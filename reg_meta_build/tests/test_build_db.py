@@ -320,12 +320,24 @@ class TestBuildDb:
         assert any(r["warning_kind"] == "no_source_state" for r in rows)
 
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
-        """code_variable_map should have distinct (code, register, variable) combos."""
+        """code_variable_map is variable_id-grained: one row per
+        (code, owning variable). The default fixture has no A2.2 split, so each
+        (register, var_id) is a single variable and the count is unchanged from
+        the old (register, var_id) grain. Split-sibling isolation (a code in only
+        one sibling's value set must map to only that sibling) is the regression
+        guarded end-to-end in reg_meta/tests/test_search_split_siblings.py."""
         count = db_conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
-        # Kön: 2 codes × 2 registers (reg 1, reg 2; both have var_id 44) = 4
-        # cvid 2002 (var_id 300): ("2","Övriga civilstånd") = 1
-        # cvid 2003 (var_id 301): ("","Uppgift okänd") = 1
+        # Kön: 2 codes × 2 variables (reg 1 var 44, reg 2 var 44) = 4
+        # cvid 2002 (UniqueVar): ("2","Övriga civilstånd") = 1
+        # cvid 2003 (ParenVar): ("","Uppgift okänd") = 1
         assert count == 6
+        # Every row's variable_id resolves (the FK + NOT NULL grain hold).
+        unresolved = db_conn.execute(
+            "SELECT COUNT(*) FROM code_variable_map cvm "
+            "LEFT JOIN variable v ON cvm.variable_id = v.variable_id "
+            "WHERE v.variable_id IS NULL"
+        ).fetchone()[0]
+        assert unresolved == 0
 
     def test_unika_summary_dropped(self, db_conn: sqlite3.Connection):
         """A2.1: unika_summary is build-time only — both A1.2 (sensitivity

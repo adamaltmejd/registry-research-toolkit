@@ -109,6 +109,8 @@ class TestSearch:
         assert len(value_results) >= 1
         assert value_results[0]["label"] == "Man"
         assert value_results[0]["code"] == "1"
+        # The result names the specific owning variable (variable_id-grained map).
+        assert value_results[0]["variable_slug"]
 
     def test_search_years_filter(self, db_path: str):
         """--years filters to results with versions in the given range."""

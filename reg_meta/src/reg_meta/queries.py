@@ -439,14 +439,21 @@ def _search_description_variables(
 def _search_values(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
+    # `code_variable_map` is variable_id-grained, so a code resolves to its exact
+    # owning sibling(s) — NOT every variable sharing a `provider_key`. Post-A2.2
+    # a split makes siblings share one source `var_id`, so the old
+    # `(register_id, provider_key)` join fanned a code across all of them, even
+    # siblings whose value set excluded it (false positives). `register_id` /
+    # `var_id` come off the joined `variable` row (the map no longer stores them).
     rows = conn.execute(
         "SELECT DISTINCT vc.code, vc.label, "
-        "cvm.register_id, cvm.var_id, "
+        "v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
+        "v.slug AS variable_slug, "
         "v.name AS variable_name, r.name AS register_name "
         "FROM value_code vc "
         "JOIN code_variable_map cvm ON vc.code_id = cvm.code_id "
-        "JOIN variable v ON cvm.register_id = v.register_id AND CAST(cvm.var_id AS TEXT) = v.provider_key "
-        "JOIN register r ON cvm.register_id = r.register_id "
+        "JOIN variable v ON cvm.variable_id = v.variable_id "
+        "JOIN register r ON v.register_id = r.register_id "
         "WHERE vc.code LIKE ? OR vc.label LIKE ? "
         "ORDER BY vc.code "
         "LIMIT 500",
@@ -466,6 +473,10 @@ def _search_values(
                 "register_id": r["register_id"],
                 "register_name": r["register_name"],
                 "var_id": r["var_id"],
+                # The specific owning variable. Split siblings share var_id and
+                # `name` but have distinct slugs, so the slug is what names the
+                # exact sibling whose value set contains this code.
+                "variable_slug": r["variable_slug"],
                 "variable_name": r["variable_name"],
                 "fts_rank": 0,
             }
