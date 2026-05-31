@@ -2319,7 +2319,7 @@ class TestReplacedByEdges:
         succession id carries no discriminator, so it can't pick a sibling and
         is skipped under `n_skipped_ambiguous_variable`, distinct from a plain
         unresolved id. (The `AktuellVariabel` cvid grain *can* disambiguate via
-        its delivery column — see `test_split_cvid_resolved_via_delivery_column`.)
+        its `variable_id` stamp — see `test_split_cvid_resolved_via_variable_id_stamp`.)
 
         Reuses #139's canonical split fixture: Hemkommun + Skolkommun (disjoint
         column stems) under one var_id → two sibling variables.
@@ -2357,12 +2357,13 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_split_cvid_resolved_via_delivery_column(self, tmp_path: Path) -> None:
+    def test_split_cvid_resolved_via_variable_id_stamp(self, tmp_path: Path) -> None:
         """An `AktuellVariabel` (cvid) succession event over an A2.2-split var_id
         DOES resolve — unlike the bare `Variabel` id above. The cvid names one
-        instance, and split siblings own disjoint delivery columns, so the cvid's
-        column (`variable_alias`) selects the sibling. No skip; the edge carries
-        that sibling's stored slug.
+        instance, and the coalescer stamps its owning sibling onto
+        `variable_instance.variable_id` (PR #150), so the edge resolves to that
+        exact sibling — no column-tie, no ambiguity skip. The edge carries that
+        sibling's stored slug.
 
         Same Hemkommun/Skolkommun split fixture; the succession event uses cvid
         9300 (the Hemkommun sibling) as predecessor.
