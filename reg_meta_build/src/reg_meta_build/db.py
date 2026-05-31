@@ -2403,6 +2403,11 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
     # guessing, no skip. A None assignment is a missing-parent invariant break
     # the materializer below raises on; the walrus filter skips it here so that
     # raise wins (and `variable_id` stays NULL, which the readers tolerate).
+    # Coverage is the coalescer-visible cvid set (`cvid_gkey`, built from `rows`,
+    # which INNER-JOINs `register_version`): a cvid absent from `rows` produced no
+    # `variable_state` either, so an unstamped cvid is consistent with
+    # materialization — never a dropped state. The real corpus stamps every cvid
+    # (0 unattributed); the importer writes a `register_version` per edition.
     stamps = [
         (vid, cvid)
         for cvid, gkey in cvid_gkey.items()
