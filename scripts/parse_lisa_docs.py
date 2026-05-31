@@ -1218,13 +1218,15 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
 
         db_path = Path.home() / ".local/share/reg_meta/reg_meta.db"
         conn = open_db(db_path)
+        # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed), and
+        # `variable_instance` / `register_version` are dropped before ship. Join
+        # straight to `variable` then `register` — the register-level join is
+        # enough for "all LISA columns". Mirrors reg_meta.queries.get_datacolumns.
         cur = conn.execute("""
             SELECT DISTINCT va.delivery_column_name
             FROM variable_alias va
-            JOIN variable_instance vi ON vi.cvid = va.cvid
-            JOIN register_version rv ON rv.regver_id = vi.regver_id
-            JOIN register_variant rvt ON rvt.register_variant_id = rv.register_variant_id
-            JOIN register r ON r.register_id = rvt.register_id
+            JOIN variable v ON va.variable_id = v.variable_id
+            JOIN register r ON v.register_id = r.register_id
             WHERE r.name LIKE '%LISA%'
         """)
         cols = {row[0] for row in cur.fetchall()}
