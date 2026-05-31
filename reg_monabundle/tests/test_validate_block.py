@@ -20,8 +20,13 @@ def test_accepts_none():
 
 
 def test_accepts_well_formed_options():
+    validate_block({"column_options": {"scb/test/lopnr": {"suppress_k": 25}}})
+
+
+def test_accepts_binding_fqid_with_version_suffix():
+    # A `@<value-set-version>` pin on the slug is a legal binding FQID.
     validate_block(
-        {"column_options": {"scb/test/_default/2020/lopnr": {"suppress_k": 25}}}
+        {"column_options": {"scb/lisa/naringsgren@sni2007": {"suppress_k": 25}}}
     )
 
 
@@ -42,7 +47,7 @@ def test_accepts_missing_column_options():
 
 def test_rejects_non_dict_column_options():
     with pytest.raises(ValueError, match="column_options must be an object"):
-        validate_block({"column_options": ["scb/test/_default/2020/lopnr"]})
+        validate_block({"column_options": ["scb/test/lopnr"]})
 
 
 def test_rejects_non_fqid_key():
@@ -54,17 +59,21 @@ def test_rejects_non_fqid_key():
     "bad_key",
     [
         # Whitespace inside a segment — would silently no-op at runtime.
-        "scb/test/_default/2020/lop nr",
+        "scb/test/lop nr",
         # Empty segment.
-        "scb/test//2020/lopnr",
+        "scb//lopnr",
+        # Wrong segment count (2).
+        "scb/lopnr",
         # Wrong segment count (4).
-        "scb/test/_default/2020",
-        # Wrong segment count (6).
-        "scb/test/_default/2020/lopnr/extra",
+        "scb/test/lopnr/extra",
         # Classification FQID, not a binding.
-        "class/sun/v1/lopnr/extra",
+        "class/sun2020",
         # Disallowed character (period).
-        "scb/test/_default/2020/lop.nr",
+        "scb/test/lop.nr",
+        # Empty value-set version after the @ pin.
+        "scb/test/lopnr@",
+        # Empty slug before the @ pin.
+        "scb/test/@sni2007",
     ],
 )
 def test_rejects_malformed_fqid_variants(bad_key):
@@ -74,9 +83,7 @@ def test_rejects_malformed_fqid_variants(bad_key):
 
 def test_rejects_non_dict_per_column_opts():
     with pytest.raises(ValueError, match="must be an object"):
-        validate_block(
-            {"column_options": {"scb/test/_default/2020/lopnr": ["suppress_k"]}}
-        )
+        validate_block({"column_options": {"scb/test/lopnr": ["suppress_k"]}})
 
 
 def test_rejects_unknown_option():
@@ -84,7 +91,7 @@ def test_rejects_unknown_option():
         validate_block(
             {
                 "column_options": {
-                    "scb/test/_default/2020/lopnr": {"unknown_opt": 1},
+                    "scb/test/lopnr": {"unknown_opt": 1},
                 }
             }
         )
@@ -95,7 +102,7 @@ def test_rejects_suppress_k_below_floor():
         validate_block(
             {
                 "column_options": {
-                    "scb/test/_default/2020/lopnr": {"suppress_k": 1},
+                    "scb/test/lopnr": {"suppress_k": 1},
                 }
             }
         )
@@ -107,7 +114,7 @@ def test_rejects_bool_suppress_k():
         validate_block(
             {
                 "column_options": {
-                    "scb/test/_default/2020/lopnr": {"suppress_k": True},
+                    "scb/test/lopnr": {"suppress_k": True},
                 }
             }
         )
@@ -118,7 +125,7 @@ def test_rejects_non_int_suppress_k():
         validate_block(
             {
                 "column_options": {
-                    "scb/test/_default/2020/lopnr": {"suppress_k": "25"},
+                    "scb/test/lopnr": {"suppress_k": "25"},
                 }
             }
         )
@@ -128,7 +135,7 @@ def test_accepts_suppress_k_at_floor():
     validate_block(
         {
             "column_options": {
-                "scb/test/_default/2020/lopnr": {"suppress_k": SUPPRESS_K},
+                "scb/test/lopnr": {"suppress_k": SUPPRESS_K},
             }
         }
     )

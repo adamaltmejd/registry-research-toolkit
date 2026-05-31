@@ -237,7 +237,7 @@ def test_bundle_extract_mode_writes_stats_from_project_data(tmp_path: Path):
             sources=[
                 {
                     "name": "data.csv",
-                    "columns": [
+                    "bindings": [
                         {
                             "display_name": "lopnr",
                             "type": "id",
@@ -279,7 +279,7 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
         sources=[
             {
                 "name": "data.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "age",

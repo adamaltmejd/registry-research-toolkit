@@ -1,40 +1,42 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "steward": "global",
-  "reg_meta_version": "reg_meta/v0.11.1",
+  "reg_meta_version": "reg_meta/v1.0.0",
   "name": "lisa_two_years",
   "sources": [
     {
       "name": "lisa_2018",
-      "register_version": "scb/lisa/individer-15plus/2018",
-      "columns": [
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
         {
-          "name": "scb/lisa/individer-15plus/2018/lopnr",
+          "variable": "scb/lisa/lopnr",
           "type": "id",
           "id_subtype": "integer",
           "display_name": "LopNr_PersonNr"
         },
         {
-          "name": "scb/lisa/individer-15plus/2018/kon",
+          "variable": "scb/lisa/kon",
           "type": "categorical",
-          "value_set": "class/sun/2020"
+          "value_set": "class/sun2020"
         }
       ]
     },
     {
       "name": "lisa_2019",
-      "register_version": "scb/lisa/individer-15plus/2019",
-      "columns": [
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2019,
+      "bindings": [
         {
-          "name": "scb/lisa/individer-15plus/2019/lopnr",
+          "variable": "scb/lisa/lopnr",
           "type": "id",
           "id_subtype": "integer",
           "display_name": "LopNr_PersonNr"
         },
         {
-          "name": "scb/lisa/individer-15plus/2019/kon",
+          "variable": "scb/lisa/kon",
           "type": "categorical",
-          "value_set": "class/sun/2020"
+          "value_set": "class/sun2020"
         }
       ]
     }

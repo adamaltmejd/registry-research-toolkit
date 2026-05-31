@@ -32,7 +32,7 @@ def _write_csv(p: Path, content: str) -> None:
 def _spec(sources, panels=()):
     """Shortcut: parse a project_data.json built from ``sources`` / ``panels``.
 
-    Each source is ``{"name": "<csv>", "columns": [{"display_name": ..., "type": ...}, ...]}``.
+    Each source is ``{"name": "<csv>", "bindings": [{"display_name": ..., "type": ...}, ...]}``.
     """
     return parse_project_data(make_project_data(sources=sources, panels=panels))
 
@@ -91,7 +91,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
         [
             {
                 "name": "people.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "age",
@@ -133,7 +133,7 @@ def test_run_extract_typed_errors_on_unconfigured_column(tmp_path: Path):
         [
             {
                 "name": "data.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             }
@@ -151,7 +151,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
         [
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "age",
@@ -162,7 +162,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
             },
             {
                 "name": "b.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {"display_name": "sex", "type": "categorical"},
                 ],
@@ -190,7 +190,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
         [
             {
                 "name": "events.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "ar",
@@ -288,7 +288,7 @@ def test_main_extract_runs_typed_pipeline(tmp_path: Path):
             sources=[
                 {
                     "name": "data.csv",
-                    "columns": [
+                    "bindings": [
                         {
                             "display_name": "lopnr",
                             "type": "id",
@@ -327,7 +327,7 @@ def test_main_extract_accepts_spec_parameter(tmp_path: Path):
             sources=[
                 {
                     "name": "data.csv",
-                    "columns": [
+                    "bindings": [
                         {"display_name": "lopnr", "type": "categorical"},
                         {"display_name": "age", "type": "opaque"},
                     ],
@@ -339,7 +339,7 @@ def test_main_extract_accepts_spec_parameter(tmp_path: Path):
         [
             {
                 "name": "data.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "age",
@@ -379,7 +379,7 @@ def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
             sources=[
                 {
                     "name": "data.csv",
-                    "columns": [
+                    "bindings": [
                         {"display_name": "lopnr", "type": "id"},
                         {"display_name": "age", "type": "numeric"},
                     ],
@@ -413,7 +413,7 @@ def test_table_and_view_paths_produce_identical_stats(
         [
             {
                 "name": "people.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "age",
@@ -454,7 +454,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
         [
             {
                 "name": "data.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "name", "type": "id", "id_subtype": "string"},
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
@@ -490,7 +490,7 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
         [
             {
                 "name": "data.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id"},
                     {"display_name": "name", "type": "id"},
                 ],
@@ -543,7 +543,7 @@ def test_run_extract_typed_emits_year_in_source_detail(tmp_path: Path):
         [
             {
                 "name": "rtb2019.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             }
@@ -573,13 +573,13 @@ def test_run_extract_typed_emits_panel_with_literal_time_key_members(tmp_path: P
         sources=[
             {
                 "name": "lisa_2018.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             },
             {
                 "name": "lisa_2019.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             },
@@ -626,7 +626,7 @@ def test_run_extract_typed_emits_panel_with_column_time_key_member(tmp_path: Pat
         sources=[
             {
                 "name": "swecov.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "ar",
@@ -673,7 +673,7 @@ def test_run_extract_typed_panel_with_same_source_two_time_keys(tmp_path: Path):
         sources=[
             {
                 "name": "swecov.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "ar",
@@ -723,7 +723,7 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
         sources=[
             {
                 "name": "swecov.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "ar",
@@ -761,7 +761,7 @@ def test_run_extract_typed_panel_handles_string_time_key(tmp_path: Path):
         sources=[
             {
                 "name": "swecov.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {"display_name": "quarter", "type": "categorical"},
                 ],
@@ -797,7 +797,7 @@ def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
         sources=[
             {
                 "name": "tax_history.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "ar",
@@ -808,7 +808,7 @@ def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
             },
             {
                 "name": "tax_2024.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             },
@@ -849,19 +849,19 @@ def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
             # missing column overrides) plus the typo'd panel members.
             {
                 "name": "lisa_2018.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             },
             {
                 "name": "lisa_2018_typo.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             },
             {
                 "name": "lisa_2019_typo.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
                 ],
             },
@@ -899,7 +899,7 @@ def test_run_extract_typed_panels_block_empty_when_no_panels_declared(tmp_path: 
         [
             {
                 "name": "x.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "a", "type": "id", "id_subtype": "integer"},
                 ],
             }
@@ -931,17 +931,18 @@ def test_main_raises_on_invalid_project_data(tmp_path: Path):
         # validator catches it; can't go through make_project_data
         # because the dataclasses also reject this.
         {
-            "schema_version": "1.0.0",
+            "schema_version": "2.0.0",
             "steward": "global",
-            "reg_meta_version": "test",
+            "reg_meta_version": "reg_meta/v1.0.0",
             "name": "x",
             "sources": [
                 {
                     "name": "data.csv",
-                    "register_version": "scb/test/_default/2020",
-                    "columns": [
+                    "register_variant": "scb/test/_default",
+                    "period": 2020,
+                    "bindings": [
                         {
-                            "name": "scb/test/_default/2020/x",
+                            "variable": "scb/test/x",
                             "display_name": "x",
                             "type": "blob",  # invalid
                         }

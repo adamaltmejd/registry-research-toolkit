@@ -6,7 +6,7 @@ before adding heavy amalgamated code. The cap is a forward-looking
 v1 ceiling, not a tight bound on today's shape — current bundles on
 the load fixture sit well under 200 KB, leaving 5×-plus headroom.
 
-This test embeds the committed 200-column load-test fixture (see
+This test embeds the committed 200-binding load-test fixture (see
 ``reg_schema/test_corpus/load_test_200col/``) into a bundle and
 asserts the emitted ``.py`` stays under cap. A regression here means
 the bundle grew enough to threaten the v1 ceiling — investigate
@@ -34,7 +34,8 @@ BUNDLE_SIZE_CAP_BYTES = 1_048_576
 # the gate would silently relax. Pin the shape here so drift fails
 # fast (Codex review on PR #124).
 LOAD_FIXTURE_EXPECTED_SOURCES = 8
-LOAD_FIXTURE_EXPECTED_COLUMNS = 200
+# Model A renamed `columns` -> `bindings`; count is unchanged (200).
+LOAD_FIXTURE_EXPECTED_BINDINGS = 200
 
 LOAD_FIXTURE = (
     Path(__file__).resolve().parent.parent.parent
@@ -50,10 +51,10 @@ def test_bundle_with_200col_load_fixture_under_1mb_cap(
 ) -> None:
     project_data = json.loads(LOAD_FIXTURE.read_text(encoding="utf-8"))
 
-    # Pin fixture shape so a stealth shrink (fewer sources, fewer cols)
-    # can't silently weaken the cap measurement.
+    # Pin fixture shape so a stealth shrink (fewer sources, fewer
+    # bindings) can't silently weaken the cap measurement.
     n_sources = len(project_data["sources"])
-    n_columns = sum(len(s["columns"]) for s in project_data["sources"])
+    n_bindings = sum(len(s["bindings"]) for s in project_data["sources"])
     assert n_sources == LOAD_FIXTURE_EXPECTED_SOURCES, (
         f"load fixture has {n_sources} sources, expected "
         f"{LOAD_FIXTURE_EXPECTED_SOURCES}. Regenerate "
@@ -61,9 +62,9 @@ def test_bundle_with_200col_load_fixture_under_1mb_cap(
         f"build.py, or update the constant here if the shape change "
         f"is intentional."
     )
-    assert n_columns == LOAD_FIXTURE_EXPECTED_COLUMNS, (
-        f"load fixture has {n_columns} columns, expected "
-        f"{LOAD_FIXTURE_EXPECTED_COLUMNS}. Same regeneration / update "
+    assert n_bindings == LOAD_FIXTURE_EXPECTED_BINDINGS, (
+        f"load fixture has {n_bindings} bindings, expected "
+        f"{LOAD_FIXTURE_EXPECTED_BINDINGS}. Same regeneration / update "
         f"as above."
     )
 

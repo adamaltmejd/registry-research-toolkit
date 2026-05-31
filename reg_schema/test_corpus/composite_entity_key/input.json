@@ -1,21 +1,22 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "steward": "global",
-  "reg_meta_version": "reg_meta/v0.11.1",
+  "reg_meta_version": "reg_meta/v1.0.0",
   "name": "workplace_panel",
   "sources": [
     {
       "name": "rams_2018",
-      "register_version": "scb/rams/_default/2018",
-      "columns": [
+      "register_variant": "scb/rams/_default",
+      "period": 2018,
+      "bindings": [
         {
-          "name": "scb/rams/_default/2018/peorgnr",
+          "variable": "scb/rams/peorgnr",
           "type": "id",
           "id_subtype": "string",
           "display_name": "LopNr_PeOrgNr"
         },
         {
-          "name": "scb/rams/_default/2018/cfar",
+          "variable": "scb/rams/cfar",
           "type": "id",
           "id_subtype": "string",
           "display_name": "LopNr_CFAR"
@@ -24,16 +25,17 @@
     },
     {
       "name": "rams_2019",
-      "register_version": "scb/rams/_default/2019",
-      "columns": [
+      "register_variant": "scb/rams/_default",
+      "period": 2019,
+      "bindings": [
         {
-          "name": "scb/rams/_default/2019/peorgnr",
+          "variable": "scb/rams/peorgnr",
           "type": "id",
           "id_subtype": "string",
           "display_name": "LopNr_PeOrgNr"
         },
         {
-          "name": "scb/rams/_default/2019/cfar",
+          "variable": "scb/rams/cfar",
           "type": "id",
           "id_subtype": "string",
           "display_name": "LopNr_CFAR"

@@ -50,13 +50,13 @@ def _spec_with(
 
     Translates the old MDWConfig-style ``{source: {display_name: override}}``
     shape into a project_data.json payload — each (source, display_name)
-    becomes a Source/Column pair carrying the override fields as
-    structural column attributes.
+    becomes a Source/Binding pair carrying the override fields as
+    structural binding attributes.
     """
     sources = [
         {
             "name": src,
-            "columns": [
+            "bindings": [
                 {
                     "display_name": col,
                     "type": ov.type,

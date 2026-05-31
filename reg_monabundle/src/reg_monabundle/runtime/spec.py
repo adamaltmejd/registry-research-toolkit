@@ -40,7 +40,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 from reg_monabundle import validate_block
 from reg_schema import (
-    Column,
+    Binding,
     Panel,
     PanelMember,
     ProjectData,
@@ -75,9 +75,9 @@ assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)
 
 @dataclass(frozen=True)
 class ColumnTypeOverride:
-    """A per-column type assignment with optional inline subtype/format hints.
+    """A per-binding type assignment with optional inline subtype/format hints.
 
-    Built from a ``reg_schema.Column`` at load time. Lives in ``spec.py``
+    Built from a ``reg_schema.Binding`` at load time. Lives in ``spec.py``
     rather than ``reg_schema`` because it's a runtime artifact —
     ``sources._probe_and_promote_opaque`` mutates a per-source copy when
     promoting opaque columns, and ``reg_schema`` is frozen by design.
@@ -96,15 +96,15 @@ class ColumnTypeOverride:
         return any(getattr(self, k) is not None for k in INLINE_HINT_KEYS[self.type])
 
     @classmethod
-    def from_column(cls, column: Column) -> ColumnTypeOverride:
+    def from_column(cls, binding: Binding) -> ColumnTypeOverride:
         # ``datetime_format`` is intentionally dropped: ``_build_column``
-        # rejects ``type == "datetime"`` before any Column with that
+        # rejects ``type == "datetime"`` before any Binding with that
         # type or ``datetime_format`` set can reach this constructor.
         return cls(
-            type=column.type,
-            id_subtype=column.id_subtype,
-            numeric_subtype=column.numeric_subtype,
-            date_format=column.date_format,
+            type=binding.type,
+            id_subtype=binding.id_subtype,
+            numeric_subtype=binding.numeric_subtype,
+            date_format=binding.date_format,
         )
 
 
@@ -129,14 +129,14 @@ class LoadedSpec:
         self._sources_by_name: dict[str, Source] = {
             s.name: s for s in project_data.sources
         }
-        self._columns_by_display: dict[tuple[str, str], Column] = {}
+        self._columns_by_display: dict[tuple[str, str], Binding] = {}
         for source in project_data.sources:
-            for column in source.columns:
+            for binding in source.bindings:
                 # display_name is required at load (asserted in
                 # _build_column). The assert silences the type checker
                 # about the schema's Optional[str].
-                assert column.display_name is not None
-                self._columns_by_display[(source.name, column.display_name)] = column
+                assert binding.display_name is not None
+                self._columns_by_display[(source.name, binding.display_name)] = binding
         self._type_cache: dict[str, dict[str, ColumnTypeOverride]] = {}
         block = project_data.reg_monabundle or {}
         raw_options = block.get("column_options") or {}
@@ -166,9 +166,9 @@ class LoadedSpec:
                 self._type_cache[source_name] = {}
             else:
                 self._type_cache[source_name] = {
-                    column.display_name: ColumnTypeOverride.from_column(column)
-                    for column in source.columns
-                    if column.display_name is not None
+                    binding.display_name: ColumnTypeOverride.from_column(binding)
+                    for binding in source.bindings
+                    if binding.display_name is not None
                 }
         return self._type_cache[source_name]
 
@@ -185,10 +185,10 @@ class LoadedSpec:
         is SQL-header-keyed (what extract has). Returns a fresh copy
         so callers can't mutate the spec.
         """
-        column = self._columns_by_display.get((source_name, display_name))
-        if column is None:
+        binding = self._columns_by_display.get((source_name, display_name))
+        if binding is None:
             return {}
-        return dict(self._column_options.get(column.name, {}))
+        return dict(self._column_options.get(binding.variable, {}))
 
 
 # -- JSON loader ----------------------------------------------------------
@@ -211,18 +211,18 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 # -- Dataclass construction (post-validation) -----------------------------
 
 
-def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Column:
-    """Build a ``reg_schema.Column`` from a JSON dict, requiring display_name.
+def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Binding:
+    """Build a ``reg_schema.Binding`` from a JSON dict, requiring display_name.
 
     The schema marks ``display_name`` optional because the webapp
     pre-resolves defaults from reg_meta at bundle-build time
     (REFACTOR_SPEC.md §6.3 + §7). ``mock_data_wizard`` runs without
-    reg_meta in the extract loop, so every column must already carry a
+    reg_meta in the extract loop, so every binding must already carry a
     ``display_name``. The bundle pre-resolve pipeline lands at §15
-    step 6; until then, hand-write ``display_name`` on every column.
+    step 6; until then, hand-write ``display_name`` on every binding.
 
     Also rejects ``type == "datetime"``: reg_schema accepts datetime
-    columns but the mdw extract/summarize/generate stack has no
+    bindings but the mdw extract/summarize/generate stack has no
     datetime branch (``classify.COLUMN_TYPES`` and
     ``sql_emit.queries_for_column``). Rejecting at load surfaces the
     error here instead of as a late ``ValueError`` deep in extract.
@@ -230,7 +230,7 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Col
     column_type = data.get("type")
     if column_type == "datetime":
         raise ValueError(
-            f"sources[{source_name!r}].columns[{idx}].type='datetime' is "
+            f"sources[{source_name!r}].bindings[{idx}].type='datetime' is "
             f"not supported by mock_data_wizard (extract/summarize/generate "
             f"only handle {sorted(COLUMN_TYPES)!r}). Use type='date' for "
             f"date-only columns or split timestamps into separate date + "
@@ -240,12 +240,12 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Col
     display_name = data.get("display_name")
     if not display_name:
         raise ValueError(
-            f"sources[{source_name!r}].columns[{idx}] is missing "
-            f"display_name; every column must carry display_name in "
+            f"sources[{source_name!r}].bindings[{idx}] is missing "
+            f"display_name; every binding must carry display_name in "
             f"step 4 (reg_meta resolution of defaults lands in §15 step 6)"
         )
-    return Column(
-        name=data["name"],
+    return Binding(
+        variable=data["variable"],
         type=data["type"],
         display_name=display_name,
         id_subtype=data.get("id_subtype"),
@@ -257,11 +257,16 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Col
 
 def _build_source(data: Mapping[str, Any], *, idx: int) -> Source:
     name = data["name"]
-    columns = tuple(
+    bindings = tuple(
         _build_column(c, source_name=name, idx=i)
-        for i, c in enumerate(data.get("columns", []))
+        for i, c in enumerate(data.get("bindings", []))
     )
-    return Source(name=name, register_version=data["register_version"], columns=columns)
+    return Source(
+        name=name,
+        register_variant=data["register_variant"],
+        period=data["period"],
+        bindings=bindings,
+    )
 
 
 def _reject_composite(
@@ -396,22 +401,24 @@ def _validate_column_options_against_columns(
     if not isinstance(options, dict):
         return
     columns_by_fqid = {
-        col.name: col for source in project_data.sources for col in source.columns
+        binding.variable: binding
+        for source in project_data.sources
+        for binding in source.bindings
     }
     orphans = sorted(set(options) - set(columns_by_fqid))
     if orphans:
         raise ValueError(
             f"reg_monabundle.column_options has key(s) that don't match "
-            f"any column FQID in sources: {orphans}. Check for typos "
-            f"against the binding FQIDs declared in sources[*].columns[*].name."
+            f"any binding FQID in sources: {orphans}. Check for typos "
+            f"against the binding FQIDs declared in sources[*].bindings[*].variable."
         )
     for fqid, opts in options.items():
-        column = columns_by_fqid[fqid]
-        if "suppress_k" in opts and column.type != "categorical":
+        binding = columns_by_fqid[fqid]
+        if "suppress_k" in opts and binding.type != "categorical":
             raise ValueError(
                 f"reg_monabundle.column_options[{fqid!r}].suppress_k is "
-                f"only honored on categorical columns (this column has "
-                f"type={column.type!r}). The runtime applies suppress_k "
+                f"only honored on categorical columns (this binding has "
+                f"type={binding.type!r}). The runtime applies suppress_k "
                 f"to the categorical frequency cutoff only — setting it "
                 f"on id/numeric/date/opaque is a no-op. For panel-level "
                 f"k-anonymity tunability see panels[*].suppress_k (not "

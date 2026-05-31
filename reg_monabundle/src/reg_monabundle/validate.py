@@ -8,7 +8,7 @@ binding-FQID well-formedness, and the ``suppress_k`` floor check against
 
 What this validator does NOT do:
 
-- Resolve ``column_options`` keys against the spec's ``sources[*].columns``
+- Resolve ``column_options`` keys against the spec's ``sources[*].bindings``
   (the orphan-FQID check). That's a cross-block referential rule the
   loader runs after building the dataclass tree — it requires the
   resolved column dataclasses, which this layer doesn't accept.
@@ -41,15 +41,32 @@ VALID_OPTION_KEYS: tuple[str, ...] = ("suppress_k",)
 _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
+def _binding_leaf_parts(leaf: str) -> list[str] | None:
+    """Split a binding-FQID leaf ``slug[@version]`` into its tokens.
+
+    Mirrors ``reg_schema.structural._binding_leaf_parts``: returns
+    ``[slug]`` or ``[slug, version]``, or ``None`` when malformed (empty
+    slug, empty version, stray second ``@``). The ``@`` is split off
+    before the per-segment regex so it never reaches the slug grammar.
+    """
+    if "@" not in leaf:
+        return [leaf] if leaf else None
+    slug, _, version = leaf.partition("@")
+    if not slug or not version or "@" in version:
+        return None
+    return [slug, version]
+
+
 def _is_binding_fqid(value: object) -> bool:
     if not isinstance(value, str):
         return False
     segs = value.split("/")
-    return (
-        len(segs) == 5
-        and segs[0] != "class"
-        and all(bool(_FQID_TOKEN.match(s)) for s in segs)
-    )
+    if len(segs) != 3 or segs[0] == "class":
+        return False
+    leaf_parts = _binding_leaf_parts(segs[2])
+    if leaf_parts is None:
+        return False
+    return all(bool(_FQID_TOKEN.match(s)) for s in [segs[0], segs[1], *leaf_parts])
 
 
 def validate_block(block: object) -> None:
@@ -82,20 +99,22 @@ def validate_block(block: object) -> None:
             f"got {type(options).__name__}"
         )
     for fqid, opts in options.items():
-        # Binding FQIDs are 5-segment slash-separated identifiers with
-        # per-segment ``[A-Za-z0-9_-]+`` tokens and a non-``class``
-        # provider. The structural validator (§6.8.1) checks
-        # well-formedness on ``column.name``; reg_monabundle.column_options
-        # keys are opaque to reg_schema. Mirror the same rule here so a
-        # typo (display_name, whitespace, empty segment, ``class/...``)
-        # raises loudly instead of silently no-opping at lookup time.
+        # Binding FQIDs are 3-segment slash-separated identifiers
+        # (``<provider>/<register>/<slug>``, optional ``@<version>`` on
+        # the slug) with per-segment ``[A-Za-z0-9_-]+`` tokens and a
+        # non-``class`` provider. The structural validator (§6.8.1)
+        # checks well-formedness on ``binding.variable``;
+        # reg_monabundle.column_options keys are opaque to reg_schema.
+        # Mirror the same rule here so a typo (display_name, whitespace,
+        # empty segment, ``class/...``) raises loudly instead of
+        # silently no-opping at lookup time.
         if not _is_binding_fqid(fqid):
             raise ValueError(
                 f"reg_monabundle.column_options key {fqid!r} is not a "
-                f"well-formed binding FQID (expected 5 slash-separated "
-                f"segments of [A-Za-z0-9_-]+, non-'class' provider); "
-                f"keys changed from (source, column) pairs to binding "
-                f"FQIDs in step 4. Update your project_data.json."
+                f"well-formed binding FQID (expected 3 slash-separated "
+                f"segments of [A-Za-z0-9_-]+ with an optional @<version> "
+                f"on the slug, non-'class' provider); keys are binding "
+                f"FQIDs. Update your project_data.json."
             )
         if not isinstance(opts, dict):
             raise ValueError(

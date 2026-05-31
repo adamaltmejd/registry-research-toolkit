@@ -40,7 +40,7 @@ def _basic_payload() -> dict:
         sources=[
             {
                 "name": "lisa_2018.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
                     {"display_name": "Kon", "type": "categorical"},
                 ],
@@ -80,10 +80,10 @@ def test_loaded_spec_lookup_options_resolves_through_binding_fqid():
         sources=[
             {
                 "name": "x.csv",
-                "register_version": "scb/test/_default/2020",
-                "columns": [
+                "register_variant": "scb/test/_default",
+                "bindings": [
                     {
-                        "name": "scb/test/_default/2020/kon",
+                        "variable": "scb/test/kon",
                         "display_name": "Kon",
                         "type": "categorical",
                     },
@@ -92,7 +92,7 @@ def test_loaded_spec_lookup_options_resolves_through_binding_fqid():
         ],
         reg_monabundle={
             "column_options": {
-                "scb/test/_default/2020/kon": {"suppress_k": 25},
+                "scb/test/kon": {"suppress_k": 25},
             }
         },
     )
@@ -113,13 +113,13 @@ def test_loaded_spec_panels_passthrough():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"}
                 ],
             },
             {
                 "name": "b.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"}
                 ],
             },
@@ -152,7 +152,7 @@ def test_composite_entity_key_rejected_with_step_10b_message():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "Year",
@@ -179,7 +179,7 @@ def test_composite_time_key_rejected_with_step_10b_message():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "Year",
@@ -213,7 +213,7 @@ def test_literal_period_time_key_rejected_with_step_10b_message():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
                 ],
             }
@@ -235,7 +235,7 @@ def test_panel_level_time_key_rejected_with_step_10b_message():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
                     {
                         "display_name": "Ar",
@@ -263,7 +263,7 @@ def test_member_level_entity_key_override_rejected():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
                     {"display_name": "Pnr", "type": "id", "id_subtype": "integer"},
                 ],
@@ -288,9 +288,9 @@ def test_display_name_required_at_load():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {
-                        "name": "scb/test/_default/2020/lopnr",
+                        "variable": "scb/test/lopnr",
                         "type": "id",
                         "id_subtype": "integer",
                     },
@@ -311,7 +311,7 @@ def test_datetime_column_type_rejected_with_actionable_message():
         sources=[
             {
                 "name": "a.csv",
-                "columns": [
+                "bindings": [
                     {
                         "display_name": "Timestamp",
                         "type": "datetime",
@@ -344,10 +344,10 @@ def test_parse_project_data_invokes_namespaced_block_validator():
         sources=[
             {
                 "name": "x.csv",
-                "register_version": "scb/test/_default/2020",
-                "columns": [
+                "register_variant": "scb/test/_default",
+                "bindings": [
                     {
-                        "name": "scb/test/_default/2020/lopnr",
+                        "variable": "scb/test/lopnr",
                         "display_name": "LopNr",
                         "type": "id",
                         "id_subtype": "integer",
@@ -362,17 +362,17 @@ def test_parse_project_data_invokes_namespaced_block_validator():
 
 
 def test_column_options_rejects_orphan_fqid_not_matching_any_column():
-    """A well-formed FQID that doesn't match any column.name in sources
-    silently no-ops at lookup time without this check. Pin the
+    """A well-formed FQID that doesn't match any binding.variable in
+    sources silently no-ops at lookup time without this check. Pin the
     referential-integrity guard so a typo surfaces at load."""
     payload = make_project_data(
         sources=[
             {
                 "name": "x.csv",
-                "register_version": "scb/test/_default/2020",
-                "columns": [
+                "register_variant": "scb/test/_default",
+                "bindings": [
                     {
-                        "name": "scb/test/_default/2020/lopnr",
+                        "variable": "scb/test/lopnr",
                         "display_name": "LopNr",
                         "type": "id",
                         "id_subtype": "integer",
@@ -383,11 +383,11 @@ def test_column_options_rejects_orphan_fqid_not_matching_any_column():
         reg_monabundle={
             # FQID is well-formed but no column declares this name.
             "column_options": {
-                "scb/test/_default/2020/typo_here": {"suppress_k": 25},
+                "scb/test/typo_here": {"suppress_k": 25},
             }
         },
     )
-    with pytest.raises(ValueError, match="don't match any column FQID"):
+    with pytest.raises(ValueError, match="don't match any binding FQID"):
         parse_project_data(payload)
 
 
@@ -398,10 +398,10 @@ def test_column_options_accepts_matching_fqid():
         sources=[
             {
                 "name": "x.csv",
-                "register_version": "scb/test/_default/2020",
-                "columns": [
+                "register_variant": "scb/test/_default",
+                "bindings": [
                     {
-                        "name": "scb/test/_default/2020/kon",
+                        "variable": "scb/test/kon",
                         "display_name": "Kon",
                         "type": "categorical",
                     },
@@ -410,7 +410,7 @@ def test_column_options_accepts_matching_fqid():
         ],
         reg_monabundle={
             "column_options": {
-                "scb/test/_default/2020/kon": {"suppress_k": 25},
+                "scb/test/kon": {"suppress_k": 25},
             }
         },
     )
@@ -435,14 +435,14 @@ def test_column_options_rejects_suppress_k_on_non_categorical(col, suffix):
     summarize_column; the id/numeric/date/opaque branches ignore it,
     so accepting it there is a silent no-op. Reject at load and
     point at the future panels[*].suppress_k for panel-level k."""
-    fqid = f"scb/test/_default/2020/{suffix}"
+    fqid = f"scb/test/{suffix}"
     payload = make_project_data(
         sources=[
             {
                 "name": "x.csv",
-                "register_version": "scb/test/_default/2020",
-                "columns": [
-                    {"name": fqid, "display_name": suffix.upper(), **col},
+                "register_variant": "scb/test/_default",
+                "bindings": [
+                    {"variable": fqid, "display_name": suffix.upper(), **col},
                 ],
             }
         ],
