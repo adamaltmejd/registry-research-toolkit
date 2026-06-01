@@ -828,10 +828,12 @@ class TestBackfillStateClassifications:
         conn.close()
 
 
-class TestReparentVariableAlias:
-    """Post-#149: `_reparent_variable_alias` attributes each cvid's delivery
-    columns to its OWNING split sibling via the coalescer-stamped
-    `variable_instance.variable_id` — no column-tie heuristic, no skip."""
+class TestEmitVariableAliases:
+    """A4.3a: `SCBAdapter._emit_variable_aliases` carries the FULL delivery-column
+    history as `IRVariableAlias`, attributing each cvid's columns to its OWNING
+    split sibling via the coalescer-stamped `variable_instance.variable_id` — no
+    column-tie heuristic, no skip. (Replaces the deleted `_reparent_variable_alias`
+    build pass; the materializer now writes `variable_alias` from this IR.)"""
 
     def test_split_siblings_get_own_columns_incl_historical(self) -> None:
         """A cvid whose ONLY column is a historical one that never became a
@@ -839,7 +841,9 @@ class TestReparentVariableAlias:
         old column-tie SKIPPED such a cvid (its columns resolved to no
         state-bearing sibling), dropping the column from `variable_alias`; the
         ground-truth `variable_id` stamp recovers it under the right sibling."""
-        from reg_meta_build.db import DDL, _reparent_variable_alias, seed_providers
+        from reg_meta_build.db import DDL, seed_providers
+        from reg_meta_build.ir import IRVariableAlias
+        from reg_meta_build.sources.scb import SCBAdapter
 
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
@@ -862,13 +866,6 @@ class TestReparentVariableAlias:
             "INSERT INTO variable (register_id, provider_key, name, slug) "
             "VALUES (1, '920', 'Kommun', 'kommun-skol')"
         ).lastrowid
-        # Surviving latest-era states, one delivery column each.
-        conn.executemany(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, delivery_column_name) "
-            "VALUES (?, 10, '2020-01-01', '9999-12-31', ?)",
-            [(vid_a, "Hemkommun"), (vid_b, "Skolkommun")],
-        )
         # cvids stamped with their owning variable_id (coalescer ground truth).
         # cvid 9302 carries ONLY 'Hemkn_old' — a historical column for sibling A
         # that never became a state (the previously-skipped case).
@@ -883,14 +880,10 @@ class TestReparentVariableAlias:
         )
         conn.commit()
 
-        _reparent_variable_alias(conn)
-
-        cols = {
-            (r["variable_id"], r["delivery_column_name"])
-            for r in conn.execute(
-                "SELECT variable_id, delivery_column_name FROM variable_alias"
-            )
-        }
+        adapter = SCBAdapter(conn)
+        aliases = list(adapter._emit_variable_aliases())
+        assert all(isinstance(a, IRVariableAlias) for a in aliases)
+        cols = {(a.variable_id, a.delivery_column_name) for a in aliases}
         # A keeps its current + historical column; B only its own. Neither
         # sibling leaks the other's column, and 'Hemkn_old' is recovered.
         assert cols == {
@@ -898,4 +891,6 @@ class TestReparentVariableAlias:
             (vid_a, "Hemkn_old"),
             (vid_b, "Skolkommun"),
         }
+        # Every alias rides the delivering variant (FK target for variable_alias).
+        assert {a.register_variant_id for a in aliases} == {10}
         conn.close()
