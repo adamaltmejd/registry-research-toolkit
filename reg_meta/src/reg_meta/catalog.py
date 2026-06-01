@@ -352,13 +352,16 @@ class Catalog:
         ]
 
     def list_registers(self, provider_slug: str) -> list[RegisterSummary]:
-        """Registers under a provider, ordered by slug. Empty when the provider
-        slug names no provider OR the provider has no registers (both are an
-        empty children list to the webapp)."""
+        """Registers under a provider, ordered by slug. A register with a NULL
+        slug isn't addressable by a register FQID, so it's excluded (symmetric
+        with `list_bindings`'s variable-slug filter; `register.slug` is nullable
+        like `variable.slug`, both filled by the build's slug derivation). Empty
+        when the provider slug names no provider OR the provider has no slugged
+        registers (both are an empty children list to the webapp)."""
         rows = self._conn.execute(
             "SELECT r.slug, r.name, r.purpose "
             "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? ORDER BY r.slug",
+            "WHERE p.slug = ? AND r.slug IS NOT NULL ORDER BY r.slug",
             (provider_slug,),
         ).fetchall()
         return [

@@ -63,6 +63,18 @@ class TestListRegisters:
     def test_unknown_provider_is_empty_not_error(self) -> None:
         assert _catalog().list_registers("nope") == []
 
+    def test_excludes_null_slug_registers(self) -> None:
+        # A register with a NULL slug isn't addressable by a register FQID, so
+        # it's excluded — symmetric with the NULL-slug variable exclusion.
+        conn = build_slugged_db()  # scb/lisa (slugged)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, slug, name) "
+            "VALUES (8, 1, NULL, 'Unslugged Register')"
+        )
+        conn.commit()
+        registers = Catalog(conn).list_registers("scb")
+        assert [r.fqid.register for r in registers] == ["lisa"]
+
 
 class TestListBindings:
     def test_lists_register_variable_slugs_slug_ordered(self) -> None:
