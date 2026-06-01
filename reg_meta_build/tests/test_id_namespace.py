@@ -49,3 +49,12 @@ def test_mint_is_deterministic() -> None:
     # Distinct inputs mint distinct ids (no accidental collapse on common keys).
     assert mint("sos", "par") != mint("sos", "par", "deldatamangd")
     assert mint("sos", "par") != mint("scb", "par")
+
+
+def test_mint_encoding_is_unambiguous() -> None:
+    """Length-prefixing the parts makes the encoding unambiguous: tuples that
+    would collide under a plain ``/``-join (the same joined string) mint
+    DISTINCT ids. Guards the SOS key grammar landing in A4.3 (Codex P2)."""
+    assert mint("a/b", "c") != mint("a", "b/c")  # both "/"-join to "a/b/c"
+    assert mint("a", "b") != mint("a/b")  # both "/"-join to "a/b"
+    assert mint("x/", "y") != mint("x", "/y")  # both "/"-join to "x//y"

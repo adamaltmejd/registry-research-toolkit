@@ -577,11 +577,12 @@ signed-int compatibility):
 ```python
 def mint(*parts: str) -> int:
     """Deterministic 63-bit ID, namespaced into [2^62, 2^63) via bit 62."""
-    h = blake2b(
-        "/".join(parts).encode("utf-8"),
-        digest_size=8,
-        person=b"regmeta-id",
-    ).digest()
+    # Length-prefix each part so the encoding is unambiguous — a plain "/"
+    # join would collapse tuples whose parts contain the separator.
+    data = b"".join(
+        len(b).to_bytes(4, "big") + b for b in (p.encode("utf-8") for p in parts)
+    )
+    h = blake2b(data, digest_size=8, person=b"regmeta-id").digest()
     # Take low 62 bits from hash, set bit 62, leave bit 63 clear.
     return (int.from_bytes(h, "big") & ((1 << 62) - 1)) | (1 << 62)
 ```
