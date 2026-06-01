@@ -4,6 +4,28 @@
  */
 
 export interface paths {
+    "/api/bundle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Build Mona Bundle
+         * @description Build the MONA bundle embedding the posted ``project_data.json`` and return
+         *     the ``.py`` bytes. Reads the raw dict (preserving namespaced blocks) and
+         *     offloads the blocking build to the threadpool.
+         */
+        post: operations["build_mona_bundle_api_bundle_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog": {
         parameters: {
             query?: never;
@@ -221,6 +243,72 @@ export interface paths {
         get: operations["get_context_api_context_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Order Project
+         * @description Render the steward's default v1 order-export CSV (§9.5).
+         *
+         *     Reads the raw dict and runs the §6.8.1 STRUCTURAL gate before rendering: the
+         *     ``ProjectData`` model enforces only field types, while the structural rules
+         *     (FQID shape, period grammar, the binding/source-prefix match) live in
+         *     ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec
+         *     (e.g. a malformed ``register_variant`` or bad period token) would otherwise
+         *     render a bad provider order at 200. A structurally invalid spec → 422.
+         *     ``async`` + ``run_in_threadpool`` (blocking display_name resolution off the
+         *     event loop), mirroring ``/validate``.
+         */
+        post: operations["order_project_api_project_order_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate Project
+         * @description Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
+         *     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
+         *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
+         *
+         *     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). NOTE the scope versus
+         *     ``POST /api/bundle``: bundle additionally runs the build-time cross-block
+         *     referential check (orphan ``column_options`` keys) and the step-4 capability
+         *     gates (e.g. a build-required ``display_name``), which ``/validate`` does NOT —
+         *     so a spec ``/validate`` greenlights can still 422 at ``/bundle``. Reconciling
+         *     that (a build-readiness layer) waits on issue-based reg_monabundle validators
+         *     (the same open question as the ``invalid_block`` code).
+         *
+         *     ``async`` only to read the body off the wire; the BLOCKING work (the structural
+         *     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
+         *     threadpool via ``run_in_threadpool`` so it never stalls the event loop (the
+         *     catalog routes are plain ``def`` for the same reason). The reg_meta connection
+         *     opens on that threadpool thread (one thread → the cross-thread sqlite P1 can't
+         *     recur).
+         */
+        post: operations["validate_project_api_project_validate_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -662,6 +750,44 @@ export interface components {
             type: string;
         };
         /**
+         * ValidationIssueModel
+         * @description One §6.8.0 validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
+         *     ``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is
+         *     an RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document
+         *     issues); ``code`` is the stable, namespaced rule identifier the SPA maps to a
+         *     UI affordance.
+         */
+        ValidationIssueModel: {
+            /** Code */
+            code: string;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "error" | "warning" | "info";
+            /** Message */
+            message: string;
+            /** Path */
+            path: string;
+        };
+        /**
+         * ValidationResultModel
+         * @description `POST /api/project/validate` response — the §6.8.0 concatenated issue list
+         *     (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
+         *
+         *     ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level
+         *     issue is present (warnings/info do not flip it). A validation FAILURE is a
+         *     SUCCESSFUL validation RESPONSE — this carries HTTP 200 with ``ok=false`` and
+         *     the issues; 4xx is reserved for a malformed request (bad JSON / oversized body
+         *     / wrong content-type), never for a spec that simply failed to validate.
+         */
+        ValidationResultModel: {
+            /** Issues */
+            issues: components["schemas"]["ValidationIssueModel"][];
+            /** Ok */
+            ok: boolean;
+        };
+        /**
          * ValueSetMember
          * @description One (code, label) pair of a state's value set.
          */
@@ -806,6 +932,32 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    build_mona_bundle_api_bundle_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": unknown;
+                };
+            };
+        };
+    };
     get_catalog_root_api_catalog_get: {
         parameters: {
             query?: never;
@@ -1095,6 +1247,58 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ContextResponse"];
+                };
+            };
+        };
+    };
+    order_project_api_project_order_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
+                };
+            };
+        };
+    };
+    validate_project_api_project_validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationResultModel"];
                 };
             };
         };

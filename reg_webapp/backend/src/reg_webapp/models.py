@@ -405,3 +405,40 @@ class VariantsResponse(BaseModel):
 
     register_name: str = Field(alias="register")
     variants: list[VariantModel]
+
+
+# ── A5.2b-ii write surface (§9.5) ───────────────────────────────────────────
+# `POST /api/project/validate` returns the §6.8.0 concatenated issue list. The
+# webapp wraps reg_schema's FROZEN `ValidationResult` / `ValidationIssue`
+# dataclasses (§9.6: reg_schema stays a dataclass — it's consumed cross-runtime
+# by the MONA bundle + the SPA — so the webapp Pydantic-wraps it 1:1, exactly
+# like the catalog node wrappers). This is the ONLY place reg_schema's
+# ValidationResult is re-modeled; the rest of the write surface (`/order`,
+# `/bundle`) takes `reg_schema.ProjectData` directly as the typed request body.
+
+
+class ValidationIssueModel(BaseModel):
+    """One §6.8.0 validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
+    ``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is
+    an RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document
+    issues); ``code`` is the stable, namespaced rule identifier the SPA maps to a
+    UI affordance."""
+
+    level: Literal["error", "warning", "info"]
+    code: str
+    path: str
+    message: str
+
+
+class ValidationResultModel(BaseModel):
+    """`POST /api/project/validate` response — the §6.8.0 concatenated issue list
+    (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
+
+    ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level
+    issue is present (warnings/info do not flip it). A validation FAILURE is a
+    SUCCESSFUL validation RESPONSE — this carries HTTP 200 with ``ok=false`` and
+    the issues; 4xx is reserved for a malformed request (bad JSON / oversized body
+    / wrong content-type), never for a spec that simply failed to validate."""
+
+    ok: bool
+    issues: list[ValidationIssueModel]

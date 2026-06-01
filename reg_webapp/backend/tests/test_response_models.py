@@ -1,7 +1,16 @@
-"""Every ``/api`` route declares a non-None ``response_model`` (§9.2).
+"""Every ``/api`` route declares a typed response contract (§9.2).
 
-Lint-enforced invariant: the SPA codegens TS types from the response models,
-so an endpoint without one is a typed-contract hole.
+Lint-enforced invariant: the SPA codegens TS types from the OpenAPI schema, so an
+endpoint without a typed contract is a hole.
+
+Two contract shapes are allowed:
+
+- a Pydantic ``response_model`` (the JSON endpoints), OR
+- a documented BINARY/DOWNLOAD media type (``/api/project/order`` → ``text/csv``,
+  ``/api/bundle`` → ``application/octet-stream``). These cannot declare a Pydantic
+  ``response_model`` (they return raw bytes), but they DO declare their media type
+  in the route's ``responses=`` so the OpenAPI contract (and the SPA codegen) sees
+  a download, not an untyped JSON body. This is the §9.5-sanctioned carve-out.
 """
 
 from __future__ import annotations
@@ -9,12 +18,45 @@ from __future__ import annotations
 from fastapi.routing import APIRoute
 from reg_webapp.app import create_app
 
+# The §9.5 binary/download endpoints: no Pydantic response_model (raw bytes), but
+# each MUST declare its download media type in OpenAPI instead. Pinned by path +
+# expected media type so a new download endpoint is a deliberate addition here.
+_DOWNLOAD_ENDPOINTS: dict[str, str] = {
+    "/api/project/order": "text/csv",
+    "/api/bundle": "application/octet-stream",
+}
 
-def test_every_api_route_has_response_model():
+
+def _api_routes() -> list[APIRoute]:
     app = create_app()
-    api_routes = [
+    routes = [
         r for r in app.routes if isinstance(r, APIRoute) and r.path.startswith("/api")
     ]
-    assert api_routes, "expected at least one /api route"
-    missing = [r.path for r in api_routes if r.response_model is None]
-    assert not missing, f"routes missing response_model: {missing}"
+    assert routes, "expected at least one /api route"
+    return routes
+
+
+def test_every_json_api_route_has_response_model():
+    """Every JSON ``/api`` route (i.e. not a documented download) declares a
+    Pydantic ``response_model``."""
+    missing = [
+        r.path
+        for r in _api_routes()
+        if r.path not in _DOWNLOAD_ENDPOINTS and r.response_model is None
+    ]
+    assert not missing, f"JSON routes missing response_model: {missing}"
+
+
+def test_download_endpoints_declare_their_media_type():
+    """The download carve-outs declare their media type in OpenAPI (a typed
+    contract for the SPA) — they don't silently fall back to ``application/json``."""
+    schema = create_app().openapi()
+    for path, media_type in _DOWNLOAD_ENDPOINTS.items():
+        content = schema["paths"][path]["post"]["responses"]["200"]["content"]
+        assert media_type in content, (
+            f"{path} should declare 200 content-type {media_type!r}, got "
+            f"{list(content)}"
+        )
+        assert "application/json" not in content, (
+            f"{path} is a download — it must not also advertise application/json"
+        )

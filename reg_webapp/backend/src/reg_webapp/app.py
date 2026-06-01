@@ -22,8 +22,13 @@ from fastapi import FastAPI
 from reg_meta.catalog import Catalog
 
 from . import __version__
+from .limits import (
+    RATE_LIMIT_PER_MINUTE,
+    BodySizeLimitMiddleware,
+    RateLimitMiddleware,
+)
 from .middleware import ETagMiddleware
-from .routes import catalog, context
+from .routes import bundle, catalog, context, project
 from .stewards import load_catalog_index, load_steward
 
 if TYPE_CHECKING:
@@ -77,12 +82,30 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-def create_app() -> FastAPI:
+def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI:
+    """Build the FastAPI app.
+
+    ``rate_limit_per_minute`` defaults to the §9.4 budget; it's a parameter ONLY
+    so tests that need to drive the write endpoints harder than 30 req/min (the
+    cross-thread concurrency smoke tests) can raise it without disabling the
+    middleware — the limiter is still IN the stack, just with a higher ceiling.
+    Production callers use the default."""
     app = FastAPI(title="reg_webapp", version=__version__, lifespan=lifespan)
-    # §9.4 read-cache: stamp ETag + Cache-Control on GET reads and serve 304 on a
-    # matching If-None-Match. Skips write endpoints (method gate, A5.2b). Added
-    # before the routers so it wraps every read response.
+    # Middleware ordering (Starlette executes add_middleware in REVERSE order —
+    # last-added runs OUTERMOST / first on the way in). §9.4 cost protection must
+    # gate a write BEFORE the handler reads the body, so the cap + limiter run
+    # outermost. Adding the rate limiter LAST puts it outermost (it rejects an
+    # over-budget IP before the body is even buffered); the body cap next (it
+    # streams + counts the body before the handler reads it); the ETag middleware
+    # innermost (GET/HEAD-only — writes pass through it untouched, confirmed in
+    # middleware.py: `_CACHEABLE_METHODS == {"GET"}`).
     app.add_middleware(ETagMiddleware)
+    app.add_middleware(BodySizeLimitMiddleware)
+    app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
     app.include_router(context.router)
     app.include_router(catalog.router)
+    # A5.2b-ii write surface: project validate/order + bundle build. The ETag
+    # middleware skips these (method gate); the cap + limiter gate them (§9.4).
+    app.include_router(project.router)
+    app.include_router(bundle.router)
     return app
