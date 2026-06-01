@@ -64,8 +64,11 @@ async def read_raw_json_object(request: Request) -> dict[str, Any]:
             status_code=400, detail="request body is nested too deeply"
         ) from exc
     except ValueError as exc:
-        # `_reject_duplicate_keys` raises ValueError (not JSONDecodeError) from
-        # inside json.loads on a duplicate key.
+        # Two malformed-body cases, both caught here as ValueError: the
+        # `_reject_duplicate_keys` duplicate-key ValueError (raised inside
+        # json.loads), AND a UnicodeDecodeError from invalid-UTF-8 bytes —
+        # `UnicodeDecodeError` IS a `ValueError` subclass (json.loads decodes the
+        # bytes before parsing), so this clause covers it. Both → 400.
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if not isinstance(parsed, dict):
         raise HTTPException(
