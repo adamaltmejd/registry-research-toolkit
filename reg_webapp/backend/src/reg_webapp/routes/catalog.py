@@ -441,7 +441,21 @@ def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
     """Parse a validated path into an Fqid, mapping a grammar/arity FqidError to
     422 (DB-free — runs before any connection opens). Used by the suffixed
     sub-endpoints, which only accept binding FQIDs (reg_meta's `_parse_binding`
-    raises the 422-mapped `not_a_binding_fqid` for a non-binding kind)."""
+    raises the 422-mapped `not_a_binding_fqid` for a non-binding kind).
+
+    A binding-leaf `@version` pin is REJECTED here (422): the suffixed endpoints
+    return the FULL state history / edge set and do NOT narrow by value-set-version,
+    so a pin would silently no-op — the same inert-modifier surface the catch-all
+    422s. Version-narrowing lives only on the catch-all leaf (`?period` + the
+    reconciled `?value_set_version`)."""
+    if validated.value_set_version is not None:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "an @version pin is not supported on this endpoint; value-set-version "
+                "narrowing is on the catalog leaf with ?period"
+            ),
+        )
     try:
         return parse(validated.fqid)
     except FqidError as exc:

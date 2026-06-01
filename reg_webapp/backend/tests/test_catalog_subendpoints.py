@@ -176,6 +176,19 @@ def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
     assert resp.status_code == 404
 
 
+@pytest.mark.parametrize(
+    "suffix",
+    ["states", "predecessors", "successors", "related", "lineage", "lineage_warnings"],
+)
+def test_subendpoint_rejects_at_version_pin(client, suffix: str):
+    # The suffixed endpoints return the FULL history / edge set and don't narrow by
+    # value-set-version. An @version pin in the FQID would be inert — so it 422s
+    # rather than silently returning unfiltered data (same as the catch-all 422ing
+    # a narrowing modifier without ?period).
+    resp = client.get(f"/api/catalog/{_KON}@v1/{suffix}")
+    assert resp.status_code == 422, f"{suffix} → {resp.status_code}"
+
+
 # ── The ?period query on the catch-all (the {states:[...]} shape) ────────────
 
 
