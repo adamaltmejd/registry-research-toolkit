@@ -19,11 +19,12 @@ from typing import TYPE_CHECKING
 
 import reg_meta.db
 from fastapi import FastAPI
+from reg_meta.catalog import Catalog
 
 from . import __version__
 from .middleware import ETagMiddleware
 from .routes import catalog, context
-from .stewards import load_steward
+from .stewards import load_catalog_index, load_steward
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -41,9 +42,23 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # the load-bearing SCHEMA_VERSION gate vs the DB manifest — an incompatible
     # major (or too-old minor) raises RegMetaError here, failing startup fast.
     db_path = reg_meta.db.db_path_from_args(None)
+    # Resolve the steward BEFORE opening the conn: load_steward raises on a
+    # misconfigured deployment, and doing it first means that raise can't leak the
+    # just-opened connection.
+    steward = load_steward()
     conn = reg_meta.db.open_db(db_path)
     try:
         manifest = reg_meta.db.get_manifest(conn)
+        # Build the §9.1 in-memory steward catalog index on the SAME boot
+        # connection, BEFORE it closes. Boot is single-threaded, so the
+        # per-request open-a-fresh-conn rule (which guards the sync-handler
+        # threadpool) does NOT apply here — reusing the boot conn is correct.
+        # A reg_meta-drift'd steward catalog still BOOTS: the steward-mode
+        # downgrade (§6.8.3) turns unresolved FQIDs into warnings, drops the
+        # affected bindings from the index, and surfaces the drift on
+        # /api/context — it does NOT crash startup. `None` for the global
+        # deployment (no filter, full universe).
+        catalog_index = load_catalog_index(steward, Catalog(conn))
     finally:
         conn.close()
     if missing := [key for key in _REQUIRED_MANIFEST_KEYS if key not in manifest]:
@@ -51,7 +66,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             f"reg_meta manifest at {db_path} missing key(s): {', '.join(missing)}"
         )
     app.state.manifest = manifest
-    app.state.steward = load_steward()
+    app.state.steward = steward
+    app.state.catalog_index = catalog_index
     # The catalog routes open a FRESH read-only connection PER REQUEST from this
     # boot-resolved path (the connection model is locked: a shared sqlite3 conn
     # isn't safe across FastAPI's sync-handler threadpool). The schema was
