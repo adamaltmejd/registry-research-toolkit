@@ -277,6 +277,49 @@ def test_extra_key_in_binding_raises_stewardcatalogerror(catalog, tmp_path):
         load_catalog_index(steward, catalog, root=stewards)
 
 
+def test_steward_catalog_with_unresolved_semantic_error_fails_fast(tmp_path):
+    """A steward catalog with a NON-downgraded semantic error (a bare
+    binding_value_set_version_ambiguous) is genuinely invalid: after the three
+    reg_meta-drift downgrades, result.ok is still False, so load_catalog_index fails
+    fast with StewardCatalogError rather than booting a catalog-with-errors as if
+    valid (which would admit the broken binding + never surface it)."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    # Two co-delivered (overlapping) value-set versions for kon under the variant →
+    # a bare binding is ambiguous (error, NOT one of the drift downgrades).
+    conn.execute(
+        "UPDATE variable_state SET value_set_version_label = 'sun2020' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        value_set_version_label="sun2000",
+    )
+    conn.commit()
+    stewards = tmp_path / "stewards"
+    ambiguous = [
+        {
+            "name": "lisa",
+            "register_variant": "scb/lisa/individer-15plus",
+            "period": 2018,
+            "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+        }
+    ]
+    _write_steward(stewards, "ifau", ambiguous)
+    steward = load_steward("ifau", root=stewards)
+    try:
+        with pytest.raises(StewardCatalogError, match="ambiguous"):
+            load_catalog_index(steward, Catalog(conn), root=stewards)
+    finally:
+        conn.close()
+
+
 def test_global_steward_has_no_index(catalog):
     steward = load_steward("global")
     assert not steward.has_catalog_filter

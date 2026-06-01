@@ -196,8 +196,20 @@ def load_catalog_index(
             f"failed model construction (an unrecognized or invalid field?): {exc}"
         ) from exc
 
-    # Steward-caller mode: reg_meta-backed misses downgrade error→warning so the
-    # deployment boots through drift. We read result.issues (the warnings),
-    # NOT just result.ok — a drift downgrade keeps ok=True while bindings drop.
+    # Steward-caller mode: the three §6.8.3 reg_meta-DRIFT codes downgrade
+    # error→warning so the deployment boots through reg_meta evolution (those
+    # bindings drop from the index + surface as drift; ok stays True). Any OTHER
+    # remaining error — e.g. a bare binding_value_set_version_ambiguous the steward
+    # must pin — means the committed catalog is genuinely INVALID: fail fast like a
+    # structural break (CLAUDE.md), don't boot a catalog-with-errors as if valid
+    # (that would admit the broken binding to the index and never surface it).
     result = validate_semantic(project, catalog, caller="steward")
+    if not result.ok:
+        errors = [i for i in result.issues if i.level == "error"]
+        raise StewardCatalogError(
+            f"{project_path}: steward catalog has unresolved semantic error(s) "
+            "after reg_meta-drift downgrades — fix the catalog (e.g. pin an "
+            "ambiguous binding's @<version>): "
+            + "; ".join(f"{i.code}@{i.path}" for i in errors)
+        )
     return build_catalog_index(project, result.issues)
