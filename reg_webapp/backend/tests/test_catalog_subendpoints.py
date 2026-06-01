@@ -272,6 +272,23 @@ def test_at_version_and_query_conflict_without_period_is_422(client):
     assert resp.status_code == 422
 
 
+@pytest.mark.parametrize(
+    "url",
+    [
+        f"/api/catalog/{_KON}@v1",  # @version pin, no ?period
+        f"/api/catalog/{_KON}?value_set_version=v1",  # ?value_set_version, no ?period
+        f"/api/catalog/{_KON}?variant=individer-15plus",  # ?variant, no ?period
+    ],
+)
+def test_narrowing_modifier_without_period_is_422(client, url: str):
+    # A narrowing modifier (@version / ?value_set_version / ?variant) is inert
+    # without ?period — it only takes effect inside resolve_at. Rather than
+    # silently no-op (return the full leaf as if the modifier were absent), the
+    # catch-all 422s "requires ?period" so the param never silently does nothing.
+    resp = client.get(url)
+    assert resp.status_code == 422, f"{url} → {resp.status_code}"
+
+
 # ── ETag / Cache-Control + 304 on every read endpoint ────────────────────────
 
 _READ_PATHS = [

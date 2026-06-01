@@ -649,8 +649,11 @@ def get_catalog_node(
     resolve_at subset, narrowed by `?variant` / `?value_set_version`; the leaf's
     `@version` pin reconciles with `?value_set_version` — equal/one-sided uses it,
     conflicting is 422). present + non-binding kind → IGNORED (resolve normally).
-    absent → the full node (binding leaf embeds full history). The connection is
-    opened and used within this sync body (one thread — see `_catalog_conn`).
+    absent on a binding leaf → the full node (full history) UNLESS a narrowing
+    modifier (`?variant` / `?value_set_version` / `@version`) is set: those are inert
+    without `?period`, so they 422 ("requires ?period") rather than silently no-op.
+    absent on a non-binding kind → the full node. The connection is opened and used
+    within this sync body (one thread — see `_catalog_conn`).
     """
     # §5.2: `class` (1 seg) is the classification-root sentinel — a reserved slug
     # `parse` rejects, so special-case it BEFORE parse. `class/<slug>` (2 seg)
@@ -674,17 +677,33 @@ def get_catalog_node(
     # A `?period` query on a binding leaf returns the resolve_at state subset
     # (uniform with `/states`), narrowed by `?variant` / the reconciled `vsv`. On
     # any other kind `?period` is IGNORED (§9.5).
-    if period is not None and parsed.kind is FqidKind.VARIABLE_BINDING:
-        with _catalog_conn(request) as conn:
-            try:
-                states = Catalog(conn).resolve_at(
-                    parsed, period, variant=variant, value_set_version=vsv
+    if parsed.kind is FqidKind.VARIABLE_BINDING:
+        if period is None:
+            # `?variant` / `?value_set_version` / the `@version` pin are MODIFIERS
+            # of the resolve_at narrowing — inert without `?period`. Require
+            # `?period` rather than silently no-op (the param narrows-or-422s
+            # everywhere else, so a silent no-op here is a surprising surface).
+            # Maintainer call: vsv/@version → 422; extended to `?variant` for the
+            # identical inert-modifier surface. 422s before the connection opens.
+            if vsv is not None or variant is not None:
+                raise HTTPException(
+                    status_code=422,
+                    detail=(
+                        "?variant, ?value_set_version, and the @version pin narrow "
+                        "the resolve_at state subset and require ?period"
+                    ),
                 )
-            except RegMetaError as exc:
-                _http_4xx_from_regmeta(exc)
-        return StatesResponse(
-            binding=str(parsed), states=[_state_model(s) for s in states]
-        )
+        else:
+            with _catalog_conn(request) as conn:
+                try:
+                    states = Catalog(conn).resolve_at(
+                        parsed, period, variant=variant, value_set_version=vsv
+                    )
+                except RegMetaError as exc:
+                    _http_4xx_from_regmeta(exc)
+            return StatesResponse(
+                binding=str(parsed), states=[_state_model(s) for s in states]
+            )
 
     with _catalog_conn(request) as conn:
         return _resolve_to_node(Catalog(conn), parsed)

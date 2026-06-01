@@ -160,12 +160,14 @@ def test_path_traversal_returns_422_with_zero_sql(catalog_db, probe: str):
 
 def test_at_version_positive_carveout_passes_gate(catalog_db):
     """The canonical pinned-binding URL `scb/lisa/naringsgren@sni2007` passes the
-    §16 gate (the `@version` pin is legal, not traversal). It then 404s because
-    that binding isn't in the fixture — but it reached resolution (SQL ran),
-    proving the GATE admitted it rather than 422'ing it."""
+    §16 gate (the `@version` pin is legal, not traversal). With `?period` (the
+    @version pin is a resolve_at modifier — inert, hence 422, without one) it
+    reaches resolution and 404s because that binding isn't in the fixture — but it
+    reached resolution (SQL ran), proving the GATE admitted it rather than 422'ing
+    it as malformed."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
         counter.reset()
-        resp = client.get("/api/catalog/scb/lisa/naringsgren@sni2007")
+        resp = client.get("/api/catalog/scb/lisa/naringsgren@sni2007?period=2020")
     # Not 422: the gate admitted the @version form. 404 because the binding is
     # absent from the fixture (resolution ran → SQL executed).
     assert resp.status_code == 404, (

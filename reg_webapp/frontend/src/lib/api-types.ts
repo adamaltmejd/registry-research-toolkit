@@ -48,8 +48,11 @@ export interface paths {
          *     resolve_at subset, narrowed by `?variant` / `?value_set_version`; the leaf's
          *     `@version` pin reconciles with `?value_set_version` — equal/one-sided uses it,
          *     conflicting is 422). present + non-binding kind → IGNORED (resolve normally).
-         *     absent → the full node (binding leaf embeds full history). The connection is
-         *     opened and used within this sync body (one thread — see `_catalog_conn`).
+         *     absent on a binding leaf → the full node (full history) UNLESS a narrowing
+         *     modifier (`?variant` / `?value_set_version` / `@version`) is set: those are inert
+         *     without `?period`, so they 422 ("requires ?period") rather than silently no-op.
+         *     absent on a non-binding kind → the full node. The connection is opened and used
+         *     within this sync body (one thread — see `_catalog_conn`).
          */
         get: operations["get_catalog_node_api_catalog__fqid__get"];
         put?: never;
@@ -252,9 +255,12 @@ export interface components {
          *     `same_as` / `replaced_by` / `related_to` / `lineage` edges.
          *
          *     `lineage_warnings` are intentionally OMITTED — `ResolvedVariable` doesn't
-         *     carry them; they arrive via A5.2's `/lineage_warnings` endpoint. `@version`
-         *     pin narrowing is also A5.2 (`?value_set_version`); this leaf embeds the full
-         *     history regardless of any `@version` suffix in the URL.
+         *     carry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node
+         *     shape is the binding leaf with NO narrowing query: a `?period` resolves via
+         *     `resolve_at` (→ `StatesResponse`) instead, and a narrowing modifier (`?variant`
+         *     / `?value_set_version` / an `@version` pin) WITHOUT `?period` is a 422 — it is
+         *     inert without a period, so it errors rather than silently embedding full
+         *     history.
          */
         BindingNode: {
             /** Definition */
