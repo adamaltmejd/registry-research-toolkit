@@ -14,6 +14,7 @@ from reg_meta.catalog import (
     Catalog,
     ProviderSummary,
     RegisterSummary,
+    VariantSummary,
 )
 from reg_meta.fqid import FqidKind
 
@@ -141,3 +142,59 @@ def test_listing_roundtrips_into_resolve() -> None:
             assert cat.resolve(reg.fqid).fqid == reg.fqid
             for binding in cat.list_bindings(prov.fqid.provider, reg.fqid.register):
                 assert cat.resolve(binding.fqid).fqid == binding.fqid
+
+
+def _variants_catalog() -> Catalog:
+    """scb/rams with three register_variants (slug out-of-order + a NULL-slug one,
+    to prove ordering + exclusion). Seeded via raw SQL because the `_slugged_db`
+    `add_variant` helper sets only slug+name, not description/display_group."""
+    conn = build_slugged_db()  # scb/lisa + its default variant
+    add_register(conn, register_id=2, slug="rams", name="RAMS")
+    conn.executemany(
+        "INSERT INTO register_variant "
+        "(register_variant_id, register_id, slug, name, description, display_group) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        [
+            (21, 2, "standard", "Standard", "the standard delivery", "Surveys"),
+            (22, 2, "extended", "Extended", None, None),
+            (23, 2, None, "Unslugged", None, None),
+        ],
+    )
+    conn.commit()
+    return Catalog(conn)
+
+
+class TestListVariants:
+    def test_lists_register_variants_slug_ordered(self) -> None:
+        variants = _variants_catalog().list_variants("scb", "rams")
+        assert [v.slug for v in variants] == ["extended", "standard"]
+        assert all(isinstance(v, VariantSummary) for v in variants)
+
+    def test_carries_name_description_display_group(self) -> None:
+        std = next(
+            v
+            for v in _variants_catalog().list_variants("scb", "rams")
+            if v.slug == "standard"
+        )
+        assert std.name == "Standard"
+        assert std.description == "the standard delivery"
+        assert std.display_group == "Surveys"
+
+    def test_nullable_fields_pass_through_as_none(self) -> None:
+        ext = next(
+            v
+            for v in _variants_catalog().list_variants("scb", "rams")
+            if v.slug == "extended"
+        )
+        assert ext.description is None
+        assert ext.display_group is None
+
+    def test_excludes_null_slug_variants(self) -> None:
+        # rams has 3 register_variants but only 2 are slugged/browse-addressable.
+        assert len(_variants_catalog().list_variants("scb", "rams")) == 2
+
+    def test_unknown_register_is_empty(self) -> None:
+        assert _variants_catalog().list_variants("scb", "nope") == []
+
+    def test_unknown_provider_is_empty(self) -> None:
+        assert _variants_catalog().list_variants("nope", "rams") == []

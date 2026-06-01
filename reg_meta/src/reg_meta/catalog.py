@@ -83,6 +83,20 @@ class BindingSummary:
     name: str | None
 
 
+# A2.5b variant-browser shape (§9.5): a variant is a register sub-resource, NOT
+# an FQID-addressable node (the variant left the binding FQID, §5.0.1), so this
+# carries the variant `slug` (the `?variant=` browse coordinate) + display fields,
+# not an `Fqid`. The §9.5-specced `panel_entity_key`/`panel_time_key`/
+# `panel_time_grain` are NOT here: those columns don't exist on `register_variant`
+# yet (they arrive with the A4.4 panel_template curation), and A5 ships no DDL.
+@dataclass(frozen=True)
+class VariantSummary:
+    slug: str
+    name: str | None
+    description: str | None
+    display_group: str | None
+
+
 # §5.10 / §6.2: the polymorphic period a caller passes to `resolve_at`. Mirrors
 # `Source.period`: a bare year (int), a period token ("HT2020"/"2020-Q3"/
 # "2020-08"/"2018-12-31"), an explicit range dict {"from", "to"} (endpoints are
@@ -394,6 +408,35 @@ class Catalog:
             BindingSummary(
                 fqid=Fqid.binding_fqid(provider_slug, register_slug, r["slug"]),
                 name=r["name"],
+            )
+            for r in rows
+        ]
+
+    def list_variants(
+        self, provider_slug: str, register_slug: str
+    ) -> list[VariantSummary]:
+        """A register's variants — the `register_variant` sub-resource (the
+        `?variant=` browse axis, §9.5) — ordered by slug. A variant with a NULL
+        slug isn't browse-addressable, so it's excluded (symmetric with
+        `list_bindings`). Empty when the (provider, register) pair names no
+        register OR it has no slugged variants. (`_default` is a real variant
+        slug — the synthesized variant for LSS/BU/SOL etc., §5.1 — so it is
+        returned, not filtered.)"""
+        rows = self._conn.execute(
+            "SELECT rv.slug, rv.name, rv.description, rv.display_group "
+            "FROM register_variant rv "
+            "JOIN register r ON rv.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND rv.slug IS NOT NULL "
+            "ORDER BY rv.slug",
+            (provider_slug, register_slug),
+        ).fetchall()
+        return [
+            VariantSummary(
+                slug=r["slug"],
+                name=r["name"],
+                description=r["description"],
+                display_group=r["display_group"],
             )
             for r in rows
         ]
