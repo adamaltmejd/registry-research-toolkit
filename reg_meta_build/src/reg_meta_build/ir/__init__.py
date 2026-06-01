@@ -244,6 +244,12 @@ class IRDeliveryProvenance(_IRBase):
     # For SCB: maps period_token → last-approval date (registerversion_
     # senastgodkanddatum).
     last_approval_dates: dict[str, str] | None = None
+    # When the approval-token union is empty, still emit one bare-token
+    # delivery_approval row so the variant's delivery metadata is recorded.
+    # SCB leaves this False (empty dicts → zero rows, the A4.2 behavior); SOS
+    # carries no approval tokens and sets it True. Keeps the materializer
+    # provider-blind — no `provider == ...` branch at the write site.
+    emit_when_no_tokens: bool = False
 
 
 __all__ = [

@@ -52,6 +52,9 @@ from typing import TYPE_CHECKING, Literal
 
 from reg_meta.db import open_db
 
+from reg_meta_build.db import PROVIDER_ID_SCB, PROVIDER_ID_SOS
+from reg_meta_build.id import _MINT_BIT
+
 if TYPE_CHECKING:
     import sqlite3
 
@@ -135,6 +138,10 @@ def validate_built_db(db_path: Path) -> ValidationResult:
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_variable_alias_covers_state_columns(conn, result, tables)
+        _check_minted_id_bands(conn, result, tables)
+        _check_sos_code_variable_map_coverage(conn, result, tables, has_projection)
+        _check_sos_sanity(conn, result, tables)
+        _check_sos_stateless_variables(conn, result, tables)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -409,6 +416,230 @@ def _check_variable_alias_covers_state_columns(
         )
     else:
         result.ok("all variable_state delivery columns present in variable_alias")
+
+
+def _check_minted_id_bands(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """A4.3b: every SOS-provider id (register -> ... -> variable_state) is in the
+    minted band [2^62, 2^63); every SCB-provider id is below 2^62.
+
+    Catches a SOS adapter that forgot to `mint()` (its id would land in the SCB
+    low band and risk an id collision) and, symmetrically, an SCB id that
+    overflowed into the minted band. value_set/value_code/code_variable_map.code_id
+    are EXCLUDED — they are content-addressed, autoincrement, PROVIDER-SHARED, so
+    they belong to neither band. Self-skips when no SOS rows are present (the
+    SCB-only fixture / `--providers=scb` build), so it only bites on a combined
+    build.
+    """
+    result.section("[bands: minted-id disjointness]")
+    if "register" not in tables:
+        result.ok("register table absent — band check skipped")
+        return
+    # Per-grain id extrema joined to the owning provider. Each tuple:
+    # (label, SQL selecting that grain's id + provider_id).
+    grains = [
+        ("register", "SELECT register_id AS id, provider_id FROM register"),
+        (
+            "register_variant",
+            "SELECT rv.register_variant_id AS id, r.provider_id "
+            "FROM register_variant rv JOIN register r USING (register_id)",
+        ),
+        (
+            "variable",
+            "SELECT v.variable_id AS id, r.provider_id "
+            "FROM variable v JOIN register r USING (register_id)",
+        ),
+        (
+            "variable_state",
+            "SELECT vs.state_id AS id, r.provider_id "
+            "FROM variable_state vs JOIN variable v USING (variable_id) "
+            "JOIN register r USING (register_id)",
+        ),
+    ]
+    failures = 0
+    n_sos = 0
+    for label, sql in grains:
+        # SCB ids must be < 2^62.
+        bad_scb = conn.execute(
+            f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id >= ?",
+            (PROVIDER_ID_SCB, _MINT_BIT),
+        ).fetchone()[0]
+        # SOS ids must be >= 2^62.
+        bad_sos = conn.execute(
+            f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id < ?",
+            (PROVIDER_ID_SOS, _MINT_BIT),
+        ).fetchone()[0]
+        n_sos += conn.execute(
+            f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ?",
+            (PROVIDER_ID_SOS,),
+        ).fetchone()[0]
+        if bad_scb:
+            result.fail(
+                f"{bad_scb} {label} SCB id(s) overflow the minted band (>= 2^62)"
+            )
+            failures += 1
+        if bad_sos:
+            result.fail(
+                f"{bad_sos} {label} SOS id(s) below the minted band (< 2^62) — "
+                "un-minted?"
+            )
+            failures += 1
+    if failures == 0:
+        if n_sos == 0:
+            result.ok("no SOS rows — minted-id band check trivially holds")
+        else:
+            result.ok("all SCB ids < 2^62 and all SOS ids >= 2^62")
+
+
+def _check_sos_code_variable_map_coverage(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    has_projection: bool,
+) -> None:
+    """A4.3b: every code-bearing SOS variable_state has its (variable_id, code_id)
+    in code_variable_map.
+
+    The A4.3a SCB coverage guard (db.py) reads SCB scratch (`variable_instance`),
+    which SOS has none of, and the dbdiff can't see SOS (not in the baseline). So
+    this is the ONLY coverage signal for SOS: the universal-table analog — every
+    (variable_id, code_id) reachable via `variable_state ⨝ value_set_member` for a
+    SOS variable must be present in `code_variable_map`. Self-skips when SOS / the
+    value tables are absent.
+    """
+    result.section("[coverage: SOS code_variable_map]")
+    needed = {"variable_state", "value_set_member", "code_variable_map", "register"}
+    if not has_projection or not needed.issubset(tables):
+        result.ok("SOS coverage tables absent — check skipped")
+        return
+    lost = conn.execute(
+        "SELECT vs.variable_id, vsm.code_id "
+        "FROM variable_state vs "
+        "JOIN variable v ON v.variable_id = vs.variable_id "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN value_set_member vsm ON vsm.value_set_id = vs.value_set_id "
+        "WHERE r.provider_id = ? AND vs.value_set_id IS NOT NULL "
+        "EXCEPT SELECT variable_id, code_id FROM code_variable_map "
+        "LIMIT 5",
+        (PROVIDER_ID_SOS,),
+    ).fetchall()
+    if lost:
+        sample = ", ".join(f"(var {r[0]}, code {r[1]})" for r in lost)
+        result.fail(
+            f"{len(lost)}+ SOS (variable_id, code_id) pair(s) missing from "
+            f"code_variable_map: {sample}"
+        )
+    else:
+        n_sos_states = conn.execute(
+            "SELECT COUNT(*) FROM variable_state vs "
+            "JOIN variable v USING (variable_id) "
+            "JOIN register r USING (register_id) "
+            "WHERE r.provider_id = ? AND vs.value_set_id IS NOT NULL",
+            (PROVIDER_ID_SOS,),
+        ).fetchone()[0]
+        if n_sos_states == 0:
+            result.ok("no code-bearing SOS states — coverage trivially holds")
+        else:
+            result.ok(
+                f"all {n_sos_states:,} code-bearing SOS states covered by "
+                "code_variable_map"
+            )
+
+
+# A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by
+# (register, name)) to ~1,730 distinct variables — the spec's "~2,300" counts the
+# PRE-merge (deldatamängd, name) occurrences (2,314); after the Model A
+# register-scoped merge the variable grain is ~1,730 (+2 for the two known
+# splits). Lower bounds are generous so a workbook drift doesn't false-fail.
+_SOS_MIN_REGISTERS = 13
+_SOS_MIN_VARIABLES = 1_400
+
+
+def _check_sos_sanity(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """A4.3b: the combined build carries the expected SOS volume (>= 13 registers,
+    a variable count in the post-merge band). Self-skips when no SOS rows are
+    present (SCB-only build)."""
+    result.section("[sanity: SOS volume]")
+    if "register" not in tables or "variable" not in tables:
+        result.ok("register/variable absent — SOS sanity skipped")
+        return
+    n_reg = conn.execute(
+        "SELECT COUNT(*) FROM register WHERE provider_id = ?", (PROVIDER_ID_SOS,)
+    ).fetchone()[0]
+    if n_reg == 0:
+        result.ok("no SOS registers — SOS sanity skipped (SCB-only build)")
+        return
+    n_var = conn.execute(
+        "SELECT COUNT(*) FROM variable v JOIN register r USING (register_id) "
+        "WHERE r.provider_id = ?",
+        (PROVIDER_ID_SOS,),
+    ).fetchone()[0]
+    if n_reg >= _SOS_MIN_REGISTERS:
+        result.ok(f"{n_reg} SOS registers (>= {_SOS_MIN_REGISTERS})")
+    else:
+        result.fail(f"only {n_reg} SOS registers (< {_SOS_MIN_REGISTERS})")
+    if n_var >= _SOS_MIN_VARIABLES:
+        result.ok(f"{n_var:,} SOS variables (>= {_SOS_MIN_VARIABLES:,})")
+    else:
+        result.fail(f"only {n_var:,} SOS variables (< {_SOS_MIN_VARIABLES:,})")
+
+
+def _check_sos_stateless_variables(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """A4.3b P2#1: surface SOS variables with ZERO variable_state rows (and the
+    registers left entirely state-less).
+
+    WARN-ONLY — this is an `info` line, never a `fail`. A state-less variable is
+    a known A4.3b gap: variable-sheet deldatamängd tokens with no Deldatamängder
+    row (LOVA/LVM) drop every member's state (the adapter emits
+    `sos_deldatamangd_unresolved`); the code->variant mapping is A4.4 curation.
+    The build must still ship, so this never gates. Self-skips when no SOS rows
+    are present (SCB-only build)."""
+    result.section("[warn: SOS state-less variables]")
+    if "variable" not in tables or "variable_state" not in tables:
+        result.ok("variable/variable_state absent — SOS state-less check skipped")
+        return
+    n_sos_var = conn.execute(
+        "SELECT COUNT(*) FROM variable v JOIN register r USING (register_id) "
+        "WHERE r.provider_id = ?",
+        (PROVIDER_ID_SOS,),
+    ).fetchone()[0]
+    if n_sos_var == 0:
+        result.ok("no SOS variables — state-less check skipped (SCB-only build)")
+        return
+    n_stateless = conn.execute(
+        "SELECT COUNT(*) FROM variable v JOIN register r USING (register_id) "
+        "WHERE r.provider_id = ? "
+        "AND NOT EXISTS (SELECT 1 FROM variable_state vs "
+        "WHERE vs.variable_id = v.variable_id)",
+        (PROVIDER_ID_SOS,),
+    ).fetchone()[0]
+    if n_stateless == 0:
+        result.ok(f"all {n_sos_var:,} SOS variables have >= 1 variable_state")
+        return
+    # WARN: list it, but do NOT fail the gate.
+    result.info(
+        f"{n_stateless:,} of {n_sos_var:,} SOS variables have ZERO variable_state "
+        "rows (A4.3b gap — A4.4 curation, see sos_deldatamangd_unresolved)"
+    )
+    empty_regs = conn.execute(
+        "SELECT r.name FROM register r WHERE r.provider_id = ? "
+        "AND NOT EXISTS (SELECT 1 FROM variable v "
+        "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+        "WHERE v.register_id = r.register_id) "
+        "ORDER BY r.name",
+        (PROVIDER_ID_SOS,),
+    ).fetchall()
+    if empty_regs:
+        names = ", ".join(r[0] for r in empty_regs)
+        result.info(
+            f"{len(empty_regs)} SOS register(s) with ZERO states across all "
+            f"variables: {names}"
+        )
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

@@ -41,6 +41,7 @@ from reg_meta.queries import extract_year
 # allowlists + the SCB provider id stay in `db.py` (used by the materializer
 # too); import them rather than duplicate.
 from reg_meta_build.db import (
+    _VALID_FROM_UNKNOWN,
     _VALID_TO_SENTINEL,
     _VARDEMANGDER_REAL_SHAPED,
     _VARDEMANGDER_SENTINELS,
@@ -525,11 +526,9 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
 # Expansion rules are deterministic — year N → first day Jan / last day Dec.
 # Open-ended (no upper bound observable) → the universal variable_state.valid_to
 # DDL sentinel (single source of truth: db._VALID_TO_SENTINEL).
+# `_VALID_FROM_UNKNOWN` (db) is the symmetric lower-bound sentinel, used when no
+# year is derivable from any signal (yearless cvids like "Person-År").
 _VALID_TO_OPEN_SENTINEL = _VALID_TO_SENTINEL
-# Lower bound when no year is derivable from any signal (yearless cvids
-# like "Person-År" with no unika_summary backing). Picked to sort before
-# any real date so range queries treat the row as "valid since forever".
-_VALID_FROM_UNKNOWN = "0001-01-01"
 
 
 def _year_to_iso_from(year: int | None) -> str | None:
@@ -1566,16 +1565,14 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
         batch,
     )
 
-    # §5.1 state-uniqueness index (deferred from A2.1.5 — see the DDL note on
-    # variable_state). Created here, after triage has folded/split/collapsed
-    # every same-year multi-shape collision, so the 4-tuple is now unique. A
-    # CREATE that raises here means triage left a residual collision — a build
-    # bug, surfaced loudly rather than shipped.
-    conn.execute(
-        "CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state("
-        "variable_id, register_variant_id, valid_from, value_set_version_label)"
-    )
-
+    # §5.1 state-uniqueness index — UNIQUE(variable_id, register_variant_id,
+    # valid_from, value_set_version_label). A4.3b moved its CREATE into the
+    # universal DDL (db.py), so it already exists when this post-triage INSERT
+    # runs: an INSERT collision raises here (the same loud failure the old
+    # in-place CREATE provided), surfacing a residual triage collision as a build
+    # bug rather than shipping it. The index is provider-blind now — SOS's
+    # `_reinsert_core_graph_from_ir` gets the same guarantee with no per-adapter
+    # CREATE.
     state_count = conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0]
     _progress(
         f"  {state_count:,} variable_state rows "

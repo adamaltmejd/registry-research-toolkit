@@ -152,6 +152,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "DB. Fails with EXIT_CONFIG on any violation."
         ),
     )
+    build_p.add_argument(
+        "--providers",
+        default="scb,sos",
+        help=(
+            "Comma-separated provider adapters to build (default: scb,sos). "
+            "`--providers scb` reproduces the byte-identical SCB-only DB (the "
+            "A4.3b dbdiff gate); SOS is purely additive."
+        ),
+    )
 
     build_docs_p = sub.add_parser(
         "build-docs",
@@ -306,12 +315,15 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db_dir = Path(args.db) if args.db else default_db_dir()
     slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
 
+    providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
+
     pre_rename_hook = _build_validate_hook() if args.validate else None
     result = build_db(
         input_dir=Path(args.input_dir),
         db_dir=db_dir,
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
+        providers=providers,
         pre_rename_hook=pre_rename_hook,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
@@ -321,6 +333,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "input_dir": args.input_dir,
             "skip_slugs": args.skip_slugs,
             "validate": args.validate,
+            "providers": list(providers),
         },
         db_info={
             "schema_version": SCHEMA_VERSION,

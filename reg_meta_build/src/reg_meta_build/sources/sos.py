@@ -21,6 +21,7 @@ Microsoft Office lock files and are rejected up front.
 
 from __future__ import annotations
 
+import calendar
 import re
 import zipfile
 from dataclasses import dataclass, field
@@ -30,6 +31,8 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
+
+    from reg_meta_build.sources import IRObject
 
 # ---------------------------------------------------------------------------
 # Output types
@@ -763,3 +766,930 @@ def _parse_quality_sheet(ws: Any) -> SosQualitySheet:
     for row in _row_iter(ws):
         rows.append(tuple(row))
     return SosQualitySheet(sheet_name=ws.title, rows=tuple(rows))
+
+
+# ---------------------------------------------------------------------------
+# SOSAdapter (A4.3b) — Socialstyrelsen on the Model A materializer
+# ---------------------------------------------------------------------------
+#
+# The adapter turns the parser's `SosRegister` trees into the provider-neutral
+# IR stream the materializer (`reg_meta_build.db`) consumes. It is PURELY
+# ADDITIVE: every `*_id` is hash-`mint()`ed into the `[2^62, 2^63)` band
+# (disjoint from SCB's source-derived low band), and value_sets content-SHARE
+# SCB's rows by member_hash (no minting). A `--providers=scb` build never
+# instantiates this adapter, so the SCB-only DB stays byte-identical.
+#
+# R4 (verified against the live 13 workbooks at
+# `reg_meta_build/input_data/Socialstyrelsen/`):
+#   - <abbrev>: the parenthesized code in the workbook filename stem
+#     ("Metadata ... (LMED)_webb.xlsx" -> "LMED"), lowercased to the mint token
+#     "lmed". All 13 derive a unique uppercase code; lowercasing matches the
+#     provider-slug convention and keeps the allow-list keys readable.
+#   - SPLIT allow-list keys (register_abbrev, var.name) — the two known
+#     same-name conflicts with a clean structured seam, both data_type-only
+#     (no codelist), so they split on normalized data_type:
+#       ("bu", "FOD_DATUMN")  Datum vs Heltal   (Insatser till barn och unga)
+#       ("par", "ATC")        Sträng (text) vs Heltal (Patientregistret)
+#     Every OTHER same-name conflict (BU AVSLDAT/BESLDAT/..., PAR ATCO/FODDAT/...)
+#     is NOT allow-listed -> warn-merge (fail-soft).
+#   - MFR entity-registry key (register_abbrev, SosKodlista.variable_hint):
+#       ("mfr", "IVF_klinik")  (Medicinska födelseregistret) — 19 codes each
+#     bound to ONE of 15 tidsperiods -> collapse to one state + per-code
+#     valid_from/to. variable_hint preserves the sheet-suffix case ("IVF_klinik")
+#     while the variable name is "IVF_KLINIK"; hint->variable match is
+#     case-insensitive.
+
+# A4.3b imports the IR contract + shared hashing/mint/IO infra from the build
+# core. Safe against the db<->sources cycle: `db.py` imports the SOS adapter
+# only function-locally (in `build_db`), never at module top.
+from reg_meta_build.db import (  # noqa: E402
+    _VALID_FROM_UNKNOWN,
+    _file_sha256,
+    _value_set_hash,
+)
+from reg_meta_build.id import mint  # noqa: E402
+from reg_meta_build.ir import (  # noqa: E402
+    IRDeliveryProvenance,
+    IRRegister,
+    IRValueCode,
+    IRVariable,
+    IRVariableAlias,
+    IRVariableState,
+    IRVariant,
+    IRWarning,
+)
+
+# (register_abbrev, var.name) groups that auto-SPLIT into disjoint siblings.
+# Fail-soft: only these known conflicts split; any other same-name conflict
+# warn-merges (see SOSAdapter._resolve_variable_group). R4-verified above.
+KNOWN_SPLIT_ALLOWLIST: frozenset[tuple[str, str]] = frozenset(
+    {("bu", "FOD_DATUMN"), ("par", "ATC")}
+)
+
+# (register_abbrev, SosKodlista.variable_hint) kodlistor that are ENTITY
+# REGISTRIES (a stable directory whose entries each have their own active
+# window), not value-set drift. Collapse to ONE state with per-code
+# valid_from/to instead of one state per tidsperiod. R4-verified above.
+ENTITY_REGISTRY_KODLISTOR: frozenset[tuple[str, str]] = frozenset(
+    {("mfr", "IVF_klinik")}
+)
+
+# Slug stem for the synthesized variant of variant-less registers (LSS/BU/SOL).
+_DEFAULT_VARIANT = "_default"
+
+_FILENAME_ABBREV_RE = re.compile(r"\(([A-Za-zÅÄÖåäö0-9_]{2,10})\)")
+
+
+def _sos_abbrev(reg: SosRegister) -> str:
+    """The stable short token for `mint("sos", <abbrev>, …)`.
+
+    Sourced from the parenthesized code in the workbook FILENAME stem
+    ("...(LMED)_webb.xlsx" -> "lmed"); R4-verified unique across all 13
+    workbooks. Lowercased so the mint token and the allow-list keys share one
+    casing convention. Falls back to a normalized `dataset_name` only if the
+    filename carries no parenthesized code (none of the 13 deliveries hit the
+    fallback) — keeps the build from minting a register id off an empty token.
+    """
+    m = _FILENAME_ABBREV_RE.search(reg.source_file.stem)
+    if m:
+        return m.group(1).lower()
+    base = (reg.dataset_name or reg.source_file.stem).strip().lower()
+    return re.sub(r"[^a-z0-9]+", "_", base).strip("_") or "sos_register"
+
+
+def _norm_data_type(dt: str | None) -> str | None:
+    """Lowercase/trim the SOS `Datatyp` to the canonical comparison form.
+
+    Used both as the split-seam discriminator and to mirror the nullable
+    `variable_state.data_type` column. SOS labels are Swedish free text
+    ("Datum", "Heltal", "Sträng (text)"); identity is by normalized string.
+    """
+    if dt is None:
+        return None
+    s = dt.strip().lower()
+    return s or None
+
+
+def _shape_signature(group: list[SosVariable], codes: tuple[str, ...]) -> str:
+    """Stable shape-derived discriminator for a split sibling (NOT a counter).
+
+    Combines the normalized data_type with a hash of the sorted code-set so
+    rebuilds mint byte-identical sibling ids. The known SOS splits are
+    data_type-only (empty code-set), so data_type alone discriminates them; the
+    code-set component future-proofs a disjoint-codelist split.
+    """
+    dts = sorted({_norm_data_type(v.data_type) or "" for v in group})
+    h = _value_set_hash([(c, "") for c in codes]) if codes else b""
+    return "|".join(dts) + ":" + h.hex()[:16]
+
+
+def _parse_tidsperiod(tp: str | None) -> tuple[str | None, str | None]:
+    """Parse a SOS `Tidsperiod` token into ISO 8601 [from, to] bounds.
+
+    Forms (consumed verbatim from the parser's forward-filled value):
+      "YYYY-YYYY" -> [YYYY-01-01, YYYY-12-31]
+      "YYYY-"     -> [YYYY-01-01, None]   (open-ended)
+      "YYYY"      -> [YYYY-01-01, YYYY-12-31]
+      None / unparseable -> (None, None)  (unbounded; caller falls back to
+                                            deldatamängd / variable era)
+    """
+    if tp is None:
+        return None, None
+    s = tp.strip()
+    m = re.fullmatch(r"(\d{4})\s*-\s*(\d{4})", s)
+    if m:
+        return f"{m.group(1)}-01-01", f"{m.group(2)}-12-31"
+    m = re.fullmatch(r"(\d{4})\s*-\s*", s)
+    if m:
+        return f"{m.group(1)}-01-01", None
+    m = re.fullmatch(r"(\d{4})", s)
+    if m:
+        return f"{m.group(1)}-01-01", f"{m.group(1)}-12-31"
+    return None, None
+
+
+def _iso_bound(value: int | None, *, end: bool) -> str | None:
+    """Normalize a SOS `data_från`/`data_till` int to a full ISO date.
+
+    SOS deldatamängd/variable date bounds arrive in three shapes (R4-verified):
+    `YYYY` (4 digits), `YYYYMM` (6), `YYYYMMDD` (8). Expand the coarse forms to a
+    full-date range bound (the `variable_state` CHECK requires length-10 ISO):
+      4 digits: from -> YYYY-01-01, to -> YYYY-12-31
+      6 digits: from -> YYYY-MM-01, to -> YYYY-MM-<last-day>
+      8 digits: exact YYYY-MM-DD (both ends)
+    Returns ``None`` for ``None`` or an unrecognized shape (treated as unbounded).
+    """
+    if value is None:
+        return None
+    s = str(value)
+    if len(s) == 4 and s.isdigit():
+        return f"{s}-12-31" if end else f"{s}-01-01"
+    if len(s) == 6 and s.isdigit():
+        year, month = int(s[:4]), int(s[4:6])
+        if not (1 <= month <= 12):
+            return None
+        if end:
+            last = calendar.monthrange(year, month)[1]
+            return f"{year:04d}-{month:02d}-{last:02d}"
+        return f"{year:04d}-{month:02d}-01"
+    if len(s) == 8 and s.isdigit():
+        year, month, day = int(s[:4]), int(s[4:6]), int(s[6:8])
+        if not (1 <= month <= 12 and 1 <= day <= 31):
+            return None
+        return f"{year:04d}-{month:02d}-{day:02d}"
+    return None
+
+
+def _intersect_window(
+    bounds: list[tuple[str | None, str | None]],
+) -> tuple[str | None, str | None] | None:
+    """3-way validity intersection: [max(froms) .. min(tos)] over the given
+    (from, to) bounds. ``None`` froms are -inf, ``None`` tos are +inf. Returns
+    the intersected (from, to), or ``None`` if the window is empty (from > to).
+    The full-date contract makes ISO strings lexically == chronologically
+    comparable.
+    """
+    lo: str | None = None
+    for f, _t in bounds:
+        if f is not None and (lo is None or f > lo):
+            lo = f
+    hi: str | None = None
+    for _f, t in bounds:
+        if t is not None and (hi is None or t < hi):
+            hi = t
+    if lo is not None and hi is not None and lo > hi:
+        return None
+    return lo, hi
+
+
+def _intersect_advisory_deldat(
+    authoritative: list[tuple[str | None, str | None]],
+    deldat: tuple[str | None, str | None],
+) -> tuple[tuple[str | None, str | None] | None, bool]:
+    """P2#2: intersect ``authoritative`` (the variable window + any code window)
+    with the ADVISORY deldatamängd coarse window ``deldat``.
+
+    The deldatamängd data_from/to is an advisory coarse bound; the VARIABLE (and
+    code, for code-bearing states) window is authoritative. If including the
+    deldat bound makes the window empty BUT the authoritative bounds alone are
+    non-empty, DROP the deldat bound and keep the authoritative window. The code
+    tidsperiod (folded into ``authoritative`` by the caller) stays a real bound —
+    only the deldat bound is the one that yields.
+
+    Returns ``(window, deldat_dropped)``: ``window`` is ``None`` only when the
+    authoritative bounds alone are empty (a genuine empty state, dropped as
+    before); ``deldat_dropped`` is ``True`` when the deldat bound was contradicted
+    and discarded (the caller emits an IRWarning).
+    """
+    full = _intersect_window([*authoritative, deldat])
+    if full is not None:
+        return full, False
+    # deldat made it empty — fall back to the authoritative window alone.
+    auth = _intersect_window(authoritative)
+    if auth is None:
+        return None, False  # genuinely empty even without deldat
+    return auth, True
+
+
+class SOSAdapter:
+    """Socialstyrelsen source adapter (IRAdapter).
+
+    `emit(source_dir)` parses every `.xlsx` under ``source_dir`` (the
+    `Socialstyrelsen/` directory) into `SosRegister` trees and yields the
+    provider-neutral IR stream the materializer consumes. PURELY ADDITIVE:
+    `mint()`ed ids (band `[2^62, 2^63)`), content-shared value_sets.
+
+    Mirrors the `SCBAdapter` attribute surface `materialize()` reads:
+      - `source_checksums`, `row_counts` — manifest inputs.
+      - `coalesce_stats` — minimal SOS analog (`{}` shape ok).
+      - `fold_slug_hints` — SOS folds are rare; left empty.
+      - `related_edges` — split-sibling (variable_id, variable_id, kind) triples
+        the materializer resolves to FQID slugs after slugs exist.
+    """
+
+    provider = "sos"
+
+    def __init__(self, conn: Any) -> None:
+        # The connection is bound for API parity with SCBAdapter and so SOS can
+        # consult/dedup value tables (INSERT OR IGNORE + read-back) against the
+        # rows SCB already wrote. SOS writes NO build-scratch.
+        self.conn = conn
+        self.source_checksums: dict[str, str] = {}
+        self.row_counts: dict[str, int] = {}
+        self.coalesce_stats: dict[str, Any] = {}
+        self.fold_slug_hints: dict[int, str] = {}
+        self.related_edges: list[tuple[int, int, str]] = []
+        # Content-share cache: member_hash -> value_set_id (read back from the DB
+        # so an identical SOS code list collapses onto SCB's existing row).
+        self._set_id_by_hash: dict[bytes, int] = {}
+
+    # -- value-table hybrid (R2) -------------------------------------------
+
+    def _ensure_value_set(self, codes: list[IRValueCode]) -> int | None:
+        """Write a SOS value_set (+codes+members) via INSERT OR IGNORE +
+        read-back, so it content-SHARES any identical SCB/SOS row.
+
+        `value_code` dedups on UNIQUE(code, label); `value_set` dedups on
+        UNIQUE(member_hash). Both ids stay AUTOINCREMENT, content-addressed,
+        provider-shared (unbanded — excluded from the §2.6 band assertion).
+        Returns the shared value_set_id, or ``None`` for an empty code list.
+        """
+        if not codes:
+            return None
+        conn = self.conn
+        pairs = [(c.code, c.label) for c in codes]
+        member_hash = _value_set_hash(pairs)
+        cached = self._set_id_by_hash.get(member_hash)
+        if cached is not None:
+            # Same content hash already written — codes + members exist.
+            return cached
+        # `value_code`: one row per distinct (code, label); read back its id.
+        code_id_of: dict[tuple[str, str], int] = {}
+        for code, label in pairs:
+            conn.execute(
+                "INSERT OR IGNORE INTO value_code (code, label) VALUES (?, ?)",
+                (code, label),
+            )
+            row = conn.execute(
+                "SELECT code_id FROM value_code WHERE code = ? AND label = ?",
+                (code, label),
+            ).fetchone()
+            code_id_of[(code, label)] = row[0]
+        conn.execute(
+            "INSERT OR IGNORE INTO value_set (member_hash) VALUES (?)", (member_hash,)
+        )
+        set_id = conn.execute(
+            "SELECT value_set_id FROM value_set WHERE member_hash = ?", (member_hash,)
+        ).fetchone()[0]
+        for code, label in pairs:
+            conn.execute(
+                "INSERT OR IGNORE INTO value_set_member (value_set_id, code_id) "
+                "VALUES (?, ?)",
+                (set_id, code_id_of[(code, label)]),
+            )
+        self._set_id_by_hash[member_hash] = set_id
+        return set_id
+
+    # -- emit ---------------------------------------------------------------
+
+    def emit(self, source_dir: Path) -> Iterator[IRObject]:
+        """Parse the `Socialstyrelsen/` workbooks under ``source_dir`` and emit
+        IR objects in FK-topological order (register -> variant -> value_set ->
+        variable -> state/alias -> related-to -> provenance/warnings).
+
+        Unreadable workbooks become an `IRWarning` (not a build abort): each
+        `.xlsx` parses in its own try/except so one corrupt delivery can't sink
+        the others.
+        """
+        for path in sorted(source_dir.iterdir()):
+            if not path.is_file():
+                continue
+            if path.suffix.lower() != ".xlsx" or path.name.startswith("~$"):
+                continue
+            self.source_checksums[path.name] = _file_sha256(path)
+            try:
+                reg = parse_register_file(path)
+            except SosParseError as exc:
+                # Unreadable workbook: surface, skip. entity_id 0 (no register
+                # minted yet). The provenance DB records it; the build proceeds.
+                yield IRWarning(
+                    entity_kind="register",
+                    entity_id=0,
+                    code="sos_workbook_unreadable",
+                    detail=f"{path.name}: {exc}",
+                )
+                continue
+            yield from self._emit_register(reg)
+
+    def _emit_register(self, reg: SosRegister) -> Iterator[IRObject]:
+        abbrev = _sos_abbrev(reg)
+        register_id = mint("sos", abbrev)
+        self.row_counts[f"sos:{abbrev}"] = len(reg.variables)
+
+        name = reg.dcat_ap.title_sv or reg.dataset_name or abbrev.upper()
+        yield IRRegister(
+            register_id=register_id,
+            provider="sos",
+            slug="",  # ignored by the reinsert; populate_slugs fills it
+            name=name,
+            description=reg.dcat_ap.description_sv,
+            purpose=reg.dcat_ap.description_sv,
+        )
+
+        # Surface every parser warning (missing sheets, unparseable kodlistor)
+        # as an IRWarning keyed on the register.
+        for w in reg.warnings:
+            yield IRWarning(
+                entity_kind="register",
+                entity_id=register_id,
+                code="sos_parser_warning",
+                detail=w,
+            )
+
+        # -- variant synthesis (§2.2): detect via DELDATAMÄNGDER-SHEET ABSENCE
+        # (r.deldatamangder == ()), NOT var.deldatamangd (BU populates that from
+        # a Datavynamn column yet has no Deldatamängder sheet -> variant-less).
+        variant_less = reg.deldatamangder == ()
+        variant_id_of: dict[str | None, int] = {}
+        if variant_less:
+            default_variant_id = mint("sos", abbrev, _DEFAULT_VARIANT)
+            yield IRVariant(
+                register_variant_id=default_variant_id,
+                register_id=register_id,
+                slug="",
+                name=_DEFAULT_VARIANT,
+                description=None,
+                synthesized=True,
+            )
+            variant_id_of[None] = default_variant_id
+        else:
+            # Dedup deldatamängder by name: a workbook can carry the same name
+            # twice (e.g. LOVA ships two 'LOVA' rows) — they mint the same
+            # variant id, so emit ONE IRVariant (first occurrence wins) or the
+            # reinsert hits a register_variant PK collision.
+            for d in reg.deldatamangder:
+                if d.name in variant_id_of:
+                    continue
+                vid = mint("sos", abbrev, d.name)
+                variant_id_of[d.name] = vid
+                yield IRVariant(
+                    register_variant_id=vid,
+                    register_id=register_id,
+                    slug="",
+                    name=d.name,
+                    description=d.description or d.label,
+                )
+
+        deldat_by_name = {d.name: d for d in reg.deldatamangder}
+
+        # -- kodlista resolution: variable_hint -> kodlista (case-insensitive).
+        # Skip unparseable kodlistor (raw_rows non-empty) for value-set
+        # construction; warn instead of fabricating.
+        kodlista_by_var: dict[str, SosKodlista] = {}
+        for k in reg.kodlistor:
+            if k.raw_rows:
+                yield IRWarning(
+                    entity_kind="register",
+                    entity_id=register_id,
+                    code="sos_kodlista_unparseable",
+                    detail=f"{k.sheet_name}: no Tidsperiod/Kod header; skipped",
+                )
+                continue
+            kodlista_by_var[k.variable_hint.lower()] = k
+
+        # -- group variables by name (the merge key + provider_key).
+        groups: dict[str, list[SosVariable]] = {}
+        for v in reg.variables:
+            groups.setdefault(v.name, []).append(v)
+
+        for name_key in sorted(groups):
+            group = groups[name_key]
+            yield from self._emit_variable_group(
+                abbrev=abbrev,
+                register_id=register_id,
+                name=name_key,
+                group=group,
+                variant_id_of=variant_id_of,
+                variant_less=variant_less,
+                deldat_by_name=deldat_by_name,
+                kodlista=kodlista_by_var.get(name_key.lower()),
+            )
+
+        # -- delivery provenance, one per variant. SOS carries no approval
+        # tokens, so emit_when_no_tokens records one bare-token row per variant.
+        for vid in variant_id_of.values():
+            yield IRDeliveryProvenance(
+                register_id=register_id,
+                register_variant_id=vid,
+                source_file=reg.source_file.name,
+                delivery_version=reg.dataset_version,
+                delivery_date=reg.dataset_date,
+                template_version=reg.template_version,
+                emit_when_no_tokens=True,
+            )
+
+    def _emit_variable_group(
+        self,
+        *,
+        abbrev: str,
+        register_id: int,
+        name: str,
+        group: list[SosVariable],
+        variant_id_of: dict[str | None, int],
+        variant_less: bool,
+        deldat_by_name: dict[str, SosDeldatamangd],
+        kodlista: SosKodlista | None,
+    ) -> Iterator[IRObject]:
+        """Emit one variable group: MERGE (default), SPLIT (allow-list), or
+        WARN-MERGE (unanticipated conflict). Then emit its era-windowed states.
+        """
+        # -- conflict detection: incompatible normalized data_type OR disjoint
+        # structured code-list shape (NEVER value_set_text — the free-text trap).
+        data_types = {_norm_data_type(v.data_type) for v in group}
+        conflict = len(group) > 1 and len(data_types) > 1
+        key = (abbrev, name)
+
+        if conflict and key in KNOWN_SPLIT_ALLOWLIST:
+            yield from self._emit_split(
+                abbrev=abbrev,
+                register_id=register_id,
+                name=name,
+                group=group,
+                variant_id_of=variant_id_of,
+                variant_less=variant_less,
+                deldat_by_name=deldat_by_name,
+                kodlista=kodlista,
+            )
+            return
+
+        if conflict:
+            # Fail-soft: unanticipated same-name conflict -> WARN + MERGE.
+            yield IRWarning(
+                entity_kind="variable",
+                entity_id=mint("sos", abbrev, name),
+                code="sos_unanticipated_same_name_conflict",
+                detail=(
+                    f"{abbrev}/{name}: data_type diverges "
+                    f"{sorted(dt or '' for dt in data_types)}; merged"
+                ),
+            )
+
+        yield from self._emit_merged(
+            abbrev=abbrev,
+            register_id=register_id,
+            name=name,
+            group=group,
+            variant_id_of=variant_id_of,
+            variant_less=variant_less,
+            deldat_by_name=deldat_by_name,
+            kodlista=kodlista,
+        )
+
+    def _emit_merged(
+        self,
+        *,
+        abbrev: str,
+        register_id: int,
+        name: str,
+        group: list[SosVariable],
+        variant_id_of: dict[str | None, int],
+        variant_less: bool,
+        deldat_by_name: dict[str, SosDeldatamangd],
+        kodlista: SosKodlista | None,
+    ) -> Iterator[IRObject]:
+        variable_id = mint("sos", abbrev, name)
+        # Deterministic winner for scalar fields: first non-null across the
+        # group (group is delivery-order stable per the parser).
+        label = _first(group, "label")
+        description = _first(group, "description")
+        yield IRVariable(
+            variable_id=variable_id,
+            register_id=register_id,
+            provider_key=name,
+            slug="",
+            name=label or name,
+            definition=None,
+            description=description,
+            measurement_unit=None,
+            is_sensitive=False,
+            is_identifier=False,
+            source_register_id=None,
+            source_register_text=None,
+            source_label=None,
+        )
+        yield from self._emit_states(
+            abbrev=abbrev,
+            variable_id=variable_id,
+            members=group,
+            variant_id_of=variant_id_of,
+            variant_less=variant_less,
+            deldat_by_name=deldat_by_name,
+            kodlista=kodlista,
+            entity_registry=(abbrev, kodlista.variable_hint)
+            in ENTITY_REGISTRY_KODLISTOR
+            if kodlista
+            else False,
+        )
+
+    def _emit_split(
+        self,
+        *,
+        abbrev: str,
+        register_id: int,
+        name: str,
+        group: list[SosVariable],
+        variant_id_of: dict[str | None, int],
+        variant_less: bool,
+        deldat_by_name: dict[str, SosDeldatamangd],
+        kodlista: SosKodlista | None,
+    ) -> Iterator[IRObject]:
+        # Partition the group by normalized data_type seam (the known SOS splits
+        # are data_type-only, no codelist). One sibling per distinct shape.
+        by_shape: dict[str | None, list[SosVariable]] = {}
+        for v in group:
+            by_shape.setdefault(_norm_data_type(v.data_type), []).append(v)
+        sibling_ids: list[int] = []
+        for shape in sorted(by_shape, key=lambda s: s or ""):
+            members = by_shape[shape]
+            disc = _shape_signature(members, ())
+            variable_id = mint("sos", abbrev, name, disc)
+            sibling_ids.append(variable_id)
+            label = _first(members, "label")
+            description = _first(members, "description")
+            yield IRVariable(
+                variable_id=variable_id,
+                register_id=register_id,
+                provider_key=name,  # split siblings SHARE the source name
+                slug="",
+                name=label or name,
+                definition=None,
+                description=description,
+                measurement_unit=None,
+                is_sensitive=False,
+                is_identifier=False,
+                source_register_id=None,
+                source_register_text=None,
+                source_label=None,
+            )
+            yield from self._emit_states(
+                abbrev=abbrev,
+                variable_id=variable_id,
+                members=members,
+                variant_id_of=variant_id_of,
+                variant_less=variant_less,
+                deldat_by_name=deldat_by_name,
+                kodlista=kodlista,
+                entity_registry=False,
+            )
+        # (N choose 2) sibling related-to edges -> self.related_edges. The
+        # materializer resolves variable_id -> FQID slug after slugs exist; it
+        # writes BOTH directions, so emit each unordered pair once.
+        for i in range(len(sibling_ids)):
+            for j in range(i + 1, len(sibling_ids)):
+                self.related_edges.append(
+                    (
+                        sibling_ids[i],
+                        sibling_ids[j],
+                        "same_definition_different_column",
+                    )
+                )
+
+    def _emit_states(
+        self,
+        *,
+        abbrev: str,
+        variable_id: int,
+        members: list[SosVariable],
+        variant_id_of: dict[str | None, int],
+        variant_less: bool,
+        deldat_by_name: dict[str, SosDeldatamangd],
+        kodlista: SosKodlista | None,
+        entity_registry: bool,
+    ) -> Iterator[IRObject]:
+        """Emit IRVariableState(+IRValueSet/IRValueCode) + IRVariableAlias for
+        each (member, resolved-era windowed value-set) of a variable.
+
+        Two members of a MERGED variable can resolve to the same variant + same
+        window (e.g. a variable name appearing under a duplicate deldatamängd, or
+        an identical drift window across members) -> the same minted state_id.
+        Those collapse: `seen_state_ids` drops the duplicate so the reinsert's
+        `idx_variable_state_unique` doesn't fire on a self-duplicate.
+        """
+        # Build the value-set rows for this variable's kodlista once.
+        # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
+        # valid_from/to. Otherwise: state-level era windowing per tidsperiod.
+        seen_alias: set[tuple[int, str]] = set()
+        seen_state_ids: set[int] = set()
+
+        def _dedup(obj: IRObject) -> Iterator[IRObject]:
+            if isinstance(obj, IRVariableState):
+                if obj.state_id in seen_state_ids:
+                    return
+                seen_state_ids.add(obj.state_id)
+            yield obj
+
+        for v in members:
+            # Variant resolution: variant-less -> the synthesized _default;
+            # else the member's deldatamängd (fall back to _default if a
+            # variable names a deldatamängd absent from the sheet).
+            if variant_less:
+                variant_id = variant_id_of[None]
+                deldat = None
+            else:
+                variant_id = variant_id_of.get(v.deldatamangd)
+                deldat = deldat_by_name.get(v.deldatamangd or "")
+                if variant_id is None:
+                    # P2#1: a variable-sheet deldatamängd token that has no
+                    # Deldatamängder-sheet row (LOVA A_LOVA*/LVM lvm_*) can't be
+                    # resolved to a variant here — the code->variant mapping is
+                    # A4.4 curation (maintainer domain knowledge); A4.3b only
+                    # WARNS so the drop is auditable, never silent. Do NOT invent
+                    # a mapping (e.g. by order) — skip the member after warning.
+                    yield IRWarning(
+                        entity_kind="variable",
+                        entity_id=variable_id,
+                        code="sos_deldatamangd_unresolved",
+                        detail=(
+                            f"{abbrev}/{v.name}: variable-sheet deldatamängd "
+                            f"{v.deldatamangd} has no Deldatamängder-sheet row; "
+                            "state dropped, code->variant mapping is A4.4 curation"
+                        ),
+                    )
+                    continue
+
+            var_from = _iso_bound(v.data_from, end=False)
+            var_to = _iso_bound(v.data_to, end=True)
+            deldat_from = _iso_bound(deldat.data_from, end=False) if deldat else None
+            deldat_to = _iso_bound(deldat.data_to, end=True) if deldat else None
+
+            # variable_alias: the delivery column == the variable name for SOS.
+            col = v.name
+            if col and (variant_id, col) not in seen_alias:
+                seen_alias.add((variant_id, col))
+                yield IRVariableAlias(
+                    variable_id=variable_id,
+                    register_variant_id=variant_id,
+                    delivery_column_name=col,
+                )
+
+            var_bound = (var_from, var_to)
+            deldat_bound = (deldat_from, deldat_to)
+            # P2#2: the deldatamängd window is ADVISORY; the variable (+ code)
+            # window is authoritative. `deldat_dropped` collects per-window
+            # contradictions so we WARN once per member (not per code/state).
+            deldat_dropped: list[bool] = []
+
+            if kodlista is None:
+                # Code-less state: one state over the variable window, with the
+                # deldat window applied only as an advisory bound.
+                window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
+                if window is None:
+                    continue
+                if dropped:
+                    deldat_dropped.append(True)
+                yield from _dedup(
+                    IRVariableState(
+                        state_id=self._state_id(
+                            abbrev, variable_id, variant_id, window[0]
+                        ),
+                        variable_id=variable_id,
+                        register_variant_id=variant_id,
+                        valid_from=window[0] or _VALID_FROM_UNKNOWN,
+                        valid_to=window[1],
+                        data_type=_norm_data_type(v.data_type),
+                        data_length=None,
+                        delivery_column_name=col,
+                        value_set_id=None,
+                        value_set_version_label=None,
+                    )
+                )
+            elif entity_registry:
+                for obj in self._emit_entity_registry_state(
+                    abbrev=abbrev,
+                    variable_id=variable_id,
+                    variant_id=variant_id,
+                    v=v,
+                    col=col,
+                    kodlista=kodlista,
+                    var_bound=var_bound,
+                    deldat_bound=deldat_bound,
+                    deldat_dropped=deldat_dropped,
+                ):
+                    yield from _dedup(obj)
+            else:
+                for obj in self._emit_windowed_states(
+                    abbrev=abbrev,
+                    variable_id=variable_id,
+                    variant_id=variant_id,
+                    v=v,
+                    col=col,
+                    kodlista=kodlista,
+                    var_bound=var_bound,
+                    deldat_bound=deldat_bound,
+                    deldat_dropped=deldat_dropped,
+                ):
+                    yield from _dedup(obj)
+
+            if deldat_dropped:
+                yield IRWarning(
+                    entity_kind="variable",
+                    entity_id=variable_id,
+                    code="sos_deldatamangd_bound_contradicts_variable",
+                    detail=(
+                        f"{abbrev}/{v.name}: deldatamängd window "
+                        f"[{deldat_from or ''}..{deldat_to or ''}] excludes "
+                        f"variable window [{var_from or ''}..{var_to or ''}]; "
+                        "kept variable window"
+                    ),
+                )
+
+    def _emit_entity_registry_state(
+        self,
+        *,
+        abbrev: str,
+        variable_id: int,
+        variant_id: int,
+        v: SosVariable,
+        col: str,
+        kodlista: SosKodlista,
+        var_bound: tuple[str | None, str | None],
+        deldat_bound: tuple[str | None, str | None],
+        deldat_dropped: list[bool],
+    ) -> Iterator[IRObject]:
+        """MFR IVF_klinik: ONE state, every code present with its OWN
+        valid_from/to (the code's tidsperiod, intersected with var/deldat).
+
+        P2#2: the variable bound + the code tidsperiod are authoritative; the
+        deldat window is advisory and yields when it would empty the window.
+        """
+        codes: list[IRValueCode] = []
+        for r in kodlista.rows:
+            cf, ct = _parse_tidsperiod(r.tidsperiod)
+            window, dropped = _intersect_advisory_deldat(
+                [var_bound, (cf, ct)], deldat_bound
+            )
+            if window is None:
+                continue  # code's window empty under var/code -> drop the code
+            if dropped:
+                deldat_dropped.append(True)
+            codes.append(
+                IRValueCode(
+                    code_id=0,  # autoincrement; assigned at write-back
+                    value_set_id=0,
+                    code=r.kod,
+                    label=r.beskrivning or "",
+                    valid_from=window[0],
+                    valid_to=window[1],
+                )
+            )
+        if not codes:
+            return
+        value_set_id = self._ensure_value_set(codes)
+        full, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
+        if full is None:
+            return
+        if dropped:
+            deldat_dropped.append(True)
+        yield IRVariableState(
+            state_id=self._state_id(abbrev, variable_id, variant_id, full[0]),
+            variable_id=variable_id,
+            register_variant_id=variant_id,
+            valid_from=full[0] or _VALID_FROM_UNKNOWN,
+            valid_to=full[1],
+            data_type=_norm_data_type(v.data_type),
+            data_length=None,
+            delivery_column_name=col,
+            value_set_id=value_set_id,
+            value_set_version_label=None,
+        )
+
+    def _emit_windowed_states(
+        self,
+        *,
+        abbrev: str,
+        variable_id: int,
+        variant_id: int,
+        v: SosVariable,
+        col: str,
+        kodlista: SosKodlista,
+        var_bound: tuple[str | None, str | None],
+        deldat_bound: tuple[str | None, str | None],
+        deldat_dropped: list[bool],
+    ) -> Iterator[IRObject]:
+        """Standard value-set DRIFT: group codes by their tidsperiod-windowed
+        validity (3-way intersect with var/deldat); one state per distinct
+        non-empty windowed code-subset.
+
+        P2#2: the variable bound + the code tidsperiod are authoritative; the
+        deldat window is advisory and yields when it would empty the window.
+        """
+        # bucket: (state_from, state_to) -> list[IRValueCode]
+        buckets: dict[tuple[str | None, str | None], list[IRValueCode]] = {}
+        for r in kodlista.rows:
+            cf, ct = _parse_tidsperiod(r.tidsperiod)
+            window, dropped = _intersect_advisory_deldat(
+                [var_bound, (cf, ct)], deldat_bound
+            )
+            if window is None:
+                continue
+            if dropped:
+                deldat_dropped.append(True)
+            buckets.setdefault(window, []).append(
+                IRValueCode(
+                    code_id=0,
+                    value_set_id=0,
+                    code=r.kod,
+                    label=r.beskrivning or "",
+                    valid_from=window[0],
+                    valid_to=window[1],
+                )
+            )
+        if not buckets:
+            # No code survived windowing — emit a code-less state over the
+            # variable window (deldat advisory) so the variable still has a state.
+            window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
+            if window is None:
+                return
+            if dropped:
+                deldat_dropped.append(True)
+            yield IRVariableState(
+                state_id=self._state_id(abbrev, variable_id, variant_id, window[0]),
+                variable_id=variable_id,
+                register_variant_id=variant_id,
+                valid_from=window[0] or _VALID_FROM_UNKNOWN,
+                valid_to=window[1],
+                data_type=_norm_data_type(v.data_type),
+                data_length=None,
+                delivery_column_name=col,
+                value_set_id=None,
+                value_set_version_label=None,
+            )
+            return
+        # Multiple windows fan into multiple states. value_set_version_label
+        # discriminates same-valid_from states so the unique index bites.
+        for window in sorted(buckets, key=lambda w: (w[0] or "", w[1] or "~")):
+            codes = buckets[window]
+            value_set_id = self._ensure_value_set(codes)
+            label = "" if len(buckets) == 1 else f"{window[0] or ''}/{window[1] or ''}"
+            yield IRVariableState(
+                state_id=self._state_id(
+                    abbrev, variable_id, variant_id, window[0], label
+                ),
+                variable_id=variable_id,
+                register_variant_id=variant_id,
+                valid_from=window[0] or _VALID_FROM_UNKNOWN,
+                valid_to=window[1],
+                data_type=_norm_data_type(v.data_type),
+                data_length=None,
+                delivery_column_name=col,
+                value_set_id=value_set_id,
+                value_set_version_label=label or None,
+            )
+
+    @staticmethod
+    def _state_id(
+        abbrev: str,
+        variable_id: int,
+        variant_id: int,
+        valid_from: str | None,
+        version_label: str = "",
+    ) -> int:
+        """Mint a rebuild-stable state id from the unique-index 4-tuple basis
+        (variable, variant, valid_from, version_label)."""
+        return mint(
+            "sos",
+            "state",
+            str(variable_id),
+            str(variant_id),
+            valid_from or "",
+            version_label,
+        )
+
+
+def _first(group: list[SosVariable], attr: str) -> str | None:
+    """First non-null value of ``attr`` across ``group`` (delivery order)."""
+    for v in group:
+        val = getattr(v, attr)
+        if val:
+            return val
+    return None
