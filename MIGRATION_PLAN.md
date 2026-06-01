@@ -578,11 +578,12 @@ IR-consuming materializer + G1/G4 scratch-coupling close-out are deferred to A4.
   legacy direct-write path): (a) make `materialize()` insert the core variable
   graph from IR and flip SCB to IR-driven at the same time; (b) lift the
   gap-table carriers into IR (chiefly `IRVariableState.delivery_column_name`)
-  so the post-passes derive from universal tables, not scratch; (c) rewrite the
-  `_emit_*` read-back helpers to be faithful — real variant/variable slugs (NULL
-  at emit time today, so the inert mirror substitutes `_default` / the raw
-  name), `classification_id`, and None-vs-sentinel encoding (see the
-  inert-mirror caveat in `SCBAdapter.emit()` for the exact field list). Both are
+  so the post-passes derive from universal tables, not scratch; (c) re-sequence
+  the `_emit_*` read-back mirror to run AFTER the slug/backfill post-passes so it
+  is faithful — the slug columns are NULL at emit time today (the mirror reads
+  them as `""` placeholders), and `classification_id` / `delivery_column_name` /
+  None-vs-sentinel encoding are likewise post-emit (see the inert-mirror caveat
+  in `SCBAdapter.emit()` for the exact field list). Both are
   guarded by the SCB-subset dbdiff (`WHERE provider='scb'`), still active at
   A4.3 but no longer the gate after A4.4's curation.
 

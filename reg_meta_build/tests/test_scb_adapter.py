@@ -186,10 +186,10 @@ class TestProvenanceEmitButDiscard:
         _conn, _adapter, objects = _drained_adapter(tmp_path)
         provenance = [o for o in objects if isinstance(o, IRDeliveryProvenance)]
         assert len(provenance) >= 1
-        # Warnings are a valid (possibly empty) part of the stream.
-        assert all(
-            isinstance(o, IRWarning) for o in objects if isinstance(o, IRWarning)
-        )
+        # Warnings are a valid (possibly empty) part of the stream; when present
+        # each carries a non-empty code. (Don't assert >0 — the standard fixture
+        # may not trip a triage-collapse / empty-projection condition.)
+        assert all(w.code for w in objects if isinstance(w, IRWarning))
 
     def test_built_db_has_no_provenance_side_effect(self, tmp_path: Path) -> None:
         """The provenance DB scaffolding stays EMPTY in A4.1 — emitting the IR

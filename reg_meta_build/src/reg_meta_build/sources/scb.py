@@ -2132,16 +2132,17 @@ class SCBAdapter:
         from the just-written rows *before* the materializer's post-passes run,
         so it is NOT yet a faithful round-trip of the shipped catalog and must
         be made faithful at A4.3, when ``materialize`` starts CONSUMING the IR.
-        Known gaps the A4.3 flip must fix: ``IRVariant.slug`` is a ``"_default"``
-        placeholder (real variant slugs are curated later by ``populate_slugs``);
-        ``IRVariable.slug`` carries the raw name (``variable.slug`` is NULL at
-        emit time, set later by ``populate_variable_slugs``);
-        ``IRValueSet.classification_id`` and ``IRVariableState`` are missing
-        ``delivery_column_name`` / ``classification_id`` (backfilled post-emit);
-        ``valid_to`` / ``value_set_version_label`` carry the stored sentinels,
-        not the IR-contract None / open-ended forms. ``materialize()`` discards
-        all of these in A4.1, so none affect the byte-identical build. See
-        MIGRATION_PLAN A4.3 "Provider-blindness close-out".
+        Known gaps the A4.3 flip must fix: the slug columns (register, variant,
+        variable) are NULL at emit time — ``populate_slugs`` /
+        ``populate_variable_slugs`` run later in the materializer — so the mirror
+        reads them as ``""`` placeholders; A4.3 re-sequences the emit AFTER
+        population so the same queries return the real slugs.
+        ``IRValueSet.classification_id`` is always None and ``IRVariableState``
+        omits ``delivery_column_name`` / ``classification_id`` (backfilled
+        post-emit); ``valid_to`` / ``value_set_version_label`` carry the stored
+        sentinels, not the IR-contract None / open-ended forms. ``materialize()``
+        discards all of these in A4.1, so none affect the byte-identical build.
+        See MIGRATION_PLAN A4.3 "Provider-blindness close-out".
         """
         conn = self.conn
         scb_dir = source_dir
@@ -2274,30 +2275,37 @@ class SCBAdapter:
     # -- IR emit helpers (read-back of the verbatim-written universal rows) --
 
     def _emit_registers(self) -> Iterator[IRObject]:
+        # register.slug is NULL at emit time (populate_slugs runs later in the
+        # materializer post-passes) → emit "" placeholder; A4.3 re-sequences the
+        # mirror after population so this same query returns the real slug. The
+        # provider string comes from self.provider — no provider join, and the
+        # register's OWN slug must be read, not provider.slug.
         for row in self.conn.execute(
-            "SELECT r.register_id, p.slug AS pslug, r.name, r.purpose "
-            "FROM register r JOIN provider p ON r.provider_id = p.provider_id"
-        ).fetchall():
+            "SELECT register_id, slug, name, purpose FROM register"
+        ):
             yield IRRegister(
                 register_id=row[0],
                 provider=self.provider,
-                slug=row[1],
+                slug=row[1] or "",
                 name=row[2],
                 description=None,
                 purpose=row[3],
             )
 
     def _emit_variants(self) -> Iterator[IRObject]:
+        # register_variant.slug is NULL at emit time (curated later by
+        # populate_slugs) → "" placeholder; A4.3 re-reads after population. (Do
+        # NOT hardcode "_default" — real variant slugs differ per variant.)
         for row in self.conn.execute(
-            "SELECT register_variant_id, register_id, name, description "
+            "SELECT register_variant_id, register_id, slug, name, description "
             "FROM register_variant"
-        ).fetchall():
+        ):
             yield IRVariant(
                 register_variant_id=row[0],
                 register_id=row[1],
-                slug="_default",
-                name=row[2],
-                description=row[3],
+                slug=row[2] or "",
+                name=row[3],
+                description=row[4],
             )
 
     def _emit_value_sets(self) -> Iterator[IRObject]:
@@ -2330,17 +2338,21 @@ class SCBAdapter:
             )
 
     def _emit_variables(self) -> Iterator[IRObject]:
+        # variable.slug is NULL at emit time (populate_variable_slugs runs later)
+        # → "" placeholder; A4.3 re-reads after population. Do NOT use `name` as
+        # the slug — they diverge (slug is a folded ASCII stem). Stream the
+        # cursor (the variable table is large on real builds).
         for row in self.conn.execute(
             "SELECT variable_id, register_id, provider_key, name, definition, "
             "       description, measurement_unit, is_sensitive, is_identifier, "
-            "       source_register_id, source_register_text "
+            "       source_register_id, source_register_text, slug "
             "FROM variable ORDER BY variable_id"
-        ).fetchall():
+        ):
             yield IRVariable(
                 variable_id=row[0],
                 register_id=row[1],
                 provider_key=row[2],
-                slug=row[3] or "",
+                slug=row[11] or "",
                 name=row[3],
                 definition=row[4],
                 description=row[5],
@@ -2352,12 +2364,13 @@ class SCBAdapter:
             )
 
     def _emit_variable_states(self) -> Iterator[IRObject]:
+        # Stream the cursor (variable_state is large on real builds).
         for row in self.conn.execute(
             "SELECT state_id, variable_id, register_variant_id, valid_from, "
             "       valid_to, data_type, data_length, value_set_id, "
             "       value_set_version_label "
             "FROM variable_state ORDER BY state_id"
-        ).fetchall():
+        ):
             yield IRVariableState(
                 state_id=row[0],
                 variable_id=row[1],
