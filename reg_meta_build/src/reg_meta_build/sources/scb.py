@@ -2362,10 +2362,12 @@ class SCBAdapter:
             )
 
     def _emit_variables(self) -> Iterator[IRObject]:
-        # variable.slug is NULL at emit time (populate_variable_slugs runs later)
-        # → "" placeholder; A4.3 re-reads after population. Do NOT use `name` as
-        # the slug — they diverge (slug is a folded ASCII stem). Stream the
-        # cursor (the variable table is large on real builds).
+        # variable.slug is NULL at emit time (populate_variable_slugs runs later).
+        # Post-A4.3a-flip the materializer IGNORES the IR slug: it inserts
+        # variable.slug NULL and populate_variable_slugs UPDATEs it in place (no
+        # read-back). The "" here is a harmless placeholder for that ignored field.
+        # Do NOT use `name` as the slug — they diverge (slug is a folded ASCII
+        # stem). Stream the cursor (the variable table is large on real builds).
         for row in self.conn.execute(
             "SELECT variable_id, register_id, provider_key, name, definition, "
             "       description, measurement_unit, is_sensitive, is_identifier, "

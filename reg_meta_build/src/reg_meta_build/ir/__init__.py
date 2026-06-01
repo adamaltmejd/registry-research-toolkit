@@ -121,7 +121,11 @@ class IRVariableState(_IRBase):
     # sentinel per §5.1; the IR contract carries None to keep adapters
     # honest about which dates they actually know.
     valid_to: str | None
-    data_type: str  # normalized lowercase canonical set
+    # Nullable to mirror the nullable `variable_state.data_type` column — the
+    # A4.3a flip CONSUMES this field, so the IR type must match the column (SCB
+    # never writes NULL, but a provider that does must be representable, not
+    # raise at emit). Normalized lowercase canonical set.
+    data_type: str | None
     # TEXT — SCB `datalangd` may carry precision/scale ("8,2"), not just an int.
     data_length: str | None
     # The state's LATEST-era delivery column (`variable_state.delivery_column_name`).
