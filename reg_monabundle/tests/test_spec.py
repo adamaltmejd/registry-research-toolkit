@@ -384,6 +384,82 @@ def test_datetime_column_type_rejected_with_actionable_message():
         loadedspec_from_dict(payload)
 
 
+# -- Missing required keys: contextual ValueError, not bare KeyError --------
+#
+# The MONA sidecar project_data.json is a researcher hand-edit surface
+# (§9.6). A missing required key in any _build_* deserializer must fail
+# with an actionable, path-naming ValueError rather than a bare KeyError
+# from a subscript deep in deserialization (A3.4 review P3).
+
+
+def _payload_with_panel() -> dict:
+    return make_project_data(
+        sources=[
+            {
+                "name": "a.csv",
+                "bindings": [
+                    {"display_name": "LopNr", "type": "id", "id_subtype": "integer"}
+                ],
+            }
+        ],
+        panels=[
+            {
+                "panel_id": "P1",
+                "entity_key": "LopNr",
+                "members": [{"source": "a.csv", "time_key": 2018}],
+            }
+        ],
+    )
+
+
+def _del(payload: dict, *path) -> dict:
+    """Delete a nested key (returning the payload) to forge a hand-edit typo."""
+    target = payload
+    for key in path[:-1]:
+        target = target[key]
+    del target[path[-1]]
+    return payload
+
+
+@pytest.mark.parametrize(
+    ("payload", "expected"),
+    [
+        (
+            _del(_basic_payload(), "sources", 0, "name"),
+            r"sources\[0\] is missing required key 'name'",
+        ),
+        (
+            _del(_basic_payload(), "sources", 0, "bindings", 0, "type"),
+            r"sources\['lisa_2018.csv'\].bindings\[0\] is missing required key 'type'",
+        ),
+        (
+            _del(_basic_payload(), "sources", 0, "bindings", 0, "variable"),
+            r"bindings\[0\] is missing required key 'variable'",
+        ),
+        (
+            _del(_payload_with_panel(), "panels", 0, "panel_id"),
+            r"panels\[0\] is missing required key 'panel_id'",
+        ),
+        (
+            _del(_payload_with_panel(), "panels", 0, "members", 0, "source"),
+            r"panels\['P1'\].members\[0\] is missing required key 'source'",
+        ),
+    ],
+    ids=[
+        "source_name",
+        "binding_type",
+        "binding_variable",
+        "panel_id",
+        "member_source",
+    ],
+)
+def test_missing_required_key_raises_contextual_value_error(
+    payload: dict, expected: str
+):
+    with pytest.raises(ValueError, match=expected):
+        loadedspec_from_dict(payload)
+
+
 # -- load_project_data (disk path) ----------------------------------------
 
 
@@ -429,9 +505,11 @@ def test_load_project_data_does_not_structurally_validate(tmp_path: Path):
 
 def test_load_project_data_surfaces_deserialization_errors(tmp_path: Path):
     # A binding missing its required ``variable`` key is a dataclass-
-    # deserialization failure (KeyError), not a structural ValidationResult.
-    # §9.6: the runtime errors with a stdlib exception on a broken embedded
-    # spec; it does not produce a structured validation report.
+    # deserialization failure. §9.6: the runtime errors with a stdlib
+    # exception on a broken embedded spec; it does not produce a structured
+    # validation report. The MONA sidecar is a hand-edit surface, so the
+    # missing key surfaces as a contextual ValueError naming the offending
+    # path — not a bare KeyError from a subscript deep in deserialization.
     payload = {
         "schema_version": "2.0.0",
         "steward": "global",
@@ -448,7 +526,9 @@ def test_load_project_data_surfaces_deserialization_errors(tmp_path: Path):
         "panels": [],
     }
     (tmp_path / PROJECT_DATA_FILENAME).write_text(json.dumps(payload), encoding="utf-8")
-    with pytest.raises(KeyError):
+    with pytest.raises(
+        ValueError, match=r"sources\['a.csv'\].bindings\[0\] is missing required key"
+    ):
         load_project_data(tmp_path)
 
 

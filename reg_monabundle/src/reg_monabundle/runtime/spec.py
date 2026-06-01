@@ -15,7 +15,8 @@ bundle on MONA trusts its embedded (or sidecar) JSON: the full Pydantic
 the gate that refuses to amalgamate a structurally broken spec. The
 bundle is a build artifact, not an authoring surface — if a researcher
 hand-edits the embedded JSON on MONA in a way that breaks dataclass
-deserialization, it errors at load with a stdlib exception, by design.
+deserialization, it errors at load with an actionable stdlib
+``ValueError`` naming the offending path (see ``_require``), by design.
 
 ``ProjectData`` here is the runtime adapter shape — a minimal frozen
 dataclass tree carrying only the fields the on-MONA pipeline reads.
@@ -270,6 +271,23 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 # -- Dataclass deserialization (trusts validated input) -------------------
 
 
+def _require(data: Mapping[str, Any], key: str, *, context: str) -> Any:
+    """Read a required key, raising a contextual ``ValueError`` if absent.
+
+    The bundle trusts a build-validated spec (§9.6), so this is not
+    structural validation. But the MONA sidecar ``project_data.json`` is
+    a researcher hand-edit surface: a missing required key should fail
+    with an actionable message naming the offending path, not a bare
+    ``KeyError`` from a subscript deep in deserialization.
+    """
+    try:
+        return data[key]
+    except KeyError:
+        raise ValueError(
+            f"{PROJECT_DATA_FILENAME}: {context} is missing required key {key!r}"
+        ) from None
+
+
 def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Binding:
     """Deserialize a runtime ``Binding`` from a JSON dict, requiring display_name.
 
@@ -286,10 +304,11 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Bin
     ``sql_emit.queries_for_column``). Rejecting at deserialize surfaces
     the error here instead of as a late ``ValueError`` deep in extract.
     """
-    column_type = data.get("type")
+    ctx = f"sources[{source_name!r}].bindings[{idx}]"
+    column_type = _require(data, "type", context=ctx)
     if column_type == "datetime":
         raise ValueError(
-            f"sources[{source_name!r}].bindings[{idx}].type='datetime' is "
+            f"{ctx}.type='datetime' is "
             f"not supported by mock_data_wizard (extract/summarize/generate "
             f"only handle {sorted(COLUMN_TYPES)!r}). Use type='date' for "
             f"date-only columns or split timestamps into separate date + "
@@ -299,13 +318,13 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Bin
     display_name = data.get("display_name")
     if not display_name:
         raise ValueError(
-            f"sources[{source_name!r}].bindings[{idx}] is missing "
+            f"{ctx} is missing "
             f"display_name; every binding must carry display_name in "
             f"step 4 (reg_meta resolution of defaults lands in §15 step 6)"
         )
     return Binding(
-        variable=data["variable"],
-        type=data["type"],
+        variable=_require(data, "variable", context=ctx),
+        type=column_type,
         display_name=display_name,
         id_subtype=data.get("id_subtype"),
         numeric_subtype=data.get("numeric_subtype"),
@@ -314,7 +333,7 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Bin
 
 
 def _build_source(data: Mapping[str, Any], *, idx: int) -> Source:
-    name = data["name"]
+    name = _require(data, "name", context=f"sources[{idx}]")
     bindings = tuple(
         _build_column(c, source_name=name, idx=i)
         for i, c in enumerate(data.get("bindings", []))
@@ -360,6 +379,7 @@ def _build_panel_member(
     # time_key check below raise the actionable ValueError — not an
     # AttributeError on a str.
     data: Mapping[str, Any] = {"source": member} if isinstance(member, str) else member
+    member_ctx = f"panels[{panel_id!r}].members[{idx}]"
     entity_key = data.get("entity_key")
     time_key = data.get("time_key")
     _reject_composite(panel_id, idx, "entity_key", entity_key)
@@ -370,7 +390,7 @@ def _build_panel_member(
         # runtime didn't, and adding the resolver here would bleed step
         # 4 scope. Reject with a clear deferral pointer.
         raise ValueError(
-            f"panels[{panel_id!r}].members[{idx}].entity_key override is "
+            f"{member_ctx}.entity_key override is "
             f"not supported in step 4; set entity_key at the panel level. "
             f"Per-member overrides land in §15 step 10b."
         )
@@ -378,15 +398,17 @@ def _build_panel_member(
         # Old runtime required every member to carry time_key; panel-level
         # defaults aren't resolved at this layer until step 10b.
         raise ValueError(
-            f"panels[{panel_id!r}].members[{idx}] is missing time_key; "
+            f"{member_ctx} is missing time_key; "
             f"panel-level time_key defaults are not resolved by the "
             f"step-4 runtime — set time_key on each member."
         )
-    return PanelMember(source=data["source"], time_key=time_key)
+    return PanelMember(
+        source=_require(data, "source", context=member_ctx), time_key=time_key
+    )
 
 
-def _build_panel(data: Mapping[str, Any]) -> Panel:
-    panel_id = data["panel_id"]
+def _build_panel(data: Mapping[str, Any], *, idx: int) -> Panel:
+    panel_id = _require(data, "panel_id", context=f"panels[{idx}]")
     entity_key = data.get("entity_key")
     time_key = data.get("time_key")
     _reject_composite(panel_id, None, "entity_key", entity_key)
@@ -420,7 +442,9 @@ def _build_project_data(payload: Mapping[str, Any]) -> ProjectData:
     sources = tuple(
         _build_source(s, idx=i) for i, s in enumerate(payload.get("sources", []))
     )
-    panels = tuple(_build_panel(p) for p in payload.get("panels", []))
+    panels = tuple(
+        _build_panel(p, idx=i) for i, p in enumerate(payload.get("panels", []))
+    )
     return ProjectData(
         sources=sources,
         panels=panels,
