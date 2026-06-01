@@ -289,6 +289,14 @@ def test_narrowing_modifier_without_period_is_422(client, url: str):
     assert resp.status_code == 422, f"{url} → {resp.status_code}"
 
 
+def test_inverted_period_range_is_422_not_500(client):
+    # `2021..2020` is a syntactically valid range (two valid period tokens) so the
+    # §16 allow-list admits it, but resolve_at rejects lo>hi with a USAGE error.
+    # That's client input → 422, NOT an uncaught-RegMetaError 500.
+    resp = client.get(f"/api/catalog/{_KON}?period=2021..2020")
+    assert resp.status_code == 422, f"inverted range → {resp.status_code}"
+
+
 # ── ETag / Cache-Control + 304 on every read endpoint ────────────────────────
 
 _READ_PATHS = [

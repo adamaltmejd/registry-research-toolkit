@@ -726,17 +726,12 @@ export interface components {
         };
         /**
          * VariantsRef
-         * @description Forward-declared reference to a register's variant browser (A5.2). A
-         *     declared slot so the discriminated union / TS types are stable before the
-         *     `/{provider}/{register}/variants` sub-resource exists — `available` is False
-         *     until A5.2 wires it.
+         * @description Reference to a register's variant browser — the `/{provider}/{register}/
+         *     variants` sub-resource (§9.5, wired in A5.2a). A discriminated slot in
+         *     `RegisterChild` so the union / TS types carry the navigable `register_fqid`;
+         *     the client GETs `{register_fqid}/variants` to list them.
          */
         VariantsRef: {
-            /**
-             * Available
-             * @default false
-             */
-            available: boolean;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}

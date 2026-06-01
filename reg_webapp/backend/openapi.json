@@ -1087,13 +1087,8 @@
         "type": "object"
       },
       "VariantsRef": {
-        "description": "Forward-declared reference to a register's variant browser (A5.2). A\ndeclared slot so the discriminated union / TS types are stable before the\n`/{provider}/{register}/variants` sub-resource exists \u2014 `available` is False\nuntil A5.2 wires it.",
+        "description": "Reference to a register's variant browser \u2014 the `/{provider}/{register}/\nvariants` sub-resource (\u00a79.5, wired in A5.2a). A discriminated slot in\n`RegisterChild` so the union / TS types carry the navigable `register_fqid`;\nthe client GETs `{register_fqid}/variants` to list them.",
         "properties": {
-          "available": {
-            "default": false,
-            "title": "Available",
-            "type": "boolean"
-          },
           "kind": {
             "const": "variants-ref",
             "default": "variants-ref",

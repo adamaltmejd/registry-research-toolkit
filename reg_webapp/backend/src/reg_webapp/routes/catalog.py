@@ -50,7 +50,7 @@ from reg_meta.catalog import (
     ResolvedRegister,
     ResolvedVariable,
 )
-from reg_meta.errors import EXIT_NOT_FOUND, RegMetaError
+from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from reg_meta.fqid import (
     CLASSIFICATION_PREFIX,
     Fqid,
@@ -421,13 +421,18 @@ def _reconcile_value_set_version(pinned: str | None, query: str | None) -> str |
 
 def _http_4xx_from_regmeta(exc: RegMetaError) -> None:
     """Map a reg_meta query error from the period/edge accessors to HTTP: a
-    genuine FQID-not-found → 404; a usage error (`not_a_binding_fqid`, raised when
-    a suffixed/period accessor gets a non-binding FQID) → 422; anything else (a
-    corrupt-DB / build-invariant break) re-raises to a generic 500. The §9.5
-    sub-endpoints want a 4xx for a non-binding FQID, not a 500."""
+    genuine FQID-not-found → 404; a USAGE error on client input → 422; anything
+    else (a corrupt-DB / build-invariant break) re-raises to a generic 500.
+
+    EXIT_USAGE covers `not_a_binding_fqid` (a suffixed/period accessor handed a
+    non-binding FQID) AND `invalid_period` (a syntactically-valid but lo>hi
+    `?period` range that resolve_at rejects) — both are client-controlled input, so
+    a 422, not a 500. EXIT_USAGE messages are input-validation text (no internal row
+    IDs), so they're safe to echo; the catch-all maps only `fqid_not_found` to 404
+    and keeps build-invariant breaks (e.g. `state_variant_unresolved`) as 500."""
     if exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE:
         raise HTTPException(status_code=404, detail=exc.message) from exc
-    if exc.code == "not_a_binding_fqid":
+    if exc.exit_code == EXIT_USAGE:
         raise HTTPException(status_code=422, detail=exc.message) from exc
     raise exc
 
