@@ -607,6 +607,22 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 
 ### [ ] A4.3 — SOS adapter
 
+**Split into 2 PRs (maintainer-approved):**
+
+- **A4.3a — provider-blindness flip (PR #170, draft).** `materialize()` now
+  CONSUMES IR for the SCB core graph (`register`/`register_variant`/`variable`/
+  `variable_state`/`variable_alias` re-inserted from IR with explicit PKs;
+  `IRVariableAlias` carrier; WIRE the 4 provenance fields). Byte-identical (full
+  dbdiff exit-0, 25/25; no SCHEMA_VERSION bump). Deferred: value tables stay
+  adapter-written (content-shared → A4.3b); `_backfill_state_classifications`
+  stays scratch-coupled (value_set→classification NOT 1:1, 5,161 cases → A4.4
+  with SOS classifications, the last gated window).
+- **A4.3b — SOS adapter (next, after A4.3a merges).** The SOS-specific work
+  below + generalizing value-table writing for SOS + the build-time minted-id
+  band assertion. Gate: `--providers=scb` SOS-excluded build = full dbdiff
+  exit-0 (SCB subset identical) + combined `build-db --validate` + ~2,300-row
+  sanity.
+
 - `reg_meta_build/sources/sos.py` `SOSAdapter` implementing `IRAdapter`
 - Consumes the 13 SOS workbooks via existing parser at `reg_meta_build/src/reg_meta_build/sources/sos.py`
 - **Variable merge (respec, DECISION POINT 4):** `SosVariable` identity is `(deldatamangd, name)`, but a SOS variable is `(register, variable_name)` — the adapter **merges same-named variables across deldatamängder into one `IRVariable`** (the register-level kodlistor are shared; §5.0.1), emitting one `IRVariableState` per `(deldatamängd, period)` with the deldatamängd as the `register_variant_id` coordinate. It **splits** into distinct variables only on a genuine meaning conflict (incompatible data types, or disjoint code-list shapes for the same name — BU `FOD_DATUMN`, PAR `ATC`), via the §5.7 triage path.
