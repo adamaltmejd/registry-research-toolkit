@@ -9,6 +9,7 @@ discard rule on a tiny synthetic fixture.
 
 from __future__ import annotations
 
+import hashlib
 import inspect
 import sqlite3
 from typing import TYPE_CHECKING
@@ -216,9 +217,10 @@ class TestProvenanceEmitButDiscard:
         # may not trip a triage-collapse / empty-projection condition.)
         assert all(w.code for w in objects if isinstance(w, IRWarning))
 
-    def test_built_db_has_no_provenance_side_effect(self, tmp_path: Path) -> None:
-        """The provenance DB scaffolding stays EMPTY in A4.1 — emitting the IR
-        provenance objects must not populate it (the materializer discards)."""
+    def test_built_db_populates_provenance(self, tmp_path: Path) -> None:
+        """A4.2: the build POPULATES the sibling provenance DB. build_manifest
+        carries one row whose universal_db_sha256 matches the live reg_meta.db,
+        and the provenance tables hold the expected source/approval rows."""
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         write_scb_input(input_dir)
@@ -228,16 +230,173 @@ class TestProvenanceEmitButDiscard:
             skip_classifications=True,
             skip_slugs=True,
         )
+        universal_path = db_dir / "reg_meta.db"
         prov_path = db_dir / "reg_meta.provenance.db"
         assert prov_path.exists()
+
+        live_sha = hashlib.sha256(universal_path.read_bytes()).hexdigest()
         prov = sqlite3.connect(prov_path)
         try:
-            # The provenance scaffold ships an empty build_manifest table; A4.2
-            # populates it. A4.1 must leave it empty.
-            n = prov.execute("SELECT COUNT(*) FROM build_manifest").fetchone()[0]
-            assert n == 0
+            rows = prov.execute(
+                "SELECT schema_version, universal_db_path, universal_db_sha256 "
+                "FROM build_manifest"
+            ).fetchall()
+            assert len(rows) == 1, "build_manifest must hold exactly one row"
+            (_schema, db_path, db_sha) = rows[0]
+            assert db_sha == live_sha, "build_manifest sha256 must match live DB"
+            assert db_path == str(universal_path)
+
+            # Source checksums + row counts mirrored into provenance (also kept
+            # in import_manifest for A4.2; the removal is deferred to A4.4+).
+            (n_checks,) = prov.execute(
+                "SELECT COUNT(*) FROM source_checksum"
+            ).fetchone()
+            assert n_checks >= 1
+            (n_counts,) = prov.execute(
+                "SELECT COUNT(*) FROM source_row_count"
+            ).fetchone()
+            assert n_counts >= 1
+
+            # Per-provider source-ID linkage: every register maps to its native
+            # Registernamn.
+            id_map = dict(
+                prov.execute(
+                    "SELECT register_id, scb_registernamn FROM scb_register_id_map"
+                ).fetchall()
+            )
+            assert id_map, "scb_register_id_map must be populated"
+
+            # delivery_approval is per (register_variant_id, period_token).
+            cols = {
+                row[1] for row in prov.execute("PRAGMA table_info(delivery_approval)")
+            }
+            assert {
+                "register_id",
+                "register_variant_id",
+                "period_token",
+                "first_approved_date",
+                "last_approved_date",
+            } <= cols
         finally:
             prov.close()
+
+
+# ── 5b. Deterministic SCB IDs + per-variant provenance keying (A4.2) ───────
+
+
+def _multi_variant_ri_rows() -> list[str]:
+    """Two variants of register 1 (RegVarID 10, 11) each delivering an edition
+    under the SAME Registerversionnamn token ('2020') but with DISTINCT approval
+    dates. The A4.1 per-register keying collapsed these into one slot; A4.2 keys
+    per register_variant_id so both survive."""
+    from _csv_fixtures import _ri_row
+
+    def _row(rvid: str, regverid: str, last_date: str, cvid: str, varid: str) -> str:
+        return _ri_row(
+            "TESTREG",
+            "Testregistret",
+            "Testning",
+            f"Variant{rvid}",
+            f"Variant{rvid}",
+            "Beskrivning",
+            "Nej",
+            "2020",  # shared Registerversionnamn token
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",  # first-approval (forsta)
+            last_date,  # last-approval (senast) — DISTINCT per variant
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "Kön",
+            "Personens kön",
+            "Kön enligt folkbokföring",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Kon",
+            "int",
+            "1",
+            cvid,
+            "1",  # RegisterId
+            rvid,  # RegVarID
+            regverid,  # RegVerID
+            varid,
+        )
+
+    return [
+        _row("10", "100", "2021-01-15", "2001", "44"),
+        _row("11", "101", "2021-06-30", "2002", "45"),
+    ]
+
+
+class TestDeterministicIdsAndKeying:
+    def test_source_ids_are_enforced(self, tmp_path: Path) -> None:
+        """register.register_id == int(RegisterId) and
+        register_variant.register_variant_id == int(RegVarID) round-trip from
+        the export (the verifiable core of the SCB deterministic-ID claim)."""
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        try:
+            # The standard fixture uses RegisterId=1, RegVarID=10.
+            assert conn.execute(
+                "SELECT register_id FROM register WHERE register_id = 1"
+            ).fetchone() == (1,)
+            assert conn.execute(
+                "SELECT register_variant_id FROM register_variant "
+                "WHERE register_variant_id = 10"
+            ).fetchone() == (10,)
+        finally:
+            conn.close()
+
+    def _build_and_read_approvals(self, tmp_path: Path) -> list[tuple]:
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir, registerinformation_rows=_multi_variant_ri_rows())
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            # No Vardemangder/value-set rows in this fixture; keep it minimal.
+        )
+        prov = sqlite3.connect(db_dir / "reg_meta.provenance.db")
+        try:
+            return prov.execute(
+                "SELECT register_variant_id, period_token, last_approved_date "
+                "FROM delivery_approval ORDER BY register_variant_id, period_token"
+            ).fetchall()
+        finally:
+            prov.close()
+
+    def test_multi_variant_dates_survive_per_variant(self, tmp_path: Path) -> None:
+        """Two variants sharing a Registerversionnamn token keep BOTH approval
+        dates (no variant collapse — the A4.1 per-register bug)."""
+        rows = self._build_and_read_approvals(tmp_path / "a")
+        by_variant = {rvid: last for rvid, _token, last in rows}
+        assert by_variant.get(10) == "2021-01-15"
+        assert by_variant.get(11) == "2021-06-30"
+
+    def test_provenance_keying_is_deterministic(self, tmp_path: Path) -> None:
+        """Repeated builds produce byte-identical delivery_approval ordering."""
+        rows_a = self._build_and_read_approvals(tmp_path / "a")
+        rows_b = self._build_and_read_approvals(tmp_path / "b")
+        assert rows_a == rows_b
 
 
 # ── 6. value_code / code_id parity probe (R1) ──────────────────────────────

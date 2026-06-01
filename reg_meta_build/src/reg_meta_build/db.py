@@ -829,32 +829,80 @@ CREATE TABLE import_manifest (
 
 
 # Sibling provenance DB (REFACTOR_SPEC §4.4 / §5.8). Maintainer-only artifact;
-# not shipped to consumers. Sits next to the universal DB. Per-provider source
-# linkage tables (e.g. scb_register_id_map) and adapter parse warning tables
-# land in later stages (A4.x) once concrete adapters emit IR; for A1.3 the
-# only required table is build_manifest which ties provenance to a specific
-# universal DB by sha256.
+# NOT shipped to consumers, and structurally outside the dbdiff gate — dbdiff
+# only ever opens the universal `reg_meta.db`, so populating this sibling file
+# is dbdiff-neutral by construction (A4.2). Sits next to the universal DB.
+#
+# A4.2 populates the tables below from the adapter's emitted IR
+# (IRDeliveryProvenance / IRWarning) plus the source checksums/row-counts. The
+# tables live ONLY in this sibling DB — they touch no universal-schema DDL, so
+# there is NO SCHEMA_VERSION bump (SCHEMA_VERSION gates the universal DB only).
 PROVENANCE_DB_FILENAME = "reg_meta.provenance.db"
 
 PROVENANCE_DDL = """\
+-- Ties this provenance DB to the exact universal DB it was built against.
 CREATE TABLE build_manifest (
     schema_version TEXT NOT NULL,
     universal_db_path TEXT NOT NULL,
     universal_db_sha256 TEXT NOT NULL,
     build_date TEXT NOT NULL
 );
+
+-- Per-provider source-ID linkage (REFACTOR_SPEC §5.1/§5.8). For SCB the
+-- universal register_id IS the source RegisterId, so this records the native
+-- register name alongside it for maintainer debugging.
+CREATE TABLE scb_register_id_map (
+    register_id INTEGER NOT NULL,
+    scb_registernamn TEXT NOT NULL,
+    scb_imported_at TEXT NOT NULL,
+    PRIMARY KEY (register_id)
+);
+
+-- Adapter parse warnings (the IRWarning sink).
+CREATE TABLE adapter_warning (
+    provider TEXT NOT NULL,
+    entity_kind TEXT NOT NULL,
+    entity_id INTEGER NOT NULL,
+    code TEXT NOT NULL,
+    detail TEXT
+);
+
+-- Source-file SHA-256 checksums (also kept in the shipped import_manifest for
+-- A4.2 so dbdiff stays exit-0; the import_manifest copy is removed at A4.4+).
+CREATE TABLE source_checksum (
+    source_file TEXT NOT NULL PRIMARY KEY,
+    sha256 TEXT NOT NULL
+);
+
+-- Source-file row counts (same dual-write rationale as source_checksum).
+CREATE TABLE source_row_count (
+    source_file TEXT NOT NULL PRIMARY KEY,
+    n_rows INTEGER NOT NULL
+);
+
+-- Per-variant Registerversion delivery/approval dates (the IRDeliveryProvenance
+-- sink). Re-grained per register_variant (A4.2 resolved fork (c)): the A4.1
+-- per-register keying collapsed variants sharing a `registerversionnamn` token.
+-- `period_token` is the Registerversionnamn; first/last approval are the SCB
+-- forsta/senast godkannandedatum.
+CREATE TABLE delivery_approval (
+    register_id INTEGER NOT NULL,
+    register_variant_id INTEGER NOT NULL,
+    period_token TEXT NOT NULL,
+    first_approved_date TEXT,
+    last_approved_date TEXT,
+    PRIMARY KEY (register_variant_id, period_token)
+);
 """
 
 
 def create_empty_provenance_db(path: Path) -> None:
-    """Create an empty provenance DB with just the build_manifest schema.
+    """Create an empty provenance DB with the full provenance schema.
 
-    The materializer (A4.x) will populate build_manifest after the universal
-    DB is finalized and its sha256 is known. For A1.3 this is a pure
-    scaffolding helper — it creates the file and applies the DDL, nothing
-    more. Idempotent only in the sense that callers are expected to call
-    `rotate_db_to_prev` first; this function refuses to overwrite an
-    existing file to keep the rotation contract obvious.
+    Applies `PROVENANCE_DDL` and nothing else; `write_provenance_db` is the
+    populating variant A4.2 wires into the build. Refuses to overwrite an
+    existing file — callers must `rotate_db_to_prev` first — to keep the
+    rotation contract obvious.
     """
     if path.exists():
         raise RegMetaError(
@@ -867,6 +915,72 @@ def create_empty_provenance_db(path: Path) -> None:
     conn = sqlite3.connect(path)
     try:
         conn.executescript(PROVENANCE_DDL)
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
+    """Create and populate the sibling provenance DB from a build payload.
+
+    `payload` is the dict `materialize()` collects (provenance IR objects,
+    warning IR objects, source checksums/row-counts, the SCB register-name map)
+    plus the finalized universal-DB sha256/path the caller stamps in after the
+    swap. Refuses to overwrite (rotate first), mirroring
+    `create_empty_provenance_db`. The caller wraps this in a non-fatal
+    try/except: a provenance write failure must NOT flip the build exit code,
+    since the universal DB is already swapped in.
+    """
+    if path.exists():
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="provenance_db_exists",
+            error_class="configuration",
+            message=f"Provenance DB already exists: {path}",
+            remediation="Call rotate_db_to_prev first, or delete the file.",
+        )
+    conn = sqlite3.connect(path)
+    try:
+        conn.executescript(PROVENANCE_DDL)
+
+        conn.execute(
+            "INSERT INTO build_manifest VALUES (?, ?, ?, ?)",
+            (
+                payload["schema_version"],
+                payload["universal_db_path"],
+                payload["universal_db_sha256"],
+                payload["build_date"],
+            ),
+        )
+
+        imported_at = payload["build_date"]
+        conn.executemany(
+            "INSERT INTO scb_register_id_map VALUES (?, ?, ?)",
+            [
+                (register_id, registernamn, imported_at)
+                for register_id, registernamn in payload["scb_register_id_map"]
+            ],
+        )
+
+        conn.executemany(
+            "INSERT INTO adapter_warning VALUES (?, ?, ?, ?, ?)",
+            payload["adapter_warnings"],
+        )
+
+        conn.executemany(
+            "INSERT INTO source_checksum VALUES (?, ?)",
+            sorted(payload["source_checksums"].items()),
+        )
+        conn.executemany(
+            "INSERT INTO source_row_count VALUES (?, ?)",
+            sorted(payload["row_counts"].items()),
+        )
+
+        conn.executemany(
+            "INSERT INTO delivery_approval VALUES (?, ?, ?, ?, ?)",
+            payload["delivery_approvals"],
+        )
+
         conn.commit()
     finally:
         conn.close()
@@ -2048,20 +2162,40 @@ def materialize(
     # Dispatch the IR stream. The universal variable-graph rows were written
     # verbatim by the adapter (A4.1 keeps the legacy ID-assignment code intact
     # for byte-identity), so those IR objects are already materialized and the
-    # loop is a no-op for them; warnings/provenance route to a discard sink
-    # (A4.2 wires them to the provenance DB).
-    n_warnings = 0
-    n_provenance = 0
+    # loop is a no-op for them. A4.2 COLLECTS the warning/provenance objects
+    # here into a payload returned to `build_db`, which writes them to the
+    # sibling provenance DB AFTER the universal swap (so build_manifest can
+    # carry the finalized universal-DB sha256). The collection is read-only
+    # against the universal tables — it inserts NOTHING into `conn`, so the
+    # universal build path is unchanged (dbdiff stays exit-0).
+    adapter_warnings: list[tuple[str, str, int, str, str | None]] = []
+    delivery_approvals: list[tuple[int, int, str, str | None, str | None]] = []
     for obj in adapter.emit(source_dir):
         if isinstance(obj, IRWarning):
-            n_warnings += 1  # DISCARD in A4.1 (no provenance population)
+            adapter_warnings.append(
+                (adapter.provider, obj.entity_kind, obj.entity_id, obj.code, obj.detail)
+            )
         elif isinstance(obj, IRDeliveryProvenance):
-            n_provenance += 1  # DISCARD in A4.1
+            # One delivery_approval row per (variant, period_token); union the
+            # first/last-approval token sets so a token present in only one
+            # still gets a row. Sorted for deterministic insert order.
+            first = obj.first_approval_dates or {}
+            last = obj.last_approval_dates or {}
+            for token in sorted(set(first) | set(last)):
+                delivery_approvals.append(
+                    (
+                        obj.register_id,
+                        obj.register_variant_id,
+                        token,
+                        first.get(token),
+                        last.get(token),
+                    )
+                )
         # All other IR types are universal variable-graph rows the adapter
         # already wrote; nothing to insert here.
     _progress(
-        f"  IR stream: emitted {n_provenance:,} provenance + {n_warnings:,} "
-        f"warning object(s) (discarded in A4.1)"
+        f"  IR stream: collected {len(delivery_approvals):,} delivery-approval + "
+        f"{len(adapter_warnings):,} warning row(s) for the provenance DB"
     )
 
     row_counts = adapter.row_counts
@@ -2269,6 +2403,13 @@ def materialize(
         if _ref_key in row_counts:
             row_counts[_ref_key] = row_counts.pop(_ref_key)
 
+    # Provenance: per-provider source-ID linkage. SCB's universal register_id IS
+    # the source RegisterId; record the native `Registernamn` alongside it for
+    # the maintainer-only provenance DB. Read-only against the universal table.
+    scb_register_id_map = adapter.conn.execute(
+        "SELECT register_id, name FROM register ORDER BY register_id"
+    ).fetchall()
+
     return {
         "source_checksums": adapter.source_checksums,
         "row_counts": row_counts,
@@ -2279,6 +2420,14 @@ def materialize(
         },
         "coalesce_stats": state_stats,
         "replaced_by_stats": replaced_by_stats,
+        # A4.2 provenance payload (sibling-DB only; never touches the universal
+        # schema). `build_db` writes these to reg_meta.provenance.db after the
+        # universal swap.
+        "provenance": {
+            "adapter_warnings": adapter_warnings,
+            "delivery_approvals": delivery_approvals,
+            "scb_register_id_map": scb_register_id_map,
+        },
     }
 
 
@@ -2296,6 +2445,7 @@ def build_db(
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
     pre_rename_hook: Callable[[Path], None] | None = None,
+    provenance_pre_rename_hook: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
     """Build the reg_meta database from SCB CSV exports.
 
@@ -2401,8 +2551,17 @@ def build_db(
         )
         source_checksums = mat["source_checksums"]
         row_counts = mat["row_counts"]
+        provenance_payload = mat["provenance"]
 
-        # Write manifest
+        # Write manifest.
+        #
+        # A4.2 DEFERRAL (resolved fork #3): `source_checksums` + `row_counts`
+        # are ALSO written to the sibling provenance DB (see write_provenance_db
+        # below), but they STAY in the shipped import_manifest here so the
+        # universal DB is byte-identical to the pre-A4 baseline and dbdiff stays
+        # exit-0. REFACTOR_SPEC §5.1/§5.8 move them OUT of import_manifest; that
+        # REMOVAL is deferred to A4.4+ (where the baseline stops being the gate).
+        # Do not drop these two keys here without re-baselining.
         manifest_data = {
             "schema_version": SCHEMA_VERSION,
             "import_date": utc_now(),
@@ -2487,28 +2646,50 @@ def build_db(
     rotate_db_to_prev(final_path)
     tmp_path.rename(final_path)
 
-    # Sibling provenance DB scaffolding. `build_manifest` stays empty until
-    # A4.x populates it; this PR just guarantees the file exists alongside
-    # the universal DB it was built against — otherwise a rebuild on an env
-    # with a prior provenance DB would leave only `.prev` and break
-    # downstream tooling that expects the live file.
+    # Sibling provenance DB population (A4.2). Runs AFTER the universal swap so
+    # build_manifest can carry the FINALIZED universal-DB sha256. Mirrors the
+    # universal DB's atomicity: populate a tmp file → rotate the prior live
+    # provenance DB aside → rename the tmp into place. The provenance DB is a
+    # SEPARATE file dbdiff never opens, so none of this touches the gate.
     #
-    # Wrapped in try/except: this runs AFTER the universal DB has already
-    # been swapped in, so any IOError here (disk full, perms) must not flip
-    # the build's exit code to "failed" — the primary artifact succeeded.
-    # Surface as a warning instead. A4.x will hook into this same block
-    # for real provenance writes; that path will need its own atomicity
-    # story (rename-into-place from a tmp), but for now an empty schema
-    # file is cheap to recreate manually and unblocks the build contract.
+    # Wrapped in try/except: this runs AFTER the universal DB has already been
+    # swapped in, so any failure here (disk full, perms, a provenance write
+    # bug) must NOT flip the build's exit code — the primary artifact already
+    # succeeded. Surface as a warning instead; the provenance DB is cheap to
+    # recreate by re-running the build.
     provenance_path = db_dir / PROVENANCE_DB_FILENAME
+    provenance_tmp = provenance_path.with_suffix(".db.tmp")
+    payload = {
+        "schema_version": SCHEMA_VERSION,
+        "universal_db_path": str(final_path),
+        # sha256 of the FINALIZED universal DB now sitting at final_path.
+        "universal_db_sha256": _file_sha256(final_path),
+        "build_date": manifest_data["import_date"],
+        "adapter_warnings": provenance_payload["adapter_warnings"],
+        "delivery_approvals": provenance_payload["delivery_approvals"],
+        "scb_register_id_map": provenance_payload["scb_register_id_map"],
+        "source_checksums": source_checksums,
+        "row_counts": row_counts,
+    }
     try:
+        provenance_tmp.unlink(missing_ok=True)
+        write_provenance_db(provenance_tmp, payload)
+        # Test/maintenance seam: lets a caller inject a failure AFTER the tmp is
+        # written but BEFORE the live file is replaced, to verify a provenance
+        # failure never poisons the already-swapped universal DB.
+        if provenance_pre_rename_hook is not None:
+            provenance_pre_rename_hook(provenance_tmp)
         rotate_db_to_prev(provenance_path)
-        create_empty_provenance_db(provenance_path)
-    except (OSError, RegMetaError) as e:
+        provenance_tmp.rename(provenance_path)
+    except Exception as e:  # noqa: BLE001 — provenance is non-fatal; the
+        # universal DB is already swapped in. Catch BROADLY (not just
+        # OSError/RegMetaError): a provenance write bug must never flip the
+        # build's exit code or poison the primary artifact.
+        provenance_tmp.unlink(missing_ok=True)
         _progress(
-            f"  WARNING: provenance DB scaffolding failed ({type(e).__name__}: {e}); "
-            f"universal DB was written successfully — re-run or manually create "
-            f"{provenance_path.name} to restore provenance."
+            f"  WARNING: provenance DB population failed ({type(e).__name__}: {e}); "
+            f"universal DB was written successfully — re-run the build to restore "
+            f"{provenance_path.name}."
         )
     _progress(f"Database written to {final_path}")
 

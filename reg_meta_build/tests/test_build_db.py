@@ -2837,3 +2837,66 @@ class TestReplacedByEdges:
             assert self._stats(conn)["n_timeseries_event_rows_scanned"] == 1
         finally:
             conn.close()
+
+
+class TestProvenanceDbRotation:
+    """A4.2: the universal DB and the sibling provenance DB rotate to `.prev`
+    in lockstep, and a provenance-write failure never poisons the universal DB.
+    """
+
+    def _build_once(self, input_dir: Path, db_dir: Path, **kwargs) -> None:
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            **kwargs,
+        )
+
+    def test_both_dbs_rotate_in_lockstep(self, tmp_path: Path) -> None:
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir)
+
+        self._build_once(input_dir, db_dir)
+        universal = db_dir / "reg_meta.db"
+        prov = db_dir / "reg_meta.provenance.db"
+        gen1_universal = universal.read_bytes()
+        gen1_prov = prov.read_bytes()
+
+        # Second build rotates gen-1 aside into `.prev`.
+        self._build_once(input_dir, db_dir)
+        universal_prev = db_dir / "reg_meta.db.prev"
+        prov_prev = db_dir / "reg_meta.provenance.db.prev"
+
+        assert universal.exists() and prov.exists()
+        assert universal_prev.exists() and prov_prev.exists()
+        # `.prev` carries gen-1 (rotation moved gen-1 aside, not gen-2).
+        assert universal_prev.read_bytes() == gen1_universal
+        assert prov_prev.read_bytes() == gen1_prov
+
+    def test_universal_db_survives_provenance_failure(self, tmp_path: Path) -> None:
+        """A provenance write failure must NOT flip the build exit code or
+        leave the universal DB unswapped — the non-fatal try/except contract."""
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir)
+
+        def _boom(_tmp_path: Path) -> None:
+            raise RuntimeError("injected provenance failure")
+
+        # build_db must return normally (no raise) despite the failure.
+        self._build_once(input_dir, db_dir, provenance_pre_rename_hook=_boom)
+
+        universal = db_dir / "reg_meta.db"
+        prov = db_dir / "reg_meta.provenance.db"
+        assert universal.exists(), "universal DB must still be swapped in"
+        # The provenance tmp was injected-to-fail before rename, so no live
+        # provenance DB was produced this build.
+        assert not prov.exists()
+        # And the universal DB is a valid, populated SQLite file.
+        conn = open_db(universal)
+        try:
+            assert conn.execute("SELECT COUNT(*) FROM register").fetchone()[0] >= 1
+        finally:
+            conn.close()
