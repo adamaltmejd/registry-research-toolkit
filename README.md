@@ -10,11 +10,11 @@ Tools for working with Swedish registry microdata on
 
 ## Prerequisites
 
-**Python 3.11+** and **uv** (Python package manager).
+**Python 3.13+** and **uv** (Python package manager).
 
 | | macOS | Windows |
 |---|---|---|
-| Python | `brew install python` or [python.org](https://www.python.org/downloads/) | [python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.12` |
+| Python | `brew install python` or [python.org](https://www.python.org/downloads/) | [python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.13` |
 | uv | `curl -LsSf https://astral.sh/uv/install.sh \| sh` | `powershell -c "irm https://astral.sh/uv/install.ps1 \| iex"` |
 
 See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/)

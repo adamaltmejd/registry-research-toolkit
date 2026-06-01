@@ -161,7 +161,7 @@ emission, never importing the runtime tier.
   `build.py`; the structural corpus harness picks it up as a regular
   validation case). `reg_monabundle/tests/test_bundle_size_budget.py`
   embeds it into `build_bundle`, byte-counts the emitted `.py`, and
-  asserts `≤ 1_048_576`. Current shape lands at ~176 KB (~17% of
+  asserts `≤ 1_048_576`. Current shape lands at ~104 KB (~10% of
   cap) — the v1 ceiling is forward-looking, not a tight bound. The
   passing test prints actual size + headroom on every run so
   creeping growth is visible before it trips the gate.

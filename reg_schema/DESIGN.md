@@ -76,27 +76,29 @@ it operates on a parsed dict and never imports Pydantic — so the rule
 engine itself ships anywhere. The Pydantic dependency lives only on the
 model surface (`project_data.py`).
 
-**MONA boundary (§9.6).** Pydantic must **not** ship to MONA. The
-*target* (A3.4): the bundle stops amalgamating `project_data.py` —
-bundle-build runs the structural validator as the gate, then converts a
-validated `Source` into a stdlib-dataclass `LoadedSpec`
-(`reg_monabundle.runtime.spec`) which the bundle embeds instead, so the
-MONA runtime sees only stdlib dataclasses. **Transient (A3.1 → A3.4):**
-until A3.4 lands, the bundle still amalgamates `project_data.py` (which
-now imports Pydantic), so the emitted bundle carries a Pydantic import
-and is built/tested only in a Pydantic-having env — it must not be
-shipped to MONA yet. See `reg_monabundle/build.py`'s
-`REG_SCHEMA_MODULE_ORDER` comment.
+**MONA boundary (§9.6).** Pydantic must **not** ship to MONA, and as of
+A3.4 it does not: the bundle no longer amalgamates `project_data.py`. A
+caller (the mdw CLI / `reg_webapp`) runs the Pydantic structural gate at
+build time — `reg_monabundle/build/spec_loader.py`
+(`validate_project_data`, plus a `LoadedSpec` round-trip that fails fast
+on runtime-unsupported specs) — and the bundle then embeds the project's
+**JSON**. On MONA the stdlib runtime deserializes that JSON into a
+`LoadedSpec` (`reg_monabundle.runtime.spec.loadedspec_from_dict`), so it
+sees only stdlib dataclasses, never Pydantic. The §9.6 CI gate
+(`test_bundle_carries_no_pydantic_or_reg_schema`) line-scans + AST-checks
+the emitted bundle to prove it carries no Pydantic and no `reg_schema`.
 
 Why the dep split matters: the spec is validated in three execution
 contexts with very different dependency availability — only the webapp
 backend has reg_meta, only the bundle runs on MONA. Keeping the
 structural layer dep-free means:
 
-- The bundle amalgamation in `reg_monabundle` can ship the same
-  validator code on MONA, where pip-install is not an option (the A3.4
-  target amalgamates `structural.py` + `validation.py`, not
-  `project_data.py`; see the transient note above).
+- The MONA bundle ships **no** `reg_schema` at all (A3.4): the
+  pure-stdlib §6.8.2 block validator in `reg_monabundle` is what runs on
+  MONA, while `reg_schema`'s §6.8.1 structural validator runs only at the
+  build-time gate. Confining Pydantic to `project_data.py` keeps the
+  structural layer importable in dep-light contexts without dragging in
+  the model surface.
 - `reg_mockdata` (the §15 step-9 rename of `mock_data_wizard`) can
   consume `reg_schema` after its `reg_meta` dependency is deleted,
   without re-introducing it transitively.

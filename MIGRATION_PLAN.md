@@ -163,7 +163,7 @@ away — deliberately.)
 
 **Gate to A2.1.5**: ✅ Met. The coalesced `variable_state` rows are the input the two-level restructure re-parents.
 
-### [ ] A2.1.5 — Two-level table restructure + stored variable slug (respec; supersedes PR #133)
+### [x] A2.1.5 — Two-level table restructure + stored variable slug (respec; supersedes PR #133; PRs #136 + #137 + #138)
 
 The structural prerequisite for triage (A2.2) and lineage (A2.4) — it
 creates the `variable` table they write to and re-parents
@@ -187,22 +187,26 @@ underivable of 42,768 — generic delivery columns like `Kolumn1`×148, `RadNr`�
 replaced with a **name-fallback derivation** (curated > existing-auto >
 register-unique kolumnnamn > capped variable name > `v<provider_key>`, all
 uniquified). Validated clean against the full corpus: 42,768/42,768 variables
-slugged, 0 register-scoped duplicates. **Remaining before this checkbox closes:**
-the slug *freeze* — commit the generated `scb.auto.toml` (42,768 entries) and
-refresh `.snapshot.json` — deferred pre-v1 (`UNFROZEN`; slugs are regenerable
-from source, so the freeze only pins them against future input changes).
+slugged, 0 register-scoped duplicates. **The structural stage is complete; two
+slug-polish tasks moved out** — neither is a structural prerequisite for
+A2.2/A2.4, and both gate on later stages, so they no longer hold this checkbox
+open: (1) the slug *freeze* (commit the generated `scb.auto.toml` + refresh
+`.snapshot.json`) moves to the **v1 release gate**, paired with the UNFROZEN
+deletion — see "What lands as soon as A5.4 ships"; (2) the name-fallback
+**curation** moves to **A4.4** (the slug-TOML curation stage, which post-dates
+the A2.2 triage that shrinks the worklist). Pre-freeze the slugs regenerate from
+source on every build, so neither task blocks anything before v1.
 
-**Follow-up — hand-curate the name-fallbacks (before the v1 freeze).** ~7,000
-variables fell past the clean unique-kolumnnamn case (4,683 collision-involved +
-2,363 underivable) and carry machine-derived slugs: capped/truncated variable
-names, `-2`/`-3` disambiguators, or `v<provider_key>` last-resorts. They are
-correct and register-unique, but often not canonical — and they are the FQID
-leaves researchers cite, frozen for good at v1. They need a hand-curation pass
-(`[variable."<reg>.<var>"]` overrides in `scb.toml`, which win over auto),
-ideally **before the v1 slug freeze** so the frozen leaves are the curated
-forms. To scope it, the build should emit the name-fallback subset as a worklist
-— `scb.auto.toml` does not yet record derivation source (unique-kolumnnamn vs
-name vs last-resort); adding that marker is part of this follow-up.
+**Follow-up — name-fallback curation — MOVED to A4.4.** The variables that fell
+past the clean unique-kolumnnamn case carry machine-derived slugs
+(capped/truncated names, `-N` disambiguators, `v<provider_key>` last-resorts):
+correct and register-unique but often not canonical, and they are the FQID leaves
+researchers cite, frozen for good at v1. The real curation backlog is far smaller
+than the ~7k headline — the name-fallback already produced ~6.6k *descriptive*
+name-derived slugs that need no work, leaving ~325 same-name `-N` pairs, and the
+A2.2 triage folds shrink even that. The hand-curation pass (and the build-side
+derivation-source worklist marker it needs) is now an A4.4 bullet, where it
+sequences after triage. See A4.4.
 
 - **Promote `variable` in place** (it keeps its name — it is already the register-scoped `variable` table on `main`; this is not a rename). Add the synthetic `variable_id AUTOINCREMENT` PK (DECISION POINT 1) and a register-unique `slug`. The A1.2 sensitivity flags (`is_sensitive`, `is_identifier`) and the shared-metadata columns (`name`, `definition`, `description`, `measurement_unit`, `source_register_id`, `source_register_text`) ride along unchanged — same grain, pure column add.
 - **Natural key = `(register_id, slug)`** UNIQUE (the FQID leaf; §5.1 DDL). Add the `slug` column (register-unique). **`provider_key` (the old `var_id` / SOS name) is a NON-unique join hint** — a plain index, *not* UNIQUE — because A2.2's triage splits put several variables under one source key (maintainer red-line on DP1). The build's source-row → variable join refines `provider_key` by the triage discriminator when a split exists (§5.7), 1:1 otherwise.
@@ -268,7 +272,7 @@ cannot land in #132.
 
 **Gate to A2.4**: ✅ Met (PR #139). Lineage join (A2.4) operates on triaged variables.
 
-### [ ] A2.3 — Auto-derive `variable_replaced_by` from `timeseries_event`
+### [x] A2.3 — Auto-derive `variable_replaced_by` from `timeseries_event` (PR #140)
 
 - Add `variable_replaced_by` table to DDL (per §5.5) at **variable grain** — 3-part `(provider, register, variable)` endpoints
 - Build pipeline: after `_import_timeseries`, materialize succession edges from `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`, mapping each variable to its variable
@@ -280,7 +284,7 @@ cannot land in #132.
 
 Can run in parallel with A2.2. **Respec note (in-flight PR #131):** #131 built `variable_replaced_by` with variant-bearing 4-part endpoints (matching the then-current 4-seg FQID). The two-level model makes it **variable grain** — drop the `*_variant` columns; the variable slot becomes the target's variable slug. The auto-derive logic is otherwise unchanged (succession is a register-level fact about the variable). PR #131 mostly survives; this is the only schema adjustment.
 
-**Follow-ups deferred from PR #140 ([#142](https://github.com/adamaltmejd/registry-research-toolkit/issues/142)).** The A2.3 materializer drops two pieces of source-row context that would make edges self-explanatory: (1) carry `timeseries_event.beskrivning` into the edge `note` (today the constant `auto:timeseries_event`); (2) derive `effective_year` for the `AktuellVariabel` grain from the cvid's edition (currently NULL — `Timeseries.csv` has no year column — but a cvid's `register_version` year is available at build time; asymmetric, since the bare `Variabel`/register/variant grains have no edition). Surfaced by the real-build `slk` edge `sun2020inr1 → sun2000inr1`, which looks backwards but is the 2000→2001 SUN96→SUN2000 switch per `beskrivning="2001 byttes SUN96 till SUN2000"`. Edge correctness is unaffected; this is diagnostic enrichment for A2.5's `.predecessors()`/`.successors()` consumers.
+**Follow-ups from PR #140 ([#142](https://github.com/adamaltmejd/registry-research-toolkit/issues/142)) — RESOLVED.** The A2.3 materializer now carries two pieces of source-row context that make edges self-explanatory: (1) `timeseries_event.beskrivning` flows into the edge `note` (was the constant `auto:timeseries_event`); (2) `effective_year` is populated for the `AktuellVariabel` grain from the cvid's `register_version` year at build time (stays NULL on the bare `Variabel`/register/variant grains, which have no edition — asymmetric by design; `Timeseries.csv` itself has no year column). Surfaced by the real-build `slk` edge `sun2020inr1 → sun2000inr1`, which looks backwards but is the 2000→2001 SUN96→SUN2000 switch per `beskrivning="2001 byttes SUN96 till SUN2000"` — now legible from the edge's own `note`/`effective_year`.
 
 ### [x] A2.4 — `variable_state_lineage` interval-overlap join (variable-grain matching) (PR #144; provider-scoping follow-up #145)
 
@@ -550,6 +554,7 @@ matching the gates diagram below.)
 - Register slugs: 3-letter SOS abbreviations (`par`, `mfr`, `dors`, etc.)
 - Variant slugs from deldatamangd names (lowercase, kebab-case) — browsing coordinates, not FQID segments (§5.2)
 - Variable slugs auto-derived from the merged SOS variable names (one variable per `(register, variable_name)`, §5.1); TOML overrides where needed
+- **SCB variable-slug name-fallback curation (moved from A2.1.5).** Hand-curate the SCB variables that carry machine-derived slugs (capped/truncated names, `-N` disambiguators, `v<provider_key>` last-resorts) via `[variable."<reg>.<var>"]` overrides in `scb.toml` (win over auto), so the cited FQID leaves are canonical before the v1 freeze. Real backlog is ~325 same-name `-N` pairs (the ~6.6k name-derived slugs are already descriptive); the A2.2 triage folds shrink it further, which is why this sequences here, after triage, not in A2.1.5. **Build prerequisite:** emit the name-fallback subset as a worklist — `scb.auto.toml` does not yet record derivation source (unique-kolumnnamn vs name vs last-resort), so add that derivation-source marker as part of this work
 - **Per-variant `panel_entity_key` / `panel_time_key` / `panel_time_grain` curation** for both SCB (~150 variants × 5 average = ~750 variant rows) and SOS (~50 variants). `seed-slugs --propose-panel` auto-suggests from:
   - SCB: `Tabelldefinitioner.sql` PK declarations + `Identifierare.csv` entity-type signals
   - SOS: workbook `is_join_variable` annotations + variable definitions
@@ -717,7 +722,7 @@ With parallelism across stages where dependencies allow, calendar time is closer
 - v1.0 SPA (no v0.x file support; Model A only)
 - v1.0 `global` deployment ready to host
 
-UNFROZEN sentinel deletion happens at v1 *public release* (not at v1.0.0 internal tag) — give the v1.0.0 build a curation polish window first.
+**Slug freeze + UNFROZEN deletion — the v1 release gate (moved out of A2.1.5).** At v1 *public release* (not the v1.0.0 internal tag — give the v1.0.0 build a curation-polish window first): commit the generated slug `.auto.toml` files (SCB `scb.auto.toml` ~42,768 entries + SOS) and refresh `.snapshot.json` to **freeze** the FQID leaves, then delete the `reg_meta_build/fqid_slugs/UNFROZEN` sentinel to re-arm the §5.4 grow-only refusal. Pre-freeze the slugs regenerate from source on every build, so the freeze only pins them against future input changes — which is why it waits until release rather than gating A2.1.5.
 
 ---
 
