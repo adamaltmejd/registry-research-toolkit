@@ -49,6 +49,8 @@ Notes:
 from __future__ import annotations
 
 import re
+import shutil
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -491,12 +493,15 @@ def make_frontmatter(
 def extract_wiki_links(
     text: str, known_cols: set[str], own_col: str | None = None
 ) -> str:
-    """Convert references to known column names into [[wiki-links]].
+    """Convert references to known column names into [col](col.md) links.
 
-    Matches column names at word boundaries, skipping:
+    Standard markdown relative links (not Obsidian [[wiki-links]]) so panache
+    formats under one gfm flavor; each column doc is named `{col}.md`, so the
+    target resolves both on GitHub and in Obsidian. Matches at word boundaries,
+    skipping:
     - The variable's own name (to avoid self-links)
     - Names inside frontmatter, headings, or table headers
-    - Names already inside wiki-links
+    - Names already inside a link
     - Names inside markdown link syntax [text](url)
     """
     # Build a regex matching any known column name at word boundaries.
@@ -546,7 +551,7 @@ def extract_wiki_links(
             before = line[: m.start()]
             if before.rstrip().endswith("]("):
                 return col
-            return f"[[{col}]]"
+            return f"[{col}]({col}.md)"
 
         line = col_re.sub(replace_col, line)
         result.append(line)
@@ -796,16 +801,29 @@ def parse_bakgrundsfakta(md_text: str, known_cols: set[str]) -> list[DocEntry]:
 
 
 def _attach_footnotes(entries: list[DocEntry], footnotes: dict[str, str]) -> None:
-    """Append footnote definitions to entries that contain references."""
+    """Append footnote definitions to referencing entries; drop orphan refs.
+
+    PDF conversion sometimes keeps an inline ``[^N]`` while losing its
+    definition. Strip those dangling refs (mirrors BROKEN_IMG_RE) so panache's
+    undefined-footnote-id lint stays green.
+    """
+
+    def _keep_defined(m: re.Match[str]) -> str:
+        return m.group(0) if m.group(1) in footnotes else ""
+
     for entry in entries:
         content = "\n".join(entry.lines)
         refs = set(re.findall(r"\[\^(\d+)\]", content))
         if not refs:
             continue
-        fn_lines = []
-        for num in sorted(refs, key=int):
-            if num in footnotes:
-                fn_lines.append(f"[^{num}]: {footnotes[num]}")
+        if not refs <= footnotes.keys():  # has orphan ref(s)
+            entry.lines = [
+                re.sub(r"\[\^(\d+)\]", _keep_defined, ln) for ln in entry.lines
+            ]
+        fn_lines = [
+            f"[^{num}]: {footnotes[num]}"
+            for num in sorted(refs & footnotes.keys(), key=int)
+        ]
         if fn_lines:
             entry.lines.extend(["", *fn_lines])
 
@@ -1029,13 +1047,10 @@ def write_entries(
         # Add wiki-links to cross-references
         content = extract_wiki_links(content, known_cols, entry.column_name)
 
-        # Markdownlint compliance
-        content = re.sub(r"\n{3,}", "\n\n", content)  # MD012: no multiple blanks
-        content = re.sub(
-            r"[^\S\n]+$", "", content, flags=re.MULTILINE
-        )  # MD009: trailing spaces
-        content = BARE_EMAIL_RE.sub(r"<\1>", content)  # MD034: wrap bare emails
-        content = BARE_URL_RE.sub(r"<\1>", content)  # MD034: wrap bare URLs
+        # Content fixups (whitespace/wrapping is owned by the panache format
+        # post-pass in main(), so MD009/MD012-style cleanup is no longer needed).
+        content = BARE_EMAIL_RE.sub(r"<\1>", content)  # wrap bare emails
+        content = BARE_URL_RE.sub(r"<\1>", content)  # wrap bare URLs
         content = BROKEN_IMG_RE.sub("", content)  # MD045: remove broken image refs
         content = content.replace("\n```\n", "\n```text\n")  # MD040: add language tag
 
@@ -1365,6 +1380,27 @@ def main() -> None:
             print(f"  Wrote {entry.slug}.md")
         else:
             print(f"  Would write {entry.slug}.md ({len(entry.lines)} lines)")
+
+    if not args.dry_run:
+        _panache_format(args.out)
+
+
+def _panache_format(out_dir: Path) -> None:
+    """Format generated docs with panache so committed output is panache-clean.
+
+    panache is the repo's markdown formatter; running it as the build's final
+    stage keeps generated docs consistent with hand-written ones and green under
+    CI's `panache format --check` (the only feasible check there — the full doc
+    build needs the untracked SCB seed). Config is the repo-root .panache.toml.
+    """
+    if shutil.which("uvx") is None:
+        print("WARNING: uvx not found; skipping panache format pass", file=sys.stderr)
+        return
+    print(f"Formatting {out_dir} with panache...")
+    subprocess.run(
+        ["uvx", "--from", "panache-cli", "panache", "format", str(out_dir)],
+        check=True,
+    )
 
 
 if __name__ == "__main__":
