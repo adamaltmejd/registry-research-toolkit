@@ -20,8 +20,8 @@ Expensive test suites are gated behind `--run-<name>` flags. To add a new catego
 ## Linting
 
 ```bash
-uv run ruff check reg_meta/ reg_meta_build/ mock_data_wizard/
-uv run ruff format reg_meta/ reg_meta_build/ mock_data_wizard/
+uv run ruff check reg_meta/ reg_meta_build/ reg_schema/ reg_monabundle/ mock_data_wizard/
+uv run ruff format reg_meta/ reg_meta_build/ reg_schema/ reg_monabundle/ mock_data_wizard/
 ```
 
 ## Releasing

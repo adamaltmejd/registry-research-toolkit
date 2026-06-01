@@ -15,7 +15,7 @@ from pathlib import Path
 
 from reg_monabundle import build_bundle, scan_file, validate_block, write_export
 
-validate_block({"column_options": {"scb/lisa/_default/2020/lopnr": {"suppress_k": 25}}})
+validate_block({"column_options": {"scb/lisa/lopnr": {"suppress_k": 25}}})
 
 # Defaults to amalgamating reg_monabundle.runtime.* — no caller wiring needed.
 build_bundle(Path("mdw_runner.py"))
@@ -35,7 +35,8 @@ complete. Lightweight surface:
 - `reg_monabundle.constants.SUPPRESS_K` — global k-anonymity floor.
 - `reg_monabundle.VALID_OPTION_KEYS` — allowed `column_options` keys.
 - `reg_monabundle.build_bundle` — amalgamates the runtime modules +
-  reg_schema + reg_monabundle into a single ``.py`` for upload to MONA.
+  reg_monabundle into a single ``.py`` for upload to MONA (no
+  `reg_schema`, no Pydantic — §9.6).
   Defaults to the in-package `reg_monabundle.runtime`; pass
   `runtime_pkg_dir` + `runtime_module_order` to plug a steward-private
   pipeline.
@@ -61,5 +62,5 @@ Bundle output is byte-counted in CI against the 1 MB v1 cap (§12) via
 [tests/test_bundle_size_budget.py](tests/test_bundle_size_budget.py),
 which embeds the 200-column load-test fixture from
 [reg_schema/test_corpus/load_test_200col/](../reg_schema/test_corpus/load_test_200col/)
-and asserts `≤ 1_048_576`. Current shape lands at ~17% of cap; the
+and asserts `≤ 1_048_576`. Current shape lands at ~10% of cap; the
 ceiling is forward-looking, not a tight bound on today's bundle.

@@ -49,7 +49,7 @@ Post-refactor target — see `REFACTOR_SPEC.md` §9–§10 for the full design a
 - **Type checking**: `uvx ty check` (Astral, beta). Blocking in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
 - **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates into a single file uploaded to MONA. Each added runtime dep must already be in MONA's WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
 
-Code currently in `mock_data_wizard/{server,editor}.py` (stdlib `http.server`, dataclass-based editor) is being superseded by `reg_webapp` and deleted in §15 step 7. Don't extend it — extend the new packages.
+`mock_data_wizard`'s old local editor/server (`editor.py`, `server.py`) are already removed; `mock-data-wizard ui` is a frozen stub and the `web/` SPA awaits final deletion in §15 step 7, superseded by `reg_webapp`. Don't revive that path — extend the new packages.
 
 # Lint and test
 - `uv run ruff check` — python lint
