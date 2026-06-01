@@ -55,6 +55,7 @@ helpers both packages agree on — lives in `reg_meta`.
 | `fqid_slugs.py`                     | `reg_meta_build` |
 | `classifications.py`                | `reg_meta_build` |
 | `validate.py`                       | `reg_meta_build` |
+| `dbdiff.py` (content diff harness)  | `reg_meta_build` |
 | `sources/` (provider CSV parsers)   | `reg_meta_build` |
 | `fqid.py`, `catalog.py`, `queries.py`, `doc_queries.py`, `errors.py`, `update.py`, `download.py` | `reg_meta` |
 
@@ -73,6 +74,46 @@ reg-meta-build parse-sos ...
 The matching `reg-meta maintain *` forms are removed. `reg-meta maintain
 update` / `info` are promoted to top-level `reg-meta update` / `reg_meta
 info` (query-side concerns — fetching/inspecting prebuilt DBs).
+
+## Content diff harness (`dbdiff`)
+
+`dbdiff.py` compares two `reg_meta.db` files by **content**, not bytes.
+It is the acceptance gate for the A4.1 adapter refactor (and any future
+"the rebuild should be identical" change): rebuild the DB, then diff the
+new file against a preserved baseline. Raw byte comparison is useless
+here — two SQLite files with identical rows differ byte-wise (page
+layout, freelist, vacuum generation, FTS index segment order), so the
+check has to be order-independent and storage-aware.
+
+- **Schema compare**: same tables, and per table the same columns
+  (name/type/order/NOT NULL/default/PK) and indexes (named + auto).
+- **Content compare**: per user table, row count plus an
+  order-independent *multiset* fingerprint — each row canonicalized to a
+  type-tagged, length-prefixed byte string (NULL-aware, BLOB-as-bytes),
+  hashed with BLAKE2b-128, the per-row hashes **summed** mod 2¹²⁸.
+  Summation (not XOR) so duplicate/missing rows can't cancel. The pass is
+  O(n) streaming / O(1) memory, so the 5.7M-row `value_set_member` table
+  costs seconds, not a 330 MB load.
+- **Ignore set** — deliberately minimal. Only `import_manifest.import_date`
+  (wall-clock) is dropped by default; `schema_version`, `source_checksums`,
+  `row_counts`, and every content/ID column are compared. `input_dir` (a
+  path) is *not* ignored — it is stable for a same-machine rebuild; a
+  cross-machine diff can add it explicitly.
+- **FTS5**: the `*_fts` virtual tables are external-content (a projection
+  of base tables, which *are* compared) and their shadow tables hold an
+  insert-order-dependent serialized index. Both are schema-compared but
+  content-excluded, so an emit-order change that leaves content identical
+  does not false-positive.
+- **Mismatch output**: names the table + count delta and dumps the first
+  N differing rows per direction, found via an ATTACH-based
+  multiset-difference query (`SUM(+1/-1) GROUP BY all-columns`) that
+  offloads its working set to SQLite's temp store.
+
+Standalone and read-only (`mode=ro` URIs); does not import the build
+pipeline. Importable as `reg_meta_build.dbdiff.diff_db_content(...)` and
+runnable as `python -m reg_meta_build.dbdiff <db_a> <db_b>` (exit 0
+identical / 1 differs / 2 error). The full rationale lives in the module
+docstring.
 
 ## Source parsers
 
