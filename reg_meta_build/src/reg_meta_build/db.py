@@ -2656,22 +2656,28 @@ def build_db(
     # swapped in, so any failure here (disk full, perms, a provenance write
     # bug) must NOT flip the build's exit code — the primary artifact already
     # succeeded. Surface as a warning instead; the provenance DB is cheap to
-    # recreate by re-running the build.
+    # recreate by re-running the build. (Known limitation: on a REBUILD, a
+    # failure before the rotate leaves the PRIOR live provenance DB in place,
+    # now stale vs the new universal generation, until the re-run — acceptable
+    # for maintainer-only debug data; A4.4+ may harden the failure path.)
     provenance_path = db_dir / PROVENANCE_DB_FILENAME
     provenance_tmp = provenance_path.with_suffix(".db.tmp")
-    payload = {
-        "schema_version": SCHEMA_VERSION,
-        "universal_db_path": str(final_path),
-        # sha256 of the FINALIZED universal DB now sitting at final_path.
-        "universal_db_sha256": _file_sha256(final_path),
-        "build_date": manifest_data["import_date"],
-        "adapter_warnings": provenance_payload["adapter_warnings"],
-        "delivery_approvals": provenance_payload["delivery_approvals"],
-        "scb_register_id_map": provenance_payload["scb_register_id_map"],
-        "source_checksums": source_checksums,
-        "row_counts": row_counts,
-    }
     try:
+        # Build the payload INSIDE the try: `_file_sha256(final_path)` reads the
+        # just-renamed universal DB, and even that (near-impossible) failure must
+        # stay non-fatal — the universal artifact already succeeded.
+        payload = {
+            "schema_version": SCHEMA_VERSION,
+            "universal_db_path": str(final_path),
+            # sha256 of the FINALIZED universal DB now sitting at final_path.
+            "universal_db_sha256": _file_sha256(final_path),
+            "build_date": manifest_data["import_date"],
+            "adapter_warnings": provenance_payload["adapter_warnings"],
+            "delivery_approvals": provenance_payload["delivery_approvals"],
+            "scb_register_id_map": provenance_payload["scb_register_id_map"],
+            "source_checksums": source_checksums,
+            "row_counts": row_counts,
+        }
         provenance_tmp.unlink(missing_ok=True)
         write_provenance_db(provenance_tmp, payload)
         # Test/maintenance seam: lets a caller inject a failure AFTER the tmp is
