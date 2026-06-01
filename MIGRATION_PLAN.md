@@ -505,7 +505,18 @@ matching the gates diagram below.)
 
 - Move SCB ingest from `db.py`'s `_import_*` functions to `reg_meta_build/sources/scb.py` `SCBAdapter`
 - Adapter emits IR; materializer in `db.py` becomes provider-blind
-- Test SCB rebuild produces byte-identical universal DB output
+- **Acceptance gate: the rebuilt universal DB must be *content*-identical to a
+  preserved pre-A4 baseline.** Before starting, copy the current
+  `reg_meta.db` aside as the baseline; after the refactor, rebuild and run the
+  diff harness (shipped by [#162](https://github.com/adamaltmejd/registry-research-toolkit/pull/162),
+  `reg_meta_build/dbdiff.py`):
+  `python -m reg_meta_build.dbdiff <rebuilt.db> <baseline.db>` (exit 0 =
+  identical; 1 = differs, with the offending table + sample rows). Do **not**
+  byte-compare the files — identical content yields byte-different SQLite files
+  (page layout, freelist, FTS index order); the harness is an order-independent
+  content fingerprint that ignores only `import_manifest.import_date`. See
+  `reg_meta_build/DESIGN.md` § "Content diff harness (`dbdiff`)" for the full
+  rationale and the ignore-list semantics.
 - Provenance DB populated with SCB-specific debug data (raw CSV checksums, import warnings)
 
 **Estimate**: 5-7 days. Refactor only; no new functionality.
