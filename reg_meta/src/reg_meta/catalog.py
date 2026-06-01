@@ -60,6 +60,29 @@ class ResolvedClassification:
     via_same_as: tuple[Fqid, ...] | None = None
 
 
+# §5.10 catalog-tree children shapes (A5.1b-i): thin child nodes for the webapp's
+# catalog browse (`/api/catalog` → providers → registers → bindings). Each carries
+# the addressable `Fqid` (webapp serializes `str(fqid)`) + a display `name`,
+# mirroring the `Resolved*` style but without the per-entity detail those carry.
+@dataclass(frozen=True)
+class ProviderSummary:
+    fqid: Fqid
+    name: str
+
+
+@dataclass(frozen=True)
+class RegisterSummary:
+    fqid: Fqid
+    name: str
+    purpose: str | None
+
+
+@dataclass(frozen=True)
+class BindingSummary:
+    fqid: Fqid
+    name: str | None
+
+
 # §5.10 / §6.2: the polymorphic period a caller passes to `resolve_at`. Mirrors
 # `Source.period`: a bare year (int), a period token ("HT2020"/"2020-Q3"/
 # "2020-08"/"2018-12-31"), an explicit range dict {"from", "to"} (endpoints are
@@ -310,6 +333,70 @@ class Catalog:
                     f"emit-then-parse yields kind={parsed.kind.value}"
                 )
         return _DISPATCH[parsed.kind](self, parsed)
+
+    # ── A5.1b-i catalog-tree children enumeration (§5.10) ──────────────────
+    # The webapp browse consumes these for the `/api/catalog` node tree. Each
+    # returns a thin Summary list, slug-ordered (deterministic, matches the
+    # FQID-leaf the webapp links on). An unknown parent slug returns an empty
+    # list — not an error: a genuinely-absent node maps to 404 via `resolve()`,
+    # and a present parent with no children maps to an empty children list.
+
+    def list_providers(self) -> list[ProviderSummary]:
+        """Every provider in the catalog (e.g. scb, sos), ordered by slug."""
+        rows = self._conn.execute(
+            "SELECT slug, name FROM provider ORDER BY slug"
+        ).fetchall()
+        return [
+            ProviderSummary(fqid=Fqid.provider_fqid(r["slug"]), name=r["name"])
+            for r in rows
+        ]
+
+    def list_registers(self, provider_slug: str) -> list[RegisterSummary]:
+        """Registers under a provider, ordered by slug. A register with a NULL
+        slug isn't addressable by a register FQID, so it's excluded (symmetric
+        with `list_bindings`'s variable-slug filter; `register.slug` is nullable
+        like `variable.slug`, both filled by the build's slug derivation). Empty
+        when the provider slug names no provider OR the provider has no slugged
+        registers (both are an empty children list to the webapp)."""
+        rows = self._conn.execute(
+            "SELECT r.slug, r.name, r.purpose "
+            "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug IS NOT NULL ORDER BY r.slug",
+            (provider_slug,),
+        ).fetchall()
+        return [
+            RegisterSummary(
+                fqid=Fqid.register_fqid(provider_slug, r["slug"]),
+                name=r["name"],
+                purpose=r["purpose"],
+            )
+            for r in rows
+        ]
+
+    def list_bindings(
+        self, provider_slug: str, register_slug: str
+    ) -> list[BindingSummary]:
+        """A register's bindings — its register-unique variable slugs — ordered
+        by slug. A variable with a NULL slug isn't addressable by a binding FQID,
+        so it's excluded (the FQID leaf is the browse key). Empty when the
+        (provider, register) pair names no register OR it has no slugged
+        variables."""
+        rows = self._conn.execute(
+            "SELECT v.slug, v.name "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "ORDER BY v.slug",
+            (provider_slug, register_slug),
+        ).fetchall()
+        return [
+            BindingSummary(
+                fqid=Fqid.binding_fqid(provider_slug, register_slug, r["slug"]),
+                name=r["name"],
+            )
+            for r in rows
+        ]
 
     def _resolve_provider(self, fqid: Fqid) -> ResolvedProvider:
         row = self._conn.execute(
