@@ -41,6 +41,7 @@ from reg_meta.queries import extract_year
 # allowlists + the SCB provider id stay in `db.py` (used by the materializer
 # too); import them rather than duplicate.
 from reg_meta_build.db import (
+    _VALID_TO_SENTINEL,
     _VARDEMANGDER_REAL_SHAPED,
     _VARDEMANGDER_SENTINELS,
     PROVIDER_ID_SCB,
@@ -56,6 +57,7 @@ from reg_meta_build.ir import (
     IRValueCode,
     IRValueSet,
     IRVariable,
+    IRVariableAlias,
     IRVariableState,
     IRVariant,
     IRWarning,
@@ -368,8 +370,8 @@ def _import_registerinformation(
         ":var_id, :variabelnamn, :data_type, :data_length)",
         list(instances.values()),
     )
-    # A2.7: cvid-grained alias staging; re-parented onto the shipped
-    # `variable_alias` (variable_id-keyed) before ship by `_reparent_variable_alias`.
+    # A2.7: cvid-grained alias staging; projected onto the shipped
+    # `variable_alias` (variable_id-keyed) via `_emit_variable_aliases` → IR (A4.3a).
     conn.executemany(
         "INSERT INTO variable_alias_build (cvid, delivery_column_name) VALUES (?, ?)",
         sorted(aliases),
@@ -391,7 +393,7 @@ def _import_registerinformation(
         "variable": len(variables),
         "variable_instance": len(instances),
         # A2.7: these rows land in the cvid-grained `variable_alias_build` staging
-        # (re-parented onto `variable_alias` later by `_reparent_variable_alias`),
+        # (projected onto `variable_alias` later via `_emit_variable_aliases` → IR),
         # NOT the shipped `variable_alias` — label by the table actually written.
         "variable_alias_build": len(aliases),
         "population": len(populations),
@@ -521,8 +523,9 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
 # A2.1: SCB ships VersionForsta/VersionSista as plain year strings ("2020").
 # §5.1 requires `variable_state.valid_from`/`valid_to` as full YYYY-MM-DD.
 # Expansion rules are deterministic — year N → first day Jan / last day Dec.
-# Open-ended (no upper bound observable) → sentinel '9999-12-31'.
-_VALID_TO_OPEN_SENTINEL = "9999-12-31"
+# Open-ended (no upper bound observable) → the universal variable_state.valid_to
+# DDL sentinel (single source of truth: db._VALID_TO_SENTINEL).
+_VALID_TO_OPEN_SENTINEL = _VALID_TO_SENTINEL
 # Lower bound when no year is derivable from any signal (yearless cvids
 # like "Person-År" with no unika_summary backing). Picked to sort before
 # any real date so range queries treat the row as "valid since forever".
@@ -1442,7 +1445,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
 
     # Stamp each cvid's OWNING `variable_id` now that triage has assigned every
     # group (including the split siblings it just minted). This is the GROUND
-    # TRUTH `_reparent_variable_alias` / `_backfill_state_classifications` read
+    # TRUTH `_emit_variable_aliases` / `_backfill_state_classifications` read
     # instead of a post-hoc column-tie: each cvid maps to exactly one gkey (see
     # `cvid_gkey`), so `assignments[gkey]` is its unambiguous sibling — no
     # guessing, no skip. A None assignment is a missing-parent invariant break
@@ -2129,21 +2132,26 @@ class SCBAdapter:
         (No IRClassification / IRLineageEdge / IRReplacedByEdge: in A4.1 those
         stay materializer-derived; the adapter emits the subset above.)
 
-        A4.1 INERT-MIRROR CAVEAT — the universal IR yielded here is read back
-        from the just-written rows *before* the materializer's post-passes run,
-        so it is NOT yet a faithful round-trip of the shipped catalog and must
-        be made faithful at A4.3, when ``materialize`` starts CONSUMING the IR.
-        Known gaps the A4.3 flip must fix: the slug columns (register, variant,
-        variable) are NULL at emit time — ``populate_slugs`` /
-        ``populate_variable_slugs`` run later in the materializer — so the mirror
-        reads them as ``""`` placeholders; A4.3 re-sequences the emit AFTER
-        population so the same queries return the real slugs.
-        ``IRValueSet.classification_id`` is always None and ``IRVariableState``
-        omits ``delivery_column_name`` / ``classification_id`` (backfilled
-        post-emit); ``valid_to`` / ``value_set_version_label`` carry the stored
-        sentinels, not the IR-contract None / open-ended forms. ``materialize()``
-        discards all of these in A4.1, so none affect the byte-identical build.
-        See MIGRATION_PLAN A4.3 "Provider-blindness close-out".
+        A4.3a — the IR is now CONSUMED: ``materialize()`` re-inserts the core
+        graph (`register` / `register_variant` / `variable` / `variable_state` /
+        `variable_alias`) from this stream with explicit PKs, making the
+        materializer the sole writer. The A4.1 inert-mirror slug caveat is closed
+        STRUCTURALLY rather than by re-sequencing: the slug columns are NULL at
+        emit time (``populate_slugs`` / ``populate_variable_slugs`` run later), and
+        the materializer IGNORES the IR slug for the core graph — it inserts NULL,
+        then those UPDATE passes fill the slug (and ``display_group``) IN PLACE on
+        the re-inserted rows. So the mirror's ``""`` slug placeholder never
+        reaches disk. ``valid_to`` / ``value_set_version_label`` are read back as
+        the stored sentinels (`9999-12-31` / `''`); the materializer's
+        None→sentinel reconciliation is idempotent on them. ``IRVariableState``
+        now carries ``delivery_column_name``; the full historical column set rides
+        on ``IRVariableAlias`` (``_emit_variable_aliases``). ``IRValueSet`` /
+        ``IRValueCode`` are emitted faithfully but the value tables stay
+        adapter-written in A4.3a (content-shared; see ``_reinsert_core_graph_from_ir``).
+        ``IRValueSet.classification_id`` stays None — classifications run in
+        ``materialize()`` AFTER emit, so the adapter cannot know it; the
+        ``variable_state.classification_id`` backfill reads the post-classification
+        ``variable_instance`` scratch instead.
         """
         conn = self.conn
         scb_dir = source_dir
@@ -2268,6 +2276,7 @@ class SCBAdapter:
         yield from self._emit_value_sets()
         yield from self._emit_variables()
         yield from self._emit_variable_states()
+        yield from self._emit_variable_aliases()
         yield from self._emit_related_edges()
         yield from self._emit_replaced_by_edges()
         yield from self._emit_provenance()
@@ -2318,7 +2327,7 @@ class SCBAdapter:
         # on-disk staging; a dict read-back would reintroduce a ~GB spike.)
         member_groups = groupby(
             self.conn.execute(
-                "SELECT vsm.value_set_id, vc.code, vc.label "
+                "SELECT vsm.value_set_id, vsm.code_id, vc.code, vc.label "
                 "FROM value_set_member vsm "
                 "JOIN value_code vc ON vc.code_id = vsm.code_id "
                 "ORDER BY vsm.value_set_id, vsm.code_id"
@@ -2335,9 +2344,10 @@ class SCBAdapter:
                 # — groupby invalidates the sub-iterator on the next() below.
                 codes = tuple(
                     IRValueCode(
+                        code_id=r[1],
                         value_set_id=vsid,
-                        code=r[1],
-                        label=r[2],
+                        code=r[2],
+                        label=r[3],
                         valid_from=None,
                         valid_to=None,
                     )
@@ -2359,7 +2369,7 @@ class SCBAdapter:
         for row in self.conn.execute(
             "SELECT variable_id, register_id, provider_key, name, definition, "
             "       description, measurement_unit, is_sensitive, is_identifier, "
-            "       source_register_id, source_register_text, slug "
+            "       source_register_id, source_register_text, slug, source_label "
             "FROM variable ORDER BY variable_id"
         ):
             yield IRVariable(
@@ -2375,14 +2385,21 @@ class SCBAdapter:
                 is_identifier=bool(row[8]),
                 source_register_id=row[9],
                 source_register_text=row[10],
+                source_label=row[12],
             )
 
     def _emit_variable_states(self) -> Iterator[IRObject]:
-        # Stream the cursor (variable_state is large on real builds).
+        # Stream the cursor (variable_state is large on real builds). A4.3a
+        # carries delivery_column_name (the LATEST-era column) so the
+        # materializer is the sole writer of variable_state; the FULL historical
+        # column set rides on IRVariableAlias (_emit_variable_aliases). valid_to /
+        # value_set_version_label are read back as the STORED sentinels here
+        # ('9999-12-31' / ''); the materializer's None→sentinel reconciliation is
+        # idempotent on them, so the round-trip stays byte-identical.
         for row in self.conn.execute(
             "SELECT state_id, variable_id, register_variant_id, valid_from, "
-            "       valid_to, data_type, data_length, value_set_id, "
-            "       value_set_version_label "
+            "       valid_to, data_type, data_length, delivery_column_name, "
+            "       value_set_id, value_set_version_label "
             "FROM variable_state ORDER BY state_id"
         ):
             yield IRVariableState(
@@ -2393,8 +2410,32 @@ class SCBAdapter:
                 valid_to=row[4],
                 data_type=row[5],
                 data_length=row[6],
-                value_set_id=row[7],
-                value_set_version_label=row[8],
+                delivery_column_name=row[7],
+                value_set_id=row[8],
+                value_set_version_label=row[9],
+            )
+
+    def _emit_variable_aliases(self) -> Iterator[IRObject]:
+        # The FULL delivery-column history (one row per historical column),
+        # keyed by the cvid's OWNING variable_id + delivering variant. Read from
+        # the cvid-grained `variable_alias_build` staging joined through the
+        # coalescer's ground-truth `variable_instance.variable_id` stamp — the
+        # exact projection `_reparent_variable_alias` performed in A4.1/A4.2, now
+        # carried as IR so the materializer writes `variable_alias`. DISTINCT +
+        # ORDER BY for deterministic emit. (`variable_instance` /
+        # `variable_alias_build` still exist here — dropped later in materialize.)
+        for variable_id, register_variant_id, column in self.conn.execute(
+            "SELECT DISTINCT vi.variable_id, vi.register_variant_id, "
+            "       vab.delivery_column_name "
+            "FROM variable_alias_build vab "
+            "JOIN variable_instance vi ON vi.cvid = vab.cvid "
+            "WHERE vi.variable_id IS NOT NULL "
+            "ORDER BY vi.variable_id, vi.register_variant_id, vab.delivery_column_name"
+        ):
+            yield IRVariableAlias(
+                variable_id=variable_id,
+                register_variant_id=register_variant_id,
+                delivery_column_name=column,
             )
 
     def _emit_related_edges(self) -> Iterator[IRObject]:

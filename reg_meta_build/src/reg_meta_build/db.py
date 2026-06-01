@@ -33,7 +33,16 @@ from .fqid_slugs import (
     populate_variable_slugs,
     repo_slug_dir,
 )
-from .ir import IRDeliveryProvenance, IRWarning
+from .ir import (
+    IRDeliveryProvenance,
+    IRRegister,
+    IRValueSet,
+    IRVariable,
+    IRVariableAlias,
+    IRVariableState,
+    IRVariant,
+    IRWarning,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -338,9 +347,10 @@ CREATE TABLE variable_instance (
     -- the `(register_id, var_id)` provider key, so `var_id` alone can't name the
     -- owning variable; but the coalescer builds each `variable_state` FROM these
     -- cvids and therefore KNOWS the exact cvid→sibling assignment, which it
-    -- records here. `_reparent_variable_alias` and `_backfill_state_classifications`
-    -- read it to attribute each cvid's delivery columns / classification to the
-    -- right sibling — no post-hoc column-tie heuristic, no skip. No FK and no
+    -- records here. `SCBAdapter._emit_variable_aliases` (→ IRVariableAlias →
+    -- materializer) and `_backfill_state_classifications` read it to attribute
+    -- each cvid's delivery columns / classification to the right sibling — no
+    -- post-hoc column-tie heuristic, no skip. No FK and no
     -- index: build-time-only (dropped with the table, before
     -- `PRAGMA foreign_key_check`), values valid by construction, and every
     -- reader joins from the cvid PK side. Distinct from the natural-key note
@@ -356,10 +366,12 @@ CREATE TABLE variable_instance (
 
 -- A2.7: BUILD-TIME-ONLY cvid-grained alias staging. The import pass writes one
 -- row per (cvid, delivery_column_name); the coalescer + sensitivity + replaced_by
--- passes read it by `cvid`; then `_reparent_variable_alias` projects it onto the
--- shipped `variable_id`-keyed `variable_alias` and DROPs it before ship. (Kept
--- separate from the shipped table because the cvid grain has no FK target once
--- `variable_instance` is dropped.)
+-- passes read it by `cvid`; then `SCBAdapter._emit_variable_aliases` projects it
+-- (joined through `variable_instance.variable_id`) onto IRVariableAlias, which
+-- the materializer writes into the shipped `variable_id`-keyed `variable_alias`
+-- (A4.3a). Both scratch tables DROP before ship. (Kept separate from the shipped
+-- table because the cvid grain has no FK target once `variable_instance` is
+-- dropped.)
 CREATE TABLE variable_alias_build (
     cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
     delivery_column_name TEXT NOT NULL,
@@ -448,16 +460,16 @@ CREATE INDEX idx_variable_state_classification
 -- A2.7: the FULL delivery-column alias history, keyed by `variable_id` (was
 -- `cvid` through A2.6). It SURVIVES into the shipped DB — `get_datacolumns`
 -- surfaces every historical column, which the coalesced
--- `variable_state.delivery_column_name` (latest era only) can't. The build
--- seeds the cvid-grained rows during import, then RE-PARENTS onto
--- `variable_id` + `register_variant_id` (`_reparent_variable_alias`) right
--- before `DROP TABLE variable_instance`, so the cvid FK never dangles. A
--- post-A2.2 `var_id` can be non-unique (split siblings share it), so the
--- re-parent attributes each cvid's alias to the specific sibling via the
--- ground-truth `variable_instance.variable_id` the coalescer stamped — each
--- sibling surfaces only its own columns in `get_datacolumns`, with no
--- column-tie heuristic and no skip (every cvid resolves). It does not feed
--- resolution (the resolver reads `variable_state`).
+-- `variable_state.delivery_column_name` (latest era only) can't. A4.3a: the
+-- adapter projects the cvid-grained staging onto `variable_id` +
+-- `register_variant_id` in `SCBAdapter._emit_variable_aliases` (one
+-- IRVariableAlias per historical column), and the MATERIALIZER writes this table
+-- from that IR (sole writer). A post-A2.2 `var_id` can be non-unique (split
+-- siblings share it), so the projection attributes each cvid's alias to the
+-- specific sibling via the ground-truth `variable_instance.variable_id` the
+-- coalescer stamped — each sibling surfaces only its own columns in
+-- `get_datacolumns`, with no column-tie heuristic and no skip (every cvid
+-- resolves). It does not feed resolution (the resolver reads `variable_state`).
 CREATE TABLE variable_alias (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     -- The delivering variant. Lets `get_datacolumns` group columns per variant
@@ -885,12 +897,23 @@ CREATE TABLE source_row_count (
 -- per-register keying collapsed variants sharing a `registerversionnamn` token.
 -- `period_token` is the Registerversionnamn; first/last approval are the SCB
 -- forsta/senast godkannandedatum.
+--
+-- A4.3a: the four IRDeliveryProvenance delivery fields (`source_file`,
+-- `delivery_version`, `delivery_date`, `template_version`) are wired here. They
+-- are per-variant (not per period_token), so they repeat across a variant's
+-- period rows — acceptable for a maintainer-only debug DB; SOS (A4.3b) populates
+-- all four, SCB sets only `source_file`. This grows the provenance DDL only;
+-- dbdiff never opens this sibling DB, so SCHEMA_VERSION does not bump.
 CREATE TABLE delivery_approval (
     register_id INTEGER NOT NULL,
     register_variant_id INTEGER NOT NULL,
     period_token TEXT NOT NULL,
     first_approved_date TEXT,
     last_approved_date TEXT,
+    source_file TEXT,
+    delivery_version TEXT,
+    delivery_date TEXT,
+    template_version TEXT,
     PRIMARY KEY (register_variant_id, period_token)
 );
 """
@@ -977,7 +1000,7 @@ def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
         )
 
         conn.executemany(
-            "INSERT INTO delivery_approval VALUES (?, ?, ?, ?, ?)",
+            "INSERT INTO delivery_approval VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             payload["delivery_approvals"],
         )
 
@@ -1578,48 +1601,6 @@ def _materialize_variable_related_to(
     return len(rows)
 
 
-def _reparent_variable_alias(conn: sqlite3.Connection) -> None:
-    """A2.7: project the cvid-grained `variable_alias_build` staging onto the
-    shipped `variable_id`-keyed `variable_alias`, then leave the staging table
-    for the caller to DROP.
-
-    Runs as one of the LAST readers of `variable_instance`. `variable_alias`
-    carries the FULL delivery-column history keyed by variable + delivering
-    variant — the source `get_datacolumns` reads, which the coalesced
-    `variable_state.delivery_column_name` (latest era only) can't supply.
-
-    Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
-    siblings share one `provider_key`), so the bare `(register_id, provider_key)`
-    join would fan a cvid's column onto EVERY sibling — wrong per-sibling
-    precision (the 169-sibling `hut/Imputerat` split would make
-    `get_datacolumns(any sibling)` return all 169 columns). Instead each cvid
-    carries its OWNING `variable_id`, stamped by `_coalesce_variable_states`
-    from the §5.7 triage's ground-truth assignment (the coalescer builds each
-    sibling's `variable_state` FROM these very cvids, so it knows the exact
-    cvid→sibling mapping). A plain join on that column attributes every column —
-    including historical columns that never survived into a coalesced
-    `variable_state` — to the correct sibling, with no column-tie heuristic and
-    no skip. This makes the `variable_alias ⊇ variable_state delivery columns`
-    invariant (validate.py) STRUCTURAL: a state's `delivery_column_name` is
-    always one of its group's cvids' alias columns, and that cvid shares the
-    state's `variable_id`, so the column is inserted under the same key.
-    """
-    _progress("Re-parenting variable_alias onto variable_id...")
-
-    conn.execute(
-        "INSERT OR IGNORE INTO variable_alias "
-        "    (variable_id, register_variant_id, delivery_column_name) "
-        "SELECT DISTINCT vi.variable_id, vi.register_variant_id, "
-        "       vab.delivery_column_name "
-        "FROM variable_alias_build vab "
-        "JOIN variable_instance vi ON vi.cvid = vab.cvid "
-        "WHERE vi.variable_id IS NOT NULL"
-    )
-
-    n = conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0]
-    _progress(f"  {n:,} variable_alias rows (variable_id-grained)")
-
-
 def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     """A2.7: tag `variable_state.classification_id` from its constituent
     `variable_instance` rows, attributing each cvid to its OWNING split sibling.
@@ -2129,6 +2110,190 @@ def link_variable_state_lineage(
 # Provider-blind materializer (A4.1)
 # ---------------------------------------------------------------------------
 
+# Sentinels the universal DDL applies as NOT NULL DEFAULTs; the IR contract
+# carries None / open-ended, so the materializer reconciles them at the insert
+# site (plan §4 "None-to-sentinel reconciliation").
+_VALID_TO_SENTINEL = "9999-12-31"  # variable_state.valid_to open-ended
+
+
+def _reinsert_core_graph_from_ir(
+    conn: sqlite3.Connection,
+    *,
+    registers: list[IRRegister],
+    variants: list[IRVariant],
+    variables: list[IRVariable],
+    states: list[IRVariableState],
+    aliases: list[IRVariableAlias],
+) -> None:
+    """A4.3a provider-blindness flip: make the materializer the SOLE WRITER of
+    the shipped provider-shaped core graph by re-inserting it from the IR.
+
+    The adapter wrote these rows during emit() to derive SCB's exact legacy IDs
+    (strategy 2). This DELETEs the adapter-written rows and re-INSERTs them from
+    the collected IR with EXPLICIT PKs, so there is exactly one final writer and
+    no parallel old+new path. The re-inserted rows are content-identical to the
+    adapter's (the IR mirror carried the exact IDs), so the universal DB stays
+    byte-identical to the pre-A4 baseline (`sqlite_sequence` re-seed is excluded
+    from the dbdiff content comparison).
+
+    Scope: `register`, `register_variant`, `variable`, `variable_state`,
+    `variable_alias` — the genuinely provider-shaped tables. `value_set` /
+    `value_code` / `value_set_member` are NOT re-inserted here: they are
+    content-addressed (member_hash) / counter-derived and PROVIDER-SHARED BY
+    CONTENT (an identical SOS code list collapses onto the same row, A4.3b), and
+    the year-projection can leave orphan `value_code` rows that belong to no
+    `value_set_member`, which the member-derived IR stream cannot reproduce. The
+    adapter stays their writer; they carry no provider-specific shape.
+
+    Slugs are inserted NULL: the IR's slug field is ignored for the core graph;
+    `populate_slugs` / `populate_variable_slugs` UPDATE them in place afterwards
+    (strategy B) — which is why the A4.1 inert-mirror NULL→"" slug caveat
+    disappears (the mirror is gone; insert-then-UPDATE, no read-back).
+    """
+    _progress("A4.3a: re-inserting core graph from IR (materializer sole-writer)...")
+
+    # Delete adapter-written rows (FK-child → parent; build runs foreign_keys=OFF
+    # so order is not load-bearing, but keep it FK-safe for clarity).
+    for table in (
+        "variable_alias",
+        "variable_state",
+        "variable",
+        "register_variant",
+        "register",
+    ):
+        conn.execute(f"DELETE FROM {table}")
+
+    conn.executemany(
+        "INSERT INTO register (register_id, provider_id, name, purpose, slug) "
+        "VALUES (:register_id, :provider_id, :name, :purpose, NULL)",
+        [
+            {
+                "register_id": r.register_id,
+                "provider_id": _provider_id_for(r.provider),
+                "name": r.name,
+                "purpose": r.purpose,
+            }
+            for r in registers
+        ],
+    )
+
+    conn.executemany(
+        "INSERT INTO register_variant "
+        "(register_variant_id, register_id, name, description, slug) "
+        "VALUES (:register_variant_id, :register_id, :name, :description, NULL)",
+        [
+            {
+                "register_variant_id": v.register_variant_id,
+                "register_id": v.register_id,
+                "name": v.name,
+                "description": v.description,
+            }
+            for v in variants
+        ],
+    )
+
+    # `is_sensitive`/`is_identifier` are INTEGER columns; the IR carries bools.
+    # `provider_key` is the NON-unique join hint. `slug` inserts NULL (the
+    # populate_variable_slugs UPDATE pass fills it). `source_label` is the
+    # resolved source-register display label (IRVariable.source_label).
+    conn.executemany(
+        "INSERT INTO variable "
+        "(variable_id, register_id, provider_key, slug, name, definition, "
+        " description, source_register_text, measurement_unit, source_register_id, "
+        " source_label, is_sensitive, is_identifier) "
+        "VALUES (:variable_id, :register_id, :provider_key, NULL, :name, "
+        " :definition, :description, :source_register_text, :measurement_unit, "
+        " :source_register_id, :source_label, :is_sensitive, :is_identifier)",
+        [
+            {
+                "variable_id": v.variable_id,
+                "register_id": v.register_id,
+                "provider_key": v.provider_key,
+                "name": v.name,
+                "definition": v.definition,
+                "description": v.description,
+                "source_register_text": v.source_register_text,
+                "measurement_unit": v.measurement_unit,
+                "source_register_id": v.source_register_id,
+                "source_label": v.source_label,
+                "is_sensitive": int(v.is_sensitive),
+                "is_identifier": int(v.is_identifier),
+            }
+            for v in variables
+        ],
+    )
+
+    # None→sentinel reconciliation at the insert site: valid_to=None →
+    # '9999-12-31', value_set_version_label=None → '' (the DDL NOT NULL
+    # DEFAULTs). classification_id is left NULL; _backfill_state_classifications
+    # tags it after classifications + value-set linkage exist.
+    conn.executemany(
+        "INSERT INTO variable_state "
+        "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
+        " data_type, data_length, delivery_column_name, value_set_id, "
+        " value_set_version_label, classification_id) "
+        "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
+        " :valid_to, :data_type, :data_length, :delivery_column_name, "
+        " :value_set_id, :value_set_version_label, NULL)",
+        [
+            {
+                "state_id": s.state_id,
+                "variable_id": s.variable_id,
+                "register_variant_id": s.register_variant_id,
+                "valid_from": s.valid_from,
+                "valid_to": s.valid_to
+                if s.valid_to is not None
+                else _VALID_TO_SENTINEL,
+                "data_type": s.data_type,
+                "data_length": s.data_length,
+                "delivery_column_name": s.delivery_column_name,
+                "value_set_id": s.value_set_id,
+                "value_set_version_label": s.value_set_version_label or "",
+            }
+            for s in states
+        ],
+    )
+    # The §5.1 post-triage state-uniqueness index was created by the ACTIVE
+    # ADAPTER's coalescer (e.g. SCBAdapter, scb.py) on the now-deleted rows; the
+    # DELETE above leaves the index in place, so it continues to bite on the
+    # re-inserted rows (an INSERT collision raises — the same loud failure the
+    # coalescer's CREATE provided). NOTE: this is an adapter-side precondition,
+    # NOT a universal-DDL guarantee — A4.3b's SOS adapter must create the same
+    # index (or it moves to universal DDL) for this guard to hold provider-blind.
+
+    # variable_alias: the FULL historical column set (one row per historical
+    # column). INSERT OR IGNORE dedups (the IR already emits DISTINCT rows; the
+    # guard mirrors the old re-parent pass's dedup defensively).
+    conn.executemany(
+        "INSERT OR IGNORE INTO variable_alias "
+        "(variable_id, register_variant_id, delivery_column_name) "
+        "VALUES (?, ?, ?)",
+        [
+            (a.variable_id, a.register_variant_id, a.delivery_column_name)
+            for a in aliases
+        ],
+    )
+
+    _progress(
+        f"  re-inserted {len(registers):,} register / {len(variants):,} variant / "
+        f"{len(variables):,} variable / {len(states):,} state / "
+        f"{len(aliases):,} alias row(s) from IR"
+    )
+
+
+def _provider_id_for(provider: str) -> int:
+    """Map an IR provider slug to its stable `provider.provider_id` seed value."""
+    for pid, slug, _name in _PROVIDER_SEED:
+        if slug == provider:
+            return pid
+    raise RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="unknown_provider",
+        error_class="configuration",
+        message=f"No provider_id seed for provider {provider!r}.",
+        remediation="Add the provider to _PROVIDER_SEED.",
+    )
+
 
 def materialize(
     conn: sqlite3.Connection,
@@ -2144,43 +2309,100 @@ def materialize(
     """Consume the adapter's IR stream and run the provider-blind derivation
     post-passes, writing the universal SQLite catalog.
 
-    Provider-blind boundary (A4.1, plan §3 "Contract gaps" / strategy B): the
-    adapter wrote the universal variable-graph rows + its SCB-named build-scratch
-    (`variable_instance`, `variable_alias_build`, `register_version`, ...) +
-    SCB-reference tables into ``conn`` during ``emit()``. This materializer
-    dispatches the IR stream (universal types are already materialized → no-op;
-    `IRWarning` / `IRDeliveryProvenance` → DISCARD sink in A4.1, resolved fork #1)
-    and then runs the derivations that read the scratch: classifications, slugs,
-    same_as, register/variant/variable replaced_by (G3), state-pair lineage,
-    code_variable_map (G4), variable_alias reparent (G1),
-    variable_state.classification_id backfill (G2), FTS. It drops the scratch
-    before ship. Each table has exactly one writer; no parallel old+new path.
+    Provider-blind boundary (A4.3a — the provider-blindness flip): the adapter
+    derives SCB's exact legacy IDs by writing the core graph + its SCB-named
+    build-scratch (`variable_instance`, `variable_alias_build`,
+    `register_version`, ...) + SCB-reference tables into ``conn`` during
+    ``emit()``, and the IR mirror reads the IDs back. This materializer is now
+    the SOLE WRITER of the shipped provider-shaped core graph: it DELETEs the
+    adapter-written `register` / `register_variant` / `variable` /
+    `variable_state` / `variable_alias` rows and re-INSERTs them from the IR with
+    explicit PKs (`_reinsert_core_graph_from_ir`) — one writer per table, no
+    parallel old+new path. (`value_set` / `value_code` / `value_set_member` stay
+    adapter-written; see `_reinsert_core_graph_from_ir`.) It then runs the
+    derivations that read the scratch: classifications, slugs, same_as,
+    register/variant/variable replaced_by (G3), state-pair lineage,
+    code_variable_map (now from `variable_state ⨝ value_set_member`),
+    `variable_state.classification_id` backfill, FTS. It drops the scratch before
+    ship. `IRWarning` / `IRDeliveryProvenance` go to the sibling provenance DB.
 
     Returns the manifest inputs (checksums, row counts, projection/coalesce/
-    replaced_by stats).
+    replaced_by stats) + the provenance payload.
     """
-    # Dispatch the IR stream. The universal variable-graph rows were written
-    # verbatim by the adapter (A4.1 keeps the legacy ID-assignment code intact
-    # for byte-identity), so those IR objects are already materialized and the
-    # loop is a no-op for them. A4.2 COLLECTS the warning/provenance objects
-    # here into a payload returned to `build_db`, which writes them to the
-    # sibling provenance DB AFTER the universal swap (so build_manifest can
-    # carry the finalized universal-DB sha256). The collection is read-only
-    # against the universal tables — it inserts NOTHING into `conn`, so the
-    # universal build path is unchanged (dbdiff stays exit-0).
+    # A4.3a — provider-blindness flip. The materializer is now the SOLE WRITER
+    # of the shipped core-graph tables (register, register_variant, variable,
+    # variable_state, value_set, value_code, value_set_member, variable_alias):
+    # it INSERTs them from the IR stream with EXPLICIT PKs. The adapter still
+    # derives SCB's exact legacy IDs by writing those rows to `conn` during
+    # emit() (strategy 2, plan §4 — reuse the proven A4.1 ID-derivation verbatim,
+    # only move WHERE the final rows land), and the IR mirror reads them back, so
+    # the IR carries the exact IDs/content. `_reinsert_core_graph_from_ir` below
+    # DELETEs the adapter-written core-graph rows and re-INSERTs them from the
+    # collected IR — making the materializer the final writer with no parallel
+    # path. Byte-identity holds because the re-inserted rows are content-identical
+    # (sqlite_sequence is excluded from the dbdiff content comparison, so the
+    # autoincrement re-seed is invisible).
+    #
+    # Slug columns are written NULL at insert (the IR's slug is ignored for the
+    # core graph); the existing populate_slugs / populate_variable_slugs UPDATE
+    # passes fill them in place exactly as today (strategy B) — closing the
+    # A4.1 inert-mirror NULL→"" caveat, since the mirror is gone.
     adapter_warnings: list[tuple[str, str, int, str, str | None]] = []
-    delivery_approvals: list[tuple[int, int, str, str | None, str | None]] = []
+    delivery_approvals: list[
+        tuple[
+            int,
+            int,
+            str,
+            str | None,
+            str | None,
+            str | None,
+            str | None,
+            str | None,
+            str | None,
+        ]
+    ] = []
+    scb_register_id_map: list[tuple[int, str]] = []
+    registers: list[IRRegister] = []
+    variants: list[IRVariant] = []
+    variables: list[IRVariable] = []
+    states: list[IRVariableState] = []
+    aliases: list[IRVariableAlias] = []
     for obj in adapter.emit(source_dir):
-        if isinstance(obj, IRWarning):
+        if isinstance(obj, IRRegister):
+            registers.append(obj)
+            # Provenance source-ID linkage rides on the IR (no re-query of the
+            # universal `register` table — the SCB-native `Registernamn` is on
+            # IRRegister.name). Provider-blind: materialize() never reads a
+            # provider-specific column back.
+            scb_register_id_map.append((obj.register_id, obj.name))
+        elif isinstance(obj, IRVariant):
+            variants.append(obj)
+        elif isinstance(obj, IRVariable):
+            variables.append(obj)
+        elif isinstance(obj, IRVariableState):
+            states.append(obj)
+        elif isinstance(obj, IRValueSet):
+            # A4.3a scope: value_set / value_code / value_set_member stay
+            # adapter-written (content-addressed, counter-derived, PROVIDER-SHARED
+            # BY CONTENT — not provider-shaped; year-projection can leave orphan
+            # value_codes the member-derived IR stream can't reproduce). Nothing
+            # to collect; the rows are already materialized.
+            pass
+        elif isinstance(obj, IRVariableAlias):
+            aliases.append(obj)
+        elif isinstance(obj, IRWarning):
             adapter_warnings.append(
                 (adapter.provider, obj.entity_kind, obj.entity_id, obj.code, obj.detail)
             )
         elif isinstance(obj, IRDeliveryProvenance):
             # One delivery_approval row per (variant, period_token); union the
             # first/last-approval token sets so a token present in only one
-            # still gets a row. Sorted for deterministic insert order.
+            # still gets a row. Sorted for deterministic insert order. The four
+            # A4.3a delivery fields are per-variant, repeated across the period
+            # rows (SCB: only source_file is set).
             first = obj.first_approval_dates or {}
             last = obj.last_approval_dates or {}
+            delivery_date = obj.delivery_date.isoformat() if obj.delivery_date else None
             for token in sorted(set(first) | set(last)):
                 delivery_approvals.append(
                     (
@@ -2189,13 +2411,25 @@ def materialize(
                         token,
                         first.get(token),
                         last.get(token),
+                        obj.source_file,
+                        obj.delivery_version,
+                        delivery_date,
+                        obj.template_version,
                     )
                 )
-        # All other IR types are universal variable-graph rows the adapter
-        # already wrote; nothing to insert here.
     _progress(
         f"  IR stream: collected {len(delivery_approvals):,} delivery-approval + "
         f"{len(adapter_warnings):,} warning row(s) for the provenance DB"
+    )
+
+    # The flip: re-insert the shipped core graph from the IR (sole-writer).
+    _reinsert_core_graph_from_ir(
+        conn,
+        registers=registers,
+        variants=variants,
+        variables=variables,
+        states=states,
+        aliases=aliases,
     )
 
     row_counts = adapter.row_counts
@@ -2339,23 +2573,38 @@ def materialize(
     # no stamp (raise-on-collision residual) carries NULL — skipped, since it
     # has no resolved owner to attribute its codes to (and NOT NULL would
     # reject it anyway).
+    # A4.3a: re-pointed off the (now scratch) `variable_instance` onto the
+    # universal `variable_state` — both are the materializer's own IR-inserted
+    # rows. `variable_state.value_set_id` carries the cvid's year-projected set;
+    # joining it to `value_set_member` yields the same (code_id, variable_id)
+    # pairs the `variable_instance`-based derivation produced (the #152 grain
+    # parity: every code-bearing cvid yields a state, and the coalescer stamped
+    # each cvid's owning `variable_id` onto its state — so the skip-sets coincide).
+    # Verified row-identical on the classification fixture; the FULL dbdiff on
+    # real data is the gate. A state with NULL value_set_id contributes nothing
+    # (the WHERE guard mirrors the old `value_set_id IS NOT NULL` skip).
     _progress("Building code_variable_map...")
     conn.execute(
         "INSERT INTO code_variable_map (code_id, variable_id) "
-        "SELECT DISTINCT vsm.code_id, vi.variable_id "
-        "FROM variable_instance vi "
-        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-        "WHERE vi.value_set_id IS NOT NULL AND vi.variable_id IS NOT NULL"
+        "SELECT DISTINCT vsm.code_id, vs.variable_id "
+        "FROM variable_state vs "
+        "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
+        "WHERE vs.value_set_id IS NOT NULL"
     )
     cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
     _progress(f"  {cvm_count:,} code×variable mappings")
 
-    # A2.7: re-parent the cvid-grained alias staging onto the shipped
-    # `variable_alias` (variable_id-keyed) and backfill
-    # `variable_state.classification_id`. BOTH are the LAST readers of
-    # `variable_instance` — they must run before the DROP below. `_progress`
-    # is emitted inside each helper.
-    _reparent_variable_alias(conn)
+    # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
+    # already wrote `variable_alias` from IRVariableAlias (the FULL historical
+    # column set the old `_reparent_variable_alias` projected from the
+    # `variable_alias_build ⨝ variable_instance` scratch). `variable_state` is
+    # now IR-inserted; `_backfill_state_classifications` tags its
+    # `classification_id` from the `variable_instance` scratch (still the home of
+    # classification linkage — `populate_classifications` writes it there, AFTER
+    # emit, so the adapter cannot carry it on IRValueSet; value_set→classification
+    # is 1:1 on the corpus, confirmed on the fixture). It UPDATEs the IR-inserted
+    # `variable_state` rows unchanged. Last reader of `variable_instance` before
+    # the DROP below.
     _backfill_state_classifications(conn)
 
     # A2.7: drop `variable_instance` + its cvid-grained alias staging before
@@ -2405,10 +2654,11 @@ def materialize(
 
     # Provenance: per-provider source-ID linkage. SCB's universal register_id IS
     # the source RegisterId; record the native `Registernamn` alongside it for
-    # the maintainer-only provenance DB. Read-only against the universal table.
-    scb_register_id_map = adapter.conn.execute(
-        "SELECT register_id, name FROM register ORDER BY register_id"
-    ).fetchall()
+    # the maintainer-only provenance DB. A4.3a: collected from the IR stream
+    # (register_id, IRRegister.name) above — NOT re-queried from the universal
+    # `register` table, so the materializer never reads a provider-native column
+    # back. Sorted by register_id for byte-stable provenance writes.
+    scb_register_id_map.sort()
 
     return {
         "source_checksums": adapter.source_checksums,
