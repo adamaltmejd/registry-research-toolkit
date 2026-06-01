@@ -2362,6 +2362,16 @@ def materialize(
         ]
     ] = []
     scb_register_id_map: list[tuple[int, str]] = []
+    # The core-graph IR is BUFFERED into these lists because the DELETE-then-
+    # reinsert flip (strategy 2) cannot reinsert until emit() has fully drained —
+    # the adapter is still writing those same tables during iteration. Bounded +
+    # small: ~240k objects on the real corpus (42k variables + 118k states + 80k
+    # aliases, low-hundreds of MB), DWARFED by the build's dominant memory (the
+    # 102M-row Vardemangder import + 515k-cvid coalesce). The genuinely huge
+    # stream — value_set/value_code/value_set_member — is NOT buffered (the
+    # IRValueSet branch below is a no-op; the adapter streams it). The real 102M
+    # build completes without OOM. (Codex P2 — buffering is inherent to strategy
+    # 2; streaming/disk-staging would be a redesign for a non-issue here.)
     registers: list[IRRegister] = []
     variants: list[IRVariant] = []
     variables: list[IRVariable] = []
