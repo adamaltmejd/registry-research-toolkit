@@ -757,7 +757,11 @@ in-memory index, steward project-file load, reg_schema response models). A5.2a:
 
 - **A5.2a-i (merged, [#169](https://github.com/adamaltmejd/registry-research-toolkit/pull/169))** — `Catalog.list_variants` (the reg_meta read-side for the variant browser).
 - **A5.2a-ii (this PR, [#171](https://github.com/adamaltmejd/registry-research-toolkit/pull/171))** — `?period` / `?variant` / `?value_set_version` on the catch-all → `resolve_at`; the 6 binding sub-endpoints + the `/{provider}/{register}/variants` register sub-resource; the §9.4 ETag/Cache-Control middleware; the §16 period/variant allow-list (422 with zero SQL + zero connection opens). A narrowing modifier without `?period` — and an `@version` pin on a suffixed route — 422s rather than silently no-op'ing. The **Cloudflare edge-cache gate (below) remains a MAINTAINER task.**
-- **A5.2b** — the project-WRITE half + the §9.2 index + steward project load (open).
+**A5.2b** SPLIT (maintainer): **b-i** (validator + index + steward-load) → **b-ii** (validate/order/bundle + write hardening) → **A5.2c** (`/api/kit` + codes.json, DEFERRED to §15 step 8, post-dogfood):
+
+- **A5.2b-i (this PR, [#173](https://github.com/adamaltmejd/registry-research-toolkit/pull/173))** — the §6.8.3 reg_meta-backed semantic validator (`semantic.py`, webapp-owned per §9.6; owns the researcher-vs-steward caller-context level split), the §9.1/§9.2 in-memory `CatalogIndex` (steward filter; drops reg_meta-drift bindings, `None` for `global`), and steward `steward.project_data.json` load at boot. **Boot boundary**: reg_meta DRIFT (the 3 §6.8.3 downgrade codes) → warnings, bindings drop + surface on `/api/context`, boot survives; any other invalid (structural / model-extra-key / non-drift semantic error) → `StewardCatalogError`, fail fast. Codes deferred (documented): `deprecated_traversal` (needs a reg_meta `deprecated` flag), `variable_replaced` (needs a structured-hint slot), `panel_inheritance_unresolvable` (kit-build), `fqid_outside_steward_catalog` (the CHECK is b-ii; its backing `admits()` ships here).
+- **A5.2b-ii** — `/api/project/validate` + `/api/project/order` + `/api/bundle` + write-side §16/§9.4 hardening (open). Open Q: should `reg_schema.validate_structural` enforce `extra="forbid"` (the b-i extra-key P1's root cause) so the researcher `/validate` path rejects typo keys as a validation issue?
+- **A5.2c** — `/api/kit` + `project_data.codes.json`, DEFERRED to §15 step 8 (open).
 
 The box stays unchecked until A5.2b lands.
 
