@@ -119,3 +119,42 @@ def test_unresolvable_binding_falls_back_to_fqid_leaf(client):
     assert resp.status_code == 200
     rows = _rows(resp.text)
     assert rows[1][-1] == "nosuchvar"
+
+
+@pytest.mark.parametrize(
+    "evil",
+    ['=HYPERLINK("http://evil","x")', "+1+1", "-2+3", "@SUM(A1:A9)", "\t=cmd"],
+)
+def test_csv_formula_injection_is_neutralized(client, evil):
+    """The order CSV is handed to a data provider who opens it in a spreadsheet, so
+    an attacker-controlled display_name beginning with a formula trigger (= + - @,
+    leading tab/CR) must be neutralized — prefixed with a single quote so it's
+    treated as text, not executed (the stdlib csv writer does NOT do this)."""
+    resp = client.post("/api/project/order", json=_spec(display_name=evil))
+    assert resp.status_code == 200
+    cell = _rows(resp.text)[1][-1]  # the display_name column
+    assert cell == "'" + evil, f"formula cell not neutralized: {cell!r}"
+
+
+def test_concurrent_order_no_cross_thread_error(catalog_db):
+    """/order opens a per-request reg_meta conn in the handler body — the same
+    DB-backed write path the A5.2a/b-i cross-thread P1 lived on. Drive it from a
+    ThreadPoolExecutor (TestClient's sequential default would mask a regression).
+    Rate limit raised so the limiter doesn't 429 the burst."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    with (
+        TestClient(create_app(rate_limit_per_minute=100_000)) as c,
+        ThreadPoolExecutor(max_workers=8) as pool,
+    ):
+        codes = list(
+            pool.map(
+                lambda _: (
+                    c.post(
+                        "/api/project/order", json=_spec(display_name="Sex")
+                    ).status_code
+                ),
+                range(50),
+            )
+        )
+    assert all(code == 200 for code in codes), f"cross-thread failures: {codes}"

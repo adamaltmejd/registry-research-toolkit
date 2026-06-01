@@ -68,7 +68,8 @@ def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
         period_str = _period_str(source.period)
         for binding in source.bindings:
             writer.writerow(
-                (
+                _csv_safe(cell)
+                for cell in (
                     provider,
                     register,
                     variant,
@@ -78,6 +79,26 @@ def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
                 )
             )
     return buffer.getvalue()
+
+
+# Spreadsheet formula-injection triggers: a cell that begins with one of these is
+# interpreted as a FORMULA by Excel / Sheets / LibreOffice when the file is opened.
+_FORMULA_TRIGGERS = "=+-@\t\r"
+
+
+def _csv_safe(value: str) -> str:
+    """Neutralize spreadsheet formula injection (§16). The order CSV is the manifest
+    a researcher hands to a DATA PROVIDER, who opens it in a spreadsheet — a
+    researcher-controlled ``display_name`` like ``=HYPERLINK("http://evil","x")``
+    would otherwise execute as a formula on the provider's machine. A leading-
+    trigger cell is prefixed with a single quote so the spreadsheet treats it as
+    text. The csv writer's own quoting (delimiters / quotes / CRLF) does NOT cover
+    this — formula triggers aren't quote-triggering characters. Slug cells
+    (provider/register/variant/variable) can't trigger, so this is a no-op for them;
+    applied uniformly for defense in depth."""
+    if value and value[0] in _FORMULA_TRIGGERS:
+        return "'" + value
+    return value
 
 
 def _coordinate_parts(register_variant: str) -> tuple[str, str, str]:

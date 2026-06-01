@@ -134,3 +134,25 @@ def test_tempfile_cleanup(client):
     assert resp.status_code == 200
     leaked = list(Path(tempfile.gettempdir()).glob("reg_webapp_bundle_*"))
     assert not leaked, f"leaked bundle tempdirs: {leaked}"
+
+
+def test_bundle_preserves_steward_namespaced_block(client):
+    """The bundle embeds the RAW dict, so a steward-namespaced block (§6.8.2 —
+    here a ``swecov`` block) survives into the embedded project_data.json. A typed
+    ``ProjectData`` body (``extra="ignore"``) would silently DROP it, so the bundle
+    wouldn't faithfully reproduce the submitted spec (the panel's P2)."""
+    import json
+    import re
+
+    spec = _valid_spec()
+    spec["swecov"] = {"sentinel": "SWECOV_SENTINEL_XYZ"}
+    resp = client.post("/api/bundle", json=spec)
+    assert resp.status_code == 200
+    # Extract the embedded `_PROJECT_DATA_JSON = r"""...""" ` literal and decode it
+    # (json.dumps escapes quotes, so the raw triple-quote delimiter can't appear in
+    # the content). The namespaced block must be present, not dropped.
+    text = resp.content.decode("utf-8")
+    match = re.search(r'_PROJECT_DATA_JSON = r"""(.*?)"""', text, re.DOTALL)
+    assert match, "bundle has no embedded _PROJECT_DATA_JSON literal"
+    embedded = json.loads(match.group(1))
+    assert embedded.get("swecov") == {"sentinel": "SWECOV_SENTINEL_XYZ"}

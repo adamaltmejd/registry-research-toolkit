@@ -15,19 +15,9 @@ export interface paths {
         put?: never;
         /**
          * Build Mona Bundle
-         * @description Build the MONA bundle embedding ``project`` and return the ``.py`` bytes.
-         *
-         *     The body is typed ``ProjectData`` (the §9.6 reg_schema-as-request-model path):
-         *     a structurally malformed body is a framework 422 before this runs, so the
-         *     handler sees a model-valid spec. We still re-run the build-side validation
-         *     gate (``validate_project_data``) on the round-tripped dict because it performs
-         *     the §6.8.2 block + cross-block + step-4 capability checks that the model alone
-         *     does NOT (a model-valid spec can still fail those build-time gates) — those
-         *     failures are bad INPUT → 422.
-         *
-         *     DB-free: the bundle build does not touch reg_meta, so no connection is opened
-         *     here (unlike ``/project/*``). Pure function of input → safe to cache by
-         *     content-hash at the edge (§9.4), which is why this endpoint sets no ETag.
+         * @description Build the MONA bundle embedding the posted ``project_data.json`` and return
+         *     the ``.py`` bytes. Reads the raw dict (preserving namespaced blocks) and
+         *     offloads the blocking build to the threadpool.
          */
         post: operations["build_mona_bundle_api_bundle_post"];
         delete?: never;
@@ -299,15 +289,23 @@ export interface paths {
         /**
          * Validate Project
          * @description Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
-         *     structural ⧺ block ⧺ semantic issue list and the derived ``ok`` flag; a 4xx is
-         *     reserved for a malformed REQUEST (see ``_read_raw_project`` / the body cap).
+         *     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
+         *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
-         *     Layer order (DB-free layers first, so a structurally-rejected body costs no DB
-         *     hit): structural → block → (model build + semantic). The semantic layer needs
-         *     a live ``Catalog``, opened per-request in THIS body. If structural fails we
-         *     SKIP the model build + semantic step (they assume a structurally valid spec)
-         *     but STILL report the block issues — the block validator is independent of the
-         *     structural one and a researcher benefits from seeing both.
+         *     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). NOTE the scope versus
+         *     ``POST /api/bundle``: bundle additionally runs the build-time cross-block
+         *     referential check (orphan ``column_options`` keys) and the step-4 capability
+         *     gates (e.g. a build-required ``display_name``), which ``/validate`` does NOT —
+         *     so a spec ``/validate`` greenlights can still 422 at ``/bundle``. Reconciling
+         *     that (a build-readiness layer) waits on issue-based reg_monabundle validators
+         *     (the same open question as the ``invalid_block`` code).
+         *
+         *     ``async`` only to read the body off the wire; the BLOCKING work (the structural
+         *     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
+         *     threadpool via ``run_in_threadpool`` so it never stalls the event loop (the
+         *     catalog routes are plain ``def`` for the same reason). The reg_meta connection
+         *     opens on that threadpool thread (one thread → the cross-thread sqlite P1 can't
+         *     recur).
          */
         post: operations["validate_project_api_project_validate_post"];
         delete?: never;
@@ -1137,11 +1135,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ProjectData"];
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1150,15 +1144,6 @@ export interface operations {
                 };
                 content: {
                     "application/octet-stream": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

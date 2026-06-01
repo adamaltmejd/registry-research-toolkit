@@ -139,6 +139,20 @@ def test_non_object_body_is_4xx(client):
     assert resp.status_code == 400
 
 
+def test_deeply_nested_json_is_400_not_500(client):
+    """A deeply-nested JSON body (well-formed, small, under the 1 MB cap) makes
+    json.loads raise RecursionError — a RuntimeError, NOT a ValueError/
+    JSONDecodeError. It must map to a malformed REQUEST (400), not escape as a 500
+    (a §16 write-side input crash on attacker-controlled input)."""
+    body = b"[" * 50_000 + b"]" * 50_000  # ~100 KB, depth 50k
+    resp = client.post(
+        "/api/project/validate",
+        content=body,
+        headers={"content-type": "application/json"},
+    )
+    assert resp.status_code == 400, f"deep-nested → {resp.status_code} (want 400)"
+
+
 def test_three_layer_concatenation(client):
     """The response issue list concatenates the three §6.8.0 layers (no merge).
     Feed a spec that trips structural (bad period token) AND semantic

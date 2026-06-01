@@ -18,15 +18,17 @@ KEY in the spec must surface as a structural (or model-construction) ISSUE in th
 but the ``ProjectData`` model does, so the model build is wrapped and a
 ``ValidationError`` is turned into an issue rather than escaping as a 500.
 
-**Connection model = per-request open IN THE HANDLER BODY** (LOCKED, copied from
-``routes/catalog.py``). The semantic layer needs a live ``Catalog``; we open a
-fresh read-only connection via the ``_project_conn`` contextmanager used as a
-plain ``with`` INSIDE the sync handler (NOT a generator ``Depends`` — a
-dependency is entered on a possibly-different threadpool thread than the handler,
-so a dependency-opened sqlite connection is used cross-thread →
-``sqlite3.ProgrammingError`` under concurrency; the A5.2a/b-i P1). The body parse
-+ structural layer are DB-FREE and run BEFORE the open, so a malformed or
-structurally-rejected body costs no DB hit.
+**Connection model = per-request open ON ONE THREAD** (LOCKED). ``/validate`` is
+``async`` only to read the body off the wire; the BLOCKING work (structural parse
++ the semantic layer's per-binding sqlite resolution) is offloaded to the
+threadpool via ``run_in_threadpool`` so it never stalls the event loop — the
+catalog routes are plain ``def`` for the same reason. ``_project_conn`` opens the
+reg_meta connection on that worker thread (``/order`` is a sync ``def``, so on its
+threadpool thread): open + query + close stay on ONE thread — NOT a generator
+``Depends``, which would run on a possibly-different AnyIO thread → cross-thread
+``sqlite3.ProgrammingError`` (the A5.2a/b-i P1). The body parse + structural/block
+layers are DB-FREE and run BEFORE the open, so a malformed or structurally-rejected
+body costs no DB hit.
 
 §9.6: this module imports ``reg_schema`` (structural validator + ``ProjectData``)
 and ``reg_monabundle.validate_block`` (the pure-stdlib §6.8.2 block gate) — NOT
@@ -35,12 +37,12 @@ and ``reg_monabundle.validate_block`` (the pure-stdlib §6.8.2 block gate) — N
 
 from __future__ import annotations
 
-import json
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
 import reg_meta.db
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
 from reg_schema.project_data import ProjectData
@@ -53,11 +55,13 @@ from reg_webapp.models import (
     ValidationResultModel,
 )
 from reg_webapp.order_export import render_order_csv
+from reg_webapp.request_body import read_raw_json_object
 from reg_webapp.semantic import validate_semantic
 
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Iterator
+    from pathlib import Path
 
     from reg_meta.catalog import Catalog
 
@@ -65,65 +69,21 @@ router = APIRouter(prefix="/api/project")
 
 
 @contextmanager
-def _project_conn(request: Request) -> Iterator[sqlite3.Connection]:
-    """A per-request reg_meta read-only connection, opened ON THE CALLING THREAD.
+def _project_conn(db_path: Path) -> Iterator[sqlite3.Connection]:
+    """A per-request reg_meta read-only connection, opened ON THE CALLING THREAD
+    (the threadpool thread for ``/validate``'s offloaded work, the sync handler
+    thread for ``/order``).
 
-    Identical contract to ``routes/catalog.py``'s ``_catalog_conn``: used as a
-    plain ``with`` INSIDE the sync handler body (NOT a FastAPI ``Depends``), so
-    open + query + close stay on one thread — the load-bearing cross-thread-safety
-    property (a generator dependency runs on a possibly-different AnyIO threadpool
-    thread → ``sqlite3.ProgrammingError`` under concurrency). ``check_schema=False``:
-    the lifespan already validated the schema at boot."""
-    conn = reg_meta.db.open_db(request.app.state.db_path, check_schema=False)
+    Used as a plain ``with`` (NOT a FastAPI ``Depends``) so open + query + close
+    stay on ONE thread — the load-bearing cross-thread-safety property (a generator
+    dependency runs on a possibly-different AnyIO threadpool thread →
+    ``sqlite3.ProgrammingError`` under concurrency). ``check_schema=False``: the
+    lifespan already validated the schema at boot."""
+    conn = reg_meta.db.open_db(db_path, check_schema=False)
     try:
         yield conn
     finally:
         conn.close()
-
-
-def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
-    """``json.loads`` ``object_pairs_hook`` that raises on a duplicate JSON key.
-
-    The default keeps the last value silently — a hand-edited project_data.json
-    with a duplicated field would validate against the wrong (last-wins) value. We
-    own a webapp-local copy rather than importing the runtime one
-    (``reg_monabundle.runtime.spec._reject_duplicate_keys``): that module is the
-    MONA-amalgamated runtime, off-limits to the webapp per the §9.6 import
-    boundary (and the import-graph test)."""
-    seen: dict[str, Any] = {}
-    for key, value in pairs:
-        if key in seen:
-            raise ValueError(f"duplicate key {key!r} in request body")
-        seen[key] = value
-    return seen
-
-
-async def _read_raw_project(request: Request) -> dict[str, Any]:
-    """Read the request body as a RAW dict (§9.5).
-
-    Deliberately NOT a typed Pydantic body param: a typed body would make FastAPI
-    422 the very malformed specs ``/validate`` exists to DIAGNOSE (they belong in
-    the 200 issue list, not a framework 422). So we read the bytes and json.loads
-    them ourselves, rejecting non-JSON / duplicate-key / non-object bodies as a
-    malformed REQUEST (4xx) — distinct from a well-formed JSON object that simply
-    fails validation (200 with ``ok=false``)."""
-    raw_bytes = await request.body()
-    try:
-        parsed = json.loads(raw_bytes, object_pairs_hook=_reject_duplicate_keys)
-    except json.JSONDecodeError as exc:
-        raise HTTPException(
-            status_code=400, detail=f"request body is not valid JSON: {exc}"
-        ) from exc
-    except ValueError as exc:
-        # `_reject_duplicate_keys` raises ValueError (not JSONDecodeError) from
-        # inside json.loads on a duplicate key.
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    if not isinstance(parsed, dict):
-        raise HTTPException(
-            status_code=400,
-            detail="request body must be a JSON object (project_data.json shape)",
-        )
-    return parsed
 
 
 def _model_issue(message: str, exc: ValidationError) -> ValidationIssue:
@@ -216,30 +176,44 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
 @router.post("/validate", response_model=ValidationResultModel)
 async def validate_project(request: Request) -> ValidationResultModel:
     """Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
-    structural ⧺ block ⧺ semantic issue list and the derived ``ok`` flag; a 4xx is
-    reserved for a malformed REQUEST (see ``_read_raw_project`` / the body cap).
+    structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
+    reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
 
-    Layer order (DB-free layers first, so a structurally-rejected body costs no DB
-    hit): structural → block → (model build + semantic). The semantic layer needs
-    a live ``Catalog``, opened per-request in THIS body. If structural fails we
-    SKIP the model build + semantic step (they assume a structurally valid spec)
-    but STILL report the block issues — the block validator is independent of the
-    structural one and a researcher benefits from seeing both."""
-    raw = await _read_raw_project(request)
+    This is the §6.8.0 SEMANTIC validator (reg_meta-backed). NOTE the scope versus
+    ``POST /api/bundle``: bundle additionally runs the build-time cross-block
+    referential check (orphan ``column_options`` keys) and the step-4 capability
+    gates (e.g. a build-required ``display_name``), which ``/validate`` does NOT —
+    so a spec ``/validate`` greenlights can still 422 at ``/bundle``. Reconciling
+    that (a build-readiness layer) waits on issue-based reg_monabundle validators
+    (the same open question as the ``invalid_block`` code).
 
+    ``async`` only to read the body off the wire; the BLOCKING work (the structural
+    parse + the semantic layer's per-binding sqlite resolution) is offloaded to the
+    threadpool via ``run_in_threadpool`` so it never stalls the event loop (the
+    catalog routes are plain ``def`` for the same reason). The reg_meta connection
+    opens on that threadpool thread (one thread → the cross-thread sqlite P1 can't
+    recur)."""
+    raw = await read_raw_json_object(request)
+    return await run_in_threadpool(_validate_blocking, request.app.state.db_path, raw)
+
+
+def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultModel:
+    """The §6.8.0 three-layer composition, run on a threadpool thread (off the
+    event loop). Layer order (DB-free first, so a structurally-rejected body costs
+    no DB hit): structural → block → (model build + semantic). When structural
+    fails we SKIP the model build + semantic step (they assume a structurally valid
+    spec) but STILL report the block issues — the block validator is independent."""
     issues: list[ValidationIssue] = []
     structural = validate_structural(raw)
     issues.extend(structural.issues)
     issues.extend(_block_issues(raw))
 
     if structural.ok:
-        # Semantic resolution assumes well-formed FQIDs / period grammar (the
-        # structural layer's job), so it only runs when structural passed. The
-        # connection opens HERE (in the handler body, one thread) and AFTER the
-        # DB-free layers — a structurally invalid body never reaches the open.
-        with _project_conn(request) as conn:
-            from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
+        # The connection opens HERE on this threadpool thread (one thread), AFTER
+        # the DB-free layers — a structurally invalid body never reaches the open.
+        from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
 
+        with _project_conn(db_path) as conn:
             issues.extend(_semantic_issues(raw, Catalog(conn)))
 
     return _to_result_model(ValidationResult(issues=tuple(issues)))
@@ -266,7 +240,7 @@ def order_project(request: Request, project: ProjectData) -> Response:
     here). Resolves missing ``display_name``s from reg_meta via a per-request
     connection opened IN THIS BODY (the locked connection model). Returns the CSV
     as a ``text/csv`` attachment."""
-    with _project_conn(request) as conn:
+    with _project_conn(request.app.state.db_path) as conn:
         from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
 
         csv_text = render_order_csv(project, Catalog(conn))
