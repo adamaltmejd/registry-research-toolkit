@@ -1,0 +1,114 @@
+{
+  "components": {
+    "schemas": {
+      "ContextResponse": {
+        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info (\u00a79.5).\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages.",
+        "properties": {
+          "reg_meta": {
+            "$ref": "#/components/schemas/RegMetaInfo"
+          },
+          "steward": {
+            "$ref": "#/components/schemas/StewardInfo"
+          },
+          "webapp": {
+            "$ref": "#/components/schemas/WebappInfo"
+          }
+        },
+        "required": [
+          "steward",
+          "reg_meta",
+          "webapp"
+        ],
+        "title": "ContextResponse",
+        "type": "object"
+      },
+      "RegMetaInfo": {
+        "description": "reg_meta build provenance, read from the DB ``import_manifest``.",
+        "properties": {
+          "import_date": {
+            "title": "Import Date",
+            "type": "string"
+          },
+          "schema_version": {
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema_version",
+          "import_date"
+        ],
+        "title": "RegMetaInfo",
+        "type": "object"
+      },
+      "StewardInfo": {
+        "description": "Deployment identity + branding, from ``steward.toml`` (\u00a79.1).",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "long_name": {
+            "title": "Long Name",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "long_name"
+        ],
+        "title": "StewardInfo",
+        "type": "object"
+      },
+      "WebappInfo": {
+        "description": "Package versions for the deployed backend + its reg_meta dependency.",
+        "properties": {
+          "reg_meta_version": {
+            "title": "Reg Meta Version",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "reg_meta_version"
+        ],
+        "title": "WebappInfo",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "reg_webapp",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/context": {
+      "get": {
+        "operationId": "get_context_api_context_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Context"
+      }
+    }
+  }
+}

@@ -9,11 +9,13 @@ dependencies = [
   "reg-meta-build",
   "reg-monabundle",
   "reg-schema",
+  "reg-webapp",
 ]
 
 [dependency-groups]
 dev = [
   "duckdb>=1.5.2",
+  "httpx>=0.28.1",
   "openpyxl>=3.1.5",
   "pytest>=9.0.3",
   "pytest-xdist>=3.8.0",
@@ -21,7 +23,14 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["mock_data_wizard", "reg_meta", "reg_meta_build", "reg_monabundle", "reg_schema"]
+testpaths = [
+  "mock_data_wizard",
+  "reg_meta",
+  "reg_meta_build",
+  "reg_monabundle",
+  "reg_schema",
+  "reg_webapp/backend/tests",
+]
 markers = ["integration: full pipeline tests requiring Docker"]
 
 [tool.ruff]
@@ -86,6 +95,7 @@ reg-meta = { workspace = true }
 reg-meta-build = { workspace = true }
 reg-monabundle = { workspace = true }
 reg-schema = { workspace = true }
+reg-webapp = { workspace = true }
 
 [tool.uv.workspace]
 members = [
@@ -94,4 +104,5 @@ members = [
   "reg_meta_build",
   "reg_monabundle",
   "reg_schema",
+  "reg_webapp/backend",
 ]
