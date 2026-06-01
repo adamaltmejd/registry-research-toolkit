@@ -93,6 +93,33 @@ class TestListBindings:
         assert _catalog().list_bindings("nope", "rams") == []
 
 
+def test_listing_disambiguates_by_parent_scope() -> None:
+    """Register slugs are provider-scoped and variable slugs register-scoped, so
+    a listing must return ONLY the queried parent's children even when a sibling
+    provider/register reuses the same slug. Locks the `WHERE p.slug = ?` /
+    `AND r.slug = ?` join predicates against a dropped-clause regression.
+    """
+    conn = build_slugged_db()  # scb/lisa (register_id 1) with variable `kon`
+    # Cross-provider register-slug collision: sos ALSO has a register `lisa`.
+    add_register(conn, register_id=9, slug="lisa", name="SOS LISA", provider_id=2)
+    add_variable(conn, register_id=9, var_id=90, name="SOS Kon", slug="kon")
+    # Cross-register variable-slug collision: scb/rams ALSO has a variable `kon`.
+    add_register(conn, register_id=2, slug="rams", name="RAMS")
+    add_variable(conn, register_id=2, var_id=70, name="RAMS Kon", slug="kon")
+    conn.commit()
+    cat = Catalog(conn)
+
+    # list_registers returns only the queried provider's registers.
+    assert [str(r.fqid) for r in cat.list_registers("scb")] == ["scb/lisa", "scb/rams"]
+    assert [str(r.fqid) for r in cat.list_registers("sos")] == ["sos/lisa"]
+
+    # list_bindings returns only the queried register's variables — the shared
+    # `kon` slug resolves to a distinct binding per (provider, register).
+    assert [str(b.fqid) for b in cat.list_bindings("scb", "lisa")] == ["scb/lisa/kon"]
+    assert [str(b.fqid) for b in cat.list_bindings("scb", "rams")] == ["scb/rams/kon"]
+    assert [str(b.fqid) for b in cat.list_bindings("sos", "lisa")] == ["sos/lisa/kon"]
+
+
 def test_listing_roundtrips_into_resolve() -> None:
     """Every listed FQID resolves — the browse tree is navigable end to end."""
     cat = _catalog()
