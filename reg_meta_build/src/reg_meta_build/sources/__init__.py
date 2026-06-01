@@ -8,9 +8,9 @@ structured representation intended for downstream ingestion (e.g. by
 
 Current providers:
 
+- `scb` — Statistics Sweden microdata-catalog CSV/SQL/xlsx exports
+  (`reg_meta_build.sources.scb.SCBAdapter`, A4.1).
 - `sos` — Socialstyrelsen metadata Excel workbooks.
-  (`scb` import logic currently lives in `reg_meta_build.db`; migrating it
-  here under the IR-adapter contract is tracked under MIGRATION_PLAN A4.x.)
 
 The post-refactor contract every adapter must implement is the `IRAdapter`
 protocol below — concrete adapters live at
@@ -73,7 +73,30 @@ class IRAdapter(Protocol):
     provider: str  # short identifier: 'scb', 'sos', 'fk', ...
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
-        """Parse the provider's native source files and emit IR objects."""
+        """Parse the provider's native source files and emit IR objects.
+
+        Emit order is the FK-topological order so the materializer can insert
+        in stream order and FK targets always exist when a child is seen:
+
+          1. ``IRRegister``        (all)
+          2. ``IRClassification``  (all; reference for value-set linkage)
+          3. ``IRVariant``         (FK → register)
+          4. ``IRValueSet`` (+ nested ``IRValueCode``; referenced by states)
+          5. ``IRVariable``        (FK → register, optional source_register_id)
+          6. ``IRVariableState``   (FK → variable + variant + value_set)
+          7. ``IRLineageEdge`` / ``IRReplacedByEdge`` / ``IRRelatedToEdge``
+          8. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)
+
+        The order constrains only the types an adapter actually emits — an
+        adapter MAY emit a subset (e.g. in A4.1 ``SCBAdapter`` leaves
+        ``IRClassification`` and ``IRLineageEdge`` materializer-derived and does
+        not emit them). Conformance is about ordering what you do emit, not
+        emitting every type.
+
+        Every IR ``*_id`` field is an explicit int the adapter bakes in the
+        provider's native ID-assignment order; emit order is independent of ID
+        assignment (it only governs FK-referential safety).
+        """
         ...
 
 
