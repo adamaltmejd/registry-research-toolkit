@@ -262,13 +262,14 @@ export interface paths {
          * Order Project
          * @description Render the steward's default v1 order-export CSV (§9.5).
          *
-         *     Takes a ``project_data.json``-shaped body typed as ``ProjectData`` directly
-         *     (the §9.6 sanctioned reg_schema-as-request-model path — unlike ``/validate``,
-         *     which needs the raw dict to diagnose malformed specs, ``/order`` operates on a
-         *     well-formed spec, so a framework 422 on a malformed body is the right behavior
-         *     here). Resolves missing ``display_name``s from reg_meta via a per-request
-         *     connection opened IN THIS BODY (the locked connection model). Returns the CSV
-         *     as a ``text/csv`` attachment.
+         *     Reads the raw dict and runs the §6.8.1 STRUCTURAL gate before rendering: the
+         *     ``ProjectData`` model enforces only field types, while the structural rules
+         *     (FQID shape, period grammar, the binding/source-prefix match) live in
+         *     ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec
+         *     (e.g. a malformed ``register_variant`` or bad period token) would otherwise
+         *     render a bad provider order at 200. A structurally invalid spec → 422.
+         *     ``async`` + ``run_in_threadpool`` (blocking display_name resolution off the
+         *     event loop), mirroring ``/validate``.
          */
         post: operations["order_project_api_project_order_post"];
         delete?: never;
@@ -318,46 +319,6 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * Binding
-         * @description A binding on a Source (§6.3) — one variable to include in the extract.
-         *
-         *     ``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3
-         *     segments, §5.2), optionally suffixed ``@<value-set-version>`` to pin
-         *     one of several value-set versions co-delivered in the bound period
-         *     (e.g. ``scb/lisa/naringsgren@sni2007``). Its ``provider/register``
-         *     prefix (first 2 segments) must equal the source's ``register_variant``
-         *     prefix — the variant is NOT repeated here, it lives once on the Source
-         *     (§6.2). That cross-field rule is enforced by the structural validator.
-         *
-         *     ``display_name`` is optional: when absent, reg_meta-backed consumers
-         *     resolve the default from ``variable_alias.delivery_column_name`` for
-         *     the binding's state at the source's ``(register_variant, period)``.
-         *     Reg_meta-free consumers (bundle on MONA, kit runs) never see an
-         *     unresolved ``display_name`` — bundle build and kit build materialize
-         *     defaults before emitting their artifacts.
-         */
-        Binding: {
-            /** Date Format */
-            date_format?: string | null;
-            /** Datetime Format */
-            datetime_format?: string | null;
-            /** Display Name */
-            display_name?: string | null;
-            /** Id Subtype */
-            id_subtype?: ("integer" | "string") | null;
-            /** Numeric Subtype */
-            numeric_subtype?: ("integer" | "double") | null;
-            /**
-             * Type
-             * @enum {string}
-             */
-            type: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
-            /** Value Set */
-            value_set?: string | null;
-            /** Variable */
-            variable: string;
-        };
         /**
          * BindingChild
          * @description A binding child under a register node — a thin (fqid, name) entry, NOT
@@ -598,83 +559,6 @@ export interface components {
             lineage_warnings: components["schemas"]["LineageWarningModel"][];
         };
         /**
-         * LiteralPeriod
-         * @description The ``{"period": int | string}`` time_key form (§6.4).
-         *
-         *     The only way to express a string-shaped literal period at the
-         *     schema level. Disambiguates ``"2018"`` (column ref) from
-         *     ``{"period": "2018-01"}`` (literal period).
-         */
-        LiteralPeriod: {
-            /** Period */
-            period: number | string;
-        };
-        /**
-         * Panel
-         * @description A panel definition over sources (§6.4).
-         *
-         *     Members are stored uniformly as ``PanelMember``. The §6.4 bare-string
-         *     shorthand (a source name with panel-level key defaults) is normalized
-         *     to ``PanelMember(source=<name>)`` by the ``members`` validator, so
-         *     consumers never branch on ``str | PanelMember``. Source-collision (each
-         *     source belongs to at most one panel) and composite ordering /
-         *     homogeneity rules are enforced by the structural validator, not here.
-         */
-        Panel: {
-            /** Comment */
-            comment?: string | null;
-            /** Entity Key */
-            entity_key?: string | string[] | null;
-            /** Members */
-            members: components["schemas"]["PanelMember"][];
-            /** Panel Id */
-            panel_id: string;
-            /** Time Key */
-            time_key?: number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"] | (number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"])[] | null;
-        };
-        /**
-         * PanelMember
-         * @description A member of a Panel (§6.4).
-         *
-         *     ``source`` is the source ``name`` (the panel layer joins on
-         *     delivered-data column headers, not FQIDs). ``entity_key`` /
-         *     ``time_key`` override panel-level defaults; when both panel and member
-         *     leave a key unset, it is inherited from the member's variant's
-         *     ``panel_template`` (§6.4) at kit/bundle-build time — the structural
-         *     validator does not flag the absence (it has no reg_meta).
-         */
-        PanelMember: {
-            /** Entity Key */
-            entity_key?: string | string[] | null;
-            /** Source */
-            source: string;
-            /** Time Key */
-            time_key?: number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"] | (number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"])[] | null;
-        };
-        /**
-         * PeriodRange
-         * @description The ``{"from": ..., "to": ...}`` range form of ``Source.period`` (§6.2).
-         *
-         *     Endpoints follow the same int / period-token-string forms as a bare
-         *     period. ``from`` is a Python keyword, so the field is ``from_`` with a
-         *     ``"from"`` alias; ``populate_by_name`` lets callers use either.
-         *
-         *     This bare object is **only** legal as a ``Source.period`` value; a
-         *     ``TimePoint`` range uses the discriminated ``TimeRange`` wrapper
-         *     (``{"range": {...}}``) so ``TimeKey``'s union stays unambiguous (§6.2).
-         *
-         *     ``serialize_by_alias=True`` so ``model_dump()`` emits ``"from"`` (not the
-         *     Python-safe ``"from_"``) without every caller having to pass
-         *     ``by_alias=True`` — the un-aliased key would fail re-validation
-         *     (``_is_period_range_obj`` requires exactly ``{"from", "to"}``).
-         */
-        PeriodRange: {
-            /** From */
-            from: number | string;
-            /** To */
-            to: number | string;
-        };
-        /**
          * PredecessorsResponse
          * @description `GET /api/catalog/{fqid}/predecessors` — inbound succession (§9.5).
          */
@@ -683,53 +567,6 @@ export interface components {
             binding: string;
             /** Predecessors */
             predecessors: components["schemas"]["VariableRefModel"][];
-        };
-        /**
-         * ProjectData
-         * @description The top-level ``project_data.json`` shape (§6.1).
-         *
-         *     ``reg_monabundle`` (and any other namespaced block added later) is
-         *     intentionally typed as an opaque ``Mapping``: §6.8.2 delegates
-         *     validation of namespaced blocks to their owning package, and
-         *     reg_schema's frozen-ness does not deep-freeze nested mappings. That is
-         *     by design — namespaced consumers own their payload lifecycle.
-         *
-         *     ``extra="ignore"`` (overriding ``_Model``'s ``forbid``) tolerates
-         *     additional steward-namespaced blocks (``swecov``, ``reg_mockdata``,
-         *     …) without modeling them as fields: they ride through on the dict side
-         *     and are handled by the owning package (§6.8.2), exactly as the v0.x
-         *     dataclass did. If a field is wanted for one, we add it deliberately
-         *     rather than growing an ``extras`` dict.
-         *
-         *     Because the ``reg_monabundle`` block is an opaque (typically
-         *     unhashable) ``Mapping``, an instance carrying one is unhashable on
-         *     demand. No consumer hashes ``ProjectData`` (the bundle wraps it in a
-         *     ``LoadedSpec``; the webapp serializes it), so ``frozen=True`` is kept
-         *     for value-immutability and ``__eq__`` without a custom ``__hash__``.
-         */
-        ProjectData: {
-            /** Name */
-            name: string;
-            /**
-             * Panels
-             * @default []
-             */
-            panels: components["schemas"]["Panel"][];
-            /** Reg Meta Version */
-            reg_meta_version: string;
-            /** Reg Monabundle */
-            reg_monabundle?: {
-                [key: string]: unknown;
-            } | null;
-            /** Schema Version */
-            schema_version: string;
-            /** Sources */
-            sources: components["schemas"]["Source"][];
-            /**
-             * Steward
-             * @enum {string}
-             */
-            steward: "global" | "ifau" | "swecov";
         };
         /**
          * ProviderNode
@@ -865,27 +702,6 @@ export interface components {
             kind: "root";
         };
         /**
-         * Source
-         * @description A data source / table in the spec (§6.2).
-         *
-         *     ``register_variant`` is the 3-part variant **coordinate**
-         *     (``<provider>/<register>/<variant>``) — not an FQID kind (§5.2), but
-         *     the same 3-part grammar. ``period`` is always required and polymorphic
-         *     (``Period``). Together ``(register_variant's variant, period)`` selects
-         *     each binding variable's ``variable_state``. ``name`` is the internal
-         *     source handle referenced by panel members; it is not an FQID.
-         */
-        Source: {
-            /** Bindings */
-            bindings: components["schemas"]["Binding"][];
-            /** Name */
-            name: string;
-            /** Period */
-            period: number | string | components["schemas"]["PeriodRange"];
-            /** Register Variant */
-            register_variant: string;
-        };
-        /**
          * StatesResponse
          * @description `GET /api/catalog/{fqid}/states` — the binding's full state history (§9.5).
          *     Same `states` shape the binding leaf embeds, as a standalone envelope. With a
@@ -919,18 +735,6 @@ export interface components {
             binding: string;
             /** Successors */
             successors: components["schemas"]["VariableRefModel"][];
-        };
-        /**
-         * TimeRange
-         * @description The ``{"range": {"from": ..., "to": ...}}`` time_key form (§6.4).
-         *
-         *     The discriminated wrapper for a period range in ``TimeKey`` position —
-         *     distinct from the bare ``{"from", "to"}`` object, which is legal only
-         *     as a ``Source.period`` (``PeriodRange``). The wrapper keeps the
-         *     ``TimePoint`` union unambiguous (§6.2).
-         */
-        TimeRange: {
-            range: components["schemas"]["PeriodRange"];
         };
         /** ValidationError */
         ValidationError: {
@@ -1135,7 +939,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -1450,7 +1258,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ProjectData"];
+                "application/json": Record<string, never>;
             };
         };
         responses: {
@@ -1463,15 +1271,6 @@ export interface operations {
                     "text/csv": unknown;
                 };
             };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
         };
     };
     validate_project_api_project_validate_post: {
@@ -1481,7 +1280,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

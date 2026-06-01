@@ -1,108 +1,6 @@
 {
   "components": {
     "schemas": {
-      "Binding": {
-        "additionalProperties": false,
-        "description": "A binding on a Source (\u00a76.3) \u2014 one variable to include in the extract.\n\n``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3\nsegments, \u00a75.2), optionally suffixed ``@<value-set-version>`` to pin\none of several value-set versions co-delivered in the bound period\n(e.g. ``scb/lisa/naringsgren@sni2007``). Its ``provider/register``\nprefix (first 2 segments) must equal the source's ``register_variant``\nprefix \u2014 the variant is NOT repeated here, it lives once on the Source\n(\u00a76.2). That cross-field rule is enforced by the structural validator.\n\n``display_name`` is optional: when absent, reg_meta-backed consumers\nresolve the default from ``variable_alias.delivery_column_name`` for\nthe binding's state at the source's ``(register_variant, period)``.\nReg_meta-free consumers (bundle on MONA, kit runs) never see an\nunresolved ``display_name`` \u2014 bundle build and kit build materialize\ndefaults before emitting their artifacts.",
-        "properties": {
-          "date_format": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Date Format"
-          },
-          "datetime_format": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Datetime Format"
-          },
-          "display_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Display Name"
-          },
-          "id_subtype": {
-            "anyOf": [
-              {
-                "enum": [
-                  "integer",
-                  "string"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id Subtype"
-          },
-          "numeric_subtype": {
-            "anyOf": [
-              {
-                "enum": [
-                  "integer",
-                  "double"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Numeric Subtype"
-          },
-          "type": {
-            "enum": [
-              "id",
-              "categorical",
-              "numeric",
-              "date",
-              "datetime",
-              "opaque"
-            ],
-            "title": "Type",
-            "type": "string"
-          },
-          "value_set": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Value Set"
-          },
-          "variable": {
-            "title": "Variable",
-            "type": "string"
-          }
-        },
-        "required": [
-          "variable",
-          "type"
-        ],
-        "title": "Binding",
-        "type": "object"
-      },
       "BindingChild": {
         "description": "A binding child under a register node \u2014 a thin (fqid, name) entry, NOT\nthe embedded longitudinal record (that is only on the binding LEAF response).",
         "properties": {
@@ -573,223 +471,6 @@
         "title": "LineageWarningsResponse",
         "type": "object"
       },
-      "LiteralPeriod": {
-        "additionalProperties": false,
-        "description": "The ``{\"period\": int | string}`` time_key form (\u00a76.4).\n\nThe only way to express a string-shaped literal period at the\nschema level. Disambiguates ``\"2018\"`` (column ref) from\n``{\"period\": \"2018-01\"}`` (literal period).",
-        "properties": {
-          "period": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              }
-            ],
-            "title": "Period"
-          }
-        },
-        "required": [
-          "period"
-        ],
-        "title": "LiteralPeriod",
-        "type": "object"
-      },
-      "Panel": {
-        "additionalProperties": false,
-        "description": "A panel definition over sources (\u00a76.4).\n\nMembers are stored uniformly as ``PanelMember``. The \u00a76.4 bare-string\nshorthand (a source name with panel-level key defaults) is normalized\nto ``PanelMember(source=<name>)`` by the ``members`` validator, so\nconsumers never branch on ``str | PanelMember``. Source-collision (each\nsource belongs to at most one panel) and composite ordering /\nhomogeneity rules are enforced by the structural validator, not here.",
-        "properties": {
-          "comment": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Comment"
-          },
-          "entity_key": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Entity Key"
-          },
-          "members": {
-            "items": {
-              "$ref": "#/components/schemas/PanelMember"
-            },
-            "title": "Members",
-            "type": "array"
-          },
-          "panel_id": {
-            "title": "Panel Id",
-            "type": "string"
-          },
-          "time_key": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/components/schemas/LiteralPeriod"
-              },
-              {
-                "$ref": "#/components/schemas/TimeRange"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/components/schemas/LiteralPeriod"
-                    },
-                    {
-                      "$ref": "#/components/schemas/TimeRange"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Time Key"
-          }
-        },
-        "required": [
-          "panel_id",
-          "members"
-        ],
-        "title": "Panel",
-        "type": "object"
-      },
-      "PanelMember": {
-        "additionalProperties": false,
-        "description": "A member of a Panel (\u00a76.4).\n\n``source`` is the source ``name`` (the panel layer joins on\ndelivered-data column headers, not FQIDs). ``entity_key`` /\n``time_key`` override panel-level defaults; when both panel and member\nleave a key unset, it is inherited from the member's variant's\n``panel_template`` (\u00a76.4) at kit/bundle-build time \u2014 the structural\nvalidator does not flag the absence (it has no reg_meta).",
-        "properties": {
-          "entity_key": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Entity Key"
-          },
-          "source": {
-            "title": "Source",
-            "type": "string"
-          },
-          "time_key": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/components/schemas/LiteralPeriod"
-              },
-              {
-                "$ref": "#/components/schemas/TimeRange"
-              },
-              {
-                "items": {
-                  "anyOf": [
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/components/schemas/LiteralPeriod"
-                    },
-                    {
-                      "$ref": "#/components/schemas/TimeRange"
-                    }
-                  ]
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Time Key"
-          }
-        },
-        "required": [
-          "source"
-        ],
-        "title": "PanelMember",
-        "type": "object"
-      },
-      "PeriodRange": {
-        "additionalProperties": false,
-        "description": "The ``{\"from\": ..., \"to\": ...}`` range form of ``Source.period`` (\u00a76.2).\n\nEndpoints follow the same int / period-token-string forms as a bare\nperiod. ``from`` is a Python keyword, so the field is ``from_`` with a\n``\"from\"`` alias; ``populate_by_name`` lets callers use either.\n\nThis bare object is **only** legal as a ``Source.period`` value; a\n``TimePoint`` range uses the discriminated ``TimeRange`` wrapper\n(``{\"range\": {...}}``) so ``TimeKey``'s union stays unambiguous (\u00a76.2).\n\n``serialize_by_alias=True`` so ``model_dump()`` emits ``\"from\"`` (not the\nPython-safe ``\"from_\"``) without every caller having to pass\n``by_alias=True`` \u2014 the un-aliased key would fail re-validation\n(``_is_period_range_obj`` requires exactly ``{\"from\", \"to\"}``).",
-        "properties": {
-          "from": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              }
-            ],
-            "title": "From"
-          },
-          "to": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              }
-            ],
-            "title": "To"
-          }
-        },
-        "required": [
-          "from",
-          "to"
-        ],
-        "title": "PeriodRange",
-        "type": "object"
-      },
       "PredecessorsResponse": {
         "description": "`GET /api/catalog/{fqid}/predecessors` \u2014 inbound succession (\u00a79.5).",
         "properties": {
@@ -810,68 +491,6 @@
           "predecessors"
         ],
         "title": "PredecessorsResponse",
-        "type": "object"
-      },
-      "ProjectData": {
-        "description": "The top-level ``project_data.json`` shape (\u00a76.1).\n\n``reg_monabundle`` (and any other namespaced block added later) is\nintentionally typed as an opaque ``Mapping``: \u00a76.8.2 delegates\nvalidation of namespaced blocks to their owning package, and\nreg_schema's frozen-ness does not deep-freeze nested mappings. That is\nby design \u2014 namespaced consumers own their payload lifecycle.\n\n``extra=\"ignore\"`` (overriding ``_Model``'s ``forbid``) tolerates\nadditional steward-namespaced blocks (``swecov``, ``reg_mockdata``,\n\u2026) without modeling them as fields: they ride through on the dict side\nand are handled by the owning package (\u00a76.8.2), exactly as the v0.x\ndataclass did. If a field is wanted for one, we add it deliberately\nrather than growing an ``extras`` dict.\n\nBecause the ``reg_monabundle`` block is an opaque (typically\nunhashable) ``Mapping``, an instance carrying one is unhashable on\ndemand. No consumer hashes ``ProjectData`` (the bundle wraps it in a\n``LoadedSpec``; the webapp serializes it), so ``frozen=True`` is kept\nfor value-immutability and ``__eq__`` without a custom ``__hash__``.",
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "panels": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/Panel"
-            },
-            "title": "Panels",
-            "type": "array"
-          },
-          "reg_meta_version": {
-            "title": "Reg Meta Version",
-            "type": "string"
-          },
-          "reg_monabundle": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reg Monabundle"
-          },
-          "schema_version": {
-            "title": "Schema Version",
-            "type": "string"
-          },
-          "sources": {
-            "items": {
-              "$ref": "#/components/schemas/Source"
-            },
-            "title": "Sources",
-            "type": "array"
-          },
-          "steward": {
-            "enum": [
-              "global",
-              "ifau",
-              "swecov"
-            ],
-            "title": "Steward",
-            "type": "string"
-          }
-        },
-        "required": [
-          "schema_version",
-          "steward",
-          "reg_meta_version",
-          "name",
-          "sources"
-        ],
-        "title": "ProjectData",
         "type": "object"
       },
       "ProviderNode": {
@@ -1164,49 +783,6 @@
         "title": "RootResponse",
         "type": "object"
       },
-      "Source": {
-        "additionalProperties": false,
-        "description": "A data source / table in the spec (\u00a76.2).\n\n``register_variant`` is the 3-part variant **coordinate**\n(``<provider>/<register>/<variant>``) \u2014 not an FQID kind (\u00a75.2), but\nthe same 3-part grammar. ``period`` is always required and polymorphic\n(``Period``). Together ``(register_variant's variant, period)`` selects\neach binding variable's ``variable_state``. ``name`` is the internal\nsource handle referenced by panel members; it is not an FQID.",
-        "properties": {
-          "bindings": {
-            "items": {
-              "$ref": "#/components/schemas/Binding"
-            },
-            "title": "Bindings",
-            "type": "array"
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "period": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/components/schemas/PeriodRange"
-              }
-            ],
-            "title": "Period"
-          },
-          "register_variant": {
-            "title": "Register Variant",
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "register_variant",
-          "period",
-          "bindings"
-        ],
-        "title": "Source",
-        "type": "object"
-      },
       "StatesResponse": {
         "description": "`GET /api/catalog/{fqid}/states` \u2014 the binding's full state history (\u00a79.5).\nSame `states` shape the binding leaf embeds, as a standalone envelope. With a\n`?period` query on the catch-all this same shape carries the resolve_at\nsubset (uniform: codegen sees one state-list type).",
         "properties": {
@@ -1273,20 +849,6 @@
           "successors"
         ],
         "title": "SuccessorsResponse",
-        "type": "object"
-      },
-      "TimeRange": {
-        "additionalProperties": false,
-        "description": "The ``{\"range\": {\"from\": ..., \"to\": ...}}`` time_key form (\u00a76.4).\n\nThe discriminated wrapper for a period range in ``TimeKey`` position \u2014\ndistinct from the bare ``{\"from\", \"to\"}`` object, which is legal only\nas a ``Source.period`` (``PeriodRange``). The wrapper keeps the\n``TimePoint`` union unambiguous (\u00a76.2).",
-        "properties": {
-          "range": {
-            "$ref": "#/components/schemas/PeriodRange"
-          }
-        },
-        "required": [
-          "range"
-        ],
-        "title": "TimeRange",
         "type": "object"
       },
       "ValidationError": {
@@ -1686,6 +1248,16 @@
       "post": {
         "description": "Build the MONA bundle embedding the posted ``project_data.json`` and return\nthe ``.py`` bytes. Reads the raw dict (preserving namespaced blocks) and\noffloads the blocking build to the threadpool.",
         "operationId": "build_mona_bundle_api_bundle_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
@@ -2147,13 +1719,13 @@
     },
     "/api/project/order": {
       "post": {
-        "description": "Render the steward's default v1 order-export CSV (\u00a79.5).\n\nTakes a ``project_data.json``-shaped body typed as ``ProjectData`` directly\n(the \u00a79.6 sanctioned reg_schema-as-request-model path \u2014 unlike ``/validate``,\nwhich needs the raw dict to diagnose malformed specs, ``/order`` operates on a\nwell-formed spec, so a framework 422 on a malformed body is the right behavior\nhere). Resolves missing ``display_name``s from reg_meta via a per-request\nconnection opened IN THIS BODY (the locked connection model). Returns the CSV\nas a ``text/csv`` attachment.",
+        "description": "Render the steward's default v1 order-export CSV (\u00a79.5).\n\nReads the raw dict and runs the \u00a76.8.1 STRUCTURAL gate before rendering: the\n``ProjectData`` model enforces only field types, while the structural rules\n(FQID shape, period grammar, the binding/source-prefix match) live in\n``validate_structural`` \u2014 so a Pydantic-valid-but-structurally-invalid spec\n(e.g. a malformed ``register_variant`` or bad period token) would otherwise\nrender a bad provider order at 200. A structurally invalid spec \u2192 422.\n``async`` + ``run_in_threadpool`` (blocking display_name resolution off the\nevent loop), mirroring ``/validate``.",
         "operationId": "order_project_api_project_order_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProjectData"
+                "type": "object"
               }
             }
           },
@@ -2165,16 +1737,6 @@
               "text/csv": {}
             },
             "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
           }
         },
         "summary": "Order Project"
@@ -2184,6 +1746,16 @@
       "post": {
         "description": "Validate a ``project_data.json`` (\u00a76.8.0). Returns 200 with the concatenated\nstructural \u29fa block \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nThis is the \u00a76.8.0 SEMANTIC validator (reg_meta-backed). NOTE the scope versus\n``POST /api/bundle``: bundle additionally runs the build-time cross-block\nreferential check (orphan ``column_options`` keys) and the step-4 capability\ngates (e.g. a build-required ``display_name``), which ``/validate`` does NOT \u2014\nso a spec ``/validate`` greenlights can still 422 at ``/bundle``. Reconciling\nthat (a build-readiness layer) waits on issue-based reg_monabundle validators\n(the same open question as the ``invalid_block`` code).\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
         "operationId": "validate_project_api_project_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {

@@ -87,7 +87,10 @@ def test_no_route_handler_references_provenance_db(app):
             source = inspect.getsource(module)
         except (OSError, TypeError):  # pragma: no cover — source always available here
             continue
-        if "provenance" in source:
+        # Match the actual provenance-DB reference (`reg_meta.provenance` import or
+        # attribute), NOT the bare word "provenance" — a docstring/comment mentioning
+        # it (e.g. this very boundary) must not false-positive.
+        if "reg_meta.provenance" in source:
             offenders.append(f"{route.path} -> {module.__name__}")
     assert not offenders, (
         f"§16: route handler module references the provenance DB: {offenders}"

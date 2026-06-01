@@ -10,9 +10,11 @@ Two endpoints:
 
 **Status discipline (§6.8.0 / §9.5).** ``/validate`` is a *diagnostic*: a spec
 that FAILS validation is a SUCCESSFUL validation RESPONSE — HTTP 200 with
-``ok=false`` + the issues. 4xx is reserved for a malformed REQUEST: non-JSON
-body, duplicate JSON keys, wrong content-type, or an oversized body (the last
-handled by ``BodySizeLimitMiddleware`` before the handler runs). An extra/typo
+``ok=false`` + the issues. 4xx is reserved for a malformed REQUEST: non-JSON body,
+duplicate JSON keys, a too-deeply-nested body, a non-object top level, or an
+oversized body (the last handled by ``BodySizeLimitMiddleware`` before the handler
+runs). The body is parsed as JSON regardless of ``Content-Type`` (lenient — a
+researcher tool, not a strict public API). An extra/typo
 KEY in the spec must surface as a structural (or model-construction) ISSUE in the
 200 body — NEVER a 500: ``validate_structural`` does not enforce ``extra=forbid``
 but the ``ProjectData`` model does, so the model build is wrapped and a
@@ -41,7 +43,7 @@ from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
 import reg_meta.db
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
@@ -173,7 +175,21 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
     return list(result.issues)
 
 
-@router.post("/validate", response_model=ValidationResultModel)
+# The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in
+# the OpenAPI schema — document it explicitly as an unconstrained JSON object
+# (a project_data.json) so the SPA codegen sees a body to send. We deliberately
+# don't pin the ProjectData schema here: /validate must accept malformed specs to
+# diagnose them.
+@router.post(
+    "/validate",
+    response_model=ValidationResultModel,
+    openapi_extra={
+        "requestBody": {
+            "required": True,
+            "content": {"application/json": {"schema": {"type": "object"}}},
+        }
+    },
+)
 async def validate_project(request: Request) -> ValidationResultModel:
     """Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
@@ -229,20 +245,49 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultMo
     "/order",
     response_class=Response,
     responses={200: {"content": {"text/csv": {}}}},
+    openapi_extra={
+        "requestBody": {
+            "required": True,
+            "content": {"application/json": {"schema": {"type": "object"}}},
+        }
+    },
 )
-def order_project(request: Request, project: ProjectData) -> Response:
+async def order_project(request: Request) -> Response:
     """Render the steward's default v1 order-export CSV (§9.5).
 
-    Takes a ``project_data.json``-shaped body typed as ``ProjectData`` directly
-    (the §9.6 sanctioned reg_schema-as-request-model path — unlike ``/validate``,
-    which needs the raw dict to diagnose malformed specs, ``/order`` operates on a
-    well-formed spec, so a framework 422 on a malformed body is the right behavior
-    here). Resolves missing ``display_name``s from reg_meta via a per-request
-    connection opened IN THIS BODY (the locked connection model). Returns the CSV
-    as a ``text/csv`` attachment."""
-    with _project_conn(request.app.state.db_path) as conn:
-        from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
+    Reads the raw dict and runs the §6.8.1 STRUCTURAL gate before rendering: the
+    ``ProjectData`` model enforces only field types, while the structural rules
+    (FQID shape, period grammar, the binding/source-prefix match) live in
+    ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec
+    (e.g. a malformed ``register_variant`` or bad period token) would otherwise
+    render a bad provider order at 200. A structurally invalid spec → 422.
+    ``async`` + ``run_in_threadpool`` (blocking display_name resolution off the
+    event loop), mirroring ``/validate``."""
+    raw = await read_raw_json_object(request)
+    return await run_in_threadpool(_order_blocking, request.app.state.db_path, raw)
 
+
+def _order_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
+    """Structural-gate then render the order CSV, on a threadpool thread. A
+    structurally invalid spec, or one the model rejects (extra/typo field), → 422
+    — you cannot render a provider order from an invalid spec (unlike ``/validate``,
+    which DIAGNOSES it at 200)."""
+    structural = validate_structural(raw)
+    if not structural.ok:
+        errors = [i for i in structural.issues if i.level == "error"]
+        raise HTTPException(
+            status_code=422,
+            detail="cannot render an order for a structurally invalid spec: "
+            + "; ".join(f"{i.code}@{i.path}" for i in errors),
+        )
+    try:
+        project = ProjectData.model_validate(raw)
+    except ValidationError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
+
+    with _project_conn(db_path) as conn:
         csv_text = render_order_csv(project, Catalog(conn))
     return Response(
         content=csv_text,

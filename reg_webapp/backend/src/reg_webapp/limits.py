@@ -200,7 +200,7 @@ class RateLimitMiddleware:
         # through — fail closed for cost protection.
         ip = client[0] if client else "unknown"
         if not self._allow(ip):
-            response = _rate_limited_response()
+            response = _rate_limited_response(int(self.capacity))
             await response(scope, receive, send)
             return
         await self.app(scope, receive, send)
@@ -227,13 +227,14 @@ class RateLimitMiddleware:
             return True
 
 
-def _rate_limited_response() -> Response:
+def _rate_limited_response(per_minute: int) -> Response:
+    """429 with the ACTUAL configured limit in the message (``create_app`` can
+    override the default, so the number isn't hard-coded)."""
     return JSONResponse(
         status_code=429,
         content={
             "detail": (
-                f"rate limit exceeded ({RATE_LIMIT_PER_MINUTE} requests/min/IP); "
-                "retry shortly"
+                f"rate limit exceeded ({per_minute} requests/min/IP); retry shortly"
             )
         },
         headers={"Retry-After": "60"},

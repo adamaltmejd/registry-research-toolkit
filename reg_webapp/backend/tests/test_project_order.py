@@ -109,6 +109,17 @@ def test_deterministic(client):
     assert a == b
 
 
+def test_structurally_invalid_spec_is_422_not_bad_csv(client):
+    """/order runs the §6.8.1 structural gate before rendering: a Pydantic-valid but
+    structurally-invalid spec (here a bad period token — a `str`, so the model
+    accepts it, but the period grammar rejects it) is a 422, NOT a 200 CSV of a bad
+    provider order (Codex P2)."""
+    spec = _spec()
+    spec["sources"][0]["period"] = "notaperiod"
+    resp = client.post("/api/project/order", json=spec)
+    assert resp.status_code == 422, f"bad period → {resp.status_code}"
+
+
 def test_unresolvable_binding_falls_back_to_fqid_leaf(client):
     """A binding whose FQID doesn't resolve still renders a row — the order is a
     manifest, so the display_name best-effort falls back to the bare FQID leaf

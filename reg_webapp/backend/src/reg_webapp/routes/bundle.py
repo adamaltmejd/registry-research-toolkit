@@ -69,6 +69,14 @@ router = APIRouter(prefix="/api")
     "/bundle",
     response_class=Response,
     responses={200: {"content": {"application/octet-stream": {}}}},
+    # Raw body (preserves namespaced blocks) → document it as an unconstrained JSON
+    # object so the OpenAPI / SPA codegen sees a body to send.
+    openapi_extra={
+        "requestBody": {
+            "required": True,
+            "content": {"application/json": {"schema": {"type": "object"}}},
+        }
+    },
 )
 async def build_mona_bundle(request: Request) -> Response:
     """Build the MONA bundle embedding the posted ``project_data.json`` and return
