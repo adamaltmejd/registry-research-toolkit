@@ -544,7 +544,14 @@ IR-consuming materializer + G1/G4 scratch-coupling close-out are deferred to A4.
 - SOS ID mint scheme implemented (BLAKE2b, top-bit-namespaced)
 - Provenance DB populated by adapters — including the SCB-specific debug data
   (raw CSV checksums, import warnings, Registerversion approval dates) the
-  A4.1 `SCBAdapter` already emits as `IRDeliveryProvenance` / `IRWarning`
+  A4.1 `SCBAdapter` already emits as `IRDeliveryProvenance` / `IRWarning`.
+  **Fix the A4.1 provenance keying when wiring population:** A4.1's
+  `_emit_provenance` keys approval dates per `register_id` (flat
+  `period_token → date`), which collapses across a register's variants and is
+  iteration-order-dependent (no `ORDER BY`). `IRDeliveryProvenance` is
+  per-register, so either re-grain per `register_variant`, include the variant
+  in the token, or add a deterministic last-wins rule. (Inert in A4.1 — the
+  objects are discarded — so this is A4.2's to resolve.)
 - `.prev` rotation verified in CI
 - **Property test: namespace invariant** (§16) — 10k random `mint(...)` inputs all land in `[2^62, 2^63)` (bit 62 set, bit 63 clear); SCB ID band `[0, 2^32)` is provably disjoint
 - **Provenance DB confinement test** (§16) — bundle amalgamator's import allow-list rejects modules that open `reg_meta.provenance.db`; FastAPI route introspection asserts no handler references the provenance path; deployment image excludes `reg_meta.provenance.db*` from the catalog volume mount
@@ -571,7 +578,11 @@ IR-consuming materializer + G1/G4 scratch-coupling close-out are deferred to A4.
   legacy direct-write path): (a) make `materialize()` insert the core variable
   graph from IR and flip SCB to IR-driven at the same time; (b) lift the
   gap-table carriers into IR (chiefly `IRVariableState.delivery_column_name`)
-  so the post-passes derive from universal tables, not scratch. Both are
+  so the post-passes derive from universal tables, not scratch; (c) rewrite the
+  `_emit_*` read-back helpers to be faithful — real variant/variable slugs (NULL
+  at emit time today, so the inert mirror substitutes `_default` / the raw
+  name), `classification_id`, and None-vs-sentinel encoding (see the
+  inert-mirror caveat in `SCBAdapter.emit()` for the exact field list). Both are
   guarded by the SCB-subset dbdiff (`WHERE provider='scb'`), still active at
   A4.3 but no longer the gate after A4.4's curation.
 

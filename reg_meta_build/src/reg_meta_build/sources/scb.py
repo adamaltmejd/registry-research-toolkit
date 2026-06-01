@@ -2123,17 +2123,36 @@ class SCBAdapter:
 
         ``source_dir`` is the ``SCB/`` directory (containing
         Registerinformation.csv and the enrichment files). Yields in
-        FK-topological order: registers → variants → variables → value_sets
-        (+codes) → variable_states → related-to edges → provenance/warnings.
+        FK-topological order: registers → variants → value_sets (+codes) →
+        variables → variable_states → related-to edges → provenance/warnings.
+        (No IRClassification / IRLineageEdge / IRReplacedByEdge: in A4.1 those
+        stay materializer-derived; the adapter emits the subset above.)
+
+        A4.1 INERT-MIRROR CAVEAT — the universal IR yielded here is read back
+        from the just-written rows *before* the materializer's post-passes run,
+        so it is NOT yet a faithful round-trip of the shipped catalog and must
+        be made faithful at A4.3, when ``materialize`` starts CONSUMING the IR.
+        Known gaps the A4.3 flip must fix: ``IRVariant.slug`` is a ``"_default"``
+        placeholder (real variant slugs are curated later by ``populate_slugs``);
+        ``IRVariable.slug`` carries the raw name (``variable.slug`` is NULL at
+        emit time, set later by ``populate_variable_slugs``);
+        ``IRValueSet.classification_id`` and ``IRVariableState`` are missing
+        ``delivery_column_name`` / ``classification_id`` (backfilled post-emit);
+        ``valid_to`` / ``value_set_version_label`` carry the stored sentinels,
+        not the IR-contract None / open-ended forms. ``materialize()`` discards
+        all of these in A4.1, so none affect the byte-identical build. See
+        MIGRATION_PLAN A4.3 "Provider-blindness close-out".
         """
         conn = self.conn
         scb_dir = source_dir
 
         ri_path = scb_dir / "Registerinformation.csv"
 
-        # Sibling staging DB for the (cvid, code_id, item_id) projection triples.
-        # SCB-private scratch — the adapter owns its ATTACH/CREATE (the legacy
-        # build did this in build_db; it is purely value-set-projection scratch).
+        # SCB-private value-set-projection scratch: the (cvid, code_id, item_id)
+        # triples. PRECONDITION: the caller must ATTACH a `staging` database
+        # before calling emit() — build_db owns the ATTACH + file lifecycle
+        # (db.py); the adapter only CREATEs its table inside it. (The legacy
+        # build did both back-to-back in build_db.)
         conn.execute(
             "CREATE TABLE staging._build_cvid_pair ("
             "cvid INTEGER NOT NULL,"

@@ -87,6 +87,12 @@ class IRAdapter(Protocol):
           7. ``IRLineageEdge`` / ``IRReplacedByEdge`` / ``IRRelatedToEdge``
           8. ``IRWarning`` / ``IRDeliveryProvenance`` (order-free sinks)
 
+        The order constrains only the types an adapter actually emits — an
+        adapter MAY emit a subset (e.g. in A4.1 ``SCBAdapter`` leaves
+        ``IRClassification`` and ``IRLineageEdge`` materializer-derived and does
+        not emit them). Conformance is about ordering what you do emit, not
+        emitting every type.
+
         Every IR ``*_id`` field is an explicit int the adapter bakes in the
         provider's native ID-assignment order; emit order is independent of ID
         assignment (it only governs FK-referential safety).
