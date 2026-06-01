@@ -72,11 +72,10 @@ def test_register_node_lists_bindings_and_variants_ref(client):
     assert body["fqid"] == "scb/lisa"
     bindings = [c for c in body["children"] if c["kind"] == "binding"]
     assert {b["fqid"] for b in bindings} == {"scb/lisa/kon"}
-    # The forward-declared variant-browser slot (A5.2): present but not yet wired.
+    # The variant-browser slot (A5.2a, wired): carries the navigable register_fqid.
     variants_refs = [c for c in body["children"] if c["kind"] == "variants-ref"]
     assert len(variants_refs) == 1
     assert variants_refs[0]["register_fqid"] == "scb/lisa"
-    assert variants_refs[0]["available"] is False
 
 
 def test_binding_leaf_embeds_full_record(client):

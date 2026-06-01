@@ -751,6 +751,16 @@ no `SCHEMA_VERSION` bump (read-only, no DDL).
 
 ### [ ] A5.2 — New API endpoints
 
+**Status**: read-side in progress. Split into **A5.2a** (catalog READ surface) +
+**A5.2b** (project-WRITE: `/api/project/*` validate/order/bundle/kit, the §9.2
+in-memory index, steward project-file load, reg_schema response models). A5.2a:
+
+- **A5.2a-i (merged, [#169](https://github.com/adamaltmejd/registry-research-toolkit/pull/169))** — `Catalog.list_variants` (the reg_meta read-side for the variant browser).
+- **A5.2a-ii (this PR, [#171](https://github.com/adamaltmejd/registry-research-toolkit/pull/171))** — `?period` / `?variant` / `?value_set_version` on the catch-all → `resolve_at`; the 6 binding sub-endpoints + the `/{provider}/{register}/variants` register sub-resource; the §9.4 ETag/Cache-Control middleware; the §16 period/variant allow-list (422 with zero SQL + zero connection opens). A narrowing modifier without `?period` — and an `@version` pin on a suffixed route — 422s rather than silently no-op'ing. The **Cloudflare edge-cache gate (below) remains a MAINTAINER task.**
+- **A5.2b** — the project-WRITE half + the §9.2 index + steward project load (open).
+
+The box stays unchecked until A5.2b lands.
+
 - Implement `?period=...` query (plus optional `?variant=...`) on canonical catalog endpoint. **Wire format is a single query-string value per §9.5**, not `deepObject`: int year (`?period=2020`), period-token (`?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`), range (`?period=<from>..<to>`, e.g. `?period=2018..2020`), snapshot sentinel (`?period=_default`); `?variant=<slug>` narrows to one variant. Server canonicalizes and returns 422 on malformed tokens; OpenAPI parameters are plain strings. Polymorphic across all `Source.period` shapes — not year-only.
 - Implement `/states`, `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings` sub-endpoints + the `/{provider}/{register}/variants` register sub-resource (the variant browser, §9.5 — variants are not FQIDs under the two-level grammar). `/lineage` and `/lineage_warnings` are first-class v1 endpoints, not deferred — `/lineage_warnings` surfaces the `variable_state_lineage_warning` rows emitted by A2.4
 - Suffixed + sub-resource routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order for all seven

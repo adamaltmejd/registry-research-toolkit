@@ -171,6 +171,10 @@ class TestPeriodGrammar:
             "9999-01-01",
             "2018-1-1",
             "2018-01-1",
+            "2020\n",  # trailing newline (Python `$` would accept this; `\Z` rejects)
+            "HT2020\n",
+            "2020-Q3\n",
+            "2020-01-01\n",
         ],
     )
     def test_invalid_periods(self, bad: str) -> None:

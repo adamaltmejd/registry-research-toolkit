@@ -71,13 +71,17 @@ _YEAR = r"(?:19|20)\d{2}"
 _MONTH = r"(?:0[1-9]|1[0-2])"
 _DAY = r"(?:0[1-9]|[12]\d|3[01])"
 
+# `\Z` not `$` (same footgun fixed for `_SLUG_RE` above): Python's `$` also matches
+# just before a single trailing newline, so `^{_YEAR}$` would accept `"2020\n"`.
+# `is_period` is the §16 `?period` allow-list reg_webapp delegates to, so a
+# trailing-newline period must be rejected here, not opened-and-queried downstream.
 _PERIOD_PATTERNS = (
-    re.compile(rf"^{_YEAR}$"),
-    re.compile(rf"^{_YEAR}-{_MONTH}$"),
-    re.compile(rf"^{_YEAR}-{_MONTH}-{_DAY}$"),
-    re.compile(rf"^[HV]T{_YEAR}$"),
-    re.compile(rf"^{_YEAR}-Q[1-4]$"),
-    re.compile(rf"^{_YEAR}-H[12]$"),
+    re.compile(rf"^{_YEAR}\Z"),
+    re.compile(rf"^{_YEAR}-{_MONTH}\Z"),
+    re.compile(rf"^{_YEAR}-{_MONTH}-{_DAY}\Z"),
+    re.compile(rf"^[HV]T{_YEAR}\Z"),
+    re.compile(rf"^{_YEAR}-Q[1-4]\Z"),
+    re.compile(rf"^{_YEAR}-H[12]\Z"),
 )
 
 # Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Word

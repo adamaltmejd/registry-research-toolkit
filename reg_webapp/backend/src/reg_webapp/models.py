@@ -120,14 +120,13 @@ class BindingChild(BaseModel):
 
 
 class VariantsRef(BaseModel):
-    """Forward-declared reference to a register's variant browser (A5.2). A
-    declared slot so the discriminated union / TS types are stable before the
-    `/{provider}/{register}/variants` sub-resource exists — `available` is False
-    until A5.2 wires it."""
+    """Reference to a register's variant browser — the `/{provider}/{register}/
+    variants` sub-resource (§9.5, wired in A5.2a). A discriminated slot in
+    `RegisterChild` so the union / TS types carry the navigable `register_fqid`;
+    the client GETs `{register_fqid}/variants` to list them."""
 
     kind: Literal["variants-ref"] = "variants-ref"
     register_fqid: str
-    available: bool = False
 
 
 # ── Binding-leaf embedded longitudinal record (§9.5) ───────────────────────
@@ -216,9 +215,12 @@ class BindingNode(BaseModel):
     `same_as` / `replaced_by` / `related_to` / `lineage` edges.
 
     `lineage_warnings` are intentionally OMITTED — `ResolvedVariable` doesn't
-    carry them; they arrive via A5.2's `/lineage_warnings` endpoint. `@version`
-    pin narrowing is also A5.2 (`?value_set_version`); this leaf embeds the full
-    history regardless of any `@version` suffix in the URL."""
+    carry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node
+    shape is the binding leaf with NO narrowing query: a `?period` resolves via
+    `resolve_at` (→ `StatesResponse`) instead, and a narrowing modifier (`?variant`
+    / `?value_set_version` / an `@version` pin) WITHOUT `?period` is a 422 — it is
+    inert without a period, so it errors rather than silently embedding full
+    history."""
 
     kind: Literal["binding"] = "binding"
     fqid: str
@@ -286,3 +288,101 @@ CatalogNode = Annotated[
     | ClassificationNode,
     Field(discriminator="kind"),
 ]
+
+
+# ── A5.2a-ii sub-endpoint models (§9.5) ─────────────────────────────────────
+# The 7 suffixed/sub-resource read endpoints. Each returns a thin envelope
+# echoing the queried `binding` (or `register`) FQID plus the mapped reg_meta
+# dataclass list, so the SPA codegen sees one response type per endpoint. These
+# REUSE the leaf edge models above (`VariableStateModel`, `VariableRefModel`,
+# `RelatedRefModel`, `LineageEdgeModel`) — the sub-endpoints are the standalone
+# accessors for the same edges the leaf embeds.
+
+
+class LineageWarningModel(BaseModel):
+    """A build-time lineage warning for a consumer state (§5.6):
+    `variable_state_lineage_warning`. `warning_kind` is `no_source_state` or
+    `ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`."""
+
+    consumer_state_id: int
+    warning_kind: str
+    message: str
+
+
+class VariantModel(BaseModel):
+    """One register variant (the `register_variant` sub-resource, §9.5) — the
+    `?variant=` browse axis. A variant is NOT FQID-addressable (the variant left
+    the binding FQID, §5.0.1), so it carries the variant `slug` (the browse
+    coordinate) + display fields, not an `Fqid`. Maps 1:1 to
+    `reg_meta.catalog.VariantSummary`. The §9.5 `panel_*` fields are NOT here —
+    those columns don't exist on `register_variant` yet (A4.4 curation)."""
+
+    slug: str
+    name: str | None = None
+    description: str | None = None
+    display_group: str | None = None
+
+
+class StatesResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/states` — the binding's full state history (§9.5).
+    Same `states` shape the binding leaf embeds, as a standalone envelope. With a
+    `?period` query on the catch-all this same shape carries the resolve_at
+    subset (uniform: codegen sees one state-list type)."""
+
+    binding: str
+    states: list[VariableStateModel]
+
+
+class PredecessorsResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/predecessors` — inbound succession (§9.5)."""
+
+    binding: str
+    predecessors: list[VariableRefModel]
+
+
+class SuccessorsResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/successors` — outbound succession (§9.5)."""
+
+    binding: str
+    successors: list[VariableRefModel]
+
+
+class RelatedResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/related` — split-sibling edges (§5.7 / §9.5)."""
+
+    binding: str
+    related: list[RelatedRefModel]
+
+
+class LineageResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/lineage` — consumer-side lineage edges (§5.6).
+
+    Maps what `reg_meta.LineageEdge` carries (consumer/source state ids, the
+    validity intersection, source_fqid). The §9.5 richer per-source-state shape
+    (embedding each source state's variant / value_set / column) is a possible
+    reg_meta enhancement, NOT blocked on here — see DESIGN.md."""
+
+    binding: str
+    lineage_edges: list[LineageEdgeModel]
+
+
+class LineageWarningsResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/lineage_warnings` — build-time lineage warnings
+    (§5.6 / §9.5). Empty list when lineage resolved cleanly."""
+
+    binding: str
+    lineage_warnings: list[LineageWarningModel]
+
+
+class VariantsResponse(BaseModel):
+    """`GET /api/catalog/{provider}/{register}/variants` — the variant browser
+    (§9.5). The wire key `register` is the 2-seg register FQID; `variants` the
+    register's `register_variant` sub-resource list.
+
+    The Python attr is `register_name` (aliased to `register`) for the same reason
+    as `VariableRefModel`: a bare `register` field shadows `BaseModel.register` (a
+    Pydantic v2 method) and warns. FastAPI serializes by alias, so the wire key
+    stays `register`; the alias is also the canonical init param."""
+
+    register_name: str = Field(alias="register")
+    variants: list[VariantModel]

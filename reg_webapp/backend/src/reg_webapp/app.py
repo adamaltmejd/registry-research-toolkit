@@ -9,7 +9,7 @@ read; the parsed manifest lives on ``app.state`` alongside the resolved
 ``db_path``. A single ``sqlite3`` connection from this lifespan is NOT safe to
 query from FastAPI's sync-handler threadpool, so the catalog routes (A5.1b) open
 a FRESH read-only connection PER REQUEST from ``app.state.db_path`` instead of
-holding a long-lived shared one — see ``routes/catalog.py`` ``_catalog``.
+holding a long-lived shared one — see ``routes/catalog.py`` ``_catalog_conn``.
 """
 
 from __future__ import annotations
@@ -21,6 +21,7 @@ import reg_meta.db
 from fastapi import FastAPI
 
 from . import __version__
+from .middleware import ETagMiddleware
 from .routes import catalog, context
 from .stewards import load_steward
 
@@ -55,13 +56,17 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # boot-resolved path (the connection model is locked: a shared sqlite3 conn
     # isn't safe across FastAPI's sync-handler threadpool). The schema was
     # already validated by open_db above, so the per-request open skips the
-    # re-check (check_schema=False) — see routes/catalog.py `_catalog`.
+    # re-check (check_schema=False) — see routes/catalog.py `_catalog_conn`.
     app.state.db_path = db_path
     yield
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title="reg_webapp", version=__version__, lifespan=lifespan)
+    # §9.4 read-cache: stamp ETag + Cache-Control on GET reads and serve 304 on a
+    # matching If-None-Match. Skips write endpoints (method gate, A5.2b). Added
+    # before the routers so it wraps every read response.
+    app.add_middleware(ETagMiddleware)
     app.include_router(context.router)
     app.include_router(catalog.router)
     return app

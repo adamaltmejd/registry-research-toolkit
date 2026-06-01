@@ -25,26 +25,60 @@ def test_startup_rejects_incompatible_schema(mismatched_db):
         pass
 
 
+_CATCH_ALL = "/api/catalog/{fqid:path}"
+
+# §9.5 (A5.2a-ii): the 7 suffixed / sub-resource routes that MUST be declared
+# BEFORE the `{fqid:path}` catch-all — Starlette matches in declaration order and
+# the `{fqid:path}` converter greedy-consumes any suffix into `fqid`, so any of
+# these declared after the catch-all would never fire. Six are `{fqid:path}/...`
+# binding suffixes; the seventh is the fixed-shape `/{provider}/{register}/
+# variants` register sub-resource.
+_ROUTES_BEFORE_CATCH_ALL = [
+    "/api/catalog/{provider}/{register}/variants",
+    "/api/catalog/{fqid:path}/states",
+    "/api/catalog/{fqid:path}/predecessors",
+    "/api/catalog/{fqid:path}/successors",
+    "/api/catalog/{fqid:path}/related",
+    "/api/catalog/{fqid:path}/lineage",
+    "/api/catalog/{fqid:path}/lineage_warnings",
+]
+
+
 def test_catalog_catch_all_route_present_and_last():
-    # INVERTED from A5.1a: A5.1b-ii OWNS the `{fqid:path}` catch-all. Assert it
-    # exists, is the catalog catch-all, and is declared LAST among /api/catalog*
-    # routes (the A5.2 router-ordering seam — Starlette matches in declaration
-    # order, so suffixed routes must precede the greedy catch-all).
+    # A5.1b-ii OWNS the bare `{fqid:path}` catch-all; A5.2a-ii adds 6 suffixed
+    # `{fqid:path}/...` routes plus the `/variants` sub-resource. Assert the bare
+    # catch-all exists and is declared LAST among /api/catalog* routes (the
+    # router-ordering seam — Starlette matches in declaration order, so the
+    # suffixed routes must precede the greedy catch-all).
     app = create_app()
-    catch_alls = [
-        r.path for r in app.routes if isinstance(r, APIRoute) and ":path}" in r.path
-    ]
-    assert catch_alls == ["/api/catalog/{fqid:path}"], (
-        f"expected exactly the catalog catch-all, got {catch_alls}"
-    )
     catalog_routes = [
         r.path
         for r in app.routes
         if isinstance(r, APIRoute) and r.path.startswith("/api/catalog")
     ]
-    assert catalog_routes[-1] == "/api/catalog/{fqid:path}", (
+    assert _CATCH_ALL in catalog_routes, (
+        f"the bare catalog catch-all must be present; routes were {catalog_routes}"
+    )
+    assert catalog_routes[-1] == _CATCH_ALL, (
         f"the catch-all must be declared last; routes were {catalog_routes}"
     )
+
+
+def test_suffixed_routes_declared_before_catch_all():
+    # §9.5 `routes_declared_before`: every suffixed / sub-resource route is
+    # declared BEFORE the `{fqid:path}` catch-all. This is the CI regression guard
+    # the spec calls for — a future route added after the catch-all (or the
+    # catch-all moved up) is caught here, not in production as a silently-shadowed
+    # endpoint.
+    app = create_app()
+    declaration_order = [r.path for r in app.routes if isinstance(r, APIRoute)]
+    catch_all_index = declaration_order.index(_CATCH_ALL)
+    for path in _ROUTES_BEFORE_CATCH_ALL:
+        assert path in declaration_order, f"missing suffixed route: {path}"
+        assert declaration_order.index(path) < catch_all_index, (
+            f"{path} is declared AFTER the catch-all {_CATCH_ALL!r} — the catch-all "
+            f"would greedy-consume it; declaration order was {declaration_order}"
+        )
 
 
 def test_section16_guard_runs_before_resolution(catalog_db):
