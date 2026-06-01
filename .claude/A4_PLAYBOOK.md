@@ -104,6 +104,46 @@ build. Pre-commit does not run this; do it manually, per step.
 - **Per-step gate order:** land → real-data validate → independent review + all
   bot reviews addressed → ~10-min window, re-check → merge.
 
+## Resolved forks (A4.1/A4.2)
+
+Maintainer rulings (2026-06-01), recorded so they persist across turns.
+
+1. **Provenance — populate in A4.2, not A4.1.** A4.1 stays a *pure*
+   byte-identical refactor. The `SCBAdapter` STILL EMITS the IR
+   provenance/warning objects (`IRDeliveryProvenance` / `IRWarning`, §4.4) so
+   A4.2 only has to wire them up — but A4.1 does **not** populate the
+   provenance DB. A4.2 owns provenance population AND the §16 confinement test
+   as one unit. **Tracker fix (do inside the A4.1 PR):** move the
+   MIGRATION_PLAN A4.1 "Provenance DB populated with SCB-specific debug data"
+   bullet down to A4.2, so the tracker matches §15 (whose A4.1 bullet has no
+   provenance line).
+
+2. **Splitting allowed along clean DOMAIN seams.** If the single A4.1 diff is
+   too large to review safely, split into sub-PRs along domain seams (e.g.
+   register/variant ingest → value-set/coalescer → timeseries), each **fully**
+   migrating its chunk off `_import_*`. Propose the seams in the plan for my
+   approval. Two hard rules:
+   - (a) Every sub-PR independently **exits 0 on dbdiff vs the baseline** —
+     main never breaks.
+   - (b) **No shim / no parallel old+new path** — violates CLAUDE.md "no
+     shims" + REFACTOR_SPEC §13 "no parallel run." A seam migrates its chunk
+     completely; it does not run old and new ingest side by side.
+
+3. **Strict identity — hard requirement.** A4.1 changes **no IDs** and
+   preserves emit-order wherever a PK is autoincrement; any ID-scheme change
+   belongs to A4.2. Baseline-gate trajectory across the stage:
+   - **A4.1 AND A4.2:** full `dbdiff` exit-0 vs baseline. A4.2's
+     deterministic-ID work only enforces/documents that SCB IDs already equal
+     source IDs and adds the SOS mint scheme + provenance — none of which
+     touch the SCB universal DB, so a non-zero diff there is a real
+     regression.
+   - **A4.3:** SCB subset stays identical, SOS is additive — scope the diff to
+     SCB (`WHERE provider='scb'`); do **not** expect a full-DB match.
+   - **A4.4+:** SCB slugs / panel_template change by design (curation), so the
+     baseline stops being the gate — fall back to `build-db --validate` +
+     targeted before/after checks.
+   - **Keep the baseline DB through A4.3.**
+
 ## Conventions
 
 - Follow the repo `CLAUDE.md` (uv not pip, bun/bunx not npm, rg/fd). Never
