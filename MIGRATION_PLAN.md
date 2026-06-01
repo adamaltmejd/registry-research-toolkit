@@ -505,7 +505,16 @@ before A2.7 drops `variable_instance` would force the adapter to
 dual-write both schemas. A2.7's cleanup is therefore the start gate,
 matching the gates diagram below.)
 
-### [ ] A4.1 — SCB adapter refactor
+### [x] A4.1 — SCB adapter refactor (PR #164)
+
+**Status:** SCB ingest extracted into `sources/scb.py` `SCBAdapter`; provider-blind
+`materialize()` added; `build_db` thinned. Byte-identical gate **green** (dbdiff
+exit 0, 25/25 content tables vs the pre-A4 baseline; 33 moved functions
+AST-identical). Shipped as the maintainer-approved byte-identity-safe "pragmatic
+hybrid" — the adapter writes universal rows directly + `materialize()` no-ops on
+universal IR (inert stream) + emit-but-discard provenance/warnings. The
+IR-consuming materializer + G1/G4 scratch-coupling close-out are deferred to A4.3
+(see "Provider-blindness close-out" there); provenance population is A4.2.
 
 - Move SCB ingest from `db.py`'s `_import_*` functions to `reg_meta_build/sources/scb.py` `SCBAdapter`
 - Adapter emits IR; materializer in `db.py` becomes provider-blind
