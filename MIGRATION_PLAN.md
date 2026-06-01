@@ -646,12 +646,43 @@ no `SCHEMA_VERSION` bump (read-only, no DDL).
 - `gen_openapi.py` deterministic dumper (`sort_keys=True` + trailing newline) → committed `openapi.json`; SPA `api-types.ts` codegen'd from it; CI fails on drift in either
 - CI: `test_openapi_snapshot.py` (always-run `test` job) guards `openapi.json` freshness; `reg-webapp-frontend` job (bun check/lint/build + TS-codegen drift guard) guards `api-types.ts`; paths-filter gated
 
-### [ ] A5.1b — `reg_webapp` Pydantic models + catalog browse
+### [x] A5.1b — `reg_webapp` Pydantic models + catalog browse
 
-- FastAPI endpoints use `reg_schema` Pydantic models directly for project_data responses
-- `reg_meta` library types wrapped 1:1 in webapp-local Pydantic models for catalog responses (the only remaining wrapper layer)
-- `/api/catalog` browse endpoints + the in-memory catalog index (§9.2); steward project-file load/validation
-- OpenAPI codegen updated for the new response models
+**Status**: done. Split into **A5.1b-i** (reg_meta listing API) and
+**A5.1b-ii** (webapp catalog browse); both merged.
+
+- **A5.1b-i (merged)** — `Catalog.list_providers` / `list_registers` /
+  `list_bindings` returning thin `ProviderSummary` / `RegisterSummary` /
+  `BindingSummary` children (slug-ordered, NULL-slug rows excluded), consumed by
+  the webapp catalog tree.
+- **A5.1b-ii (this PR)** — the `/api/catalog` browse on the A5.1a scaffold:
+  - `GET /api/catalog` (root → providers + the `class` classification-root
+    sentinel) and the single `GET /api/catalog/{fqid:path}` catch-all covering
+    provider (1 seg → registers) / register (2 seg → bindings + a `variants`
+    reference stub) / binding leaf (3 seg → the variable's FULL embedded
+    longitudinal record) / classification (`class/<slug>`, 2 seg). The
+    classification-root literal `class` (1 seg) is special-cased before parse.
+  - **Connection model = per-request open** (locked): a FastAPI dependency opens
+    a fresh read-only connection per request from `app.state.db_path`
+    (`open_db(check_schema=False)` — boot already validated), wraps a `Catalog`,
+    and closes it in `finally`. No shared connection / lock / `check_same_thread`
+    games (a shared sqlite3 conn isn't safe across the sync-handler threadpool).
+  - **§16 per-segment FQID guard** (`catalog_fqid.py`, own module): each segment
+    validated by delegating to `reg_meta.fqid.validate_slug` (+ the
+    `class`/`_default` literals); the one binding-leaf `slug@version` carve-out
+    split-and-validated; everything else (`.`, `..`, `%`-encoded, `\`, NUL, a
+    second `@`) → 422 with **zero SQL** (trace-hook-asserted). `@version` is
+    validated-but-not-yet-narrowing (narrowing is A5.2's `?value_set_version`).
+  - 1:1 webapp-local Pydantic response models (§9.6) with a `kind`-discriminated
+    union for the catch-all (clean tagged union in the codegen'd TS); regenerated
+    `openapi.json` + `api-types.ts`.
+  - Inverted the A5.1a no-catch-all boot test → asserts the catch-all is present,
+    declared last, and that the §16 guard precedes resolution.
+  - The §9.2 in-memory index + steward project-file load are **deferred to A5.2**
+    (the index is built from a steward `project_data.json` the `global`
+    deployment lacks; its consumers are A5.2 validate/authoring).
+  - reg_schema project_data response models are **A5.2** (`/api/project/*`), not
+    A5.1b — no reg_schema models used here.
 
 **Estimate**: 3-4 days total across A5.1a + A5.1b.
 

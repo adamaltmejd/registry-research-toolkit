@@ -1,23 +1,35 @@
-"""Test fixtures: a manifest-only reg_meta DB pointed at via REG_META_DB.
+"""Test fixtures: reg_meta fixture DBs pointed at via REG_META_DB.
 
-CI has no real reg_meta asset (5.1.0 is unpublished), so the backend tests
-build a tiny fixture DB and point the app at it via the highest-precedence
-``REG_META_DB`` override (``reg_meta.db.default_db_dir``). ``/api/context``
-reads ONLY ``import_manifest``, so the fixture needs nothing but that table —
-no reg_meta_build DDL. The fixture's ``schema_version`` matches the installed
-``reg_meta.SCHEMA_VERSION`` so ``open_db``'s compat check passes.
+CI has no real reg_meta asset (5.1.0 is unpublished), so the backend tests build
+fixture DBs and point the app at them via the highest-precedence ``REG_META_DB``
+override (``reg_meta.db.default_db_dir``).
+
+- ``/api/context`` reads ONLY ``import_manifest`` → the manifest-only fixture
+  (``compatible_db`` / ``mismatched_db``) needs nothing but that table.
+- ``/api/catalog`` resolves/lists against the full reg_meta schema → the
+  ``catalog_db`` fixture builds a slugged DB via ``reg_meta_build``'s
+  ``_slugged_db`` helper (one provider/register/variant/variable/classification,
+  plus extra registers/bindings) and stamps an ``import_manifest`` so ``open_db``
+  passes its boot compat check. We mirror ``reg_meta/tests/conftest.py``'s
+  sys.path injection to import that bare-name helper.
 """
 
 from __future__ import annotations
 
 import sqlite3
-from typing import TYPE_CHECKING
+import sys
+from pathlib import Path
 
 import pytest
 import reg_meta.db
 
-if TYPE_CHECKING:
-    from pathlib import Path
+# `_slugged_db` is a bare-name helper in reg_meta_build/tests/. Add that dir to
+# sys.path so this backend conftest can import the catalog-fixture-DB builder
+# (mirrors reg_meta/tests/conftest.py).
+sys.path.insert(
+    0,
+    str(Path(__file__).resolve().parents[3] / "reg_meta_build" / "tests"),
+)
 
 FIXTURE_IMPORT_DATE = "2026-06-01T00:00:00Z"
 
@@ -75,5 +87,87 @@ def mismatched_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     db_path = tmp_path / reg_meta.db.DB_FILENAME
     major = int(reg_meta.db.SCHEMA_VERSION.split(".")[0])
     _write_manifest_db(db_path, f"{major + 1}.0.0")
+    _point_app_at(monkeypatch, tmp_path)
+    return db_path
+
+
+def _stamp_manifest(conn: sqlite3.Connection) -> None:
+    """Add the boot-required ``import_manifest`` to a freshly-built slugged DB so
+    ``open_db``'s schema-compat gate (run in the lifespan) passes. The slugged-DB
+    DDL has the manifest table; we just fill the two keys the lifespan needs."""
+    conn.executemany(
+        "INSERT INTO import_manifest(key, value) VALUES (?, ?)",
+        [
+            ("schema_version", FIXTURE_SCHEMA_VERSION),
+            ("import_date", FIXTURE_IMPORT_DATE),
+        ],
+    )
+    conn.commit()
+
+
+def _build_catalog_fixture_db(db_path: Path) -> None:
+    """Build a slugged catalog DB on disk for the ``/api/catalog`` tests.
+
+    Uses ``reg_meta_build``'s ``_slugged_db`` builder: the default
+    ``scb/lisa/kon`` binding (with one state) plus a value-set on it, a second
+    register ``scb/rams`` with its own binding, and a ``variable_same_as`` edge
+    so the embedded leaf carries a non-empty ``same_as``. Then copies the
+    in-memory DB to ``db_path`` and stamps the manifest."""
+    from _slugged_db import (  # noqa: PLC0415 — sys.path-injected test helper
+        add_register,
+        add_state,
+        add_value_set,
+        add_variable,
+        add_variant,
+        add_version,
+        build_slugged_db,
+    )
+
+    src = build_slugged_db()
+    # A value set on the default kon binding so the embedded leaf exercises
+    # value_set hydration.
+    add_value_set(src, value_set_id=1, codes=[("1", "Man"), ("2", "Kvinna")])
+    src.execute(
+        "UPDATE variable_state SET value_set_id = 1 "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    # A second register + binding so a provider node has >1 child register and a
+    # register node has a non-default binding to list.
+    add_register(src, register_id=2, slug="rams", name="RAMS")
+    add_variant(src, register_variant_id=20, register_id=2, slug="standard", name="Std")
+    add_version(src, regver_id=200, register_variant_id=20, name="2019")
+    add_variable(src, register_id=2, var_id=77, name="Sysselsättning", slug="syss")
+    add_state(
+        src,
+        register_id=2,
+        variable_slug="syss",
+        register_variant_id=20,
+        delivery_column_name="Syss",
+    )
+    # A curated same_as edge kon→syss so the kon leaf embeds a same_as ref.
+    src.execute(
+        "INSERT INTO variable_same_as "
+        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
+        "VALUES ('scb','lisa','kon','scb','rams','syss')"
+    )
+    _stamp_manifest(src)
+
+    dst = sqlite3.connect(db_path)
+    try:
+        src.backup(dst)
+    finally:
+        dst.close()
+        src.close()
+
+
+@pytest.fixture
+def catalog_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A slugged reg_meta DB for the catalog browse tests, pointed at via
+    REG_META_DB. Resolves: ``scb`` (provider, 2 registers), ``scb/lisa``
+    (register, binding ``kon`` + variants-ref), ``scb/lisa/kon`` (binding leaf,
+    1 state w/ value set + a same_as edge), ``class`` (classification-root, 1
+    classification), ``class/sun2020`` (classification leaf)."""
+    db_path = tmp_path / reg_meta.db.DB_FILENAME
+    _build_catalog_fixture_db(db_path)
     _point_app_at(monkeypatch, tmp_path)
     return db_path
