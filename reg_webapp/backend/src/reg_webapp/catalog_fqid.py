@@ -12,9 +12,12 @@ fail the per-segment slug check like any other non-slug character.
 Single source of truth: each segment is validated by **delegating** to
 ``reg_meta.fqid.validate_slug`` — we do NOT re-encode the slug regex here (a
 second copy would drift from the grammar reg_meta enforces at build time). The
-only literals this module admits beyond the slug grammar are ``class`` and
-``_default`` (§5.2 reserved slugs that ``validate_slug`` rejects) plus the ONE
-binding-leaf carve-out: a leaf of the form ``slug@version`` is split on the
+only literal this module admits beyond the slug grammar is ``class`` (§5.2's
+classification-root sentinel, which ``validate_slug`` rejects); ``_default`` (the
+variant coordinate) is NOT a catalog path segment — variants are a register
+sub-resource (§9.5), never a ``/api/catalog/{fqid}`` segment — so it is rejected
+like any other reserved token. Plus the ONE binding-leaf carve-out: a leaf of the
+form ``slug@version`` is split on the
 single ``@`` and each half validated separately (slug grammar both sides; the
 version part is the classification-slug / ``value_set_version_label`` grammar,
 which is the slug grammar). ``@`` is the only non-slug character admitted, and
@@ -35,17 +38,18 @@ from dataclasses import dataclass
 
 from reg_meta.fqid import (
     CLASSIFICATION_PREFIX,
-    DEFAULT_VARIANT_SLUG,
     FqidError,
     validate_slug,
 )
 
-# §5.2 literals that are valid path segments but which `validate_slug` rejects
-# as slugs (they're reserved). `class` is the classification-root / prefix
-# segment; `_default` is the variant coordinate (not an FQID segment under the
-# grammar, but admitted here so the allow-list mirrors §5.2 exactly rather than
-# silently differing). Anything else must pass the slug grammar.
-_ALLOWED_LITERALS = frozenset({CLASSIFICATION_PREFIX, DEFAULT_VARIANT_SLUG})
+# The one §5.2 literal that is a valid catalog PATH segment but which
+# `validate_slug` rejects as a slug: `class` (the classification-root sentinel /
+# classification-prefix segment). `_default` (the variant coordinate) is NOT a
+# catalog path segment — variants are a register sub-resource (§9.5), never a
+# `/api/catalog/{fqid}` segment — so it is not admitted; a `_default` segment
+# fails the slug grammar like any other reserved token (422 at the guard, before
+# any DB access). Anything else must pass the slug grammar.
+_ALLOWED_LITERALS = frozenset({CLASSIFICATION_PREFIX})
 
 # Only the binding LEAF (3rd segment) may carry the value-set-version pin.
 _LEAF_VERSION_DELIM = "@"

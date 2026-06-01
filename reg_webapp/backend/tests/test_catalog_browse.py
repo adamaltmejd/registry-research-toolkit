@@ -9,6 +9,8 @@ stub, and the 404-on-not-found mapping. The §16 path-traversal guard lives in
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+
 import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
@@ -18,6 +20,22 @@ from reg_webapp.app import create_app
 def client(catalog_db):
     with TestClient(create_app()) as c:
         yield c
+
+
+def test_concurrent_browse_no_cross_thread_error(client):
+    """Codex P1 (#168): a generator-dependency-opened sqlite connection was used
+    cross-thread under FastAPI's sync threadpool → `sqlite3.ProgrammingError`
+    (reproduced 72/80 fail before the fix). The per-request connection now opens
+    inside the sync handler body (one thread), so concurrent browse requests must
+    all succeed."""
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        codes = list(
+            pool.map(
+                lambda _: client.get("/api/catalog/scb/lisa/kon").status_code, range(60)
+            )
+        )
+    failures = [c for c in codes if c != 200]
+    assert not failures, f"cross-thread failures under concurrency: {failures}"
 
 
 def test_root_lists_providers_and_classification_root(client):

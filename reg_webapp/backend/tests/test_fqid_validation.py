@@ -181,10 +181,24 @@ def test_at_version_negative_cousins_fail_gate(catalog_db, probe: str):
 
 
 @pytest.mark.parametrize("path", ["_default", "scb/lisa/_default", "class/_default"])
-def test_reserved_literal_in_illegal_position_returns_422(catalog_db, path: str):
-    """The guard ADMITS the `class`/`_default` reserved literals in any segment
-    (§5.2), then `parse` rejects an illegal placement → 422 (not 404/500). Locks
-    the admit-then-parse-rejects contract against a future `parse` change."""
-    with TestClient(create_app()) as client:
+def test_default_variant_literal_rejected_by_guard(catalog_db, path: str):
+    """`_default` (the variant coordinate) is NOT a catalog path segment, so the
+    §16 guard rejects it in any position → 422 with no DB hit (variants are a
+    register sub-resource, §9.5, never a `/api/catalog/{fqid}` segment)."""
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
         resp = client.get(f"/api/catalog/{path}")
     assert resp.status_code == 422
+    assert counter.opens == 0  # guard-rejected → no connection opened
+
+
+@pytest.mark.parametrize("path", ["scb/class/kon", "scb/lisa/class"])
+def test_class_literal_in_illegal_slot_parse_rejects(catalog_db, path: str):
+    """`class` IS admitted by the guard (the classification-prefix), but `parse`
+    rejects it outside the prefix slot → 422. `parse` is DB-free and runs before
+    the connection opens, so this opens no connection either."""
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(f"/api/catalog/{path}")
+    assert resp.status_code == 422
+    assert counter.opens == 0  # parse runs before the connection opens

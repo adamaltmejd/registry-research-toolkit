@@ -35,13 +35,15 @@ export interface paths {
          * Get Catalog Node
          * @description Resolve any catalog node by FQID path.
          *
-         *     The §16 per-segment allow-list runs as the `_validated_fqid` SUB-dependency of
-         *     `_node_ctx`, so a malformed / traversal-shaped path returns 422 **before** the
-         *     per-request connection opens — no DB hit at all (not just no SQL). The
-         *     classification-root literal `class` (1 seg) is special-cased before `parse`
-         *     (it's a reserved slug `parse` rejects). `@version` is validated but not yet
-         *     narrowing (A5.2 `?value_set_version`); the bare 3-seg FQID is handed to
-         *     `parse`/`resolve`.
+         *     The §16 per-segment allow-list runs as the `_validated_fqid` dependency, which
+         *     FastAPI resolves before this body — so a malformed / traversal-shaped path
+         *     returns 422 **before** any connection opens (no DB hit at all). `parse` is
+         *     DB-free and runs BEFORE the connection opens too, so a grammar/arity-invalid
+         *     path (e.g. a reserved literal in an illegal slot) also 422s with no open. The
+         *     classification-root literal `class` (1 seg) is special-cased before `parse`.
+         *     `@version` is validated but not yet narrowing (A5.2 `?value_set_version`); the
+         *     bare 3-seg FQID is handed to `parse`/`resolve`. The connection is opened and
+         *     used within this sync body (one thread — see `_catalog_conn`).
          */
         get: operations["get_catalog_node_api_catalog__fqid__get"];
         put?: never;

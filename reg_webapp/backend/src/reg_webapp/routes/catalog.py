@@ -32,7 +32,7 @@ converter greedy-consumes any suffix. The catch-all MUST stay last.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 import reg_meta.db
@@ -81,55 +81,35 @@ if TYPE_CHECKING:
 router = APIRouter(prefix="/api")
 
 
-def _catalog(request: Request) -> Iterator[Catalog]:
-    """Per-request reg_meta connection (LOCKED connection model).
+@contextmanager
+def _catalog_conn(request: Request) -> Iterator[sqlite3.Connection]:
+    """A per-request reg_meta read-only connection, opened ON THE CALLING THREAD.
 
-    Opens a FRESH read-only connection from the boot-resolved
-    `app.state.db_path`, owned by this request's thread, and closes it in
-    `finally`. `check_schema=False` because the lifespan already validated the
-    schema at boot — re-checking per request is wasted work, not safety."""
-    db_path = request.app.state.db_path
-    conn = reg_meta.db.open_db(db_path, check_schema=False)
+    Used as a plain ``with`` INSIDE the sync route handler — NOT a FastAPI
+    ``Depends``. A sync endpoint's generator *dependency* is entered via the AnyIO
+    threadpool on a possibly-DIFFERENT thread than the handler runs on, so a
+    dependency-opened sqlite connection (default ``check_same_thread=True``) gets
+    used cross-thread → intermittent ``sqlite3.ProgrammingError`` under concurrency
+    (Codex P1 on #168, reproduced 72/80 before this fix). Opening within the
+    handler body keeps open + query + close on one thread. ``check_schema=False``:
+    the lifespan already validated the schema at boot."""
+    conn = reg_meta.db.open_db(request.app.state.db_path, check_schema=False)
     try:
-        yield Catalog(conn)
+        yield conn
     finally:
         conn.close()
 
 
 def _validated_fqid(fqid: str) -> ValidatedFqidPath:
-    """The §16 allow-list as a dependency. As a SUB-dependency of ``_node_ctx``,
-    FastAPI resolves it first, so a malformed / traversal-shaped path returns 422
-    **before** the per-request connection opens — no DB hit at all (not just no
-    SQL). Reused by A5.2's suffixed routes."""
+    """The §16 allow-list as a dependency — FastAPI resolves it before the handler
+    body runs, so a malformed / traversal-shaped path returns 422 **before** the
+    handler opens any connection (no DB hit at all, not just no SQL). It holds no
+    connection itself, so it's safe across the threadpool. Reused by A5.2's
+    suffixed routes."""
     try:
         return validate_fqid_path(fqid)
     except FqidPathError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-
-
-@dataclass(frozen=True)
-class _NodeCtx:
-    """The catch-all's per-request context: the §16-validated path + its fresh
-    read-only connection (opened only after the guard passed)."""
-
-    validated: ValidatedFqidPath
-    conn: sqlite3.Connection
-
-
-def _node_ctx(
-    request: Request,
-    validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> Iterator[_NodeCtx]:
-    """Per-request connection for the catch-all, opened AFTER the §16 guard
-    (``_validated_fqid``, a sub-dependency) passes — a 422 never reaches this
-    ``open_db``. Yields the connection so the classification-root path calls
-    ``list_classifications`` on it directly (no reach into ``Catalog._conn``).
-    Closed in ``finally``."""
-    conn = reg_meta.db.open_db(request.app.state.db_path, check_schema=False)
-    try:
-        yield _NodeCtx(validated, conn)
-    finally:
-        conn.close()
 
 
 # reg_meta's genuine "this FQID resolves to no row" code. The OTHER
@@ -341,39 +321,47 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
 
 
 @router.get("/catalog", response_model=RootResponse)
-def get_catalog_root(catalog: Catalog = Depends(_catalog)) -> RootResponse:
+def get_catalog_root(request: Request) -> RootResponse:
     """The catalog root: every provider plus the classification-root sentinel."""
-    children: list[ProviderNode | ClassificationRootNode] = [
-        ProviderNode(fqid=str(p.fqid), name=p.name) for p in catalog.list_providers()
-    ]
+    with _catalog_conn(request) as conn:
+        children: list[ProviderNode | ClassificationRootNode] = [
+            ProviderNode(fqid=str(p.fqid), name=p.name)
+            for p in Catalog(conn).list_providers()
+        ]
     children.append(ClassificationRootNode())
     return RootResponse(children=children)
 
 
 # The catch-all — MUST be the last route declared in this router (see seam above).
 @router.get("/catalog/{fqid:path}", response_model=CatalogNode)
-def get_catalog_node(ctx: _NodeCtx = Depends(_node_ctx)) -> CatalogNode:
+def get_catalog_node(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> CatalogNode:
     """Resolve any catalog node by FQID path.
 
-    The §16 per-segment allow-list runs as the `_validated_fqid` SUB-dependency of
-    `_node_ctx`, so a malformed / traversal-shaped path returns 422 **before** the
-    per-request connection opens — no DB hit at all (not just no SQL). The
-    classification-root literal `class` (1 seg) is special-cased before `parse`
-    (it's a reserved slug `parse` rejects). `@version` is validated but not yet
-    narrowing (A5.2 `?value_set_version`); the bare 3-seg FQID is handed to
-    `parse`/`resolve`.
+    The §16 per-segment allow-list runs as the `_validated_fqid` dependency, which
+    FastAPI resolves before this body — so a malformed / traversal-shaped path
+    returns 422 **before** any connection opens (no DB hit at all). `parse` is
+    DB-free and runs BEFORE the connection opens too, so a grammar/arity-invalid
+    path (e.g. a reserved literal in an illegal slot) also 422s with no open. The
+    classification-root literal `class` (1 seg) is special-cased before `parse`.
+    `@version` is validated but not yet narrowing (A5.2 `?value_set_version`); the
+    bare 3-seg FQID is handed to `parse`/`resolve`. The connection is opened and
+    used within this sync body (one thread — see `_catalog_conn`).
     """
     # §5.2: `class` (1 seg) is the classification-root sentinel — a reserved slug
     # `parse` rejects, so special-case it BEFORE parse. `class/<slug>` (2 seg)
     # flows through `parse` as a normal classification FQID.
-    if ctx.validated.fqid == CLASSIFICATION_PREFIX:
-        return _classification_root_response(ctx.conn)
+    if validated.fqid == CLASSIFICATION_PREFIX:
+        with _catalog_conn(request) as conn:
+            return _classification_root_response(conn)
 
     try:
-        parsed = parse(ctx.validated.fqid)
+        # `parse` is DB-free, so a grammar/arity 422 here costs no connection.
+        parsed = parse(validated.fqid)
     except FqidError as exc:
-        # The §16 guard already validated each segment, so a parse failure here
-        # is a structural grammar issue (e.g. >3 segments) — a 422, not a 404.
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    return _resolve_to_node(Catalog(ctx.conn), parsed)
+    with _catalog_conn(request) as conn:
+        return _resolve_to_node(Catalog(conn), parsed)
