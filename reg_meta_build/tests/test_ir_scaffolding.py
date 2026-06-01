@@ -29,6 +29,7 @@ from reg_meta_build.ir import (
     IRValueCode,
     IRValueSet,
     IRVariable,
+    IRVariableAlias,
     IRVariableState,
     IRVariant,
     IRWarning,
@@ -78,6 +79,7 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "measurement_unit": None,
             "source_register_id": None,
             "source_register_text": None,
+            "source_label": None,
         },
     ),
     "IRVariableState": (
@@ -90,13 +92,23 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "valid_to": None,
             "data_type": "text",
             "data_length": None,
+            "delivery_column_name": "Kon",
             "value_set_id": None,
             "value_set_version_label": None,
+        },
+    ),
+    "IRVariableAlias": (
+        IRVariableAlias,
+        {
+            "variable_id": 100,
+            "register_variant_id": 10,
+            "delivery_column_name": "Kon",
         },
     ),
     "IRValueCode": (
         IRValueCode,
         {
+            "code_id": 7,
             "value_set_id": 50,
             "code": "1",
             "label": "Man",
@@ -116,6 +128,7 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "classification_id": None,
             "codes": (
                 IRValueCode(
+                    code_id=7,
                     value_set_id=50,
                     code="1",
                     label="Man",

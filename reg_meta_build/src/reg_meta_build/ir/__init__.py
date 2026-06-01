@@ -101,6 +101,11 @@ class IRVariable(_IRBase):
     source_register_id: int | None
     # Human-readable attribution (when source not resolved or for display):
     source_register_text: str | None
+    # Resolved display label for the source register (the matched register's
+    # short name when source_register_id resolved, else the raw attribution
+    # text). Universal `variable.source_label`. Distinct from
+    # `source_register_text` (the raw, unresolved attribution).
+    source_label: str | None
 
 
 class IRVariableState(_IRBase):
@@ -116,14 +121,48 @@ class IRVariableState(_IRBase):
     # sentinel per §5.1; the IR contract carries None to keep adapters
     # honest about which dates they actually know.
     valid_to: str | None
-    data_type: str  # normalized lowercase canonical set
+    # Nullable to mirror the nullable `variable_state.data_type` column — the
+    # A4.3a flip CONSUMES this field, so the IR type must match the column (SCB
+    # never writes NULL, but a provider that does must be representable, not
+    # raise at emit). Normalized lowercase canonical set.
+    data_type: str | None
     # TEXT — SCB `datalangd` may carry precision/scale ("8,2"), not just an int.
     data_length: str | None
+    # The state's LATEST-era delivery column (`variable_state.delivery_column_name`).
+    # A coalesced state carries only its newest column; the FULL historical column
+    # set rides on IRVariableAlias (the `variable_alias ⊇ states` invariant). None
+    # when the source row had no column header.
+    delivery_column_name: str | None
     value_set_id: int | None
     value_set_version_label: str | None  # overlap discriminator (multi-vintage)
 
 
+class IRVariableAlias(_IRBase):
+    """The FULL delivery-column history of a variable (universal `variable_alias`).
+
+    One row per historical `(variable_id, register_variant_id,
+    delivery_column_name)`. Distinct from `IRVariableState.delivery_column_name`,
+    which carries only the variable's LATEST-era column: a variable that was
+    delivered under several column headers over its life emits one
+    IRVariableState (latest column) but several IRVariableAlias rows (every
+    column). This is the carrier behind the STRUCTURAL `variable_alias ⊇
+    variable_state delivery columns` invariant (validate.py) — the materializer
+    inserts these verbatim into `variable_alias`, and every state's
+    `delivery_column_name` is one of its group's alias rows.
+    """
+
+    variable_id: int  # FK → IRVariable
+    register_variant_id: int  # the delivering variant (FK → IRVariant)
+    delivery_column_name: str
+
+
 class IRValueCode(_IRBase):
+    # The universal `value_code.code_id` (explicit PK, per the IRAdapter
+    # contract). value_code is deduplicated by (code, label) across all
+    # value_sets, so the same code_id recurs across IRValueSets that share a
+    # code — the materializer INSERT-OR-IGNOREs value_code on this PK and writes
+    # one value_set_member (value_set_id, code_id) per appearance.
+    code_id: int
     value_set_id: int
     code: str
     label: str
@@ -217,6 +256,7 @@ __all__ = [
     "IRValueCode",
     "IRValueSet",
     "IRVariable",
+    "IRVariableAlias",
     "IRVariableState",
     "IRVariant",
     "IRWarning",

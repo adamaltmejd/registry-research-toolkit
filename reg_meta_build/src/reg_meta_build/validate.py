@@ -380,9 +380,10 @@ def _check_variable_alias_covers_state_columns(
     """A2.7 invariant: every delivery column a `variable_state` carries must be
     present in `variable_alias` (the source `get_datacolumns`/`resolve` read).
 
-    `_reparent_variable_alias` re-parents each cvid's alias columns onto the
-    cvid's OWNING `variable_id` (the ground truth the coalescer stamps onto
-    `variable_instance.variable_id` from §5.7 triage). That makes this invariant
+    `SCBAdapter._emit_variable_aliases` projects each cvid's alias columns onto
+    the cvid's OWNING `variable_id` (the ground truth the coalescer stamps onto
+    `variable_instance.variable_id` from §5.7 triage), and the materializer writes
+    `variable_alias` from that IR (A4.3a). That makes this invariant
     STRUCTURAL — a state's `delivery_column_name` is always one of its group's
     cvids' alias columns, and that cvid shares the state's `variable_id`, so the
     column lands under the same key. This check guards against a regression in

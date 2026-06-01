@@ -23,6 +23,7 @@ from reg_meta_build.ir import (
     IRValueCode,
     IRValueSet,
     IRVariable,
+    IRVariableAlias,
     IRVariableState,
     IRVariant,
     IRWarning,
@@ -276,7 +277,20 @@ class TestProvenanceEmitButDiscard:
                 "period_token",
                 "first_approved_date",
                 "last_approved_date",
+                # A4.3a WIRE: the 4 delivery-manifest columns from IRDeliveryProvenance.
+                "source_file",
+                "delivery_version",
+                "delivery_date",
+                "template_version",
             } <= cols
+            # SCB populates source_file (the rest stay None for SCB; SOS fills
+            # them at A4.3b). Every delivery_approval row must carry the SCB
+            # source_file — pins the WIRE, not just the column presence.
+            src_files = {
+                row[0]
+                for row in prov.execute("SELECT source_file FROM delivery_approval")
+            }
+            assert src_files <= {"Registerinformation.csv"}, src_files
         finally:
             prov.close()
 
@@ -434,3 +448,123 @@ class TestCodeIdParity:
             "WHERE vc.code_id IS NULL"
         ).fetchone()[0]
         assert orphans == 0
+
+
+# ── 7. A4.3a provider-blindness flip parity gates ──────────────────────────
+
+
+# The pre-flip `_reparent_variable_alias` projection (the function A4.3a
+# deleted) — used to prove the IR-carried IRVariableAlias rows are row-identical.
+_OLD_REPARENT_SQL = (
+    "SELECT DISTINCT vi.variable_id, vi.register_variant_id, "
+    "       vab.delivery_column_name "
+    "FROM variable_alias_build vab "
+    "JOIN variable_instance vi ON vi.cvid = vab.cvid "
+    "WHERE vi.variable_id IS NOT NULL"
+)
+
+
+class TestA43aFlipParity:
+    """A4.3a flip: the materializer is the sole writer of the core graph and the
+    re-pointed post-passes (variable_alias, code_variable_map) are row-identical
+    to the deleted `variable_instance`-scratch derivations."""
+
+    def test_variable_alias_ir_matches_old_reparent(self, tmp_path: Path) -> None:
+        """The emitted `IRVariableAlias` rows equal the OLD
+        `_reparent_variable_alias` projection (variable_alias_build ⨝
+        variable_instance.variable_id) row-for-row — so the materializer writing
+        `variable_alias` from IR reproduces the pre-flip table exactly."""
+        conn, _adapter, objects = _drained_adapter(tmp_path)
+        ir_rows = {
+            (a.variable_id, a.register_variant_id, a.delivery_column_name)
+            for a in objects
+            if isinstance(a, IRVariableAlias)
+        }
+        old_rows = set(conn.execute(_OLD_REPARENT_SQL).fetchall())
+        assert ir_rows == old_rows
+        assert ir_rows, "fixture should produce at least one alias"
+
+    def test_code_variable_map_rederivation_is_row_identical(
+        self, tmp_path: Path
+    ) -> None:
+        """#152 grain-parity gate: the A4.3a `code_variable_map` derivation
+        (variable_state ⨝ value_set_member) is row-identical to the deleted
+        `variable_instance`-based derivation. Both run on the same drained conn
+        (the adapter-written variable_state is pre-flip but carries the same
+        (variable_id, value_set_id) pairs the materializer re-inserts)."""
+        conn, _adapter, _objects = _drained_adapter(tmp_path)
+        old = set(
+            conn.execute(
+                "SELECT DISTINCT vsm.code_id, vi.variable_id "
+                "FROM variable_instance vi "
+                "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+                "WHERE vi.value_set_id IS NOT NULL AND vi.variable_id IS NOT NULL"
+            )
+        )
+        new = set(
+            conn.execute(
+                "SELECT DISTINCT vsm.code_id, vs.variable_id "
+                "FROM variable_state vs "
+                "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
+                "WHERE vs.value_set_id IS NOT NULL"
+            )
+        )
+        assert new == old
+
+    def test_materializer_is_sole_writer_with_explicit_pks(
+        self, tmp_path: Path
+    ) -> None:
+        """After build_db, the shipped variable / variable_state PKs equal the
+        IR-carried IDs the adapter emitted — proving the materializer re-inserted
+        the core graph from IR with explicit PKs (no autoincrement drift)."""
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        # Capture the IR the adapter emits (its IDs are the contract).
+        _conn, _adapter, objects = _drained_adapter(tmp_path / "drain")
+        ir_var_ids = {o.variable_id for o in objects if isinstance(o, IRVariable)}
+        ir_state_ids = {o.state_id for o in objects if isinstance(o, IRVariableState)}
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        shipped_var_ids = {
+            r[0] for r in conn.execute("SELECT variable_id FROM variable")
+        }
+        shipped_state_ids = {
+            r[0] for r in conn.execute("SELECT state_id FROM variable_state")
+        }
+        conn.close()
+        assert shipped_var_ids == ir_var_ids
+        assert shipped_state_ids == ir_state_ids
+
+    def test_alias_superset_of_state_columns_invariant(self, tmp_path: Path) -> None:
+        """STRUCTURAL invariant (validate.py): every variable_state delivery
+        column is present in variable_alias under the same (variable_id,
+        register_variant_id) key. Holds after the flip writes both from IR."""
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        missing = conn.execute(
+            "SELECT COUNT(*) FROM ("
+            "  SELECT DISTINCT vs.variable_id, vs.register_variant_id, "
+            "    vs.delivery_column_name FROM variable_state vs "
+            "  WHERE vs.delivery_column_name IS NOT NULL "
+            "  AND NOT EXISTS (SELECT 1 FROM variable_alias va "
+            "    WHERE va.variable_id = vs.variable_id "
+            "    AND va.register_variant_id = vs.register_variant_id "
+            "    AND LOWER(va.delivery_column_name) = LOWER(vs.delivery_column_name)))"
+        ).fetchone()[0]
+        conn.close()
+        assert missing == 0
