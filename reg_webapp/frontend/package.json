@@ -1,0 +1,23 @@
+{
+  "name": "reg-webapp-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "biome check",
+    "format": "biome format --write .",
+    "gen:types": "openapi-typescript ../backend/openapi.json -o src/lib/api-types.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.15",
+    "@sveltejs/vite-plugin-svelte": "7.1.2",
+    "openapi-typescript": "7.13.0",
+    "svelte": "5.55.9",
+    "svelte-check": "4.4.8",
+    "typescript": "6.0.3",
+    "vite": "8.0.14"
+  }
+}

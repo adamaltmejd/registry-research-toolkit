@@ -582,13 +582,37 @@ A3.1 are load-bearing for A5.1; A3.2/A3.3/A3.4 are consumer-side and
 don't block webapp work). A4 not required — SCB-only deployment can
 ship first. Matches the gates diagram annotation below.
 
-### [ ] A5.1 — `reg_webapp` Pydantic models
+A5.1 is split into A5.1a (boot + toolchain scaffold) and A5.1b
+(Pydantic models + catalog browse). A5.1a gates everything downstream;
+A5.1b adds the catalog domain surface.
+
+### [x] A5.1a — `reg_webapp` boot + toolchain scaffold
+
+**Status**: done. Created `reg_webapp/` from scratch — FastAPI backend
+(workspace member `reg_webapp/backend`) booting reg_meta read-only via
+`reg_meta.db.open_db` (mode=ro + `_check_schema_compat`, the load-bearing
+schema gate) and serving `GET /api/context` (steward identity + manifest
+build info), plus a Svelte 5 + Vite + TS (bun) frontend shell that fetches
+it. Wired the full OpenAPI snapshot + `openapi-typescript` codegen + CI
+drift gates and the frontend toolchain (Biome + svelte-check). Ships only
+the `global` steward and **no `{fqid:path}` catch-all** (guarded by a boot
+test). CI uses a manifest-only fixture DB (reg_meta 5.1.0 is unpublished);
+no `SCHEMA_VERSION` bump (read-only, no DDL).
+
+- Backend member `reg_webapp/backend` added to the uv workspace; `reg-webapp` runtime deps `reg-meta`/`reg-schema`/`reg-monabundle`/`fastapi`/`uvicorn`; `httpx` added to the root dev group
+- Steward loader (`stewards.py`, stdlib `tomllib`); `stewards/global/steward.toml` (no project file → full-universe mode)
+- Webapp-local Pydantic `ContextResponse` (NOT reg_meta dataclasses, NOT reg_schema; §9.6 boundary)
+- `gen_openapi.py` deterministic dumper (`sort_keys=True` + trailing newline) → committed `openapi.json`; SPA `api-types.ts` codegen'd from it; CI fails on drift in either
+- CI: `test_openapi_snapshot.py` (always-run `test` job) guards `openapi.json` freshness; `reg-webapp-frontend` job (bun check/lint/build + TS-codegen drift guard) guards `api-types.ts`; paths-filter gated
+
+### [ ] A5.1b — `reg_webapp` Pydantic models + catalog browse
 
 - FastAPI endpoints use `reg_schema` Pydantic models directly for project_data responses
-- `reg_meta` library types still wrapped 1:1 for catalog responses (the only remaining wrapper layer)
-- OpenAPI codegen updated
+- `reg_meta` library types wrapped 1:1 in webapp-local Pydantic models for catalog responses (the only remaining wrapper layer)
+- `/api/catalog` browse endpoints + the in-memory catalog index (§9.2); steward project-file load/validation
+- OpenAPI codegen updated for the new response models
 
-**Estimate**: 3-4 days.
+**Estimate**: 3-4 days total across A5.1a + A5.1b.
 
 ### [ ] A5.2 — New API endpoints
 

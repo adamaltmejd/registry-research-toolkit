@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reg-webapp"
+version = "0.1.0"
+description = "FastAPI backend serving the reg_meta catalog to the Svelte SPA"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+# Internal deps carry Model-A floors (reg_webapp needs the Model A APIs, not
+# the v0.x ones), matching the repo's floor-pin convention (cf. reg_meta_build's
+# `reg-meta>=0.12.0`). Exact pins are deliberately NOT used — they'd force
+# monorepo-wide version lockstep and wouldn't enable out-of-workspace builds
+# anyway (these packages resolve via [tool.uv.sources], not PyPI).
+# reg-schema is load-bearing for A5.1b (project_data response models, §9.6) and
+# reg-monabundle for the /api/bundle write endpoint (A5.2+); both are declared
+# now so the member's runtime surface is complete and `uv sync` resolves the edge.
+dependencies = [
+    "reg-meta>=1.0.0",
+    "reg-schema>=2.0.0",
+    "reg-monabundle>=0.4.0",
+    "fastapi>=0.136.3",
+    "uvicorn>=0.48.0",
+    "pydantic>=2.13.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/adamaltmejd/registry-research-toolkit"
+Repository = "https://github.com/adamaltmejd/registry-research-toolkit"
+Issues = "https://github.com/adamaltmejd/registry-research-toolkit/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reg_webapp"]
