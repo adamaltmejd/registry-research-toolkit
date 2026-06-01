@@ -77,12 +77,14 @@ engine itself ships anywhere. The Pydantic dependency lives only on the
 model surface (`project_data.py`).
 
 **MONA boundary (§9.6).** Pydantic must **not** ship to MONA, and as of
-A3.4 it does not: the bundle no longer amalgamates `project_data.py`.
-Bundle-build runs the structural validator as the gate
-(`reg_monabundle/build/spec_loader.py`), then converts the validated
-project into a stdlib-dataclass `LoadedSpec`
-(`reg_monabundle.runtime.spec`) which the bundle embeds instead, so the
-MONA runtime sees only stdlib dataclasses. The §9.6 CI gate
+A3.4 it does not: the bundle no longer amalgamates `project_data.py`. A
+caller (the mdw CLI / `reg_webapp`) runs the Pydantic structural gate at
+build time — `reg_monabundle/build/spec_loader.py`
+(`validate_project_data`, plus a `LoadedSpec` round-trip that fails fast
+on runtime-unsupported specs) — and the bundle then embeds the project's
+**JSON**. On MONA the stdlib runtime deserializes that JSON into a
+`LoadedSpec` (`reg_monabundle.runtime.spec.loadedspec_from_dict`), so it
+sees only stdlib dataclasses, never Pydantic. The §9.6 CI gate
 (`test_bundle_carries_no_pydantic_or_reg_schema`) line-scans + AST-checks
 the emitted bundle to prove it carries no Pydantic and no `reg_schema`.
 
