@@ -453,6 +453,7 @@ version = "0.1.0"
 source = { editable = "reg_webapp/backend" }
 dependencies = [
     { name = "fastapi" },
+    { name = "pydantic" },
     { name = "reg-meta" },
     { name = "reg-monabundle" },
     { name = "reg-schema" },
@@ -462,6 +463,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.136.3" },
+    { name = "pydantic", specifier = ">=2.13.4" },
     { name = "reg-meta", editable = "reg_meta" },
     { name = "reg-monabundle", editable = "reg_monabundle" },
     { name = "reg-schema", editable = "reg_schema" },

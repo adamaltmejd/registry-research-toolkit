@@ -11,18 +11,24 @@ A steward is configured by ``reg_webapp/stewards/<id>/``:
 
 from __future__ import annotations
 
+import os
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-# stewards/ is a sibling of backend/ and frontend/ (REFACTOR_SPEC §9). Resolve
-# it relative to this module so the loader works regardless of cwd (tests, the
-# uvicorn boot, the OpenAPI dumper). __file__ → .../backend/src/reg_webapp/stewards.py,
-# so parents[3] is the reg_webapp/ root.
-# Assumes the source/workspace layout (run via `uv run`); a wheel packages only
-# src/reg_webapp, so deployment (Docker, A5.2+) must place stewards/ at this
-# relative location or pass load_steward(root=...).
-STEWARDS_DIR = Path(__file__).resolve().parents[3] / "stewards"
+# stewards/ is a sibling of backend/ and frontend/ (REFACTOR_SPEC §9). The
+# default resolves it relative to this module — parents[3] is the reg_webapp/
+# root — which holds for the source/workspace layout (tests, `uv run`, the
+# OpenAPI dumper). A wheel/Docker image packages only src/reg_webapp, where that
+# sibling path doesn't exist, so REG_WEBAPP_STEWARDS_DIR overrides it for
+# deployment (mirrors reg_meta's REG_META_DB); load_steward(root=...) is the
+# per-call override used by tests.
+_DEFAULT_STEWARDS_DIR = Path(__file__).resolve().parents[3] / "stewards"
+STEWARDS_DIR = (
+    Path(env)
+    if (env := os.environ.get("REG_WEBAPP_STEWARDS_DIR"))
+    else _DEFAULT_STEWARDS_DIR
+)
 
 STEWARD_TOML = "steward.toml"
 STEWARD_PROJECT_DATA = "steward.project_data.json"
@@ -67,6 +73,12 @@ def load_steward(
     ]:
         raise ValueError(
             f"{toml_path}: missing required field(s): {', '.join(missing)}"
+        )
+    # The declared id must match the directory name — keeps the identity contract
+    # explicit before steward selection becomes dynamic (A5.1b/A5.2).
+    if data["id"] != steward_id:
+        raise ValueError(
+            f"{toml_path}: id {data['id']!r} does not match directory name {steward_id!r}"
         )
     return Steward(
         id=data["id"],

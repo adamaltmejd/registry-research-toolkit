@@ -6,13 +6,18 @@ run ``uv run python reg_webapp/backend/scripts/gen_openapi.py`` and commit.
 
 from __future__ import annotations
 
-import sys
+import importlib.util
 from pathlib import Path
 
-SCRIPTS_DIR = Path(__file__).resolve().parents[1] / "scripts"
-sys.path.insert(0, str(SCRIPTS_DIR))
-
-import gen_openapi  # noqa: E402  (path-injected sibling script)
+# Load the sibling script directly, without mutating sys.path (which would leak
+# module-shadowing risk into the rest of the test session).
+_GEN_OPENAPI_PATH = Path(__file__).resolve().parents[1] / "scripts" / "gen_openapi.py"
+_spec = importlib.util.spec_from_file_location(
+    "reg_webapp_gen_openapi", _GEN_OPENAPI_PATH
+)
+assert _spec and _spec.loader
+gen_openapi = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(gen_openapi)
 
 
 def test_openapi_snapshot_matches_committed():

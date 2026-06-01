@@ -21,6 +21,13 @@ if TYPE_CHECKING:
 
 FIXTURE_IMPORT_DATE = "2026-06-01T00:00:00Z"
 
+# A schema_version that PASSES open_db's gate (same major.minor) but differs from
+# the code constant in the PATCH (_check_schema_compat ignores patch) — so
+# test_context proves /api/context surfaces the manifest's value, not an echo of
+# reg_meta.SCHEMA_VERSION.
+_MAJOR, _MINOR, _ = reg_meta.db.SCHEMA_VERSION.split(".")
+FIXTURE_SCHEMA_VERSION = f"{_MAJOR}.{_MINOR}.999"
+
 
 def _write_manifest_db(db_path: Path, schema_version: str) -> None:
     conn = sqlite3.connect(db_path)
@@ -49,10 +56,15 @@ def fixture_import_date() -> str:
 
 
 @pytest.fixture
+def fixture_schema_version() -> str:
+    return FIXTURE_SCHEMA_VERSION
+
+
+@pytest.fixture
 def compatible_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """A fixture DB whose manifest matches the installed SCHEMA_VERSION."""
+    """A fixture DB whose manifest is gate-compatible with the installed code."""
     db_path = tmp_path / reg_meta.db.DB_FILENAME
-    _write_manifest_db(db_path, reg_meta.db.SCHEMA_VERSION)
+    _write_manifest_db(db_path, FIXTURE_SCHEMA_VERSION)
     _point_app_at(monkeypatch, tmp_path)
     return db_path
 

@@ -50,10 +50,14 @@ conn = reg_meta.db.open_db(db_path)             # mode=ro + _check_schema_compat
 
 `open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real
 `SCHEMA_VERSION` assert vs the DB manifest. That is the **load-bearing** schema
-gate. The lifespan stashes `conn` + the parsed manifest on `app.state` and adds
-one belt-and-suspenders `major.minor` assert (`_assert_manifest_compatible`) to
-catch a *future* reg_meta bump that lands in code before the DB asset. The
-connection is closed on shutdown.
+gate (a wrong major / too-old minor raises at startup; `test_boot.py` covers
+it). A5.1a needs only the manifest snapshot, so the boot connection is closed
+once it's read and the parsed manifest is stashed on `app.state`; the keys
+`/api/context` surfaces are validated at boot so a malformed DB fails fast.
+A5.1a holds **no** long-lived query connection — a single `sqlite3` connection
+from the lifespan can't be queried from FastAPI's sync-handler threadpool, so
+A5.1b opens the mmap'd query connection (and picks its threading model) when it
+adds the catalog index + `/api/catalog`.
 
 A5 reads reg_meta read-only and ships no DDL, so there is **no
 `SCHEMA_VERSION` bump** from this stage.

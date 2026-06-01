@@ -43,9 +43,15 @@ export interface components {
          * @description reg_meta build provenance, read from the DB ``import_manifest``.
          */
         RegMetaInfo: {
-            /** Import Date */
+            /**
+             * Import Date
+             * @description UTC timestamp the reg_meta DB was built/imported.
+             */
             import_date: string;
-            /** Schema Version */
+            /**
+             * Schema Version
+             * @description Schema version of the reg_meta DB build (e.g. '5.1.0').
+             */
             schema_version: string;
         };
         /**
@@ -65,9 +71,15 @@ export interface components {
          * @description Package versions for the deployed backend + its reg_meta dependency.
          */
         WebappInfo: {
-            /** Reg Meta Version */
+            /**
+             * Reg Meta Version
+             * @description Installed reg_meta package version — distinct from reg_meta.schema_version, which is the DB build.
+             */
             reg_meta_version: string;
-            /** Version */
+            /**
+             * Version
+             * @description Installed reg_webapp package version.
+             */
             version: string;
         };
     };

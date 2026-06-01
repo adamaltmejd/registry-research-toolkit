@@ -3,9 +3,12 @@
 The lifespan opens the real reg_meta DB read-only via reg_meta's own helpers
 (``db_path_from_args`` + ``open_db``). ``open_db`` already opens ``mode=ro``
 AND runs ``_check_schema_compat`` (the load-bearing SCHEMA_VERSION gate vs the
-DB manifest) — we do NOT hardcode the path or reimplement the check. The
-connection + parsed manifest live on ``app.state`` for the request handlers;
-the connection is closed on shutdown.
+DB manifest) — we do NOT hardcode the path or reimplement the check. A5.1a
+needs only the manifest snapshot, so the boot connection is closed once it's
+read; the parsed manifest lives on ``app.state``. A single ``sqlite3``
+connection from this lifespan is NOT safe to query from FastAPI's sync-handler
+threadpool, so the long-lived mmap'd query connection (and its threading model)
+is A5.1b's to add when it builds the catalog index + ``/api/catalog``.
 """
 
 from __future__ import annotations
@@ -23,6 +26,11 @@ from .stewards import load_steward
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
+# Manifest keys /api/context surfaces; validated at boot so a malformed DB fails
+# fast instead of as an opaque per-request 500. schema_version is already
+# guaranteed by open_db's gate; import_date is the one this adds.
+_REQUIRED_MANIFEST_KEYS = ("schema_version", "import_date")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -33,12 +41,16 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     db_path = reg_meta.db.db_path_from_args(None)
     conn = reg_meta.db.open_db(db_path)
     try:
-        app.state.db = conn
-        app.state.manifest = reg_meta.db.get_manifest(conn)
-        app.state.steward = load_steward()
-        yield
+        manifest = reg_meta.db.get_manifest(conn)
     finally:
         conn.close()
+    if missing := [key for key in _REQUIRED_MANIFEST_KEYS if key not in manifest]:
+        raise RuntimeError(
+            f"reg_meta manifest at {db_path} missing key(s): {', '.join(missing)}"
+        )
+    app.state.manifest = manifest
+    app.state.steward = load_steward()
+    yield
 
 
 def create_app() -> FastAPI:

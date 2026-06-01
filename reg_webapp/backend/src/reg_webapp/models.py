@@ -9,7 +9,7 @@ project_data-shaped responses (A5.1b+).
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class StewardInfo(BaseModel):
@@ -23,15 +23,24 @@ class StewardInfo(BaseModel):
 class RegMetaInfo(BaseModel):
     """reg_meta build provenance, read from the DB ``import_manifest``."""
 
-    schema_version: str
-    import_date: str
+    schema_version: str = Field(
+        description="Schema version of the reg_meta DB build (e.g. '5.1.0')."
+    )
+    import_date: str = Field(
+        description="UTC timestamp the reg_meta DB was built/imported."
+    )
 
 
 class WebappInfo(BaseModel):
     """Package versions for the deployed backend + its reg_meta dependency."""
 
-    version: str
-    reg_meta_version: str
+    version: str = Field(description="Installed reg_webapp package version.")
+    reg_meta_version: str = Field(
+        description=(
+            "Installed reg_meta package version — distinct from "
+            "reg_meta.schema_version, which is the DB build."
+        )
+    )
 
 
 class ContextResponse(BaseModel):
