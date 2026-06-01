@@ -37,7 +37,13 @@ the refactor spec into per-package DESIGN files.
 - **§6.8.2 namespaced-block validator** (`reg_monabundle.validate_block`,
   phase 1 — shipped). Validates the `reg_monabundle` block of
   `project_data.json`: allowed keys, binding-FQID well-formedness on
-  `column_options`, the `suppress_k` floor against `SUPPRESS_K`.
+  `column_options`, the `suppress_k` floor against `SUPPRESS_K`. Pure-stdlib,
+  so unlike the §6.8.1 structural gate it **is amalgamated** and runs at
+  bundle **load on MONA** too (`loadedspec_from_dict` calls it), not only at
+  build — per §6.8.2 ("same code, runs at build and on MONA"). The
+  cross-block referential checks that need reg_schema-typed bindings
+  (`_validate_column_options_against_columns`) are the build-only exception,
+  living in `build.spec_loader`.
 
 ## Not in scope (intentionally)
 
