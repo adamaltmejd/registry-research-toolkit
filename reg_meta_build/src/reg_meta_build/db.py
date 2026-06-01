@@ -22,7 +22,7 @@ from reg_meta.db import (
     SCHEMA_VERSION,
     utc_now,
 )
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.errors import EXIT_CONFIG, EXIT_INTERNAL, RegMetaError
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -2594,6 +2594,44 @@ def materialize(
     cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
     _progress(f"  {cvm_count:,} code×variable mappings")
 
+    # A4.3a coverage guard (Codex P2): the provider-blind variable_state-based
+    # derivation above drops codes that appeared ONLY in a `_collapse_residual`'d
+    # cvid (stamped variable_id, but no `variable_state` row). The FULL dbdiff
+    # proves the map is row-identical on the SCB corpus, but make NO-CODE-LOSS a
+    # STRUCTURAL build invariant: every (variable_id, code_id) the cvid-stamped
+    # scratch carries MUST be present in code_variable_map — so a future corpus
+    # where a collapsed cvid holds a unique code FAILS LOUDLY instead of silently
+    # dropping it from value search. (`variable_instance` is SCB scratch, still
+    # present here, dropped below. The LOSS direction survives A4.3b: SOS adds
+    # rows the scratch lacks, but the SCB subset stays covered. A4.3b adds an
+    # equivalent guard for SOS, whose coverage the dbdiff cannot police.)
+    lost = conn.execute(
+        "SELECT vi.variable_id, vsm.code_id "
+        "FROM variable_instance vi "
+        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "WHERE vi.variable_id IS NOT NULL "
+        "EXCEPT SELECT variable_id, code_id FROM code_variable_map "
+        "LIMIT 1"
+    ).fetchone()
+    if lost is not None:
+        raise RegMetaError(
+            exit_code=EXIT_INTERNAL,
+            code="code_variable_map_coverage_loss",
+            error_class="internal",
+            message=(
+                f"code_variable_map (variable_state-derived) lost a "
+                f"(variable_id={lost[0]}, code_id={lost[1]}) pair the cvid-stamped "
+                f"scratch carries: a collapsed/dropped cvid holds a code absent "
+                f"from every surviving variable_state of that variable."
+            ),
+            remediation=(
+                "The variable_state-based code_variable_map derivation must "
+                "account for codes that only appeared in a _collapse_residual'd "
+                "cvid (A4.3a re-point; Codex P2). Ensure every code-bearing cvid "
+                "yields a variable_state, or extend the derivation."
+            ),
+        )
+
     # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
     # already wrote `variable_alias` from IRVariableAlias (the FULL historical
     # column set the old `_reparent_variable_alias` projected from the
@@ -2601,10 +2639,13 @@ def materialize(
     # now IR-inserted; `_backfill_state_classifications` tags its
     # `classification_id` from the `variable_instance` scratch (still the home of
     # classification linkage — `populate_classifications` writes it there, AFTER
-    # emit, so the adapter cannot carry it on IRValueSet; value_set→classification
-    # is 1:1 on the corpus, confirmed on the fixture). It UPDATEs the IR-inserted
-    # `variable_state` rows unchanged. Last reader of `variable_instance` before
-    # the DROP below.
+    # emit, so the adapter cannot carry it on IRValueSet). The per-cvid stamp +
+    # min() tie-break is LOAD-BEARING: value_set→classification is NOT 1:1
+    # (≈5,161 value_sets span >1 classification on the real corpus), so the
+    # cvid-level linkage cannot be replaced by a value_set-derived map; re-pointing
+    # this backfill provider-blind is an A4.4 concern (with SOS classifications,
+    # the last gated window). It UPDATEs the IR-inserted `variable_state` rows
+    # unchanged. Last reader of `variable_instance` before the DROP below.
     _backfill_state_classifications(conn)
 
     # A2.7: drop `variable_instance` + its cvid-grained alias staging before
