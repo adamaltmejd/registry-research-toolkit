@@ -42,14 +42,16 @@ from reg_meta.fqid import (
     validate_slug,
 )
 
-# The one §5.2 literal that is a valid catalog PATH segment but which
-# `validate_slug` rejects as a slug: `class` (the classification-root sentinel /
-# classification-prefix segment). `_default` (the variant coordinate) is NOT a
-# catalog path segment — variants are a register sub-resource (§9.5), never a
-# `/api/catalog/{fqid}` segment — so it is not admitted; a `_default` segment
-# fails the slug grammar like any other reserved token (422 at the guard, before
-# any DB access). Anything else must pass the slug grammar.
-_ALLOWED_LITERALS = frozenset({CLASSIFICATION_PREFIX})
+# `class` is the one §5.2 literal that is a valid catalog PATH segment but which
+# `validate_slug` rejects as a slug — and ONLY as the LEADING classification
+# prefix (`class` root or `class/<slug>`). In any other slot (provider, register,
+# variable, or the `@version` value-set-version) `class` is a reserved token: it
+# must 422 at the guard, NOT be admitted into a slot reg_meta later rejects — e.g.
+# `class/<x>/variants` would otherwise construct `Fqid.register_fqid('class', …)`
+# → FqidError → an HTTP 500 instead of a clean 422. So `_validate_segment` admits
+# the literal only at the prefix position (`is_prefix`), never unconditionally.
+# `_default` (the variant coordinate) is NEVER a catalog path segment — variants
+# are a register sub-resource (§9.5) — so it always fails the slug grammar (422).
 
 # Only the binding LEAF (3rd segment) may carry the value-set-version pin.
 _LEAF_VERSION_DELIM = "@"
@@ -78,13 +80,18 @@ class ValidatedFqidPath:
     value_set_version: str | None
 
 
-def _validate_segment(segment: str, *, slot: str) -> None:
-    """Validate one path segment against the §5.2 allow-list (slug grammar +
-    the reserved literals). Raises ``FqidPathError`` on any violation —
-    including an empty segment (``//`` or a leading/trailing ``/``)."""
+def _validate_segment(segment: str, *, slot: str, is_prefix: bool = False) -> None:
+    """Validate one path segment against the §5.2 allow-list (slug grammar, plus
+    the ``class`` classification-prefix literal). Raises ``FqidPathError`` on any
+    violation — including an empty segment (``//`` or a leading/trailing ``/``).
+
+    ``is_prefix`` (the leading segment) admits the ``class`` literal; everywhere
+    else ``class`` is a reserved token ``validate_slug`` rejects (→ 422), so it
+    can never reach a provider/register/variable/version slot that reg_meta would
+    reject downstream with a 500."""
     if not segment:
         raise FqidPathError("FQID contains an empty segment")
-    if segment in _ALLOWED_LITERALS:
+    if is_prefix and segment == CLASSIFICATION_PREFIX:
         return
     try:
         validate_slug(segment, slot)
@@ -140,7 +147,7 @@ def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
 
     for index, segment in enumerate(segments):
         slot = "variable" if index == leaf_index and len(segments) == 3 else "segment"
-        _validate_segment(segment, slot=slot)
+        _validate_segment(segment, slot=slot, is_prefix=(index == 0))
 
     return ValidatedFqidPath(
         fqid="/".join(segments), value_set_version=value_set_version

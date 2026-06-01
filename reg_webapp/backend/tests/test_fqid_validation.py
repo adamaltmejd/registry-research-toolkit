@@ -49,6 +49,12 @@ _REJECT_PATHS = [
     "scb@x/lisa/kon",  # @ in provider segment
     "scb/lisa@x",  # @ on a 2-seg path (not a binding leaf)
     "scb/lisa/naringsgren@bad/slug",  # @ then a slash → 4 segments
+    # `class` is admitted ONLY as the leading classification prefix; in any other
+    # slot it's a reserved token the guard now rejects (was previously deferred to
+    # `parse`/`Fqid` downstream — which 500'd on the variants route).
+    "scb/class/kon",  # class as register slot
+    "scb/lisa/class",  # class as variable (leaf) slot
+    "scb/lisa/kon@class",  # class as the @version value-set-version slot
 ]
 # NOTE: a 5-seg all-valid-slug path like `scb/lisa/kon/extra/more` is NOT a
 # per-segment grammar violation — the chokepoint admits it (every segment is a
@@ -192,16 +198,19 @@ def test_default_variant_literal_rejected_by_guard(catalog_db, path: str):
     assert counter.opens == 0  # guard-rejected → no connection opened
 
 
-@pytest.mark.parametrize("path", ["scb/class/kon", "scb/lisa/class"])
-def test_class_literal_in_illegal_slot_parse_rejects(catalog_db, path: str):
-    """`class` IS admitted by the guard (the classification-prefix), but `parse`
-    rejects it outside the prefix slot → 422. `parse` is DB-free and runs before
-    the connection opens, so this opens no connection either."""
+@pytest.mark.parametrize(
+    "path", ["scb/class/kon", "scb/lisa/class", "scb/lisa/kon@class"]
+)
+def test_class_literal_in_illegal_slot_guard_rejects(catalog_db, path: str):
+    """`class` is admitted ONLY as the leading classification-prefix segment; in a
+    register / variable / @version slot the §16 guard now rejects it → 422 with no
+    connection opened (previously deferred to `parse`/`Fqid`, which 500'd on the
+    variants route's direct `Fqid.register_fqid('class', …)`)."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
         counter.reset()
         resp = client.get(f"/api/catalog/{path}")
     assert resp.status_code == 422
-    assert counter.opens == 0  # parse runs before the connection opens
+    assert counter.opens == 0  # guard-rejected → no connection opened
 
 
 # ── A5.2a-ii §16 GATE: the FQID path guard on ALL 7 suffixed/sub-resource routes
@@ -270,6 +279,9 @@ _BAD_PERIODS = [
     "2020%2f..%2f",  # percent-encoded slashes
     "2020-13",  # month out of range
     "2018..badtoken",  # bad range endpoint
+    "2020\n",  # trailing newline — the `$`-vs-`\Z` period-regex hole, now closed
+    "HT2020\n",
+    "2020-Q3\n",
 ]
 _BAD_VARIANTS = ["Std", "../etc", "x%00", "x'; DROP--", "in valid"]
 _BAD_VSV = ["_default", "Sni2007", "../etc"]

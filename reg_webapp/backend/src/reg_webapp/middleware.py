@@ -9,9 +9,12 @@ sub-endpoints (the read surface A5.2a-ii ships).
 
 Skips WRITE endpoints (§9.4: ``/api/project/*``, ``/api/bundle``, ``/api/kit``
 do NOT set ETag) — those land in A5.2b. We gate on the request METHOD: only
-``GET`` (and ``HEAD``) reads are cacheable; any non-GET is passed through
-untouched. Combined with the read-only catalog surface today, a method gate is
-sufficient and won't need editing when the write endpoints arrive.
+``GET`` reads are cacheable; any other method is passed through untouched. (The
+routes register GET only — FastAPI's ``@router.get`` does not auto-add HEAD, so a
+HEAD 405s before reaching here; HEAD support, if wanted for cheap CDN
+revalidation, is a deliberate later addition with its own body-stripping + test,
+not an implicit claim here.) Combined with the read-only catalog surface today, a
+method gate is sufficient and won't need editing when the write endpoints arrive.
 
 The ETag is computed from the already-serialized response BODY bytes — FastAPI
 emits the JSON deterministically (a fixed Pydantic model dump), and the
@@ -35,9 +38,11 @@ if TYPE_CHECKING:
 
     from starlette.requests import Request
 
-# Only safe, cacheable methods get the §9.4 read-cache treatment; everything
-# else (the A5.2b write endpoints) passes through with no ETag.
-_CACHEABLE_METHODS = frozenset({"GET", "HEAD"})
+# Only GET reads get the §9.4 read-cache treatment; everything else (the A5.2b
+# write endpoints) passes through with no ETag. HEAD is intentionally NOT here:
+# the routes register GET only, so a HEAD 405s before reaching this middleware —
+# listing it would be a dead branch claiming support the routes don't provide.
+_CACHEABLE_METHODS = frozenset({"GET"})
 
 
 class ETagMiddleware(BaseHTTPMiddleware):

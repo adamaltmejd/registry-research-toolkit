@@ -132,6 +132,24 @@ def test_variants_unknown_register_404(client):
     assert resp.status_code == 404
 
 
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/api/catalog/class/foo/variants",  # `class` as provider
+        "/api/catalog/scb/class/variants",  # `class` as register
+        "/api/catalog/scb/_default/variants",  # `_default` as register
+    ],
+)
+def test_variants_reserved_segment_422_not_500(client, path: str):
+    # `class`/`_default` are reserved and NOT valid provider/register slugs. The
+    # variants route validates its segments via `Fqid.register_fqid` (reg_meta's
+    # authoritative slug check) BEFORE opening a connection, so a reserved segment
+    # is a clean 422 — not the uncaught-FqidError 500 the old path-guard reuse gave
+    # (`class/<slug>` is a legal classification PATH, but never a valid provider).
+    resp = client.get(path)
+    assert resp.status_code == 422, f"{path} → {resp.status_code}"
+
+
 # ── Sub-endpoints are binding-only: non-binding FQID → 422; absent → 404 ─────
 
 
@@ -317,6 +335,12 @@ _CONCURRENT_DB_ROUTES = [
     "/api/catalog/scb/lisa/variants",
     f"/api/catalog/{_KON}?period=2020",
     f"/api/catalog/{_KON}?period=2018..2020&variant=individer-15plus",
+    # The other in-handler-open paths (root, no-period binding leaf, class root) —
+    # same `_catalog_conn` pattern, so a future Depends-opened conn on any of them
+    # would regress the cross-thread guard.
+    "/api/catalog",
+    f"/api/catalog/{_KON}",
+    "/api/catalog/class",
 ]
 
 

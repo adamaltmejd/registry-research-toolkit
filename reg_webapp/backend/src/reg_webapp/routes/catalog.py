@@ -11,18 +11,23 @@ Two routes:
 
 **Connection model = per-request open** (LOCKED). A shared `sqlite3` connection
 is not safe across FastAPI's sync-handler threadpool (per-connection cursor
-state races), so the `_catalog` dependency opens a FRESH read-only connection per
-request from the boot-resolved `app.state.db_path`, wraps it in a `Catalog`, and
-closes it in a `finally`. The connection is owned by the handling thread
-(`check_same_thread` default True) — correct. No long-lived shared connection,
-no lock, no `check_same_thread=False`. The schema was already validated at boot
-(`open_db` in the lifespan), so the per-request open skips the re-check
-(`check_schema=False`).
+state races), so each handler opens a FRESH read-only connection per request via
+the `_catalog_conn` contextmanager — used as a plain `with` INSIDE the sync
+handler body, NOT a FastAPI dependency. (A generator *dependency* is entered on a
+possibly-different threadpool thread than the handler, so a dependency-opened
+connection would be used cross-thread → `sqlite3.ProgrammingError`; see
+`_catalog_conn`.) It opens from the boot-resolved `app.state.db_path`, the handler
+wraps it in a `Catalog`, and it closes in a `finally`. The connection is owned by
+the handling thread (`check_same_thread` default True) — correct. No long-lived
+shared connection, no lock, no `check_same_thread=False`. The schema was already
+validated at boot (`open_db` in the lifespan), so the per-request open skips the
+re-check (`check_schema=False`).
 
 **§16 guard runs BEFORE any DB access.** Every catch-all request first runs
 `validate_fqid_path` (the per-segment slug-grammar allow-list, own module
-`catalog_fqid.py`); a rejection raises 422 with zero SQL executed, because the
-guard precedes the `_catalog` Catalog dispatch.
+`catalog_fqid.py`) as a dependency; a rejection raises 422 with zero SQL executed
+AND zero connection opens, because the guard resolves before the handler body
+opens `_catalog_conn`.
 
 **Router ordering (A5.2 seam).** A5.2's suffixed routes (`/states`,
 `/predecessors`, ..., `/{provider}/{register}/variants`) MUST be declared ABOVE
@@ -39,6 +44,7 @@ import reg_meta.db
 from fastapi import APIRouter, Depends, HTTPException, Request
 from reg_meta.catalog import (
     Catalog,
+    Period,
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
@@ -100,8 +106,6 @@ from reg_webapp.period_param import (
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Iterator
-
-    from reg_meta.catalog import Period
 
 router = APIRouter(prefix="/api")
 
@@ -473,18 +477,23 @@ def get_register_variants(
     is a real variant and IS returned (not filtered). 404 when the register
     doesn't resolve (so a typo'd register isn't a silent empty list)."""
     register_fqid = f"{provider}/{register}"
-    # §16: validate both segments as slugs BEFORE opening a connection. The path
-    # guard rejects `_default`/`class`/traversal in either segment with zero SQL.
+    # §16: validate both segments BEFORE opening a connection — as a strict
+    # provider/register FQID, NOT the generic catalog path (which legitimately
+    # admits the `class/<slug>` classification prefix). `Fqid.register_fqid` runs
+    # reg_meta's authoritative `validate_slug` on both segments, rejecting
+    # `class`/`_default`/traversal/period-shaped tokens (FqidError → 422, zero SQL).
+    # `class` is NOT a valid provider, so `class/<x>/variants` is a clean 422 here,
+    # not a 500. The constructed fqid is reused for the resolve below.
     try:
-        validate_fqid_path(register_fqid)
-    except FqidPathError as exc:
+        fqid = Fqid.register_fqid(provider, register)
+    except FqidError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     with _catalog_conn(request) as conn:
         catalog = Catalog(conn)
         # Resolve the register first so a bad (provider, register) is a 404, not a
         # 200 with an empty list (list_variants alone can't distinguish them).
         try:
-            catalog.resolve(Fqid.register_fqid(provider, register))
+            catalog.resolve(fqid)
         except RegMetaError as exc:
             _http_404_if_not_found(exc)
         variants = catalog.list_variants(provider, register)
