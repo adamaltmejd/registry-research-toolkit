@@ -42,8 +42,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # the load-bearing SCHEMA_VERSION gate vs the DB manifest — an incompatible
     # major (or too-old minor) raises RegMetaError here, failing startup fast.
     db_path = reg_meta.db.db_path_from_args(None)
-    conn = reg_meta.db.open_db(db_path)
+    # Resolve the steward BEFORE opening the conn: load_steward raises on a
+    # misconfigured deployment, and doing it first means that raise can't leak the
+    # just-opened connection.
     steward = load_steward()
+    conn = reg_meta.db.open_db(db_path)
     try:
         manifest = reg_meta.db.get_manifest(conn)
         # Build the §9.1 in-memory steward catalog index on the SAME boot

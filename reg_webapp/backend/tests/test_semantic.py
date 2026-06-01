@@ -254,3 +254,73 @@ def test_pinned_version_narrows_and_passes(multiversion_catalog):
     )
     assert result.ok
     assert result.issues == ()
+
+
+# ── §6.8.3: a version TRANSITION (sequential, non-overlapping) is drift, NOT a
+# co-delivery ambiguity. resolve_at returns every state whose validity intersects
+# the period, so a range / `_default` period crossing a re-version matches several
+# SEQUENTIAL states; their distinct version labels must NOT trip the (blocking)
+# ambiguity error — only OVERLAPPING (co-delivered) versions do.
+
+
+@pytest.fixture
+def transition_catalog():
+    """A DB where `scb/lisa/kon` has two SEQUENTIAL (non-overlapping) states under
+    the same variant: sun2000 valid 2010-2015, then sun2020 valid 2016-9999 — a
+    version TRANSITION, not co-delivery."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    # Re-window the seeded kon state to the LATER era; add the earlier era as a
+    # second, non-overlapping state under the same variant.
+    conn.execute(
+        "UPDATE variable_state SET value_set_version_label = 'sun2020', "
+        "valid_from = '2016-01-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2010-01-01",
+        valid_to="2015-12-31",
+        value_set_version_label="sun2000",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_range_crossing_version_transition_is_drift_not_ambiguous(transition_catalog):
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2014, "to": 2018},  # spans the 2015→2016 re-version
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(
+        _project([source]), transition_catalog, caller="researcher"
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes  # NOT co-delivered
+    assert "binding_state_drifts_within_period" in codes
+    assert result.ok  # drift is info-only, non-blocking
+
+
+def test_default_period_over_version_history_is_not_ambiguous(transition_catalog):
+    # `_default` returns the full (sequential) history; distinct labels across
+    # non-overlapping states must NOT trip the ambiguity error.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": "_default",
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(
+        _project([source]), transition_catalog, caller="researcher"
+    )
+    assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
+    assert result.ok

@@ -24,6 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from pydantic import ValidationError
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 
@@ -182,9 +183,18 @@ def load_catalog_index(
             + "; ".join(f"{i.code}@{i.path}" for i in errors)
         )
 
-    # Structurally valid → the model builds; a Pydantic raise here would signal
-    # validator/model drift, not user error (reg_schema project_data.py docstring).
-    project = ProjectData.model_validate(raw)
+    # validate_structural passed, but the reg_schema models are `extra="forbid"`
+    # and validate_structural does NOT flag an unrecognized key on a nested Source /
+    # Binding — so model_validate can still raise on a typo'd field. That's a broken
+    # committed catalog (user error), so fail fast with a CLEAR StewardCatalogError,
+    # not an opaque pydantic traceback out of the FastAPI lifespan.
+    try:
+        project = ProjectData.model_validate(raw)
+    except ValidationError as exc:
+        raise StewardCatalogError(
+            f"{project_path}: steward catalog passed structural validation but "
+            f"failed model construction (an unrecognized or invalid field?): {exc}"
+        ) from exc
 
     # Steward-caller mode: reg_meta-backed misses downgrade error→warning so the
     # deployment boots through drift. We read result.issues (the warnings),

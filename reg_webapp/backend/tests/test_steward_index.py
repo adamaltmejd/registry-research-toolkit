@@ -31,7 +31,11 @@ from reg_webapp.app import create_app
 from reg_webapp.catalog_index import build_catalog_index
 from reg_webapp.semantic import validate_semantic
 
-from reg_webapp.stewards import load_catalog_index, load_steward
+from reg_webapp.stewards import (
+    StewardCatalogError,
+    load_catalog_index,
+    load_steward,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -241,6 +245,33 @@ def test_unresolved_variant_drops_whole_source(catalog):
 
 
 # ── (d) the global deployment has no index ─────────────────────────────────
+
+
+def test_extra_key_in_binding_raises_stewardcatalogerror(catalog, tmp_path):
+    """A steward catalog with an unrecognized key in a binding PASSES
+    validate_structural but reg_schema's `extra="forbid"` model rejects it — it
+    must surface as a clear StewardCatalogError (fail fast), NOT an opaque
+    pydantic.ValidationError out of the FastAPI lifespan (which would crash boot
+    with a traceback instead of an actionable message)."""
+    stewards = tmp_path / "stewards"
+    bad_sources = [
+        {
+            "name": "lisa",
+            "register_variant": "scb/lisa/individer-15plus",
+            "period": 2018,
+            "bindings": [
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "categorical",
+                    "typo_field_unknown": "oops",
+                }
+            ],
+        }
+    ]
+    _write_steward(stewards, "ifau", bad_sources)
+    steward = load_steward("ifau", root=stewards)
+    with pytest.raises(StewardCatalogError):
+        load_catalog_index(steward, catalog, root=stewards)
 
 
 def test_global_steward_has_no_index(catalog):

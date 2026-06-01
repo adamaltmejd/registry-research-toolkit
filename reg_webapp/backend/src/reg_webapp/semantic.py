@@ -185,6 +185,24 @@ def _period_for_resolve(period: int | str | PeriodRange) -> Period:
     return {"from": period.from_, "to": period.to}
 
 
+def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
+    """§6.8.3 CO-DELIVERY: are ≥2 states with DIFFERENT value-set-version labels
+    valid at the SAME instant (overlapping validity windows)? That is the genuine
+    ambiguity (a bare binding can't pick one). Sequential states from a version
+    transition (non-overlapping windows) are NOT co-delivery — that is drift (info).
+    O(n²) over the few states resolve_at returns for one binding. ``valid_from`` /
+    ``valid_to`` are ISO ``YYYY-MM-DD`` strings, so they compare chronologically."""
+    for i, a in enumerate(states):
+        for b in states[i + 1 :]:
+            if (
+                a.value_set_version_label != b.value_set_version_label
+                and a.valid_from <= b.valid_to
+                and b.valid_from <= a.valid_to
+            ):
+                return True
+    return False
+
+
 def _check_binding(
     binding: Binding,
     source: Source,
@@ -306,32 +324,33 @@ def _check_binding_period(
         )
         return
 
-    # §6.8.3 fold: >1 state for a BARE (unpinned) binding means several value-set
-    # versions are co-delivered in the bound period — the build must not silently
-    # pick a coding, so this is an error directing the author to pin `@<version>`.
-    # A pinned binding already narrowed to one state (value_set_version above).
-    if pinned_version is None:
+    # §6.8.3 fold: CO-DELIVERY — ≥2 states with DIFFERENT value-set versions whose
+    # validity windows OVERLAP (valid at the same instant) — means the build can't
+    # pick a coding for a BARE binding, so this is an error directing the author to
+    # pin `@<version>`. `resolve_at` returns every state whose validity INTERSECTS
+    # the period, so for a range / `_default` period the matched states may instead
+    # be SEQUENTIAL across a version transition (non-overlapping) — that's drift
+    # (info) below, NOT ambiguity. A pinned binding already narrowed to one state.
+    if pinned_version is None and _has_codelivered_versions(states):
         versions = sorted({s.value_set_version_label for s in states})
-        if len(versions) > 1:
-            issues.append(
-                _issue(
-                    "binding_value_set_version_ambiguous",
-                    "error",
-                    caller,
-                    var_path,
-                    f"binding {binding.variable!r} matches multiple co-delivered "
-                    f"value-set versions {versions} at {source.register_variant} "
-                    f"period {source.period!r}; pin one with the FQID '@<version>' "
-                    "suffix",
-                )
+        issues.append(
+            _issue(
+                "binding_value_set_version_ambiguous",
+                "error",
+                caller,
+                var_path,
+                f"binding {binding.variable!r} matches co-delivered value-set "
+                f"versions {versions} at {source.register_variant} period "
+                f"{source.period!r}; pin one with the FQID '@<version>' suffix",
             )
-            return
+        )
+        return
 
-    # §6.8.3 drift: a range period that crosses a state transition resolves to
-    # several states differing on shape — informational (the resolver returns the
-    # per-state subsets at extract time). Only meaningful for >1 state that is NOT
-    # the version-ambiguity case above (those share the period but differ on
-    # version, not transition).
+    # §6.8.3 drift (info): a range / `_default` period crossing a state transition
+    # resolves to several SEQUENTIAL states (non-overlapping windows), possibly
+    # differing on version label (a re-version) or shape — informational; the
+    # resolver returns the per-state subsets at extract time. The co-delivered
+    # (overlapping) version case was already the error above.
     if len(states) > 1:
         issues.append(
             _issue(

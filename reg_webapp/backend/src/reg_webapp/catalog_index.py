@@ -136,9 +136,15 @@ def build_catalog_index(
     for s_idx, source in enumerate(project.sources):
         source_base = f"/sources/{s_idx}"
         variant_coord = source.register_variant
+        # Always declare the variant slot (a dropped-variant source maps to an
+        # empty set — declared, but admits nothing).
+        variant_bindings = bindings_by_variant.setdefault(variant_coord, set())
+        if source_base in dropped:
+            # Whole source dropped (unresolved register_variant): not authorable, so
+            # it must NOT contribute to the register's period span either.
+            continue
         register_fqid = "/".join(variant_coord.split("/")[:2])
         periods_by_register.setdefault(register_fqid, []).append(_period_token(source))
-        variant_bindings = bindings_by_variant.setdefault(variant_coord, set())
         for b_idx, binding in enumerate(source.bindings):
             binding_base = f"{source_base}/bindings/{b_idx}"
             if _is_dropped(source_base, binding_base, dropped):
