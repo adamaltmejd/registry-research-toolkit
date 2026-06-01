@@ -120,6 +120,31 @@ class TestEmitOrder:
                     assert isinstance(code, IRValueCode)
                     assert code.value_set_id == o.value_set_id
 
+    def test_value_set_codes_match_db(self, tmp_path: Path) -> None:
+        """The lockstep merge-walk in `_emit_value_sets` must attach EXACTLY the
+        DB's members (code + label, in code_id order) to each value_set. Catches
+        group/value_set misalignment — `test_fk_referential_emit_order` cannot,
+        since the emitted `code.value_set_id` is set from the parent loop var
+        regardless of whether the right group was attached."""
+        conn, _adapter, objects = _drained_adapter(tmp_path)
+        emitted = {
+            o.value_set_id: [(c.code, c.label) for c in o.codes]
+            for o in objects
+            if isinstance(o, IRValueSet)
+        }
+        assert emitted, "fixture should produce at least one value_set"
+        for vsid, codes in emitted.items():
+            expected = [
+                (row[0], row[1])
+                for row in conn.execute(
+                    "SELECT vc.code, vc.label FROM value_set_member vsm "
+                    "JOIN value_code vc ON vc.code_id = vsm.code_id "
+                    "WHERE vsm.value_set_id = ? ORDER BY vsm.code_id",
+                    (vsid,),
+                )
+            ]
+            assert codes == expected
+
 
 # ── 3. Fixture-level dbdiff round-trip (unit mirror of the real-data gate) ──
 

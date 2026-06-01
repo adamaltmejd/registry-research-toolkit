@@ -30,6 +30,7 @@ import sqlite3
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
+from itertools import groupby
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -2309,27 +2310,40 @@ class SCBAdapter:
             )
 
     def _emit_value_sets(self) -> Iterator[IRObject]:
-        members: dict[int, list[tuple[str, str]]] = {}
-        for vsid, code, label in self.conn.execute(
-            "SELECT vsm.value_set_id, vc.code, vc.label "
-            "FROM value_set_member vsm "
-            "JOIN value_code vc ON vc.code_id = vsm.code_id "
-            "ORDER BY vsm.value_set_id, vsm.code_id"
-        ).fetchall():
-            members.setdefault(vsid, []).append((code, label))
+        # Lockstep over two value_set_id-ordered cursors so the whole member
+        # corpus (~millions of rows on a real build) is never held in memory:
+        # group the members on the fly and advance them in step with the
+        # value_set cursor. Both queries ORDER BY value_set_id, so one ordered
+        # pass over each suffices. (The legacy build minted value_sets via
+        # on-disk staging; a dict read-back would reintroduce a ~GB spike.)
+        member_groups = groupby(
+            self.conn.execute(
+                "SELECT vsm.value_set_id, vc.code, vc.label "
+                "FROM value_set_member vsm "
+                "JOIN value_code vc ON vc.code_id = vsm.code_id "
+                "ORDER BY vsm.value_set_id, vsm.code_id"
+            ),
+            key=lambda r: r[0],
+        )
+        pending = next(member_groups, None)
         for vsid, member_hash in self.conn.execute(
             "SELECT value_set_id, member_hash FROM value_set ORDER BY value_set_id"
-        ).fetchall():
-            codes = tuple(
-                IRValueCode(
-                    value_set_id=vsid,
-                    code=c,
-                    label=lab,
-                    valid_from=None,
-                    valid_to=None,
+        ):
+            codes: tuple[IRValueCode, ...] = ()
+            if pending is not None and pending[0] == vsid:
+                # Consume this group fully BEFORE advancing the groupby iterator
+                # — groupby invalidates the sub-iterator on the next() below.
+                codes = tuple(
+                    IRValueCode(
+                        value_set_id=vsid,
+                        code=r[1],
+                        label=r[2],
+                        valid_from=None,
+                        valid_to=None,
+                    )
+                    for r in pending[1]
                 )
-                for c, lab in members.get(vsid, [])
-            )
+                pending = next(member_groups, None)
             yield IRValueSet(
                 value_set_id=vsid,
                 member_hash=member_hash,
