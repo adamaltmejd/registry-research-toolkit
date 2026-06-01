@@ -222,7 +222,7 @@ def _check_binding(
     # segment, §5.2) — the pin is a value-set-version narrowing carried into the
     # period probe, not part of the variable's identity. Parsed once here and
     # threaded into the period probe (no re-parse).
-    bare_fqid, pinned_version = _parse_binding_variable(binding.variable)
+    bare_fqid, pinned_version = parse_binding_variable(binding.variable)
     try:
         parsed = parse(bare_fqid)
     except FqidError:
@@ -250,8 +250,9 @@ def _check_binding(
                 "in reg_meta",
             )
         )
-        # The variable doesn't resolve, so the period/value-set probes below are
-        # meaningless — stop here (one issue per broken binding).
+        # The variable doesn't resolve, so the PERIOD probe is meaningless — skip
+        # it. The value_set (an independent `class/<slug>` FQID) can still be broken
+        # on its own, so validate it before returning.
         _check_value_set(binding, bbase, catalog, caller, issues)
         return
 
@@ -404,7 +405,7 @@ def _check_value_set(
         )
 
 
-def _parse_binding_variable(variable_fqid: str) -> tuple[str, str | None]:
+def parse_binding_variable(variable_fqid: str) -> tuple[str, str | None]:
     """Split a binding-leaf FQID into ``(bare_fqid, value_set_version)``.
 
     The leaf may carry a ``@<version>`` value-set-version pin. ``parse`` rejects

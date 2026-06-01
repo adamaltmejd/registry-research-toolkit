@@ -146,6 +146,9 @@ def test_index_admits_known_and_rejects_unknown(catalog):
     index = build_catalog_index(project, result.issues)
     assert index.admits("scb/lisa/kon")
     assert index.admits("scb/rams/syss")
+    # A pinned binding (@version) is admitted iff its BARE FQID is — the pin is a
+    # delivery detail, normalized away before the membership test.
+    assert index.admits("scb/lisa/kon@sun2020")
     # In the universe but NOT in this steward's catalog → not admitted.
     assert not index.admits("scb/rams/nosuchbinding")
 

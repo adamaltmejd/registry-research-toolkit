@@ -40,7 +40,7 @@ from typing import TYPE_CHECKING
 
 # The single owner of binding-leaf `@<version>` splitting (semantic.py); the index
 # keys on the bare FQID. No cycle: semantic imports only reg_meta/reg_schema.
-from .semantic import _parse_binding_variable
+from .semantic import parse_binding_variable
 
 if TYPE_CHECKING:
     from reg_schema.project_data import ProjectData
@@ -71,9 +71,14 @@ class CatalogIndex:
     drift_warnings: tuple[DriftWarning, ...]
 
     def admits(self, fqid: str) -> bool:
-        """True iff ``fqid`` (a binding FQID) is admitted by ANY variant in the
-        index. Used by ``fqid_outside_steward_catalog`` (A5.2b-ii)."""
-        return any(fqid in bindings for bindings in self.bindings_by_variant.values())
+        """True iff ``fqid`` (a binding FQID, with or WITHOUT an ``@<version>`` pin)
+        is admitted by ANY variant in the index. The index keys on bare FQIDs (the
+        pin is a delivery detail, not identity), so the input is normalized the same
+        way before the membership test — otherwise a structurally-valid pinned
+        binding would be wrongly rejected. Used by ``fqid_outside_steward_catalog``
+        (A5.2b-ii)."""
+        bare = parse_binding_variable(fqid)[0]
+        return any(bare in bindings for bindings in self.bindings_by_variant.values())
 
 
 def _dropped_binding_paths(warnings: tuple[ValidationIssue, ...]) -> set[str]:
@@ -149,7 +154,7 @@ def build_catalog_index(
             binding_base = f"{source_base}/bindings/{b_idx}"
             if _is_dropped(source_base, binding_base, dropped):
                 continue
-            variant_bindings.add(_parse_binding_variable(binding.variable)[0])
+            variant_bindings.add(parse_binding_variable(binding.variable)[0])
 
     return CatalogIndex(
         bindings_by_variant={k: frozenset(v) for k, v in bindings_by_variant.items()},
