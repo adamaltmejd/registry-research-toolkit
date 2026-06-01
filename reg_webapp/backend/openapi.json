@@ -198,6 +198,30 @@
         "title": "BindingNode",
         "type": "object"
       },
+      "CatalogDriftWarning": {
+        "description": "One boot-time steward-catalog drift warning (\u00a76.8.3 / \u00a79.1).\n\nEmitted when the steward's committed ``steward.project_data.json`` references\nan FQID reg_meta no longer admits: the steward-mode semantic validator\ndowngrades the miss to a warning, the binding drops from the in-memory index,\nand this carries the warning to the SPA so it can show a \"catalog drift\"\nbanner. ``code`` is the \u00a76.8.3 ValidationIssue code (``fqid_unresolved`` /\n``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the\nJSON pointer into the steward catalog. Always empty for the ``global``\ndeployment (no filter).",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "path",
+          "message"
+        ],
+        "title": "CatalogDriftWarning",
+        "type": "object"
+      },
       "ClassificationNode": {
         "description": "A classification leaf (`class/<slug>`, 2 seg).",
         "properties": {
@@ -299,8 +323,15 @@
         "type": "object"
       },
       "ContextResponse": {
-        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info (\u00a79.5).\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages.",
+        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info (\u00a79.5).\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` (\u00a76.8.3 / \u00a79.1) is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.",
         "properties": {
+          "catalog_drift_warnings": {
+            "items": {
+              "$ref": "#/components/schemas/CatalogDriftWarning"
+            },
+            "title": "Catalog Drift Warnings",
+            "type": "array"
+          },
           "reg_meta": {
             "$ref": "#/components/schemas/RegMetaInfo"
           },

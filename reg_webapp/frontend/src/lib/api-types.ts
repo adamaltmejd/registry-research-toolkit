@@ -304,6 +304,27 @@ export interface components {
             via_same_as?: string[] | null;
         };
         /**
+         * CatalogDriftWarning
+         * @description One boot-time steward-catalog drift warning (§6.8.3 / §9.1).
+         *
+         *     Emitted when the steward's committed ``steward.project_data.json`` references
+         *     an FQID reg_meta no longer admits: the steward-mode semantic validator
+         *     downgrades the miss to a warning, the binding drops from the in-memory index,
+         *     and this carries the warning to the SPA so it can show a "catalog drift"
+         *     banner. ``code`` is the §6.8.3 ValidationIssue code (``fqid_unresolved`` /
+         *     ``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the
+         *     JSON pointer into the steward catalog. Always empty for the ``global``
+         *     deployment (no filter).
+         */
+        CatalogDriftWarning: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+            /** Path */
+            path: string;
+        };
+        /**
          * ClassificationNode
          * @description A classification leaf (`class/<slug>`, 2 seg).
          */
@@ -376,9 +397,12 @@ export interface components {
          *
          *     No git sha (decision: no new provenance dep). The reg_meta block reflects
          *     the DB the backend booted against; the webapp block reflects the installed
-         *     packages.
+         *     packages. ``catalog_drift_warnings`` (§6.8.3 / §9.1) is the steward-catalog
+         *     drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
          */
         ContextResponse: {
+            /** Catalog Drift Warnings */
+            catalog_drift_warnings?: components["schemas"]["CatalogDriftWarning"][];
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
