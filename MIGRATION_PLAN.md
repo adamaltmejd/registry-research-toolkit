@@ -538,7 +538,15 @@ IR-consuming materializer + G1/G4 scratch-coupling close-out are deferred to A4.
 
 **Estimate**: 5-7 days. Refactor only; no new functionality.
 
-### [ ] A4.2 — Deterministic IDs + provenance DB
+### [x] A4.2 — Deterministic IDs + provenance DB (PR #167)
+
+**Status:** Sibling `reg_meta.provenance.db` populated from A4.1's emitted IR +
+SCB debug data; SOS `mint` function + §16 namespace test landed; provenance
+keying re-grained per variant; §16 confinement assertion #1 (bundle) landed
+(#2/#3 → A5 forward criteria, hold by construction). "Deterministic IDs" =
+order-determinism (SCB IDs document-and-enforce only). Universal DB byte-identical
+(full dbdiff exit-0; **no `SCHEMA_VERSION` bump**); `source_checksums`/`row_counts`
+kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 
 - **SCB universal IDs — document + enforce, do NOT re-mint.** Only
   `register.register_id` (`int(RegisterId)`) and
