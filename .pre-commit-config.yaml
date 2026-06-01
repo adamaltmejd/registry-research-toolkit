@@ -16,6 +16,16 @@ repos:
         pass_filenames: false
         files: \.py$
         stages: [pre-commit]
+      # markdownlint via bunx (project standardizes on bun, not node). Config in
+      # .markdownlint-cli2.yaml drives discovery, so pass_filenames: false; files
+      # gate skips non-doc commits. CI runs this via `pre-commit run --all-files`.
+      - id: markdownlint
+        name: markdownlint-cli2
+        entry: bunx markdownlint-cli2
+        language: system
+        pass_filenames: false
+        files: \.md$
+        stages: [pre-commit]
       - id: pytest
         name: pytest (parallel)
         entry: uv run python -m pytest -n auto -q
