@@ -2414,38 +2414,63 @@ class SCBAdapter:
         return iter(())
 
     def _emit_provenance(self) -> Iterator[IRObject]:
-        # One IRDeliveryProvenance per register, carrying the Registerversion
-        # approval dates (period_token → last-approved date). SCB has no
-        # per-register delivery-version/date field, so those stay None. EMITTED
-        # for A4.2; the materializer DISCARDS these in A4.1 (resolved fork #1).
-        approvals: dict[int, dict[str, str]] = {}
-        for register_id, version_name, last_approved in self.conn.execute(
-            "SELECT rv2.register_id, rver.registerversionnamn, "
+        # One IRDeliveryProvenance per register_variant, carrying the
+        # Registerversion approval dates (period_token → first/last-approved
+        # date). SCB has no per-register delivery-version/date field, so those
+        # stay None. EMITTED for A4.2; the materializer now WRITES these to the
+        # provenance DB (A4.2; resolved fork #1).
+        #
+        # A4.2 keying fix (resolved fork (c)): approvals key on
+        # (register_variant_id, period_token), NOT register_id. `register_version`
+        # is grained by register_variant_id (db.py register_version DDL); the old
+        # per-register key collapsed two variants sharing a `registerversionnamn`
+        # token into one slot — last-writer-wins, and with no ORDER BY it was
+        # also non-deterministic. The ORDER BY below pins emit order for
+        # byte-stable provenance writes.
+        #
+        # Lifecycle note: `register_version` is dropped in materialize() AFTER
+        # the emit() drain, so it still exists here (resolved fork (c)). Any
+        # future move of this read into a post-emit materializer pass must run
+        # before that DROP or capture the data first.
+        first_by_variant: dict[int, dict[str, str]] = {}
+        last_by_variant: dict[int, dict[str, str]] = {}
+        for (
+            variant_id,
+            version_name,
+            first_approved,
+            last_approved,
+        ) in self.conn.execute(
+            "SELECT rver.register_variant_id, rver.registerversionnamn, "
+            "       rver.registerversion_forstagodkannandedatum, "
             "       rver.registerversion_senastgodkanddatum "
             "FROM register_version rver "
-            "JOIN register_variant rv2 "
-            "  ON rv2.register_variant_id = rver.register_variant_id"
+            "ORDER BY rver.register_variant_id, rver.registerversionnamn, "
+            "         rver.regver_id"
         ).fetchall():
-            if not last_approved:
-                continue
             token = version_name or ""
-            approvals.setdefault(register_id, {})[token] = last_approved
-        for register_id in self.conn.execute(
-            "SELECT register_id FROM register ORDER BY register_id"
+            if first_approved:
+                first_by_variant.setdefault(variant_id, {})[token] = first_approved
+            if last_approved:
+                last_by_variant.setdefault(variant_id, {})[token] = last_approved
+        for variant_id, register_id in self.conn.execute(
+            "SELECT register_variant_id, register_id FROM register_variant "
+            "ORDER BY register_variant_id"
         ).fetchall():
-            rid = register_id[0]
             yield IRDeliveryProvenance(
-                register_id=rid,
+                register_id=register_id,
+                register_variant_id=variant_id,
                 source_file="Registerinformation.csv",
                 delivery_version=None,
                 delivery_date=None,
                 template_version=None,
-                approval_dates=approvals.get(rid) or None,
+                first_approval_dates=first_by_variant.get(variant_id) or None,
+                last_approval_dates=last_by_variant.get(variant_id) or None,
             )
 
     def _emit_warnings(self) -> Iterator[IRObject]:
         # Triage-skip / projection-empty warnings. EMITTED for A4.2; the
-        # materializer DISCARDS these in A4.1 (resolved fork #1).
+        # materializer now WRITES these to the provenance DB (A4.2; resolved
+        # fork #1).
         stats = self.coalesce_stats
         n_collapsed = stats.get("n_triage_collapsed", 0)
         if n_collapsed:

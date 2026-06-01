@@ -174,10 +174,13 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
         IRDeliveryProvenance,
         {
             "register_id": 1,
+            "register_variant_id": 10,
             "source_file": "Registerinformation.csv",
             "delivery_version": "2024-08",
             "delivery_date": date(2024, 8, 15),
             "template_version": None,
+            "first_approval_dates": {"2020": "2020-06-01"},
+            "last_approval_dates": {"2020": "2021-01-15"},
         },
     ),
 }
@@ -342,9 +345,26 @@ def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:
             "universal_db_sha256": "TEXT",
             "build_date": "TEXT",
         }
-        # Empty by default.
-        (count,) = conn.execute("SELECT COUNT(*) FROM build_manifest").fetchone()
-        assert count == 0
+        # A4.2 added the population tables. All present, all empty in the
+        # create-empty helper (write_provenance_db is the populating variant).
+        tables = {
+            row[0]
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' "
+                "AND name NOT LIKE 'sqlite_%'"
+            )
+        }
+        assert tables == {
+            "build_manifest",
+            "scb_register_id_map",
+            "adapter_warning",
+            "source_checksum",
+            "source_row_count",
+            "delivery_approval",
+        }
+        for table in tables:
+            (count,) = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()  # noqa: S608
+            assert count == 0, f"{table} should be empty in create_empty"
     finally:
         conn.close()
 

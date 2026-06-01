@@ -538,23 +538,70 @@ IR-consuming materializer + G1/G4 scratch-coupling close-out are deferred to A4.
 
 **Estimate**: 5-7 days. Refactor only; no new functionality.
 
-### [ ] A4.2 — Deterministic IDs + provenance DB
+### [x] A4.2 — Deterministic IDs + provenance DB (PR #167)
 
-- SCB universal IDs verified to match source IDs verbatim (already the case from coalescer; this PR enforces and documents)
-- SOS ID mint scheme implemented (BLAKE2b, top-bit-namespaced)
+**Status:** Sibling `reg_meta.provenance.db` populated from A4.1's emitted IR +
+SCB debug data; SOS `mint` function + §16 namespace test landed; provenance
+keying re-grained per variant; §16 confinement assertion #1 (bundle) landed
+(#2/#3 → A5 forward criteria, hold by construction). "Deterministic IDs" =
+order-determinism (SCB IDs document-and-enforce only). Universal DB byte-identical
+(full dbdiff exit-0; **no `SCHEMA_VERSION` bump**); `source_checksums`/`row_counts`
+kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
+
+- **SCB universal IDs — document + enforce, do NOT re-mint.** Only
+  `register.register_id` (`int(RegisterId)`) and
+  `register_variant.register_variant_id` (`int(RegVarID)`) literally equal SCB
+  source ids; `variable_id` / `state_id` / `value_set_id` / `code_id` /
+  `classification.id` are build-assigned (AUTOINCREMENT / content-hash /
+  counter / TOML-seeded). The real SCB guarantee is *byte-identical given
+  identical CSV inputs* (order-determinism), enforced by the dbdiff gate
+  itself — re-minting any of the five synthetic ids would renumber ~7 content
+  tables and fail dbdiff. A4.2 ships a test asserting the two source-derived
+  ids round-trip and changes nothing in the universal DB. (The earlier "match
+  source IDs verbatim, already the case" wording was false for 5 of 7 ids.)
+- SOS ID mint scheme implemented (BLAKE2b, top-bit-namespaced) — `mint(*parts)`
+  in `reg_meta_build/src/reg_meta_build/id.py`, **function + test only** (no SOS
+  data ingested until A4.3; A4.3's `SOSAdapter` is the consumer).
 - Provenance DB populated by adapters — including the SCB-specific debug data
   (raw CSV checksums, import warnings, Registerversion approval dates) the
   A4.1 `SCBAdapter` already emits as `IRDeliveryProvenance` / `IRWarning`.
-  **Fix the A4.1 provenance keying when wiring population:** A4.1's
-  `_emit_provenance` keys approval dates per `register_id` (flat
-  `period_token → date`), which collapses across a register's variants and is
-  iteration-order-dependent (no `ORDER BY`). `IRDeliveryProvenance` is
-  per-register, so either re-grain per `register_variant`, include the variant
-  in the token, or add a deterministic last-wins rule. (Inert in A4.1 — the
-  objects are discarded — so this is A4.2's to resolve.)
-- `.prev` rotation verified in CI
-- **Property test: namespace invariant** (§16) — 10k random `mint(...)` inputs all land in `[2^62, 2^63)` (bit 62 set, bit 63 clear); SCB ID band `[0, 2^32)` is provably disjoint
-- **Provenance DB confinement test** (§16) — bundle amalgamator's import allow-list rejects modules that open `reg_meta.provenance.db`; FastAPI route introspection asserts no handler references the provenance path; deployment image excludes `reg_meta.provenance.db*` from the catalog volume mount
+  Sibling `reg_meta.provenance.db` only — dbdiff never opens it, so population
+  is dbdiff-neutral by construction. Tables: `build_manifest`
+  (`universal_db_sha256` of the finalized universal DB), `scb_register_id_map`,
+  `adapter_warning`, `source_checksum`, `source_row_count`, `delivery_approval`.
+  No `SCHEMA_VERSION` bump — these tables touch no universal-schema DDL.
+  Written via tmp→populate→rotate→rename AFTER the universal swap, in a
+  non-fatal try/except (a provenance failure must not flip the build exit code).
+  - **Resolved fork (c): provenance keying re-grained per `register_variant`.**
+    A4.1's `_emit_provenance` keyed approval dates per `register_id` (flat
+    `period_token → date`), collapsing across a register's variants and
+    iteration-order-dependent (no `ORDER BY`). A4.2 adds `register_variant_id`
+    to `IRDeliveryProvenance`, keys `delivery_approval` by
+    `(register_variant_id, period_token)`, adds `ORDER BY`, and reads BOTH
+    `registerversion_forstagodkannandedatum` (first-approval) and
+    `_senastgodkanddatum` (last-approval).
+  - **Resolved fork (d-i): `import_manifest` checksum/row-count removal
+    DEFERRED.** REFACTOR_SPEC §5.1/§5.8 move `source_checksums` + `row_counts`
+    OUT of the shipped `import_manifest`; removing them would change a *compared*
+    table and fail dbdiff. A4.2 keeps them in `import_manifest` (universal DB
+    unchanged, dbdiff exit-0) AND writes them to provenance. The REMOVAL is
+    deferred to A4.4+, where the baseline stops being the gate.
+- `.prev` rotation verified in CI — build-level test asserts the universal DB
+  and provenance DB rotate to `.prev` in lockstep, plus a silent-failure guard
+  (a provenance failure leaves the universal DB swapped in).
+- **Property test: namespace invariant** (§16) — 10k random `mint(...)` inputs all land in `[2^62, 2^63)` (bit 62 set, bit 63 clear); the minted band is STRUCTURALLY disjoint from the SCB source-ID band (`>= 2^62` vs `< 2^62`; the nominal SCB band `[0, 2^32)` is comfortably below)
+- **Provenance DB confinement test (§16) — assertion #1 ONLY in A4.2.** The
+  bundle amalgamator gate (`reg_monabundle/tests/test_build_mona_bundle.py`):
+  the MONA bundle amalgamates no module that imports `reg_meta` /
+  `reg_meta_build` or opens `reg_meta.provenance.db`. Assertions #2 and #3 are
+  forward acceptance criteria, deferred (see A5.2 / A5 step 6.5):
+  - **#2 (→ A5.2):** FastAPI route introspection asserts no handler references
+    the provenance path. Meaningful only once catalog/lineage routes exist
+    (A5.2); the property already holds by construction today —
+    `reg_webapp/backend` does not depend on `reg-meta-build`.
+  - **#3 (→ A5 step 6.5):** the deployment image excludes
+    `reg_meta.provenance.db*` from the catalog volume mount. Targets a
+    Dockerfile that does not exist until A5 step 6.5.
 
 **Estimate**: 2-3 days.
 
@@ -663,6 +710,7 @@ no `SCHEMA_VERSION` bump (read-only, no DDL).
 - ETag scheme verified to include the `?period` (and `?variant`) query in the cache key
 - Cloudflare edge-cache validation gate: small load test through Cloudflare confirms slash-bearing FQID paths still work cleanly with the new shapes
 - **Server-side input-validation gates** (§16): (a) `?period=` / `?variant=` parsers are an allow-list — malformed values (SQL-injection probes, path-traversal probes, embedded NULs) return 422 with zero SQL executed (verified via SQLite trace hook); (b) per-segment FQID grammar check rejects `.`, `..`, `%`-encoded variants, and any non-slug-grammar input with 422 and no DB hit. Parametrized tests cover both.
+- **Provenance-DB confinement assertion #2 (§16; forward criterion from A4.2).** FastAPI route introspection asserts no handler references the provenance path (`reg_meta.provenance.db`). Meaningful only once these catalog/lineage routes exist; the property already holds by construction (`reg_webapp/backend` does not depend on `reg-meta-build`, and `reg_meta` has no provenance constant), so this is a regression guard, not a fix.
 
 **Estimate**: 4-5 days.
 

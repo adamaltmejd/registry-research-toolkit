@@ -184,15 +184,27 @@ class IRWarning(_IRBase):
 
 
 class IRDeliveryProvenance(_IRBase):
-    """Goes to provenance DB only, not to the published catalog."""
+    """Goes to provenance DB only, not to the published catalog.
+
+    A4.2 re-grain (resolved fork (c)): keyed per `register_variant`, not per
+    register. `register_version` is grained by `register_variant_id`, so two
+    variants of a register delivering an edition under the same
+    `registerversionnamn` token previously collapsed into one dict slot (the
+    A4.1 known issue). One IRDeliveryProvenance is now emitted per variant.
+    """
 
     register_id: int
+    register_variant_id: int
     source_file: str
     delivery_version: str | None
     delivery_date: date | None
     template_version: str | None
-    # For SCB: maps period_token → last_approved_date.
-    approval_dates: dict[str, str] | None = None
+    # For SCB: maps period_token → first-approval date (registerversion_
+    # forstagodkannandedatum).
+    first_approval_dates: dict[str, str] | None = None
+    # For SCB: maps period_token → last-approval date (registerversion_
+    # senastgodkanddatum).
+    last_approval_dates: dict[str, str] | None = None
 
 
 __all__ = [

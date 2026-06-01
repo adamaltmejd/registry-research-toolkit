@@ -91,6 +91,29 @@ def test_bundle_does_not_carry_intra_package_imports(tmp_path: Path):
         assert "from mock_data_wizard" not in s, f"package import leaked: {line!r}"
 
 
+def _forbidden_bundle_imports(
+    src: str, exact: set[str], prefixes: tuple[str, ...]
+) -> list[str]:
+    """Walk every Import / ImportFrom in bundle source ``src`` and return the
+    forbidden module names. Checks BOTH the source module (``node.module``) and
+    the imported names, so a re-export form like ``from pkg import reg_schema``
+    is caught. ``exact`` matches whole module names; ``prefixes`` matches dotted
+    submodules. Shared by the §9.6 (pydantic/reg_schema) and §16 (reg_meta /
+    provenance) confinement gates."""
+    tree = ast.parse(src)
+    forbidden: list[str] = []
+    for node in ast.walk(tree):
+        modules: list[str] = []
+        if isinstance(node, ast.Import):
+            modules = [alias.name for alias in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            modules = [node.module or "", *(alias.name for alias in node.names)]
+        for mod in modules:
+            if mod in exact or mod.startswith(prefixes):
+                forbidden.append(mod)
+    return forbidden
+
+
 def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
     """§9.6 boundary gate: the MONA bundle must carry NO pydantic and NO
     reg_schema — neither as source text nor as a live AST import.
@@ -156,31 +179,80 @@ def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
                 f"strip all docstrings so the artifact is text-clean"
             )
 
-        # 2. AST import check — the structural proof. Walks every
-        # Import / ImportFrom node (any nesting depth) and asserts no
-        # forbidden module is imported (exact or dotted submodule). For
-        # `from X import Y` it checks BOTH the source module X (node.module)
-        # AND the imported names Y (node.names) so a re-export form like
-        # `from pkg import reg_schema` is caught too.
-        tree = ast.parse(src)
-        forbidden: list[str] = []
-        for node in ast.walk(tree):
-            modules: list[str] = []
-            if isinstance(node, ast.Import):
-                modules = [alias.name for alias in node.names]
-            elif isinstance(node, ast.ImportFrom):
-                modules = [node.module or "", *(alias.name for alias in node.names)]
-            for mod in modules:
-                if mod in ("pydantic", "reg_schema") or mod.startswith(
-                    ("pydantic.", "reg_schema.")
-                ):
-                    forbidden.append(mod)
+        # 2. AST import check — the structural proof: walk every Import /
+        # ImportFrom (any nesting depth) and assert no forbidden module is
+        # imported, checking BOTH the source module and the imported names so a
+        # re-export form like `from pkg import reg_schema` is caught too.
+        forbidden = _forbidden_bundle_imports(
+            src, {"pydantic", "reg_schema"}, ("pydantic.", "reg_schema.")
+        )
         assert not forbidden, (
             f"[{label}] bundle carries forbidden imports {sorted(set(forbidden))} "
             f"— the §9.6 boundary requires the bundle to be free of pydantic "
             f"and reg_schema. Validation is the build-time gate "
             f"(spec_loader.validate_project_data); the runtime deserializes "
             f"via loadedspec_from_dict."
+        )
+
+
+def test_bundle_carries_no_reg_meta_or_provenance(tmp_path: Path):
+    """§16 confinement assertion #1: the MONA bundle must amalgamate NO module
+    that imports `reg_meta` / `reg_meta_build` or opens the sibling provenance
+    DB (`reg_meta.provenance.db`).
+
+    The provenance DB is a maintainer-only build artifact that NEVER leaves the
+    build host — the bundle uploaded to MONA must have no path to it. `reg_meta`
+    is absent from the bundle's amalgamated prefixes (exactly like `reg_schema`),
+    so any module reaching the provenance DB would surface either a live
+    `import reg_meta[_build]` or the `reg_meta.provenance.db` filename string
+    this gate catches.
+
+    NOTE: unlike the pydantic/reg_schema gate, this does NOT raw-text-scan for
+    `reg_meta`. The bundle legitimately carries `reg_meta`-PREFIXED runtime
+    helpers (`_reg_meta_lookup`, `RegMetaSignal`, ...) that consult an EMBEDDED
+    signal table via a caller-supplied connection — those are not imports and
+    not provenance-DB opens. The structural proof is the AST import walk plus a
+    literal scan for the provenance-DB filename / its constant name.
+    """
+    from _project_data_fixtures import make_project_data
+
+    project_data = make_project_data(
+        sources=[
+            {
+                "name": "data.csv",
+                "bindings": [
+                    {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
+                ],
+            }
+        ]
+    )
+    for label, kwargs in (
+        ("sidecar", {}),
+        ("embedded", {"project_data": project_data}),
+    ):
+        out = reg_monabundle.build_bundle(tmp_path / f"{label}.py", **kwargs)
+        src = out.read_text(encoding="utf-8")
+
+        # 1. Provenance-DB reach as text — the filename or its constant name
+        # must not appear anywhere in the bundle.
+        for token in ("reg_meta.provenance.db", "PROVENANCE_DB_FILENAME"):
+            assert token not in src, (
+                f"[{label}] provenance-DB token {token!r} leaked into the bundle "
+                f"— the MONA bundle must have no path to the sibling provenance DB"
+            )
+
+        # 2. Import-graph proof — walk every Import / ImportFrom and assert no
+        # `reg_meta` / `reg_meta_build` (or `provenance` submodule) is imported,
+        # checking BOTH the source module and the imported names.
+        forbidden = _forbidden_bundle_imports(
+            src,
+            {"reg_meta", "reg_meta_build", "provenance"},
+            ("reg_meta.", "reg_meta_build."),
+        )
+        assert not forbidden, (
+            f"[{label}] bundle carries forbidden imports {sorted(set(forbidden))} "
+            f"— the §16 confinement boundary requires the bundle to be free of "
+            f"reg_meta / reg_meta_build (it would carry a path to the provenance DB)"
         )
 
 
