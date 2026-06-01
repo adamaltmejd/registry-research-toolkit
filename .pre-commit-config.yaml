@@ -7,6 +7,15 @@ repos:
       - id: ruff-format
   - repo: local
     hooks:
+      # ty (Astral, beta): unpinned via uvx to track latest, same as CI. Whole-program
+      # check, so pass_filenames: false. files gate skips doc-only commits.
+      - id: ty
+        name: ty check
+        entry: uvx ty check
+        language: system
+        pass_filenames: false
+        files: \.py$
+        stages: [pre-commit]
       - id: pytest
         name: pytest (parallel)
         entry: uv run python -m pytest -n auto -q
