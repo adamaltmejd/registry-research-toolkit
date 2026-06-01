@@ -281,6 +281,58 @@ class TestSchemaDiffs:
         assert report.schema_differs
         assert "idx_widget_name" in report.indexes_only_in_a
 
+    def test_inline_unique_column_change_caught(self, tmp_path: Path):
+        # Same columns, but the inline UNIQUE constraint moves a→b. Both DBs
+        # get a `sqlite_autoindex_*` index with the SAME name and NULL sql, and
+        # PRAGMA table_info is identical — only the CREATE statement differs.
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, ddl in (
+            (a, "CREATE TABLE t (a INTEGER, b INTEGER, UNIQUE(a))"),
+            (b, "CREATE TABLE t (a INTEGER, b INTEGER, UNIQUE(b))"),
+        ):
+            conn = sqlite3.connect(path)
+            conn.execute(ddl)
+            conn.commit()
+            conn.close()
+        report = diff_db_content(a, b)
+        assert report.schema_differs
+        cd = next(c for c in report.column_diffs if c.table == "t")
+        assert cd.definition_differs
+        assert not cd.only_in_a and not cd.only_in_b  # columns are identical
+        assert "UNIQUE(a)" in cd.create_sql_a and "UNIQUE(b)" in cd.create_sql_b
+
+    def test_check_constraint_change_caught(self, tmp_path: Path):
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, ddl in (
+            (a, "CREATE TABLE t (n INTEGER CHECK (n > 0))"),
+            (b, "CREATE TABLE t (n INTEGER CHECK (n >= 0))"),
+        ):
+            conn = sqlite3.connect(path)
+            conn.execute(ddl)
+            conn.commit()
+            conn.close()
+        report = diff_db_content(a, b)
+        assert report.schema_differs
+        assert any(c.definition_differs for c in report.column_diffs)
+
+    def test_whitespace_run_ddl_change_ignored(self, tmp_path: Path):
+        # Reindentation / extra spaces / trailing newline between tokens is
+        # collapsed, so it does not register as a schema difference (the tokens
+        # are unchanged).
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, ddl in (
+            (a, "CREATE TABLE t (a INTEGER, b INTEGER)"),
+            (b, "CREATE TABLE  t  (a   INTEGER,  b INTEGER)\n"),
+        ):
+            conn = sqlite3.connect(path)
+            conn.execute(ddl)
+            conn.commit()
+            conn.close()
+        assert diff_db_content(a, b).identical
+
 
 # --------------------------------------------------------------------------
 # Ignore list
@@ -345,6 +397,32 @@ class TestIgnore:
         assert "name" not in widget.columns
         assert widget.identical
 
+    def test_drop_all_columns_is_count_only(self, db_a: Path, tmp_path: Path):
+        # Dropping every column must not emit invalid SQL — it degrades to a
+        # count-only comparison. Same row count (despite differing values) =>
+        # identical.
+        b = tmp_path / "b.db"
+        _build(b, widgets=[(1, "ALPHA", b"\xaa", 1), *_WIDGETS[1:]])
+        all_cols = frozenset({"id", "name", "payload", "source_id"})
+        ignore = {"widget": TableIgnore(drop_columns=all_cols)}
+        report = diff_db_content(db_a, b, ignore=ignore)
+        widget = next(r for r in report.table_results if r.table == "widget")
+        assert widget.columns == ()
+        assert widget.identical  # equal counts, no columns compared
+
+    def test_drop_all_columns_catches_count_delta(self, db_a: Path, tmp_path: Path):
+        # Count-only comparison still catches a row-count difference (and emits
+        # no sample rows, since the rows are indistinguishable).
+        b = tmp_path / "b.db"
+        _build(b, widgets=[*_WIDGETS, (4, "delta", None, 4)])
+        all_cols = frozenset({"id", "name", "payload", "source_id"})
+        ignore = {"widget": TableIgnore(drop_columns=all_cols)}
+        report = diff_db_content(db_a, b, ignore=ignore)
+        widget = next(r for r in report.table_results if r.table == "widget")
+        assert not widget.identical
+        assert widget.count_a == 3 and widget.count_b == 4
+        assert widget.sample_a_not_b == () and widget.sample_b_not_a == ()
+
 
 # --------------------------------------------------------------------------
 # FTS exclusion + storage-class edge
@@ -384,6 +462,25 @@ class TestFtsAndStorageClass:
         assert not any(t.startswith("doc_fts_") for t in compared)
         # Divergent FTS index bytes do not break content identity.
         assert report.identical
+
+    def test_fts_option_change_caught(self, tmp_path: Path):
+        # FTS content is excluded, but an option change (tokenizer) alters
+        # search behavior and must still be caught via the CREATE statement —
+        # the virtual table's columns (PRAGMA table_info) are unchanged.
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, tok in ((a, "unicode61"), (b, "porter")):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE doc (id INTEGER PRIMARY KEY, body TEXT)")
+            conn.execute(
+                f"CREATE VIRTUAL TABLE doc_fts USING fts5(body, tokenize='{tok}')"
+            )
+            conn.commit()
+            conn.close()
+        report = diff_db_content(a, b)
+        assert report.schema_differs
+        cd = next(c for c in report.column_diffs if c.table == "doc_fts")
+        assert cd.definition_differs
 
     def test_storage_class_note(self, tmp_path: Path):
         # A no-affinity column storing INTEGER 1 in A vs REAL 1.0 in B: the

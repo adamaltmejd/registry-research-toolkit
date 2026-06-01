@@ -15,8 +15,12 @@ compares *content*, order-independently.
 What it does (see the four numbered requirements in the A4.1 brief):
 
 1. **Schema compare** — same set of tables, and per table the same column
-   names/types/order/NOT NULL/default/PK, plus the same indexes (named and
-   auto). Tables/columns/indexes present in only one DB are reported.
+   names/types/order/NOT NULL/default/PK plus the same normalized CREATE
+   statement, and the same indexes. Comparing the CREATE text catches what
+   `PRAGMA table_info` cannot: table-level UNIQUE/CHECK/FK constraints (so a
+   `UNIQUE(a)` → `UNIQUE(b)` change, which leaves the `sqlite_autoindex_*` name
+   identical, is still flagged) and FTS5 options (tokenize, content,
+   content_rowid). Tables/columns/indexes present in only one DB are reported.
 
 2. **Per-table content compare, order- and BLOB-safe** — for every user
    content table, compare row COUNT and an order-independent *multiset*
@@ -128,10 +132,25 @@ class ColumnDiff:
     # (column, a_definition, b_definition) for columns present in both whose
     # type/order/notnull/default/pk differ.
     mismatched: tuple[tuple[str, str, str], ...]
+    # Normalized CREATE statements when they differ (else both ""). Catches
+    # what PRAGMA table_info can't see: table-level UNIQUE/CHECK/FK constraints
+    # and FTS5 options (tokenize, content, content_rowid). May be set even when
+    # the column lists match (a pure constraint/option change).
+    create_sql_a: str = ""
+    create_sql_b: str = ""
+
+    @property
+    def definition_differs(self) -> bool:
+        return self.create_sql_a != self.create_sql_b
 
     @property
     def differs(self) -> bool:
-        return bool(self.only_in_a or self.only_in_b or self.mismatched)
+        return bool(
+            self.only_in_a
+            or self.only_in_b
+            or self.mismatched
+            or self.definition_differs
+        )
 
 
 @dataclass(frozen=True)
@@ -232,7 +251,12 @@ class _Schema:
     # table name -> tuple of column defs (name, type, notnull, dflt, pk) in
     # cid order. Covers regular, virtual, and FTS-shadow tables (not sqlite_*).
     tables: dict[str, tuple[tuple[str, str, int, str | None, int], ...]]
-    # index name -> CREATE sql ("" for auto-indexes, which have NULL sql).
+    # table name -> normalized CREATE sql (whitespace-collapsed). Carries the
+    # full definition table_info drops: table-level UNIQUE/CHECK/FK constraints,
+    # WITHOUT ROWID, and FTS5 virtual-table options.
+    table_sql: dict[str, str]
+    # index name -> CREATE sql ("" for auto-indexes, which have NULL sql; their
+    # defining constraint lives in the owning table's table_sql instead).
     indexes: dict[str, str]
     virtual_tables: frozenset[str]
     shadow_tables: frozenset[str]
@@ -260,12 +284,26 @@ def _read_schema(conn: sqlite3.Connection) -> _Schema:
         if any(name == f"{vt}_{suf}" for vt in virtual for suf in _FTS_SHADOW_SUFFIXES)
     )
     tables = {name: _table_info(conn, name) for name in table_names}
+    table_sql = {
+        r["name"]: _normalize_sql(r["sql"])
+        for r in master
+        if r["type"] == "table" and r["name"] in set(table_names)
+    }
     indexes = {
         r["name"]: (r["sql"] or "")
         for r in master
         if r["type"] == "index" and not r["name"].startswith("sqlite_stat")
     }
-    return _Schema(tables, indexes, virtual, shadow)
+    return _Schema(tables, table_sql, indexes, virtual, shadow)
+
+
+def _normalize_sql(sql: str | None) -> str:
+    """Collapse runs of whitespace between tokens in a CREATE statement, so
+    reindentation / reflowing does not register as a schema difference, while
+    any token change (a constraint, an FTS option, a renamed column) still
+    does. (Token-adjacency spacing like ``(a`` vs ``( a`` is preserved — for
+    the rebuild gate both DBs share one DDL string, so it never differs.)"""
+    return " ".join((sql or "").split())
 
 
 def _table_info(
@@ -323,7 +361,10 @@ def _row_hash(values: Sequence[object]) -> int:
 
 
 def _select_sql(table: str, columns: Sequence[str], skip_where: str | None) -> str:
-    cols = ", ".join(f'"{c}"' for c in columns)
+    # ``columns`` can be empty if an ignore rule dropped every column; fall back
+    # to a constant projection so the fingerprint degrades to a count-only
+    # comparison (every row hashes identically) instead of emitting invalid SQL.
+    cols = ", ".join(f'"{c}"' for c in columns) if columns else "1"
     sql = f'SELECT {cols} FROM "{table}"'
     if skip_where:
         sql += f" WHERE NOT ({skip_where})"
@@ -375,13 +416,23 @@ def _diff_samples(
     Uses ``SELECT ... 1 FROM a UNION ALL SELECT ... -1 FROM b`` grouped by all
     compared columns; ``SUM`` of the +1/-1 tags gives the net multiplicity per
     distinct row. Net > 0 → A has extra copies; net < 0 → B does. The GROUP BY
-    runs in SQLite (spilling to its temp store), keeping Python memory flat
-    even for multi-million-row tables. NULLs group together and BLOBs compare
-    by bytes, both of which match the fingerprint's NULL-aware/byte semantics.
+    runs in SQLite with ``PRAGMA temp_store = FILE``, so the working set spills
+    to an on-disk temp file rather than RAM, keeping Python memory flat even for
+    multi-million-row tables. NULLs group together and BLOBs compare by bytes,
+    both of which match the fingerprint's NULL-aware/byte semantics.
+
+    Returns empty samples when ``columns`` is empty (every column ignored): the
+    rows are then indistinguishable, so only the count delta is meaningful and
+    it is already reported by the fingerprint pass.
     """
+    if not columns:
+        return (), ()
     conn = sqlite3.connect("file::memory:?cache=private", uri=True)
     try:
         conn.row_factory = sqlite3.Row
+        # Force the GROUP BY sorter to spill to disk (default temp_store is
+        # build-dependent and may be MEMORY).
+        conn.execute("PRAGMA temp_store = FILE")
         conn.execute("ATTACH DATABASE ? AS a", (f"file:{db_a}?mode=ro",))
         conn.execute("ATTACH DATABASE ? AS b", (f"file:{db_b}?mode=ro",))
         cols = ", ".join(f'"{c}"' for c in columns)
@@ -471,7 +522,16 @@ def _compare_schema(schema_a: _Schema, schema_b: _Schema, report: DiffReport) ->
             for name in cols_a
             if name in cols_b and cols_a[name] != cols_b[name]
         )
-        cd = ColumnDiff(table, only_a, only_b, mismatched)
+        sql_a = schema_a.table_sql.get(table, "")
+        sql_b = schema_b.table_sql.get(table, "")
+        cd = ColumnDiff(
+            table,
+            only_a,
+            only_b,
+            mismatched,
+            create_sql_a=sql_a if sql_a != sql_b else "",
+            create_sql_b=sql_b if sql_a != sql_b else "",
+        )
         if cd.differs:
             column_diffs.append(cd)
     report.column_diffs = tuple(column_diffs)
@@ -634,6 +694,12 @@ def format_report(report: DiffReport) -> str:
                 out.append(f"  {cd.table}: column only in B: {c}")
             for name, a_def, b_def in cd.mismatched:
                 out.append(f"  {cd.table}.{name}: A[{a_def}] != B[{b_def}]")
+            if cd.definition_differs:
+                out.append(
+                    f"  {cd.table}: table definition differs (constraints/options)"
+                )
+                out.append(f"      A: {cd.create_sql_a}")
+                out.append(f"      B: {cd.create_sql_b}")
         for i in report.indexes_only_in_a:
             out.append(f"  index only in A: {i}")
         for i in report.indexes_only_in_b:
@@ -701,6 +767,7 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
                     "only_in_a": list(cd.only_in_a),
                     "only_in_b": list(cd.only_in_b),
                     "mismatched": [m[0] for m in cd.mismatched],
+                    "definition_differs": cd.definition_differs,
                 }
                 for cd in report.column_diffs
             ],
