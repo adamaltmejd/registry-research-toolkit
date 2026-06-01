@@ -186,7 +186,15 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
     openapi_extra={
         "requestBody": {
             "required": True,
-            "content": {"application/json": {"schema": {"type": "object"}}},
+            "content": {
+                "application/json": {
+                    # `additionalProperties: true` → openapi-typescript emits an OPEN
+                    # object (`Record<string, unknown>`); a bare `type: object` would
+                    # codegen as `Record<string, never>` (empty), unassignable from a
+                    # real project_data.json.
+                    "schema": {"type": "object", "additionalProperties": True}
+                }
+            },
         }
     },
 )
@@ -248,7 +256,15 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultMo
     openapi_extra={
         "requestBody": {
             "required": True,
-            "content": {"application/json": {"schema": {"type": "object"}}},
+            "content": {
+                "application/json": {
+                    # `additionalProperties: true` → openapi-typescript emits an OPEN
+                    # object (`Record<string, unknown>`); a bare `type: object` would
+                    # codegen as `Record<string, never>` (empty), unassignable from a
+                    # real project_data.json.
+                    "schema": {"type": "object", "additionalProperties": True}
+                }
+            },
         }
     },
 )

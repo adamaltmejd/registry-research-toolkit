@@ -1252,6 +1252,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": true,
                 "type": "object"
               }
             }
@@ -1725,6 +1726,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": true,
                 "type": "object"
               }
             }
@@ -1750,6 +1752,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": true,
                 "type": "object"
               }
             }

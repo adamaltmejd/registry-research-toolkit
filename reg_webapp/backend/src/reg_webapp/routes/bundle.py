@@ -74,7 +74,14 @@ router = APIRouter(prefix="/api")
     openapi_extra={
         "requestBody": {
             "required": True,
-            "content": {"application/json": {"schema": {"type": "object"}}},
+            "content": {
+                "application/json": {
+                    # Open object (Record<string, unknown>) so the codegen'd client
+                    # can post a real project_data.json — a bare `type: object`
+                    # codegens to the empty `Record<string, never>`.
+                    "schema": {"type": "object", "additionalProperties": True}
+                }
+            },
         }
     },
 )
