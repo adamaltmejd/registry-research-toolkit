@@ -892,6 +892,27 @@ def test_member_composite_time_key_kind_mismatch() -> None:
     assert "time_key_member_kind_mismatch" in _codes(result)
 
 
+def test_member_composite_kind_mismatch_does_not_also_fire_inconsistent() -> None:
+    # A composite override whose kind differs from the panel-level
+    # composite kind is a kind mismatch, not an ordering inconsistency.
+    # Feeding the cross-kind tuple into the §6.8.1 ordering check would
+    # double-fire `composite_key_inconsistent` (a ref tuple can never
+    # equal a canonicalized literal tuple) and leak the internal literal
+    # canonical form into the message. Only the kind-mismatch code fires.
+    #
+    # Needs ≥2 composites in the accumulator to exercise the ordering
+    # check: a string member inherits the panel-level literal composite,
+    # the object member overrides with a ref composite.
+    spec = _spec_with_panels(
+        time_key=[2018, 2019],
+        members=["lisa_2018", {"source": "lisa_2019", "time_key": ["AR", "AR"]}],
+    )
+    result = validate_structural(spec)
+    codes = _codes(result)
+    assert "time_key_member_kind_mismatch" in codes
+    assert "composite_key_inconsistent" not in codes
+
+
 def test_panel_member_must_be_string_or_object() -> None:
     spec = _spec_with_panels()
     spec["panels"][0]["members"][0] = 42
