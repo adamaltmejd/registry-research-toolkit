@@ -142,6 +142,20 @@ def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
                 f"[{label}] reg_schema import leaked: {line!r}"
             )
 
+        # 1b. Text scan — the bundle must be free of the forbidden tokens
+        # as *text*, not just as imports. ``_slice_module`` drops every
+        # module/class/function docstring (the only place these survived
+        # ``ast.unparse``, which already discards ``#`` comments), so the
+        # artifact carries zero ``reg_schema`` / ``pydantic`` mentions.
+        # Case-insensitive to also catch the ``Pydantic`` prose form.
+        lower = src.lower()
+        for token in ("reg_schema", "pydantic"):
+            assert token not in lower, (
+                f"[{label}] forbidden token {token!r} appears as text in the "
+                f"bundle (likely a surviving docstring) — _slice_module should "
+                f"strip all docstrings so the artifact is text-clean"
+            )
+
         # 2. AST import check — the structural proof. Walks every
         # Import / ImportFrom node (any nesting depth) and asserts no
         # forbidden module is imported (exact or dotted submodule). For

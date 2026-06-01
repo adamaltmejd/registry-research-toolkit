@@ -24,11 +24,15 @@ pure-stdlib §6.8.2 block validator). ``reg_schema`` is therefore never
 amalgamated; the source-scan gate in ``test_build_mona_bundle.py``
 enforces the no-Pydantic invariant.
 
-Each module's top-level docstring and all ``#`` comments are dropped
-during amalgamation (class/method docstrings are kept as inert string
-literals — they carry no import, so they don't affect the §9.6
-boundary). The repo source remains the documentation; the bundle is
-the artifact.
+Each module's docstrings (module-, class-, and function-level) and all
+``#`` comments are dropped during amalgamation: ``ast.unparse`` does not
+preserve comments, and ``_slice_module`` strips the leading
+string-literal statement from the module body and from every nested
+class / function body. Class/method docstrings carry no import, so they
+never affected the §9.6 boundary — but several mentioned ``reg_schema``
+/ Pydantic, so dropping them keeps the artifact text-clean (and slightly
+smaller). The repo source remains the documentation; the bundle is the
+artifact.
 
 The ``project_data.json`` may be embedded at build time via
 ``build_bundle(..., project_data=...)``; the runner deserializes it and
@@ -447,15 +451,51 @@ def _is_amalgamated_module(name: str, prefixes: tuple[str, ...]) -> bool:
     return any(name == p or name.startswith(p + ".") for p in prefixes)
 
 
-def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
-    """Read a module, drop docstring + __future__ + intra-pkg imports.
+def _strip_def_docstrings(module: ast.Module) -> None:
+    """Drop the leading docstring from every class / function in ``module``.
 
-    Also drops top-level imports of any amalgamated package
-    (``reg_monabundle`` and the caller's runtime package name). Both
-    ``from X import Y`` and ``import X`` forms are handled. The remaining
-    body (functions, classes, constants, dataclasses, stdlib imports) is
-    rendered via ``ast.unparse`` -- ``#`` comments are not preserved
-    (they live in the source modules in the repo).
+    ``ast.unparse`` preserves string-literal expression statements, so a
+    class or method docstring would otherwise survive into the bundle as
+    inert text. Several of those docstrings mention ``reg_schema`` /
+    Pydantic; the text carries no import (so it never breached the §9.6
+    boundary), but dropping it keeps the artifact text-clean and slightly
+    smaller. The module-level docstring is stripped separately by
+    ``_slice_module`` (it precedes the import filtering).
+
+    A def whose entire body was only a docstring keeps a ``pass`` so the
+    unparsed result stays valid Python. Walks every nesting depth
+    (methods, nested functions/classes). Materialize the node list before
+    mutating so removing a leaf docstring mid-walk can't perturb the walk.
+    """
+    defs = [
+        node
+        for node in ast.walk(module)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+    ]
+    for node in defs:
+        body = node.body
+        if (
+            body
+            and isinstance(body[0], ast.Expr)
+            and isinstance(body[0].value, ast.Constant)
+            and isinstance(body[0].value.value, str)
+        ):
+            del body[0]
+            if not body:
+                body.append(ast.Pass())
+
+
+def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
+    """Read a module, drop docstrings + __future__ + intra-pkg imports.
+
+    Drops the module docstring AND every nested class/function docstring
+    (see ``_strip_def_docstrings``). Also drops top-level imports of any
+    amalgamated package (``reg_monabundle`` and the caller's runtime
+    package name). Both ``from X import Y`` and ``import X`` forms are
+    handled. The remaining body (functions, classes, constants,
+    dataclasses, stdlib imports) is rendered via ``ast.unparse`` -- ``#``
+    comments are not preserved (they live in the source modules in the
+    repo).
     """
     src = path.read_text(encoding="utf-8")
     tree = ast.parse(src)
@@ -476,6 +516,17 @@ def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
                 continue
             if node.level > 0:
                 continue
+            # Keyed on ``node.module`` only (not ``node.names``): an
+            # ImportFrom sources every name from a single module, so
+            # ``node.module`` is the correct drop key. The §9.6 gate
+            # additionally scans ``node.names``, but that asymmetry can't
+            # hide a leak — ``reg_schema`` is not an amalgamated prefix
+            # (see ``_STATIC_AMALGAMATED_PREFIXES``), so a stray
+            # ``from reg_schema import X`` is NOT dropped here, survives
+            # into the bundle, and the gate catches it. Scanning names
+            # here would only let us drop a re-export like
+            # ``from amalgamated_pkg import reg_schema`` — which doesn't
+            # exist and isn't an intra-package import to inline.
             if node.module and _is_amalgamated_module(node.module, drop_prefixes):
                 continue
         elif isinstance(node, ast.Import) and all(
@@ -490,7 +541,9 @@ def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
             continue
         kept.append(node)
 
-    return ast.unparse(ast.Module(body=kept, type_ignores=[]))
+    module = ast.Module(body=kept, type_ignores=[])
+    _strip_def_docstrings(module)
+    return ast.unparse(module)
 
 
 CONFIGURE_PLACEHOLDER = "# __MDW_CONFIGURE_BLOCK__"
