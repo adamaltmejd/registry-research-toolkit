@@ -372,6 +372,96 @@
         "title": "LineageEdgeModel",
         "type": "object"
       },
+      "LineageResponse": {
+        "description": "`GET /api/catalog/{fqid}/lineage` \u2014 consumer-side lineage edges (\u00a75.6).\n\nMaps what `reg_meta.LineageEdge` carries (consumer/source state ids, the\nvalidity intersection, source_fqid). The \u00a79.5 richer per-source-state shape\n(embedding each source state's variant / value_set / column) is a possible\nreg_meta enhancement, NOT blocked on here \u2014 see DESIGN.md.",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "lineage_edges": {
+            "items": {
+              "$ref": "#/components/schemas/LineageEdgeModel"
+            },
+            "title": "Lineage Edges",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "lineage_edges"
+        ],
+        "title": "LineageResponse",
+        "type": "object"
+      },
+      "LineageWarningModel": {
+        "description": "A build-time lineage warning for a consumer state (\u00a75.6):\n`variable_state_lineage_warning`. `warning_kind` is `no_source_state` or\n`ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`.",
+        "properties": {
+          "consumer_state_id": {
+            "title": "Consumer State Id",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "warning_kind": {
+            "title": "Warning Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "consumer_state_id",
+          "warning_kind",
+          "message"
+        ],
+        "title": "LineageWarningModel",
+        "type": "object"
+      },
+      "LineageWarningsResponse": {
+        "description": "`GET /api/catalog/{fqid}/lineage_warnings` \u2014 build-time lineage warnings\n(\u00a75.6 / \u00a79.5). Empty list when lineage resolved cleanly.",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "lineage_warnings": {
+            "items": {
+              "$ref": "#/components/schemas/LineageWarningModel"
+            },
+            "title": "Lineage Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "lineage_warnings"
+        ],
+        "title": "LineageWarningsResponse",
+        "type": "object"
+      },
+      "PredecessorsResponse": {
+        "description": "`GET /api/catalog/{fqid}/predecessors` \u2014 inbound succession (\u00a79.5).",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "predecessors": {
+            "items": {
+              "$ref": "#/components/schemas/VariableRefModel"
+            },
+            "title": "Predecessors",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "predecessors"
+        ],
+        "title": "PredecessorsResponse",
+        "type": "object"
+      },
       "ProviderNode": {
         "description": "A provider node (1-seg FQID, e.g. `scb`). A child of the root and a\nresolvable node (its `children` are the provider's registers).",
         "properties": {
@@ -610,6 +700,28 @@
         "title": "RelatedRefModel",
         "type": "object"
       },
+      "RelatedResponse": {
+        "description": "`GET /api/catalog/{fqid}/related` \u2014 split-sibling edges (\u00a75.7 / \u00a79.5).",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "related": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedRefModel"
+            },
+            "title": "Related",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "related"
+        ],
+        "title": "RelatedResponse",
+        "type": "object"
+      },
       "RootResponse": {
         "description": "`GET /api/catalog` \u2014 the catalog root: every provider plus the\nclassification-root sentinel (\u00a79.5).",
         "properties": {
@@ -640,6 +752,28 @@
         "title": "RootResponse",
         "type": "object"
       },
+      "StatesResponse": {
+        "description": "`GET /api/catalog/{fqid}/states` \u2014 the binding's full state history (\u00a79.5).\nSame `states` shape the binding leaf embeds, as a standalone envelope. With a\n`?period` query on the catch-all this same shape carries the resolve_at\nsubset (uniform: codegen sees one state-list type).",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/VariableStateModel"
+            },
+            "title": "States",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "states"
+        ],
+        "title": "StatesResponse",
+        "type": "object"
+      },
       "StewardInfo": {
         "description": "Deployment identity + branding, from ``steward.toml`` (\u00a79.1).",
         "properties": {
@@ -662,6 +796,28 @@
           "long_name"
         ],
         "title": "StewardInfo",
+        "type": "object"
+      },
+      "SuccessorsResponse": {
+        "description": "`GET /api/catalog/{fqid}/successors` \u2014 outbound succession (\u00a79.5).",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "successors": {
+            "items": {
+              "$ref": "#/components/schemas/VariableRefModel"
+            },
+            "title": "Successors",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "successors"
+        ],
+        "title": "SuccessorsResponse",
         "type": "object"
       },
       "ValidationError": {
@@ -883,6 +1039,53 @@
         "title": "VariableStateModel",
         "type": "object"
       },
+      "VariantModel": {
+        "description": "One register variant (the `register_variant` sub-resource, \u00a79.5) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID, \u00a75.0.1), so it carries the variant `slug` (the browse\ncoordinate) + display fields, not an `Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. The \u00a79.5 `panel_*` fields are NOT here \u2014\nthose columns don't exist on `register_variant` yet (A4.4 curation).",
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "display_group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Group"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "title": "VariantModel",
+        "type": "object"
+      },
       "VariantsRef": {
         "description": "Forward-declared reference to a register's variant browser (A5.2). A\ndeclared slot so the discriminated union / TS types are stable before the\n`/{provider}/{register}/variants` sub-resource exists \u2014 `available` is False\nuntil A5.2 wires it.",
         "properties": {
@@ -906,6 +1109,28 @@
           "register_fqid"
         ],
         "title": "VariantsRef",
+        "type": "object"
+      },
+      "VariantsResponse": {
+        "description": "`GET /api/catalog/{provider}/{register}/variants` \u2014 the variant browser\n(\u00a79.5). The wire key `register` is the 2-seg register FQID; `variants` the\nregister's `register_variant` sub-resource list.\n\nThe Python attr is `register_name` (aliased to `register`) for the same reason\nas `VariableRefModel`: a bare `register` field shadows `BaseModel.register` (a\nPydantic v2 method) and warns. FastAPI serializes by alias, so the wire key\nstays `register`; the alias is also the canonical init param.",
+        "properties": {
+          "register": {
+            "title": "Register",
+            "type": "string"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/VariantModel"
+            },
+            "title": "Variants",
+            "type": "array"
+          }
+        },
+        "required": [
+          "register",
+          "variants"
+        ],
+        "title": "VariantsResponse",
         "type": "object"
       },
       "WebappInfo": {
@@ -958,7 +1183,7 @@
     },
     "/api/catalog/{fqid}": {
       "get": {
-        "description": "Resolve any catalog node by FQID path.\n\nThe \u00a716 per-segment allow-list runs as the `_validated_fqid` dependency, which\nFastAPI resolves before this body \u2014 so a malformed / traversal-shaped path\nreturns 422 **before** any connection opens (no DB hit at all). `parse` is\nDB-free and runs BEFORE the connection opens too, so a grammar/arity-invalid\npath (e.g. a reserved literal in an illegal slot) also 422s with no open. The\nclassification-root literal `class` (1 seg) is special-cased before `parse`.\n`@version` is validated but not yet narrowing (A5.2 `?value_set_version`); the\nbare 3-seg FQID is handed to `parse`/`resolve`. The connection is opened and\nused within this sync body (one thread \u2014 see `_catalog_conn`).",
+        "description": "Resolve any catalog node by FQID path; on a binding leaf, an optional\n`?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at\nstate subset.\n\nThe \u00a716 guards (`_validated_fqid` for the path, `_validated_period` /\n`_validated_variant` for the queries) run as dependencies, BEFORE this body \u2014\nso a malformed path OR a malformed period/variant returns 422 **before** any\nconnection opens (zero SQL, zero opens). `parse` is DB-free and runs before\nthe open too. The classification-root literal `class` (1 seg) is special-cased\nbefore `parse`.\n\n`?period` semantics (\u00a79.5): present + binding leaf \u2192 `{states: [...]}` (the\nresolve_at subset, narrowed by `?variant` / `?value_set_version`; the leaf's\n`@version` pin reconciles with `?value_set_version` \u2014 equal/one-sided uses it,\nconflicting is 422). present + non-binding kind \u2192 IGNORED (resolve normally).\nabsent \u2192 the full node (binding leaf embeds full history). The connection is\nopened and used within this sync body (one thread \u2014 see `_catalog_conn`).",
         "operationId": "get_catalog_node_api_catalog__fqid__get",
         "parameters": [
           {
@@ -969,6 +1194,54 @@
               "title": "Fqid",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "period",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Period"
+            }
+          },
+          {
+            "in": "query",
+            "name": "variant",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Variant"
+            }
+          },
+          {
+            "in": "query",
+            "name": "value_set_version",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Value Set Version"
+            }
           }
         ],
         "responses": {
@@ -976,31 +1249,38 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "discriminator": {
-                    "mapping": {
-                      "binding": "#/components/schemas/BindingNode",
-                      "classification": "#/components/schemas/ClassificationNode",
-                      "classification-root": "#/components/schemas/ClassificationRootResponse",
-                      "provider": "#/components/schemas/ProviderResponse",
-                      "register": "#/components/schemas/RegisterResponse"
-                    },
-                    "propertyName": "kind"
-                  },
-                  "oneOf": [
+                  "anyOf": [
                     {
-                      "$ref": "#/components/schemas/ProviderResponse"
+                      "discriminator": {
+                        "mapping": {
+                          "binding": "#/components/schemas/BindingNode",
+                          "classification": "#/components/schemas/ClassificationNode",
+                          "classification-root": "#/components/schemas/ClassificationRootResponse",
+                          "provider": "#/components/schemas/ProviderResponse",
+                          "register": "#/components/schemas/RegisterResponse"
+                        },
+                        "propertyName": "kind"
+                      },
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/ProviderResponse"
+                        },
+                        {
+                          "$ref": "#/components/schemas/RegisterResponse"
+                        },
+                        {
+                          "$ref": "#/components/schemas/BindingNode"
+                        },
+                        {
+                          "$ref": "#/components/schemas/ClassificationRootResponse"
+                        },
+                        {
+                          "$ref": "#/components/schemas/ClassificationNode"
+                        }
+                      ]
                     },
                     {
-                      "$ref": "#/components/schemas/RegisterResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/BindingNode"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ClassificationRootResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ClassificationNode"
+                      "$ref": "#/components/schemas/StatesResponse"
                     }
                   ],
                   "title": "Response Get Catalog Node Api Catalog  Fqid  Get"
@@ -1021,6 +1301,295 @@
           }
         },
         "summary": "Get Catalog Node"
+      }
+    },
+    "/api/catalog/{fqid}/lineage": {
+      "get": {
+        "description": "Consumer-side composite lineage edges (state grain, \u00a75.6). Maps what\nreg_meta's `LineageEdge` carries; the \u00a79.5 richer per-source-state shape is a\npossible reg_meta enhancement (not blocked on here \u2014 see DESIGN.md).",
+        "operationId": "get_binding_lineage_api_catalog__fqid__lineage_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineageResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Lineage"
+      }
+    },
+    "/api/catalog/{fqid}/lineage_warnings": {
+      "get": {
+        "description": "Build-time lineage warnings for the binding (\u00a75.6). Empty when lineage\nresolved cleanly. The leaf does NOT embed these \u2014 this is their endpoint.",
+        "operationId": "get_binding_lineage_warnings_api_catalog__fqid__lineage_warnings_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineageWarningsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Lineage Warnings"
+      }
+    },
+    "/api/catalog/{fqid}/predecessors": {
+      "get": {
+        "description": "Variables this binding's variable replaced (inbound succession, \u00a79.5).",
+        "operationId": "get_binding_predecessors_api_catalog__fqid__predecessors_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredecessorsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Predecessors"
+      }
+    },
+    "/api/catalog/{fqid}/related": {
+      "get": {
+        "description": "Split-sibling variables (variable grain, \u00a75.7).",
+        "operationId": "get_binding_related_api_catalog__fqid__related_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RelatedResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Related"
+      }
+    },
+    "/api/catalog/{fqid}/states": {
+      "get": {
+        "description": "Full state history for a binding (\u00a79.5). \u2261 the leaf's embedded `states`,\nstandalone. Same shape the `?period` catch-all returns (codegen sees one\nstate-list type).",
+        "operationId": "get_binding_states_api_catalog__fqid__states_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding States"
+      }
+    },
+    "/api/catalog/{fqid}/successors": {
+      "get": {
+        "description": "Variables that replaced this binding's variable (outbound succession).",
+        "operationId": "get_binding_successors_api_catalog__fqid__successors_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessorsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Successors"
+      }
+    },
+    "/api/catalog/{provider}/{register}/variants": {
+      "get": {
+        "description": "List a register's variants (the `?variant=` browse axis, \u00a79.5). `_default`\nis a real variant and IS returned (not filtered). 404 when the register\ndoesn't resolve (so a typo'd register isn't a silent empty list).",
+        "operationId": "get_register_variants_api_catalog__provider___register__variants_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "register",
+            "required": true,
+            "schema": {
+              "title": "Register",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VariantsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Register Variants"
       }
     },
     "/api/context": {

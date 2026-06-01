@@ -45,7 +45,13 @@ from reg_meta.catalog import (
     ResolvedVariable,
 )
 from reg_meta.errors import EXIT_NOT_FOUND, RegMetaError
-from reg_meta.fqid import CLASSIFICATION_PREFIX, Fqid, FqidError, parse
+from reg_meta.fqid import (
+    CLASSIFICATION_PREFIX,
+    Fqid,
+    FqidError,
+    FqidKind,
+    parse,
+)
 from reg_meta.queries import list_classifications
 
 from reg_webapp.catalog_fqid import (
@@ -61,22 +67,41 @@ from reg_webapp.models import (
     ClassificationRootNode,
     ClassificationRootResponse,
     LineageEdgeModel,
+    LineageResponse,
+    LineageWarningModel,
+    LineageWarningsResponse,
+    PredecessorsResponse,
     ProviderNode,
     ProviderResponse,
     RegisterChild,
     RegisterNode,
     RegisterResponse,
     RelatedRefModel,
+    RelatedResponse,
     RootResponse,
+    StatesResponse,
+    SuccessorsResponse,
     ValueSetMember,
     VariableRefModel,
     VariableStateModel,
+    VariantModel,
     VariantsRef,
+    VariantsResponse,
+)
+from reg_webapp.period_param import (
+    PeriodParamError,
+    ValueSetVersionParamError,
+    VariantParamError,
+    parse_period,
+    parse_value_set_version,
+    parse_variant,
 )
 
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Iterator
+
+    from reg_meta.catalog import Period
 
 router = APIRouter(prefix="/api")
 
@@ -109,6 +134,47 @@ def _validated_fqid(fqid: str) -> ValidatedFqidPath:
     try:
         return validate_fqid_path(fqid)
     except FqidPathError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+def _validated_period(period: str | None = None) -> Period | None:
+    """§16 ``?period`` allow-list as a pre-open dependency — FastAPI resolves it
+    before the handler body, so a malformed period (SQLi / traversal / NUL /
+    percent-encoded) returns 422 **before** any connection opens (zero SQL, zero
+    opens). Holds no connection, so it's threadpool-safe. ``None`` (no query)
+    means "no period filter" — distinct from the parsed ``_default`` sentinel,
+    but the catch-all treats an absent ``?period`` as a plain (no-period) resolve,
+    not a `resolve_at`. reg_meta's ``_period_bounds`` is the SEMANTIC backstop."""
+    if period is None:
+        return None
+    try:
+        return parse_period(period)
+    except PeriodParamError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+def _validated_variant(variant: str | None = None) -> str | None:
+    """§16 ``?variant`` allow-list as a pre-open dependency. ADMITS ``_default``
+    (a real register_variant slug, §5.1) unlike the path guard. 422s a non-slug
+    value before any connection opens (zero SQL, zero opens)."""
+    if variant is None:
+        return None
+    try:
+        return parse_variant(variant)
+    except VariantParamError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+def _validated_value_set_version(value_set_version: str | None = None) -> str | None:
+    """§16 ``?value_set_version`` allow-list as a pre-open dependency. The value
+    is a value-set-version label (the classification-slug grammar, §5.2 — the slug
+    grammar). 422s a non-slug value before any connection opens. Reconciled with
+    the binding-leaf ``@version`` pin in the handler (`_reconcile_value_set_version`)."""
+    if value_set_version is None:
+        return None
+    try:
+        return parse_value_set_version(value_set_version)
+    except ValueSetVersionParamError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
@@ -182,6 +248,23 @@ def _lineage_edge_model(edge) -> LineageEdgeModel:
         valid_from=edge.valid_from,
         valid_to=edge.valid_to,
         source_fqid=str(edge.source_fqid) if edge.source_fqid is not None else None,
+    )
+
+
+def _lineage_warning_model(warning) -> LineageWarningModel:
+    return LineageWarningModel(
+        consumer_state_id=warning.consumer_state_id,
+        warning_kind=warning.warning_kind,
+        message=warning.message,
+    )
+
+
+def _variant_model(variant) -> VariantModel:
+    return VariantModel(
+        slug=variant.slug,
+        name=variant.name,
+        description=variant.description,
+        display_group=variant.display_group,
     )
 
 
@@ -313,11 +396,56 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
     )  # pragma: no cover
 
 
+def _reconcile_value_set_version(pinned: str | None, query: str | None) -> str | None:
+    """Reconcile the binding-leaf `@version` pin (parsed into
+    `ValidatedFqidPath.value_set_version`) with the `?value_set_version` query.
+
+    LOCKED: if BOTH present and they DIFFER → 422 (ambiguous); if both present
+    and equal, or only one present → use it; neither → None. The conflict is a
+    422 (a client contradiction), not a silent precedence — pinning the same
+    version two ways is fine, two different ones is a usage error."""
+    if pinned is not None and query is not None and pinned != query:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                f"ambiguous value-set-version: FQID pin @{pinned} "
+                f"conflicts with ?value_set_version={query}"
+            ),
+        )
+    return pinned if pinned is not None else query
+
+
+def _http_4xx_from_regmeta(exc: RegMetaError) -> None:
+    """Map a reg_meta query error from the period/edge accessors to HTTP: a
+    genuine FQID-not-found → 404; a usage error (`not_a_binding_fqid`, raised when
+    a suffixed/period accessor gets a non-binding FQID) → 422; anything else (a
+    corrupt-DB / build-invariant break) re-raises to a generic 500. The §9.5
+    sub-endpoints want a 4xx for a non-binding FQID, not a 500."""
+    if exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE:
+        raise HTTPException(status_code=404, detail=exc.message) from exc
+    if exc.code == "not_a_binding_fqid":
+        raise HTTPException(status_code=422, detail=exc.message) from exc
+    raise exc
+
+
+def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
+    """Parse a validated path into an Fqid, mapping a grammar/arity FqidError to
+    422 (DB-free — runs before any connection opens). Used by the suffixed
+    sub-endpoints, which only accept binding FQIDs (reg_meta's `_parse_binding`
+    raises the 422-mapped `not_a_binding_fqid` for a non-binding kind)."""
+    try:
+        return parse(validated.fqid)
+    except FqidError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
 # ── Routes ─────────────────────────────────────────────────────────────────
-# A5.2 suffixed routes (`/catalog/{fqid:path}/states`, `/predecessors`, ...,
-# `/catalog/{provider}/{register}/variants`) go ABOVE this line; the catch-all
-# MUST stay last (Starlette matches in declaration order, and the `{fqid:path}`
-# converter greedy-consumes any suffix into `fqid`).
+# §9.5 router ordering: the suffixed sub-resource routes (`/states`, ...,
+# `/lineage_warnings`) and the register-sub-resource `/{provider}/{register}/
+# variants` MUST be declared ABOVE the `{fqid:path}` catch-all — Starlette
+# matches in declaration order and the `{fqid:path}` converter greedy-consumes
+# any suffix into `fqid`. The catch-all MUST stay last. `test_boot.py`
+# (§9.5 `routes_declared_before`) pins the order in CI.
 
 
 @router.get("/catalog", response_model=RootResponse)
@@ -332,27 +460,193 @@ def get_catalog_root(request: Request) -> RootResponse:
     return RootResponse(children=children)
 
 
+# The register-sub-resource variant browser (§9.5). A FIXED 3-seg shape with a
+# literal `variants` tail — NOT an `{fqid:path}` suffix — so it's declared with
+# explicit `{provider}`/`{register}` segments, ABOVE the catch-all. The two
+# segments are §16-guarded as slugs (reusing the path guard on the 2-seg register
+# FQID) before any connection opens.
+@router.get("/catalog/{provider}/{register}/variants", response_model=VariantsResponse)
+def get_register_variants(
+    request: Request, provider: str, register: str
+) -> VariantsResponse:
+    """List a register's variants (the `?variant=` browse axis, §9.5). `_default`
+    is a real variant and IS returned (not filtered). 404 when the register
+    doesn't resolve (so a typo'd register isn't a silent empty list)."""
+    register_fqid = f"{provider}/{register}"
+    # §16: validate both segments as slugs BEFORE opening a connection. The path
+    # guard rejects `_default`/`class`/traversal in either segment with zero SQL.
+    try:
+        validate_fqid_path(register_fqid)
+    except FqidPathError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        # Resolve the register first so a bad (provider, register) is a 404, not a
+        # 200 with an empty list (list_variants alone can't distinguish them).
+        try:
+            catalog.resolve(Fqid.register_fqid(provider, register))
+        except RegMetaError as exc:
+            _http_404_if_not_found(exc)
+        variants = catalog.list_variants(provider, register)
+    # Construct via the alias `register=` (the canonical init param; the Python
+    # attr is `register_name` to avoid the BaseModel.register method shadow).
+    return VariantsResponse(
+        register=register_fqid,
+        variants=[_variant_model(v) for v in variants],
+    )
+
+
+# ── The 6 binding-suffix sub-endpoints (§9.5) — ALL above the catch-all. ────
+# Each follows the LOCKED connection model: §16 guard (`_validated_fqid`) +
+# `parse` run BEFORE the connection opens; the connection is opened and used
+# within the sync body (one thread — see `_catalog_conn`). reg_meta's accessor
+# raises `not_a_binding_fqid` (→ 422) for a non-binding FQID and `_not_found`
+# (→ 404) for an absent binding, both mapped by `_http_4xx_from_regmeta`.
+
+
+@router.get("/catalog/{fqid:path}/states", response_model=StatesResponse)
+def get_binding_states(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> StatesResponse:
+    """Full state history for a binding (§9.5). ≡ the leaf's embedded `states`,
+    standalone. Same shape the `?period` catch-all returns (codegen sees one
+    state-list type)."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        try:
+            states = Catalog(conn).states(parsed)
+        except RegMetaError as exc:
+            _http_4xx_from_regmeta(exc)
+    return StatesResponse(binding=str(parsed), states=[_state_model(s) for s in states])
+
+
+@router.get("/catalog/{fqid:path}/predecessors", response_model=PredecessorsResponse)
+def get_binding_predecessors(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> PredecessorsResponse:
+    """Variables this binding's variable replaced (inbound succession, §9.5)."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        try:
+            refs = Catalog(conn).predecessors(parsed)
+        except RegMetaError as exc:
+            _http_4xx_from_regmeta(exc)
+    return PredecessorsResponse(
+        binding=str(parsed), predecessors=[_var_ref_model(r) for r in refs]
+    )
+
+
+@router.get("/catalog/{fqid:path}/successors", response_model=SuccessorsResponse)
+def get_binding_successors(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> SuccessorsResponse:
+    """Variables that replaced this binding's variable (outbound succession)."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        try:
+            refs = Catalog(conn).successors(parsed)
+        except RegMetaError as exc:
+            _http_4xx_from_regmeta(exc)
+    return SuccessorsResponse(
+        binding=str(parsed), successors=[_var_ref_model(r) for r in refs]
+    )
+
+
+@router.get("/catalog/{fqid:path}/related", response_model=RelatedResponse)
+def get_binding_related(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> RelatedResponse:
+    """Split-sibling variables (variable grain, §5.7)."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        try:
+            refs = Catalog(conn).related(parsed)
+        except RegMetaError as exc:
+            _http_4xx_from_regmeta(exc)
+    return RelatedResponse(
+        binding=str(parsed), related=[_related_ref_model(r) for r in refs]
+    )
+
+
+@router.get("/catalog/{fqid:path}/lineage", response_model=LineageResponse)
+def get_binding_lineage(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> LineageResponse:
+    """Consumer-side composite lineage edges (state grain, §5.6). Maps what
+    reg_meta's `LineageEdge` carries; the §9.5 richer per-source-state shape is a
+    possible reg_meta enhancement (not blocked on here — see DESIGN.md)."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        try:
+            edges = Catalog(conn).lineage(parsed)
+        except RegMetaError as exc:
+            _http_4xx_from_regmeta(exc)
+    return LineageResponse(
+        binding=str(parsed), lineage_edges=[_lineage_edge_model(e) for e in edges]
+    )
+
+
+@router.get(
+    "/catalog/{fqid:path}/lineage_warnings", response_model=LineageWarningsResponse
+)
+def get_binding_lineage_warnings(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> LineageWarningsResponse:
+    """Build-time lineage warnings for the binding (§5.6). Empty when lineage
+    resolved cleanly. The leaf does NOT embed these — this is their endpoint."""
+    parsed = _parsed_binding(validated)
+    with _catalog_conn(request) as conn:
+        try:
+            warnings = Catalog(conn).lineage_warnings(parsed)
+        except RegMetaError as exc:
+            _http_4xx_from_regmeta(exc)
+    return LineageWarningsResponse(
+        binding=str(parsed),
+        lineage_warnings=[_lineage_warning_model(w) for w in warnings],
+    )
+
+
 # The catch-all — MUST be the last route declared in this router (see seam above).
-@router.get("/catalog/{fqid:path}", response_model=CatalogNode)
+# Response is the discriminated `CatalogNode` union OR — on a binding leaf with a
+# `?period` query — a `StatesResponse` (the resolve_at subset, uniform with
+# `/states`). The two are a plain (non-discriminated) Union; the discriminator
+# applies only WITHIN `CatalogNode`.
+@router.get("/catalog/{fqid:path}", response_model=CatalogNode | StatesResponse)
 def get_catalog_node(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> CatalogNode:
-    """Resolve any catalog node by FQID path.
+    period: Period | None = Depends(_validated_period),
+    variant: str | None = Depends(_validated_variant),
+    value_set_version: str | None = Depends(_validated_value_set_version),
+) -> CatalogNode | StatesResponse:
+    """Resolve any catalog node by FQID path; on a binding leaf, an optional
+    `?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at
+    state subset.
 
-    The §16 per-segment allow-list runs as the `_validated_fqid` dependency, which
-    FastAPI resolves before this body — so a malformed / traversal-shaped path
-    returns 422 **before** any connection opens (no DB hit at all). `parse` is
-    DB-free and runs BEFORE the connection opens too, so a grammar/arity-invalid
-    path (e.g. a reserved literal in an illegal slot) also 422s with no open. The
-    classification-root literal `class` (1 seg) is special-cased before `parse`.
-    `@version` is validated but not yet narrowing (A5.2 `?value_set_version`); the
-    bare 3-seg FQID is handed to `parse`/`resolve`. The connection is opened and
-    used within this sync body (one thread — see `_catalog_conn`).
+    The §16 guards (`_validated_fqid` for the path, `_validated_period` /
+    `_validated_variant` for the queries) run as dependencies, BEFORE this body —
+    so a malformed path OR a malformed period/variant returns 422 **before** any
+    connection opens (zero SQL, zero opens). `parse` is DB-free and runs before
+    the open too. The classification-root literal `class` (1 seg) is special-cased
+    before `parse`.
+
+    `?period` semantics (§9.5): present + binding leaf → `{states: [...]}` (the
+    resolve_at subset, narrowed by `?variant` / `?value_set_version`; the leaf's
+    `@version` pin reconciles with `?value_set_version` — equal/one-sided uses it,
+    conflicting is 422). present + non-binding kind → IGNORED (resolve normally).
+    absent → the full node (binding leaf embeds full history). The connection is
+    opened and used within this sync body (one thread — see `_catalog_conn`).
     """
     # §5.2: `class` (1 seg) is the classification-root sentinel — a reserved slug
     # `parse` rejects, so special-case it BEFORE parse. `class/<slug>` (2 seg)
-    # flows through `parse` as a normal classification FQID.
+    # flows through `parse` as a normal classification FQID. The `?period` query is
+    # ignored on this (non-binding) kind.
     if validated.fqid == CLASSIFICATION_PREFIX:
         with _catalog_conn(request) as conn:
             return _classification_root_response(conn)
@@ -362,6 +656,26 @@ def get_catalog_node(
         parsed = parse(validated.fqid)
     except FqidError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    # LOCKED: the binding-leaf `@version` pin reconciles with `?value_set_version`
+    # — a CONFLICT (both present, different) is 422 (ambiguous), regardless of
+    # `?period`. Run it before the connection opens, so the 422 costs no SQL.
+    vsv = _reconcile_value_set_version(validated.value_set_version, value_set_version)
+
+    # A `?period` query on a binding leaf returns the resolve_at state subset
+    # (uniform with `/states`), narrowed by `?variant` / the reconciled `vsv`. On
+    # any other kind `?period` is IGNORED (§9.5).
+    if period is not None and parsed.kind is FqidKind.VARIABLE_BINDING:
+        with _catalog_conn(request) as conn:
+            try:
+                states = Catalog(conn).resolve_at(
+                    parsed, period, variant=variant, value_set_version=vsv
+                )
+            except RegMetaError as exc:
+                _http_4xx_from_regmeta(exc)
+        return StatesResponse(
+            binding=str(parsed), states=[_state_model(s) for s in states]
+        )
 
     with _catalog_conn(request) as conn:
         return _resolve_to_node(Catalog(conn), parsed)

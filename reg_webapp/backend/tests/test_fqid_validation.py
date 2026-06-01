@@ -202,3 +202,124 @@ def test_class_literal_in_illegal_slot_parse_rejects(catalog_db, path: str):
         resp = client.get(f"/api/catalog/{path}")
     assert resp.status_code == 422
     assert counter.opens == 0  # parse runs before the connection opens
+
+
+# ── A5.2a-ii §16 GATE: the FQID path guard on ALL 7 suffixed/sub-resource routes
+# The §16 "path-traversal payloads against EVERY {fqid:path} route" requirement.
+# A percent-encoded traversal probe in the FQID part of each suffixed route must
+# 422 with zero SQL + zero opens — the `_validated_fqid` (and the variants
+# segment guard) is a sub-dependency that runs before the per-request open.
+
+_KON = "scb/lisa/kon"
+# The 6 binding-suffix routes (FQID before the literal suffix) + the variants
+# sub-resource (FQID is the 2-seg register prefix before the literal `variants`).
+_SUFFIXED_ROUTE_TEMPLATES = [
+    "/api/catalog/{fqid}/states",
+    "/api/catalog/{fqid}/predecessors",
+    "/api/catalog/{fqid}/successors",
+    "/api/catalog/{fqid}/related",
+    "/api/catalog/{fqid}/lineage",
+    "/api/catalog/{fqid}/lineage_warnings",
+]
+
+
+@pytest.mark.parametrize("template", _SUFFIXED_ROUTE_TEMPLATES)
+@pytest.mark.parametrize(
+    "probe", ["scb/lisa/%2e%2e", "scb%2f..%2fetc", "scb/lisa/kon%00"]
+)
+def test_suffixed_route_traversal_422_zero_sql(catalog_db, template: str, probe: str):
+    url = template.format(fqid=probe)
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(url)
+    assert resp.status_code == 422, f"{url!r} → {resp.status_code}"
+    assert counter.count == 0, f"{url!r} executed {counter.count} SQL statement(s)"
+    assert counter.opens == 0, f"{url!r} opened {counter.opens} connection(s)"
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "/api/catalog/scb/%2e%2e/variants",  # traversal in the register segment
+        "/api/catalog/%2e%2e/lisa/variants",  # traversal in the provider segment
+        "/api/catalog/scb/_default/variants",  # `_default` not a path segment
+        "/api/catalog/scb/Lisa/variants",  # uppercase (slug grammar)
+    ],
+)
+def test_variants_route_traversal_422_zero_sql(catalog_db, url: str):
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(url)
+    assert resp.status_code == 422, f"{url!r} → {resp.status_code}"
+    assert counter.count == 0
+    assert counter.opens == 0
+
+
+# ── §16 GATE: the ?period / ?variant / ?value_set_version query allow-lists ──
+# The §16 "?period= canonicalization" requirement: malformed period / variant
+# values (SQLi probes, traversal, embedded NULs, percent-encoded slashes) return
+# 422 with zero SQL executed AND zero connections opened — the parser is a
+# pre-open dependency, so a rejection never touches the DB.
+
+# §16's named probes (a SQLi string, a traversal, an embedded NUL, an encoded
+# slash) plus a couple of grammar misses.
+_BAD_PERIODS = [
+    "2020'; DROP TABLE--",
+    "../../etc/passwd",
+    "2020%00",  # percent-encoded NUL (Starlette decodes to a real NUL)
+    "2020%2f..%2f",  # percent-encoded slashes
+    "2020-13",  # month out of range
+    "2018..badtoken",  # bad range endpoint
+]
+_BAD_VARIANTS = ["Std", "../etc", "x%00", "x'; DROP--", "in valid"]
+_BAD_VSV = ["_default", "Sni2007", "../etc"]
+
+
+@pytest.mark.parametrize("period", _BAD_PERIODS)
+def test_bad_period_query_422_zero_sql(catalog_db, period: str):
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(f"/api/catalog/{_KON}", params={"period": period})
+    assert resp.status_code == 422, f"{period!r} → {resp.status_code}"
+    assert counter.count == 0, f"{period!r} executed {counter.count} SQL statement(s)"
+    assert counter.opens == 0, f"{period!r} opened {counter.opens} connection(s)"
+
+
+@pytest.mark.parametrize("variant", _BAD_VARIANTS)
+def test_bad_variant_query_422_zero_sql(catalog_db, variant: str):
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(
+            f"/api/catalog/{_KON}", params={"period": "2020", "variant": variant}
+        )
+    assert resp.status_code == 422, f"{variant!r} → {resp.status_code}"
+    assert counter.count == 0
+    assert counter.opens == 0
+
+
+@pytest.mark.parametrize("vsv", _BAD_VSV)
+def test_bad_value_set_version_query_422_zero_sql(catalog_db, vsv: str):
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(
+            f"/api/catalog/{_KON}",
+            params={"period": "2020", "value_set_version": vsv},
+        )
+    assert resp.status_code == 422, f"{vsv!r} → {resp.status_code}"
+    assert counter.count == 0
+    assert counter.opens == 0
+
+
+def test_at_version_vs_value_set_version_conflict_422_zero_sql(catalog_db):
+    """LOCKED: a binding-leaf `@version` pin that DIFFERS from the
+    `?value_set_version` query is ambiguous → 422. The reconciliation runs BEFORE
+    the connection opens, so the conflict costs no SQL and no open."""
+    with _StatementCounter() as counter, TestClient(create_app()) as client:
+        counter.reset()
+        resp = client.get(
+            f"/api/catalog/{_KON}@v1",
+            params={"period": "2020", "value_set_version": "v2"},
+        )
+    assert resp.status_code == 422
+    assert counter.count == 0
+    assert counter.opens == 0

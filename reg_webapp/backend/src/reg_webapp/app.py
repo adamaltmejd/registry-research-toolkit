@@ -21,6 +21,7 @@ import reg_meta.db
 from fastapi import FastAPI
 
 from . import __version__
+from .middleware import ETagMiddleware
 from .routes import catalog, context
 from .stewards import load_steward
 
@@ -62,6 +63,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 def create_app() -> FastAPI:
     app = FastAPI(title="reg_webapp", version=__version__, lifespan=lifespan)
+    # §9.4 read-cache: stamp ETag + Cache-Control on GET reads and serve 304 on a
+    # matching If-None-Match. Skips write endpoints (method gate, A5.2b). Added
+    # before the routers so it wraps every read response.
+    app.add_middleware(ETagMiddleware)
     app.include_router(context.router)
     app.include_router(catalog.router)
     return app

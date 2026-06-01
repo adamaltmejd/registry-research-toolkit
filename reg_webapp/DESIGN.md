@@ -126,6 +126,101 @@ A register node's children include a `variants` **reference stub**
 variant browser has a stable place in the discriminated union before the
 `/{provider}/{register}/variants` sub-resource exists.
 
+## A5.2a-ii — catalog-READ sub-endpoints + the `?period` query
+
+A5.2a-ii fills the A5.1b-ii ordering seam with the 7 read sub-resources and adds
+the `?period` query to the catch-all. (The project-WRITE endpoints —
+`/api/project/*`, `/bundle`, `/kit` — are A5.2b; `/api/catalog-search` (FTS) is
+deferred — noted below.)
+
+- **The 6 binding-suffix routes** (`/states`, `/predecessors`, `/successors`,
+  `/related`, `/lineage`, `/lineage_warnings`) plus the **register sub-resource**
+  `/{provider}/{register}/variants` are ALL declared ABOVE the `{fqid:path}`
+  catch-all (Starlette matches in declaration order; the catch-all
+  greedy-consumes any suffix). A CI introspection test
+  (`test_boot.py::test_suffixed_routes_declared_before_catch_all`, §9.5
+  `routes_declared_before`) pins the order. The `variants` route is a FIXED 3-seg
+  shape with a literal `variants` tail — explicit `{provider}`/`{register}`
+  segments, NOT an `{fqid:path}` suffix.
+- **Each suffixed route maps 1:1 to a `Catalog` accessor** and returns a thin
+  `{binding, <list>}` envelope (or `{register, variants}`) so the SPA codegen
+  sees one response type per endpoint. The suffixed routes are binding-only: a
+  non-binding FQID raises reg_meta's `not_a_binding_fqid` (EXIT_USAGE) → **422**
+  (a usage error, not a 500); an absent binding → 404.
+- **`?period` on the catch-all.** On a binding leaf, `?period=...` returns
+  `{binding, states: [...]}` — the `resolve_at` subset, **uniform with `/states`**
+  (so codegen sees one state-list type). `?variant` narrows to one variant;
+  `?value_set_version` narrows to one vintage. The period query is **ignored** on
+  non-binding kinds (the register/provider/classification node resolves
+  normally). An absent `?period` still returns the FULL embedded leaf.
+- **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries
+  (`consumer_state_id`, `source_state_id`, the validity intersection,
+  `source_fqid`). The §9.5 *richer* per-source-state shape (embedding each source
+  state's variant / value_set / column) is a possible reg_meta enhancement — NOT
+  blocked on here. When reg_meta's `LineageEdge` grows those fields, the wrapper
+  and `LineageResponse` widen; the endpoint contract (`lineage_edges`) is stable.
+
+### The §16 query allow-list (`period_param.py`)
+
+The second §16 chokepoint alongside `catalog_fqid.validate_fqid_path`. A thin
+**syntactic** allow-list parsing `?period` / `?variant` / `?value_set_version`
+into the polymorphic `reg_meta.catalog.Period` type **before any reg_meta lookup**
+— a malformed value (SQLi probe, traversal, NUL, percent-encoded slash) returns
+**422 with zero SQL AND zero connection opens** (wired as a pre-open `Depends`;
+reg_meta's `resolve_at` / `_period_bounds` is the SEMANTIC backstop). Single
+source of truth: the grammar is `reg_meta.fqid.is_period` / `validate_slug` —
+not re-encoded here. FastAPI-free so it's unit-testable in isolation.
+
+- **Period wire format** (§9.5): int year (`2020` → `int`), period token
+  (`HT2020` / `2020-Q3` / `2020-08` / `2018-12-31` → `str`), range
+  (`<from>..<to>`, literal `..` → `{"from","to"}` dict), `_default` sentinel. A
+  bare year maps to `int` (the documented year arm); every other token to `str`.
+- **`?variant` ADMITS `_default`** (a real `register_variant` slug, §5.1; 108 in
+  the real DB) UNLIKE the path guard (which rejects `_default` because it's not a
+  path segment). `?value_set_version` is the classification-slug /
+  `value_set_version_label` grammar (the slug grammar) and does NOT admit
+  `_default`.
+- **`@version` vs `?value_set_version`.** The binding-leaf `@version` pin
+  (parsed into `ValidatedFqidPath.value_set_version` by the path guard) and the
+  `?value_set_version` query reconcile: both-present-and-equal or only-one uses
+  it; both-present-and-DIFFERENT is **422** (ambiguous), regardless of `?period`.
+  The reconciliation runs before the connection opens, so a conflict costs no SQL.
+
+The connection model is UNCHANGED from A5.1b-ii (the LOCKED P1 guard): every new
+DB-backed route opens its sqlite connection INSIDE the sync handler body via
+`with _catalog_conn(request) as conn:` — NEVER a FastAPI generator `Depends`
+(which is entered on a different threadpool thread → cross-thread
+`ProgrammingError`). Each new DB-backed route gets its OWN `ThreadPoolExecutor`
+concurrency smoke (the `TestClient` sequential default masks the bug).
+
+## §9.4 ETag / Cache-Control (`etag.py` + `middleware.py`)
+
+Every read endpoint (`/api/context`, the `/api/catalog` root + catch-all, the 7
+sub-endpoints) carries `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"`
+and `Cache-Control: public, max-age=86400, must-revalidate`; a matching
+`If-None-Match` yields a **304** with no body. The pure logic lives in `etag.py`
+(`compute_etag` + `etag_matches`); an ASGI middleware (`ETagMiddleware`) wires it
+DRY onto every GET read response.
+
+- **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
+  package release), NOT the DB `schema_version` manifest (§9.5). `steward_id` is
+  `app.state.steward.id`.
+- **The body-hash** makes `If-None-Match` per-URL coherent — the `?period` /
+  `?variant` query is part of the URL, so it's already part of the cache key
+  (different periods are different ETags).
+- **Middleware skips WRITE endpoints** via a method gate: only `GET`/`HEAD` reads
+  are stamped, so A5.2b's POST endpoints pass through with no ETag (§9.4). It also
+  skips non-200 responses — an error body isn't a cacheable representation.
+- The **Cloudflare edge-cache round-trip** (§9.4) is a MAINTAINER task — we
+  unit-test only the ETag/Cache-Control LOGIC + the 304 behavior, not the edge.
+
+### Deferred from A5.2a-ii
+
+`/api/catalog-search` (FTS over registers/variables, §9.5) is **deferred** — it's
+a separate path delegating to reg_meta's FTS5 indexes, orthogonal to the
+resolve/edge read surface this stage ships. The §9.2 in-memory index, steward
+project-file load, rate limits, and the body-size cap remain A5.2b.
+
 ## Deferred: the §9.2 in-memory catalog index
 
 A5.1b-ii does **not** build the §9.2 in-memory index. The index is built from a

@@ -150,6 +150,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
         "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
         "VALUES ('scb','lisa','kon','scb','rams','syss')"
     )
+    _seed_kon_edges(src)
     _stamp_manifest(src)
 
     dst = sqlite3.connect(db_path)
@@ -158,6 +159,52 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     finally:
         dst.close()
         src.close()
+
+
+def _seed_kon_edges(src: sqlite3.Connection) -> None:
+    """Seed the variable-grain edges + state-grain lineage the A5.2a-ii suffixed
+    sub-endpoints read off the ``scb/lisa/kon`` binding, so their tests assert
+    non-empty results (the leaf-embed tests only assert these fields are PRESENT,
+    so adding rows is compatible):
+
+    - ``variable_replaced_by``: kon → rams/syss (a succession edge, so
+      ``/successors`` on kon and ``/predecessors`` on syss are non-empty).
+    - ``variable_related_to``: kon ↔ rams/syss split-sibling (``/related``).
+    - ``variable_state_lineage``: kon's state consumes rams/syss's state
+      (``/lineage`` non-empty, with a real ``source_fqid``).
+    - ``variable_state_lineage_warning``: a ``no_source_state`` warning on kon's
+      state (``/lineage_warnings`` non-empty)."""
+    kon_state = src.execute(
+        "SELECT state_id FROM variable_state WHERE variable_id = "
+        "(SELECT variable_id FROM variable WHERE slug = 'kon')"
+    ).fetchone()[0]
+    syss_state = src.execute(
+        "SELECT state_id FROM variable_state WHERE variable_id = "
+        "(SELECT variable_id FROM variable WHERE slug = 'syss')"
+    ).fetchone()[0]
+    src.execute(
+        "INSERT INTO variable_replaced_by "
+        "(predecessor_provider, predecessor_register, predecessor_variable, "
+        "successor_provider, successor_register, successor_variable, "
+        "effective_year, note, beskrivning) "
+        "VALUES ('scb','lisa','kon','scb','rams','syss',2019,'auto:test','kon→syss')"
+    )
+    src.execute(
+        "INSERT INTO variable_related_to "
+        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable, "
+        "relation_kind) "
+        "VALUES ('scb','lisa','kon','scb','rams','syss','same_definition_different_column')"
+    )
+    src.execute(
+        "INSERT INTO variable_state_lineage "
+        "(consumer_state_id, source_state_id, valid_from, valid_to) VALUES (?, ?, ?, ?)",
+        (kon_state, syss_state, "2018-01-01", "9999-12-31"),
+    )
+    src.execute(
+        "INSERT INTO variable_state_lineage_warning "
+        "(consumer_state_id, warning_kind, message) VALUES (?, ?, ?)",
+        (kon_state, "no_source_state", "no source state for 2017"),
+    )
 
 
 @pytest.fixture
