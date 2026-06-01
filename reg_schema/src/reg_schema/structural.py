@@ -1189,12 +1189,13 @@ def _check_panel_member(
     # Member-vs-panel composite kind match: only fires when both panel
     # default and member override are composite time_keys (§6.4 — scalar
     # kind mixing across members is permitted).
-    if (
+    member_composite_kind_mismatch = (
         member_time_key_overridden
         and scope.panel_time_kind in ("literal_composite", "ref_composite")
         and eff_time_kind in ("literal_composite", "ref_composite")
         and scope.panel_time_kind != eff_time_kind
-    ):
+    )
+    if member_composite_kind_mismatch:
         issues.append(
             _error(
                 "time_key_member_kind_mismatch",
@@ -1210,8 +1211,16 @@ def _check_panel_member(
         scope.composite_entities.append(
             (eff_entity_path, tuple(s for s in eff_entity if isinstance(s, str)))
         )
-    if eff_time_kind in ("literal_composite", "ref_composite") and isinstance(
-        eff_time, list
+    # Skip a member whose composite kind already mismatched the panel-level
+    # kind: ref tuples and canonicalized literal tuples can never compare
+    # equal, so feeding both into `_check_composite_consistency` would
+    # re-report the kind mismatch as a spurious `composite_key_inconsistent`
+    # (an ordering error) on top of the `time_key_member_kind_mismatch`
+    # already emitted above — and leak the internal canonical literal form.
+    if (
+        eff_time_kind in ("literal_composite", "ref_composite")
+        and isinstance(eff_time, list)
+        and not member_composite_kind_mismatch
     ):
         # For ref composites we track the raw tuple of string refs; for
         # literal composites the canonicalized form. Both kinds compare
