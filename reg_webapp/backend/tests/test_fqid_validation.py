@@ -35,6 +35,9 @@ _REJECT_PATHS = [
     "scb/lisa/%2e%2e",  # not decoded at the function layer → literal `%`
     "scb/lisa/kon%00.json",  # literal `%` (and would be NUL post-decode)
     "scb/lisa/kon\x00",  # embedded NUL
+    "scb/lisa/kon\n",  # trailing newline — the `$`-vs-`\Z` slug-regex hole, now closed
+    "scb/lisa/kon\r",  # trailing carriage return
+    "scb\n/lisa/kon",  # newline in the provider segment
     "scb//lisa",  # empty middle segment
     "/scb",  # leading slash → empty first segment
     "scb/",  # trailing slash → empty last segment
@@ -175,3 +178,13 @@ def test_at_version_negative_cousins_fail_gate(catalog_db, probe: str):
         resp = client.get(f"/api/catalog/{probe}")
     assert resp.status_code == 422
     assert counter.count == 0
+
+
+@pytest.mark.parametrize("path", ["_default", "scb/lisa/_default", "class/_default"])
+def test_reserved_literal_in_illegal_position_returns_422(catalog_db, path: str):
+    """The guard ADMITS the `class`/`_default` reserved literals in any segment
+    (§5.2), then `parse` rejects an illegal placement → 422 (not 404/500). Locks
+    the admit-then-parse-rejects contract against a future `parse` change."""
+    with TestClient(create_app()) as client:
+        resp = client.get(f"/api/catalog/{path}")
+    assert resp.status_code == 422

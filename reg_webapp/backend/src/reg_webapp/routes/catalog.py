@@ -132,10 +132,19 @@ def _node_ctx(
         conn.close()
 
 
+# reg_meta's genuine "this FQID resolves to no row" code. The OTHER
+# EXIT_NOT_FOUND code, `state_variant_unresolved`, is a build-invariant break on a
+# corrupt DB — a server fault (not a client 404) whose message carries internal
+# row IDs we must not echo. So only `fqid_not_found` maps to 404; the rest
+# re-raise to a generic 500.
+_FQID_NOT_FOUND_CODE = "fqid_not_found"
+
+
 def _http_404_if_not_found(exc: RegMetaError) -> None:
-    """Map reg_meta's not-found (`EXIT_NOT_FOUND`) to HTTP 404; re-raise
-    anything else (a real 500 — a malformed DB / build-invariant break)."""
-    if exc.exit_code == EXIT_NOT_FOUND:
+    """Map reg_meta's genuine FQID-not-found to HTTP 404; re-raise anything else
+    (a corrupt-DB / build-invariant break) so it surfaces as a generic 500 — its
+    message may carry internal IDs, and it's a server fault, not a client 404."""
+    if exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE:
         raise HTTPException(status_code=404, detail=exc.message) from exc
     raise exc
 
@@ -197,9 +206,11 @@ def _lineage_edge_model(edge) -> LineageEdgeModel:
 
 
 def _binding_node(resolved: ResolvedVariable) -> BindingNode:
-    """Map a `ResolvedVariable` to the embedded-record leaf (§9.5). Embeds
-    everything the dataclass carries; `lineage_warnings` are NOT on
-    `ResolvedVariable`, so they're omitted (A5.2 `/lineage_warnings`)."""
+    """Map a `ResolvedVariable` to the embedded-record leaf (§9.5). Embeds the
+    full wire-relevant record; the internal `provider_key` (SCB build-time join
+    key, redundant with the FQID) is intentionally not exposed, and
+    `lineage_warnings` are NOT on `ResolvedVariable` so they're omitted (A5.2
+    `/lineage_warnings`)."""
     return BindingNode(
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,

@@ -75,6 +75,9 @@ class TestSlugGrammar:
             "lisa_2018",  # underscore
             "Lisa",  # uppercase
             "lisåa",  # non-ASCII
+            "lisa\n",  # trailing newline (Python `$` would accept this; `\Z` rejects)
+            "lisa\r",  # trailing carriage return
+            "li\nsa",  # embedded newline
         ],
     )
     def test_invalid_slugs(self, bad: str) -> None:

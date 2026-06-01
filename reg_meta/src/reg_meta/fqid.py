@@ -54,8 +54,11 @@ RESERVED_SLUGS: frozenset[str] = frozenset(
 )
 
 # §5.2 prose pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
-# only"; the form below enforces both in one expression.
-_SLUG_RE = re.compile(r"^[a-z](?:-?[a-z0-9])*$")
+# only"; the form below enforces both in one expression. Anchored with `\Z`, NOT
+# `$`: Python's `$` also matches just before a single trailing newline, so `$`
+# would accept a slug like `kon\n` — a hole the reg_webapp §16 path-guard (which
+# delegates here) and build-time slug validation both rely on this rejecting.
+_SLUG_RE = re.compile(r"^[a-z](?:-?[a-z0-9])*\Z")
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
 # Period grammar building blocks. Year is 1900-2099, month 01-12, day 01-31.
