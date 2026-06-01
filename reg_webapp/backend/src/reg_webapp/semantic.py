@@ -174,7 +174,7 @@ def _check_register_variant(
     return True
 
 
-def _period_for_resolve(period: int | str | PeriodRange) -> Period:
+def period_for_resolve(period: int | str | PeriodRange) -> Period:
     """Convert a `Source.period` (Pydantic) into the polymorphic `Period`
     `Catalog.resolve_at` expects (`int | str | dict`). A `PeriodRange` becomes a
     `{"from", "to"}` dict; int / str pass through (the `_default` sentinel rides
@@ -295,7 +295,7 @@ def _check_binding_period(
     if not variant_ok:
         return
     variant = source.register_variant.split("/")[2]
-    period = _period_for_resolve(source.period)
+    period = period_for_resolve(source.period)
     # `pinned_version` (the FQID's `@<version>` suffix, parsed once in
     # `_check_binding`) narrows a pinned binding to one state (§6.8.3), so it never
     # trips the ambiguity check below; `parsed` is the same bare FQID, reused.

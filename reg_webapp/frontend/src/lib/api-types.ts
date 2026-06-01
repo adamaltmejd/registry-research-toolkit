@@ -4,6 +4,38 @@
  */
 
 export interface paths {
+    "/api/bundle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Build Mona Bundle
+         * @description Build the MONA bundle embedding ``project`` and return the ``.py`` bytes.
+         *
+         *     The body is typed ``ProjectData`` (the §9.6 reg_schema-as-request-model path):
+         *     a structurally malformed body is a framework 422 before this runs, so the
+         *     handler sees a model-valid spec. We still re-run the build-side validation
+         *     gate (``validate_project_data``) on the round-tripped dict because it performs
+         *     the §6.8.2 block + cross-block + step-4 capability checks that the model alone
+         *     does NOT (a model-valid spec can still fail those build-time gates) — those
+         *     failures are bad INPUT → 422.
+         *
+         *     DB-free: the bundle build does not touch reg_meta, so no connection is opened
+         *     here (unlike ``/project/*``). Pure function of input → safe to cache by
+         *     content-hash at the edge (§9.4), which is why this endpoint sets no ETag.
+         */
+        post: operations["build_mona_bundle_api_bundle_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog": {
         parameters: {
             query?: never;
@@ -227,10 +259,107 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/project/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Order Project
+         * @description Render the steward's default v1 order-export CSV (§9.5).
+         *
+         *     Takes a ``project_data.json``-shaped body typed as ``ProjectData`` directly
+         *     (the §9.6 sanctioned reg_schema-as-request-model path — unlike ``/validate``,
+         *     which needs the raw dict to diagnose malformed specs, ``/order`` operates on a
+         *     well-formed spec, so a framework 422 on a malformed body is the right behavior
+         *     here). Resolves missing ``display_name``s from reg_meta via a per-request
+         *     connection opened IN THIS BODY (the locked connection model). Returns the CSV
+         *     as a ``text/csv`` attachment.
+         */
+        post: operations["order_project_api_project_order_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Validate Project
+         * @description Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
+         *     structural ⧺ block ⧺ semantic issue list and the derived ``ok`` flag; a 4xx is
+         *     reserved for a malformed REQUEST (see ``_read_raw_project`` / the body cap).
+         *
+         *     Layer order (DB-free layers first, so a structurally-rejected body costs no DB
+         *     hit): structural → block → (model build + semantic). The semantic layer needs
+         *     a live ``Catalog``, opened per-request in THIS body. If structural fails we
+         *     SKIP the model build + semantic step (they assume a structurally valid spec)
+         *     but STILL report the block issues — the block validator is independent of the
+         *     structural one and a researcher benefits from seeing both.
+         */
+        post: operations["validate_project_api_project_validate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * Binding
+         * @description A binding on a Source (§6.3) — one variable to include in the extract.
+         *
+         *     ``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3
+         *     segments, §5.2), optionally suffixed ``@<value-set-version>`` to pin
+         *     one of several value-set versions co-delivered in the bound period
+         *     (e.g. ``scb/lisa/naringsgren@sni2007``). Its ``provider/register``
+         *     prefix (first 2 segments) must equal the source's ``register_variant``
+         *     prefix — the variant is NOT repeated here, it lives once on the Source
+         *     (§6.2). That cross-field rule is enforced by the structural validator.
+         *
+         *     ``display_name`` is optional: when absent, reg_meta-backed consumers
+         *     resolve the default from ``variable_alias.delivery_column_name`` for
+         *     the binding's state at the source's ``(register_variant, period)``.
+         *     Reg_meta-free consumers (bundle on MONA, kit runs) never see an
+         *     unresolved ``display_name`` — bundle build and kit build materialize
+         *     defaults before emitting their artifacts.
+         */
+        Binding: {
+            /** Date Format */
+            date_format?: string | null;
+            /** Datetime Format */
+            datetime_format?: string | null;
+            /** Display Name */
+            display_name?: string | null;
+            /** Id Subtype */
+            id_subtype?: ("integer" | "string") | null;
+            /** Numeric Subtype */
+            numeric_subtype?: ("integer" | "double") | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
+            /** Value Set */
+            value_set?: string | null;
+            /** Variable */
+            variable: string;
+        };
         /**
          * BindingChild
          * @description A binding child under a register node — a thin (fqid, name) entry, NOT
@@ -471,6 +600,83 @@ export interface components {
             lineage_warnings: components["schemas"]["LineageWarningModel"][];
         };
         /**
+         * LiteralPeriod
+         * @description The ``{"period": int | string}`` time_key form (§6.4).
+         *
+         *     The only way to express a string-shaped literal period at the
+         *     schema level. Disambiguates ``"2018"`` (column ref) from
+         *     ``{"period": "2018-01"}`` (literal period).
+         */
+        LiteralPeriod: {
+            /** Period */
+            period: number | string;
+        };
+        /**
+         * Panel
+         * @description A panel definition over sources (§6.4).
+         *
+         *     Members are stored uniformly as ``PanelMember``. The §6.4 bare-string
+         *     shorthand (a source name with panel-level key defaults) is normalized
+         *     to ``PanelMember(source=<name>)`` by the ``members`` validator, so
+         *     consumers never branch on ``str | PanelMember``. Source-collision (each
+         *     source belongs to at most one panel) and composite ordering /
+         *     homogeneity rules are enforced by the structural validator, not here.
+         */
+        Panel: {
+            /** Comment */
+            comment?: string | null;
+            /** Entity Key */
+            entity_key?: string | string[] | null;
+            /** Members */
+            members: components["schemas"]["PanelMember"][];
+            /** Panel Id */
+            panel_id: string;
+            /** Time Key */
+            time_key?: number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"] | (number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"])[] | null;
+        };
+        /**
+         * PanelMember
+         * @description A member of a Panel (§6.4).
+         *
+         *     ``source`` is the source ``name`` (the panel layer joins on
+         *     delivered-data column headers, not FQIDs). ``entity_key`` /
+         *     ``time_key`` override panel-level defaults; when both panel and member
+         *     leave a key unset, it is inherited from the member's variant's
+         *     ``panel_template`` (§6.4) at kit/bundle-build time — the structural
+         *     validator does not flag the absence (it has no reg_meta).
+         */
+        PanelMember: {
+            /** Entity Key */
+            entity_key?: string | string[] | null;
+            /** Source */
+            source: string;
+            /** Time Key */
+            time_key?: number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"] | (number | string | components["schemas"]["LiteralPeriod"] | components["schemas"]["TimeRange"])[] | null;
+        };
+        /**
+         * PeriodRange
+         * @description The ``{"from": ..., "to": ...}`` range form of ``Source.period`` (§6.2).
+         *
+         *     Endpoints follow the same int / period-token-string forms as a bare
+         *     period. ``from`` is a Python keyword, so the field is ``from_`` with a
+         *     ``"from"`` alias; ``populate_by_name`` lets callers use either.
+         *
+         *     This bare object is **only** legal as a ``Source.period`` value; a
+         *     ``TimePoint`` range uses the discriminated ``TimeRange`` wrapper
+         *     (``{"range": {...}}``) so ``TimeKey``'s union stays unambiguous (§6.2).
+         *
+         *     ``serialize_by_alias=True`` so ``model_dump()`` emits ``"from"`` (not the
+         *     Python-safe ``"from_"``) without every caller having to pass
+         *     ``by_alias=True`` — the un-aliased key would fail re-validation
+         *     (``_is_period_range_obj`` requires exactly ``{"from", "to"}``).
+         */
+        PeriodRange: {
+            /** From */
+            from: number | string;
+            /** To */
+            to: number | string;
+        };
+        /**
          * PredecessorsResponse
          * @description `GET /api/catalog/{fqid}/predecessors` — inbound succession (§9.5).
          */
@@ -479,6 +685,53 @@ export interface components {
             binding: string;
             /** Predecessors */
             predecessors: components["schemas"]["VariableRefModel"][];
+        };
+        /**
+         * ProjectData
+         * @description The top-level ``project_data.json`` shape (§6.1).
+         *
+         *     ``reg_monabundle`` (and any other namespaced block added later) is
+         *     intentionally typed as an opaque ``Mapping``: §6.8.2 delegates
+         *     validation of namespaced blocks to their owning package, and
+         *     reg_schema's frozen-ness does not deep-freeze nested mappings. That is
+         *     by design — namespaced consumers own their payload lifecycle.
+         *
+         *     ``extra="ignore"`` (overriding ``_Model``'s ``forbid``) tolerates
+         *     additional steward-namespaced blocks (``swecov``, ``reg_mockdata``,
+         *     …) without modeling them as fields: they ride through on the dict side
+         *     and are handled by the owning package (§6.8.2), exactly as the v0.x
+         *     dataclass did. If a field is wanted for one, we add it deliberately
+         *     rather than growing an ``extras`` dict.
+         *
+         *     Because the ``reg_monabundle`` block is an opaque (typically
+         *     unhashable) ``Mapping``, an instance carrying one is unhashable on
+         *     demand. No consumer hashes ``ProjectData`` (the bundle wraps it in a
+         *     ``LoadedSpec``; the webapp serializes it), so ``frozen=True`` is kept
+         *     for value-immutability and ``__eq__`` without a custom ``__hash__``.
+         */
+        ProjectData: {
+            /** Name */
+            name: string;
+            /**
+             * Panels
+             * @default []
+             */
+            panels: components["schemas"]["Panel"][];
+            /** Reg Meta Version */
+            reg_meta_version: string;
+            /** Reg Monabundle */
+            reg_monabundle?: {
+                [key: string]: unknown;
+            } | null;
+            /** Schema Version */
+            schema_version: string;
+            /** Sources */
+            sources: components["schemas"]["Source"][];
+            /**
+             * Steward
+             * @enum {string}
+             */
+            steward: "global" | "ifau" | "swecov";
         };
         /**
          * ProviderNode
@@ -614,6 +867,27 @@ export interface components {
             kind: "root";
         };
         /**
+         * Source
+         * @description A data source / table in the spec (§6.2).
+         *
+         *     ``register_variant`` is the 3-part variant **coordinate**
+         *     (``<provider>/<register>/<variant>``) — not an FQID kind (§5.2), but
+         *     the same 3-part grammar. ``period`` is always required and polymorphic
+         *     (``Period``). Together ``(register_variant's variant, period)`` selects
+         *     each binding variable's ``variable_state``. ``name`` is the internal
+         *     source handle referenced by panel members; it is not an FQID.
+         */
+        Source: {
+            /** Bindings */
+            bindings: components["schemas"]["Binding"][];
+            /** Name */
+            name: string;
+            /** Period */
+            period: number | string | components["schemas"]["PeriodRange"];
+            /** Register Variant */
+            register_variant: string;
+        };
+        /**
          * StatesResponse
          * @description `GET /api/catalog/{fqid}/states` — the binding's full state history (§9.5).
          *     Same `states` shape the binding leaf embeds, as a standalone envelope. With a
@@ -648,6 +922,18 @@ export interface components {
             /** Successors */
             successors: components["schemas"]["VariableRefModel"][];
         };
+        /**
+         * TimeRange
+         * @description The ``{"range": {"from": ..., "to": ...}}`` time_key form (§6.4).
+         *
+         *     The discriminated wrapper for a period range in ``TimeKey`` position —
+         *     distinct from the bare ``{"from", "to"}`` object, which is legal only
+         *     as a ``Source.period`` (``PeriodRange``). The wrapper keeps the
+         *     ``TimePoint`` union unambiguous (§6.2).
+         */
+        TimeRange: {
+            range: components["schemas"]["PeriodRange"];
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -660,6 +946,44 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /**
+         * ValidationIssueModel
+         * @description One §6.8.0 validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
+         *     ``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is
+         *     an RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document
+         *     issues); ``code`` is the stable, namespaced rule identifier the SPA maps to a
+         *     UI affordance.
+         */
+        ValidationIssueModel: {
+            /** Code */
+            code: string;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "error" | "warning" | "info";
+            /** Message */
+            message: string;
+            /** Path */
+            path: string;
+        };
+        /**
+         * ValidationResultModel
+         * @description `POST /api/project/validate` response — the §6.8.0 concatenated issue list
+         *     (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
+         *
+         *     ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level
+         *     issue is present (warnings/info do not flip it). A validation FAILURE is a
+         *     SUCCESSFUL validation RESPONSE — this carries HTTP 200 with ``ok=false`` and
+         *     the issues; 4xx is reserved for a malformed request (bad JSON / oversized body
+         *     / wrong content-type), never for a spec that simply failed to validate.
+         */
+        ValidationResultModel: {
+            /** Issues */
+            issues: components["schemas"]["ValidationIssueModel"][];
+            /** Ok */
+            ok: boolean;
         };
         /**
          * ValueSetMember
@@ -806,6 +1130,39 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    build_mona_bundle_api_bundle_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectData"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_catalog_root_api_catalog_get: {
         parameters: {
             query?: never;
@@ -1095,6 +1452,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ContextResponse"];
+                };
+            };
+        };
+    };
+    order_project_api_project_order_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectData"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_project_api_project_validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationResultModel"];
                 };
             };
         };
