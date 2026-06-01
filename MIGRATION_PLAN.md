@@ -521,7 +521,11 @@ matching the gates diagram below.)
   content fingerprint that ignores only `import_manifest.import_date`. See
   `reg_meta_build/DESIGN.md` § "Content diff harness (`dbdiff`)" for the full
   rationale and the ignore-list semantics.
-- Provenance DB populated with SCB-specific debug data (raw CSV checksums, import warnings)
+- The `SCBAdapter` **emits** the IR provenance/warning objects
+  (`IRDeliveryProvenance` / `IRWarning`) so A4.2 only has to wire them up — but
+  A4.1 does **not** populate the provenance DB (it stays a pure byte-identical
+  refactor; the materializer discards those objects). Provenance population is
+  A4.2.
 
 **Estimate**: 5-7 days. Refactor only; no new functionality.
 
@@ -529,7 +533,9 @@ matching the gates diagram below.)
 
 - SCB universal IDs verified to match source IDs verbatim (already the case from coalescer; this PR enforces and documents)
 - SOS ID mint scheme implemented (BLAKE2b, top-bit-namespaced)
-- Provenance DB populated by adapters
+- Provenance DB populated by adapters — including the SCB-specific debug data
+  (raw CSV checksums, import warnings, Registerversion approval dates) the
+  A4.1 `SCBAdapter` already emits as `IRDeliveryProvenance` / `IRWarning`
 - `.prev` rotation verified in CI
 - **Property test: namespace invariant** (§16) — 10k random `mint(...)` inputs all land in `[2^62, 2^63)` (bit 62 set, bit 63 clear); SCB ID band `[0, 2^32)` is provably disjoint
 - **Provenance DB confinement test** (§16) — bundle amalgamator's import allow-list rejects modules that open `reg_meta.provenance.db`; FastAPI route introspection asserts no handler references the provenance path; deployment image excludes `reg_meta.provenance.db*` from the catalog volume mount
@@ -545,6 +551,20 @@ matching the gates diagram below.)
 - Kodlista state-era parsing per §5.7 (period-scoped `tidsperiod` ranges → state validity)
 - MFR IVF_klinik entity-registry heuristic (collapse to 1 state with per-code validity, not 15 states)
 - Outputs ~2,300 IR rows
+- **Provider-blindness close-out (A4.1 deferrals — full provider-blindness
+  lands here; maintainer-required).** A4.1 shipped a byte-identity-safe
+  "pragmatic hybrid": the `SCBAdapter` writes the universal variable-graph rows
+  directly and `materialize()` no-ops on the universal IR (the IR stream is
+  inert), and the G1/G4 derivation post-passes (`_reparent_variable_alias` →
+  `variable_alias`, `code_variable_map`) read SCB-named build-scratch
+  (`variable_instance`, `variable_alias_build`). A4.3 closes **both** gaps,
+  because SOS forces a genuinely IR-consuming materializer (SOS rows have no
+  legacy direct-write path): (a) make `materialize()` insert the core variable
+  graph from IR and flip SCB to IR-driven at the same time; (b) lift the
+  gap-table carriers into IR (chiefly `IRVariableState.delivery_column_name`)
+  so the post-passes derive from universal tables, not scratch. Both are
+  guarded by the SCB-subset dbdiff (`WHERE provider='scb'`), still active at
+  A4.3 but no longer the gate after A4.4's curation.
 
 **Estimate**: 7-10 days. Most complex SOS-specific logic.
 

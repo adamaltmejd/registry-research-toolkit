@@ -23,7 +23,8 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from reg_meta.db import open_db
-from reg_meta_build.db import (
+from reg_meta_build.db import build_db
+from reg_meta_build.sources.scb import (
     _apply_fold,
     _collapse_residual,
     _common_prefix_len,
@@ -31,7 +32,6 @@ from reg_meta_build.db import (
     _fold_token_from_grain,
     _StateGroup,
     _TriageResult,
-    build_db,
 )
 
 
