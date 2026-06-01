@@ -1,6 +1,303 @@
 {
   "components": {
     "schemas": {
+      "BindingChild": {
+        "description": "A binding child under a register node \u2014 a thin (fqid, name) entry, NOT\nthe embedded longitudinal record (that is only on the binding LEAF response).",
+        "properties": {
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "binding",
+            "default": "binding",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "BindingChild",
+        "type": "object"
+      },
+      "BindingNode": {
+        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call (\u00a79.5): shared\nmetadata, every state (each tagged with its variant), and the variable-grain\n`same_as` / `replaced_by` / `related_to` / `lineage` edges.\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. `@version`\npin narrowing is also A5.2 (`?value_set_version`); this leaf embeds the full\nhistory regardless of any `@version` suffix in the URL.",
+        "properties": {
+          "definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Definition"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "is_identifier": {
+            "title": "Is Identifier",
+            "type": "boolean"
+          },
+          "is_sensitive": {
+            "title": "Is Sensitive",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "binding",
+            "default": "binding",
+            "title": "Kind",
+            "type": "string"
+          },
+          "lineage": {
+            "items": {
+              "$ref": "#/components/schemas/LineageEdgeModel"
+            },
+            "title": "Lineage",
+            "type": "array"
+          },
+          "measurement_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Measurement Unit"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "register_id": {
+            "title": "Register Id",
+            "type": "integer"
+          },
+          "related_to": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedRefModel"
+            },
+            "title": "Related To",
+            "type": "array"
+          },
+          "replaced_by": {
+            "items": {
+              "$ref": "#/components/schemas/VariableRefModel"
+            },
+            "title": "Replaced By",
+            "type": "array"
+          },
+          "same_as": {
+            "items": {
+              "$ref": "#/components/schemas/VariableRefModel"
+            },
+            "title": "Same As",
+            "type": "array"
+          },
+          "source_register_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Register Id"
+          },
+          "source_register_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Register Text"
+          },
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/VariableStateModel"
+            },
+            "title": "States",
+            "type": "array"
+          },
+          "variable_id": {
+            "title": "Variable Id",
+            "type": "integer"
+          },
+          "via_same_as": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Via Same As"
+          }
+        },
+        "required": [
+          "fqid",
+          "variable_id",
+          "register_id",
+          "name",
+          "definition",
+          "description",
+          "measurement_unit",
+          "is_sensitive",
+          "is_identifier",
+          "source_register_id",
+          "source_register_text",
+          "states",
+          "same_as",
+          "replaced_by",
+          "related_to",
+          "lineage"
+        ],
+        "title": "BindingNode",
+        "type": "object"
+      },
+      "ClassificationNode": {
+        "description": "A classification leaf (`class/<slug>`, 2 seg).",
+        "properties": {
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "classification",
+            "default": "classification",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "short_name": {
+            "title": "Short Name",
+            "type": "string"
+          },
+          "via_same_as": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Via Same As"
+          }
+        },
+        "required": [
+          "fqid",
+          "short_name",
+          "name"
+        ],
+        "title": "ClassificationNode",
+        "type": "object"
+      },
+      "ClassificationRootNode": {
+        "description": "The classification-root sentinel (`class`, 1 seg) \u2014 a child of the root\nand a resolvable node whose `children` are every classification (\u00a75.2: `class`\nis a reserved slug, not a real provider).",
+        "properties": {
+          "fqid": {
+            "default": "class",
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "classification-root",
+            "default": "classification-root",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "default": "Classifications",
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "title": "ClassificationRootNode",
+        "type": "object"
+      },
+      "ClassificationRootResponse": {
+        "description": "`GET /api/catalog/class` \u2014 the classification-root + every classification\nas children.",
+        "properties": {
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationNode"
+            },
+            "title": "Children",
+            "type": "array"
+          },
+          "fqid": {
+            "default": "class",
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "classification-root",
+            "default": "classification-root",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "default": "Classifications",
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "children"
+        ],
+        "title": "ClassificationRootResponse",
+        "type": "object"
+      },
       "ContextResponse": {
         "description": "``GET /api/context`` \u2014 deployment identity, branding, build info (\u00a79.5).\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages.",
         "properties": {
@@ -22,6 +319,129 @@
         "title": "ContextResponse",
         "type": "object"
       },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "LineageEdgeModel": {
+        "description": "A consumer-side lineage edge (state grain, \u00a75.6) tying a consumer state to\na source state over their validity intersection. `source_fqid` is the source\nstate's 3-seg binding FQID (None when the source slugs aren't populated).",
+        "properties": {
+          "consumer_state_id": {
+            "title": "Consumer State Id",
+            "type": "integer"
+          },
+          "source_fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Fqid"
+          },
+          "source_state_id": {
+            "title": "Source State Id",
+            "type": "integer"
+          },
+          "valid_from": {
+            "title": "Valid From",
+            "type": "string"
+          },
+          "valid_to": {
+            "title": "Valid To",
+            "type": "string"
+          }
+        },
+        "required": [
+          "consumer_state_id",
+          "source_state_id",
+          "valid_from",
+          "valid_to"
+        ],
+        "title": "LineageEdgeModel",
+        "type": "object"
+      },
+      "ProviderNode": {
+        "description": "A provider node (1-seg FQID, e.g. `scb`). A child of the root and a\nresolvable node (its `children` are the provider's registers).",
+        "properties": {
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "provider",
+            "default": "provider",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "ProviderNode",
+        "type": "object"
+      },
+      "ProviderResponse": {
+        "description": "`GET /api/catalog/{provider}` \u2014 the provider + its registers as children.",
+        "properties": {
+          "children": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterNode"
+            },
+            "title": "Children",
+            "type": "array"
+          },
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "provider",
+            "default": "provider",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "fqid",
+          "children"
+        ],
+        "title": "ProviderResponse",
+        "type": "object"
+      },
       "RegMetaInfo": {
         "description": "reg_meta build provenance, read from the DB ``import_manifest``.",
         "properties": {
@@ -41,6 +461,183 @@
           "import_date"
         ],
         "title": "RegMetaInfo",
+        "type": "object"
+      },
+      "RegisterNode": {
+        "description": "A register node (2-seg FQID, e.g. `scb/lisa`). Its `children` are the\nregister's bindings; `variants` is a forward-declared reference stub for\nA5.2's variant browser (a link, not data).",
+        "properties": {
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "register",
+            "default": "register",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "RegisterNode",
+        "type": "object"
+      },
+      "RegisterResponse": {
+        "description": "`GET /api/catalog/{provider}/{register}` \u2014 the register + its bindings and\nthe variant-browser reference stub as children (\u00a79.5).",
+        "properties": {
+          "children": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "binding": "#/components/schemas/BindingChild",
+                  "variants-ref": "#/components/schemas/VariantsRef"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/BindingChild"
+                },
+                {
+                  "$ref": "#/components/schemas/VariantsRef"
+                }
+              ]
+            },
+            "title": "Children",
+            "type": "array"
+          },
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "register",
+            "default": "register",
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          }
+        },
+        "required": [
+          "fqid",
+          "children"
+        ],
+        "title": "RegisterResponse",
+        "type": "object"
+      },
+      "RelatedRefModel": {
+        "description": "A split-sibling edge (`variable_related_to`, \u00a75.7) with its\n`relation_kind`. `register` is the alias for `register_name` (see\n`VariableRefModel`) \u2014 avoids the `BaseModel.register` method shadow.",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          },
+          "relation_kind": {
+            "title": "Relation Kind",
+            "type": "string"
+          },
+          "variable": {
+            "title": "Variable",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid",
+          "provider",
+          "register",
+          "variable",
+          "relation_kind"
+        ],
+        "title": "RelatedRefModel",
+        "type": "object"
+      },
+      "RootResponse": {
+        "description": "`GET /api/catalog` \u2014 the catalog root: every provider plus the\nclassification-root sentinel (\u00a79.5).",
+        "properties": {
+          "children": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ProviderNode"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationRootNode"
+                }
+              ]
+            },
+            "title": "Children",
+            "type": "array"
+          },
+          "kind": {
+            "const": "root",
+            "default": "root",
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "children"
+        ],
+        "title": "RootResponse",
         "type": "object"
       },
       "StewardInfo": {
@@ -65,6 +662,250 @@
           "long_name"
         ],
         "title": "StewardInfo",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "ValueSetMember": {
+        "description": "One (code, label) pair of a state's value set.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "label"
+        ],
+        "title": "ValueSetMember",
+        "type": "object"
+      },
+      "VariableRefModel": {
+        "description": "A variable-grain edge endpoint (`same_as` / succession). `fqid` is the\nneighbor's 3-seg binding FQID (None when its slug isn't populated); the\n`provider`/`register`/`variable` triple is the load-bearing identity when\n`fqid` is None. `reason` / `effective_year` are succession-only (#142), None\non `same_as`.\n\nThe Python attribute is `register_name` because a bare `register` field\nshadows `BaseModel.register` (a Pydantic v2 method) and warns; the wire/JSON\nkey stays `register` via the alias (the alias is also the canonical init\nparam \u2014 the mapper constructs with `register=`). FastAPI serializes by alias\nby default, so the response key is `register`.",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Year"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          },
+          "variable": {
+            "title": "Variable",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid",
+          "provider",
+          "register",
+          "variable"
+        ],
+        "title": "VariableRefModel",
+        "type": "object"
+      },
+      "VariableStateModel": {
+        "description": "One `variable_state` row \u2014 a per-delivery shape tagged with its variant\ncoordinate (\u00a75.1). `value_set` is the hydrated (code, label) pairs, None when\nthe state carries no value set.",
+        "properties": {
+          "data_length": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Length"
+          },
+          "data_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Type"
+          },
+          "delivery_column_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Column Name"
+          },
+          "register_variant_id": {
+            "title": "Register Variant Id",
+            "type": "integer"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "valid_from": {
+            "title": "Valid From",
+            "type": "string"
+          },
+          "valid_to": {
+            "title": "Valid To",
+            "type": "string"
+          },
+          "value_set": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ValueSetMember"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Set"
+          },
+          "value_set_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Set Id"
+          },
+          "value_set_version_label": {
+            "title": "Value Set Version Label",
+            "type": "string"
+          },
+          "variant": {
+            "title": "Variant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state_id",
+          "variant",
+          "register_variant_id",
+          "valid_from",
+          "valid_to",
+          "data_type",
+          "data_length",
+          "delivery_column_name",
+          "value_set_version_label",
+          "value_set_id",
+          "value_set"
+        ],
+        "title": "VariableStateModel",
+        "type": "object"
+      },
+      "VariantsRef": {
+        "description": "Forward-declared reference to a register's variant browser (A5.2). A\ndeclared slot so the discriminated union / TS types are stable before the\n`/{provider}/{register}/variants` sub-resource exists \u2014 `available` is False\nuntil A5.2 wires it.",
+        "properties": {
+          "available": {
+            "default": false,
+            "title": "Available",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "variants-ref",
+            "default": "variants-ref",
+            "title": "Kind",
+            "type": "string"
+          },
+          "register_fqid": {
+            "title": "Register Fqid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "register_fqid"
+        ],
+        "title": "VariantsRef",
         "type": "object"
       },
       "WebappInfo": {
@@ -96,6 +937,92 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/catalog": {
+      "get": {
+        "description": "The catalog root: every provider plus the classification-root sentinel.",
+        "operationId": "get_catalog_root_api_catalog_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Catalog Root"
+      }
+    },
+    "/api/catalog/{fqid}": {
+      "get": {
+        "description": "Resolve any catalog node by FQID path.\n\nThe \u00a716 per-segment allow-list runs as the `_validated_fqid` dependency, which\nFastAPI resolves before this body \u2014 so a malformed / traversal-shaped path\nreturns 422 **before** any connection opens (no DB hit at all). `parse` is\nDB-free and runs BEFORE the connection opens too, so a grammar/arity-invalid\npath (e.g. a reserved literal in an illegal slot) also 422s with no open. The\nclassification-root literal `class` (1 seg) is special-cased before `parse`.\n`@version` is validated but not yet narrowing (A5.2 `?value_set_version`); the\nbare 3-seg FQID is handed to `parse`/`resolve`. The connection is opened and\nused within this sync body (one thread \u2014 see `_catalog_conn`).",
+        "operationId": "get_catalog_node_api_catalog__fqid__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "discriminator": {
+                    "mapping": {
+                      "binding": "#/components/schemas/BindingNode",
+                      "classification": "#/components/schemas/ClassificationNode",
+                      "classification-root": "#/components/schemas/ClassificationRootResponse",
+                      "provider": "#/components/schemas/ProviderResponse",
+                      "register": "#/components/schemas/RegisterResponse"
+                    },
+                    "propertyName": "kind"
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProviderResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RegisterResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BindingNode"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClassificationRootResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ClassificationNode"
+                    }
+                  ],
+                  "title": "Response Get Catalog Node Api Catalog  Fqid  Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Catalog Node"
+      }
+    },
     "/api/context": {
       "get": {
         "operationId": "get_context_api_context_get",

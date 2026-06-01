@@ -4,6 +4,56 @@
  */
 
 export interface paths {
+    "/api/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Catalog Root
+         * @description The catalog root: every provider plus the classification-root sentinel.
+         */
+        get: operations["get_catalog_root_api_catalog_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{fqid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Catalog Node
+         * @description Resolve any catalog node by FQID path.
+         *
+         *     The §16 per-segment allow-list runs as the `_validated_fqid` dependency, which
+         *     FastAPI resolves before this body — so a malformed / traversal-shaped path
+         *     returns 422 **before** any connection opens (no DB hit at all). `parse` is
+         *     DB-free and runs BEFORE the connection opens too, so a grammar/arity-invalid
+         *     path (e.g. a reserved literal in an illegal slot) also 422s with no open. The
+         *     classification-root literal `class` (1 seg) is special-cased before `parse`.
+         *     `@version` is validated but not yet narrowing (A5.2 `?value_set_version`); the
+         *     bare 3-seg FQID is handed to `parse`/`resolve`. The connection is opened and
+         *     used within this sync body (one thread — see `_catalog_conn`).
+         */
+        get: operations["get_catalog_node_api_catalog__fqid__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/context": {
         parameters: {
             query?: never;
@@ -26,6 +76,142 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * BindingChild
+         * @description A binding child under a register node — a thin (fqid, name) entry, NOT
+         *     the embedded longitudinal record (that is only on the binding LEAF response).
+         */
+        BindingChild: {
+            /** Fqid */
+            fqid: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "binding";
+            /** Name */
+            name?: string | null;
+        };
+        /**
+         * BindingNode
+         * @description A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
+         *     longitudinal record embedded from one `Catalog.resolve` call (§9.5): shared
+         *     metadata, every state (each tagged with its variant), and the variable-grain
+         *     `same_as` / `replaced_by` / `related_to` / `lineage` edges.
+         *
+         *     `lineage_warnings` are intentionally OMITTED — `ResolvedVariable` doesn't
+         *     carry them; they arrive via A5.2's `/lineage_warnings` endpoint. `@version`
+         *     pin narrowing is also A5.2 (`?value_set_version`); this leaf embeds the full
+         *     history regardless of any `@version` suffix in the URL.
+         */
+        BindingNode: {
+            /** Definition */
+            definition: string | null;
+            /** Description */
+            description: string | null;
+            /** Fqid */
+            fqid: string;
+            /** Is Identifier */
+            is_identifier: boolean;
+            /** Is Sensitive */
+            is_sensitive: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "binding";
+            /** Lineage */
+            lineage: components["schemas"]["LineageEdgeModel"][];
+            /** Measurement Unit */
+            measurement_unit: string | null;
+            /** Name */
+            name: string | null;
+            /** Register Id */
+            register_id: number;
+            /** Related To */
+            related_to: components["schemas"]["RelatedRefModel"][];
+            /** Replaced By */
+            replaced_by: components["schemas"]["VariableRefModel"][];
+            /** Same As */
+            same_as: components["schemas"]["VariableRefModel"][];
+            /** Source Register Id */
+            source_register_id: number | null;
+            /** Source Register Text */
+            source_register_text: string | null;
+            /** States */
+            states: components["schemas"]["VariableStateModel"][];
+            /** Variable Id */
+            variable_id: number;
+            /** Via Same As */
+            via_same_as?: string[] | null;
+        };
+        /**
+         * ClassificationNode
+         * @description A classification leaf (`class/<slug>`, 2 seg).
+         */
+        ClassificationNode: {
+            /** Fqid */
+            fqid: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "classification";
+            /** Name */
+            name: string;
+            /** Short Name */
+            short_name: string;
+            /** Via Same As */
+            via_same_as?: string[] | null;
+        };
+        /**
+         * ClassificationRootNode
+         * @description The classification-root sentinel (`class`, 1 seg) — a child of the root
+         *     and a resolvable node whose `children` are every classification (§5.2: `class`
+         *     is a reserved slug, not a real provider).
+         */
+        ClassificationRootNode: {
+            /**
+             * Fqid
+             * @default class
+             */
+            fqid: string;
+            /**
+             * Kind
+             * @default classification-root
+             * @constant
+             */
+            kind: "classification-root";
+            /**
+             * Name
+             * @default Classifications
+             */
+            name: string;
+        };
+        /**
+         * ClassificationRootResponse
+         * @description `GET /api/catalog/class` — the classification-root + every classification
+         *     as children.
+         */
+        ClassificationRootResponse: {
+            /** Children */
+            children: components["schemas"]["ClassificationNode"][];
+            /**
+             * Fqid
+             * @default class
+             */
+            fqid: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "classification-root";
+            /**
+             * Name
+             * @default Classifications
+             */
+            name: string;
+        };
+        /**
          * ContextResponse
          * @description ``GET /api/context`` — deployment identity, branding, build info (§9.5).
          *
@@ -37,6 +223,63 @@ export interface components {
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * LineageEdgeModel
+         * @description A consumer-side lineage edge (state grain, §5.6) tying a consumer state to
+         *     a source state over their validity intersection. `source_fqid` is the source
+         *     state's 3-seg binding FQID (None when the source slugs aren't populated).
+         */
+        LineageEdgeModel: {
+            /** Consumer State Id */
+            consumer_state_id: number;
+            /** Source Fqid */
+            source_fqid?: string | null;
+            /** Source State Id */
+            source_state_id: number;
+            /** Valid From */
+            valid_from: string;
+            /** Valid To */
+            valid_to: string;
+        };
+        /**
+         * ProviderNode
+         * @description A provider node (1-seg FQID, e.g. `scb`). A child of the root and a
+         *     resolvable node (its `children` are the provider's registers).
+         */
+        ProviderNode: {
+            /** Fqid */
+            fqid: string;
+            /**
+             * Kind
+             * @default provider
+             * @constant
+             */
+            kind: "provider";
+            /** Name */
+            name?: string | null;
+        };
+        /**
+         * ProviderResponse
+         * @description `GET /api/catalog/{provider}` — the provider + its registers as children.
+         */
+        ProviderResponse: {
+            /** Children */
+            children: components["schemas"]["RegisterNode"][];
+            /** Fqid */
+            fqid: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "provider";
+            /** Name */
+            name?: string | null;
         };
         /**
          * RegMetaInfo
@@ -55,6 +298,79 @@ export interface components {
             schema_version: string;
         };
         /**
+         * RegisterNode
+         * @description A register node (2-seg FQID, e.g. `scb/lisa`). Its `children` are the
+         *     register's bindings; `variants` is a forward-declared reference stub for
+         *     A5.2's variant browser (a link, not data).
+         */
+        RegisterNode: {
+            /** Fqid */
+            fqid: string;
+            /**
+             * Kind
+             * @default register
+             * @constant
+             */
+            kind: "register";
+            /** Name */
+            name?: string | null;
+            /** Purpose */
+            purpose?: string | null;
+        };
+        /**
+         * RegisterResponse
+         * @description `GET /api/catalog/{provider}/{register}` — the register + its bindings and
+         *     the variant-browser reference stub as children (§9.5).
+         */
+        RegisterResponse: {
+            /** Children */
+            children: (components["schemas"]["BindingChild"] | components["schemas"]["VariantsRef"])[];
+            /** Fqid */
+            fqid: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "register";
+            /** Name */
+            name?: string | null;
+            /** Purpose */
+            purpose?: string | null;
+        };
+        /**
+         * RelatedRefModel
+         * @description A split-sibling edge (`variable_related_to`, §5.7) with its
+         *     `relation_kind`. `register` is the alias for `register_name` (see
+         *     `VariableRefModel`) — avoids the `BaseModel.register` method shadow.
+         */
+        RelatedRefModel: {
+            /** Fqid */
+            fqid: string | null;
+            /** Provider */
+            provider: string;
+            /** Register */
+            register: string;
+            /** Relation Kind */
+            relation_kind: string;
+            /** Variable */
+            variable: string;
+        };
+        /**
+         * RootResponse
+         * @description `GET /api/catalog` — the catalog root: every provider plus the
+         *     classification-root sentinel (§9.5).
+         */
+        RootResponse: {
+            /** Children */
+            children: (components["schemas"]["ProviderNode"] | components["schemas"]["ClassificationRootNode"])[];
+            /**
+             * Kind
+             * @default root
+             * @constant
+             */
+            kind: "root";
+        };
+        /**
          * StewardInfo
          * @description Deployment identity + branding, from ``steward.toml`` (§9.1).
          */
@@ -65,6 +381,108 @@ export interface components {
             long_name: string;
             /** Name */
             name: string;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+        };
+        /**
+         * ValueSetMember
+         * @description One (code, label) pair of a state's value set.
+         */
+        ValueSetMember: {
+            /** Code */
+            code: string;
+            /** Label */
+            label: string;
+        };
+        /**
+         * VariableRefModel
+         * @description A variable-grain edge endpoint (`same_as` / succession). `fqid` is the
+         *     neighbor's 3-seg binding FQID (None when its slug isn't populated); the
+         *     `provider`/`register`/`variable` triple is the load-bearing identity when
+         *     `fqid` is None. `reason` / `effective_year` are succession-only (#142), None
+         *     on `same_as`.
+         *
+         *     The Python attribute is `register_name` because a bare `register` field
+         *     shadows `BaseModel.register` (a Pydantic v2 method) and warns; the wire/JSON
+         *     key stays `register` via the alias (the alias is also the canonical init
+         *     param — the mapper constructs with `register=`). FastAPI serializes by alias
+         *     by default, so the response key is `register`.
+         */
+        VariableRefModel: {
+            /** Effective Year */
+            effective_year?: number | null;
+            /** Fqid */
+            fqid: string | null;
+            /** Provider */
+            provider: string;
+            /** Reason */
+            reason?: string | null;
+            /** Register */
+            register: string;
+            /** Variable */
+            variable: string;
+        };
+        /**
+         * VariableStateModel
+         * @description One `variable_state` row — a per-delivery shape tagged with its variant
+         *     coordinate (§5.1). `value_set` is the hydrated (code, label) pairs, None when
+         *     the state carries no value set.
+         */
+        VariableStateModel: {
+            /** Data Length */
+            data_length: string | null;
+            /** Data Type */
+            data_type: string | null;
+            /** Delivery Column Name */
+            delivery_column_name: string | null;
+            /** Register Variant Id */
+            register_variant_id: number;
+            /** State Id */
+            state_id: number;
+            /** Valid From */
+            valid_from: string;
+            /** Valid To */
+            valid_to: string;
+            /** Value Set */
+            value_set: components["schemas"]["ValueSetMember"][] | null;
+            /** Value Set Id */
+            value_set_id: number | null;
+            /** Value Set Version Label */
+            value_set_version_label: string;
+            /** Variant */
+            variant: string;
+        };
+        /**
+         * VariantsRef
+         * @description Forward-declared reference to a register's variant browser (A5.2). A
+         *     declared slot so the discriminated union / TS types are stable before the
+         *     `/{provider}/{register}/variants` sub-resource exists — `available` is False
+         *     until A5.2 wires it.
+         */
+        VariantsRef: {
+            /**
+             * Available
+             * @default false
+             */
+            available: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "variants-ref";
+            /** Register Fqid */
+            register_fqid: string;
         };
         /**
          * WebappInfo
@@ -91,6 +509,57 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    get_catalog_root_api_catalog_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RootResponse"];
+                };
+            };
+        };
+    };
+    get_catalog_node_api_catalog__fqid__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fqid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_context_api_context_get: {
         parameters: {
             query?: never;

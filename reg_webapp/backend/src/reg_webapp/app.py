@@ -5,10 +5,11 @@ The lifespan opens the real reg_meta DB read-only via reg_meta's own helpers
 AND runs ``_check_schema_compat`` (the load-bearing SCHEMA_VERSION gate vs the
 DB manifest) — we do NOT hardcode the path or reimplement the check. A5.1a
 needs only the manifest snapshot, so the boot connection is closed once it's
-read; the parsed manifest lives on ``app.state``. A single ``sqlite3``
-connection from this lifespan is NOT safe to query from FastAPI's sync-handler
-threadpool, so the long-lived mmap'd query connection (and its threading model)
-is A5.1b's to add when it builds the catalog index + ``/api/catalog``.
+read; the parsed manifest lives on ``app.state`` alongside the resolved
+``db_path``. A single ``sqlite3`` connection from this lifespan is NOT safe to
+query from FastAPI's sync-handler threadpool, so the catalog routes (A5.1b) open
+a FRESH read-only connection PER REQUEST from ``app.state.db_path`` instead of
+holding a long-lived shared one — see ``routes/catalog.py`` ``_catalog``.
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ import reg_meta.db
 from fastapi import FastAPI
 
 from . import __version__
-from .routes import context
+from .routes import catalog, context
 from .stewards import load_steward
 
 if TYPE_CHECKING:
@@ -50,10 +51,17 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         )
     app.state.manifest = manifest
     app.state.steward = load_steward()
+    # The catalog routes open a FRESH read-only connection PER REQUEST from this
+    # boot-resolved path (the connection model is locked: a shared sqlite3 conn
+    # isn't safe across FastAPI's sync-handler threadpool). The schema was
+    # already validated by open_db above, so the per-request open skips the
+    # re-check (check_schema=False) — see routes/catalog.py `_catalog`.
+    app.state.db_path = db_path
     yield
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title="reg_webapp", version=__version__, lifespan=lifespan)
     app.include_router(context.router)
+    app.include_router(catalog.router)
     return app
