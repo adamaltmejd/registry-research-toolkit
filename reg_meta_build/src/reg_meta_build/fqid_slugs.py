@@ -1299,6 +1299,19 @@ def populate_variable_slugs(
             disc.update(_split_sibling_disc(conn, _rid, _pk))
 
         def _source_id(rid: int, pk: str, vid: int) -> str:
+            # The variable source-ID uses '.' as the segment separator, so a
+            # provider_key containing '.' would be mis-parsed downstream as a
+            # split-sibling 3-part key (`_parse_variable_id` → phantom
+            # discriminator, silent slug mis-attribution). SCB keys are integers
+            # (dot-free); a non-SCB provider_key (a SOS variable name, A4.4b) must
+            # be too. Fail fast rather than corrupt the key.
+            if "." in pk:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"variable provider_key {pk!r} (register {rid}) contains '.', "
+                    "which collides with the source-ID segment separator.",
+                    "Rename the source column / provider_key so it has no dot.",
+                )
             if (rid, pk) in split_pk:
                 return f"{rid}.{pk}.{disc[vid]}"
             return f"{rid}.{pk}"

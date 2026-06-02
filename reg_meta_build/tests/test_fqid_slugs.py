@@ -1562,6 +1562,28 @@ class TestAutoDerivationMarker:
         assert "1.20" in worklist  # same_as only → slug unfixed → stays
         assert "1.21" in worklist  # deprecated-only → slug still ships → stays
 
+    def test_dotted_provider_key_fails_fast(self, tmp_path: Path) -> None:
+        # A provider_key containing '.' would mis-parse the variable source-ID as
+        # a split-sibling 3-part key (silent slug mis-attribution). Fail fast at
+        # source-ID construction instead. (Inert for SCB — its keys are ints — but
+        # a non-SCB provider_key is an arbitrary name, so guard it. A4.4b review.)
+        conn = build_slugged_db(variable=None)
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, 'FOO.BAR', 'Foo')"
+        ).lastrowid
+        assert vid is not None
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2000-01-01', '2000-12-31', 'int', 'FooBar')",
+            (vid,),
+        )
+        conn.commit()
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, self._slug_dir(tmp_path))
+        assert "contains '.'" in exc.value.message
+
 
 class TestSeedEmitsValidToml:
     """seed_*_toml must produce TOML that round-trips through tomllib even
