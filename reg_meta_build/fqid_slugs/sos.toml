@@ -1,0 +1,246 @@
+# Curated FQID slugs for Socialstyrelsen (SOS) registers (A4.4b).
+#
+# Companion to scb.toml; same grammar/shape (REFACTOR_SPEC §5.2-5.3). The
+# TOML keys are the minted SOS ids (mint("sos", <abbrev>[, <variant-name>]),
+# band [2^62, 2^63)), NOT SCB's low source ids — SOS registers carry no SCB
+# RegisterId, so the minted id IS the source id populate_slugs looks up.
+#
+# Register slug = the 3-letter SOS abbrev (_sos_abbrev(reg): the
+# parenthesized code in the workbook filename, lowercased). Variant slug =
+# the deldatamängd name kebab-cased via derive_variable_slug. The synthesized
+# _default variant of variant-less registers (LSS, BU) takes slug `default`
+# (`_default` fails the §5.2 leading-char grammar; `default` is the
+# grammar-valid browsing coordinate — variant slugs are browse coordinates,
+# not FQID segments).
+#
+# Variable slugs stay AUTO (populate_variable_slugs -> sos.auto.toml,
+# transient/not committed). Regenerate .snapshot.json after edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+# Läkemedelsregistret (LMED)
+[register."7661979173609203267"]
+slug = "lmed"
+
+[register_variant."7661979173609203267.8189345851195899633"]
+slug = "lmed"
+display_group = "LMED"
+
+[register_variant."7661979173609203267.5835879744305207105"]
+slug = "lmed-vara"
+display_group = "LMED VARA"
+
+# Registret över ekonomiskt bistånd (EKB)
+[register."5352018376318353790"]
+slug = "ekb"
+
+[register_variant."5352018376318353790.6291235931365109975"]
+slug = "ekb-ar"
+display_group = "EKB_AR"
+
+[register_variant."5352018376318353790.5596904919895902135"]
+slug = "ekb-manad"
+display_group = "EKB_MANAD"
+
+# Cancerregistret (CAN)
+[register."7119586976865944958"]
+slug = "can"
+
+[register_variant."7119586976865944958.5186039963966324433"]
+slug = "can"
+display_group = "CAN"
+
+[register_variant."7119586976865944958.9216896336296984035"]
+slug = "can-bc"
+display_group = "CAN_BC"
+
+# Dödsorsaksregistret (DORS)
+[register."5369119272181688462"]
+slug = "dors"
+
+[register_variant."5369119272181688462.7577027114532436818"]
+slug = "dors-avi"
+display_group = "DORS_AVI"
+
+[register_variant."5369119272181688462.7117668989275245835"]
+slug = "dors"
+display_group = "DORS"
+
+[register_variant."5369119272181688462.5309929884760526431"]
+slug = "cov-dors-hermes"
+display_group = "COV_DORS_HERMES"
+
+# Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA) (LOVA)
+[register."7847722537922273761"]
+slug = "lova"
+
+[register_variant."7847722537922273761.6625693372895183876"]
+slug = "lova"
+display_group = "LOVA"
+
+[register_variant."7847722537922273761.5062264322777987324"]
+slug = "lova-examen"
+display_group = "LOVA EXAMEN"
+
+[register_variant."7847722537922273761.5782470112533969966"]
+slug = "lova-hosp"
+display_group = "LOVA HOSP"
+
+[register_variant."7847722537922273761.4633578538773784614"]
+slug = "lova-agarkat"
+display_group = "LOVA AGARKAT"
+
+[register_variant."7847722537922273761.6109873184706521781"]
+slug = "lova-arb-mark-stat"
+display_group = "LOVA ARB_MARK_STAT"
+
+[register_variant."7847722537922273761.6725406064067685601"]
+slug = "lova-sektorkod"
+display_group = "LOVA SEKTORKOD"
+
+[register_variant."7847722537922273761.6421767783079273516"]
+slug = "lova-syssstat"
+display_group = "LOVA SYSSSTAT"
+
+[register_variant."7847722537922273761.5119334885992855332"]
+slug = "lova-yrkstalln"
+display_group = "LOVA YRKSTALLN"
+
+[register_variant."7847722537922273761.5135897315882757553"]
+slug = "lova-hospkoder"
+display_group = "LOVA HOSPKODER"
+
+[register_variant."7847722537922273761.5481088017788934871"]
+slug = "lova-region"
+display_group = "LOVA REGION"
+
+[register_variant."7847722537922273761.5544805317603535070"]
+slug = "lova-landskod"
+display_group = "LOVA LANDSKOD"
+
+[register_variant."7847722537922273761.6891402975879538230"]
+slug = "lova-leg-spec-exam"
+display_group = "LOVA LEG_SPEC_EXAM"
+
+[register_variant."7847722537922273761.6583785043766617643"]
+slug = "lova-examenskoder"
+display_group = "LOVA EXAMENSKODER"
+
+[register_variant."7847722537922273761.8897592339203104611"]
+slug = "lova-person"
+display_group = "LOVA PERSON"
+
+# Registret över insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)
+[register."5028920659479690770"]
+slug = "lss"
+
+[register_variant."5028920659479690770.5751215697700503870"]
+slug = "default"
+display_group = "_default"
+
+# Registret över insatser inom den kommunala hälso- och sjukvården (HSL)
+[register."6512206290021964828"]
+slug = "hsl"
+
+[register_variant."6512206290021964828.5569968863053916323"]
+slug = "hsl"
+display_group = "HSL"
+
+[register_variant."6512206290021964828.5726579377988208763"]
+slug = "hsl2"
+display_group = "HSL2"
+
+# Registret över insatser till barn och unga (BU)
+[register."7550156225339591583"]
+slug = "bu"
+
+[register_variant."7550156225339591583.6478131538792493195"]
+slug = "default"
+display_group = "_default"
+
+# Medicinska födelseregistret (MFR)
+[register."6052270801387609014"]
+slug = "mfr"
+
+[register_variant."6052270801387609014.6500057991853870690"]
+slug = "mfr"
+display_group = "MFR"
+
+[register_variant."6052270801387609014.8238708481874343227"]
+slug = "mfr-fok"
+display_group = "MFR_FOK"
+
+[register_variant."6052270801387609014.7877915304423976076"]
+slug = "mfr-ivf"
+display_group = "MFR_IVF"
+
+[register_variant."6052270801387609014.5479369406799642076"]
+slug = "mfr-lmed"
+display_group = "MFR_LMED"
+
+# Patientregistret (PAR)
+[register."5891427617861710725"]
+slug = "par"
+
+[register_variant."5891427617861710725.6299896919770839454"]
+slug = "par-sv"
+display_group = "PAR_SV"
+
+[register_variant."5891427617861710725.5623677195158740599"]
+slug = "par-ov"
+display_group = "PAR_OV"
+
+[register_variant."5891427617861710725.6508659120530331974"]
+slug = "par-tv"
+display_group = "PAR_TV"
+
+# Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
+[register."6293204766641962219"]
+slug = "lvm"
+
+[register_variant."6293204766641962219.6579580878381606150"]
+slug = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
+display_group = "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+
+[register_variant."6293204766641962219.5504744580319271019"]
+slug = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
+display_group = "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+
+[register_variant."6293204766641962219.5577711036561484975"]
+slug = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
+display_group = "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+
+# Registret över socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)
+[register."9047831179457584381"]
+slug = "sol"
+
+[register_variant."9047831179457584381.7344771358524101306"]
+slug = "sol"
+display_group = "SOL"
+
+[register_variant."9047831179457584381.9078593388686399599"]
+slug = "sol-incr"
+display_group = "SOL_INCR"
+
+[register_variant."9047831179457584381.6418472685745483159"]
+slug = "sol-2007-2012"
+display_group = "SOL_2007_2012"
+
+# Tandhälsoregistret (THR)
+[register."8948214044434034899"]
+slug = "thr"
+
+[register_variant."8948214044434034899.9064008527617471683"]
+slug = "thr-besok"
+display_group = "THR_BESOK"
+
+[register_variant."8948214044434034899.6658941053497987406"]
+slug = "thr-besok-landsting"
+display_group = "THR_BESOK_LANDSTING"
+
+[register_variant."8948214044434034899.6343572965862509640"]
+slug = "thr-tandhalsa"
+display_group = "THR_TANDHALSA"
+
+[register_variant."8948214044434034899.5474396019852278710"]
+slug = "thr-tandhalsa-landsting"
+display_group = "THR_TANDHALSA_LANDSTING"

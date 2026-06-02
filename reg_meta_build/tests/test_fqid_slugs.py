@@ -13,6 +13,7 @@ from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
     SNAPSHOT_FILENAME,
     SlugEntry,
+    _parse_variable_id,
     classify_default_candidate,
     diff_snapshot,
     format_default_slug_hints,
@@ -44,6 +45,49 @@ if TYPE_CHECKING:
 def _write(path: Path, body: str) -> Path:
     path.write_text(body, encoding="utf-8")
     return path
+
+
+class TestParseVariableId:
+    """A4.4b: the variable source-ID `<RegisterId>.<VarId>[.<disc>]` accepts a
+    TEXT VarId for a non-SCB provider (SOS `provider_key` is a variable name),
+    while keeping RegisterId a canonical int and guarding a numeric VarId."""
+
+    def test_scb_integer_varid(self) -> None:
+        assert _parse_variable_id("34.10") == (34, "10")
+
+    def test_split_sibling_three_part(self) -> None:
+        assert _parse_variable_id("34.10.kon") == (34, "10")
+
+    def test_sos_text_varid(self) -> None:
+        # SOS: register_id is a big minted int, VarId is the variable name.
+        assert _parse_variable_id("5028920659479690770.ALDER") == (
+            5028920659479690770,
+            "ALDER",
+        )
+        # text VarId in a split-sibling key is fine too.
+        assert _parse_variable_id("123.FOD_DATUMN.heltal") == (123, "FOD_DATUMN")
+
+    def test_leading_zero_register_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("034.10")
+        assert "RegisterId must be an integer" in exc.value.message
+
+    def test_numeric_varid_must_be_canonical(self) -> None:
+        # A purely-numeric VarId is an SCB id → still guarded against leading zeros
+        # so `1.10` and `1.010` can't alias one row.
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("1.010")
+        assert "numeric VarId must be in canonical" in exc.value.message
+
+    def test_empty_varid_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("1.")
+        assert "VarId segment is empty" in exc.value.message
+
+    def test_wrong_arity_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("1")
+        assert "expected" in exc.value.message
 
 
 class TestProviderToml:
