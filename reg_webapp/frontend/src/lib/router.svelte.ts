@@ -43,9 +43,11 @@ export function parseRoute(pathname: string): Route {
   }
   if (path.startsWith("/catalog/")) {
     // Decode each segment (the router stores the human FQID; the api layer
-    // re-encodes per segment when fetching).
+    // re-encodes per segment when fetching). A malformed percent-sequence
+    // (`null`) or an empty segment (a `//` in the path, an invalid FQID) routes
+    // to not-found rather than fetching a mangled FQID.
     const segments = path.slice("/catalog/".length).split("/").map(safeDecode);
-    if (segments.includes(null)) {
+    if (segments.includes(null) || segments.includes("")) {
       return { name: "not-found", path };
     }
     return { name: "catalog-node", fqidPath: (segments as string[]).join("/") };

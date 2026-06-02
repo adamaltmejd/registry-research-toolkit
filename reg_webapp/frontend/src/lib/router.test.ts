@@ -40,6 +40,13 @@ describe("parseRoute", () => {
     });
   });
 
+  it("routes an empty path segment (a //) to not-found", () => {
+    expect(parseRoute("/catalog/scb//lisa")).toEqual({
+      name: "not-found",
+      path: "/catalog/scb//lisa",
+    });
+  });
+
   it("treats the classification axis as a catalog node", () => {
     expect(parseRoute("/catalog/class/sun2020")).toEqual({
       name: "catalog-node",

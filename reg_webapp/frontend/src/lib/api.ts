@@ -96,8 +96,11 @@ export type CatalogNode =
 
 /** Percent-encode each FQID segment for use in a URL path (the server
  * re-validates the slug grammar per segment, §16). Split/join on `/` so the
- * path separators survive while reserved chars inside a segment are escaped. */
-function encodeFqid(fqidPath: string): string {
+ * path separators survive while reserved chars inside a segment are escaped.
+ * Shared with `catalog.catalogHref` so the SPA's link hrefs and the API paths
+ * encode identically. (A no-op for today's ASCII slugs, but correct for any
+ * input.) */
+export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
