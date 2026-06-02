@@ -326,14 +326,17 @@ CREATE INDEX idx_variable_natkey ON variable(register_id, provider_key);
 -- feed it (SCB projects `variable_instance` verbatim; SOS contributes 0 rows for
 -- now), and `_backfill_state_classifications` reads ONLY this table — so the
 -- backfill no longer knows which provider supplied a candidate (the GAP-1
--- close-out). One row per (variable_id, value_set_id) → candidate classification;
--- the backfill folds them to the min() classification_id per (variable_id,
--- value_set_id) state key. `value_set_id` is NULLABLE: a code-less state keys on
--- (variable_id, NULL). NO FK (mirrors `variable_instance.variable_id`'s no-FK so
--- this drops cleanly before `PRAGMA foreign_key_check`) and NO index (a single
--- sequential read at backfill time). Dropped before ship with the other scratch.
+-- close-out). A (variable_id, value_set_id) state key MAY have SEVERAL candidate
+-- rows — cvids that share the key but carry different value-set-version labels
+-- resolve to different classifications — so the backfill folds them to the min()
+-- classification_id per state key. `variable_id` is NOT NULL: a candidate with no
+-- owning variable could never apply (the feed pre-filters such rows), so the
+-- constraint also guards a future SOS feed. `value_set_id` is NULLABLE: a
+-- code-less state keys on (variable_id, NULL). NO foreign key (so it drops cleanly
+-- before `PRAGMA foreign_key_check`) and NO index (a single sequential read at
+-- backfill time). Dropped before ship with the other scratch.
 CREATE TABLE classification_candidate (
-    variable_id INTEGER,
+    variable_id INTEGER NOT NULL,
     value_set_id INTEGER,
     classification_id INTEGER NOT NULL
 );
@@ -2799,10 +2802,11 @@ def materialize(
     # NOT 1:1 (≈5,161 value_sets span >1 classification on the real corpus), so
     # the candidate-level linkage cannot be replaced by a value_set-derived map.
     # SOS contributes 0 candidate rows for now (out of scope). Guarded on
-    # `scb_ran`: `variable_instance` only exists when the SCB adapter ran (an
-    # SCB-excluded build leaves `classification_candidate` empty, so the backfill
-    # is a safe no-op). `classification_candidate` is in the BASE DDL and drops
-    # below with the other scratch.
+    # `scb_ran`: `variable_instance` is only POPULATED when the SCB adapter ran (it
+    # is in the BASE DDL, so it always exists but is empty otherwise) — the guard
+    # makes the intent explicit and leaves `classification_candidate` empty in an
+    # SCB-excluded build, so the backfill is a safe no-op. `classification_candidate`
+    # is likewise in the BASE DDL and drops below with the other scratch.
     if scb_ran:
         conn.execute(_CLASSIFICATION_CANDIDATE_FEED_SQL)
 
