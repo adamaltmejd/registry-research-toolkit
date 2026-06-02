@@ -40,9 +40,9 @@ if TYPE_CHECKING:
 PROJECT_DATA_FILENAME = "project_data.json"
 
 # Canonical issue codes for the build-side cross-block referential checks
-# (§6.8.3-adjacent; build-time only). These mirror the long-standing raises
-# in ``validate_project_data`` — PR1 adds the issue-based forms; PR2 rewires
-# ``reg_webapp`` to consume issues directly instead of catching the raise.
+# (§6.8.3-adjacent; build-time only). The issue-based forms mirror the
+# long-standing raises in ``validate_project_data`` so ``reg_webapp`` can
+# consume issues directly instead of catching the raise.
 COLUMN_OPTIONS_ORPHAN_CODE = "column_options_orphan_fqid"
 SUPPRESS_K_NON_CATEGORICAL_CODE = "suppress_k_on_non_categorical"
 # The §6.8.2 ``reg_monabundle`` namespaced-block validator

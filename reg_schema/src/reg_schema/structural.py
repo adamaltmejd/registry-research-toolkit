@@ -130,6 +130,14 @@ def _error(code: str, path: str, message: str) -> ValidationIssue:
     return ValidationIssue(level="error", code=code, path=path, message=message)
 
 
+def _jp_escape(token: str) -> str:
+    """RFC 6901 escape a JSON-pointer reference token: ``~`` → ``~0``, ``/`` →
+    ``~1`` (order matters). Needed when the token is arbitrary user input — a
+    typo'd key containing ``/`` would otherwise read as nested properties and the
+    SPA's pointer-based field highlight would target the wrong location."""
+    return token.replace("~", "~0").replace("/", "~1")
+
+
 def _check_unexpected_keys(
     container: Mapping[str, object],
     allowed: frozenset[str],
@@ -150,7 +158,7 @@ def _check_unexpected_keys(
         issues.append(
             _error(
                 "unexpected_field",
-                f"{base}/{key}",
+                f"{base}/{_jp_escape(key)}",
                 f"unexpected key {key!r} on {label}",
             )
         )

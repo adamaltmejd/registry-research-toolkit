@@ -325,11 +325,11 @@ def test_project_data_to_loadedspec_round_trips_panels():
     assert {m.source: m.time_key for m in p.members} == {"a.csv": "Ar", "b.csv": 2019}
 
 
-# -- issue-based forms (PR1 additive; PR2 rewires reg_webapp) --------------
+# -- issue-based forms ----------------------------------------------------
 #
 # These are the relocated-validation surfaces: the same cross-block /
 # namespaced-block checks the build gate raises on, exposed as
-# ``list[ValidationIssue]`` so reg_webapp (PR2) can return them instead of
+# ``list[ValidationIssue]`` so reg_webapp can return them instead of
 # catching the raise. ``validate_project_data``'s raise behavior is
 # unchanged (the tests above pin it); these only add the issue path.
 

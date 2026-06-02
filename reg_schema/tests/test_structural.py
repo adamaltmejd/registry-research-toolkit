@@ -566,6 +566,17 @@ def test_unexpected_field_on_panel_member() -> None:
     assert all(i.level == "error" for i in issues)
 
 
+def test_unexpected_field_key_is_rfc6901_escaped() -> None:
+    # The key is arbitrary steward input; a typo containing `/` or `~` must be
+    # RFC 6901-escaped in the JSON pointer (`/`→`~1`, `~`→`~0`), else the SPA's
+    # pointer-based field jump resolves to the wrong (nested) location.
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["foo/bar~baz"] = "oops"
+    result = validate_structural(spec)
+    issues = [i for i in result.issues if i.code == "unexpected_field"]
+    assert [i.path for i in issues] == ["/sources/0/bindings/0/foo~1bar~0baz"]
+
+
 def test_unexpected_field_not_emitted_for_top_level_namespaced_block() -> None:
     # Top level is open: an unknown top-level key is a namespaced block,
     # never `unexpected_field`. Guards against a future reader "fixing"
