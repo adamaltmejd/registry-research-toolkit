@@ -2838,12 +2838,14 @@ def build_db(
       - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
         (optional; required only for seed entries that set ``valid_codes_file``)
 
-    ``providers`` selects which adapters run. The PROGRAMMATIC default is
-    ``("scb",)`` so the ~150 existing fixture callers (SCB-only input) stay
-    behavior-identical; the CLI's ``--providers`` flag defaults to ``scb,sos``.
-    A4.3b: SOS is purely additive (minted ids in band ``[2^62, 2^63)``,
-    content-shared value_sets), so ``providers=("scb",)`` reproduces the
-    byte-identical pre-SOS SCB-only DB — the `--providers=scb` dbdiff gate.
+    ``providers`` selects which adapters run. Both the PROGRAMMATIC default and
+    the CLI ``--providers`` flag default to ``("scb",)`` so existing fixture
+    callers stay behavior-identical and the bare default build stays green while
+    SOS lacks curated slugs (sos.toml is A4.4); A4.5 flips the CLI default to
+    ``scb,sos``. A4.3b: SOS is purely additive (minted ids in band
+    ``[2^62, 2^63)``, content-shared value_sets), so ``providers=("scb",)``
+    reproduces the byte-identical pre-SOS SCB-only DB — the `--providers=scb`
+    dbdiff gate.
 
     Classification population is controlled by:
       - ``skip_classifications=True`` — skip entirely (tests only).

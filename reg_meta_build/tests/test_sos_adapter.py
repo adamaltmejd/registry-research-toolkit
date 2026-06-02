@@ -134,9 +134,10 @@ def _register(
     )
 
 
-def _emit(reg: SosRegister) -> list:
-    """Run the adapter's per-register emit against an in-memory DB and return the
-    IR object list. The DB is needed for the value-table read-back path."""
+def _emit(reg: SosRegister) -> tuple[list, SOSAdapter]:
+    """Run the adapter's per-register emit against an in-memory DB and return
+    ``(ir_objects, adapter)``. The DB (and the returned adapter, which owns it)
+    is needed for the value-table read-back path."""
     conn = sqlite3.connect(":memory:")
     conn.executescript(DDL)
     seed_providers(conn)
@@ -392,6 +393,49 @@ def test_empty_window_drops_code() -> None:
     # only the 2010-2020 window survives the >=2008 floor
     assert len(states) == 1
     assert states[0].valid_from >= "2010-01-01"
+
+
+# ---------------------------------------------------------------------------
+# valid_to reconciliation: merged members sharing valid_from but differing
+# valid_to must collapse to the WIDEST window, not the first in delivery order
+# (the state_id / idx_variable_state_unique basis excludes valid_to).
+# ---------------------------------------------------------------------------
+
+
+def test_merged_members_same_start_widen_valid_to() -> None:
+    # Two same-name variant-less members (BU shape: all -> _default) share
+    # valid_from=1960 but end in different years. They mint the same state_id
+    # (valid_to is not in the basis); the surviving state must carry the WIDEST
+    # valid_to, never the narrower first-in-order one.
+    reg = _register(
+        "bu",
+        [
+            _var("KON", data_from=1960, data_to=2013),
+            _var("KON", data_from=1960, data_to=2016),
+        ],
+    )
+    states = _of(_emit(reg)[0], IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert states[0].valid_from == "1960-01-01"
+    assert states[0].valid_to == "2016-12-31", "widest valid_to wins, not the first"
+
+
+def test_merged_member_open_end_not_silently_closed() -> None:
+    # PAR shape: one member is open-ended (data_to=None, still delivered), another
+    # closes at 2014. The reconciliation must keep the state OPEN (valid_to None),
+    # never report the variable as retired. Order-independent.
+    forward = _register(
+        "par",
+        [_var("SLUT", data_from=2001, data_to=2014), _var("SLUT", data_from=2001)],
+    )
+    reverse = _register(
+        "par",
+        [_var("SLUT", data_from=2001), _var("SLUT", data_from=2001, data_to=2014)],
+    )
+    for reg in (forward, reverse):
+        states = _of(_emit(reg)[0], IRVariableState)
+        assert len(states) == 1
+        assert states[0].valid_to is None, "open-ended member must not be closed"
 
 
 # ---------------------------------------------------------------------------

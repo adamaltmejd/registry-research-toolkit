@@ -139,7 +139,12 @@ def validate_built_db(db_path: Path) -> ValidationResult:
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
-        _check_sos_code_variable_map_coverage(conn, result, tables, has_projection)
+        # No SOS-specific code_variable_map coverage check: code_variable_map IS
+        # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
+        # writes variable_state directly (no scratch intermediary like SCB's
+        # variable_instance), so any state-vs-map check is a tautology. The real
+        # invariant — every state with a value_set projects >= 1 code — is already
+        # covered for ALL providers by _check_state_projection_integrity above.
         _check_sos_sanity(conn, result, tables)
         _check_sos_stateless_variables(conn, result, tables)
         _check_operational(conn, result)
@@ -492,68 +497,18 @@ def _check_minted_id_bands(
             result.ok("all SCB ids < 2^62 and all SOS ids >= 2^62")
 
 
-def _check_sos_code_variable_map_coverage(
-    conn: sqlite3.Connection,
-    result: ValidationResult,
-    tables: set[str],
-    has_projection: bool,
-) -> None:
-    """A4.3b: every code-bearing SOS variable_state has its (variable_id, code_id)
-    in code_variable_map.
-
-    The A4.3a SCB coverage guard (db.py) reads SCB scratch (`variable_instance`),
-    which SOS has none of, and the dbdiff can't see SOS (not in the baseline). So
-    this is the ONLY coverage signal for SOS: the universal-table analog — every
-    (variable_id, code_id) reachable via `variable_state ⨝ value_set_member` for a
-    SOS variable must be present in `code_variable_map`. Self-skips when SOS / the
-    value tables are absent.
-    """
-    result.section("[coverage: SOS code_variable_map]")
-    needed = {"variable_state", "value_set_member", "code_variable_map", "register"}
-    if not has_projection or not needed.issubset(tables):
-        result.ok("SOS coverage tables absent — check skipped")
-        return
-    lost = conn.execute(
-        "SELECT vs.variable_id, vsm.code_id "
-        "FROM variable_state vs "
-        "JOIN variable v ON v.variable_id = vs.variable_id "
-        "JOIN register r ON r.register_id = v.register_id "
-        "JOIN value_set_member vsm ON vsm.value_set_id = vs.value_set_id "
-        "WHERE r.provider_id = ? AND vs.value_set_id IS NOT NULL "
-        "EXCEPT SELECT variable_id, code_id FROM code_variable_map "
-        "LIMIT 5",
-        (PROVIDER_ID_SOS,),
-    ).fetchall()
-    if lost:
-        sample = ", ".join(f"(var {r[0]}, code {r[1]})" for r in lost)
-        result.fail(
-            f"{len(lost)}+ SOS (variable_id, code_id) pair(s) missing from "
-            f"code_variable_map: {sample}"
-        )
-    else:
-        n_sos_states = conn.execute(
-            "SELECT COUNT(*) FROM variable_state vs "
-            "JOIN variable v USING (variable_id) "
-            "JOIN register r USING (register_id) "
-            "WHERE r.provider_id = ? AND vs.value_set_id IS NOT NULL",
-            (PROVIDER_ID_SOS,),
-        ).fetchone()[0]
-        if n_sos_states == 0:
-            result.ok("no code-bearing SOS states — coverage trivially holds")
-        else:
-            result.ok(
-                f"all {n_sos_states:,} code-bearing SOS states covered by "
-                "code_variable_map"
-            )
-
-
 # A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by
 # (register, name)) to ~1,730 distinct variables — the spec's "~2,300" counts the
 # PRE-merge (deldatamängd, name) occurrences (2,314); after the Model A
 # register-scoped merge the variable grain is ~1,730 (+2 for the two known
-# splits). Lower bounds are generous so a workbook drift doesn't false-fail.
+# splits). The band is TWO-SIDED: the upper bound (below the 2,314 un-merged
+# count) catches a merge-key regression that SPLITS a merge group — distinct
+# names mint distinct ids with no PK collision, so an over-split would otherwise
+# pass the lower bound silently. Both bounds are generous so a workbook drift
+# doesn't false-fail.
 _SOS_MIN_REGISTERS = 13
 _SOS_MIN_VARIABLES = 1_400
+_SOS_MAX_VARIABLES = 2_000
 
 
 def _check_sos_sanity(
@@ -581,10 +536,18 @@ def _check_sos_sanity(
         result.ok(f"{n_reg} SOS registers (>= {_SOS_MIN_REGISTERS})")
     else:
         result.fail(f"only {n_reg} SOS registers (< {_SOS_MIN_REGISTERS})")
-    if n_var >= _SOS_MIN_VARIABLES:
-        result.ok(f"{n_var:,} SOS variables (>= {_SOS_MIN_VARIABLES:,})")
-    else:
+    if _SOS_MIN_VARIABLES <= n_var <= _SOS_MAX_VARIABLES:
+        result.ok(
+            f"{n_var:,} SOS variables (in [{_SOS_MIN_VARIABLES:,}, "
+            f"{_SOS_MAX_VARIABLES:,}])"
+        )
+    elif n_var < _SOS_MIN_VARIABLES:
         result.fail(f"only {n_var:,} SOS variables (< {_SOS_MIN_VARIABLES:,})")
+    else:
+        result.fail(
+            f"{n_var:,} SOS variables (> {_SOS_MAX_VARIABLES:,}) — merge-key "
+            "regression? (un-merged (deldatamängd, name) grain is ~2,314)"
+        )
 
 
 def _check_sos_stateless_variables(

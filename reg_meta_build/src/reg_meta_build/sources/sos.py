@@ -991,6 +991,16 @@ def _intersect_advisory_deldat(
     return auth, True
 
 
+def _widest_valid_to(a: str | None, b: str | None) -> str | None:
+    """The wider of two ``valid_to`` bounds: ``None`` is open-ended (the widest
+    possible), else the later ISO date (full-date strings sort chronologically).
+    Reconciles merged-member states that share a (variant, valid_from) state_id
+    but carry different end bounds — see ``_emit_states``."""
+    if a is None or b is None:
+        return None
+    return max(a, b)
+
+
 class SOSAdapter:
     """Socialstyrelsen source adapter (IRAdapter).
 
@@ -1398,22 +1408,38 @@ class SOSAdapter:
         each (member, resolved-era windowed value-set) of a variable.
 
         Two members of a MERGED variable can resolve to the same variant + same
-        window (e.g. a variable name appearing under a duplicate deldatamängd, or
-        an identical drift window across members) -> the same minted state_id.
-        Those collapse: `seen_state_ids` drops the duplicate so the reinsert's
-        `idx_variable_state_unique` doesn't fire on a self-duplicate.
+        `valid_from` (e.g. a variable name appearing under a duplicate
+        deldatamängd, or members whose windows share a start) -> the same minted
+        state_id, because the `idx_variable_state_unique` basis EXCLUDES
+        `valid_to`. They are NOT duplicates: each carries its member's own
+        `valid_to`. Keeping the first in delivery order would silently truncate
+        the variable's coverage (and close an open-ended state), so reconcile
+        `valid_to` to the WIDEST window instead of dropping. `value_set_id` is
+        provably identical on a same-state_id collision — a distinguishing code
+        buckets into a non-empty `value_set_version_label`, which changes the
+        state_id — so widening `valid_to` is the only reconciliation needed.
         """
         # Build the value-set rows for this variable's kodlista once.
         # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
         # valid_from/to. Otherwise: state-level era windowing per tidsperiod.
         seen_alias: set[tuple[int, str]] = set()
-        seen_state_ids: set[int] = set()
+        # State buffer keyed by state_id; flushed after the member loop so the
+        # reinsert sees one (widest-valid_to) row per state_id.
+        states_by_id: dict[int, IRVariableState] = {}
 
-        def _dedup(obj: IRObject) -> Iterator[IRObject]:
+        def _collect(obj: IRObject) -> Iterator[IRObject]:
             if isinstance(obj, IRVariableState):
-                if obj.state_id in seen_state_ids:
-                    return
-                seen_state_ids.add(obj.state_id)
+                prior = states_by_id.get(obj.state_id)
+                states_by_id[obj.state_id] = (
+                    obj
+                    if prior is None
+                    else prior.model_copy(
+                        update={
+                            "valid_to": _widest_valid_to(prior.valid_to, obj.valid_to)
+                        }
+                    )
+                )
+                return
             yield obj
 
         for v in members:
@@ -1475,7 +1501,7 @@ class SOSAdapter:
                     continue
                 if dropped:
                     deldat_dropped.append(True)
-                yield from _dedup(
+                yield from _collect(
                     IRVariableState(
                         state_id=self._state_id(
                             abbrev, variable_id, variant_id, window[0]
@@ -1503,7 +1529,7 @@ class SOSAdapter:
                     deldat_bound=deldat_bound,
                     deldat_dropped=deldat_dropped,
                 ):
-                    yield from _dedup(obj)
+                    yield from _collect(obj)
             else:
                 for obj in self._emit_windowed_states(
                     abbrev=abbrev,
@@ -1516,7 +1542,7 @@ class SOSAdapter:
                     deldat_bound=deldat_bound,
                     deldat_dropped=deldat_dropped,
                 ):
-                    yield from _dedup(obj)
+                    yield from _collect(obj)
 
             if deldat_dropped:
                 yield IRWarning(
@@ -1531,6 +1557,9 @@ class SOSAdapter:
                     ),
                 )
 
+        # Flush the reconciled states (one per state_id, widest valid_to).
+        yield from states_by_id.values()
+
     def _emit_entity_registry_state(
         self,
         *,
@@ -1544,8 +1573,15 @@ class SOSAdapter:
         deldat_bound: tuple[str | None, str | None],
         deldat_dropped: list[bool],
     ) -> Iterator[IRObject]:
-        """MFR IVF_klinik: ONE state, every code present with its OWN
-        valid_from/to (the code's tidsperiod, intersected with var/deldat).
+        """MFR IVF_klinik: ONE state over the full variable window, whose
+        value_set is the UNION of every clinic code whose tidsperiod overlaps
+        that window (the per-code window decides SURVIVAL — codes disjoint from
+        the variable window drop — but is NOT persisted: value_code has no
+        validity columns yet). The single state therefore exposes all surviving
+        clinics across the whole window; per-code temporal precision is the
+        deferred Path B refinement. Maintainer decision (2026-06-02): keep the
+        collapse for A4.3b rather than fragmenting the entity registry into
+        per-window states. See `_ensure_value_set`.
 
         P2#2: the variable bound + the code tidsperiod are authoritative; the
         deldat window is advisory and yields when it would empty the window.
