@@ -290,6 +290,44 @@ Svelte control-flow (`{#if}` / `{#each}`), so:
 - The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely
   (codegen output, never hand-formatted).
 
+## SPA routing + production fallback (A5.3a)
+
+The SPA (`frontend/`) browses the catalog read-only with **path-based routing**:
+clean URLs mirror the API (`/catalog`, `/catalog/scb/lisa`,
+`/catalog/scb/lisa/kon`, `/catalog/class/<slug>`). The router is hand-rolled —
+no routing-library dep — in `src/lib/router.svelte.ts` (a `.svelte.ts` module so
+its reactive `$state` route compiles): it reads `window.location.pathname`,
+navigates via `history.pushState`, handles `popstate`, and intercepts internal
+`<a>` clicks (the `link` action) so navigation doesn't full-reload.
+
+- **Dev** serving Just Works: the Vite dev server's default `appType: 'spa'`
+  rewrites unknown paths to `index.html`, and `vite.config.ts` proxies `/api` to
+  the backend on `:8000`. Deep-linking to `/catalog/...` in `bun run dev` works.
+- **Production** SPA fallback is a **deploy/maintainer task**, NOT backend code.
+  The backend is a pure JSON API — `create_app` mounts no `StaticFiles` and
+  serves no `index.html` (keeping `/api`, `/openapi.json`, `/docs` un-shadowed).
+  The SPA is served by the edge (Cloudflare), which must rewrite a cold-load deep
+  link to any non-`/api` path → `index.html` (a `_redirects` / 404-rewrite rule).
+  This mirrors the existing "Cloudflare edge-cache gate is a maintainer task"
+  pattern (§9.4 above); see the comment atop `router.svelte.ts`.
+
+`gen:types` typing: A5.3a's fetch wrapper (`src/lib/api.ts`) types every response
+off `components["schemas"][...]` from the codegen'd `api-types.ts`. The catch-all
+returns the `kind`-discriminated `CatalogNode` union; A5.3a never sends `?period`,
+so the `StatesResponse` arm (the period/states picker — A5.3b) is out of scope.
+Components narrow on `kind` via `src/lib/catalog.ts` helpers (unit-tested).
+
+## Frontend unit tests (Vitest)
+
+`bun run test` runs **Vitest** (`vitest run`) — Vite-native, so it reuses
+`vite.config.ts` and compiles `.svelte` / `.svelte.ts`. The env is `jsdom`
+(`router.svelte.ts` reads `window` at module load; `api.ts` mocks `fetch`).
+Tests live next to source as `*.test.ts` and cover the fetch-wrapper error path,
+the `kind`-narrowing helpers, and route parsing. The `reg-webapp-frontend` CI job
+runs `bun run test` alongside `svelte-check` + the codegen drift check. (Use
+`bun run test`, not `bun test` — the latter is Bun's own runner, which doesn't
+compile Svelte.)
+
 ## Why CI uses a fixture DB, not a real asset
 
 reg_meta 5.1.0 is unpublished — there's no `reg_meta/v*` release asset, so
