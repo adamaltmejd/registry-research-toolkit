@@ -16,6 +16,7 @@ override (``reg_meta.db.default_db_dir``).
 
 from __future__ import annotations
 
+import json
 import sqlite3
 import sys
 from pathlib import Path
@@ -135,6 +136,13 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     # register node has a non-default binding to list.
     add_register(src, register_id=2, slug="rams", name="RAMS")
     add_variant(src, register_variant_id=20, register_id=2, slug="standard", name="Std")
+    # A4.4c: panel-shape columns on the `standard` variant so the variant endpoint
+    # exercises non-NULL panel serialization (composite entity key → JSON array).
+    src.execute(
+        "UPDATE register_variant SET panel_entity_key = ?, panel_time_key = ?, "
+        "panel_time_grain = ? WHERE register_variant_id = 20",
+        (json.dumps(["foretag", "arbetsstalle"]), "period", "delivery"),
+    )
     add_version(src, regver_id=200, register_variant_id=20, name="2019")
     add_variable(src, register_id=2, var_id=77, name="Sysselsättning", slug="syss")
     add_state(

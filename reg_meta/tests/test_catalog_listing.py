@@ -8,6 +8,8 @@ parent slug returns an empty list (the webapp 404s a genuinely-absent node via
 
 from __future__ import annotations
 
+import json
+
 from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta.catalog import (
     BindingSummary,
@@ -150,14 +152,27 @@ def _variants_catalog() -> Catalog:
     `add_variant` helper sets only slug+name, not description/display_group."""
     conn = build_slugged_db()  # scb/lisa + its default variant
     add_register(conn, register_id=2, slug="rams", name="RAMS")
+    # `standard` carries A4.4c panel data (composite entity key, stored JSON);
+    # `extended` leaves the panel columns NULL.
     conn.executemany(
         "INSERT INTO register_variant "
-        "(register_variant_id, register_id, slug, name, description, display_group) "
-        "VALUES (?, ?, ?, ?, ?, ?)",
+        "(register_variant_id, register_id, slug, name, description, display_group, "
+        " panel_entity_key, panel_time_key, panel_time_grain) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [
-            (21, 2, "standard", "Standard", "the standard delivery", "Surveys"),
-            (22, 2, "extended", "Extended", None, None),
-            (23, 2, None, "Unslugged", None, None),
+            (
+                21,
+                2,
+                "standard",
+                "Standard",
+                "the standard delivery",
+                "Surveys",
+                json.dumps(["foretag", "arbetsstalle"]),
+                "period",
+                "delivery",
+            ),
+            (22, 2, "extended", "Extended", None, None, None, None, None),
+            (23, 2, None, "Unslugged", None, None, None, None, None),
         ],
     )
     conn.commit()
@@ -188,6 +203,28 @@ class TestListVariants:
         )
         assert ext.description is None
         assert ext.display_group is None
+
+    def test_panel_fields_none_by_default(self) -> None:
+        # A4.4c: `extended` carries no panel data → all three are None.
+        ext = next(
+            v
+            for v in _variants_catalog().list_variants("scb", "rams")
+            if v.slug == "extended"
+        )
+        assert ext.panel_entity_key is None
+        assert ext.panel_time_key is None
+        assert ext.panel_time_grain is None
+
+    def test_panel_composite_entity_key_decoded_to_tuple(self) -> None:
+        # A4.4c: `standard`'s JSON-array entity key decodes to a tuple on read.
+        std = next(
+            v
+            for v in _variants_catalog().list_variants("scb", "rams")
+            if v.slug == "standard"
+        )
+        assert std.panel_entity_key == ("foretag", "arbetsstalle")
+        assert std.panel_time_key == "period"
+        assert std.panel_time_grain == "delivery"
 
     def test_excludes_null_slug_variants(self) -> None:
         # rams has 3 register_variants but only 2 are slugged/browse-addressable.

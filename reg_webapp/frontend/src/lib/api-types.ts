@@ -862,8 +862,11 @@ export interface components {
          *     `?variant=` browse axis. A variant is NOT FQID-addressable (the variant left
          *     the binding FQID, §5.0.1), so it carries the variant `slug` (the browse
          *     coordinate) + display fields, not an `Fqid`. Maps 1:1 to
-         *     `reg_meta.catalog.VariantSummary`. The §9.5 `panel_*` fields are NOT here —
-         *     those columns don't exist on `register_variant` yet (A4.4 curation).
+         *     `reg_meta.catalog.VariantSummary`. A4.4c adds the §9.5 read-only `panel_*`
+         *     fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
+         *     (composite); `panel_time_key` is "period" or a variable-slug;
+         *     `panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data →
+         *     all three are None.
          */
         VariantModel: {
             /** Description */
@@ -872,6 +875,12 @@ export interface components {
             display_group?: string | null;
             /** Name */
             name?: string | null;
+            /** Panel Entity Key */
+            panel_entity_key?: string | string[] | null;
+            /** Panel Time Grain */
+            panel_time_grain?: string | null;
+            /** Panel Time Key */
+            panel_time_key?: string | null;
             /** Slug */
             slug: string;
         };

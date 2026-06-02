@@ -1127,7 +1127,7 @@
         "type": "object"
       },
       "VariantModel": {
-        "description": "One register variant (the `register_variant` sub-resource, \u00a79.5) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID, \u00a75.0.1), so it carries the variant `slug` (the browse\ncoordinate) + display fields, not an `Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. The \u00a79.5 `panel_*` fields are NOT here \u2014\nthose columns don't exist on `register_variant` yet (A4.4 curation).",
+        "description": "One register variant (the `register_variant` sub-resource, \u00a79.5) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID, \u00a75.0.1), so it carries the variant `slug` (the browse\ncoordinate) + display fields, not an `Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. A4.4c adds the \u00a79.5 read-only `panel_*`\nfields: `panel_entity_key` is a bare variable-slug string or a list of slugs\n(composite); `panel_time_key` is \"period\" or a variable-slug;\n`panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data \u2192\nall three are None.",
         "properties": {
           "description": {
             "anyOf": [
@@ -1161,6 +1161,45 @@
               }
             ],
             "title": "Name"
+          },
+          "panel_entity_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Panel Entity Key"
+          },
+          "panel_time_grain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Panel Time Grain"
+          },
+          "panel_time_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Panel Time Key"
           },
           "slug": {
             "title": "Slug",

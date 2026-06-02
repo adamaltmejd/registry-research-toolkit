@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from typing import TYPE_CHECKING
 
@@ -117,6 +118,68 @@ class TestProviderToml:
         assert entries[0].kind == "register_variant"
         assert entries[0].slug == "individer-15plus"
         assert entries[0].display_group == "Individer"
+
+    def test_variant_with_panel_simple_entity_key(self, tmp_path: Path):
+        # A4.4c: bare-string panel_entity_key + literal "period" time key.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\n'
+            'slug = "individer-15plus"\n'
+            'panel_entity_key = "personnummer"\n'
+            'panel_time_key = "period"\n'
+            'panel_time_grain = "delivery"\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].panel_entity_key == "personnummer"
+        assert entries[0].panel_time_key == "period"
+        assert entries[0].panel_time_grain == "delivery"
+
+    def test_variant_with_panel_composite_entity_key(self, tmp_path: Path):
+        # A4.4c: list panel_entity_key → stored as a tuple on the entry; a
+        # variable-slug row-level time key.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\n'
+            'slug = "individer-15plus"\n'
+            'panel_entity_key = ["foretag", "arbetsstalle"]\n'
+            'panel_time_key = "manad"\n'
+            'panel_time_grain = "row"\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].panel_entity_key == ("foretag", "arbetsstalle")
+        assert entries[0].panel_time_key == "manad"
+        assert entries[0].panel_time_grain == "row"
+
+    def test_variant_invalid_panel_time_grain_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\n'
+            'slug = "individer-15plus"\n'
+            'panel_time_grain = "yearly"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
+    def test_variant_empty_panel_entity_key_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\npanel_entity_key = ""\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
+    def test_panel_field_rejected_on_non_variant_kind(self, tmp_path: Path):
+        # Panel fields are register_variant-only: the unknown-field guard rejects
+        # them on a register entry (they're not in `_allowed_fields("register")`).
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register."34"]\nslug = "lisa"\npanel_entity_key = "personnummer"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
 
     def test_variable_override(self, tmp_path: Path):
         path = _write(
@@ -403,6 +466,57 @@ class TestPopulateSlugs:
             ).fetchone()[0]
             == "sun2020"
         )
+
+    def test_populates_panel_columns(self, tmp_path: Path):
+        # A4.4c: a curated panel round-trips through populate_slugs. The composite
+        # entity key is JSON-encoded into the TEXT column.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\n'
+            'slug = "individer-15plus"\n'
+            'panel_entity_key = ["foretag", "arbetsstalle"]\n'
+            'panel_time_key = "period"\n'
+            'panel_time_grain = "delivery"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
+        )
+        conn = self._make_db()
+        populate_slugs(conn, d, strict=True)
+        row = conn.execute(
+            "SELECT panel_entity_key, panel_time_key, panel_time_grain "
+            "FROM register_variant WHERE register_variant_id = 10"
+        ).fetchone()
+        assert json.loads(row["panel_entity_key"]) == ["foretag", "arbetsstalle"]
+        assert (row["panel_time_key"], row["panel_time_grain"]) == (
+            "period",
+            "delivery",
+        )
+
+    def test_panel_columns_null_by_default(self, tmp_path: Path):
+        # A variant entry without panel fields leaves the columns NULL.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
+        )
+        conn = self._make_db()
+        populate_slugs(conn, d, strict=True)
+        row = conn.execute(
+            "SELECT panel_entity_key, panel_time_key, panel_time_grain "
+            "FROM register_variant WHERE register_variant_id = 10"
+        ).fetchone()
+        assert tuple(row) == (None, None, None)
 
     def test_strict_fails_when_register_missing_slug(self, tmp_path: Path):
         d = tmp_path / "slugs"

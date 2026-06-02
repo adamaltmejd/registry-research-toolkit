@@ -125,6 +125,23 @@ def test_variants_endpoint(client):
     assert "individer-15plus" in slugs
 
 
+def test_variants_endpoint_serializes_panel_fields(client):
+    # A4.4c: the `standard` variant on rams carries curated panel data; the
+    # composite entity key serializes as a JSON list. lisa's `_default` variant
+    # has no panel data → the three fields are absent/None.
+    variants = client.get("/api/catalog/scb/rams/variants").json()["variants"]
+    std = next(v for v in variants if v["slug"] == "standard")
+    assert std["panel_entity_key"] == ["foretag", "arbetsstalle"]
+    assert std["panel_time_key"] == "period"
+    assert std["panel_time_grain"] == "delivery"
+
+    lisa = client.get("/api/catalog/scb/lisa/variants").json()["variants"]
+    default = next(v for v in lisa if v["slug"] == "individer-15plus")
+    assert default["panel_entity_key"] is None
+    assert default["panel_time_key"] is None
+    assert default["panel_time_grain"] is None
+
+
 def test_variants_unknown_register_404(client):
     # A typo'd register is a 404, NOT a 200 with an empty list (the resolve guards
     # it before list_variants, so an absent register isn't silently empty).

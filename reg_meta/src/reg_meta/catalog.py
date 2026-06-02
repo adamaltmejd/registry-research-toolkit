@@ -13,6 +13,7 @@ path that enumerated per-edition bindings — are gone (§5.2).
 
 from __future__ import annotations
 
+import json
 from collections import deque
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
@@ -86,15 +87,31 @@ class BindingSummary:
 # A2.5b variant-browser shape (§9.5): a variant is a register sub-resource, NOT
 # an FQID-addressable node (the variant left the binding FQID, §5.0.1), so this
 # carries the variant `slug` (the `?variant=` browse coordinate) + display fields,
-# not an `Fqid`. The §9.5-specced `panel_entity_key`/`panel_time_key`/
-# `panel_time_grain` are NOT here: those columns don't exist on `register_variant`
-# yet (they arrive with the A4.4 panel_template curation), and A5 ships no DDL.
+# not an `Fqid`. A4.4c adds the §9.5 panel-shape columns (read-only): a
+# `panel_entity_key` that is a bare variable-slug str or a tuple of slugs
+# (composite), the `panel_time_key` ("period" or a variable-slug), and the
+# `panel_time_grain` ('delivery'/'row'). Most variants carry no panel data → all
+# three are None.
 @dataclass(frozen=True)
 class VariantSummary:
     slug: str
     name: str | None
     description: str | None
     display_group: str | None
+    panel_entity_key: str | tuple[str, ...] | None
+    panel_time_key: str | None
+    panel_time_grain: str | None
+
+
+def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
+    """Decode the stored `panel_entity_key` (A4.4c): a JSON-array string →
+    tuple (composite key), any other string → itself (simple bare slug), NULL →
+    None. Mirrors the `populate_slugs` writer (json.dumps for the tuple case)."""
+    if raw is None:
+        return None
+    if raw.startswith("["):
+        return tuple(json.loads(raw))
+    return raw
 
 
 # §5.10 / §6.2: the polymorphic period a caller passes to `resolve_at`. Mirrors
@@ -423,7 +440,8 @@ class Catalog:
         slug — the synthesized variant for LSS/BU/SOL etc., §5.1 — so it is
         returned, not filtered.)"""
         rows = self._conn.execute(
-            "SELECT rv.slug, rv.name, rv.description, rv.display_group "
+            "SELECT rv.slug, rv.name, rv.description, rv.display_group, "
+            "rv.panel_entity_key, rv.panel_time_key, rv.panel_time_grain "
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -437,6 +455,9 @@ class Catalog:
                 name=r["name"],
                 description=r["description"],
                 display_group=r["display_group"],
+                panel_entity_key=_decode_panel_entity_key(r["panel_entity_key"]),
+                panel_time_key=r["panel_time_key"],
+                panel_time_grain=r["panel_time_grain"],
             )
             for r in rows
         ]

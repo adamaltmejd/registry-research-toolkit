@@ -107,6 +107,15 @@ class SlugEntry:
     slug: str | None
     provider: str | None = None
     display_group: str | None = None
+    # A4.4c panel-shape coordinates (register_variant only). MUTABLE — these do
+    # NOT enter the slug snapshot (snapshot_payload copies only `slug`).
+    # `panel_entity_key`: a bare variable-slug str (simple) or a tuple of
+    # variable-slugs (composite, persisted as a json.dumps'd array).
+    # `panel_time_key`: literal "period" or a variable-slug.
+    # `panel_time_grain`: 'delivery' or 'row'.
+    panel_entity_key: str | tuple[str, ...] | None = None
+    panel_time_key: str | None = None
+    panel_time_grain: str | None = None
     # Whether the source ID is retired from current deliveries. populate_slugs
     # only short-circuits the missing-row branch on this — a still-live row
     # with `deprecated = true` is still slugged so resolution keeps working.
@@ -205,7 +214,15 @@ def _live_providers(conn: sqlite3.Connection) -> list[str]:
 def _allowed_fields(kind: EntityKind) -> frozenset[str]:
     base = {"slug", "deprecated", "replaced_by"}
     if kind == "register_variant":
-        return frozenset(base | {"display_group"})
+        return frozenset(
+            base
+            | {
+                "display_group",
+                "panel_entity_key",
+                "panel_time_key",
+                "panel_time_grain",
+            }
+        )
     if kind == "classification":
         return frozenset(base | {"same_as"})
     if kind == "variable":
@@ -357,16 +374,91 @@ def _validate_entry(
             f"{kind}.{source_id!r}: `display_group` must be a string.",
             "Quote the value or remove it.",
         )
+    # A4.4c panel-shape fields (register_variant only — the unknown-field guard
+    # above already rejects them on other kinds via `_allowed_fields`).
+    panel_entity_key = _validate_panel_entity_key(
+        kind, source_id, entry.get("panel_entity_key")
+    )
+    panel_time_key = _validate_panel_time_key(
+        kind, source_id, entry.get("panel_time_key")
+    )
+    panel_time_grain = _validate_panel_time_grain(
+        kind, source_id, entry.get("panel_time_grain")
+    )
     return SlugEntry(
         kind=kind,
         source_id=source_id,
         slug=slug,
         provider=provider,
         display_group=display_group,
+        panel_entity_key=panel_entity_key,
+        panel_time_key=panel_time_key,
+        panel_time_grain=panel_time_grain,
         deprecated=deprecated_raw,
         replaced_by=replaced_by,
         same_as=_validate_same_as(kind, source_id, entry.get("same_as")),
     )
+
+
+def _validate_panel_entity_key(
+    kind: EntityKind, source_id: str, raw: Any
+) -> str | tuple[str, ...] | None:
+    """`panel_entity_key` is a non-empty variable-slug string (simple case) or a
+    non-empty list of such strings (composite case, stored as a tuple)."""
+    if raw is None:
+        return None
+    if isinstance(raw, str):
+        if not raw:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `panel_entity_key` must be non-empty.",
+                "Give a variable slug or remove the field.",
+            )
+        return raw
+    if isinstance(raw, list):
+        if not raw or not all(isinstance(r, str) and r for r in raw):
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `panel_entity_key` array must be a "
+                "non-empty list of non-empty strings.",
+                'Use TOML syntax: panel_entity_key = ["a", "b"].',
+            )
+        return tuple(raw)
+    raise _err(
+        "slug_toml_invalid",
+        f"{kind}.{source_id!r}: `panel_entity_key` must be a string or an "
+        f"array of strings, got {type(raw).__name__}.",
+        'Use a bare slug or an array: panel_entity_key = ["a", "b"].',
+    )
+
+
+def _validate_panel_time_key(kind: EntityKind, source_id: str, raw: Any) -> str | None:
+    """`panel_time_key` is the literal "period" or a variable-slug — a non-empty
+    string either way."""
+    if raw is None:
+        return None
+    if not isinstance(raw, str) or not raw:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `panel_time_key` must be a non-empty string.",
+            'Use "period" (delivery-aligned) or a variable slug.',
+        )
+    return raw
+
+
+def _validate_panel_time_grain(
+    kind: EntityKind, source_id: str, raw: Any
+) -> str | None:
+    if raw is None:
+        return None
+    if raw not in ("delivery", "row"):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `panel_time_grain` must be 'delivery' or "
+            f"'row', got {raw!r}.",
+            "Set panel_time_grain to 'delivery' or 'row'.",
+        )
+    return raw
 
 
 def _resolve_replaced_by(entries: list[SlugEntry], *, scope: str) -> None:
@@ -770,10 +862,25 @@ def populate_slugs(
                         f"has no live row in this build.",
                         "Mark the entry deprecated=true or drop it.",
                     )
+                # A4.4c panel-shape columns. Composite entity key → JSON array
+                # string; bare slug / None pass through unchanged.
+                entity_key = entry.panel_entity_key
+                if isinstance(entity_key, tuple):
+                    entity_key = json.dumps(list(entity_key))
                 conn.execute(
-                    "UPDATE register_variant SET slug = ?, display_group = ? "
+                    "UPDATE register_variant SET slug = ?, display_group = ?, "
+                    "panel_entity_key = ?, panel_time_key = ?, "
+                    "panel_time_grain = ? "
                     "WHERE register_id = ? AND register_variant_id = ?",
-                    (entry.slug, entry.display_group, key[0], key[1]),
+                    (
+                        entry.slug,
+                        entry.display_group,
+                        entity_key,
+                        entry.panel_time_key,
+                        entry.panel_time_grain,
+                        key[0],
+                        key[1],
+                    ),
                 )
                 counts["register_variant"] += 1
 
