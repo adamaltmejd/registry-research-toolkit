@@ -256,6 +256,37 @@ class TestPopulateClassifications:
         assert set(tagged) == {"TESTKON", "TESTKON2"}
         assert all(n >= 1 for n in tagged.values())
 
+    def test_classification_linkage_is_stable(self, tmp_path: Path):
+        """A4.4e CI proxy for the full-corpus byte-identity gate: the
+        provider-blind feed + backfill round-trip through a real `build_db` must
+        yield a NON-empty, REPRODUCIBLE variable→classification linkage. The
+        orchestrator runs the real-data gate; this guards the small SCB fixture.
+        """
+        from reg_meta_build.db import dump_classification_linkage
+
+        dir_a, dir_b = tmp_path / "a", tmp_path / "b"
+        dir_a.mkdir()
+        dir_b.mkdir()
+        db1, _ = self._build_with_seed(dir_a, TEST_SEED_TOML)
+        db2, _ = self._build_with_seed(dir_b, TEST_SEED_TOML)
+
+        with sqlite3.connect(db1) as c1, sqlite3.connect(db2) as c2:
+            linkage1 = dump_classification_linkage(c1)
+            linkage2 = dump_classification_linkage(c2)
+
+        assert linkage1, "fixture must produce at least one tagged variable_state"
+        assert linkage1 == linkage2
+        # Sanity: both seeded classifications appear in the linkage.
+        with sqlite3.connect(db1) as conn:
+            cls_ids = {
+                r[0]
+                for r in conn.execute(
+                    "SELECT id FROM classification WHERE short_name "
+                    "IN ('TESTKON', 'TESTKON2')"
+                )
+            }
+        assert {cid for _, _, cid in linkage1} >= cls_ids
+
     def test_level_computed_from_code_length(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
         conn = sqlite3.connect(db)

@@ -664,7 +664,17 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 
 **Estimate**: 7-10 days. Most complex SOS-specific logic.
 
-### [ ] A4.4 — Slug TOML + panel_template curation (SCB + SOS)
+### [x] A4.4 — Slug TOML + panel_template curation (SCB + SOS)
+
+**DONE (2026-06-02).** All five seams shipped a→e: A4.4a (#177), A4.4b (#179),
+A4.4c-i (#180) + A4.4c-ii (#181), A4.4d-pre (#183) + A4.4d (#184), A4.4e (#186).
+The classification reader is now provider-blind (GAP-1 closed). **Post-A4.4
+follow-ups (deferred, do not block A4.5):** the SOS classification *data* path +
+`classification.provider` column (A4.4e shipped plumbing only) and the LOVA/LVM
+deldatamängd→variant mapping — both need SOS domain curation and slot in via the
+`classification_candidate` plug-in point / the stateless-register mapping. The
+maintainer's end-of-A4+A5 re-review still covers the panel-curation judgment calls
+(the entity-NULL aggregate-time boundary + the 92 low-confidence rows).
 
 **Structure (maintainer-approved 2026-06-02): 5 sub-PRs, sequential a→b→c→d→e.**
 Planning surfaced that `panel_template` is GREENFIELD (no DDL column / population /
@@ -706,11 +716,24 @@ retired at A4.4 — gate is `--validate` + targeted before/after, not byte-ident
   table BOTH adapters feed; `_backfill_state_classifications` reads it provider-blind;
   dropped before ship. value_set→classification is NOT 1:1 (~5,161 cases) so the
   linkage MUST stay `(variable_id, value_set_id)`-grain. GATE: SCB-subset
-  `classification_id` before/after diff must be identical. Adds the SOS
-  classification path (`external_classification`/`Länk kodverk`, currently parsed
-  but unused). **DEFERRED to a post-A4.4 follow-up:** LOVA/LVM `A_LOVA*`/`lvm_*`
-  deldatamängd token → variant mapping (needs SOS domain knowledge; 2 stateless
-  registers don't block A4.5).
+  `classification_id` before/after diff must be identical (content-level vs the
+  captured baseline; the candidate table is a verbatim projection of what the
+  backfill reads today, so SCB output is unchanged by construction).
+  **Scope decision (maintainer, 2026-06-02): PLUMBING ONLY.** Planning found SOS
+  has no clean classification signal — `external_classification`/`Länk kodverk` is
+  free-text (ICD URLs / prose / sheet-refs), `classifications.toml` seeds zero SOS
+  code systems, only ~17 SOS vars carry both a value-set and an external_classification,
+  and the `classification` table has no `provider` column. A4.4e therefore ships the
+  provider-blind candidate table + re-point (the GAP-1 close-out, gate-protected);
+  SOS contributes 0 tagged states as today and the candidate table is the plug-in
+  point for later SOS work. **DEFERRED to post-A4.4 follow-ups:** (1) the SOS
+  classification **data** path (curated SOS code-system seeds + an
+  `external_classification`→`classification_id` resolver in `sos.py`, kept out of the
+  SCB `vardemangdsversion` drift gate) + the `classification.provider` column question
+  (persist the already-modeled-but-dead `IRClassification.provider`, SCHEMA_VERSION
+  bump, A5 openapi/fixture coordination) only if/when SOS classifications ship; (2)
+  LOVA/LVM `A_LOVA*`/`lvm_*` deldatamängd token → variant mapping (needs SOS domain
+  knowledge; 2 stateless registers don't block A4.5).
 
 Lower forks proceeding on recommendation (flag if load-bearing): auto-TOMLs stay
 transient through A4 (commit at the v1 freeze); panel keys are mutable (not

@@ -322,6 +322,25 @@ CREATE INDEX idx_variable_natkey ON variable(register_id, provider_key);
 -- all BEFORE `DROP TABLE variable_instance`. The shipped query layer reads
 -- `variable_state` / `variable` / re-parented `variable_alias` instead (the
 -- per-cvid grain has no FQID — the 3-seg binding FQID is variable-grained).
+-- A4.4e: BUILD-TIME-ONLY provider-blind classification linkage. Both adapters
+-- feed it (SCB projects `variable_instance` verbatim; SOS contributes 0 rows for
+-- now), and `_backfill_state_classifications` reads ONLY this table — so the
+-- backfill no longer knows which provider supplied a candidate (the GAP-1
+-- close-out). A (variable_id, value_set_id) state key MAY have SEVERAL candidate
+-- rows — cvids that share the key but carry different value-set-version labels
+-- resolve to different classifications — so the backfill folds them to the min()
+-- classification_id per state key. `variable_id` is NOT NULL: a candidate with no
+-- owning variable could never apply (the feed pre-filters such rows), so the
+-- constraint also guards a future SOS feed. `value_set_id` is NULLABLE: a
+-- code-less state keys on (variable_id, NULL). NO foreign key (so it drops cleanly
+-- before `PRAGMA foreign_key_check`) and NO index (a single sequential read at
+-- backfill time). Dropped before ship with the other scratch.
+CREATE TABLE classification_candidate (
+    variable_id INTEGER NOT NULL,
+    value_set_id INTEGER,
+    classification_id INTEGER NOT NULL
+);
+
 CREATE TABLE variable_instance (
     cvid INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL,
@@ -1624,25 +1643,41 @@ def _materialize_variable_related_to(
     return len(rows)
 
 
-def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
-    """A2.7: tag `variable_state.classification_id` from its constituent
-    `variable_instance` rows, attributing each cvid to its OWNING split sibling.
+# A4.4e: the SCB feed of the provider-blind `classification_candidate` table — a
+# verbatim projection of exactly the rows `_backfill_state_classifications` used
+# to read directly off `variable_instance`. Shared as a single source of truth so
+# the byte-identical-gated filter (`classification_id IS NOT NULL AND variable_id
+# IS NOT NULL`) cannot drift between the build feed and its test.
+_CLASSIFICATION_CANDIDATE_FEED_SQL = (
+    "INSERT INTO classification_candidate "
+    "(variable_id, value_set_id, classification_id) "
+    "SELECT variable_id, value_set_id, classification_id FROM variable_instance "
+    "WHERE classification_id IS NOT NULL AND variable_id IS NOT NULL"
+)
 
-    The coalescer can't write it — `_coalesce_variable_states` runs *before*
-    `populate_classifications` sets `variable_instance.classification_id` (the
-    A2.2-documented "classification-family signal inert at coalesce time"). This
-    backfill runs after both, as one of the last readers of `variable_instance`.
+
+def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
+    """A4.4e: tag `variable_state.classification_id` from the PROVIDER-BLIND
+    `classification_candidate` table, folding candidates to their OWNING split
+    sibling's state.
+
+    `classification_candidate(variable_id, value_set_id, classification_id)` is a
+    build-time-only table both adapters feed (SCB projects `variable_instance`
+    verbatim; SOS contributes 0 rows for now — see the STEP 2 feed in
+    `materialize`). The backfill reads ONLY this table, so it no longer knows
+    which provider supplied a candidate — the GAP-1 close-out. It runs after the
+    feeds and is one of the last passes before the scratch tables drop.
 
     Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
-    siblings share one `provider_key`). The old `(register_id, provider_key)`
-    join fanned every cvid's classification onto EVERY sibling, discriminated
-    only by `value_set_id IS …` — and `IS` matches shared NULLs, so a code-less
-    sibling could adopt a classification a different sibling owned (then surfaced
-    via `classifications_for_variable` / classification search, since
-    `variable_instance` is dropped before ship). Instead each cvid carries its
-    OWNING `variable_id` (stamped by `_coalesce_variable_states` from the §5.7
-    triage's ground-truth assignment), so only that sibling's state gets the
-    classification — no fan-out, no column-tie heuristic, no skip.
+    siblings share one `provider_key`). Each candidate row carries its OWNING
+    `variable_id` (the SCB feed projects `variable_instance.variable_id`, stamped
+    by `_coalesce_variable_states` from the §5.7 triage's ground-truth
+    assignment), so only that sibling's state gets the classification — no
+    fan-out, no column-tie heuristic, no skip. (Contrast the old
+    `(register_id, provider_key)` join, which fanned every cvid's classification
+    onto EVERY sibling, discriminated only by `value_set_id IS …`; `IS` matches
+    shared NULLs, so a code-less sibling could adopt a classification a different
+    sibling owned.)
 
     Correlation key within a sibling: `(variable_id, value_set_id)`. A state's
     `value_set_id` is part of the coalescer's group key, so every cvid folded
@@ -1651,31 +1686,28 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     logic overwrites the label with a synthetic column-suffix token for states
     that never carried a classification; the value-set link is immune to that.
 
-    The correlated set is NOT necessarily single-valued: `populate_classifications`
-    tags `variable_instance.classification_id` by `value_set_version_label`, so
-    cvids sharing a `(variable_id, value_set_id)` but carrying DIFFERENT version
-    labels can resolve to different classifications. The lowest-id classification
-    wins (`min`) — a deterministic tie-break, not a claim of correctness when the
-    labels genuinely disagree (rare in the SCB corpus; a full per-label split
-    would need the state grain to carry the label, which §5.7's residual collapse
-    already discriminates).
+    The candidate set is NOT necessarily single-valued: multiple
+    `classification_candidate` rows can share a `(variable_id, value_set_id)` but
+    carry DIFFERENT classifications (on the SCB feed this happens when cvids share
+    a state key but carry distinct `value_set_version_label`s — see the STEP 2
+    feed comment). The lowest-id classification wins (`min`) — a deterministic
+    tie-break, not a claim of correctness when the candidates genuinely disagree.
 
     Code-less states (NULL `value_set_id`) are NOT guaranteed to stay NULL: they
     key on `(variable_id, None)`, so a code-less state still adopts a
-    classification if its OWNING sibling's constituent cvids carry one (a
-    version-label-tagged family with no value codes). They're left NULL only when
-    no owned cvid was classified.
+    classification if a candidate row carries one for its OWNING `variable_id`.
+    They're left NULL only when no candidate matched.
     """
     _progress("Backfilling variable_state.classification_id...")
 
-    # (variable_id, value_set_id) -> lowest constituent classification_id, keyed
-    # off each cvid's OWNING `variable_id` (stamped by the coalescer), so a
-    # sibling never inherits another's classification. `value_set_id` may be None
-    # (a code-less state keys on (variable_id, None)).
+    # (variable_id, value_set_id) -> lowest candidate classification_id, keyed
+    # off each candidate's OWNING `variable_id`, so a sibling never inherits
+    # another's classification. `value_set_id` may be None (a code-less state
+    # keys on (variable_id, None)). Reads the provider-blind candidate table;
+    # the SCB feed already filtered to non-NULL variable_id/classification_id.
     cls_by_state_key: dict[tuple[int, int | None], int] = {}
     for variable_id, value_set_id, classification_id in conn.execute(
-        "SELECT variable_id, value_set_id, classification_id FROM variable_instance "
-        "WHERE classification_id IS NOT NULL AND variable_id IS NOT NULL"
+        "SELECT variable_id, value_set_id, classification_id FROM classification_candidate"
     ):
         skey = (variable_id, value_set_id)
         prev = cls_by_state_key.get(skey)
@@ -1698,6 +1730,26 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
         "SELECT COUNT(*) FROM variable_state WHERE classification_id IS NOT NULL"
     ).fetchone()[0]
     _progress(f"  {n:,} variable_state rows tagged with a classification")
+
+
+def dump_classification_linkage(
+    conn: sqlite3.Connection,
+) -> list[tuple[int, int | None, int]]:
+    """Stable, ordered dump of the shipped variable→classification linkage.
+
+    Returns every `(variable_id, value_set_id, classification_id)` from
+    `variable_state` where a classification was tagged, ordered deterministically.
+    Reusable by the full-corpus byte-identity gate (A4.4e re-point) and by the
+    in-repo regression test as a CI proxy for it.
+    """
+    return [
+        (row[0], row[1], row[2])
+        for row in conn.execute(
+            "SELECT variable_id, value_set_id, classification_id FROM variable_state "
+            "WHERE classification_id IS NOT NULL "
+            "ORDER BY variable_id, value_set_id, classification_id"
+        )
+    ]
 
 
 def _populate_fts(conn: sqlite3.Connection) -> None:
@@ -2736,40 +2788,58 @@ def materialize(
                 ),
             )
 
+    # A4.4e: SCB feed of the provider-blind `classification_candidate` table.
+    # `populate_classifications` tags `variable_instance.classification_id` by
+    # `value_set_version_label`, AFTER the SCB adapter emits (so the adapter
+    # cannot carry it on IRValueSet) — `variable_instance` is the home of SCB
+    # classification linkage. Each cvid carries its OWNING `variable_id` (stamped
+    # by `_coalesce_variable_states` from the §5.7 triage's ground truth), so the
+    # projection below attributes each candidate to the right split sibling — no
+    # column-tie heuristic, no fan-out. This is the VERBATIM SELECT the backfill
+    # used to read directly off `variable_instance`; A4.4e moved it here so the
+    # backfill becomes provider-blind (reads only `classification_candidate`). The
+    # per-state-key min() tie-break is LOAD-BEARING: value_set→classification is
+    # NOT 1:1 (≈5,161 value_sets span >1 classification on the real corpus), so
+    # the candidate-level linkage cannot be replaced by a value_set-derived map.
+    # SOS contributes 0 candidate rows for now (out of scope). Guarded on
+    # `scb_ran`: `variable_instance` is only POPULATED when the SCB adapter ran (it
+    # is in the BASE DDL, so it always exists but is empty otherwise) — the guard
+    # makes the intent explicit and leaves `classification_candidate` empty in an
+    # SCB-excluded build, so the backfill is a safe no-op. `classification_candidate`
+    # is likewise in the BASE DDL and drops below with the other scratch.
+    if scb_ran:
+        conn.execute(_CLASSIFICATION_CANDIDATE_FEED_SQL)
+
     # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
     # already wrote `variable_alias` from IRVariableAlias (the FULL historical
     # column set the old `_reparent_variable_alias` projected from the
     # `variable_alias_build ⨝ variable_instance` scratch). `variable_state` is
     # now IR-inserted; `_backfill_state_classifications` tags its
-    # `classification_id` from the `variable_instance` scratch (still the home of
-    # classification linkage — `populate_classifications` writes it there, AFTER
-    # emit, so the adapter cannot carry it on IRValueSet). The per-cvid stamp +
-    # min() tie-break is LOAD-BEARING: value_set→classification is NOT 1:1
-    # (≈5,161 value_sets span >1 classification on the real corpus), so the
-    # cvid-level linkage cannot be replaced by a value_set-derived map; re-pointing
-    # this backfill provider-blind is an A4.4 concern (with SOS classifications,
-    # the last gated window). It UPDATEs the IR-inserted `variable_state` rows
-    # unchanged. Last reader of `variable_instance` before the DROP below. The
-    # scratch tables are in the BASE DDL (present even in an SCB-excluded build,
-    # just empty), so the backfill is a safe no-op there and the DROPs always run.
+    # `classification_id` from the provider-blind `classification_candidate` table
+    # (fed just above). It UPDATEs the IR-inserted `variable_state` rows unchanged.
     _backfill_state_classifications(conn)
 
-    # A2.7: drop `variable_instance` + its cvid-grained alias staging before
-    # ship. Every build-time reader has run: `_coalesce_variable_states`
-    # (→ `variable_state`), `populate_classifications` (tags
-    # `classification_id`), value-set projection (`value_set_id`),
-    # `code_variable_map` (above), and the two A2.7 backfills (just above).
-    # The shipped query layer reads `variable_state` / `variable` /
-    # re-parented `variable_alias`. `variable_alias_build` FKs
-    # `variable_instance(cvid)`, so it must drop FIRST (child before parent)
-    # or `PRAGMA foreign_key_check` (below) flags the dangling cvids.
-    # `variable_alias` (shipped) FKs `variable`/`register_variant`, not the
-    # dropped tables, so it survives clean. (`variable_context` was dropped
-    # from the DDL outright in A2.7 — a write-only debug table with no
-    # consumer that would have orphaned on this drop.)
+    # A2.7 / A4.4e: drop `variable_instance` + its cvid-grained alias staging +
+    # the provider-blind `classification_candidate` before ship. Every build-time
+    # reader has run: `_coalesce_variable_states` (→ `variable_state`),
+    # `populate_classifications` (tags `classification_id`), value-set projection
+    # (`value_set_id`), `code_variable_map` (above), the SCB candidate feed +
+    # `_backfill_state_classifications` (just above). The shipped query layer
+    # reads `variable_state` / `variable` / re-parented `variable_alias`.
+    # `variable_alias_build` FKs `variable_instance(cvid)`, so it must drop FIRST
+    # (child before parent) or `PRAGMA foreign_key_check` (below) flags the
+    # dangling cvids. `classification_candidate` has NO FK, so its drop order is
+    # free. `variable_alias` (shipped) FKs `variable`/`register_variant`, not the
+    # dropped tables, so it survives clean. (`variable_context` was dropped from
+    # the DDL outright in A2.7 — a write-only debug table with no consumer that
+    # would have orphaned on this drop.)
     conn.execute("DROP TABLE variable_alias_build")
     conn.execute("DROP TABLE variable_instance")
-    _progress("Dropped variable_instance + variable_alias_build (A2.7).")
+    conn.execute("DROP TABLE classification_candidate")
+    _progress(
+        "Dropped variable_instance + variable_alias_build + "
+        "classification_candidate (A2.7/A4.4e)."
+    )
 
     # A2.6: drop the build-only register-edition tables before ship (mirrors
     # the `unika_summary` drop above). `register_version` fed the coalescer's
@@ -3048,7 +3118,8 @@ def build_db(
         # A2.1: VACUUM reclaims the pages freed by the build-time-only `DROP
         # TABLE`s above — `unika_summary` (A2.1), `register_version` +
         # `population` + `object_type` (A2.6), plus `variable_instance` +
-        # `variable_alias_build` (A2.7) — so the shipped DB doesn't carry
+        # `variable_alias_build` (A2.7) + `classification_candidate` (A4.4e) —
+        # so the shipped DB doesn't carry
         # a fat freelist. `validate.py` flags
         # >= 1% freelist as staging-bloat; on the synthetic fixture the drop
         # alone leaves ~2.7%. VACUUM must run outside a transaction — the
