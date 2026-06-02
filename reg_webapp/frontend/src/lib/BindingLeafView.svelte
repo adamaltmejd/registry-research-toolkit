@@ -3,7 +3,7 @@ import {
   type BindingNodeData,
   type CatalogNode,
   getCatalogNode,
-  isStatesResponse,
+  isCatalogNode,
   type StatesResponse,
 } from "./api";
 import { asyncResource } from "./async.svelte";
@@ -44,7 +44,9 @@ const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
 
 const narrowedStates = $derived.by(() => {
   const data = periodResource.data;
-  return data !== null && isStatesResponse(data) ? data.states : null;
+  // A `?period` resolve returns a StatesResponse (the only non-node arm here);
+  // `!isCatalogNode` narrows `CatalogNode | StatesResponse` to it.
+  return data !== null && !isCatalogNode(data) ? data.states : null;
 });
 
 // ANY error on the period resolve (a 422 bad-modifier, but also a 5xx / 502 /
@@ -117,10 +119,13 @@ function setResolution(next: {
     onclear={() => setResolution({ period: null })}
   />
 
-  {#if params.variant || params.value_set_version}
+  {#if params.period && (params.variant || params.value_set_version)}
     <!-- Active narrowing modifiers, each clearable — so narrowing to one state
          isn't a one-way trap (clearing a modifier refetches the wider set and the
-         picker reappears, letting the user switch variant/version). -->
+         picker reappears, letting the user switch variant/version). Gated on a
+         period: `?variant`/`?value_set_version` only narrow a period resolve (the
+         server 422s them alone), so without a period they're inert — don't claim
+         "narrowed by" for a modifier-only deep-link (the full history shows). -->
     <div class="active-modifiers">
       <span class="muted">Narrowed by:</span>
       {#if params.variant}

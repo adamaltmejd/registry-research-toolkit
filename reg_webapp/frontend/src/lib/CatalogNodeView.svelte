@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getCatalogNode, isStatesResponse } from "./api";
+import { getCatalogNode, isCatalogNode } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
 import { breadcrumbs, catalogHref, nodeLabel } from "./catalog";
@@ -22,10 +22,10 @@ const resource = asyncResource(() => getCatalogNode(fqidPath));
 // clear message instead of a blank page.
 const node = $derived.by(() => {
   const data = resource.data;
-  return data !== null && !isStatesResponse(data) ? data : null;
+  return data !== null && isCatalogNode(data) ? data : null;
 });
 const notBrowsable = $derived(
-  resource.data !== null && isStatesResponse(resource.data),
+  resource.data !== null && !isCatalogNode(resource.data),
 );
 const crumbs = $derived(breadcrumbs(fqidPath));
 </script>

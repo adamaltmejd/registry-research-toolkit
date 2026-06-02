@@ -6,7 +6,7 @@ import {
   getBindingLineageWarnings,
   getBindingPredecessors,
   getCatalogNode,
-  isStatesResponse,
+  isCatalogNode,
   type StatesResponse,
 } from "./api";
 
@@ -167,16 +167,16 @@ describe("binding sub-endpoint helpers", () => {
   });
 });
 
-describe("isStatesResponse", () => {
-  it("is true for a StatesResponse (no `kind`, has binding+states)", () => {
-    const states: StatesResponse = { binding: "scb/lisa/kon", states: [] };
-    expect(isStatesResponse(states)).toBe(true);
+describe("isCatalogNode", () => {
+  it("is true for a kind-tagged node", () => {
+    const node = { kind: "binding" } as unknown as BindingNodeData;
+    expect(isCatalogNode(node)).toBe(true);
   });
 
-  it("is false for a kind-tagged BindingNode", () => {
-    // A minimal BindingNode-shaped object: the only field `isStatesResponse`
-    // reads is `kind`, so the structural check distinguishes the two.
-    const node = { kind: "binding" } as unknown as BindingNodeData;
-    expect(isStatesResponse(node)).toBe(false);
+  it("is false for a no-`kind` response (a StatesResponse subset)", () => {
+    // The only field `isCatalogNode` reads is `kind`; a StatesResponse (or any
+    // sub-endpoint payload) has none, so it's distinguished from a browsable node.
+    const states: StatesResponse = { binding: "scb/lisa/kon", states: [] };
+    expect(isCatalogNode(states)).toBe(false);
   });
 });

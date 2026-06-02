@@ -105,21 +105,23 @@ export type LineageEdgeModel = Schemas["LineageEdgeModel"];
 export type LineageWarningModel = Schemas["LineageWarningModel"];
 
 // The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
-// binding leaf is queried with `?period` (the resolve_at subset, §9.5). A5.3b
-// narrows on `isStatesResponse` at the fetch boundary.
+// binding leaf is queried with `?period` (the resolve_at subset, §9.5), and a
+// SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
+// from a browsable node by `isCatalogNode` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
 export type PredecessorsResponse = Schemas["PredecessorsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
-/** Narrow the catch-all's `CatalogNode | StatesResponse` result. A
- * `StatesResponse` has NO `kind` discriminator (it carries `binding` + `states`);
- * every `CatalogNode` arm carries a `kind`. Checked structurally (absence of
- * `kind`) so a binding-leaf `?period` resolve is distinguished from the full
- * `BindingNode`. */
-export function isStatesResponse(
+/** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
+ * the catch-all's other payloads (a `?period` `StatesResponse`, or a SUB-ENDPOINT
+ * `VariantsResponse`/… on a `.../states` path) do NOT. Positive `"kind" in x`
+ * check (negate it for "the non-node response"). Phrased as `isCatalogNode`
+ * rather than `isStatesResponse` because a no-`kind` payload is NOT necessarily a
+ * `StatesResponse` — only the binding-leaf `?period` resolve is. */
+export function isCatalogNode(
   x: CatalogNode | StatesResponse,
-): x is StatesResponse {
-  return !("kind" in x);
+): x is CatalogNode {
+  return "kind" in x;
 }
 
 /** Percent-encode each FQID segment for use in a URL path (the server
@@ -143,8 +145,8 @@ export function getCatalogRoot(): Promise<RootResponse> {
 /** Resolve a catalog node by its FQID path (e.g. `scb/lisa/kon`). With `params`
  * (`?period` + the `?variant`/`?value_set_version` modifiers, §9.5) a binding
  * leaf resolves to the `resolve_at` subset — a `StatesResponse` (no `kind`),
- * narrowed by `isStatesResponse`. A malformed period/variant is the server's
- * 422 (surfaced as an `ApiError`). */
+ * distinguished from a browsable node by `isCatalogNode`. A malformed
+ * period/variant is the server's 422 (surfaced as an `ApiError`). */
 export function getCatalogNode(
   fqidPath: string,
   params?: ResolutionParams,

@@ -95,9 +95,10 @@ class Router {
 
   /** Read a query parameter off the reactive `search` (so reads inside an
    * `$effect`/`$derived` re-run when the query changes). Returns the decoded
-   * value, or `null` when absent. */
+   * value, or `null` when absent OR present-but-empty (`?period=`) — an empty
+   * modifier is "no value", and callers treat it as absent. */
   getQueryParam(name: string): string | null {
-    return new URLSearchParams(this.search).get(name);
+    return new URLSearchParams(this.search).get(name) || null;
   }
 }
 

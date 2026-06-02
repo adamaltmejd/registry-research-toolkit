@@ -39,17 +39,17 @@ function distinct<K>(xs: K[]): K[] {
   return [...new Set(xs)];
 }
 const variants = $derived(distinct(states.map((s) => s.variant)));
-// `value_set_version_label` is `TEXT NOT NULL DEFAULT ''`, so a state can carry
-// an empty label — drop it from the picker (an empty chip can't be narrowed to,
-// and `?value_set_version=` would be omitted anyway). Narrow such a state by
-// variant instead.
-const versions = $derived(
-  distinct(states.map((s) => s.value_set_version_label)).filter(
-    (v) => v !== "",
-  ),
+// ALL distinct versions, INCLUDING the empty default label (`value_set_version_label`
+// is `TEXT NOT NULL DEFAULT ''`): the states DIFFER by version when this has >1,
+// so it drives whether the version axis can narrow. The CHIPS, though, are only
+// the non-empty labels — you can't narrow to "no version" via `?value_set_version=`
+// (it would be omitted), so an empty-label state is narrowed by variant instead.
+const versionsAll = $derived(
+  distinct(states.map((s) => s.value_set_version_label)),
 );
+const versionChips = $derived(versionsAll.filter((v) => v !== ""));
 // Whether either narrowing axis can actually resolve the multi-state set to one.
-const canNarrow = $derived(variants.length > 1 || versions.length > 1);
+const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 </script>
 
 {#if states.length === 0}
@@ -132,11 +132,11 @@ const canNarrow = $derived(variants.length > 1 || versions.length > 1);
         </div>
       </fieldset>
     {/if}
-    {#if versions.length > 1}
+    {#if versionsAll.length > 1}
       <fieldset class="picker">
         <legend>Value-set version</legend>
         <div class="chips">
-          {#each versions as version (version)}
+          {#each versionChips as version (version)}
             <button
               type="button"
               class="chip"
