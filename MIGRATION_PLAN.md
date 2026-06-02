@@ -664,7 +664,17 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 
 **Estimate**: 7-10 days. Most complex SOS-specific logic.
 
-### [ ] A4.4 — Slug TOML + panel_template curation (SCB + SOS)
+### [x] A4.4 — Slug TOML + panel_template curation (SCB + SOS)
+
+**DONE (2026-06-02).** All five seams shipped a→e: A4.4a (#177), A4.4b (#179),
+A4.4c-i (#180) + A4.4c-ii (#181), A4.4d-pre (#183) + A4.4d (#184), A4.4e (#186).
+The classification reader is now provider-blind (GAP-1 closed). **Post-A4.4
+follow-ups (deferred, do not block A4.5):** the SOS classification *data* path +
+`classification.provider` column (A4.4e shipped plumbing only) and the LOVA/LVM
+deldatamängd→variant mapping — both need SOS domain curation and slot in via the
+`classification_candidate` plug-in point / the stateless-register mapping. The
+maintainer's end-of-A4+A5 re-review still covers the panel-curation judgment calls
+(the entity-NULL aggregate-time boundary + the 92 low-confidence rows).
 
 **Structure (maintainer-approved 2026-06-02): 5 sub-PRs, sequential a→b→c→d→e.**
 Planning surfaced that `panel_template` is GREENFIELD (no DDL column / population /
