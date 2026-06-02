@@ -4941,7 +4941,7 @@ panel_time_grain = "delivery"
 
 [register_variant."407.1706"]
 slug = "innovation-juridiska"
-display_group = "Innovation i offentlig sektor - Jurdiska enheter"
+display_group = "Innovation i offentlig sektor - Juridiska enheter"
 panel_entity_key = "id-inst"
 panel_time_key = "period"
 panel_time_grain = "delivery"

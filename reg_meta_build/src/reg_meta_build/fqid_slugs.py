@@ -374,6 +374,13 @@ def _validate_entry(
             f"{kind}.{source_id!r}: `display_group` must be a string.",
             "Quote the value or remove it.",
         )
+    if display_group is not None:
+        # Normalize at the read boundary: display_group is seeded from the SCB
+        # register_variant.name, which carries stray leading/trailing whitespace,
+        # and is written to the DB verbatim (never re-derived at build). Trim here
+        # so every built label is clean regardless of source cruft; a
+        # whitespace-only label collapses to no label.
+        display_group = display_group.strip() or None
     # A4.4c panel-shape fields (register_variant only — the unknown-field guard
     # above already rejects them on other kinds via `_allowed_fields`).
     panel_entity_key = _validate_panel_entity_key(
@@ -2425,8 +2432,11 @@ def seed_provider_toml(
                 f"[register_variant.{_toml_str(f'{register_id}.{register_variant_id}')}]"
             )
             lines.append(f"slug = {_toml_str(v_candidate)}")
-            if vname:
-                lines.append(f"display_group = {_toml_str(vname)}")
+            # Strip at the origin: SCB names carry stray whitespace; trim so the
+            # seeded label is clean (load_provider_toml also trims defensively).
+            v_display = vname.strip() if vname else ""
+            if v_display:
+                lines.append(f"display_group = {_toml_str(v_display)}")
             if propose_panel:
                 _emit_panel_proposal(
                     lines,

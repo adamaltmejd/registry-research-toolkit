@@ -120,6 +120,23 @@ class TestProviderToml:
         assert entries[0].slug == "individer-15plus"
         assert entries[0].display_group == "Individer"
 
+    def test_display_group_whitespace_trimmed(self, tmp_path: Path):
+        # SCB names carry stray whitespace that the seed inherits; the read
+        # boundary trims it so the built label is clean. A whitespace-only
+        # value collapses to no label.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\n'
+            'slug = "individer-15plus"\n'
+            'display_group = "Individer  "\n'
+            '[register_variant."34.154"]\n'
+            'slug = "blank"\n'
+            'display_group = "   "\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].display_group == "Individer"
+        assert entries[1].display_group is None
+
     def test_variant_with_panel_simple_entity_key(self, tmp_path: Path):
         # A4.4c: bare-string panel_entity_key + literal "period" time key.
         path = _write(
