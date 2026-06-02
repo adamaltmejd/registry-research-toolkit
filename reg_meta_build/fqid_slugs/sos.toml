@@ -8,10 +8,10 @@
 # Register slug = the 3-letter SOS abbrev (_sos_abbrev(reg): the
 # parenthesized code in the workbook filename, lowercased). Variant slug =
 # the deldatamängd name kebab-cased via derive_variable_slug. The synthesized
-# _default variant of variant-less registers (LSS, BU) takes slug `default`
-# (`_default` fails the §5.2 leading-char grammar; `default` is the
-# grammar-valid browsing coordinate — variant slugs are browse coordinates,
-# not FQID segments).
+# default variant of variant-less registers (LSS, BU) takes slug `_default` —
+# the project-wide default-variant sentinel (`validate_slug(..., allow_default=
+# True)` permits it for register_variant only; the runtime resolver looks it up
+# exactly). Variant slugs are browse coordinates, not FQID segments.
 #
 # Variable slugs stay AUTO (populate_variable_slugs -> sos.auto.toml,
 # transient/not committed). Regenerate .snapshot.json after edits:
@@ -134,7 +134,7 @@ display_group = "LOVA PERSON"
 slug = "lss"
 
 [register_variant."5028920659479690770.5751215697700503870"]
-slug = "default"
+slug = "_default"
 display_group = "_default"
 
 # Registret över insatser inom den kommunala hälso- och sjukvården (HSL)
@@ -154,7 +154,7 @@ display_group = "HSL2"
 slug = "bu"
 
 [register_variant."7550156225339591583.6478131538792493195"]
-slug = "default"
+slug = "_default"
 display_group = "_default"
 
 # Medicinska födelseregistret (MFR)
