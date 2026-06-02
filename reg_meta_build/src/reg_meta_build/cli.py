@@ -565,6 +565,23 @@ def _cmd_precheck_slugs(
                     result.drifting_variables
                 )
             ],
+            # Advisory only (A4.4a) — never affects `ok`/exit. The name-fallback
+            # curation backlog: auto-slugged variables whose slug came from the
+            # variable name / a `-N` disambiguator / the `v<provider_key>` last
+            # resort (per the `# source:` markers in `<provider>.auto.toml`). A
+            # curator works through these toward a canonical slug before the §5.4
+            # freeze. Mirrors `drifting_variables` (informational, ungated).
+            "name_fallback_variables": [
+                {
+                    "provider": prov,
+                    "source_id": source_id,
+                    "slug": slug,
+                    "derivation": derivation,
+                }
+                for (prov, source_id, slug, derivation) in (
+                    result.name_fallback_variables
+                )
+            ],
             "snapshot": snapshot_status,
         },
         duration_ms=duration_ms,

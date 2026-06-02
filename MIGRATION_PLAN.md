@@ -605,7 +605,7 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 
 **Estimate**: 2-3 days.
 
-### [ ] A4.3 — SOS adapter
+### [x] A4.3 — SOS adapter — DONE (A4.3a #170 + A4.3b #175)
 
 **Split into 2 PRs (maintainer-approved):**
 
@@ -665,6 +665,47 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 **Estimate**: 7-10 days. Most complex SOS-specific logic.
 
 ### [ ] A4.4 — Slug TOML + panel_template curation (SCB + SOS)
+
+**Structure (maintainer-approved 2026-06-02): 5 sub-PRs, sequential a→b→c→d→e.**
+Planning surfaced that `panel_template` is GREENFIELD (no DDL column / population /
+`--propose-panel` yet — only an unused `IRVariant.panel_*` field), so it's
+build-the-feature + the FIRST A4 `SCHEMA_VERSION` bump (coordinate with the A5
+webapp's committed `openapi.json` + fixture DB); SOS classification linkage is
+likewise greenfield. Each seam gates on `build-db --validate` (the baseline is
+retired at A4.4 — gate is `--validate` + targeted before/after, not byte-identity).
+
+- **A4.4a — `scb.auto.toml` derivation-source marker + name-fallback worklist**
+  (pure SCB tooling, no schema, no curation). Thread the slug-source class
+  (fold / drift-name / drift-early-col / kolumnnamn / name-fallback / `v<key>`
+  last-resort) out of `populate_variable_slugs` and emit it as a TOML COMMENT in
+  `write_auto_toml`; add an advisory name-fallback worklist to `precheck-slugs`
+  (mirrors `drifting_variables`). Unblocks the SCB name-fallback curation.
+- **A4.4b — `sos.toml`** (13 register slugs hand-authored — the abbrev lives only
+  in the mint token, not the DB; variant slugs auto-seeded from
+  `register_variant.name`; variable slugs auto via `populate_variable_slugs` →
+  `sos.auto.toml`). Flips the combined `--validate` build off `--skip-slugs` for
+  the SOS surface; regenerate `.snapshot.json` in the same PR.
+- **A4.4c — `panel_template` feature** (DDL cols on `register_variant` +
+  `SCHEMA_VERSION` bump + `SlugEntry`/`_allowed_fields` + `populate_panel_templates`
+  + `seed-slugs --propose-panel` from SCB `Tabelldefinitioner` PKs / `Identifierare`
+  + SOS `is_join_variable`; expose the columns read-only in `reg_meta.catalog` for A5).
+- **A4.4d — panel curation** (maintainer: curate all ~800 variant rows row-by-row).
+- **A4.4e — classification re-point (GAP-1 close-out, highest risk)**: Option A —
+  a build-time universal `(variable_id, value_set_id, classification_id)` candidate
+  table BOTH adapters feed; `_backfill_state_classifications` reads it provider-blind;
+  dropped before ship. value_set→classification is NOT 1:1 (~5,161 cases) so the
+  linkage MUST stay `(variable_id, value_set_id)`-grain. GATE: SCB-subset
+  `classification_id` before/after diff must be identical. Adds the SOS
+  classification path (`external_classification`/`Länk kodverk`, currently parsed
+  but unused). **DEFERRED to a post-A4.4 follow-up:** LOVA/LVM `A_LOVA*`/`lvm_*`
+  deldatamängd token → variant mapping (needs SOS domain knowledge; 2 stateless
+  registers don't block A4.5).
+
+Lower forks proceeding on recommendation (flag if load-bearing): auto-TOMLs stay
+transient through A4 (commit at the v1 freeze); panel keys are mutable (not
+snapshot-protected); SOS register slugs hand-authored.
+
+Original scope detail (still accurate):
 
 - Create `reg_meta_build/fqid_slugs/sos.toml`
 - Register slugs: 3-letter SOS abbreviations (`par`, `mfr`, `dors`, etc.)
