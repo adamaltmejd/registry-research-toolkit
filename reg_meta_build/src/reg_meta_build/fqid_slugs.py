@@ -611,27 +611,52 @@ def _parse_variant_id(source_id: str) -> tuple[int, int]:
     return reg, var
 
 
-def _parse_variable_id(source_id: str) -> tuple[int, int]:
+def _parse_variable_id(source_id: str) -> tuple[int, str]:
     """Variable source-ID key: `<RegisterId>.<VarId>` for a 1:1 variable, or
     `<RegisterId>.<VarId>.<discriminator>` for a §5.7 split sibling (A2.2 —
     siblings share `VarId`; the trailing delivery-column slug disambiguates
-    their auto-slug cache entries). Returns `(register_id, var_id)`."""
+    their auto-slug cache entries). Returns `(register_id, var_key)`.
+
+    `RegisterId` is always a canonical integer. `VarId` is the variable's
+    `provider_key`: a canonical integer for SCB (the SCB VarId), but a TEXT
+    variable name for a non-SCB provider (SOS `provider_key`, e.g. `ALDER` —
+    A4.4b). It is returned as a string and matched against
+    `variable.provider_key` (CAST AS TEXT downstream, see `_variable_source_slug`);
+    a purely-numeric VarId must still be in canonical form (no leading zeros) so
+    two SCB keys can't alias one DB row."""
     parts = source_id.split(".")
     if len(parts) not in (2, 3):
         raise _err(
             "slug_toml_invalid",
             f"variable.{source_id!r}: expected `<RegisterId>.<VarId>` or "
             f"`<RegisterId>.<VarId>.<discriminator>` (split sibling).",
-            "Compose the key from SCB's IDs (plus a column discriminator for splits).",
+            "Compose the key from the register id + the variable's provider_key "
+            "(plus a column discriminator for splits).",
         )
     reg = _parse_canonical_int(parts[0])
-    var = _parse_canonical_int(parts[1])
-    if reg is None or var is None:
+    if reg is None:
         raise _err(
             "slug_toml_invalid",
-            f"variable.{source_id!r}: RegisterId and VarId must be integers in "
-            f"canonical form (no leading zeros).",
-            "Use the literal SCB IDs.",
+            f"variable.{source_id!r}: RegisterId must be an integer in canonical "
+            f"form (no leading zeros).",
+            "Use the literal register id.",
+        )
+    var_key = parts[1]
+    if not var_key:
+        raise _err(
+            "slug_toml_invalid",
+            f"variable.{source_id!r}: the VarId segment is empty.",
+            "Use the SCB VarId or the non-SCB provider_key.",
+        )
+    # A purely-numeric VarId is an SCB id — enforce canonical form so `1.10` and
+    # `1.010` can't alias one DB row. A non-numeric VarId is a non-SCB
+    # provider_key (e.g. a SOS variable name `ALDER`), accepted as text.
+    if var_key.isdigit() and _parse_canonical_int(var_key) is None:
+        raise _err(
+            "slug_toml_invalid",
+            f"variable.{source_id!r}: a numeric VarId must be in canonical form "
+            f"(no leading zeros).",
+            "Use the literal SCB VarId.",
         )
     if len(parts) == 3 and not parts[2]:
         raise _err(
@@ -639,7 +664,7 @@ def _parse_variable_id(source_id: str) -> tuple[int, int]:
             f"variable.{source_id!r}: split-sibling discriminator is empty.",
             "Provide a non-empty delivery-column discriminator.",
         )
-    return reg, var
+    return reg, var_key
 
 
 def _live_register_ids(conn: sqlite3.Connection, provider_slug: str) -> set[int]:
@@ -1274,6 +1299,19 @@ def populate_variable_slugs(
             disc.update(_split_sibling_disc(conn, _rid, _pk))
 
         def _source_id(rid: int, pk: str, vid: int) -> str:
+            # The variable source-ID uses '.' as the segment separator, so a
+            # provider_key containing '.' would be mis-parsed downstream as a
+            # split-sibling 3-part key (`_parse_variable_id` → phantom
+            # discriminator, silent slug mis-attribution). SCB keys are integers
+            # (dot-free); a non-SCB provider_key (a SOS variable name, A4.4b) must
+            # be too. Fail fast rather than corrupt the key.
+            if "." in pk:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"variable provider_key {pk!r} (register {rid}) contains '.', "
+                    "which collides with the source-ID segment separator.",
+                    "Rename the source column / provider_key so it has no dot.",
+                )
             if (rid, pk) in split_pk:
                 return f"{rid}.{pk}.{disc[vid]}"
             return f"{rid}.{pk}"
@@ -1511,7 +1549,7 @@ _ClassKey = tuple[str, str]
 
 
 def _variable_source_slug(
-    conn: sqlite3.Connection, register_id: int, var_id: int, entry: SlugEntry
+    conn: sqlite3.Connection, register_id: int, var_id: str, entry: SlugEntry
 ) -> str:
     """Read the stored variable slug for a `[variable]` TOML entry's source.
 

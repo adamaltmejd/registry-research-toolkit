@@ -13,6 +13,7 @@ from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
     SNAPSHOT_FILENAME,
     SlugEntry,
+    _parse_variable_id,
     classify_default_candidate,
     diff_snapshot,
     format_default_slug_hints,
@@ -44,6 +45,49 @@ if TYPE_CHECKING:
 def _write(path: Path, body: str) -> Path:
     path.write_text(body, encoding="utf-8")
     return path
+
+
+class TestParseVariableId:
+    """A4.4b: the variable source-ID `<RegisterId>.<VarId>[.<disc>]` accepts a
+    TEXT VarId for a non-SCB provider (SOS `provider_key` is a variable name),
+    while keeping RegisterId a canonical int and guarding a numeric VarId."""
+
+    def test_scb_integer_varid(self) -> None:
+        assert _parse_variable_id("34.10") == (34, "10")
+
+    def test_split_sibling_three_part(self) -> None:
+        assert _parse_variable_id("34.10.kon") == (34, "10")
+
+    def test_sos_text_varid(self) -> None:
+        # SOS: register_id is a big minted int, VarId is the variable name.
+        assert _parse_variable_id("5028920659479690770.ALDER") == (
+            5028920659479690770,
+            "ALDER",
+        )
+        # text VarId in a split-sibling key is fine too.
+        assert _parse_variable_id("123.FOD_DATUMN.heltal") == (123, "FOD_DATUMN")
+
+    def test_leading_zero_register_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("034.10")
+        assert "RegisterId must be an integer" in exc.value.message
+
+    def test_numeric_varid_must_be_canonical(self) -> None:
+        # A purely-numeric VarId is an SCB id → still guarded against leading zeros
+        # so `1.10` and `1.010` can't alias one row.
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("1.010")
+        assert "numeric VarId must be in canonical" in exc.value.message
+
+    def test_empty_varid_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("1.")
+        assert "VarId segment is empty" in exc.value.message
+
+    def test_wrong_arity_rejected(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _parse_variable_id("1")
+        assert "expected" in exc.value.message
 
 
 class TestProviderToml:
@@ -1517,6 +1561,28 @@ class TestAutoDerivationMarker:
         worklist = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
         assert "1.20" in worklist  # same_as only → slug unfixed → stays
         assert "1.21" in worklist  # deprecated-only → slug still ships → stays
+
+    def test_dotted_provider_key_fails_fast(self, tmp_path: Path) -> None:
+        # A provider_key containing '.' would mis-parse the variable source-ID as
+        # a split-sibling 3-part key (silent slug mis-attribution). Fail fast at
+        # source-ID construction instead. (Inert for SCB — its keys are ints — but
+        # a non-SCB provider_key is an arbitrary name, so guard it. A4.4b review.)
+        conn = build_slugged_db(variable=None)
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, 'FOO.BAR', 'Foo')"
+        ).lastrowid
+        assert vid is not None
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2000-01-01', '2000-12-31', 'int', 'FooBar')",
+            (vid,),
+        )
+        conn.commit()
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, self._slug_dir(tmp_path))
+        assert "contains '.'" in exc.value.message
 
 
 class TestSeedEmitsValidToml:
