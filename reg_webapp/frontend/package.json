@@ -9,15 +9,18 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "biome check",
     "format": "biome format --write .",
+    "test": "vitest run",
     "gen:types": "openapi-typescript ../backend/openapi.json -o src/lib/api-types.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
     "@sveltejs/vite-plugin-svelte": "7.1.2",
+    "jsdom": "29.1.1",
     "openapi-typescript": "7.13.0",
     "svelte": "5.55.9",
     "svelte-check": "4.4.8",
     "typescript": "6.0.3",
-    "vite": "8.0.14"
+    "vite": "8.0.14",
+    "vitest": "4.1.7"
   }
 }
