@@ -262,6 +262,21 @@ class TestValidateModule:
         )
 
 
+class TestBuildDbProvidersDefault:
+    def test_cli_default_is_combined_scb_sos(self):
+        """A4.5: the CLI `--providers` default is the combined `scb,sos` build.
+        `--providers scb` still selects the SCB-only DB (the A4.3b byte-identical
+        gate). Only the CLI surface flipped — `build_db()`'s function default
+        stays `('scb',)` so synthetic SCB-only fixtures need no SOS workbooks."""
+        from reg_meta_build.cli import _build_parser
+
+        parser = _build_parser()
+        ns = parser.parse_args(["build-db", "--input-dir", "x"])
+        assert ns.providers == "scb,sos"
+        ns = parser.parse_args(["build-db", "--input-dir", "x", "--providers", "scb"])
+        assert ns.providers == "scb"
+
+
 class TestBuildDbValidateFlag:
     def test_argparse_exposes_validate(self):
         """The `--validate` flag is wired into `reg-meta-build build-db`'s

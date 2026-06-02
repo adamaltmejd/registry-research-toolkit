@@ -754,19 +754,30 @@ Original scope detail (still accurate):
 
 **Estimate**: 4-5 days (initial estimate of 2-3 days didn't account for the panel_template curation pass — ~800 variant rows to review).
 
-### [ ] A4.5 — First combined SCB+SOS build
+### [x] A4.5 — First combined SCB+SOS build
 
-- **Flip the CLI `build-db --providers` default from `scb` to `scb,sos`** (A4.3b
+**DONE (2026-06-02).** The bare `reg-meta-build build-db` now produces the combined
+SCB+SOS DB.
+
+- **Flipped the CLI `build-db --providers` default from `scb` to `scb,sos`** (A4.3b
   kept it `scb` so the bare default build stayed green while SOS lacked curated
-  slugs). Now that A4.4 has shipped `sos.toml`, the default combined build passes
-  the strict slug-coverage gate without `--skip-slugs`.
-- CI pipeline produces `reg_meta.db` containing both providers
-- Verify cross-provider FTS doesn't bleed
-- Verify no ID collisions (BLAKE2b top-bit namespace held)
-- Verify no spurious cross-provider same_as edges
-- Document the resulting DB shape (sample queries, row counts)
-
-**Estimate**: 2-3 days.
+  slugs). Now that A4.4 shipped `sos.toml`, the default combined build passes the
+  strict slug-coverage gate without `--skip-slugs`. Only the **CLI** surface flipped;
+  `build_db()`'s function default stays `("scb",)` so synthetic SCB-only test
+  fixtures need no SOS workbooks. `--providers scb` still reproduces the A4.3b
+  byte-identical SCB-only DB.
+- **No CI build to change**: the shipped `reg_meta.db` is built manually at release
+  (`.claude/skills/release/SKILL.md` step runs the bare `build-db`, which now inherits
+  the combined default); the publish workflow only smoke-tests the uploaded asset.
+- **Combined DB shape** (real-data `--providers scb,sos --validate`, 22 `[OK]`):
+  251 registers (238 SCB + 13 SOS), 641 register_variants (597 + 44), 52,369 variables
+  (50,639 + 1,730), 13,511 value_sets, 69 classifications.
+- **Cross-provider verification (all clean):** id bands disjoint — every SCB id
+  `< 2^62`, every SOS id `>= 2^62` (BLAKE2b top-bit namespace held); **0** cross-provider
+  edges in `variable_same_as` / `classification_same_as` / `variable_related_to`
+  (173,758 relation edges, all within-provider); FTS no bleed — `register_fts` (251),
+  `variable_fts` (52,369), `classification_fts` (69) row counts exactly match their
+  base tables. SOS contributes 0 classification-tagged states (A4.4e plumbing-only).
 
 ---
 
