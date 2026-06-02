@@ -90,8 +90,10 @@ def test_unresolvable_fqid_is_200_not_4xx(client):
 
 def test_extra_key_is_unexpected_field_not_500(client):
     """A typo'd key on a CLOSED object (Binding, extra=forbid) now surfaces as the
-    canonical structural code ``unexpected_field`` (reg_schema owns it; the webapp
-    no longer invents ``invalid_field``) — a 200 ISSUE, NEVER a 500."""
+    canonical structural code ``unexpected_field`` (reg_schema owns it) — the
+    extra-key case no longer routes through the webapp's ``invalid_field`` (which
+    remains only as a rare defensive model-construction catch). A 200 ISSUE, NEVER
+    a 500."""
     spec = _clean_spec()
     spec["sources"][0]["bindings"][0]["typoo_field"] = "oops"
     resp = client.post("/api/project/validate", json=spec)
@@ -116,6 +118,20 @@ def test_validate_catches_orphan_column_options(client):
     body = resp.json()
     assert body["ok"] is False
     assert "column_options_orphan_fqid" in {i["code"] for i in body["issues"]}
+
+
+def test_malformed_column_options_value_is_issue_not_500(client):
+    """A non-dict per-FQID column_options value (an int) is malformed — the block
+    validator flags it (invalid_block). /validate ACCUMULATES issues (it doesn't
+    fail-fast like /bundle's raise), so the cross-block check must skip the non-dict
+    value defensively, not `"suppress_k" not in <int>` → TypeError → 500."""
+    spec = _clean_spec()
+    spec["reg_monabundle"] = {"column_options": {"scb/lisa/kon": 1}}  # bound, non-dict
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200, f"malformed column_options → {resp.status_code}"
+    body = resp.json()
+    assert body["ok"] is False
+    assert "invalid_block" in {i["code"] for i in body["issues"]}
 
 
 def test_top_level_extra_key_is_issue_not_500(client):

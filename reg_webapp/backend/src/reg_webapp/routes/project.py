@@ -15,9 +15,9 @@ duplicate JSON keys, a too-deeply-nested body, a non-object top level, or an
 oversized body (the last handled by ``BodySizeLimitMiddleware`` before the handler
 runs). The body is parsed as JSON regardless of ``Content-Type`` (lenient — a
 researcher tool, not a strict public API). An extra/typo KEY on a closed object
-(Source/Binding/Panel) surfaces as the structural ``unexpected_field`` issue; a
-residual model-construction failure is a thin defensive issue — a 200 ISSUE either
-way, NEVER a 500.
+(Source/Binding/Panel/PanelMember) surfaces as the structural ``unexpected_field``
+issue; a residual model-construction failure is a thin defensive issue (still coded
+``invalid_field``) — a 200 ISSUE either way, NEVER a 500.
 
 **Connection model = per-request open ON ONE THREAD** (LOCKED). ``/validate`` is
 ``async`` only to read the body off the wire; the BLOCKING work (structural parse
@@ -94,12 +94,13 @@ def _model_issue(message: str, exc: ValidationError) -> ValidationIssue:
     """Turn a residual ``ProjectData.model_validate`` failure into an error issue.
 
     THIN DEFENSIVE catch. ``validate_structural`` now owns the structural problems
-    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on the
-    closed Source/Binding/Panel objects), and the caller only builds the model
+    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on the closed
+    Source/Binding/Panel/PanelMember objects), and the caller only builds the model
     once structural passed. So the common extra-key case never reaches here (it is
     ``unexpected_field`` from reg_schema); a model ``ValidationError`` here is a
-    constraint structural did NOT replicate (rare) — surfaced as a 200 issue (code
-    ``invalid_field``), never a 500. The path points at the first offending field."""
+    constraint structural did NOT replicate (rare — effectively unreachable under
+    today's models) — surfaced as a 200 issue (code ``invalid_field``), never a 500.
+    The path points at the first offending field."""
     errors = exc.errors()
     path = "/" + "/".join(str(p) for p in errors[0]["loc"]) if errors else ""
     return ValidationIssue(

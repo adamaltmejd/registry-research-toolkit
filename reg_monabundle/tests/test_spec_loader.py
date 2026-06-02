@@ -405,6 +405,18 @@ def test_column_options_issues_no_block_returns_no_issues():
     assert column_options_issues(None, pd) == []
 
 
+def test_column_options_issues_skips_non_dict_opts_without_raising():
+    """A non-dict per-FQID opts value (here ``1`` on a BOUND FQID) is malformed —
+    ``validate_block``/``block_issue`` flags it. ``column_options_issues`` must
+    skip it defensively, not evaluate ``"suppress_k" not in 1`` → TypeError. The
+    raising gate fail-fasts on the bad block first, but reg_webapp's
+    issue-accumulating /validate runs this AFTER, so the skip is load-bearing."""
+    pd = _block_validated_project_data({"column_options": {"scb/test/kon": {}}})
+    # Hand a deliberately malformed block (a non-dict opts) past the block gate.
+    issues = column_options_issues({"column_options": {"scb/test/kon": 1}}, pd)
+    assert issues == []
+
+
 def test_block_issue_clean_block_returns_none():
     assert block_issue({"column_options": {"scb/test/kon": {"suppress_k": 25}}}) is None
     assert block_issue(None) is None

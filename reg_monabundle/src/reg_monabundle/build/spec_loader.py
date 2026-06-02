@@ -134,9 +134,17 @@ def column_options_issues(
             )
         )
     for fqid, opts in options.items():
-        if "suppress_k" not in opts or fqid not in bindings_by_fqid:
-            # Orphan FQIDs are already reported above; skip the type check
-            # (there are no bindings to inspect for them).
+        if (
+            not isinstance(opts, dict)
+            or "suppress_k" not in opts
+            or fqid not in bindings_by_fqid
+        ):
+            # A non-dict opts value is malformed — ``validate_block`` (via
+            # ``block_issue``) already flags it; skip it here so reg_webapp's
+            # issue-ACCUMULATING /validate (which, unlike ``validate_project_data``'s
+            # fail-fast raise, keeps going after a bad block) can't hit
+            # ``"suppress_k" not in <int>`` → TypeError → a 500. Orphan FQIDs have
+            # no bindings to inspect (already reported above).
             continue
         # ``b.type`` is a ``ColumnType`` Literal; widen to ``str`` for the
         # message helper. The string VALUES are identical, so the rendered
