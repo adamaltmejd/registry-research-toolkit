@@ -453,11 +453,12 @@ CREATE INDEX idx_variable_state_register_variant
 -- distinct windowed (variable, variant, valid_from, version_label), so both feed
 -- the index collision-free; a CREATE-time collision would surface a residual
 -- triage/era bug loudly. value_set_version_label stays NOT NULL DEFAULT '' so the
--- index bites in the common single-version case. (Byte-identity: the SCB-only
--- build's final schema is unchanged — same index, same rows — and dbdiff
--- compares content, not page layout; confirmed exit-0 vs the A4.3a baseline.)
-CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(
-    variable_id, register_variant_id, valid_from, value_set_version_label);
+-- index bites in the common single-version case. Byte-identity: SQLite stores
+-- the CREATE text verbatim in sqlite_master.sql, so this statement is kept on a
+-- single line to match the exact text the A4.3a SCB coalescer submitted (a
+-- reflowed multi-line form is a real dbdiff schema diff even though the index is
+-- semantically identical). Confirmed exit-0 vs the A4.3a baseline.
+CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label);
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;

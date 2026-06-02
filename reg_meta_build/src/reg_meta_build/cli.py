@@ -154,11 +154,13 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     build_p.add_argument(
         "--providers",
-        default="scb,sos",
+        default="scb",
         help=(
-            "Comma-separated provider adapters to build (default: scb,sos). "
-            "`--providers scb` reproduces the byte-identical SCB-only DB (the "
-            "A4.3b dbdiff gate); SOS is purely additive."
+            "Comma-separated provider adapters to build (default: scb). SOS is "
+            "opt-in via `--providers scb,sos` until A4.4 curates sos.toml slugs; "
+            "A4.5 (first combined build) flips the default to scb,sos. The default "
+            "`scb` reproduces the byte-identical SCB-only DB (the A4.3b dbdiff "
+            "gate). SOS is purely additive — it adds rows, never alters SCB's."
         ),
     )
 

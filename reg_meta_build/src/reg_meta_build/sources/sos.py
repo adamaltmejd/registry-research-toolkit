@@ -1033,6 +1033,14 @@ class SOSAdapter:
         UNIQUE(member_hash). Both ids stay AUTOINCREMENT, content-addressed,
         provider-shared (unbanded — excluded from the §2.6 band assertion).
         Returns the shared value_set_id, or ``None`` for an empty code list.
+
+        Ordering is load-bearing: the materializer runs SCB before SOS, so by
+        the time this writes, SCB's explicit-counter `code_id`s have set the
+        `value_code` rowid high-water mark and these INSERT-OR-IGNOREs pick up
+        after them without collision. Only `code`/`label` are read here; each
+        `IRValueCode.valid_from`/`valid_to` is used upstream to decide code
+        survival but not persisted — `value_code` has no validity columns
+        (per-code validity awaits the materializer-owned value tables, Path B).
         """
         if not codes:
             return None
