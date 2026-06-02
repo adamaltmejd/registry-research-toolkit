@@ -7,7 +7,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import build_slugged_db
+from _slugged_db import add_state, add_variable, build_slugged_db
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
@@ -26,6 +26,7 @@ from reg_meta_build.fqid_slugs import (
     populate_slugs,
     populate_variable_slugs,
     precheck_slugs,
+    propose_panel_entity_key,
     read_auto_derivations,
     read_snapshot,
     seed_all,
@@ -652,6 +653,112 @@ class TestSeedSlugs:
         conn = build_slugged_db(version=("Strandlinje, 2019", None, 200))
         body = seed_provider_toml(conn, "scb")
         assert "[register_version." not in body
+
+
+# ---------------------------------------------------------------------------
+# seed-slugs --propose-panel (A4.4c-ii)
+# ---------------------------------------------------------------------------
+
+
+def _flag_identifier(conn: sqlite3.Connection, register_id: int, var_id: int) -> None:
+    conn.execute(
+        "UPDATE variable SET is_identifier = 1 "
+        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
+        (register_id, var_id),
+    )
+    conn.commit()
+
+
+class TestProposePanel:
+    """The A4.4c-ii proposer emits starter panel lines that a curator edits in
+    A4.4d. It does not have to be exhaustive — only round-trip-valid and driven
+    by the persisted is_identifier signal (see propose_panel_entity_key)."""
+
+    def test_is_identifier_drives_entity_key(self):
+        # default LISA fixture: var_id=44 ("Kön"), delivery column "Kon",
+        # slug folded from the column → "kon". Flag it as the variant identifier.
+        conn = build_slugged_db()
+        _flag_identifier(conn, register_id=1, var_id=44)
+        assert propose_panel_entity_key(conn, 1, 10) == "kon"
+
+    def test_no_identifier_proposes_none(self):
+        # No is_identifier, no source_join_key → SOS-shaped arm: nothing proposed,
+        # left for A4.4d curation.
+        conn = build_slugged_db()
+        assert propose_panel_entity_key(conn, 1, 10) is None
+
+    def test_join_key_alone_proposes_none(self):
+        # A delivery column matching an ID-kolumner join key is NOT used as a
+        # signal: source_join_key.table_name doesn't map to register_id, so a
+        # column-name match can't be register-scoped and would over-propose a
+        # non-identifier as the entity grain (review P2). Only is_identifier
+        # drives the proposal — no flagged identifier → None (curation in A4.4d).
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO source_join_key (table_name, column_name, description) "
+            "VALUES ('LISA_T', 'Kon', 'join key')"
+        )
+        conn.commit()
+        assert propose_panel_entity_key(conn, 1, 10) is None
+
+    def test_composite_entity_key_is_tuple(self):
+        # Two is_identifier variables on one variant → a sorted tuple (the
+        # composite case, persisted as a JSON array by populate_slugs).
+        conn = build_slugged_db()
+        _flag_identifier(conn, register_id=1, var_id=44)
+        add_variable(conn, register_id=1, var_id=45, name="Lopnr", slug="lopnr")
+        add_state(
+            conn,
+            register_id=1,
+            var_id=45,
+            register_variant_id=10,
+            delivery_column_name="Lopnr",
+        )
+        conn.execute(
+            "UPDATE variable SET is_identifier = 1 "
+            "WHERE register_id = 1 AND provider_key = '45'"
+        )
+        conn.commit()
+        assert propose_panel_entity_key(conn, 1, 10) == ("kon", "lopnr")
+
+    def test_seed_emits_round_trippable_panel(self, tmp_path: Path):
+        # End-to-end: seed with propose_panel, then the emitted TOML must load +
+        # validate without error and carry the proposed panel fields.
+        conn = build_slugged_db()
+        _flag_identifier(conn, register_id=1, var_id=44)
+        out = tmp_path / "out"
+        seed_all(conn, out, propose_panel=True)
+        entries = load_provider_toml(out / "scb.toml")
+        variant = next(e for e in entries if e.kind == "register_variant")
+        assert variant.panel_entity_key == "kon"
+        assert variant.panel_time_key == "period"
+        assert variant.panel_time_grain == "delivery"
+
+    def test_seed_without_flag_omits_panel(self, tmp_path: Path):
+        # Default seed (no --propose-panel) emits no panel lines.
+        conn = build_slugged_db()
+        _flag_identifier(conn, register_id=1, var_id=44)
+        out = tmp_path / "out"
+        seed_all(conn, out)
+        body = (out / "scb.toml").read_text()
+        assert "panel_entity_key" not in body
+        assert "panel_time_key" not in body
+
+    def test_seed_sos_shaped_variant_proposes_no_entity_key(self, tmp_path: Path):
+        # A variant with no is_identifier / join-key signal: the seed emits the
+        # time-key/grain defaults plus a curation comment, NO panel_entity_key,
+        # and still round-trips.
+        conn = build_slugged_db()  # no identifier flagged
+        out = tmp_path / "out"
+        seed_all(conn, out, propose_panel=True)
+        body = (out / "scb.toml").read_text()
+        assert "panel_entity_key =" not in body
+        assert "# panel_entity_key:" in body
+        entries = load_provider_toml(out / "scb.toml")
+        variant = next(e for e in entries if e.kind == "register_variant")
+        assert variant.panel_entity_key is None
+        assert variant.panel_time_key == "period"
+        assert variant.panel_time_grain == "delivery"
 
 
 # ---------------------------------------------------------------------------
@@ -2864,6 +2971,9 @@ def _make_seedable_db() -> sqlite3.Connection:
 def _ns(**kw):
     import argparse
 
+    # A4.4c-ii: default the new flag off so the existing seed-slugs CLI tests
+    # (which don't pass it) keep their byte-identical, panel-free output.
+    kw.setdefault("propose_panel", False)
     return argparse.Namespace(**kw)
 
 

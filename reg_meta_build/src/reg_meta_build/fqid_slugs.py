@@ -2271,13 +2271,103 @@ def format_default_slug_hints(
     return "\n".join(lines) + "\n"
 
 
-def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
+# A4.4c-ii panel proposer defaults: the LISA-style delivery-aligned majority
+# (§6.8.3). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
+# curation — auto-detecting it inline is brittle, so the proposer never emits it.
+_PANEL_DEFAULT_TIME_KEY = "period"
+_PANEL_DEFAULT_TIME_GRAIN = "delivery"
+
+
+def propose_panel_entity_key(
+    conn: sqlite3.Connection, register_id: int, register_variant_id: int
+) -> str | tuple[str, ...] | None:
+    """Propose a starter ``panel_entity_key`` for one register_variant (A4.4c-ii).
+
+    The entity key is the variant's panel entity-identifier variable slug(s)
+    (§6.8.3), proposed from the persisted ``variable.is_identifier`` flag (the
+    §6.8.3 entity-key driver): the slugs of identifier variables that actually
+    deliver on THIS variant (joined through ``variable_state.register_variant_id``
+    so a register's identifier set doesn't fan onto sibling variants that don't
+    carry it).
+
+    A single identifier → a bare slug; several → a sorted tuple (the composite
+    case, persisted as a JSON array by ``populate_slugs``). No identifier →
+    ``None``, so the field is left off for A4.4d curation. This covers SOS
+    (``is_join_variable`` is adapter-time-only, not on the universal ``variable``)
+    and any SCB variant with no flagged identifier.
+
+    Two signals are deliberately NOT used: (a) ``source_join_key`` — its
+    ``table_name`` does not map to a ``register_id``, so a column-name match
+    cannot be register-scoped and would over-propose a non-identifier (e.g. a geo
+    join column) as the entity grain; ``is_identifier`` is the precise signal.
+    (b) Tabelldefinitioner PRIMARY KEY — the SQL parser captures only column
+    type/nullability, never the table-level PK clause (``scb.py`` ``_SQL_COL_RE``).
+
+    Proposals are starter hints — the curator reviews them in A4.4d; this need
+    not be exhaustive or perfect.
+    """
+    # Primary: is_identifier variables delivering on this variant. Restricting to
+    # the variant (via variable_state) keeps a register's identifier set from
+    # fanning onto sibling variants that don't carry it.
+    id_slugs = [
+        r[0]
+        for r in conn.execute(
+            "SELECT DISTINCT v.slug FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = ? AND vs.register_variant_id = ? "
+            "AND v.is_identifier = 1 AND v.slug IS NOT NULL "
+            "ORDER BY v.slug",
+            (register_id, register_variant_id),
+        ).fetchall()
+    ]
+    if id_slugs:
+        return id_slugs[0] if len(id_slugs) == 1 else tuple(id_slugs)
+    return None
+
+
+def _emit_panel_proposal(
+    lines: list[str], entity_key: str | tuple[str, ...] | None
+) -> None:
+    """Append the proposed panel lines to a register_variant's seed block.
+
+    ``panel_time_key`` / ``panel_time_grain`` always default to the
+    delivery-aligned majority. ``panel_entity_key`` is emitted only when a signal
+    proposed one — otherwise a comment marks it for A4.4d curation (the SOS arm
+    and any signal-less SCB variant). Emitted live (not commented) so the seed
+    round-trips through ``load_provider_toml`` / ``_validate_entry`` and a curator
+    edits real values; the file header already flags every line as hand-review.
+    """
+    if entity_key is None:
+        lines.append(
+            "# panel_entity_key: no is_identifier / join-key signal — "
+            "set in A4.4d if this variant is a panel."
+        )
+    elif isinstance(entity_key, tuple):
+        inner = ", ".join(_toml_str(s) for s in entity_key)
+        lines.append(f"panel_entity_key = [{inner}]")
+    else:
+        lines.append(f"panel_entity_key = {_toml_str(entity_key)}")
+    lines.append(f"panel_time_key = {_toml_str(_PANEL_DEFAULT_TIME_KEY)}")
+    lines.append(f"panel_time_grain = {_toml_str(_PANEL_DEFAULT_TIME_GRAIN)}")
+
+
+def seed_provider_toml(
+    conn: sqlite3.Connection,
+    provider_slug: str,
+    *,
+    propose_panel: bool = False,
+) -> str:
     """Emit a starter TOML for ``provider_slug`` from the live build.
 
     Auto-derives a slug for each register/register_variant from
     ``registernamn`` / ``registervariantnamn``; the maintainer edits the
     result by hand before committing. Variables are auto-slugged from
     kolumnnamn at build time, so they're omitted from the seed.
+
+    ``propose_panel`` (A4.4c-ii) additionally emits proposed
+    ``panel_entity_key`` / ``panel_time_key`` / ``panel_time_grain`` lines on
+    each register_variant — starter hints for the A4.4d panel-shape curation
+    seam (see ``propose_panel_entity_key``).
     """
     lines: list[str] = [
         f"# Starter slug TOML for provider {provider_slug!r}.",
@@ -2337,6 +2427,11 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             lines.append(f"slug = {_toml_str(v_candidate)}")
             if vname:
                 lines.append(f"display_group = {_toml_str(vname)}")
+            if propose_panel:
+                _emit_panel_proposal(
+                    lines,
+                    propose_panel_entity_key(conn, register_id, register_variant_id),
+                )
             lines.append("")
     return "\n".join(lines)
 
@@ -2372,13 +2467,22 @@ def seed_classifications_toml(conn: sqlite3.Connection) -> str:
     return "\n".join(lines)
 
 
-def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
-    """Write a starter TOML for every distinct provider plus classifications."""
+def seed_all(
+    conn: sqlite3.Connection, out_dir: Path, *, propose_panel: bool = False
+) -> dict[str, Path]:
+    """Write a starter TOML for every distinct provider plus classifications.
+
+    ``propose_panel`` (A4.4c-ii) threads through to ``seed_provider_toml`` so
+    each register_variant gains proposed panel-shape starter lines.
+    """
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
     for provider_slug in _live_providers(conn):
         path = out_dir / f"{provider_slug}.toml"
-        path.write_text(seed_provider_toml(conn, provider_slug), encoding="utf-8")
+        path.write_text(
+            seed_provider_toml(conn, provider_slug, propose_panel=propose_panel),
+            encoding="utf-8",
+        )
         written[path.name] = path
     cls_path = out_dir / CLASSIFICATIONS_FILE
     cls_path.write_text(seed_classifications_toml(conn), encoding="utf-8")

@@ -222,6 +222,17 @@ def _build_parser() -> argparse.ArgumentParser:
             "suppress the hint block entirely."
         ),
     )
+    seed_slugs_p.add_argument(
+        "--propose-panel",
+        action="store_true",
+        help=(
+            "Also emit proposed panel-shape starter lines (panel_entity_key / "
+            "panel_time_key / panel_time_grain) on each register_variant (A4.4c-ii). "
+            "Entity-key proposals come from variable.is_identifier (falling back to "
+            "ID-kolumner join keys); time key/grain default to the delivery-aligned "
+            "majority. These are starter hints — a curator reviews them in A4.4d."
+        ),
+    )
 
     precheck_p = sub.add_parser(
         "precheck-slugs",
@@ -422,7 +433,7 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     # than a raw `OperationalError`.
     conn = open_db(db)
     try:
-        written = seed_all(conn, out_dir)
+        written = seed_all(conn, out_dir, propose_panel=args.propose_panel)
         # reg-meta-build always emits JSON on stdout, so hints (stderr) are
         # independent of format and only suppressed by --quiet / env.
         suppress_hints = args.quiet or os.environ.get("REG_META_QUIET") == "1"
@@ -442,6 +453,7 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "out_dir": str(out_dir),
             "force": args.force,
             "all_hints": args.all_hints,
+            "propose_panel": args.propose_panel,
             "quiet": args.quiet,
         },
         db_info=None,
@@ -672,7 +684,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Rebuild the doc DB from markdown files.",
     ),
     (
-        "seed-slugs [--out-dir DIR] [--force] [--all-hints]",
+        "seed-slugs [--out-dir DIR] [--force] [--all-hints] [--propose-panel]",
         "Emit starter slug TOMLs from the current DB.",
     ),
     (
