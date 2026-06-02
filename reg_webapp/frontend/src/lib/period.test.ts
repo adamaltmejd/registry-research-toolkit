@@ -4,9 +4,35 @@ import {
   nextResolutionQuery,
   periodFieldFromQuery,
   periodQueryFromField,
+  periodToWire,
   queryFromParams,
   VALUE_SET_VERSION_NONE,
 } from "./period";
+
+describe("periodToWire (Source.period → ?period wire string)", () => {
+  it("a bare year int → the year string", () => {
+    expect(periodToWire(2020)).toBe("2020");
+  });
+
+  it("a token string → trimmed; blank → null", () => {
+    expect(periodToWire("2020-Q1")).toBe("2020-Q1");
+    expect(periodToWire("  2019  ")).toBe("2019");
+    expect(periodToWire("_default")).toBe("_default");
+    expect(periodToWire("")).toBeNull();
+    expect(periodToWire("   ")).toBeNull();
+  });
+
+  it("a {from,to} range → from..to; a blank endpoint → null", () => {
+    expect(periodToWire({ from: 2018, to: 2020 })).toBe("2018..2020");
+    expect(periodToWire({ from: "2018", to: "2020" })).toBe("2018..2020");
+    expect(periodToWire({ from: "", to: 2020 })).toBeNull();
+  });
+
+  it("null / a partial {from-only} object → null (defensive fallthrough)", () => {
+    expect(periodToWire(null as never)).toBeNull();
+    expect(periodToWire({ from: 2018 } as never)).toBeNull();
+  });
+});
 
 describe("VALUE_SET_VERSION_NONE sentinel", () => {
   it("matches the backend period_param.VALUE_SET_VERSION_NONE", () => {

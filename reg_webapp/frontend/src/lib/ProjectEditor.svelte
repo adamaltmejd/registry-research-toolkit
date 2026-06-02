@@ -1,14 +1,19 @@
 <script lang="ts">
 import { regMetaReleaseTag } from "./project_data";
 import { initPersistence, projectStore } from "./project_store.svelte";
+import SourceEditor from "./SourceEditor.svelte";
 import ValidationPanel from "./ValidationPanel.svelte";
 
-// The MINIMAL authoring surface (A5.3c-i). NOT the rich editor (SourceEditor /
-// BindingEditor / CatalogPicker + inline field-highlighting are c-ii). This is:
+// The authoring surface. c-i shipped the minimal shell (home/new screen, top-level
+// fields, toolbar, open-error banner, ValidationPanel); c-ii (this) swaps the
+// read-only sources summary for the RICH editable list (SourceEditor /
+// BindingEditor / CatalogPicker + inline FieldIssues highlighting). The toolbar,
+// banners, name input, read-only steward/version/schema block, dirty indicator, and
+// ValidationPanel are UNCHANGED. This is:
 //  - the home/new screen (draft == null): New / Open buttons,
 //  - the loaded-draft view: top-level fields, a dirty indicator, a toolbar
 //    (New / Open / Download / Validate / Download order CSV / Download bundle),
-//    the open-error banner, a READ-ONLY sources/bindings summary, the ValidationPanel.
+//    the open-error banner, the EDITABLE sources/bindings list, the ValidationPanel.
 //
 // `reg_meta_version` (bare package version) and `steward` (the deployment's
 // steward id) are seeded from the deployment context (passed by App.svelte) and
@@ -164,38 +169,27 @@ async function onFilePicked(event: Event): Promise<void> {
       </div>
     </div>
 
-    <!-- Read-only sources/bindings summary (rich editing is c-ii). -->
+    <!-- Editable sources/bindings list (c-ii). Keyed by index (no stable id;
+         matches c-i — a middle-remove shifts focus, an accepted caveat). Each
+         SourceEditor re-renders on every edit (the whole draft swaps), acceptable
+         at expected sizes. `issues` is the LAST /validate result, echoed inline. -->
     <section class="sources" aria-label="Sources">
-      <h3>Sources ({sources.length})</h3>
+      <div class="sources-head">
+        <h3>Sources ({sources.length})</h3>
+        <button type="button" class="add" onclick={() => projectStore.addSource()}>
+          Add source
+        </button>
+      </div>
       {#if sources.length === 0}
-        <p class="muted">No sources yet. Adding sources/bindings is the next milestone (c-ii).</p>
+        <p class="muted">No sources yet. Add one to begin authoring.</p>
       {:else}
-        <ul class="source-list">
-          {#each sources as source, i (i)}
-            {@const bindings = Array.isArray(source.bindings) ? source.bindings : []}
-            <li>
-              <div class="source-head">
-                <strong>{source.name || "(unnamed source)"}</strong>
-                <code class="rv">{source.register_variant}</code>
-              </div>
-              <div class="source-meta muted">
-                period <code>{JSON.stringify(source.period)}</code> ·
-                {bindings.length}
-                {bindings.length === 1 ? "binding" : "bindings"}
-              </div>
-              {#if bindings.length > 0}
-                <ul class="binding-list">
-                  {#each bindings as binding, j (j)}
-                    <li>
-                      <code>{binding.variable || "(no variable)"}</code>
-                      <span class="muted">{binding.type}</span>
-                    </li>
-                  {/each}
-                </ul>
-              {/if}
-            </li>
-          {/each}
-        </ul>
+        {#each sources as source, i (i)}
+          <SourceEditor
+            sourceIndex={i}
+            source={source}
+            issues={projectStore.validation?.issues ?? []}
+          />
+        {/each}
       {/if}
     </section>
 
@@ -305,43 +299,17 @@ async function onFilePicked(event: Event): Promise<void> {
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
-  .sources h3 {
-    margin-bottom: 0.5rem;
+  .sources-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
   }
-  .source-list,
-  .binding-list {
-    list-style: none;
-    padding: 0;
+  .sources-head h3 {
     margin: 0;
   }
-  .source-list > li {
-    padding: 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-  }
-  .source-head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-  }
-  .rv {
-    color: var(--muted);
-    font-size: 0.85em;
-  }
-  .source-meta {
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-  }
-  .binding-list {
-    margin-top: 0.5rem;
-    padding-left: 1rem;
-    border-left: 2px solid var(--border);
-  }
-  .binding-list li {
-    display: flex;
-    gap: 0.5rem;
-    align-items: baseline;
-    font-size: 0.9rem;
+  .add {
+    background: var(--surface);
   }
 </style>
