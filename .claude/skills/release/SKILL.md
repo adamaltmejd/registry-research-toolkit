@@ -161,8 +161,16 @@ Upload if **either** condition is true:
 
 Otherwise skip.
 
+As of A4.5 the shipped DB is the **combined SCB+SOS** build, so `input_data/`
+**must** contain the `Socialstyrelsen/` workbooks as well as `SCB/` — the build
+hard-fails `sos_dir_not_found` (exit 10, `EXIT_CONFIG`) without them. `--providers
+scb,sos` is the default now but is passed explicitly here so the release asset
+stays combined regardless of future default changes. (To rebuild the legacy
+SCB-only asset, use `--providers scb`.)
+
 ```bash
-uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ --validate
+uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ \
+  --providers scb,sos --validate
 zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
 rm reg_meta.db.zst
