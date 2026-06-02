@@ -110,8 +110,11 @@ export function onNavClick(event: MouseEvent): void {
   if (!(target instanceof Element)) {
     return;
   }
+  // `closest("a")` also matches an SVG `<a>` (SVGAElement), which lacks the
+  // HTMLHyperlinkElementUtils URL fields (`origin`/`pathname`/…) read below;
+  // narrow to HTMLAnchorElement so those reads are sound (and skip SVG anchors).
   const anchor = target.closest("a");
-  if (!anchor) {
+  if (!(anchor instanceof HTMLAnchorElement)) {
     return;
   }
   const href = anchor.getAttribute("href");
