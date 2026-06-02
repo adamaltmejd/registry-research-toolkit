@@ -572,7 +572,7 @@
             "type": "string"
           },
           "schema_version": {
-            "description": "Schema version of the reg_meta DB build (e.g. '5.1.0').",
+            "description": "Schema version of the reg_meta DB build (e.g. '5.2.0').",
             "title": "Schema Version",
             "type": "string"
           }

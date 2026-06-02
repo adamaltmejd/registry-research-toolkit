@@ -27,7 +27,7 @@ class RegMetaInfo(BaseModel):
     """reg_meta build provenance, read from the DB ``import_manifest``."""
 
     schema_version: str = Field(
-        description="Schema version of the reg_meta DB build (e.g. '5.1.0')."
+        description="Schema version of the reg_meta DB build (e.g. '5.2.0')."
     )
     import_date: str = Field(
         description="UTC timestamp the reg_meta DB was built/imported."

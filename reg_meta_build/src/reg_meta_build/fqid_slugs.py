@@ -400,11 +400,30 @@ def _validate_entry(
     )
 
 
+def _validate_panel_slug_ref(
+    kind: EntityKind, source_id: str, field: str, value: str
+) -> None:
+    """A panel key references a variable slug — grammar-check it (§5.2) so a typo
+    (e.g. a stray `[` that the catalog would later try to JSON-decode, or a
+    non-slug-shaped value) fails LOUDLY at build time, not as a runtime decode
+    crash when the webapp serves that variant."""
+    try:
+        validate_slug(value, field)
+    except ValueError as exc:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `{field}` {value!r} is not a valid variable "
+            f"slug: {exc}",
+            "Reference an existing variable slug.",
+        ) from exc
+
+
 def _validate_panel_entity_key(
     kind: EntityKind, source_id: str, raw: Any
 ) -> str | tuple[str, ...] | None:
     """`panel_entity_key` is a non-empty variable-slug string (simple case) or a
-    non-empty list of such strings (composite case, stored as a tuple)."""
+    non-empty list of such strings (composite case, stored as a tuple). Each
+    reference is grammar-checked (see `_validate_panel_slug_ref`)."""
     if raw is None:
         return None
     if isinstance(raw, str):
@@ -414,6 +433,7 @@ def _validate_panel_entity_key(
                 f"{kind}.{source_id!r}: `panel_entity_key` must be non-empty.",
                 "Give a variable slug or remove the field.",
             )
+        _validate_panel_slug_ref(kind, source_id, "panel_entity_key", raw)
         return raw
     if isinstance(raw, list):
         if not raw or not all(isinstance(r, str) and r for r in raw):
@@ -423,6 +443,8 @@ def _validate_panel_entity_key(
                 "non-empty list of non-empty strings.",
                 'Use TOML syntax: panel_entity_key = ["a", "b"].',
             )
+        for r in raw:
+            _validate_panel_slug_ref(kind, source_id, "panel_entity_key", r)
         return tuple(raw)
     raise _err(
         "slug_toml_invalid",
@@ -433,8 +455,9 @@ def _validate_panel_entity_key(
 
 
 def _validate_panel_time_key(kind: EntityKind, source_id: str, raw: Any) -> str | None:
-    """`panel_time_key` is the literal "period" or a variable-slug — a non-empty
-    string either way."""
+    """`panel_time_key` is the literal "period" (delivery-aligned) or a variable
+    slug. A slug reference is grammar-checked; "period" is exempt (it's the
+    sentinel, not a slug)."""
     if raw is None:
         return None
     if not isinstance(raw, str) or not raw:
@@ -443,6 +466,8 @@ def _validate_panel_time_key(kind: EntityKind, source_id: str, raw: Any) -> str 
             f"{kind}.{source_id!r}: `panel_time_key` must be a non-empty string.",
             'Use "period" (delivery-aligned) or a variable slug.',
         )
+    if raw != "period":
+        _validate_panel_slug_ref(kind, source_id, "panel_time_key", raw)
     return raw
 
 

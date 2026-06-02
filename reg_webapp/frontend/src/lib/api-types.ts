@@ -615,7 +615,7 @@ export interface components {
             import_date: string;
             /**
              * Schema Version
-             * @description Schema version of the reg_meta DB build (e.g. '5.1.0').
+             * @description Schema version of the reg_meta DB build (e.g. '5.2.0').
              */
             schema_version: string;
         };

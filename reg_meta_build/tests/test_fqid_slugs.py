@@ -181,6 +181,35 @@ class TestProviderToml:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
 
+    def test_variant_malformed_panel_entity_key_rejected(self, tmp_path: Path):
+        # A4.4c-i review P3: a panel key references a variable slug — a typo like
+        # a stray `[` (which the catalog would later try to JSON-decode) must fail
+        # at build time, not crash at serve time.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\n'
+            'panel_entity_key = "[personnummer"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
+    def test_variant_panel_time_key_period_or_slug(self, tmp_path: Path):
+        # "period" is the exempt sentinel; a non-period time_key must be a valid
+        # variable slug (a non-slug-shaped value is rejected).
+        path = tmp_path / "scb.toml"
+        _write(
+            path, '[register_variant."34.153"]\nslug = "x"\npanel_time_key = "period"\n'
+        )
+        assert load_provider_toml(path)[0].panel_time_key == "period"
+        _write(
+            path,
+            '[register_variant."34.153"]\nslug = "x"\npanel_time_key = "Not A Slug"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
     def test_variable_override(self, tmp_path: Path):
         path = _write(
             tmp_path / "scb.toml",
