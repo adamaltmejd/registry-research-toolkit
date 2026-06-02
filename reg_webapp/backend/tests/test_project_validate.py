@@ -5,9 +5,10 @@ Covers the §6.8.0 status discipline that defines this endpoint:
 - a clean spec → 200 ``ok=true`` ``issues=[]``;
 - an unresolvable FQID → 200 ``ok=false`` + the §6.8.3 semantic issue (NOT 4xx —
   a validation failure is a successful validation RESPONSE);
-- an extra/typo key → 200 with an ``invalid_field`` issue (NOT 500 — the
-  ``ProjectData`` model's ``extra=forbid`` raise is caught and turned into an
-  issue);
+- an extra/typo key on a CLOSED nested object (Source/Binding/Panel/member) →
+  200 with the structural ``unexpected_field`` issue (NOT 500; the top-level
+  ``ProjectData`` is ``extra=ignore`` so a stray top-level key is a tolerated
+  namespaced block, not an error);
 - malformed JSON / duplicate keys / non-object body → 4xx (a malformed REQUEST);
 - the three-layer concatenation (structural ⧺ block ⧺ semantic);
 - a concurrency smoke test (the cross-thread sqlite P1 the sequential TestClient
