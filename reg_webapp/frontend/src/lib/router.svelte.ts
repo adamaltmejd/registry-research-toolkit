@@ -104,7 +104,13 @@ export function onNavClick(event: MouseEvent): void {
   ) {
     return;
   }
-  const anchor = (event.target as HTMLElement | null)?.closest("a");
+  // `event.target` is an `EventTarget` and can be a non-Element; only an Element
+  // has `.closest` (calling it on a Text node / null would throw).
+  const target = event.target;
+  if (!(target instanceof Element)) {
+    return;
+  }
+  const anchor = target.closest("a");
   if (!anchor) {
     return;
   }
