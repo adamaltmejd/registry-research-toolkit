@@ -10,7 +10,7 @@ import {
   issuesForPointer,
   KNOWN_CODES,
   parseJsonPointer,
-  type ValidationResult,
+  type ValidationIssue,
 } from "./validation";
 
 describe("parseJsonPointer (RFC 6901)", () => {
@@ -88,8 +88,12 @@ describe("codeLabel / KNOWN_CODES", () => {
 
 describe("cross-runtime contract (reg_schema corpus)", () => {
   // The SPA must parse the exact path + map the code the backend's validator
-  // emits for the `unexpected_field_on_binding` fixture.
-  const expected = expectedUnexpectedField as ValidationResult;
+  // emits for the `unexpected_field_on_binding` fixture. The corpus fixture is the
+  // STRUCTURAL validator's output — an issue list with NO `ok` field (that's added
+  // by the webapp's `/validate` envelope), so pin it to the issue-list shape, not
+  // the full `ValidationResult` (whose required `ok` an `as ValidationResult` cast
+  // would silently fabricate).
+  const expected = expectedUnexpectedField as { issues: ValidationIssue[] };
 
   it("parses the issue path + maps the code for the unexpected_field fixture", () => {
     expect(expected.issues).toHaveLength(1);

@@ -162,6 +162,13 @@ describe("router reactive query (A5.3b)", () => {
     expect(router.getQueryParam("variant")).toBeNull();
   });
 
+  it("returns null for a present-but-empty query param (?period=)", () => {
+    // An empty modifier is "no value" — A5.3b callers treat `?period=` as absent
+    // (the `|| null` in getQueryParam). Pin it so a regression to `""` is caught.
+    router.navigate("/catalog/scb/lisa/kon?period=");
+    expect(router.getQueryParam("period")).toBeNull();
+  });
+
   it("reads multiple modifiers off the query", () => {
     router.navigate(
       "/catalog/scb/lisa/kon?period=2020&variant=x&value_set_version=y",

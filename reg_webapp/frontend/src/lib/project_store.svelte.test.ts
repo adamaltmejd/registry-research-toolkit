@@ -22,8 +22,20 @@ function jsonFile(text: string): File {
   return new File([text], "project_data.json", { type: "application/json" });
 }
 
+/** Stub global `fetch` so the store's write endpoints (validate → apiPostJson)
+ * resolve against a canned response. */
+function stubFetch(
+  impl: (url: string, init?: RequestInit) => Promise<unknown>,
+): void {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((url: string, init?: RequestInit) => impl(url, init)),
+  );
+}
+
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("checkVersionGate (THE A5.4 SEAM — accept path live)", () => {
@@ -79,10 +91,19 @@ describe("dirty flag", () => {
     expect(projectStore.dirty).toBe(false);
   });
 
-  it("an edit clears the stale validation (validatedClean goes false)", () => {
+  it("an edit clears a GREEN validation (validatedClean goes false)", async () => {
+    stubFetch(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, issues: [] }),
+    }));
     projectStore.newProject(SEED);
-    // Simulate a green validation, then edit — the edit must invalidate it so the
-    // order/bundle download gate re-closes.
+    // Establish a REAL green validation first — otherwise the assertion is
+    // vacuous (newProject already nulls validation).
+    await projectStore.validate();
+    expect(projectStore.validation?.ok).toBe(true);
+    expect(projectStore.validatedClean).toBe(true);
+    // An edit must invalidate it so the order/bundle download gate re-closes.
     projectStore.addSource();
     expect(projectStore.validation).toBeNull();
     expect(projectStore.validatedClean).toBe(false);
@@ -141,6 +162,84 @@ describe("openFromFile", () => {
     expect(projectStore.openError).not.toBeNull();
     projectStore.clearOpenError();
     expect(projectStore.openError).toBeNull();
+  });
+});
+
+describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
+  it("stores a 200 ok:false result and does NOT set requestError (a validation failure is not a 4xx)", async () => {
+    stubFetch(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        ok: false,
+        issues: [{ level: "error", code: "x", path: "", message: "m" }],
+      }),
+    }));
+    projectStore.newProject(SEED);
+    const r = await projectStore.validate();
+    expect(r?.ok).toBe(false);
+    expect(projectStore.validation?.ok).toBe(false);
+    expect(projectStore.validatedClean).toBe(false);
+    expect(projectStore.requestError).toBeNull();
+  });
+
+  it("sets requestError (not validation) on a true 4xx malformed request", async () => {
+    stubFetch(async () => ({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: "request body is not a JSON object" }),
+    }));
+    projectStore.newProject(SEED);
+    const r = await projectStore.validate();
+    expect(r).toBeNull();
+    expect(projectStore.requestError).toBe("request body is not a JSON object");
+    expect(projectStore.validation).toBeNull();
+  });
+
+  it("discards a stale response when the draft changed mid-flight (no resurrected validatedClean)", async () => {
+    // Defer the fetch resolution so we can edit DURING the request.
+    let resolveFetch: (v: unknown) => void = () => {};
+    stubFetch(
+      () =>
+        new Promise((res) => {
+          resolveFetch = res;
+        }),
+    );
+    projectStore.newProject(SEED);
+    const pending = projectStore.validate();
+    // Edit mid-flight → setDraft swaps the draft + clears validation.
+    projectStore.updateField("name", "edited mid-flight");
+    expect(projectStore.validation).toBeNull();
+    // The stale GREEN response now arrives — it must NOT resurrect validation.
+    resolveFetch({
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, issues: [] }),
+    });
+    await pending;
+    expect(projectStore.validation).toBeNull();
+    expect(projectStore.validatedClean).toBe(false);
+  });
+});
+
+describe("downloadProject (dirty baseline reset)", () => {
+  it("marks the draft clean by resetting the dirty baseline to the written text", () => {
+    // jsdom doesn't implement object URLs; stub so triggerDownload runs.
+    Object.defineProperty(URL, "createObjectURL", {
+      value: vi.fn(() => "blob:mock"),
+      configurable: true,
+      writable: true,
+    });
+    Object.defineProperty(URL, "revokeObjectURL", {
+      value: vi.fn(),
+      configurable: true,
+      writable: true,
+    });
+    projectStore.newProject(SEED);
+    projectStore.updateField("name", "to download");
+    expect(projectStore.dirty).toBe(true);
+    projectStore.downloadProject();
+    expect(projectStore.dirty).toBe(false);
   });
 });
 

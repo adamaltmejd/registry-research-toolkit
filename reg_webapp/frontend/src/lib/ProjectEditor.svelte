@@ -81,6 +81,12 @@ async function onFilePicked(event: Event): Promise<void> {
   {:else}
     <!-- ── Loaded draft ───────────────────────────────────────────────────── -->
     {@const draft = projectStore.draft}
+    <!-- An opened file is loaded VERBATIM and is NOT structurally validated
+         client-side (the backend diagnoses it, §9.6). A malformed spec may lack
+         `sources` or have it non-array; coerce to [] for the read-only SUMMARY so
+         the page still renders and the user can reach Validate. The draft itself
+         stays verbatim for serialize/validate. -->
+    {@const sources = Array.isArray(draft.sources) ? draft.sources : []}
     <header class="editor-head">
       <h2>
         {draft.name || "Untitled project"}
@@ -160,12 +166,13 @@ async function onFilePicked(event: Event): Promise<void> {
 
     <!-- Read-only sources/bindings summary (rich editing is c-ii). -->
     <section class="sources" aria-label="Sources">
-      <h3>Sources ({draft.sources.length})</h3>
-      {#if draft.sources.length === 0}
+      <h3>Sources ({sources.length})</h3>
+      {#if sources.length === 0}
         <p class="muted">No sources yet. Adding sources/bindings is the next milestone (c-ii).</p>
       {:else}
         <ul class="source-list">
-          {#each draft.sources as source, i (i)}
+          {#each sources as source, i (i)}
+            {@const bindings = Array.isArray(source.bindings) ? source.bindings : []}
             <li>
               <div class="source-head">
                 <strong>{source.name || "(unnamed source)"}</strong>
@@ -173,12 +180,12 @@ async function onFilePicked(event: Event): Promise<void> {
               </div>
               <div class="source-meta muted">
                 period <code>{JSON.stringify(source.period)}</code> ·
-                {source.bindings.length}
-                {source.bindings.length === 1 ? "binding" : "bindings"}
+                {bindings.length}
+                {bindings.length === 1 ? "binding" : "bindings"}
               </div>
-              {#if source.bindings.length > 0}
+              {#if bindings.length > 0}
                 <ul class="binding-list">
-                  {#each source.bindings as binding, j (j)}
+                  {#each bindings as binding, j (j)}
                     <li>
                       <code>{binding.variable || "(no variable)"}</code>
                       <span class="muted">{binding.type}</span>

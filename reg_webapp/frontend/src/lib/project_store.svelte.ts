@@ -246,9 +246,11 @@ export const projectStore = {
   /**
    * Open a `project_data.json` File. Parse → guard non-object → `checkVersionGate`.
    * On accept: load the parsed dict VERBATIM (unmapped keys / namespaced blocks
-   * survive) and set `lastDownloaded` to the raw file text so the freshly-opened
-   * draft is CLEAN. On a parse error or a gate failure: set `openError` and do NOT
-   * load (the existing draft, if any, is untouched).
+   * survive) and set the dirty baseline (`lastDownloaded`) to the draft
+   * re-serialized through OUR serializer — NOT the file's raw text — so a
+   * freshly-opened, unedited draft is CLEAN even when the file's own formatting
+   * differs from our pretty-print. On a parse error or a gate failure: set
+   * `openError` and do NOT load (the existing draft, if any, is untouched).
    */
   async openFromFile(file: File): Promise<void> {
     const text = await file.text();
@@ -273,10 +275,10 @@ export const projectStore = {
       openError = gate.reason ?? "This project file cannot be opened.";
       return;
     }
-    // Load verbatim. The opened object is the draft; the dirty baseline is the
-    // file's text (so re-serializing an unedited open is clean even if our
-    // pretty-print differs — see below). We re-serialize via our serializer for
-    // the baseline so an UNEDITED draft compares equal to itself.
+    // Load verbatim. The dirty baseline is the draft re-serialized through OUR
+    // serializer (not the file's raw text): that way an unedited open compares
+    // equal to itself even when the file's formatting differs from our
+    // pretty-print, so a freshly-opened draft is not spuriously dirty.
     draft = obj as ProjectData;
     lastDownloaded = serializeProjectData(obj as ProjectData);
     validation = null;
@@ -317,14 +319,26 @@ export const projectStore = {
     if (draft == null) {
       return null;
     }
+    // Snapshot the draft reference. The name input is NOT disabled during a
+    // validate, and the mutators / new / open all REPLACE the whole draft object,
+    // so a mid-flight edit makes `draft !== target`. Discard a stale response
+    // rather than writing `validation` for a superseded draft — otherwise an
+    // edit's `validation = null` (setDraft) gets clobbered by the old result,
+    // wrongly flipping `validatedClean` back on and re-enabling the downloads.
+    const target = draft;
     busy = true;
     requestError = null;
     try {
-      const result = await validateProject(draft as ProjectDataBody);
+      const result = await validateProject(target as ProjectDataBody);
+      if (draft !== target) {
+        return result;
+      }
       validation = result;
       return result;
     } catch (e) {
-      requestError = errMessage(e);
+      if (draft === target) {
+        requestError = errMessage(e);
+      }
       return null;
     } finally {
       busy = false;
