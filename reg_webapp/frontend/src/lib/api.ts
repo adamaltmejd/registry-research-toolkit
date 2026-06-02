@@ -109,9 +109,6 @@ export type LineageWarningModel = Schemas["LineageWarningModel"];
 // narrows on `isStatesResponse` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
 export type PredecessorsResponse = Schemas["PredecessorsResponse"];
-export type SuccessorsResponse = Schemas["SuccessorsResponse"];
-export type RelatedResponse = Schemas["RelatedResponse"];
-export type LineageResponse = Schemas["LineageResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
 /** Narrow the catch-all's `CatalogNode | StatesResponse` result. A
@@ -166,16 +163,12 @@ export function getRegisterVariants(
 }
 
 // ── Binding sub-endpoints (§9.5) ────────────────────────────────────────────
-// The leaf already EMBEDS same_as / replaced_by (outbound) / related_to /
-// lineage, so A5.3b fetches only the two NOT embedded: `/predecessors` (inbound
-// succession) and `/lineage_warnings`. The other four helpers are provided for
-// completeness/symmetry (and `/states` round-trips the embedded states subset).
-// Each GETs `/catalog/{encodeFqid}/{suffix}`; the suffix is greedy-matched ABOVE
-// the catch-all server-side.
-
-export function getBindingStates(fqidPath: string): Promise<StatesResponse> {
-  return apiGet<StatesResponse>(`/catalog/${encodeFqid(fqidPath)}/states`);
-}
+// The leaf already EMBEDS states / same_as / replaced_by (outbound) /
+// related_to / lineage, so A5.3b fetches only the two it does NOT embed:
+// `/predecessors` (inbound succession) and `/lineage_warnings`. Each GETs
+// `/catalog/{encodeFqid}/{suffix}`; the suffix is greedy-matched ABOVE the
+// catch-all server-side. (The other four suffixed endpoints exist server-side
+// but aren't fetched by the SPA — A5.3c adds helpers if/when it needs them.)
 
 export function getBindingPredecessors(
   fqidPath: string,
@@ -183,22 +176,6 @@ export function getBindingPredecessors(
   return apiGet<PredecessorsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/predecessors`,
   );
-}
-
-export function getBindingSuccessors(
-  fqidPath: string,
-): Promise<SuccessorsResponse> {
-  return apiGet<SuccessorsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/successors`,
-  );
-}
-
-export function getBindingRelated(fqidPath: string): Promise<RelatedResponse> {
-  return apiGet<RelatedResponse>(`/catalog/${encodeFqid(fqidPath)}/related`);
-}
-
-export function getBindingLineage(fqidPath: string): Promise<LineageResponse> {
-  return apiGet<LineageResponse>(`/catalog/${encodeFqid(fqidPath)}/lineage`);
 }
 
 export function getBindingLineageWarnings(

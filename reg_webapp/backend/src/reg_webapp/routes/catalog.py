@@ -171,9 +171,11 @@ def _validated_variant(variant: str | None = None) -> str | None:
 
 def _validated_value_set_version(value_set_version: str | None = None) -> str | None:
     """§16 ``?value_set_version`` allow-list as a pre-open dependency. The value
-    is a value-set-version label (the classification-slug grammar, §5.2 — the slug
-    grammar). 422s a non-slug value before any connection opens. Reconciled with
-    the binding-leaf ``@version`` pin in the handler (`_reconcile_value_set_version`)."""
+    is a FREE-TEXT value-set-version label (matched against ``value_set_version_label``
+    by a Python filter in ``resolve_at``, NOT SQL), so the gate is a sanity check
+    (non-empty, length-capped, no control chars) — 422s a malformed value before
+    any connection opens. Reconciled with the binding-leaf ``@version`` pin in the
+    handler (`_reconcile_value_set_version`)."""
     if value_set_version is None:
         return None
     try:

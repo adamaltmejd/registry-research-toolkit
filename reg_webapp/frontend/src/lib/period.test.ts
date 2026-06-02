@@ -122,6 +122,18 @@ describe("queryFromParams", () => {
   it("percent-encodes reserved characters in a value", () => {
     expect(queryFromParams({ period: "2020 Q3&z" })).toBe("period=2020+Q3%26z");
   });
+
+  it("encodes a free-text value_set_version LABEL (the picker sends the label)", () => {
+    // value_set_version is the human label (spaces/commas/case), NOT a slug — the
+    // backend §16 gate accepts it (it's a Python-filter match, not SQL). The query
+    // builder must URL-encode it so it round-trips.
+    expect(
+      queryFromParams({
+        period: "2020",
+        value_set_version: "SUN 1996, 5 positioner, brutto",
+      }),
+    ).toBe("period=2020&value_set_version=SUN+1996%2C+5+positioner%2C+brutto");
+  });
 });
 
 describe("nextResolutionQuery (resolution-merge rule)", () => {

@@ -3,12 +3,8 @@ import {
   ApiError,
   apiGet,
   type BindingNodeData,
-  getBindingLineage,
   getBindingLineageWarnings,
   getBindingPredecessors,
-  getBindingRelated,
-  getBindingStates,
-  getBindingSuccessors,
   getCatalogNode,
   isStatesResponse,
   type StatesResponse,
@@ -136,19 +132,11 @@ describe("getCatalogNode", () => {
 describe("binding sub-endpoint helpers", () => {
   // Each GETs `/catalog/{encodeFqid}/{suffix}` with no query.
   const cases: [(fqidPath: string) => Promise<unknown>, string, string][] = [
-    [getBindingStates, "states", "/api/catalog/scb/lisa/kon/states"],
     [
       getBindingPredecessors,
       "predecessors",
       "/api/catalog/scb/lisa/kon/predecessors",
     ],
-    [
-      getBindingSuccessors,
-      "successors",
-      "/api/catalog/scb/lisa/kon/successors",
-    ],
-    [getBindingRelated, "related", "/api/catalog/scb/lisa/kon/related"],
-    [getBindingLineage, "lineage", "/api/catalog/scb/lisa/kon/lineage"],
     [
       getBindingLineageWarnings,
       "lineage_warnings",

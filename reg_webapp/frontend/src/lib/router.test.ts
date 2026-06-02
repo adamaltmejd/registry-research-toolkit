@@ -183,4 +183,13 @@ describe("router reactive query (A5.3b)", () => {
     window.dispatchEvent(new PopStateEvent("popstate"));
     expect(router.getQueryParam("period")).toBe("2017");
   });
+
+  // NOTE: the *reactivity* of `search` (a $derived/$effect reading getQueryParam
+  // re-running when navigate/popstate mutates it) is not unit-tested here — the
+  // router is a module-level singleton whose $state lives outside any reactive
+  // root, so an isolated `$effect.root` in a test doesn't connect to it. The seam
+  // is covered instead by: async.svelte.test.ts (asyncResource's $effect re-runs
+  // on a tracked $state change — the same mechanism) + the imperative cases above
+  // (the value updates) + the A5.3b visual gate (the period resolve refetched
+  // without a pathname remount).
 });

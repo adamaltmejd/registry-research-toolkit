@@ -259,6 +259,31 @@ def test_value_set_version_query_alone_is_accepted(client):
     assert resp.json()["states"] == []
 
 
+def test_value_set_version_query_accepts_a_free_text_label(client):
+    # [A5.3b] ?value_set_version is matched against the FREE-TEXT
+    # value_set_version_label (a Python filter, not SQL), so a real label with
+    # spaces/commas/case/non-ASCII must NOT be 422'd by the §16 gate (the old
+    # slug-grammar gate rejected every real label — the SPA's version picker).
+    resp = client.get(
+        f"/api/catalog/{_KON}",
+        params={
+            "period": "2020",
+            "value_set_version": "SUN 1996, 5 positioner, brutto",
+        },
+    )
+    assert resp.status_code == 200, resp.json()
+    assert resp.json()["states"] == []  # no fixture state carries that label
+
+
+def test_value_set_version_query_rejects_control_chars(client):
+    # The §16 sanity gate still 422s a NUL/control char (smuggling vector).
+    resp = client.get(
+        f"/api/catalog/{_KON}",
+        params={"period": "2020", "value_set_version": "bad\x00label"},
+    )
+    assert resp.status_code == 422
+
+
 def test_at_version_pin_alone_is_accepted(client):
     resp = client.get(f"/api/catalog/{_KON}@v1?period=2020")
     assert resp.status_code == 200

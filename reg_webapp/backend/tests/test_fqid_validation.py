@@ -286,7 +286,12 @@ _BAD_PERIODS = [
     "2020-Q3\n",
 ]
 _BAD_VARIANTS = ["Std", "../etc", "x%00", "x'; DROP--", "in valid"]
-_BAD_VSV = ["_default", "Sni2007", "../etc"]
+# [A5.3b] ?value_set_version is a FREE-TEXT label (matched by a Python `==` in
+# resolve_at, NOT SQL), so the §16 gate rejects only control chars / over-length —
+# NOT slug-shape (real labels carry spaces/commas/case). A non-matching value like
+# "../etc" or "Sni2007" is now ACCEPTED (it simply narrows to no state); the bad
+# set is control/NUL chars + an over-cap string.
+_BAD_VSV = ["x\x00", "a\tb", "a\nb", "x" * 201]
 
 
 @pytest.mark.parametrize("period", _BAD_PERIODS)

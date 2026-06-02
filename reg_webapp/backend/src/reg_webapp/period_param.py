@@ -51,6 +51,10 @@ RANGE_SEP = ".."
 # but the int arm is the documented year case). Every other token stays a string.
 _YEAR_LEN = 4
 
+# A value-set-version label is a short human string (e.g. "SUN 2000 -
+# Utbildningsnivå"); cap the §16 sanity gate well above any real label.
+_MAX_VALUE_SET_VERSION_LEN = 200
+
 
 class PeriodParamError(ValueError):
     """Raised when a raw ``?period=`` value fails the §16 syntactic allow-list.
@@ -137,18 +141,31 @@ def parse_variant(raw: str) -> str:
 
 
 def parse_value_set_version(raw: str) -> str:
-    """Validate a raw ``?value_set_version=`` value as a value-set-version label.
+    """Validate a raw ``?value_set_version=`` value as a value-set-version LABEL.
 
-    Per §5.2 the version part is the classification-slug / ``value_set_version_label``
-    grammar — which is the plain slug grammar (same as the binding-leaf ``@version``
-    pin the path guard validates). Does NOT admit ``_default`` (a version label is
-    not a variant coordinate). Raises ``ValueSetVersionParamError`` (→ 422, zero
-    SQL) on anything else, delegating to ``reg_meta.fqid.validate_slug`` (single
-    source of truth)."""
+    ``?value_set_version`` is matched against the free-text ``value_set_version_label``
+    (e.g. ``"SUN 1996, 5 positioner, brutto"``) via a Python ``==`` filter in
+    ``Catalog.resolve_at`` — NOT a SQL predicate — so there is no injection surface
+    and the slug grammar is the WRONG validator (real labels carry spaces, commas,
+    parentheses, mixed case and non-ASCII). This §16 gate is therefore a SANITY
+    check only: non-empty, length-capped, and no NUL/control characters (the
+    classic smuggling / log-injection vectors, never part of a real label). The
+    SEMANTIC match (does this label exist for the variable at this period) is
+    reg_meta's job. Raises ``ValueSetVersionParamError`` (→ 422) on a malformed
+    value.
+
+    [A5.3b] This replaced an over-strict ``validate_slug`` gate (A5.2a-ii) that
+    422'd every real label — the version picker had no working consumer before
+    A5.3b, so the mis-spec was latent and the slug-shaped test fixtures masked it.
+    """
     if not raw:
         raise ValueSetVersionParamError("empty value_set_version")
-    try:
-        validate_slug(raw, "value_set_version")
-    except FqidError as exc:
-        raise ValueSetVersionParamError(str(exc)) from exc
+    if len(raw) > _MAX_VALUE_SET_VERSION_LEN:
+        raise ValueSetVersionParamError(
+            f"value_set_version too long (max {_MAX_VALUE_SET_VERSION_LEN} chars)"
+        )
+    # C0 controls (incl. NUL / tab / newline), DEL, and C1 controls are never part
+    # of a real label; reject them (smuggling / log-injection defense in depth).
+    if any(ord(c) < 0x20 or 0x7F <= ord(c) <= 0x9F for c in raw):
+        raise ValueSetVersionParamError("value_set_version contains control characters")
     return raw

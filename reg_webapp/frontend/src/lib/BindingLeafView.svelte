@@ -47,14 +47,14 @@ const narrowedStates = $derived.by(() => {
   return data !== null && isStatesResponse(data) ? data.states : null;
 });
 
-// A bad `?period`/`?variant` modifier 422s — surface it inline (the metadata +
-// the picker stay usable) and fall back to the full history rather than blanking.
+// ANY error on the period resolve (a 422 bad-modifier, but also a 5xx / 502 /
+// network drop where `status` stays null) is surfaced inline — the metadata +
+// the picker stay usable and the states fall back to the full history. Without
+// this (filtering to only 422/400), a server/network error would leave
+// `narrowedStates` null and wedge the states section on a permanent
+// "Loading states…" with no feedback.
 const narrowedError = $derived(
-  params.period &&
-    periodResource.error &&
-    (periodResource.status === 422 || periodResource.status === 400)
-    ? periodResource.error
-    : null,
+  params.period && periodResource.error ? periodResource.error : null,
 );
 
 // States to show: the narrowed subset when a valid `?period` is active (null

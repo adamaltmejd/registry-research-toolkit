@@ -39,9 +39,17 @@ function distinct<K>(xs: K[]): K[] {
   return [...new Set(xs)];
 }
 const variants = $derived(distinct(states.map((s) => s.variant)));
+// `value_set_version_label` is `TEXT NOT NULL DEFAULT ''`, so a state can carry
+// an empty label — drop it from the picker (an empty chip can't be narrowed to,
+// and `?value_set_version=` would be omitted anyway). Narrow such a state by
+// variant instead.
 const versions = $derived(
-  distinct(states.map((s) => s.value_set_version_label)),
+  distinct(states.map((s) => s.value_set_version_label)).filter(
+    (v) => v !== "",
+  ),
 );
+// Whether either narrowing axis can actually resolve the multi-state set to one.
+const canNarrow = $derived(variants.length > 1 || versions.length > 1);
 </script>
 
 {#if states.length === 0}
@@ -101,7 +109,7 @@ const versions = $derived(
        which the server only honors WITH a `?period` (it 422s them otherwise), so
        it's shown only when a period is active (`narrowed`). Without a period the
        list is the full state history — set a period to narrow to one. -->
-  {#if narrowed}
+  {#if narrowed && canNarrow}
     <p class="muted picker-hint">
       {states.length} states at this period across {variants.length}
       {variants.length === 1 ? "variant" : "variants"}. Narrow to a single state:
@@ -142,6 +150,14 @@ const versions = $derived(
         </div>
       </fieldset>
     {/if}
+  {:else if narrowed}
+    <!-- A period that resolves to several states which share one variant AND one
+         value-set version (e.g. a RANGE crossing validity windows): no narrowing
+         axis can pick one, so don't promise "narrow to a single state". -->
+    <p class="muted picker-hint">
+      {states.length} overlapping states at this period — narrow to a single
+      point period to resolve to one.
+    </p>
   {:else}
     <p class="muted picker-hint">
       {states.length} states over time. Set a period above to resolve to one.
