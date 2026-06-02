@@ -1,3 +1,10 @@
+<script lang="ts" module>
+// A per-instance sequence so each PeriodEditor's radio group gets a UNIQUE name.
+// Otherwise multiple editors on one page form ONE document-wide radio group, and
+// selecting a mode in one source unchecks the others' radios (Codex P2).
+let _instanceSeq = 0;
+</script>
+
 <script lang="ts">
 import { untrack } from "svelte";
 import FieldIssues from "./FieldIssues.svelte";
@@ -54,17 +61,11 @@ function inferMode(value: Period): Mode {
   return "token";
 }
 
-// Snapshot the incoming period ONCE at init. The UI state below is seeded from this
-// snapshot and is NOT re-derived on every prop change: a user who switches to Token
-// then types must not get snapped back to Years by the parent re-render (every edit
-// swaps the whole draft). `untrack` makes the one-time read explicit (no reactive
-// dependency) — these seeds intentionally capture only the initial value.
-const initial: Period = untrack(() => period);
+// A unique radio-group name for THIS editor instance (fix C).
+const groupName = `period-mode-${_instanceSeq++}`;
 
-let mode = $state<Mode>(inferMode(initial));
-
-// The year spinners. Seeded from a numeric value / numeric range; an empty string
-// for a non-numeric start so the inputs render blank rather than NaN.
+// The year spinners' seed: a numeric value / numeric range fills them; a
+// non-numeric start leaves them blank (so the inputs render blank, not NaN).
 function initialYears(value: Period): { from: string; to: string } {
   if (typeof value === "number") {
     return { from: String(value), to: String(value) };
@@ -79,22 +80,60 @@ function initialYears(value: Period): { from: string; to: string } {
   }
   return { from: "", to: "" };
 }
+
+// The token field's seed: the raw string when it's a token, blank for a
+// numeric/range/default value, or the JSON of a malformed (non-string) value.
+function seedTokenText(value: Period): string {
+  if (typeof value === "string" && value !== "_default") {
+    return value;
+  }
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    (value != null && typeof value === "object")
+  ) {
+    return "";
+  }
+  return JSON.stringify(value);
+}
+
+// Local UI state, seeded from the period at mount. `untrack` keeps the seed a
+// one-time read (no reactive dep) so switching mode then typing isn't snapped back
+// when an UNRELATED edit swaps the whole draft.
+const initial: Period = untrack(() => period);
+let mode = $state<Mode>(inferMode(initial));
 const seedYears = initialYears(initial);
 let yearFrom = $state(seedYears.from);
 let yearTo = $state(seedYears.to);
+let tokenText = $state(seedTokenText(initial));
 
-// The token field text: the raw string token value when in Token mode, blank for a
-// numeric/range/default seed, or the JSON of a malformed (non-string) value so the
-// user can see what's there.
-let tokenText = $state(
-  typeof initial === "string" && initial !== "_default"
-    ? initial
-    : typeof initial === "string" ||
-        typeof initial === "number" ||
-        typeof initial === "object"
-      ? ""
-      : JSON.stringify(initial),
-);
+// RE-SEED when `period` arrives with a value we did NOT just emit — i.e. the
+// index-keyed instance was REUSED for a DIFFERENT source (a middle-source remove)
+// or the draft was replaced. `emit` sets `seeded` to the value it sends, so our own
+// writes don't re-seed (no snap-back); an unrelated edit leaves THIS source's period
+// unchanged → no re-seed. Without this the editor displays/overwrites a stale
+// source's period after a middle remove (panel + Codex P2).
+let seeded = $state(JSON.stringify(initial));
+$effect(() => {
+  const incoming = JSON.stringify(period);
+  // Only `period` is a dependency — untrack the `seeded` read so writing it below
+  // doesn't re-trigger this effect (the re-seed runs once per external change).
+  if (incoming !== untrack(() => seeded)) {
+    mode = inferMode(period);
+    const ys = initialYears(period);
+    yearFrom = ys.from;
+    yearTo = ys.to;
+    tokenText = seedTokenText(period);
+    seeded = incoming;
+  }
+});
+
+// Funnel every period write so `seeded` matches what we sent (see the re-seed
+// effect above) — keeps our own emits from re-seeding.
+function emit(next: Period): void {
+  seeded = JSON.stringify(next);
+  onchange(next);
+}
 
 const tokenHint = $derived(
   tokenText.trim() !== "" && !looksLikePeriod(tokenText.trim()),
@@ -111,20 +150,20 @@ function emitYears(): void {
   const from: number | string = fromOk ? fromNum : yearFrom.trim();
   const to: number | string = toOk ? toNum : yearTo.trim();
   if (fromOk && toOk && fromNum === toNum) {
-    onchange(fromNum);
+    emit(fromNum);
     return;
   }
-  onchange({ from, to });
+  emit({ from, to });
 }
 
 function onModeChange(next: Mode): void {
   mode = next;
   if (next === "default") {
-    onchange("_default");
+    emit("_default");
   } else if (next === "years") {
     emitYears();
   } else {
-    onchange(tokenText.trim());
+    emit(tokenText.trim());
   }
 }
 </script>
@@ -136,7 +175,7 @@ function onModeChange(next: Mode): void {
       <label>
         <input
           type="radio"
-          name="period-mode"
+          name={groupName}
           checked={mode === "years"}
           onchange={() => onModeChange("years")}
         />
@@ -145,7 +184,7 @@ function onModeChange(next: Mode): void {
       <label>
         <input
           type="radio"
-          name="period-mode"
+          name={groupName}
           checked={mode === "token"}
           onchange={() => onModeChange("token")}
         />
@@ -154,7 +193,7 @@ function onModeChange(next: Mode): void {
       <label>
         <input
           type="radio"
-          name="period-mode"
+          name={groupName}
           checked={mode === "default"}
           onchange={() => onModeChange("default")}
         />
@@ -199,7 +238,7 @@ function onModeChange(next: Mode): void {
         placeholder="YYYYMM, HT2018, 2010..2020…"
         oninput={(e) => {
           tokenText = e.currentTarget.value;
-          onchange(tokenText.trim());
+          emit(tokenText.trim());
         }}
       />
       {#if tokenHint}

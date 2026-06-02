@@ -66,21 +66,7 @@ export function variantSeg(registerVariant: string): string {
   return segs.length === 3 ? segs[2] : "";
 }
 
-// ── Variable-state derivations (the CatalogPicker derive-on-pick) ─────────────
-
-/** Distinct non-empty value-set version labels across the resolved states — the
- * §6.8.3 co-delivery signal SIMPLIFIED for the picker: >1 distinct label → offer
- * the `@version` chooser. We do NOT re-implement the validity-overlap math; the
- * backend's `binding_value_set_version_ambiguous` is canonical. */
-export function distinctVersions(states: VariableStateModel[]): string[] {
-  const seen = new Set<string>();
-  for (const s of states) {
-    if (s.value_set_version_label) {
-      seen.add(s.value_set_version_label);
-    }
-  }
-  return [...seen];
-}
+// ── Variable-state derivation (the CatalogPicker derive-on-pick) ─────────────
 
 // A LIGHT, advisory storage-token → ColumnType prefill for derive-on-pick
 // (overridable; the backend is canonical, §9.6). Covers BOTH the SQL/storage

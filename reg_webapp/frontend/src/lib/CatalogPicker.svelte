@@ -10,7 +10,7 @@ function asNode(data: CatalogNode | StatesResponse | null): CatalogNode | null {
 <script lang="ts">
 import { getCatalogNode, getRegisterVariants } from "./api";
 import { asyncResource } from "./async.svelte";
-import { deriveType, distinctVersions } from "./catalog";
+import { deriveType } from "./catalog";
 
 // INLINE-EXPAND embedded pick-mode catalog browser (maintainer decision): NO
 // router import, NO overlay/modal. It reuses the catalog DATA LAYER only
@@ -81,12 +81,6 @@ const variantList = $derived(
 // The derive-on-pick resolve state + the version chooser.
 let resolving = $state(false);
 let resolveError = $state<string | null>(null);
-interface PendingPick {
-  fqid: string;
-  versions: string[];
-  emit: (versionPin: string | null) => void;
-}
-let pending = $state<PendingPick | null>(null);
 
 async function pickVariable(fqid: string): Promise<void> {
   if (props.mode !== "variable") {
@@ -115,22 +109,14 @@ async function pickVariable(fqid: string): Promise<void> {
     const first = resolved.states[0];
     const type = deriveType(first);
     const displayNameDefault = first.delivery_column_name ?? null;
-    const versions = distinctVersions(resolved.states);
-    if (versions.length > 1) {
-      // AMBIGUOUS: hold and present the chooser. The chosen version becomes the
-      // FQID '@<version>' pin (a SUFFIX on the variable string).
-      pending = {
-        fqid,
-        versions,
-        emit: (versionPin) =>
-          p.onpickVariable({
-            variable: versionPin ? `${fqid}@${versionPin}` : fqid,
-            type,
-            displayNameDefault,
-          }),
-      };
-      return;
-    }
+    // Co-delivered value-set versions are NOT pinned here. `value_set_version_label`
+    // is FREE TEXT (e.g. "Besvär: Svåra, Lätta, Nej (1-3)"), but the FQID
+    // '@<version>' slot is a SLUG (`^[a-z](?:-?[a-z0-9])*`) — pinning the label
+    // would produce an invalid_fqid binding. The classification SLUG isn't on the
+    // resolve, so the SPA can't build a valid pin frontend-only: emit the bare FQID
+    // and let the backend's `binding_value_set_version_ambiguous` flag it on
+    // Validate. (Proper version pinning needs the API to surface the slug per state
+    // — a backend follow-up.)
     p.onpickVariable({ variable: fqid, type, displayNameDefault });
   } catch (e) {
     resolveError = e instanceof Error ? e.message : String(e);
@@ -213,39 +199,6 @@ async function pickVariable(fqid: string): Promise<void> {
   {#if resolveError}
     <p class="error resolve-state" role="alert">Resolve failed: {resolveError}</p>
   {/if}
-
-  {#if pending}
-    <div class="version-chooser" role="group" aria-label="Choose value-set version">
-      <p class="hint">
-        Several value-set versions are co-delivered for
-        <code>{pending.fqid}</code> — pin one (or skip to let Validate flag it):
-      </p>
-      <div class="version-buttons">
-        {#each pending.versions as version (version)}
-          <button
-            type="button"
-            class="version"
-            onclick={() => {
-              pending?.emit(version);
-              pending = null;
-            }}
-          >
-            @{version}
-          </button>
-        {/each}
-        <button
-          type="button"
-          class="version skip"
-          onclick={() => {
-            pending?.emit(null);
-            pending = null;
-          }}
-        >
-          No pin
-        </button>
-      </div>
-    </div>
-  {/if}
 </div>
 
 <style>
@@ -322,26 +275,5 @@ async function pickVariable(fqid: string): Promise<void> {
   .resolve-state {
     font-size: 0.85rem;
     margin: 0.4rem 0 0;
-  }
-  .version-chooser {
-    border: 1px solid #fdba74;
-    background: #fff7ed;
-    border-radius: 4px;
-    padding: 0.6rem 0.75rem;
-    margin-top: 0.4rem;
-  }
-  .version-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  .version {
-    width: auto;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.3rem 0.6rem;
-    cursor: pointer;
-    font: inherit;
-    background: var(--surface);
   }
 </style>

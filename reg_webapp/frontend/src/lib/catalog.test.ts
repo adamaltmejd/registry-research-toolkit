@@ -4,7 +4,6 @@ import {
   breadcrumbs,
   catalogHref,
   deriveType,
-  distinctVersions,
   fqidSegments,
   nodeLabel,
   registerPrefixOf,
@@ -94,23 +93,6 @@ describe("registerPrefixOf / variantSeg", () => {
     expect(registerPrefixOf("")).toBe("");
     expect(variantSeg("scb/lisa")).toBe(""); // not exactly 3 segments
     expect(variantSeg("")).toBe("");
-  });
-});
-
-describe("distinctVersions", () => {
-  it("collects distinct non-empty version labels, skipping empties", () => {
-    expect(
-      distinctVersions([
-        state({ value_set_version_label: "sni2007" }),
-        state({ value_set_version_label: "sni2002" }),
-        state({ value_set_version_label: "sni2007" }), // duplicate
-        state({ value_set_version_label: "" }), // empty → skipped
-      ]),
-    ).toEqual(["sni2007", "sni2002"]);
-  });
-
-  it("is [] when no state carries a version", () => {
-    expect(distinctVersions([state({})])).toEqual([]);
   });
 });
 
