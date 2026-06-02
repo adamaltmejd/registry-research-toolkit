@@ -454,9 +454,14 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     `variable.is_sensitive` / `variable.is_identifier` (A1.2).
 
     Aggregation rule: a variable inherits a flag if ANY `unika_summary` row
-    for the same `(register_id, var_id)` carries the truthy text. SCB ships
-    these columns as the Swedish text literals `'Ja'` / `'Nej'`; any other
-    value (including empty) is treated as falsy. `kanslig_variabel` and
+    for the same `(register_id, var_id)` carries the truthy value. The SCB
+    export encodes these columns as the numeric strings `'1'` (yes) / `'0'`
+    (no) — NOT the Swedish `'Ja'`/`'Nej'` the column-NAME might suggest. We
+    match `'1'` AND `'Ja'` (the latter defensively, against an older/assumed
+    form — matching only one literal is exactly the bug that left these flags
+    silently empty for the whole corpus pre-A4); any other value (including
+    `'0'` / empty) is falsy. This flag feeds the MONA PII scanner, so a
+    false-negative is a real miss — robustness over purity. `kanslig_variabel` and
     `kanslig_variabel_ibland` both fold into `is_sensitive` — the ~22 rows
     flagged only-sometimes don't justify a third column (see MIGRATION_PLAN
     A1.2). Returns the number of variable rows whose flags were refreshed
@@ -491,10 +496,10 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
         "FROM ("
         "    SELECT "
         "        vi.register_id, vi.var_id, "
-        "        MAX(CASE WHEN us.kanslig_variabel = 'Ja' "
-        "                  OR us.kanslig_variabel_ibland = 'Ja' "
+        "        MAX(CASE WHEN us.kanslig_variabel IN ('1', 'Ja') "
+        "                  OR us.kanslig_variabel_ibland IN ('1', 'Ja') "
         "                 THEN 1 ELSE 0 END) AS is_sensitive, "
-        "        MAX(CASE WHEN us.identitetsvariabel = 'Ja' "
+        "        MAX(CASE WHEN us.identitetsvariabel IN ('1', 'Ja') "
         "                 THEN 1 ELSE 0 END) AS is_identifier "
         "    FROM unika_summary us "
         "    JOIN variable_instance vi "

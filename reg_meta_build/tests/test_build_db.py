@@ -352,8 +352,9 @@ class TestBuildDb:
         assert row is None
 
     def test_sensitivity_kanslig_variabel(self, db_conn: sqlite3.Connection):
-        """A1.2: TestVar (register_id=1, var_id=100) has kanslig_variabel='Ja'
-        in unika_summary → is_sensitive=1, is_identifier=0."""
+        """A1.2: TestVar (register_id=1, var_id=100) has kanslig_variabel='1'
+        (the real SCB export encoding) in unika_summary → is_sensitive=1,
+        is_identifier=0."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
             "WHERE register_id = 1 AND provider_key = '100'"
@@ -363,7 +364,7 @@ class TestBuildDb:
 
     def test_sensitivity_kanslig_variabel_ibland(self, db_conn: sqlite3.Connection):
         """A1.2: ÅÄÖVar (register_id=1, var_id=200) has only
-        kanslig_variabel_ibland='Ja' in unika_summary — the "22 edge cases"
+        kanslig_variabel_ibland='1' in unika_summary — the "22 edge cases"
         fold into is_sensitive per the mapping rule."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
@@ -374,8 +375,9 @@ class TestBuildDb:
 
     def test_sensitivity_identitetsvariabel(self, db_conn: sqlite3.Connection):
         """A1.2: UniqueVar (register_id=2, var_id=300) has identitetsvariabel='Ja'
-        in unika_summary → is_identifier=1. The kanslig columns are 'Nej', so
-        is_sensitive stays 0."""
+        in unika_summary → is_identifier=1. 'Ja' is the LEGACY literal, kept here
+        deliberately to exercise the lift's `IN ('1','Ja')` defensive match; the
+        real export uses '1'. The kanslig columns are '0', so is_sensitive stays 0."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
             "WHERE register_id = 2 AND provider_key = '300'"
@@ -385,7 +387,7 @@ class TestBuildDb:
 
     def test_sensitivity_all_nej(self, db_conn: sqlite3.Connection):
         """A1.2 negative case: Kön (register_id=1, var_id=44) has all three
-        unika_summary flags = 'Nej' → both columns stay 0."""
+        unika_summary flags = '0' → both columns stay 0."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
             "WHERE register_id = 1 AND provider_key = '44'"

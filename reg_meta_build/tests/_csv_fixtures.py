@@ -603,9 +603,9 @@ UNIKA_ROWS = [
             "Kon",
             "2020",
             "2022",
-            "Nej",
-            "Nej",
-            "Nej",
+            "0",
+            "0",
+            "0",
         ]
     ),
     PIPE.join(
@@ -618,9 +618,9 @@ UNIKA_ROWS = [
             "TestCol",
             "2020",
             "2020",
-            "Ja",
-            "Nej",
-            "Nej",
+            "1",
+            "0",
+            "0",
         ]
     ),
     PIPE.join(
@@ -633,9 +633,9 @@ UNIKA_ROWS = [
             "KON",
             "2021",
             "2021",
-            "Nej",
-            "Nej",
-            "Nej",
+            "0",
+            "0",
+            "0",
         ]
     ),
     # A1.2 — sensitivity flag fixtures:
@@ -651,12 +651,15 @@ UNIKA_ROWS = [
             "AaoCol",
             "2022",
             "2022",
-            "Nej",
-            "Ja",
-            "Nej",
+            "0",
+            "1",
+            "0",
         ]
     ),
     # UniqueVar (var_id=300) flagged identitetsvariabel → is_identifier=1.
+    # The flags above (TestVar/ÅÄÖVar) use the REAL export encoding '1'/'0';
+    # this row deliberately keeps the legacy 'Ja' literal so the test also
+    # exercises the `IN ('1', 'Ja')` defensive match (see _populate_sensitivity_flags).
     PIPE.join(
         [
             "OTHERREG",
@@ -667,8 +670,8 @@ UNIKA_ROWS = [
             "UniqCol",
             "2021",
             "2021",
-            "Nej",
-            "Nej",
+            "0",
+            "0",
             "Ja",
         ]
     ),
