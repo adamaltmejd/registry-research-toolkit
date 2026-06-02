@@ -35,7 +35,10 @@ function inferMode(value: Period): Mode {
     return "default";
   }
   if (typeof value === "string") {
-    return "token";
+    // An empty/unset period (a fresh source seeds `period: ""`) defaults to the
+    // YEARS picker — the year-range-first common case (maintainer directive). A
+    // non-empty token string opens in Token mode.
+    return value === "" ? "years" : "token";
   }
   if (
     value != null &&

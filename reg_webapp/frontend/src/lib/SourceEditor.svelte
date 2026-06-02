@@ -91,8 +91,20 @@ function onPickVariant(slug: string): void {
 
     <div class="field">
       <span class="field-label">Register variant</span>
+      <!-- An editable text field (the researcher often knows the FQID): type the
+           full `provider/register/variant`, OR type the `provider/register` prefix
+           and use "Pick variant" to choose the variant slug from the catalog. -->
       <div class="rv-row">
-        <code class="rv-value">{registerVariant || "(none)"}</code>
+        <input
+          type="text"
+          class="rv-input"
+          value={registerVariant}
+          placeholder="provider/register/variant"
+          oninput={(e) =>
+            projectStore.updateSource(sourceIndex, {
+              register_variant: e.currentTarget.value,
+            })}
+        />
         <button type="button" class="small" onclick={() => (pickingVariant = !pickingVariant)}>
           {pickingVariant ? "Close" : "Pick variant"}
         </button>
@@ -216,8 +228,8 @@ function onPickVariant(slug: string): void {
     align-items: center;
     gap: 0.5rem;
   }
-  .rv-value {
-    font-size: 0.9em;
+  .rv-input {
+    flex: 1;
   }
   .small {
     font: inherit;
