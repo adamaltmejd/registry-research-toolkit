@@ -1608,14 +1608,14 @@ slug = "arbetsmiljoundersokningen"
 # post-2015 redesign — register-slug echo is historical.
 [register_variant."123.413"]
 slug = "arbetsmiljoundersokningen"
-display_group = "Arbetsmiljöundersökningen  "
+display_group = "Arbetsmiljöundersökningen"
 panel_entity_key = "personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
 [register_variant."123.1316"]
 slug = "arbetsmiljoundersokningen-2015"
-display_group = "Arbetsmiljöundersökningen 2015 - "
+display_group = "Arbetsmiljöundersökningen 2015 -"
 panel_entity_key = "personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -1688,7 +1688,7 @@ panel_time_grain = "delivery"
 
 [register_variant."128.280"]
 slug = "individer-sociala-agi-ku"
-display_group = "Individer - sociala AGI/KU "
+display_group = "Individer - sociala AGI/KU"
 panel_entity_key = "personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -1902,7 +1902,7 @@ panel_time_grain = "delivery"
 
 [register_variant."147.1339"]
 slug = "godselmedelsanvandning-2016"
-display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016 "
+display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016"
 panel_entity_key = "peorgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -2066,7 +2066,7 @@ slug = "konkurser"
 
 [register_variant."167.240"]
 slug = "konkurser-offentliga-ackord"
-display_group = "Konkurser o offentliga ackord "
+display_group = "Konkurser o offentliga ackord"
 panel_entity_key = "opnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -2174,7 +2174,7 @@ panel_time_grain = "delivery"
 
 [register_variant."182.373"]
 slug = "foretagssektorn"
-display_group = "Företagssektorn "
+display_group = "Företagssektorn"
 panel_entity_key = "organisationsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -2572,7 +2572,7 @@ slug = "skord-spannmal"
 
 [register_variant."208.309"]
 slug = "_default"
-display_group = "Skörd av spannmål, trindsäd och oljeväxter "
+display_group = "Skörd av spannmål, trindsäd och oljeväxter"
 panel_entity_key = "ftgid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -2656,7 +2656,7 @@ display_group = "Strandnära befolkning"
 
 [register_variant."219.1494"]
 slug = "befolkade-oar-utan-fastlandsforbindelse"
-display_group = "Befolkade öar utan fastlandsförbindelse "
+display_group = "Befolkade öar utan fastlandsförbindelse"
 
 # Arbetsplatsområden utanför tätort
 [register."221"]
@@ -2945,7 +2945,7 @@ slug = "folkomrostningar-valresultat"
 
 [register_variant."244.473"]
 slug = "valresultat"
-display_group = "Valresultat "
+display_group = "Valresultat"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3267,7 +3267,7 @@ panel_time_grain = "delivery"
 
 [register_variant."264.667"]
 slug = "deklarationsbilaga-n6"
-display_group = "Deklarationsbilaga N6 "
+display_group = "Deklarationsbilaga N6"
 panel_entity_key = "person-organisationsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
@@ -3848,7 +3848,7 @@ slug = "lokal-demokrati"
 
 [register_variant."321.1001"]
 slug = "kommuner"
-display_group = "Kommuner "
+display_group = "Kommuner"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4656,7 +4656,7 @@ panel_time_grain = "delivery"
 
 [register_variant."382.1473"]
 slug = "industriproduktionsindex"
-display_group = "Industriproduktionsindex (IPI)  fr.o.m. 2015 "
+display_group = "Industriproduktionsindex (IPI)  fr.o.m. 2015"
 panel_entity_key = "organisationsnummer-12-siffror"
 panel_time_key = "period"
 panel_time_grain = "delivery"
