@@ -689,7 +689,18 @@ retired at A4.4 — gate is `--validate` + targeted before/after, not byte-ident
   `SCHEMA_VERSION` bump + `SlugEntry`/`_allowed_fields` + `populate_panel_templates`
   + `seed-slugs --propose-panel` from SCB `Tabelldefinitioner` PKs / `Identifierare`
   + SOS `is_join_variable`; expose the columns read-only in `reg_meta.catalog` for A5).
-- **A4.4d — panel curation** (maintainer: curate all ~800 variant rows row-by-row).
+- **A4.4d — panel curation** ✅ — *agentic* curation (maintainer reframe 2026-06-02:
+  opus agents curate + cross-check; maintainer does one careful re-review after A4+A5).
+  A 34-agent `Workflow` curated all 641 variants in a `curate → adversarial cross-check`
+  pipeline (narrow `is_identifier` to the single subject per variant, then pick time:
+  `period`/delivery default vs a row-level date slug for event registers). Result: 522
+  entity keys / 34 full-NULL (index / projection / area tables) / grain 588 delivery ·
+  19 row. Every panel ref validated to exist on its register (0 hallucinated slugs);
+  `build-db --validate --providers scb,sos` clean, 0 build-vs-curation mismatches.
+  **Flagged for the maintainer's final review:** the 85 entity-NULL-but-`time=period`
+  periodic-aggregate variants (national accounts, foreign trade, elections, vehicle
+  stocks) vs the full-NULL index/projection set — the aggregate-time boundary is a
+  judgment call the agents drew slightly unevenly.
 - **A4.4e — classification re-point (GAP-1 close-out, highest risk)**: Option A —
   a build-time universal `(variable_id, value_set_id, classification_id)` candidate
   table BOTH adapters feed; `_backfill_state_classifications` reads it provider-blind;

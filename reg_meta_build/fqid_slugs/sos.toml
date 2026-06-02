@@ -24,6 +24,9 @@ slug = "lmed"
 [register_variant."7661979173609203267.8189345851195899633"]
 slug = "lmed"
 display_group = "LMED"
+panel_entity_key = "pnr"
+panel_time_key = "edatum"
+panel_time_grain = "row"
 
 [register_variant."7661979173609203267.5835879744305207105"]
 slug = "lmed-vara"
@@ -36,10 +39,16 @@ slug = "ekb"
 [register_variant."5352018376318353790.6291235931365109975"]
 slug = "ekb-ar"
 display_group = "EKB_AR"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."5352018376318353790.5596904919895902135"]
 slug = "ekb-manad"
 display_group = "EKB_MANAD"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Cancerregistret (CAN)
 [register."7119586976865944958"]
@@ -48,10 +57,16 @@ slug = "can"
 [register_variant."7119586976865944958.5186039963966324433"]
 slug = "can"
 display_group = "CAN"
+panel_entity_key = "pnr"
+panel_time_key = "diadat"
+panel_time_grain = "row"
 
 [register_variant."7119586976865944958.9216896336296984035"]
 slug = "can-bc"
 display_group = "CAN_BC"
+panel_entity_key = "pseudo"
+panel_time_key = "diadat"
+panel_time_grain = "row"
 
 # Dödsorsaksregistret (DORS)
 [register."5369119272181688462"]
@@ -60,14 +75,23 @@ slug = "dors"
 [register_variant."5369119272181688462.7577027114532436818"]
 slug = "dors-avi"
 display_group = "DORS_AVI"
+panel_entity_key = "pnr"
+panel_time_key = "dodsdat"
+panel_time_grain = "row"
 
 [register_variant."5369119272181688462.7117668989275245835"]
 slug = "dors"
 display_group = "DORS"
+panel_entity_key = "pnr"
+panel_time_key = "dodsdat"
+panel_time_grain = "row"
 
 [register_variant."5369119272181688462.5309929884760526431"]
 slug = "cov-dors-hermes"
 display_group = "COV_DORS_HERMES"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA) (LOVA)
 [register."7847722537922273761"]
@@ -76,14 +100,23 @@ slug = "lova"
 [register_variant."7847722537922273761.6625693372895183876"]
 slug = "lova"
 display_group = "LOVA"
+panel_entity_key = "lopnummer-som-ersatter-personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."7847722537922273761.5062264322777987324"]
 slug = "lova-examen"
 display_group = "LOVA EXAMEN"
+panel_entity_key = "lopnummer-som-ersatter-personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."7847722537922273761.5782470112533969966"]
 slug = "lova-hosp"
 display_group = "LOVA HOSP"
+panel_entity_key = "lopnummer-som-ersatter-personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."7847722537922273761.4633578538773784614"]
 slug = "lova-agarkat"
@@ -128,6 +161,9 @@ display_group = "LOVA EXAMENSKODER"
 [register_variant."7847722537922273761.8897592339203104611"]
 slug = "lova-person"
 display_group = "LOVA PERSON"
+panel_entity_key = "lopnummer-som-ersatter-personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Registret över insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)
 [register."5028920659479690770"]
@@ -136,6 +172,9 @@ slug = "lss"
 [register_variant."5028920659479690770.5751215697700503870"]
 slug = "_default"
 display_group = "_default"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Registret över insatser inom den kommunala hälso- och sjukvården (HSL)
 [register."6512206290021964828"]
@@ -144,10 +183,16 @@ slug = "hsl"
 [register_variant."6512206290021964828.5569968863053916323"]
 slug = "hsl"
 display_group = "HSL"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."6512206290021964828.5726579377988208763"]
 slug = "hsl2"
 display_group = "HSL2"
+panel_entity_key = "pnr"
+panel_time_key = "atg-datum"
+panel_time_grain = "row"
 
 # Registret över insatser till barn och unga (BU)
 [register."7550156225339591583"]
@@ -156,6 +201,9 @@ slug = "bu"
 [register_variant."7550156225339591583.6478131538792493195"]
 slug = "_default"
 display_group = "_default"
+panel_entity_key = "pnr"
+panel_time_key = "insats-beslut-datumn"
+panel_time_grain = "row"
 
 # Medicinska födelseregistret (MFR)
 [register."6052270801387609014"]
@@ -164,18 +212,30 @@ slug = "mfr"
 [register_variant."6052270801387609014.6500057991853870690"]
 slug = "mfr"
 display_group = "MFR"
+panel_entity_key = "mpnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."6052270801387609014.8238708481874343227"]
 slug = "mfr-fok"
 display_group = "MFR_FOK"
+panel_entity_key = "bpnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."6052270801387609014.7877915304423976076"]
 slug = "mfr-ivf"
 display_group = "MFR_IVF"
+panel_entity_key = "mpnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."6052270801387609014.5479369406799642076"]
 slug = "mfr-lmed"
 display_group = "MFR_LMED"
+panel_entity_key = "mpnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Patientregistret (PAR)
 [register."5891427617861710725"]
@@ -184,14 +244,23 @@ slug = "par"
 [register_variant."5891427617861710725.6299896919770839454"]
 slug = "par-sv"
 display_group = "PAR_SV"
+panel_entity_key = "pnr"
+panel_time_key = "indatum"
+panel_time_grain = "row"
 
 [register_variant."5891427617861710725.5623677195158740599"]
 slug = "par-ov"
 display_group = "PAR_OV"
+panel_entity_key = "pnr"
+panel_time_key = "indatum"
+panel_time_grain = "row"
 
 [register_variant."5891427617861710725.6508659120530331974"]
 slug = "par-tv"
 display_group = "PAR_TV"
+panel_entity_key = "pnr"
+panel_time_key = "indatum"
+panel_time_grain = "row"
 
 # Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
 [register."6293204766641962219"]
@@ -200,14 +269,23 @@ slug = "lvm"
 [register_variant."6293204766641962219.6579580878381606150"]
 slug = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."6293204766641962219.5504744580319271019"]
 slug = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."6293204766641962219.5577711036561484975"]
 slug = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Registret över socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)
 [register."9047831179457584381"]
@@ -216,14 +294,23 @@ slug = "sol"
 [register_variant."9047831179457584381.7344771358524101306"]
 slug = "sol"
 display_group = "SOL"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."9047831179457584381.9078593388686399599"]
 slug = "sol-incr"
 display_group = "SOL_INCR"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."9047831179457584381.6418472685745483159"]
 slug = "sol-2007-2012"
 display_group = "SOL_2007_2012"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Tandhälsoregistret (THR)
 [register."8948214044434034899"]
@@ -232,15 +319,27 @@ slug = "thr"
 [register_variant."8948214044434034899.9064008527617471683"]
 slug = "thr-besok"
 display_group = "THR_BESOK"
+panel_entity_key = "pnr"
+panel_time_key = "besoksdatumn"
+panel_time_grain = "row"
 
 [register_variant."8948214044434034899.6658941053497987406"]
 slug = "thr-besok-landsting"
 display_group = "THR_BESOK_LANDSTING"
+panel_entity_key = "pnr"
+panel_time_key = "besoksdatumn"
+panel_time_grain = "row"
 
 [register_variant."8948214044434034899.6343572965862509640"]
 slug = "thr-tandhalsa"
 display_group = "THR_TANDHALSA"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8948214044434034899.5474396019852278710"]
 slug = "thr-tandhalsa-landsting"
 display_group = "THR_TANDHALSA_LANDSTING"
+panel_entity_key = "pnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
