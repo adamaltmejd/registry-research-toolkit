@@ -695,26 +695,28 @@ class TestVariableRelatedToEdges:
 
 
 def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, int]:
-    """Seed the PRE-ship state for the classification backfill: two split
-    siblings sharing `provider_key` '920' (distinct columns + distinct
-    classifications), each with its `variable_instance` + `variable_alias_build`
-    rows and a NULL-classification `variable_state`.
+    """Seed the PRE-backfill state for the PROVIDER-BLIND classification reader:
+    two split siblings sharing `provider_key` '920' (distinct columns + distinct
+    classifications), each with a NULL-classification `variable_state` and a
+    `classification_candidate` row.
 
     Mirrors what the build pipeline holds right before
     `_backfill_state_classifications` runs (coalescer done, classifications
-    populated, `variable_instance` not yet dropped). Returns
+    populated, candidate table fed by the SCB feed). A4.4e: the backfill reads
+    ONLY `classification_candidate`, so the reader test seeds THAT directly — it
+    is provider-blind and never touches `variable_instance`. Returns
     ``(variable_id_a, variable_id_b, cls_a, cls_b)``.
 
     The two states are CODE-LESS (`value_set_id` NULL on both states and both
-    cvids) — the §5.7 "version-label-tagged family with no value codes" case the
-    backfill docstring calls out. This is what defeats the old
+    candidate rows) — the "code-less state still adopts a classification" case
+    the backfill docstring calls out. This is what defeated the old
     `(register_id, provider_key)` join: its only discriminator was
-    `vi.value_set_id IS variable_state.value_set_id`, and `NULL IS NULL` matches,
-    so every cvid's classification fanned onto every sibling's state. (With
-    distinct non-NULL value sets the old query would coincidentally separate the
-    siblings, hiding the bug; NULL is the faithful failing case.) Each cvid
-    carries its OWNING `variable_id` (the ground truth the coalescer stamps onto
-    `variable_instance.variable_id` post-triage; set directly here), and the
+    `value_set_id IS variable_state.value_set_id`, and `NULL IS NULL` matches, so
+    every cvid's classification fanned onto every sibling's state. (With distinct
+    non-NULL value sets the old query would coincidentally separate the siblings,
+    hiding the bug; NULL is the faithful failing case.) Each candidate carries its
+    OWNING `variable_id` (the ground truth the SCB feed projects from the
+    coalescer-stamped `variable_instance.variable_id`; set directly here), and the
     backfill attributes by that — NOT by value_set_id — so the siblings stay
     isolated regardless.
     """
@@ -761,34 +763,26 @@ def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, i
         "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Skolkommun')",
         (vid_b,),
     )
-    # Pre-ship cvids: each carries its OWN classification + OWNING variable_id
-    # (the coalescer's post-triage stamp), value_set_id NULL. Both share
-    # provider_key 920; the variable_id stamp is what isolates the siblings.
-    conn.execute(
-        "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
-        "regver_id, var_id, classification_id, variable_id) "
-        "VALUES (9300, 1, 10, 100, 920, ?, ?)",
-        (cls_a, vid_a),
-    )
-    conn.execute(
-        "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
-        "regver_id, var_id, classification_id, variable_id) "
-        "VALUES (9301, 1, 10, 100, 920, ?, ?)",
-        (cls_b, vid_b),
-    )
+    # Provider-blind candidate rows: each carries its OWN classification + OWNING
+    # variable_id, value_set_id NULL. Both siblings share provider_key 920; the
+    # variable_id is what isolates them.
     conn.executemany(
-        "INSERT INTO variable_alias_build (cvid, delivery_column_name) VALUES (?, ?)",
-        [(9300, "Hemkommun"), (9301, "Skolkommun")],
+        "INSERT INTO classification_candidate "
+        "(variable_id, value_set_id, classification_id) VALUES (?, NULL, ?)",
+        [(vid_a, cls_a), (vid_b, cls_b)],
     )
     conn.commit()
     return vid_a, vid_b, cls_a, cls_b
 
 
 class TestBackfillStateClassifications:
-    """A2.7 [P2]: `_backfill_state_classifications` must attribute each cvid's
-    classification to its OWNING split sibling (by the coalescer-stamped
-    `variable_instance.variable_id`), not fan it across every sibling sharing the
-    non-unique `(register_id, provider_key)`."""
+    """A4.4e [GAP-1]: `_backfill_state_classifications` reads ONLY the
+    provider-blind `classification_candidate` table and attributes each candidate
+    to its OWNING split sibling (by the candidate's `variable_id`), not fanning it
+    across every sibling sharing the non-unique `(register_id, provider_key)`. A
+    code-less state (NULL value_set_id) is tagged via `value_set_id IS NULL`, and
+    multiple candidates for one state key resolve by the lowest-id min()
+    tie-break."""
 
     def test_each_sibling_gets_own_classification(self) -> None:
         from reg_meta_build.db import _backfill_state_classifications
@@ -805,9 +799,11 @@ class TestBackfillStateClassifications:
                 "SELECT variable_id, classification_id FROM variable_state"
             )
         }
-        # Sibling A's state carries cls_a; B's carries cls_b. Pre-fix the bare
-        # provider_key join fanned both cvids onto both siblings; the min()
-        # tie-break then put cls_a (lower id) on B's state too.
+        # Sibling A's (code-less, value_set_id NULL) state carries cls_a; B's
+        # carries cls_b. Pre-fix the bare provider_key join fanned both candidates
+        # onto both siblings; the min() tie-break then put cls_a (lower id) on B's
+        # state too. The `value_set_id IS NULL` match is what tags the code-less
+        # states here.
         assert got[vid_a] == cls_a
         assert got[vid_b] == cls_b
         conn.close()
@@ -825,6 +821,100 @@ class TestBackfillStateClassifications:
         b_cls = classifications_for_variable(conn, vid_b)
         assert [c["id"] for c in a_cls] == [cls_a]  # only A's, not B's
         assert [c["id"] for c in b_cls] == [cls_b]
+        conn.close()
+
+    def test_min_tiebreak_for_same_state_key(self) -> None:
+        """Two candidate rows share one `(variable_id, value_set_id)` but carry
+        DIFFERENT classifications; the lowest-id wins (deterministic min())."""
+        from reg_meta_build.db import _backfill_state_classifications
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        vid_a, _vid_b, cls_a, cls_b = _seed_split_for_backfill(conn)
+        # Add a SECOND candidate for sibling A's same (variable_id, NULL) key with
+        # the HIGHER classification id (cls_b > cls_a). min() must pick cls_a.
+        conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (?, NULL, ?)",
+            (vid_a, cls_b),
+        )
+        conn.commit()
+
+        _backfill_state_classifications(conn)
+
+        got = conn.execute(
+            "SELECT classification_id FROM variable_state WHERE variable_id = ?",
+            (vid_a,),
+        ).fetchone()["classification_id"]
+        assert got == min(cls_a, cls_b) == cls_a
+        conn.close()
+
+
+class TestClassificationCandidateFeed:
+    """A4.4e: the STEP 2 SCB feed projects `variable_instance` into the
+    provider-blind `classification_candidate` table, keeping ONLY the rows the
+    backfill used to read directly (`classification_id IS NOT NULL AND
+    variable_id IS NOT NULL`)."""
+
+    def test_feed_keeps_only_classified_with_variable_id(self) -> None:
+        from reg_meta_build.db import (
+            _CLASSIFICATION_CANDIDATE_FEED_SQL,
+            DDL,
+            seed_providers,
+        )
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, slug, name) "
+            "VALUES (1, 1, 'testreg', 'TESTREG')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant "
+            "(register_variant_id, register_id, slug, name) "
+            "VALUES (10, 1, 'individer', 'Individer')"
+        )
+        cls = conn.execute(
+            "INSERT INTO classification (short_name, name) VALUES ('KON', 'Kon')"
+        ).lastrowid
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '920', 'Kommun', 'kommun')"
+        ).lastrowid
+        # cvid 1: classified + stamped variable_id + a value_set_id → KEPT.
+        # cvid 2: classified but NULL variable_id (collision residual) → DROPPED.
+        # cvid 3: stamped variable_id but NULL classification → DROPPED.
+        conn.execute(
+            "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+            "regver_id, var_id, classification_id, value_set_id, variable_id) "
+            "VALUES (1, 1, 10, 100, 920, ?, 77, ?)",
+            (cls, vid),
+        )
+        conn.execute(
+            "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+            "regver_id, var_id, classification_id, value_set_id, variable_id) "
+            "VALUES (2, 1, 10, 100, 920, ?, NULL, NULL)",
+            (cls,),
+        )
+        conn.execute(
+            "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+            "regver_id, var_id, classification_id, value_set_id, variable_id) "
+            "VALUES (3, 1, 10, 100, 920, NULL, NULL, ?)",
+            (vid,),
+        )
+        conn.commit()
+
+        conn.execute(_CLASSIFICATION_CANDIDATE_FEED_SQL)
+
+        rows = conn.execute(
+            "SELECT variable_id, value_set_id, classification_id "
+            "FROM classification_candidate ORDER BY variable_id"
+        ).fetchall()
+        # Exactly the (classification_id IS NOT NULL AND variable_id IS NOT NULL)
+        # subset — just cvid 1.
+        assert [tuple(r) for r in rows] == [(vid, 77, cls)]
         conn.close()
 
 

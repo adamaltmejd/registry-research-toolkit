@@ -706,11 +706,24 @@ retired at A4.4 — gate is `--validate` + targeted before/after, not byte-ident
   table BOTH adapters feed; `_backfill_state_classifications` reads it provider-blind;
   dropped before ship. value_set→classification is NOT 1:1 (~5,161 cases) so the
   linkage MUST stay `(variable_id, value_set_id)`-grain. GATE: SCB-subset
-  `classification_id` before/after diff must be identical. Adds the SOS
-  classification path (`external_classification`/`Länk kodverk`, currently parsed
-  but unused). **DEFERRED to a post-A4.4 follow-up:** LOVA/LVM `A_LOVA*`/`lvm_*`
-  deldatamängd token → variant mapping (needs SOS domain knowledge; 2 stateless
-  registers don't block A4.5).
+  `classification_id` before/after diff must be identical (content-level vs the
+  captured baseline; the candidate table is a verbatim projection of what the
+  backfill reads today, so SCB output is unchanged by construction).
+  **Scope decision (maintainer, 2026-06-02): PLUMBING ONLY.** Planning found SOS
+  has no clean classification signal — `external_classification`/`Länk kodverk` is
+  free-text (ICD URLs / prose / sheet-refs), `classifications.toml` seeds zero SOS
+  code systems, only ~17 SOS vars carry both a value-set and an external_classification,
+  and the `classification` table has no `provider` column. A4.4e therefore ships the
+  provider-blind candidate table + re-point (the GAP-1 close-out, gate-protected);
+  SOS contributes 0 tagged states as today and the candidate table is the plug-in
+  point for later SOS work. **DEFERRED to post-A4.4 follow-ups:** (1) the SOS
+  classification **data** path (curated SOS code-system seeds + an
+  `external_classification`→`classification_id` resolver in `sos.py`, kept out of the
+  SCB `vardemangdsversion` drift gate) + the `classification.provider` column question
+  (persist the already-modeled-but-dead `IRClassification.provider`, SCHEMA_VERSION
+  bump, A5 openapi/fixture coordination) only if/when SOS classifications ship; (2)
+  LOVA/LVM `A_LOVA*`/`lvm_*` deldatamängd token → variant mapping (needs SOS domain
+  knowledge; 2 stateless registers don't block A4.5).
 
 Lower forks proceeding on recommendation (flag if load-bearing): auto-TOMLs stay
 transient through A4 (commit at the v1 freeze); panel keys are mutable (not
