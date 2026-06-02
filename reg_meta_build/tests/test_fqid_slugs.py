@@ -672,7 +672,7 @@ def _flag_identifier(conn: sqlite3.Connection, register_id: int, var_id: int) ->
 class TestProposePanel:
     """The A4.4c-ii proposer emits starter panel lines that a curator edits in
     A4.4d. It does not have to be exhaustive — only round-trip-valid and driven
-    by the persisted is_identifier / source_join_key signals."""
+    by the persisted is_identifier signal (see propose_panel_entity_key)."""
 
     def test_is_identifier_drives_entity_key(self):
         # default LISA fixture: var_id=44 ("Kön"), delivery column "Kon",
@@ -687,16 +687,19 @@ class TestProposePanel:
         conn = build_slugged_db()
         assert propose_panel_entity_key(conn, 1, 10) is None
 
-    def test_source_join_key_fallback(self):
-        # No is_identifier, but the delivery column is an ID-kolumner join key →
-        # fall back to the join-key signal.
+    def test_join_key_alone_proposes_none(self):
+        # A delivery column matching an ID-kolumner join key is NOT used as a
+        # signal: source_join_key.table_name doesn't map to register_id, so a
+        # column-name match can't be register-scoped and would over-propose a
+        # non-identifier as the entity grain (review P2). Only is_identifier
+        # drives the proposal — no flagged identifier → None (curation in A4.4d).
         conn = build_slugged_db()
         conn.execute(
             "INSERT INTO source_join_key (table_name, column_name, description) "
             "VALUES ('LISA_T', 'Kon', 'join key')"
         )
         conn.commit()
-        assert propose_panel_entity_key(conn, 1, 10) == "kon"
+        assert propose_panel_entity_key(conn, 1, 10) is None
 
     def test_composite_entity_key_is_tuple(self):
         # Two is_identifier variables on one variant → a sorted tuple (the

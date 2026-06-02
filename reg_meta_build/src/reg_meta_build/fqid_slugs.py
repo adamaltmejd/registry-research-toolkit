@@ -2284,24 +2284,24 @@ def propose_panel_entity_key(
     """Propose a starter ``panel_entity_key`` for one register_variant (A4.4c-ii).
 
     The entity key is the variant's panel entity-identifier variable slug(s)
-    (§6.8.3). Two persisted signals drive the proposal, both surviving to ship:
-
-    1. ``variable.is_identifier`` (primary — the §6.8.3 entity-key driver). Pick
-       the slugs of identifier variables that actually deliver on THIS variant
-       (joined through ``variable_state.register_variant_id``).
-    2. ``source_join_key(table_name, column_name)`` (from ID-kolumner.xlsx) as a
-       fallback when no ``is_identifier`` variable lands on the variant. A join
-       column maps to a slug via ``variable_state.delivery_column_name`` →
-       ``variable_id`` → ``variable.slug`` for that variant.
+    (§6.8.3), proposed from the persisted ``variable.is_identifier`` flag (the
+    §6.8.3 entity-key driver): the slugs of identifier variables that actually
+    deliver on THIS variant (joined through ``variable_state.register_variant_id``
+    so a register's identifier set doesn't fan onto sibling variants that don't
+    carry it).
 
     A single identifier → a bare slug; several → a sorted tuple (the composite
-    case, persisted as a JSON array by ``populate_slugs``). No signal → ``None``,
-    so the field is left off for A4.4d curation. This covers the SOS arm, whose
-    join signal (``is_join_variable``) is adapter-time-only and not on the
-    universal ``variable`` — so SOS variants propose nothing rather than a weak
-    name-pattern guess. Tabelldefinitioner PRIMARY KEY is deliberately NOT a
-    signal: the SQL parser captures only column type/nullability, never the
-    table-level PK clause (see ``scb.py`` ``_SQL_COL_RE``).
+    case, persisted as a JSON array by ``populate_slugs``). No identifier →
+    ``None``, so the field is left off for A4.4d curation. This covers SOS
+    (``is_join_variable`` is adapter-time-only, not on the universal ``variable``)
+    and any SCB variant with no flagged identifier.
+
+    Two signals are deliberately NOT used: (a) ``source_join_key`` — its
+    ``table_name`` does not map to a ``register_id``, so a column-name match
+    cannot be register-scoped and would over-propose a non-identifier (e.g. a geo
+    join column) as the entity grain; ``is_identifier`` is the precise signal.
+    (b) Tabelldefinitioner PRIMARY KEY — the SQL parser captures only column
+    type/nullability, never the table-level PK clause (``scb.py`` ``_SQL_COL_RE``).
 
     Proposals are starter hints — the curator reviews them in A4.4d; this need
     not be exhaustive or perfect.
@@ -2322,23 +2322,6 @@ def propose_panel_entity_key(
     ]
     if id_slugs:
         return id_slugs[0] if len(id_slugs) == 1 else tuple(id_slugs)
-
-    # Fallback: ID-kolumner join columns mapped to this variant's variable slugs.
-    join_slugs = [
-        r[0]
-        for r in conn.execute(
-            "SELECT DISTINCT v.slug FROM source_join_key sjk "
-            "JOIN variable_state vs "
-            "  ON vs.delivery_column_name = sjk.column_name "
-            "JOIN variable v ON v.variable_id = vs.variable_id "
-            "WHERE v.register_id = ? AND vs.register_variant_id = ? "
-            "AND v.slug IS NOT NULL "
-            "ORDER BY v.slug",
-            (register_id, register_variant_id),
-        ).fetchall()
-    ]
-    if join_slugs:
-        return join_slugs[0] if len(join_slugs) == 1 else tuple(join_slugs)
     return None
 
 
