@@ -99,11 +99,31 @@ def test_parse_variant_rejects(raw: str):
         parse_variant(raw)
 
 
-# §5.2: value_set_version is the classification-slug / value_set_version_label
-# grammar (the slug grammar). It does NOT admit `_default` (a version label is
-# not a variant coordinate).
-_ACCEPT_VSV = ["sni2007", "sun2020", "v1"]
-_REJECT_VSV = ["", "_default", "Sni2007", "../etc", "x\x00", "class"]
+# [A5.3b] ?value_set_version is matched against the FREE-TEXT
+# `value_set_version_label` via a Python `==` filter in resolve_at (no SQL), so
+# the §16 gate is a sanity check (non-empty, length-capped, no control chars) —
+# NOT the slug grammar. Real labels carry spaces / commas / parens / case /
+# non-ASCII and MUST pass.
+_ACCEPT_VSV = [
+    "sun2020",
+    "_none",  # the empty/default-label sentinel (the handler maps it to "")
+    "SUN 1996",
+    "SUN 1996, 5 positioner, brutto",
+    "SUN 2000 - Utbildningsnivå",
+    "Utbildningsnivå (SUN 2000)",
+    "_default",  # a literal label value, not a sentinel here — accepted as-is
+    "x" * 200,  # exactly the length cap
+]
+_REJECT_VSV = [
+    "",  # empty
+    "   ",  # whitespace-only (not a real label)
+    "x" * 201,  # over the length cap
+    "x\x00y",  # NUL
+    "a\tb",  # C0 control (tab)
+    "a\nb",  # C0 control (newline)
+    "a\x7fb",  # DEL
+    "a\x85b",  # C1 control
+]
 
 
 @pytest.mark.parametrize("raw", _ACCEPT_VSV)

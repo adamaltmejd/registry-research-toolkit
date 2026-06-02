@@ -7,6 +7,7 @@
  * client carries the exact API contract with no hand-maintained mirror.
  */
 import type { components } from "./api-types";
+import { queryFromParams, type ResolutionParams } from "./period";
 
 type Schemas = components["schemas"];
 
@@ -94,6 +95,35 @@ export type CatalogNode =
   | Schemas["ClassificationRootResponse"]
   | Schemas["ClassificationNode"];
 
+/** The binding-leaf node (3-seg) the catch-all returns WITHOUT a query — the
+ * variable's full embedded longitudinal record (states + edges, §9.5). */
+export type BindingNodeData = Schemas["BindingNode"];
+export type VariableStateModel = Schemas["VariableStateModel"];
+export type VariableRefModel = Schemas["VariableRefModel"];
+export type RelatedRefModel = Schemas["RelatedRefModel"];
+export type LineageEdgeModel = Schemas["LineageEdgeModel"];
+export type LineageWarningModel = Schemas["LineageWarningModel"];
+
+// The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
+// binding leaf is queried with `?period` (the resolve_at subset, §9.5), and a
+// SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
+// from a browsable node by `isCatalogNode` at the fetch boundary.
+export type StatesResponse = Schemas["StatesResponse"];
+export type PredecessorsResponse = Schemas["PredecessorsResponse"];
+export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
+
+/** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
+ * the catch-all's other payloads (a `?period` `StatesResponse`, or a SUB-ENDPOINT
+ * `VariantsResponse`/… on a `.../states` path) do NOT. Positive `"kind" in x`
+ * check (negate it for "the non-node response"). Phrased as `isCatalogNode`
+ * rather than `isStatesResponse` because a no-`kind` payload is NOT necessarily a
+ * `StatesResponse` — only the binding-leaf `?period` resolve is. */
+export function isCatalogNode(
+  x: CatalogNode | StatesResponse,
+): x is CatalogNode {
+  return "kind" in x;
+}
+
 /** Percent-encode each FQID segment for use in a URL path (the server
  * re-validates the slug grammar per segment, §16). Split/join on `/` so the
  * path separators survive while reserved chars inside a segment are escaped.
@@ -112,9 +142,18 @@ export function getCatalogRoot(): Promise<RootResponse> {
   return apiGet<RootResponse>("/catalog");
 }
 
-/** Resolve a catalog node by its FQID path (e.g. `scb/lisa/kon`). */
-export function getCatalogNode(fqidPath: string): Promise<CatalogNode> {
-  return apiGet<CatalogNode>(`/catalog/${encodeFqid(fqidPath)}`);
+/** Resolve a catalog node by its FQID path (e.g. `scb/lisa/kon`). With `params`
+ * (`?period` + the `?variant`/`?value_set_version` modifiers, §9.5) a binding
+ * leaf resolves to the `resolve_at` subset — a `StatesResponse` (no `kind`),
+ * distinguished from a browsable node by `isCatalogNode`. A malformed
+ * period/variant is the server's 422 (surfaced as an `ApiError`). */
+export function getCatalogNode(
+  fqidPath: string,
+  params?: ResolutionParams,
+): Promise<CatalogNode | StatesResponse> {
+  const query = params ? queryFromParams(params) : "";
+  const path = `/catalog/${encodeFqid(fqidPath)}${query ? `?${query}` : ""}`;
+  return apiGet<CatalogNode | StatesResponse>(path);
 }
 
 /** List a register's variants (the `?variant=` browse axis, §9.5). `register`
@@ -123,4 +162,28 @@ export function getRegisterVariants(
   register: string,
 ): Promise<VariantsResponse> {
   return apiGet<VariantsResponse>(`/catalog/${encodeFqid(register)}/variants`);
+}
+
+// ── Binding sub-endpoints (§9.5) ────────────────────────────────────────────
+// The leaf already EMBEDS states / same_as / replaced_by (outbound) /
+// related_to / lineage, so A5.3b fetches only the two it does NOT embed:
+// `/predecessors` (inbound succession) and `/lineage_warnings`. Each GETs
+// `/catalog/{encodeFqid}/{suffix}`; the suffix is greedy-matched ABOVE the
+// catch-all server-side. (The other four suffixed endpoints exist server-side
+// but aren't fetched by the SPA — A5.3c adds helpers if/when it needs them.)
+
+export function getBindingPredecessors(
+  fqidPath: string,
+): Promise<PredecessorsResponse> {
+  return apiGet<PredecessorsResponse>(
+    `/catalog/${encodeFqid(fqidPath)}/predecessors`,
+  );
+}
+
+export function getBindingLineageWarnings(
+  fqidPath: string,
+): Promise<LineageWarningsResponse> {
+  return apiGet<LineageWarningsResponse>(
+    `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
+  );
 }

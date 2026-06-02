@@ -96,6 +96,7 @@ from reg_webapp.models import (
     VariantsResponse,
 )
 from reg_webapp.period_param import (
+    VALUE_SET_VERSION_NONE,
     PeriodParamError,
     ValueSetVersionParamError,
     VariantParamError,
@@ -172,9 +173,11 @@ def _validated_variant(variant: str | None = None) -> str | None:
 
 def _validated_value_set_version(value_set_version: str | None = None) -> str | None:
     """§16 ``?value_set_version`` allow-list as a pre-open dependency. The value
-    is a value-set-version label (the classification-slug grammar, §5.2 — the slug
-    grammar). 422s a non-slug value before any connection opens. Reconciled with
-    the binding-leaf ``@version`` pin in the handler (`_reconcile_value_set_version`)."""
+    is a FREE-TEXT value-set-version label (matched against ``value_set_version_label``
+    by a Python filter in ``resolve_at``, NOT SQL), so the gate is a sanity check
+    (non-empty, length-capped, no control chars) — 422s a malformed value before
+    any connection opens. Reconciled with the binding-leaf ``@version`` pin in the
+    handler (`_reconcile_value_set_version`)."""
     if value_set_version is None:
         return None
     try:
@@ -722,10 +725,17 @@ def get_catalog_node(
                     ),
                 )
         else:
+            # The `_none` sentinel selects the empty/default label (`''`): the
+            # empty string can't ride in the query (≡ absent), so map it here,
+            # just before resolve_at's Python `label == value_set_version` filter.
+            resolved_vsv = "" if vsv == VALUE_SET_VERSION_NONE else vsv
             with _catalog_conn(request) as conn:
                 try:
                     states = Catalog(conn).resolve_at(
-                        parsed, period, variant=variant, value_set_version=vsv
+                        parsed,
+                        period,
+                        variant=variant,
+                        value_set_version=resolved_vsv,
                     )
                 except RegMetaError as exc:
                     _http_4xx_from_regmeta(exc)

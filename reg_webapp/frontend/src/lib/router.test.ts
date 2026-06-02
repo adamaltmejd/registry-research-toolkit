@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it } from "vitest";
-import { onNavClick, parseRoute } from "./router.svelte";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { onNavClick, parseRoute, router } from "./router.svelte";
 
 describe("parseRoute", () => {
   it("maps / and /catalog to the root", () => {
@@ -125,4 +125,74 @@ describe("onNavClick", () => {
   it("intercepts an SPA route under /catalog", () => {
     expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
   });
+});
+
+describe("router reactive query (A5.3b)", () => {
+  // The `router` singleton reads `window.location`; reset to a known URL before
+  // each case (jsdom's pushState updates `window.location`). Re-sync the signal
+  // via `navigate` so the singleton's `search` matches the reset location.
+  beforeEach(() => {
+    // Reset to a KNOWN location DIFFERENT from the target first, so the navigate
+    // below isn't a no-op (the guard compares the full URL) and actually re-syncs
+    // the singleton's reactive route/search regardless of where a prior test left
+    // it.
+    window.history.pushState({}, "", "/");
+    router.navigate("/catalog/scb/lisa/kon");
+  });
+  afterEach(() => {
+    window.history.pushState({}, "", "/");
+  });
+
+  it("reads ?period off the query after a navigate", () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2020");
+    expect(router.getQueryParam("period")).toBe("2020");
+  });
+
+  it("returns null for an absent query param", () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2020");
+    expect(router.getQueryParam("variant")).toBeNull();
+  });
+
+  it("reads multiple modifiers off the query", () => {
+    router.navigate(
+      "/catalog/scb/lisa/kon?period=2020&variant=x&value_set_version=y",
+    );
+    expect(router.getQueryParam("period")).toBe("2020");
+    expect(router.getQueryParam("variant")).toBe("x");
+    expect(router.getQueryParam("value_set_version")).toBe("y");
+  });
+
+  it("updates `search` on a same-path/new-query navigation (NOT a no-op)", () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2019");
+    expect(router.getQueryParam("period")).toBe("2019");
+    // Same pathname, different query — must update (the no-op guard compares the
+    // FULL url, so this is correctly NOT a no-op).
+    router.navigate("/catalog/scb/lisa/kon?period=2021");
+    expect(router.getQueryParam("period")).toBe("2021");
+  });
+
+  it("clears the query when navigating to the bare pathname", () => {
+    router.navigate("/catalog/scb/lisa/kon?period=2020");
+    expect(router.getQueryParam("period")).toBe("2020");
+    router.navigate("/catalog/scb/lisa/kon");
+    expect(router.getQueryParam("period")).toBeNull();
+  });
+
+  it("updates `search` on a popstate event", () => {
+    // Simulate a back/forward landing on a URL with a query: jsdom doesn't sync
+    // location from a synthetic popstate, so push the target URL first, then fire
+    // popstate (mirroring the browser's order: location changes, then the event).
+    window.history.pushState({}, "", "/catalog/scb/lisa/kon?period=2017");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    expect(router.getQueryParam("period")).toBe("2017");
+  });
+
+  // NOTE: the *reactivity* of `search` (a $derived/$effect reading getQueryParam
+  // re-running when navigate/popstate mutates it) is not unit-tested here — the
+  // router is a module-level singleton whose $state lives outside any reactive
+  // root, so an isolated `$effect.root` in a test doesn't connect to it. The seam
+  // is covered instead by: async.svelte.test.ts (asyncResource's $effect re-runs
+  // on a tracked $state change — the same mechanism) + the imperative cases above
+  // (the value updates) + the A5.3b visual gate (the period resolve refetched
+  // without a pathname remount).
 });

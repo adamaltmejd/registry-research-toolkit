@@ -840,6 +840,8 @@ The box stays unchecked until A5.2b lands.
 
 ### [ ] A5.3 — SPA TypeScript regen
 
+**Split into 3 PRs (maintainer): A5.3a (browse foundation) → A5.3b (states picker + lineage) → A5.3c (authoring + validation). Sequential A5.3→A5.4; path-based routing; Vitest.** **A5.3a MERGED (PR [#178](https://github.com/adamaltmejd/registry-research-toolkit/pull/178), squash 3915ff28) 2026-06-02** — the read-only browse SPA (was a context-only stub): typed fetch client + hand-rolled path router (`/catalog/...`, SPA-route-restricted interception, never-throws parse) + catalog tree over the kind-union + variant browser (register sub-resource) + the shared reactive `asyncResource` (synchronous `fn()` so `$effect` tracks inputs) + Vitest wired into CI (29 tests). Box stays unchecked until A5.3b + A5.3c land.
+
 - OpenAPI codegen against new Pydantic models
 - SPA components updated for 3-seg binding FQIDs + the variant browser (variant axis presented as a register sub-resource, not an FQID path)
 - New sub-endpoint integrations (states picker keyed by variant × period, replaced-by remediation, related-to siblings picker)

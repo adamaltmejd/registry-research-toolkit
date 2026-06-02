@@ -59,18 +59,29 @@ export function parseRoute(pathname: string): Route {
  * and re-render on navigation. A module-level singleton: one router per SPA. */
 class Router {
   route = $state<Route>(parseRoute(window.location.pathname));
+  /** The reactive `?query` string (with leading `?`, or empty). DISTINCT from
+   * `route`, which is keyed on the PATHNAME only: a same-path/new-`?period`
+   * navigation produces a structurally-equal `Route` (so `route` doesn't change
+   * and `{#key route.fqidPath}` doesn't remount), but the resolution state lives
+   * in the query (§9.5, A5.3b's single source of truth — deep-linkable /
+   * shareable / back-forward-correct). Components read `getQueryParam("period")`
+   * etc. and re-fetch when it changes. Kept in sync with the URL in BOTH the
+   * popstate handler AND inside `navigate` after `pushState`. */
+  search = $state<string>(window.location.search);
 
   constructor() {
     window.addEventListener("popstate", () => {
       this.route = parseRoute(window.location.pathname);
+      this.search = window.location.search;
     });
   }
 
   /** Navigate to `url` (path + optional `?query`/`#hash`) via pushState (no
-   * reload), updating the reactive route. The route is keyed on the PATHNAME;
-   * any query/hash is preserved in the URL (A5.3b reads `?period`/`?variant`
-   * from `window.location.search`) but doesn't change which node is shown. A
-   * no-op when already at `url` (avoids a duplicate history entry). */
+   * reload), updating the reactive route + query. The route is keyed on the
+   * PATHNAME; the `?query` drives the resolution state (A5.3b reads
+   * `?period`/`?variant`/`?value_set_version` via `getQueryParam`). A no-op when
+   * already at the full `url` (path + query + hash) — so a same-path/new-query
+   * navigation is correctly NOT a no-op. */
   navigate(url: string): void {
     const current =
       window.location.pathname + window.location.search + window.location.hash;
@@ -79,6 +90,15 @@ class Router {
     }
     window.history.pushState({}, "", url);
     this.route = parseRoute(window.location.pathname);
+    this.search = window.location.search;
+  }
+
+  /** Read a query parameter off the reactive `search` (so reads inside an
+   * `$effect`/`$derived` re-run when the query changes). Returns the decoded
+   * value, or `null` when absent OR present-but-empty (`?period=`) — an empty
+   * modifier is "no value", and callers treat it as absent. */
+  getQueryParam(name: string): string | null {
+    return new URLSearchParams(this.search).get(name) || null;
   }
 }
 
