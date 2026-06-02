@@ -121,6 +121,22 @@ def test_validate_catches_orphan_column_options(client):
     assert "column_options_orphan_fqid" in {i["code"] for i in body["issues"]}
 
 
+def test_model_issue_empty_loc_is_whole_document_pointer():
+    """A model-level (empty-``loc``) residual ValidationError must map to the RFC
+    6901 whole-document pointer ``""`` — NOT ``"/"`` (a property keyed by the empty
+    string, unresolvable). A5.3's SPA resolves these pointers, so the contract is
+    exact. Defensive path (structural owns the common cases), unit-tested directly."""
+    from pydantic_core import ValidationError
+    from reg_webapp.routes.project import _model_issue  # noqa: PLC0415
+
+    exc = ValidationError.from_exception_data(
+        "ProjectData", [{"type": "missing", "loc": (), "input": {}}]
+    )
+    issue = _model_issue("residual model error", exc)
+    assert issue.path == ""
+    assert issue.code == "invalid_field"
+
+
 def test_malformed_column_options_value_is_issue_not_500(client):
     """A non-dict per-FQID column_options value (an int) is malformed — the block
     validator flags it (invalid_block). /validate ACCUMULATES issues (it doesn't
