@@ -434,8 +434,9 @@ export const projectStore = {
  * Wire the debounced autosave `$effect` + the load-at-init. MUST be called inside
  * a reactive root (a component init or an `$effect.root`) — it registers an
  * `$effect`. c-i: the autosave writes to the in-memory stub; the load-at-init
- * returns null (no restore). A5.4 swaps the persistence impl (IndexedDB) — this
- * wiring is unchanged.
+ * returns null (no restore). A5.4 swaps in the IndexedDB impl and snapshots the
+ * draft at the persistence boundary (a live $state proxy is not
+ * structured-cloneable — see the save call below).
  *
  * Returns the (already-pending) load promise so a caller can await the
  * (currently no-op) restore if it wants to. The debounce timer is cleared on
@@ -464,7 +465,14 @@ export function initPersistence(): Promise<void> {
     // spread), so the `draft` reference changes on each edit. Debounce so a burst
     // of edits writes once.
     const timer = setTimeout(() => {
-      void persistence.save(AUTOSAVE_KEY, current, storeSchemaVersion);
+      // $state.snapshot de-proxies the draft before the persistence boundary: a
+      // live Svelte rune proxy is NOT structured-cloneable, so handing it to
+      // IndexedDB.put() throws DataCloneError. Persist a plain snapshot.
+      void persistence.save(
+        AUTOSAVE_KEY,
+        $state.snapshot(current),
+        storeSchemaVersion,
+      );
     }, AUTOSAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   });

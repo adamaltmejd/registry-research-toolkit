@@ -286,10 +286,10 @@ describe("storeSchemaVersion", () => {
 describe("persistence wiring (the A5.4 swap point)", () => {
   it("debounced autosave writes the draft to the persistence impl after the debounce", async () => {
     vi.useFakeTimers();
-    const saves: { key: string; schemaVersion: number }[] = [];
+    const saves: { key: string; draft: unknown; schemaVersion: number }[] = [];
     const fake: ProjectPersistence = {
-      save: (key, _draft, schemaVersion) => {
-        saves.push({ key, schemaVersion });
+      save: (key, draft, schemaVersion) => {
+        saves.push({ key, draft, schemaVersion });
         return Promise.resolve();
       },
       load: () => Promise.resolve(null),
@@ -306,6 +306,10 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     // After the debounce window, the draft is persisted with the stamped version.
     expect(saves.length).toBeGreaterThanOrEqual(1);
     expect(saves[0].schemaVersion).toBe(storeSchemaVersion);
+    // Regression: the persisted draft must be a plain $state.snapshot, not the live
+    // rune proxy. IndexedDB structured-clones the stored value, and a proxy throws
+    // DataCloneError — structuredClone here reproduces that exact failure mode.
+    expect(() => structuredClone(saves[0].draft)).not.toThrow();
     stop();
     vi.useRealTimers();
   });
