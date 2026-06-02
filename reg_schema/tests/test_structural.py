@@ -577,6 +577,14 @@ def test_unexpected_field_key_is_rfc6901_escaped() -> None:
     assert [i.path for i in issues] == ["/sources/0/bindings/0/foo~1bar~0baz"]
 
 
+def test_namespaced_block_key_is_rfc6901_escaped() -> None:
+    # Same pointer-escaping contract for the OTHER user-controlled key site: a
+    # non-object namespaced block whose top-level key contains `/` or `~`.
+    result = validate_structural(_spec(**{"weird/block~x": "not-an-object"}))
+    issues = [i for i in result.issues if i.code == "invalid_field_type"]
+    assert "/weird~1block~0x" in [i.path for i in issues]
+
+
 def test_unexpected_field_not_emitted_for_top_level_namespaced_block() -> None:
     # Top level is open: an unknown top-level key is a namespaced block,
     # never `unexpected_field`. Guards against a future reader "fixing"

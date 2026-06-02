@@ -463,7 +463,7 @@ def _check_namespaced_blocks(
             issues.append(
                 _error(
                     "invalid_field_type",
-                    f"/{key}",
+                    f"/{_jp_escape(key)}",
                     f"namespaced block {key!r} must be an object",
                 )
             )
