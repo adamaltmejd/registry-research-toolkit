@@ -147,7 +147,12 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `_search_values` can't query it — the minor gate rejects it (5.0.0 < 5.1.0)
 #   and `reg-meta update` refuses to install a 5.0.0 asset over a working DB
 #   (`incompatible_db_asset`). Rebuild with `reg-meta-build build-db`.
-SCHEMA_VERSION = "5.1.0"
+# - 5.2.0 (A4.4c): additive panel_entity_key/panel_time_key/panel_time_grain
+#   on register_variant — nullable panel-shape columns curated via TOML
+#   (`populate_slugs`); most variants stay NULL (curation is a later seam).
+#   `Catalog.list_variants` exposes them read-only. Additive within the 5.x
+#   line; a 5.1.0 DB lacks the columns, so it's rejected via the minor gate.
+SCHEMA_VERSION = "5.2.0"
 DB_FILENAME = "reg_meta.db"
 
 

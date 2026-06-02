@@ -27,7 +27,7 @@ class RegMetaInfo(BaseModel):
     """reg_meta build provenance, read from the DB ``import_manifest``."""
 
     schema_version: str = Field(
-        description="Schema version of the reg_meta DB build (e.g. '5.1.0')."
+        description="Schema version of the reg_meta DB build (e.g. '5.2.0')."
     )
     import_date: str = Field(
         description="UTC timestamp the reg_meta DB was built/imported."
@@ -333,13 +333,19 @@ class VariantModel(BaseModel):
     `?variant=` browse axis. A variant is NOT FQID-addressable (the variant left
     the binding FQID, §5.0.1), so it carries the variant `slug` (the browse
     coordinate) + display fields, not an `Fqid`. Maps 1:1 to
-    `reg_meta.catalog.VariantSummary`. The §9.5 `panel_*` fields are NOT here —
-    those columns don't exist on `register_variant` yet (A4.4 curation)."""
+    `reg_meta.catalog.VariantSummary`. A4.4c adds the §9.5 read-only `panel_*`
+    fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
+    (composite); `panel_time_key` is "period" or a variable-slug;
+    `panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data →
+    all three are None."""
 
     slug: str
     name: str | None = None
     description: str | None = None
     display_group: str | None = None
+    panel_entity_key: str | list[str] | None = None
+    panel_time_key: str | None = None
+    panel_time_grain: str | None = None
 
 
 class StatesResponse(BaseModel):

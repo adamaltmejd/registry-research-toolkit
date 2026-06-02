@@ -209,7 +209,19 @@ CREATE TABLE register_variant (
     description TEXT,
     slug          TEXT,
     -- Presentation-only grouping label (§5.3 field reference). Drift-tolerant.
-    display_group TEXT
+    display_group TEXT,
+    -- A4.4c panel-shape coordinates. MUTABLE (curated via TOML, not slug-frozen
+    -- — they don't enter the slug snapshot). Nullable: most variants carry no
+    -- panel data and stay NULL (curation is a later seam). `populate_slugs` is
+    -- the sole writer.
+    --   panel_entity_key: a bare variable-slug (simple case) OR a json.dumps'd
+    --     list of variable-slugs (composite case); reg_meta decodes on read.
+    --   panel_time_key: literal "period" (delivery-aligned) OR a variable-slug
+    --     (row-level time column).
+    --   panel_time_grain: 'delivery' or 'row'.
+    panel_entity_key TEXT,
+    panel_time_key   TEXT,
+    panel_time_grain TEXT CHECK (panel_time_grain IN ('delivery', 'row'))
 );
 
 -- A2.6: BUILD-TIME-ONLY (dropped before ship, like `unika_summary`). The
