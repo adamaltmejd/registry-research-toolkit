@@ -5,9 +5,10 @@
  * browse components (and A5.3b's states/lineage views) all need. `fn` is
  * re-invoked whenever a reactive value it READS changes (Svelte 5 effect
  * dependency tracking), so `asyncResource(() => getNode(fqidPath))` refetches
- * when `fqidPath` changes. The in-flight fetch is cancelled on input change /
- * unmount (the `$effect` teardown flips `cancelled`), so a response that arrives
- * after its inputs moved on never clobbers fresher state.
+ * when `fqidPath` changes. The in-flight fetch is not aborted, but its result is
+ * DISCARDED on input change / unmount (the `$effect` teardown flips a `cancelled`
+ * flag), so a response that arrives after its inputs moved on never clobbers
+ * fresher state.
  *
  * Must be called at component init (it registers an `$effect`). `.svelte.ts` so
  * the Svelte compiler processes the runes.

@@ -129,6 +129,14 @@ const crumbs = $derived(breadcrumbs(fqidPath));
         <dt>Short name</dt>
         <dd>{node.short_name}</dd>
       </dl>
+    {:else}
+      <!-- A response with no recognized `kind`: a deep-link to a sub-resource
+           path (e.g. `.../variants`, `.../states`) hits that sub-endpoint, which
+           returns a VariantsResponse/StatesResponse rather than a browsable node.
+           Render a clear message instead of a blank article. -->
+      <p class="error" role="alert">
+        <code>{fqidPath}</code> isn't a browsable catalog node.
+      </p>
     {/if}
   </article>
 {/if}
