@@ -17,10 +17,17 @@ from __future__ import annotations
 import pytest
 from _project_data_fixtures import make_project_data
 from reg_monabundle.build.spec_loader import (
+    BLOCK_INVALID_CODE,
+    COLUMN_OPTIONS_ORPHAN_CODE,
+    SUPPRESS_K_NON_CATEGORICAL_CODE,
+    block_issue,
+    column_options_issues,
     project_data_to_loadedspec,
     validate_project_data,
 )
 from reg_monabundle.runtime.spec import LoadedSpec, loadedspec_from_dict
+
+import reg_schema
 
 # -- structural validation gate -------------------------------------------
 
@@ -316,3 +323,105 @@ def test_project_data_to_loadedspec_round_trips_panels():
     assert p.panel_id == "P1"
     assert p.entity_key == "LopNr"
     assert {m.source: m.time_key for m in p.members} == {"a.csv": "Ar", "b.csv": 2019}
+
+
+# -- issue-based forms (PR1 additive; PR2 rewires reg_webapp) --------------
+#
+# These are the relocated-validation surfaces: the same cross-block /
+# namespaced-block checks the build gate raises on, exposed as
+# ``list[ValidationIssue]`` so reg_webapp (PR2) can return them instead of
+# catching the raise. ``validate_project_data``'s raise behavior is
+# unchanged (the tests above pin it); these only add the issue path.
+
+
+def _block_validated_project_data(reg_monabundle):
+    """A structurally-valid ProjectData carrying ``reg_monabundle``, built
+    WITHOUT routing through the block/column_options gate (so the issue
+    forms can be exercised directly on a payload that would otherwise raise).
+    """
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "register_variant": "scb/test/_default",
+                "bindings": [
+                    {"variable": "scb/test/kon", "type": "categorical"},
+                ],
+            }
+        ],
+    )
+    if reg_monabundle is not None:
+        payload["reg_monabundle"] = reg_monabundle
+    return reg_schema.ProjectData.model_validate(payload)
+
+
+def test_column_options_issues_clean_block_returns_no_issues():
+    pd = _block_validated_project_data({"column_options": {"scb/test/kon": {}}})
+    assert column_options_issues(pd.reg_monabundle, pd) == []
+
+
+def test_column_options_issues_flags_orphan_key():
+    pd = _block_validated_project_data(
+        {"column_options": {"scb/test/typo_here": {"suppress_k": 25}}}
+    )
+    issues = column_options_issues(pd.reg_monabundle, pd)
+    assert [i.code for i in issues] == [COLUMN_OPTIONS_ORPHAN_CODE]
+    issue = issues[0]
+    assert issue.level == "error"
+    assert issue.path == "/reg_monabundle/column_options"
+    assert "don't match any binding FQID" in issue.message
+
+
+def test_column_options_issues_flags_suppress_k_on_non_categorical():
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "register_variant": "scb/test/_default",
+                "bindings": [
+                    {
+                        "variable": "scb/test/ar",
+                        "type": "numeric",
+                        "numeric_subtype": "integer",
+                    },
+                ],
+            }
+        ],
+    )
+    payload["reg_monabundle"] = {"column_options": {"scb/test/ar": {"suppress_k": 25}}}
+    pd = reg_schema.ProjectData.model_validate(payload)
+    issues = column_options_issues(pd.reg_monabundle, pd)
+    assert [i.code for i in issues] == [SUPPRESS_K_NON_CATEGORICAL_CODE]
+    issue = issues[0]
+    assert issue.level == "error"
+    # The FQID map key (scb/test/ar) is RFC 6901-escaped: `/` → `~1`, so the
+    # pointer resolves to the single `column_options["scb/test/ar"]` key.
+    assert issue.path == "/reg_monabundle/column_options/scb~1test~1ar/suppress_k"
+    assert "only honored on categorical" in issue.message
+
+
+def test_column_options_issues_no_block_returns_no_issues():
+    pd = _block_validated_project_data(None)
+    assert column_options_issues(None, pd) == []
+
+
+def test_block_issue_clean_block_returns_none():
+    assert block_issue({"column_options": {"scb/test/kon": {"suppress_k": 25}}}) is None
+    assert block_issue(None) is None
+
+
+def test_block_issue_translates_unknown_key_raise():
+    issue = block_issue({"unknown": {}})
+    assert issue is not None
+    assert issue.code == BLOCK_INVALID_CODE
+    assert issue.level == "error"
+    assert issue.path == "/reg_monabundle"
+    # Verbatim validate_block message text (the §6.8.2 raise).
+    assert "unknown key" in issue.message
+
+
+def test_block_issue_translates_non_object_block():
+    issue = block_issue(["column_options"])
+    assert issue is not None
+    assert issue.code == BLOCK_INVALID_CODE
+    assert "must be an object" in issue.message

@@ -44,6 +44,15 @@ the refactor spec into per-package DESIGN files.
   cross-block referential checks that need reg_schema-typed bindings
   (`_validate_column_options_against_columns`) are the build-only exception,
   living in `build.spec_loader`.
+  - **Build-side ISSUE forms** (`build.spec_loader`, never amalgamated, may
+    import reg_schema): `block_issue` (translates `validate_block`'s raise to
+    one `ValidationIssue`, code `invalid_block`) and `column_options_issues`
+    (codes `column_options_orphan_fqid`, `suppress_k_on_non_categorical`) let
+    `reg_webapp`'s `/api/project/validate` concatenate these as `§6.8.0`
+    issues instead of catching the raise. The raising path
+    (`validate_project_data`) is preserved verbatim (shared message helpers),
+    so the bundle build + MONA-load `validate_block` are unchanged. `path` is
+    an RFC 6901 pointer (the FQID map key is escaped, `/`→`~1`).
 
 ## Not in scope (intentionally)
 

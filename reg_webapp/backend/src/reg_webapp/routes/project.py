@@ -14,11 +14,10 @@ that FAILS validation is a SUCCESSFUL validation RESPONSE — HTTP 200 with
 duplicate JSON keys, a too-deeply-nested body, a non-object top level, or an
 oversized body (the last handled by ``BodySizeLimitMiddleware`` before the handler
 runs). The body is parsed as JSON regardless of ``Content-Type`` (lenient — a
-researcher tool, not a strict public API). An extra/typo
-KEY in the spec must surface as a structural (or model-construction) ISSUE in the
-200 body — NEVER a 500: ``validate_structural`` does not enforce ``extra=forbid``
-but the ``ProjectData`` model does, so the model build is wrapped and a
-``ValidationError`` is turned into an issue rather than escaping as a 500.
+researcher tool, not a strict public API). An extra/typo KEY on a closed object
+(Source/Binding/Panel) surfaces as the structural ``unexpected_field`` issue; a
+residual model-construction failure is a thin defensive issue — a 200 ISSUE either
+way, NEVER a 500.
 
 **Connection model = per-request open ON ONE THREAD** (LOCKED). ``/validate`` is
 ``async`` only to read the body off the wire; the BLOCKING work (structural parse
@@ -33,8 +32,11 @@ layers are DB-FREE and run BEFORE the open, so a malformed or structurally-rejec
 body costs no DB hit.
 
 §9.6: this module imports ``reg_schema`` (structural validator + ``ProjectData``)
-and ``reg_monabundle.validate_block`` (the pure-stdlib §6.8.2 block gate) — NOT
-``reg_monabundle.runtime.*`` / duckdb / pyodbc.
+and the BUILD-side ``reg_monabundle.build.spec_loader`` issue forms (``block_issue``
+/ ``column_options_issues``, which wrap the §6.8.2 block + the cross-block
+referential checks as canonical ``ValidationIssue``s) — NOT
+``reg_monabundle.runtime.*`` / duckdb / pyodbc (``spec_loader`` imports the runtime
+lazily, so this stays out of the import graph; the import-graph test pins it).
 """
 
 from __future__ import annotations
@@ -47,11 +49,11 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
+from reg_monabundle.build.spec_loader import block_issue, column_options_issues
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue, ValidationResult
 
-from reg_monabundle import validate_block
 from reg_webapp.models import (
     ValidationIssueModel,
     ValidationResultModel,
@@ -89,20 +91,15 @@ def _project_conn(db_path: Path) -> Iterator[sqlite3.Connection]:
 
 
 def _model_issue(message: str, exc: ValidationError) -> ValidationIssue:
-    """Turn a ``ProjectData.model_validate`` failure into a STRUCTURAL-level issue.
+    """Turn a residual ``ProjectData.model_validate`` failure into an error issue.
 
-    ``validate_structural`` (pure stdlib) does NOT enforce ``extra=forbid``, but
-    the ``ProjectData`` Pydantic model does — so an extra/typo key that the
-    structural layer admits trips here when we build the model for the semantic
-    step. That is user error in the SPEC (a typo'd field), so it belongs in the
-    200 issue list as an error, NOT a 500.
-
-    ``invalid_field`` is a WEBAPP-composition code, not yet a canonical §6.8.0
-    code — the cleaner home is reg_schema's structural validator emitting it
-    directly (the open ``validate_structural`` ``extra=forbid`` question, see the
-    MIGRATION_PLAN A5.2 note). No consumer maps it yet (the SPA is A5.3), so
-    relocating it before A5.3 is churn-free; flagged for the maintainer's call.
-    The path points at the first offending field when Pydantic reports one."""
+    THIN DEFENSIVE catch. ``validate_structural`` now owns the structural problems
+    (missing / mistyped / unexpected keys — incl. ``unexpected_field`` on the
+    closed Source/Binding/Panel objects), and the caller only builds the model
+    once structural passed. So the common extra-key case never reaches here (it is
+    ``unexpected_field`` from reg_schema); a model ``ValidationError`` here is a
+    constraint structural did NOT replicate (rare) — surfaced as a 200 issue (code
+    ``invalid_field``), never a 500. The path points at the first offending field."""
     errors = exc.errors()
     path = "/" + "/".join(str(p) for p in errors[0]["loc"]) if errors else ""
     return ValidationIssue(
@@ -124,55 +121,42 @@ def _to_result_model(result: ValidationResult) -> ValidationResultModel:
 
 
 def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
-    """Run the §6.8.2 ``reg_monabundle`` block validator and adapt its raise to an
-    issue list (tuple-concatenation composition, §6.8.0).
-
-    ``validate_block`` is fail-fast (raises ``ValueError`` on a bad block) rather
-    than issue-accumulating, so we translate a raise into a single
-    ``invalid_block`` error issue — keeping the three layers uniform as one
-    concatenated list. An absent ``reg_monabundle`` block validates trivially
-    (``validate_block(None)`` is a no-op).
-
-    ``invalid_block`` is a WEBAPP-composition code (the webapp owns the three-layer
-    concatenation). The cleaner home is an issue-based ``validate_block`` in
-    reg_monabundle returning ``list[ValidationIssue]`` directly — same relocation
-    question as ``invalid_field``; no consumer maps it yet (SPA = A5.3), so it's
-    churn-free to revisit. Flagged for the maintainer."""
-    block = raw.get("reg_monabundle")
-    try:
-        validate_block(block)
-    except ValueError as exc:
-        return [
-            ValidationIssue(
-                level="error",
-                code="invalid_block",
-                path="/reg_monabundle",
-                message=str(exc),
-            )
-        ]
-    return []
+    """The §6.8.2 ``reg_monabundle`` block layer, as a §6.8.0 issue list (tuple-
+    concatenation composition). The code now lives in its OWNER:
+    ``reg_monabundle.build.spec_loader.block_issue`` runs the amalgamation-safe
+    raise-based ``validate_block`` and wraps its single raise into one canonical
+    ``invalid_block`` ``ValidationIssue`` (None when clean) — the webapp no longer
+    invents the code. An absent block validates trivially."""
+    issue = block_issue(raw.get("reg_monabundle"))
+    return [issue] if issue is not None else []
 
 
 def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
-    """Build the ``ProjectData`` model and run the §6.8.3 semantic layer.
+    """Build the ``ProjectData`` model, run the §6.8.3 semantic layer, AND the
+    build-time cross-block referential checks (orphan ``column_options`` keys /
+    suppress_k-on-non-categorical, via ``reg_monabundle.column_options_issues``).
+    The cross-block check closes the documented ``/validate``↔``/bundle``
+    divergence — a spec that bundles must also validate clean on that class.
 
-    Reached only when the structural layer passed (the caller short-circuits a
-    structural failure). The model build can still raise on an ``extra=forbid``
-    violation the structural layer doesn't catch — that becomes an
-    ``invalid_field`` issue (NOT a 500), and the semantic step is skipped (it
-    needs a constructed model)."""
+    Reached only when the structural layer passed. The model build is now a THIN
+    DEFENSIVE catch: ``validate_structural`` already flags missing / mistyped /
+    unexpected keys (incl. ``unexpected_field`` on the closed objects), so a
+    residual model ``ValidationError`` is a constraint structural didn't replicate
+    — surfaced as an issue (NOT a 500), and the semantic step is skipped (it needs
+    a built model)."""
     try:
         project = ProjectData.model_validate(raw)
     except ValidationError as exc:
         return [
             _model_issue(
-                "project_data failed model construction (an unrecognized or "
-                f"invalid field?): {exc}",
+                "project_data failed model construction (a constraint the "
+                f"structural layer did not catch?): {exc}",
                 exc,
             )
         ]
-    result = validate_semantic(project, catalog, caller="researcher")
-    return list(result.issues)
+    issues = list(validate_semantic(project, catalog, caller="researcher").issues)
+    issues.extend(column_options_issues(raw.get("reg_monabundle"), project))
+    return issues
 
 
 # The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in

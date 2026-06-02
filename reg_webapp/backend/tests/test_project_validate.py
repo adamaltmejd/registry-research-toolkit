@@ -88,10 +88,10 @@ def test_unresolvable_fqid_is_200_not_4xx(client):
     assert ("fqid_unresolved", "error") in codes
 
 
-def test_extra_key_is_issue_not_500(client):
-    """An extra/typo key the structural layer admits but ``ProjectData``'s
-    ``extra=forbid`` rejects must surface as an ``invalid_field`` ISSUE in the 200
-    body — NEVER a 500 (the b-ii side of the b-i extra-key P1)."""
+def test_extra_key_is_unexpected_field_not_500(client):
+    """A typo'd key on a CLOSED object (Binding, extra=forbid) now surfaces as the
+    canonical structural code ``unexpected_field`` (reg_schema owns it; the webapp
+    no longer invents ``invalid_field``) — a 200 ISSUE, NEVER a 500."""
     spec = _clean_spec()
     spec["sources"][0]["bindings"][0]["typoo_field"] = "oops"
     resp = client.post("/api/project/validate", json=spec)
@@ -99,7 +99,23 @@ def test_extra_key_is_issue_not_500(client):
     body = resp.json()
     assert body["ok"] is False
     codes = {i["code"] for i in body["issues"]}
-    assert "invalid_field" in codes
+    assert "unexpected_field" in codes, codes
+
+
+def test_validate_catches_orphan_column_options(client):
+    """Divergence reconciliation: an orphan ``reg_monabundle.column_options`` key
+    (a binding FQID not bound in any source) that /api/bundle 422s on is now ALSO
+    flagged by /validate (code ``column_options_orphan_fqid``) — so a /validate-
+    clean spec is buildable for that class."""
+    spec = _clean_spec()
+    spec["reg_monabundle"] = {
+        "column_options": {"scb/lisa/notbound": {"suppress_k": 10}}
+    }
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["ok"] is False
+    assert "column_options_orphan_fqid" in {i["code"] for i in body["issues"]}
 
 
 def test_top_level_extra_key_is_issue_not_500(client):

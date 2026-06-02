@@ -48,6 +48,34 @@ _TOP_LEVEL_BASELINE: frozenset[str] = frozenset(
     _TOP_LEVEL_REQUIRED + _TOP_LEVEL_OPTIONAL_BASELINE
 )
 
+# Allowed-key sets for the CLOSED objects (`_Model` subclasses with
+# ``extra="forbid"`` in ``project_data.py``). An unrecognized key on any of
+# these emits ``unexpected_field``. Mirror the Pydantic model field sets
+# exactly — the drift guard is ``test_structural.py``'s pinning test, which
+# asserts each frozenset equals ``Model.model_fields``. The top level
+# (``ProjectData``) is deliberately NOT here: it is ``extra="ignore"`` so a
+# top-level unknown key is a steward-namespaced block, not an error
+# (see ``_check_namespaced_blocks``).
+_SOURCE_KEYS: frozenset[str] = frozenset(
+    {"name", "register_variant", "period", "bindings"}
+)
+_BINDING_KEYS: frozenset[str] = frozenset(
+    {
+        "variable",
+        "type",
+        "display_name",
+        "id_subtype",
+        "numeric_subtype",
+        "date_format",
+        "datetime_format",
+        "value_set",
+    }
+)
+_PANEL_KEYS: frozenset[str] = frozenset(
+    {"panel_id", "members", "entity_key", "time_key", "comment"}
+)
+_PANEL_MEMBER_KEYS: frozenset[str] = frozenset({"source", "entity_key", "time_key"})
+
 # Subtype/format fields are only valid on the matching column type
 # (§6.3). Mapping a field to its owning type keeps the per-field check
 # uniform regardless of which subtype the spec adds next.
@@ -100,6 +128,32 @@ def validate_structural(data: Mapping[str, object]) -> ValidationResult:
 
 def _error(code: str, path: str, message: str) -> ValidationIssue:
     return ValidationIssue(level="error", code=code, path=path, message=message)
+
+
+def _check_unexpected_keys(
+    container: Mapping[str, object],
+    allowed: frozenset[str],
+    base: str,
+    label: str,
+    issues: list[ValidationIssue],
+) -> None:
+    """Emit ``unexpected_field`` for each key on a CLOSED object not in ``allowed``.
+
+    Mirrors the ``extra="forbid"`` config on the §6.1-§6.4 ``_Model``
+    subclasses (``Source`` / ``Binding`` / ``Panel`` / ``PanelMember``): a
+    typo'd or unknown key on one of those objects is a structural error, not
+    a silently-ignored extra. The top level (``ProjectData``) is
+    ``extra="ignore"`` and is handled separately by
+    ``_check_namespaced_blocks`` — it must NOT route through here.
+    """
+    for key in sorted(set(container) - allowed):
+        issues.append(
+            _error(
+                "unexpected_field",
+                f"{base}/{key}",
+                f"unexpected key {key!r} on {label}",
+            )
+        )
 
 
 def _present_and_not_null(
@@ -385,6 +439,15 @@ def _check_namespaced_blocks(
     # Any non-baseline top-level key is treated as a namespaced block
     # (§6.1). The owning package validates contents (§6.8.2); the
     # structural layer only checks the block is an object.
+    #
+    # DELIBERATE: the TOP LEVEL stays OPEN. ``ProjectData`` is
+    # ``extra="ignore"`` (project_data.py) precisely so steward-namespaced
+    # blocks (``reg_monabundle``, ``swecov``, ``reg_mockdata``, …) ride
+    # through without being modeled as fields. A top-level unknown key is a
+    # namespaced block, NOT an ``unexpected_field`` — do not "tighten" this
+    # to mirror the closed-object check in ``_check_unexpected_keys`` (which
+    # applies only to Source/Binding/Panel/member, the ``extra="forbid"``
+    # ``_Model`` subclasses).
     for key, value in data.items():
         if key in _TOP_LEVEL_BASELINE:
             continue
@@ -428,6 +491,7 @@ def _check_source(
     seen_names: dict[str, int],
     issues: list[ValidationIssue],
 ) -> None:
+    _check_unexpected_keys(source, _SOURCE_KEYS, base, "source", issues)
     if _present_and_not_null(source, "name", base, "source 'name'", issues):
         name = source["name"]
         if not isinstance(name, str):
@@ -536,6 +600,7 @@ def _check_binding(
     rv_prefix: list[str] | None,
     issues: list[ValidationIssue],
 ) -> None:
+    _check_unexpected_keys(binding, _BINDING_KEYS, base, "binding", issues)
     # Parsed binding FQID parts ([provider, register, slug(, version)]) once the
     # FQID is well-formed — reused by the prefix and value-set-version checks.
     variable_parts: list[str] | None = None
@@ -1009,6 +1074,7 @@ def _check_panel(
     seen_panel_ids: dict[str, int],
     issues: list[ValidationIssue],
 ) -> None:
+    _check_unexpected_keys(panel, _PANEL_KEYS, base, "panel", issues)
     if _present_and_not_null(panel, "panel_id", base, "panel 'panel_id'", issues):
         panel_id = panel["panel_id"]
         if not isinstance(panel_id, str):
@@ -1137,6 +1203,9 @@ def _check_panel_member(
         eff_time_path = f"{pbase}/time_key"
         eff_time_kind = scope.panel_time_kind
     elif isinstance(member, Mapping):
+        _check_unexpected_keys(
+            member, _PANEL_MEMBER_KEYS, mbase, "panel member", issues
+        )
         source_name = _resolve_member_source(member, mbase, issues)
 
         # Override fields (entity_key, time_key): distinguish absent
