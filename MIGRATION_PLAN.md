@@ -617,11 +617,23 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
   adapter-written (content-shared → A4.3b); `_backfill_state_classifications`
   stays scratch-coupled (value_set→classification NOT 1:1, 5,161 cases → A4.4
   with SOS classifications, the last gated window).
-- **A4.3b — SOS adapter (next, after A4.3a merges).** The SOS-specific work
-  below + generalizing value-table writing for SOS + the build-time minted-id
-  band assertion. Gate: `--providers=scb` SOS-excluded build = full dbdiff
-  exit-0 (SCB subset identical) + combined `build-db --validate` + ~2,300-row
-  sanity.
+- **A4.3b — SOS adapter (gate PASSED).** The SOS-specific work below +
+  generalizing value-table writing for SOS (INSERT-OR-IGNORE + read-back hybrid,
+  content-shared with SCB; full materializer-owned Path B deferred) + the
+  build-time minted-id band assertion. **Gate result:** `--providers=scb` build =
+  full dbdiff exit-0 vs the A4.3a baseline (`[IDENTICAL]`, 25/25 tables — the
+  moved `idx_variable_state_unique` had to stay single-line so its verbatim
+  `sqlite_master.sql` text matches); combined `--providers=scb,sos --skip-slugs
+  --validate` clean (band disjointness, SOS code_variable_map coverage, SOS
+  sanity 13 registers / 1,730 variables / 1,956 states; stateless WARN non-gating);
+  EKB/DORS/LMED states kept (602/235/137); LOVA/LVM warned-not-silent (zero states
+  + 308 `sos_deldatamangd_unresolved` warnings). **Resolved forks:** fail-soft
+  same-name split (BU/PAR allow-list); MFR IVF_klinik entity-registry collapse;
+  advisory deldatamängd bound (variable+code window authoritative, contradiction
+  WARNs); warn-don't-map for unresolved LOVA/LVM deldatamängder (code→variant
+  mapping → A4.4). **CLI `--providers` default stays `scb`** (SOS opt-in) until
+  A4.5 flips it — the strict slug-coverage gate fails for the 13 SOS registers
+  until A4.4 ships `sos.toml`, so the combined gate build runs `--skip-slugs`.
 
 - `reg_meta_build/sources/sos.py` `SOSAdapter` implementing `IRAdapter`
 - Consumes the 13 SOS workbooks via existing parser at `reg_meta_build/src/reg_meta_build/sources/sos.py`
@@ -669,6 +681,10 @@ kept in `import_manifest` + written to provenance, removal deferred to A4.4+.
 
 ### [ ] A4.5 — First combined SCB+SOS build
 
+- **Flip the CLI `build-db --providers` default from `scb` to `scb,sos`** (A4.3b
+  kept it `scb` so the bare default build stayed green while SOS lacked curated
+  slugs). Now that A4.4 has shipped `sos.toml`, the default combined build passes
+  the strict slug-coverage gate without `--skip-slugs`.
 - CI pipeline produces `reg_meta.db` containing both providers
 - Verify cross-provider FTS doesn't bleed
 - Verify no ID collisions (BLAKE2b top-bit namespace held)

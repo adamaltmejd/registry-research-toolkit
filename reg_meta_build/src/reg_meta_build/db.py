@@ -48,8 +48,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
     from pathlib import Path
 
-    from .sources.scb import SCBAdapter
-
 # Built-in data providers. `provider_id` values are stable: rows reference them
 # from `register.provider_id`. Add new providers by appending — never renumber.
 PROVIDER_ID_SCB = 1
@@ -436,18 +434,31 @@ CREATE INDEX idx_variable_state_variable
     ON variable_state(variable_id);
 CREATE INDEX idx_variable_state_register_variant
     ON variable_state(register_variant_id);
--- NOTE: the §5.1 state-uniqueness index — UNIQUE(variable_id,
--- register_variant_id, valid_from, value_set_version_label) — is intentionally
--- NOT in this base DDL. `_coalesce_variable_states` emits one PRE-TRIAGE row
--- per (… data_type, data_length, value_set_id, value_set_version_label, grain)
--- group, so a same-year variable with multiple grains / codings / shapes
--- produces several rows that share (variable_id, register_variant_id,
--- valid_from) and carry value_set_version_label = '' — they'd collide before
--- A2.2 triage folds them (→ value_set_version_label-discriminated states),
--- splits them (→ sibling variable_ids), or collapses drift. The invariant only
--- holds POST-triage, so `_coalesce_variable_states` CREATEs the unique index
--- itself, after triage runs (idx_variable_state_unique). value_set_version_label
--- stays NOT NULL DEFAULT '' so the index bites in the common single-version case.
+-- §5.1 state-uniqueness index — UNIQUE(variable_id, register_variant_id,
+-- valid_from, value_set_version_label). A4.3b moved it into the base DDL (was
+-- created by `_coalesce_variable_states` after SCB triage). Rationale: it is a
+-- structural invariant of the universal `variable_state` shape, not an SCB
+-- artifact — two adapters (SCB coalescer, SOS reinsert) each CREATE-ing it is a
+-- footgun, and with it in the DDL from table creation BOTH the SCB coalescer's
+-- post-triage bulk INSERT and the materializer's `_reinsert_core_graph_from_ir`
+-- get the loud-collision guarantee with no per-adapter coordination.
+--   The invariant only holds POST-triage: `_coalesce_variable_states` emits one
+-- PRE-TRIAGE row per (… data_type, data_length, value_set_id,
+-- value_set_version_label, grain) group, so a same-year variable with multiple
+-- grains / codings / shapes produces several rows that share (variable_id,
+-- register_variant_id, valid_from) and carry value_set_version_label = '' — they
+-- collide before A2.2 triage folds them (→ value_set_version_label-discriminated
+-- states), splits them (→ sibling variable_ids), or collapses drift. SCB triage
+-- writes its rows POST-fold/split (collision-free), and SOS emits one state per
+-- distinct windowed (variable, variant, valid_from, version_label), so both feed
+-- the index collision-free; a CREATE-time collision would surface a residual
+-- triage/era bug loudly. value_set_version_label stays NOT NULL DEFAULT '' so the
+-- index bites in the common single-version case. Byte-identity: SQLite stores
+-- the CREATE text verbatim in sqlite_master.sql, so this statement is kept on a
+-- single line to match the exact text the A4.3a SCB coalescer submitted (a
+-- reflowed multi-line form is a real dbdiff schema diff even though the index is
+-- semantically identical). Confirmed exit-0 vs the A4.3a baseline.
+CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label);
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;
@@ -2114,6 +2125,7 @@ def link_variable_state_lineage(
 # carries None / open-ended, so the materializer reconciles them at the insert
 # site (plan §4 "None-to-sentinel reconciliation").
 _VALID_TO_SENTINEL = "9999-12-31"  # variable_state.valid_to open-ended
+_VALID_FROM_UNKNOWN = "0001-01-01"  # variable_state.valid_from start unknown
 
 
 def _reinsert_core_graph_from_ir(
@@ -2297,17 +2309,32 @@ def _provider_id_for(provider: str) -> int:
 
 def materialize(
     conn: sqlite3.Connection,
-    adapter: SCBAdapter,
+    adapters: list[tuple[Any, Path]],
     *,
-    source_dir: Path,
     seed_path: Path | None,
     cls_dir: Path,
     skip_classifications: bool,
     slug_dir: Path | None,
     skip_slugs: bool,
 ) -> dict[str, Any]:
-    """Consume the adapter's IR stream and run the provider-blind derivation
-    post-passes, writing the universal SQLite catalog.
+    """Consume EACH adapter's IR stream and run the provider-blind derivation
+    post-passes ONCE over the combined graph, writing the universal catalog.
+
+    A4.3b — multi-adapter loop: ``adapters`` is a list of ``(adapter,
+    source_dir)`` pairs (SCB then SOS). The PER-ADAPTER work (emit -> buffer ->
+    value-table writes) runs in a loop, accumulating into combined IR buffers;
+    `_reinsert_core_graph_from_ir` then writes the combined core graph ONCE, and
+    the SHARED post-passes (classifications, slugs, same_as, replaced_by,
+    lineage, code_variable_map, classification backfill, scratch DROPs, FTS) run
+    ONCE over both providers' rows. Each adapter's
+    `row_counts`/`source_checksums`/`related_edges`/`fold_slug_hints` and the
+    provenance sinks are MERGED into combined structures the post-passes consume
+    once. SCB-only stats (`projection_stats`, `coalesce_stats`) come from the SCB
+    adapter; the SCB `code_variable_map` coverage guard reads SCB scratch
+    (`variable_instance`) and stays SCB-only (SOS coverage is policed in
+    `validate.py`). The scratch DROPs run ONCE after both adapters reinsert + the
+    shared post-passes — never double-dropped (a naive second `materialize()`
+    call would re-DROP already-dropped tables; the loop avoids that).
 
     Provider-blind boundary (A4.3a — the provider-blindness flip): the adapter
     derives SCB's exact legacy IDs by writing the core graph + its SCB-named
@@ -2377,62 +2404,116 @@ def materialize(
     variables: list[IRVariable] = []
     states: list[IRVariableState] = []
     aliases: list[IRVariableAlias] = []
-    for obj in adapter.emit(source_dir):
-        if isinstance(obj, IRRegister):
-            registers.append(obj)
-            # Provenance source-ID linkage rides on the IR (no re-query of the
-            # universal `register` table — the SCB-native `Registernamn` is on
-            # IRRegister.name). Provider-blind: materialize() never reads a
-            # provider-specific column back.
-            scb_register_id_map.append((obj.register_id, obj.name))
-        elif isinstance(obj, IRVariant):
-            variants.append(obj)
-        elif isinstance(obj, IRVariable):
-            variables.append(obj)
-        elif isinstance(obj, IRVariableState):
-            states.append(obj)
-        elif isinstance(obj, IRValueSet):
-            # A4.3a scope: value_set / value_code / value_set_member stay
-            # adapter-written (content-addressed, counter-derived, PROVIDER-SHARED
-            # BY CONTENT — not provider-shaped; year-projection can leave orphan
-            # value_codes the member-derived IR stream can't reproduce). Nothing
-            # to collect; the rows are already materialized.
-            pass
-        elif isinstance(obj, IRVariableAlias):
-            aliases.append(obj)
-        elif isinstance(obj, IRWarning):
-            adapter_warnings.append(
-                (adapter.provider, obj.entity_kind, obj.entity_id, obj.code, obj.detail)
-            )
-        elif isinstance(obj, IRDeliveryProvenance):
-            # One delivery_approval row per (variant, period_token); union the
-            # first/last-approval token sets so a token present in only one
-            # still gets a row. Sorted for deterministic insert order. The four
-            # A4.3a delivery fields are per-variant, repeated across the period
-            # rows (SCB: only source_file is set).
-            first = obj.first_approval_dates or {}
-            last = obj.last_approval_dates or {}
-            delivery_date = obj.delivery_date.isoformat() if obj.delivery_date else None
-            for token in sorted(set(first) | set(last)):
-                delivery_approvals.append(
+    # Combined manifest inputs + the side channels the post-passes consume once.
+    row_counts: dict[str, Any] = {}
+    source_checksums: dict[str, str] = {}
+    related_edges: list[tuple[int, int, str]] = []
+    fold_slug_hints: dict[int, str] = {}
+    # SCB-only stats (the SOS adapter has no projection/coalesce passes). The SCB
+    # adapter is the only one that populates these; default to empty / zeroed for
+    # an SCB-excluded (`--providers=sos`) build.
+    state_stats: dict[str, Any] = {}
+    projection_stats: dict[str, int] = {
+        "n_value_sets": 0,
+        "cvids_with_set": 0,
+        "cvids_empty_after_projection": 0,
+    }
+    # Whether the SCB adapter is in this build. Only SCB writes build-scratch
+    # (`variable_instance`, `variable_alias_build`, `register_version`, ...); the
+    # SCB-only coverage guard + the scratch DROPs run only when SCB ran (an
+    # SCB-excluded `--providers=sos` build has no scratch to read or drop).
+    scb_ran = any(a.provider == "scb" for a, _ in adapters)
+
+    # A4.3b multi-adapter loop. Per adapter: drain its IR stream into the COMBINED
+    # buffers (the DELETE-then-reinsert flip can't reinsert until every adapter's
+    # emit() has drained — SCB is still writing those tables during iteration;
+    # SOS writes none), and MERGE its row_counts/source_checksums/related_edges/
+    # fold_slug_hints. The reinsert + shared post-passes then run ONCE below.
+    for adapter, source_dir in adapters:
+        for obj in adapter.emit(source_dir):
+            if isinstance(obj, IRRegister):
+                registers.append(obj)
+                # Provenance source-ID linkage rides on the IR (no re-query of
+                # the universal `register` table). SCB only: the provenance DB's
+                # `scb_register_id_map` records the SCB-native `Registernamn`.
+                if obj.provider == "scb":
+                    scb_register_id_map.append((obj.register_id, obj.name))
+            elif isinstance(obj, IRVariant):
+                variants.append(obj)
+            elif isinstance(obj, IRVariable):
+                variables.append(obj)
+            elif isinstance(obj, IRVariableState):
+                states.append(obj)
+            elif isinstance(obj, IRValueSet):
+                # value_set / value_code / value_set_member are adapter-written
+                # (content-addressed, PROVIDER-SHARED BY CONTENT). SCB writes
+                # them directly; SOS writes them via INSERT OR IGNORE + read-back
+                # so an identical code list collapses onto SCB's row. Nothing to
+                # collect here.
+                pass
+            elif isinstance(obj, IRVariableAlias):
+                aliases.append(obj)
+            elif isinstance(obj, IRWarning):
+                adapter_warnings.append(
                     (
-                        obj.register_id,
-                        obj.register_variant_id,
-                        token,
-                        first.get(token),
-                        last.get(token),
-                        obj.source_file,
-                        obj.delivery_version,
-                        delivery_date,
-                        obj.template_version,
+                        adapter.provider,
+                        obj.entity_kind,
+                        obj.entity_id,
+                        obj.code,
+                        obj.detail,
                     )
                 )
+            elif isinstance(obj, IRDeliveryProvenance):
+                # One delivery_approval row per (variant, period_token); union
+                # the first/last-approval token sets. When that union is empty,
+                # the adapter's `emit_when_no_tokens` flag decides whether to
+                # still record one bare-token row: SCB leaves it False (empty
+                # dicts → zero rows, the A4.2 behavior), SOS sets it True so the
+                # variant's delivery metadata survives. The decision lives at the
+                # IR boundary, keeping this loop provider-blind.
+                first = obj.first_approval_dates or {}
+                last = obj.last_approval_dates or {}
+                delivery_date = (
+                    obj.delivery_date.isoformat() if obj.delivery_date else None
+                )
+                tokens = sorted(set(first) | set(last))
+                if not tokens and obj.emit_when_no_tokens:
+                    tokens = [""]
+                for token in tokens:
+                    delivery_approvals.append(
+                        (
+                            obj.register_id,
+                            obj.register_variant_id,
+                            token,
+                            first.get(token),
+                            last.get(token),
+                            obj.source_file,
+                            obj.delivery_version,
+                            delivery_date,
+                            obj.template_version,
+                        )
+                    )
+        # Merge this adapter's manifest inputs + side channels.
+        row_counts.update(adapter.row_counts)
+        source_checksums.update(adapter.source_checksums)
+        related_edges.extend(adapter.related_edges)
+        fold_slug_hints.update(adapter.fold_slug_hints)
+        if adapter.provider == "scb":
+            state_stats = adapter.coalesce_stats
+            projection_stats = {
+                "n_value_sets": adapter.projection_stats.n_value_sets,
+                "cvids_with_set": adapter.projection_stats.cvids_with_set,
+                "cvids_empty_after_projection": (
+                    adapter.projection_stats.cvids_empty_after_projection
+                ),
+            }
+
     _progress(
         f"  IR stream: collected {len(delivery_approvals):,} delivery-approval + "
         f"{len(adapter_warnings):,} warning row(s) for the provenance DB"
     )
 
-    # The flip: re-insert the shipped core graph from the IR (sole-writer).
+    # The flip: re-insert the combined core graph from the IR (sole-writer).
     _reinsert_core_graph_from_ir(
         conn,
         registers=registers,
@@ -2441,9 +2522,6 @@ def materialize(
         states=states,
         aliases=aliases,
     )
-
-    row_counts = adapter.row_counts
-    state_stats = adapter.coalesce_stats
 
     # Classifications — maintainer-curated normalized code systems.
     if skip_classifications:
@@ -2502,7 +2580,7 @@ def materialize(
         # scb.toml win; the rest auto-derive into scb.auto.toml. `fold_slugs`
         # is the adapter's R8 build-only side channel (NOT an IR object).
         var_slug_counts = populate_variable_slugs(
-            conn, slug_root, fold_slugs=adapter.fold_slug_hints
+            conn, slug_root, fold_slugs=fold_slug_hints
         )
         row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
         row_counts["variable_slugs_auto"] = (
@@ -2512,7 +2590,7 @@ def materialize(
         # §5.7 split-sibling edges. Runs after variable slugs so each
         # sibling variable_id resolves to its FQID slug; the triage emitted
         # the (variable_id, variable_id, kind) pairs during coalescing.
-        n_related = _materialize_variable_related_to(conn, adapter.related_edges)
+        n_related = _materialize_variable_related_to(conn, related_edges)
         row_counts["variable_related_to"] = n_related
         _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
 
@@ -2614,33 +2692,37 @@ def materialize(
     # dropping it from value search. (`variable_instance` is SCB scratch, still
     # present here, dropped below. The LOSS direction survives A4.3b: SOS adds
     # rows the scratch lacks, but the SCB subset stays covered. A4.3b adds an
-    # equivalent guard for SOS, whose coverage the dbdiff cannot police.)
-    lost = conn.execute(
-        "SELECT vi.variable_id, vsm.code_id "
-        "FROM variable_instance vi "
-        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-        "WHERE vi.variable_id IS NOT NULL "
-        "EXCEPT SELECT variable_id, code_id FROM code_variable_map "
-        "LIMIT 1"
-    ).fetchone()
-    if lost is not None:
-        raise RegMetaError(
-            exit_code=EXIT_INTERNAL,
-            code="code_variable_map_coverage_loss",
-            error_class="internal",
-            message=(
-                f"code_variable_map (variable_state-derived) lost a "
-                f"(variable_id={lost[0]}, code_id={lost[1]}) pair the cvid-stamped "
-                f"scratch carries: a collapsed/dropped cvid holds a code absent "
-                f"from every surviving variable_state of that variable."
-            ),
-            remediation=(
-                "The variable_state-based code_variable_map derivation must "
-                "account for codes that only appeared in a _collapse_residual'd "
-                "cvid (A4.3a re-point; Codex P2). Ensure every code-bearing cvid "
-                "yields a variable_state, or extend the derivation."
-            ),
-        )
+    # equivalent guard for SOS in validate.py, whose coverage the dbdiff cannot
+    # police.) Guarded on `scb_ran`: `variable_instance` only exists when the SCB
+    # adapter ran (an SCB-excluded build has no scratch).
+    if scb_ran:
+        lost = conn.execute(
+            "SELECT vi.variable_id, vsm.code_id "
+            "FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "WHERE vi.variable_id IS NOT NULL "
+            "EXCEPT SELECT variable_id, code_id FROM code_variable_map "
+            "LIMIT 1"
+        ).fetchone()
+        if lost is not None:
+            raise RegMetaError(
+                exit_code=EXIT_INTERNAL,
+                code="code_variable_map_coverage_loss",
+                error_class="internal",
+                message=(
+                    f"code_variable_map (variable_state-derived) lost a "
+                    f"(variable_id={lost[0]}, code_id={lost[1]}) pair the "
+                    f"cvid-stamped scratch carries: a collapsed/dropped cvid holds "
+                    f"a code absent from every surviving variable_state of that "
+                    f"variable."
+                ),
+                remediation=(
+                    "The variable_state-based code_variable_map derivation must "
+                    "account for codes that only appeared in a _collapse_residual'd "
+                    "cvid (A4.3a re-point; Codex P2). Ensure every code-bearing cvid "
+                    "yields a variable_state, or extend the derivation."
+                ),
+            )
 
     # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
     # already wrote `variable_alias` from IRVariableAlias (the FULL historical
@@ -2655,7 +2737,9 @@ def materialize(
     # cvid-level linkage cannot be replaced by a value_set-derived map; re-pointing
     # this backfill provider-blind is an A4.4 concern (with SOS classifications,
     # the last gated window). It UPDATEs the IR-inserted `variable_state` rows
-    # unchanged. Last reader of `variable_instance` before the DROP below.
+    # unchanged. Last reader of `variable_instance` before the DROP below. The
+    # scratch tables are in the BASE DDL (present even in an SCB-excluded build,
+    # just empty), so the backfill is a safe no-op there and the DROPs always run.
     _backfill_state_classifications(conn)
 
     # A2.7: drop `variable_instance` + its cvid-grained alias staging before
@@ -2712,13 +2796,9 @@ def materialize(
     scb_register_id_map.sort()
 
     return {
-        "source_checksums": adapter.source_checksums,
+        "source_checksums": source_checksums,
         "row_counts": row_counts,
-        "projection_stats": {
-            "n_value_sets": adapter.projection_stats.n_value_sets,
-            "cvids_with_set": adapter.projection_stats.cvids_with_set,
-            "cvids_empty_after_projection": adapter.projection_stats.cvids_empty_after_projection,
-        },
+        "projection_stats": projection_stats,
         "coalesce_stats": state_stats,
         "replaced_by_stats": replaced_by_stats,
         # A4.2 provenance payload (sibling-DB only; never touches the universal
@@ -2745,15 +2825,27 @@ def build_db(
     skip_classifications: bool = False,
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
+    providers: tuple[str, ...] = ("scb",),
     pre_rename_hook: Callable[[Path], None] | None = None,
     provenance_pre_rename_hook: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
-    """Build the reg_meta database from SCB CSV exports.
+    """Build the reg_meta database from the selected providers' source exports.
 
     ``input_dir`` must contain:
       - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports
+      - ``<input_dir>/Socialstyrelsen/*.xlsx``— SOS register workbooks (A4.3b;
+        required only when ``"sos"`` is in ``providers``)
       - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
         (optional; required only for seed entries that set ``valid_codes_file``)
+
+    ``providers`` selects which adapters run. Both the PROGRAMMATIC default and
+    the CLI ``--providers`` flag default to ``("scb",)`` so existing fixture
+    callers stay behavior-identical and the bare default build stays green while
+    SOS lacks curated slugs (sos.toml is A4.4); A4.5 flips the CLI default to
+    ``scb,sos``. A4.3b: SOS is purely additive (minted ids in band
+    ``[2^62, 2^63)``, content-shared value_sets), so ``providers=("scb",)``
+    reproduces the byte-identical pre-SOS SCB-only DB — the `--providers=scb`
+    dbdiff gate.
 
     Classification population is controlled by:
       - ``skip_classifications=True`` — skip entirely (tests only).
@@ -2770,7 +2862,22 @@ def build_db(
     input_dir = input_dir.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
     scb_dir = input_dir / "SCB"
+    sos_dir = input_dir / "Socialstyrelsen"
     cls_dir = input_dir / "classifications"
+
+    known = {slug for _pid, slug, _name in _PROVIDER_SEED}
+    unknown = [p for p in providers if p not in known]
+    if not providers or unknown:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="unknown_provider",
+            error_class="configuration",
+            message=(
+                f"--providers must be a non-empty subset of {sorted(known)}; "
+                f"got {list(providers)} (unknown: {unknown})."
+            ),
+            remediation=f"Pass a comma-list of known providers, e.g. {','.join(sorted(known))}.",
+        )
 
     if not input_dir.is_dir():
         raise RegMetaError(
@@ -2781,23 +2888,32 @@ def build_db(
             remediation="Provide a directory containing SCB/ and classifications/ subdirectories.",
         )
 
-    if not scb_dir.is_dir():
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="scb_dir_not_found",
-            error_class="configuration",
-            message=f"SCB subdirectory not found: {scb_dir}",
-            remediation="Place SCB metadata CSV exports under <input_dir>/SCB/.",
-        )
+    if "scb" in providers:
+        if not scb_dir.is_dir():
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_dir_not_found",
+                error_class="configuration",
+                message=f"SCB subdirectory not found: {scb_dir}",
+                remediation="Place SCB metadata CSV exports under <input_dir>/SCB/.",
+            )
+        ri_path = scb_dir / "Registerinformation.csv"
+        if not ri_path.exists():
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="csv_missing_backbone",
+                error_class="configuration",
+                message=f"Registerinformation.csv not found in {scb_dir}.",
+                remediation="Export all metadata files from mikrometadata.scb.se.",
+            )
 
-    ri_path = scb_dir / "Registerinformation.csv"
-    if not ri_path.exists():
+    if "sos" in providers and not sos_dir.is_dir():
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="csv_missing_backbone",
+            code="sos_dir_not_found",
             error_class="configuration",
-            message=f"Registerinformation.csv not found in {scb_dir}.",
-            remediation="Export all metadata files from mikrometadata.scb.se.",
+            message=f"Socialstyrelsen subdirectory not found: {sos_dir}",
+            remediation="Place SOS register workbooks under <input_dir>/Socialstyrelsen/.",
         )
 
     db_dir.mkdir(parents=True, exist_ok=True)
@@ -2831,19 +2947,24 @@ def build_db(
         # quotes/specials in the parent dir can't break or inject SQL.
         conn.execute("ATTACH DATABASE ? AS staging", (str(staging_path),))
 
-        # Provider-blind materialization (A4.1): the SCB adapter parses the
-        # native exports and emits the IR stream; `materialize` dispatches it
-        # and runs the derivation post-passes. `materialize` returns the
-        # manifest inputs (checksums, row counts, projection/coalesce/replaced_by
-        # stats). Imported here (function-local) to break the db ↔ sources.scb
-        # import cycle — `sources.scb` imports shared infra from this module.
+        # Provider-blind materialization. Each selected adapter parses its native
+        # exports and emits the IR stream; `materialize` loops over them and runs
+        # the shared derivation post-passes ONCE. Adapters imported function-local
+        # to break the db ↔ sources.* import cycle (those modules import shared
+        # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
+        # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
         from .sources.scb import SCBAdapter
+        from .sources.sos import SOSAdapter
 
-        adapter = SCBAdapter(conn)
+        adapters: list[tuple[Any, Path]] = []
+        if "scb" in providers:
+            adapters.append((SCBAdapter(conn), scb_dir))
+        if "sos" in providers:
+            adapters.append((SOSAdapter(conn), sos_dir))
+
         mat = materialize(
             conn,
-            adapter,
-            source_dir=scb_dir,
+            adapters,
             seed_path=seed_path,
             cls_dir=cls_dir,
             skip_classifications=skip_classifications,

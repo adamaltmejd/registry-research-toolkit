@@ -51,6 +51,30 @@ def test_mint_is_deterministic() -> None:
     assert mint("sos", "par") != mint("scb", "par")
 
 
+def test_sos_mint_grammar_tuples_pinned() -> None:
+    """A4.3b SOS mint grammar (resolved fork d), pinned so a refactor that
+    changes the key tuple is caught (it would silently re-id the whole SOS
+    subset and break rebuild stability):
+      register = mint("sos", <abbrev>)
+      variant  = mint("sos", <abbrev>, <deldatamangd>)  (synth -> "_default")
+      variable = mint("sos", <abbrev>, <var.name>)
+      split sibling = mint("sos", <abbrev>, <var.name>, <shape discriminator>)
+      state    = mint("sos", "state", <variable_id>, <variant_id>, <from>, <label>)
+    The four grains are distinct for a shared key, and each lands in the minted
+    band [2^62, 2^63)."""
+    register = mint("sos", "par")
+    variant = mint("sos", "par", "PAR_SV")
+    variable = mint("sos", "par", "ATC")
+    sibling = mint("sos", "par", "ATC", "heltal:")
+    state = mint("sos", "state", str(variable), str(variant), "2001-01-01", "")
+    ids = {register, variant, variable, sibling, state}
+    assert len(ids) == 5, "the five SOS grains mint distinct ids"
+    for v in ids:
+        assert _LOW <= v < _HIGH
+    # The synthesized-variant token is the literal "_default".
+    assert mint("sos", "lss", "_default") != mint("sos", "lss")
+
+
 def test_mint_encoding_is_unambiguous() -> None:
     """Length-prefixing the parts makes the encoding unambiguous: tuples that
     would collide under a plain ``/``-join (the same joined string) mint
