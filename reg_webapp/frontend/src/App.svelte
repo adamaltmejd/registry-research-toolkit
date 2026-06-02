@@ -1,8 +1,10 @@
 <script lang="ts">
 import { onMount } from "svelte";
-import { ApiError, type Context, getContext } from "./lib/api";
+import { type Context, errMessage, getContext } from "./lib/api";
 import CatalogNodeView from "./lib/CatalogNodeView.svelte";
 import CatalogRoot from "./lib/CatalogRoot.svelte";
+import ProjectEditor from "./lib/ProjectEditor.svelte";
+import { projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
 
 // The shell: a header with steward branding (GET /api/context) + a catalog-drift
@@ -12,19 +14,39 @@ let context = $state<Context | null>(null);
 let contextError = $state<string | null>(null);
 
 // The deployment context is app-global and immutable for the session — fetch
-// once at mount (not an $effect that could re-run).
+// once at mount (not an $effect that could re-run). Also wire the §9.7
+// beforeunload warning: a tab/window close with a dirty draft prompts the
+// browser's native "leave site?" dialog (autosaved-but-not-downloaded state is
+// recoverable from IndexedDB in A5.4, but the file download is the durable copy).
 onMount(() => {
   getContext()
     .then((resp) => {
       context = resp;
     })
     .catch((e) => {
-      contextError = e instanceof ApiError ? e.message : String(e);
+      contextError = errMessage(e);
     });
+
+  const onBeforeUnload = (event: BeforeUnloadEvent) => {
+    if (projectStore.dirty) {
+      event.preventDefault();
+      // Legacy assignment kept for older browsers that gate the prompt on it.
+      event.returnValue = "";
+    }
+  };
+  window.addEventListener("beforeunload", onBeforeUnload);
+  return () => window.removeEventListener("beforeunload", onBeforeUnload);
 });
 
 const route = $derived(router.route);
 const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
+// The deployment's bare reg_meta package version + its steward id, seeded into a
+// new project's skeleton (ProjectEditor formats the version into a `reg_meta/v`
+// release tag). Both fall back to the empty string until /api/context resolves (a
+// new project before the context loads is an edge case; the seed is corrected on
+// the next New).
+const regMetaVersion = $derived(context?.webapp.reg_meta_version ?? "");
+const steward = $derived(context?.steward.id ?? "");
 </script>
 
 <!-- Click interception is delegated from the root container via the `link`
@@ -43,6 +65,13 @@ const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
         <span class="steward-id">{context.steward.id}</span>
       {/if}
     </div>
+    <nav class="nav">
+      <a href="/catalog" class:active={route.name === "root" || route.name === "catalog-node"}>Catalog</a>
+      <a href="/project" class:active={route.name === "project"}>
+        Project
+        {#if projectStore.dirty}<span class="nav-dirty" title="Unsaved changes">●</span>{/if}
+      </a>
+    </nav>
     {#if context}
       <div class="build muted" title="reg_meta DB build / installed versions">
         schema {context.reg_meta.schema_version} · webapp {context.webapp.version}
@@ -77,6 +106,8 @@ const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
       {#key route.fqidPath}
         <CatalogNodeView fqidPath={route.fqidPath} />
       {/key}
+    {:else if route.name === "project"}
+      <ProjectEditor {regMetaVersion} {steward} />
     {:else}
       <article>
         <h2>Not found</h2>
@@ -151,6 +182,23 @@ const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
     font-family: ui-monospace, monospace;
     font-size: 0.8rem;
     color: var(--muted);
+  }
+  .nav {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .nav a {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .nav a.active {
+    color: var(--accent);
+  }
+  .nav-dirty {
+    color: #d97706;
+    font-size: 0.7rem;
+    vertical-align: super;
   }
   .build {
     font-size: 0.8rem;

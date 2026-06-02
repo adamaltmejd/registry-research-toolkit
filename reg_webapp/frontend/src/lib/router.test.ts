@@ -54,6 +54,11 @@ describe("parseRoute", () => {
     });
   });
 
+  it("parses the /project authoring route (A5.3c)", () => {
+    expect(parseRoute("/project")).toEqual({ name: "project" });
+    expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash
+  });
+
   it("maps anything else to not-found", () => {
     expect(parseRoute("/about")).toEqual({ name: "not-found", path: "/about" });
   });
@@ -124,6 +129,10 @@ describe("onNavClick", () => {
 
   it("intercepts an SPA route under /catalog", () => {
     expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
+  });
+
+  it("intercepts the /project authoring route (A5.3c)", () => {
+    expect(clickAnchor("/project").defaultPrevented).toBe(true);
   });
 });
 

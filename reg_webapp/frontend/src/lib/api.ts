@@ -54,6 +54,13 @@ function messageFromBody(status: number, body: unknown): string {
   return `Request failed (HTTP ${status})`;
 }
 
+/** Normalize a caught `unknown` into a banner-ready message: an `Error`'s
+ * `message` (covers `ApiError`, whose `message` is already human-readable), else
+ * `String(e)`. Shared by the catch arms in the store + App shell. */
+export function errMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
+
 /**
  * GET `path` (relative to `/api`) and return the parsed JSON typed as `T`.
  * Throws `ApiError` on any non-2xx response, parsing a JSON error body when it
@@ -74,6 +81,104 @@ export async function apiGet<T>(path: string): Promise<T> {
     throw new ApiError(resp.status, body, messageFromBody(resp.status, body));
   }
   return (await resp.json()) as T;
+}
+
+/**
+ * POST `body` as JSON to `path` (relative to `/api`) and return the parsed JSON
+ * typed as `T`. Throws `ApiError` on any NON-2xx response (parsing a JSON error
+ * body when present). Used for `/project/validate`, where a non-2xx is a malformed
+ * REQUEST (a 4xx from `read_raw_json_object` / the body cap) — NOT a validation
+ * failure: a validation failure is a 200 with `ok:false`, which this RETURNS
+ * (see `validateProject`).
+ */
+export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) {
+    let errBody: unknown = null;
+    try {
+      errBody = await resp.json();
+    } catch {
+      // Non-JSON error body — leave null.
+    }
+    throw new ApiError(
+      resp.status,
+      errBody,
+      messageFromBody(resp.status, errBody),
+    );
+  }
+  return (await resp.json()) as T;
+}
+
+/**
+ * POST `body` as JSON to `path` and trigger a browser file download of the 2xx
+ * response blob. The filename is taken from the response's `Content-Disposition`
+ * (`attachment; filename="..."`), falling back to `fallbackFilename`. A non-2xx is
+ * an `ApiError` (the backend's 400/422 — a malformed request or an invalid spec
+ * the download endpoints reject, unlike `/validate`'s 200 diagnosis). Used for the
+ * CSV order export + the MONA bundle (`/project/order`, `/bundle`).
+ *
+ * The download is wired with a transient `<a download>` + `createObjectURL`,
+ * revoked after the click — the standard no-dep blob-download pattern.
+ */
+export async function apiPostForBlob(
+  path: string,
+  body: unknown,
+  fallbackFilename: string,
+): Promise<void> {
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) {
+    let errBody: unknown = null;
+    try {
+      errBody = await resp.json();
+    } catch {
+      // Non-JSON error body — leave null.
+    }
+    throw new ApiError(
+      resp.status,
+      errBody,
+      messageFromBody(resp.status, errBody),
+    );
+  }
+  const blob = await resp.blob();
+  const filename =
+    filenameFromContentDisposition(resp.headers.get("content-disposition")) ??
+    fallbackFilename;
+  triggerDownload(blob, filename);
+}
+
+/** Parse the `filename="..."` out of a `Content-Disposition` header, or `null`
+ * when absent/unparseable. Only the simple quoted form the backend emits
+ * (`attachment; filename="order.csv"`) is handled — that's all the contract
+ * produces. */
+function filenameFromContentDisposition(header: string | null): string | null {
+  if (!header) {
+    return null;
+  }
+  const match = /filename="?([^"]+)"?/.exec(header);
+  return match ? match[1] : null;
+}
+
+/** Save `blob` to the user's filesystem under `filename` via a transient
+ * `<a download>` + an object URL (revoked after the click). Shared by
+ * `apiPostForBlob` (server blobs) and the store's local project_data.json
+ * download. */
+export function triggerDownload(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
 }
 
 // ── Typed endpoint helpers ─────────────────────────────────────────────────
@@ -186,4 +291,44 @@ export function getBindingLineageWarnings(
   return apiGet<LineageWarningsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
   );
+}
+
+// ── Project write surface (§9.5, A5.2b-ii) ──────────────────────────────────
+// The three POST endpoints the authoring SPA drives. Each takes the WHOLE
+// serialized draft as an open object (the requestBodies are
+// `additionalProperties: true`), so steward-namespaced blocks ride along — the
+// backend embeds the raw dict (routes/project.py, routes/bundle.py).
+
+export type ValidationResultModel = Schemas["ValidationResultModel"];
+
+/** A serialized project_data.json draft posted to the write endpoints — an open
+ * object (the backend reads it raw, preserving namespaced blocks). */
+export type ProjectDataBody = Record<string, unknown>;
+
+/**
+ * POST a draft to `/api/project/validate` and RETURN the 200
+ * `ValidationResultModel` (`{ok, issues}`). A validation FAILURE is a 200 with
+ * `ok:false` — this NEVER throws on `ok:false`; the caller renders the issues.
+ * Only a true 4xx (a malformed REQUEST — bad JSON / oversized body, from the
+ * backend's `read_raw_json_object` / body cap) throws an `ApiError` (shown as a
+ * banner, distinct from the issue list). §9.6: no client-side structural
+ * validator — the backend is canonical; the SPA mirrors codes for presentation.
+ */
+export function validateProject(
+  draft: ProjectDataBody,
+): Promise<ValidationResultModel> {
+  return apiPostJson<ValidationResultModel>("/project/validate", draft);
+}
+
+/** POST a draft to `/api/project/order` and download the rendered order-export
+ * CSV. A structurally invalid spec is the backend's 422 (an `ApiError`) — unlike
+ * `/validate`, the order endpoint cannot render from an invalid spec. */
+export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
+  return apiPostForBlob("/project/order", draft, "order.csv");
+}
+
+/** POST a draft to `/api/bundle` and download the single-file MONA `.py` bundle.
+ * A build-gate failure (bad input) is the backend's 422 (an `ApiError`). */
+export function downloadBundle(draft: ProjectDataBody): Promise<void> {
+  return apiPostForBlob("/bundle", draft, "mona_bundle.py");
 }

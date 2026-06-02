@@ -8,6 +8,7 @@ import {
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
+  validateProject,
 } from "./api";
 
 // Stub the global fetch per test. jsdom provides `Response`, but we hand-build
@@ -164,6 +165,73 @@ describe("binding sub-endpoint helpers", () => {
     });
     await getBindingPredecessors("scb/lisa/kön");
     expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n/predecessors");
+  });
+});
+
+describe("validateProject", () => {
+  it("RETURNS the 200 ok:false body WITHOUT throwing (a validation failure is not a 4xx)", async () => {
+    const body = {
+      ok: false,
+      issues: [
+        {
+          level: "error",
+          code: "unexpected_field",
+          path: "/sources/0/bindings/0/typ",
+          message: "unexpected key 'typ' on binding",
+        },
+      ],
+    };
+    stubFetch(async () => ({ ok: true, status: 200, json: async () => body }));
+    const result = await validateProject({ schema_version: "2.0.0" });
+    expect(result.ok).toBe(false);
+    expect(result.issues).toHaveLength(1);
+    expect(result.issues[0].code).toBe("unexpected_field");
+  });
+
+  it("RETURNS the 200 ok:true body for a clean spec", async () => {
+    stubFetch(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, issues: [] }),
+    }));
+    const result = await validateProject({ schema_version: "2.0.0" });
+    expect(result.ok).toBe(true);
+    expect(result.issues).toEqual([]);
+  });
+
+  it("POSTs the whole draft as JSON to /api/project/validate", async () => {
+    let seenUrl = "";
+    let seenInit: RequestInit | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string, init?: RequestInit) => {
+        seenUrl = url;
+        seenInit = init;
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({ ok: true, issues: [] }),
+        });
+      }),
+    );
+    const draft = { schema_version: "2.0.0", reg_monabundle: { x: 1 } };
+    await validateProject(draft);
+    expect(seenUrl).toBe("/api/project/validate");
+    expect(seenInit?.method).toBe("POST");
+    // The namespaced block rides along in the posted body (the raw-dict embed).
+    expect(JSON.parse(seenInit?.body as string)).toEqual(draft);
+  });
+
+  it("throws ApiError on a true 4xx (a malformed request)", async () => {
+    stubFetch(async () => ({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: "request body is not a JSON object" }),
+    }));
+    const err = (await validateProject({}).catch((e) => e)) as ApiError;
+    expect(err).toBeInstanceOf(ApiError);
+    expect(err.status).toBe(400);
+    expect(err.message).toBe("request body is not a JSON object");
   });
 });
 
