@@ -132,8 +132,11 @@ describe("router reactive query (A5.3b)", () => {
   // each case (jsdom's pushState updates `window.location`). Re-sync the signal
   // via `navigate` so the singleton's `search` matches the reset location.
   beforeEach(() => {
-    window.history.pushState({}, "", "/catalog/scb/lisa/kon");
-    // navigate() updates the reactive `search` after pushState.
+    // Reset to a KNOWN location DIFFERENT from the target first, so the navigate
+    // below isn't a no-op (the guard compares the full URL) and actually re-syncs
+    // the singleton's reactive route/search regardless of where a prior test left
+    // it.
+    window.history.pushState({}, "", "/");
     router.navigate("/catalog/scb/lisa/kon");
   });
   afterEach(() => {

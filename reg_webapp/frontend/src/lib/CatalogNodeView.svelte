@@ -15,10 +15,18 @@ import VariantBrowser from "./VariantBrowser.svelte";
 let { fqidPath }: { fqidPath: string } = $props();
 
 const resource = asyncResource(() => getCatalogNode(fqidPath));
+// A browsable path resolves to a `kind`-tagged CatalogNode. A SUB-ENDPOINT path
+// (e.g. a deep-link to `.../states` or `.../variants`) hits that endpoint and
+// returns a no-`kind` StatesResponse/VariantsResponse — narrow it OUT of `node`
+// (so the kind-switch type-checks) and flag it as `notBrowsable` so we render a
+// clear message instead of a blank page.
 const node = $derived.by(() => {
   const data = resource.data;
-  return data === null || isStatesResponse(data) ? null : data;
+  return data !== null && !isStatesResponse(data) ? data : null;
 });
+const notBrowsable = $derived(
+  resource.data !== null && isStatesResponse(resource.data),
+);
 const crumbs = $derived(breadcrumbs(fqidPath));
 </script>
 
@@ -114,16 +122,16 @@ const crumbs = $derived(breadcrumbs(fqidPath));
         <dt>Short name</dt>
         <dd>{node.short_name}</dd>
       </dl>
-    {:else}
-      <!-- A response with no recognized `kind`: a deep-link to a sub-resource
-           path (e.g. `.../variants`, `.../states`) hits that sub-endpoint, which
-           returns a VariantsResponse/StatesResponse rather than a browsable node.
-           Render a clear message instead of a blank article. -->
-      <p class="error" role="alert">
-        <code>{fqidPath}</code> isn't a browsable catalog node.
-      </p>
     {/if}
   </article>
+{:else if notBrowsable}
+  <!-- A no-`kind` response: a deep-link to a SUB-ENDPOINT path (e.g.
+       `.../states`, `.../variants`) hits that endpoint and returns a
+       StatesResponse/VariantsResponse, not a browsable node. Render a clear
+       message instead of a blank page. -->
+  <p class="error" role="alert">
+    <code>{fqidPath}</code> isn't a browsable catalog node.
+  </p>
 {/if}
 
 <style>

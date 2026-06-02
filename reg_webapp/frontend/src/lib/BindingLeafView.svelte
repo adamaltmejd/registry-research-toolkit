@@ -117,6 +117,35 @@ function setResolution(next: {
     onclear={() => setResolution({ period: null })}
   />
 
+  {#if params.variant || params.value_set_version}
+    <!-- Active narrowing modifiers, each clearable — so narrowing to one state
+         isn't a one-way trap (clearing a modifier refetches the wider set and the
+         picker reappears, letting the user switch variant/version). -->
+    <div class="active-modifiers">
+      <span class="muted">Narrowed by:</span>
+      {#if params.variant}
+        <button
+          type="button"
+          class="modifier-chip"
+          aria-label="Clear variant filter"
+          onclick={() => setResolution({ variant: null })}
+        >
+          variant: {params.variant} <span aria-hidden="true">✕</span>
+        </button>
+      {/if}
+      {#if params.value_set_version}
+        <button
+          type="button"
+          class="modifier-chip"
+          aria-label="Clear value-set version filter"
+          onclick={() => setResolution({ value_set_version: null })}
+        >
+          version: {params.value_set_version} <span aria-hidden="true">✕</span>
+        </button>
+      {/if}
+    </div>
+  {/if}
+
   {#if narrowedError}
     <!-- The full node is still shown; a bad ?period/?variant modifier 422'd.
          Surface it inline (the picker stays usable) rather than blanking. -->
@@ -171,5 +200,29 @@ function setResolution(next: {
   }
   .inline-error {
     margin: 0.5rem 0;
+  }
+  .active-modifiers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+  }
+  .modifier-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .modifier-chip:hover {
+    background: var(--surface);
   }
 </style>
