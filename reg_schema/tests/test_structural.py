@@ -521,6 +521,79 @@ def test_empty_bindings_emits_explicit_code() -> None:
     assert _at(result, "empty_bindings") == ["/sources/0/bindings"]
 
 
+# --- Unexpected fields on closed objects --------------------------------
+#
+# Source/Binding/Panel/PanelMember are ``extra="forbid"`` (_Model in
+# project_data.py): an unrecognized key is a structural error
+# (`unexpected_field`), not a silently-ignored extra. The TOP LEVEL stays
+# open (ProjectData is extra="ignore" for steward-namespaced blocks) —
+# see test_unknown_top_level_field_is_treated_as_namespaced_block.
+
+
+def test_unexpected_field_on_source() -> None:
+    spec = _spec()
+    spec["sources"][0]["registr_variant"] = "scb/lisa/individer-15plus"  # typo
+    result = validate_structural(spec)
+    issues = [i for i in result.issues if i.code == "unexpected_field"]
+    assert [i.path for i in issues] == ["/sources/0/registr_variant"]
+    assert all(i.level == "error" for i in issues)
+
+
+def test_unexpected_field_on_binding() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["typ"] = "id"  # typo for `type`
+    result = validate_structural(spec)
+    issues = [i for i in result.issues if i.code == "unexpected_field"]
+    assert [i.path for i in issues] == ["/sources/0/bindings/0/typ"]
+    assert all(i.level == "error" for i in issues)
+
+
+def test_unexpected_field_on_panel() -> None:
+    spec = _spec_with_panels()
+    spec["panels"][0]["coment"] = "typo for comment"
+    result = validate_structural(spec)
+    issues = [i for i in result.issues if i.code == "unexpected_field"]
+    assert [i.path for i in issues] == ["/panels/0/coment"]
+    assert all(i.level == "error" for i in issues)
+
+
+def test_unexpected_field_on_panel_member() -> None:
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["time_kye"] = 2018  # typo for time_key
+    result = validate_structural(spec)
+    issues = [i for i in result.issues if i.code == "unexpected_field"]
+    assert [i.path for i in issues] == ["/panels/0/members/0/time_kye"]
+    assert all(i.level == "error" for i in issues)
+
+
+def test_unexpected_field_key_is_rfc6901_escaped() -> None:
+    # The key is arbitrary steward input; a typo containing `/` or `~` must be
+    # RFC 6901-escaped in the JSON pointer (`/`→`~1`, `~`→`~0`), else the SPA's
+    # pointer-based field jump resolves to the wrong (nested) location.
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["foo/bar~baz"] = "oops"
+    result = validate_structural(spec)
+    issues = [i for i in result.issues if i.code == "unexpected_field"]
+    assert [i.path for i in issues] == ["/sources/0/bindings/0/foo~1bar~0baz"]
+
+
+def test_namespaced_block_key_is_rfc6901_escaped() -> None:
+    # Same pointer-escaping contract for the OTHER user-controlled key site: a
+    # non-object namespaced block whose top-level key contains `/` or `~`.
+    result = validate_structural(_spec(**{"weird/block~x": "not-an-object"}))
+    issues = [i for i in result.issues if i.code == "invalid_field_type"]
+    assert "/weird~1block~0x" in [i.path for i in issues]
+
+
+def test_unexpected_field_not_emitted_for_top_level_namespaced_block() -> None:
+    # Top level is open: an unknown top-level key is a namespaced block,
+    # never `unexpected_field`. Guards against a future reader "fixing"
+    # _check_namespaced_blocks to mirror the closed-object check.
+    result = validate_structural(_spec(swecov={"filters": {}}))
+    assert result.ok, result.issues
+    assert "unexpected_field" not in _codes(result)
+
+
 # --- Nested required-field null handling -------------------------------
 #
 # `{"name": null}` is a different JSON shape than `{}`. The validator
@@ -1019,3 +1092,35 @@ def test_validator_accepts_arbitrary_mapping() -> None:
 
     result = validate_structural(FrozenMap(_spec()))
     assert result.ok, result.issues
+
+
+# --- Frozenset drift guard ----------------------------------------------
+#
+# The allowed-key frozensets MUST equal the Pydantic models' WIRE-key sets they
+# mirror. Introspect ``Model.model_fields`` here — a closed object growing a
+# field in project_data.py without the frozenset following would otherwise
+# let the new key fire a false ``unexpected_field``. We compare against the
+# WIRE name (``field.alias or name``), NOT the bare Python attribute name: the
+# structural validator checks JSON KEYS, so if a field ever gains an alias the
+# frozenset must carry the alias (the models are alias-free today, so this is
+# future-proofing). This test file may import pydantic freely: only the
+# BUNDLE-amalgamated modules must stay pydantic-free; structural.py is build-side.
+
+
+def _wire_keys(model: type) -> set[str]:
+    return {f.alias or n for n, f in model.model_fields.items()}
+
+
+def test_allowed_key_frozensets_match_pydantic_models() -> None:
+    from reg_schema.project_data import Binding, Panel, PanelMember, Source
+    from reg_schema.structural import (
+        _BINDING_KEYS,
+        _PANEL_KEYS,
+        _PANEL_MEMBER_KEYS,
+        _SOURCE_KEYS,
+    )
+
+    assert _wire_keys(Source) == _SOURCE_KEYS
+    assert _wire_keys(Binding) == _BINDING_KEYS
+    assert _wire_keys(Panel) == _PANEL_KEYS
+    assert _wire_keys(PanelMember) == _PANEL_MEMBER_KEYS

@@ -123,16 +123,22 @@ def test_concurrent_bundle_builds_do_not_collide(unthrottled_client):
     assert len(bodies) == 1, "deterministic build produced differing bytes"
 
 
-def test_tempfile_cleanup(client):
+def test_tempfile_cleanup(client, tmp_path, monkeypatch):
     """The handler builds into a ``TemporaryDirectory`` context that removes the
     file on exit — assert no ``reg_webapp_bundle_*`` tempdir leaks after a build
-    (the prefix the handler uses)."""
-    import tempfile
-    from pathlib import Path
+    (the prefix the handler uses).
 
+    Point ``tempfile`` at this test's unique ``tmp_path`` so the leak glob sees
+    ONLY this build: the TestClient handler runs in-process (the build is on a
+    threadpool thread that shares this process-global override), whereas globbing
+    the GLOBAL tempdir would race a concurrent xdist worker's in-flight build
+    under the same prefix — a false-positive leak."""
+    import tempfile
+
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     resp = client.post("/api/bundle", json=_valid_spec())
     assert resp.status_code == 200
-    leaked = list(Path(tempfile.gettempdir()).glob("reg_webapp_bundle_*"))
+    leaked = list(tmp_path.glob("reg_webapp_bundle_*"))
     assert not leaked, f"leaked bundle tempdirs: {leaked}"
 
 

@@ -5,9 +5,10 @@ Covers the §6.8.0 status discipline that defines this endpoint:
 - a clean spec → 200 ``ok=true`` ``issues=[]``;
 - an unresolvable FQID → 200 ``ok=false`` + the §6.8.3 semantic issue (NOT 4xx —
   a validation failure is a successful validation RESPONSE);
-- an extra/typo key → 200 with an ``invalid_field`` issue (NOT 500 — the
-  ``ProjectData`` model's ``extra=forbid`` raise is caught and turned into an
-  issue);
+- an extra/typo key on a CLOSED nested object (Source/Binding/Panel/member) →
+  200 with the structural ``unexpected_field`` issue (NOT 500; the top-level
+  ``ProjectData`` is ``extra=ignore`` so a stray top-level key is a tolerated
+  namespaced block, not an error);
 - malformed JSON / duplicate keys / non-object body → 4xx (a malformed REQUEST);
 - the three-layer concatenation (structural ⧺ block ⧺ semantic);
 - a concurrency smoke test (the cross-thread sqlite P1 the sequential TestClient
@@ -88,10 +89,12 @@ def test_unresolvable_fqid_is_200_not_4xx(client):
     assert ("fqid_unresolved", "error") in codes
 
 
-def test_extra_key_is_issue_not_500(client):
-    """An extra/typo key the structural layer admits but ``ProjectData``'s
-    ``extra=forbid`` rejects must surface as an ``invalid_field`` ISSUE in the 200
-    body — NEVER a 500 (the b-ii side of the b-i extra-key P1)."""
+def test_extra_key_is_unexpected_field_not_500(client):
+    """A typo'd key on a CLOSED object (Binding, extra=forbid) now surfaces as the
+    canonical structural code ``unexpected_field`` (reg_schema owns it) — the
+    extra-key case no longer routes through the webapp's ``invalid_field`` (which
+    remains only as a rare defensive model-construction catch). A 200 ISSUE, NEVER
+    a 500."""
     spec = _clean_spec()
     spec["sources"][0]["bindings"][0]["typoo_field"] = "oops"
     resp = client.post("/api/project/validate", json=spec)
@@ -99,7 +102,53 @@ def test_extra_key_is_issue_not_500(client):
     body = resp.json()
     assert body["ok"] is False
     codes = {i["code"] for i in body["issues"]}
-    assert "invalid_field" in codes
+    assert "unexpected_field" in codes, codes
+
+
+def test_validate_catches_orphan_column_options(client):
+    """Divergence reconciliation: an orphan ``reg_monabundle.column_options`` key
+    (a binding FQID not bound in any source) that /api/bundle 422s on is now ALSO
+    flagged by /validate (code ``column_options_orphan_fqid``) — so a /validate-
+    clean spec is buildable for that class."""
+    spec = _clean_spec()
+    spec["reg_monabundle"] = {
+        "column_options": {"scb/lisa/notbound": {"suppress_k": 10}}
+    }
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["ok"] is False
+    assert "column_options_orphan_fqid" in {i["code"] for i in body["issues"]}
+
+
+def test_model_issue_empty_loc_is_whole_document_pointer():
+    """A model-level (empty-``loc``) residual ValidationError must map to the RFC
+    6901 whole-document pointer ``""`` — NOT ``"/"`` (a property keyed by the empty
+    string, unresolvable). A5.3's SPA resolves these pointers, so the contract is
+    exact. Defensive path (structural owns the common cases), unit-tested directly."""
+    from pydantic_core import ValidationError
+    from reg_webapp.routes.project import _model_issue  # noqa: PLC0415
+
+    exc = ValidationError.from_exception_data(
+        "ProjectData", [{"type": "missing", "loc": (), "input": {}}]
+    )
+    issue = _model_issue("residual model error", exc)
+    assert issue.path == ""
+    assert issue.code == "invalid_field"
+
+
+def test_malformed_column_options_value_is_issue_not_500(client):
+    """A non-dict per-FQID column_options value (an int) is malformed — the block
+    validator flags it (invalid_block). /validate ACCUMULATES issues (it doesn't
+    fail-fast like /bundle's raise), so the cross-block check must skip the non-dict
+    value defensively, not `"suppress_k" not in <int>` → TypeError → 500."""
+    spec = _clean_spec()
+    spec["reg_monabundle"] = {"column_options": {"scb/lisa/kon": 1}}  # bound, non-dict
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200, f"malformed column_options → {resp.status_code}"
+    body = resp.json()
+    assert body["ok"] is False
+    assert "invalid_block" in {i["code"] for i in body["issues"]}
 
 
 def test_top_level_extra_key_is_issue_not_500(client):

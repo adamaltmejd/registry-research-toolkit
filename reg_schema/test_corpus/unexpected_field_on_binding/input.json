@@ -1,0 +1,21 @@
+{
+  "schema_version": "2.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "unexpected_field_on_binding",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical",
+          "value_set": "class/sun2020",
+          "typ": "categorical"
+        }
+      ]
+    }
+  ]
+}

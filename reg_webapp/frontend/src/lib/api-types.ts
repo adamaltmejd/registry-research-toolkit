@@ -293,13 +293,14 @@ export interface paths {
          *     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
-         *     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). NOTE the scope versus
-         *     ``POST /api/bundle``: bundle additionally runs the build-time cross-block
-         *     referential check (orphan ``column_options`` keys) and the step-4 capability
-         *     gates (e.g. a build-required ``display_name``), which ``/validate`` does NOT —
-         *     so a spec ``/validate`` greenlights can still 422 at ``/bundle``. Reconciling
-         *     that (a build-readiness layer) waits on issue-based reg_monabundle validators
-         *     (the same open question as the ``invalid_block`` code).
+         *     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). It now ALSO runs the
+         *     build-time cross-block referential checks (orphan ``column_options`` keys /
+         *     suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
+         *     divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
+         *     step-4 capability gates (e.g. a build-required ``display_name``), which
+         *     ``/validate`` does NOT — so a spec ``/validate`` greenlights can still 422 at
+         *     ``/bundle`` on a capability gate (an intentional lenient residual: ``/validate``
+         *     defaults ``display_name`` from reg_meta).
          *
          *     ``async`` only to read the body off the wire; the BLOCKING work (the structural
          *     parse + the semantic layer's per-binding sqlite resolution) is offloaded to the

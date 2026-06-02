@@ -76,11 +76,14 @@ DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 # because the runtime modules amalgamated after this tuple (in particular
 # ``extract``) call ``write_export``.
 #
-# ``validate`` is intentionally NOT amalgamated: post-A3.4 the runtime
-# ``spec`` no longer calls ``validate_block`` — the namespaced-block
-# validator runs at bundle-build time in ``spec_loader``, not on MONA
-# (§9.6). Keeping it out trims the bundle and removes the last
-# ``reg_monabundle.validate`` reference from the runtime slices.
+# ``validate`` IS amalgamated (see ``REG_MONABUNDLE_MODULE_ORDER`` below):
+# the §6.8.2 namespaced-block validator (``validate_block`` — option keys +
+# suppress_k floor, pure-stdlib, reg_schema-free) re-runs on MONA at bundle
+# LOAD time per §6.8.2, and ``runtime/spec.py`` does ``from reg_monabundle
+# import validate_block``. (The §6.8.1 STRUCTURAL validator is a separate,
+# build-time-only gate in ``spec_loader`` — reg_schema/Pydantic, never
+# amalgamated.) Do not remove ``validate`` from the module order: dropping
+# it would break the on-MONA block check and the runtime ``spec`` import.
 #
 # Derive from the package, not ``__file__``: this module now lives in
 # ``reg_monabundle/build/__init__.py``, so ``Path(__file__).parent`` is
