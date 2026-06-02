@@ -76,15 +76,15 @@ slug = "dors"
 slug = "dors-avi"
 display_group = "DORS_AVI"
 panel_entity_key = "pnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = "dodsdat"
+panel_time_grain = "row"
 
 [register_variant."5369119272181688462.7117668989275245835"]
 slug = "dors"
 display_group = "DORS"
 panel_entity_key = "pnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = "dodsdat"
+panel_time_grain = "row"
 
 [register_variant."5369119272181688462.5309929884760526431"]
 slug = "cov-dors-hermes"
