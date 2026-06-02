@@ -38,7 +38,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("checkVersionGate (THE A5.4 SEAM — accept path live)", () => {
+describe("checkVersionGate", () => {
   it("accepts the Model A range (schema_version 2.x + reg_meta/v1.x.y)", () => {
     expect(
       checkVersionGate({
@@ -54,17 +54,51 @@ describe("checkVersionGate (THE A5.4 SEAM — accept path live)", () => {
     ).toEqual({ ok: true });
   });
 
-  it("is a NEUTRAL no-op (ok:true) for out-of-range versions in c-i (A5.4 adds reject)", () => {
-    // c-i does NOT reject v0.x / 1.x — A5.4 inserts the reject branches. The seam
-    // exists (the {ok, reason} shape + version extraction), so these must NOT yet
-    // be blocking.
+  it("hard-rejects schema_version 1.x (pre-Model-A)", () => {
+    const gate = checkVersionGate({
+      schema_version: "1.2.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+    });
+    expect(gate.ok).toBe(false);
+    expect(gate.reason).toMatch(/Model A|re-author/i);
+  });
+
+  it("hard-rejects reg_meta/v0.x (pre-Model-A) even with a 2.x schema", () => {
+    const gate = checkVersionGate({
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v0.9.0",
+    });
+    expect(gate.ok).toBe(false);
+    expect(gate.reason).toMatch(/Model A|re-author/i);
+  });
+
+  it("hard-rejects when BOTH are v0 (schema 1.x AND reg_meta/v0.x)", () => {
+    const gate = checkVersionGate({
+      schema_version: "1.0.0",
+      reg_meta_version: "reg_meta/v0.9.0",
+    });
+    expect(gate.ok).toBe(false);
+    expect(gate.reason).toMatch(/Model A|re-author/i);
+  });
+
+  it("is a NEUTRAL no-op (ok:true) for unrecognized in-range-ish versions", () => {
+    // Backend stays canonical: only v0.x is hard-rejected, everything else passes.
     expect(
       checkVersionGate({
-        schema_version: "1.0.0",
-        reg_meta_version: "reg_meta/v0.9.0",
+        schema_version: "3.0.0",
+        reg_meta_version: "reg_meta/v2.0.0",
       }),
     ).toEqual({ ok: true });
     expect(checkVersionGate({})).toEqual({ ok: true });
+  });
+
+  it("is a NEUTRAL no-op (ok:true) for malformed/non-numeric version strings", () => {
+    expect(
+      checkVersionGate({
+        schema_version: "not-a-version",
+        reg_meta_version: "reg_meta/vbogus",
+      }),
+    ).toEqual({ ok: true });
   });
 });
 
