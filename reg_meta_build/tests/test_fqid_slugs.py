@@ -1414,6 +1414,57 @@ class TestAutoDerivationMarker:
         # drift + name-unique-among-drifters → drift-name (a worklist class).
         assert hit[0] == ("scb", "1.BefolkningPerKommun", "befolkning", "drift-name")
 
+    def test_existing_markers_carried_forward_on_rebuild(self, tmp_path: Path) -> None:
+        # An incremental rebuild (prior auto.toml + a NEW variable → auto_dirty)
+        # must PRESERVE the pre-existing rows' `# source:` markers, not strip them
+        # — else the worklist shrinks over time. populate_variable_slugs seeds
+        # auto_derivation from the prior file before Pass 3 re-derives only the new.
+        conn = build_slugged_db(variable=None)
+        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
+        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        first = read_auto_derivations(self._auto_path(d))
+        assert first["1.20"] == "name-fallback"
+        assert first["1.21"] == "name-fallback"
+        # Add a NEW variable and rebuild — the full file is rewritten. (30 is now
+        # the only pending var, so its OBS_VALUE column is unique among pending →
+        # it takes the kolumnnamn slug; the class differs from 20/21, which is
+        # exactly why a re-derivation can't reconstruct their original markers.)
+        self._add_variable(conn, var_id=30, name="Sparande", cols=["OBS_VALUE"])
+        populate_variable_slugs(conn, d)
+        second = read_auto_derivations(self._auto_path(d))
+        assert second["1.30"] == "kolumnnamn"  # the new row is freshly classed ...
+        assert second["1.20"] == "name-fallback"  # ... and the prior markers
+        assert second["1.21"] == "name-fallback"  # survived the rewrite.
+
+    def test_read_auto_derivations_tolerates_undecodable_file(
+        self, tmp_path: Path
+    ) -> None:
+        # "Tolerant by design" (advisory): invalid UTF-8 must yield {}, not raise.
+        d = self._slug_dir(tmp_path)
+        auto = self._auto_path(d)
+        auto.write_bytes(
+            b'[variable."1.44"]\nslug = "\xff\xfe"  # source: name-fallback\n'
+        )
+        assert read_auto_derivations(auto) == {}
+
+    def test_advisory_worklist_survives_malformed_auto_toml(
+        self, tmp_path: Path
+    ) -> None:
+        # A malformed `<provider>.auto.toml` is precheck's job to report via
+        # parse_errors; the advisory worklist must NOT turn it into a crash —
+        # it skips the unparseable provider.
+        conn = build_slugged_db(variable=None)
+        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
+        d = self._slug_dir(tmp_path)
+        # Unterminated string → tomllib raises → _parse_toml → RegMetaError.
+        self._auto_path(d).write_text(
+            '[variable."1.20"]\nslug = "inkomst\n', encoding="utf-8"
+        )
+        result = precheck_slugs(conn, d)  # must not raise
+        assert all(r[0] != "scb" for r in result.name_fallback_variables)
+
 
 class TestSeedEmitsValidToml:
     """seed_*_toml must produce TOML that round-trips through tomllib even
