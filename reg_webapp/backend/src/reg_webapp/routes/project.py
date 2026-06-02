@@ -138,7 +138,8 @@ def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
 def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
     """Build the ``ProjectData`` model, run the §6.8.3 semantic layer, AND the
     build-time cross-block referential checks (orphan ``column_options`` keys /
-    suppress_k-on-non-categorical, via ``reg_monabundle.column_options_issues``).
+    suppress_k-on-non-categorical, via
+    ``reg_monabundle.build.spec_loader.column_options_issues``).
     The cross-block check closes the documented ``/validate``↔``/bundle``
     divergence — a spec that bundles must also validate clean on that class.
 
