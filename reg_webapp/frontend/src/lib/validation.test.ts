@@ -8,6 +8,8 @@ import expectedUnexpectedField from "../../../../reg_schema/test_corpus/unexpect
 import {
   codeLabel,
   issuesForPointer,
+  issuesUnderPointer,
+  jsonPointer,
   KNOWN_CODES,
   parseJsonPointer,
   type ValidationIssue,
@@ -39,6 +41,82 @@ describe("parseJsonPointer (RFC 6901)", () => {
 
   it("returns null for a malformed (non-empty, no leading slash) pointer", () => {
     expect(parseJsonPointer("sources/0")).toBeNull();
+  });
+});
+
+describe("jsonPointer (inverse of parseJsonPointer)", () => {
+  it('encodes the empty token array as "" (whole document)', () => {
+    expect(jsonPointer([])).toBe("");
+  });
+
+  it("joins tokens with / and a leading /, stringifying numeric indices", () => {
+    expect(jsonPointer(["sources", 0, "bindings", 1, "variable"])).toBe(
+      "/sources/0/bindings/1/variable",
+    );
+  });
+
+  it("escapes ~ to ~0 and / to ~1 (in that order)", () => {
+    // `~`→`~0` MUST run before `/`→`~1`: a `/`-first pass on `a/b` emits `a~1b`,
+    // and a subsequent `~`→`~0` would corrupt that `~1` into `~01`.
+    expect(jsonPointer(["a/b"])).toBe("/a~1b");
+    expect(jsonPointer(["a~b"])).toBe("/a~0b");
+    expect(jsonPointer(["m~1n"])).toBe("/m~01n");
+    expect(jsonPointer(["/~"])).toBe("/~1~0");
+  });
+
+  it("round-trips with parseJsonPointer", () => {
+    for (const tokens of [
+      [],
+      ["sources", "0", "bindings", "0", "typ"],
+      ["a/b"],
+      ["a~b"],
+      ["m~1n"],
+      ["/~"],
+    ]) {
+      expect(parseJsonPointer(jsonPointer(tokens))).toEqual(tokens);
+    }
+  });
+});
+
+describe("issuesUnderPointer (roll-up)", () => {
+  const issues = [
+    {
+      level: "error" as const,
+      code: "a",
+      path: "/sources/1",
+      message: "exact",
+    },
+    {
+      level: "error" as const,
+      code: "b",
+      path: "/sources/1/bindings/0/type",
+      message: "descendant",
+    },
+    {
+      level: "error" as const,
+      code: "c",
+      path: "/sources/10/name",
+      message: "sibling-10",
+    },
+    { level: "warning" as const, code: "d", path: "", message: "doc" },
+  ];
+
+  it("rolls up the exact match AND its descendants", () => {
+    const under = issuesUnderPointer(issues, "/sources/1");
+    expect(under.map((i) => i.code)).toEqual(["a", "b"]);
+  });
+
+  it("does NOT false-match /sources/10 when the prefix is /sources/1", () => {
+    const under = issuesUnderPointer(issues, "/sources/1");
+    expect(under.some((i) => i.path.startsWith("/sources/10"))).toBe(false);
+  });
+
+  it("an empty prefix (whole document) rolls up everything", () => {
+    expect(issuesUnderPointer(issues, "")).toHaveLength(issues.length);
+  });
+
+  it("returns [] when nothing is at or below the prefix", () => {
+    expect(issuesUnderPointer(issues, "/panels/0")).toEqual([]);
   });
 });
 

@@ -1,6 +1,33 @@
 import { describe, expect, it } from "vitest";
-import type { CatalogNode } from "./api";
-import { breadcrumbs, catalogHref, fqidSegments, nodeLabel } from "./catalog";
+import type { CatalogNode, VariableStateModel } from "./api";
+import {
+  breadcrumbs,
+  catalogHref,
+  deriveType,
+  distinctVersions,
+  fqidSegments,
+  nodeLabel,
+  registerPrefixOf,
+  variantSeg,
+} from "./catalog";
+
+// Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
+function state(over: Partial<VariableStateModel>): VariableStateModel {
+  return {
+    state_id: 1,
+    variant: "v",
+    register_variant_id: 1,
+    valid_from: "",
+    valid_to: "",
+    data_type: null,
+    data_length: null,
+    delivery_column_name: null,
+    value_set_version_label: "",
+    value_set_id: null,
+    value_set: null,
+    ...over,
+  };
+}
 
 // Minimal fixtures for each `kind` arm — only the fields the helpers read.
 const provider = {
@@ -53,5 +80,81 @@ describe("fqidSegments / breadcrumbs", () => {
       { label: "lisa", fqidPath: "scb/lisa" },
       { label: "kon", fqidPath: "scb/lisa/kon" },
     ]);
+  });
+});
+
+describe("registerPrefixOf / variantSeg", () => {
+  it("splits a 3-seg register_variant into prefix + variant", () => {
+    expect(registerPrefixOf("scb/lisa/individer")).toBe("scb/lisa");
+    expect(variantSeg("scb/lisa/individer")).toBe("individer");
+  });
+
+  it("returns '' for a register_variant of the wrong shape", () => {
+    expect(registerPrefixOf("scb")).toBe(""); // < 2 segments
+    expect(registerPrefixOf("")).toBe("");
+    expect(variantSeg("scb/lisa")).toBe(""); // not exactly 3 segments
+    expect(variantSeg("")).toBe("");
+  });
+});
+
+describe("distinctVersions", () => {
+  it("collects distinct non-empty version labels, skipping empties", () => {
+    expect(
+      distinctVersions([
+        state({ value_set_version_label: "sni2007" }),
+        state({ value_set_version_label: "sni2002" }),
+        state({ value_set_version_label: "sni2007" }), // duplicate
+        state({ value_set_version_label: "" }), // empty → skipped
+      ]),
+    ).toEqual(["sni2007", "sni2002"]);
+  });
+
+  it("is [] when no state carries a version", () => {
+    expect(distinctVersions([state({})])).toEqual([]);
+  });
+});
+
+describe("deriveType", () => {
+  it("no state → opaque", () => {
+    expect(deriveType(undefined)).toBe("opaque");
+  });
+
+  it("a value set → categorical (overrides the storage token)", () => {
+    expect(deriveType(state({ value_set_id: 5, data_type: "int" }))).toBe(
+      "categorical",
+    );
+    expect(
+      deriveType(
+        state({
+          value_set: [
+            { code: "1", label: "x" },
+          ] as VariableStateModel["value_set"],
+          data_type: "char",
+        }),
+      ),
+    ).toBe("categorical");
+  });
+
+  it("maps SQL storage tokens (stripping a trailing length)", () => {
+    expect(deriveType(state({ data_type: "int" }))).toBe("numeric");
+    expect(deriveType(state({ data_type: "decimal(10,2)" }))).toBe("numeric");
+    expect(deriveType(state({ data_type: "date" }))).toBe("date");
+    expect(deriveType(state({ data_type: "smalldatetime" }))).toBe("datetime");
+    expect(deriveType(state({ data_type: "uniqueidentifier" }))).toBe("id");
+  });
+
+  it("maps the Swedish Datatyp tokens SOS delivers (case-insensitive)", () => {
+    expect(deriveType(state({ data_type: "Heltal" }))).toBe("numeric");
+    expect(deriveType(state({ data_type: "Decimaltal" }))).toBe("numeric");
+    expect(deriveType(state({ data_type: "numerisk" }))).toBe("numeric");
+    expect(deriveType(state({ data_type: "Datum" }))).toBe("date");
+    expect(deriveType(state({ data_type: "Identifierare" }))).toBe("id");
+  });
+
+  it("unrecognized / empty storage token → opaque (user picks)", () => {
+    expect(deriveType(state({ data_type: "alfanumerisk" }))).toBe("opaque");
+    expect(deriveType(state({ data_type: "Sträng (text)" }))).toBe("opaque");
+    expect(deriveType(state({ data_type: "" }))).toBe("opaque");
+    expect(deriveType(state({ data_type: "<undefined>" }))).toBe("opaque");
   });
 });

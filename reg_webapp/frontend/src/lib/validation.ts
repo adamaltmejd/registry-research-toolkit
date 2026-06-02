@@ -42,6 +42,24 @@ export function parseJsonPointer(ptr: string): string[] | null {
     .map((token) => token.replace(/~1/g, "/").replace(/~0/g, "~"));
 }
 
+/**
+ * The INVERSE of `parseJsonPointer`: encode reference tokens into an RFC-6901
+ * pointer. Each token escapes `~`→`~0` THEN `/`→`~1` (the RFC-6901 escape order):
+ * `~` MUST be escaped first, otherwise a literal `/`→`~1` would emit a `~` that the
+ * later `~`→`~0` pass re-escapes into `~01`. This is the exact inverse of
+ * `parseJsonPointer`'s `~1`→`/` then `~0`→`~` decode, so the two round-trip.
+ * Numeric tokens (array indices) stringify. An EMPTY token array is the whole
+ * document → `""`. The c-ii field-highlighting seam builds a field's pointer with
+ * this and looks it up against the server's issue list via `issuesForPointer`. */
+export function jsonPointer(tokens: (string | number)[]): string {
+  if (tokens.length === 0) {
+    return "";
+  }
+  return `/${tokens
+    .map((token) => String(token).replace(/~/g, "~0").replace(/\//g, "~1"))
+    .join("/")}`;
+}
+
 /** The issues whose `path` is exactly `ptr` (the c-ii field-highlighting lookup;
  * c-i uses it for a per-location grouping if needed). A whole-document issue has
  * `path === ""`. */
@@ -50,6 +68,27 @@ export function issuesForPointer(
   ptr: string,
 ): ValidationIssue[] {
   return issues.filter((issue) => issue.path === ptr);
+}
+
+/**
+ * Every issue AT `prefix` OR BELOW it — the c-ii ROLL-UP lookup so a source/binding
+ * header can badge all errors under its subtree (`/sources/{i}` rolls up
+ * `/sources/{i}/bindings/0/type`, `/sources/{i}/name`, …). A descendant is matched
+ * by `path === prefix` (exact) OR `path.startsWith(prefix + "/")` — the trailing
+ * `/` guard is load-bearing: it stops `/sources/1` from false-matching
+ * `/sources/10` (a bare `startsWith(prefix)` would). An empty `prefix` (whole
+ * document) rolls up everything. */
+export function issuesUnderPointer(
+  issues: ValidationIssue[],
+  prefix: string,
+): ValidationIssue[] {
+  if (prefix === "") {
+    return issues;
+  }
+  const descendantPrefix = `${prefix}/`;
+  return issues.filter(
+    (issue) => issue.path === prefix || issue.path.startsWith(descendantPrefix),
+  );
 }
 
 /** A hand-maintained registry entry for a stable §6.8.0 code. `label` is the

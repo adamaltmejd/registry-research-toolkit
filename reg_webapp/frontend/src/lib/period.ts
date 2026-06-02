@@ -11,6 +11,8 @@
  * server's 422 detail is the authority).
  */
 
+import type { Period } from "./project_data";
+
 /** The §9.5 narrowing modifiers carried in the URL query alongside `?period`. */
 export interface ResolutionParams {
   period?: string;
@@ -87,6 +89,33 @@ export function looksLikePeriod(raw: string): boolean {
     return parts.length === 2 && parts.every((p) => TOKEN_RE.test(p));
   }
   return TOKEN_RE.test(value);
+}
+
+/** Convert a structured `Source.period` (§6.2: int | token-string | {from,to} |
+ * "_default") into the wire `?period` string the catalog resolve takes (a bare
+ * year, a `from..to` range, a token, or `_default`). Returns `null` when the
+ * period can't form a resolvable query (blank / malformed) — the picker then
+ * can't derive-on-pick and shows its "set the period" hint. ADVISORY shaping
+ * only; the backend is the canonical period validator (§9.6). */
+export function periodToWire(period: Period): string | null {
+  if (typeof period === "number") {
+    return String(period);
+  }
+  if (typeof period === "string") {
+    const trimmed = period.trim();
+    return trimmed === "" ? null : trimmed;
+  }
+  if (
+    period != null &&
+    typeof period === "object" &&
+    "from" in period &&
+    "to" in period
+  ) {
+    const from = String(period.from).trim();
+    const to = String(period.to).trim();
+    return from === "" || to === "" ? null : `${from}${RANGE_SEP}${to}`;
+  }
+  return null;
 }
 
 // ── Query-string builder ─────────────────────────────────────────────────────

@@ -3,7 +3,7 @@
  * a node's label, and the `/catalog/<fqid-path>` URL ↔ FQID-segment helpers
  * (the SPA routes mirror the API path, §9.5).
  */
-import { type CatalogNode, encodeFqid } from "./api";
+import { type CatalogNode, encodeFqid, type VariableStateModel } from "./api";
 
 /** A node's display label — its `name` when present, else its FQID (providers
  * and registers carry an optional `name`; classifications carry a required
@@ -45,4 +45,101 @@ export function breadcrumbs(
     label,
     fqidPath: segs.slice(0, i + 1).join("/"),
   }));
+}
+
+// ── register_variant coordinate helpers ──────────────────────────────────────
+// A Source.register_variant is a 3-seg coordinate `provider/register/variant`
+// (§6.2). The binding variable picker is SCOPED to the provider/register prefix
+// (enforcing the FQID-prefix coupling as UX); the resolve takes the variant.
+
+/** The 2-seg `provider/register` prefix of a register_variant, or "" when it has
+ * fewer than 2 segments. */
+export function registerPrefixOf(registerVariant: string): string {
+  const segs = fqidSegments(registerVariant);
+  return segs.length >= 2 ? `${segs[0]}/${segs[1]}` : "";
+}
+
+/** The variant coordinate (3rd seg) of a 3-seg register_variant, or "" when it
+ * isn't that shape (the picker omits the `?variant` modifier then). */
+export function variantSeg(registerVariant: string): string {
+  const segs = fqidSegments(registerVariant);
+  return segs.length === 3 ? segs[2] : "";
+}
+
+// ── Variable-state derivations (the CatalogPicker derive-on-pick) ─────────────
+
+/** Distinct non-empty value-set version labels across the resolved states — the
+ * §6.8.3 co-delivery signal SIMPLIFIED for the picker: >1 distinct label → offer
+ * the `@version` chooser. We do NOT re-implement the validity-overlap math; the
+ * backend's `binding_value_set_version_ambiguous` is canonical. */
+export function distinctVersions(states: VariableStateModel[]): string[] {
+  const seen = new Set<string>();
+  for (const s of states) {
+    if (s.value_set_version_label) {
+      seen.add(s.value_set_version_label);
+    }
+  }
+  return [...seen];
+}
+
+// A LIGHT, advisory storage-token → ColumnType prefill for derive-on-pick
+// (overridable; the backend is canonical, §9.6). Covers BOTH the SQL/storage
+// spellings SCB delivers AND the Swedish `Datatyp` tokens SOS writes verbatim
+// (reg_meta_build `sources/sos.py` `_norm_data_type` — lowercased "Heltal",
+// "Datum", "Identifierare", …). Anything unrecognized → "opaque" for the user.
+const NUMERIC_TOKENS = new Set([
+  // SQL spellings (SCB)
+  "tinyint",
+  "smallint",
+  "int",
+  "integer",
+  "bigint",
+  "hugeint",
+  "decimal",
+  "numeric",
+  "real",
+  "float",
+  "double",
+  "money",
+  "smallmoney",
+  // Swedish Datatyp tokens (SOS)
+  "heltal",
+  "decimaltal",
+  "numerisk",
+]);
+const DATE_TOKENS = new Set(["date", "datum"]);
+const DATETIME_TOKENS = new Set([
+  "datetime",
+  "datetime2",
+  "timestamp",
+  "smalldatetime",
+]);
+const ID_TOKENS = new Set(["identifierare", "uniqueidentifier"]);
+
+/** Advisory storage-type → ColumnType prefill (§6.3) for the binding type
+ * derive-on-pick. A state carrying a value set is categorical; otherwise the
+ * leading `data_type` token decides; unrecognized → "opaque". ALWAYS overridable
+ * via the BindingEditor's `<select>` — the backend stays canonical (§9.6). */
+export function deriveType(state: VariableStateModel | undefined): string {
+  if (!state) {
+    return "opaque";
+  }
+  if (state.value_set_id != null || (state.value_set?.length ?? 0) > 0) {
+    return "categorical";
+  }
+  // The leading token (strip a trailing `(len)` or trailing words like "(text)").
+  const token = (state.data_type ?? "").trim().toLowerCase().split(/[ (]/)[0];
+  if (ID_TOKENS.has(token)) {
+    return "id";
+  }
+  if (NUMERIC_TOKENS.has(token)) {
+    return "numeric";
+  }
+  if (DATE_TOKENS.has(token)) {
+    return "date";
+  }
+  if (DATETIME_TOKENS.has(token)) {
+    return "datetime";
+  }
+  return "opaque";
 }
