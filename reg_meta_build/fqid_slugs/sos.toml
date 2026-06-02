@@ -57,14 +57,14 @@ slug = "can"
 [register_variant."7119586976865944958.5186039963966324433"]
 slug = "can"
 display_group = "CAN"
-panel_entity_key = "lopnr"
+panel_entity_key = "pnr"
 panel_time_key = "diadat"
 panel_time_grain = "row"
 
 [register_variant."7119586976865944958.9216896336296984035"]
 slug = "can-bc"
 display_group = "CAN_BC"
-panel_entity_key = "lopnr"
+panel_entity_key = "pseudo"
 panel_time_key = "diadat"
 panel_time_grain = "row"
 
