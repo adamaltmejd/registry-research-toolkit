@@ -1495,6 +1495,29 @@ class TestAutoDerivationMarker:
         result = precheck_slugs(conn, d)  # must not raise on the odd shape
         assert all(r[0] != "scb" for r in result.name_fallback_variables)
 
+    def test_worklist_keeps_metadata_only_override(self, tmp_path: Path) -> None:
+        # A [variable] entry WITHOUT a string slug leaves the auto slug unchanged,
+        # so it stays backlog regardless of other metadata: same_as (a cross-rename
+        # edge) and deprecated (still slugged so old references resolve) both keep
+        # their variable in the list. Only a string `slug` override drops it
+        # (Codex: don't treat every [variable] row as a slug fix).
+        conn = build_slugged_db(variable=None)
+        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
+        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        (d / "scb.toml").write_text(
+            '[variable."1.20"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "inkomst" }]\n'
+            '[variable."1.21"]\ndeprecated = true\n',
+            encoding="utf-8",
+        )
+        populate_variable_slugs(conn, d)
+        worklist = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
+        assert "1.20" in worklist  # same_as only → slug unfixed → stays
+        assert "1.21" in worklist  # deprecated-only → slug still ships → stays
+
 
 class TestSeedEmitsValidToml:
     """seed_*_toml must produce TOML that round-trips through tomllib even

@@ -2464,14 +2464,22 @@ def _name_fallback_variables(
             for sid, tbl in auto_vars.items()
             if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
         }
-        # Curated overrides in <provider>.toml have already fixed these slugs —
-        # drop them from the backlog (their frozen auto entry still carries a marker).
-        curated = _raw_variable_table(slug_dir / f"{provider_slug}.toml") or {}
+        # Only a string `slug` override RESOLVES the auto slug — drop those from
+        # the backlog even though their frozen auto entry + marker linger. A
+        # metadata-only entry (`same_as` / `replaced_by` / `deprecated` with NO
+        # slug) leaves the auto slug unchanged (a deprecated variable stays slugged
+        # so old references resolve), so it still needs curation and stays backlog.
+        curated_table = _raw_variable_table(slug_dir / f"{provider_slug}.toml") or {}
+        resolved = {
+            sid
+            for sid, tbl in curated_table.items()
+            if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
+        }
         derivations = read_auto_derivations(auto_path)
         for source_id, kind in derivations.items():
             if (
                 source_id in slugs
-                and source_id not in curated
+                and source_id not in resolved
                 and _is_name_fallback_derivation(kind)
             ):
                 out.append((provider_slug, source_id, slugs[source_id], kind))
