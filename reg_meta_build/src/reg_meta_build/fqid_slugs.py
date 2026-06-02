@@ -2411,6 +2411,24 @@ def _drifting_variables(
     )
 
 
+def _raw_variable_table(path: Path) -> dict[str, Any] | None:
+    """The raw ``[variable]`` table from a slug TOML, or ``None`` when the file
+    is absent / unparseable / carries a non-table ``variable`` value.
+
+    RAW ``tomllib`` (not the validating ``load_provider_toml``) so the advisory
+    worklist tolerates a non-numeric SOS TEXT key (mirrors ``_drifting_variables``).
+    A malformed/unreadable file or an odd ``variable`` shape is precheck's job to
+    report via ``parse_errors``; surfacing ``None`` here lets the caller skip it
+    instead of crashing ``precheck-slugs`` (the worklist must never gate)."""
+    if not path.is_file():
+        return None
+    try:
+        table = _parse_toml(path).get("variable")
+    except RegMetaError:
+        return None
+    return table if isinstance(table, dict) else None
+
+
 def _name_fallback_variables(
     conn: sqlite3.Connection, slug_dir: Path
 ) -> tuple[tuple[str, str, str, str], ...]:
@@ -2422,40 +2440,40 @@ def _name_fallback_variables(
     live provider's ``<provider>.auto.toml`` (the single source of truth — the
     selection logic is not re-run, and ``tomllib`` strips the comment so it never
     pollutes ``SlugEntry``/``snapshot_payload``). An entry without a marker
-    (legacy pre-A4.4a row, or a kolumnnamn/fold/drift-column slug) is excluded.
-    Slug values are read from the same auto file, so the worklist needs no DB
-    join and still lists a variable whose row was pruned from a later delivery.
+    (legacy pre-A4.4a row, or a kolumnnamn/fold/drift-column slug) is excluded,
+    as is a variable a curator has already FIXED via a ``[variable."…"]`` override
+    in ``<provider>.toml`` — its frozen auto entry (and marker) lingers in the
+    auto file but it is no longer backlog. Slug values are read from the same auto
+    file, so the worklist needs no DB join and still lists a variable whose row
+    was pruned from a later delivery.
 
     Each row is ``(provider, source_id, slug, derivation)``, sorted by
     (provider, numeric-aware source_id) for a stable, human-scannable list.
     Like :func:`_drifting_variables` this NEVER gates — it is reported but not
-    in :attr:`PrecheckResult.ok`.
+    in :attr:`PrecheckResult.ok`, and a malformed/odd-shaped TOML skips the
+    provider rather than raising.
     """
     out: list[tuple[str, str, str, str]] = []
     for provider_slug in _live_providers(conn):
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
-        if not auto_path.is_file():
-            continue
-        # Read slugs via RAW tomllib (not `load_provider_toml`): the validating
-        # loader rejects a non-numeric SCB-shaped key, but a SOS provider_key is
-        # a merged variable name (`1.BefolkningPerKommun`) — an advisory must not
-        # crash on it (mirrors `_drifting_variables`' TEXT-tolerance). tomllib
-        # parses the table without enforcing the §5.2 key grammar.
-        try:
-            raw = _parse_toml(auto_path).get("variable") or {}
-        except RegMetaError:
-            # A malformed/unreadable auto.toml is precheck's job to report via
-            # `parse_errors`; this advisory worklist must never gate, so skip the
-            # provider rather than crash `precheck-slugs`.
+        auto_vars = _raw_variable_table(auto_path)
+        if auto_vars is None:
             continue
         slugs = {
             sid: tbl["slug"]
-            for sid, tbl in raw.items()
+            for sid, tbl in auto_vars.items()
             if isinstance(tbl, dict) and isinstance(tbl.get("slug"), str)
         }
+        # Curated overrides in <provider>.toml have already fixed these slugs —
+        # drop them from the backlog (their frozen auto entry still carries a marker).
+        curated = _raw_variable_table(slug_dir / f"{provider_slug}.toml") or {}
         derivations = read_auto_derivations(auto_path)
         for source_id, kind in derivations.items():
-            if source_id in slugs and _is_name_fallback_derivation(kind):
+            if (
+                source_id in slugs
+                and source_id not in curated
+                and _is_name_fallback_derivation(kind)
+            ):
                 out.append((provider_slug, source_id, slugs[source_id], kind))
     out.sort(key=lambda row: (row[0], _auto_source_sort_key(row[1])))
     return tuple(out)

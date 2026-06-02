@@ -1465,6 +1465,36 @@ class TestAutoDerivationMarker:
         result = precheck_slugs(conn, d)  # must not raise
         assert all(r[0] != "scb" for r in result.name_fallback_variables)
 
+    def test_worklist_excludes_curated_override(self, tmp_path: Path) -> None:
+        # A variable a curator FIXED via a [variable] override in <provider>.toml
+        # is no longer backlog, even though its frozen auto entry + marker linger
+        # in the auto file across the rebuild.
+        conn = build_slugged_db(variable=None)
+        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
+        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        before = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
+        assert {"1.20", "1.21"} <= before
+        # Curate 1.20 — its auto entry/marker persist, but it drops from the list.
+        (d / "scb.toml").write_text(
+            '[variable."1.20"]\nslug = "hushalls-inkomst"\n', encoding="utf-8"
+        )
+        populate_variable_slugs(conn, d)
+        after = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
+        assert "1.20" not in after  # curated → excluded from the backlog
+        assert "1.21" in after  # still backlog
+
+    def test_advisory_worklist_survives_nontable_variable(self, tmp_path: Path) -> None:
+        # A syntactically-valid auto.toml whose `variable` is a non-table value
+        # must not crash the worklist (precheck reports it via parse_errors).
+        conn = build_slugged_db(variable=None)
+        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
+        d = self._slug_dir(tmp_path)
+        self._auto_path(d).write_text('variable = "bad"\n', encoding="utf-8")
+        result = precheck_slugs(conn, d)  # must not raise on the odd shape
+        assert all(r[0] != "scb" for r in result.name_fallback_variables)
+
 
 class TestSeedEmitsValidToml:
     """seed_*_toml must produce TOML that round-trips through tomllib even
