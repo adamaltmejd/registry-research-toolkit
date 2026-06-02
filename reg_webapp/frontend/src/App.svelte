@@ -63,7 +63,7 @@ const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
       {driftWarnings.length === 1 ? "binding" : "bindings"} no longer resolve
       against this reg_meta build.
       <ul>
-        {#each driftWarnings as warning (warning.path)}
+        {#each driftWarnings as warning (`${warning.code}|${warning.path}`)}
           <li><code>{warning.code}</code> — {warning.message}</li>
         {/each}
       </ul>

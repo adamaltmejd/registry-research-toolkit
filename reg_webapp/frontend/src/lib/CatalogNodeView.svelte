@@ -78,7 +78,7 @@ const crumbs = $derived(breadcrumbs(fqidPath));
       {/if}
       <VariantBrowser registerFqid={node.fqid} />
     {:else if node.kind === "binding"}
-      <h2>{node.name ?? node.fqid}</h2>
+      <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       <!-- A5.3a: BASIC metadata only. The period/states picker + lineage are A5.3b. -->
       <dl class="meta">
@@ -106,7 +106,7 @@ const crumbs = $derived(breadcrumbs(fqidPath));
         states view (coming in A5.3b).
       </p>
     {:else if node.kind === "classification-root"}
-      <h2>{node.name}</h2>
+      <h2>{nodeLabel(node)}</h2>
       <h3>Classifications</h3>
       {#if node.children.length > 0}
         <ul class="children">
@@ -123,7 +123,7 @@ const crumbs = $derived(breadcrumbs(fqidPath));
         <p class="muted">No classifications.</p>
       {/if}
     {:else if node.kind === "classification"}
-      <h2>{node.name}</h2>
+      <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       <dl class="meta">
         <dt>Short name</dt>

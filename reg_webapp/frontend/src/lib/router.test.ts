@@ -26,6 +26,20 @@ describe("parseRoute", () => {
     });
   });
 
+  it("routes a malformed percent-sequence to not-found (never throws)", () => {
+    // `decodeURIComponent("%")` throws a URIError; parseRoute runs at module
+    // import (the Router singleton's $state init), so an unguarded throw would
+    // white-screen the SPA on a cold deep-link. Must degrade to not-found.
+    expect(parseRoute("/catalog/%")).toEqual({
+      name: "not-found",
+      path: "/catalog/%",
+    });
+    expect(parseRoute("/catalog/scb/%E0%A4")).toEqual({
+      name: "not-found",
+      path: "/catalog/scb/%E0%A4",
+    });
+  });
+
   it("treats the classification axis as a catalog node", () => {
     expect(parseRoute("/catalog/class/sun2020")).toEqual({
       name: "catalog-node",

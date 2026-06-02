@@ -36,7 +36,11 @@ export function asyncResource<T>(fn: () => Promise<T>): AsyncResource<T> {
     error = null;
     status = null;
     data = null;
-    fn()
+    // `Promise.resolve().then(fn)` (not `fn()`) so a SYNCHRONOUS throw in `fn`
+    // becomes a rejection routed through `.catch` below — otherwise it escapes
+    // the effect and wedges `loading` at true (spinner never clears).
+    Promise.resolve()
+      .then(fn)
       .then((resp) => {
         if (!cancelled) data = resp;
       })

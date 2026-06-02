@@ -7,26 +7,6 @@
  */
 import type { CatalogNode } from "./api";
 
-/** The `kind` discriminator of any catalog node the catch-all returns (A5.3a:
- * no `?period`, so no `StatesResponse` — that arm has no `kind`). */
-export type CatalogNodeKind = CatalogNode["kind"];
-
-type NodeOfKind<K extends CatalogNodeKind> = Extract<CatalogNode, { kind: K }>;
-
-/** Narrow a catalog node to a specific `kind`, or `null` if it's a different
- * arm. Keeps the `kind` switch in one tested place rather than scattered casts. */
-export function narrowNode<K extends CatalogNodeKind>(
-  node: CatalogNode,
-  kind: K,
-): NodeOfKind<K> | null {
-  return node.kind === kind ? (node as NodeOfKind<K>) : null;
-}
-
-/** True when the node is a binding leaf (the embedded longitudinal record). */
-export function isBinding(node: CatalogNode): node is NodeOfKind<"binding"> {
-  return node.kind === "binding";
-}
-
 /** A node's display label — its `name` when present, else its FQID (providers
  * and registers carry an optional `name`; classifications carry a required
  * `name`; the classification-root carries a default `name`). */

@@ -21,7 +21,21 @@ export type Route =
   | { name: "catalog-node"; fqidPath: string }
   | { name: "not-found"; path: string };
 
-/** Parse a pathname into a route. Trailing slashes are tolerated. */
+/** `decodeURIComponent` that returns `null` on a malformed percent-sequence
+ * instead of throwing a `URIError`. Load-bearing: `parseRoute` runs at module
+ * import (the `Router` singleton's `$state` initializer), so an unguarded throw
+ * on a cold deep-link to e.g. `/catalog/%` would escape module evaluation and
+ * white-screen the whole SPA rather than render a not-found page. */
+function safeDecode(segment: string): string | null {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return null;
+  }
+}
+
+/** Parse a pathname into a route. Trailing slashes are tolerated; a malformed
+ * percent-encoded segment routes to not-found (never throws). */
 export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, "") || "/";
   if (path === "/" || path === "/catalog") {
@@ -30,12 +44,11 @@ export function parseRoute(pathname: string): Route {
   if (path.startsWith("/catalog/")) {
     // Decode each segment (the router stores the human FQID; the api layer
     // re-encodes per segment when fetching).
-    const fqidPath = path
-      .slice("/catalog/".length)
-      .split("/")
-      .map(decodeURIComponent)
-      .join("/");
-    return { name: "catalog-node", fqidPath };
+    const segments = path.slice("/catalog/".length).split("/").map(safeDecode);
+    if (segments.includes(null)) {
+      return { name: "not-found", path };
+    }
+    return { name: "catalog-node", fqidPath: (segments as string[]).join("/") };
   }
   return { name: "not-found", path };
 }
@@ -51,14 +64,19 @@ class Router {
     });
   }
 
-  /** Navigate to `path` via pushState (no reload), updating the reactive route.
-   * A no-op when already on `path` (avoids a duplicate history entry). */
-  navigate(path: string): void {
-    if (path === window.location.pathname) {
+  /** Navigate to `url` (path + optional `?query`/`#hash`) via pushState (no
+   * reload), updating the reactive route. The route is keyed on the PATHNAME;
+   * any query/hash is preserved in the URL (A5.3b reads `?period`/`?variant`
+   * from `window.location.search`) but doesn't change which node is shown. A
+   * no-op when already at `url` (avoids a duplicate history entry). */
+  navigate(url: string): void {
+    const current =
+      window.location.pathname + window.location.search + window.location.hash;
+    if (url === current) {
       return;
     }
-    window.history.pushState({}, "", path);
-    this.route = parseRoute(path);
+    window.history.pushState({}, "", url);
+    this.route = parseRoute(window.location.pathname);
   }
 }
 
@@ -102,7 +120,9 @@ export function onNavClick(event: MouseEvent): void {
     return;
   }
   event.preventDefault();
-  router.navigate(anchor.pathname);
+  // Preserve query + hash so deep-link refinements (A5.3b's `?period`/`?variant`)
+  // survive the pushState navigation rather than being silently dropped.
+  router.navigate(anchor.pathname + anchor.search + anchor.hash);
 }
 
 /**
