@@ -106,4 +106,16 @@ describe("onNavClick", () => {
     const event = clickAnchor("https://scb.se/");
     expect(event.defaultPrevented).toBe(false);
   });
+
+  it("ignores a same-origin link to a non-SPA path (backend routes, /docs)", () => {
+    // /api/* and the FastAPI docs are server routes — intercepting them would
+    // pushState-route to the SPA not-found instead of hitting the backend.
+    expect(clickAnchor("/api/project/validate").defaultPrevented).toBe(false);
+    expect(clickAnchor("/openapi.json").defaultPrevented).toBe(false);
+    expect(clickAnchor("/docs").defaultPrevented).toBe(false);
+  });
+
+  it("intercepts an SPA route under /catalog", () => {
+    expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
+  });
 });

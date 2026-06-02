@@ -46,7 +46,7 @@ const crumbs = $derived(breadcrumbs(fqidPath));
             <li>
               <a href={catalogHref(register.fqid)}>
                 <span class="label">{register.name ?? register.fqid}</span>
-                <code class=" child-fqid">{register.fqid}</code>
+                <code class="child-fqid">{register.fqid}</code>
               </a>
               {#if register.purpose}<p class="muted">{register.purpose}</p>{/if}
             </li>

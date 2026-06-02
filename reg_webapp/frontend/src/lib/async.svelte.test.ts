@@ -50,6 +50,31 @@ describe("asyncResource", () => {
     stop();
   });
 
+  it("refetches (re-invokes fn) when a tracked reactive input changes", async () => {
+    // Pins the dependency-tracking contract: `fn` must be called SYNCHRONOUSLY
+    // in the effect so the reactive values it reads are tracked. If `fn` were
+    // deferred to a microtask, the effect would track nothing and never refetch
+    // on input change (the A5.3b period-refetch break). Count the invocations.
+    let key = $state(1);
+    let calls = 0;
+    let res!: ReturnType<typeof asyncResource<number>>;
+    const stop = $effect.root(() => {
+      res = asyncResource(() => {
+        calls++;
+        return Promise.resolve(key);
+      });
+    });
+    flushSync();
+    await vi.waitFor(() => expect(res.data).toBe(1));
+    expect(calls).toBe(1);
+
+    key = 2;
+    flushSync();
+    await vi.waitFor(() => expect(res.data).toBe(2)); // refetched with the new input
+    expect(calls).toBe(2);
+    stop();
+  });
+
   it("ignores a stale response after its tracked input changed", async () => {
     // The load-bearing guarantee for A5.3b's refetch-on-period: when the input
     // changes mid-flight, the first (now-stale) fetch's late resolution must NOT
