@@ -9,7 +9,7 @@ import {
 import { asyncResource } from "./async.svelte";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
-import { nextResolutionQuery } from "./period";
+import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
 
@@ -145,7 +145,9 @@ function setResolution(next: {
           aria-label="Clear value-set version filter"
           onclick={() => setResolution({ value_set_version: null })}
         >
-          version: {params.value_set_version} <span aria-hidden="true">✕</span>
+          version: {params.value_set_version === VALUE_SET_VERSION_NONE
+            ? "(no version)"
+            : params.value_set_version} <span aria-hidden="true">✕</span>
         </button>
       {/if}
     </div>

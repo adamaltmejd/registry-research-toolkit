@@ -95,6 +95,7 @@ from reg_webapp.models import (
     VariantsResponse,
 )
 from reg_webapp.period_param import (
+    VALUE_SET_VERSION_NONE,
     PeriodParamError,
     ValueSetVersionParamError,
     VariantParamError,
@@ -715,10 +716,17 @@ def get_catalog_node(
                     ),
                 )
         else:
+            # The `_none` sentinel selects the empty/default label (`''`): the
+            # empty string can't ride in the query (≡ absent), so map it here,
+            # just before resolve_at's Python `label == value_set_version` filter.
+            resolved_vsv = "" if vsv == VALUE_SET_VERSION_NONE else vsv
             with _catalog_conn(request) as conn:
                 try:
                     states = Catalog(conn).resolve_at(
-                        parsed, period, variant=variant, value_set_version=vsv
+                        parsed,
+                        period,
+                        variant=variant,
+                        value_set_version=resolved_vsv,
                     )
                 except RegMetaError as exc:
                     _http_4xx_from_regmeta(exc)

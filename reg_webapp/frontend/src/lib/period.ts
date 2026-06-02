@@ -18,6 +18,13 @@ export interface ResolutionParams {
   value_set_version?: string;
 }
 
+/** Sentinel `?value_set_version` selecting the empty/default label (a state with
+ * `value_set_version_label === ""`). The empty string can't ride in the query
+ * (≡ absent), so the picker sends this for the "(no version)" option; the backend
+ * maps it back to `""` before `resolve_at`. MUST match `period_param.py`'s
+ * `VALUE_SET_VERSION_NONE`. */
+export const VALUE_SET_VERSION_NONE = "_none";
+
 // ── Period field ↔ query (de)serialize ──────────────────────────────────────
 // The picker is a single free-text field; the URL query carries the same wire
 // string. Round-tripping is the identity on a trimmed string — the field's raw

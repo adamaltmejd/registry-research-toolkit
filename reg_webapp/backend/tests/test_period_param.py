@@ -106,6 +106,7 @@ def test_parse_variant_rejects(raw: str):
 # non-ASCII and MUST pass.
 _ACCEPT_VSV = [
     "sun2020",
+    "_none",  # the empty/default-label sentinel (the handler maps it to "")
     "SUN 1996",
     "SUN 1996, 5 positioner, brutto",
     "SUN 2000 - Utbildningsnivå",
@@ -115,6 +116,7 @@ _ACCEPT_VSV = [
 ]
 _REJECT_VSV = [
     "",  # empty
+    "   ",  # whitespace-only (not a real label)
     "x" * 201,  # over the length cap
     "x\x00y",  # NUL
     "a\tb",  # C0 control (tab)

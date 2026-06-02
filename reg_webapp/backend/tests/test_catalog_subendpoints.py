@@ -284,6 +284,20 @@ def test_value_set_version_query_rejects_control_chars(client):
     assert resp.status_code == 422
 
 
+def test_value_set_version_none_sentinel_selects_the_empty_label(client):
+    # [A5.3b] The `_none` sentinel selects the empty/default-label state (the
+    # handler maps it to "" before resolve_at). The fixture's kon states carry the
+    # empty label, so `?value_set_version=v1` narrows to NOTHING but `_none`
+    # narrows to those states — proving the sentinel ≠ "no narrowing".
+    labeled = client.get(f"/api/catalog/{_KON}?period=2020&value_set_version=v1")
+    assert labeled.status_code == 200
+    assert labeled.json()["states"] == []  # no state has the label "v1"
+
+    sentinel = client.get(f"/api/catalog/{_KON}?period=2020&value_set_version=_none")
+    assert sentinel.status_code == 200
+    assert len(sentinel.json()["states"]) > 0  # the empty-label states matched
+
+
 def test_at_version_pin_alone_is_accepted(client):
     resp = client.get(f"/api/catalog/{_KON}@v1?period=2020")
     assert resp.status_code == 200

@@ -55,6 +55,15 @@ _YEAR_LEN = 4
 # Utbildningsnivå"); cap the §16 sanity gate well above any real label.
 _MAX_VALUE_SET_VERSION_LEN = 200
 
+# Sentinel `?value_set_version` for "the empty/default label" (a state with
+# `value_set_version_label = ''`). The empty string can't ride in the query (it's
+# indistinguishable from absent), so a multi-vintage set that mixes a labeled and
+# an empty-default state uses this sentinel to select the empty one; the catalog
+# handler maps it to `''` before `resolve_at`. Starts with `_` so it can't collide
+# with a real label (labels are SCB display text, never `_`-prefixed). It passes
+# the gate below as ordinary non-empty text.
+VALUE_SET_VERSION_NONE = "_none"
+
 
 class PeriodParamError(ValueError):
     """Raised when a raw ``?period=`` value fails the §16 syntactic allow-list.
@@ -158,7 +167,9 @@ def parse_value_set_version(raw: str) -> str:
     422'd every real label — the version picker had no working consumer before
     A5.3b, so the mis-spec was latent and the slug-shaped test fixtures masked it.
     """
-    if not raw:
+    if not raw.strip():
+        # Empty OR whitespace-only — never a real label (validate, don't mutate:
+        # real labels can carry trailing spaces, e.g. "Utbildningsnivå (SUN 2000)  ").
         raise ValueSetVersionParamError("empty value_set_version")
     if len(raw) > _MAX_VALUE_SET_VERSION_LEN:
         raise ValueSetVersionParamError(

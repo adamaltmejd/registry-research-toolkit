@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { VariableStateModel } from "./api";
+import { VALUE_SET_VERSION_NONE } from "./period";
 
 // Presentational view of a variable's `variable_state` rows (from the full
 // node's embedded `states` OR a `?period`-narrowed StatesResponse). Pure
@@ -48,6 +49,9 @@ const versionsAll = $derived(
   distinct(states.map((s) => s.value_set_version_label)),
 );
 const versionChips = $derived(versionsAll.filter((v) => v !== ""));
+// A state may carry the empty/default label; it gets a "(no version)" chip
+// (sending the `_none` sentinel) so it's individually selectable too.
+const hasEmptyVersion = $derived(versionsAll.includes(""));
 // Whether either narrowing axis can actually resolve the multi-state set to one.
 const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 </script>
@@ -77,7 +81,7 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
         <dd><code>{s.delivery_column_name}</code></dd>
       {/if}
       <dt>Value-set version</dt>
-      <dd>{s.value_set_version_label}</dd>
+      <dd>{s.value_set_version_label || "(no version)"}</dd>
     </dl>
 
     {#if s.value_set && s.value_set.length > 0}
@@ -147,6 +151,19 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
               {version}
             </button>
           {/each}
+          {#if hasEmptyVersion}
+            <!-- The empty/default-label state — selectable via the `_none`
+                 sentinel (an empty `?value_set_version` can't ride in the URL). -->
+            <button
+              type="button"
+              class="chip"
+              class:active={activeValueSetVersion === VALUE_SET_VERSION_NONE}
+              aria-pressed={activeValueSetVersion === VALUE_SET_VERSION_NONE}
+              onclick={() => onpickValueSetVersion(VALUE_SET_VERSION_NONE)}
+            >
+              (no version)
+            </button>
+          {/if}
         </div>
       </fieldset>
     {/if}
@@ -169,7 +186,9 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
       <li>
         <span class="state-variant"><code>{s.variant}</code></span>
         <span class="state-validity muted">{s.valid_from} – {s.valid_to}</span>
-        <span class="state-vsv muted">{s.value_set_version_label}</span>
+        <span class="state-vsv muted">
+          {s.value_set_version_label || "(no version)"}
+        </span>
         {#if s.delivery_column_name}
           <code class="state-col">{s.delivery_column_name}</code>
         {/if}

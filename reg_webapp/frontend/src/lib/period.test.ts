@@ -5,7 +5,25 @@ import {
   periodFieldFromQuery,
   periodQueryFromField,
   queryFromParams,
+  VALUE_SET_VERSION_NONE,
 } from "./period";
+
+describe("VALUE_SET_VERSION_NONE sentinel", () => {
+  it("matches the backend period_param.VALUE_SET_VERSION_NONE", () => {
+    // The picker's "(no version)" chip sends this; the backend maps it to "".
+    // MUST stay in lockstep with reg_webapp/backend/.../period_param.py.
+    expect(VALUE_SET_VERSION_NONE).toBe("_none");
+  });
+
+  it("rides in the query like any value", () => {
+    expect(
+      queryFromParams({
+        period: "2020",
+        value_set_version: VALUE_SET_VERSION_NONE,
+      }),
+    ).toBe("period=2020&value_set_version=_none");
+  });
+});
 
 describe("period field ↔ query round-trip", () => {
   // The field text IS the wire value (identity on a trimmed string), for every
