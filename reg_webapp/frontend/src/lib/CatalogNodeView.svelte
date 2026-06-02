@@ -1,18 +1,24 @@
 <script lang="ts">
-import { getCatalogNode } from "./api";
+import { getCatalogNode, isStatesResponse } from "./api";
 import { asyncResource } from "./async.svelte";
+import BindingLeafView from "./BindingLeafView.svelte";
 import { breadcrumbs, catalogHref, nodeLabel } from "./catalog";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // Fetches and renders one catalog node by FQID path, switching on the `kind`
-// discriminator. A5.3a is READ-ONLY browse: a binding leaf shows BASIC metadata
-// only (no period/states picker — that is A5.3b). The catch-all response is
-// narrowed on `kind` at the fetch boundary (the union has no `StatesResponse`
-// arm here because A5.3a never passes `?period`).
+// discriminator. The provider/register/classification browse fetch is a plain
+// (no-query) resolve; a binding leaf delegates to `BindingLeafView`, which owns
+// the period/variant resolution + states + lineage (A5.3b). The browse fetch
+// here never passes `?period`, so this catch-all response is always a `kind`-
+// tagged node (the `StatesResponse` arm — a no-`kind` resolve_at subset — is
+// only reachable WITH a query, so it's filtered to `null` and never rendered).
 let { fqidPath }: { fqidPath: string } = $props();
 
 const resource = asyncResource(() => getCatalogNode(fqidPath));
-const node = $derived(resource.data);
+const node = $derived.by(() => {
+  const data = resource.data;
+  return data === null || isStatesResponse(data) ? null : data;
+});
 const crumbs = $derived(breadcrumbs(fqidPath));
 </script>
 
@@ -78,33 +84,12 @@ const crumbs = $derived(breadcrumbs(fqidPath));
       {/if}
       <VariantBrowser registerFqid={node.fqid} />
     {:else if node.kind === "binding"}
-      <h2>{nodeLabel(node)}</h2>
-      <p class="fqid"><code>{node.fqid}</code></p>
-      <!-- A5.3a: BASIC metadata only. The period/states picker + lineage are A5.3b. -->
-      <dl class="meta">
-        {#if node.definition}
-          <dt>Definition</dt>
-          <dd>{node.definition}</dd>
-        {/if}
-        {#if node.description}
-          <dt>Description</dt>
-          <dd>{node.description}</dd>
-        {/if}
-        {#if node.measurement_unit}
-          <dt>Unit</dt>
-          <dd>{node.measurement_unit}</dd>
-        {/if}
-        <dt>Sensitive</dt>
-        <dd>{node.is_sensitive ? "yes" : "no"}</dd>
-        <dt>Identifier</dt>
-        <dd>{node.is_identifier ? "yes" : "no"}</dd>
-        <dt>States</dt>
-        <dd>{node.states.length}</dd>
-      </dl>
-      <p class="muted note">
-        State history, variants and lineage for this variable are shown in the
-        states view (coming in A5.3b).
-      </p>
+      <!-- Pass the full node down: this no-query browse fetch already resolved
+           the variable's metadata + embedded edges + default states. BindingLeafView
+           renders those from `node` (always present — so a cold deep-link with
+           `?period` isn't blank) and fetches only the period-NARROWED states from
+           the URL query, reactive without a remount. -->
+      <BindingLeafView {fqidPath} {node} />
     {:else if node.kind === "classification-root"}
       <h2>{nodeLabel(node)}</h2>
       <h3>Classifications</h3>
@@ -182,8 +167,5 @@ const crumbs = $derived(breadcrumbs(fqidPath));
   }
   .meta dt {
     font-weight: 600;
-  }
-  .note {
-    font-style: italic;
   }
 </style>
