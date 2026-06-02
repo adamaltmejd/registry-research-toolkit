@@ -54,6 +54,11 @@ describe("parseRoute", () => {
     });
   });
 
+  it("parses the /project authoring route (A5.3c)", () => {
+    expect(parseRoute("/project")).toEqual({ name: "project" });
+    expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash
+  });
+
   it("maps anything else to not-found", () => {
     expect(parseRoute("/about")).toEqual({ name: "not-found", path: "/about" });
   });
@@ -125,6 +130,10 @@ describe("onNavClick", () => {
   it("intercepts an SPA route under /catalog", () => {
     expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
   });
+
+  it("intercepts the /project authoring route (A5.3c)", () => {
+    expect(clickAnchor("/project").defaultPrevented).toBe(true);
+  });
 });
 
 describe("router reactive query (A5.3b)", () => {
@@ -151,6 +160,13 @@ describe("router reactive query (A5.3b)", () => {
   it("returns null for an absent query param", () => {
     router.navigate("/catalog/scb/lisa/kon?period=2020");
     expect(router.getQueryParam("variant")).toBeNull();
+  });
+
+  it("returns null for a present-but-empty query param (?period=)", () => {
+    // An empty modifier is "no value" — A5.3b callers treat `?period=` as absent
+    // (the `|| null` in getQueryParam). Pin it so a regression to `""` is caught.
+    router.navigate("/catalog/scb/lisa/kon?period=");
+    expect(router.getQueryParam("period")).toBeNull();
   });
 
   it("reads multiple modifiers off the query", () => {

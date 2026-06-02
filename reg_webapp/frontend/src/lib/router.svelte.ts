@@ -15,10 +15,12 @@
  */
 
 /** The parsed current route. `root` is `/` and `/catalog`; `catalog-node`
- * carries the FQID path after `/catalog/`; `not-found` is anything else. */
+ * carries the FQID path after `/catalog/`; `project` is the authoring surface
+ * (A5.3c); `not-found` is anything else. */
 export type Route =
   | { name: "root" }
   | { name: "catalog-node"; fqidPath: string }
+  | { name: "project" }
   | { name: "not-found"; path: string };
 
 /** `decodeURIComponent` that returns `null` on a malformed percent-sequence
@@ -40,6 +42,9 @@ export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, "") || "/";
   if (path === "/" || path === "/catalog") {
     return { name: "root" };
+  }
+  if (path === "/project") {
+    return { name: "project" };
   }
   if (path.startsWith("/catalog/")) {
     // Decode each segment (the router stores the human FQID; the api layer
