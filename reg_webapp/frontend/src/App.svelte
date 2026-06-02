@@ -98,6 +98,10 @@ const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
   :global(body) {
     margin: 0;
     font-family: system-ui, sans-serif;
+    /* Explicit light theme: every palette token (borders, surfaces, text)
+       assumes a light page, so pin the background — without it an OS dark-mode
+       default paints dark behind the dark `#1a1a1a` text (unreadable). */
+    background-color: #fff;
     color: #1a1a1a;
     line-height: 1.5;
   }
