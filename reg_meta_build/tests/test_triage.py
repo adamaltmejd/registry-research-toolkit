@@ -172,6 +172,28 @@ class TestSplit:
         ).fetchall()
         assert len(sibs) == 2, "split should mint a second sibling variable"
 
+    def test_declared_split_var_flags_all_siblings(self, tmp_path: Path) -> None:
+        """Change 1 × Change 2 end-to-end: a var_id declared in Identifierare.csv
+        that ALSO splits. The declared flag lands on the pre-split variable
+        (`_populate_sensitivity_flags`, before triage) and must propagate to
+        every split sibling (`_inherited_flags`). var_id 301 is in the default
+        IDENTIFIERARE_ROWS; delivering it under two disjoint columns splits it."""
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(colname="Hemkommun", cvid=9500, var_id=301),
+                _var_row(colname="Skolkommun", cvid=9501, var_id=301),
+            ],
+        )
+        rows = conn.execute(
+            "SELECT is_identifier FROM variable "
+            "WHERE register_id = 1 AND provider_key = '301'"
+        ).fetchall()
+        assert len(rows) == 2, "var_id 301 should split into two siblings"
+        assert all(r[0] == 1 for r in rows), (
+            "a declared (Identifierare.csv) var_id must flag ALL its split siblings"
+        )
+
     def test_split_states_route_to_distinct_siblings(self, tmp_path: Path) -> None:
         conn = _build(
             tmp_path,

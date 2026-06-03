@@ -533,9 +533,15 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     # Keyed on the source var_id (provider_key), so it lands on the one
     # pre-triage variable per var_id; the §5.7 split then copies it to siblings
     # (`_inherited_flags`). Orphan declared var_ids (no matching variable) no-op.
+    # Scoped to SCB registers: identifier_semantics + the numeric `provider_key`
+    # are SCB-native (a non-SCB/SOS text provider_key would `CAST` to 0), so the
+    # explicit provider scope keeps this correct independent of build order
+    # rather than relying on no SOS rows being present yet.
     id_cur = conn.execute(
         "UPDATE variable SET is_identifier = 1 "
         "WHERE is_identifier = 0 "
+        f"  AND register_id IN (SELECT register_id FROM register "
+        f"WHERE provider_id = {PROVIDER_ID_SCB}) "
         "  AND CAST(provider_key AS INTEGER) IN (SELECT var_id FROM identifier_semantics)"
     )
     declared = id_cur.rowcount or 0
@@ -1080,7 +1086,7 @@ def _apply_split(
     # set on the pre-split variable applies to every sibling. `is_sensitive` /
     # `is_identifier` are lifted PRE-triage (`_populate_sensitivity_flags`), so
     # an INSERT that omitted them would default both to 0 and silently drop the
-    # flag on all but the lex-first column — the source of ~200 false-negative
+    # flag on all but the lex-first column — the source of ~201 false-negative
     # identifiers across the corpus (A1.2 flags vs §5.7 split ordering).
     shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
     sibling_vids = [orig_vid]
