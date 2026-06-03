@@ -77,14 +77,20 @@ export class IndexedDBPersistence implements ProjectPersistence {
   ): Promise<void> {
     try {
       const db = await openDb();
-      await new Promise<void>((resolve, reject) => {
-        const txn = db.transaction(STORE_NAME, "readwrite");
-        txn.objectStore(STORE_NAME).put({ draft, schemaVersion }, key);
-        txn.oncomplete = () => resolve();
-        txn.onerror = () => reject(txn.error ?? new Error("save txn failed"));
-        txn.onabort = () => reject(txn.error ?? new Error("save txn aborted"));
-      });
-      db.close();
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const txn = db.transaction(STORE_NAME, "readwrite");
+          txn.objectStore(STORE_NAME).put({ draft, schemaVersion }, key);
+          txn.oncomplete = () => resolve();
+          txn.onerror = () => reject(txn.error ?? new Error("save txn failed"));
+          txn.onabort = () =>
+            reject(txn.error ?? new Error("save txn aborted"));
+        });
+      } finally {
+        // Close on both the resolve AND reject paths so a failed txn never
+        // leaks the open connection (the graceful-degradation contract).
+        db.close();
+      }
     } catch {
       // Swallow: a debounced autosave must never reject. Degrade to in-memory.
       console.warn("IndexedDB save failed; autosave degraded to in-memory.");
@@ -94,16 +100,20 @@ export class IndexedDBPersistence implements ProjectPersistence {
   async load(): Promise<ProjectData | null> {
     try {
       const db = await openDb();
-      const record = await new Promise<StoredDraft | undefined>(
-        (resolve, reject) => {
-          const txn = db.transaction(STORE_NAME, "readonly");
-          const req = txn.objectStore(STORE_NAME).get(this.key);
-          req.onsuccess = () => resolve(req.result as StoredDraft | undefined);
-          req.onerror = () => reject(req.error ?? new Error("load failed"));
-        },
-      );
-      db.close();
-      return restoredDraft(record, this.schemaVersion);
+      try {
+        const record = await new Promise<StoredDraft | undefined>(
+          (resolve, reject) => {
+            const txn = db.transaction(STORE_NAME, "readonly");
+            const req = txn.objectStore(STORE_NAME).get(this.key);
+            req.onsuccess = () =>
+              resolve(req.result as StoredDraft | undefined);
+            req.onerror = () => reject(req.error ?? new Error("load failed"));
+          },
+        );
+        return restoredDraft(record, this.schemaVersion);
+      } finally {
+        db.close(); // close on both the resolve AND reject paths (no leak on error)
+      }
     } catch {
       return null;
     }

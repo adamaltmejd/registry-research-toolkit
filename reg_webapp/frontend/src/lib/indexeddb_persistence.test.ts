@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { IndexedDBPersistence, restoredDraft } from "./indexeddb_persistence";
 import { newProjectData, type ProjectData } from "./project_data";
 
@@ -54,5 +54,22 @@ describe("IndexedDBPersistence", () => {
     await new IndexedDBPersistence("current", 1).save("current", draft, 1);
     const loaded = await new IndexedDBPersistence("current", 2).load();
     expect(loaded).toBeNull();
+  });
+});
+
+describe("graceful degradation (the mandatory no-throw contract)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("save resolves and load returns null when IndexedDB is unavailable", async () => {
+    // Private mode / disabled storage: `indexedDB` is absent. The debounced
+    // autosave $effect must never see a rejection, and restore must yield null.
+    vi.stubGlobal("indexedDB", undefined);
+    const p = new IndexedDBPersistence("current", 1);
+    await expect(
+      p.save("current", makeDraft("offline"), 1),
+    ).resolves.toBeUndefined();
+    await expect(p.load()).resolves.toBeNull();
   });
 });

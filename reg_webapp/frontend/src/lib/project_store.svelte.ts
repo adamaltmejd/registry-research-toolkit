@@ -448,7 +448,11 @@ export function initPersistence(): Promise<void> {
   const loaded = persistence.load().then((restored) => {
     if (restored != null && draft == null) {
       draft = restored;
-      lastDownloaded = serializeProjectData(restored);
+      // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
+      // downloaded to the durable project_data.json this session, so it must read
+      // as DIRTY (§9.7 unsaved-changes warning). lastDownloaded stays null →
+      // dirty=true → the header indicator + beforeunload warning fire. IndexedDB
+      // autosave is recovery, not the durable file.
     }
   });
 

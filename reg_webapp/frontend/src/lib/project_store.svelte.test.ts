@@ -296,6 +296,7 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     };
     setPersistence(fake);
     projectStore.newProject(SEED);
+    projectStore.updateField("name", "persisted-name-check");
 
     const stop = $effect.root(() => {
       initPersistence();
@@ -310,6 +311,11 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     // rune proxy. IndexedDB structured-clones the stored value, and a proxy throws
     // DataCloneError — structuredClone here reproduces that exact failure mode.
     expect(() => structuredClone(saves[0].draft)).not.toThrow();
+    // …and the snapshot carries the real edited content (not an empty/dropped
+    // object that would also clone fine).
+    expect((saves[0].draft as { name?: string }).name).toBe(
+      "persisted-name-check",
+    );
     stop();
     vi.useRealTimers();
   });
