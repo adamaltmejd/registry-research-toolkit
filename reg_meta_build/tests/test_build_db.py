@@ -396,18 +396,25 @@ class TestBuildDb:
         assert row["is_identifier"] == 0
 
     def test_sensitivity_no_unika_row(self, db_conn: sqlite3.Connection):
-        """A1.2: variables without a matching unika_summary row default to 0
-        (the DDL DEFAULT). Several fixture variables (ParenVar=2/301,
-        ExternVar=2/302) have no unika_summary entry — they must stay 0/0."""
-        rows = db_conn.execute(
-            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, "
-            "is_sensitive, is_identifier "
-            "FROM variable WHERE (register_id, provider_key) IN ((2, '301'), (2, '302'))"
-        ).fetchall()
-        assert len(rows) == 2
-        for row in rows:
-            assert row["is_sensitive"] == 0, row["var_id"]
-            assert row["is_identifier"] == 0, row["var_id"]
+        """A1.2: a variable with no matching unika_summary row defaults to 0/0
+        (ExternVar=2/302). is_sensitive comes ONLY from unika, so it stays 0.
+
+        Change 1: is_identifier is `unika ∪ Identifierare.csv`. ParenVar=2/301
+        has no unika row but IS declared in Identifierare.csv → is_identifier=1
+        (is_sensitive stays 0; Identifierare carries no sensitivity signal)."""
+        by_pk = {
+            row["provider_key"]: row
+            for row in db_conn.execute(
+                "SELECT provider_key, is_sensitive, is_identifier FROM variable "
+                "WHERE register_id = 2 AND provider_key IN ('301', '302')"
+            )
+        }
+        # ParenVar (301): declared in Identifierare.csv, no unika row.
+        assert by_pk["301"]["is_identifier"] == 1
+        assert by_pk["301"]["is_sensitive"] == 0
+        # ExternVar (302): neither declared nor unika-flagged → both 0.
+        assert by_pk["302"]["is_identifier"] == 0
+        assert by_pk["302"]["is_sensitive"] == 0
 
     # ------------------------------------------------------------------
     # A2.1 — variable_state coalescer
@@ -595,9 +602,9 @@ class TestBuildDb:
 
     def test_identifierare_imported(self, db_conn: sqlite3.Connection):
         row = db_conn.execute(
-            "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 44"
+            "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 301"
         ).fetchone()
-        assert row["variabelnamn"] == "Kön"
+        assert row["variabelnamn"] == "ParenVar"
 
     def test_variable_state_no_open_ended_in_default_fixture(
         self, db_conn: sqlite3.Connection

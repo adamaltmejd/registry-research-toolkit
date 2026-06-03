@@ -679,8 +679,14 @@ UNIKA_ROWS = [
 
 IDENTIFIERARE_HEADER = PIPE.join(["VarID", "Variabelnamn", "Variabeldefinition"])
 
+# Identifierare.csv = SCB's declared identification-variable list. var_id 301
+# (ParenVar, reg 2) has NO unika_summary row, so it exercises Change 1: a
+# declared identifier that `unika.identitetsvariabel` never flags must still
+# resolve to is_identifier=1 (the unika ∪ Identifierare union). Kön (var_id 44)
+# is deliberately NOT here — it is not an identifier (real Identifierare.csv
+# carries no such non-identifiers), so it must stay is_identifier=0.
 IDENTIFIERARE_ROWS = [
-    PIPE.join(["44", "Kön", "Personens kön"]),
+    PIPE.join(["301", "ParenVar", "Identifieringsvariabel för testet"]),
 ]
 
 TIMESERIES_HEADER = PIPE.join(
