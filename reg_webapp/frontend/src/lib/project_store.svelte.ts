@@ -6,10 +6,10 @@
  * This file is the A5.4 SEAM. Three deliberately-real-but-minimal mechanisms are
  * wired here so A5.4 is a drop-in extension, never a refactor:
  *
- *  1. `checkVersionGate` — the version-acceptance function. c-i ACCEPTS the Model A
- *     range (schema_version major 2, reg_meta_version `reg_meta/v1.x.y`) and is a
- *     NEUTRAL no-op (`{ok:true}`) otherwise; A5.4 ADDS the v0.x hard-reject branches
- *     (schema_version 1.x OR reg_meta/v0.x.y → a blocking `{ok:false, reason}`).
+ *  1. `checkVersionGate` — the version-acceptance function. ACCEPTS the Model A
+ *     range (schema_version major 2, reg_meta_version `reg_meta/v1.x.y`), HARD-rejects
+ *     v0.x (schema_version 1.x OR reg_meta/v0.x.y → a blocking `{ok:false, reason}`,
+ *     A5.4), and is a NEUTRAL no-op (`{ok:true}`) for everything else.
  *  2. `ProjectPersistence` — the autosave interface. c-i ships an in-memory Map
  *     stub (`InMemoryPersistence`) with a DEBOUNCED autosave `$effect` over the
  *     draft + a load-at-init (returns null → no restore). A5.4 swaps the impl for
@@ -84,16 +84,12 @@ function regMetaDotted(regMetaVersion: string): string | null {
 /**
  * THE A5.4 SEAM. Decide whether an opened project_data dict is loadable by version.
  *
- * c-i ACCEPTS the Model A range: `schema_version` major 2 AND `reg_meta_version`
- * of the form `reg_meta/v1.x.y` (major 1). Anything else is a NEUTRAL no-op
- * (`{ok:true}`) — c-i does NOT reject, it just lets unrecognized versions through
- * so the backend remains the canonical authority.
- *
- * A5.4 ADDS (additive branches, no refactor): the v0.x hard-reject — a
+ * ACCEPTS the Model A range: `schema_version` major 2 AND `reg_meta_version` of
+ * the form `reg_meta/v1.x.y` (major 1). HARD-rejects v0.x (A5.4): a
  * `schema_version` major 1 OR a `reg_meta/v0.x.y` returns `{ok:false, reason}`
- * (§9.7 "Hard reject v0.x files"). The version-extraction + the accept path +
- * the `{ok, reason}` shape are already live here so A5.4 only inserts the reject
- * checks.
+ * (§9.7 "Hard reject v0.x files") — no migration, pre-v1 policy. Anything else is
+ * a NEUTRAL no-op (`{ok:true}`): it lets unrecognized versions through so the
+ * backend remains the canonical authority.
  */
 export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
   const schemaVersion =
@@ -105,8 +101,14 @@ export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
   const dotted = regMetaDotted(regMetaVersion);
   const regMetaMajor = dotted ? majorOf(dotted) : null;
 
-  // A5.4 inserts the v0.x reject branches HERE (schemaMajor === 1 ||
-  // regMetaMajor === 0 → {ok:false, reason}). c-i only has the accept path.
+  // v0.x hard-reject (A5.4): pre-Model-A files. No migration — pre-v1 policy (§9.7).
+  if (schemaMajor === 1 || regMetaMajor === 0) {
+    return {
+      ok: false,
+      reason:
+        "This project predates Model A (v1.0). Please re-author against the current schema.",
+    };
+  }
 
   // Accept the Model A range explicitly (the documented happy path).
   if (schemaMajor === 2 && regMetaMajor === 1) {
@@ -159,9 +161,9 @@ export function setPersistence(impl: ProjectPersistence): void {
   persistence = impl;
 }
 
-/** The single autosave key for c-i (one draft per session). A5.4's multi-project
- * list (§9.7) keys per project. */
-const AUTOSAVE_KEY = "current";
+/** The single autosave key (one draft per session). Exported as the single source
+ * of truth so `main.ts` wires the IndexedDB load key from it (A5.4). */
+export const AUTOSAVE_KEY = "current";
 
 // ── The store ───────────────────────────────────────────────────────────────
 
@@ -432,8 +434,9 @@ export const projectStore = {
  * Wire the debounced autosave `$effect` + the load-at-init. MUST be called inside
  * a reactive root (a component init or an `$effect.root`) — it registers an
  * `$effect`. c-i: the autosave writes to the in-memory stub; the load-at-init
- * returns null (no restore). A5.4 swaps the persistence impl (IndexedDB) — this
- * wiring is unchanged.
+ * returns null (no restore). A5.4 swaps in the IndexedDB impl and snapshots the
+ * draft at the persistence boundary (a live $state proxy is not
+ * structured-cloneable — see the save call below).
  *
  * Returns the (already-pending) load promise so a caller can await the
  * (currently no-op) restore if it wants to. The debounce timer is cleared on
@@ -445,7 +448,11 @@ export function initPersistence(): Promise<void> {
   const loaded = persistence.load().then((restored) => {
     if (restored != null && draft == null) {
       draft = restored;
-      lastDownloaded = serializeProjectData(restored);
+      // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
+      // downloaded to the durable project_data.json this session, so it must read
+      // as DIRTY (§9.7 unsaved-changes warning). lastDownloaded stays null →
+      // dirty=true → the header indicator + beforeunload warning fire. IndexedDB
+      // autosave is recovery, not the durable file.
     }
   });
 
@@ -462,7 +469,14 @@ export function initPersistence(): Promise<void> {
     // spread), so the `draft` reference changes on each edit. Debounce so a burst
     // of edits writes once.
     const timer = setTimeout(() => {
-      void persistence.save(AUTOSAVE_KEY, current, storeSchemaVersion);
+      // $state.snapshot de-proxies the draft before the persistence boundary: a
+      // live Svelte rune proxy is NOT structured-cloneable, so handing it to
+      // IndexedDB.put() throws DataCloneError. Persist a plain snapshot.
+      void persistence.save(
+        AUTOSAVE_KEY,
+        $state.snapshot(current),
+        storeSchemaVersion,
+      );
     }, AUTOSAVE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
   });

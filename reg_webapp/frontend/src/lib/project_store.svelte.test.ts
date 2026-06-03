@@ -38,7 +38,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("checkVersionGate (THE A5.4 SEAM — accept path live)", () => {
+describe("checkVersionGate", () => {
   it("accepts the Model A range (schema_version 2.x + reg_meta/v1.x.y)", () => {
     expect(
       checkVersionGate({
@@ -54,17 +54,51 @@ describe("checkVersionGate (THE A5.4 SEAM — accept path live)", () => {
     ).toEqual({ ok: true });
   });
 
-  it("is a NEUTRAL no-op (ok:true) for out-of-range versions in c-i (A5.4 adds reject)", () => {
-    // c-i does NOT reject v0.x / 1.x — A5.4 inserts the reject branches. The seam
-    // exists (the {ok, reason} shape + version extraction), so these must NOT yet
-    // be blocking.
+  it("hard-rejects schema_version 1.x (pre-Model-A)", () => {
+    const gate = checkVersionGate({
+      schema_version: "1.2.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+    });
+    expect(gate.ok).toBe(false);
+    expect(gate.reason).toMatch(/Model A|re-author/i);
+  });
+
+  it("hard-rejects reg_meta/v0.x (pre-Model-A) even with a 2.x schema", () => {
+    const gate = checkVersionGate({
+      schema_version: "2.0.0",
+      reg_meta_version: "reg_meta/v0.9.0",
+    });
+    expect(gate.ok).toBe(false);
+    expect(gate.reason).toMatch(/Model A|re-author/i);
+  });
+
+  it("hard-rejects when BOTH are v0 (schema 1.x AND reg_meta/v0.x)", () => {
+    const gate = checkVersionGate({
+      schema_version: "1.0.0",
+      reg_meta_version: "reg_meta/v0.9.0",
+    });
+    expect(gate.ok).toBe(false);
+    expect(gate.reason).toMatch(/Model A|re-author/i);
+  });
+
+  it("is a NEUTRAL no-op (ok:true) for unrecognized in-range-ish versions", () => {
+    // Backend stays canonical: only v0.x is hard-rejected, everything else passes.
     expect(
       checkVersionGate({
-        schema_version: "1.0.0",
-        reg_meta_version: "reg_meta/v0.9.0",
+        schema_version: "3.0.0",
+        reg_meta_version: "reg_meta/v2.0.0",
       }),
     ).toEqual({ ok: true });
     expect(checkVersionGate({})).toEqual({ ok: true });
+  });
+
+  it("is a NEUTRAL no-op (ok:true) for malformed/non-numeric version strings", () => {
+    expect(
+      checkVersionGate({
+        schema_version: "not-a-version",
+        reg_meta_version: "reg_meta/vbogus",
+      }),
+    ).toEqual({ ok: true });
   });
 });
 
@@ -252,16 +286,17 @@ describe("storeSchemaVersion", () => {
 describe("persistence wiring (the A5.4 swap point)", () => {
   it("debounced autosave writes the draft to the persistence impl after the debounce", async () => {
     vi.useFakeTimers();
-    const saves: { key: string; schemaVersion: number }[] = [];
+    const saves: { key: string; draft: unknown; schemaVersion: number }[] = [];
     const fake: ProjectPersistence = {
-      save: (key, _draft, schemaVersion) => {
-        saves.push({ key, schemaVersion });
+      save: (key, draft, schemaVersion) => {
+        saves.push({ key, draft, schemaVersion });
         return Promise.resolve();
       },
       load: () => Promise.resolve(null),
     };
     setPersistence(fake);
     projectStore.newProject(SEED);
+    projectStore.updateField("name", "persisted-name-check");
 
     const stop = $effect.root(() => {
       initPersistence();
@@ -272,6 +307,15 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     // After the debounce window, the draft is persisted with the stamped version.
     expect(saves.length).toBeGreaterThanOrEqual(1);
     expect(saves[0].schemaVersion).toBe(storeSchemaVersion);
+    // Regression: the persisted draft must be a plain $state.snapshot, not the live
+    // rune proxy. IndexedDB structured-clones the stored value, and a proxy throws
+    // DataCloneError — structuredClone here reproduces that exact failure mode.
+    expect(() => structuredClone(saves[0].draft)).not.toThrow();
+    // …and the snapshot carries the real edited content (not an empty/dropped
+    // object that would also clone fine).
+    expect((saves[0].draft as { name?: string }).name).toBe(
+      "persisted-name-check",
+    );
     stop();
     vi.useRealTimers();
   });
