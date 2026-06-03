@@ -13,7 +13,6 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-import pytest
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
@@ -818,13 +817,14 @@ def test_check_sos_stateless_variables_skips_scb_only() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 12. --providers selection + 13. combined integration / byte-identity proxy
+# 12. --providers selection + 13. combined build additivity (synthetic)
+#
+# SOS is purely additive (minted ids, content-shared value_sets), so a
+# --providers=scb build never picks up SOS, and a combined scb,sos build leaves
+# the SCB-shaped rows byte-identical. These pin that on synthetic data. (The
+# real-corpus volume sanity check lived in a real-delivery test, now dropped —
+# a maintainer's actual build over the real input is what surfaces real drift.)
 # ---------------------------------------------------------------------------
-
-REAL_SOS = Path(__file__).resolve().parents[1] / "input_data" / "Socialstyrelsen"
-requires_real_sos = pytest.mark.skipif(
-    not REAL_SOS.is_dir(), reason="real SOS workbooks not present (gitignored)"
-)
 
 
 def _write_scb_only(tmp: Path) -> Path:
@@ -836,15 +836,14 @@ def _write_scb_only(tmp: Path) -> Path:
     return inp
 
 
-@requires_real_sos
-def test_providers_scb_only_emits_no_sos_rows(tmp_path: Path) -> None:
-    import shutil
+def test_synthetic_scb_only_excludes_present_sos_dir(tmp_path: Path) -> None:
+    # A providers=("scb",) build must ignore a present Socialstyrelsen dir: SOS
+    # is opt-in per --providers, so excluding it yields zero SOS rows — the
+    # A4.3b gate that SOS never leaks into an SCB-only build.
+    from _sos_fixtures import write_sos_input
 
     inp = _write_scb_only(tmp_path)
-    sosdir = inp / "Socialstyrelsen"
-    sosdir.mkdir()
-    for f in REAL_SOS.glob("*.xlsx"):
-        shutil.copy(f, sosdir / f.name)
+    write_sos_input(inp)  # SOS workbooks present but excluded by --providers
     build_db(
         input_dir=inp,
         db_dir=tmp_path / "scb",
@@ -853,25 +852,31 @@ def test_providers_scb_only_emits_no_sos_rows(tmp_path: Path) -> None:
         providers=("scb",),
     )
     conn = sqlite3.connect(tmp_path / "scb" / "reg_meta.db")
-    assert (
-        conn.execute("SELECT COUNT(*) FROM register WHERE provider_id=2").fetchone()[0]
-        == 0
-    )
+    try:
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM register WHERE provider_id=2"
+            ).fetchone()[0]
+            == 0
+        )
+    finally:
+        conn.close()
 
 
-@requires_real_sos
-def test_combined_build_validates_and_scb_subset_identical(tmp_path: Path) -> None:
-    import shutil
-
+def test_synthetic_combined_scb_subset_identical_to_scb_only(tmp_path: Path) -> None:
+    # SOS is purely additive: the SCB-shaped rows of a combined scb,sos build are
+    # byte-identical to an SCB-only build over the same input. Diff the
+    # provider-shaped tables with SOS filtered out (value tables are
+    # content-shared, so they legitimately differ by the SOS-only value_sets and
+    # are excluded from the proxy). `variable_related_to` is included, filtered
+    # to its SOS endpoints — the surface the P3#1 leaked-loop-var regression
+    # polluted. (Under skip_slugs the slug-keyed tables are empty, so this is the
+    # same contract pin the deleted real-data byte-identity proxy relied on.)
+    from _sos_fixtures import write_sos_input
     from reg_meta_build.dbdiff import DEFAULT_IGNORE, TableIgnore, diff_db_content
-    from reg_meta_build.validate import validate_built_db
 
     inp = _write_scb_only(tmp_path)
-    sosdir = inp / "Socialstyrelsen"
-    sosdir.mkdir()
-    for f in REAL_SOS.glob("*.xlsx"):
-        shutil.copy(f, sosdir / f.name)
-
+    write_sos_input(inp)
     build_db(
         input_dir=inp,
         db_dir=tmp_path / "comb",
@@ -889,19 +894,6 @@ def test_combined_build_validates_and_scb_subset_identical(tmp_path: Path) -> No
     comb = tmp_path / "comb" / "reg_meta.db"
     scb = tmp_path / "scb" / "reg_meta.db"
 
-    # Combined build passes validation (incl. the 3 new A4.3b checks).
-    res = validate_built_db(comb)
-    assert res.passed, res.format_report()
-
-    # SCB subset of the combined build == SCB-only build (byte-identity proxy):
-    # filter both DBs to provider_id != 2 on the provider-shaped tables. Same
-    # input dir, so import_manifest matches; SOS rows are the only delta.
-    #
-    # P3#1: the proxy also diffs `variable_related_to` (filtered to its SCB
-    # endpoints) — the P1 the orchestrator fixed (leaked-loop-var merge) leaked
-    # SOS related-to edges, which a register/variant/variable-only diff would
-    # MISS. `variable_related_to` rows are slug-keyed (a_provider/b_provider), so
-    # filter SOS-touching rows instead of by register_id.
     ignore = dict(DEFAULT_IGNORE)
     for table, where in (
         ("register", "provider_id = 2"),
@@ -916,13 +908,7 @@ def test_combined_build_validates_and_scb_subset_identical(tmp_path: Path) -> No
         ("variable_related_to", "a_provider = 'sos' OR b_provider = 'sos'"),
     ):
         ignore[table] = TableIgnore(skip_where=where)
-    # The core graph (register/variant/variable) matches once SOS rows are
-    # filtered; the value tables are content-shared (SOS collapses onto SCB), so
-    # an SCB-only build and the combined build differ there by the SOS-only
-    # value_sets — compare only the provider-shaped tables for the proxy.
     rep = diff_db_content(scb, comb, ignore=ignore)
-    # register/variant/variable AND variable_related_to rows match after
-    # filtering SOS out of the combined build.
     proxy_tables = {"register", "register_variant", "variable", "variable_related_to"}
     seen = set()
     for tr in rep.table_results:
@@ -932,65 +918,6 @@ def test_combined_build_validates_and_scb_subset_identical(tmp_path: Path) -> No
     assert proxy_tables.issubset(seen), (
         f"proxy did not diff all expected tables: missing {proxy_tables - seen}"
     )
-
-    # Explicit, skip_slugs-independent guards: the SCB variable_related_to row
-    # count and the folded SCB variable slug multiset must be byte-identical
-    # between the SCB-only and combined builds. (Under skip_slugs both are empty,
-    # but these assertions pin the contract so a future regression — incl. one
-    # that runs WITH slugs — is caught when SOS pollutes SCB's edges/slugs.)
-    conn_scb = sqlite3.connect(scb)
-    conn_comb = sqlite3.connect(comb)
-    try:
-        scb_related = conn_scb.execute(
-            "SELECT COUNT(*) FROM variable_related_to "
-            "WHERE a_provider != 'sos' AND b_provider != 'sos'"
-        ).fetchone()[0]
-        comb_related = conn_comb.execute(
-            "SELECT COUNT(*) FROM variable_related_to "
-            "WHERE a_provider != 'sos' AND b_provider != 'sos'"
-        ).fetchone()[0]
-        assert scb_related == comb_related, (
-            f"SCB variable_related_to count drifted: {scb_related} -> {comb_related}"
-        )
-
-        slug_sql = (
-            "SELECT v.slug FROM variable v JOIN register r USING (register_id) "
-            "WHERE r.provider_id != 2 ORDER BY v.slug"
-        )
-        scb_slugs = [r[0] for r in conn_scb.execute(slug_sql)]
-        comb_slugs = [r[0] for r in conn_comb.execute(slug_sql)]
-        assert scb_slugs == comb_slugs, "SCB folded variable slugs drifted"
-    finally:
-        conn_scb.close()
-        conn_comb.close()
-
-
-@requires_real_sos
-def test_combined_sos_volume_sanity(tmp_path: Path) -> None:
-    import shutil
-
-    inp = _write_scb_only(tmp_path)
-    sosdir = inp / "Socialstyrelsen"
-    sosdir.mkdir()
-    for f in REAL_SOS.glob("*.xlsx"):
-        shutil.copy(f, sosdir / f.name)
-    build_db(
-        input_dir=inp,
-        db_dir=tmp_path / "comb",
-        skip_classifications=True,
-        skip_slugs=True,
-        providers=("scb", "sos"),
-    )
-    conn = sqlite3.connect(tmp_path / "comb" / "reg_meta.db")
-    n_reg = conn.execute(
-        "SELECT COUNT(*) FROM register WHERE provider_id=2"
-    ).fetchone()[0]
-    n_var = conn.execute(
-        "SELECT COUNT(*) FROM variable v JOIN register r USING(register_id) "
-        "WHERE r.provider_id=2"
-    ).fetchone()[0]
-    assert n_reg >= 13
-    assert n_var >= 1400
 
 
 def test_unreadable_workbook_becomes_warning(tmp_path: Path) -> None:
@@ -1022,3 +949,283 @@ def test_alias_emitted_per_variant_column(tmp_path: Path) -> None:
     aliases = _of(objs, IRVariableAlias)
     assert len(aliases) == 1
     assert aliases[0].delivery_column_name == "KON"
+
+
+# ---------------------------------------------------------------------------
+# 14. Synthetic SOS workbooks — full build coverage
+#
+# SOS has no real-data tests (the Socialstyrelsen workbooks are gitignored and
+# real-corpus drift is left to a maintainer's actual `build-db`), so these
+# synthetic .xlsx workbooks (`_sos_fixtures.write_sos_input`, the SOS analog of
+# `_csv_fixtures.write_scb_input`) are the entire CI coverage for the SOS adapter
+# end-to-end, the combined scb,sos build, and the SOS-only (scb_ran=False)
+# lifecycle. They deliberately do NOT call `validate_built_db` wholesale —
+# `_check_sos_sanity` fails below 13 registers (a real-corpus volume gate) — and
+# instead pin the specific cross-provider invariants directly.
+# ---------------------------------------------------------------------------
+
+
+def _write_combined_input(tmp: Path) -> Path:
+    """Synthetic SCB CSVs + synthetic SOS workbooks under one input dir."""
+    from _sos_fixtures import write_sos_input
+
+    inp = _write_scb_only(tmp)
+    write_sos_input(inp)
+    return inp
+
+
+def test_synthetic_sos_emit_in_band_and_populates(tmp_path: Path) -> None:
+    from _sos_fixtures import write_sos_input
+
+    sos_dir = write_sos_input(tmp_path)
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    seed_providers(conn)
+    adapter = SOSAdapter(conn)
+    objs = list(adapter.emit(sos_dir))
+
+    # Every minted grain lands in the SOS band [2^62, 2^63).
+    for o in objs:
+        for attr in ("register_id", "register_variant_id", "variable_id", "state_id"):
+            v = getattr(o, attr, None)
+            if v is not None:
+                assert _MINT_BIT <= v < _HIGH, f"{attr}={v} out of minted band"
+
+    registers = _of(objs, IRRegister)
+    assert {r.name for r in registers} == {
+        "Syntetiskt register",
+        "Syntetiskt variantlöst register",
+    }
+    assert all(r.provider == "sos" for r in registers)
+
+    # Real deldatamängd variants (SYN) + the synthesized _default (variant-less
+    # SYT, which ships no Deldatamängder sheet).
+    variants = _of(objs, IRVariant)
+    assert {v.name for v in variants} == {"SYN_A", "SYN_B", "_default"}
+    assert [v.synthesized for v in variants if v.name == "_default"] == [True]
+
+    # DIAGNOS appears under both SYN deldatamängder -> merges to one variable;
+    # KON (SYN) and LOPNR (SYT) stay distinct.
+    variables = _of(objs, IRVariable)
+    assert sorted(v.provider_key for v in variables) == ["DIAGNOS", "KON", "LOPNR"]
+
+    # The Kodlista_DIAGNOS sheet populates a value set; both DIAGNOS states
+    # content-share it (the KON/LOPNR states carry none).
+    assert conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0] == 1
+    assert {r[0] for r in conn.execute("SELECT code FROM value_code")} == {"A01", "B02"}
+    states = _of(objs, IRVariableState)
+    assert sum(1 for s in states if s.value_set_id is not None) == 2
+
+
+def test_synthetic_combined_build_bands_edges_fts(tmp_path: Path) -> None:
+    from reg_meta_build.validate import ValidationResult, _check_minted_id_bands
+
+    inp = _write_combined_input(tmp_path)
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "comb",
+        skip_classifications=True,
+        skip_slugs=True,
+        providers=("scb", "sos"),
+    )
+    conn = sqlite3.connect(tmp_path / "comb" / "reg_meta.db")
+    try:
+        # Both providers materialized.
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM register WHERE provider_id=1"
+            ).fetchone()[0]
+            > 0
+        )
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM register WHERE provider_id=2"
+            ).fetchone()[0]
+            == 2
+        )
+
+        # (1) Minted-id band disjointness: SCB < 2^62, SOS >= 2^62.
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_minted_id_bands(conn, result, tables)
+        assert result.passed, result.format_report()
+
+        # (2) No cross-provider equivalence/relation edges. Under --skip-slugs
+        # both tables are empty (slug-keyed; can't resolve), so this is the same
+        # contract pin the real-data combined test relies on — a future
+        # regression that leaks a cross-provider edge (e.g. the P3#1
+        # leaked-loop-var merge) is caught.
+        for table in ("variable_same_as", "variable_related_to"):
+            n_cross = conn.execute(
+                f"SELECT COUNT(*) FROM {table} WHERE a_provider != b_provider"
+            ).fetchone()[0]
+            assert n_cross == 0, f"{table} has {n_cross} cross-provider edge(s)"
+
+        # (3) FTS row-count parity with the base tables (content-synced indexes).
+        assert (
+            conn.execute("SELECT COUNT(*) FROM register_fts").fetchone()[0]
+            == conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
+        )
+        assert (
+            conn.execute("SELECT COUNT(*) FROM variable_fts").fetchone()[0]
+            == conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]
+        )
+    finally:
+        conn.close()
+
+
+def test_synthetic_sos_only_build_drops_classification_candidate(
+    tmp_path: Path,
+) -> None:
+    # SOS-only build: scb_ran=False, so the SCB feed of classification_candidate
+    # is skipped — but materialize() still runs the UNCONDITIONAL
+    # `DROP TABLE classification_candidate` against the empty-but-present BASE-DDL
+    # table (and _backfill_state_classifications reads it as a no-op). The A4.4e
+    # review verified this safe by simulation; this pins it in CI.
+    from _sos_fixtures import write_sos_input
+
+    inp = tmp_path / "input"
+    inp.mkdir()
+    write_sos_input(inp)
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "sos",
+        skip_classifications=True,
+        skip_slugs=True,
+        providers=("sos",),
+    )
+    conn = sqlite3.connect(tmp_path / "sos" / "reg_meta.db")
+    try:
+        # SOS-only: no SCB rows, SOS registers present.
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM register WHERE provider_id=1"
+            ).fetchone()[0]
+            == 0
+        )
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM register WHERE provider_id=2"
+            ).fetchone()[0]
+            == 2
+        )
+        # The build-scratch tables were dropped before ship despite scb_ran=False.
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        assert "classification_candidate" not in tables
+        assert "variable_instance" not in tables
+        # The SOS variables still landed in the shipped catalog.
+        assert conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0] == 3
+    finally:
+        conn.close()
+
+
+def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
+    tmp_path: Path,
+) -> None:
+    # The skip-slugs combined test above pins the edge-count CONTRACT but can't
+    # exercise the slug-keyed derivation (both edge tables are empty without
+    # slugs). This runs the build WITH slugs so `variable_related_to` actually
+    # materializes, then asserts SOS's split-sibling edges stay SOS-internal —
+    # the LIVE guard for the P3#1 leaked-loop-var regression that crossed SOS
+    # related-to edges onto SCB. populate_slugs(strict=True) demands a slug for
+    # every register/variant, so we curate them from a throwaway no-slug "probe"
+    # build (ids are deterministic, so the probe and the real build share them).
+    from _sos_fixtures import (
+        DEFAULT_REGISTERS,
+        PAR_SPLIT_REGISTER,
+        write_slug_dir_from_db,
+        write_sos_input,
+    )
+    from reg_meta_build.validate import ValidationResult, _check_minted_id_bands
+
+    inp = _write_scb_only(tmp_path)
+    # PAR triggers the ("par", "ATC") split -> one related-to edge between its
+    # two sibling variables.
+    write_sos_input(inp, registers=DEFAULT_REGISTERS + (PAR_SPLIT_REGISTER,))
+
+    # Probe build (no slugs) -> harvest deterministic ids -> curate slug TOMLs.
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "probe",
+        skip_classifications=True,
+        skip_slugs=True,
+        providers=("scb", "sos"),
+    )
+    probe = sqlite3.connect(tmp_path / "probe" / "reg_meta.db")
+    slug_dir = write_slug_dir_from_db(probe, tmp_path / "slugs")
+    probe.close()
+
+    # Real build WITH slugs.
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "comb",
+        skip_classifications=True,
+        skip_slugs=False,
+        slug_dir=slug_dir,
+        providers=("scb", "sos"),
+    )
+    conn = sqlite3.connect(tmp_path / "comb" / "reg_meta.db")
+    try:
+        # SOS variable slugs all populate (provider-blind auto-derivation,
+        # including the two ATC split siblings disambiguated to atc / atc-2).
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable v JOIN register r USING (register_id) "
+                "WHERE r.provider_id=2 AND v.slug IS NULL"
+            ).fetchone()[0]
+            == 0
+        )
+
+        # The PAR ATC split materialized its related-to edge (stored both
+        # directions), and EVERY related-to edge is SOS-internal — none leaked
+        # to SCB.
+        n_related = conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[
+            0
+        ]
+        assert n_related == 2, f"expected the PAR split edge (2 rows), got {n_related}"
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_related_to "
+                "WHERE a_provider='sos' AND b_provider='sos'"
+            ).fetchone()[0]
+            == n_related
+        )
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_related_to WHERE a_provider != b_provider"
+            ).fetchone()[0]
+            == 0
+        )
+
+        # same_as is curated-only (none here), and never crosses providers.
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_same_as WHERE a_provider != b_provider"
+            ).fetchone()[0]
+            == 0
+        )
+
+        # Band disjointness + FTS parity still hold with slugs populated.
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_minted_id_bands(conn, result, tables)
+        assert result.passed, result.format_report()
+        assert (
+            conn.execute("SELECT COUNT(*) FROM register_fts").fetchone()[0]
+            == conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
+        )
+        assert (
+            conn.execute("SELECT COUNT(*) FROM variable_fts").fetchone()[0]
+            == conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]
+        )
+    finally:
+        conn.close()
