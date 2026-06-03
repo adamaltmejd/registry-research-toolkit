@@ -16,17 +16,12 @@ only literal this module admits beyond the slug grammar is ``class`` (§5.2's
 classification-root sentinel, which ``validate_slug`` rejects); ``_default`` (the
 variant coordinate) is NOT a catalog path segment — variants are a register
 sub-resource (§9.5), never a ``/api/catalog/{fqid}`` segment — so it is rejected
-like any other reserved token. Plus the ONE binding-leaf carve-out: a leaf of the
-form ``slug@version`` is split on the
-single ``@`` and each half validated separately (slug grammar both sides; the
-version part is the classification-slug / ``value_set_version_label`` grammar,
-which is the slug grammar). ``@`` is the only non-slug character admitted, and
-only as the single leaf delimiter — a second ``@`` (or ``@`` anywhere but the
-leaf) is rejected.
-
-A5.1b-ii validates ``@version`` but does NOT yet narrow on it: ``parse`` is
-fed the bare 3-segment FQID and ``@version`` narrowing is A5.2's
-``?value_set_version`` (documented, deferred).
+like any other reserved token. A binding leaf is a bare slug: the ``@version``
+value-set-version pin is **retired** (the value set is determined by the resolved
+``(variable, variant, period)``, not pinned on the FQID), so ``@`` is just a
+non-slug character that 422s like any other. (The catalog browse still offers a
+separate, query-string ``?value_set_version`` label filter — that is unrelated to
+the path grammar guarded here.)
 
 The module is intentionally reg_meta-only and FastAPI-free so it's unit-testable
 in isolation and reusable by A5.2's suffixed routes (``/states`` etc.).
@@ -45,16 +40,13 @@ from reg_meta.fqid import (
 # `class` is the one §5.2 literal that is a valid catalog PATH segment but which
 # `validate_slug` rejects as a slug — and ONLY as the LEADING classification
 # prefix (`class` root or `class/<slug>`). In any other slot (provider, register,
-# variable, or the `@version` value-set-version) `class` is a reserved token: it
-# must 422 at the guard, NOT be admitted into a slot reg_meta later rejects — e.g.
-# `class/<x>/variants` would otherwise construct `Fqid.register_fqid('class', …)`
-# → FqidError → an HTTP 500 instead of a clean 422. So `_validate_segment` admits
-# the literal only at the prefix position (`is_prefix`), never unconditionally.
-# `_default` (the variant coordinate) is NEVER a catalog path segment — variants
-# are a register sub-resource (§9.5) — so it always fails the slug grammar (422).
-
-# Only the binding LEAF (3rd segment) may carry the value-set-version pin.
-_LEAF_VERSION_DELIM = "@"
+# variable) `class` is a reserved token: it must 422 at the guard, NOT be admitted
+# into a slot reg_meta later rejects — e.g. `class/<x>/variants` would otherwise
+# construct `Fqid.register_fqid('class', …)` → FqidError → an HTTP 500 instead of a
+# clean 422. So `_validate_segment` admits the literal only at the prefix position
+# (`is_prefix`), never unconditionally. `_default` (the variant coordinate) is
+# NEVER a catalog path segment — variants are a register sub-resource (§9.5) — so
+# it always fails the slug grammar (422).
 
 
 class FqidPathError(ValueError):
@@ -69,15 +61,11 @@ class FqidPathError(ValueError):
 class ValidatedFqidPath:
     """A path that passed the §16 allow-list.
 
-    ``fqid`` is the bare FQID string to hand to ``reg_meta.fqid.parse`` — for a
-    binding leaf carrying ``@version`` this is the slug part only (the
-    ``@version`` pin is stripped; ``value_set_version`` carries it forward for
-    A5.2 narrowing). ``value_set_version`` is the stripped version (None when no
-    ``@`` was present).
+    ``fqid`` is the validated FQID string to hand to ``reg_meta.fqid.parse``. A
+    binding leaf is a bare slug — there is no ``@version`` pin to strip (retired).
     """
 
     fqid: str
-    value_set_version: str | None
 
 
 def _validate_segment(segment: str, *, slot: str, is_prefix: bool = False) -> None:
@@ -103,52 +91,22 @@ def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
     """§16 chokepoint: validate every segment of ``raw_path`` before resolution.
 
     Splits on the structural ``/`` and validates each segment against the slug
-    grammar (via ``reg_meta.fqid.validate_slug``) or the ``class`` / ``_default``
-    literals. The single carve-out: the binding LEAF (a 3-segment path) may carry
-    ``slug@version`` — split on the one ``@``, both halves validated as slugs.
+    grammar (via ``reg_meta.fqid.validate_slug``) or the leading ``class``
+    classification-prefix literal. A binding leaf is a bare slug — the ``@version``
+    pin is retired, so ``@`` is just a non-slug character (the value set is
+    resolved from ``(variable, variant, period)``, not pinned on the FQID).
 
-    Returns a ``ValidatedFqidPath`` carrying the bare FQID (``@version`` stripped)
-    plus the stripped ``value_set_version`` (None when absent). Raises
+    Returns a ``ValidatedFqidPath`` carrying the validated FQID. Raises
     ``FqidPathError`` (→ 422, zero SQL) on anything else: empty segment, ``.``,
-    ``..``, ``%``, ``\\``, NUL, a second ``@``, or ``@`` outside the leaf.
+    ``..``, ``%``, ``\\``, NUL, ``@``, or any other non-slug character.
     """
     if not raw_path:
         raise FqidPathError("empty FQID path")
     # A leading/trailing slash or `//` yields an empty segment — caught below.
     segments = raw_path.split("/")
-
-    value_set_version: str | None = None
     leaf_index = len(segments) - 1
-    # The `@version` carve-out applies ONLY to a 3-segment binding leaf (§5.2:
-    # version is value-set-bindable only on the variable). Restricting it to the
-    # leaf of a 3-seg path keeps `@` out of provider/register/classification
-    # segments and out of shorter/longer paths (a stray `@` there is a reject).
-    bare_leaf = segments[leaf_index]
-    if _LEAF_VERSION_DELIM in bare_leaf and len(segments) == 3:
-        slug_part, _, version_part = bare_leaf.partition(_LEAF_VERSION_DELIM)
-        # `partition` splits on the FIRST `@`; a second `@` lands in
-        # `version_part`, so reject it explicitly (only ONE `@`, as the single
-        # leaf delimiter, is admitted).
-        if _LEAF_VERSION_DELIM in version_part:
-            raise FqidPathError(
-                f"binding leaf admits at most one '{_LEAF_VERSION_DELIM}' "
-                f"(value-set-version delimiter): {bare_leaf!r}"
-            )
-        _validate_segment(version_part, slot="value_set_version")
-        value_set_version = version_part
-        segments = [*segments[:leaf_index], slug_part]
-    elif _LEAF_VERSION_DELIM in raw_path:
-        # `@` anywhere other than a 3-seg binding leaf is not a legal segment
-        # char — reject before validate_slug would (clearer error, same 422).
-        raise FqidPathError(
-            f"'{_LEAF_VERSION_DELIM}' is only legal on a binding leaf "
-            f"(value-set-version pin): {raw_path!r}"
-        )
-
     for index, segment in enumerate(segments):
         slot = "variable" if index == leaf_index and len(segments) == 3 else "segment"
         _validate_segment(segment, slot=slot, is_prefix=(index == 0))
 
-    return ValidatedFqidPath(
-        fqid="/".join(segments), value_set_version=value_set_version
-    )
+    return ValidatedFqidPath(fqid="/".join(segments))

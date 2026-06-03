@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import FqidError, parse
 
-from .semantic import parse_binding_variable, period_for_resolve
+from .semantic import period_for_resolve
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
@@ -133,11 +133,10 @@ def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
     if binding.display_name is not None:
         return binding.display_name
 
-    bare_fqid, pinned_version = parse_binding_variable(binding.variable)
     try:
-        parsed = parse(bare_fqid)
+        parsed = parse(binding.variable)
     except FqidError:
-        return _fqid_leaf(bare_fqid)
+        return _fqid_leaf(binding.variable)
 
     variant = (
         source.register_variant.split("/")[2]
@@ -146,15 +145,13 @@ def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
     )
     period = period_for_resolve(source.period)
     try:
-        states = catalog.resolve_at(
-            parsed, period, variant=variant, value_set_version=pinned_version
-        )
+        states = catalog.resolve_at(parsed, period, variant=variant)
     except RegMetaError:
-        return _fqid_leaf(bare_fqid)
+        return _fqid_leaf(binding.variable)
     for state in states:
         if state.delivery_column_name:
             return state.delivery_column_name
-    return _fqid_leaf(bare_fqid)
+    return _fqid_leaf(binding.variable)
 
 
 def _fqid_leaf(fqid: str) -> str:

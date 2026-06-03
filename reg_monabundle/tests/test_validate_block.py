@@ -23,13 +23,6 @@ def test_accepts_well_formed_options():
     validate_block({"column_options": {"scb/test/lopnr": {"suppress_k": 25}}})
 
 
-def test_accepts_binding_fqid_with_version_suffix():
-    # A `@<value-set-version>` pin on the slug is a legal binding FQID.
-    validate_block(
-        {"column_options": {"scb/lisa/naringsgren@sni2007": {"suppress_k": 25}}}
-    )
-
-
 def test_rejects_non_dict_block():
     with pytest.raises(ValueError, match="must be an object"):
         validate_block(["column_options"])
@@ -70,9 +63,10 @@ def test_rejects_non_fqid_key():
         "class/sun2020",
         # Disallowed character (period).
         "scb/test/lop.nr",
-        # Empty value-set version after the @ pin.
+        # `@` is a disallowed character now that the @version pin is retired —
+        # the leaf is a bare slug; any `@` in it is rejected.
+        "scb/lisa/naringsgren@sni2007",
         "scb/test/lopnr@",
-        # Empty slug before the @ pin.
         "scb/test/@sni2007",
     ],
 )

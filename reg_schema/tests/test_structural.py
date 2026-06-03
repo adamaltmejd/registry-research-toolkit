@@ -402,28 +402,24 @@ def test_binding_variable_class_prefix_rejected() -> None:
     assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
 
 
-def test_binding_variable_with_version_suffix_is_ok() -> None:
-    # The leaf parses as ``slug[@version]`` — the ``@`` is split off
-    # before the slug regex (§5.2).
+def test_binding_variable_version_suffix_is_invalid_fqid() -> None:
+    # @version was retired (§6.8.3): a value set is resolved from
+    # ``(variable, variant, period)``, never pinned on the FQID. The ``@`` is
+    # now a stray character the per-segment grammar rejects.
     spec = _spec()
     spec["sources"][0]["bindings"][1]["variable"] = "scb/lisa/naringsgren@sni2007"
-    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni2007"
     result = validate_structural(spec)
-    assert result.ok, result.issues
+    assert "/sources/0/bindings/1/variable" in _at(result, "invalid_fqid")
 
 
-def test_binding_variable_empty_version_suffix_is_invalid_fqid() -> None:
-    spec = _spec()
-    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa/naringsgren@"
-    result = validate_structural(spec)
-    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
-
-
-def test_binding_variable_double_at_is_invalid_fqid() -> None:
-    spec = _spec()
-    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa/naringsgren@a@b"
-    result = validate_structural(spec)
-    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
+def test_binding_variable_any_at_in_leaf_is_invalid_fqid() -> None:
+    # Empty (``@``), single (``@v``), or double (``@a@b``) — any ``@`` in the
+    # leaf is a stray character now that the version pin is gone.
+    for variable in ("scb/lisa/kon@", "scb/lisa/kon@sni2007", "scb/lisa/kon@a@b"):
+        spec = _spec()
+        spec["sources"][0]["bindings"][0]["variable"] = variable
+        result = validate_structural(spec)
+        assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid"), variable
 
 
 def test_binding_variable_must_match_source_register_variant_prefix() -> None:
@@ -487,28 +483,11 @@ def test_value_set_missing_class_prefix_is_invalid_fqid() -> None:
     assert _at(result, "invalid_fqid") == ["/sources/0/bindings/1/value_set"]
 
 
-def test_binding_value_set_version_mismatch() -> None:
-    # The FQID's @<version> pin and the value_set's class slug must name
-    # the same version (§6.8.1).
-    spec = _spec()
-    spec["sources"][0]["bindings"][1]["variable"] = "scb/lisa/naringsgren@sni2007"
-    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni92"
-    result = validate_structural(spec)
-    assert _at(result, "binding_value_set_version_mismatch") == [
-        "/sources/0/bindings/1/value_set"
-    ]
-
-
-def test_binding_value_set_version_match_is_ok() -> None:
-    spec = _spec()
-    spec["sources"][0]["bindings"][1]["variable"] = "scb/lisa/naringsgren@sni2007"
-    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni2007"
-    assert validate_structural(spec).ok
-
-
-def test_binding_value_set_without_version_pin_is_ok() -> None:
-    # No @version on the FQID → no cross-check; any well-formed value_set
-    # passes the structural layer.
+def test_binding_value_set_is_ok() -> None:
+    # A well-formed ``class/<slug>`` value_set passes the structural layer; the
+    # binding FQID carries no version pin to cross-check against (§6.8.3 — the
+    # value set is resolved from the variant/period, and the retired @version
+    # mismatch rule is gone).
     spec = _spec()
     spec["sources"][0]["bindings"][1]["value_set"] = "class/sni92"
     assert validate_structural(spec).ok

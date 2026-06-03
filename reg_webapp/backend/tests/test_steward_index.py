@@ -146,9 +146,6 @@ def test_index_admits_known_and_rejects_unknown(catalog):
     index = build_catalog_index(project, result.issues)
     assert index.admits("scb/lisa/kon")
     assert index.admits("scb/rams/syss")
-    # A pinned binding (@version) is admitted iff its BARE FQID is — the pin is a
-    # delivery detail, normalized away before the membership test.
-    assert index.admits("scb/lisa/kon@sun2020")
     # In the universe but NOT in this steward's catalog → not admitted.
     assert not index.admits("scb/rams/nosuchbinding")
 
@@ -283,13 +280,17 @@ def test_steward_catalog_with_unresolved_semantic_error_fails_fast(tmp_path):
     reg_meta-drift downgrades, result.ok is still False, so load_catalog_index fails
     fast with StewardCatalogError rather than booting a catalog-with-errors as if
     valid (which would admit the broken binding + never surface it)."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
 
     conn = build_slugged_db()
-    # Two co-delivered (overlapping) value-set versions for kon under the variant →
-    # a bare binding is ambiguous (error, NOT one of the drift downgrades).
+    # Two co-delivered (overlapping) states for kon under the variant with DISTINCT
+    # value sets → a bare binding is ambiguous (error, NOT one of the drift
+    # downgrades). Ambiguity keys on value_set_id, so the two must differ.
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
     conn.execute(
-        "UPDATE variable_state SET value_set_version_label = 'sun2020' "
+        "UPDATE variable_state SET value_set_version_label = 'sun2020', "
+        "value_set_id = 701 "
         "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
     )
     add_state(
@@ -300,6 +301,7 @@ def test_steward_catalog_with_unresolved_semantic_error_fails_fast(tmp_path):
         valid_from="2018-01-01",
         valid_to="9999-12-31",
         value_set_version_label="sun2000",
+        value_set_id=702,
     )
     conn.commit()
     stewards = tmp_path / "stewards"

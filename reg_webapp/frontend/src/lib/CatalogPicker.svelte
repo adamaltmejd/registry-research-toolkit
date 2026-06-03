@@ -24,7 +24,9 @@ import { deriveType } from "./catalog";
 //    register_variant) — drills ONLY within that register's binding (variable)
 //    list. On selecting a leaf it DERIVES-ON-PICK by resolving the variable at the
 //    source's (period, variant) → StatesResponse, then prefills type +
-//    display_name + the optional @version pin (the key feature).
+//    display_name from the resolved state. There is no value-set-version pin: a
+//    (variable, variant, period) resolves to exactly one value set (enforced at
+//    reg_meta build time), so the FQID is a bare 3-segment slug.
 //
 // Source-scoping the variable picker to the register prefix is the UX that prevents
 // fqid_register_variant_mismatch for picked values — but it is UX only; the backend
@@ -109,14 +111,12 @@ async function pickVariable(fqid: string): Promise<void> {
     const first = resolved.states[0];
     const type = deriveType(first);
     const displayNameDefault = first.delivery_column_name ?? null;
-    // Co-delivered value-set versions are NOT pinned here. `value_set_version_label`
-    // is FREE TEXT (e.g. "Besvär: Svåra, Lätta, Nej (1-3)"), but the FQID
-    // '@<version>' slot is a SLUG (`^[a-z](?:-?[a-z0-9])*`) — pinning the label
-    // would produce an invalid_fqid binding. The classification SLUG isn't on the
-    // resolve, so the SPA can't build a valid pin frontend-only: emit the bare FQID
-    // and let the backend's `binding_value_set_version_ambiguous` flag it on
-    // Validate. (Proper version pinning needs the API to surface the slug per state
-    // — a backend follow-up.)
+    // The FQID is a bare 3-segment slug — there is no value-set-version pin. A
+    // (variable, variant, period) resolves to exactly one value set, enforced at
+    // reg_meta build time (the build's co-delivery curation + validate invariant).
+    // In the rare event a not-yet-curated catalog still co-delivers two value sets,
+    // the backend's `binding_value_set_version_ambiguous` flags it on Validate —
+    // the fix is build-side curation, not a frontend pin.
     p.onpickVariable({ variable: fqid, type, displayNameDefault });
   } catch (e) {
     resolveError = e instanceof Error ? e.message : String(e);

@@ -107,12 +107,14 @@ class Binding(_Model):
     """A binding on a Source (§6.3) — one variable to include in the extract.
 
     ``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3
-    segments, §5.2), optionally suffixed ``@<value-set-version>`` to pin
-    one of several value-set versions co-delivered in the bound period
-    (e.g. ``scb/lisa/naringsgren@sni2007``). Its ``provider/register``
-    prefix (first 2 segments) must equal the source's ``register_variant``
-    prefix — the variant is NOT repeated here, it lives once on the Source
-    (§6.2). That cross-field rule is enforced by the structural validator.
+    segments, §5.2). Its ``provider/register`` prefix (first 2 segments) must
+    equal the source's ``register_variant`` prefix — the variant is NOT
+    repeated here, it lives once on the Source (§6.2). That cross-field rule
+    is enforced by the structural validator. The value set is determined by
+    the resolved ``(variable, variant, period)`` (§6.8.3); there is no
+    ``@version`` pin — that grammar is retired now that a
+    ``(variable, variant, period)`` resolves to exactly one value set
+    (enforced at reg_meta build time).
 
     ``display_name`` is optional: when absent, reg_meta-backed consumers
     resolve the default from ``variable_alias.delivery_column_name`` for

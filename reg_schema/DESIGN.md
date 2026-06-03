@@ -178,10 +178,9 @@ Current codes:
 | `invalid_field_type` | A field's JSON type is wrong (e.g. `steward` is not a string; `members` is not an array; `period` is null). |
 | `invalid_enum_value` | `steward`, `type`, `id_subtype`, `numeric_subtype` is outside its allowed set. |
 | `unexpected_field` | An unrecognized key on a CLOSED object (`Source` / `Binding` / `Panel` / member) — these are the `extra="forbid"` `_Model` subclasses (§6.2-§6.4). Top-level unknown keys are namespaced blocks, not errors (`ProjectData` is `extra="ignore"`). |
-| `invalid_fqid` | FQID segment count or per-segment characters are wrong: binding `variable` is not a 3-segment `<provider>/<register>/<slug>[@version]`, `value_set` is not a 2-segment `class/<slug>`, or `register_variant` is not a 3-part `<provider>/<register>/<variant>` coordinate. The binding leaf parses as `slug[@version]` (the `@` is split off before the slug grammar; §5.2). |
+| `invalid_fqid` | FQID segment count or per-segment characters are wrong: binding `variable` is not a 3-segment `<provider>/<register>/<slug>`, `value_set` is not a 2-segment `class/<slug>`, or `register_variant` is not a 3-part `<provider>/<register>/<variant>` coordinate. The binding leaf is a bare slug — the retired `@version` pin is now a stray `@` the per-segment grammar rejects (§6.8.3 resolves the value set from `(variable, variant, period)`). |
 | `fqid_register_variant_mismatch` | A binding `variable`'s first **2** segments (provider/register) don't equal the owning source's `register_variant` prefix. The variant is not repeated on the binding — it lives once on the Source (§6.2). |
 | `invalid_period` | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, or a `{"from","to"}` range object with valid endpoints (§6.2). |
-| `binding_value_set_version_mismatch` | A binding pins a value-set version via the FQID's `@<version>` suffix **and** names a `value_set`, but they disagree (`…@sni2007` with `value_set = class/sni92`). A slug-string comparison — no reg_meta. The `@<version>` is the canonical pin; `value_set` may be omitted when `@<version>` is present (§5.2). |
 | `subtype_on_wrong_type` | A `*_subtype` or `*_format` field is set on a binding whose `type` doesn't own it (e.g. `id_subtype` on a categorical). |
 | `empty_bindings` | A source has zero bindings. |
 | `duplicate_source_name` | Two sources share a `name`. |
@@ -226,7 +225,7 @@ stable-code registry is complete and the SPA can map them:
 |---|---|---|
 | `period_outside_state_validity` | error | No `variable_state` covers the binding's `(variant, period)`. |
 | `binding_state_drifts_within_period` | info | A range `period` crosses a state transition; the resolver returns per-state subsets. |
-| `binding_value_set_version_ambiguous` | error | A bare binding's `(variant, period)` matches several co-delivered value-set versions; the author must pin one with `@<version>`. |
+| `binding_value_set_version_ambiguous` | error | A binding's `(variant, period)` resolves to several **distinct value sets** co-delivered at the same instant (keyed on `value_set_id`, not the free-text version label). This should not occur once the reg_meta build enforces one value set per `(variable, variant, period)` (the build's co-delivery curation + `validate` invariant), so it is a defensive backstop. There is no author-side pin (the `@version` grammar is retired) — the resolution is build-side curation. |
 | `variable_replaced` | info | The binding has a `variable_replaced_by` edge effective at or before the source's `period`; hint points at the successor. |
 | `panel_inheritance_unresolvable` | error | A member has no effective `entity_key` / `time_key` and its variant has no `panel_template` to inherit from. |
 

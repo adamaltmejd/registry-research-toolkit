@@ -237,9 +237,8 @@ class BindingNode(BaseModel):
     carry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node
     shape is the binding leaf with NO narrowing query: a `?period` resolves via
     `resolve_at` (→ `StatesResponse`) instead, and a narrowing modifier (`?variant`
-    / `?value_set_version` / an `@version` pin) WITHOUT `?period` is a 422 — it is
-    inert without a period, so it errors rather than silently embedding full
-    history."""
+    / `?value_set_version`) WITHOUT `?period` is a 422 — it is inert without a
+    period, so it errors rather than silently embedding full history."""
 
     kind: Literal["binding"] = "binding"
     fqid: str

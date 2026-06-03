@@ -186,16 +186,23 @@ def period_for_resolve(period: int | str | PeriodRange) -> Period:
 
 
 def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
-    """§6.8.3 CO-DELIVERY: are ≥2 states with DIFFERENT value-set-version labels
-    valid at the SAME instant (overlapping validity windows)? That is the genuine
-    ambiguity (a bare binding can't pick one). Sequential states from a version
-    transition (non-overlapping windows) are NOT co-delivery — that is drift (info).
-    O(n²) over the few states resolve_at returns for one binding. ``valid_from`` /
-    ``valid_to`` are ISO ``YYYY-MM-DD`` strings, so they compare chronologically."""
+    """§6.8.3 CO-DELIVERY: are ≥2 states with DISTINCT VALUE SETS (different
+    ``value_set_id`` — not merely a different free-text version label) valid at the
+    SAME instant (overlapping validity windows)? That is the genuine ambiguity: the
+    same coordinate yields two different code-lists. Two states that share a
+    ``value_set_id`` but carry different version labels are the SAME values under
+    two names — NOT ambiguity (keying on the label would false-positive on ~71% of
+    co-deliveries). Sequential states from a transition (non-overlapping windows)
+    are drift (info), not co-delivery. O(n²) over the few states resolve_at returns;
+    ``valid_from`` / ``valid_to`` are ISO ``YYYY-MM-DD`` strings (chronological).
+
+    Note: post-curation the reg_meta build enforces one value set per
+    ``(variable, variant, period)`` (the build's co-delivery curation + ``validate``
+    invariant), so this should not fire in practice — it is a defensive backstop."""
     for i, a in enumerate(states):
         for b in states[i + 1 :]:
             if (
-                a.value_set_version_label != b.value_set_version_label
+                a.value_set_id != b.value_set_id
                 and a.valid_from <= b.valid_to
                 and b.valid_from <= a.valid_to
             ):
@@ -217,14 +224,11 @@ def _check_binding(
     var_path = f"{bbase}/variable"
 
     # §6.8.3: the binding FQID must resolve to a known variable (following
-    # `same_as` curated links — `Catalog.resolve` does that internally). Split off
-    # any `@<version>` pin first: `parse` rejects `@` (it's not an identity
-    # segment, §5.2) — the pin is a value-set-version narrowing carried into the
-    # period probe, not part of the variable's identity. Parsed once here and
-    # threaded into the period probe (no re-parse).
-    bare_fqid, pinned_version = parse_binding_variable(binding.variable)
+    # `same_as` curated links — `Catalog.resolve` does that internally). The
+    # binding FQID is a bare 3-segment variable (the `@version` pin is retired —
+    # the value set is determined by the resolved `(variable, variant, period)`).
     try:
-        parsed = parse(bare_fqid)
+        parsed = parse(binding.variable)
     except FqidError:
         # Structurally valid input shouldn't reach here; treat as unresolved.
         issues.append(
@@ -263,7 +267,6 @@ def _check_binding(
         var_path,
         variant_ok,
         parsed,
-        pinned_version,
         catalog,
         caller,
         issues,
@@ -278,7 +281,6 @@ def _check_binding_period(
     var_path: str,
     variant_ok: bool,
     parsed: Fqid,
-    pinned_version: str | None,
     catalog: Catalog,
     caller: Caller,
     issues: list[ValidationIssue],
@@ -286,26 +288,19 @@ def _check_binding_period(
     """§6.8.3: the binding must resolve to a `variable_state` at the source's
     variant AND period. No covering state → `period_outside_state_validity`. A
     range period crossing a state transition → `binding_state_drifts_within_period`
-    (info). Multiple states matching a BARE binding because several value-set
-    versions are co-delivered in that period (a §5.7 fold) →
-    `binding_value_set_version_ambiguous` (error) — the author must pin the
-    version with the FQID's `@<version>` suffix."""
+    (info). The binding resolving to ≥2 DISTINCT value sets co-delivered in that
+    period → `binding_value_set_version_ambiguous` (error). That last case is a
+    defensive backstop: the reg_meta build enforces one value set per
+    `(variable, variant, period)` (its co-delivery curation + `validate`
+    invariant), so a clean catalog never trips it — there is no author-side pin."""
     # An unresolved variant already produced an `fqid_unresolved`; a period probe
     # against it would be derivative noise. Skip it.
     if not variant_ok:
         return
     variant = source.register_variant.split("/")[2]
     period = period_for_resolve(source.period)
-    # `pinned_version` (the FQID's `@<version>` suffix, parsed once in
-    # `_check_binding`) narrows a pinned binding to one state (§6.8.3), so it never
-    # trips the ambiguity check below; `parsed` is the same bare FQID, reused.
     try:
-        states = catalog.resolve_at(
-            parsed,
-            period,
-            variant=variant,
-            value_set_version=pinned_version,
-        )
+        states = catalog.resolve_at(parsed, period, variant=variant)
     except RegMetaError:
         # resolve_at only raises when the binding FQID doesn't resolve — already
         # handled above — or on a malformed period (structurally pre-validated).
@@ -325,24 +320,29 @@ def _check_binding_period(
         )
         return
 
-    # §6.8.3 fold: CO-DELIVERY — ≥2 states with DIFFERENT value-set versions whose
-    # validity windows OVERLAP (valid at the same instant) — means the build can't
-    # pick a coding for a BARE binding, so this is an error directing the author to
-    # pin `@<version>`. `resolve_at` returns every state whose validity INTERSECTS
-    # the period, so for a range / `_default` period the matched states may instead
-    # be SEQUENTIAL across a version transition (non-overlapping) — that's drift
-    # (info) below, NOT ambiguity. A pinned binding already narrowed to one state.
-    if pinned_version is None and _has_codelivered_versions(states):
-        versions = sorted({s.value_set_version_label for s in states})
+    # §6.8.3 fold: CO-DELIVERY — ≥2 states with DISTINCT value sets (different
+    # `value_set_id`) whose validity windows OVERLAP (valid at the same instant).
+    # That breaks the `(variable, variant, period) → one value set` invariant, so
+    # it is an error. `resolve_at` returns every state whose validity INTERSECTS the
+    # period, so for a range / `_default` period the matched states may instead be
+    # SEQUENTIAL across a transition (non-overlapping) — that's drift (info) below,
+    # NOT ambiguity. There is no author-side pin: the fix is reg_meta build-time
+    # curation (this should not fire against a curated catalog).
+    if _has_codelivered_versions(states):
+        # Distinct value sets at the same instant, labelled for legibility.
+        labels: dict[int | None, str] = {}
+        for s in states:
+            labels.setdefault(s.value_set_id, s.value_set_version_label)
         issues.append(
             _issue(
                 "binding_value_set_version_ambiguous",
                 "error",
                 caller,
                 var_path,
-                f"binding {binding.variable!r} matches co-delivered value-set "
-                f"versions {versions} at {source.register_variant} period "
-                f"{source.period!r}; pin one with the FQID '@<version>' suffix",
+                f"binding {binding.variable!r} resolves to several co-delivered "
+                f"value sets {sorted(labels.values())} at {source.register_variant} "
+                f"period {source.period!r}; a (variable, variant, period) must map "
+                f"to one value set — this reg_meta build needs co-delivery curation",
             )
         )
         return
@@ -403,18 +403,3 @@ def _check_value_set(
                 "in reg_meta",
             )
         )
-
-
-def parse_binding_variable(variable_fqid: str) -> tuple[str, str | None]:
-    """Split a binding-leaf FQID into ``(bare_fqid, value_set_version)``.
-
-    The leaf may carry a ``@<version>`` value-set-version pin. ``parse`` rejects
-    ``@`` (the pin is a delivery detail, not part of the variable's identity,
-    §5.2), so we strip it for resolution and return it separately to narrow the
-    ``resolve_at`` probe. The structural layer guarantees at most one ``@`` on the
-    leaf (§6.8.1). The single owner of this split — ``catalog_index`` imports it
-    for the bare index key."""
-    provider_register, _, leaf = variable_fqid.rpartition("/")
-    bare_leaf, _, version = leaf.partition("@")
-    bare = f"{provider_register}/{bare_leaf}" if provider_register else bare_leaf
-    return bare, version or None

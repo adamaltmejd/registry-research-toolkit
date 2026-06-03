@@ -3,9 +3,11 @@
 Covers the 7 suffixed / sub-resource routes (`/states`, `/predecessors`,
 `/successors`, `/related`, `/lineage`, `/lineage_warnings`, and the
 `/{provider}/{register}/variants` register sub-resource), the `?period` query on
-the catch-all (the `{states: [...]}` resolve_at shape), the `@version`-vs-
-`?value_set_version` reconciliation, and a per-DB-backed-route ThreadPoolExecutor
-concurrency smoke (the A5.1b-ii P1 cross-thread guard). The §16 security gate
+the catch-all (the `{states: [...]}` resolve_at shape), the read-only
+`?value_set_version` browse-narrowing label filter, and a per-DB-backed-route
+ThreadPoolExecutor concurrency smoke (the A5.1b-ii P1 cross-thread guard). (The
+`@version` FQID pin is retired — a bare leaf is the only form.) The §16 security
+gate
 (malformed period/variant/traversal → 422 + zero SQL) lives in
 ``test_fqid_validation.py``.
 
@@ -198,10 +200,9 @@ def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
     ["states", "predecessors", "successors", "related", "lineage", "lineage_warnings"],
 )
 def test_subendpoint_rejects_at_version_pin(client, suffix: str):
-    # The suffixed endpoints return the FULL history / edge set and don't narrow by
-    # value-set-version. An @version pin in the FQID would be inert — so it 422s
-    # rather than silently returning unfiltered data (same as the catch-all 422ing
-    # a narrowing modifier without ?period).
+    # The `@version` pin is retired — a binding leaf is a bare slug, so the `@` is a
+    # non-slug character the §16 path gate rejects (422) before the suffixed handler
+    # runs, on every sub-resource route.
     resp = client.get(f"/api/catalog/{_KON}@v1/{suffix}")
     assert resp.status_code == 422, f"{suffix} → {resp.status_code}"
 
@@ -265,7 +266,7 @@ def test_no_period_query_returns_full_leaf(client):
     assert "same_as" in body  # the full record, not the states envelope
 
 
-# ── @version pin vs ?value_set_version reconciliation (LOCKED) ───────────────
+# ── ?value_set_version read-only browse-narrowing label filter ───────────────
 
 
 def test_value_set_version_query_alone_is_accepted(client):
@@ -315,45 +316,18 @@ def test_value_set_version_none_sentinel_selects_the_empty_label(client):
     assert len(sentinel.json()["states"]) > 0  # the empty-label states matched
 
 
-def test_at_version_pin_alone_is_accepted(client):
-    resp = client.get(f"/api/catalog/{_KON}@v1?period=2020")
-    assert resp.status_code == 200
-    assert resp.json()["states"] == []
-
-
-def test_at_version_and_query_equal_is_accepted(client):
-    resp = client.get(f"/api/catalog/{_KON}@v1?period=2020&value_set_version=v1")
-    assert resp.status_code == 200
-    assert resp.json()["states"] == []
-
-
-def test_at_version_and_query_conflict_is_422(client):
-    # LOCKED: @version pin AND ?value_set_version both present but DIFFERENT →
-    # 422 (ambiguous). This is a client contradiction, not a silent precedence.
-    resp = client.get(f"/api/catalog/{_KON}@v1?period=2020&value_set_version=v2")
-    assert resp.status_code == 422
-
-
-def test_at_version_and_query_conflict_without_period_is_422(client):
-    # The conflict is a client contradiction regardless of ?period — even on the
-    # full-leaf path (no ?period) a differing @version vs ?value_set_version 422s.
-    resp = client.get(f"/api/catalog/{_KON}@v1?value_set_version=v2")
-    assert resp.status_code == 422
-
-
 @pytest.mark.parametrize(
     "url",
     [
-        f"/api/catalog/{_KON}@v1",  # @version pin, no ?period
         f"/api/catalog/{_KON}?value_set_version=v1",  # ?value_set_version, no ?period
         f"/api/catalog/{_KON}?variant=individer-15plus",  # ?variant, no ?period
     ],
 )
 def test_narrowing_modifier_without_period_is_422(client, url: str):
-    # A narrowing modifier (@version / ?value_set_version / ?variant) is inert
-    # without ?period — it only takes effect inside resolve_at. Rather than
-    # silently no-op (return the full leaf as if the modifier were absent), the
-    # catch-all 422s "requires ?period" so the param never silently does nothing.
+    # A narrowing modifier (?value_set_version / ?variant) is inert without ?period
+    # — it only takes effect inside resolve_at. Rather than silently no-op (return
+    # the full leaf as if the modifier were absent), the catch-all 422s "requires
+    # ?period" so the param never silently does nothing.
     resp = client.get(url)
     assert resp.status_code == 422, f"{url} → {resp.status_code}"
 
