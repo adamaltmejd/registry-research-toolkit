@@ -707,10 +707,15 @@ retired at A4.4 — gate is `--validate` + targeted before/after, not byte-ident
   entity keys / 34 full-NULL (index / projection / area tables) / grain 588 delivery ·
   19 row. Every panel ref validated to exist on its register (0 hallucinated slugs);
   `build-db --validate --providers scb,sos` clean, 0 build-vs-curation mismatches.
-  **Flagged for the maintainer's final review:** the 85 entity-NULL-but-`time=period`
-  periodic-aggregate variants (national accounts, foreign trade, elections, vehicle
-  stocks) vs the full-NULL index/projection set — the aggregate-time boundary is a
-  judgment call the agents drew slightly unevenly.
+  **Maintainer review — RESOLVED (2026-06-03):** the aggregate-time boundary is now
+  uniform — every entity-NULL variant is full-NULL (no entity ⇒ no panel ⇒ inert time
+  key). Of the 85 entity-NULL-but-`time=period` variants, 72 were genuine aggregates
+  (national accounts, foreign trade, elections, vehicle stocks → cleared to full-NULL)
+  and 13 were miscurated per-subject panels, promoted to entity-bearing: stuv ×2 +
+  lararreg/lararprognos → `personnummer`; fordonsreg ×10 vehicle-type variants →
+  `chassi` (the stable VIN — `agnr` disqualified, ≤3 co-owners/row; `regnr` reusable;
+  `ovriga-fordonsslag` has no chassi → full-NULL). Combined total now 535 entity /
+  106 full-NULL; `build-db --validate --providers scb,sos` clean.
 - **A4.4e — classification re-point (GAP-1 close-out, highest risk)**: Option A —
   a build-time universal `(variable_id, value_set_id, classification_id)` candidate
   table BOTH adapters feed; `_backfill_state_classifications` reads it provider-blind;
