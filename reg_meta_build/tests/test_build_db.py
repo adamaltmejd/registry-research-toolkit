@@ -88,8 +88,9 @@ class TestBuildDb:
 
     def test_variable_count(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]
-        # Kön, TestVar, ÅÄÖVar in reg 1; Kön, UniqueVar, ParenVar, ExternVar in reg 2
-        assert count == 7
+        # reg 1: Kön, TestVar, ÅÄÖVar
+        # reg 2: Kön, UniqueVar, ParenVar, ExternVar, LopNr
+        assert count == 8
 
     def test_variable_instance_absent(self, db_conn: sqlite3.Connection):
         """A2.7: `variable_instance` (and its cvid-grained alias staging) is
@@ -396,25 +397,32 @@ class TestBuildDb:
         assert row["is_identifier"] == 0
 
     def test_sensitivity_no_unika_row(self, db_conn: sqlite3.Connection):
-        """A1.2: a variable with no matching unika_summary row defaults to 0/0
-        (ExternVar=2/302). is_sensitive comes ONLY from unika, so it stays 0.
+        """A1.2: variables with no matching unika_summary row AND not declared in
+        Identifierare.csv default to 0/0 (the DDL DEFAULT). ParenVar=2/301 and
+        ExternVar=2/302 have neither — they must stay 0/0."""
+        rows = db_conn.execute(
+            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, "
+            "is_sensitive, is_identifier "
+            "FROM variable WHERE (register_id, provider_key) IN ((2, '301'), (2, '302'))"
+        ).fetchall()
+        assert len(rows) == 2
+        for row in rows:
+            assert row["is_sensitive"] == 0, row["var_id"]
+            assert row["is_identifier"] == 0, row["var_id"]
 
-        Change 1: is_identifier is `unika ∪ Identifierare.csv`. ParenVar=2/301
-        has no unika row but IS declared in Identifierare.csv → is_identifier=1
-        (is_sensitive stays 0; Identifierare carries no sensitivity signal)."""
-        by_pk = {
-            row["provider_key"]: row
-            for row in db_conn.execute(
-                "SELECT provider_key, is_sensitive, is_identifier FROM variable "
-                "WHERE register_id = 2 AND provider_key IN ('301', '302')"
-            )
-        }
-        # ParenVar (301): declared in Identifierare.csv, no unika row.
-        assert by_pk["301"]["is_identifier"] == 1
-        assert by_pk["301"]["is_sensitive"] == 0
-        # ExternVar (302): neither declared nor unika-flagged → both 0.
-        assert by_pk["302"]["is_identifier"] == 0
-        assert by_pk["302"]["is_sensitive"] == 0
+    def test_identifier_from_identifierare_without_unika(
+        self, db_conn: sqlite3.Connection
+    ):
+        """Change 1 (unika ∪ Identifierare.csv): LopNr=2/303 has NO unika_summary
+        row but IS declared in Identifierare.csv, so is_identifier=1 from the
+        declared list alone. is_sensitive stays 0 (Identifierare carries no
+        sensitivity signal — that comes only from unika)."""
+        row = db_conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 2 AND provider_key = '303'"
+        ).fetchone()
+        assert row["is_identifier"] == 1
+        assert row["is_sensitive"] == 0
 
     # ------------------------------------------------------------------
     # A2.1 — variable_state coalescer
@@ -602,9 +610,9 @@ class TestBuildDb:
 
     def test_identifierare_imported(self, db_conn: sqlite3.Connection):
         row = db_conn.execute(
-            "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 301"
+            "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 303"
         ).fetchone()
-        assert row["variabelnamn"] == "ParenVar"
+        assert row["variabelnamn"] == "LopNr"
 
     def test_variable_state_no_open_ended_in_default_fixture(
         self, db_conn: sqlite3.Connection
