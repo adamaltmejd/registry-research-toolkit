@@ -181,6 +181,43 @@ class TestResolveYearWinners:
         assert winners == [big[0]]
         assert genuine is False
 
+    def test_label_freshness_final_beats_preliminary(self) -> None:
+        a = _state(1, col="x", label="RTB 2021 preliminär")
+        b = _state(2, col="x", label="RTB 2021")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2021, self._codes({1: 234, 2: 251})
+        )
+        assert winners == [b[0]]  # final beats preliminary
+        assert genuine is False
+
+    def test_label_freshness_later_snapshot_wins(self) -> None:
+        a = _state(1, col="x", label="Skolenhetskod 2015-05-15")
+        b = _state(2, col="x", label="Skolenhetskod 2015-10-15")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2015, self._codes({1: 8854, 2: 9110})
+        )
+        assert winners == [b[0]]  # later dated snapshot
+        assert genuine is False
+
+    def test_label_freshness_calendar_beats_academic(self) -> None:
+        a = _state(1, col="x", label="Komvux Kurskod 2001/2002")
+        b = _state(2, col="x", label="Komvux Kurskod 2001")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2001, self._codes({1: 5955, 2: 6473})
+        )
+        assert winners == [b[0]]  # calendar-year canonical over academic
+        assert genuine is False
+
+    def test_label_freshness_autumn_term_no_space(self) -> None:
+        # the no-space `HT1986` form must match (regression: `\bht\b` missed it).
+        a = _state(1, col="x", label="Komvux Kurskod VT1986")
+        b = _state(2, col="x", label="Komvux Kurskod HT1986")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1986, self._codes({1: 837, 2: 780})
+        )
+        assert winners == [b[0]]  # autumn term wins despite fewer codes
+        assert genuine is False
+
     def test_distinct_label_recoding_stays_genuine(self) -> None:
         # one column, SAME introduction, DIFFERENT source labels (Br92 vs Br07) →
         # genuine → curation.
@@ -188,6 +225,30 @@ class TestResolveYearWinners:
         b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45})
+        )
+        assert genuine is True
+        assert set(winners) == {a[0], b[0]}
+
+    def test_curation_pin_resolves_genuine(self) -> None:
+        # a codelivery pin keeps the named label, resolving the genuine conflict.
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        # gkey: [0]=register_id=1, [2]=var_id=1, [8]=column="AL2"
+        codelivery = {(1, 1, "AL2"): "Br07-kod"}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
+        )
+        assert winners == [b[0]]  # the pinned Br07 coding
+        assert genuine is False
+
+    def test_curation_pin_mismatch_falls_through(self) -> None:
+        # a pin matching no surviving label at this year falls through to GENUINE
+        # (no crash) — the year stays unresolved for --validate to flag.
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        codelivery = {(1, 1, "AL2"): "Something else"}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
         assert genuine is True
         assert set(winners) == {a[0], b[0]}

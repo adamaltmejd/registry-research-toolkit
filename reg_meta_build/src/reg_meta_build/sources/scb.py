@@ -1285,11 +1285,41 @@ def _is_historical_grain(grain: str | None) -> bool:
     return any(m in s for m in _HISTORICAL_GRAIN_MARKERS)
 
 
+_LABEL_DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+_LABEL_ACADEMIC_RE = re.compile(r"\d{4}\s*/\s*\d{4}")
+# `\bht\d` also matches the no-space form `HT1986` (no word boundary between the
+# `t` and the digit, so a bare `\bht\b` would miss it).
+_LABEL_HT_RE = re.compile(r"\bht\d|\bht\b|hosttermin|hosten")
+_LABEL_VT_RE = re.compile(r"\bvt\d|\bvt\b|vartermin|varen")
+
+
+def _label_resolution_rank(
+    label: str | None,
+) -> tuple[int, int, tuple[int, int, int], int]:
+    """A sortable 'freshness' key for SCB's RECURRING co-delivery families, read
+    from the value-set version label (higher wins). These are SCB delivery
+    conventions — they live in this adapter, not the provider-blind layer:
+      - FINALITY: a `slutlig`/plain coding beats a `preliminär` one.
+      - CALENDAR over ACADEMIC: `Kurskod 2001` beats `Kurskod 2001/2002`.
+      - DATED snapshot: the later `YYYY-MM-DD` wins (`2015-10-15` > `2015-05-15`).
+      - TERM: autumn (`HT`) after spring (`VT`).
+    One-off genuine re-codings (`Br92-kod`/`Br07-kod`, `Ja nej 1`/`Ja nej 3`) carry
+    none of these markers → equal rank → they fall through to curation."""
+    s = _ascii_fold_lower(label)
+    finality = 0 if "preliminar" in s else 1
+    academic = -1 if _LABEL_ACADEMIC_RE.search(s) else 0  # calendar (0) > academic (-1)
+    dm = _LABEL_DATE_RE.search(s)
+    date_key = (int(dm[1]), int(dm[2]), int(dm[3])) if dm else (0, 0, 0)
+    term = 2 if _LABEL_HT_RE.search(s) else (1 if _LABEL_VT_RE.search(s) else 0)
+    return (finality, academic, date_key, term)
+
+
 def _resolve_year_winners(
     cands: list[tuple],
     groups: dict[tuple, _StateGroup],
     year: int,
     codes_fn: Callable[[int], frozenset[str]],
+    codelivery: dict[tuple[int, int, str], str] | None = None,
 ) -> tuple[list[tuple], bool]:
     """Pick the winning group(s) for one contested `year`, COLUMN-AWARE.
 
@@ -1300,6 +1330,9 @@ def _resolve_year_winners(
     one winner; the winners across columns all survive. `is_genuine` is True only
     when a SINGLE column still holds >1 distinct value set after its cascade (a
     real same-column conflict the build can't resolve → curation).
+
+    `codelivery` is the curation map (`(register_id, var_id, column) → keep label`)
+    consulted for genuine one-off conflicts before they're flagged.
     """
     by_col: dict[str, list[tuple]] = defaultdict(list)
     for gk in cands:
@@ -1307,7 +1340,7 @@ def _resolve_year_winners(
     winners: list[tuple] = []
     any_genuine = False
     for col_cands in by_col.values():
-        w, genuine = _resolve_column_year(col_cands, groups, year, codes_fn)
+        w, genuine = _resolve_column_year(col_cands, groups, year, codes_fn, codelivery)
         winners.extend(w)
         any_genuine = any_genuine or genuine
     return winners, any_genuine
@@ -1318,6 +1351,7 @@ def _resolve_column_year(
     groups: dict[tuple, _StateGroup],
     year: int,
     codes_fn: Callable[[int], frozenset[str]],
+    codelivery: dict[tuple[int, int, str], str] | None = None,
 ) -> tuple[list[tuple], bool]:
     """Resolve ONE column's groups for a contested year to a single winner. The
     within-column cascade:
@@ -1329,9 +1363,13 @@ def _resolve_column_year(
          min observed year) wins the transition year; equal introduction continues.
       6. SAME-LABEL drift — distinct value sets sharing one source label (`-N`
          collapse near-dups) → keep the largest.
-      7. COSMETIC  — distinct value sets within `_COSMETIC_MAX_SYM` symmetric codes
+      7. LABEL FRESHNESS — SCB recurring families (`_label_resolution_rank`):
+         final>preliminary, calendar>academic year, latest dated snapshot, HT>VT.
+      8. CURATION — a `codelivery` entry pinning the kept label for this
+         (register, var, column) wins (the one-off escape hatch).
+      9. COSMETIC  — distinct value sets within `_COSMETIC_MAX_SYM` symmetric codes
          → keep the largest.
-      8. GENUINE   — distinct, non-cosmetic value sets on ONE column → all reps,
+     10. GENUINE   — distinct, non-cosmetic value sets on ONE column → all reps,
          `is_genuine` (overlapping → the invariant flags it for curation).
     """
     if len(cands) == 1:
@@ -1391,6 +1429,39 @@ def _resolve_column_year(
         win_vs = max(nonnull, key=lambda v: (len(codes_fn(v)), v))
         return [_pick_state_rep(nonnull[win_vs], groups)], False
 
+    # LABEL FRESHNESS (SCB recurring families): final>preliminary, calendar>academic
+    # year, latest dated snapshot, autumn>spring term. One value set strictly fresher
+    # → it wins; equal (one-off genuine re-codings) falls through to curation.
+    vs_fresh = {
+        vs: max(
+            _label_resolution_rank(groups[gk].value_set_version_label) for gk in gks
+        )
+        for vs, gks in nonnull.items()
+    }
+    top_fresh = max(vs_fresh.values())
+    if sum(1 for f in vs_fresh.values() if f == top_fresh) == 1:
+        win_vs = max(vs_fresh, key=lambda v: vs_fresh[v])
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    # CURATION (one-off escape hatch): an explicit pin for this (register, var,
+    # column) keeps the named value-set label. register/var/column are constant
+    # across `cands` (partitioned by column, one variable's timeline). A pin that
+    # doesn't match THIS year's survivors falls through to GENUINE (the year stays
+    # unresolved → flagged by `--validate`); it does not abort the build, so a pin
+    # that resolves only some years of a multi-year column is harmless and a true
+    # typo surfaces as the still-failing invariant rather than a hard crash.
+    if codelivery:
+        reg_id, var_id, column = cands[0][0], cands[0][2], cands[0][8]
+        pin = codelivery.get((reg_id, var_id, column))
+        if pin is not None:
+            target = pin.strip()
+            for gks in nonnull.values():
+                if any(
+                    (groups[gk].value_set_version_label or "").strip() == target
+                    for gk in gks
+                ):
+                    return [_pick_state_rep(gks, groups)], False
+
     vss = sorted(nonnull)
     max_sym = max(
         len(codes_fn(vss[i]) ^ codes_fn(vss[j]))
@@ -1418,7 +1489,10 @@ def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tup
     )
 
 
-def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
+def _coalesce_variable_states(
+    conn: sqlite3.Connection,
+    codelivery: dict[tuple[int, int, str], str] | None = None,
+) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` per §5.1.
 
     Group key: `(register_id, register_variant_id, var_id, data_type, data_length,
@@ -1957,7 +2031,9 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
             all_years |= groups[gk].regyears
         for y in sorted(all_years):
             cands = [gk for gk in year_bearing if y in groups[gk].regyears]
-            winners, genuine = _resolve_year_winners(cands, groups, y, _vs_codes)
+            winners, genuine = _resolve_year_winners(
+                cands, groups, y, _vs_codes, codelivery
+            )
             for gk in winners:
                 owned[gk].add(y)
             if genuine:
@@ -2558,10 +2634,17 @@ class SCBAdapter:
 
     provider = "scb"
 
-    def __init__(self, conn: sqlite3.Connection) -> None:
+    def __init__(
+        self,
+        conn: sqlite3.Connection,
+        codelivery: dict[tuple[int, int, str], str] | None = None,
+    ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B, plan §4).
         self.conn = conn
+        # §5.7 co-delivery curation (register_id, var_id, column) → kept label,
+        # consulted by the coalescer for genuine one-off same-column conflicts.
+        self.codelivery = codelivery or {}
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -2688,7 +2771,7 @@ class SCBAdapter:
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the
         # unika_summary DROP below.
-        self.coalesce_stats = _coalesce_variable_states(conn)
+        self.coalesce_stats = _coalesce_variable_states(conn, self.codelivery)
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug + related-to post-passes.

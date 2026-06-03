@@ -3053,12 +3053,18 @@ def build_db(
         # to break the db ↔ sources.* import cycle (those modules import shared
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
+        from .codelivery import load_codelivery, repo_codelivery_path
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
 
+        # §5.7 co-delivery curation (maintainer artifact, like the slug TOMLs):
+        # resolves genuine one-off same-column re-codings the coalescer cascade
+        # leaves. Empty when the file is absent (wheel installs, synthetic builds).
+        codelivery = load_codelivery(repo_codelivery_path())
+
         adapters: list[tuple[Any, Path]] = []
         if "scb" in providers:
-            adapters.append((SCBAdapter(conn), scb_dir))
+            adapters.append((SCBAdapter(conn, codelivery), scb_dir))
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
 

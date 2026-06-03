@@ -1,0 +1,128 @@
+# Co-delivery curation (§5.7) — see reg_meta_build/codelivery.py.
+#
+# When ONE delivery column carries TWO distinct value-set codings in the same
+# period and the SCB coalescer's deterministic cascade (sources/scb.py) cannot
+# resolve it, build-db --validate FAILS. Each entry below pins which coding the
+# column KEEPS, by its `value_set_version_label` (matched stripped). The cascade
+# already handles the RECURRING families (preliminär/final, sub-annual HT/VT and
+# dated snapshots, calendar vs academic year); only genuine ONE-OFF re-codings
+# land here.
+#
+# Key: (register_id, var_id, column) — stable SCB source ids + the delivery
+# column. `column = ""` for a code-bearing variable with no delivery alias.
+# A `keep` that matches no surviving coding raises `codelivery_pin_stale`.
+#
+# DRAFT — proposed picks default to the fuller / newer / contemporaneous coding;
+# entries marked REVIEW are domain judgment calls awaiting maintainer sign-off.
+
+# ── branschgrupp (SNI92 vs SNI2007) — pick the standard contemporaneous to the
+#    period: Br92 (SNI92) for the 1998–1999 window, Br07 (SNI2007) for 2009–2010.
+[[resolve]]                       # REVIEW: SNI92 vs SNI2007 vintage choice
+register_id = 187
+var_id = 3310
+column = "AL2UndEjU"
+keep = "Br92-kod"
+note = "Konjunkturstatistik, AL2UndEjU 1998-1999: SNI92 is contemporaneous."
+
+[[resolve]]                       # REVIEW: SNI92 vs SNI2007 vintage choice
+register_id = 382
+var_id = 3310
+column = "AL2UndEjU"
+keep = "Br07-kod"
+note = "Produktion inom näringslivet, AL2UndEjU 2009-2010: SNI2007 is contemporaneous."
+
+# ── ULF (levnadsförhållanden): prefer the fuller yes/no & education codings ──
+[[resolve]]
+register_id = 237
+var_id = 13598
+column = "TK0094"
+keep = "Ja nej 1"
+note = "ULF TK0094 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
+
+[[resolve]]
+register_id = 237
+var_id = 13600
+column = "TK0095"
+keep = "Ja nej 1"
+note = "ULF TK0095 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
+
+[[resolve]]
+register_id = 237
+var_id = 11788
+column = "HA0020"
+keep = "Ja nej 1"
+note = "ULF HA0020 2004: 'Ja nej 1' (6 codes) over 'Dikotom' (2 codes)."
+
+[[resolve]]
+register_id = 237
+var_id = 13593
+column = "TK0083"
+keep = "Butiksbuss etc"
+note = "ULF TK0083 1978: 'Butiksbuss etc' (5 codes) is the superset."
+
+[[resolve]]                       # REVIEW: two distinct education codings
+register_id = 237
+var_id = 10587
+column = "UT0020"
+keep = "Utbildning 1"
+note = "ULF UT0020 1976: 'Utbildning 1' (11 codes) over 'Fullbordad utbildning' (5)."
+
+# ── electoral districts: include postal-vote districts (superset) ──
+[[resolve]]
+register_id = 243
+var_id = 69
+column = "llkkdddd"
+keep = "Valdistrikt 2006 inkl poströster"
+note = "Valresultat llkkdddd 2006: the 'inkl poströster' superset (6074 vs 5783)."
+
+# ── ownership category: keep the detailed grain (column-less variable) ──
+[[resolve]]                       # REVIEW: detaljerad vs grov is a grain choice
+register_id = 198
+var_id = 2187
+column = ""
+keep = "Ägarkategori detaljerad"
+note = "Hyror/nybyggda 2013: 'detaljerad' (9 codes) over 'grov' (3 codes)."
+
+# ── institutional unit indexing: newer standard ──
+[[resolve]]
+register_id = 134
+var_id = 33
+column = "Inst"
+keep = "Enhetsindelning 2014"
+note = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
+
+# NOTE: reg248/var104 col=Skolkod is RECURRING (SFI 1999/2000/2001/2002/2004 +
+# all-school-forms overlap year-by-year), not a single one-off — a single `keep`
+# can't cover every year's pair. Handled separately (pending).
+
+# ── FoB75 tenure form: keep the fuller dwelling coding ──
+[[resolve]]                       # REVIEW: household (Hh) vs dwelling (Lgh) coding
+register_id = 32
+var_id = 4472
+column = "UpplForm"
+keep = "UpplFormFoB75Lgh"
+note = "FoB75 UpplForm 1975: dwelling coding (12 codes) over household (5)."
+
+# ── SUN2020 4-pos: collapse near-dup to the larger ──
+[[resolve]]
+register_id = 24
+var_id = 65
+column = "SUN2020Inr"
+keep = "4pos-1"
+note = "SUN2020Inr: '4pos-1' (378) vs '4pos' (377) — near-dup, keep larger."
+
+# ── R&D institution id: keep the broader institution coding ──
+[[resolve]]                       # REVIEW: institution coding choice
+register_id = 182
+var_id = 3
+column = "ID_INST"
+keep = "Universitet/högskolor"
+note = "FoU ID_INST 2023: 'Universitet/högskolor' (129) over 'Högskolekod 2017' (41)."
+
+# ── distance-school unit code: the later (contemporaneous) snapshot ──
+[[resolve]]
+register_id = 366
+var_id = 45133
+column = "skolenhetskod"
+keep = "Skolenhetskod distans gymnasieskola 15 oktober 2020"
+note = "skolenhetskod 2020: the Oct-2020 snapshot over Oct-2019."
