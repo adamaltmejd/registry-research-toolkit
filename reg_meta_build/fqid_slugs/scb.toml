@@ -211,42 +211,72 @@ slug = "fordonsreg"
 [register_variant."8.739"]
 slug = "eu-mopeder"
 display_group = "EU-mopeder"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.740"]
 slug = "bussar"
 display_group = "Bussar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.741"]
 slug = "lastbilar"
 display_group = "Lastbilar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.742"]
 slug = "personbilar"
 display_group = "Personbilar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.743"]
 slug = "motorcyklar"
 display_group = "Motorcyklar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.745"]
 slug = "slapvagnar"
 display_group = "Släpvagnar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.748"]
 slug = "traktorer"
 display_group = "Traktorer"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.749"]
 slug = "terrangskotrar"
 display_group = "Terrängskotrar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.1186"]
 slug = "snoskotrar"
 display_group = "Snöskotrar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.1187"]
 slug = "terranghjulingar"
 display_group = "Terränghjulingar"
+panel_entity_key = "chassi"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."8.1188"]
 slug = "ovriga-fordonsslag"
@@ -2702,6 +2732,9 @@ panel_time_grain = "delivery"
 [register_variant."232.1497"]
 slug = "lararprognos-skola-forskola"
 display_group = "Lärarprognos inom skola och förskola"
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Gymnasieskola: elever per 15 oktober
 [register."233"]
@@ -4636,6 +4669,9 @@ slug = "stuv"
 [register_variant."397.1558"]
 slug = "studieforbund-stuv-2012"
 display_group = "Studieförbund (STUV) 2012 - 2019"
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 [register_variant."397.1572"]
 slug = "deltagare"
@@ -4647,6 +4683,9 @@ panel_time_grain = "delivery"
 [register_variant."397.1633"]
 slug = "studieforbund-stuv-2020"
 display_group = "Studieförbund (STUV) 2020 -"
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Regionala befolkningsprognoser (Statund)
 [register."400"]
