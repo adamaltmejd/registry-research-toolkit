@@ -26,10 +26,12 @@ from reg_meta.db import open_db
 from reg_meta_build.db import build_db
 from reg_meta_build.sources.scb import (
     _apply_fold,
+    _apply_split,
     _collapse_residual,
     _common_prefix_len,
     _decide_fold_or_split,
     _fold_token_from_grain,
+    _split_off_non_contested,
     _StateGroup,
     _TriageResult,
 )
@@ -98,6 +100,57 @@ class TestDecideFoldOrSplit:
         assert _decide_fold_or_split(["foosni", "foosni2"], {7, 9}) == "split"
 
 
+class TestSplitSiblingFlagInheritance:
+    """A §5.7 split sibling inherits is_identifier / is_sensitive from its
+    pre-split origin. The A1.2 flags are lifted BEFORE triage, so a sibling
+    minted without copying them defaults both to 0 and the flag survives only on
+    the lex-first column — the corpus-wide false-negative-identifier regression."""
+
+    @staticmethod
+    def _flagged_origin() -> tuple[sqlite3.Connection, int]:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)  # FKs default off → no register/provider parents needed
+        cur = conn.execute(
+            "INSERT INTO variable "
+            "(register_id, provider_key, name, is_sensitive, is_identifier) "
+            "VALUES (1, '57', 'Personnummer', 1, 1)"
+        )
+        assert cur.lastrowid is not None
+        return conn, cur.lastrowid
+
+    def test_apply_split_propagates_flags_to_siblings(self) -> None:
+        conn, orig = self._flagged_origin()
+        res = _TriageResult({}, {}, set(), {}, [], Counter())
+        # 'PNR' (lex-first) keeps the origin; 'PersonNr' mints a sibling that must
+        # inherit the flags rather than defaulting to 0/0.
+        by_col = {"PNR": [("gk-pnr",)], "PersonNr": [("gk-personnr",)]}
+        _apply_split(conn, {}, by_col, ["PNR", "PersonNr"], 1, 57, orig, res)
+        rows = conn.execute(
+            "SELECT name, is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 1 AND provider_key = '57'"
+        ).fetchall()
+        assert len(rows) == 2  # origin + one minted sibling
+        assert all(r["is_identifier"] == 1 for r in rows)
+        assert all(r["is_sensitive"] == 1 for r in rows)
+        assert all(r["name"] == "Personnummer" for r in rows)
+
+    def test_split_off_non_contested_propagates_flags(self) -> None:
+        conn, orig = self._flagged_origin()
+        res = _TriageResult({}, {}, set(), {}, [], Counter())
+        _split_off_non_contested(
+            conn, {}, {"PersonNrSamh": [("gk",)]}, ["PersonNrSamh"], 1, 57, orig, res
+        )
+        rows = conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 1 AND provider_key = '57'"
+        ).fetchall()
+        assert len(rows) == 2
+        assert all(r["is_identifier"] == 1 and r["is_sensitive"] == 1 for r in rows)
+
+
 # ── integration: fold / split / collapse + uniqueness index ───────────────
 
 
@@ -118,6 +171,29 @@ class TestSplit:
             "WHERE register_id = 1 AND provider_key = '920'"
         ).fetchall()
         assert len(sibs) == 2, "split should mint a second sibling variable"
+
+    def test_declared_split_var_flags_all_siblings(self, tmp_path: Path) -> None:
+        """Change 1 × Change 2 end-to-end: a var_id declared in Identifierare.csv
+        that ALSO splits. The declared flag lands on the pre-split variable
+        (`_populate_sensitivity_flags`, before triage) and must propagate to
+        every split sibling (`_inherited_flags`). var_id 303 (LopNr) is in the
+        default IDENTIFIERARE_ROWS; delivering it under two disjoint columns
+        (here in reg 1) splits it into siblings that must all stay flagged."""
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(colname="Hemkommun", cvid=9500, var_id=303),
+                _var_row(colname="Skolkommun", cvid=9501, var_id=303),
+            ],
+        )
+        rows = conn.execute(
+            "SELECT is_identifier FROM variable "
+            "WHERE register_id = 1 AND provider_key = '303'"
+        ).fetchall()
+        assert len(rows) == 2, "var_id 303 should split into two siblings"
+        assert all(r[0] == 1 for r in rows), (
+            "a declared (Identifierare.csv) var_id must flag ALL its split siblings"
+        )
 
     def test_split_states_route_to_distinct_siblings(self, tmp_path: Path) -> None:
         conn = _build(

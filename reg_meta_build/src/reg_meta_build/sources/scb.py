@@ -523,6 +523,29 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     )
     refreshed = cur.rowcount or 0
     _progress(f"  {refreshed:,} variable rows refreshed from unika_summary")
+
+    # Union the authoritative declared-identifier list (Identifierare.csv →
+    # identifier_semantics) into is_identifier. The two sources are
+    # COMPLEMENTARY: `unika.identitetsvariabel` (above) misses identifiers that
+    # Identifierare declares (per-column match gaps), and Identifierare misses a
+    # few that unika flags — so OR maximizes recall (the §A1.2 lift was
+    # unika-only and silently dropped ~7 register-level declared identifiers).
+    # Keyed on the source var_id (provider_key), so it lands on the one
+    # pre-triage variable per var_id; the §5.7 split then copies it to siblings
+    # (`_inherited_flags`). Orphan declared var_ids (no matching variable) no-op.
+    # Scoped to SCB registers: identifier_semantics + the numeric `provider_key`
+    # are SCB-native (a non-SCB/SOS text provider_key would `CAST` to 0), so the
+    # explicit provider scope keeps this correct independent of build order
+    # rather than relying on no SOS rows being present yet.
+    id_cur = conn.execute(
+        "UPDATE variable SET is_identifier = 1 "
+        "WHERE is_identifier = 0 "
+        f"  AND register_id IN (SELECT register_id FROM register "
+        f"WHERE provider_id = {PROVIDER_ID_SCB}) "
+        "  AND CAST(provider_key AS INTEGER) IN (SELECT var_id FROM identifier_semantics)"
+    )
+    declared = id_cur.rowcount or 0
+    _progress(f"  {declared:,} additional rows flagged from Identifierare.csv")
     return refreshed
 
 
@@ -988,6 +1011,21 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                 res.dropped.add(gk)
 
 
+def _inherited_flags(
+    conn: sqlite3.Connection, orig_vid: int
+) -> tuple[str | None, int, int]:
+    """The `(name, is_sensitive, is_identifier)` a split sibling inherits from
+    its origin variable. The A1.2 sensitivity/identity flags are lifted
+    PRE-triage (`_populate_sensitivity_flags`), so siblings minted during the
+    split MUST copy them — otherwise the INSERT defaults both to 0 and the flag
+    survives only on the lex-first column."""
+    row = conn.execute(
+        "SELECT name, is_sensitive, is_identifier FROM variable WHERE variable_id = ?",
+        (orig_vid,),
+    ).fetchone()
+    return (row[0], row[1], row[2]) if row else (None, 0, 0)
+
+
 def _apply_fold(
     groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
@@ -1043,18 +1081,21 @@ def _apply_split(
     the source provider_key); link siblings with variable_related_to edges.
     Sibling slugs derive later from each sibling's own reassigned column."""
     # First column (lexically) keeps the original variable; the rest mint new
-    # sibling variables. Name is the shared generic Variabelnamn (variable.name
-    # is already populated; reuse it for the siblings).
-    name_row = conn.execute(
-        "SELECT name FROM variable WHERE variable_id = ?", (orig_vid,)
-    ).fetchone()
-    shared_name = name_row[0] if name_row else None
+    # sibling variables. Name + sensitivity/identity flags are shared: siblings
+    # are column-variants of ONE source var_id (same concept family), so a flag
+    # set on the pre-split variable applies to every sibling. `is_sensitive` /
+    # `is_identifier` are lifted PRE-triage (`_populate_sensitivity_flags`), so
+    # an INSERT that omitted them would default both to 0 and silently drop the
+    # flag on all but the lex-first column — the source of ~201 false-negative
+    # identifiers across the corpus (A1.2 flags vs §5.7 split ordering).
+    shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
     sibling_vids = [orig_vid]
     for col in named_cols[1:]:
         cur = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (?, CAST(? AS TEXT), ?)",
-            (register_id, var_id, shared_name),
+            "INSERT INTO variable "
+            "(register_id, provider_key, name, is_sensitive, is_identifier) "
+            "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
+            (register_id, var_id, shared_name, shared_sensitive, shared_identifier),
         )
         new_vid = cur.lastrowid
         assert new_vid is not None  # lastrowid is set after an INSERT
@@ -1094,16 +1135,15 @@ def _split_off_non_contested(
     mis-attribution."""
     if not non_contested_cols:
         return
-    name_row = conn.execute(
-        "SELECT name FROM variable WHERE variable_id = ?", (orig_vid,)
-    ).fetchone()
-    shared_name = name_row[0] if name_row else None
+    # Inherit name + sensitivity/identity flags from the origin (see _apply_split).
+    shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
     vids = [orig_vid]
     for col in non_contested_cols:
         cur = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (?, CAST(? AS TEXT), ?)",
-            (register_id, var_id, shared_name),
+            "INSERT INTO variable "
+            "(register_id, provider_key, name, is_sensitive, is_identifier) "
+            "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
+            (register_id, var_id, shared_name, shared_sensitive, shared_identifier),
         )
         nvid = cur.lastrowid
         assert nvid is not None

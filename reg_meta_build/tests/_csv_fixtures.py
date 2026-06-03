@@ -574,6 +574,48 @@ REGISTERINFORMATION_ROWS = [
         "200",
         "302",
     ),
+    # Dedicated declared-identifier fixture: an identifier variable with NO
+    # unika_summary row. It exercises the unika ∪ Identifierare union — its only
+    # is_identifier signal is the Identifierare.csv declaration (var_id 303 in
+    # IDENTIFIERARE_ROWS). No value codes (keeps value_set/code counts stable).
+    _ri_row(
+        "OTHERREG",
+        "Annat register",
+        "Annat syfte",
+        "Företag",
+        "Företag",
+        "Alla företag",
+        "Ja",
+        "2021",
+        "Version 2021",
+        "",
+        "Godkänd",
+        "2021-01-01",
+        "2021-12-31",
+        "Alla företag",
+        "Samtliga företag",
+        "",
+        "2021-12-31",
+        "Företag",
+        "Juridisk person",
+        "LopNr",
+        "Löpnummer",
+        "Objektets identifierare",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "LopNr",
+        "char",
+        "12",
+        "2005",
+        "2",
+        "20",
+        "200",
+        "303",
+    ),
 ]
 
 UNIKA_HEADER = PIPE.join(
@@ -679,8 +721,15 @@ UNIKA_ROWS = [
 
 IDENTIFIERARE_HEADER = PIPE.join(["VarID", "Variabelnamn", "Variabeldefinition"])
 
+# Identifierare.csv = SCB's declared identification-variable list. var_id 303
+# (LopNr) is a dedicated declared identifier with NO unika_summary row, so it
+# exercises the unika ∪ Identifierare union: a declared identifier that
+# `unika.identitetsvariabel` never flags must still resolve to is_identifier=1.
+# Kön (44) and ParenVar (301) are deliberately NOT here — neither is an
+# identifier, so both must stay is_identifier=0 (real Identifierare.csv carries
+# no such non-identifiers).
 IDENTIFIERARE_ROWS = [
-    PIPE.join(["44", "Kön", "Personens kön"]),
+    PIPE.join(["303", "LopNr", "Objektets identifierare"]),
 ]
 
 TIMESERIES_HEADER = PIPE.join(

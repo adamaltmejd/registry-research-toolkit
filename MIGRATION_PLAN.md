@@ -716,6 +716,11 @@ retired at A4.4 — gate is `--validate` + targeted before/after, not byte-ident
   `chassi` (the stable VIN — `agnr` disqualified, ≤3 co-owners/row; `regnr` reusable;
   `ovriga-fordonsslag` has no chassi → full-NULL). Combined total now 535 entity /
   106 full-NULL; `build-db --validate --providers scb,sos` clean.
+  **DEFERRED ([#196](https://github.com/adamaltmejd/registry-research-toolkit/issues/196)):**
+  this curation ran against the pre-#194 `is_identifier` flags, so ~112
+  `panel_entity_key`s point at the wrong/sparse fragment of a fragmented identity
+  (re-curation + a curated `PNR`≡`PersonNr` column-merge primitive — see the issue,
+  which outlives this tracker).
 - **A4.4e — classification re-point (GAP-1 close-out, highest risk)**: Option A —
   a build-time universal `(variable_id, value_set_id, classification_id)` candidate
   table BOTH adapters feed; `_backfill_state_classifications` reads it provider-blind;
