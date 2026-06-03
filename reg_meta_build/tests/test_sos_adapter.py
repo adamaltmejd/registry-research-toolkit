@@ -959,9 +959,10 @@ def test_alias_emitted_per_variant_column(tmp_path: Path) -> None:
 # synthetic .xlsx workbooks (`_sos_fixtures.write_sos_input`, the SOS analog of
 # `_csv_fixtures.write_scb_input`) are the entire CI coverage for the SOS adapter
 # end-to-end, the combined scb,sos build, and the SOS-only (scb_ran=False)
-# lifecycle. They deliberately do NOT call `validate_built_db` wholesale —
-# `_check_sos_sanity` fails below 13 registers (a real-corpus volume gate) — and
-# instead pin the specific cross-provider invariants directly.
+# lifecycle. They run `validate_built_db(corpus=False)` — the full structural
+# suite minus the real-corpus volume gate (`_check_sos_sanity`, >= 13 registers,
+# which `corpus=False` skips) — plus targeted SQL for the invariants validate
+# doesn't cover (cross-provider edges, FTS parity).
 # ---------------------------------------------------------------------------
 
 
@@ -1017,8 +1018,8 @@ def test_synthetic_sos_emit_in_band_and_populates(tmp_path: Path) -> None:
     assert sum(1 for s in states if s.value_set_id is not None) == 2
 
 
-def test_synthetic_combined_build_bands_edges_fts(tmp_path: Path) -> None:
-    from reg_meta_build.validate import ValidationResult, _check_minted_id_bands
+def test_synthetic_combined_build_validates_edges_fts(tmp_path: Path) -> None:
+    from reg_meta_build.validate import validate_built_db
 
     inp = _write_combined_input(tmp_path)
     build_db(
@@ -1028,7 +1029,17 @@ def test_synthetic_combined_build_bands_edges_fts(tmp_path: Path) -> None:
         skip_slugs=True,
         providers=("scb", "sos"),
     )
-    conn = sqlite3.connect(tmp_path / "comb" / "reg_meta.db")
+    db = tmp_path / "comb" / "reg_meta.db"
+
+    # (1) Full structural validation over the synthetic combined build.
+    # corpus=False skips only the real-corpus SOS volume gate (>= 13 registers);
+    # every other invariant — schema shape, state-projection integrity, alias
+    # coverage, minted-id band disjointness, freelist ceiling — runs against a
+    # SOS-containing build in CI (where the real-data tests never could).
+    res = validate_built_db(db, corpus=False)
+    assert res.passed, res.format_report()
+
+    conn = sqlite3.connect(db)
     try:
         # Both providers materialized.
         assert (
@@ -1044,16 +1055,8 @@ def test_synthetic_combined_build_bands_edges_fts(tmp_path: Path) -> None:
             == 2
         )
 
-        # (1) Minted-id band disjointness: SCB < 2^62, SOS >= 2^62.
-        tables = {
-            r[0]
-            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        }
-        result = ValidationResult()
-        _check_minted_id_bands(conn, result, tables)
-        assert result.passed, result.format_report()
-
-        # (2) No cross-provider equivalence/relation edges. Under --skip-slugs
+        # (2) No cross-provider equivalence/relation edges (validate doesn't
+        # cover cross-provider edges). Under --skip-slugs
         # both tables are empty (slug-keyed; can't resolve), so this is the same
         # contract pin the real-data combined test relies on — a future
         # regression that leaks a cross-provider edge (e.g. the P3#1
@@ -1064,7 +1067,8 @@ def test_synthetic_combined_build_bands_edges_fts(tmp_path: Path) -> None:
             ).fetchone()[0]
             assert n_cross == 0, f"{table} has {n_cross} cross-provider edge(s)"
 
-        # (3) FTS row-count parity with the base tables (content-synced indexes).
+        # (3) FTS row-count parity with the base tables (content-synced
+        # indexes; validate doesn't cover the FTS mirrors).
         assert (
             conn.execute("SELECT COUNT(*) FROM register_fts").fetchone()[0]
             == conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
@@ -1077,6 +1081,30 @@ def test_synthetic_combined_build_bands_edges_fts(tmp_path: Path) -> None:
         conn.close()
 
 
+def test_corpus_gate_off_under_synthetic_on_under_corpus_true(tmp_path: Path) -> None:
+    # Pins the `corpus` contract: the real-corpus SOS volume gate (>= 13
+    # registers / >= 1,400 variables) is SKIPPED under corpus=False so synthetic
+    # CI passes, and FIRES under corpus=True so a real build catches a short
+    # delivery. The synthetic combined build has 2 SOS registers / 3 variables,
+    # well under the gate.
+    from reg_meta_build.validate import validate_built_db
+
+    inp = _write_combined_input(tmp_path)
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "comb",
+        skip_classifications=True,
+        skip_slugs=True,
+        providers=("scb", "sos"),
+    )
+    db = tmp_path / "comb" / "reg_meta.db"
+
+    assert validate_built_db(db, corpus=False).passed, "volume gate must be off"
+    corpus_res = validate_built_db(db, corpus=True)
+    assert not corpus_res.passed, "volume gate must fire on a sub-13-register build"
+    assert any("SOS registers" in f for f in corpus_res.failures), corpus_res.failures
+
+
 def test_synthetic_sos_only_build_drops_classification_candidate(
     tmp_path: Path,
 ) -> None:
@@ -1086,6 +1114,7 @@ def test_synthetic_sos_only_build_drops_classification_candidate(
     # table (and _backfill_state_classifications reads it as a no-op). The A4.4e
     # review verified this safe by simulation; this pins it in CI.
     from _sos_fixtures import write_sos_input
+    from reg_meta_build.validate import validate_built_db
 
     inp = tmp_path / "input"
     inp.mkdir()
@@ -1097,7 +1126,13 @@ def test_synthetic_sos_only_build_drops_classification_candidate(
         skip_slugs=True,
         providers=("sos",),
     )
-    conn = sqlite3.connect(tmp_path / "sos" / "reg_meta.db")
+    db = tmp_path / "sos" / "reg_meta.db"
+
+    # Structural validation holds on a provider=sos-only build too (scb_ran=False).
+    res = validate_built_db(db, corpus=False)
+    assert res.passed, res.format_report()
+
+    conn = sqlite3.connect(db)
     try:
         # SOS-only: no SCB rows, SOS registers present.
         assert (
@@ -1142,7 +1177,7 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
         write_slug_dir_from_db,
         write_sos_input,
     )
-    from reg_meta_build.validate import ValidationResult, _check_minted_id_bands
+    from reg_meta_build.validate import validate_built_db
 
     inp = _write_scb_only(tmp_path)
     # PAR triggers the ("par", "ATC") split -> one related-to edge between its
@@ -1211,14 +1246,8 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
             == 0
         )
 
-        # Band disjointness + FTS parity still hold with slugs populated.
-        tables = {
-            r[0]
-            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        }
-        result = ValidationResult()
-        _check_minted_id_bands(conn, result, tables)
-        assert result.passed, result.format_report()
+        # FTS parity still holds with slugs populated (validate doesn't cover
+        # the FTS mirrors).
         assert (
             conn.execute("SELECT COUNT(*) FROM register_fts").fetchone()[0]
             == conn.execute("SELECT COUNT(*) FROM register").fetchone()[0]
@@ -1229,3 +1258,7 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
         )
     finally:
         conn.close()
+
+    # Full structural validation also holds on the WITH-slugs combined build.
+    res = validate_built_db(tmp_path / "comb" / "reg_meta.db", corpus=False)
+    assert res.passed, res.format_report()

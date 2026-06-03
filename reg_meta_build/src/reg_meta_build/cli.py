@@ -144,12 +144,14 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     build_p.add_argument(
-        "--validate",
+        "--no-validate",
         action="store_true",
         help=(
-            "Run post-build invariant checks (value-set dedup, year-projection "
-            "anchors, FK integrity, freelist ceiling) against the freshly-built "
-            "DB. Fails with EXIT_CONFIG on any violation."
+            "Skip post-build invariant checks. By default build-db validates the "
+            "freshly-built DB (schema shape, value-set dedup, year-projection "
+            "anchors, FK integrity, minted-id bands, freelist ceiling, and — as a "
+            "real maintainer build — the SOS corpus-volume gate) and fails with "
+            "EXIT_CONFIG on any violation. Maintainer escape hatch only."
         ),
     )
     build_p.add_argument(
@@ -296,12 +298,16 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _build_validate_hook() -> Callable[[Path], None]:
-    """Return a build_db pre_rename_hook that runs the value-set dedup
-    validator against the staging DB and raises on failure. Defined as a
-    helper so the closure stays narrowly scoped."""
+    """Return a build_db pre_rename_hook that runs the post-build validator
+    against the staging DB and raises on failure. Defined as a helper so the
+    closure stays narrowly scoped.
+
+    Runs with ``corpus=True``: build-db is the real maintainer build, so the
+    provider-specific corpus-volume gates apply here (synthetic CI uses
+    ``corpus=False``)."""
 
     def hook(staging_db: Path) -> None:
-        validation = validate_built_db(staging_db)
+        validation = validate_built_db(staging_db, corpus=True)
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
         if validation.failures:
@@ -316,8 +322,8 @@ def _build_validate_hook() -> Callable[[Path], None]:
                 remediation=(
                     "Inspect the [FAIL] lines above. The staging DB has been "
                     "discarded and the previously-installed DB is unchanged. "
-                    "Fix the underlying build issue and rerun "
-                    "`reg-meta-build build-db --validate`."
+                    "Fix the underlying build issue and rerun `reg-meta-build "
+                    "build-db` (pass `--no-validate` to skip these checks)."
                 ),
             )
 
@@ -331,7 +337,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
 
-    pre_rename_hook = _build_validate_hook() if args.validate else None
+    pre_rename_hook = None if args.no_validate else _build_validate_hook()
     result = build_db(
         input_dir=Path(args.input_dir),
         db_dir=db_dir,
@@ -346,7 +352,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args_payload={
             "input_dir": args.input_dir,
             "skip_slugs": args.skip_slugs,
-            "validate": args.validate,
+            "validate": not args.no_validate,
             "providers": list(providers),
         },
         db_info={

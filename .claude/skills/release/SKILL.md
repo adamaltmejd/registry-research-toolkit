@@ -170,16 +170,17 @@ SCB-only asset, use `--providers scb`.)
 
 ```bash
 uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ \
-  --providers scb,sos --validate
+  --providers scb,sos
 zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
 rm reg_meta.db.zst
 ```
 
-`--validate` runs the value-set dedup + year-projection invariants
-inline and exits 10 on failure (same checks as
-`scripts/validate_valueset_dedup.py`). Skip the flag only for the rare
-`--skip-slugs` bootstrap build, which intentionally produces a partial DB.
+`build-db` validates by default: it runs the value-set dedup +
+year-projection invariants (plus the SOS corpus-volume gate, since this is
+a real build) inline and exits 10 on failure (same checks as
+`scripts/validate_valueset_dedup.py`). Pass `--no-validate` to skip — only
+ever for a throwaway build where the checks are noise.
 
 If the build fails with `vardemangder_drift` (exit 10), SCB has shipped a
 new `kod==version` row whose kod is in neither `_VARDEMANGDER_SENTINELS`
