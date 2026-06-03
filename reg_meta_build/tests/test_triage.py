@@ -45,29 +45,42 @@ from reg_meta_build.sources.scb import (
 )
 
 
-def _grp(
-    *,
+def _state(
     value_set_id: int | None,
+    *,
+    col: str = "agrupp",
+    grain: str = "",
     authority: int = _AUTH_PLAIN,
     approval: str = "",
     regver_max: int | None = None,
+    regver_min: int | None = None,
+    label: str | None = None,
+    dlen: str = "1",
     year: int = 2020,
-) -> _StateGroup:
-    """A minimal _StateGroup for the per-year timeline resolver tests."""
+) -> tuple[tuple, _StateGroup]:
+    """Return (gkey, group) for the per-year resolver tests. The gkey is a real
+    9-tuple — [5]=value_set_id, [7]=grain, [8]=column — the fields the
+    column-aware resolver reads. `dlen` varies the shape so two same-value-set
+    groups on one column stay distinct gkeys. `label` defaults to a UNIQUE
+    per-value-set string so distinct value sets are distinct-label (genuine) unless
+    a test sets a shared label to exercise the same-label-drift rule."""
+    vlabel = label if label is not None else f"vs{value_set_id}"
+    gkey = (1, 10, 1, "int", dlen, value_set_id, vlabel, grain, col)
     g = _StateGroup(
         register_id=1,
         register_variant_id=10,
         var_id=1,
         data_type="int",
-        data_length="1",
+        data_length=dlen,
         value_set_id=value_set_id,
-        value_set_version_label="",
+        value_set_version_label=vlabel,
     )
     g.regyears = {year}
     g.year_authority = {year: authority}
     g.year_approval = {year: approval}
     g.regver_max = regver_max
-    return g
+    g.regver_min = regver_min
+    return gkey, g
 
 
 class TestEditionAuthority:
@@ -109,78 +122,125 @@ class TestResolveYearWinners:
         return lambda vs: store.get(vs, frozenset())
 
     def test_single_candidate(self) -> None:
-        g = {"a": _grp(value_set_id=1)}
-        winners, genuine = _resolve_year_winners(["a"], g, 2020, self._codes({1: 3}))
-        assert winners == ["a"]
+        a = _state(1)
+        winners, genuine = _resolve_year_winners(
+            [a[0]], dict([a]), 2020, self._codes({1: 3})
+        )
+        assert winners == [a[0]]
         assert genuine is False
 
     def test_authority_breaks_tie(self) -> None:
-        groups = {
-            "hi": _grp(value_set_id=1, authority=_AUTH_FINAL),
-            "lo": _grp(value_set_id=2, authority=_AUTH_PRELIM),
-        }
+        # same column, distinct value sets -> authority resolves within the column.
+        a = _state(1, col="x", authority=_AUTH_FINAL)
+        b = _state(2, col="x", authority=_AUTH_PRELIM)
         winners, genuine = _resolve_year_winners(
-            ["hi", "lo"], groups, 2020, self._codes({1: 3, 2: 3})
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 3})
         )
-        assert winners == ["hi"]
+        assert winners == [a[0]]
         assert genuine is False
 
     def test_recency_breaks_tie(self) -> None:
-        groups = {
-            "new": _grp(value_set_id=1, approval="2022-01-01"),
-            "old": _grp(value_set_id=2, approval="2014-01-01"),
-        }
+        a = _state(1, col="x", approval="2022-01-01")
+        b = _state(2, col="x", approval="2014-01-01")
         winners, genuine = _resolve_year_winners(
-            ["new", "old"], groups, 2020, self._codes({1: 3, 2: 3})
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 3})
         )
-        assert winners == ["new"]
+        assert winners == [a[0]]
         assert genuine is False
 
     def test_cosmetic_keeps_larger(self) -> None:
-        # same authority + approval, codes differ by 1 -> cosmetic -> larger wins.
-        groups = {
-            "big": _grp(value_set_id=1),
-            "small": _grp(value_set_id=2),
-        }
+        # same column + authority + approval, codes differ by 1 -> cosmetic.
+        a = _state(1, col="x")
+        b = _state(2, col="x")
         winners, genuine = _resolve_year_winners(
-            ["big", "small"], groups, 2020, self._codes({1: 11, 2: 10})
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 10})
         )
-        assert winners == ["big"]
+        assert winners == [a[0]]  # larger
         assert genuine is False
 
-    def test_genuine_residual_returns_both(self) -> None:
-        # same authority + approval, codes differ a lot -> genuine co-delivery.
-        groups = {
-            "x": _grp(value_set_id=1),
-            "y": _grp(value_set_id=2),
-        }
+    def test_supersession_latest_introduced_wins(self) -> None:
+        # one column, sequential vintages overlapping at the transition year: the
+        # later-introduced coding (higher min year) supersedes; big code diff so
+        # only supersession (not cosmetic) can resolve it.
+        old = _state(1, col="NgS1", regver_min=2006)
+        new = _state(2, col="NgS1", regver_min=2008)
         winners, genuine = _resolve_year_winners(
-            ["x", "y"], groups, 2020, self._codes({1: 11, 2: 6})
+            [old[0], new[0]], dict([old, new]), 2008, self._codes({1: 778, 2: 821})
+        )
+        assert winners == [new[0]]  # latest-introduced supersedes the boundary
+        assert genuine is False
+
+    def test_same_label_drift_keeps_larger(self) -> None:
+        # one column, SAME source label (a `-N` collapse near-dup), distinct value
+        # sets, equal introduction -> keep the larger (most complete).
+        small = _state(1, col="x", label="SEI_PSU")
+        big = _state(2, col="x", label="SEI_PSU")
+        winners, genuine = _resolve_year_winners(
+            [small[0], big[0]], dict([small, big]), 2020, self._codes({1: 19, 2: 22})
+        )
+        assert winners == [big[0]]
+        assert genuine is False
+
+    def test_distinct_label_recoding_stays_genuine(self) -> None:
+        # one column, SAME introduction, DIFFERENT source labels (Br92 vs Br07) →
+        # genuine → curation.
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45})
         )
         assert genuine is True
-        assert set(winners) == {"x", "y"}
+        assert set(winners) == {a[0], b[0]}
+
+    def test_genuine_same_column_returns_both(self) -> None:
+        # SAME column, distinct value sets, big diff -> genuine same-column conflict.
+        a = _state(1, col="x")
+        b = _state(2, col="x")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 6})
+        )
+        assert genuine is True
+        assert set(winners) == {a[0], b[0]}
+
+    def test_distinct_columns_coexist(self) -> None:
+        # DISTINCT columns = parallel representations of one concept -> co-exist,
+        # NOT a conflict (the SSYK 3/5-digit, age 5/10-yr bracket case).
+        a = _state(1, col="agrupp")
+        b = _state(2, col="agrupp2")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 6})
+        )
+        assert genuine is False
+        assert set(winners) == {a[0], b[0]}  # both kept
+
+    def test_current_beats_historical(self) -> None:
+        # one column, current vs historical grain -> current wins (a column holds
+        # one coding/period; historical is a superseded vintage).
+        cur = _state(1, col="Kommun", grain="Kommun")
+        hist = _state(2, col="Kommun", grain="Kommun historisk")
+        winners, genuine = _resolve_year_winners(
+            [cur[0], hist[0]], dict([cur, hist]), 2020, self._codes({1: 300, 2: 350})
+        )
+        assert winners == [cur[0]]  # current wins despite historical being larger
+        assert genuine is False
 
     def test_same_value_set_not_genuine(self) -> None:
-        # two groups, same value set (e.g. a column rename) -> one rep, not genuine.
-        groups = {
-            "a": _grp(value_set_id=1, regver_max=2019),
-            "b": _grp(value_set_id=1, regver_max=2020),
-        }
+        # one column, same value set, shape drift (data_length) -> one rep.
+        a = _state(1, col="x", regver_max=2019, dlen="1")
+        b = _state(1, col="x", regver_max=2020, dlen="2")
         winners, genuine = _resolve_year_winners(
-            ["a", "b"], groups, 2020, self._codes({1: 3})
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3})
         )
         assert genuine is False
         assert len(winners) == 1
-        assert winners[0] == "b"  # latest-era rep
+        assert winners[0] == b[0]  # latest-era rep
 
 
 class TestPickStateRep:
     def test_latest_era_wins(self) -> None:
-        groups = {
-            "a": _grp(value_set_id=1, regver_max=2010),
-            "b": _grp(value_set_id=1, regver_max=2020),
-        }
-        assert _pick_state_rep(["a", "b"], groups) == "b"
+        a = _state(1, regver_max=2010, dlen="1")
+        b = _state(1, regver_max=2020, dlen="2")
+        assert _pick_state_rep([a[0], b[0]], dict([a, b])) == b[0]
 
 
 def _build(tmp_path: Path, extra_rows: list[str]) -> sqlite3.Connection:

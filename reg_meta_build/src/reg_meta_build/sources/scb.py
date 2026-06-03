@@ -1272,24 +1272,67 @@ def _rle_runs(years: list[int]) -> list[tuple[int, int]]:
     return runs
 
 
+# Grain markers (ascii-folded substrings) flagging a HISTORICAL re-coding —
+# `Kommun historisk`, `Län historisk`, `… tidigare`. SCB co-delivers these
+# alongside the current coding in a re-issue edition (e.g. the 2010 LKF re-issue);
+# on one column the current coding supersedes the historical one. A column-period
+# physically holds ONE coding, so this is a VINTAGE choice, not a representation.
+_HISTORICAL_GRAIN_MARKERS = ("historisk", "tidigare")
+
+
+def _is_historical_grain(grain: str | None) -> bool:
+    s = _ascii_fold_lower(grain)
+    return any(m in s for m in _HISTORICAL_GRAIN_MARKERS)
+
+
 def _resolve_year_winners(
     cands: list[tuple],
     groups: dict[tuple, _StateGroup],
     year: int,
     codes_fn: Callable[[int], frozenset[str]],
 ) -> tuple[list[tuple], bool]:
-    """Pick the winning group(s) for one contested `year` among candidate gkeys
-    (each a group whose `regyears` include `year`). Returns
-    `(winner_gkeys, is_genuine)`. Normally one winner; a GENUINE residual returns
-    one representative gkey PER surviving distinct value set (so they stay
-    overlapping → the build invariant fails). The cascade:
+    """Pick the winning group(s) for one contested `year`, COLUMN-AWARE.
+
+    A delivery column (gkey[8]) is one representation of the concept; distinct
+    columns are parallel representations (SSYK 3/5-digit, age 5/10-yr brackets)
+    that legitimately CO-EXIST under one FQID — they are NOT a conflict. So
+    candidates are partitioned by column and each column resolves INDEPENDENTLY to
+    one winner; the winners across columns all survive. `is_genuine` is True only
+    when a SINGLE column still holds >1 distinct value set after its cascade (a
+    real same-column conflict the build can't resolve → curation).
+    """
+    by_col: dict[str, list[tuple]] = defaultdict(list)
+    for gk in cands:
+        by_col[gk[8]].append(gk)
+    winners: list[tuple] = []
+    any_genuine = False
+    for col_cands in by_col.values():
+        w, genuine = _resolve_column_year(col_cands, groups, year, codes_fn)
+        winners.extend(w)
+        any_genuine = any_genuine or genuine
+    return winners, any_genuine
+
+
+def _resolve_column_year(
+    cands: list[tuple],
+    groups: dict[tuple, _StateGroup],
+    year: int,
+    codes_fn: Callable[[int], frozenset[str]],
+) -> tuple[list[tuple], bool]:
+    """Resolve ONE column's groups for a contested year to a single winner. The
+    within-column cascade:
       1. AUTHORITY — keep groups at the highest `year_authority`.
       2. RECENCY   — keep groups at the latest `year_approval`.
-      3. value-set fold — survivors sharing one value set (or all code-less) have
-         no real conflict → one representative.
-      4. COSMETIC  — distinct value sets differing by <= `_COSMETIC_MAX_SYM`
-         symmetric codes are drift → keep the largest.
-      5. GENUINE   — distinct, non-cosmetic value sets → all reps, `is_genuine`.
+      3. CURRENT   — drop HISTORICAL-grain groups if a non-historical one survives.
+      4. value-set fold — survivors sharing one value set (or all code-less) → one rep.
+      5. SUPERSESSION — sequential vintages: the latest-INTRODUCED value set (max
+         min observed year) wins the transition year; equal introduction continues.
+      6. SAME-LABEL drift — distinct value sets sharing one source label (`-N`
+         collapse near-dups) → keep the largest.
+      7. COSMETIC  — distinct value sets within `_COSMETIC_MAX_SYM` symmetric codes
+         → keep the largest.
+      8. GENUINE   — distinct, non-cosmetic value sets on ONE column → all reps,
+         `is_genuine` (overlapping → the invariant flags it for curation).
     """
     if len(cands) == 1:
         return cands, False
@@ -1301,6 +1344,9 @@ def _resolve_year_winners(
     ]
     top_appr = max(groups[gk].year_approval.get(year, "") for gk in cands)
     cands = [gk for gk in cands if groups[gk].year_approval.get(year, "") == top_appr]
+    non_hist = [gk for gk in cands if not _is_historical_grain(gk[7])]
+    if non_hist and len(non_hist) < len(cands):
+        cands = non_hist
 
     by_vs: dict[int | None, list[tuple]] = defaultdict(list)
     for gk in cands:
@@ -1311,6 +1357,39 @@ def _resolve_year_winners(
         # pick the representative of the value set if present, else any rep.
         pool = next(iter(nonnull.values())) if nonnull else cands
         return [_pick_state_rep(pool, groups)], False
+
+    # SUPERSESSION: a physical column holds one coding per period, so two distinct
+    # value sets overlapping ON ONE COLUMN are sequential vintages whose transition
+    # year is claimed by both (SNI2002→SNI2007 at 2008, RTB-2019→RTB-2020 at 2020).
+    # The most-recently-INTRODUCED coding (latest min observed year) supersedes at
+    # the boundary; the predecessor carves to end before it. Fires only when one
+    # value set is strictly later — EQUAL introduction (same-span re-codings on one
+    # column: Br92/Br07, Ja-nej-1/Ja-nej-3) stays a genuine conflict → curation.
+    vs_min: dict[int, int] = {}
+    for vs, gks in nonnull.items():
+        vs_min[vs] = min(
+            (groups[gk].regver_min for gk in gks if groups[gk].regver_min is not None),
+            default=1 << 30,
+        )
+    latest = max(vs_min.values())
+    if sum(1 for m in vs_min.values() if m == latest) == 1:
+        win_vs = max(vs_min, key=lambda v: vs_min[v])
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    # SAME-LABEL DRIFT: distinct value sets on one column carrying the SAME source
+    # version label are re-coding drift of ONE concept — triage disambiguated them
+    # with a `-N` suffix (`SEI_PSU`/`SEI_PSU-1`, `4pos`/`4pos-1`). Keep the largest
+    # (most complete). Genuinely different codings carry DIFFERENT labels
+    # (`Br92-kod`/`Br07-kod`, prelim/final, sub-annual dates) and fall through to
+    # curation. Provider-agnostic: any same-label coding drift collapses here.
+    orig_labels = {
+        groups[gk].value_set_version_label or ""
+        for gk in cands
+        if groups[gk].value_set_id is not None
+    }
+    if len(orig_labels) == 1:
+        win_vs = max(nonnull, key=lambda v: (len(codes_fn(v)), v))
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
 
     vss = sorted(nonnull)
     max_sym = max(
