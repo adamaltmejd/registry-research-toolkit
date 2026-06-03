@@ -234,11 +234,43 @@ class TestResolveYearWinners:
         a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
         b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
         # gkey: [0]=register_id=1, [2]=var_id=1, [8]=column="AL2"
-        codelivery = {(1, 1, "AL2"): "Br07-kod"}
+        codelivery = {(1, 1, "AL2"): ("Br07-kod", None)}
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
         assert winners == [b[0]]  # the pinned Br07 coding
+        assert genuine is False
+
+    def test_curation_pin_matches_emitted_label(self) -> None:
+        # a §5.7 fold relabels the raw value_set_version_label (origA/origB) to
+        # emitted tokens (4pos/4pos-1). The pin matches the EMITTED label (what the
+        # maintainer sees in variable_state), resolving to '4pos' over cosmetic's
+        # would-be larger pick.
+        a = _state(1, col="X", label="origA")
+        b = _state(2, col="X", label="origB")
+        emitted = {a[0]: "4pos", b[0]: "4pos-1"}
+        codelivery = {(1, 1, "X"): ("4pos", None)}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]],
+            dict([a, b]),
+            2020,
+            self._codes({1: 377, 2: 378}),
+            codelivery,
+            emitted,
+        )
+        assert winners == [a[0]]  # the pinned '4pos' (377), not cosmetic's larger
+        assert genuine is False
+
+    def test_curation_keep_rule_latest_year(self) -> None:
+        # keep_rule=latest_year keeps the coding whose label embeds the latest year
+        # (recurring SFI-year vintages on one column).
+        a = _state(1, col="Skolkod", label="Skolkod SFI 1999")
+        b = _state(2, col="Skolkod", label="Skolkod SFI 2000")
+        codelivery = {(1, 1, "Skolkod"): (None, "latest_year")}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1999, self._codes({1: 574, 2: 597}), codelivery
+        )
+        assert winners == [b[0]]  # SFI 2000 (later vintage)
         assert genuine is False
 
     def test_curation_pin_mismatch_falls_through(self) -> None:
@@ -246,7 +278,7 @@ class TestResolveYearWinners:
         # (no crash) — the year stays unresolved for --validate to flag.
         a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
         b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
-        codelivery = {(1, 1, "AL2"): "Something else"}
+        codelivery = {(1, 1, "AL2"): ("Something else", None)}
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
@@ -295,6 +327,41 @@ class TestResolveYearWinners:
         assert genuine is False
         assert len(winners) == 1
         assert winners[0] == b[0]  # latest-era rep
+
+
+class TestLoadCodelivery:
+    def test_parses_keep_and_rule(self, tmp_path: Path) -> None:
+        from reg_meta_build.codelivery import load_codelivery
+
+        toml = tmp_path / "codelivery.toml"
+        toml.write_text(
+            '[[resolve]]\nregister_id=187\nvar_id=3310\ncolumn="AL2UndEjU"\n'
+            'keep="Br07-kod"\n\n'
+            '[[resolve]]\nregister_id=248\nvar_id=104\ncolumn="Skolkod"\n'
+            'keep_rule="latest_year"\n',
+            encoding="utf-8",
+        )
+        cmap = load_codelivery(toml)
+        assert cmap[(187, 3310, "AL2UndEjU")] == ("Br07-kod", None)
+        assert cmap[(248, 104, "Skolkod")] == (None, "latest_year")
+
+    def test_rejects_both_or_neither(self, tmp_path: Path) -> None:
+        from reg_meta_build.codelivery import load_codelivery
+
+        both = tmp_path / "both.toml"
+        both.write_text(
+            '[[resolve]]\nregister_id=1\nvar_id=1\ncolumn="c"\nkeep="x"\n'
+            'keep_rule="latest_year"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(ValueError, match="exactly one"):
+            load_codelivery(both)
+
+    def test_missing_file_is_empty(self, tmp_path: Path) -> None:
+        from reg_meta_build.codelivery import load_codelivery
+
+        assert load_codelivery(tmp_path / "nope.toml") == {}
+        assert load_codelivery(None) == {}
 
 
 class TestPickStateRep:

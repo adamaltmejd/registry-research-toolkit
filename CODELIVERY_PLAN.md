@@ -80,33 +80,60 @@ occupancy from the *observed editions* (`_StateGroup.regyears`, not the
   `agrupp`/`agrupp2`) → auto-split into siblings; **same-column** dual-coding
   (`rv=448` historical old/new; two ~800-code classifications) → curate.
 
-### Plan (settled)
+### The model pivot: a delivery COLUMN is the representation handle
 
-1. **Per-`(variable, variant)` per-year value-set timeline (build time).** Replace
-   the per-group `[min,max]` emit. For each `(variable, variant)` that has
+A FQID names ONE concept; SSYK 3/4/5-digit and age 5/10-yr brackets are the *same*
+concept at different granularities, NOT different concepts — so they must stay one
+FQID and must NOT be split into siblings. They are delivered as DISTINCT delivery
+columns, and a single physical column holds ONE coding per period. So:
+
+- the invariant is **`(variable, variant, period, delivery_column) → one value
+  set`** — distinct columns are parallel *representations* that legitimately
+  co-exist under one FQID; only two value sets on ONE column in one period is the
+  unresolvable conflict;
+- a binding picks a representation by its **delivery column** (the stable handle
+  `@version` failed to be) — the bind-side chooser (Phase 2b).
+
+### Plan (settled) — build-side (Phase 2a, DONE)
+
+1. **Per-`(variable, variant)` COLUMN-AWARE year timeline** (`sources/scb.py`).
+   Replace the per-group `[min,max]` emit. For each `(variable, variant)` with
    OVERLAPPING distinct-value-set groups, build per-year occupancy from
-   `regyears`, resolve each year to a winner via the cascade
-   (authority → recency → cosmetic), and RLE each group's *won* years into
-   contiguous `variable_state` runs. Non-overlapping `(variable, variant)` keep
-   the fast `[min,max]` path (preserves benign-gap coverage + most output). This
-   is option **(a)** (interval schema, multi-interval-per-shape) — chosen over a
-   period-list (b): the period grammar is sub-annual, the whole query layer is
-   interval-overlap, and SOS already emits multi-interval-per-shape, so (a) needs
-   no schema/consumer change. Cascade signals tracked on `_StateGroup`:
-   `regyears`, `year_authority` (`_edition_authority`), `year_approval`.
-2. **`validate.py` invariant (done).** `_check_one_value_set_per_period` FAILS the
-   build when any `(variable, variant)` resolves a period to >1 value set. After
-   (1) the only survivors are the genuine residual.
-3. **Auto-split distinct-column genuine parallels** into sibling variables
-   (extend §5.7 split: co-delivered distinct columns are distinct variables now
-   that `@version` is retired — a binding can't pick a grain otherwise).
-4. **Same-column genuine residual → STRICT FAIL → curation TOML** (modeled on
-   `fqid_slugs`): build fails listing each; a TOML entry pins the canonical value
-   set (or requests a split). Nothing ships until every same-column genuine case
-   is curated.
-5. **Browse-by-`value_set_id` timeline (frontend/backend, nice-to-have).** Key the
-   `?value_set_version` browse on `value_set_id` + show each distinct set's
-   contiguous span. Composes on (1)'s partitioned windows.
+   `regyears`; partition candidates by column and resolve EACH column to one
+   winner (distinct columns co-exist); RLE each group's won years into contiguous
+   runs. Non-overlapping `(variable, variant)` keep the fast `[min,max]` path.
+   Option **(a)** (interval schema, multi-interval-per-shape) — the query layer is
+   interval-overlap and SOS already emits multi-interval-per-shape, so no
+   schema/consumer change. Within-column cascade (`_resolve_column_year`):
+   authority → recency → current>historical → value-set fold → supersession
+   (latest-introduced vintage) → same-label drift → **label freshness**
+   (`_label_resolution_rank`: final>preliminary, calendar>academic, latest dated
+   snapshot, HT>VT — SCB recurring families) → **curation** → cosmetic → genuine.
+2. **`validate.py` invariant.** `_check_one_value_set_per_period` keys on
+   `(variable, register_variant, delivery_column)` and FAILS the build on any
+   surviving same-column overlap.
+3. **Curation** (`codelivery.py` + `codelivery.toml`): the provider-agnostic
+   escape hatch for genuine one-off same-column re-codings the cascade leaves. A
+   `[[resolve]]` entry keyed on `(register_id, var_id, column)` either pins a
+   `keep` label or sets `keep_rule = "latest_year"` (recurring per-year vintages,
+   e.g. SFI `Skolkod`). A pin that doesn't match a year falls through to genuine.
+   ~15 entries; several are domain calls (Br92/Br07 by period, UpplForm,
+   SUN2020Inr classification `4pos`, …).
+
+### Phase 2b — bind-side representation chooser (TODO, this PR)
+
+Now that the build ALLOWS multi-column concepts, a binding to one resolves to >1
+value set and must name its representation:
+
+- **`reg_schema.Binding`**: new optional `representation` field (the delivery
+  column); update the docstring (drop "resolves to exactly one value set").
+- **`reg_meta` resolve**: filter states by the binding's chosen column.
+- **`reg_webapp` semantic**: `binding_value_set_version_ambiguous` flags a
+  multi-column binding with no representation; resolve to the chosen column.
+- **`reg_webapp` frontend**: CatalogPicker/BindingEditor offer a column chooser
+  when a picked variable has >1 representation at the period; regenerate
+  `openapi.json` + `api-types.ts`.
+- Optional: browse-by-`value_set_id` timeline.
 
 ### Verification
 

@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
     from pathlib import Path
 
+    from reg_meta_build.codelivery import CodeliveryMap
     from reg_meta_build.sources import IRObject
 
 
@@ -1319,7 +1320,8 @@ def _resolve_year_winners(
     groups: dict[tuple, _StateGroup],
     year: int,
     codes_fn: Callable[[int], frozenset[str]],
-    codelivery: dict[tuple[int, int, str], str] | None = None,
+    codelivery: CodeliveryMap | None = None,
+    labels: dict[tuple, str] | None = None,
 ) -> tuple[list[tuple], bool]:
     """Pick the winning group(s) for one contested `year`, COLUMN-AWARE.
 
@@ -1332,7 +1334,10 @@ def _resolve_year_winners(
     real same-column conflict the build can't resolve → curation).
 
     `codelivery` is the curation map (`(register_id, var_id, column) → keep label`)
-    consulted for genuine one-off conflicts before they're flagged.
+    consulted for genuine one-off conflicts before they're flagged. `labels` is
+    the triage EMITTED labels (`triage.labels`) so a curation pin matches the label
+    that lands in `variable_state` (what the maintainer drafts from), not the raw
+    source `value_set_version_label` (which a §5.7 fold/collapse may relabel).
     """
     by_col: dict[str, list[tuple]] = defaultdict(list)
     for gk in cands:
@@ -1340,7 +1345,9 @@ def _resolve_year_winners(
     winners: list[tuple] = []
     any_genuine = False
     for col_cands in by_col.values():
-        w, genuine = _resolve_column_year(col_cands, groups, year, codes_fn, codelivery)
+        w, genuine = _resolve_column_year(
+            col_cands, groups, year, codes_fn, codelivery, labels
+        )
         winners.extend(w)
         any_genuine = any_genuine or genuine
     return winners, any_genuine
@@ -1351,7 +1358,8 @@ def _resolve_column_year(
     groups: dict[tuple, _StateGroup],
     year: int,
     codes_fn: Callable[[int], frozenset[str]],
-    codelivery: dict[tuple[int, int, str], str] | None = None,
+    codelivery: CodeliveryMap | None = None,
+    labels: dict[tuple, str] | None = None,
 ) -> tuple[list[tuple], bool]:
     """Resolve ONE column's groups for a contested year to a single winner. The
     within-column cascade:
@@ -1452,15 +1460,40 @@ def _resolve_column_year(
     # typo surfaces as the still-failing invariant rather than a hard crash.
     if codelivery:
         reg_id, var_id, column = cands[0][0], cands[0][2], cands[0][8]
-        pin = codelivery.get((reg_id, var_id, column))
-        if pin is not None:
-            target = pin.strip()
-            for gks in nonnull.values():
-                if any(
-                    (groups[gk].value_set_version_label or "").strip() == target
-                    for gk in gks
-                ):
-                    return [_pick_state_rep(gks, groups)], False
+        entry = codelivery.get((reg_id, var_id, column))
+        if entry is not None:
+            keep_label, keep_rule = entry
+            if keep_label is not None:
+                # Match the EMITTED label (what lands in variable_state, what the
+                # maintainer drafts the pin from) — a §5.7 fold/collapse can relabel
+                # the raw source `value_set_version_label`.
+                target = keep_label.strip()
+
+                def _emitted(gk: tuple) -> str:
+                    if labels is not None and gk in labels:
+                        return labels[gk]
+                    return groups[gk].value_set_version_label or ""
+
+                for gks in nonnull.values():
+                    if any(_emitted(gk).strip() == target for gk in gks):
+                        return [_pick_state_rep(gks, groups)], False
+            elif keep_rule == "latest_year":
+                # Recurring per-year vintages: keep the coding whose label embeds
+                # the latest 4-digit year. Unique max → resolved; ties fall through.
+                vs_year: dict[int, int] = {}
+                for vs, gks in nonnull.items():
+                    yrs = [
+                        int(m)
+                        for gk in gks
+                        for m in re.findall(
+                            r"(?:19|20)\d{2}", groups[gk].value_set_version_label or ""
+                        )
+                    ]
+                    vs_year[vs] = max(yrs) if yrs else -1
+                top = max(vs_year.values())
+                if top >= 0 and sum(1 for y in vs_year.values() if y == top) == 1:
+                    win = max(vs_year, key=lambda v: vs_year[v])
+                    return [_pick_state_rep(nonnull[win], groups)], False
 
     vss = sorted(nonnull)
     max_sym = max(
@@ -1491,7 +1524,7 @@ def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tup
 
 def _coalesce_variable_states(
     conn: sqlite3.Connection,
-    codelivery: dict[tuple[int, int, str], str] | None = None,
+    codelivery: CodeliveryMap | None = None,
 ) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` per §5.1.
 
@@ -1998,17 +2031,30 @@ def _coalesce_variable_states(
 
     def _spans_overlap(gkeys: list[tuple]) -> bool:
         spans: list[tuple[int, int, int]] = []
+        col_vs: dict[str, set[int]] = defaultdict(set)
+        col_yearless: dict[str, bool] = defaultdict(bool)
         for gk in gkeys:
             g = groups[gk]
-            if g.value_set_id is None or g.regver_min is None or g.regver_max is None:
+            if g.value_set_id is None:
                 continue
-            spans.append((g.regver_min, g.regver_max, g.value_set_id))
+            col_vs[gk[8]].add(g.value_set_id)
+            if not g.regyears:
+                col_yearless[gk[8]] = True
+            elif g.regver_min is not None and g.regver_max is not None:
+                spans.append((g.regver_min, g.regver_max, g.value_set_id))
+        # (a) two year-bearing distinct-value-set groups with overlapping windows.
         for i in range(len(spans)):
             lo_i, hi_i, vs_i = spans[i]
             for j in range(i + 1, len(spans)):
                 lo_j, hi_j, vs_j = spans[j]
                 if vs_i != vs_j and max(lo_i, lo_j) <= min(hi_i, hi_j):
                     return True
+        # (b) a YEARLESS group on a column carrying >1 distinct value set — it
+        # emits an open span (fast path) that would overlap the column's other
+        # coding; route the cluster through the timeline so it resolves.
+        for col, yearless in col_yearless.items():
+            if yearless and len(col_vs[col]) > 1:
+                return True
         return False
 
     genuine_unresolved: list[tuple[int, int, int, list[int]]] = []
@@ -2019,12 +2065,36 @@ def _coalesce_variable_states(
                 _emit_span(gk, groups[gk])
             continue
         timeline_vv += 1
-        # Per-year ownership over the OBSERVED editions. Yearless groups in a
-        # timeline cluster can't be placed per-year → emit their span fallback.
         year_bearing = [gk for gk in gkeys if groups[gk].regyears]
+        # A YEARLESS group has no per-year placement, so it can't compete in the
+        # timeline below — it just emits its open span. When it shares a column
+        # with a year-bearing group carrying a DISTINCT value set, that span
+        # overlaps the year-bearing coding. The year-bearing coding (real years)
+        # wins; the yearless one is DROPPED — unless a curation pin explicitly
+        # keeps the yearless label. Non-conflicting yearless groups emit normally.
         for gk in gkeys:
-            if not groups[gk].regyears:
-                _emit_span(gk, groups[gk])
+            grp = groups[gk]
+            if grp.regyears:
+                continue
+            col = gk[8]
+            rivals = grp.value_set_id is not None and any(
+                ogk[8] == col
+                and groups[ogk].value_set_id is not None
+                and groups[ogk].value_set_id != grp.value_set_id
+                for ogk in year_bearing
+            )
+            if rivals:
+                pin = None
+                if codelivery:
+                    _entry = codelivery.get((gk[0], gk[2], col))
+                    if _entry is not None and _entry[0] is not None:
+                        pin = _entry[0].strip()
+                emitted = (
+                    triage.labels.get(gk, grp.value_set_version_label or "")
+                ).strip()
+                if pin != emitted:
+                    continue  # drop the yearless loser (year-bearing coding wins)
+            _emit_span(gk, grp)
         owned: dict[tuple, set[int]] = defaultdict(set)
         all_years: set[int] = set()
         for gk in year_bearing:
@@ -2032,7 +2102,7 @@ def _coalesce_variable_states(
         for y in sorted(all_years):
             cands = [gk for gk in year_bearing if y in groups[gk].regyears]
             winners, genuine = _resolve_year_winners(
-                cands, groups, y, _vs_codes, codelivery
+                cands, groups, y, _vs_codes, codelivery, triage.labels
             )
             for gk in winners:
                 owned[gk].add(y)
@@ -2637,7 +2707,7 @@ class SCBAdapter:
     def __init__(
         self,
         conn: sqlite3.Connection,
-        codelivery: dict[tuple[int, int, str], str] | None = None,
+        codelivery: CodeliveryMap | None = None,
     ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B, plan §4).

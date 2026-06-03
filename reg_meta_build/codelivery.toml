@@ -91,9 +91,17 @@ column = "Inst"
 keep = "Enhetsindelning 2014"
 note = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
 
-# NOTE: reg248/var104 col=Skolkod is RECURRING (SFI 1999/2000/2001/2002/2004 +
-# all-school-forms overlap year-by-year), not a single one-off — a single `keep`
-# can't cover every year's pair. Handled separately (pending).
+# ── komvux SFI school codes: RECURRING per-year vintages (SFI 1999/2000/2001/
+#    2002/2004 + the all-school-forms set 't.o.m. maj 2013'), a different label
+#    pair every year — one `keep` can't cover it. keep_rule keeps, per year, the
+#    coding whose label embeds the latest year (latest SFI vintage; the
+#    all-school-forms 2013 set where it overlaps). ──
+[[resolve]]
+register_id = 248
+var_id = 104
+column = "Skolkod"
+keep_rule = "latest_year"
+note = "Komvux SFI Skolkod: latest-vintage SFI / all-school-forms coding per year."
 
 # ── FoB75 tenure form: keep the fuller dwelling coding ──
 [[resolve]]                       # REVIEW: household (Hh) vs dwelling (Lgh) coding
@@ -103,13 +111,16 @@ column = "UpplForm"
 keep = "UpplFormFoB75Lgh"
 note = "FoB75 UpplForm 1975: dwelling coding (12 codes) over household (5)."
 
-# ── SUN2020 4-pos: collapse near-dup to the larger ──
+# ── SUN2020 utbildningsinriktning (classification id=8): the two 4-pos codings
+#    differ by exactly one code, the '----' missing-value placeholder. Keep the
+#    canonical SUN2020 coding ('4pos', 377) — '----' is a data missing-marker, not
+#    a SUN2020 category. ──
 [[resolve]]
 register_id = 24
 var_id = 65
 column = "SUN2020Inr"
-keep = "4pos-1"
-note = "SUN2020Inr: '4pos-1' (378) vs '4pos' (377) — near-dup, keep larger."
+keep = "4pos"
+note = "SUN2020Inr classification: '4pos' (377, canonical) over '4pos-1' (378, adds '----')."
 
 # ── R&D institution id: keep the broader institution coding ──
 [[resolve]]                       # REVIEW: institution coding choice
@@ -119,10 +130,12 @@ column = "ID_INST"
 keep = "Universitet/högskolor"
 note = "FoU ID_INST 2023: 'Universitet/högskolor' (129) over 'Högskolekod 2017' (41)."
 
-# ── distance-school unit code: the later (contemporaneous) snapshot ──
+# ── distance-school unit register: RECURRING yearly '15 oktober YYYY' snapshots
+#    (codes are school-unit ids; the value SET is a dated register capture). Keep
+#    the latest snapshot per year. keep_rule, not a one-off pin. ──
 [[resolve]]
 register_id = 366
 var_id = 45133
 column = "skolenhetskod"
-keep = "Skolenhetskod distans gymnasieskola 15 oktober 2020"
-note = "skolenhetskod 2020: the Oct-2020 snapshot over Oct-2019."
+keep_rule = "latest_year"
+note = "skolenhetskod distans: latest '15 oktober YYYY' register snapshot per year."
