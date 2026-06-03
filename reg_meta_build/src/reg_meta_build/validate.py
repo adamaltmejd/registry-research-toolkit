@@ -3,8 +3,8 @@
 Run against a freshly built `reg_meta.db` to catch value-set dedup or
 year-projection drift before the build is shipped. Logic mirrors what
 `scripts/validate_valueset_dedup.py` used to do as a sibling process;
-both that script and the `--validate` flag on `build-db` call into this
-module so the checks stay in one place.
+both that script and `build-db` (which validates by default; opt out with
+`--no-validate`) call into this module so the checks stay in one place.
 
 Schema shape:
   - value_set / value_set_member / variable_state.value_set_id present
@@ -111,8 +111,8 @@ class ValidationResult:
         return "\n".join(parts)
 
 
-def validate_built_db(db_path: Path) -> ValidationResult:
-    """Run all value-set dedup invariants against ``db_path``.
+def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResult:
+    """Run the build invariants against ``db_path``.
 
     The result records ``[OK]`` / ``[FAIL]`` lines per check; callers
     decide how to surface them. Raises FileNotFoundError if ``db_path``
@@ -121,6 +121,15 @@ def validate_built_db(db_path: Path) -> ValidationResult:
     Opens with ``check_schema=False``: this validator exists to catch
     schema drift, so it must not depend on the schema-version sanity
     check passing first.
+
+    ``corpus`` gates the real-corpus volume checks — currently only
+    ``_check_sos_sanity`` (the provider-specific ">= 13 SOS registers,
+    1,400-2,000 variables" gate), which holds only on a real maintainer
+    build and false-fails on the small synthetic fixtures. CI validates
+    synthetic builds with ``corpus=False``; the real ``build-db`` runs
+    ``corpus=True``. Every other check is corpus-independent and always
+    runs, so synthetic CI exercises the full structural suite without any
+    real data.
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -145,7 +154,10 @@ def validate_built_db(db_path: Path) -> ValidationResult:
         # variable_instance), so any state-vs-map check is a tautology. The real
         # invariant — every state with a value_set projects >= 1 code — is already
         # covered for ALL providers by _check_state_projection_integrity above.
-        _check_sos_sanity(conn, result, tables)
+        # Real-corpus volume gate: provider-specific, needs the real delivery.
+        # Skipped under corpus=False so synthetic CI builds don't false-fail.
+        if corpus:
+            _check_sos_sanity(conn, result, tables)
         _check_sos_stateless_variables(conn, result, tables)
         _check_operational(conn, result)
     finally:

@@ -1,40 +1,21 @@
 """Tests for the Socialstyrelsen Excel parser.
 
-Two tiers:
-
-- Unit tests for helpers. Always run.
-- Integration tests over the real input files under
-  `reg_meta_build/input_data/Socialstyrelsen/`. Skipped when the directory
-  is absent (CI, fresh checkouts) since the input is gitignored. These
-  tests exist to catch regressions against real deliveries during local
-  development.
+Unit tests over pure helpers, plus synthetic-workbook coverage: tests build
+small `.xlsx` fixtures in-process (no gitignored real deliveries) to exercise
+the parser's branches — DCAT-AP field map, variable fields, deldatamängder,
+kodlistor, phantom rows, and directory lock-file skipping. `openpyxl` is a
+hard runtime dep of reg_meta_build, so the workbook-building tests run
+everywhere.
 """
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import pytest
-
-# The parser module imports lazily, so unit tests over pure helpers can run
-# without openpyxl. Tests that actually load workbooks are gated by the
-# `requires_openpyxl` mark below.
-try:
-    import openpyxl  # noqa: F401
-except ImportError:
-    HAS_OPENPYXL = False
-else:
-    HAS_OPENPYXL = True
-
-requires_openpyxl = pytest.mark.skipif(
-    not HAS_OPENPYXL, reason="openpyxl is required for this test"
-)
-
-from reg_meta_build.sources.sos import (  # noqa: E402
+from reg_meta_build.sources.sos import (
     SosDcatAp,
     SosParseError,
-    SosRegister,
     _as_date,
     _as_int,
     _clean,
@@ -159,7 +140,6 @@ def _write_minimal_workbook(
     wb.save(path)
 
 
-@requires_openpyxl
 def test_zero_padded_kod_round_trips_through_workbook(tmp_path: Path) -> None:
     p = tmp_path / "Test.xlsx"
     _write_minimal_workbook(
@@ -172,7 +152,6 @@ def test_zero_padded_kod_round_trips_through_workbook(tmp_path: Path) -> None:
     assert [r.kod for r in result.kodlistor[0].rows] == ["001", "012"]
 
 
-@requires_openpyxl
 def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
     tmp_path: Path,
 ) -> None:
@@ -183,13 +162,11 @@ def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
     assert results[0].source_file.name == "TEST.XLSX"
 
 
-@requires_openpyxl
 def test_directory_passed_as_file_rejected(tmp_path: Path) -> None:
     with pytest.raises(SosParseError, match="not a regular file"):
         parse_register_file(tmp_path)
 
 
-@requires_openpyxl
 def test_variable_sheet_without_variabelnamn_header_raises(tmp_path: Path) -> None:
     # An upstream rename or malformed delivery would leave the varsheet
     # without a Variabelnamn column. Silently returning zero variables
@@ -200,7 +177,6 @@ def test_variable_sheet_without_variabelnamn_header_raises(tmp_path: Path) -> No
         parse_register_file(p)
 
 
-@requires_openpyxl
 def test_unsupported_xls_format_wrapped_as_sos_parse_error(tmp_path: Path) -> None:
     # openpyxl raises InvalidFileException for `.xls`/`.xlsb`; surface as
     # SosParseError so the parser's contract holds for common wrong inputs.
@@ -211,143 +187,211 @@ def test_unsupported_xls_format_wrapped_as_sos_parse_error(tmp_path: Path) -> No
 
 
 # ---------------------------------------------------------------------------
-# Integration tests against real deliveries
+# Synthetic-workbook parser coverage
+#
+# These replace the deleted real-delivery integration tests: they pin the same
+# parser branches against a hand-built workbook instead of the gitignored real
+# deliveries — DCAT-AP field map, full variable fields (incl. Länk kodverk),
+# Deldatamängder parsing, a per-row Variabelnamn kodlista (MFR shape), an
+# unrecognised kodlista (-> raw_rows), Generell key/values, phantom rows, and
+# directory lock-file skipping. Real-corpus drift is deliberately NOT a CI
+# concern; a maintainer's actual `build-db` over the real input surfaces that.
 # ---------------------------------------------------------------------------
 
 
-def _locate_sos_data() -> Path | None:
-    """Find `reg_meta_build/input_data/Socialstyrelsen/` — gitignored, so
-    it may live in the main checkout rather than the current worktree.
+def _write_rich_workbook(path: Path) -> None:
+    """Write a multi-sheet SoS-shaped workbook exercising the parser's branches.
 
-    Honour `REG_META_SOS_DATA` first. Otherwise walk upward so worktrees
-    can find the sibling main checkout.
+    Shapes mirror the live deliveries the deleted integration tests pinned: a
+    Generell key/value sheet, a full DCAT-AP attribute map, a Deldatamängder
+    sheet, a variable sheet with the full column set, a Kodlista with a per-row
+    ``Variabelnamn`` column (MFR shape), an unrecognised Kodlista (no
+    Tidsperiod/Kod header -> raw_rows), and trailing phantom rows.
     """
-    env = os.environ.get("REG_META_SOS_DATA")
-    if env:
-        p = Path(env)
-        return p if p.exists() else None
+    import openpyxl
 
-    anchor = Path(__file__).resolve()
-    candidates = [anchor.parents[1] / "input_data" / "Socialstyrelsen"]
-    for parent in anchor.parents:
-        candidates.append(parent / "reg_meta_build" / "input_data" / "Socialstyrelsen")
+    wb = openpyxl.Workbook()
 
-    for c in candidates:
-        if c.exists() and list(c.glob("*.xlsx")):
-            return c
-    return None
+    gen = wb.active
+    gen.title = "Generell information"
+    gen.append(["", "Om metadatamallen", None])  # section header (value None)
+    gen.append(["", "Version", "2.1"])
+    gen.append(["", "Om datamängden version", None])  # section header
+    gen.append(["", "Datamängd", "Patientregistret-syntet"])
+    gen.append(["", "Version", "2024:2"])
+    gen.append(["", "E-post", "kontakt@example.se"])
 
-
-SOS_DATA = _locate_sos_data()
-
-
-requires_sos_data = pytest.mark.skipif(
-    SOS_DATA is None or not HAS_OPENPYXL,
-    reason=(
-        "Socialstyrelsen input data not present (gitignored) or openpyxl "
-        "missing; set REG_META_SOS_DATA and install reg_meta_build to run"
-    ),
-)
-
-
-@requires_sos_data
-def test_parses_every_register_without_error() -> None:
-    results = parse_directory(SOS_DATA)
-    assert len(results) >= 13, f"expected ≥13 registers, got {len(results)}"
-    for r in results:
-        assert isinstance(r, SosRegister)
-        assert r.variables, f"{r.source_file.name}: no variables parsed"
-
-
-@requires_sos_data
-def test_skips_office_lock_files() -> None:
-    results = parse_directory(SOS_DATA)
-    for r in results:
-        assert not r.source_file.name.startswith("~$")
-
-
-@requires_sos_data
-def test_par_shape() -> None:
-    par = _find_register(parse_directory(SOS_DATA), "Patientregistret")
-    assert par.dataset_name == "Patientregistret"
-    assert par.dcat_ap.title_sv == "Patientregistret"
-    assert par.dcat_ap.title_en == "National Patient Register"
-    names = {d.name for d in par.deldatamangder}
-    assert names == {"PAR_SV", "PAR_OV", "PAR_TV"}
-    assert par.dcat_ap.legislation_sv
-    assert "hälsodataregister" in par.dcat_ap.legislation_sv.lower()
-    assert any(v.name == "HDIA" for v in par.variables)
-
-
-@requires_sos_data
-def test_mfr_kodlista_with_per_row_variable_column() -> None:
-    mfr = _find_register(parse_directory(SOS_DATA), "Medicinska födelseregistret")
-    butsatt = next(
-        (k for k in mfr.kodlistor if k.variable_hint.lower() == "butsatt"), None
+    dcat = wb.create_sheet("Metadata-Datamängd (DCAT-AP)")
+    dcat.append(["Attribut SoS-metadata", "Definition", "Svenska", "Engelska"])
+    dcat.append(["Titel", "", "Patientregistret-syntet", "Synthetic Patient Register"])
+    dcat.append(
+        ["Beskrivning", "", "En syntetisk beskrivning", "A synthetic description"]
     )
-    assert butsatt is not None, "Kodlista_butsatt missing"
-    assert butsatt.rows
-    assert butsatt.rows[0].variable_name == "BUTSATT"
+    dcat.append(["Tidsperiod", "", "1964-", ""])
+    dcat.append(["Utgivare", "", "Socialstyrelsen", ""])
+    dcat.append(["Ingångssida", "", "https://example.se/par", ""])
+    dcat.append(["Åtkomsträttigheter", "", "Begränsad åtkomst", ""])
+    dcat.append(["Tillämplig lagstiftning", "", "Lag om hälsodataregister", ""])
+    dcat.append(["Okänt attribut", "", "extra-värde", ""])  # -> dcat_ap.extras
 
+    dd = wb.create_sheet("Deldatamängder och datavyer")
+    dd.append(["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"])
+    dd.append(["PAR_OV", "Öppenvård", 2001, 2020])
+    dd.append(["PAR_SV", "Slutenvård", 1987, 2020])
 
-@requires_sos_data
-def test_unrecognised_kodlista_preserves_raw_rows() -> None:
-    results = parse_directory(SOS_DATA)
-    skipped = [k for r in results for k in r.kodlistor if not k.rows and k.raw_rows]
-    assert skipped, "expected at least one kodlista with empty rows + raw_rows"
-
-
-@requires_sos_data
-def test_registers_without_deldatamangder_warn() -> None:
-    results = parse_directory(SOS_DATA)
-    missing = [r for r in results if not r.deldatamangder]
-    assert missing, (
-        "expected at least one register without deldatamängd sheet (LSS/BU/SOL)"
+    var = wb.create_sheet("Metadata - Variabelnivå")
+    var.append(
+        [
+            "Deldatamängdsnamn",
+            "Variabelnamn",
+            "Variabeletikett",
+            "Variabelbeskrivning",
+            "Objekttyp",
+            "Värdemängd",
+            "Länk kodverk",
+            "Datatyp",
+            "Data från",
+            "Data till",
+        ]
     )
-    for r in missing:
-        assert any("Deldatamängder" in w for w in r.warnings)
-
-
-@requires_sos_data
-def test_bu_phantom_rows_do_not_inflate_variable_count() -> None:
-    bu = _find_register(parse_directory(SOS_DATA), "Insatser till barn och unga")
-    assert 50 <= len(bu.variables) <= 2000, (
-        f"BU variable count implausible: {len(bu.variables)}"
+    var.append(
+        [
+            "PAR_OV",
+            "HDIA",
+            "Huvuddiagnos",
+            "Huvuddiagnoskod",
+            "Vårdkontakt",
+            "Se kodlista",
+            "ICD-10",
+            "Sträng (text)",
+            2001,
+            2020,
+        ]
     )
+    var.append(
+        [
+            "PAR_OV",
+            "KON",
+            "Kön",
+            "Personens kön",
+            "Person",
+            "",
+            "",
+            "Heltal",
+            2001,
+            2020,
+        ]
+    )
+    # Trailing phantom/empty rows must not become variables.
+    var.append([None] * 10)
+    var.append([None] * 10)
+
+    # MFR shape: a per-row Variabelnamn column alongside Tidsperiod/Kod.
+    kod = wb.create_sheet("Kodlista_BUTSATT")
+    kod.append(["Tidsperiod", "Kod", "Beskrivning", "Variabelnamn"])
+    kod.append(["2001-2020", "1", "Ja", "BUTSATT"])
+    kod.append(["2001-2020", "0", "Nej", "BUTSATT"])
+
+    # Unrecognised shape: no Tidsperiod/Kod header -> structured rows skipped,
+    # raw content preserved.
+    weird = wb.create_sheet("Kodlista_WEIRD")
+    weird.append(["Sjukhuskatalog", "", ""])
+    weird.append(["Karolinska", "Stockholm", "01"])
+    weird.append(["Sahlgrenska", "Göteborg", "02"])
+
+    wb.save(path)
 
 
-@requires_sos_data
-def test_dcat_ap_covers_expected_fields() -> None:
-    par = _find_register(parse_directory(SOS_DATA), "Patientregistret")
-    d: SosDcatAp = par.dcat_ap
-    assert d.title_sv and d.title_en
+def test_synthetic_generell_fields(tmp_path: Path) -> None:
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    reg = parse_register_file(p)
+    assert reg.template_version == "2.1"
+    assert reg.dataset_name == "Patientregistret-syntet"
+    assert reg.dataset_version == "2024:2"
+    assert reg.contact_email == "kontakt@example.se"
+
+
+def test_synthetic_dcat_ap_field_map(tmp_path: Path) -> None:
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    d: SosDcatAp = parse_register_file(p).dcat_ap
+    assert d.title_sv == "Patientregistret-syntet"
+    assert d.title_en == "Synthetic Patient Register"
     assert d.description_sv and d.description_en
     assert d.temporal_coverage_sv == "1964-"
     assert d.publisher_sv == "Socialstyrelsen"
     assert d.landing_page_sv and d.landing_page_sv.startswith("https://")
     assert d.access_rights_sv
+    assert d.legislation_sv and "hälsodataregister" in d.legislation_sv.lower()
+    assert d.extras.get("Okänt attribut") == "extra-värde"
 
 
-@requires_sos_data
-def test_variable_fields_populated() -> None:
-    par = _find_register(parse_directory(SOS_DATA), "Patientregistret")
-    hdia = next(v for v in par.variables if v.name == "HDIA")
-    assert hdia.deldatamangd in {"PAR_SV", "PAR_OV", "PAR_TV"}
-    assert hdia.label
-    assert hdia.data_type
-    external_refs = [
-        v.external_classification for v in par.variables if v.external_classification
-    ]
-    assert any("icd" in r.lower() for r in external_refs)
+def test_synthetic_deldatamangder_parsed(tmp_path: Path) -> None:
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    by_name = {d.name: d for d in parse_register_file(p).deldatamangder}
+    assert set(by_name) == {"PAR_OV", "PAR_SV"}
+    assert by_name["PAR_OV"].label == "Öppenvård"
+    assert by_name["PAR_OV"].data_from == 2001
+    assert by_name["PAR_OV"].data_to == 2020
 
 
-# ---------------------------------------------------------------------------
-# helpers
-# ---------------------------------------------------------------------------
+def test_synthetic_variable_fields_and_external_classification(tmp_path: Path) -> None:
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    hdia = next(v for v in parse_register_file(p).variables if v.name == "HDIA")
+    assert hdia.deldatamangd == "PAR_OV"
+    assert hdia.label == "Huvuddiagnos"
+    assert hdia.data_type == "Sträng (text)"
+    assert hdia.object_type == "Vårdkontakt"
+    assert hdia.external_classification == "ICD-10"
+    assert hdia.data_from == 2001
+    assert hdia.data_to == 2020
 
 
-def _find_register(results: list[SosRegister], dataset_name: str) -> SosRegister:
-    for r in results:
-        if r.dataset_name and dataset_name.lower() in r.dataset_name.lower():
-            return r
-    raise AssertionError(f"register {dataset_name!r} not in parse results")
+def test_synthetic_kodlista_per_row_variable_column(tmp_path: Path) -> None:
+    # MFR shape: the Kodlista carries a per-row Variabelnamn column.
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    reg = parse_register_file(p)
+    butsatt = next(k for k in reg.kodlistor if k.variable_hint.lower() == "butsatt")
+    assert butsatt.rows
+    assert butsatt.rows[0].variable_name == "BUTSATT"
+    assert {r.kod for r in butsatt.rows} == {"1", "0"}
+
+
+def test_synthetic_unrecognised_kodlista_preserves_raw_rows(tmp_path: Path) -> None:
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    reg = parse_register_file(p)
+    weird = next(k for k in reg.kodlistor if k.variable_hint.lower() == "weird")
+    assert weird.rows == ()
+    assert weird.raw_rows
+    assert any("Karolinska" in str(c) for row in weird.raw_rows for c in row)
+
+
+def test_synthetic_phantom_rows_do_not_inflate_variable_count(tmp_path: Path) -> None:
+    # openpyxl's max_row is unreliable; `_row_iter` skips empty rows so trailing
+    # phantom rows never become variables.
+    p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
+    _write_rich_workbook(p)
+    assert {v.name for v in parse_register_file(p).variables} == {"HDIA", "KON"}
+
+
+def test_synthetic_register_without_deldatamangder_warns(tmp_path: Path) -> None:
+    # A workbook with no Deldatamängder sheet parses with an implicit-subset
+    # warning (the LSS/BU/SOL shape the adapter turns into a _default variant).
+    p = tmp_path / "Metadata Minimal (XXX)_webb.xlsx"
+    _write_minimal_workbook(p)
+    reg = parse_register_file(p)
+    assert reg.deldatamangder == ()
+    assert any("Deldatamängder" in w for w in reg.warnings)
+
+
+def test_synthetic_parse_directory_skips_lock_files(tmp_path: Path) -> None:
+    _write_rich_workbook(tmp_path / "Metadata Syntet (PAR)_webb.xlsx")
+    (tmp_path / "~$Metadata Syntet (PAR)_webb.xlsx").write_bytes(b"lock")
+    results = parse_directory(tmp_path)
+    assert len(results) == 1
+    assert not results[0].source_file.name.startswith("~$")

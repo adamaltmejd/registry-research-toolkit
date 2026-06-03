@@ -1,7 +1,8 @@
 """Tests for the value-set dedup validator.
 
 Exercises the module-level entry point (`validate_built_db`) and the
-argparse wiring for `reg-meta-build build-db --validate`. The CLI
+argparse wiring for `reg-meta-build build-db` (validates by default,
+opt out with `--no-validate`). The CLI
 handler itself is two lines of glue around `validate_built_db` and
 `RegMetaError`; the validator module is the part with logic worth
 testing in depth.
@@ -278,22 +279,21 @@ class TestBuildDbProvidersDefault:
 
 
 class TestBuildDbValidateFlag:
-    def test_argparse_exposes_validate(self):
-        """The `--validate` flag is wired into `reg-meta-build build-db`'s
-        argparse subparser; default is False so existing callers that
-        omit it are unaffected."""
+    def test_argparse_exposes_no_validate(self):
+        """Validation is on by default; `--no-validate` is the opt-out wired
+        into `reg-meta-build build-db`'s argparse subparser."""
         from reg_meta_build.cli import _build_parser
 
         parser = _build_parser()
-        ns = parser.parse_args(["build-db", "--input-dir", "x", "--validate"])
-        assert ns.validate is True
         ns = parser.parse_args(["build-db", "--input-dir", "x"])
-        assert ns.validate is False
+        assert ns.no_validate is False
+        ns = parser.parse_args(["build-db", "--input-dir", "x", "--no-validate"])
+        assert ns.no_validate is True
 
     def test_failed_validation_does_not_replace_installed_db(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
-        """Regression for Copilot review on PR #99: a failing `--validate`
+        """Regression for Copilot review on PR #99: a failing validation
         run must not leave the staging DB installed at `<db_dir>/reg_meta.db`.
         Pre-populates the install path with a sentinel, builds with a hook
         that always fails, and asserts the sentinel is preserved."""
@@ -317,7 +317,9 @@ class TestBuildDbValidateFlag:
         sentinel_bytes = b"SENTINEL-PREVIOUS-DB-MUST-SURVIVE"
         sentinel.write_bytes(sentinel_bytes)
 
-        def always_fail(_db_path: Path) -> validate_mod.ValidationResult:
+        def always_fail(
+            _db_path: Path, *, corpus: bool = False
+        ) -> validate_mod.ValidationResult:
             r = validate_mod.ValidationResult()
             r.fail("synthetic invariant breach")
             return r
