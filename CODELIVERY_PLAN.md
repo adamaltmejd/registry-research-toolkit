@@ -53,61 +53,74 @@ emits `vs A` = `1998–2025`, overlapping the real 2010 `vs B` state. The overla
 is a `[min,max]` artifact — the 2010 exception is legitimate ("a status appeared
 then vanished").
 
-### The data (stable DB, 2026-06-02 build; SCB)
+### The data (scratch SCB-only build, 2026-06-03; instrumented coalescer)
 
-3033 overlapping distinct-non-null-value-set `variable_state` PAIRS:
+3014 overlapping distinct-non-null-value-set `variable_state` PAIRS on the shipped
+(`[min,max]`) DB. But the **real** signal is per `(variable, variant, year)`
+occupancy from the *observed editions* (`_StateGroup.regyears`, not the
+`[min,max]` span). Two findings reshaped the plan:
 
-| kind | count | meaning |
-|---|---|---|
-| **different window** | 1819 | broad "default" coding + a narrower override (exception year / transition). 1655 strict containment; ~164 transition off-by-ones (likely a coalescer boundary bug). **Artifacts** — should partition cleanly. |
-| **identical window** | 1214 | genuinely two codings for the *same* range. 835 cosmetic (≤2-code off-by-one); 216 divergent (`pin/branschgrupp` Br92 vs Br07; grain variants like "Ja nej 1" vs "Ja nej 3"). |
+- **Most "overlaps" are `[min,max]` phantoms.** `civilfar` is delivered one
+  cvid/year 1998–2025; 2010's cvid → exception value set `vs2834`, so the `vs2`
+  group has a **real gap at 2010** the `[min,max]` collapse paves over. Likewise
+  the 5,944 multi-label "folds" (e.g. `kommun` `LKF 1980-01-01 … 2025-01-01`) are
+  **sequential annual vintages** — one label/year — that only overlap via
+  `[min,max]`. Per-year occupancy lays both out correctly with no overlap.
+- **Genuine same-year co-delivery = 1,584 cells** (years where ≥2 distinct value
+  sets were *both* observed). A deterministic CASCADE resolves 63%:
 
-Only 204/1226 violating `(variable,variant)` pairs carry a classification family;
-the bulk is anonymous value sets — so a classification-based rule does **not**
-suffice.
+  | layer | resolves | signal |
+  |---|---|---|
+  | **authority** | 452 | `registerversionnamn`: final > plain > sub-annual > old |
+  | **recency** | 249 | latest `registerversion_senastgodkanddatum` supersedes |
+  | **cosmetic** | 296 | symmetric code-diff ≤ 2 → keep larger |
+  | **GENUINE** | 587 cells / **129 (variable,variant)** | true parallel co-delivery |
 
-### Plan
+  Genuine splits two ways: **distinct-column** parallels (`Åldersgrupp`
+  `agrupp`/`agrupp2`) → auto-split into siblings; **same-column** dual-coding
+  (`rv=448` historical old/new; two ~800-code classifications) → curate.
 
-1. **Fix window derivation (build time).** Stop collapsing to `[min,max]`; emit
-   per the actual observed editions so the timeline is **partitioned** (one value
-   set per `(variable, variant, period)`). Open design choice:
-   - **(a) multiple intervals per shape** — keep the `valid_from/valid_to` schema
-     + its sub-annual granularity + all consumers; just split a shape's window
-     around gaps (RLE of the period set). Minimal blast radius.
-   - **(b) explicit period/edition lists** — replace the interval with a period
-     set (e.g. a `variable_state_period` junction). Simpler/bug-proof build (no
-     interval arithmetic, no boundary off-by-ones, trivial co-delivery detection)
-     but a v1 schema + query-layer rewrite (`resolve_at`, period-grammar
-     expansion, every reg_meta/webapp/bundle consumer). Justifiable pre-v1.
-   - Lean: (a) unless we want the bigger simplification. Decide before cutting —
-     it changes the storage contract.
-2. **`validate.py` invariant + report.** Add a `build-db --validate` check that
-   FAILS when any `(variable, variant)` has two states with **overlapping**
-   validity and **distinct** `value_set_id`. After (1) the only survivors are
-   **identical-window** genuine co-delivery → these must be resolved or curated.
-3. **Resolve / curate the identical-window 1214.** Auto-resolve cosmetic
-   (off-by-one) + classification-in-effect cases; the genuinely-divergent ~216
-   → `UNRESOLVED` (curation TOML, modeled on `fqid_slugs`) → build fails until
-   resolved. Open question: genuinely-distinct co-codings (Br92/Br07, grain)
-   may instead warrant **splitting into sibling variables** (distinct FQIDs), the
-   way §5.7 splits distinct columns.
-4. **Browse-by-`value_set_id` timeline (frontend/backend, nice-to-have).** The
-   `?value_set_version` browse keys on the free-text label today — reliable for
-   classifications, weak for anonymous sets. Key it on `value_set_id` + show each
-   distinct value set's contiguous span (e.g. `sysselsattningsstatus`: set A
-   2000–2011, set B 2012–2025). Composes cleanly on (1)'s partitioned windows.
+### Plan (settled)
+
+1. **Per-`(variable, variant)` per-year value-set timeline (build time).** Replace
+   the per-group `[min,max]` emit. For each `(variable, variant)` that has
+   OVERLAPPING distinct-value-set groups, build per-year occupancy from
+   `regyears`, resolve each year to a winner via the cascade
+   (authority → recency → cosmetic), and RLE each group's *won* years into
+   contiguous `variable_state` runs. Non-overlapping `(variable, variant)` keep
+   the fast `[min,max]` path (preserves benign-gap coverage + most output). This
+   is option **(a)** (interval schema, multi-interval-per-shape) — chosen over a
+   period-list (b): the period grammar is sub-annual, the whole query layer is
+   interval-overlap, and SOS already emits multi-interval-per-shape, so (a) needs
+   no schema/consumer change. Cascade signals tracked on `_StateGroup`:
+   `regyears`, `year_authority` (`_edition_authority`), `year_approval`.
+2. **`validate.py` invariant (done).** `_check_one_value_set_per_period` FAILS the
+   build when any `(variable, variant)` resolves a period to >1 value set. After
+   (1) the only survivors are the genuine residual.
+3. **Auto-split distinct-column genuine parallels** into sibling variables
+   (extend §5.7 split: co-delivered distinct columns are distinct variables now
+   that `@version` is retired — a binding can't pick a grain otherwise).
+4. **Same-column genuine residual → STRICT FAIL → curation TOML** (modeled on
+   `fqid_slugs`): build fails listing each; a TOML entry pins the canonical value
+   set (or requests a split). Nothing ships until every same-column genuine case
+   is curated.
+5. **Browse-by-`value_set_id` timeline (frontend/backend, nice-to-have).** Key the
+   `?value_set_version` browse on `value_set_id` + show each distinct set's
+   contiguous span. Composes on (1)'s partitioned windows.
 
 ### Verification
 
-Rebuild SCB-only to a scratch path (read-only on the input; never the live DB):
+Rebuild SCB-only to a scratch path (read-only on the input; never the live DB).
+`--db` is a GLOBAL flag (before the subcommand); the default is the live DB, so it
+must always be passed:
 
 ```sh
-reg-meta-build build-db \
+reg-meta-build --db /tmp/regmeta-scratch build-db \
   --input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data \
-  --db /tmp/regmeta-scratch/ --providers scb --validate
+  --providers scb --skip-slugs --validate
 ```
 
-Invariant passes (or fails only on `UNRESOLVED`); spot-check that representative
-bindings (`scb/rtb/kommun`, `scb/komvux/folkbokforingskommun`,
-`scb/rtb/civilgrel`) resolve to a single value set per period; the live DB at
-`~/.local/share/reg_meta/reg_meta.db` is **never** rebuilt in place.
+Invariant passes (or fails only on uncurated same-column genuine); spot-check that
+`scb/rtb/civilfar` resolves to one value set per period (vs2834 owns 2010, vs2
+1998–2009 + 2011–2025); the live DB at `~/.local/share/reg_meta/reg_meta.db` is
+**never** rebuilt in place.

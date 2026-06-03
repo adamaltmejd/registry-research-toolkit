@@ -25,16 +25,162 @@ from _csv_fixtures import (
 from reg_meta.db import open_db
 from reg_meta_build.db import build_db
 from reg_meta_build.sources.scb import (
+    _AUTH_FINAL,
+    _AUTH_PLAIN,
+    _AUTH_PRELIM,
+    _AUTH_SUBANNUAL,
     _apply_fold,
     _apply_split,
     _collapse_residual,
     _common_prefix_len,
     _decide_fold_or_split,
+    _edition_authority,
     _fold_token_from_grain,
+    _pick_state_rep,
+    _resolve_year_winners,
+    _rle_runs,
     _split_off_non_contested,
     _StateGroup,
     _TriageResult,
 )
+
+
+def _grp(
+    *,
+    value_set_id: int | None,
+    authority: int = _AUTH_PLAIN,
+    approval: str = "",
+    regver_max: int | None = None,
+    year: int = 2020,
+) -> _StateGroup:
+    """A minimal _StateGroup for the per-year timeline resolver tests."""
+    g = _StateGroup(
+        register_id=1,
+        register_variant_id=10,
+        var_id=1,
+        data_type="int",
+        data_length="1",
+        value_set_id=value_set_id,
+        value_set_version_label="",
+    )
+    g.regyears = {year}
+    g.year_authority = {year: authority}
+    g.year_approval = {year: approval}
+    g.regver_max = regver_max
+    return g
+
+
+class TestEditionAuthority:
+    def test_finality_ranks(self) -> None:
+        assert _edition_authority("2020, slutlig version") == _AUTH_FINAL
+        assert _edition_authority("2020, preliminär version") == _AUTH_PRELIM
+        assert _edition_authority("2020") == _AUTH_PLAIN
+        assert _edition_authority("1992_old") == 0
+
+    def test_subannual_markers(self) -> None:
+        assert _edition_authority("Höstterminen 2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("2010 kvartal 2-4") == _AUTH_SUBANNUAL
+        assert _edition_authority("Läsåret 2015/2016") == _AUTH_SUBANNUAL
+
+    def test_finality_beats_subannual_order(self) -> None:
+        # 'slutlig' must win even if a sub-annual word also appears.
+        assert _edition_authority("Höstterminen 2018, slutlig version") == _AUTH_FINAL
+
+
+class TestRleRuns:
+    def test_contiguous(self) -> None:
+        assert _rle_runs([2000, 2001, 2002]) == [(2000, 2002)]
+
+    def test_gap_splits(self) -> None:
+        assert _rle_runs([2000, 2002]) == [(2000, 2000), (2002, 2002)]
+        assert _rle_runs([2000, 2001, 2003, 2004, 2005]) == [(2000, 2001), (2003, 2005)]
+
+    def test_empty_and_single(self) -> None:
+        assert _rle_runs([]) == []
+        assert _rle_runs([1999]) == [(1999, 1999)]
+
+
+class TestResolveYearWinners:
+    def _codes(self, sizes: dict[int, int]):
+        # value_set_id -> a NESTED code set of the requested size (shared prefix,
+        # so two sets' symmetric diff == their size difference — the real-world
+        # cosmetic-drift shape where a coding gains/loses a few codes).
+        store = {vs: frozenset(f"c{i}" for i in range(n)) for vs, n in sizes.items()}
+        return lambda vs: store.get(vs, frozenset())
+
+    def test_single_candidate(self) -> None:
+        g = {"a": _grp(value_set_id=1)}
+        winners, genuine = _resolve_year_winners(["a"], g, 2020, self._codes({1: 3}))
+        assert winners == ["a"]
+        assert genuine is False
+
+    def test_authority_breaks_tie(self) -> None:
+        groups = {
+            "hi": _grp(value_set_id=1, authority=_AUTH_FINAL),
+            "lo": _grp(value_set_id=2, authority=_AUTH_PRELIM),
+        }
+        winners, genuine = _resolve_year_winners(
+            ["hi", "lo"], groups, 2020, self._codes({1: 3, 2: 3})
+        )
+        assert winners == ["hi"]
+        assert genuine is False
+
+    def test_recency_breaks_tie(self) -> None:
+        groups = {
+            "new": _grp(value_set_id=1, approval="2022-01-01"),
+            "old": _grp(value_set_id=2, approval="2014-01-01"),
+        }
+        winners, genuine = _resolve_year_winners(
+            ["new", "old"], groups, 2020, self._codes({1: 3, 2: 3})
+        )
+        assert winners == ["new"]
+        assert genuine is False
+
+    def test_cosmetic_keeps_larger(self) -> None:
+        # same authority + approval, codes differ by 1 -> cosmetic -> larger wins.
+        groups = {
+            "big": _grp(value_set_id=1),
+            "small": _grp(value_set_id=2),
+        }
+        winners, genuine = _resolve_year_winners(
+            ["big", "small"], groups, 2020, self._codes({1: 11, 2: 10})
+        )
+        assert winners == ["big"]
+        assert genuine is False
+
+    def test_genuine_residual_returns_both(self) -> None:
+        # same authority + approval, codes differ a lot -> genuine co-delivery.
+        groups = {
+            "x": _grp(value_set_id=1),
+            "y": _grp(value_set_id=2),
+        }
+        winners, genuine = _resolve_year_winners(
+            ["x", "y"], groups, 2020, self._codes({1: 11, 2: 6})
+        )
+        assert genuine is True
+        assert set(winners) == {"x", "y"}
+
+    def test_same_value_set_not_genuine(self) -> None:
+        # two groups, same value set (e.g. a column rename) -> one rep, not genuine.
+        groups = {
+            "a": _grp(value_set_id=1, regver_max=2019),
+            "b": _grp(value_set_id=1, regver_max=2020),
+        }
+        winners, genuine = _resolve_year_winners(
+            ["a", "b"], groups, 2020, self._codes({1: 3})
+        )
+        assert genuine is False
+        assert len(winners) == 1
+        assert winners[0] == "b"  # latest-era rep
+
+
+class TestPickStateRep:
+    def test_latest_era_wins(self) -> None:
+        groups = {
+            "a": _grp(value_set_id=1, regver_max=2010),
+            "b": _grp(value_set_id=1, regver_max=2020),
+        }
+        assert _pick_state_rep(["a", "b"], groups) == "b"
 
 
 def _build(tmp_path: Path, extra_rows: list[str]) -> sqlite3.Connection:

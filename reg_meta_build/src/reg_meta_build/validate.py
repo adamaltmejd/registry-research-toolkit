@@ -146,6 +146,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_schema_shape(conn, result, tables)
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
+        _check_one_value_set_per_period(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
@@ -396,6 +397,64 @@ def _check_var_year_codes_anchor(
         )
     else:
         result.ok(f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} excludes 00/05")
+
+
+def _check_one_value_set_per_period(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """The §5.7 co-delivery invariant: a `(variable, register_variant, period)`
+    must resolve to EXACTLY ONE value set.
+
+    Concretely: no two `variable_state` rows for the same `(variable_id,
+    register_variant_id)` may have OVERLAPPING validity and DISTINCT non-null
+    `value_set_id`. The catalog resolver (`reg_meta.catalog`) intersects a query
+    period against `[valid_from, valid_to]`; two overlapping states with
+    different value sets mean a period can land on both, so the binding can't name
+    a single code-list — the exact ambiguity the retired `@version` pin tried to
+    paper over (see CODELIVERY_PLAN.md). The coalescer's per-(variable,variant)
+    year timeline (`sources/scb.py`) is supposed to eliminate these by
+    construction; a survivor is either a coalescer regression or a genuine
+    same-year co-delivery that needs curation. Either way the build must FAIL
+    rather than ship an unresolvable catalog.
+
+    States with NULL `value_set_id` (code-less variables) are exempt — overlap
+    there is fine; only DISTINCT code-lists conflict. Same value set with
+    different `value_set_version_label`s is also fine (that's the §5.7
+    multi-vintage discriminator, one code-list).
+    """
+    result.section("[invariant: one value_set per (variable, variant, period)]")
+    if "variable_state" not in tables:
+        result.ok("variable_state absent — invariant skipped")
+        return
+    # Overlapping distinct-value_set state pairs under one (variable, variant).
+    # `a.state_id < b.state_id` dedups the symmetric pair; the overlap predicate
+    # is the canonical closed-interval intersection (mirrors `catalog._states_in_bounds`).
+    rows = conn.execute(
+        "SELECT v.register_id, v.slug, a.valid_from, a.valid_to, a.value_set_id, "
+        "       b.valid_from, b.valid_to, b.value_set_id "
+        "FROM variable_state a "
+        "JOIN variable_state b "
+        "  ON a.variable_id = b.variable_id "
+        " AND a.register_variant_id = b.register_variant_id "
+        " AND a.state_id < b.state_id "
+        " AND a.value_set_id IS NOT NULL AND b.value_set_id IS NOT NULL "
+        " AND a.value_set_id <> b.value_set_id "
+        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        "JOIN variable v ON v.variable_id = a.variable_id "
+        "ORDER BY v.register_id, v.slug"
+    ).fetchall()
+    if not rows:
+        result.ok("no (variable, variant) resolves a period to >1 value set")
+        return
+    affected = {(r[1]) for r in rows}
+    sample = "; ".join(
+        f"{r[1]} [{r[2][:4]}-{r[3][:4]}]vs{r[4]} ∩ [{r[5][:4]}-{r[6][:4]}]vs{r[7]}"
+        for r in rows[:5]
+    )
+    result.fail(
+        f"{len(rows)} overlapping distinct-value_set state pair(s) across "
+        f"{len(affected)} variable(s) — a period resolves to >1 value set: {sample}"
+    )
 
 
 def _check_variable_alias_covers_state_columns(

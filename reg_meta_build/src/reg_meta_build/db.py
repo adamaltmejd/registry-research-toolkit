@@ -2743,6 +2743,24 @@ def materialize(
         "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
         "WHERE vs.value_set_id IS NOT NULL"
     )
+    # SCB cvid-scratch top-up. `code_variable_map` is a code→variable SEARCH index
+    # (no period dimension), so it must list every code a variable EVER delivered.
+    # The per-(variable, variant, year) co-delivery cascade (`sources/scb.py`) drops
+    # superseded value sets from `variable_state` (a preliminary/old coding beaten by
+    # the final one every year emits no state) — so a code unique to a dropped value
+    # set is absent from the variable_state-derived map above. Restore it from the
+    # cvid scratch: the authoritative per-period set lives in `variable_state`; this
+    # search index stays complete. Provider-blind base + SCB top-up (SOS emits states
+    # directly, so the base derivation already covers it). Guarded on `scb_ran` —
+    # `variable_instance` is only populated when the SCB adapter ran.
+    if scb_ran:
+        conn.execute(
+            "INSERT OR IGNORE INTO code_variable_map (code_id, variable_id) "
+            "SELECT DISTINCT vsm.code_id, vi.variable_id "
+            "FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "WHERE vi.variable_id IS NOT NULL"
+        )
     cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
     _progress(f"  {cvm_count:,} code×variable mappings")
 
