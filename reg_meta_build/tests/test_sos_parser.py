@@ -1,13 +1,11 @@
 """Tests for the Socialstyrelsen Excel parser.
 
-Two tiers:
-
-- Unit tests for helpers. Always run.
-- Integration tests over the real input files under
-  `reg_meta_build/input_data/Socialstyrelsen/`. Skipped when the directory
-  is absent (CI, fresh checkouts) since the input is gitignored. These
-  tests exist to catch regressions against real deliveries during local
-  development.
+Unit tests over pure helpers, plus synthetic-workbook coverage: tests build
+small `.xlsx` fixtures in-process (no gitignored real deliveries) to exercise
+the parser's branches — DCAT-AP field map, variable fields, deldatamängder,
+kodlistor, phantom rows, and directory lock-file skipping. `openpyxl` is a
+hard runtime dep of reg_meta_build, so the workbook-building tests run
+everywhere.
 """
 
 from __future__ import annotations
@@ -15,22 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-# The parser module imports lazily, so unit tests over pure helpers can run
-# without openpyxl. Tests that actually load workbooks are gated by the
-# `requires_openpyxl` mark below.
-try:
-    import openpyxl  # noqa: F401
-except ImportError:
-    HAS_OPENPYXL = False
-else:
-    HAS_OPENPYXL = True
-
-requires_openpyxl = pytest.mark.skipif(
-    not HAS_OPENPYXL, reason="openpyxl is required for this test"
-)
-
-from reg_meta_build.sources.sos import (  # noqa: E402
+from reg_meta_build.sources.sos import (
     SosDcatAp,
     SosParseError,
     _as_date,
@@ -157,7 +140,6 @@ def _write_minimal_workbook(
     wb.save(path)
 
 
-@requires_openpyxl
 def test_zero_padded_kod_round_trips_through_workbook(tmp_path: Path) -> None:
     p = tmp_path / "Test.xlsx"
     _write_minimal_workbook(
@@ -170,7 +152,6 @@ def test_zero_padded_kod_round_trips_through_workbook(tmp_path: Path) -> None:
     assert [r.kod for r in result.kodlistor[0].rows] == ["001", "012"]
 
 
-@requires_openpyxl
 def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
     tmp_path: Path,
 ) -> None:
@@ -181,13 +162,11 @@ def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
     assert results[0].source_file.name == "TEST.XLSX"
 
 
-@requires_openpyxl
 def test_directory_passed_as_file_rejected(tmp_path: Path) -> None:
     with pytest.raises(SosParseError, match="not a regular file"):
         parse_register_file(tmp_path)
 
 
-@requires_openpyxl
 def test_variable_sheet_without_variabelnamn_header_raises(tmp_path: Path) -> None:
     # An upstream rename or malformed delivery would leave the varsheet
     # without a Variabelnamn column. Silently returning zero variables
@@ -198,7 +177,6 @@ def test_variable_sheet_without_variabelnamn_header_raises(tmp_path: Path) -> No
         parse_register_file(p)
 
 
-@requires_openpyxl
 def test_unsupported_xls_format_wrapped_as_sos_parse_error(tmp_path: Path) -> None:
     # openpyxl raises InvalidFileException for `.xls`/`.xlsb`; surface as
     # SosParseError so the parser's contract holds for common wrong inputs.
@@ -324,7 +302,6 @@ def _write_rich_workbook(path: Path) -> None:
     wb.save(path)
 
 
-@requires_openpyxl
 def test_synthetic_generell_fields(tmp_path: Path) -> None:
     p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
     _write_rich_workbook(p)
@@ -335,7 +312,6 @@ def test_synthetic_generell_fields(tmp_path: Path) -> None:
     assert reg.contact_email == "kontakt@example.se"
 
 
-@requires_openpyxl
 def test_synthetic_dcat_ap_field_map(tmp_path: Path) -> None:
     p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
     _write_rich_workbook(p)
@@ -351,7 +327,6 @@ def test_synthetic_dcat_ap_field_map(tmp_path: Path) -> None:
     assert d.extras.get("Okänt attribut") == "extra-värde"
 
 
-@requires_openpyxl
 def test_synthetic_deldatamangder_parsed(tmp_path: Path) -> None:
     p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
     _write_rich_workbook(p)
@@ -362,7 +337,6 @@ def test_synthetic_deldatamangder_parsed(tmp_path: Path) -> None:
     assert by_name["PAR_OV"].data_to == 2020
 
 
-@requires_openpyxl
 def test_synthetic_variable_fields_and_external_classification(tmp_path: Path) -> None:
     p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
     _write_rich_workbook(p)
@@ -376,7 +350,6 @@ def test_synthetic_variable_fields_and_external_classification(tmp_path: Path) -
     assert hdia.data_to == 2020
 
 
-@requires_openpyxl
 def test_synthetic_kodlista_per_row_variable_column(tmp_path: Path) -> None:
     # MFR shape: the Kodlista carries a per-row Variabelnamn column.
     p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
@@ -388,7 +361,6 @@ def test_synthetic_kodlista_per_row_variable_column(tmp_path: Path) -> None:
     assert {r.kod for r in butsatt.rows} == {"1", "0"}
 
 
-@requires_openpyxl
 def test_synthetic_unrecognised_kodlista_preserves_raw_rows(tmp_path: Path) -> None:
     p = tmp_path / "Metadata Syntet (PAR)_webb.xlsx"
     _write_rich_workbook(p)
@@ -399,7 +371,6 @@ def test_synthetic_unrecognised_kodlista_preserves_raw_rows(tmp_path: Path) -> N
     assert any("Karolinska" in str(c) for row in weird.raw_rows for c in row)
 
 
-@requires_openpyxl
 def test_synthetic_phantom_rows_do_not_inflate_variable_count(tmp_path: Path) -> None:
     # openpyxl's max_row is unreliable; `_row_iter` skips empty rows so trailing
     # phantom rows never become variables.
@@ -408,7 +379,6 @@ def test_synthetic_phantom_rows_do_not_inflate_variable_count(tmp_path: Path) ->
     assert {v.name for v in parse_register_file(p).variables} == {"HDIA", "KON"}
 
 
-@requires_openpyxl
 def test_synthetic_register_without_deldatamangder_warns(tmp_path: Path) -> None:
     # A workbook with no Deldatamängder sheet parses with an implicit-subset
     # warning (the LSS/BU/SOL shape the adapter turns into a _default variant).
@@ -419,7 +389,6 @@ def test_synthetic_register_without_deldatamangder_warns(tmp_path: Path) -> None
     assert any("Deldatamängder" in w for w in reg.warnings)
 
 
-@requires_openpyxl
 def test_synthetic_parse_directory_skips_lock_files(tmp_path: Path) -> None:
     _write_rich_workbook(tmp_path / "Metadata Syntet (PAR)_webb.xlsx")
     (tmp_path / "~$Metadata Syntet (PAR)_webb.xlsx").write_bytes(b"lock")
