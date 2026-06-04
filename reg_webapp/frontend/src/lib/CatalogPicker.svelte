@@ -8,9 +8,13 @@ function asNode(data: CatalogNode | StatesResponse | null): CatalogNode | null {
 </script>
 
 <script lang="ts">
-import { getCatalogNode, getRegisterVariants } from "./api";
+import { getCatalogNode, getRegisterVariants, type VariableStateModel } from "./api";
 import { asyncResource } from "./async.svelte";
-import { deriveType } from "./catalog";
+import {
+  deriveType,
+  type Representation,
+  representationsFromStates,
+} from "./catalog";
 
 // INLINE-EXPAND embedded pick-mode catalog browser (maintainer decision): NO
 // router import, NO overlay/modal. It reuses the catalog DATA LAYER only
@@ -46,6 +50,9 @@ interface VariableProps {
     variable: string;
     type: string;
     displayNameDefault: string | null;
+    // The chosen REPRESENTATION (delivery column) when the concept has >1 at the
+    // period; null/undefined when there is a single representation.
+    representation?: string | null;
   }) => void;
   oncancel: () => void;
 }
@@ -80,15 +87,24 @@ const variantList = $derived(
     : [],
 );
 
-// The derive-on-pick resolve state + the version chooser.
+// The derive-on-pick resolve state + the REPRESENTATION chooser. A concept can
+// carry several co-existing delivery columns (parallel representations: SSYK
+// 3/4/5-digit, age brackets) at one period; when it does, the author must pick
+// which column the binding extracts (`binding.representation`) — the job the
+// retired `@version` pin once did, keyed on the delivery column.
 let resolving = $state(false);
 let resolveError = $state<string | null>(null);
+let pending = $state<{ fqid: string; states: VariableStateModel[] } | null>(null);
+const pendingReps = $derived<Representation[]>(
+  pending ? representationsFromStates(pending.states) : [],
+);
 
 async function pickVariable(fqid: string): Promise<void> {
   if (props.mode !== "variable") {
     return;
   }
   const p = props;
+  pending = null;
   // No period → can't resolve. Pick the bare FQID; no prefill (the backend Validate
   // fills / flags type + display_name).
   if (!p.period) {
@@ -108,21 +124,36 @@ async function pickVariable(fqid: string): Promise<void> {
       p.onpickVariable({ variable: fqid, type: "opaque", displayNameDefault: null });
       return;
     }
+    // >1 distinct delivery column → multi-representation; defer to the chooser.
+    if (representationsFromStates(resolved.states).length > 1) {
+      pending = { fqid, states: resolved.states };
+      return;
+    }
     const first = resolved.states[0];
-    const type = deriveType(first);
-    const displayNameDefault = first.delivery_column_name ?? null;
-    // The FQID is a bare 3-segment slug — there is no value-set-version pin. A
-    // (variable, variant, period) resolves to exactly one value set, enforced at
-    // reg_meta build time (the build's co-delivery curation + validate invariant).
-    // In the rare event a not-yet-curated catalog still co-delivers two value sets,
-    // the backend's `binding_value_set_version_ambiguous` flags it on Validate —
-    // the fix is build-side curation, not a frontend pin.
-    p.onpickVariable({ variable: fqid, type, displayNameDefault });
+    p.onpickVariable({
+      variable: fqid,
+      type: deriveType(first),
+      displayNameDefault: first.delivery_column_name ?? null,
+    });
   } catch (e) {
     resolveError = e instanceof Error ? e.message : String(e);
   } finally {
     resolving = false;
   }
+}
+
+function chooseRepresentation(rep: Representation): void {
+  if (props.mode !== "variable" || !pending) {
+    return;
+  }
+  const state = pending.states.find((s) => s.delivery_column_name === rep.column);
+  props.onpickVariable({
+    variable: pending.fqid,
+    type: deriveType(state),
+    displayNameDefault: rep.column,
+    representation: rep.column,
+  });
+  pending = null;
 }
 </script>
 
@@ -198,6 +229,25 @@ async function pickVariable(fqid: string): Promise<void> {
   {/if}
   {#if resolveError}
     <p class="error resolve-state" role="alert">Resolve failed: {resolveError}</p>
+  {/if}
+
+  {#if pending && pendingReps.length > 1}
+    <div class="chooser" role="group" aria-label="Pick a representation">
+      <p class="chooser-title">
+        <code>{pending.fqid}</code> has several representations at this period — pick one:
+      </p>
+      <ul class="pick-list">
+        {#each pendingReps as rep (rep.column)}
+          <li>
+            <button type="button" class="pick" onclick={() => chooseRepresentation(rep)}>
+              <span class="slug">{rep.column}</span>
+              {#if rep.label}<span class="name">{rep.label}</span>{/if}
+              {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
   {/if}
 </div>
 
@@ -275,5 +325,14 @@ async function pickVariable(fqid: string): Promise<void> {
   .resolve-state {
     font-size: 0.85rem;
     margin: 0.4rem 0 0;
+  }
+  .chooser {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .chooser-title {
+    font-size: 0.85rem;
+    margin: 0 0 0.4rem;
   }
 </style>

@@ -43,17 +43,20 @@ function ptr(field: string): string {
 }
 
 // DERIVE-ON-PICK: apply the picked variable + the derived type + the display_name
-// default (overridable). The variable is a bare 3-segment FQID (no value-set
-// version pin — that grammar is retired). Only set display_name when the resolve
-// gave a default — otherwise leave it untouched so the backend resolves it.
+// default (overridable). The variable is a bare 3-segment FQID (no @version pin).
+// When the concept has several co-existing delivery columns at the period, the
+// picker's chooser supplies a `representation` (the chosen column) — set it; else
+// clear any stale one. Only set display_name when the resolve gave a default.
 function onPickVariable(picked: {
   variable: string;
   type: string;
   displayNameDefault: string | null;
+  representation?: string | null;
 }): void {
   const patch: Partial<Binding> = {
     variable: picked.variable,
     type: picked.type,
+    representation: picked.representation ?? null,
   };
   if (
     picked.displayNameDefault != null &&

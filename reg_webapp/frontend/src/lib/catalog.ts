@@ -129,3 +129,33 @@ export function deriveType(state: VariableStateModel | undefined): string {
   }
   return "opaque";
 }
+
+/** One co-existing REPRESENTATION of a concept at a period — a distinct delivery
+ * column. `column` is the stable handle set on `binding.representation`; `label`
+ * (the value-set version label, e.g. "5-års intervall") + `codeCount` are for
+ * display in the chooser. */
+export interface Representation {
+  column: string;
+  label: string;
+  codeCount: number | null;
+}
+
+/** The distinct delivery-column representations among a resolve's states (the
+ * `StatesResponse` from a `?period` resolve), in first-seen order. >1 means the
+ * concept is multi-representation at that period and a binding must pick one
+ * (`representation`); 0/1 means no choice is needed. Pure — unit-tested. */
+export function representationsFromStates(
+  states: VariableStateModel[],
+): Representation[] {
+  const byColumn = new Map<string, VariableStateModel>();
+  for (const s of states) {
+    if (s.delivery_column_name && !byColumn.has(s.delivery_column_name)) {
+      byColumn.set(s.delivery_column_name, s);
+    }
+  }
+  return [...byColumn.entries()].map(([column, s]) => ({
+    column,
+    label: s.value_set_version_label,
+    codeCount: s.value_set?.length ?? null,
+  }));
+}
