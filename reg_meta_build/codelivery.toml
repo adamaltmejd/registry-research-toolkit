@@ -21,10 +21,11 @@
 # REVIEWED (phase 2 sign-off): the picks below were maintainer defaults (fuller /
 # newer / contemporaneous coding); each has now been checked against the backing
 # SCB codings (codes, sizes, sub/superset, classification vintage) and the raw
-# Registerinformation/Vardemangder source. UpplForm (reg32), first read as a
-# §5.7 SPLIT candidate, is on inspection a genuine same-slot co-delivery — two
-# Värdemängd versions attached to ONE column with no structural key to split on —
-# resolved by keeping the lossless Lgh superset (see its note).
+# Registerinformation/Vardemangder source. UpplForm (reg32) is a §5.7 SPLIT
+# candidate by POPULATION: SCB's legacy catalog (metadata.scb.se) models it as two
+# population-scoped variables — dwellings → Lgh (12), households → Hh (5) — but the
+# mikrodata feed we ingest flattens that axis onto one column, so the split isn't
+# recoverable from our input. Interim: keep the lossless Lgh superset (see its note).
 
 # ── branschgrupp (SNI92 vs SNI2007): keep the standard CONTEMPORANEOUS to the
 #    period. The two codings reuse the same integer codes for DIFFERENT industries
@@ -122,25 +123,34 @@ column = "Skolkod"
 keep_rule = "latest_year"
 note = "Komvux SFI Skolkod: latest-vintage SFI / all-school-forms coding per year."
 
-# ── FoB75 tenure form — genuine same-slot co-delivery (keep the superset) ──
-#    SCB's source attaches TWO Värdemängd versions to the IDENTICAL slot
-#    (reg32, variant 82 'Lägenhet och hushåll', version 1975, column UpplForm):
-#    CVID 759714 'UpplFormFoB75Hh' (5 codes, household tenure) and CVID 759810
-#    'UpplFormFoB75Lgh' (12). Lgh is a strict SUPERSET of Hh: same four tenure
-#    codes (0 äger / 1 bostadsrätt / 3 hyres / 4 annat) plus dwelling-occupancy
-#    states 5–9 (under reparation, ledig, disponeras av fastighetsägaren, utrymd,
-#    upplåten utan mantalsskriven) that have no household analogue. The label
-#    suffixes imply a household-vs-dwelling unit split, but the source does NOT
-#    separate the units by column, variant, OR object type (both CVIDs span both
-#    'Lägenhet' and 'Bostadshushåll'), so there is no key to route rows to sibling
-#    variables — this is curation, not a §5.7 split. Keep Lgh: it labels every Hh
-#    code, so the pin is lossless and final.
-[[resolve]]                       # same-slot co-delivery — keep lossless superset
+# ── FoB75 tenure form — FLAGGED: §5.7 SPLIT candidate (by population) ──
+#    SCB's legacy catalog (metadata.scb.se/mikrodataregister.aspx) splits this
+#    into TWO population-scoped 'Upplåtelseform' variables on column UpplForm:
+#      • DWELLINGS  (pop 'Samtliga bebodda/obebodda bostadslägenheter')
+#        → UpplFormFoB75Lgh (12): tenure 0/1/3/4 + dwelling-occupancy 5–9
+#          (under reparation, ledig, disponeras av fastighetsägaren, utrymd,
+#          upplåten utan mantalsskriven) — states only a dwelling can be in.
+#      • HOUSEHOLDS (pop 'Samtliga bostadshushåll')
+#        → UpplFormFoB75Hh (5): the same tenure codes 0/1/3/4, no occupancy
+#          states (a household always occupies). Lgh ⊋ Hh; the 5 shared codes
+#          are identical.
+#    Two populations = two concepts → correct fix is a population-scoped split
+#    into sibling variables (discriminator = the Hh/Lgh value-set coding, which
+#    encodes the population). BUT our mikrodata feed FLATTENS population: both
+#    CVIDs (759714 Hh, 759810 Lgh) attach to the IDENTICAL (variant 82 'Lägenhet
+#    och hushåll', version 1975, column UpplForm) slot, each cross-linked to BOTH
+#    populations — so the build can't auto-split (the §5.7 splitter keys on column,
+#    and the clean population↔coding mapping isn't in our input). Until a
+#    same-column-by-coding split axis lands, keep the Lgh superset: for the merged
+#    variable it labels every code from EITHER population (Lgh ⊇ Hh), so it's the
+#    lossless interim — keeping Hh would drop dwelling codes 5–9. MAINTAINER:
+#    split by population/coding, then drop this pin.
+[[resolve]]                       # FLAGGED: split candidate (by population) — Lgh interim
 register_id = 32
 var_id = 4472
 column = "UpplForm"
 keep = "UpplFormFoB75Lgh"
-note = "FoB75 UpplForm: variant 82 'Lägenhet och hushåll' / version 1975 attaches two Värdemängd versions to one column (Hh 5, Lgh 12). Keep Lgh — a strict superset of Hh, so lossless. Not a split: source separates the units by neither column, variant, nor object type."
+note = "FoB75 UpplForm: SCB's legacy catalog splits this by population — dwellings → Lgh (12), households → Hh (5) — but our mikrodata feed flattens both onto one (variant 82, version 1975, UpplForm) slot, cross-linked to both populations, so the split isn't recoverable from input. Keep the Lgh superset (Lgh ⊇ Hh) as the lossless interim; keeping Hh would drop dwelling-occupancy codes 5–9. SPLIT candidate by population — see comment."
 
 # ── SUN2020 utbildningsinriktning (classification id=8): the two 4-pos codings
 #    differ by exactly one code, the '----' missing-value placeholder. Keep the
