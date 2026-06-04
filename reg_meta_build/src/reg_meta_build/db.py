@@ -22,7 +22,7 @@ from reg_meta.db import (
     SCHEMA_VERSION,
     utc_now,
 )
-from reg_meta.errors import EXIT_CONFIG, EXIT_INTERNAL, RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -2743,15 +2743,23 @@ def materialize(
         "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
         "WHERE vs.value_set_id IS NOT NULL"
     )
-    # SCB cvid-scratch top-up. `code_variable_map` is a code→variable SEARCH index
-    # (no period dimension), so it must list every code a variable EVER delivered.
-    # The per-(variable, variant, year) co-delivery cascade (`sources/scb.py`) drops
-    # superseded value sets from `variable_state` (a preliminary/old coding beaten by
-    # the final one every year emits no state) — so a code unique to a dropped value
-    # set is absent from the variable_state-derived map above. Restore it from the
-    # cvid scratch: the authoritative per-period set lives in `variable_state`; this
-    # search index stays complete. Provider-blind base + SCB top-up (SOS emits states
-    # directly, so the base derivation already covers it). Guarded on `scb_ran` —
+    # SCB cvid-scratch top-up — makes code→variable search coverage STRUCTURAL.
+    # `code_variable_map` is a code→variable SEARCH index (no period dimension), so
+    # it must list every code a variable EVER delivered. Two effects drop codes the
+    # variable_state-derived map above needs: (1) the per-(variable, variant, year)
+    # co-delivery cascade (`sources/scb.py`) drops superseded value sets from
+    # `variable_state` (a preliminary/old coding beaten by the final one emits no
+    # state); (2) a `_collapse_residual`'d cvid carries a stamped variable_id but no
+    # `variable_state` row at all. A code unique to either is absent above. This
+    # top-up restores them from the cvid scratch (`variable_instance`), which holds
+    # the complete code set per cvid — so the index is COMPLETE BY CONSTRUCTION.
+    # (This supersedes the former A4.3a fail-loudly coverage guard: that guard
+    # asserted `variable_instance ⨝ value_set_member EXCEPT code_variable_map` was
+    # empty, i.e. exactly the rows this INSERT supplies — tautological once the
+    # top-up runs, so it was removed. validate.py keeps the SOS coverage guard the
+    # dbdiff cannot police.) Authoritative per-period codings still live only in
+    # `variable_state`. Provider-blind base + SCB top-up (SOS emits states directly,
+    # so the base derivation already covers it). Guarded on `scb_ran` —
     # `variable_instance` is only populated when the SCB adapter ran.
     if scb_ran:
         conn.execute(
@@ -2763,48 +2771,6 @@ def materialize(
         )
     cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
     _progress(f"  {cvm_count:,} code×variable mappings")
-
-    # A4.3a coverage guard (Codex P2): the provider-blind variable_state-based
-    # derivation above drops codes that appeared ONLY in a `_collapse_residual`'d
-    # cvid (stamped variable_id, but no `variable_state` row). The FULL dbdiff
-    # proves the map is row-identical on the SCB corpus, but make NO-CODE-LOSS a
-    # STRUCTURAL build invariant: every (variable_id, code_id) the cvid-stamped
-    # scratch carries MUST be present in code_variable_map — so a future corpus
-    # where a collapsed cvid holds a unique code FAILS LOUDLY instead of silently
-    # dropping it from value search. (`variable_instance` is SCB scratch, still
-    # present here, dropped below. The LOSS direction survives A4.3b: SOS adds
-    # rows the scratch lacks, but the SCB subset stays covered. A4.3b adds an
-    # equivalent guard for SOS in validate.py, whose coverage the dbdiff cannot
-    # police.) Guarded on `scb_ran`: `variable_instance` only exists when the SCB
-    # adapter ran (an SCB-excluded build has no scratch).
-    if scb_ran:
-        lost = conn.execute(
-            "SELECT vi.variable_id, vsm.code_id "
-            "FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "WHERE vi.variable_id IS NOT NULL "
-            "EXCEPT SELECT variable_id, code_id FROM code_variable_map "
-            "LIMIT 1"
-        ).fetchone()
-        if lost is not None:
-            raise RegMetaError(
-                exit_code=EXIT_INTERNAL,
-                code="code_variable_map_coverage_loss",
-                error_class="internal",
-                message=(
-                    f"code_variable_map (variable_state-derived) lost a "
-                    f"(variable_id={lost[0]}, code_id={lost[1]}) pair the "
-                    f"cvid-stamped scratch carries: a collapsed/dropped cvid holds "
-                    f"a code absent from every surviving variable_state of that "
-                    f"variable."
-                ),
-                remediation=(
-                    "The variable_state-based code_variable_map derivation must "
-                    "account for codes that only appeared in a _collapse_residual'd "
-                    "cvid (A4.3a re-point; Codex P2). Ensure every code-bearing cvid "
-                    "yields a variable_state, or extend the derivation."
-                ),
-            )
 
     # A4.4e: SCB feed of the provider-blind `classification_candidate` table.
     # `populate_classifications` tags `variable_instance.classification_id` by

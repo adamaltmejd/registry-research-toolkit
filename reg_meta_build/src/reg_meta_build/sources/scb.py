@@ -600,7 +600,6 @@ _SUBANNUAL_MARKERS = (
     "kvartal",
     " kv ",
     " kv2",
-    " kv ",
     "halvar",
     "lasar",
     "hosten",
@@ -632,7 +631,7 @@ def _edition_authority(versionname: str | None) -> int:
     s = _ascii_fold_lower(versionname)
     if not s:
         return _AUTH_PLAIN
-    if s.endswith("_old") or "_old" in s:
+    if "_old" in s:
         return _AUTH_OLD
     if "slutlig" in s or "slutgiltig" in s:
         return _AUTH_FINAL
@@ -1454,10 +1453,11 @@ def _resolve_column_year(
     # CURATION (one-off escape hatch): an explicit pin for this (register, var,
     # column) keeps the named value-set label. register/var/column are constant
     # across `cands` (partitioned by column, one variable's timeline). A pin that
-    # doesn't match THIS year's survivors falls through to GENUINE (the year stays
-    # unresolved → flagged by `--validate`); it does not abort the build, so a pin
-    # that resolves only some years of a multi-year column is harmless and a true
-    # typo surfaces as the still-failing invariant rather than a hard crash.
+    # doesn't match THIS year's survivors falls through to GENUINE, so the
+    # coalescer FAILS the build (`coalesce_unresolved_codelivery`) naming the
+    # column + candidate labels: a stale pin, a typo, or a pin covering only some
+    # years of a multi-year column all surface as an actionable build error rather
+    # than a silently shipped ambiguous column.
     if codelivery:
         reg_id, var_id, column = cands[0][0], cands[0][2], cands[0][8]
         entry = codelivery.get((reg_id, var_id, column))
@@ -1958,10 +1958,13 @@ def _coalesce_variable_states(
     # (variable_id, register_variant_id, valid_from, label) keys already emitted —
     # the §5.1 uniqueness index. The fast path NEVER collides (a collision there is
     # a triage bug → let the INSERT raise loudly). The timeline path CAN legitimately
-    # collide: a GENUINE same-year co-delivery emits two distinct value sets starting
-    # the same year, both label '' — those are real distinct codings, so disambiguate
-    # the label so both ship and the value_set_id-keyed invariant (not the index)
-    # flags the overlap. Disambiguation is counted; a flood would signal a bug.
+    # collide on CROSS-COLUMN co-delivery: two distinct delivery columns (parallel
+    # representations — agrupp/agrupp2, SSYK 3/5-digit) each win the same year with
+    # an empty label, so they share `(vid, rv, valid_from, '')`. Those are real
+    # distinct codings on distinct columns, so disambiguate the label (`-cdN`) so
+    # both ship. SAME-column conflicts never reach the INSERT: they're collected as
+    # `genuine` and the coalescer RAISES before materializing (see below).
+    # Disambiguation is counted; a flood would signal a bug.
     _used_index_keys: set[tuple[int, int, str, str]] = set()
 
     def _append_state(
@@ -2057,7 +2060,13 @@ def _coalesce_variable_states(
                 return True
         return False
 
-    genuine_unresolved: list[tuple[int, int, int, list[int]]] = []
+    # Genuine same-column conflicts: a delivery column resolves a year to >1
+    # distinct value set the cascade + curation couldn't reduce. Keyed by
+    # (register_id, var_id, column) → contested years + candidate (value_set_id,
+    # emitted label) pairs, so the build-time failure names exactly which curation
+    # pin to add. Any entry here fails the build before materializing.
+    genuine_years: dict[tuple[int, int, str], set[int]] = defaultdict(set)
+    genuine_cands: dict[tuple[int, int, str], set[tuple[int, str]]] = defaultdict(set)
     timeline_vv = 0
     for (vid, rv), gkeys in by_vv.items():
         if not _spans_overlap(gkeys):
@@ -2107,20 +2116,27 @@ def _coalesce_variable_states(
             for gk in winners:
                 owned[gk].add(y)
             if genuine:
-                genuine_unresolved.append(
-                    (
-                        vid,
-                        rv,
-                        y,
-                        sorted(
-                            {
-                                vs
-                                for gk in winners
-                                if (vs := groups[gk].value_set_id) is not None
-                            }
-                        ),
-                    )
-                )
+                # Pin the conflict to the offending column(s): winners on ONE
+                # column carrying >1 distinct value set (cross-column winners are a
+                # legitimate co-delivery, not a conflict). Record each contested
+                # year + its candidate (value_set_id, emitted label) pairs.
+                col_winners: dict[str, list[tuple]] = defaultdict(list)
+                for gk in winners:
+                    if groups[gk].value_set_id is not None:
+                        col_winners[gk[8]].append(gk)
+                for col, gks in col_winners.items():
+                    if len({groups[gk].value_set_id for gk in gks}) <= 1:
+                        continue
+                    ckey = (gks[0][0], gks[0][2], col)
+                    genuine_years[ckey].add(y)
+                    for gk in gks:
+                        vs = groups[gk].value_set_id
+                        if vs is None:
+                            continue
+                        lbl = triage.labels.get(
+                            gk, groups[gk].value_set_version_label or ""
+                        )
+                        genuine_cands[ckey].add((vs, lbl))
         # Each owning group's window = the contiguous RUNS of years it won
         # (gaps where a competitor superseded it carve out). The open-ended
         # sentinel applies only to the final run that still ends at the group's
@@ -2143,14 +2159,40 @@ def _coalesce_variable_states(
         _progress(
             f"  partitioned {timeline_vv:,} overlapping (variable,variant) into "
             f"per-year value-set timelines "
-            f"({disambig_count:,} genuine co-delivery labels disambiguated)"
+            f"({disambig_count:,} cross-column co-delivery labels disambiguated)"
         )
-    if genuine_unresolved:
-        _gv = {(v, r) for v, r, _y, _vss in genuine_unresolved}
-        _progress(
-            f"  [WARN] {len(genuine_unresolved):,} genuine same-year co-delivery "
-            f"cell(s) across {len(_gv):,} (variable,variant) remain unresolved "
-            f"(curation pending — the invariant will flag these)"
+    # Fail BEFORE materializing: a same-column conflict that survived the cascade
+    # AND curation is an unresolvable co-delivery. This is the build-time half of
+    # the `(variable, variant, period, column) → one value set` invariant —
+    # `validate.py` re-checks the shipped DB as a redundant backstop, but the build
+    # must never ship an ambiguous column, even on a default (non-`--validate`) run.
+    if genuine_years:
+        lines = []
+        for ckey in sorted(genuine_years):
+            reg, var, col = ckey
+            yrs = ", ".join(str(y) for y in sorted(genuine_years[ckey]))
+            cands_str = ", ".join(
+                f"vs{vs} {lbl!r}" for vs, lbl in sorted(genuine_cands[ckey])
+            )
+            lines.append(
+                f"  register_id={reg} var_id={var} "
+                f"column={col or '(no column)'} year(s) {yrs}: {cands_str}"
+            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="coalesce_unresolved_codelivery",
+            error_class="configuration",
+            message=(
+                f"{len(genuine_years)} delivery column(s) resolve a period to >1 "
+                "value set after the deterministic cascade — an unresolvable "
+                "same-column co-delivery:\n" + "\n".join(lines)
+            ),
+            remediation=(
+                "Add a curation pin to reg_meta_build/codelivery.toml keyed on "
+                '(register_id, var_id, column), with `keep = "<emitted label>"` '
+                'naming the coding to keep (or `keep_rule = "latest_year"` for '
+                "recurring dated vintages). See the file header."
+            ),
         )
 
     conn.executemany(
