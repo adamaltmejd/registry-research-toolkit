@@ -294,6 +294,87 @@ def test_same_value_set_two_labels_is_not_ambiguous(same_value_set_catalog):
     assert "binding_value_set_version_ambiguous" not in codes
 
 
+@pytest.fixture
+def multi_representation_catalog():
+    """`scb/lisa/kon` carries TWO co-existing DELIVERY COLUMNS at 2018 — parallel
+    REPRESENTATIONS of one concept (the SSYK 3/5-digit / age-bracket shape). A
+    binding must pick one via `representation`."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+    conn.execute(
+        "UPDATE variable_state SET value_set_id = 701, delivery_column_name = 'kon', "
+        "value_set_version_label = 'grov' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="kon_detalj",  # a SECOND co-existing column
+        value_set_version_label="detalj",  # distinct label (the §5.1 index keys on it)
+        value_set_id=702,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def _repr_source(representation=None):
+    binding = {"variable": "scb/lisa/kon", "type": "categorical"}
+    if representation is not None:
+        binding["representation"] = representation
+    return {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [binding],
+    }
+
+
+def test_multi_representation_without_representation_is_ambiguous(
+    multi_representation_catalog,
+):
+    result = validate_semantic(
+        _project([_repr_source()]), multi_representation_catalog, caller="researcher"
+    )
+    issue = next(
+        i for i in result.issues if i.code == "binding_value_set_version_ambiguous"
+    )
+    assert issue.level == "error"
+    assert "kon" in issue.message and "kon_detalj" in issue.message
+    assert not result.ok
+
+
+def test_representation_picks_one_column(multi_representation_catalog):
+    result = validate_semantic(
+        _project([_repr_source("kon_detalj")]),
+        multi_representation_catalog,
+        caller="researcher",
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_representation_unknown" not in codes
+
+
+def test_unknown_representation_is_flagged(multi_representation_catalog):
+    result = validate_semantic(
+        _project([_repr_source("nope")]),
+        multi_representation_catalog,
+        caller="researcher",
+    )
+    issue = next(i for i in result.issues if i.code == "binding_representation_unknown")
+    assert issue.level == "error"
+    assert "nope" in issue.message
+
+
 # ── §6.8.3: a version TRANSITION (sequential, non-overlapping) is drift, NOT a
 # co-delivery ambiguity. resolve_at returns every state whose validity intersects
 # the period, so a range / `_default` period crossing a re-version matches several

@@ -110,11 +110,17 @@ class Binding(_Model):
     segments, §5.2). Its ``provider/register`` prefix (first 2 segments) must
     equal the source's ``register_variant`` prefix — the variant is NOT
     repeated here, it lives once on the Source (§6.2). That cross-field rule
-    is enforced by the structural validator. The value set is determined by
-    the resolved ``(variable, variant, period)`` (§6.8.3); there is no
-    ``@version`` pin — that grammar is retired now that a
-    ``(variable, variant, period)`` resolves to exactly one value set
-    (enforced at reg_meta build time).
+    is enforced by the structural validator. There is no ``@version`` pin —
+    that grammar is retired.
+
+    A FQID names one CONCEPT. The reg_meta build enforces one value set per
+    ``(variable, variant, period, delivery_column)``, but a concept may carry
+    several co-existing delivery columns — parallel REPRESENTATIONS of it (SSYK
+    3/4/5-digit, age 5/10-yr brackets). ``representation`` selects which one (by
+    its ``variable_alias.delivery_column_name``); it is required only when the
+    concept resolves to >1 column at the source's ``(variant, period)`` — the
+    semantic validator (§6.8.3) flags an ambiguous binding that omits it, and the
+    SPA offers a chooser. A single-representation concept leaves it ``None``.
 
     ``display_name`` is optional: when absent, reg_meta-backed consumers
     resolve the default from ``variable_alias.delivery_column_name`` for
@@ -132,6 +138,7 @@ class Binding(_Model):
     date_format: str | None = None
     datetime_format: str | None = None
     value_set: str | None = None
+    representation: str | None = None
 
 
 class Source(_Model):

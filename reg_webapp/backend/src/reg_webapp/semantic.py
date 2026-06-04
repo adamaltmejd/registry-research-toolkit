@@ -320,16 +320,57 @@ def _check_binding_period(
         )
         return
 
-    # §6.8.3 fold: CO-DELIVERY — ≥2 states with DISTINCT value sets (different
-    # `value_set_id`) whose validity windows OVERLAP (valid at the same instant).
-    # That breaks the `(variable, variant, period) → one value set` invariant, so
-    # it is an error. `resolve_at` returns every state whose validity INTERSECTS the
-    # period, so for a range / `_default` period the matched states may instead be
-    # SEQUENTIAL across a transition (non-overlapping) — that's drift (info) below,
-    # NOT ambiguity. There is no author-side pin: the fix is reg_meta build-time
-    # curation (this should not fire against a curated catalog).
+    # §6.8.3 REPRESENTATION. A FQID names one concept; the reg_meta build enforces
+    # one value set per `(variable, variant, period, delivery_column)`, but a
+    # concept may carry several co-existing delivery columns — parallel
+    # representations (SSYK 3/4/5-digit, age brackets). `binding.representation`
+    # selects one by its `delivery_column_name`.
+    if binding.representation is not None:
+        matched = [
+            s for s in states if s.delivery_column_name == binding.representation
+        ]
+        if not matched:
+            avail = sorted(
+                {s.delivery_column_name for s in states if s.delivery_column_name}
+            )
+            issues.append(
+                _issue(
+                    "binding_representation_unknown",
+                    "error",
+                    caller,
+                    var_path,
+                    f"binding {binding.variable!r} representation "
+                    f"{binding.representation!r} is not a delivery column at "
+                    f"{source.register_variant} period {source.period!r} "
+                    f"(available: {avail})",
+                )
+            )
+            return
+        states = matched
+
+    # ≥2 distinct delivery columns and no `representation` chosen → the binding is
+    # AMBIGUOUS: it would extract more than one column. The author must pick a
+    # representation (the SPA offers a chooser); this is where the retired
+    # `@version` pin's job now lives, keyed on the delivery column.
+    columns = sorted({s.delivery_column_name for s in states if s.delivery_column_name})
+    if binding.representation is None and len(columns) > 1:
+        issues.append(
+            _issue(
+                "binding_value_set_version_ambiguous",
+                "error",
+                caller,
+                var_path,
+                f"binding {binding.variable!r} resolves to {len(columns)} "
+                f"representations {columns} at {source.register_variant} period "
+                f"{source.period!r}; set `representation` to one of them",
+            )
+        )
+        return
+
+    # Backstop: distinct value sets on ONE column at the same instant — a reg_meta
+    # build co-delivery the curation missed (the build `validate` invariant should
+    # make this unreachable against a clean catalog).
     if _has_codelivered_versions(states):
-        # Distinct value sets at the same instant, labelled for legibility.
         labels: dict[int | None, str] = {}
         for s in states:
             labels.setdefault(s.value_set_id, s.value_set_version_label)
@@ -340,18 +381,17 @@ def _check_binding_period(
                 caller,
                 var_path,
                 f"binding {binding.variable!r} resolves to several co-delivered "
-                f"value sets {sorted(labels.values())} at {source.register_variant} "
-                f"period {source.period!r}; a (variable, variant, period) must map "
-                f"to one value set — this reg_meta build needs co-delivery curation",
+                f"value sets {sorted(labels.values())} on one column at "
+                f"{source.register_variant} period {source.period!r} — this reg_meta "
+                f"build needs co-delivery curation",
             )
         )
         return
 
     # §6.8.3 drift (info): a range / `_default` period crossing a state transition
-    # resolves to several SEQUENTIAL states (non-overlapping windows), possibly
-    # differing on version label (a re-version) or shape — informational; the
-    # resolver returns the per-state subsets at extract time. The co-delivered
-    # (overlapping) version case was already the error above.
+    # resolves to several SEQUENTIAL states (non-overlapping windows) on ONE column,
+    # possibly differing on version label (a re-version) or shape — informational;
+    # the resolver returns the per-state subsets at extract time.
     if len(states) > 1:
         issues.append(
             _issue(

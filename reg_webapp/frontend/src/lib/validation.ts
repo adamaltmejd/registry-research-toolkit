@@ -199,7 +199,11 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   },
   binding_value_set_version_ambiguous: {
     label:
-      "Several co-delivered value sets match this (variant, period) — needs reg_meta build-time curation",
+      "The concept has several representations (delivery columns) at this period — pick one via representation",
+    hint: "error",
+  },
+  binding_representation_unknown: {
+    label: "The chosen representation is not a delivery column at this period",
     hint: "error",
   },
   binding_state_drifts_within_period: {

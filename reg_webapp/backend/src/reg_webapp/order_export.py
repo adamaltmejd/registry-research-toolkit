@@ -132,6 +132,9 @@ def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
     validator's job to flag (this renderer is best-effort)."""
     if binding.display_name is not None:
         return binding.display_name
+    # A `representation` is the chosen delivery column — it IS the default label.
+    if binding.representation is not None:
+        return binding.representation
 
     try:
         parsed = parse(binding.variable)

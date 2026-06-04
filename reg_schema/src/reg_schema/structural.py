@@ -69,6 +69,7 @@ _BINDING_KEYS: frozenset[str] = frozenset(
         "date_format",
         "datetime_format",
         "value_set",
+        "representation",
     }
 )
 _PANEL_KEYS: frozenset[str] = frozenset(

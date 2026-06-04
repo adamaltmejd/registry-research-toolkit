@@ -225,7 +225,8 @@ stable-code registry is complete and the SPA can map them:
 |---|---|---|
 | `period_outside_state_validity` | error | No `variable_state` covers the binding's `(variant, period)`. |
 | `binding_state_drifts_within_period` | info | A range `period` crosses a state transition; the resolver returns per-state subsets. |
-| `binding_value_set_version_ambiguous` | error | A binding's `(variant, period)` resolves to several **distinct value sets** co-delivered at the same instant (keyed on `value_set_id`, not the free-text version label). This should not occur once the reg_meta build enforces one value set per `(variable, variant, period)` (the build's co-delivery curation + `validate` invariant), so it is a defensive backstop. There is no author-side pin (the `@version` grammar is retired) — the resolution is build-side curation. |
+| `binding_value_set_version_ambiguous` | error | A binding's `(variant, period)` resolves to several **distinct delivery columns** — parallel REPRESENTATIONS of the one concept (SSYK 3/4/5-digit, age brackets) — and the binding sets no `representation`. The author must pick one (the SPA offers a chooser); this is where the retired `@version` pin's job now lives, keyed on the delivery column. (Also re-used as a backstop for the rarer case of distinct value sets co-delivered on ONE column — a reg_meta build co-delivery the `validate` invariant should make unreachable.) |
+| `binding_representation_unknown` | error | A binding's `representation` is not a delivery column of the concept at the source's `(variant, period)`. |
 | `variable_replaced` | info | The binding has a `variable_replaced_by` edge effective at or before the source's `period`; hint points at the successor. |
 | `panel_inheritance_unresolvable` | error | A member has no effective `entity_key` / `time_key` and its variant has no `panel_template` to inherit from. |
 
