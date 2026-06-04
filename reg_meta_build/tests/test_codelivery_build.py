@@ -170,3 +170,39 @@ class TestGenuineConflictFailsBuild:
         assert exc.value.exit_code == EXIT_CONFIG
         # Actionable: names the offending column so a maintainer can write the pin.
         assert "ClashCol" in exc.value.message
+
+    def test_all_yearless_conflict_raises(self, tmp_path: Path) -> None:
+        # var 900, column YlessCol: two distinct codings whose registerversionnamn
+        # carries NO parseable year, so both are YEARLESS open-span groups. With no
+        # year-bearing coding to win and no curation pin, the per-year cascade can't
+        # separate them → unresolvable open-span co-delivery → the build must fail
+        # (not silently ship two overlapping open states on one column).
+        ri = [
+            _var_row(
+                colname="YlessCol",
+                cvid=9001,
+                var_id=900,
+                varname="YlessVar",
+                year="Senaste version",
+                regver_id=900,
+                data_length="3",
+            ),
+            _var_row(
+                colname="YlessCol",
+                cvid=9002,
+                var_id=900,
+                varname="YlessVar",
+                year="Tidigare version",
+                regver_id=901,
+                data_length="3",
+            ),
+        ]
+        vm = _vm_rows(9001, "Coding A", _CODING_A) + _vm_rows(
+            9002, "Coding B", _CODING_B
+        )
+
+        with pytest.raises(RegMetaError) as exc:
+            _build(tmp_path, ri, vm)
+        assert exc.value.code == "coalesce_unresolved_codelivery"
+        assert "YlessCol" in exc.value.message
+        assert "yearless" in exc.value.message

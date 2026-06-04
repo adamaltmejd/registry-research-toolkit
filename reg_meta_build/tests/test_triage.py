@@ -99,6 +99,15 @@ class TestEditionAuthority:
         # 'slutlig' must win even if a sub-annual word also appears.
         assert _edition_authority("Höstterminen 2018, slutlig version") == _AUTH_FINAL
 
+    def test_compact_term_forms_are_subannual(self) -> None:
+        # No-space `HT2018`/`VT2018` and a bare `HT`/`VT` token must rank
+        # sub-annual (else they tie a full-year annual at _AUTH_PLAIN).
+        assert _edition_authority("HT2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("VT2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("Skolår 2018 HT") == _AUTH_SUBANNUAL
+        # A plain annual is unaffected (no false HT/VT match mid-word).
+        assert _edition_authority("Avbrott 2018") == _AUTH_PLAIN
+
 
 class TestRleRuns:
     def test_contiguous(self) -> None:
@@ -346,6 +355,7 @@ class TestLoadCodelivery:
         assert cmap[(248, 104, "Skolkod")] == (None, "latest_year")
 
     def test_rejects_both_or_neither(self, tmp_path: Path) -> None:
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
         from reg_meta_build.codelivery import load_codelivery
 
         both = tmp_path / "both.toml"
@@ -354,8 +364,21 @@ class TestLoadCodelivery:
             'keep_rule="latest_year"\n',
             encoding="utf-8",
         )
-        with pytest.raises(ValueError, match="exactly one"):
+        with pytest.raises(RegMetaError) as exc:
             load_codelivery(both)
+        assert "exactly one" in exc.value.message
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_malformed_toml_is_config_error(self, tmp_path: Path) -> None:
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "bad.toml"
+        bad.write_text("[[resolve]]\nregister_id = = 1\n", encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codelivery_toml_unreadable"
 
     def test_missing_file_is_empty(self, tmp_path: Path) -> None:
         from reg_meta_build.codelivery import load_codelivery

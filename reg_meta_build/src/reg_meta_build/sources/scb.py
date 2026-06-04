@@ -621,6 +621,13 @@ _SUBANNUAL_MARKERS = (
     "december",
 )
 
+# Compact / bare term forms the string markers above miss: `HT2018` / `VT2018`
+# (no trailing space) and a bare `HT` / `VT` token. Mirrors `_LABEL_HT_RE` /
+# `_LABEL_VT_RE` used in label-freshness ranking — a contested column must rank
+# these sub-annual too, else a compact-term coding ties a full-year annual at
+# `_AUTH_PLAIN` (and the later freshness step could even prefer the term).
+_SUBANNUAL_TERM_RE = re.compile(r"\bht\d|\bvt\d|\bht\b|\bvt\b")
+
 
 def _edition_authority(versionname: str | None) -> int:
     """Rank a `registerversionnamn` by catalog authority (see the ranking note
@@ -637,7 +644,7 @@ def _edition_authority(versionname: str | None) -> int:
         return _AUTH_FINAL
     if "preliminar" in s or "prel." in s or s.endswith(" prel"):
         return _AUTH_PRELIM
-    if any(m in s for m in _SUBANNUAL_MARKERS):
+    if any(m in s for m in _SUBANNUAL_MARKERS) or _SUBANNUAL_TERM_RE.search(s):
         return _AUTH_SUBANNUAL
     return _AUTH_PLAIN
 
@@ -2060,14 +2067,24 @@ def _coalesce_variable_states(
                 return True
         return False
 
-    # Genuine same-column conflicts: a delivery column resolves a year to >1
+    # Genuine same-column conflicts: a delivery column resolves a period to >1
     # distinct value set the cascade + curation couldn't reduce. Keyed by
-    # (register_id, var_id, column) → contested years + candidate (value_set_id,
-    # emitted label) pairs, so the build-time failure names exactly which curation
-    # pin to add. Any entry here fails the build before materializing.
-    genuine_years: dict[tuple[int, int, str], set[int]] = defaultdict(set)
+    # (register_id, var_id, column) → contested period descriptors (a year, or
+    # "(yearless)" for an open-span conflict) + candidate (value_set_id, emitted
+    # label) pairs, so the build-time failure names exactly which curation pin to
+    # add. Any entry here fails the build before materializing.
+    genuine_years: dict[tuple[int, int, str], set[str]] = defaultdict(set)
     genuine_cands: dict[tuple[int, int, str], set[tuple[int, str]]] = defaultdict(set)
     timeline_vv = 0
+
+    def _emitted_label(gk: tuple) -> str:
+        """The label that lands in `variable_state` (triage fold token wins, else
+        the group's own label) — what a curation `keep` pin matches against."""
+        return (triage.labels.get(gk, groups[gk].value_set_version_label or "")).strip()
+
+    def _col_value_sets(gks: list[tuple]) -> set[int]:
+        return {vs for gk in gks if (vs := groups[gk].value_set_id) is not None}
+
     for (vid, rv), gkeys in by_vv.items():
         if not _spans_overlap(gkeys):
             for gk in gkeys:  # fast path
@@ -2075,35 +2092,56 @@ def _coalesce_variable_states(
             continue
         timeline_vv += 1
         year_bearing = [gk for gk in gkeys if groups[gk].regyears]
-        # A YEARLESS group has no per-year placement, so it can't compete in the
-        # timeline below — it just emits its open span. When it shares a column
-        # with a year-bearing group carrying a DISTINCT value set, that span
-        # overlaps the year-bearing coding. The year-bearing coding (real years)
-        # wins; the yearless one is DROPPED — unless a curation pin explicitly
-        # keeps the yearless label. Non-conflicting yearless groups emit normally.
-        for gk in gkeys:
-            grp = groups[gk]
-            if grp.regyears:
+        yearless = [gk for gk in gkeys if not groups[gk].regyears]
+        # A YEARLESS group has no per-year placement: it emits a single OPEN span
+        # over the variable's lifetime, so on a column carrying >1 DISTINCT value
+        # set it overlaps every other coding there. Resolve each yearless-bearing
+        # column up front, deciding which yearless to EMIT and which year-bearing
+        # rivals to DROP from the per-year timeline below:
+        #   - a curation `keep` pin selects the kept coding (yearless OR
+        #     year-bearing); every other coding on that column is dropped;
+        #   - else a year-bearing coding wins (it carries real years) and the
+        #     yearless ones are dropped;
+        #   - else (ALL-yearless, no pin) the column is an unresolvable open-span
+        #     co-delivery → recorded GENUINE so the build fails (not shipped).
+        # Non-conflicting yearless groups (≤1 distinct value set on the column)
+        # always emit.
+        yearless_emit: set[tuple] = set()
+        yb_drop: set[tuple] = set()
+        for col in {gk[8] for gk in yearless}:
+            col_yl = [gk for gk in yearless if gk[8] == col]
+            col_yb = [gk for gk in year_bearing if gk[8] == col]
+            if len(_col_value_sets(col_yl + col_yb)) <= 1:
+                yearless_emit.update(col_yl)  # no conflict on this column
                 continue
-            col = gk[8]
-            rivals = grp.value_set_id is not None and any(
-                ogk[8] == col
-                and groups[ogk].value_set_id is not None
-                and groups[ogk].value_set_id != grp.value_set_id
-                for ogk in year_bearing
-            )
-            if rivals:
-                pin = None
-                if codelivery:
-                    _entry = codelivery.get((gk[0], gk[2], col))
-                    if _entry is not None and _entry[0] is not None:
-                        pin = _entry[0].strip()
-                emitted = (
-                    triage.labels.get(gk, grp.value_set_version_label or "")
-                ).strip()
-                if pin != emitted:
-                    continue  # drop the yearless loser (year-bearing coding wins)
-            _emit_span(gk, grp)
+            pin = None
+            if codelivery:
+                _entry = codelivery.get((col_yl[0][0], col_yl[0][2], col))
+                if _entry is not None and _entry[0] is not None:
+                    pin = _entry[0].strip()
+            pinned_yl = [gk for gk in col_yl if pin and _emitted_label(gk) == pin]
+            if pinned_yl:
+                # A yearless coding is pinned: keep it, drop every rival on the
+                # column — other yearless AND all year-bearing.
+                yearless_emit.add(pinned_yl[0])
+                yb_drop.update(col_yb)
+            elif col_yb:
+                # A year-bearing coding wins (pinned in the year loop, or by
+                # default it carries real years): drop all yearless here.
+                continue
+            else:
+                # All-yearless, no pin → unresolvable open-span conflict.
+                ckey = (col_yl[0][0], col_yl[0][2], col)
+                genuine_years[ckey].add("(yearless)")
+                for gk in col_yl:
+                    if (vs := groups[gk].value_set_id) is not None:
+                        genuine_cands[ckey].add((vs, _emitted_label(gk)))
+        for gk in yearless:
+            if gk in yearless_emit:
+                _emit_span(gk, groups[gk])
+        # A pinned yearless coding beat these year-bearing rivals — drop them so
+        # the timeline doesn't re-emit an overlapping coding on the same column.
+        year_bearing = [gk for gk in year_bearing if gk not in yb_drop]
         owned: dict[tuple, set[int]] = defaultdict(set)
         all_years: set[int] = set()
         for gk in year_bearing:
@@ -2128,7 +2166,7 @@ def _coalesce_variable_states(
                     if len({groups[gk].value_set_id for gk in gks}) <= 1:
                         continue
                     ckey = (gks[0][0], gks[0][2], col)
-                    genuine_years[ckey].add(y)
+                    genuine_years[ckey].add(str(y))
                     for gk in gks:
                         vs = groups[gk].value_set_id
                         if vs is None:
@@ -2170,13 +2208,13 @@ def _coalesce_variable_states(
         lines = []
         for ckey in sorted(genuine_years):
             reg, var, col = ckey
-            yrs = ", ".join(str(y) for y in sorted(genuine_years[ckey]))
+            yrs = ", ".join(sorted(genuine_years[ckey]))
             cands_str = ", ".join(
                 f"vs{vs} {lbl!r}" for vs, lbl in sorted(genuine_cands[ckey])
             )
             lines.append(
                 f"  register_id={reg} var_id={var} "
-                f"column={col or '(no column)'} year(s) {yrs}: {cands_str}"
+                f"column={col or '(no column)'} period(s) {yrs}: {cands_str}"
             )
         raise RegMetaError(
             exit_code=EXIT_CONFIG,

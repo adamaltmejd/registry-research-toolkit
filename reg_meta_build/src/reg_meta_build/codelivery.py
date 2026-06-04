@@ -24,6 +24,8 @@ from __future__ import annotations
 import tomllib
 from pathlib import Path
 
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+
 # (register_id, var_id, delivery-column component) — the same coordinates the
 # coalescer's per-column resolver carries (gkey[0], gkey[2], gkey[8]). The column
 # component is "" for a code-bearing cvid that has no delivery alias.
@@ -33,6 +35,21 @@ CodeliveryRule = tuple[str | None, str | None]
 CodeliveryMap = dict[CodeliveryKey, CodeliveryRule]
 
 _KEEP_RULES = frozenset({"latest_year"})
+
+
+def _codelivery_error(code: str, message: str, remediation: str) -> RegMetaError:
+    """A configuration-class error (EXIT_CONFIG). `codelivery.toml` is
+    maintainer-edited curation data like the slug TOMLs, so a syntax typo or a
+    malformed entry is a config failure with actionable remediation — not an
+    internal build bug (which is how a raw tomllib/ValueError would surface
+    through the CLI's generic handler)."""
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code=code,
+        error_class="configuration",
+        message=message,
+        remediation=remediation,
+    )
 
 
 def repo_codelivery_path() -> Path | None:
@@ -48,24 +65,44 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
     keep_rule)}`. Empty when no file (synthetic test builds, wheel installs)."""
     if path is None or not path.is_file():
         return {}
-    data = tomllib.loads(path.read_text(encoding="utf-8"))
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        raise _codelivery_error(
+            "codelivery_toml_unreadable",
+            f"Could not parse co-delivery curation TOML {path}: {exc}",
+            "Fix the TOML syntax in reg_meta_build/codelivery.toml.",
+        ) from exc
     out: CodeliveryMap = {}
     for entry in data.get("resolve", []):
-        key: CodeliveryKey = (
-            int(entry["register_id"]),
-            int(entry["var_id"]),
-            str(entry.get("column", "")),
-        )
+        try:
+            key: CodeliveryKey = (
+                int(entry["register_id"]),
+                int(entry["var_id"]),
+                str(entry.get("column", "")),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise _codelivery_error(
+                "codelivery_invalid",
+                f"codelivery [[resolve]] entry {entry!r} is missing or has a "
+                f"non-integer register_id / var_id: {exc}",
+                "Each [[resolve]] entry needs integer `register_id` and `var_id`.",
+            ) from exc
         keep_label = entry.get("keep")
         keep_rule = entry.get("keep_rule")
         if (keep_label is None) == (keep_rule is None):
-            raise ValueError(
-                f"codelivery entry {key} must set exactly one of `keep`/`keep_rule`"
+            raise _codelivery_error(
+                "codelivery_invalid",
+                f"codelivery entry {key} must set exactly one of `keep`/`keep_rule`",
+                'Give the [[resolve]] entry either `keep = "<label>"` or '
+                "`keep_rule`, not both and not neither.",
             )
         if keep_rule is not None and keep_rule not in _KEEP_RULES:
-            raise ValueError(
+            raise _codelivery_error(
+                "codelivery_invalid",
                 f"codelivery entry {key} has unknown keep_rule {keep_rule!r} "
-                f"(known: {sorted(_KEEP_RULES)})"
+                f"(known: {sorted(_KEEP_RULES)})",
+                f"Use a supported keep_rule value: {sorted(_KEEP_RULES)}.",
             )
         out[key] = (
             str(keep_label) if keep_label is not None else None,
