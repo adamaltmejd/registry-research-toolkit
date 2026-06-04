@@ -349,7 +349,9 @@ def test_multi_representation_without_representation_is_ambiguous(
         i for i in result.issues if i.code == "binding_value_set_version_ambiguous"
     )
     assert issue.level == "error"
-    assert "kon" in issue.message and "kon_detalj" in issue.message
+    # Both co-existing columns named; `'kon'` quoted distinguishes it from the
+    # `kon_detalj` substring.
+    assert "'kon'" in issue.message and "kon_detalj" in issue.message
     assert not result.ok
 
 
@@ -373,6 +375,20 @@ def test_unknown_representation_is_flagged(multi_representation_catalog):
     issue = next(i for i in result.issues if i.code == "binding_representation_unknown")
     assert issue.level == "error"
     assert "nope" in issue.message
+
+
+def test_unknown_representation_downgrades_for_steward(multi_representation_catalog):
+    # A steward committed a representation a newer reg_meta build no longer
+    # delivers as a column → drift: downgraded to warning (the binding drops from
+    # the index) instead of crashing boot (§6.8.3 boot-availability invariant).
+    result = validate_semantic(
+        _project([_repr_source("nope")]),
+        multi_representation_catalog,
+        caller="steward",
+    )
+    issue = next(i for i in result.issues if i.code == "binding_representation_unknown")
+    assert issue.level == "warning"
+    assert result.ok
 
 
 # ── §6.8.3: a version TRANSITION (sequential, non-overlapping) is drift, NOT a
@@ -442,4 +458,108 @@ def test_default_period_over_version_history_is_not_ambiguous(transition_catalog
         _project([source]), transition_catalog, caller="researcher"
     )
     assert "binding_value_set_version_ambiguous" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+@pytest.fixture
+def column_rename_catalog():
+    """`scb/lisa/kon` delivered under DISTINCT columns in NON-overlapping windows:
+    `KonOld` 2010-2015, renamed `KonNew` 2016-9999. A rename, not parallel
+    co-existence — a range crossing it must be drift, not representation-ambiguity."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET delivery_column_name = 'KonNew', "
+        "valid_from = '2016-01-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2010-01-01",
+        valid_to="2015-12-31",
+        delivery_column_name="KonOld",
+        value_set_version_label="old",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_range_crossing_column_rename_is_drift_not_ambiguous(column_rename_catalog):
+    # DISTINCT columns in NON-overlapping windows (a rename) must NOT demand a
+    # `representation` — only co-EXISTING (overlapping) columns do.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2014, "to": 2018},  # spans the 2015→2016 rename
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+    result = validate_semantic(
+        _project([source]), column_rename_catalog, caller="researcher"
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_state_drifts_within_period" in codes
+    assert result.ok
+
+
+@pytest.fixture
+def uneven_representation_catalog():
+    """Two co-existing columns with UNEVEN spans: `kon` 2010-9999 and `kon_detalj`
+    only 2018-9999. Picking the shorter column over a range that predates it
+    under-covers the requested period."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+    conn.execute(
+        "UPDATE variable_state SET delivery_column_name = 'kon', "
+        "valid_from = '2010-01-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="kon_detalj",
+        value_set_version_label="detalj",
+        value_set_id=702,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_representation_under_covering_range_is_drift(uneven_representation_catalog):
+    # Range 2010-2020 picking `kon_detalj` (only 2018+) leaves 2010-2017 uncovered
+    # vs the `kon` column — an info coverage note, not a blocking error.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2010, "to": 2020},
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon_detalj",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), uneven_representation_catalog, caller="researcher"
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_state_drifts_within_period" in codes
     assert result.ok

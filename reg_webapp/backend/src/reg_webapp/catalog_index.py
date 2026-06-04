@@ -118,14 +118,15 @@ def build_catalog_index(
     accumulate the two §9.1 maps.
 
     Only ``warning``-level issues mark a DROP (and populate ``drift_warnings``):
-    those are exactly the three §6.8.3 steward-downgraded resolution failures
-    (``fqid_unresolved`` / ``value_set_missing`` / ``period_outside_state_validity``)
-    — the FQID/value-set/period this catalog references that reg_meta no longer
-    admits. An ``info`` ``binding_state_drifts_within_period`` (the binding RESOLVED,
-    it just spans a transition) and a non-downgraded ``error``
-    ``binding_value_set_version_ambiguous`` (kept an error per §6.8.3 — a
-    researcher-author-time concern, not catalog drift) must NOT drop the binding;
-    the steward filter keeps it and the researcher-validate path enforces it."""
+    those are exactly the §6.8.3 steward-downgraded resolution failures
+    (``fqid_unresolved`` / ``value_set_missing`` / ``period_outside_state_validity``
+    / ``binding_representation_unknown``) — the FQID / value-set / period / pinned
+    representation this catalog references that reg_meta no longer admits. An
+    ``info`` ``binding_state_drifts_within_period`` (the binding RESOLVED, it just
+    spans a transition or its representation under-covers the range) and a
+    non-downgraded ``error`` ``binding_value_set_version_ambiguous`` (kept an error
+    per §6.8.3 — a researcher-author-time concern, not catalog drift) must NOT drop
+    the binding; the steward filter keeps it and the researcher path enforces it."""
     warnings = tuple(i for i in issues if i.level == "warning")
     dropped = _dropped_binding_paths(warnings)
     bindings_by_variant: dict[str, set[str]] = {}
