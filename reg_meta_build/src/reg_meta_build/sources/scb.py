@@ -1328,6 +1328,7 @@ def _resolve_year_winners(
     codes_fn: Callable[[int], frozenset[str]],
     codelivery: CodeliveryMap | None = None,
     labels: dict[tuple, str] | None = None,
+    code_labels_fn: Callable[[int], dict[str, str]] | None = None,
 ) -> tuple[list[tuple], bool]:
     """Pick the winning group(s) for one contested `year`, COLUMN-AWARE.
 
@@ -1352,7 +1353,7 @@ def _resolve_year_winners(
     any_genuine = False
     for col_cands in by_col.values():
         w, genuine = _resolve_column_year(
-            col_cands, groups, year, codes_fn, codelivery, labels
+            col_cands, groups, year, codes_fn, codelivery, labels, code_labels_fn
         )
         winners.extend(w)
         any_genuine = any_genuine or genuine
@@ -1366,6 +1367,7 @@ def _resolve_column_year(
     codes_fn: Callable[[int], frozenset[str]],
     codelivery: CodeliveryMap | None = None,
     labels: dict[tuple, str] | None = None,
+    code_labels_fn: Callable[[int], dict[str, str]] | None = None,
 ) -> tuple[list[tuple], bool]:
     """Resolve ONE column's groups for a contested year to a single winner. The
     within-column cascade:
@@ -1381,9 +1383,15 @@ def _resolve_column_year(
          final>preliminary, calendar>academic year, latest dated snapshot, HT>VT.
       8. CURATION — a `codelivery` entry pinning the kept label for this
          (register, var, column) wins (the one-off escape hatch).
-      9. COSMETIC  — distinct value sets within `_COSMETIC_MAX_SYM` symmetric codes
-         → keep the largest.
-     10. GENUINE   — distinct, non-cosmetic value sets on ONE column → all reps,
+      9. EXTENDS-LATER — introduction tied at SUPERSESSION, but one coding's
+         timeline reaches a strictly later period (max `regver_max`) → it's the
+         live/newer coding of a sequential re-coding; keep it. Co-extensive codings
+         tie and fall through.
+     10. COSMETIC  — distinct value sets within `_COSMETIC_MAX_SYM` symmetric codes
+         → keep the largest. GATED label-aware: a small symmetric diff that hides a
+         RELABELED shared code (same code, different label) is a genuine re-coding,
+         not cosmetic drift, so it does NOT collapse here — it falls to GENUINE.
+     11. GENUINE   — distinct, non-cosmetic value sets on ONE column → all reps,
          `is_genuine` (overlapping → the invariant flags it for curation).
     """
     if len(cands) == 1:
@@ -1502,17 +1510,66 @@ def _resolve_column_year(
                     win = max(vs_year, key=lambda v: vs_year[v])
                     return [_pick_state_rep(nonnull[win], groups)], False
 
+    # EXTENDS-LATER (more modern): nothing above separated these and there is no
+    # curation pin, but one coding's timeline reaches a STRICTLY LATER period than
+    # the rest — it is the live/newer coding of a sequential re-coding whose
+    # INTRODUCTION year tied at SUPERSESSION (the plain→'…2009'→'…2014' bloc series;
+    # a FoB75 coding that carries forward open-ended). Keep the latest-extending
+    # one. Co-extensive codings (same last period: UpplForm Hh/Lgh, Br92/Br07,
+    # the genuinely parallel re-codings) tie here and fall through to cosmetic /
+    # genuine, where a relabel is surfaced for curation.
+    vs_max: dict[int, int] = {}
+    for vs, gks in nonnull.items():
+        vs_max[vs] = max(
+            (groups[gk].regver_max for gk in gks if groups[gk].regver_max is not None),
+            default=-1,
+        )
+    top_max = max(vs_max.values())
+    if top_max >= 0 and sum(1 for m in vs_max.values() if m == top_max) == 1:
+        win_vs = max(vs_max, key=lambda v: vs_max[v])
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
     vss = sorted(nonnull)
     max_sym = max(
         len(codes_fn(vss[i]) ^ codes_fn(vss[j]))
         for i in range(len(vss))
         for j in range(i + 1, len(vss))
     )
-    if max_sym <= _COSMETIC_MAX_SYM:
+    if max_sym <= _COSMETIC_MAX_SYM and not _shared_code_relabeled(vss, code_labels_fn):
         win_vs = max(nonnull, key=lambda v: (len(codes_fn(v)), v))
         return [_pick_state_rep(nonnull[win_vs], groups)], False
 
     return [_pick_state_rep(gks, groups) for gks in nonnull.values()], True
+
+
+def _shared_code_relabeled(
+    vss: list[int], code_labels_fn: Callable[[int], dict[str, str]] | None
+) -> bool:
+    """True if any code appears in ≥2 of these value sets with a MEANINGFULLY
+    different label. Such a re-coding (same code, new meaning — e.g. a 1-code
+    Br92/Br07-style clash, or FoB75 'i huset' vs 'i lägenheten') is NOT cosmetic
+    drift even when the symmetric code-count diff is tiny, so the cosmetic collapse
+    must skip it and let the conflict fall through to curation.
+
+    Labels are compared ASCII-folded/lowercased with whitespace collapsed, so a
+    pure case/diacritic/spacing difference ('Makedonien' vs 'MAKEDONIEN',
+    'STOCKHOLMS LÄNS' vs 'Stockholms läns') stays cosmetic and still collapses.
+    No label source (older callers / tests) → fall back to code-only behavior."""
+    if code_labels_fn is None:
+        return False
+
+    def _norm(label: str) -> str:
+        return " ".join(_ascii_fold_lower(label).split())
+
+    seen: dict[str, str] = {}
+    for vs in vss:
+        for code, label in code_labels_fn(vs).items():
+            norm = _norm(label)
+            prior = seen.get(code)
+            if prior is not None and prior != norm:
+                return True
+            seen[code] = norm
+    return False
 
 
 def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tuple:
@@ -1905,24 +1962,28 @@ def _coalesce_variable_states(
     open_top_from_unika = 0
     disambig_count = 0
 
-    # Cosmetic-diff needs value-set code lists; cache per value_set_id (the
+    # Cosmetic-diff needs value-set code lists, and the label-aware cosmetic gate
+    # needs each code's label; cache the code→label map per value_set_id (the
     # contested set is a small fraction of all value sets, so lazy is cheap).
-    _vs_codes_cache: dict[int, frozenset[str]] = {}
+    _vs_code_labels_cache: dict[int, dict[str, str]] = {}
 
-    def _vs_codes(vsid: int) -> frozenset[str]:
-        cached = _vs_codes_cache.get(vsid)
+    def _vs_code_labels(vsid: int) -> dict[str, str]:
+        cached = _vs_code_labels_cache.get(vsid)
         if cached is None:
-            cached = frozenset(
-                r[0]
+            cached = {
+                r[0]: (r[1] or "")
                 for r in conn.execute(
-                    "SELECT vc.code FROM value_set_member vsm "
+                    "SELECT vc.code, vc.label FROM value_set_member vsm "
                     "JOIN value_code vc ON vc.code_id = vsm.code_id "
                     "WHERE vsm.value_set_id = ?",
                     (vsid,),
                 )
-            )
-            _vs_codes_cache[vsid] = cached
+            }
+            _vs_code_labels_cache[vsid] = cached
         return cached
+
+    def _vs_codes(vsid: int) -> frozenset[str]:
+        return frozenset(_vs_code_labels(vsid))
 
     def _resolve_variable_id(gkey: tuple, grp: _StateGroup) -> int:
         variable_id = triage.assignments.get(gkey)
@@ -2149,7 +2210,7 @@ def _coalesce_variable_states(
         for y in sorted(all_years):
             cands = [gk for gk in year_bearing if y in groups[gk].regyears]
             winners, genuine = _resolve_year_winners(
-                cands, groups, y, _vs_codes, codelivery, triage.labels
+                cands, groups, y, _vs_codes, codelivery, triage.labels, _vs_code_labels
             )
             for gk in winners:
                 owned[gk].add(y)

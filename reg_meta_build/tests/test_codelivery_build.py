@@ -206,3 +206,196 @@ class TestGenuineConflictFailsBuild:
         assert exc.value.code == "coalesce_unresolved_codelivery"
         assert "YlessCol" in exc.value.message
         assert "yearless" in exc.value.message
+
+
+# Two codings whose CODE sets are identical ({30,31,32}) but one code is RELABELED
+# — symmetric code-diff is 0 (well within _COSMETIC_MAX_SYM=2), so the pre-gate
+# cosmetic rule would silently keep one. A relabel is a genuine re-coding, not
+# cosmetic drift, so the label-aware gate must refuse to collapse it.
+_RECODE_BASE = [("30", "Stockholm"), ("31", "Göteborg"), ("32", "Malmö")]
+_RECODE_RELABELED = [("30", "Stockholm"), ("31", "Göteborg"), ("32", "Uppsala")]
+# True cosmetic drift: the smaller is a clean subset (one code dropped), no shared
+# code relabeled — symmetric diff 1 ≤ 2, so it still collapses to the larger.
+_DRIFT_FULL = [("30", "Stockholm"), ("31", "Göteborg"), ("32", "Malmö")]
+_DRIFT_MINUS_ONE = [("30", "Stockholm"), ("31", "Göteborg")]
+
+
+class TestLabelAwareCosmetic:
+    """The cosmetic collapse (≤ _COSMETIC_MAX_SYM symmetric codes → keep larger)
+    is label-aware: a tiny code-diff that hides a relabeled shared code is a genuine
+    re-coding and must NOT silently merge; clean drift (no relabel) still merges."""
+
+    def test_relabeled_shared_code_under_threshold_raises(self, tmp_path: Path) -> None:
+        # var 950, column ReCol: two codings, same year, same code set {30,31,32}
+        # (symmetric diff 0), but code 32 is relabeled Malmö→Uppsala. Distinct
+        # version labels (no same-label drift), equal intro year (no supersession).
+        # Pre-gate this collapsed silently; now it must fail as a genuine conflict.
+        ri = [
+            _var_row(
+                colname="ReCol",
+                cvid=9501,
+                var_id=950,
+                varname="ReVar",
+                year="2020",
+                regver_id=950,
+                data_length="3",
+            ),
+            _var_row(
+                colname="ReCol",
+                cvid=9502,
+                var_id=950,
+                varname="ReVar",
+                year="2020",
+                regver_id=951,
+                data_length="3",
+            ),
+        ]
+        vm = _vm_rows(9501, "Coding base", _RECODE_BASE) + _vm_rows(
+            9502, "Coding relabeled", _RECODE_RELABELED
+        )
+        with pytest.raises(RegMetaError) as exc:
+            _build(tmp_path, ri, vm)
+        assert exc.value.code == "coalesce_unresolved_codelivery"
+        assert "ReCol" in exc.value.message
+
+    def test_clean_drift_still_collapses(self, tmp_path: Path) -> None:
+        # var 960, column DriftCol: same setup but the smaller coding is a clean
+        # SUBSET (code 32 absent, none relabeled) — symmetric diff 1 ≤ 2, no shared
+        # code differs → genuine cosmetic drift, still collapses to the larger.
+        ri = [
+            _var_row(
+                colname="DriftCol",
+                cvid=9601,
+                var_id=960,
+                varname="DriftVar",
+                year="2020",
+                regver_id=960,
+                data_length="3",
+            ),
+            _var_row(
+                colname="DriftCol",
+                cvid=9602,
+                var_id=960,
+                varname="DriftVar",
+                year="2020",
+                regver_id=961,
+                data_length="3",
+            ),
+        ]
+        vm = _vm_rows(9601, "Coding full", _DRIFT_FULL) + _vm_rows(
+            9602, "Coding minus", _DRIFT_MINUS_ONE
+        )
+        conn = _build(tmp_path, ri, vm)
+        try:
+            rows = conn.execute(
+                "SELECT DISTINCT value_set_id FROM variable_state "
+                "WHERE delivery_column_name = 'DriftCol' AND value_set_id IS NOT NULL"
+            ).fetchall()
+        finally:
+            conn.close()
+        # Collapsed to exactly one value set (the larger, 3-code coding).
+        assert len(rows) == 1
+
+    def test_case_only_relabel_still_collapses(self, tmp_path: Path) -> None:
+        # var 970, column CaseCol: identical code set, one code differs ONLY by
+        # case ('Malmö' vs 'MALMÖ') — the FodelseLandNamn 'Makedonien'/'MAKEDONIEN'
+        # pattern. Normalized labels match → not a meaningful re-coding → still
+        # collapses (cosmetic), so a cosmetic case-normalization isn't a conflict.
+        case_a = [("30", "Stockholm"), ("31", "Göteborg"), ("32", "Malmö")]
+        case_b = [("30", "Stockholm"), ("31", "Göteborg"), ("32", "MALMÖ")]
+        ri = [
+            _var_row(
+                colname="CaseCol",
+                cvid=9701,
+                var_id=970,
+                varname="CaseVar",
+                year="2020",
+                regver_id=970,
+                data_length="3",
+            ),
+            _var_row(
+                colname="CaseCol",
+                cvid=9702,
+                var_id=970,
+                varname="CaseVar",
+                year="2020",
+                regver_id=971,
+                data_length="3",
+            ),
+        ]
+        vm = _vm_rows(9701, "Coding cased", case_a) + _vm_rows(
+            9702, "Coding upper", case_b
+        )
+        conn = _build(tmp_path, ri, vm)
+        try:
+            rows = conn.execute(
+                "SELECT DISTINCT value_set_id FROM variable_state "
+                "WHERE delivery_column_name = 'CaseCol' AND value_set_id IS NOT NULL"
+            ).fetchall()
+        finally:
+            conn.close()
+        assert len(rows) == 1
+
+
+class TestExtendsLater:
+    """Sequential re-coding whose INTRODUCTION year ties at supersession: the
+    coding whose timeline reaches a later period (max regver_max) is the modern
+    one and wins the contested transition year — no curation pin needed. Mirrors
+    the political-bloc series (plain → '…2009' → '…2014') and Avlopp's FoB75 coding
+    that carries forward."""
+
+    def test_later_extending_coding_wins(self, tmp_path: Path) -> None:
+        # column ExtCol: OLD coding observed in 2020 only; MODERN coding observed
+        # 2020-2022 (distinct, non-cosmetic codes → won't merge). Both introduced
+        # at 2020 (regver_min ties), but MODERN extends to 2022 → it wins 2020 and
+        # carries 2021-2022, OLD is dropped. The build resolves (no conflict).
+        ri = [
+            _var_row(
+                colname="ExtCol",
+                cvid=9801,
+                var_id=980,
+                varname="ExtVar",
+                year="2020",
+                regver_id=980,
+                data_length="3",
+            ),
+        ]
+        ri += [
+            _var_row(
+                colname="ExtCol",
+                cvid=9810 + i,
+                var_id=980,
+                varname="ExtVar",
+                year=str(y),
+                regver_id=981 + i,
+                data_length="3",
+            )
+            for i, y in enumerate((2020, 2021, 2022))
+        ]
+        vm = _vm_rows(9801, "Coding old", _CODING_A)
+        for i in range(3):
+            vm += _vm_rows(9810 + i, "Coding modern", _CODING_B)
+
+        conn = _build(tmp_path, ri, vm)
+        try:
+            vsids = [
+                r[0]
+                for r in conn.execute(
+                    "SELECT DISTINCT value_set_id FROM variable_state "
+                    "WHERE delivery_column_name = 'ExtCol' AND value_set_id IS NOT NULL"
+                )
+            ]
+            codes = {
+                r[0]
+                for r in conn.execute(
+                    "SELECT vc.code FROM value_set_member vsm "
+                    "JOIN value_code vc ON vc.code_id = vsm.code_id "
+                    "WHERE vsm.value_set_id = ?",
+                    (vsids[0],),
+                )
+            }
+        finally:
+            conn.close()
+        # Exactly the MODERN coding survives (its codes, not the old coding's).
+        assert len(vsids) == 1
+        assert codes == {c for c, _ in _CODING_B}

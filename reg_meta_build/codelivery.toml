@@ -180,3 +180,44 @@ var_id = 45133
 column = "skolenhetskod"
 keep_rule = "latest_year"
 note = "skolenhetskod distans: latest '15 oktober YYYY' register snapshot per year."
+
+# ══ RELABEL co-deliveries surfaced by the §5.7 label-aware cosmetic gate ══
+# These columns carry two CO-EXTENSIVE codings (same period span → no recency
+# winner) that share codes with DIFFERING labels — a genuine re-coding the
+# cosmetic rule would otherwise silently keep-larger. The gate routes them here
+# for an explicit pick. (Sequential vintages where one coding extends to a later
+# period — e.g. the reg164 'Blocksympati'→'…2009'→'…2014' bloc series — resolve
+# deterministically via the EXTENDS-LATER rule and need no pin.)
+
+# FoB75 sanitation — UpplForm's twin: household vs dwelling unit on one column.
+# reg32 variant 82 'Lägenhet och hushåll' / 1975 carries AvloppFoB75Hh ('Avlopp
+# finns i huset', 4) and AvloppFoB75Lgh ('…i lägenheten', 4) — co-extensive, a
+# pure unit relabel (neither a superset). Keep Hh: the variable definition is
+# "Anger om avlopp finns i huset" (household/house framing).
+[[resolve]]                       # FoB75 household vs dwelling relabel (cf. UpplForm)
+register_id = 32
+var_id = 42551
+column = "Avlopp"
+keep = "AvloppFoB75Hh"
+note = "FoB75 Avlopp 1975 (variant 82 'Lägenhet och hushåll'): household 'i huset' (Hh) vs dwelling 'i lägenheten' (Lgh), co-extensive relabel. Keep Hh — matches the variable definition 'om avlopp finns i huset'."
+
+[[resolve]]                       # ULF non-response coding relabel
+register_id = 237
+var_id = 10801
+column = "SY0373"
+keep = "Ja nej 2"
+note = "ULF 'Förvärvsarbete heltid' SY0373 1975-1979: 'Ja nej 2' (8 Vet ej / 9 Vill ej svara alt. indirekt intervju) vs 'Ja nej 3' (9 Vill ej svara / 0 Värde saknas) — co-extensive, differ only in non-response codes. Keep 'Ja nej 2'."
+
+[[resolve]]                       # constituency renumbering — keep the _mandat (canonical) numbering
+register_id = 243
+var_id = 14775
+column = "RI_valkretskod"
+keep = "Riksdagsvalkrets fram till 1994_mandat"
+note = "Riksdagsvalkrets RI_valkretskod 1982/1988: two pre-1994 codings renumber the constituencies (Kristianstads=11 base vs =14 in _mandat). Keep '…_mandat' — canonical spelling 'Riksdagsvalkrets' + mandate-allocation numbering."
+
+[[resolve]]                       # lägenhet- vs byggnad-level reason — keep dwelling-level
+register_id = 276
+var_id = 19639
+column = "NYREGORS"
+keep = "Nyregistreringsorsak3"
+note = "Nyregistreringsorsak NYREGORS 2015-2025: dwelling-level 'Nyregistreringsorsak3' (Nybyggd/Befintlig lägenhet, 4) vs building-level 'Nyregistreringsorsak 2' (byggnad/bygglov, 6), co-delivered every year. Keep the lägenhet-level coding."
