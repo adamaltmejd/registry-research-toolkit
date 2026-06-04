@@ -25,7 +25,7 @@ import calendar
 import re
 import zipfile
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -1001,6 +1001,74 @@ def _widest_valid_to(a: str | None, b: str | None) -> str | None:
     return max(a, b)
 
 
+_SEG_LO = date(1, 1, 1)  # open-start sentinel (−∞)
+_SEG_HI = date(9999, 12, 31)  # open-end sentinel (+∞)
+
+
+def _segment_windowed_codes(
+    windowed: list[tuple[str | None, str | None, IRValueCode]],
+) -> list[tuple[str | None, str | None, list[IRValueCode]]]:
+    """Partition heterogeneous per-code validity windows into NON-OVERLAPPING
+    period segments (sweep-line), each carrying the UNION of codes live across its
+    full extent — so a period resolves to exactly ONE value set on the column
+    (§5.7 invariant). This is the deferred "Path B" per-period refinement: it
+    replaces bucketing codes by their EXACT window (which produced overlapping
+    value sets when a wide/open code coexisted with narrower sub-windows, e.g.
+    SOS ALKOHOL `'0'`[1987–] over `'1'`[1987–96]/[1997–]).
+
+    Windows are closed ISO-date intervals; `None` bounds are open (−∞ / +∞). Cuts
+    fall at every window start and the day AFTER every window end. Adjacent
+    segments with an identical `(code, label)` union are merged (RLE) so an
+    unchanged codelist doesn't fragment. Returns `(valid_from, valid_to, codes)`
+    in chronological order; `None` bounds stay open.
+    """
+    if not windowed:
+        return []
+
+    def _lo(s: str | None) -> date:
+        return date.fromisoformat(s) if s else _SEG_LO
+
+    def _hi(s: str | None) -> date:
+        return date.fromisoformat(s) if s else _SEG_HI
+
+    intervals = [(_lo(vf), _hi(vt), code) for vf, vt, code in windowed]
+    # Segment starts: every window start + the day after every (closed) window end.
+    cuts: set[date] = set()
+    for lo, hi, _ in intervals:
+        cuts.add(lo)
+        if hi < _SEG_HI:
+            cuts.add(hi + timedelta(days=1))
+    starts = sorted(cuts)
+
+    # raw[(lo, hi, codes)] — non-overlapping; skip stretches no code covers.
+    raw: list[tuple[date, date, list[IRValueCode]]] = []
+    for i, seg_lo in enumerate(starts):
+        seg_hi = starts[i + 1] - timedelta(days=1) if i + 1 < len(starts) else _SEG_HI
+        live = [c for lo, hi, c in intervals if lo <= seg_lo and seg_hi <= hi]
+        if live:
+            raw.append((seg_lo, seg_hi, live))
+
+    # RLE-merge CONTIGUOUS segments whose (code, label) union is identical.
+    merged: list[tuple[date, date, list[IRValueCode], frozenset[tuple[str, str]]]] = []
+    for seg_lo, seg_hi, live in raw:
+        sig = frozenset((c.code, c.label) for c in live)
+        if merged:
+            plo, phi, plive, psig = merged[-1]
+            if psig == sig and phi < _SEG_HI and seg_lo == phi + timedelta(days=1):
+                merged[-1] = (plo, seg_hi, plive, sig)
+                continue
+        merged.append((seg_lo, seg_hi, live, sig))
+
+    return [
+        (
+            None if lo == _SEG_LO else lo.isoformat(),
+            None if hi == _SEG_HI else hi.isoformat(),
+            live,
+        )
+        for lo, hi, live, _sig in merged
+    ]
+
+
 class SOSAdapter:
     """Socialstyrelsen source adapter (IRAdapter).
 
@@ -1640,15 +1708,20 @@ class SOSAdapter:
         deldat_bound: tuple[str | None, str | None],
         deldat_dropped: list[bool],
     ) -> Iterator[IRObject]:
-        """Standard value-set DRIFT: group codes by their tidsperiod-windowed
-        validity (3-way intersect with var/deldat); one state per distinct
-        non-empty windowed code-subset.
+        """Standard value-set DRIFT across per-code validity windows.
+
+        SOS codes can carry HETEROGENEOUS, overlapping tidsperiod windows (a
+        wide/open code coexisting with narrower sub-windows). Bucketing by EXACT
+        window then produced OVERLAPPING value sets on one column — a period
+        resolving to >1 value set (§5.7 invariant violation). Instead, sweep-line
+        the 3-way-intersected windows into NON-OVERLAPPING period segments
+        (`_segment_windowed_codes`), each carrying the union of codes live across
+        it (the "Path B" per-period refinement), and emit one state per segment.
 
         P2#2: the variable bound + the code tidsperiod are authoritative; the
         deldat window is advisory and yields when it would empty the window.
         """
-        # bucket: (state_from, state_to) -> list[IRValueCode]
-        buckets: dict[tuple[str | None, str | None], list[IRValueCode]] = {}
+        windowed: list[tuple[str | None, str | None, IRValueCode]] = []
         for r in kodlista.rows:
             cf, ct = _parse_tidsperiod(r.tidsperiod)
             window, dropped = _intersect_advisory_deldat(
@@ -1658,17 +1731,22 @@ class SOSAdapter:
                 continue
             if dropped:
                 deldat_dropped.append(True)
-            buckets.setdefault(window, []).append(
-                IRValueCode(
-                    code_id=0,
-                    value_set_id=0,
-                    code=r.kod,
-                    label=r.beskrivning or "",
-                    valid_from=window[0],
-                    valid_to=window[1],
+            windowed.append(
+                (
+                    window[0],
+                    window[1],
+                    IRValueCode(
+                        code_id=0,
+                        value_set_id=0,
+                        code=r.kod,
+                        label=r.beskrivning or "",
+                        valid_from=window[0],
+                        valid_to=window[1],
+                    ),
                 )
             )
-        if not buckets:
+        segments = _segment_windowed_codes(windowed)
+        if not segments:
             # No code survived windowing — emit a code-less state over the
             # variable window (deldat advisory) so the variable still has a state.
             window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
@@ -1689,20 +1767,22 @@ class SOSAdapter:
                 value_set_version_label=None,
             )
             return
-        # Multiple windows fan into multiple states. value_set_version_label
-        # discriminates same-valid_from states so the unique index bites.
-        for window in sorted(buckets, key=lambda w: (w[0] or "", w[1] or "~")):
-            codes = buckets[window]
+        # Segments are non-overlapping, so each has a distinct valid_from — the
+        # value_set_version_label (the segment range) only disambiguates a
+        # same-valid_from collision ACROSS members of a merged variable; the
+        # unique index keys on it.
+        multi = len(segments) > 1
+        for seg_from, seg_to, codes in segments:
             value_set_id = self._ensure_value_set(codes)
-            label = "" if len(buckets) == 1 else f"{window[0] or ''}/{window[1] or ''}"
+            label = "" if not multi else f"{seg_from or ''}/{seg_to or ''}"
             yield IRVariableState(
                 state_id=self._state_id(
-                    abbrev, variable_id, variant_id, window[0], label
+                    abbrev, variable_id, variant_id, seg_from, label
                 ),
                 variable_id=variable_id,
                 register_variant_id=variant_id,
-                valid_from=window[0] or _VALID_FROM_UNKNOWN,
-                valid_to=window[1],
+                valid_from=seg_from or _VALID_FROM_UNKNOWN,
+                valid_to=seg_to,
                 data_type=_norm_data_type(v.data_type),
                 data_length=None,
                 delivery_column_name=col,
