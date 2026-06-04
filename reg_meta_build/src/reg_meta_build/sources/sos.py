@@ -1002,7 +1002,11 @@ def _widest_valid_to(a: str | None, b: str | None) -> str | None:
 
 
 _SEG_LO = date(1, 1, 1)  # open-start sentinel (−∞)
-_SEG_HI = date(9999, 12, 31)  # open-end sentinel (+∞)
+# Open-end sentinel (+∞). A real closed window literally ending 9999-12-31 would
+# be conflated with open-ended and emitted as `None`, but `_parse_tidsperiod`
+# never produces a literal 9999 bound (open windows yield `None`), so this only
+# bites a pathological year-9999 tidsperiod — accepted.
+_SEG_HI = date(9999, 12, 31)
 
 
 def _segment_windowed_codes(
@@ -1040,11 +1044,22 @@ def _segment_windowed_codes(
             cuts.add(hi + timedelta(days=1))
     starts = sorted(cuts)
 
-    # raw[(lo, hi, codes)] — non-overlapping; skip stretches no code covers.
+    # raw: list of (lo, hi, codes) — non-overlapping; skip stretches no code
+    # covers. The per-segment rescan of `intervals` is O(segments × intervals),
+    # which is negligible at SOS kodlista sizes. Each segment's live codes are
+    # DEDUPED by (code, label): two identical rows with overlapping tidsperiod
+    # windows would otherwise both land here, and `_ensure_value_set` hashes the
+    # pair list while `value_set_member`'s PK collapses the duplicate — desyncing
+    # `member_hash` from the stored member set and breaking content-share.
     raw: list[tuple[date, date, list[IRValueCode]]] = []
     for i, seg_lo in enumerate(starts):
         seg_hi = starts[i + 1] - timedelta(days=1) if i + 1 < len(starts) else _SEG_HI
-        live = [c for lo, hi, c in intervals if lo <= seg_lo and seg_hi <= hi]
+        seen: set[tuple[str, str]] = set()
+        live: list[IRValueCode] = []
+        for lo, hi, c in intervals:
+            if lo <= seg_lo and seg_hi <= hi and (c.code, c.label) not in seen:
+                seen.add((c.code, c.label))
+                live.append(c)
         if live:
             raw.append((seg_lo, seg_hi, live))
 
@@ -1720,6 +1735,19 @@ class SOSAdapter:
 
         P2#2: the variable bound + the code tidsperiod are authoritative; the
         deldat window is advisory and yields when it would empty the window.
+
+        SCOPE: segmentation guarantees non-overlap WITHIN this call (one member).
+        `_emit_states` calls it once per member of a merged variable, and two
+        members can share a (variant, column). Cross-member overlap with DISTINCT
+        value sets is not structurally blocked here, but cannot arise in practice:
+        all members of a merged variable share THIS `kodlista` (keyed by
+        variable_hint), so any windows they share resolve to the same segment +
+        value_set + `valid_from` → an EXACT `state_id` collision that
+        `_emit_states` reconciles (widest `valid_to`). Members differ only by
+        `var_bound`/deldat window, which can shrink or shift a member's coverage
+        but never re-codes a shared period — so two members never emit DISTINCT
+        value sets that overlap on one column. (The §5.7 build invariant is the
+        backstop if a future merged shape violates this.)
         """
         windowed: list[tuple[str | None, str | None, IRValueCode]] = []
         for r in kodlista.rows:
