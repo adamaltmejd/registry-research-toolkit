@@ -1344,6 +1344,20 @@ class TestSegmentWindowedCodes:
         assert len(segs) == 1
         assert (segs[0][0], segs[0][1]) == ("2000-01-01", "2005-12-31")
 
+    def test_dedups_identical_codes_in_one_segment(self) -> None:
+        # Two identical (code, label) rows with overlapping (here identical)
+        # windows must collapse to ONE live code in the segment — else the
+        # value_set member_hash (hashed from the code list) desyncs from the
+        # stored value_set_member set (PK-collapsed) and content-share breaks.
+        segs = _segment_windowed_codes(
+            [
+                _wc("1", "Ett", "2000-01-01", "2005-12-31"),
+                _wc("1", "Ett", "2000-01-01", "2005-12-31"),
+            ]
+        )
+        assert len(segs) == 1
+        assert [(c.code, c.label) for c in segs[0][2]] == [("1", "Ett")]
+
     def test_gap_is_not_merged_across_uncovered_stretch(self) -> None:
         # Identical union on both sides of an UNCOVERED stretch must stay two
         # segments (the catalog has no coding for the gap).
