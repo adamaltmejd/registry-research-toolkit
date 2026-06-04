@@ -2,34 +2,49 @@
 #
 # When ONE delivery column carries TWO distinct value-set codings in the same
 # period and the SCB coalescer's deterministic cascade (sources/scb.py) cannot
-# resolve it, build-db --validate FAILS. Each entry below pins which coding the
-# column KEEPS, by its `value_set_version_label` (matched stripped). The cascade
-# already handles the RECURRING families (preliminär/final, sub-annual HT/VT and
-# dated snapshots, calendar vs academic year); only genuine ONE-OFF re-codings
-# land here.
+# resolve it, the build FAILS. Each entry below pins which coding the column
+# KEEPS. The cascade already handles the RECURRING families (preliminär/final,
+# sub-annual HT/VT and dated snapshots, calendar vs academic year); only genuine
+# ONE-OFF re-codings land here.
 #
 # Key: (register_id, var_id, column) — stable SCB source ids + the delivery
 # column. `column = ""` for a code-bearing variable with no delivery alias.
-# A `keep` that matches no surviving coding raises `codelivery_pin_stale`.
+# Two label sources, by design: `keep` is matched (stripped) against the EMITTED
+# label — what lands in `variable_state`, the label you see when drafting a pin —
+# because a §5.7 fold/collapse can relabel the raw source label; `keep_rule =
+# "latest_year"` instead reads the 4-digit year out of the RAW source
+# `value_set_version_label`. A pin that resolves no SURVIVING coding leaves the
+# column GENUINE, which FAILS the build: the coalescer raises before shipping any
+# state (--validate re-checks as a redundant backstop). So a build that completes
+# is proof every pin here still matches a live coding.
 #
-# DRAFT — proposed picks default to the fuller / newer / contemporaneous coding;
-# entries marked REVIEW are domain judgment calls awaiting maintainer sign-off.
+# REVIEWED (phase 2 sign-off): the picks below were maintainer defaults (fuller /
+# newer / contemporaneous coding); each has now been checked against the backing
+# SCB codings (codes, sizes, sub/superset, classification vintage). One case —
+# UpplForm (reg32) — is FLAGGED as a §5.7 SPLIT candidate rather than a genuine
+# re-coding; its pin is a lossless interim until the split lands (see its note).
 
-# ── branschgrupp (SNI92 vs SNI2007) — pick the standard contemporaneous to the
-#    period: Br92 (SNI92) for the 1998–1999 window, Br07 (SNI2007) for 2009–2010.
-[[resolve]]                       # REVIEW: SNI92 vs SNI2007 vintage choice
+# ── branschgrupp (SNI92 vs SNI2007): keep the standard CONTEMPORANEOUS to the
+#    period. The two codings reuse the same integer codes for DIFFERENT industries
+#    (code 100 = "Kolgruvor" in SNI92 vs "Livsmedelsframställning" in SNI2007), so
+#    a period's delivered codes only mean one thing under its own vintage. Keeping
+#    Br07 throughout would MISLABEL the 1998–1999 data — SNI2007 did not exist
+#    before 2008. Cross-vintage comparison is a downstream SNI92↔SNI2007 crosswalk,
+#    not a catalog relabel. (reg187 and reg382 are separate registers/columns, not
+#    one continuous time series.)
+[[resolve]]                       # SNI92 vs SNI2007 — contemporaneous (confirmed)
 register_id = 187
 var_id = 3310
 column = "AL2UndEjU"
 keep = "Br92-kod"
-note = "Konjunkturstatistik, AL2UndEjU 1998-1999: SNI92 is contemporaneous."
+note = "Konjunkturstatistik AL2UndEjU 1998-1999: SNI92 (Br92, 53 codes) is contemporaneous; SNI2007 did not exist yet."
 
-[[resolve]]                       # REVIEW: SNI92 vs SNI2007 vintage choice
+[[resolve]]                       # SNI92 vs SNI2007 — contemporaneous (confirmed)
 register_id = 382
 var_id = 3310
 column = "AL2UndEjU"
 keep = "Br07-kod"
-note = "Produktion inom näringslivet, AL2UndEjU 2009-2010: SNI2007 is contemporaneous."
+note = "Produktion inom näringslivet AL2UndEjU 2009-2010: SNI2007 (Br07, 45 codes) is the operative standard by 2009."
 
 # ── ULF (levnadsförhållanden): prefer the fuller yes/no & education codings ──
 [[resolve]]
@@ -60,12 +75,12 @@ column = "TK0083"
 keep = "Butiksbuss etc"
 note = "ULF TK0083 1978: 'Butiksbuss etc' (5 codes) is the superset."
 
-[[resolve]]                       # REVIEW: two distinct education codings
+[[resolve]]                       # attainment coding vs completion-flag (confirmed)
 register_id = 237
 var_id = 10587
 column = "UT0020"
 keep = "Utbildning 1"
-note = "ULF UT0020 1976: 'Utbildning 1' (11 codes) over 'Fullbordad utbildning' (5)."
+note = "ULF UT0020 1976: 'Utbildning 1' (11 codes) is the substantive educational-attainment coding (Folkskola/Grundskola/.../Gymnasium). 'Fullbordad utbildning' (5: Fullbordade/Avbröt/Okänt) is a thin completion-status flag, not attainment — keep the attainment coding for 'Fullföljd skolutbildning'."
 
 # ── electoral districts: include postal-vote districts (superset) ──
 [[resolve]]
@@ -76,12 +91,12 @@ keep = "Valdistrikt 2006 inkl poströster"
 note = "Valresultat llkkdddd 2006: the 'inkl poströster' superset (6074 vs 5783)."
 
 # ── ownership category: keep the detailed grain (column-less variable) ──
-[[resolve]]                       # REVIEW: detaljerad vs grov is a grain choice
+[[resolve]]                       # detaljerad vs grov grain (confirmed)
 register_id = 198
 var_id = 2187
 column = ""
 keep = "Ägarkategori detaljerad"
-note = "Hyror/nybyggda 2013: 'detaljerad' (9 codes) over 'grov' (3 codes)."
+note = "Hyror/nybyggda: 'detaljerad' (9) and 'grov' (3) are co-existing grains on SEPARATE columns (bygghtyp / bygghtyp2) every year EXCEPT 2013, where both lose their delivery alias and collapse onto the null column. Keep the detailed grain (primary column; superset of grov). Cleaner long-term fix: recover the 2013 column aliases."
 
 # ── institutional unit indexing: newer standard ──
 [[resolve]]
@@ -95,7 +110,9 @@ note = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
 #    2002/2004 + the all-school-forms set 't.o.m. maj 2013'), a different label
 #    pair every year — one `keep` can't cover it. keep_rule keeps, per year, the
 #    coding whose label embeds the latest year (latest SFI vintage; the
-#    all-school-forms 2013 set where it overlaps). ──
+#    all-school-forms 2013 set where it overlaps). The few intra-year ties
+#    (e.g. 2012/2013 SFI pairs) are broken upstream by recency / cosmetic-drift,
+#    so the build resolves green. ──
 [[resolve]]
 register_id = 248
 var_id = 104
@@ -103,13 +120,25 @@ column = "Skolkod"
 keep_rule = "latest_year"
 note = "Komvux SFI Skolkod: latest-vintage SFI / all-school-forms coding per year."
 
-# ── FoB75 tenure form: keep the fuller dwelling coding ──
-[[resolve]]                       # REVIEW: household (Hh) vs dwelling (Lgh) coding
+# ── FoB75 tenure form — FLAGGED: SPLIT candidate, not a one-off re-coding ──
+#    'UpplFormFoB75Hh' (household, 5 codes) and 'UpplFormFoB75Lgh' (dwelling, 12)
+#    share the four tenure codes (0 äger / 1 bostadsrätt / 3 hyres / 4 annat) but
+#    differ in UNIT and UNIVERSE: the dwelling coding adds occupancy states (5–9:
+#    under reparation, ledig till uthyrning, disponeras av fastighetsägaren,
+#    utrymd inför rivning, upplåten utan mantalsskriven boende) that have NO
+#    household analogue — an empty dwelling has no household. FoB75 tabulated
+#    tenure for BOTH hushåll and bostadslägenheter; these are two concepts. The
+#    correct fix is a §5.7 SPLIT into sibling variables (household tenure /
+#    dwelling tenure+occupancy), a build change out of scope for this TOML. Until
+#    then keep the Lgh superset as a LOSSLESS interim (it contains all four
+#    household tenure codes), so --validate stays green. MAINTAINER: split, then
+#    drop this pin.
+[[resolve]]                       # FLAGGED: split candidate (interim pin keeps superset)
 register_id = 32
 var_id = 4472
 column = "UpplForm"
 keep = "UpplFormFoB75Lgh"
-note = "FoB75 UpplForm 1975: dwelling coding (12 codes) over household (5)."
+note = "FoB75 UpplForm 1975: interim — keep dwelling coding (12, superset of household's 5). SPLIT candidate: Hh vs Lgh are distinct units/universes (see comment); recommend splitting into sibling variables rather than pinning."
 
 # ── SUN2020 utbildningsinriktning (classification id=8): the two 4-pos codings
 #    differ by exactly one code, the '----' missing-value placeholder. Keep the
@@ -123,12 +152,12 @@ keep = "4pos"
 note = "SUN2020Inr classification: '4pos' (377, canonical) over '4pos-1' (378, adds '----')."
 
 # ── R&D institution id: keep the broader institution coding ──
-[[resolve]]                       # REVIEW: institution coding choice
+[[resolve]]                       # institution codelist — strict superset (confirmed)
 register_id = 182
 var_id = 3
 column = "ID_INST"
 keep = "Universitet/högskolor"
-note = "FoU ID_INST 2023: 'Universitet/högskolor' (129) over 'Högskolekod 2017' (41)."
+note = "FoU ID_INST 2023: 'Universitet/högskolor' (129) is a strict SUPERSET of the official 'Högskolekod 2017' (41) — every standard lärosäte code plus historical/extra institutions. Keep the superset so no delivered code is unlabeled."
 
 # ── distance-school unit register: RECURRING yearly '15 oktober YYYY' snapshots
 #    (codes are school-unit ids; the value SET is a dated register capture). Keep
