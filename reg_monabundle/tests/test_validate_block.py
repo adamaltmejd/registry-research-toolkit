@@ -20,12 +20,12 @@ def test_accepts_none():
 
 
 def test_accepts_well_formed_options():
-    validate_block({"column_options": {"scb/test/lopnr": {"suppress_k": 25}}})
+    validate_block({"binding_options": {"scb/test/lopnr": {"suppress_k": 25}}})
 
 
 def test_rejects_non_dict_block():
     with pytest.raises(ValueError, match="must be an object"):
-        validate_block(["column_options"])
+        validate_block(["binding_options"])
 
 
 def test_rejects_unknown_top_level_key():
@@ -33,19 +33,19 @@ def test_rejects_unknown_top_level_key():
         validate_block({"unknown": {}})
 
 
-def test_accepts_missing_column_options():
-    # The block is allowed to be {} or {column_options absent}.
+def test_accepts_missing_binding_options():
+    # The block is allowed to be {} or {binding_options absent}.
     validate_block({})
 
 
-def test_rejects_non_dict_column_options():
-    with pytest.raises(ValueError, match="column_options must be an object"):
-        validate_block({"column_options": ["scb/test/lopnr"]})
+def test_rejects_non_dict_binding_options():
+    with pytest.raises(ValueError, match="binding_options must be an object"):
+        validate_block({"binding_options": ["scb/test/lopnr"]})
 
 
 def test_rejects_non_fqid_key():
     with pytest.raises(ValueError, match="binding FQID"):
-        validate_block({"column_options": {"LopNr": {"suppress_k": 25}}})
+        validate_block({"binding_options": {"LopNr": {"suppress_k": 25}}})
 
 
 @pytest.mark.parametrize(
@@ -72,19 +72,19 @@ def test_rejects_non_fqid_key():
 )
 def test_rejects_malformed_fqid_variants(bad_key):
     with pytest.raises(ValueError, match="binding FQID"):
-        validate_block({"column_options": {bad_key: {"suppress_k": 25}}})
+        validate_block({"binding_options": {bad_key: {"suppress_k": 25}}})
 
 
 def test_rejects_non_dict_per_column_opts():
     with pytest.raises(ValueError, match="must be an object"):
-        validate_block({"column_options": {"scb/test/lopnr": ["suppress_k"]}})
+        validate_block({"binding_options": {"scb/test/lopnr": ["suppress_k"]}})
 
 
 def test_rejects_unknown_option():
     with pytest.raises(ValueError, match="unknown option"):
         validate_block(
             {
-                "column_options": {
+                "binding_options": {
                     "scb/test/lopnr": {"unknown_opt": 1},
                 }
             }
@@ -95,7 +95,7 @@ def test_rejects_suppress_k_below_floor():
     with pytest.raises(ValueError, match="below the global minimum"):
         validate_block(
             {
-                "column_options": {
+                "binding_options": {
                     "scb/test/lopnr": {"suppress_k": 1},
                 }
             }
@@ -107,7 +107,7 @@ def test_rejects_bool_suppress_k():
     with pytest.raises(ValueError, match="must be an int"):
         validate_block(
             {
-                "column_options": {
+                "binding_options": {
                     "scb/test/lopnr": {"suppress_k": True},
                 }
             }
@@ -118,7 +118,7 @@ def test_rejects_non_int_suppress_k():
     with pytest.raises(ValueError, match="must be an int"):
         validate_block(
             {
-                "column_options": {
+                "binding_options": {
                     "scb/test/lopnr": {"suppress_k": "25"},
                 }
             }
@@ -128,7 +128,7 @@ def test_rejects_non_int_suppress_k():
 def test_accepts_suppress_k_at_floor():
     validate_block(
         {
-            "column_options": {
+            "binding_options": {
                 "scb/test/lopnr": {"suppress_k": SUPPRESS_K},
             }
         }

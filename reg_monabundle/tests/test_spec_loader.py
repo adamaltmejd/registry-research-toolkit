@@ -6,7 +6,7 @@ namespaced-block validator, and the cross-block referential checks, then
 converts a validated Pydantic ``ProjectData`` into the stdlib
 ``LoadedSpec`` the bundle runtime consumes.
 
-The structural / block / column_options validation tests live here (not
+The structural / block / binding_options validation tests live here (not
 in ``test_spec.py``) because post-A3.4 the bundle runtime
 (``loadedspec_from_dict``) does NOT validate — it trusts already-validated
 input. ``validate_project_data`` is the only place those checks run.
@@ -17,11 +17,11 @@ from __future__ import annotations
 import pytest
 from _project_data_fixtures import make_project_data
 from reg_monabundle.build.spec_loader import (
+    BINDING_OPTIONS_ORPHAN_CODE,
     BLOCK_INVALID_CODE,
-    COLUMN_OPTIONS_ORPHAN_CODE,
     SUPPRESS_K_NON_CATEGORICAL_CODE,
+    binding_options_issues,
     block_issue,
-    column_options_issues,
     project_data_to_loadedspec,
     validate_project_data,
 )
@@ -71,7 +71,7 @@ def test_validate_project_data_accepts_valid_spec():
 # reg_monabundle/tests/test_validate_block.py alongside the validator
 # (§15 step 5 phase 1 — owner-validates-its-block). The tests here
 # exercise the namespaced-block validator routing + the cross-block
-# referential checks (``_validate_column_options_against_columns``) that
+# referential checks (``_validate_binding_options_against_columns``) that
 # need the FQID-typed bindings — both run at the build-time gate.
 
 
@@ -101,7 +101,7 @@ def test_validate_project_data_invokes_namespaced_block_validator():
         validate_project_data(payload)
 
 
-def test_column_options_rejects_orphan_fqid_not_matching_any_column():
+def test_binding_options_rejects_orphan_fqid_not_matching_any_column():
     """A well-formed FQID that doesn't match any binding.variable in
     sources silently no-ops at lookup time without this check. Pin the
     referential-integrity guard so a typo surfaces at the build gate."""
@@ -122,7 +122,7 @@ def test_column_options_rejects_orphan_fqid_not_matching_any_column():
         ],
         reg_monabundle={
             # FQID is well-formed but no column declares this name.
-            "column_options": {
+            "binding_options": {
                 "scb/test/typo_here": {"suppress_k": 25},
             }
         },
@@ -131,7 +131,7 @@ def test_column_options_rejects_orphan_fqid_not_matching_any_column():
         validate_project_data(payload)
 
 
-def test_column_options_accepts_matching_fqid():
+def test_binding_options_accepts_matching_fqid():
     """Sanity: the referential check doesn't reject a key that does
     match a declared column."""
     payload = make_project_data(
@@ -149,7 +149,7 @@ def test_column_options_accepts_matching_fqid():
             }
         ],
         reg_monabundle={
-            "column_options": {
+            "binding_options": {
                 "scb/test/kon": {"suppress_k": 25},
             }
         },
@@ -193,7 +193,7 @@ def test_suppress_k_rejected_when_fqid_non_categorical_in_any_source():
                 ],
             },
         ],
-        reg_monabundle={"column_options": {"scb/test/foo": {"suppress_k": 25}}},
+        reg_monabundle={"binding_options": {"scb/test/foo": {"suppress_k": 25}}},
     )
     with pytest.raises(ValueError, match="only honored on categorical"):
         validate_project_data(payload)
@@ -208,7 +208,7 @@ def test_suppress_k_rejected_when_fqid_non_categorical_in_any_source():
         ({"type": "opaque"}, "namn"),
     ],
 )
-def test_column_options_rejects_suppress_k_on_non_categorical(col, suffix):
+def test_binding_options_rejects_suppress_k_on_non_categorical(col, suffix):
     """``suppress_k`` only feeds the categorical frequency cutoff in
     summarize_column; the id/numeric/date/opaque branches ignore it,
     so accepting it there is a silent no-op. Reject at the build gate and
@@ -224,7 +224,7 @@ def test_column_options_rejects_suppress_k_on_non_categorical(col, suffix):
                 ],
             }
         ],
-        reg_monabundle={"column_options": {fqid: {"suppress_k": 25}}},
+        reg_monabundle={"binding_options": {fqid: {"suppress_k": 25}}},
     )
     with pytest.raises(ValueError, match="only honored on categorical"):
         validate_project_data(payload)
@@ -258,7 +258,7 @@ def test_project_data_to_loadedspec_round_trips_with_loadedspec_from_dict():
                 ],
             }
         ],
-        reg_monabundle={"column_options": {"scb/test/kon": {"suppress_k": 25}}},
+        reg_monabundle={"binding_options": {"scb/test/kon": {"suppress_k": 25}}},
     )
     pd = validate_project_data(payload)
     converted = project_data_to_loadedspec(pd)
@@ -336,7 +336,7 @@ def test_project_data_to_loadedspec_round_trips_panels():
 
 def _block_validated_project_data(reg_monabundle):
     """A structurally-valid ProjectData carrying ``reg_monabundle``, built
-    WITHOUT routing through the block/column_options gate (so the issue
+    WITHOUT routing through the block/binding_options gate (so the issue
     forms can be exercised directly on a payload that would otherwise raise).
     """
     payload = make_project_data(
@@ -355,24 +355,24 @@ def _block_validated_project_data(reg_monabundle):
     return reg_schema.ProjectData.model_validate(payload)
 
 
-def test_column_options_issues_clean_block_returns_no_issues():
-    pd = _block_validated_project_data({"column_options": {"scb/test/kon": {}}})
-    assert column_options_issues(pd.reg_monabundle, pd) == []
+def test_binding_options_issues_clean_block_returns_no_issues():
+    pd = _block_validated_project_data({"binding_options": {"scb/test/kon": {}}})
+    assert binding_options_issues(pd.reg_monabundle, pd) == []
 
 
-def test_column_options_issues_flags_orphan_key():
+def test_binding_options_issues_flags_orphan_key():
     pd = _block_validated_project_data(
-        {"column_options": {"scb/test/typo_here": {"suppress_k": 25}}}
+        {"binding_options": {"scb/test/typo_here": {"suppress_k": 25}}}
     )
-    issues = column_options_issues(pd.reg_monabundle, pd)
-    assert [i.code for i in issues] == [COLUMN_OPTIONS_ORPHAN_CODE]
+    issues = binding_options_issues(pd.reg_monabundle, pd)
+    assert [i.code for i in issues] == [BINDING_OPTIONS_ORPHAN_CODE]
     issue = issues[0]
     assert issue.level == "error"
-    assert issue.path == "/reg_monabundle/column_options"
+    assert issue.path == "/reg_monabundle/binding_options"
     assert "don't match any binding FQID" in issue.message
 
 
-def test_column_options_issues_flags_suppress_k_on_non_categorical():
+def test_binding_options_issues_flags_suppress_k_on_non_categorical():
     payload = make_project_data(
         sources=[
             {
@@ -388,37 +388,39 @@ def test_column_options_issues_flags_suppress_k_on_non_categorical():
             }
         ],
     )
-    payload["reg_monabundle"] = {"column_options": {"scb/test/ar": {"suppress_k": 25}}}
+    payload["reg_monabundle"] = {"binding_options": {"scb/test/ar": {"suppress_k": 25}}}
     pd = reg_schema.ProjectData.model_validate(payload)
-    issues = column_options_issues(pd.reg_monabundle, pd)
+    issues = binding_options_issues(pd.reg_monabundle, pd)
     assert [i.code for i in issues] == [SUPPRESS_K_NON_CATEGORICAL_CODE]
     issue = issues[0]
     assert issue.level == "error"
     # The FQID map key (scb/test/ar) is RFC 6901-escaped: `/` → `~1`, so the
-    # pointer resolves to the single `column_options["scb/test/ar"]` key.
-    assert issue.path == "/reg_monabundle/column_options/scb~1test~1ar/suppress_k"
+    # pointer resolves to the single `binding_options["scb/test/ar"]` key.
+    assert issue.path == "/reg_monabundle/binding_options/scb~1test~1ar/suppress_k"
     assert "only honored on categorical" in issue.message
 
 
-def test_column_options_issues_no_block_returns_no_issues():
+def test_binding_options_issues_no_block_returns_no_issues():
     pd = _block_validated_project_data(None)
-    assert column_options_issues(None, pd) == []
+    assert binding_options_issues(None, pd) == []
 
 
-def test_column_options_issues_skips_non_dict_opts_without_raising():
+def test_binding_options_issues_skips_non_dict_opts_without_raising():
     """A non-dict per-FQID opts value (here ``1`` on a BOUND FQID) is malformed —
-    ``validate_block``/``block_issue`` flags it. ``column_options_issues`` must
+    ``validate_block``/``block_issue`` flags it. ``binding_options_issues`` must
     skip it defensively, not evaluate ``"suppress_k" not in 1`` → TypeError. The
     raising gate fail-fasts on the bad block first, but reg_webapp's
     issue-accumulating /validate runs this AFTER, so the skip is load-bearing."""
-    pd = _block_validated_project_data({"column_options": {"scb/test/kon": {}}})
+    pd = _block_validated_project_data({"binding_options": {"scb/test/kon": {}}})
     # Hand a deliberately malformed block (a non-dict opts) past the block gate.
-    issues = column_options_issues({"column_options": {"scb/test/kon": 1}}, pd)
+    issues = binding_options_issues({"binding_options": {"scb/test/kon": 1}}, pd)
     assert issues == []
 
 
 def test_block_issue_clean_block_returns_none():
-    assert block_issue({"column_options": {"scb/test/kon": {"suppress_k": 25}}}) is None
+    assert (
+        block_issue({"binding_options": {"scb/test/kon": {"suppress_k": 25}}}) is None
+    )
     assert block_issue(None) is None
 
 
@@ -433,7 +435,7 @@ def test_block_issue_translates_unknown_key_raise():
 
 
 def test_block_issue_translates_non_object_block():
-    issue = block_issue(["column_options"])
+    issue = block_issue(["binding_options"])
     assert issue is not None
     assert issue.code == BLOCK_INVALID_CODE
     assert "must be an object" in issue.message

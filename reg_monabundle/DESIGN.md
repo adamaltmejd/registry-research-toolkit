@@ -37,17 +37,17 @@ the refactor spec into per-package DESIGN files.
 - **§6.8.2 namespaced-block validator** (`reg_monabundle.validate_block`,
   phase 1 — shipped). Validates the `reg_monabundle` block of
   `project_data.json`: allowed keys, binding-FQID well-formedness on
-  `column_options`, the `suppress_k` floor against `SUPPRESS_K`. Pure-stdlib,
+  `binding_options`, the `suppress_k` floor against `SUPPRESS_K`. Pure-stdlib,
   so unlike the §6.8.1 structural gate it **is amalgamated** and runs at
   bundle **load on MONA** too (`loadedspec_from_dict` calls it), not only at
   build — per §6.8.2 ("same code, runs at build and on MONA"). The
   cross-block referential checks that need reg_schema-typed bindings
-  (`_validate_column_options_against_columns`) are the build-only exception,
+  (`_validate_binding_options_against_columns`) are the build-only exception,
   living in `build.spec_loader`.
   - **Build-side ISSUE forms** (`build.spec_loader`, never amalgamated, may
     import reg_schema): `block_issue` (translates `validate_block`'s raise to
-    one `ValidationIssue`, code `invalid_block`) and `column_options_issues`
-    (codes `column_options_orphan_fqid`, `suppress_k_on_non_categorical`) let
+    one `ValidationIssue`, code `invalid_block`) and `binding_options_issues`
+    (codes `binding_options_orphan_fqid`, `suppress_k_on_non_categorical`) let
     `reg_webapp`'s `/api/project/validate` concatenate these as `§6.8.0`
     issues instead of catching the raise. The raising path
     (`validate_project_data`) is preserved verbatim (shared message helpers),

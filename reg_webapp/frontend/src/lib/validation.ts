@@ -105,7 +105,7 @@ export interface CodeInfo {
  * renders with its raw code (see `codeLabel`). Sourced from:
  * - §6.8.1 structural (`reg_schema/structural.py`, DESIGN.md §6.8.1 table)
  * - §6.8.2 block (`reg_monabundle.build.spec_loader`: `invalid_block`,
- *   `column_options_orphan_fqid`, `suppress_k_on_non_categorical`)
+ *   `binding_options_orphan_fqid`, `suppress_k_on_non_categorical`)
  * - §6.8.3 semantic (`reg_webapp.semantic` + DESIGN.md §6.8.3 table)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
@@ -175,8 +175,8 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
 
   // ── §6.8.2 block (reg_monabundle) ─────────────────────────────────────────
   invalid_block: { label: "Invalid reg_monabundle block", hint: "error" },
-  column_options_orphan_fqid: {
-    label: "column_options key references no bound variable",
+  binding_options_orphan_fqid: {
+    label: "binding_options key references no bound variable",
     hint: "error",
   },
   suppress_k_on_non_categorical: {

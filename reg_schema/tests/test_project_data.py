@@ -245,7 +245,7 @@ def test_project_data_is_frozen() -> None:
 
 
 def test_project_data_carries_opaque_reg_monabundle_block() -> None:
-    block = {"column_options": {"scb/lisa/dispink04": {"suppress_k": 20}}}
+    block = {"binding_options": {"scb/lisa/dispink04": {"suppress_k": 20}}}
     pd = ProjectData(
         schema_version="2.0.0",
         steward="global",
@@ -272,7 +272,7 @@ def test_project_data_with_dict_block_is_unhashable_on_demand() -> None:
         reg_meta_version="reg_meta/v1.0.0",
         name="demo",
         sources=(_source(),),
-        reg_monabundle={"column_options": {"scb/lisa/kon": {"suppress_k": 20}}},
+        reg_monabundle={"binding_options": {"scb/lisa/kon": {"suppress_k": 20}}},
     )
     with pytest.raises(TypeError):
         hash(pd_with_block)

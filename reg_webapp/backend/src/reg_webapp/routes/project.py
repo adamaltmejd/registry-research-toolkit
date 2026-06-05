@@ -33,7 +33,7 @@ body costs no DB hit.
 
 §9.6: this module imports ``reg_schema`` (structural validator + ``ProjectData``)
 and the BUILD-side ``reg_monabundle.build.spec_loader`` issue forms (``block_issue``
-/ ``column_options_issues``, which wrap the §6.8.2 block + the cross-block
+/ ``binding_options_issues``, which wrap the §6.8.2 block + the cross-block
 referential checks as canonical ``ValidationIssue``s) — NOT
 ``reg_monabundle.runtime.*`` / duckdb / pyodbc (``spec_loader`` imports the runtime
 lazily, so this stays out of the import graph; the import-graph test pins it).
@@ -49,7 +49,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
-from reg_monabundle.build.spec_loader import block_issue, column_options_issues
+from reg_monabundle.build.spec_loader import binding_options_issues, block_issue
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue, ValidationResult
@@ -137,9 +137,9 @@ def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
 
 def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
     """Build the ``ProjectData`` model, run the §6.8.3 semantic layer, AND the
-    build-time cross-block referential checks (orphan ``column_options`` keys /
+    build-time cross-block referential checks (orphan ``binding_options`` keys /
     suppress_k-on-non-categorical, via
-    ``reg_monabundle.build.spec_loader.column_options_issues``).
+    ``reg_monabundle.build.spec_loader.binding_options_issues``).
     The cross-block check closes the documented ``/validate``↔``/bundle``
     divergence — a spec that bundles must also validate clean on that class.
 
@@ -160,7 +160,7 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
             )
         ]
     issues = list(validate_semantic(project, catalog, caller="researcher").issues)
-    issues.extend(column_options_issues(raw.get("reg_monabundle"), project))
+    issues.extend(binding_options_issues(raw.get("reg_monabundle"), project))
     return issues
 
 
@@ -193,7 +193,7 @@ async def validate_project(request: Request) -> ValidationResultModel:
     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
 
     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). It now ALSO runs the
-    build-time cross-block referential checks (orphan ``column_options`` keys /
+    build-time cross-block referential checks (orphan ``binding_options`` keys /
     suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
     divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
     step-4 capability gates (e.g. a build-required ``display_name``), which

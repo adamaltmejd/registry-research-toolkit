@@ -86,12 +86,12 @@ def test_bundle_is_deterministic(client):
 
 def test_bad_input_is_422(client):
     """A spec that passes the Pydantic MODEL (so it isn't a framework 422) but
-    FAILS the build gate is bad INPUT → 422. A ``reg_monabundle.column_options``
+    FAILS the build gate is bad INPUT → 422. A ``reg_monabundle.binding_options``
     key referencing no binding FQID is an orphan-key build-gate failure
     (``validate_project_data`` raises ``ValueError``)."""
     spec = _valid_spec()
     spec["reg_monabundle"] = {
-        "column_options": {"scb/lisa/notbound": {"suppress_k": 5}}
+        "binding_options": {"scb/lisa/notbound": {"suppress_k": 5}}
     }
     resp = client.post("/api/bundle", json=spec)
     assert resp.status_code == 422

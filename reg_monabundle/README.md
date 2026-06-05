@@ -15,7 +15,7 @@ from pathlib import Path
 
 from reg_monabundle import build_bundle, scan_file, validate_block, write_export
 
-validate_block({"column_options": {"scb/lisa/lopnr": {"suppress_k": 25}}})
+validate_block({"binding_options": {"scb/lisa/lopnr": {"suppress_k": 25}}})
 
 # Defaults to amalgamating reg_monabundle.runtime.* — no caller wiring needed.
 build_bundle(Path("mdw_runner.py"))
@@ -33,7 +33,7 @@ complete. Lightweight surface:
 
 - `reg_monabundle.validate_block` — §6.8.2 namespaced-block validator.
 - `reg_monabundle.constants.SUPPRESS_K` — global k-anonymity floor.
-- `reg_monabundle.VALID_OPTION_KEYS` — allowed `column_options` keys.
+- `reg_monabundle.VALID_OPTION_KEYS` — allowed `binding_options` keys.
 - `reg_monabundle.build_bundle` — amalgamates the runtime modules +
   reg_monabundle into a single ``.py`` for upload to MONA (no
   `reg_schema`, no Pydantic — §9.6).
