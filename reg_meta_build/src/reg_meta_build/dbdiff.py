@@ -1,7 +1,7 @@
 """Content-level diff for two reg_meta SQLite DBs.
 
 This is the acceptance gate for the Model A migration's adapter refactor
-(`MIGRATION_PLAN.md` stage A4.1): A4.1 moves SCB ingest out of
+(Model A migration stage A4.1): A4.1 moves SCB ingest out of
 `reg_meta_build.db`'s `_import_*` functions into an IR-emitting adapter +
 a provider-blind materializer, and MUST produce a universal DB whose
 *content* is identical to the pre-A4 baseline.
