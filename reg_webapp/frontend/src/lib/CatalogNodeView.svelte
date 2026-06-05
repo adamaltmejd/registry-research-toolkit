@@ -2,7 +2,13 @@
 import { getCatalogNode, isCatalogNode } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
-import { breadcrumbs, catalogHref, nodeLabel } from "./catalog";
+import {
+  bindingChildren,
+  breadcrumbs,
+  catalogHref,
+  narrowCatalogNode,
+  nodeLabel,
+} from "./catalog";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // Fetches and renders one catalog node by FQID path, switching on the `kind`
@@ -20,10 +26,7 @@ const resource = asyncResource(() => getCatalogNode(fqidPath));
 // returns a no-`kind` StatesResponse/VariantsResponse — narrow it OUT of `node`
 // (so the kind-switch type-checks) and flag it as `notBrowsable` so we render a
 // clear message instead of a blank page.
-const node = $derived.by(() => {
-  const data = resource.data;
-  return data !== null && isCatalogNode(data) ? data : null;
-});
+const node = $derived(narrowCatalogNode(resource.data));
 const notBrowsable = $derived(
   resource.data !== null && !isCatalogNode(resource.data),
 );
@@ -70,21 +73,20 @@ const crumbs = $derived(breadcrumbs(fqidPath));
         <p class="muted">No registers.</p>
       {/if}
     {:else if node.kind === "register"}
+      {@const bindings = bindingChildren(node)}
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       {#if node.purpose}<p>{node.purpose}</p>{/if}
       <h3>Bindings</h3>
-      {#if node.children.some((c) => c.kind === "binding")}
+      {#if bindings.length > 0}
         <ul class="children">
-          {#each node.children as child (child.kind === "binding" ? child.fqid : "variants-ref")}
-            {#if child.kind === "binding"}
-              <li>
-                <a href={catalogHref(child.fqid)}>
-                  <span class="label">{child.name ?? child.fqid}</span>
-                  <code class="child-fqid">{child.fqid}</code>
-                </a>
-              </li>
-            {/if}
+          {#each bindings as child (child.fqid)}
+            <li>
+              <a href={catalogHref(child.fqid)}>
+                <span class="label">{child.name ?? child.fqid}</span>
+                <code class="child-fqid">{child.fqid}</code>
+              </a>
+            </li>
           {/each}
         </ul>
       {:else}

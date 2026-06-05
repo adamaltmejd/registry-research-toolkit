@@ -125,6 +125,14 @@ const steward = $derived(context?.steward.id ?? "");
     --accent: #2563eb;
     --accent-bg: #eff4ff;
     --surface: #fff;
+    /* Validation-level palette (error / warning / info), shared by every editor
+       and the validation panels. Info reuses the accent. */
+    --level-error: #b00020;
+    --level-warning: #d97706;
+    --level-info: var(--accent);
+    /* The error-banner / error-badge fill + border pair. */
+    --banner-error-bg: #fef2f2;
+    --banner-error-border: #fca5a5;
   }
   :global(body) {
     margin: 0;
@@ -147,7 +155,7 @@ const steward = $derived(context?.steward.id ?? "");
     color: var(--muted);
   }
   :global(.error) {
-    color: #b00020;
+    color: var(--level-error);
   }
   .app {
     max-width: 56rem;
@@ -196,7 +204,7 @@ const steward = $derived(context?.steward.id ?? "");
     color: var(--accent);
   }
   .nav-dirty {
-    color: #d97706;
+    color: var(--level-warning);
     font-size: 0.7rem;
     vertical-align: super;
   }
@@ -216,7 +224,7 @@ const steward = $derived(context?.steward.id ?? "");
     margin: 0.5rem 0 0;
   }
   .banner.error {
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
+    background: var(--banner-error-bg);
+    border: 1px solid var(--banner-error-border);
   }
 </style>

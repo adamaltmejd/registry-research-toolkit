@@ -196,9 +196,9 @@ function onPickVariant(slug: string): void {
   .error-badge {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #b00020;
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
+    color: var(--level-error);
+    background: var(--banner-error-bg);
+    border: 1px solid var(--banner-error-border);
     border-radius: 999px;
     padding: 0.05rem 0.5rem;
   }
@@ -244,7 +244,7 @@ function onPickVariant(slug: string): void {
     border-color: var(--accent);
   }
   .remove {
-    color: #b00020;
+    color: var(--level-error);
   }
   .bindings-head {
     display: flex;

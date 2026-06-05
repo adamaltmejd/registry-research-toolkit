@@ -99,8 +99,8 @@ const LEVEL_LABEL: Record<Level, string> = {
     margin-bottom: 1rem;
   }
   .request-error {
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
+    background: var(--banner-error-bg);
+    border: 1px solid var(--banner-error-border);
   }
   .summary {
     font-weight: 600;
@@ -112,8 +112,8 @@ const LEVEL_LABEL: Record<Level, string> = {
     border: 1px solid #86efac;
   }
   .summary.fail {
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
+    background: var(--banner-error-bg);
+    border: 1px solid var(--banner-error-border);
   }
   .group {
     margin-top: 1rem;
@@ -136,13 +136,13 @@ const LEVEL_LABEL: Record<Level, string> = {
     background: #fafafa;
   }
   .group.error li {
-    border-left-color: #b00020;
+    border-left-color: var(--level-error);
   }
   .group.warning li {
-    border-left-color: #d97706;
+    border-left-color: var(--level-warning);
   }
   .group.info li {
-    border-left-color: var(--accent);
+    border-left-color: var(--level-info);
   }
   .issue-head {
     display: flex;

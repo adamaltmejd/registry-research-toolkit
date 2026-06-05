@@ -7,8 +7,9 @@ import { codeLabel, type ValidationIssue } from "./validation";
 // backend is the canonical validator (§9.6) — these echo the LAST /validate click
 // and vanish on the next edit (the store nulls `validation` on every mutation).
 //
-// Color follows ValidationPanel's convention: error #b00020 / warning #d97706 /
-// info --accent. An unknown level degrades to the info color (forward-compat).
+// Color follows ValidationPanel's convention via the shared --level-* vars
+// (error / warning / info). An unknown level degrades to the info color
+// (forward-compat).
 const { issues } = $props<{ issues: ValidationIssue[] }>();
 </script>
 
@@ -39,22 +40,22 @@ const { issues } = $props<{ issues: ValidationIssue[] }>();
     border-left: 2px solid var(--accent);
   }
   .issue.error {
-    border-left-color: #b00020;
+    border-left-color: var(--level-error);
   }
   .issue.warning {
-    border-left-color: #d97706;
+    border-left-color: var(--level-warning);
   }
   .issue.info {
-    border-left-color: var(--accent);
+    border-left-color: var(--level-info);
   }
   .label {
     font-weight: 600;
   }
   .issue.error .label {
-    color: #b00020;
+    color: var(--level-error);
   }
   .issue.warning .label {
-    color: #d97706;
+    color: var(--level-warning);
   }
   .message {
     color: var(--muted);

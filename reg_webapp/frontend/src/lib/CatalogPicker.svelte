@@ -1,17 +1,17 @@
-<script lang="ts" module>
-import { type CatalogNode, isCatalogNode, type StatesResponse } from "./api";
-
-// Narrow a catch-all response to a browsable CatalogNode (or null).
-function asNode(data: CatalogNode | StatesResponse | null): CatalogNode | null {
-  return data !== null && isCatalogNode(data) ? data : null;
-}
-</script>
-
 <script lang="ts">
-import { getCatalogNode, getRegisterVariants, type VariableStateModel } from "./api";
+import {
+  type CatalogNode,
+  getCatalogNode,
+  getRegisterVariants,
+  isCatalogNode,
+  type StatesResponse,
+  type VariableStateModel,
+} from "./api";
 import { asyncResource } from "./async.svelte";
 import {
+  bindingChildren,
   deriveType,
+  narrowCatalogNode,
   type Representation,
   representationsFromStates,
 } from "./catalog";
@@ -72,12 +72,12 @@ const resource = asyncResource<
 // The variable-pick register node (the browse fetch is no-query → a `kind`-tagged
 // node). Its `binding` children are the pickable variables.
 const registerNode = $derived(
-  props.mode === "variable" ? asNode(resource.data as CatalogNode | StatesResponse | null) : null,
+  props.mode === "variable"
+    ? narrowCatalogNode(resource.data as CatalogNode | StatesResponse | null)
+    : null,
 );
 const variableChildren = $derived(
-  registerNode && registerNode.kind === "register"
-    ? registerNode.children.filter((c) => c.kind === "binding")
-    : [],
+  registerNode ? bindingChildren(registerNode) : [],
 );
 
 // The variant-pick list.
@@ -94,7 +94,9 @@ const variantList = $derived(
 // retired `@version` pin once did, keyed on the delivery column.
 let resolving = $state(false);
 let resolveError = $state<string | null>(null);
-let pending = $state<{ fqid: string; states: VariableStateModel[] } | null>(null);
+let pending = $state<{ fqid: string; states: VariableStateModel[] } | null>(
+  null,
+);
 const pendingReps = $derived<Representation[]>(
   pending ? representationsFromStates(pending.states) : [],
 );
@@ -108,7 +110,11 @@ async function pickVariable(fqid: string): Promise<void> {
   // No period → can't resolve. Pick the bare FQID; no prefill (the backend Validate
   // fills / flags type + display_name).
   if (!p.period) {
-    p.onpickVariable({ variable: fqid, type: "opaque", displayNameDefault: null });
+    p.onpickVariable({
+      variable: fqid,
+      type: "opaque",
+      displayNameDefault: null,
+    });
     return;
   }
   resolving = true;
@@ -121,7 +127,11 @@ async function pickVariable(fqid: string): Promise<void> {
     // Not a StatesResponse (shouldn't happen with `?period`), or no state covers
     // the period → pick the bare FQID with no prefill; the backend flags it.
     if (isCatalogNode(resolved) || resolved.states.length === 0) {
-      p.onpickVariable({ variable: fqid, type: "opaque", displayNameDefault: null });
+      p.onpickVariable({
+        variable: fqid,
+        type: "opaque",
+        displayNameDefault: null,
+      });
       return;
     }
     // >1 distinct delivery column → multi-representation; defer to the chooser.
@@ -146,7 +156,9 @@ function chooseRepresentation(rep: Representation): void {
   if (props.mode !== "variable" || !pending) {
     return;
   }
-  const state = pending.states.find((s) => s.delivery_column_name === rep.column);
+  const state = pending.states.find(
+    (s) => s.delivery_column_name === rep.column,
+  );
   props.onpickVariable({
     variable: pending.fqid,
     type: deriveType(state),
@@ -199,20 +211,18 @@ function chooseRepresentation(rep: Representation): void {
   {:else if registerNode && registerNode.kind === "register"}
     {#if variableChildren.length > 0}
       <ul class="pick-list">
-        {#each variableChildren as child (child.kind === "binding" ? child.fqid : "ref")}
-          {#if child.kind === "binding"}
-            <li>
-              <button
-                type="button"
-                class="pick"
-                disabled={resolving}
-                onclick={() => void pickVariable(child.fqid)}
-              >
-                <span class="slug">{child.name ?? child.fqid}</span>
-                <code class="leaf-fqid">{child.fqid}</code>
-              </button>
-            </li>
-          {/if}
+        {#each variableChildren as child (child.fqid)}
+          <li>
+            <button
+              type="button"
+              class="pick"
+              disabled={resolving}
+              onclick={() => void pickVariable(child.fqid)}
+            >
+              <span class="slug">{child.name ?? child.fqid}</span>
+              <code class="leaf-fqid">{child.fqid}</code>
+            </button>
+          </li>
         {/each}
       </ul>
     {:else}

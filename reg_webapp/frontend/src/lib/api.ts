@@ -200,6 +200,10 @@ export type CatalogNode =
   | Schemas["ClassificationRootResponse"]
   | Schemas["ClassificationNode"];
 
+/** A binding child under a register node — a thin (fqid, name) entry, NOT the
+ * embedded longitudinal record (that lives on the binding LEAF, `BindingNode`). */
+export type BindingChild = Schemas["BindingChild"];
+
 /** The binding-leaf node (3-seg) the catch-all returns WITHOUT a query — the
  * variable's full embedded longitudinal record (states + edges, §9.5). */
 export type BindingNodeData = Schemas["BindingNode"];
