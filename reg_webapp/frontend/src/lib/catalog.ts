@@ -1,5 +1,5 @@
 /**
- * Display + FQID-path helpers for the catalog browse UI (`catalog.test.ts`):
+ * Display + FQID-path helpers for the catalog browse UI (`catalog.ts`):
  * a node's label, and the `/catalog/<fqid-path>` URL ↔ FQID-segment helpers
  * (the SPA routes mirror the API path, §9.5).
  */
