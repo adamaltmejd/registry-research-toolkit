@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type { CatalogNode, VariableStateModel } from "./api";
+import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import {
+  bindingChildren,
   breadcrumbs,
   catalogHref,
   deriveType,
   fqidSegments,
+  narrowCatalogNode,
   nodeLabel,
   registerPrefixOf,
   representationsFromStates,
@@ -54,6 +56,40 @@ describe("nodeLabel", () => {
     expect(nodeLabel(provider)).toBe("Statistics Sweden");
     expect(nodeLabel(register)).toBe("scb/lisa"); // name is null → fqid
     expect(nodeLabel(classification)).toBe("Education");
+  });
+});
+
+describe("narrowCatalogNode", () => {
+  it("keeps a `kind`-tagged node, drops a no-`kind` payload and null", () => {
+    expect(narrowCatalogNode(provider)).toBe(provider);
+    // A `?period` resolve returns a no-`kind` StatesResponse → not browsable.
+    const states = { states: [] } as unknown as StatesResponse;
+    expect(narrowCatalogNode(states)).toBeNull();
+    expect(narrowCatalogNode(null)).toBeNull();
+  });
+});
+
+describe("bindingChildren", () => {
+  it("returns only the binding children of a register, in order", () => {
+    const node = {
+      kind: "register",
+      fqid: "scb/lisa",
+      name: null,
+      purpose: null,
+      children: [
+        { kind: "binding", fqid: "scb/lisa/kon", name: "Sex" },
+        { kind: "variants-ref" },
+        { kind: "binding", fqid: "scb/lisa/alder", name: null },
+      ],
+    } as unknown as CatalogNode;
+    expect(bindingChildren(node).map((c) => c.fqid)).toEqual([
+      "scb/lisa/kon",
+      "scb/lisa/alder",
+    ]);
+  });
+
+  it("returns [] for a non-register node", () => {
+    expect(bindingChildren(provider)).toEqual([]);
   });
 });
 

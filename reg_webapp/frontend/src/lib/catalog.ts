@@ -3,7 +3,35 @@
  * a node's label, and the `/catalog/<fqid-path>` URL ↔ FQID-segment helpers
  * (the SPA routes mirror the API path, §9.5).
  */
-import { type CatalogNode, encodeFqid, type VariableStateModel } from "./api";
+import {
+  type BindingChild,
+  type CatalogNode,
+  encodeFqid,
+  isCatalogNode,
+  type StatesResponse,
+  type VariableStateModel,
+} from "./api";
+
+/** Narrow the catch-all browse response to a browsable `CatalogNode`, or `null`
+ * for a no-`kind` payload (a `?period` `StatesResponse` or a sub-endpoint
+ * envelope) — the boundary every browse consumer narrows at before switching on
+ * `kind` (§9.5). */
+export function narrowCatalogNode(
+  data: CatalogNode | StatesResponse | null,
+): CatalogNode | null {
+  return data !== null && isCatalogNode(data) ? data : null;
+}
+
+/** The binding children of a register node, in order. `[]` for any other node
+ * kind — a register's `children` mix binding entries with a `VariantsRef`, so
+ * callers want only the `kind === "binding"` ones (the pickable / browsable
+ * variable list). */
+export function bindingChildren(node: CatalogNode): BindingChild[] {
+  if (node.kind !== "register") {
+    return [];
+  }
+  return node.children.filter((c): c is BindingChild => c.kind === "binding");
+}
 
 /** A node's display label — its `name` when present, else its FQID (providers
  * and registers carry an optional `name`; classifications carry a required

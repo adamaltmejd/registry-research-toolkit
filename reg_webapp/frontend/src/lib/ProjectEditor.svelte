@@ -218,7 +218,7 @@ async function onFilePicked(event: Event): Promise<void> {
   .dirty {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #d97706;
+    color: var(--level-warning);
   }
   .toolbar {
     display: flex;
@@ -258,8 +258,8 @@ async function onFilePicked(event: Event): Promise<void> {
     margin-bottom: 1rem;
   }
   .banner.error {
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
+    background: var(--banner-error-bg);
+    border: 1px solid var(--banner-error-border);
   }
   .fields {
     display: flex;

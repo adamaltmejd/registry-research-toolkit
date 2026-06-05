@@ -276,7 +276,7 @@ const displayName = $derived(strField("display_name"));
   }
   .remove {
     align-self: flex-start;
-    color: #b00020;
+    color: var(--level-error);
   }
   .advanced summary {
     cursor: pointer;
