@@ -121,10 +121,6 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   invalid_period: { label: "Invalid period", hint: "error" },
-  binding_value_set_version_mismatch: {
-    label: "Binding @version pin disagrees with value_set",
-    hint: "error",
-  },
   subtype_on_wrong_type: {
     label: "Subtype/format field set on a binding type that doesn't own it",
     hint: "error",
@@ -203,7 +199,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   },
   binding_value_set_version_ambiguous: {
     label:
-      "Several co-delivered value-set versions match — pin one with @version",
+      "Several co-delivered value sets match this (variant, period) — needs reg_meta build-time curation",
     hint: "error",
   },
   binding_state_drifts_within_period: {

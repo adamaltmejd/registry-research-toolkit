@@ -172,12 +172,12 @@ def _validated_variant(variant: str | None = None) -> str | None:
 
 
 def _validated_value_set_version(value_set_version: str | None = None) -> str | None:
-    """§16 ``?value_set_version`` allow-list as a pre-open dependency. The value
-    is a FREE-TEXT value-set-version label (matched against ``value_set_version_label``
-    by a Python filter in ``resolve_at``, NOT SQL), so the gate is a sanity check
-    (non-empty, length-capped, no control chars) — 422s a malformed value before
-    any connection opens. Reconciled with the binding-leaf ``@version`` pin in the
-    handler (`_reconcile_value_set_version`)."""
+    """§16 ``?value_set_version`` allow-list as a pre-open dependency. This is the
+    read-only catalog-browse label filter (NOT a binding pin — the FQID ``@version``
+    pin is retired). The value is a FREE-TEXT value-set-version label (matched
+    against ``value_set_version_label`` by a Python filter in ``resolve_at``, NOT
+    SQL), so the gate is a sanity check (non-empty, length-capped, no control
+    chars) — 422s a malformed value before any connection opens."""
     if value_set_version is None:
         return None
     try:
@@ -412,25 +412,6 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
     )  # pragma: no cover
 
 
-def _reconcile_value_set_version(pinned: str | None, query: str | None) -> str | None:
-    """Reconcile the binding-leaf `@version` pin (parsed into
-    `ValidatedFqidPath.value_set_version`) with the `?value_set_version` query.
-
-    LOCKED: if BOTH present and they DIFFER → 422 (ambiguous); if both present
-    and equal, or only one present → use it; neither → None. The conflict is a
-    422 (a client contradiction), not a silent precedence — pinning the same
-    version two ways is fine, two different ones is a usage error."""
-    if pinned is not None and query is not None and pinned != query:
-        raise HTTPException(
-            status_code=422,
-            detail=(
-                f"ambiguous value-set-version: FQID pin @{pinned} "
-                f"conflicts with ?value_set_version={query}"
-            ),
-        )
-    return pinned if pinned is not None else query
-
-
 def _http_4xx_from_regmeta(exc: RegMetaError) -> None:
     """Map a reg_meta query error from the period/edge accessors to HTTP: a
     genuine FQID-not-found → 404; a USAGE error on client input → 422; anything
@@ -453,21 +434,8 @@ def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
     """Parse a validated path into an Fqid, mapping a grammar/arity FqidError to
     422 (DB-free — runs before any connection opens). Used by the suffixed
     sub-endpoints, which only accept binding FQIDs (reg_meta's `_parse_binding`
-    raises the 422-mapped `not_a_binding_fqid` for a non-binding kind).
-
-    A binding-leaf `@version` pin is REJECTED here (422): the suffixed endpoints
-    return the FULL state history / edge set and do NOT narrow by value-set-version,
-    so a pin would silently no-op — the same inert-modifier surface the catch-all
-    422s. Version-narrowing lives only on the catch-all leaf (`?period` + the
-    reconciled `?value_set_version`)."""
-    if validated.value_set_version is not None:
-        raise HTTPException(
-            status_code=422,
-            detail=(
-                "an @version pin is not supported on this endpoint; value-set-version "
-                "narrowing is on the catalog leaf with ?period"
-            ),
-        )
+    raises the 422-mapped `not_a_binding_fqid` for a non-binding kind). The path is
+    a bare FQID — the `@version` pin is retired, so there is none to reject here."""
     try:
         return parse(validated.fqid)
     except FqidError as exc:
@@ -677,14 +645,14 @@ def get_catalog_node(
     before `parse`.
 
     `?period` semantics (§9.5): present + binding leaf → `{states: [...]}` (the
-    resolve_at subset, narrowed by `?variant` / `?value_set_version`; the leaf's
-    `@version` pin reconciles with `?value_set_version` — equal/one-sided uses it,
-    conflicting is 422). present + non-binding kind → IGNORED (resolve normally).
-    absent on a binding leaf → the full node (full history) UNLESS a narrowing
-    modifier (`?variant` / `?value_set_version` / `@version`) is set: those are inert
-    without `?period`, so they 422 ("requires ?period") rather than silently no-op.
-    absent on a non-binding kind → the full node. The connection is opened and used
-    within this sync body (one thread — see `_catalog_conn`).
+    resolve_at subset, narrowed by `?variant` / `?value_set_version`). present +
+    non-binding kind → IGNORED (resolve normally). absent on a binding leaf → the
+    full node (full history) UNLESS a narrowing modifier (`?variant` /
+    `?value_set_version`) is set: those are inert without `?period`, so they 422
+    ("requires ?period") rather than silently no-op. absent on a non-binding kind →
+    the full node. `?value_set_version` is a read-only browse-narrowing label
+    filter — there is no FQID `@version` pin (retired). The connection is opened and
+    used within this sync body (one thread — see `_catalog_conn`).
     """
     # §5.2: `class` (1 seg) is the classification-root sentinel — a reserved slug
     # `parse` rejects, so special-case it BEFORE parse. `class/<slug>` (2 seg)
@@ -700,28 +668,25 @@ def get_catalog_node(
     except FqidError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    # LOCKED: the binding-leaf `@version` pin reconciles with `?value_set_version`
-    # — a CONFLICT (both present, different) is 422 (ambiguous), regardless of
-    # `?period`. Run it before the connection opens, so the 422 costs no SQL.
-    vsv = _reconcile_value_set_version(validated.value_set_version, value_set_version)
+    # `?value_set_version` is the read-only browse-narrowing label filter (no FQID
+    # `@version` pin — retired). Used directly as the resolve_at version filter.
+    vsv = value_set_version
 
     # A `?period` query on a binding leaf returns the resolve_at state subset
-    # (uniform with `/states`), narrowed by `?variant` / the reconciled `vsv`. On
-    # any other kind `?period` is IGNORED (§9.5).
+    # (uniform with `/states`), narrowed by `?variant` / `vsv`. On any other kind
+    # `?period` is IGNORED (§9.5).
     if parsed.kind is FqidKind.VARIABLE_BINDING:
         if period is None:
-            # `?variant` / `?value_set_version` / the `@version` pin are MODIFIERS
-            # of the resolve_at narrowing — inert without `?period`. Require
-            # `?period` rather than silently no-op (the param narrows-or-422s
-            # everywhere else, so a silent no-op here is a surprising surface).
-            # Maintainer call: vsv/@version → 422; extended to `?variant` for the
-            # identical inert-modifier surface. 422s before the connection opens.
+            # `?variant` / `?value_set_version` are MODIFIERS of the resolve_at
+            # narrowing — inert without `?period`. Require `?period` rather than
+            # silently no-op (the params narrow-or-422 everywhere else, so a silent
+            # no-op here is a surprising surface). 422s before the connection opens.
             if vsv is not None or variant is not None:
                 raise HTTPException(
                     status_code=422,
                     detail=(
-                        "?variant, ?value_set_version, and the @version pin narrow "
-                        "the resolve_at state subset and require ?period"
+                        "?variant and ?value_set_version narrow the resolve_at "
+                        "state subset and require ?period"
                     ),
                 )
         else:

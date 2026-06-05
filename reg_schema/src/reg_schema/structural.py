@@ -92,7 +92,9 @@ _SUBTYPE_FIELDS: dict[str, str] = {
 # slugs (``sun2020``). Under Model A the period is no longer an FQID
 # segment (§6.2) — it is the ``Source.period`` field, checked separately by
 # ``_check_period``. This layer only checks a segment is non-empty and free
-# of stray characters (the ``@`` in a binding leaf is split off first).
+# of stray characters. The value set is determined by the resolved
+# ``(variable, variant, period)`` (§6.8.3), never pinned on the FQID, so a
+# binding leaf is a bare slug — there is no ``@version`` suffix to split off.
 _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
@@ -245,40 +247,21 @@ def _is_register_variant_coord(value: object) -> bool:
     return len(segs) == 3 and segs[0] != "class" and _segments_well_formed(segs)
 
 
-def _binding_leaf_parts(leaf: str) -> list[str] | None:
-    """Split a binding-FQID leaf ``slug[@version]`` into its tokens.
-
-    Returns ``[slug]`` or ``[slug, version]``, or ``None`` when the leaf is
-    malformed (empty slug, empty version, or a stray second ``@``). The
-    ``@`` is split off *before* the per-segment regex so it never reaches
-    the slug grammar (§6.8.1 / §5.2) — ``_FQID_TOKEN`` would reject the ``@``.
-    """
-    if "@" not in leaf:
-        return [leaf] if leaf else None
-    slug, _, version = leaf.partition("@")
-    if not slug or not version or "@" in version:
-        return None
-    return [slug, version]
-
-
 def _parse_binding_fqid(value: object) -> list[str] | None:
-    """Parse a binding FQID into ``[provider, register, slug(, version)]``.
+    """Parse a binding FQID into ``[provider, register, slug]``.
 
-    3-segment ``<provider>/<register>/<slug>`` with an optional ``@<version>``
-    pin on the leaf (§5.2). Returns the parsed parts (length 3, or 4 when a
-    version is pinned), else ``None``. Callers parse once and reuse the parts
-    for the prefix and version checks instead of re-splitting the FQID.
+    3-segment ``<provider>/<register>/<slug>`` (§5.2): the FQID names the
+    variable; its value set is determined by the resolved ``(variable, variant,
+    period)`` (§6.8.3), not pinned on the FQID. Returns the three parts, else
+    ``None`` (wrong arity, a ``class/`` prefix, or a stray character — including
+    the retired ``@`` version delimiter, which ``_FQID_TOKEN`` rejects).
     """
     if not isinstance(value, str):
         return None
     segs = value.split("/")
     if len(segs) != 3 or segs[0] == "class":
         return None
-    leaf_parts = _binding_leaf_parts(segs[2])
-    if leaf_parts is None:
-        return None
-    parts = [segs[0], segs[1], *leaf_parts]
-    return parts if _segments_well_formed(parts) else None
+    return segs if _segments_well_formed(segs) else None
 
 
 def _is_binding_fqid(value: object) -> bool:
@@ -609,9 +592,6 @@ def _check_binding(
     issues: list[ValidationIssue],
 ) -> None:
     _check_unexpected_keys(binding, _BINDING_KEYS, base, "binding", issues)
-    # Parsed binding FQID parts ([provider, register, slug(, version)]) once the
-    # FQID is well-formed — reused by the prefix and value-set-version checks.
-    variable_parts: list[str] | None = None
     if _present_and_not_null(binding, "variable", base, "binding 'variable'", issues):
         variable = binding["variable"]
         if not isinstance(variable, str):
@@ -630,20 +610,18 @@ def _check_binding(
                         "invalid_fqid",
                         f"{base}/variable",
                         "binding 'variable' must be a 3-segment binding FQID "
-                        f"<provider>/<register>/<slug>[@version]; got {variable!r}",
+                        f"<provider>/<register>/<slug>; got {variable!r}",
                     )
                 )
-            else:
-                variable_parts = parsed
-                if rv_prefix is not None and parsed[:2] != rv_prefix:
-                    issues.append(
-                        _error(
-                            "fqid_register_variant_mismatch",
-                            f"{base}/variable",
-                            f"binding FQID prefix {parsed[:2]} must equal the "
-                            f"source register_variant prefix {rv_prefix}",
-                        )
+            elif rv_prefix is not None and parsed[:2] != rv_prefix:
+                issues.append(
+                    _error(
+                        "fqid_register_variant_mismatch",
+                        f"{base}/variable",
+                        f"binding FQID prefix {parsed[:2]} must equal the "
+                        f"source register_variant prefix {rv_prefix}",
                     )
+                )
 
     typ_valid: str | None = None
     if _present_and_not_null(binding, "type", base, "binding 'type'", issues):
@@ -737,23 +715,6 @@ def _check_binding(
                     f"class/<slug>; got {value_set!r}",
                 )
             )
-        elif variable_parts is not None:
-            # §6.8.1: when a binding pins a value-set version via the FQID's
-            # `@<version>` suffix AND names a `value_set`, they must agree —
-            # the classification slug is version-baked (§5.2), so the `@`
-            # version equals the `class/<slug>` leaf. The version is the 4th
-            # parsed part when present.
-            version = variable_parts[3] if len(variable_parts) == 4 else None
-            class_slug = value_set.split("/")[1]
-            if version is not None and version != class_slug:
-                issues.append(
-                    _error(
-                        "binding_value_set_version_mismatch",
-                        f"{base}/value_set",
-                        f"binding pins @{version} but value_set names "
-                        f"class/{class_slug}; they must name the same version",
-                    )
-                )
 
 
 # --- Panel helpers ------------------------------------------------------

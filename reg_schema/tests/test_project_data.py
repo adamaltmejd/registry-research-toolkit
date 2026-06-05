@@ -67,9 +67,11 @@ def test_binding_is_frozen_and_hashable() -> None:
     assert {binding, _binding()} == {binding}
 
 
-def test_binding_accepts_version_suffixed_variable() -> None:
-    # The model stores the raw FQID string; the @version suffix is a
-    # structural-validator concern, not a model one.
+def test_binding_variable_stored_verbatim_model_does_not_validate() -> None:
+    # The Pydantic model stores the raw FQID string and does NOT validate its
+    # grammar — well-formedness is the structural validator's job (§6.8.1). So
+    # even a malformed value (here the retired @version suffix, now an
+    # invalid_fqid) is accepted at the model layer and stored verbatim.
     binding = Binding(variable="scb/lisa/naringsgren@sni2007", type="categorical")
     assert binding.variable == "scb/lisa/naringsgren@sni2007"
 

@@ -4,15 +4,16 @@ Two layers:
 
 1. Unit tests on ``validate_fqid_path`` directly (the chokepoint module): every
    traversal / malformed payload raises ``FqidPathError`` and every legal FQID
-   (incl. the ``@version`` carve-out) passes. The unit layer is where raw ``..``
-   payloads belong — an HTTP client normalizes ``scb/../etc`` to ``etc`` before
-   it reaches the server, so the raw-dotdot case can only be exercised against
-   the function.
+   passes. A binding leaf is a bare slug — the ``@version`` pin is retired, so any
+   ``@`` is a non-slug character that is rejected here. The unit layer is where raw
+   ``..`` payloads belong — an HTTP client normalizes ``scb/../etc`` to ``etc``
+   before it reaches the server, so the raw-dotdot case can only be exercised
+   against the function.
 2. The §16 SECURITY GATE through the live app: percent-encoded probes (which
    survive client normalization and arrive URL-decoded at the handler) return
    422 AND execute **zero SQL** (asserted via a sqlite3 trace hook counting
    statements), proving the guard runs before any Catalog query. Plus the
-   positive ``@version`` carve-out and its two negative cousins.
+   retired ``@version`` form, now rejected at the gate.
 """
 
 from __future__ import annotations
@@ -44,32 +45,33 @@ _REJECT_PATHS = [
     "scb/lisa\\kon",  # backslash
     "scb/Lisa",  # uppercase (slug grammar)
     "scb/li sa",  # space
+    # `@` is a non-slug character everywhere now that the @version pin is retired:
+    # a binding leaf is a bare slug, so any `@` (including the once-legal pin form)
+    # is rejected by the per-segment grammar.
+    "scb/lisa/naringsgren@sni2007",  # the retired canonical pin form
     "scb/lisa/kon@@x",  # double @
     "scb/li@sa/kon",  # @ in a non-leaf segment
     "scb@x/lisa/kon",  # @ in provider segment
-    "scb/lisa@x",  # @ on a 2-seg path (not a binding leaf)
+    "scb/lisa@x",  # @ on a 2-seg path
     "scb/lisa/naringsgren@bad/slug",  # @ then a slash → 4 segments
     # `class` is admitted ONLY as the leading classification prefix; in any other
     # slot it's a reserved token the guard now rejects (was previously deferred to
     # `parse`/`Fqid` downstream — which 500'd on the variants route).
     "scb/class/kon",  # class as register slot
     "scb/lisa/class",  # class as variable (leaf) slot
-    "scb/lisa/kon@class",  # class as the @version value-set-version slot
 ]
 # NOTE: a 5-seg all-valid-slug path like `scb/lisa/kon/extra/more` is NOT a
 # per-segment grammar violation — the chokepoint admits it (every segment is a
 # slug); `reg_meta.fqid.parse` rejects the arity downstream (→ 422 at the app
 # layer, covered by test_too_many_segments_returns_422).
 
-# Legal FQIDs that must PASS the chokepoint.
+# Legal FQIDs that must PASS the chokepoint (bare FQIDs — no @version pin).
 _ACCEPT_PATHS = [
-    ("scb", "scb", None),
-    ("scb/lisa", "scb/lisa", None),
-    ("scb/lisa/kon", "scb/lisa/kon", None),
-    ("class", "class", None),
-    ("class/sun2020", "class/sun2020", None),
-    # The @version carve-out: the bare FQID is stripped, the version stripped out.
-    ("scb/lisa/naringsgren@sni2007", "scb/lisa/naringsgren", "sni2007"),
+    ("scb", "scb"),
+    ("scb/lisa", "scb/lisa"),
+    ("scb/lisa/kon", "scb/lisa/kon"),
+    ("class", "class"),
+    ("class/sun2020", "class/sun2020"),
 ]
 
 
@@ -79,13 +81,10 @@ def test_validate_fqid_path_rejects(raw: str):
         validate_fqid_path(raw)
 
 
-@pytest.mark.parametrize(("raw", "expect_fqid", "expect_version"), _ACCEPT_PATHS)
-def test_validate_fqid_path_accepts(
-    raw: str, expect_fqid: str, expect_version: str | None
-):
+@pytest.mark.parametrize(("raw", "expect_fqid"), _ACCEPT_PATHS)
+def test_validate_fqid_path_accepts(raw: str, expect_fqid: str):
     result = validate_fqid_path(raw)
     assert result.fqid == expect_fqid
-    assert result.value_set_version == expect_version
 
 
 # ── §16 SECURITY GATE: 422 + zero SQL through the live app ──────────────────
@@ -158,32 +157,22 @@ def test_path_traversal_returns_422_with_zero_sql(catalog_db, probe: str):
     )
 
 
-def test_at_version_positive_carveout_passes_gate(catalog_db):
-    """The canonical pinned-binding URL `scb/lisa/naringsgren@sni2007` passes the
-    §16 gate (the `@version` pin is legal, not traversal). With `?period` (the
-    @version pin is a resolve_at modifier — inert, hence 422, without one) it
-    reaches resolution and 404s because that binding isn't in the fixture — but it
-    reached resolution (SQL ran), proving the GATE admitted it rather than 422'ing
-    it as malformed."""
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "scb/lisa/naringsgren@sni2007",  # the retired canonical pin form
+        "scb/lisa/naringsgren@bad/slug",
+        "scb/lisa/kon@@x",
+    ],
+)
+def test_at_version_rejected_by_gate(catalog_db, probe: str):
+    """The `@version` pin is retired — a binding leaf is a bare slug, so any `@`
+    (including the once-canonical `scb/lisa/naringsgren@sni2007`) fails the §16 gate
+    with 422 and ZERO SQL (the value set is resolved from the variant/period, never
+    pinned on the FQID)."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
         counter.reset()
-        resp = client.get("/api/catalog/scb/lisa/naringsgren@sni2007?period=2020")
-    # Not 422: the gate admitted the @version form. 404 because the binding is
-    # absent from the fixture (resolution ran → SQL executed).
-    assert resp.status_code == 404, (
-        f"expected 404 (admitted then not found), got {resp.status_code}"
-    )
-    assert counter.count > 0, (
-        "the admitted @version path must reach resolution (SQL runs)"
-    )
-
-
-@pytest.mark.parametrize("probe", ["scb/lisa/naringsgren@bad/slug", "scb/lisa/kon@@x"])
-def test_at_version_negative_cousins_fail_gate(catalog_db, probe: str):
-    """The two illegitimate `@` forms fail the gate with 422 and zero SQL."""
-    with _StatementCounter() as counter, TestClient(create_app()) as client:
-        counter.reset()
-        resp = client.get(f"/api/catalog/{probe}")
+        resp = client.get(f"/api/catalog/{probe}?period=2020")
     assert resp.status_code == 422
     assert counter.count == 0
 
@@ -200,14 +189,12 @@ def test_default_variant_literal_rejected_by_guard(catalog_db, path: str):
     assert counter.opens == 0  # guard-rejected → no connection opened
 
 
-@pytest.mark.parametrize(
-    "path", ["scb/class/kon", "scb/lisa/class", "scb/lisa/kon@class"]
-)
+@pytest.mark.parametrize("path", ["scb/class/kon", "scb/lisa/class"])
 def test_class_literal_in_illegal_slot_guard_rejects(catalog_db, path: str):
     """`class` is admitted ONLY as the leading classification-prefix segment; in a
-    register / variable / @version slot the §16 guard now rejects it → 422 with no
-    connection opened (previously deferred to `parse`/`Fqid`, which 500'd on the
-    variants route's direct `Fqid.register_fqid('class', …)`)."""
+    register / variable slot the §16 guard now rejects it → 422 with no connection
+    opened (previously deferred to `parse`/`Fqid`, which 500'd on the variants
+    route's direct `Fqid.register_fqid('class', …)`)."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
         counter.reset()
         resp = client.get(f"/api/catalog/{path}")
@@ -325,20 +312,5 @@ def test_bad_value_set_version_query_422_zero_sql(catalog_db, vsv: str):
             params={"period": "2020", "value_set_version": vsv},
         )
     assert resp.status_code == 422, f"{vsv!r} → {resp.status_code}"
-    assert counter.count == 0
-    assert counter.opens == 0
-
-
-def test_at_version_vs_value_set_version_conflict_422_zero_sql(catalog_db):
-    """LOCKED: a binding-leaf `@version` pin that DIFFERS from the
-    `?value_set_version` query is ambiguous → 422. The reconciliation runs BEFORE
-    the connection opens, so the conflict costs no SQL and no open."""
-    with _StatementCounter() as counter, TestClient(create_app()) as client:
-        counter.reset()
-        resp = client.get(
-            f"/api/catalog/{_KON}@v1",
-            params={"period": "2020", "value_set_version": "v2"},
-        )
-    assert resp.status_code == 422
     assert counter.count == 0
     assert counter.opens == 0

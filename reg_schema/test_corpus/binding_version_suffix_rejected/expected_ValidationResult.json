@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/0/bindings/0/variable",
+      "message": "binding 'variable' must be a 3-segment binding FQID <provider>/<register>/<slug>; got 'scb/lisa/naringsgren@sni2007'"
+    }
+  ]
+}

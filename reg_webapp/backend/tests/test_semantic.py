@@ -195,14 +195,20 @@ def test_sos_provider_resolves_clean(catalog):
 @pytest.fixture
 def multiversion_catalog():
     """A DB where `scb/lisa/kon` has TWO states co-delivered in 2018 under the
-    same variant, differing only by value_set_version_label (a §5.7 fold)."""
-    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+    same variant with DISTINCT value sets (different `value_set_id`) — the genuine
+    co-delivery ambiguity (a `(variable, variant, period)` resolving to two
+    different code-lists)."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
 
     conn = build_slugged_db()
-    # The default build seeded one kon state ('' label). Stamp it sun2020 and add
-    # a second co-delivered sun2000 state in the same variant + window.
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+    # The seeded kon state spans 2018-01-01..9999-12-31; stamp it value set 701 +
+    # label sun2020, then add a second co-delivered state with a DIFFERENT value
+    # set 702 in the same variant + window.
     conn.execute(
-        "UPDATE variable_state SET value_set_version_label = 'sun2020' "
+        "UPDATE variable_state SET value_set_version_label = 'sun2020', "
+        "value_set_id = 701 "
         "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
     )
     add_state(
@@ -213,6 +219,7 @@ def multiversion_catalog():
         valid_from="2018-01-01",
         valid_to="9999-12-31",
         value_set_version_label="sun2000",
+        value_set_id=702,
     )
     conn.commit()
     try:
@@ -239,21 +246,52 @@ def test_bare_binding_with_codelivered_versions_is_ambiguous(multiversion_catalo
     assert not result.ok
 
 
-def test_pinned_version_narrows_and_passes(multiversion_catalog):
+@pytest.fixture
+def same_value_set_catalog():
+    """`scb/lisa/kon` has TWO states co-delivered in 2018 under the same variant
+    that share ONE `value_set_id` but carry different free-text version labels —
+    the same values under two names. This is NOT ambiguity (the re-key on
+    `value_set_id` must NOT false-positive on it — the ~71% phantom case)."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    add_value_set(conn, value_set_id=701, codes=[("1", "Man"), ("2", "Kvinna")])
+    conn.execute(
+        "UPDATE variable_state SET value_set_version_label = 'LKF 2003', "
+        "value_set_id = 701 "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        value_set_version_label="LKF 2004",  # different label, SAME value set
+        value_set_id=701,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_same_value_set_two_labels_is_not_ambiguous(same_value_set_catalog):
+    # Two co-delivered states sharing one value_set_id are the same values under
+    # two names — keying ambiguity on the label would false-positive here.
     source = {
         "name": "s",
         "register_variant": "scb/lisa/individer-15plus",
         "period": 2018,
-        # Pin one of the co-delivered versions with the FQID @<version> suffix.
-        "bindings": [
-            {"variable": "scb/lisa/kon@sun2020", "type": "categorical"},
-        ],
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
     }
     result = validate_semantic(
-        _project([source]), multiversion_catalog, caller="researcher"
+        _project([source]), same_value_set_catalog, caller="researcher"
     )
-    assert result.ok
-    assert result.issues == ()
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
 
 
 # ── §6.8.3: a version TRANSITION (sequential, non-overlapping) is drift, NOT a

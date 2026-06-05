@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "steward": "global",
   "reg_meta_version": "reg_meta/v1.0.0",
-  "name": "mismatched_value_set_version",
+  "name": "lisa_retired_version_suffix",
   "sources": [
     {
       "name": "lisa_2018",
@@ -11,8 +11,7 @@
       "bindings": [
         {
           "variable": "scb/lisa/naringsgren@sni2007",
-          "type": "categorical",
-          "value_set": "class/sni92"
+          "type": "categorical"
         }
       ]
     }

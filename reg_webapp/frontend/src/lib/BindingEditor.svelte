@@ -43,9 +43,9 @@ function ptr(field: string): string {
 }
 
 // DERIVE-ON-PICK: apply the picked variable + the derived type + the display_name
-// default (overridable). The @version pin (if any) rides INSIDE the variable
-// string. Only set display_name when the resolve gave a default — otherwise leave
-// it untouched so the backend resolves it.
+// default (overridable). The variable is a bare 3-segment FQID (no value-set
+// version pin — that grammar is retired). Only set display_name when the resolve
+// gave a default — otherwise leave it untouched so the backend resolves it.
 function onPickVariable(picked: {
   variable: string;
   type: string;
