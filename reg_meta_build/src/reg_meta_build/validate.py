@@ -146,6 +146,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_schema_shape(conn, result, tables)
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
+        _check_one_value_set_per_period(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
@@ -396,6 +397,71 @@ def _check_var_year_codes_anchor(
         )
     else:
         result.ok(f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} excludes 00/05")
+
+
+def _check_one_value_set_per_period(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """The §5.7 co-delivery invariant: a `(variable, register_variant, period,
+    delivery_column)` must resolve to EXACTLY ONE value set.
+
+    Concretely: no two `variable_state` rows for the same `(variable_id,
+    register_variant_id, delivery_column_name)` may have OVERLAPPING validity and
+    DISTINCT non-null `value_set_id`. The key includes the DELIVERY COLUMN because
+    a column is the representation handle: a concept (FQID) may carry several
+    co-existing columns (SSYK 3/5-digit, age 5/10-yr brackets) — those legitimately
+    overlap and a binding picks the column. But a SINGLE physical column holds ONE
+    coding per period; two distinct value sets on one column in one period is an
+    unresolvable conflict (vintage drift, sub-annual collision) — the catalog
+    resolver would land a period on both. The coalescer's per-(variable, variant)
+    column-aware year timeline (`sources/scb.py`) eliminates these by construction;
+    a survivor is a coalescer regression or a genuine same-column co-delivery that
+    needs curation. Either way the build must FAIL rather than ship it.
+
+    NULL `value_set_id` (code-less) is exempt — only distinct code-lists conflict.
+    Same value set with different `value_set_version_label`s is fine (the §5.7
+    representation discriminator, one code-list). Distinct columns are fine
+    (parallel representations of the concept).
+    """
+    result.section("[invariant: one value_set per (variable, variant, period, column)]")
+    if "variable_state" not in tables:
+        result.ok("variable_state absent — invariant skipped")
+        return
+    # Overlapping distinct-value_set state pairs on the SAME delivery column under
+    # one (variable, variant). `a.state_id < b.state_id` dedups the symmetric pair;
+    # `IS` is SQLite's null-safe equality so two NULL-column states still match
+    # column-wise (rare; both code-less states are already excluded by the
+    # value_set_id guards). Overlap is the closed-interval intersection (mirrors
+    # `catalog._states_in_bounds`).
+    rows = conn.execute(
+        "SELECT v.register_id, v.slug, a.delivery_column_name, "
+        "       a.valid_from, a.valid_to, a.value_set_id, "
+        "       b.valid_from, b.valid_to, b.value_set_id "
+        "FROM variable_state a "
+        "JOIN variable_state b "
+        "  ON a.variable_id = b.variable_id "
+        " AND a.register_variant_id = b.register_variant_id "
+        " AND a.delivery_column_name IS b.delivery_column_name "
+        " AND a.state_id < b.state_id "
+        " AND a.value_set_id IS NOT NULL AND b.value_set_id IS NOT NULL "
+        " AND a.value_set_id <> b.value_set_id "
+        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        "JOIN variable v ON v.variable_id = a.variable_id "
+        "ORDER BY v.register_id, v.slug"
+    ).fetchall()
+    if not rows:
+        result.ok("no (variable, variant, column) resolves a period to >1 value set")
+        return
+    affected = {(r[1], r[2]) for r in rows}
+    sample = "; ".join(
+        f"{r[1]}/{r[2]} [{r[3][:4]}-{r[4][:4]}]vs{r[5]} ∩ [{r[6][:4]}-{r[7][:4]}]vs{r[8]}"
+        for r in rows[:5]
+    )
+    result.fail(
+        f"{len(rows)} overlapping distinct-value_set state pair(s) on one column "
+        f"across {len(affected)} (variable, column) — a period resolves to >1 "
+        f"value set: {sample}"
+    )
 
 
 def _check_variable_alias_covers_state_columns(

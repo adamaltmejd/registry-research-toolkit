@@ -65,9 +65,10 @@ from reg_meta_build.ir import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Callable, Iterator
     from pathlib import Path
 
+    from reg_meta_build.codelivery import CodeliveryMap
     from reg_meta_build.sources import IRObject
 
 
@@ -575,6 +576,79 @@ def _year_to_iso_to(year: int | None) -> str | None:
     return f"{year:04d}-12-31"
 
 
+# Edition AUTHORITY: when two SCB deliveries map to the same reference year with
+# DIFFERENT value sets (the co-delivery root cause), the authoritative one for the
+# catalog is determined by SCB's own `registerversionnamn` qualifier. Ranking
+# (high wins): a FINAL ("slutlig") annual supersedes a PRELIMINARY ("preliminär")
+# one for the same year; a full-year annual supersedes a SUB-ANNUAL slice
+# (term/quarter/half/month — these collide at year granularity but are partial);
+# an explicit "_old" historical re-coding is the lowest (superseded by anything).
+# The per-year timeline (`_coalesce_variable_states`) picks the highest-authority
+# value set per (variable, variant, year); equal top authority is a genuine tie
+# the deterministic rule can't break → curation (see CODELIVERY_PLAN.md).
+_AUTH_FINAL = 4
+_AUTH_PLAIN = 3
+_AUTH_PRELIM = 2
+_AUTH_SUBANNUAL = 1
+_AUTH_OLD = 0
+
+# Sub-annual qualifier markers (ascii-folded, lowercased substrings) — terms,
+# quarters, half-years, school years, seasons, and Swedish month names. A version
+# name carrying any of these delivers a slice of a year, not the full year.
+_SUBANNUAL_MARKERS = (
+    "termin",
+    "kvartal",
+    " kv ",
+    " kv2",
+    "halvar",
+    "lasar",
+    "hosten",
+    "varen",
+    "sommar",
+    "vt ",
+    "ht ",
+)
+
+# Compact / bare term forms the string markers above miss: `HT2018` / `VT2018`
+# (no trailing space) and a bare `HT` / `VT` token. Mirrors `_LABEL_HT_RE` /
+# `_LABEL_VT_RE` used in label-freshness ranking — a contested column must rank
+# these sub-annual too, else a compact-term coding ties a full-year annual at
+# `_AUTH_PLAIN` (and the later freshness step could even prefer the term).
+_SUBANNUAL_TERM_RE = re.compile(r"\bht\d|\bvt\d|\bht\b|\bvt\b")
+
+# Swedish month names — WORD-BOUNDARY matched (ascii-folded) so a token like
+# `juni` isn't matched inside `junior`, `maj` inside `majoritet`, etc. (the bare
+# substrings these replace mis-ranked such names sub-annual).
+_SUBANNUAL_MONTH_RE = re.compile(
+    r"\b(?:januari|februari|mars|april|maj|juni|juli|augusti|september"
+    r"|oktober|november|december)\b"
+)
+
+
+def _edition_authority(versionname: str | None) -> int:
+    """Rank a `registerversionnamn` by catalog authority (see the ranking note
+    above). Substring-matched on the ascii-folded, lowercased name so å/ä/ö and
+    casing don't matter. Order is load-bearing: `_old` and finality qualifiers
+    are checked before the sub-annual markers (a name like 'YYYY, slutlig
+    version' must rank FINAL, not fall through)."""
+    s = _ascii_fold_lower(versionname)
+    if not s:
+        return _AUTH_PLAIN
+    if "_old" in s:
+        return _AUTH_OLD
+    if "slutlig" in s or "slutgiltig" in s:
+        return _AUTH_FINAL
+    if "preliminar" in s or "prel." in s or s.endswith(" prel"):
+        return _AUTH_PRELIM
+    if (
+        any(m in s for m in _SUBANNUAL_MARKERS)
+        or _SUBANNUAL_TERM_RE.search(s)
+        or _SUBANNUAL_MONTH_RE.search(s)
+    ):
+        return _AUTH_SUBANNUAL
+    return _AUTH_PLAIN
+
+
 def _parse_unika_year(raw: str | None) -> int | None:
     """Parse a `VersionForsta` / `VersionSista` cell. Empty / unparseable
     yields None so the coalescer can fall back to the register_version
@@ -640,6 +714,24 @@ class _StateGroup:
     # sub-annual variant (e.g. one with both HT2018 and VT2018) doesn't treat a
     # term-to-term column rename as a same-year co-delivery (Codex #139).
     regvers: set[int] = field(default_factory=set)
+    # The set of REFERENCE years this group was observed in (parsed from
+    # `registerversionnamn`). Distinct from `regver_min/max`: this carries the
+    # GAPS, so the materializer can partition a shape's window into contiguous
+    # runs instead of collapsing to `[min, max]` and paving over years the shape
+    # wasn't delivered (the co-delivery root cause — see CODELIVERY_PLAN.md).
+    regyears: set[int] = field(default_factory=set)
+    # year → highest edition AUTHORITY (`_edition_authority`) observed for that
+    # year in this group. When two groups (distinct value sets) compete for a
+    # year, the per-year timeline picks the higher-authority one (final > plain
+    # > preliminary > sub-annual > old); equal top authority is a genuine tie.
+    year_authority: dict[int, int] = field(default_factory=dict)
+    # year → latest edition approval date (`registerversion_senastgodkanddatum`,
+    # ISO so lexical == chronological) observed for that year. The RECENCY
+    # tiebreak after authority: when same-authority value sets compete for a year,
+    # the one delivered by the most-recently-approved edition supersedes (the old
+    # coding lingering in a newer edition loses). Equal date = same delivery = a
+    # genuine parallel co-delivery the rule can't break.
+    year_approval: dict[int, str] = field(default_factory=dict)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -1155,7 +1247,349 @@ def _split_off_non_contested(
             res.related_edges.append((a, b, "same_definition_different_column"))
 
 
-def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
+# ─────────────────────────────────────────────────────────────────────────
+# Per-(variable, variant) year timeline — co-delivery resolution
+# ─────────────────────────────────────────────────────────────────────────
+# The materializer below emits one state per group spanning `[regver_min,
+# regver_max]`. That single span CANNOT express gaps: a value set delivered
+# 1998-2009 + 2011-2025 (with another value set in 2010) still emits 1998-2025,
+# overlapping the 2010 state — the co-delivery root cause (CODELIVERY_PLAN.md).
+# When a `(variable, variant)` has OVERLAPPING distinct-value-set groups, the
+# functions here rebuild its states from per-year occupancy of the OBSERVED
+# editions (`_StateGroup.regyears`), resolving each contested year via a
+# deterministic cascade (authority → recency → cosmetic) and re-deriving each
+# group's window as the contiguous RUNS of the years it actually won. Years a
+# group lost (a competitor superseded it) carve out of its window. A residual
+# year still held by ≥2 distinct value sets is a GENUINE co-delivery that no
+# deterministic signal resolves — those states stay overlapping so the
+# `validate.py` invariant FAILS the build until curated.
+
+_COSMETIC_MAX_SYM = 2  # symmetric code-count diff treated as cosmetic drift
+
+
+def _rle_runs(years: list[int]) -> list[tuple[int, int]]:
+    """Run-length-encode a sorted year list into maximal contiguous
+    `(start, end)` runs (a gap > 1 year starts a new run)."""
+    runs: list[tuple[int, int]] = []
+    for y in years:
+        if runs and y == runs[-1][1] + 1:
+            runs[-1] = (runs[-1][0], y)
+        else:
+            runs.append((y, y))
+    return runs
+
+
+# Grain markers (ascii-folded substrings) flagging a HISTORICAL re-coding —
+# `Kommun historisk`, `Län historisk`, `… tidigare`. SCB co-delivers these
+# alongside the current coding in a re-issue edition (e.g. the 2010 LKF re-issue);
+# on one column the current coding supersedes the historical one. A column-period
+# physically holds ONE coding, so this is a VINTAGE choice, not a representation.
+_HISTORICAL_GRAIN_MARKERS = ("historisk", "tidigare")
+
+
+def _is_historical_grain(grain: str | None) -> bool:
+    s = _ascii_fold_lower(grain)
+    return any(m in s for m in _HISTORICAL_GRAIN_MARKERS)
+
+
+_LABEL_DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+_LABEL_ACADEMIC_RE = re.compile(r"\d{4}\s*/\s*\d{4}")
+# `\bht\d` also matches the no-space form `HT1986` (no word boundary between the
+# `t` and the digit, so a bare `\bht\b` would miss it).
+_LABEL_HT_RE = re.compile(r"\bht\d|\bht\b|hosttermin|hosten")
+_LABEL_VT_RE = re.compile(r"\bvt\d|\bvt\b|vartermin|varen")
+
+
+def _label_resolution_rank(
+    label: str | None,
+) -> tuple[int, int, tuple[int, int, int], int]:
+    """A sortable 'freshness' key for SCB's RECURRING co-delivery families, read
+    from the value-set version label (higher wins). These are SCB delivery
+    conventions — they live in this adapter, not the provider-blind layer:
+      - FINALITY: a `slutlig`/plain coding beats a `preliminär` one.
+      - CALENDAR over ACADEMIC: `Kurskod 2001` beats `Kurskod 2001/2002`.
+      - DATED snapshot: the later `YYYY-MM-DD` wins (`2015-10-15` > `2015-05-15`).
+      - TERM: autumn (`HT`) after spring (`VT`).
+    One-off genuine re-codings (`Br92-kod`/`Br07-kod`, `Ja nej 1`/`Ja nej 3`) carry
+    none of these markers → equal rank → they fall through to curation."""
+    s = _ascii_fold_lower(label)
+    finality = 0 if "preliminar" in s else 1
+    academic = -1 if _LABEL_ACADEMIC_RE.search(s) else 0  # calendar (0) > academic (-1)
+    dm = _LABEL_DATE_RE.search(s)
+    date_key = (int(dm[1]), int(dm[2]), int(dm[3])) if dm else (0, 0, 0)
+    term = 2 if _LABEL_HT_RE.search(s) else (1 if _LABEL_VT_RE.search(s) else 0)
+    return (finality, academic, date_key, term)
+
+
+def _resolve_year_winners(
+    cands: list[tuple],
+    groups: dict[tuple, _StateGroup],
+    year: int,
+    codes_fn: Callable[[int], frozenset[str]],
+    codelivery: CodeliveryMap | None = None,
+    labels: dict[tuple, str] | None = None,
+    code_labels_fn: Callable[[int], dict[str, str]] | None = None,
+) -> tuple[list[tuple], bool]:
+    """Pick the winning group(s) for one contested `year`, COLUMN-AWARE.
+
+    A delivery column (gkey[8]) is one representation of the concept; distinct
+    columns are parallel representations (SSYK 3/5-digit, age 5/10-yr brackets)
+    that legitimately CO-EXIST under one FQID — they are NOT a conflict. So
+    candidates are partitioned by column and each column resolves INDEPENDENTLY to
+    one winner; the winners across columns all survive. `is_genuine` is True only
+    when a SINGLE column still holds >1 distinct value set after its cascade (a
+    real same-column conflict the build can't resolve → curation).
+
+    `codelivery` is the curation map (`(register_id, var_id, column) → keep label`)
+    consulted for genuine one-off conflicts before they're flagged. `labels` is
+    the triage EMITTED labels (`triage.labels`) so a curation pin matches the label
+    that lands in `variable_state` (what the maintainer drafts from), not the raw
+    source `value_set_version_label` (which a §5.7 fold/collapse may relabel).
+    """
+    by_col: dict[str, list[tuple]] = defaultdict(list)
+    for gk in cands:
+        by_col[gk[8]].append(gk)
+    winners: list[tuple] = []
+    any_genuine = False
+    for col_cands in by_col.values():
+        w, genuine = _resolve_column_year(
+            col_cands, groups, year, codes_fn, codelivery, labels, code_labels_fn
+        )
+        winners.extend(w)
+        any_genuine = any_genuine or genuine
+    return winners, any_genuine
+
+
+def _resolve_column_year(
+    cands: list[tuple],
+    groups: dict[tuple, _StateGroup],
+    year: int,
+    codes_fn: Callable[[int], frozenset[str]],
+    codelivery: CodeliveryMap | None = None,
+    labels: dict[tuple, str] | None = None,
+    code_labels_fn: Callable[[int], dict[str, str]] | None = None,
+) -> tuple[list[tuple], bool]:
+    """Resolve ONE column's groups for a contested year to a single winner. The
+    within-column cascade:
+      1. AUTHORITY — keep groups at the highest `year_authority`.
+      2. RECENCY   — keep groups at the latest `year_approval`.
+      3. CURRENT   — drop HISTORICAL-grain groups if a non-historical one survives.
+      4. value-set fold — survivors sharing one value set (or all code-less) → one rep.
+      5. SUPERSESSION — sequential vintages: the latest-INTRODUCED value set (max
+         min observed year) wins the transition year; equal introduction continues.
+      6. SAME-LABEL drift — distinct value sets sharing one source label (`-N`
+         collapse near-dups) → keep the largest.
+      7. LABEL FRESHNESS — SCB recurring families (`_label_resolution_rank`):
+         final>preliminary, calendar>academic year, latest dated snapshot, HT>VT.
+      8. CURATION — a `codelivery` entry pinning the kept label for this
+         (register, var, column) wins (the one-off escape hatch).
+      9. EXTENDS-LATER — introduction tied at SUPERSESSION, but one coding's
+         timeline reaches a strictly later period (max `regver_max`) → it's the
+         live/newer coding of a sequential re-coding; keep it. Co-extensive codings
+         tie and fall through.
+     10. COSMETIC  — distinct value sets within `_COSMETIC_MAX_SYM` symmetric codes
+         → keep the largest. GATED label-aware: a small symmetric diff that hides a
+         RELABELED shared code (same code, different label) is a genuine re-coding,
+         not cosmetic drift, so it does NOT collapse here — it falls to GENUINE.
+     11. GENUINE   — distinct, non-cosmetic value sets on ONE column → all reps,
+         `is_genuine` (overlapping → the invariant flags it for curation).
+    """
+    if len(cands) == 1:
+        return cands, False
+    top_auth = max(groups[gk].year_authority.get(year, _AUTH_PLAIN) for gk in cands)
+    cands = [
+        gk
+        for gk in cands
+        if groups[gk].year_authority.get(year, _AUTH_PLAIN) == top_auth
+    ]
+    top_appr = max(groups[gk].year_approval.get(year, "") for gk in cands)
+    cands = [gk for gk in cands if groups[gk].year_approval.get(year, "") == top_appr]
+    non_hist = [gk for gk in cands if not _is_historical_grain(gk[7])]
+    if non_hist and len(non_hist) < len(cands):
+        cands = non_hist
+
+    by_vs: dict[int | None, list[tuple]] = defaultdict(list)
+    for gk in cands:
+        by_vs[groups[gk].value_set_id].append(gk)
+    nonnull = {vs: gks for vs, gks in by_vs.items() if vs is not None}
+    if len(nonnull) <= 1:
+        # One real value set (code-less groups are exempt from the invariant);
+        # pick the representative of the value set if present, else any rep.
+        pool = next(iter(nonnull.values())) if nonnull else cands
+        return [_pick_state_rep(pool, groups)], False
+
+    # SUPERSESSION: a physical column holds one coding per period, so two distinct
+    # value sets overlapping ON ONE COLUMN are sequential vintages whose transition
+    # year is claimed by both (SNI2002→SNI2007 at 2008, RTB-2019→RTB-2020 at 2020).
+    # The most-recently-INTRODUCED coding (latest min observed year) supersedes at
+    # the boundary; the predecessor carves to end before it. Fires only when one
+    # value set is strictly later — EQUAL introduction (same-span re-codings on one
+    # column: Br92/Br07, Ja-nej-1/Ja-nej-3) stays a genuine conflict → curation.
+    vs_min: dict[int, int] = {}
+    for vs, gks in nonnull.items():
+        vs_min[vs] = min(
+            (groups[gk].regver_min for gk in gks if groups[gk].regver_min is not None),
+            default=1 << 30,
+        )
+    latest = max(vs_min.values())
+    if sum(1 for m in vs_min.values() if m == latest) == 1:
+        win_vs = max(vs_min, key=lambda v: vs_min[v])
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    # SAME-LABEL DRIFT: distinct value sets on one column carrying the SAME source
+    # version label are re-coding drift of ONE concept — triage disambiguated them
+    # with a `-N` suffix (`SEI_PSU`/`SEI_PSU-1`, `4pos`/`4pos-1`). Keep the largest
+    # (most complete). Genuinely different codings carry DIFFERENT labels
+    # (`Br92-kod`/`Br07-kod`, prelim/final, sub-annual dates) and fall through to
+    # curation. Provider-agnostic: any same-label coding drift collapses here.
+    orig_labels = {
+        groups[gk].value_set_version_label or ""
+        for gk in cands
+        if groups[gk].value_set_id is not None
+    }
+    if len(orig_labels) == 1:
+        win_vs = max(nonnull, key=lambda v: (len(codes_fn(v)), v))
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    # LABEL FRESHNESS (SCB recurring families): final>preliminary, calendar>academic
+    # year, latest dated snapshot, autumn>spring term. One value set strictly fresher
+    # → it wins; equal (one-off genuine re-codings) falls through to curation.
+    vs_fresh = {
+        vs: max(
+            _label_resolution_rank(groups[gk].value_set_version_label) for gk in gks
+        )
+        for vs, gks in nonnull.items()
+    }
+    top_fresh = max(vs_fresh.values())
+    if sum(1 for f in vs_fresh.values() if f == top_fresh) == 1:
+        win_vs = max(vs_fresh, key=lambda v: vs_fresh[v])
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    # CURATION (one-off escape hatch): an explicit pin for this (register, var,
+    # column) keeps the named value-set label. register/var/column are constant
+    # across `cands` (partitioned by column, one variable's timeline). A pin that
+    # doesn't match THIS year's survivors falls through to GENUINE, so the
+    # coalescer FAILS the build (`coalesce_unresolved_codelivery`) naming the
+    # column + candidate labels: a stale pin, a typo, or a pin covering only some
+    # years of a multi-year column all surface as an actionable build error rather
+    # than a silently shipped ambiguous column.
+    if codelivery:
+        reg_id, var_id, column = cands[0][0], cands[0][2], cands[0][8]
+        entry = codelivery.get((reg_id, var_id, column))
+        if entry is not None:
+            keep_label, keep_rule = entry
+            if keep_label is not None:
+                # Match the EMITTED label (what lands in variable_state, what the
+                # maintainer drafts the pin from) — a §5.7 fold/collapse can relabel
+                # the raw source `value_set_version_label`.
+                target = keep_label.strip()
+
+                def _emitted(gk: tuple) -> str:
+                    if labels is not None and gk in labels:
+                        return labels[gk]
+                    return groups[gk].value_set_version_label or ""
+
+                for gks in nonnull.values():
+                    if any(_emitted(gk).strip() == target for gk in gks):
+                        return [_pick_state_rep(gks, groups)], False
+            elif keep_rule == "latest_year":
+                # Recurring per-year vintages: keep the coding whose label embeds
+                # the latest 4-digit year. Unique max → resolved; ties fall through.
+                vs_year: dict[int, int] = {}
+                for vs, gks in nonnull.items():
+                    yrs = [
+                        int(m)
+                        for gk in gks
+                        for m in re.findall(
+                            r"(?:19|20)\d{2}", groups[gk].value_set_version_label or ""
+                        )
+                    ]
+                    vs_year[vs] = max(yrs) if yrs else -1
+                top = max(vs_year.values())
+                if top >= 0 and sum(1 for y in vs_year.values() if y == top) == 1:
+                    win = max(vs_year, key=lambda v: vs_year[v])
+                    return [_pick_state_rep(nonnull[win], groups)], False
+
+    # EXTENDS-LATER (more modern): nothing above separated these and there is no
+    # curation pin, but one coding's timeline reaches a STRICTLY LATER period than
+    # the rest — it is the live/newer coding of a sequential re-coding whose
+    # INTRODUCTION year tied at SUPERSESSION (the plain→'…2009'→'…2014' bloc series;
+    # a FoB75 coding that carries forward open-ended). Keep the latest-extending
+    # one. Co-extensive codings (same last period: UpplForm Hh/Lgh, Br92/Br07,
+    # the genuinely parallel re-codings) tie here and fall through to cosmetic /
+    # genuine, where a relabel is surfaced for curation.
+    vs_max: dict[int, int] = {}
+    for vs, gks in nonnull.items():
+        vs_max[vs] = max(
+            (groups[gk].regver_max for gk in gks if groups[gk].regver_max is not None),
+            default=-1,
+        )
+    top_max = max(vs_max.values())
+    if top_max >= 0 and sum(1 for m in vs_max.values() if m == top_max) == 1:
+        win_vs = max(vs_max, key=lambda v: vs_max[v])
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    vss = sorted(nonnull)
+    max_sym = max(
+        len(codes_fn(vss[i]) ^ codes_fn(vss[j]))
+        for i in range(len(vss))
+        for j in range(i + 1, len(vss))
+    )
+    if max_sym <= _COSMETIC_MAX_SYM and not _shared_code_relabeled(vss, code_labels_fn):
+        win_vs = max(nonnull, key=lambda v: (len(codes_fn(v)), v))
+        return [_pick_state_rep(nonnull[win_vs], groups)], False
+
+    return [_pick_state_rep(gks, groups) for gks in nonnull.values()], True
+
+
+def _shared_code_relabeled(
+    vss: list[int], code_labels_fn: Callable[[int], dict[str, str]] | None
+) -> bool:
+    """True if any code appears in ≥2 of these value sets with a MEANINGFULLY
+    different label. Such a re-coding (same code, new meaning — e.g. a 1-code
+    Br92/Br07-style clash, or FoB75 'i huset' vs 'i lägenheten') is NOT cosmetic
+    drift even when the symmetric code-count diff is tiny, so the cosmetic collapse
+    must skip it and let the conflict fall through to curation.
+
+    Labels are compared ASCII-folded/lowercased with whitespace collapsed, so a
+    pure case/diacritic/spacing difference ('Makedonien' vs 'MAKEDONIEN',
+    'STOCKHOLMS LÄNS' vs 'Stockholms läns') stays cosmetic and still collapses.
+    No label source (older callers / tests) → fall back to code-only behavior."""
+    if code_labels_fn is None:
+        return False
+
+    def _norm(label: str) -> str:
+        return " ".join(_ascii_fold_lower(label).split())
+
+    seen: dict[str, str] = {}
+    for vs in vss:
+        for code, label in code_labels_fn(vs).items():
+            norm = _norm(label)
+            prior = seen.get(code)
+            if prior is not None and prior != norm:
+                return True
+            seen[code] = norm
+    return False
+
+
+def _pick_state_rep(gkeys: list[tuple], groups: dict[tuple, _StateGroup]) -> tuple:
+    """Deterministic representative among gkeys sharing a value set: the
+    latest-era group (highest `regver_max`), ties broken by the stringified gkey
+    (a raw gkey carries `value_set_id: int | None`, so a None-vs-int compare would
+    raise; stringify each element)."""
+    return max(
+        gkeys,
+        key=lambda gk: (
+            groups[gk].regver_max if groups[gk].regver_max is not None else -1,
+            tuple("" if x is None else str(x) for x in gk),
+        ),
+    )
+
+
+def _coalesce_variable_states(
+    conn: sqlite3.Connection,
+    codelivery: CodeliveryMap | None = None,
+) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` per §5.1.
 
     Group key: `(register_id, register_variant_id, var_id, data_type, data_length,
@@ -1221,7 +1655,8 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
         "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
         "       vi.classification_id, "
         "       vi.variabelnamn, va.delivery_column_name, "
-        "       rv.registerversionnamn "
+        "       rv.registerversionnamn, "
+        "       rv.registerversion_senastgodkanddatum "
         "FROM variable_instance vi "
         "LEFT JOIN variable_alias_build va ON va.cvid = vi.cvid "
         "JOIN register_version rv ON rv.regver_id = vi.regver_id"
@@ -1352,6 +1787,13 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
         # identify the latest-era group when clamping unika ranges.
         rver_year = extract_year(row["registerversionnamn"] or "")
         if rver_year is not None:
+            grp.regyears.add(rver_year)
+            _auth = _edition_authority(row["registerversionnamn"])
+            if _auth > grp.year_authority.get(rver_year, -1):
+                grp.year_authority[rver_year] = _auth
+            _appr = row["registerversion_senastgodkanddatum"] or ""
+            if _appr > grp.year_approval.get(rver_year, ""):
+                grp.year_approval[rver_year] = _appr
             grp.regver_min = (
                 rver_year if grp.regver_min is None else min(grp.regver_min, rver_year)
             )
@@ -1518,54 +1960,32 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
     sentinel_count = 0
     fallback_only_count = 0
     open_top_from_unika = 0
-    for gkey, grp in groups.items():
-        if gkey in triage.dropped:
-            continue  # collapsed into a sibling state (§5.7 rule 4 drift)
-        vkey = (grp.register_id, grp.register_variant_id, grp.var_id)
-        var_max = var_max_regver.get(vkey)
-        # `None == None` is True — a yearless single-group variable counts
-        # as the latest era of itself, so the open-ended sentinel can
-        # still apply there.
-        is_latest_era = grp.regver_max == var_max
+    disambig_count = 0
 
-        # Lower bound: regver is authoritative (the years we actually
-        # observed the group). Unika is fallback for yearless cvids. Shared
-        # with triage's collision bucketing via _group_from_year.
-        from_year = _group_from_year(grp)
+    # Cosmetic-diff needs value-set code lists, and the label-aware cosmetic gate
+    # needs each code's label; cache the code→label map per value_set_id (the
+    # contested set is a small fraction of all value sets, so lazy is cheap).
+    _vs_code_labels_cache: dict[int, dict[str, str]] = {}
 
-        # Upper bound: latest-era group with unika-open → sentinel.
-        # Otherwise the group's observed regver_max wins. Unika upper
-        # only stands in when regver is unparseable.
-        #
-        # The open-ended trigger covers two shapes: (a) unika matched the
-        # group and `unika_max` was never populated (only blank
-        # VersionSista rows applied); (b) `unika_has_open_top` flagged
-        # that at least one matching unika row left VersionSista blank
-        # even when others did populate `unika_max`. Case (b) is the
-        # mid-life-rename pattern — a bounded OriginalName row and an
-        # open-ended RenamedName row both apply to the same group. The
-        # "still active" signal from the rename must win over the
-        # bounded-out OriginalName row.
-        if (
-            is_latest_era
-            and grp.unika_matched
-            and (grp.unika_max is None or grp.unika_has_open_top)
-        ):
-            to_year = None  # forces sentinel
-            open_top_from_unika += 1
-        elif grp.regver_max is not None:
-            to_year = grp.regver_max
-        else:
-            to_year = grp.unika_max  # yearless fallback; may be None → sentinel
+    def _vs_code_labels(vsid: int) -> dict[str, str]:
+        cached = _vs_code_labels_cache.get(vsid)
+        if cached is None:
+            cached = {
+                r[0]: (r[1] or "")
+                for r in conn.execute(
+                    "SELECT vc.code, vc.label FROM value_set_member vsm "
+                    "JOIN value_code vc ON vc.code_id = vsm.code_id "
+                    "WHERE vsm.value_set_id = ?",
+                    (vsid,),
+                )
+            }
+            _vs_code_labels_cache[vsid] = cached
+        return cached
 
-        valid_from = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
-        valid_to = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+    def _vs_codes(vsid: int) -> frozenset[str]:
+        return frozenset(_vs_code_labels(vsid))
 
-        if valid_to == _VALID_TO_OPEN_SENTINEL or valid_from == _VALID_FROM_UNKNOWN:
-            sentinel_count += 1
-        if not grp.unika_matched:
-            fallback_only_count += 1
-
+    def _resolve_variable_id(gkey: tuple, grp: _StateGroup) -> int:
         variable_id = triage.assignments.get(gkey)
         if variable_id is None:
             # Defensive: `variable` and `variable_instance` derive from the same
@@ -1585,21 +2005,315 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
                     "source with `reg-meta-build build-db`."
                 ),
             )
+        return variable_id
+
+    def _group_open_to(grp: _StateGroup) -> int | None:
+        """Upper-bound year for a group's LATEST run, or None → open sentinel.
+        Latest-era group with unika-open → sentinel; else its observed
+        `regver_max`; else the unika upper (yearless fallback)."""
+        vkey = (grp.register_id, grp.register_variant_id, grp.var_id)
+        is_latest_era = grp.regver_max == var_max_regver.get(vkey)
+        if (
+            is_latest_era
+            and grp.unika_matched
+            and (grp.unika_max is None or grp.unika_has_open_top)
+        ):
+            return None
+        if grp.regver_max is not None:
+            return grp.regver_max
+        return grp.unika_max
+
+    # (variable_id, register_variant_id, valid_from, label) keys already emitted —
+    # the §5.1 uniqueness index. The fast path NEVER collides (a collision there is
+    # a triage bug → let the INSERT raise loudly). The timeline path CAN legitimately
+    # collide on CROSS-COLUMN co-delivery: two distinct delivery columns (parallel
+    # representations — agrupp/agrupp2, SSYK 3/5-digit) each win the same year with
+    # an empty label, so they share `(vid, rv, valid_from, '')`. Those are real
+    # distinct codings on distinct columns, so disambiguate the label with the
+    # DELIVERY-COLUMN NAME (self-documenting + stable) so both ship. SAME-column
+    # conflicts never reach the INSERT: they're collected as
+    # `genuine` and the coalescer RAISES before materializing (see below).
+    # Disambiguation is counted; a flood would signal a bug.
+    _used_index_keys: set[tuple[int, int, str, str]] = set()
+
+    def _append_state(
+        grp: _StateGroup,
+        gkey: tuple,
+        vid: int,
+        vf: str,
+        vt: str,
+        disambig: bool = False,
+    ) -> None:
+        nonlocal sentinel_count, fallback_only_count, disambig_count
+        if vt == _VALID_TO_OPEN_SENTINEL or vf == _VALID_FROM_UNKNOWN:
+            sentinel_count += 1
+        if not grp.unika_matched:
+            fallback_only_count += 1
+        # Fold token from triage wins; else the group's own label (NOT NULL
+        # DEFAULT '' — coalesce NULL→'' so the index bites for single-version).
+        label = triage.labels.get(gkey, grp.value_set_version_label or "")
+        if disambig:
+            base = label
+            # Disambiguate a cross-column co-delivery collision with the delivery-
+            # column name (self-documenting + order-stable) rather than an opaque
+            # counter; the first-emitted column keeps the base label. The numeric
+            # fallback only fires if the column name ALSO collides (it shouldn't —
+            # same-column conflicts are caught as `genuine` before emit).
+            col = grp.latest_alias or gkey[8] or "cd"
+            n = 0
+            while (vid, grp.register_variant_id, vf, label) in _used_index_keys:
+                n += 1
+                suffix = col if n == 1 else f"{col}{n}"
+                label = f"{base}-{suffix}" if base else suffix
+            if label != base:
+                disambig_count += 1
+        _used_index_keys.add((vid, grp.register_variant_id, vf, label))
         batch.append(
             (
-                variable_id,
+                vid,
                 grp.register_variant_id,
-                valid_from,
-                valid_to,
+                vf,
+                vt,
                 grp.data_type,
                 grp.data_length,
                 grp.latest_alias,
                 grp.value_set_id,
-                # Fold token from triage wins; else the group's own label
-                # (NOT NULL DEFAULT '' — coalesce NULL→'' so the uniqueness
-                # index bites for the common single-version case).
-                triage.labels.get(gkey, grp.value_set_version_label or ""),
+                label,
             )
+        )
+
+    def _emit_span(gkey: tuple, grp: _StateGroup) -> None:
+        """Fast path / yearless fallback: one state over the group's
+        `[from, to]` span (the pre-timeline behavior)."""
+        nonlocal open_top_from_unika
+        vid = _resolve_variable_id(gkey, grp)
+        from_year = _group_from_year(grp)
+        to_year = _group_open_to(grp)
+        if to_year is None:
+            open_top_from_unika += 1
+        vf = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
+        vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+        _append_state(grp, gkey, vid, vf, vt)
+
+    # Partition surviving groups by (variable_id, register_variant_id). A
+    # `(variable, variant)` needs the per-year TIMELINE iff two of its groups
+    # carry DISTINCT non-null value sets with OVERLAPPING `[regver_min,
+    # regver_max]` spans (the same condition `validate.py` flags). Everything
+    # else keeps the fast `[min,max]` span path — byte-identical to before, and
+    # benign single-edition gaps stay covered (no needless fragmentation).
+    by_vv: dict[tuple[int, int], list[tuple]] = defaultdict(list)
+    for gkey, grp in groups.items():
+        if gkey in triage.dropped:
+            continue  # collapsed into a sibling state (§5.7 rule 4 drift)
+        vid = _resolve_variable_id(gkey, grp)
+        by_vv[(vid, grp.register_variant_id)].append(gkey)
+
+    def _spans_overlap(gkeys: list[tuple]) -> bool:
+        spans: list[tuple[int, int, int]] = []
+        col_vs: dict[str, set[int]] = defaultdict(set)
+        col_yearless: dict[str, bool] = defaultdict(bool)
+        for gk in gkeys:
+            g = groups[gk]
+            if g.value_set_id is None:
+                continue
+            col_vs[gk[8]].add(g.value_set_id)
+            if not g.regyears:
+                col_yearless[gk[8]] = True
+            elif g.regver_min is not None and g.regver_max is not None:
+                spans.append((g.regver_min, g.regver_max, g.value_set_id))
+        # (a) two year-bearing distinct-value-set groups with overlapping windows.
+        for i in range(len(spans)):
+            lo_i, hi_i, vs_i = spans[i]
+            for j in range(i + 1, len(spans)):
+                lo_j, hi_j, vs_j = spans[j]
+                if vs_i != vs_j and max(lo_i, lo_j) <= min(hi_i, hi_j):
+                    return True
+        # (b) a YEARLESS group on a column carrying >1 distinct value set — it
+        # emits an open span (fast path) that would overlap the column's other
+        # coding; route the cluster through the timeline so it resolves.
+        for col, yearless in col_yearless.items():
+            if yearless and len(col_vs[col]) > 1:
+                return True
+        return False
+
+    # Genuine same-column conflicts: a delivery column resolves a period to >1
+    # distinct value set the cascade + curation couldn't reduce. Keyed by
+    # (register_id, var_id, column) → contested period descriptors (a year, or
+    # "(yearless)" for an open-span conflict) + candidate (value_set_id, emitted
+    # label) pairs, so the build-time failure names exactly which curation pin to
+    # add. Any entry here fails the build before materializing.
+    genuine_years: dict[tuple[int, int, str], set[str]] = defaultdict(set)
+    genuine_cands: dict[tuple[int, int, str], set[tuple[int, str]]] = defaultdict(set)
+    timeline_vv = 0
+
+    def _emitted_label(gk: tuple) -> str:
+        """The label that lands in `variable_state` (triage fold token wins, else
+        the group's own label) — what a curation `keep` pin matches against."""
+        return (triage.labels.get(gk, groups[gk].value_set_version_label or "")).strip()
+
+    def _col_value_sets(gks: list[tuple]) -> set[int]:
+        return {vs for gk in gks if (vs := groups[gk].value_set_id) is not None}
+
+    for (vid, rv), gkeys in by_vv.items():
+        if not _spans_overlap(gkeys):
+            for gk in gkeys:  # fast path
+                _emit_span(gk, groups[gk])
+            continue
+        timeline_vv += 1
+        year_bearing = [gk for gk in gkeys if groups[gk].regyears]
+        yearless = [gk for gk in gkeys if not groups[gk].regyears]
+        # A YEARLESS group has no per-year placement: it emits a single OPEN span
+        # over the variable's lifetime, so on a column carrying >1 DISTINCT value
+        # set it overlaps every other coding there. Resolve each yearless-bearing
+        # column up front, deciding which yearless to EMIT and which year-bearing
+        # rivals to DROP from the per-year timeline below:
+        #   - a curation `keep` pin selects the kept coding (yearless OR
+        #     year-bearing); every other coding on that column is dropped;
+        #   - else a year-bearing coding wins (it carries real years) and the
+        #     yearless ones are dropped;
+        #   - else (ALL-yearless, no pin) the column is an unresolvable open-span
+        #     co-delivery → recorded GENUINE so the build fails (not shipped).
+        # Non-conflicting yearless groups (≤1 distinct value set on the column)
+        # always emit.
+        yearless_emit: set[tuple] = set()
+        yb_drop: set[tuple] = set()
+        for col in {gk[8] for gk in yearless}:
+            col_yl = [gk for gk in yearless if gk[8] == col]
+            col_yb = [gk for gk in year_bearing if gk[8] == col]
+            if len(_col_value_sets(col_yl + col_yb)) <= 1:
+                yearless_emit.update(col_yl)  # no conflict on this column
+                continue
+            pin = None
+            if codelivery:
+                _entry = codelivery.get((col_yl[0][0], col_yl[0][2], col))
+                if _entry is not None and _entry[0] is not None:
+                    pin = _entry[0].strip()
+            pinned_yl = [gk for gk in col_yl if pin and _emitted_label(gk) == pin]
+            pinned_yb = [gk for gk in col_yb if pin and _emitted_label(gk) == pin]
+            if pinned_yl:
+                # A yearless coding is pinned: keep it, drop every rival on the
+                # column — other yearless AND all year-bearing.
+                yearless_emit.add(pinned_yl[0])
+                yb_drop.update(col_yb)
+            elif pin is not None and not pinned_yb:
+                # A `keep` pin is set for this column but matches NEITHER a yearless
+                # nor a year-bearing coding here (stale/typo). Honor the curation
+                # file's guarantee that a non-matching pin fails the build: record
+                # GENUINE rather than silently shipping the year-bearing default —
+                # with a single year-bearing rival the year loop returns before
+                # consulting curation, so the bad pin would otherwise go unreported.
+                ckey = (col_yl[0][0], col_yl[0][2], col)
+                genuine_years[ckey].add("(yearless)")
+                for gk in col_yl + col_yb:
+                    if (vs := groups[gk].value_set_id) is not None:
+                        genuine_cands[ckey].add((vs, _emitted_label(gk)))
+                yb_drop.update(col_yb)  # don't also process them in the year loop
+            elif col_yb:
+                # A year-bearing coding wins (no pin, or the pin matches a
+                # year-bearing coding the year loop keeps): drop all yearless here.
+                continue
+            else:
+                # All-yearless, no pin → unresolvable open-span conflict.
+                ckey = (col_yl[0][0], col_yl[0][2], col)
+                genuine_years[ckey].add("(yearless)")
+                for gk in col_yl:
+                    if (vs := groups[gk].value_set_id) is not None:
+                        genuine_cands[ckey].add((vs, _emitted_label(gk)))
+        for gk in yearless:
+            if gk in yearless_emit:
+                _emit_span(gk, groups[gk])
+        # A pinned yearless coding beat these year-bearing rivals — drop them so
+        # the timeline doesn't re-emit an overlapping coding on the same column.
+        year_bearing = [gk for gk in year_bearing if gk not in yb_drop]
+        owned: dict[tuple, set[int]] = defaultdict(set)
+        all_years: set[int] = set()
+        for gk in year_bearing:
+            all_years |= groups[gk].regyears
+        for y in sorted(all_years):
+            cands = [gk for gk in year_bearing if y in groups[gk].regyears]
+            winners, genuine = _resolve_year_winners(
+                cands, groups, y, _vs_codes, codelivery, triage.labels, _vs_code_labels
+            )
+            for gk in winners:
+                owned[gk].add(y)
+            if genuine:
+                # Pin the conflict to the offending column(s): winners on ONE
+                # column carrying >1 distinct value set (cross-column winners are a
+                # legitimate co-delivery, not a conflict). Record each contested
+                # year + its candidate (value_set_id, emitted label) pairs.
+                col_winners: dict[str, list[tuple]] = defaultdict(list)
+                for gk in winners:
+                    if groups[gk].value_set_id is not None:
+                        col_winners[gk[8]].append(gk)
+                for col, gks in col_winners.items():
+                    if len({groups[gk].value_set_id for gk in gks}) <= 1:
+                        continue
+                    ckey = (gks[0][0], gks[0][2], col)
+                    genuine_years[ckey].add(str(y))
+                    for gk in gks:
+                        vs = groups[gk].value_set_id
+                        if vs is None:
+                            continue
+                        lbl = triage.labels.get(
+                            gk, groups[gk].value_set_version_label or ""
+                        )
+                        genuine_cands[ckey].add((vs, lbl))
+        # Each owning group's window = the contiguous RUNS of years it won
+        # (gaps where a competitor superseded it carve out). The open-ended
+        # sentinel applies only to the final run that still ends at the group's
+        # latest observed edition (it didn't lose its latest era).
+        for gk, yrs in owned.items():
+            grp = groups[gk]
+            runs = _rle_runs(sorted(yrs))
+            open_to = _group_open_to(grp)
+            for idx, (run_lo, run_hi) in enumerate(runs):
+                is_last = idx == len(runs) - 1
+                if is_last and open_to is None and run_hi == grp.regver_max:
+                    vt = _VALID_TO_OPEN_SENTINEL
+                    open_top_from_unika += 1
+                else:
+                    vt = _year_to_iso_to(run_hi) or _VALID_TO_OPEN_SENTINEL
+                vf = _year_to_iso_from(run_lo) or _VALID_FROM_UNKNOWN
+                _append_state(grp, gk, vid, vf, vt, disambig=True)
+
+    if timeline_vv:
+        _progress(
+            f"  partitioned {timeline_vv:,} overlapping (variable,variant) into "
+            f"per-year value-set timelines "
+            f"({disambig_count:,} cross-column co-delivery labels disambiguated)"
+        )
+    # Fail BEFORE materializing: a same-column conflict that survived the cascade
+    # AND curation is an unresolvable co-delivery. This is the build-time half of
+    # the `(variable, variant, period, column) → one value set` invariant —
+    # `validate.py` re-checks the shipped DB as a redundant backstop, but the build
+    # must never ship an ambiguous column, even on a default (non-`--validate`) run.
+    if genuine_years:
+        lines = []
+        for ckey in sorted(genuine_years):
+            reg, var, col = ckey
+            yrs = ", ".join(sorted(genuine_years[ckey]))
+            cands_str = ", ".join(
+                f"vs{vs} {lbl!r}" for vs, lbl in sorted(genuine_cands[ckey])
+            )
+            lines.append(
+                f"  register_id={reg} var_id={var} "
+                f"column={col or '(no column)'} period(s) {yrs}: {cands_str}"
+            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="coalesce_unresolved_codelivery",
+            error_class="configuration",
+            message=(
+                f"{len(genuine_years)} delivery column(s) resolve a period to >1 "
+                "value set after the deterministic cascade — an unresolvable "
+                "same-column co-delivery:\n" + "\n".join(lines)
+            ),
+            remediation=(
+                "Add a curation pin to reg_meta_build/codelivery.toml keyed on "
+                '(register_id, var_id, column), with `keep = "<emitted label>"` '
+                'naming the coding to keep (or `keep_rule = "latest_year"` for '
+                "recurring dated vintages). See the file header."
+            ),
         )
 
     conn.executemany(
@@ -2153,10 +2867,17 @@ class SCBAdapter:
 
     provider = "scb"
 
-    def __init__(self, conn: sqlite3.Connection) -> None:
+    def __init__(
+        self,
+        conn: sqlite3.Connection,
+        codelivery: CodeliveryMap | None = None,
+    ) -> None:
         # The adapter writes its scratch/reference tables into the working conn
         # and reads the universal rows back to emit IR (strategy B, plan §4).
         self.conn = conn
+        # §5.7 co-delivery curation (register_id, var_id, column) → kept label,
+        # consulted by the coalescer for genuine one-off same-column conflicts.
+        self.codelivery = codelivery or {}
         self.source_checksums: dict[str, str] = {}
         self.row_counts: dict[str, int] = {}
         self.coalesce_stats: dict[str, Any] = {}
@@ -2283,7 +3004,7 @@ class SCBAdapter:
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the
         # unika_summary DROP below.
-        self.coalesce_stats = _coalesce_variable_states(conn)
+        self.coalesce_stats = _coalesce_variable_states(conn, self.codelivery)
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug + related-to post-passes.

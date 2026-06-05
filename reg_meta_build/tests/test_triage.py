@@ -25,16 +25,409 @@ from _csv_fixtures import (
 from reg_meta.db import open_db
 from reg_meta_build.db import build_db
 from reg_meta_build.sources.scb import (
+    _AUTH_FINAL,
+    _AUTH_PLAIN,
+    _AUTH_PRELIM,
+    _AUTH_SUBANNUAL,
     _apply_fold,
     _apply_split,
     _collapse_residual,
     _common_prefix_len,
     _decide_fold_or_split,
+    _edition_authority,
     _fold_token_from_grain,
+    _pick_state_rep,
+    _resolve_year_winners,
+    _rle_runs,
     _split_off_non_contested,
     _StateGroup,
     _TriageResult,
 )
+
+
+def _state(
+    value_set_id: int | None,
+    *,
+    col: str = "agrupp",
+    grain: str = "",
+    authority: int = _AUTH_PLAIN,
+    approval: str = "",
+    regver_max: int | None = None,
+    regver_min: int | None = None,
+    label: str | None = None,
+    dlen: str = "1",
+    year: int = 2020,
+) -> tuple[tuple, _StateGroup]:
+    """Return (gkey, group) for the per-year resolver tests. The gkey is a real
+    9-tuple — [5]=value_set_id, [7]=grain, [8]=column — the fields the
+    column-aware resolver reads. `dlen` varies the shape so two same-value-set
+    groups on one column stay distinct gkeys. `label` defaults to a UNIQUE
+    per-value-set string so distinct value sets are distinct-label (genuine) unless
+    a test sets a shared label to exercise the same-label-drift rule."""
+    vlabel = label if label is not None else f"vs{value_set_id}"
+    gkey = (1, 10, 1, "int", dlen, value_set_id, vlabel, grain, col)
+    g = _StateGroup(
+        register_id=1,
+        register_variant_id=10,
+        var_id=1,
+        data_type="int",
+        data_length=dlen,
+        value_set_id=value_set_id,
+        value_set_version_label=vlabel,
+    )
+    g.regyears = {year}
+    g.year_authority = {year: authority}
+    g.year_approval = {year: approval}
+    g.regver_max = regver_max
+    g.regver_min = regver_min
+    return gkey, g
+
+
+class TestEditionAuthority:
+    def test_finality_ranks(self) -> None:
+        assert _edition_authority("2020, slutlig version") == _AUTH_FINAL
+        assert _edition_authority("2020, preliminär version") == _AUTH_PRELIM
+        assert _edition_authority("2020") == _AUTH_PLAIN
+        assert _edition_authority("1992_old") == 0
+
+    def test_subannual_markers(self) -> None:
+        assert _edition_authority("Höstterminen 2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("2010 kvartal 2-4") == _AUTH_SUBANNUAL
+        assert _edition_authority("Läsåret 2015/2016") == _AUTH_SUBANNUAL
+
+    def test_finality_beats_subannual_order(self) -> None:
+        # 'slutlig' must win even if a sub-annual word also appears.
+        assert _edition_authority("Höstterminen 2018, slutlig version") == _AUTH_FINAL
+
+    def test_compact_term_forms_are_subannual(self) -> None:
+        # No-space `HT2018`/`VT2018` and a bare `HT`/`VT` token must rank
+        # sub-annual (else they tie a full-year annual at _AUTH_PLAIN).
+        assert _edition_authority("HT2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("VT2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("Skolår 2018 HT") == _AUTH_SUBANNUAL
+        # A plain annual is unaffected (no false HT/VT match mid-word).
+        assert _edition_authority("Avbrott 2018") == _AUTH_PLAIN
+
+    def test_month_names_word_bounded(self) -> None:
+        # A real month name → sub-annual, but the word boundary blocks a substring
+        # false-positive: `juni` ⊄ `junior`, `maj` ⊄ `majversion`.
+        assert _edition_authority("Mars 2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("2018 juni") == _AUTH_SUBANNUAL
+        assert _edition_authority("Majversion 2018") == _AUTH_PLAIN
+        assert _edition_authority("Junioravgång 2018") == _AUTH_PLAIN
+
+
+class TestRleRuns:
+    def test_contiguous(self) -> None:
+        assert _rle_runs([2000, 2001, 2002]) == [(2000, 2002)]
+
+    def test_gap_splits(self) -> None:
+        assert _rle_runs([2000, 2002]) == [(2000, 2000), (2002, 2002)]
+        assert _rle_runs([2000, 2001, 2003, 2004, 2005]) == [(2000, 2001), (2003, 2005)]
+
+    def test_empty_and_single(self) -> None:
+        assert _rle_runs([]) == []
+        assert _rle_runs([1999]) == [(1999, 1999)]
+
+
+class TestResolveYearWinners:
+    def _codes(self, sizes: dict[int, int]):
+        # value_set_id -> a NESTED code set of the requested size (shared prefix,
+        # so two sets' symmetric diff == their size difference — the real-world
+        # cosmetic-drift shape where a coding gains/loses a few codes).
+        store = {vs: frozenset(f"c{i}" for i in range(n)) for vs, n in sizes.items()}
+        return lambda vs: store.get(vs, frozenset())
+
+    def test_single_candidate(self) -> None:
+        a = _state(1)
+        winners, genuine = _resolve_year_winners(
+            [a[0]], dict([a]), 2020, self._codes({1: 3})
+        )
+        assert winners == [a[0]]
+        assert genuine is False
+
+    def test_authority_breaks_tie(self) -> None:
+        # same column, distinct value sets -> authority resolves within the column.
+        a = _state(1, col="x", authority=_AUTH_FINAL)
+        b = _state(2, col="x", authority=_AUTH_PRELIM)
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 3})
+        )
+        assert winners == [a[0]]
+        assert genuine is False
+
+    def test_recency_breaks_tie(self) -> None:
+        a = _state(1, col="x", approval="2022-01-01")
+        b = _state(2, col="x", approval="2014-01-01")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 3})
+        )
+        assert winners == [a[0]]
+        assert genuine is False
+
+    def test_cosmetic_keeps_larger(self) -> None:
+        # same column + authority + approval, codes differ by 1 -> cosmetic.
+        a = _state(1, col="x")
+        b = _state(2, col="x")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 10})
+        )
+        assert winners == [a[0]]  # larger
+        assert genuine is False
+
+    def test_authority_precedes_cosmetic(self) -> None:
+        # PRECEDENCE: authority (step 1) runs before cosmetic (step 10). A is FINAL
+        # but SMALLER; B is plain but larger (cosmetic would keep B). Authority wins
+        # → A, proving the earlier step short-circuits.
+        a = _state(1, col="x", authority=_AUTH_FINAL)
+        b = _state(2, col="x", authority=_AUTH_PLAIN)
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 4})
+        )
+        assert winners == [a[0]]  # authority, not the larger cosmetic pick
+        assert genuine is False
+
+    def test_supersession_precedes_cosmetic(self) -> None:
+        # PRECEDENCE: supersession (step 5) runs before cosmetic (step 10). The
+        # codes differ by 1 (cosmetic-eligible) AND introduction years differ; the
+        # later-introduced coding is the SMALLER one, so supersession (not cosmetic,
+        # which would keep the larger) decides → the later coding wins.
+        old_big = _state(1, col="x", regver_min=2006)
+        new_small = _state(2, col="x", regver_min=2008)
+        winners, genuine = _resolve_year_winners(
+            [old_big[0], new_small[0]],
+            dict([old_big, new_small]),
+            2020,
+            self._codes({1: 4, 2: 3}),
+        )
+        assert winners == [new_small[0]]  # supersession, not the larger cosmetic pick
+        assert genuine is False
+
+    def test_supersession_latest_introduced_wins(self) -> None:
+        # one column, sequential vintages overlapping at the transition year: the
+        # later-introduced coding (higher min year) supersedes; big code diff so
+        # only supersession (not cosmetic) can resolve it.
+        old = _state(1, col="NgS1", regver_min=2006)
+        new = _state(2, col="NgS1", regver_min=2008)
+        winners, genuine = _resolve_year_winners(
+            [old[0], new[0]], dict([old, new]), 2008, self._codes({1: 778, 2: 821})
+        )
+        assert winners == [new[0]]  # latest-introduced supersedes the boundary
+        assert genuine is False
+
+    def test_same_label_drift_keeps_larger(self) -> None:
+        # one column, SAME source label (a `-N` collapse near-dup), distinct value
+        # sets, equal introduction -> keep the larger (most complete).
+        small = _state(1, col="x", label="SEI_PSU")
+        big = _state(2, col="x", label="SEI_PSU")
+        winners, genuine = _resolve_year_winners(
+            [small[0], big[0]], dict([small, big]), 2020, self._codes({1: 19, 2: 22})
+        )
+        assert winners == [big[0]]
+        assert genuine is False
+
+    def test_label_freshness_final_beats_preliminary(self) -> None:
+        a = _state(1, col="x", label="RTB 2021 preliminär")
+        b = _state(2, col="x", label="RTB 2021")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2021, self._codes({1: 234, 2: 251})
+        )
+        assert winners == [b[0]]  # final beats preliminary
+        assert genuine is False
+
+    def test_label_freshness_later_snapshot_wins(self) -> None:
+        a = _state(1, col="x", label="Skolenhetskod 2015-05-15")
+        b = _state(2, col="x", label="Skolenhetskod 2015-10-15")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2015, self._codes({1: 8854, 2: 9110})
+        )
+        assert winners == [b[0]]  # later dated snapshot
+        assert genuine is False
+
+    def test_label_freshness_calendar_beats_academic(self) -> None:
+        a = _state(1, col="x", label="Komvux Kurskod 2001/2002")
+        b = _state(2, col="x", label="Komvux Kurskod 2001")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2001, self._codes({1: 5955, 2: 6473})
+        )
+        assert winners == [b[0]]  # calendar-year canonical over academic
+        assert genuine is False
+
+    def test_label_freshness_autumn_term_no_space(self) -> None:
+        # the no-space `HT1986` form must match (regression: `\bht\b` missed it).
+        a = _state(1, col="x", label="Komvux Kurskod VT1986")
+        b = _state(2, col="x", label="Komvux Kurskod HT1986")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1986, self._codes({1: 837, 2: 780})
+        )
+        assert winners == [b[0]]  # autumn term wins despite fewer codes
+        assert genuine is False
+
+    def test_distinct_label_recoding_stays_genuine(self) -> None:
+        # one column, SAME introduction, DIFFERENT source labels (Br92 vs Br07) →
+        # genuine → curation.
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45})
+        )
+        assert genuine is True
+        assert set(winners) == {a[0], b[0]}
+
+    def test_curation_pin_resolves_genuine(self) -> None:
+        # a codelivery pin keeps the named label, resolving the genuine conflict.
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        # gkey: [0]=register_id=1, [2]=var_id=1, [8]=column="AL2"
+        codelivery = {(1, 1, "AL2"): ("Br07-kod", None)}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
+        )
+        assert winners == [b[0]]  # the pinned Br07 coding
+        assert genuine is False
+
+    def test_curation_pin_matches_emitted_label(self) -> None:
+        # a §5.7 fold relabels the raw value_set_version_label (origA/origB) to
+        # emitted tokens (4pos/4pos-1). The pin matches the EMITTED label (what the
+        # maintainer sees in variable_state), resolving to '4pos' over cosmetic's
+        # would-be larger pick.
+        a = _state(1, col="X", label="origA")
+        b = _state(2, col="X", label="origB")
+        emitted = {a[0]: "4pos", b[0]: "4pos-1"}
+        codelivery = {(1, 1, "X"): ("4pos", None)}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]],
+            dict([a, b]),
+            2020,
+            self._codes({1: 377, 2: 378}),
+            codelivery,
+            emitted,
+        )
+        assert winners == [a[0]]  # the pinned '4pos' (377), not cosmetic's larger
+        assert genuine is False
+
+    def test_curation_keep_rule_latest_year(self) -> None:
+        # keep_rule=latest_year keeps the coding whose label embeds the latest year
+        # (recurring SFI-year vintages on one column).
+        a = _state(1, col="Skolkod", label="Skolkod SFI 1999")
+        b = _state(2, col="Skolkod", label="Skolkod SFI 2000")
+        codelivery = {(1, 1, "Skolkod"): (None, "latest_year")}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1999, self._codes({1: 574, 2: 597}), codelivery
+        )
+        assert winners == [b[0]]  # SFI 2000 (later vintage)
+        assert genuine is False
+
+    def test_curation_pin_mismatch_falls_through(self) -> None:
+        # a pin matching no surviving label at this year falls through to GENUINE
+        # (no crash) — the year stays unresolved for --validate to flag.
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        codelivery = {(1, 1, "AL2"): ("Something else", None)}
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
+        )
+        assert genuine is True
+        assert set(winners) == {a[0], b[0]}
+
+    def test_genuine_same_column_returns_both(self) -> None:
+        # SAME column, distinct value sets, big diff -> genuine same-column conflict.
+        a = _state(1, col="x")
+        b = _state(2, col="x")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 6})
+        )
+        assert genuine is True
+        assert set(winners) == {a[0], b[0]}
+
+    def test_distinct_columns_coexist(self) -> None:
+        # DISTINCT columns = parallel representations of one concept -> co-exist,
+        # NOT a conflict (the SSYK 3/5-digit, age 5/10-yr bracket case).
+        a = _state(1, col="agrupp")
+        b = _state(2, col="agrupp2")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 6})
+        )
+        assert genuine is False
+        assert set(winners) == {a[0], b[0]}  # both kept
+
+    def test_current_beats_historical(self) -> None:
+        # one column, current vs historical grain -> current wins (a column holds
+        # one coding/period; historical is a superseded vintage).
+        cur = _state(1, col="Kommun", grain="Kommun")
+        hist = _state(2, col="Kommun", grain="Kommun historisk")
+        winners, genuine = _resolve_year_winners(
+            [cur[0], hist[0]], dict([cur, hist]), 2020, self._codes({1: 300, 2: 350})
+        )
+        assert winners == [cur[0]]  # current wins despite historical being larger
+        assert genuine is False
+
+    def test_same_value_set_not_genuine(self) -> None:
+        # one column, same value set, shape drift (data_length) -> one rep.
+        a = _state(1, col="x", regver_max=2019, dlen="1")
+        b = _state(1, col="x", regver_max=2020, dlen="2")
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3})
+        )
+        assert genuine is False
+        assert len(winners) == 1
+        assert winners[0] == b[0]  # latest-era rep
+
+
+class TestLoadCodelivery:
+    def test_parses_keep_and_rule(self, tmp_path: Path) -> None:
+        from reg_meta_build.codelivery import load_codelivery
+
+        toml = tmp_path / "codelivery.toml"
+        toml.write_text(
+            '[[resolve]]\nregister_id=187\nvar_id=3310\ncolumn="AL2UndEjU"\n'
+            'keep="Br07-kod"\n\n'
+            '[[resolve]]\nregister_id=248\nvar_id=104\ncolumn="Skolkod"\n'
+            'keep_rule="latest_year"\n',
+            encoding="utf-8",
+        )
+        cmap = load_codelivery(toml)
+        assert cmap[(187, 3310, "AL2UndEjU")] == ("Br07-kod", None)
+        assert cmap[(248, 104, "Skolkod")] == (None, "latest_year")
+
+    def test_rejects_both_or_neither(self, tmp_path: Path) -> None:
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        both = tmp_path / "both.toml"
+        both.write_text(
+            '[[resolve]]\nregister_id=1\nvar_id=1\ncolumn="c"\nkeep="x"\n'
+            'keep_rule="latest_year"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(both)
+        assert "exactly one" in exc.value.message
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_malformed_toml_is_config_error(self, tmp_path: Path) -> None:
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "bad.toml"
+        bad.write_text("[[resolve]]\nregister_id = = 1\n", encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codelivery_toml_unreadable"
+
+    def test_missing_file_is_empty(self, tmp_path: Path) -> None:
+        from reg_meta_build.codelivery import load_codelivery
+
+        assert load_codelivery(tmp_path / "nope.toml") == {}
+        assert load_codelivery(None) == {}
+
+
+class TestPickStateRep:
+    def test_latest_era_wins(self) -> None:
+        a = _state(1, regver_max=2010, dlen="1")
+        b = _state(1, regver_max=2020, dlen="2")
+        assert _pick_state_rep([a[0], b[0]], dict([a, b])) == b[0]
 
 
 def _build(tmp_path: Path, extra_rows: list[str]) -> sqlite3.Connection:

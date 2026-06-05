@@ -1,0 +1,227 @@
+# Co-delivery curation (§5.7) — see reg_meta_build/codelivery.py.
+#
+# When ONE delivery column carries TWO distinct value-set codings in the same
+# period and the SCB coalescer's deterministic cascade (sources/scb.py) cannot
+# resolve it, the build FAILS. Each entry below pins which coding the column
+# KEEPS. The cascade already handles the RECURRING families (preliminär/final,
+# sub-annual HT/VT and dated snapshots, calendar vs academic year); only genuine
+# ONE-OFF re-codings land here.
+#
+# Key: (register_id, var_id, column) — stable SCB source ids + the delivery
+# column. `column = ""` for a code-bearing variable with no delivery alias.
+# Two label sources, by design: `keep` is matched (stripped) against the EMITTED
+# label — what lands in `variable_state`, the label you see when drafting a pin —
+# because a §5.7 fold/collapse can relabel the raw source label; `keep_rule =
+# "latest_year"` instead reads the 4-digit year out of the RAW source
+# `value_set_version_label`. A pin that IS consulted (the conflict reaches the
+# CURATION cascade step) but matches no surviving coding leaves the column
+# GENUINE → the coalescer FAILS the build (--validate re-checks as a backstop).
+# This is NOT continuous validation of every pin: curation is one cascade step,
+# and a conflict an EARLIER step resolves (e.g. label-freshness) or a LATER step
+# resolves (extends-later / cosmetic) never reaches curation, so a pin that goes
+# stale that way lingers undetected (harmless — the shipped DB is still valid).
+# Treat a pin as live only while its conflict still routes through curation.
+#
+# REVIEWED (phase 2 sign-off): the picks below were maintainer defaults (fuller /
+# newer / contemporaneous coding); each has now been checked against the backing
+# SCB codings (codes, sizes, sub/superset, classification vintage) and the raw
+# Registerinformation/Vardemangder source. UpplForm (reg32) is a §5.7 SPLIT
+# candidate by POPULATION: SCB's legacy catalog (metadata.scb.se) models it as two
+# population-scoped variables — dwellings → Lgh (12), households → Hh (5) — but the
+# mikrodata feed we ingest flattens that axis onto one column, so the split isn't
+# recoverable from our input. Interim: keep the lossless Lgh superset (see its note).
+
+# ── branschgrupp (SNI92 vs SNI2007): keep the standard CONTEMPORANEOUS to the
+#    period. The two codings reuse the same integer codes for DIFFERENT industries
+#    (code 100 = "Kolgruvor" in SNI92 vs "Livsmedelsframställning" in SNI2007), so
+#    a period's delivered codes only mean one thing under its own vintage. Keeping
+#    Br07 throughout would MISLABEL the 1998–1999 data — SNI2007 did not exist
+#    before 2008. Cross-vintage comparison is a downstream SNI92↔SNI2007 crosswalk,
+#    not a catalog relabel. (reg187 and reg382 are separate registers/columns, not
+#    one continuous time series.)
+[[resolve]]                       # SNI92 vs SNI2007 — contemporaneous (confirmed)
+register_id = 187
+var_id = 3310
+column = "AL2UndEjU"
+keep = "Br92-kod"
+note = "Konjunkturstatistik AL2UndEjU 1998-1999: SNI92 (Br92, 53 codes) is contemporaneous; SNI2007 did not exist yet."
+
+[[resolve]]                       # SNI92 vs SNI2007 — contemporaneous (confirmed)
+register_id = 382
+var_id = 3310
+column = "AL2UndEjU"
+keep = "Br07-kod"
+note = "Produktion inom näringslivet AL2UndEjU 2009-2010: SNI2007 (Br07, 45 codes) is the operative standard by 2009."
+
+# ── ULF (levnadsförhållanden): prefer the fuller yes/no & education codings ──
+[[resolve]]
+register_id = 237
+var_id = 13598
+column = "TK0094"
+keep = "Ja nej 1"
+note = "ULF TK0094 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
+
+[[resolve]]
+register_id = 237
+var_id = 13600
+column = "TK0095"
+keep = "Ja nej 1"
+note = "ULF TK0095 1978: 'Ja nej 1' (5 codes) over 'Ja nej 3' (1 code)."
+
+[[resolve]]
+register_id = 237
+var_id = 11788
+column = "HA0020"
+keep = "Ja nej 1"
+note = "ULF HA0020 2004: 'Ja nej 1' (6 codes) over 'Dikotom' (2 codes)."
+
+[[resolve]]
+register_id = 237
+var_id = 13593
+column = "TK0083"
+keep = "Butiksbuss etc"
+note = "ULF TK0083 1978: 'Butiksbuss etc' (5 codes) is the superset."
+
+[[resolve]]                       # attainment coding vs completion-flag (confirmed)
+register_id = 237
+var_id = 10587
+column = "UT0020"
+keep = "Utbildning 1"
+note = "ULF UT0020 1976: 'Utbildning 1' (11 codes) is the substantive educational-attainment coding (Folkskola/Grundskola/.../Gymnasium). 'Fullbordad utbildning' (5: Fullbordade/Avbröt/Okänt) is a thin completion-status flag, not attainment — keep the attainment coding for 'Fullföljd skolutbildning'."
+
+# ── electoral districts: include postal-vote districts (superset) ──
+[[resolve]]
+register_id = 243
+var_id = 69
+column = "llkkdddd"
+keep = "Valdistrikt 2006 inkl poströster"
+note = "Valresultat llkkdddd 2006: the 'inkl poströster' superset (6074 vs 5783)."
+
+# ── ownership category: keep the detailed grain (column-less variable) ──
+[[resolve]]                       # detaljerad vs grov grain (confirmed)
+register_id = 198
+var_id = 2187
+column = ""
+keep = "Ägarkategori detaljerad"
+note = "Hyror/nybyggda: 'detaljerad' (9) and 'grov' (3) are co-existing grains on SEPARATE columns (bygghtyp / bygghtyp2) every year EXCEPT 2013, where both lose their delivery alias and collapse onto the null column. Keep the detailed grain (primary column; superset of grov). Cleaner long-term fix: recover the 2013 column aliases."
+
+# ── institutional unit indexing: newer standard ──
+[[resolve]]
+register_id = 134
+var_id = 33
+column = "Inst"
+keep = "Enhetsindelning 2014"
+note = "Kortperiodisk syss., Inst 2015: the 2014 institutional standard."
+
+# ── komvux SFI school codes: RECURRING per-year vintages (SFI 1999/2000/2001/
+#    2002/2004 + the all-school-forms set 't.o.m. maj 2013'), a different label
+#    pair every year — one `keep` can't cover it. keep_rule keeps, per year, the
+#    coding whose label embeds the latest year (latest SFI vintage; the
+#    all-school-forms 2013 set where it overlaps). The few intra-year ties
+#    (e.g. 2012/2013 SFI pairs) are broken upstream by recency / cosmetic-drift,
+#    so the build resolves green. ──
+[[resolve]]
+register_id = 248
+var_id = 104
+column = "Skolkod"
+keep_rule = "latest_year"
+note = "Komvux SFI Skolkod: latest-vintage SFI / all-school-forms coding per year."
+
+# ── FoB75 tenure form — FLAGGED: §5.7 SPLIT candidate (by population) ──
+#    SCB's legacy catalog (metadata.scb.se/mikrodataregister.aspx) splits this
+#    into TWO population-scoped 'Upplåtelseform' variables on column UpplForm:
+#      • DWELLINGS  (pop 'Samtliga bebodda/obebodda bostadslägenheter')
+#        → UpplFormFoB75Lgh (12): tenure 0/1/3/4 + dwelling-occupancy 5–9
+#          (under reparation, ledig, disponeras av fastighetsägaren, utrymd,
+#          upplåten utan mantalsskriven) — states only a dwelling can be in.
+#      • HOUSEHOLDS (pop 'Samtliga bostadshushåll')
+#        → UpplFormFoB75Hh (5): the same tenure codes 0/1/3/4, no occupancy
+#          states (a household always occupies). Lgh ⊋ Hh; the 5 shared codes
+#          are identical.
+#    Two populations = two concepts → correct fix is a population-scoped split
+#    into sibling variables (discriminator = the Hh/Lgh value-set coding, which
+#    encodes the population). BUT our mikrodata feed FLATTENS population: both
+#    CVIDs (759714 Hh, 759810 Lgh) attach to the IDENTICAL (variant 82 'Lägenhet
+#    och hushåll', version 1975, column UpplForm) slot, each cross-linked to BOTH
+#    populations — so the build can't auto-split (the §5.7 splitter keys on column,
+#    and the clean population↔coding mapping isn't in our input). Until a
+#    same-column-by-coding split axis lands, keep the Lgh superset: for the merged
+#    variable it labels every code from EITHER population (Lgh ⊇ Hh), so it's the
+#    lossless interim — keeping Hh would drop dwelling codes 5–9. MAINTAINER:
+#    split by population/coding, then drop this pin.
+[[resolve]]                       # FLAGGED: split candidate (by population) — Lgh interim
+register_id = 32
+var_id = 4472
+column = "UpplForm"
+keep = "UpplFormFoB75Lgh"
+note = "FoB75 UpplForm: SCB's legacy catalog splits this by population — dwellings → Lgh (12), households → Hh (5) — but our mikrodata feed flattens both onto one (variant 82, version 1975, UpplForm) slot, cross-linked to both populations, so the split isn't recoverable from input. Keep the Lgh superset (Lgh ⊇ Hh) as the lossless interim; keeping Hh would drop dwelling-occupancy codes 5–9. SPLIT candidate by population — see comment."
+
+# ── SUN2020 utbildningsinriktning (classification id=8): the two 4-pos codings
+#    differ by exactly one code, the '----' missing-value placeholder. Keep the
+#    canonical SUN2020 coding ('4pos', 377) — '----' is a data missing-marker, not
+#    a SUN2020 category. ──
+[[resolve]]
+register_id = 24
+var_id = 65
+column = "SUN2020Inr"
+keep = "4pos"
+note = "SUN2020Inr classification: '4pos' (377, canonical) over '4pos-1' (378, adds '----')."
+
+# ── R&D institution id: keep the broader institution coding ──
+[[resolve]]                       # institution codelist — strict superset (confirmed)
+register_id = 182
+var_id = 3
+column = "ID_INST"
+keep = "Universitet/högskolor"
+note = "FoU ID_INST 2023: 'Universitet/högskolor' (129) is a strict SUPERSET of the official 'Högskolekod 2017' (41) — every standard lärosäte code plus historical/extra institutions. Keep the superset so no delivered code is unlabeled."
+
+# ── distance-school unit register: RECURRING yearly '15 oktober YYYY' snapshots
+#    (codes are school-unit ids; the value SET is a dated register capture). Keep
+#    the latest snapshot per year. keep_rule, not a one-off pin. ──
+[[resolve]]
+register_id = 366
+var_id = 45133
+column = "skolenhetskod"
+keep_rule = "latest_year"
+note = "skolenhetskod distans: latest '15 oktober YYYY' register snapshot per year."
+
+# ══ RELABEL co-deliveries surfaced by the §5.7 label-aware cosmetic gate ══
+# These columns carry two CO-EXTENSIVE codings (same period span → no recency
+# winner) that share codes with DIFFERING labels — a genuine re-coding the
+# cosmetic rule would otherwise silently keep-larger. The gate routes them here
+# for an explicit pick. (Sequential vintages where one coding extends to a later
+# period — e.g. the reg164 'Blocksympati'→'…2009'→'…2014' bloc series — resolve
+# deterministically via the EXTENDS-LATER rule and need no pin.)
+
+# FoB75 sanitation — UpplForm's twin: household vs dwelling unit on one column.
+# reg32 variant 82 'Lägenhet och hushåll' / 1975 carries AvloppFoB75Hh ('Avlopp
+# finns i huset', 4) and AvloppFoB75Lgh ('…i lägenheten', 4) — co-extensive, a
+# pure unit relabel (neither a superset). Keep Hh: the variable definition is
+# "Anger om avlopp finns i huset" (household/house framing).
+[[resolve]]                       # FoB75 household vs dwelling relabel (cf. UpplForm)
+register_id = 32
+var_id = 42551
+column = "Avlopp"
+keep = "AvloppFoB75Hh"
+note = "FoB75 Avlopp 1975 (variant 82 'Lägenhet och hushåll'): household 'i huset' (Hh) vs dwelling 'i lägenheten' (Lgh), co-extensive relabel. Keep Hh — matches the variable definition 'om avlopp finns i huset'."
+
+[[resolve]]                       # ULF non-response coding relabel
+register_id = 237
+var_id = 10801
+column = "SY0373"
+keep = "Ja nej 2"
+note = "ULF 'Förvärvsarbete heltid' SY0373 1975-1979: 'Ja nej 2' (8 Vet ej / 9 Vill ej svara alt. indirekt intervju) vs 'Ja nej 3' (9 Vill ej svara / 0 Värde saknas) — co-extensive, differ only in non-response codes. Keep 'Ja nej 2'."
+
+[[resolve]]                       # constituency renumbering — keep the _mandat (canonical) numbering
+register_id = 243
+var_id = 14775
+column = "RI_valkretskod"
+keep = "Riksdagsvalkrets fram till 1994_mandat"
+note = "Riksdagsvalkrets RI_valkretskod 1982/1988: two pre-1994 codings renumber the constituencies (Kristianstads=11 base vs =14 in _mandat). Keep '…_mandat' — canonical spelling 'Riksdagsvalkrets' + mandate-allocation numbering."
+
+[[resolve]]                       # lägenhet- vs byggnad-level reason — keep dwelling-level
+register_id = 276
+var_id = 19639
+column = "NYREGORS"
+keep = "Nyregistreringsorsak3"
+note = "Nyregistreringsorsak NYREGORS 2015-2025: dwelling-level 'Nyregistreringsorsak3' (Nybyggd/Befintlig lägenhet, 4) vs building-level 'Nyregistreringsorsak 2' (byggnad/bygglov, 6), co-delivered every year. Keep the lägenhet-level coding."
