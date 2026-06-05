@@ -210,10 +210,35 @@ def _endpoint_bounds(endpoint: int | str) -> tuple[str, str]:
 def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     """The inclusive ISO `[lo, hi]` the author asked for with an explicit range:
     `lo` from the `from` endpoint, `hi` from the `to` endpoint. Structural
-    validation already guaranteed `from <= to`, so no ordering re-check here."""
+    validation already guaranteed `from <= to`, so no ordering re-check here.
+
+    Caller must first run `_calendar_invalid_endpoint` — `_endpoint_bounds` is a
+    purely syntactic expansion (it passes `2019-02-29` straight through), but the
+    gap math feeds the result to `date.fromisoformat`, which rejects it."""
     lo, _ = _endpoint_bounds(period.from_)
     _, hi = _endpoint_bounds(period.to)
     return lo, hi
+
+
+def _calendar_invalid_endpoint(period: PeriodRange) -> int | str | None:
+    """The first range endpoint that is grammar-valid but NOT a real calendar date
+    (e.g. `2019-02-29`, `2018-02-30`), or None when both are real dates.
+
+    The period grammar's day bound is purely syntactic — `Feb 30` passes
+    `is_period` and reg_schema structural validation ("calendar validity is the
+    curator's responsibility", reg_meta/fqid.py). The range-coverage gap math is
+    the first code to feed an endpoint into `date.fromisoformat`, which raises on
+    an impossible day. We detect it here so `_check_binding_period` can emit an
+    actionable `invalid_period` finding instead of letting the ValueError escape
+    `validate_semantic` as an uncaught 500."""
+    for endpoint in (period.from_, period.to):
+        lo, hi = _endpoint_bounds(endpoint)
+        try:
+            date.fromisoformat(lo)
+            date.fromisoformat(hi)
+        except ValueError:
+            return endpoint
+    return None
 
 
 def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
@@ -376,19 +401,44 @@ def _check_binding_period(
     issues: list[ValidationIssue],
 ) -> None:
     """§6.8.3: the binding must resolve to a `variable_state` at the source's
-    variant AND period. No covering state → `period_outside_state_validity`. An
-    explicit range only PARTIALLY covered by the concept's states (a gap NO column
-    delivers) → `range_period_partially_covered` (info). A range period crossing a
-    state transition → `binding_state_drifts_within_period` (info). The binding
-    resolving to ≥2 DISTINCT value sets co-delivered in that period →
-    `binding_value_set_version_ambiguous` (error). That last case is a defensive
-    backstop: the reg_meta build enforces one value set per
-    `(variable, variant, period)` (its co-delivery curation + `validate`
+    variant AND period. A range whose endpoint is grammar-valid but calendar-
+    impossible → `invalid_period` (error). No covering state →
+    `period_outside_state_validity`. An explicit range only PARTIALLY covered by
+    the concept's states (a gap NO column delivers) → `range_period_partially_covered`
+    (info). A range period crossing a state transition →
+    `binding_state_drifts_within_period` (info). The binding resolving to ≥2 DISTINCT
+    value sets co-delivered in that period → `binding_value_set_version_ambiguous`
+    (error). That last case is a defensive backstop: the reg_meta build enforces one
+    value set per `(variable, variant, period)` (its co-delivery curation + `validate`
     invariant), so a clean catalog never trips it — there is no author-side pin."""
     # An unresolved variant already produced an `fqid_unresolved`; a period probe
     # against it would be derivative noise. Skip it.
     if not variant_ok:
         return
+
+    # A range endpoint may be grammar-valid but calendar-IMPOSSIBLE (`2019-02-29`):
+    # the period grammar's day bound is syntactic, so structural validation lets it
+    # through. Catch it BEFORE `resolve_at` (which also tolerates the string and
+    # would yield a phantom coverage result) and before the gap math (which would
+    # raise `ValueError` out of `validate_semantic` → uncaught 500). A malformed
+    # range is an author-side spec error (`invalid_period`, blocking for both
+    # callers — it is NOT reg_meta drift, so it is not steward-downgraded); probing
+    # a nonsense range further would only add derivative noise, so stop here.
+    if not isinstance(source.period, (int, str)):
+        bad = _calendar_invalid_endpoint(source.period)
+        if bad is not None:
+            issues.append(
+                _issue(
+                    "invalid_period",
+                    "error",
+                    caller,
+                    var_path,
+                    f"binding {binding.variable!r} range endpoint {bad!r} in period "
+                    f"{source.period!r} is not a real calendar date",
+                )
+            )
+            return
+
     variant = source.register_variant.split("/")[2]
     period = period_for_resolve(source.period)
     try:
@@ -429,6 +479,8 @@ def _check_binding_period(
     # The steward index keys its binding-DROP on `warning` level (catalog_index.py),
     # so an `info` correctly keeps a partially-covered binding in the index.
     if not isinstance(source.period, (int, str)):
+        # The calendar-validity guard above already returned for an impossible
+        # endpoint, so `_requested_range_bounds` here yields real ISO dates.
         lo, hi = _requested_range_bounds(source.period)
         gaps = _range_coverage_gaps(states, lo, hi)
         if gaps:
