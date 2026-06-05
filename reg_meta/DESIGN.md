@@ -355,7 +355,7 @@ obsolete variant-slot grammar and is wrong.
 kind; the provider / register / classification arms each return their
 dedicated `Resolved*` row (variant and version are **not** FQID kinds —
 variant is a register sub-resource coordinate, period a delivery axis).
-The **binding** arm is longitudinal (A2.5): a binding FQID resolves to a
+The **binding** arm is longitudinal: a binding FQID resolves to a
 `ResolvedVariable` —
 the addressable variable's shared metadata + its full `variable_state`
 history (each state tagged with its variant coordinate) + the
@@ -446,7 +446,7 @@ Succession (`replaced_by`) is directional and orthogonal; lineage
 **`VariableRef`** — a variable-grain edge endpoint
 (`same_as` / `predecessors` / `successors`). Fields: `fqid` (the 3-seg
 binding FQID — the edge tables store exactly the `(provider, register,
-variable)` triple, which **is** the binding FQID since A2.6; built via
+variable)` triple, which **is** the binding FQID; built via
 `_ref_fqid`, None only if a slug is malformed/NULL), the load-bearing
 `provider` / `register` / `variable` triple, and (#142, on
 succession refs only) `reason` (the `timeseries_event.beskrivning`
@@ -470,7 +470,7 @@ slug, as with the refs' `fqid`).
 `ambiguous_source_variant`), `message`.
 
 `ResolvedVariableBinding` (the interim per-edition binding row) and the
-`editions()` discovery path that returned it were **removed in A2.6** along
+`editions()` discovery path that returned it were **removed** along
 with the v0.11 5-seg binding parse. Resolution is now `ResolvedVariable` +
 `resolve_at` / `states` (§5.10): the variable's shared metadata plus its
 `variable_state` rows, each tagged with its variant. The per-edition cvid is
@@ -529,7 +529,7 @@ uses SUN 2000 codes through 2018 and SUN 2020 codes from 2019 onwards;
 `SSYK` and `SNI` show the same generational drift. Linking at the state
 level keeps each code system distinct (SUN 2000 codes never bleed into
 SUN 2020), isolates split siblings (each sibling's states classify
-independently — the A2.7 fix), and lets variable-level helpers aggregate
+independently), and lets variable-level helpers aggregate
 when needed.
 
 The `classification_id` column is populated at build time from a

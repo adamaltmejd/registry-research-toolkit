@@ -347,8 +347,7 @@ the intersection. A few non-obvious choices:
   slugs, LISA `foo` ↔ RTB `bar`, §5.5). The common no-rename case yields just
   the identity slug, so an edge is always additive. (An earlier single-seed form
   expanded only the source node and silently missed mismatched-slug
-  cross-register edges — latent while `variable_same_as` is empty, fixed in the
-  A2.4 review.)
+  cross-register edges — latent while `variable_same_as` is empty; since fixed.)
 - **Variant pinning is TOML-only — no SQL table.** A `[lineage_defaults]`
   block picks one source variant per source register; a
   `[lineage."<consumer_register>.<variable_slug>"]` block overrides it per
@@ -362,11 +361,7 @@ the intersection. A few non-obvious choices:
   the linker against the DB (fail-fast on a pin to a non-existent variant or a
   `source_register` that contradicts the variable's resolved source register).
 
-`link_variable_state_lineage` is the sole lineage linker. (Through A2.6 it
-ran **alongside** the old slug-only `link_consumer_side_bindings`, which set
-`variable_instance.via_source_id` for `reg_meta`'s interim resolver; A2.7
-dropped that old linker, the `via_source_id` column, and `variable_instance`
-itself, leaving this the only linker.)
+`link_variable_state_lineage` is the sole lineage linker.
 
 ## Vardemängder sentinel filtering
 
@@ -461,8 +456,8 @@ Each entry declares a normalized classification and lists the raw
 labels) that map to it — exact match, no fuzzy inference. Match strings are
 deterministic and auditable: any maintainer can enumerate them via
 `SELECT DISTINCT value_set_version_label FROM variable_instance`. The build
-tags `variable_instance.classification_id` first; A2.7's
-`_backfill_state_classifications` then projects it onto the **shipped**
+tags `variable_instance.classification_id` first; the
+`_backfill_state_classifications` pass then projects it onto the **shipped**
 `variable_state.classification_id` (per-era, attributed to the owning split
 sibling) before `variable_instance` is dropped.
 
