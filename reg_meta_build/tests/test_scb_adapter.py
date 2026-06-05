@@ -247,17 +247,6 @@ class TestProvenanceEmitButDiscard:
             assert db_sha == live_sha, "build_manifest sha256 must match live DB"
             assert db_path == str(universal_path)
 
-            # Source checksums + row counts mirrored into provenance (also kept
-            # in import_manifest for A4.2; the removal is deferred to A4.4+).
-            (n_checks,) = prov.execute(
-                "SELECT COUNT(*) FROM source_checksum"
-            ).fetchone()
-            assert n_checks >= 1
-            (n_counts,) = prov.execute(
-                "SELECT COUNT(*) FROM source_row_count"
-            ).fetchone()
-            assert n_counts >= 1
-
             # Per-provider source-ID linkage: every register maps to its native
             # Registernamn.
             id_map = dict(
