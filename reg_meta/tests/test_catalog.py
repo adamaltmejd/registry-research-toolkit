@@ -639,7 +639,7 @@ class TestResolveVariableLongitudinal:
         assert exc.value.code == "not_a_binding_fqid"
 
     def test_resolve_states_round_trip_with_resolve_at(self) -> None:
-        # §5.10 / MIGRATION_PLAN A2.5: the full history via resolve(fqid).states
+        # §5.10 (migration stage A2.5): the full history via resolve(fqid).states
         # equals the union of per-year resolve_at() results on the unambiguous
         # single-variant case.
         conn = build_slugged_db()

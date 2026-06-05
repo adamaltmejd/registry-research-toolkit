@@ -4,7 +4,7 @@ Parses Statistics Sweden (SCB) microdata-catalog CSV/SQL/xlsx exports and
 runs the §5.7 build-time triage, value-set projection, and state coalescer.
 `SCBAdapter.emit()` yields the provider-neutral IR stream
 (`reg_meta_build.ir.*`) consumed by the provider-blind materializer in
-`reg_meta_build.db`. See REFACTOR_SPEC.md §4.4 and MIGRATION_PLAN A4.1.
+`reg_meta_build.db`. See REFACTOR_SPEC.md §4.4 (migration stage A4.1).
 
 A4.1 is a pure byte-identical refactor: the SCB ingest functions below moved
 out of `db.py` VERBATIM (only their module home changed). The adapter runs
@@ -464,8 +464,7 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     `'0'` / empty) is falsy. This flag feeds the MONA PII scanner, so a
     false-negative is a real miss — robustness over purity. `kanslig_variabel` and
     `kanslig_variabel_ibland` both fold into `is_sensitive` — the ~22 rows
-    flagged only-sometimes don't justify a third column (see MIGRATION_PLAN
-    A1.2). Returns the number of variable rows whose flags were refreshed
+    flagged only-sometimes don't justify a third column. Returns the number of variable rows whose flags were refreshed
     from `unika_summary` — i.e. rows that had at least one matching
     unika_summary entry. This count includes variables whose flags resolved
     to 0/0 (all-`Nej` entries); the function is deterministic in the
@@ -840,7 +839,7 @@ def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
     — e.g. SNI 2002 supersedes SNI 92 supersedes SNI 69, so all three resolve
     to the SNI-69 root and fold.
 
-    INERT TODAY (documented follow-up, MIGRATION_PLAN A2.2): triage runs inside
+    INERT TODAY (documented design note, §5.7): triage runs inside
     the coalescer, *before* `populate_classifications`, so the `classification`
     table is empty here → this returns ``{}`` and `_decide_fold_or_split` falls
     to the column-stem signal. Stem-folding covers every §5.7 fold example
