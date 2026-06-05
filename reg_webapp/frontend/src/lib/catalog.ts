@@ -140,10 +140,13 @@ export interface Representation {
   codeCount: number | null;
 }
 
-/** The distinct delivery-column representations among a resolve's states (the
- * `StatesResponse` from a `?period` resolve), in first-seen order. >1 means the
- * concept is multi-representation at that period and a binding must pick one
- * (`representation`); 0/1 means no choice is needed. Pure — unit-tested. */
+/** The delivery-column representations a binding must choose between among a
+ * resolve's states (the `StatesResponse` from a `?period` resolve), first-seen
+ * order. >1 only when ≥2 columns CO-EXIST (overlapping validity windows) — that
+ * is the genuine multi-representation case; this MIRRORS the backend
+ * `_coexisting_columns` so a range crossing a sequential column RENAME (distinct
+ * columns, non-overlapping) is treated as drift and does NOT open the chooser.
+ * 0/1 means no choice is needed. Pure — unit-tested. */
 export function representationsFromStates(
   states: VariableStateModel[],
 ): Representation[] {
@@ -153,9 +156,37 @@ export function representationsFromStates(
       byColumn.set(s.delivery_column_name, s);
     }
   }
-  return [...byColumn.entries()].map(([column, s]) => ({
-    column,
+  const toRep = (s: VariableStateModel): Representation => ({
+    column: s.delivery_column_name as string,
     label: s.value_set_version_label,
     codeCount: s.value_set?.length ?? null,
-  }));
+  });
+  // Distinct columns valid at the SAME instant (overlapping windows) are parallel
+  // representations; distinct columns in non-overlapping windows are a rename.
+  const coexisting = new Set<string>();
+  for (let i = 0; i < states.length; i++) {
+    for (let j = i + 1; j < states.length; j++) {
+      const a = states[i];
+      const b = states[j];
+      if (
+        a.delivery_column_name &&
+        b.delivery_column_name &&
+        a.delivery_column_name !== b.delivery_column_name &&
+        a.valid_from <= b.valid_to &&
+        b.valid_from <= a.valid_to
+      ) {
+        coexisting.add(a.delivery_column_name);
+        coexisting.add(b.delivery_column_name);
+      }
+    }
+  }
+  if (coexisting.size >= 2) {
+    return [...byColumn.values()]
+      .filter((s) => coexisting.has(s.delivery_column_name as string))
+      .map(toRep);
+  }
+  // No genuine choice: a single column, or a sequential rename (drift). Report at
+  // most the first column so the caller's `length > 1` chooser gate stays closed.
+  const first = [...byColumn.values()][0];
+  return first ? [toRep(first)] : [];
 }

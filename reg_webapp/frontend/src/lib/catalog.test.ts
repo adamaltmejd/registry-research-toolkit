@@ -177,4 +177,39 @@ describe("representationsFromStates", () => {
       representationsFromStates([state({ delivery_column_name: null })]),
     ).toEqual([]);
   });
+
+  it("does NOT treat a sequential column rename as a choice (no overlap)", () => {
+    // KonOld 2010-2015, renamed KonNew 2016-9999 — never co-exist → drift, not a
+    // representation choice; the chooser stays closed (length ≤ 1). Mirrors the
+    // backend overlap gate.
+    const reps = representationsFromStates([
+      state({
+        delivery_column_name: "KonOld",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+      }),
+      state({
+        delivery_column_name: "KonNew",
+        valid_from: "2016-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ]);
+    expect(reps.length).toBeLessThanOrEqual(1);
+  });
+
+  it("treats overlapping distinct columns as co-existing representations", () => {
+    const reps = representationsFromStates([
+      state({
+        delivery_column_name: "kon",
+        valid_from: "2018-01-01",
+        valid_to: "9999-12-31",
+      }),
+      state({
+        delivery_column_name: "kon_detalj",
+        valid_from: "2018-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ]);
+    expect(reps.map((r) => r.column).sort()).toEqual(["kon", "kon_detalj"]);
+  });
 });

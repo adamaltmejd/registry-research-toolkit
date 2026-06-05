@@ -381,14 +381,16 @@ def _check_binding_period(
                 )
             )
             return
-        # The chosen column may not span the whole RANGE period: resolve_at returns
+        # The chosen column may not span the whole MULTI-period: resolve_at returns
         # only intersecting states, so narrowing to `matched` can silently drop a
         # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
-        # binding → 2010–2013 lost). Surface it as info (point periods are a single
-        # instant — no coverage gap; `source.period` is a PeriodRange iff it is
-        # neither an int year nor the `_default` string).
-        is_range = not isinstance(source.period, (int, str))
-        if is_range and (
+        # binding → 2010–2013 lost). Surface it as info. A point int period is a
+        # single instant (no gap); `_default` returns the FULL state history, so it
+        # CAN under-cover just like a PeriodRange and must be checked too.
+        is_multi_period = (
+            not isinstance(source.period, (int, str)) or source.period == "_default"
+        )
+        if is_multi_period and (
             min(s.valid_from for s in matched) > min(s.valid_from for s in states)
             or max(s.valid_to for s in matched) < max(s.valid_to for s in states)
         ):

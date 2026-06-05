@@ -563,3 +563,27 @@ def test_representation_under_covering_range_is_drift(uneven_representation_cata
     assert "binding_value_set_version_ambiguous" not in codes
     assert "binding_state_drifts_within_period" in codes
     assert result.ok
+
+
+def test_representation_under_covering_default_is_drift(uneven_representation_catalog):
+    # `_default` returns the full history (kon 2010+), so picking kon_detalj (2018+)
+    # under-covers it too — the coverage check must treat `_default` like a range.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": "_default",
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon_detalj",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), uneven_representation_catalog, caller="researcher"
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_state_drifts_within_period" in codes
+    assert result.ok
