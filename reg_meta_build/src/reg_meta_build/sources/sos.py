@@ -1738,16 +1738,20 @@ class SOSAdapter:
 
         SCOPE: segmentation guarantees non-overlap WITHIN this call (one member).
         `_emit_states` calls it once per member of a merged variable, and two
-        members can share a (variant, column). Cross-member overlap with DISTINCT
-        value sets is not structurally blocked here, but cannot arise in practice:
-        all members of a merged variable share THIS `kodlista` (keyed by
-        variable_hint), so any windows they share resolve to the same segment +
-        value_set + `valid_from` → an EXACT `state_id` collision that
-        `_emit_states` reconciles (widest `valid_to`). Members differ only by
-        `var_bound`/deldat window, which can shrink or shift a member's coverage
-        but never re-codes a shared period — so two members never emit DISTINCT
-        value sets that overlap on one column. (The §5.7 build invariant is the
-        backstop if a future merged shape violates this.)
+        members can share a (variant, column); cross-member overlap is NOT
+        structurally blocked here. It is empirically absent on today's corpus, but
+        not impossible: members carry different `var_bound`/deldat clamps, so a
+        period two members share can land in segments with DIFFERENT clamped
+        `valid_from` (no exact `state_id` collision → `_emit_states` does not
+        reconcile them). What keeps §5.7 green in the common case is that equal
+        code-content segments CONTENT-SHARE one `value_set_id`, and §5.7 only fails
+        on DISTINCT value sets. The residual hole: `_intersect_advisory_deldat` is
+        a FALLBACK, not a pure clamp — when the deldat window would empty a code's
+        window it is dropped and the wider authoritative window kept, so a code
+        clipped out of member A (deldat honored) can survive in member B (deldat
+        dropped); at a shared period on a shared column that is a DISTINCT value
+        set. The **§5.7 build invariant is the guarantee** that catches it (the
+        build fails) — this segmentation is not a structural proof against it.
         """
         windowed: list[tuple[str | None, str | None, IRValueCode]] = []
         for r in kodlista.rows:
