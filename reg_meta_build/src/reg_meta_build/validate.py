@@ -542,28 +542,27 @@ def _check_panel_refs_resolve(
     failures: list[str] = []
     n_refs = 0
     for r in rows:
-        variant_id, register_id, variant_slug = r[0], r[1], r[2]
         # (field label, slug to resolve) pairs for this variant.
         refs: list[tuple[str, str]] = []
-        entity = _decode_panel_entity_key(r[3])
+        entity = _decode_panel_entity_key(r["panel_entity_key"])
         if isinstance(entity, tuple):
             refs.extend(("panel_entity_key", s) for s in entity)
         elif entity is not None:
             refs.append(("panel_entity_key", entity))
-        time_key = r[4]
+        time_key = r["panel_time_key"]
         if time_key is not None and time_key != "period":
             refs.append(("panel_time_key", time_key))
         for field_name, slug in refs:
             n_refs += 1
             hit = conn.execute(
                 "SELECT 1 FROM variable WHERE register_id = ? AND slug = ? LIMIT 1",
-                (register_id, slug),
+                (r["register_id"], slug),
             ).fetchone()
             if hit is None:
                 failures.append(
-                    f"variant {variant_id} ({variant_slug!r}, register {register_id}) "
-                    f"{field_name} {slug!r} resolves to no variable.slug in that "
-                    "register"
+                    f"variant {r['register_variant_id']} ({r['slug']!r}, "
+                    f"register {r['register_id']}) {field_name} {slug!r} resolves "
+                    "to no variable.slug in that register"
                 )
     if failures:
         for msg in failures[:10]:
