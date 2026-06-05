@@ -762,3 +762,28 @@ def test_calendar_invalid_endpoint_blocks_for_steward_too(catalog):
     issue = next(i for i in result.issues if i.code == "invalid_period")
     assert issue.level == "error"
     assert not result.ok
+
+
+@pytest.mark.parametrize(
+    "good_endpoint",
+    [
+        "2019-02",  # YYYY-02 in a NON-leap year: expands to 2019-02-29 hi (an
+        # over-counted, non-real day) but a real month — must NOT be flagged.
+        "2020-02",  # leap-year Feb, for symmetry
+        "2019-12",  # plain month token
+        "2019-Q1",  # quarter (hi = 2019-03-31)
+        "2019-H1",  # half (hi = 2019-06-30)
+        "HT2019",  # autumn term
+        "VT2019",  # spring term
+        "2019-02-28",  # a real Feb day token
+    ],
+)
+def test_valid_period_token_endpoint_is_accepted(catalog, good_endpoint):
+    # Regression for the `hi`-bound over-counting false positive: only a genuinely
+    # impossible AUTHOR DAY (a YYYY-MM-DD token) is invalid; month/quarter/half/term
+    # tokens whose synthetic upper bound happens to be a non-real day are fine. The
+    # endpoint pairs with 2020 so the range resolves; we only assert it is not
+    # rejected as an invalid period (coverage findings are orthogonal here).
+    source = _kon_source({"from": good_endpoint, "to": 2020})
+    result = validate_semantic(_project([source]), catalog, caller="researcher")
+    assert "invalid_period" not in {i.code for i in result.issues}

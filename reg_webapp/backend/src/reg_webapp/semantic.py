@@ -221,8 +221,10 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
 
 
 def _calendar_invalid_endpoint(period: PeriodRange) -> int | str | None:
-    """The first range endpoint that is grammar-valid but NOT a real calendar date
-    (e.g. `2019-02-29`, `2018-02-30`), or None when both are real dates.
+    """The first range endpoint whose author-supplied DAY is grammar-valid but NOT
+    a real calendar day (e.g. `2019-02-29`, `2018-02-30`), or None when both are
+    real. Only a full `YYYY-MM-DD` token names an author day; year / `YYYY-MM` /
+    quarter / half / `HT`/`VT` / int-year forms can never carry an impossible day.
 
     The period grammar's day bound is purely syntactic — `Feb 30` passes
     `is_period` and reg_schema structural validation ("calendar validity is the
@@ -230,12 +232,19 @@ def _calendar_invalid_endpoint(period: PeriodRange) -> int | str | None:
     the first code to feed an endpoint into `date.fromisoformat`, which raises on
     an impossible day. We detect it here so `_check_binding_period` can emit an
     actionable `invalid_period` finding instead of letting the ValueError escape
-    `validate_semantic` as an uncaught 500."""
+    `validate_semantic` as an uncaught 500.
+
+    We check only the LOWER bound, never the expanded upper bound. For a
+    `YYYY-MM-DD` token `lo == hi ==` the literal author day, so a genuinely
+    impossible day is still caught; every other form puts `lo` on day 01 (always a
+    real date). Checking the expanded `hi` would false-positive a VALID `YYYY-02`
+    month token in a non-leap year: `period_token_to_bounds` over-counts February's
+    upper bound to day 29 for interval overlap (`_MONTH_LAST_DAY["02"]`, harmless
+    there but not a real date)."""
     for endpoint in (period.from_, period.to):
-        lo, hi = _endpoint_bounds(endpoint)
+        lo, _ = _endpoint_bounds(endpoint)
         try:
             date.fromisoformat(lo)
-            date.fromisoformat(hi)
         except ValueError:
             return endpoint
     return None
