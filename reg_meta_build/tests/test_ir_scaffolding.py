@@ -371,8 +371,6 @@ def test_create_empty_provenance_db_schema(tmp_path: Path) -> None:
             "build_manifest",
             "scb_register_id_map",
             "adapter_warning",
-            "source_checksum",
-            "source_row_count",
             "delivery_approval",
         }
         for table in tables:

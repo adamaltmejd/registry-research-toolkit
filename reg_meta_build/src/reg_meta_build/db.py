@@ -888,9 +888,9 @@ CREATE TABLE import_manifest (
 # is dbdiff-neutral by construction (A4.2). Sits next to the universal DB.
 #
 # A4.2 populates the tables below from the adapter's emitted IR
-# (IRDeliveryProvenance / IRWarning) plus the source checksums/row-counts. The
-# tables live ONLY in this sibling DB — they touch no universal-schema DDL, so
-# there is NO SCHEMA_VERSION bump (SCHEMA_VERSION gates the universal DB only).
+# (IRDeliveryProvenance / IRWarning). The tables live ONLY in this sibling DB —
+# they touch no universal-schema DDL, so there is NO SCHEMA_VERSION bump
+# (SCHEMA_VERSION gates the universal DB only).
 PROVENANCE_DB_FILENAME = "reg_meta.provenance.db"
 
 PROVENANCE_DDL = """\
@@ -919,19 +919,6 @@ CREATE TABLE adapter_warning (
     entity_id INTEGER NOT NULL,
     code TEXT NOT NULL,
     detail TEXT
-);
-
--- Source-file SHA-256 checksums (also kept in the shipped import_manifest for
--- A4.2 so dbdiff stays exit-0; the import_manifest copy is removed at A4.4+).
-CREATE TABLE source_checksum (
-    source_file TEXT NOT NULL PRIMARY KEY,
-    sha256 TEXT NOT NULL
-);
-
--- Source-file row counts (same dual-write rationale as source_checksum).
-CREATE TABLE source_row_count (
-    source_file TEXT NOT NULL PRIMARY KEY,
-    n_rows INTEGER NOT NULL
 );
 
 -- Per-variant Registerversion delivery/approval dates (the IRDeliveryProvenance
@@ -989,9 +976,9 @@ def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
     """Create and populate the sibling provenance DB from a build payload.
 
     `payload` is the dict `materialize()` collects (provenance IR objects,
-    warning IR objects, source checksums/row-counts, the SCB register-name map)
-    plus the finalized universal-DB sha256/path the caller stamps in after the
-    swap. Refuses to overwrite (rotate first), mirroring
+    warning IR objects, the SCB register-name map) plus the finalized
+    universal-DB sha256/path the caller stamps in after the swap. Refuses to
+    overwrite (rotate first), mirroring
     `create_empty_provenance_db`. The caller wraps this in a non-fatal
     try/except: a provenance write failure must NOT flip the build exit code,
     since the universal DB is already swapped in.
@@ -1030,15 +1017,6 @@ def write_provenance_db(path: Path, payload: dict[str, Any]) -> None:
         conn.executemany(
             "INSERT INTO adapter_warning VALUES (?, ?, ?, ?, ?)",
             payload["adapter_warnings"],
-        )
-
-        conn.executemany(
-            "INSERT INTO source_checksum VALUES (?, ?)",
-            sorted(payload["source_checksums"].items()),
-        )
-        conn.executemany(
-            "INSERT INTO source_row_count VALUES (?, ?)",
-            sorted(payload["row_counts"].items()),
         )
 
         conn.executemany(
@@ -3171,8 +3149,6 @@ def build_db(
             "adapter_warnings": provenance_payload["adapter_warnings"],
             "delivery_approvals": provenance_payload["delivery_approvals"],
             "scb_register_id_map": provenance_payload["scb_register_id_map"],
-            "source_checksums": source_checksums,
-            "row_counts": row_counts,
         }
         provenance_tmp.unlink(missing_ok=True)
         write_provenance_db(provenance_tmp, payload)
