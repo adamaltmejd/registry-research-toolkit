@@ -58,7 +58,7 @@ Human terminal use is supported but secondary. This drives several choices:
 
 ## SQLite backend
 
-All metadata lives in a single SQLite file (~1.6 GB). Chosen because:
+All metadata lives in a single SQLite file (~320 MB). Chosen because:
 
 - Zero-dependency deployment (Python stdlib)
 - Single-file distribution via GitHub Releases + zstd compression
@@ -576,9 +576,8 @@ state that observes it. SCB's validity windows are applied at build time
 (see "Value sets are year-projected"), eliminating the historical-union
 junction and the per-item validity tables entirely. A pre-aggregated
 `code_variable_map` replaces large secondary indexes for value search
-queries. The original 13 GB raw DB shrank to ~1.6 GB through
-deduplication and integer keys; year-projection is expected to take it
-further still.
+queries. The original 13 GB raw DB shrank to ~320 MB through
+deduplication, integer keys, and year-projection.
 
 ## Documentation layer
 

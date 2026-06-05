@@ -9,7 +9,7 @@ users see), see [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md).
 `reg_meta_build` owns the build pipeline that produces the SQLite databases
 `reg_meta` queries against. Specifically:
 
-- `reg_meta.db` — main metadata DB (~520 MB uncompressed). Built from SCB
+- `reg_meta.db` — main metadata DB (~320 MB uncompressed). Built from SCB
   source CSVs under `reg_meta_build/input_data/`, classifications seed at
   `reg_meta_build/classifications.toml`, and curated slug TOMLs under
   `reg_meta_build/fqid_slugs/`. Validated by `reg_meta_build/validate.py`
