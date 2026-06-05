@@ -125,10 +125,11 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`,
 
 - **`reg_meta` vs `reg_meta_build`** — different deps (query needs only
   stdlib `sqlite3`; build needs CSV/Excel parsers), cadence, and
-  operators. The built SQLite DBs (`reg_meta.db` ~520 MB; `reg_meta_docs.db`)
-  are too large for the wheel and ship as `.zst`-compressed **GitHub
-  release artifacts** on `reg_meta/v*` tags; `reg-meta update` fetches
-  the matching version into `$XDG_DATA_HOME/reg_meta/`. Mirrors the
+  operators. The built SQLite DBs (`reg_meta.db` plus the smaller
+  `reg_meta_docs.db`) are too large to ship inside the wheel and are
+  distributed as `.zst`-compressed **GitHub release artifacts** on
+  `reg_meta/v*` tags; `reg-meta update` fetches the matching version
+  into `$XDG_DATA_HOME/reg_meta/`. Mirrors the
   build/runtime separation a future Go/Rust port of the query layer
   would need.
 - **`reg_schema` standalone** — the `project_data.json` schema has many

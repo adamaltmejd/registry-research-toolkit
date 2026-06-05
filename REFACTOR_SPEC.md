@@ -85,115 +85,6 @@ bundle → realign → re-author loop against `global` before kit-build
 piles on. Paired with the 200-column load-test fixture for realign-UX
 stress. `global` is the staging environment; no separate staging tier.
 
-## 10a — MONA workflow: realign-then-extract
-
-The shipped bundle still runs the legacy two-MODE `discover`/`extract`
-model emitting `mock_data_discovery.json`/`mock_data_stats.json`. This
-section replaces it. There is no `reg_monabundle.types` module yet and
-no realign phase; both land here.
-
-### Single invocation, two phases
-
-`reg_webapp` builds one `.py` per upload via `reg_monabundle.build`,
-embedding `project_data.json` as a string literal. The bundle has one
-default invocation plus two flag variants:
-
-```text
-python project_bundle.py            # realign-then-extract; happy path → stats.json
-python project_bundle.py --check    # realign phase only; never extract
-python project_bundle.py --force    # skip realign; extract regardless
-```
-
-1. **Realign phase** — pulls `INFORMATION_SCHEMA.COLUMNS` + `COUNT(*)`
-   only (seconds, no row data). Verifies every spec column's
-   `display_name` exists and that the declared `type` is compatible with
-   the observed `sql_type` (via `reg_monabundle.types.is_compatible`).
-2. **Extract phase** — the aggregation queries (potentially hours).
-   Entered only if realign finds zero diffs.
-
-If realign finds diffs the bundle writes `project_data.realign.json`,
-exits non-zero, and never extracts — making "I forgot to realign" a
-structural impossibility. Happy case is **one** MONA round-trip;
-misalignment costs a second after reconciliation. The first historical
-round-trip (discover) goes away: the spec is authored from the order,
-not derived from the data.
-
-**Build-time pre-resolution.** Before embedding the JSON,
-`reg_monabundle.build` resolves every absent `display_name` from
-reg_meta (alias resolution) and writes it back, so the embedded JSON
-always carries `display_name` on every binding — the bundle never needs
-reg_meta on MONA. (Today the runtime instead *requires* hand-written
-`display_name` and rejects bindings without it; this pre-resolution is
-the on-ramp to making it optional in authored specs.)
-
-`project_data.realign.json` (written only on diffs):
-
-```json
-{
-  "schema_version": "2.0.0",
-  "project": "swecov-education",
-  "sources": {
-    "lisa_2018": {
-      "row_count": 8492768,
-      "missing_in_data": [
-        {"binding": "scb/lisa/lopnr", "display_name": "LopNr"}
-      ],
-      "extra_in_data": ["P1105_LopNr_PersonNr", "UnexpectedCol"],
-      "type_mismatches": [
-        {"binding": "scb/lisa/birthdate", "display_name": "BirthDate",
-         "spec_type": "date", "sql_type": "INTEGER"}
-      ]
-    }
-  }
-}
-```
-
-`missing_in_data` lists columns by binding FQID + the `display_name` the
-bundle queried for; `extra_in_data` lists SQL columns found but not
-queried; `type_mismatches` lists incompatible declared-vs-observed types.
-
-### Type compatibility lives in `reg_monabundle`
-
-The SQL↔spec-type machinery is owned by `reg_monabundle`'s pure-python
-lightweight side (amalgamated into the bundle, imported by `reg_webapp`):
-
-- `is_compatible(spec_type, sql_type) -> bool` — what the extract code
-  can ingest (`numeric` ↔ `VARCHAR`/`INTEGER`/`DECIMAL`/`DOUBLE`; `date`
-  ↔ `VARCHAR`/`DATE`/`DATETIME` but not `INTEGER`). Drives realign
-  mismatch detection.
-- `suggest_spec_type(sql_type) -> SpecType` — the inverse, used by the
-  realign-review UI to pre-fill "accept SQL type into spec". Always
-  returns *some* type; the user can override.
-
-Living in `reg_monabundle` keeps the durable artifacts durable: if the
-package learns a new cast, the realign check learns it the same release.
-
-### Reconciling the patch (client-side)
-
-The spec is authoritative. The webapp loads the patch into the in-browser
-project state and walks the user through one screen. Four actions:
-
-- **Pair as rename** — link a `missing_in_data` to an `extra_in_data`;
-  update the binding's `display_name` to the SQL header. The binding FQID
-  (`variable`) is never modified — reg_meta identity is stable.
-- **Remove from spec** — drop a truly-absent binding.
-- **Add to spec** — a real new delivered column; prompt for a binding
-  FQID (chosen against reg_meta via catalog search) and a `type`, store
-  the SQL string as `display_name`.
-- **Resolve type mismatch** — accept the SQL type into the spec or remove
-  the binding. There is no "keep spec type, cast anyway" reconciliation;
-  `--force` is the only way to extract past a diff.
-
-The realign-review UI is client-side only — no server endpoint applies
-the patch. After reconciliation the in-browser spec updates and the next
-bundle download embeds the corrected version.
-
-**`--force` extract semantics.** With realign skipped, extract proceeds
-column-by-column: absent `display_name` → warn + skip; present but
-incompatible → try the cast, warn + skip on failure. `--force` is the
-only path that produces a *partial* stats file; the result should be
-treated as provisional.
-
 ## 8 — Kit-build (`POST /api/kit`)
 
 `/api/kit` does not exist yet (#217). Kit-build is just file packaging —
@@ -368,6 +259,115 @@ consumes JSON only. The surviving surface is `reg-mockdata generate` +
 reg_monabundle.scan`. The CVID picker is already obsolete under Model A —
 `Catalog.resolve_at(fqid, period, …)` returns the `list[VariableState]`
 directly, no heuristic scoring.
+
+## 10a — MONA workflow: realign-then-extract
+
+The shipped bundle still runs the legacy two-MODE `discover`/`extract`
+model emitting `mock_data_discovery.json`/`mock_data_stats.json`. This
+section replaces it. There is no `reg_monabundle.types` module yet and
+no realign phase; both land here.
+
+### Single invocation, two phases
+
+`reg_webapp` builds one `.py` per upload via `reg_monabundle.build`,
+embedding `project_data.json` as a string literal. The bundle has one
+default invocation plus two flag variants:
+
+```text
+python project_bundle.py            # realign-then-extract; happy path → stats.json
+python project_bundle.py --check    # realign phase only; never extract
+python project_bundle.py --force    # skip realign; extract regardless
+```
+
+1. **Realign phase** — pulls `INFORMATION_SCHEMA.COLUMNS` + `COUNT(*)`
+   only (seconds, no row data). Verifies every spec column's
+   `display_name` exists and that the declared `type` is compatible with
+   the observed `sql_type` (via `reg_monabundle.types.is_compatible`).
+2. **Extract phase** — the aggregation queries (potentially hours).
+   Entered only if realign finds zero diffs.
+
+If realign finds diffs the bundle writes `project_data.realign.json`,
+exits non-zero, and never extracts — making "I forgot to realign" a
+structural impossibility. Happy case is **one** MONA round-trip;
+misalignment costs a second after reconciliation. The first historical
+round-trip (discover) goes away: the spec is authored from the order,
+not derived from the data.
+
+**Build-time pre-resolution.** Before embedding the JSON,
+`reg_monabundle.build` resolves every absent `display_name` from
+reg_meta (alias resolution) and writes it back, so the embedded JSON
+always carries `display_name` on every binding — the bundle never needs
+reg_meta on MONA. (Today the runtime instead *requires* hand-written
+`display_name` and rejects bindings without it; this pre-resolution is
+the on-ramp to making it optional in authored specs.)
+
+`project_data.realign.json` (written only on diffs):
+
+```json
+{
+  "schema_version": "2.0.0",
+  "project": "swecov-education",
+  "sources": {
+    "lisa_2018": {
+      "row_count": 8492768,
+      "missing_in_data": [
+        {"binding": "scb/lisa/lopnr", "display_name": "LopNr"}
+      ],
+      "extra_in_data": ["P1105_LopNr_PersonNr", "UnexpectedCol"],
+      "type_mismatches": [
+        {"binding": "scb/lisa/birthdate", "display_name": "BirthDate",
+         "spec_type": "date", "sql_type": "INTEGER"}
+      ]
+    }
+  }
+}
+```
+
+`missing_in_data` lists columns by binding FQID + the `display_name` the
+bundle queried for; `extra_in_data` lists SQL columns found but not
+queried; `type_mismatches` lists incompatible declared-vs-observed types.
+
+### Type compatibility lives in `reg_monabundle`
+
+The SQL↔spec-type machinery is owned by `reg_monabundle`'s pure-python
+lightweight side (amalgamated into the bundle, imported by `reg_webapp`):
+
+- `is_compatible(spec_type, sql_type) -> bool` — what the extract code
+  can ingest (`numeric` ↔ `VARCHAR`/`INTEGER`/`DECIMAL`/`DOUBLE`; `date`
+  ↔ `VARCHAR`/`DATE`/`DATETIME` but not `INTEGER`). Drives realign
+  mismatch detection.
+- `suggest_spec_type(sql_type) -> SpecType` — the inverse, used by the
+  realign-review UI to pre-fill "accept SQL type into spec". Always
+  returns *some* type; the user can override.
+
+Living in `reg_monabundle` keeps the durable artifacts durable: if the
+package learns a new cast, the realign check learns it the same release.
+
+### Reconciling the patch (client-side)
+
+The spec is authoritative. The webapp loads the patch into the in-browser
+project state and walks the user through one screen. Four actions:
+
+- **Pair as rename** — link a `missing_in_data` to an `extra_in_data`;
+  update the binding's `display_name` to the SQL header. The binding FQID
+  (`variable`) is never modified — reg_meta identity is stable.
+- **Remove from spec** — drop a truly-absent binding.
+- **Add to spec** — a real new delivered column; prompt for a binding
+  FQID (chosen against reg_meta via catalog search) and a `type`, store
+  the SQL string as `display_name`.
+- **Resolve type mismatch** — accept the SQL type into the spec or remove
+  the binding. There is no "keep spec type, cast anyway" reconciliation;
+  `--force` is the only way to extract past a diff.
+
+The realign-review UI is client-side only — no server endpoint applies
+the patch. After reconciliation the in-browser spec updates and the next
+bundle download embeds the corrected version.
+
+**`--force` extract semantics.** With realign skipped, extract proceeds
+column-by-column: absent `display_name` → warn + skip; present but
+incompatible → try the cast, warn + skip on failure. `--force` is the
+only path that produces a *partial* stats file; the result should be
+treated as provisional.
 
 ## 10b — Composite `entity_key` / `time_key`
 
