@@ -210,6 +210,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The period crosses a state transition (per-state subsets returned)",
     hint: "info",
   },
+  range_period_partially_covered: {
+    label: "The requested range has a sub-range no variable state covers",
+    hint: "info",
+  },
   variable_replaced: {
     label: "The binding has a replacement edge at/before this period",
     hint: "info",

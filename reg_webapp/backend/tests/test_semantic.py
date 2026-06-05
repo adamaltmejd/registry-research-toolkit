@@ -17,6 +17,7 @@ import pytest
 import reg_meta.db
 from reg_meta.catalog import Catalog
 from reg_schema.project_data import ProjectData
+from reg_webapp.catalog_index import build_catalog_index
 from reg_webapp.semantic import validate_semantic
 
 
@@ -587,3 +588,145 @@ def test_representation_under_covering_default_is_drift(uneven_representation_ca
     assert "binding_value_set_version_ambiguous" not in codes
     assert "binding_state_drifts_within_period" in codes
     assert result.ok
+
+
+# ── §6.8.3 (#207): an explicit range PARTIALLY covered by the concept's states.
+# `resolve_at` returns the states INTERSECTING the requested `[from, to]`; if their
+# union leaves a gap NO column delivers, the binding silently drops that sub-range.
+# `range_period_partially_covered` (info) surfaces it. This is the WHOLE-CONCEPT
+# under-coverage case — distinct from #204's `binding_state_drifts_within_period`,
+# which is the CHOSEN representation under-covering vs a sibling column that DOES
+# deliver the gap. Zero coverage stays `period_outside_state_validity`.
+
+
+def _kon_source(period) -> dict:
+    return {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": period,
+        "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+    }
+
+
+def test_range_fully_covered_has_no_partial_finding(catalog):
+    # kon spans 2018-01-01..9999-12-31; a range fully inside it has no gap.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2019, "to": 2021})]),
+        catalog,
+        caller="researcher",
+    )
+    codes = {i.code for i in result.issues}
+    assert "range_period_partially_covered" not in codes
+    assert result.ok
+
+
+def test_range_partially_covered_is_flagged(catalog):
+    # kon first delivered 2018; a 2010-2020 binding leaves 2010-2017 uncovered.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2010, "to": 2020})]),
+        catalog,
+        caller="researcher",
+    )
+    issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
+    assert issue.level == "info"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    # The reported gap is the leading uncovered span, inclusive ISO bounds.
+    assert "2010-01-01..2017-12-31" in issue.message
+    # Info is non-blocking: the covered sub-range still extracts.
+    assert result.ok
+
+
+def test_zero_coverage_is_only_period_outside_state_validity(catalog):
+    # A range entirely BEFORE kon's first state is zero coverage, not partial —
+    # `resolve_at` returns no states, so only the existing code fires.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2010, "to": 2015})]),
+        catalog,
+        caller="researcher",
+    )
+    codes = {i.code for i in result.issues}
+    assert "period_outside_state_validity" in codes
+    assert "range_period_partially_covered" not in codes
+
+
+def test_point_period_has_no_partial_finding(catalog):
+    # A point period is a single instant — no requested span to under-cover.
+    result = validate_semantic(
+        _project([_kon_source(2018)]), catalog, caller="researcher"
+    )
+    assert "range_period_partially_covered" not in {i.code for i in result.issues}
+
+
+def test_default_period_has_no_partial_finding(catalog):
+    # `_default` means "the full history" — there is no author-requested window to
+    # compare against, so the whole-concept partial-coverage check must not fire.
+    result = validate_semantic(
+        _project([_kon_source("_default")]), catalog, caller="researcher"
+    )
+    assert "range_period_partially_covered" not in {i.code for i in result.issues}
+
+
+def test_partial_coverage_does_not_drop_binding_from_steward_index(catalog):
+    # The finding is `info` for both callers, so it must NOT drop the binding from
+    # the steward catalog index — a partially-covered binding is still usable for the
+    # covered sub-range. (A `warning` here would wrongly drop it; catalog_index.py
+    # keys its DROP on warning level.)
+    project = _project([_kon_source({"from": 2010, "to": 2020})])
+    result = validate_semantic(project, catalog, caller="steward")
+    issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
+    assert issue.level == "info"
+    assert result.ok
+
+    index = build_catalog_index(project, result.issues)
+    assert index.admits("scb/lisa/kon")
+
+
+@pytest.fixture
+def internal_gap_catalog():
+    """`scb/lisa/kon` delivered in TWO non-adjacent windows under one variant:
+    2010-2012, then 2016-9999 — an INTERNAL gap (2013-2015 has no state at all).
+    The seeded state is re-windowed to the later era; the earlier era is added as a
+    second state, leaving the 2013-2015 hole."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2016-01-01', valid_to = '9999-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2010-01-01",
+        valid_to="2012-12-31",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_internal_gap_in_range_is_flagged(internal_gap_catalog):
+    # Range 2010-2018 over a concept with a 2013-2015 hole → exactly that gap.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2010, "to": 2018})]),
+        internal_gap_catalog,
+        caller="researcher",
+    )
+    issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
+    assert "2013-01-01..2015-12-31" in issue.message
+    assert result.ok
+
+
+def test_day_adjacent_windows_leave_no_gap(internal_gap_catalog):
+    # A range covering only the populated tail (2016+) is fully covered. Guards the
+    # adjacency math: string `valid_from > valid_to` would false-positive a gap.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2016, "to": 2018})]),
+        internal_gap_catalog,
+        caller="researcher",
+    )
+    assert "range_period_partially_covered" not in {i.code for i in result.issues}
