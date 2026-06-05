@@ -26,10 +26,17 @@ def client(catalog_db):
         yield c
 
 
-def _spec(*, display_name: str | None = None, period: object = 2018) -> dict:
+def _spec(
+    *,
+    display_name: str | None = None,
+    period: object = 2018,
+    representation: str | None = None,
+) -> dict:
     binding: dict = {"variable": "scb/lisa/kon", "type": "categorical"}
     if display_name is not None:
         binding["display_name"] = display_name
+    if representation is not None:
+        binding["representation"] = representation
     return {
         "schema_version": "2.0.0",
         "steward": "ifau",
@@ -66,6 +73,7 @@ def test_csv_header_and_row_shape(client):
         "register",
         "variant",
         "variable",
+        "representation",
         "period",
         "display_name",
     ]
@@ -74,6 +82,7 @@ def test_csv_header_and_row_shape(client):
         "lisa",
         "individer-15plus",
         "scb/lisa/kon",
+        "",
         "2018",
         "Sex",
     ]
@@ -93,13 +102,27 @@ def test_range_period_serializes_with_double_dot(client):
         "/api/project/order", json=_spec(period={"from": 2018, "to": 2020})
     )
     rows = _rows(resp.text)
-    assert rows[1][4] == "2018..2020"
+    assert rows[1][5] == "2018..2020"
 
 
 def test_default_sentinel_period_serializes_literally(client):
     resp = client.post("/api/project/order", json=_spec(period="_default"))
     rows = _rows(resp.text)
-    assert rows[1][4] == "_default"
+    assert rows[1][5] == "_default"
+
+
+def test_representation_column_survives_custom_display_name(client):
+    # A binding with BOTH a representation and a custom display_name must still
+    # carry the representation in its own column (else the provider can't tell
+    # which delivery column was pinned).
+    resp = client.post(
+        "/api/project/order",
+        json=_spec(display_name="Sex (detailed)", representation="kon_detalj"),
+    )
+    rows = _rows(resp.text)
+    assert rows[0][4] == "representation"
+    assert rows[1][4] == "kon_detalj"
+    assert rows[1][-1] == "Sex (detailed)"
 
 
 def test_deterministic(client):

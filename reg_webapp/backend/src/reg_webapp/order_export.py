@@ -42,11 +42,15 @@ if TYPE_CHECKING:
     from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
 
 # §9.5: the default order-export column header (fixed order is the contract).
+# `representation` is its OWN column (not folded into display_name): a custom
+# display_name would otherwise hide which delivery column the binding pinned, so
+# the data provider couldn't tell representations apart.
 ORDER_COLUMNS = (
     "provider",
     "register",
     "variant",
     "variable",
+    "representation",
     "period",
     "display_name",
 )
@@ -74,6 +78,7 @@ def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
                     register,
                     variant,
                     binding.variable,
+                    binding.representation or "",
                     period_str,
                     _display_name(binding, source, catalog),
                 )
@@ -132,6 +137,9 @@ def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
     validator's job to flag (this renderer is best-effort)."""
     if binding.display_name is not None:
         return binding.display_name
+    # A `representation` is the chosen delivery column — it IS the default label.
+    if binding.representation is not None:
+        return binding.representation
 
     try:
         parsed = parse(binding.variable)

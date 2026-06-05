@@ -18,11 +18,12 @@ calls it per-request with an in-handler connection; the steward catalog load
 ``caller`` flag drives the level mapping. For the *researcher* path
 (``POST /api/project/validate``) unresolved FQIDs are blocking ``error``s. For
 the *steward-catalog load* path (FastAPI startup, §9.1) ``fqid_unresolved``,
-``value_set_missing``, and ``period_outside_state_validity`` are downgraded
-``error`` → ``warning`` so the deployment doesn't fail to start when reg_meta
-evolves out from under a steward's committed catalog; the affected bindings are
-then dropped from the in-memory index (``catalog_index.py``), but ``ok`` stays
-True, so the caller must inspect the warnings, not just ``ok`` (§6.8.0).
+``value_set_missing``, ``period_outside_state_validity``, and
+``binding_representation_unknown`` are downgraded ``error`` → ``warning`` so the
+deployment doesn't fail to start when reg_meta evolves out from under a steward's
+committed catalog; the affected bindings are then dropped from the in-memory
+index (``catalog_index.py``), but ``ok`` stays True, so the caller must inspect
+the warnings, not just ``ok`` (§6.8.0).
 
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
@@ -45,13 +46,23 @@ if TYPE_CHECKING:
 
 Caller = Literal["researcher", "steward"]
 
-# §6.8.3 caller-context: these three codes downgrade error → warning on the
+# §6.8.3 caller-context: these codes downgrade error → warning on the
 # steward-catalog load path so a deployment boots through reg_meta drift (the
 # affected bindings drop from the in-memory index instead of crashing startup).
 # The researcher path keeps them as errors. The split is a level *mapping* by
 # caller, NOT a different rule set (§6.8.3 "same codes, different level mapping").
+# `binding_representation_unknown` belongs here for the same reason as
+# `period_outside_state_validity`: a steward pinned a representation that a newer
+# reg_meta build no longer delivers as a column — drift, not an author error.
+# `binding_value_set_version_ambiguous` deliberately stays strict (an author-time
+# choice, not drift).
 _STEWARD_DOWNGRADED: frozenset[str] = frozenset(
-    {"fqid_unresolved", "value_set_missing", "period_outside_state_validity"}
+    {
+        "fqid_unresolved",
+        "value_set_missing",
+        "period_outside_state_validity",
+        "binding_representation_unknown",
+    }
 )
 
 
@@ -210,6 +221,30 @@ def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta Vari
     return False
 
 
+def _coexisting_columns(states) -> list[str]:  # noqa: ANN001 — reg_meta VariableState
+    """§6.8.3 REPRESENTATION: the distinct delivery columns that are valid at the
+    SAME instant (overlapping windows) — genuine parallel representations the
+    binding must choose between (SSYK 3/4/5-digit, age brackets). Distinct columns
+    in NON-overlapping windows are a SEQUENTIAL rename across the period (column A
+    until 2014, renamed B from 2015) — that is drift, not co-existence, so it must
+    NOT demand a `representation`. Mirrors `_has_codelivered_versions` but keys on
+    `delivery_column_name` rather than `value_set_id`. O(n²) over the few states
+    `resolve_at` returns; ISO `YYYY-MM-DD` strings compare chronologically."""
+    cols: set[str] = set()
+    for i, a in enumerate(states):
+        for b in states[i + 1 :]:
+            if (
+                a.delivery_column_name
+                and b.delivery_column_name
+                and a.delivery_column_name != b.delivery_column_name
+                and a.valid_from <= b.valid_to
+                and b.valid_from <= a.valid_to
+            ):
+                cols.add(a.delivery_column_name)
+                cols.add(b.delivery_column_name)
+    return sorted(cols)
+
+
 def _check_binding(
     binding: Binding,
     source: Source,
@@ -320,16 +355,86 @@ def _check_binding_period(
         )
         return
 
-    # §6.8.3 fold: CO-DELIVERY — ≥2 states with DISTINCT value sets (different
-    # `value_set_id`) whose validity windows OVERLAP (valid at the same instant).
-    # That breaks the `(variable, variant, period) → one value set` invariant, so
-    # it is an error. `resolve_at` returns every state whose validity INTERSECTS the
-    # period, so for a range / `_default` period the matched states may instead be
-    # SEQUENTIAL across a transition (non-overlapping) — that's drift (info) below,
-    # NOT ambiguity. There is no author-side pin: the fix is reg_meta build-time
-    # curation (this should not fire against a curated catalog).
+    # §6.8.3 REPRESENTATION. A FQID names one concept; the reg_meta build enforces
+    # one value set per `(variable, variant, period, delivery_column)`, but a
+    # concept may carry several co-existing delivery columns — parallel
+    # representations (SSYK 3/4/5-digit, age brackets). `binding.representation`
+    # selects one by its `delivery_column_name`.
+    if binding.representation is not None:
+        matched = [
+            s for s in states if s.delivery_column_name == binding.representation
+        ]
+        if not matched:
+            avail = sorted(
+                {s.delivery_column_name for s in states if s.delivery_column_name}
+            )
+            issues.append(
+                _issue(
+                    "binding_representation_unknown",
+                    "error",
+                    caller,
+                    var_path,
+                    f"binding {binding.variable!r} representation "
+                    f"{binding.representation!r} is not a delivery column at "
+                    f"{source.register_variant} period {source.period!r} "
+                    f"(available: {avail})",
+                )
+            )
+            return
+        # The chosen column may not span the whole MULTI-period: resolve_at returns
+        # only intersecting states, so narrowing to `matched` can silently drop a
+        # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
+        # binding → 2010–2013 lost). Surface it as info. A point int period is a
+        # single instant (no gap); `_default` returns the FULL state history, so it
+        # CAN under-cover just like a PeriodRange and must be checked too.
+        is_multi_period = (
+            not isinstance(source.period, (int, str)) or source.period == "_default"
+        )
+        if is_multi_period and (
+            min(s.valid_from for s in matched) > min(s.valid_from for s in states)
+            or max(s.valid_to for s in matched) < max(s.valid_to for s in states)
+        ):
+            issues.append(
+                _issue(
+                    "binding_state_drifts_within_period",
+                    "info",
+                    caller,
+                    var_path,
+                    f"binding {binding.variable!r} representation "
+                    f"{binding.representation!r} covers only part of period "
+                    f"{source.period!r} at {source.register_variant}; the rest of "
+                    f"the range has no state for that column",
+                )
+            )
+        states = matched
+
+    # ≥2 delivery columns CO-EXISTING (overlapping windows) and no `representation`
+    # chosen → the binding is AMBIGUOUS: it would extract more than one column. The
+    # author must pick one (the SPA offers a chooser); this is where the retired
+    # `@version` pin's job now lives, keyed on the delivery column. Distinct columns
+    # in NON-overlapping windows (a sequential rename) are NOT ambiguous — they fall
+    # through to the drift-info case below. (When `representation` is set, `states`
+    # is one column, so `coexisting` is empty and this never fires.)
+    coexisting = _coexisting_columns(states)
+    if len(coexisting) > 1:
+        issues.append(
+            _issue(
+                "binding_value_set_version_ambiguous",
+                "error",
+                caller,
+                var_path,
+                f"binding {binding.variable!r} resolves to {len(coexisting)} "
+                f"co-existing representations {coexisting} at "
+                f"{source.register_variant} period {source.period!r}; set "
+                f"`representation` to one of them",
+            )
+        )
+        return
+
+    # Backstop: distinct value sets on ONE column at the same instant — a reg_meta
+    # build co-delivery the curation missed (the build `validate` invariant should
+    # make this unreachable against a clean catalog).
     if _has_codelivered_versions(states):
-        # Distinct value sets at the same instant, labelled for legibility.
         labels: dict[int | None, str] = {}
         for s in states:
             labels.setdefault(s.value_set_id, s.value_set_version_label)
@@ -340,18 +445,17 @@ def _check_binding_period(
                 caller,
                 var_path,
                 f"binding {binding.variable!r} resolves to several co-delivered "
-                f"value sets {sorted(labels.values())} at {source.register_variant} "
-                f"period {source.period!r}; a (variable, variant, period) must map "
-                f"to one value set — this reg_meta build needs co-delivery curation",
+                f"value sets {sorted(labels.values())} on one column at "
+                f"{source.register_variant} period {source.period!r} — this reg_meta "
+                f"build needs co-delivery curation",
             )
         )
         return
 
     # §6.8.3 drift (info): a range / `_default` period crossing a state transition
-    # resolves to several SEQUENTIAL states (non-overlapping windows), possibly
-    # differing on version label (a re-version) or shape — informational; the
-    # resolver returns the per-state subsets at extract time. The co-delivered
-    # (overlapping) version case was already the error above.
+    # resolves to several SEQUENTIAL states (non-overlapping windows) on ONE column,
+    # possibly differing on version label (a re-version) or shape — informational;
+    # the resolver returns the per-state subsets at extract time.
     if len(states) > 1:
         issues.append(
             _issue(

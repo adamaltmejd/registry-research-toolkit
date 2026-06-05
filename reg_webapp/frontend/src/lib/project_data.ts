@@ -26,6 +26,11 @@ export interface Binding {
   type: string;
   display_name?: string | null;
   value_set?: string | null;
+  // The delivery column selecting which REPRESENTATION of the concept to extract
+  // (set only when the concept resolves to >1 column at the source period — the
+  // chooser fills it; the backend semantic check flags an ambiguous binding that
+  // omits it). The job the retired `@version` pin once did, keyed on the column.
+  representation?: string | null;
   [key: string]: unknown;
 }
 
