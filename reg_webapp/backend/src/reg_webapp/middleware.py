@@ -7,7 +7,7 @@ handlers free of caching boilerplate and guarantees the scheme is uniform across
 ``/api/context``, the ``/api/catalog`` root, the catch-all, and the 7 suffixed
 sub-endpoints (the read surface A5.2a-ii ships).
 
-Skips WRITE endpoints (§9.4: ``/api/project/*``, ``/api/bundle``, ``/api/kit``
+Skips WRITE endpoints (§9.4: ``/api/project/*``, ``/api/bundle``
 do NOT set ETag) — those land in A5.2b. We gate on the request METHOD: only
 ``GET`` reads are cacheable; any other method is passed through untouched. (The
 routes register GET only — FastAPI's ``@router.get`` does not auto-add HEAD, so a
