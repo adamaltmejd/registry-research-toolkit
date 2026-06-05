@@ -247,7 +247,7 @@ def summarize_column(
             carries any inline subtype/format hints that let the caller
             skip the per-column sample query.
         options: Per-column option overrides loaded from the
-            ``reg_monabundle.column_options`` block of
+            ``reg_monabundle.binding_options`` block of
             ``project_data.json``. Reserved for downstream consumers
             (e.g. ``suppress_k`` in disclosure-control hardening).
     """

@@ -294,7 +294,7 @@ export interface paths {
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
          *     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). It now ALSO runs the
-         *     build-time cross-block referential checks (orphan ``column_options`` keys /
+         *     build-time cross-block referential checks (orphan ``binding_options`` keys /
          *     suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
          *     divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
          *     step-4 capability gates (e.g. a build-required ``display_name``), which

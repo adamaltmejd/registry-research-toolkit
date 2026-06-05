@@ -43,7 +43,7 @@ PROJECT_DATA_FILENAME = "project_data.json"
 # (§6.8.3-adjacent; build-time only). The issue-based forms mirror the
 # long-standing raises in ``validate_project_data`` so ``reg_webapp`` can
 # consume issues directly instead of catching the raise.
-COLUMN_OPTIONS_ORPHAN_CODE = "column_options_orphan_fqid"
+BINDING_OPTIONS_ORPHAN_CODE = "binding_options_orphan_fqid"
 SUPPRESS_K_NON_CATEGORICAL_CODE = "suppress_k_on_non_categorical"
 # The §6.8.2 ``reg_monabundle`` namespaced-block validator
 # (``validate_block``) is raise-based, pure-stdlib, and amalgamated into the
@@ -54,7 +54,7 @@ BLOCK_INVALID_CODE = "invalid_block"
 
 def _json_pointer_escape(token: str) -> str:
     """RFC 6901 escape a JSON-pointer reference token: ``~`` → ``~0``, ``/`` →
-    ``~1`` (in that order). A binding FQID is the ``column_options`` map KEY and
+    ``~1`` (in that order). A binding FQID is the ``binding_options`` map KEY and
     contains ``/`` (``provider/register/slug``), so it must be escaped or the
     ``ValidationIssue.path`` is a malformed pointer the SPA can't resolve."""
     return token.replace("~", "~0").replace("/", "~1")
@@ -62,7 +62,7 @@ def _json_pointer_escape(token: str) -> str:
 
 def _orphan_message(orphans: list[str]) -> str:
     return (
-        f"reg_monabundle.column_options has key(s) that don't match "
+        f"reg_monabundle.binding_options has key(s) that don't match "
         f"any binding FQID in sources: {orphans}. Check for typos "
         f"against the binding FQIDs declared in sources[*].bindings[*].variable."
     )
@@ -70,7 +70,7 @@ def _orphan_message(orphans: list[str]) -> str:
 
 def _suppress_k_non_categorical_message(fqid: str, non_categorical: list[str]) -> str:
     return (
-        f"reg_monabundle.column_options[{fqid!r}].suppress_k is only "
+        f"reg_monabundle.binding_options[{fqid!r}].suppress_k is only "
         f"honored on categorical bindings, but this FQID is bound as "
         f"{non_categorical} in at least one source — suppress_k is a "
         f"no-op there. The runtime applies suppress_k to the categorical "
@@ -79,10 +79,10 @@ def _suppress_k_non_categorical_message(fqid: str, non_categorical: list[str]) -
     )
 
 
-def column_options_issues(
+def binding_options_issues(
     block: object, project_data: reg_schema.ProjectData
 ) -> list[ValidationIssue]:
-    """Cross-check ``column_options`` keys against actual columns, as issues.
+    """Cross-check ``binding_options`` keys against actual columns, as issues.
 
     Two checks, both requiring access to the FQID-typed bindings:
 
@@ -105,13 +105,13 @@ def column_options_issues(
     does not re-run these checks (§9.6). The message text is shared with
     the raising path in ``validate_project_data`` so the issue and the
     raise can never drift; ``path`` is the RFC 6901 pointer into the
-    ``reg_monabundle.column_options`` map.
+    ``reg_monabundle.binding_options`` map.
     """
     issues: list[ValidationIssue] = []
     if not isinstance(block, dict):
         return issues
     block_obj = cast("Mapping[str, Any]", block)
-    options = block_obj.get("column_options")
+    options = block_obj.get("binding_options")
     if not isinstance(options, dict):
         return issues
     # A binding FQID is the 3-seg variable identity (the period left the FQID
@@ -128,8 +128,8 @@ def column_options_issues(
         issues.append(
             ValidationIssue(
                 level="error",
-                code=COLUMN_OPTIONS_ORPHAN_CODE,
-                path="/reg_monabundle/column_options",
+                code=BINDING_OPTIONS_ORPHAN_CODE,
+                path="/reg_monabundle/binding_options",
                 message=_orphan_message(orphans),
             )
         )
@@ -158,7 +158,7 @@ def column_options_issues(
                     level="error",
                     code=SUPPRESS_K_NON_CATEGORICAL_CODE,
                     path=(
-                        "/reg_monabundle/column_options/"
+                        "/reg_monabundle/binding_options/"
                         f"{_json_pointer_escape(fqid)}/suppress_k"
                     ),
                     message=_suppress_k_non_categorical_message(fqid, non_categorical),
@@ -192,10 +192,10 @@ def block_issue(block: object) -> ValidationIssue | None:
     return None
 
 
-def _validate_column_options_against_columns(
+def _validate_binding_options_against_columns(
     block: object, project_data: reg_schema.ProjectData
 ) -> None:
-    """Raising wrapper over ``column_options_issues`` (build gate).
+    """Raising wrapper over ``binding_options_issues`` (build gate).
 
     Computes the issues, then raises off the first one so
     ``validate_project_data`` keeps its message-stable fail-fast contract
@@ -204,7 +204,7 @@ def _validate_column_options_against_columns(
     the source of truth — both paths share ``_orphan_message`` /
     ``_suppress_k_non_categorical_message`` so they cannot drift.
     """
-    issues = column_options_issues(block, project_data)
+    issues = binding_options_issues(block, project_data)
     if issues:
         raise ValueError(issues[0].message)
 
@@ -238,7 +238,7 @@ def validate_project_data(payload: Mapping[str, Any]) -> reg_schema.ProjectData:
 
     validate_block(reg_schema_block)
     project_data = reg_schema.ProjectData.model_validate(payload)
-    _validate_column_options_against_columns(reg_schema_block, project_data)
+    _validate_binding_options_against_columns(reg_schema_block, project_data)
     return project_data
 
 

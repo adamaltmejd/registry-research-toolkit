@@ -99,7 +99,7 @@ def test_loaded_spec_lookup_options_resolves_through_binding_fqid():
             }
         ],
         reg_monabundle={
-            "column_options": {
+            "binding_options": {
                 "scb/test/kon": {"suppress_k": 25},
             }
         },
@@ -134,7 +134,7 @@ def test_loadedspec_from_dict_enforces_suppress_k_floor_at_load():
                 ],
             }
         ],
-        reg_monabundle={"column_options": {"scb/test/kon": {"suppress_k": 1}}},
+        reg_monabundle={"binding_options": {"scb/test/kon": {"suppress_k": 1}}},
     )
     with pytest.raises(ValueError, match="suppress_k"):
         loadedspec_from_dict(payload)

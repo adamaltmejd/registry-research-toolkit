@@ -7,7 +7,7 @@ payload, but the filename follows the corpus harness contract (see
 
 A realistic-shape SCB project: LISA + LOUISE + RTB across a handful of
 years, ~25 bindings per source, a panel linking the LISA years, and a
-populated ``reg_monabundle.column_options`` block with ``suppress_k``
+populated ``reg_monabundle.binding_options`` block with ``suppress_k``
 overrides. Used by two consumers:
 
 - ``reg_monabundle/tests/test_bundle_size_budget.py`` embeds this fixture
@@ -150,11 +150,11 @@ def build() -> dict[str, object]:
     # researcher wants a tighter k-anonymity floor than the global
     # default. Spread across registers so the block exercises lookup
     # paths. Block keys are 3-segment binding FQIDs (§6.1).
-    column_options: dict[str, dict[str, int]] = {}
+    binding_options: dict[str, dict[str, int]] = {}
     for _source_name, register_variant, _period in SOURCES:
         prefix = _provider_register(register_variant)
         for slug in ("kommun", "ssyk2012", "ast_sni2007"):
-            column_options[f"{prefix}/{slug}"] = {"suppress_k": 25}
+            binding_options[f"{prefix}/{slug}"] = {"suppress_k": 25}
 
     return {
         "schema_version": "2.0.0",
@@ -163,7 +163,7 @@ def build() -> dict[str, object]:
         "name": "load_test_200col",
         "sources": sources_out,
         "panels": [panel],
-        "reg_monabundle": {"column_options": column_options},
+        "reg_monabundle": {"binding_options": binding_options},
     }
 
 

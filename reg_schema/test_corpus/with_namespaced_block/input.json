@@ -19,7 +19,7 @@
     }
   ],
   "reg_monabundle": {
-    "column_options": {
+    "binding_options": {
       "scb/lisa/dispink04": {"suppress_k": 20}
     }
   }

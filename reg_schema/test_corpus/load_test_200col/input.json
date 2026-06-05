@@ -1238,7 +1238,7 @@
     }
   ],
   "reg_monabundle": {
-    "column_options": {
+    "binding_options": {
       "scb/lisa/kommun": {
         "suppress_k": 25
       },

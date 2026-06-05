@@ -105,20 +105,20 @@ def test_extra_key_is_unexpected_field_not_500(client):
     assert "unexpected_field" in codes, codes
 
 
-def test_validate_catches_orphan_column_options(client):
-    """Divergence reconciliation: an orphan ``reg_monabundle.column_options`` key
+def test_validate_catches_orphan_binding_options(client):
+    """Divergence reconciliation: an orphan ``reg_monabundle.binding_options`` key
     (a binding FQID not bound in any source) that /api/bundle 422s on is now ALSO
-    flagged by /validate (code ``column_options_orphan_fqid``) — so a /validate-
+    flagged by /validate (code ``binding_options_orphan_fqid``) — so a /validate-
     clean spec is buildable for that class."""
     spec = _clean_spec()
     spec["reg_monabundle"] = {
-        "column_options": {"scb/lisa/notbound": {"suppress_k": 10}}
+        "binding_options": {"scb/lisa/notbound": {"suppress_k": 10}}
     }
     resp = client.post("/api/project/validate", json=spec)
     assert resp.status_code == 200
     body = resp.json()
     assert body["ok"] is False
-    assert "column_options_orphan_fqid" in {i["code"] for i in body["issues"]}
+    assert "binding_options_orphan_fqid" in {i["code"] for i in body["issues"]}
 
 
 def test_model_issue_empty_loc_is_whole_document_pointer():
@@ -137,15 +137,15 @@ def test_model_issue_empty_loc_is_whole_document_pointer():
     assert issue.code == "invalid_field"
 
 
-def test_malformed_column_options_value_is_issue_not_500(client):
-    """A non-dict per-FQID column_options value (an int) is malformed — the block
+def test_malformed_binding_options_value_is_issue_not_500(client):
+    """A non-dict per-FQID binding_options value (an int) is malformed — the block
     validator flags it (invalid_block). /validate ACCUMULATES issues (it doesn't
     fail-fast like /bundle's raise), so the cross-block check must skip the non-dict
     value defensively, not `"suppress_k" not in <int>` → TypeError → 500."""
     spec = _clean_spec()
-    spec["reg_monabundle"] = {"column_options": {"scb/lisa/kon": 1}}  # bound, non-dict
+    spec["reg_monabundle"] = {"binding_options": {"scb/lisa/kon": 1}}  # bound, non-dict
     resp = client.post("/api/project/validate", json=spec)
-    assert resp.status_code == 200, f"malformed column_options → {resp.status_code}"
+    assert resp.status_code == 200, f"malformed binding_options → {resp.status_code}"
     body = resp.json()
     assert body["ok"] is False
     assert "invalid_block" in {i["code"] for i in body["issues"]}
@@ -226,7 +226,7 @@ def test_three_layer_concatenation(client):
     # Semantic would also fire, but structural failure short-circuits the model
     # build; the block layer is independent, so add a bad block too to prove
     # block issues ride alongside structural ones.
-    spec["reg_monabundle"] = {"column_options": {"bogus": {"suppress_k": 5}}}
+    spec["reg_monabundle"] = {"binding_options": {"bogus": {"suppress_k": 5}}}
     resp = client.post("/api/project/validate", json=spec)
     assert resp.status_code == 200
     body = resp.json()

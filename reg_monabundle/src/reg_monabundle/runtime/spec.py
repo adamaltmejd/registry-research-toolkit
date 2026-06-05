@@ -92,7 +92,7 @@ class Binding:
     """A bound delivery column: the runtime fields of a ``reg_schema.Binding``.
 
     ``display_name`` is the SQL header the runtime keys on; ``variable``
-    is the binding FQID used to resolve ``reg_monabundle.column_options``.
+    is the binding FQID used to resolve ``reg_monabundle.binding_options``.
     ``value_set`` / ``datetime_format`` are dropped — unused at runtime
     (datetime is rejected at deserialize, so no ``datetime_format``
     binding can reach here).
@@ -199,10 +199,10 @@ class LoadedSpec:
                 self._columns_by_display[(source.name, binding.display_name)] = binding
         self._type_cache: dict[str, dict[str, ColumnTypeOverride]] = {}
         block = project_data.reg_monabundle or {}
-        raw_options = block.get("column_options") or {}
+        raw_options = block.get("binding_options") or {}
         # The build-time validator pinned the inner shape, so a plain
         # dict access is enough at runtime.
-        self._column_options: Mapping[str, Mapping[str, Any]] = raw_options
+        self._binding_options: Mapping[str, Mapping[str, Any]] = raw_options
 
     @property
     def panels(self) -> tuple[Panel, ...]:
@@ -238,7 +238,7 @@ class LoadedSpec:
         return self.column_types_for_source(source_name).get(display_name)
 
     def lookup_options(self, source_name: str, display_name: str) -> dict[str, Any]:
-        """Return ``reg_monabundle.column_options`` for one column.
+        """Return ``reg_monabundle.binding_options`` for one column.
 
         Resolves through the column's binding FQID: the on-disk block
         is FQID-keyed (single source of truth) but the runtime lookup
@@ -248,7 +248,7 @@ class LoadedSpec:
         binding = self._columns_by_display.get((source_name, display_name))
         if binding is None:
             return {}
-        return dict(self._column_options.get(binding.variable, {}))
+        return dict(self._binding_options.get(binding.variable, {}))
 
 
 # -- JSON loader ----------------------------------------------------------

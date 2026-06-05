@@ -126,7 +126,7 @@ def test_build_bundle_project_data_invalid_schema_clean_error(tmp_path: Path, ca
 
 def test_build_bundle_model_a_spec_succeeds(tmp_path: Path, capsys):
     """Happy path: a Model A project_data.json (3-seg binding FQIDs,
-    register_variant + period, a reg_monabundle.column_options block keyed by
+    register_variant + period, a reg_monabundle.binding_options block keyed by
     a 3-seg variable FQID) builds a bundle cleanly. Pins the mdw
     cli → reg_monabundle.runtime.spec contract against an accidental v0.x
     reintroduction — the error-path tests above only prove rejection (A3.2)."""
@@ -146,7 +146,7 @@ def test_build_bundle_model_a_spec_succeeds(tmp_path: Path, capsys):
                 ],
             }
         ],
-        reg_monabundle={"column_options": {"scb/lisa/kon": {"suppress_k": 25}}},
+        reg_monabundle={"binding_options": {"scb/lisa/kon": {"suppress_k": 25}}},
     )
     spec_path = write_project_data(tmp_path, spec)
     out = tmp_path / "bundle.py"

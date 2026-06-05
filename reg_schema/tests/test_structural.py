@@ -84,7 +84,7 @@ def test_accepts_panels_and_namespaced_block() -> None:
                 "members": ["lisa_2018"],
             }
         ],
-        reg_monabundle={"column_options": {}},
+        reg_monabundle={"binding_options": {}},
     )
     result = validate_structural(spec)
     assert result.ok, result.issues
