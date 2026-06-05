@@ -36,6 +36,7 @@ from reg_meta_build.sources.sos import (
     _intersect_window,
     _iso_bound,
     _parse_tidsperiod,
+    _segment_windowed_codes,
     _sos_abbrev,
 )
 
@@ -1262,3 +1263,147 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
     # Full structural validation also holds on the WITH-slugs combined build.
     res = validate_built_db(tmp_path / "comb" / "reg_meta.db", corpus=False)
     assert res.passed, res.format_report()
+
+
+# ---------------------------------------------------------------------------
+# _segment_windowed_codes: sweep-line into non-overlapping period segments
+# ---------------------------------------------------------------------------
+
+
+def _wc(
+    code: str, label: str, vf: str | None, vt: str | None
+) -> tuple[str | None, str | None, IRValueCode]:
+    """One windowed code for the segmenter: (valid_from, valid_to, IRValueCode)."""
+    return (
+        vf,
+        vt,
+        IRValueCode(
+            code_id=0,
+            value_set_id=0,
+            code=code,
+            label=label,
+            valid_from=vf,
+            valid_to=vt,
+        ),
+    )
+
+
+def _seg_codes(
+    seg: tuple[str | None, str | None, list[IRValueCode]],
+) -> set[tuple[str, str]]:
+    return {(c.code, c.label) for c in seg[2]}
+
+
+class TestSegmentWindowedCodes:
+    def test_empty(self) -> None:
+        assert _segment_windowed_codes([]) == []
+
+    def test_alkohol_shape_wide_code_over_two_sub_windows(self) -> None:
+        # '0' lives the whole time; '1' means one thing 1987-1996, another 1997+.
+        # Bucketing by exact window overlapped (the bug); segmentation must yield
+        # TWO non-overlapping period states, each unioning the live codes.
+        segs = _segment_windowed_codes(
+            [
+                _wc("0", "noll", "1987-01-01", None),
+                _wc("1", "A", "1987-01-01", "1996-12-31"),
+                _wc("1", "B", "1997-01-01", None),
+            ]
+        )
+        assert [(s[0], s[1]) for s in segs] == [
+            ("1987-01-01", "1996-12-31"),
+            ("1997-01-01", None),
+        ]
+        assert _seg_codes(segs[0]) == {("0", "noll"), ("1", "A")}
+        assert _seg_codes(segs[1]) == {("0", "noll"), ("1", "B")}
+
+    def test_main_list_plus_sub_window_addition(self) -> None:
+        # A stable main code over the whole span + a code added for a later window
+        # → two non-overlapping segments; the second is the superset.
+        segs = _segment_windowed_codes(
+            [
+                _wc("A", "a", "1961-01-01", None),
+                _wc("X", "x", "1979-01-01", None),
+            ]
+        )
+        assert [(s[0], s[1]) for s in segs] == [
+            ("1961-01-01", "1978-12-31"),
+            ("1979-01-01", None),
+        ]
+        assert _seg_codes(segs[0]) == {("A", "a")}
+        assert _seg_codes(segs[1]) == {("A", "a"), ("X", "x")}
+
+    def test_rle_merges_contiguous_identical_unions(self) -> None:
+        # The same (code, label) delivered across two abutting windows must
+        # collapse to ONE segment — no spurious fragmentation.
+        segs = _segment_windowed_codes(
+            [
+                _wc("A", "a", "2000-01-01", "2002-12-31"),
+                _wc("A", "a", "2003-01-01", "2005-12-31"),
+            ]
+        )
+        assert len(segs) == 1
+        assert (segs[0][0], segs[0][1]) == ("2000-01-01", "2005-12-31")
+
+    def test_dedups_identical_codes_in_one_segment(self) -> None:
+        # Two identical (code, label) rows with overlapping (here identical)
+        # windows must collapse to ONE live code in the segment — else the
+        # value_set member_hash (hashed from the code list) desyncs from the
+        # stored value_set_member set (PK-collapsed) and content-share breaks.
+        segs = _segment_windowed_codes(
+            [
+                _wc("1", "Ett", "2000-01-01", "2005-12-31"),
+                _wc("1", "Ett", "2000-01-01", "2005-12-31"),
+            ]
+        )
+        assert len(segs) == 1
+        assert [(c.code, c.label) for c in segs[0][2]] == [("1", "Ett")]
+
+    def test_gap_is_not_merged_across_uncovered_stretch(self) -> None:
+        # Identical union on both sides of an UNCOVERED stretch must stay two
+        # segments (the catalog has no coding for the gap).
+        segs = _segment_windowed_codes(
+            [
+                _wc("A", "a", "2000-01-01", "2001-12-31"),
+                _wc("A", "a", "2005-01-01", "2006-12-31"),
+            ]
+        )
+        assert [(s[0], s[1]) for s in segs] == [
+            ("2000-01-01", "2001-12-31"),
+            ("2005-01-01", "2006-12-31"),
+        ]
+
+    def test_no_overlap_invariant_holds_for_arbitrary_windows(self) -> None:
+        # Property: emitted segments never overlap (closed intervals).
+        segs = _segment_windowed_codes(
+            [
+                _wc("a", "a", None, "1990-12-31"),
+                _wc("b", "b", "1985-01-01", "1995-12-31"),
+                _wc("c", "c", "1992-01-01", None),
+            ]
+        )
+        bounds = [(s[0] or "0000-01-01", s[1] or "9999-12-31") for s in segs]
+        for (_, hi), (lo_next, _) in zip(bounds, bounds[1:]):
+            assert hi < lo_next  # strictly before the next segment's start
+
+    def test_daldkl5_shape_three_segments(self) -> None:
+        # The motivating real shape (DALDKL5): a stable main code-list over [1961-]
+        # plus a sub-window code that changes across THREE eras → three
+        # non-overlapping segments, each = the main list ∪ that era's code. Locks
+        # in the multi-cut + per-segment union the function is built for.
+        segs = _segment_windowed_codes(
+            [
+                _wc("M1", "main1", "1961-01-01", None),
+                _wc("M2", "main2", "1961-01-01", None),
+                _wc("A", "era-a", "1961-01-01", "1978-12-31"),
+                _wc("B", "era-b", "1979-01-01", "1986-12-31"),
+                _wc("C", "era-c", "1987-01-01", None),
+            ]
+        )
+        assert [(s[0], s[1]) for s in segs] == [
+            ("1961-01-01", "1978-12-31"),
+            ("1979-01-01", "1986-12-31"),
+            ("1987-01-01", None),
+        ]
+        assert _seg_codes(segs[0]) == {("M1", "main1"), ("M2", "main2"), ("A", "era-a")}
+        assert _seg_codes(segs[1]) == {("M1", "main1"), ("M2", "main2"), ("B", "era-b")}
+        assert _seg_codes(segs[2]) == {("M1", "main1"), ("M2", "main2"), ("C", "era-c")}
