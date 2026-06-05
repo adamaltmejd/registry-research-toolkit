@@ -173,8 +173,9 @@ the sections below.
           "display_name": "Ink", "nullable": true, "null_count": 152340,
           "null_rate": 0.0179, "n_distinct": 982341,
           "stats": {"min": 0, "max": 5234100, "mean": 425000, "sd": 312000,
-                    "quantiles": {"p01": 0, "p25": 180000, "p50": 380000,
-                                  "p75": 580000, "p99": 2500000}}
+                    "quantiles": {"p01": 0, "p05": 50000, "p25": 180000,
+                                  "p50": 380000, "p75": 580000, "p95": 1500000,
+                                  "p99": 2500000}}
         }
       }
     }

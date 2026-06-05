@@ -582,9 +582,8 @@ the binding pinned, so the data provider couldn't tell representations apart.
 `"<from>..<to>"`, snapshot → `"_default"`). Pluggable per-steward `order_template`s are remaining — see
 `REFACTOR_SPEC.md`.
 
-Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`;
-the dead `/api/kit` references in `middleware.py` and `bundle.py` docstrings
-should be trimmed), `/api/catalog-search` (FTS), and `/api/docs/*`.
+Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`),
+`/api/catalog-search` (FTS), and `/api/docs/*`.
 
 ## §16 input-validation gates (security boundary)
 
