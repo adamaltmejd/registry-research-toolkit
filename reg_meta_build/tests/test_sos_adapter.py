@@ -1384,3 +1384,26 @@ class TestSegmentWindowedCodes:
         bounds = [(s[0] or "0000-01-01", s[1] or "9999-12-31") for s in segs]
         for (_, hi), (lo_next, _) in zip(bounds, bounds[1:]):
             assert hi < lo_next  # strictly before the next segment's start
+
+    def test_daldkl5_shape_three_segments(self) -> None:
+        # The motivating real shape (DALDKL5): a stable main code-list over [1961-]
+        # plus a sub-window code that changes across THREE eras → three
+        # non-overlapping segments, each = the main list ∪ that era's code. Locks
+        # in the multi-cut + per-segment union the function is built for.
+        segs = _segment_windowed_codes(
+            [
+                _wc("M1", "main1", "1961-01-01", None),
+                _wc("M2", "main2", "1961-01-01", None),
+                _wc("A", "era-a", "1961-01-01", "1978-12-31"),
+                _wc("B", "era-b", "1979-01-01", "1986-12-31"),
+                _wc("C", "era-c", "1987-01-01", None),
+            ]
+        )
+        assert [(s[0], s[1]) for s in segs] == [
+            ("1961-01-01", "1978-12-31"),
+            ("1979-01-01", "1986-12-31"),
+            ("1987-01-01", None),
+        ]
+        assert _seg_codes(segs[0]) == {("M1", "main1"), ("M2", "main2"), ("A", "era-a")}
+        assert _seg_codes(segs[1]) == {("M1", "main1"), ("M2", "main2"), ("B", "era-b")}
+        assert _seg_codes(segs[2]) == {("M1", "main1"), ("M2", "main2"), ("C", "era-c")}
