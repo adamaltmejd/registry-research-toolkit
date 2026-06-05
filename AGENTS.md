@@ -1,11 +1,13 @@
 # Registry Research Toolkit
-Multi-package workspace for Swedish register research: catalog metadata, schema validation, and MONA bundle / mock-data generation. See `REFACTOR_SPEC.md` for the in-flight cross-package design.
+Multi-package workspace for Swedish register research: catalog metadata, schema validation, and MONA bundle / mock-data generation. See `ARCHITECTURE.md` for the cross-package design and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
 
 ## Packages
 - `reg_meta` (CLI `reg-meta`) — search and query registry metadata.
 - `reg_meta_build` (CLI `reg-meta-build`) — build the reg_meta SQLite DBs from SCB exports (maintainer-only).
 - `reg_schema` (library) — `project_data.json` schema and structural validator.
-- `mock_data_wizard` (CLI `mock-data-wizard`) — MONA mock-data generation. Being split into `reg_monabundle` + `reg_mockdata` per REFACTOR_SPEC.md.
+- `reg_monabundle` (library) — MONA bundle build + runtime + PII scanner.
+- `reg_webapp` — FastAPI backend + Svelte SPA: catalog browse + project authoring.
+- `mock_data_wizard` (CLI `mock-data-wizard`) — local mock-data generation; pending rename to `reg_mockdata` + reg_meta-dep removal (see `REFACTOR_SPEC.md`).
 
 ## MONA constraint
 [MONA](https://www.scb.se/mona) is Statistics Sweden's microdata platform. Agents are not allowed on MONA. **PII must never leave MONA — only aggregate statistics are exported.** `mock_data_wizard` (post-refactor: `reg_monabundle` + `reg_mockdata`) bridges agentic local work to MONA projects.
@@ -13,7 +15,7 @@ Multi-package workspace for Swedish register research: catalog metadata, schema 
 # Governance
 - `DESIGN.md` per package documents design rationale and constraints.
 - No frozen specs or **permanent** implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
-- **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker (e.g. `MIGRATION_PLAN.md` for the Model A refactor) for cross-PR coordination. The tracker is **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X ships"), gets deleted at that gate, and never outlives the refactor it tracks. Per-package DESIGN.md notes for the same effort are still preferred where the scope is package-local.
+- **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker (currently `REFACTOR_SPEC.md`, scoping the remaining post-A5 work; the earlier `MIGRATION_PLAN.md` was retired once A5 shipped) for cross-PR coordination. The tracker is **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X ships"), gets deleted at that gate, and never outlives the refactor it tracks. Per-package DESIGN.md notes for the same effort are still preferred where the scope is package-local.
 
 # Maturity and compatibility
 - Pre-v1, no external users — break things freely if it benefits the long-term design.
@@ -35,21 +37,21 @@ Multi-package workspace for Swedish register research: catalog metadata, schema 
 - `requires-python` floor is bound to MONA's bundled Python — see `mock_data_wizard/DESIGN.md` "MONA Python runtime" before raising it.
 
 ## Stack
-Post-refactor target — see `REFACTOR_SPEC.md` §9–§10 for the full design and §15 for the migration sequence.
+Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.md` for the cross-package invariants and each `<package>/DESIGN.md` for the detail; `REFACTOR_SPEC.md` tracks the remaining work.
 
 - **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
   - Modeling: `@dataclass`. **No Pydantic on these library surfaces** — keeps them importable from any context (Jupyter, scripts, MONA bundle).
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION` constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB is read-mostly, single-backend, mmap'd; an ORM would add overhead with no benefit.
   - Analytical queries: DuckDB where needed.
   - CLI: argparse. No click/typer.
-- **`reg_schema`** (authoring/validation surface — exception to the no-Pydantic rule): Pydantic v2. Reasons: (1) it's the canonical structural validator for `project_data.json` — Pydantic's declarative field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/` consumes `reg_schema` models directly as response models, killing the 1:1 wrapper drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free, always-correct schema source. Runtime escape valve: the MONA bundle does **not** ship Pydantic; bundle-build runs the Pydantic validator as the gate, then converts validated `Source` → dataclass `LoadedSpec` (`reg_monabundle.runtime.spec`) which the bundle amalgamates instead. See REFACTOR_SPEC §9.6.
-- **Web backend** (`reg_webapp/backend/`, in-flight): FastAPI + Pydantic REST. `reg_schema` Pydantic models are response models directly (no wrapper layer). For `reg_meta` (dataclass-based) responses, the backend defines per-endpoint Pydantic response wrappers — the only place 1:1 wrappers remain.
-- **Web frontend** (`reg_webapp/frontend/`, in-flight): Svelte 5 + Vite + TypeScript, bun-managed. TS types codegen'd from FastAPI's `openapi.json`.
+- **`reg_schema`** (authoring/validation surface — exception to the no-Pydantic rule): Pydantic v2. Reasons: (1) it's the canonical structural validator for `project_data.json` — Pydantic's declarative field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/` consumes `reg_schema` models directly as response models, killing the 1:1 wrapper drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free, always-correct schema source. Runtime escape valve: the MONA bundle does **not** ship Pydantic; bundle-build runs the Pydantic validator as the gate, then converts validated `Source` → dataclass `LoadedSpec` (`reg_monabundle.runtime.spec`) which the bundle amalgamates instead. See `reg_schema/DESIGN.md` and `reg_monabundle/DESIGN.md` for the boundary.
+- **Web backend** (`reg_webapp/backend/`): FastAPI + Pydantic REST. `reg_schema` Pydantic models are response models directly (no wrapper layer). For `reg_meta` (dataclass-based) responses, the backend defines per-endpoint Pydantic response wrappers — the only place 1:1 wrappers remain.
+- **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed. TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Docker-requiring tests. Build/parse coverage is fully synthetic (no gitignored real SCB/SOS data) and runs the full structural validator (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`, which validates by default with `corpus=True` (opt out with `--no-validate`).
 - **Type checking**: `uvx ty check` (Astral, beta). Blocking in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
 - **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates into a single file uploaded to MONA. Each added runtime dep must already be in MONA's WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
 
-`mock_data_wizard`'s old local editor/server (`editor.py`, `server.py`) are already removed; `mock-data-wizard ui` is a frozen stub and the `web/` SPA awaits final deletion in §15 step 7, superseded by `reg_webapp`. Don't revive that path — extend the new packages.
+`mock_data_wizard`'s old local editor/server (`editor.py`, `server.py`) and `classify.py` are already removed; `mock-data-wizard ui` is a frozen stub and the `web/` SPA awaits final deletion (step 7 in `REFACTOR_SPEC.md`), superseded by `reg_webapp`. Don't revive that path — extend the new packages.
 
 # Lint and test
 - `uv run ruff check` — python lint
@@ -63,4 +65,4 @@ Post-refactor target — see `REFACTOR_SPEC.md` §9–§10 for the full design a
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a pre-commit hook fails, fix the underlying issue rather than bypassing.
 
 # Layout
-For per-package design rationale, see `<package>/DESIGN.md` (plus `reg_meta/STRUCTURE.md` for the domain model). For the cross-package refactor design, see `REFACTOR_SPEC.md` §3 (target structure) and §15 (migration sequence).
+For per-package design rationale, see `<package>/DESIGN.md` (plus `reg_meta/STRUCTURE.md` for the domain model). For the cross-package design (topology, dependency graph, repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see `REFACTOR_SPEC.md`.

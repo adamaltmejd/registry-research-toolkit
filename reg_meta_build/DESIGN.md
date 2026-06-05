@@ -32,7 +32,8 @@ different cadence (most users never run a build). Separating the two:
 - Mirrors the build/runtime separation needed for a future Go/Rust
   port of the query layer.
 
-See `REFACTOR_SPEC.md` §4 *Why this split* and §15 step 2.
+The cross-package dependency graph and the build/runtime boundary that
+governs it live in ARCHITECTURE.md.
 
 ## Dependency direction
 
@@ -46,8 +47,10 @@ helpers both packages agree on — lives in `reg_meta`.
 
 | Module                              | Package         |
 | ----------------------------------- | --------------- |
-| `db.py` (DDL, build_db, CSV import) | `reg_meta_build` |
+| `db.py` (DDL, build_db, materializer, provenance DB) | `reg_meta_build` |
 | `db.py` (open_db, schema constants) | `reg_meta`       |
+| `ir/` (provider-neutral IR contract) | `reg_meta_build` |
+| `id.py` (deterministic ID minting)  | `reg_meta_build` |
 | `doc_db.py` (build_doc_db)          | `reg_meta_build` |
 | `doc_db.py` (open_doc_db, ensure)   | `reg_meta`       |
 | `cli.py` (build / docs-build / slug commands) | `reg_meta_build` |
@@ -56,7 +59,7 @@ helpers both packages agree on — lives in `reg_meta`.
 | `classifications.py`                | `reg_meta_build` |
 | `validate.py`                       | `reg_meta_build` |
 | `dbdiff.py` (content diff harness)  | `reg_meta_build` |
-| `sources/` (provider CSV parsers)   | `reg_meta_build` |
+| `sources/` (per-provider IR adapters: scb, sos) | `reg_meta_build` |
 | `fqid.py`, `catalog.py`, `queries.py`, `doc_queries.py`, `errors.py`, `update.py`, `download.py` | `reg_meta` |
 
 ## CLI shape
@@ -78,7 +81,7 @@ info` (query-side concerns — fetching/inspecting prebuilt DBs).
 ## Content diff harness (`dbdiff`)
 
 `dbdiff.py` compares two `reg_meta.db` files by **content**, not bytes.
-It is the acceptance gate for the A4.1 adapter refactor (and any future
+It is the acceptance gate for the IR/adapter refactor (and any future
 "the rebuild should be identical" change): rebuild the DB, then diff the
 new file against a preserved baseline. Raw byte comparison is useless
 here — two SQLite files with identical rows differ byte-wise (page
@@ -115,26 +118,178 @@ runnable as `python -m reg_meta_build.dbdiff <db_a> <db_b>` (exit 0
 identical / 1 differs / 2 error). The full rationale lives in the module
 docstring.
 
-## Source parsers
+## IR + adapter architecture
 
-Provider-specific logic lives under
-`reg_meta_build/src/reg_meta_build/sources/`:
+The build is structured around a provider-neutral **intermediate
+representation** (IR) and per-provider **adapters** that emit it, fed to
+one **provider-blind materializer**. Three layers:
 
-- `sources/sos.py` — parses Socialstyrelsen register metadata Excel
-  deliveries (`.xlsx` per register). Returns `SosRegister` dataclasses.
-  Isolated here so the quirks of that format (sheet-name variance,
-  "metadatat"-typo section headings, phantom row counts, non-standard
-  kodlistor) don't leak into schema or query code.
-- SCB CSV import currently lives in `db.py::build_db`. Moving it under
-  `sources/scb.py` with the same intermediate-representation pattern is
-  tracked as a follow-up — non-blocking for additional providers.
+```text
+   per-provider adapter (sources/<provider>.py)
+       ↓ emits a stream of IR objects (reg_meta_build.ir.*)
+   universal materializer (db.py::materialize)
+       ↓ writes
+   universal SQLite catalog (English columns, provider-agnostic)
+       + sibling provenance DB (maintainer-only debug data)
+```
 
-The build-db step consumes each provider's parser and maps into the
-unified schema. Providers share `register`, `variable`, `value_code`,
-etc.; provider-specific fields live on optional columns or in
-enrichment tables when they have no shared analogue. Adding a new
-provider means writing a parser in `sources/` and a mapping step in
-`build-db`; no query-layer or CLI changes should be needed.
+The point of the split: adding a provider is *write an adapter + a slug
+TOML*, nothing else. The materializer never branches on `provider`, the
+universal schema carries no provider-specific tables or columns, and
+`reg_meta`'s read side is untouched. The IR is the contract.
+
+**IR** (`reg_meta_build/ir/__init__.py`). Pydantic v2 models — the one
+build-side exception to the no-Pydantic-on-library-surfaces rule (see
+ARCHITECTURE.md), because model-level validators catch *builder* bugs at
+construction (a state validity range that crosses zero, a variable
+referencing a non-existent variant) rather than surfacing them as corrupt
+catalog rows. `_IRBase` sets `extra="forbid"`: Pydantic's default silently
+drops unknown keys, so a misspelled `is_sensitive=True` would vanish and
+the field would quietly stay `False` — adapters speak a strict contract,
+unknown keys must raise. Build-time only: never imported by `reg_meta`
+runtime, `reg_monabundle.runtime`, the MONA bundle, or the webapp (those
+stick to stdlib dataclasses). Treat `ir/__init__.py` as the source of
+truth for field shapes; a few that bite:
+
+- `IRVariable` is **register-scoped** (the "define once" addressable
+  variable); the variant coordinate lives down on
+  `IRVariableState.register_variant_id`. `provider_key` (SCB `str(var_id)`,
+  SOS the merged name) is a **required, non-unique** join hint — a triage
+  split (below) shares one key across siblings — so `(register_id, slug)`
+  is the unique natural key, not `provider_key`.
+- `IRVariableState.delivery_column_name` carries only the state's
+  *latest-era* column; the **full** historical column set rides on separate
+  `IRVariableAlias` rows. That split is the carrier behind the structural
+  `variable_alias ⊇ state delivery columns` invariant (validate.py).
+- `IRVariableState.data_type` is nullable to mirror the nullable
+  `variable_state.data_type` column — SCB never writes NULL, but a provider
+  that does must be *representable*, not raise at emit.
+- `IRValueSet.member_hash` is raw 32 bytes (not hex) — wire and storage
+  encodings stay identical, no encode/decode at the boundary. The
+  materializer writes it verbatim into `value_set.member_hash` (a BLOB with
+  `CHECK length = 32`).
+
+**Adapter** (`sources/<provider>.py`, implementing the `IRAdapter`
+protocol in `sources/__init__.py`). Reads the provider's native format and
+emits IR. Provider quirks are normalized *here*, never leaked downstream:
+
+- `SCBAdapter` (`sources/scb.py`) — pipe-delimited cp1252 CSV exports.
+  Runs build-time triage for same-year collisions (fold vs split; see
+  *Build-time triage* below), the value-set year-projection, and the state
+  coalescer.
+- `SOSAdapter` (`sources/sos.py`) — Socialstyrelsen `.xlsx` workbooks (one
+  per register), parsed via `sources/sos.py`'s `SosRegister` trees. Isolates
+  that format's quirks (sheet-name variance, "metadatat"-typo headings,
+  phantom row counts, non-standard kodlistor). **Merges same-named
+  variables across deldatamängder into one variable by default** (the
+  structured kodlistor are register-level and shared), splitting only on a
+  genuine meaning conflict — incompatible normalized `data_type` or disjoint
+  code-list shapes for one name (BU `FOD_DATUMN` date-vs-int, PAR `ATC`
+  text-vs-int, both in `KNOWN_SPLIT_ALLOWLIST`). Any *other* same-name
+  conflict warn-merges (fail-soft). Synthesizes a `_default` variant for
+  variant-less registers (LSS/BU/SOL).
+
+`emit()` yields IR in FK-topological order (register → classification →
+variant → value_set → variable → state/alias → edges → warning/provenance
+sinks) so the materializer can insert in stream order with FK targets
+always present. The order constrains only the types an adapter actually
+emits — an adapter MAY emit a subset (`SCBAdapter` leaves classifications
+and lineage materializer-derived). Every `*_id` is an explicit int the
+adapter bakes in; emit order is independent of ID assignment.
+
+Remaining: future-provider adapters (FK, Skatteverket) — see REFACTOR_SPEC.md.
+
+## Materializer
+
+`db.py::materialize` consumes each adapter's IR stream, runs the shared
+provider-blind derivation passes once over the combined graph, and writes
+the universal catalog. It is the **sole writer** of the shipped
+provider-shaped core graph — `register`, `register_variant`, `variable`,
+`variable_state`, `variable_alias`. `_reinsert_core_graph_from_ir` DELETEs
+the rows each adapter wrote to scratch during `emit()` and re-INSERTs them
+from the collected IR with explicit PKs, so there is exactly one final
+writer per table and no parallel old/new path. (The adapter writes those
+rows during emit purely to *derive* SCB's exact legacy IDs — strategy
+reuse, not a second source of truth — and the IR mirror reads the IDs
+back; the re-insert makes byte-identity with the pre-refactor baseline
+hold.) Slugs insert NULL; `populate_slugs` / `populate_variable_slugs`
+UPDATE them in place afterwards.
+
+**Provider-blindness is complete for the core graph but not the value
+tables.** `value_set` / `value_code` / `value_set_member` stay
+adapter-written and are *not* re-inserted, deliberately: they are
+content-addressed by `member_hash` and **shared across providers by
+content** (an identical SOS code list collapses onto the same row as
+SCB's), and the year-projection can leave orphan `value_code` rows
+belonging to no `value_set_member`, which a member-derived IR stream
+cannot reproduce. They carry no provider-specific shape, so the adapter
+staying their writer costs no provider-blindness.
+Remaining: making the materializer own the value tables too — see
+REFACTOR_SPEC.md / #212.
+
+The shared post-passes (run once over both providers' rows):
+classifications, slugs, `same_as` / `replaced_by` / lineage edges,
+`code_variable_map`, the `variable_state.classification_id` backfill, FTS.
+The materializer enforces the build-time invariants the universal schema
+encodes — chiefly that `(variable_id, register_variant_id, valid_from)` is
+unique across `variable_state` unless explicitly marked multi-vintage via
+`value_set_version_label` (the variant coordinate is part of the
+uniqueness scope), and that `variable.slug` is register-unique. The
+non-overlap invariant is what *requires* the build-time triage below.
+
+## Provenance DB sibling
+
+A second SQLite file, `reg_meta.provenance.db`, sits next to the universal
+DB. It is a **maintainer-only debug artifact — never shipped to
+consumers** and structurally outside the dbdiff gate (dbdiff only ever
+opens `reg_meta.db`, so populating this sibling is dbdiff-neutral by
+construction). The provenance tables live *only* here and touch no
+universal-schema DDL, so writing them does **not** bump `SCHEMA_VERSION`
+(that constant gates the universal DB alone). It holds the data that must
+not pollute the published catalog:
+
+- `build_manifest(schema_version, universal_db_path, universal_db_sha256,
+  build_date)` — ties the provenance file to the exact universal DB it was
+  built against.
+- `delivery_approval` — per-`register_variant` Registerversion
+  delivery/approval dates (the `IRDeliveryProvenance` sink). Keyed per
+  variant, not per register: two variants delivering an edition under the
+  same `registerversionnamn` token would otherwise collapse into one slot.
+  `period_token` is the Registerversionnamn; `first_approved_date` /
+  `last_approved_date` are SCB's första/senast godkännandedatum.
+- Per-provider source-ID linkage (`scb_register_id_map`), adapter parse
+  warnings (`adapter_warning`, the `IRWarning` sink), and source-file
+  checksums / row counts.
+
+Both the universal and provenance DBs rotate one generation on rebuild
+(`rotate_db_to_prev`): `reg_meta.db` → `reg_meta.db.prev`, evicting any
+prior `.prev`. No auto-cleanup of older generations — a maintainer who
+wants to keep more than one `mv`s the `.prev` aside. The provenance write
+is wrapped non-fatally: a provenance failure must not flip the build exit
+code. Confinement is enforced cross-package — `reg_monabundle`'s bundle
+amalgamator carries an import allow-list that rejects any module opening
+this DB, so it can never reach MONA (see ARCHITECTURE.md).
+
+## Deterministic ID minting
+
+SCB universal IDs **reuse the source integers verbatim** (`RegisterId`,
+`RegVarID`, `VarId`, `CVID`), so an SCB rebuild produces byte-identical IDs
+from identical CSV inputs. Providers without native int keys (SOS today)
+mint deterministically via `id.py::mint`:
+
+- **BLAKE2b**, 8-byte digest, personalized `regmeta-id`. Each input part is
+  **length-prefixed** (4-byte big-endian length + UTF-8) before hashing, so
+  the encoding is unambiguous — a plain `/` separator would collapse
+  distinct key tuples whose parts contain the separator (`mint("a/b","c")`
+  vs `mint("a","b/c")`).
+- The low 62 bits become the ID body and **bit 62 is set**, landing every
+  minted ID in `[2^62, 2^63)`. SCB's source-derived IDs are small integers
+  far below `2^62`, so the two bands are **structurally disjoint** —
+  arithmetic, not a runtime collision check. Query-time cross-provider
+  disambiguation therefore needs no provider check. **Bit 63 stays clear**
+  so every value fits a signed 64-bit SQLite INTEGER. The `< 2^62`
+  structural bound (not a loose 32-bit window) is what the §16 namespace
+  property test pins. Future providers get their own band bit.
 
 ## CSV import and encoding
 
@@ -168,7 +323,7 @@ review. The resulting `source_register_id` / `source_label` pair on
 [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Composite registers and
 source tracking").
 
-## Consumer-side lineage (`variable_state_lineage`, §5.6)
+## Consumer-side lineage (`variable_state_lineage`)
 
 Composite registers (LISA, RAMS, …) re-deliver variables sourced from base
 registers (RTB, FTB, …). `link_variable_state_lineage` materializes that
@@ -345,6 +500,170 @@ per-classification extraction recipes that produced the shipped CSVs.
 The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled
 in any wheel — same status as `reg_meta_build/docs/`. End users receive
 the already-populated classification tables via the prebuilt DB asset.
+
+## Build-time triage (SCB)
+
+SCB lumps several distinct delivery columns under one `var_id`, so the
+coalescer can produce multiple `variable_state` candidates for one
+`(variable, year)` within a variant — empirically ~2.7% of buckets. That
+violates the materializer's state-uniqueness invariant, so the SCB adapter
+triages every such collision (`sources/scb.py`, `_triage_groups`) three
+ways:
+
+- **Fold** — same concept in different *representations* (a classification
+  vintage, a SUN/SSYK grain, a coding variant), even when shipped as
+  parallel columns. Keep **one** variable; give each colliding state a
+  distinct `value_set_version_label` token; the variable slug derives from
+  the shared column stem. No edge — it's one variable.
+- **Split** — genuinely different concepts under a generic `var_id`
+  (disjoint column stems). Mint distinct sibling `variable` rows sharing the
+  source `provider_key`, reassign each column's states to its sibling, and
+  link the siblings with `variable_related_to` edges.
+- **Collapse** — residual same-column metadata drift (`data_type` /
+  `value_set_id` re-delivery churn). Keep the latest-era state, drop the
+  rest (`_collapse_residual`).
+
+`Variabelnamn` is **never** the fold/split signal: SCB ships generic family
+labels (one `var_id` named `Imputerat` covering rooms, area, …; the name is
+identical across the columns in 100% of split buckets), so the concept
+boundary rides on the classification family, then the column stem. The
+fold/split mix is roughly **56% fold / 44% split** on the columns that
+collide in a single edition — which is why triage needs *both* outcomes: a
+fold-everything rule merges rooms with area, and a split-everything rule
+over-shards SNI vintages that happen to arrive as parallel columns.
+
+Two shipped-reality footguns where the code diverges from the original
+design sketch:
+
+- **The classification-family fold signal is inert.** `_classification_roots`
+  is written and wired, but triage runs *inside the coalescer, before*
+  `populate_classifications`, so the `classification` table is empty when it
+  reads — it returns `{}` and `_decide_fold_or_split` always falls through to
+  the **column-stem** signal. Stem-folding covers every fold example
+  (`FtgSni69`/`FtgSni92`, `Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED` all share a
+  stem), so the primary signal only matters for same-family columns with
+  *disjoint* stems. Activating it means moving triage to a
+  post-classifications pass.
+- **Every split emits `relation_kind = same_definition_different_column`.**
+  The finer kinds (`code_vs_label_pair`, `import_bug_suspect`) need
+  code/label-pair + datatype heuristics that aren't built; the generic kind
+  is correct (in the allowed set, never the fold-only
+  `same_concept_different_grain`). Edges carry `note = "auto:triage"`. There
+  is **no** `triage_unresolved_split` warning — an unmatched column just
+  routes to a fresh auto-slugged sibling (additive under grow-only).
+
+Slug collisions during triage (and in the *Slug curation* auto-derive
+below) are resolved with a deterministic **numeric `-N` suffix**
+(`_uniquify` / `_collapse_residual`), not `-a`/`-b` or a hash suffix.
+
+Remaining: interim residual-collapse precision (year-scoped, not
+edition-scoped) — see REFACTOR_SPEC.md / #223. Relation-kind refinement —
+see REFACTOR_SPEC.md / #218.
+
+## Slug curation
+
+Slugs are **anchored to the provider's source IDs, never derived from
+human-readable Swedish names** (those drift). They live in per-provider
+TOMLs under `reg_meta_build/fqid_slugs/` (`scb.toml`, `sos.toml`,
+`classifications.toml`), are read at build time, compiled into `slug`
+columns on `register` / `register_variant` / `variable` / `classification`,
+and reach `reg_meta` only through the DB asset. TOML keys are **always
+quoted strings** for one canonical form regardless of whether the ID looks
+integer-shaped (SCB's dotted `<reg>.<var>` keys *must* be quoted anyway).
+The grammar lives in `reg_schema` / `reg_meta.fqid`; this module
+(`fqid_slugs.py`) is the loader, validator, populator, and snapshot
+machine. (There is no `register_version` slug surface — version left the
+FQID grammar.)
+
+**Registers, variants, and classifications are curated; variables
+auto-slug.** A first-sight variable's slug comes from a fallback chain
+(`populate_variable_slugs`), every candidate run through a per-register
+`_uniquify`, so the build **always** yields a register-unique slug with no
+"curate every collision" gate — real SCB data has generic delivery columns
+(`Kolumn1`×148, `RadNr`×137, `OBS_VALUE`×121) and ~2k variables with a
+numeric/absent kolumnnamn, so neither the kolumnnamn alone nor strict
+manual curation scales. The chain, first match wins:
+
+1. **Curated** `[variable."<reg>.<var>"]` slug in `<provider>.toml` — the
+   curator's hook to prettify any auto pick.
+2. **Existing auto** slug in `<provider>.auto.toml` — kept verbatim, so a
+   kolumnnamn/name change can't rot a published slug.
+3. **Drift-stable basis** — when `delivery_column_name` is *not* constant
+   across the variable's states (the column was renamed across editions),
+   the latest column is a misleading version-coupled basis
+   (`sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Slug from the
+   **name** when register-unique among drifters, else the **earliest**
+   delivery column (also the split-sibling discriminator basis — siblings
+   share a name, so the name collides and routes here).
+4. **kolumnnamn-derived** — register-unique latest column (the short, common
+   case: `kon`). "Latest" = highest `valid_to`, lexically smallest on ties.
+5. **name-derived**, length-capped to 60 chars on a hyphen boundary
+   (`_name_slug`) — when the kolumnnamn slug collides, is generic, or is
+   absent.
+6. **`v<provider_key>`** last resort (`v881`), prefixed to satisfy the
+   leading-letter grammar.
+
+Each auto slug records *which* arm produced it as a `# source:` comment in
+the auto file (a TOML comment, never a field — `tomllib` ignores it, so it
+never reaches `SlugEntry` or the snapshot and never perturbs slug values).
+The name-derived / last-resort classes form the curation worklist the
+precheck surfaces.
+
+**Split-sibling cache key.** A triage split puts several siblings under one
+`provider_key`, so `(register_id, provider_key)` is *not* a unique auto-slug
+cache key. The auto-file source-ID for a split sibling takes a third
+segment — its earliest-column discriminator slug — so the build replays the
+right slug onto each sibling across rebuilds instead of the last one
+overwriting the shared entry. Unsplit keys (~96%) stay 2-part.
+
+**Edge fields (slug-anchored inline tables on `[variable]` rows).** The
+curatable edge field is `same_as` — symmetric cross-register / cross-provider
+variable equivalence, keyed `{ provider, register, variable_slug }` (note:
+`variable_slug`, not `variable`), materialized into `variable_same_as`
+edges that `Catalog.resolve` follows transitively (build rejects cycles).
+`replaced_by` is a **single in-file key string** (a typo-correction pointer
+to another row's TOML key in the same file), validated for shape and
+cycle-freedom — *not* a cross-provider tuple. `related_to` is **not a
+curatable TOML field at all**: it is auto-emitted by triage splits only
+(the generic `same_definition_different_column` kind, above).
+
+**Panel-shape bootstrap.** `register_variant` rows also carry
+`panel_entity_key` / `panel_time_key` / `panel_time_grain` (a variable-slug
+reference or the `"period"` sentinel). `seed-slugs` proposes defaults from
+SCB `Tabelldefinitioner.sql` PK declarations and `Identifierare.csv`
+(SOS: `is_join_variable` annotations); a curator confirms. These are
+grammar-checked at load so a typo fails loudly at build, not as a runtime
+JSON-decode crash when the webapp serves the variant.
+
+## Slug immutability
+
+Both TOML files — hand-curated `<provider>.toml` and build-generated
+`<provider>.auto.toml` — are **grow-only**: a published slug can never
+change (a committed `project_data.json` references slugs; a rename rots
+every project that pins one). Removed source IDs are flagged
+`deprecated = true` but retain their slug forever; a typo is fixed by
+adding a new entry and a `replaced_by` pointer, never by editing in place.
+CI enforces this with a snapshot test: `snapshot_payload` distills the
+curated `{key: slug}` set into `.snapshot.json`, and `diff_snapshot`
+allows adds but flags removes and renames.
+
+**Pre-v1 escape hatch — the `UNFROZEN` sentinel.** While
+`reg_meta_build/fqid_slugs/UNFROZEN` exists, `is_unfrozen` lifts the
+grow-only *refusal* (not the *visibility* — renames are still reported):
+`precheck-slugs --update-snapshot` writes rename/removal diffs through to
+the snapshot, and the immutability CI test skips its rename guard. This is
+deliberate friction-removal — pre-v1, the right move is to let curators fix
+typos, normalize conventions, and reshape sibling groups freely before any
+external artifact pins these FQIDs. Consequently, pre-v1 reality: no
+committed `<provider>.auto.toml` exists on disk (auto slugs regenerate from
+scratch each build while UNFROZEN holds), and `.snapshot.json` carries **0
+variable entries** — auto-derived variables aren't part of the hand-frozen
+curated set. The committed snapshot covers only register / variant /
+classification.
+
+Remaining: arming immutability at v1 (delete UNFROZEN in the release
+commit; that snapshot becomes the immutable baseline) — see
+REFACTOR_SPEC.md / #209.
 
 ## Doc-DB build
 
