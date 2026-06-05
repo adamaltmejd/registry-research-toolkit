@@ -13,10 +13,14 @@
 # label — what lands in `variable_state`, the label you see when drafting a pin —
 # because a §5.7 fold/collapse can relabel the raw source label; `keep_rule =
 # "latest_year"` instead reads the 4-digit year out of the RAW source
-# `value_set_version_label`. A pin that resolves no SURVIVING coding leaves the
-# column GENUINE, which FAILS the build: the coalescer raises before shipping any
-# state (--validate re-checks as a redundant backstop). So a build that completes
-# is proof every pin here still matches a live coding.
+# `value_set_version_label`. A pin that IS consulted (the conflict reaches the
+# CURATION cascade step) but matches no surviving coding leaves the column
+# GENUINE → the coalescer FAILS the build (--validate re-checks as a backstop).
+# This is NOT continuous validation of every pin: curation is one cascade step,
+# and a conflict an EARLIER step resolves (e.g. label-freshness) or a LATER step
+# resolves (extends-later / cosmetic) never reaches curation, so a pin that goes
+# stale that way lingers undetected (harmless — the shipped DB is still valid).
+# Treat a pin as live only while its conflict still routes through curation.
 #
 # REVIEWED (phase 2 sign-off): the picks below were maintainer defaults (fuller /
 # newer / contemporaneous coding); each has now been checked against the backing

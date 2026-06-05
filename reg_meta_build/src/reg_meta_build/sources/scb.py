@@ -607,18 +607,6 @@ _SUBANNUAL_MARKERS = (
     "sommar",
     "vt ",
     "ht ",
-    "januari",
-    "februari",
-    "mars",
-    "april",
-    " maj",
-    "juni",
-    "juli",
-    "augusti",
-    "september",
-    "oktober",
-    "november",
-    "december",
 )
 
 # Compact / bare term forms the string markers above miss: `HT2018` / `VT2018`
@@ -627,6 +615,14 @@ _SUBANNUAL_MARKERS = (
 # these sub-annual too, else a compact-term coding ties a full-year annual at
 # `_AUTH_PLAIN` (and the later freshness step could even prefer the term).
 _SUBANNUAL_TERM_RE = re.compile(r"\bht\d|\bvt\d|\bht\b|\bvt\b")
+
+# Swedish month names — WORD-BOUNDARY matched (ascii-folded) so a token like
+# `juni` isn't matched inside `junior`, `maj` inside `majoritet`, etc. (the bare
+# substrings these replace mis-ranked such names sub-annual).
+_SUBANNUAL_MONTH_RE = re.compile(
+    r"\b(?:januari|februari|mars|april|maj|juni|juli|augusti|september"
+    r"|oktober|november|december)\b"
+)
 
 
 def _edition_authority(versionname: str | None) -> int:
@@ -644,7 +640,11 @@ def _edition_authority(versionname: str | None) -> int:
         return _AUTH_FINAL
     if "preliminar" in s or "prel." in s or s.endswith(" prel"):
         return _AUTH_PRELIM
-    if any(m in s for m in _SUBANNUAL_MARKERS) or _SUBANNUAL_TERM_RE.search(s):
+    if (
+        any(m in s for m in _SUBANNUAL_MARKERS)
+        or _SUBANNUAL_TERM_RE.search(s)
+        or _SUBANNUAL_MONTH_RE.search(s)
+    ):
         return _AUTH_SUBANNUAL
     return _AUTH_PLAIN
 
@@ -2029,8 +2029,9 @@ def _coalesce_variable_states(
     # collide on CROSS-COLUMN co-delivery: two distinct delivery columns (parallel
     # representations — agrupp/agrupp2, SSYK 3/5-digit) each win the same year with
     # an empty label, so they share `(vid, rv, valid_from, '')`. Those are real
-    # distinct codings on distinct columns, so disambiguate the label (`-cdN`) so
-    # both ship. SAME-column conflicts never reach the INSERT: they're collected as
+    # distinct codings on distinct columns, so disambiguate the label with the
+    # DELIVERY-COLUMN NAME (self-documenting + stable) so both ship. SAME-column
+    # conflicts never reach the INSERT: they're collected as
     # `genuine` and the coalescer RAISES before materializing (see below).
     # Disambiguation is counted; a flood would signal a bug.
     _used_index_keys: set[tuple[int, int, str, str]] = set()
@@ -2053,10 +2054,17 @@ def _coalesce_variable_states(
         label = triage.labels.get(gkey, grp.value_set_version_label or "")
         if disambig:
             base = label
-            n = 1
+            # Disambiguate a cross-column co-delivery collision with the delivery-
+            # column name (self-documenting + order-stable) rather than an opaque
+            # counter; the first-emitted column keeps the base label. The numeric
+            # fallback only fires if the column name ALSO collides (it shouldn't —
+            # same-column conflicts are caught as `genuine` before emit).
+            col = grp.latest_alias or gkey[8] or "cd"
+            n = 0
             while (vid, grp.register_variant_id, vf, label) in _used_index_keys:
-                label = f"{base}-cd{n}"
                 n += 1
+                suffix = col if n == 1 else f"{col}{n}"
+                label = f"{base}-{suffix}" if base else suffix
             if label != base:
                 disambig_count += 1
         _used_index_keys.add((vid, grp.register_variant_id, vf, label))
@@ -2181,14 +2189,28 @@ def _coalesce_variable_states(
                 if _entry is not None and _entry[0] is not None:
                     pin = _entry[0].strip()
             pinned_yl = [gk for gk in col_yl if pin and _emitted_label(gk) == pin]
+            pinned_yb = [gk for gk in col_yb if pin and _emitted_label(gk) == pin]
             if pinned_yl:
                 # A yearless coding is pinned: keep it, drop every rival on the
                 # column — other yearless AND all year-bearing.
                 yearless_emit.add(pinned_yl[0])
                 yb_drop.update(col_yb)
+            elif pin is not None and not pinned_yb:
+                # A `keep` pin is set for this column but matches NEITHER a yearless
+                # nor a year-bearing coding here (stale/typo). Honor the curation
+                # file's guarantee that a non-matching pin fails the build: record
+                # GENUINE rather than silently shipping the year-bearing default —
+                # with a single year-bearing rival the year loop returns before
+                # consulting curation, so the bad pin would otherwise go unreported.
+                ckey = (col_yl[0][0], col_yl[0][2], col)
+                genuine_years[ckey].add("(yearless)")
+                for gk in col_yl + col_yb:
+                    if (vs := groups[gk].value_set_id) is not None:
+                        genuine_cands[ckey].add((vs, _emitted_label(gk)))
+                yb_drop.update(col_yb)  # don't also process them in the year loop
             elif col_yb:
-                # A year-bearing coding wins (pinned in the year loop, or by
-                # default it carries real years): drop all yearless here.
+                # A year-bearing coding wins (no pin, or the pin matches a
+                # year-bearing coding the year loop keeps): drop all yearless here.
                 continue
             else:
                 # All-yearless, no pin → unresolvable open-span conflict.

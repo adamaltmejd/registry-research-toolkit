@@ -3023,13 +3023,14 @@ def build_db(
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
 
-        # §5.7 co-delivery curation (maintainer artifact, like the slug TOMLs):
-        # resolves genuine one-off same-column re-codings the coalescer cascade
-        # leaves. Empty when the file is absent (wheel installs, synthetic builds).
-        codelivery = load_codelivery(repo_codelivery_path())
-
         adapters: list[tuple[Any, Path]] = []
         if "scb" in providers:
+            # §5.7 co-delivery curation (maintainer artifact, like the slug TOMLs):
+            # resolves genuine one-off same-column re-codings the coalescer cascade
+            # leaves. SCB-only — loaded INSIDE this branch so a malformed/invalid
+            # codelivery.toml can't fail an SOS-only build that never reads it.
+            # Empty when the file is absent (wheel installs, synthetic builds).
+            codelivery = load_codelivery(repo_codelivery_path())
             adapters.append((SCBAdapter(conn, codelivery), scb_dir))
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))

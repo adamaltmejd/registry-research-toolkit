@@ -207,6 +207,52 @@ class TestGenuineConflictFailsBuild:
         assert "YlessCol" in exc.value.message
         assert "yearless" in exc.value.message
 
+    def test_stale_pin_with_yearbearing_rival_raises(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        # A `keep` pin for a column whose conflict mixes a YEARLESS coding and a
+        # YEAR-BEARING rival, but whose label matches NEITHER (stale/typo), must
+        # FAIL the build — not silently drop the yearless codings and ship the
+        # year-bearing default (with a single year-bearing rival the year loop
+        # returns before consulting curation, so the bad pin would go unreported).
+        ri = [
+            _var_row(
+                colname="StaleCol",
+                cvid=9101,
+                var_id=910,
+                varname="StaleVar",
+                year="Aktuell version",  # yearless
+                regver_id=910,
+                data_length="3",
+            ),
+            _var_row(
+                colname="StaleCol",
+                cvid=9102,
+                var_id=910,
+                varname="StaleVar",
+                year="2020",  # year-bearing rival
+                regver_id=911,
+                data_length="3",
+            ),
+        ]
+        vm = _vm_rows(9101, "Coding A", _CODING_A) + _vm_rows(
+            9102, "Coding B", _CODING_B
+        )
+        pin = tmp_path / "codelivery.toml"
+        pin.write_text(
+            '[[resolve]]\nregister_id = 1\nvar_id = 910\ncolumn = "StaleCol"\n'
+            'keep = "Nonexistent coding"\n',
+            encoding="utf-8",
+        )
+        import reg_meta_build.codelivery as _cd
+
+        monkeypatch.setattr(_cd, "repo_codelivery_path", lambda: pin)
+
+        with pytest.raises(RegMetaError) as exc:
+            _build(tmp_path, ri, vm)
+        assert exc.value.code == "coalesce_unresolved_codelivery"
+        assert "StaleCol" in exc.value.message
+
 
 # Two codings whose CODE sets are identical ({30,31,32}) but one code is RELABELED
 # — symmetric code-diff is 0 (well within _COSMETIC_MAX_SYM=2), so the pre-gate

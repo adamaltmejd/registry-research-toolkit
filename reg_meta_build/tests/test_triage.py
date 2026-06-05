@@ -108,6 +108,14 @@ class TestEditionAuthority:
         # A plain annual is unaffected (no false HT/VT match mid-word).
         assert _edition_authority("Avbrott 2018") == _AUTH_PLAIN
 
+    def test_month_names_word_bounded(self) -> None:
+        # A real month name → sub-annual, but the word boundary blocks a substring
+        # false-positive: `juni` ⊄ `junior`, `maj` ⊄ `majversion`.
+        assert _edition_authority("Mars 2018") == _AUTH_SUBANNUAL
+        assert _edition_authority("2018 juni") == _AUTH_SUBANNUAL
+        assert _edition_authority("Majversion 2018") == _AUTH_PLAIN
+        assert _edition_authority("Junioravgång 2018") == _AUTH_PLAIN
+
 
 class TestRleRuns:
     def test_contiguous(self) -> None:
@@ -165,6 +173,34 @@ class TestResolveYearWinners:
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 10})
         )
         assert winners == [a[0]]  # larger
+        assert genuine is False
+
+    def test_authority_precedes_cosmetic(self) -> None:
+        # PRECEDENCE: authority (step 1) runs before cosmetic (step 10). A is FINAL
+        # but SMALLER; B is plain but larger (cosmetic would keep B). Authority wins
+        # → A, proving the earlier step short-circuits.
+        a = _state(1, col="x", authority=_AUTH_FINAL)
+        b = _state(2, col="x", authority=_AUTH_PLAIN)
+        winners, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 4})
+        )
+        assert winners == [a[0]]  # authority, not the larger cosmetic pick
+        assert genuine is False
+
+    def test_supersession_precedes_cosmetic(self) -> None:
+        # PRECEDENCE: supersession (step 5) runs before cosmetic (step 10). The
+        # codes differ by 1 (cosmetic-eligible) AND introduction years differ; the
+        # later-introduced coding is the SMALLER one, so supersession (not cosmetic,
+        # which would keep the larger) decides → the later coding wins.
+        old_big = _state(1, col="x", regver_min=2006)
+        new_small = _state(2, col="x", regver_min=2008)
+        winners, genuine = _resolve_year_winners(
+            [old_big[0], new_small[0]],
+            dict([old_big, new_small]),
+            2020,
+            self._codes({1: 4, 2: 3}),
+        )
+        assert winners == [new_small[0]]  # supersession, not the larger cosmetic pick
         assert genuine is False
 
     def test_supersession_latest_introduced_wins(self) -> None:
