@@ -116,9 +116,10 @@ def _connect(driver: str) -> Any:
 
 
 @pytest.fixture(scope="module")
-def mssql_conn(_odbc_driver_name: str) -> Iterator[Any]:
+def mssql_conn() -> Iterator[Any]:
     """Run the SQL Server container, wait for readiness, yield a live conn."""
     docker = _docker()
+    driver = _odbc_driver()
     name = f"regmona-mssql-{uuid.uuid4().hex[:8]}"
     run = subprocess.run(
         [
@@ -144,18 +145,13 @@ def mssql_conn(_odbc_driver_name: str) -> Iterator[Any]:
         pytest.skip(f"Could not start MSSQL container: {run.stderr.strip()}")
 
     try:
-        conn = _wait_for_server(_odbc_driver_name, timeout_s=120)
+        conn = _wait_for_server(driver, timeout_s=120)
         try:
             yield conn
         finally:
             conn.close()
     finally:
         subprocess.run([docker, "stop", name], capture_output=True, timeout=60)
-
-
-@pytest.fixture(scope="module")
-def _odbc_driver_name() -> str:
-    return _odbc_driver()
 
 
 def _wait_for_server(driver: str, timeout_s: int) -> Any:
