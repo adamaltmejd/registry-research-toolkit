@@ -50,6 +50,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
+from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
 from reg_meta_build.db import PROVIDER_ID_SCB, PROVIDER_ID_SOS
@@ -148,6 +149,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_one_value_set_per_period(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
+        _check_panel_refs_resolve(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
@@ -499,6 +501,78 @@ def _check_variable_alias_covers_state_columns(
         )
     else:
         result.ok("all variable_state delivery columns present in variable_alias")
+
+
+def _check_panel_refs_resolve(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """A4.4c: every curated panel reference on `register_variant` must resolve to
+    a real `variable.slug` in the variant's OWN register.
+
+    `panel_entity_key` / `panel_time_key` are curated slug strings (the §9.5 panel
+    shape). The TOML loader (`fqid_slugs._validate_panel_slug_ref`) grammar-checks
+    them at build time, but grammar alone can't catch a *dangling* reference — a
+    well-formed slug that names no actual variable, or one that lives in a
+    different register (slug is only register-unique: `idx_variable_slug` on
+    `(register_id, slug)`, so the same slug — e.g. `kon` — exists under several
+    registers). A dangling ref would surface as an empty panel axis in the webapp,
+    not a build error, so this is the resolution gate.
+
+    Resolution scope is the variant's register: `register_variant.register_id`.
+    - `panel_entity_key`: a bare slug OR a json-array string (composite key);
+      decode element-wise via `_decode_panel_entity_key` (the catalog's read-side
+      decoder — same JSON semantics) and resolve EACH element. ANY element that
+      fails to resolve is a finding.
+    - `panel_time_key`: a single slug, EXCEPT the literal "period" sentinel
+      (delivery-aligned time, not a variable) which is exempt.
+    """
+    result.section("[panel: refs resolve to register-scoped variable slugs]")
+    if not {"register_variant", "variable"}.issubset(tables):
+        result.ok("register_variant / variable absent — panel-ref check skipped")
+        return
+    rows = conn.execute(
+        "SELECT register_variant_id, register_id, slug, "
+        "       panel_entity_key, panel_time_key "
+        "FROM register_variant "
+        "WHERE panel_entity_key IS NOT NULL OR panel_time_key IS NOT NULL"
+    ).fetchall()
+    if not rows:
+        result.ok("no variant carries panel refs — nothing to resolve")
+        return
+    failures: list[str] = []
+    n_refs = 0
+    for r in rows:
+        # (field label, slug to resolve) pairs for this variant.
+        refs: list[tuple[str, str]] = []
+        entity = _decode_panel_entity_key(r["panel_entity_key"])
+        if isinstance(entity, tuple):
+            refs.extend(("panel_entity_key", s) for s in entity)
+        elif entity is not None:
+            refs.append(("panel_entity_key", entity))
+        time_key = r["panel_time_key"]
+        if time_key is not None and time_key != "period":
+            refs.append(("panel_time_key", time_key))
+        for field_name, slug in refs:
+            n_refs += 1
+            hit = conn.execute(
+                "SELECT 1 FROM variable WHERE register_id = ? AND slug = ? LIMIT 1",
+                (r["register_id"], slug),
+            ).fetchone()
+            if hit is None:
+                failures.append(
+                    f"variant {r['register_variant_id']} ({r['slug']!r}, "
+                    f"register {r['register_id']}) {field_name} {slug!r} resolves "
+                    "to no variable.slug in that register"
+                )
+    if failures:
+        for msg in failures[:10]:
+            result.fail(msg)
+        if len(failures) > 10:
+            result.info(f"... and {len(failures) - 10} more unresolved panel ref(s)")
+    else:
+        result.ok(
+            f"all {n_refs:,} panel ref(s) across {len(rows):,} variant(s) resolve"
+        )
 
 
 def _check_minted_id_bands(

@@ -10,6 +10,7 @@ testing in depth.
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from pathlib import Path
 
@@ -259,6 +260,105 @@ class TestValidateModule:
         result = validate_built_db(broken)
         assert not result.passed
         assert any("missing from variable_alias" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_panel_refs_skip_when_no_variant_carries_them(self, fixture_db: Path):
+        """A4.4c: the unmodified fixture carries NO panel refs (all variants have
+        NULL panel keys), so the resolution check self-passes but still EMITS its
+        section + an [OK] line so a future fixture that grows panel data can't
+        silently drop the gate."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[panel: refs resolve to register-scoped variable slugs]" in report
+        assert "no variant carries panel refs" in report
+
+    def test_panel_ref_good_and_period_exempt_pass(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A4.4c: a `panel_entity_key` naming a real variable slug in the variant's
+        register resolves, and the literal "period" `panel_time_key` sentinel is
+        exempt (it's delivery-aligned time, not a variable slug). Variant 10 lives
+        in register 1 (TESTREG), whose variables include slug `kon`."""
+        ok_db = tmp_path / "ok.db"
+        ok_db.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(ok_db)
+        conn.execute(
+            "UPDATE register_variant SET panel_entity_key = 'kon', "
+            "panel_time_key = 'period' WHERE register_variant_id = 10"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(ok_db)
+        assert result.passed, result.failures
+        assert "all 1 panel ref(s)" in result.format_report()
+
+    def test_panel_ref_dangling_fails(self, fixture_db: Path, tmp_path: Path):
+        """A4.4c: a `panel_time_key` naming a slug that exists in NO variable for
+        the variant's register is a dangling reference — a FAIL."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.execute(
+            "UPDATE register_variant SET panel_time_key = 'nonexistent_slug' "
+            "WHERE register_variant_id = 10"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "panel_time_key 'nonexistent_slug' resolves to no variable.slug" in f
+            for f in result.failures
+        ), result.failures
+
+    def test_panel_ref_wrong_register_fails(self, fixture_db: Path, tmp_path: Path):
+        """A4.4c: slug is only register-unique. `parencol` exists under register 2
+        (OTHERREG) but NOT register 1 (TESTREG). A panel ref on variant 10
+        (register 1) pointing at `parencol` must FAIL — resolution is scoped to the
+        variant's own register, so a cross-register slug is dangling."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.execute(
+            "UPDATE register_variant SET panel_entity_key = 'parencol' "
+            "WHERE register_variant_id = 10"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "panel_entity_key 'parencol' resolves to no variable.slug" in f
+            for f in result.failures
+        ), result.failures
+
+    def test_panel_ref_composite_array_element_miss_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A4.4c: a composite `panel_entity_key` is a json-array string; it resolves
+        element-wise. ANY element that fails to resolve is a finding. Here `kon`
+        resolves (register 1) but `ghost` does not — the array must FAIL on the
+        bad element while leaving the good one alone."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.execute(
+            "UPDATE register_variant SET panel_entity_key = ? "
+            "WHERE register_variant_id = 10",
+            (json.dumps(["kon", "ghost"]),),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "panel_entity_key 'ghost' resolves to no variable.slug" in f
+            for f in result.failures
+        ), result.failures
+        # The resolving element must NOT produce a finding.
+        assert not any("'kon' resolves to no" in f for f in result.failures), (
             result.failures
         )
 
