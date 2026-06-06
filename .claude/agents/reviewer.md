@@ -45,9 +45,10 @@ at one, or `bun run check`). You do not fix anything.
 - After the lead pushes fixes, you will be asked to re-review. Each round, only
   raise **new** relevant findings or confirm prior ones are resolved.
 - **Stop condition:** when a round surfaces no new relevant findings, say
-  explicitly "no further findings — converged." Do not invent marginal nits to keep
-  the loop alive. If you find yourself re-raising the same point with no progress,
-  say so and defer to the lead rather than looping.
+  explicitly "converged — no further findings" (exact phrase — the lead matches on
+  it to exit the loop). Do not invent marginal nits to keep the loop alive. If you
+  find yourself re-raising the same point with no progress, say so and defer to the
+  lead rather than looping.
 
 ## Output (via SendMessage to the lead)
 
