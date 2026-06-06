@@ -28,12 +28,13 @@ Teammates report to you via `SendMessage`; you route work between them.
    judgment) and the decision is NOT already recorded on the issue, resolve it with
    `AskUserQuestion` BEFORE dispatching. Only you (the lead) can ask the human;
    teammates cannot. Do not let an implementer guess a flagged fork.
-3. Pick the branch name: `s/<issue>-<slug>`.
+3. Create and check out the branch `s/<issue>-<slug>` yourself — branch/worktree
+   setup is the lead's job, not the implementer's.
 
 ## Step 1 — implement
 
-Dispatch **implementer** with the full issue spec, the branch name, and the Verify
-commands (for build-affecting issues, that includes the real
+Dispatch **implementer** (the branch is already checked out) with the full issue spec
+and the Verify commands (for build-affecting issues, that includes the real
 `reg-meta-build build-db --validate --providers scb,sos` against the local
 `reg_meta_build/input_data`). Await its report: branch, PR number/URL, summary.
 
