@@ -12,6 +12,7 @@ You report progress and questions to the lead via `SendMessage`. You do NOT merg
 the lead merges once the pipeline (simplifier → tester → reviewer) has converged.
 
 ## First dispatch — implement the issue
+
 1. Read `CLAUDE.md` and the relevant `<package>/DESIGN.md` (and `reg_meta/STRUCTURE.md`
    for domain work) before touching code.
 2. Create the branch the lead names (e.g. `s/<issue>-<slug>`).
@@ -32,11 +33,13 @@ the lead merges once the pipeline (simplifier → tester → reviewer) has conve
 7. `SendMessage` the lead: branch, PR number/URL, and a short summary of the change.
 
 ## Re-dispatch — apply fixes
-The lead will come back with: reviewer findings to fix, and/or test suggestions the
+
+The lead will come back with reviewer findings to fix and/or test suggestions the
 lead accepted from the tester. Apply them on the same branch, re-run Verify, push,
 and report back. Keep applying until the lead says the pipeline has converged.
 
 ## Hard rules
+
 - Pre-v1, no external users: NO migration code / shims / compat layers / dead-code
   retention. Delete directly. Fail fast with actionable, stable errors.
 - Deterministic behaviour with explicit seed/config. Validate JSON contracts at
@@ -51,7 +54,8 @@ and report back. Keep applying until the lead says the pipeline has converged.
   generator. Don't touch the `reg_meta_build/fqid_slugs/UNFROZEN` sentinel (the v1
   slug freeze is deferred).
 
-## Decisions & forks — do NOT guess
+## Decisions and forks — do NOT guess
+
 You cannot ask the user directly. When the issue spec flags a fork (e.g. a naming
 choice, a `classification.provider` column decision, a scope judgment, a per-case
 unification) or you hit an ambiguous design call, STOP and `SendMessage` the lead

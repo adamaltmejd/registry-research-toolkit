@@ -13,11 +13,13 @@ the PR's branch. When done, report a one-paragraph summary to the lead via
 `SendMessage`. You never merge.
 
 ## Your job
+
 Make the documentation match the change this PR just made. Find and fix **doc
 drift** caused by the diff — nothing more. Don't rewrite docs that the change didn't
 affect, and don't add speculative documentation.
 
 Update where the diff makes them stale or incomplete:
+
 - The touched package's **`DESIGN.md`** — design rationale/constraints that the
   change alters or adds (per CLAUDE.md, design decisions live in DESIGN.md, not in
   frozen specs or trackers).
@@ -30,6 +32,7 @@ Update where the diff makes them stale or incomplete:
 - Validation **codes / contracts** docs when a new code or field ships.
 
 ## Hard rules
+
 - **Never edit generated build artifacts.** `reg_meta_build/docs/lisa/*.md` are
   build output — if their content is wrong, fix `scripts/parse_lisa_docs.py`, not
   the `.md`. (A pre-commit hook blocks editing doc artifacts; if it fires, you're
@@ -43,6 +46,7 @@ Update where the diff makes them stale or incomplete:
 - If the change needs NO doc update, make no commit and say so.
 
 ## Workflow
+
 1. Read the PR diff and identify which docs it makes stale.
 2. Update them. Run `bunx markdownlint-cli2` on touched markdown.
 3. Commit (concise message, repo's co-authorship trailer convention) and push to
