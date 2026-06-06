@@ -31,12 +31,18 @@ Teammates report to you via `SendMessage`; you route work between them.
 3. Create and check out the branch `s/<issue>-<slug>` yourself — branch/worktree
    setup is the lead's job, not the implementer's.
 
-## Step 1 — implement
+## Step 1 — implement, then open a DRAFT PR
 
 Dispatch **implementer** (the branch is already checked out) with the full issue spec
 and the Verify commands (for build-affecting issues, that includes the real
 `reg-meta-build build-db --validate --providers scb,sos` against the local
-`reg_meta_build/input_data`). Await its report: branch, PR number/URL, summary.
+`reg_meta_build/input_data`). It implements, verifies, commits, pushes, and reports
+the branch + a summary — it does NOT open the PR.
+
+Once it has pushed, YOU open the PR as a **draft** (body: what the change does and why,
+naming the issue it closes if there is one). Draft keeps external review bots and the
+"ready" trigger off the raw implementation — the PR flips to ready only after the
+pre-review passes (Step 2), so review runs once on near-final code.
 
 ## Step 2 — simplify, then test-suggest (before review)
 
@@ -47,6 +53,10 @@ Run these on the implemented diff so the reviewer sees near-final code:
 2. Dispatch **tester**. It returns a prioritized suggestion list (`must`/`nice`).
    **You decide** which to accept, then send the accepted ones to **implementer** to
    add; it re-verifies and pushes.
+
+Then mark the PR **ready for review** — the simplifier and any accepted tests are now
+in, so external review/CI-on-ready fires once, on near-final code, not on the raw
+implementation.
 
 ## Step 3 — review loop (iterate to convergence)
 
