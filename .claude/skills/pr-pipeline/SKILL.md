@@ -21,14 +21,24 @@ teammates, and you are the only one who merges. The five role teammates are defi
 
 **Set up a real team FIRST — this is load-bearing, don't skip it.** Before dispatching
 anyone, call **`TeamCreate`** (e.g. `team_name: "pr-pipeline-<slug>"`,
-`agent_type: "team-lead"`). Then spawn each teammate with the `Agent` tool passing BOTH
-`team_name` (the team you just made) AND `name` (its role, e.g. `implementer`), with
-`run_in_background: true` so it joins as a persistent member. This is what makes the
-by-name addressing below actually work: a bare `Agent` call WITHOUT `team_name` is a
-one-shot subagent whose name vanishes the moment it finishes (you'd be stuck resuming
-it by raw agent ID, and it can't message you). `TeamCreate` requires
-`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams are disabled, STOP
-and tell the user to enable that flag.
+`agent_type: "team-lead"`). Then spawn each teammate with the `Agent` tool passing all
+THREE of:
+
+- **`subagent_type`** — the ROLE (e.g. `implementer`). This is what LOADS
+  `.claude/agents/implementer.md` (its system prompt + tool restrictions). **Omitting it
+  defaults to a generic `general-purpose` agent** that merely happens to be named
+  `implementer` — wrong prompt, wrong tools, the whole pipeline silently degraded.
+  `name` does NOT select the role.
+- **`name`** — the addressable handle (use the same string as the role for the
+  single-instance teammates, e.g. `name: "implementer"`).
+- **`team_name`** — the team you just made. This is what makes the by-name addressing
+  below work: a bare `Agent` call WITHOUT `team_name` is a one-shot subagent whose name
+  vanishes the moment it finishes (you'd be stuck resuming it by raw agent ID, and it
+  can't message you).
+
+Also pass `run_in_background: true` so each joins as a persistent member. `TeamCreate`
+requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams are
+disabled, STOP and tell the user to enable that flag.
 
 **How a team behaves (the mental model):** teammates are addressable **by name** for the
 whole pipeline — to re-dispatch one (re-review, apply fixes) you just `SendMessage` its
@@ -123,14 +133,16 @@ fan out — simplify/test/docs stay single):
 - **Fan out — large or high-risk diff** (rough triggers: >~400 changed lines or >~8
   files, multiple packages/subsystems, DDL/schema/build-affecting, or security /
   data-safety / concurrency-sensitive): dispatch SEVERAL reviewer agents IN PARALLEL on
-  the same HEAD, each scoped to a distinct lens from `reviewer.md` — e.g. `reviewer-bugs`,
-  `reviewer-conventions` (CLAUDE.md/DESIGN), `reviewer-history` (git blame + prior-PR
-  comments), `reviewer-contracts` (JSON / exit codes / validation / data-safety) — or
-  split by subsystem for a very large multi-package diff. Reviewers are READ-ONLY, so
-  parallel ones share the checkout safely (no worktree isolation needed), but each needs
-  a DISTINCT name (team names must be unique). YOU then SYNTHESIZE: merge findings, drop
-  duplicates, apply the confidence bar (keep only high-confidence, material ones), and
-  emit one consolidated blocking/non-blocking/question list.
+  the same HEAD — each spawned with `subagent_type: reviewer` (so it loads `reviewer.md`,
+  NOT a generic agent), a DISTINCT `name`, and the `team_name` — scoped to a distinct
+  lens via its prompt: e.g. `reviewer-bugs`, `reviewer-conventions` (CLAUDE.md/DESIGN),
+  `reviewer-history` (git blame + prior-PR comments), `reviewer-contracts` (JSON / exit
+  codes / validation / data-safety) — or split by subsystem for a very large
+  multi-package diff. Reviewers are READ-ONLY, so parallel ones share the checkout safely
+  (no worktree isolation needed), but each needs a distinct `name` (member names must be
+  unique within the team). YOU then SYNTHESIZE: merge findings, drop duplicates, apply
+  the confidence bar (keep only high-confidence, material ones), and emit one
+  consolidated blocking/non-blocking/question list.
 
 1. Get the review on HEAD — one reviewer, or the synthesized fan-out above. Findings are
    tagged blocking / non-blocking / question, each with `file:line`; nitpicks and
