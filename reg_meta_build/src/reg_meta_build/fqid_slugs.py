@@ -309,7 +309,7 @@ def _validate_entry_slug(
         raise _err(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: {exc}",
-            "Adjust the slug to match the §5.2 grammar.",
+            "Adjust the slug to satisfy the §5.2 slug rules (grammar and reserved tokens).",
         ) from exc
 
 
