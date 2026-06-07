@@ -69,13 +69,13 @@ Top-level commands (no `maintain` subgroup; that group is dissolved):
 ```text
 reg-meta-build build-db [--no-validate] [--skip-slugs] ...
 reg-meta-build build-docs ...
-reg-meta-build seed-slugs [--scb] ...
+reg-meta-build seed-slugs [--out-dir DIR] [--propose-panel] ...
 reg-meta-build precheck-slugs ...
 reg-meta-build parse-sos ...
 ```
 
 The matching `reg-meta maintain *` forms are removed. `reg-meta maintain
-update` / `info` are promoted to top-level `reg-meta update` / `reg_meta
+update` / `info` are promoted to top-level `reg-meta update` / `reg-meta
 info` (query-side concerns — fetching/inspecting prebuilt DBs).
 
 ## Content diff harness (`dbdiff`)
@@ -96,7 +96,7 @@ check has to be order-independent and storage-aware.
   hashed with BLAKE2b-128, the per-row hashes **summed** mod 2¹²⁸.
   Summation (not XOR) so duplicate/missing rows can't cancel. The pass is
   O(n) streaming / O(1) memory, so the 5.7M-row `value_set_member` table
-  costs seconds, not a 330 MB load.
+  costs seconds, not a 320 MB load.
 - **Ignore set** — deliberately minimal. Only `import_manifest.import_date`
   (wall-clock) is dropped by default; `schema_version`, `source_checksums`,
   `row_counts`, and every content/ID column are compared. `input_dir` (a

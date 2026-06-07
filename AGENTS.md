@@ -41,7 +41,7 @@ Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.m
 
 - **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
   - Modeling: `@dataclass`. **No Pydantic on these library surfaces** — keeps them importable from any context (Jupyter, scripts, MONA bundle).
-  - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION` constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB is read-mostly, single-backend, mmap'd; an ORM would add overhead with no benefit.
+  - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION` constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB is read-mostly, single-backend; an ORM would add overhead with no benefit.
   - Analytical queries: DuckDB where needed.
   - CLI: argparse. No click/typer.
 - **`reg_schema`** (authoring/validation surface — exception to the no-Pydantic rule): Pydantic v2. Reasons: (1) it's the canonical structural validator for `project_data.json` — Pydantic's declarative field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/` consumes `reg_schema` models directly as response models, killing the 1:1 wrapper drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free, always-correct schema source. Runtime escape valve: the MONA bundle does **not** ship Pydantic; bundle-build runs the Pydantic validator as the gate, then converts validated `Source` → dataclass `LoadedSpec` (`reg_monabundle.runtime.spec`) which the bundle amalgamates instead. See `reg_schema/DESIGN.md` and `reg_monabundle/DESIGN.md` for the boundary.
@@ -51,7 +51,7 @@ Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.m
 - **Type checking**: `uvx ty check` (Astral, beta). Blocking in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
 - **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates into a single file uploaded to MONA. Each added runtime dep must already be in MONA's WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
 
-`mock_data_wizard`'s old local editor/server (`editor.py`, `server.py`) and `classify.py` are already removed; `mock-data-wizard ui` is a frozen stub and the `web/` SPA awaits final deletion (step 7 in `REFACTOR_SPEC.md`), superseded by `reg_webapp`. Don't revive that path — extend the new packages.
+`mock_data_wizard`'s old local editor/server (`editor.py`, `server.py`) are already removed; `classify.py` was **moved** to `reg_monabundle/runtime/classify.py` (not deleted — it backs the bundle's runtime classification). `mock-data-wizard ui` is a frozen stub and the `web/` SPA awaits final deletion (step 7 in `REFACTOR_SPEC.md`), superseded by `reg_webapp`. Don't revive that path — extend the new packages.
 
 # Lint and test
 - `uv run ruff check` — python lint

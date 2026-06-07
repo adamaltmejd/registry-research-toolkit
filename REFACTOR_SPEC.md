@@ -55,7 +55,7 @@ spec's post-A5 step numbering.
 
 - `reg_webapp` Dockerfile runs `reg-meta update` at image-build time to
   bake the matching reg_meta release's DB into an image layer.
-- Cloudflare in front: edge caching with the §9.4 ETag scheme (origin
+- Cloudflare in front: edge caching with the ETag scheme (origin
   ETag/`Cache-Control`/rate-limit machinery already ships — see
   `reg_webapp/DESIGN.md`), per-IP rate limits, DDoS shielding.
 - **Edge-cache validation gate (#220):** run a small load through
@@ -467,6 +467,11 @@ Carried from the §16 testing strategy; the shipped categories are in
 - **LISA composite-source presentation** — the lineage data + endpoints
   ship; the UX treatment (tooltip vs "see also" panel) is a webapp
   authoring-UI decision.
+- **Container-build CI trigger** — the frontend/Python `paths-filter`
+  split already ships in `ci.yml` (gating the lint/test jobs), but there
+  is no Dockerfile or container-build job yet (step 6.5); what path
+  changes should trigger the webapp container build vs the Python package
+  CI is still undecided.
 
 ## Tracking issues
 

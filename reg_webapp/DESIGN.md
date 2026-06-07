@@ -66,9 +66,11 @@ reg_meta's manifest.
 ## Catalog connection model (per-request open)
 
 The catalog routes (`routes/catalog.py`) open a **fresh read-only connection
-per request** from the boot-resolved `app.state.db_path`, via a FastAPI
-dependency (`_catalog`) that `yield`s a `Catalog` and `close()`s the connection
-in a `finally`. This is a deliberate decision, not an oversight:
+per request** from the boot-resolved `app.state.db_path`, via the
+`_catalog_conn` contextmanager used as a plain `with` block inside the sync
+handler body (NOT a FastAPI `Depends`). It `yield`s a `sqlite3.Connection`
+that the handler wraps in a `Catalog`, and `close()`s it in a `finally`. This
+is a deliberate decision, not an oversight:
 
 - A single shared `sqlite3` connection is **not** concurrency-safe across
   FastAPI's sync-handler threadpool, even with `check_same_thread=False` —
@@ -79,7 +81,7 @@ in a `finally`. This is a deliberate decision, not an oversight:
   connection, opened and closed within the request.
 - `open_db(db_path, check_schema=False)` skips the schema-compat re-check — the
   lifespan already ran it at boot, so re-checking per request is wasted work,
-  not safety. (The mmap'd read-only open is cheap; reg_meta's DB is read-mostly
+  not safety. (The read-only open is cheap; reg_meta's DB is read-mostly
   and single-backend.)
 
 ## §16 FQID path guard (`catalog_fqid.py`)

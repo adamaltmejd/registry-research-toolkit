@@ -82,7 +82,8 @@ provider-specific parsing that feeds it lives in
 
 ## FTS5 configuration
 
-Two content-synced FTS5 indexes:
+Two content-synced FTS5 indexes power search (the build also maintains a
+`classification_fts` index the query layer does not currently search):
 
 - **`register_fts`** — indexes register `name`, `purpose`.
 - **`variable_fts`** — indexes variable `name`, `definition`, `description`.
@@ -368,7 +369,7 @@ list-returning; `resolve_at` returns `[]` (never raises) when no state
 covers the period — only the binding FQID not resolving raises
 `fqid_not_found`. The method signatures are the reference in `catalog.py`
 itself; the webapp's `/api/catalog/*` shape derives directly from this
-surface (see `reg_webapp/DESIGN.md` §9.5).
+surface (see `reg_webapp/DESIGN.md`).
 
 The exact dataclass shapes live here. They are frozen `@dataclass` (no
 Pydantic — reg_meta is the no-Pydantic library surface, see root
@@ -418,7 +419,10 @@ Fields: `state_id`, `variant` (the `register_variant.slug`),
 `data_type`, `data_length`, `delivery_column_name` (denormalized latest
 alias), `value_set_version_label` (NOT NULL, `''` = no discriminator),
 `value_set_id`, and `value_set` (hydrated `(code, label)` tuple, None
-when the state has no value set).
+when the state has no value set). The full delivery-column history —
+multiple aliases per state from cross-edition spelling drift — lives in
+the `variable_alias` table; `delivery_column_name` is its denormalized
+latest, and `reg-meta get datacolumns` surfaces the complete list.
 
 **Edge semantics (reader-facing).** All relationship edges are
 **variable grain** — the variant is a delivery coordinate, not an
@@ -517,7 +521,7 @@ in the source — see [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
 ## Classifications
 
 Named code systems (SUN2000, SSYK2012, SNI2007, LKF, ...) are first-class
-entities. Each `classification` row carries metadata (publisher, version,
+entities. Each `classification` row carries metadata (publisher,
 validity range, supersedes link, canonical URL) and a cached `code_count`.
 The `classification_code` junction holds the deduplicated union of value
 codes that belong to the classification, with an optional `level` integer

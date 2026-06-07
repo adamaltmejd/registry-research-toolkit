@@ -260,8 +260,8 @@ a half-written file can never become canonical. It matches three shapes
 guard and — for personnummer — a date-validity + Luhn gate to drop
 arbitrary digit runs. Conservatively scoped to strings only: numeric
 scalars aren't scanned because a plain large integer (a row count that
-looks like a date) would false-positive. Also runnable ad-hoc as
-`python -m reg_monabundle.scan <path>`.
+looks like a date) would false-positive. Also runnable ad-hoc via the
+`mock-data-wizard scan <path>` subcommand (which calls `scan_file`).
 
 Its regression corpus is **grow-only**: a PII shape the scanner misses
 in production becomes a new fixture row the scanner must thereafter

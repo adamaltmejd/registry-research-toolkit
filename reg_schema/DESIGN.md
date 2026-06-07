@@ -99,10 +99,12 @@ field/model validators the right tool here, and keeping `reg_schema` as
 the *only* Pydantic surface kills the 1:1 wrapper-drift that a separate
 validation model would create between the schema and the API.
 
-The **structural validator** (`structural.py`) is still pure stdlib —
-it operates on a parsed dict and never imports Pydantic — so the rule
-engine itself ships anywhere. The Pydantic dependency lives only on the
-model surface (`project_data.py`).
+The **structural validator** (`structural.py`) uses no Pydantic in its
+rule logic — it operates on a parsed dict. (It does import the `Literal`
+type aliases from `project_data.py`, which pulls Pydantic into the import
+chain; the MONA bundle ships `reg_monabundle`'s own §6.8.2 validator, not
+this one, so that never reaches MONA — see below.) The Pydantic models
+live on the model surface (`project_data.py`).
 
 **MONA boundary (§9.6).** Pydantic must **not** ship to MONA, and does
 not: the bundle never amalgamates `project_data.py`. A
