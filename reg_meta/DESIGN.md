@@ -315,21 +315,34 @@ the classification vintage-in-slug folds the only former exception
 away.
 
 **Reserved slugs.** `_default` and `class` are reserved everywhere
-(`RESERVED_SLUGS` in `fqid.py`). `class` keeps the leading-`class/`
+(checked inline in `validate_slug`). `class` keeps the leading-`class/`
 discriminator unambiguous. `_default` is the variant-less coordinate;
 it is the **one literal exception** to the slug regex (it starts with
 `_`), so validators short-circuit on the literal string before applying
 the regex. Build rejects any other slug entry hitting these.
 
-**Design intent — HTTP-suffix slug rejection.** The webapp's catalog
-routes use suffixes (`states`, `predecessors`, `successors`, `related`,
-`lineage`, `lineage_warnings`, `variants`) as path segments after a
-binding; a variable slugged with one of these would be unreachable via
-the canonical path. The intent is for the build to reject these in the
-variable slot at curation time. **Remaining/gap:** this rejection is
-**not yet implemented** (issue-tracked) — `fqid.py` reserves only
-`_default` and `class`. Treat the suffix ban as design intent, not
-shipped behavior.
+**HTTP-suffix slug rejection.** The webapp's catalog router declares
+sub-resource routes that use path segments after a binding; a slug equal
+to one of these would shadow a live route and make the entity unreachable.
+Two constants in `fqid.py` encode the reservation:
+
+- `RESERVED_HTTP_SUFFIX_SLUGS` — `{states, predecessors, successors,
+  related, lineage, lineage_warnings}`. The six binding-suffix routes
+  (`/catalog/{fqid:path}/<suffix>`) greedy-match any FQID path, so each
+  collides with a 3-segment variable leaf, a 2-segment register, and a
+  classification. All three slots are therefore reserved.
+- `RESERVED_VARIANTS_SLUG` — `"variants"`. The
+  `/catalog/{provider}/{register}/variants` register sub-resource shadows
+  only a 3-segment variable leaf, so `variants` is reserved in the
+  **variable slot only**. The provider slot (always a leading segment) and
+  the register_variant slot (a `?variant=` query value, never a path
+  segment) carry no reservation.
+
+`validate_slug` enforces both; `derive_variable_slug` delegates to it, so
+a column literally named e.g. "States" or "Variants" degrades to `None`
+(triggering the name/last-resort fallback) rather than minting a
+shadow slug. The reserved set is pinned to the live catalog route list by
+a drift guard in `reg_webapp/backend/tests/test_boot.py`.
 
 **Open — curator review cadence on rename.** Slugs are derived from the
 latest delivery-column alias. If a provider renames a column between

@@ -427,9 +427,9 @@ the on-disk `reg_meta_build/fqid_slugs/UNFROZEN` sentinel; slugs
 regenerate from source each build and aren't yet frozen. At the v1
 release tag: curate the SCB name-fallback auto-slugs, commit/freeze the
 generated `<provider>.auto.toml` files, delete `UNFROZEN`, and arm the
-immutability gate. Also enforce the reserved HTTP-suffix slug rejection
-(`states`/`predecessors`/…/`variants`) **before** the freeze locks slugs
-for good (tracked separately).
+immutability gate. The reserved HTTP-suffix slug rejection
+(`states`/`predecessors`/…/`variants`) shipped in #228 — it is already
+enforced at curation time and does not need to precede the freeze.
 
 ## Remaining test coverage
 
@@ -478,5 +478,6 @@ Carried from the §16 testing strategy; the shipped categories are in
 Open issues seeded from or feeding this plan: #206 (steward admission
 keying), #209 (v1 slug freeze), #210 (SOS classification path), #217
 (kit-build), #220 (Cloudflare edge-cache gate), and #224 (provenance-DB
-deployment confinement). Plus the A0–A5 loose ends: issues #227 (wire
-`fqid_outside_steward_catalog`) and #228 (reserved suffix slugs).
+deployment confinement). Plus the A0–A5 loose ends: issue #227 (wire
+`fqid_outside_steward_catalog`). #228 (reserved suffix slugs) is now
+resolved.
