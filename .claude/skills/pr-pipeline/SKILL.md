@@ -39,6 +39,16 @@ or "stuck": an idle teammate still receives messages and wakes on the next one, 
 nag idleness. Only YOU can reach the human (via `AskUserQuestion`). When the whole
 request is finished, tear the team down (see **Teardown** at the end).
 
+**Shared-checkout rule (load-bearing for safety).** By default every teammate operates
+in your ONE working tree, so a MUTATING teammate (implementer / simplifier /
+docs-updater) must NOT run concurrently with any other teammate that reads or writes
+that tree — a reader can observe a half-applied edit, run tests on it, or analyze a diff
+that's about to change under it. Run a mutating teammate ALONE; only read-only teammates
+may overlap with each other. To run a mutating teammate in parallel with anything, spawn
+it in an isolated worktree (`isolation: "worktree"` on the `Agent` spawn). The same
+applies to YOU: don't `git checkout`/`reset`/`commit` in the shared tree while a
+teammate is active there.
+
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
 The request may be one or several GitHub issues, a freeform feature/problem
@@ -92,11 +102,14 @@ Then run the per-PR pipeline below for each planned PR, in order.
    decide which to accept; send accepted ones to **implementer** to add; it
    re-verifies and pushes.
 
-The simplifier (mutating) and tester (read-only) are independent — dispatch them in
-PARALLEL to save wall-clock; the simplifier's cleanups are behaviour-preserving and
-don't change what needs coverage. Land the simplifier's push and the accepted tester
-suggestions (have the implementer sync to the simplifier's HEAD first) before marking
-ready.
+Run these two SEQUENTIALLY by default — simplifier first, it pushes, THEN tester against
+the simplified HEAD. They share your single checkout (see the shared-checkout rule
+above), and the simplifier edits/commits while the tester reads the tree and runs
+pytest, so running them concurrently races (the tester would analyze a half-edited tree
+or a pre-simplification diff). Parallelize them ONLY by spawning each in an isolated
+worktree (`isolation: "worktree"` on the `Agent` spawn); then the tester sees the
+pre-simplifier HEAD, which is fine for coverage gaps — reconcile when the implementer
+adds the accepted suggestions on the latest HEAD.
 
 Then mark the PR **ready for review** — now external auto-review (Codex/Copilot) and
 CI-on-ready fire once, on near-final code.
