@@ -201,11 +201,15 @@ class TestReservedHttpSuffixSlugs:
         assert f.kind is FqidKind.REGISTER
         assert str(f) == "scb/variants"
 
-    @pytest.mark.parametrize("name", ["States", "Variants", "Lineage", "Related"])
+    @pytest.mark.parametrize(
+        "name", ["States", "Variants", "Lineage", "Related", "Class"]
+    )
     def test_derive_variable_slug_rejects_folded_reserved(self, name: str) -> None:
         # A column name that folds to a reserved variable-slot token degrades to
         # None so the caller falls back to the name / last-resort slug instead of
-        # minting a route-shadowing slug.
+        # minting a route-shadowing slug. "Class" pins the `class`-reservation
+        # path now that the deriver delegates to validate_slug (the explicit
+        # RESERVED_SLUGS check is gone).
         assert derive_variable_slug(name) is None
 
 
