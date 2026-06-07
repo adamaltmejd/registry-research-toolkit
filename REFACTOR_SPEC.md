@@ -432,15 +432,9 @@ Carried from the §16 testing strategy; the shipped categories are in
 - **Kit reproducibility** — same spec + codes + stats → identical kit
   zip (deterministic ordering, no embedded timestamps). Ships with
   `/api/kit` (#217).
-- **MONA-shape integration** — a `sqlserver-linux` Docker container with
-  INFORMATION_SCHEMA fixtures, running the bundle's realign + extract SQL
-  end-to-end against MSSQL (#231). The canonical first
-  `@pytest.mark.integration` test for the bundle.
 - **Per-deploy smoke tests** — golden `/api/context` + shallow
   `/api/catalog` walk on every container start; a failure halts the
   deploy (ships with 6.5).
-- **Bundle determinism** — same spec → byte-identical `.py` on a
-  fixed-content fixture (#230).
 - **Performance gate** — wire the 200-column fixture into a load-test
   harness measuring the §12 p95 budgets and failing CI on regression.
 
@@ -471,8 +465,6 @@ Carried from the §16 testing strategy; the shipped categories are in
 
 Open issues seeded from or feeding this plan: #206 (steward admission
 keying), #209 (v1 slug freeze), #210 (SOS classification path), #217
-(kit-build), #220 (Cloudflare edge-cache gate), #224 (provenance-DB
-deployment confinement), #230 (bundle determinism test), #231
-(MONA-shape MSSQL integration test). Plus the A0–A5 loose ends:
-issues #227 (wire `fqid_outside_steward_catalog`), #228 (reserved
-suffix slugs), and #229 (`binding_options` vs `column_options`).
+(kit-build), #220 (Cloudflare edge-cache gate), and #224 (provenance-DB
+deployment confinement). Plus the A0–A5 loose ends: issues #227 (wire
+`fqid_outside_steward_catalog`) and #228 (reserved suffix slugs).

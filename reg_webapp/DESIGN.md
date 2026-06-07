@@ -397,7 +397,7 @@ to send.
   three-layer composition (structural → namespaced-block → semantic) and returns
   the **concatenated** issue list; the DB-free layers run first, so a
   structurally-rejected body costs no DB hit. It also runs the build-side
-  cross-block referential checks (orphan `column_options` keys /
+  cross-block referential checks (orphan `binding_options` keys /
   suppress_k-on-non-categorical), closing that half of the old
   `/validate`↔`/bundle` divergence — the one residual gap is `/bundle`'s step-4
   capability gates (e.g. a build-required `display_name`), which `/validate`

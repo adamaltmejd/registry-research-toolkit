@@ -348,9 +348,10 @@ not pollute the published catalog:
   same `registerversionnamn` token would otherwise collapse into one slot.
   `period_token` is the Registerversionnamn; `first_approved_date` /
   `last_approved_date` are SCB's första/senast godkännandedatum.
-- Per-provider source-ID linkage (`scb_register_id_map`), adapter parse
-  warnings (`adapter_warning`, the `IRWarning` sink), and source-file
-  checksums / row counts.
+- Per-provider source-ID linkage (`scb_register_id_map`) and adapter
+  parse warnings (`adapter_warning`, the `IRWarning` sink). (Source-file
+  checksums and row counts are not duplicated here — they live in the
+  shipped `import_manifest`.)
 
 Both the universal and provenance DBs rotate one generation on rebuild
 (`rotate_db_to_prev`): `reg_meta.db` → `reg_meta.db.prev`, evicting any
@@ -719,7 +720,10 @@ reference or the `"period"` sentinel). `seed-slugs` proposes defaults from
 SCB `Tabelldefinitioner.sql` PK declarations and `Identifierare.csv`
 (SOS: `is_join_variable` annotations); a curator confirms. These are
 grammar-checked at load so a typo fails loudly at build, not as a runtime
-JSON-decode crash when the webapp serves the variant.
+JSON-decode crash when the webapp serves the variant. The structural
+validator (`validate.py::_check_panel_refs_resolve`) additionally fails
+the build if a panel key does not resolve to a real `variable.slug` in
+the variant's own register.
 
 ## Slug immutability
 

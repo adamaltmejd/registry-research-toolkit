@@ -180,7 +180,7 @@ These are **fixed library defaults, not steward-configurable knobs**.
 The spec plus `reg_monabundle`'s release version fully determine bundle
 behavior — no out-of-band steward configuration influences a run, which
 keeps the spec freestanding and reproducible. The only per-spec lever is
-`reg_monabundle.column_options[<fqid>].suppress_k`, and it is
+`reg_monabundle.binding_options[<fqid>].suppress_k`, and it is
 **raise-only**: the effective value is `max(SUPPRESS_K, override)`, so a
 typo'd low value floors to the library default rather than weakening
 disclosure control. The §6.8.2 validator rejects an override below the
@@ -286,6 +286,5 @@ embedded signal table via a caller-supplied connection.
 
 `build_bundle` is a pure function of its input: building the same spec
 twice yields a byte-identical `.py` (no embedded timestamps, stable
-module ordering). Remaining: a CI test pinning the byte-identical
-invariant on a fixed-content fixture is not yet written (issue-tracked)
-— see REFACTOR_SPEC.md.
+module ordering). `tests/test_bundle_determinism.py` pins the
+byte-identical invariant on a fixed-content fixture.
