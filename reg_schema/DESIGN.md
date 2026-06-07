@@ -221,7 +221,7 @@ Current codes:
 | `unexpected_field` | An unrecognized key on a CLOSED object (`Source` / `Binding` / `Panel` / member) — these are the `extra="forbid"` `_Model` subclasses (§6.2-§6.4). Top-level unknown keys are namespaced blocks, not errors (`ProjectData` is `extra="ignore"`). |
 | `invalid_fqid` | FQID segment count or per-segment characters are wrong: binding `variable` is not a 3-segment `<provider>/<register>/<slug>`, `value_set` is not a 2-segment `class/<slug>`, or `register_variant` is not a 3-part `<provider>/<register>/<variant>` coordinate. The binding leaf is a bare slug — the retired `@version` pin is now a stray `@` the per-segment grammar rejects (§6.8.3 resolves the value set from `(variable, variant, period)`). |
 | `fqid_register_variant_mismatch` | A binding `variable`'s first **2** segments (provider/register) don't equal the owning source's `register_variant` prefix. The variant is not repeated on the binding — it lives once on the Source (§6.2). |
-| `invalid_period` | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, or a `{"from","to"}` range object with valid endpoints (§6.2). |
+| `invalid_period` | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, or a `{"from","to"}` range object with valid endpoints (§6.2). A `YYYY-MM-DD` token that passes the syntactic 01-31 day envelope but names a calendar-impossible day (`2019-02-29` in a non-leap year, `2018-02-30`) also raises this code. |
 | `subtype_on_wrong_type` | A `*_subtype` or `*_format` field is set on a binding whose `type` doesn't own it (e.g. `id_subtype` on a categorical). |
 | `empty_bindings` | A source has zero bindings. |
 | `duplicate_source_name` | Two sources share a `name`. |
@@ -307,11 +307,18 @@ The same rationale covers the **period-token grammar** (`Source.period`
 and `TimeKey` range endpoints, §6.2): `structural._PERIOD_TOKEN` is a
 deliberate mirror of the canonical grammar in
 `reg_meta.fqid._PERIOD_PATTERNS` (year 1900-2099, month 01-12, day 01-31,
-plus `HT/VT`, quarter, half-year forms). It is kept **bound-for-bound
-identical** so a spec that passes this structural gate doesn't later fail
-reg_meta's period resolution — a looser copy would silently split the
-period contract across the two packages. When the canonical grammar
-changes, update both.
+plus `HT/VT`, quarter, half-year forms). Both copies also calendar-validate
+the author-supplied day of a `YYYY-MM-DD` token (`_is_period_endpoint` here
+mirrors `is_period` on the reg_meta side): the regex bounds the day 01-31
+syntactically, but an impossible day (`2019-02-29` in a non-leap year,
+`2018-02-30`) is rejected by an extra `date.fromisoformat` check. The
+grammar is kept **bound-for-bound identical** so a spec that passes this
+structural gate doesn't later fail reg_meta's period resolution — a looser
+copy would silently split the period contract across the two packages. The
+cross-grammar parity test
+(`reg_webapp/backend/tests/test_period_grammar_parity.py`) is the CI gate
+that enforces this invariant: any future change to one grammar that breaks
+parity with the other will fail CI.
 
 Semantic FQID resolution stays in `reg_meta` and is invoked by the
 §6.8.3 layer in `reg_webapp`.

@@ -732,44 +732,12 @@ def test_day_adjacent_windows_leave_no_gap(internal_gap_catalog):
     assert "range_period_partially_covered" not in {i.code for i in result.issues}
 
 
-@pytest.mark.parametrize("bad_endpoint", ["2019-02-29", "2018-02-30", "2021-04-31"])
-def test_calendar_invalid_range_endpoint_is_graceful_invalid_period(
-    catalog, bad_endpoint
-):
-    # The period grammar's day bound is syntactic — Feb 30 passes structural
-    # validation — but the gap math feeds endpoints to `date.fromisoformat`, which
-    # raises. The check must catch it and emit a graceful `invalid_period`, NOT let
-    # a ValueError escape `validate_semantic` (which routes to an uncaught 500).
-    source = _kon_source({"from": bad_endpoint, "to": 2020})
-    # The call must NOT raise.
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
-    issue = next(i for i in result.issues if i.code == "invalid_period")
-    assert issue.level == "error"
-    assert issue.path == "/sources/0/bindings/0/variable"
-    assert bad_endpoint in issue.message
-    assert not result.ok
-    # The nonsense range short-circuits: no phantom coverage finding is emitted.
-    codes = {i.code for i in result.issues}
-    assert "range_period_partially_covered" not in codes
-    assert "period_outside_state_validity" not in codes
-
-
-def test_calendar_invalid_endpoint_blocks_for_steward_too(catalog):
-    # `invalid_period` is an author-side spec error, NOT reg_meta drift, so it is
-    # not steward-downgraded: a malformed committed catalog must fail boot loudly.
-    source = _kon_source({"from": "2019-02-29", "to": 2020})
-    result = validate_semantic(_project([source]), catalog, caller="steward")
-    issue = next(i for i in result.issues if i.code == "invalid_period")
-    assert issue.level == "error"
-    assert not result.ok
-
-
 @pytest.mark.parametrize(
     "good_endpoint",
     [
-        "2019-02",  # YYYY-02 in a NON-leap year: expands to 2019-02-29 hi (an
-        # over-counted, non-real day) but a real month — must NOT be flagged.
-        "2020-02",  # leap-year Feb, for symmetry
+        "2019-02",  # YYYY-02 in a NON-leap year: synthesized hi = 2019-02-29 (an
+        # over-counted, non-real day) — the crash case. Must snap to 2019-02-28.
+        "2020-02",  # leap-year Feb, for symmetry (synthesized hi IS a real day)
         "2019-12",  # plain month token
         "2019-Q1",  # quarter (hi = 2019-03-31)
         "2019-H1",  # half (hi = 2019-06-30)
@@ -778,12 +746,35 @@ def test_calendar_invalid_endpoint_blocks_for_steward_too(catalog):
         "2019-02-28",  # a real Feb day token
     ],
 )
-def test_valid_period_token_endpoint_is_accepted(catalog, good_endpoint):
-    # Regression for the `hi`-bound over-counting false positive: only a genuinely
-    # impossible AUTHOR DAY (a YYYY-MM-DD token) is invalid; month/quarter/half/term
-    # tokens whose synthetic upper bound happens to be a non-real day are fine. The
-    # endpoint pairs with 2020 so the range resolves; we only assert it is not
-    # rejected as an invalid period (coverage findings are orthogonal here).
-    source = _kon_source({"from": good_endpoint, "to": 2020})
+def test_valid_period_token_to_endpoint_is_accepted(catalog, good_endpoint):
+    # Regression for the synthesized-`hi` over-count CRASH (#239 follow-up): the
+    # token is the `to` endpoint, so its synthesized UPPER bound is what the gap
+    # math runs real `date` arithmetic on. A non-leap `2019-02` expands to a
+    # 2019-02-29 hi that `date.fromisoformat` rejects — `_requested_range_bounds`
+    # snaps it to 2019-02-28 so the call must NOT raise. `from: 2019` is ≤ every
+    # endpoint and intersects kon's 2018-01-01..9999-12-31 state, so the range is
+    # FULLY covered: no `invalid_period`, no spurious phantom Feb-29 gap, usable.
+    source = _kon_source({"from": 2019, "to": good_endpoint})
     result = validate_semantic(_project([source]), catalog, caller="researcher")
-    assert "invalid_period" not in {i.code for i in result.issues}
+    codes = {i.code for i in result.issues}
+    assert "invalid_period" not in codes, codes
+    assert "range_period_partially_covered" not in codes, codes
+    assert "period_outside_state_validity" not in codes, codes
+    assert result.ok, result.issues
+
+
+def test_non_leap_feb_to_endpoint_gap_is_snapped_not_phantom(catalog):
+    # The snapped synthesized hi must produce CORRECT gap math, not a phantom
+    # Feb-29 span. kon starts 2018-01-01; a `{2017, "2019-02"}` range has exactly
+    # ONE real gap — the leading 2017 (uncovered before kon's first state) — and
+    # the covered tail ends at the snapped 2019-02-28, never an impossible -02-29.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2017, "to": "2019-02"})]),
+        catalog,
+        caller="researcher",
+    )
+    issue = next(i for i in result.issues if i.code == "range_period_partially_covered")
+    assert "2017-01-01..2017-12-31" in issue.message, issue.message
+    # No spurious Feb-29 phantom gap leaked in.
+    assert "2019-02-29" not in issue.message, issue.message
+    assert result.ok

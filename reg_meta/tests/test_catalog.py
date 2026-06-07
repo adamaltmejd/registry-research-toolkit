@@ -850,6 +850,17 @@ class TestResolveAt:
             Catalog(slugged_conn).resolve_at(_KON, "not-a-period")
         assert exc.value.code == "invalid_period"
 
+    @pytest.mark.parametrize("bad", ["2019-02-29", "2018-02-30", "2021-04-31"])
+    def test_calendar_invalid_period_raises_usage(
+        self, slugged_conn: sqlite3.Connection, bad: str
+    ) -> None:
+        # #239: a calendar-impossible day is now rejected by the period grammar,
+        # so `resolve_at` raises `invalid_period` instead of silently tolerating
+        # the string (which previously risked phantom coverage results).
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).resolve_at(_KON, bad)
+        assert exc.value.code == "invalid_period"
+
 
 class TestEdgeAccessors:
     """§5.10: predecessors/successors/related/lineage/lineage_warnings + the

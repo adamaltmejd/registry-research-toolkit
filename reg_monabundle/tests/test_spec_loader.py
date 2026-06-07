@@ -49,6 +49,25 @@ def test_validate_project_data_surfaces_structural_validation_errors():
         validate_project_data(payload)
 
 
+def test_validate_project_data_rejects_calendar_invalid_period():
+    # #239: a calendar-impossible day (`2019-02-29`, non-leap) is rejected at the
+    # structural layer, so the build-time gate refuses it before amalgamation —
+    # the gate runs `validate_structural` first and raises on any structural error.
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "lisa_2019.csv",
+                "period": "2019-02-29",
+                "bindings": [
+                    {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
+                ],
+            }
+        ]
+    )
+    with pytest.raises(ValueError, match="structural validation"):
+        validate_project_data(payload)
+
+
 def test_validate_project_data_accepts_valid_spec():
     payload = make_project_data(
         sources=[

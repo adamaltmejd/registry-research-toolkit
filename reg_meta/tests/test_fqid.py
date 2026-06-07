@@ -18,6 +18,7 @@ from reg_meta.fqid import (
     is_period,
     is_slug,
     parse,
+    period_token_to_bounds,
 )
 
 # ---------------------------------------------------------------------------
@@ -137,8 +138,7 @@ class TestPeriodGrammar:
             "2002-10-15",
             "2018-01-01",
             "2018-12-31",
-            "2018-02-30",
-            "2019-04-31",
+            "2020-02-29",  # 2020 IS a leap year — a real Feb 29
         ],
     )
     def test_valid_periods(self, period: str) -> None:
@@ -175,10 +175,29 @@ class TestPeriodGrammar:
             "HT2020\n",
             "2020-Q3\n",
             "2020-01-01\n",
+            # Calendar-impossible author days: pass the syntactic 01-31 day regex
+            # but are not real dates, so `is_period` rejects them (the
+            # `_MONTH_LAST_DAY` Feb→29 over-count is for SYNTHESIZED bounds only,
+            # never an author-supplied `YYYY-MM-DD` day).
+            "2019-02-29",  # 2019 is NOT a leap year
+            "2018-02-30",  # February never has 30 days
+            "2021-04-31",  # April has 30 days
+            "2019-04-31",  # April has 30 days
         ],
     )
     def test_invalid_periods(self, bad: str) -> None:
         assert not is_period(bad)
+
+    @pytest.mark.parametrize("bad", ["2019-02-29", "2018-02-30", "2021-04-31"])
+    def test_period_token_to_bounds_rejects_calendar_invalid_day(
+        self, bad: str
+    ) -> None:
+        # `period_token_to_bounds` guards on `is_period` first, so a calendar-
+        # impossible author day raises rather than expanding to nonsense bounds
+        # (#239). The synthesized Feb→29 over-count for month/quarter forms is
+        # unaffected — that is NOT an author-supplied day.
+        with pytest.raises(FqidError):
+            period_token_to_bounds(bad)
 
 
 # ---------------------------------------------------------------------------
@@ -381,6 +400,52 @@ class TestDerivePeriod:
         from reg_meta.fqid import derive_period
 
         assert derive_period(version_name) == expected
+
+    @pytest.mark.parametrize(
+        "version_name,expected",
+        [
+            ("Snapshot 2019-02-29", "2019-02"),  # non-leap Feb 29 → month token
+            ("Snapshot 2018-02-30", "2018-02"),  # Feb 30 → month token
+            ("Snapshot 2021-04-31", "2021-04"),  # April 31 → month token
+            ("Snapshot 2020-02-29", "2020-02-29"),  # leap year IS a real date
+        ],
+    )
+    def test_calendar_invalid_full_date_degrades_to_month(
+        self, version_name: str, expected: str
+    ) -> None:
+        from reg_meta.fqid import derive_period
+
+        # `is_period` now calendar-validates the author day, so a calendar-
+        # impossible full-date substring skips the full-date extract pattern and
+        # degrades to the most-specific VALID token (the month), instead of
+        # returning a token `period_token_to_bounds` would later crash on.
+        assert derive_period(version_name) == expected
+
+    @pytest.mark.parametrize(
+        "version_name",
+        [
+            "Snapshot 2019-02-29",
+            "x 2021-04-31 y",
+            "2018-02-30 cohort",
+            "LISA HT2020",
+            "Survey 2020-Q1",
+            "Census 2018-01",
+            "2014-12-31",
+            "LISA 2018-2020",
+            "Höstterminen 1980",
+            "Person-År",  # no period — None is allowed
+        ],
+    )
+    def test_extractor_output_always_satisfies_is_period(
+        self, version_name: str
+    ) -> None:
+        from reg_meta.fqid import derive_period
+
+        # The restored invariant: whatever `derive_period` returns (when non-None)
+        # must itself pass `is_period` — the extractors and the validator agree on
+        # what counts as a period, calendar-impossible dates included.
+        out = derive_period(version_name)
+        assert out is None or is_period(out), (version_name, out)
 
 
 # ---------------------------------------------------------------------------

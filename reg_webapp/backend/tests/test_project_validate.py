@@ -105,6 +105,44 @@ def test_extra_key_is_unexpected_field_not_500(client):
     assert "unexpected_field" in codes, codes
 
 
+def test_calendar_invalid_period_is_structural_200_not_500(client):
+    """#239 regression: a calendar-impossible day (`2019-02-29`, non-leap) is now
+    rejected at the STRUCTURAL layer (`invalid_period`), so the retired #238
+    semantic guard can't recur as an uncaught `date.fromisoformat` 500. A 200
+    ISSUE, never a 500. The semantic layer is genuinely SKIPPED on structural
+    failure (`_validate_blocking` only runs it `if structural.ok`): assert no
+    semantic period codes (`period_outside_state_validity`,
+    `range_period_partially_covered`) appear alongside the structural finding."""
+    spec = _clean_spec()
+    spec["sources"][0]["period"] = "2019-02-29"
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200, resp.status_code
+    body = resp.json()
+    assert body["ok"] is False
+    codes = {i["code"] for i in body["issues"]}
+    assert "invalid_period" in codes, codes
+    # Semantic was skipped: none of its period codes leak through.
+    assert "period_outside_state_validity" not in codes, codes
+    assert "range_period_partially_covered" not in codes, codes
+
+
+def test_non_leap_feb_range_to_endpoint_is_200_not_500(client):
+    """#239 follow-up: a VALID range whose `to` is a non-leap `YYYY-02` month
+    token (`{"from": 2019, "to": "2019-02"}`) passes structural validation, then
+    the semantic gap math runs real `date` arithmetic on the SYNTHESIZED upper
+    bound — which reg_meta over-counts to `2019-02-29` (not a real date). Without
+    the month-end snap this 500s; assert a clean 200 (`scb/lisa/kon` covers all of
+    2019, so the range is fully covered: no period issue)."""
+    spec = _clean_spec()
+    spec["sources"][0]["period"] = {"from": 2019, "to": "2019-02"}
+    resp = client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200, resp.status_code
+    body = resp.json()
+    assert body["ok"] is True, body["issues"]
+    codes = {i["code"] for i in body["issues"]}
+    assert "range_period_partially_covered" not in codes, codes
+
+
 def test_validate_catches_orphan_binding_options(client):
     """Divergence reconciliation: an orphan ``reg_monabundle.binding_options`` key
     (a binding FQID not bound in any source) that /api/bundle 422s on is now ALSO
