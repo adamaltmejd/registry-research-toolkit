@@ -410,12 +410,16 @@ def _validate_entry(
 def _validate_panel_slug_ref(
     kind: EntityKind, source_id: str, field: str, value: str
 ) -> None:
-    """A panel key references a variable slug — grammar-check it (§5.2) so a typo
-    (e.g. a stray `[` that the catalog would later try to JSON-decode, or a
-    non-slug-shaped value) fails LOUDLY at build time, not as a runtime decode
-    crash when the webapp serves that variant."""
+    """A panel key references a variable slug — validate it against the VARIABLE
+    slot (§5.2) so a typo (e.g. a stray `[` that the catalog would later try to
+    JSON-decode, or a non-slug-shaped value) fails LOUDLY at build time, not as a
+    runtime decode crash when the webapp serves that variant. Validating against
+    the `variable` slot (not the field name) is deliberate: it also rejects a
+    reference to a reserved HTTP-suffix token (`states`/`variants`/…) — no variable
+    can ever be minted with such a slug, so a panel key naming one is dangling
+    metadata (Codex P2 on #228). `field` is kept only for the diagnostic message."""
     try:
-        validate_slug(value, field)
+        validate_slug(value, "variable")
     except ValueError as exc:
         raise _err(
             "slug_toml_invalid",
