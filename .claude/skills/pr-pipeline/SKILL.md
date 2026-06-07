@@ -106,8 +106,11 @@ Merge only when ALL hold:
   merge over an unanswered material comment.
 
 Then merge and delete the branch. Never merge on a red review, red Verify, red CI, or
-an open material external comment. The implementer never merges — only you. Start the
-next planned PR.
+an open material external comment. The implementer never merges — only you. Before
+starting the next planned PR, re-sync local `main` to the just-merged base
+(`git checkout main && git fetch origin main && git reset --hard origin/main`) so PR
+N+1 forks off the merged code, not stale local state or the prior PR's history — then
+loop back to Step 1 for the next PR.
 
 ## Conventions you enforce on dispatch
 
