@@ -28,11 +28,15 @@ the warnings, not just ``ok`` (§6.8.0).
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
 passes — so this layer assumes well-formed FQIDs / period grammar and resolves
-them, rather than re-checking shape. In particular, calendar-day validity of
-period endpoints (rejecting an impossible author day like ``2019-02-29``) is a
-STRUCTURAL guarantee (§6.8.1) — every caller runs structural first and
-short-circuits before semantic — so this layer no longer pre-checks it before
-feeding endpoints to ``date.fromisoformat`` in the gap math.
+them, rather than re-checking shape. In particular, calendar-day validity of the
+AUTHOR-supplied period endpoints (rejecting an impossible author day like
+``2019-02-29``) is a STRUCTURAL guarantee (§6.8.1) — every caller runs structural
+first and short-circuits before semantic — so this layer no longer pre-checks it.
+What structural does NOT guarantee is the SYNTHESIZED upper bound: a non-leap
+``YYYY-02`` month token expands to an over-counted ``-02-29`` ``hi`` (intentional
+in reg_meta for lexical interval overlap), so before the gap math does real
+``date`` arithmetic this layer snaps that bound to the real month-end
+(``_snap_to_real_month_end``).
 """
 
 from __future__ import annotations
@@ -211,15 +215,37 @@ def _endpoint_bounds(endpoint: int | str) -> tuple[str, str]:
     return period_token_to_bounds(endpoint)
 
 
+def _snap_to_real_month_end(iso: str) -> str:
+    """Snap a synthesized upper bound to a REAL calendar date.
+
+    `period_token_to_bounds` over-counts February's synthesized upper bound to
+    day 29 (`_MONTH_LAST_DAY["02"]`) regardless of leap year — intentional and
+    harmless for reg_meta's LEXICAL ISO-string interval overlap, but this layer
+    does real `date` arithmetic (`_range_coverage_gaps`), where a non-leap
+    `2019-02-29` raises `ValueError`. The only token whose synthesized `hi` is a
+    non-real date is a non-leap `YYYY-02` month token, so only `YYYY-02-29` in a
+    non-leap year can reach the fallback; snapping it to `-02-28` is also MORE
+    correct (a window through "Feb 2019" really ends Feb 28, and it avoids a
+    spurious 1-day phantom gap). Author-supplied `YYYY-MM-DD` days are already
+    calendar-valid (structural guarantee, §6.8.1), so they pass the try arm."""
+    try:
+        date.fromisoformat(iso)
+    except ValueError:
+        return iso[:8] + "28"
+    return iso
+
+
 def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     """The inclusive ISO `[lo, hi]` the author asked for with an explicit range:
     `lo` from the `from` endpoint, `hi` from the `to` endpoint. Structural
-    validation already guaranteed `from <= to` AND that each endpoint is a real
-    calendar date (§6.8.1), so the gap math's `date.fromisoformat` calls here
-    never see an impossible day — no ordering or calendar re-check needed."""
+    validation already guaranteed `from <= to` and that each AUTHOR-supplied
+    endpoint is a real calendar date (§6.8.1). The SYNTHESIZED upper bound may
+    still over-count a non-leap February to day 29 (intentional in reg_meta for
+    lexical interval overlap), so `hi` is snapped to the real month-end before the
+    gap math does real `date` arithmetic on it."""
     lo, _ = _endpoint_bounds(period.from_)
     _, hi = _endpoint_bounds(period.to)
-    return lo, hi
+    return lo, _snap_to_real_month_end(hi)
 
 
 def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
@@ -437,8 +463,10 @@ def _check_binding_period(
     # The steward index keys its binding-DROP on `warning` level (catalog_index.py),
     # so an `info` correctly keeps a partially-covered binding in the index.
     if not isinstance(source.period, (int, str)):
-        # Structural validation (§6.8.1) guarantees both endpoints are real
-        # calendar dates, so `_requested_range_bounds` here yields real ISO dates.
+        # Author endpoints are calendar-valid (structural guarantee, §6.8.1);
+        # `_requested_range_bounds` additionally snaps the synthesized upper bound
+        # (a non-leap `YYYY-02` over-counts to `-02-29`) to the real month-end, so
+        # the real `date` arithmetic in `_range_coverage_gaps` can't raise.
         lo, hi = _requested_range_bounds(source.period)
         gaps = _range_coverage_gaps(states, lo, hi)
         if gaps:
