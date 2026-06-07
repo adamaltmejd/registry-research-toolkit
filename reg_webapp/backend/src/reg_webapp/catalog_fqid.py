@@ -105,6 +105,18 @@ def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
     # A leading/trailing slash or `//` yields an empty segment — caught below.
     segments = raw_path.split("/")
     leaf_index = len(segments) - 1
+    # Per-segment slot label: the 3-seg leaf is the `variable` slot, every other
+    # position is the generic `segment` slot. This guard is deliberately
+    # kind-agnostic — it grammar-checks each segment and special-cases only the
+    # leading `class` literal; it does NOT replicate `parse`'s position→kind
+    # mapping. §5.2 reserved-HTTP-suffix interaction (#228): `validate_slug`
+    # rejects the reserved suffix tokens keyed on the slot, so HERE the
+    # reservation fires only for a reserved VARIABLE leaf. A reserved register
+    # (`scb/states`) or classification (`class/states`) token passes this
+    # per-segment check but is rejected one step later by `parse()` / `Fqid`
+    # construction in the route handler — still DB-free and BEFORE any connection
+    # opens, so §16's reject-before-SQL guarantee holds for every reserved token
+    # without making this guard kind-aware.
     for index, segment in enumerate(segments):
         slot = "variable" if index == leaf_index and len(segments) == 3 else "segment"
         _validate_segment(segment, slot=slot, is_prefix=(index == 0))

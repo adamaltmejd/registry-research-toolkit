@@ -266,6 +266,44 @@ class TestProviderToml:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
 
+    def test_reserved_http_suffix_slug_rejected_in_register(self, tmp_path: Path):
+        # §5.2: a binding-suffix token (`states`) would shadow the
+        # `/catalog/{fqid:path}/states` route if minted as a register slug.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register."34"]\nslug = "states"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "reserved" in exc.value.message
+
+    def test_reserved_http_suffix_slug_rejected_in_variable(self, tmp_path: Path):
+        # The variable slot reserves both the 6 binding suffixes AND `variants`
+        # (the `/{provider}/{register}/variants` sub-resource shadows the 3-seg
+        # variable leaf).
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.4"]\nslug = "variants"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "reserved" in exc.value.message
+
+    def test_reserved_http_suffix_slug_allowed_for_register_variant(
+        self, tmp_path: Path
+    ):
+        # register_variant rides a `?variant=` query value, never a path segment,
+        # so it carries no reservation — `states` is a valid variant slug.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.0"]\nslug = "states"\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].kind == "register_variant"
+        assert entries[0].slug == "states"
+
     def test_default_slug_rejected_outside_variant(self, tmp_path: Path):
         path = _write(
             tmp_path / "scb.toml",
@@ -435,6 +473,28 @@ class TestClassificationsToml:
         with pytest.raises(RegMetaError) as exc:
             load_classifications_toml(path)
         assert exc.value.code == "slug_toml_invalid"
+
+    def test_reserved_http_suffix_slug_rejected(self, tmp_path: Path):
+        # §5.2: a binding-suffix token would shadow `/catalog/{fqid:path}/lineage`
+        # if minted as a classification slug (`class/lineage`).
+        path = _write(
+            tmp_path / "classifications.toml",
+            '[classification."LINEAGE"]\nslug = "lineage"\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_classifications_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "reserved" in exc.value.message
+
+    def test_variants_slug_allowed(self, tmp_path: Path):
+        # `variants` collides only with the 3-seg variable leaf; a classification
+        # (`class/variants`) is a clean 2-seg path, so it must be accepted.
+        path = _write(
+            tmp_path / "classifications.toml",
+            '[classification."VARIANTS"]\nslug = "variants"\n',
+        )
+        entries = load_classifications_toml(path)
+        assert entries[0].slug == "variants"
 
 
 class TestLoadSlugDir:

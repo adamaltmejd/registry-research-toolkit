@@ -54,6 +54,39 @@ RESERVED_SLUGS: frozenset[str] = frozenset(
     {DEFAULT_VARIANT_SLUG, CLASSIFICATION_PREFIX}
 )
 
+# §5.2 reserved HTTP-suffix slugs. reg_webapp's catalog router declares
+# sub-resource routes that greedy-shadow variable canonical paths; a slug equal
+# to one of these would mint an FQID whose URL is permanently captured by the
+# route, so they're reserved in the slot(s) whose canonical URL position the
+# route occupies. Source of truth for the route list:
+# `reg_webapp/backend/src/reg_webapp/routes/catalog.py` (pinned in
+# `reg_webapp/backend/tests/test_boot.py` as `_ROUTES_BEFORE_CATCH_ALL`).
+#
+# The 6 binding-suffix routes `/catalog/{fqid:path}/<suffix>` greedy-match ANY
+# fqid path, so `<suffix>` shadows a 3-seg variable leaf (`scb/lisa/states`), a
+# 2-seg register (`scb/states`), AND a classification (`class/states`) — reserved
+# in all three slots. (`lineage_warnings` carries an underscore, so the slug
+# grammar already rejects it before this check runs; it's listed anyway to keep
+# the set a faithful mirror of the route list and to stay correct if the grammar
+# ever loosened.)
+RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
+    {
+        "states",
+        "predecessors",
+        "successors",
+        "related",
+        "lineage",
+        "lineage_warnings",
+    }
+)
+# The literal `/catalog/{provider}/{register}/variants` register sub-resource
+# shadows ONLY a 3-seg variable leaf (`scb/lisa/variants`); a 2-seg register
+# (`scb/variants`) is a clean register path. So `variants` is reserved in the
+# VARIABLE slot only. (The provider slot is always a leading segment and the
+# register_variant slug rides a `?variant=` query value, never a path segment —
+# neither can collide, so neither is reserved.)
+RESERVED_VARIANTS_SLUG = "variants"
+
 # §5.2 prose pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
 # only"; the form below enforces both in one expression. Anchored with `\Z`, NOT
 # `$`: Python's `$` also matches just before a single trailing newline, so `$`
@@ -261,6 +294,26 @@ def validate_slug(
             f"invalid slug in {slot_name}: {value!r} "
             f"(grammar: ^[a-z][a-z0-9-]*[a-z0-9]$ or single ^[a-z]$, single hyphens only)"
         )
+    # §5.2 reserved HTTP-suffix slugs: a grammar-valid slug equal to one of these
+    # would shadow a live reg_webapp catalog sub-resource route (see
+    # `RESERVED_HTTP_SUFFIX_SLUGS`). Keyed on the slot — a token only collides in
+    # the slot(s) whose canonical URL position the route can occupy. The provider
+    # and register_variant slots carry no reservation (a provider is always a
+    # leading segment; a register_variant rides a `?variant=` query value).
+    if slot_name in ("variable", "register", "classification") and (
+        value in RESERVED_HTTP_SUFFIX_SLUGS
+    ):
+        raise FqidError(
+            f"slug in {slot_name} is a reserved HTTP-suffix: {value!r} "
+            f"(it would shadow the `/catalog/{{fqid:path}}/{value}` catalog route — "
+            f"see reg_webapp routes/catalog.py)"
+        )
+    if slot_name == "variable" and value == RESERVED_VARIANTS_SLUG:
+        raise FqidError(
+            f"slug in {slot_name} is reserved: {value!r} (it would shadow the "
+            f"`/catalog/{{provider}}/{{register}}/variants` register sub-resource — "
+            f"see reg_webapp routes/catalog.py)"
+        )
 
 
 def _validate_period(value: str) -> None:
@@ -439,7 +492,10 @@ def derive_variable_slug(delivery_column_name: str | None) -> str | None:
 
     Lowercases, strips diacritics via NFKD ASCII fold, replaces runs of
     non-alphanumerics with single hyphens. Returns ``None`` when the result
-    is empty or fails the slug grammar.
+    is empty, fails the slug grammar, is period-shaped, or lands on a reserved
+    variable-slot token (so a column literally named e.g. "States"/"Variants"
+    degrades to the name/last-resort fallback rather than minting a slug that
+    would shadow a catalog route — see `validate_slug`).
     """
     if not delivery_column_name:
         return None
@@ -452,6 +508,14 @@ def derive_variable_slug(delivery_column_name: str | None) -> str | None:
     candidate = _SLUG_NONALNUM.sub("-", folded).strip("-")
     if not candidate or not _SLUG_RE.match(candidate):
         return None
-    if candidate in RESERVED_SLUGS or is_period(candidate):
+    # The variable slot reserves both RESERVED_SLUGS and the §5.2 HTTP-suffix
+    # tokens (the 6 binding suffixes + `variants`). Reuse the constants so this
+    # never drifts from `validate_slug`'s variable-slot rejection.
+    if (
+        candidate in RESERVED_SLUGS
+        or candidate in RESERVED_HTTP_SUFFIX_SLUGS
+        or candidate == RESERVED_VARIANTS_SLUG
+        or is_period(candidate)
+    ):
         return None
     return candidate
