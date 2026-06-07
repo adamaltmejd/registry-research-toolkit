@@ -5,8 +5,14 @@ Tools for working with Swedish registry microdata on
 
 | Package | Description |
 |---|---|
-| [`reg_meta`](reg_meta/) | Search and query SCB registry metadata |
+| [`reg_meta`](reg_meta/) | Search and query SCB registry metadata (CLI `reg-meta`) |
+| [`reg_meta_build`](reg_meta_build/) | Build the `reg_meta` metadata DBs from agency exports (maintainer-only) |
+| [`reg_schema`](reg_schema/) | `project_data.json` schema and structural validator |
+| [`reg_monabundle`](reg_monabundle/) | MONA bundle build + runtime + PII scanner |
+| [`reg_webapp`](reg_webapp/) | Web app (FastAPI + Svelte): catalog browse + project authoring |
 | [`mock_data_wizard`](mock_data_wizard/) | Generate mock CSV data from MONA projects without exporting personal data |
+
+See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
 ## Prerequisites
 

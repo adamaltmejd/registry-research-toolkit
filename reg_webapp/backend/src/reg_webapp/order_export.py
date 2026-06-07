@@ -2,8 +2,9 @@
 
 The steward's *order export* is the human-readable manifest a researcher hands
 to the data provider: one row per bound variable. v1 ships the DEFAULT template
-only — a CSV with the §9.5 columns ``provider,register,variant,variable,period,
-display_name`` — one row per ``sources[*].bindings[*]``. Stewards inherit this
+only — a CSV with the §9.5 columns
+``provider,register,variant,variable,representation,period,display_name`` — one
+row per ``sources[*].bindings[*]``. Stewards inherit this
 default; per-steward jinja2 ``order_template`` overrides are DEFERRED (not v1).
 
 ``period`` follows the §9.5 wire serialization (matching the ``/api/catalog``

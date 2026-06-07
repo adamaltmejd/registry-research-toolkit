@@ -1,10 +1,51 @@
 # Design: reg_meta
 
 Design rationale and constraints for the query layer. For usage, see
-`reg-meta --help`. For the domain model, see [STRUCTURE.md](STRUCTURE.md).
-For build-pipeline rationale (CSV import, sentinel filtering, year
+`reg-meta --help`. The object model lives below ("Two-level variable
+model"); for the per-provider source shapes it collapses (the SCB
+input-file layout, the SOS workbook layout) and the rest of the
+build-pipeline rationale (CSV import, sentinel filtering, year
 projection, classification seeding, doc-DB build), see
-[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md).
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md). For the
+cross-package topology, dependency graph, and version policy, see the
+root `ARCHITECTURE.md`.
+
+## reg_meta as the substrate
+
+reg_meta is the identifier and object-model substrate every downstream
+artifact references — the `project_data.json` schema, the webapp's
+`/api/catalog/*` endpoints, the generation kit consumed by
+`reg_mockdata`. The contract between them is only as stable as
+reg_meta's identifier scheme, so the model is built to outlast any one
+provider's vocabulary.
+
+The design rule that drives everything below: **a provider-neutral
+object model**. Universal column names (`name`, `description`,
+`data_type`, ...) carry provider-native string values verbatim — the
+SCB `registernamn` for LISA stays under `register.name` exactly as
+published; order generation reads these strings because they are what
+the provider's intake form expects. The universal schema carries **no
+provider-specific tables** (no `scb_*`, no `sos_*`): provider variation
+is captured purely as fill-rate on the universal columns (some
+providers populate fewer fields). Provider-specific parsing lives in
+`reg_meta_build`; what query commands see is the unified shape. This
+keeps one mental model for consumers across every provider, and keeps
+reg_meta importable from any context (Jupyter, scripts, the MONA
+bundle) with no provider conditionals.
+
+The earlier (v0.11) scheme worked but baked SCB's CSV vocabulary and
+yearly publication cadence into the universal model; adding a second
+provider (Socialstyrelsen) and a third (Försäkringskassan) made the
+cracks visible. The current substrate is the result of removing them:
+a **two-level variable model** (`variable` → `variable_state`), a
+**3-segment binding FQID grammar** (`provider/register/slug`) with no
+variant or period slot, **slug-anchored edge tables** at variable
+grain, and a **build-time triage** pass that normalizes
+provider-specific oddities into the universal shape (the triage
+mechanics live in [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)).
+Prose and narrative metadata go to the doc DB; maintainer-only build
+artifacts go to a sibling provenance DB (see "What's not in the
+catalog").
 
 ## Agent-first design
 
@@ -19,7 +60,7 @@ Human terminal use is supported but secondary. This drives several choices:
 
 ## SQLite backend
 
-All metadata lives in a single SQLite file (~1.6 GB). Chosen because:
+All metadata lives in a single SQLite file (~320 MB). Chosen because:
 
 - Zero-dependency deployment (Python stdlib)
 - Single-file distribution via GitHub Releases + zstd compression
@@ -31,15 +72,18 @@ The database is read-only from the perspective of query commands.
 
 ## Data providers
 
-reg_meta is provider-agnostic at the query layer: one metadata DB, one
-docs DB, one CLI. Users searching or resolving variables shouldn't need
-to know which agency published a given register. Provider-specific
-parsers live in `reg_meta_build` (see its DESIGN.md § "Source parsers");
-the resulting unified schema is what query commands see.
+At the query layer reg_meta is provider-agnostic: one metadata DB, one
+docs DB, one CLI. Users searching or resolving variables need not know
+which agency published a given register — the provider is a queryable
+attribute, not a separate code path. The provider-neutral object model
+that makes this possible is "reg_meta as the substrate" above; the
+provider-specific parsing that feeds it lives in
+[reg_meta_build](../reg_meta_build/DESIGN.md) (the IR + adapter layer).
 
 ## FTS5 configuration
 
-Two content-synced FTS5 indexes:
+Two content-synced FTS5 indexes power search (the build also maintains a
+`classification_fts` index the query layer does not currently search):
 
 - **`register_fts`** — indexes register `name`, `purpose`.
 - **`variable_fts`** — indexes variable `name`, `definition`, `description`.
@@ -78,6 +122,236 @@ resolution rules used during build are documented in
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) §
 "Source-register resolution".
 
+## Two-level variable model
+
+What SCB and SOS each publish as a "variable" is split into exactly two
+levels, because two distinct facts are entangled there:
+
+- **`variable`** — the **addressable variable**, the thing an FQID
+  names: the provider's "define once" identity. Holds the
+  register-unique slug (the FQID leaf) and the cross-era constants
+  (`name`, `definition`, `description`, `measurement_unit`,
+  `is_sensitive`, `is_identifier`, source attribution).
+- **`variable_state`** — the **per-delivery shape**, a child of
+  `variable`. A variable has 1..N states; each carries a **variant
+  coordinate** and a period range, plus the data type, length, value
+  set, and version label for that delivery.
+
+The SCB source delivery this collapses (the CVID grain, the input-file
+mapping) is documented in
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Source
+delivery shapes"; this section is the cross-provider rationale. The
+normative DDL lives in `reg_meta_build/db.py` — not copied here.
+
+**Why the variant is a coordinate, not an identity level.** A *variant*
+(SCB `registervariant`, SOS `deldatamängd`) is a **delivery
+coordinate**. "Kön in LISA" is one variable however many variants
+deliver it; the same variable delivered in variant A vs B, or year X vs
+Y, is a different *state*, not a different identity. So the variable is
+the FQID target, and the variant and period are coordinates that select
+among its states. This is the load-bearing design decision — the
+empirical basis is in the next section.
+
+**Variable formation is adapter-defined.** What constitutes one variable
+depends on the provider's source structure, but the resulting `variable`
+row is uniform:
+
+- **SCB:** variable = `(register_id, var_id)` — `var_id` is the
+  define-once unit, reused verbatim across the variants that deliver it.
+- **SOS:** variable = `(register, variable_name)`, formed by merging
+  same-named variables across deldatamängder within a register (sound
+  because the structured `Kodlista_*` sheets are register-level and
+  shared across deldatamängder). Genuine name-reuse collisions split
+  into distinct variables.
+
+**Keys (DECISION POINT 1).** The natural key is `(register_id, slug)`
+(register-unique, the binding FQID). It stays unique even after a triage
+*split* puts several variables under one source key, because siblings
+get distinct slugs. `provider_key` (SCB `str(var_id)`; SOS the merged
+name) is therefore a **NON-unique join hint, not a key** — the build
+join "source row → variable" refines it by the triage discriminator
+when a split exists, 1:1 otherwise. A **synthetic `variable_id` PK**
+backs all this so `variable_state`'s FK stays single-column and the
+edge tables stay stable as the natural key's provider-specific shape
+varies. (The triage fold/split mechanics live in
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md).)
+
+**`classification_id` and `source_label` placement.** The per-era
+classification family lives on `variable_state.classification_id` (an
+era can change code system mid-life — see "Classifications"), while the
+human-readable source attribution lives on `variable.source_label`
+(cross-era constant). `variable_state` carries `state_id`,
+`variable_id`, `register_variant_id`, `valid_from`/`valid_to`,
+`data_type`, `data_length`, `delivery_column_name`, `value_set_id`,
+`value_set_version_label`, and `classification_id`.
+
+**Variant-less registers (`_default`).** Socialstyrelsen LSS, BU, SOL
+ship variables without a deldatamängd sheet. Adapters synthesise a
+single `_default` variant row at build time (a real row, not a
+resolve-time fiction), and every state references it as its
+`register_variant_id`. Because the variant is not an FQID segment,
+`_default` never appears in a binding FQID — it is a browsing/state
+coordinate, not a path segment.
+
+## Why two levels, not three (the variant-identity investigation)
+
+The decision to make the variant a coordinate rather than an identity
+level is empirical, calibrated against the production SCB `reg_meta.db`
+(schema v0.11.x at the 2026-05-22 design lock) and the 13
+Socialstyrelsen workbooks current then. The numbers are recorded here
+so a future contributor questioning the shape has the anchor — re-run
+them if the data drifts.
+
+Earlier drafts treated the variant as part of variable identity (a
+4-segment FQID `provider/register/variant/variable`), recovering
+`var_id` reuse across variants by auto-emitting `(N choose 2)`
+`variable_same_as` edges. The investigation refuted that:
+
+| Question | Finding | Implication |
+|---|---|---|
+| How many SCB `(register, var)` pairs appear in more than one variant? | **78.9%** appear in exactly one variant. | Variant identity is degenerate for 4 in 5 variables. |
+| When a variable spans variants in the same year, what differs? | Rolled up to the variable grain, only **4.3%** of pairs show any same-year cross-variant divergence — and it is overwhelmingly column-name or grain. | The divergence is what triage resolves (fold or split), independent of variant. The variant is never the discriminator. |
+| Variant or period — which is the stronger differentiator? | **43%** of multi-period `(variable × variant)` cells drift across periods, vs 4.3% across same-year variants. | **Period** is the real differentiation axis, and it lives in `variable_state`, not identity. |
+| SOS: do code sets differ by deldatamängd? | **Zero** variables have a deldatamängd-specific code list. | The deldatamängd carries no code/identity differentiation. |
+| SOS: do codes vary by period? | **35%** of code rows carry `tidsperiod` ranges. | SOS codes vary by period, not variant — again period is the axis. |
+
+The 4.3% (pairs grain) and 43% (multi-period-cells grain) sit at
+different grains **on purpose** — the point is the contrast, not a
+like-for-like ratio. The full denominators (42,768 `(register, var)`
+pairs; 55,309 same-year multi-variant cells; the multi-period-cell
+subset) are recorded in git history if a re-run needs them.
+
+**Conclusion.** In both providers the variant is a delivery coordinate
+and period is the differentiation axis. Two levels suffice: an
+addressable `variable` and per-delivery `variable_state` rows each
+carrying a variant coordinate and a period range. Collapsing the
+three-level draft's intermediate variant-scoped row removes the
+`(N choose 2)` `variable_same_as` explosion (within-register identity
+is the variable itself now) and shortens the binding FQID from 4
+segments to 3.
+
+**Two corroborating signals worth keeping.** (1) State-on-variable is
+real signal, not bookkeeping: 43% of multi-version triples carry drift
+across editions, and coalescing-by-shape shrank ~515K instance rows to
+~104K states (≈5×). (2) **Free-text fields are unreliable for identity
+decisions** — an early SOS pass comparing free-text `Värdemängd`
+descriptions across deldatamängder spuriously suggested ~50% divergence;
+the structured `kodlistor` refuted it. Anchor identity decisions on the
+structured code data, never the prose.
+
+## FQID grammar
+
+Every reg_meta entity has a Fully Qualified Identifier — a stable,
+`/`-separated string with strict positional grammar. The kind is
+determined entirely by segment count plus the `class/` discriminator
+prefix; no out-of-band lookup is needed. The parser/emitter is
+`fqid.py`.
+
+| Segments | Form | Kind |
+|---|---|---|
+| 1 | `<provider>` | provider |
+| 2 | `<provider>/<register>` | register |
+| 3 | `<provider>/<register>/<slug>` | variable binding (the variable) |
+| 2, leading `class/` | `class/<slug>` | classification |
+
+```text
+scb                              provider
+scb/lisa                         register
+scb/lisa/kon                     variable binding (names the variable)
+sos/lss/insatstyp                variable binding (variant-less register)
+class/sun2020                    classification (vintage baked into the slug)
+class/icd10                      classification
+```
+
+**The FQID names the variable; the binding is 3-segment.** The binding
+`provider/register/slug` addresses a `variable` directly. The variant
+and period are delivery coordinates that select among its states —
+neither is a segment.
+
+**No variant slot (DECISION POINT 2).** Dropping the variant makes the
+binding 3-segment, which would otherwise collide with the old
+3-segment *variant* address (`scb/lisa/individer-15plus`). We resolve
+this by removing the variant FQID kind entirely: a variant is no longer
+addressed by a slash-path. You **browse** a register's variants as a
+sub-resource (the catalog UI / `/api/catalog` lists them) and
+**address** a variable directly, so `scb/lisa/X` is unambiguously a
+variable. The `register_variant` table still exists (panel keys,
+browsing metadata) and the variant is still a coordinate on
+`variable_state` and in `project_data` Sources — you just never reach a
+variable *through* a variant path.
+
+**No period slot.** The same variable can have different definitions in
+different years; that drift is `variable_state` rows with explicit
+validity ranges, not per-year FQIDs. Year-specific resolution is
+supplied via `resolve_at(fqid, period)` or `Source.period`. Time is
+data context, not identity.
+
+**Classification vintage is in the slug.** SUN2020 is `class/sun2020`,
+not `class/sun?version=2020`; ICD-10 and ICD-11 are distinct
+classifications with distinct slugs. Each vintage is its own normative
+document, which is how researchers think about them, and the slug alone
+is the global uniqueness key (no separate version segment).
+
+**No `@version` binding suffix.** Co-delivered parallel codings (a
+classification vintage during a crosswalk era — näringsgren in both
+SNI92 and SNI2007 in a transition year) are **not** addressed by an
+`@<value-set-version>` FQID suffix. A binding leaf is always a bare
+3-segment slug. Co-delivered codings live as overlapping
+`value_set_version_label`-discriminated states of one variable, and the
+caller selects one with `resolve_at(..., value_set_version=...)` — not
+by an FQID pin. (`fqid.py` has no `@` handling.) The binding-side
+"representation" chooser — which delivery column a co-delivery maps to
+— is a `project_data`/`reg_schema` concern, not part of the reg_meta
+identifier.
+
+**Slug grammar.** Every slug matches `^[a-z](?:[a-z0-9]|-[a-z0-9])*$`
+(lowercase ASCII kebab-case: starts with a letter, ends with a letter
+or digit, hyphens only singly between alphanumerics; single-character
+slugs match `^[a-z]$`). The regex is anchored with `\Z`, not `$`, so a
+trailing newline can't sneak a slug like `kon\n` past the validator (a
+footgun the webapp path-guard and build-time validation both rely on).
+Period-shaped strings are rejected as slugs everywhere (legibility) —
+the classification vintage-in-slug folds the only former exception
+away.
+
+**Reserved slugs.** `_default` and `class` are reserved everywhere
+(`RESERVED_SLUGS` in `fqid.py`). `class` keeps the leading-`class/`
+discriminator unambiguous. `_default` is the variant-less coordinate;
+it is the **one literal exception** to the slug regex (it starts with
+`_`), so validators short-circuit on the literal string before applying
+the regex. Build rejects any other slug entry hitting these.
+
+**Design intent — HTTP-suffix slug rejection.** The webapp's catalog
+routes use suffixes (`states`, `predecessors`, `successors`, `related`,
+`lineage`, `lineage_warnings`, `variants`) as path segments after a
+binding; a variable slugged with one of these would be unreachable via
+the canonical path. The intent is for the build to reject these in the
+variable slot at curation time. **Remaining/gap:** this rejection is
+**not yet implemented** (issue-tracked) — `fqid.py` reserves only
+`_default` and `class`. Treat the suffix ban as design intent, not
+shipped behavior.
+
+**Open — curator review cadence on rename.** Slugs are derived from the
+latest delivery-column alias. If a provider renames a column between
+editions and the curator hasn't yet added a `same_as` link, the
+auto-rule produces a new slug for the later editions while earlier ones
+keep the old slug. This is correct in principle (rename = new variable
+by default), but the operational rhythm — how often curators review
+newly-shipped renames — is undecided. The slug-derivation and curation
+mechanics live in
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md).
+
+**FQID property tests.** The grammar invariants are property-tested:
+round-trip (parse → emit → parse equals identity), segment-count
+discrimination (1/2/3 + the `class/` prefix), reserved-slug rejection,
+and `same_as` traversal termination (cycle detection). Reserved-slug
+coverage is grammar-wide under the 3-segment grammar: `_default` and
+`class` are reserved **everywhere** (there is no variant slot to exempt
+`_default` in — a 4-segment FQID does not parse at all). A test
+asserting `_default` is accepted in some slot, or that a 4-segment
+string like `sos/lss/_default/insatstyp` parses, is testing the
+obsolete variant-slot grammar and is wrong.
+
 ## Catalog API surface (§5.10)
 
 `Catalog` (`catalog.py`) is the in-process FQID→entity API the webapp's
@@ -85,7 +359,7 @@ resolution rules used during build are documented in
 kind; the provider / register / classification arms each return their
 dedicated `Resolved*` row (variant and version are **not** FQID kinds —
 variant is a register sub-resource coordinate, period a delivery axis).
-The **binding** arm is longitudinal (A2.5): a binding FQID resolves to a
+The **binding** arm is longitudinal: a binding FQID resolves to a
 `ResolvedVariable` —
 the addressable variable's shared metadata + its full `variable_state`
 history (each state tagged with its variant coordinate) + the
@@ -93,13 +367,31 @@ variable-grain edges. Period-specific resolution lives in `resolve_at`;
 cross-variable traversal in the per-edge accessors. All accessors are
 list-returning; `resolve_at` returns `[]` (never raises) when no state
 covers the period — only the binding FQID not resolving raises
-`fqid_not_found`. See REFACTOR_SPEC.md §5.10 for the normative
-signatures.
+`fqid_not_found`. The method signatures are the reference in `catalog.py`
+itself; the webapp's `/api/catalog/*` shape derives directly from this
+surface (see `reg_webapp/DESIGN.md`).
 
-The §5.10 spec says the exact dataclass shapes live here. They are
-frozen `@dataclass` (no Pydantic — reg_meta is the no-Pydantic library
-surface, see root CLAUDE.md "Stack"); collection fields are tuples for
-frozen-dataclass immutability/hashability.
+The exact dataclass shapes live here. They are frozen `@dataclass` (no
+Pydantic — reg_meta is the no-Pydantic library surface, see root
+CLAUDE.md "Stack"); collection fields are tuples for frozen-dataclass
+immutability/hashability.
+
+**Why two methods for succession.** `predecessors` / `successors` are
+split (not one `replaced` returning a dict) so every edge-traversal
+accessor returns `list[...]` uniformly. The longitudinal
+`resolve(fqid).replaced_by` attribute carries the **outbound** edges
+(successors) — "X was replaced by Y" is the natural directional read;
+inbound traversal is the explicit `predecessors(fqid)` call.
+
+**Multi-state at a period is normal, not an edge case.** `resolve_at`
+returns a list because length N is genuinely common: several variants
+delivered the variable at the period (omitting `variant`), a range
+period crosses transitions, or — the common case for
+classification-versioned variables — multiple value-set versions
+co-exist in the period (a crosswalk era, SNI92 + SNI2007 in a
+transition year). The list shape is the contract; no exception is
+raised on ambiguity. Callers who know the variant pass `variant=…`;
+callers who know the vintage pass `value_set_version=…`.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at`
 accepts (mirrors `Source.period`, §6.2): a bare year (`2018`), a period
@@ -127,12 +419,41 @@ Fields: `state_id`, `variant` (the `register_variant.slug`),
 `data_type`, `data_length`, `delivery_column_name` (denormalized latest
 alias), `value_set_version_label` (NOT NULL, `''` = no discriminator),
 `value_set_id`, and `value_set` (hydrated `(code, label)` tuple, None
-when the state has no value set).
+when the state has no value set). The full delivery-column history —
+multiple aliases per state from cross-edition spelling drift — lives in
+the `variable_alias` table; `delivery_column_name` is its denormalized
+latest, and `reg-meta get datacolumns` surfaces the complete list.
+
+**Edge semantics (reader-facing).** All relationship edges are
+**variable grain** — the variant is a delivery coordinate, not an
+identity level, so there is nothing below the variable to anchor an
+edge on. The edge triple `(provider, register, variable)` **is** the
+binding FQID. Two edge tables partition the relationship space:
+
+- **`same_as`** — symmetric cross-register / cross-provider
+  **equivalence** (substitutable: "this variable here is that variable
+  there"). **Curated only — never auto-derived.** Within-register
+  `var_id` reuse is now the variable itself (one variable, many variant
+  states), so the old `(N choose 2)` auto-derive from matching `var_id`
+  is gone; `same_as` carries only the genuinely-curated cross-register
+  set. `resolve()` traverses it transitively, recording the path in
+  `via_same_as`.
+- **`related_to`** — symmetric **split siblings**: distinct variables
+  that triage split from one source key (`kommun-hem` ↔ `kommun-skol`,
+  `land-id` ↔ `land-namn`). Related in concept but **not
+  substitutable** — parallel columns a researcher orders separately.
+
+Same-concept grain/vintage/coding appears in **neither** — it *folds*
+into one variable, so there is no edge (the fold/split distinction and
+auto-emit mechanics are in
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)).
+Succession (`replaced_by`) is directional and orthogonal; lineage
+(§5.6) is the state-grain composite-source edge.
 
 **`VariableRef`** — a variable-grain edge endpoint
 (`same_as` / `predecessors` / `successors`). Fields: `fqid` (the 3-seg
 binding FQID — the edge tables store exactly the `(provider, register,
-variable)` triple, which **is** the binding FQID since A2.6; built via
+variable)` triple, which **is** the binding FQID; built via
 `_ref_fqid`, None only if a slug is malformed/NULL), the load-bearing
 `provider` / `register` / `variable` triple, and (#142, on
 succession refs only) `reason` (the `timeseries_event.beskrivning`
@@ -156,7 +477,7 @@ slug, as with the refs' `fqid`).
 `ambiguous_source_variant`), `message`.
 
 `ResolvedVariableBinding` (the interim per-edition binding row) and the
-`editions()` discovery path that returned it were **removed in A2.6** along
+`editions()` discovery path that returned it were **removed** along
 with the v0.11 5-seg binding parse. Resolution is now `ResolvedVariable` +
 `resolve_at` / `states` (§5.10): the variable's shared metadata plus its
 `variable_state` rows, each tagged with its variant. The per-edition cvid is
@@ -200,7 +521,7 @@ in the source — see [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
 ## Classifications
 
 Named code systems (SUN2000, SSYK2012, SNI2007, LKF, ...) are first-class
-entities. Each `classification` row carries metadata (publisher, version,
+entities. Each `classification` row carries metadata (publisher,
 validity range, supersedes link, canonical URL) and a cached `code_count`.
 The `classification_code` junction holds the deduplicated union of value
 codes that belong to the classification, with an optional `level` integer
@@ -215,7 +536,7 @@ uses SUN 2000 codes through 2018 and SUN 2020 codes from 2019 onwards;
 `SSYK` and `SNI` show the same generational drift. Linking at the state
 level keeps each code system distinct (SUN 2000 codes never bleed into
 SUN 2020), isolates split siblings (each sibling's states classify
-independently — the A2.7 fix), and lets variable-level helpers aggregate
+independently), and lets variable-level helpers aggregate
 when needed.
 
 The `classification_id` column is populated at build time from a
@@ -262,9 +583,8 @@ state that observes it. SCB's validity windows are applied at build time
 (see "Value sets are year-projected"), eliminating the historical-union
 junction and the per-item validity tables entirely. A pre-aggregated
 `code_variable_map` replaces large secondary indexes for value search
-queries. The original 13 GB raw DB shrank to ~1.6 GB through
-deduplication and integer keys; year-projection is expected to take it
-further still.
+queries. The original 13 GB raw DB shrank to ~320 MB through
+deduplication, integer keys, and year-projection.
 
 ## Documentation layer
 
@@ -290,6 +610,48 @@ repo checkout, and is absent in installed wheels of `reg_meta`.
 
 See [../reg_meta_build/docs/SCHEMA.md](../reg_meta_build/docs/SCHEMA.md)
 for the markdown file format.
+
+## What's not in the catalog
+
+The universal model is deliberately lean. The catalog answers "what
+variables exist and what shape they have"; two siblings answer the
+rest, and the boundary is a design decision worth stating:
+
+- **The doc DB** answers "how to understand them" — free-form prose and
+  narrative metadata at variant level: methodology (SCB
+  mätinformation), quality narratives (SOS quality sheets), conceptual
+  time-series breaks, long-form descriptions, legal text. When content
+  drifts over a register's life, the doc uses chronological Markdown
+  sections; the catalog does not try to model prose chronology.
+- **The provenance DB** — a maintainer-only sibling SQLite artifact,
+  not shipped to consumers — holds build artifacts: approval dates,
+  workbook delivery metadata, source checksums, build manifests, and
+  raw provider-side IDs not reused as universal IDs. Its build
+  rationale lives in
+  [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md).
+
+Localization is deferred (v2+): the catalog carries one canonical text
+per field (the provider's native language), and the build drops SOS
+DCAT-AP `*_en` variants for now.
+
+**Structural sensitivity flags stay in the catalog** as universal
+`variable` columns (`is_sensitive`, `is_identifier`) — they are
+MONA-critical, apply to every variable regardless of provider, and are
+inherently shared metadata (sensitivity is a property of the variable,
+not of how a variant delivers it).
+
+**`is_identifier` downstream semantics.** A variable with
+`is_identifier=true` will be pseudonymized at delivery — SCB prefixes
+the column header with `LopNr_` (or a project-specific prefix). The
+flag is **broad**: it covers not just the subject identifier
+(`PersonNr`) but every related identity column (`PersonNrMor`,
+`PersonNrFar`, `PersonNrSambo`, ...). It is distinct from the narrower
+"which identifier is the *subject* of this variant?", which
+`variant.panel_entity_key` answers. Downstream consumers (SPA
+authoring's default `display_name`, the validator's info-level
+pseudonymization-prefix check, the MONA bundle's PII scanner) key off
+`is_identifier`; only panel-default inheritance keys off
+`panel_entity_key`.
 
 ## Versioning and compatibility
 
@@ -406,6 +768,66 @@ relies on this format for version comparison.
 - Metadata only — no microdata
 - No credentials read or stored
 - No outbound network requests (except `reg-meta update` and the weekly version check)
+
+## Glossary and Swedish↔English crosswalk
+
+Durable reference for the universal vocabulary. The normative
+shipped-entity definitions live in the `reg_meta_build/db.py` DDL; this
+captures the cross-provider term meanings and the column-rename pass
+that turned SCB's Swedish source columns into universal English.
+
+| Term | Meaning |
+|---|---|
+| variable | The addressable variable — provider's "define once" identity, the FQID target. Synthetic `variable_id` PK; identity `(provider, register, slug)`. Has 1..N states across variants and time. |
+| variant (coordinate) | A `register_variant` row (SCB `registervariant`, SOS `deldatamängd`): a delivery coordinate, not an identity level. Carried on `variable_state` and on `project_data` Sources. Browsed under its register; **not an FQID kind**. |
+| variable state | A `variable_state` row: per-delivery shape, carrying a variant coordinate, validity range, type/length/value-set/version-label. The canonical unit of resolution at a `(variant, period)`. |
+| binding | A 3-segment FQID referencing a variable. Resolves to a `ResolvedVariable` (all states) or `list[VariableState]` (with period context). |
+| variable slug | `variable.slug`: the register-unique, immutable FQID leaf. Triage splits get distinct slugs; grain/vintage folds keep one slug. |
+| same_as | Symmetric cross-register / cross-provider equivalence between variables. Variable grain; curated only, no auto-derive. |
+| related_to | Symmetric split-sibling edge (distinct variables from one source key). Variable grain. |
+| classification | A named versioned vocabulary (SUN2020, ICD10). Provider-independent; addressed via `class/<slug>` (vintage in slug). |
+| value_set | A code list on a `variable_state`. Content-addressed (`member_hash`) for dedup; optional FK to `classification`. Never exposed via FQID. |
+| value_set_version_label | On `variable_state`: the discriminator that lets multiple value-set versions co-exist as overlapping states (folded crosswalk vintages / LKF multi-vintage). `NOT NULL DEFAULT ''`. |
+
+**Universal English ↔ SCB Swedish.** Column names are universal
+English; column **values** stay provider-native verbatim. The validator
+emits errors against strings; resolution turns strings back into
+entities.
+
+| SCB Swedish | Universal English | Lives on |
+|---|---|---|
+| registernamn | name | register |
+| registersyfte | purpose | register |
+| registervariantnamn | name | register_variant |
+| registervariantbeskrivning | description | register_variant |
+| variabelnamn | name | variable |
+| variabeldefinition | definition | variable |
+| variabelbeskrivning | description | variable |
+| variabeloperationell_definition | (merged into `description` when distinct) | variable |
+| variabelregister_kalla | source_label | variable |
+| mattenhet | measurement_unit | variable (NULL when source was "Okänd") |
+| datatyp | data_type | variable_state |
+| datalangd | data_length | variable_state (TEXT — may carry precision/scale, e.g. `8,2`) |
+| vardemangdsversion | value_set_version_label | variable_state |
+| värdekod | code | value_code |
+| värdebenämning | label | value_code |
+| kolumnnamn | delivery_column_name | variable_alias / variable_state |
+| kanslig_variabel(_ibland) | is_sensitive | variable (both source values fold into one flag) |
+| identitetsvariabel | is_identifier | variable |
+| version_forsta / version_sista | valid_from / valid_to | variable_state (mapped to ISO 8601 at ingest) |
+
+`registerrubrik` / `registervariantrubrik` are dropped (redundant with
+`name`); `variabelreferenstid`, `variabelhamtadfran`,
+`variabelextern_kommentar` are dropped or moved to docs; SCB
+`registerversion_*` (mätinformation, approval dates) go to docs /
+provenance.
+
+**Population and object type are build-only.** SCB's `populationnamn` /
+`objekttypnamn` etc. land in scratch `population` / `object_type`
+tables that the build folds into `variable_state` validity windows and
+then **drops before ship** (alongside `register_version`,
+`variable_instance`). They are **not catalog entities** and have no FQID
+slot — do not query for them in the shipped DB.
 
 ## Explored and ruled out
 
