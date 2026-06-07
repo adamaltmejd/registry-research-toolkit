@@ -164,15 +164,18 @@ Merge only when ALL hold:
 - Verify is green (incl. the real `build-db` for build work),
 - CI on the PR is green,
 - **external auto-review hold:** after the PR went ready (and after your most recent
-  push), wait for the external reviewers (Codex / Copilot) to weigh in on the CURRENT
-  HEAD. They are usually fast (Codex typically comments within a minute or two of a
-  push), so POLL for a review whose commit matches HEAD rather than blind-sleeping;
-  treat **~10 minutes as a ceiling**, not a fixed wait. Read every new review comment;
-  route any **material** finding back through the implementer, reply on the thread once
-  it's fixed, then re-review and **restart the wait from the new push**. Merge only once
-  the external reviewers have weighed in on HEAD and a short settle passes with **no new
-  material comments**. Dismiss non-material/incorrect comments with a one-line reason —
-  never merge over an unanswered material comment.
+  push), give the external reviewers (Codex / Copilot) a BOUNDED window to post on the
+  CURRENT HEAD. They're usually fast (Codex comments within a minute or two of a push —
+  or just 👍-reacts when it has nothing to say), so POLL for a review matching HEAD
+  rather than blind-sleeping — but **~10 minutes is a hard CEILING, not a wait-for-them
+  gate**. Read every new review comment; route any **material** finding back through the
+  implementer, reply on the thread once it's fixed, then re-review and **restart the
+  window from the new push**. You may merge once EITHER (a) a reviewer has weighed in and
+  a short settle passes with no new material comments, OR (b) the ~10-minute ceiling
+  elapses with no material comments — INCLUDING when the bots are disabled, delayed,
+  silent, or only 👍-reacted (absence of a comment is not a blocker). Dismiss
+  non-material / incorrect comments with a one-line reason — never merge over an
+  UNANSWERED material comment.
 
 Then merge (squash, matching the repo's `(#issue) (#PR)` commit-title history) and
 delete the branch. **Worktree caveat:** `gh pr merge --squash --delete-branch` can fail
