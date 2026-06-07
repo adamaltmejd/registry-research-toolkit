@@ -254,6 +254,13 @@ consumes JSON only. The surviving surface is `reg-mockdata generate` +
   cross-provider mismatch case (SCB's `kon` vs another provider's `sex`)
   and a future `reg_mockdata` namespaced override (`spine_groups`) are
   deferred until a concrete project needs them.
+- **DESIGN.md rewrite** — `mock_data_wizard/DESIGN.md` is pervasively
+  stale: it still documents the deleted editor/server modules, the
+  deleted `web/` SPA (`## Editor API`, `## Web UI`), and the deleted
+  `mock_data_config.json` config model (`column_options`,
+  `set_column_options`, `snapshot_version`). Rewrite it against the
+  surviving generate/compare/spine/stats surface and move it to
+  `reg_mockdata/DESIGN.md`; do not salvage the dead sections.
 
 `mock_data_wizard`'s `update` subcommand is deleted (users run
 `reg-meta update`); the standalone `scan` CLI is replaced by `python -m
