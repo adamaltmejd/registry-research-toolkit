@@ -116,17 +116,35 @@ CI-on-ready fire once, on near-final code.
 
 ### C. Review loop (iterate to convergence)
 
-1. Dispatch **reviewer** on HEAD (tell it the change's size so it scales depth) →
-   high-confidence, material findings tagged blocking / non-blocking / question, each
-   with `file:line`. It deliberately suppresses nitpicks and anything CI/linters
-   already catch (see `.claude/agents/reviewer.md`), so a short list is expected — not
-   a sign it skimmed.
+**Choose the review WIDTH first, by change size/risk** (this is the ONE step that may
+fan out — simplify/test/docs stay single):
+
+- **Default — focused diff:** ONE `reviewer` teammate, iterating (steps 1–5).
+- **Fan out — large or high-risk diff** (rough triggers: >~400 changed lines or >~8
+  files, multiple packages/subsystems, DDL/schema/build-affecting, or security /
+  data-safety / concurrency-sensitive): dispatch SEVERAL reviewer agents IN PARALLEL on
+  the same HEAD, each scoped to a distinct lens from `reviewer.md` — e.g. `reviewer-bugs`,
+  `reviewer-conventions` (CLAUDE.md/DESIGN), `reviewer-history` (git blame + prior-PR
+  comments), `reviewer-contracts` (JSON / exit codes / validation / data-safety) — or
+  split by subsystem for a very large multi-package diff. Reviewers are READ-ONLY, so
+  parallel ones share the checkout safely (no worktree isolation needed), but each needs
+  a DISTINCT name (team names must be unique). YOU then SYNTHESIZE: merge findings, drop
+  duplicates, apply the confidence bar (keep only high-confidence, material ones), and
+  emit one consolidated blocking/non-blocking/question list.
+
+1. Get the review on HEAD — one reviewer, or the synthesized fan-out above. Findings are
+   tagged blocking / non-blocking / question, each with `file:line`; nitpicks and
+   CI/linter-caught issues are suppressed (see `.claude/agents/reviewer.md`), so a short
+   list is expected, not a sign it skimmed.
 2. Route blocking findings (and questions you resolve) to **implementer** → fix,
    re-verify, push.
-3. Ask **reviewer** to re-review (same persistent teammate; it raises only NEW
-   findings or confirms resolution).
+3. Re-review the fix delta — re-dispatch the reviewer by name (it raises only NEW
+   findings or confirms resolution). After a fan-out round you can usually narrow the
+   re-review to a SINGLE reviewer on the (small) delta, unless the fixes were themselves
+   large.
 4. Repeat 2–3 until the reviewer emits its exact stop token: **"converged — no further
-   findings."**
+   findings."** (After a fan-out, you declare convergence once the consolidated set has
+   no remaining blocking findings.)
 5. Safety valve: if it won't converge after a few rounds or keeps re-raising the same
    point, STOP and surface the blocker via `AskUserQuestion`; never loop forever.
 
