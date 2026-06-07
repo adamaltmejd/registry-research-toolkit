@@ -10,7 +10,7 @@ repos:
       # CLAUDE.md is a real copy of AGENTS.md (not a symlink), so static tools that
       # don't follow links — e.g. PR-review bots — see both. Keep them byte-identical.
       - id: claude-agents-sync
-        name: CLAUDE.md and AGENTS.md must be identical
+        name: "CLAUDE.md must equal AGENTS.md (to fix drift: cp AGENTS.md CLAUDE.md)"
         entry: diff -q CLAUDE.md AGENTS.md
         language: system
         pass_filenames: false
