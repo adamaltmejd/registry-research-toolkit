@@ -21,8 +21,9 @@ branch. Do NOT create, name, or switch branches; that's the lead's job.
 
 1. **Read the plan in full and understand its PURPOSE before writing any code** — the
    outcome the lead wants and why, not just the literal steps. Then read `CLAUDE.md`
-   and the relevant `<package>/DESIGN.md` (and `reg_meta/STRUCTURE.md` for domain
-   work). If the plan's intent is unclear, underspecified, or seems to conflict with
+   and the relevant `<package>/DESIGN.md` (the reg_meta object model lives in
+   `reg_meta/DESIGN.md`; `ARCHITECTURE.md` for cross-package work). If the plan's
+   intent is unclear, underspecified, or seems to conflict with
    the codebase, `SendMessage` the lead before coding — don't guess at what they meant.
 2. Implement **exactly the scope of the plan** — no neighbouring refactors, no scope
    creep. Keep the diff tight and idiomatic to the surrounding code.

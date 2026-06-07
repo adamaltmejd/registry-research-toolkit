@@ -27,7 +27,7 @@ Update where the diff makes them stale or incomplete:
   keys, or commands.
 - **Docstrings** on changed functions/classes/modules whose described behaviour,
   parameters, or invariants moved.
-- **`CLAUDE.md`** / `STRUCTURE.md` references only if the change invalidates a
+- **`CLAUDE.md`** / `ARCHITECTURE.md` references only if the change invalidates a
   statement there (e.g. a renamed key, a removed module, a new conventions rule).
 - Validation **codes / contracts** docs when a new code or field ships.
 
