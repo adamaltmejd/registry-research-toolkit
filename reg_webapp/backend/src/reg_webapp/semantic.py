@@ -382,8 +382,8 @@ def _check_binding_period(
     issues: list[ValidationIssue],
 ) -> None:
     """§6.8.3: the binding must resolve to a `variable_state` at the source's
-    variant AND period. A range whose endpoint is grammar-valid but calendar-
-    impossible → `invalid_period` (error). No covering state →
+    variant AND period. Endpoints are already real calendar dates here (§6.8.1
+    structural guarantee — see module docstring). No covering state →
     `period_outside_state_validity`. An explicit range only PARTIALLY covered by
     the concept's states (a gap NO column delivers) → `range_period_partially_covered`
     (info). A range period crossing a state transition →
