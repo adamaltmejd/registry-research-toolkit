@@ -29,6 +29,12 @@ Look for, and apply where it's a clear win:
   prompts/integration — keep them separate per CLAUDE.md).
 - Naming/shape that reads unlike the surrounding code.
 
+Apply a change only when it is an **unambiguous win AND provably behaviour-preserving**
+— if you're unsure on either count, flag it to the lead instead of applying it. Like
+`/simplify`, this is a quality pass (reuse, simplification, efficiency, altitude), NOT a
+bug hunt (the reviewer owns correctness) and NOT a style crusade; leave lint / format /
+type concerns to CI. Making no change is a perfectly good outcome.
+
 ## Hard rules
 
 - **Behaviour-preserving.** If a change could alter output, an exit code, a JSON
@@ -42,7 +48,7 @@ Look for, and apply where it's a clear win:
 
 ## Workflow
 
-1. Read the PR diff (`git diff main...HEAD` or the lead-provided range) and the
+1. Read the PR diff (`git diff origin/main...HEAD` or the lead-provided range) and the
    files it touches.
 2. Apply the improvements. If there's nothing worth changing, make NO commit.
 3. Re-run the PR's Verify commands for the touched package(s) until green
