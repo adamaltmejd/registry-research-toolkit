@@ -50,11 +50,16 @@ _CORPUS: tuple[str, ...] = (
     "2002-10-15",
     "2018-01-01",
     "2020-02-29",  # 2020 IS a leap year — a real Feb 29
+    "2000-02-29",  # ÷400 century leap — a real Feb 29
     # — calendar-impossible full dates (pass the 01-31 day regex, not real dates) —
     "2019-02-29",  # 2019 is NOT a leap year
+    "1900-02-29",  # ÷100 not ÷400 — NOT a leap year (and in the 19xx range)
     "2018-02-30",  # February never has 30 days
     "2021-04-31",  # April has 30 days
     "2019-04-31",
+    "2021-06-31",  # June has 30 days
+    "2021-09-31",  # September has 30 days
+    "2021-11-31",  # November has 30 days
     # — out-of-bounds / syntactic junk —
     "",
     "abc",

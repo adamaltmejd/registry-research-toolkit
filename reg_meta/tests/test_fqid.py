@@ -18,6 +18,7 @@ from reg_meta.fqid import (
     is_period,
     is_slug,
     parse,
+    period_token_to_bounds,
 )
 
 # ---------------------------------------------------------------------------
@@ -186,6 +187,17 @@ class TestPeriodGrammar:
     )
     def test_invalid_periods(self, bad: str) -> None:
         assert not is_period(bad)
+
+    @pytest.mark.parametrize("bad", ["2019-02-29", "2018-02-30", "2021-04-31"])
+    def test_period_token_to_bounds_rejects_calendar_invalid_day(
+        self, bad: str
+    ) -> None:
+        # `period_token_to_bounds` guards on `is_period` first, so a calendar-
+        # impossible author day raises rather than expanding to nonsense bounds
+        # (#239). The synthesized Feb→29 over-count for month/quarter forms is
+        # unaffected — that is NOT an author-supplied day.
+        with pytest.raises(FqidError):
+            period_token_to_bounds(bad)
 
 
 # ---------------------------------------------------------------------------
