@@ -105,6 +105,25 @@ def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
     # A leading/trailing slash or `//` yields an empty segment — caught below.
     segments = raw_path.split("/")
     leaf_index = len(segments) - 1
+    # Per-segment slot label: the 3-seg leaf is the `variable` slot, every other
+    # position is the generic `segment` slot. This guard is deliberately
+    # kind-agnostic — it grammar-checks each segment and special-cases only the
+    # leading `class` literal; it does NOT replicate `parse`'s position→kind
+    # mapping.
+    # §5.2 reserved-HTTP-suffix interaction (#228): `validate_slug` rejects the
+    # reserved suffix tokens keyed on the slot, so HERE the reservation fires only
+    # for a reserved VARIABLE leaf. It does NOT fire for a register/classification
+    # segment — and it doesn't need to: those reserved tokens can never BE a
+    # register/classification slug, because `validate_slug` rejects them where such
+    # FQIDs are constructed (`Fqid.register_fqid` / `classification_fqid`) and at
+    # build time (`fqid_slugs._validate_entry_slug`). So no real register or
+    # classification ever carries a reserved slug for this guard to catch. A
+    # hand-crafted colliding request is still safe: `class/states` is rejected at
+    # `parse()` before any connection opens, and `scb/states` is captured by the
+    # matching `{fqid:path}/states` suffix route and rejected by the binding
+    # accessor as a non-binding FQID before any lookup query runs (a connection may
+    # open, but no catalog SQL executes) — so §16's reject-before-SQL guarantee
+    # holds for every reserved token without making this guard kind-aware.
     for index, segment in enumerate(segments):
         slot = "variable" if index == leaf_index and len(segments) == 3 else "segment"
         _validate_segment(segment, slot=slot, is_prefix=(index == 0))

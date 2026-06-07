@@ -11,6 +11,8 @@ from __future__ import annotations
 import pytest
 from reg_meta.fqid import (
     DEFAULT_VARIANT_SLUG,
+    RESERVED_HTTP_SUFFIX_SLUGS,
+    RESERVED_VARIANTS_SLUG,
     Fqid,
     FqidError,
     FqidKind,
@@ -19,6 +21,7 @@ from reg_meta.fqid import (
     is_slug,
     parse,
     period_token_to_bounds,
+    validate_slug,
 )
 
 # ---------------------------------------------------------------------------
@@ -111,6 +114,103 @@ class TestSlugGrammar:
             parse("scb/2020")  # register slot
         with pytest.raises(FqidError, match="period grammar"):
             parse("scb/lisa/2020")  # variable slot
+
+
+# ---------------------------------------------------------------------------
+# Reserved HTTP-suffix slugs (§5.2): tokens that would shadow a live reg_webapp
+# catalog sub-resource route. The 6 binding suffixes are reserved in the
+# variable / register / classification slots; `variants` only in the variable
+# slot. Provider and register_variant slots carry no reservation.
+# ---------------------------------------------------------------------------
+
+
+class TestReservedHttpSuffixSlugs:
+    # The 7 reserved variable-slot tokens = the 6 binding suffixes + `variants`.
+    ALL_VARIABLE_RESERVED = sorted(
+        RESERVED_HTTP_SUFFIX_SLUGS | {RESERVED_VARIANTS_SLUG}
+    )
+    # `lineage_warnings` carries an underscore, so the slug grammar rejects it
+    # BEFORE the reserved-token check runs — it can never be a slug regardless.
+    # The other tokens are valid slug SHAPES whose only barrier IS the
+    # reservation, so a "reserved" message is asserted only for these.
+    SLUG_SHAPED_RESERVED = sorted(t for t in ALL_VARIABLE_RESERVED if is_slug(t))
+    SLUG_SHAPED_SUFFIXES = sorted(t for t in RESERVED_HTTP_SUFFIX_SLUGS if is_slug(t))
+
+    @pytest.mark.parametrize("token", ALL_VARIABLE_RESERVED)
+    def test_variable_slot_rejects_all_seven(self, token: str) -> None:
+        # All 7 are rejected as a variable slug (5 suffixes + `variants` via the
+        # reservation; `lineage_warnings` via the underscore grammar bar).
+        with pytest.raises(FqidError):
+            validate_slug(token, "variable")
+
+    @pytest.mark.parametrize("token", SLUG_SHAPED_RESERVED)
+    def test_variable_slot_reserved_message(self, token: str) -> None:
+        with pytest.raises(FqidError, match="reserved"):
+            validate_slug(token, "variable")
+
+    @pytest.mark.parametrize("token", sorted(RESERVED_HTTP_SUFFIX_SLUGS))
+    def test_register_slot_rejects_the_six(self, token: str) -> None:
+        with pytest.raises(FqidError):
+            validate_slug(token, FqidKind.REGISTER)
+
+    @pytest.mark.parametrize("token", sorted(RESERVED_HTTP_SUFFIX_SLUGS))
+    def test_classification_slot_rejects_the_six(self, token: str) -> None:
+        with pytest.raises(FqidError):
+            validate_slug(token, FqidKind.CLASSIFICATION)
+
+    @pytest.mark.parametrize("token", SLUG_SHAPED_SUFFIXES)
+    def test_register_and_classification_reserved_message(self, token: str) -> None:
+        with pytest.raises(FqidError, match="reserved"):
+            validate_slug(token, FqidKind.REGISTER)
+        with pytest.raises(FqidError, match="reserved"):
+            validate_slug(token, FqidKind.CLASSIFICATION)
+
+    def test_variants_accepted_in_register_and_classification_slots(self) -> None:
+        # `variants` only collides with the 3-seg variable leaf — a 2-seg
+        # register (`scb/variants`) and a classification (`class/variants`) are
+        # clean paths, so the register / classification slots must ACCEPT it.
+        validate_slug(RESERVED_VARIANTS_SLUG, FqidKind.REGISTER)
+        validate_slug(RESERVED_VARIANTS_SLUG, FqidKind.CLASSIFICATION)
+
+    @pytest.mark.parametrize("token", SLUG_SHAPED_RESERVED)
+    def test_reserved_tokens_allowed_in_provider_slot(self, token: str) -> None:
+        # A provider is always the leading segment, never a colliding URL
+        # position — no reservation applies. (`lineage_warnings` is excluded: it
+        # fails the slug grammar in every slot, provider included.)
+        validate_slug(token, FqidKind.PROVIDER)
+
+    @pytest.mark.parametrize(
+        "value",
+        ["scb/lisa/states", "scb/lisa/related", "scb/lisa/variants"],
+    )
+    def test_parse_rejects_reserved_variable_leaf(self, value: str) -> None:
+        with pytest.raises(FqidError, match="reserved"):
+            parse(value)
+
+    @pytest.mark.parametrize("value", ["scb/states", "class/states"])
+    def test_parse_rejects_reserved_register_and_classification(
+        self, value: str
+    ) -> None:
+        with pytest.raises(FqidError, match="reserved"):
+            parse(value)
+
+    def test_parse_accepts_variants_as_register(self) -> None:
+        # `scb/variants` is a clean 2-seg register path (variants is reserved
+        # only in the variable slot).
+        f = parse("scb/variants")
+        assert f.kind is FqidKind.REGISTER
+        assert str(f) == "scb/variants"
+
+    @pytest.mark.parametrize(
+        "name", ["States", "Variants", "Lineage", "Related", "Class"]
+    )
+    def test_derive_variable_slug_rejects_folded_reserved(self, name: str) -> None:
+        # A column name that folds to a reserved variable-slot token degrades to
+        # None so the caller falls back to the name / last-resort slug instead of
+        # minting a route-shadowing slug. "Class" pins the `class`-reservation
+        # path now that the deriver delegates to validate_slug (the explicit
+        # RESERVED_SLUGS check is gone).
+        assert derive_variable_slug(name) is None
 
 
 # ---------------------------------------------------------------------------
