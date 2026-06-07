@@ -65,4 +65,4 @@ Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.m
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a pre-commit hook fails, fix the underlying issue rather than bypassing.
 
 # Layout
-For per-package design rationale, see `<package>/DESIGN.md` (plus `reg_meta/STRUCTURE.md` for the domain model). For the cross-package design (topology, dependency graph, repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see `REFACTOR_SPEC.md`.
+For per-package design rationale, see `<package>/DESIGN.md` (the reg_meta object model lives in `reg_meta/DESIGN.md`; per-provider source-delivery shapes in `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph, repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see `REFACTOR_SPEC.md`.

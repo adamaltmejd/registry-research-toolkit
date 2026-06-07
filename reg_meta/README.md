@@ -94,8 +94,8 @@ Override with `--db` or `$REG_META_DB`.
 
 | Path | Purpose |
 |---|---|
-| [DESIGN.md](DESIGN.md) | Design rationale and constraints |
-| [STRUCTURE.md](STRUCTURE.md) | Domain model (SCB metadata hierarchy) |
+| [DESIGN.md](DESIGN.md) | Design rationale, constraints, and the object model |
+| [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) | Build pipeline and per-provider source-delivery shapes |
 | [../reg_meta_build/docs/SCHEMA.md](../reg_meta_build/docs/SCHEMA.md) | Documentation markdown file format |
 | `src/reg_meta/` | Package source |
 | `tests/` | Test suite |

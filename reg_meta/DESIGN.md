@@ -1,8 +1,10 @@
 # Design: reg_meta
 
 Design rationale and constraints for the query layer. For usage, see
-`reg-meta --help`. For the domain model, see [STRUCTURE.md](STRUCTURE.md).
-For build-pipeline rationale (CSV import, sentinel filtering, year
+`reg-meta --help`. The object model lives below ("Two-level variable
+model"); for the per-provider source shapes it collapses (the SCB
+input-file layout, the SOS workbook layout) and the rest of the
+build-pipeline rationale (CSV import, sentinel filtering, year
 projection, classification seeding, doc-DB build), see
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md). For the
 cross-package topology, dependency graph, and version policy, see the
@@ -134,10 +136,11 @@ levels, because two distinct facts are entangled there:
   coordinate** and a period range, plus the data type, length, value
   set, and version label for that delivery.
 
-STRUCTURE.md describes the same split from the SCB-domain angle (CVID
-coalescing, the input-file mapping); this section is the cross-provider
-rationale. The normative DDL lives in `reg_meta_build/db.py` — not
-copied here.
+The SCB source delivery this collapses (the CVID grain, the input-file
+mapping) is documented in
+[../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Source
+delivery shapes"; this section is the cross-provider rationale. The
+normative DDL lives in `reg_meta_build/db.py` — not copied here.
 
 **Why the variant is a coordinate, not an identity level.** A *variant*
 (SCB `registervariant`, SOS `deldatamängd`) is a **delivery
@@ -764,10 +767,10 @@ relies on this format for version comparison.
 
 ## Glossary and Swedish↔English crosswalk
 
-Durable reference for the universal vocabulary. The shipped-entity
-glossary is in [STRUCTURE.md](STRUCTURE.md) "Working Interpretation";
-this captures the cross-provider term meanings and the column-rename
-pass that turned SCB's Swedish source columns into universal English.
+Durable reference for the universal vocabulary. The normative
+shipped-entity definitions live in the `reg_meta_build/db.py` DDL; this
+captures the cross-provider term meanings and the column-rename pass
+that turned SCB's Swedish source columns into universal English.
 
 | Term | Meaning |
 |---|---|

@@ -118,6 +118,97 @@ runnable as `python -m reg_meta_build.dbdiff <db_a> <db_b>` (exit 0
 identical / 1 differs / 2 error). The full rationale lives in the module
 docstring.
 
+## Source delivery shapes
+
+Each provider ships metadata in its own native structure; the adapters
+(next section) normalize these into the provider-neutral IR. This section
+documents the **source** shapes an adapter reads — not the shipped
+catalog. For the universal two-level `variable` / `variable_state` model
+the catalog collapses these into, see
+[../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Two-level variable
+model".
+
+### SCB
+
+SCB delivers pipe-delimited cp1252 CSVs plus a SQL DDL and an Excel
+join-key sheet. One backbone row is roughly a *variable occurrence*
+inside a registry / variant / version / context, identified by `CVID` —
+not a stable column key (see *Build-time triage*). The build coalesces
+the CVID grain into `variable` + `variable_state`; `CVID` does not
+survive to the shipped DB.
+
+| File | Role | Practical reading |
+| --- | --- | --- |
+| `Registerinformation.csv` | Backbone metadata fact table | The main source of truth: one row ≈ a variable occurrence inside a registry/variant/version/context. Carries most IDs and drives normalization (~1M rows). |
+| `UnikaRegisterOchVariabler.csv` | Deduplicated registry/variable summary | Lifecycle and flags (`VersionForsta`, `VersionSista`, sensitive/identity markers). Enriches, never overrides `Registerinformation.csv`. |
+| `Identifierare.csv` | Identifier semantics | A small dictionary of identifier-like variables keyed by `VarID` (not globally unique to one registry); also feeds the panel-key bootstrap. |
+| `Timeseries.csv` | Change log | Breaks, redefinitions, and other events over time. Annotates the model, does not define it; the source for `*_replaced_by` edges. |
+| `Vardemangder.csv` | Value-set members | Code/label rows keyed by `CVID` — where categorical values live (~102M rows). |
+| `VardemangderValidDates.csv` | Value-item validity windows | Applied at build time for the value-set year projection (see *Year projection*); not stored. |
+| `Tabelldefinitioner.sql` | SQL Server table shells | Authoritative SQL types/constraints per export column; used for type validation and the panel-key bootstrap. |
+| `ID-kolumner.xlsx` | Join-key documentation | Which columns are ID/join columns between export files and what they reference (12 rows). |
+
+The CVID-grained source hierarchy the SCB adapter reads — a registry
+splits into variants, each into time-sliced versions, each into a
+population/object-type context, under which a variable occurs once per
+`CVID` with its column alias and value set; change events annotate every
+level:
+
+```mermaid
+flowchart TD
+    provider["Data provider: SCB"]
+    source["Operational sources / lower-level registries\n(e.g. Skatteverket, HREG, RTB, UREG)"]
+    registry["Registry\n(e.g. LISA, UREG)"]
+    variant["Register variant\n(dataset family)"]
+    version["Register version\n(time slice / release)"]
+    context["Population + object type\n(context layer)"]
+    variable["Variable meaning\n(name, definition, VarId)"]
+    instance["Variable instance\n(CVID-bound occurrence)"]
+    alias["Column alias\n(Kolumnnamn)"]
+    values["Value set items\n(Vardemangder)"]
+    timeseries["Change events over time\n(Timeseries)"]
+
+    provider --> registry
+    source --> registry
+    registry --> variant
+    variant --> version
+    version --> context
+    context --> instance
+    variable --> instance
+    instance --> alias
+    instance --> values
+    registry -. historical notes .-> timeseries
+    variant -. historical notes .-> timeseries
+    version -. historical notes .-> timeseries
+    variable -. historical notes .-> timeseries
+```
+
+**A registry is not a table.** One SCB registry exposes several
+table-like units (`Registervariant`), each recurring across years,
+months, or event streams, and the same variable meaning recurs across
+many versions and contexts. The shipped model captures this as the
+variant *coordinate* on `variable_state`, not as an identity level — see
+[../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Why two levels, not
+three".
+
+**LISA as a worked example.** `LISA` (RegisterId 34) is a high-level
+longitudinal integrated registry, not a single flat table: it combines
+population, education, employment, income, unemployment, and
+sickness/parental-insurance information so transitions over time can be
+studied, and is itself built from lower-level registries and
+administrative sources (e.g. UREG and RTB; UREG in turn draws on HREG).
+It exposes several table-like variants, including `Individer, 16 år och
+äldre`, `Företag`, `Arbetsställen`, and `Individer födelseland`.
+
+### SOS
+
+Socialstyrelsen delivers one `.xlsx` workbook per register, parsed by
+`SOSAdapter` (`sources/sos.py`) into `SosRegister` trees (see *IR +
+adapter architecture* for the merge/split and `_default`-variant rules).
+A full structural catalog of the SOS delivery — sheet layout, kodlista
+shape, the deldatamängd ↔ variant mapping, and the classification/value
+path — lands with the SOS data path; see #210 and #212.
+
 ## IR + adapter architecture
 
 The build is structured around a provider-neutral **intermediate
