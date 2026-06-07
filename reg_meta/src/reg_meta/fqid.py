@@ -33,6 +33,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass
+from datetime import date
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
@@ -63,10 +64,12 @@ _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
 # Period grammar building blocks. Year is 1900-2099, month 01-12, day 01-31.
 # Shared by the anchored validators and the substring extractors so `is_period`
-# and `derive_period` agree on what counts as a period. Day bound is purely
-# syntactic — Feb 30 passes the grammar; calendar validity is the curator's
-# responsibility (same as how the year/month bounds don't enforce SCB
-# coverage).
+# and `derive_period` agree on what counts as a period. The day bound here is
+# only the syntactic 01-31 envelope; an author-supplied `YYYY-MM-DD` is ALSO
+# calendar-validated in `is_period` (real leap years etc. — `2019-02-29` is
+# rejected). The year/month bounds still don't enforce SCB coverage, and the
+# SYNTHESIZED month/quarter/half upper bound in `period_token_to_bounds`
+# intentionally over-counts Feb→29 for interval overlap (see `_MONTH_LAST_DAY`).
 _YEAR = r"(?:19|20)\d{2}"
 _MONTH = r"(?:0[1-9]|1[0-2])"
 _DAY = r"(?:0[1-9]|[12]\d|3[01])"
@@ -136,7 +139,18 @@ def is_slug(value: str) -> bool:
 
 
 def is_period(value: str) -> bool:
-    return any(p.match(value) for p in _PERIOD_PATTERNS)
+    if not any(p.match(value) for p in _PERIOD_PATTERNS):
+        return False
+    # The `YYYY-MM-DD` form is the only 10-char form and the only one carrying an
+    # author-supplied day; calendar-validate it so an impossible day (`2019-02-29`
+    # in a non-leap year, `2018-02-30`) is rejected, not just bounded 01-31 by the
+    # regex. Other forms carry no author day, so the regex match alone is enough.
+    if len(value) == 10:
+        try:
+            date.fromisoformat(value)
+        except ValueError:
+            return False
+    return True
 
 
 # Quarter / half-year → (start_month, end_month). Used by `period_token_to_bounds`
@@ -149,9 +163,15 @@ _QUARTER_MONTHS = {
     "4": ("10", "12"),
 }
 _HALF_MONTHS = {"1": ("01", "06"), "2": ("07", "12")}
-# Last day per month (non-leap). February uses 29 so a leap-day `YYYY-02-29`
-# token still bounds correctly; the day bound is syntactic (§5.1 / fqid grammar),
-# so over-counting Feb to 29 is harmless for interval overlap.
+# Last day per month (non-leap). This is the SYNTHESIZED upper bound for the
+# month/quarter/half/term forms, NOT an author-supplied day. February uses 29 so
+# a `YYYY-02` month token still expands to `..-02-29` even in a non-leap year:
+# over-counting Feb to 29 is intentional and harmless for interval overlap (the
+# resolver only intersects, never round-trips this through `date.fromisoformat`).
+# This is deliberately DIFFERENT from the author-supplied `YYYY-MM-DD` day, which
+# `is_period` now calendar-validates (a real `2019-02-29` is rejected). The two
+# must not be conflated: rejecting an impossible author day is correct; rejecting
+# the synthesized Feb-29 bound would break valid `YYYY-02` month tokens.
 _MONTH_LAST_DAY = {
     "01": "31", "02": "29", "03": "31", "04": "30", "05": "31", "06": "30",
     "07": "31", "08": "31", "09": "30", "10": "31", "11": "30", "12": "31",

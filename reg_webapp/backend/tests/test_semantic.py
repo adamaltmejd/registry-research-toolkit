@@ -732,38 +732,6 @@ def test_day_adjacent_windows_leave_no_gap(internal_gap_catalog):
     assert "range_period_partially_covered" not in {i.code for i in result.issues}
 
 
-@pytest.mark.parametrize("bad_endpoint", ["2019-02-29", "2018-02-30", "2021-04-31"])
-def test_calendar_invalid_range_endpoint_is_graceful_invalid_period(
-    catalog, bad_endpoint
-):
-    # The period grammar's day bound is syntactic — Feb 30 passes structural
-    # validation — but the gap math feeds endpoints to `date.fromisoformat`, which
-    # raises. The check must catch it and emit a graceful `invalid_period`, NOT let
-    # a ValueError escape `validate_semantic` (which routes to an uncaught 500).
-    source = _kon_source({"from": bad_endpoint, "to": 2020})
-    # The call must NOT raise.
-    result = validate_semantic(_project([source]), catalog, caller="researcher")
-    issue = next(i for i in result.issues if i.code == "invalid_period")
-    assert issue.level == "error"
-    assert issue.path == "/sources/0/bindings/0/variable"
-    assert bad_endpoint in issue.message
-    assert not result.ok
-    # The nonsense range short-circuits: no phantom coverage finding is emitted.
-    codes = {i.code for i in result.issues}
-    assert "range_period_partially_covered" not in codes
-    assert "period_outside_state_validity" not in codes
-
-
-def test_calendar_invalid_endpoint_blocks_for_steward_too(catalog):
-    # `invalid_period` is an author-side spec error, NOT reg_meta drift, so it is
-    # not steward-downgraded: a malformed committed catalog must fail boot loudly.
-    source = _kon_source({"from": "2019-02-29", "to": 2020})
-    result = validate_semantic(_project([source]), catalog, caller="steward")
-    issue = next(i for i in result.issues if i.code == "invalid_period")
-    assert issue.level == "error"
-    assert not result.ok
-
-
 @pytest.mark.parametrize(
     "good_endpoint",
     [

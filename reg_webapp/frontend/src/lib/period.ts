@@ -53,18 +53,45 @@ export function periodQueryFromField(raw: string): string | null {
 // already does NOT match before a trailing `\n` the way Python's does, so the
 // trailing-newline footgun the backend guards doesn't exist here; still, the
 // server is the canonical gate). A range is `<endpoint>..<endpoint>`; each
-// endpoint is a single token. ADVISORY ONLY — never gates submit.
+// endpoint is a single token. The author-supplied day of a `YYYY-MM-DD` token is
+// ALSO calendar-checked (regex can't do leap years, so `2019-02-29` matches the
+// pattern but is rejected by `isRealCalendarDay` — mirrors the reg_meta/reg_schema
+// side). ADVISORY ONLY — never gates submit.
 
 const YEAR = "(?:19|20)\\d{2}";
 const MONTH = "(?:0[1-9]|1[0-2])";
 const DAY = "(?:0[1-9]|[12]\\d|3[01])";
 
-/** One period TOKEN (no range, no `_default`): the §9.5 single-token forms —
- * `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `YYYY-Q[1-4]`,
- * `YYYY-H[12]`. */
 const TOKEN_RE = new RegExp(
   `^(?:${YEAR}|${YEAR}-${MONTH}|${YEAR}-${MONTH}-${DAY}|[HV]T${YEAR}|${YEAR}-Q[1-4]|${YEAR}-H[12])$`,
 );
+
+const FULL_DATE_RE = new RegExp(`^${YEAR}-${MONTH}-${DAY}$`);
+
+/** Is a `YYYY-MM-DD` string a REAL calendar date? The grammar regex only bounds
+ * the day 01-31; this rejects calendar-impossible days (`2019-02-29` in a
+ * non-leap year, `2018-02-30`). Builds the date in UTC (avoids TZ drift) and
+ * checks each component round-trips — `Date` silently rolls a bad day over
+ * (Feb 30 → Mar 2), so a mismatch means the day was impossible. */
+function isRealCalendarDay(value: string): boolean {
+  const [y, m, d] = value.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return (
+    dt.getUTCFullYear() === y &&
+    dt.getUTCMonth() === m - 1 &&
+    dt.getUTCDate() === d
+  );
+}
+
+/** One period TOKEN (no range, no `_default`): the §9.5 single-token forms —
+ * `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `YYYY-Q[1-4]`,
+ * `YYYY-H[12]`. A `YYYY-MM-DD` is additionally calendar-validated. */
+function isPeriodToken(value: string): boolean {
+  if (!TOKEN_RE.test(value)) {
+    return false;
+  }
+  return FULL_DATE_RE.test(value) ? isRealCalendarDay(value) : true;
+}
 
 const RANGE_SEP = "..";
 const DEFAULT_SENTINEL = "_default";
@@ -86,9 +113,9 @@ export function looksLikePeriod(raw: string): boolean {
     const parts = value.split(RANGE_SEP);
     // Exactly one separator → two endpoints; each must be a single token
     // (a range of `_default` / nested ranges is not grammar).
-    return parts.length === 2 && parts.every((p) => TOKEN_RE.test(p));
+    return parts.length === 2 && parts.every((p) => isPeriodToken(p));
   }
-  return TOKEN_RE.test(value);
+  return isPeriodToken(value);
 }
 
 /** Convert a structured `Source.period` (§6.2: int | token-string | {from,to} |

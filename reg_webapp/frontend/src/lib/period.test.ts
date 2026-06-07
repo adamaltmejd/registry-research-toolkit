@@ -102,6 +102,7 @@ describe("looksLikePeriod (advisory §9.5 grammar)", () => {
     "2020-Q4",
     "2020-H1",
     "2020-H2",
+    "2020-02-29", // 2020 IS a leap year — a real Feb 29
     "2018..2020",
     "2020-Q1..2020-Q4",
     "_default",
@@ -129,6 +130,9 @@ describe("looksLikePeriod (advisory §9.5 grammar)", () => {
     "_default..2020", // `_default` is not a range endpoint
     "2020; DROP TABLE", // SQLi probe shape
     "../etc/passwd", // traversal probe
+    "2019-02-29", // calendar-impossible: 2019 is NOT a leap year
+    "2018-02-30", // February never has 30 days
+    "2021-04-31", // April has 30 days
   ];
   for (const value of rejected) {
     it(`rejects ${JSON.stringify(value)}`, () => {

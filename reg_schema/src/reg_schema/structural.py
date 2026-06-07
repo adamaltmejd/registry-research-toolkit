@@ -22,6 +22,7 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import date
 from typing import Any, get_args
 
 from .project_data import ColumnType, IdSubtype, NumericSubtype, Steward
@@ -284,13 +285,23 @@ def _is_classification_fqid(value: object) -> bool:
 # reg_schema can't import reg_meta (one-way dep + MONA amalgamation; see
 # DESIGN.md), so the grammar is duplicated here — keep the two in sync: a looser
 # copy would let a spec pass this structural gate yet fail reg_meta's period
-# resolution. The snapshot sentinel ``_default`` is matched separately (it is
-# not a token form).
+# resolution. BOTH grammars also calendar-validate the author-supplied day of a
+# `YYYY-MM-DD` token (see ``_is_period_endpoint`` here and ``is_period`` on the
+# reg_meta side): the regex only bounds the day 01-31, so an impossible day like
+# `2019-02-29` (non-leap) is rejected by the extra ``date.fromisoformat`` check.
+# The cross-grammar parity test (reg_webapp/backend/tests/test_period_grammar_parity.py)
+# locks the two together. The snapshot sentinel ``_default`` is matched separately
+# (it is not a token form).
 _YEAR = r"(?:19|20)\d{2}"
 _MONTH = r"(?:0[1-9]|1[0-2])"
 _DAY = r"(?:0[1-9]|[12]\d|3[01])"
+# `\Z` not `$` at the end (same footgun reg_meta.fqid guards): Python's `$` also
+# matches just before a single trailing newline, so `^{_YEAR}$` would accept
+# `"2020\n"` — which reg_meta's `\Z`-anchored grammar rejects. Anchoring with `\Z`
+# keeps this copy byte-for-byte aligned with reg_meta's verdict (the parity test
+# in reg_webapp/backend/tests/test_period_grammar_parity.py enforces this).
 _PERIOD_TOKEN: re.Pattern[str] = re.compile(
-    rf"^(?:{_YEAR}(?:-{_MONTH}(?:-{_DAY})?|-Q[1-4]|-H[12])?|[HV]T{_YEAR})$"
+    rf"^(?:{_YEAR}(?:-{_MONTH}(?:-{_DAY})?|-Q[1-4]|-H[12])?|[HV]T{_YEAR})\Z"
 )
 
 
@@ -302,9 +313,21 @@ def _is_int_literal(value: object) -> bool:
 
 def _is_period_endpoint(value: object) -> bool:
     """A period int or period-token string (range endpoints; no ``_default``)."""
-    return _is_int_literal(value) or (
-        isinstance(value, str) and bool(_PERIOD_TOKEN.match(value))
-    )
+    if _is_int_literal(value):
+        return True
+    if not (isinstance(value, str) and _PERIOD_TOKEN.match(value)):
+        return False
+    # The full-date `YYYY-MM-DD` form is the only 10-char token and the only one
+    # carrying an author-supplied day; calendar-validate it so an impossible day
+    # (`2019-02-29` in a non-leap year, `2018-02-30`) fails the grammar instead of
+    # bounded 01-31 by the regex. Other forms carry no author day. Mirrors
+    # ``reg_meta.fqid.is_period``.
+    if len(value) == 10:
+        try:
+            date.fromisoformat(value)
+        except ValueError:
+            return False
+    return True
 
 
 def _is_period_range_obj(value: object) -> bool:

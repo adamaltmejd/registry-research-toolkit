@@ -370,6 +370,55 @@ def test_period_range_out_of_bounds_endpoint_is_invalid() -> None:
         assert _at(result, "invalid_period") == ["/sources/0/period"], endpoint
 
 
+def test_period_calendar_invalid_full_date_scalar_is_invalid() -> None:
+    # A `YYYY-MM-DD` token passes the syntactic 01-31 day regex but names an
+    # impossible calendar day — `_is_period_endpoint` calendar-validates it, so it
+    # is rejected as `invalid_period` (NOT a new code; mirrors reg_meta.fqid).
+    for period in ("2019-02-29", "2018-02-30", "2021-04-31"):
+        spec = _spec()
+        spec["sources"][0]["period"] = period
+        result = validate_structural(spec)
+        assert _at(result, "invalid_period") == ["/sources/0/period"], period
+
+
+def test_period_calendar_invalid_full_date_range_endpoint_is_invalid() -> None:
+    # The same calendar check gates a range endpoint (flows through
+    # _is_period_range_obj → _is_period_endpoint).
+    spec = _spec()
+    spec["sources"][0]["period"] = {"from": "2019-02-29", "to": "2020"}
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
+
+
+def test_period_leap_day_is_ok() -> None:
+    # 2020 IS a leap year, so 2020-02-29 is a real date and must pass.
+    spec = _spec()
+    spec["sources"][0]["period"] = "2020-02-29"
+    result = validate_structural(spec)
+    assert "invalid_period" not in _codes(result), result.issues
+
+
+def test_period_trailing_newline_is_invalid() -> None:
+    # `\Z` not `$`: Python's `$` matches before a single trailing newline, so a
+    # `$`-anchored grammar would accept `"2020\n"` — which reg_meta's grammar
+    # rejects. The structural copy must agree (parity test enforces this).
+    for period in ("2020\n", "2020-01-01\n", "HT2020\n"):
+        spec = _spec()
+        spec["sources"][0]["period"] = period
+        result = validate_structural(spec)
+        assert _at(result, "invalid_period") == ["/sources/0/period"], repr(period)
+
+
+def test_period_month_token_in_non_leap_year_is_ok() -> None:
+    # A `YYYY-MM` month token carries NO author day — the synthesized Feb→29
+    # over-count lives only in reg_meta's bound expansion, never in this grammar.
+    # `2019-02` (a non-leap February month) must NOT be rejected.
+    spec = _spec()
+    spec["sources"][0]["period"] = "2019-02"
+    result = validate_structural(spec)
+    assert "invalid_period" not in _codes(result), result.issues
+
+
 def test_period_null_is_invalid_field_type() -> None:
     spec = _spec()
     spec["sources"][0]["period"] = None

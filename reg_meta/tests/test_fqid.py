@@ -137,8 +137,7 @@ class TestPeriodGrammar:
             "2002-10-15",
             "2018-01-01",
             "2018-12-31",
-            "2018-02-30",
-            "2019-04-31",
+            "2020-02-29",  # 2020 IS a leap year — a real Feb 29
         ],
     )
     def test_valid_periods(self, period: str) -> None:
@@ -175,6 +174,14 @@ class TestPeriodGrammar:
             "HT2020\n",
             "2020-Q3\n",
             "2020-01-01\n",
+            # Calendar-impossible author days: pass the syntactic 01-31 day regex
+            # but are not real dates, so `is_period` rejects them (the
+            # `_MONTH_LAST_DAY` Feb→29 over-count is for SYNTHESIZED bounds only,
+            # never an author-supplied `YYYY-MM-DD` day).
+            "2019-02-29",  # 2019 is NOT a leap year
+            "2018-02-30",  # February never has 30 days
+            "2021-04-31",  # April has 30 days
+            "2019-04-31",  # April has 30 days
         ],
     )
     def test_invalid_periods(self, bad: str) -> None:
