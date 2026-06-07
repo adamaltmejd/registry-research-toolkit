@@ -67,9 +67,12 @@ _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 # and `derive_period` agree on what counts as a period. The day bound here is
 # only the syntactic 01-31 envelope; an author-supplied `YYYY-MM-DD` is ALSO
 # calendar-validated in `is_period` (real leap years etc. — `2019-02-29` is
-# rejected). The year/month bounds still don't enforce SCB coverage, and the
-# SYNTHESIZED month/quarter/half upper bound in `period_token_to_bounds`
-# intentionally over-counts Feb→29 for interval overlap (see `_MONTH_LAST_DAY`).
+# rejected), and `derive_period_with_span` routes its extractor matches through
+# `is_period` so the agree-invariant holds for calendar-impossible dates too (a
+# `2019-02-29` substring degrades to `2019-02`). The year/month bounds still don't
+# enforce SCB coverage, and the SYNTHESIZED month/quarter/half upper bound in
+# `period_token_to_bounds` intentionally over-counts Feb→29 for interval overlap
+# (see `_MONTH_LAST_DAY`).
 _YEAR = r"(?:19|20)\d{2}"
 _MONTH = r"(?:0[1-9]|1[0-2])"
 _DAY = r"(?:0[1-9]|[12]\d|3[01])"
@@ -97,7 +100,10 @@ _PERIOD_PATTERNS = (
 # contain literal `YYYY-MM-DD` (e.g. `'2014-12-31'`); the half-year pattern
 # is curated-only (Swedish source forms like `Första halvåret 1995` don't
 # carry the bare `1995-H1` substring, same as `maj-2011`/`kv1-2011` — see
-# REFACTOR_SPEC.md §5.3 for the canonical-form convention).
+# REFACTOR_SPEC.md §5.3 for the canonical-form convention). `derive_period_with_span`
+# checks each match against `is_period`, so a calendar-impossible ISO date
+# (`2019-02-29`) skips the full-date pattern and degrades to the next, most-specific
+# VALID token (`2019-02`) — keeping extractor output and `is_period` in agreement.
 _PERIOD_EXTRACT_PATTERNS = (
     re.compile(rf"(?<![A-Za-z0-9])[HV]T{_YEAR}(?!\d)"),
     re.compile(rf"(?<!\d){_YEAR}-Q[1-4](?![A-Za-z0-9])"),
@@ -395,9 +401,16 @@ def derive_period_with_span(
         m = pat.search(version_name)
         if m:
             return (f"{prefix}{m.group(1)}", m.start(), m.end())
+    # Validate each match against `is_period` and, on failure, fall through to the
+    # next (less-specific) pattern — preserving the extractors-and-`is_period`-agree
+    # invariant now that `is_period` calendar-validates the author day. Only the
+    # full-date pattern can produce a calendar-invalid token (the HT/VT/Q/half/
+    # YYYY-MM/YYYY forms carry no author day), so e.g. `2019-02-29` degrades to the
+    # most-specific VALID token `2019-02` instead of returning a token the
+    # downstream coalescer's `period_token_to_bounds` would crash on.
     for pat in _PERIOD_EXTRACT_PATTERNS:
         m = pat.search(version_name)
-        if m:
+        if m and is_period(m.group(0)):
             return (m.group(0), m.start(), m.end())
     return None
 
