@@ -50,9 +50,6 @@ class FqidKind(StrEnum):
 
 CLASSIFICATION_PREFIX = "class"
 DEFAULT_VARIANT_SLUG = "_default"
-RESERVED_SLUGS: frozenset[str] = frozenset(
-    {DEFAULT_VARIANT_SLUG, CLASSIFICATION_PREFIX}
-)
 
 # §5.2 reserved HTTP-suffix slugs. reg_webapp's catalog router declares
 # sub-resource routes that greedy-shadow variable canonical paths; a slug equal
@@ -506,16 +503,15 @@ def derive_variable_slug(delivery_column_name: str | None) -> str | None:
         .lower()
     )
     candidate = _SLUG_NONALNUM.sub("-", folded).strip("-")
-    if not candidate or not _SLUG_RE.match(candidate):
-        return None
-    # The variable slot reserves both RESERVED_SLUGS and the §5.2 HTTP-suffix
-    # tokens (the 6 binding suffixes + `variants`). Reuse the constants so this
-    # never drifts from `validate_slug`'s variable-slot rejection.
-    if (
-        candidate in RESERVED_SLUGS
-        or candidate in RESERVED_HTTP_SUFFIX_SLUGS
-        or candidate == RESERVED_VARIANTS_SLUG
-        or is_period(candidate)
-    ):
+    # A derived slug must clear the exact same bar an authored variable slug does,
+    # so delegate to `validate_slug` (grammar, period, the `_default`/`class`
+    # reservations, and the §5.2 HTTP-suffix tokens) rather than re-checking them
+    # here — the two can never drift, and it's the same build-via-validating-factory
+    # idiom as `try_emit`. A column literally named e.g. "States"/"Variants" thus
+    # degrades to None (caller falls back to the name/last-resort slug) instead of
+    # minting a slug that would shadow a catalog route.
+    try:
+        validate_slug(candidate, "variable")
+    except FqidError:
         return None
     return candidate
