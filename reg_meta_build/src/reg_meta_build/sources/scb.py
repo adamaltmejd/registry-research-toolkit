@@ -671,7 +671,7 @@ class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
     triage below can read it). The 8-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
-    latest-era delivery column and classification for triage."""
+    latest-era delivery column for triage."""
 
     register_id: int
     register_variant_id: int
