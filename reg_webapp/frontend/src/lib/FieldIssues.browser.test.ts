@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import FieldIssues from "./FieldIssues.svelte";
-import { codeLabel, type ValidationIssue } from "./validation";
+import type { ValidationIssue } from "./validation";
 
 // Scenario 5 (#201): the inline per-field highlight primitive. The parent has
 // already filtered the issue list to this field's pointer, so FieldIssues is
@@ -24,13 +24,13 @@ describe("FieldIssues", () => {
     await render(FieldIssues, { issues: [issue] });
 
     await expect.element(page.getByRole("alert")).toBeVisible();
-    // The raw code is mapped to a friendly label for display.
-    await expect
-      .element(page.getByText(codeLabel("invalid_period")))
-      .toBeVisible();
+    // The raw code is mapped to a friendly label for display — pin the literal so
+    // a broken/removed `invalid_period` mapping is actually caught (asserting via
+    // codeLabel() would be circular: the component renders the same function).
+    await expect.element(page.getByText("Invalid period")).toBeVisible();
     await expect.element(page.getByText(issue.message)).toBeVisible();
-    // The issue's level drives the styling hook (`li.issue.<level>`).
-    await expect.element(page.getByRole("listitem")).toHaveClass(/\bissue\b/);
+    // The issue's level drives the styling hook (`li.issue.<level>`). Only the
+    // level class is meaningful — `issue` is hardcoded on every <li>.
     await expect.element(page.getByRole("listitem")).toHaveClass(/\berror\b/);
   });
 });

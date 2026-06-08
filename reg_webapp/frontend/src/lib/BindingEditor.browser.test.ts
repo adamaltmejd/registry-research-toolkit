@@ -9,7 +9,9 @@ import { projectStore } from "./project_store.svelte";
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getCatalogNode: vi.fn(), getRegisterVariants: vi.fn() };
+  // BindingEditor only opens the picker in variable mode (getCatalogNode); the
+  // variant fetch is never reached, so it doesn't need stubbing here.
+  return { ...actual, getCatalogNode: vi.fn() };
 });
 
 beforeEach(() => {

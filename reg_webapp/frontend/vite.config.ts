@@ -3,6 +3,7 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vite";
+import { configDefaults } from "vitest/config";
 
 export default defineConfig({
   plugins: [svelte()],
@@ -31,8 +32,10 @@ export default defineConfig({
           environment: "jsdom",
           include: ["src/**/*.test.ts"],
           // Component tests belong to the `browser` project below — exclude them
-          // here (their `.browser.test.ts` suffix also matches `*.test.ts`).
-          exclude: ["src/**/*.browser.test.ts"],
+          // here (their `.browser.test.ts` suffix also matches `*.test.ts`). A
+          // custom `exclude` REPLACES Vitest's default (node_modules, .git), so
+          // spread the defaults back in or the unit run loses that guard.
+          exclude: [...configDefaults.exclude, "src/**/*.browser.test.ts"],
         },
       },
       {
