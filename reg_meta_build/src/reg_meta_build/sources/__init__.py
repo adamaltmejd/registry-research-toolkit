@@ -74,8 +74,22 @@ class IRAdapter(Protocol):
 
     provider: str  # short identifier: 'scb', 'sos', 'fk', ...
 
+    def prepare(self, source_dir: Path) -> None:
+        """PHASE 1 (#223): parse the provider's source and write the build
+        scratch the shared `populate_classifications` pass reads, WITHOUT yet
+        producing the IR. The materializer calls every adapter's `prepare()`,
+        then runs `populate_classifications` (so the SCB fold/split triage signal
+        is live), then calls every adapter's `emit()`. An adapter that needs no
+        pre-classification scratch (e.g. SOS, which writes no `variable_instance`)
+        implements this as a no-op and keeps all its work in `emit()`.
+        """
+        ...
+
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         """Parse the provider's native source files and emit IR objects.
+
+        Called in PHASE 2, after `prepare()` and after the materializer's
+        `populate_classifications` pass.
 
         Emit order is the FK-topological order so the materializer can insert
         in stream order and FK targets always exist when a child is seen:

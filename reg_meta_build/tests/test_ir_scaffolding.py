@@ -255,10 +255,12 @@ def test_iradapter_is_protocol() -> None:
 
 
 def test_iradapter_emit_signature() -> None:
-    """The IRAdapter contract exposes `provider: str` and `emit(source_dir) -> Iterator[IRObject]`."""
+    """The IRAdapter contract exposes `provider: str`, the phase-1
+    `prepare(source_dir) -> None`, and `emit(source_dir) -> Iterator[IRObject]`."""
     hints = get_type_hints(IRAdapter)
     assert "provider" in hints
     assert hints["provider"] is str
+    assert callable(IRAdapter.prepare)
     assert callable(IRAdapter.emit)
 
 
@@ -273,10 +275,15 @@ def test_iradapter_runtime_conformance() -> None:
     class _IRAdapterMirror(Protocol):
         provider: str
 
+        def prepare(self, source_dir: Path) -> None: ...
+
         def emit(self, source_dir: Path) -> Iterator[IRObject]: ...
 
     class _DummyAdapter:
         provider = "dummy"
+
+        def prepare(self, source_dir: Path) -> None:
+            pass
 
         def emit(self, source_dir: Path) -> Iterator[IRObject]:
             yield IRRegister(

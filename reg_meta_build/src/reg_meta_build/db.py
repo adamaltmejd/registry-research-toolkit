@@ -2478,11 +2478,51 @@ def materialize(
     # SCB-excluded `--providers=sos` build has no scratch to read or drop).
     scb_ran = any(a.provider == "scb" for a, _ in adapters)
 
-    # A4.3b multi-adapter loop. Per adapter: drain its IR stream into the COMBINED
-    # buffers (the DELETE-then-reinsert flip can't reinsert until every adapter's
-    # emit() has drained — SCB is still writing those tables during iteration;
-    # SOS writes none), and MERGE its row_counts/source_checksums/related_edges/
-    # fold_slug_hints. The reinsert + shared post-passes then run ONCE below.
+    # PHASE 1 (#223): prepare every adapter — the imports + value-set projection
+    # that populate the SCB scratch (`variable_instance.value_set_id`,
+    # `value_set_member`) that `populate_classifications` reads. SCB does the real
+    # work; SOS's prepare() is a no-op (it writes no `variable_instance`).
+    # Provider-blind: the loop calls prepare() uniformly.
+    for adapter, source_dir in adapters:
+        adapter.prepare(source_dir)
+
+    # Classifications run HERE — BEFORE the coalescer/triage inside phase-2
+    # emit() — so the classification-family fold signal is LIVE: triage reads the
+    # `classification` supersedes-family tree (`_classification_roots`) and the
+    # now-tagged `variable_instance.classification_id`. (Until #223 this ran after
+    # the whole emit() drain, leaving the signal inert so every triage decision
+    # fell to the column-stem fallback.) Provider-blind: called from the
+    # materializer, reads only SCB scratch + writes the `classification` tables.
+    if skip_classifications:
+        _progress("Skipping classifications (skip_classifications=True)")
+    else:
+        seed = seed_path or repo_seed_path()
+        if seed is None:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="classification_seed_not_found",
+                error_class="configuration",
+                message=(
+                    "Classification seed not found. build-db requires the "
+                    "in-repo classifications.toml; it is a maintainer-only "
+                    "command and is not supported from wheel installs."
+                ),
+                remediation=(
+                    "Run from a repo checkout, or run "
+                    "`reg-meta update` to fetch the prebuilt DB."
+                ),
+            )
+        valid_codes_dir = cls_dir if cls_dir.is_dir() else None
+        row_counts["classifications.toml"] = populate_classifications(
+            conn, seed, valid_codes_dir=valid_codes_dir
+        )
+
+    # PHASE 2 — A4.3b multi-adapter loop. Per adapter: drain its IR stream into
+    # the COMBINED buffers (the DELETE-then-reinsert flip can't reinsert until
+    # every adapter's emit() has drained — SCB is still writing those tables
+    # during iteration; SOS writes none), and MERGE its
+    # row_counts/source_checksums/related_edges/fold_slug_hints. The reinsert +
+    # shared post-passes then run ONCE below.
     for adapter, source_dir in adapters:
         for obj in adapter.emit(source_dir):
             if isinstance(obj, IRRegister):
@@ -2577,34 +2617,9 @@ def materialize(
         aliases=aliases,
     )
 
-    # Classifications — maintainer-curated normalized code systems.
-    if skip_classifications:
-        _progress("Skipping classifications (skip_classifications=True)")
-    else:
-        seed = seed_path or repo_seed_path()
-        if seed is None:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_not_found",
-                error_class="configuration",
-                message=(
-                    "Classification seed not found. build-db requires the "
-                    "in-repo classifications.toml; it is a maintainer-only "
-                    "command and is not supported from wheel installs."
-                ),
-                remediation=(
-                    "Run from a repo checkout, or run "
-                    "`reg-meta update` to fetch the prebuilt DB."
-                ),
-            )
-        valid_codes_dir = cls_dir if cls_dir.is_dir() else None
-        row_counts["classifications.toml"] = populate_classifications(
-            conn, seed, valid_codes_dir=valid_codes_dir
-        )
-
     # Slug TOMLs: populate slug columns on register / register_variant /
-    # classification. Run after classifications so the classification table
-    # is populated before its slugs are written.
+    # classification. Run after classifications (which ran in phase 1, above) so
+    # the classification table is populated before its slugs are written.
     if skip_slugs:
         _progress("Skipping slug TOMLs (skip_slugs=True)")
     else:

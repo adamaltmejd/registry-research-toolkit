@@ -9,7 +9,12 @@ import sys
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import PIPE, write_scb_input
+from _csv_fixtures import (
+    PIPE,
+    REGISTERINFORMATION_ROWS,
+    _var_row,
+    write_scb_input,
+)
 from reg_meta.errors import RegMetaError
 from reg_meta_build.classifications import load_seed, load_valid_codes
 from reg_meta_build.db import build_db
@@ -764,3 +769,77 @@ class TestCli:
             for inst in v["instances"]:
                 if inst.get("classification"):
                     assert inst["classification"] in {"TESTKON", "TESTKON2"}
+
+
+# Two DISJOINT-stem columns (`Foo`, `Bar`) under ONE var_id (920), co-delivered
+# in one edition (shared regver). `Foo`'s value set is version "Kön" (→ TESTKON);
+# `Bar`'s is "Kon-2" (→ TESTKON2, which supersedes TESTKON). Both resolve to the
+# TESTKON family root, so the classification-family signal FOLDS them — where the
+# column-stem fallback (classifications off) SPLITS them (common prefix of
+# `foo`/`bar` is 0 < the fold-stem floor). Rows mirror the working 1001/1004
+# shapes (ItemIDs 5001/5002 for "Kön", empty for "Kon-2") so projection + the
+# classification code-count invariants behave identically.
+_FAMILY_FOLD_RI = [
+    _var_row(colname="Foo", cvid=7001, var_id=920),
+    _var_row(colname="Bar", cvid=7002, var_id=920),
+]
+_FAMILY_FOLD_VM = EXTENDED_VARDEMANGDER_ROWS + [
+    PIPE.join(["Kön", "1", "1", "Man", "7001", "5001"]),
+    PIPE.join(["Kön", "1", "2", "Kvinna", "7001", "5002"]),
+    PIPE.join(["Kon-2", "1", "10", "Female", "7002", ""]),
+    PIPE.join(["Kon-2", "1", "20", "Male", "7002", ""]),
+]
+
+
+def _build_family_fold(tmp_path: Path, *, with_classifications: bool) -> Path:
+    """Build the disjoint-stem/same-family fixture, with classifications either
+    LIVE (TEST_SEED_TOML) or skipped, and return the DB path."""
+    input_dir = tmp_path / "input"
+    write_scb_input(
+        input_dir,
+        registerinformation_rows=list(REGISTERINFORMATION_ROWS) + _FAMILY_FOLD_RI,
+        vardemangder_rows=_FAMILY_FOLD_VM,
+    )
+    db_dir = tmp_path / "db"
+    db_dir.mkdir()
+    if with_classifications:
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(TEST_SEED_TOML, encoding="utf-8")
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
+    else:
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+    return db_dir / "reg_meta.db"
+
+
+def _provider_key_variable_count(db_path: Path, provider_key: str) -> int:
+    conn = sqlite3.connect(db_path)
+    try:
+        return conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE register_id = 1 AND provider_key = ?",
+            (provider_key,),
+        ).fetchone()[0]
+    finally:
+        conn.close()
+
+
+class TestClassificationFamilyFoldSignal:
+    """#223 load-bearing: with `populate_classifications` now running BEFORE the
+    coalescer/triage, the classification-family branch of `_decide_fold_or_split`
+    is the PRIMARY fold signal — two disjoint-stem columns sharing a family FOLD
+    (one variable) where they previously SPLIT (sibling variables)."""
+
+    def test_disjoint_stems_split_without_classifications(self, tmp_path: Path):
+        # Signal off → column-stem fallback → disjoint `Foo`/`Bar` SPLIT into two
+        # siblings sharing provider_key '920'.
+        db = _build_family_fold(tmp_path, with_classifications=False)
+        assert _provider_key_variable_count(db, "920") == 2
+
+    def test_same_family_folds_with_classifications(self, tmp_path: Path):
+        # Signal live → same TESTKON family root → FOLD to ONE variable.
+        db = _build_family_fold(tmp_path, with_classifications=True)
+        assert _provider_key_variable_count(db, "920") == 1

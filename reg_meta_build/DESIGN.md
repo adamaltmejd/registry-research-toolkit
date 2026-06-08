@@ -619,18 +619,22 @@ collide in a single edition — which is why triage needs *both* outcomes: a
 fold-everything rule merges rooms with area, and a split-everything rule
 over-shards SNI vintages that happen to arrive as parallel columns.
 
-Two shipped-reality footguns where the code diverges from the original
-design sketch:
+Two notes on the triage signals:
 
-- **The classification-family fold signal is inert.** `_classification_roots`
-  is written and wired, but triage runs *inside the coalescer, before*
-  `populate_classifications`, so the `classification` table is empty when it
-  reads — it returns `{}` and `_decide_fold_or_split` always falls through to
-  the **column-stem** signal. Stem-folding covers every fold example
-  (`FtgSni69`/`FtgSni92`, `Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED` all share a
-  stem), so the primary signal only matters for same-family columns with
-  *disjoint* stems. Activating it means moving triage to a
-  post-classifications pass.
+- **The classification-family fold signal is the PRIMARY fold signal** (LIVE
+  since #223). `_classification_roots` resolves each column's `classification_id`
+  to its `supersedes_id` family root; columns whose ids share a root are one
+  classification family → fold, even when their column stems are *disjoint*
+  (e.g. a SUN96 column folded with a SUN2000 column under one family). It is live
+  because the build runs in two phases: every adapter's `prepare()` (imports +
+  value-set projection) runs first, then `populate_classifications` (which builds
+  the `classification` family tree and tags `variable_instance.classification_id`),
+  then the coalescer/triage inside each adapter's `emit()`. So the table is
+  populated and the ids are tagged by the time triage reads them.
+  `_decide_fold_or_split` falls to the **column-stem** fallback only for
+  *unclassified* columns (and under `skip_classifications`, the only path the
+  synthetic test suite exercises). Stem-folding still covers the same-stem fold
+  examples (`FtgSni69`/`FtgSni92`, `Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED`).
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`),
   from the pair's two delivery columns, most specific first: `code_vs_label_pair`
   (name-based — a `<stem>namn` label paired with its bare-stem or

@@ -38,8 +38,9 @@ if TYPE_CHECKING:
 
 def _drained_adapter(tmp_path: Path) -> tuple[sqlite3.Connection, SCBAdapter, list]:
     """Set up a working conn exactly as `build_db` does (DDL + providers +
-    staging ATTACH), run `SCBAdapter.emit()` over the standard fixture, and
-    return (conn, adapter, emitted_ir_objects)."""
+    staging ATTACH), run `SCBAdapter.prepare()` then `.emit()` over the standard
+    fixture, and return (conn, adapter, emitted_ir_objects). No classifications
+    run between the phases here, so triage stays on the column-stem fallback."""
     scb_dir = write_scb_input(tmp_path / "input")
     staging_path = tmp_path / "staging.sqlite"
 
@@ -50,7 +51,8 @@ def _drained_adapter(tmp_path: Path) -> tuple[sqlite3.Connection, SCBAdapter, li
     conn.execute("ATTACH DATABASE ? AS staging", (str(staging_path),))
 
     adapter = SCBAdapter(conn)
-    objects = list(adapter.emit(scb_dir))
+    adapter.prepare(scb_dir)  # phase 1: imports + value-set projection
+    objects = list(adapter.emit(scb_dir))  # phase 2: coalesce/triage + IR
     return conn, adapter, objects
 
 

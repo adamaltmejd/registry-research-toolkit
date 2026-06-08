@@ -840,14 +840,13 @@ def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
     — e.g. SNI 2002 supersedes SNI 92 supersedes SNI 69, so all three resolve
     to the SNI-69 root and fold.
 
-    INERT TODAY (documented design note): triage runs inside
-    the coalescer, *before* `populate_classifications`, so the `classification`
-    table is empty here → this returns ``{}`` and `_decide_fold_or_split` falls
-    to the column-stem signal. Stem-folding covers every fold example
-    (`FtgSni69`/`FtgSni92`, `Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED` all share a stem),
-    so the primary signal only matters for same-family columns with *disjoint*
-    stems. Activating it = moving triage to a post-classifications materialize
-    step (keeps the coalescer's in-memory grain, which the final schema drops)."""
+    LIVE since #223: `populate_classifications` now runs in phase 1, BEFORE the
+    coalescer/triage in phase-2 `emit()`, so the `classification` table is
+    populated here and this returns the real family-root map. It is the PRIMARY
+    fold signal — `_decide_fold_or_split` falls to the column-stem fallback only
+    when the columns are unclassified. (Under `skip_classifications` the table is
+    empty → ``{}`` → stem fallback, the only path the synthetic test suite
+    exercises.)"""
     parent = {
         r[0]: r[1] for r in conn.execute("SELECT id, supersedes_id FROM classification")
     }
@@ -3048,36 +3047,25 @@ class SCBAdapter:
         self.fold_slug_hints: dict[int, str] = {}
         self.related_edges: list[tuple[int, int, str]] = []
 
-    def emit(self, source_dir: Path) -> Iterator[IRObject]:
-        """Parse SCB exports under ``source_dir`` and emit IR objects.
+    def prepare(self, source_dir: Path) -> None:
+        """PHASE 1 (#223): parse SCB exports under ``source_dir`` and write the
+        build scratch the shared `populate_classifications` pass reads — WITHOUT
+        coalescing or triaging yet.
 
-        ``source_dir`` is the ``SCB/`` directory (containing
-        Registerinformation.csv and the enrichment files). Yields in
-        FK-topological order: registers → variants → value_sets (+codes) →
-        variables → variable_states → related-to edges → provenance/warnings.
-        (No IRClassification / IRLineageEdge / IRReplacedByEdge: in A4.1 those
-        stay materializer-derived; the adapter emits the subset above.)
+        Runs the imports (Registerinformation + enrichment files) and the
+        value-set projection (`_project_and_mint_value_sets`), leaving
+        `variable_instance` populated with `value_set_id` + `value_set_version_label`
+        and `value_set` / `value_code` / `value_set_member` written. The
+        materializer then runs `populate_classifications` (tagging
+        `variable_instance.classification_id` + building the `classification`
+        supersedes-family tree) BEFORE calling `emit()`, so the coalescer's
+        fold/split triage in phase 2 sees a LIVE classification signal. All side
+        effects land on ``self.conn``; nothing in-memory crosses into `emit()`
+        (the coalescer rebuilds its grain from `variable_instance`).
 
-        A4.3a — the IR is now CONSUMED: ``materialize()`` re-inserts the core
-        graph (`register` / `register_variant` / `variable` / `variable_state` /
-        `variable_alias`) from this stream with explicit PKs, making the
-        materializer the sole writer. The A4.1 inert-mirror slug caveat is closed
-        STRUCTURALLY rather than by re-sequencing: the slug columns are NULL at
-        emit time (``populate_slugs`` / ``populate_variable_slugs`` run later), and
-        the materializer IGNORES the IR slug for the core graph — it inserts NULL,
-        then those UPDATE passes fill the slug (and ``display_group``) IN PLACE on
-        the re-inserted rows. So the mirror's ``""`` slug placeholder never
-        reaches disk. ``valid_to`` / ``value_set_version_label`` are read back as
-        the stored sentinels (`9999-12-31` / `''`); the materializer's
-        None→sentinel reconciliation is idempotent on them. ``IRVariableState``
-        now carries ``delivery_column_name``; the full historical column set rides
-        on ``IRVariableAlias`` (``_emit_variable_aliases``). ``IRValueSet`` /
-        ``IRValueCode`` are emitted faithfully but the value tables stay
-        adapter-written in A4.3a (content-shared; see ``_reinsert_core_graph_from_ir``).
-        ``IRValueSet.classification_id`` stays None — classifications run in
-        ``materialize()`` AFTER emit, so the adapter cannot know it; the
-        ``variable_state.classification_id`` backfill reads the post-classification
-        ``variable_instance`` scratch instead.
+        PRECONDITION: the caller must ATTACH a `staging` database before calling
+        prepare() — build_db owns the ATTACH + file lifecycle (db.py); this method
+        only CREATEs its projection table inside it.
         """
         conn = self.conn
         scb_dir = source_dir
@@ -3086,7 +3074,7 @@ class SCBAdapter:
 
         # SCB-private value-set-projection scratch: the (cvid, code_id, item_id)
         # triples. PRECONDITION: the caller must ATTACH a `staging` database
-        # before calling emit() — build_db owns the ATTACH + file lifecycle
+        # before calling prepare() — build_db owns the ATTACH + file lifecycle
         # (db.py); the adapter only CREATEs its table inside it. (The legacy
         # build did both back-to-back in build_db.)
         conn.execute(
@@ -3158,6 +3146,39 @@ class SCBAdapter:
                     )
                 # Year-project staging pairs and link variable_instance.value_set_id.
                 self.projection_stats = _project_and_mint_value_sets(conn, validity_map)
+
+    def emit(self, source_dir: Path) -> Iterator[IRObject]:
+        """PHASE 2 (#223): coalesce + triage (now classification-aware) and emit
+        the IR stream. Runs AFTER `prepare()` and AFTER the materializer's
+        `populate_classifications` pass, so `_coalesce_variable_states` reads the
+        tagged `variable_instance.classification_id` and `_classification_roots`
+        sees the live `classification` family tree — the triage fold/split signal.
+
+        Yields in FK-topological order: registers → variants → value_sets (+codes)
+        → variables → variable_states → related-to edges → provenance/warnings.
+        (No IRClassification / IRLineageEdge / IRReplacedByEdge: those stay
+        materializer-derived; the adapter emits the subset above.)
+
+        A4.3a — the IR is CONSUMED: ``materialize()`` re-inserts the core graph
+        (`register` / `register_variant` / `variable` / `variable_state` /
+        `variable_alias`) from this stream with explicit PKs, making the
+        materializer the sole writer. The slug columns are NULL at emit time
+        (``populate_slugs`` / ``populate_variable_slugs`` run later) and the
+        materializer IGNORES the IR slug for the core graph — it inserts NULL,
+        then those UPDATE passes fill the slug (and ``display_group``) IN PLACE.
+        ``valid_to`` / ``value_set_version_label`` are read back as the stored
+        sentinels (`9999-12-31` / `''`); the materializer's None→sentinel
+        reconciliation is idempotent on them. ``IRVariableState`` carries
+        ``delivery_column_name``; the full historical column set rides on
+        ``IRVariableAlias`` (``_emit_variable_aliases``). ``IRValueSet`` /
+        ``IRValueCode`` are emitted faithfully but the value tables stay
+        adapter-written (content-shared; see ``_reinsert_core_graph_from_ir``).
+        ``IRValueSet.classification_id`` stays None — value-set classification is
+        left materializer/backfill-derived (``_backfill_state_classifications``
+        reads the `variable_instance` scratch).
+        """
+        conn = self.conn
+        scb_dir = source_dir
 
         # A1.2: lift sensitivity / identifier flags from unika_summary into the
         # variable table. Runs after the enrichment loop so both source and

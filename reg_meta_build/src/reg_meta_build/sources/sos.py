@@ -1171,7 +1171,13 @@ class SOSAdapter:
         self._set_id_by_hash[member_hash] = set_id
         return set_id
 
-    # -- emit ---------------------------------------------------------------
+    # -- prepare / emit -----------------------------------------------------
+
+    def prepare(self, source_dir: Path) -> None:
+        """No-op phase-1 (#223). SOS writes no `variable_instance` and feeds no
+        classification rows, so it needs nothing done before the shared
+        `populate_classifications` pass — all its work stays in `emit()`. The
+        method exists only to satisfy the two-phase `IRAdapter` contract."""
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         """Parse the `Socialstyrelsen/` workbooks under ``source_dir`` and emit
