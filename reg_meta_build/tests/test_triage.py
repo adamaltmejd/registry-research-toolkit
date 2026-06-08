@@ -31,6 +31,7 @@ from reg_meta_build.sources.scb import (
     _AUTH_SUBANNUAL,
     _apply_fold,
     _apply_split,
+    _classification_roots,
     _collapse_residual,
     _common_prefix_len,
     _data_type_class,
@@ -502,6 +503,59 @@ class TestDecideFoldOrSplit:
 
     def test_multiple_classification_families_split(self) -> None:
         assert _decide_fold_or_split(["foosni", "foosni2"], {7, 9}) == "split"
+
+    def test_shared_stem_multiple_families_overrides_stem_fold(self) -> None:
+        # `ssyk3`/`ssyk5` share a stem and would stem-FOLD with an empty/singleton
+        # root set (see test_shared_stem_folds), but two DISTINCT classification
+        # roots make them different families → SPLIT. The primary family signal
+        # overrides the stem-fold fallback.
+        assert _decide_fold_or_split(["ssyk3", "ssyk5"], {7, 9}) == "split"
+
+
+class TestClassificationRoots:
+    """`_classification_roots` resolves the `supersedes_id` family tree — the
+    now-LIVE (#223) primary fold signal."""
+
+    @staticmethod
+    def _conn() -> sqlite3.Connection:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        return conn
+
+    @staticmethod
+    def _insert(
+        conn: sqlite3.Connection, short_name: str, supersedes_id: int | None = None
+    ) -> int:
+        rid = conn.execute(
+            "INSERT INTO classification (short_name, name, supersedes_id) "
+            "VALUES (?, ?, ?)",
+            (short_name, short_name, supersedes_id),
+        ).lastrowid
+        assert rid is not None
+        return rid
+
+    def test_three_hop_chain_resolves_to_root(self) -> None:
+        conn = self._conn()
+        # C is the root; B supersedes C; A supersedes B.
+        c = self._insert(conn, "C")
+        b = self._insert(conn, "B", c)
+        a = self._insert(conn, "A", b)
+        roots = _classification_roots(conn)
+        assert roots[a] == roots[b] == roots[c] == c
+
+    def test_empty_table_returns_empty(self) -> None:
+        assert _classification_roots(self._conn()) == {}
+
+    def test_corrupt_cycle_terminates(self) -> None:
+        conn = self._conn()
+        # A↔B cycle (corrupt seed). The `seen` guard must terminate the walk
+        # instead of looping forever; each node resolves to itself.
+        a = self._insert(conn, "A")
+        b = self._insert(conn, "B", a)
+        conn.execute("UPDATE classification SET supersedes_id = ? WHERE id = ?", (b, a))
+        assert _classification_roots(conn) == {a: a, b: b}
 
 
 class TestLooksLikeCodeLabelPair:
