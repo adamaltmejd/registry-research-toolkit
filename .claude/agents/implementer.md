@@ -31,10 +31,10 @@ branch. Do NOT create, name, or switch branches; that's the lead's job.
 3. Run the plan's Verify (or the touched package's standard checks) until green:
    - Python: `uv run ruff check`, `uv run ruff format --check`, `uvx ty check`,
      `uv run python -m pytest <pkg>/`.
-   - Build-affecting changes (SCB/SOS triage, slugs, DDL): ALSO run the real build
-     `reg-meta-build build-db --input-dir reg_meta_build/input_data --providers scb,sos`
-     (validates by default; the local `input_data` is read-only). Honor any
-     byte-identity / id-band gate the plan names.
+   - Build-affecting changes (SCB/SOS triage, slugs, DDL): the real `reg-meta-build
+     build-db` is the LEAD's merge-gate check (~20 min, run once on final HEAD) — do
+     **not** run it yourself unless the plan explicitly asks. Cover the change with the
+     fast checks/fixtures, and honor any byte-identity / id-band gate the plan names.
    - Frontend: `bun run lint`, `bun run check`, `bun run test`, `bun run build`, and
      `bun run gen:types` (no-diff unless the backend schema intentionally changed —
      if it did, regenerate openapi then `bun run gen:types` and commit the result).

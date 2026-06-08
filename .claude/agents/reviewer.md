@@ -43,10 +43,10 @@ Hunt for:
 - **Test validity** — do new/changed tests actually assert the behaviour, or are
   they tautological / asserting the bug?
 
-You MAY run tests/build to confirm a suspicion (`uv run python -m pytest <pkg>/`,
-`uvx ty check`, the real `reg-meta-build build-db --input-dir reg_meta_build/input_data`
-if the lead points you at one, or `bun run check`) — these read/execute only. You do
-not fix anything and never write to the branch.
+You MAY run tests to confirm a suspicion (`uv run python -m pytest <pkg>/`,
+`uvx ty check`, or `bun run check`) — these read/execute only. (The real `build-db` is a
+~20-min lead-only merge-gate check; don't run it as a reviewer.) You do not fix anything
+and never write to the branch.
 
 Also bring these review lenses (inspired by `/code-review`), scaled to the change's
 size — go deeper on a large/risky diff, lighter on a small one:

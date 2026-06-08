@@ -36,7 +36,10 @@ THREE of:
   vanishes the moment it finishes (you'd be stuck resuming it by raw agent ID, and it
   can't message you).
 
-Also pass `run_in_background: true` so each joins as a persistent member. `TeamCreate`
+Also pass `run_in_background: true` so each joins as a persistent member. Keep the spawn
+prompt MINIMAL — the role `.md` already defines behavior; do **not** ask the teammate to
+"acknowledge readiness" (its ack races with your first work dispatch — the ack lands
+saying "send me work" *after* you already did — and just adds idle noise). `TeamCreate`
 requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams are
 disabled, STOP and tell the user to enable that flag.
 
@@ -46,8 +49,10 @@ name; no agent-ID juggling. They **report to you via `SendMessage`**, delivered 
 normal conversation turn, and they **can message you with questions mid-run** (you
 answer by name). After each turn a teammate **goes idle** — that is NORMAL, not "done"
 or "stuck": an idle teammate still receives messages and wakes on the next one, so don't
-nag idleness. Only YOU can reach the human (via `AskUserQuestion`). When the whole
-request is finished, tear the team down (see **Teardown** at the end).
+nag idleness. Idle notifications are **system-generated** — telling a teammate to stop
+sending them does nothing; just ignore them. Only YOU can reach the human (via
+`AskUserQuestion`). When the whole request is finished, tear the team down (see
+**Teardown** at the end).
 
 **Shared-checkout rule (load-bearing for safety).** By default every teammate operates
 in your ONE working tree, so a MUTATING teammate (implementer / simplifier /
@@ -58,6 +63,12 @@ may overlap with each other. To run a mutating teammate in parallel with anythin
 it in an isolated worktree (`isolation: "worktree"` on the `Agent` spawn). The same
 applies to YOU: don't `git checkout`/`reset`/`commit` in the shared tree while a
 teammate is active there.
+
+**Sandbox isolation.** Your `Bash` runs in a SEPARATE sandbox from each teammate's, so
+you cannot see a teammate's processes or background jobs with your own `ps`/log checks —
+they'll look absent even while running. Don't diagnose a teammate's process state from
+your shell and don't issue instructions based on that guess; ASK the teammate for ground
+truth instead. (Reading shared *files* — `git log`, the diff, source — is fine.)
 
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
@@ -91,10 +102,11 @@ Then run the per-PR pipeline below for each planned PR, in order.
   checked out elsewhere), so fork the branch off the remote directly —
   `git fetch origin main && git checkout -b s/<slug> origin/main` — rather than
   checking out local `main`, which errors when another worktree holds it.
-- Dispatch **implementer** with this PR's scope/plan and its Verify commands. For
-  build-affecting work (SCB/SOS triage, slugs, DDL) that includes the real build
-  `reg-meta-build build-db --input-dir reg_meta_build/input_data --providers scb,sos`
-  (validates by default; the local `input_data` is read-only). It implements,
+- Dispatch **implementer** with this PR's scope/plan and its Verify commands — the FAST
+  checks only (lint / format / `ty` / `pytest`). For build-affecting work (SCB/SOS triage,
+  slugs, DDL) the real `reg-meta-build build-db` is deliberately **NOT** in the
+  implementer's loop: it takes ~20 min and is YOUR single merge-gate check (Step E), so
+  the implementer never re-runs it per-push or builds on a non-final HEAD. It implements,
   verifies, commits, pushes, and reports the branch + summary — it does NOT open the PR.
 - Once it has pushed, YOU open the PR as a **draft** (body: what the change does and
   why; name any issue it closes). Write the body to a temp file and use
@@ -170,24 +182,43 @@ docs push after the hold has started restarts it.
 
 ### E. Merge gate (lead only) — with external auto-review hold
 
-Merge only when ALL hold:
+Merge only when ALL hold. Run the cheap gates first and the **expensive real `build-db`
+LAST**, so it runs exactly once on the truly-final HEAD (every review/Codex fix changes
+the HEAD — building before the diff settles just means rebuilding):
 
 - the reviewer loop CONVERGED (no blocking findings),
-- Verify is green (incl. the real `build-db` for build work),
 - CI on the PR is green,
-- **external auto-review hold:** after the PR went ready (and after your most recent
-  push), give the external reviewers (Codex / Copilot) a BOUNDED window to post on the
-  CURRENT HEAD. They're usually fast (Codex comments within a minute or two of a push —
-  or just 👍-reacts when it has nothing to say), so POLL for a review matching HEAD
-  rather than blind-sleeping — but **~10 minutes is a hard CEILING, not a wait-for-them
-  gate**. Read every new review comment; route any **material** finding back through the
-  implementer, reply on the thread once it's fixed, then re-review and **restart the
-  window from the new push**. You may merge once EITHER (a) a reviewer has weighed in and
-  a short settle passes with no new material comments, OR (b) the ~10-minute ceiling
-  elapses with no material comments — INCLUDING when the bots are disabled, delayed,
-  silent, or only 👍-reacted (absence of a comment is not a blocker). Dismiss
-  non-material / incorrect comments with a one-line reason — never merge over an
-  UNANSWERED material comment.
+- **external auto-review hold (settle this BEFORE the build):** after the PR went ready
+  (and after your most recent push), give the external reviewers (Codex / Copilot) a
+  BOUNDED window to post on the CURRENT HEAD. Codex self-assesses when a review is
+  warranted and is usually fast (comments within a minute or two of going ready — or just
+  👍-reacts when it has nothing to say); it does **not** necessarily re-review every
+  subsequent push, so when you need a verdict on the current HEAD (e.g. after pushing a
+  fix for its finding), trigger one explicitly by commenting **`@codex review`** on the
+  PR. POLL for a review matching HEAD rather than blind-sleeping — but **~10 minutes is a
+  hard CEILING, not a wait-for-them gate**. Read every new review comment; route any
+  **material** finding back through the implementer, reply on the thread once it's fixed,
+  then re-review and **restart the window from the new push**. You may merge once EITHER
+  (a) a reviewer has weighed in and a short settle passes with no new material comments,
+  OR (b) the ~10-minute ceiling elapses with no material comments — INCLUDING when the
+  bots are disabled, delayed, silent, or only 👍-reacted (absence of a comment is not a
+  blocker). Dismiss non-material / incorrect comments with a one-line reason — never merge
+  over an UNANSWERED material comment.
+- **the real `build-db` is green (build-affecting work only) — YOUR check, run LAST:**
+  once the external hold has settled and no further code change is pending, run the real
+  build ONCE on the final HEAD. It takes **~20 min** and EXCEEDS the 10-minute foreground
+  `Bash` cap (which silently kills it mid-import — frozen log, no DB, no error), so launch
+  it with **`run_in_background: true`**, never foreground. The pipeline almost always runs
+  in a **worktree**, whose `reg_meta_build/input_data/` holds only `classifications/` —
+  the 14 GB SCB/SOS seed lives in the MAIN checkout (the repo root that owns the worktree,
+  i.e. the path above `.claude/worktrees/`), so pass an ABSOLUTE path:
+  `reg-meta-build build-db --input-dir <main-checkout>/reg_meta_build/input_data --providers scb,sos`
+  (validates by default; the seed is read-only). A clean exit 0 means build + validation
+  passed; confirm the slug-population line in the log shows no reserved-token / collision
+  rejection. The build WRITES generated `<provider>.auto.toml` into
+  `reg_meta_build/fqid_slugs/` (pre-freeze, untracked) — `git clean -f` / delete them
+  afterward; left in place they dirty the tree and trip the slug-snapshot pytest on any
+  later local commit in the same worktree.
 
 Then merge (squash, matching the repo's `(#issue) (#PR)` commit-title history) and
 delete the branch. **Worktree caveat:** `gh pr merge --squash --delete-branch` can fail
