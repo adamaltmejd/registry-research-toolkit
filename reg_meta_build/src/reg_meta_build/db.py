@@ -1050,6 +1050,18 @@ def rotate_db_to_prev(db_path: Path) -> None:
     db_path.rename(prev_path)
 
 
+def _unlink_wal_sidecars(db_path: Path) -> None:
+    """Remove a SQLite DB's WAL `-wal`/`-shm` sidecar files if present.
+
+    A clean `close()` deletes them, but a subsequent read-only open
+    (`open_db(..., mode=ro)`) re-creates them, and a read-only close leaves
+    them on disk. They must be cleared before an atomic base-file rename,
+    which moves only `<db>` and would otherwise orphan `<db>-wal`/`<db>-shm`.
+    """
+    for sidecar in ("-wal", "-shm"):
+        db_path.with_name(db_path.name + sidecar).unlink(missing_ok=True)
+
+
 # ---------------------------------------------------------------------------
 # CSV reading
 # ---------------------------------------------------------------------------
@@ -3113,7 +3125,16 @@ def build_db(
             pre_rename_hook(tmp_path)
         except BaseException:
             tmp_path.unlink(missing_ok=True)
+            _unlink_wal_sidecars(tmp_path)
             raise
+
+    # The build connection's clean close deletes the WAL `-wal`/`-shm` sidecars,
+    # but the post-build validator re-opens the tmp DB read-only and SQLite
+    # re-creates them — a read-only close then leaves them on disk. The atomic
+    # rename below moves only the base file, so without this they orphan in the
+    # DB dir as `<db>.tmp-wal`/`<db>.tmp-shm`. (Drop them whether or not a hook
+    # ran; it's a no-op when none did.)
+    _unlink_wal_sidecars(tmp_path)
 
     # Rotate the prior universal DB aside before the atomic replace
     # (REFACTOR_SPEC §4.4 / §5.8: single-generation `.prev`, no auto-cleanup).
