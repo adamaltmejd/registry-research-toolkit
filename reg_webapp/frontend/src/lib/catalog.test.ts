@@ -268,13 +268,23 @@ describe("representationsFromStates", () => {
         delivery_column_name: "kon",
         valid_from: "2018-01-01",
         valid_to: "9999-12-31",
+        classification_slug: "lkf2007",
       }),
       state({
         delivery_column_name: "kon_detalj",
         valid_from: "2018-01-01",
         valid_to: "9999-12-31",
+        classification_slug: "lkf2016",
       }),
     ]);
     expect(reps.map((r) => r.column).sort()).toEqual(["kon", "kon_detalj"]);
+    // Each co-existing representation keeps its OWN classification slug (the
+    // crosswalk case — per-column fidelity, not a shared binding-level value).
+    expect(reps.find((r) => r.column === "kon")?.classificationSlug).toBe(
+      "lkf2007",
+    );
+    expect(
+      reps.find((r) => r.column === "kon_detalj")?.classificationSlug,
+    ).toBe("lkf2016");
   });
 });

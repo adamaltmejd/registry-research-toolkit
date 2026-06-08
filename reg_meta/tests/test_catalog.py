@@ -782,6 +782,30 @@ class TestResolveAt:
         assert len(states) == 1
         assert states[0].is_identifier is True
 
+    def test_classification_slug_on_variant_scoped_state(self) -> None:
+        # Mirror of the is_identifier variant-scoped test, for classification: the
+        # variant-scoped (`register_variant_id IS NOT NULL`) SELECT branch must
+        # also resolve the per-state slug. A pre-2018 window keeps the seed clear
+        # of the fixture's open-ended base state so it's the sole match.
+        conn = build_slugged_db()
+        cls_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun2020'"
+        ).fetchone()[0]
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2017-01-01",
+            valid_to="2017-12-31",
+            delivery_column_name="Kon",
+            classification_id=cls_id,
+        )
+        conn.commit()
+        states = Catalog(conn).resolve_at(_KON, 2017, variant="individer-15plus")
+        assert len(states) == 1
+        assert states[0].classification_slug == "sun2020"
+
     def test_period_token_month(self) -> None:
         conn = self._two_state_year_db()
         states = Catalog(conn).resolve_at(_KON, "2020-08", variant="individer-15plus")
