@@ -23,8 +23,8 @@ edit and report. The five role teammates are defined in `.claude/agents/`: `impl
 **Set up a real team FIRST — this is load-bearing, don't skip it** (FULL path; a LITE
 run skips the team — see **Pipeline weight**). Before dispatching
 anyone, call **`TeamCreate`** (e.g. `team_name: "pr-pipeline-<slug>"`,
-`agent_type: "team-lead"`). Then spawn each teammate with the `Agent` tool passing all
-THREE of:
+`agent_type: "team-lead"`). Then spawn the roles this run needs — only those (see
+**Roles by change class**) — with the `Agent` tool, passing all THREE of:
 
 - **`subagent_type`** — the ROLE (e.g. `implementer`). This is what LOADS
   `.claude/agents/implementer.md` (its system prompt + tool restrictions). **Omitting it
@@ -47,7 +47,15 @@ prompt MINIMAL — the role `.md` already defines behavior; do **not** ask the t
 are disabled, STOP and tell the user to enable that flag.
 
 **How a team behaves:** teammates are addressable **by name** for the whole pipeline — to
-re-dispatch one (re-review, apply fixes) just `SendMessage` its name. They **report via
+re-dispatch one (re-review, apply fixes) just `SendMessage` its name — but **only a role
+you actually spawned.** `SendMessage` to a name you never `Agent`-spawned does NOT create
+it and does NOT error: the framework returns `success: true` ("message sent to its inbox")
+and drops the message into a void, so you wait forever for a reply that can't come — a real
+run burned ~30 min (and three "is it stuck?" nudges) mistaking a never-spawned simplifier
+for a "frozen" one, then misreported it as "stalled." So **spawn a role (Agent + the three
+fields above) BEFORE the first `SendMessage` to it.** Spawning lazily — right when you need
+a role, not all five up front — is good (fewer idle members, lighter teardown); just make
+it spawn-then-message, never message-then-hope. They **report via
 `SendMessage`** (a normal conversation turn) and **can message you with questions
 mid-run**. After each turn a teammate **goes idle** — NORMAL, not "done"/"stuck": it still
 receives messages and wakes on the next, so don't nag idleness, and ignore the
@@ -161,6 +169,26 @@ and changes only the orchestration:
 surfaces, or a reviewer flags a data-safety / concurrency issue): stand up the team and
 resume at the right step. When unsure, pick FULL.
 
+## Roles by change class
+
+Weight (above) is about team-vs-no-team by SIZE; this is about WHICH roles by the
+**kind** of change — they compose. The implementer and reviewer always run; the other
+three are conditional, and a role you won't use is one you must not spawn (idle members
+are teardown cost, and a never-spawned role you message anyway silently swallows the
+message — see the team rules above):
+
+- **simplifier** — only when the diff adds or changes real logic worth de-duplicating. A
+  comment / docstring / config / pure-rename or reference sweep has nothing to simplify.
+- **tester** — only when behaviour changes. No new/changed behaviour (docs, a swept
+  reference, config already covered by existing snapshot/idempotence tests) → skip.
+- **docs-updater** — only when code or a contract drifts from AUTHORED docs. A change that
+  edits/repoints docs directly, or touches no documented surface, has no drift to fix.
+
+So a large *mechanical* change (even 100+ files) can still be implementer + reviewer
+only: its size forces the FULL team + fan-out, but its class needs none of
+simplify/test/docs. Skipping a role is a planned decision you NAME in the Final report,
+never a silent omission.
+
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
 The request may be one or several GitHub issues, a freeform feature/problem
@@ -240,6 +268,9 @@ Then run the per-PR pipeline below for each planned PR, in order.
 
 ### B. Simplify + test-suggest, then mark ready
 
+Run each step only if its role applies (**Roles by change class**) — a no-logic /
+no-behaviour change may run neither, leaving this step as just "mark ready."
+
 1. Dispatch **simplifier** → applies behaviour-preserving cleanups and reports what it
    changed + files touched (or "nothing found"). YOU commit + push its changes.
 2. Dispatch **tester** → returns a prioritized `must`/`nice` suggestion list. YOU decide
@@ -290,6 +321,10 @@ fan out — simplify/test/docs stay single):
    point, STOP and surface the blocker via `AskUserQuestion`; never loop forever.
 
 ### D. Docs
+
+Run this step **only if** code or a contract drifted from authored docs (**Roles by
+change class**); a change that edits/repoints docs directly or touches no documented
+surface has no drift — skip straight to Step E.
 
 Dispatch **docs-updater** on the final code → it fixes doc drift (DESIGN.md / README /
 docstrings) and reports what changed + files touched, or "no doc update needed" (it
@@ -386,6 +421,9 @@ shutdown round, write your **Final report** immediately, and let the delayed
 `shutdown_approved` notifications arrive on their own — then retry `TeamDelete` (or let
 the session clean up on exit). Do **NOT** burn turns re-sending shutdowns, sleeping, and
 re-calling `TeamDelete` in a tight loop — the requests are already queued, just slow.
+Don't second-guess the message *shape*, either: `message: {type: "shutdown_request"}` IS
+the correct form — re-sending it differently encoded changes nothing (two real runs wasted
+turns re-issuing shutdowns suspecting a format bug; latency was the only cause).
 There is **no force-stop and no per-agent kill** for a genuinely hung teammate
 (confirmed against the Claude Code docs + issues #34476 / #31788): `TaskStop` accepts
 only background-*task* ids (your `Bash`/poller jobs), NOT the `name@team` agent id;
