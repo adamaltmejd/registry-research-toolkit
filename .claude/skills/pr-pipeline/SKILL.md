@@ -141,14 +141,17 @@ Then run the per-PR pipeline below for each planned PR, in order.
   merge-gate check (Step E).
 - Each implementer edits, runs Verify on its work, and reports a summary + **the files it
   touched** — it does NOT commit, push, or open the PR (you own git). When every dispatched
-  implementer has reported: use the reported file sets as a **disjointness backstop** (they
-  must not overlap; if they DO, a parallel write may already have clobbered — discard and
-  re-run those surfaces serially), then — after a fan-out — run the full Verify ONCE on the
-  assembled tree (the only place the union is valid; a solo implementer's reported-green
-  stands). Stage the **tree delta** and commit (see *Lead owns all git* — `git add -A`, not
-  the reported list, so an under-reported create/rename/delete isn't dropped; safe here
-  since the scratch DB is in `/tmp`, `*.auto.toml` is generated later in Step E, and caches
-  are gitignored).
+  implementer has reported, validate the **actual diff against your pre-declared partition**,
+  NOT the agents' self-reports (you'll stage the real delta with `git add -A`, so the real
+  delta is what must be checked): every path in `git diff --name-status` + `git status
+  --porcelain` must fall inside the disjoint file sets you assigned in the spawn prompts. A
+  change outside every lane means an implementer strayed onto an unreported out-of-scope file
+  — exactly the clobber the report-based check would miss — so discard and re-run those
+  surfaces serially. Only once the delta is within the partition: after a fan-out run the
+  full Verify ONCE on the assembled tree (the only place the union is valid; a solo
+  implementer's reported-green stands), then `git add -A` and commit (the `-A` is safe here —
+  the scratch DB is in `/tmp`, `*.auto.toml` is generated later in Step E, caches are
+  gitignored — and now provably in-bounds because you just checked the delta).
 - Push, then YOU open the PR as a **draft** (body: what the change does and why; name any
   issue it closes). Write the body to a temp file and use `gh pr create --draft
   --body-file <file>` — an inline `--body` heredoc can trip the permission classifier.
