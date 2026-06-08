@@ -64,7 +64,9 @@ half-done edits — and every git gotcha lives in one place (here). When you com
 the working-tree delta** (`git add -A` after a quick `git status` glance), NOT a teammate's
 reported file list — treat the reported files as a cross-check (and the Step A disjointness
 check), never the source of truth, so an under-reported create / rename / delete is never
-silently dropped.
+silently dropped. If a pre-commit hook fails on your commit (it runs the full pytest), do
+NOT `--no-verify` — route the failure to the responsible implementer to fix, then
+re-commit; you don't write code, so the fix is always a teammate's.
 
 **Shared-checkout / concurrency rule.** All teammates share your ONE working tree. A
 mutating teammate must not run while ANY other teammate reads or writes that tree (a
@@ -126,7 +128,9 @@ Then run the per-PR pipeline below for each planned PR, in order.
     another's input, it isn't independent — keep it single, or order the dependent parts as
     steps. Dispatch several implementers IN PARALLEL, each `subagent_type: implementer`
     with a DISTINCT `name` (e.g. `implementer-reg_meta`) and `team_name`, its prompt naming
-    ONLY its surface and the explicit file set it owns. Tell each to run only ITS surface's
+    ONLY its surface and the explicit, provably-disjoint file set it owns (partitioning the
+    sets up front is what makes the parallel writes safe — the post-report overlap check is
+    only a backstop). Tell each to run only ITS surface's
     FAST checks (that package's ruff / ty / pytest) — running the full `pytest` on the
     shared, half-assembled tree both races siblings and duplicates your post-assembly union
     Verify. This is intra-PR only — never split one logical PR into several just to
@@ -137,8 +141,9 @@ Then run the per-PR pipeline below for each planned PR, in order.
   merge-gate check (Step E).
 - Each implementer edits, runs Verify on its work, and reports a summary + **the files it
   touched** — it does NOT commit, push, or open the PR (you own git). When every dispatched
-  implementer has reported: use the reported file sets only as a **disjointness safety
-  check** (they must not overlap), then — after a fan-out — run the full Verify ONCE on the
+  implementer has reported: use the reported file sets as a **disjointness backstop** (they
+  must not overlap; if they DO, a parallel write may already have clobbered — discard and
+  re-run those surfaces serially), then — after a fan-out — run the full Verify ONCE on the
   assembled tree (the only place the union is valid; a solo implementer's reported-green
   stands). Stage the **tree delta** and commit (see *Lead owns all git* — `git add -A`, not
   the reported list, so an under-reported create/rename/delete isn't dropped; safe here
@@ -267,7 +272,7 @@ merge.
 
 Before the next planned PR, fork off the freshly-merged base —
 `git fetch origin main && git checkout -b s/<next-slug> origin/main` (not `git checkout
-main`; see Step A). Then loop back to Step 1.
+main`; see Step A). Then loop back to the per-PR pipeline (Step A).
 
 ## Conventions you enforce on dispatch
 
