@@ -30,7 +30,7 @@ import sqlite3
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from itertools import groupby
+from itertools import combinations, groupby
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -974,9 +974,16 @@ def _triage_groups(
             for regver in grp.regvers:
                 bucket_cols[(grp.register_variant_id, regver)].add(col_of[gk])
         contested: set[str] = set()
+        # CO-DELIVERED column pairs: two columns that share at least one edition
+        # bucket. `contested` is a UNION across buckets, so contested membership
+        # does NOT imply two columns ever co-occurred — the per-pair split kind
+        # must gate on this precise pairwise relation, not on `contested`.
+        codelivered_pairs: set[frozenset[str]] = set()
         for cols in bucket_cols.values():
             if len(cols) > 1:
                 contested |= cols
+                for col_a, col_b in combinations(cols - {""}, 2):
+                    codelivered_pairs.add(frozenset((col_a, col_b)))
         contested.discard("")  # empty-column stubs aren't fold/split contestants
         if len(contested) < 2:
             continue  # no real multi-column same-year collision → not a container
@@ -1017,7 +1024,15 @@ def _triage_groups(
         else:
             # Split: every distinct column-component becomes its own variable.
             _apply_split(
-                conn, groups, by_col, all_cols, register_id, var_id, orig_vid, res
+                conn,
+                groups,
+                by_col,
+                all_cols,
+                codelivered_pairs,
+                register_id,
+                var_id,
+                orig_vid,
+                res,
             )
             res.stats["splits"] += 1
 
@@ -1161,9 +1176,14 @@ def _apply_fold(
 
 # ── split relation_kind heuristics (#218) ─────────────────────────────────
 # A triage SPLIT links its sibling variables with `variable_related_to` edges.
-# The kind is PER SIBLING PAIR (per two columns), not per split: a code/label
-# pairing or a mis-typed-delivery suspicion is a claim about TWO specific
-# columns. Precedence, most specific first:
+# The kind is decided PER CO-DELIVERED PAIR — only two columns that actually
+# shared an edition bucket may receive a specific kind, because a code/label
+# pairing or a mis-typed-delivery suspicion is a claim about TWO columns SEEN
+# TOGETHER. A pair that never co-occurred (a temporal/renamed sibling, or two
+# `contested` columns that — `contested` being a union across buckets — never
+# shared one bucket) stays generic; its pairwise code/datatype signals are
+# meaningless across editions. Precedence for a co-delivered pair, most
+# specific first:
 #   1. code_vs_label_pair — name-based, high confidence
 #   2. import_bug_suspect — data_type/shape mismatch, lower confidence
 #   3. same_definition_different_column — generic fallback
@@ -1274,9 +1294,15 @@ def _split_relation_kind(
     col_b: str,
     groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
+    codelivered_pairs: set[frozenset[str]],
 ) -> str:
     """relation_kind for ONE split sibling pair, decided from the pair's two
-    delivery columns (precedence in the section note above)."""
+    delivery columns (precedence in the section note above). A pair that is not
+    CO-DELIVERED (never shared an edition bucket) short-circuits to the generic
+    kind BEFORE the heuristics run — across editions the pairwise code/datatype
+    signals are meaningless."""
+    if frozenset((col_a, col_b)) not in codelivered_pairs:
+        return "same_definition_different_column"
     if _looks_like_code_label_pair(col_a, col_b):
         return "code_vs_label_pair"
     if _import_bug_suspect(
@@ -1292,6 +1318,7 @@ def _apply_split(
     groups: dict[tuple, _StateGroup],
     by_col: dict[str, list[tuple]],
     named_cols: list[str],
+    codelivered_pairs: set[frozenset[str]],
     register_id: int,
     var_id: int,
     orig_vid: int,
@@ -1299,7 +1326,9 @@ def _apply_split(
 ) -> None:
     """SPLIT: each distinct column becomes its own sibling `variable` (sharing
     the source provider_key); link siblings with variable_related_to edges.
-    Sibling slugs derive later from each sibling's own reassigned column."""
+    Sibling slugs derive later from each sibling's own reassigned column.
+    `codelivered_pairs` is the set of unordered column pairs that actually
+    shared an edition bucket — only those pairs get a specific relation_kind."""
     # First column (lexically) keeps the original variable; the rest mint new
     # sibling variables. Name + sensitivity/identity flags are shared: siblings
     # are column-variants of ONE source var_id (same concept family), so a flag
@@ -1323,16 +1352,17 @@ def _apply_split(
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
     # (N choose 2) edges between siblings (both directions are emitted at
-    # materialization). The relation_kind is computed PER PAIR from the pair's
-    # two delivery columns — code_vs_label_pair / import_bug_suspect are claims
-    # about two specific columns, not the whole split. sibling_vids[k] ⟷
+    # materialization). The relation_kind is computed PER CO-DELIVERED PAIR from
+    # the pair's two delivery columns — code_vs_label_pair / import_bug_suspect
+    # are claims about two columns seen together, not the whole split; a pair
+    # that never shared an edition bucket stays generic. sibling_vids[k] ⟷
     # named_cols[k] by construction (sibling_vids[0] = orig_vid ⟷ named_cols[0],
     # then named_cols[1:] append in order), so zip re-pairs each vid with its
-    # column. Identity (the vid pairs and their order) is unchanged — only the
-    # kind label is refined.
+    # column. EVERY pair still emits an edge in the same order — identity (the
+    # vid pairs and their order) is unchanged; only the kind label is refined.
     for i, (vid_a, col_a) in enumerate(zip(sibling_vids, named_cols)):
         for vid_b, col_b in zip(sibling_vids[i + 1 :], named_cols[i + 1 :]):
-            kind = _split_relation_kind(col_a, col_b, groups, by_col)
+            kind = _split_relation_kind(col_a, col_b, groups, by_col, codelivered_pairs)
             res.related_edges.append((vid_a, vid_b, kind))
 
 

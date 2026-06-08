@@ -545,15 +545,19 @@ class TestImportBugSuspect:
 
 
 class TestSplitRelationKind:
-    """Per-pair precedence: code_vs_label_pair → import_bug_suspect → generic."""
+    """Per-CO-DELIVERED-pair precedence: code_vs_label_pair → import_bug_suspect
+    → generic; a non-co-delivered pair short-circuits to generic."""
 
     @staticmethod
-    def _kind(col_a: str, type_a: str, col_b: str, type_b: str) -> str:
+    def _kind(
+        col_a: str, type_a: str, col_b: str, type_b: str, *, codelivered: bool = True
+    ) -> str:
         gk_a = (1, 10, 1, type_a, "1", 1, "", "", col_a)
         gk_b = (1, 10, 1, type_b, "1", 2, "", "", col_b)
         groups = {gk_a: _shape(type_a), gk_b: _shape(type_b)}
         by_col = {col_a: [gk_a], col_b: [gk_b]}
-        return _split_relation_kind(col_a, col_b, groups, by_col)
+        pairs = {frozenset((col_a, col_b))} if codelivered else set()
+        return _split_relation_kind(col_a, col_b, groups, by_col, pairs)
 
     def test_name_match_wins_over_datatype_signal(self) -> None:
         # Lid int / LNamn text matches BOTH signals; the name-based, higher-
@@ -568,6 +572,14 @@ class TestSplitRelationKind:
     def test_generic_when_neither_signal(self) -> None:
         assert (
             self._kind("Hemkommun", "int", "Skolkommun", "int")
+            == "same_definition_different_column"
+        )
+
+    def test_non_codelivered_pair_stays_generic_despite_signals(self) -> None:
+        # A pair that never shared an edition bucket is generic even though its
+        # names AND types would otherwise trip code_vs_label_pair.
+        assert (
+            self._kind("Lid", "int", "LNamn", "text", codelivered=False)
             == "same_definition_different_column"
         )
 
@@ -604,6 +616,49 @@ class TestSplitEmitsSpecificRelationKind:
         assert {kind for _, _, kind in res.related_edges} == {"code_vs_label_pair"}
         conn.close()
 
+    def test_temporal_pair_stays_generic_only_codelivered_is_specific(self) -> None:
+        # One split container with BOTH a co-delivered Lid/LNamn collision in
+        # edition 100 AND a non-contested `Lidnamn` delivered alone in edition
+        # 200. `Lidnamn` would form a code/label pair with `Lid` by name, but it
+        # never co-occurred — so only the genuinely co-delivered pair is specific.
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Lan')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        gk_lid = (1, 10, 920, "int", "10", 1, "", "", "Lid")
+        gk_lnamn = (1, 10, 920, "text", "40", 2, "", "", "LNamn")
+        gk_temporal = (1, 10, 920, "text", "40", 3, "", "", "Lidnamn")
+        g_lid = _StateGroup(1, 10, 920, "int", "10", 1, "")
+        g_lid.regvers = {100}
+        g_lnamn = _StateGroup(1, 10, 920, "text", "40", 2, "")
+        g_lnamn.regvers = {100}
+        g_temporal = _StateGroup(1, 10, 920, "text", "40", 3, "")
+        g_temporal.regvers = {200}  # different edition → never co-delivered
+        res = _triage_groups(
+            conn,
+            {gk_lid: g_lid, gk_lnamn: g_lnamn, gk_temporal: g_temporal},
+            {(1, 920): orig},
+        )
+        assert res.stats["splits"] == 1
+        kind_by_pair = {frozenset((a, b)): kind for a, b, kind in res.related_edges}
+        vid_lid = res.assignments[gk_lid]
+        vid_temporal = res.assignments[gk_temporal]
+        # The co-delivered code/label pair is specific; the temporal pair (which
+        # would otherwise trip the name heuristic) stays generic.
+        assert kind_by_pair[frozenset((orig, vid_lid))] == "code_vs_label_pair"
+        assert (
+            kind_by_pair[frozenset((vid_lid, vid_temporal))]
+            == "same_definition_different_column"
+        )
+        conn.close()
+
 
 class TestSplitSiblingFlagInheritance:
     """A split sibling inherits is_identifier / is_sensitive from its
@@ -632,7 +687,9 @@ class TestSplitSiblingFlagInheritance:
         # 'PNR' (lex-first) keeps the origin; 'PersonNr' mints a sibling that must
         # inherit the flags rather than defaulting to 0/0.
         by_col = {"PNR": [("gk-pnr",)], "PersonNr": [("gk-personnr",)]}
-        _apply_split(conn, {}, by_col, ["PNR", "PersonNr"], 1, 57, orig, res)
+        # codelivered_pairs empty: this test only asserts flag propagation, and
+        # PNR/PersonNr don't co-occur here, so every edge is generic.
+        _apply_split(conn, {}, by_col, ["PNR", "PersonNr"], set(), 1, 57, orig, res)
         rows = conn.execute(
             "SELECT name, is_sensitive, is_identifier FROM variable "
             "WHERE register_id = 1 AND provider_key = '57'"
