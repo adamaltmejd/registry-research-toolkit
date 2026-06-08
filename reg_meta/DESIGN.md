@@ -407,7 +407,7 @@ raised on ambiguity. Callers who know the variant pass `variant=…`;
 callers who know the vintage pass `value_set_version=…`.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at`
-accepts (mirrors `Source.period`, §6.2): a bare year (`2018`), a period
+accepts (mirrors `Source.period`): a bare year (`2018`), a period
 token (`"HT2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit
 range `{"from", "to"}` (endpoints are int or token), or the `"_default"`
 snapshot sentinel (no period filter). Expanded to an inclusive ISO
@@ -437,7 +437,7 @@ flag denormalized onto every state via a JOIN — constant across all of a
 variable's states — so consumers holding only a `VariableState` (e.g. the
 `resolve_at` / `/states` paths) can read the authoritative identifier flag
 without needing the enclosing `ResolvedVariable`), and
-`classification_slug` (the §5.7 classification family slug for this
+`classification_slug` (the classification family slug (see DESIGN.md → Classifications) for this
 state's value set, e.g. `lkf2007`; resolved per-state from
 `variable_state.classification_id` — varies across a variable's states;
 None for code-less / unclassified states). The full delivery-column
@@ -470,7 +470,7 @@ into one variable, so there is no edge (the fold/split distinction and
 auto-emit mechanics are in
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)).
 Succession (`replaced_by`) is directional and orthogonal; lineage
-(§5.6) is the state-grain composite-source edge.
+(see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)) is the state-grain composite-source edge.
 
 **`VariableRef`** — a variable-grain edge endpoint
 (`same_as` / `predecessors` / `successors`). Fields: `fqid` (the 3-seg
@@ -483,13 +483,14 @@ transition reason) + `effective_year` (the AktuellVariabel-grain
 successor edition year; None on `same_as` refs and on bare-grain
 succession with no edition).
 
-**`RelatedRef`** — a `variable_related_to` sibling (§5.7 split). Same
+**`RelatedRef`** — a `variable_related_to` sibling (a triage split; see reg_meta_build/DESIGN.md → Build-time triage (SCB)). Same
 `fqid` (3-seg) + `provider`/`register`/`variable` triple as `VariableRef`,
 plus `relation_kind` (the split reason,
 e.g. `same_definition_different_column`).
 
-**`LineageEdge`** — one `variable_state_lineage` row (§5.6
-consumer-side, state grain): `consumer_state_id`, `source_state_id`,
+**`LineageEdge`** — one `variable_state_lineage` row (see
+reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage);
+state grain): `consumer_state_id`, `source_state_id`,
 `valid_from` / `valid_to` (the validity intersection), and `source_fqid`
 (the source state's 3-seg binding FQID; None only on a malformed/NULL
 slug, as with the refs' `fqid`).

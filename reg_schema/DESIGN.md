@@ -15,7 +15,7 @@ field-level reference; this file is the WHY. Cross-cutting topology
 - The `project_data.json` v2 shape (Model A): Pydantic v2 models for
   `ProjectData`, `Source`, `Binding`, `Panel`, `PanelMember`,
   `PeriodRange`, `LiteralPeriod`, `TimeRange`, and the `Period` /
-  `EntityKey` / `TimeKey` / `TimePoint` type aliases (§6.1-§6.4).
+  `EntityKey` / `TimeKey` / `TimePoint` type aliases.
   Under Model A a `Source` carries a 3-part `register_variant`
   coordinate plus a required `period`; bindings (renamed from the v0.x
   `columns`) name a 3-segment binding FQID via `variable`. Composite
@@ -46,7 +46,7 @@ field-level reference; this file is the WHY. Cross-cutting topology
   membership, drift detection. Lives in `reg_webapp` (and any local
   CLI that loads reg_meta). The split is what lets `reg_schema` ship
   reg_meta-free.
-- The `project_data.codes.json` sibling file (§6.9). Codes live
+- The `project_data.codes.json` sibling file (see REFACTOR_SPEC.md → 8 — Kit-build). Codes live
   alongside the spec but are written by kit-build in `reg_webapp`;
   the SPA carries pre-kit ad-hoc codes in IndexedDB. Either may grow a
   schema dataclass here later; phase 1 keeps it out.
@@ -91,7 +91,7 @@ semantic concern.
 deliberate exception to the workspace no-Pydantic rule (the
 cross-cutting "no Pydantic on library surfaces" policy and why
 `reg_schema` is exempt live in `ARCHITECTURE.md`; the
-reg_schema-specific reasons follow). The §6.1-§6.4 models are the
+reg_schema-specific reasons follow). The models are the
 canonical project_data shape, double as FastAPI response models in
 `reg_webapp`, and feed the SPA's TypeScript types via
 `model_json_schema()`; those three jobs make Pydantic's declarative
@@ -106,7 +106,7 @@ chain; the MONA bundle ships `reg_monabundle`'s own §6.8.2 validator, not
 this one, so that never reaches MONA — see below.) The Pydantic models
 live on the model surface (`project_data.py`).
 
-**MONA boundary (§9.6).** Pydantic must **not** ship to MONA, and does
+**MONA boundary (see reg_monabundle/DESIGN.md → The two halves).** Pydantic must **not** ship to MONA, and does
 not: the bundle never amalgamates `project_data.py`. A
 caller (the mdw CLI / `reg_webapp`) runs the Pydantic structural gate at
 build time — `reg_monabundle/build/spec_loader.py`
@@ -114,7 +114,7 @@ build time — `reg_monabundle/build/spec_loader.py`
 on runtime-unsupported specs) — and the bundle then embeds the project's
 **JSON**. On MONA the stdlib runtime deserializes that JSON into a
 `LoadedSpec` (`reg_monabundle.runtime.spec.loadedspec_from_dict`), so it
-sees only stdlib dataclasses, never Pydantic. The §9.6 CI gate
+sees only stdlib dataclasses, never Pydantic. The CI gate
 (`test_bundle_carries_no_pydantic_or_reg_schema`) line-scans + AST-checks
 the emitted bundle to prove it carries no Pydantic and no `reg_schema`.
 
@@ -160,7 +160,7 @@ layer, and the two are kept apart on purpose:
   enum value has to surface as an accumulated `invalid_enum_value`
   issue, not a constructor crash. Second, staying off the model surface
   keeps the validator Pydantic-free so it ports to the MONA bundle and
-  the TS SPA (§9.6).
+  the TS SPA.
 
 Models are constructed at boundaries (API ingress, bundle build) only
 *after* `validate_structural` has passed; a Pydantic raise at that point
@@ -218,31 +218,31 @@ Current codes:
 | `missing_required_field` | A required field (top-level, source, binding, panel, member) is absent. |
 | `invalid_field_type` | A field's JSON type is wrong (e.g. `steward` is not a string; `members` is not an array; `period` is null). |
 | `invalid_enum_value` | `steward`, `type`, `id_subtype`, `numeric_subtype` is outside its allowed set. |
-| `unexpected_field` | An unrecognized key on a CLOSED object (`Source` / `Binding` / `Panel` / member) — these are the `extra="forbid"` `_Model` subclasses (§6.2-§6.4). Top-level unknown keys are namespaced blocks, not errors (`ProjectData` is `extra="ignore"`). |
+| `unexpected_field` | An unrecognized key on a CLOSED object (`Source` / `Binding` / `Panel` / member) — these are the `extra="forbid"` `_Model` subclasses. Top-level unknown keys are namespaced blocks, not errors (`ProjectData` is `extra="ignore"`). |
 | `invalid_fqid` | FQID segment count or per-segment characters are wrong: binding `variable` is not a 3-segment `<provider>/<register>/<slug>`, `value_set` is not a 2-segment `class/<slug>`, or `register_variant` is not a 3-part `<provider>/<register>/<variant>` coordinate. The binding leaf is a bare slug — the retired `@version` pin is now a stray `@` the per-segment grammar rejects (§6.8.3 resolves the value set from `(variable, variant, period)`). |
-| `fqid_register_variant_mismatch` | A binding `variable`'s first **2** segments (provider/register) don't equal the owning source's `register_variant` prefix. The variant is not repeated on the binding — it lives once on the Source (§6.2). |
-| `invalid_period` | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, or a `{"from","to"}` range object with valid endpoints (§6.2). A `YYYY-MM-DD` token that passes the syntactic 01-31 day envelope but names a calendar-impossible day (`2019-02-29` in a non-leap year, `2018-02-30`) also raises this code. |
+| `fqid_register_variant_mismatch` | A binding `variable`'s first **2** segments (provider/register) don't equal the owning source's `register_variant` prefix. The variant is not repeated on the binding — it lives once on the Source. |
+| `invalid_period` | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, or a `{"from","to"}` range object with valid endpoints. A `YYYY-MM-DD` token that passes the syntactic 01-31 day envelope but names a calendar-impossible day (`2019-02-29` in a non-leap year, `2018-02-30`) also raises this code. |
 | `subtype_on_wrong_type` | A `*_subtype` or `*_format` field is set on a binding whose `type` doesn't own it (e.g. `id_subtype` on a categorical). |
 | `empty_bindings` | A source has zero bindings. |
 | `duplicate_source_name` | Two sources share a `name`. |
-| `display_name_collision` | Two bindings on the same source share an explicit `display_name` (§6.3). The implicit-resolution half — one explicit + one resolving to the same reg_meta default — needs reg_meta and lives in §6.8.3. |
+| `display_name_collision` | Two bindings on the same source share an explicit `display_name`. The implicit-resolution half — one explicit + one resolving to the same reg_meta default — needs reg_meta and lives in §6.8.3. |
 | `duplicate_panel_id` | Two panels share a `panel_id`. |
 | `empty_members` | A panel has zero members. |
 | `literal_period_invalid` | The `{"period": ...}` or `{"range": {"from","to"}}` time_key object form is malformed (missing/extra keys, or non-period endpoints). |
-| `composite_time_key_mixed_kinds` | A composite `time_key` array mixes column refs and literals on a single member (§6.4). |
+| `composite_time_key_mixed_kinds` | A composite `time_key` array mixes column refs and literals on a single member. |
 | `composite_key_inconsistent` | Composite `entity_key` / `time_key` tuples across members of a panel are not identically ordered. |
-| `time_key_member_kind_mismatch` | A member-level composite `time_key` override has a different kind (literal vs ref) than the panel-level composite (§6.4). |
+| `time_key_member_kind_mismatch` | A member-level composite `time_key` override has a different kind (literal vs ref) than the panel-level composite. |
 | `literal_time_key_duplicate` | Two members of one panel resolve to the same literal `time_key`. |
 | `entity_key_unknown_column` | A bare-string `entity_key` ref doesn't match any `display_name` on the member's source. Skipped on sources with any unset `display_name` (the ref may resolve to a reg_meta-derived default at runtime). |
 | `time_key_unknown_column` | Same rule, for `time_key` column refs. |
-| `source_referenced_by_multiple_panels` | One source appears in two panels (§6.4). |
+| `source_referenced_by_multiple_panels` | One source appears in two panels. |
 | `panel_member_unknown_source` | A panel member's `source` does not match any entry in `/sources`. |
 
 The "ref exists on source" check is intentionally lenient: when any
 binding on the source lacks an explicit `display_name`, the structural
 layer skips matching that source's refs entirely. The bundle / kit /
 webapp paths materialize defaults from reg_meta before they emit
-artifacts (§6.3), and a pre-kit SPA-state spec shouldn't be flagged
+artifacts, and a pre-kit SPA-state spec shouldn't be flagged
 for refs that will resolve later.
 
 ### Effective-key presence is not structural
@@ -250,7 +250,7 @@ for refs that will resolve later.
 The v0.x `missing_effective_entity_key` / `missing_effective_time_key`
 codes do **not** exist in this layer. Under Model A an omitted
 `entity_key` / `time_key` inherits from the member's variant's
-`panel_template` (§6.4), which needs reg_meta state — so the "no
+`panel_template`, which needs reg_meta state — so the "no
 effective key" case is the semantic `panel_inheritance_unresolvable`
 check (§6.8.3), raised by kit/bundle-build, not here. A member with no
 panel default and no override is simply not flagged at this layer.
@@ -304,7 +304,7 @@ Two reasons:
   coupling.
 
 The same rationale covers the **period-token grammar** (`Source.period`
-and `TimeKey` range endpoints, §6.2): `structural._PERIOD_TOKEN` is a
+and `TimeKey` range endpoints): `structural._PERIOD_TOKEN` is a
 deliberate mirror of the canonical grammar in
 `reg_meta.fqid._PERIOD_PATTERNS` (year 1900-2099, month 01-12, day 01-31,
 plus `HT/VT`, quarter, half-year forms). Both copies also calendar-validate

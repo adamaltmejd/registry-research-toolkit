@@ -3,8 +3,7 @@
 Golden `(input.json, expected_ValidationResult.json)` pairs that pin
 the cross-runtime contract for `project_data.json` validation. The
 corpus is the single artifact that makes the §6.8.0 `ValidationResult`
-shape coherent across the three runtimes that consume it
-(`REFACTOR_SPEC.md` §15 step 5.5).
+shape coherent across the three runtimes that consume it.
 
 ## Layout
 
@@ -33,7 +32,7 @@ coexist without confusing the runners.
 ### `input.json`
 
 A `project_data.json` payload as authored by a researcher or steward.
-Schema is `REFACTOR_SPEC.md` §6.1-§6.4 (Model A: `register_variant`
+Schema is the `project_data.json` model (see reg_schema/DESIGN.md → Two layers: models vs. validator) (Model A: `register_variant`
 3-part coordinate + `period`, `bindings` with 3-segment binding FQIDs,
 2-segment `class/<slug>` value sets). Both well-formed and
 deliberately-malformed inputs live here — the case ID indicates which.
@@ -85,14 +84,14 @@ same input:
 
 1. **`reg_schema` Python tests** — `reg_schema/tests/test_corpus.py`
    discovers cases and runs `validate_structural()` on each
-   `input.json`. Lands as part of §15 step 3 phase 3.
+   `input.json`.
 2. **`reg_monabundle` amalgamated bundle** — the bundle build pulls
    the corpus into a self-test that runs on MONA load, so the
    amalgamated copy of the validator stays in sync with the
-   reg_schema source. Lands with §15 step 5.
+   reg_schema source.
 3. **SPA TypeScript tests** — the SPA imports the corpus as JSON
    fixtures and runs its TS port of the structural validator against
-   them. Lands with §15 step 6.
+   them.
 
 All three read the same JSON. If any one diverges, the corpus catches
 it before downstream consumers do.
@@ -101,8 +100,8 @@ it before downstream consumers do.
 
 The corpus starts with well-formed inputs and an empty-issues
 expectation — these prove the format, harness, and round-trip work
-end-to-end before §6.8.1 rule-emission cases pile on. Phase 3 of
-§15 step 3 grows the corpus alongside `validate_structural()`,
+end-to-end before §6.8.1 rule-emission cases pile on. Phase 3
+grows the corpus alongside `validate_structural()`,
 adding one (or more) cases per rule. Negative cases for §6.8.2
 (namespaced blocks) and §6.8.3 (reg_meta-backed semantic) layers
 land in their owning packages, not here — `reg_schema` only owns

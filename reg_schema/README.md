@@ -10,9 +10,9 @@ itself operates on raw dicts and needs no third-party deps. See
 
 ## Status
 
-v2.0.0 — Model A grammar (`REFACTOR_SPEC.md` §15 step 3). The surface:
+v2.0.0 — Model A grammar. The surface:
 the §6.8.0 cross-runtime contract (`ValidationIssue`,
-`ValidationResult`), the §6.1-§6.4 Pydantic v2 models (`ProjectData`,
+`ValidationResult`), the Pydantic v2 models (`ProjectData`,
 `Source`, `Binding`, `Panel`, `PanelMember`, `Period`, `PeriodRange`,
 `LiteralPeriod`, plus the `EntityKey` / `TimeKey` / `TimePoint`
 aliases), and the unified `validate_structural()` entrypoint
@@ -34,6 +34,6 @@ if not result.ok:
             print(f"{issue.path}: {issue.code} — {issue.message}")
 ```
 
-The validator operates on a parsed dict, not on the §6.1-§6.4 Pydantic
+The validator operates on a parsed dict, not on the Pydantic
 models, because rules like "type is one of the enum values" must
 fire on raw JSON values before any `Literal` cast.

@@ -433,7 +433,7 @@ enforced at curation time and does not need to precede the freeze.
 
 ## Remaining test coverage
 
-Carried from the §16 testing strategy; the shipped categories are in
+Carried from the testing strategy; the shipped categories are in
 [`ARCHITECTURE.md`](ARCHITECTURE.md). Still to build:
 
 - **Kit reproducibility** — same spec + codes + stats → identical kit
@@ -443,7 +443,7 @@ Carried from the §16 testing strategy; the shipped categories are in
   `/api/catalog` walk on every container start; a failure halts the
   deploy (ships with 6.5).
 - **Performance gate** — wire the 200-column fixture into a load-test
-  harness measuring the §12 p95 budgets and failing CI on regression.
+  harness measuring the p95 budgets (see ARCHITECTURE.md → Repo-wide invariants) and failing CI on regression.
 
 ## Open / deferred decisions
 
