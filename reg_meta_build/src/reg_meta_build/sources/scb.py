@@ -923,6 +923,73 @@ def _decide_fold_or_split(folded_cols: list[str], class_roots_present: set[int])
     return "split"
 
 
+def _cluster_contested(
+    contested_cols: list[str],
+    *,
+    forced_same: list[frozenset[str]] | None = None,
+) -> list[list[str]]:
+    """Partition one split container's contested columns into fold-clusters
+    (#223). Each returned cluster is the column set that folds into ONE variable;
+    a singleton cluster is a column that splits into its own variable.
+
+    Two columns share a cluster iff they are pairwise stem-foldable
+    (`_decide_fold_or_split([a, b], set())` == "fold" — shared stem ≥
+    `_FOLD_MIN_STEM` and rep-only differing suffixes), grown into connected
+    components and then VERIFIED as a whole: a component that does not fold as a
+    unit degrades to singletons, so the partition NEVER folds a set the stem rule
+    wouldn't. The classification family is intentionally NOT consulted — the
+    column stem is the concept boundary (the family signal over-folds distinct
+    concepts sharing a code system).
+
+    `forced_same` pre-seeds the union-find with curator-asserted equivalences
+    (columns that ARE one concept regardless of stem); those components fold by
+    fiat, bypassing the stem verify. Nothing populates it yet — the curated
+    fold-override surface is #261."""
+    folded = {c: _ascii_fold_lower(c) for c in contested_cols}
+    parent = {c: c for c in contested_cols}
+
+    def find(x: str) -> str:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[max(ra, rb)] = min(ra, rb)  # deterministic root (lex-min)
+
+    # Curator fiat first: a forced group is one concept regardless of stem.
+    forced_cols: set[str] = set()
+    for group in forced_same or ():
+        members = [c for c in contested_cols if c in group]
+        for a, b in combinations(members, 2):
+            union(a, b)
+        forced_cols.update(members)
+
+    # Stem-foldable pairwise unions (sorted for deterministic component roots).
+    for a, b in combinations(sorted(contested_cols), 2):
+        if _decide_fold_or_split([folded[a], folded[b]], set()) == "fold":
+            union(a, b)
+
+    comps: dict[str, list[str]] = defaultdict(list)
+    for c in contested_cols:
+        comps[find(c)].append(c)
+
+    clusters: list[list[str]] = []
+    for members in comps.values():
+        members_sorted = sorted(members)
+        forced = any(c in forced_cols for c in members_sorted)
+        whole_folds = (
+            _decide_fold_or_split([folded[c] for c in members_sorted], set()) == "fold"
+        )
+        if len(members_sorted) > 1 and (forced or whole_folds):
+            clusters.append(members_sorted)  # fold cluster
+        else:
+            clusters.extend([c] for c in members_sorted)  # singletons → split
+    return clusters
+
+
 def _triage_groups(
     conn: sqlite3.Connection,
     groups: dict[tuple, _StateGroup],
@@ -1022,19 +1089,48 @@ def _triage_groups(
             )
             res.stats["folds"] += 1
         else:
-            # Split: every distinct column-component becomes its own variable.
-            _apply_split(
-                conn,
-                groups,
-                by_col,
-                all_cols,
-                codelivered_pairs,
-                register_id,
-                var_id,
-                orig_vid,
-                res,
-            )
-            res.stats["splits"] += 1
+            # The whole contested set doesn't fold. Sub-cluster by shared stem +
+            # rep-only suffix and decide PER CLUSTER, so a var_id mixing foldable
+            # + disjoint columns folds each stem-family and splits the rest —
+            # instead of over-splitting all of them (#223). Non-contested columns
+            # never co-occur, so they're always singletons (own variable), as the
+            # legacy `_apply_split(all_cols)` already gave them.
+            # Future curated fold-overrides resolve here, keyed by
+            # (register_id, var_id); empty until the override surface lands (#261).
+            forced_same: list[frozenset[str]] = []
+            clusters = _cluster_contested(contested_cols, forced_same=forced_same)
+            clusters += [[c] for c in non_contested_cols]
+            if any(len(c) > 1 for c in clusters):
+                _apply_clustered(
+                    conn,
+                    groups,
+                    by_col,
+                    clusters,
+                    codelivered_pairs,
+                    register_id,
+                    var_id,
+                    orig_vid,
+                    res,
+                )
+                # Outcome-by-variable counters + a per-var_id `clustered` tally so
+                # the build log shows how often the new path fires (#223).
+                res.stats["folds"] += sum(1 for c in clusters if len(c) > 1)
+                res.stats["splits"] += sum(1 for c in clusters if len(c) == 1)
+                res.stats["clustered"] += 1
+            else:
+                # No foldable sub-cluster → byte-identical to the legacy split-all.
+                _apply_split(
+                    conn,
+                    groups,
+                    by_col,
+                    all_cols,
+                    codelivered_pairs,
+                    register_id,
+                    var_id,
+                    orig_vid,
+                    res,
+                )
+                res.stats["splits"] += 1
 
     # Universal residual collapse: after fold/split assigned variable_ids and
     # fold labels, guarantee the state-uniqueness invariant holds by making
@@ -1364,6 +1460,69 @@ def _apply_split(
         for vid_b, col_b in zip(sibling_vids[i + 1 :], named_cols[i + 1 :]):
             kind = _split_relation_kind(col_a, col_b, groups, by_col, codelivered_pairs)
             res.related_edges.append((vid_a, vid_b, kind))
+
+
+def _apply_clustered(
+    conn: sqlite3.Connection,
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+    clusters: list[list[str]],
+    codelivered_pairs: set[frozenset[str]],
+    register_id: int,
+    var_id: int,
+    orig_vid: int,
+    res: _TriageResult,
+) -> None:
+    """Per-cluster triage (#223): each cluster becomes ONE sibling `variable`
+    (sharing the source provider_key). A multi-column cluster FOLDS its columns
+    into one variable (`_apply_fold` — value-set-version labels + shared-stem slug
+    hint); a singleton cluster is a plain split sibling. This generalizes
+    `_apply_split`, which is the all-singletons special case.
+
+    The lexically-first cluster keeps `orig_vid`; the rest mint siblings with the
+    inherited name/sensitivity/identity flags (see `_apply_split` for why the
+    flags must be copied). Sibling edges link the cluster variables; the
+    relation_kind is decided from each cluster's REPRESENTATIVE (lex-min) column
+    via PR1's `_split_relation_kind` — so a specific kind (`code_vs_label_pair` /
+    `import_bug_suspect`) needs the two REPS to have co-delivered, and a non-rep
+    cross-member co-delivery degrades to the generic kind (an acceptable
+    precision tradeoff on an informational label)."""
+    clusters_sorted = sorted(clusters, key=lambda c: min(c))
+    shared_name, shared_sensitive, shared_identifier = _inherited_flags(conn, orig_vid)
+    cluster_vids: list[int] = []
+    for i, cluster_cols in enumerate(clusters_sorted):
+        if i == 0:
+            vid = orig_vid  # lex-first cluster keeps the original variable
+        else:
+            cur = conn.execute(
+                "INSERT INTO variable "
+                "(register_id, provider_key, name, is_sensitive, is_identifier) "
+                "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
+                (register_id, var_id, shared_name, shared_sensitive, shared_identifier),
+            )
+            vid = cur.lastrowid
+            assert vid is not None  # lastrowid is set after an INSERT
+        cluster_vids.append(vid)
+        for col in cluster_cols:
+            for gk in by_col[col]:
+                res.assignments[gk] = vid
+        if len(cluster_cols) > 1:
+            _apply_fold(
+                groups,
+                by_col,
+                cluster_cols,
+                [_ascii_fold_lower(c) for c in cluster_cols],
+                vid,
+                res,
+            )
+    # (N_clusters choose 2) edges, kind from each cluster's representative column.
+    reps = [min(c) for c in clusters_sorted]
+    for i, vid_a in enumerate(cluster_vids):
+        for j in range(i + 1, len(cluster_vids)):
+            kind = _split_relation_kind(
+                reps[i], reps[j], groups, by_col, codelivered_pairs
+            )
+            res.related_edges.append((vid_a, cluster_vids[j], kind))
 
 
 def _split_off_non_contested(
@@ -2505,7 +2664,8 @@ def _coalesce_variable_states(
     _progress(
         f"  triage: {triage.stats.get('folds', 0):,} folds, "
         f"{triage.stats.get('splits', 0):,} splits, "
-        f"{len(triage.dropped):,} states collapsed"
+        f"{len(triage.dropped):,} states collapsed, "
+        f"{triage.stats.get('clustered', 0):,} clustered"
     )
     return {
         "n_state_groups": len(groups),

@@ -29,8 +29,10 @@ from reg_meta_build.sources.scb import (
     _AUTH_PLAIN,
     _AUTH_PRELIM,
     _AUTH_SUBANNUAL,
+    _apply_clustered,
     _apply_fold,
     _apply_split,
+    _cluster_contested,
     _collapse_residual,
     _common_prefix_len,
     _data_type_class,
@@ -504,6 +506,57 @@ class TestDecideFoldOrSplit:
         assert _decide_fold_or_split(["foosni", "foosni2"], {7, 9}) == "split"
 
 
+class TestClusterContested:
+    """Per-cluster partition (#223): shared-stem + rep-suffix columns cluster
+    (fold); disjoint / non-rep-suffix columns are singletons (split). The
+    classification family is NOT consulted — the column stem is the boundary."""
+
+    @staticmethod
+    def _clusters(cols: list[str], **kw: object) -> list[list[str]]:
+        # Normalize to sorted-list-of-sorted-lists for order-independent asserts.
+        return sorted(sorted(c) for c in _cluster_contested(cols, **kw))  # type: ignore[arg-type]
+
+    def test_shared_stem_rep_suffix_one_cluster(self) -> None:
+        assert self._clusters(["Ssyk3", "Ssyk5"]) == [["Ssyk3", "Ssyk5"]]
+        assert self._clusters(["FtgSni02", "FtgSni07", "FtgSni69", "FtgSni92"]) == [
+            ["FtgSni02", "FtgSni07", "FtgSni69", "FtgSni92"]
+        ]
+        assert self._clusters(["BCIV", "BCIVRED"]) == [["BCIV", "BCIVRED"]]
+
+    def test_disjoint_stems_separate(self) -> None:
+        assert self._clusters(["Hemkommun", "Skolkommun"]) == [
+            ["Hemkommun"],
+            ["Skolkommun"],
+        ]
+
+    def test_non_rep_suffix_separate(self) -> None:
+        # Shared stem `kommun`, but `namn` is not a representation suffix → split.
+        assert self._clusters(["Kommun", "Kommunnamn"]) == [["Kommun"], ["Kommunnamn"]]
+
+    def test_mixed_container_partitions(self) -> None:
+        assert self._clusters(["Ssyk3", "Ssyk5", "Hemkommun"]) == [
+            ["Hemkommun"],
+            ["Ssyk3", "Ssyk5"],
+        ]
+        assert self._clusters(["Ssyk3", "Ssyk5", "Lid", "LNamn"]) == [
+            ["LNamn"],
+            ["Lid"],
+            ["Ssyk3", "Ssyk5"],
+        ]
+
+    def test_forced_same_folds_by_fiat(self) -> None:
+        # The curated-override seam (#261): force-merge disjoint stems into one
+        # cluster, bypassing the stem rule. Default (no override) keeps them split.
+        forced = [frozenset({"Hemkommun", "Skolkommun"})]
+        assert self._clusters(["Hemkommun", "Skolkommun"], forced_same=forced) == [
+            ["Hemkommun", "Skolkommun"]
+        ]
+        assert self._clusters(["Hemkommun", "Skolkommun"]) == [
+            ["Hemkommun"],
+            ["Skolkommun"],
+        ]
+
+
 class TestLooksLikeCodeLabelPair:
     def test_two_namn_columns_are_not_a_pair(self) -> None:
         assert not _looks_like_code_label_pair("Fornamn", "Efternamn")
@@ -660,6 +713,144 @@ class TestSplitEmitsSpecificRelationKind:
         conn.close()
 
 
+class TestPerClusterFoldSplit:
+    """End-to-end (#223): a var_id mixing a foldable stem-family with a disjoint
+    column folds the family and splits the rest — instead of over-splitting all
+    of them. Drives `_triage_groups` and inspects the routing + stats."""
+
+    def test_mixed_container_folds_family_splits_disjoint(self) -> None:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Var')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        # Ssyk3/Ssyk5 (shared stem) + Hemkommun (disjoint), all co-delivered in
+        # one edition. Same data_type so the cross-cluster edge stays generic.
+        gk_s3 = (1, 10, 920, "int", "1", 1, "", "", "Ssyk3")
+        gk_s5 = (1, 10, 920, "int", "1", 2, "", "", "Ssyk5")
+        gk_hem = (1, 10, 920, "int", "1", 3, "", "", "Hemkommun")
+        g_s3 = _StateGroup(1, 10, 920, "int", "1", 1, "")
+        g_s3.regvers = {100}
+        g_s5 = _StateGroup(1, 10, 920, "int", "1", 2, "")
+        g_s5.regvers = {100}
+        g_hem = _StateGroup(1, 10, 920, "int", "1", 3, "")
+        g_hem.regvers = {100}
+        res = _triage_groups(
+            conn,
+            {gk_s3: g_s3, gk_s5: g_s5, gk_hem: g_hem},
+            {(1, 920): orig},
+        )
+        # Two variables: Ssyk3/Ssyk5 fold into one, Hemkommun splits into its own
+        # (NOT three siblings, NOT one folded variable).
+        n_vars = conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE register_id = 1 AND provider_key = '920'"
+        ).fetchone()[0]
+        assert n_vars == 2
+        assert res.assignments[gk_s3] == res.assignments[gk_s5]  # Ssyk* folded
+        assert res.assignments[gk_hem] != res.assignments[gk_s3]  # Hemkommun split
+        assert res.stats["clustered"] == 1
+        assert res.stats["folds"] == 1  # one multi-column fold cluster
+        assert res.stats["splits"] == 1  # one singleton cluster (Hemkommun)
+        # One cross-cluster sibling edge, generic (not a code/label or type pair).
+        assert {kind for _, _, kind in res.related_edges} == {
+            "same_definition_different_column"
+        }
+        conn.close()
+
+    def test_fold_cluster_emits_slug_hint_and_distinct_labels(self) -> None:
+        # Guards the vid passed to `_apply_fold` inside the clustered path: the
+        # fold cluster's states must get DISTINCT value_set_version_labels and the
+        # cluster's (possibly minted) vid must carry the shared-stem slug hint.
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Var')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        gk_s3 = (1, 10, 920, "int", "1", 1, "", "", "Ssyk3")
+        gk_s5 = (1, 10, 920, "int", "1", 2, "", "", "Ssyk5")
+        gk_hem = (1, 10, 920, "int", "1", 3, "", "", "Hemkommun")
+        g_s3 = _StateGroup(1, 10, 920, "int", "1", 1, "")
+        g_s3.regvers = {100}
+        g_s5 = _StateGroup(1, 10, 920, "int", "1", 2, "")
+        g_s5.regvers = {100}
+        g_hem = _StateGroup(1, 10, 920, "int", "1", 3, "")
+        g_hem.regvers = {100}
+        res = _triage_groups(
+            conn, {gk_s3: g_s3, gk_s5: g_s5, gk_hem: g_hem}, {(1, 920): orig}
+        )
+        ssyk_vid = res.assignments[gk_s3]
+        assert res.assignments[gk_s5] == ssyk_vid  # the two Ssyk states folded
+        assert res.labels[gk_s3] != res.labels[gk_s5]  # distinct fold labels
+        assert ssyk_vid in res.fold_slug_hints  # shared-stem ("ssyk") slug hint
+        conn.close()
+
+    def test_cluster_rep_edge_code_vs_label_for_lid_lnamn(self) -> None:
+        # Confirms `reps = [min(c) …]` + `_split_relation_kind` wiring through the
+        # clustered path: the Lid/LNamn rep pair (name-based code/label) keeps its
+        # specific kind, while the Ssyk cluster's cross edges stay generic. Ssyk
+        # is typed neutrally (class "other") so neither Ssyk↔Lid (int) nor
+        # Ssyk↔LNamn (text) trips the numeric-vs-text import_bug heuristic.
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Var')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        gk_s3 = (1, 10, 920, "", "1", 1, "", "", "Ssyk3")
+        gk_s5 = (1, 10, 920, "", "1", 2, "", "", "Ssyk5")
+        gk_lid = (1, 10, 920, "int", "1", 3, "", "", "Lid")
+        gk_lnamn = (1, 10, 920, "text", "1", 4, "", "", "LNamn")
+        g_s3 = _StateGroup(1, 10, 920, "", "1", 1, "")
+        g_s3.regvers = {100}
+        g_s5 = _StateGroup(1, 10, 920, "", "1", 2, "")
+        g_s5.regvers = {100}
+        g_lid = _StateGroup(1, 10, 920, "int", "1", 3, "")
+        g_lid.regvers = {100}
+        g_lnamn = _StateGroup(1, 10, 920, "text", "1", 4, "")
+        g_lnamn.regvers = {100}
+        res = _triage_groups(
+            conn,
+            {gk_s3: g_s3, gk_s5: g_s5, gk_lid: g_lid, gk_lnamn: g_lnamn},
+            {(1, 920): orig},
+        )
+        n_vars = conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE register_id = 1 AND provider_key = '920'"
+        ).fetchone()[0]
+        assert n_vars == 3  # Ssyk fold + Lid + LNamn
+        kind_by_pair = {frozenset((a, b)): kind for a, b, kind in res.related_edges}
+        vid_lnamn = res.assignments[gk_lnamn]  # lex-first cluster keeps the origin
+        vid_lid = res.assignments[gk_lid]
+        vid_ssyk = res.assignments[gk_s3]
+        assert vid_lnamn == orig
+        assert kind_by_pair[frozenset((vid_lid, vid_lnamn))] == "code_vs_label_pair"
+        assert (
+            kind_by_pair[frozenset((vid_ssyk, vid_lid))]
+            == "same_definition_different_column"
+        )
+        assert (
+            kind_by_pair[frozenset((vid_ssyk, vid_lnamn))]
+            == "same_definition_different_column"
+        )
+        conn.close()
+
+
 class TestSplitSiblingFlagInheritance:
     """A split sibling inherits is_identifier / is_sensitive from its
     pre-split origin. The A1.2 flags are lifted BEFORE triage, so a sibling
@@ -710,6 +901,40 @@ class TestSplitSiblingFlagInheritance:
             "WHERE register_id = 1 AND provider_key = '57'"
         ).fetchall()
         assert len(rows) == 2
+        assert all(r["is_identifier"] == 1 and r["is_sensitive"] == 1 for r in rows)
+
+    def test_apply_clustered_propagates_flags_to_siblings(self) -> None:
+        # A minted cluster sibling must inherit the flags too (the #139 class).
+        # One fold cluster (Ssyk3/Ssyk5) + one singleton (Hemkommun): one of them
+        # keeps the origin, the other mints a sibling. Real groups are required —
+        # the multi-column cluster routes through `_apply_fold` (reads groups[gk]).
+        conn, orig = self._flagged_origin()
+        res = _TriageResult({}, {}, set(), {}, [], Counter())
+        gk_s3 = (1, 10, 57, "int", "1", 1, "", "", "Ssyk3")
+        gk_s5 = (1, 10, 57, "int", "1", 2, "", "", "Ssyk5")
+        gk_hem = (1, 10, 57, "int", "1", 3, "", "", "Hemkommun")
+        groups = {
+            gk_s3: _StateGroup(1, 10, 57, "int", "1", 1, ""),
+            gk_s5: _StateGroup(1, 10, 57, "int", "1", 2, ""),
+            gk_hem: _StateGroup(1, 10, 57, "int", "1", 3, ""),
+        }
+        by_col = {"Ssyk3": [gk_s3], "Ssyk5": [gk_s5], "Hemkommun": [gk_hem]}
+        _apply_clustered(
+            conn,
+            groups,
+            by_col,
+            [["Ssyk3", "Ssyk5"], ["Hemkommun"]],
+            set(),
+            1,
+            57,
+            orig,
+            res,
+        )
+        rows = conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 1 AND provider_key = '57'"
+        ).fetchall()
+        assert len(rows) == 2  # origin + one minted sibling
         assert all(r["is_identifier"] == 1 and r["is_sensitive"] == 1 for r in rows)
 
 
