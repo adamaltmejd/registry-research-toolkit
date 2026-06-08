@@ -27,6 +27,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
+    is_identifier: false,
     ...over,
   };
 }
@@ -168,6 +169,19 @@ describe("deriveType", () => {
     expect(deriveType(state({ data_type: "numerisk" }))).toBe("numeric");
     expect(deriveType(state({ data_type: "Datum" }))).toBe("date");
     expect(deriveType(state({ data_type: "Identifierare" }))).toBe("id");
+    // "date and time" must beat DATE despite the leading "datum" token.
+    expect(deriveType(state({ data_type: "datum och klockslag" }))).toBe(
+      "datetime",
+    );
+  });
+
+  it("reg_meta is_identifier overrides the storage token (int → id, not numeric)", () => {
+    expect(deriveType(state({ data_type: "int", is_identifier: true }))).toBe(
+      "id",
+    );
+    expect(deriveType(state({ data_type: "int", is_identifier: false }))).toBe(
+      "numeric",
+    );
   });
 
   it("unrecognized / empty storage token → opaque (user picks)", () => {

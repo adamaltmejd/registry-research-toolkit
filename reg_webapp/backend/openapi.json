@@ -1060,6 +1060,10 @@
             ],
             "title": "Delivery Column Name"
           },
+          "is_identifier": {
+            "title": "Is Identifier",
+            "type": "boolean"
+          },
           "register_variant_id": {
             "title": "Register Variant Id",
             "type": "integer"
@@ -1121,7 +1125,8 @@
           "delivery_column_name",
           "value_set_version_label",
           "value_set_id",
-          "value_set"
+          "value_set",
+          "is_identifier"
         ],
         "title": "VariableStateModel",
         "type": "object"

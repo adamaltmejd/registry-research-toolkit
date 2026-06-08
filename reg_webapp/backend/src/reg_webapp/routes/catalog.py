@@ -223,6 +223,7 @@ def _state_model(state) -> VariableStateModel:
             if state.value_set is not None
             else None
         ),
+        is_identifier=state.is_identifier,
     )
 
 
