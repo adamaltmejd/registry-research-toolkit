@@ -127,6 +127,9 @@ const DATETIME_TOKENS = new Set([
   "datetime2",
   "timestamp",
   "smalldatetime",
+  // SOS "date and time" — a multi-word phrase, matched on the full string below
+  // (the leading-token split would reduce it to "datum" → date).
+  "datum och klockslag",
 ]);
 const ID_TOKENS = new Set(["identifierare", "uniqueidentifier"]);
 
@@ -138,22 +141,31 @@ export function deriveType(state: VariableStateModel | undefined): string {
   if (!state) {
     return "opaque";
   }
+  // reg_meta's curated, variable-grain `is_identifier` is the authoritative
+  // semantic signal, so it wins over the storage-derived heuristics below — an
+  // integer-stored panel key is an "id", not "numeric" (or "categorical").
+  if (state.is_identifier) {
+    return "id";
+  }
   if (state.value_set_id != null || (state.value_set?.length ?? 0) > 0) {
     return "categorical";
   }
+  const norm = (state.data_type ?? "").trim().toLowerCase();
   // The leading token (strip a trailing `(len)` or trailing words like "(text)").
-  const token = (state.data_type ?? "").trim().toLowerCase().split(/[ (]/)[0];
+  const token = norm.split(/[ (]/)[0];
   if (ID_TOKENS.has(token)) {
     return "id";
   }
   if (NUMERIC_TOKENS.has(token)) {
     return "numeric";
   }
+  // Datetime before date: a multi-word datetime phrase ("datum och klockslag")
+  // matches the full `norm`, while its leading token ("datum") would mis-hit DATE.
+  if (DATETIME_TOKENS.has(token) || DATETIME_TOKENS.has(norm)) {
+    return "datetime";
+  }
   if (DATE_TOKENS.has(token)) {
     return "date";
-  }
-  if (DATETIME_TOKENS.has(token)) {
-    return "datetime";
   }
   return "opaque";
 }

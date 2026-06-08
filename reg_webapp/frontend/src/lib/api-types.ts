@@ -838,6 +838,8 @@ export interface components {
             data_type: string | null;
             /** Delivery Column Name */
             delivery_column_name: string | null;
+            /** Is Identifier */
+            is_identifier: boolean;
             /** Register Variant Id */
             register_variant_id: number;
             /** State Id */

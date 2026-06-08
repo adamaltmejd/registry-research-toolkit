@@ -431,11 +431,16 @@ Fields: `state_id`, `variant` (the `register_variant.slug`),
 `register_variant_id`, `valid_from` / `valid_to` (inclusive ISO dates),
 `data_type`, `data_length`, `delivery_column_name` (denormalized latest
 alias), `value_set_version_label` (NOT NULL, `''` = no discriminator),
-`value_set_id`, and `value_set` (hydrated `(code, label)` tuple, None
-when the state has no value set). The full delivery-column history —
-multiple aliases per state from cross-edition spelling drift — lives in
-the `variable_alias` table; `delivery_column_name` is its denormalized
-latest, and `reg-meta get datacolumns` surfaces the complete list.
+`value_set_id`, `value_set` (hydrated `(code, label)` tuple, None
+when the state has no value set), and `is_identifier` (variable-grain
+flag denormalized onto every state via a JOIN — constant across all of a
+variable's states — so consumers holding only a `VariableState` (e.g. the
+`resolve_at` / `/states` paths) can read the authoritative identifier flag
+without needing the enclosing `ResolvedVariable`). The full
+delivery-column history — multiple aliases per state from cross-edition
+spelling drift — lives in the `variable_alias` table;
+`delivery_column_name` is its denormalized latest, and `reg-meta get
+datacolumns` surfaces the complete list.
 
 **Edge semantics (reader-facing).** All relationship edges are
 **variable grain** — the variant is a delivery coordinate, not an

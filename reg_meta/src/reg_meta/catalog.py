@@ -151,6 +151,11 @@ class VariableState:
     # None when the state carries no value set. Eager (frozen dataclass favors
     # it); typical per-state code fan-out is small.
     value_set: tuple[tuple[str, str], ...] | None
+    # Variable-grain `variable.is_identifier` denormalized onto every state via a
+    # JOIN (constant across a variable's states), so consumers with no
+    # ResolvedVariable in scope (the `resolve_at` / `/states` paths) can still
+    # read the authoritative identifier flag.
+    is_identifier: bool
 
 
 @dataclass(frozen=True)
@@ -666,22 +671,31 @@ class Catalog:
         the year-only INTERIM limit is lifted. The interval test is the standard
         `valid_from <= hi AND valid_to >= lo` (string compare is chronologically
         correct because every stored value is a full date)."""
+        # JOIN `variable` to denormalize the variable-grain `is_identifier` flag
+        # onto each state (§5.1 column is variable-grain); columns are qualified
+        # so the ORDER BY stays unambiguous.
         if register_variant_id is not None:
             rows = self._conn.execute(
-                "SELECT state_id, register_variant_id, data_type, data_length, "
-                "delivery_column_name, value_set_id, value_set_version_label, "
-                "valid_from, valid_to FROM variable_state "
-                "WHERE variable_id = ? AND register_variant_id = ? "
-                "ORDER BY valid_from, valid_to, value_set_version_label, state_id",
+                "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
+                "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
+                "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
+                "v.is_identifier FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE vs.variable_id = ? AND vs.register_variant_id = ? "
+                "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
+                "vs.state_id",
                 (variable_id, register_variant_id),
             ).fetchall()
         else:
             rows = self._conn.execute(
-                "SELECT state_id, register_variant_id, data_type, data_length, "
-                "delivery_column_name, value_set_id, value_set_version_label, "
-                "valid_from, valid_to FROM variable_state WHERE variable_id = ? "
-                "ORDER BY valid_from, valid_to, value_set_version_label, "
-                "register_variant_id, state_id",
+                "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
+                "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
+                "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
+                "v.is_identifier FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE vs.variable_id = ? "
+                "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
+                "vs.register_variant_id, vs.state_id",
                 (variable_id,),
             ).fetchall()
         if bounds is None:
@@ -735,6 +749,7 @@ class Catalog:
             value_set_version_label=row["value_set_version_label"],
             value_set_id=row["value_set_id"],
             value_set=self._value_set_codes(row["value_set_id"]),
+            is_identifier=bool(row["is_identifier"]),
         )
 
     def _states_for_variable(self, variable_id: int) -> tuple[VariableState, ...]:

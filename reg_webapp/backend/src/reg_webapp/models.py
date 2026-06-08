@@ -179,6 +179,7 @@ class VariableStateModel(BaseModel):
     value_set_version_label: str
     value_set_id: int | None
     value_set: list[ValueSetMember] | None
+    is_identifier: bool
 
 
 class VariableRefModel(BaseModel):
