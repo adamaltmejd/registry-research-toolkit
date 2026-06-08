@@ -96,7 +96,7 @@ with zero SQL executed** (pinned by a trace-hook test that counts statements
 - Each `/`-split segment is validated by **delegating** to
   `reg_meta.fqid.validate_slug` (no second copy of the slug regex — single
   source of truth). The only literal admitted beyond the slug grammar is `class`
-  (§5.2's classification-root sentinel), and only at the **leading** position;
+  (the classification-root sentinel; see reg_meta/DESIGN.md → FQID grammar), and only at the **leading** position;
   in any other slot `class` 422s like any reserved token. `_default` is **never**
   a catalog path segment (variants are a register sub-resource, not an
   `/api/catalog/{fqid}` segment), so it is rejected too.
@@ -125,7 +125,7 @@ catch-all or the catch-all swallows the suffix into `fqid` and the suffix handle
 never fires. A CI router-introspection test
 (`test_boot.py::test_suffixed_routes_declared_before_catch_all`) pins the order.
 The suffix tokens (and `variants`) are also **reserved in the variable slot** of
-the slug grammar (§5.2) at build time, so a variable slugged `states` can't
+the slug grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable slugged `states` can't
 shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map flow is
 factored into reusable helpers.
 
@@ -172,7 +172,7 @@ not re-encoded here. FastAPI-free so it's unit-testable in isolation.
   (`HT2020` / `2020-Q3` / `2020-08` / `2018-12-31` → `str`), range
   (`<from>..<to>`, literal `..` → `{"from","to"}` dict), `_default` sentinel. A
   bare year maps to `int` (the documented year arm); every other token to `str`.
-- **`?variant` ADMITS `_default`** (a real `register_variant` slug, §5.1) UNLIKE
+- **`?variant` ADMITS `_default`** (a real `register_variant` slug, see reg_meta/DESIGN.md → Two-level variable model) UNLIKE
   the path guard (which rejects `_default` because it's not a path segment).
   `?value_set_version` is the `value_set_version_label` grammar and does NOT admit
   `_default`; the `_none` sentinel selects the empty-label vintage (the empty

@@ -4,7 +4,7 @@ MONA bundle builder, bundle runtime, PII scanner, and (eventually) type
 compatibility map. See [DESIGN.md](DESIGN.md) for scope, dependency
 direction, and the two-half lightweight/runtime split.
 
-`REFACTOR_SPEC.md` §15 step 5. Phase 1 landed the namespaced-block
+Phase 1 landed the namespaced-block
 validator; phase 2a landed the bundle builder; phase 2b landed the
 PII scanner; phase 2c relocated the runtime modules under
 `reg_monabundle.runtime.*` and gave `build_bundle` default runtime
@@ -28,7 +28,7 @@ matches = scan_file(Path("mock_data_stats.json"))
 
 ## Status
 
-**Phase 3** of `REFACTOR_SPEC.md` §15 step 5 — step 5 is now fully
+**Phase 3** — step 5 is now fully
 complete. Lightweight surface:
 
 - `reg_monabundle.validate_block` — §6.8.2 namespaced-block validator.
@@ -36,7 +36,7 @@ complete. Lightweight surface:
 - `reg_monabundle.VALID_OPTION_KEYS` — allowed `binding_options` keys.
 - `reg_monabundle.build_bundle` — amalgamates the runtime modules +
   reg_monabundle into a single ``.py`` for upload to MONA (no
-  `reg_schema`, no Pydantic — §9.6).
+  `reg_schema`, no Pydantic).
   Defaults to the in-package `reg_monabundle.runtime`; pass
   `runtime_pkg_dir` + `runtime_module_order` to plug a steward-private
   pipeline.
@@ -58,7 +58,7 @@ typically never import the runtime tier — the CI gate
 ([tests/test_lightweight_surface.py](tests/test_lightweight_surface.py))
 asserts the top-level surface never pulls it transitively.
 
-Bundle output is byte-counted in CI against the 1 MB v1 cap (§12) via
+Bundle output is byte-counted in CI against the 1 MB v1 cap (see ARCHITECTURE.md → Repo-wide invariants) via
 [tests/test_bundle_size_budget.py](tests/test_bundle_size_budget.py),
 which embeds the 200-column load-test fixture from
 [reg_schema/test_corpus/load_test_200col/](../reg_schema/test_corpus/load_test_200col/)

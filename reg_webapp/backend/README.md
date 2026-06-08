@@ -1,7 +1,7 @@
 # reg_webapp backend
 
 FastAPI backend serving the reg_meta catalog to the Svelte SPA. See
-`../DESIGN.md` for the boot seam, steward layering, and the §9.6 Pydantic
+`../DESIGN.md` for the boot seam, steward layering, and the Pydantic
 boundary.
 
 A5.1a ships the boot path + `GET /api/context` only. Catalog browse endpoints

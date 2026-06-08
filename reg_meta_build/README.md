@@ -15,6 +15,5 @@ reg-meta-build precheck-slugs  # report any IDs missing a slug entry
 reg-meta-build parse-sos       # parse Socialstyrelsen register metadata xlsx
 ```
 
-See [DESIGN.md](DESIGN.md) for design rationale; build pipeline details
-are in `REFACTOR_SPEC.md` §15 step 2 at repo root until the spec is
-dissolved into per-package DESIGN files (§15 step 9-10).
+See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is
+tracked in `REFACTOR_SPEC.md` at repo root.

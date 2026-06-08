@@ -380,7 +380,7 @@ mint deterministically via `id.py::mint`:
   arithmetic, not a runtime collision check. Query-time cross-provider
   disambiguation therefore needs no provider check. **Bit 63 stays clear**
   so every value fits a signed 64-bit SQLite INTEGER. The `< 2^62`
-  structural bound (not a loose 32-bit window) is what the §16 namespace
+  structural bound (not a loose 32-bit window) is what the namespace
   property test pins. Future providers get their own band bit.
 
 ## CSV import and encoding
@@ -436,7 +436,7 @@ the intersection. A few non-obvious choices:
   the source-register identity node (picking up within-source renames like RTB
   `kon` ↔ `kon-v2`) and the consumer node (picking up any curated cross-register
   / cross-provider `variable_same_as` edge whose endpoints have *different*
-  slugs, LISA `foo` ↔ RTB `bar`, §5.5). The common no-rename case yields just
+  slugs, LISA `foo` ↔ RTB `bar`; see reg_meta/DESIGN.md → Composite registers and source tracking). The common no-rename case yields just
   the identity slug, so an edge is always additive. (An earlier single-seed form
   expanded only the source node and silently missed mismatched-slug
   cross-register edges — latent while `variable_same_as` is empty; since fixed.)

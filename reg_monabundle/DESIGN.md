@@ -16,10 +16,10 @@ pre-resolution) lives in `REFACTOR_SPEC.md`.
   the runtime modules + the lightweight `reg_monabundle` slices
   (`constants`, `validate`, `scan`) into a single `.py` for upload to
   MONA. Pure-stdlib, importable by `reg_webapp` at container build time.
-  **Carries no `reg_schema` and no Pydantic** (§9.6) — structural
+  **Carries no `reg_schema` and no Pydantic** — structural
   validation is the build-time gate, not an on-MONA step (see below).
 - **Build-time spec gate** (`reg_monabundle.build.spec_loader`).
-  The Pydantic side of the §9.6 boundary, run at bundle-build
+  The Pydantic side of the boundary, run at bundle-build
   only (never amalgamated): `validate_project_data` runs the full
   `reg_schema` structural validator + the `reg_monabundle` block
   validator + the cross-block referential checks, then
@@ -57,7 +57,7 @@ pre-resolution) lives in `REFACTOR_SPEC.md`.
 - **§6.8.1 structural rules.** Owned by `reg_schema`. Run once at
   **bundle-build time** as the validation gate
   (`reg_monabundle.build.spec_loader.validate_project_data`), never on
-  MONA: the bundle is `reg_schema`/Pydantic-free (§9.6) and its
+  MONA: the bundle is `reg_schema`/Pydantic-free and its
   runtime trusts the already-validated embedded/sidecar JSON,
   deserializing it into a stdlib `LoadedSpec` via
   `runtime.spec.loadedspec_from_dict`. A hand-edit on MONA that breaks
@@ -82,8 +82,8 @@ No `reg_meta` dep — the bundle has no reg_meta on MONA. No
 `mock_data_wizard` dep — the dep direction is the other way around
 (mdw's CLI invokes `reg_monabundle.build`). `reg_schema` (Pydantic)
 is a build-time-only dep of `reg_monabundle.build.spec_loader`: it
-runs the validation gate but is **never amalgamated** into the bundle
-(§9.6). The amalgamated slices are stdlib-only.
+runs the validation gate but is **never amalgamated** into the bundle.
+The amalgamated slices are stdlib-only.
 
 ## The two halves
 
@@ -242,7 +242,7 @@ What runs **at bundle load on MONA** is only the pure-stdlib §6.8.2
 namespaced-block validator (`validate_block`, via
 `loadedspec_from_dict`) plus the step-4 runtime capability gates. The
 §6.8.1 **structural** validation does NOT run on MONA — the bundle ships
-no Pydantic and no reg_schema (§9.6), so structural validation is a
+no Pydantic and no reg_schema, so structural validation is a
 **build-time-only gate** (`build.spec_loader.validate_project_data`).
 Drift introduced by an inline MONA edit is caught at the next webapp
 round-trip, not on MONA.
