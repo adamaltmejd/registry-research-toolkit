@@ -631,21 +631,26 @@ design sketch:
   stem), so the primary signal only matters for same-family columns with
   *disjoint* stems. Activating it means moving triage to a
   post-classifications pass.
-- **Every split emits `relation_kind = same_definition_different_column`.**
-  The finer kinds (`code_vs_label_pair`, `import_bug_suspect`) need
-  code/label-pair + datatype heuristics that aren't built; the generic kind
-  is correct (in the allowed set, never the fold-only
-  `same_concept_different_grain`). Edges carry `note = "auto:triage"`. There
-  is **no** `triage_unresolved_split` warning — an unmatched column just
-  routes to a fresh auto-slugged sibling (additive under grow-only).
+- **Split `relation_kind` is decided PER SIBLING PAIR** (`_apply_split`), from
+  the pair's two delivery columns, most specific first: `code_vs_label_pair`
+  (name-based — a `<stem>namn` label paired with its bare-stem or
+  `<stem>kod`/`<stem>id` code, e.g. `Lid`/`LNamn`), then `import_bug_suspect`
+  (a numeric-vs-text `data_type` mismatch on the columns' latest-era groups;
+  failing a type read, a present-on-both `data_length` disagreement), else the
+  generic `same_definition_different_column`. **Never** the fold-only
+  `same_concept_different_grain`. `_split_off_non_contested` stays generic by
+  design — its columns never co-occur in one edition, so they are
+  temporal/rename variants, not parallel pairs the pairwise heuristic can read.
+  Edges carry `note = "auto:triage"`. There is **no** `triage_unresolved_split`
+  warning — an unmatched column just routes to a fresh auto-slugged sibling
+  (additive under grow-only).
 
 Slug collisions during triage (and in the *Slug curation* auto-derive
 below) are resolved with a deterministic **numeric `-N` suffix**
 (`_uniquify` / `_collapse_residual`), not `-a`/`-b` or a hash suffix.
 
 Remaining: interim residual-collapse precision (year-scoped, not
-edition-scoped) — see REFACTOR_SPEC.md / #223. Relation-kind refinement —
-see REFACTOR_SPEC.md / #218.
+edition-scoped) — see REFACTOR_SPEC.md / #223.
 
 ## Slug curation
 
@@ -712,7 +717,7 @@ edges that `Catalog.resolve` follows transitively (build rejects cycles).
 to another row's TOML key in the same file), validated for shape and
 cycle-freedom — *not* a cross-provider tuple. `related_to` is **not a
 curatable TOML field at all**: it is auto-emitted by triage splits only
-(the generic `same_definition_different_column` kind, above).
+(the per-pair split `relation_kind`s, above).
 
 **Panel-shape bootstrap.** `register_variant` rows also carry
 `panel_entity_key` / `panel_time_key` / `panel_time_grain` (a variable-slug

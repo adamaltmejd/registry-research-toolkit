@@ -1159,6 +1159,134 @@ def _apply_fold(
         res.fold_slug_hints[orig_vid] = hint
 
 
+# ── split relation_kind heuristics (#218) ─────────────────────────────────
+# A triage SPLIT links its sibling variables with `variable_related_to` edges.
+# The kind is PER SIBLING PAIR (per two columns), not per split: a code/label
+# pairing or a mis-typed-delivery suspicion is a claim about TWO specific
+# columns. Precedence, most specific first:
+#   1. code_vs_label_pair — name-based, high confidence
+#   2. import_bug_suspect — data_type/shape mismatch, lower confidence
+#   3. same_definition_different_column — generic fallback
+# NEVER `same_concept_different_grain`: that is a FOLD-only kind and folds emit
+# no edges at all (DESIGN.md → Build-time triage (SCB)).
+
+# A label column carries the Swedish `namn` (name) suffix; its partner code
+# column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a `kod`/`id`
+# code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`).
+_CODE_SUFFIXES = ("kod", "id")
+_LABEL_SUFFIX = "namn"
+
+
+def _strip_suffix(folded: str, suffixes: tuple[str, ...]) -> str | None:
+    """The non-empty stem when `folded` ends with one of `suffixes`, else None."""
+    for suf in suffixes:
+        if folded.endswith(suf) and len(folded) > len(suf):
+            return folded[: -len(suf)]
+    return None
+
+
+def _is_code_then_label(code: str, label: str) -> bool:
+    """True when `code` is a code column and `label` its matching label column:
+    `label` is `<stem>namn` and `code` is either the bare `<stem>` or
+    `<stem>kod`/`<stem>id` on the SAME stem."""
+    stem = _strip_suffix(label, (_LABEL_SUFFIX,))
+    if stem is None:
+        return False
+    if code == stem:  # bare-stem code paired with its `<stem>namn` label
+        return True
+    return _strip_suffix(code, _CODE_SUFFIXES) == stem
+
+
+def _looks_like_code_label_pair(col_a: str, col_b: str) -> bool:
+    """A code column paired with its label column, in either order. Name-based
+    only (the old #132 heuristic, re-derived to current conventions)."""
+    a, b = _ascii_fold_lower(col_a), _ascii_fold_lower(col_b)
+    if not a or not b:
+        return False
+    return _is_code_then_label(a, b) or _is_code_then_label(b, a)
+
+
+# data_type marker substrings. SCB ships SQL-ish lowercased types (`int`,
+# `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
+# the same column. Substring match is safe — the field only ever holds a type
+# name — and the two marker sets are disjoint across known types, so order
+# doesn't matter.
+_NUMERIC_TYPE_MARKERS = ("int", "tal", "num", "dec", "float", "real", "double")
+_TEXT_TYPE_MARKERS = ("text", "char", "strang", "string", "varchar")
+
+
+def _data_type_class(dt: str | None) -> str:
+    """Coarse `numeric` / `text` / `other` class for a data_type. `other` covers
+    dates and anything unrecognized (never claimed numeric or text)."""
+    s = _ascii_fold_lower(dt)
+    if any(m in s for m in _TEXT_TYPE_MARKERS):
+        return "text"
+    if any(m in s for m in _NUMERIC_TYPE_MARKERS):
+        return "numeric"
+    return "other"
+
+
+def _representative_group(
+    gkeys: list[tuple], groups: dict[tuple, _StateGroup]
+) -> _StateGroup | None:
+    """The latest-era group for a column — highest `latest_alias_regver` (the
+    edition that set the surviving delivery alias), deterministic stringified-
+    gkey tiebreak. Mirrors the `latest_alias` rule so the compared shape is the
+    column's latest delivered shape. None when no gkey resolves to a group
+    (defensive: the kind then falls back to generic)."""
+    present = [(gk, groups[gk]) for gk in gkeys if gk in groups]
+    if not present:
+        return None
+    _, grp = max(
+        present,
+        key=lambda item: (
+            item[1].latest_alias_regver
+            if item[1].latest_alias_regver is not None
+            else -1,
+            tuple("" if x is None else str(x) for x in item[0]),
+        ),
+    )
+    return grp
+
+
+def _import_bug_suspect(a: _StateGroup | None, b: _StateGroup | None) -> bool:
+    """Lower-confidence shape heuristic: the two split siblings disagree on
+    physical SHAPE in a way that suggests one delivery was mis-imported. Primary
+    signal — a numeric-vs-text `data_type` mismatch (the canonical SCB/SOS import
+    bug: one lumped delivery shipped as a number, the other as text). Fallback —
+    when `data_type` can't be classified on at least one side, a present-on-both
+    `data_length` disagreement is the only remaining shape evidence. A SAME-class
+    length difference is deliberately NOT flagged: on genuinely-distinct split
+    siblings differing widths are normal and would fire this 'suspect' label on
+    nearly every split, diluting the taxonomy."""
+    if a is None or b is None:
+        return False
+    class_a, class_b = _data_type_class(a.data_type), _data_type_class(b.data_type)
+    if {class_a, class_b} == {"numeric", "text"}:
+        return True
+    if "other" in (class_a, class_b) and a.data_length and b.data_length:
+        return a.data_length != b.data_length
+    return False
+
+
+def _split_relation_kind(
+    col_a: str,
+    col_b: str,
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+) -> str:
+    """relation_kind for ONE split sibling pair, decided from the pair's two
+    delivery columns (precedence in the section note above)."""
+    if _looks_like_code_label_pair(col_a, col_b):
+        return "code_vs_label_pair"
+    if _import_bug_suspect(
+        _representative_group(by_col[col_a], groups),
+        _representative_group(by_col[col_b], groups),
+    ):
+        return "import_bug_suspect"
+    return "same_definition_different_column"
+
+
 def _apply_split(
     conn: sqlite3.Connection,
     groups: dict[tuple, _StateGroup],
@@ -1194,17 +1322,18 @@ def _apply_split(
         sibling_vids.append(new_vid)
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
-    # (N choose 2) edges, both directions, between all siblings.
-    # TODO: every split currently emits `same_definition_different_column`.
-    # Differentiate the split relation_kind — `code_vs_label_pair`
-    # (`Lid`/`LNamn` — order the code OR the name) and `import_bug_suspect` — but
-    # detecting those needs the code/label-pair + datatype heuristics (see the
-    # old #132 `_looks_like_code_label_pair`). Flattening to the generic kind is
-    # interim (it's in the allowed set and correctly never the fold-only
-    # `same_concept_different_grain`); refine when the split heuristics land.
-    for i, a in enumerate(sibling_vids):
-        for b in sibling_vids[i + 1 :]:
-            res.related_edges.append((a, b, "same_definition_different_column"))
+    # (N choose 2) edges between siblings (both directions are emitted at
+    # materialization). The relation_kind is computed PER PAIR from the pair's
+    # two delivery columns — code_vs_label_pair / import_bug_suspect are claims
+    # about two specific columns, not the whole split. sibling_vids[k] ⟷
+    # named_cols[k] by construction (sibling_vids[0] = orig_vid ⟷ named_cols[0],
+    # then named_cols[1:] append in order), so zip re-pairs each vid with its
+    # column. Identity (the vid pairs and their order) is unchanged — only the
+    # kind label is refined.
+    for i, (vid_a, col_a) in enumerate(zip(sibling_vids, named_cols)):
+        for vid_b, col_b in zip(sibling_vids[i + 1 :], named_cols[i + 1 :]):
+            kind = _split_relation_kind(col_a, col_b, groups, by_col)
+            res.related_edges.append((vid_a, vid_b, kind))
 
 
 def _split_off_non_contested(
@@ -1242,6 +1371,10 @@ def _split_off_non_contested(
         vids.append(nvid)
         for gk in by_col[col]:
             res.assignments[gk] = nvid
+    # Generic kind by design (NOT the per-pair `_apply_split` heuristics): a
+    # non-contested column never co-occurs with another in one edition, so these
+    # siblings are temporal/rename variants, not parallel code/label or mis-typed
+    # co-deliveries — the pairwise code/datatype signals are meaningless here.
     for i, a in enumerate(vids):
         for b in vids[i + 1 :]:
             res.related_edges.append((a, b, "same_definition_different_column"))
