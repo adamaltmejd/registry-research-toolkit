@@ -211,14 +211,17 @@ the HEAD — building before the diff settles just means rebuilding):
   it with **`run_in_background: true`**, never foreground. The pipeline almost always runs
   in a **worktree**, whose `reg_meta_build/input_data/` holds only `classifications/` —
   the 14 GB SCB/SOS seed lives in the MAIN checkout (the repo root that owns the worktree,
-  i.e. the path above `.claude/worktrees/`), so pass an ABSOLUTE path:
-  `reg-meta-build build-db --input-dir <main-checkout>/reg_meta_build/input_data --providers scb,sos`
+  i.e. the path above `.claude/worktrees/`), so pass an ABSOLUTE path. Also pass the
+  `--db <tmpdir>` GLOBAL flag (a DIRECTORY, BEFORE the subcommand) so the built DB lands
+  in scratch instead of clobbering the real query DB at `~/.local/share/reg_meta/`:
+  `reg-meta-build --db /tmp/regmeta-<slug> build-db --input-dir <main-checkout>/reg_meta_build/input_data --providers scb,sos`
   (validates by default; the seed is read-only). A clean exit 0 means build + validation
   passed; confirm the slug-population line in the log shows no reserved-token / collision
-  rejection. The build WRITES generated `<provider>.auto.toml` into
-  `reg_meta_build/fqid_slugs/` (pre-freeze, untracked) — `git clean -f` / delete them
-  afterward; left in place they dirty the tree and trip the slug-snapshot pytest on any
-  later local commit in the same worktree.
+  rejection. The build also WRITES generated `<provider>.auto.toml` into
+  `reg_meta_build/fqid_slugs/` (pre-freeze, untracked — `--db` does NOT redirect these;
+  they follow `--slug-dir`) — `git clean -f reg_meta_build/fqid_slugs/` afterward; left in
+  place they dirty the tree and trip the slug-snapshot pytest on any later local commit in
+  the same worktree.
 
 Then merge (squash, matching the repo's `(#issue) (#PR)` commit-title history) and
 delete the branch. **Worktree caveat:** `gh pr merge --squash --delete-branch` can fail
