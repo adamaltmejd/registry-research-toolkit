@@ -91,6 +91,9 @@ def test_binding_leaf_embeds_full_record(client):
     # The variable-grain `is_identifier` is serialized as a required field
     # (the `_state_model` passthrough); the fixture seeds is_identifier=0.
     assert state["is_identifier"] is False
+    # The per-state classification slug serializes too; the fixture kon state has
+    # classification_id NULL → None.
+    assert state["classification_slug"] is None
     # The value set is hydrated as (code, label) objects.
     assert state["value_set"] == [
         {"code": "1", "label": "Man"},

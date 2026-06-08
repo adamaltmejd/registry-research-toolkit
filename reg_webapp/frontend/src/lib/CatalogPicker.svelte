@@ -253,6 +253,7 @@ function chooseRepresentation(rep: Representation): void {
               <span class="slug">{rep.column}</span>
               {#if rep.label}<span class="name">{rep.label}</span>{/if}
               {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
+              {#if rep.classificationSlug}<code class="classification">{rep.classificationSlug}</code>{/if}
             </button>
           </li>
         {/each}
@@ -324,7 +325,8 @@ function chooseRepresentation(rep: Representation): void {
     font-weight: 600;
   }
   .leaf-fqid,
-  .name {
+  .name,
+  .classification {
     color: var(--muted);
     font-size: 0.85em;
   }

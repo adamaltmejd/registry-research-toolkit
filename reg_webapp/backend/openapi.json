@@ -1027,6 +1027,17 @@
       "VariableStateModel": {
         "description": "One `variable_state` row \u2014 a per-delivery shape tagged with its variant\ncoordinate (\u00a75.1). `value_set` is the hydrated (code, label) pairs, None when\nthe state carries no value set.",
         "properties": {
+          "classification_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classification Slug"
+          },
           "data_length": {
             "anyOf": [
               {
@@ -1126,7 +1137,8 @@
           "value_set_version_label",
           "value_set_id",
           "value_set",
-          "is_identifier"
+          "is_identifier",
+          "classification_slug"
         ],
         "title": "VariableStateModel",
         "type": "object"

@@ -832,6 +832,8 @@ export interface components {
          *     the state carries no value set.
          */
         VariableStateModel: {
+            /** Classification Slug */
+            classification_slug: string | null;
             /** Data Length */
             data_length: string | null;
             /** Data Type */
