@@ -1,2 +1,6 @@
 node_modules/
 dist/
+
+# Vitest browser-mode run artifacts (transient): failure screenshots + attachments.
+__screenshots__/
+.vitest-attachments/

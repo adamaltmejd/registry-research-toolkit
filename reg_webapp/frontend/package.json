@@ -15,13 +15,17 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
     "@sveltejs/vite-plugin-svelte": "7.1.2",
+    "@vitest/browser": "4.1.7",
+    "@vitest/browser-playwright": "4.1.7",
     "fake-indexeddb": "6.2.5",
     "jsdom": "29.1.1",
     "openapi-typescript": "7.13.0",
+    "playwright": "1.60.0",
     "svelte": "5.55.9",
     "svelte-check": "4.4.8",
     "typescript": "6.0.3",
     "vite": "8.0.14",
-    "vitest": "4.1.7"
+    "vitest": "4.1.7",
+    "vitest-browser-svelte": "2.1.1"
   }
 }
