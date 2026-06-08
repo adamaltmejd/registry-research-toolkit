@@ -180,6 +180,7 @@ class VariableStateModel(BaseModel):
     value_set_id: int | None
     value_set: list[ValueSetMember] | None
     is_identifier: bool
+    classification_slug: str | None
 
 
 class VariableRefModel(BaseModel):

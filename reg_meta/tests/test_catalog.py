@@ -600,6 +600,33 @@ class TestResolveVariableLongitudinal:
         assert r.is_identifier is True
         assert r.states[0].is_identifier is True
 
+    def test_classification_slug_resolved_per_state(self) -> None:
+        # `variable_state.classification_id` is per-state, so the slug resolves
+        # per-state via the LEFT JOIN. The fixture's auto-seeded base state is
+        # code-less (classification_id NULL → slug None); seed a second state
+        # pointing at the 'sun2020' classification and assert its slug comes
+        # through alongside the base state's None.
+        conn = build_slugged_db()
+        cls_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun2020'"
+        ).fetchone()[0]
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2019-01-01",
+            valid_to="2019-12-31",
+            delivery_column_name="Kon",
+            classification_id=cls_id,
+        )
+        conn.commit()
+        by_from = {
+            s.valid_from: s.classification_slug for s in Catalog(conn).states(_KON)
+        }
+        assert by_from["2018-01-01"] is None
+        assert by_from["2019-01-01"] == "sun2020"
+
     def test_states_tagged_with_variant(self) -> None:
         # The same variable delivered in two variants → two states, each carrying
         # its own variant coordinate.

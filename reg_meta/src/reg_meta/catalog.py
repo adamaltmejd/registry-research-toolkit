@@ -156,6 +156,10 @@ class VariableState:
     # ResolvedVariable in scope (the `resolve_at` / `/states` paths) can still
     # read the authoritative identifier flag.
     is_identifier: bool
+    # §5.7 classification family slug for this state's value set (e.g. 'lkf2007'),
+    # resolved per-state from `variable_state.classification_id` — it varies
+    # across a variable's states. None for code-less / unclassified states.
+    classification_slug: str | None
 
 
 @dataclass(frozen=True)
@@ -672,15 +676,19 @@ class Catalog:
         `valid_from <= hi AND valid_to >= lo` (string compare is chronologically
         correct because every stored value is a full date)."""
         # JOIN `variable` to denormalize the variable-grain `is_identifier` flag
-        # onto each state (§5.1 column is variable-grain); columns are qualified
-        # so the ORDER BY stays unambiguous.
+        # onto each state (§5.1 column is variable-grain); LEFT JOIN
+        # `classification` for the per-state `classification_slug` (NULL for
+        # code-less states). Columns are qualified so the ORDER BY stays
+        # unambiguous.
         if register_variant_id is not None:
             rows = self._conn.execute(
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
-                "v.is_identifier FROM variable_state vs "
+                "v.is_identifier, c.slug AS classification_slug "
+                "FROM variable_state vs "
                 "JOIN variable v ON vs.variable_id = v.variable_id "
+                "LEFT JOIN classification c ON vs.classification_id = c.id "
                 "WHERE vs.variable_id = ? AND vs.register_variant_id = ? "
                 "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
                 "vs.state_id",
@@ -691,8 +699,10 @@ class Catalog:
                 "SELECT vs.state_id, vs.register_variant_id, vs.data_type, "
                 "vs.data_length, vs.delivery_column_name, vs.value_set_id, "
                 "vs.value_set_version_label, vs.valid_from, vs.valid_to, "
-                "v.is_identifier FROM variable_state vs "
+                "v.is_identifier, c.slug AS classification_slug "
+                "FROM variable_state vs "
                 "JOIN variable v ON vs.variable_id = v.variable_id "
+                "LEFT JOIN classification c ON vs.classification_id = c.id "
                 "WHERE vs.variable_id = ? "
                 "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
                 "vs.register_variant_id, vs.state_id",
@@ -750,6 +760,7 @@ class Catalog:
             value_set_id=row["value_set_id"],
             value_set=self._value_set_codes(row["value_set_id"]),
             is_identifier=bool(row["is_identifier"]),
+            classification_slug=row["classification_slug"],
         )
 
     def _states_for_variable(self, variable_id: int) -> tuple[VariableState, ...]:

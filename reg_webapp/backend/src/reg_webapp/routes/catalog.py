@@ -224,6 +224,7 @@ def _state_model(state) -> VariableStateModel:
             else None
         ),
         is_identifier=state.is_identifier,
+        classification_slug=state.classification_slug,
     )
 
 

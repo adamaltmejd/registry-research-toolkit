@@ -28,6 +28,7 @@ function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_id: null,
     value_set: null,
     is_identifier: false,
+    classification_slug: null,
     ...over,
   };
 }
@@ -206,22 +207,29 @@ describe("representationsFromStates", () => {
         delivery_column_name: "agrupp",
         value_set_version_label: "5-års intervall",
         value_set: [{ code: "1", label: "a" }] as never,
+        classification_slug: "lkf2007",
       }),
       state({
         delivery_column_name: "agrupp2",
         value_set_version_label: "10-års intervall",
         value_set: null,
       }),
-      // a second state on the same column collapses to the first.
+      // a second state on the same column collapses to the first — the rep's
+      // classificationSlug stays the representative's (here null on the later
+      // state, so a regression would surface as a flip to null).
       state({ delivery_column_name: "agrupp", value_set_version_label: "x" }),
     ]);
     expect(reps.map((r) => r.column)).toEqual(["agrupp", "agrupp2"]);
+    // label / codeCount / classificationSlug are carried from the representative.
     expect(reps[0]).toEqual({
       column: "agrupp",
       label: "5-års intervall",
       codeCount: 1,
+      classificationSlug: "lkf2007",
     });
     expect(reps[1].codeCount).toBeNull();
+    // agrupp2's representative state is code-less → null classification slug.
+    expect(reps[1].classificationSlug).toBeNull();
   });
 
   it("is empty / single when there is no real choice", () => {

@@ -172,12 +172,14 @@ export function deriveType(state: VariableStateModel | undefined): string {
 
 /** One co-existing REPRESENTATION of a concept at a period — a distinct delivery
  * column. `column` is the stable handle set on `binding.representation`; `label`
- * (the value-set version label, e.g. "5-års intervall") + `codeCount` are for
- * display in the chooser. */
+ * (the value-set version label, e.g. "5-års intervall"), `codeCount`, and
+ * `classificationSlug` (the §5.7 classification family, e.g. "lkf2007"; null when
+ * the representative state is code-less) are for display in the chooser. */
 export interface Representation {
   column: string;
   label: string;
   codeCount: number | null;
+  classificationSlug: string | null;
 }
 
 /** The delivery-column representations a binding must choose between among a
@@ -196,10 +198,13 @@ export function representationsFromStates(
       byColumn.set(s.delivery_column_name, s);
     }
   }
+  // label / codeCount / classificationSlug are all sourced from the
+  // representative (first-seen) state per column.
   const toRep = (s: VariableStateModel): Representation => ({
     column: s.delivery_column_name as string,
     label: s.value_set_version_label,
     codeCount: s.value_set?.length ?? null,
+    classificationSlug: s.classification_slug ?? null,
   });
   // Distinct columns valid at the SAME instant (overlapping windows) are parallel
   // representations; distinct columns in non-overlapping windows are a rename.
