@@ -671,7 +671,7 @@ class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
     triage below can read it). The 8-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
-    latest-era delivery column and classification for triage."""
+    latest-era delivery column for triage."""
 
     register_id: int
     register_variant_id: int
@@ -681,10 +681,6 @@ class _StateGroup:
     value_set_id: int | None
     value_set_version_label: str | None
     # grain is part of the *group key* (gkey position 7), not stored here.
-    # classification_id: first non-null seen for the group — the fold
-    # primary signal (same classification family → fold). Correlates with
-    # value_set_id (in the key), so it's stable within a group.
-    classification_id: int | None = None
     unika_min: int | None = None
     unika_max: int | None = None
     # Sticky bit: True iff at least one unika_summary row applied to this
@@ -755,9 +751,9 @@ class _StateGroup:
 #              re-delivery churn that survived grouping): keep the latest-era
 #              state, drop the rest.
 # `Variabelnamn` is a generic family label and is never the fold/split signal
-# — instead the classification family (then the column stem) carries the concept
-# boundary. The discriminator that routes a column to its sibling is build-time
-# in-memory only (the per-column assignment here) — never a shipped table.
+# — the column stem carries the concept boundary. The discriminator that routes
+# a column to its sibling is build-time in-memory only (the per-column
+# assignment here) — never a shipped table.
 
 # Rule 2 grain patterns → fold label token (the token discriminates the
 # folded states of one variable; it does NOT suffix a slug, post-redesign).
@@ -833,35 +829,6 @@ def _group_from_year(grp: _StateGroup) -> int | None:
     return grp.regver_min if grp.regver_min is not None else grp.unika_min
 
 
-def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
-    """Map each ``classification.id`` to its family-root id, following the
-    ``supersedes_id`` chain. Two columns are the same classification family
-    (the fold *primary* signal) iff their classification_ids share a root
-    — e.g. SNI 2002 supersedes SNI 92 supersedes SNI 69, so all three resolve
-    to the SNI-69 root and fold.
-
-    INERT TODAY (documented design note): triage runs inside
-    the coalescer, *before* `populate_classifications`, so the `classification`
-    table is empty here → this returns ``{}`` and `_decide_fold_or_split` falls
-    to the column-stem signal. Stem-folding covers every fold example
-    (`FtgSni69`/`FtgSni92`, `Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED` all share a stem),
-    so the primary signal only matters for same-family columns with *disjoint*
-    stems. Activating it = moving triage to a post-classifications materialize
-    step (keeps the coalescer's in-memory grain, which the final schema drops)."""
-    parent = {
-        r[0]: r[1] for r in conn.execute("SELECT id, supersedes_id FROM classification")
-    }
-
-    def root(cid: int) -> int:
-        seen: set[int] = set()
-        while parent.get(cid) is not None and cid not in seen:
-            seen.add(cid)
-            cid = parent[cid]
-        return cid
-
-    return {cid: root(cid) for cid in parent}
-
-
 @dataclass
 class _TriageResult:
     # gkey → variable_id the state materializes under (siblings for splits).
@@ -900,26 +867,17 @@ def _is_representation_suffix(suffix: str) -> bool:
     return not s or s.isdigit() or s in _REP_SUFFIX_TOKENS
 
 
-def _decide_fold_or_split(folded_cols: list[str], class_roots_present: set[int]) -> str:
+def _decide_fold_or_split(folded_cols: list[str]) -> str:
     """Decide *fold* vs *split* for one source var_id delivered under ≥2
-    distinct columns (rule 3). Classification family is the primary
-    signal; column stem + representation suffix is the fallback.
-    `class_roots_present` is the set of classification family-roots across the
-    columns (empty when unclassified)."""
-    # Primary: all classified columns belong to one classification family →
-    # versions of the same classification → fold.
-    if class_roots_present and len(class_roots_present) == 1:
+    distinct columns (rule 3), purely on the column stem: a shared stem ≥
+    `_FOLD_MIN_STEM` AND every column's differing suffix being a representation
+    token → fold (`Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED`). A concept-word suffix
+    (`Hemkommun`/`Skolkommun`) or no shared stem → split."""
+    prefix = _common_prefix_len(folded_cols)
+    if prefix >= _FOLD_MIN_STEM and all(
+        _is_representation_suffix(c[prefix:]) for c in folded_cols
+    ):
         return "fold"
-    # Fallback: shared stem AND every column's differing suffix is a
-    # representation token → fold (`Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED`). A
-    # concept-word suffix (`Hemkommun`/`Skolkommun`) or no shared stem → split.
-    # (Mixed/multiple classification families also fall here → split.)
-    if len(class_roots_present) <= 1:
-        prefix = _common_prefix_len(folded_cols)
-        if prefix >= _FOLD_MIN_STEM and all(
-            _is_representation_suffix(c[prefix:]) for c in folded_cols
-        ):
-            return "fold"
     return "split"
 
 
@@ -933,7 +891,7 @@ def _cluster_contested(
     a singleton cluster is a column that splits into its own variable.
 
     Two columns share a cluster iff they are pairwise stem-foldable
-    (`_decide_fold_or_split([a, b], set())` == "fold" — shared stem ≥
+    (`_decide_fold_or_split([a, b])` == "fold" — shared stem ≥
     `_FOLD_MIN_STEM` and rep-only differing suffixes), grown into connected
     components and then VERIFIED as a whole: a component that does not fold as a
     unit degrades to singletons, so the partition NEVER folds a set the stem rule
@@ -969,7 +927,7 @@ def _cluster_contested(
 
     # Stem-foldable pairwise unions (sorted for deterministic component roots).
     for a, b in combinations(sorted(contested_cols), 2):
-        if _decide_fold_or_split([folded[a], folded[b]], set()) == "fold":
+        if _decide_fold_or_split([folded[a], folded[b]]) == "fold":
             union(a, b)
 
     comps: dict[str, list[str]] = defaultdict(list)
@@ -981,7 +939,7 @@ def _cluster_contested(
         members_sorted = sorted(members)
         forced = any(c in forced_cols for c in members_sorted)
         whole_folds = (
-            _decide_fold_or_split([folded[c] for c in members_sorted], set()) == "fold"
+            _decide_fold_or_split([folded[c] for c in members_sorted]) == "fold"
         )
         if len(members_sorted) > 1 and (forced or whole_folds):
             clusters.append(members_sorted)  # fold cluster
@@ -998,7 +956,6 @@ def _triage_groups(
     """Resolve pre-triage state collisions. Mutates the DB (mints
     split-sibling `variable` rows) and returns the per-gkey routing the
     coalescer applies when it materializes `variable_state`."""
-    class_roots = _classification_roots(conn)
     res = _TriageResult({}, {}, set(), {}, [], Counter())
 
     by_var: dict[tuple[int, int], list[tuple]] = defaultdict(list)
@@ -1066,14 +1023,7 @@ def _triage_groups(
         # The fold/split DECISION is made on the *contested* columns only (the
         # real collision); the assignment then covers all columns.
         folded = [_ascii_fold_lower(c) for c in contested_cols]
-        roots = {
-            class_roots[grp.classification_id]
-            for c in contested_cols
-            for gk in by_col[c]
-            if (grp := groups[gk]).classification_id is not None
-            and grp.classification_id in class_roots
-        }
-        if _decide_fold_or_split(folded, roots) == "fold":
+        if _decide_fold_or_split(folded) == "fold":
             # Contested columns fold into the original variable; each
             # non-contested column splits off into its own.
             _apply_fold(groups, by_col, contested_cols, folded, orig_vid, res)
@@ -1975,7 +1925,6 @@ def _coalesce_variable_states(
         "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
         "       vi.data_type, vi.data_length, vi.value_set_id, "
         "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
-        "       vi.classification_id, "
         "       vi.variabelnamn, va.delivery_column_name, "
         "       rv.registerversionnamn, "
         "       rv.registerversion_senastgodkanddatum "
@@ -2092,13 +2041,8 @@ def _coalesce_variable_states(
                 data_length=row["data_length"],
                 value_set_id=row["value_set_id"],
                 value_set_version_label=row["value_set_version_label"],
-                classification_id=row["classification_id"],
             )
             groups[gkey] = grp
-        elif grp.classification_id is None and row["classification_id"] is not None:
-            # First non-null classification across the group's cvids — the
-            # fold primary signal.
-            grp.classification_id = row["classification_id"]
 
         # Editions this group was delivered in — the contested gate buckets
         # by edition, not year (regver_id is NOT NULL on variable_instance).

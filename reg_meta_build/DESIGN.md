@@ -633,17 +633,14 @@ fold / split / clustered counts are reported by the `triage:` build line.
 
 Two notes on the triage signals:
 
-- **The classification family is intentionally NOT the fold signal.**
-  `_classification_roots` is wired and `_decide_fold_or_split` still accepts a
-  `class_roots_present` argument, but the per-cluster decision passes it empty:
-  the column STEM is the concept boundary. Activating the family signal was
-  tried (run triage after `populate_classifications`) and measured **195
+- **The classification family plays no role in the triage fold decision.** The
+  column STEM is the sole fold/concept boundary. Activating the family signal
+  was tried (run triage after `populate_classifications`) and measured **195
   over-folds** — it merges distinct concepts that merely share a code system
   (`Hemkommun`/`Skolkommun`, SSYK-primary/SSYK-secondary), so it was dropped.
   A curated fold-override can force specific columns to one cluster later via
   the `_cluster_contested(forced_same=…)` seam (#261); that surface is not yet
-  built. (The now-dead classification-fold branch of `_decide_fold_or_split` is
-  a separate cleanup — #223 thread.)
+  built.
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`),
   from the pair's two delivery columns, most specific first: `code_vs_label_pair`
   (name-based — a `<stem>namn` label paired with its bare-stem or

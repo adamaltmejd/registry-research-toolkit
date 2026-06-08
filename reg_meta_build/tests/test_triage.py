@@ -491,19 +491,12 @@ class TestCommonPrefixLen:
 
 class TestDecideFoldOrSplit:
     def test_shared_stem_folds(self) -> None:
-        assert _decide_fold_or_split(["ssyk3", "ssyk5"], set()) == "fold"
-        assert _decide_fold_or_split(["bciv", "bcivred"], set()) == "fold"
+        assert _decide_fold_or_split(["ssyk3", "ssyk5"]) == "fold"
+        assert _decide_fold_or_split(["bciv", "bcivred"]) == "fold"
 
     def test_disjoint_stems_split(self) -> None:
-        assert _decide_fold_or_split(["hemkommun", "skolkommun"], set()) == "split"
-        assert _decide_fold_or_split(["lid", "lnamn"], set()) == "split"
-
-    def test_one_classification_family_folds(self) -> None:
-        # Even disjoint stems fold when they're one classification family.
-        assert _decide_fold_or_split(["foo", "bar"], {7}) == "fold"
-
-    def test_multiple_classification_families_split(self) -> None:
-        assert _decide_fold_or_split(["foosni", "foosni2"], {7, 9}) == "split"
+        assert _decide_fold_or_split(["hemkommun", "skolkommun"]) == "split"
+        assert _decide_fold_or_split(["lid", "lnamn"]) == "split"
 
 
 class TestClusterContested:
