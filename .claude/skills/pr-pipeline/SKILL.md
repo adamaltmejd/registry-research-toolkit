@@ -21,10 +21,10 @@ edit and report. The five role teammates are defined in `.claude/agents/`: `impl
 `simplifier`, `tester`, `reviewer`, `docs-updater`.
 
 **Set up a real team FIRST — this is load-bearing, don't skip it** (FULL path; a LITE
-run skips the team — see **Pipeline weight**). Before dispatching
+run skips the team — see **Choosing the run shape**). Before dispatching
 anyone, call **`TeamCreate`** (e.g. `team_name: "pr-pipeline-<slug>"`,
 `agent_type: "team-lead"`). Then spawn the roles this run needs — only those (see
-**Roles by change class**) — with the `Agent` tool, passing all THREE of:
+**Choosing the run shape**) — with the `Agent` tool, passing all THREE of:
 
 - **`subagent_type`** — the ROLE (e.g. `implementer`). This is what LOADS
   `.claude/agents/implementer.md` (its system prompt + tool restrictions). **Omitting it
@@ -103,13 +103,14 @@ not stuck. Note a long task's rough duration when you dispatch, so silence doesn
 as failure. Only if a teammate stays silent past a task-calibrated window: send **ONE**
 `SendMessage` status query (ASK for ground truth — never guess from your sandbox), and if
 it's genuinely wedged, re-plan around it rather than block the pipeline (there's no
-force-kill — see Teardown). Don't re-ping in a tight loop; the query is already queued.
+force-kill — see **Known framework limits**). Don't re-ping in a tight loop; the query is
+already queued.
 
 ## Pipeline at a glance
 
 Do **Step 0** once, then run **A→E** for EACH planned PR, strictly serially. The
 detailed prose for each step is below — this is the map (the FULL path; see
-**Pipeline weight** for the lighter LITE variant).
+**Choosing the run shape** for the LITE variant).
 
 - **0 · Plan** — read issue(s) + comments + code; split into the smallest coherent
   PRs; order by dependency; settle forks with `AskUserQuestion`; confirm a multi-PR
@@ -124,7 +125,7 @@ detailed prose for each step is below — this is the map (the FULL path; see
 - **D · Docs** — docs-updater on the final code (commit) — AFTER convergence, BEFORE
   the external hold.
 - **E · Merge gate** — ALL of: reviewer converged · CI green · external-review hold
-  settled (poll for a bot review on HEAD, ≤10 min ceiling) · (build-affecting work
+  settled (poll for a bot review on HEAD) · (build-affecting work
   only) real `build-db` green, run LAST. Then squash-merge `(#issue) (#PR)`, confirm
   `MERGED` via `gh pr view` (don't trust the merge command's exit code in a worktree),
   clean up local + remote branches.
@@ -136,58 +137,40 @@ parallelism is intra-PR role fan-out (Step A implementers / Step C reviewers) ov
 disjoint surfaces. Ignore idle notifications and yield (don't poll) while a teammate
 works; only YOU reach the human.
 
-## Pipeline weight — FULL vs LITE
+## Choosing the run shape
 
-The full A→E machinery (standing 5-role team, simplify + independent test-suggest, docs
-pass, ~10-min external hold, teardown) earns its overhead on large or risky work. On a
-**small, low-risk single PR it dwarfs the change** — so choose the weight during Step 0:
+Two independent dials, both set in Step 0 and composable: **weight** (by size/risk — sets
+team, draft, hold) and **roles** (by change class — sets which of the five run). Default
+to FULL when unsure.
 
-- **FULL** — default for anything non-trivial; everything below as written.
-- **LITE** — when the work is ONE PR and ALL of: ≲150 changed lines / ≲5 files, one
-  package/subsystem, no DDL/schema/`SCHEMA_VERSION`/build-affecting change, no
-  data-safety / PII / concurrency / security surface, and no unresolved design fork. (The
-  inverse of the Step C review-fan-out triggers.)
+**Weight — by size/risk:**
 
-LITE keeps every git/safety invariant (you still own ALL git; agents only edit + report)
-and changes only the orchestration:
+| | LITE | FULL |
+|---|---|---|
+| **When** | ONE PR, and ALL of: ≲150 lines / ≲5 files, one subsystem, no DDL/schema/`SCHEMA_VERSION`/build-affecting change, no data-safety/PII/concurrency/security, no open fork | anything else (the inverse — includes the Step C fan-out triggers) |
+| **Team** | none — **foreground** one-shot `Agent` per role (`subagent_type` set so the role `.md` loads; no `team_name`, no `run_in_background`) | standing team — `TeamCreate` + spawned members per the team rules above |
+| **Reporting** | the one-shot's **final message returns as your tool result**, so its spawn prompt must say *"end your turn with the summary + files-touched; do NOT `SendMessage`"* — the role `.md`'s team-reporting line needs a team that isn't there | teammates report via `SendMessage` (the role `.md` default) |
+| **PR** | open **ready** (no pre-review churn to hide) | open **draft** → ready after Step B |
+| **Hold** | short — Step E ceiling, lower end | up to the Step E ceiling |
 
-- **No standing team.** Skip `TeamCreate`; dispatch each role as a one-shot `Agent` (still
-  pass `subagent_type` so the role `.md` loads — just omit `team_name`). One-shot agents
-  finish and vanish: **no teardown, no idle-notification stream** — that is most of the
-  overhead the full path pays.
-- **Fewer roles: implementer → reviewer (one pass) → merge.** Fold what the simplifier and
-  tester would catch INTO the implementer's brief ("keep it simple; add the tests that lock
-  the new logic"); skip the standalone simplifier and tester. Run the docs-updater **only
-  if** the diff changed a documented contract (DESIGN.md / README / a public docstring).
-- **Open the PR ready, not draft** — with no pre-review simplify/test churn to hide, the
-  draft→ready step buys nothing.
-- **Short external hold** (Step E) — same `@codex review` + poll, ~3–4 min ceiling for a
-  tiny diff. A review-fix re-dispatch is a fresh one-shot reviewer on the delta (a vanished
-  one-shot can't be re-addressed by name).
+Because LITE one-shots are foreground and just return, the *waiting-on-a-teammate /
+yield-don't-poll* and *teardown* problems **don't apply to LITE**. A review fix is a fresh
+one-shot on the delta (a vanished one-shot can't be re-addressed by name). **Escalate
+LITE→FULL** the moment scope breaks (diff blows the triggers, a fork surfaces, a reviewer
+flags data-safety/concurrency): stand up the team and resume at the right step.
 
-**Escalate LITE→FULL** the moment the scope breaks (diff blows past the triggers, a fork
-surfaces, or a reviewer flags a data-safety / concurrency issue): stand up the team and
-resume at the right step. When unsure, pick FULL.
+**Roles — by change class** (implementer + reviewer ALWAYS run; the rest are conditional,
+and a role you won't use is one you must NOT spawn):
 
-## Roles by change class
+| Role | Run only when |
+|---|---|
+| **simplifier** | the diff adds/changes real logic worth de-duplicating (a comment / config / rename / reference sweep has nothing to simplify) |
+| **tester** | behaviour changes (no new behaviour, or existing snapshot/idempotence tests already cover it → skip) |
+| **docs-updater** | code or a contract drifts from AUTHORED docs (a change that edits/repoints docs directly, or touches no documented surface, has no drift) |
 
-Weight (above) is about team-vs-no-team by SIZE; this is about WHICH roles by the
-**kind** of change — they compose. The implementer and reviewer always run; the other
-three are conditional, and a role you won't use is one you must not spawn (idle members
-are teardown cost, and a never-spawned role you message anyway silently swallows the
-message — see the team rules above):
-
-- **simplifier** — only when the diff adds or changes real logic worth de-duplicating. A
-  comment / docstring / config / pure-rename or reference sweep has nothing to simplify.
-- **tester** — only when behaviour changes. No new/changed behaviour (docs, a swept
-  reference, config already covered by existing snapshot/idempotence tests) → skip.
-- **docs-updater** — only when code or a contract drifts from AUTHORED docs. A change that
-  edits/repoints docs directly, or touches no documented surface, has no drift to fix.
-
-So a large *mechanical* change (even 100+ files) can still be implementer + reviewer
-only: its size forces the FULL team + fan-out, but its class needs none of
-simplify/test/docs. Skipping a role is a planned decision you NAME in the Final report,
-never a silent omission.
+So a large *mechanical* change (even 100+ files) is still implementer + reviewer only —
+size forces the FULL team + fan-out, class needs none of simplify/test/docs. Skipping a
+role is a planned decision you NAME in the Final report, never a silent omission.
 
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
@@ -199,7 +182,7 @@ description, or a mix. Plan before building:
    `<package>/DESIGN.md` to understand intent and constraints.
 2. **Decide the shape — one PR or several.** Break the request into the smallest set
    of coherent, independently reviewable/mergeable PRs. Write a one-line scope per PR,
-   and pick each PR's **weight** (FULL/LITE — see **Pipeline weight**).
+   and pick each PR's **shape** (weight + roles — see **Choosing the run shape**).
 3. **Decide the order.** Sequence the PRs by dependency; note which are independent. You
    execute them **strictly SERIALLY** — one fully merged before the next starts; never run
    two PRs at once. The only parallelism in this pipeline is **within a single PR** —
@@ -218,6 +201,9 @@ Then run the per-PR pipeline below for each planned PR, in order.
 ## Per-PR pipeline (repeat for each planned PR, in dependency order)
 
 ### A. Implement, then open a DRAFT PR
+
+*LITE: one **foreground** one-shot implementer (no team), open the PR **ready** not draft
+(see **Choosing the run shape**); the rest of this step is the FULL path.*
 
 - Create and check out a branch for this PR (`s/<slug>`); branch creation is your
   job, not the implementer's. You may be running in a **git worktree** (with `main`
@@ -268,7 +254,7 @@ Then run the per-PR pipeline below for each planned PR, in order.
 
 ### B. Simplify + test-suggest, then mark ready
 
-Run each step only if its role applies (**Roles by change class**) — a no-logic /
+Run each step only if its role applies (**Choosing the run shape** → roles) — a no-logic /
 no-behaviour change may run neither, leaving this step as just "mark ready."
 
 1. Dispatch **simplifier** → applies behaviour-preserving cleanups and reports what it
@@ -322,8 +308,8 @@ fan out — simplify/test/docs stay single):
 
 ### D. Docs
 
-Run this step **only if** code or a contract drifted from authored docs (**Roles by
-change class**); a change that edits/repoints docs directly or touches no documented
+Run this step **only if** code or a contract drifted from authored docs (**Choosing the
+run shape** → roles); a change that edits/repoints docs directly or touches no documented
 surface has no drift — skip straight to Step E.
 
 Dispatch **docs-updater** on the final code → it fixes doc drift (DESIGN.md / README /
@@ -412,7 +398,8 @@ escalated to the human.
 
 Once every planned PR is merged (or the run is abandoned), shut the team down: send each
 teammate a `SendMessage` with `message: {type: "shutdown_request"}`, then call
-**`TeamDelete`** (it refuses while any member is still active).
+**`TeamDelete`** (it refuses while any member is still active). (A LITE run has no team —
+nothing to tear down.)
 
 **Shutdown is LATENT — send it ONCE, then move on.** Idle background members can take
 *many minutes* (observed ~10) to wake on the shutdown turn and emit `shutdown_approved`,
@@ -420,26 +407,33 @@ even though they answered work dispatches in 1–2 min mid-pipeline. So: send th
 shutdown round, write your **Final report** immediately, and let the delayed
 `shutdown_approved` notifications arrive on their own — then retry `TeamDelete` (or let
 the session clean up on exit). Do **NOT** burn turns re-sending shutdowns, sleeping, and
-re-calling `TeamDelete` in a tight loop — the requests are already queued, just slow.
-Don't second-guess the message *shape*, either: `message: {type: "shutdown_request"}` IS
-the correct form — re-sending it differently encoded changes nothing (two real runs wasted
-turns re-issuing shutdowns suspecting a format bug; latency was the only cause).
-There is **no force-stop and no per-agent kill** for a genuinely hung teammate
-(confirmed against the Claude Code docs + issues #34476 / #31788): `TaskStop` accepts
-only background-*task* ids (your `Bash`/poller jobs), NOT the `name@team` agent id;
-there is no kill keybinding and no `/agents` stop command; and `Esc` interrupts only
-the LEAD's own turn, never a teammate's in-flight turn. In-process teammates run their
-own event loop inside the session, so a truly hung one dies only when the **session is
-interrupted/restarted** (Ctrl+C / close the terminal). If instead only `TeamDelete` is
-stuck waiting on a hung member and you want to unblock without restarting, the
-documented workaround is to move the team state aside manually:
-`mv ~/.claude/teams/<team> /tmp/ && mv ~/.claude/tasks/<team> /tmp/` (frees the team
-name/files; the hung in-process loop itself still only dies on session restart). The
-real defense is prevention: bounded tasks with clear Verify, and never hard-block the
-pipeline on one teammate — re-plan around a stuck one.
+re-calling `TeamDelete` in a tight loop — the requests are already queued, just slow. Nor
+second-guess the message *shape*: `message: {type: "shutdown_request"}` IS correct —
+re-encoding it changes nothing (two real runs wasted turns suspecting a format bug;
+latency was the only cause). For a genuinely hung member there is no force-stop — see
+**Known framework limits**.
 
 Don't leave a live team and its task list dangling between requests. Then sweep stray git
 state: `git worktree prune` (and `git worktree remove` any `isolation: "worktree"`
 leftover), and `git branch -D` any merged `s/<slug>` still lingering as `[gone]` (see
 Step E). Leave pre-existing branches you didn't create (and any branch checked out in
 another worktree) alone.
+
+## Known framework limits
+
+Current agent-teams tooling gaps — they age faster than the pipeline logic above (verified
+against the Claude Code docs + issues #34476 / #31788):
+
+- **No force-stop / no per-agent kill.** `TaskStop` accepts only background-*task* ids
+  (your `Bash`/poller jobs), NOT the `name@team` agent id; there is no kill keybinding and
+  no `/agents` stop command; `Esc` interrupts only the LEAD's own turn, never a teammate's
+  in-flight turn. In-process teammates run their own event loop inside the session, so a
+  truly hung one dies only when the **session is interrupted/restarted** (Ctrl+C / close
+  the terminal). Prevention is the real defense: bounded tasks with clear Verify, and never
+  hard-block the pipeline on one teammate — re-plan around a stuck one.
+- **`TeamDelete` wedged on a hung member?** To unblock without restarting, move the team
+  state aside: `mv ~/.claude/teams/<team> /tmp/ && mv ~/.claude/tasks/<team> /tmp/` (frees
+  the team name/files; the hung in-process loop itself still only dies on session restart).
+- **`SendMessage` to an unspawned name returns `success: true`** and silently drops the
+  message (no auto-create, no error) — so spawn a role before messaging it (see **How a
+  team behaves**).
