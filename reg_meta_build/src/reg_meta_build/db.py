@@ -528,7 +528,7 @@ CREATE TABLE variable_alias (
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
 -- Populated at build time from a maintainer-curated seed (classifications.toml)
 -- that maps raw variable_instance.vardemangdsversion labels to normalized
--- classification rows. See DESIGN.md § "Classifications".
+-- classification rows. See DESIGN.md → Classification seed.
 CREATE TABLE classification (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     short_name       TEXT NOT NULL UNIQUE,

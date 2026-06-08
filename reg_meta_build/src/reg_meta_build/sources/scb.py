@@ -529,7 +529,7 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     # identifier_semantics) into is_identifier. The two sources are
     # COMPLEMENTARY: `unika.identitetsvariabel` (above) misses identifiers that
     # Identifierare declares (per-column match gaps), and Identifierare misses a
-    # few that unika flags — so OR maximizes recall (the §A1.2 lift was
+    # few that unika flags — so OR maximizes recall (the A1.2 lift was
     # unika-only and silently dropped ~7 register-level declared identifiers).
     # Keyed on the source var_id (provider_key), so it lands on the one
     # pre-triage variable per var_id; the triage split then copies it to siblings
@@ -669,7 +669,7 @@ def _parse_unika_year(raw: str | None) -> int | None:
 @dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
-    the triage below can read it). The 8-component group key lives in the
+    triage below can read it). The 8-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
     latest-era delivery column and classification for triage."""
 
