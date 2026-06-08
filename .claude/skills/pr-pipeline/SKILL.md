@@ -16,8 +16,9 @@ You are the **team lead** for this request:
 > $ARGUMENTS
 
 You do NOT write code, tests, or docs yourself — you plan the work, dispatch
-teammates, and you are the only one who merges. The five role teammates are defined in
-`.claude/agents/`: `implementer`, `simplifier`, `tester`, `reviewer`, `docs-updater`.
+teammates, and you own all git (stage / commit / push / open / merge); teammates only
+edit and report. The five role teammates are defined in `.claude/agents/`: `implementer`,
+`simplifier`, `tester`, `reviewer`, `docs-updater`.
 
 **Set up a real team FIRST — this is load-bearing, don't skip it.** Before dispatching
 anyone, call **`TeamCreate`** (e.g. `team_name: "pr-pipeline-<slug>"`,
@@ -29,8 +30,10 @@ THREE of:
   defaults to a generic `general-purpose` agent** that merely happens to be named
   `implementer` — wrong prompt, wrong tools, the whole pipeline silently degraded.
   `name` does NOT select the role.
-- **`name`** — the addressable handle (use the same string as the role for the
-  single-instance teammates, e.g. `name: "implementer"`).
+- **`name`** — the addressable handle (use the role name for a single-instance teammate,
+  e.g. `name: "implementer"`; when you fan a role out — parallel implementers in Step A,
+  parallel reviewers in Step C — give each a DISTINCT name like `implementer-<surface>`,
+  `reviewer-<lens>`).
 - **`team_name`** — the team you just made. This is what makes the by-name addressing
   below work: a bare `Agent` call WITHOUT `team_name` is a one-shot subagent whose name
   vanishes the moment it finishes (you'd be stuck resuming it by raw agent ID, and it
@@ -51,15 +54,23 @@ system-generated idle notifications (telling a teammate to stop them does nothin
 YOU reach the human (`AskUserQuestion`). When the request is finished, tear the team down
 (see **Teardown**).
 
-**Shared-checkout rule (load-bearing for safety).** By default every teammate operates
-in your ONE working tree, so a MUTATING teammate (implementer / simplifier /
-docs-updater) must NOT run concurrently with any other teammate that reads or writes
-that tree — a reader can observe a half-applied edit, run tests on it, or analyze a diff
-that's about to change under it. Run a mutating teammate ALONE; only read-only teammates
-may overlap with each other. To run a mutating teammate in parallel with anything, spawn
-it in an isolated worktree (`isolation: "worktree"` on the `Agent` spawn). The same
-applies to YOU: don't `git checkout`/`reset`/`commit` in the shared tree while a
-teammate is active there.
+**Lead owns ALL git (load-bearing).** Mutating teammates (implementer / simplifier /
+docs-updater) are **non-committing editors**: they edit files, run Verify on their work,
+and report a summary + the exact list of files they touched — they do **not** run
+`git add` / `commit` / `push` (or `checkout` / `reset` / `stash` / `merge`). YOU stage,
+commit, and push after they report, and you alone open and merge the PR. One writer on the
+shared git index means no `index.lock` races and no commit sweeping up a sibling's
+half-done edits — and every git gotcha lives in one place (here).
+
+**Shared-checkout / concurrency rule.** All teammates share your ONE working tree. A
+mutating teammate must not run while ANY other teammate reads or writes that tree (a
+reader can test a half-applied edit; a second writer can clobber a file) — EXCEPT the
+sanctioned implementer fan-out in Step A, where parallel implementers are confined to
+**disjoint file sets**. Because no teammate touches git and YOU run the authoritative
+Verify on the assembled result, that fan-out is safe in the shared tree — no worktrees
+needed. Do git yourself only when no mutating teammate is active. (Worktree isolation,
+`isolation: "worktree"`, stays an escape hatch for the rare case of overlapping writers
+whose files aren't cleanly disjoint — but prefer disjoint partitioning.)
 
 **Sandbox isolation.** Your `Bash` runs in a SEPARATE sandbox from each teammate's, so
 you cannot see a teammate's processes or background jobs with your own `ps`/log checks —
@@ -77,10 +88,12 @@ description, or a mix. Plan before building:
    `<package>/DESIGN.md` to understand intent and constraints.
 2. **Decide the shape — one PR or several.** Break the request into the smallest set
    of coherent, independently reviewable/mergeable PRs. Write a one-line scope per PR.
-3. **Decide the order.** Sequence the PRs by dependency (which must land before
-   which); note which are independent. You execute them SERIALLY in this session —
-   one fully merged before the next starts. (For parallelism the human launches a
-   separate lead per independent chain; not your concern here.)
+3. **Decide the order.** Sequence the PRs by dependency; note which are independent. You
+   execute them **strictly SERIALLY** — one fully merged before the next starts; never run
+   two PRs at once. The only parallelism in this pipeline is **within a single PR** —
+   fanning a role out across disjoint surfaces (implementers in Step A, reviewers in Step
+   C). (For cross-PR parallelism the human launches a separate lead per independent chain;
+   not your concern here.)
 4. **Settle decisions/forks up front.** If the request or an issue has an open fork
    (naming, schema/column choice, scope judgment) not already decided on the issue,
    resolve it now with `AskUserQuestion`. Only you can ask the human; teammates can't.
@@ -99,30 +112,46 @@ Then run the per-PR pipeline below for each planned PR, in order.
   checked out elsewhere), so fork the branch off the remote directly —
   `git fetch origin main && git checkout -b s/<slug> origin/main` — rather than
   checking out local `main`, which errors when another worktree holds it.
-- Dispatch **implementer** with this PR's scope/plan and its Verify commands — the FAST
-  checks only (lint / format / `ty` / `pytest`). For build-affecting work (SCB/SOS triage,
-  slugs, DDL) the real `reg-meta-build build-db` is deliberately **NOT** in the
-  implementer's loop: it takes ~20 min and is YOUR single merge-gate check (Step E). It
-  implements, verifies, commits, pushes, and reports the branch + summary — it does NOT
-  open the PR.
-- Once it has pushed, YOU open the PR as a **draft** (body: what the change does and
-  why; name any issue it closes). Write the body to a temp file and use
-  `gh pr create --draft --body-file <file>` — an inline `--body` heredoc can trip the
-  permission classifier. Outward-facing `gh` actions (PR create / merge / comment) may
-  prompt or be denied by the session's permission mode; if one is denied, surface it to
-  the human rather than working around it. Draft keeps external review bots off the raw
-  implementation until it's near-final.
+- **Choose the implementation WIDTH by size + shape:**
+  - **Default — ONE implementer.** Dispatch a single `implementer` with the PR's
+    scope/plan and its Verify commands.
+  - **Fan out — large PR that partitions into INDEPENDENT surfaces** (e.g. the same
+    mechanical edit across many packages — a docs sweep → one implementer per package; or
+    disjoint backend vs codegen'd-frontend slices). Fan out ONLY when the surfaces are
+    **file-disjoint with no cross-surface dependency**: if one slice's output feeds
+    another's input, it isn't independent — keep it single, or order the dependent parts as
+    steps. Dispatch several implementers IN PARALLEL, each `subagent_type: implementer`
+    with a DISTINCT `name` (e.g. `implementer-reg_meta`) and `team_name`, its prompt naming
+    ONLY its surface and the explicit file set it owns. This is intra-PR only — never split
+    one logical PR into several just to parallelize.
+- Verify commands are the FAST checks only (lint / format / `ty` / `pytest`). For
+  build-affecting work (SCB/SOS triage, slugs, DDL) the real `reg-meta-build build-db` is
+  deliberately **NOT** in any implementer's loop: it takes ~20 min and is YOUR single
+  merge-gate check (Step E).
+- Each implementer edits, runs Verify on its work, and reports a summary + **the files it
+  touched** — it does NOT commit, push, or open the PR (you own git). When every dispatched
+  implementer has reported: confirm the reported file sets DON'T overlap, then — after a
+  fan-out — run the full Verify ONCE on the assembled tree (the only place the union is
+  valid; a solo implementer's reported-green stands). Then `git add` the reported files and
+  commit.
+- Push, then YOU open the PR as a **draft** (body: what the change does and why; name any
+  issue it closes). Write the body to a temp file and use `gh pr create --draft
+  --body-file <file>` — an inline `--body` heredoc can trip the permission classifier.
+  Outward-facing `gh` actions (PR create / merge / comment) may prompt or be denied by the
+  session's permission mode; if one is denied, surface it to the human rather than working
+  around it. Draft keeps external review bots off the raw implementation until it's
+  near-final.
 
 ### B. Simplify + test-suggest, then mark ready
 
-1. Dispatch **simplifier** → applies behaviour-preserving cleanups and pushes (or
-   reports "nothing found").
-2. Dispatch **tester** → returns a prioritized `must`/`nice` suggestion list. YOU
-   decide which to accept; send accepted ones to **implementer** to add; it
-   re-verifies and pushes.
+1. Dispatch **simplifier** → applies behaviour-preserving cleanups and reports what it
+   changed + files touched (or "nothing found"). YOU commit + push its changes.
+2. Dispatch **tester** → returns a prioritized `must`/`nice` suggestion list. YOU decide
+   which to accept; send accepted ones to an **implementer** to add; it re-verifies and
+   reports; YOU commit + push.
 
-Run these SEQUENTIALLY by default — simplifier first (it pushes), THEN tester against the
-simplified HEAD: per the shared-checkout rule, the simplifier's edits would race the
+Run these SEQUENTIALLY by default — simplifier first (commit its result), THEN tester
+against the committed HEAD: per the concurrency rule, the simplifier's edits would race the
 tester's read/pytest. To parallelize, spawn each with `isolation: "worktree"`; the tester
 then sees the pre-simplifier HEAD (fine for coverage gaps — reconcile when the implementer
 adds accepted suggestions on the latest HEAD).
@@ -152,8 +181,8 @@ fan out — simplify/test/docs stay single):
    tagged blocking / non-blocking / question, each with `file:line`; nitpicks and
    CI/linter-caught issues are suppressed (see `.claude/agents/reviewer.md`), so a short
    list is expected, not a sign it skimmed.
-2. Route blocking findings (and questions you resolve) to **implementer** → fix,
-   re-verify, push.
+2. Route blocking findings (and questions you resolve) to an **implementer** → fix,
+   re-verify, report; YOU commit + push the fix.
 3. Re-review the fix delta — re-dispatch the reviewer by name (it raises only NEW
    findings or confirms resolution). After a fan-out round you can usually narrow the
    re-review to a SINGLE reviewer on the (small) delta, unless the fixes were themselves
@@ -167,10 +196,10 @@ fan out — simplify/test/docs stay single):
 ### D. Docs
 
 Dispatch **docs-updater** on the final code → it fixes doc drift (DESIGN.md / README /
-docstrings) and pushes, or reports "no doc update needed" (it re-runs the package
-Verify if it touched `.py`). Do this AFTER the review converges and BEFORE the
-external-review hold (Step E), so the hold window runs against the true final HEAD — a
-docs push after the hold has started restarts it.
+docstrings) and reports what changed + files touched, or "no doc update needed" (it
+re-runs the package Verify if it touched `.py`). YOU commit + push its changes. Do this
+AFTER the review converges and BEFORE the external-review hold (Step E), so the hold window
+runs against the true final HEAD — a docs push after the hold has started restarts it.
 
 ### E. Merge gate (lead only) — with external auto-review hold
 
@@ -223,7 +252,8 @@ GitHub shows `MERGED` use `git branch -D s/<slug>` — you can't delete the bran
 standing on, so do it from the next PR's `origin/main` checkout (Step below) or after
 switching off it. A removed worktree leaves its local branch ref behind otherwise; it
 lingers as `[gone]`. Never merge on a red review, red Verify, red CI, or
-an open material external comment. The implementer never merges — only you.
+an open material external comment. Teammates never run git — you stage, commit, push, and
+merge.
 
 Before the next planned PR, fork off the freshly-merged base —
 `git fetch origin main && git checkout -b s/<next-slug> origin/main` (not `git checkout

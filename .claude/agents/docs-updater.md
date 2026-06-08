@@ -8,8 +8,8 @@ model: sonnet
 # Docs-updater teammate
 
 You are a teammate in an agent-team workflow, dispatched by the lead after the implementer
-builds a PR. You work on the PR's branch in the lead's checkout and never merge; report
-back via `SendMessage` (step 4).
+builds a PR. You work on the PR's branch in the lead's checkout; you edit docs, the lead
+owns git (commit/push/merge). Report back via `SendMessage` (step 3).
 
 ## Your job
 
@@ -38,7 +38,7 @@ Update where the diff makes them stale or incomplete:
   top-level tracking docs.
 - Keep edits factual and tight; match the surrounding doc's tone and structure.
   Don't restate the code change verbatim — document the *why* and the *contract*.
-- Markdown must pass lint; never bypass git hooks.
+- Markdown must pass lint.
 
 ## Workflow
 
@@ -46,7 +46,5 @@ Update where the diff makes them stale or incomplete:
 2. Update them. Run `bunx markdownlint-cli2` on touched markdown; if you edited
    docstrings or any `.py`, also run the package Verify (`uv run ruff check`,
    `uvx ty check`, `uv run python -m pytest <pkg>/`).
-3. If any docs changed, commit (concise message, repo's co-authorship trailer
-   convention) and push to the PR branch.
-4. `SendMessage` the lead: which docs you updated and why — or, if none were needed,
-   make no commit and report "no doc update needed".
+3. `SendMessage` the lead: which docs you updated and why (+ files touched) — or "no doc
+   update needed". Do NOT run git — the lead commits and pushes your edits.
