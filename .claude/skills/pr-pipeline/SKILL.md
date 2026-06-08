@@ -38,21 +38,18 @@ THREE of:
 
 Also pass `run_in_background: true` so each joins as a persistent member. Keep the spawn
 prompt MINIMAL — the role `.md` already defines behavior; do **not** ask the teammate to
-"acknowledge readiness" (its ack races with your first work dispatch — the ack lands
-saying "send me work" *after* you already did — and just adds idle noise). `TeamCreate`
-requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams are
-disabled, STOP and tell the user to enable that flag.
+"acknowledge readiness" (the ack races your first work dispatch and just adds idle noise).
+`TeamCreate` requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams
+are disabled, STOP and tell the user to enable that flag.
 
-**How a team behaves (the mental model):** teammates are addressable **by name** for the
-whole pipeline — to re-dispatch one (re-review, apply fixes) you just `SendMessage` its
-name; no agent-ID juggling. They **report to you via `SendMessage`**, delivered as a
-normal conversation turn, and they **can message you with questions mid-run** (you
-answer by name). After each turn a teammate **goes idle** — that is NORMAL, not "done"
-or "stuck": an idle teammate still receives messages and wakes on the next one, so don't
-nag idleness. Idle notifications are **system-generated** — telling a teammate to stop
-sending them does nothing; just ignore them. Only YOU can reach the human (via
-`AskUserQuestion`). When the whole request is finished, tear the team down (see
-**Teardown** at the end).
+**How a team behaves:** teammates are addressable **by name** for the whole pipeline — to
+re-dispatch one (re-review, apply fixes) just `SendMessage` its name. They **report via
+`SendMessage`** (a normal conversation turn) and **can message you with questions
+mid-run**. After each turn a teammate **goes idle** — NORMAL, not "done"/"stuck": it still
+receives messages and wakes on the next, so don't nag idleness, and ignore the
+system-generated idle notifications (telling a teammate to stop them does nothing). Only
+YOU reach the human (`AskUserQuestion`). When the request is finished, tear the team down
+(see **Teardown**).
 
 **Shared-checkout rule (load-bearing for safety).** By default every teammate operates
 in your ONE working tree, so a MUTATING teammate (implementer / simplifier /
@@ -105,9 +102,9 @@ Then run the per-PR pipeline below for each planned PR, in order.
 - Dispatch **implementer** with this PR's scope/plan and its Verify commands — the FAST
   checks only (lint / format / `ty` / `pytest`). For build-affecting work (SCB/SOS triage,
   slugs, DDL) the real `reg-meta-build build-db` is deliberately **NOT** in the
-  implementer's loop: it takes ~20 min and is YOUR single merge-gate check (Step E), so
-  the implementer never re-runs it per-push or builds on a non-final HEAD. It implements,
-  verifies, commits, pushes, and reports the branch + summary — it does NOT open the PR.
+  implementer's loop: it takes ~20 min and is YOUR single merge-gate check (Step E). It
+  implements, verifies, commits, pushes, and reports the branch + summary — it does NOT
+  open the PR.
 - Once it has pushed, YOU open the PR as a **draft** (body: what the change does and
   why; name any issue it closes). Write the body to a temp file and use
   `gh pr create --draft --body-file <file>` — an inline `--body` heredoc can trip the
@@ -124,14 +121,11 @@ Then run the per-PR pipeline below for each planned PR, in order.
    decide which to accept; send accepted ones to **implementer** to add; it
    re-verifies and pushes.
 
-Run these two SEQUENTIALLY by default — simplifier first, it pushes, THEN tester against
-the simplified HEAD. They share your single checkout (see the shared-checkout rule
-above), and the simplifier edits/commits while the tester reads the tree and runs
-pytest, so running them concurrently races (the tester would analyze a half-edited tree
-or a pre-simplification diff). Parallelize them ONLY by spawning each in an isolated
-worktree (`isolation: "worktree"` on the `Agent` spawn); then the tester sees the
-pre-simplifier HEAD, which is fine for coverage gaps — reconcile when the implementer
-adds the accepted suggestions on the latest HEAD.
+Run these SEQUENTIALLY by default — simplifier first (it pushes), THEN tester against the
+simplified HEAD: per the shared-checkout rule, the simplifier's edits would race the
+tester's read/pytest. To parallelize, spawn each with `isolation: "worktree"`; the tester
+then sees the pre-simplifier HEAD (fine for coverage gaps — reconcile when the implementer
+adds accepted suggestions on the latest HEAD).
 
 Then mark the PR **ready for review** — now external auto-review (Codex/Copilot) and
 CI-on-ready fire once, on near-final code.
@@ -144,17 +138,15 @@ fan out — simplify/test/docs stay single):
 - **Default — focused diff:** ONE `reviewer` teammate, iterating (steps 1–5).
 - **Fan out — large or high-risk diff** (rough triggers: >~400 changed lines or >~8
   files, multiple packages/subsystems, DDL/schema/build-affecting, or security /
-  data-safety / concurrency-sensitive): dispatch SEVERAL reviewer agents IN PARALLEL on
-  the same HEAD — each spawned with `subagent_type: reviewer` (so it loads `reviewer.md`,
-  NOT a generic agent), a DISTINCT `name`, and the `team_name` — scoped to a distinct
-  lens via its prompt: e.g. `reviewer-bugs`, `reviewer-conventions` (CLAUDE.md/DESIGN),
-  `reviewer-history` (git blame + prior-PR comments), `reviewer-contracts` (JSON / exit
-  codes / validation / data-safety) — or split by subsystem for a very large
-  multi-package diff. Reviewers are READ-ONLY, so parallel ones share the checkout safely
-  (no worktree isolation needed), but each needs a distinct `name` (member names must be
-  unique within the team). YOU then SYNTHESIZE: merge findings, drop duplicates, apply
-  the confidence bar (keep only high-confidence, material ones), and emit one
-  consolidated blocking/non-blocking/question list.
+  data-safety / concurrency-sensitive): dispatch SEVERAL reviewers IN PARALLEL on the same
+  HEAD — each with `subagent_type: reviewer`, a DISTINCT `name`, and `team_name` (per the
+  spawn rule) — scoped to a lens via its prompt: e.g. `reviewer-bugs`,
+  `reviewer-conventions` (CLAUDE.md/DESIGN), `reviewer-history` (git blame + prior-PR
+  comments), `reviewer-contracts` (JSON / exit codes / validation / data-safety), or split
+  by subsystem. Reviewers are READ-ONLY so they share the checkout safely (no worktree
+  isolation), but names must be unique. Then SYNTHESIZE: merge findings, drop duplicates,
+  apply the confidence bar (high-confidence + material only), emit one consolidated
+  blocking/non-blocking/question list.
 
 1. Get the review on HEAD — one reviewer, or the synthesized fan-out above. Findings are
    tagged blocking / non-blocking / question, each with `file:line`; nitpicks and
@@ -188,22 +180,17 @@ the HEAD — building before the diff settles just means rebuilding):
 
 - the reviewer loop CONVERGED (no blocking findings),
 - CI on the PR is green,
-- **external auto-review hold (settle this BEFORE the build):** after the PR went ready
-  (and after your most recent push), give the external reviewers (Codex / Copilot) a
-  BOUNDED window to post on the CURRENT HEAD. Codex self-assesses when a review is
-  warranted and is usually fast (comments within a minute or two of going ready — or just
-  👍-reacts when it has nothing to say); it does **not** necessarily re-review every
-  subsequent push, so when you need a verdict on the current HEAD (e.g. after pushing a
-  fix for its finding), trigger one explicitly by commenting **`@codex review`** on the
-  PR. POLL for a review matching HEAD rather than blind-sleeping — but **~10 minutes is a
-  hard CEILING, not a wait-for-them gate**. Read every new review comment; route any
-  **material** finding back through the implementer, reply on the thread once it's fixed,
-  then re-review and **restart the window from the new push**. You may merge once EITHER
-  (a) a reviewer has weighed in and a short settle passes with no new material comments,
-  OR (b) the ~10-minute ceiling elapses with no material comments — INCLUDING when the
-  bots are disabled, delayed, silent, or only 👍-reacted (absence of a comment is not a
-  blocker). Dismiss non-material / incorrect comments with a one-line reason — never merge
-  over an UNANSWERED material comment.
+- **external auto-review hold (settle BEFORE the build):** after the PR is ready and after
+  your most recent push, give Codex/Copilot a BOUNDED window to post on the CURRENT HEAD.
+  Codex doesn't necessarily re-review every push, so to get a verdict on the current HEAD
+  (e.g. after fixing a finding) trigger one by commenting **`@codex review`**. POLL for a
+  review matching HEAD, don't blind-sleep — but **~10 min is a hard CEILING, not a
+  wait-for-them gate**. Route any **material** finding through the implementer, reply on
+  the thread once fixed, then **restart the window from the new push**. Merge once EITHER
+  (a) a reviewer weighed in and a short settle passes with no new material comments, OR (b)
+  the ceiling elapses with no material comments — including when bots are
+  disabled/delayed/silent/👍-only (absence is not a blocker). Dismiss non-material comments
+  with a one-line reason; never merge over an UNANSWERED material comment.
 - **the real `build-db` is green (build-affecting work only) — YOUR check, run LAST:**
   once the external hold has settled and no further code change is pending, run the real
   build ONCE on the final HEAD. It takes **~20 min** and EXCEEDS the 10-minute foreground
@@ -238,16 +225,15 @@ switching off it. A removed worktree leaves its local branch ref behind otherwis
 lingers as `[gone]`. Never merge on a red review, red Verify, red CI, or
 an open material external comment. The implementer never merges — only you.
 
-Before starting the next planned PR, fork it off the freshly-fetched merged base —
-`git fetch origin main && git checkout -b s/<next-slug> origin/main` — do NOT
-`git checkout main` (it fails in a worktree, and you don't need a local `main` to branch
-from `origin/main`). Then loop back to Step 1 for the next PR.
+Before the next planned PR, fork off the freshly-merged base —
+`git fetch origin main && git checkout -b s/<next-slug> origin/main` (not `git checkout
+main`; see Step A). Then loop back to Step 1.
 
 ## Conventions you enforce on dispatch
 
-- Pre-v1: no migration/compat/dead-code retention; fail fast; deterministic with
-  explicit seed/config; validate JSON contracts at boundaries; never leak row-level
-  content. `uv` for Python, `bun`/`bunx` for frontend. Never bypass git hooks.
+- Hold dispatched work to the repo `CLAUDE.md` conventions — notably: pre-v1, no
+  migration/compat/dead-code; fail fast; validate JSON contracts; never leak row-level
+  content; `uv`/`bun`; never bypass git hooks.
 
 ## Final report
 
@@ -261,7 +247,6 @@ Once every planned PR is merged (or the run is abandoned), shut the team down: s
 teammate a `SendMessage` with `message: {type: "shutdown_request"}`, wait for them to
 terminate, then call **`TeamDelete`** (it refuses while any member is still active).
 Don't leave a live team and its task list dangling between requests. Then sweep stray git
-state: a teammate spawned with `isolation: "worktree"` can leave a worktree behind, so
-`git worktree prune` (and `git worktree remove` any that survive), and force-delete every
-merged PR branch you created (`git branch -D s/<slug>`) — they linger as `[gone]` once
-their worktree is gone.
+state: `git worktree prune` (and `git worktree remove` any `isolation: "worktree"`
+leftover), and `git branch -D` any merged `s/<slug>` still lingering as `[gone]` (see
+Step E).
