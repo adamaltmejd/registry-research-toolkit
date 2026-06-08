@@ -100,9 +100,25 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run check
       - run: bun run lint
-      # Vitest unit tests (Vite-native; reuses vite.config so it compiles
-      # `.svelte`/`.svelte.ts`). `bun run test` runs `vitest run`, NOT Bun's own
-      # `bun test` runner.
+      # The `browser` Vitest project (vitest-browser-svelte) renders `.svelte`
+      # components in a real headless Chromium via Playwright. Cache the browser
+      # binary (keyed on the lockfile, so it re-downloads only when deps change)
+      # so the ~90 MB download is a one-time cost, not per-run.
+      - name: Cache Playwright browser
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('reg_webapp/frontend/bun.lock') }}
+      # Cache miss → download the browser + its OS libs. Cache hit → the binary is
+      # restored, but the apt-level libs are NOT cached, so still install those.
+      - run: bunx playwright install --with-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: bunx playwright install-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+      # `bun run test` (= `vitest run`, NOT Bun's own `bun test`) runs BOTH the
+      # jsdom `unit` project (`*.test.ts`) and the Chromium `browser` project
+      # (`*.browser.test.ts`); the shared vite.config compiles `.svelte`/`.svelte.ts`.
       - run: bun run test
       - run: bun run build
       # TS types are codegen'd from ../backend/openapi.json and committed.
