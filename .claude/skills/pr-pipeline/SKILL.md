@@ -84,6 +84,35 @@ they'll look absent even while running. Don't diagnose a teammate's process stat
 your shell and don't issue instructions based on that guess; ASK the teammate for ground
 truth instead. (Reading shared *files* — `git log`, the diff, source — is fine.)
 
+## Pipeline at a glance
+
+Do **Step 0** once, then run **A→E** for EACH planned PR, strictly serially. The
+detailed prose for each step is below — this is the map.
+
+- **0 · Plan** — read issue(s) + comments + code; split into the smallest coherent
+  PRs; order by dependency; settle forks with `AskUserQuestion`; confirm a multi-PR
+  plan with the human.
+- **A · Implement** — branch `s/<slug>` off `origin/main`; dispatch implementer(s)
+  (FAST checks only — never `build-db`); validate the REAL diff against your declared
+  partition; `git add -A`, commit, push; open a **draft** PR.
+- **B · Simplify + test** — simplifier (commit its result) → THEN tester → you pick
+  suggestions → implementer adds them (commit); mark PR **ready**.
+- **C · Review loop** — reviewer on HEAD → route blocking findings to implementer →
+  re-review the delta → repeat until **"converged — no further findings."**
+- **D · Docs** — docs-updater on the final code (commit) — AFTER convergence, BEFORE
+  the external hold.
+- **E · Merge gate** — ALL of: reviewer converged · CI green · external-review hold
+  settled (poll for a bot review on HEAD, ≤10 min ceiling) · (build-affecting work
+  only) real `build-db` green, run LAST. Then squash-merge `(#issue) (#PR)`, confirm
+  `MERGED` via `gh pr view` (don't trust the merge command's exit code in a worktree),
+  clean up local + remote branches.
+- **Teardown** — send ONE shutdown round, write your final report, `TeamDelete` once
+  members terminate (shutdown is latent — don't loop on it).
+
+Standing invariants: YOU own ALL git; teammates only edit + report. The only
+parallelism is intra-PR role fan-out (Step A implementers / Step C reviewers) over
+disjoint surfaces. Ignore idle notifications; only YOU reach the human.
+
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
 The request may be one or several GitHub issues, a freeform feature/problem
@@ -232,7 +261,12 @@ the HEAD — building before the diff settles just means rebuilding):
   Codex doesn't necessarily re-review every push, so to get a verdict on the current HEAD
   (e.g. after fixing a finding) trigger one by commenting **`@codex review`**. POLL for a
   review matching HEAD, don't blind-sleep — but **~10 min is a hard CEILING, not a
-  wait-for-them gate**. Route any **material** finding through the implementer, reply on
+  wait-for-them gate**. Key the poll on **a bot review/comment appearing on the current
+  HEAD**, NOT on CI finishing: CI is a SEPARATE gate that usually goes green far sooner
+  (tens of seconds here), so a poller that exits on CI-done has NOT given the bot its
+  window — wait for the bot author (e.g. `chatgpt-codex-connector`) or the ceiling.
+  Calibrate the ceiling to the diff: a tiny, low-risk PR doesn't need the full 10 min.
+  Route any **material** finding through the implementer, reply on
   the thread once fixed, then **restart the window from the new push**. Merge once EITHER
   (a) a reviewer weighed in and a short settle passes with no new material comments, OR (b)
   the ceiling elapses with no material comments — including when bots are
@@ -292,9 +326,32 @@ escalated to the human.
 ## Teardown
 
 Once every planned PR is merged (or the run is abandoned), shut the team down: send each
-teammate a `SendMessage` with `message: {type: "shutdown_request"}`, wait for them to
-terminate, then call **`TeamDelete`** (it refuses while any member is still active).
+teammate a `SendMessage` with `message: {type: "shutdown_request"}`, then call
+**`TeamDelete`** (it refuses while any member is still active).
+
+**Shutdown is LATENT — send it ONCE, then move on.** Idle background members can take
+*many minutes* (observed ~10) to wake on the shutdown turn and emit `shutdown_approved`,
+even though they answered work dispatches in 1–2 min mid-pipeline. So: send the one
+shutdown round, write your **Final report** immediately, and let the delayed
+`shutdown_approved` notifications arrive on their own — then retry `TeamDelete` (or let
+the session clean up on exit). Do **NOT** burn turns re-sending shutdowns, sleeping, and
+re-calling `TeamDelete` in a tight loop — the requests are already queued, just slow.
+There is **no force-stop and no per-agent kill** for a genuinely hung teammate
+(confirmed against the Claude Code docs + issues #34476 / #31788): `TaskStop` accepts
+only background-*task* ids (your `Bash`/poller jobs), NOT the `name@team` agent id;
+there is no kill keybinding and no `/agents` stop command; and `Esc` interrupts only
+the LEAD's own turn, never a teammate's in-flight turn. In-process teammates run their
+own event loop inside the session, so a truly hung one dies only when the **session is
+interrupted/restarted** (Ctrl+C / close the terminal). If instead only `TeamDelete` is
+stuck waiting on a hung member and you want to unblock without restarting, the
+documented workaround is to move the team state aside manually:
+`mv ~/.claude/teams/<team> /tmp/ && mv ~/.claude/tasks/<team> /tmp/` (frees the team
+name/files; the hung in-process loop itself still only dies on session restart). The
+real defense is prevention: bounded tasks with clear Verify, and never hard-block the
+pipeline on one teammate — re-plan around a stuck one.
+
 Don't leave a live team and its task list dangling between requests. Then sweep stray git
 state: `git worktree prune` (and `git worktree remove` any `isolation: "worktree"`
 leftover), and `git branch -D` any merged `s/<slug>` still lingering as `[gone]` (see
-Step E).
+Step E). Leave pre-existing branches you didn't create (and any branch checked out in
+another worktree) alone.
