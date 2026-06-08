@@ -1,8 +1,8 @@
 # Curated FQID slugs for SCB-published registers.
 #
 # Grow-only: entries are added, never deleted or renamed — committed
-# project_data.json files reference these slugs forever (REFACTOR_SPEC §5.4).
-# The grow-only lock binds at the first v1 release (§5.4 Activation); during
+# project_data.json files reference these slugs forever (see reg_meta_build/DESIGN.md → Slug immutability).
+# The grow-only lock binds at the first v1 release; during
 # the pre-v1 curation window the snapshot is regenerable.
 # Typo corrections add a new row and link the old one via `replaced_by`. The
 # snapshot test (reg_meta_build/tests/test_slug_snapshot.py) fails CI on any
@@ -10,9 +10,9 @@
 # after adding rows.
 #
 # Bootstrap from live data with `reg-meta-build seed-slugs`. Schema and
-# field semantics live in REFACTOR_SPEC.md §5.3.
+# field semantics live in reg_meta_build/DESIGN.md → Slug curation.
 
-# §5.6 consumer-side lineage: source-variant pinning (TOML-only, no SQL table).
+# Consumer-side lineage (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)): source-variant pinning (TOML-only, no SQL table).
 # `[lineage_defaults]` picks the heuristic default source variant per source
 # register; `link_variable_state_lineage` joins LISA/RAMS/... consumer states
 # to these source-register states by validity intersection. Composite registers

@@ -10,7 +10,7 @@
  * SPA is served by Cloudflare. Cloudflare must rewrite unknown non-`/api` paths
  * to `index.html` (a `_redirects` / 404-rewrite rule) — a MAINTAINER task,
  * consistent with the existing "Cloudflare edge-cache gate is a maintainer task"
- * pattern (see reg_webapp/DESIGN.md §9.4). The Vite dev server already does this
+ * pattern (see reg_webapp/DESIGN.md → SPA routing + production fallback). The Vite dev server already does this
  * fallback by default (`appType: 'spa'`), so `bun run dev` deep-links work.
  */
 
@@ -68,7 +68,8 @@ class Router {
    * `route`, which is keyed on the PATHNAME only: a same-path/new-`?period`
    * navigation produces a structurally-equal `Route` (so `route` doesn't change
    * and `{#key route.fqidPath}` doesn't remount), but the resolution state lives
-   * in the query (§9.5, A5.3b's single source of truth — deep-linkable /
+   * in the query (see reg_webapp/DESIGN.md → Catalog router structure; A5.3b's
+   * single source of truth — deep-linkable /
    * shareable / back-forward-correct). Components read `getQueryParam("period")`
    * etc. and re-fetch when it changes. Kept in sync with the URL in BOTH the
    * popstate handler AND inside `navigate` after `pushState`. */

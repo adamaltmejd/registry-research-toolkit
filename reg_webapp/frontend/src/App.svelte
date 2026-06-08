@@ -14,8 +14,9 @@ let context = $state<Context | null>(null);
 let contextError = $state<string | null>(null);
 
 // The deployment context is app-global and immutable for the session — fetch
-// once at mount (not an $effect that could re-run). Also wire the §9.7
-// beforeunload warning: a tab/window close with a dirty draft prompts the
+// once at mount (not an $effect that could re-run). Also wire the beforeunload
+// warning (see reg_webapp/DESIGN.md → Browser storage + project-file persistence
+// (the SPA store)): a tab/window close with a dirty draft prompts the
 // browser's native "leave site?" dialog (autosaved-but-not-downloaded state is
 // recoverable from IndexedDB in A5.4, but the file download is the durable copy).
 onMount(() => {

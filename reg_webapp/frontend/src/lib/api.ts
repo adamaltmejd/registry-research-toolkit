@@ -1,6 +1,7 @@
 /**
- * Tiny, dependency-free typed fetch wrapper for the reg_webapp backend (§9.6:
- * the SPA only talks HTTP/JSON to the backend — no domain coupling).
+ * Tiny, dependency-free typed fetch wrapper for the reg_webapp backend (see
+ * reg_webapp/DESIGN.md → Pydantic boundary: the SPA only talks HTTP/JSON to the
+ * backend — no domain coupling).
  *
  * Every response type is the codegen'd `components["schemas"][...]` from
  * `./api-types` (generated from the backend's committed `openapi.json`), so the
@@ -18,8 +19,8 @@ const API_BASE = "/api";
 /**
  * A non-2xx response, thrown by the GET helpers. `status` is the HTTP status;
  * `body` is the parsed JSON error body when present (the backend returns
- * `{detail: ...}` on 4xx from FastAPI's `HTTPException`, and the §6.8.0 shapes
- * elsewhere) or `null` when the body wasn't JSON; `message` is a human-readable
+ * `{detail: ...}` on 4xx from FastAPI's `HTTPException`, and the validation
+ * issue shapes elsewhere) or `null` when the body wasn't JSON; `message` is a human-readable
  * summary suitable for an error banner.
  */
 export class ApiError extends Error {
@@ -205,7 +206,8 @@ export type CatalogNode =
 export type BindingChild = Schemas["BindingChild"];
 
 /** The binding-leaf node (3-seg) the catch-all returns WITHOUT a query — the
- * variable's full embedded longitudinal record (states + edges, §9.5). */
+ * variable's full embedded longitudinal record (states + edges; see
+ * reg_webapp/DESIGN.md → Catalog router structure). */
 export type BindingNodeData = Schemas["BindingNode"];
 export type VariableStateModel = Schemas["VariableStateModel"];
 export type VariableRefModel = Schemas["VariableRefModel"];
@@ -214,7 +216,7 @@ export type LineageEdgeModel = Schemas["LineageEdgeModel"];
 export type LineageWarningModel = Schemas["LineageWarningModel"];
 
 // The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
-// binding leaf is queried with `?period` (the resolve_at subset, §9.5), and a
+// binding leaf is queried with `?period` (the resolve_at subset), and a
 // SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
 // from a browsable node by `isCatalogNode` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
@@ -234,7 +236,8 @@ export function isCatalogNode(
 }
 
 /** Percent-encode each FQID segment for use in a URL path (the server
- * re-validates the slug grammar per segment, §16). Split/join on `/` so the
+ * re-validates the slug grammar per segment — see reg_webapp/DESIGN.md → FQID
+ * path guard (catalog_fqid.py)). Split/join on `/` so the
  * path separators survive while reserved chars inside a segment are escaped.
  * Shared with `catalog.catalogHref` so the SPA's link hrefs and the API paths
  * encode identically. (A no-op for today's ASCII slugs, but correct for any
@@ -252,7 +255,7 @@ export function getCatalogRoot(): Promise<RootResponse> {
 }
 
 /** Resolve a catalog node by its FQID path (e.g. `scb/lisa/kon`). With `params`
- * (`?period` + the `?variant`/`?value_set_version` modifiers, §9.5) a binding
+ * (`?period` + the `?variant`/`?value_set_version` modifiers) a binding
  * leaf resolves to the `resolve_at` subset — a `StatesResponse` (no `kind`),
  * distinguished from a browsable node by `isCatalogNode`. A malformed
  * period/variant is the server's 422 (surfaced as an `ApiError`). */
@@ -265,7 +268,7 @@ export function getCatalogNode(
   return apiGet<CatalogNode | StatesResponse>(path);
 }
 
-/** List a register's variants (the `?variant=` browse axis, §9.5). `register`
+/** List a register's variants (the `?variant=` browse axis). `register`
  * is the 2-seg register FQID `provider/register`. */
 export function getRegisterVariants(
   register: string,
@@ -273,7 +276,7 @@ export function getRegisterVariants(
   return apiGet<VariantsResponse>(`/catalog/${encodeFqid(register)}/variants`);
 }
 
-// ── Binding sub-endpoints (§9.5) ────────────────────────────────────────────
+// ── Binding sub-endpoints ───────────────────────────────────────────────────
 // The leaf already EMBEDS states / same_as / replaced_by (outbound) /
 // related_to / lineage, so A5.3b fetches only the two it does NOT embed:
 // `/predecessors` (inbound succession) and `/lineage_warnings`. Each GETs
@@ -297,8 +300,9 @@ export function getBindingLineageWarnings(
   );
 }
 
-// ── Project write surface (§9.5, A5.2b-ii) ──────────────────────────────────
-// The three POST endpoints the authoring SPA drives. Each takes the WHOLE
+// ── Project write surface (A5.2b-ii) ────────────────────────────────────────
+// The three POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
+// Project-write surface (routes/project.py + routes/bundle.py)). Each takes the WHOLE
 // serialized draft as an open object (the requestBodies are
 // `additionalProperties: true`), so steward-namespaced blocks ride along — the
 // backend embeds the raw dict (routes/project.py, routes/bundle.py).
@@ -315,8 +319,9 @@ export type ProjectDataBody = Record<string, unknown>;
  * `ok:false` — this NEVER throws on `ok:false`; the caller renders the issues.
  * Only a true 4xx (a malformed REQUEST — bad JSON / oversized body, from the
  * backend's `read_raw_json_object` / body cap) throws an `ApiError` (shown as a
- * banner, distinct from the issue list). §9.6: no client-side structural
- * validator — the backend is canonical; the SPA mirrors codes for presentation.
+ * banner, distinct from the issue list). No client-side structural
+ * validator — the backend is canonical (see reg_webapp/DESIGN.md → Pydantic
+ * boundary); the SPA mirrors codes for presentation.
  */
 export function validateProject(
   draft: ProjectDataBody,

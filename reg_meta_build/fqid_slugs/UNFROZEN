@@ -1,4 +1,4 @@
-# Pre-v1 escape hatch (§5.4)
+# Pre-v1 escape hatch (see reg_meta_build/DESIGN.md → Slug immutability)
 
 While this file exists in `reg_meta_build/fqid_slugs/`, slug renames and removals
 flow through `precheck-slugs --update-snapshot` instead of being refused,

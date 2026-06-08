@@ -5,12 +5,14 @@
  * (`register_variant`, `period`, `bindings[]`); `panels[]` and steward-namespaced
  * blocks (`reg_monabundle`, `swecov`, …) ROUND-TRIP VERBATIM — they ride on the
  * dict side and are NEVER stripped on open/save (matching the backend raw-dict
- * embed; §6.8.2 / `routes/bundle.py`).
+ * embed; see reg_monabundle/DESIGN.md → The two halves and `routes/bundle.py`).
  *
- * §9.6: this is NOT a structural validator — the backend is canonical. These
+ * This is NOT a structural validator — the backend is canonical (see
+ * reg_webapp/DESIGN.md → Pydantic boundary). These
  * helpers only construct + immutably edit the shape the SPA posts to
  * `/api/project/validate` / `/order` / `/bundle`. The field names mirror
- * `reg_schema/src/reg_schema/project_data.py` (§6.1-§6.4).
+ * `reg_schema/src/reg_schema/project_data.py` (see reg_schema/DESIGN.md → Two
+ * layers: models vs. validator).
  *
  * There is no codegen'd `ProjectData` schema in `api-types` (the write endpoints
  * declare `additionalProperties: true` open-object request bodies, NOT the pinned
@@ -18,7 +20,7 @@
  * type is a hand-written OPEN shape that keeps unmapped keys.
  */
 
-/** A binding on a source (§6.3) — one variable to include. Only the fields the
+/** A binding on a source — one variable to include. Only the fields the
  * A5.3c surface touches are named; any other key (`id_subtype`, `date_format`, …)
  * survives via the index signature. */
 export interface Binding {
@@ -34,15 +36,15 @@ export interface Binding {
   [key: string]: unknown;
 }
 
-/** A `Source.period` value (§6.2): a bare year, a period-token string, the
+/** A `Source.period` value: a bare year, a period-token string, the
  * `"_default"` sentinel, or a `{from, to}` range object. Kept loose — the server
- * is the canonical period validator (§9.6). */
+ * is the canonical period validator. */
 export type Period =
   | number
   | string
   | { from: number | string; to: number | string };
 
-/** A data source / table (§6.2). Open: panel-referenced or future keys survive. */
+/** A data source / table. Open: panel-referenced or future keys survive. */
 export interface Source {
   name: string;
   register_variant: string;
@@ -52,7 +54,7 @@ export interface Source {
 }
 
 /**
- * The top-level project_data.json draft (§6.1). OPEN: `panels[]`, `reg_monabundle`
+ * The top-level project_data.json draft. OPEN: `panels[]`, `reg_monabundle`
  * and any steward-namespaced block ride through the index signature untouched —
  * the A5.3c surface never edits them, but they must round-trip verbatim.
  */
@@ -68,7 +70,7 @@ export interface ProjectData {
 /** The Model A `schema_version` a NEW draft is seeded with (reg_schema 2.0.0). */
 export const MODEL_A_SCHEMA_VERSION = "2.0.0";
 
-/** The 6 ColumnType values (§6.3, reg_schema `ColumnType` `Literal`). The
+/** The 6 ColumnType values (reg_schema `ColumnType` `Literal`). The
  * BindingEditor's type `<select>` + the type-conditional advanced-field gating key
  * off this. Hand-maintained — `ColumnType` isn't on the OpenAPI surface
  * (project_data isn't a response model), so codegen can't supply it; co-located
@@ -91,7 +93,7 @@ export interface ProjectSeed {
   steward: string;
 }
 
-/** Construct a fresh Model A skeleton (§6.1). The version fields are seeded from
+/** Construct a fresh Model A skeleton. The version fields are seeded from
  * the deployment context so a new draft already carries the accepted version
  * range (`schema_version` 2.x + `reg_meta/v1.x.y`). */
 export function newProjectData(seed: ProjectSeed): ProjectData {
@@ -107,8 +109,9 @@ export function newProjectData(seed: ProjectSeed): ProjectData {
 /**
  * Format the deployment's bare reg_meta PACKAGE version
  * (`context.webapp.reg_meta_version`, e.g. `"1.0.0"`) into the canonical
- * project_data release-tag form (`"reg_meta/v1.0.0"`) — REFACTOR_SPEC §2526
- * ("Model A files require a v1.x reg_meta release tag"). The inverse of the
+ * project_data release-tag form (`"reg_meta/v1.0.0"`; see reg_meta/DESIGN.md →
+ * Release tags and distribution) — Model A files require a v1.x reg_meta release
+ * tag. The inverse of the
  * version gate's `regMetaDotted` strip. Empty in → empty out (the context
  * hasn't resolved yet; the seed is corrected on the next New).
  */

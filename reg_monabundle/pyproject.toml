@@ -24,7 +24,7 @@ classifiers = [
 dependencies = ["reg-schema"]
 
 [project.optional-dependencies]
-# Reserved for §15 step 5 phase 2 — bundle-runtime deps that the MONA
+# Reserved for bundle-runtime deps that the MONA
 # WinPython env preinstalls. The webapp pins reg-monabundle without
 # extras; researchers running the bundle locally never need this group
 # either (MONA brings its own).

@@ -1,7 +1,8 @@
 /**
  * Display + FQID-path helpers for the catalog browse UI (`catalog.ts`):
  * a node's label, and the `/catalog/<fqid-path>` URL ↔ FQID-segment helpers
- * (the SPA routes mirror the API path, §9.5).
+ * (the SPA routes mirror the API path; see reg_webapp/DESIGN.md → Catalog router
+ * structure).
  */
 import {
   type BindingChild,
@@ -15,7 +16,7 @@ import {
 /** Narrow the catch-all browse response to a browsable `CatalogNode`, or `null`
  * for a no-`kind` payload (a `?period` `StatesResponse` or a sub-endpoint
  * envelope) — the boundary every browse consumer narrows at before switching on
- * `kind` (§9.5). */
+ * `kind`. */
 export function narrowCatalogNode(
   data: CatalogNode | StatesResponse | null,
 ): CatalogNode | null {
@@ -77,7 +78,8 @@ export function breadcrumbs(
 
 // ── register_variant coordinate helpers ──────────────────────────────────────
 // A Source.register_variant is a 3-seg coordinate `provider/register/variant`
-// (§6.2). The binding variable picker is SCOPED to the provider/register prefix
+// (see reg_schema/DESIGN.md → Two layers: models vs. validator). The binding
+// variable picker is SCOPED to the provider/register prefix
 // (enforcing the FQID-prefix coupling as UX); the resolve takes the variant.
 
 /** The 2-seg `provider/register` prefix of a register_variant, or "" when it has
@@ -97,7 +99,8 @@ export function variantSeg(registerVariant: string): string {
 // ── Variable-state derivation (the CatalogPicker derive-on-pick) ─────────────
 
 // A LIGHT, advisory storage-token → ColumnType prefill for derive-on-pick
-// (overridable; the backend is canonical, §9.6). Covers BOTH the SQL/storage
+// (overridable; the backend is canonical — see reg_webapp/DESIGN.md → Pydantic
+// boundary). Covers BOTH the SQL/storage
 // spellings SCB delivers AND the Swedish `Datatyp` tokens SOS writes verbatim
 // (reg_meta_build `sources/sos.py` `_norm_data_type` — lowercased "Heltal",
 // "Datum", "Identifierare", …). Anything unrecognized → "opaque" for the user.
@@ -133,10 +136,10 @@ const DATETIME_TOKENS = new Set([
 ]);
 const ID_TOKENS = new Set(["identifierare", "uniqueidentifier"]);
 
-/** Advisory storage-type → ColumnType prefill (§6.3) for the binding type
+/** Advisory storage-type → ColumnType prefill for the binding type
  * derive-on-pick. A state carrying a value set is categorical; otherwise the
  * leading `data_type` token decides; unrecognized → "opaque". ALWAYS overridable
- * via the BindingEditor's `<select>` — the backend stays canonical (§9.6). */
+ * via the BindingEditor's `<select>` — the backend stays canonical. */
 export function deriveType(state: VariableStateModel | undefined): string {
   if (!state) {
     return "opaque";
@@ -173,7 +176,8 @@ export function deriveType(state: VariableStateModel | undefined): string {
 /** One co-existing REPRESENTATION of a concept at a period — a distinct delivery
  * column. `column` is the stable handle set on `binding.representation`; `label`
  * (the value-set version label, e.g. "5-års intervall"), `codeCount`, and
- * `classificationSlug` (the §5.7 classification family, e.g. "lkf2007"; null when
+ * `classificationSlug` (the classification family, e.g. "lkf2007" — see
+ * reg_meta/DESIGN.md → Classifications; null when
  * the representative state is code-less) are for display in the chooser. */
 export interface Representation {
   column: string;

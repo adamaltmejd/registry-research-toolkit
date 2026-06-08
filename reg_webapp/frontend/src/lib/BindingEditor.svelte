@@ -9,11 +9,13 @@ import {
   type ValidationIssue,
 } from "./validation";
 
-// Editable single binding (§6.3). DERIVE CORE + ADVANCED DISCLOSURE (maintainer
+// Editable single binding (see reg_schema/DESIGN.md → Two layers: models vs.
+// validator). DERIVE CORE + ADVANCED DISCLOSURE (maintainer
 // decision): the common fields (variable / type / display_name) are the surface;
 // the rare type-conditional overrides hide in an Advanced disclosure.
 //
-// §9.6: every edit funnels through the c-i store mutators (updateBinding /
+// Per the Pydantic boundary (see reg_webapp/DESIGN.md → Pydantic boundary), every
+// edit funnels through the c-i store mutators (updateBinding /
 // removeBinding) — NO new store API. NEVER bind:value on the immutable draft;
 // mirror c-i's name input EXACTLY (value=… + oninput=… → mutator).
 const {

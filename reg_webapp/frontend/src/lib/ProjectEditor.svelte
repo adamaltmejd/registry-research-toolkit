@@ -87,7 +87,8 @@ async function onFilePicked(event: Event): Promise<void> {
     <!-- ── Loaded draft ───────────────────────────────────────────────────── -->
     {@const draft = projectStore.draft}
     <!-- An opened file is loaded VERBATIM and is NOT structurally validated
-         client-side (the backend diagnoses it, §9.6). A malformed spec may lack
+         client-side (the backend diagnoses it; see reg_webapp/DESIGN.md →
+         Pydantic boundary). A malformed spec may lack
          `sources` or have it non-array; coerce to [] for the read-only SUMMARY so
          the page still renders and the user can reach Validate. The draft itself
          stays verbatim for serialize/validate. -->

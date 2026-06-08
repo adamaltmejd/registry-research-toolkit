@@ -12,13 +12,15 @@ import { looksLikePeriod } from "./period";
 import type { Period } from "./project_data";
 import type { ValidationIssue } from "./validation";
 
-// Editable Source.period (§6.2). YEAR-RANGE-FIRST (maintainer directive): the
+// Editable Source.period (see reg_schema/DESIGN.md → Two layers: models vs.
+// validator). YEAR-RANGE-FIRST (maintainer directive): the
 // DEFAULT mode is two numeric year spinners (from / to) so picking a year range is
 // the path of least resistance, not free text. Other modes cover the non-year
 // cases: "Token" (a text field for monthly 'YYYYMM' / special tokens) and
 // "Default" (the "_default" snapshot sentinel).
 //
-// §9.6: NEVER validates structurally — a malformed value is echoed via the
+// Per the Pydantic boundary (see reg_webapp/DESIGN.md → Pydantic boundary), this
+// NEVER validates structurally — a malformed value is echoed via the
 // backend's `invalid_period` on the period pointer (the mounted <FieldIssues>).
 // Emits a bare int when from===to (the single-year Period int arm), else {from,to}.
 const { period, issues, onchange } = $props<{

@@ -13,7 +13,7 @@ dependencies = [
   "numpy>=1.26",
   "reg-meta",
   # >=0.4 required for `reg_monabundle.runtime.*`, hard-imported by
-  # `mock_data_wizard.{cli,stats,enrich}` after §15 step 5 phase 2c
+  # `mock_data_wizard.{cli,stats,enrich}` after the runtime extraction
   # relocated classify/sql_emit/sources/summarize/spec/extract out of
   # mdw and into the runtime subpackage.
   "reg-monabundle>=0.4",

@@ -34,7 +34,7 @@ import {
 //
 // Source-scoping the variable picker to the register prefix is the UX that prevents
 // fqid_register_variant_mismatch for picked values — but it is UX only; the backend
-// remains canonical (§9.6).
+// remains canonical (see reg_webapp/DESIGN.md → Pydantic boundary).
 interface VariantProps {
   mode: "variant";
   register: string; // 2-seg provider/register FQID

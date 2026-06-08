@@ -156,7 +156,7 @@ class VariableState:
     # ResolvedVariable in scope (the `resolve_at` / `/states` paths) can still
     # read the authoritative identifier flag.
     is_identifier: bool
-    # §5.7 classification family slug for this state's value set (e.g. 'lkf2007'),
+    # Classification family slug (see DESIGN.md → Classifications) for this state's value set (e.g. 'lkf2007'),
     # resolved per-state from `variable_state.classification_id` — it varies
     # across a variable's states. None for code-less / unclassified states.
     classification_slug: str | None
@@ -678,7 +678,7 @@ class Catalog:
         `valid_from <= hi AND valid_to >= lo` (string compare is chronologically
         correct because every stored value is a full date)."""
         # JOIN `variable` to denormalize the variable-grain `is_identifier` flag
-        # onto each state (§5.1 column is variable-grain); LEFT JOIN
+        # onto each state (see DESIGN.md → Two-level variable model — the column is variable-grain); LEFT JOIN
         # `classification` for the per-state `classification_slug` (NULL for
         # code-less states). Columns are qualified so the ORDER BY stays
         # unambiguous.
