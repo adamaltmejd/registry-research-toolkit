@@ -1,9 +1,10 @@
-"""`/api/catalog` browse against the slugged ``catalog_db`` fixture (§9.5).
+"""`/api/catalog` browse against the slugged ``catalog_db`` fixture.
 
-Covers the root, each catch-all node kind (provider / register / binding leaf /
+See DESIGN.md → Catalog router structure. Covers the root, each catch-all node
+kind (provider / register / binding leaf /
 classification-root / classification), the discriminated-union ``kind`` tags, the
 binding leaf's embedded longitudinal record, the register's ``variants`` ref
-stub, and the 404-on-not-found mapping. The §16 path-traversal guard lives in
+stub, and the 404-on-not-found mapping. The path-traversal guard lives in
 ``test_fqid_validation.py``.
 """
 
@@ -144,7 +145,7 @@ def test_missing_binding_returns_404(client):
 
 
 def test_too_many_segments_returns_422(client):
-    # Every segment is a valid slug, so the §16 per-segment guard admits it; the
+    # Every segment is a valid slug, so the per-segment guard admits it; the
     # >3-segment arity is rejected by `reg_meta.fqid.parse` → 422 (a structural
     # grammar error, not a 404).
     resp = client.get("/api/catalog/scb/lisa/kon/extra/more")

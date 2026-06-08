@@ -137,7 +137,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Skip slug TOML loading and the strict-coverage check. Used to "
             "bootstrap the DB so `seed-slugs` has something to read from "
-            "before the slug TOMLs exist (REFACTOR_SPEC §5.4 Activation). "
+            "before the slug TOMLs exist (see DESIGN.md → Slug immutability). "
             "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
             "columns and is intended only as input to `seed-slugs`, not for "
             "downstream queries that depend on FQIDs."
@@ -194,7 +194,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Emit starter slug TOMLs from the current DB (maintainer-only).",
         description=(
             "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml\n"
-            "and <out-dir>/classifications.toml, mirroring REFACTOR_SPEC §5.3.\n"
+            "and <out-dir>/classifications.toml, mirroring DESIGN.md → Slug curation.\n"
             "Slugs are auto-derived from register.name / register_variant.name / short_name\n"
             "and need maintainer review before commit.\n\n"
             "Examples:\n"
@@ -244,7 +244,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Verify the slug TOMLs match the current DB. Reports:\n"
             "  - TOML parse / validation errors\n"
             "  - register / register_variant / classification rows with no slug\n"
-            "  - non-additive changes vs. the committed snapshot (§5.4)\n\n"
+            "  - non-additive changes vs. the committed snapshot (see DESIGN.md → Slug immutability)\n\n"
             "Exits 10 if any check fails (cleaner failure mode than a build).\n\n"
             "Examples:\n"
             "  reg-meta-build precheck-slugs\n"
@@ -498,7 +498,7 @@ def _cmd_precheck_slugs(
             snapshot_status["updated"] = False
             snapshot_status["update_skipped_reason"] = "parse_errors"
         else:
-            # §5.4 grow-only enforcement: `--update-snapshot` must NOT bless
+            # Grow-only enforcement (see DESIGN.md → Slug immutability): `--update-snapshot` must NOT bless
             # a removal or a slug rename — that's how committed FQIDs rot in
             # researcher project_data.json files. The `UNFROZEN` sentinel in
             # the slug dir lifts the refusal pre-v1 so curators can iterate
@@ -568,7 +568,7 @@ def _cmd_precheck_slugs(
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
             ],
             "stale_classifications": list(result.stale_classifications),
-            # Advisory only (§5.3/#143) — never affects `ok`/exit. Variables
+            # Advisory only (#143) — never affects `ok`/exit. Variables
             # whose delivery column drifts across editions, auto-slugged from a
             # stable basis; a curator scans this for the pre-v1 slug freeze.
             "drifting_variables": [
@@ -588,7 +588,7 @@ def _cmd_precheck_slugs(
             # curation backlog: auto-slugged variables whose slug came from the
             # variable name / a `-N` disambiguator / the `v<provider_key>` last
             # resort (per the `# source:` markers in `<provider>.auto.toml`). A
-            # curator works through these toward a canonical slug before the §5.4
+            # curator works through these toward a canonical slug before the slug
             # freeze. Mirrors `drifting_variables` (informational, ungated).
             "name_fallback_variables": [
                 {

@@ -71,7 +71,8 @@ def test_slicer_drops_reg_monabundle_imports(build):
     prefix.
 
     ``reg_schema`` is intentionally NOT in the static set post-A3.4: it
-    is never amalgamated (§9.6), so a stray ``from reg_schema import …``
+    is never amalgamated (see DESIGN.md → The two halves), so a stray
+    ``from reg_schema import …``
     would NOT be dropped and would leak as a live import — which is the
     exact failure ``test_build_mona_bundle.test_bundle_carries_no_pydantic_or_reg_schema``
     gates. The runtime is reg_schema-free by construction, so no such

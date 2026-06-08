@@ -1,7 +1,8 @@
 """Webapp-local Pydantic response models.
 
 These are reg_webapp's OWN response models — NOT reg_schema models and NOT
-reg_meta dataclasses (§9.6). reg_meta's library surface is plain dataclasses;
+reg_meta dataclasses (see DESIGN.md → Pydantic boundary). reg_meta's library
+surface is plain dataclasses;
 the backend wraps its domain types in per-endpoint Pydantic models (the only
 place a 1:1 wrapper remains). reg_schema models are used directly only for
 project_data-shaped responses (A5.1b+).
@@ -16,7 +17,7 @@ from reg_meta.fqid import CLASSIFICATION_PREFIX
 
 
 class StewardInfo(BaseModel):
-    """Deployment identity + branding, from ``steward.toml`` (§9.1)."""
+    """Deployment identity + branding, from ``steward.toml``."""
 
     id: str
     name: str
@@ -47,13 +48,13 @@ class WebappInfo(BaseModel):
 
 
 class CatalogDriftWarning(BaseModel):
-    """One boot-time steward-catalog drift warning (§6.8.3 / §9.1).
+    """One boot-time steward-catalog drift warning.
 
     Emitted when the steward's committed ``steward.project_data.json`` references
     an FQID reg_meta no longer admits: the steward-mode semantic validator
     downgrades the miss to a warning, the binding drops from the in-memory index,
     and this carries the warning to the SPA so it can show a "catalog drift"
-    banner. ``code`` is the §6.8.3 ValidationIssue code (``fqid_unresolved`` /
+    banner. ``code`` is the ValidationIssue code (``fqid_unresolved`` /
     ``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the
     JSON pointer into the steward catalog. Always empty for the ``global``
     deployment (no filter)."""
@@ -64,11 +65,11 @@ class CatalogDriftWarning(BaseModel):
 
 
 class ContextResponse(BaseModel):
-    """``GET /api/context`` — deployment identity, branding, build info (§9.5).
+    """``GET /api/context`` — deployment identity, branding, build info.
 
     No git sha (decision: no new provenance dep). The reg_meta block reflects
     the DB the backend booted against; the webapp block reflects the installed
-    packages. ``catalog_drift_warnings`` (§6.8.3 / §9.1) is the steward-catalog
+    packages. ``catalog_drift_warnings`` is the steward-catalog
     drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
     """
 
@@ -78,9 +79,10 @@ class ContextResponse(BaseModel):
     catalog_drift_warnings: list[CatalogDriftWarning] = Field(default_factory=list)
 
 
-# ── Catalog browse (§9.5) ──────────────────────────────────────────────────
+# ── Catalog browse (see DESIGN.md → Catalog router structure) ───────────────
 # Webapp-local 1:1 Pydantic wrappers of reg_meta's frozen Catalog dataclasses
-# (§9.6). reg_meta dataclasses are NOT imported as response models. FQID fields
+# (see DESIGN.md → Pydantic boundary). reg_meta dataclasses are NOT imported as
+# response models. FQID fields
 # serialize as plain `str` (the catalog mapper passes `str(fqid)`), NOT nested
 # models — so `openapi-typescript` emits flat string fields. Each node model
 # carries a `kind` Literal discriminator so the catch-all's response is a
@@ -98,8 +100,9 @@ class ProviderNode(BaseModel):
 
 class ClassificationRootNode(BaseModel):
     """The classification-root sentinel (`class`, 1 seg) — a child of the root
-    and a resolvable node whose `children` are every classification (§5.2: `class`
-    is a reserved slug, not a real provider)."""
+    and a resolvable node whose `children` are every classification (see
+    reg_meta/DESIGN.md → FQID grammar: `class` is a reserved slug, not a real
+    provider)."""
 
     kind: Literal["classification-root"] = "classification-root"
     fqid: str = CLASSIFICATION_PREFIX
@@ -124,8 +127,9 @@ class ClassificationNode(BaseModel):
     fqid: str
     short_name: str
     name: str
-    # §5.5: present (non-None) when the queried slug resolved via a curated
-    # `classification_same_as` edge rather than directly; the hop path as FQIDs.
+    # Present (non-None) when the queried slug resolved via a curated
+    # `classification_same_as` edge rather than directly (see reg_meta/DESIGN.md →
+    # Classifications); the hop path as FQIDs.
     via_same_as: list[str] | None = None
 
 
@@ -140,7 +144,7 @@ class BindingChild(BaseModel):
 
 class VariantsRef(BaseModel):
     """Reference to a register's variant browser — the `/{provider}/{register}/
-    variants` sub-resource (§9.5, wired in A5.2a). A discriminated slot in
+    variants` sub-resource (wired in A5.2a). A discriminated slot in
     `RegisterChild` so the union / TS types carry the navigable `register_fqid`;
     the client GETs `{register_fqid}/variants` to list them."""
 
@@ -148,9 +152,9 @@ class VariantsRef(BaseModel):
     register_fqid: str
 
 
-# ── Binding-leaf embedded longitudinal record (§9.5) ───────────────────────
+# ── Binding-leaf embedded longitudinal record ──────────────────────────────
 # The binding LEAF (3-seg) embeds the variable's FULL record from one
-# `Catalog.resolve` call: every state + variable-grain edges (§9.5). These
+# `Catalog.resolve` call: every state + variable-grain edges. These
 # mirror the reg_meta dataclasses 1:1. `ResolvedVariable` does NOT carry
 # lineage_warnings, so they are OMITTED here (they arrive via A5.2's
 # `/lineage_warnings`).
@@ -165,7 +169,8 @@ class ValueSetMember(BaseModel):
 
 class VariableStateModel(BaseModel):
     """One `variable_state` row — a per-delivery shape tagged with its variant
-    coordinate (§5.1). `value_set` is the hydrated (code, label) pairs, None when
+    coordinate (see reg_meta/DESIGN.md → Two-level variable model). `value_set` is
+    the hydrated (code, label) pairs, None when
     the state carries no value set."""
 
     state_id: int
@@ -206,7 +211,8 @@ class VariableRefModel(BaseModel):
 
 
 class RelatedRefModel(BaseModel):
-    """A split-sibling edge (`variable_related_to`, §5.7) with its
+    """A split-sibling edge (`variable_related_to` — see reg_meta_build/DESIGN.md →
+    Build-time triage (SCB)) with its
     `relation_kind`. `register` is the alias for `register_name` (see
     `VariableRefModel`) — avoids the `BaseModel.register` method shadow."""
 
@@ -218,7 +224,8 @@ class RelatedRefModel(BaseModel):
 
 
 class LineageEdgeModel(BaseModel):
-    """A consumer-side lineage edge (state grain, §5.6) tying a consumer state to
+    """A consumer-side lineage edge (state grain — see reg_meta_build/DESIGN.md →
+    Consumer-side lineage (variable_state_lineage)) tying a consumer state to
     a source state over their validity intersection. `source_fqid` is the source
     state's 3-seg binding FQID (None when the source slugs aren't populated)."""
 
@@ -231,7 +238,7 @@ class LineageEdgeModel(BaseModel):
 
 class BindingNode(BaseModel):
     """A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
-    longitudinal record embedded from one `Catalog.resolve` call (§9.5): shared
+    longitudinal record embedded from one `Catalog.resolve` call: shared
     metadata, every state (each tagged with its variant), and the variable-grain
     `same_as` / `replaced_by` / `related_to` / `lineage` edges.
 
@@ -276,7 +283,7 @@ class ProviderResponse(ProviderNode):
 
 class RegisterResponse(RegisterNode):
     """`GET /api/catalog/{provider}/{register}` — the register + its bindings and
-    the variant-browser reference stub as children (§9.5)."""
+    the variant-browser reference stub as children."""
 
     children: list[RegisterChild]
 
@@ -290,7 +297,7 @@ class ClassificationRootResponse(ClassificationRootNode):
 
 class RootResponse(BaseModel):
     """`GET /api/catalog` — the catalog root: every provider plus the
-    classification-root sentinel (§9.5)."""
+    classification-root sentinel."""
 
     kind: Literal["root"] = "root"
     children: list[ProviderNode | ClassificationRootNode]
@@ -310,7 +317,7 @@ CatalogNode = Annotated[
 ]
 
 
-# ── A5.2a-ii sub-endpoint models (§9.5) ─────────────────────────────────────
+# ── A5.2a-ii sub-endpoint models (see DESIGN.md → Catalog router structure) ──
 # The 7 suffixed/sub-resource read endpoints. Each returns a thin envelope
 # echoing the queried `binding` (or `register`) FQID plus the mapped reg_meta
 # dataclass list, so the SPA codegen sees one response type per endpoint. These
@@ -320,7 +327,7 @@ CatalogNode = Annotated[
 
 
 class LineageWarningModel(BaseModel):
-    """A build-time lineage warning for a consumer state (§5.6):
+    """A build-time lineage warning for a consumer state:
     `variable_state_lineage_warning`. `warning_kind` is `no_source_state` or
     `ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`."""
 
@@ -330,11 +337,12 @@ class LineageWarningModel(BaseModel):
 
 
 class VariantModel(BaseModel):
-    """One register variant (the `register_variant` sub-resource, §9.5) — the
+    """One register variant (the `register_variant` sub-resource) — the
     `?variant=` browse axis. A variant is NOT FQID-addressable (the variant left
-    the binding FQID, §5.0.1), so it carries the variant `slug` (the browse
-    coordinate) + display fields, not an `Fqid`. Maps 1:1 to
-    `reg_meta.catalog.VariantSummary`. A4.4c adds the §9.5 read-only `panel_*`
+    the binding FQID — see reg_meta/DESIGN.md → Two-level variable model), so it
+    carries the variant `slug` (the browse coordinate) + display fields, not an
+    `Fqid`. Maps 1:1 to
+    `reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`
     fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
     (composite); `panel_time_key` is "period" or a variable-slug;
     `panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data →
@@ -350,7 +358,7 @@ class VariantModel(BaseModel):
 
 
 class StatesResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/states` — the binding's full state history (§9.5).
+    """`GET /api/catalog/{fqid}/states` — the binding's full state history.
     Same `states` shape the binding leaf embeds, as a standalone envelope. With a
     `?period` query on the catch-all this same shape carries the resolve_at
     subset (uniform: codegen sees one state-list type)."""
@@ -360,31 +368,31 @@ class StatesResponse(BaseModel):
 
 
 class PredecessorsResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/predecessors` — inbound succession (§9.5)."""
+    """`GET /api/catalog/{fqid}/predecessors` — inbound succession."""
 
     binding: str
     predecessors: list[VariableRefModel]
 
 
 class SuccessorsResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/successors` — outbound succession (§9.5)."""
+    """`GET /api/catalog/{fqid}/successors` — outbound succession."""
 
     binding: str
     successors: list[VariableRefModel]
 
 
 class RelatedResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/related` — split-sibling edges (§5.7 / §9.5)."""
+    """`GET /api/catalog/{fqid}/related` — split-sibling edges."""
 
     binding: str
     related: list[RelatedRefModel]
 
 
 class LineageResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/lineage` — consumer-side lineage edges (§5.6).
+    """`GET /api/catalog/{fqid}/lineage` — consumer-side lineage edges.
 
     Maps what `reg_meta.LineageEdge` carries (consumer/source state ids, the
-    validity intersection, source_fqid). The §9.5 richer per-source-state shape
+    validity intersection, source_fqid). The richer per-source-state shape
     (embedding each source state's variant / value_set / column) is a possible
     reg_meta enhancement, NOT blocked on here — see DESIGN.md."""
 
@@ -393,16 +401,16 @@ class LineageResponse(BaseModel):
 
 
 class LineageWarningsResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/lineage_warnings` — build-time lineage warnings
-    (§5.6 / §9.5). Empty list when lineage resolved cleanly."""
+    """`GET /api/catalog/{fqid}/lineage_warnings` — build-time lineage warnings.
+    Empty list when lineage resolved cleanly."""
 
     binding: str
     lineage_warnings: list[LineageWarningModel]
 
 
 class VariantsResponse(BaseModel):
-    """`GET /api/catalog/{provider}/{register}/variants` — the variant browser
-    (§9.5). The wire key `register` is the 2-seg register FQID; `variants` the
+    """`GET /api/catalog/{provider}/{register}/variants` — the variant browser.
+    The wire key `register` is the 2-seg register FQID; `variants` the
     register's `register_variant` sub-resource list.
 
     The Python attr is `register_name` (aliased to `register`) for the same reason
@@ -414,10 +422,12 @@ class VariantsResponse(BaseModel):
     variants: list[VariantModel]
 
 
-# ── A5.2b-ii write surface (§9.5) ───────────────────────────────────────────
-# `POST /api/project/validate` returns the §6.8.0 concatenated issue list. The
+# ── A5.2b-ii write surface (see DESIGN.md → Project-write surface
+# (routes/project.py + routes/bundle.py)) ───────────────────────────────────
+# `POST /api/project/validate` returns the concatenated issue list. The
 # webapp wraps reg_schema's FROZEN `ValidationResult` / `ValidationIssue`
-# dataclasses (§9.6: reg_schema stays a dataclass — it's consumed cross-runtime
+# dataclasses (see DESIGN.md → Pydantic boundary: reg_schema stays a dataclass —
+# it's consumed cross-runtime
 # by the MONA bundle + the SPA — so the webapp Pydantic-wraps it 1:1, exactly
 # like the catalog node wrappers). This is the ONLY place reg_schema's
 # ValidationResult is re-modeled; the rest of the write surface (`/order`,
@@ -425,7 +435,7 @@ class VariantsResponse(BaseModel):
 
 
 class ValidationIssueModel(BaseModel):
-    """One §6.8.0 validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
+    """One validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
     ``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is
     an RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document
     issues); ``code`` is the stable, namespaced rule identifier the SPA maps to a
@@ -438,7 +448,7 @@ class ValidationIssueModel(BaseModel):
 
 
 class ValidationResultModel(BaseModel):
-    """`POST /api/project/validate` response — the §6.8.0 concatenated issue list
+    """`POST /api/project/validate` response — the concatenated issue list
     (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
 
     ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level

@@ -53,7 +53,7 @@ def _write_fixture_slug_dir(slug_dir: Path) -> None:
     table stays empty, so the empty `classifications.toml` clears
     `populate_slugs`'s strict coverage check (no rows = no NULL slugs).
     """
-    # §5.6 lineage default: OTHERREG's Kön (sourced from TESTREG) pins to
+    # Lineage default: OTHERREG's Kön (sourced from TESTREG) pins to
     # TESTREG's `individer` variant, so the e2e build materializes a
     # variable_state_lineage edge (asserted in test_build_db.py). Without the
     # pin the consumer would hit the single-variant fallback (TESTREG has only

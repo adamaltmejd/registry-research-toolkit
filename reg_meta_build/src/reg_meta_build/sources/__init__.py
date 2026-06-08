@@ -17,7 +17,7 @@ protocol below — concrete adapters live at
 `reg_meta_build/sources/<provider>.py` (e.g. `scb.py`, future: `fk.py`,
 etc.) and emit a stream of IR objects (`reg_meta_build.ir.*`) consumed
 by the provider-blind materializer in `reg_meta_build.db`. See
-REFACTOR_SPEC.md §4.4.
+DESIGN.md → IR + adapter architecture.
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ class IRAdapter(Protocol):
     Concrete adapters live at `reg_meta_build/sources/<provider>.py`
     (e.g. `scb.py`, `sos.py`). The materializer in `reg_meta_build.db`
     is provider-blind — it consumes the IR stream and writes the
-    universal SQLite catalog. See REFACTOR_SPEC.md §4.4.
+    universal SQLite catalog. See DESIGN.md → IR + adapter architecture.
     """
 
     provider: str  # short identifier: 'scb', 'sos', 'fk', ...

@@ -1,36 +1,38 @@
-"""Semantic (§6.8.3) validation — reg_meta-backed.
+"""Semantic validation — reg_meta-backed.
 
-The third validation layer (§6.8.0): structural (§6.8.1, ``reg_schema``) and
-namespaced-block (§6.8.2, owning packages) run first; this one resolves every
+See DESIGN.md → Semantic validation (semantic.py). The third validation layer:
+structural (``reg_schema``) and namespaced-block (owning packages) run first;
+this one resolves every
 FQID in a *structurally valid* ``project_data.json`` against a live reg_meta
 ``Catalog``. It lives in the webapp — NOT ``reg_schema`` — because ``reg_schema``
-is reg_meta-free by design (§6.8.1, MONA-amalgamatable); semantic rules need the
+is reg_meta-free by design (MONA-amalgamatable); semantic rules need the
 DB, so they belong where the DB is (the webapp backend, and any local tool that
-has loaded reg_meta — REFACTOR_SPEC §6.8.3).
+has loaded reg_meta).
 
 It emits the same frozen ``reg_schema.ValidationIssue`` shape the other layers
-do (§6.8.0) — composition is tuple concatenation, no merge semantics. It takes a
+do — composition is tuple concatenation, no merge semantics. It takes a
 ``Catalog`` (never opens a connection): A5.2b-ii's ``POST /api/project/validate``
 calls it per-request with an in-handler connection; the steward catalog load
 (``stewards.py``) calls it at boot with the boot connection.
 
-**Caller context (§6.8.3 "researcher-project vs steward-catalog").** The
+**Caller context (researcher-project vs steward-catalog).** The
 ``caller`` flag drives the level mapping. For the *researcher* path
 (``POST /api/project/validate``) unresolved FQIDs are blocking ``error``s. For
-the *steward-catalog load* path (FastAPI startup, §9.1) ``fqid_unresolved``,
+the *steward-catalog load* path (FastAPI startup) ``fqid_unresolved``,
 ``value_set_missing``, ``period_outside_state_validity``, and
 ``binding_representation_unknown`` are downgraded ``error`` → ``warning`` so the
 deployment doesn't fail to start when reg_meta evolves out from under a steward's
 committed catalog; the affected bindings are then dropped from the in-memory
 index (``catalog_index.py``), but ``ok`` stays True, so the caller must inspect
-the warnings, not just ``ok`` (§6.8.0).
+the warnings, not just ``ok``.
 
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
 passes — so this layer assumes well-formed FQIDs / period grammar and resolves
 them, rather than re-checking shape. In particular, calendar-day validity of the
 AUTHOR-supplied period endpoints (rejecting an impossible author day like
-``2019-02-29``) is a STRUCTURAL guarantee (§6.8.1) — every caller runs structural
+``2019-02-29``) is a STRUCTURAL guarantee (see reg_schema/DESIGN.md → Structural
+rules and issue codes) — every caller runs structural
 first and short-circuits before semantic — so this layer no longer pre-checks it.
 What structural does NOT guarantee is the SYNTHESIZED upper bound: a non-leap
 ``YYYY-02`` month token expands to an over-counted ``-02-29`` ``hi`` (intentional
@@ -55,11 +57,11 @@ if TYPE_CHECKING:
 
 Caller = Literal["researcher", "steward"]
 
-# §6.8.3 caller-context: these codes downgrade error → warning on the
+# Caller-context: these codes downgrade error → warning on the
 # steward-catalog load path so a deployment boots through reg_meta drift (the
 # affected bindings drop from the in-memory index instead of crashing startup).
 # The researcher path keeps them as errors. The split is a level *mapping* by
-# caller, NOT a different rule set (§6.8.3 "same codes, different level mapping").
+# caller, NOT a different rule set (same codes, different level mapping).
 # `binding_representation_unknown` belongs here for the same reason as
 # `period_outside_state_validity`: a steward pinned a representation that a newer
 # reg_meta build no longer delivers as a column — drift, not an author error.
@@ -81,11 +83,11 @@ def validate_semantic(
     *,
     caller: Caller,
 ) -> ValidationResult:
-    """Run §6.8.3 semantic rules over ``project`` against ``catalog``.
+    """Run semantic rules over ``project`` against ``catalog``.
 
     Walks ``sources[*].register_variant``, each ``sources[*].bindings[*]``
     (``variable`` + ``value_set``), resolving against the live ``Catalog``.
-    Returns a ``ValidationResult`` whose ``issues`` carry the §6.8.3 codes at the
+    Returns a ``ValidationResult`` whose ``issues`` carry the codes at the
     level dictated by ``caller`` (see module docstring). Never opens a connection
     — the caller owns the ``Catalog``'s lifetime.
     """
@@ -102,7 +104,7 @@ def _issue(
     path: str,
     message: str,
 ) -> ValidationIssue:
-    """Build an issue, applying the §6.8.3 steward error→warning downgrade.
+    """Build an issue, applying the steward error→warning downgrade.
 
     Only the three ``_STEWARD_DOWNGRADED`` codes flip, and only on the steward
     path; ``info`` issues and the researcher path pass through unchanged."""
@@ -121,9 +123,10 @@ def _check_source(
 ) -> None:
     base = f"/sources/{s_idx}"
 
-    # §6.8.3: the source's register_variant must resolve to a known variant. The
+    # The source's register_variant must resolve to a known variant. The
     # variant coordinate is `<provider>/<register>/<variant>` — NOT an FQID kind
-    # (§5.2), so it can't go through `Catalog.resolve`. We resolve the
+    # (see reg_meta/DESIGN.md → FQID grammar), so it can't go through
+    # `Catalog.resolve`. We resolve the
     # provider/register prefix to a known register and the variant slug to a
     # `register_variant` row via `list_variants` (the variant browse axis). A
     # missing register OR variant is `fqid_unresolved`.
@@ -227,7 +230,7 @@ def _snap_to_real_month_end(iso: str) -> str:
     non-leap year can reach the fallback; snapping it to `-02-28` is also MORE
     correct (a window through "Feb 2019" really ends Feb 28, and it avoids a
     spurious 1-day phantom gap). Author-supplied `YYYY-MM-DD` days are already
-    calendar-valid (structural guarantee, §6.8.1), so they pass the try arm."""
+    calendar-valid (structural guarantee), so they pass the try arm."""
     try:
         date.fromisoformat(iso)
     except ValueError:
@@ -239,7 +242,7 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
     """The inclusive ISO `[lo, hi]` the author asked for with an explicit range:
     `lo` from the `from` endpoint, `hi` from the `to` endpoint. Structural
     validation already guaranteed `from <= to` and that each AUTHOR-supplied
-    endpoint is a real calendar date (§6.8.1). The SYNTHESIZED upper bound may
+    endpoint is a real calendar date (structural guarantee). The SYNTHESIZED upper bound may
     still over-count a non-leap February to day 29 (intentional in reg_meta for
     lexical interval overlap), so `hi` is snapped to the real month-end before the
     gap math does real `date` arithmetic on it."""
@@ -249,7 +252,7 @@ def _requested_range_bounds(period: PeriodRange) -> tuple[str, str]:
 
 
 def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta VariableState
-    """§6.8.3 CO-DELIVERY: are ≥2 states with DISTINCT VALUE SETS (different
+    """CO-DELIVERY: are ≥2 states with DISTINCT VALUE SETS (different
     ``value_set_id`` — not merely a different free-text version label) valid at the
     SAME instant (overlapping validity windows)? That is the genuine ambiguity: the
     same coordinate yields two different code-lists. Two states that share a
@@ -274,7 +277,7 @@ def _has_codelivered_versions(states) -> bool:  # noqa: ANN001 — reg_meta Vari
 
 
 def _coexisting_columns(states) -> list[str]:  # noqa: ANN001 — reg_meta VariableState
-    """§6.8.3 REPRESENTATION: the distinct delivery columns that are valid at the
+    """REPRESENTATION: the distinct delivery columns that are valid at the
     SAME instant (overlapping windows) — genuine parallel representations the
     binding must choose between (SSYK 3/4/5-digit, age brackets). Distinct columns
     in NON-overlapping windows are a SEQUENTIAL rename across the period (column A
@@ -345,7 +348,7 @@ def _check_binding(
     bbase = f"{base}/bindings/{b_idx}"
     var_path = f"{bbase}/variable"
 
-    # §6.8.3: the binding FQID must resolve to a known variable (following
+    # The binding FQID must resolve to a known variable (following
     # `same_as` curated links — `Catalog.resolve` does that internally). The
     # binding FQID is a bare 3-segment variable (the `@version` pin is retired —
     # the value set is determined by the resolved `(variable, variant, period)`).
@@ -407,9 +410,9 @@ def _check_binding_period(
     caller: Caller,
     issues: list[ValidationIssue],
 ) -> None:
-    """§6.8.3: the binding must resolve to a `variable_state` at the source's
-    variant AND period. Endpoints are already real calendar dates here (§6.8.1
-    structural guarantee — see module docstring). No covering state →
+    """The binding must resolve to a `variable_state` at the source's
+    variant AND period. Endpoints are already real calendar dates here (structural
+    guarantee — see module docstring). No covering state →
     `period_outside_state_validity`. An explicit range only PARTIALLY covered by
     the concept's states (a gap NO column delivers) → `range_period_partially_covered`
     (info). A range period crossing a state transition →
@@ -446,7 +449,7 @@ def _check_binding_period(
         )
         return
 
-    # §6.8.3 PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case). The
+    # PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case). The
     # author named an explicit `[from, to]`; `resolve_at` returned the states that
     # INTERSECT it, but their union may leave a sub-range NO column delivers (e.g.
     # SSYK first delivered 2014 under a `from:2010,to:2020` binding → 2010–2013 has
@@ -463,7 +466,7 @@ def _check_binding_period(
     # The steward index keys its binding-DROP on `warning` level (catalog_index.py),
     # so an `info` correctly keeps a partially-covered binding in the index.
     if not isinstance(source.period, (int, str)):
-        # Author endpoints are calendar-valid (structural guarantee, §6.8.1);
+        # Author endpoints are calendar-valid (structural guarantee);
         # `_requested_range_bounds` additionally snaps the synthesized upper bound
         # (a non-leap `YYYY-02` over-counts to `-02-29`) to the real month-end, so
         # the real `date` arithmetic in `_range_coverage_gaps` can't raise.
@@ -483,7 +486,7 @@ def _check_binding_period(
                 )
             )
 
-    # §6.8.3 REPRESENTATION. A FQID names one concept; the reg_meta build enforces
+    # REPRESENTATION. A FQID names one concept; the reg_meta build enforces
     # one value set per `(variable, variant, period, delivery_column)`, but a
     # concept may carry several co-existing delivery columns — parallel
     # representations (SSYK 3/4/5-digit, age brackets). `binding.representation`
@@ -580,7 +583,7 @@ def _check_binding_period(
         )
         return
 
-    # §6.8.3 drift (info): a range / `_default` period crossing a state transition
+    # Drift (info): a range / `_default` period crossing a state transition
     # resolves to several SEQUENTIAL states (non-overlapping windows) on ONE column,
     # possibly differing on version label (a re-version) or shape — informational;
     # the resolver returns the per-state subsets at extract time.
@@ -604,7 +607,7 @@ def _check_value_set(
     caller: Caller,
     issues: list[ValidationIssue],
 ) -> None:
-    """§6.8.3: a binding's `value_set` (a `class/<slug>` FQID) must resolve to a
+    """A binding's `value_set` (a `class/<slug>` FQID) must resolve to a
     known classification."""
     if binding.value_set is None:
         return

@@ -1,8 +1,8 @@
 """mock_data_wizard — generate mock CSV data from MONA project metadata.
 
-Post-§15-step-5-phase-2c, the on-MONA bundle runtime (``classify``,
-``sql_emit``, ``sources``, ``summarize``, ``spec``, ``extract``) lives
-under ``reg_monabundle.runtime``. mdw is now the local CLI surface
+The on-MONA bundle runtime (``classify``, ``sql_emit``, ``sources``,
+``summarize``, ``spec``, ``extract``) lives under
+``reg_monabundle.runtime``. mdw is now the local CLI surface
 (``compare``, ``generate``, ``update``, ``scan``, ``build-bundle``) plus
 the stats-parsing + enrichment + mock-generation pipeline. Bundle
 amalgamation is owned end-to-end by ``reg_monabundle.build_bundle``.

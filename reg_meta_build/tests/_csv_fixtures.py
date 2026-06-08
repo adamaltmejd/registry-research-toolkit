@@ -148,7 +148,7 @@ def _var_row(
 ) -> str:
     """A Registerinformation row for register TESTREG (register_id 1, variant
     register_variant_id 10), varying only the fields triage keys on. Shared by
-    the §5.7 triage tests and the A2.3 replaced_by tests (both reuse the
+    the triage tests and the A2.3 replaced_by tests (both reuse the
     canonical disjoint-column split geometry), so it lives here rather than in
     either test module."""
     return _ri_row(

@@ -1,6 +1,7 @@
-"""``GET /api/context`` — deployment identity, branding, build info (§9.5).
+"""``GET /api/context`` — deployment identity, branding, build info.
 
-Reads only the reg_meta ``import_manifest`` (stashed on ``app.state`` by the
+See DESIGN.md → API surface. Reads only the reg_meta ``import_manifest``
+(stashed on ``app.state`` by the
 lifespan) + the loaded steward + installed package versions. No git
 dependency.
 """
@@ -26,8 +27,8 @@ router = APIRouter(prefix="/api")
 def get_context(request: Request) -> ContextResponse:
     manifest = request.app.state.manifest
     steward = request.app.state.steward
-    # The §9.1 in-memory index (None for the global deployment) carries the
-    # boot-time steward-catalog drift warnings (§6.8.3). Surface them so the SPA
+    # The in-memory index (None for the global deployment) carries the
+    # boot-time steward-catalog drift warnings. Surface them so the SPA
     # can show a "catalog drift" banner; empty for global / an up-to-date catalog.
     index = request.app.state.catalog_index
     drift = [] if index is None else index.drift_warnings

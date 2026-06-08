@@ -98,8 +98,9 @@ def _forbidden_bundle_imports(
     forbidden module names. Checks BOTH the source module (``node.module``) and
     the imported names, so a re-export form like ``from pkg import reg_schema``
     is caught. ``exact`` matches whole module names; ``prefixes`` matches dotted
-    submodules. Shared by the §9.6 (pydantic/reg_schema) and §16 (reg_meta /
-    provenance) confinement gates."""
+    submodules. Shared by the two confinement gates: pydantic/reg_schema
+    (see DESIGN.md → The two halves) and reg_meta/provenance (see DESIGN.md →
+    Provenance-DB confinement)."""
     tree = ast.parse(src)
     forbidden: list[str] = []
     for node in ast.walk(tree):
@@ -115,10 +116,11 @@ def _forbidden_bundle_imports(
 
 
 def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
-    """§9.6 boundary gate: the MONA bundle must carry NO pydantic and NO
-    reg_schema — neither as source text nor as a live AST import.
+    """Boundary gate (see DESIGN.md → The two halves): the MONA bundle must
+    carry NO pydantic and NO reg_schema — neither as source text nor as a
+    live AST import.
 
-    This is the real §9.6 CI gate. It would have caught the A3.1
+    This is the real CI gate. It would have caught the A3.1
     transient (reg_schema pulled in Pydantic via the amalgamated
     ``project_data`` slice). Note the subprocess ``_run_bundle`` tests
     run in a Pydantic-having env, so they do NOT prove pydantic-free; the
@@ -188,7 +190,8 @@ def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
         )
         assert not forbidden, (
             f"[{label}] bundle carries forbidden imports {sorted(set(forbidden))} "
-            f"— the §9.6 boundary requires the bundle to be free of pydantic "
+            f"— the bundle boundary (see DESIGN.md → The two halves) requires the "
+            f"bundle to be free of pydantic "
             f"and reg_schema. Validation is the build-time gate "
             f"(spec_loader.validate_project_data); the runtime deserializes "
             f"via loadedspec_from_dict."
@@ -196,7 +199,8 @@ def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
 
 
 def test_bundle_carries_no_reg_meta_or_provenance(tmp_path: Path):
-    """§16 confinement assertion #1: the MONA bundle must amalgamate NO module
+    """Confinement assertion #1 (see DESIGN.md → Provenance-DB confinement):
+    the MONA bundle must amalgamate NO module
     that imports `reg_meta` / `reg_meta_build` or opens the sibling provenance
     DB (`reg_meta.provenance.db`).
 
@@ -251,7 +255,8 @@ def test_bundle_carries_no_reg_meta_or_provenance(tmp_path: Path):
         )
         assert not forbidden, (
             f"[{label}] bundle carries forbidden imports {sorted(set(forbidden))} "
-            f"— the §16 confinement boundary requires the bundle to be free of "
+            f"— the confinement boundary (see DESIGN.md → Provenance-DB confinement) "
+            f"requires the bundle to be free of "
             f"reg_meta / reg_meta_build (it would carry a path to the provenance DB)"
         )
 

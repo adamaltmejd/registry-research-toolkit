@@ -12,7 +12,7 @@ Both stdout/stderr capture and the log file are PII-clean: no
 row-level data is ever logged. Only schema metadata and aggregate
 counts (single integers, never frequency cell values).
 
-Optional: set PROJECT_DSN and SAMPLE_TABLE below to enable §6
+Optional: set PROJECT_DSN and SAMPLE_TABLE below to enable section 6
 (MS SQL via pyodbc).
 """
 

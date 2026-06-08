@@ -1,4 +1,4 @@
-"""Tests for Catalog.resolve() (REFACTOR_SPEC.md §5.8)."""
+"""Tests for Catalog.resolve()."""
 
 from __future__ import annotations
 
@@ -66,7 +66,7 @@ class TestResolveRegister:
 
 
 class TestVariantAndVersionKindsGone:
-    """A2.6: the variant and register_version FQID kinds were removed (§5.2). A
+    """A2.6: the variant and register_version FQID kinds were removed (see DESIGN.md → FQID grammar). A
     3-segment string is a binding now; a 4-segment string doesn't parse. (The
     `_default` variant + its synthesis live on as a `resolve_at` coordinate, not
     an addressable FQID — see TestResolveAt.)"""
@@ -94,7 +94,7 @@ class TestVariantAndVersionKindsGone:
 
 
 class TestResolveBinding:
-    """A2.5 (§5.10): `resolve()` returns the longitudinal `ResolvedVariable` —
+    """A2.5 (see DESIGN.md → Catalog API surface): `resolve()` returns the longitudinal `ResolvedVariable` —
     the variable's shared metadata + its `variable_state` history, no per-edition
     cvid. The interim `ResolvedVariableBinding` and the `editions()` path that
     returned it were removed in A2.6."""
@@ -112,7 +112,7 @@ class TestResolveBinding:
         assert r.states[0].variant == "individer-15plus"
 
     def test_swedish_kolumnnamn_folds_to_ascii_slug(self) -> None:
-        # "Kön" → "kon" via NFKD ASCII fold; binding FQIDs are ASCII (§5.2).
+        # "Kön" → "kon" via NFKD ASCII fold; binding FQIDs are ASCII (see DESIGN.md → FQID grammar).
         # The raw delivery column is preserved on the state.
         conn = build_slugged_db(delivery_column_name="Kön")
         r = Catalog(conn).resolve("scb/lisa/kon")
@@ -138,7 +138,7 @@ class TestResolveBinding:
 
 
 class TestStoredVariableSlug:
-    """A2.1.5 (§5.3): the resolver reads the stored `variable.slug`, not a slug
+    """A2.1.5 (see reg_meta_build/DESIGN.md → Slug curation): the resolver reads the stored `variable.slug`, not a slug
     derived from `delivery_column_name` at query time. A2.5: resolution is now
     longitudinal (`ResolvedVariable`, period-independent) — split siblings
     resolve to distinct `variable_id`s, and point selection moved to
@@ -184,7 +184,7 @@ class TestStoredVariableSlug:
 
     def test_split_siblings_resolve_to_distinct_variables(self) -> None:
         # A2.2 split → A2.5 longitudinal: two sibling variables share provider_key
-        # '44' (a §5.7 split puts several variables under one source key) but have
+        # '44' (a split puts several variables under one source key; see reg_meta_build/DESIGN.md → Build-time triage (SCB)) but have
         # distinct slugs + distinct `variable_id`s and own DISJOINT delivery
         # columns. Each resolves to its OWN `ResolvedVariable` with its own state
         # — no shared cvid fan-out (the interim hazard the A2.2 flip removed).
@@ -227,7 +227,7 @@ class TestStoredVariableSlug:
 
 
 class TestResolveBindingLineage:
-    """§5.6 consumer-side lineage exposure on the longitudinal resolution
+    """Consumer-side lineage exposure (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)) on the longitudinal resolution
     (A2.5). Lineage is the `variable_state_lineage` table (A2.4, state grain),
     surfaced via `resolve(fqid).lineage` and `lineage(fqid)` — NOT the deleted
     interim per-cvid `via_source_id` FQID."""
@@ -308,7 +308,7 @@ class TestResolveBindingLineage:
 # (TestResolveVersionWithCuratedSlug), and the per-edition discovery path
 # Catalog.editions (TestEditions) are all gone — the resolver reads
 # variable.slug + variable_state, period is a resolve_at coordinate, and a
-# variant is a register sub-resource without a slash-path FQID (§5.2).
+# variant is a register sub-resource without a slash-path FQID (see DESIGN.md → FQID grammar).
 
 
 class TestResolveClassification:
@@ -363,7 +363,7 @@ class TestNullSlugMisses:
 
 
 class TestSameAsTraversal:
-    """§5.5 / §6.7: resolver follows curated same_as links transitively when
+    """See DESIGN.md → Composite registers and source tracking / Canonical vs observed codes: resolver follows curated same_as links transitively when
     direct lookup misses. Traversal path surfaces on `via_same_as` (info, not
     warning per spec)."""
 
@@ -374,7 +374,7 @@ class TestSameAsTraversal:
         a: tuple[str, str, str],
         b: tuple[str, str, str],
     ) -> None:
-        """Insert both directions of a variable-grain same_as edge (§5.5)."""
+        """Insert both directions of a variable-grain same_as edge (see DESIGN.md → Composite registers and source tracking)."""
         for src, tgt in ((a, b), (b, a)):
             conn.execute(
                 "INSERT INTO variable_same_as ("
@@ -450,7 +450,7 @@ class TestSameAsTraversal:
             Catalog(conn).resolve("scb/lisa/phantom-a")
         assert exc.value.code == "fqid_not_found"
 
-    # A2.1.5 (§5.5): variable same_as is variable-grain — edges carry no
+    # A2.1.5 (see DESIGN.md → Composite registers and source tracking): variable same_as is variable-grain — edges carry no
     # variant/period narrowing, so the former `test_same_as_variant_narrowing`
     # and `test_visited_key_separates_variant_scopes` (which exercised
     # variant-scoped edges + a variant-keyed visited set) no longer have a
@@ -488,7 +488,7 @@ class TestSameAsTraversal:
 
 
 class TestSameAsClassificationTraversal:
-    """§5.5 classification same_as traversal."""
+    """Classification same_as traversal (see DESIGN.md → Classifications)."""
 
     @staticmethod
     def _add_class_edge(
@@ -567,13 +567,13 @@ class TestSameAsClassificationTraversal:
         assert exc.value.code == "fqid_not_found"
 
 
-# ── A2.5 longitudinal resolution + resolve_at + edge accessors (§5.10) ──────
+# ── A2.5 longitudinal resolution + resolve_at + edge accessors (see DESIGN.md → Catalog API surface) ──
 
 _KON = "scb/lisa/kon"
 
 
 class TestResolveVariableLongitudinal:
-    """§5.10: `resolve()` returns the variable's shared metadata + full state
+    """see DESIGN.md → Catalog API surface: `resolve()` returns the variable's shared metadata + full state
     history, each state tagged with its variant."""
 
     def test_resolve_returns_resolved_variable(
@@ -678,7 +678,7 @@ class TestResolveVariableLongitudinal:
         assert exc.value.code == "not_a_binding_fqid"
 
     def test_resolve_states_round_trip_with_resolve_at(self) -> None:
-        # §5.10 (migration stage A2.5): the full history via resolve(fqid).states
+        # see DESIGN.md → Catalog API surface (migration stage A2.5): the full history via resolve(fqid).states
         # equals the union of per-year resolve_at() results on the unambiguous
         # single-variant case.
         conn = build_slugged_db()
@@ -730,7 +730,7 @@ class TestResolveVariableLongitudinal:
 
 
 class TestResolveAt:
-    """§5.10: `resolve_at` — period/variant/version-narrowed list of states."""
+    """see DESIGN.md → Catalog API surface: `resolve_at` — period/variant/version-narrowed list of states."""
 
     @staticmethod
     def _two_state_year_db() -> sqlite3.Connection:
@@ -867,7 +867,7 @@ class TestResolveAt:
         assert len(cat.resolve_at(_KON, 2018, variant="foretag")) == 1
 
     def test_value_set_version_narrows_multivintage(self) -> None:
-        # §5.7 multi-vintage fold: two overlapping states, same variant + year,
+        # Multi-vintage fold (see reg_meta_build/DESIGN.md → Build-time triage (SCB)): two overlapping states, same variant + year,
         # distinct value_set_version_label (SNI92 + SNI2007 in a crosswalk year).
         # resolve_at returns both; value_set_version narrows to one.
         conn = build_slugged_db()
@@ -937,7 +937,7 @@ class TestResolveAt:
 
 
 class TestEdgeAccessors:
-    """§5.10: predecessors/successors/related/lineage/lineage_warnings + the
+    """see DESIGN.md → Catalog API surface: predecessors/successors/related/lineage/lineage_warnings + the
     edges surfaced on ResolvedVariable (variable grain)."""
 
     @staticmethod

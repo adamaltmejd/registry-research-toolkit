@@ -1,4 +1,4 @@
-"""Tests for the FQID parser/emitter (REFACTOR_SPEC.md §5.2).
+"""Tests for the FQID parser/emitter (see DESIGN.md → FQID grammar).
 
 A2.6 grammar: 1-seg provider, 2-seg register, 3-seg variable binding (the FQID
 names the variable). A2.6.1: `class/<slug>` is a classification (2-seg, vintage
@@ -36,7 +36,7 @@ class TestRoundTrip:
             ("scb", FqidKind.PROVIDER),
             ("scb/lisa", FqidKind.REGISTER),
             # 3-seg is now a binding (the leaf is the variable slug), not a
-            # variant — the variant FQID kind is gone (§5.2 DECISION POINT 2).
+            # variant — the variant FQID kind is gone.
             ("scb/lisa/kon", FqidKind.VARIABLE_BINDING),
             ("scb/lisa/individer-15plus", FqidKind.VARIABLE_BINDING),
             ("sos/lss/insatstyp", FqidKind.VARIABLE_BINDING),
@@ -89,7 +89,7 @@ class TestSlugGrammar:
 
     def test_class_token_rejected_as_slug_anywhere(self) -> None:
         # `class` is the discriminator; it may not appear as a slug in any
-        # ordinary slot (§5.2 reserved-slug rule).
+        # ordinary slot (reserved-slug rule; see DESIGN.md → FQID grammar).
         for s in ("class", "scb/class", "scb/lisa/class"):
             with pytest.raises(FqidError, match="class"):
                 parse(s)
@@ -106,7 +106,7 @@ class TestSlugGrammar:
 
     def test_period_shaped_slugs_rejected_in_binding(self) -> None:
         # Period grammar is rejected in every slot — there is no period segment
-        # in the grammar anymore (§5.2). A period-shaped leaf is not a valid
+        # in the grammar anymore (see DESIGN.md → FQID grammar). A period-shaped leaf is not a valid
         # variable slug.
         with pytest.raises(FqidError, match="period grammar"):
             parse("2020")  # provider slot
@@ -117,7 +117,7 @@ class TestSlugGrammar:
 
 
 # ---------------------------------------------------------------------------
-# Reserved HTTP-suffix slugs (§5.2): tokens that would shadow a live reg_webapp
+# Reserved HTTP-suffix slugs (see DESIGN.md → FQID grammar): tokens that would shadow a live reg_webapp
 # catalog sub-resource route. The 6 binding suffixes are reserved in the
 # variable / register / classification slots; `variants` only in the variable
 # slot. Provider and register_variant slots carry no reservation.
@@ -302,7 +302,7 @@ class TestPeriodGrammar:
 
 # ---------------------------------------------------------------------------
 # Segment-count discrimination (kind is determined purely from segment count
-# + the `class/` discriminator — no out-of-band lookup needed; §5.2).
+# + the `class/` discriminator — no out-of-band lookup needed; see DESIGN.md → FQID grammar).
 # ---------------------------------------------------------------------------
 
 
@@ -549,7 +549,7 @@ class TestDerivePeriod:
 
 
 # ---------------------------------------------------------------------------
-# Stored binding FQIDs (no variant/period segment, §5.2)
+# Stored binding FQIDs (no variant/period segment; see DESIGN.md → FQID grammar)
 # ---------------------------------------------------------------------------
 
 

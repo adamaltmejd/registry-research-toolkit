@@ -1,4 +1,4 @@
-"""1 MB bundle-size budget gate (``REFACTOR_SPEC.md`` §12).
+"""1 MB bundle-size budget gate (see ARCHITECTURE.md → Repo-wide invariants).
 
 The MONA bundle is uploaded through MONA's GUI on every round-trip;
 the v1 budget keeps the upload responsive and forces deliberation
@@ -24,8 +24,9 @@ from reg_monabundle import build_bundle
 if TYPE_CHECKING:
     import pytest
 
-# ``REFACTOR_SPEC.md`` §12. Bumping this constant requires a spec edit
-# and a steward conversation — the cap is part of the bundle contract,
+# See ARCHITECTURE.md → Repo-wide invariants. Bumping this constant requires
+# a spec edit and a steward conversation — the cap is part of the bundle
+# contract,
 # not a test tuning knob.
 BUNDLE_SIZE_CAP_BYTES = 1_048_576
 
@@ -87,5 +88,5 @@ def test_bundle_with_200col_load_fixture_under_1mb_cap(
         f"bundle is {size:,} bytes — over the 1 MB v1 cap "
         f"({BUNDLE_SIZE_CAP_BYTES:,}). Either trim what was just added "
         f"to the runtime amalgamation, or raise the cap in "
-        f"REFACTOR_SPEC.md §12 (requires a spec edit, not a test tweak)."
+        f"ARCHITECTURE.md → Repo-wide invariants (requires a spec edit, not a test tweak)."
     )

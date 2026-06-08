@@ -6,9 +6,10 @@ Two modes, one bundle:
   sources read ``INFORMATION_SCHEMA.COLUMNS`` and ``COUNT(*)``; file
   sources use DuckDB ``DESCRIBE`` and ``COUNT(*)``. No samples, no
   distinct counts. Output: ``mock_data_discovery.json``. The user copies
-  it off MONA and authors ``project_data.json`` locally (the §15 step 7
-  webapp owns the authoring UI; until then, hand-write against
-  REFACTOR_SPEC.md §6).
+  it off MONA and authors ``project_data.json`` locally (the
+  REFACTOR_SPEC.md step 7 webapp owns the authoring UI; until then,
+  hand-write against the project_data schema — see reg_schema/DESIGN.md →
+  Two layers: models vs. validator).
 - ``MODE = "extract"`` -- typed aggregation. Reads ``project_data.json``
   uploaded next to the bundle, requires every column to have a type
   override, and produces ``mock_data_stats.json``. No data-driven
@@ -333,7 +334,8 @@ def _build_panels_block(
     column-members (the ``GROUP BY time_key`` query result). The
     time_key is part of the key because the schema permits two
     members of the same panel to share a source with different
-    time_key columns (§6.4 only forbids cross-panel source reuse).
+    time_key columns (it only forbids cross-panel source reuse; see
+    reg_schema/DESIGN.md → Structural rules and issue codes).
     File-members read ``n_rows`` from the per-source row count and
     ``n_entity_ids`` from the entity-key column's ``n_distinct``.
     Suppression is uniform (drop periods where
@@ -469,7 +471,7 @@ def process_handle(
             f"{len(missing)} column(s) with no type override in "
             f"project_data.json: {listed}. Add the missing entries by "
             f"hand (or regenerate from a fresh discover payload via the "
-            f"§15 step 7 webapp once it lands)."
+            f"REFACTOR_SPEC.md step 7 webapp once it lands)."
         )
 
     columns_out: list[dict[str, Any]] = []
@@ -593,7 +595,8 @@ def run_extract_typed(
     # GROUP BY time_key query while the connection is still open.
     # The schema permits two members of the *same* panel to share a
     # source with different time_key columns (reg_schema only forbids
-    # cross-panel source reuse, §6.4) — index per-member so each
+    # cross-panel source reuse; see reg_schema/DESIGN.md → Structural rules
+    # and issue codes) — index per-member so each
     # GROUP BY runs once and lookup is unambiguous in
     # ``_build_panels_block``.
     time_key_members_by_source: dict[str, list[tuple[Panel, str]]] = defaultdict(list)
@@ -789,8 +792,9 @@ def main(
         raise RuntimeError(
             f"extract mode requires project_data.json next to the bundle "
             f"({output_dir}/project_data.json). Run mode='discover' first, "
-            f"then author project_data.json locally against REFACTOR_SPEC.md "
-            f"§6 (the §15 step 7 webapp owns this authoring once it lands)."
+            f"then author project_data.json locally against its schema "
+            f"(the REFACTOR_SPEC.md step 7 webapp owns this authoring once it "
+            f"lands)."
         )
     log.info(
         "loaded project_data.json: %d source(s), %d panel(s)",

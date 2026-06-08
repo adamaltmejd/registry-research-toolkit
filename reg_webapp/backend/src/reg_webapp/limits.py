@@ -1,19 +1,20 @@
-"""Write-endpoint cost protection: body-size cap + per-IP rate limit (§9.4).
+"""Write-endpoint cost protection: body-size cap + per-IP rate limit.
 
-§9.4 has no auth — the data is public-ish registry metadata and there's no
+See DESIGN.md → Cost protection (limits.py). There is no auth — the data is
+public-ish registry metadata and there's no
 server-side user state. "Auth" is cost protection on the actual-work POST
 endpoints (`/api/project/validate`, `/api/project/order`, `/api/bundle`). Two
 stdlib-only ASGI middlewares, no new dependency (no slowapi):
 
 - ``BodySizeLimitMiddleware`` — a STREAMING byte-count guard that 413s a request
-  whose body exceeds ``MAX_BODY_BYTES`` (1 MB, §9.4). It counts the bytes as they
+  whose body exceeds ``MAX_BODY_BYTES`` (1 MB). It counts the bytes as they
   arrive rather than trusting ``Content-Length`` — that header can lie, be absent
   on a chunked request, or be spoofed below the real size — so a body that
   *streams* past the cap is rejected even with a small/missing declared length.
 - ``RateLimitMiddleware`` — an in-memory token bucket keyed on the client IP
-  (``request.client.host``), ~``RATE_LIMIT_PER_MINUTE`` requests/min/IP (§9.4).
+  (``request.client.host``), ~``RATE_LIMIT_PER_MINUTE`` requests/min/IP.
   IP-only by design (no session token — that adds a fingerprinting surface for
-  anonymous public data, §9.4); a localStorage token is a later, opt-in concern.
+  anonymous public data); a localStorage token is a later, opt-in concern.
 
 Both gate ONLY the write methods (POST). Read GETs flow through untouched — they
 are edge-cached (Cloudflare) and ETag-revalidated (``ETagMiddleware``), a
@@ -21,8 +22,8 @@ different and cheaper protection axis. The cap MUST run BEFORE a handler reads
 the body, and the limiter before any work; ``app.py`` adds them so they wrap the
 routers (see its middleware-ordering note).
 
-Cloudflare fronts production with the same body cap + per-IP limits at the edge
-(§9.4); these origin-side guards catch direct origin hits that bypass the edge.
+Cloudflare fronts production with the same body cap + per-IP limits at the edge;
+these origin-side guards catch direct origin hits that bypass the edge.
 The buckets are per-process in-memory (lost on restart, not shared across
 replicas) — sufficient as the origin backstop behind the edge limiter; a shared
 store (Redis) is a scale-out concern, not v1.
@@ -40,12 +41,13 @@ from starlette.responses import JSONResponse, Response
 if TYPE_CHECKING:
     from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-# §9.4: 1 MB cap on write bodies — matches the bundle-output budget (§12) and is
-# comfortably larger than any plausible project_data.json (the 200-column
+# 1 MB cap on write bodies — matches the bundle-output budget (see
+# ARCHITECTURE.md → Repo-wide invariants) and is comfortably larger than any
+# plausible project_data.json (the 200-column
 # load-test fixture lands at tens of KB).
 MAX_BODY_BYTES = 1024 * 1024
 
-# §9.4: ~30 req/min/IP on the actual-work endpoints, stricter than the
+# ~30 req/min/IP on the actual-work endpoints, stricter than the
 # edge-cached reads. Modeled as a token bucket: capacity = the per-minute budget,
 # refilled continuously at capacity/60 tokens per second so a steady drip is
 # allowed but a burst beyond the bucket is 429'd.
@@ -57,7 +59,7 @@ _WRITE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
 
 
 class BodySizeLimitMiddleware:
-    """413 a write request whose body streams past ``MAX_BODY_BYTES`` (§9.4).
+    """413 a write request whose body streams past ``MAX_BODY_BYTES``.
 
     Pure ASGI (not ``BaseHTTPMiddleware``) so it can intercept the request body
     stream BEFORE the route handler reads it: it wraps ``receive`` and tallies the
@@ -169,9 +171,9 @@ class _TokenBucket:
 
 
 class RateLimitMiddleware:
-    """In-memory per-IP token-bucket rate limiter for write endpoints (§9.4).
+    """In-memory per-IP token-bucket rate limiter for write endpoints.
 
-    Keyed on ``request.client.host`` (IP-only, §9.4). Pure ASGI (no body access
+    Keyed on ``request.client.host`` (IP-only). Pure ASGI (no body access
     needed — the decision is made from the method + IP before the handler runs, so
     no request-body buffering). A drained bucket returns 429. The bucket map is
     guarded by a single lock; the per-IP work is O(1) and the lock is held only

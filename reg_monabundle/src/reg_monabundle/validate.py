@@ -1,7 +1,7 @@
-"""``reg_monabundle`` namespaced-block validator (§6.8.2).
+"""``reg_monabundle`` namespaced-block validator.
 
-Per REFACTOR_SPEC.md §6.8.2, each namespaced block under
-``project_data.json`` is validated by its owning package. This module
+Each namespaced block under ``project_data.json`` is validated by its
+owning package (see DESIGN.md → The two halves). This module
 owns the ``reg_monabundle`` block: shape, allowed keys, ``binding_options``
 binding-FQID well-formedness, and the ``suppress_k`` floor check against
 ``SUPPRESS_K``.
@@ -16,7 +16,8 @@ What this validator does NOT do:
   (it only makes sense on categorical columns). Same reason — needs
   the resolved column tree. Lives in
   ``reg_monabundle.build.spec_loader._validate_binding_options_against_columns``
-  (build-time gate; §9.6 — the bundle runtime trusts the embedded JSON).
+  (build-time gate; see DESIGN.md → The two halves — the bundle runtime
+  trusts the embedded JSON).
 """
 
 from __future__ import annotations
@@ -46,7 +47,7 @@ def _is_binding_fqid(value: object) -> bool:
     provider, per-segment ``[A-Za-z0-9_-]+``).
 
     Mirrors ``reg_schema.structural._is_binding_fqid``: the value set is
-    resolved from ``(variable, variant, period)`` (§6.8.3), not pinned on the
+    resolved from ``(variable, variant, period)``, not pinned on the
     FQID, so a binding leaf is a bare slug with no ``@version`` suffix.
     """
     if not isinstance(value, str):
@@ -90,7 +91,8 @@ def validate_block(block: object) -> None:
         # Binding FQIDs are 3-segment slash-separated identifiers
         # (``<provider>/<register>/<slug>``) with per-segment
         # ``[A-Za-z0-9_-]+`` tokens and a non-``class`` provider. The
-        # structural validator (§6.8.1) checks well-formedness on
+        # structural validator (see reg_schema/DESIGN.md → Structural rules
+        # and issue codes) checks well-formedness on
         # ``binding.variable``; reg_monabundle.binding_options keys are opaque
         # to reg_schema. Mirror the same rule here so a typo (display_name,
         # whitespace, empty segment, ``class/...``) raises loudly instead of

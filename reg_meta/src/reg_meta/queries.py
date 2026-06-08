@@ -47,7 +47,7 @@ def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[int]:
         return [row["register_id"]]
 
     rows = conn.execute(
-        # `register.name` is the §5.11 rename of `registernamn`; values
+        # `register.name` is the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) of `registernamn`; values
         # are still provider-native (e.g. "LISA").
         "SELECT register_id FROM register WHERE LOWER(name) = LOWER(?)",
         (value,),
@@ -313,7 +313,7 @@ def _search_datacolumns(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     # Aliased SELECT so both `variable.name` and `register.name` land under
-    # distinct row keys after the §5.11 rename collapsed them to a single
+    # distinct row keys after the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) collapsed them to a single
     # column name.
     # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed). Join
     # straight to `variable` via `variable_id`; `var_id` is the variable's
@@ -380,7 +380,7 @@ def _search_description_registers(
     conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     # register_fts now mirrors the renamed columns: `name` + `purpose`.
-    # `registerrubrik` was dropped per §5.11.
+    # `registerrubrik` was dropped per the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk).
     rows = conn.execute(
         "SELECT register_id, name, purpose, rank "
         "FROM register_fts WHERE register_fts MATCH ? "
@@ -472,7 +472,7 @@ def _search_values(
         results.append(
             {
                 "type": "value",
-                # §5.11: SCB `vardekod`/`vardebenamning` are exposed in the
+                # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): SCB `vardekod`/`vardebenamning` are exposed in the
                 # JSON envelope under the universal English `code`/`label`.
                 "code": r["code"],
                 "label": r["label"],
@@ -527,7 +527,7 @@ def get_register(
         for v in variants:
             vd = dict(v)
             # A2.6: a variant is a navigational sub-resource of a register, not a
-            # slash-path FQID (§5.2 DECISION POINT 2). It carries the parent
+            # slash-path FQID. It carries the parent
             # register FQID + its own slug (the `?variant=` browse coordinate),
             # not an addressable variant FQID.
             vd["register_fqid"] = register_fqid
@@ -615,7 +615,7 @@ def get_schema(
         # windows), not the dropped `register_version`. One "version" per
         # distinct (valid_from, valid_to) DELIVERY WINDOW the variant delivered;
         # its columns are every state in that window. `value_set_version_label`
-        # is a PER-COLUMN attribute (a §5.7 folded multi-vintage variable carries
+        # is a PER-COLUMN attribute (a folded multi-vintage variable — see reg_meta_build/DESIGN.md → Build-time triage (SCB) — carries
         # two states in the SAME window with labels like `sni92`/`sni2007` while
         # ordinary columns carry ''), so it must NOT be part of the edition key —
         # keying by it would shard one delivered schema into partial pseudo-
@@ -661,11 +661,11 @@ def get_schema(
                         "data_length": s["data_length"],
                         "variable_name": s["variable_name"],
                         "source": s["source"],
-                        # Per-column §5.7 vintage discriminator: '' for ordinary
+                        # Per-column vintage discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB)): '' for ordinary
                         # columns, e.g. `sni92`/`sni2007` for the two states of a
                         # folded multi-vintage variable sharing this window.
                         "value_set_version_label": s["value_set_version_label"],
-                        # The state's denormalized latest alias (§5.1) is the
+                        # The state's denormalized latest alias (see DESIGN.md → Two-level variable model) is the
                         # display column; emit it under `aliases` for the
                         # table/flat renderers and `compare()` flattening.
                         "aliases": s["delivery_column_name"] or "",
@@ -700,7 +700,7 @@ def get_schema(
                 {
                     "register_variant_id": rvid,
                     "register_id": rv["register_id"],
-                    # §5.11: the variant's name + description (was Swedish
+                    # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): the variant's name + description (was Swedish
                     # `registervariantnamn` / `registervariantbeskrivning`).
                     "variant_name": rv["name"],
                     "variant_description": rv["description"],
@@ -856,7 +856,7 @@ def get_varinfo(
                 "year": int(s["valid_from"][:4]),
                 "data_type": s["data_type"],
                 "data_length": s["data_length"],
-                # The state's denormalized latest alias (§5.1); list-shaped for
+                # The state's denormalized latest alias (see DESIGN.md → Two-level variable model); list-shaped for
                 # the CLI renderer's `", ".join(...)`.
                 "aliases": [col] if col else [],
                 "value_set_count": (
@@ -880,7 +880,7 @@ def get_varinfo(
                 "register_id": rid,
                 "register_name": var["register_name"],
                 "var_id": vid,
-                # §5.11 keys: SCB Swedish columns surface here as the
+                # Glossary-rename keys (see DESIGN.md → Glossary and Swedish↔English crosswalk): SCB Swedish columns surface here as the
                 # universal English names. Dropped columns
                 # (variabelreferenstid, variabelhamtadfran,
                 # variabelextern_kommentar, variabeloperationell_definition)
@@ -1126,7 +1126,7 @@ def get_values_by_variable(
     ``{input, variable_name, instances: [{state_id, register_id, register_name,
     register_variant_id, variant_name, valid_from, valid_to, year, values}]}``.
     Resolution mirrors ``get_varinfo``: var_id → variable name → alias.
-    Keys follow the §5.11 rename (`variabelnamn` → `variable_name`).
+    Keys follow the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): `variabelnamn` → `variable_name`.
     """
     reg_ids: list[int] | None = None
     if register:
@@ -1302,7 +1302,7 @@ def get_values_by_variable(
 
     return {
         "input": variable,
-        # §5.11: surface as `variable_name` (variable.name with the entity
+        # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): surface as `variable_name` (variable.name with the entity
         # qualifier so consumers don't confuse it with register.name).
         "variable_name": variable_name,
         "instances": instances,
@@ -1327,8 +1327,8 @@ def get_datacolumns(
     straight to `variable`. The full history is the right source here; the
     coalesced `variable_state.delivery_column_name` keeps only the denormalized
     latest era. Returns a list of dicts with "delivery_column_name",
-    "register_id", "register_name", "register_variant_id". Keys follow the §5.11
-    rename (`kolumnnamn` → `delivery_column_name`).
+    "register_id", "register_name", "register_variant_id". Keys follow the glossary rename (see DESIGN.md →
+    Glossary and Swedish↔English crosswalk): `kolumnnamn` → `delivery_column_name`.
 
     Filters the alias rows by the matched `variable_id` (NOT the non-unique
     `(register_id, provider_key)`): an A2.2 split sibling has its own
@@ -1338,7 +1338,7 @@ def get_datacolumns(
     if register:
         reg_ids = require_register_ids(conn, register)
 
-    # Match by var_id or variable name (§5.11: was `variabelnamn`). Carry
+    # Match by var_id or variable name (glossary rename — was `variabelnamn`; see DESIGN.md → Glossary and Swedish↔English crosswalk). Carry
     # `variable_id` — the unique key the re-parented `variable_alias` filters by.
     int_variable = _try_int(variable)
     if reg_ids:
@@ -1390,7 +1390,7 @@ def get_datacolumns(
             seen.add(key)
             results.append(
                 {
-                    # §5.11: SCB `kolumnnamn` → universal
+                    # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): SCB `kolumnnamn` → universal
                     # `delivery_column_name`.
                     "delivery_column_name": r["delivery_column_name"],
                     "register_id": r["register_id"],
@@ -1578,7 +1578,7 @@ def get_diff(
             changed_any_variant.update(changed_var_ids)
             for vid in filter_var_ids - changed_var_ids:
                 if vid in from_ids or vid in to_ids:
-                    # `name` is the §5.11 rename of
+                    # `name` is the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) of
                     # `registervariantnamn` on register_variant.
                     unchanged_by_var.setdefault(vid, []).append(rv["name"])
 
@@ -1695,11 +1695,11 @@ def get_lineage(
     for var in matched:
         rid, vid = var["register_id"], var["var_id"]
         variable_id = var["variable_id"]
-        # §5.11 drop: `variabelhamtadfran` is no longer ingested. Lineage
+        # Glossary-rename drop (see DESIGN.md → Glossary and Swedish↔English crosswalk): `variabelhamtadfran` is no longer ingested. Lineage
         # role detection now keys solely on `source_register_text` (the
         # renamed `variabelregister_kalla`); the auxiliary `hamtad` text
         # carried no orthogonal signal in practice and its disposition is
-        # "(dropped)" per §5.11.
+        # "(dropped)" per the same glossary rename.
         kalla = (var["source_register_text"] or "").strip()
         source_register_id = var["source_register_id"]
 
@@ -1741,8 +1741,8 @@ def get_lineage(
                 "register_name": var["register_name"],
                 "var_id": vid,
                 "role": role,
-                # §5.11 rename: surface SCB's raw attribution under the universal
-                # English key. `variabelhamtadfran` was dropped at §5.11; lineage
+                # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): surface SCB's raw attribution under the universal
+                # English key. `variabelhamtadfran` was dropped at the same rename; lineage
                 # signal collapsed onto `source_register_text` alone.
                 "source_register_text": kalla,
                 "source_register_id": source_register_id,

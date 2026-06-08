@@ -33,8 +33,8 @@ if TYPE_CHECKING:
     from .spec import ColumnTypeOverride
 
 # Disclosure-control thresholds. SUPPRESS_K lives in reg_monabundle because
-# it's the bundle's privacy floor (also enforced by the §6.8.2 namespaced-
-# block validator); re-exported here so the runtime modules (summarize,
+# it's the bundle's privacy floor (also enforced by the namespaced-block
+# validator); re-exported here so the runtime modules (summarize,
 # extract) keep their stable import surface.
 __all__ = ["SUPPRESS_K"]
 

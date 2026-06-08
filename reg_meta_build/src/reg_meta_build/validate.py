@@ -404,7 +404,7 @@ def _check_var_year_codes_anchor(
 def _check_one_value_set_per_period(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
-    """The §5.7 co-delivery invariant: a `(variable, register_variant, period,
+    """The co-delivery invariant (see DESIGN.md → Build-time triage (SCB)): a `(variable, register_variant, period,
     delivery_column)` must resolve to EXACTLY ONE value set.
 
     Concretely: no two `variable_state` rows for the same `(variable_id,
@@ -421,7 +421,7 @@ def _check_one_value_set_per_period(
     needs curation. Either way the build must FAIL rather than ship it.
 
     NULL `value_set_id` (code-less) is exempt — only distinct code-lists conflict.
-    Same value set with different `value_set_version_label`s is fine (the §5.7
+    Same value set with different `value_set_version_label`s is fine (the
     representation discriminator, one code-list). Distinct columns are fine
     (parallel representations of the concept).
     """
@@ -474,7 +474,7 @@ def _check_variable_alias_covers_state_columns(
 
     `SCBAdapter._emit_variable_aliases` projects each cvid's alias columns onto
     the cvid's OWNING `variable_id` (the ground truth the coalescer stamps onto
-    `variable_instance.variable_id` from §5.7 triage), and the materializer writes
+    `variable_instance.variable_id` from triage), and the materializer writes
     `variable_alias` from that IR (A4.3a). That makes this invariant
     STRUCTURAL — a state's `delivery_column_name` is always one of its group's
     cvids' alias columns, and that cvid shares the state's `variable_id`, so the
@@ -509,7 +509,7 @@ def _check_panel_refs_resolve(
     """A4.4c: every curated panel reference on `register_variant` must resolve to
     a real `variable.slug` in the variant's OWN register.
 
-    `panel_entity_key` / `panel_time_key` are curated slug strings (the §9.5 panel
+    `panel_entity_key` / `panel_time_key` are curated slug strings (the panel
     shape). The TOML loader (`fqid_slugs._validate_panel_slug_ref`) grammar-checks
     them at build time, but grammar alone can't catch a *dangling* reference — a
     well-formed slug that names no actual variable, or one that lives in a

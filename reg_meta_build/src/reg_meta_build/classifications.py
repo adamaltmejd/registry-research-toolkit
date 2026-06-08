@@ -603,7 +603,8 @@ def populate_classifications(
     # strings and the table has ~500k rows — without an index on
     # value_set_version_label the UPDATE would full-scan the table. Build
     # the index once, drop it after population (it's not useful at query
-    # time). (Column name follows the §5.11 rename from `vardemangdsversion`.)
+    # time). (Column name follows the universal-vocabulary rename from
+    # `vardemangdsversion`; see reg_meta/DESIGN.md → Glossary and Swedish↔English crosswalk.)
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_vi_value_set_version_label_tmp "
         "ON variable_instance(value_set_version_label)"

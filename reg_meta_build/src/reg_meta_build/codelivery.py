@@ -1,4 +1,4 @@
-"""Co-delivery curation (§5.7): pin which value-set version a single delivery
+"""Co-delivery curation (see DESIGN.md → Build-time triage (SCB)): pin which value-set version a single delivery
 column KEEPS when it carries two distinct codings in one period and the SCB
 coalescer's deterministic cascade can't resolve it.
 

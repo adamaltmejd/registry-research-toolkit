@@ -1,7 +1,8 @@
-"""ETag + Cache-Control logic for the read endpoints (§9.4 / §9.5).
+"""ETag + Cache-Control logic for the read endpoints.
 
-Pure, FastAPI-free functions so the scheme is unit-testable in isolation; the
-middleware (``middleware.py``) wires them onto every read response. The §9.4
+See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). Pure,
+FastAPI-free functions so the scheme is unit-testable in isolation; the
+middleware (``middleware.py``) wires them onto every read response. The
 scheme:
 
     ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"
@@ -15,7 +16,7 @@ invalidates the whole keyspace when either axis changes (e.g. a DB rebuild on a
 new reg_meta release).
 
 ``reg_meta_version`` is the INSTALLED package version (``reg_meta.__version__``,
-the v1.x Model A release), NOT the DB ``schema_version`` manifest value (§9.5).
+the v1.x Model A release), NOT the DB ``schema_version`` manifest value.
 """
 
 from __future__ import annotations
@@ -24,13 +25,13 @@ import hashlib
 
 CACHE_CONTROL = "public, max-age=86400, must-revalidate"
 
-# §9.4: 16 hex chars of the body sha256 — enough to make per-URL ETags
+# 16 hex chars of the body sha256 — enough to make per-URL ETags
 # collision-safe in practice while keeping the header short.
 _HASH_PREFIX_LEN = 16
 
 
 def compute_etag(body: bytes, reg_meta_version: str, steward_id: str) -> str:
-    """The §9.4 strong ETag for a response body: a quoted
+    """The strong ETag for a response body: a quoted
     ``"<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"``.
 
     Strong (no ``W/`` prefix) because the body is byte-deterministic for a given
@@ -49,7 +50,7 @@ def _opaque_tag(tag: str) -> str:
 def etag_matches(if_none_match: str | None, etag: str) -> bool:
     """Whether an ``If-None-Match`` request header matches ``etag`` → serve 304.
 
-    Uses the WEAK comparison function RFC 7232 §3.2 mandates for ``If-None-Match``
+    Uses the WEAK comparison function RFC 7232 Section 3.2 mandates for ``If-None-Match``
     (the opposite of ``If-Range``, which is strong): the leading ``W/`` weak
     marker is stripped from BOTH sides before comparing the quoted opaque-tag, so
     an intermediary that weakens our strong ETag to ``W/"…"`` (e.g. Cloudflare on

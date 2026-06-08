@@ -1,8 +1,9 @@
-"""`POST /api/project/order` against the slugged ``catalog_db`` fixture (§9.5).
+"""`POST /api/project/order` against the slugged ``catalog_db`` fixture.
 
+See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
 Covers the default v1 order-export CSV: the column header + shape, the
 ``text/csv`` content-type + ``Content-Disposition`` download header,
-determinism (same spec → byte-identical CSV), the §9.5 period serialization
+determinism (same spec → byte-identical CSV), the period serialization
 (int / range / ``_default``), and the ``display_name`` fallback from reg_meta's
 ``delivery_column_name`` when the binding leaves ``display_name`` unset.
 
@@ -133,7 +134,7 @@ def test_deterministic(client):
 
 
 def test_structurally_invalid_spec_is_422_not_bad_csv(client):
-    """/order runs the §6.8.1 structural gate before rendering: a Pydantic-valid but
+    """/order runs the structural gate before rendering: a Pydantic-valid but
     structurally-invalid spec (here a bad period token — a `str`, so the model
     accepts it, but the period grammar rejects it) is a 422, NOT a 200 CSV of a bad
     provider order (Codex P2)."""

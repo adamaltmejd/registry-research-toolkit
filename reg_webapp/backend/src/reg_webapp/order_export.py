@@ -1,13 +1,14 @@
-"""Default v1 order-export CSV renderer (§9.5 `POST /api/project/order`).
+"""Default v1 order-export CSV renderer (`POST /api/project/order`).
 
-The steward's *order export* is the human-readable manifest a researcher hands
+See DESIGN.md → API surface for the order-export CSV columns. The steward's
+*order export* is the human-readable manifest a researcher hands
 to the data provider: one row per bound variable. v1 ships the DEFAULT template
-only — a CSV with the §9.5 columns
+only — a CSV with the columns
 ``provider,register,variant,variable,representation,period,display_name`` — one
 row per ``sources[*].bindings[*]``. Stewards inherit this
 default; per-steward jinja2 ``order_template`` overrides are DEFERRED (not v1).
 
-``period`` follows the §9.5 wire serialization (matching the ``/api/catalog``
+``period`` follows the wire serialization (matching the ``/api/catalog``
 ``?period=`` and the catch-all): an int year prints as-is; a ``PeriodRange``
 prints ``"<from>..<to>"`` (literal ``..``); the ``"_default"`` snapshot sentinel
 prints literally.
@@ -15,7 +16,7 @@ prints literally.
 ``display_name`` defaults from reg_meta when ``Binding.display_name`` is None:
 the binding is resolved against the live ``Catalog`` at the source's
 ``(register_variant, period)`` and the matching state's
-``delivery_column_name`` is used (the §6.3 default-resolution rule). A binding
+``delivery_column_name`` is used (the default-resolution rule). A binding
 that doesn't resolve, or has no covering state, falls back to its bare
 ``variable`` FQID leaf — the order is a manifest, so a best-effort label beats a
 crash; the semantic validator is where unresolved bindings are surfaced as
@@ -42,7 +43,7 @@ if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
     from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
 
-# §9.5: the default order-export column header (fixed order is the contract).
+# The default order-export column header (fixed order is the contract).
 # `representation` is its OWN column (not folded into display_name): a custom
 # display_name would otherwise hide which delivery column the binding pinned, so
 # the data provider couldn't tell representations apart.
@@ -58,7 +59,7 @@ ORDER_COLUMNS = (
 
 
 def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
-    """Render ``project`` to the default v1 order-export CSV (§9.5).
+    """Render ``project`` to the default v1 order-export CSV.
 
     One row per ``sources[*].bindings[*]`` in declaration order. ``catalog`` is
     consulted only to default a missing ``display_name`` from the binding's
@@ -93,7 +94,8 @@ _FORMULA_TRIGGERS = "=+-@\t\r"
 
 
 def _csv_safe(value: str) -> str:
-    """Neutralize spreadsheet formula injection (§16). The order CSV is the manifest
+    """Neutralize spreadsheet formula injection (see DESIGN.md → input-validation
+    gates (security boundary)). The order CSV is the manifest
     a researcher hands to a DATA PROVIDER, who opens it in a spreadsheet — a
     researcher-controlled ``display_name`` like ``=HYPERLINK("http://evil","x")``
     would otherwise execute as a formula on the provider's machine. A leading-
@@ -118,7 +120,7 @@ def _coordinate_parts(register_variant: str) -> tuple[str, str, str]:
 
 
 def _period_str(period: int | str | PeriodRange) -> str:
-    """Serialize ``Source.period`` to its §9.5 wire string. ``PeriodRange`` →
+    """Serialize ``Source.period`` to its wire string. ``PeriodRange`` →
     ``"<from>..<to>"`` (literal ``..``, matching the ``?period=`` range form); int
     / str (incl. the ``"_default"`` sentinel) → ``str()``."""
     if isinstance(period, (int, str)):
@@ -128,7 +130,7 @@ def _period_str(period: int | str | PeriodRange) -> str:
 
 
 def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
-    """The binding's ``display_name``, defaulting from reg_meta when unset (§6.3).
+    """The binding's ``display_name``, defaulting from reg_meta when unset.
 
     Explicit ``display_name`` wins. Otherwise resolve the binding at the source's
     ``(register_variant, period)`` and use the first covering state's

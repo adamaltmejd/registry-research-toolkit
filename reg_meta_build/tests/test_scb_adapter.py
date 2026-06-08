@@ -1,7 +1,7 @@
 """A4.1 SCB adapter / provider-blind materializer tests.
 
 Fast fixture/unit coverage for the adapter→IR→materializer seam introduced by
-the A4.1 refactor (plan §8 items 1-6). These do NOT replace the real-data
+the A4.1 refactor. These do NOT replace the real-data
 dbdiff gate (the orchestrator runs that against the 14GB seed) — they pin the
 adapter contract, IR emit order, determinism, and the provenance emit-but-
 discard rule on a tiny synthetic fixture.
@@ -201,7 +201,7 @@ class TestDeterminism:
         assert _ids("run1") == _ids("run2")
 
 
-# ── 5. Provenance emit-but-discard (§5) ────────────────────────────────────
+# ── 5. Provenance emit-but-discard ─────────────────────────────────────────
 
 
 class TestProvenanceEmitButDiscard:

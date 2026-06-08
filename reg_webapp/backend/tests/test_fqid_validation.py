@@ -1,6 +1,6 @@
-"""§16 FQID route-segment validation — the path-traversal allow-list.
+"""FQID route-segment validation — the path-traversal allow-list.
 
-Two layers:
+See DESIGN.md → FQID path guard (catalog_fqid.py). Two layers:
 
 1. Unit tests on ``validate_fqid_path`` directly (the chokepoint module): every
    traversal / malformed payload raises ``FqidPathError`` and every legal FQID
@@ -9,7 +9,7 @@ Two layers:
    ``..`` payloads belong — an HTTP client normalizes ``scb/../etc`` to ``etc``
    before it reaches the server, so the raw-dotdot case can only be exercised
    against the function.
-2. The §16 SECURITY GATE through the live app: percent-encoded probes (which
+2. The SECURITY GATE through the live app: percent-encoded probes (which
    survive client normalization and arrive URL-decoded at the handler) return
    422 AND execute **zero SQL** (asserted via a sqlite3 trace hook counting
    statements), proving the guard runs before any Catalog query. Plus the
@@ -87,7 +87,7 @@ def test_validate_fqid_path_accepts(raw: str, expect_fqid: str):
     assert result.fqid == expect_fqid
 
 
-# ── §16 SECURITY GATE: 422 + zero SQL through the live app ──────────────────
+# ── SECURITY GATE: 422 + zero SQL through the live app ──────────────────────
 
 # Probes that survive HTTP-client URL normalization and reach the handler
 # decoded. The raw `..` forms collapse at the client, so the app layer uses the
@@ -106,7 +106,7 @@ class _StatementCounter:
     """Wraps ``sqlite3.connect`` while active to count BOTH connection opens
     (``opens``) and SQL statements executed (``count``, via
     ``set_trace_callback``). A 422 path is a true "no DB hit" only if it runs zero
-    SQL AND opens zero connections — the §16 guard (a sub-dependency) rejects
+    SQL AND opens zero connections — the guard (a sub-dependency) rejects
     before the per-request connection ever opens."""
 
     def __init__(self) -> None:
@@ -146,13 +146,13 @@ def test_path_traversal_returns_422_with_zero_sql(catalog_db, probe: str):
         resp = client.get(f"/api/catalog/{probe}")
     assert resp.status_code == 422, f"{probe!r} should be 422, got {resp.status_code}"
     assert counter.count == 0, (
-        f"{probe!r} executed {counter.count} SQL statement(s); the §16 guard must "
+        f"{probe!r} executed {counter.count} SQL statement(s); the guard must "
         f"run before any Catalog query (zero SQL)"
     )
-    # §16 "no DB hit": the guard is a sub-dependency, so it 422s BEFORE the
+    # "no DB hit": the guard is a sub-dependency, so it 422s BEFORE the
     # per-request connection opens — a rejected path opens zero connections too.
     assert counter.opens == 0, (
-        f"{probe!r} opened {counter.opens} connection(s); the §16 guard must run "
+        f"{probe!r} opened {counter.opens} connection(s); the guard must run "
         f"before the per-request connection opens (no DB hit on rejection)"
     )
 
@@ -167,7 +167,7 @@ def test_path_traversal_returns_422_with_zero_sql(catalog_db, probe: str):
 )
 def test_at_version_rejected_by_gate(catalog_db, probe: str):
     """The `@version` pin is retired — a binding leaf is a bare slug, so any `@`
-    (including the once-canonical `scb/lisa/naringsgren@sni2007`) fails the §16 gate
+    (including the once-canonical `scb/lisa/naringsgren@sni2007`) fails the gate
     with 422 and ZERO SQL (the value set is resolved from the variant/period, never
     pinned on the FQID)."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
@@ -180,8 +180,8 @@ def test_at_version_rejected_by_gate(catalog_db, probe: str):
 @pytest.mark.parametrize("path", ["_default", "scb/lisa/_default", "class/_default"])
 def test_default_variant_literal_rejected_by_guard(catalog_db, path: str):
     """`_default` (the variant coordinate) is NOT a catalog path segment, so the
-    §16 guard rejects it in any position → 422 with no DB hit (variants are a
-    register sub-resource, §9.5, never a `/api/catalog/{fqid}` segment)."""
+    guard rejects it in any position → 422 with no DB hit (variants are a
+    register sub-resource, never a `/api/catalog/{fqid}` segment)."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
         counter.reset()
         resp = client.get(f"/api/catalog/{path}")
@@ -192,7 +192,7 @@ def test_default_variant_literal_rejected_by_guard(catalog_db, path: str):
 @pytest.mark.parametrize("path", ["scb/class/kon", "scb/lisa/class"])
 def test_class_literal_in_illegal_slot_guard_rejects(catalog_db, path: str):
     """`class` is admitted ONLY as the leading classification-prefix segment; in a
-    register / variable slot the §16 guard now rejects it → 422 with no connection
+    register / variable slot the guard now rejects it → 422 with no connection
     opened (previously deferred to `parse`/`Fqid`, which 500'd on the variants
     route's direct `Fqid.register_fqid('class', …)`)."""
     with _StatementCounter() as counter, TestClient(create_app()) as client:
@@ -202,8 +202,8 @@ def test_class_literal_in_illegal_slot_guard_rejects(catalog_db, path: str):
     assert counter.opens == 0  # guard-rejected → no connection opened
 
 
-# ── A5.2a-ii §16 GATE: the FQID path guard on ALL 7 suffixed/sub-resource routes
-# The §16 "path-traversal payloads against EVERY {fqid:path} route" requirement.
+# ── A5.2a-ii GATE: the FQID path guard on ALL 7 suffixed/sub-resource routes
+# The "path-traversal payloads against EVERY {fqid:path} route" requirement.
 # A percent-encoded traversal probe in the FQID part of each suffixed route must
 # 422 with zero SQL + zero opens — the `_validated_fqid` (and the variants
 # segment guard) is a sub-dependency that runs before the per-request open.
@@ -253,13 +253,13 @@ def test_variants_route_traversal_422_zero_sql(catalog_db, url: str):
     assert counter.opens == 0
 
 
-# ── §16 GATE: the ?period / ?variant / ?value_set_version query allow-lists ──
-# The §16 "?period= canonicalization" requirement: malformed period / variant
+# ── GATE: the ?period / ?variant / ?value_set_version query allow-lists ──────
+# The "?period= canonicalization" requirement: malformed period / variant
 # values (SQLi probes, traversal, embedded NULs, percent-encoded slashes) return
 # 422 with zero SQL executed AND zero connections opened — the parser is a
 # pre-open dependency, so a rejection never touches the DB.
 
-# §16's named probes (a SQLi string, a traversal, an embedded NUL, an encoded
+# The named probes (a SQLi string, a traversal, an embedded NUL, an encoded
 # slash) plus a couple of grammar misses.
 _BAD_PERIODS = [
     "2020'; DROP TABLE--",
@@ -274,7 +274,7 @@ _BAD_PERIODS = [
 ]
 _BAD_VARIANTS = ["Std", "../etc", "x%00", "x'; DROP--", "in valid"]
 # [A5.3b] ?value_set_version is a FREE-TEXT label (matched by a Python `==` in
-# resolve_at, NOT SQL), so the §16 gate rejects only control chars / over-length —
+# resolve_at, NOT SQL), so the gate rejects only control chars / over-length —
 # NOT slug-shape (real labels carry spaces/commas/case). A non-matching value like
 # "../etc" or "Sni2007" is now ACCEPTED (it simply narrows to no state); the bad
 # set is control/NUL chars + an over-cap string.

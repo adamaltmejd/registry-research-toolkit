@@ -1,7 +1,8 @@
-"""Unit tests for the §16 ``?period`` / ``?variant`` / ``?value_set_version``
+"""Unit tests for the ``?period`` / ``?variant`` / ``?value_set_version``
 syntactic allow-list (``period_param.py``).
 
-The pure-function layer (no app, no DB). The §16 SECURITY GATE through the live
+See DESIGN.md → query allow-list (period_param.py). The pure-function layer (no
+app, no DB). The SECURITY GATE through the live
 app — 422 + zero SQL + zero opens — lives in ``test_fqid_validation.py``. Here we
 pin the parse RESULT shapes (the polymorphic ``Period`` mapping) and the reject
 set (SQLi / traversal / NUL probes raise before any reg_meta call).
@@ -36,7 +37,7 @@ _ACCEPT_PERIODS = [
     ("HT2018..VT2019", {"from": "HT2018", "to": "VT2019"}),
 ]
 
-# §16: malformed period values must raise BEFORE any reg_meta lookup. SQLi /
+# Malformed period values must raise BEFORE any reg_meta lookup. SQLi /
 # traversal / NUL / percent-encoded probes are not period tokens → reject.
 _REJECT_PERIODS = [
     "",  # empty
@@ -74,7 +75,7 @@ def test_parse_period_rejects(raw: str):
         parse_period(raw)
 
 
-# §16: ?variant ADMITS `_default` (a real register_variant slug, §5.1) UNLIKE the
+# ?variant ADMITS `_default` (a real register_variant slug) UNLIKE the
 # path guard. Validates against the slug grammar otherwise.
 _ACCEPT_VARIANTS = ["_default", "individer-15plus", "standard", "ht"]
 _REJECT_VARIANTS = [
@@ -101,7 +102,7 @@ def test_parse_variant_rejects(raw: str):
 
 # [A5.3b] ?value_set_version is matched against the FREE-TEXT
 # `value_set_version_label` via a Python `==` filter in resolve_at (no SQL), so
-# the §16 gate is a sanity check (non-empty, length-capped, no control chars) —
+# the gate is a sanity check (non-empty, length-capped, no control chars) —
 # NOT the slug grammar. Real labels carry spaces / commas / parens / case /
 # non-ASCII and MUST pass.
 _ACCEPT_VSV = [

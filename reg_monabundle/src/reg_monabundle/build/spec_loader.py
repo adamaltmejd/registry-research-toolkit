@@ -1,13 +1,14 @@
-"""Build-time structural validation + ``LoadedSpec`` conversion (§9.6).
+"""Build-time structural validation + ``LoadedSpec`` conversion.
 
-This is the **Pydantic side** of the §9.6 boundary. It imports
-``reg_schema`` and is **never amalgamated into the bundle** — it runs at
-bundle-build time only:
+This is the **Pydantic side** of the boundary (see DESIGN.md → The two
+halves). It imports ``reg_schema`` and is **never amalgamated into the
+bundle** — it runs at bundle-build time only:
 
-- ``validate_project_data`` is the structural-validation **gate**
-  (§6.8.1): it runs the full Pydantic ``reg_schema`` validator on the
-  input ``project_data.json``, runs the ``reg_monabundle`` namespaced-
-  block validator (§6.8.2), and runs the cross-block referential checks
+- ``validate_project_data`` is the structural-validation **gate** (see
+  reg_schema/DESIGN.md → Structural rules and issue codes): it runs the
+  full Pydantic ``reg_schema`` validator on the input
+  ``project_data.json``, runs the ``reg_monabundle`` namespaced-block
+  validator, and runs the cross-block referential checks
   (orphan FQID, suppress_k-on-non-categorical) that need FQID-typed
   bindings. A structurally broken spec fails *here*, at build, never on
   MONA. Returns the validated Pydantic ``reg_schema.ProjectData``.
@@ -40,12 +41,14 @@ if TYPE_CHECKING:
 PROJECT_DATA_FILENAME = "project_data.json"
 
 # Canonical issue codes for the build-side cross-block referential checks
-# (§6.8.3-adjacent; build-time only). The issue-based forms mirror the
+# (adjacent to semantic validation — see reg_webapp/DESIGN.md → Semantic
+# validation (`semantic.py`); build-time only). The issue-based forms mirror
+# the
 # long-standing raises in ``validate_project_data`` so ``reg_webapp`` can
 # consume issues directly instead of catching the raise.
 BINDING_OPTIONS_ORPHAN_CODE = "binding_options_orphan_fqid"
 SUPPRESS_K_NON_CATEGORICAL_CODE = "suppress_k_on_non_categorical"
-# The §6.8.2 ``reg_monabundle`` namespaced-block validator
+# The ``reg_monabundle`` namespaced-block validator
 # (``validate_block``) is raise-based, pure-stdlib, and amalgamated into the
 # MONA bundle (it must stay reg_schema-free — see ``validate.py``). This
 # build-side form translates its single raise into one ``ValidationIssue``.
@@ -102,7 +105,8 @@ def binding_options_issues(
        yet implemented), not here.
 
     Build-time only: the bundle on MONA trusts the embedded JSON and
-    does not re-run these checks (§9.6). The message text is shared with
+    does not re-run these checks (see DESIGN.md → The two halves). The
+    message text is shared with
     the raising path in ``validate_project_data`` so the issue and the
     raise can never drift; ``path`` is the RFC 6901 pointer into the
     ``reg_monabundle.binding_options`` map.
@@ -170,7 +174,7 @@ def binding_options_issues(
 def block_issue(block: object) -> ValidationIssue | None:
     """Translate ``validate_block``'s raise into a single ``ValidationIssue``.
 
-    ``validate_block`` (§6.8.2) is raise-based, pure-stdlib, and amalgamated
+    ``validate_block`` is raise-based, pure-stdlib, and amalgamated
     into the MONA bundle, so it stays reg_schema-free and cannot itself
     return ``ValidationIssue``. This build-side adapter runs it and, on the
     first violation, wraps the ``ValueError`` message into one issue (code
@@ -210,10 +214,11 @@ def _validate_binding_options_against_columns(
 
 
 def validate_project_data(payload: Mapping[str, Any]) -> reg_schema.ProjectData:
-    """Structural-validation gate (§6.8.1) — run at bundle-build time.
+    """Structural-validation gate (see reg_schema/DESIGN.md → Structural
+    rules and issue codes) — run at bundle-build time.
 
     Runs the full Pydantic ``reg_schema`` structural validator, the
-    ``reg_monabundle`` namespaced-block validator (§6.8.2), and the
+    ``reg_monabundle`` namespaced-block validator, and the
     cross-block referential checks, then returns the validated Pydantic
     ``reg_schema.ProjectData``. Raises ``ValueError`` on any structural
     failure so bundle-build refuses to amalgamate a broken spec.
@@ -229,7 +234,7 @@ def validate_project_data(payload: Mapping[str, Any]) -> reg_schema.ProjectData:
             f"{PROJECT_DATA_FILENAME} failed structural validation:\n  - "
             + "\n  - ".join(errors)
         )
-    # The reg_monabundle block validator (§6.8.2) is pure-Python and also
+    # The reg_monabundle block validator is pure-Python and also
     # runs in the bundle's lightweight surface — but the cross-block
     # referential checks below need the FQID-typed bindings, so both
     # run here at the build gate.
@@ -245,7 +250,8 @@ def validate_project_data(payload: Mapping[str, Any]) -> reg_schema.ProjectData:
 def project_data_to_loadedspec(project_data: reg_schema.ProjectData) -> LoadedSpec:
     """Convert a validated Pydantic ``ProjectData`` into a stdlib ``LoadedSpec``.
 
-    The §9.6 conversion boundary: the Pydantic model is dumped back to a
+    The conversion boundary (see DESIGN.md → The two halves): the Pydantic
+    model is dumped back to a
     plain dict (``by_alias=True`` so ``period``'s ``from`` alias and the
     discriminated time-key wrappers round-trip) and deserialized by the
     runtime's ``loadedspec_from_dict``. Routing through the same

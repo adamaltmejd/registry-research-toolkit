@@ -27,7 +27,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 # from source, so there is no in-place upgrade to break; the one
 # consumer-visible major break is deferred to A2.7 (see below).
 #
-# - 4.0.0 (A1.1): §5.11 renamed ~21 columns across the universal schema
+# - 4.0.0 (A1.1): the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) renamed ~21 columns across the universal schema
 #   and dropped the SCB-Swedish names. Pre-4.x DBs reference columns
 #   that no longer exist — hard break. A1.2's additive sensitivity
 #   columns (`is_sensitive`, `is_identifier`) rode on the same major
@@ -73,7 +73,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   resolver consumes these for `predecessors()` / `successors()`.
 # - 4.6.0 (A2.4, current): added `variable_state_lineage` +
 #   `variable_state_lineage_warning` — state-pair interval-overlap consumer→source
-#   lineage (§5.6), materialized by `link_variable_state_lineage` from
+#   lineage (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)), materialized by `link_variable_state_lineage` from
 #   `variable.source_register_id` + variable-grain `variable_same_as`. Replaces
 #   v0.11's per-cvid `variable_instance.via_source_id` edges, but via_source_id
 #   is KEPT in parallel through A2.6 (catalog.py's interim resolver still reads
@@ -91,7 +91,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   related/lineage/lineage_warnings (query-side only — no DDL impact beyond the
 #   above). A 4.6.0 DB lacks the `beskrivning` column + successor index, so it's
 #   rejected via the minor-version gate. Additive within the 4.x line.
-# - 4.8.0 (A2.6): the FQID grammar flip (§5.2). The binding FQID drops
+# - 4.8.0 (A2.6): the FQID grammar flip (see DESIGN.md → FQID grammar). The binding FQID drops
 #   to 3 segments (`provider/register/slug`) and the variant / register_version
 #   FQID kinds are gone — variant + period are delivery coordinates, not
 #   identity. Shipped-DB shape change: the build-only `register_version`,
@@ -105,7 +105,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   under the 3-seg grammar, so it's rejected via the minor-version gate.
 #   Query-side only beyond the drops; no break to the 4.x line (5.0.0 stays
 #   reserved for A2.7's `variable_instance` drop).
-# - 4.9.0 (A2.6.1, current): 2-seg classification grammar (§5.2). The
+# - 4.9.0 (A2.6.1, current): 2-seg classification grammar (see DESIGN.md → FQID grammar). The
 #   classification FQID folds the vintage into the slug (`class/<slug>/<version>`
 #   → `class/<slug>`; 'sun2020', 'lkf2007'). `classification.slug` becomes UNIQUE
 #   and the redundant `classification.version` column is DROPped (the vintage

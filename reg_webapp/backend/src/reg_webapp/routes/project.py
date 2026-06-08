@@ -1,14 +1,15 @@
-"""`POST /api/project/*` — the project-WRITE surface (§9.5, A5.2b-ii).
+"""`POST /api/project/*` — the project-WRITE surface (A5.2b-ii).
 
+See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
 Two endpoints:
 
-- ``POST /api/project/validate`` — runs the §6.8.0 three-layer validator over a
+- ``POST /api/project/validate`` — runs the three-layer validator over a
   raw ``project_data.json`` and returns the CONCATENATED issue list (structural
   ⧺ block ⧺ semantic) as a ``ValidationResultModel``.
 - ``POST /api/project/order`` — renders the steward's default v1 order-export CSV
   (``order_export.render_order_csv``) as a ``text/csv`` download.
 
-**Status discipline (§6.8.0 / §9.5).** ``/validate`` is a *diagnostic*: a spec
+**Status discipline.** ``/validate`` is a *diagnostic*: a spec
 that FAILS validation is a SUCCESSFUL validation RESPONSE — HTTP 200 with
 ``ok=false`` + the issues. 4xx is reserved for a malformed REQUEST: non-JSON body,
 duplicate JSON keys, a too-deeply-nested body, a non-object top level, or an
@@ -31,9 +32,10 @@ threadpool thread): open + query + close stay on ONE thread — NOT a generator
 layers are DB-FREE and run BEFORE the open, so a malformed or structurally-rejected
 body costs no DB hit.
 
-§9.6: this module imports ``reg_schema`` (structural validator + ``ProjectData``)
+Import boundary (see reg_monabundle/DESIGN.md → The two halves): this module
+imports ``reg_schema`` (structural validator + ``ProjectData``)
 and the BUILD-side ``reg_monabundle.build.spec_loader`` issue forms (``block_issue``
-/ ``binding_options_issues``, which wrap the §6.8.2 block + the cross-block
+/ ``binding_options_issues``, which wrap the block + the cross-block
 referential checks as canonical ``ValidationIssue``s) — NOT
 ``reg_monabundle.runtime.*`` / duckdb / pyodbc (``spec_loader`` imports the runtime
 lazily, so this stays out of the import graph; the import-graph test pins it).
@@ -125,8 +127,9 @@ def _to_result_model(result: ValidationResult) -> ValidationResultModel:
 
 
 def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
-    """The §6.8.2 ``reg_monabundle`` block layer, as a §6.8.0 issue list (tuple-
-    concatenation composition). The code now lives in its OWNER:
+    """The ``reg_monabundle`` block layer (see reg_monabundle/DESIGN.md → The two
+    halves), as an issue list (tuple-concatenation composition). The code now
+    lives in its OWNER:
     ``reg_monabundle.build.spec_loader.block_issue`` runs the amalgamation-safe
     raise-based ``validate_block`` and wraps its single raise into one canonical
     ``invalid_block`` ``ValidationIssue`` (None when clean) — the webapp no longer
@@ -136,7 +139,8 @@ def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
 
 
 def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
-    """Build the ``ProjectData`` model, run the §6.8.3 semantic layer, AND the
+    """Build the ``ProjectData`` model, run the semantic layer (see DESIGN.md →
+    Semantic validation (semantic.py)), AND the
     build-time cross-block referential checks (orphan ``binding_options`` keys /
     suppress_k-on-non-categorical, via
     ``reg_monabundle.build.spec_loader.binding_options_issues``).
@@ -188,11 +192,11 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
     },
 )
 async def validate_project(request: Request) -> ValidationResultModel:
-    """Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
+    """Validate a ``project_data.json``. Returns 200 with the concatenated
     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
 
-    This is the §6.8.0 SEMANTIC validator (reg_meta-backed). It now ALSO runs the
+    This is the SEMANTIC validator (reg_meta-backed). It now ALSO runs the
     build-time cross-block referential checks (orphan ``binding_options`` keys /
     suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
     divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
@@ -212,7 +216,7 @@ async def validate_project(request: Request) -> ValidationResultModel:
 
 
 def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultModel:
-    """The §6.8.0 three-layer composition, run on a threadpool thread (off the
+    """The three-layer composition, run on a threadpool thread (off the
     event loop). Layer order (DB-free first, so a structurally-rejected body costs
     no DB hit): structural → block → (model build + semantic). When structural
     fails we SKIP the model build + semantic step (they assume a structurally valid
@@ -233,7 +237,7 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultMo
     return _to_result_model(ValidationResult(issues=tuple(issues)))
 
 
-# §9.5: the order export is a CSV DOWNLOAD, so this endpoint cannot declare a
+# The order export is a CSV DOWNLOAD, so this endpoint cannot declare a
 # Pydantic `response_model=` — it returns raw `text/csv` bytes, the ONE documented
 # exception to the "every route declares a response_model" lint. Documented here
 # so the carve-out is explicit (a binary/download response, not a JSON model).
@@ -259,9 +263,10 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultMo
     },
 )
 async def order_project(request: Request) -> Response:
-    """Render the steward's default v1 order-export CSV (§9.5).
+    """Render the steward's default v1 order-export CSV.
 
-    Reads the raw dict and runs the §6.8.1 STRUCTURAL gate before rendering: the
+    Reads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md →
+    Structural rules and issue codes) before rendering: the
     ``ProjectData`` model enforces only field types, while the structural rules
     (FQID shape, period grammar, the binding/source-prefix match) live in
     ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec

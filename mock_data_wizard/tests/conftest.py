@@ -2,7 +2,7 @@
 
 The bundle-runtime fixtures live in ``reg_monabundle/tests/`` because the
 modules under test (``classify``, ``sources``, ``spec``, ``extract``, …)
-moved there in §15 step 5 phase 2c. The ``sys.path.insert`` below bridges
+moved there. The ``sys.path.insert`` below bridges
 that directory so mdw tests reach them without duplicating — same trick as
 ``reg_meta/tests/conftest.py``. This module re-exports the stats fixtures
 (``MINIMAL_STATS`` / ``SPINE_STATS``); the project_data builders

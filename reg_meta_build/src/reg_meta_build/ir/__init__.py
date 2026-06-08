@@ -4,12 +4,12 @@ The IR is the contract every provider adapter (SCB, SOS, future: FK,
 Skatteverket, …) speaks to the universal materializer in `db.py`.
 Pydantic v2 models so model-level validators can catch builder bugs at
 construction (e.g. "state validity range crosses zero", "variable
-references non-existent variant"). See REFACTOR_SPEC.md §4.4.
+references non-existent variant"). See DESIGN.md → IR + adapter architecture.
 
 Build-time only. **Never imported by `reg_meta` runtime, by
 `reg_monabundle.runtime`, by the MONA bundle, or by the webapp** —
 those surfaces stick to stdlib dataclasses (CLAUDE.md "Stack" /
-REFACTOR_SPEC.md §4.4 lines 407-410). The Pydantic-on-IR carve-out
+DESIGN.md → IR + adapter architecture). The Pydantic-on-IR carve-out
 matches `reg_schema`'s existing carve-out: build-time validation
 where it pays for itself, dataclasses everywhere else.
 
@@ -18,7 +18,7 @@ the universal SQLite catalog. Provider-specific oddities are normalized
 into the universal shape inside each adapter; the universal schema
 carries no provider-specific tables or columns. Maintainer-only debug
 data (SCB's `kolumnnamn` history, SOS's per-row tidsperiod ranges, …)
-lives in the sibling provenance DB (§5.1, §5.8).
+lives in the sibling provenance DB (see DESIGN.md → Provenance DB sibling).
 """
 
 from __future__ import annotations
@@ -64,18 +64,18 @@ class IRVariant(_IRBase):
     description: str | None
     # True when adapter invented this variant from var.deldatamangd:
     synthesized: bool = False
-    # Natural panel structure for this variant (§5.3 panel_template):
+    # Natural panel structure for this variant (panel_template; see DESIGN.md → Slug curation):
     panel_entity_key: str | tuple[str, ...] | None = None  # variable slug(s)
     panel_time_key: str | None = None  # "period" sentinel OR variable slug
     panel_time_grain: Literal["delivery", "row"] | None = None
 
 
 class IRVariable(_IRBase):
-    # A2.1.5 redefinition (§4.4 / §5.1): IRVariable is register-scoped — the
-    # "define once" addressable variable. The variant coordinate moved DOWN to
-    # IRVariableState.register_variant_id; the A1.3-shipped `variant_id` field
-    # is gone. `provider_key` (SCB str(var_id); SOS the merged name) is a
-    # NON-unique join hint, not the key — a §5.7 triage split shares it. The
+    # IRVariable is register-scoped (see reg_meta/DESIGN.md → Two-level variable
+    # model) — the "define once" addressable variable. The variant coordinate
+    # moved DOWN to IRVariableState.register_variant_id; the A1.3-shipped
+    # `variant_id` field is gone. `provider_key` (SCB str(var_id); SOS the merged
+    # name) is a NON-unique join hint, not the key — a triage split shares it. The
     # (register_id, slug) natural key is the unique one (DECISION POINT 1).
     #
     # `provider_key` is REQUIRED (not `str | None`): every variable originates
@@ -85,7 +85,7 @@ class IRVariable(_IRBase):
     # variable. The `synthesized` flag is VARIANT-only (a register may invent a
     # `_default` variant); there is no variable-level analogue, so no variable is
     # forced to an empty-key sentinel. Matches `variable.provider_key TEXT NOT
-    # NULL` (§5.1). Toolkit-computed variables would be a deliberate spec change
+    # NULL`. Toolkit-computed variables would be a deliberate spec change
     # (field + column → nullable).
     variable_id: int
     register_id: int
@@ -112,13 +112,13 @@ class IRVariableState(_IRBase):
     state_id: int
     variable_id: int  # FK → IRVariable (the addressable identity)
     # A2.1.5: the variant is an explicit per-state delivery coordinate (the
-    # variant moved off IRVariable). FK → IRVariant.register_variant_id (§5.1).
+    # variant moved off IRVariable). FK → IRVariant.register_variant_id.
     register_variant_id: int
     # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD'); materializer expands
     # coarser forms to full-date ranges.
     valid_from: str | None
     # ISO 8601; None = open-ended. The materializer writes the '9999-12-31'
-    # sentinel per §5.1; the IR contract carries None to keep adapters
+    # sentinel; the IR contract carries None to keep adapters
     # honest about which dates they actually know.
     valid_to: str | None
     # Nullable to mirror the nullable `variable_state.data_type` column — the
@@ -174,7 +174,7 @@ class IRValueSet(_IRBase):
     value_set_id: int
     # Raw 32-byte SHA-256 digest of the normalized code list; dedup key.
     # Materializer writes this verbatim into universal
-    # `value_set.member_hash` (§5.1), which is a BLOB with
+    # `value_set.member_hash`, which is a BLOB with
     # `CHECK (length(member_hash) = 32)`. Adapters compute via
     # `reg_meta_build.db._value_set_hash` (which returns `bytes`); the
     # IR contract carries raw bytes to keep wire and storage encodings

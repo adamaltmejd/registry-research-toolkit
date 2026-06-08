@@ -1,10 +1,10 @@
-"""§16 namespace-invariant property tests for `reg_meta_build.id.mint`.
+"""Namespace-invariant property tests for `reg_meta_build.id.mint`.
 
 The minted-ID band must be STRUCTURALLY disjoint from the SCB source-ID band:
 every minted id lands in ``[2^62, 2^63)`` (bit 62 set, bit 63 clear), and SCB
 ids — being source-derived small integers — are ``< 2^62``. The disjointness
 assertion is against the structural invariant ``< 2^62``, NOT a hardcoded
-2^32 the test never measures (REFACTOR_SPEC §16 names the nominal SCB band
+2^32 the test never measures (DESIGN.md → Deterministic ID minting names the nominal SCB band
 [0, 2^32), but the proof only needs max_scb_id < 2^62).
 """
 

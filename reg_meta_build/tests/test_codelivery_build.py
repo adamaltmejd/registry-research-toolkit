@@ -1,4 +1,4 @@
-"""End-to-end coverage for the §5.7 co-delivery cascade in
+"""End-to-end coverage for the co-delivery cascade (see DESIGN.md → Build-time triage (SCB)) in
 `_coalesce_variable_states` — the build-side glue the per-resolver unit tests in
 `test_triage.py` don't reach: timeline routing (`_spans_overlap`), per-year
 resolution, RLE run emission + the supersession carve, and the build-time FAIL

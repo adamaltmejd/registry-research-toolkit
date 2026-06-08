@@ -1,6 +1,6 @@
-"""`GET /api/catalog` browse (§9.5) — the canonical catalog endpoint.
+"""`GET /api/catalog` browse — the canonical catalog endpoint.
 
-Two routes:
+See DESIGN.md → Catalog router structure. Two routes:
 
 - ``/catalog`` — the root: every provider plus the classification-root sentinel.
 - ``/catalog/{fqid:path}`` — the single catch-all covering provider (1 seg) →
@@ -23,7 +23,8 @@ shared connection, no lock, no `check_same_thread=False`. The schema was already
 validated at boot (`open_db` in the lifespan), so the per-request open skips the
 re-check (`check_schema=False`).
 
-**§16 guard runs BEFORE any DB access.** Every catch-all request first runs
+**Path guard runs BEFORE any DB access** (see DESIGN.md → FQID path guard
+(catalog_fqid.py)). Every catch-all request first runs
 `validate_fqid_path` (the per-segment slug-grammar allow-list, own module
 `catalog_fqid.py`) as a dependency; a rejection raises 422 with zero SQL executed
 AND zero connection opens, because the guard resolves before the handler body
@@ -132,7 +133,8 @@ def _catalog_conn(request: Request) -> Iterator[sqlite3.Connection]:
 
 
 def _validated_fqid(fqid: str) -> ValidatedFqidPath:
-    """The §16 allow-list as a dependency — FastAPI resolves it before the handler
+    """The path-guard allow-list as a dependency (see DESIGN.md → FQID path guard
+    (catalog_fqid.py)) — FastAPI resolves it before the handler
     body runs, so a malformed / traversal-shaped path returns 422 **before** the
     handler opens any connection (no DB hit at all, not just no SQL). It holds no
     connection itself, so it's safe across the threadpool. Reused by A5.2's
@@ -144,7 +146,8 @@ def _validated_fqid(fqid: str) -> ValidatedFqidPath:
 
 
 def _validated_period(period: str | None = None) -> Period | None:
-    """§16 ``?period`` allow-list as a pre-open dependency — FastAPI resolves it
+    """``?period`` allow-list as a pre-open dependency (see DESIGN.md → query
+    allow-list (period_param.py)) — FastAPI resolves it
     before the handler body, so a malformed period (SQLi / traversal / NUL /
     percent-encoded) returns 422 **before** any connection opens (zero SQL, zero
     opens). Holds no connection, so it's threadpool-safe. ``None`` (no query)
@@ -160,8 +163,8 @@ def _validated_period(period: str | None = None) -> Period | None:
 
 
 def _validated_variant(variant: str | None = None) -> str | None:
-    """§16 ``?variant`` allow-list as a pre-open dependency. ADMITS ``_default``
-    (a real register_variant slug, §5.1) unlike the path guard. 422s a non-slug
+    """``?variant`` allow-list as a pre-open dependency. ADMITS ``_default``
+    (a real register_variant slug) unlike the path guard. 422s a non-slug
     value before any connection opens (zero SQL, zero opens)."""
     if variant is None:
         return None
@@ -172,7 +175,7 @@ def _validated_variant(variant: str | None = None) -> str | None:
 
 
 def _validated_value_set_version(value_set_version: str | None = None) -> str | None:
-    """§16 ``?value_set_version`` allow-list as a pre-open dependency. This is the
+    """``?value_set_version`` allow-list as a pre-open dependency. This is the
     read-only catalog-browse label filter (NOT a binding pin — the FQID ``@version``
     pin is retired). The value is a FREE-TEXT value-set-version label (matched
     against ``value_set_version_label`` by a Python filter in ``resolve_at``, NOT
@@ -203,7 +206,8 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
     raise exc
 
 
-# ── reg_meta dataclass → Pydantic mappers (§9.6 1:1 wrappers) ──────────────
+# ── reg_meta dataclass → Pydantic mappers (1:1 wrappers; see DESIGN.md →
+# Pydantic boundary) ───────────────────────────────────────────────────────
 
 
 def _state_model(state) -> VariableStateModel:
@@ -287,7 +291,7 @@ def _variant_model(variant: VariantSummary) -> VariantModel:
 
 
 def _binding_node(resolved: ResolvedVariable) -> BindingNode:
-    """Map a `ResolvedVariable` to the embedded-record leaf (§9.5). Embeds the
+    """Map a `ResolvedVariable` to the embedded-record leaf. Embeds the
     full wire-relevant record; the internal `provider_key` (SCB build-time join
     key, redundant with the FQID) is intentionally not exposed, and
     `lineage_warnings` are NOT on `ResolvedVariable` so they're omitted (A5.2
@@ -353,7 +357,7 @@ def _register_response(
     register_slug = resolved.fqid.register
     assert provider_slug is not None and register_slug is not None
     bindings = catalog.list_bindings(provider_slug, register_slug)
-    # §9.5: a register's children are its bindings PLUS a `variants` reference
+    # A register's children are its bindings PLUS a `variants` reference
     # stub (the declared A5.2 variant-browser slot — a link, not data).
     children: list[RegisterChild] = [
         BindingChild(fqid=str(b.fqid), name=b.name) for b in bindings
@@ -445,12 +449,12 @@ def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
 
 
 # ── Routes ─────────────────────────────────────────────────────────────────
-# §9.5 router ordering: the suffixed sub-resource routes (`/states`, ...,
-# `/lineage_warnings`) and the register-sub-resource `/{provider}/{register}/
-# variants` MUST be declared ABOVE the `{fqid:path}` catch-all — Starlette
-# matches in declaration order and the `{fqid:path}` converter greedy-consumes
-# any suffix into `fqid`. The catch-all MUST stay last. `test_boot.py`
-# (§9.5 `routes_declared_before`) pins the order in CI.
+# Router ordering (see DESIGN.md → Catalog router structure): the suffixed
+# sub-resource routes (`/states`, ..., `/lineage_warnings`) and the
+# register-sub-resource `/{provider}/{register}/variants` MUST be declared ABOVE
+# the `{fqid:path}` catch-all — Starlette matches in declaration order and the
+# `{fqid:path}` converter greedy-consumes any suffix into `fqid`. The catch-all
+# MUST stay last. `test_boot.py` (`routes_declared_before`) pins the order in CI.
 
 
 @router.get("/catalog", response_model=RootResponse)
@@ -465,20 +469,20 @@ def get_catalog_root(request: Request) -> RootResponse:
     return RootResponse(children=children)
 
 
-# The register-sub-resource variant browser (§9.5). A FIXED 3-seg shape with a
+# The register-sub-resource variant browser. A FIXED 3-seg shape with a
 # literal `variants` tail — NOT an `{fqid:path}` suffix — so it's declared with
 # explicit `{provider}`/`{register}` segments, ABOVE the catch-all. The two
-# segments are §16-guarded as slugs (reusing the path guard on the 2-seg register
+# segments are guarded as slugs (reusing the path guard on the 2-seg register
 # FQID) before any connection opens.
 @router.get("/catalog/{provider}/{register}/variants", response_model=VariantsResponse)
 def get_register_variants(
     request: Request, provider: str, register: str
 ) -> VariantsResponse:
-    """List a register's variants (the `?variant=` browse axis, §9.5). `_default`
+    """List a register's variants (the `?variant=` browse axis). `_default`
     is a real variant and IS returned (not filtered). 404 when the register
     doesn't resolve (so a typo'd register isn't a silent empty list)."""
     register_fqid = f"{provider}/{register}"
-    # §16: validate both segments BEFORE opening a connection — as a strict
+    # Validate both segments BEFORE opening a connection — as a strict
     # provider/register FQID, NOT the generic catalog path (which legitimately
     # admits the `class/<slug>` classification prefix). `Fqid.register_fqid` runs
     # reg_meta's authoritative `validate_slug` on both segments, rejecting
@@ -506,8 +510,9 @@ def get_register_variants(
     )
 
 
-# ── The 6 binding-suffix sub-endpoints (§9.5) — ALL above the catch-all. ────
-# Each follows the LOCKED connection model: §16 guard (`_validated_fqid`) +
+# ── The 6 binding-suffix sub-endpoints (see DESIGN.md → Catalog router
+# structure) — ALL above the catch-all. ───────────────────────────────────
+# Each follows the LOCKED connection model: path guard (`_validated_fqid`) +
 # `parse` run BEFORE the connection opens; the connection is opened and used
 # within the sync body (one thread — see `_catalog_conn`). reg_meta's accessor
 # raises `not_a_binding_fqid` (→ 422) for a non-binding FQID and `_not_found`
@@ -519,7 +524,7 @@ def get_binding_states(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> StatesResponse:
-    """Full state history for a binding (§9.5). ≡ the leaf's embedded `states`,
+    """Full state history for a binding. ≡ the leaf's embedded `states`,
     standalone. Same shape the `?period` catch-all returns (codegen sees one
     state-list type)."""
     parsed = _parsed_binding(validated)
@@ -536,7 +541,7 @@ def get_binding_predecessors(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> PredecessorsResponse:
-    """Variables this binding's variable replaced (inbound succession, §9.5)."""
+    """Variables this binding's variable replaced (inbound succession)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
         try:
@@ -570,7 +575,8 @@ def get_binding_related(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> RelatedResponse:
-    """Split-sibling variables (variable grain, §5.7)."""
+    """Split-sibling variables (variable grain — see reg_meta_build/DESIGN.md →
+    Build-time triage (SCB))."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
         try:
@@ -587,8 +593,9 @@ def get_binding_lineage(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> LineageResponse:
-    """Consumer-side composite lineage edges (state grain, §5.6). Maps what
-    reg_meta's `LineageEdge` carries; the §9.5 richer per-source-state shape is a
+    """Consumer-side composite lineage edges (state grain — see
+    reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)).
+    Maps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a
     possible reg_meta enhancement (not blocked on here — see DESIGN.md)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
@@ -608,7 +615,7 @@ def get_binding_lineage_warnings(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
 ) -> LineageWarningsResponse:
-    """Build-time lineage warnings for the binding (§5.6). Empty when lineage
+    """Build-time lineage warnings for the binding. Empty when lineage
     resolved cleanly. The leaf does NOT embed these — this is their endpoint."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
@@ -639,14 +646,14 @@ def get_catalog_node(
     `?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at
     state subset.
 
-    The §16 guards (`_validated_fqid` for the path, `_validated_period` /
+    The guards (`_validated_fqid` for the path, `_validated_period` /
     `_validated_variant` for the queries) run as dependencies, BEFORE this body —
     so a malformed path OR a malformed period/variant returns 422 **before** any
     connection opens (zero SQL, zero opens). `parse` is DB-free and runs before
     the open too. The classification-root literal `class` (1 seg) is special-cased
     before `parse`.
 
-    `?period` semantics (§9.5): present + binding leaf → `{states: [...]}` (the
+    `?period` semantics: present + binding leaf → `{states: [...]}` (the
     resolve_at subset, narrowed by `?variant` / `?value_set_version`). present +
     non-binding kind → IGNORED (resolve normally). absent on a binding leaf → the
     full node (full history) UNLESS a narrowing modifier (`?variant` /
@@ -656,8 +663,8 @@ def get_catalog_node(
     filter — there is no FQID `@version` pin (retired). The connection is opened and
     used within this sync body (one thread — see `_catalog_conn`).
     """
-    # §5.2: `class` (1 seg) is the classification-root sentinel — a reserved slug
-    # `parse` rejects, so special-case it BEFORE parse. `class/<slug>` (2 seg)
+    # `class` (1 seg) is the classification-root sentinel (see reg_meta/DESIGN.md →
+    # FQID grammar) — a reserved slug `parse` rejects, so special-case it BEFORE parse. `class/<slug>` (2 seg)
     # flows through `parse` as a normal classification FQID. The `?period` query is
     # ignored on this (non-binding) kind.
     if validated.fqid == CLASSIFICATION_PREFIX:
@@ -676,7 +683,7 @@ def get_catalog_node(
 
     # A `?period` query on a binding leaf returns the resolve_at state subset
     # (uniform with `/states`), narrowed by `?variant` / `vsv`. On any other kind
-    # `?period` is IGNORED (§9.5).
+    # `?period` is IGNORED.
     if parsed.kind is FqidKind.VARIABLE_BINDING:
         if period is None:
             # `?variant` / `?value_set_version` are MODIFIERS of the resolve_at

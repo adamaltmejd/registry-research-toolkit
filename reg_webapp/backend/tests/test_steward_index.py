@@ -1,4 +1,7 @@
-"""Steward catalog index build + boot behaviour (§9.1 / §6.8.3).
+"""Steward catalog index build + boot behaviour.
+
+See DESIGN.md → Steward layering and the in-memory catalog index (stewards.py +
+catalog_index.py).
 
 Covers:
 
@@ -12,7 +15,7 @@ Covers:
 (d) the ``global`` deployment has no index and no catalog filter.
 
 A filtered steward is selected at boot via ``REG_WEBAPP_STEWARD`` +
-``REG_WEBAPP_STEWARDS_DIR`` (the static per-deployment selection seam, §9.1),
+``REG_WEBAPP_STEWARDS_DIR`` (the static per-deployment selection seam),
 both pointed at a tmp stewards dir holding a minimal ``ifau`` catalog.
 """
 
@@ -182,7 +185,7 @@ def test_drift_drops_binding_keeps_others(catalog):
 
 def test_build_index_drops_only_warning_level_issues():
     """build_catalog_index drops a binding (+ surfaces drift) ONLY for a
-    warning-level issue — the three §6.8.3 steward-downgraded resolution failures.
+    warning-level issue — the three steward-downgraded resolution failures.
     An info `binding_state_drifts_within_period` (the binding RESOLVED, it just
     spans a transition) and a non-downgraded error `binding_value_set_version_
     ambiguous` (a researcher-author-time concern) must NOT drop the binding nor
@@ -355,7 +358,7 @@ def test_boot_with_filtered_steward_populates_index(catalog_db, _filtered_stewar
 
 
 def test_boot_survives_catalog_drift(catalog_db, _filtered_steward_dir):
-    """⚠️ §6.8.3 boot-availability: a steward catalog referencing an FQID reg_meta
+    """⚠️ Boot-availability: a steward catalog referencing an FQID reg_meta
     no longer admits must BOOT — the steward-mode downgrade makes it a warning,
     the binding drops from the index, startup does NOT crash, and the drift is
     surfaced on /api/context."""

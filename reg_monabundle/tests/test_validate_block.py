@@ -1,8 +1,8 @@
 """Tests for ``reg_monabundle.validate_block``.
 
 Mirrors the validator coverage that lived in
-``mock_data_wizard.tests.test_spec`` before §15 step 5 phase 1
-relocated the function. The cross-block referential checks
+``mock_data_wizard.tests.test_spec`` before the function was
+relocated. The cross-block referential checks
 (orphan FQID, suppress_k-on-non-categorical) live in
 ``reg_monabundle.runtime.spec`` because they need the resolved
 column dataclasses — see ``DESIGN.md`` "Scope".

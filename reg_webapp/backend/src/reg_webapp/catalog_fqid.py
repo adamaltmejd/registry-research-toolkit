@@ -1,7 +1,7 @@
-"""§16 per-segment FQID slug-grammar allow-list for the catalog catch-all.
+"""Per-segment FQID slug-grammar allow-list for the catalog catch-all.
 
-This is the single chokepoint guarding ``/api/catalog/{fqid:path}`` (§9.5
-"Path-traversal rejection", §16 "Server-side input-validation gates"). It runs
+See DESIGN.md → FQID path guard (catalog_fqid.py). This is the single chokepoint
+guarding ``/api/catalog/{fqid:path}``. It runs
 **before** any reg_meta lookup, so a malformed or traversal-shaped FQID returns
 422 with ZERO SQL executed — the guard, not the resolver, rejects it.
 
@@ -12,10 +12,11 @@ fail the per-segment slug check like any other non-slug character.
 Single source of truth: each segment is validated by **delegating** to
 ``reg_meta.fqid.validate_slug`` — we do NOT re-encode the slug regex here (a
 second copy would drift from the grammar reg_meta enforces at build time). The
-only literal this module admits beyond the slug grammar is ``class`` (§5.2's
-classification-root sentinel, which ``validate_slug`` rejects); ``_default`` (the
-variant coordinate) is NOT a catalog path segment — variants are a register
-sub-resource (§9.5), never a ``/api/catalog/{fqid}`` segment — so it is rejected
+only literal this module admits beyond the slug grammar is ``class`` (the
+classification-root sentinel — see reg_meta/DESIGN.md → FQID grammar — which
+``validate_slug`` rejects); ``_default`` (the variant coordinate) is NOT a catalog
+path segment — variants are a register sub-resource, never a
+``/api/catalog/{fqid}`` segment — so it is rejected
 like any other reserved token. A binding leaf is a bare slug: the ``@version``
 value-set-version pin is **retired** (the value set is determined by the resolved
 ``(variable, variant, period)``, not pinned on the FQID), so ``@`` is just a
@@ -37,7 +38,7 @@ from reg_meta.fqid import (
     validate_slug,
 )
 
-# `class` is the one §5.2 literal that is a valid catalog PATH segment but which
+# `class` is the one reserved literal that is a valid catalog PATH segment but which
 # `validate_slug` rejects as a slug — and ONLY as the LEADING classification
 # prefix (`class` root or `class/<slug>`). In any other slot (provider, register,
 # variable) `class` is a reserved token: it must 422 at the guard, NOT be admitted
@@ -45,12 +46,12 @@ from reg_meta.fqid import (
 # construct `Fqid.register_fqid('class', …)` → FqidError → an HTTP 500 instead of a
 # clean 422. So `_validate_segment` admits the literal only at the prefix position
 # (`is_prefix`), never unconditionally. `_default` (the variant coordinate) is
-# NEVER a catalog path segment — variants are a register sub-resource (§9.5) — so
+# NEVER a catalog path segment — variants are a register sub-resource — so
 # it always fails the slug grammar (422).
 
 
 class FqidPathError(ValueError):
-    """Raised when a raw ``{fqid:path}`` fails the §16 per-segment allow-list.
+    """Raised when a raw ``{fqid:path}`` fails the per-segment allow-list.
 
     The catalog router maps this to HTTP 422 (before any Catalog call), so a
     rejection means zero SQL was executed.
@@ -59,7 +60,7 @@ class FqidPathError(ValueError):
 
 @dataclass(frozen=True)
 class ValidatedFqidPath:
-    """A path that passed the §16 allow-list.
+    """A path that passed the allow-list.
 
     ``fqid`` is the validated FQID string to hand to ``reg_meta.fqid.parse``. A
     binding leaf is a bare slug — there is no ``@version`` pin to strip (retired).
@@ -69,8 +70,9 @@ class ValidatedFqidPath:
 
 
 def _validate_segment(segment: str, *, slot: str, is_prefix: bool = False) -> None:
-    """Validate one path segment against the §5.2 allow-list (slug grammar, plus
-    the ``class`` classification-prefix literal). Raises ``FqidPathError`` on any
+    """Validate one path segment against the slug-grammar allow-list (see
+    reg_meta/DESIGN.md → FQID grammar; plus the ``class`` classification-prefix
+    literal). Raises ``FqidPathError`` on any
     violation — including an empty segment (``//`` or a leading/trailing ``/``).
 
     ``is_prefix`` (the leading segment) admits the ``class`` literal; everywhere
@@ -88,7 +90,7 @@ def _validate_segment(segment: str, *, slot: str, is_prefix: bool = False) -> No
 
 
 def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
-    """§16 chokepoint: validate every segment of ``raw_path`` before resolution.
+    """Chokepoint: validate every segment of ``raw_path`` before resolution.
 
     Splits on the structural ``/`` and validates each segment against the slug
     grammar (via ``reg_meta.fqid.validate_slug``) or the leading ``class``
@@ -110,7 +112,8 @@ def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
     # kind-agnostic — it grammar-checks each segment and special-cases only the
     # leading `class` literal; it does NOT replicate `parse`'s position→kind
     # mapping.
-    # §5.2 reserved-HTTP-suffix interaction (#228): `validate_slug` rejects the
+    # Reserved-HTTP-suffix interaction (#228, see reg_meta/DESIGN.md → FQID
+    # grammar): `validate_slug` rejects the
     # reserved suffix tokens keyed on the slot, so HERE the reservation fires only
     # for a reserved VARIABLE leaf. It does NOT fire for a register/classification
     # segment — and it doesn't need to: those reserved tokens can never BE a
@@ -122,7 +125,7 @@ def validate_fqid_path(raw_path: str) -> ValidatedFqidPath:
     # `parse()` before any connection opens, and `scb/states` is captured by the
     # matching `{fqid:path}/states` suffix route and rejected by the binding
     # accessor as a non-binding FQID before any lookup query runs (a connection may
-    # open, but no catalog SQL executes) — so §16's reject-before-SQL guarantee
+    # open, but no catalog SQL executes) — so the reject-before-SQL guarantee
     # holds for every reserved token without making this guard kind-aware.
     for index, segment in enumerate(segments):
         slot = "variable" if index == leaf_index and len(segments) == 3 else "segment"

@@ -1,14 +1,15 @@
-"""In-memory steward catalog index (§9.1 / §9.2).
+"""In-memory steward catalog index.
 
-Built once at FastAPI startup from a steward's validated
-``steward.project_data.json`` (§9.1) and held on ``app.state`` for the lifetime
+See DESIGN.md → Steward layering and the in-memory catalog index (stewards.py +
+catalog_index.py). Built once at FastAPI startup from a steward's validated
+``steward.project_data.json`` and held on ``app.state`` for the lifetime
 of the process. It is the filter that scopes a steward deployment to a subset of
 reg_meta's universe: the validate endpoint and the variable-list authoring
-endpoints (A5.2b-ii) consult it, and ``fqid_outside_steward_catalog`` (§6.8.3)
-fires when a researcher's project references an FQID not in it.
+endpoints (A5.2b-ii) consult it, and ``fqid_outside_steward_catalog`` (see
+DESIGN.md → Semantic validation (semantic.py)) fires when a researcher's
+project references an FQID not in it.
 
-Two maps (REFACTOR_SPEC §9.1, derived directly from the steward project's
-``sources[]``):
+Two maps (derived directly from the steward project's ``sources[]``):
 
 - ``bindings_by_variant`` — ``register_variant coordinate`` (the 3-part
   ``<provider>/<register>/<variant>`` string) → ``frozenset`` of the binding
@@ -20,17 +21,17 @@ Two maps (REFACTOR_SPEC §9.1, derived directly from the steward project's
   ``period_outside_state_validity`` is the gate).
 
 This is an INTERNAL dataclass — never a response body — so it is a plain stdlib
-frozen ``@dataclass``, not Pydantic (§9.6: only response models are Pydantic;
-reg_webapp internals are dataclasses). The ``global`` deployment
+frozen ``@dataclass``, not Pydantic (see DESIGN.md → Pydantic boundary: only
+response models are Pydantic; reg_webapp internals are dataclasses). The ``global`` deployment
 (``has_catalog_filter=False``) has NO index (``None``); the catalog endpoints
 pass through to reg_meta's full universe.
 
 A binding that the semantic validator (steward-caller mode) could not resolve
 (``fqid_unresolved`` / ``period_outside_state_validity`` / ``value_set_missing``,
-all downgraded to ``warning`` at boot, §6.8.3) is DROPPED from the index — it
+all downgraded to ``warning`` at boot) is DROPPED from the index — it
 can't be authored against until the steward updates the catalog. ``drift_warnings``
 carries those downgraded warnings so ``/api/context`` can surface a "catalog
-drift" banner (§6.8.3, §9.1).
+drift" banner.
 """
 
 from __future__ import annotations
@@ -45,7 +46,7 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class DriftWarning:
-    """A single boot-time catalog-drift warning (§6.8.3 steward downgrade).
+    """A single boot-time catalog-drift warning (steward downgrade).
 
     A thin, JSON-serializable projection of the steward-mode ``ValidationIssue``
     that caused a binding to drop from the index — surfaced on ``/api/context``
@@ -60,7 +61,7 @@ class DriftWarning:
 
 @dataclass(frozen=True)
 class CatalogIndex:
-    """The §9.1 in-memory steward catalog filter. Internal — never serialized."""
+    """The in-memory steward catalog filter. Internal — never serialized."""
 
     bindings_by_variant: dict[str, frozenset[str]]
     period_range_by_register: dict[str, tuple[str, str]]
@@ -109,23 +110,23 @@ def build_catalog_index(
     project: ProjectData,
     issues: tuple[ValidationIssue, ...],
 ) -> CatalogIndex:
-    """Build the §9.1 index from a validated steward ``project`` plus the
+    """Build the index from a validated steward ``project`` plus the
     steward-mode semantic ``issues`` it produced.
 
     ``project`` has already passed ``validate_structural`` (well-formed FQIDs /
     period grammar) and ``validate_semantic`` in steward-caller mode. We walk its
     ``sources``, skipping any binding (or whole source) flagged as drift, and
-    accumulate the two §9.1 maps.
+    accumulate the two maps.
 
     Only ``warning``-level issues mark a DROP (and populate ``drift_warnings``):
-    those are exactly the §6.8.3 steward-downgraded resolution failures
+    those are exactly the steward-downgraded resolution failures
     (``fqid_unresolved`` / ``value_set_missing`` / ``period_outside_state_validity``
     / ``binding_representation_unknown``) — the FQID / value-set / period / pinned
     representation this catalog references that reg_meta no longer admits. An
     ``info`` ``binding_state_drifts_within_period`` (the binding RESOLVED, it just
     spans a transition or its representation under-covers the range) and a
     non-downgraded ``error`` ``binding_value_set_version_ambiguous`` (kept an error
-    per §6.8.3 — a researcher-author-time concern, not catalog drift) must NOT drop
+    — a researcher-author-time concern, not catalog drift) must NOT drop
     the binding; the steward filter keeps it and the researcher path enforces it."""
     warnings = tuple(i for i in issues if i.level == "warning")
     dropped = _dropped_binding_paths(warnings)

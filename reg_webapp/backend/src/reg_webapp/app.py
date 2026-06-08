@@ -54,12 +54,13 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     conn = reg_meta.db.open_db(db_path)
     try:
         manifest = reg_meta.db.get_manifest(conn)
-        # Build the §9.1 in-memory steward catalog index on the SAME boot
+        # Build the in-memory steward catalog index on the SAME boot
         # connection, BEFORE it closes. Boot is single-threaded, so the
         # per-request open-a-fresh-conn rule (which guards the sync-handler
         # threadpool) does NOT apply here — reusing the boot conn is correct.
         # A reg_meta-drift'd steward catalog still BOOTS: the steward-mode
-        # downgrade (§6.8.3) turns unresolved FQIDs into warnings, drops the
+        # downgrade (see DESIGN.md → Semantic validation (semantic.py)) turns
+        # unresolved FQIDs into warnings, drops the
         # affected bindings from the index, and surfaces the drift on
         # /api/context — it does NOT crash startup. `None` for the global
         # deployment (no filter, full universe).
@@ -85,14 +86,15 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI:
     """Build the FastAPI app.
 
-    ``rate_limit_per_minute`` defaults to the §9.4 budget; it's a parameter ONLY
+    ``rate_limit_per_minute`` defaults to the cost-protection budget; it's a parameter ONLY
     so tests that need to drive the write endpoints harder than 30 req/min (the
     cross-thread concurrency smoke tests) can raise it without disabling the
     middleware — the limiter is still IN the stack, just with a higher ceiling.
     Production callers use the default."""
     app = FastAPI(title="reg_webapp", version=__version__, lifespan=lifespan)
     # Middleware ordering (Starlette executes add_middleware in REVERSE order —
-    # last-added runs OUTERMOST / first on the way in). §9.4 cost protection must
+    # last-added runs OUTERMOST / first on the way in). Cost protection (see
+    # DESIGN.md → Cost protection (limits.py)) must
     # gate a write BEFORE the handler reads the body, so the cap + limiter run
     # outermost. Adding the rate limiter LAST puts it outermost (it rejects an
     # over-budget IP before the body is even buffered); the body cap next (it
@@ -105,7 +107,7 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     app.include_router(context.router)
     app.include_router(catalog.router)
     # A5.2b-ii write surface: project validate/order + bundle build. The ETag
-    # middleware skips these (method gate); the cap + limiter gate them (§9.4).
+    # middleware skips these (method gate); the cap + limiter gate them.
     app.include_router(project.router)
     app.include_router(bundle.router)
     return app

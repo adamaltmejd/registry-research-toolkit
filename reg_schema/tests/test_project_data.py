@@ -1,11 +1,11 @@
-"""Shape tests for the §6.1-§6.4 Pydantic models.
+"""Shape tests for the Pydantic models.
 
 These verify the contract that consumers depend on: frozenness,
 hashability, list→tuple coercion for sequence fields, defaults for
 optional fields, and that ``model_json_schema()`` exposes the nested
 models (the SPA's TypeScript codegen source). Structural rule
 enforcement (FQID well-formedness, panel ordering, etc.) belongs to
-the §6.8.1 validator — these tests deliberately stay shape-only.
+the structural validator — these tests deliberately stay shape-only.
 """
 
 from __future__ import annotations
@@ -69,7 +69,7 @@ def test_binding_is_frozen_and_hashable() -> None:
 
 def test_binding_variable_stored_verbatim_model_does_not_validate() -> None:
     # The Pydantic model stores the raw FQID string and does NOT validate its
-    # grammar — well-formedness is the structural validator's job (§6.8.1). So
+    # grammar — well-formedness is the structural validator's job. So
     # even a malformed value (here the retired @version suffix, now an
     # invalid_fqid) is accepted at the model layer and stored verbatim.
     binding = Binding(variable="scb/lisa/naringsgren@sni2007", type="categorical")
@@ -102,7 +102,7 @@ def test_source_coerces_bindings_list_to_tuple() -> None:
 
 def test_source_accepts_period_forms() -> None:
     # int, period-token string, snapshot sentinel, and range object all
-    # construct (the Period union; §6.2).
+    # construct (the Period union).
     for period in (2018, "2018-01", "_default"):
         src = Source(
             name="s",
@@ -125,7 +125,7 @@ def test_period_range_round_trips_through_validator() -> None:
     # serialize_by_alias=True: model_dump emits "from"/"to" (not the
     # Python-safe "from_"), so a dumped spec re-validates clean
     # (_is_period_range_obj requires exactly {"from","to"}). Guards the
-    # webapp/SPA serialization path (§6.2) against the alias footgun.
+    # webapp/SPA serialization path against the alias footgun.
     src = Source(
         name="par",
         register_variant="scb/par/_default",
@@ -296,7 +296,7 @@ def test_project_data_eq_compares_namespaced_block() -> None:
 def test_project_data_ignores_extra_steward_blocks() -> None:
     # extra="ignore" (overriding _Model's forbid): unmodeled steward
     # blocks ride through on the dict side and are handled by the owning
-    # package (§6.8.2); the model neither stores them nor errors.
+    # package (see DESIGN.md → Not in scope (intentionally)); the model neither stores them nor errors.
     pd = ProjectData(
         schema_version="2.0.0",
         steward="global",
@@ -312,7 +312,7 @@ def test_project_data_ignores_extra_steward_blocks() -> None:
 
 
 def test_model_json_schema_exposes_nested_models() -> None:
-    # model_json_schema() is the SPA's TS-codegen source (§9.6); it must
+    # model_json_schema() is the SPA's TS-codegen source; it must
     # expose the nested models as $defs so the generated types are not
     # inlined into one opaque blob.
     schema = ProjectData.model_json_schema()

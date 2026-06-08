@@ -303,7 +303,7 @@ class TestProviderToml:
         assert exc.value.code == "slug_toml_invalid"
 
     def test_reserved_http_suffix_slug_rejected_in_register(self, tmp_path: Path):
-        # §5.2: a binding-suffix token (`states`) would shadow the
+        # A binding-suffix token (`states`) would shadow the
         # `/catalog/{fqid:path}/states` route if minted as a register slug.
         path = _write(
             tmp_path / "scb.toml",
@@ -511,7 +511,7 @@ class TestClassificationsToml:
         assert exc.value.code == "slug_toml_invalid"
 
     def test_reserved_http_suffix_slug_rejected(self, tmp_path: Path):
-        # §5.2: a binding-suffix token would shadow `/catalog/{fqid:path}/lineage`
+        # A binding-suffix token would shadow `/catalog/{fqid:path}/lineage`
         # if minted as a classification slug (`class/lineage`).
         path = _write(
             tmp_path / "classifications.toml",
@@ -761,7 +761,7 @@ class TestSeedSlugs:
     def test_omits_register_version_from_seed(self):
         # A2.6: register_version is not seeded at all (version left the FQID
         # grammar; no slug column). The former version-seed tests (unperiodized
-        # stub, periodized omission, curated override, §5.3 rule-5 collision
+        # stub, periodized omission, curated override, rule-5 collision
         # annotation, rule-6 residual stub) were removed with the mechanism.
         conn = build_slugged_db(version=("Strandlinje, 2019", None, 200))
         body = seed_provider_toml(conn, "scb")
@@ -923,7 +923,7 @@ class TestPrecheckSlugs:
         assert result.parse_errors
 
     def test_drifting_variables_advisory(self, tmp_path: Path):
-        # §5.3/#143: precheck lists drifting-column variables (advisory — it must
+        # #143: precheck lists drifting-column variables (advisory — it must
         # NOT affect `ok`). The drift var is reported with its stored slug + the
         # distinct columns in edition order; a constant-column var is omitted.
         d = tmp_path / "slugs"
@@ -1228,7 +1228,7 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
 
 
 class TestPopulateVariableSlugs:
-    """A2.1.5 (§5.3): stored `variable.slug` population — kolumnnamn-derived
+    """Stored `variable.slug` population — kolumnnamn-derived
     where register-unique, name-fallback otherwise, never-failing fallback
     chain, curated overrides, .auto.toml generation."""
 
@@ -1316,7 +1316,7 @@ class TestPopulateVariableSlugs:
         assert self._stored_slug(conn, 44) == "kon"
 
     def test_deprecated_curated_slug_reserved(self, tmp_path: Path) -> None:
-        # §5.4: a deprecated curated [variable] slug (retired variable kept in
+        # A deprecated curated [variable] slug (retired variable kept in
         # the snapshot) is reserved — a new live variable can't auto-derive it
         # and recreate the published FQID.
         conn = self._db(kol="Kon")  # live var 44 → would derive "kon"
@@ -1345,7 +1345,7 @@ class TestPopulateVariableSlugs:
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
         # SCB renames the delivery column; rebuild reads the existing
-        # .auto.toml and keeps the original slug (§5.3 immutability).
+        # .auto.toml and keeps the original slug (immutability).
         conn2 = self._db(kol="Konkod")  # would derive `konkod`
         counts = populate_variable_slugs(conn2, d)
         assert self._stored_slug(conn2, 44) == "kon"
@@ -1353,7 +1353,7 @@ class TestPopulateVariableSlugs:
         assert counts["auto_new"] == 0
 
     def test_retired_auto_slug_not_reused(self, tmp_path: Path) -> None:
-        # §5.4 immutability: a frozen auto slug whose variable was pruned from
+        # Immutability: a frozen auto slug whose variable was pruned from
         # the delivery stays reserved — a live/new variable can't be assigned it,
         # which would duplicate the slug in the rewritten auto.toml.
         conn = self._db(kol="Kon")  # live var 44, kolumnnamn → "kon"
@@ -1376,7 +1376,7 @@ class TestPopulateVariableSlugs:
     def test_collision_falls_back_to_name(self, tmp_path: Path) -> None:
         # Two distinct variables under one register whose kolumnnamn fold to the
         # SAME slug ('kon') no longer fail the build — both fall back to their
-        # (distinct) names, yielding distinct register-unique slugs (§5.3).
+        # (distinct) names, yielding distinct register-unique slugs.
         conn = self._db(kol="Kon", name="Kön")  # var 44
         self._add_variable(conn, var_id=88, name="Civilstånd", kol="Kon")
         d = self._slug_dir(tmp_path)
@@ -1477,7 +1477,7 @@ class TestPopulateVariableSlugs:
 
     def test_auto_slugs_flow_into_snapshot(self, tmp_path: Path) -> None:
         # Auto-derived variable slugs (in .auto.toml) must land in the snapshot
-        # payload's "variable" kind so the §5.4 grow-only guard covers them.
+        # payload's "variable" kind so the grow-only guard covers them.
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
         (d / "classifications.toml").write_text("", encoding="utf-8")
@@ -1490,7 +1490,7 @@ class TestPopulateVariableSlugs:
         diff = diff_snapshot(previous, payload)
         assert any("1.44" in r for r in diff["renamed"])
 
-    # --- §5.3/#143: drift-stable slug basis (+ doable-now part of #141) --------
+    # --- #143: drift-stable slug basis (+ doable-now part of #141) --------
 
     @staticmethod
     def _add_drift_variable(
@@ -1528,7 +1528,7 @@ class TestPopulateVariableSlugs:
         ).fetchone()[0]
 
     def test_drifting_column_slugs_from_name(self, tmp_path: Path) -> None:
-        # §5.3/#143: a 1:1 variable whose single delivery column drifts across
+        # #143: a 1:1 variable whose single delivery column drifts across
         # editions (SunInr→sun2000inr1→sun2020inr1) must NOT slug from its latest
         # column (`sun2020inr1` — misleading + version-coupled). The
         # register-unique NAME wins: a version-neutral `utbildningsinriktning`.
@@ -2087,7 +2087,7 @@ class TestCuratedDefaultVariantRoundTrip:
     """A curated `slug = "_default"` on a real register_variant row must
     survive TOML → populate_slugs → seed_provider_toml → TOML cycles.
 
-    Before §5.1 synthesis moved to FQID-resolve time, the seed emitter
+    Before synthesis moved to FQID-resolve time, the seed emitter
     treated every `_default` row as build-synthesized and silently dropped
     it from the regenerated TOML, so a curator who committed the new TOML
     would discard their own entry."""
@@ -2323,7 +2323,7 @@ class TestSameAs:
         )
 
     def test_rejected_on_register(self, tmp_path: Path):
-        # §5.3 same_as is only valid on variable / classification.
+        # same_as is only valid on variable / classification.
         path = _write(
             tmp_path / "scb.toml",
             '[register."34"]\nslug = "lisa"\n'
@@ -2532,7 +2532,7 @@ class TestSameAsKeyValidation:
 
 class TestPrecheckCliGrowOnly:
     """--update-snapshot must refuse to bless a removal or rename — otherwise
-    the §5.4 grow-only contract is bypassable in one command."""
+    the grow-only contract is bypassable in one command."""
 
     def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
         """Reuse the layout from TestPrecheckCli but local to keep dependencies
@@ -2653,7 +2653,7 @@ class TestPrecheckCliGrowOnly:
         )
 
     def test_rename_accepted_under_update_when_unfrozen(self, tmp_path: Path):
-        """§5.4 pre-v1 escape hatch: an ``UNFROZEN`` sentinel in the slug dir
+        """Pre-v1 escape hatch: an ``UNFROZEN`` sentinel in the slug dir
         flips `--update-snapshot` from refuse-and-fail to write-through. The
         rename is still reported in the envelope so drift stays visible.
         """
@@ -3091,12 +3091,12 @@ def _ns(**kw):
 
 
 # ---------------------------------------------------------------------------
-# §5.5 same_as edge materialization
+# same_as edge materialization
 # ---------------------------------------------------------------------------
 
 
 class TestMaterializeSameAsEdges:
-    """Build-time `same_as` edge materialization (§5.5)."""
+    """Build-time `same_as` edge materialization."""
 
     @staticmethod
     def _slug_dir_with_same_as(tmp_path: Path, body: str) -> Path:
@@ -3186,7 +3186,7 @@ class TestMaterializeSameAsEdges:
 
     def test_register_variant_key_rejected(self, tmp_path: Path) -> None:
         # A2.1.5: variable same_as is variable-grain — the `register_variant`
-        # narrowing key was dropped (§5.5), so it's now an unknown key rejected
+        # narrowing key was dropped, so it's now an unknown key rejected
         # at TOML load.
         conn = build_slugged_db()
         slug_dir = self._slug_dir_with_same_as(
@@ -3334,7 +3334,7 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_self_loop"
 
     def test_period_key_rejected(self, tmp_path: Path) -> None:
-        # A2.1.5: the `period` same_as narrowing key was dropped (§5.5) — it's
+        # The `period` same_as narrowing key was dropped — it's
         # now an unknown key rejected at TOML load. (Previously a period-only
         # narrowing raised slug_same_as_period_without_variant; that whole
         # narrowing concept is gone at variable grain.)

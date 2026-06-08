@@ -1,4 +1,4 @@
-"""Smoke tests for the §6.8.0 cross-runtime contract."""
+"""Smoke tests for the cross-runtime contract."""
 
 from __future__ import annotations
 

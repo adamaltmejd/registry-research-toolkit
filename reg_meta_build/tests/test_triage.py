@@ -1,4 +1,4 @@
-"""Tests for §5.7 build-time triage (fold / split / collapse).
+"""Tests for build-time triage (fold / split / collapse); see DESIGN.md → Build-time triage (SCB).
 
 The pure decision helpers are unit-tested directly; the fold/split integration
 is exercised through `build_db` with crafted Registerinformation rows that put
@@ -287,7 +287,7 @@ class TestResolveYearWinners:
         assert genuine is False
 
     def test_curation_pin_matches_emitted_label(self) -> None:
-        # a §5.7 fold relabels the raw value_set_version_label (origA/origB) to
+        # a fold relabels the raw value_set_version_label (origA/origB) to
         # emitted tokens (4pos/4pos-1). The pin matches the EMITTED label (what the
         # maintainer sees in variable_state), resolving to '4pos' over cosmetic's
         # would-be larger pick.
@@ -494,7 +494,7 @@ class TestDecideFoldOrSplit:
 
 
 class TestSplitSiblingFlagInheritance:
-    """A §5.7 split sibling inherits is_identifier / is_sensitive from its
+    """A split sibling inherits is_identifier / is_sensitive from its
     pre-split origin. The A1.2 flags are lifted BEFORE triage, so a sibling
     minted without copying them defaults both to 0 and the flag survives only on
     the lex-first column — the corpus-wide false-negative-identifier regression."""
@@ -558,7 +558,7 @@ class TestSplit:
                 _var_row(colname="Skolkommun", cvid=9301, var_id=920),
             ],
         )
-        # Two variables share provider_key '920' (a split, §5.7 DECISION POINT 1).
+        # Two variables share provider_key '920' (a split).
         sibs = conn.execute(
             "SELECT variable_id FROM variable "
             "WHERE register_id = 1 AND provider_key = '920'"
@@ -628,7 +628,7 @@ class TestSplit:
             "ORDER BY variable_id"
         ).fetchall()
         assert len(sibs) == 2
-        # Each sibling's alias set == its single owning column (the §5.7 query
+        # Each sibling's alias set == its single owning column (the query
         # `get_datacolumns` runs: SELECT delivery_column_name … WHERE variable_id=?).
         alias_by_vid = {
             r["variable_id"]: sorted(
@@ -819,7 +819,7 @@ class TestFold:
 
 
 class TestUniquenessIndex:
-    """The §5.7 state-uniqueness index is created post-triage and is live."""
+    """The state-uniqueness index is created post-triage and is live."""
 
     def test_index_exists(self, tmp_path: Path) -> None:
         conn = _build(tmp_path, [])
@@ -893,7 +893,7 @@ class TestCollapseResidual:
 class TestFoldSlugHint:
     """A fold whose shared stem isn't a valid slug must NOT emit a hint — real
     build hit `slug_toml_invalid` for an all-digit stem (`2501`/`2502` → `250`),
-    which violates the §5.2 grammar (slugs start with a letter)."""
+    which violates the FQID grammar (slugs start with a letter)."""
 
     def test_digit_stem_emits_no_hint(self) -> None:
         gk1 = (1, 10, 99, "int", "", None, "", "", "2501")

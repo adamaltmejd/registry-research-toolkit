@@ -177,7 +177,7 @@ DDL = """\
 -- Core tables (all IDs stored as INTEGER for compact storage)
 
 -- Data providers (publishers): scb, sos, ... See _PROVIDER_SEED for the seed.
--- Promoted to first-class in schema v3.1 for FQID grammar (REFACTOR_SPEC.md §5.1).
+-- Promoted to first-class in schema v3.1 for FQID grammar (see reg_meta/DESIGN.md → FQID grammar).
 CREATE TABLE provider (
     provider_id INTEGER PRIMARY KEY,
     slug        TEXT NOT NULL UNIQUE,
@@ -186,13 +186,13 @@ CREATE TABLE provider (
 
 -- FQID slug columns (`slug` on register / register_variant / classification)
 -- are nullable in 3.1. Curated values land in step 1c; the build refuses to
--- compile with NULL slugs from then on. The §5.1 `_default` placeholder for
+-- compile with NULL slugs from then on. The `_default` placeholder for
 -- variant-less registers is synthesized at FQID-resolve time (catalog.py),
--- never persisted. See REFACTOR_SPEC.md §5.1 and §5.3.
+-- never persisted. See reg_meta/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
-    -- Universal English columns per REFACTOR_SPEC §5.11 vocabulary glossary.
+    -- Universal English columns; see reg_meta/DESIGN.md → Glossary and Swedish↔English crosswalk.
     -- Values remain provider-native strings (SCB's literal `Registernamn`
     -- text such as "LISA"). `registerrubrik` is dropped (redundant with `name`).
     name TEXT NOT NULL,
@@ -203,12 +203,12 @@ CREATE TABLE register (
 CREATE TABLE register_variant (
     register_variant_id INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
-    -- §5.11 rename. `registervariantrubrik` (redundant with name) and
+    -- Universal-vocabulary rename. `registervariantrubrik` (redundant with name) and
     -- `registervariantsekretess` (legal text → reg-meta-docs) are dropped.
     name TEXT,
     description TEXT,
     slug          TEXT,
-    -- Presentation-only grouping label (§5.3 field reference). Drift-tolerant.
+    -- Presentation-only grouping label. Drift-tolerant.
     display_group TEXT,
     -- A4.4c panel-shape coordinates. MUTABLE (curated via TOML, not slug-frozen
     -- — they don't enter the slug snapshot). Nullable: most variants carry no
@@ -228,7 +228,7 @@ CREATE TABLE register_variant (
 -- coalescer reads `registerversionnamn` for the variable_state valid_from/to
 -- year fallback, and the lineage linkers derive a per-edition period from it;
 -- both run before `DROP TABLE register_version`. The FQID grammar no longer
--- has a version segment (§5.2), so this table carries NO `slug` column — period
+-- has a version segment (see reg_meta/DESIGN.md → FQID grammar), so this table carries NO `slug` column — period
 -- is a delivery coordinate, not identity. Per-edition prose/artifacts move to
 -- the provenance DB (A4.2, deferred); nothing in the shipped catalog reads it.
 CREATE TABLE register_version (
@@ -244,12 +244,12 @@ CREATE TABLE register_version (
 
 -- A2.6: BUILD-TIME-ONLY, dropped before ship together with `register_version`
 -- (they FK it). Write-only debug tables — nothing in the shipped catalog or the
--- query layer reads them; their content belongs in the provenance DB (§5.1,
--- A4.2). Kept build-time only because the importer still populates them from the
+-- query layer reads them; their content belongs in the provenance DB (see
+-- DESIGN.md → Provenance DB sibling). Kept build-time only because the importer still populates them from the
 -- same Registerinformation.csv pass.
 CREATE TABLE population (
     regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
-    -- §5.11 rename. `populationdatum` is a free-text date range, not a parsed
+    -- Universal-vocabulary rename. `populationdatum` is a free-text date range, not a parsed
     -- date — provider-native string preserved.
     name TEXT NOT NULL,
     definition TEXT,
@@ -266,27 +266,27 @@ CREATE TABLE object_type (
 );
 
 CREATE TABLE variable (
-    -- A2.1.5 (DECISION POINT 1, §5.1): synthetic PK so variable_state's FK is
+    -- Synthetic PK so variable_state's FK is
     -- single-column and the edge tables stay stable as the natural key varies
     -- per provider. The natural key is (register_id, slug); `provider_key`
     -- (SCB `str(var_id)`; SOS the merged variable name) is demoted from the PK
-    -- to a NON-unique join hint — a §5.7 triage split (A2.2) puts several
+    -- to a NON-unique join hint — a triage split puts several
     -- variables under one source key.
     variable_id INTEGER PRIMARY KEY AUTOINCREMENT,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
-    -- SCB str(var_id), TEXT so SOS can key by merged variable name (§5.1).
+    -- SCB str(var_id), TEXT so SOS can key by merged variable name.
     -- NON-unique join hint, not a key: the build-time `variable_instance.var_id`
     -- (INTEGER) joins via CAST-to-TEXT, and `code_variable_map.var_id` carries it
     -- into the shipped DB.
     provider_key TEXT NOT NULL,
-    -- §5.3 register-unique FQID leaf. NULL until the A2.1.5 slug follow-up PR
+    -- Register-unique FQID leaf. NULL until the slug follow-up PR
     -- populates it; SQLite treats NULLs as distinct, so the transient all-NULL
     -- window doesn't trip the unique index below.
     slug TEXT,
-    -- §5.11 rename. Values stay provider-native. `variabeloperationell_definition`
+    -- Universal-vocabulary rename. Values stay provider-native. `variabeloperationell_definition`
     -- merges into `description` at ingest when distinct + non-empty;
     -- `variabelreferenstid`, `variabelhamtadfran`, and `variabelextern_kommentar`
-    -- are dropped per §5.11. `variabelregister_kalla` (raw attribution text)
+    -- are dropped. `variabelregister_kalla` (raw attribution text)
     -- becomes `source_register_text`.
     name TEXT,
     definition TEXT,
@@ -305,7 +305,7 @@ CREATE TABLE variable (
     is_sensitive INTEGER NOT NULL DEFAULT 0,
     is_identifier INTEGER NOT NULL DEFAULT 0
 );
--- Natural key: register-unique slug (the FQID leaf, §5.3). Stays unique after
+-- Natural key: register-unique slug (the FQID leaf). Stays unique after
 -- an A2.2 triage split because siblings get distinct slugs. The one UNIQUE
 -- constraint on the table (DECISION POINT 1).
 CREATE UNIQUE INDEX idx_variable_slug ON variable(register_id, slug);
@@ -355,7 +355,7 @@ CREATE TABLE variable_instance (
     -- the renamed-era unika row. This column preserves the per-cvid raw name
     -- so the lookup matches.
     variabelnamn TEXT,
-    -- §5.11 rename of `datatyp` / `datalangd` / `vardemangdsversion`.
+    -- Universal-vocabulary rename of `datatyp` / `datalangd` / `vardemangdsversion`.
     -- `vardemangdsniva` stays Swedish: it's a transient pre-triage carrier
     -- through A2.2 (the coalescer's `grain` field) and gets dropped from the
     -- final `variable_state` schema in A2.1. Keeping the Swedish name signals
@@ -371,7 +371,7 @@ CREATE TABLE variable_instance (
     -- here from the cvid PK side, so the forward path is already optimal.
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     -- The cvid's OWNING `variable_id` — GROUND TRUTH, stamped by
-    -- `_coalesce_variable_states` AFTER §5.7 triage (NULL until then). A2.2
+    -- `_coalesce_variable_states` AFTER triage (NULL until then). A2.2
     -- triage can split one source `var_id` into sibling variables that SHARE
     -- the `(register_id, var_id)` provider key, so `var_id` alone can't name the
     -- owning variable; but the coalescer builds each `variable_state` FROM these
@@ -407,7 +407,7 @@ CREATE TABLE variable_alias_build (
     PRIMARY KEY (cvid, delivery_column_name)
 );
 
--- A2.1: per-era shape of a variable (§5.1). One row per coalesced
+-- Per-era shape of a variable (see reg_meta/DESIGN.md → Two-level variable model). One row per coalesced
 -- `(register_id, register_variant_id, var_id, data_type, data_length, value_set_id,
 -- value_set_version_label, grain)` tuple over `variable_instance`; populated
 -- by `_coalesce_variable_states` after CSV import. A2.5/A2.6 flipped the
@@ -419,7 +419,7 @@ CREATE TABLE variable_alias_build (
 -- `(register_id, var_id)` via the promoted `variable` table.
 --
 -- valid_from / valid_to are TEXT NOT NULL `YYYY-MM-DD` always (storage
--- contract from §5.1); coarser SCB inputs like the year "2020" expand at
+-- contract); coarser SCB inputs like the year "2020" expand at
 -- ingest into 2020-01-01..2020-12-31. Open-ended states use the sentinel
 -- valid_to = '9999-12-31' (never NULL). Lexical string comparison is
 -- chronologically correct because every stored value is full-date.
@@ -439,12 +439,12 @@ CREATE TABLE variable_state (
     data_length TEXT,
     delivery_column_name TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
-    -- §5.7 overlap discriminator (multi-vintage / grain / coding). NOT NULL
+    -- Overlap discriminator (multi-vintage / grain / coding). NOT NULL
     -- DEFAULT '' so the uniqueness index below bites in the common
     -- single-version case — SQLite treats NULLs as distinct, which would let
     -- duplicate non-multi-vintage states slip through. Mirrors '9999-12-31'.
     value_set_version_label TEXT NOT NULL DEFAULT '',
-    -- A2.7: §5.7 classification family for this era's value set. The coalescer
+    -- Classification family for this era's value set. The coalescer
     -- can't set it (it runs before `populate_classifications`); a build step
     -- backfills it after classifications + value-set minting, correlating each
     -- state to its constituent `variable_instance` rows by (variable_id,
@@ -465,7 +465,7 @@ CREATE INDEX idx_variable_state_variable
     ON variable_state(variable_id);
 CREATE INDEX idx_variable_state_register_variant
     ON variable_state(register_variant_id);
--- §5.1 state-uniqueness index — UNIQUE(variable_id, register_variant_id,
+-- State-uniqueness index — UNIQUE(variable_id, register_variant_id,
 -- valid_from, value_set_version_label). A4.3b moved it into the base DDL (was
 -- created by `_coalesce_variable_states` after SCB triage). Rationale: it is a
 -- structural invariant of the universal `variable_state` shape, not an SCB
@@ -517,7 +517,7 @@ CREATE TABLE variable_alias (
     -- The delivering variant. Lets `get_datacolumns` group columns per variant
     -- as it did off `variable_instance.register_variant_id`.
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
-    -- §5.11: `kolumnnamn` → `delivery_column_name`. The SCB delivery column
+    -- `kolumnnamn` → `delivery_column_name`. The SCB delivery column
     -- header (e.g. `PersonNr`, `Kon`, `LopNr_PersonNr`). SCB pseudonymizes
     -- identifier columns at delivery with the `LopNr_` prefix; the metadata
     -- stores the un-prefixed name.
@@ -528,7 +528,7 @@ CREATE TABLE variable_alias (
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
 -- Populated at build time from a maintainer-curated seed (classifications.toml)
 -- that maps raw variable_instance.vardemangdsversion labels to normalized
--- classification rows. See DESIGN.md § "Classifications".
+-- classification rows. See DESIGN.md → Classification seed.
 CREATE TABLE classification (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     short_name       TEXT NOT NULL UNIQUE,
@@ -546,7 +546,7 @@ CREATE TABLE classification (
     -- codes that never appeared in any observed instance still count, but
     -- observed-only noise codes inflate code_count.
     valid_code_count INTEGER,
-    -- A2.6.1: slug carries the vintage (version baked in, §5.2): 'sun2020',
+    -- Slug carries the vintage (version baked in): 'sun2020',
     -- 'lkf2007'. The classification FQID is the 2-segment `class/<slug>` —
     -- the standalone `version` column is gone (vintage lives in slug + name +
     -- valid_from/valid_to). UNIQUE, not NOT NULL: `populate_slugs` UPDATEs
@@ -571,7 +571,7 @@ CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 -- Enrichment tables
 CREATE TABLE value_code (
     code_id INTEGER PRIMARY KEY,
-    -- §5.11: SCB's `värdekod` / `värdebenämning` become universal `code` / `label`.
+    -- SCB's `värdekod` / `värdebenämning` become universal `code` / `label`.
     -- Values stay provider-native (SCB code strings like "01", "Man", "").
     code TEXT NOT NULL,
     label TEXT NOT NULL,
@@ -689,7 +689,7 @@ CREATE TABLE code_variable_map (
     PRIMARY KEY (code_id, variable_id)
 ) WITHOUT ROWID;
 
--- Curated cross-register / cross-provider equivalence edges (§5.5).
+-- Curated cross-register / cross-provider equivalence edges (see reg_meta/DESIGN.md → Composite registers and source tracking).
 -- **Variable grain**: endpoints are `(provider, register, variable)` slug
 -- triples. Slug-anchored (not cvid-anchored), so the link survives rebuilds
 -- even if provider IDs shift. Each TOML same_as entry becomes two rows
@@ -698,8 +698,8 @@ CREATE TABLE code_variable_map (
 -- A2.1.5 dropped the v0.11 `a_variant`/`b_variant` and `a_period`/`b_period`
 -- slots: a variable is register-scoped, so one edge covers every variant that
 -- delivers either variable, and period was never load-bearing for same_as
--- semantics — validity is implicit in both variables' state histories (§5.5).
--- (§5.5 also reserves a `note` column for curator annotations; not added here
+-- semantics — validity is implicit in both variables' state histories.
+-- (the same_as model also reserves a `note` column for curator annotations; not added here
 -- because the TOML same_as form carries no note field to populate it yet.)
 CREATE TABLE variable_same_as (
     a_provider     TEXT NOT NULL,
@@ -728,11 +728,11 @@ CREATE TABLE classification_same_as (
     )
 ) WITHOUT ROWID;
 
--- §5.5/§5.7 sibling edges (variable grain). A2.2 triage emits these between
+-- Sibling edges (variable grain). A2.2 triage emits these between
 -- the distinct `variable` rows a *split* produced (disjoint columns lumped
 -- under one source `var_id`): one variable per column, linked here so a
 -- consumer can discover "these are the same definition delivered as different
--- columns." Folds do NOT appear here — they stay one variable (§5.7). Stored
+-- columns." Folds do NOT appear here — they stay one variable. Stored
 -- in BOTH directions (like `variable_same_as`) so the a-side PK prefix serves
 -- `Catalog.related(x)` without a second b-side scan; the (N choose 2) sibling
 -- pairs each yield two rows. `relation_kind` reflects the split reason
@@ -754,7 +754,7 @@ CREATE TABLE variable_related_to (
     )
 ) WITHOUT ROWID;
 
--- A2.3: directional succession edges (§5.5). Auto-derived from SCB
+-- Directional succession edges. Auto-derived from SCB
 -- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
 -- `_materialize_replaced_by_edges`. Three sibling tables, one per entity grain
 -- (register / variant / variable). Slug-anchored so an edge survives rebuilds
@@ -829,7 +829,7 @@ CREATE TABLE variable_replaced_by (
 CREATE INDEX idx_variable_replaced_by_successor
     ON variable_replaced_by(successor_provider, successor_register, successor_variable);
 
--- §5.6 consumer-side binding lineage (STATE grain). Materialized by
+-- Consumer-side binding lineage (STATE grain; see DESIGN.md → Consumer-side lineage (variable_state_lineage)). Materialized by
 -- `link_variable_state_lineage`. One edge per (consumer_state, source_state)
 -- pair whose validity ranges intersect; (valid_from, valid_to) is the
 -- intersection. Source register comes from `variable.source_register_id`
@@ -882,7 +882,7 @@ CREATE TABLE import_manifest (
 """
 
 
-# Sibling provenance DB (REFACTOR_SPEC §4.4 / §5.8). Maintainer-only artifact;
+# Sibling provenance DB (see DESIGN.md → Provenance DB sibling). Maintainer-only artifact;
 # NOT shipped to consumers, and structurally outside the dbdiff gate — dbdiff
 # only ever opens the universal `reg_meta.db`, so populating this sibling file
 # is dbdiff-neutral by construction (A4.2). Sits next to the universal DB.
@@ -902,7 +902,7 @@ CREATE TABLE build_manifest (
     build_date TEXT NOT NULL
 );
 
--- Per-provider source-ID linkage (REFACTOR_SPEC §5.1/§5.8). For SCB the
+-- Per-provider source-ID linkage. For SCB the
 -- universal register_id IS the source RegisterId, so this records the native
 -- register name alongside it for maintainer debugging.
 CREATE TABLE scb_register_id_map (
@@ -1035,7 +1035,7 @@ def rotate_db_to_prev(db_path: Path) -> None:
     Used before the materializer writes the new universal DB / provenance
     DB so a single previous generation survives a rebuild. No auto-cleanup
     of older generations — maintainers `mv` the `.prev` aside if they
-    want to keep more than one (REFACTOR_SPEC §4.4 / §5.8).
+    want to keep more than one.
 
     No-op if `<db_path>` does not exist (first-ever build).
     """
@@ -1195,7 +1195,7 @@ def _empty_replaced_by_stats() -> dict[str, int]:
 
 
 def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
-    """Materialize §5.5 succession edges from `timeseries_event` (A2.3).
+    """Materialize succession edges from `timeseries_event`.
 
     Scans `timeseries_event` for `handelse IN ('Ersatt av', 'Ersätter')` on
     `entitet IN ('Register', 'RegisterVariant', 'AktuellVariabel', 'Variabel')`,
@@ -1210,7 +1210,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     produce a single edge.
 
     All three grains read STORED slug columns — `register.slug`,
-    `register_variant.slug`, and (A2.1.5 §5.3) `variable.slug`. The variable
+    `register_variant.slug`, and `variable.slug`. The variable
     grain is 3-part `(provider, register, variable)`: the two-level model put
     the variant out of the binding, so a cvid / var_id resolves to its
     register-scoped variable, not a variant-qualified one. (This is the core of
@@ -1257,7 +1257,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     Returns a stats dict for the manifest.
 
     TODO(A4): cross-provider edges (e.g. SOS→SCB) won't appear in SCB's
-    timeseries_event. The slug TOML form (§5.5) carries these as inline rows;
+    timeseries_event. The slug TOML form carries these as inline rows;
     wire that loader in alongside the SOS adapter work.
     """
     _progress("Materializing replaced_by edges from timeseries_event...")
@@ -1283,7 +1283,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     ).fetchall():
         variant_lookup[rvid] = (p_slug, r_slug, rv_slug)
 
-    # Variable grain reads the STORED `variable.slug` (A2.1.5 §5.3) — no
+    # Variable grain reads the STORED `variable.slug` — no
     # resolve-time derivation. `provider_key` is `str(var_id)`; cast it back to
     # the integer ids `timeseries_event` carries. Keyed by (register_id, var_id)
     # -> (provider, register, variable) slug triple.
@@ -1320,7 +1320,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     # cvid -> (provider, register, variable) slug triple, via the coalescer's
     # GROUND-TRUTH `variable_instance.variable_id` stamp (PR #150). An
     # AktuellVariabel row names one cvid, and its stamped owning variable_id
-    # picks the exact §5.7 split sibling directly — no column-tie, no ambiguity
+    # picks the exact split sibling directly — no column-tie, no ambiguity
     # skip. Excludes cvids whose variable carries no slug (→ unresolved).
     # Stream the cursor (no `.fetchall()`): the join spans every cvid (~515K on
     # the real corpus), so materializing the full row list before building the
@@ -1359,7 +1359,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         naming the skip counter ('unresolved' / 'ambiguous')."""
         if entitet == "AktuellVariabel":
             # A cvid names one instance; its coalescer-stamped owning variable_id
-            # (PR #150) resolves the exact §5.7 split sibling — no column-tie, no
+            # (PR #150) resolves the exact split sibling — no column-tie, no
             # ambiguity. Missing / unstamped / slug-less cvid → unresolved.
             triple = cvid_to_slug.get(raw_id)
             return (triple, None) if triple is not None else (None, "unresolved")
@@ -1595,7 +1595,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
 def _materialize_variable_related_to(
     conn: sqlite3.Connection, edges: list[tuple[int, int, str]]
 ) -> int:
-    """Insert §5.7 split-sibling edges (both directions) into
+    """Insert split-sibling edges (both directions) into
     `variable_related_to`. Runs after `populate_variable_slugs` so each
     `variable_id` resolves to its (provider, register, variable) slug FQID.
     Returns the row count inserted.
@@ -1661,7 +1661,7 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
     siblings share one `provider_key`). Each candidate row carries its OWNING
     `variable_id` (the SCB feed projects `variable_instance.variable_id`, stamped
-    by `_coalesce_variable_states` from the §5.7 triage's ground-truth
+    by `_coalesce_variable_states` from the triage's ground-truth
     assignment), so only that sibling's state gets the classification — no
     fan-out, no column-tie heuristic, no skip. (Contrast the old
     `(register_id, provider_key)` join, which fanned every cvid's classification
@@ -1813,7 +1813,7 @@ def _variable_set_via_same_as(
 ) -> set[str]:
     """Multi-seed BFS over variable-grain `variable_same_as`, returning the set
     of variable slugs *in `source_register`* equivalent to the consumer variable
-    (§5.6 "same_as on the source side").
+    (the "same_as on the source side").
 
     Two seed nodes, so all three equivalence kinds are covered:
       - the SOURCE-side identity node `(source_provider, source_register,
@@ -1822,8 +1822,8 @@ def _variable_set_via_same_as(
         reachable from it (RTB `kon` ↔ `kon-v2`);
       - the CONSUMER node `(consumer_provider, consumer_register,
         variable_slug)` — any curated cross-register / cross-provider `same_as`
-        edge whose endpoints have *different* slugs (LISA `foo` ↔ RTB `bar`,
-        §5.5), plus renames transitively reachable from the matched source node.
+        edge whose endpoints have *different* slugs (LISA `foo` ↔ RTB `bar`),
+        plus renames transitively reachable from the matched source node.
 
     The earlier single-seed form (source node only) silently missed the
     mismatched-slug cross-register edge — a latent gap while `variable_same_as`
@@ -1881,7 +1881,7 @@ def link_variable_state_lineage(
     conn: sqlite3.Connection,
     slug_dir: Path,
 ) -> dict[str, int]:
-    """Materialize §5.6 state-pair interval-overlap lineage edges.
+    """Materialize state-pair interval-overlap lineage edges.
 
     For every consumer `variable_state` whose variable has a populated
     `variable.source_register_id` (pointing at a *different* register), find
@@ -2011,7 +2011,7 @@ def link_variable_state_lineage(
         # curated edge needed); the multi-seed BFS additionally follows the
         # source register's own renames (RTB `kon` ↔ `kon-v2`) AND any curated
         # cross-register `same_as` edge whose slugs differ (LISA `foo` ↔ RTB
-        # `bar`, §5.5). The no-rename common case yields just {consumer_slug}.
+        # `bar`). The no-rename common case yields just {consumer_slug}.
         src_slugs = src_slugs_by_variable.get(variable_id)
         if src_slugs is None:
             src_slugs = _variable_set_via_same_as(
@@ -2177,7 +2177,7 @@ def link_variable_state_lineage(
 
 # Sentinels the universal DDL applies as NOT NULL DEFAULTs; the IR contract
 # carries None / open-ended, so the materializer reconciles them at the insert
-# site (plan §4 "None-to-sentinel reconciliation").
+# site ("None-to-sentinel reconciliation").
 _VALID_TO_SENTINEL = "9999-12-31"  # variable_state.valid_to open-ended
 _VALID_FROM_UNKNOWN = "0001-01-01"  # variable_state.valid_from start unknown
 
@@ -2319,7 +2319,7 @@ def _reinsert_core_graph_from_ir(
             for s in states
         ],
     )
-    # The §5.1 post-triage state-uniqueness index was created by the ACTIVE
+    # The post-triage state-uniqueness index was created by the ACTIVE
     # ADAPTER's coalescer (e.g. SCBAdapter, scb.py) on the now-deleted rows; the
     # DELETE above leaves the index in place, so it continues to bite on the
     # re-inserted rows (an INSERT collision raises — the same loud failure the
@@ -2415,7 +2415,7 @@ def materialize(
     # variable_state, value_set, value_code, value_set_member, variable_alias):
     # it INSERTs them from the IR stream with EXPLICIT PKs. The adapter still
     # derives SCB's exact legacy IDs by writing those rows to `conn` during
-    # emit() (strategy 2, plan §4 — reuse the proven A4.1 ID-derivation verbatim,
+    # emit() (strategy 2 — reuse the proven A4.1 ID-derivation verbatim,
     # only move WHERE the final rows land), and the IR mirror reads them back, so
     # the IR carries the exact IDs/content. `_reinsert_core_graph_from_ir` below
     # DELETEs the adapter-written core-graph rows and re-INSERTs them from the
@@ -2602,7 +2602,7 @@ def materialize(
             conn, seed, valid_codes_dir=valid_codes_dir
         )
 
-    # Slug TOMLs (§5.3): populate slug columns on register / register_variant /
+    # Slug TOMLs: populate slug columns on register / register_variant /
     # classification. Run after classifications so the classification table
     # is populated before its slugs are written.
     if skip_slugs:
@@ -2626,7 +2626,7 @@ def materialize(
             )
         populate_slugs(conn, slug_root, strict=True)
 
-        # A2.1.5 (§5.3): stored `variable.slug`. Runs after populate_slugs
+        # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),
         # but before materialize_same_as_edges (which reads the stored slug
@@ -2641,14 +2641,14 @@ def materialize(
             var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
         )
 
-        # §5.7 split-sibling edges. Runs after variable slugs so each
+        # Split-sibling edges. Runs after variable slugs so each
         # sibling variable_id resolves to its FQID slug; the triage emitted
         # the (variable_id, variable_id, kind) pairs during coalescing.
         n_related = _materialize_variable_related_to(conn, related_edges)
         row_counts["variable_related_to"] = n_related
         _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
 
-    # §5.5 same_as edges. Runs *after* populate_slugs so register /
+    # same_as edges. Runs *after* populate_slugs so register /
     # variant / version slug columns are populated — the materializer
     # validates target slugs against them. Skip-slugs takes the
     # honest-failure stance shared by the slug-keyed linkers below
@@ -2663,7 +2663,7 @@ def materialize(
             f"{sa_counts['classification']:,} classification same_as edges"
         )
 
-    # A2.3: §5.5 replaced_by edges. Runs *after* populate_variable_slugs
+    # replaced_by edges. Runs *after* populate_variable_slugs
     # (above) — every grain resolves off a stored slug column, and the
     # variable grain reads `variable.slug`. Under `--skip-slugs` those
     # columns are NULL, so the materializer would emit zero edges silently;
@@ -2675,7 +2675,7 @@ def materialize(
     else:
         replaced_by_stats = _materialize_replaced_by_edges(conn)
 
-    # §5.6 lineage edges. Runs *after* populate_variable_slugs so
+    # Lineage edges. Runs *after* populate_variable_slugs so
     # `variable.slug` is non-NULL on both sides. `source_register_id` was
     # populated by the Registerinformation.csv import far above.
     #
@@ -2690,7 +2690,7 @@ def materialize(
     if skip_slugs:
         _progress("Skipping variable_state lineage edges (skip_slugs=True)")
     else:
-        # A2.4 (§5.6): state-pair interval-overlap lineage. Ordering: after
+        # State-pair interval-overlap lineage. Ordering: after
         # populate_variable_slugs (reads variable.slug on both sides),
         # materialize_same_as_edges (the BFS reads variable_same_as), and
         # _coalesce_variable_states (reads the finished variable_state rows
@@ -2767,7 +2767,7 @@ def materialize(
     # `value_set_version_label`, AFTER the SCB adapter emits (so the adapter
     # cannot carry it on IRValueSet) — `variable_instance` is the home of SCB
     # classification linkage. Each cvid carries its OWNING `variable_id` (stamped
-    # by `_coalesce_variable_states` from the §5.7 triage's ground truth), so the
+    # by `_coalesce_variable_states` from the triage's ground truth), so the
     # projection below attributes each candidate to the right split sibling — no
     # column-tie heuristic, no fan-out. This is the VERBATIM SELECT the backfill
     # used to read directly off `variable_instance`; A4.4e moved it here so the
@@ -2820,7 +2820,7 @@ def materialize(
     # valid_from/to year fallback and the lineage linkers (`*_replaced_by`,
     # `link_variable_state_lineage`), all of which ran above; `population` /
     # `object_type` are write-only debug tables nothing in the shipped
-    # catalog reads. The FQID grammar no longer has a version segment (§5.2),
+    # catalog reads. The FQID grammar no longer has a version segment,
     # so none of these belong in the shipped DB. Drop order is FK-safe:
     # children (`population`, `object_type` FK `register_version`) first,
     # then the parent — `PRAGMA foreign_key_check` (below) flags children of
@@ -3015,7 +3015,7 @@ def build_db(
 
         adapters: list[tuple[Any, Path]] = []
         if "scb" in providers:
-            # §5.7 co-delivery curation (maintainer artifact, like the slug TOMLs):
+            # Co-delivery curation (maintainer artifact, like the slug TOMLs):
             # resolves genuine one-off same-column re-codings the coalescer cascade
             # leaves. SCB-only — loaded INSIDE this branch so a malformed/invalid
             # codelivery.toml can't fail an SOS-only build that never reads it.
@@ -3044,7 +3044,7 @@ def build_db(
         # are ALSO written to the sibling provenance DB (see write_provenance_db
         # below), but they STAY in the shipped import_manifest here so the
         # universal DB is byte-identical to the pre-A4 baseline and dbdiff stays
-        # exit-0. REFACTOR_SPEC §5.1/§5.8 move them OUT of import_manifest; that
+        # exit-0. The provenance-DB design moves them OUT of import_manifest; that
         # REMOVAL is deferred to A4.4+ (where the baseline stops being the gate).
         # Do not drop these two keys here without re-baselining.
         manifest_data = {
@@ -3137,7 +3137,7 @@ def build_db(
     _unlink_wal_sidecars(tmp_path)
 
     # Rotate the prior universal DB aside before the atomic replace
-    # (REFACTOR_SPEC §4.4 / §5.8: single-generation `.prev`, no auto-cleanup).
+    # (single-generation `.prev`, no auto-cleanup).
     rotate_db_to_prev(final_path)
     tmp_path.rename(final_path)
 

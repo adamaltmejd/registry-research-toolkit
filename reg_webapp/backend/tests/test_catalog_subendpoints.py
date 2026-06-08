@@ -6,10 +6,10 @@ Covers the 7 suffixed / sub-resource routes (`/states`, `/predecessors`,
 the catch-all (the `{states: [...]}` resolve_at shape), the read-only
 `?value_set_version` browse-narrowing label filter, and a per-DB-backed-route
 ThreadPoolExecutor concurrency smoke (the A5.1b-ii P1 cross-thread guard). (The
-`@version` FQID pin is retired — a bare leaf is the only form.) The §16 security
+`@version` FQID pin is retired — a bare leaf is the only form.) The security
 gate
-(malformed period/variant/traversal → 422 + zero SQL) lives in
-``test_fqid_validation.py``.
+(malformed period/variant/traversal → 422 + zero SQL; see DESIGN.md → FQID path
+guard (catalog_fqid.py)) lives in ``test_fqid_validation.py``.
 
 The ``catalog_db`` fixture seeds ``scb/lisa/kon`` with a same_as edge, a
 succession edge (kon→rams/syss), a related-to edge, a lineage edge (kon's state
@@ -201,7 +201,7 @@ def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
 )
 def test_subendpoint_rejects_at_version_pin(client, suffix: str):
     # The `@version` pin is retired — a binding leaf is a bare slug, so the `@` is a
-    # non-slug character the §16 path gate rejects (422) before the suffixed handler
+    # non-slug character the path gate rejects (422) before the suffixed handler
     # runs, on every sub-resource route.
     resp = client.get(f"/api/catalog/{_KON}@v1/{suffix}")
     assert resp.status_code == 422, f"{suffix} → {resp.status_code}"
@@ -249,7 +249,7 @@ def test_period_query_on_absent_binding_is_404(client):
 
 
 def test_period_query_ignored_on_non_binding(client):
-    # §9.5: the period query is IGNORED on non-binding kinds — a register still
+    # The period query is IGNORED on non-binding kinds — a register still
     # resolves to its full register node, not a states envelope.
     resp = client.get("/api/catalog/scb/lisa?period=2020")
     assert resp.status_code == 200
@@ -280,7 +280,7 @@ def test_value_set_version_query_alone_is_accepted(client):
 def test_value_set_version_query_accepts_a_free_text_label(client):
     # [A5.3b] ?value_set_version is matched against the FREE-TEXT
     # value_set_version_label (a Python filter, not SQL), so a real label with
-    # spaces/commas/case/non-ASCII must NOT be 422'd by the §16 gate (the old
+    # spaces/commas/case/non-ASCII must NOT be 422'd by the gate (the old
     # slug-grammar gate rejected every real label — the SPA's version picker).
     resp = client.get(
         f"/api/catalog/{_KON}",
@@ -294,7 +294,7 @@ def test_value_set_version_query_accepts_a_free_text_label(client):
 
 
 def test_value_set_version_query_rejects_control_chars(client):
-    # The §16 sanity gate still 422s a NUL/control char (smuggling vector).
+    # The sanity gate still 422s a NUL/control char (smuggling vector).
     resp = client.get(
         f"/api/catalog/{_KON}",
         params={"period": "2020", "value_set_version": "bad\x00label"},
@@ -334,7 +334,7 @@ def test_narrowing_modifier_without_period_is_422(client, url: str):
 
 def test_inverted_period_range_is_422_not_500(client):
     # `2021..2020` is a syntactically valid range (two valid period tokens) so the
-    # §16 allow-list admits it, but resolve_at rejects lo>hi with a USAGE error.
+    # the allow-list admits it, but resolve_at rejects lo>hi with a USAGE error.
     # That's client input → 422, NOT an uncaught-RegMetaError 500.
     resp = client.get(f"/api/catalog/{_KON}?period=2021..2020")
     assert resp.status_code == 422, f"inverted range → {resp.status_code}"

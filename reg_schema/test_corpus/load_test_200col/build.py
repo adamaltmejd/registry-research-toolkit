@@ -12,7 +12,7 @@ overrides. Used by two consumers:
 
 - ``reg_monabundle/tests/test_bundle_size_budget.py`` embeds this fixture
   into ``build_bundle(..., project_data=...)`` and asserts the emitted
-  ``.py`` stays under ``REFACTOR_SPEC.md`` §12's 1 MB v1 cap. The size
+  ``.py`` stays under the 1 MB v1 cap (see ARCHITECTURE.md → Repo-wide invariants). The size
   budget gate fires only on real regressions; today's bundle on this
   fixture is well under cap (the v1 ceiling is forward-looking, not a
   tight bound on current shape). Its ``LOAD_FIXTURE_EXPECTED_COLUMNS``
@@ -37,7 +37,7 @@ HERE = Path(__file__).resolve().parent
 # bindings total. Mirrors the shape of a real-MONA project: a few LISA
 # yearly extracts, a couple of LOUISE years, two RTB siblings — broadly
 # the kit a labour-market researcher would request. Under Model A the
-# period lives in its own field, not as a 4th FQID segment (§6.2).
+# period lives in its own field, not as a 4th FQID segment.
 SOURCES: tuple[tuple[str, str, int], ...] = (
     ("lisa_2015", "scb/lisa/individer-15plus", 2015),
     ("lisa_2016", "scb/lisa/individer-15plus", 2016),
@@ -53,7 +53,7 @@ SOURCES: tuple[tuple[str, str, int], ...] = (
 # numeric, ~3 date, ~4 categorical-ad-hoc, ~2 opaque. The mix exercises
 # every binding-type code path in the validator and the bundle slicer.
 # ``value_set`` classification FQIDs are 2-segment, version baked into
-# the slug (§5.2): ``class/sun2020``, not the old ``class/sun/2020``.
+# the slug (see reg_meta/DESIGN.md → FQID grammar): ``class/sun2020``, not the old ``class/sun/2020``.
 BINDING_TEMPLATES: tuple[tuple[str, str, dict[str, str | None]], ...] = (
     ("lopnr", "id", {"id_subtype": "integer"}),
     ("kon", "categorical", {"value_set": "class/sun2020"}),
@@ -87,9 +87,9 @@ assert len(BINDING_TEMPLATES) == 25, "expected 25 binding templates per source"
 def _provider_register(register_variant: str) -> str:
     """The ``<provider>/<register>`` prefix that scopes a source's bindings.
 
-    A binding FQID is ``<provider>/<register>/<slug>`` (3 segments, §6.3);
+    A binding FQID is ``<provider>/<register>/<slug>`` (3 segments);
     its first 2 segments must equal the source ``register_variant`` prefix.
-    The variant segment is dropped — it lives once on the Source (§6.2).
+    The variant segment is dropped — it lives once on the Source.
     """
     provider, register, _variant = register_variant.split("/")
     return f"{provider}/{register}"
@@ -133,7 +133,7 @@ def build() -> dict[str, object]:
 
     # One panel linking the LISA years by person-id. ``entity_key``
     # must match a ``display_name`` on every member source (structural
-    # validator §6.4 cross-reference rule), so it uses the value
+    # validator cross-reference rule), so it uses the value
     # ``_display_name("lopnr")`` produces.
     panel = {
         "panel_id": "lisa_panel",
@@ -149,7 +149,7 @@ def build() -> dict[str, object]:
     # ~15 ``suppress_k`` overrides — categorical bindings where the
     # researcher wants a tighter k-anonymity floor than the global
     # default. Spread across registers so the block exercises lookup
-    # paths. Block keys are 3-segment binding FQIDs (§6.1).
+    # paths. Block keys are 3-segment binding FQIDs.
     binding_options: dict[str, dict[str, int]] = {}
     for _source_name, register_variant, _period in SOURCES:
         prefix = _provider_register(register_variant)
