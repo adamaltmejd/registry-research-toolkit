@@ -1,9 +1,11 @@
-"""`POST /api/bundle` — MONA bundle build (§9.5, A5.2b-ii).
+"""`POST /api/bundle` — MONA bundle build (A5.2b-ii).
 
+See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
 Covers the verified 3-call reuse chain (validate_project_data →
 project_data_to_loadedspec → build_bundle): a valid project → 200
 ``application/octet-stream`` non-empty bytes; determinism (pure function of
-input — the §16 bundle-determinism property); a build-gate failure (bad input)
+input — the bundle-determinism property, see reg_monabundle/DESIGN.md → Bundle
+determinism); a build-gate failure (bad input)
 → 422; and a concurrency smoke test (each build uses its own
 ``TemporaryDirectory``, so concurrent builds must not collide).
 
@@ -38,11 +40,11 @@ def unthrottled_client(compatible_db):
 def _valid_spec() -> dict:
     """A structurally + build-gate valid project. NB: the bundle build is reg_meta
     -free, so the binding FQIDs need only be well-formed (no DB resolution) — the
-    build gate is the §6.8.1 structural + §6.8.2 block + step-4 capability checks,
-    not the §6.8.3 semantic layer. ``display_name`` is REQUIRED here: the step-4
+    build gate is the structural + block + step-4 capability checks,
+    not the semantic layer. ``display_name`` is REQUIRED here: the step-4
     capability gate (``project_data_to_loadedspec``) rejects a binding without one
     because reg_meta default-resolution doesn't run in the reg_meta-free bundle
-    path (it lands in §15 step 6) — so a bundle spec must carry explicit names."""
+    path — so a bundle spec must carry explicit names."""
     return {
         "schema_version": "2.0.0",
         "steward": "ifau",
@@ -78,7 +80,7 @@ def test_valid_project_returns_octet_stream_bytes(client):
 
 
 def test_bundle_is_deterministic(client):
-    """Pure function of input: same spec → byte-identical bundle (§16)."""
+    """Pure function of input: same spec → byte-identical bundle."""
     a = client.post("/api/bundle", json=_valid_spec()).content
     b = client.post("/api/bundle", json=_valid_spec()).content
     assert a == b
@@ -143,8 +145,8 @@ def test_tempfile_cleanup(client, tmp_path, monkeypatch):
 
 
 def test_bundle_preserves_steward_namespaced_block(client):
-    """The bundle embeds the RAW dict, so a steward-namespaced block (§6.8.2 —
-    here a ``swecov`` block) survives into the embedded project_data.json. A typed
+    """The bundle embeds the RAW dict, so a steward-namespaced block (a
+    ``swecov`` block) survives into the embedded project_data.json. A typed
     ``ProjectData`` body (``extra="ignore"``) would silently DROP it, so the bundle
     wouldn't faithfully reproduce the submitted spec (the panel's P2)."""
     import json

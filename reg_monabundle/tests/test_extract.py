@@ -924,11 +924,13 @@ def test_extract_year_falls_back_to_name_regex():
 
 
 def test_main_raises_on_structurally_invalid_sidecar_project_data(tmp_path: Path):
-    # §9.6: the sidecar extract path (``main`` -> ``load_project_data``) does
+    # Per DESIGN.md → The two halves, the sidecar extract path
+    # (``main`` -> ``load_project_data``) does
     # NOT structurally re-validate — that's the bundle-build gate's job
     # (``spec_loader.validate_project_data``), not an on-MONA step. A
     # structurally-invalid spec the gate would have rejected (here: an
-    # unknown ``type`` outside the §6.3 enum) therefore flows past the loader
+    # unknown ``type`` outside the schema type enum) therefore flows past the
+    # loader
     # and surfaces as a runtime error deep in extract, not a clean
     # "structural validation" message. The contract here is just that the
     # run fails loudly and writes no stats file — authoring-time validation
@@ -950,7 +952,7 @@ def test_main_raises_on_structurally_invalid_sidecar_project_data(tmp_path: Path
                         {
                             "variable": "scb/test/x",
                             "display_name": "x",
-                            "type": "blob",  # invalid: outside the §6.3 enum
+                            "type": "blob",  # invalid: outside the schema type enum
                         }
                     ],
                 }

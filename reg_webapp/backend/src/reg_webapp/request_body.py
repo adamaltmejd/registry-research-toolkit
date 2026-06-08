@@ -1,10 +1,13 @@
-"""Raw JSON request-body reader for the project-WRITE endpoints (§9.5).
+"""Raw JSON request-body reader for the project-WRITE endpoints.
+
+See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
 
 ``POST /api/project/validate`` and ``POST /api/bundle`` both read the body as a
 RAW dict rather than a typed Pydantic body: ``/validate`` must DIAGNOSE a malformed
 spec (a typed body would make FastAPI 422 the very inputs it exists to report), and
 ``/bundle`` must EMBED the spec verbatim — including steward-namespaced blocks
-(``swecov`` / ``reg_mockdata``, §6.8.2) that the ``ProjectData`` model drops
+(``swecov`` / ``reg_mockdata`` — see reg_monabundle/DESIGN.md → The two halves)
+that the ``ProjectData`` model drops
 (``extra="ignore"``). So both share this reader, which json.loads the body
 ourselves and maps a malformed REQUEST (non-JSON, duplicate key, non-object,
 pathologically nested) to a 4xx — distinct from a well-formed object that simply
@@ -29,8 +32,9 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     with a duplicated field would validate against the wrong (last-wins) value.
     Fires at every nesting depth (the hook runs per object). We own a webapp-local
     copy rather than importing ``reg_monabundle.runtime.spec._reject_duplicate_keys``:
-    that module is the MONA-amalgamated runtime, off-limits per the §9.6 import
-    boundary (and the import-graph test)."""
+    that module is the MONA-amalgamated runtime, off-limits per the import
+    boundary (the lightweight/runtime split — see reg_monabundle/DESIGN.md → The
+    two halves; enforced by the import-graph test)."""
     seen: dict[str, Any] = {}
     for key, value in pairs:
         if key in seen:
@@ -48,8 +52,8 @@ async def read_raw_json_object(request: Request) -> dict[str, Any]:
     non-JSON, a duplicate key, a non-object top level, or a pathologically nested
     body. ``RecursionError`` (a ``RuntimeError``, NOT a ``ValueError`` /
     ``JSONDecodeError``) is caught explicitly — a deeply-nested array that fits
-    under the body-size cap would otherwise escape as a 500 (a §16 write-side
-    input crash)."""
+    under the body-size cap would otherwise escape as a 500 (a write-side
+    input crash — see DESIGN.md → input-validation gates (security boundary))."""
     raw_bytes = await request.body()
     try:
         parsed = json.loads(raw_bytes, object_pairs_hook=_reject_duplicate_keys)

@@ -1,15 +1,17 @@
 """Runtime deserializer: ``project_data.json`` dict -> ``LoadedSpec``.
 
-This module is the **bundle-runtime** side of the §9.6 boundary. It is
-amalgamated into the MONA bundle, so it carries **no Pydantic and no
-``reg_schema``** — only stdlib + the sibling runtime modules. It reads
-an already-validated ``project_data.json`` dict (REFACTOR_SPEC.md §6),
-deserializes it into stdlib ``@dataclass`` instances, and exposes the
-``(source_name, display_name)``-keyed lookup surface that extract /
-sources / summarize consume.
+This module is the **bundle-runtime** side of the boundary (see
+DESIGN.md → The two halves). It is amalgamated into the MONA bundle, so
+it carries **no Pydantic and no ``reg_schema``** — only stdlib + the
+sibling runtime modules. It reads an already-validated
+``project_data.json`` dict (see reg_schema/DESIGN.md → Two layers:
+models vs. validator), deserializes it into stdlib ``@dataclass``
+instances, and exposes the ``(source_name, display_name)``-keyed lookup
+surface that extract / sources / summarize consume.
 
-Structural validation does **not** run here. Per §6.8.1 + §9.6, the
-bundle on MONA trusts its embedded (or sidecar) JSON: the full Pydantic
+Structural validation does **not** run here. The bundle on MONA trusts
+its embedded (or sidecar) JSON (see reg_schema/DESIGN.md → Structural
+rules and issue codes; DESIGN.md → The two halves): the full Pydantic
 ``reg_schema`` structural validator runs once at **bundle-build time**
 (``reg_monabundle.build.spec_loader.validate_project_data``), which is
 the gate that refuses to amalgamate a structurally broken spec. The
@@ -25,7 +27,7 @@ dataclass tree carrying only the fields the on-MONA pipeline reads.
 ``sources._probe_and_promote_opaque`` writes into. The frozen dataclass
 tree cannot host that mutation; the cache is the only mutation path.
 
-Step 4 capability gates (REFACTOR_SPEC.md §15) — these are *runtime*
+Step 4 capability gates — these are *runtime*
 rejections, NOT structural validation:
 
 - Composite ``entity_key`` / ``time_key`` (tuple-shaped) and
@@ -37,13 +39,13 @@ rejections, NOT structural validation:
   neither, and adding the resolver here would bleed scope.
 - Every column must carry a ``display_name``. The schema marks it
   optional because the webapp materializes defaults from reg_meta at
-  bundle-build time (§6.3 + §7); that pipeline lands in §15 step 6.
+  bundle-build time; that pipeline is not yet built.
 
 The cross-block referential checks (orphan FQID,
 suppress_k-on-non-categorical) are **not** here — they need FQID-typed
 bindings and run at bundle-build time in
 ``reg_monabundle.build.spec_loader``. The bundle trusts the embedded
-JSON and does not re-check them (§9.6).
+JSON and does not re-check them (see DESIGN.md → The two halves).
 """
 
 from __future__ import annotations
@@ -274,7 +276,8 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 def _require(data: Mapping[str, Any], key: str, *, context: str) -> Any:
     """Read a required key, raising a contextual ``ValueError`` if absent.
 
-    The bundle trusts a build-validated spec (§9.6), so this is not
+    The bundle trusts a build-validated spec (see DESIGN.md → The two
+    halves), so this is not
     structural validation. But the MONA sidecar ``project_data.json`` is
     a researcher hand-edit surface: a missing required key should fail
     with an actionable message naming the offending path, not a bare
@@ -292,11 +295,11 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Bin
     """Deserialize a runtime ``Binding`` from a JSON dict, requiring display_name.
 
     The schema marks ``display_name`` optional because the webapp
-    pre-resolves defaults from reg_meta at bundle-build time
-    (REFACTOR_SPEC.md §6.3 + §7). ``mock_data_wizard`` runs without
-    reg_meta in the extract loop, so every binding must already carry a
-    ``display_name``. The bundle pre-resolve pipeline lands at §15
-    step 6; until then, hand-write ``display_name`` on every binding.
+    pre-resolves defaults from reg_meta at bundle-build time.
+    ``mock_data_wizard`` runs without reg_meta in the extract loop, so
+    every binding must already carry a ``display_name``. The bundle
+    pre-resolve pipeline is not yet built; until then, hand-write
+    ``display_name`` on every binding.
 
     Also rejects ``type == "datetime"``: reg_schema accepts datetime
     bindings but the mdw extract/summarize/generate stack has no
@@ -313,14 +316,14 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Bin
             f"only handle {sorted(COLUMN_TYPES)!r}). Use type='date' for "
             f"date-only columns or split timestamps into separate date + "
             f"time columns. End-to-end datetime support is a separate "
-            f"workstream from §15 step 4."
+            f"workstream."
         )
     display_name = data.get("display_name")
     if not display_name:
         raise ValueError(
             f"{ctx} is missing "
             f"display_name; every binding must carry display_name in "
-            f"step 4 (reg_meta resolution of defaults lands in §15 step 6)"
+            f"step 4 (reg_meta resolution of defaults is not yet built)"
         )
     return Binding(
         variable=_require(data, "variable", context=ctx),
@@ -350,7 +353,7 @@ def _reject_composite(
         raise ValueError(
             f"panels[{panel_id!r}]{member}.{field_name} is composite; "
             f"runtime support for composite entity_key / time_key lands "
-            f"in §15 step 10b. Step 4 supports scalar keys only."
+            f"in REFACTOR_SPEC.md step 10b. Step 4 supports scalar keys only."
         )
 
 
@@ -363,7 +366,7 @@ def _reject_literal_period(
         raise ValueError(
             f"panels[{panel_id!r}]{member}.time_key uses the "
             f"{{'period': ...}} literal form; LiteralPeriod runtime "
-            f"support lands in §15 step 10b. Step 4 accepts int or "
+            f"support lands in REFACTOR_SPEC.md step 10b. Step 4 accepts int or "
             f"str (column ref) only."
         )
 
@@ -371,10 +374,12 @@ def _reject_literal_period(
 def _build_panel_member(
     member: Mapping[str, Any] | str, *, panel_id: str, idx: int
 ) -> PanelMember:
-    # §6.4 bare-string shorthand: a string member names the source and relies
-    # on panel-level / variant-inherited key defaults. reg_schema's structural
-    # layer accepts it (effective-key *presence* is a reg_meta concern,
-    # §6.8.1), and the runtime builds from the raw JSON dict where members may
+    # Bare-string shorthand (see reg_schema/DESIGN.md → Structural rules and
+    # issue codes): a string member names the source and relies on panel-level
+    # / variant-inherited key defaults. reg_schema's structural layer accepts
+    # it (effective-key *presence* is a reg_meta concern — see
+    # reg_schema/DESIGN.md → Effective-key presence is not structural), and the
+    # runtime builds from the raw JSON dict where members may
     # still be bare strings, so normalize to the object form and let the
     # time_key check below raise the actionable ValueError — not an
     # AttributeError on a str.
@@ -392,7 +397,7 @@ def _build_panel_member(
         raise ValueError(
             f"{member_ctx}.entity_key override is "
             f"not supported in step 4; set entity_key at the panel level. "
-            f"Per-member overrides land in §15 step 10b."
+            f"Per-member overrides land in REFACTOR_SPEC.md step 10b."
         )
     if time_key is None:
         # Old runtime required every member to carry time_key; panel-level
@@ -417,7 +422,7 @@ def _build_panel(data: Mapping[str, Any], *, idx: int) -> Panel:
     if not isinstance(entity_key, str) or not entity_key:
         raise ValueError(
             f"panels[{panel_id!r}].entity_key must be a non-empty string "
-            f"in step 4 (composite entity_key support lands in §15 step 10b)"
+            f"in step 4 (composite entity_key support lands in REFACTOR_SPEC.md step 10b)"
         )
     if time_key is not None:
         # Panel-level time_key default isn't honored by the step-4
@@ -425,7 +430,7 @@ def _build_panel(data: Mapping[str, Any], *, idx: int) -> Panel:
         raise ValueError(
             f"panels[{panel_id!r}].time_key (panel-level default) is "
             f"not honored by the step-4 runtime; set time_key on each "
-            f"member instead. Panel-level defaults land in §15 step 10b."
+            f"member instead. Panel-level defaults land in REFACTOR_SPEC.md step 10b."
         )
     members = tuple(
         _build_panel_member(m, panel_id=panel_id, idx=i)
@@ -455,11 +460,12 @@ def _build_project_data(payload: Mapping[str, Any]) -> ProjectData:
 def loadedspec_from_dict(payload: Mapping[str, Any]) -> LoadedSpec:
     """Deserialize a ``LoadedSpec`` from a parsed JSON dict (bundle-load path).
 
-    No **structural** validation runs here (§6.8.1 / §9.6): the bundle
+    No **structural** validation runs here (see reg_schema/DESIGN.md →
+    Structural rules and issue codes; DESIGN.md → The two halves): the bundle
     trusts its embedded / sidecar JSON because bundle-build already ran the
     Pydantic structural gate via
     ``reg_monabundle.build.spec_loader.validate_project_data``. But the
-    **§6.8.2 namespaced-block validator** (``validate_block`` — option keys +
+    **namespaced-block validator** (``validate_block`` — option keys +
     the suppress_k floor) IS pure-stdlib and runs at bundle LOAD time on MONA
     too (same code, amalgamated), so it is re-checked here. The step-4 runtime
     capability gates in ``_build_*`` likewise still raise on shapes the on-MONA
@@ -475,7 +481,8 @@ def load_project_data(directory: Path) -> LoadedSpec | None:
     Returns ``None`` when the file is absent. Raises on duplicate JSON
     keys or runtime-capability rejections (composite keys, datetime,
     missing display_name, …). Does **not** structurally re-validate:
-    the sidecar file is trusted input on MONA (§9.6) — structural
+    the sidecar file is trusted input on MONA (see DESIGN.md → The two
+    halves) — structural
     validation is the bundle-build gate.
     """
     path = Path(directory) / PROJECT_DATA_FILENAME

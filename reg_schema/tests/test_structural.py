@@ -1,7 +1,7 @@
-"""Tests for the §6.8.1 structural validator (Model A grammar).
+"""Tests for the structural validator (Model A grammar).
 
 Issue ``code`` values are pinned: they are stable across releases and
-the SPA maps them to UI affordances (§6.8.0). Renames here would break
+the SPA maps them to UI affordances. Renames here would break
 downstream consumers.
 
 The validator runs against a parsed dict, not the Pydantic models, so
@@ -9,7 +9,7 @@ fixtures are JSON-shaped (lists not tuples, raw strings). The
 ``_spec()`` helper builds a minimum-viable, all-rules-pass payload
 that tests then mutate to exercise individual rules.
 
-Model A (§6.2-§6.3): a source carries a 3-part ``register_variant``
+Model A: a source carries a 3-part ``register_variant``
 coordinate plus a required ``period``; bindings (renamed from the v0.x
 ``columns``) name a 3-segment binding FQID via ``variable`` and a
 2-segment ``class/<slug>`` ``value_set``.
@@ -197,10 +197,10 @@ def test_duplicate_source_name() -> None:
 
 
 def test_display_name_collision_within_source() -> None:
-    # §6.3: two bindings on the same source sharing an explicit
+    # Two bindings on the same source sharing an explicit
     # display_name must produce display_name_collision. The implicit-
     # resolution case (one explicit + one resolving to the same
-    # reg_meta default) needs reg_meta and is §6.8.3.
+    # reg_meta default) needs reg_meta and is a semantic check.
     spec = _spec()
     # _spec()'s two bindings already have distinct display_names; set
     # the second to match the first.
@@ -248,7 +248,7 @@ def test_register_variant_wrong_segment_count_is_invalid_fqid() -> None:
 
 def test_register_variant_with_period_segment_is_invalid_fqid() -> None:
     # The v0.x 4-segment register_version (period in slot 4) is no longer
-    # accepted — period lives in its own field now (§6.2).
+    # accepted — period lives in its own field now.
     spec = _spec()
     spec["sources"][0]["register_variant"] = "scb/lisa/individer-15plus/2018"
     result = validate_structural(spec)
@@ -269,7 +269,7 @@ def test_register_variant_bad_chars_rejected() -> None:
     assert _at(result, "invalid_fqid") == ["/sources/0/register_variant"]
 
 
-# --- Period (§6.2) ------------------------------------------------------
+# --- Period -------------------------------------------------------------
 
 
 def test_period_int_year_is_ok() -> None:
@@ -452,7 +452,7 @@ def test_binding_variable_class_prefix_rejected() -> None:
 
 
 def test_binding_variable_version_suffix_is_invalid_fqid() -> None:
-    # @version was retired (§6.8.3): a value set is resolved from
+    # @version was retired: a value set is resolved from
     # ``(variable, variant, period)``, never pinned on the FQID. The ``@`` is
     # now a stray character the per-segment grammar rejects.
     spec = _spec()
@@ -534,7 +534,7 @@ def test_value_set_missing_class_prefix_is_invalid_fqid() -> None:
 
 def test_binding_value_set_is_ok() -> None:
     # A well-formed ``class/<slug>`` value_set passes the structural layer; the
-    # binding FQID carries no version pin to cross-check against (§6.8.3 — the
+    # binding FQID carries no version pin to cross-check against (the
     # value set is resolved from the variant/period, and the retired @version
     # mismatch rule is gone).
     spec = _spec()
@@ -733,17 +733,17 @@ def test_panel_string_member_inherits_panel_defaults() -> None:
 
 
 def test_panel_string_member_missing_panel_defaults_is_not_structural() -> None:
-    # Effective-key *presence* is no longer a structural rule (§6.8.1):
+    # Effective-key *presence* is no longer a structural rule:
     # an omitted entity_key/time_key inherits from the member's variant
     # panel_template, which needs reg_meta — so the "no effective key"
-    # case is the semantic `panel_inheritance_unresolvable` check
-    # (§6.8.3), not emitted here.
+    # case is the semantic `panel_inheritance_unresolvable` check,
+    # not emitted here.
     spec = _spec_with_panels(members=["lisa_2018"])  # no panel time_key
     spec["panels"][0].pop("time_key", None)
     spec["panels"][0].pop("entity_key", None)
     result = validate_structural(spec)
     assert result.ok, result.issues
-    # Pin the §6.8.1 removal: neither removed code is emitted any more.
+    # Pin the structural-rule removal: neither removed code is emitted any more.
     assert "missing_effective_time_key" not in _codes(result)
     assert "missing_effective_entity_key" not in _codes(result)
 
@@ -756,7 +756,7 @@ def test_duplicate_panel_id() -> None:
 
 
 def test_same_panel_duplicate_source_does_not_fire_cross_panel_collision() -> None:
-    # The §6.4 "at most one panel" rule is cross-panel. Two members of
+    # The "at most one panel" rule is cross-panel. Two members of
     # one panel sharing a source is a degenerate panel, not a
     # cross-panel collision — firing the code here would lie.
     spec = _spec_with_panels()
@@ -867,7 +867,7 @@ def test_literal_period_object_form_accepted() -> None:
 
 
 def test_time_range_object_form_accepted() -> None:
-    # The {"range": {"from","to"}} TimePoint wrapper (§6.4) is a valid
+    # The {"range": {"from","to"}} TimePoint wrapper is a valid
     # literal time_key — distinct from a bare {"from","to"} period.
     spec = _spec_with_panels()
     spec["panels"][0]["members"] = [
@@ -986,7 +986,7 @@ def test_composite_entity_key_ordering_inconsistent() -> None:
 def test_member_composite_time_key_kind_mismatch() -> None:
     # Panel-level composite time_key is a literal composite; the
     # member override is a column-ref composite. Cross-kind composite
-    # overrides are rejected by §6.8.1.
+    # overrides are rejected by the structural validator.
     spec = _spec_with_panels(time_key=[2018, 2019])
     spec["panels"][0]["members"][1]["time_key"] = ["AR", "AR"]
     result = validate_structural(spec)
@@ -996,7 +996,7 @@ def test_member_composite_time_key_kind_mismatch() -> None:
 def test_member_composite_kind_mismatch_does_not_also_fire_inconsistent() -> None:
     # A composite override whose kind differs from the panel-level
     # composite kind is a kind mismatch, not an ordering inconsistency.
-    # Feeding the cross-kind tuple into the §6.8.1 ordering check would
+    # Feeding the cross-kind tuple into the ordering check would
     # double-fire `composite_key_inconsistent` (a ref tuple can never
     # equal a canonicalized literal tuple) and leak the internal literal
     # canonical form into the message. Only the kind-mismatch code fires.
@@ -1032,7 +1032,7 @@ def test_panel_must_have_at_least_one_member() -> None:
 
 
 def test_panel_comment_must_be_string_when_present() -> None:
-    # `comment` is documented as string in §6.4; accepting non-strings
+    # `comment` is documented as a string; accepting non-strings
     # here would let structurally invalid specs through and break
     # downstream consumers that treat comments as text.
     spec = _spec_with_panels()

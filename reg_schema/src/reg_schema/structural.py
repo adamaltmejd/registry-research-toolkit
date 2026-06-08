@@ -1,8 +1,9 @@
-"""Structural validator for ``project_data.json`` (REFACTOR_SPEC.md §6.8.1).
+"""Structural validator for ``project_data.json`` (see DESIGN.md → Structural rules and issue codes).
 
 Pure-stdlib, reg_meta-free. The entrypoint operates on a parsed dict
-(typically ``json.loads(...)`` output), not on the §6.1-§6.4
-dataclasses, because rules like "type is one of the enum values" must
+(typically ``json.loads(...)`` output), not on the model-layer
+dataclasses (see DESIGN.md → Two layers: models vs. validator), because
+rules like "type is one of the enum values" must
 fire on raw JSON values before any ``Literal`` cast — the dataclass
 constructors deliberately don't enforce them (see ``project_data.py``).
 
@@ -13,7 +14,7 @@ checked locally (segment count + per-segment chars) rather than
 importing reg_meta — keeps the dependency direction one-way and the
 duplicated surface tight.
 
-Issue ``code`` values are stable across releases (§6.8.0): tests pin
+Issue ``code`` values are stable across releases (see DESIGN.md → Structural rules and issue codes): tests pin
 codes; the SPA maps them to UI affordances; new codes are additive.
 """
 
@@ -28,7 +29,7 @@ from typing import Any, get_args
 from .project_data import ColumnType, IdSubtype, NumericSubtype, Steward
 from .validation import ValidationIssue, ValidationResult
 
-# Mirror the §6.1-§6.4 Literal types at runtime so the structural layer
+# Mirror the model Literal types (see DESIGN.md → Two layers: models vs. validator) at runtime so the structural layer
 # can't drift from the dataclass declarations. Same drift-protection
 # pattern as ``IssueLevel`` in ``validation.py``. Adding a fourth
 # steward is a single-point edit in ``project_data.py``.
@@ -79,7 +80,7 @@ _PANEL_KEYS: frozenset[str] = frozenset(
 _PANEL_MEMBER_KEYS: frozenset[str] = frozenset({"source", "entity_key", "time_key"})
 
 # Subtype/format fields are only valid on the matching column type
-# (§6.3). Mapping a field to its owning type keeps the per-field check
+# (see DESIGN.md → Structural rules and issue codes). Mapping a field to its owning type keeps the per-field check
 # uniform regardless of which subtype the spec adds next.
 _SUBTYPE_FIELDS: dict[str, str] = {
     "id_subtype": "id",
@@ -92,10 +93,10 @@ _SUBTYPE_FIELDS: dict[str, str] = {
 # underscore. Wide enough to cover kebab-case slugs (``individer-15plus``),
 # the ``_default`` reserved slug, and the version-baked classification
 # slugs (``sun2020``). Under Model A the period is no longer an FQID
-# segment (§6.2) — it is the ``Source.period`` field, checked separately by
+# segment (see reg_meta/DESIGN.md → FQID grammar) — it is the ``Source.period`` field, checked separately by
 # ``_check_period``. This layer only checks a segment is non-empty and free
 # of stray characters. The value set is determined by the resolved
-# ``(variable, variant, period)`` (§6.8.3), never pinned on the FQID, so a
+# ``(variable, variant, period)`` (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)), never pinned on the FQID, so a
 # binding leaf is a bare slug — there is no ``@version`` suffix to split off.
 _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
@@ -104,13 +105,14 @@ _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
 def validate_structural(data: Mapping[str, object]) -> ValidationResult:
-    """Run §6.8.1 structural rules against ``data``.
+    """Run structural rules against ``data``.
 
     Accepts a ``Mapping`` (typically a dict from ``json.loads``).
     Returns a ``ValidationResult`` whose ``issues`` capture every
     structural problem found. The result is dependency-free: nothing
-    here consults reg_meta. Semantic resolution (§6.8.3) and
-    namespaced-block validation (§6.8.2) are owned by other layers.
+    here consults reg_meta. Semantic resolution (see reg_webapp/DESIGN.md
+    → Semantic validation (semantic.py)) and namespaced-block validation
+    (see DESIGN.md → Not in scope (intentionally)) are owned by other layers.
     """
 
     issues: list[ValidationIssue] = []
@@ -151,8 +153,9 @@ def _check_unexpected_keys(
 ) -> None:
     """Emit ``unexpected_field`` for each key on a CLOSED object not in ``allowed``.
 
-    Mirrors the ``extra="forbid"`` config on the §6.1-§6.4 ``_Model``
-    subclasses (``Source`` / ``Binding`` / ``Panel`` / ``PanelMember``): a
+    Mirrors the ``extra="forbid"`` config on the ``_Model``
+    subclasses (``Source`` / ``Binding`` / ``Panel`` / ``PanelMember``; see
+    DESIGN.md → Two layers: models vs. validator): a
     typo'd or unknown key on one of those objects is a structural error, not
     a silently-ignored extra. The top level (``ProjectData``) is
     ``extra="ignore"`` and is handled separately by
@@ -237,11 +240,11 @@ def _segments_well_formed(segments: list[str]) -> bool:
 
 
 def _is_register_variant_coord(value: object) -> bool:
-    """A 3-part variant coordinate ``<provider>/<register>/<variant>`` (§5.2).
+    """A 3-part variant coordinate ``<provider>/<register>/<variant>`` (see reg_meta/DESIGN.md → FQID grammar).
 
     Not an FQID *kind* (the variant is not addressable as an FQID), but the
     same 3-part grammar. The structural layer only checks shape; resolution
-    to a real ``variant`` row is reg_meta's job (§6.8.3).
+    to a real ``variant`` row is reg_meta's job (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)).
     """
     if not isinstance(value, str):
         return False
@@ -252,9 +255,9 @@ def _is_register_variant_coord(value: object) -> bool:
 def _parse_binding_fqid(value: object) -> list[str] | None:
     """Parse a binding FQID into ``[provider, register, slug]``.
 
-    3-segment ``<provider>/<register>/<slug>`` (§5.2): the FQID names the
+    3-segment ``<provider>/<register>/<slug>`` (see reg_meta/DESIGN.md → FQID grammar): the FQID names the
     variable; its value set is determined by the resolved ``(variable, variant,
-    period)`` (§6.8.3), not pinned on the FQID. Returns the three parts, else
+    period)`` (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)), not pinned on the FQID. Returns the three parts, else
     ``None`` (wrong arity, a ``class/`` prefix, or a stray character — including
     the retired ``@`` version delimiter, which ``_FQID_TOKEN`` rejects).
     """
@@ -277,7 +280,7 @@ def _is_classification_fqid(value: object) -> bool:
     return len(segs) == 2 and segs[0] == "class" and _segments_well_formed(segs)
 
 
-# --- Period grammar (§6.2) ----------------------------------------------
+# --- Period grammar -----------------------------------------------------
 
 # Period-token grammar: bare year, year-month, full date, Swedish terms
 # (HT/VT), quarters, half-years. The bounds (year 1900-2099, month 01-12,
@@ -331,7 +334,7 @@ def _is_period_endpoint(value: object) -> bool:
 
 
 def _is_period_range_obj(value: object) -> bool:
-    """A bare ``{"from": ..., "to": ...}`` range with period-token endpoints (§6.2).
+    """A bare ``{"from": ..., "to": ...}`` range with period-token endpoints.
 
     Single definition of the range shape, shared by ``Source.period``
     (``_check_period``) and the ``TimeKey`` ``{"range": ...}`` wrapper
@@ -347,7 +350,7 @@ def _is_period_range_obj(value: object) -> bool:
 
 
 def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> None:
-    """Validate ``Source.period`` (§6.2): int / period-token / range / sentinel."""
+    """Validate ``Source.period``: int / period-token / range / sentinel."""
     path = f"{base}/period"
     if _is_period_endpoint(period) or period == "_default":
         return
@@ -451,9 +454,10 @@ def _check_top_level_fields(
 def _check_namespaced_blocks(
     data: Mapping[str, object], issues: list[ValidationIssue]
 ) -> None:
-    # Any non-baseline top-level key is treated as a namespaced block
-    # (§6.1). The owning package validates contents (§6.8.2); the
-    # structural layer only checks the block is an object.
+    # Any non-baseline top-level key is treated as a namespaced block.
+    # The owning package validates contents (see DESIGN.md → Not in
+    # scope (intentionally)); the structural layer only checks the block is
+    # an object.
     #
     # DELIBERATE: the TOP LEVEL stays OPEN. ``ProjectData`` is
     # ``extra="ignore"`` (project_data.py) precisely so steward-namespaced
@@ -529,7 +533,7 @@ def _check_source(
             seen_names[name] = index
 
     # The variant coordinate's first 2 segments (provider/register) scope
-    # every binding's FQID prefix (§6.3). The variant segment itself is NOT
+    # every binding's FQID prefix. The variant segment itself is NOT
     # repeated on bindings, so only the 2-seg prefix is the cross-field key.
     rv_prefix: list[str] | None = None
     if _present_and_not_null(
@@ -581,10 +585,11 @@ def _check_source(
         )
         return
 
-    # Per-source explicit-display_name collisions (§6.3
-    # `display_name_collision`). The other half of the spec — one
-    # explicit + one resolving to the same reg_meta default — needs
-    # reg_meta and lives in §6.8.3.
+    # Per-source explicit-display_name collisions (`display_name_collision`;
+    # see DESIGN.md → Structural rules and issue codes). The other half of
+    # the spec — one explicit + one resolving to the same reg_meta default —
+    # needs reg_meta and lives in the semantic layer (see reg_webapp/DESIGN.md
+    # → Semantic validation (semantic.py)).
     seen_display_names: dict[str, str] = {}
     for j, binding in enumerate(bindings):
         bbase = f"{base}/bindings/{j}"
@@ -752,12 +757,12 @@ def _is_literal_period_obj(value: object) -> bool:
     period = value["period"]
     # The object form's job is to disambiguate a literal period from a bare
     # column ref; unlike Source.period, the string's period-token validity is
-    # NOT grammar-checked here — that is a reg_meta semantic concern (§6.8.3).
+    # NOT grammar-checked here — that is a reg_meta semantic concern (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)).
     return _is_int_literal(period) or isinstance(period, str)
 
 
 def _is_time_range_obj(value: object) -> bool:
-    """The ``{"range": {"from", "to"}}`` TimePoint form (§6.4).
+    """The ``{"range": {"from", "to"}}`` TimePoint form.
 
     Distinct from a bare ``{"from", "to"}`` (which is legal only as a
     ``Source.period``): the ``range`` wrapper keeps the ``TimePoint`` union
@@ -1151,8 +1156,8 @@ def _check_panel(
     for mi, member in enumerate(members):
         _check_panel_member(member, f"{base}/members/{mi}", scope, issues)
 
-    # Cross-member composite ordering consistency (§6.8.1). Scalar keys
-    # may differ across members (the "heterogeneous" example in §6.4),
+    # Cross-member composite ordering consistency. Scalar keys
+    # may differ across members (the "heterogeneous" example),
     # so only composite-vs-composite mismatches fire.
     _check_composite_consistency(scope.composite_entities, "entity_key", issues)
     _check_composite_consistency(scope.composite_times, "time_key", issues)
@@ -1241,15 +1246,16 @@ def _check_panel_member(
         )
         return
 
-    # NOTE: effective-key *presence* is no longer a structural rule (§6.8.1).
+    # NOTE: effective-key *presence* is no longer a structural rule.
     # Under Model A an omitted entity_key/time_key inherits from the member's
-    # variant `panel_template` (§6.4), which needs reg_meta — so the
+    # variant `panel_template`, which needs reg_meta — so the
     # "no effective key" case is the semantic `panel_inheritance_unresolvable`
-    # check (§6.8.3), raised by kit/bundle-build, not here. A `None` eff_entity
+    # check (see DESIGN.md → Semantic codes — defined, not emitted by
+    # reg_schema), raised by kit/bundle-build, not here. A `None` eff_entity
     # / eff_time simply has no refs to check below.
 
     # Member-vs-panel composite kind match: only fires when both panel
-    # default and member override are composite time_keys (§6.4 — scalar
+    # default and member override are composite time_keys (scalar
     # kind mixing across members is permitted).
     member_composite_kind_mismatch = (
         member_time_key_overridden
@@ -1296,7 +1302,7 @@ def _check_panel_member(
             tup = canonical[1] if isinstance(canonical, tuple) else ()  # type: ignore[assignment]
         scope.composite_times.append((eff_time_path, tup))
 
-    # Literal time_key uniqueness within the panel (§6.8.1).
+    # Literal time_key uniqueness within the panel.
     if eff_time_kind in ("literal_scalar", "literal_composite"):
         canon = _canonicalize_time_literal(eff_time)
         if canon is not None:
@@ -1335,7 +1341,7 @@ def _check_panel_member(
             )
         return
 
-    # Cross-panel source-collision (§6.4 "at most one panel"). Two
+    # Cross-panel source-collision ("at most one panel"). Two
     # members of the *same* panel sharing a source is a different
     # condition (probably a degenerate panel) — don't fire this code
     # for that, otherwise the path-shaped error message lies about
@@ -1354,7 +1360,7 @@ def _check_panel_member(
 
     # Column-ref existence against the member's source. Skip when any
     # column on the source has display_name absent — the bare ref may
-    # resolve to a reg_meta-derived default later (§6.3).
+    # resolve to a reg_meta-derived default later.
     if not entry["all_have_display"]:
         return
     display_names: set[str] = entry["display_names"]

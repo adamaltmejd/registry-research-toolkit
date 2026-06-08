@@ -1,15 +1,15 @@
-"""Steward configuration loader (§9.1).
+"""Steward configuration loader.
 
-A steward is configured by ``reg_webapp/stewards/<id>/``:
+See DESIGN.md → Steward layering and the in-memory catalog index (stewards.py +
+catalog_index.py). A steward is configured by ``reg_webapp/stewards/<id>/``:
 
 - ``steward.toml`` — identity and branding (required).
 - ``steward.project_data.json`` — the catalog filter (optional). Its
-  *absence* selects full-universe mode — the special ``global`` deployment
-  (§9.1).
+  *absence* selects full-universe mode — the special ``global`` deployment.
 
 ``load_steward`` reads ``steward.toml`` (identity) and detects the project
 file's presence. ``load_catalog_index`` (A5.2b-i) actually parses + validates
-that project file against a live reg_meta ``Catalog`` and builds the §9.1
+that project file against a live reg_meta ``Catalog`` and builds the
 in-memory index — called once at FastAPI startup with the boot connection (see
 ``app.py``). The two are split because index-building needs the reg_meta DB,
 which only exists once the lifespan opens it.
@@ -36,7 +36,7 @@ if TYPE_CHECKING:
 
     from .catalog_index import CatalogIndex
 
-# stewards/ is a sibling of backend/ and frontend/ (REFACTOR_SPEC §9). The
+# stewards/ is a sibling of backend/ and frontend/ (see DESIGN.md → Layout). The
 # default resolves it relative to this module — parents[3] is the reg_webapp/
 # root — which holds for the source/workspace layout (tests, `uv run`, the
 # OpenAPI dumper). A wheel/Docker image packages only src/reg_webapp, where that
@@ -62,7 +62,7 @@ DEFAULT_STEWARD_ID = "global"
 
 def _selected_steward_id() -> str:
     """Which steward this process serves. Static per deployment (one Docker image
-    fronts one steward; dynamic Host-header dispatch is a later concern, §9.1).
+    fronts one steward; dynamic Host-header dispatch is a later concern).
     ``REG_WEBAPP_STEWARD`` overrides the ``global`` default — mirrors the
     ``REG_META_DB`` / ``REG_WEBAPP_STEWARDS_DIR`` env-override pattern and is the
     seam the boot tests use to select a filtered steward. Read at call time (not
@@ -72,8 +72,10 @@ def _selected_steward_id() -> str:
 
 class StewardCatalogError(ValueError):
     """A steward's committed ``steward.project_data.json`` is itself broken —
-    malformed JSON or a STRUCTURAL (§6.8.1) violation. Distinct from reg_meta
-    *drift* (§6.8.3 semantic warnings), which does NOT raise: drift is a
+    malformed JSON or a STRUCTURAL (see reg_schema/DESIGN.md → Structural rules
+    and issue codes) violation. Distinct from reg_meta *drift* (semantic
+    warnings, see DESIGN.md → Semantic validation (semantic.py)), which does NOT
+    raise: drift is a
     steward-vs-reg_meta version skew the deployment boots through (bindings drop,
     warnings surface). A structural break is a misconfigured deployment — fail
     fast (CLAUDE.md), it can't be reasoned about as drift."""
@@ -139,7 +141,7 @@ def load_steward(steward_id: str | None = None, *, root: Path | None = None) -> 
 def load_catalog_index(
     steward: Steward, catalog: Catalog, *, root: Path | None = None
 ) -> CatalogIndex | None:
-    """Load + validate ``steward.project_data.json`` and build the §9.1 index.
+    """Load + validate ``steward.project_data.json`` and build the index.
 
     Returns ``None`` for the ``global`` deployment (``has_catalog_filter=False``)
     — no filter, reg_meta's full universe. Otherwise:
@@ -152,11 +154,11 @@ def load_catalog_index(
        builds);
     4. run ``validate_semantic`` in **steward-caller** mode — ``fqid_unresolved``
        / ``value_set_missing`` / ``period_outside_state_validity`` are downgraded
-       to ``warning`` (§6.8.3), so reg_meta drift does NOT crash startup;
+       to ``warning``, so reg_meta drift does NOT crash startup;
     5. build the index, DROPPING bindings the validator warned on, and carry the
        warnings for ``/api/context``.
 
-    ⚠️ Boot-availability (§6.8.3): a steward catalog referencing an FQID reg_meta
+    ⚠️ Boot-availability: a steward catalog referencing an FQID reg_meta
     no longer admits must still BOOT. The steward-mode downgrade keeps
     ``result.ok`` True even when bindings drop, so we key on the WARNINGS list
     (not ``.ok``) — ``build_catalog_index`` drops the flagged bindings and the
@@ -196,7 +198,7 @@ def load_catalog_index(
             f"failed model construction (an unrecognized or invalid field?): {exc}"
         ) from exc
 
-    # Steward-caller mode: the three §6.8.3 reg_meta-DRIFT codes downgrade
+    # Steward-caller mode: the three reg_meta-DRIFT codes downgrade
     # error→warning so the deployment boots through reg_meta evolution (those
     # bindings drop from the index + surface as drift; ok stays True). Any OTHER
     # remaining error — e.g. a bare binding_value_set_version_ambiguous the steward

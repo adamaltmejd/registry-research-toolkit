@@ -1,13 +1,14 @@
-"""ETag / Cache-Control middleware for the read endpoints (§9.4).
+"""ETag / Cache-Control middleware for the read endpoints.
 
 DRY alternative to per-handler header wiring: one ASGI middleware stamps the
-§9.4 ``ETag`` + ``Cache-Control`` headers on every GET read response and turns a
+``ETag`` + ``Cache-Control`` headers (see DESIGN.md → ETag / Cache-Control
+(etag.py + middleware.py)) on every GET read response and turns a
 matching ``If-None-Match`` into a 304. Centralizing it here keeps the route
 handlers free of caching boilerplate and guarantees the scheme is uniform across
 ``/api/context``, the ``/api/catalog`` root, the catch-all, and the 7 suffixed
 sub-endpoints (the read surface A5.2a-ii ships).
 
-Skips WRITE endpoints (§9.4: ``/api/project/*``, ``/api/bundle``
+Skips WRITE endpoints (``/api/project/*``, ``/api/bundle``
 do NOT set ETag) — those land in A5.2b. We gate on the request METHOD: only
 ``GET`` reads are cacheable; any other method is passed through untouched. (The
 routes register GET only — FastAPI's ``@router.get`` does not auto-add HEAD, so a
@@ -38,7 +39,7 @@ if TYPE_CHECKING:
 
     from starlette.requests import Request
 
-# Only GET reads get the §9.4 read-cache treatment; everything else (the A5.2b
+# Only GET reads get the read-cache treatment; everything else (the A5.2b
 # write endpoints) passes through with no ETag. HEAD is intentionally NOT here:
 # the routes register GET only, so a HEAD 405s before reaching this middleware —
 # listing it would be a dead branch claiming support the routes don't provide.
@@ -46,7 +47,7 @@ _CACHEABLE_METHODS = frozenset({"GET"})
 
 
 class ETagMiddleware(BaseHTTPMiddleware):
-    """Stamp §9.4 ETag + Cache-Control on GET reads; 304 on If-None-Match match."""
+    """Stamp ETag + Cache-Control on GET reads; 304 on If-None-Match match."""
 
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]

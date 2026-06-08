@@ -1,4 +1,4 @@
-"""Tests for the Catalog children-enumeration API (A5.1b-i, §5.10).
+"""Tests for the Catalog children-enumeration API (A5.1b-i; see DESIGN.md → Catalog API surface).
 
 `list_providers` / `list_registers` / `list_bindings` back the webapp's
 catalog browse tree. They return thin slug-ordered Summary lists; an unknown

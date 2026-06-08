@@ -986,8 +986,8 @@ def _group_instances_by_codes(
 ) -> dict[str, Any]:
     """Bucket instances by their (code, label) set so callers don't have to
     scroll through dozens of rows of identical codes. Used when a (variable,
-    year) lookup hits multiple distinct value sets. Keys follow the §5.11
-    rename from `(vardekod, vardebenamning)`.
+    year) lookup hits multiple distinct value sets. Keys follow the glossary rename (see DESIGN.md → Glossary and Swedish↔English
+    crosswalk) from `(vardekod, vardebenamning)`.
     """
     buckets: dict[tuple, list[dict[str, Any]]] = {}
     for inst in instances:
@@ -1542,7 +1542,7 @@ def _write_payload(
                                 "data_type": col.get("data_type", ""),
                                 "aliases": col.get("aliases", ""),
                                 "source": col.get("source", ""),
-                                # A2.6: per-column §5.7 vintage label ('' for
+                                # A2.6: per-column vintage label, see reg_meta_build/DESIGN.md → Build-time triage (SCB) ('' for
                                 # ordinary columns; e.g. sni92/sni2007 for a
                                 # folded variable's two states in one window).
                                 "vintage": col.get("value_set_version_label", ""),

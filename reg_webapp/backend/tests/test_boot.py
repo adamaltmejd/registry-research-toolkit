@@ -1,9 +1,10 @@
 """Boot-path guards: schema-mismatch rejection + the catalog catch-all invariant.
 
 A5.1a shipped NO `:path` catch-all (asserted negatively). A5.1b-ii legitimately
-adds the `/api/catalog/{fqid:path}` catch-all behind the §16 per-segment guard,
+adds the `/api/catalog/{fqid:path}` catch-all behind the per-segment guard (see
+DESIGN.md → FQID path guard (catalog_fqid.py)),
 so this test is INVERTED on purpose: it now asserts the catch-all IS present and
-LAST among the catalog routes, and that the §16 guard runs before any DB access
+LAST among the catalog routes, and that the guard runs before any DB access
 (a traversal probe 422s with zero SQL).
 """
 
@@ -28,7 +29,8 @@ def test_startup_rejects_incompatible_schema(mismatched_db):
 
 _CATCH_ALL = "/api/catalog/{fqid:path}"
 
-# §9.5 (A5.2a-ii): the 7 suffixed / sub-resource routes that MUST be declared
+# Router ordering (A5.2a-ii, see DESIGN.md → Catalog router structure): the 7
+# suffixed / sub-resource routes that MUST be declared
 # BEFORE the `{fqid:path}` catch-all — Starlette matches in declaration order and
 # the `{fqid:path}` converter greedy-consumes any suffix into `fqid`, so any of
 # these declared after the catch-all would never fire. Six are `{fqid:path}/...`
@@ -66,7 +68,7 @@ def test_catalog_catch_all_route_present_and_last():
 
 
 def test_suffixed_routes_declared_before_catch_all():
-    # §9.5 `routes_declared_before`: every suffixed / sub-resource route is
+    # `routes_declared_before`: every suffixed / sub-resource route is
     # declared BEFORE the `{fqid:path}` catch-all. This is the CI regression guard
     # the spec calls for — a future route added after the catch-all (or the
     # catch-all moved up) is caught here, not in production as a silently-shadowed
@@ -83,7 +85,8 @@ def test_suffixed_routes_declared_before_catch_all():
 
 
 def test_reserved_slug_set_mirrors_catalog_routes():
-    # §5.2 drift guard (#228): the reserved-slug sets in reg_meta.fqid exist ONLY
+    # Reserved-slug drift guard (#228, see reg_meta/DESIGN.md → FQID grammar): the
+    # reserved-slug sets in reg_meta.fqid exist ONLY
     # to stop a slug from shadowing one of these catalog sub-resource routes, so
     # the two MUST stay in lockstep. If a future route is added/removed in
     # `_ROUTES_BEFORE_CATCH_ALL` without updating the reserved set (or vice
@@ -118,7 +121,7 @@ def test_reserved_slug_set_mirrors_catalog_routes():
 
 
 def test_section16_guard_runs_before_resolution(catalog_db):
-    # The §16 per-segment guard must reject a traversal probe BEFORE any Catalog
+    # The per-segment guard must reject a traversal probe BEFORE any Catalog
     # query — 422 with zero SQL executed (full coverage lives in
     # test_fqid_validation.py; this is the boot-level smoke).
     count = [0]

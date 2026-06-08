@@ -3,7 +3,8 @@
 Covers ``loadedspec_from_dict`` (dict -> ``LoadedSpec``), the ``LoadedSpec``
 lookup surface, the step-4 runtime capability rejections, and the
 ``load_project_data`` sidecar path. **No structural validation runs at
-this layer** (§9.6) — the build-time validation gate lives in
+this layer** (see DESIGN.md → The two halves) — the build-time validation
+gate lives in
 ``reg_monabundle.build.spec_loader`` and is exercised in
 ``test_spec_loader.py``.
 """
@@ -117,7 +118,7 @@ def test_loaded_spec_lookup_options_unknown_returns_empty_dict():
 
 
 def test_loadedspec_from_dict_enforces_suppress_k_floor_at_load():
-    # §6.8.2: the reg_monabundle namespaced-block validator (validate_block —
+    # The reg_monabundle namespaced-block validator (validate_block —
     # option keys + suppress_k floor) is pure-stdlib and runs at bundle LOAD
     # time on MONA too, not only at the build-time gate. loadedspec_from_dict
     # must reject a below-floor suppress_k (review P2 on #157).
@@ -296,8 +297,9 @@ def test_panel_level_time_key_rejected_with_step_10b_message():
 
 
 def test_bare_string_panel_member_without_time_key_raises_clean_error():
-    # §6.4 bare-string member shorthand passes reg_schema's structural
-    # validator (effective-key *presence* is reg_meta-backed, §6.8.1), so it
+    # Bare-string member shorthand passes reg_schema's structural
+    # validator (effective-key *presence* is reg_meta-backed — see
+    # reg_schema/DESIGN.md → Effective-key presence is not structural), so it
     # reaches _build_panel_member. The step-4 runtime must reject it with the
     # actionable "missing time_key" ValueError, not an AttributeError on a str
     # (Codex P2 on PR #155). The runtime builds from the raw JSON dict, so
@@ -387,7 +389,8 @@ def test_datetime_column_type_rejected_with_actionable_message():
 # -- Missing required keys: contextual ValueError, not bare KeyError --------
 #
 # The MONA sidecar project_data.json is a researcher hand-edit surface
-# (§9.6). A missing required key in any _build_* deserializer must fail
+# (see DESIGN.md → The two halves). A missing required key in any _build_*
+# deserializer must fail
 # with an actionable, path-naming ValueError rather than a bare KeyError
 # from a subscript deep in deserialization (A3.4 review P3).
 
@@ -489,7 +492,8 @@ def test_load_project_data_rejects_duplicate_keys(tmp_path: Path):
 
 
 def test_load_project_data_does_not_structurally_validate(tmp_path: Path):
-    # §9.6: the sidecar file is trusted input on MONA — load_project_data
+    # Per DESIGN.md → The two halves, the sidecar file is trusted input on
+    # MONA — load_project_data
     # deserializes but does NOT structurally re-validate. A spec missing a
     # required top-level field (``steward``) that the build-time gate would
     # reject loads fine here (the runtime reads only sources/panels/
@@ -505,7 +509,8 @@ def test_load_project_data_does_not_structurally_validate(tmp_path: Path):
 
 def test_load_project_data_surfaces_deserialization_errors(tmp_path: Path):
     # A binding missing its required ``variable`` key is a dataclass-
-    # deserialization failure. §9.6: the runtime errors with a stdlib
+    # deserialization failure. Per DESIGN.md → The two halves, the runtime
+    # errors with a stdlib
     # exception on a broken embedded spec; it does not produce a structured
     # validation report. The MONA sidecar is a hand-edit surface, so the
     # missing key surfaces as a contextual ValueError naming the offending

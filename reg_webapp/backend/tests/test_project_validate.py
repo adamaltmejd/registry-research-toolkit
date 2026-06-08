@@ -1,9 +1,10 @@
-"""`POST /api/project/validate` against the slugged ``catalog_db`` fixture (§9.5).
+"""`POST /api/project/validate` against the slugged ``catalog_db`` fixture.
 
-Covers the §6.8.0 status discipline that defines this endpoint:
+See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
+Covers the status discipline that defines this endpoint:
 
 - a clean spec → 200 ``ok=true`` ``issues=[]``;
-- an unresolvable FQID → 200 ``ok=false`` + the §6.8.3 semantic issue (NOT 4xx —
+- an unresolvable FQID → 200 ``ok=false`` + the semantic issue (NOT 4xx —
   a validation failure is a successful validation RESPONSE);
 - an extra/typo key on a CLOSED nested object (Source/Binding/Panel/member) →
   200 with the structural ``unexpected_field`` issue (NOT 500; the top-level
@@ -36,7 +37,7 @@ def client(catalog_db):
 
 @pytest.fixture
 def unthrottled_client(catalog_db):
-    """A client whose app has the §9.4 rate limit raised out of the way, so the
+    """A client whose app has the rate limit raised out of the way, so the
     cross-thread CONCURRENCY smoke test can fire >30 requests/min from one IP
     without the limiter (correctly) 429ing them. The limiter is still in the
     stack — its own behavior is covered in ``test_write_limits.py``."""
@@ -76,7 +77,7 @@ def test_clean_spec_is_ok(client):
 
 
 def test_unresolvable_fqid_is_200_not_4xx(client):
-    """A binding FQID reg_meta doesn't admit → 200 with ``ok=false`` + the §6.8.3
+    """A binding FQID reg_meta doesn't admit → 200 with ``ok=false`` + the semantic
     ``fqid_unresolved`` issue. This is the load-bearing status discipline: a
     validation FAILURE is a successful validation RESPONSE (200), not a 4xx."""
     spec = _clean_spec()
@@ -230,7 +231,8 @@ def test_deeply_nested_json_is_400_not_500(client):
     """A deeply-nested JSON body (well-formed, small, under the 1 MB cap) makes
     json.loads raise RecursionError — a RuntimeError, NOT a ValueError/
     JSONDecodeError. It must map to a malformed REQUEST (400), not escape as a 500
-    (a §16 write-side input crash on attacker-controlled input)."""
+    (a write-side input crash on attacker-controlled input — see DESIGN.md →
+    input-validation gates (security boundary))."""
     body = b"[" * 50_000 + b"]" * 50_000  # ~100 KB, depth 50k
     resp = client.post(
         "/api/project/validate",
@@ -243,7 +245,7 @@ def test_deeply_nested_json_is_400_not_500(client):
 def test_invalid_utf8_body_is_400_not_500(client):
     """Invalid UTF-8 bytes make json.loads raise UnicodeDecodeError — a ValueError
     subclass, so the shared reader's `except ValueError` maps it to 400, not a 500
-    (a §16 write-side input crash). Pinned because the coverage is non-obvious (the
+    (a write-side input crash). Pinned because the coverage is non-obvious (the
     except clauses don't NAME UnicodeDecodeError)."""
     resp = client.post(
         "/api/project/validate",
@@ -254,7 +256,7 @@ def test_invalid_utf8_body_is_400_not_500(client):
 
 
 def test_three_layer_concatenation(client):
-    """The response issue list concatenates the three §6.8.0 layers (no merge).
+    """The response issue list concatenates the three layers (no merge).
     Feed a spec that trips structural (bad period token) AND semantic
     (unresolvable value_set) and assert codes from BOTH layers appear in the one
     200 list."""
@@ -277,7 +279,7 @@ def test_three_layer_concatenation(client):
 
 def test_block_layer_runs_even_when_structural_passes(client):
     """A structurally-clean spec with a broken ``reg_monabundle`` block → the
-    block layer fires its ``invalid_block`` issue (the §6.8.2 layer is composed
+    block layer fires its ``invalid_block`` issue (the block layer is composed
     in regardless of the structural outcome)."""
     spec = _clean_spec()
     spec["reg_monabundle"] = {"unknown_key": 1}

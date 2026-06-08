@@ -1,6 +1,7 @@
 """Tests for ``reg_monabundle.build.spec_loader`` (the build-time gate).
 
-``spec_loader`` is the Pydantic side of the §9.6 boundary — it runs the
+``spec_loader`` is the Pydantic side of the boundary (see DESIGN.md →
+The two halves) — it runs the
 full ``reg_schema`` structural validator, the ``reg_monabundle``
 namespaced-block validator, and the cross-block referential checks, then
 converts a validated Pydantic ``ProjectData`` into the stdlib
@@ -88,7 +89,7 @@ def test_validate_project_data_accepts_valid_spec():
 #
 # Per-rule validator coverage lives in
 # reg_monabundle/tests/test_validate_block.py alongside the validator
-# (§15 step 5 phase 1 — owner-validates-its-block). The tests here
+# (owner-validates-its-block). The tests here
 # exercise the namespaced-block validator routing + the cross-block
 # referential checks (``_validate_binding_options_against_columns``) that
 # need the FQID-typed bindings — both run at the build-time gate.
@@ -249,13 +250,14 @@ def test_binding_options_rejects_suppress_k_on_non_categorical(col, suffix):
         validate_project_data(payload)
 
 
-# -- conversion boundary (§9.6) -------------------------------------------
+# -- conversion boundary (see DESIGN.md → The two halves) -----------------
 
 
 def test_project_data_to_loadedspec_round_trips_with_loadedspec_from_dict():
     """A validated Pydantic ProjectData converts to a LoadedSpec whose
     lookup surface matches deserializing the same dict directly. This is
-    the §9.6 conversion boundary — the build-time Pydantic side and the
+    the conversion boundary (see DESIGN.md → The two halves) — the
+    build-time Pydantic side and the
     runtime dataclass side must agree."""
     payload = make_project_data(
         sources=[
@@ -449,7 +451,7 @@ def test_block_issue_translates_unknown_key_raise():
     assert issue.code == BLOCK_INVALID_CODE
     assert issue.level == "error"
     assert issue.path == "/reg_monabundle"
-    # Verbatim validate_block message text (the §6.8.2 raise).
+    # Verbatim validate_block message text (the namespaced-block raise).
     assert "unknown key" in issue.message
 
 

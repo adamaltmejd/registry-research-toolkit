@@ -11,16 +11,18 @@ The bundle is self-contained — only stdlib + duckdb + pyodbc + numpy
 (all pre-installed on the WinPython distribution shipped with MONA's
 batch client; see ``DESIGN.md`` for the runtime probe results).
 
-§9.6 boundary: the bundle carries **no Pydantic and no ``reg_schema``**.
-Structural validation (§6.8.1) is the **bundle-build gate**, not an
-on-MONA step — but it does NOT run inside ``build_bundle`` (which only
-embeds the JSON it is given). **Callers** (the mdw CLI, ``reg_webapp``)
-run ``reg_monabundle.build.spec_loader.validate_project_data`` (the full
+Boundary (see DESIGN.md → The two halves): the bundle carries **no
+Pydantic and no ``reg_schema``**. Structural validation (see
+reg_schema/DESIGN.md → Structural rules and issue codes) is the
+**bundle-build gate**, not an on-MONA step — but it does NOT run inside
+``build_bundle`` (which only embeds the JSON it is given). **Callers**
+(the mdw CLI, ``reg_webapp``) run
+``reg_monabundle.build.spec_loader.validate_project_data`` (the full
 Pydantic ``reg_schema`` validator) on the spec *before* calling
 ``build_bundle``. The bundle's runtime deserializes the embedded /
 sidecar JSON into a stdlib ``LoadedSpec`` via ``spec.loadedspec_from_dict``
 and does **not** re-run structural validation (it does re-run the
-pure-stdlib §6.8.2 block validator). ``reg_schema`` is therefore never
+pure-stdlib block validator). ``reg_schema`` is therefore never
 amalgamated; the source-scan gate in ``test_build_mona_bundle.py``
 enforces the no-Pydantic invariant.
 
@@ -29,7 +31,7 @@ Each module's docstrings (module-, class-, and function-level) and all
 preserve comments, and ``_slice_module`` strips the leading
 string-literal statement from the module body and from every nested
 class / function body. Class/method docstrings carry no import, so they
-never affected the §9.6 boundary — but several mentioned ``reg_schema``
+never affected the boundary — but several mentioned ``reg_schema``
 / Pydantic, so dropping them keeps the artifact text-clean (and slightly
 smaller). The repo source remains the documentation; the bundle is the
 artifact.
@@ -77,13 +79,14 @@ DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 # ``extract``) call ``write_export``.
 #
 # ``validate`` IS amalgamated (see ``REG_MONABUNDLE_MODULE_ORDER`` below):
-# the §6.8.2 namespaced-block validator (``validate_block`` — option keys +
+# the namespaced-block validator (``validate_block`` — option keys +
 # suppress_k floor, pure-stdlib, reg_schema-free) re-runs on MONA at bundle
-# LOAD time per §6.8.2, and ``runtime/spec.py`` does ``from reg_monabundle
-# import validate_block``. (The §6.8.1 STRUCTURAL validator is a separate,
-# build-time-only gate in ``spec_loader`` — reg_schema/Pydantic, never
-# amalgamated.) Do not remove ``validate`` from the module order: dropping
-# it would break the on-MONA block check and the runtime ``spec`` import.
+# LOAD time, and ``runtime/spec.py`` does ``from reg_monabundle
+# import validate_block``. (The STRUCTURAL validator — see reg_schema/DESIGN.md
+# → Structural rules and issue codes — is a separate, build-time-only gate in
+# ``spec_loader`` — reg_schema/Pydantic, never amalgamated.) Do not remove
+# ``validate`` from the module order: dropping it would break the on-MONA
+# block check and the runtime ``spec`` import.
 #
 # Derive from the package, not ``__file__``: this module now lives in
 # ``reg_monabundle/build/__init__.py``, so ``Path(__file__).parent`` is
@@ -91,10 +94,11 @@ DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 # the ``constants`` / ``validate`` / ``scan`` slices live one level up,
 # next to ``reg_monabundle.__init__``.
 REG_MONABUNDLE_DIR = Path(_reg_monabundle.__file__).resolve().parent
-# ``validate`` is amalgamated so the §6.8.2 namespaced-block validator
+# ``validate`` is amalgamated so the namespaced-block validator
 # (``validate_block`` — option keys + suppress_k floor, pure-stdlib) runs at
-# bundle LOAD time on MONA too, per §6.8.2 (the §6.8.1 STRUCTURAL validator is
-# build-time only). ``constants`` before ``validate`` (it reads SUPPRESS_K).
+# bundle LOAD time on MONA too (the STRUCTURAL validator — see
+# reg_schema/DESIGN.md → Structural rules and issue codes — is build-time
+# only). ``constants`` before ``validate`` (it reads SUPPRESS_K).
 REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate", "scan")
 
 # The in-package runtime amalgamated into the bundle by default. Order
@@ -136,7 +140,7 @@ Two modes, one bundle:
     Cheap metadata-only walk -- INFORMATION_SCHEMA / DuckDB DESCRIBE
     plus COUNT(*). Output: mock_data_discovery.json next to this script.
     Copy mock_data_discovery.json off MONA, author project_data.json
-    locally against REFACTOR_SPEC.md §6 (the §15 step 7 webapp will
+    locally against its schema (the REFACTOR_SPEC.md step 7 webapp will
     own this authoring once it lands), then either embed it via
     `mock-data-wizard build-bundle --project-data path/to/project_data.json`
     or upload it next to the bundle. Re-run with MODE = "extract".
@@ -358,7 +362,7 @@ def _load_embedded_spec():
     embedded JSON -- a structurally bad bundle should fail loudly, not
     silently fall through to the sidecar.
 
-    No structural validation here (§9.6): the embedded JSON was
+    No structural validation here: the embedded JSON was
     validated at bundle-build time (spec_loader.validate_project_data);
     the runtime trusts it and only deserializes via loadedspec_from_dict.
 
@@ -436,7 +440,8 @@ def _is_type_checking_block(node: ast.stmt) -> bool:
 # non-mdw runtime (``reg_mockdata``, a steward-private package, …)
 # can plug its own intra-runtime imports through the same drop logic.
 #
-# ``reg_schema`` is NOT here (§9.6): it is never amalgamated, so a
+# ``reg_schema`` is NOT here (see DESIGN.md → The two halves): it is never
+# amalgamated, so a
 # ``from reg_schema import …`` in a runtime module would NOT be dropped
 # and would leak into the bundle as a live import — which is exactly the
 # failure the source-scan gate in ``test_build_mona_bundle.py`` catches.
@@ -460,8 +465,9 @@ def _strip_def_docstrings(module: ast.Module) -> None:
     ``ast.unparse`` preserves string-literal expression statements, so a
     class or method docstring would otherwise survive into the bundle as
     inert text. Several of those docstrings mention ``reg_schema`` /
-    Pydantic; the text carries no import (so it never breached the §9.6
-    boundary), but dropping it keeps the artifact text-clean and slightly
+    Pydantic; the text carries no import (so it never breached the
+    boundary; see DESIGN.md → The two halves), but dropping it keeps the
+    artifact text-clean and slightly
     smaller. The module-level docstring is stripped separately by
     ``_slice_module`` (it precedes the import filtering).
 
@@ -521,8 +527,9 @@ def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
                 continue
             # Keyed on ``node.module`` only (not ``node.names``): an
             # ImportFrom sources every name from a single module, so
-            # ``node.module`` is the correct drop key. The §9.6 gate
-            # additionally scans ``node.names``, but that asymmetry can't
+            # ``node.module`` is the correct drop key. The boundary gate
+            # (see DESIGN.md → The two halves) additionally scans
+            # ``node.names``, but that asymmetry can't
             # hide a leak — ``reg_schema`` is not an amalgamated prefix
             # (see ``_STATIC_AMALGAMATED_PREFIXES``), so a stray
             # ``from reg_schema import X`` is NOT dropped here, survives

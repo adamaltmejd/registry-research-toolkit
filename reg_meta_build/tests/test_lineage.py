@@ -1,4 +1,4 @@
-"""A2.4 (§5.6) tests: `variable_state_lineage` interval-overlap join.
+"""`variable_state_lineage` interval-overlap join tests (see DESIGN.md → Consumer-side lineage (variable_state_lineage)).
 
 Two harnesses, mirroring the rest of the suite:
 
@@ -178,7 +178,7 @@ def _warnings(conn: sqlite3.Connection) -> list[tuple[int, str, str]]:
 class TestVariableStateLineage:
     def test_lineage_year_aligned_single_edge(self, tmp_path: Path):
         """Year-aligned consumer + source Kön states produce exactly one edge
-        spanning the shared year, with no warnings (the trivial §5.6 case)."""
+        spanning the shared year, with no warnings (the trivial case)."""
         conn = _new_conn()
         _seed_kon_registers(conn)
         src_vid = _variable_id(conn, _SOURCE_REGISTER_ID, 44)
@@ -495,7 +495,7 @@ class TestVariableStateLineage:
         assert _edges(conn) == [(s_cons, s_src, "2021-01-01", "2021-12-31")]
 
     def test_lineage_same_as_renamed_source_variable(self, tmp_path: Path):
-        """The §5.6 motivating case: the source retired `kon` and now only
+        """The motivating case: the source retired `kon` and now only
         ships `kon-v2`. Naive slug equality (consumer `kon` → source `kon`)
         would miss it and warn `no_source_state`; the BFS finds `kon-v2`."""
         conn = _new_conn()

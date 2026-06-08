@@ -22,9 +22,10 @@ personal data. The workflow has three on-MONA-and-back steps:
     # Upload to MONA. On MONA's batch client, run mdw_runner.py with
     # python -> writes mock_data_discovery.json next to the bundle.
     # Copy mock_data_discovery.json off MONA. Author project_data.json
-    # locally against REFACTOR_SPEC.md §6 (the §15 step 7 webapp
-    # will own this authoring once it lands). Upload project_data.json
-    # next to the bundle.
+    # locally against the schema (reg_schema/DESIGN.md → "Two layers:
+    # models vs. validator"; the reg_webapp authoring surface,
+    # REFACTOR_SPEC.md → "7 — Webapp authoring hard-cut", will own
+    # this once it lands). Upload project_data.json next to the bundle.
     # On MONA, set MODE = "extract" in the bundle and re-run
     # -> writes mock_data_stats.json.
     # Verify mock_data_stats.json contains no personal data, then copy
@@ -50,9 +51,10 @@ Build the single-file Python bundle that runs on MONA.
   4. With MODE = "discover", on MONA's batch client run mdw_runner.py
      with python -> writes mock_data_discovery.json.
   5. Copy mock_data_discovery.json off MONA, author project_data.json
-     locally against REFACTOR_SPEC.md §6 (the §15 step 7 webapp will
-     own this authoring once it lands), then upload it next to the
-     bundle.
+     locally against the schema (reg_schema/DESIGN.md → "Two layers:
+     models vs. validator"; the reg_webapp authoring surface,
+     REFACTOR_SPEC.md → "7 — Webapp authoring hard-cut", will own this
+     once it lands), then upload it next to the bundle.
   6. Switch the bundle to MODE = "extract" and re-run on MONA
      -> writes mock_data_stats.json (only aggregate statistics; no
      row-level data).
@@ -414,7 +416,8 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
         # Validate before embedding — shipping a broken bundle is worse than
         # failing at build. Two build-time gates (the bundle runtime trusts the
         # embedded JSON for structural validation and never re-runs it):
-        #   1. validate_project_data — the §6.8.1 Pydantic structural gate.
+        #   1. validate_project_data — the Pydantic structural gate
+        #      (reg_schema/DESIGN.md → "Structural rules and issue codes").
         #   2. project_data_to_loadedspec — exercises the step-4 runtime
         #      capability gates (datetime / composite key / missing
         #      display_name) so an unsupported spec fails fast HERE instead of
@@ -467,18 +470,18 @@ def _cmd_scan(args: argparse.Namespace) -> int:
 
 
 def _cmd_ui(_args: argparse.Namespace) -> int:
-    """Frozen pending §15 step 7 deletion.
+    """Frozen pending the webapp-authoring hard-cut.
 
-    The editor / server / Svelte UI are scheduled for hard deletion at
-    REFACTOR_SPEC.md §15 step 7 (webapp authoring takes over). Step 4
-    drops the supporting Python code (`editor.py`, `server.py`,
-    `_serialize.py`) — Svelte source under `web/` survives the cut
-    for cleaner deletion at step 7.
+    The editor / server / Svelte UI are scheduled for hard deletion when
+    reg_webapp authoring takes over (REFACTOR_SPEC.md → "7 — Webapp
+    authoring hard-cut"). The supporting Python code (`editor.py`,
+    `server.py`, `_serialize.py`) is already gone; the Svelte source
+    under `web/` survives for cleaner deletion at the cut.
     """
     print(
-        "mock-data-wizard ui: frozen pending §15 step 7 deletion.\n"
+        "mock-data-wizard ui: frozen pending the webapp-authoring hard-cut.\n"
         "Author project_data.json via the reg_webapp (not yet released)\n"
-        "or by hand against the schema in REFACTOR_SPEC.md §6.",
+        "or by hand against the project_data.json schema (reg_schema).",
         file=sys.stderr,
     )
     return 2
@@ -676,16 +679,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # ui — stub: editor + server + Svelte UI are scheduled for hard
-    # deletion at §15 step 7 (webapp authoring takes over). The
-    # subcommand survives as a discoverable pointer to the webapp.
+    # deletion at the webapp-authoring hard-cut (REFACTOR_SPEC.md →
+    # "7 — Webapp authoring hard-cut"). The subcommand survives as a
+    # discoverable pointer to the webapp.
     sub.add_parser(
         "ui",
-        help="(frozen) Launch the local web UI — disabled until §15 step 7",
+        help="(frozen) Launch the local web UI — disabled until the webapp hard-cut",
         description=(
-            "Frozen pending §15 step 7 deletion. The local editor / "
-            "server have been removed; author project_data.json via "
-            "the reg_webapp (not yet released) or by hand against "
-            "REFACTOR_SPEC.md §6."
+            "Frozen pending the webapp-authoring hard-cut. The local "
+            "editor / server have been removed; author project_data.json "
+            "via the reg_webapp (not yet released) or by hand against the "
+            "project_data.json schema (reg_schema)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )

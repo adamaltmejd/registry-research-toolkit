@@ -1,4 +1,4 @@
-"""project_data.json schema models (REFACTOR_SPEC.md §6.1-§6.4).
+"""project_data.json schema models (see DESIGN.md → Two layers: models vs. validator).
 
 Pure shape definitions, not validators. Pydantic v2 ``BaseModel`` —
 ``reg_schema`` is the deliberate exception to the workspace no-Pydantic
@@ -15,7 +15,7 @@ composites without losing the frozen + hashable contract.
 JSON deserialization and structural validation are deliberately
 separate concerns:
 
-- Structural rules (§6.8.1 — type/subtype consistency, FQID
+- Structural rules (see DESIGN.md → Structural rules and issue codes — type/subtype consistency, FQID
   well-formedness, panel ordering, period grammar, etc.) live in
   ``validate_structural()`` and run on the **raw dict** before any
   model is constructed. They accumulate every issue into a
@@ -31,7 +31,7 @@ separate concerns:
 On MONA the models are NOT used: bundle-build converts a validated
 ``Source`` into a stdlib-dataclass ``LoadedSpec`` (reg_monabundle, A3.4)
 that the bundle amalgamates instead — Pydantic never ships to MONA
-(REFACTOR_SPEC §9.6).
+(see reg_monabundle/DESIGN.md → The two halves).
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-# Top-level enums (§6.1, §6.3). Mirrored at runtime by the structural
+# Top-level enums (see DESIGN.md → Two layers: models vs. validator). Mirrored at runtime by the structural
 # validator using ``get_args`` — same drift-protection pattern as
 # ``IssueLevel`` in ``validation.py``.
 Steward = Literal["global", "ifau", "swecov"]
@@ -64,11 +64,11 @@ class _Model(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
 
-# §6.2 Period -------------------------------------------------------------
+# Period -------------------------------------------------------------
 
 
 class PeriodRange(_Model):
-    """The ``{"from": ..., "to": ...}`` range form of ``Source.period`` (§6.2).
+    """The ``{"from": ..., "to": ...}`` range form of ``Source.period``.
 
     Endpoints follow the same int / period-token-string forms as a bare
     period. ``from`` is a Python keyword, so the field is ``from_`` with a
@@ -76,7 +76,7 @@ class PeriodRange(_Model):
 
     This bare object is **only** legal as a ``Source.period`` value; a
     ``TimePoint`` range uses the discriminated ``TimeRange`` wrapper
-    (``{"range": {...}}``) so ``TimeKey``'s union stays unambiguous (§6.2).
+    (``{"range": {...}}``) so ``TimeKey``'s union stays unambiguous.
 
     ``serialize_by_alias=True`` so ``model_dump()`` emits ``"from"`` (not the
     Python-safe ``"from_"``) without every caller having to pass
@@ -95,21 +95,21 @@ class PeriodRange(_Model):
     to: int | str
 
 
-# ``Source.period`` (§6.2): bare year, period-token string, explicit range,
+# ``Source.period``: bare year, period-token string, explicit range,
 # or the ``"_default"`` snapshot sentinel (a plain string). Always required.
 Period = int | str | PeriodRange
 
 
-# §6.3 Binding ------------------------------------------------------------
+# Binding ------------------------------------------------------------
 
 
 class Binding(_Model):
-    """A binding on a Source (§6.3) — one variable to include in the extract.
+    """A binding on a Source — one variable to include in the extract.
 
     ``variable`` is the binding FQID: ``<provider>/<register>/<slug>`` (3
-    segments, §5.2). Its ``provider/register`` prefix (first 2 segments) must
+    segments, see reg_meta/DESIGN.md → FQID grammar). Its ``provider/register`` prefix (first 2 segments) must
     equal the source's ``register_variant`` prefix — the variant is NOT
-    repeated here, it lives once on the Source (§6.2). That cross-field rule
+    repeated here, it lives once on the Source. That cross-field rule
     is enforced by the structural validator. There is no ``@version`` pin —
     that grammar is retired.
 
@@ -119,7 +119,7 @@ class Binding(_Model):
     3/4/5-digit, age 5/10-yr brackets). ``representation`` selects which one (by
     its ``variable_alias.delivery_column_name``); it is required only when the
     concept resolves to >1 column at the source's ``(variant, period)`` — the
-    semantic validator (§6.8.3) flags an ambiguous binding that omits it, and the
+    semantic validator (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)) flags an ambiguous binding that omits it, and the
     SPA offers a chooser. A single-representation concept leaves it ``None``.
 
     ``display_name`` is optional: when absent, reg_meta-backed consumers
@@ -142,10 +142,10 @@ class Binding(_Model):
 
 
 class Source(_Model):
-    """A data source / table in the spec (§6.2).
+    """A data source / table in the spec.
 
     ``register_variant`` is the 3-part variant **coordinate**
-    (``<provider>/<register>/<variant>``) — not an FQID kind (§5.2), but
+    (``<provider>/<register>/<variant>``) — not an FQID kind (see reg_meta/DESIGN.md → FQID grammar), but
     the same 3-part grammar. ``period`` is always required and polymorphic
     (``Period``). Together ``(register_variant's variant, period)`` selects
     each binding variable's ``variable_state``. ``name`` is the internal
@@ -158,9 +158,9 @@ class Source(_Model):
     bindings: tuple[Binding, ...]
 
 
-# §6.4 Panel ---------------------------------------------------------------
+# Panel ---------------------------------------------------------------
 #
-# Type aliases follow REFACTOR_SPEC.md §6.4:
+# Type aliases:
 #
 #   EntityKey = string | string[]                          // always column refs
 #   TimePoint = int | string | LiteralPeriod | TimeRange   // string is column ref
@@ -173,7 +173,7 @@ class Source(_Model):
 
 
 class LiteralPeriod(_Model):
-    """The ``{"period": int | string}`` time_key form (§6.4).
+    """The ``{"period": int | string}`` time_key form.
 
     The only way to express a string-shaped literal period at the
     schema level. Disambiguates ``"2018"`` (column ref) from
@@ -184,12 +184,12 @@ class LiteralPeriod(_Model):
 
 
 class TimeRange(_Model):
-    """The ``{"range": {"from": ..., "to": ...}}`` time_key form (§6.4).
+    """The ``{"range": {"from": ..., "to": ...}}`` time_key form.
 
     The discriminated wrapper for a period range in ``TimeKey`` position —
     distinct from the bare ``{"from", "to"}`` object, which is legal only
     as a ``Source.period`` (``PeriodRange``). The wrapper keeps the
-    ``TimePoint`` union unambiguous (§6.2).
+    ``TimePoint`` union unambiguous.
     """
 
     range: PeriodRange
@@ -201,13 +201,13 @@ EntityKey = str | tuple[str, ...]
 
 
 class PanelMember(_Model):
-    """A member of a Panel (§6.4).
+    """A member of a Panel.
 
     ``source`` is the source ``name`` (the panel layer joins on
     delivered-data column headers, not FQIDs). ``entity_key`` /
     ``time_key`` override panel-level defaults; when both panel and member
     leave a key unset, it is inherited from the member's variant's
-    ``panel_template`` (§6.4) at kit/bundle-build time — the structural
+    ``panel_template`` at kit/bundle-build time — the structural
     validator does not flag the absence (it has no reg_meta).
     """
 
@@ -217,9 +217,9 @@ class PanelMember(_Model):
 
 
 class Panel(_Model):
-    """A panel definition over sources (§6.4).
+    """A panel definition over sources.
 
-    Members are stored uniformly as ``PanelMember``. The §6.4 bare-string
+    Members are stored uniformly as ``PanelMember``. The bare-string
     shorthand (a source name with panel-level key defaults) is normalized
     to ``PanelMember(source=<name>)`` by the ``members`` validator, so
     consumers never branch on ``str | PanelMember``. Source-collision (each
@@ -236,7 +236,7 @@ class Panel(_Model):
     @field_validator("members", mode="before")
     @classmethod
     def _normalize_member_shorthand(cls, value: object) -> object:
-        # §6.4: a bare-string member is the source name. Expand it to the
+        # A bare-string member is the source name. Expand it to the
         # object form before per-element validation; dicts and already-built
         # PanelMember instances pass through untouched.
         if isinstance(value, (list, tuple)):
@@ -244,22 +244,23 @@ class Panel(_Model):
         return value
 
 
-# §6.1 Top-level shape -----------------------------------------------------
+# Top-level shape -----------------------------------------------------
 
 
 class ProjectData(_Model):
-    """The top-level ``project_data.json`` shape (§6.1).
+    """The top-level ``project_data.json`` shape.
 
     ``reg_monabundle`` (and any other namespaced block added later) is
-    intentionally typed as an opaque ``Mapping``: §6.8.2 delegates
-    validation of namespaced blocks to their owning package, and
+    intentionally typed as an opaque ``Mapping``: reg_schema delegates
+    validation of namespaced blocks to their owning package (see
+    DESIGN.md → Not in scope (intentionally)), and
     reg_schema's frozen-ness does not deep-freeze nested mappings. That is
     by design — namespaced consumers own their payload lifecycle.
 
     ``extra="ignore"`` (overriding ``_Model``'s ``forbid``) tolerates
     additional steward-namespaced blocks (``swecov``, ``reg_mockdata``,
     …) without modeling them as fields: they ride through on the dict side
-    and are handled by the owning package (§6.8.2), exactly as the v0.x
+    and are handled by the owning package (see DESIGN.md → Not in scope (intentionally)), exactly as the v0.x
     dataclass did. If a field is wanted for one, we add it deliberately
     rather than growing an ``extras`` dict.
 

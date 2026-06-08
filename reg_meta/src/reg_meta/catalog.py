@@ -1,6 +1,6 @@
 """Catalog: FQID-to-row resolution against the reg_meta SQLite DB.
 
-Implements the FQID API in REFACTOR_SPEC.md §5.10: ``Catalog.resolve(fqid)``
+Implements the FQID API (see DESIGN.md → Catalog API surface): ``Catalog.resolve(fqid)``
 turns any FQID kind into a typed entity row (the 3-segment binding arm resolves
 to the longitudinal ``ResolvedVariable``), with ``resolve_at`` + the per-edge
 accessors for period/relationship traversal.
@@ -8,7 +8,7 @@ accessors for period/relationship traversal.
 A2.6: the binding FQID is 3-segment (`provider/register/slug`). Variant and
 period are delivery coordinates passed to ``resolve_at`` (not FQID segments),
 and the variant / register_version FQID kinds — plus the ``editions`` discovery
-path that enumerated per-edition bindings — are gone (§5.2).
+path that enumerated per-edition bindings — are gone (see DESIGN.md → FQID grammar).
 """
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ class ResolvedRegister:
     fqid: Fqid
     register_id: int
     provider_id: int
-    # §5.11: `name` was `registernamn`, `purpose` was `registersyfte`.
+    # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): `name` was `registernamn`, `purpose` was `registersyfte`.
     # `registerrubrik` is dropped (redundant with name).
     name: str
     purpose: str | None
@@ -61,7 +61,7 @@ class ResolvedClassification:
     via_same_as: tuple[Fqid, ...] | None = None
 
 
-# §5.10 catalog-tree children shapes (A5.1b-i): thin child nodes for the webapp's
+# Catalog-tree children shapes (A5.1b-i; see DESIGN.md → Catalog API surface): thin child nodes for the webapp's
 # catalog browse (`/api/catalog` → providers → registers → bindings). Each carries
 # the addressable `Fqid` (webapp serializes `str(fqid)`) + a display `name`,
 # mirroring the `Resolved*` style but without the per-entity detail those carry.
@@ -84,10 +84,10 @@ class BindingSummary:
     name: str | None
 
 
-# A2.5b variant-browser shape (§9.5): a variant is a register sub-resource, NOT
-# an FQID-addressable node (the variant left the binding FQID, §5.0.1), so this
+# A2.5b variant-browser shape (see reg_webapp/DESIGN.md → Catalog router structure): a variant is a register sub-resource, NOT
+# an FQID-addressable node (the variant left the binding FQID; see DESIGN.md → Two-level variable model), so this
 # carries the variant `slug` (the `?variant=` browse coordinate) + display fields,
-# not an `Fqid`. A4.4c adds the §9.5 panel-shape columns (read-only): a
+# not an `Fqid`. A4.4c adds the panel-shape columns (read-only; see reg_webapp/DESIGN.md → Catalog router structure): a
 # `panel_entity_key` that is a bare variable-slug str or a tuple of slugs
 # (composite), the `panel_time_key` ("period" or a variable-slug), and the
 # `panel_time_grain` ('delivery'/'row'). Most variants carry no panel data → all
@@ -114,23 +114,23 @@ def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
     return raw
 
 
-# §5.10 / §6.2: the polymorphic period a caller passes to `resolve_at`. Mirrors
+# The polymorphic period a caller passes to `resolve_at` (see DESIGN.md → Catalog API surface; see reg_schema/DESIGN.md → Two layers: models vs. validator). Mirrors
 # `Source.period`: a bare year (int), a period token ("HT2020"/"2020-Q3"/
 # "2020-08"/"2018-12-31"), an explicit range dict {"from", "to"} (endpoints are
 # int or token), or the "_default" snapshot sentinel (no period filter). It is a
-# delivery coordinate, NOT an FQID segment (the binding FQID is 3-seg, §5.2).
+# delivery coordinate, NOT an FQID segment (the binding FQID is 3-seg; see DESIGN.md → FQID grammar).
 Period = int | str | dict
 
 
 @dataclass(frozen=True)
 class VariableState:
-    """§5.1: one `variable_state` row — a variable's per-delivery shape, tagged
+    """One `variable_state` row (see DESIGN.md → Two-level variable model) — a variable's per-delivery shape, tagged
     with the **variant coordinate** it was delivered in. The longitudinal
     `ResolvedVariable.states` is a tuple of these; `resolve_at` returns the
     subset whose validity range intersects the queried period."""
 
     state_id: int
-    # `register_variant.slug` for `register_variant_id`. §5.1 makes the column
+    # `register_variant.slug` for `register_variant_id`. The two-level model (see DESIGN.md → Two-level variable model) makes the column
     # NOT NULL, so a state always carries a real variant — `variant` is always a
     # resolved slug, never the synth `_default` placeholder (that fiction exists
     # only at variant-slot resolve time, not on a stored state).
@@ -140,10 +140,10 @@ class VariableState:
     valid_to: str  # ISO 8601 'YYYY-MM-DD', inclusive ('9999-12-31' open-ended)
     data_type: str | None
     data_length: str | None
-    # Denormalized latest alias for the state (§5.1); full alias history lives in
+    # Denormalized latest alias for the state (see DESIGN.md → Two-level variable model); full alias history lives in
     # `variable_alias`.
     delivery_column_name: str | None
-    # §5.7 overlap discriminator (multi-vintage / grain / coding). NOT NULL
+    # Overlap discriminator (see reg_meta_build/DESIGN.md → Build-time triage (SCB); multi-vintage / grain / coding). NOT NULL
     # DEFAULT '' in the DDL, so '' means "no discriminator", not absent.
     value_set_version_label: str
     value_set_id: int | None
@@ -155,12 +155,12 @@ class VariableState:
 
 @dataclass(frozen=True)
 class VariableRef:
-    """A variable-grain edge endpoint (§5.5): the 3-part `(provider, register,
+    """A variable-grain edge endpoint (see DESIGN.md → Composite registers and source tracking): the 3-part `(provider, register,
     variable)` identity of a `same_as` / `replaced_by` neighbor. Carried by
     `predecessors`/`successors` and `ResolvedVariable.same_as`/`.replaced_by`.
 
     A2.6: `fqid` is the neighbor's 3-segment binding FQID — the edge triple IS
-    the binding FQID now that the variant/period left the grammar (§5.2/§5.5).
+    the binding FQID now that the variant/period left the grammar (see DESIGN.md → FQID grammar and Composite registers and source tracking).
     Build-time slug validation guarantees the triple round-trips, so this is
     never None in practice.
     """
@@ -180,7 +180,7 @@ class VariableRef:
 
 @dataclass(frozen=True)
 class RelatedRef:
-    """A variable-grain sibling edge (§5.7 split): `variable_related_to`. Same
+    """A variable-grain sibling edge (split; see reg_meta_build/DESIGN.md → Build-time triage (SCB)): `variable_related_to`. Same
     3-part identity as `VariableRef` plus the `relation_kind` (split reason,
     e.g. `same_definition_different_column`). `fqid` is the sibling's 3-segment
     binding FQID (A2.6)."""
@@ -194,7 +194,7 @@ class RelatedRef:
 
 @dataclass(frozen=True)
 class LineageEdge:
-    """§5.6 consumer-side lineage at STATE grain: one `variable_state_lineage`
+    """Consumer-side lineage at STATE grain (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)): one `variable_state_lineage`
     row tying a consumer state to a source state over their validity
     intersection. `source_fqid` is the source state's 3-part binding FQID,
     best-effort (None when the source's slugs aren't populated)."""
@@ -208,7 +208,7 @@ class LineageEdge:
 
 @dataclass(frozen=True)
 class LineageWarning:
-    """§5.6 build-time lineage warning for a consumer state:
+    """Build-time lineage warning for a consumer state (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)):
     `variable_state_lineage_warning`. `warning_kind` is 'no_source_state' or
     'ambiguous_source_variant'."""
 
@@ -219,7 +219,7 @@ class LineageWarning:
 
 @dataclass(frozen=True)
 class ResolvedVariable:
-    """§5.10 longitudinal resolution of a binding FQID: the addressable
+    """Longitudinal resolution of a binding FQID (see DESIGN.md → Catalog API surface): the addressable
     variable's shared metadata + its full `variable_state` history (each state
     tagged with its variant) + variable-grain edges."""
 
@@ -241,7 +241,9 @@ class ResolvedVariable:
     # carries its variant coordinate + period range.
     states: tuple[VariableState, ...]
     same_as: tuple[VariableRef, ...]  # variable_same_as (equivalence)
-    replaced_by: tuple[VariableRef, ...]  # OUTBOUND successors (§5.10)
+    replaced_by: tuple[
+        VariableRef, ...
+    ]  # OUTBOUND successors (see DESIGN.md → Catalog API surface)
     related_to: tuple[RelatedRef, ...]  # variable_related_to (split siblings)
     lineage: tuple[LineageEdge, ...]  # variable_state_lineage (consumer-side)
     # Traversal path (3-segment binding FQIDs) when resolved via `same_as`; None
@@ -304,7 +306,7 @@ def _endpoint_bounds(value: int | str) -> tuple[str, str]:
 
 
 def _period_bounds(period: Period) -> tuple[str, str] | None:
-    """Expand a §6.2 `Period` to an inclusive ISO `(lo, hi)` interval, or None
+    """Expand a `Period` (see reg_schema/DESIGN.md → Two layers: models vs. validator) to an inclusive ISO `(lo, hi)` interval, or None
     for the `_default` sentinel (no period filter). Fail-fast on malformed
     input (`invalid_period`, EXIT_USAGE)."""
     if isinstance(period, bool):  # bool is an int subclass — reject before int
@@ -365,7 +367,7 @@ class Catalog:
                 )
         return _DISPATCH[parsed.kind](self, parsed)
 
-    # ── A5.1b-i catalog-tree children enumeration (§5.10) ──────────────────
+    # ── A5.1b-i catalog-tree children enumeration (see DESIGN.md → Catalog API surface) ──
     # The webapp browse consumes these for the `/api/catalog` node tree. Each
     # returns a thin Summary list, slug-ordered (deterministic, matches the
     # FQID-leaf the webapp links on). An unknown parent slug returns an empty
@@ -433,11 +435,11 @@ class Catalog:
         self, provider_slug: str, register_slug: str
     ) -> list[VariantSummary]:
         """A register's variants — the `register_variant` sub-resource (the
-        `?variant=` browse axis, §9.5) — ordered by slug. A variant with a NULL
+        `?variant=` browse axis; see reg_webapp/DESIGN.md → Catalog router structure) — ordered by slug. A variant with a NULL
         slug isn't browse-addressable, so it's excluded (symmetric with
         `list_bindings`). Empty when the (provider, register) pair names no
         register OR it has no slugged variants. (`_default` is a real variant
-        slug — the synthesized variant for LSS/BU/SOL etc., §5.1 — so it is
+        slug — the synthesized variant for LSS/BU/SOL etc.; see DESIGN.md → Two-level variable model — so it is
         returned, not filtered.)"""
         rows = self._conn.execute(
             "SELECT rv.slug, rv.name, rv.description, rv.display_group, "
@@ -474,8 +476,8 @@ class Catalog:
         )
 
     def _resolve_register(self, fqid: Fqid) -> ResolvedRegister:
-        # §5.11: `name` / `purpose` (was `registernamn` / `registersyfte`).
-        # `registerrubrik` is dropped per §5.11.
+        # Glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk): `name` / `purpose` (was `registernamn` / `registersyfte`).
+        # `registerrubrik` is dropped per the same glossary rename.
         row = self._conn.execute(
             "SELECT r.register_id, r.provider_id, r.name, r.purpose "
             "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
@@ -493,7 +495,7 @@ class Catalog:
         )
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariable:
-        """Longitudinal resolution (§5.10). The 3-segment binding FQID selects
+        """Longitudinal resolution (see DESIGN.md → Catalog API surface). The 3-segment binding FQID selects
         ONE `variable` row by register-unique slug (exact match, no
         derive-at-resolve); from it we gather the shared metadata, the full
         `variable_state` history (each tagged with its variant), and the
@@ -525,7 +527,7 @@ class Catalog:
         the direct lookup nor any same_as edge resolves.
 
         Variable identity is period- and variant-independent (the FQID's slug is
-        the register-unique natural key, §5.1) — there is no edition/instance to
+        the register-unique natural key; see DESIGN.md → Two-level variable model) — there is no edition/instance to
         thread."""
         assert fqid.provider is not None and fqid.register is not None
         assert fqid.variable is not None
@@ -537,7 +539,7 @@ class Catalog:
     def _resolve_variable_via_same_as(
         self, fqid: Fqid
     ) -> tuple[sqlite3.Row, tuple[Fqid, ...]] | None:
-        """BFS through `variable_same_as` (variable grain, §5.5) until a target
+        """BFS through `variable_same_as` (variable grain; see DESIGN.md → Composite registers and source tracking) until a target
         variable EXISTS (by register-unique slug). The edge is variable grain
         (cross-register / cross-provider equivalence), so the target register
         may use other variant slugs; the path records each hop as its 3-segment
@@ -619,7 +621,7 @@ class Catalog:
     def _lookup_variable(
         self, provider: str, register: str, variable_slug: str
     ) -> sqlite3.Row | None:
-        """THE variable row for a register-unique slug (§5.1 natural key)."""
+        """THE variable row for a register-unique slug (see DESIGN.md → Two-level variable model — natural key)."""
         return self._conn.execute(
             "SELECT v.variable_id, v.register_id, v.provider_key, "
             "v.name AS variable_name "
@@ -662,7 +664,7 @@ class Catalog:
 
         A2.5 generalizes the interim year-granular overlap test: bounds
         are full ISO dates, so sub-annual queries (`HT2020`, `2020-08`, a range)
-        intersect precisely against the stored full-date validity ranges (§5.1) —
+        intersect precisely against the stored full-date validity ranges (see DESIGN.md → Two-level variable model) —
         the year-only INTERIM limit is lifted. The interval test is the standard
         `valid_from <= hi AND valid_to >= lo` (string compare is chronologically
         correct because every stored value is a full date)."""
@@ -710,7 +712,7 @@ class Catalog:
         rvid = row["register_variant_id"]
         variant = self._variant_slug(rvid)
         if variant is None:
-            # §5.1: register_variant_id is NOT NULL on variable_state and FK'd to
+            # see DESIGN.md → Two-level variable model: register_variant_id is NOT NULL on variable_state and FK'd to
             # register_variant, so a missing slug is a build-invariant break, not
             # a normal case — surface it loudly rather than emit a bad coordinate.
             raise RegMetaError(
@@ -759,7 +761,7 @@ class Catalog:
         genuine miss → empty `resolve_at` result). `_default` is looked up like
         any other slug: a curated `_default` row matches its id; a variant-less
         register has no `register_variant` row (and no states), so `_default`
-        misses → empty (states always carry a real `register_variant_id`, §5.1)."""
+        misses → empty (states always carry a real `register_variant_id`; see DESIGN.md → Two-level variable model)."""
         row = self._conn.execute(
             "SELECT register_variant_id FROM register_variant "
             "WHERE register_id = ? AND slug = ?",
@@ -767,11 +769,11 @@ class Catalog:
         ).fetchone()
         return row["register_variant_id"] if row is not None else _MISSING
 
-    # ── A2.5 variable-grain edge accessors (§5.10) ─────────────────────────
+    # ── A2.5 variable-grain edge accessors (see DESIGN.md → Catalog API surface) ──
 
     @staticmethod
     def _ref_fqid(provider: str, register: str, variable: str) -> Fqid | None:
-        """Best-effort 3-segment binding FQID for an edge endpoint (§5.5/§5.2).
+        """Best-effort 3-segment binding FQID for an edge endpoint (see DESIGN.md → Composite registers and source tracking and FQID grammar).
         The stored triple is exactly the binding FQID now; build-time slug
         validation guarantees it round-trips, but a malformed/NULL slug surfaces
         as None rather than raising (the triple stays the load-bearing identity)."""
@@ -875,7 +877,7 @@ class Catalog:
         self, provider: str, register: str, variable: str
     ) -> tuple[RelatedRef, ...]:
         """`variable_related_to` siblings (a-side keyed; stored both directions,
-        §5.7). Carries `relation_kind`."""
+        see reg_meta_build/DESIGN.md → Build-time triage (SCB)). Carries `relation_kind`."""
         rows = self._conn.execute(
             "SELECT b_provider, b_register, b_variable, relation_kind "
             "FROM variable_related_to "
@@ -895,7 +897,7 @@ class Catalog:
         )
 
     def _lineage_edges(self, variable_id: int) -> tuple[LineageEdge, ...]:
-        """§5.6 consumer-side lineage for this variable's states (the consumer
+        """Consumer-side lineage (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)) for this variable's states (the consumer
         side). A2.6: `source_fqid` is the source state's 3-segment binding FQID,
         joined from the source state's variable → register → provider. Best-effort
         — a NULL/malformed source slug surfaces as None (`_ref_fqid`)."""
@@ -930,7 +932,7 @@ class Catalog:
         )
 
     def _lineage_warning_rows(self, variable_id: int) -> tuple[LineageWarning, ...]:
-        """§5.6 build-time lineage warnings for this variable's states."""
+        """Build-time lineage warnings for this variable's states (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage))."""
         rows = self._conn.execute(
             "SELECT w.consumer_state_id, w.warning_kind, w.message "
             "FROM variable_state_lineage_warning w "
@@ -948,7 +950,7 @@ class Catalog:
             for r in rows
         )
 
-    # ── A2.5 public period-resolution + edge-traversal API (§5.10) ─────────
+    # ── A2.5 public period-resolution + edge-traversal API (see DESIGN.md → Catalog API surface) ──
 
     def resolve_at(
         self,
@@ -958,14 +960,14 @@ class Catalog:
         variant: str | None = None,
         value_set_version: str | None = None,
     ) -> list[VariableState]:
-        """§5.10 point/range resolution: the `VariableState`s whose validity
+        """Point/range resolution (see DESIGN.md → Catalog API surface): the `VariableState`s whose validity
         intersects `period`, chronological ascending. Length 1 for the common
         single-state-in-one-variant-and-version point query; length N across
         variants (omitting `variant`), range periods crossing transitions, or
         co-delivered classification vintages. Empty list when no state covers the
         period (no exception) — only the binding FQID not resolving raises.
 
-        `period` is polymorphic (§6.2): int year, period token, range dict
+        `period` is polymorphic (see reg_schema/DESIGN.md → Two layers: models vs. validator): int year, period token, range dict
         {"from","to"}, or "_default" (no period filter). `variant` narrows to one
         variant (the Source's `register_variant`); `value_set_version` narrows
         multi-vintage results to a single state by `value_set_version_label`.
@@ -997,35 +999,35 @@ class Catalog:
         return states
 
     def states(self, fqid: str | Fqid) -> list[VariableState]:
-        """§5.10: the variable's full state history (≡ `resolve(fqid).states`)."""
+        """see DESIGN.md → Catalog API surface: the variable's full state history (≡ `resolve(fqid).states`)."""
         # Route through _parse_binding (like the edge accessors) so a non-binding
         # FQID fails with the structured `not_a_binding_fqid` error instead of a
-        # raw AttributeError off a ResolvedRegister/etc. (§9.5 wants a 4xx, not 500).
+        # raw AttributeError off a ResolvedRegister/etc. (reg_webapp wants a 4xx, not 500; see reg_webapp/DESIGN.md → Catalog router structure).
         parsed = self._parse_binding(fqid)
         return list(self._resolve_binding(parsed).states)
 
     def predecessors(self, fqid: str | Fqid) -> list[VariableRef]:
-        """§5.10: variables this binding's variable replaced (inbound succession)."""
+        """see DESIGN.md → Catalog API surface: variables this binding's variable replaced (inbound succession)."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._predecessor_edges(provider, register, variable))
 
     def successors(self, fqid: str | Fqid) -> list[VariableRef]:
-        """§5.10: variables that replaced this binding's variable (outbound)."""
+        """see DESIGN.md → Catalog API surface: variables that replaced this binding's variable (outbound)."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._successor_edges(provider, register, variable))
 
     def related(self, fqid: str | Fqid) -> list[RelatedRef]:
-        """§5.10: split-sibling variables (variable grain, §5.7)."""
+        """see DESIGN.md → Catalog API surface: split-sibling variables (variable grain; see reg_meta_build/DESIGN.md → Build-time triage (SCB))."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._related_edges(provider, register, variable))
 
     def lineage(self, fqid: str | Fqid) -> list[LineageEdge]:
-        """§5.10: consumer-side composite lineage edges (state grain, §5.6)."""
+        """see DESIGN.md → Catalog API surface: consumer-side composite lineage edges (state grain; see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage))."""
         _, _, _, variable_id = self._resolve_edge_triple(fqid)
         return list(self._lineage_edges(variable_id))
 
     def lineage_warnings(self, fqid: str | Fqid) -> list[LineageWarning]:
-        """§5.10: build-time lineage warnings for the binding (§5.6)."""
+        """see DESIGN.md → Catalog API surface: build-time lineage warnings for the binding (see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage))."""
         _, _, _, variable_id = self._resolve_edge_triple(fqid)
         return list(self._lineage_warning_rows(variable_id))
 
@@ -1048,7 +1050,7 @@ class Catalog:
 
     @staticmethod
     def _parse_binding(fqid: str | Fqid) -> Fqid:
-        """Parse a binding FQID and assert it is one. The §5.10 accessors only
+        """Parse a binding FQID and assert it is one. The catalog API accessors (see DESIGN.md → Catalog API surface) only
         accept binding FQIDs; a non-binding kind is a usage error."""
         parsed = parse(fqid) if isinstance(fqid, str) else parse(str(fqid))
         if parsed.kind is not FqidKind.VARIABLE_BINDING:

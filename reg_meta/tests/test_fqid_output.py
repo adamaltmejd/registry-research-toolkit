@@ -29,7 +29,7 @@ class TestGetRegisterFqid:
         reg = results[0]
         assert reg["fqid"] == "scb/lisa"
         # A2.6: a variant is a register sub-resource, not a slash-path FQID. It
-        # carries the parent register FQID + its browse slug (§5.2).
+        # carries the parent register FQID + its browse slug (see DESIGN.md → FQID grammar).
         variant = reg["variants"][0]
         assert variant["register_fqid"] == "scb/lisa"
         assert variant["slug"] == "individer-15plus"

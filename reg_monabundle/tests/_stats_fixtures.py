@@ -5,7 +5,7 @@ clean stats export.
 Mirrored from ``mock_data_wizard/tests/conftest.py`` — ``test_cli.py`` over
 there still consumes them. Both packages emit / consume this shape today;
 one source of truth lands when ``mock_data_wizard`` is retired in
-REFACTOR_SPEC.md §15 step 7.
+REFACTOR_SPEC.md step 7.
 """
 
 from __future__ import annotations

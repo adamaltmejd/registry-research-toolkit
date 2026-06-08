@@ -1,6 +1,7 @@
-"""§9.4 ETag middleware wiring, end-to-end through the app.
+"""ETag middleware wiring, end-to-end through the app.
 
-The pure logic is unit-tested in ``test_etag.py``; here we pin the middleware
+See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). The pure logic is
+unit-tested in ``test_etag.py``; here we pin the middleware
 behavior: GET reads get ETag + Cache-Control, error responses do NOT (an error
 body is not a cacheable representation), a matching If-None-Match yields a 304
 with no body, and the ETag prefix is the INSTALLED reg_meta version (NOT the DB
@@ -22,7 +23,7 @@ import reg_meta
 
 
 def test_etag_prefix_is_installed_reg_meta_version_not_manifest(catalog_db):
-    # §9.5: the ETag's version component is `reg_meta.__version__` (the v1.x Model
+    # The ETag's version component is `reg_meta.__version__` (the v1.x Model
     # A package release), NOT the DB build's schema_version (the fixture stamps a
     # `5.1.999` manifest — distinct, and must NOT appear in the ETag).
     with TestClient(create_app()) as client:
@@ -40,7 +41,7 @@ def test_error_response_has_no_etag(catalog_db):
         assert "etag" not in not_found.headers
         assert "cache-control" not in not_found.headers
 
-        bad = client.get("/api/catalog/scb/Lisa")  # §16 guard → 422
+        bad = client.get("/api/catalog/scb/Lisa")  # path guard → 422
         assert bad.status_code == 422
         assert "etag" not in bad.headers
 

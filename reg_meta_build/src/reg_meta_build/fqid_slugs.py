@@ -1,7 +1,8 @@
 """Slug TOML loading, validation, population, seeding, and snapshot.
 
 Curated slugs live in per-provider TOML files at ``reg_meta_build/fqid_slugs/``.
-This module parses them against the FQID grammar (REFACTOR_SPEC.md §5.2-5.3),
+This module parses them against the FQID grammar (see reg_meta/DESIGN.md → FQID
+grammar and DESIGN.md → Slug curation),
 writes the slug columns during build, and ships the seed/precheck/snapshot
 machinery the CLI exposes.
 
@@ -33,8 +34,8 @@ if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable, Iterator
 
-# A2.6: `register_version` is gone — the FQID grammar has no version segment
-# (§5.2), version slugs are no longer curated or persisted, and the build-time
+# A2.6: `register_version` is gone — the FQID grammar has no version segment;
+# version slugs are no longer curated or persisted, and the build-time
 # `register_version` table is dropped before ship.
 EntityKind = Literal[
     "register",
@@ -50,7 +51,7 @@ ENTITY_KINDS: tuple[EntityKind, ...] = (
 )
 PROVIDER_FILE_SUFFIX = ".toml"
 # Auto-derived variable slugs live alongside the hand-curated `<provider>.toml`
-# in `<provider>.auto.toml` (§5.3). Both files feed one in-memory index; the
+# in `<provider>.auto.toml`. Both files feed one in-memory index; the
 # hand-curated file wins on key clash. The auto file is build-generated
 # (`write_auto_toml`) and committed; it must never be hand-edited.
 AUTO_FILE_SUFFIX = ".auto.toml"
@@ -61,7 +62,7 @@ _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classificat
 
 # Top-level keys accepted in a provider TOML; anything else is a typo
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
-# silently no-op. `lineage_defaults` / `lineage` (§5.6) are NOT SlugEntry rows
+# silently no-op. `lineage_defaults` / `lineage` are NOT SlugEntry rows
 # — `load_lineage_config` parses them separately — but they're legal top-level
 # tables, so the strict typo check must accept them.
 _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
@@ -75,9 +76,9 @@ _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
 )
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
 
-# Allowed keys for inline `same_as` tables (§5.3 worked examples).
+# Allowed keys for inline `same_as` tables.
 # A2.1.5: variable same_as is variable-grain — no `register_variant`/`period`
-# narrowing keys (the variant/period slots were dropped, §5.5). One edge covers
+# narrowing keys (the variant/period slots were dropped). One edge covers
 # every variant/period that delivers either variable.
 _SAME_AS_KEYS_VARIABLE: frozenset[str] = frozenset(
     {"provider", "register", "variable_slug"}
@@ -97,7 +98,7 @@ _SAME_AS_REQUIRED_CLASSIFICATION: frozenset[str] = frozenset(
 class SlugEntry:
     """One row of a slug TOML.
 
-    ``source_id`` is the literal TOML key (always a quoted string per §5.3).
+    ``source_id`` is the literal TOML key (always a quoted string).
     ``provider`` is the filename stem for provider-scoped files; ``None`` for
     classifications.
     """
@@ -120,11 +121,11 @@ class SlugEntry:
     # only short-circuits the missing-row branch on this — a still-live row
     # with `deprecated = true` is still slugged so resolution keeps working.
     deprecated: bool = False
-    # Validated for shape and cycle-freedom (§5.4) but not yet applied to the
+    # Validated for shape and cycle-freedom but not yet applied to the
     # DB; the resolver-side typo-correction lands with consumer-side binding
     # materialization in step 1e.
     replaced_by: str | None = None
-    # §5.5 cross-rename equivalence; materialized into `variable_same_as` /
+    # Cross-rename equivalence; materialized into `variable_same_as` /
     # `classification_same_as` edge tables by `materialize_same_as_edges`.
     # `Catalog.resolve` follows the edges transitively when direct lookup misses.
     same_as: tuple[dict[str, str], ...] = field(default_factory=tuple)
@@ -298,7 +299,7 @@ def _validate_entry_slug(
             f"{kind}.{source_id!r}: `slug` must be a string, got {type(slug).__name__}.",
             "Quote the value as a TOML string.",
         )
-    # The register_variant slug is a delivery coordinate (§5.1) that still
+    # The register_variant slug is a delivery coordinate that still
     # persists a real `_default` row for variant-less registers, so it keeps
     # `allow_default`. No other slot allows `_default` or period-shaped slugs.
     # `kind` is the slot label here — `validate_slug` only uses it for the error
@@ -309,7 +310,7 @@ def _validate_entry_slug(
         raise _err(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: {exc}",
-            "Adjust the slug to satisfy the §5.2 slug rules (grammar and reserved tokens).",
+            "Adjust the slug to satisfy the slug rules (grammar and reserved tokens).",
         ) from exc
 
 
@@ -332,7 +333,7 @@ def _validate_entry(
     # malformed keys. `[register."01"]` (leading zero) fails at TOML load with a
     # clear field-shape error rather than blowing up later as a
     # `slug_unknown_source_id` lookup miss. A `variable` key takes an optional
-    # third segment — the §5.7 split-sibling discriminator (A2.2).
+    # third segment — the split-sibling discriminator.
     if kind == "register":
         _parse_register_id(source_id)
     elif kind == "register_variant":
@@ -411,7 +412,7 @@ def _validate_panel_slug_ref(
     kind: EntityKind, source_id: str, field: str, value: str
 ) -> None:
     """A panel key references a variable slug — validate it against the VARIABLE
-    slot (§5.2) so a typo (e.g. a stray `[` that the catalog would later try to
+    slot so a typo (e.g. a stray `[` that the catalog would later try to
     JSON-decode, or a non-slug-shaped value) fails LOUDLY at build time, not as a
     runtime decode crash when the webapp serves that variant. Validating against
     the `variable` slot (not the field name) is deliberate: it also rejects a
@@ -541,7 +542,7 @@ def _provider_from_path(path: Path) -> str:
 def load_provider_toml(path: Path) -> list[SlugEntry]:
     """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …).
 
-    Also handles the build-generated ``<provider>.auto.toml`` (§5.3): same
+    Also handles the build-generated ``<provider>.auto.toml``: same
     grammar and shape, only auto-derived variable rows in practice. The
     ``.auto`` companion maps to the same provider as ``<provider>.toml``.
     """
@@ -564,7 +565,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
             '(e.g. `[registers."..."]` -> `[register."..."]`).',
         )
     entries: list[SlugEntry] = []
-    # Slug uniqueness scope follows the FQID grammar (§5.2):
+    # Slug uniqueness scope follows the FQID grammar (see reg_meta/DESIGN.md → FQID grammar):
     # - register: provider-wide (`<provider>/<register>`)
     # - register_variant, variable: per parent register (the register slot in
     #   `<provider>/<register>/<variant>...` already disambiguates them).
@@ -640,7 +641,7 @@ def load_classifications_toml(path: Path) -> list[SlugEntry]:
             )
         entry = _validate_entry("classification", source_id, raw, provider=None)
         # A2.6.1: the classification FQID is the 2-segment `class/<slug>`, so
-        # the slug alone must be unique (the vintage is baked in, §5.2).
+        # the slug alone must be unique (the vintage is baked in).
         slug_key = entry.slug or ""
         prev = seen_slugs.get(slug_key)
         if prev is not None:
@@ -660,7 +661,7 @@ UNFROZEN_MARKER = "UNFROZEN"
 
 
 def is_unfrozen(slug_dir: Path) -> bool:
-    """§5.4 pre-v1 escape hatch: returns True iff ``UNFROZEN`` sentinel file
+    """Pre-v1 escape hatch (see DESIGN.md → Slug immutability): returns True iff ``UNFROZEN`` sentinel file
     exists in ``slug_dir``.
 
     While the file is present, ``precheck-slugs --update-snapshot`` writes
@@ -741,8 +742,8 @@ def _parse_variant_id(source_id: str) -> tuple[int, int]:
 
 def _parse_variable_id(source_id: str) -> tuple[int, str]:
     """Variable source-ID key: `<RegisterId>.<VarId>` for a 1:1 variable, or
-    `<RegisterId>.<VarId>.<discriminator>` for a §5.7 split sibling (A2.2 —
-    siblings share `VarId`; the trailing delivery-column slug disambiguates
+    `<RegisterId>.<VarId>.<discriminator>` for a split sibling (siblings
+    share `VarId`; the trailing delivery-column slug disambiguates
     their auto-slug cache entries). Returns `(register_id, var_key)`.
 
     `RegisterId` is always a canonical integer. `VarId` is the variable's
@@ -826,7 +827,7 @@ def populate_slugs(
 ) -> dict[str, int]:
     """Read ``slug_dir`` and write slug columns on register / register_variant /
     classification. (A2.6: register_version has no slug — version left the FQID
-    grammar, §5.2.)
+    grammar.)
 
     ``strict=True`` (the default for real builds) refuses if any live source
     ID has no slug entry. Tests pass ``strict=False`` to populate whatever's
@@ -852,7 +853,7 @@ def populate_slugs(
     # handles register / variant / classification and intentionally
     # skips variable rows here; the override gate that previously rejected
     # `[variable] slug = ...` is lifted. A2.6: register_version has no slug
-    # column or curation anymore — version is not an FQID segment (§5.2).
+    # column or curation anymore — version is not an FQID segment.
 
     by_provider: dict[str, list[SlugEntry]] = {}
     classification_entries: list[SlugEntry] = []
@@ -1001,7 +1002,7 @@ def populate_slugs(
 
 
 # ---------------------------------------------------------------------------
-# Variable slugs (§5.3 stored `variable.slug`)
+# Variable slugs (stored `variable.slug`; see DESIGN.md → Slug curation)
 # ---------------------------------------------------------------------------
 
 
@@ -1048,7 +1049,7 @@ def write_auto_toml(
     Deterministic (sorted by source ID, numeric-aware) so rebuilds produce
     byte-identical output given identical inputs. Generated artifact — the
     header warns against hand-editing; curator overrides go in the
-    hand-curated ``<provider>.toml`` instead (§5.3).
+    hand-curated ``<provider>.toml`` instead.
 
     ``derivation`` (A4.4a) maps ``source_id`` → derivation class (the
     ``_DERIVATION_*`` constants). When present, each ``slug = "…"`` line carries
@@ -1066,7 +1067,7 @@ def write_auto_toml(
     """
     lines = [
         f"# AUTO-GENERATED by reg-meta-build — do not hand-edit ({provider}).",
-        "# Auto-derived variable slugs (§5.3): one entry per (register, var)",
+        "# Auto-derived variable slugs: one entry per (register, var)",
         "# pair, slug folded from the latest kolumnnamn on first sight and",
         "# never recomputed. Curator overrides belong in the hand-curated",
         f"# {provider}.toml; an override there shadows the entry here.",
@@ -1137,14 +1138,14 @@ def read_auto_derivations(path: Path) -> dict[str, str]:
     return out
 
 
-# Length cap for name-fallback slugs (§5.3). kolumnnamn-derived slugs are short;
+# Length cap for name-fallback slugs. kolumnnamn-derived slugs are short;
 # name-derived fallbacks are truncated to a readable FQID leaf on a hyphen
 # boundary. Residual truncation collisions get a numeric suffix via _uniquify.
 _NAME_SLUG_MAX_LEN = 60
 
 
 def _name_slug(name: str | None, *, cap: int = _NAME_SLUG_MAX_LEN) -> str | None:
-    """Derive a length-capped variable slug from a variable NAME (§5.3 fallback).
+    """Derive a length-capped variable slug from a variable NAME (fallback).
 
     Used when the kolumnnamn-derived slug is unavailable or not register-unique.
     Real SCB registers reuse generic delivery columns (`Kolumn1`/`RadNr`/
@@ -1175,7 +1176,7 @@ def _uniquify(base: str, used: set[str]) -> str:
     """Return ``base`` if free in ``used``, else ``base-2`` / ``base-3`` / … .
 
     Deterministic numeric suffix so first-sight derivation is reproducible.
-    Once a slug is frozen into ``<provider>.auto.toml`` (§5.3 immutability) the
+    Once a slug is frozen into ``<provider>.auto.toml`` (see DESIGN.md → Slug immutability) the
     suffix is stable — a later-added variable just takes the next free index;
     existing slugs are read back from the auto file and never recomputed.
     """
@@ -1203,7 +1204,7 @@ def _fallback_slug(provider_key: str) -> str:
 # mirror the docstring numbering (steps 3-6); the `-N` disambiguator from
 # `_uniquify` is recorded orthogonally as a `+disambiguated` suffix on the base
 # class (`_DISAMBIGUATED_MARKER`), not a separate class.
-_DERIVATION_FOLD = "fold"  # step (3) §5.7 shared column stem (triage)
+_DERIVATION_FOLD = "fold"  # step (3) shared column stem (triage)
 _DERIVATION_DRIFT_NAME = "drift-name"  # step (3a) register-unique name basis
 _DERIVATION_DRIFT_COLUMN = "drift-earliest-column"  # step (3b) earliest column
 _DERIVATION_DRIFT_NAME_RESIDUAL = "drift-name-residual"  # step (3b) → name
@@ -1252,9 +1253,9 @@ def _is_name_fallback_derivation(kind: str) -> bool:
 def _split_sibling_disc(
     conn: sqlite3.Connection, register_id: int, provider_key: str | int
 ) -> dict[int, str]:
-    """variable_id → §5.7 split-sibling discriminator for the siblings sharing
+    """variable_id → split-sibling discriminator for the siblings sharing
     ``(register_id, provider_key)``: the sibling's EARLIEST delivery-column
-    slug, uniquified in column-sorted order (§5.4 rename stability, #139).
+    slug, uniquified in column-sorted order (rename stability, #139).
 
     Single source of truth for BOTH the auto.toml cache key
     (:func:`populate_variable_slugs`) and the curated ``same_as`` / slug-override
@@ -1265,7 +1266,7 @@ def _split_sibling_disc(
     **Immutability scope — DEFERRED to #141, NOT solved here.** This gives split
     siblings *distinct, rebuild-stable* slugs, which is all the pre-v1
     regenerate-every-build model needs: ``UNFROZEN`` regenerates ``scb.auto.toml``
-    each build, so no published FQID exists to break yet. Full §5.4 immutability
+    each build, so no published FQID exists to break yet. Full slug immutability
     across triage transitions — a sibling's delivery column being renamed, or a
     1:1 variable *becoming* a split (migrating the old 2-part auto slug onto the
     right sibling) — needs the slug-freeze format / rename-tracking and is tracked
@@ -1297,9 +1298,9 @@ def populate_variable_slugs(
     slug_dir: Path,
     fold_slugs: dict[int, str] | None = None,
 ) -> dict[str, int]:
-    """Populate register-unique `variable.slug` (§5.3) — always succeeds.
+    """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation) — always succeeds.
 
-    `fold_slugs` (§5.7) maps a *folded* variable's `variable_id` to its
+    `fold_slugs` maps a *folded* variable's `variable_id` to its
     shared-column-stem slug base. A fold keeps one variable whose states span
     several representation columns (`Ssyk3` / `Ssyk5`), so the latest-column
     auto-derive would pick one representation (`ssyk5`) instead of the stem
@@ -1316,8 +1317,8 @@ def populate_variable_slugs(
 
     1. **Curated** `[variable."<reg>.<var>"]` slug in ``<provider>.toml`` — wins.
     2. **Existing auto** slug in ``<provider>.auto.toml`` — kept verbatim
-       (§5.3 immutability: a kolumnnamn/name change can't rot a published slug).
-    3. **Drift-stable basis** (§5.3/#143) — when the variable's
+       (immutability: a kolumnnamn/name change can't rot a published slug).
+    3. **Drift-stable basis** (#143) — when the variable's
        ``delivery_column_name`` is *not* constant across its states (the column
        was renamed/revised across editions), the latest column is a misleading,
        version-coupled basis (``sun2020inr1`` for a var that was
@@ -1339,7 +1340,7 @@ def populate_variable_slugs(
     from .db import _progress
 
     counts = {"curated": 0, "auto_existing": 0, "auto_new": 0}
-    # First-sight variables whose delivery column drifts (§5.3/#143) — slugged
+    # First-sight variables whose delivery column drifts (#143) — slugged
     # from a stable basis (name / earliest column) rather than the latest
     # column. Build-signal only; not a slug-source category, so it's reported on
     # the progress line, not returned in `counts`.
@@ -1357,7 +1358,7 @@ def populate_variable_slugs(
     # A hand-curated [variable] slug override must match a live variable — a
     # non-deprecated override for a missing (register, var) is a typo that would
     # otherwise be silently ignored (the variable auto-slugs under a different
-    # FQID). §5.4 retired variables use deprecated=true; auto-file entries are
+    # FQID). Retired variables use deprecated=true; auto-file entries are
     # exempt (they legitimately outlive deliveries, so they never reach here —
     # `curated_entries` excludes `.auto.toml`). Verified after the provider loop.
     curated_required = {
@@ -1376,7 +1377,7 @@ def populate_variable_slugs(
         # A4.4a: source_id → derivation class — the `# source:` comment basis for
         # the rewritten auto.toml + the name-fallback worklist. Seeded from the
         # EXISTING file's markers so an incremental rewrite (the prior file + new
-        # appended slugs, the §5.4-freeze workflow) preserves the provenance of
+        # appended slugs, the slug-freeze workflow) preserves the provenance of
         # rows it isn't re-deriving; Pass 3 below overwrites/adds for first-sight
         # slugs. Pre-v1 the file regenerates from scratch (UNFROZEN, no prior
         # file), so this is a no-op then and every slug is freshly classed.
@@ -1387,9 +1388,9 @@ def populate_variable_slugs(
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
-        # ties (matches the coalescer tie-break, §5.3). `early_kol` is the
+        # ties (matches the coalescer tie-break). `early_kol` is the
         # mirror (lowest valid_from) — the #139 split-sibling discriminator
-        # basis — and `n_cols` is the §5.3/#143 drift signal: a variable whose
+        # basis — and `n_cols` is the #143 drift signal: a variable whose
         # delivery column is NOT constant across its states (n_cols > 1) must
         # NOT slug from its latest column (a version-specific name like
         # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Ordered by
@@ -1415,7 +1416,7 @@ def populate_variable_slugs(
             (provider_slug,),
         ).fetchall()
 
-        # §5.7 split siblings share one `provider_key`, so `(register_id,
+        # Split siblings share one `provider_key`, so `(register_id,
         # provider_key)` is NOT a unique auto-slug cache key. Without a
         # discriminator the last sibling overwrites the shared `auto.toml`
         # entry, and the next build replays that one slug onto every sibling →
@@ -1425,7 +1426,7 @@ def populate_variable_slugs(
         # uniquified in **column-sorted** order (NOT variable_id order, which is
         # an AUTOINCREMENT that changes across rebuilds) so two siblings whose
         # columns slug-collide still get distinct, rebuild-stable keys.
-        # §5.7 split siblings share one `provider_key`, so `(register_id,
+        # Split siblings share one `provider_key`, so `(register_id,
         # provider_key)` is NOT a unique auto-slug cache key — without a
         # discriminator the last sibling overwrites the shared `auto.toml` entry
         # and the next build replays that one slug onto every sibling →
@@ -1459,12 +1460,12 @@ def populate_variable_slugs(
                 return f"{rid}.{pk}.{disc[vid]}"
             return f"{rid}.{pk}"
 
-        # §5.4 immutability: reserve every PUBLISHED slug per register so a new
+        # Slug immutability: reserve every PUBLISHED slug per register so a new
         # variable can't reuse one (which would recreate a published FQID). Two
         # sources, both of which flow into the grow-only snapshot:
         #   - frozen auto.toml slugs (incl. entries pruned from this delivery);
         #   - hand-curated slugs for variables NOT live in this delivery — a
-        #     deprecated/§5.4-retired entry kept in scb.toml (a non-deprecated
+        #     deprecated/retired entry kept in scb.toml (a non-deprecated
         #     stale one is also flagged by the override-staleness check below).
         # Curated slugs for LIVE variables are intentionally NOT pre-reserved:
         # they're reserved when applied in Pass 1, and pre-reserving would trip
@@ -1484,7 +1485,7 @@ def populate_variable_slugs(
         # The build connection yields plain tuples (not sqlite3.Row), so unpack
         # positionally: (variable_id, register_id, provider_key, name, kol,
         # early_kol, n_cols). `pending` carries the early column + a `drift`
-        # flag (n_cols > 1) into the §5.3/#143 stable-basis fallback in Pass 3.
+        # flag (n_cols > 1) into the #143 stable-basis fallback in Pass 3.
         for register_id, group in groupby(variables, key=lambda row: row[1]):
             used: set[str] = set(reserved_by_register.get(register_id, ()))
             pending: list[
@@ -1501,7 +1502,7 @@ def populate_variable_slugs(
                     applied_curated.add((provider_slug, source_id))
                     # A curated override must not reuse a slug already reserved
                     # for a DIFFERENT source in this register — a frozen
-                    # auto.toml slug (§5.4 immutability) or another row assigned
+                    # auto.toml slug (immutability) or another row assigned
                     # above. Re-taking the variable's own prior auto slug is
                     # fine. Without this it falls through to a raw
                     # UNIQUE(register_id, slug) failure (live other source) or
@@ -1532,7 +1533,7 @@ def populate_variable_slugs(
             # Pass 2: kolumnnamn-slug frequency among first-sight variables.
             # A kol slug is usable directly only if exactly one pending variable
             # derives it and it isn't already taken by a curated/auto slug.
-            # Drifters (§5.3/#143) are excluded from `kol_freq`: they won't claim
+            # Drifters (#143) are excluded from `kol_freq`: they won't claim
             # a latest-column slug, so they mustn't block a stable-column sibling
             # that legitimately wants it (a drifter's last column can equal an
             # unsplit variable's only column — the same-column-different-var_id
@@ -1558,12 +1559,12 @@ def populate_variable_slugs(
                 ks = kol_slug[variable_id]
                 fold = fold_slugs.get(variable_id) if fold_slugs else None
                 if fold:
-                    # §5.7 fold: slug from the shared column stem (triage-
+                    # Fold: slug from the shared column stem (triage-
                     # supplied), not a single representation column.
                     base = fold
                     kind = _DERIVATION_FOLD
                 elif drift:
-                    # §5.3/#143: the delivery column isn't constant across this
+                    # #143: the delivery column isn't constant across this
                     # variable's states, so the latest-column slug is misleading
                     # and version-coupled (`sun2020inr1` for a var that was
                     # SUN96→SUN2000→SUN2020). Slug from a stable basis: the NAME
@@ -1643,7 +1644,7 @@ def populate_variable_slugs(
         f"  Variable slugs: {counts['curated']:,} curated, "
         f"{counts['auto_existing']:,} auto (existing), "
         f"{counts['auto_new']:,} auto (new); "
-        f"{drift_new:,} new from a drift-stable basis (§5.3/#143)"
+        f"{drift_new:,} new from a drift-stable basis (#143)"
     )
     return counts
 
@@ -1680,12 +1681,12 @@ def _assert_no_unslugged(
 
 
 # ---------------------------------------------------------------------------
-# same_as edge materialization (§5.5)
+# same_as edge materialization
 # ---------------------------------------------------------------------------
 
 
 # A2.1.5: variable same_as keys are variable-grain 3-tuples
-# (provider, register, variable). The variant/period slots were dropped (§5.5).
+# (provider, register, variable). The variant/period slots were dropped.
 # Classification keys are 2-tuples (provider, classification_slug).
 _VarKey = tuple[str, str, str]
 _ClassKey = tuple[str, str]
@@ -1737,7 +1738,7 @@ def _variable_source_slug(
             f"{entry.provider}.toml: variable.{entry.source_id!r} split-sibling "
             f"discriminator {disc_key!r} matches {len(matches)} of {len(rows)} "
             f"siblings under (register_id, provider_key).",
-            "Use the exact §5.7 sibling discriminator (the earliest "
+            "Use the exact sibling discriminator (the earliest "
             "delivery-column slug); `reg-meta-build precheck-slugs` lists them.",
         )
     if len(rows) > 1:
@@ -1763,7 +1764,7 @@ def _validate_variable_target(
     point of slug-anchored linking: the link survives forward-of-data renames.
     Provider and register slugs are checked because if those are typos the link
     is permanently dead. A2.1.5: the edge is variable-grain — there are no
-    `register_variant`/`period` narrowing slots (§5.5), so the only DB check is
+    `register_variant`/`period` narrowing slots, so the only DB check is
     provider+register existence. Key shape is enforced upstream by
     `_validate_same_as` (which now rejects variant/period keys) at TOML load.
     """
@@ -1881,7 +1882,7 @@ def materialize_same_as_edges(
     Variables and classifications each get their own edge table. Each TOML
     edge becomes two rows (A→B and B→A) so the resolver can BFS in one
     direction without a UNION lookup. Cycles in the as-declared directed
-    graph are rejected (§5.5).
+    graph are rejected.
 
     Runs after `populate_slugs` — register/variant/version slugs must be
     written before we can validate same_as targets against them.
@@ -1991,13 +1992,13 @@ def materialize_same_as_edges(
 
 
 # ---------------------------------------------------------------------------
-# §5.6 consumer-side binding lineage config (TOML-only, no SQL table)
+# Consumer-side binding lineage config (TOML-only, no SQL table; see DESIGN.md → Consumer-side lineage (variable_state_lineage))
 # ---------------------------------------------------------------------------
 
 
 @dataclass(frozen=True)
 class LineageConfig:
-    """Source-variant pinning for §5.6 lineage, parsed from slug TOMLs.
+    """Source-variant pinning for lineage, parsed from slug TOMLs.
 
     Keyed by PROVIDER because register.slug is not globally unique — two
     providers can reuse a register slug, so an `scb/rtb` default must not bleed
@@ -2283,7 +2284,7 @@ def format_default_slug_hints(
 
 
 # A4.4c-ii panel proposer defaults: the LISA-style delivery-aligned majority
-# (§6.8.3). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
+# (see reg_webapp/DESIGN.md → Semantic validation (semantic.py)). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
 # curation — auto-detecting it inline is brittle, so the proposer never emits it.
 _PANEL_DEFAULT_TIME_KEY = "period"
 _PANEL_DEFAULT_TIME_GRAIN = "delivery"
@@ -2295,8 +2296,8 @@ def propose_panel_entity_key(
     """Propose a starter ``panel_entity_key`` for one register_variant (A4.4c-ii).
 
     The entity key is the variant's panel entity-identifier variable slug(s)
-    (§6.8.3), proposed from the persisted ``variable.is_identifier`` flag (the
-    §6.8.3 entity-key driver): the slugs of identifier variables that actually
+    proposed from the persisted ``variable.is_identifier`` flag (the
+    entity-key driver): the slugs of identifier variables that actually
     deliver on THIS variant (joined through ``variable_state.register_variant_id``
     so a register's identifier set doesn't fan onto sibling variants that don't
     carry it).
@@ -2413,7 +2414,7 @@ def seed_provider_toml(
         )
 
     # A2.6: register_version is not seeded — version is not an FQID segment and
-    # has no slug column anymore (§5.2). Only register + register_variant emit.
+    # has no slug column anymore. Only register + register_variant emit.
     for register_id, name, existing_slug in regs:
         candidate = existing_slug or derive_variable_slug(name) or "TODO"
         # Register-level audit comment: the `registernamn` is the
@@ -2464,7 +2465,7 @@ def seed_classifications_toml(conn: sqlite3.Connection) -> str:
         "# Starter classification slug TOML.",
         "# Generated by `reg-meta-build seed-slugs`. Hand-review the slug",
         "# (auto-derived from short_name, often needs shortening; the vintage",
-        "# bakes into the slug, §5.2 — `class/<slug>`, e.g. `sun2020`).",
+        "# bakes into the slug — `class/<slug>`, e.g. `sun2020`).",
         "",
     ]
     rows = conn.execute(
@@ -2526,7 +2527,7 @@ class PrecheckResult:
     stale_variants: tuple[tuple[str, str], ...] = ()
     stale_classifications: tuple[str, ...] = ()
     entries: tuple[SlugEntry, ...] = ()
-    # Advisory (§5.3/#143): variables whose delivery column drifts across
+    # Advisory (#143): variables whose delivery column drifts across
     # editions, auto-slugged from a stable basis (name / earliest column). A
     # pre-v1 curation-review aid, NOT a gate — never feeds `ok`/exit. Each row:
     # (provider, register_id, provider_key, slug, name, cols-in-valid_from-order).
@@ -2653,7 +2654,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
 def _drifting_variables(
     conn: sqlite3.Connection,
 ) -> tuple[tuple[str, int, str, str, str, tuple[str, ...]], ...]:
-    """Advisory list (§5.3/#143): variables whose ``delivery_column_name`` is
+    """Advisory list (#143): variables whose ``delivery_column_name`` is
     NOT constant across their ``variable_state`` rows.
 
     ``populate_variable_slugs`` already slugs these from a stable basis (name /
@@ -2722,7 +2723,7 @@ def _name_fallback_variables(
 ) -> tuple[tuple[str, str, str, str], ...]:
     """Advisory worklist (A4.4a): auto-slugged variables in the name-fallback /
     ``-N`` disambiguator / ``v<provider_key>`` last-resort derivation classes —
-    the curation backlog a curator works through before the §5.4 slug freeze.
+    the curation backlog a curator works through before the slug freeze.
 
     Reads the `# source:` derivation markers `write_auto_toml` emits into each
     live provider's ``<provider>.auto.toml`` (the single source of truth — the
@@ -2801,7 +2802,7 @@ def _stale_toml_entries(
     surfaces every stale entry at once instead of failing on the first.
     Deprecated entries are excluded — they're allowed to outlive their DB row.
     Variable entries are excluded from the staleness precheck: the bulk are
-    build-generated `<provider>.auto.toml` rows (A2.1.5, §5.3), which the
+    build-generated `<provider>.auto.toml` rows, which the
     grow-only snapshot (`snapshot_payload`) already covers, and an auto entry
     may legitimately outlive a variable pruned from a later delivery. Stale
     *hand-curated* `[variable]` slug overrides (typo'd keys) are instead caught
@@ -2834,7 +2835,7 @@ def _stale_toml_entries(
 
 
 # ---------------------------------------------------------------------------
-# Snapshot (§5.4 grow-only immutability)
+# Snapshot (grow-only; see DESIGN.md → Slug immutability)
 # ---------------------------------------------------------------------------
 
 

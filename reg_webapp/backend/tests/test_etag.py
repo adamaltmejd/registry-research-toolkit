@@ -1,8 +1,9 @@
-"""Unit tests for the §9.4 ETag / Cache-Control LOGIC (``etag.py``).
+"""Unit tests for the ETag / Cache-Control LOGIC (``etag.py``).
 
-Pure-function layer — no app, no DB. The middleware wiring + the end-to-end
+See DESIGN.md → ETag / Cache-Control (etag.py + middleware.py). Pure-function
+layer — no app, no DB. The middleware wiring + the end-to-end
 304 behavior live in ``test_etag_middleware.py``. The Cloudflare edge-cache
-round-trip is a MAINTAINER task (§9.4), explicitly NOT tested here.
+round-trip is a MAINTAINER task, explicitly NOT tested here.
 """
 
 from __future__ import annotations
@@ -80,7 +81,7 @@ def test_etag_matches_wildcard():
 
 
 def test_etag_matches_weak_validator_matches_strong():
-    # RFC 7232 §3.2: If-None-Match uses WEAK comparison, so a weak-validator
+    # RFC 7232 Section 3.2: If-None-Match uses WEAK comparison, so a weak-validator
     # request value (W/"...") matches our strong ETag with the same opaque-tag —
     # this is what lets an edge (Cloudflare) that weakened our ETag still 304.
     etag = compute_etag(b"body", "1.0.0", "global")

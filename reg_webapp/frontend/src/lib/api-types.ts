@@ -59,14 +59,14 @@ export interface paths {
          *     `?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at
          *     state subset.
          *
-         *     The §16 guards (`_validated_fqid` for the path, `_validated_period` /
+         *     The guards (`_validated_fqid` for the path, `_validated_period` /
          *     `_validated_variant` for the queries) run as dependencies, BEFORE this body —
          *     so a malformed path OR a malformed period/variant returns 422 **before** any
          *     connection opens (zero SQL, zero opens). `parse` is DB-free and runs before
          *     the open too. The classification-root literal `class` (1 seg) is special-cased
          *     before `parse`.
          *
-         *     `?period` semantics (§9.5): present + binding leaf → `{states: [...]}` (the
+         *     `?period` semantics: present + binding leaf → `{states: [...]}` (the
          *     resolve_at subset, narrowed by `?variant` / `?value_set_version`). present +
          *     non-binding kind → IGNORED (resolve normally). absent on a binding leaf → the
          *     full node (full history) UNLESS a narrowing modifier (`?variant` /
@@ -94,8 +94,9 @@ export interface paths {
         };
         /**
          * Get Binding Lineage
-         * @description Consumer-side composite lineage edges (state grain, §5.6). Maps what
-         *     reg_meta's `LineageEdge` carries; the §9.5 richer per-source-state shape is a
+         * @description Consumer-side composite lineage edges (state grain — see
+         *     reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)).
+         *     Maps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a
          *     possible reg_meta enhancement (not blocked on here — see DESIGN.md).
          */
         get: operations["get_binding_lineage_api_catalog__fqid__lineage_get"];
@@ -116,7 +117,7 @@ export interface paths {
         };
         /**
          * Get Binding Lineage Warnings
-         * @description Build-time lineage warnings for the binding (§5.6). Empty when lineage
+         * @description Build-time lineage warnings for the binding. Empty when lineage
          *     resolved cleanly. The leaf does NOT embed these — this is their endpoint.
          */
         get: operations["get_binding_lineage_warnings_api_catalog__fqid__lineage_warnings_get"];
@@ -137,7 +138,7 @@ export interface paths {
         };
         /**
          * Get Binding Predecessors
-         * @description Variables this binding's variable replaced (inbound succession, §9.5).
+         * @description Variables this binding's variable replaced (inbound succession).
          */
         get: operations["get_binding_predecessors_api_catalog__fqid__predecessors_get"];
         put?: never;
@@ -157,7 +158,8 @@ export interface paths {
         };
         /**
          * Get Binding Related
-         * @description Split-sibling variables (variable grain, §5.7).
+         * @description Split-sibling variables (variable grain — see reg_meta_build/DESIGN.md →
+         *     Build-time triage (SCB)).
          */
         get: operations["get_binding_related_api_catalog__fqid__related_get"];
         put?: never;
@@ -177,7 +179,7 @@ export interface paths {
         };
         /**
          * Get Binding States
-         * @description Full state history for a binding (§9.5). ≡ the leaf's embedded `states`,
+         * @description Full state history for a binding. ≡ the leaf's embedded `states`,
          *     standalone. Same shape the `?period` catch-all returns (codegen sees one
          *     state-list type).
          */
@@ -219,7 +221,7 @@ export interface paths {
         };
         /**
          * Get Register Variants
-         * @description List a register's variants (the `?variant=` browse axis, §9.5). `_default`
+         * @description List a register's variants (the `?variant=` browse axis). `_default`
          *     is a real variant and IS returned (not filtered). 404 when the register
          *     doesn't resolve (so a typo'd register isn't a silent empty list).
          */
@@ -260,9 +262,10 @@ export interface paths {
         put?: never;
         /**
          * Order Project
-         * @description Render the steward's default v1 order-export CSV (§9.5).
+         * @description Render the steward's default v1 order-export CSV.
          *
-         *     Reads the raw dict and runs the §6.8.1 STRUCTURAL gate before rendering: the
+         *     Reads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md →
+         *     Structural rules and issue codes) before rendering: the
          *     ``ProjectData`` model enforces only field types, while the structural rules
          *     (FQID shape, period grammar, the binding/source-prefix match) live in
          *     ``validate_structural`` — so a Pydantic-valid-but-structurally-invalid spec
@@ -289,11 +292,11 @@ export interface paths {
         put?: never;
         /**
          * Validate Project
-         * @description Validate a ``project_data.json`` (§6.8.0). Returns 200 with the concatenated
+         * @description Validate a ``project_data.json``. Returns 200 with the concatenated
          *     structural ⧺ block ⧺ semantic issue list + the derived ``ok`` flag; a 4xx is
          *     reserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).
          *
-         *     This is the §6.8.0 SEMANTIC validator (reg_meta-backed). It now ALSO runs the
+         *     This is the SEMANTIC validator (reg_meta-backed). It now ALSO runs the
          *     build-time cross-block referential checks (orphan ``binding_options`` keys /
          *     suppress_k-on-non-categorical) — that half of the old ``/validate``↔``/bundle``
          *     divergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the
@@ -339,7 +342,7 @@ export interface components {
         /**
          * BindingNode
          * @description A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
-         *     longitudinal record embedded from one `Catalog.resolve` call (§9.5): shared
+         *     longitudinal record embedded from one `Catalog.resolve` call: shared
          *     metadata, every state (each tagged with its variant), and the variable-grain
          *     `same_as` / `replaced_by` / `related_to` / `lineage` edges.
          *
@@ -393,13 +396,13 @@ export interface components {
         };
         /**
          * CatalogDriftWarning
-         * @description One boot-time steward-catalog drift warning (§6.8.3 / §9.1).
+         * @description One boot-time steward-catalog drift warning.
          *
          *     Emitted when the steward's committed ``steward.project_data.json`` references
          *     an FQID reg_meta no longer admits: the steward-mode semantic validator
          *     downgrades the miss to a warning, the binding drops from the in-memory index,
          *     and this carries the warning to the SPA so it can show a "catalog drift"
-         *     banner. ``code`` is the §6.8.3 ValidationIssue code (``fqid_unresolved`` /
+         *     banner. ``code`` is the ValidationIssue code (``fqid_unresolved`` /
          *     ``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the
          *     JSON pointer into the steward catalog. Always empty for the ``global``
          *     deployment (no filter).
@@ -434,8 +437,9 @@ export interface components {
         /**
          * ClassificationRootNode
          * @description The classification-root sentinel (`class`, 1 seg) — a child of the root
-         *     and a resolvable node whose `children` are every classification (§5.2: `class`
-         *     is a reserved slug, not a real provider).
+         *     and a resolvable node whose `children` are every classification (see
+         *     reg_meta/DESIGN.md → FQID grammar: `class` is a reserved slug, not a real
+         *     provider).
          */
         ClassificationRootNode: {
             /**
@@ -481,11 +485,11 @@ export interface components {
         };
         /**
          * ContextResponse
-         * @description ``GET /api/context`` — deployment identity, branding, build info (§9.5).
+         * @description ``GET /api/context`` — deployment identity, branding, build info.
          *
          *     No git sha (decision: no new provenance dep). The reg_meta block reflects
          *     the DB the backend booted against; the webapp block reflects the installed
-         *     packages. ``catalog_drift_warnings`` (§6.8.3 / §9.1) is the steward-catalog
+         *     packages. ``catalog_drift_warnings`` is the steward-catalog
          *     drift surfaced at boot — empty for ``global`` and for an up-to-date catalog.
          */
         ContextResponse: {
@@ -502,7 +506,8 @@ export interface components {
         };
         /**
          * LineageEdgeModel
-         * @description A consumer-side lineage edge (state grain, §5.6) tying a consumer state to
+         * @description A consumer-side lineage edge (state grain — see reg_meta_build/DESIGN.md →
+         *     Consumer-side lineage (variable_state_lineage)) tying a consumer state to
          *     a source state over their validity intersection. `source_fqid` is the source
          *     state's 3-seg binding FQID (None when the source slugs aren't populated).
          */
@@ -520,10 +525,10 @@ export interface components {
         };
         /**
          * LineageResponse
-         * @description `GET /api/catalog/{fqid}/lineage` — consumer-side lineage edges (§5.6).
+         * @description `GET /api/catalog/{fqid}/lineage` — consumer-side lineage edges.
          *
          *     Maps what `reg_meta.LineageEdge` carries (consumer/source state ids, the
-         *     validity intersection, source_fqid). The §9.5 richer per-source-state shape
+         *     validity intersection, source_fqid). The richer per-source-state shape
          *     (embedding each source state's variant / value_set / column) is a possible
          *     reg_meta enhancement, NOT blocked on here — see DESIGN.md.
          */
@@ -535,7 +540,7 @@ export interface components {
         };
         /**
          * LineageWarningModel
-         * @description A build-time lineage warning for a consumer state (§5.6):
+         * @description A build-time lineage warning for a consumer state:
          *     `variable_state_lineage_warning`. `warning_kind` is `no_source_state` or
          *     `ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`.
          */
@@ -549,8 +554,8 @@ export interface components {
         };
         /**
          * LineageWarningsResponse
-         * @description `GET /api/catalog/{fqid}/lineage_warnings` — build-time lineage warnings
-         *     (§5.6 / §9.5). Empty list when lineage resolved cleanly.
+         * @description `GET /api/catalog/{fqid}/lineage_warnings` — build-time lineage warnings.
+         *     Empty list when lineage resolved cleanly.
          */
         LineageWarningsResponse: {
             /** Binding */
@@ -560,7 +565,7 @@ export interface components {
         };
         /**
          * PredecessorsResponse
-         * @description `GET /api/catalog/{fqid}/predecessors` — inbound succession (§9.5).
+         * @description `GET /api/catalog/{fqid}/predecessors` — inbound succession.
          */
         PredecessorsResponse: {
             /** Binding */
@@ -641,7 +646,7 @@ export interface components {
         /**
          * RegisterResponse
          * @description `GET /api/catalog/{provider}/{register}` — the register + its bindings and
-         *     the variant-browser reference stub as children (§9.5).
+         *     the variant-browser reference stub as children.
          */
         RegisterResponse: {
             /** Children */
@@ -660,7 +665,8 @@ export interface components {
         };
         /**
          * RelatedRefModel
-         * @description A split-sibling edge (`variable_related_to`, §5.7) with its
+         * @description A split-sibling edge (`variable_related_to` — see reg_meta_build/DESIGN.md →
+         *     Build-time triage (SCB)) with its
          *     `relation_kind`. `register` is the alias for `register_name` (see
          *     `VariableRefModel`) — avoids the `BaseModel.register` method shadow.
          */
@@ -678,7 +684,7 @@ export interface components {
         };
         /**
          * RelatedResponse
-         * @description `GET /api/catalog/{fqid}/related` — split-sibling edges (§5.7 / §9.5).
+         * @description `GET /api/catalog/{fqid}/related` — split-sibling edges.
          */
         RelatedResponse: {
             /** Binding */
@@ -689,7 +695,7 @@ export interface components {
         /**
          * RootResponse
          * @description `GET /api/catalog` — the catalog root: every provider plus the
-         *     classification-root sentinel (§9.5).
+         *     classification-root sentinel.
          */
         RootResponse: {
             /** Children */
@@ -703,7 +709,7 @@ export interface components {
         };
         /**
          * StatesResponse
-         * @description `GET /api/catalog/{fqid}/states` — the binding's full state history (§9.5).
+         * @description `GET /api/catalog/{fqid}/states` — the binding's full state history.
          *     Same `states` shape the binding leaf embeds, as a standalone envelope. With a
          *     `?period` query on the catch-all this same shape carries the resolve_at
          *     subset (uniform: codegen sees one state-list type).
@@ -716,7 +722,7 @@ export interface components {
         };
         /**
          * StewardInfo
-         * @description Deployment identity + branding, from ``steward.toml`` (§9.1).
+         * @description Deployment identity + branding, from ``steward.toml``.
          */
         StewardInfo: {
             /** Id */
@@ -728,7 +734,7 @@ export interface components {
         };
         /**
          * SuccessorsResponse
-         * @description `GET /api/catalog/{fqid}/successors` — outbound succession (§9.5).
+         * @description `GET /api/catalog/{fqid}/successors` — outbound succession.
          */
         SuccessorsResponse: {
             /** Binding */
@@ -751,7 +757,7 @@ export interface components {
         };
         /**
          * ValidationIssueModel
-         * @description One §6.8.0 validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
+         * @description One validation issue — a 1:1 Pydantic wrapper of reg_schema's frozen
          *     ``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is
          *     an RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document
          *     issues); ``code`` is the stable, namespaced rule identifier the SPA maps to a
@@ -772,7 +778,7 @@ export interface components {
         };
         /**
          * ValidationResultModel
-         * @description `POST /api/project/validate` response — the §6.8.0 concatenated issue list
+         * @description `POST /api/project/validate` response — the concatenated issue list
          *     (structural ⧺ block ⧺ semantic) plus the derived ``ok`` flag.
          *
          *     ``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level
@@ -828,7 +834,8 @@ export interface components {
         /**
          * VariableStateModel
          * @description One `variable_state` row — a per-delivery shape tagged with its variant
-         *     coordinate (§5.1). `value_set` is the hydrated (code, label) pairs, None when
+         *     coordinate (see reg_meta/DESIGN.md → Two-level variable model). `value_set` is
+         *     the hydrated (code, label) pairs, None when
          *     the state carries no value set.
          */
         VariableStateModel: {
@@ -857,11 +864,12 @@ export interface components {
         };
         /**
          * VariantModel
-         * @description One register variant (the `register_variant` sub-resource, §9.5) — the
+         * @description One register variant (the `register_variant` sub-resource) — the
          *     `?variant=` browse axis. A variant is NOT FQID-addressable (the variant left
-         *     the binding FQID, §5.0.1), so it carries the variant `slug` (the browse
-         *     coordinate) + display fields, not an `Fqid`. Maps 1:1 to
-         *     `reg_meta.catalog.VariantSummary`. A4.4c adds the §9.5 read-only `panel_*`
+         *     the binding FQID — see reg_meta/DESIGN.md → Two-level variable model), so it
+         *     carries the variant `slug` (the browse coordinate) + display fields, not an
+         *     `Fqid`. Maps 1:1 to
+         *     `reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`
          *     fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
          *     (composite); `panel_time_key` is "period" or a variable-slug;
          *     `panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data →
@@ -886,7 +894,7 @@ export interface components {
         /**
          * VariantsRef
          * @description Reference to a register's variant browser — the `/{provider}/{register}/
-         *     variants` sub-resource (§9.5, wired in A5.2a). A discriminated slot in
+         *     variants` sub-resource (wired in A5.2a). A discriminated slot in
          *     `RegisterChild` so the union / TS types carry the navigable `register_fqid`;
          *     the client GETs `{register_fqid}/variants` to list them.
          */
@@ -901,8 +909,8 @@ export interface components {
         };
         /**
          * VariantsResponse
-         * @description `GET /api/catalog/{provider}/{register}/variants` — the variant browser
-         *     (§9.5). The wire key `register` is the 2-seg register FQID; `variants` the
+         * @description `GET /api/catalog/{provider}/{register}/variants` — the variant browser.
+         *     The wire key `register` is the 2-seg register FQID; `variants` the
          *     register's `register_variant` sub-resource list.
          *
          *     The Python attr is `register_name` (aliased to `register`) for the same reason

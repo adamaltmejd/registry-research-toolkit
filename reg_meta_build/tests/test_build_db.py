@@ -282,7 +282,7 @@ class TestBuildDb:
         assert row["source_label"] is None
 
     def test_e2e_variable_state_lineage_edge(self, db_conn: sqlite3.Connection):
-        """A2.4 (§5.6) end-to-end: the full build_db pipeline materializes a
+        """End-to-end: the full build_db pipeline materializes a
         `variable_state_lineage` edge. OTHERREG's Kön (consumer, sourced from
         TESTREG, year 2021) joins TESTREG's value-set-bearing Kön state
         (2020-2021, `individer` variant pinned via `[lineage_defaults]`); the
@@ -443,7 +443,7 @@ class TestBuildDb:
             assert n >= 1, f"no variable_state for variable_id {vid}"
 
     def test_variable_state_valid_from_to_full_iso(self, db_conn: sqlite3.Connection):
-        """§5.1: every valid_from / valid_to is a 10-char YYYY-MM-DD string.
+        """Every valid_from / valid_to is a 10-char YYYY-MM-DD string.
         The CHECK constraint guards this at write time; this test catches
         the data layer in case a future migration loosens the CHECK."""
         rows = db_conn.execute(
@@ -478,7 +478,7 @@ class TestBuildDb:
         has NULL value_set (sentinel-only Vardemangder rows for 2022).
 
         Each group claims its OWN observed years — not the full unika
-        lifetime — per the §5.1 non-overlap invariant and the Codex P1
+        lifetime — per the non-overlap invariant and the Codex P1
         fix on PR #130. Without clamping, both groups would inherit
         unika's 2020-2022 range and overlap on 2020-2021 with no
         `value_set_version_label` discriminator, which the A2.5 point
@@ -506,7 +506,7 @@ class TestBuildDb:
         assert without_set[0]["valid_to"] == "2022-12-31"
 
     def test_variable_state_delivery_column_name(self, db_conn: sqlite3.Connection):
-        """§5.1: delivery_column_name on variable_state is the denormalized
+        """delivery_column_name on variable_state is the denormalized
         latest alias. For TestVar (cvid 1002) with aliases ['TestCol',
         'TestKolumn'] both attached to the same regver, the lexically
         smaller alias wins by deterministic tie-break."""
@@ -536,7 +536,7 @@ class TestBuildDb:
         self, db_conn: sqlite3.Connection
     ):
         """A2.1: value_set_version_label rides through the coalescer onto
-        variable_state — it's the §5.7 multi-vintage discriminator that
+        variable_state — it's the multi-vintage discriminator that
         permits overlapping states. UniqueVar's instance gets the "2"
         label from Vardemangder; assert it surfaces on the state row."""
         row = db_conn.execute(
@@ -687,10 +687,10 @@ class TestBuildDb:
     def test_no_synthetic_default_variant_rows_persisted(
         self, db_conn: sqlite3.Connection
     ):
-        # §5.1: the `_default` placeholder for variant-less registers is
+        # The `_default` placeholder for variant-less registers is
         # synthesized at FQID-resolve time (catalog.py), never persisted.
         # Every register_variant row in the DB must be a real source row
-        # — i.e. `name` (renamed from `registervariantnamn` per §5.11) populated.
+        # — i.e. `name` (renamed from `registervariantnamn`) populated.
         synthetic = db_conn.execute(
             "SELECT COUNT(*) FROM register_variant WHERE name IS NULL"
         ).fetchone()[0]
@@ -1334,7 +1334,7 @@ class TestYearProjection:
 
 class TestSameAsBuildIntegration:
     """End-to-end coverage that `build_db` correctly wires up
-    `materialize_same_as_edges` (§5.5): tables created, populated when the
+    `materialize_same_as_edges`: tables created, populated when the
     slug TOML carries `same_as`, skipped under `--skip-slugs`, and the
     resolver can traverse against the resulting DB."""
 
@@ -1451,7 +1451,7 @@ class TestSameAsBuildIntegration:
 
 
 class TestOperationalDefinitionFold:
-    """A1.1 / §5.11: SCB ships `VariabelOperationell_definition` as a refinement
+    """SCB ships `VariabelOperationell_definition` as a refinement
     over `Variabelbeskrivning`. The Model A schema drops the dedicated column
     and folds the operational definition into `description` when it's distinct
     and non-empty. These tests lock the fold contract — empty op stays empty,
@@ -1932,7 +1932,7 @@ class TestVariableStateMultiShape:
             conn.close()
 
     def test_groups_non_overlapping(self, tmp_path: Path):
-        """§5.1 invariant: variable_state rows for the same variable are
+        """Invariant: variable_state rows for the same variable are
         non-overlapping unless explicitly discriminated by
         value_set_version_label. Multi-shape ShiftingVar has no
         discriminator, so its two states must NOT overlap. This is the
@@ -2134,11 +2134,11 @@ class TestVariableStateRenameMidLife:
 
 
 class TestReplacedByEdges:
-    """A2.3: succession edges materialized from `timeseries_event` (§5.5).
+    """Succession edges materialized from `timeseries_event`.
 
     Reworked onto the two-level model: `variable_replaced_by` is **variable
     grain** — 3-part `(provider, register, variable)` endpoints, no variant —
-    and the variable slot carries the STORED `variable.slug` (A2.1.5 §5.3), not
+    and the variable slot carries the STORED `variable.slug`, not
     a build-time derivation. `register_replaced_by` / `variant_replaced_by` are
     unchanged from the original draft.
 
@@ -2179,7 +2179,7 @@ class TestReplacedByEdges:
         """Build a DB with custom Timeseries.csv rows. Returns the DB path.
 
         ``registerinformation_rows=None`` uses the standard fixture; pass a
-        custom list (e.g. to inject a §5.7 triage split) to vary the variables.
+        custom list (e.g. to inject a triage split) to vary the variables.
         """
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
@@ -2343,7 +2343,7 @@ class TestReplacedByEdges:
             conn.close()
 
     def test_split_var_id_skipped_as_ambiguous(self, tmp_path: Path) -> None:
-        """A §5.7 triage SPLIT (A2.2, #139) makes one (register, var_id) map to
+        """A triage SPLIT (#139) makes one (register, var_id) map to
         several sibling variables sharing `provider_key`. A bare `Variabel`
         succession id carries no discriminator, so it can't pick a sibling and
         is skipped under `n_skipped_ambiguous_variable`, distinct from a plain
@@ -2375,7 +2375,7 @@ class TestReplacedByEdges:
                 "SELECT COUNT(*) FROM variable "
                 "WHERE register_id = 1 AND provider_key = '920'"
             ).fetchone()[0]
-            assert sibs == 2, "fixture should produce a §5.7 triage split"
+            assert sibs == 2, "fixture should produce a triage split"
             assert (
                 conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
                 == 0

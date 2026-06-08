@@ -1,6 +1,6 @@
-"""Write-endpoint cost protection: body cap + rate limit + content-type (§9.4).
+"""Write-endpoint cost protection: body cap + rate limit + content-type.
 
-Covers ``limits.py``:
+See DESIGN.md → Cost protection (limits.py). Covers ``limits.py``:
 
 - a body > 1 MB → 413, AND that the guard is STREAMING (it rejects an oversized
   body even when ``Content-Length`` lies / is absent — not Content-Length-trusting);

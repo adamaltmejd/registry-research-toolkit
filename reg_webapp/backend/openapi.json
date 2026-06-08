@@ -33,7 +33,7 @@
         "type": "object"
       },
       "BindingNode": {
-        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call (\u00a79.5): shared\nmetadata, every state (each tagged with its variant), and the variable-grain\n`same_as` / `replaced_by` / `related_to` / `lineage` edges.\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
+        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call: shared\nmetadata, every state (each tagged with its variant), and the variable-grain\n`same_as` / `replaced_by` / `related_to` / `lineage` edges.\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
         "properties": {
           "definition": {
             "anyOf": [
@@ -199,7 +199,7 @@
         "type": "object"
       },
       "CatalogDriftWarning": {
-        "description": "One boot-time steward-catalog drift warning (\u00a76.8.3 / \u00a79.1).\n\nEmitted when the steward's committed ``steward.project_data.json`` references\nan FQID reg_meta no longer admits: the steward-mode semantic validator\ndowngrades the miss to a warning, the binding drops from the in-memory index,\nand this carries the warning to the SPA so it can show a \"catalog drift\"\nbanner. ``code`` is the \u00a76.8.3 ValidationIssue code (``fqid_unresolved`` /\n``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the\nJSON pointer into the steward catalog. Always empty for the ``global``\ndeployment (no filter).",
+        "description": "One boot-time steward-catalog drift warning.\n\nEmitted when the steward's committed ``steward.project_data.json`` references\nan FQID reg_meta no longer admits: the steward-mode semantic validator\ndowngrades the miss to a warning, the binding drops from the in-memory index,\nand this carries the warning to the SPA so it can show a \"catalog drift\"\nbanner. ``code`` is the ValidationIssue code (``fqid_unresolved`` /\n``value_set_missing`` / ``period_outside_state_validity``); ``path`` is the\nJSON pointer into the steward catalog. Always empty for the ``global``\ndeployment (no filter).",
         "properties": {
           "code": {
             "title": "Code",
@@ -267,7 +267,7 @@
         "type": "object"
       },
       "ClassificationRootNode": {
-        "description": "The classification-root sentinel (`class`, 1 seg) \u2014 a child of the root\nand a resolvable node whose `children` are every classification (\u00a75.2: `class`\nis a reserved slug, not a real provider).",
+        "description": "The classification-root sentinel (`class`, 1 seg) \u2014 a child of the root\nand a resolvable node whose `children` are every classification (see\nreg_meta/DESIGN.md \u2192 FQID grammar: `class` is a reserved slug, not a real\nprovider).",
         "properties": {
           "fqid": {
             "default": "class",
@@ -323,7 +323,7 @@
         "type": "object"
       },
       "ContextResponse": {
-        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info (\u00a79.5).\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` (\u00a76.8.3 / \u00a79.1) is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.",
+        "description": "``GET /api/context`` \u2014 deployment identity, branding, build info.\n\nNo git sha (decision: no new provenance dep). The reg_meta block reflects\nthe DB the backend booted against; the webapp block reflects the installed\npackages. ``catalog_drift_warnings`` is the steward-catalog\ndrift surfaced at boot \u2014 empty for ``global`` and for an up-to-date catalog.",
         "properties": {
           "catalog_drift_warnings": {
             "items": {
@@ -364,7 +364,7 @@
         "type": "object"
       },
       "LineageEdgeModel": {
-        "description": "A consumer-side lineage edge (state grain, \u00a75.6) tying a consumer state to\na source state over their validity intersection. `source_fqid` is the source\nstate's 3-seg binding FQID (None when the source slugs aren't populated).",
+        "description": "A consumer-side lineage edge (state grain \u2014 see reg_meta_build/DESIGN.md \u2192\nConsumer-side lineage (variable_state_lineage)) tying a consumer state to\na source state over their validity intersection. `source_fqid` is the source\nstate's 3-seg binding FQID (None when the source slugs aren't populated).",
         "properties": {
           "consumer_state_id": {
             "title": "Consumer State Id",
@@ -404,7 +404,7 @@
         "type": "object"
       },
       "LineageResponse": {
-        "description": "`GET /api/catalog/{fqid}/lineage` \u2014 consumer-side lineage edges (\u00a75.6).\n\nMaps what `reg_meta.LineageEdge` carries (consumer/source state ids, the\nvalidity intersection, source_fqid). The \u00a79.5 richer per-source-state shape\n(embedding each source state's variant / value_set / column) is a possible\nreg_meta enhancement, NOT blocked on here \u2014 see DESIGN.md.",
+        "description": "`GET /api/catalog/{fqid}/lineage` \u2014 consumer-side lineage edges.\n\nMaps what `reg_meta.LineageEdge` carries (consumer/source state ids, the\nvalidity intersection, source_fqid). The richer per-source-state shape\n(embedding each source state's variant / value_set / column) is a possible\nreg_meta enhancement, NOT blocked on here \u2014 see DESIGN.md.",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -426,7 +426,7 @@
         "type": "object"
       },
       "LineageWarningModel": {
-        "description": "A build-time lineage warning for a consumer state (\u00a75.6):\n`variable_state_lineage_warning`. `warning_kind` is `no_source_state` or\n`ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`.",
+        "description": "A build-time lineage warning for a consumer state:\n`variable_state_lineage_warning`. `warning_kind` is `no_source_state` or\n`ambiguous_source_variant`. Maps 1:1 to `reg_meta.catalog.LineageWarning`.",
         "properties": {
           "consumer_state_id": {
             "title": "Consumer State Id",
@@ -450,7 +450,7 @@
         "type": "object"
       },
       "LineageWarningsResponse": {
-        "description": "`GET /api/catalog/{fqid}/lineage_warnings` \u2014 build-time lineage warnings\n(\u00a75.6 / \u00a79.5). Empty list when lineage resolved cleanly.",
+        "description": "`GET /api/catalog/{fqid}/lineage_warnings` \u2014 build-time lineage warnings.\nEmpty list when lineage resolved cleanly.",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -472,7 +472,7 @@
         "type": "object"
       },
       "PredecessorsResponse": {
-        "description": "`GET /api/catalog/{fqid}/predecessors` \u2014 inbound succession (\u00a79.5).",
+        "description": "`GET /api/catalog/{fqid}/predecessors` \u2014 inbound succession.",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -627,7 +627,7 @@
         "type": "object"
       },
       "RegisterResponse": {
-        "description": "`GET /api/catalog/{provider}/{register}` \u2014 the register + its bindings and\nthe variant-browser reference stub as children (\u00a79.5).",
+        "description": "`GET /api/catalog/{provider}/{register}` \u2014 the register + its bindings and\nthe variant-browser reference stub as children.",
         "properties": {
           "children": {
             "items": {
@@ -691,7 +691,7 @@
         "type": "object"
       },
       "RelatedRefModel": {
-        "description": "A split-sibling edge (`variable_related_to`, \u00a75.7) with its\n`relation_kind`. `register` is the alias for `register_name` (see\n`VariableRefModel`) \u2014 avoids the `BaseModel.register` method shadow.",
+        "description": "A split-sibling edge (`variable_related_to` \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)) with its\n`relation_kind`. `register` is the alias for `register_name` (see\n`VariableRefModel`) \u2014 avoids the `BaseModel.register` method shadow.",
         "properties": {
           "fqid": {
             "anyOf": [
@@ -732,7 +732,7 @@
         "type": "object"
       },
       "RelatedResponse": {
-        "description": "`GET /api/catalog/{fqid}/related` \u2014 split-sibling edges (\u00a75.7 / \u00a79.5).",
+        "description": "`GET /api/catalog/{fqid}/related` \u2014 split-sibling edges.",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -754,7 +754,7 @@
         "type": "object"
       },
       "RootResponse": {
-        "description": "`GET /api/catalog` \u2014 the catalog root: every provider plus the\nclassification-root sentinel (\u00a79.5).",
+        "description": "`GET /api/catalog` \u2014 the catalog root: every provider plus the\nclassification-root sentinel.",
         "properties": {
           "children": {
             "items": {
@@ -784,7 +784,7 @@
         "type": "object"
       },
       "StatesResponse": {
-        "description": "`GET /api/catalog/{fqid}/states` \u2014 the binding's full state history (\u00a79.5).\nSame `states` shape the binding leaf embeds, as a standalone envelope. With a\n`?period` query on the catch-all this same shape carries the resolve_at\nsubset (uniform: codegen sees one state-list type).",
+        "description": "`GET /api/catalog/{fqid}/states` \u2014 the binding's full state history.\nSame `states` shape the binding leaf embeds, as a standalone envelope. With a\n`?period` query on the catch-all this same shape carries the resolve_at\nsubset (uniform: codegen sees one state-list type).",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -806,7 +806,7 @@
         "type": "object"
       },
       "StewardInfo": {
-        "description": "Deployment identity + branding, from ``steward.toml`` (\u00a79.1).",
+        "description": "Deployment identity + branding, from ``steward.toml``.",
         "properties": {
           "id": {
             "title": "Id",
@@ -830,7 +830,7 @@
         "type": "object"
       },
       "SuccessorsResponse": {
-        "description": "`GET /api/catalog/{fqid}/successors` \u2014 outbound succession (\u00a79.5).",
+        "description": "`GET /api/catalog/{fqid}/successors` \u2014 outbound succession.",
         "properties": {
           "binding": {
             "title": "Binding",
@@ -892,7 +892,7 @@
         "type": "object"
       },
       "ValidationIssueModel": {
-        "description": "One \u00a76.8.0 validation issue \u2014 a 1:1 Pydantic wrapper of reg_schema's frozen\n``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is\nan RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document\nissues); ``code`` is the stable, namespaced rule identifier the SPA maps to a\nUI affordance.",
+        "description": "One validation issue \u2014 a 1:1 Pydantic wrapper of reg_schema's frozen\n``ValidationIssue`` dataclass. ``level`` is the tri-state severity; ``path`` is\nan RFC-6901 JSON pointer into ``project_data.json`` (empty for whole-document\nissues); ``code`` is the stable, namespaced rule identifier the SPA maps to a\nUI affordance.",
         "properties": {
           "code": {
             "title": "Code",
@@ -926,7 +926,7 @@
         "type": "object"
       },
       "ValidationResultModel": {
-        "description": "`POST /api/project/validate` response \u2014 the \u00a76.8.0 concatenated issue list\n(structural \u29fa block \u29fa semantic) plus the derived ``ok`` flag.\n\n``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level\nissue is present (warnings/info do not flip it). A validation FAILURE is a\nSUCCESSFUL validation RESPONSE \u2014 this carries HTTP 200 with ``ok=false`` and\nthe issues; 4xx is reserved for a malformed request (bad JSON / oversized body\n/ wrong content-type), never for a spec that simply failed to validate.",
+        "description": "`POST /api/project/validate` response \u2014 the concatenated issue list\n(structural \u29fa block \u29fa semantic) plus the derived ``ok`` flag.\n\n``ok`` mirrors ``reg_schema.ValidationResult.ok``: True iff NO error-level\nissue is present (warnings/info do not flip it). A validation FAILURE is a\nSUCCESSFUL validation RESPONSE \u2014 this carries HTTP 200 with ``ok=false`` and\nthe issues; 4xx is reserved for a malformed request (bad JSON / oversized body\n/ wrong content-type), never for a spec that simply failed to validate.",
         "properties": {
           "issues": {
             "items": {
@@ -1025,7 +1025,7 @@
         "type": "object"
       },
       "VariableStateModel": {
-        "description": "One `variable_state` row \u2014 a per-delivery shape tagged with its variant\ncoordinate (\u00a75.1). `value_set` is the hydrated (code, label) pairs, None when\nthe state carries no value set.",
+        "description": "One `variable_state` row \u2014 a per-delivery shape tagged with its variant\ncoordinate (see reg_meta/DESIGN.md \u2192 Two-level variable model). `value_set` is\nthe hydrated (code, label) pairs, None when\nthe state carries no value set.",
         "properties": {
           "data_length": {
             "anyOf": [
@@ -1127,7 +1127,7 @@
         "type": "object"
       },
       "VariantModel": {
-        "description": "One register variant (the `register_variant` sub-resource, \u00a79.5) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID, \u00a75.0.1), so it carries the variant `slug` (the browse\ncoordinate) + display fields, not an `Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. A4.4c adds the \u00a79.5 read-only `panel_*`\nfields: `panel_entity_key` is a bare variable-slug string or a list of slugs\n(composite); `panel_time_key` is \"period\" or a variable-slug;\n`panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data \u2192\nall three are None.",
+        "description": "One register variant (the `register_variant` sub-resource) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID \u2014 see reg_meta/DESIGN.md \u2192 Two-level variable model), so it\ncarries the variant `slug` (the browse coordinate) + display fields, not an\n`Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`\nfields: `panel_entity_key` is a bare variable-slug string or a list of slugs\n(composite); `panel_time_key` is \"period\" or a variable-slug;\n`panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data \u2192\nall three are None.",
         "properties": {
           "description": {
             "anyOf": [
@@ -1213,7 +1213,7 @@
         "type": "object"
       },
       "VariantsRef": {
-        "description": "Reference to a register's variant browser \u2014 the `/{provider}/{register}/\nvariants` sub-resource (\u00a79.5, wired in A5.2a). A discriminated slot in\n`RegisterChild` so the union / TS types carry the navigable `register_fqid`;\nthe client GETs `{register_fqid}/variants` to list them.",
+        "description": "Reference to a register's variant browser \u2014 the `/{provider}/{register}/\nvariants` sub-resource (wired in A5.2a). A discriminated slot in\n`RegisterChild` so the union / TS types carry the navigable `register_fqid`;\nthe client GETs `{register_fqid}/variants` to list them.",
         "properties": {
           "kind": {
             "const": "variants-ref",
@@ -1233,7 +1233,7 @@
         "type": "object"
       },
       "VariantsResponse": {
-        "description": "`GET /api/catalog/{provider}/{register}/variants` \u2014 the variant browser\n(\u00a79.5). The wire key `register` is the 2-seg register FQID; `variants` the\nregister's `register_variant` sub-resource list.\n\nThe Python attr is `register_name` (aliased to `register`) for the same reason\nas `VariableRefModel`: a bare `register` field shadows `BaseModel.register` (a\nPydantic v2 method) and warns. FastAPI serializes by alias, so the wire key\nstays `register`; the alias is also the canonical init param.",
+        "description": "`GET /api/catalog/{provider}/{register}/variants` \u2014 the variant browser.\nThe wire key `register` is the 2-seg register FQID; `variants` the\nregister's `register_variant` sub-resource list.\n\nThe Python attr is `register_name` (aliased to `register`) for the same reason\nas `VariableRefModel`: a bare `register` field shadows `BaseModel.register` (a\nPydantic v2 method) and warns. FastAPI serializes by alias, so the wire key\nstays `register`; the alias is also the canonical init param.",
         "properties": {
           "register": {
             "title": "Register",
@@ -1330,7 +1330,7 @@
     },
     "/api/catalog/{fqid}": {
       "get": {
-        "description": "Resolve any catalog node by FQID path; on a binding leaf, an optional\n`?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at\nstate subset.\n\nThe \u00a716 guards (`_validated_fqid` for the path, `_validated_period` /\n`_validated_variant` for the queries) run as dependencies, BEFORE this body \u2014\nso a malformed path OR a malformed period/variant returns 422 **before** any\nconnection opens (zero SQL, zero opens). `parse` is DB-free and runs before\nthe open too. The classification-root literal `class` (1 seg) is special-cased\nbefore `parse`.\n\n`?period` semantics (\u00a79.5): present + binding leaf \u2192 `{states: [...]}` (the\nresolve_at subset, narrowed by `?variant` / `?value_set_version`). present +\nnon-binding kind \u2192 IGNORED (resolve normally). absent on a binding leaf \u2192 the\nfull node (full history) UNLESS a narrowing modifier (`?variant` /\n`?value_set_version`) is set: those are inert without `?period`, so they 422\n(\"requires ?period\") rather than silently no-op. absent on a non-binding kind \u2192\nthe full node. `?value_set_version` is a read-only browse-narrowing label\nfilter \u2014 there is no FQID `@version` pin (retired). The connection is opened and\nused within this sync body (one thread \u2014 see `_catalog_conn`).",
+        "description": "Resolve any catalog node by FQID path; on a binding leaf, an optional\n`?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at\nstate subset.\n\nThe guards (`_validated_fqid` for the path, `_validated_period` /\n`_validated_variant` for the queries) run as dependencies, BEFORE this body \u2014\nso a malformed path OR a malformed period/variant returns 422 **before** any\nconnection opens (zero SQL, zero opens). `parse` is DB-free and runs before\nthe open too. The classification-root literal `class` (1 seg) is special-cased\nbefore `parse`.\n\n`?period` semantics: present + binding leaf \u2192 `{states: [...]}` (the\nresolve_at subset, narrowed by `?variant` / `?value_set_version`). present +\nnon-binding kind \u2192 IGNORED (resolve normally). absent on a binding leaf \u2192 the\nfull node (full history) UNLESS a narrowing modifier (`?variant` /\n`?value_set_version`) is set: those are inert without `?period`, so they 422\n(\"requires ?period\") rather than silently no-op. absent on a non-binding kind \u2192\nthe full node. `?value_set_version` is a read-only browse-narrowing label\nfilter \u2014 there is no FQID `@version` pin (retired). The connection is opened and\nused within this sync body (one thread \u2014 see `_catalog_conn`).",
         "operationId": "get_catalog_node_api_catalog__fqid__get",
         "parameters": [
           {
@@ -1452,7 +1452,7 @@
     },
     "/api/catalog/{fqid}/lineage": {
       "get": {
-        "description": "Consumer-side composite lineage edges (state grain, \u00a75.6). Maps what\nreg_meta's `LineageEdge` carries; the \u00a79.5 richer per-source-state shape is a\npossible reg_meta enhancement (not blocked on here \u2014 see DESIGN.md).",
+        "description": "Consumer-side composite lineage edges (state grain \u2014 see\nreg_meta_build/DESIGN.md \u2192 Consumer-side lineage (variable_state_lineage)).\nMaps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a\npossible reg_meta enhancement (not blocked on here \u2014 see DESIGN.md).",
         "operationId": "get_binding_lineage_api_catalog__fqid__lineage_get",
         "parameters": [
           {
@@ -1492,7 +1492,7 @@
     },
     "/api/catalog/{fqid}/lineage_warnings": {
       "get": {
-        "description": "Build-time lineage warnings for the binding (\u00a75.6). Empty when lineage\nresolved cleanly. The leaf does NOT embed these \u2014 this is their endpoint.",
+        "description": "Build-time lineage warnings for the binding. Empty when lineage\nresolved cleanly. The leaf does NOT embed these \u2014 this is their endpoint.",
         "operationId": "get_binding_lineage_warnings_api_catalog__fqid__lineage_warnings_get",
         "parameters": [
           {
@@ -1532,7 +1532,7 @@
     },
     "/api/catalog/{fqid}/predecessors": {
       "get": {
-        "description": "Variables this binding's variable replaced (inbound succession, \u00a79.5).",
+        "description": "Variables this binding's variable replaced (inbound succession).",
         "operationId": "get_binding_predecessors_api_catalog__fqid__predecessors_get",
         "parameters": [
           {
@@ -1572,7 +1572,7 @@
     },
     "/api/catalog/{fqid}/related": {
       "get": {
-        "description": "Split-sibling variables (variable grain, \u00a75.7).",
+        "description": "Split-sibling variables (variable grain \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)).",
         "operationId": "get_binding_related_api_catalog__fqid__related_get",
         "parameters": [
           {
@@ -1612,7 +1612,7 @@
     },
     "/api/catalog/{fqid}/states": {
       "get": {
-        "description": "Full state history for a binding (\u00a79.5). \u2261 the leaf's embedded `states`,\nstandalone. Same shape the `?period` catch-all returns (codegen sees one\nstate-list type).",
+        "description": "Full state history for a binding. \u2261 the leaf's embedded `states`,\nstandalone. Same shape the `?period` catch-all returns (codegen sees one\nstate-list type).",
         "operationId": "get_binding_states_api_catalog__fqid__states_get",
         "parameters": [
           {
@@ -1692,7 +1692,7 @@
     },
     "/api/catalog/{provider}/{register}/variants": {
       "get": {
-        "description": "List a register's variants (the `?variant=` browse axis, \u00a79.5). `_default`\nis a real variant and IS returned (not filtered). 404 when the register\ndoesn't resolve (so a typo'd register isn't a silent empty list).",
+        "description": "List a register's variants (the `?variant=` browse axis). `_default`\nis a real variant and IS returned (not filtered). 404 when the register\ndoesn't resolve (so a typo'd register isn't a silent empty list).",
         "operationId": "get_register_variants_api_catalog__provider___register__variants_get",
         "parameters": [
           {
@@ -1759,7 +1759,7 @@
     },
     "/api/project/order": {
       "post": {
-        "description": "Render the steward's default v1 order-export CSV (\u00a79.5).\n\nReads the raw dict and runs the \u00a76.8.1 STRUCTURAL gate before rendering: the\n``ProjectData`` model enforces only field types, while the structural rules\n(FQID shape, period grammar, the binding/source-prefix match) live in\n``validate_structural`` \u2014 so a Pydantic-valid-but-structurally-invalid spec\n(e.g. a malformed ``register_variant`` or bad period token) would otherwise\nrender a bad provider order at 200. A structurally invalid spec \u2192 422.\n``async`` + ``run_in_threadpool`` (blocking display_name resolution off the\nevent loop), mirroring ``/validate``.",
+        "description": "Render the steward's default v1 order-export CSV.\n\nReads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md \u2192\nStructural rules and issue codes) before rendering: the\n``ProjectData`` model enforces only field types, while the structural rules\n(FQID shape, period grammar, the binding/source-prefix match) live in\n``validate_structural`` \u2014 so a Pydantic-valid-but-structurally-invalid spec\n(e.g. a malformed ``register_variant`` or bad period token) would otherwise\nrender a bad provider order at 200. A structurally invalid spec \u2192 422.\n``async`` + ``run_in_threadpool`` (blocking display_name resolution off the\nevent loop), mirroring ``/validate``.",
         "operationId": "order_project_api_project_order_post",
         "requestBody": {
           "content": {
@@ -1785,7 +1785,7 @@
     },
     "/api/project/validate": {
       "post": {
-        "description": "Validate a ``project_data.json`` (\u00a76.8.0). Returns 200 with the concatenated\nstructural \u29fa block \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nThis is the \u00a76.8.0 SEMANTIC validator (reg_meta-backed). It now ALSO runs the\nbuild-time cross-block referential checks (orphan ``binding_options`` keys /\nsuppress_k-on-non-categorical) \u2014 that half of the old ``/validate``\u2194``/bundle``\ndivergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the\nstep-4 capability gates (e.g. a build-required ``display_name``), which\n``/validate`` does NOT \u2014 so a spec ``/validate`` greenlights can still 422 at\n``/bundle`` on a capability gate (an intentional lenient residual: ``/validate``\ndefaults ``display_name`` from reg_meta).\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
+        "description": "Validate a ``project_data.json``. Returns 200 with the concatenated\nstructural \u29fa block \u29fa semantic issue list + the derived ``ok`` flag; a 4xx is\nreserved for a malformed REQUEST (``read_raw_json_object`` / the body cap).\n\nThis is the SEMANTIC validator (reg_meta-backed). It now ALSO runs the\nbuild-time cross-block referential checks (orphan ``binding_options`` keys /\nsuppress_k-on-non-categorical) \u2014 that half of the old ``/validate``\u2194``/bundle``\ndivergence is CLOSED. The ONLY residual gap: ``/bundle`` additionally runs the\nstep-4 capability gates (e.g. a build-required ``display_name``), which\n``/validate`` does NOT \u2014 so a spec ``/validate`` greenlights can still 422 at\n``/bundle`` on a capability gate (an intentional lenient residual: ``/validate``\ndefaults ``display_name`` from reg_meta).\n\n``async`` only to read the body off the wire; the BLOCKING work (the structural\nparse + the semantic layer's per-binding sqlite resolution) is offloaded to the\nthreadpool via ``run_in_threadpool`` so it never stalls the event loop (the\ncatalog routes are plain ``def`` for the same reason). The reg_meta connection\nopens on that threadpool thread (one thread \u2192 the cross-thread sqlite P1 can't\nrecur).",
         "operationId": "validate_project_api_project_validate_post",
         "requestBody": {
           "content": {

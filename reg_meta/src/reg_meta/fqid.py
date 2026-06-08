@@ -1,4 +1,4 @@
-"""FQID parser/emitter for reg_meta (REFACTOR_SPEC.md §5.2).
+"""FQID parser/emitter for reg_meta (see DESIGN.md → FQID grammar).
 
 Forms:
 
@@ -11,7 +11,7 @@ A2.6 grammar flip: the binding FQID names the **variable** directly and is
 3-segment (`provider/register/slug`). The variant and the period are
 **delivery coordinates** (carried on `variable_state` / passed to
 `resolve_at`), NOT FQID segments — so the variant FQID kind and the
-register_version FQID kind are gone (§5.2 DECISION POINT 2). With the variant
+register_version FQID kind are gone. With the variant
 slot removed, a 3-segment string like `scb/lisa/individer-15plus` is
 unambiguously a binding (variable slug `individer-15plus`); there is no
 3-segment variant address to collide with.
@@ -19,7 +19,7 @@ unambiguously a binding (variable slug `individer-15plus`); there is no
 The leading ``class/`` discriminates classification FQIDs from the binding
 form; ``class`` is reserved everywhere else. A2.6.1 folded the classification
 vintage into the slug, so the classification FQID is the 2-segment
-`class/<slug>` (`class/sun2020`, `class/lkf2007`, §5.2) — there is no separate
+`class/<slug>` (`class/sun2020`, `class/lkf2007`; see DESIGN.md → FQID grammar) — there is no separate
 version segment, and the slug alone is the global uniqueness key.
 
 The period grammar (``is_period`` / ``period_token_to_bounds`` /
@@ -51,7 +51,7 @@ class FqidKind(StrEnum):
 CLASSIFICATION_PREFIX = "class"
 DEFAULT_VARIANT_SLUG = "_default"
 
-# §5.2 reserved HTTP-suffix slugs. reg_webapp's catalog router declares
+# Reserved HTTP-suffix slugs (see DESIGN.md → FQID grammar). reg_webapp's catalog router declares
 # sub-resource routes that greedy-shadow variable canonical paths; a slug equal
 # to one of these would mint an FQID whose URL is permanently captured by the
 # route, so they're reserved in the slot(s) whose canonical URL position the
@@ -84,10 +84,10 @@ RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
 # neither can collide, so neither is reserved.)
 RESERVED_VARIANTS_SLUG = "variants"
 
-# §5.2 prose pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
+# The FQID-grammar prose (see DESIGN.md → FQID grammar) pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
 # only"; the form below enforces both in one expression. Anchored with `\Z`, NOT
 # `$`: Python's `$` also matches just before a single trailing newline, so `$`
-# would accept a slug like `kon\n` — a hole the reg_webapp §16 path-guard (which
+# would accept a slug like `kon\n` — a hole the reg_webapp path guard (see reg_webapp/DESIGN.md → FQID path guard (catalog_fqid.py)) (which
 # delegates here) and build-time slug validation both rely on this rejecting.
 _SLUG_RE = re.compile(r"^[a-z](?:-?[a-z0-9])*\Z")
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
@@ -109,7 +109,7 @@ _DAY = r"(?:0[1-9]|[12]\d|3[01])"
 
 # `\Z` not `$` (same footgun fixed for `_SLUG_RE` above): Python's `$` also matches
 # just before a single trailing newline, so `^{_YEAR}$` would accept `"2020\n"`.
-# `is_period` is the §16 `?period` allow-list reg_webapp delegates to, so a
+# `is_period` is the `?period` allow-list reg_webapp delegates to (see reg_webapp/DESIGN.md → query allow-list (period_param.py)), so a
 # trailing-newline period must be rejected here, not opened-and-queried downstream.
 _PERIOD_PATTERNS = (
     re.compile(rf"^{_YEAR}\Z"),
@@ -130,7 +130,7 @@ _PERIOD_PATTERNS = (
 # contain literal `YYYY-MM-DD` (e.g. `'2014-12-31'`); the half-year pattern
 # is curated-only (Swedish source forms like `Första halvåret 1995` don't
 # carry the bare `1995-H1` substring, same as `maj-2011`/`kv1-2011` — see
-# REFACTOR_SPEC.md §5.3 for the canonical-form convention). `derive_period_with_span`
+# reg_meta_build/DESIGN.md → Slug curation for the canonical-form convention). `derive_period_with_span`
 # checks each match against `is_period`, so a calendar-impossible ISO date
 # (`2019-02-29`) skips the full-date pattern and degrades to the next, most-specific
 # VALID token (`2019-02`) — keeping extractor output and `is_period` in agreement.
@@ -191,7 +191,7 @@ def is_period(value: str) -> bool:
 
 # Quarter / half-year → (start_month, end_month). Used by `period_token_to_bounds`
 # to expand a token into an ISO date interval the same way the ingest coalescer
-# does (§5.1: period tokens expand to ISO ranges).
+# does (period tokens expand to ISO ranges — see DESIGN.md → FQID grammar).
 _QUARTER_MONTHS = {
     "1": ("01", "03"),
     "2": ("04", "06"),
@@ -219,7 +219,7 @@ def period_token_to_bounds(token: str) -> tuple[str, str]:
 
     The full date-range expansion the resolver's `resolve_at` needs to intersect
     against `variable_state` validity ranges (which are stored as full ISO dates,
-    §5.1). Mirrors the ingest-side expansion so a `HT2020` query and a `HT2020`
+    see DESIGN.md → Two-level variable model). Mirrors the ingest-side expansion so a `HT2020` query and a `HT2020`
     state agree on bounds. Accepts the six period forms `is_period` accepts:
 
         2018          → 2018-01-01 .. 2018-12-31
@@ -270,7 +270,7 @@ def validate_slug(
             return
         raise FqidError(
             f"`_default` is reserved for the register_variant slug "
-            f"(a delivery coordinate, §5.1); got it in {slot_name}"
+            f"(a delivery coordinate); got it in {slot_name}"
         )
     if value == CLASSIFICATION_PREFIX:
         raise FqidError(
@@ -291,7 +291,7 @@ def validate_slug(
             f"invalid slug in {slot_name}: {value!r} "
             f"(grammar: ^[a-z][a-z0-9-]*[a-z0-9]$ or single ^[a-z]$, single hyphens only)"
         )
-    # §5.2 reserved HTTP-suffix slugs: a grammar-valid slug equal to one of these
+    # Reserved HTTP-suffix slugs (see DESIGN.md → FQID grammar): a grammar-valid slug equal to one of these
     # would shadow a live reg_webapp catalog sub-resource route (see
     # `RESERVED_HTTP_SUFFIX_SLUGS`). Keyed on the slot — a token only collides in
     # the slot(s) whose canonical URL position the route can occupy. The provider
@@ -328,7 +328,7 @@ class Fqid:
 
     A2.6: the binding FQID names the variable (`provider/register/variable`);
     `variant` and `period` are no longer FQID fields (they are delivery
-    coordinates carried elsewhere — §5.1/§5.2).
+    coordinates carried elsewhere — see DESIGN.md → FQID grammar / Two-level variable model).
     """
 
     kind: FqidKind
@@ -363,7 +363,7 @@ class Fqid:
     def binding_fqid(cls, provider: str, register: str, variable: str) -> Fqid:
         """A2.6: the 3-segment binding FQID names the variable directly
         (`provider/register/variable`). The variant and period are delivery
-        coordinates resolved via `resolve_at`, not FQID segments (§5.2)."""
+        coordinates resolved via `resolve_at`, not FQID segments (see DESIGN.md → FQID grammar)."""
         validate_slug(provider, FqidKind.PROVIDER)
         validate_slug(register, FqidKind.REGISTER)
         validate_slug(variable, "variable")
@@ -378,7 +378,7 @@ class Fqid:
     def classification_fqid(cls, classification: str) -> Fqid:
         """A2.6.1: the 2-segment classification FQID names the version-baked
         slug directly (`class/<slug>`, e.g. `class/sun2020`). The vintage lives
-        in the slug, not a separate segment (§5.2)."""
+        in the slug, not a separate segment (see DESIGN.md → FQID grammar)."""
         validate_slug(classification, FqidKind.CLASSIFICATION)
         return cls(kind=FqidKind.CLASSIFICATION, classification=classification)
 
@@ -386,7 +386,7 @@ class Fqid:
 def parse(value: str) -> Fqid:
     """Parse and validate an FQID string. Raises ``FqidError`` on any violation.
 
-    A2.6 grammar (§5.2): kind is determined purely by segment count + the
+    A2.6 grammar (see DESIGN.md → FQID grammar): kind is determined purely by segment count + the
     `class/` discriminator. 1 = provider, 2 = register, 3 = variable binding
     (the FQID names the variable). The `class/` prefix marks a classification;
     A2.6.1 made it 2-segment (`class/<slug>`, vintage baked into the slug). There
@@ -441,8 +441,8 @@ def derive_period_with_span(
     version_name: str | None,
 ) -> tuple[str, int, int] | None:
     """Like :func:`derive_period` but also returns the `(start, end)` span the
-    match consumed in ``version_name``. Lets audit tooling (seed-slugs §5.3
-    rule callout) recover the residual — the source-name text outside the
+    match consumed in ``version_name``. Lets audit tooling (the seed-slugs rule callout, see reg_meta_build/DESIGN.md → Slug
+    curation) recover the residual — the source-name text outside the
     matched period — so a curator can see what auto-derive would discard.
     """
     if not version_name:
@@ -475,7 +475,7 @@ def derive_period(version_name: str | None) -> str | None:
 
     Match order is termin patterns first, then the period patterns in
     most-specific-first order. Reordering would let `1980 höstterminen`
-    collapse to bare `1980` and re-trip the §5.3 uniqueness rule it exists
+    collapse to bare `1980` and re-trip the uniqueness rule (see reg_meta_build/DESIGN.md → Slug curation) it exists
     to prevent.
     """
     match = derive_period_with_span(version_name)
@@ -483,9 +483,9 @@ def derive_period(version_name: str | None) -> str | None:
 
 
 def derive_variable_slug(delivery_column_name: str | None) -> str | None:
-    """Derive a variable slug from a SCB delivery column name (§5.3 auto-slug
-    rule). The input is `variable_alias.delivery_column_name` — the §5.11
-    rename of what SCB ships as `kolumnnamn` (e.g. `Kon`, `PersonNr`).
+    """Derive a variable slug from a SCB delivery column name (auto-slug
+    rule; see reg_meta_build/DESIGN.md → Slug curation). The input is `variable_alias.delivery_column_name` — the glossary
+    rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) of what SCB ships as `kolumnnamn` (e.g. `Kon`, `PersonNr`).
 
     Lowercases, strips diacritics via NFKD ASCII fold, replaces runs of
     non-alphanumerics with single hyphens. Returns ``None`` when the result
@@ -505,7 +505,7 @@ def derive_variable_slug(delivery_column_name: str | None) -> str | None:
     candidate = _SLUG_NONALNUM.sub("-", folded).strip("-")
     # A derived slug must clear the exact same bar an authored variable slug does,
     # so delegate to `validate_slug` (grammar, period, the `_default`/`class`
-    # reservations, and the §5.2 HTTP-suffix tokens) rather than re-checking them
+    # reservations, and the HTTP-suffix tokens; see DESIGN.md → FQID grammar) rather than re-checking them
     # here — the two can never drift, and it's the same build-via-validating-factory
     # idiom as `try_emit`. A column literally named e.g. "States"/"Variants" thus
     # degrades to None (caller falls back to the name/last-resort slug) instead of

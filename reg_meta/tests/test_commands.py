@@ -1863,7 +1863,7 @@ class TestGetSchemaYearOverlap:
 
 def _folded_window_db():
     """In-memory DB with ONE delivery window (2007) holding four columns:
-    two ordinary variables (`value_set_version_label=''`) plus a §5.7 folded
+    two ordinary variables (`value_set_version_label=''`) plus a folded
     multi-vintage variable delivering two states (`sni92` + `sni2007`) in the
     SAME window. Exercises that get_schema groups by delivery window, not by
     the per-column vintage label.
@@ -1926,7 +1926,7 @@ def _folded_window_db():
 class TestGetSchemaFoldedWindowNotSharded:
     """A2.6 P2 regression: get_schema groups editions by DELIVERY WINDOW only.
 
-    A §5.7 folded multi-vintage variable carries two states in one window with
+    A folded multi-vintage variable (see reg_meta_build/DESIGN.md → Build-time triage (SCB)) carries two states in one window with
     distinct `value_set_version_label`s while ordinary columns carry ''. Keying
     the edition by the label sharded one delivered schema into partial pseudo-
     versions (the '' group missing the folded var, each vintage group missing

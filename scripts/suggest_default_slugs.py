@@ -11,7 +11,7 @@ that has exactly one variant, and groups them into three classes:
                   descriptive.
 
 Run against a slugged or `--skip-slugs` build (it joins on names, not slugs).
-After v1 freeze (§5.4 *Activation*) this script becomes redundant: new rows
+After v1 freeze (see reg_meta_build/DESIGN.md → Slug immutability) this script becomes redundant: new rows
 will be picked up by the one-line stderr hint folded into `precheck-slugs`.
 
 Usage:

@@ -1015,7 +1015,7 @@ def _segment_windowed_codes(
     """Partition heterogeneous per-code validity windows into NON-OVERLAPPING
     period segments (sweep-line), each carrying the UNION of codes live across its
     full extent — so a period resolves to exactly ONE value set on the column
-    (§5.7 invariant). This is the deferred "Path B" per-period refinement: it
+    (see DESIGN.md → Build-time triage (SCB)). This is the deferred "Path B" per-period refinement: it
     replaces bucketing codes by their EXACT window (which produced overlapping
     value sets when a wide/open code coexisted with narrower sub-windows, e.g.
     SOS ALKOHOL `'0'`[1987–] over `'1'`[1987–96]/[1997–]).
@@ -1124,7 +1124,7 @@ class SOSAdapter:
 
         `value_code` dedups on UNIQUE(code, label); `value_set` dedups on
         UNIQUE(member_hash). Both ids stay AUTOINCREMENT, content-addressed,
-        provider-shared (unbanded — excluded from the §2.6 band assertion).
+        provider-shared (unbanded — excluded from the band assertion).
         Returns the shared value_set_id, or ``None`` for an empty code list.
 
         Ordering is load-bearing: the materializer runs SCB before SOS, so by
@@ -1227,7 +1227,7 @@ class SOSAdapter:
                 detail=w,
             )
 
-        # -- variant synthesis (§2.2): detect via DELDATAMÄNGDER-SHEET ABSENCE
+        # -- variant synthesis: detect via DELDATAMÄNGDER-SHEET ABSENCE
         # (r.deldatamangder == ()), NOT var.deldatamangd (BU populates that from
         # a Datavynamn column yet has no Deldatamängder sheet -> variant-less).
         variant_less = reg.deldatamangder == ()
@@ -1728,7 +1728,8 @@ class SOSAdapter:
         SOS codes can carry HETEROGENEOUS, overlapping tidsperiod windows (a
         wide/open code coexisting with narrower sub-windows). Bucketing by EXACT
         window then produced OVERLAPPING value sets on one column — a period
-        resolving to >1 value set (§5.7 invariant violation). Instead, sweep-line
+        resolving to >1 value set (the co-delivery invariant — see DESIGN.md →
+        Build-time triage (SCB)). Instead, sweep-line
         the 3-way-intersected windows into NON-OVERLAPPING period segments
         (`_segment_windowed_codes`), each carrying the union of codes live across
         it (the "Path B" per-period refinement), and emit one state per segment.
@@ -1743,14 +1744,14 @@ class SOSAdapter:
         not impossible: members carry different `var_bound`/deldat clamps, so a
         period two members share can land in segments with DIFFERENT clamped
         `valid_from` (no exact `state_id` collision → `_emit_states` does not
-        reconcile them). What keeps §5.7 green in the common case is that equal
-        code-content segments CONTENT-SHARE one `value_set_id`, and §5.7 only fails
+        reconcile them). What keeps the invariant green in the common case is that equal
+        code-content segments CONTENT-SHARE one `value_set_id`, and the invariant only fails
         on DISTINCT value sets. The residual hole: `_intersect_advisory_deldat` is
         a FALLBACK, not a pure clamp — when the deldat window would empty a code's
         window it is dropped and the wider authoritative window kept, so a code
         clipped out of member A (deldat honored) can survive in member B (deldat
         dropped); at a shared period on a shared column that is a DISTINCT value
-        set. The **§5.7 build invariant is the guarantee** that catches it (the
+        set. The **build invariant is the guarantee** that catches it (the
         build fails) — this segmentation is not a structural proof against it.
         """
         windowed: list[tuple[str | None, str | None, IRValueCode]] = []

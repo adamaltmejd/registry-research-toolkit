@@ -1,16 +1,17 @@
-"""§16 ``?period`` / ``?variant`` query allow-list for the catalog catch-all.
+"""``?period`` / ``?variant`` query allow-list for the catalog catch-all.
 
-The second §16 chokepoint (alongside ``catalog_fqid.validate_fqid_path``): a
+See DESIGN.md → query allow-list (period_param.py). The second chokepoint
+(alongside ``catalog_fqid.validate_fqid_path``): a
 thin SYNTACTIC allow-list that parses the raw ``?period=`` / ``?variant=`` query
 values into the polymorphic ``reg_meta.catalog.Period`` type **before** any
 reg_meta lookup — so a malformed value (SQLi probe, traversal, NUL,
 percent-encoded slash) returns 422 with ZERO SQL executed and ZERO connections
-opened (§16 "Server-side input-validation gates"). reg_meta's ``resolve_at`` /
+opened. reg_meta's ``resolve_at`` /
 ``_period_bounds`` is the SEMANTIC backstop; this layer is purely about refusing
 non-grammar input before the DB is ever touched.
 
 Single source of truth: the period grammar is ``reg_meta.fqid.is_period`` /
-``period_token_to_bounds`` — we do NOT re-encode it. The wire format (§9.5):
+``period_token_to_bounds`` — we do NOT re-encode it. The wire format:
 
     ?period=2020              int year      → Period int 2020
     ?period=HT2020            period token  → Period str "HT2020"
@@ -52,7 +53,7 @@ RANGE_SEP = ".."
 _YEAR_LEN = 4
 
 # A value-set-version label is a short human string (e.g. "SUN 2000 -
-# Utbildningsnivå"); cap the §16 sanity gate well above any real label.
+# Utbildningsnivå"); cap the sanity gate well above any real label.
 _MAX_VALUE_SET_VERSION_LEN = 200
 
 # Sentinel `?value_set_version` for "the empty/default label" (a state with
@@ -66,7 +67,7 @@ VALUE_SET_VERSION_NONE = "_none"
 
 
 class PeriodParamError(ValueError):
-    """Raised when a raw ``?period=`` value fails the §16 syntactic allow-list.
+    """Raised when a raw ``?period=`` value fails the syntactic allow-list.
 
     The catalog router maps this to HTTP 422 before any Catalog call, so a
     rejection means zero SQL was executed and zero connections opened.
@@ -100,7 +101,7 @@ def _parse_endpoint(raw: str) -> int | str:
 def parse_period(raw: str) -> Period:
     """Parse a raw ``?period=`` wire value into a ``reg_meta.catalog.Period``.
 
-    A pure SYNTACTIC allow-list (§16): the result is one of the polymorphic
+    A pure SYNTACTIC allow-list: the result is one of the polymorphic
     ``Period`` forms ``resolve_at`` accepts — ``int`` year, period-token ``str``,
     ``{"from","to"}`` range ``dict``, or the ``_default`` sentinel ``str``.
     Raises ``PeriodParamError`` (→ 422, zero SQL) on anything else, BEFORE
@@ -134,8 +135,9 @@ def parse_variant(raw: str) -> str:
     """Validate a raw ``?variant=`` value as a register_variant slug.
 
     UNLIKE the FQID path guard, this ADMITS ``_default`` — it is a real
-    ``register_variant`` slug (§5.1, the synthesized variant for LSS/BU/SOL etc.;
-    108 in the real DB), and ``?variant=`` is the register-sub-resource browse
+    ``register_variant`` slug (see reg_meta/DESIGN.md → Two-level variable model;
+    the synthesized variant for LSS/BU/SOL etc.; 108 in the real DB), and
+    ``?variant=`` is the register-sub-resource browse
     coordinate, not a path segment. So the value passes if it is the ``_default``
     literal OR a valid slug. Raises ``VariantParamError`` (→ 422, zero SQL) on
     anything else — delegating the slug grammar to ``reg_meta.fqid.validate_slug``
@@ -156,7 +158,7 @@ def parse_value_set_version(raw: str) -> str:
     (e.g. ``"SUN 1996, 5 positioner, brutto"``) via a Python ``==`` filter in
     ``Catalog.resolve_at`` — NOT a SQL predicate — so there is no injection surface
     and the slug grammar is the WRONG validator (real labels carry spaces, commas,
-    parentheses, mixed case and non-ASCII). This §16 gate is therefore a SANITY
+    parentheses, mixed case and non-ASCII). This gate is therefore a SANITY
     check only: non-empty, length-capped, and no NUL/control characters (the
     classic smuggling / log-injection vectors, never part of a real label). The
     SEMANTIC match (does this label exist for the variable at this period) is

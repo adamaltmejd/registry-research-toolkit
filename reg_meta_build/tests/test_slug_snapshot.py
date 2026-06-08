@@ -1,4 +1,4 @@
-"""Immutability snapshot for committed slug TOMLs (§5.4 grow-only).
+"""Immutability snapshot for committed slug TOMLs (grow-only; see DESIGN.md → Slug immutability).
 
 Compares the live TOMLs at ``reg_meta_build/fqid_slugs/`` against the
 committed snapshot at ``reg_meta_build/fqid_slugs/.snapshot.json``. Adds
@@ -40,7 +40,7 @@ def test_committed_slugs_parse(slug_dir):
 
 
 def test_no_removed_or_renamed_slugs(slug_dir):
-    """§5.4: committed slugs are grow-only. Removals or slug renames here
+    """Committed slugs are grow-only. Removals or slug renames here
     rot every project_data.json that pinned the old FQID.
 
     Skipped while the pre-v1 ``UNFROZEN`` sentinel exists in ``slug_dir``.

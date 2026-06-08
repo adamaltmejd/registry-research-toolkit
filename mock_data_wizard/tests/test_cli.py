@@ -21,9 +21,10 @@ if TYPE_CHECKING:
 
 
 def test_ui_subcommand_returns_frozen_message(capsys):
-    """The ``ui`` subcommand is a stub pending §15 step 7 deletion of
-    the local editor + server + Svelte UI. It accepts no positional or
-    flag arguments and exits with code 2 + a frozen-message hint."""
+    """The ``ui`` subcommand is a stub pending hard deletion of the local
+    editor + server + Svelte UI (REFACTOR_SPEC.md → "7 — Webapp authoring
+    hard-cut"). It accepts no positional or flag arguments and exits with
+    code 2 + a frozen-message hint."""
     rc = main(["ui"])
     assert rc == 2
     err = capsys.readouterr().err

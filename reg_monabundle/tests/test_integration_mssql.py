@@ -1,5 +1,6 @@
 """MONA-shape integration test: the bundle's emitted MSSQL extract
-queries run end-to-end against a real SQL Server (``REFACTOR_SPEC.md`` §16).
+queries run end-to-end against a real SQL Server (see ARCHITECTURE.md →
+Testing strategy).
 
 The MONA runtime aggregates over the project's ODBC views on Statistics
 Sweden's MSSQL backend. Every unit test of that path runs against DuckDB

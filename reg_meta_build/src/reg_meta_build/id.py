@@ -1,7 +1,7 @@
 """Deterministic ID minting for provider-synthesized universal IDs.
 
-REFACTOR_SPEC.md §5 (568-597) / §16 namespace invariant. Build-side only —
-consumed by the SOS adapter (A4.3) and the §16 property test. NOT imported by
+See DESIGN.md → Deterministic ID minting. Build-side only —
+consumed by the SOS adapter and the namespace property test. NOT imported by
 `reg_meta` runtime, `reg_monabundle.runtime`, the MONA bundle, or the webapp;
 keeping it in `reg_meta_build` respects the build/runtime boundary even though
 it is pure stdlib.

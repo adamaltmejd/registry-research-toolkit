@@ -465,7 +465,8 @@ def _seed_split_siblings(conn: Any) -> tuple[int, int]:
             VALUES (9002, 3, '900', 'Imputerat', 'area_imp');
         """
     )
-    # Sibling A: column Rooms, codes {1,2,3}. The §5.7 column-tie discriminator —
+    # Sibling A: column Rooms, codes {1,2,3}. The column-tie discriminator
+    # (reg_meta_build/DESIGN.md → "Build-time triage (SCB)") —
     # delivery_column_name pins the cvid to its sibling.
     vs_a = mint_value_set(conn, [("1", "One"), ("2", "Two"), ("3", "Three")])
     conn.execute(

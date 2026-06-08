@@ -1,4 +1,4 @@
-"""Byte-identical determinism gate for ``build_bundle`` (``REFACTOR_SPEC.md`` §16).
+"""Byte-identical determinism gate for ``build_bundle`` (see DESIGN.md → Bundle determinism).
 
 The MONA bundle is a build artifact that round-trips through MONA's GUI;
 two builds of the same spec must produce the *same bytes* so a rebuild is

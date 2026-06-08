@@ -1,4 +1,4 @@
-"""Corpus harness for §6.8.0 cross-runtime shape coherence.
+"""Corpus harness for cross-runtime shape coherence.
 
 See ``reg_schema/test_corpus/README.md`` for the corpus contract.
 The harness runs ``validate_structural(input)`` against every case
@@ -94,7 +94,7 @@ def test_corpus_is_not_empty() -> None:
 
 @pytest.mark.parametrize("case_dir", _CASES, ids=_CASE_IDS)
 def test_expected_result_decodes(case_dir: Path) -> None:
-    """Every case's expected payload parses against the §6.8.0 contract —
+    """Every case's expected payload parses against the cross-runtime contract —
     the cross-runtime shape coherence the corpus exists to pin."""
 
     payload = json.loads(

@@ -1,6 +1,7 @@
-"""§6.8.3 semantic validator against the slugged ``catalog_db`` fixture.
+"""Semantic validator against the slugged ``catalog_db`` fixture.
 
-Covers: a clean spec → no issues; an unresolvable ``register_variant`` →
+See DESIGN.md → Semantic validation (semantic.py). Covers: a clean spec → no
+issues; an unresolvable ``register_variant`` →
 ``fqid_unresolved``; an unresolvable binding ``variable`` → ``fqid_unresolved``;
 an out-of-validity period → ``period_outside_state_validity``; a missing
 ``value_set`` → ``value_set_missing``; and the researcher-vs-steward caller
@@ -137,7 +138,7 @@ def test_value_set_missing(catalog):
     ],
 )
 def test_steward_caller_downgrades_error_to_warning(catalog, source_patch, code):
-    """§6.8.3 caller context: the three reg_meta-backed codes are blocking errors
+    """Caller context: the three reg_meta-backed codes are blocking errors
     for the researcher path but downgrade to warnings on the steward-catalog load
     path (so a deployment boots through reg_meta drift)."""
     source = {**_CLEAN_SOURCE, **source_patch}
@@ -186,7 +187,7 @@ def test_sos_provider_resolves_clean(catalog):
     assert result.ok
 
 
-# ── §6.8.3 fold: co-delivered value-set versions ───────────────────────────
+# ── Fold: co-delivered value-set versions ──────────────────────────────────
 # A bare binding matching >1 state because several value-set versions are
 # co-delivered in the bound period is `binding_value_set_version_ambiguous`
 # (error); pinning `@<version>` narrows to one and passes. These need a 2-version
@@ -318,7 +319,7 @@ def multi_representation_catalog():
         valid_from="2018-01-01",
         valid_to="9999-12-31",
         delivery_column_name="kon_detalj",  # a SECOND co-existing column
-        value_set_version_label="detalj",  # distinct label (the §5.1 index keys on it)
+        value_set_version_label="detalj",  # distinct label (the index keys on it)
         value_set_id=702,
     )
     conn.commit()
@@ -381,7 +382,7 @@ def test_unknown_representation_is_flagged(multi_representation_catalog):
 def test_unknown_representation_downgrades_for_steward(multi_representation_catalog):
     # A steward committed a representation a newer reg_meta build no longer
     # delivers as a column → drift: downgraded to warning (the binding drops from
-    # the index) instead of crashing boot (§6.8.3 boot-availability invariant).
+    # the index) instead of crashing boot (boot-availability invariant).
     result = validate_semantic(
         _project([_repr_source("nope")]),
         multi_representation_catalog,
@@ -392,7 +393,7 @@ def test_unknown_representation_downgrades_for_steward(multi_representation_cata
     assert result.ok
 
 
-# ── §6.8.3: a version TRANSITION (sequential, non-overlapping) is drift, NOT a
+# ── A version TRANSITION (sequential, non-overlapping) is drift, NOT a
 # co-delivery ambiguity. resolve_at returns every state whose validity intersects
 # the period, so a range / `_default` period crossing a re-version matches several
 # SEQUENTIAL states; their distinct version labels must NOT trip the (blocking)
@@ -590,7 +591,7 @@ def test_representation_under_covering_default_is_drift(uneven_representation_ca
     assert result.ok
 
 
-# ── §6.8.3 (#207): an explicit range PARTIALLY covered by the concept's states.
+# ── #207: an explicit range PARTIALLY covered by the concept's states.
 # `resolve_at` returns the states INTERSECTING the requested `[from, to]`; if their
 # union leaves a gap NO column delivers, the binding silently drops that sub-range.
 # `range_period_partially_covered` (info) surfaces it. This is the WHOLE-CONCEPT

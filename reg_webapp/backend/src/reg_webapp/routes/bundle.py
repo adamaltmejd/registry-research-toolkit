@@ -1,22 +1,25 @@
-"""`POST /api/bundle` — build the MONA upload bundle (§9.5, A5.2b-ii).
+"""`POST /api/bundle` — build the MONA upload bundle (A5.2b-ii).
 
+See DESIGN.md → Project-write surface (routes/project.py + routes/bundle.py).
 Embeds the supplied ``project_data.json`` into a single-file ``.py`` MONA bundle
 and streams it back as ``application/octet-stream``. The bundle is a PURE
-function of its input (§9.5) — building the same spec twice yields byte-identical
-output (the §16 bundle-determinism property).
+function of its input — building the same spec twice yields byte-identical
+output (the bundle-determinism property — see reg_monabundle/DESIGN.md → Bundle
+determinism).
 
 **Reads the RAW dict** (like ``/api/project/validate``), NOT a typed ``ProjectData``
 body: the model is ``extra="ignore"`` at the top level, so a typed body would
-silently DROP steward-namespaced blocks (``swecov`` / ``reg_mockdata``, §6.8.2)
-from the embedded spec. Embedding the raw dict makes the bundle faithfully
+silently DROP steward-namespaced blocks (``swecov`` / ``reg_mockdata`` — see
+reg_monabundle/DESIGN.md → The two halves) from the embedded spec. Embedding the raw dict makes the bundle faithfully
 reproduce the submitted spec — it IS the file-load path (``json.load`` →
 ``build_bundle``), which is why the output matches the canonical CLI bundle.
 
 **The verified 3-call reuse chain** (mirrors ``mock_data_wizard.cli``
 ``_cmd_build_bundle``, the canonical caller):
 
-1. ``validate_project_data(raw)`` — the §6.8.1 Pydantic structural gate; runs the
-   full reg_schema validator + the §6.8.2 block validator + the cross-block
+1. ``validate_project_data(raw)`` — the Pydantic structural gate (see
+   reg_schema/DESIGN.md → Structural rules and issue codes); runs the
+   full reg_schema validator + the block validator + the cross-block
    referential checks. Raises ``ValueError`` / ``ValidationError`` on bad input.
 2. ``project_data_to_loadedspec(validated)`` — exercises the step-4 runtime
    capability gates (datetime / composite key / missing display_name), so an
@@ -35,9 +38,10 @@ with the ``.py`` bytes.
 file IO) is offloaded to the threadpool (``run_in_threadpool``) so it never stalls
 the event loop. DB-free — the bundle build does not touch reg_meta, so no
 connection is opened (and no ETag: a pure function of input → content-hash
-cacheable at the edge, §9.4).
+cacheable at the edge).
 
-**§9.6 boundary.** Imports ``reg_monabundle.build.spec_loader`` (the Pydantic
+**Import boundary** (see reg_monabundle/DESIGN.md → The two halves). Imports
+``reg_monabundle.build.spec_loader`` (the Pydantic
 BUILD side — runs locally, never amalgamated) and the top-level
 ``reg_monabundle.build_bundle`` — NOT ``reg_monabundle.runtime.*`` / duckdb /
 pyodbc. ``spec_loader``'s ``project_data_to_loadedspec`` imports the runtime
@@ -61,7 +65,7 @@ from reg_webapp.request_body import read_raw_json_object
 router = APIRouter(prefix="/api")
 
 
-# §9.5: the bundle is a binary `.py` DOWNLOAD (application/octet-stream), the same
+# The bundle is a binary `.py` DOWNLOAD (application/octet-stream), the same
 # response_model-lint carve-out as `/project/order`. `responses=` + `response_class`
 # declare the octet-stream media type so the OpenAPI contract / SPA codegen sees a
 # download, not a JSON body.

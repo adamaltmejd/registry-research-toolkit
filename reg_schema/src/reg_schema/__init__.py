@@ -1,7 +1,8 @@
 """reg_schema: project_data.json schema + structural validator.
 
-See ``DESIGN.md`` for scope and dependency direction; ``REFACTOR_SPEC.md``
-§6 is the authoritative schema spec.
+See ``DESIGN.md`` for scope and dependency direction; the models in
+``project_data.py`` are the authoritative schema (see DESIGN.md → Two
+layers: models vs. validator).
 """
 
 from .project_data import (
