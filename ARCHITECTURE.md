@@ -270,9 +270,3 @@ A5 shipped).
 | §6.8.3 semantic rules, §9 webapp | `reg_webapp/DESIGN.md` |
 | §7 (shipped bundle bits), §10-bundle, §16 PII/determinism | `reg_monabundle/DESIGN.md` |
 | §6.6 codes, §7 realign/merged-mode, §8 stats+kit, §9 deployment/kit/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–12, remaining §16 | `REFACTOR_SPEC.md` (remaining work) |
-
-> **Legacy `§N` markers.** Code docstrings and some prose still cite the
-> dissolved spec's section numbers (e.g. `§5.8`, `§6.8.x`, `§9.6`). Resolve
-> them via the table above (old `§N` → new home). A repo-wide sweep to
-> replace them with named references is tracked in
-> [#244](https://github.com/adamaltmejd/registry-research-toolkit/issues/244).
