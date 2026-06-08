@@ -325,10 +325,7 @@ function chooseRepresentation(rep: Representation): void {
     font-weight: 600;
   }
   .leaf-fqid,
-  .name {
-    color: var(--muted);
-    font-size: 0.85em;
-  }
+  .name,
   .classification {
     color: var(--muted);
     font-size: 0.85em;
