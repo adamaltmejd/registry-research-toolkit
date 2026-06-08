@@ -59,6 +59,29 @@ class TestBuildDb:
         conn = open_db(fixture_db)
         conn.close()
 
+    def test_validator_open_leaves_no_wal_sidecars(self, tmp_path: Path):
+        # The build connection's clean close deletes the WAL `-wal`/`-shm`
+        # sidecars, but the post-build validator re-opens the tmp DB read-only
+        # and SQLite re-creates them; the atomic rename moves only the base
+        # file, so without cleanup they orphan as `reg_meta.db.tmp-wal`/`-shm`.
+        # The shared `fixture_db` passes no hook, so it can't catch this — drive
+        # build_db with a read-only-opening hook (the real CLI path).
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        input_dir.mkdir()
+        write_scb_input(input_dir)
+
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            pre_rename_hook=lambda p: open_db(p).close(),
+        )
+
+        orphans = sorted(p.name for p in db_dir.iterdir() if ".db.tmp" in p.name)
+        assert orphans == []
+
     def test_manifest(self, db_conn: sqlite3.Connection):
         manifest = get_manifest(db_conn)
         assert manifest["schema_version"] == SCHEMA_VERSION
