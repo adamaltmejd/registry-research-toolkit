@@ -221,7 +221,8 @@ the HEAD — building before the diff settles just means rebuilding):
   `reg_meta_build/fqid_slugs/` (pre-freeze, untracked — `--db` does NOT redirect these;
   they follow `--slug-dir`) — `git clean -f reg_meta_build/fqid_slugs/` afterward; left in
   place they dirty the tree and trip the slug-snapshot pytest on any later local commit in
-  the same worktree.
+  the same worktree. Then drop the scratch DB itself — `rm -rf /tmp/regmeta-<slug>` —
+  it's a ~300 MB build (universal DB + provenance + WAL/SHM) and nothing else removes it.
 
 Then merge (squash, matching the repo's `(#issue) (#PR)` commit-title history) and
 delete the branch. **Worktree caveat:** `gh pr merge --squash --delete-branch` can fail
@@ -229,7 +230,12 @@ its LOCAL post-merge step (it tries to `git checkout main`, which errors when an
 worktree holds `main`) even though the merge on GitHub SUCCEEDED — so do NOT trust the
 command's exit code: confirm with `gh pr view <n> --json state,mergeCommit` (state ==
 `MERGED`), and if the branch wasn't deleted, remove the remote ref explicitly with
-`git push origin --delete s/<slug>`. Never merge on a red review, red Verify, red CI, or
+`git push origin --delete s/<slug>`. Delete the LOCAL branch too: after a squash merge
+`git branch -d` REFUSES (the squash commit isn't an ancestor of the branch), so once
+GitHub shows `MERGED` use `git branch -D s/<slug>` — you can't delete the branch you're
+standing on, so do it from the next PR's `origin/main` checkout (Step below) or after
+switching off it. A removed worktree leaves its local branch ref behind otherwise; it
+lingers as `[gone]`. Never merge on a red review, red Verify, red CI, or
 an open material external comment. The implementer never merges — only you.
 
 Before starting the next planned PR, fork it off the freshly-fetched merged base —
@@ -254,4 +260,8 @@ escalated to the human.
 Once every planned PR is merged (or the run is abandoned), shut the team down: send each
 teammate a `SendMessage` with `message: {type: "shutdown_request"}`, wait for them to
 terminate, then call **`TeamDelete`** (it refuses while any member is still active).
-Don't leave a live team and its task list dangling between requests.
+Don't leave a live team and its task list dangling between requests. Then sweep stray git
+state: a teammate spawned with `isolation: "worktree"` can leave a worktree behind, so
+`git worktree prune` (and `git worktree remove` any that survive), and force-delete every
+merged PR branch you created (`git branch -D s/<slug>`) — they linger as `[gone]` once
+their worktree is gone.
