@@ -3331,7 +3331,9 @@ slug = "stativ"
 [register_variant."273.649"]
 slug = "_default"
 display_group = "STATIV"
-panel_entity_key = "personnummer"
+# personnr (not personnummer): PR3 folds the PersonNr/personnr case-variant
+# columns; the identifier now slugs from the folded stem.
+panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
