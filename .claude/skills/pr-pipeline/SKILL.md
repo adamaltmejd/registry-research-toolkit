@@ -16,8 +16,9 @@ You are the **team lead** for this request:
 > $ARGUMENTS
 
 You do NOT write code, tests, or docs yourself — you plan the work, dispatch
-teammates, and you are the only one who merges. The five role teammates are defined in
-`.claude/agents/`: `implementer`, `simplifier`, `tester`, `reviewer`, `docs-updater`.
+teammates, and you own all git (stage / commit / push / open / merge); teammates only
+edit and report. The five role teammates are defined in `.claude/agents/`: `implementer`,
+`simplifier`, `tester`, `reviewer`, `docs-updater`.
 
 **Set up a real team FIRST — this is load-bearing, don't skip it.** Before dispatching
 anyone, call **`TeamCreate`** (e.g. `team_name: "pr-pipeline-<slug>"`,
@@ -29,35 +30,59 @@ THREE of:
   defaults to a generic `general-purpose` agent** that merely happens to be named
   `implementer` — wrong prompt, wrong tools, the whole pipeline silently degraded.
   `name` does NOT select the role.
-- **`name`** — the addressable handle (use the same string as the role for the
-  single-instance teammates, e.g. `name: "implementer"`).
+- **`name`** — the addressable handle (use the role name for a single-instance teammate,
+  e.g. `name: "implementer"`; when you fan a role out — parallel implementers in Step A,
+  parallel reviewers in Step C — give each a DISTINCT name like `implementer-<surface>`,
+  `reviewer-<lens>`).
 - **`team_name`** — the team you just made. This is what makes the by-name addressing
   below work: a bare `Agent` call WITHOUT `team_name` is a one-shot subagent whose name
   vanishes the moment it finishes (you'd be stuck resuming it by raw agent ID, and it
   can't message you).
 
-Also pass `run_in_background: true` so each joins as a persistent member. `TeamCreate`
-requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams are
-disabled, STOP and tell the user to enable that flag.
+Also pass `run_in_background: true` so each joins as a persistent member. Keep the spawn
+prompt MINIMAL — the role `.md` already defines behavior; do **not** ask the teammate to
+"acknowledge readiness" (the ack races your first work dispatch and just adds idle noise).
+`TeamCreate` requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; if it errors because teams
+are disabled, STOP and tell the user to enable that flag.
 
-**How a team behaves (the mental model):** teammates are addressable **by name** for the
-whole pipeline — to re-dispatch one (re-review, apply fixes) you just `SendMessage` its
-name; no agent-ID juggling. They **report to you via `SendMessage`**, delivered as a
-normal conversation turn, and they **can message you with questions mid-run** (you
-answer by name). After each turn a teammate **goes idle** — that is NORMAL, not "done"
-or "stuck": an idle teammate still receives messages and wakes on the next one, so don't
-nag idleness. Only YOU can reach the human (via `AskUserQuestion`). When the whole
-request is finished, tear the team down (see **Teardown** at the end).
+**How a team behaves:** teammates are addressable **by name** for the whole pipeline — to
+re-dispatch one (re-review, apply fixes) just `SendMessage` its name. They **report via
+`SendMessage`** (a normal conversation turn) and **can message you with questions
+mid-run**. After each turn a teammate **goes idle** — NORMAL, not "done"/"stuck": it still
+receives messages and wakes on the next, so don't nag idleness, and ignore the
+system-generated idle notifications (telling a teammate to stop them does nothing). Only
+YOU reach the human (`AskUserQuestion`). When the request is finished, tear the team down
+(see **Teardown**).
 
-**Shared-checkout rule (load-bearing for safety).** By default every teammate operates
-in your ONE working tree, so a MUTATING teammate (implementer / simplifier /
-docs-updater) must NOT run concurrently with any other teammate that reads or writes
-that tree — a reader can observe a half-applied edit, run tests on it, or analyze a diff
-that's about to change under it. Run a mutating teammate ALONE; only read-only teammates
-may overlap with each other. To run a mutating teammate in parallel with anything, spawn
-it in an isolated worktree (`isolation: "worktree"` on the `Agent` spawn). The same
-applies to YOU: don't `git checkout`/`reset`/`commit` in the shared tree while a
-teammate is active there.
+**Lead owns ALL git (load-bearing).** Mutating teammates (implementer / simplifier /
+docs-updater) are **non-committing editors**: they edit files, run Verify on their work,
+and report a summary + the exact list of files they touched — they do **not** run
+`git add` / `commit` / `push` (or `checkout` / `reset` / `stash` / `merge`). YOU stage,
+commit, and push after they report, and you alone open and merge the PR. One writer on the
+shared git index means no `index.lock` races and no commit sweeping up a sibling's
+half-done edits — and every git gotcha lives in one place (here). When you commit, **stage
+the working-tree delta** (`git add -A` after a quick `git status` glance), NOT a teammate's
+reported file list — treat the reported files as a cross-check (and the Step A disjointness
+check), never the source of truth, so an under-reported create / rename / delete is never
+silently dropped. If a pre-commit hook fails on your commit (it runs the full pytest), do
+NOT `--no-verify` — route the failure to the responsible implementer to fix, then
+re-commit; you don't write code, so the fix is always a teammate's.
+
+**Shared-checkout / concurrency rule.** All teammates share your ONE working tree. A
+mutating teammate must not run while ANY other teammate reads or writes that tree (a
+reader can test a half-applied edit; a second writer can clobber a file) — EXCEPT the
+sanctioned implementer fan-out in Step A, where parallel implementers are confined to
+**disjoint file sets**. Because no teammate touches git and YOU run the authoritative
+Verify on the assembled result, that fan-out is safe in the shared tree — no worktrees
+needed. Do git yourself only when no mutating teammate is active. (Worktree isolation,
+`isolation: "worktree"`, stays an escape hatch for the rare case of overlapping writers
+whose files aren't cleanly disjoint — but prefer disjoint partitioning.)
+
+**Sandbox isolation.** Your `Bash` runs in a SEPARATE sandbox from each teammate's, so
+you cannot see a teammate's processes or background jobs with your own `ps`/log checks —
+they'll look absent even while running. Don't diagnose a teammate's process state from
+your shell and don't issue instructions based on that guess; ASK the teammate for ground
+truth instead. (Reading shared *files* — `git log`, the diff, source — is fine.)
 
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
@@ -69,10 +94,12 @@ description, or a mix. Plan before building:
    `<package>/DESIGN.md` to understand intent and constraints.
 2. **Decide the shape — one PR or several.** Break the request into the smallest set
    of coherent, independently reviewable/mergeable PRs. Write a one-line scope per PR.
-3. **Decide the order.** Sequence the PRs by dependency (which must land before
-   which); note which are independent. You execute them SERIALLY in this session —
-   one fully merged before the next starts. (For parallelism the human launches a
-   separate lead per independent chain; not your concern here.)
+3. **Decide the order.** Sequence the PRs by dependency; note which are independent. You
+   execute them **strictly SERIALLY** — one fully merged before the next starts; never run
+   two PRs at once. The only parallelism in this pipeline is **within a single PR** —
+   fanning a role out across disjoint surfaces (implementers in Step A, reviewers in Step
+   C). (For cross-PR parallelism the human launches a separate lead per independent chain;
+   not your concern here.)
 4. **Settle decisions/forks up front.** If the request or an issue has an open fork
    (naming, schema/column choice, scope judgment) not already decided on the issue,
    resolve it now with `AskUserQuestion`. Only you can ask the human; teammates can't.
@@ -91,35 +118,61 @@ Then run the per-PR pipeline below for each planned PR, in order.
   checked out elsewhere), so fork the branch off the remote directly —
   `git fetch origin main && git checkout -b s/<slug> origin/main` — rather than
   checking out local `main`, which errors when another worktree holds it.
-- Dispatch **implementer** with this PR's scope/plan and its Verify commands. For
-  build-affecting work (SCB/SOS triage, slugs, DDL) that includes the real build
-  `reg-meta-build build-db --input-dir reg_meta_build/input_data --providers scb,sos`
-  (validates by default; the local `input_data` is read-only). It implements,
-  verifies, commits, pushes, and reports the branch + summary — it does NOT open the PR.
-- Once it has pushed, YOU open the PR as a **draft** (body: what the change does and
-  why; name any issue it closes). Write the body to a temp file and use
-  `gh pr create --draft --body-file <file>` — an inline `--body` heredoc can trip the
-  permission classifier. Outward-facing `gh` actions (PR create / merge / comment) may
-  prompt or be denied by the session's permission mode; if one is denied, surface it to
-  the human rather than working around it. Draft keeps external review bots off the raw
-  implementation until it's near-final.
+- **Choose the implementation WIDTH by size + shape:**
+  - **Default — ONE implementer.** Dispatch a single `implementer` with the PR's
+    scope/plan and its Verify commands.
+  - **Fan out — large PR that partitions into INDEPENDENT surfaces** (e.g. the same
+    mechanical edit across many packages — a docs sweep → one implementer per package; or
+    disjoint backend vs codegen'd-frontend slices). Fan out ONLY when the surfaces are
+    **file-disjoint with no cross-surface dependency**: if one slice's output feeds
+    another's input, it isn't independent — keep it single, or order the dependent parts as
+    steps. Dispatch several implementers IN PARALLEL, each `subagent_type: implementer`
+    with a DISTINCT `name` (e.g. `implementer-reg_meta`) and `team_name`, its prompt naming
+    ONLY its surface and the explicit, provably-disjoint file set it owns (partitioning the
+    sets up front is what makes the parallel writes safe — the post-report overlap check is
+    only a backstop). Tell each to run only ITS surface's
+    FAST checks (that package's ruff / ty / pytest) — running the full `pytest` on the
+    shared, half-assembled tree both races siblings and duplicates your post-assembly union
+    Verify. This is intra-PR only — never split one logical PR into several just to
+    parallelize.
+- Verify commands are the FAST checks only (lint / format / `ty` / `pytest`). For
+  build-affecting work (SCB/SOS triage, slugs, DDL) the real `reg-meta-build build-db` is
+  deliberately **NOT** in any implementer's loop: it takes ~20 min and is YOUR single
+  merge-gate check (Step E).
+- Each implementer edits, runs Verify on its work, and reports a summary + **the files it
+  touched** — it does NOT commit, push, or open the PR (you own git). When every dispatched
+  implementer has reported, validate the **actual diff against your pre-declared partition**,
+  NOT the agents' self-reports (you'll stage the real delta with `git add -A`, so the real
+  delta is what must be checked): every path in `git diff --name-status` + `git status
+  --porcelain` must fall inside the disjoint file sets you assigned in the spawn prompts. A
+  change outside every lane means an implementer strayed onto an unreported out-of-scope file
+  — exactly the clobber the report-based check would miss — so discard and re-run those
+  surfaces serially. Only once the delta is within the partition: after a fan-out run the
+  full Verify ONCE on the assembled tree (the only place the union is valid; a solo
+  implementer's reported-green stands), then `git add -A` and commit (the `-A` is safe here —
+  the scratch DB is in `/tmp`, `*.auto.toml` is generated later in Step E, caches are
+  gitignored — and now provably in-bounds because you just checked the delta).
+- Push, then YOU open the PR as a **draft** (body: what the change does and why; name any
+  issue it closes). Write the body to a temp file and use `gh pr create --draft
+  --body-file <file>` — an inline `--body` heredoc can trip the permission classifier.
+  Outward-facing `gh` actions (PR create / merge / comment) may prompt or be denied by the
+  session's permission mode; if one is denied, surface it to the human rather than working
+  around it. Draft keeps external review bots off the raw implementation until it's
+  near-final.
 
 ### B. Simplify + test-suggest, then mark ready
 
-1. Dispatch **simplifier** → applies behaviour-preserving cleanups and pushes (or
-   reports "nothing found").
-2. Dispatch **tester** → returns a prioritized `must`/`nice` suggestion list. YOU
-   decide which to accept; send accepted ones to **implementer** to add; it
-   re-verifies and pushes.
+1. Dispatch **simplifier** → applies behaviour-preserving cleanups and reports what it
+   changed + files touched (or "nothing found"). YOU commit + push its changes.
+2. Dispatch **tester** → returns a prioritized `must`/`nice` suggestion list. YOU decide
+   which to accept; send accepted ones to an **implementer** to add; it re-verifies and
+   reports; YOU commit + push.
 
-Run these two SEQUENTIALLY by default — simplifier first, it pushes, THEN tester against
-the simplified HEAD. They share your single checkout (see the shared-checkout rule
-above), and the simplifier edits/commits while the tester reads the tree and runs
-pytest, so running them concurrently races (the tester would analyze a half-edited tree
-or a pre-simplification diff). Parallelize them ONLY by spawning each in an isolated
-worktree (`isolation: "worktree"` on the `Agent` spawn); then the tester sees the
-pre-simplifier HEAD, which is fine for coverage gaps — reconcile when the implementer
-adds the accepted suggestions on the latest HEAD.
+Run these SEQUENTIALLY by default — simplifier first (commit its result), THEN tester
+against the committed HEAD: per the concurrency rule, the simplifier's edits would race the
+tester's read/pytest. To parallelize, spawn each with `isolation: "worktree"`; the tester
+then sees the pre-simplifier HEAD (fine for coverage gaps — reconcile when the implementer
+adds accepted suggestions on the latest HEAD).
 
 Then mark the PR **ready for review** — now external auto-review (Codex/Copilot) and
 CI-on-ready fire once, on near-final code.
@@ -132,24 +185,22 @@ fan out — simplify/test/docs stay single):
 - **Default — focused diff:** ONE `reviewer` teammate, iterating (steps 1–5).
 - **Fan out — large or high-risk diff** (rough triggers: >~400 changed lines or >~8
   files, multiple packages/subsystems, DDL/schema/build-affecting, or security /
-  data-safety / concurrency-sensitive): dispatch SEVERAL reviewer agents IN PARALLEL on
-  the same HEAD — each spawned with `subagent_type: reviewer` (so it loads `reviewer.md`,
-  NOT a generic agent), a DISTINCT `name`, and the `team_name` — scoped to a distinct
-  lens via its prompt: e.g. `reviewer-bugs`, `reviewer-conventions` (CLAUDE.md/DESIGN),
-  `reviewer-history` (git blame + prior-PR comments), `reviewer-contracts` (JSON / exit
-  codes / validation / data-safety) — or split by subsystem for a very large
-  multi-package diff. Reviewers are READ-ONLY, so parallel ones share the checkout safely
-  (no worktree isolation needed), but each needs a distinct `name` (member names must be
-  unique within the team). YOU then SYNTHESIZE: merge findings, drop duplicates, apply
-  the confidence bar (keep only high-confidence, material ones), and emit one
-  consolidated blocking/non-blocking/question list.
+  data-safety / concurrency-sensitive): dispatch SEVERAL reviewers IN PARALLEL on the same
+  HEAD — each with `subagent_type: reviewer`, a DISTINCT `name`, and `team_name` (per the
+  spawn rule) — scoped to a lens via its prompt: e.g. `reviewer-bugs`,
+  `reviewer-conventions` (CLAUDE.md/DESIGN), `reviewer-history` (git blame + prior-PR
+  comments), `reviewer-contracts` (JSON / exit codes / validation / data-safety), or split
+  by subsystem. Reviewers are READ-ONLY so they share the checkout safely (no worktree
+  isolation), but names must be unique. Then SYNTHESIZE: merge findings, drop duplicates,
+  apply the confidence bar (high-confidence + material only), emit one consolidated
+  blocking/non-blocking/question list.
 
 1. Get the review on HEAD — one reviewer, or the synthesized fan-out above. Findings are
    tagged blocking / non-blocking / question, each with `file:line`; nitpicks and
    CI/linter-caught issues are suppressed (see `.claude/agents/reviewer.md`), so a short
    list is expected, not a sign it skimmed.
-2. Route blocking findings (and questions you resolve) to **implementer** → fix,
-   re-verify, push.
+2. Route blocking findings (and questions you resolve) to an **implementer** → fix,
+   re-verify, report; YOU commit + push the fix.
 3. Re-review the fix delta — re-dispatch the reviewer by name (it raises only NEW
    findings or confirms resolution). After a fan-out round you can usually narrow the
    re-review to a SINGLE reviewer on the (small) delta, unless the fixes were themselves
@@ -163,31 +214,49 @@ fan out — simplify/test/docs stay single):
 ### D. Docs
 
 Dispatch **docs-updater** on the final code → it fixes doc drift (DESIGN.md / README /
-docstrings) and pushes, or reports "no doc update needed" (it re-runs the package
-Verify if it touched `.py`). Do this AFTER the review converges and BEFORE the
-external-review hold (Step E), so the hold window runs against the true final HEAD — a
-docs push after the hold has started restarts it.
+docstrings) and reports what changed + files touched, or "no doc update needed" (it
+re-runs the package Verify if it touched `.py`). YOU commit + push its changes. Do this
+AFTER the review converges and BEFORE the external-review hold (Step E), so the hold window
+runs against the true final HEAD — a docs push after the hold has started restarts it.
 
 ### E. Merge gate (lead only) — with external auto-review hold
 
-Merge only when ALL hold:
+Merge only when ALL hold. Run the cheap gates first and the **expensive real `build-db`
+LAST**, so it runs exactly once on the truly-final HEAD (every review/Codex fix changes
+the HEAD — building before the diff settles just means rebuilding):
 
 - the reviewer loop CONVERGED (no blocking findings),
-- Verify is green (incl. the real `build-db` for build work),
 - CI on the PR is green,
-- **external auto-review hold:** after the PR went ready (and after your most recent
-  push), give the external reviewers (Codex / Copilot) a BOUNDED window to post on the
-  CURRENT HEAD. They're usually fast (Codex comments within a minute or two of a push —
-  or just 👍-reacts when it has nothing to say), so POLL for a review matching HEAD
-  rather than blind-sleeping — but **~10 minutes is a hard CEILING, not a wait-for-them
-  gate**. Read every new review comment; route any **material** finding back through the
-  implementer, reply on the thread once it's fixed, then re-review and **restart the
-  window from the new push**. You may merge once EITHER (a) a reviewer has weighed in and
-  a short settle passes with no new material comments, OR (b) the ~10-minute ceiling
-  elapses with no material comments — INCLUDING when the bots are disabled, delayed,
-  silent, or only 👍-reacted (absence of a comment is not a blocker). Dismiss
-  non-material / incorrect comments with a one-line reason — never merge over an
-  UNANSWERED material comment.
+- **external auto-review hold (settle BEFORE the build):** after the PR is ready and after
+  your most recent push, give Codex/Copilot a BOUNDED window to post on the CURRENT HEAD.
+  Codex doesn't necessarily re-review every push, so to get a verdict on the current HEAD
+  (e.g. after fixing a finding) trigger one by commenting **`@codex review`**. POLL for a
+  review matching HEAD, don't blind-sleep — but **~10 min is a hard CEILING, not a
+  wait-for-them gate**. Route any **material** finding through the implementer, reply on
+  the thread once fixed, then **restart the window from the new push**. Merge once EITHER
+  (a) a reviewer weighed in and a short settle passes with no new material comments, OR (b)
+  the ceiling elapses with no material comments — including when bots are
+  disabled/delayed/silent/👍-only (absence is not a blocker). Dismiss non-material comments
+  with a one-line reason; never merge over an UNANSWERED material comment.
+- **the real `build-db` is green (build-affecting work only) — YOUR check, run LAST:**
+  once the external hold has settled and no further code change is pending, run the real
+  build ONCE on the final HEAD. It takes **~20 min** and EXCEEDS the 10-minute foreground
+  `Bash` cap (which silently kills it mid-import — frozen log, no DB, no error), so launch
+  it with **`run_in_background: true`**, never foreground. The pipeline almost always runs
+  in a **worktree**, whose `reg_meta_build/input_data/` holds only `classifications/` —
+  the 14 GB SCB/SOS seed lives in the MAIN checkout (the repo root that owns the worktree,
+  i.e. the path above `.claude/worktrees/`), so pass an ABSOLUTE path. Also pass the
+  `--db <tmpdir>` GLOBAL flag (a DIRECTORY, BEFORE the subcommand) so the built DB lands
+  in scratch instead of clobbering the real query DB at `~/.local/share/reg_meta/`:
+  `reg-meta-build --db /tmp/regmeta-<slug> build-db --input-dir <main-checkout>/reg_meta_build/input_data --providers scb,sos`
+  (validates by default; the seed is read-only). A clean exit 0 means build + validation
+  passed; confirm the slug-population line in the log shows no reserved-token / collision
+  rejection. The build also WRITES generated `<provider>.auto.toml` into
+  `reg_meta_build/fqid_slugs/` (pre-freeze, untracked — `--db` does NOT redirect these;
+  they follow `--slug-dir`) — `git clean -f reg_meta_build/fqid_slugs/` afterward; left in
+  place they dirty the tree and trip the slug-snapshot pytest on any later local commit in
+  the same worktree. Then drop the scratch DB itself — `rm -rf /tmp/regmeta-<slug>` —
+  it's a ~300 MB build (universal DB + provenance + WAL/SHM) and nothing else removes it.
 
 Then merge (squash, matching the repo's `(#issue) (#PR)` commit-title history) and
 delete the branch. **Worktree caveat:** `gh pr merge --squash --delete-branch` can fail
@@ -195,19 +264,24 @@ its LOCAL post-merge step (it tries to `git checkout main`, which errors when an
 worktree holds `main`) even though the merge on GitHub SUCCEEDED — so do NOT trust the
 command's exit code: confirm with `gh pr view <n> --json state,mergeCommit` (state ==
 `MERGED`), and if the branch wasn't deleted, remove the remote ref explicitly with
-`git push origin --delete s/<slug>`. Never merge on a red review, red Verify, red CI, or
-an open material external comment. The implementer never merges — only you.
+`git push origin --delete s/<slug>`. Delete the LOCAL branch too: after a squash merge
+`git branch -d` REFUSES (the squash commit isn't an ancestor of the branch), so once
+GitHub shows `MERGED` use `git branch -D s/<slug>` — you can't delete the branch you're
+standing on, so do it from the next PR's `origin/main` checkout (Step below) or after
+switching off it. A removed worktree leaves its local branch ref behind otherwise; it
+lingers as `[gone]`. Never merge on a red review, red Verify, red CI, or
+an open material external comment. Teammates never run git — you stage, commit, push, and
+merge.
 
-Before starting the next planned PR, fork it off the freshly-fetched merged base —
-`git fetch origin main && git checkout -b s/<next-slug> origin/main` — do NOT
-`git checkout main` (it fails in a worktree, and you don't need a local `main` to branch
-from `origin/main`). Then loop back to Step 1 for the next PR.
+Before the next planned PR, fork off the freshly-merged base —
+`git fetch origin main && git checkout -b s/<next-slug> origin/main` (not `git checkout
+main`; see Step A). Then loop back to the per-PR pipeline (Step A).
 
 ## Conventions you enforce on dispatch
 
-- Pre-v1: no migration/compat/dead-code retention; fail fast; deterministic with
-  explicit seed/config; validate JSON contracts at boundaries; never leak row-level
-  content. `uv` for Python, `bun`/`bunx` for frontend. Never bypass git hooks.
+- Hold dispatched work to the repo `CLAUDE.md` conventions — notably: pre-v1, no
+  migration/compat/dead-code; fail fast; validate JSON contracts; never leak row-level
+  content; `uv`/`bun`; never bypass git hooks.
 
 ## Final report
 
@@ -220,4 +294,7 @@ escalated to the human.
 Once every planned PR is merged (or the run is abandoned), shut the team down: send each
 teammate a `SendMessage` with `message: {type: "shutdown_request"}`, wait for them to
 terminate, then call **`TeamDelete`** (it refuses while any member is still active).
-Don't leave a live team and its task list dangling between requests.
+Don't leave a live team and its task list dangling between requests. Then sweep stray git
+state: `git worktree prune` (and `git worktree remove` any `isolation: "worktree"`
+leftover), and `git branch -D` any merged `s/<slug>` still lingering as `[gone]` (see
+Step E).
