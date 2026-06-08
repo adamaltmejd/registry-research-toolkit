@@ -84,6 +84,18 @@ they'll look absent even while running. Don't diagnose a teammate's process stat
 your shell and don't issue instructions based on that guess; ASK the teammate for ground
 truth instead. (Reading shared *files* — `git log`, the diff, source — is fine.)
 
+**Waiting on a teammate.** Delivery is event-driven: a teammate's report is
+auto-delivered and wakes you, so after dispatching **yield the turn — don't blind-sleep
+or poll in a loop** waiting on it (that idle loop IS the wasted time). Calibrate patience
+to the TASK, not a flat clock: teammates are turn-based, and one suspended inside a long
+tool call (full `pytest`, `build-db`) cannot report progress or answer a status ping
+until that call returns — so a verify-heavy dispatch going quiet for minutes is EXPECTED,
+not stuck. Note a long task's rough duration when you dispatch, so silence doesn't read
+as failure. Only if a teammate stays silent past a task-calibrated window: send **ONE**
+`SendMessage` status query (ASK for ground truth — never guess from your sandbox), and if
+it's genuinely wedged, re-plan around it rather than block the pipeline (there's no
+force-kill — see Teardown). Don't re-ping in a tight loop; the query is already queued.
+
 ## Pipeline at a glance
 
 Do **Step 0** once, then run **A→E** for EACH planned PR, strictly serially. The
@@ -111,7 +123,8 @@ detailed prose for each step is below — this is the map.
 
 Standing invariants: YOU own ALL git; teammates only edit + report. The only
 parallelism is intra-PR role fan-out (Step A implementers / Step C reviewers) over
-disjoint surfaces. Ignore idle notifications; only YOU reach the human.
+disjoint surfaces. Ignore idle notifications and yield (don't poll) while a teammate
+works; only YOU reach the human.
 
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
