@@ -20,7 +20,8 @@ teammates, and you own all git (stage / commit / push / open / merge); teammates
 edit and report. The five role teammates are defined in `.claude/agents/`: `implementer`,
 `simplifier`, `tester`, `reviewer`, `docs-updater`.
 
-**Set up a real team FIRST — this is load-bearing, don't skip it.** Before dispatching
+**Set up a real team FIRST — this is load-bearing, don't skip it** (FULL path; a LITE
+run skips the team — see **Pipeline weight**). Before dispatching
 anyone, call **`TeamCreate`** (e.g. `team_name: "pr-pipeline-<slug>"`,
 `agent_type: "team-lead"`). Then spawn each teammate with the `Agent` tool passing all
 THREE of:
@@ -99,7 +100,8 @@ force-kill — see Teardown). Don't re-ping in a tight loop; the query is alread
 ## Pipeline at a glance
 
 Do **Step 0** once, then run **A→E** for EACH planned PR, strictly serially. The
-detailed prose for each step is below — this is the map.
+detailed prose for each step is below — this is the map (the FULL path; see
+**Pipeline weight** for the lighter LITE variant).
 
 - **0 · Plan** — read issue(s) + comments + code; split into the smallest coherent
   PRs; order by dependency; settle forks with `AskUserQuestion`; confirm a multi-PR
@@ -126,6 +128,39 @@ parallelism is intra-PR role fan-out (Step A implementers / Step C reviewers) ov
 disjoint surfaces. Ignore idle notifications and yield (don't poll) while a teammate
 works; only YOU reach the human.
 
+## Pipeline weight — FULL vs LITE
+
+The full A→E machinery (standing 5-role team, simplify + independent test-suggest, docs
+pass, ~10-min external hold, teardown) earns its overhead on large or risky work. On a
+**small, low-risk single PR it dwarfs the change** — so choose the weight during Step 0:
+
+- **FULL** — default for anything non-trivial; everything below as written.
+- **LITE** — when the work is ONE PR and ALL of: ≲150 changed lines / ≲5 files, one
+  package/subsystem, no DDL/schema/`SCHEMA_VERSION`/build-affecting change, no
+  data-safety / PII / concurrency / security surface, and no unresolved design fork. (The
+  inverse of the Step C review-fan-out triggers.)
+
+LITE keeps every git/safety invariant (you still own ALL git; agents only edit + report)
+and changes only the orchestration:
+
+- **No standing team.** Skip `TeamCreate`; dispatch each role as a one-shot `Agent` (still
+  pass `subagent_type` so the role `.md` loads — just omit `team_name`). One-shot agents
+  finish and vanish: **no teardown, no idle-notification stream** — that is most of the
+  overhead the full path pays.
+- **Fewer roles: implementer → reviewer (one pass) → merge.** Fold what the simplifier and
+  tester would catch INTO the implementer's brief ("keep it simple; add the tests that lock
+  the new logic"); skip the standalone simplifier and tester. Run the docs-updater **only
+  if** the diff changed a documented contract (DESIGN.md / README / a public docstring).
+- **Open the PR ready, not draft** — with no pre-review simplify/test churn to hide, the
+  draft→ready step buys nothing.
+- **Short external hold** (Step E) — same `@codex review` + poll, ~3–4 min ceiling for a
+  tiny diff. A review-fix re-dispatch is a fresh one-shot reviewer on the delta (a vanished
+  one-shot can't be re-addressed by name).
+
+**Escalate LITE→FULL** the moment the scope breaks (diff blows past the triggers, a fork
+surfaces, or a reviewer flags a data-safety / concurrency issue): stand up the team and
+resume at the right step. When unsure, pick FULL.
+
 ## Step 0 — understand the request and PLAN the work (FIRST, before any coding)
 
 The request may be one or several GitHub issues, a freeform feature/problem
@@ -135,7 +170,8 @@ description, or a mix. Plan before building:
    decisions are recorded there); read the relevant code, `CLAUDE.md`, and
    `<package>/DESIGN.md` to understand intent and constraints.
 2. **Decide the shape — one PR or several.** Break the request into the smallest set
-   of coherent, independently reviewable/mergeable PRs. Write a one-line scope per PR.
+   of coherent, independently reviewable/mergeable PRs. Write a one-line scope per PR,
+   and pick each PR's **weight** (FULL/LITE — see **Pipeline weight**).
 3. **Decide the order.** Sequence the PRs by dependency; note which are independent. You
    execute them **strictly SERIALLY** — one fully merged before the next starts; never run
    two PRs at once. The only parallelism in this pipeline is **within a single PR** —
@@ -278,7 +314,8 @@ the HEAD — building before the diff settles just means rebuilding):
   HEAD**, NOT on CI finishing: CI is a SEPARATE gate that usually goes green far sooner
   (tens of seconds here), so a poller that exits on CI-done has NOT given the bot its
   window — wait for the bot author (e.g. `chatgpt-codex-connector`) or the ceiling.
-  Calibrate the ceiling to the diff: a tiny, low-risk PR doesn't need the full 10 min.
+  Calibrate the ceiling to the diff: a tiny, low-risk PR (a LITE run) needs only
+  ~3–4 min, not the full 10.
   Route any **material** finding through the implementer, reply on
   the thread once fixed, then **restart the window from the new push**. Merge once EITHER
   (a) a reviewer weighed in and a short settle passes with no new material comments, OR (b)
