@@ -182,6 +182,13 @@ describe("deriveType", () => {
     expect(deriveType(state({ data_type: "int", is_identifier: false }))).toBe(
       "numeric",
     );
+    // is_identifier also wins over the value_set → categorical check (it's
+    // checked first).
+    expect(
+      deriveType(
+        state({ data_type: "int", is_identifier: true, value_set_id: 5 }),
+      ),
+    ).toBe("id");
   });
 
   it("unrecognized / empty storage token → opaque (user picks)", () => {

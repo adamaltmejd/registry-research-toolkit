@@ -88,6 +88,9 @@ def test_binding_leaf_embeds_full_record(client):
     assert len(body["states"]) == 1
     state = body["states"][0]
     assert state["variant"] == "individer-15plus"
+    # The variable-grain `is_identifier` is serialized as a required field
+    # (the `_state_model` passthrough); the fixture seeds is_identifier=0.
+    assert state["is_identifier"] is False
     # The value set is hydrated as (code, label) objects.
     assert state["value_set"] == [
         {"code": "1", "label": "Man"},

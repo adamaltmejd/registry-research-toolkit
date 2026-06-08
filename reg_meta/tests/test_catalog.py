@@ -588,6 +588,18 @@ class TestResolveVariableLongitudinal:
         assert len(r.states) >= 1
         assert r.states[0].variant == "individer-15plus"
 
+    def test_identifier_flag_denormalized_onto_states(self) -> None:
+        # The variable-grain `is_identifier` is exposed on the ResolvedVariable
+        # AND denormalized onto every state via the `_states_in_bounds` JOIN
+        # (no-variant branch) — distinct from the variable-meta path — so
+        # consumers with no ResolvedVariable in scope still read it.
+        conn = build_slugged_db()
+        conn.execute("UPDATE variable SET is_identifier = 1 WHERE slug = 'kon'")
+        conn.commit()
+        r = Catalog(conn).resolve(_KON)
+        assert r.is_identifier is True
+        assert r.states[0].is_identifier is True
+
     def test_states_tagged_with_variant(self) -> None:
         # The same variable delivered in two variants → two states, each carrying
         # its own variant coordinate.
@@ -731,6 +743,17 @@ class TestResolveAt:
         )
         assert len(states) == 1
         assert states[0].variant == "individer-15plus"
+
+    def test_identifier_flag_on_variant_scoped_state(self) -> None:
+        # Resolving with an explicit variant takes the variant-scoped
+        # (`register_variant_id IS NOT NULL`) branch of `_states_in_bounds`; the
+        # denormalized `is_identifier` must come through there too.
+        conn = build_slugged_db()
+        conn.execute("UPDATE variable SET is_identifier = 1 WHERE slug = 'kon'")
+        conn.commit()
+        states = Catalog(conn).resolve_at(_KON, 2018, variant="individer-15plus")
+        assert len(states) == 1
+        assert states[0].is_identifier is True
 
     def test_period_token_month(self) -> None:
         conn = self._two_state_year_db()
