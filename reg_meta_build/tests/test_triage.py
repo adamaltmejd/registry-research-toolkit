@@ -33,14 +33,19 @@ from reg_meta_build.sources.scb import (
     _apply_split,
     _collapse_residual,
     _common_prefix_len,
+    _data_type_class,
     _decide_fold_or_split,
     _edition_authority,
     _fold_token_from_grain,
+    _import_bug_suspect,
+    _looks_like_code_label_pair,
     _pick_state_rep,
     _resolve_year_winners,
     _rle_runs,
     _split_off_non_contested,
+    _split_relation_kind,
     _StateGroup,
+    _triage_groups,
     _TriageResult,
 )
 
@@ -81,6 +86,12 @@ def _state(
     g.regver_max = regver_max
     g.regver_min = regver_min
     return gkey, g
+
+
+def _shape(data_type: str | None, data_length: str | None = None) -> _StateGroup:
+    """A minimal `_StateGroup` carrying only the shape fields the split
+    relation_kind heuristics read (`data_type` / `data_length`)."""
+    return _StateGroup(1, 10, 1, data_type, data_length, None, None)
 
 
 class TestEditionAuthority:
@@ -491,6 +502,107 @@ class TestDecideFoldOrSplit:
 
     def test_multiple_classification_families_split(self) -> None:
         assert _decide_fold_or_split(["foosni", "foosni2"], {7, 9}) == "split"
+
+
+class TestLooksLikeCodeLabelPair:
+    def test_two_namn_columns_are_not_a_pair(self) -> None:
+        assert not _looks_like_code_label_pair("Fornamn", "Efternamn")
+
+    def test_code_label_pairs(self) -> None:
+        assert _looks_like_code_label_pair("Lid", "LNamn")  # code suffix vs namn
+        assert _looks_like_code_label_pair("Sun2000Kod", "Sun2000Namn")  # kod vs namn
+        assert _looks_like_code_label_pair("Kommun", "Kommunnamn")  # bare stem vs namn
+
+    def test_order_independent(self) -> None:
+        assert _looks_like_code_label_pair("Kommunnamn", "Kommun")
+
+
+class TestDataTypeClass:
+    def test_classes(self) -> None:
+        assert _data_type_class("Heltal") == "numeric"
+        assert _data_type_class("Sträng (text)") == "text"  # locks the ä→a fold
+        assert _data_type_class("Datum") == "other"
+        assert _data_type_class(None) == "other"
+
+
+class TestImportBugSuspect:
+    def test_numeric_vs_text_fires(self) -> None:
+        assert _import_bug_suspect(_shape("int"), _shape("text"))
+
+    def test_same_class_differing_width_does_not_fire(self) -> None:
+        assert not _import_bug_suspect(_shape("int", "4"), _shape("int", "8"))
+
+    def test_none_side_does_not_fire(self) -> None:
+        assert not _import_bug_suspect(None, _shape("int"))
+        assert not _import_bug_suspect(_shape("int"), None)
+
+    def test_length_fallback_requires_length_on_both_sides(self) -> None:
+        # Unclassifiable types (class "other") fall back to data_length, but only
+        # when BOTH lengths are present — a blank side must short-circuit, never
+        # compare None/"" against a real width.
+        assert not _import_bug_suspect(_shape(None, ""), _shape("Datum", "10"))
+        assert _import_bug_suspect(_shape("Datum", "4"), _shape("Datum", "8"))
+
+
+class TestSplitRelationKind:
+    """Per-pair precedence: code_vs_label_pair → import_bug_suspect → generic."""
+
+    @staticmethod
+    def _kind(col_a: str, type_a: str, col_b: str, type_b: str) -> str:
+        gk_a = (1, 10, 1, type_a, "1", 1, "", "", col_a)
+        gk_b = (1, 10, 1, type_b, "1", 2, "", "", col_b)
+        groups = {gk_a: _shape(type_a), gk_b: _shape(type_b)}
+        by_col = {col_a: [gk_a], col_b: [gk_b]}
+        return _split_relation_kind(col_a, col_b, groups, by_col)
+
+    def test_name_match_wins_over_datatype_signal(self) -> None:
+        # Lid int / LNamn text matches BOTH signals; the name-based, higher-
+        # confidence kind takes precedence over import_bug_suspect.
+        assert self._kind("Lid", "int", "LNamn", "text") == "code_vs_label_pair"
+
+    def test_datatype_signal_when_names_do_not_pair(self) -> None:
+        assert (
+            self._kind("Hemkommun", "int", "Skolkommun", "text") == "import_bug_suspect"
+        )
+
+    def test_generic_when_neither_signal(self) -> None:
+        assert (
+            self._kind("Hemkommun", "int", "Skolkommun", "int")
+            == "same_definition_different_column"
+        )
+
+
+class TestSplitEmitsSpecificRelationKind:
+    """End-to-end: triage of a real same-edition Lid/LNamn collision routes the
+    specific `code_vs_label_pair` kind onto the split's edge. Drives
+    `_triage_groups` and inspects `res.related_edges`; the edge → DB-row
+    materializer passthrough is covered by `TestVariableRelatedToEdges`."""
+
+    def test_lid_lnamn_split_emits_code_vs_label_pair(self) -> None:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)  # FKs off → no provider/register parent needed
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '920', 'Lan')"
+        )
+        orig = cur.lastrowid
+        assert orig is not None
+        # Two disjoint-stem columns under one var_id co-delivered in one edition
+        # (shared regver) → a split; int code vs text label → code_vs_label_pair
+        # wins over the numeric-vs-text import_bug_suspect signal.
+        gk_lid = (1, 10, 920, "int", "10", 1, "", "", "Lid")
+        gk_lnamn = (1, 10, 920, "text", "40", 2, "", "", "LNamn")
+        g_lid = _StateGroup(1, 10, 920, "int", "10", 1, "")
+        g_lid.regvers = {100}
+        g_lnamn = _StateGroup(1, 10, 920, "text", "40", 2, "")
+        g_lnamn.regvers = {100}
+        res = _triage_groups(conn, {gk_lid: g_lid, gk_lnamn: g_lnamn}, {(1, 920): orig})
+        assert res.stats["splits"] == 1
+        assert {kind for _, _, kind in res.related_edges} == {"code_vs_label_pair"}
+        conn.close()
 
 
 class TestSplitSiblingFlagInheritance:
