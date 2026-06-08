@@ -190,9 +190,10 @@ class VariableRef:
 @dataclass(frozen=True)
 class RelatedRef:
     """A variable-grain sibling edge (split; see reg_meta_build/DESIGN.md → Build-time triage (SCB)): `variable_related_to`. Same
-    3-part identity as `VariableRef` plus the `relation_kind` (split reason,
-    e.g. `same_definition_different_column`). `fqid` is the sibling's 3-segment
-    binding FQID (A2.6)."""
+    3-part identity as `VariableRef` plus the `relation_kind` (auto-derived split
+    reason: `code_vs_label_pair`, `import_bug_suspect`, or the generic
+    `same_definition_different_column`; full taxonomy in reg_meta_build/DESIGN.md).
+    `fqid` is the sibling's 3-segment binding FQID (A2.6)."""
 
     fqid: Fqid | None
     provider: str

@@ -485,8 +485,10 @@ succession with no edition).
 
 **`RelatedRef`** — a `variable_related_to` sibling (a triage split; see reg_meta_build/DESIGN.md → Build-time triage (SCB)). Same
 `fqid` (3-seg) + `provider`/`register`/`variable` triple as `VariableRef`,
-plus `relation_kind` (the split reason,
-e.g. `same_definition_different_column`).
+plus `relation_kind` (the auto-derived split reason —
+`code_vs_label_pair`, `import_bug_suspect`, or the generic
+`same_definition_different_column`; see reg_meta_build/DESIGN.md → Build-time
+triage (SCB) for the full taxonomy).
 
 **`LineageEdge`** — one `variable_state_lineage` row (see
 reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage);
