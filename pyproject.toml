@@ -77,7 +77,7 @@ combine-as-imports = true
 exclude = ["**/tests/**", "**/scripts/**", "scripts/**", "**/test_corpus/**"]
 
 [[tool.ty.overrides]]
-# The §6.8.1 structural validator narrows JSON-loaded values via
+# The structural validator (see reg_schema/DESIGN.md → Structural rules and issue codes) narrows JSON-loaded values via
 # isinstance(x, Mapping); ty narrows to Top[Mapping[Unknown, object]]
 # rather than Mapping[str, object], producing per-callsite false
 # positives. The validator does its own isinstance checks at every

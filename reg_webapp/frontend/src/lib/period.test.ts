@@ -53,7 +53,7 @@ describe("VALUE_SET_VERSION_NONE sentinel", () => {
 
 describe("period field ↔ query round-trip", () => {
   // The field text IS the wire value (identity on a trimmed string), for every
-  // §9.5 form.
+  // wire form.
   const wireForms = [
     "2020", // year
     "HT2020", // term token
@@ -89,7 +89,7 @@ describe("period field ↔ query round-trip", () => {
   });
 });
 
-describe("looksLikePeriod (advisory §9.5 grammar)", () => {
+describe("looksLikePeriod (advisory period grammar)", () => {
   const accepted = [
     "2020",
     "1999",
@@ -173,7 +173,7 @@ describe("queryFromParams", () => {
 
   it("encodes a free-text value_set_version LABEL (the picker sends the label)", () => {
     // value_set_version is the human label (spaces/commas/case), NOT a slug — the
-    // backend §16 gate accepts it (it's a Python-filter match, not SQL). The query
+    // backend input-validation gate accepts it (it's a Python-filter match, not SQL). The query
     // builder must URL-encode it so it round-trips.
     expect(
       queryFromParams({
@@ -190,7 +190,7 @@ describe("nextResolutionQuery (resolution-merge rule)", () => {
   });
 
   it("clearing the period DROPS the variant/value_set_version modifiers", () => {
-    // §9.5: ?variant / ?value_set_version are inert without ?period (the server
+    // ?variant / ?value_set_version are inert without ?period (the server
     // 422s them), so clearing the period yields the empty query (full history).
     const current = {
       period: "2020",

@@ -16,9 +16,10 @@
  *     IndexedDB via `setPersistence`; the `storeSchemaVersion` constant gates a
  *     stored-schema mismatch (an A5.4 reject the in-memory stub never trips).
  *  3. `openError` — the blocking open-error channel. c-i sets it on a parse failure
- *     or a (currently no-op) gate failure; A5.4 reuses it for the v0.x reject.
+ *     or a (currently no-op) gate failure; the v0.x reject reuses it.
  *
- * §9.6: NOT a structural validator — the backend is canonical. The store only
+ * NOT a structural validator — the backend is canonical (see reg_webapp/DESIGN.md
+ * → Pydantic boundary). The store only
  * constructs / opens / immutably edits / serializes the draft and drives the
  * write endpoints via `lib/api.ts`.
  */
@@ -48,12 +49,13 @@ import {
 } from "./project_data";
 
 /** The autosave store's OWN schema version (distinct from `project_data`'s
- * `schema_version`). Stamped alongside each persisted draft; A5.4's IndexedDB impl
- * hard-rejects a stored draft whose `storeSchemaVersion` differs (§9.7 "IndexedDB
- * schema versioning"). Bumped only when the persisted shape changes. */
+ * `schema_version`). Stamped alongside each persisted draft; the IndexedDB impl
+ * hard-rejects a stored draft whose `storeSchemaVersion` differs (see
+ * reg_webapp/DESIGN.md → Browser storage + project-file persistence (the SPA
+ * store)). Bumped only when the persisted shape changes. */
 export const storeSchemaVersion = 1;
 
-/** The debounce window for the autosave `$effect` (§9.7: ~500ms). */
+/** The debounce window for the autosave `$effect` (~500ms). */
 const AUTOSAVE_DEBOUNCE_MS = 500;
 
 // ── Version gate (THE A5.4 SEAM) ────────────────────────────────────────────
@@ -85,9 +87,9 @@ function regMetaDotted(regMetaVersion: string): string | null {
  * THE A5.4 SEAM. Decide whether an opened project_data dict is loadable by version.
  *
  * ACCEPTS the Model A range: `schema_version` major 2 AND `reg_meta_version` of
- * the form `reg_meta/v1.x.y` (major 1). HARD-rejects v0.x (A5.4): a
+ * the form `reg_meta/v1.x.y` (major 1). HARD-rejects v0.x: a
  * `schema_version` major 1 OR a `reg_meta/v0.x.y` returns `{ok:false, reason}`
- * (§9.7 "Hard reject v0.x files") — no migration, pre-v1 policy. Anything else is
+ * — no migration, pre-v1 policy. Anything else is
  * a NEUTRAL no-op (`{ok:true}`): it lets unrecognized versions through so the
  * backend remains the canonical authority.
  */
@@ -101,7 +103,7 @@ export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
   const dotted = regMetaDotted(regMetaVersion);
   const regMetaMajor = dotted ? majorOf(dotted) : null;
 
-  // v0.x hard-reject (A5.4): pre-Model-A files. No migration — pre-v1 policy (§9.7).
+  // v0.x hard-reject: pre-Model-A files. No migration — pre-v1 policy.
   if (schemaMajor === 1 || regMetaMajor === 0) {
     return {
       ok: false,
@@ -170,12 +172,12 @@ export const AUTOSAVE_KEY = "current";
 /** The draft, or `null` for the home/new screen. */
 let draft = $state<ProjectData | null>(null);
 
-/** The serialized text of the last DOWNLOAD (the §9.7 dirty baseline). Set on
+/** The serialized text of the last DOWNLOAD (the dirty baseline). Set on
  * open (the opened raw text) and on download (the just-written text); `null` while
  * no draft is loaded. */
 let lastDownloaded = $state<string | null>(null);
 
-/** The blocking open-error channel (parse failure / A5.4 version reject). Cleared
+/** The blocking open-error channel (parse failure / version reject). Cleared
  * on a successful open / new / when the user dismisses. */
 let openError = $state<string | null>(null);
 
@@ -190,7 +192,7 @@ let requestError = $state<string | null>(null);
 /** True while a `/validate` or download POST is in flight (disables the toolbar). */
 let busy = $state(false);
 
-/** The dirty flag: the draft has diverged from the last download (§9.7). */
+/** The dirty flag: the draft has diverged from the last download. */
 const dirty = $derived(
   draft != null && serializeProjectData(draft) !== lastDownloaded,
 );
@@ -450,7 +452,7 @@ export function initPersistence(): Promise<void> {
       draft = restored;
       // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
       // downloaded to the durable project_data.json this session, so it must read
-      // as DIRTY (§9.7 unsaved-changes warning). lastDownloaded stays null →
+      // as DIRTY (unsaved-changes warning). lastDownloaded stays null →
       // dirty=true → the header indicator + beforeunload warning fire. IndexedDB
       // autosave is recovery, not the durable file.
     }

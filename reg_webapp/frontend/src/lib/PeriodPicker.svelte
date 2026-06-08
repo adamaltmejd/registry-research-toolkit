@@ -5,9 +5,10 @@ import {
   periodQueryFromField,
 } from "./period";
 
-// A single free-text period field accepting the §9.5 wire grammar (year `2020`;
+// A single free-text period field accepting the wire grammar (year `2020`;
 // token `HT2020`/`VT2020`/`2020-Q3`/`2020-H1`/`2020-08`/`2020-12-31`; range
-// `2018..2020`; `_default`). The server is the CANONICAL validator — the inline
+// `2018..2020`; `_default`; see reg_webapp/DESIGN.md → Catalog router structure).
+// The server is the CANONICAL validator — the inline
 // hint is ADVISORY only and NEVER blocks submit (a "looks wrong" value is still
 // sent so the server's 422 detail is the authority). A "clear" button removes the
 // period (full history). The chosen value is emitted UP to BindingLeafView, which

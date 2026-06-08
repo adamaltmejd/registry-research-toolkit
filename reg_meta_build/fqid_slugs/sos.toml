@@ -1,6 +1,6 @@
 # Curated FQID slugs for Socialstyrelsen (SOS) registers (A4.4b).
 #
-# Companion to scb.toml; same grammar/shape (REFACTOR_SPEC §5.2-5.3). The
+# Companion to scb.toml; same grammar/shape (see reg_meta/DESIGN.md → FQID grammar and reg_meta_build/DESIGN.md → Slug curation). The
 # TOML keys are the minted SOS ids (mint("sos", <abbrev>[, <variant-name>]),
 # band [2^62, 2^63)), NOT SCB's low source ids — SOS registers carry no SCB
 # RegisterId, so the minted id IS the source id populate_slugs looks up.

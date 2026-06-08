@@ -23,7 +23,7 @@ classifiers = [
 # TS codegen. The MONA bundle does NOT ship Pydantic — bundle-build runs the
 # Pydantic validator as the gate, then converts validated models to dataclass
 # `LoadedSpec` (reg_monabundle.build.spec_loader, A3.4) which the bundle
-# amalgamates instead. See REFACTOR_SPEC §9.6 for the boundary.
+# amalgamates instead. See reg_monabundle/DESIGN.md → The two halves and reg_schema/DESIGN.md → Two layers: models vs. validator for the boundary.
 dependencies = [
     "pydantic>=2.13.4",
 ]

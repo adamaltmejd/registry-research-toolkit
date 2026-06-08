@@ -145,7 +145,7 @@ describe("codeLabel / KNOWN_CODES", () => {
     expect(codeLabel("some_future_code")).toBe("some_future_code");
   });
 
-  it("registers the core §6.8.1 + §6.8.3 codes", () => {
+  it("registers the core structural + semantic codes", () => {
     for (const code of [
       "unexpected_field",
       "missing_required_field",

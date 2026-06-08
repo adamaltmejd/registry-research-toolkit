@@ -4,7 +4,8 @@ import { codeLabel, type ValidationIssue } from "./validation";
 // The single inline-highlight primitive every editor field mounts. Presentational
 // ONLY: the parent has ALREADY filtered the issue list to this field's pointer
 // (via `issuesForPointer(validation.issues, ptr)`), so this just renders them. The
-// backend is the canonical validator (§9.6) — these echo the LAST /validate click
+// backend is the canonical validator (see reg_webapp/DESIGN.md → Pydantic
+// boundary) — these echo the LAST /validate click
 // and vanish on the next edit (the store nulls `validation` on every mutation).
 //
 // Color follows ValidationPanel's convention via the shared --level-* vars

@@ -1,4 +1,4 @@
-# Co-delivery curation (§5.7) — see reg_meta_build/codelivery.py.
+# Co-delivery curation (see reg_meta_build/DESIGN.md → Build-time triage (SCB)) — see reg_meta_build/codelivery.py.
 #
 # When ONE delivery column carries TWO distinct value-set codings in the same
 # period and the SCB coalescer's deterministic cascade (sources/scb.py) cannot
@@ -11,7 +11,7 @@
 # column. `column = ""` for a code-bearing variable with no delivery alias.
 # Two label sources, by design: `keep` is matched (stripped) against the EMITTED
 # label — what lands in `variable_state`, the label you see when drafting a pin —
-# because a §5.7 fold/collapse can relabel the raw source label; `keep_rule =
+# because a fold/collapse can relabel the raw source label; `keep_rule =
 # "latest_year"` instead reads the 4-digit year out of the RAW source
 # `value_set_version_label`. A pin that IS consulted (the conflict reaches the
 # CURATION cascade step) but matches no surviving coding leaves the column
@@ -25,7 +25,7 @@
 # REVIEWED (phase 2 sign-off): the picks below were maintainer defaults (fuller /
 # newer / contemporaneous coding); each has now been checked against the backing
 # SCB codings (codes, sizes, sub/superset, classification vintage) and the raw
-# Registerinformation/Vardemangder source. UpplForm (reg32) is a §5.7 SPLIT
+# Registerinformation/Vardemangder source. UpplForm (reg32) is a SPLIT
 # candidate by POPULATION: SCB's legacy catalog (metadata.scb.se) models it as two
 # population-scoped variables — dwellings → Lgh (12), households → Hh (5) — but the
 # mikrodata feed we ingest flattens that axis onto one column, so the split isn't
@@ -127,7 +127,7 @@ column = "Skolkod"
 keep_rule = "latest_year"
 note = "Komvux SFI Skolkod: latest-vintage SFI / all-school-forms coding per year."
 
-# ── FoB75 tenure form — FLAGGED: §5.7 SPLIT candidate (by population) ──
+# ── FoB75 tenure form — FLAGGED: SPLIT candidate (by population) ──
 #    SCB's legacy catalog (metadata.scb.se/mikrodataregister.aspx) splits this
 #    into TWO population-scoped 'Upplåtelseform' variables on column UpplForm:
 #      • DWELLINGS  (pop 'Samtliga bebodda/obebodda bostadslägenheter')
@@ -143,7 +143,7 @@ note = "Komvux SFI Skolkod: latest-vintage SFI / all-school-forms coding per yea
 #    encodes the population). BUT our mikrodata feed FLATTENS population: both
 #    CVIDs (759714 Hh, 759810 Lgh) attach to the IDENTICAL (variant 82 'Lägenhet
 #    och hushåll', version 1975, column UpplForm) slot, each cross-linked to BOTH
-#    populations — so the build can't auto-split (the §5.7 splitter keys on column,
+#    populations — so the build can't auto-split (the splitter keys on column,
 #    and the clean population↔coding mapping isn't in our input). Until a
 #    same-column-by-coding split axis lands, keep the Lgh superset: for the merged
 #    variable it labels every code from EITHER population (Lgh ⊇ Hh), so it's the
@@ -185,7 +185,7 @@ column = "skolenhetskod"
 keep_rule = "latest_year"
 note = "skolenhetskod distans: latest '15 oktober YYYY' register snapshot per year."
 
-# ══ RELABEL co-deliveries surfaced by the §5.7 label-aware cosmetic gate ══
+# ══ RELABEL co-deliveries surfaced by the label-aware cosmetic gate ══
 # These columns carry two CO-EXTENSIVE codings (same period span → no recency
 # winner) that share codes with DIFFERING labels — a genuine re-coding the
 # cosmetic rule would otherwise silently keep-larger. The gate routes them here

@@ -1,4 +1,4 @@
-# The `global` steward is special (§9.1): it ships NO steward.project_data.json,
+# The `global` steward is special (see reg_webapp/DESIGN.md → Steward layering and the in-memory catalog index (stewards.py + catalog_index.py)): it ships NO steward.project_data.json,
 # so the catalog is reg_meta's full universe (no filter). Its absence is what
 # the loader keys on to select full-universe mode.
 id = "global"

@@ -1,7 +1,8 @@
 /**
  * Pure validation-presentation helpers (NO runes — unit-tested + corpus-pinned;
- * `validation.test.ts`). The backend is the CANONICAL validator (§9.6): the SPA
- * never re-implements the §6.8.0 rules — it only PARSES the issue list the server
+ * `validation.test.ts`). The backend is the CANONICAL validator (see
+ * reg_webapp/DESIGN.md → Pydantic boundary): the SPA
+ * never re-implements the server's validation rules — it only PARSES the issue list the server
  * returns (`ValidationResultModel`) and maps each `code` to a UI label/severity
  * hint for presentation.
  *
@@ -9,10 +10,13 @@
  * 1. RFC-6901 JSON-pointer decoding (`parseJsonPointer`) so an issue `path`
  *    (`/sources/0/bindings/0/typ`) can be matched against a draft location — the
  *    A5.3c-ii inline field-highlighting seam (c-i only groups by level).
- * 2. The `KNOWN_CODES` registry: every stable §6.8.0 code → a friendly label +
- *    the level it's typically raised at. Hand-maintained from
- *    `reg_schema/structural.py` + `reg_schema/DESIGN.md` §6.8.1/§6.8.3 + the
- *    §6.8.2 block codes (`reg_monabundle.build.spec_loader`). An UNKNOWN code
+ * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
+ *    the level it's typically raised at. Hand-maintained from the validator
+ *    sources: structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md →
+ *    Structural rules and issue codes), semantic (see reg_webapp/DESIGN.md →
+ *    Semantic validation (semantic.py)), and the block codes
+ *    (`reg_monabundle.build.spec_loader`; see reg_monabundle/DESIGN.md → The two
+ *    halves). An UNKNOWN code
  *    degrades gracefully (the issue is still shown with its raw code + level).
  */
 
@@ -91,7 +95,7 @@ export function issuesUnderPointer(
   );
 }
 
-/** A hand-maintained registry entry for a stable §6.8.0 code. `label` is the
+/** A hand-maintained registry entry for a stable validation code. `label` is the
  * human phrasing for the UI; `hint` is the level the rule is TYPICALLY raised at
  * (advisory — the actual issue's `level` is authoritative when rendering). */
 export interface CodeInfo {
@@ -100,16 +104,16 @@ export interface CodeInfo {
 }
 
 /**
- * The stable §6.8.0 code registry. Hand-maintained from the validator sources —
- * new codes are ADDITIVE (§6.8.0), so a code missing here is not a bug, it just
+ * The stable validation-code registry. Hand-maintained from the validator sources —
+ * new codes are ADDITIVE, so a code missing here is not a bug, it just
  * renders with its raw code (see `codeLabel`). Sourced from:
- * - §6.8.1 structural (`reg_schema/structural.py`, DESIGN.md §6.8.1 table)
- * - §6.8.2 block (`reg_monabundle.build.spec_loader`: `invalid_block`,
- *   `binding_options_orphan_fqid`, `suppress_k_on_non_categorical`)
- * - §6.8.3 semantic (`reg_webapp.semantic` + DESIGN.md §6.8.3 table)
+ * - structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md → Structural rules and issue codes)
+ * - block (`reg_monabundle.build.spec_loader`: `invalid_block`,
+ *   `binding_options_orphan_fqid`, `suppress_k_on_non_categorical`; see reg_monabundle/DESIGN.md → The two halves)
+ * - semantic (`reg_webapp.semantic`; see reg_webapp/DESIGN.md → Semantic validation (semantic.py))
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
-  // ── §6.8.1 structural ─────────────────────────────────────────────────────
+  // ── structural ────────────────────────────────────────────────────────────
   invalid_root: { label: "Root must be a JSON object", hint: "error" },
   missing_required_field: { label: "Missing required field", hint: "error" },
   invalid_field_type: { label: "Wrong field type", hint: "error" },
@@ -173,7 +177,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   // structural didn't replicate (routes/project.py `_model_issue`).
   invalid_field: { label: "Invalid field", hint: "error" },
 
-  // ── §6.8.2 block (reg_monabundle) ─────────────────────────────────────────
+  // ── block (reg_monabundle) ────────────────────────────────────────────────
   invalid_block: { label: "Invalid reg_monabundle block", hint: "error" },
   binding_options_orphan_fqid: {
     label: "binding_options key references no bound variable",
@@ -184,7 +188,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
 
-  // ── §6.8.3 semantic (reg_meta-backed) ─────────────────────────────────────
+  // ── semantic (reg_meta-backed) ────────────────────────────────────────────
   fqid_unresolved: {
     label: "FQID does not resolve against this reg_meta build",
     hint: "error",
@@ -225,7 +229,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
 };
 
 /** The friendly label for a code, or the raw code when it isn't registered (an
- * unknown/new code degrades gracefully — §6.8.0 codes are additive). */
+ * unknown/new code degrades gracefully — codes are additive). */
 export function codeLabel(code: string): string {
   return KNOWN_CODES[code]?.label ?? code;
 }

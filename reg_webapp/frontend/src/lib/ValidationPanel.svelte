@@ -2,7 +2,8 @@
 import type { ValidationResultModel } from "./api";
 import { codeLabel, type ValidationIssue } from "./validation";
 
-// The §6.8.0 validation echo. Renders the `/validate` result's issue list grouped
+// The validation echo (see reg_schema/DESIGN.md → Structural rules and issue
+// codes). Renders the `/validate` result's issue list grouped
 // by level (error / warning / info), the ok/not-ok summary, and — distinct from a
 // 200 `ok:false` issue list — a malformed-REQUEST banner (a true 4xx ApiError).
 // Inline field-highlighting against the draft is c-ii; c-i groups by level.

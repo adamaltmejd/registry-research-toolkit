@@ -1,7 +1,7 @@
 # Curated FQID slugs for classifications (provider-independent —
-# see REFACTOR_SPEC §5.2 on the `class/<slug>` namespace).
+# see reg_meta/DESIGN.md → FQID grammar on the `class/<slug>` namespace).
 #
-# Uniqueness is by slug alone (§5.2): the vintage is baked into the
+# Uniqueness is by slug alone: the vintage is baked into the
 # slug, so the FQID is the 2-segment `class/<slug>` (e.g. `class/sun2020`,
 # `class/lkf2007`) — there is no separate version segment. Each year of a
 # yearly family is its own slug, e.g. `lkf1980` … `lkf2026`.

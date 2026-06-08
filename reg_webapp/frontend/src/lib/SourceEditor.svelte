@@ -14,7 +14,8 @@ import {
   type ValidationIssue,
 } from "./validation";
 
-// Editable single source (§6.2). Header carries a rolled-up error badge (every
+// Editable single source (see reg_schema/DESIGN.md → Two layers: models vs.
+// validator). Header carries a rolled-up error badge (every
 // issue under /sources/{i}); the fields edit name / register_variant / period /
 // bindings. Every edit funnels through the c-i store mutators — NO new store API.
 const { sourceIndex, source, issues } = $props<{

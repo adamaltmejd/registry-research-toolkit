@@ -2,8 +2,9 @@
 import { getRegisterVariants } from "./api";
 import { asyncResource } from "./async.svelte";
 
-// The variant axis is a register SUB-RESOURCE (NOT an FQID path segment,
-// §5.0.1). A5.3a DISPLAYS the variants for a register; the selection + the
+// The variant axis is a register SUB-RESOURCE (NOT an FQID path segment; see
+// reg_meta/DESIGN.md → Two-level variable model). A5.3a DISPLAYS the variants for
+// a register; the selection + the
 // period/state resolution that consumes `?variant` is A5.3b (which makes these
 // interactive and wires them to `resolve_at`).
 const { registerFqid }: { registerFqid: string } = $props();

@@ -21,7 +21,8 @@ import StatesView from "./StatesView.svelte";
 // states narrow.
 //
 // Resolution state (`?period`/`?variant`/`?value_set_version`) lives in the URL
-// query (the single source of truth, §9.5), read off the router's reactive
+// query (the single source of truth — see reg_webapp/DESIGN.md → Catalog router
+// structure), read off the router's reactive
 // `search` so changing it re-fetches WITHOUT a remount. WITH a `?period` we fetch
 // the resolve_at subset (a `StatesResponse`) to narrow the visible states; the
 // metadata + lineage (from `node`) are unaffected.
@@ -73,7 +74,7 @@ const isNarrowed = $derived(!!params.period && !narrowedError);
  * reactive query picks up → refetch. An empty `period` clears the narrowing
  * (full history). `variant`/`value_set_version` are only meaningful WITH a
  * period (the server 422s them otherwise), so they're dropped when period is
- * cleared (the §9.5 merge rule in `nextResolutionQuery`). */
+ * cleared (the merge rule in `nextResolutionQuery`). */
 function setResolution(next: {
   period?: string | null;
   variant?: string | null;
