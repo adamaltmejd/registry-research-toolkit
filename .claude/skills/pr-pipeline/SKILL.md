@@ -60,7 +60,11 @@ and report a summary + the exact list of files they touched — they do **not** 
 `git add` / `commit` / `push` (or `checkout` / `reset` / `stash` / `merge`). YOU stage,
 commit, and push after they report, and you alone open and merge the PR. One writer on the
 shared git index means no `index.lock` races and no commit sweeping up a sibling's
-half-done edits — and every git gotcha lives in one place (here).
+half-done edits — and every git gotcha lives in one place (here). When you commit, **stage
+the working-tree delta** (`git add -A` after a quick `git status` glance), NOT a teammate's
+reported file list — treat the reported files as a cross-check (and the Step A disjointness
+check), never the source of truth, so an under-reported create / rename / delete is never
+silently dropped.
 
 **Shared-checkout / concurrency rule.** All teammates share your ONE working tree. A
 mutating teammate must not run while ANY other teammate reads or writes that tree (a
@@ -122,18 +126,24 @@ Then run the per-PR pipeline below for each planned PR, in order.
     another's input, it isn't independent — keep it single, or order the dependent parts as
     steps. Dispatch several implementers IN PARALLEL, each `subagent_type: implementer`
     with a DISTINCT `name` (e.g. `implementer-reg_meta`) and `team_name`, its prompt naming
-    ONLY its surface and the explicit file set it owns. This is intra-PR only — never split
-    one logical PR into several just to parallelize.
+    ONLY its surface and the explicit file set it owns. Tell each to run only ITS surface's
+    FAST checks (that package's ruff / ty / pytest) — running the full `pytest` on the
+    shared, half-assembled tree both races siblings and duplicates your post-assembly union
+    Verify. This is intra-PR only — never split one logical PR into several just to
+    parallelize.
 - Verify commands are the FAST checks only (lint / format / `ty` / `pytest`). For
   build-affecting work (SCB/SOS triage, slugs, DDL) the real `reg-meta-build build-db` is
   deliberately **NOT** in any implementer's loop: it takes ~20 min and is YOUR single
   merge-gate check (Step E).
 - Each implementer edits, runs Verify on its work, and reports a summary + **the files it
   touched** — it does NOT commit, push, or open the PR (you own git). When every dispatched
-  implementer has reported: confirm the reported file sets DON'T overlap, then — after a
-  fan-out — run the full Verify ONCE on the assembled tree (the only place the union is
-  valid; a solo implementer's reported-green stands). Then `git add` the reported files and
-  commit.
+  implementer has reported: use the reported file sets only as a **disjointness safety
+  check** (they must not overlap), then — after a fan-out — run the full Verify ONCE on the
+  assembled tree (the only place the union is valid; a solo implementer's reported-green
+  stands). Stage the **tree delta** and commit (see *Lead owns all git* — `git add -A`, not
+  the reported list, so an under-reported create/rename/delete isn't dropped; safe here
+  since the scratch DB is in `/tmp`, `*.auto.toml` is generated later in Step E, and caches
+  are gitignored).
 - Push, then YOU open the PR as a **draft** (body: what the change does and why; name any
   issue it closes). Write the body to a temp file and use `gh pr create --draft
   --body-file <file>` — an inline `--body` heredoc can trip the permission classifier.

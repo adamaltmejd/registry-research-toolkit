@@ -19,8 +19,9 @@ Do NOT create, name, or switch branches — that's the lead's job; build on the 
 
 You may be **one of several implementers** the lead fanned out across disjoint surfaces of
 one PR. If so, stay strictly inside the file set your prompt assigns — never touch another
-surface's files. Your local Verify may transiently see a sibling's half-done edits; that's
-expected — the lead runs the authoritative Verify on the assembled result.
+surface's files, and run only YOUR surface's fast checks (that package's ruff / ty /
+pytest), not the whole suite — the shared tree holds siblings' half-done edits, and the
+lead runs the authoritative union Verify on the assembled result.
 
 1. **Understand the plan's PURPOSE** (the outcome and why, not just the literal steps)
    before writing code. Read `CLAUDE.md` and the relevant `<package>/DESIGN.md` (reg_meta
