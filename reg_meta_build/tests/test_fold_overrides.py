@@ -94,6 +94,16 @@ class TestLoadFoldOverrides:
             )
         assert exc.value.code == "fold_override_invalid"
 
+    def test_boolean_id_rejected(self, tmp_path: Path) -> None:
+        # A TOML boolean is a Python `int` subclass (`true == 1`); the loader's
+        # explicit bool guard must reject it so `register_id = true` can't alias 1.
+        with pytest.raises(RegMetaError) as exc:
+            self._load(
+                tmp_path,
+                '[[fold]]\nregister_id = true\nvar_id = 9\ncolumns = ["A", "B"]\n',
+            )
+        assert exc.value.code == "fold_override_invalid"
+
     def test_missing_id_rejected(self, tmp_path: Path) -> None:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, '[[fold]]\nregister_id = 1\ncolumns = ["A", "B"]\n')
@@ -261,6 +271,9 @@ class TestFoldOverrideTriage:
             _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "fold_override_unused"
+        # Actionable: the message names the offending key so a maintainer can find it.
+        assert "register_id=1" in exc.value.message
+        assert "920" in exc.value.message
         conn.close()
 
     def test_override_for_absent_register_is_inert(self) -> None:
@@ -286,6 +299,54 @@ class TestFoldOverrideTriage:
         fold = {(1, 920): [frozenset({"Ssyk3", "Ssyk5"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)  # must not raise
         assert res.assignments[gk["Ssyk3"]] == res.assignments[gk["Ssyk5"]]
+        assert res.stats["folds"] == 1
+        conn.close()
+
+    def test_two_independent_groups_on_one_var(self) -> None:
+        # Two SEPARATE fold groups under one (register, var) key: {Ksjusni, NG1}
+        # and {bransch, sni2}, all four disjoint-stem and co-delivered in one
+        # edition. Each group folds into its OWN variable (2 variables, not 1, not
+        # 4), and BOTH groups are consumed under the single key → no
+        # `fold_override_unused`. Pins the per-var list-of-groups semantics.
+        conn = _ddl_conn()
+        orig = _insert_var(conn, register_id=1, var_id=920)
+        groups, gk = _container(
+            [("Ksjusni", 100), ("NG1", 100), ("bransch", 100), ("sni2", 100)]
+        )
+        fold = {
+            (1, 920): [frozenset({"Ksjusni", "NG1"}), frozenset({"bransch", "sni2"})]
+        }
+        res = _triage_groups(conn, groups, {(1, 920): orig}, fold)  # must not raise
+        assert res.assignments[gk["Ksjusni"]] == res.assignments[gk["NG1"]]
+        assert res.assignments[gk["bransch"]] == res.assignments[gk["sni2"]]
+        assert res.assignments[gk["Ksjusni"]] != res.assignments[gk["bransch"]]
+        n_vars = conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE register_id=1 AND provider_key='920'"
+        ).fetchone()[0]
+        assert n_vars == 2  # one variable per fold group
+        assert res.stats["folds"] == 2  # two fold clusters
+        conn.close()
+
+    def test_forced_fold_grows_through_stem_connected_column(self) -> None:
+        # Union-find cumulativity: force {Ssyk3, NG1}; the stem rule independently
+        # unites Ssyk3–Ssyk5. The forced seed + the stem edge share Ssyk3, so all
+        # THREE columns collapse into ONE component → one variable. Pins that
+        # forced and stem unions compose (a forced edge can pull a non-named but
+        # stem-connected column into the fold), order-independent.
+        conn = _ddl_conn()
+        orig = _insert_var(conn, register_id=1, var_id=920)
+        groups, gk = _container([("Ssyk3", 100), ("Ssyk5", 100), ("NG1", 100)])
+        fold = {(1, 920): [frozenset({"Ssyk3", "NG1"})]}
+        res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
+        assert (
+            res.assignments[gk["Ssyk3"]]
+            == res.assignments[gk["Ssyk5"]]
+            == res.assignments[gk["NG1"]]
+        )
+        n_vars = conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE register_id=1 AND provider_key='920'"
+        ).fetchone()[0]
+        assert n_vars == 1  # all three folded into the original variable
         assert res.stats["folds"] == 1
         conn.close()
 
