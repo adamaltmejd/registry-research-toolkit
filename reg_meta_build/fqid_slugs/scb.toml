@@ -2405,6 +2405,16 @@ panel_entity_key = "personnummer"
 panel_time_key = "sjukfrom"
 panel_time_grain = "row"
 
+# var 4027 "Näringsgren": #261 folds its same-edition näringsgren columns
+# (Ksjusni/NG1/bransch/sni2 + stem-kin) into one variable, but the column-basis
+# auto-derivation picks `ksjusni`; name it for the concept instead. Keyed on the
+# split-sibling discriminator — the sibling's earliest delivery column NG1_2007
+# (2006) → `ng1-2007`. The 2009 predecessor column `lgrp` is a SEPARATE variable
+# (it never co-delivers with these, so it isn't foldable); it auto-uniquifies to
+# `naringsgren-2`.
+[variable."195.4027.ng1-2007"]
+slug = "naringsgren"
+
 # Energianvändningen inom fiskesektorn
 [register."196"]
 slug = "energianvandning-fiske"
