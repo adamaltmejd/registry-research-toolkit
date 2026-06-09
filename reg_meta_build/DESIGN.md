@@ -647,9 +647,45 @@ Two notes on the triage signals:
   was tried (run triage after `populate_classifications`) and measured **195
   over-folds** — it merges distinct concepts that merely share a code system
   (`Hemkommun`/`Skolkommun`, SSYK-primary/SSYK-secondary), so it was dropped.
-  A curated fold-override can force specific columns to one cluster later via
-  the `_cluster_contested(forced_same=…)` seam (#261); that surface is not yet
-  built.
+  When a register genuinely delivers ONE concept under DISJOINT-stem columns
+  (näringsgren as `Ksjusni`/`NG1`/`bransch`/`sni2`), the stem rule can't see it;
+  a **curated fold-override** (`fold_overrides.toml`, loaded by
+  `fold_overrides.py`) forces those columns to one cluster via the
+  `_cluster_contested(forced_same=…)` seam (#261). An entry is keyed
+  `(register_id, var_id)` — the same SCB ids the triage carries, so a fold group
+  spanning multiple variables is unrepresentable by construction. It is the
+  curation twin of `codelivery.toml` (which resolves two codings on ONE column),
+  and like it a maintainer artifact absent from wheel/synthetic builds (empty map
+  ⇒ byte-identical to the stem-only partition). It is **not a silent no-op**: a
+  named column that isn't contested for the var, or an override whose register is
+  built but whose var is not a contested split container, FAILS the build
+  (`EXIT_CONFIG`); an override for a register absent from the build is inert
+  (the partial-/synthetic-build escape, like a codelivery pin for an absent
+  register).
+
+  **Format** — each `[[fold]]` entry is one fold group for one `(register_id,
+  var_id)`; a var needing two independent groups gets two `[[fold]]` entries
+  with the same key:
+
+  ```toml
+  [[fold]]
+  register_id = 195
+  var_id = 4027
+  columns = ["Ksjusni", "NG1", "bransch", "sni2"]
+  ```
+
+  Only `[[fold]]` is a legal top-level table; `register_id` / `var_id` must
+  be canonical integers (no leading zeros); `columns` requires ≥ 2 non-empty
+  strings with no repeats within or across groups for the same key. All
+  violations are `EXIT_CONFIG`.
+
+  **Pre-v1 churn** — the curation content in `fold_overrides.toml` churns
+  freely pre-v1; no freeze or immutability is in effect for this surface yet.
+  Arming snapshot-style immutability (analogous to the `fqid_slugs/UNFROZEN`
+  sentinel for register-version slugs) is tracked as #209 and explicitly out
+  of scope here. `fold_overrides.toml` is a separate package-root file like
+  `codelivery.toml` — it is not under the `fqid_slugs/` snapshot machinery.
+
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`),
   from the pair's two delivery columns, most specific first: `code_vs_label_pair`
   (name-based — a `<stem>namn` label paired with its bare-stem or
