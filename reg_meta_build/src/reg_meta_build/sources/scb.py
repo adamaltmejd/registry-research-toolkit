@@ -839,6 +839,12 @@ class _TriageResult:
     labels: dict[tuple, str]
     # gkeys collapsed into a sibling and not materialized.
     dropped: set[tuple]
+    # gkey → clamped valid_to YEAR. Pass 2 of `_collapse_residual` caps a group
+    # whose `[regver_min, regver_max]` span is superseded by a later same-column
+    # state; the materializer's fast path emits this as valid_to (overriding the
+    # open sentinel). NEVER touches `regver_min`/valid_from, so the unique index
+    # keys stay stable. (No default: built positionally alongside `dropped`.)
+    clamped_to: dict[tuple, int]
     # variable_id → shared-stem slug base for folded variables (consumed by
     # populate_variable_slugs; a single-column variable is absent → derives
     # from its column as usual).
@@ -956,7 +962,7 @@ def _triage_groups(
     """Resolve pre-triage state collisions. Mutates the DB (mints
     split-sibling `variable` rows) and returns the per-gkey routing the
     coalescer applies when it materializes `variable_state`."""
-    res = _TriageResult({}, {}, set(), {}, [], Counter())
+    res = _TriageResult({}, {}, set(), {}, {}, [], Counter())
 
     by_var: dict[tuple[int, int], list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
@@ -1092,31 +1098,89 @@ def _triage_groups(
     return res
 
 
+def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool:
+    """True iff this (variable_id, register_variant_id) partition needs the
+    materializer's per-year TIMELINE: two year-bearing groups carry DISTINCT
+    value sets over overlapping `[regver_min, regver_max]` windows, OR a yearless
+    group sits on a column carrying >1 distinct value set (its open span would
+    overlap the column's other coding). A FALSE partition stays on the fast
+    `[min, max]` span path — so there `[min, max]` subsumption is real emitted
+    coverage, which is why `_collapse_residual`'s overlap pass only acts on it.
+    Shared by the materializer and that pass, so the two agree on the routing."""
+    spans: list[tuple[int, int, int]] = []
+    col_vs: dict[str, set[int]] = defaultdict(set)
+    col_yearless: dict[str, bool] = defaultdict(bool)
+    for gk in gkeys:
+        g = groups[gk]
+        if g.value_set_id is None:
+            continue
+        col_vs[gk[8]].add(g.value_set_id)
+        if not g.regyears:
+            col_yearless[gk[8]] = True
+        elif g.regver_min is not None and g.regver_max is not None:
+            spans.append((g.regver_min, g.regver_max, g.value_set_id))
+    # (a) two year-bearing distinct-value-set groups with overlapping windows.
+    for i in range(len(spans)):
+        lo_i, hi_i, vs_i = spans[i]
+        for j in range(i + 1, len(spans)):
+            lo_j, hi_j, vs_j = spans[j]
+            if vs_i != vs_j and max(lo_i, lo_j) <= min(hi_i, hi_j):
+                return True
+    # (b) a YEARLESS group on a column carrying >1 distinct value set — it emits
+    # an open span (fast path) that would overlap the column's other coding;
+    # route the cluster through the timeline so it resolves.
+    for col, yearless in col_yearless.items():
+        if yearless and len(col_vs[col]) > 1:
+            return True
+    return False
+
+
+def _preferred_label(gk: tuple, grp: _StateGroup, res: _TriageResult) -> str:
+    """The label `_collapse_residual` PASS 1 prefers when deduping a `valid_from`
+    scope: an existing triage override, else a grain token, else the group's
+    `value_set_version_label`. Pass 1 writes the winner into `res.labels`. Pass 2
+    must NOT use this — it keys on the materializer's EMITTED label
+    (`res.labels.get(gk, value_set_version_label)`), which never adds the grain
+    token. The two diverge for a grain-bearing group pass 1 left untouched (a scope
+    singleton, so no `res.labels` entry): here the grain fallback is picked but
+    never emitted, so keying pass 2 on it would collapse distinct vintages."""
+    return (
+        res.labels.get(gk)
+        or _fold_token_from_grain(gk[7])
+        or (grp.value_set_version_label or "")
+    )
+
+
 def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> None:
-    """Rule 4 — final collision resolution. Every materializing group is
-    scoped by its FINAL uniqueness coordinate (assigned variable_id,
-    register_variant_id, valid_from-year); within a scope, each surviving group
-    must carry a distinct `value_set_version_label` or the unique index fails.
+    """Rule 4 — final collision resolution, in two passes.
 
-    Per group, the preferred label is its fold label (if triage set one), else a
-    grain token, else its own value_set_version_label. Processing latest-era
-    first, a label that's free is kept; a *meaningful* label already taken is
-    disambiguated (`-N`); an empty/uninformative collision is pure shape/value
-    drift and the group is dropped. This preserves multi-vintage (distinct
-    labels) and multi-grain (distinct grain tokens) while collapsing drift —
-    and, running after fold/split, also resolves split-sibling within-column
-    drift.
+    PASS 1 (index-key label dedup): every materializing group is scoped by its
+    FINAL uniqueness coordinate (assigned variable_id, register_variant_id,
+    valid_from-year); within a scope each surviving group must carry a distinct
+    `value_set_version_label` or the unique index fails. Per group the preferred
+    label is its fold label (if triage set one), else a grain token, else its own
+    value_set_version_label. Processing latest-era first, a free label is kept; a
+    *meaningful* label already taken is disambiguated (`-N`); an empty/
+    uninformative collision is pure shape/value drift and the group is dropped.
+    This preserves multi-vintage (distinct labels) and multi-grain (distinct
+    grain tokens) while collapsing drift — and, running after fold/split, also
+    resolves split-sibling within-column drift.
 
-    INTERIM scope limit: groups are scoped by `valid_from`-year (the index key).
-    Two same-label groups under one variable with *different* lower bounds but a
-    shared edition — e.g. a 2018-2019 stub and a 2019+ shape — land in separate
-    scopes, so this overlapping-but-not-index-colliding pair isn't reconciled
-    here. The unique index still holds (distinct `valid_from`); the interim point
-    resolver picks the later state at the overlap year (sensible supersession)
-    and A2.5 `resolve_at` surfaces both. A full fix range-clamps the older
-    overlap (not a whole-group drop, which would lose its non-overlap coverage),
-    so it belongs with the A2.5 state-model rework. Triage *detection* already
-    buckets by edition (`regver_id`); only this residual pass stays year-scoped."""
+    PASS 2 (same-column cross-year overlap): pass 1 keys on `valid_from`-year, so
+    two SAME-column, SAME-value-set, SAME-label groups with DIFFERENT lower
+    bounds but overlapping `[regver_min, regver_max]` spans (a temporal
+    supersession the index can't see) slip through. Only the materializer's FAST
+    path emits a contiguous `[min, max]` span, so there `[min, max]` subsumption
+    is real emitted overlap; timeline partitions (distinct value sets) de-overlap
+    per-year already and are left to the materializer (`_spans_overlap` gates
+    this). Within each fast-path partition, same-(column, value set, label)
+    groups are swept ascending by lower bound against a running "container": a
+    group fully inside the container is DROPPED (its coverage is redundant); a
+    group that starts inside it but extends past range-CLAMPS the container
+    (`res.clamped_to`) to end the year before this group begins, then becomes the
+    new container — never touching `regver_min`/valid_from, so the index keys
+    stay stable. Distinct value sets are the timeline/validator's domain and are
+    never reconciled here."""
     scopes: dict[tuple, list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         if gkey in res.dropped:
@@ -1143,11 +1207,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
         used: set[str] = set()
         for gk in ordered:
             grp = groups[gk]
-            preferred = (
-                res.labels.get(gk)
-                or _fold_token_from_grain(gk[7])
-                or (grp.value_set_version_label or "")
-            )
+            preferred = _preferred_label(gk, grp, res)
             if preferred and preferred not in used:
                 used.add(preferred)
                 res.labels[gk] = preferred
@@ -1162,6 +1222,66 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                 res.labels[gk] = ""
             else:  # uninformative drift that can't be distinguished → drop
                 res.dropped.add(gk)
+
+    # ── Pass 2: same-column cross-year overlap reconciliation ───────────────
+    # Partition the post-pass-1 survivors by (assigned vid, register_variant_id);
+    # act only on fast-path partitions, where each group emits a contiguous span.
+    fp_partitions: dict[tuple[int, int], list[tuple]] = defaultdict(list)
+    for gkey, grp in groups.items():
+        if gkey in res.dropped:
+            continue
+        vid = res.assignments.get(gkey)
+        if vid is None:
+            continue
+        fp_partitions[(vid, grp.register_variant_id)].append(gkey)
+
+    for part_gkeys in fp_partitions.values():
+        if len(part_gkeys) <= 1 or _spans_overlap(groups, part_gkeys):
+            continue  # singleton, or a timeline partition the materializer owns
+        # Sub-group by (delivery column, value set, EMITTED label): only the SAME
+        # column carrying the SAME coding under the SAME emitted label can be
+        # temporal drift. `latest_alias` is the emitted `delivery_column_name`
+        # (None matches None). The label MUST be the materializer's emitted formula
+        # (`_append_state`: `res.labels.get(gk, value_set_version_label)`), NOT pass
+        # 1's grain-aware `_preferred_label`: the materializer never applies the
+        # grain token, so keying on it would wrongly merge distinct
+        # `value_set_version_label` vintages that share codes + grain (e.g.
+        # "SSYK2012"/"SSYK2012rev") and collapse one the materializer ships intact.
+        subgroups: dict[tuple, list[tuple]] = defaultdict(list)
+        for gk in part_gkeys:
+            grp = groups[gk]
+            emitted_label = res.labels.get(gk, grp.value_set_version_label or "")
+            subgroups[(grp.latest_alias, grp.value_set_id, emitted_label)].append(gk)
+
+        for sub_gkeys in subgroups.values():
+            if len(sub_gkeys) <= 1:
+                continue
+            # Need both bounds on every member to compare spans; the narrowed
+            # (lo, hi, gkey) list also satisfies the type checker for the sweep.
+            bounds: list[tuple[int, int, tuple]] = []
+            for gk in sub_gkeys:
+                lo, hi = groups[gk].regver_min, groups[gk].regver_max
+                if lo is None or hi is None:
+                    break
+                bounds.append((lo, hi, gk))
+            if len(bounds) != len(sub_gkeys):
+                continue
+            # Sweep ascending, merging overlaps: drop a fully-subsumed group,
+            # clamp a crossing one to end the year before the next begins.
+            bounds.sort(key=lambda b: (b[0], b[1]))
+            container_lo, covered_to, container_gk = bounds[0]
+            for lo, hi, gk in bounds[1:]:
+                if lo > covered_to:  # gap → this group opens a fresh container
+                    container_lo, covered_to, container_gk = lo, hi, gk
+                elif hi <= covered_to:  # subsumed by the container → drop
+                    res.dropped.add(gk)
+                else:  # crossing: clamp the container, then advance to this group
+                    # Pass 1 already deduped same-valid_from collisions, so lower
+                    # bounds are distinct (lo > container_lo) and the clamp can
+                    # never empty the container's span.
+                    assert lo - 1 >= container_lo
+                    res.clamped_to[container_gk] = lo - 1
+                    container_lo, covered_to, container_gk = lo, hi, gk
 
 
 def _inherited_flags(
@@ -2354,7 +2474,11 @@ def _coalesce_variable_states(
         nonlocal open_top_from_unika
         vid = _resolve_variable_id(gkey, grp)
         from_year = _group_from_year(grp)
-        to_year = _group_open_to(grp)
+        # A triage clamp (residual same-column supersession, _collapse_residual
+        # pass 2) caps valid_to the year before the superseding group begins and
+        # overrides the open sentinel — a superseded group is no longer active.
+        # Clamps only land on fast-path groups, so honoring it here suffices.
+        to_year = triage.clamped_to.get(gkey, _group_open_to(grp))
         if to_year is None:
             open_top_from_unika += 1
         vf = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
@@ -2373,34 +2497,6 @@ def _coalesce_variable_states(
             continue  # collapsed into a sibling state (rule 4 drift)
         vid = _resolve_variable_id(gkey, grp)
         by_vv[(vid, grp.register_variant_id)].append(gkey)
-
-    def _spans_overlap(gkeys: list[tuple]) -> bool:
-        spans: list[tuple[int, int, int]] = []
-        col_vs: dict[str, set[int]] = defaultdict(set)
-        col_yearless: dict[str, bool] = defaultdict(bool)
-        for gk in gkeys:
-            g = groups[gk]
-            if g.value_set_id is None:
-                continue
-            col_vs[gk[8]].add(g.value_set_id)
-            if not g.regyears:
-                col_yearless[gk[8]] = True
-            elif g.regver_min is not None and g.regver_max is not None:
-                spans.append((g.regver_min, g.regver_max, g.value_set_id))
-        # (a) two year-bearing distinct-value-set groups with overlapping windows.
-        for i in range(len(spans)):
-            lo_i, hi_i, vs_i = spans[i]
-            for j in range(i + 1, len(spans)):
-                lo_j, hi_j, vs_j = spans[j]
-                if vs_i != vs_j and max(lo_i, lo_j) <= min(hi_i, hi_j):
-                    return True
-        # (b) a YEARLESS group on a column carrying >1 distinct value set — it
-        # emits an open span (fast path) that would overlap the column's other
-        # coding; route the cluster through the timeline so it resolves.
-        for col, yearless in col_yearless.items():
-            if yearless and len(col_vs[col]) > 1:
-                return True
-        return False
 
     # Genuine same-column conflicts: a delivery column resolves a period to >1
     # distinct value set the cascade + curation couldn't reduce. Keyed by
@@ -2421,7 +2517,7 @@ def _coalesce_variable_states(
         return {vs for gk in gks if (vs := groups[gk].value_set_id) is not None}
 
     for (vid, rv), gkeys in by_vv.items():
-        if not _spans_overlap(gkeys):
+        if not _spans_overlap(groups, gkeys):
             for gk in gkeys:  # fast path
                 _emit_span(gk, groups[gk])
             continue
@@ -2609,7 +2705,8 @@ def _coalesce_variable_states(
         f"  triage: {triage.stats.get('folds', 0):,} folds, "
         f"{triage.stats.get('splits', 0):,} splits, "
         f"{len(triage.dropped):,} states collapsed, "
-        f"{triage.stats.get('clustered', 0):,} clustered"
+        f"{triage.stats.get('clustered', 0):,} clustered, "
+        f"{len(triage.clamped_to):,} clamped"
     )
     return {
         "n_state_groups": len(groups),
@@ -2624,6 +2721,7 @@ def _coalesce_variable_states(
         "n_triage_folds": triage.stats.get("folds", 0),
         "n_triage_splits": triage.stats.get("splits", 0),
         "n_triage_collapsed": len(triage.dropped),
+        "n_triage_clamped": len(triage.clamped_to),
         # Build-only routing consumed downstream by build_db (NOT manifest
         # values): fold-slug hints → populate_variable_slugs; sibling edges →
         # _materialize_variable_related_to (after slugs exist).

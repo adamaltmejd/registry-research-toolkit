@@ -607,8 +607,16 @@ ways:
   source `provider_key`, reassign each column's states to its sibling, and
   link the siblings with `variable_related_to` edges.
 - **Collapse** — residual same-column metadata drift (`data_type` /
-  `value_set_id` re-delivery churn). Keep the latest-era state, drop the
-  rest (`_collapse_residual`).
+  `value_set_id` re-delivery churn). `_collapse_residual` runs in two
+  passes: pass 1 dedupes groups sharing the same `valid_from`-year index
+  key (keeps the latest-era state, drops pure drift); pass 2 reconciles
+  SAME-column, SAME-value-set, SAME-emitted-label groups whose
+  `[regver_min, regver_max]` spans *overlap across different lower-bound
+  years* — dropping a fully-subsumed group and range-clamping a crossing
+  container's `valid_to` to the year before the successor begins. Only
+  fast-path `(variable_id, register_variant_id)` partitions are touched;
+  distinct value sets and different-column overlaps (parallel
+  co-deliveries) are left to the materializer.
 
 Fold vs split is decided **PER CLUSTER** (#223), not fold-all-or-split-all:
 `_cluster_contested` partitions a container's contested columns into stem-
@@ -629,7 +637,8 @@ boundary rides on the **column stem**. Stem-based triage folds only a
 *minority* of contested containers, but triage still needs *both* outcomes: a
 fold-everything rule would merge rooms with area, and a split-everything rule
 would over-shard SNI vintages that arrive as parallel columns. The precise
-fold / split / clustered counts are reported by the `triage:` build line.
+fold / split / collapsed / clamped / clustered counts are reported by the
+`triage:` build line.
 
 Two notes on the triage signals:
 
@@ -662,8 +671,10 @@ Slug collisions during triage (and in the *Slug curation* auto-derive
 below) are resolved with a deterministic **numeric `-N` suffix**
 (`_uniquify` / `_collapse_residual`), not `-a`/`-b` or a hash suffix.
 
-Remaining: interim residual-collapse precision (year-scoped, not
-edition-scoped) — see REFACTOR_SPEC.md / #223.
+Residual collapse now reconciles same-column cross-year overlaps (pass 2
+above). The remaining open item is cross-column identical-parallel-column
+dedup (two delivery columns carrying exactly the same concept at the same
+period), which is a separate rule outside this collapse path.
 
 ## Slug curation
 
