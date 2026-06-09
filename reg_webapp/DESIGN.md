@@ -490,11 +490,15 @@ this is also the deliberate "what would my project look like under steward X?"
 feature — load a spec against another steward's deployment and the warnings
 enumerate exactly which columns would be unavailable; the SPA offers a one-click
 "drop out-of-scope columns" remediation. The `global` deployment never emits it
-(no filter). The membership probe (`CatalogIndex.admits`) is built and
-unit-tested. **Gap: it is not yet wired into `/api/project/validate`** —
-`_semantic_issues` runs `validate_semantic` + the cross-block checks but never
-consults the `CatalogIndex`, so the code is never emitted from a request today.
-Remaining: wire `admits` into `/validate` — see `REFACTOR_SPEC.md`.
+(no filter). The membership probe (`CatalogIndex.admits`) is built and unit-tested, and
+**is now wired into `/api/project/validate`**: `routes/project.py` threads
+`app.state.catalog_index` into `validate_semantic` via `run_in_threadpool`,
+and `admits` gates the `warning` for any resolved binding FQID the steward's
+filtered catalog does not admit. The `global` deployment (index `None`) never
+emits it. Admission keying is currently literal/variant-agnostic; per-variant,
+value_set, and same_as keying (e.g. a curated `kon→syss` same_as edge can
+produce a warning on a same_as sibling under literal keying) is deferred to
+issue #206.
 
 ## Cost protection (`limits.py`)
 

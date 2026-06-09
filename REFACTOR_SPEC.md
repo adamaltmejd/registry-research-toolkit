@@ -405,10 +405,7 @@ sub-concerns: steward-catalog admission keying (#206) and the SOS
 classification data path that some steward catalogs depend on (#210).
 
 Also remaining within the steward surface: the SPA catalog-authoring mode
-(distinct from project authoring), a `reg-meta-build` steward-diff CLI,
-and wiring `fqid_outside_steward_catalog` into `/validate` (the
-membership index ships but is never consulted by the validate path —
-tracked separately).
+(distinct from project authoring) and a `reg-meta-build` steward-diff CLI.
 
 ## 12 — Per-steward order templates + `extensions`
 
@@ -478,6 +475,5 @@ Carried from the testing strategy; the shipped categories are in
 Open issues seeded from or feeding this plan: #206 (steward admission
 keying), #209 (v1 slug freeze), #210 (SOS classification path), #217
 (kit-build), #220 (Cloudflare edge-cache gate), and #224 (provenance-DB
-deployment confinement). Plus the A0–A5 loose ends: issue #227 (wire
-`fqid_outside_steward_catalog`). #228 (reserved suffix slugs) is now
-resolved.
+deployment confinement). Plus the A0–A5 loose ends: issues #227 (wire `fqid_outside_steward_catalog`)
+and #228 (reserved suffix slugs) are now resolved.
