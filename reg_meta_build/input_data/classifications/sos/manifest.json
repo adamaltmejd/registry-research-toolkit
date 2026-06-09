@@ -1,0 +1,148 @@
+{
+  "sources": [
+    {
+      "key": "atc",
+      "name": "ATC – Anatomical Therapeutic Chemical (Swedish register)",
+      "publisher": "Läkemedelsverket (MPA)",
+      "source_url": "https://nsl.mpa.se/sensl-v2.0.zip",
+      "raw_sha256": "5a220e0694737a8a172946d9b822bffc68a6ec3bfec9d511af6a0b0e83fb02ef",
+      "raw_bytes": 1693518,
+      "n_codes": 16264,
+      "n_retired": 950,
+      "out_file": "atc.csv",
+      "fetched_at": "2026-06-09T15:09:13+00:00"
+    },
+    {
+      "key": "icd-10-se",
+      "name": "ICD-10-SE – diagnoses (Swedish version)",
+      "publisher": "Socialstyrelsen / eHälsomyndigheten",
+      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icd-10-se.tsv?version=1&modificationDate=1779615619577&api=v2",
+      "raw_sha256": "696c0c02178dabce2c99802898e98cb5c7c4a3af1f78c5cc1c2ad29f5eaabae8",
+      "raw_bytes": 15393792,
+      "n_codes": 38928,
+      "n_retired": 0,
+      "out_file": "icd-10-se.csv",
+      "fetched_at": "2026-06-09T15:09:13+00:00"
+    },
+    {
+      "key": "kva-kma",
+      "name": "KVÅ / KMÅ – medical care measures",
+      "publisher": "Socialstyrelsen / eHälsomyndigheten",
+      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-medicinska-atgarder-kma.tsv?version=2&modificationDate=1779616677863&api=v2",
+      "raw_sha256": "0d78a1211a89f8addf7773382da878da7eaa5445ac33c037a151e815ee9e5726",
+      "raw_bytes": 937413,
+      "n_codes": 4935,
+      "n_retired": 0,
+      "out_file": "kva-kma.csv",
+      "fetched_at": "2026-06-09T15:09:13+00:00"
+    },
+    {
+      "key": "kva-kka",
+      "name": "KVÅ / KKÅ – surgical care measures",
+      "publisher": "Socialstyrelsen / eHälsomyndigheten",
+      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-kirurgiska-atgarder-kka.tsv?version=1&modificationDate=1779617727780&api=v2",
+      "raw_sha256": "502c7f2c663fa9f76147d0415278d9c66f821042b70b47715c37cc7483b3bba7",
+      "raw_bytes": 897527,
+      "n_codes": 8663,
+      "n_retired": 0,
+      "out_file": "kva-kka.csv",
+      "fetched_at": "2026-06-09T15:09:14+00:00"
+    },
+    {
+      "key": "icf",
+      "name": "ICF – Functioning, Disability and Health",
+      "publisher": "Socialstyrelsen / eHälsomyndigheten",
+      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icf.tsv?version=1&modificationDate=1779622373643&api=v2",
+      "raw_sha256": "69d906244413a100b91c32fae6c18a0f484b7fc66546115787fae0fff448cedf",
+      "raw_bytes": 341288,
+      "n_codes": 1632,
+      "n_retired": 0,
+      "out_file": "icf.csv",
+      "fetched_at": "2026-06-09T15:09:14+00:00"
+    },
+    {
+      "key": "ksi",
+      "name": "KSI – Social Services Interventions",
+      "publisher": "Socialstyrelsen / eHälsomyndigheten",
+      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/ksi.tsv?version=1&modificationDate=1779622712923&api=v2",
+      "raw_sha256": "9ca2b4263ba0bf74105e301d002ed79ec0f9f3f4f0865da783fd9bed1fc5943a",
+      "raw_bytes": 666272,
+      "n_codes": 2074,
+      "n_retired": 0,
+      "out_file": "ksi.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "icd-8",
+      "name": "ICD-8 / Klassifikation av sjukdomar 1968 (Swedish)",
+      "publisher": "Socialstyrelsen",
+      "source_url": "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/icd-8-klassifikation-av-sjukdomar-mm-1968.xls",
+      "raw_sha256": "0f8527dae58df40e54625b1bff14b90df0cede7d532cca167a4734fdd9faa180",
+      "raw_bytes": 614912,
+      "n_codes": 5600,
+      "n_retired": 0,
+      "out_file": "icd-8.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "icd-9-ks87",
+      "name": "ICD-9 / KS87 – Klassifikation av sjukdomar 1987 (Swedish)",
+      "publisher": "Socialstyrelsen",
+      "source_url": "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/icd-9-klassifikation-av-sjukdomar-1987-ks87.xls",
+      "raw_sha256": "54c0f93919bb3e789db75221be7c8d34b046c3c37fbe9a08bc859bc418b9d9e1",
+      "raw_bytes": 679424,
+      "n_codes": 5679,
+      "n_retired": 0,
+      "out_file": "icd-9-ks87.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "ks87-p",
+      "name": "KS87-P – Klassifikation av sjukdomar 1987, primärvård",
+      "publisher": "Socialstyrelsen",
+      "source_url": "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/klassifikation-av-sjukdomar-1987-primarvard-ks87-p-excel.xls",
+      "raw_sha256": "65fab80152aa3e0ebd7b6ed099c5d1168a2c625c3239eee2f89f731142192e75",
+      "raw_bytes": 73728,
+      "n_codes": 383,
+      "n_retired": 0,
+      "out_file": "ks87-p.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "landskoder",
+      "name": "Landskoder – country codes (Skatteverket, ISO-3166 alpha-2)",
+      "publisher": "Skatteverket",
+      "source_url": "https://www.skatteverket.se/download/18.6de6b99e16e94f3973b1ee/1574772028612/Land-%20och%20ers%C3%A4ttningskoder.xlsx",
+      "raw_sha256": "c90fc184aedb552d035688c106f618f4ec8530dd8a02206aa963b02a89fff9cd",
+      "raw_bytes": 39447,
+      "n_codes": 253,
+      "n_retired": 0,
+      "out_file": "landskoder.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "drg",
+      "name": "NordDRG – diagnosis-related groups (Swedish, latest)",
+      "publisher": "Socialstyrelsen / Nordic Casemix Centre (licensed)",
+      "source_url": "https://norddrg-explorer.socialstyrelsen.se/api/Defdata/DownloadDefdata (SWE2026PR1)",
+      "raw_sha256": "c7979a43e35f84ce91c6f60eef8eab62411da11f6213175771246a42faed771d",
+      "raw_bytes": 5035640,
+      "n_codes": 1983,
+      "n_retired": 0,
+      "out_file": "drg.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    },
+    {
+      "key": "mdc",
+      "name": "MDC – major diagnostic categories (NordDRG, Swedish, latest)",
+      "publisher": "Socialstyrelsen / Nordic Casemix Centre (licensed)",
+      "source_url": "https://norddrg-explorer.socialstyrelsen.se/api/Defdata/DownloadDefdata (SWE2026PR1)",
+      "raw_sha256": "c7979a43e35f84ce91c6f60eef8eab62411da11f6213175771246a42faed771d",
+      "raw_bytes": 5035640,
+      "n_codes": 29,
+      "n_retired": 0,
+      "out_file": "mdc.csv",
+      "fetched_at": "2026-06-09T15:09:15+00:00"
+    }
+  ]
+}

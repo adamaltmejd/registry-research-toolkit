@@ -92,13 +92,24 @@ class TestLoadSeed:
         assert ei.value.code == "classification_seed_empty"
 
     def test_missing_required_field(self, tmp_path: Path):
+        # short_name + name are required; vardemangdsversion is optional, so
+        # omit `name` to trigger the missing-required-field path.
+        seed = tmp_path / "c.toml"
+        seed.write_text('[[classification]]\nshort_name = "A"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as ei:
+            load_seed(seed)
+        assert ei.value.code == "classification_seed_invalid"
+
+    def test_vardemangdsversion_optional(self, tmp_path: Path):
+        # An entry with no vardemangdsversion is valid (provider-seeded
+        # canonical-codes-only classification — tags no instances).
         seed = tmp_path / "c.toml"
         seed.write_text(
             '[[classification]]\nshort_name = "A"\nname = "A"\n', encoding="utf-8"
         )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
+        entries = load_seed(seed)
+        assert len(entries) == 1
+        assert "vardemangdsversion" not in entries[0]
 
     def test_duplicate_short_name(self, tmp_path: Path):
         seed = tmp_path / "c.toml"
@@ -179,10 +190,18 @@ class TestLoadValidCodes:
         assert load_valid_codes(path) == {"A": "Alpha", "B": "Bravo"}
 
     def test_bad_header(self, tmp_path: Path):
-        path = self._csv(tmp_path, "code,label\nA,Alpha\n")
+        path = self._csv(tmp_path, "foo,bar\nA,Alpha\n")
         with pytest.raises(RegMetaError) as ei:
             load_valid_codes(path)
         assert ei.value.code == "classification_csv_invalid"
+
+    def test_universal_header_accepted(self, tmp_path: Path):
+        # The SOS CSVs ship `code,label` (+ extra trailing columns we ignore).
+        path = self._csv(
+            tmp_path,
+            "code,label,label_en,parent_code\nA,Alpha,Alpha-en,\nB,Bravo,,A\n",
+        )
+        assert load_valid_codes(path) == {"A": "Alpha", "B": "Bravo"}
 
     def test_duplicate_code(self, tmp_path: Path):
         path = self._csv(tmp_path, "vardekod,vardebenamning\nA,Alpha\nA,Apple\n")
