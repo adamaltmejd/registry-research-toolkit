@@ -618,7 +618,14 @@ def build_bundle(
     # json.dumps escapes embedded backslashes and triple-quotes; the
     # outer r""" raw string preserves the result verbatim so json.loads
     # at runtime sees the same bytes.
-    project_data_str = "" if project_data is None else json.dumps(project_data)
+    # sort_keys makes the embedded bytes a pure function of spec *content*,
+    # not the caller's dict key order, so the determinism gate holds for any
+    # caller (see DESIGN.md → Bundle determinism). The embedded literal is
+    # thus canonicalized, not a verbatim byte-copy of the project_data.json
+    # sidecar — both parse to the same dict, so this is semantically inert.
+    project_data_str = (
+        "" if project_data is None else json.dumps(project_data, sort_keys=True)
+    )
     header = header.replace(PROJECT_DATA_PLACEHOLDER, project_data_str, 1)
     # Static prefixes plus the caller's runtime — see _STATIC_AMALGAMATED_PREFIXES.
     drop_prefixes: tuple[str, ...] = (
