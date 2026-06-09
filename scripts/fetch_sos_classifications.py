@@ -117,8 +117,8 @@ class Source:
     # ehalsa_tsv
     attachment: str | None = None  # filename on the samarbetsyta page
     # ehalsa_tsv_merge: several samarbetsyta TSVs concatenated into one code list,
-    # deduped on the code column (earlier attachment's label wins on a shared
-    # code). KVÅ uses this — KMÅ + KKÅ are disjoint upstream but one åtgärd field
+    # deduped on the code column (earlier attachment's label wins on a collision).
+    # KVÅ uses this — KMÅ + KKÅ are disjoint upstream but one åtgärd field
     # downstream. Mutually exclusive with `attachment`.
     merge_attachments: tuple[str, ...] = ()
     # sos_xls (legacy .xls on socialstyrelsen.se globalassets; needs xlrd)
@@ -138,8 +138,9 @@ class Source:
 
 # Registry of SOS-referenced external classifications. KVÅ is split upstream
 # into KMÅ (medical) + KKÅ (surgical) disjoint code spaces; we fetch both and
-# MERGE them into one `kva.csv` (deduped on the shared chapter headers), since
-# SOS registers reference KVÅ as a single åtgärd field.
+# MERGE them into one `kva.csv` (deduped on cross-space collisions — the ~50
+# 1–2-char organizational headers that appear in both, never leaf åtgärd codes),
+# since SOS registers reference KVÅ as a single åtgärd field.
 SOURCES: tuple[Source, ...] = (
     Source(
         key="atc",
@@ -163,8 +164,9 @@ SOURCES: tuple[Source, ...] = (
         name="KVÅ – care measures (KMÅ medical + KKÅ surgical, merged)",
         publisher="Socialstyrelsen / eHälsomyndigheten",
         kind="ehalsa_tsv_merge",
-        # KMÅ first so its label wins on the ~50 shared chapter-header codes
-        # (A, AA, …) that both code spaces define.
+        # KMÅ first so its label wins on the ~50 cross-space collision codes
+        # (1–2-char organizational headers like A, AA, … that carry DIFFERENT
+        # meanings in KMÅ vs KKÅ; never leaf åtgärd codes registers reference).
         merge_attachments=(
             "kva-medicinska-atgarder-kma.tsv",
             "kva-kirurgiska-atgarder-kka.tsv",
@@ -642,7 +644,7 @@ def fetch_source(src: Source, cache_dir: Path, out_dir: Path, *, force: bool) ->
         source_url = url
     elif src.kind == "ehalsa_tsv_merge":
         # Fetch each disjoint code space, then concatenate + dedup on the code
-        # column (first attachment's row wins on a shared code — KMÅ before KKÅ).
+        # column (first attachment's row wins on a collision — KMÅ before KKÅ).
         # Provenance for both raw files survives in the manifest entry built
         # below (source_urls list + per-file raw_sha256), keyed off the per-file
         # `attachment` stem so a future re-run is auditable.

@@ -63,7 +63,7 @@ A01,Tyfoidfeber,Typhoid fever,A00-A09
 
 ## Status overview
 
-80 classifications (47 per-year LKF entries + 22 SCB-sourced others + 11 SOS
+80 classifications (47 per-year LKF entries + 22 SCB-sourced others + 10 SOS
 code systems). All currently declared in `classifications.toml` ship with a
 `valid_codes_file`.
 
@@ -102,10 +102,10 @@ marked `is_valid=1`).
 
 ### SOS code systems
 
-These are provider-seeded canonical-only entries (`provider = "sos"`):
-they seed canonical codes via `valid_codes_file` but carry no
-`vardemangdsversion` — no observed variable instance is linked yet. PR2 adds
-the variable→classification linkage via the `external_classification` resolver.
+These are provider-seeded entries (`provider = "sos"`): they seed canonical
+codes via `valid_codes_file`. PR2 wired SOS→classification linkage via the
+`external_classification` resolver, so SOS variable_states can now carry a
+`classification_id` — the entries are no longer canonical-only.
 CSVs live under `input_data/classifications/sos/`; `manifest.json` there
 records the per-system source URL, sha256, and counts.
 
@@ -113,8 +113,7 @@ records the per-system source URL, sha256, and counts.
 |---|---:|---|---|
 | `ATC` | 16 264 | Läkemedelsverket (MPA) | Swedish ATC register; nightly zip |
 | `ICD-10-SE` | 38 928 | Socialstyrelsen | Swedish ICD-10 |
-| `KVA-KMA` | 4 935 | Socialstyrelsen | KVÅ medical care measures (KMÅ) |
-| `KVA-KKA` | 8 663 | Socialstyrelsen | KVÅ surgical care measures (KKÅ) |
+| `KVA` | 13 548 | Socialstyrelsen | KVÅ – care measures (KMÅ medical + KKÅ surgical, merged) |
 | `ICF` | 1 632 | Socialstyrelsen | Functioning, Disability and Health |
 | `KSI` | 2 074 | Socialstyrelsen | Social Services Interventions |
 | `ICD-8-KS68` | 5 600 | Socialstyrelsen | Swedish ICD-8, 1969–1986 |
@@ -136,12 +135,12 @@ merge-writes that manifest, so counts and hashes stay current.
 
 **Refresh caveat:** a bare run fetches all configured source keys, including
 `landskoder` (ISO-3166 country codes) — which we deliberately do NOT seed as a
-classification. To refresh only the 11 seeded keys without touching unrelated
+classification. To refresh only the 10 seeded keys without touching unrelated
 entries, pass `--only` with the relevant key names:
 
 ```bash
 uv run python scripts/fetch_sos_classifications.py \
-    --only atc icd-10-se kva-kma kva-kka icf ksi \
+    --only atc icd-10-se kva icf ksi \
              icd-8 icd-9-ks87 ks87-p drg mdc
 ```
 
