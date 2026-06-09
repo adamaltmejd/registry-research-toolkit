@@ -71,6 +71,8 @@ if TYPE_CHECKING:
 
     from reg_meta.catalog import Catalog
 
+    from reg_webapp.catalog_index import CatalogIndex
+
 router = APIRouter(prefix="/api/project")
 
 
@@ -138,7 +140,9 @@ def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
     return [issue] if issue is not None else []
 
 
-def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIssue]:
+def _semantic_issues(
+    raw: dict[str, Any], catalog: Catalog, index: CatalogIndex | None
+) -> list[ValidationIssue]:
     """Build the ``ProjectData`` model, run the semantic layer (see DESIGN.md →
     Semantic validation (semantic.py)), AND the
     build-time cross-block referential checks (orphan ``binding_options`` keys /
@@ -146,6 +150,10 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
     ``reg_monabundle.build.spec_loader.binding_options_issues``).
     The cross-block check closes the documented ``/validate``↔``/bundle``
     divergence — a spec that bundles must also validate clean on that class.
+
+    ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
+    ``global`` deployment); the semantic layer consults it to flag a resolvable FQID
+    outside the steward's filtered subset (``fqid_outside_steward_catalog``).
 
     Reached only when the structural layer passed. The model build is now a THIN
     DEFENSIVE catch: ``validate_structural`` already flags missing / mistyped /
@@ -163,7 +171,9 @@ def _semantic_issues(raw: dict[str, Any], catalog: Catalog) -> list[ValidationIs
                 exc,
             )
         ]
-    issues = list(validate_semantic(project, catalog, caller="researcher").issues)
+    issues = list(
+        validate_semantic(project, catalog, caller="researcher", index=index).issues
+    )
     issues.extend(binding_options_issues(raw.get("reg_monabundle"), project))
     return issues
 
@@ -212,15 +222,28 @@ async def validate_project(request: Request) -> ValidationResultModel:
     opens on that threadpool thread (one thread → the cross-thread sqlite P1 can't
     recur)."""
     raw = await read_raw_json_object(request)
-    return await run_in_threadpool(_validate_blocking, request.app.state.db_path, raw)
+    # The `CatalogIndex` is an immutable in-memory dataclass (no DB conn), so reading
+    # it on the threadpool thread is safe — mirrors how `db_path` is already passed.
+    return await run_in_threadpool(
+        _validate_blocking,
+        request.app.state.db_path,
+        raw,
+        request.app.state.catalog_index,
+    )
 
 
-def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultModel:
+def _validate_blocking(
+    db_path: Path, raw: dict[str, Any], index: CatalogIndex | None
+) -> ValidationResultModel:
     """The three-layer composition, run on a threadpool thread (off the
     event loop). Layer order (DB-free first, so a structurally-rejected body costs
     no DB hit): structural → block → (model build + semantic). When structural
     fails we SKIP the model build + semantic step (they assume a structurally valid
-    spec) but STILL report the block issues — the block validator is independent."""
+    spec) but STILL report the block issues — the block validator is independent.
+
+    ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
+    ``global`` deployment), threaded into the semantic layer for the steward
+    catalog filter (``fqid_outside_steward_catalog``)."""
     issues: list[ValidationIssue] = []
     structural = validate_structural(raw)
     issues.extend(structural.issues)
@@ -232,7 +255,7 @@ def _validate_blocking(db_path: Path, raw: dict[str, Any]) -> ValidationResultMo
         from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
 
         with _project_conn(db_path) as conn:
-            issues.extend(_semantic_issues(raw, Catalog(conn)))
+            issues.extend(_semantic_issues(raw, Catalog(conn), index))
 
     return _to_result_model(ValidationResult(issues=tuple(issues)))
 

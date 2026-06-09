@@ -779,3 +779,78 @@ def test_non_leap_feb_to_endpoint_gap_is_snapped_not_phantom(catalog):
     # No spurious Feb-29 phantom gap leaked in.
     assert "2019-02-29" not in issue.message, issue.message
     assert result.ok
+
+
+# ── #227: fqid_outside_steward_catalog (steward catalog filter) ─────────────
+# Given the loaded steward `CatalogIndex`, the researcher path flags a RESOLVED
+# FQID outside the steward's filtered subset as a non-blocking warning. The
+# steward-load path and the `global` deployment (index=None) never emit it. The
+# fixture DB resolves both `scb/lisa/kon` and `scb/rams/syss`; an index built from
+# a kon-only steward project admits the former but not the latter.
+
+_RAMS_SOURCE = {
+    "name": "rams",
+    "register_variant": "scb/rams/standard",
+    "period": 2019,
+    "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
+}
+
+
+@pytest.fixture
+def kon_only_index(catalog):
+    """A steward `CatalogIndex` admitting ONLY `scb/lisa/kon` (built from a
+    one-source steward project). `scb/rams/syss` resolves reg_meta-wide but is NOT
+    admitted by this index."""
+    project = _project([_CLEAN_SOURCE])
+    result = validate_semantic(project, catalog, caller="steward")
+    assert result.ok
+    index = build_catalog_index(project, result.issues)
+    assert index.admits("scb/lisa/kon")
+    assert not index.admits("scb/rams/syss")
+    return index
+
+
+def test_resolvable_unadmitted_fqid_is_outside_steward_catalog(catalog, kon_only_index):
+    result = validate_semantic(
+        _project([_RAMS_SOURCE]), catalog, caller="researcher", index=kon_only_index
+    )
+    outside = [i for i in result.issues if i.code == "fqid_outside_steward_catalog"]
+    assert len(outside) == 1
+    assert outside[0].level == "warning"
+    assert outside[0].path == "/sources/0/bindings/0/variable"
+    assert "scb/rams/syss" in outside[0].message
+    # Non-blocking: the FQID resolves, it is merely outside this deployment.
+    assert result.ok
+
+
+def test_admitted_fqid_has_no_outside_steward_catalog(catalog, kon_only_index):
+    result = validate_semantic(
+        _project([_CLEAN_SOURCE]), catalog, caller="researcher", index=kon_only_index
+    )
+    assert "fqid_outside_steward_catalog" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+def test_no_index_never_emits_outside_steward_catalog(catalog):
+    # `index` defaults to None (the `global` deployment): the filter never fires,
+    # even for an FQID outside any steward's catalog.
+    result = validate_semantic(_project([_RAMS_SOURCE]), catalog, caller="researcher")
+    assert "fqid_outside_steward_catalog" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+def test_unresolvable_fqid_not_also_outside_catalog(catalog, kon_only_index):
+    # An unresolvable FQID gets `fqid_unresolved` and returns BEFORE the admission
+    # check — it must NOT also be flagged `fqid_outside_steward_catalog`.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [{"variable": "scb/lisa/nosuchvar", "type": "categorical"}],
+    }
+    result = validate_semantic(
+        _project([source]), catalog, caller="researcher", index=kon_only_index
+    )
+    codes = {i.code for i in result.issues}
+    assert "fqid_unresolved" in codes
+    assert "fqid_outside_steward_catalog" not in codes
