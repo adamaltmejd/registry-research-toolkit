@@ -867,7 +867,7 @@ class TestSplitSiblingFlagInheritance:
 
     def test_apply_split_propagates_flags_to_siblings(self) -> None:
         conn, orig = self._flagged_origin()
-        res = _TriageResult({}, {}, set(), {}, [], Counter())
+        res = _TriageResult({}, {}, set(), {}, {}, [], Counter())
         # 'PNR' (lex-first) keeps the origin; 'PersonNr' mints a sibling that must
         # inherit the flags rather than defaulting to 0/0.
         by_col = {"PNR": [("gk-pnr",)], "PersonNr": [("gk-personnr",)]}
@@ -885,7 +885,7 @@ class TestSplitSiblingFlagInheritance:
 
     def test_split_off_non_contested_propagates_flags(self) -> None:
         conn, orig = self._flagged_origin()
-        res = _TriageResult({}, {}, set(), {}, [], Counter())
+        res = _TriageResult({}, {}, set(), {}, {}, [], Counter())
         _split_off_non_contested(
             conn, {}, {"PersonNrSamh": [("gk",)]}, ["PersonNrSamh"], 1, 57, orig, res
         )
@@ -902,7 +902,7 @@ class TestSplitSiblingFlagInheritance:
         # keeps the origin, the other mints a sibling. Real groups are required —
         # the multi-column cluster routes through `_apply_fold` (reads groups[gk]).
         conn, orig = self._flagged_origin()
-        res = _TriageResult({}, {}, set(), {}, [], Counter())
+        res = _TriageResult({}, {}, set(), {}, {}, [], Counter())
         gk_s3 = (1, 10, 57, "int", "1", 1, "", "", "Ssyk3")
         gk_s5 = (1, 10, 57, "int", "1", 2, "", "", "Ssyk5")
         gk_hem = (1, 10, 57, "int", "1", 3, "", "", "Hemkommun")
@@ -1267,6 +1267,7 @@ class TestCollapseResidual:
             assignments={gk_none: 1, gk_int: 1},
             labels={},
             dropped=set(),
+            clamped_to={},
             fold_slug_hints={},
             related_edges=[],
             stats=Counter(),
@@ -1275,6 +1276,128 @@ class TestCollapseResidual:
         # Drift collapses to one; the latest-era group (regver_max 2019) wins.
         assert len(res.dropped) == 1
         assert gk_int not in res.dropped
+
+
+class TestCollapseResidualOverlap:
+    """Pass 2 of `_collapse_residual`: same-column, same-value-set, same-label
+    groups whose `[regver_min, regver_max]` spans overlap across DIFFERENT lower
+    bounds are reconciled on the fast path — a contained group is dropped, a
+    crossing container is range-clamped — while timeline (distinct value set) and
+    different-column overlaps are left alone. Each group below starts in its own
+    `valid_from` scope, so pass 1 is a no-op and the assertions isolate pass 2."""
+
+    @staticmethod
+    def _grp(
+        value_set_id: int | None,
+        regver_min: int,
+        regver_max: int,
+        alias: str = "Kon",
+    ) -> _StateGroup:
+        return _StateGroup(
+            register_id=1,
+            register_variant_id=10,
+            var_id=44,
+            data_type="int",
+            data_length="",
+            value_set_id=value_set_id,
+            value_set_version_label="",
+            regver_min=regver_min,
+            regver_max=regver_max,
+            latest_alias=alias,
+        )
+
+    @staticmethod
+    def _gk(tag: str, value_set_id: int | None) -> tuple:
+        # Distinct gk[8] component keeps gkeys distinct; pass 2 keys the column by
+        # `latest_alias` (set on the group), not by this component.
+        return (1, 10, 44, "int", "", value_set_id, "", "", tag)
+
+    def _res(self, gkeys: list[tuple]) -> _TriageResult:
+        return _TriageResult(
+            assignments=dict.fromkeys(gkeys, 1),
+            labels={},
+            dropped=set(),
+            clamped_to={},
+            fold_slug_hints={},
+            related_edges=[],
+            stats=Counter(),
+        )
+
+    def test_contained_group_dropped(self) -> None:
+        gk_wide = self._gk("a", 5)
+        gk_inner = self._gk("b", 5)
+        groups = {
+            gk_wide: self._grp(5, 2010, 2020),
+            gk_inner: self._grp(5, 2012, 2015),  # fully inside the wide span
+        }
+        res = self._res([gk_wide, gk_inner])
+        _collapse_residual(groups, res)
+        assert gk_inner in res.dropped
+        assert gk_wide not in res.dropped
+        assert res.clamped_to == {}
+
+    def test_crossing_container_clamped(self) -> None:
+        gk_old = self._gk("a", 5)
+        gk_new = self._gk("b", 5)
+        groups = {
+            gk_old: self._grp(5, 2010, 2015),
+            gk_new: self._grp(5, 2013, 2020),  # starts inside, extends past
+        }
+        res = self._res([gk_old, gk_new])
+        _collapse_residual(groups, res)
+        # Container clamped to end the year before the newer span begins.
+        assert res.clamped_to == {gk_old: 2012}
+        assert res.dropped == set()
+
+    def test_gap_groups_left_alone(self) -> None:
+        gk_a = self._gk("a", 5)
+        gk_b = self._gk("b", 5)
+        groups = {gk_a: self._grp(5, 2010, 2012), gk_b: self._grp(5, 2015, 2018)}
+        res = self._res([gk_a, gk_b])
+        _collapse_residual(groups, res)
+        assert res.dropped == set()
+        assert res.clamped_to == {}
+
+    def test_distinct_value_set_left_to_timeline(self) -> None:
+        # Overlapping spans but DISTINCT value sets → timeline partition; the
+        # materializer resolves it per-year, so pass 2 must not touch it.
+        gk_a = self._gk("a", 5)
+        gk_b = self._gk("b", 6)
+        groups = {gk_a: self._grp(5, 2010, 2020), gk_b: self._grp(6, 2012, 2015)}
+        res = self._res([gk_a, gk_b])
+        _collapse_residual(groups, res)
+        assert res.dropped == set()
+        assert res.clamped_to == {}
+
+    def test_different_column_left_alone(self) -> None:
+        # Same value set, overlapping spans, but DIFFERENT delivery column
+        # (latest_alias) → a legitimate parallel co-delivery, not drift.
+        gk_a = self._gk("a", 5)
+        gk_b = self._gk("b", 5)
+        groups = {
+            gk_a: self._grp(5, 2010, 2020, alias="ColA"),
+            gk_b: self._grp(5, 2012, 2015, alias="ColB"),
+        }
+        res = self._res([gk_a, gk_b])
+        _collapse_residual(groups, res)
+        assert res.dropped == set()
+        assert res.clamped_to == {}
+
+    def test_chain_of_three_crossing_clamps_each(self) -> None:
+        # A staircase of three overlapping spans clamps each earlier container to
+        # the year before the next begins; the latest stays open.
+        gk_a = self._gk("a", 5)
+        gk_b = self._gk("b", 5)
+        gk_c = self._gk("c", 5)
+        groups = {
+            gk_a: self._grp(5, 2010, 2015),
+            gk_b: self._grp(5, 2012, 2018),
+            gk_c: self._grp(5, 2016, 2020),
+        }
+        res = self._res([gk_a, gk_b, gk_c])
+        _collapse_residual(groups, res)
+        assert res.clamped_to == {gk_a: 2011, gk_b: 2015}
+        assert res.dropped == set()
 
 
 class TestFoldSlugHint:
@@ -1304,6 +1427,7 @@ class TestFoldSlugHint:
             assignments={gk1: 5, gk2: 5},
             labels={},
             dropped=set(),
+            clamped_to={},
             fold_slug_hints={},
             related_edges=[],
             stats=Counter(),
@@ -1345,6 +1469,7 @@ class TestFoldSlugHint:
             assignments={gk1: 5, gk2: 5},
             labels={},
             dropped=set(),
+            clamped_to={},
             fold_slug_hints={},
             related_edges=[],
             stats=Counter(),
