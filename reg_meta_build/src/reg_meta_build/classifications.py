@@ -608,10 +608,10 @@ def populate_classifications(
                 active.append(entry)
         entries = active
     csv_paths = _resolve_valid_codes_paths(entries, valid_codes_dir)
+    skipped_note = f", {len(skipped)} provider-skipped" if skipped else ""
     _progress(
-        f"Populating classifications from {seed_path.name} ({len(entries)} entries"
-        + (f", {len(skipped)} provider-skipped" if skipped else "")
-        + ")..."
+        f"Populating classifications from {seed_path.name} "
+        f"({len(entries)} entries{skipped_note})..."
     )
 
     # Insert classification rows. supersedes_id is resolved in a second pass
