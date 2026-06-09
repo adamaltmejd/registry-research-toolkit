@@ -18,7 +18,10 @@ from pathlib import Path
 
 import pytest
 from _csv_fixtures import (
+    PIPE,
     REGISTERINFORMATION_ROWS,
+    UNIKA_ROWS,
+    VARDEMANGDER_ROWS,
     _var_row,
     write_scb_input,
 )
@@ -535,10 +538,25 @@ class TestPickStateRep:
         assert _pick_state_rep([a[0], b[0]], dict([a, b])) == b[0]
 
 
-def _build(tmp_path: Path, extra_rows: list[str]) -> sqlite3.Connection:
+def _build(
+    tmp_path: Path,
+    extra_rows: list[str],
+    *,
+    vm_extra: list[str] | None = None,
+    unika_extra: list[str] | None = None,
+) -> sqlite3.Connection:
+    """`vm_extra` adds Vardemangder rows (value codes → non-null value_set_id, e.g.
+    to force the timeline path); `unika_extra` adds UnikaRegisterOchVariabler rows
+    (e.g. a blank-VersionSista row for the still-active open sentinel). Both append
+    to the standard fixture lists."""
     ri_rows = list(REGISTERINFORMATION_ROWS) + extra_rows
     input_dir = tmp_path / "input"
-    write_scb_input(input_dir, registerinformation_rows=ri_rows)
+    write_scb_input(
+        input_dir,
+        registerinformation_rows=ri_rows,
+        vardemangder_rows=VARDEMANGDER_ROWS + (vm_extra or []),
+        unika_rows=UNIKA_ROWS + (unika_extra or []),
+    )
     db_dir = tmp_path / "db"
     build_db(
         input_dir=input_dir,
@@ -1026,6 +1044,20 @@ class TestSplitSiblingFlagInheritance:
 # ── integration: fold / split / collapse + uniqueness index ───────────────
 
 
+# Two disjoint 3-code value sets — distinct value_set_ids with symmetric diff 6
+# (> the cosmetic threshold), so two codings on one column are genuinely different
+# and route to the per-year TIMELINE (mirrors test_codelivery_build's coding pair).
+_CLAMP_CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
+_CLAMP_CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
+
+
+def _vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
+    """Vardemangder rows for one cvid (version, niva=1, kod, benämning, CVID, ItemId).
+    Identical codes across cvids fold to ONE value_set; `version` is the state's
+    value_set_version_label."""
+    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
+
+
 class TestSubAnnualBoundaryClamp:
     """#219: a state's lifetime START/END is clamped to the actual sub-annual
     delivery window instead of over-claiming the boundary year. Single-column,
@@ -1160,6 +1192,191 @@ class TestSubAnnualBoundaryClamp:
             ],
         )
         assert self._state_bounds(conn, "943") == ("0001-01-01", "9999-12-31")
+
+    def test_timeline_first_run_ht_start_interior_stays_year_granular(
+        self, tmp_path: Path
+    ) -> None:
+        # Force the TIMELINE path: two distinct codings on ONE column (var 950,
+        # TimeCol) with overlapping spans. Coding A (HT-start 2018 + 2020) loses
+        # year 2019 to coding B (introduced 2019), so A's owned years carve into TWO
+        # runs [2018] and [2020]. Exercises the `is_first and run_lo == regver_min`
+        # guard in the timeline run loop — never reached by the fast-path tests.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="TimeCol",
+                    cvid=9700,
+                    var_id=950,
+                    varname="TimeVar",
+                    year="2018",
+                    versionname="Höstterminen 2018",
+                    regver_id=9700,
+                    data_length="3",
+                ),
+                _var_row(
+                    colname="TimeCol",
+                    cvid=9701,
+                    var_id=950,
+                    varname="TimeVar",
+                    year="2020",
+                    versionname="2020",
+                    regver_id=9702,
+                    data_length="3",
+                ),
+                _var_row(
+                    colname="TimeCol",
+                    cvid=9710,
+                    var_id=950,
+                    varname="TimeVar",
+                    year="2019",
+                    versionname="2019",
+                    regver_id=9711,
+                    data_length="3",
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9700, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9701, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9710, "BetaB", _CLAMP_CODING_B)
+            ),
+        )
+        rows = conn.execute(
+            "SELECT valid_from, valid_to, value_set_id FROM variable_state "
+            "WHERE delivery_column_name = 'TimeCol' ORDER BY valid_from"
+        ).fetchall()
+        assert len(rows) == 3, rows
+        # Coding A's FIRST run starts at its HT-start (Jul 1) — the timeline first-run
+        # clamp. The carve middle run (coding B, 2019) is the year-granular handoff.
+        assert (rows[0]["valid_from"], rows[0]["valid_to"]) == (
+            "2018-07-01",
+            "2018-12-31",
+        )
+        assert (rows[1]["valid_from"], rows[1]["valid_to"]) == (
+            "2019-01-01",
+            "2019-12-31",
+        )
+        # A's SECOND (interior) run is fully year-granular — from_iso (2018-07-01) is
+        # NOT reapplied to a run that doesn't open at regver_min.
+        assert (rows[2]["valid_from"], rows[2]["valid_to"]) == (
+            "2020-01-01",
+            "2020-12-31",
+        )
+        # Outer runs are coding A (one value set); the middle is coding B.
+        assert (
+            rows[0]["value_set_id"]
+            == rows[2]["value_set_id"]
+            != rows[1]["value_set_id"]
+        )
+
+    def test_residual_clamp_overrides_to_iso(self, tmp_path: Path) -> None:
+        # `_collapse_residual` pass 2 caps a VT-ending group (to_iso 2020-06-30) whose
+        # [regver_min, regver_max] span is crossed by a later same-column, same-value-
+        # set group. The YEAR clamp must win over the sub-annual envelope (the
+        # `clamp is None` guard in `_emit_span`). Two code-less groups distinguished by
+        # data_length share value_set_id NULL + label "" so they stay on the fast path
+        # and subgroup together in pass 2.
+        conn = _build(
+            tmp_path,
+            [
+                # Group P (data_length 1): 2018 .. VT2020 → to_iso 2020-06-30.
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9720,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9720,
+                    data_length="1",
+                ),
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9721,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2020",
+                    versionname="Vårterminen 2020",
+                    regver_id=9722,
+                    data_length="1",
+                ),
+                # Group Q (data_length 2): 2020 .. 2021 — crosses P, so pass 2 clamps
+                # P to end 2019 (the year before Q's lower bound).
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9723,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2020",
+                    versionname="2020",
+                    regver_id=9724,
+                    data_length="2",
+                ),
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9725,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2021",
+                    versionname="2021",
+                    regver_id=9726,
+                    data_length="2",
+                ),
+            ],
+        )
+        # P (data_length 1): valid_to is the clamp year-end 2019-12-31, NOT the
+        # VT2020 envelope end 2020-06-30.
+        row = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE delivery_column_name = 'ClampCol' AND data_length = '1'"
+        ).fetchone()
+        assert (row["valid_from"], row["valid_to"]) == ("2018-01-01", "2019-12-31")
+
+    def test_open_sentinel_overrides_to_iso(self, tmp_path: Path) -> None:
+        # A still-active group (unika row with blank VersionSista) whose latest
+        # edition is a spring term (to_iso 2020-06-30). The open-ended sentinel must
+        # win over the sub-annual envelope (the `to_year is not None` guard in
+        # `_emit_span`): a currently-live variable stays open, not clamped to VT-end.
+        unika_open = PIPE.join(
+            [
+                "TESTREG",
+                "Testregistret",
+                "Individer",
+                "Individer",
+                "OpenVar",
+                "OpenCol",
+                "2018",
+                "",
+                "0",
+                "0",
+                "0",
+            ]
+        )
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="OpenCol",
+                    cvid=9730,
+                    var_id=952,
+                    varname="OpenVar",
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9730,
+                ),
+                _var_row(
+                    colname="OpenCol",
+                    cvid=9731,
+                    var_id=952,
+                    varname="OpenVar",
+                    year="2020",
+                    versionname="Vårterminen 2020",
+                    regver_id=9731,
+                ),
+            ],
+            unika_extra=[unika_open],
+        )
+        assert self._state_bounds(conn, "952") == ("2018-01-01", "9999-12-31")
 
 
 class TestSplit:
