@@ -1,0 +1,32 @@
+# Fold-override curation (see reg_meta_build/DESIGN.md → Build-time triage (SCB))
+# — see reg_meta_build/fold_overrides.py.
+#
+# The SCB triage clusters a split container's contested columns PURELY on the
+# column stem: a shared stem + representation-only suffix folds (`Ssyk3`/`Ssyk5`),
+# a disjoint stem splits. That is correct for almost every case. When a register
+# delivers ONE concept under columns that share NO stem, the stem rule can't see
+# it — the maintainer asserts the equivalence here and the build folds those
+# columns by fiat.
+#
+# Key: (register_id, var_id) — stable SCB source ids (RegisterId + VarId ==
+# variable.provider_key), the exact coordinates the triage carries. One [[fold]]
+# is ONE fold group for one (register, var); a var with two independent groups
+# gets two [[fold]] entries with that same key. A group spanning multiple
+# variables is unrepresentable by construction (good — the key is per-var).
+#
+# The build FAILS (EXIT_CONFIG) on bad curation: a named column that isn't a
+# contested column of the var, an unknown (register, var), or a duplicate /
+# overlapping group. An empty file is a no-op — every var stays exactly as the
+# stem rule decided.
+
+# ── näringsgren (industry): one concept delivered under DISJOINT stems ──
+#    reg 195 / var 4027 co-delivers the same näringsgren concept under four
+#    columns that share no stem — `Ksjusni`, `NG1`, `bransch`, `sni2` — so the
+#    stem rule would split them into four sibling variables. They ARE one
+#    concept; fold them. `lgrp` (also contested on this var) is a DIFFERENT
+#    concept (local-unit grouping), intentionally left to split — curator
+#    judgment, not an omission.
+[[fold]]
+register_id = 195
+var_id = 4027
+columns = ["Ksjusni", "NG1", "bransch", "sni2"]
