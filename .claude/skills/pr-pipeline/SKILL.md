@@ -106,6 +106,18 @@ it's genuinely wedged, re-plan around it rather than block the pipeline (there's
 force-kill — see **Known framework limits**). Don't re-ping in a tight loop; the query is
 already queued.
 
+**A crossed report is NOT a dropped message.** If a teammate's report arrives right as
+you send it a new instruction, that report is answering an EARLIER dispatch — your new
+message is still queued and unprocessed, which is EXPECTED (the framework wakes it on its
+NEXT turn). Do **not** verify your instruction's effect within the same lead turn and
+conclude it was dropped: a real run sent a doc fix, got an unrelated "heads-up" that
+crossed it, grepped the file *before yielding*, saw stale content, declared a phantom
+"didn't land," and re-sent — the fix had simply not been applied yet, and the re-send was
+redundant (harmless for an idempotent edit, but a re-sent non-idempotent instruction —
+"add these tests" — can double-apply). The effect only becomes visible after the
+teammate's NEXT report. Wait for that report; never dispatch-then-verify-then-re-send in
+one turn.
+
 ## Pipeline at a glance
 
 Do **Step 0** once, then run **A→E** for EACH planned PR, strictly serially. The
