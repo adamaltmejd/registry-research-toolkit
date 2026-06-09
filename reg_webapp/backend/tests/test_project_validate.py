@@ -22,6 +22,7 @@ classification ``class/sun2020``.
 
 from __future__ import annotations
 
+import json
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
@@ -310,3 +311,83 @@ def test_concurrent_validate_no_cross_thread_error(unthrottled_client):
         )
     failures = [c for c in codes if c != 200]
     assert not failures, f"cross-thread failures under concurrency: {failures}"
+
+
+# ── #227: fqid_outside_steward_catalog through a FILTERED steward client ────
+# A filtered steward deployment (catalog admits only `scb/lisa/kon`) surfaces
+# `fqid_outside_steward_catalog` (warning) for a researcher spec referencing a
+# resolvable-but-unadmitted FQID — the steward filter now wired into /validate.
+# The default `client` fixture boots the `global` steward (no index), so this
+# needs its own env-seam client (mirrors test_steward_index.py's seam).
+
+_IFAU_TOML = """\
+id = "ifau"
+name = "IFAU"
+long_name = "Institute for Evaluation of Labour Market and Education Policy"
+hostname = "ifau.example.org"
+"""
+
+
+@pytest.fixture
+def filtered_client(catalog_db, tmp_path, monkeypatch):
+    """A client whose app boots the `ifau` steward with a catalog admitting ONLY
+    `scb/lisa/kon`, so a researcher FQID outside it (`scb/rams/syss`) trips the
+    steward filter."""
+    base = tmp_path / "stewards" / "ifau"
+    base.mkdir(parents=True)
+    (base / "steward.toml").write_text(_IFAU_TOML, encoding="utf-8")
+    (base / "steward.project_data.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "2.0.0",
+                "steward": "ifau",
+                "reg_meta_version": "5.1.0",
+                "name": "ifau-catalog",
+                "sources": [
+                    {
+                        "name": "lisa",
+                        "register_variant": "scb/lisa/individer-15plus",
+                        "period": 2018,
+                        "bindings": [
+                            {
+                                "variable": "scb/lisa/kon",
+                                "type": "categorical",
+                                "value_set": "class/sun2020",
+                            }
+                        ],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("REG_WEBAPP_STEWARDS_DIR", str(tmp_path / "stewards"))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "ifau")
+    with TestClient(create_app()) as c:
+        yield c
+
+
+def test_fqid_outside_steward_catalog_via_filtered_client(filtered_client):
+    spec = {
+        "schema_version": "2.0.0",
+        "steward": "ifau",
+        "reg_meta_version": "5.1.0",
+        "name": "test",
+        "sources": [
+            {
+                "name": "rams",
+                "register_variant": "scb/rams/standard",
+                "period": 2019,
+                "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
+            }
+        ],
+    }
+    resp = filtered_client.post("/api/project/validate", json=spec)
+    assert resp.status_code == 200
+    body = resp.json()
+    # The FQID resolves reg_meta-wide but is outside the steward's catalog → a
+    # non-blocking warning, so ok stays True.
+    assert body["ok"] is True
+    outside = [i for i in body["issues"] if i["code"] == "fqid_outside_steward_catalog"]
+    assert len(outside) == 1
+    assert outside[0]["level"] == "warning"

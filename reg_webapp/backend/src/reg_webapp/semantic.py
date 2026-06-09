@@ -26,6 +26,14 @@ committed catalog; the affected bindings are then dropped from the in-memory
 index (``catalog_index.py``), but ``ok`` stays True, so the caller must inspect
 the warnings, not just ``ok``.
 
+The *researcher* path additionally emits ``fqid_outside_steward_catalog`` (a
+non-blocking ``warning``) when an ``index`` (the loaded ``CatalogIndex``) is
+supplied and a RESOLVED FQID falls outside it — the column is real reg_meta-wide
+but this filtered deployment does not supply it. The steward-catalog load path
+passes NO ``index`` (it BUILDS the index from its own validated project
+afterward), and the ``global`` deployment's ``index`` is ``None`` (no filter), so
+neither ever emits the code.
+
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
 passes — so this layer assumes well-formed FQIDs / period grammar and resolves
@@ -55,6 +63,8 @@ if TYPE_CHECKING:
     from reg_meta.fqid import Fqid
     from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
 
+    from reg_webapp.catalog_index import CatalogIndex
+
 Caller = Literal["researcher", "steward"]
 
 # Caller-context: these codes downgrade error → warning on the
@@ -82,6 +92,7 @@ def validate_semantic(
     catalog: Catalog,
     *,
     caller: Caller,
+    index: CatalogIndex | None = None,
 ) -> ValidationResult:
     """Run semantic rules over ``project`` against ``catalog``.
 
@@ -90,10 +101,15 @@ def validate_semantic(
     Returns a ``ValidationResult`` whose ``issues`` carry the codes at the
     level dictated by ``caller`` (see module docstring). Never opens a connection
     — the caller owns the ``Catalog``'s lifetime.
+
+    ``index`` is the loaded steward ``CatalogIndex`` (researcher path only): when
+    supplied, a RESOLVED FQID outside it yields ``fqid_outside_steward_catalog``
+    (warning). ``None`` (the steward-load path and the ``global`` deployment) never
+    emits it.
     """
     issues: list[ValidationIssue] = []
     for s_idx, source in enumerate(project.sources):
-        _check_source(source, s_idx, catalog, caller, issues)
+        _check_source(source, s_idx, catalog, caller, index, issues)
     return ValidationResult(issues=tuple(issues))
 
 
@@ -119,6 +135,7 @@ def _check_source(
     s_idx: int,
     catalog: Catalog,
     caller: Caller,
+    index: CatalogIndex | None,
     issues: list[ValidationIssue],
 ) -> None:
     base = f"/sources/{s_idx}"
@@ -136,7 +153,7 @@ def _check_source(
 
     for b_idx, binding in enumerate(source.bindings):
         _check_binding(
-            binding, source, base, b_idx, variant_ok, catalog, caller, issues
+            binding, source, base, b_idx, variant_ok, catalog, caller, index, issues
         )
 
 
@@ -343,6 +360,7 @@ def _check_binding(
     variant_ok: bool,
     catalog: Catalog,
     caller: Caller,
+    index: CatalogIndex | None,
     issues: list[ValidationIssue],
 ) -> None:
     bbase = f"{base}/bindings/{b_idx}"
@@ -384,6 +402,29 @@ def _check_binding(
         # on its own, so validate it before returning.
         _check_value_set(binding, bbase, catalog, caller, issues)
         return
+
+    # STEWARD CATALOG FILTER (#227). The FQID resolves reg_meta-wide (we are past
+    # the resolve-success path, so an unresolved FQID already got `fqid_unresolved`
+    # and returned — no double-report here), but a FILTERED steward deployment
+    # supplies only a subset of that universe. A resolved FQID outside the loaded
+    # `index` is a non-blocking `warning`: the column is real but unavailable in
+    # THIS deployment — also the deliberate "what would my project look like under
+    # steward X?" feature. `index=None` (the steward-load path AND the `global`
+    # deployment) never emits it. Admission is keyed on the LITERAL binding FQID and
+    # is variant-agnostic per the shipped `admits` probe; precise per-variant /
+    # value_set / same_as-aware keying is deferred to #206 — so this deliberately
+    # does NOT widen to value_sets / register_variants.
+    if index is not None and not index.admits(binding.variable):
+        issues.append(
+            _issue(
+                "fqid_outside_steward_catalog",
+                "warning",
+                caller,
+                var_path,
+                f"binding {binding.variable!r} resolves in reg_meta but is outside "
+                "this deployment's steward catalog — the steward does not supply it",
+            )
+        )
 
     _check_binding_period(
         binding,

@@ -779,3 +779,190 @@ def test_non_leap_feb_to_endpoint_gap_is_snapped_not_phantom(catalog):
     # No spurious Feb-29 phantom gap leaked in.
     assert "2019-02-29" not in issue.message, issue.message
     assert result.ok
+
+
+# ── #227: fqid_outside_steward_catalog (steward catalog filter) ─────────────
+# Given the loaded steward `CatalogIndex`, the researcher path flags a RESOLVED
+# FQID outside the steward's filtered subset as a non-blocking warning. The
+# steward-load path and the `global` deployment (index=None) never emit it. The
+# fixture DB resolves both `scb/lisa/kon` and `scb/rams/syss`; an index built from
+# a kon-only steward project admits the former but not the latter.
+
+_RAMS_SOURCE = {
+    "name": "rams",
+    "register_variant": "scb/rams/standard",
+    "period": 2019,
+    "bindings": [{"variable": "scb/rams/syss", "type": "numeric"}],
+}
+
+
+@pytest.fixture
+def kon_only_index(catalog):
+    """A steward `CatalogIndex` admitting ONLY `scb/lisa/kon` (built from a
+    one-source steward project). `scb/rams/syss` resolves reg_meta-wide but is NOT
+    admitted by this index."""
+    project = _project([_CLEAN_SOURCE])
+    result = validate_semantic(project, catalog, caller="steward")
+    assert result.ok
+    index = build_catalog_index(project, result.issues)
+    assert index.admits("scb/lisa/kon")
+    assert not index.admits("scb/rams/syss")
+    return index
+
+
+def test_resolvable_unadmitted_fqid_is_outside_steward_catalog(catalog, kon_only_index):
+    result = validate_semantic(
+        _project([_RAMS_SOURCE]), catalog, caller="researcher", index=kon_only_index
+    )
+    outside = [i for i in result.issues if i.code == "fqid_outside_steward_catalog"]
+    assert len(outside) == 1
+    assert outside[0].level == "warning"
+    assert outside[0].path == "/sources/0/bindings/0/variable"
+    assert "scb/rams/syss" in outside[0].message
+    # Non-blocking: the FQID resolves, it is merely outside this deployment.
+    assert result.ok
+
+
+@pytest.fixture
+def two_lisa_var_catalog():
+    """`scb/lisa` carries `kon` PLUS a second resolvable variable `alder`, both
+    under `individer-15plus` with a 2018+ state. The shared `catalog_db` has only
+    ONE variable per register, so landing an unadmitted warning at binding index 1
+    AFTER an admitted binding 0 (both in one source, both period-clean) needs a
+    second resolvable variable under kon's variant — built here."""
+    from _slugged_db import add_state, add_variable, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    add_variable(conn, register_id=1, var_id=88, name="Ålder", slug="alder")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="alder",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="Alder",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_outside_steward_catalog_warns_per_unadmitted_binding(two_lisa_var_catalog):
+    # Multiplicity: one warning PER unadmitted binding, each at its own
+    # `/sources/<i>/bindings/<j>/variable` path. The index admits only `kon`, so the
+    # admitted `kon` (source 0 binding 0) stays silent while the unadmitted `alder`
+    # warns at both its source-0/binding-1 and source-1/binding-0 positions.
+    steward = _project(
+        [
+            {
+                "name": "lisa",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+            }
+        ]
+    )
+    sresult = validate_semantic(steward, two_lisa_var_catalog, caller="steward")
+    assert sresult.ok
+    index = build_catalog_index(steward, sresult.issues)
+    assert index.admits("scb/lisa/kon")
+    assert not index.admits("scb/lisa/alder")
+
+    researcher = _project(
+        [
+            {
+                "name": "s0",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [
+                    {"variable": "scb/lisa/kon", "type": "categorical"},
+                    {"variable": "scb/lisa/alder", "type": "numeric"},
+                ],
+            },
+            {
+                "name": "s1",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/alder", "type": "numeric"}],
+            },
+        ]
+    )
+    result = validate_semantic(
+        researcher, two_lisa_var_catalog, caller="researcher", index=index
+    )
+    outside = [i for i in result.issues if i.code == "fqid_outside_steward_catalog"]
+    assert len(outside) == 2
+    assert {i.path for i in outside} == {
+        "/sources/0/bindings/1/variable",
+        "/sources/1/bindings/0/variable",
+    }
+    assert all(i.level == "warning" for i in outside)
+    # The admitted `kon` (source 0 binding 0) did NOT warn; nothing else is wrong.
+    assert result.ok
+
+
+def test_outside_steward_catalog_coexists_with_period_check(catalog):
+    # Coexistence: the `fqid_outside_steward_catalog` block does NOT early-return —
+    # it falls through to `_check_binding_period`, so a binding that is BOTH
+    # unadmitted AND period-invalid emits BOTH codes. (The fixture's `syss` covers
+    # all history and can't be made period-invalid, so the period-bounded binding
+    # here is `kon` (state 2018+); the index therefore admits `syss`, leaving `kon`
+    # unadmitted.)
+    steward = _project([_RAMS_SOURCE])
+    sresult = validate_semantic(steward, catalog, caller="steward")
+    assert sresult.ok
+    index = build_catalog_index(steward, sresult.issues)
+    assert index.admits("scb/rams/syss")
+    assert not index.admits("scb/lisa/kon")
+
+    # kon's only state is 2018-01-01..9999-12-31; period 2015 is outside it.
+    result = validate_semantic(
+        _project([{**_CLEAN_SOURCE, "period": 2015}]),
+        catalog,
+        caller="researcher",
+        index=index,
+    )
+    by_code = {i.code: i for i in result.issues}
+    assert "fqid_outside_steward_catalog" in by_code
+    assert by_code["fqid_outside_steward_catalog"].level == "warning"
+    assert "period_outside_state_validity" in by_code
+    # On the RESEARCHER path `period_outside_state_validity` is an ERROR (only the
+    # steward caller downgrades it), so the result is NOT ok despite the warning.
+    assert by_code["period_outside_state_validity"].level == "error"
+    assert result.ok is False
+
+
+def test_admitted_fqid_has_no_outside_steward_catalog(catalog, kon_only_index):
+    result = validate_semantic(
+        _project([_CLEAN_SOURCE]), catalog, caller="researcher", index=kon_only_index
+    )
+    assert "fqid_outside_steward_catalog" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+def test_no_index_never_emits_outside_steward_catalog(catalog):
+    # `index` defaults to None (the `global` deployment): the filter never fires,
+    # even for an FQID outside any steward's catalog.
+    result = validate_semantic(_project([_RAMS_SOURCE]), catalog, caller="researcher")
+    assert "fqid_outside_steward_catalog" not in {i.code for i in result.issues}
+    assert result.ok
+
+
+def test_unresolvable_fqid_not_also_outside_catalog(catalog, kon_only_index):
+    # An unresolvable FQID gets `fqid_unresolved` and returns BEFORE the admission
+    # check — it must NOT also be flagged `fqid_outside_steward_catalog`.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [{"variable": "scb/lisa/nosuchvar", "type": "categorical"}],
+    }
+    result = validate_semantic(
+        _project([source]), catalog, caller="researcher", index=kon_only_index
+    )
+    codes = {i.code for i in result.issues}
+    assert "fqid_unresolved" in codes
+    assert "fqid_outside_steward_catalog" not in codes

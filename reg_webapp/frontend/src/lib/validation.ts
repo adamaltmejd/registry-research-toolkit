@@ -210,6 +210,11 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     label: "The chosen representation is not a delivery column at this period",
     hint: "error",
   },
+  fqid_outside_steward_catalog: {
+    label:
+      "This column is outside the steward's catalog (not supplied by this deployment)",
+    hint: "warning",
+  },
   binding_state_drifts_within_period: {
     label: "The period crosses a state transition (per-state subsets returned)",
     hint: "info",
