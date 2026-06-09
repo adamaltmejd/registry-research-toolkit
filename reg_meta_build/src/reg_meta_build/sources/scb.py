@@ -2596,11 +2596,13 @@ def _coalesce_variable_states(
         # trip the one-value-set-per-period invariant. Such a range narrows its
         # START (within y) and keeps a year-granular END.
         vf = grp.from_iso or _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
-        if clamp is None and to_year is not None:
-            if grp.to_iso and grp.to_iso[:4] == f"{to_year:04d}":
-                vt = grp.to_iso
-            else:
-                vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+        if (
+            clamp is None
+            and to_year is not None
+            and grp.to_iso
+            and grp.to_iso[:4] == f"{to_year:04d}"
+        ):
+            vt = grp.to_iso
         else:
             vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
         _append_state(grp, gkey, vid, vf, vt)
