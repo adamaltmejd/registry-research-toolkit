@@ -70,11 +70,46 @@ class TestLoadFoldOverrides:
         assert load_fold_overrides(None) == {}
         assert load_fold_overrides(tmp_path / "absent.toml") == {}
 
+    def test_valid_file_with_no_entries_is_empty(self, tmp_path: Path) -> None:
+        # A present but entry-less file is a no-op, not an error (the byte-identity
+        # path the unknown-key / shape guards must not regress).
+        assert self._load(tmp_path, "# no fold entries yet\n") == {}
+
     def test_malformed_toml_is_config_error(self, tmp_path: Path) -> None:
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, "[[fold]]\nregister_id = = 1\n")
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "fold_override_toml_unreadable"
+
+    def test_single_fold_table_rejected(self, tmp_path: Path) -> None:
+        # `[fold]` makes `fold` a single table, not the `[[fold]]` array → reject
+        # (don't let it AttributeError through the generic handler).
+        with pytest.raises(RegMetaError) as exc:
+            self._load(
+                tmp_path, '[fold]\nregister_id = 1\nvar_id = 9\ncolumns = ["A", "B"]\n'
+            )
+        assert exc.value.code == "fold_override_invalid"
+
+    def test_scalar_fold_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, "fold = 5\n")
+        assert exc.value.code == "fold_override_invalid"
+
+    def test_non_table_fold_entry_rejected(self, tmp_path: Path) -> None:
+        # `fold` is an array but its entries aren't tables.
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, "fold = [1, 2]\n")
+        assert exc.value.code == "fold_override_invalid"
+
+    def test_misspelled_toplevel_key_rejected(self, tmp_path: Path) -> None:
+        # `[[folds]]` (typo) would silently disable ALL curation → loud error.
+        with pytest.raises(RegMetaError) as exc:
+            self._load(
+                tmp_path,
+                '[[folds]]\nregister_id = 1\nvar_id = 9\ncolumns = ["A", "B"]\n',
+            )
+        assert exc.value.code == "fold_override_invalid"
+        assert "folds" in exc.value.message
 
     def test_leading_zero_id_rejected(self, tmp_path: Path) -> None:
         # A leading-zero string id could alias a canonical int → reject (mirrors

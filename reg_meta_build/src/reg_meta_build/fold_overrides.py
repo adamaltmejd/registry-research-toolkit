@@ -38,6 +38,11 @@ FoldOverrideKey = tuple[int, int]
 # `forced_same`: every frozenset is one column set that folds into one variable.
 FoldOverrideMap = dict[FoldOverrideKey, list[frozenset[str]]]
 
+# The only legal top-level table is `[[fold]]`. Anything else (a misspelled
+# `[[folds]]`, a stray key) is a typo that would otherwise silently disable ALL
+# curation — reject it loudly, mirroring fqid_slugs' strict top-level typo check.
+_ALLOWED_TOPLEVEL_KEYS = frozenset({"fold"})
+
 
 def _fold_override_error(code: str, message: str, remediation: str) -> RegMetaError:
     """A configuration-class error (EXIT_CONFIG). `fold_overrides.toml` is
@@ -87,6 +92,8 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
     Empty when no file (synthetic test builds, wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable):
+      - Only `[[fold]]` top-level (a misspelled `[[folds]]` is a loud error, not a
+        silent no-op); `fold` is an array of tables.
       - `register_id` / `var_id` present and canonical int (no leading zeros).
       - `columns` is a list of ≥2 non-empty strings (a singleton fold is a no-op).
       - No column repeats within a group, or across groups of the SAME
@@ -106,9 +113,32 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
             f"Could not parse fold-override curation TOML {path}: {exc}",
             "Fix the TOML syntax in reg_meta_build/fold_overrides.toml.",
         ) from exc
+    unknown_top = set(data) - _ALLOWED_TOPLEVEL_KEYS
+    if unknown_top:
+        raise _fold_override_error(
+            "fold_override_invalid",
+            f"fold-override TOML has unknown top-level key(s): {sorted(unknown_top)}.",
+            "The only legal table is `[[fold]]` — check for a typo like "
+            "`[[folds]]` in reg_meta_build/fold_overrides.toml.",
+        )
+    fold_entries = data.get("fold", [])
+    if not isinstance(fold_entries, list):
+        raise _fold_override_error(
+            "fold_override_invalid",
+            f"fold-override `fold` must be an array of tables (`[[fold]]`), got "
+            f"{type(fold_entries).__name__}.",
+            "Use `[[fold]]` table entries in reg_meta_build/fold_overrides.toml, "
+            "not `fold = …` or a single `[fold]` table.",
+        )
     out: FoldOverrideMap = {}
     seen_cols: dict[FoldOverrideKey, set[str]] = {}
-    for entry in data.get("fold", []):
+    for entry in fold_entries:
+        if not isinstance(entry, dict):
+            raise _fold_override_error(
+                "fold_override_invalid",
+                f"fold-override entry {entry!r} must be a `[[fold]]` table.",
+                "Each entry is a `[[fold]]` table with register_id / var_id / columns.",
+            )
         reg = _canonical_int(entry.get("register_id"))
         var = _canonical_int(entry.get("var_id"))
         if reg is None or var is None:
