@@ -63,6 +63,14 @@ system-generated idle notifications (telling a teammate to stop them does nothin
 YOU reach the human (`AskUserQuestion`). When the request is finished, tear the team down
 (see **Teardown**).
 
+**The Task list (`TaskCreate`/`TaskUpdate`) is for YOUR progress tracking only — never a
+teammate instruction channel.** `SendMessage` is the single source of truth for what a
+teammate does. Putting work in a task `description` (or leaning on `owner: <teammate>`)
+creates a second, terser spec that drifts from your briefs: a real run had to tell the
+implementer twice that the brief "supersedes the terse task description" and to "ignore the
+task text — it's my tracking note, not your instruction." Track steps in tasks if you like;
+dispatch work only in messages.
+
 **Lead owns ALL git (load-bearing).** Mutating teammates (implementer / simplifier /
 docs-updater) are **non-committing editors**: they edit files, run Verify on their work,
 and report a summary + the exact list of files they touched — they do **not** run
@@ -449,3 +457,13 @@ against the Claude Code docs + issues #34476 / #31788):
 - **`SendMessage` to an unspawned name returns `success: true`** and silently drops the
   message (no auto-create, no error) — so spawn a role before messaging it (see **How a
   team behaves**).
+- **A long run can be force-shut-down by a transient "non-interactive mode" reminder.**
+  Even in a normal interactive session (`mode: normal`), if the host loses interactivity
+  mid-run — laptop sleep, lid close, disconnect — the harness can decide it can't return a
+  response while a team is live and inject a `system-reminder` ordering a team shutdown
+  first. Observed landing mid-Step-C, before the merge gate. It is NOT a headless-launch
+  artifact and you cannot prevent it from inside the run. Don't treat it as failure or
+  restart from scratch: shut down as told, then make your final message a precise RESUME
+  HAND-OFF — PR #, HEAD sha, the exact Step, and what's still pending. A follow-up "resume"
+  rebuilds the team and continues from that step. (Host-side fix, for the human: run under
+  `caffeinate` / prevent sleep during long pipelines.)
