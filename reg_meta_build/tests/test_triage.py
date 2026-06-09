@@ -1433,12 +1433,12 @@ class TestCollapseResidualOverlap:
     def test_pass1_disambiguation_feeds_pass2_subgrouping(self) -> None:
         # Two groups collide in ONE pass-1 scope (SAME valid_from year) under the
         # same source `value_set_version_label`, so pass 1 disambiguates the
-        # earlier-ending one to 'ver-1'. Pass 2 MUST read that disambiguated label
-        # (res.labels first in `_preferred_label`) so the two land in DISTINCT
-        # sub-groups and are left alone. Guards the `_preferred_label` extraction:
-        # checking value_set_version_label before res.labels would re-merge them
-        # under 'ver' and wrongly clamp. (Same regver_min is REQUIRED here — a
-        # different one would put them in separate pass-1 scopes and never
+        # earlier-ending one to 'ver-1'. Pass 2 keys on the EMITTED label
+        # (`res.labels.get(gk, value_set_version_label)`), which reads res.labels
+        # first, so the two land in DISTINCT sub-groups and are left alone. Guards
+        # against keying value_set_version_label before res.labels, which would
+        # re-merge them under 'ver' and wrongly clamp. (Same regver_min is REQUIRED
+        # here — a different one would put them in separate pass-1 scopes and never
         # disambiguate.)
         gk_a = self._gk("a", 5)
         gk_b = self._gk("b", 5)
@@ -1452,6 +1452,29 @@ class TestCollapseResidualOverlap:
         # Pass 1 disambiguated → distinct emitted labels.
         assert {res.labels[gk_a], res.labels[gk_b]} == {"ver", "ver-1"}
         # Pass 2 saw distinct labels → distinct sub-groups → no overlap action.
+        assert res.dropped == set()
+        assert res.clamped_to == {}
+
+    def test_distinct_vintage_sharing_grain_not_merged(self) -> None:
+        # Two same-column, same-value-set groups that SHARE a grain mapping to a
+        # fold token (gk[7]='grov') but carry DIFFERENT value_set_version_labels
+        # ('v2012' vs 'v2012rev'), overlapping years, distinct regver_min, BOTH
+        # pass-1 singletons (different from_year → pass 1 leaves res.labels empty).
+        # Pass 2 must key on the EMITTED label (res.labels-or-value_set_version_
+        # label, what the materializer ships) → distinct sub-groups → left alone.
+        # The OLD grain-token key (`_preferred_label`) would merge them under 'grov'
+        # and clamp the older, collapsing a distinct vintage the materializer ships
+        # intact — and `build-db --validate` would NOT catch it (no invariant
+        # broken). gk[7]='grov' maps to fold token 'grov'; gk[6] mirrors the label.
+        gk_a = (1, 10, 44, "int", "", 5, "v2012", "grov", "a")
+        gk_b = (1, 10, 44, "int", "", 5, "v2012rev", "grov", "b")
+        ga = self._grp(5, 2010, 2015, alias="Ssyk")
+        gb = self._grp(5, 2012, 2018, alias="Ssyk")  # crosses ga, newer vintage
+        ga.value_set_version_label = "v2012"
+        gb.value_set_version_label = "v2012rev"
+        groups = {gk_a: ga, gk_b: gb}
+        res = self._res([gk_a, gk_b])
+        _collapse_residual(groups, res)
         assert res.dropped == set()
         assert res.clamped_to == {}
 

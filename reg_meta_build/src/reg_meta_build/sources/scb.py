@@ -1136,10 +1136,14 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
 
 
 def _preferred_label(gk: tuple, grp: _StateGroup, res: _TriageResult) -> str:
-    """The label a group will emit: a triage fold label, else a grain token,
-    else its own `value_set_version_label`. Both `_collapse_residual` passes MUST
-    share this — pass 2's same-label subgrouping is only correct if it keys on the
-    exact label pass 1 deduped on."""
+    """The label `_collapse_residual` PASS 1 prefers when deduping a `valid_from`
+    scope: an existing triage override, else a grain token, else the group's
+    `value_set_version_label`. Pass 1 writes the winner into `res.labels`. Pass 2
+    must NOT use this — it keys on the materializer's EMITTED label
+    (`res.labels.get(gk, value_set_version_label)`), which never adds the grain
+    token. The two diverge for a grain-bearing group pass 1 left untouched (a scope
+    singleton, so no `res.labels` entry): here the grain fallback is picked but
+    never emitted, so keying pass 2 on it would collapse distinct vintages."""
     return (
         res.labels.get(gk)
         or _fold_token_from_grain(gk[7])
@@ -1234,15 +1238,20 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     for part_gkeys in fp_partitions.values():
         if len(part_gkeys) <= 1 or _spans_overlap(groups, part_gkeys):
             continue  # singleton, or a timeline partition the materializer owns
-        # Sub-group by (delivery column, value set, final label): only the SAME
+        # Sub-group by (delivery column, value set, EMITTED label): only the SAME
         # column carrying the SAME coding under the SAME emitted label can be
         # temporal drift. `latest_alias` is the emitted `delivery_column_name`
-        # (None matches None); `final_label` is pass 1's formula.
+        # (None matches None). The label MUST be the materializer's emitted formula
+        # (`_append_state`: `res.labels.get(gk, value_set_version_label)`), NOT pass
+        # 1's grain-aware `_preferred_label`: the materializer never applies the
+        # grain token, so keying on it would wrongly merge distinct
+        # `value_set_version_label` vintages that share codes + grain (e.g.
+        # "SSYK2012"/"SSYK2012rev") and collapse one the materializer ships intact.
         subgroups: dict[tuple, list[tuple]] = defaultdict(list)
         for gk in part_gkeys:
             grp = groups[gk]
-            final_label = _preferred_label(gk, grp, res)
-            subgroups[(grp.latest_alias, grp.value_set_id, final_label)].append(gk)
+            emitted_label = res.labels.get(gk, grp.value_set_version_label or "")
+            subgroups[(grp.latest_alias, grp.value_set_id, emitted_label)].append(gk)
 
         for sub_gkeys in subgroups.values():
             if len(sub_gkeys) <= 1:
