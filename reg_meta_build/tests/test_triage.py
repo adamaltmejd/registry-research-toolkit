@@ -44,6 +44,7 @@ from reg_meta_build.sources.scb import (
     _pick_state_rep,
     _resolve_year_winners,
     _rle_runs,
+    _spans_overlap,
     _split_off_non_contested,
     _split_relation_kind,
     _StateGroup,
@@ -1390,6 +1391,8 @@ class TestCollapseResidualOverlap:
         gy.regyears = {2011, 2012, 2013}
         gz.regyears = {2012, 2013, 2014, 2015, 2016}
         groups = {gk_x: gx, gk_y: gy, gk_z: gz}
+        # Path (a) actually fires (unlike the regyears-empty test above).
+        assert _spans_overlap(groups, [gk_x, gk_y, gk_z]) is True
         res = self._res([gk_x, gk_y, gk_z])
         _collapse_residual(groups, res)
         # Whole partition is timeline-owned → pass 2 makes NO change, not even to
