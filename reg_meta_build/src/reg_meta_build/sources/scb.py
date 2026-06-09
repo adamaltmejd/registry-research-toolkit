@@ -1017,8 +1017,8 @@ def _cluster_contested(
 
     `forced_same` pre-seeds the union-find with curator-asserted equivalences
     (columns that ARE one concept regardless of stem); those components fold by
-    fiat, bypassing the stem verify. Nothing populates it yet — the curated
-    fold-override surface is #261."""
+    fiat, bypassing the stem verify. It is populated by the curated fold-override
+    surface (#261), threaded in from `_triage_groups`."""
     folded = {c: _ascii_fold_lower(c) for c in contested_cols}
     parent = {c: c for c in contested_cols}
 
