@@ -553,23 +553,42 @@ tags `variable_instance.classification_id` first; the
 `variable_state.classification_id` (per-era, attributed to the owning split
 sibling) before `variable_instance` is dropped.
 
+**Provider gate.** A seed entry may carry `provider = "<name>"` (e.g. `"sos"`).
+When the build runs with a restricted provider set (e.g. `--providers=scb`),
+every entry whose `provider` is not in that set is skipped entirely — no codes
+seeded, no `classification` row inserted. This is a build-time filter only:
+no `provider` column exists in the shipped DB; the catalog remains
+provider-blind. An entry without a `provider` field is always processed.
+
+**`vardemangdsversion`-free seeds.** A classification may omit
+`vardemangdsversion` entirely. Without it, no variable instance is tagged and
+the classification row carries only canonical codes from `valid_codes_file`.
+The SOS code systems (ATC, ICD-10-SE, KVÅ, ICF, KSI, historic ICD, DRG/MDC)
+are seeded this way: the canonical codes are committed, but the linkage from
+observed SOS variable instances to these classifications is wired in PR2 via
+the `external_classification` resolver.
+
 Build-time invariants (violations fail `reg-meta-build build-db` loudly,
 exit 10):
 
-- Every seed `value_set_version_label` string must match at least one instance.
-- Every classification must resolve to at least one tagged instance and
-  at least one value code.
-- A given `value_set_version_label` string may belong to at most one
-  classification.
+- Every seed `vardemangdsversion` string must match at least one instance
+  (entries without `vardemangdsversion` are exempt from this check).
+- Every classification with at least one tagged instance must resolve to at
+  least one value code.
+- A given `vardemangdsversion` string may belong to at most one classification.
 - Every `supersedes` reference must resolve to a declared `short_name`.
 - Every `valid_codes_file`, when present, must resolve to a CSV under the
-  classifications directory with header `vardekod,vardebenamning`.
+  classifications directory whose first two columns are the code and label
+  (either `vardekod,vardebenamning` or the universal `code,label` header;
+  further columns are ignored).
 
 ### Canonical code CSVs
 
 A seed entry's optional `valid_codes_file` points at a CSV under
-`reg_meta_build/input_data/classifications/` (header
-`vardekod,vardebenamning`). At build time:
+`reg_meta_build/input_data/classifications/`. Accepted headers: the SCB
+convention `vardekod,vardebenamning` or the universal `code,label`; only the
+first two columns are read — further columns are silently ignored. At build
+time:
 
 - Every CSV code is ensured to exist in `value_code` (canonical-but-
   unobserved codes get a fresh row with no `value_set_member` linkage).

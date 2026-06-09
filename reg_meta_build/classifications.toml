@@ -19,21 +19,28 @@
 # (validity unknown).
 #
 # Build-time invariants (violations fail the build loudly):
-#   - Every string listed under `vardemangdsversion` must match >= 1 instance
-#   - Every classification must resolve to >= 1 instance
 #   - Every classification must resolve to >= 1 distinct value code
 #   - A given `vardemangdsversion` string may belong to at most one classification
 #   - Every `supersedes` reference must resolve to a declared short_name
-#   - Every `valid_codes_file` must resolve to an existing CSV with header
-#     `vardekod,vardebenamning` and at least one row
+#   - Every `valid_codes_file` must resolve to an existing CSV whose first two
+#     columns are `vardekod,vardebenamning` or `code,label`, with >= 1 row
+#
+# `vardemangdsversion` is OPTIONAL. When listed, every string must match >= 1
+# variable instance (drift gate) and the classification must resolve to >= 1
+# instance. Entries WITHOUT it (provider-seeded canonical code systems such as
+# the Socialstyrelsen classifications below) tag no instances — they seed only
+# the canonical codes from `valid_codes_file`, so they are exempt from the
+# instance-match and >= 1-instance gates but still need >= 1 canonical code.
 #
 # To enumerate candidates from the live data:
 #   SELECT vardemangdsversion, COUNT(*) FROM variable_instance
 #   WHERE vardemangdsversion IS NOT NULL AND vardemangdsversion != ''
 #   GROUP BY vardemangdsversion ORDER BY 2 DESC;
 #
-# Scope of this seed: well-known SCB classifications. Socialstyrelsen
-# classifications (ICD, KVÅ, ATC, ...) live in a separate branch.
+# Scope of this seed: well-known SCB classifications, plus the Socialstyrelsen
+# (SOS) code systems (ICD, KVÅ, ATC, ...) at the end of the file. SOS entries
+# carry `provider = "sos"` and are gated by the build's active provider set —
+# an SCB-only build (`--providers=scb`) skips them entirely.
 
 # ---------------------------------------------------------------------------
 # Education — Svensk utbildningsnomenklatur (SUN)
@@ -1080,3 +1087,119 @@ vardemangdsversion = [
   "ISCED F 2013 ",
 ]
 valid_codes_file = "isced-f2013.csv"
+
+# ===========================================================================
+# Socialstyrelsen (SOS) code systems — provider = "sos" gated
+# ===========================================================================
+# Health / social-services code systems delivered with SOS register data. They
+# have canonical code CSVs (under input_data/classifications/sos/) but no SCB
+# `vardemangdsversion` instance labels, so they tag no variable instances —
+# they seed only the canonical codes. PR2 wires SOS variable → classification
+# linkage; the short_names below are stable identifiers that linkage depends on.
+# An SCB-only build skips every entry in this section (provider gate).
+
+[[classification]]
+short_name = "ATC"
+name = "Anatomisk Terapeutisk Kemisk klassifikation (ATC)"
+name_en = "Anatomical Therapeutic Chemical classification (ATC)"
+publisher = "Läkemedelsverket"
+provider = "sos"
+url = "https://nsl.mpa.se/sensl-v2.0.zip"
+valid_codes_file = "sos/atc.csv"
+
+[[classification]]
+short_name = "ICD-10-SE"
+name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version (ICD-10-SE)"
+name_en = "International Statistical Classification of Diseases, Swedish version (ICD-10-SE)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+valid_from = 1997
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icd-10-se.tsv?version=1&modificationDate=1779615619577&api=v2"
+valid_codes_file = "sos/icd-10-se.csv"
+
+[[classification]]
+short_name = "KVA-KMA"
+name = "Klassifikation av vårdåtgärder — medicinska åtgärder (KMÅ)"
+name_en = "Swedish Classification of Health Interventions — medical procedures (KMÅ)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-medicinska-atgarder-kma.tsv?version=2&modificationDate=1779616677863&api=v2"
+valid_codes_file = "sos/kva-kma.csv"
+
+[[classification]]
+short_name = "KVA-KKA"
+name = "Klassifikation av vårdåtgärder — kirurgiska åtgärder (KKÅ)"
+name_en = "Swedish Classification of Health Interventions — surgical procedures (KKÅ)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-kirurgiska-atgarder-kka.tsv?version=1&modificationDate=1779617727780&api=v2"
+valid_codes_file = "sos/kva-kka.csv"
+
+[[classification]]
+short_name = "ICF"
+name = "Internationell klassifikation av funktionstillstånd, funktionshinder och hälsa (ICF)"
+name_en = "International Classification of Functioning, Disability and Health (ICF)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icf.tsv?version=1&modificationDate=1779622373643&api=v2"
+valid_codes_file = "sos/icf.csv"
+
+[[classification]]
+short_name = "KSI"
+name = "Klassifikation av socialtjänstens insatser och aktiviteter (KSI)"
+name_en = "Classification of Social Services Interventions and Activities (KSI)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/ksi.tsv?version=1&modificationDate=1779622712923&api=v2"
+valid_codes_file = "sos/ksi.csv"
+
+[[classification]]
+short_name = "ICD-8-KS68"
+name = "Klassifikation av sjukdomar 1968 (ICD-8 / KS68)"
+name_en = "Swedish Classification of Diseases 1968 (ICD-8 / KS68)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+valid_from = 1969
+valid_to = 1986
+url = "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/icd-8-klassifikation-av-sjukdomar-mm-1968.xls"
+valid_codes_file = "sos/icd-8.csv"
+
+[[classification]]
+short_name = "ICD-9-KS87"
+name = "Klassifikation av sjukdomar 1987 (ICD-9 / KS87)"
+name_en = "Swedish Classification of Diseases 1987 (ICD-9 / KS87)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+valid_from = 1987
+valid_to = 1996
+url = "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/icd-9-klassifikation-av-sjukdomar-1987-ks87.xls"
+valid_codes_file = "sos/icd-9-ks87.csv"
+
+[[classification]]
+short_name = "KS87-P"
+name = "Klassifikation av sjukdomar 1987, primärvård (KS87-P)"
+name_en = "Swedish Classification of Diseases 1987, primary care (KS87-P)"
+publisher = "Socialstyrelsen"
+provider = "sos"
+valid_from = 1987
+valid_to = 1996
+url = "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/klassifikationer-och-koder/klassifikation-av-sjukdomar-1987-primarvard-ks87-p-excel.xls"
+valid_codes_file = "sos/ks87-p.csv"
+
+[[classification]]
+short_name = "DRG"
+name = "NordDRG — diagnosrelaterade grupper"
+name_en = "NordDRG — diagnosis-related groups"
+publisher = "Socialstyrelsen / Nordic Casemix Centre"
+provider = "sos"
+url = "https://norddrg-explorer.socialstyrelsen.se/api/Defdata/DownloadDefdata"
+valid_codes_file = "sos/drg.csv"
+
+[[classification]]
+short_name = "MDC"
+name = "Större diagnosgrupper (MDC, NordDRG)"
+name_en = "Major Diagnostic Categories (MDC, NordDRG)"
+publisher = "Socialstyrelsen / Nordic Casemix Centre"
+provider = "sos"
+url = "https://norddrg-explorer.socialstyrelsen.se/api/Defdata/DownloadDefdata"
+valid_codes_file = "sos/mdc.csv"

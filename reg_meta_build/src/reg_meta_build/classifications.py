@@ -24,8 +24,13 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 if TYPE_CHECKING:
     import sqlite3
 
-_REQUIRED_FIELDS = ("short_name", "name", "vardemangdsversion")
-_VALID_CODES_HEADER = ("vardekod", "vardebenamning")
+# vardemangdsversion is OPTIONAL: a provider-seeded entry may carry canonical
+# codes (via valid_codes_file) with no observed instance-label linkage.
+_REQUIRED_FIELDS = ("short_name", "name")
+# Accepted first-two-column headers for a valid-codes CSV. SCB CSVs use the
+# native `vardekod,vardebenamning`; the universal `code,label` shape is what
+# the SOS classification CSVs ship (with extra trailing columns we drop).
+_VALID_CODES_HEADERS = (("vardekod", "vardebenamning"), ("code", "label"))
 
 # level = number of digits for all-digit codes, NULL otherwise. Used in
 # multiple INSERTs against classification_code; keep the SQL identical so
@@ -50,11 +55,14 @@ def repo_seed_path() -> Path | None:
 
 
 def load_valid_codes(path: Path) -> dict[str, str]:
-    """Read a canonical valid-codes CSV and return ``{vardekod: vardebenamning}``.
+    """Read a canonical valid-codes CSV and return ``{code: label}``.
 
-    The CSV must have a header ``vardekod,vardebenamning``. Codes are stripped
-    of leading/trailing whitespace before use (matches the rule used at query
-    time). Duplicate codes raise.
+    The first two columns must be headed ``vardekod,vardebenamning`` (SCB) or
+    ``code,label`` (universal/SOS). Any further columns (``label_en``,
+    ``parent_code``, validity dates) are ignored — per-code en-labels, validity
+    and hierarchy are a future enhancement, not modeled here. Codes are
+    stripped of leading/trailing whitespace before use (matches the rule used
+    at query time). Duplicate codes raise.
     """
     try:
         with path.open(encoding="utf-8", newline="") as fh:
@@ -62,14 +70,15 @@ def load_valid_codes(path: Path) -> dict[str, str]:
             header = next(reader, None)
             if (
                 header is None
-                or tuple(h.strip() for h in header) != _VALID_CODES_HEADER
+                or tuple(h.strip() for h in header[:2]) not in _VALID_CODES_HEADERS
             ):
                 raise RegMetaError(
                     exit_code=EXIT_CONFIG,
                     code="classification_csv_invalid",
                     error_class="configuration",
                     message=(
-                        f"{path}: header must be 'vardekod,vardebenamning' "
+                        f"{path}: first two columns must be "
+                        f"'vardekod,vardebenamning' or 'code,label' "
                         f"(got {header!r})."
                     ),
                     remediation="Fix the CSV header.",
@@ -178,33 +187,37 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
             )
         seen_short_names.add(short)
 
-        versions = entry["vardemangdsversion"]
-        if not isinstance(versions, list) or not all(
-            isinstance(v, str) for v in versions
-        ):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_invalid",
-                error_class="configuration",
-                message=(f"{short}: vardemangdsversion must be a list of strings."),
-                remediation="Use a TOML array of quoted strings.",
-            )
-        for v in versions:
-            if v in seen_versions:
+        # vardemangdsversion is optional: a missing key or an empty list means
+        # the entry tags no instances (provider-seeded canonical codes only).
+        # When present it must be a list of strings.
+        versions = entry.get("vardemangdsversion")
+        if versions is not None:
+            if not isinstance(versions, list) or not all(
+                isinstance(v, str) for v in versions
+            ):
                 raise RegMetaError(
                     exit_code=EXIT_CONFIG,
                     code="classification_seed_invalid",
                     error_class="configuration",
-                    message=(
-                        f"vardemangdsversion {v!r} is claimed by both "
-                        f"{seen_versions[v]!r} and {short!r}."
-                    ),
-                    remediation=(
-                        "A vardemangdsversion string belongs to exactly one "
-                        "classification. Remove the duplicate."
-                    ),
+                    message=(f"{short}: vardemangdsversion must be a list of strings."),
+                    remediation="Use a TOML array of quoted strings.",
                 )
-            seen_versions[v] = short
+            for v in versions:
+                if v in seen_versions:
+                    raise RegMetaError(
+                        exit_code=EXIT_CONFIG,
+                        code="classification_seed_invalid",
+                        error_class="configuration",
+                        message=(
+                            f"vardemangdsversion {v!r} is claimed by both "
+                            f"{seen_versions[v]!r} and {short!r}."
+                        ),
+                        remediation=(
+                            "A vardemangdsversion string belongs to exactly one "
+                            "classification. Remove the duplicate."
+                        ),
+                    )
+                seen_versions[v] = short
 
         vcf = entry.get("valid_codes_file")
         if vcf is not None and not isinstance(vcf, str):
@@ -214,6 +227,19 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
                 error_class="configuration",
                 message=f"{short}: valid_codes_file must be a string.",
                 remediation="Use a relative filename like 'sun2000-niva.csv'.",
+            )
+
+        # provider is an optional build-time seed filter (not a DB column). An
+        # entry with no provider is always seeded; a provider-tagged entry is
+        # seeded only when its provider is in the active build set.
+        prov = entry.get("provider")
+        if prov is not None and not isinstance(prov, str):
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="classification_seed_invalid",
+                error_class="configuration",
+                message=f"{short}: provider must be a string.",
+                remediation='Use a provider slug like provider = "sos".',
             )
 
     # Resolve supersedes references now that all short_names are known.
@@ -539,14 +565,14 @@ def populate_classifications(
     seed_path: Path,
     *,
     valid_codes_dir: Path | None = None,
-) -> int:
+    providers: frozenset[str] | None = None,
+) -> tuple[int, frozenset[str]]:
     """Populate classification / classification_code / variable_instance.classification_id.
 
     Called once per ``build_db`` run, after value codes are imported and
     ``variable_instance.value_set_id`` has been linked. Strict failure modes:
 
     - A seed ``vardemangdsversion`` string that matches no instance → fail
-    - A classification resolving to zero instances → fail
     - A classification resolving to zero value codes → fail
     - A seed ``valid_codes_file`` that doesn't resolve under
       ``valid_codes_dir`` → fail
@@ -558,12 +584,34 @@ def populate_classifications(
     codes that don't appear in observed data are still inserted (they get a
     fresh ``value_code`` row with no ``value_set_member`` linkage).
 
-    Returns the number of classifications inserted.
+    ``providers`` gates provider-tagged entries: when set, an entry whose
+    ``provider`` field is present AND not in the set is SKIPPED entirely (no
+    classification row, no codes). Entries with no ``provider`` are always
+    seeded. ``None`` (the default) seeds every entry. Provider-seeded entries
+    typically carry no ``vardemangdsversion`` (no instance tagging), so they
+    contribute no value codes from observed instances; their ``valid_codes_file``
+    supplies the canonical codes that keep them above the zero-code guard.
+
+    Returns ``(n_seeded, skipped_short_names)`` — the count of classifications
+    inserted and the set of provider-skipped short_names (the caller threads the
+    latter into ``populate_slugs`` so their slug entries don't raise).
     """
     entries = load_seed(seed_path)
+    skipped: set[str] = set()
+    if providers is not None:
+        active: list[dict[str, Any]] = []
+        for entry in entries:
+            prov = entry.get("provider")
+            if prov is not None and prov not in providers:
+                skipped.add(entry["short_name"])
+            else:
+                active.append(entry)
+        entries = active
     csv_paths = _resolve_valid_codes_paths(entries, valid_codes_dir)
+    skipped_note = f", {len(skipped)} provider-skipped" if skipped else ""
     _progress(
-        f"Populating classifications from {seed_path.name} ({len(entries)} entries)..."
+        f"Populating classifications from {seed_path.name} "
+        f"({len(entries)} entries{skipped_note})..."
     )
 
     # Insert classification rows. supersedes_id is resolved in a second pass
@@ -593,7 +641,10 @@ def populate_classifications(
 
     for entry in entries:
         sup = entry.get("supersedes")
-        if sup is not None:
+        # `sup in id_by_short` guards the rare case where a seeded entry
+        # supersedes a provider-skipped one (load_seed already validated the
+        # reference resolves in the full seed).
+        if sup is not None and sup in id_by_short:
             conn.execute(
                 "UPDATE classification SET supersedes_id = ? WHERE id = ?",
                 (id_by_short[sup], id_by_short[entry["short_name"]]),
@@ -620,7 +671,7 @@ def populate_classifications(
             [
                 (v, id_by_short[entry["short_name"]])
                 for entry in entries
-                for v in entry["vardemangdsversion"]
+                for v in (entry.get("vardemangdsversion") or [])
             ],
         )
         conn.execute(
@@ -731,4 +782,4 @@ def populate_classifications(
     ).fetchone()
     _progress(f"  {n_cls} classifications, {total_codes:,} codes tagged")
 
-    return len(entries)
+    return len(entries), frozenset(skipped)

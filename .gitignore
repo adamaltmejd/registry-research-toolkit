@@ -37,6 +37,11 @@ Thumbs.db
 # into a parent dir that's been ignored at the directory level).
 reg_meta_build/input_data/*
 !reg_meta_build/input_data/classifications/
+# Under classifications/ only the normalized CSVs (+ manifest.json) are tracked.
+# The raw SOS source workbooks the fetch script downloads are not — they
+# regenerate from scripts/fetch_sos_classifications.py.
+reg_meta_build/input_data/classifications/sos/*.xls
+reg_meta_build/input_data/classifications/sos/*.xlsx
 
 # mock-data-wizard generated output
 mock_data/

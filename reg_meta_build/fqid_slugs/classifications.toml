@@ -28,6 +28,24 @@ slug = "agarkat2000"
 [classification."AGARKAT2020"]
 slug = "agarkat2020"
 
+[classification."ATC"]
+slug = "atc"
+
+[classification."DRG"]
+slug = "drg"
+
+[classification."ICD-10-SE"]
+slug = "icd-10-se"
+
+[classification."ICD-8-KS68"]
+slug = "icd-8-ks68"
+
+[classification."ICD-9-KS87"]
+slug = "icd-9-ks87"
+
+[classification."ICF"]
+slug = "icf"
+
 [classification."ISCED-F2013"]
 slug = "isced-f2013"
 
@@ -39,6 +57,18 @@ slug = "jurform2000"
 
 [classification."JURFORM2020"]
 slug = "jurform2020"
+
+[classification."KS87-P"]
+slug = "ks87-p"
+
+[classification."KSI"]
+slug = "ksi"
+
+[classification."KVA-KKA"]
+slug = "kva-kka"
+
+[classification."KVA-KMA"]
+slug = "kva-kma"
 
 [classification."LKF1980"]
 slug = "lkf1980"
@@ -180,6 +210,9 @@ slug = "lkf2025"
 
 [classification."LKF2026"]
 slug = "lkf2026"
+
+[classification."MDC"]
+slug = "mdc"
 
 [classification."NIVA-GROV"]
 slug = "niva-grovv1"

@@ -7,8 +7,8 @@ Background: see `DESIGN.md` § "Classifications" → "Canonical vs observed code
 
 Each `[[classification]]` in `reg_meta_build/classifications.toml` may declare a
 `valid_codes_file = "<filename>.csv"`. The CSV lives under
-`reg_meta_build/input_data/classifications/` (gitignored — these are local
-maintainer artifacts, just like `input_data/SCB/`). At build time:
+`reg_meta_build/input_data/classifications/` (tracked in git; SCB-sourced CSVs
+live at the top level, SOS CSVs under `sos/`). At build time:
 
 1. Every code in the CSV is ensured to exist in `value_code` (codes that
    never appeared in any register get inserted as canonical-but-unobserved).
@@ -22,11 +22,14 @@ Without a CSV, every code carries `is_valid = NULL` ("validity unknown").
 
 - Filename: lowercased classification `short_name`, e.g. `sun2000-niva.csv`.
 - Encoding: UTF-8.
-- Header (exact): `vardekod,vardebenamning`
+- Header: either `vardekod,vardebenamning` (SCB convention) or `code,label`
+  (universal). Both are accepted; `load_valid_codes` only reads the first two
+  columns — any further columns (`label_en`, `parent_code`, `valid_from`,
+  `valid_to`, …) are silently ignored.
 - One code per row. Whitespace is trimmed on both columns at load time.
-- Duplicate `vardekod` values → build fails.
+- Duplicate `vardekod`/`code` values → build fails.
 
-Example:
+Example (SCB convention):
 
 ```csv
 vardekod,vardebenamning
@@ -35,12 +38,19 @@ vardekod,vardebenamning
 002,Förskoleklass
 ```
 
+Example (universal header, extra columns ignored):
+
+```csv
+code,label,label_en,parent_code
+A01,Tyfoidfeber,Typhoid fever,A00-A09
+```
+
 ## Workflow
 
 1. Find SCB's authoritative code list (often a downloadable Excel/CSV on
    the classification's documentation page).
-2. Save as `reg_meta_build/input_data/classifications/<short_name>.csv` with the
-   header above.
+2. Save as `reg_meta_build/input_data/classifications/<short_name>.csv` with
+   the header above and commit it.
 3. Add `valid_codes_file = "<short_name>.csv"` to the matching seed entry
    in `reg_meta_build/classifications.toml`.
 4. Run `reg-meta-build build-db --input-dir reg_meta_build/input_data/`.
@@ -53,8 +63,11 @@ vardekod,vardebenamning
 
 ## Status overview
 
-69 classifications (47 per-year LKF entries + 22 others). All currently
-declared in `classifications.toml` ship with a `valid_codes_file`.
+80 classifications (47 per-year LKF entries + 22 SCB-sourced others + 11 SOS
+code systems). All currently declared in `classifications.toml` ship with a
+`valid_codes_file`.
+
+### SCB-sourced classifications
 
 | short_name | status | code_count | valid | notes |
 |---|---|---:|---:|---|
@@ -86,6 +99,54 @@ declared in `classifications.toml` ship with a `valid_codes_file`.
 the CSV row count when SCB exports carry the same canonical code under
 multiple labels (each label variant becomes its own `value_code` row, all
 marked `is_valid=1`).
+
+### SOS code systems
+
+These are provider-seeded canonical-only entries (`provider = "sos"`):
+they seed canonical codes via `valid_codes_file` but carry no
+`vardemangdsversion` — no observed variable instance is linked yet. PR2 adds
+the variable→classification linkage via the `external_classification` resolver.
+CSVs live under `input_data/classifications/sos/`; `manifest.json` there
+records the per-system source URL, sha256, and counts.
+
+| short_name | canonical codes | publisher | notes |
+|---|---:|---|---|
+| `ATC` | 16 264 | Läkemedelsverket (MPA) | Swedish ATC register; nightly zip |
+| `ICD-10-SE` | 38 928 | Socialstyrelsen | Swedish ICD-10 |
+| `KVA-KMA` | 4 935 | Socialstyrelsen | KVÅ medical care measures (KMÅ) |
+| `KVA-KKA` | 8 663 | Socialstyrelsen | KVÅ surgical care measures (KKÅ) |
+| `ICF` | 1 632 | Socialstyrelsen | Functioning, Disability and Health |
+| `KSI` | 2 074 | Socialstyrelsen | Social Services Interventions |
+| `ICD-8-KS68` | 5 600 | Socialstyrelsen | Swedish ICD-8, 1969–1986 |
+| `ICD-9-KS87` | 5 679 | Socialstyrelsen | Swedish ICD-9, 1987–1996 |
+| `KS87-P` | 383 | Socialstyrelsen | ICD-9 primary care variant, 1987–1996 |
+| `DRG` | 1 983 | Socialstyrelsen / Nordic Casemix Centre | NordDRG diagnosis-related groups |
+| `MDC` | 29 | Socialstyrelsen / Nordic Casemix Centre | NordDRG major diagnostic categories |
+
+## SOS code systems — snapshot fetcher
+
+The SOS CSVs are produced by `scripts/fetch_sos_classifications.py` (committed;
+the SOS analog of `scripts/extract_lkf.py`). This script is run on demand by a
+maintainer — it is NOT executed automatically at build time. The resulting CSVs
+and `manifest.json` are committed under `input_data/classifications/sos/`.
+
+Per-system source URLs and sha256 digests are stored in
+`input_data/classifications/sos/manifest.json`. On each run the script
+merge-writes that manifest, so counts and hashes stay current.
+
+**Refresh caveat:** a bare run fetches all configured source keys, including
+`landskoder` (ISO-3166 country codes) — which we deliberately do NOT seed as a
+classification. To refresh only the 11 seeded keys without touching unrelated
+entries, pass `--only` with the relevant key names:
+
+```bash
+uv run python scripts/fetch_sos_classifications.py \
+    --only atc icd-10-se kva-kma kva-kka icf ksi \
+             icd-8 icd-9-ks87 ks87-p drg mdc
+```
+
+**DRG / MDC note:** both are drawn from the NordDRG system published by
+Socialstyrelsen in collaboration with the Nordic Casemix Centre.
 
 ## Done — extraction details
 

@@ -2578,6 +2578,10 @@ def materialize(
     )
 
     # Classifications — maintainer-curated normalized code systems.
+    # Provider-skipped classifications (seed entries whose `provider` is set but
+    # absent from this build) are threaded into populate_slugs so their slug
+    # entries don't raise on the missing DB row.
+    skipped_classifications: frozenset[str] = frozenset()
     if skip_classifications:
         _progress("Skipping classifications (skip_classifications=True)")
     else:
@@ -2598,9 +2602,13 @@ def materialize(
                 ),
             )
         valid_codes_dir = cls_dir if cls_dir.is_dir() else None
-        row_counts["classifications.toml"] = populate_classifications(
-            conn, seed, valid_codes_dir=valid_codes_dir
+        # Provider gate: seed only classifications whose provider is in this
+        # build (entries with no provider are always seeded).
+        active_providers = frozenset(a.provider for a, _ in adapters)
+        n_classifications, skipped_classifications = populate_classifications(
+            conn, seed, valid_codes_dir=valid_codes_dir, providers=active_providers
         )
+        row_counts["classifications.toml"] = n_classifications
 
     # Slug TOMLs: populate slug columns on register / register_variant /
     # classification. Run after classifications so the classification table
@@ -2624,7 +2632,12 @@ def materialize(
                     "`reg-meta update` to fetch the prebuilt DB."
                 ),
             )
-        populate_slugs(conn, slug_root, strict=True)
+        populate_slugs(
+            conn,
+            slug_root,
+            strict=True,
+            skipped_classifications=skipped_classifications,
+        )
 
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
