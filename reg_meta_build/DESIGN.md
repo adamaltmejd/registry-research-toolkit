@@ -723,6 +723,32 @@ byte-for-byte. Because the emitted `valid_from` only ever becomes MORE specific
 merge two distinct ones, so the year-keyed residual-collapse scope and the fast
 path's never-collides assumption are unaffected.
 
+### Year-granular resolver: intentional limitation
+
+The co-delivery resolver (`_resolve_year_winners` + the per-year `owned`/`_rle_runs`
+timeline) is deliberately **year-bucketed**; the boundary clamp above is its single
+sub-annual concession. Known consequence: when two sub-annual editions in one calendar
+year carry genuinely different value sets at equal authority, the recency tiebreak keeps
+the later-approved term and **silently drops the loser's coding** (invisible post-build —
+the dropped state never materializes). On today's corpus this affects only ~a couple
+dozen codings, all in niche registers (Komvux, sfi, gymnasium national tests,
+Kommunernas aktivitetsansvar, PSU waves) — none in LISA/income/RTB/population/health — so
+the recency-winner is a defensible default and a full interval resolver is not yet worth
+its cost.
+
+This is safe to defer because there is **no lock-in**: storage (`valid_from`/`valid_to`),
+the one-value-set-per-period invariant, reg_meta's query resolver, and the period grammar
+are all already interval-native, and the DB is regenerate-not-migrate — so making the
+resolver interval-native later is a localized change at flat cost. The **trigger** to do
+it: the first provider/register with genuine sub-annual *coding* cadence (value sets that
+change within a year — e.g. SOS half-year deliveries; Försäkringskassan/Folkhälsomyndig-
+heten/Skatteverket event data), since a year-bucketed resolver would silently drop its
+codings on arrival. At that point the resolver moves to an interval sweep in the shared
+provider-blind core (not this SCB adapter), designed against the new provider's real
+metadata. Mere high-frequency *data* with a stable annual coding (e.g. monthly income)
+does **not** trigger it. Decision rationale, real-corpus measurements, and the rejected
+narrow term-split alternative: issue #271.
+
 ## Slug curation
 
 Slugs are **anchored to the provider's source IDs, never derived from
