@@ -724,6 +724,53 @@ class TestPopulateSlugs:
             populate_slugs(conn, d, strict=True)
         assert exc.value.code == "slug_unknown_source_id"
 
+    def test_skipped_classification_slug_does_not_raise(self, tmp_path: Path):
+        # A classification slug entry whose short_name was provider-skipped this
+        # build has no DB row — it must be skipped silently, writing nothing.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register_variant."1.10"]\nslug = "v"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SOSCLS"]\nslug = "soscls"\n',
+        )
+        # classification=None → empty classification table, so the reverse
+        # coverage check is trivially satisfied and counts isolate the skip.
+        conn = build_slugged_db(classification=None)
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.commit()
+        counts = populate_slugs(
+            conn, d, strict=True, skipped_classifications=frozenset({"SOSCLS"})
+        )
+        assert counts["classification"] == 0
+
+    def test_unknown_classification_not_skipped_still_fails(self, tmp_path: Path):
+        # A classification slug entry with no DB row that is NOT in the skipped
+        # set is a genuine typo and must still raise.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register_variant."1.10"]\nslug = "v"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."GHOST"]\nslug = "ghost"\n',
+        )
+        conn = build_slugged_db(classification=None)
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.commit()
+        with pytest.raises(RegMetaError) as exc:
+            populate_slugs(
+                conn, d, strict=True, skipped_classifications=frozenset({"OTHER"})
+            )
+        assert exc.value.code == "slug_unknown_source_id"
+
     # A2.6: register_version left the FQID grammar — version slugs are neither
     # curated, auto-derived, nor persisted (no `register_version.slug` column),
     # so the former version-slot tests
