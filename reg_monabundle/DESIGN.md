@@ -288,3 +288,13 @@ embedded signal table via a caller-supplied connection.
 twice yields a byte-identical `.py` (no embedded timestamps, stable
 module ordering). `tests/test_bundle_determinism.py` pins the
 byte-identical invariant on a fixed-content fixture.
+
+The embedded `project_data` is serialized with `json.dumps(sort_keys=True)`,
+so the bundle is a pure function of spec **content** — not of the caller's
+dict key order. Reproducibility therefore holds for any caller (a re-parse
+or round-trip that reorders keys still yields identical bytes), not only for
+callers that happen to feed the same dict object. A consequence: the embedded
+literal is **canonicalized**, so its key order is not a verbatim byte-copy of
+the `project_data.json` sidecar fallback. The two are alternatives — embedded
+wins, sidecar is the fallback — and both `json.loads` to the same dict, so the
+canonicalization is semantically inert.
