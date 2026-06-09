@@ -34,7 +34,7 @@ from itertools import combinations, groupby
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import derive_variable_slug
+from reg_meta.fqid import derive_variable_slug, period_token_to_bounds
 from reg_meta.queries import extract_year
 
 # Shared SCB-CSV / hashing / progress infra + the Vardemangder sentinel
@@ -649,6 +649,85 @@ def _edition_authority(versionname: str | None) -> int:
     return _AUTH_PLAIN
 
 
+# Sub-annual delivery-window narrowing (#219). `_edition_authority` above answers
+# "is this a partial-year slice?" for value-set authority ranking; this answers the
+# adjacent but distinct question "what inclusive ISO window did this edition cover?"
+# so the materializer can clamp a state's lifetime START/END to the real delivery
+# window instead of over-claiming the whole boundary year (the HT-start / VT-end
+# over-claim — see DESIGN.md → Sub-annual boundary clamp).
+#
+# We narrow ONLY the academic-term / quarter / half-year forms, where the slice is
+# unambiguous. Everything else — bare year, dated annual, prelim/final, month names,
+# seasons (Hösten/Våren/Sommar), läsår, Sommarterminen — expands to the FULL year:
+# their sub-year span is ambiguous (a season is not cleanly H1/H2; a läsår spans two
+# calendar years) and over-narrowing would drop real coverage. So this is a CURATED
+# SUBSET of `_SUBANNUAL_MARKERS` on purpose — authority ranks ANY partial slice down,
+# but bounds narrows only the forms whose window is well-defined.
+#
+# Token → ISO expansion is delegated to reg_meta's `period_token_to_bounds` so a
+# query (`HT2024`) and the emitted state bound agree byte-for-byte (identical
+# month/day arithmetic, incl. the intentional Feb-29 over-count).
+
+# Term phrase → HT/VT prefix, year on either side. `\bhosttermin(?:en)?\b` covers
+# `Höstterminen`/`Hösttermin` (NFKD-folded); `\bht` the compact `HT 2024`/`Ht 2003`/
+# `HT2024`. We scan with `finditer` (not a single match) so a school-year range
+# `Höstterminen 2020 - Vårterminen 2021` / `Komvux HT 1988 - VT 2024` yields BOTH term
+# tokens and the union spans them. Mirrors reg_meta.fqid._TERMIN_EXTRACT_PATTERNS
+# (höst→HT, vår→VT) but needs ALL matches, not just the most-specific single one;
+# `_SUBANNUAL_TERM_RE` can't be reused directly because it carries no year group.
+_TERM_BOUND_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\bhosttermin(?:en)?\s+(\d{4})\b"), "HT"),
+    (re.compile(r"\b(\d{4})\s+hosttermin(?:en)?\b"), "HT"),
+    (re.compile(r"\bht\s*(\d{4})\b"), "HT"),
+    (re.compile(r"\bvartermin(?:en)?\s+(\d{4})\b"), "VT"),
+    (re.compile(r"\b(\d{4})\s+vartermin(?:en)?\b"), "VT"),
+    (re.compile(r"\bvt\s*(\d{4})\b"), "VT"),
+)
+
+# Quarter: `kvartal N` / `kv N` / `kvN`, optionally a range `N-M` / `N- kv M`
+# (`2005 kvartal 2-4`, `2007 kv 2-kv 4`). The year comes from `extract_year` (separate
+# from the quarter token, unlike HT/VT). A bare `kvartal` with no digit (`2010
+# Kvartal`) matches nothing → full year (all quarters). Both endpoints are emitted as
+# separate tokens so the union picks up the whole range.
+_QUARTER_BOUND_RE = re.compile(r"\bkv(?:artal)?\s*([1-4])(?:\s*-\s*(?:kv\s*)?([1-4]))?")
+
+# Half-year: `Första/Andra halvåret YYYY` → H1/H2 (NFKD-folded `forsta`/`andra` +
+# `halvar`). A bare `halvår` with no ordinal can't pick a half → full year.
+_HALF_BOUND_RE = re.compile(r"\b(forsta|andra)\s+halvar(?:et)?\s+(\d{4})\b")
+
+
+def _edition_bounds(versionname: str | None) -> tuple[str, str] | None:
+    """Inclusive ISO ``(lo, hi)`` delivery window for a ``registerversionnamn``.
+
+    Sub-annual term/quarter/half forms narrow to their slice (via reg_meta's
+    `period_token_to_bounds`, so build & resolve agree byte-for-byte); a school-year
+    range (`Höstterminen 2020 - Vårterminen 2021`) spans both terms; every other form
+    with a parseable year expands to the full year. Returns ``None`` when no year is
+    parseable (the caller falls back to its year/unika signals). See the
+    narrowing-scope note above for why seasons/läsår/months stay full-year."""
+    s = _ascii_fold_lower(versionname)
+    if not s:
+        return None
+    bounds: list[tuple[str, str]] = []
+    for pat, prefix in _TERM_BOUND_PATTERNS:
+        for m in pat.finditer(s):
+            bounds.append(period_token_to_bounds(f"{prefix}{m.group(1)}"))
+    year = extract_year(s)
+    if year is not None:
+        for m in _QUARTER_BOUND_RE.finditer(s):
+            for q in (m.group(1), m.group(2)):
+                if q:
+                    bounds.append(period_token_to_bounds(f"{year}-Q{q}"))
+        for m in _HALF_BOUND_RE.finditer(s):
+            half = "1" if m.group(1) == "forsta" else "2"
+            bounds.append(period_token_to_bounds(f"{m.group(2)}-H{half}"))
+    if bounds:
+        return min(lo for lo, _ in bounds), max(hi for _, hi in bounds)
+    if year is not None:
+        return f"{year:04d}-01-01", f"{year:04d}-12-31"
+    return None
+
+
 def _parse_unika_year(raw: str | None) -> int | None:
     """Parse a `VersionForsta` / `VersionSista` cell. Empty / unparseable
     yields None so the coalescer can fall back to the register_version
@@ -669,7 +748,7 @@ def _parse_unika_year(raw: str | None) -> int | None:
 @dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
-    triage below can read it). The 8-component group key lives in the
+    triage below can read it). The 9-component group key lives in the
     `groups` dict; the accumulator carries the year-range signals plus the
     latest-era delivery column for triage."""
 
@@ -700,6 +779,16 @@ class _StateGroup:
     unika_has_open_top: bool = False
     regver_min: int | None = None
     regver_max: int | None = None
+    # #219: inclusive sub-annual ISO envelope, parallel to the year-int
+    # regver_min/regver_max above. `from_iso` is the earliest actual delivery START
+    # and `to_iso` the latest delivery END across the group's editions (a full-year
+    # edition contributes YYYY-01-01/YYYY-12-31, so a sub-annual edition only narrows
+    # a boundary when NO full-year edition shares that boundary year). The
+    # materializer reads these ONLY at a state's lifetime start/end, to avoid
+    # over-claiming the boundary year (see `_edition_bounds`). None when no edition
+    # carried a parseable year (the yearless/unika fallback fires instead).
+    from_iso: str | None = None
+    to_iso: str | None = None
     # Latest-era alias: highest regver_id, ties broken by lexically smallest
     # delivery_column_name. regver_id alone orders alias selection; the row's
     # year only updates regver_min/max.
@@ -734,7 +823,7 @@ class _StateGroup:
 # Build-time triage (see DESIGN.md → Build-time triage (SCB))
 # ─────────────────────────────────────────────────────────────────────────
 # The coalescer groups variable_instance rows into pre-triage states (one per
-# shape/grain/column 8-tuple). A single source `var_id` can carry several
+# shape/grain/column 9-tuple). A single source `var_id` can carry several
 # states that collide on the universal invariant key
 # (variable_id, register_variant_id, valid_from, value_set_version_label).
 # Triage resolves every such collision three ways so the uniqueness
@@ -2186,6 +2275,16 @@ def _coalesce_variable_states(
             grp.regver_max = (
                 rver_year if grp.regver_max is None else max(grp.regver_max, rver_year)
             )
+            # #219: accumulate the sub-annual ISO envelope alongside the year ints.
+            # String min/max is chronological for ISO dates. A full-year edition
+            # contributes YYYY-01-01/YYYY-12-31, so a min-year that ALSO has a
+            # full-year (or spring) edition keeps -01-01 — no spurious narrowing.
+            ed = _edition_bounds(row["registerversionnamn"])
+            if ed is not None:
+                grp.from_iso = (
+                    ed[0] if grp.from_iso is None else min(grp.from_iso, ed[0])
+                )
+                grp.to_iso = ed[1] if grp.to_iso is None else max(grp.to_iso, ed[1])
             vkey = (row["register_id"], row["register_variant_id"], row["var_id"])
             cur_max = var_max_regver.get(vkey)
             if cur_max is None or rver_year > cur_max:
@@ -2478,11 +2577,32 @@ def _coalesce_variable_states(
         # pass 2) caps valid_to the year before the superseding group begins and
         # overrides the open sentinel — a superseded group is no longer active.
         # Clamps only land on fast-path groups, so honoring it here suffices.
-        to_year = triage.clamped_to.get(gkey, _group_open_to(grp))
+        clamp = triage.clamped_to.get(gkey)
+        to_year = clamp if clamp is not None else _group_open_to(grp)
         if to_year is None:
             open_top_from_unika += 1
-        vf = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
-        vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+        # #219: clamp the state's lifetime START/END to the sub-annual delivery
+        # window (from_iso/to_iso) instead of the boundary year. The `or` chains
+        # preserve the yearless/unika fallback (from_iso/to_iso are None there). A
+        # year clamp and the open sentinel both ignore to_iso — a superseded group
+        # ends at the year clamp; a still-active one stays open.
+        #
+        # from_iso is always WITHIN the regver_min year (the earliest edition's
+        # start), so it only ever narrows the opening — never crosses below it.
+        # to_iso is applied only when it stays WITHIN the regver_max boundary year:
+        # a cross-year school-year range (HT_y - VT_{y+1}) must NOT extend the span
+        # into year y+1, where a distinct value set may own the same column under
+        # year-over-year recoding — that would manufacture a same-column overlap and
+        # trip the one-value-set-per-period invariant. Such a range narrows its
+        # START (within y) and keeps a year-granular END.
+        vf = grp.from_iso or _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
+        if clamp is None and to_year is not None:
+            if grp.to_iso and grp.to_iso[:4] == f"{to_year:04d}":
+                vt = grp.to_iso
+            else:
+                vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+        else:
+            vt = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
         _append_state(grp, gkey, vid, vf, vt)
 
     # Partition surviving groups by (variable_id, register_variant_id). A
@@ -2629,13 +2749,33 @@ def _coalesce_variable_states(
             runs = _rle_runs(sorted(yrs))
             open_to = _group_open_to(grp)
             for idx, (run_lo, run_hi) in enumerate(runs):
+                is_first = idx == 0
                 is_last = idx == len(runs) - 1
+                # #219: the sub-annual envelope narrows ONLY the group's lifetime
+                # START (first run, at regver_min) and END (last run, at regver_max);
+                # INTERIOR run boundaries are competitor handoffs and stay
+                # year-aligned. The to_iso clamp is gated on staying WITHIN run_hi's
+                # year: a cross-year school-year range (`HT2020-VT2021`) would
+                # otherwise extend a run into a year a rival value set owns, tripping
+                # the one-value-set-per-period overlap invariant — that run owns only
+                # its own years, so it ends year-granular. from_iso is always within
+                # the regver_min year, so the first-run start needs no such guard.
                 if is_last and open_to is None and run_hi == grp.regver_max:
                     vt = _VALID_TO_OPEN_SENTINEL
                     open_top_from_unika += 1
+                elif (
+                    is_last
+                    and run_hi == grp.regver_max
+                    and grp.to_iso
+                    and grp.to_iso[:4] == f"{run_hi:04d}"
+                ):
+                    vt = grp.to_iso
                 else:
                     vt = _year_to_iso_to(run_hi) or _VALID_TO_OPEN_SENTINEL
-                vf = _year_to_iso_from(run_lo) or _VALID_FROM_UNKNOWN
+                if is_first and run_lo == grp.regver_min and grp.from_iso:
+                    vf = grp.from_iso
+                else:
+                    vf = _year_to_iso_from(run_lo) or _VALID_FROM_UNKNOWN
                 _append_state(grp, gk, vid, vf, vt, disambig=True)
 
     if timeline_vv:

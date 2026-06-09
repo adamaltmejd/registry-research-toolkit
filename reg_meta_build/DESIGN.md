@@ -676,6 +676,45 @@ above). The remaining open item is cross-column identical-parallel-column
 dedup (two delivery columns carrying exactly the same concept at the same
 period), which is a separate rule outside this collapse path.
 
+### Sub-annual boundary clamp
+
+A state's validity window is otherwise year-granular: `valid_from`/`valid_to`
+expand each edition's `registerversionnamn` year to `YYYY-01-01`/`YYYY-12-31`.
+That **over-claims** the boundary year when a `(variable, variant)` group's
+EARLIEST edition is a partial autumn term (`Höstterminen`/`HT`, delivered Jul–Dec)
+or its LATEST is a partial spring term (`Vårterminen`/`VT`, Jan–Jun): the year
+bound claims a half-year the variable was never delivered in.
+
+`_edition_bounds` (#219) parses the Swedish term/quarter/half phrasings to an
+inclusive ISO `(lo, hi)` window and `_StateGroup` accumulates the per-group
+envelope (`from_iso` = min lo, `to_iso` = max hi) in parallel with the
+`regver_min`/`regver_max` year ints. The materializer applies the envelope **only
+at a state's lifetime start/end** — `from_iso` for the first emitted run when it
+begins at `regver_min`, `to_iso` for the last when it ends at `regver_max`.
+Interior timeline handoffs between competing value sets stay year-aligned.
+
+The clamp only ever NARROWS within the boundary year — it never crosses a year
+boundary. `from_iso` is always within the `regver_min` year (the earliest edition's
+start). `to_iso` is applied only when it stays within the `regver_max` year, so a
+cross-year school-year range (`Höstterminen 2020 - Vårterminen 2021`, whose
+`extract_year` is the first year) narrows its START to Jul 1 but keeps a
+year-granular END rather than extending into the next year. Extending across the
+year boundary would manufacture a same-column overlap with a distinct value set
+delivered the next year (legitimate year-over-year recoding) and trip the
+one-value-set-per-period invariant. Capturing a school-year range's spring tail is
+therefore deferred (it fixes an UNDER-claim beyond this PR's over-claim scope).
+
+Only the academic-term, quarter (`kvartal`/`kv`, incl. ranges), and half-year
+(`Första/Andra halvåret`) forms are narrowed; bare years, dated annuals,
+prelim/final, month names, seasons (`Hösten`/`Våren`/`Sommar`), `Sommarterminen`,
+and `läsår` all stay full-year, since their sub-year span is ambiguous and
+narrowing would risk dropping coverage. Token→ISO expansion is reg_meta's
+`period_token_to_bounds`, so a `HT2024` query and the emitted state bound agree
+byte-for-byte. Because the emitted `valid_from` only ever becomes MORE specific
+(year → term), it can only split a previously-colliding uniqueness-index key, never
+merge two distinct ones, so the year-keyed residual-collapse scope and the fast
+path's never-collides assumption are unaffected.
+
 ## Slug curation
 
 Slugs are **anchored to the provider's source IDs, never derived from

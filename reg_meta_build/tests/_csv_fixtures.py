@@ -142,6 +142,7 @@ def _var_row(
     var_id: int,
     varname: str = "GenericVar",
     year: str = "2020",
+    versionname: str | None = None,
     regver_id: int = 110,
     data_type: str = "int",
     data_length: str = "1",
@@ -150,7 +151,12 @@ def _var_row(
     register_variant_id 10), varying only the fields triage keys on. Shared by
     the triage tests and the A2.3 replaced_by tests (both reuse the
     canonical disjoint-column split geometry), so it lives here rather than in
-    either test module."""
+    either test module.
+
+    `versionname` overrides the `registerversionnamn` cell (the value the
+    coalescer derives the edition year and sub-annual window from); it defaults
+    to `year`. Pass a sub-annual phrasing (e.g. `"Höstterminen 2018"`) while
+    keeping `year` a bare year so the approval dates stay well-formed."""
     return _ri_row(
         "TESTREG",
         "Testregistret",
@@ -159,7 +165,7 @@ def _var_row(
         "Individer",
         "Alla individer",
         "Nej",
-        year,
+        versionname if versionname is not None else year,
         f"Version {year}",
         "",
         "Godkänd",

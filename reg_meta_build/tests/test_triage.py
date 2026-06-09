@@ -23,6 +23,7 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from reg_meta.db import open_db
+from reg_meta.fqid import period_token_to_bounds
 from reg_meta_build.db import build_db
 from reg_meta_build.sources.scb import (
     _AUTH_FINAL,
@@ -38,6 +39,7 @@ from reg_meta_build.sources.scb import (
     _data_type_class,
     _decide_fold_or_split,
     _edition_authority,
+    _edition_bounds,
     _fold_token_from_grain,
     _import_bug_suspect,
     _looks_like_code_label_pair,
@@ -129,6 +131,95 @@ class TestEditionAuthority:
         assert _edition_authority("2018 juni") == _AUTH_SUBANNUAL
         assert _edition_authority("Majversion 2018") == _AUTH_PLAIN
         assert _edition_authority("Junioravgång 2018") == _AUTH_PLAIN
+
+
+class TestEditionBounds:
+    """#219 sub-annual delivery-window parser. The term/quarter/half forms must
+    AGREE with reg_meta's `period_token_to_bounds` (build & resolve share the same
+    expansion); everything else stays full-year."""
+
+    def test_autumn_term_forms_agree_with_period_bounds(self) -> None:
+        ht = period_token_to_bounds("HT2024")
+        for name in (
+            "Höstterminen 2024",
+            "Hösttermin 2024",
+            "2024 höstterminen",
+            "HT 2024",
+            "Ht 2024",
+            "HT2024",
+        ):
+            assert _edition_bounds(name) == ht, name
+        assert ht == ("2024-07-01", "2024-12-31")
+
+    def test_spring_term_forms_agree_with_period_bounds(self) -> None:
+        vt = period_token_to_bounds("VT2024")
+        for name in (
+            "Vårterminen 2024",
+            "Vårtermin 2024",
+            "2024 vårterminen",
+            "VT 2024",
+            "Vt 2024",
+            "VT2024",
+            "Vårterminen 2024 - betyg",
+        ):
+            assert _edition_bounds(name) == vt, name
+        assert vt == ("2024-01-01", "2024-06-30")
+
+    def test_quarter_forms_agree_with_period_bounds(self) -> None:
+        assert _edition_bounds("2005 kvartal 1") == period_token_to_bounds("2005-Q1")
+        assert _edition_bounds("2011 kv1") == period_token_to_bounds("2011-Q1")
+        # A range spans its endpoints (union of the two quarter tokens).
+        assert _edition_bounds("2005 kvartal 2-4") == ("2005-04-01", "2005-12-31")
+        assert _edition_bounds("2007 kv 2-kv 4") == ("2007-04-01", "2007-12-31")
+        assert _edition_bounds("Kvartal 1-3 fr.o.m 2010") == (
+            "2010-01-01",
+            "2010-09-30",
+        )
+
+    def test_half_year_forms_agree_with_period_bounds(self) -> None:
+        assert _edition_bounds("Första halvåret 1995") == period_token_to_bounds(
+            "1995-H1"
+        )
+        assert _edition_bounds("Andra halvåret 1995") == period_token_to_bounds(
+            "1995-H2"
+        )
+
+    def test_school_year_range_spans_both_terms(self) -> None:
+        # lo from the first (autumn) term, hi from the last (spring) term.
+        assert _edition_bounds("Höstterminen 2020 - Vårterminen 2021") == (
+            "2020-07-01",
+            "2021-06-30",
+        )
+        assert _edition_bounds("Komvux HT 1988 - VT 2024") == (
+            "1988-07-01",
+            "2024-06-30",
+        )
+
+    def test_full_year_forms_not_narrowed(self) -> None:
+        # Bare year, dated annual, finality qualifiers, month names, seasons,
+        # läsår, and the summer term all expand to the FULL year — their sub-year
+        # span is ambiguous, so narrowing is deliberately withheld.
+        full = ("2024-01-01", "2024-12-31")
+        for name in (
+            "2024",
+            "15 oktober 2024",
+            "2024, slutlig version",
+            "2024, preliminär version",
+            "2024_old",
+            "Mars 2024",
+            "Hösten 2024",
+            "Våren 2024",
+            "Sommarterminen 2024",
+            "2024 Kvartal",  # bare 'Kvartal', no quarter number → all quarters
+        ):
+            assert _edition_bounds(name) == full, name
+        assert _edition_bounds("Läsåret 2013/2014") == ("2013-01-01", "2013-12-31")
+
+    def test_yearless_returns_none(self) -> None:
+        assert _edition_bounds(None) is None
+        assert _edition_bounds("") is None
+        assert _edition_bounds("Senaste versionen") is None
+        assert _edition_bounds("Ekonomiskt bistånd, kvartal") is None
 
 
 class TestRleRuns:
@@ -933,6 +1024,142 @@ class TestSplitSiblingFlagInheritance:
 
 
 # ── integration: fold / split / collapse + uniqueness index ───────────────
+
+
+class TestSubAnnualBoundaryClamp:
+    """#219: a state's lifetime START/END is clamped to the actual sub-annual
+    delivery window instead of over-claiming the boundary year. Single-column,
+    code-less (value_set_id NULL) variables with no unika row take the fast span
+    path, so `valid_from`/`valid_to` come straight from the group's ISO envelope."""
+
+    def _state_bounds(self, conn: sqlite3.Connection, provider_key: str) -> tuple:
+        rows = conn.execute(
+            "SELECT vs.valid_from, vs.valid_to FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = ?",
+            (provider_key,),
+        ).fetchall()
+        assert len(rows) == 1, f"expected one state for {provider_key}, got {rows}"
+        return rows[0]["valid_from"], rows[0]["valid_to"]
+
+    def test_autumn_term_start_clamps_valid_from(self, tmp_path: Path) -> None:
+        # Earliest edition is an autumn term (Jul–Dec); the latest is a full year.
+        # valid_from narrows to Jul 1, valid_to stays the full boundary year.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="HtCol",
+                    cvid=9600,
+                    var_id=940,
+                    year="2018",
+                    versionname="Höstterminen 2018",
+                    regver_id=9610,
+                ),
+                _var_row(
+                    colname="HtCol",
+                    cvid=9601,
+                    var_id=940,
+                    year="2020",
+                    versionname="2020",
+                    regver_id=9611,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "940") == ("2018-07-01", "2020-12-31")
+
+    def test_spring_term_end_clamps_valid_to(self, tmp_path: Path) -> None:
+        # Latest edition is a spring term (Jan–Jun); valid_to narrows to Jun 30,
+        # valid_from stays the full earliest year.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="VtCol",
+                    cvid=9620,
+                    var_id=941,
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9630,
+                ),
+                _var_row(
+                    colname="VtCol",
+                    cvid=9621,
+                    var_id=941,
+                    year="2020",
+                    versionname="Vårterminen 2020",
+                    regver_id=9631,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "941") == ("2018-01-01", "2020-06-30")
+
+    def test_full_year_edition_blocks_narrowing_at_same_boundary(
+        self, tmp_path: Path
+    ) -> None:
+        # A full-year edition sharing the boundary year keeps -01-01/-12-31: the
+        # envelope's min/max sees the full-year bound, so the autumn-term sibling
+        # in the same year does NOT narrow it.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="MixCol",
+                    cvid=9640,
+                    var_id=942,
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9650,
+                ),
+                _var_row(
+                    colname="MixCol",
+                    cvid=9641,
+                    var_id=942,
+                    year="2018",
+                    versionname="Höstterminen 2018",
+                    regver_id=9651,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "942") == ("2018-01-01", "2018-12-31")
+
+    def test_school_year_range_narrows_start_only(self, tmp_path: Path) -> None:
+        # A lone school-year range edition narrows its START (Jul 1) but keeps a
+        # year-granular END: extending the span into the next calendar year would
+        # risk a same-column overlap with a distinct value set delivered then
+        # (year-over-year recoding), so the spring tail is deliberately NOT
+        # captured (#219 — fixing that UNDER-claim is out of scope here).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="RangeCol",
+                    cvid=9680,
+                    var_id=944,
+                    year="2020",
+                    versionname="Höstterminen 2020 - Vårterminen 2021",
+                    regver_id=9690,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "944") == ("2020-07-01", "2020-12-31")
+
+    def test_yearless_edition_keeps_sentinel_fallback(self, tmp_path: Path) -> None:
+        # No parseable year and no unika row → from_iso/to_iso stay None and the
+        # existing yearless/open-ended fallback is unchanged.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="NoYrCol",
+                    cvid=9660,
+                    var_id=943,
+                    versionname="Senaste versionen",
+                    regver_id=9670,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "943") == ("0001-01-01", "9999-12-31")
 
 
 class TestSplit:
