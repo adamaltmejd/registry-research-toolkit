@@ -139,7 +139,8 @@ class TestEditionAuthority:
 class TestEditionBounds:
     """#219 sub-annual delivery-window parser. The term/quarter/half forms must
     AGREE with reg_meta's `period_token_to_bounds` (build & resolve share the same
-    expansion); everything else stays full-year."""
+    expansion); everything else stays full-year. The second arg is the row's edition
+    year — only markers matching it are narrowed, so a window can never escape it."""
 
     def test_autumn_term_forms_agree_with_period_bounds(self) -> None:
         ht = period_token_to_bounds("HT2024")
@@ -151,7 +152,7 @@ class TestEditionBounds:
             "Ht 2024",
             "HT2024",
         ):
-            assert _edition_bounds(name) == ht, name
+            assert _edition_bounds(name, 2024) == ht, name
         assert ht == ("2024-07-01", "2024-12-31")
 
     def test_spring_term_forms_agree_with_period_bounds(self) -> None:
@@ -165,37 +166,59 @@ class TestEditionBounds:
             "VT2024",
             "Vårterminen 2024 - betyg",
         ):
-            assert _edition_bounds(name) == vt, name
+            assert _edition_bounds(name, 2024) == vt, name
         assert vt == ("2024-01-01", "2024-06-30")
 
     def test_quarter_forms_agree_with_period_bounds(self) -> None:
-        assert _edition_bounds("2005 kvartal 1") == period_token_to_bounds("2005-Q1")
-        assert _edition_bounds("2011 kv1") == period_token_to_bounds("2011-Q1")
+        assert _edition_bounds("2005 kvartal 1", 2005) == period_token_to_bounds(
+            "2005-Q1"
+        )
+        assert _edition_bounds("2011 kv1", 2011) == period_token_to_bounds("2011-Q1")
         # A range spans its endpoints (union of the two quarter tokens).
-        assert _edition_bounds("2005 kvartal 2-4") == ("2005-04-01", "2005-12-31")
-        assert _edition_bounds("2007 kv 2-kv 4") == ("2007-04-01", "2007-12-31")
-        assert _edition_bounds("Kvartal 1-3 fr.o.m 2010") == (
+        assert _edition_bounds("2005 kvartal 2-4", 2005) == ("2005-04-01", "2005-12-31")
+        assert _edition_bounds("2007 kv 2-kv 4", 2007) == ("2007-04-01", "2007-12-31")
+        assert _edition_bounds("Kvartal 1-3 fr.o.m 2010", 2010) == (
             "2010-01-01",
             "2010-09-30",
         )
 
     def test_half_year_forms_agree_with_period_bounds(self) -> None:
-        assert _edition_bounds("Första halvåret 1995") == period_token_to_bounds(
+        assert _edition_bounds("Första halvåret 1995", 1995) == period_token_to_bounds(
             "1995-H1"
         )
-        assert _edition_bounds("Andra halvåret 1995") == period_token_to_bounds(
+        assert _edition_bounds("Andra halvåret 1995", 1995) == period_token_to_bounds(
             "1995-H2"
         )
 
-    def test_school_year_range_spans_both_terms(self) -> None:
-        # lo from the first (autumn) term, hi from the last (spring) term.
-        assert _edition_bounds("Höstterminen 2020 - Vårterminen 2021") == (
+    def test_school_year_range_keeps_only_edition_year_term(self) -> None:
+        # The edition year (extract_year = the FIRST year) selects which term is
+        # narrowed; the other-year term is dropped, so the window stays WITHIN the
+        # edition year (start narrowed, year-granular end — no cross-year extension).
+        assert _edition_bounds("Höstterminen 2020 - Vårterminen 2021", 2020) == (
             "2020-07-01",
-            "2021-06-30",
+            "2020-12-31",
         )
-        assert _edition_bounds("Komvux HT 1988 - VT 2024") == (
+        assert _edition_bounds("Komvux HT 1988 - VT 2024", 1988) == (
             "1988-07-01",
-            "2024-06-30",
+            "1988-12-31",
+        )
+
+    def test_term_for_other_year_dropped_no_inversion(self) -> None:
+        # A collection note whose term names a DIFFERENT year than the edition year
+        # must NOT yield that term's bounds (which would invert valid_from > valid_to
+        # once the materializer clamps valid_to to the edition year). The term is
+        # dropped → full edition year.
+        assert _edition_bounds("Insamling 2019 avseende höstterminen 2020", 2019) == (
+            "2019-01-01",
+            "2019-12-31",
+        )
+
+    def test_out_of_range_term_year_does_not_crash(self) -> None:
+        # `period_token_to_bounds("HT1850")` would raise FqidError (year < 1900). The
+        # 1850 term mismatches the edition year 2024 → dropped → full 2024, no crash.
+        assert _edition_bounds("HT 1850, version 2024", 2024) == (
+            "2024-01-01",
+            "2024-12-31",
         )
 
     def test_full_year_forms_not_narrowed(self) -> None:
@@ -215,14 +238,18 @@ class TestEditionBounds:
             "Sommarterminen 2024",
             "2024 Kvartal",  # bare 'Kvartal', no quarter number → all quarters
         ):
-            assert _edition_bounds(name) == full, name
-        assert _edition_bounds("Läsåret 2013/2014") == ("2013-01-01", "2013-12-31")
+            assert _edition_bounds(name, 2024) == full, name
+        assert _edition_bounds("Läsåret 2013/2014", 2013) == (
+            "2013-01-01",
+            "2013-12-31",
+        )
 
     def test_yearless_returns_none(self) -> None:
-        assert _edition_bounds(None) is None
-        assert _edition_bounds("") is None
-        assert _edition_bounds("Senaste versionen") is None
-        assert _edition_bounds("Ekonomiskt bistånd, kvartal") is None
+        # year=None (yearless row) → None regardless of the name's content.
+        assert _edition_bounds(None, None) is None
+        assert _edition_bounds("", None) is None
+        assert _edition_bounds("Senaste versionen", None) is None
+        assert _edition_bounds("Ekonomiskt bistånd, kvartal", None) is None
 
 
 class TestRleRuns:

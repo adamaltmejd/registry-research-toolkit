@@ -685,24 +685,32 @@ EARLIEST edition is a partial autumn term (`Höstterminen`/`HT`, delivered Jul�
 or its LATEST is a partial spring term (`Vårterminen`/`VT`, Jan–Jun): the year
 bound claims a half-year the variable was never delivered in.
 
-`_edition_bounds` (#219) parses the Swedish term/quarter/half phrasings to an
-inclusive ISO `(lo, hi)` window and `_StateGroup` accumulates the per-group
-envelope (`from_iso` = min lo, `to_iso` = max hi) in parallel with the
+`_edition_bounds(versionname, year)` (#219) parses the Swedish term/quarter/half
+phrasings to an inclusive ISO `(lo, hi)` window and `_StateGroup` accumulates the
+per-group envelope (`from_iso` = min lo, `to_iso` = max hi) in parallel with the
 `regver_min`/`regver_max` year ints. The materializer applies the envelope **only
 at a state's lifetime start/end** — `from_iso` for the first emitted run when it
 begins at `regver_min`, `to_iso` for the last when it ends at `regver_max`.
 Interior timeline handoffs between competing value sets stay year-aligned.
 
 The clamp only ever NARROWS within the boundary year — it never crosses a year
-boundary. `from_iso` is always within the `regver_min` year (the earliest edition's
-start). `to_iso` is applied only when it stays within the `regver_max` year, so a
-cross-year school-year range (`Höstterminen 2020 - Vårterminen 2021`, whose
-`extract_year` is the first year) narrows its START to Jul 1 but keeps a
-year-granular END rather than extending into the next year. Extending across the
-year boundary would manufacture a same-column overlap with a distinct value set
+boundary, **by construction**: `_edition_bounds` is passed the row's edition year
+(`extract_year(registerversionnamn)`) and narrows only markers whose own year EQUALS
+it, so every edition's window is a subset of `[year-01-01, year-12-31]` and the
+group envelope is a subset of `[regver_min-01-01, regver_max-12-31]`. A cross-year
+school-year range (`Höstterminen 2020 - Vårterminen 2021`, whose `extract_year` is
+the first year) thus narrows its START to Jul 1 but drops the next-year spring term,
+keeping a year-granular END. This year-tie also closes two corpus-constructible
+traps: a term naming a different year than the edition (`Insamling 2019 avseende
+höstterminen 2020`) can no longer produce an inverted `valid_from > valid_to`, and a
+stray out-of-1900-2099 term (`HT 1850, version 2024`) can no longer crash
+`period_token_to_bounds`. As a backstop, the materializer fail-fast-raises
+(`coalesce_inverted_state_window`) if any non-sentinel state would ship with
+`valid_from > valid_to`. Extending across the year boundary is avoided regardless
+because it would manufacture a same-column overlap with a distinct value set
 delivered the next year (legitimate year-over-year recoding) and trip the
-one-value-set-per-period invariant. Capturing a school-year range's spring tail is
-therefore deferred (it fixes an UNDER-claim beyond this PR's over-claim scope).
+one-value-set-per-period invariant; capturing a school-year range's spring tail is
+deferred (it fixes an UNDER-claim beyond this PR's over-claim scope).
 
 Only the academic-term, quarter (`kvartal`/`kv`, incl. ranges), and half-year
 (`Första/Andra halvåret`) forms are narrowed; bare years, dated annuals,
