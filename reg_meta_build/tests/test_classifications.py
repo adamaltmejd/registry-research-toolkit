@@ -787,6 +787,122 @@ class TestPopulateClassifications:
 
 
 # ---------------------------------------------------------------------------
+# PR2: SOS classification candidate feed (_feed_sos_classification_candidates)
+# ---------------------------------------------------------------------------
+
+
+class TestFeedSosClassificationCandidates:
+    """Unit-pins the SOS candidate feed: it resolves short_name → classification_id
+    against the populated `classification` table and INSERTs the SCB-shaped
+    `(variable_id, value_set_id, classification_id)` rows. Unknown short_names are
+    dropped silently (no row, no raise) so a provider-skipped SOS classification
+    (or a typo) can't abort the build."""
+
+    @staticmethod
+    def _conn() -> sqlite3.Connection:
+        from reg_meta_build.db import DDL
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        conn.execute(
+            "INSERT INTO classification (short_name, name, publisher) "
+            "VALUES ('ICD-10-SE', 'ICD-10-SE', 'Socialstyrelsen')"
+        )
+        return conn
+
+    @staticmethod
+    def _rows(conn: sqlite3.Connection) -> list[tuple]:
+        return conn.execute(
+            "SELECT variable_id, value_set_id, classification_id "
+            "FROM classification_candidate ORDER BY variable_id, value_set_id"
+        ).fetchall()
+
+    def test_empty_inserts_nothing(self) -> None:
+        from reg_meta_build.db import _feed_sos_classification_candidates
+
+        conn = self._conn()
+        assert _feed_sos_classification_candidates(conn, []) == 0
+        assert self._rows(conn) == []
+
+    def test_known_short_name_inserted(self) -> None:
+        from reg_meta_build.db import _feed_sos_classification_candidates
+
+        conn = self._conn()
+        icd_id = conn.execute(
+            "SELECT id FROM classification WHERE short_name = 'ICD-10-SE'"
+        ).fetchone()[0]
+        # One code-less (value_set_id None) + one code-bearing candidate.
+        n = _feed_sos_classification_candidates(
+            conn, [(920, None, "ICD-10-SE"), (921, 5000, "ICD-10-SE")]
+        )
+        assert n == 2
+        assert self._rows(conn) == [(920, None, icd_id), (921, 5000, icd_id)]
+
+    def test_unknown_short_name_dropped_without_raise(self) -> None:
+        from reg_meta_build.db import _feed_sos_classification_candidates
+
+        conn = self._conn()
+        # No raise; the unknown short_name simply contributes no row.
+        n = _feed_sos_classification_candidates(conn, [(920, None, "NOPE")])
+        assert n == 0
+        assert self._rows(conn) == []
+
+    def test_mixed_inserts_only_known(self) -> None:
+        from reg_meta_build.db import _feed_sos_classification_candidates
+
+        conn = self._conn()
+        icd_id = conn.execute(
+            "SELECT id FROM classification WHERE short_name = 'ICD-10-SE'"
+        ).fetchone()[0]
+        n = _feed_sos_classification_candidates(
+            conn,
+            [(920, None, "ICD-10-SE"), (921, None, "KVA"), (922, 7, "NOPE")],
+        )
+        # KVA + NOPE are absent from the classification table → dropped.
+        assert n == 1
+        assert self._rows(conn) == [(920, None, icd_id)]
+
+
+# ---------------------------------------------------------------------------
+# PR2: the merged kva.csv round-trips through populate_classifications
+# ---------------------------------------------------------------------------
+
+
+class TestKvaMergedCsv:
+    def test_kva_csv_round_trips_without_duplicate_codes(self, tmp_path: Path):
+        """The real merged `sos/kva.csv` (KMÅ ∪ KKÅ, deduped on the 50 shared
+        chapter headers) loads into ONE `KVA` classification with codes and
+        WITHOUT a duplicate-code `RegMetaError` — proving the merge deduped."""
+        from reg_meta_build.classifications import (
+            populate_classifications,
+            repo_seed_path,
+        )
+        from reg_meta_build.db import DDL
+
+        cls_dir = repo_seed_path().parent / "input_data" / "classifications"
+        assert (cls_dir / "sos" / "kva.csv").is_file(), "merged kva.csv must exist"
+
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(
+            '[[classification]]\nshort_name = "KVA"\nname = "KVÅ"\n'
+            'provider = "sos"\nvalid_codes_file = "sos/kva.csv"\n',
+            encoding="utf-8",
+        )
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        # Does not raise classification_csv_invalid (duplicate vardekod).
+        n_seeded, skipped = populate_classifications(
+            conn, seed, valid_codes_dir=cls_dir, providers=frozenset({"sos"})
+        )
+        assert (n_seeded, skipped) == (1, frozenset())
+        row = conn.execute(
+            "SELECT short_name, code_count FROM classification"
+        ).fetchone()
+        assert row[0] == "KVA"
+        assert row[1] > 0, "KVA must seed canonical codes"
+
+
+# ---------------------------------------------------------------------------
 # CLI commands — get classification
 # ---------------------------------------------------------------------------
 
