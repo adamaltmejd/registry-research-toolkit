@@ -88,35 +88,44 @@ def test_reserved_slug_set_mirrors_catalog_routes():
     # Reserved-slug drift guard (#228, see reg_meta/DESIGN.md → FQID grammar): the
     # reserved-slug sets in reg_meta.fqid exist ONLY
     # to stop a slug from shadowing one of these catalog sub-resource routes, so
-    # the two MUST stay in lockstep. If a future route is added/removed in
-    # `_ROUTES_BEFORE_CATCH_ALL` without updating the reserved set (or vice
-    # versa), this fails loudly here rather than silently leaving a route
-    # shadowable (or a token needlessly reserved).
-    #
-    # The 6 `{fqid:path}/<suffix>` binding routes → their suffix tails must equal
-    # RESERVED_HTTP_SUFFIX_SLUGS.
+    # the two MUST stay in lockstep. Derive the tails from the LIVE FastAPI routes
+    # (not a curated Python list) so a new catalog sub-resource route added to
+    # routes/catalog.py but forgotten from the reserved set fails loudly here —
+    # the curated-list version was blind to that gap (it would pass while the
+    # suffix stayed un-reserved, re-opening the #228 slug-shadow collision). Set
+    # equality gives both directions at once: every live route's tail IS reserved,
+    # and every reserved token HAS a live route.
+    app = create_app()
+    catalog_routes = [
+        r.path
+        for r in app.routes
+        if isinstance(r, APIRoute) and r.path.startswith("/api/catalog")
+    ]
+    # The `{fqid:path}/<suffix>` binding routes → their suffix tails must equal
+    # RESERVED_HTTP_SUFFIX_SLUGS. The bare catch-all `/api/catalog/{fqid:path}`
+    # contains `{fqid:path}` but NOT `{fqid:path}/`, so it's correctly excluded.
     suffix_tails = {
         path.rsplit("{fqid:path}/", 1)[1]
-        for path in _ROUTES_BEFORE_CATCH_ALL
+        for path in catalog_routes
         if "{fqid:path}/" in path
     }
     assert suffix_tails == RESERVED_HTTP_SUFFIX_SLUGS, (
         "RESERVED_HTTP_SUFFIX_SLUGS drifted from the catalog binding-suffix "
-        f"routes: routes have {sorted(suffix_tails)}, reserved set has "
-        f"{sorted(RESERVED_HTTP_SUFFIX_SLUGS)}. Update reg_meta.fqid or the route list."
+        f"routes: live routes have {sorted(suffix_tails)}, reserved set has "
+        f"{sorted(RESERVED_HTTP_SUFFIX_SLUGS)}. Update reg_meta.fqid or routes/catalog.py."
     )
-    # The literal `/{provider}/{register}/variants` sub-resource (the one route
-    # with a `/variants` tail and no `{fqid:path}`) → its tail must equal
-    # RESERVED_VARIANTS_SLUG.
+    # The literal `/{provider}/{register}/variants` register sub-resource (a
+    # fixed-shape route with no `{fqid:path}`, distinct from the `/api/catalog`
+    # root) → its last-segment tail must equal RESERVED_VARIANTS_SLUG.
     variants_tails = {
         path.rsplit("/", 1)[1]
-        for path in _ROUTES_BEFORE_CATCH_ALL
-        if path.endswith("/variants") and "{fqid:path}" not in path
+        for path in catalog_routes
+        if "{fqid:path}" not in path and path != "/api/catalog"
     }
     assert variants_tails == {RESERVED_VARIANTS_SLUG}, (
         "RESERVED_VARIANTS_SLUG drifted from the `/variants` register sub-resource "
-        f"route: routes have {sorted(variants_tails)}, reserved value is "
-        f"{RESERVED_VARIANTS_SLUG!r}. Update reg_meta.fqid or the route list."
+        f"route: live routes have {sorted(variants_tails)}, reserved value is "
+        f"{RESERVED_VARIANTS_SLUG!r}. Update reg_meta.fqid or routes/catalog.py."
     )
 
 
