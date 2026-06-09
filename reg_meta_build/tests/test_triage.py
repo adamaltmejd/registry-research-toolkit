@@ -1358,14 +1358,42 @@ class TestCollapseResidualOverlap:
         assert res.dropped == set()
         assert res.clamped_to == {}
 
-    def test_distinct_value_set_left_to_timeline(self) -> None:
-        # Overlapping spans but DISTINCT value sets → timeline partition; the
-        # materializer resolves it per-year, so pass 2 must not touch it.
+    def test_distinct_value_set_subgrouped_apart(self) -> None:
+        # DISTINCT value sets land in distinct pass-2 sub-group keys (value_set_id
+        # is in the key), so pass 2 never compares them — independent of routing.
+        # (regyears unset here → these are yearless on the fast path; the
+        # _spans_overlap-True timeline SKIP is covered by the next test.)
         gk_a = self._gk("a", 5)
         gk_b = self._gk("b", 6)
         groups = {gk_a: self._grp(5, 2010, 2020), gk_b: self._grp(6, 2012, 2015)}
         res = self._res([gk_a, gk_b])
         _collapse_residual(groups, res)
+        assert res.dropped == set()
+        assert res.clamped_to == {}
+
+    def test_timeline_partition_skipped(self) -> None:
+        # A partition routed to the per-year TIMELINE — two YEAR-BEARING (populated
+        # regyears) groups with DISTINCT value sets over overlapping windows →
+        # _spans_overlap path (a) True — is skipped WHOLESALE by pass 2. This is
+        # load-bearing: the SAME-column same-value-set crossing pair (SameCol/vs5)
+        # that pass 2 WOULD clamp on the fast path is left untouched, because the
+        # timeline owns the whole partition. (`_grp` doesn't init regyears, so set
+        # it here — without it both vs5/vs6 groups read as yearless and the
+        # distinct-value-set overlap never trips path (a).)
+        gk_x = self._gk("x", 5)
+        gk_y = self._gk("y", 5)  # crosses gk_x on the same column + value set
+        gk_z = self._gk("z", 6)  # distinct value set → forces _spans_overlap True
+        gx = self._grp(5, 2010, 2012, alias="SameCol")
+        gy = self._grp(5, 2011, 2013, alias="SameCol")
+        gz = self._grp(6, 2012, 2016, alias="OtherCol")
+        gx.regyears = {2010, 2011, 2012}
+        gy.regyears = {2011, 2012, 2013}
+        gz.regyears = {2012, 2013, 2014, 2015, 2016}
+        groups = {gk_x: gx, gk_y: gy, gk_z: gz}
+        res = self._res([gk_x, gk_y, gk_z])
+        _collapse_residual(groups, res)
+        # Whole partition is timeline-owned → pass 2 makes NO change, not even to
+        # the vs5 crossing pair it would otherwise clamp.
         assert res.dropped == set()
         assert res.clamped_to == {}
 
@@ -1398,6 +1426,31 @@ class TestCollapseResidualOverlap:
         _collapse_residual(groups, res)
         assert res.clamped_to == {gk_a: 2011, gk_b: 2015}
         assert res.dropped == set()
+
+    def test_pass1_disambiguation_feeds_pass2_subgrouping(self) -> None:
+        # Two groups collide in ONE pass-1 scope (SAME valid_from year) under the
+        # same source `value_set_version_label`, so pass 1 disambiguates the
+        # earlier-ending one to 'ver-1'. Pass 2 MUST read that disambiguated label
+        # (res.labels first in `_preferred_label`) so the two land in DISTINCT
+        # sub-groups and are left alone. Guards the `_preferred_label` extraction:
+        # checking value_set_version_label before res.labels would re-merge them
+        # under 'ver' and wrongly clamp. (Same regver_min is REQUIRED here — a
+        # different one would put them in separate pass-1 scopes and never
+        # disambiguate.)
+        gk_a = self._gk("a", 5)
+        gk_b = self._gk("b", 5)
+        ga = self._grp(5, 2010, 2016)
+        gb = self._grp(5, 2010, 2012)  # same scope (2010) + same label → 'ver-1'
+        ga.value_set_version_label = "ver"
+        gb.value_set_version_label = "ver"
+        groups = {gk_a: ga, gk_b: gb}
+        res = self._res([gk_a, gk_b])
+        _collapse_residual(groups, res)
+        # Pass 1 disambiguated → distinct emitted labels.
+        assert {res.labels[gk_a], res.labels[gk_b]} == {"ver", "ver-1"}
+        # Pass 2 saw distinct labels → distinct sub-groups → no overlap action.
+        assert res.dropped == set()
+        assert res.clamped_to == {}
 
 
 class TestFoldSlugHint:

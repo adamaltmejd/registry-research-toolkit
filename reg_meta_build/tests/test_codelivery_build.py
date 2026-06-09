@@ -445,3 +445,104 @@ class TestExtendsLater:
         # Exactly the MODERN coding survives (its codes, not the old coding's).
         assert len(vsids) == 1
         assert codes == {c for c, _ in _CODING_B}
+
+
+class TestResidualClampReconciliation:
+    """Fast-path residual reconciliation (`_collapse_residual` pass 2), the
+    complement to the timeline cascade above: two states on ONE column carry the
+    SAME value set under the SAME label but drift in `data_length` across
+    overlapping year spans (so the only gkey difference is `data_length`). Same
+    value set → `_spans_overlap` is False → they never reach the timeline, so
+    pass 2 owns the emitted overlap: it DROPS a fully-subsumed span and CLAMPS a
+    crossing one — without losing the older span's non-overlap coverage."""
+
+    @staticmethod
+    def _drift_rows(
+        *, colname: str, var_id: int, years: range, regver_base: int, data_length: str
+    ) -> tuple[list[str], list[str]]:
+        # One cvid per year on `colname`, all SAME codes (_CODING_A) + SAME version
+        # label, so the only gkey difference from the rival span is `data_length`.
+        ri: list[str] = []
+        vm: list[str] = []
+        for i, year in enumerate(years):
+            cvid = regver_base * 10 + i
+            ri.append(
+                _var_row(
+                    colname=colname,
+                    cvid=cvid,
+                    var_id=var_id,
+                    varname=f"{colname}Var",
+                    year=str(year),
+                    regver_id=regver_base + i,
+                    data_length=data_length,
+                )
+            )
+            vm += _vm_rows(cvid, "Coding", _CODING_A)
+        return ri, vm
+
+    def test_crossing_clamp_preserves_older_non_overlap(self, tmp_path: Path) -> None:
+        # Older span 2016-2020 (len 3); younger 2019-2022 (len 5) starts inside it
+        # and extends past → CROSSING. The older is clamped to 2018 (younger.min-1),
+        # so its non-overlap years 2016-2018 SURVIVE; the younger owns 2019-2022.
+        ri_old, vm_old = self._drift_rows(
+            colname="ClampCol",
+            var_id=1750,
+            years=range(2016, 2021),
+            regver_base=1750,
+            data_length="3",
+        )
+        ri_new, vm_new = self._drift_rows(
+            colname="ClampCol",
+            var_id=1750,
+            years=range(2019, 2023),
+            regver_base=1790,
+            data_length="5",
+        )
+        conn = _build(tmp_path, ri_old + ri_new, vm_old + vm_new)
+        try:
+            rows = conn.execute(
+                "SELECT valid_from, valid_to, data_length, value_set_id "
+                "FROM variable_state WHERE delivery_column_name = 'ClampCol' "
+                "ORDER BY valid_from"
+            ).fetchall()
+        finally:
+            conn.close()
+        # Two non-overlapping states; the older keeps 2016-2018 (clamped, not dropped).
+        assert [(r[0][:4], r[1][:4]) for r in rows] == [
+            ("2016", "2018"),
+            ("2019", "2022"),
+        ]
+        assert [r[2] for r in rows] == ["3", "5"]  # both drifting lengths ship
+        assert rows[0][3] == rows[1][3]  # same value set throughout
+        assert rows[0][1] < rows[1][0]  # no overlap: older ends before younger starts
+
+    def test_nested_subsumed_span_dropped(self, tmp_path: Path) -> None:
+        # Younger span 2018-2020 (len 5) is fully inside older 2016-2022 (len 3) →
+        # SUBSUMED. The younger is redundant drift (the older already covers those
+        # years with the identical coding) → dropped; the older keeps its full span.
+        ri_old, vm_old = self._drift_rows(
+            colname="DropCol",
+            var_id=1760,
+            years=range(2016, 2023),
+            regver_base=1760,
+            data_length="3",
+        )
+        ri_new, vm_new = self._drift_rows(
+            colname="DropCol",
+            var_id=1760,
+            years=range(2018, 2021),
+            regver_base=1860,
+            data_length="5",
+        )
+        conn = _build(tmp_path, ri_old + ri_new, vm_old + vm_new)
+        try:
+            rows = conn.execute(
+                "SELECT valid_from, valid_to, data_length FROM variable_state "
+                "WHERE delivery_column_name = 'DropCol' ORDER BY valid_from"
+            ).fetchall()
+        finally:
+            conn.close()
+        # Exactly one state survives: the wider older span, its data_length intact.
+        assert len(rows) == 1
+        assert (rows[0][0][:4], rows[0][1][:4]) == ("2016", "2022")
+        assert rows[0][2] == "3"

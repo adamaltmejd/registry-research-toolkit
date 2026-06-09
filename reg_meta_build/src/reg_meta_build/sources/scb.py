@@ -1260,14 +1260,10 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
             # Sweep ascending, merging overlaps: drop a fully-subsumed group,
             # clamp a crossing one to end the year before the next begins.
             bounds.sort(key=lambda b: (b[0], b[1]))
-            container_gk, container_lo, covered_to = (
-                bounds[0][2],
-                bounds[0][0],
-                bounds[0][1],
-            )
+            container_lo, covered_to, container_gk = bounds[0]
             for lo, hi, gk in bounds[1:]:
                 if lo > covered_to:  # gap → this group opens a fresh container
-                    container_gk, container_lo, covered_to = gk, lo, hi
+                    container_lo, covered_to, container_gk = lo, hi, gk
                 elif hi <= covered_to:  # subsumed by the container → drop
                     res.dropped.add(gk)
                 else:  # crossing: clamp the container, then advance to this group
@@ -1276,7 +1272,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
                     # never empty the container's span.
                     assert lo - 1 >= container_lo
                     res.clamped_to[container_gk] = lo - 1
-                    container_gk, container_lo, covered_to = gk, lo, hi
+                    container_lo, covered_to, container_gk = lo, hi, gk
 
 
 def _inherited_flags(
