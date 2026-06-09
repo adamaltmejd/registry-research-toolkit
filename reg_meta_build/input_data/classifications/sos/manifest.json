@@ -109,18 +109,6 @@
       "fetched_at": "2026-06-09T15:09:15+00:00"
     },
     {
-      "key": "landskoder",
-      "name": "Landskoder – country codes (Skatteverket, ISO-3166 alpha-2)",
-      "publisher": "Skatteverket",
-      "source_url": "https://www.skatteverket.se/download/18.6de6b99e16e94f3973b1ee/1574772028612/Land-%20och%20ers%C3%A4ttningskoder.xlsx",
-      "raw_sha256": "c90fc184aedb552d035688c106f618f4ec8530dd8a02206aa963b02a89fff9cd",
-      "raw_bytes": 39447,
-      "n_codes": 253,
-      "n_retired": 0,
-      "out_file": "landskoder.csv",
-      "fetched_at": "2026-06-09T15:09:15+00:00"
-    },
-    {
       "key": "drg",
       "name": "NordDRG – diagnosis-related groups (Swedish, latest)",
       "publisher": "Socialstyrelsen / Nordic Casemix Centre (licensed)",
