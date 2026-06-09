@@ -1135,6 +1135,18 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
     return False
 
 
+def _preferred_label(gk: tuple, grp: _StateGroup, res: _TriageResult) -> str:
+    """The label a group will emit: a triage fold label, else a grain token,
+    else its own `value_set_version_label`. Both `_collapse_residual` passes MUST
+    share this — pass 2's same-label subgrouping is only correct if it keys on the
+    exact label pass 1 deduped on."""
+    return (
+        res.labels.get(gk)
+        or _fold_token_from_grain(gk[7])
+        or (grp.value_set_version_label or "")
+    )
+
+
 def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> None:
     """Rule 4 — final collision resolution, in two passes.
 
@@ -1191,11 +1203,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
         used: set[str] = set()
         for gk in ordered:
             grp = groups[gk]
-            preferred = (
-                res.labels.get(gk)
-                or _fold_token_from_grain(gk[7])
-                or (grp.value_set_version_label or "")
-            )
+            preferred = _preferred_label(gk, grp, res)
             if preferred and preferred not in used:
                 used.add(preferred)
                 res.labels[gk] = preferred
@@ -1233,11 +1241,7 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
         subgroups: dict[tuple, list[tuple]] = defaultdict(list)
         for gk in part_gkeys:
             grp = groups[gk]
-            final_label = (
-                res.labels.get(gk)
-                or _fold_token_from_grain(gk[7])
-                or (grp.value_set_version_label or "")
-            )
+            final_label = _preferred_label(gk, grp, res)
             subgroups[(grp.latest_alias, grp.value_set_id, final_label)].append(gk)
 
         for sub_gkeys in subgroups.values():
