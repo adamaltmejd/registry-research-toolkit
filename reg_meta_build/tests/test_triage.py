@@ -18,11 +18,15 @@ from pathlib import Path
 
 import pytest
 from _csv_fixtures import (
+    PIPE,
     REGISTERINFORMATION_ROWS,
+    UNIKA_ROWS,
+    VARDEMANGDER_ROWS,
     _var_row,
     write_scb_input,
 )
 from reg_meta.db import open_db
+from reg_meta.fqid import period_token_to_bounds
 from reg_meta_build.db import build_db
 from reg_meta_build.sources.scb import (
     _AUTH_FINAL,
@@ -38,6 +42,7 @@ from reg_meta_build.sources.scb import (
     _data_type_class,
     _decide_fold_or_split,
     _edition_authority,
+    _edition_bounds,
     _fold_token_from_grain,
     _import_bug_suspect,
     _looks_like_code_label_pair,
@@ -129,6 +134,122 @@ class TestEditionAuthority:
         assert _edition_authority("2018 juni") == _AUTH_SUBANNUAL
         assert _edition_authority("Majversion 2018") == _AUTH_PLAIN
         assert _edition_authority("Junioravgång 2018") == _AUTH_PLAIN
+
+
+class TestEditionBounds:
+    """#219 sub-annual delivery-window parser. The term/quarter/half forms must
+    AGREE with reg_meta's `period_token_to_bounds` (build & resolve share the same
+    expansion); everything else stays full-year. The second arg is the row's edition
+    year — only markers matching it are narrowed, so a window can never escape it."""
+
+    def test_autumn_term_forms_agree_with_period_bounds(self) -> None:
+        ht = period_token_to_bounds("HT2024")
+        for name in (
+            "Höstterminen 2024",
+            "Hösttermin 2024",
+            "2024 höstterminen",
+            "HT 2024",
+            "Ht 2024",
+            "HT2024",
+        ):
+            assert _edition_bounds(name, 2024) == ht, name
+        assert ht == ("2024-07-01", "2024-12-31")
+
+    def test_spring_term_forms_agree_with_period_bounds(self) -> None:
+        vt = period_token_to_bounds("VT2024")
+        for name in (
+            "Vårterminen 2024",
+            "Vårtermin 2024",
+            "2024 vårterminen",
+            "VT 2024",
+            "Vt 2024",
+            "VT2024",
+            "Vårterminen 2024 - betyg",
+        ):
+            assert _edition_bounds(name, 2024) == vt, name
+        assert vt == ("2024-01-01", "2024-06-30")
+
+    def test_quarter_forms_agree_with_period_bounds(self) -> None:
+        assert _edition_bounds("2005 kvartal 1", 2005) == period_token_to_bounds(
+            "2005-Q1"
+        )
+        assert _edition_bounds("2011 kv1", 2011) == period_token_to_bounds("2011-Q1")
+        # A range spans its endpoints (union of the two quarter tokens).
+        assert _edition_bounds("2005 kvartal 2-4", 2005) == ("2005-04-01", "2005-12-31")
+        assert _edition_bounds("2007 kv 2-kv 4", 2007) == ("2007-04-01", "2007-12-31")
+        assert _edition_bounds("Kvartal 1-3 fr.o.m 2010", 2010) == (
+            "2010-01-01",
+            "2010-09-30",
+        )
+
+    def test_half_year_forms_agree_with_period_bounds(self) -> None:
+        assert _edition_bounds("Första halvåret 1995", 1995) == period_token_to_bounds(
+            "1995-H1"
+        )
+        assert _edition_bounds("Andra halvåret 1995", 1995) == period_token_to_bounds(
+            "1995-H2"
+        )
+
+    def test_school_year_range_keeps_only_edition_year_term(self) -> None:
+        # The edition year (extract_year = the FIRST year) selects which term is
+        # narrowed; the other-year term is dropped, so the window stays WITHIN the
+        # edition year (start narrowed, year-granular end — no cross-year extension).
+        assert _edition_bounds("Höstterminen 2020 - Vårterminen 2021", 2020) == (
+            "2020-07-01",
+            "2020-12-31",
+        )
+        assert _edition_bounds("Komvux HT 1988 - VT 2024", 1988) == (
+            "1988-07-01",
+            "1988-12-31",
+        )
+
+    def test_term_for_other_year_dropped_no_inversion(self) -> None:
+        # A collection note whose term names a DIFFERENT year than the edition year
+        # must NOT yield that term's bounds (which would invert valid_from > valid_to
+        # once the materializer clamps valid_to to the edition year). The term is
+        # dropped → full edition year.
+        assert _edition_bounds("Insamling 2019 avseende höstterminen 2020", 2019) == (
+            "2019-01-01",
+            "2019-12-31",
+        )
+
+    def test_out_of_range_term_year_does_not_crash(self) -> None:
+        # `period_token_to_bounds("HT1850")` would raise FqidError (year < 1900). The
+        # 1850 term mismatches the edition year 2024 → dropped → full 2024, no crash.
+        assert _edition_bounds("HT 1850, version 2024", 2024) == (
+            "2024-01-01",
+            "2024-12-31",
+        )
+
+    def test_full_year_forms_not_narrowed(self) -> None:
+        # Bare year, dated annual, finality qualifiers, month names, seasons,
+        # läsår, and the summer term all expand to the FULL year — their sub-year
+        # span is ambiguous, so narrowing is deliberately withheld.
+        full = ("2024-01-01", "2024-12-31")
+        for name in (
+            "2024",
+            "15 oktober 2024",
+            "2024, slutlig version",
+            "2024, preliminär version",
+            "2024_old",
+            "Mars 2024",
+            "Hösten 2024",
+            "Våren 2024",
+            "Sommarterminen 2024",
+            "2024 Kvartal",  # bare 'Kvartal', no quarter number → all quarters
+        ):
+            assert _edition_bounds(name, 2024) == full, name
+        assert _edition_bounds("Läsåret 2013/2014", 2013) == (
+            "2013-01-01",
+            "2013-12-31",
+        )
+
+    def test_yearless_returns_none(self) -> None:
+        # year=None (yearless row) → None regardless of the name's content.
+        assert _edition_bounds(None, None) is None
+        assert _edition_bounds("", None) is None
+        assert _edition_bounds("Senaste versionen", None) is None
+        assert _edition_bounds("Ekonomiskt bistånd, kvartal", None) is None
 
 
 class TestRleRuns:
@@ -444,10 +565,25 @@ class TestPickStateRep:
         assert _pick_state_rep([a[0], b[0]], dict([a, b])) == b[0]
 
 
-def _build(tmp_path: Path, extra_rows: list[str]) -> sqlite3.Connection:
+def _build(
+    tmp_path: Path,
+    extra_rows: list[str],
+    *,
+    vm_extra: list[str] | None = None,
+    unika_extra: list[str] | None = None,
+) -> sqlite3.Connection:
+    """`vm_extra` adds Vardemangder rows (value codes → non-null value_set_id, e.g.
+    to force the timeline path); `unika_extra` adds UnikaRegisterOchVariabler rows
+    (e.g. a blank-VersionSista row for the still-active open sentinel). Both append
+    to the standard fixture lists."""
     ri_rows = list(REGISTERINFORMATION_ROWS) + extra_rows
     input_dir = tmp_path / "input"
-    write_scb_input(input_dir, registerinformation_rows=ri_rows)
+    write_scb_input(
+        input_dir,
+        registerinformation_rows=ri_rows,
+        vardemangder_rows=VARDEMANGDER_ROWS + (vm_extra or []),
+        unika_rows=UNIKA_ROWS + (unika_extra or []),
+    )
     db_dir = tmp_path / "db"
     build_db(
         input_dir=input_dir,
@@ -933,6 +1069,341 @@ class TestSplitSiblingFlagInheritance:
 
 
 # ── integration: fold / split / collapse + uniqueness index ───────────────
+
+
+# Two disjoint 3-code value sets — distinct value_set_ids with symmetric diff 6
+# (> the cosmetic threshold), so two codings on one column are genuinely different
+# and route to the per-year TIMELINE (mirrors test_codelivery_build's coding pair).
+_CLAMP_CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
+_CLAMP_CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
+
+
+def _vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
+    """Vardemangder rows for one cvid (version, niva=1, kod, benämning, CVID, ItemId).
+    Identical codes across cvids fold to ONE value_set; `version` is the state's
+    value_set_version_label."""
+    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
+
+
+class TestSubAnnualBoundaryClamp:
+    """#219: a state's lifetime START/END is clamped to the actual sub-annual
+    delivery window instead of over-claiming the boundary year. Single-column,
+    code-less (value_set_id NULL) variables with no unika row take the fast span
+    path, so `valid_from`/`valid_to` come straight from the group's ISO envelope."""
+
+    def _state_bounds(self, conn: sqlite3.Connection, provider_key: str) -> tuple:
+        rows = conn.execute(
+            "SELECT vs.valid_from, vs.valid_to FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = ?",
+            (provider_key,),
+        ).fetchall()
+        assert len(rows) == 1, f"expected one state for {provider_key}, got {rows}"
+        return rows[0]["valid_from"], rows[0]["valid_to"]
+
+    def test_autumn_term_start_clamps_valid_from(self, tmp_path: Path) -> None:
+        # Earliest edition is an autumn term (Jul–Dec); the latest is a full year.
+        # valid_from narrows to Jul 1, valid_to stays the full boundary year.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="HtCol",
+                    cvid=9600,
+                    var_id=940,
+                    year="2018",
+                    versionname="Höstterminen 2018",
+                    regver_id=9610,
+                ),
+                _var_row(
+                    colname="HtCol",
+                    cvid=9601,
+                    var_id=940,
+                    year="2020",
+                    versionname="2020",
+                    regver_id=9611,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "940") == ("2018-07-01", "2020-12-31")
+
+    def test_spring_term_end_clamps_valid_to(self, tmp_path: Path) -> None:
+        # Latest edition is a spring term (Jan–Jun); valid_to narrows to Jun 30,
+        # valid_from stays the full earliest year.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="VtCol",
+                    cvid=9620,
+                    var_id=941,
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9630,
+                ),
+                _var_row(
+                    colname="VtCol",
+                    cvid=9621,
+                    var_id=941,
+                    year="2020",
+                    versionname="Vårterminen 2020",
+                    regver_id=9631,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "941") == ("2018-01-01", "2020-06-30")
+
+    def test_full_year_edition_blocks_narrowing_at_same_boundary(
+        self, tmp_path: Path
+    ) -> None:
+        # A full-year edition sharing the boundary year keeps -01-01/-12-31: the
+        # envelope's min/max sees the full-year bound, so the autumn-term sibling
+        # in the same year does NOT narrow it.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="MixCol",
+                    cvid=9640,
+                    var_id=942,
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9650,
+                ),
+                _var_row(
+                    colname="MixCol",
+                    cvid=9641,
+                    var_id=942,
+                    year="2018",
+                    versionname="Höstterminen 2018",
+                    regver_id=9651,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "942") == ("2018-01-01", "2018-12-31")
+
+    def test_school_year_range_narrows_start_only(self, tmp_path: Path) -> None:
+        # A lone school-year range edition narrows its START (Jul 1) but keeps a
+        # year-granular END: extending the span into the next calendar year would
+        # risk a same-column overlap with a distinct value set delivered then
+        # (year-over-year recoding), so the spring tail is deliberately NOT
+        # captured (#219 — fixing that UNDER-claim is out of scope here).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="RangeCol",
+                    cvid=9680,
+                    var_id=944,
+                    year="2020",
+                    versionname="Höstterminen 2020 - Vårterminen 2021",
+                    regver_id=9690,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "944") == ("2020-07-01", "2020-12-31")
+
+    def test_yearless_edition_keeps_sentinel_fallback(self, tmp_path: Path) -> None:
+        # No parseable year and no unika row → from_iso/to_iso stay None and the
+        # existing yearless/open-ended fallback is unchanged.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="NoYrCol",
+                    cvid=9660,
+                    var_id=943,
+                    versionname="Senaste versionen",
+                    regver_id=9670,
+                ),
+            ],
+        )
+        assert self._state_bounds(conn, "943") == ("0001-01-01", "9999-12-31")
+
+    def test_timeline_first_run_ht_start_interior_stays_year_granular(
+        self, tmp_path: Path
+    ) -> None:
+        # Force the TIMELINE path: two distinct codings on ONE column (var 950,
+        # TimeCol) with overlapping spans. Coding A (HT-start 2018 + 2020) loses
+        # year 2019 to coding B (introduced 2019), so A's owned years carve into TWO
+        # runs [2018] and [2020]. Exercises the `is_first and run_lo == regver_min`
+        # guard in the timeline run loop — never reached by the fast-path tests.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="TimeCol",
+                    cvid=9700,
+                    var_id=950,
+                    varname="TimeVar",
+                    year="2018",
+                    versionname="Höstterminen 2018",
+                    regver_id=9700,
+                    data_length="3",
+                ),
+                _var_row(
+                    colname="TimeCol",
+                    cvid=9701,
+                    var_id=950,
+                    varname="TimeVar",
+                    year="2020",
+                    versionname="2020",
+                    regver_id=9702,
+                    data_length="3",
+                ),
+                _var_row(
+                    colname="TimeCol",
+                    cvid=9710,
+                    var_id=950,
+                    varname="TimeVar",
+                    year="2019",
+                    versionname="2019",
+                    regver_id=9711,
+                    data_length="3",
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9700, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9701, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9710, "BetaB", _CLAMP_CODING_B)
+            ),
+        )
+        rows = conn.execute(
+            "SELECT valid_from, valid_to, value_set_id FROM variable_state "
+            "WHERE delivery_column_name = 'TimeCol' ORDER BY valid_from"
+        ).fetchall()
+        assert len(rows) == 3, rows
+        # Coding A's FIRST run starts at its HT-start (Jul 1) — the timeline first-run
+        # clamp. The carve middle run (coding B, 2019) is the year-granular handoff.
+        assert (rows[0]["valid_from"], rows[0]["valid_to"]) == (
+            "2018-07-01",
+            "2018-12-31",
+        )
+        assert (rows[1]["valid_from"], rows[1]["valid_to"]) == (
+            "2019-01-01",
+            "2019-12-31",
+        )
+        # A's SECOND (interior) run is fully year-granular — from_iso (2018-07-01) is
+        # NOT reapplied to a run that doesn't open at regver_min.
+        assert (rows[2]["valid_from"], rows[2]["valid_to"]) == (
+            "2020-01-01",
+            "2020-12-31",
+        )
+        # Outer runs are coding A (one value set); the middle is coding B.
+        assert (
+            rows[0]["value_set_id"]
+            == rows[2]["value_set_id"]
+            != rows[1]["value_set_id"]
+        )
+
+    def test_residual_clamp_overrides_to_iso(self, tmp_path: Path) -> None:
+        # `_collapse_residual` pass 2 caps a VT-ending group (to_iso 2020-06-30) whose
+        # [regver_min, regver_max] span is crossed by a later same-column, same-value-
+        # set group. The YEAR clamp must win over the sub-annual envelope (the
+        # `clamp is None` guard in `_emit_span`). Two code-less groups distinguished by
+        # data_length share value_set_id NULL + label "" so they stay on the fast path
+        # and subgroup together in pass 2.
+        conn = _build(
+            tmp_path,
+            [
+                # Group P (data_length 1): 2018 .. VT2020 → to_iso 2020-06-30.
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9720,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9720,
+                    data_length="1",
+                ),
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9721,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2020",
+                    versionname="Vårterminen 2020",
+                    regver_id=9722,
+                    data_length="1",
+                ),
+                # Group Q (data_length 2): 2020 .. 2021 — crosses P, so pass 2 clamps
+                # P to end 2019 (the year before Q's lower bound).
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9723,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2020",
+                    versionname="2020",
+                    regver_id=9724,
+                    data_length="2",
+                ),
+                _var_row(
+                    colname="ClampCol",
+                    cvid=9725,
+                    var_id=951,
+                    varname="ClampVar",
+                    year="2021",
+                    versionname="2021",
+                    regver_id=9726,
+                    data_length="2",
+                ),
+            ],
+        )
+        # P (data_length 1): valid_to is the clamp year-end 2019-12-31, NOT the
+        # VT2020 envelope end 2020-06-30.
+        row = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE delivery_column_name = 'ClampCol' AND data_length = '1'"
+        ).fetchone()
+        assert (row["valid_from"], row["valid_to"]) == ("2018-01-01", "2019-12-31")
+
+    def test_open_sentinel_overrides_to_iso(self, tmp_path: Path) -> None:
+        # A still-active group (unika row with blank VersionSista) whose latest
+        # edition is a spring term (to_iso 2020-06-30). The open-ended sentinel must
+        # win over the sub-annual envelope (the `to_year is not None` guard in
+        # `_emit_span`): a currently-live variable stays open, not clamped to VT-end.
+        unika_open = PIPE.join(
+            [
+                "TESTREG",
+                "Testregistret",
+                "Individer",
+                "Individer",
+                "OpenVar",
+                "OpenCol",
+                "2018",
+                "",
+                "0",
+                "0",
+                "0",
+            ]
+        )
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="OpenCol",
+                    cvid=9730,
+                    var_id=952,
+                    varname="OpenVar",
+                    year="2018",
+                    versionname="2018",
+                    regver_id=9730,
+                ),
+                _var_row(
+                    colname="OpenCol",
+                    cvid=9731,
+                    var_id=952,
+                    varname="OpenVar",
+                    year="2020",
+                    versionname="Vårterminen 2020",
+                    regver_id=9731,
+                ),
+            ],
+            unika_extra=[unika_open],
+        )
+        assert self._state_bounds(conn, "952") == ("2018-01-01", "9999-12-31")
 
 
 class TestSplit:

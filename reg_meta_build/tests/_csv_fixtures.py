@@ -142,6 +142,7 @@ def _var_row(
     var_id: int,
     varname: str = "GenericVar",
     year: str = "2020",
+    versionname: str | None = None,
     regver_id: int = 110,
     data_type: str = "int",
     data_length: str = "1",
@@ -150,7 +151,12 @@ def _var_row(
     register_variant_id 10), varying only the fields triage keys on. Shared by
     the triage tests and the A2.3 replaced_by tests (both reuse the
     canonical disjoint-column split geometry), so it lives here rather than in
-    either test module."""
+    either test module.
+
+    `versionname` overrides the `registerversionnamn` cell (the value the
+    coalescer derives the edition year and sub-annual window from); it defaults
+    to `year`. Pass a sub-annual phrasing (e.g. `"Höstterminen 2018"`) while
+    keeping `year` a bare year so the approval dates stay well-formed."""
     return _ri_row(
         "TESTREG",
         "Testregistret",
@@ -159,7 +165,7 @@ def _var_row(
         "Individer",
         "Alla individer",
         "Nej",
-        year,
+        versionname if versionname is not None else year,
         f"Version {year}",
         "",
         "Godkänd",
@@ -850,6 +856,7 @@ def write_scb_input(
     *,
     registerinformation_rows: list[str] | None = None,
     vardemangder_rows: list[str] = VARDEMANGDER_ROWS,
+    unika_rows: list[str] = UNIKA_ROWS,
     valid_dates_rows: list[str] | None = None,
     timeseries_rows: list[str] | None = None,
     include: tuple[str, ...] = (
@@ -865,10 +872,10 @@ def write_scb_input(
 
     Returns the SCB subdirectory path. ``include`` lets a test build a partial
     set (e.g. just Registerinformation.csv); ``registerinformation_rows`` /
-    ``vardemangder_rows`` / ``valid_dates_rows`` / ``timeseries_rows`` let a
-    test swap in alternate rows for projection / succession scenarios without
-    re-implementing the rest. The ``*_rows=None`` defaults fall back to the
-    standard fixture lists.
+    ``vardemangder_rows`` / ``unika_rows`` / ``valid_dates_rows`` /
+    ``timeseries_rows`` let a test swap in alternate rows for projection /
+    succession / lifetime scenarios without re-implementing the rest. The
+    ``*_rows=None`` defaults fall back to the standard fixture lists.
     """
     scb_dir = input_dir / "SCB"
     scb_dir.mkdir(parents=True, exist_ok=True)
@@ -884,7 +891,7 @@ def write_scb_input(
             rows,
         )
     if "unika" in include:
-        write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
+        write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
     if "identifierare" in include:
         write_csv(
             scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS
