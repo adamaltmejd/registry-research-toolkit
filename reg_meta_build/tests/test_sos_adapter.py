@@ -13,6 +13,12 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
+import pytest
+from _sos_fixtures import (
+    _Deldat as _SosFixtureDeldat,
+    _Register as _SosFixtureRegister,
+    _Var as _SosFixtureVar,
+)
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
@@ -36,6 +42,8 @@ from reg_meta_build.sources.sos import (
     _intersect_window,
     _iso_bound,
     _parse_tidsperiod,
+    _resolve_by_signal,
+    _resolve_classification,
     _segment_windowed_codes,
     _sos_abbrev,
 )
@@ -58,6 +66,7 @@ def _var(
     description: str | None = None,
     data_from: int | None = None,
     data_to: int | None = None,
+    external_classification: str | None = None,
 ) -> SosVariable:
     return SosVariable(
         deldatamangd=deldatamangd,
@@ -66,7 +75,7 @@ def _var(
         description=description,
         object_type=None,
         value_set_text=None,
-        external_classification=None,
+        external_classification=external_classification,
         data_type=data_type,
         is_join_variable=None,
         join_description=None,
@@ -393,6 +402,200 @@ def test_empty_window_drops_code() -> None:
     # only the 2010-2020 window survives the >=2008 floor
     assert len(states) == 1
     assert states[0].valid_from >= "2010-01-01"
+
+
+# ---------------------------------------------------------------------------
+# Classification resolver (PR2): _resolve_by_signal + _resolve_classification.
+# These are CURATED maps; the tests pin every signal + the precedence rules
+# against real-data-shaped values (verified against input_data/Socialstyrelsen/).
+# ---------------------------------------------------------------------------
+
+
+class TestResolveBySignal:
+    """`_resolve_by_signal` matches a `Länk kodverk` value to a classification
+    short_name by curated substring (case-insensitive), or None."""
+
+    @pytest.mark.parametrize(
+        ("value", "expected"),
+        [
+            # All 8 curated signals → their short_name.
+            ("https://icd.who.int/browse10/2019/en", "ICD-10-SE"),
+            (
+                "https://www.socialstyrelsen.se/statistik-och-data/"
+                "klassifikationer-och-koder/icd-10/",
+                "ICD-10-SE",
+            ),
+            ("https://icd.who.int/browse/releases/all-releases/en", "ICD-10-SE"),
+            ("https://www.fass.se/LIF/atcregister?userType=0", "ATC"),
+            ("https://atcddd.fhi.no/atc_ddd_index/", "ATC"),
+            (
+                "https://www.socialstyrelsen.se/statistik-och-data/"
+                "klassifikationer-och-koder/kva/",
+                "KVA",
+            ),
+            ("Klassifikation av vårdåtgärder (KVÅ) - Socialstyrelsen", "KVA"),
+            (
+                "https://www.socialstyrelsen.se/statistik-och-data/"
+                "klassifikationer-och-koder/drg/drg-koder-och-definitioner/",
+                "DRG",
+            ),
+            # Tolerances: trailing slash, uppercase URL, query string after signal.
+            ("https://icd.who.int/browse10/2019/en/", "ICD-10-SE"),
+            ("HTTPS://ICD.WHO.INT/BROWSE10/2019/EN", "ICD-10-SE"),
+            ("https://icd.who.int/browse10/2019/en?lang=sv", "ICD-10-SE"),
+            # The KVA bundled-PDF value: two Op6 PDFs THEN the kva fragment — the
+            # CONTAINS match still resolves it to KVA.
+            (
+                "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/"
+                "dokument-webb/klassifikationer-och-koder/"
+                "klassifikation-av-operationer-sjatte-upplagan.pdf  "
+                "https://www.socialstyrelsen.se/statistik-och-data/"
+                "klassifikationer-och-koder/kva/",
+                "KVA",
+            ),
+            # Unmatched signals → None (SCB systems, sheet refs, prose, empty).
+            (
+                "https://www.scb.se/.../standard-for-svensk-yrkesklassificering-ssyk/",
+                None,
+            ),
+            (
+                "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/"
+                "regionala-indelningar/lan-och-kommuner/",
+                None,
+            ),
+            ("Kodlista_DIAG", None),
+            ("", None),
+            (None, None),
+        ],
+    )
+    def test_signal_map(self, value: str | None, expected: str | None) -> None:
+        assert _resolve_by_signal(value) == expected
+
+
+class TestResolveClassification:
+    """`_resolve_classification` layers the CAN variable-name override on top of
+    the signal map, with the signal map taking precedence."""
+
+    def test_can_varname_override_resolves_icd9(self) -> None:
+        # CAN's ext value is a globalassets PDF (no signal); the var name ICD9
+        # names the seeded ICD-9-KS87.
+        ext = (
+            "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/"
+            "artikelkatalog/statistik/2023-5-8512.pdf"
+        )
+        assert _resolve_classification(ext, "can", "ICD9") == "ICD-9-KS87"
+
+    @pytest.mark.parametrize("var_name", ["ICD7", "M", "MORF"])
+    def test_can_varname_override_unseeded_is_none(self, var_name: str) -> None:
+        # The historical tumour/morphology systems are not seeded → None.
+        ext = (
+            "https://www.socialstyrelsen.se/globalassets/sharepoint-dokument/"
+            "artikelkatalog/statistik/2023-5-8512.pdf"
+        )
+        assert _resolve_classification(ext, "can", var_name) is None
+
+    def test_override_does_not_fire_for_non_can_register(self) -> None:
+        # The variable-name override is CAN-only: a non-CAN register with a var
+        # literally named "ICD9" must NOT inherit ICD-9-KS87.
+        assert _resolve_classification(None, "par", "ICD9") is None
+
+    def test_signal_wins_over_can_override(self) -> None:
+        # A CAN ICD9 variable that DOES carry an icd-10 URL resolves by the
+        # signal (ICD-10-SE), not the var-name override (ICD-9-KS87).
+        assert (
+            _resolve_classification(
+                "https://icd.who.int/browse10/2019/en", "can", "ICD9"
+            )
+            == "ICD-10-SE"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Classification candidate accumulation (PR2): a RESOLVED variable contributes
+# one `(variable_id, value_set_id, short_name)` per emitted state to
+# `adapter.classification_candidates`; an UNRESOLVED variable contributes none.
+# ---------------------------------------------------------------------------
+
+
+def test_resolved_variable_accumulates_codeless_candidate() -> None:
+    # A code-less SOS variable (no kodlista) whose ext value resolves to ICD-10-SE
+    # yields one state with value_set_id None → one candidate keyed on
+    # (variable_id, None).
+    reg = _register(
+        "par",
+        [
+            _var(
+                "DIAGNOS",
+                deldatamangd="PAR_OV",
+                data_type="Sträng (text)",
+                data_from=2001,
+                external_classification="https://icd.who.int/browse10/2019/en",
+            )
+        ],
+        deldatamangder=(_deldat("PAR_OV", data_from=2001),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    variables = _of(objs, IRVariable)
+    assert len(states) == 1 and len(variables) == 1
+    variable_id = variables[0].variable_id
+    assert states[0].value_set_id is None
+    assert adapter.classification_candidates == [(variable_id, None, "ICD-10-SE")]
+
+
+def test_resolved_variable_accumulates_code_bearing_candidate() -> None:
+    # A code-bearing variable whose ext value resolves: the candidate's
+    # value_set_id matches the emitted state's (non-None) value_set_id.
+    rows = [SosKodlistaRow(tidsperiod="2001-2010", kod="A01", beskrivning="d")]
+    reg = _register(
+        "par",
+        [
+            _var(
+                "OP",
+                deldatamangd="PAR_OV",
+                data_type="Sträng (text)",
+                data_from=2001,
+                external_classification=(
+                    "https://www.socialstyrelsen.se/statistik-och-data/"
+                    "klassifikationer-och-koder/kva/"
+                ),
+            )
+        ],
+        deldatamangder=(_deldat("PAR_OV", data_from=2001),),
+        kodlistor=(_kodlista("OP", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    variables = _of(objs, IRVariable)
+    assert len(states) == 1 and len(variables) == 1
+    state = states[0]
+    assert state.value_set_id is not None
+    assert adapter.classification_candidates == [
+        (variables[0].variable_id, state.value_set_id, "KVA")
+    ]
+
+
+def test_unresolved_variable_accumulates_no_candidate() -> None:
+    # A variable whose ext value names no seeded system (an SCB SSYK URL) emits
+    # states but contributes ZERO candidates.
+    reg = _register(
+        "par",
+        [
+            _var(
+                "YRKE",
+                deldatamangd="PAR_OV",
+                data_type="Sträng (text)",
+                data_from=2001,
+                external_classification=(
+                    "Standard för svensk yrkesklassificering (SSYK)"
+                ),
+            )
+        ],
+        deldatamangder=(_deldat("PAR_OV", data_from=2001),),
+    )
+    objs, adapter = _emit(reg)
+    assert _of(objs, IRVariableState), "the variable still emits a state"
+    assert adapter.classification_candidates == []
 
 
 # ---------------------------------------------------------------------------
@@ -919,6 +1122,168 @@ def test_synthetic_combined_scb_subset_identical_to_scb_only(tmp_path: Path) -> 
     assert proxy_tables.issubset(seen), (
         f"proxy did not diff all expected tables: missing {proxy_tables - seen}"
     )
+
+
+# ---------------------------------------------------------------------------
+# PR2 classification feed: end-to-end resolution + SCB byte-identity WITH
+# classifications ENABLED. The skip_classifications=True byte-identity test above
+# never exercises the candidate feed/backfill; these run the real path.
+# ---------------------------------------------------------------------------
+
+# Seed covering the SCB fixture's "Kön" vardemangdsversion (so SCB classification
+# linkage is NON-empty) plus the SOS ICD-10-SE entry the resolving SOS variable
+# below points at. ICD-10-SE is provider="sos" so it is provider-skipped in an
+# SCB-only build — exactly the gate that keeps the SCB-subset byte-identical.
+_PR2_SEED_TOML = """\
+[[classification]]
+short_name = "TESTKON"
+name = "Test classification for gender codes"
+publisher = "TEST"
+valid_from = 2000
+vardemangdsversion = ["Kön"]
+
+[[classification]]
+short_name = "ICD-10-SE"
+name = "ICD-10-SE"
+publisher = "Socialstyrelsen"
+provider = "sos"
+valid_codes_file = "icd-10-se.csv"
+"""
+
+# A SOS register whose DIAGNOS variable carries an icd-10 `Länk kodverk`, so the
+# resolver tags it ICD-10-SE during a combined build with classifications on.
+_PR2_SOS_REGISTERS = (
+    _SosFixtureRegister(
+        abbrev="SYN",
+        title_sv="Syntetiskt register",
+        description_sv="Ett syntetiskt SOS-register för testbygget.",
+        deldatamangder=(_SosFixtureDeldat("SYN_A", data_from=2005, data_to=2015),),
+        variables=(
+            _SosFixtureVar(
+                "DIAGNOS",
+                deldatamangd="SYN_A",
+                label="Diagnoskod",
+                data_type="Sträng (text)",
+                data_from=2005,
+                data_to=2015,
+                external_classification="https://icd.who.int/browse10/2019/en",
+            ),
+        ),
+    ),
+)
+
+
+def _write_pr2_seed(tmp_path: Path) -> Path:
+    # The ICD-10-SE entry needs a valid_codes CSV under a classifications dir.
+    seed = tmp_path / "classifications.toml"
+    seed.write_text(_PR2_SEED_TOML, encoding="utf-8")
+    cls_dir = tmp_path / "input" / "classifications"
+    cls_dir.mkdir(parents=True, exist_ok=True)
+    (cls_dir / "icd-10-se.csv").write_text(
+        "code,label\nA01,Diagnos A\nB02,Diagnos B\n", encoding="utf-8"
+    )
+    return seed
+
+
+def test_pr2_combined_build_tags_sos_state_classification(tmp_path: Path) -> None:
+    # End-to-end: a combined ("scb","sos") build with classifications ENABLED and
+    # a SOS variable whose external_classification resolves → at least one SOS
+    # `variable_state.classification_id` is non-null (tagged ICD-10-SE).
+    from _sos_fixtures import write_sos_input
+
+    inp = _write_scb_only(tmp_path)
+    write_sos_input(inp, registers=_PR2_SOS_REGISTERS)
+    seed = _write_pr2_seed(tmp_path)
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "comb",
+        seed_path=seed,
+        skip_slugs=True,
+        providers=("scb", "sos"),
+    )
+    conn = sqlite3.connect(tmp_path / "comb" / "reg_meta.db")
+    try:
+        icd_id = conn.execute(
+            "SELECT id FROM classification WHERE short_name = 'ICD-10-SE'"
+        ).fetchone()[0]
+        # The SOS DIAGNOS state (provider_id=2) is tagged ICD-10-SE.
+        tagged = conn.execute(
+            "SELECT COUNT(*) FROM variable_state vs "
+            "JOIN variable v USING (variable_id) "
+            "JOIN register r USING (register_id) "
+            "WHERE r.provider_id = 2 AND vs.classification_id = ?",
+            (icd_id,),
+        ).fetchone()[0]
+        assert tagged >= 1, "the resolving SOS variable_state must be tagged ICD-10-SE"
+    finally:
+        conn.close()
+
+
+def test_pr2_scb_linkage_identical_with_classifications_enabled(
+    tmp_path: Path,
+) -> None:
+    # The REAL PR2 byte-identity gate: with classifications ENABLED (so the SOS
+    # candidate feed + backfill actually run), the SCB variable→classification
+    # linkage of a combined ("scb","sos") build is IDENTICAL to an SCB-only build.
+    # Proves the SOS feed tags only SOS states and never touches SCB linkage.
+    from _sos_fixtures import write_sos_input
+    from reg_meta_build.db import dump_classification_linkage
+
+    inp = _write_scb_only(tmp_path)
+    write_sos_input(inp, registers=_PR2_SOS_REGISTERS)
+    seed = _write_pr2_seed(tmp_path)
+
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "comb",
+        seed_path=seed,
+        skip_slugs=True,
+        providers=("scb", "sos"),
+    )
+    build_db(
+        input_dir=inp,
+        db_dir=tmp_path / "scb",
+        seed_path=seed,
+        skip_slugs=True,
+        providers=("scb",),
+    )
+
+    def _scb_linkage(db: Path) -> list[tuple[int, int | None, int]]:
+        conn = sqlite3.connect(db)
+        try:
+            scb_vars = {
+                r[0]
+                for r in conn.execute(
+                    "SELECT v.variable_id FROM variable v "
+                    "JOIN register r USING (register_id) WHERE r.provider_id = 1"
+                )
+            }
+            return [t for t in dump_classification_linkage(conn) if t[0] in scb_vars]
+        finally:
+            conn.close()
+
+    comb_db = tmp_path / "comb" / "reg_meta.db"
+    scb_db = tmp_path / "scb" / "reg_meta.db"
+    scb_linkage = _scb_linkage(scb_db)
+    assert scb_linkage, "the SCB fixture must produce a non-empty SCB linkage (TESTKON)"
+    assert _scb_linkage(comb_db) == scb_linkage, (
+        "SOS feed must leave SCB variable→classification linkage byte-identical"
+    )
+
+    # And the combined build DID exercise the SOS feed (a SOS state is tagged).
+    conn = sqlite3.connect(comb_db)
+    try:
+        sos_tagged = conn.execute(
+            "SELECT COUNT(*) FROM variable_state vs "
+            "JOIN variable v USING (variable_id) "
+            "JOIN register r USING (register_id) "
+            "WHERE r.provider_id = 2 AND vs.classification_id IS NOT NULL"
+        ).fetchone()[0]
+        assert sos_tagged >= 1, (
+            "combined build must actually tag a SOS state (feed ran)"
+        )
+    finally:
+        conn.close()
 
 
 def test_unreadable_workbook_becomes_warning(tmp_path: Path) -> None:

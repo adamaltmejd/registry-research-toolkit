@@ -1646,6 +1646,45 @@ _CLASSIFICATION_CANDIDATE_FEED_SQL = (
 )
 
 
+def _feed_sos_classification_candidates(
+    conn: sqlite3.Connection,
+    candidates: list[tuple[int, int | None, str]],
+) -> int:
+    """A4.4e PR2: feed the SOS adapter's classification candidates into the
+    provider-blind `classification_candidate` table.
+
+    The SOS adapter resolves each variable's free-text `external_classification`
+    (it carries no `value_set_version_label`) to a seeded classification
+    short_name and hands the materializer `(variable_id, value_set_id,
+    short_name)` per variable_state. This resolves short_name → classification_id
+    against the populated `classification` table and INSERTs the same
+    `(variable_id, value_set_id, classification_id)` shape the SCB feed produces,
+    so `_backfill_state_classifications` stays provider-blind (it reads only the
+    candidate table). Candidates whose short_name is absent (e.g. a
+    provider-skipped SOS classification in an SCB-only build, or a typo) are
+    dropped — no row, no error. Returns the number of candidate rows inserted.
+    """
+    if not candidates:
+        return 0
+    id_by_short = {
+        short_name: cls_id
+        for cls_id, short_name in conn.execute(
+            "SELECT id, short_name FROM classification"
+        )
+    }
+    rows = [
+        (variable_id, value_set_id, id_by_short[short_name])
+        for variable_id, value_set_id, short_name in candidates
+        if short_name in id_by_short
+    ]
+    conn.executemany(
+        "INSERT INTO classification_candidate "
+        "(variable_id, value_set_id, classification_id) VALUES (?, ?, ?)",
+        rows,
+    )
+    return len(rows)
+
+
 def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     """A4.4e: tag `variable_state.classification_id` from the PROVIDER-BLIND
     `classification_candidate` table, folding candidates to their OWNING split
@@ -2462,6 +2501,10 @@ def materialize(
     row_counts: dict[str, Any] = {}
     source_checksums: dict[str, str] = {}
     related_edges: list[tuple[int, int, str]] = []
+    # A4.4e PR2: provider-blind classification linkage from the SOS adapter
+    # (variable_id, value_set_id, short_name). Merged per-adapter like
+    # `related_edges`; fed into `classification_candidate` after the SCB feed.
+    classification_candidates: list[tuple[int, int | None, str]] = []
     fold_slug_hints: dict[int, str] = {}
     # SCB-only stats (the SOS adapter has no projection/coalesce passes). The SCB
     # adapter is the only one that populates these; default to empty / zeroed for
@@ -2551,6 +2594,13 @@ def materialize(
         row_counts.update(adapter.row_counts)
         source_checksums.update(adapter.source_checksums)
         related_edges.extend(adapter.related_edges)
+        # Only the SOS adapter populates classification candidates today; SCB
+        # tags classification on `variable_instance` and feeds the candidate
+        # table via SQL (the SCB feed below). getattr keeps this loop blind to
+        # which adapter carries the attribute.
+        classification_candidates.extend(
+            getattr(adapter, "classification_candidates", ())
+        )
         fold_slug_hints.update(adapter.fold_slug_hints)
         if adapter.provider == "scb":
             state_stats = adapter.coalesce_stats
@@ -2796,6 +2846,26 @@ def materialize(
     # is likewise in the BASE DDL and drops below with the other scratch.
     if scb_ran:
         conn.execute(_CLASSIFICATION_CANDIDATE_FEED_SQL)
+
+    # A4.4e PR2: SOS feed of the same provider-blind candidate table. Runs after
+    # `populate_classifications` (so `classification.id` exists for short_name
+    # resolution) AND after the SCB feed (both write into one table the backfill
+    # reads). The SOS adapter resolved `external_classification` → short_name per
+    # state; this resolves short_name → classification_id and INSERTs the
+    # SCB-shaped rows. Guarded on SOS candidates being present: an SCB-only build
+    # produces none, leaving the table byte-identical to the SCB-only state.
+    n_sos_candidates = _feed_sos_classification_candidates(
+        conn, classification_candidates
+    )
+    if classification_candidates:
+        _progress(
+            f"  {n_sos_candidates:,} SOS classification candidates fed "
+            f"(of {len(classification_candidates):,} resolved states)"
+        )
+        for adapter, _ in adapters:
+            summary = getattr(adapter, "classification_summary", None)
+            if summary is not None:
+                _progress(f"  {summary()}")
 
     # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
     # already wrote `variable_alias` from IRVariableAlias (the FULL historical

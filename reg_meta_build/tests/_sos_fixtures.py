@@ -48,6 +48,9 @@ class _Var:
     data_type: str = "Sträng (text)"
     data_from: int | None = None
     data_to: int | None = None
+    # Raw `Länk kodverk` free-text — the signal the classification resolver
+    # parses (SosVariable.external_classification). None emits a blank cell.
+    external_classification: str | None = None
 
 
 @dataclass(frozen=True)
@@ -209,6 +212,7 @@ def _write_register(path: Path, reg: _Register) -> None:
             "Variabeletikett",
             "Variabelbeskrivning",
             "Datatyp",
+            "Länk kodverk",
             "Data från",
             "Data till",
         ]
@@ -221,6 +225,7 @@ def _write_register(path: Path, reg: _Register) -> None:
                 v.label,
                 v.description,
                 v.data_type,
+                v.external_classification,
                 v.data_from,
                 v.data_to,
             ]

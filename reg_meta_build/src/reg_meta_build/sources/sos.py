@@ -834,6 +834,85 @@ ENTITY_REGISTRY_KODLISTOR: frozenset[tuple[str, str]] = frozenset(
     {("mfr", "IVF_klinik")}
 )
 
+# Curated `Länk kodverk` (external_classification) → classification short_name.
+#
+# SOS has no `value_set_version_label`; the code system a variable uses is named
+# only in the free-text `external_classification` field. This is a CURATED map of
+# the OFFICIAL signals that unambiguously name a seeded classification (PR1) —
+# NOT a broad regex/name-guesser. Each tuple is (substring-signal, short_name);
+# a value matches when it CONTAINS the signal (case-insensitively), so trailing
+# slashes / query strings / a bundled-PDF value that also carries the kva
+# fragment all resolve. Order is irrelevant (signals are disjoint across systems).
+#
+# Everything NOT listed → None (unresolved): SCB LKF/SSYK/SUN/SNI URLs,
+# skatteverket landskoder, TNM/Wiley, Op6-only PDFs, SOSNYK, sjukhuskoder,
+# postnummer, all `Kodlista_*`/sheet-refs, prose, and typos. Real-data values
+# verified against the 13 workbooks at input_data/Socialstyrelsen/.
+_CLASSIFICATION_SIGNALS: tuple[tuple[str, str], ...] = (
+    ("icd.who.int/browse10", "ICD-10-SE"),
+    ("klassifikationer-och-koder/icd-10/", "ICD-10-SE"),
+    ("icd.who.int/browse/releases", "ICD-10-SE"),
+    ("fass.se/lif/atcregister", "ATC"),
+    ("atcddd.fhi.no", "ATC"),
+    ("klassifikationer-och-koder/kva/", "KVA"),
+    ("klassifikation av vårdåtgärder (kvå) - socialstyrelsen", "KVA"),
+    ("klassifikationer-och-koder/drg/", "DRG"),
+)
+
+# CAN (Cancerregistret) variable-name override. CAN's `external_classification`
+# is a single globalassets PDF / Wiley TNM link that names NO seeded system, so
+# the signal map yields None; the real code system is named by the VARIABLE name
+# instead. Only ICD9 maps to a seeded classification (ICD-9-KS87); the historical
+# tumour/morphology systems (ICD-7, ICD-O, SNOMED, TNM M/N/T, MORF) are not
+# seeded → explicit None (documents the decision; the default is None anyway).
+_CAN_VARNAME_CLASSIFICATION: dict[str, str | None] = {
+    "ICD9": "ICD-9-KS87",
+    "ICD7": None,
+    "ICDO3": None,
+    "ICDO10": None,
+    "SNOMED3": None,
+    "SNOMEDO10": None,
+    "M": None,
+    "N": None,
+    "T": None,
+    "MORF": None,
+}
+
+
+def _resolve_by_signal(external_classification: str | None) -> str | None:
+    """Match an `external_classification` value against the curated signal map
+    (substring, case-insensitive). Returns the classification short_name or None.
+    This is the URL/string-signal half of the resolver — distinct from the CAN
+    variable-name override."""
+    if not external_classification:
+        return None
+    haystack = external_classification.lower()
+    for signal, short_name in _CLASSIFICATION_SIGNALS:
+        if signal in haystack:
+            return short_name
+    return None
+
+
+def _resolve_classification(
+    external_classification: str | None,
+    abbrev: str,
+    var_name: str,
+) -> str | None:
+    """Resolve a SOS variable to a seeded classification `short_name`, or None.
+
+    Precedence: the `external_classification` signal map first; if it yields
+    nothing and the register is CAN, the variable-name override; else None.
+    Curated and conservative — an unrecognized signal stays unresolved rather
+    than guessing (see `_CLASSIFICATION_SIGNALS`).
+    """
+    by_signal = _resolve_by_signal(external_classification)
+    if by_signal is not None:
+        return by_signal
+    if abbrev == "can":
+        return _CAN_VARNAME_CLASSIFICATION.get(var_name)
+    return None
+
+
 # Slug stem for the synthesized variant of variant-less registers (LSS/BU/SOL).
 _DEFAULT_VARIANT = "_default"
 
@@ -1112,6 +1191,19 @@ class SOSAdapter:
         self.coalesce_stats: dict[str, Any] = {}
         self.fold_slug_hints: dict[int, str] = {}
         self.related_edges: list[tuple[int, int, str]] = []
+        # Provider-blind classification linkage: (variable_id, value_set_id,
+        # short_name) per variable_state of a RESOLVED variable. `db.py` resolves
+        # short_name → classification_id and feeds `classification_candidate`,
+        # which `_backfill_state_classifications` reads — same path as SCB.
+        # value_set_id is often None (code-less ICD/ATC states); the backfill
+        # keys on (variable_id, value_set_id) with `IS`, so NULL is fine.
+        self.classification_candidates: list[tuple[int, int | None, str]] = []
+        # Maintainer visibility (the issue wants this): distinct
+        # external_classification values resolved vs unresolved, + tagged counts.
+        self._resolved_ext: set[str] = set()
+        self._unresolved_ext: set[str] = set()
+        self._resolved_variables = 0
+        self._tagged_states = 0
         # Content-share cache: member_hash -> value_set_id (read back from the DB
         # so an identical SOS code list collapses onto SCB's existing row).
         self._set_id_by_hash: dict[bytes, int] = {}
@@ -1398,6 +1490,7 @@ class SOSAdapter:
             source_register_text=None,
             source_label=None,
         )
+        classification = self._resolve_group_classification(abbrev, name, group)
         yield from self._emit_states(
             abbrev=abbrev,
             variable_id=variable_id,
@@ -1410,6 +1503,7 @@ class SOSAdapter:
             in ENTITY_REGISTRY_KODLISTOR
             if kodlista
             else False,
+            classification=classification,
         )
 
     def _emit_split(
@@ -1452,6 +1546,7 @@ class SOSAdapter:
                 source_register_text=None,
                 source_label=None,
             )
+            classification = self._resolve_group_classification(abbrev, name, members)
             yield from self._emit_states(
                 abbrev=abbrev,
                 variable_id=variable_id,
@@ -1461,6 +1556,7 @@ class SOSAdapter:
                 deldat_by_name=deldat_by_name,
                 kodlista=kodlista,
                 entity_registry=False,
+                classification=classification,
             )
         # (N choose 2) sibling related-to edges -> self.related_edges. The
         # materializer resolves variable_id -> FQID slug after slugs exist; it
@@ -1475,6 +1571,38 @@ class SOSAdapter:
                     )
                 )
 
+    def _resolve_group_classification(
+        self, abbrev: str, name: str, group: list[SosVariable]
+    ) -> str | None:
+        """Resolve one variable group → classification short_name (or None) and
+        record the distinct external_classification value as resolved/unresolved
+        for the maintainer summary. The signal is the first non-null
+        `external_classification` across the group (delivery-order stable).
+
+        The resolved/unresolved split tracks the SIGNAL-MAP outcome only: a CAN
+        variable-name override resolves the variable but its ext value names no
+        seeded system, so it stays in `_unresolved_ext` (the same ext value can
+        also back a sibling that the override leaves None — counting it resolved
+        would misreport the resolver's URL-signal reach)."""
+        ext = _first(group, "external_classification")
+        short_name = _resolve_classification(ext, abbrev, name)
+        if ext:
+            by_signal = _resolve_by_signal(ext)
+            (self._resolved_ext if by_signal else self._unresolved_ext).add(ext)
+        return short_name
+
+    def classification_summary(self) -> str:
+        """One-line maintainer summary of the classification resolver's reach
+        (distinct external_classification values resolved vs unresolved, plus
+        variables/states tagged). Logged by `db.py` after the SOS feed runs."""
+        return (
+            f"SOS classification resolver: "
+            f"{len(self._resolved_ext)} distinct external_classification values "
+            f"resolved, {len(self._unresolved_ext)} unresolved; "
+            f"{self._resolved_variables} variables / {self._tagged_states} states "
+            f"tagged ({len(self.classification_candidates)} candidates)"
+        )
+
     def _emit_states(
         self,
         *,
@@ -1486,6 +1614,7 @@ class SOSAdapter:
         deldat_by_name: dict[str, SosDeldatamangd],
         kodlista: SosKodlista | None,
         entity_registry: bool,
+        classification: str | None,
     ) -> Iterator[IRObject]:
         """Emit IRVariableState(+IRValueSet/IRValueCode) + IRVariableAlias for
         each (member, resolved-era windowed value-set) of a variable.
@@ -1641,6 +1770,18 @@ class SOSAdapter:
                 )
 
         # Flush the reconciled states (one per state_id, widest valid_to).
+        # For a RESOLVED variable, append one classification candidate per emitted
+        # state keyed on (variable_id, state.value_set_id) — the backfill's state
+        # key (value_set_id may be None for code-less ICD/ATC states; matched with
+        # `IS`). valid_to reconciliation doesn't touch value_set_id, so the buffer
+        # holds the final, deduped state set.
+        if classification is not None and states_by_id:
+            self._resolved_variables += 1
+            for state in states_by_id.values():
+                self.classification_candidates.append(
+                    (variable_id, state.value_set_id, classification)
+                )
+                self._tagged_states += 1
         yield from states_by_id.values()
 
     def _emit_entity_registry_state(

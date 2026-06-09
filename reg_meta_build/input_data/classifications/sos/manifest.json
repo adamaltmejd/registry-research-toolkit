@@ -25,28 +25,22 @@
       "fetched_at": "2026-06-09T15:09:13+00:00"
     },
     {
-      "key": "kva-kma",
-      "name": "KVÅ / KMÅ – medical care measures",
+      "key": "kva",
+      "name": "KVÅ – care measures (KMÅ medical + KKÅ surgical, merged)",
       "publisher": "Socialstyrelsen / eHälsomyndigheten",
-      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-medicinska-atgarder-kma.tsv?version=2&modificationDate=1779616677863&api=v2",
-      "raw_sha256": "0d78a1211a89f8addf7773382da878da7eaa5445ac33c037a151e815ee9e5726",
-      "raw_bytes": 937413,
-      "n_codes": 4935,
+      "source_urls": [
+        "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-medicinska-atgarder-kma.tsv?version=2&modificationDate=1779616677863&api=v2",
+        "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-kirurgiska-atgarder-kka.tsv?version=1&modificationDate=1779617727780&api=v2"
+      ],
+      "raw_sha256": {
+        "kva-medicinska-atgarder-kma": "0d78a1211a89f8addf7773382da878da7eaa5445ac33c037a151e815ee9e5726",
+        "kva-kirurgiska-atgarder-kka": "502c7f2c663fa9f76147d0415278d9c66f821042b70b47715c37cc7483b3bba7"
+      },
+      "raw_bytes": 1834940,
+      "n_codes": 13548,
       "n_retired": 0,
-      "out_file": "kva-kma.csv",
+      "out_file": "kva.csv",
       "fetched_at": "2026-06-09T15:09:13+00:00"
-    },
-    {
-      "key": "kva-kka",
-      "name": "KVÅ / KKÅ – surgical care measures",
-      "publisher": "Socialstyrelsen / eHälsomyndigheten",
-      "source_url": "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-kirurgiska-atgarder-kka.tsv?version=1&modificationDate=1779617727780&api=v2",
-      "raw_sha256": "502c7f2c663fa9f76147d0415278d9c66f821042b70b47715c37cc7483b3bba7",
-      "raw_bytes": 897527,
-      "n_codes": 8663,
-      "n_retired": 0,
-      "out_file": "kva-kka.csv",
-      "fetched_at": "2026-06-09T15:09:14+00:00"
     },
     {
       "key": "icf",

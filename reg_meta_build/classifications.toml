@@ -1117,23 +1117,24 @@ valid_from = 1997
 url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/icd-10-se.tsv?version=1&modificationDate=1779615619577&api=v2"
 valid_codes_file = "sos/icd-10-se.csv"
 
+# KVÅ is published upstream as two disjoint code spaces — KMÅ (medical) and
+# KKÅ (surgical) — but SOS registers reference it as ONE åtgärd field mixing
+# both. Merged into a single classification (kva.csv = KMÅ ∪ KKÅ). The ~50
+# 1–2-character codes that appear in both TSVs are organizational chapter/section
+# headers (e.g. KMÅ "A" = "Utredning, anatomiskt perspektiv"; KKÅ "A" =
+# "Operationer på nervsystemet") — cross-space collisions, not shared semantics.
+# These headers are never leaf åtgärd codes referenced by registers, so keeping
+# the KMÅ label on collisions is a cosmetic choice; all disjoint 5-char leaf
+# codes are preserved with correct labels. See
+# scripts/fetch_sos_classifications.py for the upstream fetch+merge.
 [[classification]]
-short_name = "KVA-KMA"
-name = "Klassifikation av vårdåtgärder — medicinska åtgärder (KMÅ)"
-name_en = "Swedish Classification of Health Interventions — medical procedures (KMÅ)"
+short_name = "KVA"
+name = "Klassifikation av vårdåtgärder (KVÅ)"
+name_en = "Swedish Classification of Health Interventions (KVÅ)"
 publisher = "Socialstyrelsen"
 provider = "sos"
 url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-medicinska-atgarder-kma.tsv?version=2&modificationDate=1779616677863&api=v2"
-valid_codes_file = "sos/kva-kma.csv"
-
-[[classification]]
-short_name = "KVA-KKA"
-name = "Klassifikation av vårdåtgärder — kirurgiska åtgärder (KKÅ)"
-name_en = "Swedish Classification of Health Interventions — surgical procedures (KKÅ)"
-publisher = "Socialstyrelsen"
-provider = "sos"
-url = "https://samarbetsyta.ehalsomyndigheten.se/download/attachments/451267009/kva-kirurgiska-atgarder-kka.tsv?version=1&modificationDate=1779617727780&api=v2"
-valid_codes_file = "sos/kva-kka.csv"
+valid_codes_file = "sos/kva.csv"
 
 [[classification]]
 short_name = "ICF"

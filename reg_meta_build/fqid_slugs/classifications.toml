@@ -64,11 +64,8 @@ slug = "ks87-p"
 [classification."KSI"]
 slug = "ksi"
 
-[classification."KVA-KKA"]
-slug = "kva-kka"
-
-[classification."KVA-KMA"]
-slug = "kva-kma"
+[classification."KVA"]
+slug = "kva"
 
 [classification."LKF1980"]
 slug = "lkf1980"

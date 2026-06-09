@@ -116,6 +116,11 @@ class Source:
     member_suffix: str | None = None  # zip member whose name ends with this
     # ehalsa_tsv
     attachment: str | None = None  # filename on the samarbetsyta page
+    # ehalsa_tsv_merge: several samarbetsyta TSVs concatenated into one code list,
+    # deduped on the code column (earlier attachment's label wins on a collision).
+    # KVÅ uses this — KMÅ + KKÅ are disjoint upstream but one åtgärd field
+    # downstream. Mutually exclusive with `attachment`.
+    merge_attachments: tuple[str, ...] = ()
     # sos_xls (legacy .xls on socialstyrelsen.se globalassets; needs xlrd)
     sheet: str | None = None
     code_col: int = 0
@@ -133,7 +138,9 @@ class Source:
 
 # Registry of SOS-referenced external classifications. KVÅ is split upstream
 # into KMÅ (medical) + KKÅ (surgical) disjoint code spaces; we fetch both and
-# leave the union/merge decision to the (later) integration step.
+# MERGE them into one `kva.csv` (deduped on cross-space collisions — the ~50
+# 1–2-char organizational headers that appear in both, never leaf åtgärd codes),
+# since SOS registers reference KVÅ as a single åtgärd field.
 SOURCES: tuple[Source, ...] = (
     Source(
         key="atc",
@@ -153,18 +160,17 @@ SOURCES: tuple[Source, ...] = (
         note="Multi-row per code (continuation rows for includes/excludes); grouped by Kod.",
     ),
     Source(
-        key="kva-kma",
-        name="KVÅ / KMÅ – medical care measures",
+        key="kva",
+        name="KVÅ – care measures (KMÅ medical + KKÅ surgical, merged)",
         publisher="Socialstyrelsen / eHälsomyndigheten",
-        kind="ehalsa_tsv",
-        attachment="kva-medicinska-atgarder-kma.tsv",
-    ),
-    Source(
-        key="kva-kka",
-        name="KVÅ / KKÅ – surgical care measures",
-        publisher="Socialstyrelsen / eHälsomyndigheten",
-        kind="ehalsa_tsv",
-        attachment="kva-kirurgiska-atgarder-kka.tsv",
+        kind="ehalsa_tsv_merge",
+        # KMÅ first so its label wins on the ~50 cross-space collision codes
+        # (1–2-char organizational headers like A, AA, … that carry DIFFERENT
+        # meanings in KMÅ vs KKÅ; never leaf åtgärd codes registers reference).
+        merge_attachments=(
+            "kva-medicinska-atgarder-kma.tsv",
+            "kva-kirurgiska-atgarder-kka.tsv",
+        ),
     ),
     Source(
         key="icf",
@@ -636,6 +642,41 @@ def fetch_source(src: Source, cache_dir: Path, out_dir: Path, *, force: bool) ->
         raw = download(url, cache_dir / src.attachment, force=force)
         codes = parse_tsv(raw)
         source_url = url
+    elif src.kind == "ehalsa_tsv_merge":
+        # Fetch each disjoint code space, then concatenate + dedup on the code
+        # column (first attachment's row wins on a collision — KMÅ before KKÅ).
+        # Provenance for both raw files survives in the manifest entry built
+        # below (source_urls list + per-file raw_sha256), keyed off the per-file
+        # `attachment` stem so a future re-run is auditable.
+        assert src.merge_attachments
+        merged: OrderedDict[str, Code] = OrderedDict()
+        raw_by_stem: dict[str, bytes] = {}
+        urls: list[str] = []
+        for attachment in src.merge_attachments:
+            url = confluence_attachment_url(EHALSA_PAGE_ID, attachment)
+            raw_one = download(url, cache_dir / attachment, force=force)
+            stem = Path(attachment).stem
+            raw_by_stem[stem] = raw_one
+            urls.append(url)
+            for code in parse_tsv(raw_one):
+                merged.setdefault(code.code, code)
+        codes = list(merged.values())
+        out_path = out_dir / f"{src.key}.csv"
+        write_csv(codes, out_path)
+        n_retired = sum(1 for c in codes if c.valid_to)
+        _log(f"  wrote   {out_path.name}: {len(codes):,} codes ({n_retired:,} retired)")
+        return {
+            "key": src.key,
+            "name": src.name,
+            "publisher": src.publisher,
+            "source_urls": urls,
+            "raw_sha256": {stem: _sha256(b) for stem, b in raw_by_stem.items()},
+            "raw_bytes": sum(len(b) for b in raw_by_stem.values()),
+            "n_codes": len(codes),
+            "n_retired": n_retired,
+            "out_file": out_path.name,
+            "fetched_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        }
     elif src.kind == "sos_xls":
         assert src.url
         raw = download(src.url, cache_dir / Path(src.url).name, force=force)
