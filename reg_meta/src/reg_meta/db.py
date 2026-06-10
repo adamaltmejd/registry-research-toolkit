@@ -255,7 +255,25 @@ def open_db(
             message=f"Database not found: {db_path}",
             remediation=remediation,
         )
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    # `immutable=1` (read-only path only): the published DB assets ship in WAL
+    # journal mode, and a plain `mode=ro` open of a WAL DB still tries to create
+    # the `-wal`/`-shm` sidecars — which crashes ("attempt to write a readonly
+    # database") whenever the catalog dir isn't writable (non-root container user,
+    # read-only volume mount, shared install; see #283). `immutable=1` promises
+    # SQLite the file never changes, so it skips sidecar creation and all locking.
+    # Corollary: a stray `-wal` next to the file (crashed reader, third-party
+    # tool) is IGNORED, not replayed — silent staleness, not an error. Can't
+    # happen via our writers, which always install checkpointed base-only files.
+    #
+    # Locking trade-off (the gotcha): disabling locking means a reader racing an
+    # in-place writer is unprotected. Acceptable here because nothing writes this
+    # inode in place — `reg-meta update` installs via tmp-file + atomic rename
+    # (a reader holding the old inode keeps reading a consistent, now-unlinked
+    # file), and the only other writer, maintainer-local `reg-meta-build build-db`,
+    # ALSO writes a `.db.tmp` and renames it over the default path
+    # (reg_meta_build.db.build_db: `tmp_path.rename(final_path)`). No code path
+    # mutates the live inode under a reader, so the immutability contract holds.
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
     conn.row_factory = sqlite3.Row
     if check_schema:
         try:

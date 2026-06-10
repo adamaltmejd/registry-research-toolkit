@@ -105,7 +105,14 @@ def open_doc_db(db_path: Path, *, check_schema: bool = True) -> sqlite3.Connecti
             message=f"Doc DB not found: {db_path}",
             remediation="Run `reg-meta update` to fetch the doc DB.",
         )
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    # `immutable=1` (read-only path only): unlike the main catalog DB, the doc DB
+    # is built in (and shipped as) DELETE journal mode, so the #283 sidecar crash
+    # cannot occur here — applied for symmetry with `db.open_db` and to
+    # future-proof against the builder ever switching journal modes. Same locking
+    # trade-off and same safety argument (see db.open_db): the doc DB is only ever
+    # replaced via `reg-meta update`'s atomic tmp-file + rename, never mutated in
+    # place under a reader.
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
     conn.row_factory = sqlite3.Row
     if check_schema:
         try:

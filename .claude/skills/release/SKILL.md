@@ -185,9 +185,18 @@ default now but is passed explicitly here so the release asset stays combined re
 of future default changes. (To rebuild the legacy SCB-only asset, use
 `--providers scb`.)
 
+Checkpoint the WAL into the base file and switch the journal mode to `DELETE` before
+compressing, so the shipped asset is a self-contained single file (no `-wal`/`-shm`
+sidecars). `open_db` opens read-only with `immutable=1` (#283), so a WAL asset would
+still open on a read-only dir — but a `DELETE`-mode asset is robust for anyone opening
+it directly, regardless of consumer code version. Run via `uv run python -c` (no sqlite3
+CLI is assumed to exist on the release host).
+
 ```bash
 uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ \
   --providers scb,sos
+uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" \
+  ~/.local/share/reg_meta/reg_meta.db
 zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
 rm reg_meta.db.zst
@@ -221,8 +230,15 @@ workaround, `--MarkdownRenderer_keep_pageheader_in_output` footgun) lives in the
 docstring at the top of `scripts/parse_lisa_docs.py`. Run that step first, then continue
 here.
 
+Run the same checkpoint as 8a before compressing. Today this is a no-op guard —
+`build-docs` already produces a `DELETE`-mode file (only the main catalog build sets
+WAL) — but it keeps the shipped-asset invariant ("self-contained single file, no
+sidecars") independent of the builder's journal-mode choices:
+
 ```bash
 uv run reg-meta-build build-docs
+uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" \
+  ~/.local/share/reg_meta/reg_meta_docs.db
 zstd -3 -T0 ~/.local/share/reg_meta/reg_meta_docs.db -o reg_meta_docs.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
 rm reg_meta_docs.db.zst

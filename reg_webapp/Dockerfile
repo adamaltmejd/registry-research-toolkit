@@ -110,22 +110,10 @@ RUN /app/.venv/bin/reg-meta update --db "$REG_META_DB" --tag "$REG_META_TAG" --y
     && test -f "$REG_META_DB/reg_meta.db" \
     && test -f "$REG_META_DB/reg_meta_docs.db"
 
-# The published DBs ship in WAL mode. reg_meta's `open_db` opens `?mode=ro`
-# (no `immutable=1`), and a read-only open of a WAL-mode DB still needs to create
-# `-shm`/`-wal` sidecars — which fails as a non-root user against a root-owned,
-# read-only catalog dir ("attempt to write a readonly database"). Checkpoint the
-# WAL into the main DB and switch journal mode to DELETE so the read-only open is
-# fully self-contained (no sidecar writes). Idempotent + deterministic; touches
-# only the baked image copy, never reg_meta's shipped artifact. Also drop any
-# leftover decompression `.tmp-*` sidecars.
-RUN for db in "$REG_META_DB/reg_meta.db" "$REG_META_DB/reg_meta_docs.db"; do \
-        python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); \
-c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); \
-c.commit(); c.close()" "$db"; \
-    done \
-    && rm -f "$REG_META_DB"/*.tmp-shm "$REG_META_DB"/*.tmp-wal \
-    && find "$REG_META_DB" -type f -name '*-wal' -delete \
-    && find "$REG_META_DB" -type f -name '*-shm' -delete
+# Read-only confinement of the baked WAL-mode DBs now relies on `open_db`'s
+# `immutable=1` (#283) — the deploy-side WAL checkpoint + sidecar cleanup that
+# used to live here is gone (this image installs reg_meta from workspace source
+# above, so it carries the fix).
 
 # #224 provenance-confinement assertion #3 (deployment-side). Assertions #1
 # (bundle amalgamates no provenance-importing module) and #2 (no FastAPI route
