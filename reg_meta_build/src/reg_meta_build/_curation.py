@@ -12,14 +12,19 @@ silently stops matching its triage component.
 
 from __future__ import annotations
 
+import functools
 import unicodedata
 
 
+@functools.cache
 def fold_column(s: str) -> str:
     """Canonical column-identity key: NFKD-decompose, strip non-ASCII, lowercase
     (`Kön` → `kon`, `PersonNr` → `personnr`). This is the SCB rule-2 connectivity
     key — case/diacritic column twins fold to one union-find node — and therefore
-    the form every curated column key is normalized to at load time."""
+    the form every curated column key is normalized to at load time. Cached: the
+    coalescer folds per row-column over ~515K instance rows, but the domain is
+    the corpus's distinct header spellings (tens of thousands), so a process-
+    lifetime cache is small and saves repeated NFKD passes."""
     return (
         unicodedata.normalize("NFKD", s)
         .encode("ascii", "ignore")

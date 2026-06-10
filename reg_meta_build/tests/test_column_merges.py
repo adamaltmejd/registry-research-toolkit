@@ -21,23 +21,22 @@ monkeypatch `repo_column_merges_path` to inject their own curation.
 
 from __future__ import annotations
 
-import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import (
-    PIPE,
-    REGISTERINFORMATION_ROWS,
-    VARDEMANGDER_ROWS,
-    _var_row,
-    write_scb_input,
+from _csv_fixtures import _var_row
+from _shared_fixtures import (
+    CODING_A,
+    CODING_B,
+    CODING_C,
+    build_with_rows,
+    vm_rows,
 )
-from _shared_fixtures import _write_fixture_slug_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.column_merges import load_column_merges
-from reg_meta_build.db import build_db
 
 if TYPE_CHECKING:
+    import sqlite3
     from pathlib import Path
 
 
@@ -194,35 +193,6 @@ class TestColumnMergeKeyIsPerVar:
 
 # ── build-driven end-to-end ─────────────────────────────────────────────────
 
-# Disjoint codings so each cvid mints its own value set (and state group).
-_CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
-_CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
-_CODING_C = [("31", "Gamma ett"), ("32", "Gamma två"), ("33", "Gamma tre")]
-
-
-def _vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
-    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
-
-
-def _build(
-    tmp_path: Path, ri_extra: list[str], vm_extra: list[str]
-) -> sqlite3.Connection:
-    input_dir = tmp_path / "input"
-    db_dir = tmp_path / "db"
-    slug_dir = tmp_path / "slugs"
-    for d in (input_dir, db_dir, slug_dir):
-        d.mkdir()
-    write_scb_input(
-        input_dir,
-        registerinformation_rows=REGISTERINFORMATION_ROWS + ri_extra,
-        vardemangder_rows=VARDEMANGDER_ROWS + vm_extra,
-    )
-    _write_fixture_slug_dir(slug_dir)
-    build_db(
-        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, slug_dir=slug_dir
-    )
-    return sqlite3.connect(db_dir / "reg_meta.db")
-
 
 def _rename_container(
     *, var_id: int, old_col: str, new_col: str, other_col: str = "Kommun"
@@ -262,9 +232,9 @@ def _rename_container(
         ),
     ]
     vm = (
-        _vm_rows(5001, "AlphaA", _CODING_A)
-        + _vm_rows(5002, "BetaB", _CODING_B)
-        + _vm_rows(5003, "GammaC", _CODING_C)
+        vm_rows(5001, "AlphaA", CODING_A)
+        + vm_rows(5002, "BetaB", CODING_B)
+        + vm_rows(5003, "GammaC", CODING_C)
     )
     return ri, vm
 
@@ -303,7 +273,7 @@ class TestAutoCaseFoldBuild:
         ri, vm = _rename_container(
             var_id=500, old_col="Hemkommun", new_col="HEMKOMMUN", other_col="Skolkommun"
         )
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vids = _sibling_vids(conn, 500)
             n_vars = _n_vars(conn, 500)
@@ -318,7 +288,7 @@ class TestAutoCaseFoldBuild:
         ri, vm = _rename_container(
             var_id=505, old_col="Kon", new_col="Kön", other_col="Alder"
         )
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vids = _sibling_vids(conn, 505)
             n_vars = _n_vars(conn, 505)
@@ -353,10 +323,10 @@ class TestAutoCaseFoldBuild:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(5201, "Tre grupper", _CODING_A) + _vm_rows(
-            5202, "Två grupper", _CODING_B
+        vm = vm_rows(5201, "Tre grupper", CODING_A) + vm_rows(
+            5202, "Två grupper", CODING_B
         )
-        conn = _build(tmp_path, ri, vm)  # must not raise unresolved-codelivery
+        conn = build_with_rows(tmp_path, ri, vm)  # must not raise unresolved-codelivery
         try:
             rows = conn.execute(
                 "SELECT vs.delivery_column_name, vs.variable_id, vs.value_set_id, "
@@ -393,7 +363,7 @@ class TestColumnMergeBuild:
             monkeypatch,
             '[[merge]]\nregister_id = 1\nvar_id = 510\ncolumns = ["PNR", "PersonNr"]\n',
         )
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vids = _sibling_vids(conn, 510)
             n_vars = _n_vars(conn, 510)
@@ -408,7 +378,7 @@ class TestColumnMergeBuild:
         # its own component, and the split container shards it into a third
         # sibling — the #196 fragmentation this surface exists to fix.
         ri, vm = _rename_container(var_id=510, old_col="PNR", new_col="PersonNr")
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vids = _sibling_vids(conn, 510)
             n_vars = _n_vars(conn, 510)
@@ -417,7 +387,9 @@ class TestColumnMergeBuild:
         assert vids["PNR"] != vids["PersonNr"]
         assert n_vars == 3
 
-    def test_stale_merge_column_fails_build(self, tmp_path: Path, monkeypatch) -> None:
+    def test_stale_merge_column_failsbuild_with_rows(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
         ri, vm = _rename_container(var_id=510, old_col="PNR", new_col="PersonNr")
         self._patch_merges(
             tmp_path,
@@ -425,7 +397,7 @@ class TestColumnMergeBuild:
             '[[merge]]\nregister_id = 1\nvar_id = 510\ncolumns = ["PNR", "Bogus"]\n',
         )
         with pytest.raises(RegMetaError) as exc:
-            _build(tmp_path, ri, vm)
+            build_with_rows(tmp_path, ri, vm)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "column_merge_unknown_column"
         assert "bogus" in exc.value.message  # folded form
@@ -443,7 +415,7 @@ class TestColumnMergeBuild:
             monkeypatch,
             '[[merge]]\nregister_id = 195\nvar_id = 510\ncolumns = ["X", "Y"]\n',
         )
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             n_vars = _n_vars(conn, 510)
         finally:

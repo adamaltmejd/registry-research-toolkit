@@ -2284,6 +2284,8 @@ def _coalesce_variable_states(
     }
     # Folded delivery columns actually seen per curated key, for the build-time
     # stale-entry check (only curated keys are tracked — the dict stays tiny).
+    # Populated in the pre-pass below, the one place the row sweep records
+    # observations; `_node_col` stays a pure lookup.
     merge_observed: dict[tuple[int, int], set[str]] = {}
 
     # Co-delivered case-twin guard: per (register, variant, var, folded-col),
@@ -2295,7 +2297,13 @@ def _coalesce_variable_states(
         col = row["delivery_column_name"]
         if not col:
             continue
+        # A column that folds to "" (no ASCII content) keeps its raw spelling —
+        # "" is the no-alias stub component and must not absorb a real column.
         fcol = _ascii_fold_lower(col) or col
+        if (row["register_id"], row["var_id"]) in column_merges:
+            merge_observed.setdefault((row["register_id"], row["var_id"]), set()).add(
+                fcol
+            )
         spells = spell_eds.setdefault(
             (row["register_id"], row["register_variant_id"], row["var_id"], fcol), {}
         )
@@ -2311,14 +2319,10 @@ def _coalesce_variable_states(
             guarded.add(skey)
 
     def _node_col(register_id: int, variant_id: int, var_id: int, col: str) -> str:
-        # A column that folds to "" (no ASCII content) keeps its raw spelling —
-        # "" is the no-alias stub component and must not absorb a real column.
         fcol = _ascii_fold_lower(col) or col
-        if (register_id, var_id) in column_merges:
-            merge_observed.setdefault((register_id, var_id), set()).add(fcol)
-            canon = merge_canon.get((register_id, var_id, fcol))
-            if canon is not None:
-                return canon  # curated fiat outranks the co-delivery guard
+        canon = merge_canon.get((register_id, var_id, fcol))
+        if canon is not None:
+            return canon  # curated fiat outranks the co-delivery guard
         if (register_id, variant_id, var_id, fcol) in guarded:
             return col
         return fcol
