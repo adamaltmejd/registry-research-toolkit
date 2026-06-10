@@ -413,6 +413,100 @@ describe("stable client-side ids (issue #200)", () => {
     expect(projectStore.bindingId(0, 0)).not.toBe(projectStore.bindingId(0, 1));
   });
 
+  describe("malformed drafts do not corrupt the mirror or the store state (review #280)", () => {
+    it("opens a draft with a null sources ELEMENT cleanly (no throw, consistent mirror)", async () => {
+      // A null/undefined source element must not throw in buildIds — and because the
+      // replacement is atomic, the open must land clean (no stale validatedClean from
+      // a previous document, no unhandled rejection, openError null on success).
+      const raw = {
+        schema_version: "2.0.0",
+        steward: "global",
+        reg_meta_version: "reg_meta/v1.0.0",
+        name: "has-null-source",
+        sources: [
+          {
+            name: "ok",
+            register_variant: "scb/lisa/v1",
+            period: 2018,
+            bindings: [],
+          },
+          null,
+          {
+            name: "ok2",
+            register_variant: "scb/lisa/v1",
+            period: 2019,
+            bindings: [],
+          },
+        ],
+      };
+      // Seed a DIFFERENT prior document first so a mid-update abort would surface as
+      // stale state belonging to it.
+      projectStore.newProject(SEED);
+      projectStore.updateField("name", "prior");
+
+      await expect(
+        projectStore.openFromFile(jsonFile(JSON.stringify(raw))),
+      ).resolves.toBeUndefined();
+
+      // Clean open: the malformed-but-loadable draft is in, error channels are clear.
+      expect(projectStore.openError).toBeNull();
+      expect(projectStore.requestError).toBeNull();
+      expect(projectStore.draft?.name).toBe("has-null-source");
+      // A fresh open is not pre-validated → downloads gated closed (no stale state).
+      expect(projectStore.validation).toBeNull();
+      expect(projectStore.validatedClean).toBe(false);
+      // The mirror mirrors the 3-element sources array (the null slot gets its own id
+      // with an empty bindings list — no throw, no divergence).
+      expect(projectStore.sourceId(0)).toBeTruthy();
+      expect(projectStore.sourceId(1)).toBeTruthy();
+      expect(projectStore.sourceId(2)).toBeTruthy();
+      expect(projectStore.sourceId(0)).not.toBe(projectStore.sourceId(1));
+    });
+
+    it("addSource on a malformed non-array `sources` coerces to [] (no char-spread, mirror stays consistent)", async () => {
+      // The supported malformed fixture: `sources: "not-an-array"`. addSource must
+      // NOT spread the string into 13 single-char "sources"; it coerces to [] then
+      // appends one — and the store mirror appends exactly one id to match.
+      const raw = {
+        schema_version: "2.0.0",
+        steward: "global",
+        reg_meta_version: "reg_meta/v1.0.0",
+        name: "malformed-sources",
+        sources: "not-an-array",
+      };
+      await projectStore.openFromFile(jsonFile(JSON.stringify(raw)));
+      // The malformed value is loaded verbatim (the SPA is not the validator).
+      expect(projectStore.draft?.sources as unknown).toBe("not-an-array");
+
+      projectStore.addSource();
+      // Coerced: exactly ONE well-formed source now (not 14 char-sources).
+      const sources = projectStore.draft?.sources as unknown;
+      expect(Array.isArray(sources)).toBe(true);
+      expect((sources as unknown[]).length).toBe(1);
+      // The mirror matches: one source id, distinct from the index fallback.
+      expect(projectStore.sourceId(0)).toMatch(/^c\d+$/);
+      expect(projectStore.sourceId(1)).toBe("i1"); // out of range → index fallback
+    });
+
+    it("updateField('sources', …) rebuilds the mirror so it can't desync (review #280)", () => {
+      projectStore.newProject(SEED);
+      projectStore.addSource();
+      projectStore.addSource();
+      const beforeId0 = projectStore.sourceId(0);
+      // A wholesale `sources` replacement via updateField must rebuild the mirror to
+      // the NEW array's shape (here: shrink 2 → 1), not keep the stale 2-entry mirror.
+      projectStore.updateField("sources", [
+        { name: "only", register_variant: "", period: "", bindings: [] },
+      ]);
+      expect((projectStore.draft?.sources as unknown[]).length).toBe(1);
+      expect(projectStore.sourceId(0)).toBeTruthy();
+      // The rebuilt mirror has exactly one entry → index 1 falls back to the index.
+      expect(projectStore.sourceId(1)).toBe("i1");
+      // It's a genuine rebuild (fresh id), not the pre-replacement id.
+      expect(projectStore.sourceId(0)).not.toBe(beforeId0);
+    });
+  });
+
   describe("ids NEVER leak into the serialized draft / POST bodies (the closed-object constraint)", () => {
     // Source/Binding are extra=forbid in reg_schema — an injected id would both trip
     // `unexpected_field` AND end up in the downloaded project_data.json. The ids live

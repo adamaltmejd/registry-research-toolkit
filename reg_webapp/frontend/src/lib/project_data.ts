@@ -135,6 +135,17 @@ export function updateField<K extends keyof ProjectData>(
 
 // ── Immutable source edits ──────────────────────────────────────────────────
 
+/** Coerce a draft's `sources` to an array. An opened spec may carry a malformed
+ * non-array `sources` (kept verbatim for serialize/validate); these mutators match
+ * the editors' coercion doctrine (SourceEditor/ProjectEditor render a non-array as
+ * []) so a structural edit on such a draft starts from [] rather than spreading a
+ * string into char "sources" or throwing on `.map`/`.filter`. The malformed value is
+ * thus REPLACED by a well-formed array on the first structural edit (intentional —
+ * the user is fixing the draft via the editor). */
+function sourcesArray(draft: ProjectData): Source[] {
+  return Array.isArray(draft.sources) ? draft.sources : [];
+}
+
 /** Append an empty source skeleton. */
 export function addSource(draft: ProjectData): ProjectData {
   const source: Source = {
@@ -143,12 +154,15 @@ export function addSource(draft: ProjectData): ProjectData {
     period: "",
     bindings: [],
   };
-  return { ...draft, sources: [...draft.sources, source] };
+  return { ...draft, sources: [...sourcesArray(draft), source] };
 }
 
 /** Remove the source at `index` (no-op if out of range). */
 export function removeSource(draft: ProjectData, index: number): ProjectData {
-  return { ...draft, sources: draft.sources.filter((_, i) => i !== index) };
+  return {
+    ...draft,
+    sources: sourcesArray(draft).filter((_, i) => i !== index),
+  };
 }
 
 /** Patch the source at `index` with `patch` (shallow merge — preserves the
@@ -160,7 +174,7 @@ export function updateSource(
 ): ProjectData {
   return {
     ...draft,
-    sources: draft.sources.map((s, i) =>
+    sources: sourcesArray(draft).map((s, i) =>
       i === index ? { ...s, ...patch } : s,
     ),
   };
@@ -204,7 +218,9 @@ export function updateBinding(
   );
 }
 
-/** Internal: apply a transform to one source's `bindings` immutably. */
+/** Internal: apply a transform to one source's `bindings` immutably. Coerces a
+ * non-array `sources` / `bindings` to [] (the editors' doctrine) so a structural
+ * binding edit never spreads a string or throws on `.map`. */
 function updateSourceBindings(
   draft: ProjectData,
   sourceIndex: number,
@@ -212,8 +228,10 @@ function updateSourceBindings(
 ): ProjectData {
   return {
     ...draft,
-    sources: draft.sources.map((s, i) =>
-      i === sourceIndex ? { ...s, bindings: fn(s.bindings) } : s,
+    sources: sourcesArray(draft).map((s, i) =>
+      i === sourceIndex
+        ? { ...s, bindings: fn(Array.isArray(s.bindings) ? s.bindings : []) }
+        : s,
     ),
   };
 }

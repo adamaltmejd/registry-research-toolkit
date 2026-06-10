@@ -210,14 +210,18 @@ function nextId(): string {
 }
 
 /** Build a fresh id tree for a wholesale-replaced draft. A malformed (non-array)
- * `sources` / `bindings` yields an empty mirror — the editors coerce those to []
- * for rendering, so no keyed instance is created against them. */
+ * `sources` / `bindings` — including a `null`/`undefined` source element — yields an
+ * empty mirror for that slot, matching the editors' coercion (they render such slots
+ * as []), so no keyed instance is created against them. NEVER throws: it runs at a
+ * draft-replacement boundary where a throw would abort the update mid-assignment. */
 function buildIds(next: ProjectData | null): SourceIds[] {
   const sources =
     next != null && Array.isArray(next.sources) ? next.sources : [];
   return sources.map((s) => ({
     id: nextId(),
-    bindings: Array.isArray(s.bindings) ? s.bindings.map(() => nextId()) : [],
+    // `s?.bindings`: a null/undefined source element must not throw — yield no
+    // binding ids for it (the malformed-yields-empty-mirror contract).
+    bindings: Array.isArray(s?.bindings) ? s.bindings.map(() => nextId()) : [],
   }));
 }
 
@@ -308,8 +312,11 @@ export const projectStore = {
    * until edited. */
   newProject(seed: ProjectSeed): void {
     const next = newProjectData(seed);
+    // Atomic replacement (compute the mirror before mutating store state) — the
+    // skeleton is always well-formed here, but this matches openFromFile/restore.
+    const ids = buildIds(next);
     draft = next;
-    sourceIds = buildIds(next);
+    sourceIds = ids;
     lastDownloaded = serializeProjectData(next);
     validation = null;
     openError = null;
@@ -352,9 +359,16 @@ export const projectStore = {
     // serializer (not the file's raw text): that way an unedited open compares
     // equal to itself even when the file's formatting differs from our
     // pretty-print, so a freshly-opened draft is not spuriously dirty.
-    draft = obj as ProjectData;
-    sourceIds = buildIds(obj as ProjectData);
-    lastDownloaded = serializeProjectData(obj as ProjectData);
+    // Compute the id mirror BEFORE mutating any store state so the replacement is
+    // atomic: a throw here would otherwise leave a malformed draft loaded while
+    // lastDownloaded/validation/openError still belong to the previous document
+    // (stale validatedClean keeps the order/bundle downloads enabled). buildIds is
+    // guarded never to throw, but the atomic order is the durable invariant.
+    const opened = obj as ProjectData;
+    const ids = buildIds(opened);
+    draft = opened;
+    sourceIds = ids;
+    lastDownloaded = serializeProjectData(opened);
     validation = null;
     openError = null;
     requestError = null;
@@ -455,13 +469,25 @@ export const projectStore = {
 
   // ── Immutable mutators (replace the draft so `dirty` recomputes) ──────────
   // Guarded against a null draft so a stray call on the home screen is a no-op.
+  // STRUCTURAL edits to `sources`/`bindings` MUST go through the mirror-aware
+  // mutators below (addSource/removeSource/addBinding/removeBinding) — they patch
+  // the stable-id mirror (`sourceIds`) in lockstep. A structural edit that bypasses
+  // them desyncs the mirror and resurrects the wrong-instance bug class issue #200
+  // fixes. `updateField` therefore rebuilds the mirror when handed `sources`.
 
   updateField<K extends keyof ProjectData>(
     key: K,
     value: ProjectData[K],
   ): void {
     if (draft != null) {
-      setDraft(updateField(draft, key, value));
+      const next = updateField(draft, key, value);
+      setDraft(next);
+      // `K extends keyof ProjectData` admits `"sources"` (and any string via the
+      // open index signature). A wholesale `sources` replacement must rebuild the
+      // mirror or it desyncs from the new array — keep them consistent.
+      if (key === "sources") {
+        sourceIds = buildIds(next);
+      }
     }
   },
   addSource(): void {
@@ -530,8 +556,11 @@ export function initPersistence(): Promise<void> {
   // restore onto an empty store so we never clobber an in-progress new/open.
   const loaded = persistence.load().then((restored) => {
     if (restored != null && draft == null) {
+      // Atomic replacement: compute the mirror before assigning `draft` so a throw
+      // can't leave a restored draft with a stale/empty mirror inside this `.then()`.
+      const ids = buildIds(restored);
       draft = restored;
-      sourceIds = buildIds(restored);
+      sourceIds = ids;
       // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
       // downloaded to the durable project_data.json this session, so it must read
       // as DIRTY (unsaved-changes warning). lastDownloaded stays null →
