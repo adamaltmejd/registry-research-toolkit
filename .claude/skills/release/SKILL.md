@@ -15,9 +15,9 @@ Create a release with arguments: `$ARGUMENTS`
 
 | Package | pyproject.toml | `__init__.py` | Publish workflow |
 |---|---|---|---|
-| reg_meta | `reg_meta/pyproject.toml` | `reg_meta/src/reg_meta/__init__.py` | `publish_reg_meta.yml` (needs environment approval) |
-| reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | `publish_reg_meta_build.yml` (needs environment approval) |
-| mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | `publish_mock_data_wizard.yml` (needs environment approval) |
+| reg_meta | `reg_meta/pyproject.toml` | `reg_meta/src/reg_meta/__init__.py` | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
+| reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | `publish_reg_meta_build.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
+| mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | `publish_mock_data_wizard.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
 
 reg_meta_build is the build pipeline that produces `reg_meta`'s SQLite
 assets; it has its own PyPI release on the `reg_meta_build/v*` tag but
@@ -123,9 +123,11 @@ Then push to main.
 The publish workflow fires on `release: published`, so the release must be
 created as a **draft** until any required assets (reg_meta only) are uploaded.
 A `release: published` event with missing assets races the workflow's smoke
-step against the upload — if the maintainer approves the environment gate
-before assets land, the smoke step walks back to a prior release and may pick
-up an incompatible asset, failing the publish.
+step against the upload — with no environment-approval pause (the review
+gate was removed 2026-06-10), the smoke step runs immediately on publish,
+walks back to a prior release, and may pick up an incompatible asset,
+failing the publish. The draft step is therefore the ONLY thing standing
+between a missing asset and a failed publish.
 
 ```bash
 gh release create <package>/vX.Y.Z --draft --title "<package> vX.Y.Z" --notes "$(cat <<'EOF'
@@ -233,8 +235,11 @@ gh release edit <package>/vX.Y.Z --draft=false
 
 - If the package has a publish workflow (see table above):
   - Find the triggered run: `gh run list --workflow=<workflow> --limit 1 --json databaseId,url`
-  - Tell the user: **"Publish workflow started — approve the deployment at `<run URL>`"**
+  - The run proceeds unattended (the `pypi` environment review gate was
+    removed 2026-06-10 — no maintainer approval step). Share the run URL
+    with the user for visibility, then watch it.
   - Watch the run to completion: `gh run watch <run-id> --exit-status`
+    (run it in the background — CI + smoke can take several minutes)
   - Verify the new version is on PyPI: `curl -s https://pypi.org/pypi/<package>/json | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['version'])"`
 - If the package has no publish workflow, report the release is done after the tag is created.
 
