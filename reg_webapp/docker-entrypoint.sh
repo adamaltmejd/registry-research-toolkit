@@ -15,8 +15,14 @@ set -eu
 
 HOST="${REG_WEBAPP_HOST:-0.0.0.0}"
 PORT="${REG_WEBAPP_PORT:-8000}"
-# Probe over loopback regardless of the bind host (0.0.0.0 isn't a connect addr).
-SMOKE_URL="http://127.0.0.1:${PORT}"
+# Probe the actual bind host so a deployment that binds a SPECIFIC interface
+# (not loopback) is still reachable by the gate. A wildcard bind (0.0.0.0 / ::)
+# isn't a connectable address, so fall back to loopback only in that case.
+case "$HOST" in
+    0.0.0.0 | ::) PROBE_HOST="127.0.0.1" ;;
+    *) PROBE_HOST="$HOST" ;;
+esac
+SMOKE_URL="http://${PROBE_HOST}:${PORT}"
 
 # Start uvicorn in the background so the smoke gate can probe the real serving
 # path (lifespan, baked-DB open, middleware) — not just an in-process app object.

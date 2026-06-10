@@ -36,14 +36,29 @@ class SmokeError(Exception):
 
 
 def _get(url: str, timeout: float) -> tuple[int, Any]:
-    """GET ``url`` and return ``(status, parsed_json)``. Raises on transport error.
+    """GET ``url`` and return ``(status, parsed_json_or_None)``.
 
-    The body is ``json.loads``'d (genuinely ``Any``); callers narrow it with
-    ``isinstance`` before use.
+    Returns a non-2xx status WITHOUT raising: ``urlopen`` raises ``HTTPError``
+    (a ``URLError`` subclass) for any non-2xx, so we catch it FIRST and surface
+    its ``.code`` as the status. This is what lets the readiness wait stop
+    retrying a reachable-but-failing server (a boot-time 500) and the golden
+    checks report the real status. Genuine transport failures (connection
+    refused, DNS, timeout) still raise ``URLError`` and propagate to the caller.
+
+    The body is ``json.loads``'d when present (genuinely ``Any``); callers narrow
+    it with ``isinstance`` before use. An error body that isn't JSON yields
+    ``None`` (the status already tells the checks it failed).
     """
     req = urllib.request.Request(url, method="GET")  # noqa: S310 (loopback only)
-    with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310
-        return resp.status, json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        try:
+            body = json.loads(exc.read().decode("utf-8"))
+        except (ValueError, OSError):
+            body = None
+        return exc.code, body
 
 
 def _server_alive(server_pid: int | None) -> bool:

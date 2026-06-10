@@ -76,23 +76,37 @@ COPY reg_schema/ ./reg_schema/
 COPY mock_data_wizard/ ./mock_data_wizard/
 COPY reg_webapp/backend/ ./reg_webapp/backend/
 
-# Install ONLY the reg-webapp package + its runtime deps (reg-meta / reg-schema /
-# reg-monabundle), no dev deps. --frozen asserts the lockfile is up to date (CI
-# parity). This pulls the `reg-meta` console script into /app/.venv/bin.
+# Install ONLY the reg-webapp package + its runtime dep closure (reg-meta /
+# reg-schema / reg-monabundle), no dev deps. --frozen asserts the lockfile is up
+# to date (CI parity). --package scopes the sync so reg-meta-build /
+# mock-data-wizard (other workspace members, not reg-webapp deps) are NOT
+# installed. This pulls the `reg-meta` console script into /app/.venv/bin.
 #
-# uv installs the workspace members as EDITABLE (.pth links into /app/<member>/src)
-# regardless of --no-editable for a lockfile-driven workspace sync, so the runtime
-# stage copies those member src trees alongside the venv (below) — the venv is not
-# self-contained on its own.
+# uv installs the workspace members as EDITABLE (.pth links into /app/<member>/src),
+# so the runtime stage copies those member src trees alongside the venv (below) —
+# the venv is not self-contained on its own.
 RUN uv sync --frozen --no-dev --package reg-webapp
 
 # Bake the matching reg_meta release DB pair (reg_meta.db + reg_meta_docs.db)
-# into an image layer. reg-meta update resolves the newest `reg_meta/v*` release
+# into an image layer. `reg-meta update` resolves a `reg_meta/v*` release
 # carrying reg_meta.db.zst / reg_meta_docs.db.zst and installs into --db <dir>.
 # The DB schema matches the installed reg_meta code (reg_meta/v0.9.0 → SCHEMA
-# 5.2.0); rebuilding the image after a reg_meta bump re-bakes the matching pair.
+# 5.2.0); rebuilding after a reg_meta bump re-bakes the matching pair.
+#
+# Invoke the venv's reg-meta binary by ABSOLUTE PATH (NOT `uv run`, which would
+# re-sync: re-resolving the lockfile drops the global exclude-newer 7-day
+# release-age guard and reinstalls the dev group + all workspace members into the
+# venv that stage 3 ships to production). The frozen sync above already installed
+# reg-meta into /app/.venv; this RUN must not touch the environment.
+#
+# REG_META_TAG is a cache-bust knob: a DATA-only reg_meta release reuses the same
+# code/lockfile, so the bake layer's cache key would otherwise never change and a
+# cached rebuild (GHA cache-from / local cache) would silently keep a stale DB.
+# Default `latest` resolves whatever release is newest at build time; CI can pass
+# `--build-arg REG_META_TAG=reg_meta/vX.Y.Z` to pin + force a re-bake.
+ARG REG_META_TAG=latest
 ENV REG_META_DB=/opt/reg_meta
-RUN uv run reg-meta update --db "$REG_META_DB" --yes \
+RUN /app/.venv/bin/reg-meta update --db "$REG_META_DB" --tag "$REG_META_TAG" --yes \
     && test -f "$REG_META_DB/reg_meta.db" \
     && test -f "$REG_META_DB/reg_meta_docs.db"
 
@@ -141,13 +155,12 @@ RUN groupadd --system app && useradd --system --gid app --home /app app
 WORKDIR /app
 
 # The venv + the editable member src trees its .pth files point at (uv installs
-# workspace members editable; the .pth entries reference /app/<member>/src). Only
-# the members reg-webapp actually imports are copied — reg_meta, reg_schema,
-# reg_monabundle, and reg_webapp itself; reg_meta_build / mock_data_wizard .pth
-# entries dangle harmlessly (their dirs are never on an import path). Plus the
-# baked DB pair, the SPA bundle, and the steward configs. UV_LINK_MODE=copy made
-# the venv relocatable; both stages are python3.13 slim-bookworm so the venv's
-# interpreter path matches.
+# workspace members editable; the .pth entries reference /app/<member>/src). The
+# frozen --package sync installed exactly reg-webapp's dep closure — reg_meta,
+# reg_schema, reg_monabundle, and reg_webapp itself — so all four src trees are
+# copied and no .pth entry dangles. Plus the baked DB pair, the SPA bundle, and
+# the steward configs. UV_LINK_MODE=copy made the venv relocatable; both stages
+# are python3.13 slim-bookworm so the venv's interpreter path matches.
 COPY --from=backend /app/.venv /app/.venv
 COPY --from=backend /app/reg_meta/src /app/reg_meta/src
 COPY --from=backend /app/reg_schema/src /app/reg_schema/src
