@@ -245,7 +245,9 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ksjusni", 100), ("NG1", 100)])
-        fold = {(1, 920): [frozenset({"Ksjusni", "NG1"})]}
+        # Maps passed directly to _triage_groups follow the loader contract:
+        # case-folded columns (the gate compares on the folded form).
+        fold = {(1, 920): [frozenset({"ksjusni", "ng1"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert res.assignments[gk["Ksjusni"]] == res.assignments[gk["NG1"]]
         n_vars = conn.execute(
@@ -289,12 +291,12 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, _ = _container([("Ksjusni", 100), ("NG1", 100)])
-        fold = {(1, 920): [frozenset({"Ksjusni", "Bogus"})]}
+        fold = {(1, 920): [frozenset({"ksjusni", "bogus"})]}
         with pytest.raises(RegMetaError) as exc:
             _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "fold_override_unknown_column"
-        assert "Bogus" in exc.value.message
+        assert "bogus" in exc.value.message
         conn.close()
 
     def test_stale_override_for_non_container_fails_build(self) -> None:
@@ -304,7 +306,9 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, _ = _container([("Ksjusni", 100), ("NG1", 200)])
-        fold = {(1, 920): [frozenset({"Ksjusni", "NG1"})]}
+        # Maps passed directly to _triage_groups follow the loader contract:
+        # case-folded columns (the gate compares on the folded form).
+        fold = {(1, 920): [frozenset({"ksjusni", "ng1"})]}
         with pytest.raises(RegMetaError) as exc:
             _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert exc.value.exit_code == EXIT_CONFIG
@@ -321,7 +325,7 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ksjusni", 100), ("NG1", 100)])
-        fold = {(195, 4027): [frozenset({"X", "Y"})]}  # register 195 not built
+        fold = {(195, 4027): [frozenset({"x", "y"})]}  # register 195 not built
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert res.assignments[gk["Ksjusni"]] != res.assignments[gk["NG1"]]  # split
         conn.close()
@@ -334,7 +338,7 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ssyk3", 100), ("Ssyk5", 100)])
-        fold = {(1, 920): [frozenset({"Ssyk3", "Ssyk5"})]}
+        fold = {(1, 920): [frozenset({"ssyk3", "ssyk5"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)  # must not raise
         assert res.assignments[gk["Ssyk3"]] == res.assignments[gk["Ssyk5"]]
         assert res.stats["folds"] == 1
@@ -352,7 +356,7 @@ class TestFoldOverrideTriage:
             [("Ksjusni", 100), ("NG1", 100), ("bransch", 100), ("sni2", 100)]
         )
         fold = {
-            (1, 920): [frozenset({"Ksjusni", "NG1"}), frozenset({"bransch", "sni2"})]
+            (1, 920): [frozenset({"ksjusni", "ng1"}), frozenset({"bransch", "sni2"})]
         }
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)  # must not raise
         assert res.assignments[gk["Ksjusni"]] == res.assignments[gk["NG1"]]
@@ -374,7 +378,7 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ssyk3", 100), ("Ssyk5", 100), ("NG1", 100)])
-        fold = {(1, 920): [frozenset({"Ssyk3", "NG1"})]}
+        fold = {(1, 920): [frozenset({"ssyk3", "ng1"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert (
             res.assignments[gk["Ssyk3"]]

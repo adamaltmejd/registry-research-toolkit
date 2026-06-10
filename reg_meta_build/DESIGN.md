@@ -613,35 +613,44 @@ precise fold / split / collapsed / clamped / clustered counts are reported by th
 connectivity (`_coalesce_variable_states`) keys its union-find node-col on
 `_ascii_fold_lower(column)` — NFKD-decomposed, ASCII-stripped, lowercased — so
 case-/diacritic-only header twins delivered under *separate* cvids
-(`PersonNr`/`Personnr`, `Kon`/`Kön`) are ONE node and never reach triage as
-distinct columns. Without the fold, a split-container var sharded each casing
-into its own sibling fragment (~543 fragments across the corpus). Raw casing
-still surfaces where it should: `delivery_column_name` is the latest-era alias
-verbatim, and the unika lookups stay raw. Consequently every curated column key
-(`fold_overrides.toml`, `codelivery.toml`, `column_merges.toml`) is case-folded
-at load by the shared `_curation.fold_column` — TOML casing is cosmetic, and the
-single shared definition keeps loader keys and coalescer components from
-drifting.
+(`PersonNr`/`Personnr`, `Kon`/`Kön`) are ONE node and never reach triage as distinct
+columns. Without the fold, a split-container var sharded each casing into its own
+sibling fragment (\~543 fragments across the corpus). Raw casing still surfaces where it
+should: `delivery_column_name` is the latest-era alias verbatim, and the unika lookups
+stay raw. Consequently every curated column key (`fold_overrides.toml`,
+`codelivery.toml`, `column_merges.toml`) is case-folded at load by the shared
+`_curation.fold_column` — TOML casing is cosmetic, and the single shared definition
+keeps loader keys and coalescer components from drifting.
 
-**Curated column-merge** (#196; `column_merges.toml`, loaded by
-`column_merges.py`) — the curated counterpart of the auto case-fold, for
-era-RENAME twins
-(`PNR` ≡ `PersonNr`) that share no case identity. The two headers never co-occur
-in one edition, so rule-2 sees two components; once the var_id is a split
-container (other columns DO co-deliver), each component becomes its own sibling
-variable and one identity's history shards across fragments. The triage
-fold-override below cannot express this — it acts on CONTESTED (same-edition
-co-delivered) columns only, and the gate rejects a non-contested column by
-design. The merge instead normalizes the named columns to ONE union-find
-node-col (the lex-min folded member) *upstream* of triage. Keyed
-`(register_id, var_id)` like the fold-override, with the same maintainer-artifact
-semantics (absent in wheel/synthetic builds; empty ⇒ connectivity unchanged) and
-the same strictness: a named column never observed as a delivery column of the
-var FAILS the build (`EXIT_CONFIG`, `column_merge_unknown_column`), scoped to
-the registers present in the build (the partial-/synthetic-build escape). A
-merge spanning multiple var_ids is unrepresentable by construction — cross-
-var_id column *sharing* (#197) is a different shape and intentionally not
-curatable here.
+**Co-delivery guard on the fold.** The fold targets era-rename twins that never
+co-occur. When two distinct spellings of one folded header share an edition of a variant
+(81 groups in the corpus), they are genuinely *parallel* columns — HRE ships `Niva` +
+`Nivå` side by side for 25 years carrying a 3-group and a 2-group coding — and folding
+them would put two codings on ONE column, forcing the co-delivery invariant to drop one.
+Those groups keep their raw node-cols; the triage still folds them into one variable
+(identical folded stems) with label-discriminated states, the pre-#196 handling. Because
+a guarded component can be raw-cased, every consumer compares on the folded form: the
+fold-override gate and `_cluster_contested`'s `forced_same` membership fold the
+contested side, and the codelivery pin lookups fold `gkey[8]` (a folded pin key thereby
+pins ALL spellings of the header, by design). A curated column-merge outranks the guard
+— maintainer fiat can force a co-delivered pair onto one node.
+
+**Curated column-merge** (#196; `column_merges.toml`, loaded by `column_merges.py`) —
+the curated counterpart of the auto case-fold, for era-RENAME twins (`PNR` ≡ `PersonNr`)
+that share no case identity. The two headers never co-occur in one edition, so rule-2
+sees two components; once the var_id is a split container (other columns DO co-deliver),
+each component becomes its own sibling variable and one identity's history shards across
+fragments. The triage fold-override below cannot express this — it acts on CONTESTED
+(same-edition co-delivered) columns only, and the gate rejects a non-contested column by
+design. The merge instead normalizes the named columns to ONE union-find node-col (the
+lex-min folded member) *upstream* of triage. Keyed `(register_id, var_id)` like the
+fold-override, with the same maintainer-artifact semantics (absent in wheel/synthetic
+builds; empty ⇒ connectivity unchanged) and the same strictness: a named column never
+observed as a delivery column of the var FAILS the build (`EXIT_CONFIG`,
+`column_merge_unknown_column`), scoped to the registers present in the build (the
+partial-/synthetic-build escape). A merge spanning multiple var_ids is unrepresentable
+by construction — cross- var_id column *sharing* (#197) is a different shape and
+intentionally not curatable here.
 
 Two notes on the triage signals:
 
@@ -672,12 +681,16 @@ Two notes on the triage signals:
   [[fold]]
   register_id = 195
   var_id = 4027
-  columns = ["Ksjusni", "NG1", "bransch", "sni2"]
+  columns = ["bgr98", "bransch", "ksjusni"]
   ```
 
   Only `[[fold]]` is a legal top-level table; `register_id` / `var_id` must be canonical
   integers (no leading zeros); `columns` requires ≥ 2 non-empty strings with no repeats
-  within or across groups for the same key. All violations are `EXIT_CONFIG`.
+  within or across groups for the same key. All violations are `EXIT_CONFIG`. A listed
+  column names a contested **component** — the case-folded lex-min member of its rule-2
+  connectivity component (#196), which is the form the triage carries; the
+  `fold_override_unknown_column` error lists the var's current contested roots when an
+  entry goes stale.
 
   **Pre-v1 churn** — the curation content in `fold_overrides.toml` churns freely pre-v1;
   no freeze or immutability is in effect for this surface yet. Arming snapshot-style

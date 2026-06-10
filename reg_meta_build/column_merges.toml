@@ -27,3 +27,33 @@
 # as a delivery column of the var (typo / stale entry), or a duplicate /
 # overlapping group. An empty file is a no-op — connectivity stays exactly as
 # the case-folded rule-2 intersection decides.
+#
+# Every entry below is verified against the raw SCB Registerinformation source:
+# the named columns NEVER share a (variant, edition) bucket (so they are not
+# fold_overrides material) and carry the SAME role (never merge a subject key
+# with a relation column — RTB's personnrmor/personnrsamh CO-occur with
+# personnr and correctly stay split siblings).
+
+# ── RTB (reg 2) subject personnummer: era rename `pnr` → `personnr` ──
+#    The #196 canonical case: var 57 ("Personnummer") delivered as the legacy
+#    `pnr` header in early editions and `personnr` later, never co-occurring.
+#    Without the merge the var (a split container via the co-delivered
+#    relation-pnr columns) shards the subject key into a sparse legacy `pnr`
+#    fragment + the well-materialized `personnr` — and the A4.4d panel keys
+#    ended up pinned to the sparse fragment.
+[[merge]]
+register_id = 2
+var_id = 57
+columns = ["pnr", "personnr"]
+
+# ── FRIDA (reg 121) firm key: era rename `borgnr` → `persorgnr` → `borgnr` ──
+#    var 56 ("Person-/organisationsnummer"): the Punktskatter variant delivers
+#    the firm key as `persorgnr` for 2014-2017, exactly filling the gap in
+#    `borgnr`'s 2007-2023 coverage there; the two never co-occur. The variant's
+#    OTHER var-56 columns are different ROLES and stay split: `bpnr` (the
+#    person-side key) and `borgnr_bolag` (N3B's referenced partnership) both
+#    CO-occur with `borgnr`. See #197 for the full FRIDA borgnr resolution.
+[[merge]]
+register_id = 121
+var_id = 56
+columns = ["borgnr", "persorgnr"]

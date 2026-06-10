@@ -327,6 +327,51 @@ class TestAutoCaseFoldBuild:
         assert vids["Kon"] == vids["Kön"]
         assert n_vars == 2
 
+    def test_co_delivered_twins_are_not_folded(self, tmp_path: Path) -> None:
+        # The guard: `Niva` + `Nivå` ship in the SAME edition carrying two
+        # distinct codings (the real HRE shape). Folding them would put both
+        # codings on one column and the co-delivery invariant would drop one —
+        # instead they keep raw node-cols, the triage folds them by stem into
+        # ONE variable, and BOTH codings ship as label-discriminated states.
+        ri = [
+            _var_row(
+                colname="Niva",
+                cvid=5201,
+                var_id=520,
+                varname="NivaVar",
+                year="2020",
+                regver_id=600,
+                data_length="3",
+            ),
+            _var_row(
+                colname="Nivå",
+                cvid=5202,
+                var_id=520,
+                varname="NivaVar",
+                year="2020",
+                regver_id=600,
+                data_length="3",
+            ),
+        ]
+        vm = _vm_rows(5201, "Tre grupper", _CODING_A) + _vm_rows(
+            5202, "Två grupper", _CODING_B
+        )
+        conn = _build(tmp_path, ri, vm)  # must not raise unresolved-codelivery
+        try:
+            rows = conn.execute(
+                "SELECT vs.delivery_column_name, vs.variable_id, vs.value_set_id, "
+                "       vs.value_set_version_label "
+                "FROM variable_state vs JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.provider_key = '520' AND vs.value_set_id IS NOT NULL"
+            ).fetchall()
+            n_vars = _n_vars(conn, 520)
+        finally:
+            conn.close()
+        assert n_vars == 1  # stem-folded into one variable, not split, not lost
+        assert {r[0] for r in rows} == {"Niva", "Nivå"}  # both columns shipped
+        assert len({r[2] for r in rows}) == 2  # both codings survive
+        assert len({r[3] for r in rows}) == 2  # discriminated by label
+
 
 class TestColumnMergeBuild:
     """The curated half of #196: an era-rename twin (`PNR` → `PersonNr`) shares

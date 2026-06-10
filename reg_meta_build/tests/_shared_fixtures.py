@@ -16,6 +16,29 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _no_repo_curation() -> Iterator[None]:
+    """Synthetic test builds run with EMPTY curation maps — the documented
+    contract for the maintainer TOMLs (codelivery / fold_overrides /
+    column_merges). A checkout-run `build_db` would otherwise load the REPO
+    TOMLs, which are keyed on real SCB source ids that can collide with the
+    fixture register ids (RTB IS register 2 — a real `column_merges.toml`
+    entry for it binds the fixture's OTHERREG and fails every build). Session-
+    scoped + autouse so it lands before the session-scoped `fixture_db` build;
+    tests that exercise a curation surface monkeypatch their own file path on
+    top (function-scoped, applied after, undone per test)."""
+    import reg_meta_build.codelivery as _cd
+    import reg_meta_build.column_merges as _cm
+    import reg_meta_build.fold_overrides as _fo
+
+    mp = pytest.MonkeyPatch()
+    mp.setattr(_cd, "repo_codelivery_path", lambda: None)
+    mp.setattr(_cm, "repo_column_merges_path", lambda: None)
+    mp.setattr(_fo, "repo_fold_overrides_path", lambda: None)
+    yield
+    mp.undo()
+
+
 @pytest.fixture(scope="session")
 def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Build a small SQLite DB from synthetic CSV fixtures.
