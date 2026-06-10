@@ -26,6 +26,8 @@ from pathlib import Path
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+from ._curation import canonical_int
+
 # (register_id, var_id, delivery-column component) — the same coordinates the
 # coalescer's per-column resolver carries (gkey[0], gkey[2], gkey[8]). The column
 # component is "" for a code-bearing cvid that has no delivery alias.
@@ -75,10 +77,14 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         not a silent no-op that disables ALL curation); `resolve` is an array of
         tables (a scalar / single `[resolve]` table is rejected before the loop,
         not a raw uncaught crash).
-      - Each entry needs integer `register_id` / `var_id` and exactly one of
-        `keep` / `keep_rule`, each a string (`keep_rule` from a known set); a
-        non-string rule — including an unhashable list/dict — is rejected, not
-        crashed on the membership test."""
+      - `register_id` / `var_id` present and canonical int (no leading zeros,
+        no bool/float — shared `_curation.canonical_int`, identical to
+        fold_overrides), and `column` a string (or absent → ""); a leniently
+        coerced id or a str()-coerced column would produce an inert
+        never-matching pin instead of a load-time error.
+      - Exactly one of `keep` / `keep_rule`, each a string (`keep_rule` from a
+        known set); a non-string rule — including an unhashable list/dict — is
+        rejected, not crashed on the membership test."""
     if path is None or not path.is_file():
         return {}
     try:
@@ -115,19 +121,31 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
                 "Each entry is a `[[resolve]]` table with register_id / var_id / "
                 "column.",
             )
-        try:
-            key: CodeliveryKey = (
-                int(entry["register_id"]),
-                int(entry["var_id"]),
-                str(entry.get("column", "")),
-            )
-        except (KeyError, TypeError, ValueError) as exc:
+        # Canonicalize ids identically to fold_overrides (shared `canonical_int`):
+        # `int(...)` would silently accept `1.5` (→1), `true` (→1), `"01"` (→1),
+        # and negatives, producing an inert never-matching pin instead of a
+        # load-time error.
+        reg = canonical_int(entry.get("register_id"))
+        var = canonical_int(entry.get("var_id"))
+        if reg is None or var is None:
             raise _codelivery_error(
                 "codelivery_invalid",
-                f"codelivery [[resolve]] entry {entry!r} is missing or has a "
-                f"non-integer register_id / var_id: {exc}",
+                f"codelivery [[resolve]] entry {entry!r} needs `register_id` and "
+                f"`var_id` as canonical integers (no leading zeros).",
                 "Each [[resolve]] entry needs integer `register_id` and `var_id`.",
-            ) from exc
+            )
+        # `column` must be a string (or absent → ""): a list/dict/number/bool would
+        # str()-coerce into a column name that can never match a real delivery
+        # column — reject it at load, not as a confusing downstream mismatch.
+        column = entry.get("column", "")
+        if not isinstance(column, str):
+            raise _codelivery_error(
+                "codelivery_invalid",
+                f"codelivery [[resolve]] entry {entry!r} `column` must be a string, "
+                f"got {type(column).__name__}.",
+                'Give `column = "<delivery-column>"` as a string, or omit it.',
+            )
+        key: CodeliveryKey = (reg, var, column)
         keep_label = entry.get("keep")
         keep_rule = entry.get("keep_rule")
         if (keep_label is None) == (keep_rule is None):
