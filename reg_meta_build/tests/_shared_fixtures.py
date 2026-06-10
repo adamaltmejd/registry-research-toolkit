@@ -4,6 +4,7 @@ suites. Both conftests import these via the on-`sys.path` bare-name path
 
 from __future__ import annotations
 
+import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
@@ -11,9 +12,31 @@ from _csv_fixtures import write_scb_input
 from reg_meta_build.db import build_db
 
 if TYPE_CHECKING:
-    import sqlite3
     from collections.abc import Iterator
     from pathlib import Path
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _no_repo_curation() -> Iterator[None]:
+    """Synthetic test builds run with EMPTY curation maps — the documented
+    contract for the maintainer TOMLs (codelivery / fold_overrides /
+    column_merges). A checkout-run `build_db` would otherwise load the REPO
+    TOMLs, which are keyed on real SCB source ids that can collide with the
+    fixture register ids (RTB IS register 2 — a real `column_merges.toml`
+    entry for it binds the fixture's OTHERREG and fails every build). Session-
+    scoped + autouse so it lands before the session-scoped `fixture_db` build;
+    tests that exercise a curation surface monkeypatch their own file path on
+    top (function-scoped, applied after, undone per test)."""
+    import reg_meta_build.codelivery as _cd
+    import reg_meta_build.column_merges as _cm
+    import reg_meta_build.fold_overrides as _fo
+
+    mp = pytest.MonkeyPatch()
+    mp.setattr(_cd, "repo_codelivery_path", lambda: None)
+    mp.setattr(_cm, "repo_column_merges_path", lambda: None)
+    mp.setattr(_fo, "repo_fold_overrides_path", lambda: None)
+    yield
+    mp.undo()
 
 
 @pytest.fixture(scope="session")
@@ -102,3 +125,53 @@ def db_conn(fixture_db: Path) -> Iterator[sqlite3.Connection]:
 def db_path(fixture_db: Path) -> str:
     """`--db` arg pointing to the fixture database directory."""
     return str(fixture_db.parent)
+
+
+# ── build-driven test helpers (test_codelivery_build / test_fold_overrides /
+#    test_column_merges) — one definition, three suites ─────────────────────
+
+# Clearly-distinct codings for one column: pairwise-disjoint codes (symmetric
+# diff 6 > _COSMETIC_MAX_SYM=2 → not cosmetic) and DIFFERENT version labels
+# (→ no same-label-drift, and arbitrary labels rank equal under
+# _label_resolution_rank → no freshness tiebreak). Plain "YYYY" register
+# versions → equal authority/recency. So nothing in the co-delivery cascade
+# resolves two of these on one column except SUPERSESSION (distinct intro year).
+CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
+CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
+CODING_C = [("31", "Gamma ett"), ("32", "Gamma två"), ("33", "Gamma tre")]
+
+
+def vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
+    """Vardemangder rows for one cvid: [version, niva, kod, benämning, CVID, ItemId].
+    `niva="1"` is a non-historical grain (matches the default fixture); ItemId is
+    left empty (the importer accepts it, and no ValidDates row means always-valid).
+    The value_set_id is derived from the (kod, benämning) set, so two cvids sharing
+    identical codes fold into ONE value set; the `version` becomes the state's
+    `value_set_version_label`."""
+    from _csv_fixtures import PIPE
+
+    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
+
+
+def build_with_rows(
+    tmp_path: Path, ri_extra: list[str], vm_extra: list[str]
+) -> sqlite3.Connection:
+    """Run a real SCB build with the standard fixture plus the extra rows; return
+    a connection to the built DB. Never touches the live DB (tmp only)."""
+    from _csv_fixtures import REGISTERINFORMATION_ROWS, VARDEMANGDER_ROWS
+
+    input_dir = tmp_path / "input"
+    db_dir = tmp_path / "db"
+    slug_dir = tmp_path / "slugs"
+    for d in (input_dir, db_dir, slug_dir):
+        d.mkdir()
+    write_scb_input(
+        input_dir,
+        registerinformation_rows=REGISTERINFORMATION_ROWS + ri_extra,
+        vardemangder_rows=VARDEMANGDER_ROWS + vm_extra,
+    )
+    _write_fixture_slug_dir(slug_dir)
+    build_db(
+        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, slug_dir=slug_dir
+    )
+    return sqlite3.connect(db_dir / "reg_meta.db")

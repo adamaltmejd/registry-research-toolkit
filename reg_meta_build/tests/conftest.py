@@ -16,4 +16,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from _shared_fixtures import db_conn, db_path, fixture_db  # noqa: E402,F401
+from _shared_fixtures import (  # noqa: E402,F401
+    _no_repo_curation,
+    db_conn,
+    db_path,
+    fixture_db,
+)

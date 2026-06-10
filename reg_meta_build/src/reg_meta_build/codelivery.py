@@ -26,11 +26,13 @@ from pathlib import Path
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
-from ._curation import canonical_int
+from ._curation import canonical_int, fold_column
 
 # (register_id, var_id, delivery-column component) — the same coordinates the
 # coalescer's per-column resolver carries (gkey[0], gkey[2], gkey[8]). The column
-# component is "" for a code-bearing cvid that has no delivery alias.
+# component is "" for a code-bearing cvid that has no delivery alias, and is the
+# coalescer's CASE-FOLDED rule-2 connectivity key otherwise — the loader folds
+# the TOML's `column` to match (a raw-cased pin would silently never match).
 CodeliveryKey = tuple[int, int, str]
 # (keep_label, keep_rule) — exactly one is non-None per entry.
 CodeliveryRule = tuple[str | None, str | None]
@@ -145,7 +147,9 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
                 f"got {type(column).__name__}.",
                 'Give `column = "<delivery-column>"` as a string, or omit it.',
             )
-        key: CodeliveryKey = (reg, var, column)
+        # Folded to the coalescer's connectivity key (see CodeliveryKey above);
+        # "" (no delivery alias) folds to itself.
+        key: CodeliveryKey = (reg, var, fold_column(column))
         keep_label = entry.get("keep")
         keep_rule = entry.get("keep_rule")
         if (keep_label is None) == (keep_rule is None):

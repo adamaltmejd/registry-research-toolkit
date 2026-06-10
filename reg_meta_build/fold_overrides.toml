@@ -19,18 +19,28 @@
 # overlapping group. An empty file is a no-op — every var stays exactly as the
 # stem rule decided.
 
+# A listed column names a contested COMPONENT of the var — the case-folded
+# lex-min member of its rule-2 connectivity component (#196), which is how the
+# triage identifies columns. A component grown by the case-fold can change its
+# root name; the build's `fold_override_unknown_column` error lists the current
+# contested roots when that happens.
+
 # ── näringsgren (industry): one concept delivered under DISJOINT stems ──
 #    reg 195 (KSju) / var 4027 ("Näringsgren") co-delivers the same näringsgren
-#    concept under four SAME-EDITION columns that share no stem — `Ksjusni`,
-#    `NG1`, `bransch`, `sni2` — so the stem rule would split them into four
-#    sibling variables. They ARE one concept; fold them.
+#    concept under SAME-EDITION columns that share no stem, so the stem rule
+#    would split them into sibling variables. They ARE one concept; fold them.
+#    `bgr98` is the root of the rule-2 component carrying the whole
+#    NG1/sni1/sni2/NgGr1/Bgr98 alias chain (one variable already — the #196
+#    case-fold united the case-twin bridges that used to leave `NG1` and `sni2`
+#    as separate contested roots); `bransch` and `ksjusni` are the other two
+#    same-edition deliveries of the concept.
 #    NOT listed: `lgrp`. It carries the same näringsgren coding (the 821-code
 #    value set 2340, shared with the in-cluster `NgGr1` column), but it is the
 #    2009 predecessor delivered ALONE — it never co-occurs in one edition with
-#    the four above, so it is NOT a contested column and the fold-override would
+#    the others, so it is NOT a contested column and the fold-override would
 #    (correctly) reject it. It stays a separate longitudinal variable; its slug
 #    is curated in scb.toml.
 [[fold]]
 register_id = 195
 var_id = 4027
-columns = ["Ksjusni", "NG1", "bransch", "sni2"]
+columns = ["bgr98", "bransch", "ksjusni"]

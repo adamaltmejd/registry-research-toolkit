@@ -414,7 +414,8 @@ class TestResolveYearWinners:
         a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
         b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
         # gkey: [0]=register_id=1, [2]=var_id=1, [8]=column="AL2"
-        codelivery = {(1, 1, "AL2"): ("Br07-kod", None)}
+        # Map keys follow the loader contract: case-folded column ("al2").
+        codelivery = {(1, 1, "al2"): ("Br07-kod", None)}
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
@@ -429,7 +430,7 @@ class TestResolveYearWinners:
         a = _state(1, col="X", label="origA")
         b = _state(2, col="X", label="origB")
         emitted = {a[0]: "4pos", b[0]: "4pos-1"}
-        codelivery = {(1, 1, "X"): ("4pos", None)}
+        codelivery = {(1, 1, "x"): ("4pos", None)}
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]],
             dict([a, b]),
@@ -446,7 +447,7 @@ class TestResolveYearWinners:
         # (recurring SFI-year vintages on one column).
         a = _state(1, col="Skolkod", label="Skolkod SFI 1999")
         b = _state(2, col="Skolkod", label="Skolkod SFI 2000")
-        codelivery = {(1, 1, "Skolkod"): (None, "latest_year")}
+        codelivery = {(1, 1, "skolkod"): (None, "latest_year")}
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]], dict([a, b]), 1999, self._codes({1: 574, 2: 597}), codelivery
         )
@@ -458,7 +459,7 @@ class TestResolveYearWinners:
         # (no crash) — the year stays unresolved for --validate to flag.
         a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
         b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
-        codelivery = {(1, 1, "AL2"): ("Something else", None)}
+        codelivery = {(1, 1, "al2"): ("Something else", None)}
         winners, genuine = _resolve_year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
@@ -522,8 +523,10 @@ class TestLoadCodelivery:
             encoding="utf-8",
         )
         cmap = load_codelivery(toml)
-        assert cmap[(187, 3310, "AL2UndEjU")] == ("Br07-kod", None)
-        assert cmap[(248, 104, "Skolkod")] == (None, "latest_year")
+        # Column keys are case-folded at load to the coalescer's rule-2
+        # connectivity key (#196) — TOML casing is cosmetic.
+        assert cmap[(187, 3310, "al2undeju")] == ("Br07-kod", None)
+        assert cmap[(248, 104, "skolkod")] == (None, "latest_year")
 
     def test_rejects_both_or_neither(self, tmp_path: Path) -> None:
         from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -833,7 +836,8 @@ class TestClusterContested:
     def test_forced_same_folds_by_fiat(self) -> None:
         # The curated-override seam (#261): force-merge disjoint stems into one
         # cluster, bypassing the stem rule. Default (no override) keeps them split.
-        forced = [frozenset({"Hemkommun", "Skolkommun"})]
+        # forced_same groups are case-folded at load; membership probes fold.
+        forced = [frozenset({"hemkommun", "skolkommun"})]
         assert self._clusters(["Hemkommun", "Skolkommun"], forced_same=forced) == [
             ["Hemkommun", "Skolkommun"]
         ]

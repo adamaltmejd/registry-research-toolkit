@@ -14,67 +14,22 @@ register ids, so it never accidentally cures these synthetic register_id=1 cases
 
 from __future__ import annotations
 
-import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import (
-    PIPE,
-    REGISTERINFORMATION_ROWS,
-    VARDEMANGDER_ROWS,
     _var_row,
-    write_scb_input,
 )
-from _shared_fixtures import _write_fixture_slug_dir
+from _shared_fixtures import (
+    CODING_A,
+    CODING_B,
+    build_with_rows,
+    vm_rows,
+)
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.db import build_db
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-def _vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
-    """Vardemangder rows for one cvid: [version, niva, kod, benämning, CVID, ItemId].
-    `niva="1"` is a non-historical grain (matches the default fixture); ItemId is
-    left empty (the importer accepts it, and no ValidDates row means always-valid).
-    The value_set_id is derived from the (kod, benämning) set, so two cvids sharing
-    identical codes fold into ONE value set; the `version` becomes the state's
-    `value_set_version_label`."""
-    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
-
-
-# Two clearly-distinct codings on one column: disjoint codes (symmetric diff 6 >
-# _COSMETIC_MAX_SYM=2 → not cosmetic) and DIFFERENT version labels (→ no
-# same-label-drift, and arbitrary labels rank equal under _label_resolution_rank →
-# no freshness tiebreak). Plain "YYYY" register versions → equal authority/recency.
-# So nothing in the cascade resolves them except SUPERSESSION (distinct intro year).
-_CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
-_CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
-
-
-def _build(
-    tmp_path: Path, ri_extra: list[str], vm_extra: list[str]
-) -> sqlite3.Connection:
-    """Run a real SCB build with the standard fixture plus the extra rows; return a
-    read-only connection to the built DB. Never touches the live DB (tmp only)."""
-    input_dir = tmp_path / "input"
-    db_dir = tmp_path / "db"
-    slug_dir = tmp_path / "slugs"
-    for d in (input_dir, db_dir, slug_dir):
-        d.mkdir()
-    write_scb_input(
-        input_dir,
-        registerinformation_rows=REGISTERINFORMATION_ROWS + ri_extra,
-        vardemangder_rows=VARDEMANGDER_ROWS + vm_extra,
-    )
-    _write_fixture_slug_dir(slug_dir)
-    build_db(
-        input_dir=input_dir,
-        db_dir=db_dir,
-        skip_classifications=True,
-        slug_dir=slug_dir,
-    )
-    return sqlite3.connect(db_dir / "reg_meta.db")
 
 
 class TestCascadeCarvesCleanly:
@@ -84,7 +39,7 @@ class TestCascadeCarvesCleanly:
 
     def test_supersession_carves_two_runs(self, tmp_path: Path) -> None:
         # Coding A (var 700, column CarveCol): one cvid per year 2018-2022, all
-        # sharing codes _CODING_A → one folded group spanning the five years.
+        # sharing codes CODING_A → one folded group spanning the five years.
         ri = [
             _var_row(
                 colname="CarveCol",
@@ -97,7 +52,7 @@ class TestCascadeCarvesCleanly:
             )
             for i, year in enumerate((2018, 2019, 2020, 2021, 2022))
         ]
-        vm = [r for i in range(5) for r in _vm_rows(7000 + i, "AlphaA", _CODING_A)]
+        vm = [r for i in range(5) for r in vm_rows(7000 + i, "AlphaA", CODING_A)]
         # Coding B: a single 2020 cvid with disjoint codes → introduced in 2020, so
         # SUPERSESSION (latest min-year) hands it the 2020 cell over coding A.
         ri.append(
@@ -111,9 +66,9 @@ class TestCascadeCarvesCleanly:
                 data_length="3",
             )
         )
-        vm += _vm_rows(7100, "BetaB", _CODING_B)
+        vm += vm_rows(7100, "BetaB", CODING_B)
 
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             rows = conn.execute(
                 "SELECT valid_from, valid_to, value_set_id FROM variable_state "
@@ -160,16 +115,17 @@ class TestGenuineConflictFailsBuild:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(8001, "Coding A", _CODING_A) + _vm_rows(
-            8002, "Coding B", _CODING_B
-        )
+        vm = vm_rows(8001, "Coding A", CODING_A) + vm_rows(8002, "Coding B", CODING_B)
 
         with pytest.raises(RegMetaError) as exc:
-            _build(tmp_path, ri, vm)
+            build_with_rows(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
         assert exc.value.exit_code == EXIT_CONFIG
-        # Actionable: names the offending column so a maintainer can write the pin.
-        assert "ClashCol" in exc.value.message
+        # Actionable: names the offending column so a maintainer can write the
+        # pin. The coalescer's column identity is the case-folded rule-2 key
+        # (#196), so the message carries the folded form; the codelivery loader
+        # folds the pin's `column` the same way, so any TOML casing matches.
+        assert "clashcol" in exc.value.message
 
     def test_all_yearless_conflict_raises(self, tmp_path: Path) -> None:
         # var 900, column YlessCol: two distinct codings whose registerversionnamn
@@ -197,14 +153,12 @@ class TestGenuineConflictFailsBuild:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(9001, "Coding A", _CODING_A) + _vm_rows(
-            9002, "Coding B", _CODING_B
-        )
+        vm = vm_rows(9001, "Coding A", CODING_A) + vm_rows(9002, "Coding B", CODING_B)
 
         with pytest.raises(RegMetaError) as exc:
-            _build(tmp_path, ri, vm)
+            build_with_rows(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
-        assert "YlessCol" in exc.value.message
+        assert "ylesscol" in exc.value.message  # folded rule-2 column key (#196)
         assert "yearless" in exc.value.message
 
     def test_stale_pin_with_yearbearing_rival_raises(
@@ -235,9 +189,7 @@ class TestGenuineConflictFailsBuild:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(9101, "Coding A", _CODING_A) + _vm_rows(
-            9102, "Coding B", _CODING_B
-        )
+        vm = vm_rows(9101, "Coding A", CODING_A) + vm_rows(9102, "Coding B", CODING_B)
         pin = tmp_path / "codelivery.toml"
         pin.write_text(
             '[[resolve]]\nregister_id = 1\nvar_id = 910\ncolumn = "StaleCol"\n'
@@ -249,9 +201,9 @@ class TestGenuineConflictFailsBuild:
         monkeypatch.setattr(_cd, "repo_codelivery_path", lambda: pin)
 
         with pytest.raises(RegMetaError) as exc:
-            _build(tmp_path, ri, vm)
+            build_with_rows(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
-        assert "StaleCol" in exc.value.message
+        assert "stalecol" in exc.value.message  # folded rule-2 column key (#196)
 
 
 # Two codings whose CODE sets are identical ({30,31,32}) but one code is RELABELED
@@ -296,13 +248,13 @@ class TestLabelAwareCosmetic:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(9501, "Coding base", _RECODE_BASE) + _vm_rows(
+        vm = vm_rows(9501, "Coding base", _RECODE_BASE) + vm_rows(
             9502, "Coding relabeled", _RECODE_RELABELED
         )
         with pytest.raises(RegMetaError) as exc:
-            _build(tmp_path, ri, vm)
+            build_with_rows(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
-        assert "ReCol" in exc.value.message
+        assert "recol" in exc.value.message  # folded rule-2 column key (#196)
 
     def test_clean_drift_still_collapses(self, tmp_path: Path) -> None:
         # var 960, column DriftCol: same setup but the smaller coding is a clean
@@ -328,10 +280,10 @@ class TestLabelAwareCosmetic:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(9601, "Coding full", _DRIFT_FULL) + _vm_rows(
+        vm = vm_rows(9601, "Coding full", _DRIFT_FULL) + vm_rows(
             9602, "Coding minus", _DRIFT_MINUS_ONE
         )
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             rows = conn.execute(
                 "SELECT DISTINCT value_set_id FROM variable_state "
@@ -369,10 +321,10 @@ class TestLabelAwareCosmetic:
                 data_length="3",
             ),
         ]
-        vm = _vm_rows(9701, "Coding cased", case_a) + _vm_rows(
+        vm = vm_rows(9701, "Coding cased", case_a) + vm_rows(
             9702, "Coding upper", case_b
         )
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             rows = conn.execute(
                 "SELECT DISTINCT value_set_id FROM variable_state "
@@ -418,11 +370,11 @@ class TestExtendsLater:
             )
             for i, y in enumerate((2020, 2021, 2022))
         ]
-        vm = _vm_rows(9801, "Coding old", _CODING_A)
+        vm = vm_rows(9801, "Coding old", CODING_A)
         for i in range(3):
-            vm += _vm_rows(9810 + i, "Coding modern", _CODING_B)
+            vm += vm_rows(9810 + i, "Coding modern", CODING_B)
 
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vsids = [
                 r[0]
@@ -444,7 +396,7 @@ class TestExtendsLater:
             conn.close()
         # Exactly the MODERN coding survives (its codes, not the old coding's).
         assert len(vsids) == 1
-        assert codes == {c for c, _ in _CODING_B}
+        assert codes == {c for c, _ in CODING_B}
 
 
 class TestResidualClampReconciliation:
@@ -460,7 +412,7 @@ class TestResidualClampReconciliation:
     def _drift_rows(
         *, colname: str, var_id: int, years: range, regver_base: int, data_length: str
     ) -> tuple[list[str], list[str]]:
-        # One cvid per year on `colname`, all SAME codes (_CODING_A) + SAME version
+        # One cvid per year on `colname`, all SAME codes (CODING_A) + SAME version
         # label, so the only gkey difference from the rival span is `data_length`.
         ri: list[str] = []
         vm: list[str] = []
@@ -477,7 +429,7 @@ class TestResidualClampReconciliation:
                     data_length=data_length,
                 )
             )
-            vm += _vm_rows(cvid, "Coding", _CODING_A)
+            vm += vm_rows(cvid, "Coding", CODING_A)
         return ri, vm
 
     def test_crossing_clamp_preserves_older_non_overlap(self, tmp_path: Path) -> None:
@@ -498,7 +450,7 @@ class TestResidualClampReconciliation:
             regver_base=1790,
             data_length="5",
         )
-        conn = _build(tmp_path, ri_old + ri_new, vm_old + vm_new)
+        conn = build_with_rows(tmp_path, ri_old + ri_new, vm_old + vm_new)
         try:
             rows = conn.execute(
                 "SELECT valid_from, valid_to, data_length, value_set_id "
@@ -534,7 +486,7 @@ class TestResidualClampReconciliation:
             regver_base=1860,
             data_length="5",
         )
-        conn = _build(tmp_path, ri_old + ri_new, vm_old + vm_new)
+        conn = build_with_rows(tmp_path, ri_old + ri_new, vm_old + vm_new)
         try:
             rows = conn.execute(
                 "SELECT valid_from, valid_to, data_length FROM variable_state "

@@ -24,15 +24,16 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import (
-    PIPE,
-    REGISTERINFORMATION_ROWS,
-    VARDEMANGDER_ROWS,
     _var_row,
-    write_scb_input,
 )
-from _shared_fixtures import _write_fixture_slug_dir
+from _shared_fixtures import (
+    CODING_A,
+    CODING_B,
+    build_with_rows,
+    vm_rows,
+)
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.db import DDL, build_db
+from reg_meta_build.db import DDL
 from reg_meta_build.fold_overrides import load_fold_overrides
 from reg_meta_build.sources.scb import _StateGroup, _triage_groups
 
@@ -56,7 +57,8 @@ class TestLoadFoldOverrides:
             "[[fold]]\nregister_id = 195\nvar_id = 4027\n"
             'columns = ["Ksjusni", "NG1", "bransch", "sni2"]\n',
         )
-        assert m == {(195, 4027): [frozenset({"Ksjusni", "NG1", "bransch", "sni2"})]}
+        # Columns are case-folded at load to the rule-2 connectivity key (#196).
+        assert m == {(195, 4027): [frozenset({"ksjusni", "ng1", "bransch", "sni2"})]}
 
     def test_two_groups_same_var_are_two_entries(self, tmp_path: Path) -> None:
         m = self._load(
@@ -64,7 +66,7 @@ class TestLoadFoldOverrides:
             '[[fold]]\nregister_id = 5\nvar_id = 9\ncolumns = ["A", "B"]\n\n'
             '[[fold]]\nregister_id = 5\nvar_id = 9\ncolumns = ["C", "D"]\n',
         )
-        assert m == {(5, 9): [frozenset({"A", "B"}), frozenset({"C", "D"})]}
+        assert m == {(5, 9): [frozenset({"a", "b"}), frozenset({"c", "d"})]}
 
     def test_missing_file_is_empty(self, tmp_path: Path) -> None:
         assert load_fold_overrides(None) == {}
@@ -178,7 +180,7 @@ class TestLoadFoldOverrides:
                 '[[fold]]\nregister_id = 1\nvar_id = 9\ncolumns = ["B", "C"]\n',
             )
         assert exc.value.code == "fold_override_invalid"
-        assert "B" in exc.value.message
+        assert "b" in exc.value.message  # folded form (#196)
 
 
 class TestFoldOverrideKeyIsPerVar:
@@ -197,8 +199,8 @@ class TestFoldOverrideKeyIsPerVar:
         )
         m = load_fold_overrides(path)
         assert set(m) == {(1, 100), (1, 200)}
-        assert m[(1, 100)] == [frozenset({"A", "B"})]
-        assert m[(1, 200)] == [frozenset({"A", "B"})]
+        assert m[(1, 100)] == [frozenset({"a", "b"})]
+        assert m[(1, 200)] == [frozenset({"a", "b"})]
 
 
 # ── triage-driven tests (in-memory, deterministic) ─────────────────────────
@@ -244,7 +246,9 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ksjusni", 100), ("NG1", 100)])
-        fold = {(1, 920): [frozenset({"Ksjusni", "NG1"})]}
+        # Maps passed directly to _triage_groups follow the loader contract:
+        # case-folded columns (the gate compares on the folded form).
+        fold = {(1, 920): [frozenset({"ksjusni", "ng1"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert res.assignments[gk["Ksjusni"]] == res.assignments[gk["NG1"]]
         n_vars = conn.execute(
@@ -280,28 +284,32 @@ class TestFoldOverrideTriage:
         assert res.assignments[gk["Ksjusni"]] != res.assignments[gk["NG1"]]
         conn.close()
 
-    def test_non_contested_column_fails_build(self) -> None:
+    def test_non_contested_column_failsbuild_with_rows(self) -> None:
         # (b) the override names `Bogus`, which is not a contested column of the
         # var → fail at the container gate with an actionable EXIT_CONFIG error.
+        # (This test feeds _triage_groups a raw map directly — the loader-folded
+        # form is exercised by TestFoldOverrideBuild.)
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, _ = _container([("Ksjusni", 100), ("NG1", 100)])
-        fold = {(1, 920): [frozenset({"Ksjusni", "Bogus"})]}
+        fold = {(1, 920): [frozenset({"ksjusni", "bogus"})]}
         with pytest.raises(RegMetaError) as exc:
             _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "fold_override_unknown_column"
-        assert "Bogus" in exc.value.message
+        assert "bogus" in exc.value.message
         conn.close()
 
-    def test_stale_override_for_non_container_fails_build(self) -> None:
+    def test_stale_override_for_non_container_failsbuild_with_rows(self) -> None:
         # The var exists but its two columns are in DIFFERENT editions → they never
         # co-occur, so it is not a contested split container. The override goes
         # unconsumed → fail after the loop (stale curation, not a silent no-op).
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, _ = _container([("Ksjusni", 100), ("NG1", 200)])
-        fold = {(1, 920): [frozenset({"Ksjusni", "NG1"})]}
+        # Maps passed directly to _triage_groups follow the loader contract:
+        # case-folded columns (the gate compares on the folded form).
+        fold = {(1, 920): [frozenset({"ksjusni", "ng1"})]}
         with pytest.raises(RegMetaError) as exc:
             _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert exc.value.exit_code == EXIT_CONFIG
@@ -318,7 +326,7 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ksjusni", 100), ("NG1", 100)])
-        fold = {(195, 4027): [frozenset({"X", "Y"})]}  # register 195 not built
+        fold = {(195, 4027): [frozenset({"x", "y"})]}  # register 195 not built
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert res.assignments[gk["Ksjusni"]] != res.assignments[gk["NG1"]]  # split
         conn.close()
@@ -331,7 +339,7 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ssyk3", 100), ("Ssyk5", 100)])
-        fold = {(1, 920): [frozenset({"Ssyk3", "Ssyk5"})]}
+        fold = {(1, 920): [frozenset({"ssyk3", "ssyk5"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)  # must not raise
         assert res.assignments[gk["Ssyk3"]] == res.assignments[gk["Ssyk5"]]
         assert res.stats["folds"] == 1
@@ -349,7 +357,7 @@ class TestFoldOverrideTriage:
             [("Ksjusni", 100), ("NG1", 100), ("bransch", 100), ("sni2", 100)]
         )
         fold = {
-            (1, 920): [frozenset({"Ksjusni", "NG1"}), frozenset({"bransch", "sni2"})]
+            (1, 920): [frozenset({"ksjusni", "ng1"}), frozenset({"bransch", "sni2"})]
         }
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)  # must not raise
         assert res.assignments[gk["Ksjusni"]] == res.assignments[gk["NG1"]]
@@ -371,7 +379,7 @@ class TestFoldOverrideTriage:
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, gk = _container([("Ssyk3", 100), ("Ssyk5", 100), ("NG1", 100)])
-        fold = {(1, 920): [frozenset({"Ssyk3", "NG1"})]}
+        fold = {(1, 920): [frozenset({"ssyk3", "ng1"})]}
         res = _triage_groups(conn, groups, {(1, 920): orig}, fold)
         assert (
             res.assignments[gk["Ssyk3"]]
@@ -387,34 +395,6 @@ class TestFoldOverrideTriage:
 
 
 # ── build-driven end-to-end (proves the db→adapter→coalesce→triage wiring) ──
-
-# Two disjoint codings so Ksjusni / NG1 are distinct value sets (and groups).
-_CODING_A = [("11", "Alpha ett"), ("12", "Alpha två"), ("13", "Alpha tre")]
-_CODING_B = [("21", "Beta ett"), ("22", "Beta två"), ("23", "Beta tre")]
-
-
-def _vm_rows(cvid: int, version: str, codes: list[tuple[str, str]]) -> list[str]:
-    return [PIPE.join([version, "1", kod, ben, str(cvid), ""]) for kod, ben in codes]
-
-
-def _build(
-    tmp_path: Path, ri_extra: list[str], vm_extra: list[str]
-) -> sqlite3.Connection:
-    input_dir = tmp_path / "input"
-    db_dir = tmp_path / "db"
-    slug_dir = tmp_path / "slugs"
-    for d in (input_dir, db_dir, slug_dir):
-        d.mkdir()
-    write_scb_input(
-        input_dir,
-        registerinformation_rows=REGISTERINFORMATION_ROWS + ri_extra,
-        vardemangder_rows=VARDEMANGDER_ROWS + vm_extra,
-    )
-    _write_fixture_slug_dir(slug_dir)
-    build_db(
-        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, slug_dir=slug_dir
-    )
-    return sqlite3.connect(db_dir / "reg_meta.db")
 
 
 def _industry_container(var_id: int = 4027) -> tuple[list[str], list[str]]:
@@ -440,7 +420,7 @@ def _industry_container(var_id: int = 4027) -> tuple[list[str], list[str]]:
             data_length="3",
         ),
     ]
-    vm = _vm_rows(4001, "AlphaA", _CODING_A) + _vm_rows(4002, "BetaB", _CODING_B)
+    vm = vm_rows(4001, "AlphaA", CODING_A) + vm_rows(4002, "BetaB", CODING_B)
     return ri, vm
 
 
@@ -459,7 +439,7 @@ class TestFoldOverrideBuild:
         import reg_meta_build.fold_overrides as _fo
 
         monkeypatch.setattr(_fo, "repo_fold_overrides_path", lambda: path)
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vids = [
                 r[0]
@@ -479,7 +459,7 @@ class TestFoldOverrideBuild:
         # is keyed on register 195, so it never touches register_id=1 → the same
         # container splits into two sibling variables.
         ri, vm = _industry_container()
-        conn = _build(tmp_path, ri, vm)
+        conn = build_with_rows(tmp_path, ri, vm)
         try:
             vids = {
                 r[0]
@@ -492,7 +472,7 @@ class TestFoldOverrideBuild:
             conn.close()
         assert len(vids) == 2  # split into two siblings (no override)
 
-    def test_non_contested_override_fails_the_build(
+    def test_non_contested_override_fails_thebuild_with_rows(
         self, tmp_path: Path, monkeypatch
     ) -> None:
         # (b) end-to-end: an override naming a column that isn't contested for the
@@ -508,7 +488,7 @@ class TestFoldOverrideBuild:
 
         monkeypatch.setattr(_fo, "repo_fold_overrides_path", lambda: path)
         with pytest.raises(RegMetaError) as exc:
-            _build(tmp_path, ri, vm)
+            build_with_rows(tmp_path, ri, vm)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "fold_override_unknown_column"
-        assert "Bogus" in exc.value.message
+        assert "bogus" in exc.value.message  # folded form (#196)

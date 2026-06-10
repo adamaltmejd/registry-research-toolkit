@@ -31,13 +31,16 @@ from pathlib import Path
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
-from ._curation import canonical_int
+from ._curation import canonical_int, fold_column
 
 # (register_id, var_id) — the same coordinates the triage's per-var split
 # container carries (`register.register_id`, `variable.provider_key`).
 FoldOverrideKey = tuple[int, int]
 # Each var's curated fold groups, ready to hand to `_cluster_contested`'s
-# `forced_same`: every frozenset is one column set that folds into one variable.
+# `forced_same`: every frozenset is one CASE-FOLDED column set that folds into
+# one variable. Folded at load because the triage's contested columns are the
+# coalescer's case-folded rule-2 components (`fold_column`) — a raw-cased entry
+# would silently never match.
 FoldOverrideMap = dict[FoldOverrideKey, list[frozenset[str]]]
 
 # The only legal top-level table is `[[fold]]`. Anything else (a misspelled
@@ -71,8 +74,8 @@ def repo_fold_overrides_path() -> Path | None:
 
 
 def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
-    """Parse the curation TOML into `{(register_id, var_id): [frozenset(cols), …]}`.
-    Empty when no file (synthetic test builds, wheel installs).
+    """Parse the curation TOML into `{(register_id, var_id): [frozenset(cols), …]}`
+    with case-folded columns. Empty when no file (synthetic builds, wheels).
 
     Load-time validation (all EXIT_CONFIG, actionable):
       - Only `[[fold]]` top-level (a misspelled `[[folds]]` is a loud error, not a
@@ -80,7 +83,8 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
       - `register_id` / `var_id` present and canonical int (no leading zeros).
       - `columns` is a list of ≥2 non-empty strings (a singleton fold is a no-op).
       - No column repeats within a group, or across groups of the SAME
-        `(register_id, var_id)` (duplicate / overlapping group).
+        `(register_id, var_id)` (duplicate / overlapping group) — compared on the
+        case-folded form (`_curation.fold_column`).
 
     The build-time half (every named column must be a CONTESTED column of a real
     split container, and every key must be consumed) lives in `_triage_groups`,
@@ -144,15 +148,16 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
                 f"non-empty strings (a singleton fold is a no-op).",
                 'Give `columns = ["ColA", "ColB", …]` with at least two columns.',
             )
-        # `str(c)` is a no-op past the guard above, but it gives the frozenset a
-        # concrete `str` element type (tomllib values are `Any`).
-        group: frozenset[str] = frozenset(str(c) for c in columns)
+        # Case-folded to the rule-2 connectivity key so the group matches the
+        # triage's (folded) contested components; TOML casing is cosmetic.
+        group: frozenset[str] = frozenset(fold_column(c) for c in columns)
         if len(group) != len(columns):
             raise _fold_override_error(
                 "fold_override_invalid",
-                f"fold-override entry {key} repeats a column within its group: "
-                f"{columns}.",
-                "List each column once per [[fold]] group.",
+                f"fold-override entry {key} repeats a column within its group "
+                f"(after case-folding): {columns}.",
+                "List each column once per [[fold]] group; case/diacritic twins "
+                "collapse automatically and must not be spelled out.",
             )
         prior = seen_cols.setdefault(key, set())
         overlap = group & prior
