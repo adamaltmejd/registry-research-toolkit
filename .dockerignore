@@ -1,0 +1,48 @@
+# Build context exclusions for reg_webapp/Dockerfile (context = repo root).
+# Keep the context lean + deterministic, and DEFEND #224 provenance confinement
+# at the context boundary (assertion #3, alongside the in-image RUN check):
+# a maintainer's local build-db writes reg_meta.provenance.db* next to the
+# catalog DB, and any reg_meta.db / *.db lying around the working tree must never
+# enter the image — `reg-meta update` re-fetches the release DB at build time.
+
+# --- #224: maintainer-only provenance debug sibling (never ships) ---
+**/reg_meta.provenance.db
+**/reg_meta.provenance.db-*
+**/reg_meta.provenance.db*
+
+# --- Local DB artifacts (the image bakes its own via `reg-meta update`) ---
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/*.db.zst
+**/*.zst
+
+# --- Real SCB/SOS seed + build inputs (untracked, large, never in the image) ---
+reg_meta_build/input_data/
+
+# --- VCS / agent / editor cruft ---
+.git/
+.github/
+.claude/
+.agents/
+.venv/
+**/.venv/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+.ruff_cache/
+**/.DS_Store
+
+# --- Node / bun build state (bun reinstalls from the lockfile in-image) ---
+**/node_modules/
+reg_webapp/frontend/dist/
+mock_data_wizard/web/
+mock_data_wizard/src/mock_data_wizard/static/
+
+# --- Docs / specs not needed to build or run ---
+# NOTE: do NOT blanket-exclude **/*.md — several member pyprojects set
+# `readme = "README.md"`, so hatchling's editable build reads them in-image.
+archive/
+REFACTOR_SPEC.md
+ARCHITECTURE.md
+AGENTS.md

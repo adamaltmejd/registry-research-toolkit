@@ -1,0 +1,71 @@
+# reg_webapp deployment-image build (REFACTOR_SPEC.md §6.5 — Deployment).
+#
+# Build-ONLY: no registry push. The registry / hosting target is not decided yet
+# (REFACTOR_SPEC.md §6.5); pushing is wired once that lands. This job proves the
+# multi-stage Dockerfile still builds — including the `reg-meta update` DB bake
+# and the #224 provenance-confinement assertion #3 (the RUN check fails the build
+# if reg_meta.provenance.db* is present).
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# PROPOSAL — path trigger (OPEN decision, REFACTOR_SPEC.md "Open / deferred
+# decisions → Container-build CI trigger"). The image content depends on:
+#   • the webapp itself (backend source + the SPA the frontend builds),
+#   • reg_meta (its code AND the `reg-meta update` DB pair baked in),
+#   • the Dockerfile / .dockerignore / entrypoint / this workflow.
+# So the proposed trigger set below covers exactly those surfaces. It deliberately
+# does NOT trigger on reg_schema / reg_monabundle changes even though they're
+# baked deps: that would rebuild on most monorepo PRs, and they're already
+# exercised by the backend test job in ci.yml. MAINTAINER: confirm whether the
+# baked workspace deps (reg_schema/reg_monabundle) should also trigger a rebuild,
+# or whether a manual `workflow_dispatch` (kept below) is enough for those.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Container build
+
+on:
+  # NOTE: the push/pull_request `paths` lists are kept in sync by hand (GitHub
+  # Actions supports YAML anchors, but they trip some third-party tooling — the
+  # short list is clearer inlined). `reg_webapp/**` already covers the Dockerfile
+  # and entrypoint; `reg_meta/**` covers the code whose release DB gets baked in.
+  push:
+    branches: [main]
+    paths:
+      - "reg_webapp/**"
+      - "reg_meta/**"
+      - ".dockerignore"
+      - ".github/workflows/container-build.yml"
+      # The DB bake + workspace resolution key on the lockfile/manifest.
+      - "uv.lock"
+      - "pyproject.toml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "reg_webapp/**"
+      - "reg_meta/**"
+      - ".dockerignore"
+      - ".github/workflows/container-build.yml"
+      - "uv.lock"
+      - "pyproject.toml"
+  # Manual escape hatch for rebuilding after a baked-dep (reg_schema /
+  # reg_monabundle) change the path filter above intentionally skips.
+  workflow_dispatch:
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: docker/setup-buildx-action@v3
+      # Build context is the repo root (the Dockerfile needs the uv workspace);
+      # -f points at reg_webapp/Dockerfile. Build-only — `push: false`, and the
+      # image is loaded into the runner's docker so a follow-up smoke job could
+      # run it. GHA layer cache keeps rebuilds cheap.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: reg_webapp/Dockerfile
+          push: false
+          load: true
+          tags: reg-webapp:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
