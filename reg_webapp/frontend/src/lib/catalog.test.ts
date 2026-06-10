@@ -9,6 +9,7 @@ import {
   narrowCatalogNode,
   nodeLabel,
   registerPrefixOf,
+  representationsCollapse,
   representationsFromStates,
   variantSeg,
 } from "./catalog";
@@ -201,16 +202,20 @@ describe("deriveType", () => {
 });
 
 describe("representationsFromStates", () => {
-  it("returns the distinct delivery columns (representations), first-seen", () => {
+  it("returns the distinct delivery columns (representations), latest-era first", () => {
     const reps = representationsFromStates([
       state({
         delivery_column_name: "agrupp",
+        valid_from: "2000-01-01",
+        valid_to: "2010-12-31",
         value_set_version_label: "5-års intervall",
         value_set: [{ code: "1", label: "a" }] as never,
         classification_slug: "lkf2007",
       }),
       state({
         delivery_column_name: "agrupp2",
+        valid_from: "2005-01-01",
+        valid_to: "2015-12-31",
         value_set_version_label: "10-års intervall",
         value_set: null,
       }),
@@ -219,17 +224,21 @@ describe("representationsFromStates", () => {
       // state, so a regression would surface as a flip to null).
       state({ delivery_column_name: "agrupp", value_set_version_label: "x" }),
     ]);
-    expect(reps.map((r) => r.column)).toEqual(["agrupp", "agrupp2"]);
+    // agrupp2 (valid_to 2015) outranks agrupp (2010) → latest-era first.
+    expect(reps.map((r) => r.column)).toEqual(["agrupp2", "agrupp"]);
     // label / codeCount / classificationSlug are carried from the representative.
-    expect(reps[0]).toEqual({
+    expect(reps[1]).toMatchObject({
       column: "agrupp",
       label: "5-års intervall",
       codeCount: 1,
       classificationSlug: "lkf2007",
+      validTo: "2010-12-31",
     });
-    expect(reps[1].codeCount).toBeNull();
+    // codingKey = version label + sorted "code=label" pairs (content hash).
+    expect(reps[1].codingKey).toContain("1=a");
+    expect(reps[0].codeCount).toBeNull();
     // agrupp2's representative state is code-less → null classification slug.
-    expect(reps[1].classificationSlug).toBeNull();
+    expect(reps[0].classificationSlug).toBeNull();
   });
 
   it("is empty / single when there is no real choice", () => {
@@ -286,5 +295,113 @@ describe("representationsFromStates", () => {
     expect(
       reps.find((r) => r.column === "kon_detalj")?.classificationSlug,
     ).toBe("lkf2016");
+  });
+
+  it("ranks an open-ended column ahead of a dated one (latest-era primary)", () => {
+    // UT0290 1980–1987 vs UT0280 1982–1983 — both overlap (coexist). The wider,
+    // later-ending UT0290 leads. Then an open-ended (9999) column would beat both.
+    const reps = representationsFromStates([
+      state({
+        delivery_column_name: "UT0280",
+        valid_from: "1982-01-01",
+        valid_to: "1983-12-31",
+      }),
+      state({
+        delivery_column_name: "UT0290",
+        valid_from: "1980-01-01",
+        valid_to: "1987-12-31",
+      }),
+      state({
+        delivery_column_name: "UT_open",
+        valid_from: "1981-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ]);
+    expect(reps.map((r) => r.column)).toEqual(["UT_open", "UT0290", "UT0280"]);
+  });
+
+  it("ranks by a column's LATEST era (max valid_to over its states)", () => {
+    // colA has an early state but a later one extends it past colB → colA leads,
+    // even though colB's first-seen state ends later than colA's first-seen state.
+    const reps = representationsFromStates([
+      state({
+        delivery_column_name: "colA",
+        valid_from: "1990-01-01",
+        valid_to: "1995-12-31",
+      }),
+      state({
+        delivery_column_name: "colB",
+        valid_from: "1992-01-01",
+        valid_to: "2000-12-31",
+      }),
+      state({
+        delivery_column_name: "colA",
+        valid_from: "2001-01-01",
+        valid_to: "2010-12-31",
+      }),
+    ]);
+    expect(reps[0].column).toBe("colA");
+    expect(reps[0].validTo).toBe("2010-12-31");
+  });
+});
+
+describe("representationsCollapse", () => {
+  const coding = (
+    column: string,
+    label: string,
+    value_set: { code: string; label: string }[] | null,
+  ) =>
+    state({
+      delivery_column_name: column,
+      valid_from: "1980-01-01",
+      valid_to: "1987-12-31",
+      value_set_version_label: label,
+      value_set: value_set as never,
+    });
+
+  it("collapses coding-identical coexisting columns (UT0290/UT0280)", () => {
+    // Same value-set content + label, two columns → collapse to primary + reveal.
+    const reps = representationsFromStates([
+      coding("UT0290", "Ja nej 1", [{ code: "1", label: "Ja" }]),
+      coding("UT0280", "Ja nej 1", [{ code: "1", label: "Ja" }]),
+    ]);
+    expect(reps).toHaveLength(2);
+    expect(representationsCollapse(reps)).toBe(true);
+  });
+
+  it("does NOT collapse genuinely distinct codings (SSYK 3/4/5-digit)", () => {
+    const reps = representationsFromStates([
+      coding("ssyk3", "3-siffer", [{ code: "1", label: "a" }]),
+      coding("ssyk5", "5-siffer", [
+        { code: "1", label: "a" },
+        { code: "11", label: "b" },
+      ]),
+    ]);
+    expect(representationsCollapse(reps)).toBe(false);
+  });
+
+  it("collapses two code-less columns sharing a version label", () => {
+    const reps = representationsFromStates([
+      coding("col_a", "identifierare", null),
+      coding("col_b", "identifierare", null),
+    ]);
+    expect(representationsCollapse(reps)).toBe(true);
+  });
+
+  it("does NOT collapse code-less columns with different labels", () => {
+    const reps = representationsFromStates([
+      coding("col_a", "heltal", null),
+      coding("col_b", "datum", null),
+    ]);
+    expect(representationsCollapse(reps)).toBe(false);
+  });
+
+  it("is true for 0/1-length lists (no choice to make)", () => {
+    expect(representationsCollapse([])).toBe(true);
+    expect(
+      representationsCollapse(
+        representationsFromStates([state({ delivery_column_name: "kon" })]),
+      ),
+    ).toBe(true);
   });
 });

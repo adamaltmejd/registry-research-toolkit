@@ -13,6 +13,7 @@ import {
   deriveType,
   narrowCatalogNode,
   type Representation,
+  representationsCollapse,
   representationsFromStates,
 } from "./catalog";
 
@@ -100,6 +101,11 @@ let pending = $state<{ fqid: string; states: VariableStateModel[] } | null>(
 const pendingReps = $derived<Representation[]>(
   pending ? representationsFromStates(pending.states) : [],
 );
+// CODING-IDENTICAL coexisting columns (UT0290/UT0280) collapse to the primary
+// (`pendingReps[0]`, latest-era) + a reveal of the alternates, rather than a
+// forced flat choice (issue #266). `showAlternates` toggles that reveal.
+const collapse = $derived(representationsCollapse(pendingReps));
+let showAlternates = $state(false);
 
 async function pickVariable(fqid: string): Promise<void> {
   if (props.mode !== "variable") {
@@ -136,6 +142,7 @@ async function pickVariable(fqid: string): Promise<void> {
     }
     // >1 distinct delivery column → multi-representation; defer to the chooser.
     if (representationsFromStates(resolved.states).length > 1) {
+      showAlternates = false;
       pending = { fqid, states: resolved.states };
       return;
     }
@@ -243,21 +250,72 @@ function chooseRepresentation(rep: Representation): void {
 
   {#if pending && pendingReps.length > 1}
     <div class="chooser" role="group" aria-label="Pick a representation">
-      <p class="chooser-title">
-        <code>{pending.fqid}</code> has several representations at this period — pick one:
-      </p>
-      <ul class="pick-list">
-        {#each pendingReps as rep (rep.column)}
+      {#if collapse}
+        <!-- Coding-identical parallel deliveries: lead with the primary (latest-era);
+             the alternates are the SAME coding under a different delivery column, so
+             they reveal-on-demand rather than forcing a co-equal choice (#266). -->
+        <p class="chooser-title">
+          <code>{pending.fqid}</code> is delivered as
+          <code class="slug">{pendingReps[0].column}</code> (same coding under
+          {pendingReps.length - 1} other column{pendingReps.length > 2 ? "s" : ""}):
+        </p>
+        <ul class="pick-list">
           <li>
-            <button type="button" class="pick" onclick={() => chooseRepresentation(rep)}>
-              <span class="slug">{rep.column}</span>
-              {#if rep.label}<span class="name">{rep.label}</span>{/if}
-              {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
-              {#if rep.classificationSlug}<code class="classification">{rep.classificationSlug}</code>{/if}
+            <button type="button" class="pick primary" onclick={() => chooseRepresentation(pendingReps[0])}>
+              <span class="slug">{pendingReps[0].column}</span>
+              {#if pendingReps[0].label}<span class="name">{pendingReps[0].label}</span>{/if}
+              {#if pendingReps[0].codeCount != null}<span class="name">({pendingReps[0].codeCount} codes)</span>{/if}
+              {#if pendingReps[0].classificationSlug}<code class="classification">{pendingReps[0].classificationSlug}</code>{/if}
             </button>
           </li>
-        {/each}
-      </ul>
+        </ul>
+        <button
+          type="button"
+          class="reveal"
+          aria-expanded={showAlternates}
+          onclick={() => (showAlternates = !showAlternates)}
+        >
+          {showAlternates ? "Hide" : "Also delivered as"}
+          {#if !showAlternates}
+            {pendingReps
+              .slice(1)
+              .map((r) => r.column)
+              .join(", ")}
+          {/if}
+        </button>
+        {#if showAlternates}
+          <ul class="pick-list alternates">
+            {#each pendingReps.slice(1) as rep (rep.column)}
+              <li>
+                <button type="button" class="pick" onclick={() => chooseRepresentation(rep)}>
+                  <span class="slug">{rep.column}</span>
+                  {#if rep.label}<span class="name">{rep.label}</span>{/if}
+                  {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
+                  {#if rep.classificationSlug}<code class="classification">{rep.classificationSlug}</code>{/if}
+                </button>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      {:else}
+        <!-- Genuinely distinct codings (SSYK 3/4/5-digit, age brackets): an explicit
+             pick, but ranked latest-era first so the primary leads (#266). -->
+        <p class="chooser-title">
+          <code>{pending.fqid}</code> has several representations at this period — pick one:
+        </p>
+        <ul class="pick-list">
+          {#each pendingReps as rep (rep.column)}
+            <li>
+              <button type="button" class="pick" onclick={() => chooseRepresentation(rep)}>
+                <span class="slug">{rep.column}</span>
+                {#if rep.label}<span class="name">{rep.label}</span>{/if}
+                {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
+                {#if rep.classificationSlug}<code class="classification">{rep.classificationSlug}</code>{/if}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {/if}
     </div>
   {/if}
 </div>
@@ -346,5 +404,23 @@ function chooseRepresentation(rep: Representation): void {
   .chooser-title {
     font-size: 0.85rem;
     margin: 0 0 0.4rem;
+  }
+  .pick.primary {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .reveal {
+    font: inherit;
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    padding: 0.2rem 0;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    text-align: left;
+  }
+  .pick-list.alternates {
+    margin-top: 0.25rem;
   }
 </style>

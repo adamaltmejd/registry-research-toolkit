@@ -178,38 +178,90 @@ export function deriveType(state: VariableStateModel | undefined): string {
  * (the value-set version label, e.g. "5-års intervall"), `codeCount`, and
  * `classificationSlug` (the classification family, e.g. "lkf2007" — see
  * reg_meta/DESIGN.md → Classifications; null when
- * the representative state is code-less) are for display in the chooser. */
+ * the representative state is code-less) are for display in the chooser.
+ *
+ * `validTo` is the representative state's `valid_to` (ISO `YYYY-MM-DD`,
+ * `9999-12-31` for open-ended) — the latest-era ranking key (see
+ * `representationsFromStates`). `codingKey` is a content hash of the value-set
+ * (sorted `code|label` pairs + version label); two reps with the same
+ * `codingKey` are coding-identical parallel deliveries (the UT0290/UT0280 case)
+ * the chooser can COLLAPSE rather than present as a flat choice. */
 export interface Representation {
   column: string;
   label: string;
   codeCount: number | null;
   classificationSlug: string | null;
+  validTo: string;
+  codingKey: string;
+}
+
+/** A stable content key for a state's coding — sorted `code|label` pairs plus the
+ * value-set version label. Two coexisting columns with the same key carry the
+ * IDENTICAL coding (same value-set content + label), so the chooser collapses
+ * them (primary + reveal-alternates) instead of forcing a co-equal choice.
+ * Code-less states key on `"<label>|no-codes"` so two code-less columns with the
+ * same label also collapse. */
+function codingKeyOf(s: VariableStateModel): string {
+  const members = s.value_set
+    ? s.value_set.map((m) => `${m.code}=${m.label}`).sort()
+    : ["no-codes"];
+  return `${s.value_set_version_label}|${members.join(",")}`;
 }
 
 /** The delivery-column representations a binding must choose between among a
- * resolve's states (the `StatesResponse` from a `?period` resolve), first-seen
- * order. >1 only when ≥2 columns CO-EXIST (overlapping validity windows) — that
- * is the genuine multi-representation case; this MIRRORS the backend
- * `_coexisting_columns` so a range crossing a sequential column RENAME (distinct
- * columns, non-overlapping) is treated as drift and does NOT open the chooser.
- * 0/1 means no choice is needed. Pure — unit-tested. */
+ * resolve's states (the `StatesResponse` from a `?period` resolve), ranked
+ * latest-era first so the PRIMARY (currently-active) column is `[0]` — the
+ * chooser's default. >1 only when ≥2 columns CO-EXIST (overlapping validity
+ * windows) — that is the genuine multi-representation case; this MIRRORS the
+ * backend `_coexisting_columns` so a range crossing a sequential column RENAME
+ * (distinct columns, non-overlapping) is treated as drift and does NOT open the
+ * chooser. 0/1 means no choice is needed. Pure — unit-tested.
+ *
+ * Ranking key: `valid_to` DESC (open-ended `9999-12-31` sorts first; ISO strings
+ * compare chronologically), ties broken by column name for determinism. This
+ * reuses the build's latest-era canonicalization (reg_meta_build
+ * `fqid_slugs.py`, `ORDER BY vs.valid_to DESC`) so the consumer's "primary"
+ * matches the slug-derivation era rather than inventing a second policy
+ * (issue #266). Policy is single-sourced HERE on the client: the states already
+ * carry per-column `valid_to`, the backend `_coexisting_columns` is a pure
+ * ambiguity validator (it ranks nothing), and the CLI `get_datacolumns` reads
+ * the period-less `variable_alias` (no `valid_to` to rank by without a DB join,
+ * which is out of scope) — so no shared API field would actually be shared. */
 export function representationsFromStates(
   states: VariableStateModel[],
 ): Representation[] {
   const byColumn = new Map<string, VariableStateModel>();
+  // A column's latest era = max(valid_to) over ALL its states; the first-seen
+  // state supplies label/codeCount/slug/codingKey but NOT the ranking era (a
+  // later state can extend the column past the representative's window).
+  const maxValidTo = new Map<string, string>();
   for (const s of states) {
-    if (s.delivery_column_name && !byColumn.has(s.delivery_column_name)) {
-      byColumn.set(s.delivery_column_name, s);
+    const col = s.delivery_column_name;
+    if (!col) {
+      continue;
+    }
+    if (!byColumn.has(col)) {
+      byColumn.set(col, s);
+    }
+    const prev = maxValidTo.get(col);
+    if (prev === undefined || s.valid_to > prev) {
+      maxValidTo.set(col, s.valid_to);
     }
   }
-  // label / codeCount / classificationSlug are all sourced from the
-  // representative (first-seen) state per column.
+  // label / codeCount / classificationSlug / codingKey are sourced from the
+  // representative (first-seen) state per column; validTo is the column's
+  // latest era (max over its states) for ranking.
   const toRep = (s: VariableStateModel): Representation => ({
     column: s.delivery_column_name as string,
     label: s.value_set_version_label,
     codeCount: s.value_set?.length ?? null,
     classificationSlug: s.classification_slug ?? null,
+    validTo: maxValidTo.get(s.delivery_column_name as string) as string,
+    codingKey: codingKeyOf(s),
   });
+  // Latest-era first: valid_to DESC, then column ASC for a stable order.
+  const byLatestEra = (a: Representation, b: Representation): number =>
+    b.validTo.localeCompare(a.validTo) || a.column.localeCompare(b.column);
   // Distinct columns valid at the SAME instant (overlapping windows) are parallel
   // representations; distinct columns in non-overlapping windows are a rename.
   const coexisting = new Set<string>();
@@ -232,10 +284,23 @@ export function representationsFromStates(
   if (coexisting.size >= 2) {
     return [...byColumn.values()]
       .filter((s) => coexisting.has(s.delivery_column_name as string))
-      .map(toRep);
+      .map(toRep)
+      .sort(byLatestEra);
   }
   // No genuine choice: a single column, or a sequential rename (drift). Report at
   // most the first column so the caller's `length > 1` chooser gate stays closed.
   const first = [...byColumn.values()][0];
   return first ? [toRep(first)] : [];
+}
+
+/** Whether a set of coexisting representations is CODING-IDENTICAL — every column
+ * carries the same value-set content + version label (the UT0290/UT0280 case:
+ * "Folkhögskola" delivered as two columns, both value_set 1197 / "Ja nej 1").
+ * The chooser then COLLAPSES: it defaults to the primary (`reps[0]`, latest-era)
+ * and offers the alternates as a reveal ("also delivered as …") rather than a
+ * forced co-equal choice (issue #266). False for a genuine multi-coding choice
+ * (SSYK 3/4/5-digit, age brackets) — those stay an explicit pick. A 0/1-length
+ * list trivially collapses (no choice to make). */
+export function representationsCollapse(reps: Representation[]): boolean {
+  return reps.every((r) => r.codingKey === reps[0]?.codingKey);
 }
