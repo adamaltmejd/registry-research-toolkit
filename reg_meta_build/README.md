@@ -2,8 +2,8 @@
 
 Builder for the reg_meta SQLite databases (`reg_meta.db`, `reg_meta_docs.db`).
 
-Maintainer-only. End users install [`reg_meta`](../reg_meta/) and fetch the
-prebuilt databases via `reg-meta update`.
+Maintainer-only. End users install [`reg_meta`](../reg_meta/) and fetch the prebuilt
+databases via `reg-meta update`.
 
 ## Commands
 
@@ -15,5 +15,5 @@ reg-meta-build precheck-slugs  # report any IDs missing a slug entry
 reg-meta-build parse-sos       # parse Socialstyrelsen register metadata xlsx
 ```
 
-See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is
-tracked in `REFACTOR_SPEC.md` at repo root.
+See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
+`REFACTOR_SPEC.md` at repo root.

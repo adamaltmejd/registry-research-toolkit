@@ -7,7 +7,7 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
----
+----------------------------------------------------------------------------------------
 
 **Förtidspension från folkpension, egenförmån FolkFort**
 

@@ -22,4 +22,7 @@ Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
 10 \* halv omfattning = 5 nettodagar, 10 \* en kvarts omfattning = 2,5 nettodagar.
 
-2008-2011 finns förebyggande sjukpenning uppdelad på *Förebyggande sjukpenning, antal nettodagar* ([[ForbSjukP_08_Ndag]]) och *Förebyggande sjukpenning, förlängd, antal nettodagar* (ForbSjukP_Forlangd_Ndag). Dessa dagar ingår i *Sjukpenning, förebyggande, antal nettodagar* (Forb-SjukP_Bdag).
+2008-2011 finns förebyggande sjukpenning uppdelad på *Förebyggande sjukpenning, antal
+nettodagar* ([ForbSjukP_08_Ndag](ForbSjukP_08_Ndag.md)) och *Förebyggande sjukpenning,
+förlängd, antal nettodagar* (ForbSjukP_Forlangd_Ndag). Dessa dagar ingår i *Sjukpenning,
+förebyggande, antal nettodagar* (Forb-SjukP_Bdag).

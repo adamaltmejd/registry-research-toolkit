@@ -23,5 +23,6 @@ Man kan få smittbärarpenning om man måste avstå från att arbeta på grund a
 - har eller antas ha en smittsam sjukdom, men inte har nedsatt arbetsförmåga
 - ska till läkaren för att utreda om du har en smittsam sjukdom
 - är smittad av en allmänfarlig sjukdom
-- har en sjukdom, en smitta, ett sår eller annan skada som gör att du inte får hantera livsmedel
+- har en sjukdom, en smitta, ett sår eller annan skada som gör att du inte får hantera
+  livsmedel
 - är försäkrad i Sverige. Det finns några undantag från den regeln.

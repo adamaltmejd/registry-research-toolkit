@@ -16,7 +16,8 @@ FolkBel
 
 Beloppet anges i hundratals kronor.
 
-Under året utbetalt folkpensionsbelopp i form av *Förtidspension*, *Sjukbidrag*, *Ålderspension, Hustrutillägg* och /eller *Efterlevandeförmån*.
+Under året utbetalt folkpensionsbelopp i form av *Förtidspension*, *Sjukbidrag*,
+*Ålderspension, Hustrutillägg* och /eller *Efterlevandeförmån*.
 
 Utgår i och med att det reformerade pensionssystemet fullt ut träder i kraft.
 

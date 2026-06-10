@@ -14,8 +14,10 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 (1994–)
 
-Antal startade sjukfall med sjukpenning, arbetsskadesjukpenning och/eller rehabiliteringspenning under året.
+Antal startade sjukfall med sjukpenning, arbetsskadesjukpenning och/eller
+rehabiliteringspenning under året.
 
-*För ytterligare information se mer under respektive ersättningsslag*  ([[SjukPP]], [[ArbSkErs]], [[RehabErs]]).
+*För ytterligare information se mer under respektive ersättningsslag*
+([SjukPP](SjukPP.md), [ArbSkErs](ArbSkErs.md), [RehabErs](RehabErs.md)).
 
 *För ytterligare information, se bilaga 5 - Hur FK-data tolkas.*

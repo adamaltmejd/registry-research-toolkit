@@ -18,6 +18,10 @@ Antal utbetalda bruttodagar under året med arbetsskadesjukpenning.
 
 Antal bruttodagar visar antal dagar under ett år oavsett omfattning.
 
-Arbetsskadesjukpenningkan betalas ut till personer som har låg inkomst, studerar, behöver avstå från arbete i förebyggande syfte eller saknar arbetstillstånd eller uppehållstillstånd.
+Arbetsskadesjukpenningkan betalas ut till personer som har låg inkomst, studerar,
+behöver avstå från arbete i förebyggande syfte eller saknar arbetstillstånd eller
+uppehållstillstånd.
 
-Endast summerade fall där beloppet för penningen dividerat med antal nettodagar för penningen är större än 100 redovisas, annars räknas det som en tilläggsutbetalning varvid antalet nettodagar inte redovisas.
+Endast summerade fall där beloppet för penningen dividerat med antal nettodagar för
+penningen är större än 100 redovisas, annars räknas det som en tilläggsutbetalning
+varvid antalet nettodagar inte redovisas.

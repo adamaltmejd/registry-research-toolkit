@@ -16,22 +16,40 @@ AMK
 
 Beloppet anges i hundratals kronor.
 
-Den *1/7 1994* införs dagpenning från statlig arbetsmarknadskassa, vilket är en inkomstrelaterad ersättning till arbetslösa som inte tillhör en arbetslöshetskassa (se inkomstrelaterad dagpenning i [[KAS]]).
+Den *1/7 1994* införs dagpenning från statlig arbetsmarknadskassa, vilket är en
+inkomstrelaterad ersättning till arbetslösa som inte tillhör en arbetslöshetskassa (se
+inkomstrelaterad dagpenning i [KAS](KAS.md)).
 
-Ersättningen avskaffas den *1/1 1995*. Övergångsbestämmelser gäller dock för dem som före årsskiftet har påbörjat en ersättningsperiod med dagpenning, de får fortsätta perioden längst till och med 30 juni 1996. Övergångsbestämmelser gäller även för vissa nya [[KAS]]-sökande, nämligen för dem som blev arbetslösa under första halvåret 1995, som hade sju avgiftsmånader under 1994 och som uppfyllde arbetsvillkoret för rätt till [[KAS]]-ersättning.
+Ersättningen avskaffas den *1/1 1995*. Övergångsbestämmelser gäller dock för dem som
+före årsskiftet har påbörjat en ersättningsperiod med dagpenning, de får fortsätta
+perioden längst till och med 30 juni 1996. Övergångsbestämmelser gäller även för vissa
+nya [KAS](KAS.md)-sökande, nämligen för dem som blev arbetslösa under första halvåret
+1995, som hade sju avgiftsmånader under 1994 och som uppfyllde arbetsvillkoret för rätt
+till [KAS](KAS.md)-ersättning.
 
-*Följande regler gäller för den inkomstrelaterade ersättningen:* Kravet på medlemskap i en arbetslöshetskassa för att erhålla inkomstrelaterad ersättning avskaffas. För att ha rätt till ersättning skall den försäkrade ha betalt en allmän avgift till finansieringen av arbetslöshetsersättningen. Denna avgift skall ha betalats under tolv av de senaste 24 månaderna före arbetslösheten.
+*Följande regler gäller för den inkomstrelaterade ersättningen:* Kravet på medlemskap i
+en arbetslöshetskassa för att erhålla inkomstrelaterad ersättning avskaffas. För att ha
+rätt till ersättning skall den försäkrade ha betalt en allmän avgift till finansieringen
+av arbetslöshetsersättningen. Denna avgift skall ha betalats under tolv av de senaste 24
+månaderna före arbetslösheten.
 
-De nya reglerna föreskriver också att arbete ska ha utförts under minst fem kalendermånader under de senaste tolv månaderna före arbetslösheten med minst 75 timmars arbete per månad, alternativt minst tio kalendermånader under de senaste 12 månaderna före arbetslösheten med minst 65 timmars arbete per månad.
+De nya reglerna föreskriver också att arbete ska ha utförts under minst fem
+kalendermånader under de senaste tolv månaderna före arbetslösheten med minst 75 timmars
+arbete per månad, alternativt minst tio kalendermånader under de senaste 12 månaderna
+före arbetslösheten med minst 65 timmars arbete per månad.
 
-Den inkomstrelaterade ersättningen kan fås under 300 dagar, den som fyllt 55 år kan få den under 450 dagar.
+Den inkomstrelaterade ersättningen kan fås under 300 dagar, den som fyllt 55 år kan få
+den under 450 dagar.
 
-Ersättningsnivån fastställs till 80 procent av tidigare inkomst. Högsta dagpenning är 564 kr, lägsta ersättning är 245 kr.
+Ersättningsnivån fastställs till 80 procent av tidigare inkomst. Högsta dagpenning är
+564 kr, lägsta ersättning är 245 kr.
 
-Ersättningen administreras av arbetsmarknadskassorna och betalas ut av de allmänna försäkringskassorna.
+Ersättningen administreras av arbetsmarknadskassorna och betalas ut av de allmänna
+försäkringskassorna.
 
 (1994–1997)
 
 Beloppet anges i hundratals kronor.
 
-Arbetslösa kan resa till annat ES/EES-land för att söka arbete. De som beviljats intyg har rätt till bibehållen svensk arbetslöshetsersättning under högst tre månader.
+Arbetslösa kan resa till annat ES/EES-land för att söka arbete. De som beviljats intyg
+har rätt till bibehållen svensk arbetslöshetsersättning under högst tre månader.

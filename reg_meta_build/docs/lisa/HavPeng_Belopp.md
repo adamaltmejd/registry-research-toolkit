@@ -8,7 +8,7 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
----
+----------------------------------------------------------------------------------------
 
 **Graviditetspenning, ersättningsbelopp HavPeng_Belopp**
 
@@ -18,9 +18,11 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratals kronor.
 
-Utbetalt belopp under året för graviditetspenning, står i relation till utbetalda dagar med graviditetspenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för graviditetspenning, står i relation till utbetalda dagar
+med graviditetspenning. Utbetalt belopp avser ersättningsperioden.
 
-*För ytterligare information, se under Graviditetspenning, antal bruttodagar* (HavPeng_Bdag).
+*För ytterligare information, se under Graviditetspenning, antal bruttodagar*
+(HavPeng_Bdag).
 
 #### **Sjukdom, arbetsskada och rehabilitering**
 

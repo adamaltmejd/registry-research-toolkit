@@ -16,11 +16,8 @@ jobs:
       - run: uv sync --frozen
       - run: uv run ruff check
       - run: uv run ruff format --check
-      # setup-bun is required for the markdownlint hook (bunx) in the
-      # pre-commit backstop below.
-      - uses: oven-sh/setup-bun@v2
       # Backstop: run the pre-commit suite that an agent could have bypassed
-      # locally with `--no-verify`. Covers markdownlint + ty + ruff hooks.
+      # locally with `--no-verify`. Covers panache + ty + ruff hooks.
       # SKIP=pytest avoids duplicating the test job below.
       - run: uvx pre-commit run --all-files
         env:

@@ -16,4 +16,6 @@ Beloppet anges i hundratals kronor.
 
 Inkomstpension betalas ut till pensionärer som är födda 1938 eller senare.
 
-Inkomstpension grundar sig på den sammanlagda inkomst man har haft under livet. Hur mycket hen har tjänat varje månad, hur löner allmänt utvecklar sig i samhället och vid vilken ålder man går i pension är faktorer som påverkar inkomstpensionens storlek.
+Inkomstpension grundar sig på den sammanlagda inkomst man har haft under livet. Hur
+mycket hen har tjänat varje månad, hur löner allmänt utvecklar sig i samhället och vid
+vilken ålder man går i pension är faktorer som påverkar inkomstpensionens storlek.

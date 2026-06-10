@@ -1,16 +1,16 @@
 # Registry Research Toolkit
 
-Tools for working with Swedish registry microdata on
-[SCB MONA](https://www.scb.se/mona).
+Tools for working with Swedish registry microdata on [SCB
+MONA](https://www.scb.se/mona).
 
-| Package | Description |
-|---|---|
-| [`reg_meta`](reg_meta/) | Search and query SCB registry metadata (CLI `reg-meta`) |
-| [`reg_meta_build`](reg_meta_build/) | Build the `reg_meta` metadata DBs from agency exports (maintainer-only) |
-| [`reg_schema`](reg_schema/) | `project_data.json` schema and structural validator |
-| [`reg_monabundle`](reg_monabundle/) | MONA bundle build + runtime + PII scanner |
-| [`reg_webapp`](reg_webapp/) | Web app (FastAPI + Svelte): catalog browse + project authoring |
-| [`mock_data_wizard`](mock_data_wizard/) | Generate mock CSV data from MONA projects without exporting personal data |
+  | Package                                 | Description                                                               |
+  | --------------------------------------- | ------------------------------------------------------------------------- |
+  | [`reg_meta`](reg_meta/)                 | Search and query SCB registry metadata (CLI `reg-meta`)                   |
+  | [`reg_meta_build`](reg_meta_build/)     | Build the `reg_meta` metadata DBs from agency exports (maintainer-only)   |
+  | [`reg_schema`](reg_schema/)             | `project_data.json` schema and structural validator                       |
+  | [`reg_monabundle`](reg_monabundle/)     | MONA bundle build + runtime + PII scanner                                 |
+  | [`reg_webapp`](reg_webapp/)             | Web app (FastAPI + Svelte): catalog browse + project authoring            |
+  | [`mock_data_wizard`](mock_data_wizard/) | Generate mock CSV data from MONA projects without exporting personal data |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
@@ -18,13 +18,22 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
 **Python 3.13+** and **uv** (Python package manager).
 
-| | macOS | Windows |
-|---|---|---|
-| Python | `brew install python` or [python.org](https://www.python.org/downloads/) | [python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.13` |
-| uv | `curl -LsSf https://astral.sh/uv/install.sh \| sh` | `powershell -c "irm https://astral.sh/uv/install.ps1 \| iex"` |
+macOS:
 
-See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/)
-for other methods.
+```sh
+brew install python   # or download from python.org
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Windows:
+
+```powershell
+winget install Python.Python.3.13   # or download from python.org
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/) for
+other methods.
 
 ## Install
 
@@ -45,11 +54,9 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 
 then install `microdata-tools-se` from the plugin marketplace UI.
 
-This bundles two skills —
-`/microdata-tools-se:register-metadata-search` and
-`/microdata-tools-se:init-mona-project` — and keeps them updated through the
-plugin host. The skills use the underlying CLIs below; install those once per
-machine.
+This bundles two skills — `/microdata-tools-se:register-metadata-search` and
+`/microdata-tools-se:init-mona-project` — and keeps them updated through the plugin
+host. The skills use the underlying CLIs below; install those once per machine.
 
 ### CLIs
 
@@ -84,8 +91,7 @@ mock-data-wizard build-bundle                        # build mdw_runner.py
 mock-data-wizard generate --stats mdw_step3_stats.json --seed 42   # mock CSVs
 ```
 
-See per-package READMEs for details:
-[reg_meta](reg_meta/README.md) |
+See per-package READMEs for details: [reg_meta](reg_meta/README.md) \|
 [mock_data_wizard](mock_data_wizard/README.md)
 
 ## License

@@ -11,14 +11,19 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 KU1PeOrgN
 
-Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret[^4] gett individen störst inkomstbelopp i form av löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under aktuellt år[^5] .
+Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret gett
+individen störst inkomstbelopp i form av löneinkomst eller företagarinkomst (inkomst av
+aktiv näringsverksamhet) under aktuellt år[^5] .
 
-I de fall flera förvärvskällor gett individen lika stor inkomst väljs den förvärvskälla där individen arbetat störst del av året.
+I de fall flera förvärvskällor gett individen lika stor inkomst väljs den förvärvskälla
+där individen arbetat störst del av året.
 
 KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 
-*För ytterligare information, se beskrivning under Företag ([[PeOrgNr_LISA]]).*
+*För ytterligare information, se beskrivning under Företag
+([PeOrgNr_LISA](PeOrgNr_LISA.md)).*
 
 *Vid utlämnade av data från LISA ersätts organisationsnumret av ett löpnummer.*
 
-[^5]: 1990 utgjordes underlaget för företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.
+[^5]: 1990 utgjordes underlaget för företagarinkomsten av Inkomst av rörelse/Inkomst av
+    Jordbruksfastighet (brukad) för 1989.

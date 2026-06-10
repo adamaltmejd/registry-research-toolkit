@@ -16,4 +16,6 @@ AktStod*Sjuk*Dag
 
 Antal utbetalda bruttodagar under året med aktivitetsstöd med sjukpenning.
 
-Man kan inte få sjukpenning för samma tid som aktivitetsstöd men däremot har man rätt att behålla aktivitetsstödet även när man blir sjuk om man anmäler till Arbetsförmedlingen första dagen som man är frånvarande.
+Man kan inte få sjukpenning för samma tid som aktivitetsstöd men däremot har man rätt
+att behålla aktivitetsstödet även när man blir sjuk om man anmäler till
+Arbetsförmedlingen första dagen som man är frånvarande.

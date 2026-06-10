@@ -13,7 +13,8 @@ SjukErsInkAnd
 
 (2003–)
 
-Ger information om vilken grad av sjukersättningen som erhållits vid sista utbetalning under året.
+Ger information om vilken grad av sjukersättningen som erhållits vid sista utbetalning
+under året.
 
 #### Kodförteckning:
 

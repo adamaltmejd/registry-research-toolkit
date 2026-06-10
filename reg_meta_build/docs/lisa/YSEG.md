@@ -13,7 +13,10 @@ YSEG
 
 (2001–2013)
 
-YSEG är en härledd socioekonomisk variabel som bygger på den modell som togs fram av en arbetsgrupp inom Eurostat för att skapa ESeC (European socioeconomic classification). Information för att kunna härleda YSEG för förvärvsarbetande är antal anställda, ISCO-88(COM) på tresiffernivå samt yrkesställning. ISCO-88(COM) nycklas till SSYK 96.
+YSEG är en härledd socioekonomisk variabel som bygger på den modell som togs fram av en
+arbetsgrupp inom Eurostat för att skapa ESeC (European socioeconomic classification).
+Information för att kunna härleda YSEG för förvärvsarbetande är antal anställda,
+ISCO-88(COM) på tresiffernivå samt yrkesställning. ISCO-88(COM) nycklas till SSYK 96.
 
 YSEG uppgifter finns endast för de som är förvärvsarbetande enligt RAMS.
 

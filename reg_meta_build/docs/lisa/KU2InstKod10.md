@@ -15,10 +15,13 @@ KU2InstKod10
 
 Kod för institutionell sektor för det företag som avser näst största förvärvskällan.
 
-Den institutionella sektorkoden är från och med 2014 tioställig. Koden bildas utifrån *företagets samhällssektor, ägare* och *juridiska form*. De sex första positionerna anger samhällssektor, den sjunde och åttonde positionen anger ägarkontroll medan den juridiska formen anges i variabelns nionde och tionde position.
+Den institutionella sektorkoden är från och med 2014 tioställig. Koden bildas utifrån
+*företagets samhällssektor, ägare* och *juridiska form*. De sex första positionerna
+anger samhällssektor, den sjunde och åttonde positionen anger ägarkontroll medan den
+juridiska formen anges i variabelns nionde och tionde position.
 
-*Se under Institutionell sektorkod (företag)*, ([[InstKod10]]).
+*Se under Institutionell sektorkod (företag)*, ([InstKod10](InstKod10.md)).
 
 Sektorkod för det företag som avser näst största förvärvskällan.
 
-*Se under Sektortillhörighet (företag)*, ([[SektorKod]]).
+*Se under Sektortillhörighet (företag)*, ([SektorKod](SektorKod.md)).

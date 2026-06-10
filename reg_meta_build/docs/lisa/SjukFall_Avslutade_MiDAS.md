@@ -14,8 +14,10 @@ SjukFall Avslutade MiDAS
 
 (1994–)
 
-Antal avslutade sjukfall med sjukpenning, arbetsskadesjukpenning och/eller rehabiliteringspenning under året.
+Antal avslutade sjukfall med sjukpenning, arbetsskadesjukpenning och/eller
+rehabiliteringspenning under året.
 
-*För ytterligare information se mer under respektive ersättningsslag ([[SjukPP]], [[ArbSkErs]], [[RehabErs]]).*
+*För ytterligare information se mer under respektive ersättningsslag
+([SjukPP](SjukPP.md), [ArbSkErs](ArbSkErs.md), [RehabErs](RehabErs.md)).*
 
 *För ytterligare information, se bilaga 5 - Hur FK-data tolkas.*

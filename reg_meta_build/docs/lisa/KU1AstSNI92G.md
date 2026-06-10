@@ -7,4 +7,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Arbetsställets näringsgren, SNI92, grov nivå (10grupper) (största förvärvskälla) KU1AstSNI92G**
+**Arbetsställets näringsgren, SNI92, grov nivå (10grupper) (största förvärvskälla)
+KU1AstSNI92G**

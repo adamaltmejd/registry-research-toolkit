@@ -7,4 +7,4 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-| 8                        | Arbetsmarknadspolitisk åtgärd | Raks_UtbBidrInk  |
+\| 8 \| Arbetsmarknadspolitisk åtgärd \| Raks_UtbBidrInk \|

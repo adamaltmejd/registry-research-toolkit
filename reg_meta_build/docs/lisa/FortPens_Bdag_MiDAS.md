@@ -15,4 +15,5 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Antal utbetalda bruttodagar under året med förtidspension.
 
-*För ytterligare information om förtidspension se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
+*För ytterligare information om förtidspension se grundläggarende texten under
+Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*

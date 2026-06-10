@@ -16,8 +16,12 @@ UtbFor
 
 Beloppet anges i hundratals kronor.
 
-Utbildningsbidrag för kompletterande pedagogisk utbildning som leder till ämneslärarexamen för personer som har en examen på forskarnivå.
+Utbildningsbidrag för kompletterande pedagogisk utbildning som leder till
+ämneslärarexamen för personer som har en examen på forskarnivå.
 
-Utbildningsbidragets storlek är 25 000 kr/mån till och med det kalenderår då den studerande fyller 56 år. Beloppet är skattepliktigt och förutsätter studier på heltid. Efter sex månader granskas studiemeriterna innan beslut fattas om bidrag för återstående del av utbildningen.
+Utbildningsbidragets storlek är 25 000 kr/mån till och med det kalenderår då den
+studerande fyller 56 år. Beloppet är skattepliktigt och förutsätter studier på heltid.
+Efter sex månader granskas studiemeriterna innan beslut fattas om bidrag för återstående
+del av utbildningen.
 
 Utbetalare är universitet och högskolor.

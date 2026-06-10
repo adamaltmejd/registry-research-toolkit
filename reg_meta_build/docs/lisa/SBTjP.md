@@ -16,6 +16,7 @@ SBTjF
 
 Beloppet anges i hundratals kronor.
 
-Från och med 1994 redovisas tjänste-/tilläggspension för anställda i statliga bolag i en egen variabel.
+Från och med 1994 redovisas tjänste-/tilläggspension för anställda i statliga bolag i en
+egen variabel.
 
-*För ytterligare information, se under Statlig tjänstepension* ([[STjP]]).
+*För ytterligare information, se under Statlig tjänstepension* ([STjP](STjP.md)).

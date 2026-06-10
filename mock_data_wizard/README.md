@@ -1,8 +1,7 @@
 # mock_data_wizard
 
-Generate mock CSV data from MONA project metadata without exporting
-personal data. Designed for LLM agent consumption; terminal use is
-secondary.
+Generate mock CSV data from MONA project metadata without exporting personal data.
+Designed for LLM agent consumption; terminal use is secondary.
 
 ## Install
 
@@ -10,12 +9,11 @@ secondary.
 uv tool install mock-data-wizard
 ```
 
-Requires `reg_meta` for metadata enrichment (population spine, value
-code validation, compare). Install reg_meta first — see
-[reg_meta/README.md](../reg_meta/README.md).
+Requires `reg_meta` for metadata enrichment (population spine, value code validation,
+compare). Install reg_meta first — see [reg_meta/README.md](../reg_meta/README.md).
 
-Upgrade with `mock-data-wizard update`. The CLI also checks for a newer
-version on startup and points at this command if one is available.
+Upgrade with `mock-data-wizard update`. The CLI also checks for a newer version on
+startup and points at this command if one is available.
 
 ## Quick start
 
@@ -44,9 +42,8 @@ Use `--help` on any command for full flag documentation.
 
 ## Data sources
 
-The bundle exposes a `configure()` function near the top of
-`mdw_runner.py`. Edit it to declare what to aggregate.
-Two constructors are available:
+The bundle exposes a `configure()` function near the top of `mdw_runner.py`. Edit it to
+declare what to aggregate. Two constructors are available:
 
 ```python
 def configure():
@@ -68,13 +65,12 @@ def configure():
 
 Discovery mode: when a source has no filtering info (no `include`/
 `tables`/`pattern`/`queries`), the bundle writes a timestamped
-`mdw_sources_<YYYYMMDD_HHMMSS>.py` sidecar listing everything
-discoverable, and exits without writing `mdw_step3_stats.json`. Edit the sidecar
-to narrow each source to the items you want, then re-run the bundle —
-it auto-loads the sidecar on the next run (no copy-paste back into
-`configure()`). Delete the sidecar to re-discover. A source that can't
-be reached on this project (e.g., a DSN that doesn't exist) fails
-gracefully and is omitted from the suggestion.
+`mdw_sources_<YYYYMMDD_HHMMSS>.py` sidecar listing everything discoverable, and exits
+without writing `mdw_step3_stats.json`. Edit the sidecar to narrow each source to the
+items you want, then re-run the bundle — it auto-loads the sidecar on the next run (no
+copy-paste back into `configure()`). Delete the sidecar to re-discover. A source that
+can't be reached on this project (e.g., a DSN that doesn't exist) fails gracefully and
+is omitted from the suggestion.
 
 Want everything without the discovery dance? Pass `all=True`:
 
@@ -88,23 +84,22 @@ def configure():
 
 ## Commands
 
-| Command | Purpose |
-|---|---|
-| `build-bundle` | Build the single-file Python bundle to upload to MONA |
-| `generate` | Produce mock CSV files from mdw_step3_stats.json |
-| `compare` | Compare local file columns against registry metadata |
+  | Command        | Purpose                                               |
+  | -------------- | ----------------------------------------------------- |
+  | `build-bundle` | Build the single-file Python bundle to upload to MONA |
+  | `generate`     | Produce mock CSV files from mdw_step3_stats.json      |
+  | `compare`      | Compare local file columns against registry metadata  |
 
 ## PII safety
 
-The bundle exports **only** aggregate statistics (counts, means,
-frequencies). Cells with 5 or fewer individuals are censored. No
-individual-level data leaves MONA. See [DESIGN.md](DESIGN.md) for
-the full safety specification.
+The bundle exports **only** aggregate statistics (counts, means, frequencies). Cells
+with 5 or fewer individuals are censored. No individual-level data leaves MONA. See
+[DESIGN.md](DESIGN.md) for the full safety specification.
 
 ## Files
 
-| Path | Purpose |
-|---|---|
-| [DESIGN.md](DESIGN.md) | Design rationale, PII safety rules, generation strategy |
-| `src/mock_data_wizard/` | Package source |
-| `tests/` | Test suite |
+  | Path                    | Purpose                                                 |
+  | ----------------------- | ------------------------------------------------------- |
+  | [DESIGN.md](DESIGN.md)  | Design rationale, PII safety rules, generation strategy |
+  | `src/mock_data_wizard/` | Package source                                          |
+  | `tests/`                | Test suite                                              |

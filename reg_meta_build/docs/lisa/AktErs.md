@@ -16,4 +16,4 @@ Beloppet anges i hundratal kronor.
 
 Aktivitetsersättningen avser utbetalningsåret oavsett ersättningsperiod.
 
-*För ytterligare information, se under Sjukersättning* ([[SjukErs]]).
+*För ytterligare information, se under Sjukersättning* ([SjukErs](SjukErs.md)).

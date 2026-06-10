@@ -16,16 +16,23 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Totalt antal dagar under året med föräldraledighet, både med och utan föräldrapenning.
 
-Tills dess att barnet är 18 månader ha föräldern rätt till ledighet med eller utan föräldrapenning. På så sätt är det möjligt att förlänga föräldraledigheten genom att ta ut ledighet utan ersättning.
+Tills dess att barnet är 18 månader ha föräldern rätt till ledighet med eller utan
+föräldrapenning. På så sätt är det möjligt att förlänga föräldraledigheten genom att ta
+ut ledighet utan ersättning.
 
 De obetalda dagarna är skattade dagar och göras av Försäkringskassan.
 
-*För ytterligare information om föräldrapenning, se under Föräldrapenning, antal bruttodagar* ([[ForPeng_Bdag]]).
+*För ytterligare information om föräldrapenning, se under Föräldrapenning, antal
+bruttodagar* ([ForPeng_Bdag](ForPeng_Bdag.md)).
 
 (1994–)
 
 Antal utbetalda bruttodagar under året med tillfällig föräldrapenning.
 
-Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5 procent). Antal bruttodagar visar antal dagar under ett år oavsett ovan omfattning.
+Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75
+procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning
+(12,5 procent). Antal bruttodagar visar antal dagar under ett år oavsett ovan
+omfattning.
 
-*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn* ([[ForVAB]]).
+*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn*
+([ForVAB](ForVAB.md)).

@@ -15,12 +15,28 @@ AnnInkF04
 
 Beloppet anges i hundratals kronor.
 
-*[[SPenTill]]* (2005-)*, [[InkPens]]* (2005-)*, [[TillPens]]* (2005-)*, [[PremPens]]* (2005-)*, [[GarPens]]* (2005-)*, SumEftpens* (2005-)*, [[ITP]]* (2005-)*, [[KTjP]]* (2005-)*, [[STjP]]* (2005-)*, [[SBTjP]]* (2005-)*, [[KUPens]]* (2005-)*, [[STP]]* (2005-)*, OvrTjP* (2005-)*, [[PrivPens]]* (2005-)*, [[LivYrke]]* (2005-)*, [[LivArb]]* (2005-)*, [[LivAnnan]]* (2005-)*, [[LivArbF]]* (2005-)*, [[HKapErs]]* (2005-)*, [[BidrFor]]* (2005-)*, SocBidrPersF04* (2005-)*, BostBidrPersF04* (2005-)*, BostTillPersF04* (2005-) samt *[[UnderHBidrMot]]* (2015-)*.*
+*[SPenTill](SPenTill.md)* (2005-)*, [InkPens](InkPens.md)* (2005-)*,
+[TillPens](TillPens.md)* (2005-)*, [PremPens](PremPens.md)* (2005-)*,
+[GarPens](GarPens.md)* (2005-)*, SumEftpens* (2005-)*, [ITP](ITP.md)* (2005-)*,
+[KTjP](KTjP.md)* (2005-)*, [STjP](STjP.md)* (2005-)*, [SBTjP](SBTjP.md)* (2005-)*,
+[KUPens](KUPens.md)* (2005-)*, [STP](STP.md)* (2005-)*, OvrTjP* (2005-)*,
+[PrivPens](PrivPens.md)* (2005-)*, [LivYrke](LivYrke.md)* (2005-)*, [LivArb](LivArb.md)*
+(2005-)*, [LivAnnan](LivAnnan.md)* (2005-)*, [LivArbF](LivArbF.md)* (2005-)*,
+[HKapErs](HKapErs.md)* (2005-)*, [BidrFor](BidrFor.md)* (2005-)*, SocBidrPersF04*
+(2005-)*, BostBidrPersF04* (2005-)*, BostTillPersF04* (2005-) samt
+*[UnderHBidrMot](UnderHBidrMot.md)* (2015-)*.*
 
-Variabeln summerar för aktuellt år de inkomster/ersättningar som listas ovan, Annan inkomst[^164] .
+Variabeln summerar för aktuellt år de inkomster/ersättningar som listas ovan, Annan
+inkomst[^164] .
 
-*"Annan inkomst" omfattar inkomster som inte står i relation till grad av aktivt arbetslivsdeltagande. Individer med dessa inkomster kan samtidigt mycket väl vara heltidsarbetande. Inkomsten bidrar dock med en förklaring till hur individer får sin försörjning.*
+*"Annan inkomst" omfattar inkomster som inte står i relation till grad av aktivt
+arbetslivsdeltagande. Individer med dessa inkomster kan samtidigt mycket väl vara
+heltidsarbetande. Inkomsten bidrar dock med en förklaring till hur individer får sin
+försörjning.*
 
-I och med att beräkningarna av konsumtionsvikt förändras mellan 2004 och 2005 ersätts variabeln *[[AnnInkF]]* med variabeln *AnnInkF04* från och med år 2005.
+I och med att beräkningarna av konsumtionsvikt förändras mellan 2004 och 2005 ersätts
+variabeln *[AnnInkF](AnnInkF.md)* med variabeln *AnnInkF04* från och med år 2005.
 
-[^164]: Annan inkomst: Andra inkomster än Inkomst av förvärvskälla, Arbetstidsrelaterad social inkomst och Kapitalinkomst. För de familjerelaterade inkomsterna används det individualiserade beloppet.
+[^164]: Annan inkomst: Andra inkomster än Inkomst av förvärvskälla, Arbetstidsrelaterad
+    social inkomst och Kapitalinkomst. För de familjerelaterade inkomsterna används det
+    individualiserade beloppet.

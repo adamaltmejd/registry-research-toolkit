@@ -13,6 +13,8 @@ AstSNI92G
 
 (1990–2001)
 
-Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål, 10 grupper.
+Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för
+redovisningsändamål, 10 grupper.
 
-*För kodförteckning se under Näringsgren enligt SNI2002, grov nivå* ([[AstSNI2002G]]).
+*För kodförteckning se under Näringsgren enligt SNI2002, grov nivå*
+([AstSNI2002G](AstSNI2002G.md)).

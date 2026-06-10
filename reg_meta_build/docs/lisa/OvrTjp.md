@@ -16,8 +16,12 @@ OvrTjP
 
 Beloppet anges i hundratals kronor.
 
-Här ingår de utbetalningar som redovisas på Kontrolluppgift från pensions- och försäkringsutbetalare där ersättningen avser tjänstepension och där utbetalaren inte är tjänstepensionsbolagen Alecta, KPA, AMF eller SPV och Kåpan.
+Här ingår de utbetalningar som redovisas på Kontrolluppgift från pensions- och
+försäkringsutbetalare där ersättningen avser tjänstepension och där utbetalaren inte är
+tjänstepensionsbolagen Alecta, KPA, AMF eller SPV och Kåpan.
 
-En restgrupp där samtliga i inkomststatistiken icke specificerade tjänste- och tilläggspensioner redovisas.
+En restgrupp där samtliga i inkomststatistiken icke specificerade tjänste- och
+tilläggspensioner redovisas.
 
-*Variabeln har inte kunnat skapas för åren 1990 till 1993 (1994 var det 103 329 personer som erhöll "Övrig tjänste- och tilläggspension").*
+*Variabeln har inte kunnat skapas för åren 1990 till 1993 (1994 var det 103 329 personer
+som erhöll "Övrig tjänste- och tilläggspension").*

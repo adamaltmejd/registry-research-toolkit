@@ -16,23 +16,32 @@ SjukP*Ndaq*MiDAS
 
 Antal utbetalda nettodagar under året med sjukpenning.
 
-Sjukpenning kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent) eller en fjärdedels (25 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
+Sjukpenning kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50
+procent) eller en fjärdedels (25 procent). Antal nettodagar är bruttodagar
+\*omfattningen under ett år.
 
 - 10 \* hel omfattning = 10 nettodagar,
 - 10 \* tre kvarts omfattning = 7,5 nettodagar,
 - 10 \* halv omfattning = 5 nettodagar,
 - 10 \* en kvarts omfattning = 2,5 nettodagar
 
-2008-2011 finns variabeln också uppdelad på *Sjukpenning, antal nettodagar* ([[SjukP_08_Ndag]]), *Sjukpenning, förlängd, antal nettodagar*  ([[SjukP_Forlangd_Ndag]]) och *Sjukpenning, fortsatt, antal nettodagar*  ([[SjukP_Fortsatt_Ndag]]).
+2008-2011 finns variabeln också uppdelad på *Sjukpenning, antal nettodagar*
+([SjukP_08_Ndag](SjukP_08_Ndag.md)), *Sjukpenning, förlängd, antal nettodagar*
+([SjukP_Forlangd_Ndag](SjukP_Forlangd_Ndag.md)) och *Sjukpenning, fortsatt, antal
+nettodagar* ([SjukP_Fortsatt_Ndag](SjukP_Fortsatt_Ndag.md)).
 
-*För ytterligare information se under Sjukpenning* ([[SjukPP]]).
+*För ytterligare information se under Sjukpenning* ([SjukPP](SjukPP.md)).
 
 (1994–)
 
 Beloppet anges i hundratals kronor.
 
-Utbetalt belopp under året för sjukpenning, står i relation till utbetalda dagar med sjukpenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för sjukpenning, står i relation till utbetalda dagar med
+sjukpenning. Utbetalt belopp avser ersättningsperioden.
 
-2008-2011 finns variabeln också uppdelad på *Sjukpenning, ersättningsbelopp* (SjukP_08_ Belopp), *Sjukpenning, förlängd, ersättningsbelopp* (SjukP_Forlangd_ Belopp) och *Sjukpenning, fortsatt, ersättningsbelopp* ([[SjukP_Fortsatt_Belopp]]).
+2008-2011 finns variabeln också uppdelad på *Sjukpenning, ersättningsbelopp* (SjukP_08\_
+Belopp), *Sjukpenning, förlängd, ersättningsbelopp* (SjukP_Forlangd\_ Belopp) och
+*Sjukpenning, fortsatt, ersättningsbelopp*
+([SjukP_Fortsatt_Belopp](SjukP_Fortsatt_Belopp.md)).
 
-*För ytterligare information se under Sjukpenning* ([[SjukPP]]).
+*För ytterligare information se under Sjukpenning* ([SjukPP](SjukPP.md)).

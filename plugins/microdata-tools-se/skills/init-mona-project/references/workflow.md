@@ -1,7 +1,7 @@
 # Detailed Workflow
 
-Use this file for the exact execution sequence. Keep `SKILL.md` loaded as the
-compact control surface and come here when you need the full procedure.
+Use this file for the exact execution sequence. Keep `SKILL.md` loaded as the compact
+control surface and come here when you need the full procedure.
 
 ## Phase 1: Interview and bootstrap
 
@@ -16,16 +16,16 @@ Start with a short orientation aimed at a first-time user. Explain:
 - what inputs you need right now
 - where you plan to scaffold, if that is already known
 
-Do not open with a terse list of questions or lead with a non-blocking tooling
-detail. If a command works via `--help` or a subcommand but lacks `--version`,
-that is not the first thing the user needs to hear.
+Do not open with a terse list of questions or lead with a non-blocking tooling detail.
+If a command works via `--help` or a subcommand but lacks `--version`, that is not the
+first thing the user needs to hear.
 
 Use wording like:
 
-> I can set up the project locally and prepare the MONA handoff. This happens
-> in two phases: first I create the local scaffold and the MONA extract bundle
-> (`mdw_runner.py`); after you run that on MONA and bring back
-> `mdw_step3_stats.json`, I generate mock data and finish the project docs and repo setup.
+> I can set up the project locally and prepare the MONA handoff. This happens in two
+> phases: first I create the local scaffold and the MONA extract bundle
+> (`mdw_runner.py`); after you run that on MONA and bring back `mdw_step3_stats.json`, I
+> generate mock data and finish the project docs and repo setup.
 >
 > To start, I need:
 >
@@ -40,13 +40,13 @@ Collect these things from the user:
 1. **Project slug**: use `$ARGUMENTS` if provided; otherwise ask. It must be
    `lowercase-with-hyphens`, with no spaces.
 2. **Target directory**:
-   - if the current working directory contains only invisible agent metadata,
-     scaffold into it directly
-   - if it is otherwise non-empty, ask whether to scaffold into the current
-     directory or into a `{slug}/` subdirectory
+   - if the current working directory contains only invisible agent metadata, scaffold
+     into it directly
+   - if it is otherwise non-empty, ask whether to scaffold into the current directory or
+     into a `{slug}/` subdirectory
 3. **SCB project number**: normalize to `P{num}` with no leading zeros
-4. **Research plan**: strongly encourage the user to paste it or point to a
-   file because it materially improves the scaffold
+4. **Research plan**: strongly encourage the user to paste it or point to a file because
+   it materially improves the scaffold
 
 ### Create the minimal scaffold
 
@@ -54,8 +54,7 @@ Collect these things from the user:
 mkdir -p {projdir}/src {projdir}/notes {projdir}/tests/testthat {projdir}/output {projdir}/output_mock
 ```
 
-Generate these files immediately using
-[generated-files.md](generated-files.md):
+Generate these files immediately using [generated-files.md](generated-files.md):
 
 - `{projdir}/{slug}.Rproj`
 - `{projdir}/.gitignore`
@@ -63,8 +62,8 @@ Generate these files immediately using
 
 ### Preflight CLI checks
 
-Confirm both tools are installed and runnable. Prefer checks that prove the
-commands work, not just `--version`:
+Confirm both tools are installed and runnable. Prefer checks that prove the commands
+work, not just `--version`:
 
 ```bash
 command -v mock-data-wizard
@@ -73,9 +72,9 @@ mock-data-wizard --help
 reg-meta --help
 ```
 
-If `--version` happens to work, that is fine. If it does not but `--help` and
-the required subcommands do work, treat the tool as installed and move on
-without bothering the user about it.
+If `--version` happens to work, that is fine. If it does not but `--help` and the
+required subcommands do work, treat the tool as installed and move on without bothering
+the user about it.
 
 If either command fails, stop and install it before proceeding:
 
@@ -99,10 +98,9 @@ uv tool install --force mock-data-wizard
 cd {projdir} && mock-data-wizard build-bundle
 ```
 
-This writes `mdw_runner.py` in `{projdir}/`. The bundle
-is a single self-contained Python file; the user edits its
-`configure()` block on MONA to declare which files or SQL tables to
-aggregate.
+This writes `mdw_runner.py` in `{projdir}/`. The bundle is a single self-contained
+Python file; the user edits its `configure()` block on MONA to declare which files or
+SQL tables to aggregate.
 
 ### MONA handoff
 
@@ -110,45 +108,41 @@ Tell the user exactly what to do:
 
 > **Next steps on MONA:**
 >
-> 1. Upload `mdw_runner.py` to MONA via **My Files** and move it
->    from your Inkorg into the project folder.
-> 2. Open the bundle in Notepad++ and edit the `configure()` block at the top
->    to return the list of sources you want to aggregate. The file has inline
->    examples for `file_source(...)` and `sql_source(...)`. If you don't know
->    what's available yet, return one bare source with no filters to trigger
->    discovery — for example
->    `return [sql_source(dsn="P{num}")]` or
->    `return [file_source(path=r"\\micro.intra\projekt\P{num}$\P{num}_Data")]`.
->    On the first run the bundle writes a `mdw_sources_<timestamp>.py` sidecar
->    listing every discoverable file and SQL view, then exits.
->    (Returning `[]` is an error, not discovery — the bundle exits with a
->    message asking you to populate `configure()` or drop a sidecar.)
-> 3. Open the **Batch client**, choose **Python**, select
->    `mdw_runner.py`, and run it.
+> 1. Upload `mdw_runner.py` to MONA via **My Files** and move it from your Inkorg into
+>   the project folder.
+> 2. Open the bundle in Notepad++ and edit the `configure()` block at the top to return
+>   the list of sources you want to aggregate. The file has inline examples for
+>   `file_source(...)` and `sql_source(...)`. If you don't know what's available yet,
+>   return one bare source with no filters to trigger discovery — for example
+>   `return [sql_source(dsn="P{num}")]` or
+>   `return [file_source(path=r"\\micro.intra\projekt\P{num}$\P{num}_Data")]`. On the
+>   first run the bundle writes a `mdw_sources_<timestamp>.py` sidecar listing every
+>   discoverable file and SQL view, then exits. (Returning `[]` is an error, not
+>   discovery — the bundle exits with a message asking you to populate `configure()` or
+>   drop a sidecar.)
+> 3. Open the **Batch client**, choose **Python**, select `mdw_runner.py`, and run it.
 > 4. The bundle writes `mdw_step3_stats.json` next to itself. (If discovery ran, edit
->    the new `mdw_sources_<timestamp>.py` sidecar and re-run the bundle —
->    the sidecar overrides `configure()` automatically.)
+>   the new `mdw_sources_<timestamp>.py` sidecar and re-run the bundle — the sidecar
+>   overrides `configure()` automatically.)
 > 5. Review `mdw_step3_stats.json` in Notepad++ before export. It must contain only
->    aggregate statistics such as counts, shares, value frequencies, or year
->    coverage summaries. Do **not** export the file if you see personal
->    identifiers, row-level records, names, addresses, free-text fields, exact
->    dates of birth, lists of households, or anything else that looks like data
->    about identifiable people rather than aggregates. If an individual field is
->    unsafe but the rest of the file is fine, replace that field with `null`.
->    If the problem is broader than that, stop and fix the extraction before
->    exporting anything.
+>   aggregate statistics such as counts, shares, value frequencies, or year coverage
+>   summaries. Do **not** export the file if you see personal identifiers, row-level
+>   records, names, addresses, free-text fields, exact dates of birth, lists of
+>   households, or anything else that looks like data about identifiable people rather
+>   than aggregates. If an individual field is unsafe but the rest of the file is fine,
+>   replace that field with `null`. If the problem is broader than that, stop and fix
+>   the extraction before exporting anything.
 > 6. Export the file via the file exporter and download it from **My Files**.
 > 7. Place `mdw_step3_stats.json` in `{projdir}/` and return to this skill.
 
-Phase 1 ends here. Do not generate the remaining project files yet.
-When you report back to the user, present this as the expected checkpoint, not
-as a failure or an inability to continue.
+Phase 1 ends here. Do not generate the remaining project files yet. When you report back
+to the user, present this as the expected checkpoint, not as a failure or an inability
+to continue.
 
 Use wording like:
 
-> Phase 1 is ready. I created the local scaffold and built the MONA extract
-> bundle (`mdw_runner.py`); the next step is the MONA round-trip
-> for `mdw_step3_stats.json`.
+> Phase 1 is ready. I created the local scaffold and built the MONA extract bundle
+> (`mdw_runner.py`); the next step is the MONA round-trip for `mdw_step3_stats.json`.
 
 ## Mock data generation
 
@@ -158,13 +152,12 @@ When `mdw_step3_stats.json` exists but `mock_data/manifest.json` does not:
 cd {projdir} && mock-data-wizard generate --stats mdw_step3_stats.json --output-dir mock_data/ -y --force
 ```
 
-Verify that `mock_data/manifest.json` was created. If generation fails,
-diagnose the problem before continuing.
+Verify that `mock_data/manifest.json` was created. If generation fails, diagnose the
+problem before continuing.
 
-After successful generation, delete `{projdir}/mdw_runner.py`
-unless the user explicitly asked to keep it for reruns. It is a setup
-artifact, not part of the working project scaffold; it can always be rebuilt
-with `mock-data-wizard build-bundle`.
+After successful generation, delete `{projdir}/mdw_runner.py` unless the user explicitly
+asked to keep it for reruns. It is a setup artifact, not part of the working project
+scaffold; it can always be rebuilt with `mock-data-wizard build-bundle`.
 
 ## Phase 2: Enrichment
 
@@ -187,8 +180,7 @@ reg-meta --format json resolve --columns "{comma-separated columns}" --register 
 reg-meta get register {register_hint}
 ```
 
-3. If the register hint is the generic catch-all 366, mark the result as
-   low-confidence.
+3. If the register hint is the generic catch-all 366, mark the result as low-confidence.
 
 Use this structure:
 
@@ -227,15 +219,15 @@ reg-meta resolve --columns "{key_columns}" --register {register_id}
 If a file cannot be matched confidently to a register, give it its own
 `data_{filename_slug}.md` and say so explicitly.
 
-Interpret file and year coverage literally. `mock-data-wizard` generates mock
-data from the exported `mdw_step3_stats.json`; it is not randomly omitting years or
-inventing a smaller panel for convenience. If only one year appears in the
-mock-data scaffold, say that only one year was present in the extracted stats
-unless the user tells you the MONA export was intentionally incomplete.
+Interpret file and year coverage literally. `mock-data-wizard` generates mock data from
+the exported `mdw_step3_stats.json`; it is not randomly omitting years or inventing a
+smaller panel for convenience. If only one year appears in the mock-data scaffold, say
+that only one year was present in the extracted stats unless the user tells you the MONA
+export was intentionally incomplete.
 
-If reg_meta fails to resolve a column, say that the metadata resolution failed
-in this probe. Do not jump from "unresolved in reg_meta" to "invalid linkage" or
-"not available" unless the data itself shows a real problem.
+If reg_meta fails to resolve a column, say that the metadata resolution failed in this
+probe. Do not jump from "unresolved in reg_meta" to "invalid linkage" or "not available"
+unless the data itself shows a real problem.
 
 Generate `notes/README.md` as an index:
 
@@ -253,41 +245,39 @@ findings that need to persist across sessions.
 
 ### Mock data assessment
 
-This file is the evidence summary for what the scaffold learned locally. Do
-not paraphrase the manifest or invent issues.
+This file is the evidence summary for what the scaffold learned locally. Do not
+paraphrase the manifest or invent issues.
 
 Build it from three layers:
 
-1. **Standardized scripted checks**: repeatable baseline metrics with explicit
-   inputs and calculations.
-2. **Additional runtime probing**: one-off R checks for project-specific
-   questions the standardized checks did not cover.
-3. **Interpretation and synthesis**: careful reading of script output,
-   `manifest.json`, reg_meta results, and relevant docs.
+1. **Standardized scripted checks**: repeatable baseline metrics with explicit inputs
+   and calculations.
+2. **Additional runtime probing**: one-off R checks for project-specific questions the
+   standardized checks did not cover.
+3. **Interpretation and synthesis**: careful reading of script output, `manifest.json`,
+   reg_meta results, and relevant docs.
 
 Hard rules:
 
 - Never fabricate a finding, warning, mismatch, or code-set issue.
 - If something was not measured, say `Not assessed`.
-- If something comes from a heuristic, metadata hint, or low-confidence
-  register match, label it that way.
+- If something comes from a heuristic, metadata hint, or low-confidence register match,
+  label it that way.
 - If prose disagrees with script output, the prose is wrong. Fix it.
 
-Actually probe the mock data. Start with repeatable scripted checks. Prefer a
-shared assessment script if one exists; otherwise write an explicit baseline
-`Rscript` block and record it in the note. Then add extra targeted probes when
-the project needs them.
+Actually probe the mock data. Start with repeatable scripted checks. Prefer a shared
+assessment script if one exists; otherwise write an explicit baseline `Rscript` block
+and record it in the note. Then add extra targeted probes when the project needs them.
 
 For each mock CSV, check:
 
 - plausible row counts
 - identifier cardinality
 - variables with more than 30% nulls
-- categorical codes present in mock data but absent from reg_meta, and the
-  reverse
+- categorical codes present in mock data but absent from reg_meta, and the reverse
 - whether shared identifier columns overlap across linked files
-- schema or code-set mismatches, but only when backed by a direct comparison
-  artifact or script output; otherwise mark them `Not assessed`
+- schema or code-set mismatches, but only when backed by a direct comparison artifact or
+  script output; otherwise mark them `Not assessed`
 
 Write `notes/mock_data_assessment.md` using this structure:
 
@@ -373,8 +363,8 @@ Before declaring success:
 cd {projdir} && Rscript tests/testthat.R
 ```
 
-If it fails, the most likely cause is non-ASCII characters in generated R
-files. Replace them with `\\uXXXX` escapes or ASCII equivalents and re-run.
+If it fails, the most likely cause is non-ASCII characters in generated R files. Replace
+them with `\\uXXXX` escapes or ASCII equivalents and re-run.
 
 ### Initialize git
 
@@ -384,8 +374,8 @@ Only do this after the tests pass.
 2. Check whether git is installed with `command -v git`.
 3. If git is missing, ask whether the user wants to install it. Do not assume.
 4. Check `git config --get user.email` and `git config --get user.name`.
-5. If identity is missing, ask the user whether to set global or repo-local
-   config. Do not set global config silently.
+5. If identity is missing, ask the user whether to set global or repo-local config. Do
+   not set global config silently.
 6. Then initialize and commit:
 
 ```bash
@@ -395,8 +385,8 @@ git add -A
 git commit -q -m "Initial project scaffold"
 ```
 
-If the user declines git install or configuration, add this note directly
-under the project title in `{MEMORY}.md`:
+If the user declines git install or configuration, add this note directly under the
+project title in `{MEMORY}.md`:
 
 ```markdown
 > **Note:** This project is not under version control. The user declined
@@ -415,6 +405,5 @@ Keep the final chat summary under about six lines:
 
 Use runtime-neutral wording such as:
 
-> The scaffold is ready. Review `ROADMAP.md`, fill any obvious gaps, then
-> start a fresh agent session from `{projdir}` to work on data processing and
-> analysis code.
+> The scaffold is ready. Review `ROADMAP.md`, fill any obvious gaps, then start a fresh
+> agent session from `{projdir}` to work on data processing and analysis code.

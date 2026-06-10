@@ -15,6 +15,10 @@ AKassaAmPol
 
 Beloppet anges i hundratal kronor.
 
-Ersättning från arbetslöshetskassa vid Offentligt Tillfälligt Arbete ([[OTA]]) redovisas, tillsammans med restutbetalningar avseende Aktivare användning av arbetslöshetsersättning (PROJEKT) och Arbetslivsutvecklingsbidrag, från och med år 2000 under denna variabel.
+Ersättning från arbetslöshetskassa vid Offentligt Tillfälligt Arbete ([OTA](OTA.md))
+redovisas, tillsammans med restutbetalningar avseende Aktivare användning av
+arbetslöshetsersättning (PROJEKT) och Arbetslivsutvecklingsbidrag, från och med år 2000
+under denna variabel.
 
-*För ytterligare information, se under Arbetslivsutvecklingbidrag* ([[ALUBidr]]).
+*För ytterligare information, se under Arbetslivsutvecklingbidrag*
+([ALUBidr](ALUBidr.md)).

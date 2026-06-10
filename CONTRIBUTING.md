@@ -15,7 +15,9 @@ uv run python -m pytest                            # unit tests only
 uv run python -m pytest --run-integration           # include Docker integration tests
 ```
 
-Expensive test suites are gated behind `--run-<name>` flags. To add a new category, add an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with `@pytest.mark.<name>`.
+Expensive test suites are gated behind `--run-<name>` flags. To add a new category, add
+an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with
+`@pytest.mark.<name>`.
 
 ## Linting
 
@@ -26,8 +28,8 @@ uv run ruff format     # format
 
 ## Releasing
 
-Use the `/release` skill in Claude Code, which handles version bumps, tagging,
-and publishing. For manual database releases:
+Use the `/release` skill in Claude Code, which handles version bumps, tagging, and
+publishing. For manual database releases:
 
 ```bash
 # Build DB from SCB CSV exports

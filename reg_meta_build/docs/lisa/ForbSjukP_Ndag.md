@@ -23,16 +23,23 @@ Antal nettodagar är bruttodagar \*omfattningen under ett år.
 - 10 \* halv omfattning = 5 nettodagar,
 - 10 \* en kvarts omfattning = 2,5 nettodagar.
 
-2008-2011 finns variabeln också uppdelad på *Förebyggande sjukpenning, antal nettodagar* ([[ForbSjukP_08_Ndag]]) och *Förebyggande sjukpenning, förlängd, antal nettodagar* ([[ForbSjukP_Forlangd_Ndag]]).
+2008-2011 finns variabeln också uppdelad på *Förebyggande sjukpenning, antal nettodagar*
+([ForbSjukP_08_Ndag](ForbSjukP_08_Ndag.md)) och *Förebyggande sjukpenning, förlängd,
+antal nettodagar* ([ForbSjukP_Forlangd_Ndag](ForbSjukP_Forlangd_Ndag.md)).
 
-*Läs mer om förebyggande sjukpenning under Förebyggande sjukpenning, antal bruttodagar* ([[ForbSjukP_Bdag]]).
+*Läs mer om förebyggande sjukpenning under Förebyggande sjukpenning, antal bruttodagar*
+([ForbSjukP_Bdag](ForbSjukP_Bdag.md)).
 
 (1993–2011)
 
 Beloppet anges i hundratals kronor.
 
-Utbetalt belopp under året för förbyggande sjukpenning, står i relation till utbetalda dagar med förebyggande sjukpenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för förbyggande sjukpenning, står i relation till utbetalda
+dagar med förebyggande sjukpenning. Utbetalt belopp avser ersättningsperioden.
 
-2008-2011 finns variabeln också uppdelad på *Förebyggande sjukpenning, belopp* ([[ForbSjukP_08_Belopp]]) och *Förebyggande sjukpenning, förlängd, belopp* ([[ForbSjukP_Forlangd_Belopp]]).
+2008-2011 finns variabeln också uppdelad på *Förebyggande sjukpenning, belopp*
+([ForbSjukP_08_Belopp](ForbSjukP_08_Belopp.md)) och *Förebyggande sjukpenning, förlängd,
+belopp* ([ForbSjukP_Forlangd_Belopp](ForbSjukP_Forlangd_Belopp.md)).
 
-*Läs mer om förebyggande sjukpenning under Förebyggande sjukpenning, antal bruttodagar* ([[ForbSjukP_Bdag]]).
+*Läs mer om förebyggande sjukpenning under Förebyggande sjukpenning, antal bruttodagar*
+([ForbSjukP_Bdag](ForbSjukP_Bdag.md)).

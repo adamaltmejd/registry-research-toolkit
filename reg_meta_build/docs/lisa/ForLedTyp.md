@@ -12,8 +12,10 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 ForLedTyp
 
-Markering för om individ under aktuellt år erhållit någon föräldraersättning enligt ovan.
+Markering för om individ under aktuellt år erhållit någon föräldraersättning enligt
+ovan.
 
 Markeringen avser inkomståret oavsett år för händelse.
 
-*För ytterligare information, se under Summa inkomst föranledd av föräldraledighet* ([[ForLed]]) *samt respektive inkomstslag.*
+*För ytterligare information, se under Summa inkomst föranledd av föräldraledighet*
+([ForLed](ForLed.md)) *samt respektive inkomstslag.*

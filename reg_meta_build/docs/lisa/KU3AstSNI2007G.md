@@ -7,16 +7,20 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, tredje största förvärvskälla), grov nivå KU3AstSNI2007G**
+**Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, tredje största förvärvskälla),
+grov nivå KU3AstSNI2007G**
 
 KU3AstSNI2007G
 
 (2007–)
 
-Arbetsställets (avseende tredje största förvärvskälla) näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2007. 15 grupper.
+Arbetsställets (avseende tredje största förvärvskälla) näringsgren enligt en gruppering
+av näringsgrenskoder för redovisningsändamål utifrån SNI 2007. 15 grupper.
 
 *För kodförteckning se under Näringsgren enligt SNI2007, grov nivå* (AstSni2007G).
 
 (2007–)
 
-Markering för om individen, för sin tredje största förvärvskälla under aktuellt år redovisat som delägare i ett mindre aktiebolag, ett så kallat fåmansföretag, och äger kvalificerade andelar.
+Markering för om individen, för sin tredje största förvärvskälla under aktuellt år
+redovisat som delägare i ett mindre aktiebolag, ett så kallat fåmansföretag, och äger
+kvalificerade andelar.

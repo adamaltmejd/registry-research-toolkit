@@ -7,4 +7,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Gräns för individens etablering tillarbetsmarknaden, 1000-tals kronor Raks_EtablGrans**
+**Gräns för individens etablering tillarbetsmarknaden, 1000-tals kronor
+Raks_EtablGrans**

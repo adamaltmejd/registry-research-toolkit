@@ -12,6 +12,8 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 SjukTyp
 
-Markering för om individ under aktuellt år erhållit sjukpenning/arbetsskadesjukpenning. Markering avser utbetalningsåret oavsett ersättningsperiod.
+Markering för om individ under aktuellt år erhållit sjukpenning/arbetsskadesjukpenning.
+Markering avser utbetalningsåret oavsett ersättningsperiod.
 
-*För detaljerad information, se under respektive inkomstslag* ([[SjukPP]] och [[ArbSkErs]]).
+*För detaljerad information, se under respektive inkomstslag* ([SjukPP](SjukPP.md) och
+[ArbSkErs](ArbSkErs.md)).

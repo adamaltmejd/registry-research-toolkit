@@ -16,7 +16,9 @@ TfForPeng_Ndag
 
 Antal utbetalda nettodagar under året med tillfällig föräldrapenning.
 
-Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
+Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75
+procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning
+(12,5 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
 - 10 \* hel omfattning = 10 nettodagar,
 - 10 \* tre kvarts omfattning = 7,5 nettodagar,
@@ -24,4 +26,5 @@ Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärd
 - 10 \* en kvarts omfattning = 2,5 nettodagar,
 - 10 \* en åttondels omfattning = 1,25 dagar
 
-*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn* ([[ForVAB]]).
+*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn*
+([ForVAB](ForVAB.md)).

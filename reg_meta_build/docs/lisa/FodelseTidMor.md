@@ -13,6 +13,7 @@ FodelseTidMor
 
 År, månad och dag för moderns födelse.
 
-Moderns födelsetid finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga personer i LISA-populationen.
+Moderns födelsetid finns i en icke årgångsbunden databastabell. Tabellen omfattar
+samtliga personer i LISA-populationen.
 
 *I övrigt se under Moderns födelseland* (FodelseLandNamnMor).

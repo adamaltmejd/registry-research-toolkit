@@ -14,6 +14,9 @@ SjukFall Antal MiDAS
 
 (1994–)
 
-Totalt antal sjukfall under året med sjukpenning, arbetsskadesjukpenning och/eller rehabiliteringspenning. *För ytterligare information se mer under respektive ersättningsslag* ([[SjukPP]], [[ArbSkErs]], [[RehabErs]]).
+Totalt antal sjukfall under året med sjukpenning, arbetsskadesjukpenning och/eller
+rehabiliteringspenning. *För ytterligare information se mer under respektive
+ersättningsslag* ([SjukPP](SjukPP.md), [ArbSkErs](ArbSkErs.md),
+[RehabErs](RehabErs.md)).
 
 *För ytterligare information, se bilaga 5 - Hur FK-data tolkas.*

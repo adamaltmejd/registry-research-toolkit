@@ -16,7 +16,9 @@ HavPeng_Ndag
 
 Antal utbetalda nettodagar under året med graviditetspenningen.
 
-Graviditetspenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
+Graviditetspenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent),
+halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5
+procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
 10 \* hel omfattning = 10 nettodagar,
 
@@ -28,4 +30,5 @@ Graviditetspenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 p
 
 10 \* en åttondels omfattning = 1,25 dagar
 
-*För ytterligare information, se under Graviditetspenning, antal bruttodagar* ([[HavPeng_Bdag]]).
+*För ytterligare information, se under Graviditetspenning, antal bruttodagar*
+([HavPeng_Bdag](HavPeng_Bdag.md)).

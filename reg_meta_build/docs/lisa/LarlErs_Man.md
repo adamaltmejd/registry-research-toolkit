@@ -10,7 +10,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Lärlingsersättning, antal ersatta månader LarlErs_Man**
 
-[[LarlErs]] Man
+[LarlErs](LarlErs.md) Man
 
 (2014-)
 

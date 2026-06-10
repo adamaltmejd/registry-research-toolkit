@@ -15,8 +15,12 @@ KU2Ssyk4
 
 Yrkeskod på fyrsiffernivå enligt Standard för svensk yrkesklassificering 1996.
 
-Om en person har fler än en förvärvsinkomst så fastställs yrke för näst största förvärvskälla. Yrke fastställs endast om uppgiften om förvärvsinkomst matchar med arbetsstället i fråga. Om ingen uppgift finns för aktuellt år används uppgift om yrke från tidigare år om personen tidigare har haft förvärvsinkomst från samma företag. Inga försök görs dock för att hämta yrkesuppgift från någon annan inkomstkälla.
+Om en person har fler än en förvärvsinkomst så fastställs yrke för näst största
+förvärvskälla. Yrke fastställs endast om uppgiften om förvärvsinkomst matchar med
+arbetsstället i fråga. Om ingen uppgift finns för aktuellt år används uppgift om yrke
+från tidigare år om personen tidigare har haft förvärvsinkomst från samma företag. Inga
+försök görs dock för att hämta yrkesuppgift från någon annan inkomstkälla.
 
 *Se "SSYK 96. Standard för svensk yrkesklassificering 1996." (MIS 1998:3).*
 
-*För ytterligare information se Yrke enligt SSYK, 4 siffernivå* ([[Ssyk4]]).
+*För ytterligare information se Yrke enligt SSYK, 4 siffernivå* ([Ssyk4](Ssyk4.md)).

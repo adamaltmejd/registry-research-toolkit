@@ -8,7 +8,7 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
----
+----------------------------------------------------------------------------------------
 
 **Antal karensdagar för företagare Karens_Foretagare**
 
@@ -18,7 +18,9 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Antal karensdagar för företagare.
 
-Sedan *1/7 2010:* Den lägsta karenstiden utökas från 1 dag till 7 dagar. För den egna företagaren som vill välja en längre karenstid införs flera alternativ. Det blir möjligt att välja 14, 30, 60 eller 90 karensdagar.
+Sedan *1/7 2010:* Den lägsta karenstiden utökas från 1 dag till 7 dagar. För den egna
+företagaren som vill välja en längre karenstid införs flera alternativ. Det blir möjligt
+att välja 14, 30, 60 eller 90 karensdagar.
 
 Sedan *1/1 2013:* Egna företagarna kan välja en karenstid på en dag
 
@@ -56,8 +58,10 @@ Noll dagars karens
 
 (1994–)
 
-Antal utbetalda bruttodagar under året med sjukpenning, arbetsskadesjukpenning och rehabiliteringspenning. Variabeln summerar antal bruttodagar med dessa ersättningar.
+Antal utbetalda bruttodagar under året med sjukpenning, arbetsskadesjukpenning och
+rehabiliteringspenning. Variabeln summerar antal bruttodagar med dessa ersättningar.
 
 Antal bruttodagar visar antal dagar under ett år oavsett ovan omfattning.
 
-*För ytterligare information se mer under respektive ersättningsslag* (SjukPP, ArbSkErs, RehabErs).
+*För ytterligare information se mer under respektive ersättningsslag* (SjukPP, ArbSkErs,
+RehabErs).

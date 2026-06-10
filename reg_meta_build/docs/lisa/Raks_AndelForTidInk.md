@@ -7,4 +7,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Andel av den totala inkomsten som utgörs avinkomst från sjuk- eller aktivitetsersättning Raks_AndelForTidInk**
+**Andel av den totala inkomsten som utgörs avinkomst från sjuk- eller
+aktivitetsersättning Raks_AndelForTidInk**

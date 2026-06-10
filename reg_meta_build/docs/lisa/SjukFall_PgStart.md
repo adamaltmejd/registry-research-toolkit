@@ -14,4 +14,5 @@ SjukFall_PgStart
 
 (1994–2013)
 
-Startdatum för sjukfall med sjukpenning, arbetsskadesjukpenning och/eller rehabiliteringspenning som påbörjats innan aktuellt år.
+Startdatum för sjukfall med sjukpenning, arbetsskadesjukpenning och/eller
+rehabiliteringspenning som påbörjats innan aktuellt år.

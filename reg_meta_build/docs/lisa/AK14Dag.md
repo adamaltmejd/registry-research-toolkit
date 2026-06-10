@@ -8,4 +8,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Antal dagar som arbetssökande med förhinder,tidigare "Övrig inskriven vid AF" AK14Dag**
+**Antal dagar som arbetssökande med förhinder,tidigare "Övrig inskriven vid AF"
+AK14Dag**

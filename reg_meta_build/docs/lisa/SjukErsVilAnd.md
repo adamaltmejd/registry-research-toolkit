@@ -13,7 +13,8 @@ SiukErsVilAnd
 
 (2009–)
 
-Ger information om vilken grad av vilande sjukersättningen som erhållits vid sista utbetalning under året.
+Ger information om vilken grad av vilande sjukersättningen som erhållits vid sista
+utbetalning under året.
 
 #### Kodförteckning:
 

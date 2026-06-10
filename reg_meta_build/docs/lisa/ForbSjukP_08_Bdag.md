@@ -18,4 +18,7 @@ Antal utbetalda bruttodagar under året med förbyggande sjukpenning.
 
 Antal bruttodagar visar antal dagar under ett år oavsett omfattning.
 
-2008-2011 finns förebyggande sjukpenning uppdelad på *Förebyggande sjukpenning, antal bruttodagar* (ForbSjukP_08_Bdag) och *Förebyggande sjukpenning, förlängd, antal bruttodagar* ([[ForbSjukP_Forlangd_Bdag]]). Dessa dagar ingår i *Sjukpenning, förebyggande, antal bruttodagar* (Forb-SjukP_Bdag).
+2008-2011 finns förebyggande sjukpenning uppdelad på *Förebyggande sjukpenning, antal
+bruttodagar* (ForbSjukP_08_Bdag) och *Förebyggande sjukpenning, förlängd, antal
+bruttodagar* ([ForbSjukP_Forlangd_Bdag](ForbSjukP_Forlangd_Bdag.md)). Dessa dagar ingår
+i *Sjukpenning, förebyggande, antal bruttodagar* (Forb-SjukP_Bdag).

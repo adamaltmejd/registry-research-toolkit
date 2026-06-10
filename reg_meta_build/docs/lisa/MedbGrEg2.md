@@ -11,4 +11,4 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 MedbGrEq2
 
-Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg2]]).
+Grupperas som födelseland, se *Eget födelseland* ([FodGrEg2](FodGrEg2.md)).

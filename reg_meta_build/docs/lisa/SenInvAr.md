@@ -11,14 +11,19 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **SenInvAr**
 
-Täckningsgraden avseende invandringsår ökar väsentligt 1998. Från och med denna tidpunkt finns i långt större utsträckning än tidigare tillgång till information om vilket år invandring skett för dem som invandrat före 1968.
+Täckningsgraden avseende invandringsår ökar väsentligt 1998. Från och med denna tidpunkt
+finns i långt större utsträckning än tidigare tillgång till information om vilket år
+invandring skett för dem som invandrat före 1968.
 
 De som saknar uppgift om invandringsår har värde 0000, majoriteten är födda i Sverige.
 
-*I övrigt se Datum för in-/utvandring* ([[InvUtvManad]]) *och under objektet Individ* ([[PersonNr]]).
+*I övrigt se Datum för in-/utvandring* ([InvUtvManad](InvUtvManad.md)) *och under
+objektet Individ* ([PersonNr](PersonNr.md)).
 
-Vid invandring avser uppgiften det land varifrån personen utvandrat och vid utvandring det land till vilket personen invandrar (anges med landsnamn).
+Vid invandring avser uppgiften det land varifrån personen utvandrat och vid utvandring
+det land till vilket personen invandrar (anges med landsnamn).
 
-[[InvUtvLand]] finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISA-populationen.
+[InvUtvLand](InvUtvLand.md) finns i en icke årgångsbunden databastabell. Tabellen
+omfattar samtliga in- och utvandringstillfällen för LISA-populationen.
 
-*I övrigt se År och månad för in-/utvandring* ([[InvUtvManad]]).
+*I övrigt se År och månad för in-/utvandring* ([InvUtvManad](InvUtvManad.md)).

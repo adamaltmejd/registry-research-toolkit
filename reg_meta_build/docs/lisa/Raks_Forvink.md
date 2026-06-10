@@ -13,12 +13,15 @@ RAKS_ForvInk
 
 (1993–)
 
-Summerar Nettoinkomst av näringsverksamhet och Kontant bruttolön. Är Nettoinkomsten av näringsverksamhet negativ eller 0 anges endast Kontant bruttolön. Variabeln anges i hundratal kronor.
+Summerar Nettoinkomst av näringsverksamhet och Kontant bruttolön. Är Nettoinkomsten av
+näringsverksamhet negativ eller 0 anges endast Kontant bruttolön. Variabeln anges i
+hundratal kronor.
 
-*För ytterligare information se Nettoinkomst av näringsverksamhet* ([[InkFNetto]]) samt *Kontant bruttolön* ([[LoneInk]]).
+*För ytterligare information se Nettoinkomst av näringsverksamhet*
+([InkFNetto](InkFNetto.md)) samt *Kontant bruttolön* ([LoneInk](LoneInk.md)).
 
 **Total inkomst**
 
----
+----------------------------------------------------------------------------------------
 
-| 1                        | Förvärvsarbete                | Raks_ForvInk     |
+\| 1 \| Förvärvsarbete \| Raks_ForvInk \|

@@ -11,10 +11,12 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Inv_UtvGrEg2
 
-Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg2]]).
+Grupperas som födelseland, se *Eget födelseland* ([FodGrEg2](FodGrEg2.md)).
 
-Land vid in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISApopulationen.
+Land vid in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar
+samtliga in- och utvandringstillfällen för LISApopulationen.
 
-Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg3]]).
+Grupperas som födelseland, se *Eget födelseland* ([FodGrEg3](FodGrEg3.md)).
 
-Land vid in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISApopulationen.
+Land vid in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar
+samtliga in- och utvandringstillfällen för LISApopulationen.
