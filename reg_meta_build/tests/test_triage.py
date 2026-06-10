@@ -696,6 +696,23 @@ class TestLoadCodelivery:
                 load_codelivery(bad)
             assert exc.value.code == "codelivery_invalid"
 
+    def test_missing_id_rejected(self, tmp_path: Path) -> None:
+        # A missing register_id/var_id must still be rejected: the old
+        # `int(entry["register_id"])` raised KeyError; the new `entry.get(...)` +
+        # canonical_int path must keep the same EXIT_CONFIG rejection (mirrors
+        # fold_overrides' test_missing_id_rejected), not fall through to a raw
+        # crash if the `reg is None or var is None` guard ever regresses.
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "missing.toml"
+        bad.write_text(
+            '[[resolve]]\nvar_id=1\ncolumn="c"\nkeep="x"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.code == "codelivery_invalid"
+
 
 class TestPickStateRep:
     def test_latest_era_wins(self) -> None:
