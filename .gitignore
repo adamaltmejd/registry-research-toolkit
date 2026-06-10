@@ -42,6 +42,10 @@ reg_meta_build/input_data/*
 # regenerate from scripts/fetch_sos_classifications.py.
 reg_meta_build/input_data/classifications/sos/*.xls
 reg_meta_build/input_data/classifications/sos/*.xlsx
+# landskoder.csv is fetched but deliberately not seeded (see
+# reg_meta_build/CLASSIFICATIONS.md); a bare fetch run regenerates it —
+# keep it out of status noise.
+reg_meta_build/input_data/classifications/sos/landskoder.csv
 
 # mock-data-wizard generated output
 mock_data/
