@@ -31,6 +31,8 @@ from pathlib import Path
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+from ._curation import canonical_int
+
 # (register_id, var_id) — the same coordinates the triage's per-var split
 # container carries (`register.register_id`, `variable.provider_key`).
 FoldOverrideKey = tuple[int, int]
@@ -66,25 +68,6 @@ def repo_fold_overrides_path() -> Path | None:
     glob-loaded as provider-slug TOMLs; a file there would break the build)."""
     candidate = Path(__file__).resolve().parent.parent.parent / "fold_overrides.toml"
     return candidate if candidate.is_file() else None
-
-
-def _canonical_int(value: object) -> int | None:
-    """Coerce a TOML `register_id` / `var_id` value to its canonical int, or None
-    if it isn't one. A TOML integer is already canonical (the format forbids
-    leading zeros); a string is accepted only in canonical form — no leading
-    zeros, so `"01"` can't alias `1` (mirrors fqid_slugs `_parse_canonical_int`).
-    A bool (TOML true/false, a Python int subclass) and a float are rejected."""
-    if isinstance(value, bool):
-        return None
-    if isinstance(value, int):
-        return value if value >= 0 else None
-    if isinstance(value, str):
-        if not value or not value.isdigit():
-            return None
-        if len(value) > 1 and value[0] == "0":
-            return None
-        return int(value)
-    return None
 
 
 def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
@@ -139,8 +122,8 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
                 f"fold-override entry {entry!r} must be a `[[fold]]` table.",
                 "Each entry is a `[[fold]]` table with register_id / var_id / columns.",
             )
-        reg = _canonical_int(entry.get("register_id"))
-        var = _canonical_int(entry.get("var_id"))
+        reg = canonical_int(entry.get("register_id"))
+        var = canonical_int(entry.get("var_id"))
         if reg is None or var is None:
             raise _fold_override_error(
                 "fold_override_invalid",

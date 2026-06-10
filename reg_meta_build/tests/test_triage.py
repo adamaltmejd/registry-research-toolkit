@@ -655,6 +655,47 @@ class TestLoadCodelivery:
             load_codelivery(bad)
         assert exc.value.code == "codelivery_invalid"
 
+    @pytest.mark.parametrize(
+        ("ids", "why"),
+        [
+            ('register_id=1\nvar_id="01"', "leading-zero string aliases the int"),
+            ("register_id=1\nvar_id=1.5", "float truncates silently"),
+            ("register_id=true\nvar_id=1", "bool is an int subclass (true == 1)"),
+            ("register_id=-5\nvar_id=1", "negative id is not a real source id"),
+        ],
+    )
+    def test_non_canonical_id_rejected(
+        self, tmp_path: Path, ids: str, why: str
+    ) -> None:
+        # Parity with fold_overrides: ids must be canonical ints (shared
+        # `canonical_int`). `int(...)` would coerce each of these to an inert
+        # never-matching pin (`why`) instead of a load-time error.
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "id.toml"
+        bad.write_text(f'[[resolve]]\n{ids}\ncolumn="c"\nkeep="x"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codelivery_invalid", why
+
+    def test_non_string_column_rejected(self, tmp_path: Path) -> None:
+        # A non-string `column` (list/dict/number/bool) would str()-coerce into a
+        # column name that can never match a real delivery column → reject at load.
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        for column in ("[1]", "{a = 1}", "3", "true"):
+            bad = tmp_path / "col.toml"
+            bad.write_text(
+                f'[[resolve]]\nregister_id=1\nvar_id=2\ncolumn={column}\nkeep="x"\n',
+                encoding="utf-8",
+            )
+            with pytest.raises(RegMetaError) as exc:
+                load_codelivery(bad)
+            assert exc.value.code == "codelivery_invalid"
+
 
 class TestPickStateRep:
     def test_latest_era_wins(self) -> None:
