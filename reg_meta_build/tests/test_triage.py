@@ -557,6 +557,104 @@ class TestLoadCodelivery:
         assert load_codelivery(tmp_path / "nope.toml") == {}
         assert load_codelivery(None) == {}
 
+    def test_valid_file_with_no_entries_is_empty(self, tmp_path: Path) -> None:
+        # A present but entry-less file is a no-op, not an error (the byte-identity
+        # path the new shape / unknown-key guards must not regress).
+        from reg_meta_build.codelivery import load_codelivery
+
+        empty = tmp_path / "empty.toml"
+        empty.write_text("# no resolve entries yet\n", encoding="utf-8")
+        assert load_codelivery(empty) == {}
+
+    def test_scalar_resolve_rejected(self, tmp_path: Path) -> None:
+        # `resolve = 5` is non-iterable → without the list guard `for entry in 5`
+        # raises a RAW uncaught TypeError (the loop is outside the per-entry
+        # try/except), escaping the EXIT_CONFIG contract.
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "scalar.toml"
+        bad.write_text("resolve = 5\n", encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "codelivery_invalid"
+
+    def test_single_resolve_table_rejected(self, tmp_path: Path) -> None:
+        # `[resolve]` makes `resolve` a single table, not the `[[resolve]]` array →
+        # reject (don't let its keys iterate as bogus entries).
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "single.toml"
+        bad.write_text(
+            '[resolve]\nregister_id=1\nvar_id=1\nkeep="x"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.code == "codelivery_invalid"
+
+    def test_non_table_resolve_entries_rejected(self, tmp_path: Path) -> None:
+        # `resolve` is an array but its entries aren't tables.
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "ints.toml"
+        bad.write_text("resolve = [1, 2]\n", encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.code == "codelivery_invalid"
+
+    def test_misspelled_toplevel_key_rejected(self, tmp_path: Path) -> None:
+        # `[[resolves]]` (typo) would silently disable ALL curation → loud error.
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "typo.toml"
+        bad.write_text(
+            '[[resolves]]\nregister_id=1\nvar_id=1\ncolumn="c"\nkeep="x"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.code == "codelivery_invalid"
+        assert "resolves" in exc.value.message
+
+    def test_unhashable_keep_rule_rejected(self, tmp_path: Path) -> None:
+        # `keep_rule = [1]` / `{a = 1}` is non-None and UNHASHABLE → without an
+        # isinstance guard the `keep_rule not in _KEEP_RULES` membership test raises
+        # a RAW `TypeError: unhashable type` outside the entry try/except, escaping
+        # the EXIT_CONFIG contract. Both must land on codelivery_invalid, no crash.
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        for rule in ("[1]", "{a = 1}"):
+            bad = tmp_path / "rule.toml"
+            bad.write_text(
+                f"[[resolve]]\nregister_id=1\nvar_id=2\nkeep_rule={rule}\n",
+                encoding="utf-8",
+            )
+            with pytest.raises(RegMetaError) as exc:
+                load_codelivery(bad)
+            assert exc.value.exit_code == EXIT_CONFIG
+            assert exc.value.code == "codelivery_invalid"
+
+    def test_non_string_keep_label_rejected(self, tmp_path: Path) -> None:
+        # A non-string `keep` (here a list) would str()-coerce into an inert pin
+        # (`"[1]"`) that never matches a real value_set_version_label → reject it at
+        # load with an actionable error instead of a confusing downstream failure.
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "label.toml"
+        bad.write_text(
+            '[[resolve]]\nregister_id=1\nvar_id=2\ncolumn="c"\nkeep=[1]\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.code == "codelivery_invalid"
+
 
 class TestPickStateRep:
     def test_latest_era_wins(self) -> None:

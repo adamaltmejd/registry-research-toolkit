@@ -36,6 +36,12 @@ CodeliveryMap = dict[CodeliveryKey, CodeliveryRule]
 
 _KEEP_RULES = frozenset({"latest_year"})
 
+# The only legal top-level table is `[[resolve]]`. Anything else (a misspelled
+# `[[resolves]]`, a stray key) is a typo that would otherwise silently disable ALL
+# co-delivery curation — reject it loudly, mirroring fqid_slugs' / fold_overrides'
+# strict top-level typo check.
+_ALLOWED_TOPLEVEL_KEYS = frozenset({"resolve"})
+
 
 def _codelivery_error(code: str, message: str, remediation: str) -> RegMetaError:
     """A configuration-class error (EXIT_CONFIG). `codelivery.toml` is
@@ -62,7 +68,17 @@ def repo_codelivery_path() -> Path | None:
 
 def load_codelivery(path: Path | None) -> CodeliveryMap:
     """Parse the curation TOML into `{(register_id, var_id, column): (keep_label,
-    keep_rule)}`. Empty when no file (synthetic test builds, wheel installs)."""
+    keep_rule)}`. Empty when no file (synthetic test builds, wheel installs).
+
+    Load-time validation (all EXIT_CONFIG, actionable):
+      - Only `[[resolve]]` top-level (a misspelled `[[resolves]]` is a loud error,
+        not a silent no-op that disables ALL curation); `resolve` is an array of
+        tables (a scalar / single `[resolve]` table is rejected before the loop,
+        not a raw uncaught crash).
+      - Each entry needs integer `register_id` / `var_id` and exactly one of
+        `keep` / `keep_rule`, each a string (`keep_rule` from a known set); a
+        non-string rule — including an unhashable list/dict — is rejected, not
+        crashed on the membership test."""
     if path is None or not path.is_file():
         return {}
     try:
@@ -73,8 +89,32 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
             f"Could not parse co-delivery curation TOML {path}: {exc}",
             "Fix the TOML syntax in reg_meta_build/codelivery.toml.",
         ) from exc
+    unknown_top = set(data) - _ALLOWED_TOPLEVEL_KEYS
+    if unknown_top:
+        raise _codelivery_error(
+            "codelivery_invalid",
+            f"codelivery TOML has unknown top-level key(s): {sorted(unknown_top)}.",
+            "The only legal table is `[[resolve]]` — check for a typo like "
+            "`[[resolves]]` in reg_meta_build/codelivery.toml.",
+        )
+    resolve_entries = data.get("resolve", [])
+    if not isinstance(resolve_entries, list):
+        raise _codelivery_error(
+            "codelivery_invalid",
+            f"codelivery `resolve` must be an array of tables (`[[resolve]]`), got "
+            f"{type(resolve_entries).__name__}.",
+            "Use `[[resolve]]` table entries in reg_meta_build/codelivery.toml, "
+            "not `resolve = …` or a single `[resolve]` table.",
+        )
     out: CodeliveryMap = {}
-    for entry in data.get("resolve", []):
+    for entry in resolve_entries:
+        if not isinstance(entry, dict):
+            raise _codelivery_error(
+                "codelivery_invalid",
+                f"codelivery entry {entry!r} must be a `[[resolve]]` table.",
+                "Each entry is a `[[resolve]]` table with register_id / var_id / "
+                "column.",
+            )
         try:
             key: CodeliveryKey = (
                 int(entry["register_id"]),
@@ -97,7 +137,22 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
                 'Give the [[resolve]] entry either `keep = "<label>"` or '
                 "`keep_rule`, not both and not neither.",
             )
-        if keep_rule is not None and keep_rule not in _KEEP_RULES:
+        # The set field must be a string: `keep` is a value-set label, `keep_rule`
+        # a rule name. Reject a non-string (list/dict/bool/number) at load rather
+        # than str()-coercing it into an inert never-matching pin — and, for
+        # `keep_rule`, BEFORE the membership test below, since an unhashable value
+        # (`keep_rule = [1]`) would raise a raw TypeError there (the test hashes the
+        # candidate against the frozenset), escaping the EXIT_CONFIG contract.
+        if keep_label is not None and not isinstance(keep_label, str):
+            raise _codelivery_error(
+                "codelivery_invalid",
+                f"codelivery entry {key} `keep` must be a string label, got "
+                f"{type(keep_label).__name__}.",
+                'Give `keep = "<value_set_version_label>"` as a string.',
+            )
+        if keep_rule is not None and (
+            not isinstance(keep_rule, str) or keep_rule not in _KEEP_RULES
+        ):
             raise _codelivery_error(
                 "codelivery_invalid",
                 f"codelivery entry {key} has unknown keep_rule {keep_rule!r} "
