@@ -207,7 +207,10 @@ Socialstyrelsen delivers one `.xlsx` workbook per register, parsed by
 adapter architecture* for the merge/split and `_default`-variant rules).
 A full structural catalog of the SOS delivery — sheet layout, kodlista
 shape, the deldatamängd ↔ variant mapping, and the classification/value
-path — lands with the SOS data path; see #210 and #212.
+path — is still to be written. The classification/value path itself
+shipped with #210 (PRs #273/#274); the LOVA/LVM deldatamängd → variant
+mapping is tracked in #211; the remaining vehicle for the catalog
+write-up is #212 (materializer-owned value tables).
 
 ## IR + adapter architecture
 
