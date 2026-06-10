@@ -43,12 +43,12 @@ spec's post-A5 step numbering.
 |------|------|----------|--------|
 | 6.5  | Containerize + Cloudflare + `global` deploy | A5 | #278, #220, #224 |
 | 7    | Webapp-authoring hard-cut; delete `mock_data_wizard/web/` | 6.5 | — |
-| 7.5  | `global` dogfood (2 weeks) | 7 | — |
+| 7.5  | `global` dogfood (2 weeks) | 7 | #200, #266 |
 | 8    | Kit-build (`/api/kit` + `codes.json` + stats v1) | 7.5 | #217 |
 | 9    | `mock_data_wizard` → `reg_mockdata` rename; drop reg_meta dep | 8 | — |
 | 10a  | Bundle merged-mode (realign-then-extract) + `reg_monabundle.types` | 9 | #240 |
 | 10b  | Composite `entity_key` / `time_key` support | 10a | — |
-| 11   | Steward catalogs (ifau, swecov) | 8 | #206 |
+| 11   | Steward catalogs (ifau, swecov) | 8 | #206, #211 |
 | 12   | Per-steward order templates + `extensions` toggles | 11 | — |
 | —    | v1 slug freeze + arm immutability | all | #209, #196, #197 |
 
