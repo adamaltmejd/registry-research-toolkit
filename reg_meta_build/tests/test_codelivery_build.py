@@ -168,8 +168,11 @@ class TestGenuineConflictFailsBuild:
             _build(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
         assert exc.value.exit_code == EXIT_CONFIG
-        # Actionable: names the offending column so a maintainer can write the pin.
-        assert "ClashCol" in exc.value.message
+        # Actionable: names the offending column so a maintainer can write the
+        # pin. The coalescer's column identity is the case-folded rule-2 key
+        # (#196), so the message carries the folded form; the codelivery loader
+        # folds the pin's `column` the same way, so any TOML casing matches.
+        assert "clashcol" in exc.value.message
 
     def test_all_yearless_conflict_raises(self, tmp_path: Path) -> None:
         # var 900, column YlessCol: two distinct codings whose registerversionnamn
@@ -204,7 +207,7 @@ class TestGenuineConflictFailsBuild:
         with pytest.raises(RegMetaError) as exc:
             _build(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
-        assert "YlessCol" in exc.value.message
+        assert "ylesscol" in exc.value.message  # folded rule-2 column key (#196)
         assert "yearless" in exc.value.message
 
     def test_stale_pin_with_yearbearing_rival_raises(
@@ -251,7 +254,7 @@ class TestGenuineConflictFailsBuild:
         with pytest.raises(RegMetaError) as exc:
             _build(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
-        assert "StaleCol" in exc.value.message
+        assert "stalecol" in exc.value.message  # folded rule-2 column key (#196)
 
 
 # Two codings whose CODE sets are identical ({30,31,32}) but one code is RELABELED
@@ -302,7 +305,7 @@ class TestLabelAwareCosmetic:
         with pytest.raises(RegMetaError) as exc:
             _build(tmp_path, ri, vm)
         assert exc.value.code == "coalesce_unresolved_codelivery"
-        assert "ReCol" in exc.value.message
+        assert "recol" in exc.value.message  # folded rule-2 column key (#196)
 
     def test_clean_drift_still_collapses(self, tmp_path: Path) -> None:
         # var 960, column DriftCol: same setup but the smaller coding is a clean

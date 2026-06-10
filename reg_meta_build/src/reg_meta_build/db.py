@@ -3093,6 +3093,7 @@ def build_db(
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
         from .codelivery import load_codelivery, repo_codelivery_path
+        from .column_merges import load_column_merges, repo_column_merges_path
         from .fold_overrides import load_fold_overrides, repo_fold_overrides_path
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
@@ -3109,7 +3110,13 @@ def build_db(
             # disjoint-stem columns the triage stem rule would split. Empty file
             # ⇒ no behavioral change vs the stem-only partition.
             fold_overrides = load_fold_overrides(repo_fold_overrides_path())
-            adapters.append((SCBAdapter(conn, codelivery, fold_overrides), scb_dir))
+            # Column-merge curation (#196), same shape again: unifies
+            # never-co-occurring era-rename column twins in the coalescer's
+            # rule-2 union-find. Empty file ⇒ connectivity unchanged.
+            column_merges = load_column_merges(repo_column_merges_path())
+            adapters.append(
+                (SCBAdapter(conn, codelivery, fold_overrides, column_merges), scb_dir)
+            )
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
 

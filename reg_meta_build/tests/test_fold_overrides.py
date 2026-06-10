@@ -56,7 +56,8 @@ class TestLoadFoldOverrides:
             "[[fold]]\nregister_id = 195\nvar_id = 4027\n"
             'columns = ["Ksjusni", "NG1", "bransch", "sni2"]\n',
         )
-        assert m == {(195, 4027): [frozenset({"Ksjusni", "NG1", "bransch", "sni2"})]}
+        # Columns are case-folded at load to the rule-2 connectivity key (#196).
+        assert m == {(195, 4027): [frozenset({"ksjusni", "ng1", "bransch", "sni2"})]}
 
     def test_two_groups_same_var_are_two_entries(self, tmp_path: Path) -> None:
         m = self._load(
@@ -64,7 +65,7 @@ class TestLoadFoldOverrides:
             '[[fold]]\nregister_id = 5\nvar_id = 9\ncolumns = ["A", "B"]\n\n'
             '[[fold]]\nregister_id = 5\nvar_id = 9\ncolumns = ["C", "D"]\n',
         )
-        assert m == {(5, 9): [frozenset({"A", "B"}), frozenset({"C", "D"})]}
+        assert m == {(5, 9): [frozenset({"a", "b"}), frozenset({"c", "d"})]}
 
     def test_missing_file_is_empty(self, tmp_path: Path) -> None:
         assert load_fold_overrides(None) == {}
@@ -178,7 +179,7 @@ class TestLoadFoldOverrides:
                 '[[fold]]\nregister_id = 1\nvar_id = 9\ncolumns = ["B", "C"]\n',
             )
         assert exc.value.code == "fold_override_invalid"
-        assert "B" in exc.value.message
+        assert "b" in exc.value.message  # folded form (#196)
 
 
 class TestFoldOverrideKeyIsPerVar:
@@ -197,8 +198,8 @@ class TestFoldOverrideKeyIsPerVar:
         )
         m = load_fold_overrides(path)
         assert set(m) == {(1, 100), (1, 200)}
-        assert m[(1, 100)] == [frozenset({"A", "B"})]
-        assert m[(1, 200)] == [frozenset({"A", "B"})]
+        assert m[(1, 100)] == [frozenset({"a", "b"})]
+        assert m[(1, 200)] == [frozenset({"a", "b"})]
 
 
 # ── triage-driven tests (in-memory, deterministic) ─────────────────────────
@@ -283,6 +284,8 @@ class TestFoldOverrideTriage:
     def test_non_contested_column_fails_build(self) -> None:
         # (b) the override names `Bogus`, which is not a contested column of the
         # var → fail at the container gate with an actionable EXIT_CONFIG error.
+        # (This test feeds _triage_groups a raw map directly — the loader-folded
+        # form is exercised by TestFoldOverrideBuild.)
         conn = _ddl_conn()
         orig = _insert_var(conn, register_id=1, var_id=920)
         groups, _ = _container([("Ksjusni", 100), ("NG1", 100)])
@@ -511,4 +514,4 @@ class TestFoldOverrideBuild:
             _build(tmp_path, ri, vm)
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "fold_override_unknown_column"
-        assert "Bogus" in exc.value.message
+        assert "bogus" in exc.value.message  # folded form (#196)

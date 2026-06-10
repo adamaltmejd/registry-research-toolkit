@@ -522,8 +522,10 @@ class TestLoadCodelivery:
             encoding="utf-8",
         )
         cmap = load_codelivery(toml)
-        assert cmap[(187, 3310, "AL2UndEjU")] == ("Br07-kod", None)
-        assert cmap[(248, 104, "Skolkod")] == (None, "latest_year")
+        # Column keys are case-folded at load to the coalescer's rule-2
+        # connectivity key (#196) — TOML casing is cosmetic.
+        assert cmap[(187, 3310, "al2undeju")] == ("Br07-kod", None)
+        assert cmap[(248, 104, "skolkod")] == (None, "latest_year")
 
     def test_rejects_both_or_neither(self, tmp_path: Path) -> None:
         from reg_meta.errors import EXIT_CONFIG, RegMetaError

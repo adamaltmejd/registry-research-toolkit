@@ -1,0 +1,29 @@
+# Column-merge curation (see reg_meta_build/DESIGN.md → Build-time triage (SCB))
+# — see reg_meta_build/column_merges.py.
+#
+# A register sometimes RENAMES a delivery column between eras (`PNR` →
+# `PersonNr`): the two headers never co-occur in one edition, so the coalescer's
+# rule-2 connectivity sees two components — and once the var_id is a split
+# container (other columns DO co-deliver), each component shards into its own
+# sibling variable, splitting one identity's history across fragments. The
+# maintainer asserts the equivalence here and the coalescer treats the columns
+# as ONE union-find node from the start, upstream of triage.
+#
+# NOT this surface:
+#   - case/diacritic twins (`PersonNr`/`Personnr`, `Kon`/`Kön`) — collapsed
+#     automatically (the connectivity key is case-folded);
+#   - contested same-edition columns (`Ksjusni`/`NG1`) — fold_overrides.toml;
+#   - two value-set codings on ONE column in one period — codelivery.toml;
+#   - the same column attributed to SEVERAL var_ids (#197) — cross-var_id
+#     sharing is unrepresentable here by construction (the key is per-var).
+#
+# Key: (register_id, var_id) — stable SCB source ids (RegisterId + VarId ==
+# variable.provider_key). One [[merge]] is ONE merge group for one
+# (register, var); a var with two independent groups gets two [[merge]] entries
+# with that same key. Columns are case-folded at load, so TOML casing is
+# cosmetic.
+#
+# The build FAILS (EXIT_CONFIG) on bad curation: a named column never observed
+# as a delivery column of the var (typo / stale entry), or a duplicate /
+# overlapping group. An empty file is a no-op — connectivity stays exactly as
+# the case-folded rule-2 intersection decides.
