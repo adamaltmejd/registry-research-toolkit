@@ -76,7 +76,9 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         tables (a scalar / single `[resolve]` table is rejected before the loop,
         not a raw uncaught crash).
       - Each entry needs integer `register_id` / `var_id` and exactly one of
-        `keep` / `keep_rule` (with a known `keep_rule`)."""
+        `keep` / `keep_rule`, each a string (`keep_rule` from a known set); a
+        non-string rule — including an unhashable list/dict — is rejected, not
+        crashed on the membership test."""
     if path is None or not path.is_file():
         return {}
     try:
@@ -135,7 +137,22 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
                 'Give the [[resolve]] entry either `keep = "<label>"` or '
                 "`keep_rule`, not both and not neither.",
             )
-        if keep_rule is not None and keep_rule not in _KEEP_RULES:
+        # The set field must be a string: `keep` is a value-set label, `keep_rule`
+        # a rule name. Reject a non-string (list/dict/bool/number) at load rather
+        # than str()-coercing it into an inert never-matching pin — and, for
+        # `keep_rule`, BEFORE the membership test below, since an unhashable value
+        # (`keep_rule = [1]`) would raise a raw TypeError there (the test hashes the
+        # candidate against the frozenset), escaping the EXIT_CONFIG contract.
+        if keep_label is not None and not isinstance(keep_label, str):
+            raise _codelivery_error(
+                "codelivery_invalid",
+                f"codelivery entry {key} `keep` must be a string label, got "
+                f"{type(keep_label).__name__}.",
+                'Give `keep = "<value_set_version_label>"` as a string.',
+            )
+        if keep_rule is not None and (
+            not isinstance(keep_rule, str) or keep_rule not in _KEEP_RULES
+        ):
             raise _codelivery_error(
                 "codelivery_invalid",
                 f"codelivery entry {key} has unknown keep_rule {keep_rule!r} "

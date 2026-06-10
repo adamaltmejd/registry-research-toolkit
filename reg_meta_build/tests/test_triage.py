@@ -620,6 +620,41 @@ class TestLoadCodelivery:
         assert exc.value.code == "codelivery_invalid"
         assert "resolves" in exc.value.message
 
+    def test_unhashable_keep_rule_rejected(self, tmp_path: Path) -> None:
+        # `keep_rule = [1]` / `{a = 1}` is non-None and UNHASHABLE → without an
+        # isinstance guard the `keep_rule not in _KEEP_RULES` membership test raises
+        # a RAW `TypeError: unhashable type` outside the entry try/except, escaping
+        # the EXIT_CONFIG contract. Both must land on codelivery_invalid, no crash.
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        for rule in ("[1]", "{a = 1}"):
+            bad = tmp_path / "rule.toml"
+            bad.write_text(
+                f"[[resolve]]\nregister_id=1\nvar_id=2\nkeep_rule={rule}\n",
+                encoding="utf-8",
+            )
+            with pytest.raises(RegMetaError) as exc:
+                load_codelivery(bad)
+            assert exc.value.exit_code == EXIT_CONFIG
+            assert exc.value.code == "codelivery_invalid"
+
+    def test_non_string_keep_label_rejected(self, tmp_path: Path) -> None:
+        # A non-string `keep` (here a list) would str()-coerce into an inert pin
+        # (`"[1]"`) that never matches a real value_set_version_label → reject it at
+        # load with an actionable error instead of a confusing downstream failure.
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.codelivery import load_codelivery
+
+        bad = tmp_path / "label.toml"
+        bad.write_text(
+            '[[resolve]]\nregister_id=1\nvar_id=2\ncolumn="c"\nkeep=[1]\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_codelivery(bad)
+        assert exc.value.code == "codelivery_invalid"
+
 
 class TestPickStateRep:
     def test_latest_era_wins(self) -> None:
