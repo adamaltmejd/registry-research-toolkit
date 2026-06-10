@@ -66,6 +66,25 @@ describe("immutable source edits", () => {
     });
   });
 
+  it("coerces a malformed non-array `sources` to [] (review #280 — no char-spread, no throw)", () => {
+    // An opened spec can carry a malformed `sources: "not-an-array"` (kept verbatim
+    // for serialize/validate). A structural edit must match the editors' coercion
+    // doctrine: start from [] rather than spreading the string into char "sources"
+    // (the old `[...draft.sources, …]` bug) or throwing on `.map`/`.filter`.
+    const malformed = {
+      ...newProjectData(SEED),
+      sources: "not-an-array" as unknown as ProjectData["sources"],
+    };
+    const added = addSource(malformed);
+    expect(added.sources).toHaveLength(1);
+    expect(added.sources[0].name).toBe("");
+    // The array-reading mutators no longer throw on the malformed input either.
+    expect(() => removeSource(malformed, 0)).not.toThrow();
+    expect(removeSource(malformed, 0).sources).toEqual([]);
+    expect(() => addBinding(malformed, 0)).not.toThrow();
+    expect(() => removeBinding(malformed, 0, 0)).not.toThrow();
+  });
+
   it("removeSource drops the source at the index", () => {
     let draft = newProjectData(SEED);
     draft = addSource(draft);

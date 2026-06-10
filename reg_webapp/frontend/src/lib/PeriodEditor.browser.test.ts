@@ -4,10 +4,12 @@ import { render } from "vitest-browser-svelte";
 import PeriodEditor from "./PeriodEditor.svelte";
 import type { Period } from "./project_data";
 
-// Scenario 3 (#201): the three real bugs this covers all reached merge once —
-// a period defaulting to free text, a cross-source radio-group collision, and
-// stale state after a middle-source remove. PeriodEditor is self-contained
-// (props in, `onchange` out), so these drive it directly.
+// Scenario 3 (#201, updated by #200): the real bugs this covers all reached merge
+// once — a period defaulting to free text, a cross-source radio-group collision, and
+// (the #188 symptom) stale state after a middle-source remove, now fixed at the root
+// by stable each-block keys (#200) rather than the removed re-seed workaround.
+// PeriodEditor is self-contained (props in, `onchange` out), so these drive it
+// directly.
 describe("PeriodEditor", () => {
   it("switches modes and emits the right Period shape per mode", async () => {
     const onchange = vi.fn<(next: Period) => void>();
@@ -80,10 +82,12 @@ describe("PeriodEditor", () => {
       .toBeChecked();
   });
 
-  it("re-seeds local state when the period prop changes under it (middle-source remove)", async () => {
-    // ProjectEditor keys SourceEditor by index, so removing a middle source REUSES
-    // this instance for a different source — the `period` prop changes under it.
-    // Without the re-seed effect the editor would show the removed source's value.
+  it("seeds local state ONCE at mount and never snaps back on an unrelated prop change (#188/#200)", async () => {
+    // #200 removed the #188 re-seed workaround: with stable each-block keys a
+    // different source REMOUNTS a fresh PeriodEditor, so this instance never gets
+    // REUSED for another source. The seed is therefore one-time at mount and a later
+    // `period` prop change (an unrelated edit re-running the parent render with the
+    // SAME stable key) must NOT snap local UI state back — the exact #188 symptom.
     const onchange = vi.fn<(next: Period) => void>();
     const screen = await render(PeriodEditor, {
       period: 2015,
@@ -91,14 +95,19 @@ describe("PeriodEditor", () => {
       onchange,
     });
     await expect
-      .element(screen.getByRole("spinbutton", { name: "From" }))
-      .toHaveValue(2015);
+      .element(screen.getByRole("radio", { name: "Years" }))
+      .toBeChecked();
 
-    // The reused instance now belongs to a source with a token period.
-    await screen.rerender({ period: "HT2018", issues: [], onchange });
+    // The user switches THIS source to Token mode (local-only until they type).
+    await screen.getByRole("radio", { name: "Token" }).click();
+    await expect.element(screen.getByRole("textbox")).toBeVisible();
 
-    await expect.element(screen.getByRole("textbox")).toHaveValue("HT2018");
-    // Re-seeding is an EXTERNAL change — it must not echo back through onchange.
-    expect(onchange).not.toHaveBeenCalled();
+    // An unrelated edit elsewhere re-renders the parent; this instance survives on
+    // its stable key and receives its OWN period prop again. The one-time seed must
+    // NOT re-run — the mode stays Token (no snap-back to Years).
+    await screen.rerender({ period: 2015, issues: [], onchange });
+    await expect
+      .element(screen.getByRole("radio", { name: "Token" }))
+      .toBeChecked();
   });
 });

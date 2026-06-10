@@ -99,43 +99,22 @@ function seedTokenText(value: Period): string {
   return JSON.stringify(value);
 }
 
-// Local UI state, seeded from the period at mount. `untrack` keeps the seed a
+// Local UI state, seeded from the period ONCE at mount. `untrack` keeps the seed a
 // one-time read (no reactive dep) so switching mode then typing isn't snapped back
 // when an UNRELATED edit swaps the whole draft.
+//
+// No re-seed `$effect` is needed (issue #200 removed the #188 workaround): the
+// each-blocks now key on a store-owned STABLE id, so a middle-source remove REMOUNTS
+// the surviving editors on their own ids rather than rebinding a survivor's instance
+// to a shifted source. A genuinely different source therefore gets a fresh mount that
+// re-runs this one-time seed correctly — and an unrelated edit no longer reuses this
+// instance for another source, so there is no stale-period symptom to paper over.
 const initial: Period = untrack(() => period);
 let mode = $state<Mode>(inferMode(initial));
 const seedYears = initialYears(initial);
 let yearFrom = $state(seedYears.from);
 let yearTo = $state(seedYears.to);
 let tokenText = $state(seedTokenText(initial));
-
-// RE-SEED when `period` arrives with a value we did NOT just emit — i.e. the
-// index-keyed instance was REUSED for a DIFFERENT source (a middle-source remove)
-// or the draft was replaced. `emit` sets `seeded` to the value it sends, so our own
-// writes don't re-seed (no snap-back); an unrelated edit leaves THIS source's period
-// unchanged → no re-seed. Without this the editor displays/overwrites a stale
-// source's period after a middle remove (panel + Codex P2).
-let seeded = $state(JSON.stringify(initial));
-$effect(() => {
-  const incoming = JSON.stringify(period);
-  // Only `period` is a dependency — untrack the `seeded` read so writing it below
-  // doesn't re-trigger this effect (the re-seed runs once per external change).
-  if (incoming !== untrack(() => seeded)) {
-    mode = inferMode(period);
-    const ys = initialYears(period);
-    yearFrom = ys.from;
-    yearTo = ys.to;
-    tokenText = seedTokenText(period);
-    seeded = incoming;
-  }
-});
-
-// Funnel every period write so `seeded` matches what we sent (see the re-seed
-// effect above) — keeps our own emits from re-seeding.
-function emit(next: Period): void {
-  seeded = JSON.stringify(next);
-  onchange(next);
-}
 
 const tokenHint = $derived(
   tokenText.trim() !== "" && !looksLikePeriod(tokenText.trim()),
@@ -152,20 +131,20 @@ function emitYears(): void {
   const from: number | string = fromOk ? fromNum : yearFrom.trim();
   const to: number | string = toOk ? toNum : yearTo.trim();
   if (fromOk && toOk && fromNum === toNum) {
-    emit(fromNum);
+    onchange(fromNum);
     return;
   }
-  emit({ from, to });
+  onchange({ from, to });
 }
 
 function onModeChange(next: Mode): void {
   mode = next;
   if (next === "default") {
-    emit("_default");
+    onchange("_default");
   } else if (next === "years") {
     emitYears();
   } else {
-    emit(tokenText.trim());
+    onchange(tokenText.trim());
   }
 }
 </script>
@@ -240,7 +219,7 @@ function onModeChange(next: Mode): void {
         placeholder="YYYYMM, HT2018, 2010..2020…"
         oninput={(e) => {
           tokenText = e.currentTarget.value;
-          emit(tokenText.trim());
+          onchange(tokenText.trim());
         }}
       />
       {#if tokenHint}

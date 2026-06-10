@@ -154,7 +154,11 @@ function onPickVariant(slug: string): void {
       <p class="muted">No bindings yet.</p>
     {:else}
       <ul class="binding-list">
-        {#each bindings as binding, j (j)}
+        <!-- Keyed by the store-owned STABLE client id (issue #200), not the index,
+             so a middle binding remove remounts the correct BindingEditor instance
+             (its `picking` flag / open CatalogPicker stay bound to the right
+             binding). The id lives only in the store, never in the draft. -->
+        {#each bindings as binding, j (projectStore.bindingId(sourceIndex, j))}
           <li>
             <BindingEditor
               sourceIndex={sourceIndex}

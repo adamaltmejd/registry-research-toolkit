@@ -170,10 +170,13 @@ async function onFilePicked(event: Event): Promise<void> {
       </div>
     </div>
 
-    <!-- Editable sources/bindings list (c-ii). Keyed by index (no stable id;
-         matches c-i — a middle-remove shifts focus, an accepted caveat). Each
-         SourceEditor re-renders on every edit (the whole draft swaps), acceptable
-         at expected sizes. `issues` is the LAST /validate result, echoed inline. -->
+    <!-- Editable sources/bindings list (c-ii). Keyed by the store-owned STABLE
+         client id (issue #200) — NOT the index — so a middle-remove remounts the
+         correct SourceEditor instance instead of rebinding a survivor's stale UI
+         state to a shifted source. The id lives only in the store, never in the
+         serialized draft. Each SourceEditor re-renders on every edit (the whole
+         draft swaps), acceptable at expected sizes. `issues` is the LAST /validate
+         result, echoed inline. -->
     <section class="sources" aria-label="Sources">
       <div class="sources-head">
         <h3>Sources ({sources.length})</h3>
@@ -184,7 +187,7 @@ async function onFilePicked(event: Event): Promise<void> {
       {#if sources.length === 0}
         <p class="muted">No sources yet. Add one to begin authoring.</p>
       {:else}
-        {#each sources as source, i (i)}
+        {#each sources as source, i (projectStore.sourceId(i))}
           <SourceEditor
             sourceIndex={i}
             source={source}
