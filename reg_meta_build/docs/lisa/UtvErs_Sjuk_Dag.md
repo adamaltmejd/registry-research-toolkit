@@ -15,4 +15,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Antal utbetalda bruttodagar under året med utvecklingsersättning med sjukpenning.
 
-Man kan inte få sjukpenning för samma tid som utvecklingsersättning men däremot har man rätt att behålla utvecklingsersättningen även när man blir sjuk om man anmäler till Arbetsförmedlingen första dagen som man är frånvarande.
+Man kan inte få sjukpenning för samma tid som utvecklingsersättning men däremot har man
+rätt att behålla utvecklingsersättningen även när man blir sjuk om man anmäler till
+Arbetsförmedlingen första dagen som man är frånvarande.

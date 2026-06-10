@@ -17,4 +17,4 @@ Anger om personen är registrererad i någon skolform under höstterminen aktuel
 
 0 = ej studerande höstterminen
 
-*För ytterligare information, se under Studiedeltagande, HT* ([[StudDelt]]).
+*För ytterligare information, se under Studiedeltagande, HT* ([StudDelt](StudDelt.md)).

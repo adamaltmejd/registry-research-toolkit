@@ -13,4 +13,5 @@ Posttyp
 
 Anger invandring till Sverige och utvandring från Sverige.
 
-Posttyp för in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISApopulationen.
+Posttyp för in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen
+omfattar samtliga in- och utvandringstillfällen för LISApopulationen.

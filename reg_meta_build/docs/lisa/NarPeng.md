@@ -13,17 +13,23 @@ NarPeng
 
 Beloppet anges i hundratal kronor.
 
-Närståendepenning infördes den 1 juli 1989. En närstående som vårdar en sjuk person, har rätt till ersättning från sjukförsäkringen och rätt till ledighet från sin anställning under högst 100 dagar[^130]. Både den sjuke och vårdaren måste vara inskrivna hos Försäkringskassan och vården måste ges i Sverige. Vården av den sjuke kan ske både i hemmet och på sjukhus eller annan institution.
+Närståendepenning infördes den 1 juli 1989. En närstående som vårdar en sjuk person, har
+rätt till ersättning från sjukförsäkringen och rätt till ledighet från sin anställning
+under högst 100 dagar[^130]. Både den sjuke och vårdaren måste vara inskrivna hos
+Försäkringskassan och vården måste ges i Sverige. Vården av den sjuke kan ske både i
+hemmet och på sjukhus eller annan institution.
 
 Ledigheten kan tas ut med hel, halv eller fjärdedels ersättning.
 
-Närståendepenning kan inte betalas ut till flera vårdare för samma tid. Dagarna i närståendepenningen tillhör den som vårdas, inte den som får ersättningen.
+Närståendepenning kan inte betalas ut till flera vårdare för samma tid. Dagarna i
+närståendepenningen tillhör den som vårdas, inte den som får ersättningen.
 
 *Ersättningsnivån i närståendepenningen:*
 
 *1990–1991:* 90 procent av den sjukpenninggrundande inkomsten.
 
-*1992:* 75 procent (tre första dagarna) sedan 90 procent av den sjukpenninggrundande inkomsten.
+*1992:* 75 procent (tre första dagarna) sedan 90 procent av den sjukpenninggrundande
+inkomsten.
 
 *1993–1995:* 80 procent av den sjukpenninggrundande inkomsten, ingen karensdag.
 
@@ -31,22 +37,41 @@ Närståendepenning kan inte betalas ut till flera vårdare för samma tid. Daga
 
 *1998–2006:* 80 procent av den sjukpenninggrundande inkomsten, ingen karensdag.
 
-*2007:* 80 procent av den sjukpenninggrundande inkomsten multiplicerad med faktorn 0,989. Ingen karensdag.
+*2007:* 80 procent av den sjukpenninggrundande inkomsten multiplicerad med faktorn
+0,989. Ingen karensdag.
 
-Den *1/7 2006* höjs inkomsttaket vid beräkning av den sjukpenninggrundande inkomsten (SGI) från sju och en halv till tio gånger prisbasbeloppet. Det höjda inkomsttaket skall tillämpas vid beräkning av närståendepenning.
+Den *1/7 2006* höjs inkomsttaket vid beräkning av den sjukpenninggrundande inkomsten
+(SGI) från sju och en halv till tio gånger prisbasbeloppet. Det höjda inkomsttaket skall
+tillämpas vid beräkning av närståendepenning.
 
-Den *1/1 2007* sänks inkomsttaket vid beräkning av den sjukpenninggrundande inkomsten (SGI) från tio till sju och en halv gånger prisbasbeloppet.
+Den *1/1 2007* sänks inkomsttaket vid beräkning av den sjukpenninggrundande inkomsten
+(SGI) från tio till sju och en halv gånger prisbasbeloppet.
 
-*2008–2017:* 80 procent av den sjukpenninggrundande inkomsten multiplicerad med faktorn 0,97. Ingen karensdag.
+*2008–2017:* 80 procent av den sjukpenninggrundande inkomsten multiplicerad med faktorn
+0,97. Ingen karensdag.
 
 (1997)
 
 Beloppet anges i hundratal kronor.
 
-Från 1/7 till 31/12 1997 fanns, för arbetssökande personer som fyllt 60 men inte 65 år, möjlighet att ansöka om tillfällig avgångsersättning i form av arbetslöshetsersättning eller kontant arbetsmarknadsstöd fram till ålderspension. Avgångsersättningen var tillfällig i den meningen att ansökningsperioden var begränsad till denna period. Erbjudandet gällde för sökande som uppburit A-kassa eller deltagit i arbetsmarknadspolitisk åtgärd i minst 12 månader mellan 1996-01-01 och 1997-04-15. Berörda personer behövde inte längre stå till arbetsmarknadens förfogande. Till den som beviljats [[TAE]] betalas ersättningen ut fortsättningsvis och utan att den sökande behöver uppfylla några nya villkor till dess sökanden återgår till arbetsmarknaden, erhåller hel förtidspension eller fyller 65 år.
+Från 1/7 till 31/12 1997 fanns, för arbetssökande personer som fyllt 60 men inte 65 år,
+möjlighet att ansöka om tillfällig avgångsersättning i form av arbetslöshetsersättning
+eller kontant arbetsmarknadsstöd fram till ålderspension. Avgångsersättningen var
+tillfällig i den meningen att ansökningsperioden var begränsad till denna period.
+Erbjudandet gällde för sökande som uppburit A-kassa eller deltagit i
+arbetsmarknadspolitisk åtgärd i minst 12 månader mellan 1996-01-01 och 1997-04-15.
+Berörda personer behövde inte längre stå till arbetsmarknadens förfogande. Till den som
+beviljats [TAE](TAE.md) betalas ersättningen ut fortsättningsvis och utan att den
+sökande behöver uppfylla några nya villkor till dess sökanden återgår till
+arbetsmarknaden, erhåller hel förtidspension eller fyller 65 år.
 
-Endast det fåtal som 1997 får tillfällig avgångsersättning utbetald från Försäkringskassan (som kontant arbetsmarknadsstöd eller motsvarande) redovisas här. För övriga redovisas tillfällig avgångsersättning under arbetslöshetsersättning.
+Endast det fåtal som 1997 får tillfällig avgångsersättning utbetald från
+Försäkringskassan (som kontant arbetsmarknadsstöd eller motsvarande) redovisas här. För
+övriga redovisas tillfällig avgångsersättning under arbetslöshetsersättning.
 
-Totalt beviljades 18 986 personer [[TAE]], samtliga var födda 1932–1937. Efter år 2002 kommer således ingen [[TAE]] att betalas ut.
+Totalt beviljades 18 986 personer [TAE](TAE.md), samtliga var födda 1932–1937. Efter år
+2002 kommer således ingen [TAE](TAE.md) att betalas ut.
 
-[^130]: Före den 1 juli 1994 var rätten till ledighet högst 30 dagar. Fr.o.m. 1 juli 1994 t.o.m. 2009 var rätten till ledighet högst 60 dagar. För vård av HIV-smittad kan man få närståendepenning i 240 dagar.
+[^130]: Före den 1 juli 1994 var rätten till ledighet högst 30 dagar. Fr.o.m. 1 juli
+    1994 t.o.m. 2009 var rätten till ledighet högst 60 dagar. För vård av HIV-smittad
+    kan man få närståendepenning i 240 dagar.

@@ -16,11 +16,16 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Antal utbetalda nettodagar under året med arbetsskadesjukpenning.
 
-Arbetsskadesjukpenningkan betalas ut till personer som har låg inkomst, studerar, behöver avstå från arbete i förebyggande syfte eller saknar arbetstillstånd eller uppehållstillstånd.
+Arbetsskadesjukpenningkan betalas ut till personer som har låg inkomst, studerar,
+behöver avstå från arbete i förebyggande syfte eller saknar arbetstillstånd eller
+uppehållstillstånd.
 
-Arbetsskadesjukpenning kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent) eller en fjärdedels (25 procent). Antalet nettodagar är bruttodagar \*omfattning under ett år.
+Arbetsskadesjukpenning kan betalas ut som hel (100 procent), tre fjärdedels (75
+procent), halv (50 procent) eller en fjärdedels (25 procent). Antalet nettodagar är
+bruttodagar \*omfattning under ett år.
 
-Antalet utbetalade nettodagar är bruttodagar \*omfattning under ett år för förmånen arbetsskadesjukpenning.
+Antalet utbetalade nettodagar är bruttodagar \*omfattning under ett år för förmånen
+arbetsskadesjukpenning.
 
 10 \* hel omfattning = 10 nettodagar,
 
@@ -30,4 +35,6 @@ Antalet utbetalade nettodagar är bruttodagar \*omfattning under ett år för f�
 
 10 \* en kvarts omfattning = 2,5 nettodagar.
 
-Endast summerade fall där beloppet för penningen dividerat med antal nettodagar för penningen är större än 100 redovisas, annars räknas det som en tilläggsutbetalning varvid antalet nettodagar inte redovisas.
+Endast summerade fall där beloppet för penningen dividerat med antal nettodagar för
+penningen är större än 100 redovisas, annars räknas det som en tilläggsutbetalning
+varvid antalet nettodagar inte redovisas.

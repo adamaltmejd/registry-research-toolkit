@@ -15,4 +15,5 @@ SjukBidr*Bdag*MiDAS
 
 Antal utbetalda bruttodagar under året med sjukbidrag.
 
-*För ytterligare information om sjukbidrag se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
+*För ytterligare information om sjukbidrag se grundläggarende texten under
+Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*

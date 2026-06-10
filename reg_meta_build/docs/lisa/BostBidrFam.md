@@ -14,8 +14,11 @@ BostBidrFam
 
 Beloppet anges i hundratals kronor.
 
-Variabeln är summerad till familjenivå och omfattar såväl *bostadsbidrag till barnfamiljer, bostadsbidrag till ungdomar* som *bostadsbidrag till övriga familjer och ensamstående utan barn* (1991–1995).
+Variabeln är summerad till familjenivå och omfattar såväl *bostadsbidrag till
+barnfamiljer, bostadsbidrag till ungdomar* som *bostadsbidrag till övriga familjer och
+ensamstående utan barn* (1991–1995).
 
-Det familjebegrepp[^153] som här används skiljer sig från det faktiska hushållet. Största skillnaden avser sammanboende utan gemensamma barn.
+Det familjebegrepp[^153] som här används skiljer sig från det faktiska hushållet.
+Största skillnaden avser sammanboende utan gemensamma barn.
 
-[^153]: För information om familjebegreppet se objektet Familj ([[FamId]]).
+[^153]: För information om familjebegreppet se objektet Familj ([FamId](FamId.md)).

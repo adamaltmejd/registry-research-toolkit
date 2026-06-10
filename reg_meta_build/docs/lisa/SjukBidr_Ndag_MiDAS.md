@@ -15,7 +15,9 @@ SjukBidr*Ndaq*MiDAS
 
 Antal utbetalda nettodagar under året med sjukbidrag.
 
-Sjukbidrag kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent) eller en fjärdedels (25 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
+Sjukbidrag kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50
+procent) eller en fjärdedels (25 procent). Antal nettodagar är bruttodagar
+\*omfattningen under ett år.
 
 10 \* hel omfattning = 10 nettodagar,
 
@@ -25,12 +27,15 @@ Sjukbidrag kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), h
 
 10 \* en kvarts omfattning = 2,5 nettodagar
 
-*För ytterligare information om sjukbidrag se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
+*För ytterligare information om sjukbidrag se grundläggarende texten under
+Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
 
 (1994–2002)
 
 Beloppet anges i hundratal kronor.
 
-Utbetalt belopp under året för sjukbidrag, står i relation till utbetalda dagar med sjukbidrag. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för sjukbidrag, står i relation till utbetalda dagar med
+sjukbidrag. Utbetalt belopp avser ersättningsperioden.
 
-*För ytterligare information om sjukbidrag se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
+*För ytterligare information om sjukbidrag se grundläggarende texten under
+Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*

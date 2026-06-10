@@ -16,6 +16,8 @@ Smitt_Belopp
 
 Beloppet anges i hundratals kronor.
 
-Utbetalt belopp under året för smittbärarpenning, står i relation till utbetalda dagar med smittbärarpenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för smittbärarpenning, står i relation till utbetalda dagar
+med smittbärarpenning. Utbetalt belopp avser ersättningsperioden.
 
-*För ytterligare information se under Smittbärarpenning, antal bruttodagar*  ([[Smitt_Bdag]]).
+*För ytterligare information se under Smittbärarpenning, antal bruttodagar*
+([Smitt_Bdag](Smitt_Bdag.md)).

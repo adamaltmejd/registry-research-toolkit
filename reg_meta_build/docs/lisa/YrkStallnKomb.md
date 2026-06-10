@@ -13,7 +13,9 @@ YrkStallnKomb
 
 (2003–)
 
-Kod för kombinatörer (personer med anknytning till mer än en yrkesställning). Koden är treställig och ett blanksteg används istället för en bokstav om färre än tre bokstäver anges.
+Kod för kombinatörer (personer med anknytning till mer än en yrkesställning). Koden är
+treställig och ett blanksteg används istället för en bokstav om färre än tre bokstäver
+anges.
 
 F = renodlad företagare i eget AB
 

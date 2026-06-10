@@ -26,6 +26,13 @@ Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
 10 \* en kvarts omfattning = 2,5 nettodagar
 
-Dessa dagar ingår i variabeln *Rehabiliteringspenning, antal bruttodagar* ([[Rehab_Bdag_MiDAS]]). *Rehabiliteringspenning* och *förlängd rehabiliteringspenning* summeras till antal bruttodagar för rehabiliteringspenning när källan är Försäkringskassans STOREdatabas. I LISA redovisas dock totalt antal bruttodagar för rehabiliteringspenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*
+Dessa dagar ingår i variabeln *Rehabiliteringspenning, antal bruttodagar*
+([Rehab_Bdag_MiDAS](Rehab_Bdag_MiDAS.md)). *Rehabiliteringspenning* och *förlängd
+rehabiliteringspenning* summeras till antal bruttodagar för rehabiliteringspenning när
+källan är Försäkringskassans STOREdatabas. I LISA redovisas dock totalt antal
+bruttodagar för rehabiliteringspenning från MiDAS, Försäkringskassans analysdatabas så
+denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE –
+MiDAS.*
 
-*Lär mer om rehabiliteringspenning och förlängd rehabiliteringspenning under Rehabiliteringspenning, antal bruttodagar* ([[Rehab_08_Bdag]]).
+*Lär mer om rehabiliteringspenning och förlängd rehabiliteringspenning under
+Rehabiliteringspenning, antal bruttodagar* ([Rehab_08_Bdag](Rehab_08_Bdag.md)).

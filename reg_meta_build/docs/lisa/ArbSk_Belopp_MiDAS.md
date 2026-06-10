@@ -16,6 +16,9 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratals kronor.
 
-Utbetalt belopp under året för arbetsskadesjukpenning, står i relation till utbetalda dagar med arbetsskadesjukpenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för arbetsskadesjukpenning, står i relation till utbetalda
+dagar med arbetsskadesjukpenning. Utbetalt belopp avser ersättningsperioden.
 
-Arbetsskadesjukpenningkan betalas ut till personer som har låg inkomst, studerar, behöver avstå från arbete i förebyggande syfte eller saknar arbetstillstånd eller uppehållstillstånd.
+Arbetsskadesjukpenningkan betalas ut till personer som har låg inkomst, studerar,
+behöver avstå från arbete i förebyggande syfte eller saknar arbetstillstånd eller
+uppehållstillstånd.

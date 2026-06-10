@@ -19,7 +19,8 @@ Nettoinkomst från näringsverksamhet under året. Negativa värden förekommer.
 
 #### *2003-2006:*
 
-Utifrån uppgifterna i de Standardiserade räkenskapsutdragen (SRU) som avser personens näringsverksamhet beräknas företagsinkomsten enligt följande:
+Utifrån uppgifterna i de Standardiserade räkenskapsutdragen (SRU) som avser personens
+näringsverksamhet beräknas företagsinkomsten enligt följande:
 
 Resultat (över- eller underskott)
 
@@ -31,6 +32,12 @@ Resultat (över- eller underskott)
 
 #### *2007-:*
 
-Endast resultatet som företagaren redovisat på Inkomstdeklarationen ingår, över – eller underskott.
+Endast resultatet som företagaren redovisat på Inkomstdeklarationen ingår, över – eller
+underskott.
 
-2007 togs uppgiften om aktiv/passiv näringsverksamhet bort från det material som tidigare användes som källa och denna uppgift hämtas istället från en annan blankett. I samband med denna förändring togs det justerade resultatet bort och endast det resultat som den egna företagaren redovisat i Inkomstdeklarationen redovisas. Den studie som gjordes inför denna förändring konstaterade att värdet i variablerna inte påverkas nämnvärt. Det går således att göra jämförelser utan att ta hänsyn till denna förändring.
+2007 togs uppgiften om aktiv/passiv näringsverksamhet bort från det material som
+tidigare användes som källa och denna uppgift hämtas istället från en annan blankett. I
+samband med denna förändring togs det justerade resultatet bort och endast det resultat
+som den egna företagaren redovisat i Inkomstdeklarationen redovisas. Den studie som
+gjordes inför denna förändring konstaterade att värdet i variablerna inte påverkas
+nämnvärt. Det går således att göra jämförelser utan att ta hänsyn till denna förändring.

@@ -18,4 +18,6 @@ Beloppet anges i hundratals kronor.
 
 Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod.
 
-Arbetsgivarinträde betyder att arbetsgivaren lämnar sjuklön och att arbetsgivaren sedan, från Försäkringskassan, får den sjukpenning/arbetsskadesjukpenning som den anställde har rätt till. Den 1/7 1992 upphörde arbetsgivarinträdet.
+Arbetsgivarinträde betyder att arbetsgivaren lämnar sjuklön och att arbetsgivaren sedan,
+från Försäkringskassan, får den sjukpenning/arbetsskadesjukpenning som den anställde har
+rätt till. Den 1/7 1992 upphörde arbetsgivarinträdet.

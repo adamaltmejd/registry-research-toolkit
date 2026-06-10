@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Parse LISA bakgrundsfakta PDF into per-variable and topic markdown files.
 
-Outputs to reg_meta_build/docs/lisa/ with Obsidian-style YAML frontmatter,
-wiki-style links, and hierarchical tags.
+Outputs to reg_meta_build/docs/lisa/ with YAML frontmatter, standard markdown
+links ([X](X.md)), and hierarchical tags.
 
 Two-step workflow:
 
@@ -1397,8 +1397,9 @@ def _panache_format(out_dir: Path) -> None:
         print("WARNING: uvx not found; skipping panache format pass", file=sys.stderr)
         return
     print(f"Formatting {out_dir} with panache...")
+    # Pinned (7-day release-age policy); keep in sync with .pre-commit-config.yaml.
     subprocess.run(
-        ["uvx", "--from", "panache-cli", "panache", "format", str(out_dir)],
+        ["uvx", "--from", "panache-cli==2.51.0", "panache", "format", str(out_dir)],
         check=True,
     )
 

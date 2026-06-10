@@ -14,7 +14,8 @@ AktErsGarAnd
 
 (2003–)
 
-Ger information om vilken grad av aktivitetsersättningen som erhållits vid sista utbetalning under året.
+Ger information om vilken grad av aktivitetsersättningen som erhållits vid sista
+utbetalning under året.
 
 Kodförteckning:
 

@@ -7,12 +7,15 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Näringsgrenstillhörighet enligt SNI 69 (arbetsställe, näst största förvärvskälla) KU2AstSNI69**
+**Näringsgrenstillhörighet enligt SNI 69 (arbetsställe, näst största förvärvskälla)
+KU2AstSNI69**
 
 KU2AstSNI69
 
 (1990–1992)
 
-Arbetsställets (avseende näst största förvärvskälla) näringsgrenskod enligt standard för svensk näringsgrensindelning (SNI 69).
+Arbetsställets (avseende näst största förvärvskälla) näringsgrenskod enligt standard för
+svensk näringsgrensindelning (SNI 69).
 
-*Se under Näringsgrenstillhörighet enligt SNI 69 (arbetsställe),* ([[AstSNI69]]).
+*Se under Näringsgrenstillhörighet enligt SNI 69 (arbetsställe),*
+([AstSNI69](AstSNI69.md)).

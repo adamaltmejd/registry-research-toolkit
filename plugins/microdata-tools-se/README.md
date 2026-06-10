@@ -3,10 +3,10 @@
 Agent plugin for working with Swedish administrative register microdata (SCB,
 Socialstyrelsen, and other holders). Bundles two skills:
 
-| Skill | Purpose |
-|---|---|
-| `init-mona-project` | Scaffold a local R environment for an existing SCB MONA research project (mock data, templates, guardrails). |
-| `register-metadata-search` | Query register metadata (variables, value codes, schemas) via the `reg-meta` CLI. |
+  | Skill                      | Purpose                                                                                                      |
+  | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+  | `init-mona-project`        | Scaffold a local R environment for an existing SCB MONA research project (mock data, templates, guardrails). |
+  | `register-metadata-search` | Query register metadata (variables, value codes, schemas) via the `reg-meta` CLI.                            |
 
 ## Prerequisites
 
@@ -18,8 +18,8 @@ uv tool install mock-data-wizard
 reg-meta update --yes   # pull the latest metadata DB
 ```
 
-Both CLIs check for updates on startup. Upgrade explicitly with
-`reg-meta update` (package + DB) or `mock-data-wizard update`.
+Both CLIs check for updates on startup. Upgrade explicitly with `reg-meta update`
+(package + DB) or `mock-data-wizard update`.
 
 ## Install
 
@@ -46,20 +46,19 @@ Then open the Codex plugin marketplace, find `microdata-tools-se` under
 
 ## Scope
 
-The toolkit targets Swedish register-based work generally — research, report
-writing, statistics production — not only MONA. `init-mona-project` is the
-MONA-specific piece; `register-metadata-search` works with any register whose
-schema is in the `reg_meta` DB.
+The toolkit targets Swedish register-based work generally — research, report writing,
+statistics production — not only MONA. `init-mona-project` is the MONA-specific piece;
+`register-metadata-search` works with any register whose schema is in the `reg_meta` DB.
 
 ## Personal data
 
-MONA contains personal data. The skills never export row-level data; only
-aggregate statistics.
+MONA contains personal data. The skills never export row-level data; only aggregate
+statistics.
 
 ## Support
 
 Source code and issue tracker:
 [adamaltmejd/registry-research-toolkit](https://github.com/adamaltmejd/registry-research-toolkit)
 
-If the plugin behaves unexpectedly or the documentation is unclear, please
-file an issue.
+If the plugin behaves unexpectedly or the documentation is unclear, please file an
+issue.

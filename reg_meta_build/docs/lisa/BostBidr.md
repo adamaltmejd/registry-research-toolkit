@@ -16,7 +16,9 @@ BostBidr
 
 Beloppet anges i hundratals kronor.
 
-Bostadsbidrag är ett stöd som betalas ut till de som behöver hjälp att betala hyra eller månadsavgift för sitt boende. Bostadsbidraget betalas ut till barnfamiljer och till ungdomar mellan 18–28 år.
+Bostadsbidrag är ett stöd som betalas ut till de som behöver hjälp att betala hyra eller
+månadsavgift för sitt boende. Bostadsbidraget betalas ut till barnfamiljer och till
+ungdomar mellan 18–28 år.
 
 Beloppet är endast kopplat till den huvudsökande.
 

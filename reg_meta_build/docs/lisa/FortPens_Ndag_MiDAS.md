@@ -15,7 +15,9 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Antal utbetalda nettodagar under året med förtidspension.
 
-Förtidspension kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent) eller en fjärdedels (25 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
+Förtidspension kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv
+(50 procent) eller en fjärdedels (25 procent). Antal nettodagar är bruttodagar
+\*omfattningen under ett år.
 
 10 \* hel omfattning = 10 nettodagar,
 
@@ -25,4 +27,5 @@ Förtidspension kan betalas ut som hel (100 procent), tre fjärdedels (75 procen
 
 10 \* en kvarts omfattning = 2,5 nettodagar
 
-*För ytterligare information om förtidspension se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
+*För ytterligare information om förtidspension se grundläggarende texten under
+Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*

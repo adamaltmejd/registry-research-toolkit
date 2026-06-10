@@ -13,8 +13,9 @@ KU1Ssyk4
 
 (2002–2013)
 
-Yrkeskod, för största förvärvskälla, på fyrsiffernivå enligt Standard för svensk yrkesklassificering 1996.
+Yrkeskod, för största förvärvskälla, på fyrsiffernivå enligt Standard för svensk
+yrkesklassificering 1996.
 
 *Se "SSYK 96. Standard för svensk yrkesklassificering 1996." (MIS 1998:3).*
 
-*För ytterligare information se Yrke enligt SSYK 96, 4-siffernivå ([[Ssyk4]]).*
+*För ytterligare information se Yrke enligt SSYK 96, 4-siffernivå ([Ssyk4](Ssyk4.md)).*

@@ -14,6 +14,7 @@ AktErsVilAnd
 
 (2009–)
 
-Ger information om vilken grad av vilande aktivitetsersättningen som erhållits vid sista utbetalning under året.
+Ger information om vilken grad av vilande aktivitetsersättningen som erhållits vid sista
+utbetalning under året.
 
 Kodförteckning: 00 = 0/0, 0 % utbetalt 01 = 1/1, 100 % utbetalt

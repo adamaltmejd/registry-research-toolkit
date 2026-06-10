@@ -1,21 +1,21 @@
 # Generated Files and Templates
 
-Use this file when you are ready to write files. It contains the required
-templates and document structure.
+Use this file when you are ready to write files. It contains the required templates and
+document structure.
 
 ## Bundled template files
 
 Copy these files verbatim from `templates/`:
 
-| Template | Destination |
-|----------|-------------|
-| `templates/air.toml` | `{projdir}/air.toml` |
-| `templates/run.R` | `{projdir}/run.R` |
-| `templates/src/helpers.R` | `{projdir}/src/helpers.R` |
-| `templates/src/plotting.R` | `{projdir}/src/plotting.R` |
-| `templates/src/manage_packages.R` | `{projdir}/src/manage_packages.R` |
-| `templates/tests/testthat.R` | `{projdir}/tests/testthat.R` |
-| `templates/tests/testthat/test-guards.R` | `{projdir}/tests/testthat/test-guards.R` |
+  | Template                                 | Destination                              |
+  | ---------------------------------------- | ---------------------------------------- |
+  | `templates/air.toml`                     | `{projdir}/air.toml`                     |
+  | `templates/run.R`                        | `{projdir}/run.R`                        |
+  | `templates/src/helpers.R`                | `{projdir}/src/helpers.R`                |
+  | `templates/src/plotting.R`               | `{projdir}/src/plotting.R`               |
+  | `templates/src/manage_packages.R`        | `{projdir}/src/manage_packages.R`        |
+  | `templates/tests/testthat.R`             | `{projdir}/tests/testthat.R`             |
+  | `templates/tests/testthat/test-guards.R` | `{projdir}/tests/testthat/test-guards.R` |
 
 Do not modify those files during scaffolding.
 

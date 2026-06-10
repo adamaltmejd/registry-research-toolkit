@@ -8,4 +8,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Markering om sjukersättningen är tidsbegränsadeller icke tidsbegränsad SjukErs_Tidsbegr**
+**Markering om sjukersättningen är tidsbegränsadeller icke tidsbegränsad
+SjukErs_Tidsbegr**

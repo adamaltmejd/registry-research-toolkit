@@ -1,9 +1,0 @@
-{
-  "private": true,
-  "scripts": {
-    "lint:md": "markdownlint-cli2"
-  },
-  "devDependencies": {
-    "markdownlint-cli2": "^0.22.0"
-  }
-}

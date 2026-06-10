@@ -15,6 +15,8 @@ Kodas enligt:
 
 2 = Kvinna
 
-Kön härleds från näst sista siffran i personnumret. Är siffran udda sätts kön = man, är siffran jämn sätts kön = kvinna.
+Kön härleds från näst sista siffran i personnumret. Är siffran udda sätts kön = man, är
+siffran jämn sätts kön = kvinna.
 
-Varje år ändras personnumret för mellan 500 och 1500 personer. De flesta av dessa ändringar beror på felaktigt angiven födelsetid i samband med invandring.
+Varje år ändras personnumret för mellan 500 och 1500 personer. De flesta av dessa
+ändringar beror på felaktigt angiven födelsetid i samband med invandring.

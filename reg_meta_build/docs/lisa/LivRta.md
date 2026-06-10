@@ -13,6 +13,8 @@ LivRta
 
 Beloppet anges i hundratals kronor.
 
-Den under året summerade inkomsten av *Yrkesskadelivränta, egenförmån/ efterlevandeförmån (*[[LivYrke]]*)* och *Arbetsskadelivränta, egenförmån (*[[LivArb]]*).*
+Den under året summerade inkomsten av *Yrkesskadelivränta, egenförmån/
+efterlevandeförmån (*[LivYrke](LivYrke.md)*)* och *Arbetsskadelivränta, egenförmån
+(*[LivArb](LivArb.md)*).*
 
 *För mer detaljerad information, se under respektive inkomstslag*

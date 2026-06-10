@@ -23,4 +23,5 @@ Informationen i variabeln:
 
 "Saknas/Okänd".
 
-*För ytterligare information om sjukersättning se under Sjukersättning* ([[SjukErs]]).
+*För ytterligare information om sjukersättning se under Sjukersättning*
+([SjukErs](SjukErs.md)).

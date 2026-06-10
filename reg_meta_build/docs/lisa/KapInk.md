@@ -15,151 +15,275 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratal kronor, negativa värden kan förekomma.
 
-Kapitalinkomst består av det skattepliktiga eller avdragsgilla nettot av inkomster och utgifter för kapital.
+Kapitalinkomst består av det skattepliktiga eller avdragsgilla nettot av inkomster och
+utgifter för kapital.
 
 Variabeln är nettot av följande delposter:
 
 - + inkomstränta, aktieutdelning, schablonintäkt avdrag för skuldränta
 - + överskott vid uthyrning av privatbostad (efter schablonavdrag)
 - + positiv räntefördelning avdrag för negativ räntefördelning (företagare)
-- + kapitalvinst kapitalförlust (vid försäljning av småhus, bostadsrätt, värdepapper, andra tillgångar)
+- + kapitalvinst kapitalförlust (vid försäljning av småhus, bostadsrätt, värdepapper,
+    andra tillgångar)
 - medgivet investeraravdrag (vid förvärv av andelar i mindre företag)
 
-Schablonintäkter är beskattningsunderlaget för innehav av fondandelar respektive investeringssparkonto (ISK) samt bostadsuppskov.
+Schablonintäkter är beskattningsunderlaget för innehav av fondandelar respektive
+investeringssparkonto (ISK) samt bostadsuppskov.
 
-För kapitalvinst/förlust är det endast de skattepliktiga respektive avdragsgilla beloppen som ingår. Det skattepliktiga vinstbeloppet vid bostadsförsäljning var 22/30 av vinsten 2017. Förlust vid bostadsförsäljning är avdragsgill till 50 procent. Skattepliktiga och avdragsgilla belopp avseende vinster och förluster vid avyttring av värdepapper och bolagsandelar varierar beroende på typ av tillgång. Se deklarationshandledning för aktuella regler respektive år.
+För kapitalvinst/förlust är det endast de skattepliktiga respektive avdragsgilla
+beloppen som ingår. Det skattepliktiga vinstbeloppet vid bostadsförsäljning var 22/30 av
+vinsten 2017. Förlust vid bostadsförsäljning är avdragsgill till 50 procent.
+Skattepliktiga och avdragsgilla belopp avseende vinster och förluster vid avyttring av
+värdepapper och bolagsandelar varierar beroende på typ av tillgång. Se
+deklarationshandledning för aktuella regler respektive år.
 
-Viss utdelning och ränta från innehav av andelar i fåmansföretag är skattefri. Dessa belopp ingår inte.
+Viss utdelning och ränta från innehav av andelar i fåmansföretag är skattefri. Dessa
+belopp ingår inte.
 
 Under 1994 är reavinstbeskattningen halverad.
 
-Utdelningen på svenska aktier är skattefri under förutsättning att den inte överstiger ett fastställt jämförelsebelopp under 1994.
+Utdelningen på svenska aktier är skattefri under förutsättning att den inte överstiger
+ett fastställt jämförelsebelopp under 1994.
 
-*På grund av de förändringar, i och med skattereformen, som sker mellan 1990 och 1991, så är inkomst av kapital 1990 inte jämförbar med inkomst av kapital för åren efter 1990. Av detta skäl läggs inkomst av kapital inte in i databasen för år 1991.*
+*På grund av de förändringar, i och med skattereformen, som sker mellan 1990 och 1991,
+så är inkomst av kapital 1990 inte jämförbar med inkomst av kapital för åren efter 1990.
+Av detta skäl läggs inkomst av kapital inte in i databasen för år 1991.*
 
 #### **Annan inkomst**
 
-Under *Annan inkomst* redovisas andra inkomster än *Inkomst av förvärvskälla, Arbetstidsrelaterad social inkomst* och *Kapitalinkomst*.
+Under *Annan inkomst* redovisas andra inkomster än *Inkomst av förvärvskälla,
+Arbetstidsrelaterad social inkomst* och *Kapitalinkomst*.
 
 #### **Ålderspension**
 
 Pensionen utgår normalt från och med den månad den försäkrade fyller 65 år.
 
-Ålderspensionen består av en fast grundpension (allmän folkpension) och en inkomstrelaterad del (allmän tilläggspension, ATP).
+Ålderspensionen består av en fast grundpension (allmän folkpension) och en
+inkomstrelaterad del (allmän tilläggspension, ATP).
 
 Pensionsförmånen, som är skattepliktig, är direkt kopplad till aktuellt basbelopp.
 
 Om man saknar eller har låg ATP utgår pensionstillskott.
 
-*Till och med 30/6 1993* kan ålderspension tas ut som hel eller halv förmån. Därefter kan ålderspensionen även beviljas som fjärdedels eller tre fjärdedels förmån.
+*Till och med 30/6 1993* kan ålderspension tas ut som hel eller halv förmån. Därefter
+kan ålderspensionen även beviljas som fjärdedels eller tre fjärdedels förmån.
 
-Det finns möjlighet att få ålderspension som förtida alternativt uppskjutet uttag. Som *förtida uttag* kan ålderspensionen tas ut från det man fyllt 61 år[^133], som *uppskjutet uttag* kan man vänta med att ta ut ålderspensionen tills det man fyllt 70 år. Förtida och uppskjutet uttag måste omfatta såväl folkpension som ATP. Om man tar ut hel, tre fjärdedels, halv eller en fjärdedels ålderspension före 65 års ålder görs ett avdrag på pensionen med 0,5 procent för varje månad \* del av pension som tas ut.
+Det finns möjlighet att få ålderspension som förtida alternativt uppskjutet uttag. Som
+*förtida uttag* kan ålderspensionen tas ut från det man fyllt 61 år[^133], som
+*uppskjutet uttag* kan man vänta med att ta ut ålderspensionen tills det man fyllt 70
+år. Förtida och uppskjutet uttag måste omfatta såväl folkpension som ATP. Om man tar ut
+hel, tre fjärdedels, halv eller en fjärdedels ålderspension före 65 års ålder görs ett
+avdrag på pensionen med 0,5 procent för varje månad \* del av pension som tas ut.
 
-*Ex. 61–64 år halvtid förtida uttag: 0,5 (procentavdrag) \* 12 (månader) \* 4 (år) \* 0,5 (halvtid) = 12 procent (reducerad pension).*
+*Ex. 61–64 år halvtid förtida uttag: 0,5 (procentavdrag) \* 12 (månader) \* 4 (år) \*
+0,5 (halvtid) = 12 procent (reducerad pension).*
 
-Förtida uttag kan återkallas. Om man får förtidspension sedan man återkallat ålderspension minskas förtidspensionen med 0,5 procent för antalet månader man haft ålderspension.
+Förtida uttag kan återkallas. Om man får förtidspension sedan man återkallat
+ålderspension minskas förtidspensionen med 0,5 procent för antalet månader man haft
+ålderspension.
 
-Uppskjuts uttaget ökas pensionen med 0,7 procent[^134] för varje månad som förflutit mellan 65-årsdagen och dagen för första uttag.
+Uppskjuts uttaget ökas pensionen med 0,7 procent[^134] för varje månad som förflutit
+mellan 65-årsdagen och dagen för första uttag.
 
-Ålderspension från folkpension och ATP (förtida uttag), som under året ersatts av förtidspension/sjukbidrag, redovisas som förtidspension/sjukbidrag.
+Ålderspension från folkpension och ATP (förtida uttag), som under året ersatts av
+förtidspension/sjukbidrag, redovisas som förtidspension/sjukbidrag.
 
-Ålderspension från folkpension och ATP som under året ersatt förtidspension/sjukbidrag, får tillskrivet även förtidspensions- /sjukbidragsbeloppet som ålderspension (gäller samtliga förtidspensionärer som under året fyllt 65 år).
+Ålderspension från folkpension och ATP som under året ersatt förtidspension/sjukbidrag,
+får tillskrivet även förtidspensions- /sjukbidragsbeloppet som ålderspension (gäller
+samtliga förtidspensionärer som under året fyllt 65 år).
 
-För personer som erhållit ålderspension från folkpension/ATP ingår, i förekommande fall, även belopp från efterlevandeförmån (Änkepension, Barnpension, Omställningspension, Förlängd omställningspension och Särskild efterlevandepension) i ålderspensionsbeloppet.
+För personer som erhållit ålderspension från folkpension/ATP ingår, i förekommande fall,
+även belopp från efterlevandeförmån (Änkepension, Barnpension, Omställningspension,
+Förlängd omställningspension och Särskild efterlevandepension) i ålderspensionsbeloppet.
 
-*Från och med 1993* gäller, för person som erhållit både ålderspension och förtidspension/sjukbidrag under ett år och där detta förhållande fortfarande råder den 31/12, att hela beloppet hänförs till förtidspension. (*107 personer hade detta förhållande 1993*.)
+*Från och med 1993* gäller, för person som erhållit både ålderspension och
+förtidspension/sjukbidrag under ett år och där detta förhållande fortfarande råder den
+31/12, att hela beloppet hänförs till förtidspension. (*107 personer hade detta
+förhållande 1993*.)
 
-Från och med år 1993 gäller samma regler för folkpension för både svenska och utländska medborgare.
+Från och med år 1993 gäller samma regler för folkpension för både svenska och utländska
+medborgare.
 
 #### **Nytt pensionssystem 2003**
 
-Varje år betalas en avgift baserat på inkomst in till pensionssystemet och ger en så kallad pensionsrätt. Samlade pensionsrätter över livet bestämmer storleken på pensionen.
+Varje år betalas en avgift baserat på inkomst in till pensionssystemet och ger en så
+kallad pensionsrätt. Samlade pensionsrätter över livet bestämmer storleken på pensionen.
 
-Intjänade pensionsrättigheter och utbetalda pensioner följer den allmänna inkomstutvecklingen. Dessutom anpassas pensionerna till den ökande livslängden genom att pensionen beräknas utifrån den förväntade livslängden för varje enskild årskull.
+Intjänade pensionsrättigheter och utbetalda pensioner följer den allmänna
+inkomstutvecklingen. Dessutom anpassas pensionerna till den ökande livslängden genom att
+pensionen beräknas utifrån den förväntade livslängden för varje enskild årskull.
 
-Det pensionssystem som finns idag är konstruerat för att bättre än det gamla ATP-systemet kunna klara av framtida samhällsekonomiska och demografiska förändringar. Som till exempel att vi lever längre och ett ökat antal pensionärer i relation till antalet yrkesverksamma.
+Det pensionssystem som finns idag är konstruerat för att bättre än det gamla
+ATP-systemet kunna klara av framtida samhällsekonomiska och demografiska förändringar.
+Som till exempel att vi lever längre och ett ökat antal pensionärer i relation till
+antalet yrkesverksamma.
 
-För att pensionssystemet ska garanteras stabilitet oavsett ekonomisk eller demografisk utveckling har det kompletterats med en automatisk
+För att pensionssystemet ska garanteras stabilitet oavsett ekonomisk eller demografisk
+utveckling har det kompletterats med en automatisk
 
-balansering. Den tar bort risken för eventuella underskott och garanterar en långsiktig finansiell stabilitet för pensionssystemet.
+balansering. Den tar bort risken för eventuella underskott och garanterar en långsiktig
+finansiell stabilitet för pensionssystemet.
 
-Anledningen till att det gamla ATP-systemet infördes 1960 var att man ville skapa ett obligatoriskt tjänstepensionssystem som grundades på inkomstbortfallsprincipen. För första gången fanns ett system för alla där pensionen betraktades som uppskjuten lön för utfört arbete och inte som ett bidrag. Systemet bestod av en folkpension som var lika för alla, och en inkomstgrundad tilläggspension ATP.
+Anledningen till att det gamla ATP-systemet infördes 1960 var att man ville skapa ett
+obligatoriskt tjänstepensionssystem som grundades på inkomstbortfallsprincipen. För
+första gången fanns ett system för alla där pensionen betraktades som uppskjuten lön för
+utfört arbete och inte som ett bidrag. Systemet bestod av en folkpension som var lika
+för alla, och en inkomstgrundad tilläggspension ATP.
 
-De intjänade rättigheterna såsom pensionspoängen, och utbetalda pensioner i ATP-systemet var kopplade till prisutvecklingen. Det gjorde att systemet inte hade koppling till den samhällsekonomiska utvecklingen. ATP-systemet anpassade inte heller pensionerna till den ökande livslängden.
+De intjänade rättigheterna såsom pensionspoängen, och utbetalda pensioner i ATP-systemet
+var kopplade till prisutvecklingen. Det gjorde att systemet inte hade koppling till den
+samhällsekonomiska utvecklingen. ATP-systemet anpassade inte heller pensionerna till den
+ökande livslängden.
 
-När medellivslängden ökade kraftigt och den ekonomiska tillväxten saktade in i slutet på 1900-talet innebar det stora påfrestningar på ATPsystemet. Prognoserna pekade på att systemet inte var finansiellt stabilt och att AP-fonderna skulle kunna tömmas en bit in på 2000-talet. Det fanns därför ett behov av att se över pensionssystemet och man påbörjade ett utredningsarbete för att skapa ett hållbart pensionssystem.
+När medellivslängden ökade kraftigt och den ekonomiska tillväxten saktade in i slutet på
+1900-talet innebar det stora påfrestningar på ATPsystemet. Prognoserna pekade på att
+systemet inte var finansiellt stabilt och att AP-fonderna skulle kunna tömmas en bit in
+på 2000-talet. Det fanns därför ett behov av att se över pensionssystemet och man
+påbörjade ett utredningsarbete för att skapa ett hållbart pensionssystem.
 
-Det första steget i pensionsreformen var den så kallade Pensionsberedningen. Det var en parlamentarisk kommitté som påbörjade sitt arbete 1984 och lämnade sin rapport 1990. Rapporten innehöll en genomgripande analys av problemen och pekade på olika lösningsalternativ men kommittén lyckades inte enas om ett slutligt förslag. Därför tillsattes Pensionsarbetsgruppen 1991, en mindre grupp politiker och experter, för att slutföra arbetet. Gruppen presenterade 1994 ett principförslag till ett reformerat ålderspensionssystem som antogs av riksdagen samma år. Under åren 1994-1998 arbetades den detaljerade lagstiftningen fram och den allmänna pensionen trädde i kraft 1999.
+Det första steget i pensionsreformen var den så kallade Pensionsberedningen. Det var en
+parlamentarisk kommitté som påbörjade sitt arbete 1984 och lämnade sin rapport 1990.
+Rapporten innehöll en genomgripande analys av problemen och pekade på olika
+lösningsalternativ men kommittén lyckades inte enas om ett slutligt förslag. Därför
+tillsattes Pensionsarbetsgruppen 1991, en mindre grupp politiker och experter, för att
+slutföra arbetet. Gruppen presenterade 1994 ett principförslag till ett reformerat
+ålderspensionssystem som antogs av riksdagen samma år. Under åren 1994-1998 arbetades
+den detaljerade lagstiftningen fram och den allmänna pensionen trädde i kraft 1999.
 
-Reformeringen av ålderspensionen medförde också ett behov av att reformera efterlevandepensionen och den dåvarande förtidspensionen. Detta arbete genomfördes under åren därpå och 2003 var samtliga delar av pensionsreformen på plats.
+Reformeringen av ålderspensionen medförde också ett behov av att reformera
+efterlevandepensionen och den dåvarande förtidspensionen. Detta arbete genomfördes under
+åren därpå och 2003 var samtliga delar av pensionsreformen på plats.
 
 (1990–2002)
 
 Beloppet anges i hundratal kronor.
 
-*Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år[^135] (för beskrivning av folkpensionskod och redovisning av fördelning mellan hel- och deltidsersättningar se under Folkpensionskod för egenförmån* ([[FolkEgen]])*.*
+*Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och
+den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt
+år[^135] (för beskrivning av folkpensionskod och redovisning av fördelning mellan hel-
+och deltidsersättningar se under Folkpensionskod för egenförmån*
+([FolkEgen](FolkEgen.md))*.*
 
-För att ha rätt till ålderspension krävs, i början av 90-talet, i princip att man är bosatt i Sverige – för utländska medborgare att de varit bosatta i Sverige i minst fem år.
+För att ha rätt till ålderspension krävs, i början av 90-talet, i princip att man är
+bosatt i Sverige – för utländska medborgare att de varit bosatta i Sverige i minst fem
+år.
 
-*Från och med 1993* bedöms rätten till folkpension och folkpensionens storlek enligt två alternativa regler:
+*Från och med 1993* bedöms rätten till folkpension och folkpensionens storlek enligt två
+alternativa regler:
 
 - i förhållande till bosättningstiden i Sverige (bosättningsregeln)
 - i förhållande till antalet intjänade ATP-poängår (ATP-poängsregeln)
 
-Samma regler gäller nu både för svenska och utländska medborgare. Den regel som ger förmånligast resultat tillämpas. För att ha rätt till folkpension enligt bosättningsregeln krävs att man varit bosatt i Sverige under minst tre år. Då får man tre fyrtiondelar av hel folkpension. För att få hel folkpension krävs 40 års bosättningstid. Bosättningstid kan tillgodoräknas från 16 till 64 år. För att ha rätt till folkpension enligt ATP-poängsregeln krävs tre år med ATP-poäng, vilket ger tre trettiondelar av hel folkpension. Den som är född 1937 eller tidigare kan få rätt till hel folkpension enligt övergångsbestämmelserna till bosättningsregeln.
+Samma regler gäller nu både för svenska och utländska medborgare. Den regel som ger
+förmånligast resultat tillämpas. För att ha rätt till folkpension enligt
+bosättningsregeln krävs att man varit bosatt i Sverige under minst tre år. Då får man
+tre fyrtiondelar av hel folkpension. För att få hel folkpension krävs 40 års
+bosättningstid. Bosättningstid kan tillgodoräknas från 16 till 64 år. För att ha rätt
+till folkpension enligt ATP-poängsregeln krävs tre år med ATP-poäng, vilket ger tre
+trettiondelar av hel folkpension. Den som är född 1937 eller tidigare kan få rätt till
+hel folkpension enligt övergångsbestämmelserna till bosättningsregeln.
 
-Svenska medborgare, som har rätt till folkpension enligt ATPpoängsregeln, har rätt att behålla folkpensionen när man bosätter sig utomlands. Däremot har man inte rätt till pensionstillskott.
+Svenska medborgare, som har rätt till folkpension enligt ATPpoängsregeln, har rätt att
+behålla folkpensionen när man bosätter sig utomlands. Däremot har man inte rätt till
+pensionstillskott.
 
-Om man inte har bott tre år i Sverige eller tjänat in ATP-poäng för tre år kan man ändock, under vissa omständigheter, ha rätt till folkpension, genom den s.k. sammanläggningsprincipen enligt EU:s förordningar om social trygghet.
+Om man inte har bott tre år i Sverige eller tjänat in ATP-poäng för tre år kan man
+ändock, under vissa omständigheter, ha rätt till folkpension, genom den s.k.
+sammanläggningsprincipen enligt EU:s förordningar om social trygghet.
 
-*1990* utgör folkpensionen 96 procent av basbeloppet. För folkpensionär gift med folkpensionär är folkpensionen 78,5 procent av basbeloppet[^136] .
+*1990* utgör folkpensionen 96 procent av basbeloppet. För folkpensionär gift med
+folkpensionär är folkpensionen 78,5 procent av basbeloppet[^136] .
 
-Från och med *1993* används ett så kallat minskat basbelopp som underlag till pensionsbeloppen.
+Från och med *1993* används ett så kallat minskat basbelopp som underlag till
+pensionsbeloppen.
 
-Från och med *1996* har det inte längre någon betydelse om maken har pension eller inte för att erhålla 78,5 procent av pensionsbeloppet i stället för 96 procent.
+Från och med *1996* har det inte längre någon betydelse om maken har pension eller inte
+för att erhålla 78,5 procent av pensionsbeloppet i stället för 96 procent.
 
-Från och med *1999* används det så kallade prisbasbeloppet[^137] som underlag till pensionsbeloppen.
+Från och med *1999* används det så kallade prisbasbeloppet[^137] som underlag till
+pensionsbeloppen.
 
-År *2002* är sista året då Ålderspension från folkpension betalas ut. Från och med *2003* ersätts den av garantipensionen i det nya pensionssystemet.
+År *2002* är sista året då Ålderspension från folkpension betalas ut. Från och med
+*2003* ersätts den av garantipensionen i det nya pensionssystemet.
 
-*För ytterligare information om det nya pensionssystemet se grundläggarende texten under Ålderspension samt under Summa ålderspension* (SumAld03).
+*För ytterligare information om det nya pensionssystemet se grundläggarende texten under
+Ålderspension samt under Summa ålderspension* (SumAld03).
 
 #### **Pensionstillskott**
 
-Om man saknar eller har låg ATP utgår pensionstillskott. Pensionstillskottet får inte, tillsammans med ATP-pensionen, vid hel ålderspension överstiga 56,9 procent av prisbasbeloppet[^138] . Pensionstillskottet är lika för ensamstående och gifta pensionärer. Pensionstillskottsbeloppet kan i variabeln inte särskiljas från folkpensionsbeloppet.
+Om man saknar eller har låg ATP utgår pensionstillskott. Pensionstillskottet får inte,
+tillsammans med ATP-pensionen, vid hel ålderspension överstiga 56,9 procent av
+prisbasbeloppet[^138] . Pensionstillskottet är lika för ensamstående och gifta
+pensionärer. Pensionstillskottsbeloppet kan i variabeln inte särskiljas från
+folkpensionsbeloppet.
 
-Ålderspension från folkpension kan kompletteras med tilläggsförmånerna: *Pensionstillskott* (ingår här i folkpensionsbeloppet, se ovan), *Handikappersättning*, *Bostadstillägg* och från och med 1991 *Särskilt pensionstillägg* (se beskrivning under respektive variabel).
+Ålderspension från folkpension kan kompletteras med tilläggsförmånerna:
+*Pensionstillskott* (ingår här i folkpensionsbeloppet, se ovan), *Handikappersättning*,
+*Bostadstillägg* och från och med 1991 *Särskilt pensionstillägg* (se beskrivning under
+respektive variabel).
 
 (1990–2004)
 
 Beloppet anges i hundratal kronor.
 
-*Variabeln härleds utifrån det ATP-belopp som betalats ut under aktuellt år och den ATP-kod för egenförmån som anger typ av ATP-pension den 31/12 aktuellt år[^139] (för beskrivning av ATP-kod se under ATP-kod för egenförmån*  (ATPEgen)*.*
+*Variabeln härleds utifrån det ATP-belopp som betalats ut under aktuellt år och den
+ATP-kod för egenförmån som anger typ av ATP-pension den 31/12 aktuellt år[^139] (för
+beskrivning av ATP-kod se under ATP-kod för egenförmån* (ATPEgen)*.*
 
-För att ha rätt till ålderspension från ATP krävs att man haft en pensionsgrundande inkomst (en arbetsinkomst som under året varit minst 100 kronor högre än det förhöjda basbeloppet[^140]) i minst tre år[^141] . Den pensionsgrundande inkomsten (PGI) kan förvärvas i åldersintervallet 16 till 64 år. Full pension erhålls efter 30 års intjänad tid. ATP beräknas på den genomsnittliga inkomsten under de 15 bästa åren.
+För att ha rätt till ålderspension från ATP krävs att man haft en pensionsgrundande
+inkomst (en arbetsinkomst som under året varit minst 100 kronor högre än det förhöjda
+basbeloppet[^140]) i minst tre år[^141] . Den pensionsgrundande inkomsten (PGI) kan
+förvärvas i åldersintervallet 16 till 64 år. Full pension erhålls efter 30 års intjänad
+tid. ATP beräknas på den genomsnittliga inkomsten under de 15 bästa åren.
 
-När man beräknar den pensionsgrundande inkomsten drar man ifrån ett förhöjt basbelopp samt den del av inkomsten som överstiger 7,5 förhöjt basbelopp. För varje år fastställs en pensionspoäng som sedan multipliceras med det aktuella basbeloppet. 60 procent av detta belopp utgör vid full pension storleken på ATP-pensionen.
+När man beräknar den pensionsgrundande inkomsten drar man ifrån ett förhöjt basbelopp
+samt den del av inkomsten som överstiger 7,5 förhöjt basbelopp. För varje år fastställs
+en pensionspoäng som sedan multipliceras med det aktuella basbeloppet. 60 procent av
+detta belopp utgör vid full pension storleken på ATP-pensionen.
 
-ATP för ålderspensionärer födda 1937 eller tidigare räknas år 2002 upp med ett nytt index som kallas följsamhetsindex. Detta index tar hänsyn till inkomstutvecklingen i samhället. Följsamhetsindexeringen för år 2002 innebär att tilläggspensionen räknas upp med 3,28 procent.
+ATP för ålderspensionärer födda 1937 eller tidigare räknas år 2002 upp med ett nytt
+index som kallas följsamhetsindex. Detta index tar hänsyn till inkomstutvecklingen i
+samhället. Följsamhetsindexeringen för år 2002 innebär att tilläggspensionen räknas upp
+med 3,28 procent.
 
-Under 2003 och 2004 erhåller ett mindre antal (ca 15 000 personer år 2003) *Ålderspension från ATP*. Övriga ersätts fullt ut enligt det nya pensionssystemet.
+Under 2003 och 2004 erhåller ett mindre antal (ca 15 000 personer år 2003)
+*Ålderspension från ATP*. Övriga ersätts fullt ut enligt det nya pensionssystemet.
 
-*För ytterligare information om det nya pensionssystemet se grundläggarende texten under Ålderspension samt under Summa ålderspension* (SumAld03).
+*För ytterligare information om det nya pensionssystemet se grundläggarende texten under
+Ålderspension samt under Summa ålderspension* (SumAld03).
 
 (1990–2002)
 
 Beloppet anges i hundratal kronor.
 
-Den under året summerade inkomsten av *Ålderspension från folkpension (egenförmån)* ([[FolkAld]]), *Ålderspension från ATP (egenförmån)* ([[ATPAld]]) och *Särskilt pensionstillägg (1991–)* ([[SPenTill]]).
+Den under året summerade inkomsten av *Ålderspension från folkpension (egenförmån)*
+([FolkAld](FolkAld.md)), *Ålderspension från ATP (egenförmån)* ([ATPAld](ATPAld.md)) och
+*Särskilt pensionstillägg (1991–)* ([SPenTill](SPenTill.md)).
 
 *För mer information, se under respektive inkomstslag.*
 
 [^133]: Åldersgränsen för förtida uttag höjdes den 1 januari 1998 från 60 till 61 år.
+
 [^134]: Innan 1/7 1990 med 0,6 procent för varje månad.
+
 [^135]: Alternativt: Anger typ av folkpension vid senast utbetalning under året
-[^136]: Som make/maka räknas även den som stadigvarande bor tillsammans med pensionären, om de antingen tidigare varit gifta med varandra eller om de har eller har haft barn tillsammans.
-[^137]: Från och med 1999 beräknas pensionen på det fulla basbeloppet som från och med nu benämns prisbasbeloppet.
-[^138]: 1990 fick pensionstillskottet tillsammans med ATP-pensionen inte överstiga 50 procent av basbeloppet, 1991 höjdes nivån till 54 procent av basbeloppet, 1993 ändras nivån till 55,5 procent av det minskade basbeloppet. Den 1/6 1999 höjs nivån till 56,9 procent av prisbasbeloppet.
+
+[^136]: Som make/maka räknas även den som stadigvarande bor tillsammans med pensionären,
+    om de antingen tidigare varit gifta med varandra eller om de har eller har haft barn
+    tillsammans.
+
+[^137]: Från och med 1999 beräknas pensionen på det fulla basbeloppet som från och med
+    nu benämns prisbasbeloppet.
+
+[^138]: 1990 fick pensionstillskottet tillsammans med ATP-pensionen inte överstiga 50
+    procent av basbeloppet, 1991 höjdes nivån till 54 procent av basbeloppet, 1993
+    ändras nivån till 55,5 procent av det minskade basbeloppet. Den 1/6 1999 höjs nivån
+    till 56,9 procent av prisbasbeloppet.
+
 [^139]: Alternativt: Anger typ av ATP-pension vid senast utbetalning under året.
-[^140]: Före 1995 beräknades PGI efter basbeloppet. Från och med 1999 kallas det förhöjda basbeloppet för förhöjt prisbasbelopp.
-[^141]: Även om man inte i Sverige tjänat in ATP-poäng för tre år, kan man ha rätt till ATP-pension genom sammanläggningsprincipen enligt EU:s förordningar.
+
+[^140]: Före 1995 beräknades PGI efter basbeloppet. Från och med 1999 kallas det
+    förhöjda basbeloppet för förhöjt prisbasbelopp.
+
+[^141]: Även om man inte i Sverige tjänat in ATP-poäng för tre år, kan man ha rätt till
+    ATP-pension genom sammanläggningsprincipen enligt EU:s förordningar.

@@ -11,8 +11,9 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 FodGrFar3
 
-Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg3]]).
+Grupperas som födelseland, se *Eget födelseland* ([FodGrEg3](FodGrEg3.md)).
 
-Faderns födelseland finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga personer i LISA-populationen.
+Faderns födelseland finns i en icke årgångsbunden databastabell. Tabellen omfattar
+samtliga personer i LISA-populationen.
 
 *I övrigt se under Faderns födelseland* (FodelseLandNamnFar).

@@ -15,6 +15,9 @@ KU2InstKod7
 
 Kod för institutionell sektor för det företag som avser näst största förvärvskällan.
 
-Den institutionella sektorkoden är från och med 2001 sjuställig. Koden bildas utifrån *företagets samhällssektor, ägare* och *juridiska form*. De tre första positionerna anger samhällssektor, den fjärde och femte positionen anger ägarkontroll medan den juridiska formen anges i variabelns sjätte och sjunde position.
+Den institutionella sektorkoden är från och med 2001 sjuställig. Koden bildas utifrån
+*företagets samhällssektor, ägare* och *juridiska form*. De tre första positionerna
+anger samhällssektor, den fjärde och femte positionen anger ägarkontroll medan den
+juridiska formen anges i variabelns sjätte och sjunde position.
 
 *För ytterligare information se under Institutionell sektorkod (företag),* (Inst-Kod7).

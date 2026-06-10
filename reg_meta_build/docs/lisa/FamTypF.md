@@ -9,9 +9,10 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Familjetyp[^9] FamTypF**
 
-Familjetyp är en härledd variabel. Samtliga personer i en familj (personer som har samma familjeidentitet) har samma familjetyp.
+Familjetyp är en härledd variabel. Samtliga personer i en familj (personer som har samma
+familjeidentitet) har samma familjetyp.
 
-*Se under Familj* ([[FamId]]).
+*Se under Familj* ([FamId](FamId.md)).
 
 Make-maka familj (inkl. partnerskap)
 
@@ -41,8 +42,12 @@ Sambo-familj (med gemensamt barn)
 - 60 = Barn 15 år och yngre som felaktigt folkbokförts som ensamstående
 - 00 = Personer med ofullständiga och/eller motstridiga uppgifter i folkbokföringen.
 
-*För ytterligare information samt skillnader i avgränsningen mellan 1990– 1997 och 1998– se under Familj ([[FamId]]).*
+*För ytterligare information samt skillnader i avgränsningen mellan 1990– 1997 och 1998–
+se under Familj ([FamId](FamId.md)).*
 
 [^9]: Familjeenheter enligt MIS 1999:1.
+
 [^10]: Här ingår sambor utan gemensamma barn.
-[^11]: Här ingår sambor utan gemensamma barn samt barn utan relation till någon annan person på fastigheten.
+
+[^11]: Här ingår sambor utan gemensamma barn samt barn utan relation till någon annan
+    person på fastigheten.

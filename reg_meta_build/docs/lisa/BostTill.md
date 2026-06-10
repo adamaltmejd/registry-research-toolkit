@@ -14,8 +14,10 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratals kronor.
 
-Bostadstillägg betalas ut till de med aktivitets- eller sjukersättning och är en hjälp till personer med höga bostadskostnader.
+Bostadstillägg betalas ut till de med aktivitets- eller sjukersättning och är en hjälp
+till personer med höga bostadskostnader.
 
-*För ytterligare information om bostadstillägg se grundläggarende texten under Bostadstillägg.*
+*För ytterligare information om bostadstillägg se grundläggarende texten under
+Bostadstillägg.*
 
 #### **Övriga inkomster/ersättningar**

@@ -7,4 +7,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Förvärvsinkomst och arbetsrelaterade ersättningarinkl. underskott av aktiv näringsverksamhet ForvErsNettoA**
+**Förvärvsinkomst och arbetsrelaterade ersättningarinkl. underskott av aktiv
+näringsverksamhet ForvErsNettoA**

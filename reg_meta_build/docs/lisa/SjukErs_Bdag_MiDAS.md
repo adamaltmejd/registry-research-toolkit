@@ -8,4 +8,5 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Antal bruttodagar med icke tidsbegränsadoch/eller tidsbegränsad sjukersättning SjukErs_Bdag_MiDAS**
+**Antal bruttodagar med icke tidsbegränsadoch/eller tidsbegränsad sjukersättning
+SjukErs_Bdag_MiDAS**

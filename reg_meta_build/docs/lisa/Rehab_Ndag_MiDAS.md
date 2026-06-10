@@ -16,7 +16,9 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Antal utbetalda nettodagar under året med rehabiliteringspenning.
 
-Rehabiliteringspenning kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent) eller en fjärdedels (25 procent). Antalet nettodagar är bruttodagar \*omfattning under ett år.
+Rehabiliteringspenning kan betalas ut som hel (100 procent), tre fjärdedels (75
+procent), halv (50 procent) eller en fjärdedels (25 procent). Antalet nettodagar är
+bruttodagar \*omfattning under ett år.
 
 10 \* hel omfattning = 10 nettodagar,
 
@@ -26,6 +28,12 @@ Rehabiliteringspenning kan betalas ut som hel (100 procent), tre fjärdedels (75
 
 10 \* en kvarts omfattning = 2,5 nettodagar.
 
-2008-2011 finns variabeln också uppdelad på *Rehabiliteringspenning, antal nettodagar* (Rehab_08_ Ndag) och *Förlängd rehabiliteringspenning, antal nettodagar* ([[Rehab_Forlangd_Ndag]]). För dessa ersättningar är källan Försäkringskassans STORE-databas. I LISA redovisas dock *Rehabiliteringspenning, antal nettodagar* från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. **För ytterligare information, se Bilaga 4 STORE – MiDAS.**
+2008-2011 finns variabeln också uppdelad på *Rehabiliteringspenning, antal nettodagar*
+(Rehab_08\_ Ndag) och *Förlängd rehabiliteringspenning, antal nettodagar*
+([Rehab_Forlangd_Ndag](Rehab_Forlangd_Ndag.md)). För dessa ersättningar är källan
+Försäkringskassans STORE-databas. I LISA redovisas dock *Rehabiliteringspenning, antal
+nettodagar* från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte
+alltid. **För ytterligare information, se Bilaga 4 STORE – MiDAS.**
 
-*Läs mer om rehabilteringspenning under Rehabilteringspenning, antal bruttodagar* ([[Rehab_Bdag_MiDAS]]).
+*Läs mer om rehabilteringspenning under Rehabilteringspenning, antal bruttodagar*
+([Rehab_Bdag_MiDAS](Rehab_Bdag_MiDAS.md)).

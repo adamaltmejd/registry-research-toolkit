@@ -13,10 +13,12 @@ RAKS VardInk
 
 (1993–)
 
-Ersättning från föräldraledighet och vård av närstående anges i hundratal kronor. Från och med år 2011 ingår kommunalt vårdnadsbidrag ([[KomVardBidr]]).
+Ersättning från föräldraledighet och vård av närstående anges i hundratal kronor. Från
+och med år 2011 ingår kommunalt vårdnadsbidrag ([KomVardBidr](KomVardBidr.md)).
 
-*För ytterligare information se Summa inkomst föranledd av föräldraledighet* ([[ForLed]]) samt *Närståendepenning* ([[NarPeng]]).
+*För ytterligare information se Summa inkomst föranledd av föräldraledighet*
+([ForLed](ForLed.md)) samt *Närståendepenning* ([NarPeng](NarPeng.md)).
 
----
+----------------------------------------------------------------------------------------
 
-| 3                        | Vård av barn/anhörig          | Raks_VardInk     |
+\| 3 \| Vård av barn/anhörig \| Raks_VardInk \|

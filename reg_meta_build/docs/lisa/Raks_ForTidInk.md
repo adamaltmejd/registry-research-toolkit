@@ -13,10 +13,12 @@ RAKS_ForTidInk
 
 (1993–)
 
-Ersättning från förtidspension/sjukbidrag sjukersättning/aktivitetsersättning anges i hundratal kronor.
+Ersättning från förtidspension/sjukbidrag sjukersättning/aktivitetsersättning anges i
+hundratal kronor.
 
-*För ytterligare information se Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning* ([[ForTid]]).
+*För ytterligare information se Summa inkomst föranledd av
+förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning* ([ForTid](ForTid.md)).
 
----
+----------------------------------------------------------------------------------------
 
-| 6                        | Förtidspension                | Raks_ForTidInk   |
+\| 6 \| Förtidspension \| Raks_ForTidInk \|

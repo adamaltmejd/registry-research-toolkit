@@ -25,12 +25,21 @@ repos:
         pass_filenames: false
         files: \.py$
         stages: [pre-commit]
-      # markdownlint via bunx (project standardizes on bun, not node). Config in
-      # .markdownlint-cli2.yaml drives discovery, so pass_filenames: false; files
-      # gate skips non-doc commits. CI runs this via `pre-commit run --all-files`.
-      - id: markdownlint
-        name: markdownlint-cli2
-        entry: bunx markdownlint-cli2
+      # panache (formatter + linter) replaces markdownlint-cli2. Pinned because
+      # uvx always grabs latest, which would defeat the 7-day release-age policy;
+      # keep the pin in sync with scripts/parse_lisa_docs.py. Discovery is
+      # whole-repo (.panache.toml excludes + .gitignore), so pass_filenames: false;
+      # files gate skips non-doc commits. CI runs via `pre-commit run --all-files`.
+      - id: panache-format
+        name: panache format --check
+        entry: uvx --from panache-cli==2.51.0 panache format --check .
+        language: system
+        pass_filenames: false
+        files: \.md$
+        stages: [pre-commit]
+      - id: panache-lint
+        name: panache lint --check
+        entry: uvx --from panache-cli==2.51.0 panache lint --check .
         language: system
         pass_filenames: false
         files: \.md$

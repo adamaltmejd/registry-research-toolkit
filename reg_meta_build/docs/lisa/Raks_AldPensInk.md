@@ -15,16 +15,18 @@ RAKS_AldPensInk
 
 Ersättning från pensioner anges i hundratal kronor.
 
-*För ytterligare information se Summa inkomst av pensioner* ([[AldPens]]).
+*För ytterligare information se Summa inkomst av pensioner* ([AldPens](AldPens.md)).
 
----
+----------------------------------------------------------------------------------------
 
-| 9                        | Ålderspension                 | Raks_AldPensInk  |
-| 99                       | Saknar inkomst                |                  |
+\| 9 \| Ålderspension \| Raks_AldPensInk \| \| 99 \| Saknar inkomst \| \|
 
-En individ klassificeras in under en huvudsaklig inkomstkälla under året utifrån andelsvariablerna ovan. Den variabel som står för den högsta andelen av det totala beloppet utgör en individs huvudsakliga inkomstkälla.
+En individ klassificeras in under en huvudsaklig inkomstkälla under året utifrån
+andelsvariablerna ovan. Den variabel som står för den högsta andelen av det totala
+beloppet utgör en individs huvudsakliga inkomstkälla.
 
-Om en individ har exakt lika stora inkomster (berör ca 2000 individer per år) har individerna klassificerats enligt följande rangordning:
+Om en individ har exakt lika stora inkomster (berör ca 2000 individer per år) har
+individerna klassificerats enligt följande rangordning:
 
 - 1. Raks_ForvInk
 - 2. Raks_StudInk
@@ -35,4 +37,5 @@ Om en individ har exakt lika stora inkomster (berör ca 2000 individer per år) 
 - 7. Raks_AldPensInk
 - 8. Raks_SjukInk
 
-Under kod 99 finns individer som helt saknar inkomst under året och individer som redovisat negativa inkomster av näringsverksamhet.
+Under kod 99 finns individer som helt saknar inkomst under året och individer som
+redovisat negativa inkomster av näringsverksamhet.

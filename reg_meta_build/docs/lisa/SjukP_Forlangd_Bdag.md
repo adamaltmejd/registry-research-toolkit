@@ -18,6 +18,12 @@ Antal utbetalda bruttodagar under året med förlängd sjukpenning.
 
 Antal bruttodagar visar antal dagar under ett år oavsett omfattning.
 
-Dessa dagar ingår i variabeln *Sjukpenning, antal bruttodagar* ([[SjukP_Bdag_MiDAS]]). *Sjukpenning, förlängd sjukpenning* och *fortsatt sjukpenning* summeras till antal bruttodagar för sjukpenning när källan är Försäkringskassans STORE-databas. I LISA redovisas dock totalt antal bruttodagar för sjukpenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*
+Dessa dagar ingår i variabeln *Sjukpenning, antal bruttodagar*
+([SjukP_Bdag_MiDAS](SjukP_Bdag_MiDAS.md)). *Sjukpenning, förlängd sjukpenning* och
+*fortsatt sjukpenning* summeras till antal bruttodagar för sjukpenning när källan är
+Försäkringskassans STORE-databas. I LISA redovisas dock totalt antal bruttodagar för
+sjukpenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte
+alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*
 
-*Läs mer om sjukpenning, förlängd sjukpenning och fortsatt sjukpenning under Sjukpenning, antal bruttodagar* ([[SjukP_08_Bdag]]).
+*Läs mer om sjukpenning, förlängd sjukpenning och fortsatt sjukpenning under
+Sjukpenning, antal bruttodagar* ([SjukP_08_Bdag](SjukP_08_Bdag.md)).

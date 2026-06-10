@@ -16,9 +16,13 @@ ForPeng_Ndag
 
 Antal utbetalda nettodagar under året med föräldrapenning.
 
-Ett nytt automatiserat datasystem för utbetalningar av föräldrapenning krävde en anpassning av de statistikregister som innehöll information om förmånen. I dessa siffror finns därför en viss osäkerhet för åren 2013-2015.
+Ett nytt automatiserat datasystem för utbetalningar av föräldrapenning krävde en
+anpassning av de statistikregister som innehöll information om förmånen. I dessa siffror
+finns därför en viss osäkerhet för åren 2013-2015.
 
-Föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5 procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
+Föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent),
+halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5
+procent). Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
 - 10 \* hel omfattning = 10 nettodagar,
 - 10 \* tre kvarts omfattning = 7,5 nettodagar,
@@ -26,14 +30,19 @@ Föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 pr
 - 10 \* en kvarts omfattning = 2,5 nettodagar,
 - 10 \* en åttondels omfattning = 1,25 dagar
 
-*För ytterligare information, se under Föräldrapenning, antal bruttodagar* (For-Peng_Bdag).
+*För ytterligare information, se under Föräldrapenning, antal bruttodagar*
+(For-Peng_Bdag).
 
 (1994–2015)
 
 Beloppet anges i hundratals kronor.
 
-Ett nytt automatiserat datasystem för utbetalningar av föräldrapenning krävde en anpassning av de statistikregister som innehöll information om förmånen. I dessa siffror finns därför en viss osäkerhet för åren 2013-2015.
+Ett nytt automatiserat datasystem för utbetalningar av föräldrapenning krävde en
+anpassning av de statistikregister som innehöll information om förmånen. I dessa siffror
+finns därför en viss osäkerhet för åren 2013-2015.
 
-Utbetalt belopp under året för föräldrapenning, står i relation till utbetalda dagar med föräldrapenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för föräldrapenning, står i relation till utbetalda dagar med
+föräldrapenning. Utbetalt belopp avser ersättningsperioden.
 
-*För ytterligare information, se under Föräldrapenning, antal bruttodagar* (For-Peng_Bdag).
+*För ytterligare information, se under Föräldrapenning, antal bruttodagar*
+(For-Peng_Bdag).

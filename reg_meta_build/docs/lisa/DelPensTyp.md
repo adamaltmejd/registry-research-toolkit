@@ -15,6 +15,6 @@ DelPensTyp
 
 Markering för om individ under aktuellt år erhållit delpension.
 
-*För ytterligare information, se under Delpension* ([[DelPens]]).
+*För ytterligare information, se under Delpension* ([DelPens](DelPens.md)).
 
 #### **Övrig arbetstidsrelaterad social inkomst**

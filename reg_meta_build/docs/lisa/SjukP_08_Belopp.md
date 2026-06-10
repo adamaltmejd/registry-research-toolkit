@@ -16,8 +16,15 @@ SjukP*08*Belopp
 
 Beloppet anges i hundratals kronor.
 
-Utbetalt belopp under året för sjukpenning, står i relation till utbetalda dagar med sjukpenning. Utbetalt belopp avser ersättningsperioden.
+Utbetalt belopp under året för sjukpenning, står i relation till utbetalda dagar med
+sjukpenning. Utbetalt belopp avser ersättningsperioden.
 
-Detta belopp ingår i variabeln *Sjukpenning, ersättningsbelopp*  ([[SjukP_Belopp_MiDAS]]). *Sjukpenning, förlängd sjukpenning* och *fortsatt sjukpenning* summeras till ersättning för sjukpenning när källan är Försäkringskassans STORE-databas. I LISA redovisas dock totalt belopp för sjukpenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*
+Detta belopp ingår i variabeln *Sjukpenning, ersättningsbelopp*
+([SjukP_Belopp_MiDAS](SjukP_Belopp_MiDAS.md)). *Sjukpenning, förlängd sjukpenning* och
+*fortsatt sjukpenning* summeras till ersättning för sjukpenning när källan är
+Försäkringskassans STORE-databas. I LISA redovisas dock totalt belopp för sjukpenning
+från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid.
+*För ytterligare information, se Bilaga 4 STORE – MiDAS.*
 
-*Läs mer om sjukpenning, förlängd sjukpenning och fortsatt sjukpenning under Sjukpenning, antal bruttodagar* ([[SjukP_08_Bdag]]).
+*Läs mer om sjukpenning, förlängd sjukpenning och fortsatt sjukpenning under
+Sjukpenning, antal bruttodagar* ([SjukP_08_Bdag](SjukP_08_Bdag.md)).

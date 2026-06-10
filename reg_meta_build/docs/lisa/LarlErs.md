@@ -16,4 +16,7 @@ LarlErs
 
 Beloppet anges i hundratals kronor.
 
-Lärlingsersättning är ett bidrag för personer som går på en gymnasial lärlingsutbildning där delar av utbildningen är på en arbetsplats. Ersättningen är till för måltider och resor. Bidraget är 1 000 kronor i månaden under den tid man studerar och har ett utbildningskontrakt.
+Lärlingsersättning är ett bidrag för personer som går på en gymnasial lärlingsutbildning
+där delar av utbildningen är på en arbetsplats. Ersättningen är till för måltider och
+resor. Bidraget är 1 000 kronor i månaden under den tid man studerar och har ett
+utbildningskontrakt.

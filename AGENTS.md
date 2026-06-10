@@ -56,7 +56,8 @@ Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.m
 # Lint and test
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
-- `bunx markdownlint-cli2` — markdown lint (config in `.markdownlint-cli2.yaml`)
+- `uvx --from panache-cli==2.51.0 panache format --check .` — markdown format check (config in `.panache.toml`; drop `--check` to fix)
+- `uvx --from panache-cli==2.51.0 panache lint --check .` — markdown lint
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output

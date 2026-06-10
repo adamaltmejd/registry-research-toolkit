@@ -8,13 +8,15 @@ tags:
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Summa nettodagar för sjukpenning, arbetsskada och/eller rehabilitering SjukSum_Ndag_MiDAS**
+**Summa nettodagar för sjukpenning, arbetsskada och/eller rehabilitering
+SjukSum_Ndag_MiDAS**
 
 SjukSum*Ndaq*MiDAS
 
 (1994–)
 
-Antal utbetalda nettodagar under året med sjukpenning, arbetsskadesjukpenning och rehabiliteringspenning. Variabeln summerar antal nettodagar med dessa ersättningar.
+Antal utbetalda nettodagar under året med sjukpenning, arbetsskadesjukpenning och
+rehabiliteringspenning. Variabeln summerar antal nettodagar med dessa ersättningar.
 
 Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
@@ -28,4 +30,5 @@ Antal nettodagar är bruttodagar \*omfattningen under ett år.
 
 10 \* en åttondels omfattning = 1,25 dagar
 
-*För ytterligare information se mer under respektive ersättningsslag* ([[SjukPP]], [[ArbSkErs]], [[RehabErs]]).
+*För ytterligare information se mer under respektive ersättningsslag*
+([SjukPP](SjukPP.md), [ArbSkErs](ArbSkErs.md), [RehabErs](RehabErs.md)).
