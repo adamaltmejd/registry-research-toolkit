@@ -172,6 +172,55 @@ export const AUTOSAVE_KEY = "current";
 /** The draft, or `null` for the home/new screen. */
 let draft = $state<ProjectData | null>(null);
 
+// ── Stable client-side ids (issue #200) ──────────────────────────────────────
+//
+// The `{#each}` blocks over `sources[]` / `bindings[]` need a STABLE key so Svelte
+// remounts the correct component instance on a middle-remove (an index key rebinds a
+// surviving instance to a shifted item, landing stale per-instance UI — an open
+// CatalogPicker, a BindingEditor `picking` flag, a PeriodEditor's seed — on the
+// WRONG item; see issue #200).
+//
+// Stable ids must NEVER enter the serialized draft: `Source`/`Binding` are closed
+// objects (`extra="forbid"` in reg_schema/structural.py) — an injected `_uid` would
+// trip `unexpected_field` AND leak into the downloaded project_data.json. So the
+// store owns a PARALLEL id tree, kept in lockstep with every mutator, that the draft
+// (and thus every serialize / validate / order / bundle POST, all of which
+// JSON.stringify the draft) never sees. The immutable mutators replace edited
+// objects on every edit, so an object-keyed WeakMap wouldn't survive — the store
+// owns the id↔position association positionally, patching it alongside each
+// structural edit.
+
+/** One source's stable id + its bindings' stable ids (positional mirror of
+ * `draft.sources[i]`). */
+interface SourceIds {
+  id: string;
+  bindings: string[];
+}
+
+/** The id tree mirroring `draft.sources` 1:1 by position. Rebuilt on a wholesale
+ * draft replacement (new / open / restore), patched in lockstep on structural
+ * edits. */
+let sourceIds = $state<SourceIds[]>([]);
+
+let _idSeq = 0;
+/** A fresh, process-unique client id. Opaque — never serialized. */
+function nextId(): string {
+  _idSeq += 1;
+  return `c${_idSeq}`;
+}
+
+/** Build a fresh id tree for a wholesale-replaced draft. A malformed (non-array)
+ * `sources` / `bindings` yields an empty mirror — the editors coerce those to []
+ * for rendering, so no keyed instance is created against them. */
+function buildIds(next: ProjectData | null): SourceIds[] {
+  const sources =
+    next != null && Array.isArray(next.sources) ? next.sources : [];
+  return sources.map((s) => ({
+    id: nextId(),
+    bindings: Array.isArray(s.bindings) ? s.bindings.map(() => nextId()) : [],
+  }));
+}
+
 /** The serialized text of the last DOWNLOAD (the dirty baseline). Set on
  * open (the opened raw text) and on download (the just-written text); `null` while
  * no draft is loaded. */
@@ -233,6 +282,25 @@ export const projectStore = {
     return validatedClean;
   },
 
+  // ── Stable client-side ids (issue #200 — keys for the editor each-blocks) ──
+  // Positional accessors so the `{#each}` blocks key on a STABLE id rather than the
+  // array index. A fresh source/binding gets a new id; a remove drops its id; an
+  // update leaves the id in place — so a middle-remove remounts the right instance
+  // instead of rebinding a survivor's stale UI state to a shifted item. Out-of-range
+  // (a malformed spec where the id mirror is empty) falls back to the index so the
+  // key is still defined.
+
+  /** The stable id for the source at `index` (falls back to the index string when
+   * the mirror has no entry — a malformed non-array `sources`). */
+  sourceId(index: number): string {
+    return sourceIds[index]?.id ?? `i${index}`;
+  },
+  /** The stable id for the binding at `[sourceIndex][bindingIndex]` (index fallback
+   * when the mirror has no entry). */
+  bindingId(sourceIndex: number, bindingIndex: number): string {
+    return sourceIds[sourceIndex]?.bindings[bindingIndex] ?? `i${bindingIndex}`;
+  },
+
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   /** Start a fresh Model A draft (clears any open error + stale validation). The
@@ -241,6 +309,7 @@ export const projectStore = {
   newProject(seed: ProjectSeed): void {
     const next = newProjectData(seed);
     draft = next;
+    sourceIds = buildIds(next);
     lastDownloaded = serializeProjectData(next);
     validation = null;
     openError = null;
@@ -284,6 +353,7 @@ export const projectStore = {
     // equal to itself even when the file's formatting differs from our
     // pretty-print, so a freshly-opened draft is not spuriously dirty.
     draft = obj as ProjectData;
+    sourceIds = buildIds(obj as ProjectData);
     lastDownloaded = serializeProjectData(obj as ProjectData);
     validation = null;
     openError = null;
@@ -397,11 +467,14 @@ export const projectStore = {
   addSource(): void {
     if (draft != null) {
       setDraft(addSource(draft));
+      // Keep the id mirror in lockstep: append a fresh source id (no bindings).
+      sourceIds = [...sourceIds, { id: nextId(), bindings: [] }];
     }
   },
   removeSource(index: number): void {
     if (draft != null) {
       setDraft(removeSource(draft, index));
+      sourceIds = sourceIds.filter((_, i) => i !== index);
     }
   },
   updateSource(index: number, patch: Partial<Source>): void {
@@ -412,11 +485,19 @@ export const projectStore = {
   addBinding(sourceIndex: number): void {
     if (draft != null) {
       setDraft(addBinding(draft, sourceIndex));
+      sourceIds = sourceIds.map((s, i) =>
+        i === sourceIndex ? { ...s, bindings: [...s.bindings, nextId()] } : s,
+      );
     }
   },
   removeBinding(sourceIndex: number, bindingIndex: number): void {
     if (draft != null) {
       setDraft(removeBinding(draft, sourceIndex, bindingIndex));
+      sourceIds = sourceIds.map((s, i) =>
+        i === sourceIndex
+          ? { ...s, bindings: s.bindings.filter((_, j) => j !== bindingIndex) }
+          : s,
+      );
     }
   },
   updateBinding(
@@ -450,6 +531,7 @@ export function initPersistence(): Promise<void> {
   const loaded = persistence.load().then((restored) => {
     if (restored != null && draft == null) {
       draft = restored;
+      sourceIds = buildIds(restored);
       // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
       // downloaded to the durable project_data.json this session, so it must read
       // as DIRTY (unsaved-changes warning). lastDownloaded stays null →

@@ -336,3 +336,157 @@ describe("persistence wiring (the A5.4 swap point)", () => {
     stop();
   });
 });
+
+describe("stable client-side ids (issue #200)", () => {
+  // A 3-source draft, each with 2 bindings, so a MIDDLE remove is meaningful.
+  function seedThreeSources(): void {
+    projectStore.newProject(SEED);
+    for (let s = 0; s < 3; s++) {
+      projectStore.addSource();
+      projectStore.updateSource(s, { name: `s${s}` });
+      projectStore.addBinding(s);
+      projectStore.addBinding(s);
+      projectStore.updateBinding(s, 0, { variable: `s${s}b0` });
+      projectStore.updateBinding(s, 1, { variable: `s${s}b1` });
+    }
+  }
+
+  it("keeps a survivor's id stable across a MIDDLE source remove (no rebind to a shifted item)", () => {
+    seedThreeSources();
+    const id0 = projectStore.sourceId(0);
+    const id2 = projectStore.sourceId(2);
+    // Remove the middle source. The last source shifts down to index 1.
+    projectStore.removeSource(1);
+    expect(projectStore.draft?.sources?.[1]?.name).toBe("s2");
+    // The shifted survivor MUST carry its own id (id2), not the index-1 id it now
+    // sits at — that stability is what remounts the right component instance.
+    expect(projectStore.sourceId(0)).toBe(id0);
+    expect(projectStore.sourceId(1)).toBe(id2);
+  });
+
+  it("keeps a survivor binding's id stable across a MIDDLE binding remove", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.addBinding(0);
+    projectStore.addBinding(0);
+    projectStore.addBinding(0);
+    const b0 = projectStore.bindingId(0, 0);
+    const b2 = projectStore.bindingId(0, 2);
+    projectStore.removeBinding(0, 1);
+    expect(projectStore.bindingId(0, 0)).toBe(b0);
+    expect(projectStore.bindingId(0, 1)).toBe(b2);
+  });
+
+  it("leaves a survivor's id UNCHANGED across an unrelated edit (one stable identity per item)", () => {
+    seedThreeSources();
+    const id1 = projectStore.sourceId(1);
+    const b1 = projectStore.bindingId(1, 1);
+    // An immutable edit replaces the source/binding object but must NOT churn its id.
+    projectStore.updateSource(0, { name: "renamed" });
+    projectStore.updateBinding(1, 1, { type: "categorical" });
+    expect(projectStore.sourceId(1)).toBe(id1);
+    expect(projectStore.bindingId(1, 1)).toBe(b1);
+  });
+
+  it("seeds ids for an OPENED file's sources + bindings", async () => {
+    const raw = {
+      schema_version: "2.0.0",
+      steward: "global",
+      reg_meta_version: "reg_meta/v1.0.0",
+      name: "opened",
+      sources: [
+        {
+          name: "s1",
+          register_variant: "scb/lisa/individer",
+          period: 2018,
+          bindings: [
+            { variable: "scb/lisa/kon", type: "categorical" },
+            { variable: "scb/lisa/alder", type: "numeric" },
+          ],
+        },
+      ],
+    };
+    await projectStore.openFromFile(jsonFile(JSON.stringify(raw)));
+    // Distinct, defined ids for the opened source + its two bindings.
+    expect(projectStore.sourceId(0)).toBeTruthy();
+    expect(projectStore.bindingId(0, 0)).toBeTruthy();
+    expect(projectStore.bindingId(0, 0)).not.toBe(projectStore.bindingId(0, 1));
+  });
+
+  describe("ids NEVER leak into the serialized draft / POST bodies (the closed-object constraint)", () => {
+    // Source/Binding are extra=forbid in reg_schema — an injected id would both trip
+    // `unexpected_field` AND end up in the downloaded project_data.json. The ids live
+    // only in the store, so neither the serialized text nor any POST body may carry
+    // a `_uid`/`_id`/client `c<n>` key.
+
+    function assertNoIdLeak(payload: unknown): void {
+      const text = JSON.stringify(payload);
+      expect(text).not.toMatch(/"_uid"|"_id"|"_clientId"/);
+      // The opaque client ids are `c<n>` strings; assert none appear as a value
+      // anywhere in the wire payload either.
+      expect(text).not.toMatch(/"c\d+"/);
+    }
+
+    it("serializeProjectData output carries no client id", () => {
+      seedThreeSources();
+      // Sanity: ids exist in the store…
+      expect(projectStore.sourceId(0)).toMatch(/^c\d+$/);
+      // …but never in the serialized draft (the downloaded file / dirty baseline).
+      const draft = projectStore.draft as unknown;
+      assertNoIdLeak(draft);
+    });
+
+    it("the /validate POST body carries no client id", async () => {
+      const bodies: unknown[] = [];
+      stubFetch(async (_url, init) => {
+        if (init?.body != null) {
+          bodies.push(JSON.parse(init.body as string));
+        }
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ ok: true, issues: [] }),
+        };
+      });
+      seedThreeSources();
+      await projectStore.validate();
+      expect(bodies).toHaveLength(1);
+      assertNoIdLeak(bodies[0]);
+      // The real source/binding content IS there (not an empty body that also passes).
+      const sent = bodies[0] as { sources: { name: string }[] };
+      expect(sent.sources.map((s) => s.name)).toEqual(["s0", "s1", "s2"]);
+    });
+
+    it("the /order + /bundle POST bodies carry no client id", async () => {
+      const bodies: unknown[] = [];
+      Object.defineProperty(URL, "createObjectURL", {
+        value: vi.fn(() => "blob:mock"),
+        configurable: true,
+        writable: true,
+      });
+      Object.defineProperty(URL, "revokeObjectURL", {
+        value: vi.fn(),
+        configurable: true,
+        writable: true,
+      });
+      stubFetch(async (_url, init) => {
+        if (init?.body != null) {
+          bodies.push(JSON.parse(init.body as string));
+        }
+        return {
+          ok: true,
+          status: 200,
+          blob: async () => new Blob(["x"]),
+          headers: new Headers(),
+        };
+      });
+      seedThreeSources();
+      await projectStore.downloadOrder();
+      await projectStore.downloadBundleFile();
+      expect(bodies.length).toBeGreaterThanOrEqual(2);
+      for (const body of bodies) {
+        assertNoIdLeak(body);
+      }
+    });
+  });
+});
