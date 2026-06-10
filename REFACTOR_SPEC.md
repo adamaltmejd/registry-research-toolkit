@@ -41,7 +41,7 @@ spec's post-A5 step numbering.
 
 | Step | Work | Gates on | Issues |
 |------|------|----------|--------|
-| 6.5  | Containerize + Cloudflare + `global` deploy | A5 | #220, #224 |
+| 6.5  | Containerize + Cloudflare + `global` deploy | A5 | #278, #220, #224 |
 | 7    | Webapp-authoring hard-cut; delete `mock_data_wizard/web/` | 6.5 | — |
 | 7.5  | `global` dogfood (2 weeks) | 7 | — |
 | 8    | Kit-build (`/api/kit` + `codes.json` + stats v1) | 7.5 | #217 |
@@ -54,7 +54,7 @@ spec's post-A5 step numbering.
 
 ## 6.5 — Deployment: containerize, Cloudflare, `global` up
 
-- **First task — cut a resolvable reg_meta release:** `reg-meta update`
+- **First task — cut a resolvable reg_meta release (#278):** `reg-meta update`
   matches `reg_meta/v*` (plus legacy bare `v*`) tags and the assets
   `reg_meta.db.zst` / `reg_meta_docs.db.zst` (`download.py` /
   `doc_db.py`); every existing release predates the package rename and
@@ -575,8 +575,9 @@ kickoff), #209 (v1 slug freeze), #217 (kit-build), #220 (Cloudflare
 edge-cache gate), #224 (provenance-DB deployment confinement), #240
 (MSSQL integration test — pre-10a gate), #196 + #197 (identity-churning
 curation — pre-freeze), #200 + #266 (authoring-UX ride-alongs for the
-7.5 dogfood), and #211 (LOVA/LVM curation — freeze-safe, batch with
-step 11). Deferred beyond v1 but recorded so pointers resolve: #212
+7.5 dogfood), #211 (LOVA/LVM curation — freeze-safe, batch with
+step 11), and #278 (cut a resolvable reg_meta release — first task of
+6.5). Deferred beyond v1 but recorded so pointers resolve: #212
 (materializer-owned value tables) and #271 (interval-native resolver).
 Resolved since this spec was seeded: #210 (SOS classification path,
 closed via PRs #273/#274), #208 (closed with the classification-slug
