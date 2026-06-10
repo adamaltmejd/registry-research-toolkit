@@ -8,6 +8,7 @@ the ``--no-dev`` runtime venv where httpx/TestClient are absent.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import threading
 import time
@@ -56,7 +57,9 @@ def _make_handler(routes: dict[str, tuple[int, object]]):
     return Handler
 
 
+@contextlib.contextmanager
 def _serve(routes: dict[str, tuple[int, object]]) -> Iterator[str]:
+    """Run a stub HTTP server for the body of the `with`, yielding its base URL."""
     server = HTTPServer(("127.0.0.1", 0), _make_handler(routes))
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -74,7 +77,8 @@ def healthy_server() -> Iterator[str]:
         "/api/catalog": (200, _GOOD_ROOT),
         "/api/catalog/scb": (200, _GOOD_PROVIDER),
     }
-    yield from _serve(routes)
+    with _serve(routes) as base:
+        yield base
 
 
 def test_run_smoke_passes_on_healthy_server(healthy_server: str) -> None:
@@ -87,24 +91,26 @@ def test_run_smoke_fails_on_empty_catalog() -> None:
         "/api/context": (200, _GOOD_CONTEXT),
         "/api/catalog": (200, {"kind": "root", "children": []}),
     }
-    server_iter = _serve(routes)
-    base = next(server_iter)
-    try:
-        with pytest.raises(SmokeError, match="zero providers"):
-            run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
-    finally:
-        next(server_iter, None)
+    with _serve(routes) as base, pytest.raises(SmokeError, match="zero providers"):
+        run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
 
 
 def test_run_smoke_fails_on_bad_context_shape() -> None:
     routes = {"/api/context": (200, {"steward": {"id": "global"}})}  # missing keys
-    server_iter = _serve(routes)
-    base = next(server_iter)
-    try:
-        with pytest.raises(SmokeError, match="missing key"):
-            run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
-    finally:
-        next(server_iter, None)
+    with _serve(routes) as base, pytest.raises(SmokeError, match="missing key"):
+        run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
+
+
+def test_run_smoke_fails_on_500_context() -> None:
+    # A reachable-but-failing server (boot-time 500) must FAIL the smoke (exit 1
+    # equivalent), NOT be retried for the full deadline → exit 2. The readiness
+    # wait stops on the reachable non-200, and _check_context reports the code.
+    routes = {"/api/context": (500, {"detail": "boot failed"})}
+    start = time.monotonic()
+    with _serve(routes) as base, pytest.raises(SmokeError, match="returned 500"):
+        run_smoke(base, ready_deadline_s=30.0, timeout_s=2.0)
+    # Bailed on the reachable 500, not after burning the 30s deadline.
+    assert time.monotonic() - start < 5.0
 
 
 def test_run_smoke_times_out_when_unreachable() -> None:
