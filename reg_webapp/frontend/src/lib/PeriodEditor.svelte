@@ -120,6 +120,16 @@ const tokenHint = $derived(
   tokenText.trim() !== "" && !looksLikePeriod(tokenText.trim()),
 );
 
+// B1 (UI audit): the Years spinners render example placeholders ("e.g. 2015")
+// that read as EXAMPLES, not filled values — a fresh source no longer LOOKS
+// configured. Until a required endpoint is filled, surface a subtle inline
+// "incomplete" hint (NOT a red error wall — an empty period is a normal
+// mid-authoring state; the backend's invalid_period stays the authority once the
+// user submits). `incomplete` is true while either spinner is blank.
+const yearsIncomplete = $derived(
+  mode === "years" && (yearFrom.trim() === "" || yearTo.trim() === ""),
+);
+
 // Emit the years value: a bare int when from===to (single year → the Period int
 // arm), else a {from,to} range. A blank/non-integer endpoint is emitted as the raw
 // string so the backend's invalid_period flags it rather than us coercing to NaN.
@@ -187,10 +197,14 @@ function onModeChange(next: Mode): void {
     <div class="years">
       <label>
         <span>From</span>
+        <!-- B1: example placeholder ("e.g. 2015"), not a bare "2010" that reads as
+             a filled value. An empty required endpoint is flagged by the inline
+             incomplete hint below (not a red wall — normal mid-authoring state). -->
         <input
           type="number"
           value={yearFrom}
-          placeholder="2010"
+          placeholder="e.g. 2015"
+          aria-invalid={yearFrom.trim() === "" ? "true" : undefined}
           oninput={(e) => {
             yearFrom = e.currentTarget.value;
             emitYears();
@@ -202,7 +216,8 @@ function onModeChange(next: Mode): void {
         <input
           type="number"
           value={yearTo}
-          placeholder="2020"
+          placeholder="e.g. 2020"
+          aria-invalid={yearTo.trim() === "" ? "true" : undefined}
           oninput={(e) => {
             yearTo = e.currentTarget.value;
             emitYears();
@@ -210,6 +225,11 @@ function onModeChange(next: Mode): void {
         />
       </label>
       <p class="hint muted">A single year sets from = to.</p>
+      {#if yearsIncomplete}
+        <!-- Subtle, non-blocking: the period isn't set yet. Distinct from a
+             backend invalid_period error (which renders red via <FieldIssues>). -->
+        <p class="hint incomplete">Set both years to complete the period.</p>
+      {/if}
     </div>
   {:else if mode === "token"}
     <div class="token">
@@ -290,5 +310,11 @@ function onModeChange(next: Mode): void {
   .hint {
     font-size: 0.75rem;
     margin: 0.2rem 0 0;
+  }
+  /* B1: the "period incomplete" cue — amber (advisory), not the red error level.
+     An empty period is a normal mid-authoring state, not a validation failure. */
+  .hint.incomplete {
+    color: var(--level-warning);
+    flex-basis: 100%;
   }
 </style>

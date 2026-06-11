@@ -114,12 +114,19 @@ describe("CatalogPicker", () => {
 
     await page.getByRole("button", { name: /Lön/ }).click();
 
-    // `int` storage type → numeric; the delivery column is the display_name default.
+    // `int` storage type → numeric; the delivery column is the display_name
+    // default. A single-representation derive now explicitly clears
+    // `representation: null` (the shared resolveBindingAt path), so a re-pick of a
+    // multi-rep variable can't leave a stale representation behind.
     await vi.waitFor(() =>
       expect(onpickVariable).toHaveBeenCalledWith({
         variable: "scb/lisa/lon",
         type: "numeric",
         displayNameDefault: "Lon",
+        representation: null,
+        // The picker emits the ground-truth resolution kind so the consumer never
+        // re-infers status from value tells.
+        resolution: "derived",
       }),
     );
     // The resolve carried the source's (period, variant).
@@ -179,6 +186,8 @@ describe("CatalogPicker", () => {
       type: "categorical",
       displayNameDefault: "Ssyk4",
       representation: "Ssyk4",
+      // A chooser pick is always a concrete derive.
+      resolution: "derived",
     });
   });
 

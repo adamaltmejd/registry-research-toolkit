@@ -1,5 +1,6 @@
 <script lang="ts">
 import CatalogPicker from "./CatalogPicker.svelte";
+import type { PickedVariable } from "./catalog";
 import FieldIssues from "./FieldIssues.svelte";
 import { type Binding, COLUMN_TYPES } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -49,24 +50,22 @@ function ptr(field: string): string {
 // When the concept has several co-existing delivery columns at the period, the
 // picker's chooser supplies a `representation` (the chosen column) — set it; else
 // clear any stale one. Only set display_name when the resolve gave a default.
-function onPickVariable(picked: {
-  variable: string;
-  type: string;
-  displayNameDefault: string | null;
-  representation?: string | null;
-}): void {
-  const patch: Partial<Binding> = {
+//
+// B2: funnel through `applyPickedBinding`, which records the derived snapshot
+// (provenance) so a LATER period/variant change can re-derive without clobbering
+// the user's hand-edits. The picker emits the ground-truth resolution KIND
+// (`derived` / `unresolved`) from resolveBindingAt, so we mark the row directly
+// from it — NEVER re-inferring status from value tells (a genuinely-derived
+// opaque/null-column state would otherwise be mislabeled "unresolved").
+function onPickVariable(picked: PickedVariable): void {
+  projectStore.applyPickedBinding(sourceIndex, bindingIndex, {
     variable: picked.variable,
     type: picked.type,
-    representation: picked.representation ?? null,
-  };
-  if (
-    picked.displayNameDefault != null &&
-    (binding.display_name ?? "") === ""
-  ) {
-    patch.display_name = picked.displayNameDefault;
-  }
-  projectStore.updateBinding(sourceIndex, bindingIndex, patch);
+    displayNameDefault: picked.displayNameDefault,
+    representation: picked.representation,
+    status: picked.resolution,
+    reason: picked.unresolvedReason,
+  });
   picking = false;
 }
 
@@ -86,6 +85,57 @@ function strField(field: keyof Binding): string {
 }
 const type = $derived(strField("type"));
 const displayName = $derived(strField("display_name"));
+
+// B2: the derivation marker. The store re-derives this binding when the source's
+// (period, variant) changes; the resulting status drives an honest row marker —
+// "unresolved" (period unset / no data here), "ambiguous" (re-pick a
+// representation), or a non-blocking "mismatch" hint when a hand-edited field now
+// re-derives differently. `null` (never derived) shows nothing. The validator
+// stays the authority; these are advisory cues, NOT a red error wall.
+const derivation = $derived(
+  projectStore.bindingDerivation(sourceIndex, bindingIndex),
+);
+
+/** The human marker text for the current derivation status (null → no marker). */
+const derivationMarker = $derived.by(() => {
+  const d = derivation;
+  if (!d) {
+    return null;
+  }
+  if (d.status === "unresolved") {
+    return {
+      level: "unresolved" as const,
+      text:
+        d.reason === "period-unset"
+          ? "Set the source period to resolve type."
+          : "No data for this period / variant — type couldn't be resolved.",
+    };
+  }
+  if (d.status === "ambiguous") {
+    return {
+      level: "unresolved" as const,
+      text: d.detail ?? "Several representations now co-exist — re-pick one.",
+    };
+  }
+  if (d.status === "error") {
+    return {
+      level: "unresolved" as const,
+      text: `Couldn't re-resolve: ${d.detail ?? "request failed"}.`,
+    };
+  }
+  // status === "derived": only surface a marker when a hand-edit diverged from the
+  // freshly-derived value (non-blocking).
+  if (d.mismatch) {
+    return {
+      level: "mismatch" as const,
+      text:
+        d.mismatch.field === "type"
+          ? `reg_meta now derives type "${d.mismatch.derived}" here; you kept "${type}".`
+          : `reg_meta now suggests display name "${d.mismatch.derived}"; you kept yours.`,
+    };
+  }
+  return null;
+});
 </script>
 
 <div class="binding">
@@ -100,6 +150,17 @@ const displayName = $derived(strField("display_name"));
         </button>
       </div>
       <FieldIssues issues={issuesForPointer(issues, ptr("variable"))} />
+      {#if derivationMarker}
+        <!-- B2: the derivation marker — an honest cue that the binding's type isn't
+             really resolved (unresolved) or that a hand-edit now disagrees with
+             reg_meta (mismatch). Advisory; the backend Validate is the authority. -->
+        <p
+          class="derive-marker {derivationMarker.level}"
+          role={derivationMarker.level === "unresolved" ? "status" : undefined}
+        >
+          {derivationMarker.text}
+        </p>
+      {/if}
     </div>
 
     <!-- type: the 6 ColumnType values, prefilled from the pick, overridable. -->
@@ -295,5 +356,20 @@ const displayName = $derived(strField("display_name"));
     gap: 0.25rem;
     max-width: 18rem;
     font-size: 0.8rem;
+  }
+  /* B2 markers. `unresolved` is the stronger cue (the type isn't real yet) —
+     amber, like the period-incomplete hint; `mismatch` is a quieter advisory
+     (the value is the user's choice, we just note reg_meta disagrees). Neither is
+     red: red is reserved for the backend's validation errors (<FieldIssues>). */
+  .derive-marker {
+    font-size: 0.75rem;
+    margin: 0.1rem 0 0;
+  }
+  .derive-marker.unresolved {
+    color: var(--level-warning);
+    font-weight: 600;
+  }
+  .derive-marker.mismatch {
+    color: var(--muted);
   }
 </style>

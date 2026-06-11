@@ -8,6 +8,7 @@ import {
   type BindingChild,
   type CatalogNode,
   encodeFqid,
+  getCatalogNode,
   isCatalogNode,
   type StatesResponse,
   type VariableStateModel,
@@ -391,4 +392,96 @@ export function representationsFromStates(
  * list trivially collapses (no choice to make). */
 export function representationsCollapse(reps: Representation[]): boolean {
   return reps.every((r) => r.codingKey === reps[0]?.codingKey);
+}
+
+// ── Shared binding resolution (picker derive-on-pick + store re-derive) ──────
+// ONE resolution path, used by BOTH the CatalogPicker's derive-on-pick AND the
+// store's re-derive-on-(period/variant)-change (B2, UI audit). Keeping it here —
+// not inlined in the picker — is what lets the store re-resolve every binding of a
+// source through the IDENTICAL logic when the source's period/variant changes, so a
+// picked binding never goes silently stale.
+
+/** Why a binding could not be resolved to a real type at the source's
+ * (period, variant). Drives the BindingEditor's "unresolved" marker (B2.3): an
+ * honest "set the period" / "no data here" cue instead of dressing the opaque
+ * fallback as a derived type. */
+export type UnresolvedReason = "period-unset" | "no-states" | "not-a-leaf";
+
+/** The outcome of resolving one binding's variable at a (period, variant).
+ *  - `derived`: a single representation → type + display-name default ready to apply.
+ *  - `ambiguous`: >1 co-existing delivery column → the author must pick a
+ *    representation (only the picker's chooser can; the store can't auto-pick, so
+ *    it surfaces a non-blocking hint and leaves the existing value).
+ *  - `unresolved`: resolution impossible (no period / no covering state). */
+export type BindingResolution =
+  | {
+      kind: "derived";
+      type: string;
+      displayNameDefault: string | null;
+      representation: string | null;
+    }
+  | { kind: "ambiguous"; fqid: string; states: VariableStateModel[] }
+  | { kind: "unresolved"; reason: UnresolvedReason };
+
+/** The payload the CatalogPicker hands back on a pick (the BindingEditor applies it
+ * through the store). It carries the ground-truth resolution `kind` from
+ * `resolveBindingAt` so the consumer NEVER re-infers status from value tells (a
+ * genuinely-derived `opaque` with a null delivery column would otherwise be
+ * mislabeled "unresolved"). `unresolvedReason` rides along only when the resolve
+ * could not produce a type (period unset / no covering state) — the opaque
+ * fallback the picker wrote. */
+export interface PickedVariable {
+  variable: string;
+  type: string;
+  displayNameDefault: string | null;
+  // The chosen REPRESENTATION (delivery column) when the concept has >1 at the
+  // period; null/undefined when there is a single representation.
+  representation?: string | null;
+  /** Ground truth from `resolveBindingAt`: `derived` (a real type was resolved) or
+   * `unresolved` (the opaque fallback). `ambiguous` never reaches a pick — the
+   * picker's chooser resolves it to a concrete representation (`derived`) first. */
+  resolution: "derived" | "unresolved";
+  /** Why unresolved (only when `resolution === "unresolved"`). */
+  unresolvedReason?: UnresolvedReason;
+}
+
+/**
+ * Resolve `fqid` at the source's (`period`, `variant`) through the catalog
+ * `?period` resolve — the SINGLE source of truth for derive-on-pick AND store
+ * re-derive. A null/blank period is `unresolved` ("period-unset") WITHOUT a fetch
+ * (the resolve needs a period). A leaf that yields no covering state is
+ * `no-states`; a non-leaf payload is `not-a-leaf` (shouldn't happen with
+ * `?period`). >1 co-existing representation is `ambiguous` (deferred to the picker
+ * chooser); exactly one is `derived` with the prefill. A network/422 throws — the
+ * caller owns the error surface (the picker shows `resolveError`; the store stores
+ * a per-binding error hint). */
+export async function resolveBindingAt(
+  fqid: string,
+  period: string | null,
+  variant: string,
+): Promise<BindingResolution> {
+  if (!period) {
+    return { kind: "unresolved", reason: "period-unset" };
+  }
+  const resolved = await getCatalogNode(fqid, {
+    period,
+    variant: variant || undefined,
+  });
+  if (isCatalogNode(resolved) || resolved.states.length === 0) {
+    return {
+      kind: "unresolved",
+      reason: isCatalogNode(resolved) ? "not-a-leaf" : "no-states",
+    };
+  }
+  const reps = representationsFromStates(resolved.states);
+  if (reps.length > 1) {
+    return { kind: "ambiguous", fqid, states: resolved.states };
+  }
+  const first = resolved.states[0];
+  return {
+    kind: "derived",
+    type: deriveType(first),
+    displayNameDefault: first.delivery_column_name ?? null,
+    representation: null,
+  };
 }
