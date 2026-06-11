@@ -29,12 +29,20 @@ def _no_repo_curation() -> Iterator[None]:
     top (function-scoped, applied after, undone per test)."""
     import reg_meta_build.codelivery as _cd
     import reg_meta_build.column_merges as _cm
+    import reg_meta_build.concept_groups as _cg
+    import reg_meta_build.db as _db
     import reg_meta_build.fold_overrides as _fo
 
     mp = pytest.MonkeyPatch()
     mp.setattr(_cd, "repo_codelivery_path", lambda: None)
     mp.setattr(_cm, "repo_column_merges_path", lambda: None)
     mp.setattr(_fo, "repo_fold_overrides_path", lambda: None)
+    # concept_groups.toml references real registers (scb/lisa) by SLUG, and the
+    # materializer fails fast on a dangling reference — which every synthetic
+    # fixture build would be. `db.materialize` imported the symbol directly, so
+    # patch it there too.
+    mp.setattr(_cg, "repo_concept_groups_path", lambda: None)
+    mp.setattr(_db, "repo_concept_groups_path", lambda: None)
     yield
     mp.undo()
 

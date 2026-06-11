@@ -19,6 +19,7 @@ from pathlib import Path
 
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.column_merges import load_column_merges
+from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.fold_overrides import load_fold_overrides
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
@@ -35,3 +36,11 @@ def test_repo_fold_overrides_parses() -> None:
 
 def test_repo_column_merges_parses() -> None:
     assert load_column_merges(_ROOT / "column_merges.toml")
+
+
+def test_repo_concept_groups_parses() -> None:
+    groups = load_concept_groups(_ROOT / "concept_groups.toml")
+    assert groups  # the LISA agi rank family ships with the repo
+    # Build-time resolution (register/group/variable exist) is maintainer-build
+    # territory (the materializer fails fast); load-time shape is this gate.
+    assert all(len(g.members) >= 2 for g in groups)

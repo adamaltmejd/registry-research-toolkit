@@ -864,6 +864,48 @@ runtime JSON-decode crash when the webapp serves the variant. The structural val
 (`validate.py::_check_panel_refs_resolve`) additionally fails the build if a panel key
 does not resolve to a real `variable.slug` in the variant's own register.
 
+## Concept-group derivation (#303)
+
+`concept_groups.py` materializes the presentation-only concept-group layer (see
+`reg_meta/DESIGN.md` → Concept groups) as the last slug-gated post-pass — after
+`populate_variable_slugs` + `_materialize_variable_related_to` (the edge pass resolves
+slug-anchored edges) and `populate_classifications` + `populate_slugs` (classification
+rows + slugs). Skipped under `--skip-slugs` like the other slug-keyed linkers. Three
+dimension sources, in priority order; a member belongs to at most one group, and a later
+pass never claims an already-grouped member:
+
+0. **`edge`** — connected components of within-register
+   `same_definition_different_column` sibling edges. Zero inference: the A2.2 split
+   machinery minted these edges between the delivery columns of ONE SCB variable
+   definition, so folding them back into one browse row cannot over-fold. Measured
+   2026-06-11: 2,193 components / 8,151 variables (16% of the catalog), 2,191 sharing a
+   single name (the group label; key = min member slug). Other `relation_kind`s
+   (`code_vs_label_pair`, `import_bug_suspect`) do NOT group.
+1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
+   curation rule). Variables: the Swedish month slug tails, both short and full forms
+   (SCB mixes them within one family); guard = ≥3 distinct months on one stem AND a
+   ≥5-char shared label prefix, so a slug coincidentally ending in `maj` never folds
+   (zero false folds measured). Classifications: 4-digit vintage-year slug tails
+   (`lkf1980`…, `sni2007`); guard = ≥2 vintages AND year-stripped-name agreement (the
+   agreed name is the label). The month facet value is the zero-padded number; the
+   vintage facet is the year.
+2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
+   `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
+   `[[variable_group]]` families with exact member lists: a `group = "<stem>"` member
+   absorbs a derived token group (its variables keep their month facets and gain the
+   family's facet — the LISA `agi{1,2,3}` rank axis yields one month × rank matrix); a
+   `variable = "<slug>"` member attaches one ungrouped variable. Dangling references
+   FAIL the build (EXIT_CONFIG) — curation drift is fixed, not silently dropped.
+   Families are provider-gated like the classification seed, so a `--providers=sos`
+   build skips scb families instead of failing.
+
+Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
+derived fresh every build (regenerate-not-migrate) and carry no identity. The structural
+validator (`validate.py::_check_concept_groups`) checks member-kind/register wiring and
+the ≥2-member floor always, plus per-source volume floors (edge/month/curated/lkf) on
+`corpus=True` builds so a derivation pass that silently stops matching fails the
+maintainer gate.
+
 ## Slug immutability
 
 Both TOML files — hand-curated `<provider>.toml` and build-generated

@@ -162,6 +162,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         if corpus:
             _check_sos_sanity(conn, result, tables)
         _check_sos_stateless_variables(conn, result, tables)
+        _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -754,6 +755,125 @@ def _check_sos_stateless_variables(
         result.info(
             f"{len(empty_regs)} SOS register(s) with ZERO states across all "
             f"variables: {names}"
+        )
+
+
+# Real-corpus floors for the derived concept-group layer (#303). Measured
+# 2026-06-11: 2,193 edge groups / 8 month families / lkf = 47 vintages / 1
+# curated family. Generous floors so corpus drift doesn't false-fail; a
+# collapse to zero means a derivation-pass regression.
+_CG_MIN_EDGE_GROUPS = 1_000
+_CG_MIN_MONTH_GROUPS = 3
+_CG_MIN_LKF_VINTAGES = 40
+
+
+def _check_concept_groups(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#303 derived concept-group invariants (presentation-only layer; see
+    `concept_groups.py`).
+
+    Structural (always): the member-kind wiring is consistent (variable
+    members point at `kind='variable'` groups in the SAME register;
+    classification members at `kind='classification'` groups) and every group
+    has >= 2 members — a 1-member group is a derivation bug (the passes only
+    mint groups from >= 2 candidates; a curated absorb that emptied a group
+    would surface here).
+
+    Corpus (real build only): volume floors per derivation source, so a pass
+    that silently stops matching (slug-vocabulary drift, edge-kind rename)
+    fails the gate instead of shipping an ungrouped browse."""
+    result.section("[concept groups]")
+    required = {
+        "concept_group",
+        "concept_group_variable",
+        "concept_group_variable_facet",
+        "concept_group_classification",
+    }
+    missing_tables = required - tables
+    if missing_tables:
+        for name in sorted(missing_tables):
+            result.fail(f"{name} missing (schema 5.3.0 concept-group layer)")
+        return
+
+    undersized = conn.execute(
+        "SELECT COUNT(*) FROM concept_group g WHERE "
+        "(SELECT COUNT(*) FROM concept_group_variable m "
+        " WHERE m.group_id = g.group_id) + "
+        "(SELECT COUNT(*) FROM concept_group_classification c "
+        " WHERE c.group_id = g.group_id) < 2"
+    ).fetchone()[0]
+    if undersized:
+        result.fail(f"{undersized} concept group(s) with < 2 members")
+    else:
+        n_groups = conn.execute("SELECT COUNT(*) FROM concept_group").fetchone()[0]
+        result.ok(f"all {n_groups:,} concept groups have >= 2 members")
+
+    kind_mismatch = conn.execute(
+        "SELECT "
+        "(SELECT COUNT(*) FROM concept_group_variable m "
+        " JOIN concept_group g ON g.group_id = m.group_id "
+        " WHERE g.kind != 'variable') + "
+        "(SELECT COUNT(*) FROM concept_group_classification c "
+        " JOIN concept_group g ON g.group_id = c.group_id "
+        " WHERE g.kind != 'classification')"
+    ).fetchone()[0]
+    if kind_mismatch:
+        result.fail(f"{kind_mismatch} group member(s) under a wrong-kind group")
+    else:
+        result.ok("member tables wire to matching-kind groups")
+
+    cross_register = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_variable m "
+        "JOIN concept_group g ON g.group_id = m.group_id "
+        "JOIN variable v ON v.variable_id = m.variable_id "
+        "WHERE v.register_id != g.register_id"
+    ).fetchone()[0]
+    if cross_register:
+        result.fail(
+            f"{cross_register} variable member(s) outside their group's register"
+        )
+    else:
+        result.ok("variable members stay in their group's register")
+
+    if not corpus:
+        return
+    by_source = {
+        (r[0], r[1]): r[2]
+        for r in conn.execute(
+            "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
+        )
+    }
+    n_edge = by_source.get(("edge", "variable"), 0)
+    n_month = by_source.get(("token", "variable"), 0)
+    n_curated = by_source.get(("curated", "variable"), 0)
+    if n_edge >= _CG_MIN_EDGE_GROUPS:
+        result.ok(f"{n_edge:,} edge groups (>= {_CG_MIN_EDGE_GROUPS:,})")
+    else:
+        result.fail(f"only {n_edge:,} edge groups (< {_CG_MIN_EDGE_GROUPS:,})")
+    if n_month >= _CG_MIN_MONTH_GROUPS:
+        result.ok(f"{n_month} month-token groups (>= {_CG_MIN_MONTH_GROUPS})")
+    else:
+        result.fail(f"only {n_month} month-token groups (< {_CG_MIN_MONTH_GROUPS})")
+    if n_curated >= 1:
+        result.ok(f"{n_curated} curated group(s) (>= 1)")
+    else:
+        result.fail("no curated concept groups (concept_groups.toml not applied?)")
+    lkf = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_classification c "
+        "JOIN concept_group g ON g.group_id = c.group_id "
+        "WHERE g.group_key = 'lkf'"
+    ).fetchone()[0]
+    if lkf >= _CG_MIN_LKF_VINTAGES:
+        result.ok(f"lkf vintage family has {lkf} members (>= {_CG_MIN_LKF_VINTAGES})")
+    else:
+        result.fail(
+            f"lkf vintage family has {lkf} members (< {_CG_MIN_LKF_VINTAGES}) — "
+            "classification vintage pass regression?"
         )
 
 
