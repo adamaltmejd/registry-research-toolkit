@@ -515,3 +515,129 @@ describe("representationsCollapse", () => {
     ).toBe(true);
   });
 });
+
+// ── Concept-group folding (#303) ─────────────────────────────────────────────
+
+import type { ConceptGroup } from "./api";
+import {
+  axisValues,
+  foldGroupedRows,
+  groupMatchesFilter,
+  memberAt,
+} from "./catalog";
+
+function group(over: Partial<ConceptGroup>): ConceptGroup {
+  return {
+    key: "ink",
+    label: "Inkomst",
+    source: "token",
+    axes: ["month"],
+    members: [
+      {
+        fqid: "scb/lisa/inkjan",
+        name: "Inkomst i januari",
+        facets: [{ axis: "month", value: "01", label: "januari" }],
+      },
+      {
+        fqid: "scb/lisa/inkfeb",
+        name: "Inkomst i februari",
+        facets: [{ axis: "month", value: "02", label: "februari" }],
+      },
+    ],
+    ...over,
+  };
+}
+
+describe("foldGroupedRows", () => {
+  const bindings = [
+    { fqid: "scb/lisa/alder", name: "Ålder" },
+    { fqid: "scb/lisa/inkfeb", name: "Inkomst i februari" },
+    { fqid: "scb/lisa/inkjan", name: "Inkomst i januari" },
+    { fqid: "scb/lisa/kon", name: "Kön" },
+  ];
+
+  it("folds grouped members under one group row, keeps ungrouped leaves", () => {
+    const rows = foldGroupedRows(bindings, [group({})]);
+    expect(
+      rows.map((r) => (r.kind === "group" ? `g:${r.group.key}` : r.item.fqid)),
+    ).toEqual(["scb/lisa/alder", "g:ink", "scb/lisa/kon"]);
+  });
+
+  it("is the identity (leaf rows in slug order) without groups", () => {
+    const rows = foldGroupedRows(bindings, []);
+    expect(rows.every((r) => r.kind === "leaf")).toBe(true);
+    expect(rows).toHaveLength(4);
+  });
+});
+
+describe("groupMatchesFilter", () => {
+  it("matches on the group label/key", () => {
+    expect(groupMatchesFilter("inkomst", group({}))).toBe(true);
+    expect(groupMatchesFilter("ink", group({}))).toBe(true);
+  });
+
+  it("matches on a member name/FQID (folded, diacritic-blind)", () => {
+    expect(groupMatchesFilter("februari", group({}))).toBe(true);
+    expect(groupMatchesFilter("inkjan", group({}))).toBe(true);
+    expect(groupMatchesFilter("nomatch", group({}))).toBe(false);
+  });
+});
+
+describe("axisValues / memberAt", () => {
+  const matrix = group({
+    axes: ["month", "rank"],
+    members: [
+      {
+        fqid: "scb/lisa/agi1inkjan",
+        name: null,
+        facets: [
+          { axis: "month", value: "01", label: "januari" },
+          { axis: "rank", value: "1", label: "största" },
+        ],
+      },
+      {
+        fqid: "scb/lisa/agi2inkjan",
+        name: null,
+        facets: [
+          { axis: "month", value: "01", label: "januari" },
+          { axis: "rank", value: "2", label: "näst största" },
+        ],
+      },
+      {
+        fqid: "scb/lisa/agi1inkfeb",
+        name: null,
+        facets: [
+          { axis: "month", value: "02", label: "februari" },
+          { axis: "rank", value: "1", label: "största" },
+        ],
+      },
+    ],
+  });
+
+  it("collects distinct value-sorted axis values", () => {
+    expect(axisValues(matrix, "month")).toEqual([
+      { value: "01", label: "januari" },
+      { value: "02", label: "februari" },
+    ]);
+    expect(axisValues(matrix, "rank")).toEqual([
+      { value: "1", label: "största" },
+      { value: "2", label: "näst största" },
+    ]);
+  });
+
+  it("finds the member at a coordinate; empty cells are undefined", () => {
+    expect(
+      memberAt(matrix, [
+        { axis: "month", value: "01" },
+        { axis: "rank", value: "2" },
+      ])?.fqid,
+    ).toBe("scb/lisa/agi2inkjan");
+    // partial family: feb has no rank-2 member
+    expect(
+      memberAt(matrix, [
+        { axis: "month", value: "02" },
+        { axis: "rank", value: "2" },
+      ]),
+    ).toBeUndefined();
+  });
+});

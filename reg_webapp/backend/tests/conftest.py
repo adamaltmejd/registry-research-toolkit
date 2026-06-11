@@ -159,6 +159,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
         "VALUES ('scb','lisa','kon','scb','rams','syss')"
     )
     _seed_kon_edges(src)
+    _seed_concept_groups(src, add_variable)
     _stamp_manifest(src)
 
     dst = sqlite3.connect(db_path)
@@ -212,6 +213,58 @@ def _seed_kon_edges(src: sqlite3.Connection) -> None:
         "INSERT INTO variable_state_lineage_warning "
         "(consumer_state_id, warning_kind, message) VALUES (?, ?, ?)",
         (kon_state, "no_source_state", "no source state for 2017"),
+    )
+
+
+def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
+    """Seed #303 concept groups so the register / classification-root responses
+    exercise the `groups` surface (grouped members ALSO stay in `children`):
+
+    - a token month group `ink` on scb/rams over two added variables; and
+    - a classification vintage group `sun` over sun2000 (added) + sun2020."""
+    src.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (10, 'variable', 2, 'ink', 'Inkomst', 'token')"
+    )
+    for i, (slug, month, month_label) in enumerate(
+        [("inkjan", "01", "januari"), ("inkfeb", "02", "februari")]
+    ):
+        add_variable(src, register_id=2, var_id=900 + i, name="Inkomst", slug=slug)
+        vid = src.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 2 AND slug = ?",
+            (slug,),
+        ).fetchone()[0]
+        src.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, 10)",
+            (vid,),
+        )
+        src.execute(
+            "INSERT INTO concept_group_variable_facet (variable_id, axis, value, "
+            "label) VALUES (?, 'month', ?, ?)",
+            (vid, month, month_label),
+        )
+    src.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
+    )
+    src.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token')"
+    )
+    src.executemany(
+        "INSERT INTO concept_group_classification (classification_id, group_id, "
+        "facet_value, facet_label) VALUES (?, 11, ?, ?)",
+        [
+            (50, "2000", "2000"),
+            (
+                src.execute(
+                    "SELECT id FROM classification WHERE slug = 'sun2020'"
+                ).fetchone()[0],
+                "2020",
+                "2020",
+            ),
+        ],
     )
 
 

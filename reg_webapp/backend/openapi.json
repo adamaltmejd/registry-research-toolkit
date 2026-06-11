@@ -290,7 +290,7 @@
         "type": "object"
       },
       "ClassificationRootResponse": {
-        "description": "`GET /api/catalog/class` \u2014 the classification-root + every classification\nas children.",
+        "description": "`GET /api/catalog/class` \u2014 the classification-root + every classification\nas children, plus the derived vintage `groups` (#303; grouped\nclassifications ALSO appear in `children`).",
         "properties": {
           "children": {
             "items": {
@@ -303,6 +303,14 @@
             "default": "class",
             "title": "Fqid",
             "type": "string"
+          },
+          "groups": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupModel"
+            },
+            "title": "Groups",
+            "type": "array"
           },
           "kind": {
             "const": "classification-root",
@@ -320,6 +328,84 @@
           "children"
         ],
         "title": "ClassificationRootResponse",
+        "type": "object"
+      },
+      "ConceptGroupMemberModel": {
+        "description": "A group member: the leaf's real FQID (binding or `class/<slug>`), its\ndisplay name, and its facet assignments (empty on edge-group members).",
+        "properties": {
+          "facets": {
+            "items": {
+              "$ref": "#/components/schemas/GroupFacetModel"
+            },
+            "title": "Facets",
+            "type": "array"
+          },
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "fqid",
+          "facets"
+        ],
+        "title": "ConceptGroupMemberModel",
+        "type": "object"
+      },
+      "ConceptGroupModel": {
+        "description": "One derived concept group. `key` is the scope-unique derivation key (a\nUI anchor, not an FQID); `source` records the derivation dimension; `axes`\nare the sorted facet axes the members carry (empty for edge groups);\nmembers are ordered by facet values along `axes`, then slug.",
+        "properties": {
+          "axes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Axes",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupMemberModel"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "source": {
+            "enum": [
+              "edge",
+              "token",
+              "curated"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "source",
+          "axes",
+          "members"
+        ],
+        "title": "ConceptGroupModel",
         "type": "object"
       },
       "ContextResponse": {
@@ -348,6 +434,30 @@
           "webapp"
         ],
         "title": "ContextResponse",
+        "type": "object"
+      },
+      "GroupFacetModel": {
+        "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank' / 'vintage'), `value` sorts, `label` displays.",
+        "properties": {
+          "axis": {
+            "title": "Axis",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "axis",
+          "value",
+          "label"
+        ],
+        "title": "GroupFacetModel",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -627,7 +737,7 @@
         "type": "object"
       },
       "RegisterResponse": {
-        "description": "`GET /api/catalog/{provider}/{register}` \u2014 the register + its bindings and\nthe variant-browser reference stub as children.",
+        "description": "`GET /api/catalog/{provider}/{register}` \u2014 the register + its bindings and\nthe variant-browser reference stub as children, plus the derived concept\n`groups` (#303; grouped bindings ALSO appear in `children` \u2014 the flat list\nstays complete, the SPA folds it).",
         "properties": {
           "children": {
             "items": {
@@ -653,6 +763,14 @@
           "fqid": {
             "title": "Fqid",
             "type": "string"
+          },
+          "groups": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupModel"
+            },
+            "title": "Groups",
+            "type": "array"
           },
           "kind": {
             "const": "register",

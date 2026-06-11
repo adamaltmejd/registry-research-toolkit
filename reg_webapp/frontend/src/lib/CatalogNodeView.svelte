@@ -2,10 +2,13 @@
 import { getCatalogNode, isCatalogNode } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
+import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
   bindingChildren,
   breadcrumbs,
   catalogHref,
+  foldGroupedRows,
+  groupMatchesFilter,
   matchesFilter,
   narrowCatalogNode,
   nodeLabel,
@@ -111,9 +114,14 @@ $effect(() => {
         <p class="muted">No registers.</p>
       {/if}
     {:else if node.kind === "register"}
-      {@const bindings = bindingChildren(node)}
-      {@const filteredBindings = bindings.filter((c) =>
-        matchesFilter(filter, c.name, c.fqid),
+      <!-- #303 concept-group folding: grouped bindings render as one expandable
+           group row (ConceptGroupRow); ungrouped bindings stay leaf rows. The
+           flat `children` list is complete — `foldGroupedRows` hides members. -->
+      {@const rows = foldGroupedRows(bindingChildren(node), node.groups)}
+      {@const filteredRows = rows.filter((row) =>
+        row.kind === "group"
+          ? groupMatchesFilter(filter, row.group)
+          : matchesFilter(filter, row.item.name, row.item.fqid),
       )}
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
@@ -121,22 +129,26 @@ $effect(() => {
       <!-- "Variables" is the researcher-facing label for this list; the code/API
            term is "binding" (the addressable variable leaf) — display copy only. -->
       <h3>Variables</h3>
-      {#if bindings.length > 0}
+      {#if rows.length > 0}
         <FilterInput
           bind:value={filter}
-          total={bindings.length}
-          shown={filteredBindings.length}
+          total={rows.length}
+          shown={filteredRows.length}
           placeholder="Filter variables…"
           label="Filter variables"
         />
-        {#if filteredBindings.length > 0}
+        {#if filteredRows.length > 0}
           <ul class="children">
-            {#each filteredBindings as child (child.fqid)}
+            {#each filteredRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
               <li>
-                <a href={catalogHref(child.fqid)}>
-                  <span class="label">{child.name ?? child.fqid}</span>
-                  <code class="child-fqid">{child.fqid}</code>
-                </a>
+                {#if row.kind === "group"}
+                  <ConceptGroupRow group={row.group} noun="variables" />
+                {:else}
+                  <a href={catalogHref(row.item.fqid)}>
+                    <span class="label">{row.item.name ?? row.item.fqid}</span>
+                    <code class="child-fqid">{row.item.fqid}</code>
+                  </a>
+                {/if}
               </li>
             {/each}
           </ul>
@@ -155,16 +167,23 @@ $effect(() => {
            the URL query, reactive without a remount. -->
       <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} />
     {:else if node.kind === "classification-root"}
+      <!-- #303 vintage folding: e.g. lkf1980…lkf2026 render as ONE group row
+           expanding to a year picker; ungrouped classifications stay leaves. -->
+      {@const clsRows = foldGroupedRows(node.children, node.groups)}
       <h2>{nodeLabel(node)}</h2>
       <h3>Classifications</h3>
-      {#if node.children.length > 0}
+      {#if clsRows.length > 0}
         <ul class="children">
-          {#each node.children as classification (classification.fqid)}
+          {#each clsRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
             <li>
-              <a href={catalogHref(classification.fqid)}>
-                <span class="label">{classification.name}</span>
-                <code class="child-fqid">{classification.short_name}</code>
-              </a>
+              {#if row.kind === "group"}
+                <ConceptGroupRow group={row.group} noun="vintages" />
+              {:else}
+                <a href={catalogHref(row.item.fqid)}>
+                  <span class="label">{row.item.name}</span>
+                  <code class="child-fqid">{row.item.short_name}</code>
+                </a>
+              {/if}
             </li>
           {/each}
         </ul>
