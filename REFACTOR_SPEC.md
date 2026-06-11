@@ -19,10 +19,10 @@ edge/lineage tables, build-time triage, SCB + SOS adapters and the first combine
 `reg_webapp` FastAPI backend + Svelte SPA (catalog browse, project authoring, IndexedDB
 autosave, validate / order / bundle endpoints).
 
-**Remaining (this document):** webapp deployment, the realign-then-extract MONA
-workflow, kit-build (`/api/kit` + `codes.json` + stats v1), the `mock_data_wizard` →
-`reg_mockdata` split, composite panel keys, the real steward catalogs, and the v1 slug
-freeze.
+**Remaining (this document):** the realign-then-extract MONA workflow, kit-build
+(`/api/kit` + `codes.json` + stats v1), the `mock_data_wizard` → `reg_mockdata` split,
+composite panel keys, the real steward catalogs, and the v1 slug freeze. (Webapp
+deployment — step 6.5 — shipped 2026-06-11.)
 
 The single biggest structural gap: **`reg_mockdata` does not exist yet.** Its code still
 lives in `mock_data_wizard/`, reg_meta-coupled and on the legacy `mock_data_stats.json`
@@ -50,37 +50,16 @@ step numbering.
 
 ## 6.5 — Deployment: containerize, Cloudflare, `global` up
 
-- **First task — cut a resolvable reg_meta release (#278):** `reg-meta update` matches
-  `reg_meta/v*` (plus legacy bare `v*`) tags and the assets `reg_meta.db.zst` /
-  `reg_meta_docs.db.zst` (`download.py` / `doc_db.py`); every existing release predates
-  the package rename and is tagged `regmeta/v*`, which never matches. The newest with a
-  DB asset (regmeta/v0.8.0) carries a single `regmeta.db.zst` at schema 3.0.0 (current
-  code requires 5.2.0), and no docs asset resolvable by current code was ever published
-  (the legacy `regmeta_docs.db.zst` on v0.6.3–v0.6.4 matches neither the tag prefix nor
-  the asset name). Publish a fresh `reg_meta/v*` release with both assets from a
-  post-#210 real-data `build-db --validate` before writing the Dockerfile; verify
-  `reg-meta update` resolves and installs it end-to-end.
-- `reg_webapp` Dockerfile runs `reg-meta update` at image-build time to bake the
-  matching reg_meta release's DB into an image layer.
-- **Origin platform (decided 2026-06-11): Fly.io** — app `reg-webapp-global`, one
-  always-on `shared-cpu-1x`/1GB machine in `arn`, live at `reg-webapp-global.fly.dev`
-  (`/api/context` + ETag/304 verified). Rationale, topology, and the Cloudflare-zone
-  setup gotchas live in `reg_webapp/DESIGN.md` → "Deployment"; `container-build.yml`
-  pushes to `registry.fly.io` + deploys on image-affecting main pushes. Remaining for
-  6.5: the Cloudflare zone itself (domain + DNS), then the #220 gate below.
-- Cloudflare in front: edge caching with the ETag scheme (origin
-  ETag/`Cache-Control`/rate-limit machinery already ships — see `reg_webapp/DESIGN.md`),
-  per-IP rate limits, DDoS shielding.
-- **Edge-cache validation gate (#220):** run a small load through Cloudflare to confirm
-  slash-bearing FQID paths round-trip cleanly through the edge cache before publishing
-  the OpenAPI. The 3-segment binding FQID is edge-cache-friendly; if the edge mangles
-  it, fall back to a query-string form *before* the OpenAPI is committed.
-- **Provenance-DB confinement (#224):** the deployment image build excludes
-  `reg_meta.provenance.db*` (the maintainer-only debug sibling) from the catalog volume
-  mount. The bundle-side and route-side confinement assertions already ship; this is the
-  third, deployment-side assertion.
-- `global` deployment goes live serving `/api/catalog`, `/api/context`, and the SPA — no
-  authoring UI cutover yet.
+**Shipped 2026-06-11.** `global` is live at `catalog.swecov.se`: Fly.io origin
+(`reg-webapp-global`, image bakes the reg_meta/v0.9.0 release DB pair) behind the
+Cloudflare zone (SPA via the edge worker, `/api/*` passthrough with edge caching and a
+WAF rate limit) — no authoring UI cutover yet (that is step 7). The **#220 edge-cache
+gate passed**: slash-bearing FQID paths round-trip the edge cache byte-identical with
+per-URL entries and edge-served 304s, so the path-based FQID surface stands in the
+OpenAPI (no query-string fallback). The #224 deployment-side provenance assertion and
+the per-deploy smoke gate ship in the image; #278's resolvable `reg_meta/v*` release cut
+2026-06-10. As-built topology, rationale, and operational notes: `reg_webapp/DESIGN.md`
+→ "Deployment".
 
 ## 7 — Webapp authoring hard-cut
 
@@ -483,8 +462,6 @@ Carried from the testing strategy; the shipped categories are in
 
 - **Kit reproducibility** — same spec + codes + stats → identical kit zip (deterministic
   ordering, no embedded timestamps). Ships with `/api/kit` (#217).
-- **Per-deploy smoke tests** — golden `/api/context` + shallow `/api/catalog` walk on
-  every container start; a failure halts the deploy (ships with 6.5).
 - **Performance gate** — wire the 200-column fixture into a load-test harness measuring
   the p95 budgets (see ARCHITECTURE.md → Repo-wide invariants) and failing CI on
   regression.
@@ -509,10 +486,11 @@ Carried from the testing strategy; the shipped categories are in
   #209.
 - **LISA composite-source presentation** — the lineage data + endpoints ship; the UX
   treatment (tooltip vs "see also" panel) is a webapp authoring-UI decision.
-- **Container-build CI trigger** — the frontend/Python `paths-filter` split already
-  ships in `ci.yml` (gating the lint/test jobs), but there is no Dockerfile or
-  container-build job yet (step 6.5); what path changes should trigger the webapp
-  container build vs the Python package CI is still undecided.
+- **Container-build CI trigger** — the container-build + deploy job ships
+  (`container-build.yml`: PR-gating build, main-push deploy), but its path-trigger set
+  is a recorded PROPOSAL in that workflow's header awaiting maintainer confirmation —
+  notably whether baked workspace deps (reg_schema/reg_monabundle) should also trigger a
+  rebuild or stay manual-dispatch-only.
 - **Sub-annual-coding providers (#271)** — before onboarding any provider whose *coding*
   changes within a year (FK/FHM/SKV event data, SCB monthly income, SOS half-year),
   build the interval-native co-delivery resolver first, in the provider-blind core. #271
@@ -527,12 +505,12 @@ Carried from the testing strategy; the shipped categories are in
 
 Open issues seeded from or feeding this plan: #206 (steward admission keying — the
 kit-contract facet is decided on #217 at step-8 kickoff), #209 (v1 slug freeze), #217
-(kit-build), #220 (Cloudflare edge-cache gate), #224 (provenance-DB deployment
-confinement), #240 (MSSQL integration test — pre-10a gate), #196 + #197
+(kit-build), #240 (MSSQL integration test — pre-10a gate), #196 + #197
 (identity-churning curation — pre-freeze), #200 + #266 (authoring-UX ride-alongs for the
-7.5 dogfood), #211 (LOVA/LVM curation — freeze-safe, batch with step 11), and #278 (cut
-a resolvable reg_meta release — first task of 6.5). Deferred beyond v1 but recorded so
-pointers resolve: #212 (materializer-owned value tables) and #271 (interval-native
-resolver). Resolved since this spec was seeded: #210 (SOS classification path, closed
-via PRs #273/#274), #208 (closed with the classification-slug surface, not the keyspace
-question), #227 (wire `fqid_outside_steward_catalog`), and #228 (reserved suffix slugs).
+7.5 dogfood), and #211 (LOVA/LVM curation — freeze-safe, batch with step 11). Deferred
+beyond v1 but recorded so pointers resolve: #212 (materializer-owned value tables) and
+#271 (interval-native resolver). Resolved since this spec was seeded: #220 + #224 + #278
+(the 6.5 deployment set, closed when 6.5 shipped 2026-06-11), #210 (SOS classification
+path, closed via PRs #273/#274), #208 (closed with the classification-slug surface, not
+the keyspace question), #227 (wire `fqid_outside_steward_catalog`), and #228 (reserved
+suffix slugs).

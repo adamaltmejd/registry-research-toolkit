@@ -378,8 +378,16 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with
   `Cache-Control: public` — without the rule every read is `cf-cache-status: DYNAMIC`),
-  and the free plan's one WAF rate-limiting rule on `/api/*`. #220's FQID edge-cache
-  validation runs against the Cache Rule.
+  and the free plan's one WAF rate-limiting rule (path-only match — free-tier rate
+  limiting can't match hostname; 100 req/10s/IP → block, burst-verified to 429).
+- **#220 gate: PASSED (2026-06-11)** — 20 slash-bearing FQID paths (3-segment bindings,
+  `/states` suffixes, `/variants`) round-trip the edge cache byte-identical to origin,
+  MISS→HIT per URL, ETag→body mapping consistent, and conditional GETs answer 304 from
+  the edge (`CF-Cache-Status: HIT`, no origin traffic). The path-based FQID surface
+  stands; no query-string fallback needed before publishing the OpenAPI.
+- **Known quirk**: pre-existing zone bot protection 403s non-browser User-Agents (e.g.
+  Python's default `urllib` UA) on every path including `/api/*`; the SPA is unaffected,
+  but programmatic API consumers must send a real User-Agent header.
 
 ## Frontend unit tests (Vitest)
 
