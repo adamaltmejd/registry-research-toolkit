@@ -356,15 +356,17 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 - **Deploys**: one workflow (`container-build.yml`) owns both deploy surfaces, scoped by
   a `changes` paths-filter job. Image-affecting main pushes (Dockerfile COPY surfaces +
   bake inputs — NOT baked deps reg_schema/reg_monabundle, which need a manual
-  `workflow_dispatch`; recorded open decision in the workflow header) build, push to
+  `workflow_dispatch` — decided 2026-06-11: that is the rule, not a gap) build, push to
   `registry.fly.io` (SHA-tagged), and `flyctl deploy --image`. The bake build-arg is the
   RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` makes the bake
   layer's buildx cache key insensitive to data-only releases and can even resurrect a
-  stale cached layer after a pinned dispatch). Both deploy jobs carry a HEAD-of-main
-  guard (GHA concurrency serializes by build-completion order, not commit order —
-  without the guard an older commit's slow build could overwrite a newer deploy; it also
-  makes non-main dispatches deploy-inert). Two gates guard a bad image: the entrypoint
-  smoke gate (container exits non-zero before ever serving) and fly.toml's
+  stale cached layer after a pinned dispatch). Nothing deploys without green CI: a
+  `wait-ci` job polls this commit's ci.yml run and both deploy jobs require its success
+  — an image that builds but fails lint/ty/pytest never ships. Both deploy jobs carry a
+  HEAD-of-main guard (GHA concurrency serializes by build-completion order, not commit
+  order — without the guard an older commit's slow build could overwrite a newer deploy;
+  it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
+  entrypoint smoke gate (container exits non-zero before ever serving) and fly.toml's
   `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
   `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
   seconds.
