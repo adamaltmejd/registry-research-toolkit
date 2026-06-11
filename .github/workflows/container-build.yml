@@ -172,7 +172,7 @@ jobs:
             echo "::notice::skipping deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
             echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: superfly/flyctl-actions/setup-flyctl@v1.5
+      - uses: superfly/flyctl-actions/setup-flyctl@1.6
         if: steps.head.outputs.skip != 'true'
       # Two gates guard a bad image: the container entrypoint runs the smoke
       # gate before uvicorn serves (a bad image exits non-zero), and fly.toml's
