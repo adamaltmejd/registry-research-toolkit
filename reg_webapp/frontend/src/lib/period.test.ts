@@ -3,6 +3,7 @@ import {
   looksLikePeriod,
   nextResolutionQuery,
   periodFieldFromQuery,
+  periodFromTokenText,
   periodFromWire,
   periodQueryFromField,
   periodRangeEndpoints,
@@ -34,6 +35,22 @@ describe("periodToWire (Source.period → ?period wire string)", () => {
   it("null / a partial {from-only} object → null (defensive fallthrough)", () => {
     expect(periodToWire(null as never)).toBeNull();
     expect(periodToWire({ from: 2018 } as never)).toBeNull();
+  });
+
+  it("a #307 segment list → comma-joined member wires", () => {
+    expect(
+      periodToWire([
+        { from: 2005, to: 2010 },
+        { from: 2015, to: 2020 },
+      ]),
+    ).toBe("2005..2010,2015..2020");
+    expect(periodToWire([2018, "HT2020"])).toBe("2018,HT2020");
+  });
+
+  it("a list with a malformed/blank member (or empty list) → null", () => {
+    expect(periodToWire([])).toBeNull();
+    expect(periodToWire([2018, ""])).toBeNull();
+    expect(periodToWire([{ from: "", to: 2020 }])).toBeNull();
   });
 });
 
@@ -90,6 +107,45 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
     expect(periodToWire(periodFromWire("1992..2009-06-30"))).toBe(
       "1992..2009-06-30",
     );
+  });
+
+  it("a comma wire → the #307 segment list, members shaped like scalars", () => {
+    expect(periodFromWire("2005..2010,2015..2020")).toEqual([
+      { from: 2005, to: 2010 },
+      { from: 2015, to: 2020 },
+    ]);
+    expect(periodFromWire("2018,HT2020")).toEqual([2018, "HT2020"]);
+  });
+
+  it("a malformed comma wire (blank member) stays the raw string", () => {
+    expect(periodFromWire("2018,")).toBe("2018,");
+    expect(periodFromWire(",2018")).toBe(",2018");
+  });
+
+  it("round-trips a list wire through periodToWire", () => {
+    expect(periodToWire(periodFromWire("2005..2010,2015..2020"))).toBe(
+      "2005..2010,2015..2020",
+    );
+  });
+});
+
+describe("periodFromTokenText (PeriodEditor token-mode emit shaping)", () => {
+  it("plain text stays the raw trimmed string (pre-#307 token behavior)", () => {
+    expect(periodFromTokenText("  2018  ")).toBe("2018");
+    expect(periodFromTokenText("HT2020")).toBe("HT2020");
+    expect(periodFromTokenText("2010..2020")).toBe("2010..2020");
+    expect(periodFromTokenText("junk")).toBe("junk");
+  });
+
+  it("comma text becomes the #307 segment list", () => {
+    expect(periodFromTokenText("2005..2010, 2015..2020")).toEqual([
+      { from: 2005, to: 2010 },
+      { from: 2015, to: 2020 },
+    ]);
+  });
+
+  it("malformed comma text (blank member) rides through as the raw string", () => {
+    expect(periodFromTokenText("2018,")).toBe("2018,");
   });
 });
 
@@ -166,6 +222,8 @@ describe("looksLikePeriod (advisory period grammar)", () => {
     "2020-Q1..2020-Q4",
     "_default",
     "  2020  ", // tolerates surrounding whitespace
+    "2005..2010,2015..2020", // #307 interrupted-series list wire
+    "2018, HT2020", // list members tolerate surrounding whitespace
   ];
   for (const value of accepted) {
     it(`accepts ${JSON.stringify(value)}`, () => {
@@ -192,6 +250,9 @@ describe("looksLikePeriod (advisory period grammar)", () => {
     "2019-02-29", // calendar-impossible: 2019 is NOT a leap year
     "2018-02-30", // February never has 30 days
     "2021-04-31", // April has 30 days
+    "2018,", // list with a blank member
+    "2018,_default", // `_default` is not a list segment
+    "2018,abc", // list with a junk member
   ];
   for (const value of rejected) {
     it(`rejects ${JSON.stringify(value)}`, () => {

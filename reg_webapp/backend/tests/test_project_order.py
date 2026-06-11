@@ -106,6 +106,18 @@ def test_range_period_serializes_with_double_dot(client):
     assert rows[1][5] == "2018..2020"
 
 
+def test_list_period_serializes_comma_joined(client):
+    # #307: the interrupted-series wire grammar is comma-joined member wires.
+    # The order goes through the full validate-then-render endpoint, so this
+    # also pins that a list-period spec passes the structural gate end-to-end.
+    resp = client.post(
+        "/api/project/order",
+        json=_spec(period=[{"from": 2018, "to": 2019}, {"from": 2021, "to": 2022}]),
+    )
+    rows = _rows(resp.text)
+    assert rows[1][5] == "2018..2019,2021..2022"
+
+
 def test_default_sentinel_period_serializes_literally(client):
     resp = client.post("/api/project/order", json=_spec(period="_default"))
     rows = _rows(resp.text)

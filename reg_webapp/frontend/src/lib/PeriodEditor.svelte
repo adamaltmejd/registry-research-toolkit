@@ -8,7 +8,7 @@ let _instanceSeq = 0;
 <script lang="ts">
 import { untrack } from "svelte";
 import FieldIssues from "./FieldIssues.svelte";
-import { looksLikePeriod } from "./period";
+import { looksLikePeriod, periodFromTokenText, periodToWire } from "./period";
 import type { Period } from "./project_data";
 import type { ValidationIssue } from "./validation";
 
@@ -49,6 +49,11 @@ function inferMode(value: Period): Mode {
     // non-empty token string opens in Token mode.
     return value === "" ? "years" : "token";
   }
+  if (Array.isArray(value)) {
+    // The #307 interrupted-series list edits as comma-joined Token text —
+    // the MINIMAL affordance; the dedicated picker mode is #308 (Lane A).
+    return "token";
+  }
   if (
     value != null &&
     typeof value === "object" &&
@@ -59,7 +64,8 @@ function inferMode(value: Period): Mode {
   ) {
     return "years";
   }
-  // Malformed (boolean / array / token-range object): show it as raw text.
+  // Malformed (boolean / unexpected object) or a token-range object: show it
+  // as raw text.
   return "token";
 }
 
@@ -75,6 +81,7 @@ function initialYears(value: Period): { from: string; to: string } {
   if (
     value != null &&
     typeof value === "object" &&
+    !Array.isArray(value) &&
     typeof value.from === "number" &&
     typeof value.to === "number"
   ) {
@@ -83,14 +90,19 @@ function initialYears(value: Period): { from: string; to: string } {
   return { from: "", to: "" };
 }
 
-// The token field's seed: the raw string when it's a token, the `from..to`
-// wire text for a {from,to} range (a TOKEN-endpoint range opens in Token mode —
-// see inferMode — and must DISPLAY, not render a blank field; the #306
-// succession auto-split routinely writes such ranges), blank for a
-// numeric/default value, or the JSON of a malformed (non-string) value.
+// The token field's seed: the raw string when it's a token, the comma-joined
+// wire text for a #307 segment list (so an interrupted series is visible and
+// editable, not silently blanked), the `from..to` wire text for a {from,to}
+// range (a TOKEN-endpoint range opens in Token mode — see inferMode — and must
+// DISPLAY, not render a blank field; the #306 succession auto-split routinely
+// writes such ranges), blank for a numeric/default value, or the JSON of a
+// malformed (non-string) value.
 function seedTokenText(value: Period): string {
   if (typeof value === "string" && value !== "_default") {
     return value;
+  }
+  if (Array.isArray(value)) {
+    return periodToWire(value) ?? JSON.stringify(value);
   }
   if (
     value != null &&
@@ -161,7 +173,8 @@ function onModeChange(next: Mode): void {
   } else if (next === "years") {
     emitYears();
   } else {
-    onchange(tokenText.trim());
+    // Comma text emits the #307 segment LIST; plain text stays the raw string.
+    onchange(periodFromTokenText(tokenText));
   }
 }
 </script>
@@ -246,7 +259,7 @@ function onModeChange(next: Mode): void {
         placeholder="YYYYMM, HT2018, 2010..2020…"
         oninput={(e) => {
           tokenText = e.currentTarget.value;
-          onchange(tokenText.trim());
+          onchange(periodFromTokenText(tokenText));
         }}
       />
       {#if tokenHint}

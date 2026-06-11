@@ -85,6 +85,50 @@ def test_validate_project_data_accepts_valid_spec():
     assert [s.name for s in pd.sources] == ["lisa_2018.csv"]
 
 
+def test_list_period_rides_through_gate_and_conversion():
+    # #307: a spec with the interrupted-series LIST period passes the build
+    # gate (reg_schema accepts + structurally enforces sorted/disjoint) and
+    # converts to a LoadedSpec. The runtime Source deliberately carries no
+    # `period` (authoring-side field — see runtime/spec.py), so "carry and
+    # apply" at the bundle layer means: the embedded JSON keeps the list
+    # verbatim and the conversion round-trip (model_dump → loadedspec_from_dict)
+    # must not choke on it.
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "lisa.csv",
+                "period": [{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}],
+                "bindings": [
+                    {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
+                ],
+            }
+        ]
+    )
+    pd = validate_project_data(payload)
+    assert isinstance(pd.sources[0].period, tuple)
+    spec = project_data_to_loadedspec(pd)
+    assert isinstance(spec, LoadedSpec)
+    assert spec.project_data.sources[0].name == "lisa.csv"
+
+
+def test_list_period_unsorted_is_rejected_at_gate():
+    # The structural sorted/disjoint rule gates amalgamation like any other
+    # structural error — an out-of-order series never reaches the bundle.
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "lisa.csv",
+                "period": [{"from": 2015, "to": 2020}, {"from": 2005, "to": 2010}],
+                "bindings": [
+                    {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
+                ],
+            }
+        ]
+    )
+    with pytest.raises(ValueError, match="structural validation"):
+        validate_project_data(payload)
+
+
 # -- reg_monabundle namespaced block --------------------------------------
 #
 # Per-rule validator coverage lives in

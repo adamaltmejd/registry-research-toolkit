@@ -110,4 +110,30 @@ describe("PeriodEditor", () => {
       .element(screen.getByRole("radio", { name: "Token" }))
       .toBeChecked();
   });
+
+  it("opens a #307 list period in Token mode showing the comma wire, and comma text emits the list", async () => {
+    // The MINIMAL interrupted-series affordance (#307): a list period must be
+    // VISIBLE and editable as comma-joined token text (not a silently blanked
+    // field), and comma text typed in Token mode must emit the segment LIST —
+    // the dedicated picker mode is #308.
+    const onchange = vi.fn<(next: Period) => void>();
+    const screen = await render(PeriodEditor, {
+      period: [
+        { from: 2005, to: 2010 },
+        { from: 2015, to: 2020 },
+      ],
+      issues: [],
+      onchange,
+    });
+
+    await expect
+      .element(screen.getByRole("radio", { name: "Token" }))
+      .toBeChecked();
+    await expect
+      .element(screen.getByRole("textbox"))
+      .toHaveValue("2005..2010,2015..2020");
+
+    await screen.getByRole("textbox").fill("2005..2010,2013");
+    expect(onchange).toHaveBeenLastCalledWith([{ from: 2005, to: 2010 }, 2013]);
+  });
 });

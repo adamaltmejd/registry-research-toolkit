@@ -1190,3 +1190,101 @@ def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalo
     assert "'Kon'" in issue.message
     assert "fqid_outside_steward_catalog" not in by_code
     assert result.ok
+
+
+# ── #307: the period LIST form (interrupted series) ──────────────────────────
+# Structural validation guarantees the list is non-empty, sorted, and disjoint
+# before this layer runs; semantic resolution is PER SEGMENT
+# (`period_outside_state_validity` / `range_period_partially_covered` name the
+# segment) while the representation/ambiguity/drift checks run on the
+# `state_id`-deduped union of every segment's states.
+
+
+def test_list_period_clean_resolves_without_issues(catalog):
+    # Both segments inside kon's single 2018+ state → no issues at all (the
+    # state intersecting both segments counts ONCE — no phantom drift info).
+    result = validate_semantic(
+        _project([_kon_source([2018, {"from": 2019, "to": 2020}])]),
+        catalog,
+        caller="researcher",
+    )
+    assert result.issues == ()
+    assert result.ok
+
+
+def test_list_period_uncovered_segment_errors_per_segment(catalog):
+    # kon's state starts 2018: the 2010..2012 segment has NO covering state →
+    # one error naming that segment; the covered 2018 segment contributes none.
+    result = validate_semantic(
+        _project([_kon_source([{"from": 2010, "to": 2012}, 2018])]),
+        catalog,
+        caller="researcher",
+    )
+    outside = [i for i in result.issues if i.code == "period_outside_state_validity"]
+    assert len(outside) == 1
+    assert "2010..2012" in outside[0].message
+    assert "segment of 2010..2012,2018" in outside[0].message
+    assert not result.ok
+
+
+def test_list_period_two_uncovered_segments_error_each(catalog):
+    # Every uncovered segment gets its own error (per-segment feedback).
+    result = validate_semantic(
+        _project([_kon_source([2015, 2016, 2018])]),
+        catalog,
+        caller="researcher",
+    )
+    outside = [i for i in result.issues if i.code == "period_outside_state_validity"]
+    assert len(outside) == 2
+    assert any("2015" in i.message for i in outside)
+    assert any("2016" in i.message for i in outside)
+
+
+def test_list_period_partial_coverage_names_the_segment(catalog):
+    # kon starts 2018: the 2017..2019 segment is PARTIALLY covered (2017 gap);
+    # the 2021..2022 segment is fully covered. One info, naming the under-
+    # covered segment, with the whole-series context appended.
+    result = validate_semantic(
+        _project(
+            [_kon_source([{"from": 2017, "to": 2019}, {"from": 2021, "to": 2022}])]
+        ),
+        catalog,
+        caller="researcher",
+    )
+    partial = [i for i in result.issues if i.code == "range_period_partially_covered"]
+    assert len(partial) == 1
+    assert "2017..2019" in partial[0].message
+    assert "2017-01-01..2017-12-31" in partial[0].message
+    assert "segment of 2017..2019,2021..2022" in partial[0].message
+    assert result.ok
+
+
+def test_list_period_segments_on_distinct_states_report_drift(internal_gap_catalog):
+    # The gap fixture delivers kon in TWO windows (2010-2012, 2016+). A list
+    # period with one segment in each window unions TWO distinct states →
+    # the sequential-drift info fires (and the union is what admission sees).
+    result = validate_semantic(
+        _project(
+            [_kon_source([{"from": 2010, "to": 2012}, {"from": 2016, "to": 2018}])]
+        ),
+        internal_gap_catalog,
+        caller="researcher",
+    )
+    drift = [i for i in result.issues if i.code == "binding_state_drifts_within_period"]
+    assert len(drift) == 1
+    assert "spans 2 states" in drift[0].message
+    assert result.ok
+
+
+def test_list_period_steward_index_resolves_columns(catalog):
+    # A steward catalog may itself use the list form: the kept binding's
+    # columns resolve per segment and union into the (FQID, column) pairs.
+    project = _project([_kon_source([2018, {"from": 2019, "to": 2020}])])
+    result = validate_semantic(project, catalog, caller="steward")
+    assert result.ok and result.issues == ()
+    index = build_catalog_index(project, result.issues, catalog)
+    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
+        {("scb/lisa/kon", "Kon")}
+    )
+    # The best-effort register span hints off the FIRST (lowest) segment.
+    assert index.period_range_by_register["scb/lisa"] == ("2018", "2018")

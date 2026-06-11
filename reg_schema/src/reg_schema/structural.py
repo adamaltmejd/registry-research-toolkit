@@ -349,8 +349,152 @@ def _is_period_range_obj(value: object) -> bool:
     )
 
 
+# Bounds expansion for the LIST-form ordering/overlap rule (#307). Mirrors
+# ``reg_meta.fqid.period_token_to_bounds`` + its int-year arm — reg_schema can't
+# import reg_meta (one-way dep + MONA amalgamation; see DESIGN.md), so like the
+# token regex above this is a deliberate duplicate kept in lockstep by the
+# cross-grammar parity test (reg_webapp/backend/tests/test_period_grammar_parity.py).
+# February's synthesized upper bound is 29 regardless of leap year — the same
+# intentional over-count as reg_meta (harmless for the lexical interval
+# comparison this layer does; both sides agree on the convention).
+_QUARTER_MONTHS = {"1": ("01", "03"), "2": ("04", "06"), "3": ("07", "09"), "4": ("10", "12")}  # fmt: skip
+_HALF_MONTHS = {"1": ("01", "06"), "2": ("07", "12")}
+_MONTH_LAST_DAY = {
+    "01": "31", "02": "29", "03": "31", "04": "30", "05": "31", "06": "30",
+    "07": "31", "08": "31", "09": "30", "10": "31", "11": "30", "12": "31",
+}  # fmt: skip
+
+
+def _endpoint_bounds(value: int | str) -> tuple[str, str]:
+    """Inclusive ISO ``(lo, hi)`` for a VALID period endpoint (int year or
+    token). Callers guarantee ``_is_period_endpoint(value)`` already passed."""
+    if _is_int_literal(value):
+        return f"{value:04d}-01-01", f"{value:04d}-12-31"
+    token = str(value)
+    if token[:2] in ("HT", "VT"):
+        year = token[2:]
+        lo_m, hi_m = ("07", "12") if token[0] == "H" else ("01", "06")
+        return f"{year}-{lo_m}-01", f"{year}-{hi_m}-{_MONTH_LAST_DAY[hi_m]}"
+    if "-Q" in token:
+        year, q = token.split("-Q")
+        lo_m, hi_m = _QUARTER_MONTHS[q]
+        return f"{year}-{lo_m}-01", f"{year}-{hi_m}-{_MONTH_LAST_DAY[hi_m]}"
+    if "-H" in token:
+        year, h = token.split("-H")
+        lo_m, hi_m = _HALF_MONTHS[h]
+        return f"{year}-{lo_m}-01", f"{year}-{hi_m}-{_MONTH_LAST_DAY[hi_m]}"
+    parts = token.split("-")
+    if len(parts) == 1:  # YYYY
+        return f"{parts[0]}-01-01", f"{parts[0]}-12-31"
+    if len(parts) == 2:  # YYYY-MM
+        return f"{token}-01", f"{token}-{_MONTH_LAST_DAY[parts[1]]}"
+    return token, token  # YYYY-MM-DD single day
+
+
+def _segment_bounds(segment: object) -> tuple[str, str]:
+    """Inclusive ISO ``(lo, hi)`` for a VALID period segment (endpoint or
+    ``{"from","to"}`` range object)."""
+    if isinstance(segment, Mapping):
+        lo, _ = _endpoint_bounds(segment["from"])
+        _, hi = _endpoint_bounds(segment["to"])
+        return lo, hi
+    return _endpoint_bounds(segment)  # type: ignore[arg-type]
+
+
+def _check_period_list(
+    period: list[object], path: str, issues: list[ValidationIssue]
+) -> None:
+    """Validate the LIST form of ``Source.period`` (#307 — interrupted series).
+
+    Fail-fast rules (each violation is its own ``invalid_period``):
+
+    - non-empty;
+    - every member is a period SEGMENT — an int year, a period token, or a
+      ``{"from","to"}`` range. ``"_default"`` (whole-history makes no sense as
+      one piece of a series) and nested lists are not segments;
+    - members are SORTED ascending by their lower bound and NON-OVERLAPPING
+      (each member's upper bound lexically below the next member's lower
+      bound). Adjacent segments (``2005..2010, 2011..2015``) are allowed — the
+      list expresses interruption, but contiguity is harmless and rejecting it
+      would need calendar adjacency math for no safety gain. Sorted-and-disjoint
+      keeps the wire form canonical and downstream per-segment resolution
+      deterministic.
+
+    Bounds use the synthesized-Feb-29 convention shared with reg_meta (see
+    ``_MONTH_LAST_DAY``), so the lexical comparisons here agree with reg_meta's
+    interval overlap verdicts.
+    """
+    if not period:
+        issues.append(
+            _error(
+                "invalid_period",
+                path,
+                "period list must be non-empty (a list period is an interrupted "
+                "series of segments)",
+            )
+        )
+        return
+    members_ok = True
+    for i, member in enumerate(period):
+        if _is_period_endpoint(member) or _is_period_range_obj(member):
+            continue
+        members_ok = False
+        issues.append(
+            _error(
+                "invalid_period",
+                f"{path}/{i}",
+                "period list member must be an int year, a period-token string, "
+                "or a {'from','to'} range object ('_default' and nested lists "
+                "are not segments)",
+            )
+        )
+    if not members_ok:
+        # Ordering/overlap math needs valid members; the per-member issues
+        # above already fail the document.
+        return
+    bounds = [_segment_bounds(member) for member in period]
+    for i, (lo, hi) in enumerate(bounds):
+        # An inverted member range (from > to) would poison the sorted/overlap
+        # comparisons below; reject it here. (A SCALAR inverted range is a
+        # pre-existing semantic-layer concern — reg_meta's resolve_at rejects
+        # it with a usage error — but the list rules need sound intervals.)
+        if lo > hi:
+            issues.append(
+                _error(
+                    "invalid_period",
+                    f"{path}/{i}",
+                    f"period list member {i} is an inverted range "
+                    f"(starts {lo}, ends {hi})",
+                )
+            )
+            members_ok = False
+    if not members_ok:
+        return
+    for i in range(1, len(bounds)):
+        prev_lo, prev_hi = bounds[i - 1]
+        lo, hi = bounds[i]
+        if lo < prev_lo:
+            issues.append(
+                _error(
+                    "invalid_period",
+                    f"{path}/{i}",
+                    f"period list members must be sorted ascending: member {i} "
+                    f"starts {lo}, before member {i - 1} ({prev_lo})",
+                )
+            )
+        elif lo <= prev_hi:
+            issues.append(
+                _error(
+                    "invalid_period",
+                    f"{path}/{i}",
+                    f"period list members must not overlap: member {i} starts "
+                    f"{lo}, inside member {i - 1} (ends {prev_hi})",
+                )
+            )
+
+
 def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> None:
-    """Validate ``Source.period``: int / period-token / range / sentinel."""
+    """Validate ``Source.period``: int / period-token / range / sentinel / list."""
     path = f"{base}/period"
     if _is_period_endpoint(period) or period == "_default":
         return
@@ -377,12 +521,15 @@ def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> N
             )
         )
         return
+    if isinstance(period, list):
+        _check_period_list(period, path, issues)
+        return
     issues.append(
         _error(
             "invalid_period",
             path,
-            "period must be an int, a period-token string, or a {'from','to'} "
-            "range object",
+            "period must be an int, a period-token string, a {'from','to'} "
+            "range object, or a list of those segment forms",
         )
     )
 

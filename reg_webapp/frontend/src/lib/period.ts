@@ -12,7 +12,7 @@
  * server's 422 detail is the authority).
  */
 
-import type { Period } from "./project_data";
+import type { Period, PeriodSegment } from "./project_data";
 
 /** The narrowing modifiers carried in the URL query alongside `?period`. */
 export interface ResolutionParams {
@@ -95,13 +95,30 @@ function isPeriodToken(value: string): boolean {
 }
 
 const RANGE_SEP = "..";
+const LIST_SEP = ",";
 const DEFAULT_SENTINEL = "_default";
 
+/** One period SEGMENT looks valid: a single token or a `<token>..<token>`
+ * range. `_default` is NOT a segment (it is the whole-history sentinel, only
+ * legal at the top level — mirrors the backend's list-member rule). */
+function looksLikeSegment(value: string): boolean {
+  if (value.includes(RANGE_SEP)) {
+    const parts = value.split(RANGE_SEP);
+    // Exactly one separator → two endpoints; each must be a single token
+    // (a range of `_default` / nested ranges is not grammar).
+    return parts.length === 2 && parts.every((p) => isPeriodToken(p));
+  }
+  return isPeriodToken(value);
+}
+
 /** ADVISORY: does `raw` look like a period (a single token, a
- * `<token>..<token>` range, or the `_default` snapshot sentinel)? Leading/
- * trailing whitespace is tolerated (the picker trims before sending). Returns
- * `false` for junk so the picker can show an inline "doesn't look like a period"
- * hint — but the caller MUST still allow submit (the server is canonical). */
+ * `<token>..<token>` range, the `_default` snapshot sentinel, or a
+ * comma-joined LIST of segments — the #307 interrupted-series wire form,
+ * e.g. `2005..2010,2015..2020`)? Leading/trailing whitespace is tolerated
+ * (the picker trims before sending). Returns `false` for junk so the picker
+ * can show an inline "doesn't look like a period" hint — but the caller MUST
+ * still allow submit (the server is canonical; it also owns the
+ * sorted/non-overlap list rules this hint doesn't check). */
 export function looksLikePeriod(raw: string): boolean {
   const value = raw.trim();
   if (value === "") {
@@ -110,13 +127,12 @@ export function looksLikePeriod(raw: string): boolean {
   if (value === DEFAULT_SENTINEL) {
     return true;
   }
-  if (value.includes(RANGE_SEP)) {
-    const parts = value.split(RANGE_SEP);
-    // Exactly one separator → two endpoints; each must be a single token
-    // (a range of `_default` / nested ranges is not grammar).
-    return parts.length === 2 && parts.every((p) => isPeriodToken(p));
+  if (value.includes(LIST_SEP)) {
+    return value
+      .split(LIST_SEP)
+      .every((member) => looksLikeSegment(member.trim()));
   }
-  return isPeriodToken(value);
+  return looksLikeSegment(value);
 }
 
 // ── Token bounds (advisory mirror of `reg_meta.fqid` interval semantics) ────
@@ -199,12 +215,26 @@ export function periodRangeEndpoints(wire: string): [string, string] | null {
 }
 
 /** Convert a structured `Source.period` (int | token-string | {from,to} |
- * "_default") into the wire `?period` string the catalog resolve takes (a bare
- * year, a `from..to` range, a token, or `_default`). Returns `null` when the
- * period can't form a resolvable query (blank / malformed) — the picker then
- * can't derive-on-pick and shows its "set the period" hint. ADVISORY shaping
- * only; the backend is the canonical period validator. */
+ * "_default" | segment list) into the wire `?period` string (a bare year, a
+ * `from..to` range, a token, `_default`, or — for the #307 list form — the
+ * comma-joined member wires, `2005..2010,2015..2020`). Returns `null` when the
+ * period can't form a resolvable query (blank / malformed / a list with a
+ * malformed member) — the picker then can't derive-on-pick and shows its "set
+ * the period" hint. NOTE: the catalog `?period=` endpoint does not accept the
+ * comma form yet (project-schema support came first) — a list wire submitted
+ * there gets the server's 422, the same authority as any other malformed
+ * query. ADVISORY shaping only; the backend is the canonical period
+ * validator. */
 export function periodToWire(period: Period): string | null {
+  if (Array.isArray(period)) {
+    if (period.length === 0) {
+      return null;
+    }
+    const members = period.map((segment) => periodToWire(segment));
+    return members.some((m) => m === null || m.includes(LIST_SEP))
+      ? null
+      : members.join(LIST_SEP);
+  }
   if (typeof period === "number") {
     return String(period);
   }
@@ -238,6 +268,9 @@ export function periodToWire(period: Period): string | null {
  *     single-token-only, so a raw `"a..b"` string period would fail
  *     `invalid_period` (bit the #306 succession auto-split, whose clipped
  *     segments routinely carry date/token endpoints);
+ *   - a comma-joined LIST wire (`"2005..2010,2015..2020"`, the #307
+ *     interrupted-series form) → an array of segments, each member shaped by
+ *     the same scalar rules (a blank member rides through as the raw string);
  *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`), a `_default`
  *     sentinel, or a malformed multi-`..` string — rides through as the raw
  *     string (token mode), which is exactly how PeriodEditor would model it.
@@ -249,12 +282,30 @@ export function periodFromWire(wire: string | null): Period {
   if (value === "") {
     return "";
   }
+  if (value.includes(LIST_SEP)) {
+    // #307 list wire (`2005..2010,2015..2020`) → a segment array, each member
+    // shaped like a scalar wire. A blank member means malformed list text —
+    // ride through as the raw string (the server's invalid_period is the
+    // authority, exactly like any other junk token).
+    const members = value.split(LIST_SEP).map((m) => m.trim());
+    if (members.some((m) => m === "")) {
+      return value;
+    }
+    return members.map((m) => segmentFromWire(m));
+  }
+  return segmentFromWire(value);
+}
+
+/** One scalar wire member → its structured segment shape (the pre-#307
+ * `periodFromWire` body). */
+function segmentFromWire(value: string): PeriodSegment {
   if (value.includes(RANGE_SEP)) {
     const parts = value.split(RANGE_SEP);
     if (parts.length === 2) {
       // ALWAYS the {from, to} object for a 2-endpoint range: int-year endpoints
       // where they parse, token strings otherwise. Never the raw "a..b" string —
-      // that's not a valid Source.period (see the docstring).
+      // reg_schema's string arm is single-token-only, so a raw range string
+      // (scalar OR #307 list member) would fail `invalid_period`.
       return {
         from: yearInt(parts[0]) ?? parts[0].trim(),
         to: yearInt(parts[1]) ?? parts[1].trim(),
@@ -265,6 +316,20 @@ export function periodFromWire(wire: string | null): Period {
   const year = yearInt(value);
   // A bare integer year → the single-year `number` arm (from=to in the editor).
   return year !== null ? year : value;
+}
+
+/** Token-mode text → `Source.period` (PeriodEditor's emit shaping). Plain
+ * text stays the raw trimmed string (current token-mode behavior; the server
+ * validates it), but comma text becomes the #307 segment LIST via
+ * `periodFromWire` — the minimal interrupted-series authoring affordance
+ * until the picker grows its dedicated mode (#308). Malformed list text (a
+ * blank member) rides through as the raw string for the server to flag. */
+export function periodFromTokenText(raw: string): Period {
+  const value = raw.trim();
+  if (!value.includes(LIST_SEP)) {
+    return value;
+  }
+  return periodFromWire(value);
 }
 
 /** Parse a string as a bare integer year (no sign, round-trips), else null —
