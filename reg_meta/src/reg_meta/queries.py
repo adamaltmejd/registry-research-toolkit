@@ -10,12 +10,15 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Any
 
+from .catalog import Catalog
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import Fqid, try_emit
 
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Iterable
+
+    from .catalog import ConceptGroupSummary
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
@@ -244,6 +247,7 @@ def search(
     years: str | None = None,
     limit: int = 50,
     offset: int = 0,
+    fold_groups: bool = True,
 ) -> dict[str, Any]:
     """Search across registers and variables.
 
@@ -253,6 +257,15 @@ def search(
       - "description": FTS on variable/register descriptions
       - "value": value codes and labels (LIKE pattern match)
       - "all": all of the above (default)
+
+    fold_groups (#322): when hits land on ≥2 member variables of one concept
+    group (see DESIGN.md → Concept groups), the sibling hits collapse into a
+    single `type: "group"` result row (original hits under `matched`, the full
+    member list under `members`); a lone member hit stays a leaf row annotated
+    with `concept_group`/`concept_group_label`. Group LABELS match too — for
+    `field` in ("varname", "all"), a query matching a group's label/key emits
+    the group row even when no leaf row matches. Result-shaping only; folding
+    happens before pagination, so a group row counts as one result.
 
     Returns {"total_count": int, "results": [...]}.
     Doc results are NOT included here — the CLI layer merges them separately.
@@ -302,6 +315,27 @@ def search(
     if years:
         all_results = _filter_search_by_years(conn, all_results, years)
 
+    if fold_groups:
+        # Label hits ride the varname-ish surface (a group label is a concept
+        # name). A group has no validity window of its own, so --years applies
+        # through its MEMBERS: a variable-kind label hit needs at least one
+        # member state overlapping the range (member hits were already year-
+        # filtered above; this guards the label-only path). Classification
+        # groups are exempt — their members carry no delivery windows.
+        label_hits = (
+            _search_group_labels(
+                conn,
+                like_pattern,
+                reg_ids,
+                type=type,
+                year_range=parse_year_range(years) if years else None,
+            )
+            if field in ("varname", "all")
+            else []
+        )
+        all_results = _fold_concept_groups(conn, all_results, label_hits)
+    _strip_internal_keys(all_results)
+
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
     results = all_results[offset : offset + limit]
@@ -319,7 +353,7 @@ def _search_datacolumns(
     # straight to `variable` via `variable_id`; `var_id` is the variable's
     # `provider_key`.
     rows = conn.execute(
-        "SELECT DISTINCT va.delivery_column_name, v.register_id, "
+        "SELECT DISTINCT va.delivery_column_name, v.register_id, v.variable_id, "
         "CAST(v.provider_key AS INTEGER) AS var_id, "
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable_alias va "
@@ -342,6 +376,7 @@ def _search_datacolumns(
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
                 "fts_rank": 0,
+                "_variable_id": r["variable_id"],
             }
         )
     return results
@@ -351,7 +386,8 @@ def _search_varnames(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
+        "SELECT v.register_id, v.variable_id, "
+        "CAST(v.provider_key AS INTEGER) AS var_id, "
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
@@ -371,6 +407,7 @@ def _search_varnames(
                 "var_id": r["var_id"],
                 "variable_name": r["variable_name"],
                 "fts_rank": 0,
+                "_variable_id": r["variable_id"],
             }
         )
     return results
@@ -406,8 +443,12 @@ def _search_description_registers(
 def _search_description_variables(
     conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
+    # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
+    # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
+    # the variable_id — carried for concept-group folding (#322).
     rows = conn.execute(
-        "SELECT vf.register_id, CAST(vf.provider_key AS INTEGER) AS var_id, "
+        "SELECT vf.register_id, vf.rowid AS variable_id, "
+        "CAST(vf.provider_key AS INTEGER) AS var_id, "
         "vf.name AS variable_name, vf.definition AS variable_definition, "
         "vf.description AS variable_description, vf.rank, "
         "r.name AS register_name, r.purpose AS register_purpose "
@@ -431,6 +472,7 @@ def _search_description_variables(
                 "variable_name": r["variable_name"],
                 "variable_definition": r["variable_definition"],
                 "fts_rank": r["rank"],
+                "_variable_id": r["variable_id"],
             }
         )
     return results
@@ -453,7 +495,7 @@ def _search_values(
     # there is no variant fan-out to dedup.
     rows = conn.execute(
         "SELECT vc.code, vc.label, "
-        "v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
+        "v.register_id, v.variable_id, CAST(v.provider_key AS INTEGER) AS var_id, "
         "v.slug AS variable_slug, "
         "v.name AS variable_name, r.name AS register_name "
         "FROM value_code vc "
@@ -485,9 +527,313 @@ def _search_values(
                 "variable_slug": r["variable_slug"],
                 "variable_name": r["variable_name"],
                 "fts_rank": 0,
+                "_variable_id": r["variable_id"],
             }
         )
     return results
+
+
+# ---------------------------------------------------------------------------
+# Concept groups (#322/#325): search folding + the `get groups` listing.
+# Read-only over the 5.3.0 group tables; reuses the Catalog read surface
+# (`list_concept_groups` / `list_classification_groups`) for member lists so
+# the facet-aware member ordering stays in one place.
+# ---------------------------------------------------------------------------
+
+
+def _group_summary_to_dict(summary: ConceptGroupSummary) -> dict[str, Any]:
+    """JSON shape for one `ConceptGroupSummary` (see catalog.py): members keep
+    their leaf FQIDs — a group is a browse affordance, not an entity."""
+    return {
+        "key": summary.key,
+        "label": summary.label,
+        "source": summary.source,
+        "axes": list(summary.axes),
+        "member_count": len(summary.members),
+        "members": [
+            {
+                "fqid": str(m.fqid),
+                "name": m.name,
+                "facets": [
+                    {"axis": f.axis, "value": f.value, "label": f.label}
+                    for f in m.facets
+                ],
+            }
+            for m in summary.members
+        ],
+    }
+
+
+def get_concept_groups(conn: sqlite3.Connection, register: str) -> dict[str, Any]:
+    """Concept groups for a register (#325), keyed like the other `get`
+    commands (name or numeric ID). Reuses `Catalog.list_concept_groups` for
+    the group/member/facet shape. A register without a slug isn't catalog-
+    addressable and reports an empty group list (the build only derives
+    groups over slugged variables, so nothing is hidden)."""
+    reg_ids = require_register_ids(conn, register)
+    catalog = Catalog(conn)
+    registers_out: list[dict[str, Any]] = []
+    for rid in reg_ids:
+        row = conn.execute(
+            "SELECT r.register_id, r.name, r.slug AS register_slug, "
+            "p.slug AS provider_slug "
+            "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE r.register_id = ?",
+            (rid,),
+        ).fetchone()
+        register_fqid = None
+        groups: list[dict[str, Any]] = []
+        if row["register_slug"] is not None:
+            register_fqid = try_emit(
+                Fqid.register_fqid, row["provider_slug"], row["register_slug"]
+            )
+            groups = [
+                _group_summary_to_dict(g)
+                for g in catalog.list_concept_groups(
+                    row["provider_slug"], row["register_slug"]
+                )
+            ]
+        registers_out.append(
+            {
+                "register_id": row["register_id"],
+                "register_name": row["name"],
+                "fqid": register_fqid,
+                "groups": groups,
+            }
+        )
+    return {"registers": registers_out}
+
+
+def get_classification_concept_groups(conn: sqlite3.Connection) -> dict[str, Any]:
+    """Classification vintage groups (#325), catalog-scoped — e.g. the
+    lkf1980…lkf2026 family as one group with a 'vintage' facet per member."""
+    catalog = Catalog(conn)
+    return {
+        "groups": [
+            _group_summary_to_dict(g) for g in catalog.list_classification_groups()
+        ]
+    }
+
+
+def _search_group_labels(
+    conn: sqlite3.Connection,
+    like_pattern: str,
+    reg_ids: set[int] | None,
+    *,
+    type: str,
+    year_range: tuple[int | None, int | None] | None = None,
+) -> list[sqlite3.Row]:
+    """Concept groups whose LABEL or key matches the query (#322): the family
+    itself is findable even when no single leaf row matches (e.g. searching
+    "Län, kommuner och församlingar" finds the lkf vintage family).
+
+    Scope rules: variable groups respect a `--register` scope and pass the
+    'variable' type filter (they fold variable hits); classification groups
+    are catalog-scoped, so they only surface unscoped (`type == "all"`, no
+    register filter). `type == "register"` excludes groups entirely. Under a
+    `year_range` (--years), a variable group needs at least one member state
+    overlapping the range — the group itself has no validity window."""
+    if type == "register":
+        return []
+    rows = conn.execute(
+        "SELECT g.group_id, g.kind, g.group_key, g.label, g.source, "
+        "g.register_id, r.name AS register_name "
+        "FROM concept_group g "
+        "LEFT JOIN register r ON r.register_id = g.register_id "
+        "WHERE g.label LIKE ? OR g.group_key LIKE ? "
+        "ORDER BY g.kind, g.group_key",
+        (like_pattern, like_pattern),
+    ).fetchall()
+    hits = []
+    for r in rows:
+        if r["kind"] == "classification":
+            if reg_ids or type == "variable":
+                continue
+        else:
+            if reg_ids and r["register_id"] not in reg_ids:
+                continue
+            if year_range is not None and not _group_member_state_in_years(
+                conn, r["group_id"], *year_range
+            ):
+                continue
+        hits.append(r)
+    return hits
+
+
+def _group_member_state_in_years(
+    conn: sqlite3.Connection, group_id: int, lo: int | None, hi: int | None
+) -> bool:
+    """Whether any member variable of a variable-kind group has a
+    `variable_state` validity window overlapping the requested year range —
+    the --years semantics for a label-matched group (mirrors what
+    `_filter_search_by_years` does for leaf hits)."""
+    rows = conn.execute(
+        "SELECT vs.valid_from, vs.valid_to "
+        "FROM concept_group_variable cgv "
+        "JOIN variable_state vs ON vs.variable_id = cgv.variable_id "
+        "WHERE cgv.group_id = ?",
+        (group_id,),
+    ).fetchall()
+    return any(
+        _state_overlaps_years(r["valid_from"], r["valid_to"], lo, hi) for r in rows
+    )
+
+
+def _fold_concept_groups(
+    conn: sqlite3.Connection,
+    results: list[dict[str, Any]],
+    label_hits: list[sqlite3.Row],
+) -> list[dict[str, Any]]:
+    """Collapse sibling search hits under their concept group (#322).
+
+    A group row replaces its member hits when ≥2 DISTINCT member variables
+    matched (one variable hit through several fields is not a family signal)
+    OR the group's own label matched. A lone member hit stays a leaf row,
+    annotated with `concept_group`/`concept_group_label` so the family is
+    still discoverable. Original leaf hits ride under the group row's
+    `matched`; the full member list (facet-ordered, via the Catalog reuse)
+    rides under `members`."""
+    vids = {r["_variable_id"] for r in results if r.get("_variable_id") is not None}
+    membership: dict[int, sqlite3.Row] = {}
+    if vids:
+        placeholders = ",".join("?" * len(vids))
+        rows = conn.execute(
+            "SELECT cgv.variable_id, g.group_id, g.kind, g.group_key, g.label, "
+            "g.source, g.register_id, r.name AS register_name "
+            "FROM concept_group_variable cgv "
+            "JOIN concept_group g ON g.group_id = cgv.group_id "
+            "LEFT JOIN register r ON r.register_id = g.register_id "
+            f"WHERE cgv.variable_id IN ({placeholders})",
+            list(vids),
+        ).fetchall()
+        membership = {row["variable_id"]: row for row in rows}
+
+    buckets: dict[int, list[dict[str, Any]]] = {}
+    group_meta: dict[int, sqlite3.Row] = {}
+    for r in results:
+        vid = r.get("_variable_id")
+        member = membership.get(vid) if vid is not None else None
+        if member is not None:
+            buckets.setdefault(member["group_id"], []).append(r)
+            group_meta.setdefault(member["group_id"], member)
+
+    label_ids = {row["group_id"] for row in label_hits}
+    for row in label_hits:
+        group_meta.setdefault(row["group_id"], row)
+
+    folded_ids = set(label_ids)
+    for gid, hits in buckets.items():
+        if len({h["_variable_id"] for h in hits}) >= 2:
+            folded_ids.add(gid)
+
+    summaries = _GroupSummaryLookup(conn)
+    out: list[dict[str, Any]] = []
+    emitted: set[int] = set()
+    for r in results:
+        vid = r.get("_variable_id")
+        member = membership.get(vid) if vid is not None else None
+        if member is None:
+            out.append(r)
+            continue
+        gid = member["group_id"]
+        if gid not in folded_ids:
+            r["concept_group"] = member["group_key"]
+            r["concept_group_label"] = member["label"]
+            out.append(r)
+        elif gid not in emitted:
+            emitted.add(gid)
+            out.append(
+                _group_result_row(
+                    group_meta[gid],
+                    buckets[gid],
+                    summaries,
+                    label_matched=gid in label_ids,
+                )
+            )
+    for row in label_hits:
+        if row["group_id"] not in emitted:
+            emitted.add(row["group_id"])
+            out.append(_group_result_row(row, [], summaries, label_matched=True))
+    return out
+
+
+class _GroupSummaryLookup:
+    """Per-search cache over the Catalog group listings, so folding N groups
+    of one register costs one `list_concept_groups` call, not N."""
+
+    def __init__(self, conn: sqlite3.Connection) -> None:
+        self._conn = conn
+        self._catalog = Catalog(conn)
+        self._by_scope: dict[int | None, dict[str, ConceptGroupSummary]] = {}
+
+    def get(self, meta: sqlite3.Row) -> ConceptGroupSummary | None:
+        """The `ConceptGroupSummary` for a `concept_group` row, or None when
+        the register isn't slugged (no catalog address → no member listing;
+        can't happen for build-derived groups, which only cover slugged
+        variables)."""
+        scope = None if meta["kind"] == "classification" else meta["register_id"]
+        if scope not in self._by_scope:
+            self._by_scope[scope] = self._load_scope(scope)
+        return self._by_scope[scope].get(meta["group_key"])
+
+    def _load_scope(self, scope: int | None) -> dict[str, ConceptGroupSummary]:
+        if scope is None:
+            groups = self._catalog.list_classification_groups()
+        else:
+            row = self._conn.execute(
+                "SELECT r.slug AS register_slug, p.slug AS provider_slug "
+                "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE r.register_id = ?",
+                (scope,),
+            ).fetchone()
+            if row is None or row["register_slug"] is None:
+                return {}
+            groups = self._catalog.list_concept_groups(
+                row["provider_slug"], row["register_slug"]
+            )
+        return {g.key: g for g in groups}
+
+
+def _group_result_row(
+    meta: sqlite3.Row,
+    matched: list[dict[str, Any]],
+    summaries: _GroupSummaryLookup,
+    *,
+    label_matched: bool,
+) -> dict[str, Any]:
+    """One `type: "group"` search result row: group identity + the full
+    member list + the leaf hits it folded (`matched`). `fts_rank` is the best
+    (lowest) member rank so the group sorts where its members would have."""
+    summary = summaries.get(meta)
+    payload = (
+        _group_summary_to_dict(summary)
+        if summary is not None
+        else {"axes": [], "member_count": 0, "members": []}
+    )
+    return {
+        "type": "group",
+        "kind": meta["kind"],
+        "group_key": meta["group_key"],
+        "group_label": meta["label"],
+        "group_source": meta["source"],
+        "register_id": meta["register_id"],
+        "register_name": meta["register_name"],
+        "axes": payload["axes"],
+        "member_count": payload["member_count"],
+        "members": payload["members"],
+        "matched": matched,
+        "label_matched": label_matched,
+        "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
+    }
+
+
+def _strip_internal_keys(results: list[dict[str, Any]]) -> None:
+    """Drop the fold-internal `_variable_id` from leaf rows and from the leaf
+    hits nested under a group row's `matched` before results go public."""
+    for r in results:
+        r.pop("_variable_id", None)
+        for m in r.get("matched", ()):
+            m.pop("_variable_id", None)
 
 
 # ---------------------------------------------------------------------------
@@ -620,13 +966,19 @@ def get_schema(
         # ordinary columns carry ''), so it must NOT be part of the edition key —
         # keying by it would shard one delivered schema into partial pseudo-
         # versions. The binding FQID is 3-seg (provider/register/variable_slug).
+        # #325: LEFT JOIN the concept-group membership (at most one group per
+        # variable — single-column member PK) so the fold is visible inline on
+        # schema listings. NULL `concept_group` means "not in any group".
         state_rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
             "CAST(v.provider_key AS INTEGER) AS var_id, v.slug AS variable_slug, "
-            "v.name AS variable_name, COALESCE(v.source_label, '') AS source "
+            "v.name AS variable_name, COALESCE(v.source_label, '') AS source, "
+            "cg.group_key AS concept_group, cg.label AS concept_group_label "
             "FROM variable_state vs "
             "JOIN variable v ON vs.variable_id = v.variable_id "
+            "LEFT JOIN concept_group_variable cgv ON cgv.variable_id = v.variable_id "
+            "LEFT JOIN concept_group cg ON cg.group_id = cgv.group_id "
             "WHERE vs.register_variant_id = ? "
             "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, v.slug",
             (rvid,),
@@ -669,6 +1021,11 @@ def get_schema(
                         # display column; emit it under `aliases` for the
                         # table/flat renderers and `compare()` flattening.
                         "aliases": s["delivery_column_name"] or "",
+                        # #325: concept-group membership (None when ungrouped)
+                        # so the fold is visible inline; `get groups` lists the
+                        # full family with facets.
+                        "concept_group": s["concept_group"],
+                        "concept_group_label": s["concept_group_label"],
                         "fqid": try_emit(
                             Fqid.binding_fqid,
                             provider_slug,
