@@ -359,14 +359,27 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   ever serving) and fly.toml's `/api/context` HTTP check (flyctl reports failure if it
   never passes). Rollback: `flyctl releases --image` lists history;
   `flyctl deploy --image <old>` restores in seconds.
-- **Cloudflare zone (pending)**: orange-cloud DNS → the Fly app. Setup gotchas, recorded
-  so they aren't re-derived: add the domain on Fly first (`fly certs add` + the
-  `_fly-ownership` TXT record so HTTP-01 issuance works through the proxy), SSL mode
-  **Full (strict)**, and never proxy a hostname pointing at `*.fly.dev` (Fly's edge has
-  no cert for the custom SNI → 525). No dedicated IPv4 — the free shared IPv4 works
-  behind the proxy. SPA on Workers static assets with SPA-fallback rewriting (previous
-  section); per-IP rate limits at the WAF. #220's FQID edge-cache validation runs once
-  the zone fronts the origin.
+- **Cloudflare zone**: `catalog.swecov.se`, orange-cloud A/AAAA → the Fly app's shared
+  IPv4 + dedicated IPv6, plus a `_fly-ownership` TXT (proves ownership behind the proxy)
+  and a grey-cloud `_acme-challenge` CNAME (DNS-01 cert issuance — the reliable path
+  behind a proxy; never proxy a hostname pointing at `*.fly.dev`: Fly's edge has no cert
+  for the custom SNI → 525). SSL mode Full (strict). No dedicated IPv4 — the free shared
+  IPv4 works behind the proxy.
+- **Edge worker** (`reg_webapp/edge/`, Workers free plan): static-assets worker on
+  `catalog.swecov.se/*` serving the SPA `dist/` with `single-page-application` deep-link
+  fallback; backend paths (`/api/*`, `/openapi.json`, `/docs`) are `run_worker_first` +
+  `fetch(request)` passthrough to the zone origin (Fly), so the origin
+  ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
+  `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
+  navigations without invoking the worker, shadowing `/api` deep-opens. Cloudflare
+  downgrades the origin's strong ETag to weak (`W/`) when compression applies — weak
+  comparison is correct for GET revalidation, not a bug. Deploy: build the SPA, then
+  `bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc` (manual; not in CI).
+- **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
+  cache-eligible (Cloudflare never caches extensionless API paths by default, even with
+  `Cache-Control: public` — without the rule every read is `cf-cache-status: DYNAMIC`),
+  and the free plan's one WAF rate-limiting rule on `/api/*`. #220's FQID edge-cache
+  validation runs against the Cache Rule.
 
 ## Frontend unit tests (Vitest)
 
