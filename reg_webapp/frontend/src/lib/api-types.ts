@@ -910,6 +910,8 @@ export interface components {
             delivery_column_name: string | null;
             /** Is Identifier */
             is_identifier: boolean;
+            /** Period Token */
+            period_token?: string | null;
             /** Register Variant Id */
             register_variant_id: number;
             /** State Id */

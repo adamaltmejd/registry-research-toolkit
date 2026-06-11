@@ -1193,6 +1193,17 @@
             "title": "Is Identifier",
             "type": "boolean"
           },
+          "period_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period Token"
+          },
           "register_variant_id": {
             "title": "Register Variant Id",
             "type": "integer"

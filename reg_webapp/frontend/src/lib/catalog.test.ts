@@ -8,6 +8,7 @@ import {
   deriveType,
   foldText,
   formatDataType,
+  formatStateWindow,
   fqidSegments,
   matchesFilter,
   narrowCatalogNode,
@@ -16,7 +17,9 @@ import {
   registerPrefixOf,
   representationsCollapse,
   representationsFromStates,
+  stateChangeHints,
   variantSeg,
+  windowTitle,
 } from "./catalog";
 
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
@@ -916,5 +919,210 @@ describe("buildAddPlan (#306 one-click add)", () => {
       expect(plan.segments[0].needsRepChoice).toBe(false);
       expect(plan.segments[0].representation).toBe("UT0290");
     }
+  });
+});
+
+describe("formatStateWindow (#309 sentinel hiding + #321 period tokens)", () => {
+  it("an open-ended state reads 'since <from>' (sentinel hidden, year-collapsed)", () => {
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2016-01-01", valid_to: "9999-12-31" }),
+      ),
+    ).toBe("since 2016");
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2016-07-01", valid_to: "9999-12-31" }),
+      ),
+    ).toBe("since 2016-07-01");
+  });
+
+  it("prefers the backend's single coarsest-exact token", () => {
+    expect(
+      formatStateWindow(
+        state({
+          valid_from: "2009-01-01",
+          valid_to: "2009-06-30",
+          period_token: "VT2009",
+        }),
+      ),
+    ).toBe("VT2009");
+    expect(
+      formatStateWindow(
+        state({
+          valid_from: "2018-01-01",
+          valid_to: "2018-12-31",
+          period_token: "2018",
+        }),
+      ),
+    ).toBe("2018");
+  });
+
+  it("falls back to a year-collapsed range for multi-year windows and token-less payloads", () => {
+    // A multi-year window's token is the explicit lo..hi range → fall back.
+    expect(
+      formatStateWindow(
+        state({
+          valid_from: "1992-01-01",
+          valid_to: "2009-12-31",
+          period_token: "1992-01-01..2009-12-31",
+        }),
+      ),
+    ).toBe("1992 – 2009");
+    // A stale edge-cached payload missing the field entirely (#317 rule).
+    expect(
+      formatStateWindow(
+        state({ valid_from: "1992-01-01", valid_to: "2009-12-31" }),
+      ),
+    ).toBe("1992 – 2009");
+    // Mid-year bounds stay exact dates.
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2009-07-01", valid_to: "2010-06-30" }),
+      ),
+    ).toBe("2009-07-01 – 2010-06-30");
+    // A PARTIALLY year-aligned window keeps both exact dates — a one-sided
+    // collapse would read backwards ("2009-07-01 – 2009") for a stale-cached
+    // HT window.
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2009-07-01", valid_to: "2009-12-31" }),
+      ),
+    ).toBe("2009-07-01 – 2009-12-31");
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2009-01-01", valid_to: "2009-06-30" }),
+      ),
+    ).toBe("2009-01-01 – 2009-06-30");
+  });
+});
+
+describe("stateChangeHints (#309 what-differs)", () => {
+  it("flags a data-type-only change between adjacent same-variant states (int → bigint)", () => {
+    const hints = stateChangeHints([
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+        data_type: "int",
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "2016-01-01",
+        valid_to: "2023-12-31",
+        data_type: "bigint",
+      }),
+    ]);
+    expect(hints.get(2)).toEqual(["type int → bigint"]);
+    expect(hints.has(1)).toBe(false);
+  });
+
+  it("flags a column rename and a value-set content change (same label → 'value set changed')", () => {
+    const hints = stateChangeHints([
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+        delivery_column_name: "Old",
+        value_set_id: 10,
+        value_set_version_label: "v",
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "2016-01-01",
+        valid_to: "2023-12-31",
+        delivery_column_name: "New",
+        value_set_id: 11, // content key differs, label does NOT
+        value_set_version_label: "v",
+      }),
+    ]);
+    expect(hints.get(2)).toEqual(["column Old → New", "value set changed"]);
+  });
+
+  it("names the labels when the value-set version label changes too", () => {
+    const hints = stateChangeHints([
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+        value_set_id: 10,
+        value_set_version_label: "SSYK 96",
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "2016-01-01",
+        valid_to: "2023-12-31",
+        value_set_id: 11,
+        value_set_version_label: "SSYK 2012",
+      }),
+    ]);
+    expect(hints.get(2)).toEqual(["value set SSYK 96 → SSYK 2012"]);
+  });
+
+  it("never diffs OVERLAPPING same-variant states (parallel alternatives, not a transition)", () => {
+    // Two co-delivered vintages at the same window (Codex P2 on #335): a
+    // chronological "changed" hint would be misleading — these co-exist.
+    const hints = stateChangeHints([
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "Ssyk3",
+        value_set_id: 1,
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2023-12-31",
+        delivery_column_name: "Ssyk4",
+        value_set_id: 2,
+      }),
+    ]);
+    expect(hints.size).toBe(0);
+  });
+
+  it("never hints across variants and stays silent for identical shapes", () => {
+    const hints = stateChangeHints([
+      state({
+        state_id: 1,
+        variant: "a",
+        valid_from: "1992-01-01",
+        valid_to: "2009-12-31",
+        data_type: "int",
+      }),
+      state({
+        state_id: 2,
+        variant: "b", // a variant change is visible on the row, not a hint
+        valid_from: "2010-01-01",
+        valid_to: "2015-12-31",
+        data_type: "bigint",
+      }),
+      state({
+        state_id: 3,
+        variant: "b", // identical shape to state 2 → no hint
+        valid_from: "2016-01-01",
+        valid_to: "2023-12-31",
+        data_type: "bigint",
+      }),
+    ]);
+    expect(hints.size).toBe(0);
+  });
+});
+
+describe("windowTitle (#309 sentinel-free tooltips)", () => {
+  it("renders exact dates; the sentinel reads open-ended", () => {
+    expect(windowTitle("2010-01-01", "2015-12-31")).toBe(
+      "2010-01-01 – 2015-12-31",
+    );
+    expect(windowTitle("2016-01-01", "9999-12-31")).toBe(
+      "2016-01-01 – open-ended",
+    );
   });
 });
