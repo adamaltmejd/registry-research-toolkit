@@ -7,12 +7,16 @@
 #
 # Pushes to main: a `changes` filter scopes the work — image-affecting paths
 # rebuild + push + `flyctl deploy` the origin; SPA/edge-affecting paths build
-# the SPA and `wrangler deploy` the edge worker. The edge job `needs:` the
-# origin deploy so a contract-changing push can never ship a new SPA against
-# an old origin (deploy-skew guard). Both deploy jobs also verify they are
-# still main's HEAD before shipping — GHA concurrency serializes deploys but
-# admits them in BUILD-COMPLETION order, so without the guard an older
-# commit's slow build could overwrite a newer deploy.
+# the SPA and `wrangler deploy` the edge worker. Image-affecting paths ALSO
+# redeploy the edge: each edge deploy carries a fresh DEPLOY_VERSION that the
+# worker stamps into the /api/* cache key (#318), so an origin deploy that
+# changes API payloads must ship an edge deploy to orphan the pre-deploy edge
+# cache. The edge job `needs:` the origin deploy so a contract-changing push
+# can never ship a new SPA against an old origin (deploy-skew guard). Both
+# deploy jobs also verify they are still main's HEAD before shipping — GHA
+# concurrency serializes deploys but admits them in BUILD-COMPLETION order,
+# so without the guard an older commit's slow build could overwrite a newer
+# deploy.
 #
 # `global` is prod and staging in one tier (§7.5), so every relevant main
 # push deploys. workflow_dispatch is the manual escape hatch (rebuild +
@@ -286,14 +290,19 @@ jobs:
   # origin deploy (deploy-skew guard): on a contract-changing push the SPA must
   # not go live before the origin serves the new endpoints. `needs.deploy`
   # being skipped (edge-only change → no image rebuild) is fine; a FAILED
-  # image build/deploy blocks the edge ship.
+  # image build/deploy blocks the edge ship. Image-affecting changes also run
+  # this job even when nothing edge-side changed: the deploy ships a fresh
+  # DEPLOY_VERSION cache generation (#318), without which the edge would keep
+  # serving pre-deploy /api/* payloads for up to the 24h TTL.
   edge-deploy:
     needs: [changes, build-image, deploy, wait-ci]
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
       needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
-      (needs.changes.outputs.edge == 'true' || github.event_name == 'workflow_dispatch')
+      (needs.changes.outputs.edge == 'true' ||
+      needs.changes.outputs.image == 'true' ||
+      github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     concurrency:
       group: edge-deploy-global
@@ -325,9 +334,15 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
       # wrangler reads CLOUDFLARE_API_TOKEN from the env; major-pinned so a
-      # breaking wrangler v5 can't land unreviewed.
+      # breaking wrangler v5 can't land unreviewed. DEPLOY_VERSION is the
+      # /api/* cache generation (#318) — the worker stamps it into every
+      # origin-bound URL, orphaning all pre-deploy edge-cache entries. The
+      # expression mirrors IMAGE_TAG: dispatch runs get a -<run_id> suffix so a
+      # same-SHA rebuild (data-only reg_meta release) still busts the cache.
       - if: steps.head.outputs.skip != 'true'
-        run: bunx wrangler@4 deploy --config reg_webapp/edge/wrangler.jsonc
+        run: >-
+          bunx wrangler@4 deploy --config reg_webapp/edge/wrangler.jsonc
+          --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
@@ -336,7 +351,11 @@ jobs:
       # every edge deploy that a catalog read still caches (MISS/HIT family,
       # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
       # Rule deletion / zone drift that nothing else in CI would notice.
-      - name: Edge cache probe (#220)
+      # Also asserts the HIT is YOUNG (#318): this deploy started a new cache
+      # generation, so any reachable entry must have been populated after it —
+      # an old Age means DEPLOY_VERSION stopped reaching the cache key and the
+      # stale-24h window is back.
+      - name: Edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
         run: |
           url="https://catalog.swecov.se/api/catalog"
@@ -349,6 +368,9 @@ jobs:
           done
           echo "cf-cache-status: $status"
           [ "$status" = "HIT" ] || { echo "FATAL: /api/* not edge-cached (Cache Rule missing?)" >&2; exit 1; }
+          age=$(curl -sfo /dev/null -w '%header{age}' "$url")
+          echo "age: ${age:-0}s"
+          [ "${age:-0}" -le 600 ] || { echo "FATAL: edge HIT is ${age}s old — pre-deploy cache entry still reachable (#318 DEPLOY_VERSION cache-key versioning broken?)" >&2; exit 1; }
           etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
           code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
           echo "If-None-Match → $code"

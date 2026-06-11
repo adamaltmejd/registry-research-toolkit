@@ -410,18 +410,35 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   the backend disables `/redoc` (`create_app` passes `redoc_url=None`) so its surface is
   exactly the forwarded set. Cloudflare downgrades the origin's strong ETag to weak
   (`W/`) when compression applies — weak comparison is correct for GET revalidation, not
-  a bug. Deploys: the `edge-deploy` job in `container-build.yml` rebuilds the SPA (bun
-  pinned to the Dockerfile's version — bump together) and runs `wrangler deploy` on main
-  pushes touching the SPA, the edge worker, or the committed `openapi.json`
+  a bug.
+- **Edge cache generations (#318)**: the worker stamps a per-deploy `DEPLOY_VERSION`
+  (wrangler var; CI passes the commit SHA, `-<run_id>`-suffixed on dispatch so same-SHA
+  data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
+  param. The zone cache key is the full URL, so each deploy orphans all prior `/api/*`
+  cache entries — fresh payloads immediately after deploy, while the 24h TTL still
+  bounds origin traffic *within* a generation. This is the free-plan substitute for
+  `cf.cacheKey` (Enterprise-only) and needs no purge credentials. Origin-side the param
+  is inert: FastAPI ignores undeclared query params and the ETag is content-derived.
+  Consequence: `edge-deploy` runs on **image-affecting** pushes too, not just edge paths
+  — an origin deploy that changes API payloads without touching the SPA/contract must
+  still ship a new cache generation. The motivating incident (#303 rollout) had the edge
+  serving 11h-old pre-deploy catalog JSON against a freshly deployed SPA; the #317
+  defensive-rendering rule (SPA tolerates one cache generation of payload skew on
+  additive fields) stays in force regardless, for clients holding *browser*-cached
+  payloads (`max-age=86400` applies there too, unversioned). Deploys: the `edge-deploy`
+  job in `container-build.yml` rebuilds the SPA (bun pinned to the Dockerfile's version
+  — bump together) and runs `wrangler deploy` on main pushes touching the SPA, the edge
+  worker, the committed `openapi.json`, or the image surface (cache generation, above)
   (`CLOUDFLARE_API_TOKEN` repo secret, "Edit Cloudflare Workers" template scoped to the
   account + swecov.se). The job `needs:` the origin deploy — on a contract-changing push
   the SPA never goes live before the origin serves the new endpoints (deploy-skew guard;
   skew 404s are NOT negatively cached: the Cache Rule's Edge TTL is "bypass if no
   cache-control", and the origin only stamps 200s). After each edge deploy a probe
-  asserts a catalog read returns `CF-Cache-Status: HIT` and an edge 304 — the #220 gate
-  as a standing regression check against silent Cache Rule / zone drift. Manual
-  fallback: build the SPA, then
-  `bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc`.
+  asserts a catalog read returns `CF-Cache-Status: HIT` with a young `Age` (a stale
+  `Age` means cache-key versioning broke) and an edge 304 — the #220 gate as a standing
+  regression check against silent Cache Rule / zone drift. Manual fallback: build the
+  SPA, then `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
+  `wrangler.jsonc`'s header — the config's literal `"dev"` default must not ship).
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with
   `Cache-Control: public` — without the rule every read is `cf-cache-status: DYNAMIC`),
