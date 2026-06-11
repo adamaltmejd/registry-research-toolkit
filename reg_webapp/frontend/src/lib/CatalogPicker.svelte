@@ -2,7 +2,9 @@
 import {
   type CatalogNode,
   getCatalogNode,
+  getCatalogRoot,
   getRegisterVariants,
+  type RootResponse,
   type StatesResponse,
   type VariableStateModel,
 } from "./api";
@@ -14,6 +16,7 @@ import {
   type PickedVariable,
   type Representation,
   rankFilter,
+  registerPrefixOf,
   representationsCollapse,
   representationsFromStates,
   resolveBindingAt,
@@ -26,8 +29,14 @@ import FilterInput from "./FilterInput.svelte";
 // <a href> navigation with internal pick callbacks.
 //
 // Two modes (the picker mounts once per open with a FIXED mode):
-//  - "variant": lists a register's variants → onpickVariant(slug); the caller
-//    builds the 3-seg register_variant.
+//  - "variant": pick a 3-seg register_variant, emitted WHOLE via
+//    onpickVariant(registerVariant). When `register` (a valid 2-seg prefix) is
+//    KNOWN (the user hand-typed it), it jumps straight to that register's variant
+//    list. When `register` is EMPTY / not a valid prefix (C2 — catalog→project
+//    handoff), it opens in REGISTER-BROWSE mode: provider list → register list →
+//    variant list, reusing the catalog DATA LAYER (root + provider node fetches) and
+//    the same FilterInput/rankFilter. Either way the emitted value is the full
+//    `provider/register/variant`.
 //  - "variable": SCOPED to a source's register (registerPrefix = first 2 segs of
 //    register_variant) — drills ONLY within that register's binding (variable)
 //    list. On selecting a leaf it DERIVES-ON-PICK by resolving the variable at the
@@ -41,8 +50,12 @@ import FilterInput from "./FilterInput.svelte";
 // remains canonical (see reg_webapp/DESIGN.md → Pydantic boundary).
 interface VariantProps {
   mode: "variant";
-  register: string; // 2-seg provider/register FQID
-  onpickVariant: (slug: string) => void;
+  // The KNOWN 2-seg provider/register FQID (hand-typed prefix) → jump straight to
+  // variants. Empty / not a valid 2-seg prefix → register-browse mode (C2).
+  register: string;
+  // Emits the WHOLE 3-seg register_variant (the picker owns the register, browsed or
+  // hand-typed, so the caller just sets the field).
+  onpickVariant: (registerVariant: string) => void;
   oncancel: () => void;
 }
 interface VariableProps {
@@ -55,16 +68,54 @@ interface VariableProps {
 }
 const props: VariantProps | VariableProps = $props();
 
-// One top-level resource (registers its $effect at component init). The fetch
-// branches on the FIXED mode: variants for a variant-pick, the register node (whose
-// binding children are the variable list) for a variable-pick.
-const resource = asyncResource<
-  Awaited<ReturnType<typeof getRegisterVariants>> | CatalogNode | StatesResponse
->(() =>
-  props.mode === "variant"
-    ? getRegisterVariants(props.register)
-    : getCatalogNode(props.registerPrefix),
+// ── C2: register-browse navigation (variant mode only) ───────────────────────
+// In variant mode, the EFFECTIVE register is either the hand-typed prefix (props
+// `register`, when it's a valid 2-seg FQID) or a register the user browsed to
+// (provider list → register list). `browsedRegister` holds the latter. A valid
+// prop prefix short-circuits the browse (jump straight to variants).
+const propPrefix = $derived(
+  props.mode === "variant" ? registerPrefixOf(props.register) : "",
 );
+// Has the prop given us a usable register prefix? (A 2-seg FQID — registerPrefixOf
+// returns "" for fewer segments.)
+const havePropRegister = $derived(propPrefix !== "");
+let browsedRegister = $state<string | null>(null);
+// The register whose variants we list: the prop prefix wins; else the browsed one.
+const effectiveRegister = $derived(
+  havePropRegister ? propPrefix : browsedRegister,
+);
+// The browse step the picker shows when there's no prop register and no browsed one
+// yet: "provider" (pick a provider) → "register" (pick a register under it) →
+// (effectiveRegister set) → the variant list. `browsedProvider` is the chosen
+// provider FQID at the "register" step.
+let browsedProvider = $state<string | null>(null);
+
+// One top-level resource (registers its $effect at component init). The fetch
+// branches on the mode AND, in variant browse mode, on the current browse step:
+//  - variable mode → the register node (its binding children are the variables);
+//  - variant mode with an effective register → that register's variants;
+//  - variant browse, provider step (no provider chosen) → the catalog root
+//    (provider list);
+//  - variant browse, register step (provider chosen) → the provider node (its
+//    register children).
+// The fn READS the reactive browse state so the resource re-fetches as the user
+// drills in (asyncResource tracks the sync reads).
+const resource = asyncResource<
+  | Awaited<ReturnType<typeof getRegisterVariants>>
+  | CatalogNode
+  | StatesResponse
+  | RootResponse
+>(() => {
+  if (props.mode === "variable") {
+    return getCatalogNode(props.registerPrefix);
+  }
+  const reg = effectiveRegister;
+  if (reg) {
+    return getRegisterVariants(reg);
+  }
+  // Browse: provider step (no provider chosen) → root; register step → provider node.
+  return browsedProvider ? getCatalogNode(browsedProvider) : getCatalogRoot();
+});
 
 // The variable-pick register node (the browse fetch is no-query → a `kind`-tagged
 // node). Its `binding` children are the pickable variables.
@@ -77,10 +128,38 @@ const variableChildren = $derived(
   registerNode ? bindingChildren(registerNode) : [],
 );
 
-// The variant-pick list.
+// The variant-pick list (only when an effective register is set).
 const variantList = $derived(
-  props.mode === "variant" && resource.data && "variants" in resource.data
+  props.mode === "variant" &&
+    effectiveRegister &&
+    resource.data &&
+    "variants" in resource.data
     ? resource.data.variants
+    : [],
+);
+
+// ── C2 browse lists (provider step + register step) ──────────────────────────
+// Active ONLY when variant mode has no effective register yet. The root's children
+// are a provider | classification-root union — keep providers only (variants live
+// under providers). The provider node's children are register nodes.
+const browseProviders = $derived(
+  props.mode === "variant" &&
+    !effectiveRegister &&
+    !browsedProvider &&
+    resource.data &&
+    "kind" in resource.data &&
+    resource.data.kind === "root"
+    ? resource.data.children.filter((c) => c.kind === "provider")
+    : [],
+);
+const browseRegisters = $derived(
+  props.mode === "variant" &&
+    !effectiveRegister &&
+    browsedProvider &&
+    resource.data &&
+    "kind" in resource.data &&
+    resource.data.kind === "provider"
+    ? resource.data.children
     : [],
 );
 
@@ -97,6 +176,23 @@ const filteredVariants = $derived(
 const filteredVariables = $derived(
   rankFilter(variableChildren, filter, (c) => [c.fqid, c.name]),
 );
+// C2: the browse-step lists, same rankFilter (target-hunt a provider/register).
+const filteredProviders = $derived(
+  rankFilter(browseProviders, filter, (p) => [p.fqid, p.name]),
+);
+const filteredRegisters = $derived(
+  rankFilter(browseRegisters, filter, (r) => [r.fqid, r.name]),
+);
+
+// C2: reset the filter when the browse STEP changes (provider → register →
+// variant), so a needle that narrowed one list doesn't hide the next. The reads
+// register the dependency; `untrack` would defeat the reset. A fresh list at each
+// step opens unfiltered, matching the browse pages.
+$effect(() => {
+  void browsedProvider;
+  void browsedRegister;
+  filter = "";
+});
 
 // The derive-on-pick resolve state + the REPRESENTATION chooser. A concept can
 // carry several co-existing delivery columns (parallel representations: SSYK
@@ -182,12 +278,48 @@ function chooseRepresentation(rep: Representation): void {
   });
   pending = null;
 }
+
+// ── C2 browse handlers (variant mode) ────────────────────────────────────────
+
+/** Step into a provider (the "register" browse step). */
+function browseProvider(fqid: string): void {
+  browsedProvider = fqid;
+}
+/** Step into a register (sets the effective register → the variant list). */
+function browseRegister(fqid: string): void {
+  browsedRegister = fqid;
+}
+/** Back out one browse step: register list → provider list, or variant list →
+ * register list (only the BROWSED register backs out; a hand-typed prop prefix has
+ * no back step — there's nothing to browse above it). */
+function browseBack(): void {
+  if (browsedRegister) {
+    browsedRegister = null;
+  } else if (browsedProvider) {
+    browsedProvider = null;
+  }
+}
+
+/** Emit the chosen variant as the WHOLE register_variant (register + slug). The
+ * register is the effective one (hand-typed prefix or browsed). */
+function emitVariant(slug: string): void {
+  if (props.mode !== "variant" || !effectiveRegister) {
+    return;
+  }
+  props.onpickVariant(`${effectiveRegister}/${slug}`);
+}
 </script>
 
 <div class="picker">
   <div class="picker-head">
     {#if props.mode === "variant"}
-      <span class="picker-title">Pick a variant of <code>{props.register}</code></span>
+      {#if effectiveRegister}
+        <span class="picker-title">Pick a variant of <code>{effectiveRegister}</code></span>
+      {:else if browsedProvider}
+        <span class="picker-title">Pick a register in <code>{browsedProvider}</code></span>
+      {:else}
+        <span class="picker-title">Pick a register — choose a provider</span>
+      {/if}
     {:else}
       <span class="picker-title">
         Pick a variable from <code>{props.registerPrefix}</code>
@@ -195,6 +327,12 @@ function chooseRepresentation(rep: Representation): void {
     {/if}
     <button type="button" class="cancel" onclick={props.oncancel}>Cancel</button>
   </div>
+
+  {#if props.mode === "variant" && !havePropRegister && (browsedProvider || browsedRegister)}
+    <!-- C2: a back step for the register-browse path (no back from a hand-typed
+         prefix — there's nothing above it to browse). -->
+    <button type="button" class="back" onclick={browseBack}>← Back</button>
+  {/if}
 
   {#if props.mode === "variable" && !props.period}
     <p class="hint muted">Set the source period to auto-fill type / display name.</p>
@@ -204,7 +342,8 @@ function chooseRepresentation(rep: Representation): void {
     <p class="muted" aria-busy="true">Loading…</p>
   {:else if resource.error}
     <p class="error" role="alert">Failed to load: {resource.error}</p>
-  {:else if props.mode === "variant"}
+  {:else if props.mode === "variant" && effectiveRegister}
+    <!-- Variant list (hand-typed prefix OR a browsed register). -->
     {#if variantList.length > 0}
       <FilterInput
         bind:value={filter}
@@ -218,11 +357,7 @@ function chooseRepresentation(rep: Representation): void {
         <ul class="pick-list">
           {#each filteredVariants as variant (variant.slug)}
             <li>
-              <button
-                type="button"
-                class="pick"
-                onclick={() => props.mode === "variant" && props.onpickVariant(variant.slug)}
-              >
+              <button type="button" class="pick" onclick={() => emitVariant(variant.slug)}>
                 <span class="slug">{variant.slug}</span>
                 {#if variant.name}<span class="name">{variant.name}</span>{/if}
               </button>
@@ -234,6 +369,62 @@ function chooseRepresentation(rep: Representation): void {
       {/if}
     {:else}
       <p class="muted">No variants for this register.</p>
+    {/if}
+  {:else if props.mode === "variant" && browsedProvider}
+    <!-- C2: register-browse step 2 — the chosen provider's registers. -->
+    {#if browseRegisters.length > 0}
+      <FilterInput
+        bind:value={filter}
+        total={browseRegisters.length}
+        shown={filteredRegisters.length}
+        placeholder="Filter registers…"
+        label="Filter registers"
+        autofocus
+      />
+      {#if filteredRegisters.length > 0}
+        <ul class="pick-list">
+          {#each filteredRegisters as register (register.fqid)}
+            <li>
+              <button type="button" class="pick" onclick={() => browseRegister(register.fqid)}>
+                <span class="slug">{register.name ?? register.fqid}</span>
+                <code class="leaf-fqid">{register.fqid}</code>
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="muted">No registers match “{filter}”.</p>
+      {/if}
+    {:else}
+      <p class="muted">No registers for this provider.</p>
+    {/if}
+  {:else if props.mode === "variant"}
+    <!-- C2: register-browse step 1 — the provider list (catalog root). -->
+    {#if browseProviders.length > 0}
+      <FilterInput
+        bind:value={filter}
+        total={browseProviders.length}
+        shown={filteredProviders.length}
+        placeholder="Filter providers…"
+        label="Filter providers"
+        autofocus
+      />
+      {#if filteredProviders.length > 0}
+        <ul class="pick-list">
+          {#each filteredProviders as provider (provider.fqid)}
+            <li>
+              <button type="button" class="pick" onclick={() => browseProvider(provider.fqid)}>
+                <span class="slug">{provider.name ?? provider.fqid}</span>
+                <code class="leaf-fqid">{provider.fqid}</code>
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="muted">No providers match “{filter}”.</p>
+      {/if}
+    {:else}
+      <p class="muted">No providers.</p>
     {/if}
   {:else if registerNode && registerNode.kind === "register"}
     {#if variableChildren.length > 0}
@@ -379,6 +570,17 @@ function chooseRepresentation(rep: Representation): void {
     border-radius: 4px;
     background: var(--surface);
     cursor: pointer;
+  }
+  .back {
+    font: inherit;
+    font-size: 0.8rem;
+    padding: 0.1rem 0;
+    margin-bottom: 0.4rem;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    text-align: left;
   }
   .pick-list {
     list-style: none;

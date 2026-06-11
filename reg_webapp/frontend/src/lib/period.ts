@@ -146,6 +146,51 @@ export function periodToWire(period: Period): string | null {
   return null;
 }
 
+/** The INVERSE of `periodToWire`: shape a wire `?period` string (as the catalog
+ * page's PeriodPicker holds it) into a structured `Source.period` the editor's
+ * PeriodEditor models (C1 — catalog→project handoff period prefill). The mapping
+ * mirrors PeriodEditor's mode inference so a prefilled source opens in the right
+ * editor mode:
+ *   - a bare integer year (`"2018"`) → the `number` arm (years mode, from=to);
+ *   - a `from..to` RANGE of two integer years (`"2010..2020"`) → `{from, to}`
+ *     numbers (years range mode);
+ *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`), a `_default`
+ *     sentinel, or a range with a non-integer endpoint — rides through as the raw
+ *     string (token mode), which is exactly how PeriodEditor would model it.
+ * A null/blank wire string yields `""` (the fresh-source unset period: PR B's
+ * unresolved marker + amber hint then guide the user). ADVISORY shaping only — the
+ * backend is the canonical period validator. */
+export function periodFromWire(wire: string | null): Period {
+  const value = (wire ?? "").trim();
+  if (value === "") {
+    return "";
+  }
+  if (value.includes(RANGE_SEP)) {
+    const parts = value.split(RANGE_SEP);
+    if (parts.length === 2) {
+      const from = yearInt(parts[0]);
+      const to = yearInt(parts[1]);
+      // Both endpoints integer years → the structured years range; otherwise the
+      // raw token string (a token-endpoint range PeriodEditor shows as Token text).
+      if (from !== null && to !== null) {
+        return { from, to };
+      }
+    }
+    return value;
+  }
+  const year = yearInt(value);
+  // A bare integer year → the single-year `number` arm (from=to in the editor).
+  return year !== null ? year : value;
+}
+
+/** Parse a string as a bare integer year (no sign, round-trips), else null —
+ * matching PeriodEditor's `emitYears` integer test. */
+function yearInt(raw: string): number | null {
+  const trimmed = raw.trim();
+  const n = Number.parseInt(trimmed, 10);
+  return trimmed !== "" && String(n) === trimmed ? n : null;
+}
+
 // ── Query-string builder ─────────────────────────────────────────────────────
 
 /** Build a `?query` string from the resolution params, omitting undefined /

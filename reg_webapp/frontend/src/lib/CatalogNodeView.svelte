@@ -20,7 +20,17 @@ import VariantBrowser from "./VariantBrowser.svelte";
 // here never passes `?period`, so this catch-all response is always a `kind`-
 // tagged node (the `StatesResponse` arm — a no-`kind` resolve_at subset — is
 // only reachable WITH a query, so it's filtered to `null` and never rendered).
-let { fqidPath }: { fqidPath: string } = $props();
+let {
+  fqidPath,
+  regMetaVersion,
+  steward,
+}: {
+  fqidPath: string;
+  // C1: the deployment seed, threaded to BindingLeafView's "Add to project" so a
+  // pristine store can implicitly create the project (App → here → BindingLeafView).
+  regMetaVersion: string;
+  steward: string;
+} = $props();
 
 const resource = asyncResource(() => getCatalogNode(fqidPath));
 // A browsable path resolves to a `kind`-tagged CatalogNode. A SUB-ENDPOINT path
@@ -143,7 +153,7 @@ $effect(() => {
            renders those from `node` (always present — so a cold deep-link with
            `?period` isn't blank) and fetches only the period-NARROWED states from
            the URL query, reactive without a remount. -->
-      <BindingLeafView {fqidPath} {node} />
+      <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} />
     {:else if node.kind === "classification-root"}
       <h2>{nodeLabel(node)}</h2>
       <h3>Classifications</h3>

@@ -3,6 +3,7 @@ import {
   looksLikePeriod,
   nextResolutionQuery,
   periodFieldFromQuery,
+  periodFromWire,
   periodQueryFromField,
   periodToWire,
   queryFromParams,
@@ -31,6 +32,39 @@ describe("periodToWire (Source.period → ?period wire string)", () => {
   it("null / a partial {from-only} object → null (defensive fallthrough)", () => {
     expect(periodToWire(null as never)).toBeNull();
     expect(periodToWire({ from: 2018 } as never)).toBeNull();
+  });
+});
+
+describe("periodFromWire (?period wire string → Source.period, C1 prefill)", () => {
+  it("a bare integer year → the number arm (single year, from=to in the editor)", () => {
+    expect(periodFromWire("2018")).toBe(2018);
+    expect(periodFromWire("  2020  ")).toBe(2020);
+  });
+
+  it("an integer-year range → the {from,to} numbers (years range mode)", () => {
+    expect(periodFromWire("2010..2020")).toEqual({ from: 2010, to: 2020 });
+  });
+
+  it("a non-year token rides through as the raw string (token mode)", () => {
+    expect(periodFromWire("HT2018")).toBe("HT2018");
+    expect(periodFromWire("2019-03")).toBe("2019-03");
+    expect(periodFromWire("_default")).toBe("_default");
+  });
+
+  it("a range with a non-integer endpoint stays the raw token string", () => {
+    expect(periodFromWire("HT2018..VT2019")).toBe("HT2018..VT2019");
+    expect(periodFromWire("2019-03..2019-06")).toBe("2019-03..2019-06");
+  });
+
+  it("null / blank → the unset empty-string period", () => {
+    expect(periodFromWire(null)).toBe("");
+    expect(periodFromWire("")).toBe("");
+    expect(periodFromWire("   ")).toBe("");
+  });
+
+  it("round-trips a single year and an integer range through periodToWire", () => {
+    expect(periodToWire(periodFromWire("2018"))).toBe("2018");
+    expect(periodToWire(periodFromWire("2010..2020"))).toBe("2010..2020");
   });
 });
 

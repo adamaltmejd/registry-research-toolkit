@@ -5,11 +5,15 @@ import {
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
+  type VariableStateModel,
 } from "./api";
 import { asyncResource } from "./async.svelte";
+import { registerPrefixOf, representationsFromStates } from "./catalog";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
+import { regMetaReleaseTag } from "./project_data";
+import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
 
@@ -26,7 +30,20 @@ import StatesView from "./StatesView.svelte";
 // `search` so changing it re-fetches WITHOUT a remount. WITH a `?period` we fetch
 // the resolve_at subset (a `StatesResponse`) to narrow the visible states; the
 // metadata + lineage (from `node`) are unaffected.
-let { fqidPath, node }: { fqidPath: string; node: BindingNodeData } = $props();
+let {
+  fqidPath,
+  node,
+  regMetaVersion,
+  steward,
+}: {
+  fqidPath: string;
+  node: BindingNodeData;
+  // C1: the deployment seed for an IMPLICIT "New project" when the store is
+  // pristine (App → CatalogNodeView → here). Empty until /api/context resolves; an
+  // add before then is an edge case the seed self-corrects on the next New.
+  regMetaVersion: string;
+  steward: string;
+} = $props();
 
 // Read the resolution modifiers off the reactive query so the fetch re-runs when
 // they change.
@@ -82,6 +99,60 @@ function setResolution(next: {
 }): void {
   const query = nextResolutionQuery(params, next);
   router.navigate(window.location.pathname + (query ? `?${query}` : ""));
+}
+
+// ── C1: add to project ────────────────────────────────────────────────────────
+// The variable's provider/register prefix (first 2 segs of its 3-seg fqid). A
+// source's register_variant is `<prefix>/<variant>`, the variant taken from the
+// chosen STATE (each state carries its variant slug) — so the add is fully explicit:
+// this variable, at this variant, and (when several columns co-exist) this delivery
+// column.
+const registerPrefix = $derived(registerPrefixOf(node.fqid));
+
+// Whether the CURRENTLY-VISIBLE states carry MORE THAN ONE co-existing representation
+// (delivery column) — the same `representationsFromStates` the picker chooser uses.
+// Only then is the per-state delivery column a genuine REPRESENTATION choice to pin on
+// the binding; a single representation must NOT set `binding.representation` (it would
+// desync from the store's single-rep derive, which clears it to null — and break the
+// duplicate guard). `states` may be null while a narrow loads.
+const multiRepresentation = $derived(
+  states ? representationsFromStates(states).length > 1 : false,
+);
+
+// Per-state add feedback keyed by state_id (drives StatesView's inline confirmation).
+let addStatus = $state<Record<number, "added" | "already-present">>({});
+
+// A fresh resolution clears stale confirmations (the visible states changed).
+$effect(() => {
+  void params.period;
+  void params.variant;
+  void params.value_set_version;
+  addStatus = {};
+});
+
+/** Add ONE variant-state to the project (C1). Builds the register_variant from the
+ * variable's prefix + the state's variant, hands the variable + (only when several
+ * columns co-exist) the state's delivery column as the representation + the page's
+ * resolved period to the store, and records the outcome for the inline confirmation.
+ * The store creates the project + source as needed and derives the binding at the
+ * source's period — no editor import here. */
+function onAdd(state: VariableStateModel): void {
+  const registerVariant = `${registerPrefix}/${state.variant}`;
+  const result = projectStore.addFromCatalog(
+    {
+      registerVariant,
+      variable: node.fqid,
+      // A representation is pinned ONLY when the concept genuinely has >1 co-existing
+      // column at this period (the explicit per-column choice); a single-rep variable
+      // adds representation-less, matching the store's single-rep derive.
+      representation: multiRepresentation
+        ? (state.delivery_column_name ?? null)
+        : null,
+      resolvedPeriod: params.period ?? null,
+    },
+    { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
+  );
+  addStatus = { ...addStatus, [state.state_id]: result.status };
 }
 </script>
 
@@ -175,6 +246,8 @@ function setResolution(next: {
         onpickVariant={(variant) => setResolution({ variant })}
         onpickValueSetVersion={(value_set_version) =>
           setResolution({ value_set_version })}
+        onadd={onAdd}
+        {addStatus}
       />
     {:else}
       <p class="muted" aria-busy="true">Loading states…</p>
