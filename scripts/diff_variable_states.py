@@ -127,6 +127,14 @@ def main() -> None:
             f"\nFAIL: {len(out_of_population)} group(s) outside the enumerated populations"
         )
         sys.exit(1)
+    if pin_changed:
+        # Not automatically wrong (a pin's conflict can legitimately gain a
+        # disjoint sibling state), but never automation-passable: a changed
+        # pinned column requires human review of the printout above.
+        print(
+            f"\nREVIEW: {pin_changed} pinned column(s) changed — verify the pinned winners above"
+        )
+        sys.exit(2)
     print("\nOK: every changed group involves a sub-annual bound")
 
 
