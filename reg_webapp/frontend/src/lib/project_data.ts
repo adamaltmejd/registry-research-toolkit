@@ -157,6 +157,66 @@ export function addSource(draft: ProjectData): ProjectData {
   return { ...draft, sources: [...sourcesArray(draft), source] };
 }
 
+// ── Source-name prefill (#312) ──────────────────────────────────────────────
+// Source names are panel-key join handles (reg_schema panels join on source
+// name), so a prefill must be unique among the draft's sources. The prefill is
+// advisory: it only ever replaces an empty name or one IT previously wrote
+// (tracked by shape, see `isPrefilledSourceName`) — never a user-entered name.
+
+/** Default source name for a register_variant coordinate: the register slug
+ * (segment 2 of `provider/register/variant`) uppercased — `scb/lisa/v1` →
+ * `"LISA"` (Swedish register stubs are mostly acronyms). `""` when the
+ * coordinate has no register segment yet. */
+export function defaultSourceName(registerVariant: string): string {
+  const slug = registerVariant.split("/")[1] ?? "";
+  return slug.toUpperCase();
+}
+
+/** Whether `name` is one the prefill could have produced for `registerVariant`
+ * — empty, the default, or the default with a `_<n>` uniqueness suffix. The
+ * "untouched" test: a variant change may overwrite such a name with the new
+ * default, while anything user-entered survives. */
+export function isPrefilledSourceName(
+  name: string,
+  registerVariant: string,
+): boolean {
+  if (name === "") {
+    return true;
+  }
+  const base = defaultSourceName(registerVariant);
+  if (!base) {
+    return false;
+  }
+  return (
+    name === base ||
+    (name.startsWith(`${base}_`) &&
+      /^[0-9]+$/.test(name.slice(base.length + 1)))
+  );
+}
+
+/** `base` if no OTHER source (case-sensitive, as the schema compares) already
+ * uses it, else the first free `base_2`, `base_3`, … The source at
+ * `excludeIndex` is ignored (it's the one being named). */
+export function uniqueSourceName(
+  sources: Source[],
+  base: string,
+  excludeIndex: number,
+): string {
+  const taken = new Set(
+    sources
+      .filter((_, i) => i !== excludeIndex)
+      .map((s) => (typeof s.name === "string" ? s.name : "")),
+  );
+  if (!taken.has(base)) {
+    return base;
+  }
+  let n = 2;
+  while (taken.has(`${base}_${n}`)) {
+    n += 1;
+  }
+  return `${base}_${n}`;
+}
+
 /** Remove the source at `index` (no-op if out of range). */
 export function removeSource(draft: ProjectData, index: number): ProjectData {
   return {

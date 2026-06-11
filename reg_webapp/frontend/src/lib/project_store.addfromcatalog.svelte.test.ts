@@ -76,10 +76,12 @@ describe("addFromCatalog (C1)", () => {
     expect(projectStore.draft?.steward).toBe("global");
 
     // The source carries the register_variant + the period prefilled from 2018
-    // (a single year → the number arm).
+    // (a single year → the number arm) + the #312 name prefill (register slug
+    // uppercased).
     const source = projectStore.draft?.sources[0];
     expect(source?.register_variant).toBe("scb/lisa/v1");
     expect(source?.period).toBe(2018);
+    expect(source?.name).toBe("LISA");
 
     // The binding was appended with the variable; the derive lands the type +
     // display name from the resolved state (categorical, "Kon").
@@ -211,6 +213,25 @@ describe("addFromCatalog (C1)", () => {
       SEED,
     );
     expect(c.status).toBe("already-present");
+  });
+
+  it("a created source's name prefill suffixes _2 when the default is taken (#312)", async () => {
+    projectStore.newProject(SEED);
+    // A user-named source already holds "LISA" (a different variant, so the
+    // catalog add creates a NEW source rather than appending).
+    projectStore.addSource();
+    projectStore.updateSource(0, {
+      name: "LISA",
+      register_variant: "scb/lisa/v2",
+      period: 2018,
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([vstate({ delivery_column_name: "Kon", value_set_id: 7 })]),
+    );
+
+    const result = projectStore.addFromCatalog(konPayload(), SEED);
+    expect(result).toEqual({ status: "added", createdSource: true });
+    expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
   });
 
   it("a created source with NO resolved period is left period-unset (the binding marks unresolved)", async () => {
