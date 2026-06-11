@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { VariableStateModel } from "./api";
+import { formatDataType } from "./catalog";
 import { VALUE_SET_VERSION_NONE } from "./period";
 
 // Presentational view of a variable's `variable_state` rows (from the full
@@ -74,7 +75,9 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
       <dd>{s.valid_from} – {s.valid_to}</dd>
       {#if s.data_type}
         <dt>Data type</dt>
-        <dd>{s.data_type}{#if s.data_length}({s.data_length}){/if}</dd>
+        <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
+             (the "bigint(0)" artifact) while keeping real ones like "char(25)". -->
+        <dd>{formatDataType(s.data_type, s.data_length)}</dd>
       {/if}
       {#if s.delivery_column_name}
         <dt>Delivery column</dt>

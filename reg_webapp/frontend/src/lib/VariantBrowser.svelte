@@ -10,6 +10,17 @@ import { asyncResource } from "./async.svelte";
 const { registerFqid }: { registerFqid: string } = $props();
 
 const variants = asyncResource(() => getRegisterVariants(registerFqid));
+
+// `display_group` duplicates `name` for most variants (SCB delivers them
+// identical), so show it only when it ADDS information. Compare trimmed: some
+// source rows carry trailing-whitespace noise on one side ("…AGI/KU " vs
+// "…AGI/KU") that a strict !== would treat as a difference, re-printing the name.
+function showsDistinctGroup(
+  name: string | null | undefined,
+  group: string | null | undefined,
+): boolean {
+  return !!group && group.trim() !== (name ?? "").trim();
+}
 </script>
 
 <section class="variants" aria-labelledby="variants-heading">
@@ -25,7 +36,9 @@ const variants = asyncResource(() => getRegisterVariants(registerFqid));
           <div class="variant">
             <span class="slug">{variant.slug}</span>
             {#if variant.name}<span class="name">{variant.name}</span>{/if}
-            {#if variant.display_group}
+            <!-- Omit display_group when it just repeats `name` (the common case;
+                 "Arbetsställen Arbetsställen") — trimmed compare, see the helper. -->
+            {#if showsDistinctGroup(variant.name, variant.display_group)}
               <span class="group">{variant.display_group}</span>
             {/if}
           </div>
