@@ -54,11 +54,10 @@ function ptr(field: string): string {
   return jsonPointer(["sources", sourceIndex, field]);
 }
 
-function onPickVariant(slug: string): void {
-  // Build the 3-seg register_variant: keep the register prefix, set the variant.
-  const prefix = registerPrefix || registerVariant;
-  const next = prefix ? `${prefix}/${slug}` : slug;
-  projectStore.updateSource(sourceIndex, { register_variant: next });
+function onPickVariant(registerVariant: string): void {
+  // C2: the picker emits the WHOLE 3-seg register_variant (it owns the register —
+  // either the hand-typed prefix or one the user browsed to). Set it directly.
+  projectStore.updateSource(sourceIndex, { register_variant: registerVariant });
   pickingVariant = false;
 }
 </script>
@@ -112,18 +111,15 @@ function onPickVariant(slug: string): void {
       </div>
       <FieldIssues issues={issuesForPointer(issues, ptr("register_variant"))} />
       {#if pickingVariant}
-        {#if registerPrefix}
-          <CatalogPicker
-            mode="variant"
-            register={registerPrefix}
-            onpickVariant={onPickVariant}
-            oncancel={() => (pickingVariant = false)}
-          />
-        {:else}
-          <p class="hint muted">
-            Set the register (e.g. <code>scb/lisa</code>) in <code>register_variant</code> first to pick a variant.
-          </p>
-        {/if}
+        <!-- C2: the picker BROWSES providers → registers → variants when no valid
+             register prefix is hand-typed, and jumps straight to the variant list
+             when one is. It emits the WHOLE register_variant either way. -->
+        <CatalogPicker
+          mode="variant"
+          register={registerPrefix}
+          onpickVariant={onPickVariant}
+          oncancel={() => (pickingVariant = false)}
+        />
       {/if}
     </div>
 
@@ -268,9 +264,5 @@ function onPickVariant(slug: string): void {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-  .hint {
-    font-size: 0.8rem;
-    margin: 0.4rem 0 0;
   }
 </style>

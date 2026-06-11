@@ -105,7 +105,7 @@ const steward = $derived(context?.steward.id ?? "");
       <CatalogRoot />
     {:else if route.name === "catalog-node"}
       {#key route.fqidPath}
-        <CatalogNodeView fqidPath={route.fqidPath} />
+        <CatalogNodeView fqidPath={route.fqidPath} {regMetaVersion} {steward} />
       {/key}
     {:else if route.name === "project"}
       <ProjectEditor {regMetaVersion} {steward} />

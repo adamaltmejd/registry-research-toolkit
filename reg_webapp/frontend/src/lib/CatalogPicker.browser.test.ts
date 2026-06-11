@@ -1,15 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { CatalogNode, StatesResponse, VariantsResponse } from "./api";
-import { getCatalogNode, getRegisterVariants } from "./api";
+import type {
+  CatalogNode,
+  RootResponse,
+  StatesResponse,
+  VariantsResponse,
+} from "./api";
+import { getCatalogNode, getCatalogRoot, getRegisterVariants } from "./api";
 import CatalogPicker from "./CatalogPicker.svelte";
 
-// Stub only the two catalog GETs; keep the rest of api.ts real (isCatalogNode,
-// encodeFqid, types) so the picker's derive helpers run against real data shapes.
+// Stub the three catalog GETs the picker uses; keep the rest of api.ts real
+// (isCatalogNode, encodeFqid, types) so the picker's derive helpers run against real
+// data shapes.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getCatalogNode: vi.fn(), getRegisterVariants: vi.fn() };
+  return {
+    ...actual,
+    getCatalogNode: vi.fn(),
+    getRegisterVariants: vi.fn(),
+    getCatalogRoot: vi.fn(),
+  };
 });
 
 // A register node whose `binding` children are the pickable variables.
@@ -31,9 +42,37 @@ function statesResponse(rows: Array<Record<string, unknown>>): StatesResponse {
   return { states: rows } as unknown as StatesResponse;
 }
 
+// A catalog root whose children are providers (+ a classification-root sentinel the
+// picker must filter out — variants live under providers only).
+function rootResponse(...providers: string[]): RootResponse {
+  return {
+    kind: "root",
+    children: [
+      ...providers.map((fqid) => ({ kind: "provider", fqid, name: fqid })),
+      { kind: "classification-root", fqid: "class", name: "Classifications" },
+    ],
+  } as unknown as RootResponse;
+}
+// A provider node whose children are register nodes.
+function providerNode(
+  fqid: string,
+  ...registers: { fqid: string; name: string }[]
+): CatalogNode {
+  return {
+    kind: "provider",
+    fqid,
+    children: registers.map((r) => ({
+      kind: "register",
+      fqid: r.fqid,
+      name: r.name,
+    })),
+  } as unknown as CatalogNode;
+}
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
   vi.mocked(getRegisterVariants).mockReset();
+  vi.mocked(getCatalogRoot).mockReset();
 });
 
 describe("CatalogPicker", () => {
@@ -81,7 +120,88 @@ describe("CatalogPicker", () => {
 
     await expect.element(page.getByText(/Pick a variant of/)).toBeVisible();
     await page.getByRole("button", { name: /v2019/ }).click();
-    expect(onpickVariant).toHaveBeenCalledWith("v2019");
+    // C2: the picker now emits the WHOLE register_variant (it owns the register —
+    // here the hand-typed `scb/lisa` prefix), not the bare variant slug.
+    expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019");
+  });
+
+  // ── C2: register-browse mode (no hand-typed prefix) ────────────────────────
+  it("browses provider → register → variant when no register prefix is given", async () => {
+    const onpickVariant = vi.fn();
+    // Step 1: the root provides the provider list (classification-root filtered out).
+    vi.mocked(getCatalogRoot).mockResolvedValue(rootResponse("scb", "sos"));
+    // Step 2: the scb provider node's register children.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      providerNode(
+        "scb",
+        { fqid: "scb/lisa", name: "LISA" },
+        { fqid: "scb/rtb", name: "RTB" },
+      ),
+    );
+    // Step 3: lisa's variants.
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [{ slug: "v2019", name: "2019 vintage" }],
+    } as unknown as VariantsResponse);
+
+    await render(CatalogPicker, {
+      mode: "variant",
+      register: "", // EMPTY → register-browse mode
+      onpickVariant,
+      oncancel: vi.fn(),
+    });
+
+    // Step 1: the provider list (filterable); the classification-root is excluded.
+    await expect.element(page.getByText(/choose a provider/)).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /scb/ }))
+      .toBeVisible();
+    // The provider filter is present + functional.
+    const providerFilter = page.getByRole("textbox", {
+      name: "Filter providers",
+    });
+    await expect.element(providerFilter).toBeVisible();
+    // Drill into scb.
+    await page.getByRole("button", { name: /^scb/ }).click();
+
+    // Step 2: the register list under scb (the filter narrows it).
+    await expect.element(page.getByText(/Pick a register in/)).toBeVisible();
+    const registerFilter = page.getByRole("textbox", {
+      name: "Filter registers",
+    });
+    await registerFilter.fill("lisa");
+    await expect
+      .element(page.getByRole("button", { name: /LISA/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /RTB/ }))
+      .not.toBeInTheDocument();
+    await page.getByRole("button", { name: /LISA/ }).click();
+
+    // Step 3: the variant list; picking emits the WHOLE register_variant.
+    await expect.element(page.getByText(/Pick a variant of/)).toBeVisible();
+    await page.getByRole("button", { name: /v2019/ }).click();
+    expect(onpickVariant).toHaveBeenCalledWith("scb/lisa/v2019");
+  });
+
+  it("a hand-typed prefix jumps straight to the variant list (no provider browse)", async () => {
+    vi.mocked(getRegisterVariants).mockResolvedValue({
+      variants: [{ slug: "v2020", name: "2020 vintage" }],
+    } as unknown as VariantsResponse);
+
+    await render(CatalogPicker, {
+      mode: "variant",
+      register: "scb/lisa", // a valid 2-seg prefix → skip the browse
+      onpickVariant: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    // Straight to variants — never the provider/register browse.
+    await expect.element(page.getByText(/Pick a variant of/)).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /v2020/ }))
+      .toBeVisible();
+    // The root was never fetched (no browse step).
+    expect(getCatalogRoot).not.toHaveBeenCalled();
   });
 
   // ── Scenario 1: derive-on-pick prefill ─────────────────────────────────────

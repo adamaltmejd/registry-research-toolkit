@@ -35,11 +35,12 @@ import {
 } from "./api";
 import {
   type BindingResolution,
+  deriveType,
   resolveBindingAt,
   type UnresolvedReason,
   variantSeg,
 } from "./catalog";
-import { periodToWire } from "./period";
+import { periodFromWire, periodToWire } from "./period";
 import {
   addBinding,
   addSource,
@@ -354,6 +355,80 @@ const validatedClean = $derived(validation?.ok === true);
 function setDraft(next: ProjectData): void {
   draft = next;
   validation = null;
+}
+
+// ── Catalog → project handoff (C1 — UI audit finding 2) ──────────────────────
+//
+// The catalog variable page hands a resolved variable-state to the project store
+// WITHOUT importing any editor component: `addFromCatalog` is the single store-level
+// entry point that (find-or-create source) → (duplicate guard) → (append binding) →
+// (derive at the SOURCE's period through the SAME resolveBindingAt + applyPickedBinding
+// path the picker uses). Catalog routes are reachable from the module-singleton store,
+// so this keeps the browse→author handoff a pure store API.
+
+/** The catalog page's resolved variable-state to add to the project (C1). Carries
+ * the full register coordinate + the variable FQID + the chosen representation (the
+ * delivery column, when the page resolved one) + the page's resolved period as a
+ * wire string (prefills a freshly-created source's period; an existing source keeps
+ * its own period). */
+export interface CatalogAddPayload {
+  /** The 3-seg `provider/register/variant` coordinate (the source register_variant). */
+  registerVariant: string;
+  /** The bare 3-seg variable FQID (`scb/lisa/kon`). */
+  variable: string;
+  /** The chosen delivery column when the page resolved a specific representation
+   * (the StatesView is at a single state), else null. */
+  representation: string | null;
+  /** The page's resolved period as a wire string (`"2018"`, `"2010..2020"`, a
+   * token), or null when the user hasn't resolved a period — only used to PREFILL a
+   * newly-created source. */
+  resolvedPeriod: string | null;
+}
+
+/** The outcome of an `addFromCatalog` call, for the catalog page's inline feedback.
+ *  - `added`         — a binding was appended (to a found or newly-created source).
+ *  - `already-present` — the source already had this fqid (+ representation); no-op.
+ */
+export interface CatalogAddResult {
+  status: "added" | "already-present";
+  /** True when a source was created (vs. appended to an existing matching source) —
+   * lets the confirmation distinguish "added to scb/lisa/v1" from "started a new
+   * source". */
+  createdSource: boolean;
+}
+
+/** Whether a source already carries a binding for this fqid (+ representation) — the
+ * duplicate guard, applied at the CONCEPT level (review MAJOR 2). For the same
+ * variable, a stored binding decides as follows:
+ *  - the PAYLOAD representation is null (a single-column concept, or an unspecified
+ *    add) → any existing binding of the variable is a duplicate (the concept is
+ *    already in the project; there is no other column to distinguish);
+ *  - the STORED representation is null → ALSO a duplicate for ANY payload
+ *    representation. A null stored representation means "the only column at the
+ *    source's period" — so a page that pinned a column R against a DIFFERENT (page)
+ *    period, where the source resolves single-rep, must NOT add a second binding
+ *    (the source's resolve collapses R to that single column). This is the desync
+ *    the page-pin-vs-source-derive gap would otherwise miss.
+ *  - both non-null → exact column match (two genuinely co-existing columns are
+ *    distinct extractions and may both live in the source). */
+function sourceHasBinding(
+  source: Source,
+  variable: string,
+  representation: string | null,
+): boolean {
+  const bindings = Array.isArray(source.bindings) ? source.bindings : [];
+  return bindings.some((b) => {
+    if ((typeof b.variable === "string" ? b.variable : "") !== variable) {
+      return false;
+    }
+    const bRep = typeof b.representation === "string" ? b.representation : null;
+    // null on EITHER side means "the only column" — a duplicate regardless of the
+    // other side's value; both non-null compares the exact delivery column.
+    if (representation == null || bRep == null) {
+      return true;
+    }
+    return bRep === representation;
+  });
 }
 
 export const projectStore = {
@@ -741,6 +816,117 @@ export const projectStore = {
       mismatch: null,
     });
   },
+
+  /**
+   * Add a catalog variable-state to the project (C1 — catalog→project handoff).
+   * The single store-level entry point the catalog page calls (it imports NO editor
+   * component). Steps:
+   *   1. Ensure a draft exists — implicitly create the untitled project from `seed`
+   *      when the store is pristine (same as "New project").
+   *   2. Find a source whose `register_variant` matches `payload.registerVariant`;
+   *      create one (prefilling its period from `payload.resolvedPeriod`) when none.
+   *   3. Duplicate guard: a source already carrying this fqid (+ representation) is a
+   *      no-op → `already-present`.
+   *   4. Append the binding and write its variable (+ the page's representation)
+   *      SYNCHRONOUSLY so the binding is non-empty immediately (a fast second add is
+   *      caught by the duplicate guard, which keys on the variable), STAMP a provisional
+   *      `unresolved` marker so the row is never a bare type:"" with no cue, THEN derive
+   *      the type/display/representation at the SOURCE's (period, variant) by kicking the
+   *      SAME guarded `rederiveSource` pass the editor's period-change uses — so the
+   *      catalog-add derive participates in the source's rederiveGen + the per-binding
+   *      identity re-check, and a later period change (or a remove) correctly SUPERSEDES
+   *      a stale in-flight add-derive instead of clobbering. A found source's period may
+   *      differ from the page's, so resolving at the source's own period (what
+   *      rederiveSource does) is the correct behavior, not trusting the page's
+   *      representation blindly. The synchronous return reports the add outcome; the type
+   *      fills in once the (guarded) resolve lands.
+   */
+  addFromCatalog(
+    payload: CatalogAddPayload,
+    seed: ProjectSeed,
+  ): CatalogAddResult {
+    // 1. Pristine store → create the untitled project (same path as New project).
+    if (draft == null) {
+      projectStore.newProject(seed);
+    }
+    if (draft == null) {
+      // newProject always sets the draft; this guards the type-narrowing only.
+      return { status: "already-present", createdSource: false };
+    }
+
+    const sources = Array.isArray(draft.sources) ? draft.sources : [];
+    let sourceIndex = sources.findIndex(
+      (s) =>
+        (typeof s.register_variant === "string" ? s.register_variant : "") ===
+        payload.registerVariant,
+    );
+    let createdSource = false;
+
+    // 2. No matching source → create one (period prefilled from the page's resolved
+    //    period; unset otherwise — PR B's unresolved marker then guides the user).
+    if (sourceIndex < 0) {
+      projectStore.addSource();
+      sourceIndex =
+        (Array.isArray(draft.sources) ? draft.sources : []).length - 1;
+      projectStore.updateSource(sourceIndex, {
+        register_variant: payload.registerVariant,
+        period: periodFromWire(payload.resolvedPeriod),
+      });
+      createdSource = true;
+    }
+
+    // 3. Duplicate guard against the (now-resolved) source.
+    const source = draft.sources?.[sourceIndex];
+    if (
+      source &&
+      sourceHasBinding(source, payload.variable, payload.representation)
+    ) {
+      return { status: "already-present", createdSource };
+    }
+
+    // 4. Append the binding and write its variable (+ provisional representation)
+    //    SYNCHRONOUSLY — the binding must be non-empty before this call returns so a
+    //    rapid second add is caught by the duplicate guard (which keys on variable +
+    //    representation).
+    projectStore.addBinding(sourceIndex);
+    const bindingIndex =
+      (Array.isArray(draft.sources?.[sourceIndex]?.bindings)
+        ? (draft.sources[sourceIndex].bindings as Binding[])
+        : []
+      ).length - 1;
+    projectStore.updateBinding(sourceIndex, bindingIndex, {
+      variable: payload.variable,
+      representation: payload.representation,
+    });
+    // Stamp a provisional `unresolved` marker so the row shows an honest cue (not a
+    // bare type:"" with nothing) until the guarded derive lands — or, if a structural
+    // shift drops that derive before it replaces this, this marker is what the user
+    // sees (never a silent type:""). The reason reflects the source's period: unset →
+    // "set the period"; set → "resolving / no covering state" (no-states), which the
+    // landing derive corrects to the real status.
+    const provSource = draft.sources?.[sourceIndex];
+    const provPeriod = provSource
+      ? periodToWire(provSource.period as Period)
+      : null;
+    setDerivation(sourceIndex, bindingIndex, {
+      status: "unresolved",
+      reason: provPeriod ? "no-states" : "period-unset",
+      variant: provSource ? variantSeg(registerVariantOf(provSource)) : "",
+      period: provPeriod,
+      // The provisionally-written representation is OURS (the add wrote it, not the
+      // user), so record it as the derived baseline — the guarded derive then clears
+      // it when the source's period resolves single-rep (the collapse case) instead
+      // of treating it as a user-owned value to preserve (review MAJOR 2).
+      derivedRepresentation: payload.representation,
+      mismatch: null,
+    });
+    // Derive through the SAME guarded pass the editor's period-change uses: it bumps
+    // the source's rederiveGen and re-checks identity + gen before any write, so a
+    // later period change (or a remove) supersedes this in-flight add-derive instead
+    // of letting a stale resolution clobber the binding (review MAJOR 1).
+    void rederiveSource(sourceIndex);
+    return { status: "added", createdSource };
+  },
 };
 
 // ── Re-derivation engine (B2) ─────────────────────────────────────────────────
@@ -937,9 +1123,37 @@ function applyResolution(
   }
 
   if (result.kind === "ambiguous") {
-    // The concept now resolves to >1 co-existing representation; the store can't
-    // auto-pick (only the picker chooser can). Surface a non-blocking marker and
-    // leave the existing value (B2.4).
+    // The concept resolves to >1 co-existing representation. If the binding ALREADY
+    // carries a representation that is one of the co-existing columns, the choice is
+    // already made — narrow to that column and derive it (the catalog-add page-pin
+    // case AND a re-derive of a binding whose chosen column still co-exists). Only
+    // when no chosen column matches do we surface the non-blocking "re-pick" marker
+    // (the store can't auto-pick; the picker chooser must — B2.4).
+    const chosenRep =
+      typeof binding.representation === "string"
+        ? binding.representation
+        : null;
+    const chosenState = chosenRep
+      ? result.states.find((s) => s.delivery_column_name === chosenRep)
+      : undefined;
+    if (chosenState) {
+      // Re-run the derived-result branch below for the chosen column.
+      applyDerivedResult(
+        sourceIndex,
+        bindingIndex,
+        binding,
+        prev,
+        variant,
+        period,
+        {
+          kind: "derived",
+          type: deriveType(chosenState),
+          displayNameDefault: chosenState.delivery_column_name ?? chosenRep,
+          representation: chosenRep,
+        },
+      );
+      return;
+    }
     setDerivation(sourceIndex, bindingIndex, {
       ...(prev ?? {}),
       status: "ambiguous",
@@ -952,6 +1166,39 @@ function applyResolution(
   }
 
   // result.kind === "derived": the clobber-vs-keep core.
+  applyDerivedResult(
+    sourceIndex,
+    bindingIndex,
+    binding,
+    prev,
+    variant,
+    period,
+    result,
+  );
+}
+
+/** The clobber-vs-keep core for a single-representation `derived` resolution (B2.2),
+ * applied to the binding at (sourceIndex, bindingIndex). Extracted so the ambiguous
+ * branch can reuse it when the binding's chosen representation still co-exists (the
+ * choice is already made → derive that column rather than re-flagging ambiguous).
+ * The CALLER owns the gen + identity re-checks (this runs only after they pass). */
+function applyDerivedResult(
+  sourceIndex: number,
+  bindingIndex: number,
+  binding: Binding,
+  prev: BindingDerivation | null,
+  variant: string,
+  period: string | null,
+  result: {
+    kind: "derived";
+    type: string;
+    displayNameDefault: string | null;
+    representation: string | null;
+  },
+): void {
+  if (draft == null) {
+    return;
+  }
   const currentType = typeof binding.type === "string" ? binding.type : "";
   const currentDisplay =
     typeof binding.display_name === "string" ? binding.display_name : "";
