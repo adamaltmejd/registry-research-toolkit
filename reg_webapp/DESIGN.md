@@ -373,8 +373,11 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
   navigations without invoking the worker, shadowing `/api` deep-opens. Cloudflare
   downgrades the origin's strong ETag to weak (`W/`) when compression applies — weak
-  comparison is correct for GET revalidation, not a bug. Deploy: build the SPA, then
-  `bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc` (manual; not in CI).
+  comparison is correct for GET revalidation, not a bug. Deploys: CI (`edge-deploy.yml`)
+  rebuilds the SPA and runs `wrangler deploy` on main pushes touching the SPA, the edge
+  worker, or the committed `openapi.json` (`CLOUDFLARE_API_TOKEN` repo secret, "Edit
+  Cloudflare Workers" template scoped to the account + swecov.se). Manual fallback:
+  build the SPA, then `bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc`.
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with
   `Cache-Control: public` — without the rule every read is `cf-cache-status: DYNAMIC`),
