@@ -124,15 +124,19 @@ reads `codes.classifications[value_set]`; absent `value_set` reads
 
 > Co-delivered parallel representations of one variable are distinguished by the
 > binding-level `representation` field (the retired `@version` FQID pin no longer exists
-> — see `reg_meta/DESIGN.md`). Whether the `sources` keyspace must key on
-> `(binding FQID, representation)` to avoid a same-FQID co-delivery collision is
-> **undecided — settle it at step-8 kickoff, before codes.json or stats v1 is
-> implemented**; the same collision applies to the stats `bindings` keyspace below. The
+> — see `reg_meta/DESIGN.md`). **Decided 2026-06-11 (#206/#217): the keyspaces are
+> column-based** — keyed on `(binding FQID, resolved delivery column)`, where the column
+> is the binding's **resolved** `delivery_column_name` (its `representation` when
+> pinned; the unique column otherwise), never the raw `representation` string. The
 > exposure is real: the build deliberately keeps coexisting cross-column parallel
 > deliveries (PR #265, \~1,372 cross-column pairs kept, \~1,078 of them
-> identical-coding). Decide the kit-contract facet on #217; the steward-admission facet
-> stays with #206. (#208, once named here, closed with a different deliverable — the
-> classification-slug surface — and no longer tracks this.)
+> identical-coding). The steward-admission facet is **implemented** (#206:
+> `CatalogIndex` stores resolved-column pairs, `admits(fqid, column)`, and the distinct
+> `representation_outside_steward_catalog` finding — see `reg_webapp/DESIGN.md` →
+> Steward layering); the kit-contract facet (codes.json `sources` + stats `bindings`
+> keyspaces) applies the same keying when #217 implements them. (#208, once named here,
+> closed with a different deliverable — the classification-slug surface — and no longer
+> tracks this.)
 
 After kit-build the trio is **freestanding from reg_meta**: a project committed to git
 regenerates the same mock data years later, regardless of how reg_meta evolves
@@ -497,14 +501,14 @@ Carried from the testing strategy; the shipped categories are in
 
 ## Tracking issues
 
-Open issues seeded from or feeding this plan: #206 (steward admission keying — the
-kit-contract facet is decided on #217 at step-8 kickoff), #209 (v1 slug freeze), #217
-(kit-build), #240 (MSSQL integration test — pre-10a gate), #196 + #197
-(identity-churning curation — pre-freeze), #200 + #266 (authoring-UX ride-alongs for the
-7.5 dogfood), and #211 (LOVA/LVM curation — freeze-safe, batch with step 11). Deferred
-beyond v1 but recorded so pointers resolve: #212 (materializer-owned value tables) and
-#271 (interval-native resolver). Resolved since this spec was seeded: #220 + #224 + #278
-(the 6.5 deployment set, closed when 6.5 shipped 2026-06-11), #210 (SOS classification
-path, closed via PRs #273/#274), #208 (closed with the classification-slug surface, not
-the keyspace question), #227 (wire `fqid_outside_steward_catalog`), and #228 (reserved
-suffix slugs).
+Open issues seeded from or feeding this plan: #206 (steward admission keying — decided
+column-based 2026-06-11 and implemented; the kit-contract facet lands with #217's
+implementation), #209 (v1 slug freeze), #217 (kit-build), #240 (MSSQL integration test —
+pre-10a gate), #196 + #197 (identity-churning curation — pre-freeze), #200 + #266
+(authoring-UX ride-alongs for the 7.5 dogfood), and #211 (LOVA/LVM curation —
+freeze-safe, batch with step 11). Deferred beyond v1 but recorded so pointers resolve:
+#212 (materializer-owned value tables) and #271 (interval-native resolver). Resolved
+since this spec was seeded: #220 + #224 + #278 (the 6.5 deployment set, closed when 6.5
+shipped 2026-06-11), #210 (SOS classification path, closed via PRs #273/#274), #208
+(closed with the classification-slug surface, not the keyspace question), #227 (wire
+`fqid_outside_steward_catalog`), and #228 (reserved suffix slugs).

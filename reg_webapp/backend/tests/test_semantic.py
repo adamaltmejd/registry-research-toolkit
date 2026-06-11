@@ -706,8 +706,8 @@ def test_partial_coverage_does_not_drop_binding_from_steward_index(catalog):
     assert issue.level == "info"
     assert result.ok
 
-    index = build_catalog_index(project, result.issues)
-    assert index.admits("scb/lisa/kon")
+    index = build_catalog_index(project, result.issues, catalog)
+    assert index.admits("scb/lisa/kon", "Kon")
 
 
 @pytest.fixture
@@ -832,9 +832,9 @@ def kon_only_index(catalog):
     project = _project([_CLEAN_SOURCE])
     result = validate_semantic(project, catalog, caller="steward")
     assert result.ok
-    index = build_catalog_index(project, result.issues)
-    assert index.admits("scb/lisa/kon")
-    assert not index.admits("scb/rams/syss")
+    index = build_catalog_index(project, result.issues, catalog)
+    assert index.admits("scb/lisa/kon", "Kon")
+    assert not index.admits("scb/rams/syss", "Syss")
     return index
 
 
@@ -895,9 +895,9 @@ def test_outside_steward_catalog_warns_per_unadmitted_binding(two_lisa_var_catal
     )
     sresult = validate_semantic(steward, two_lisa_var_catalog, caller="steward")
     assert sresult.ok
-    index = build_catalog_index(steward, sresult.issues)
-    assert index.admits("scb/lisa/kon")
-    assert not index.admits("scb/lisa/alder")
+    index = build_catalog_index(steward, sresult.issues, two_lisa_var_catalog)
+    assert index.admits("scb/lisa/kon", "Kon")
+    assert not index.admits("scb/lisa/alder", "Alder")
 
     researcher = _project(
         [
@@ -933,8 +933,9 @@ def test_outside_steward_catalog_warns_per_unadmitted_binding(two_lisa_var_catal
 
 
 def test_outside_steward_catalog_coexists_with_period_check(catalog):
-    # Coexistence: the `fqid_outside_steward_catalog` block does NOT early-return —
-    # it falls through to `_check_binding_period`, so a binding that is BOTH
+    # Coexistence: the admission check runs AFTER `_check_binding_period` (it
+    # needs the resolved columns, #206) but its FQID-level arm fires even when
+    # the period resolution failed, so a binding that is BOTH
     # unadmitted AND period-invalid emits BOTH codes. (The fixture's `syss` covers
     # all history and can't be made period-invalid, so the period-bounded binding
     # here is `kon` (state 2018+); the index therefore admits `syss`, leaving `kon`
@@ -942,9 +943,9 @@ def test_outside_steward_catalog_coexists_with_period_check(catalog):
     steward = _project([_RAMS_SOURCE])
     sresult = validate_semantic(steward, catalog, caller="steward")
     assert sresult.ok
-    index = build_catalog_index(steward, sresult.issues)
-    assert index.admits("scb/rams/syss")
-    assert not index.admits("scb/lisa/kon")
+    index = build_catalog_index(steward, sresult.issues, catalog)
+    assert index.admits("scb/rams/syss", "Syss")
+    assert not index.admits("scb/lisa/kon", "Kon")
 
     # kon's only state is 2018-01-01..9999-12-31; period 2015 is outside it.
     result = validate_semantic(
@@ -994,3 +995,198 @@ def test_unresolvable_fqid_not_also_outside_catalog(catalog, kon_only_index):
     codes = {i.code for i in result.issues}
     assert "fqid_unresolved" in codes
     assert "fqid_outside_steward_catalog" not in codes
+
+
+# ── #206: representation_outside_steward_catalog (column-based admission) ───
+# Admission keys on (FQID, RESOLVED delivery column). A steward holding only one
+# representation of a multi-column concept admits exactly that column; a
+# researcher binding the sibling column gets the DISTINCT
+# `representation_outside_steward_catalog` (warning) whose message enumerates
+# what the steward DOES hold. Matching is on the resolved column, never the raw
+# `representation` string, so a steward-authored-`None`-before-drift catalog and
+# a researcher who must now pin still compare equal.
+
+
+@pytest.fixture
+def two_repr_catalog():
+    """`scb/lisa/kon` delivered under TWO CO-EXISTING columns at 2018+ — the
+    seeded `Kon` plus a parallel `KonDetailed` (same window, distinct column) —
+    a multi-representation concept whose bindings must pin `representation`."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="KonDetailed",
+        # Distinct label only to satisfy the state uniqueness key (same
+        # variable/variant/valid_from); value_set_id stays None on both states,
+        # so the co-delivered-value-set backstop is NOT in play here.
+        value_set_version_label="detailed",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def _kon_repr_source(representation: str | None) -> dict:
+    binding: dict = {"variable": "scb/lisa/kon", "type": "categorical"}
+    if representation is not None:
+        binding["representation"] = representation
+    return {
+        "name": "lisa-2018",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": 2018,
+        "bindings": [binding],
+    }
+
+
+@pytest.fixture
+def kon_basic_only_index(two_repr_catalog):
+    """A steward holding `kon` at the `Kon` column ONLY (its catalog pins
+    `representation: "Kon"` — required, the concept is multi-representation)."""
+    steward = _project([_kon_repr_source("Kon")])
+    sresult = validate_semantic(steward, two_repr_catalog, caller="steward")
+    assert sresult.ok and sresult.issues == ()
+    index = build_catalog_index(steward, sresult.issues, two_repr_catalog)
+    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
+        {("scb/lisa/kon", "Kon")}
+    )
+    return index
+
+
+def test_sibling_representation_outside_steward_catalog(
+    two_repr_catalog, kon_basic_only_index
+):
+    # The researcher pins the OTHER column: the FQID is in the catalog, its
+    # resolved column is not → the distinct representation-level warning, whose
+    # message names the missing column AND enumerates the steward's holdings.
+    result = validate_semantic(
+        _project([_kon_repr_source("KonDetailed")]),
+        two_repr_catalog,
+        caller="researcher",
+        index=kon_basic_only_index,
+    )
+    by_code = {i.code: i for i in result.issues}
+    assert "fqid_outside_steward_catalog" not in by_code
+    issue = by_code["representation_outside_steward_catalog"]
+    assert issue.level == "warning"
+    assert issue.path == "/sources/0/bindings/0/variable"
+    assert "'KonDetailed'" in issue.message
+    assert "'Kon'" in issue.message
+    # Non-blocking: the column is real reg_meta-wide, merely not supplied here.
+    assert result.ok
+
+
+def test_matching_representation_is_admitted(two_repr_catalog, kon_basic_only_index):
+    result = validate_semantic(
+        _project([_kon_repr_source("Kon")]),
+        two_repr_catalog,
+        caller="researcher",
+        index=kon_basic_only_index,
+    )
+    codes = {i.code for i in result.issues}
+    assert "representation_outside_steward_catalog" not in codes
+    assert "fqid_outside_steward_catalog" not in codes
+    assert result.ok
+
+
+def test_ambiguous_binding_skips_representation_admission(
+    two_repr_catalog, kon_basic_only_index
+):
+    # No `representation` on a multi-column concept → the binding is ambiguous
+    # (`binding_value_set_version_ambiguous` error); WHICH column the author means
+    # is unknowable, so the column-level admission check stays silent rather than
+    # piling a speculative warning on top.
+    result = validate_semantic(
+        _project([_kon_repr_source(None)]),
+        two_repr_catalog,
+        caller="researcher",
+        index=kon_basic_only_index,
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" in codes
+    assert "representation_outside_steward_catalog" not in codes
+    assert "fqid_outside_steward_catalog" not in codes
+
+
+def test_steward_none_vs_researcher_pin_compare_equal_on_resolved_column(
+    catalog, kon_only_index
+):
+    # Drift-handling rationale (#206): the steward authored `representation: None`
+    # back when `kon` had ONE column; reg_meta later grows a sibling and the
+    # researcher must pin. Both sides RESOLVE to the same `Kon` column, so the
+    # pinned researcher binding is admitted — raw-string matching (None vs "Kon")
+    # would falsely reject. (Single-column fixture: pinning is legal, not required.)
+    source = {
+        **_CLEAN_SOURCE,
+        "bindings": [{**_CLEAN_SOURCE["bindings"][0], "representation": "Kon"}],
+    }
+    result = validate_semantic(
+        _project([source]), catalog, caller="researcher", index=kon_only_index
+    )
+    codes = {i.code for i in result.issues}
+    assert "representation_outside_steward_catalog" not in codes
+    assert "fqid_outside_steward_catalog" not in codes
+    assert result.ok
+
+
+@pytest.fixture
+def renamed_column_catalog():
+    """`scb/lisa/kon` SEQUENTIALLY renamed: column `Kon` through 2019-12-31, then
+    `KonNy` from 2020 (non-overlapping windows — a rename, NOT co-existing
+    representations, so no `representation` pin is required on either side)."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET valid_to = '2019-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2020-01-01",
+        valid_to="9999-12-31",
+        delivery_column_name="KonNy",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_resolved_column_mismatch_across_sequential_rename(renamed_column_catalog):
+    # Neither side pins a `representation` (legal — one column per instant), yet
+    # admission still catches the mismatch because BOTH sides resolve to columns:
+    # the steward's 2018 catalog holds `Kon`; the researcher's 2020 binding
+    # resolves to the renamed `KonNy`. Raw-string matching (None vs None) would
+    # falsely admit it.
+    steward = _project([_kon_repr_source(None)])  # period 2018 → column `Kon`
+    sresult = validate_semantic(steward, renamed_column_catalog, caller="steward")
+    assert sresult.ok and sresult.issues == ()
+    index = build_catalog_index(steward, sresult.issues, renamed_column_catalog)
+    assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
+        {("scb/lisa/kon", "Kon")}
+    )
+
+    researcher = _project([{**_kon_repr_source(None), "period": 2020}])
+    result = validate_semantic(
+        researcher, renamed_column_catalog, caller="researcher", index=index
+    )
+    by_code = {i.code: i for i in result.issues}
+    issue = by_code["representation_outside_steward_catalog"]
+    assert issue.level == "warning"
+    assert "'KonNy'" in issue.message
+    assert "'Kon'" in issue.message
+    assert "fqid_outside_steward_catalog" not in by_code
+    assert result.ok

@@ -214,4 +214,4 @@ def load_catalog_index(
             "ambiguous binding's @<version>): "
             + "; ".join(f"{i.code}@{i.path}" for i in errors)
         )
-    return build_catalog_index(project, result.issues)
+    return build_catalog_index(project, result.issues, catalog)

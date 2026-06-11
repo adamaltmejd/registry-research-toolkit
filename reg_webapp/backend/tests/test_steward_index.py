@@ -120,17 +120,19 @@ def test_index_maps_variant_coord_to_bindings(catalog):
     project = ProjectData.model_validate(_steward_project(_CLEAN_SOURCES))
     result = validate_semantic(project, catalog, caller="steward")
     assert result.ok and result.issues == ()
-    index = build_catalog_index(project, result.issues)
+    index = build_catalog_index(project, result.issues, catalog)
 
     assert set(index.bindings_by_variant) == {
         "scb/lisa/individer-15plus",
         "scb/rams/standard",
     }
+    # #206: values are (FQID, resolved delivery column) pairs — the steward
+    # bindings carry no `representation`, so each resolves to its unique column.
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
-        {"scb/lisa/kon"}
+        {("scb/lisa/kon", "Kon")}
     )
     assert index.bindings_by_variant["scb/rams/standard"] == frozenset(
-        {"scb/rams/syss"}
+        {("scb/rams/syss", "Syss")}
     )
     # Period-range map keyed by register FQID.
     assert index.period_range_by_register == {
@@ -146,11 +148,16 @@ def test_index_maps_variant_coord_to_bindings(catalog):
 def test_index_admits_known_and_rejects_unknown(catalog):
     project = ProjectData.model_validate(_steward_project(_CLEAN_SOURCES))
     result = validate_semantic(project, catalog, caller="steward")
-    index = build_catalog_index(project, result.issues)
-    assert index.admits("scb/lisa/kon")
-    assert index.admits("scb/rams/syss")
+    index = build_catalog_index(project, result.issues, catalog)
+    assert index.admits("scb/lisa/kon", "Kon")
+    assert index.admits("scb/rams/syss", "Syss")
     # In the universe but NOT in this steward's catalog → not admitted.
-    assert not index.admits("scb/rams/nosuchbinding")
+    assert not index.admits("scb/rams/nosuchbinding", "Whatever")
+    # #206: the right FQID at a column the steward does not hold → not admitted,
+    # but `held_columns` still names the concept (the representation-level case).
+    assert not index.admits("scb/lisa/kon", "KonDetailed")
+    assert index.held_columns("scb/lisa/kon") == frozenset({"Kon"})
+    assert index.held_columns("scb/rams/nosuchbinding") == frozenset()
 
 
 # ── drift drops a binding from the index (unit) ────────────────────────────
@@ -175,21 +182,43 @@ def test_drift_drops_binding_keeps_others(catalog):
     assert result.ok
     assert any(w.code == "fqid_unresolved" for w in result.issues)
 
-    index = build_catalog_index(project, result.issues)
+    index = build_catalog_index(project, result.issues, catalog)
     # The resolvable binding survives; the ghost is dropped.
     assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
-        {"scb/lisa/kon"}
+        {("scb/lisa/kon", "Kon")}
     )
     assert len(index.drift_warnings) == 1
 
 
 def test_build_index_drops_only_warning_level_issues():
     """build_catalog_index drops a binding (+ surfaces drift) ONLY for a
-    warning-level issue — the three steward-downgraded resolution failures.
+    warning-level issue — the steward-downgraded resolution failures.
     An info `binding_state_drifts_within_period` (the binding RESOLVED, it just
     spans a transition) and a non-downgraded error `binding_value_set_version_
     ambiguous` (a researcher-author-time concern) must NOT drop the binding nor
-    appear as drift. Pure walk over `issues` — no DB needed."""
+    appear as drift. The drop decision is a pure walk over `issues`; the KEPT
+    bindings must resolve against the catalog (#206 column resolution), so the
+    fixture seeds `alder` / `civst` alongside the warned-on ghost `aaa` (a
+    dropped binding is never resolved — it may be absent from the DB)."""
+    from _slugged_db import add_state, add_variable, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    for var_id, name, slug, column in [
+        (88, "Ålder", "alder", "Alder"),
+        (89, "Civilstånd", "civst", "Civst"),
+    ]:
+        add_variable(conn, register_id=1, var_id=var_id, name=name, slug=slug)
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug=slug,
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            valid_to="9999-12-31",
+            delivery_column_name=column,
+        )
+    conn.commit()
+
     sources = [
         {
             "name": "lisa",
@@ -197,8 +226,8 @@ def test_build_index_drops_only_warning_level_issues():
             "period": 2018,
             "bindings": [
                 {"variable": "scb/lisa/aaa", "type": "categorical"},  # warning → drop
-                {"variable": "scb/lisa/bbb", "type": "categorical"},  # info → keep
-                {"variable": "scb/lisa/ccc", "type": "categorical"},  # error → keep
+                {"variable": "scb/lisa/alder", "type": "categorical"},  # info → keep
+                {"variable": "scb/lisa/civst", "type": "categorical"},  # error → keep
             ],
         }
     ]
@@ -223,11 +252,14 @@ def test_build_index_drops_only_warning_level_issues():
             message="pin a version",
         ),
     )
-    index = build_catalog_index(project, issues)
-    admitted = index.bindings_by_variant["scb/lisa/individer-15plus"]
+    try:
+        index = build_catalog_index(project, issues, Catalog(conn))
+    finally:
+        conn.close()
+    admitted = {f for f, _ in index.bindings_by_variant["scb/lisa/individer-15plus"]}
     assert "scb/lisa/aaa" not in admitted  # warning dropped it
-    assert "scb/lisa/bbb" in admitted  # info must NOT drop
-    assert "scb/lisa/ccc" in admitted  # non-downgraded error must NOT drop
+    assert "scb/lisa/alder" in admitted  # info must NOT drop
+    assert "scb/lisa/civst" in admitted  # non-downgraded error must NOT drop
     assert [w.code for w in index.drift_warnings] == ["fqid_unresolved"]
 
 
@@ -242,7 +274,7 @@ def test_unresolved_variant_drops_whole_source(catalog):
     ]
     project = ProjectData.model_validate(_steward_project(sources))
     result = validate_semantic(project, catalog, caller="steward")
-    index = build_catalog_index(project, result.issues)
+    index = build_catalog_index(project, result.issues, catalog)
     # The variant didn't resolve → the source's bindings are all unauthorable.
     assert index.bindings_by_variant.get("scb/lisa/ghostvariant") == frozenset()
 
@@ -382,7 +414,7 @@ def test_boot_survives_catalog_drift(catalog_db, _filtered_steward_dir):
         assert index is not None
         # The ghost binding dropped; the resolvable one survives.
         assert index.bindings_by_variant["scb/lisa/individer-15plus"] == frozenset(
-            {"scb/lisa/kon"}
+            {("scb/lisa/kon", "Kon")}
         )
         resp = client.get("/api/context")
 

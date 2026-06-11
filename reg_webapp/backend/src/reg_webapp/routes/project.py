@@ -152,8 +152,9 @@ def _semantic_issues(
     divergence — a spec that bundles must also validate clean on that class.
 
     ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
-    ``global`` deployment); the semantic layer consults it to flag a resolvable FQID
-    outside the steward's filtered subset (``fqid_outside_steward_catalog``).
+    ``global`` deployment); the semantic layer consults it to flag a resolvable
+    binding outside the steward's filtered subset (``fqid_outside_steward_catalog``
+    / ``representation_outside_steward_catalog`` — column-based admission, #206).
 
     Reached only when the structural layer passed. The model build is now a THIN
     DEFENSIVE catch: ``validate_structural`` already flags missing / mistyped /
@@ -243,7 +244,8 @@ def _validate_blocking(
 
     ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
     ``global`` deployment), threaded into the semantic layer for the steward
-    catalog filter (``fqid_outside_steward_catalog``)."""
+    catalog filter (``fqid_outside_steward_catalog`` /
+    ``representation_outside_steward_catalog``)."""
     issues: list[ValidationIssue] = []
     structural = validate_structural(raw)
     issues.extend(structural.issues)
