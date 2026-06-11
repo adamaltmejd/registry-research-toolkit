@@ -241,9 +241,10 @@ export function deriveType(state: VariableStateModel | undefined): string {
 
 /** Display the storage `data_type` with its length parenthetical, DROPPING a
  * meaningless length. `data_length` arrives as a string (`str | None` on the
- * wire); many source rows carry `"0"` / `""` as a "no precision" sentinel, which
- * rendered verbatim as the artifact "bigint(0)". A length is shown only when it
- * parses to a NON-ZERO number (e.g. `char(25)`, `Decimaltal(4)`); `0`/empty/
+ * wire); many source rows carry `"0"` / `""` as a "no precision" sentinel
+ * (rendered verbatim as the artifact "bigint(0)"), and 64 rows carry `"-1"` —
+ * SQL Server's varchar(MAX) sentinel. A length is shown only when it parses to
+ * a POSITIVE number (e.g. `char(25)`, `Decimaltal(4)`); zero/negative/empty/
  * non-numeric are suppressed. Returns "" when there is no data_type at all (the
  * caller already gates the "Data type" row on a present type). */
 export function formatDataType(
@@ -256,8 +257,8 @@ export function formatDataType(
   }
   const len = (dataLength ?? "").trim();
   const n = Number(len);
-  // Show the parenthetical only for a non-zero numeric length; "0"/""/garbage drop.
-  return len !== "" && Number.isFinite(n) && n !== 0 ? `${type}(${len})` : type;
+  // Show the parenthetical only for a positive numeric length; "0"/"-1"/""/garbage drop.
+  return len !== "" && Number.isFinite(n) && n > 0 ? `${type}(${len})` : type;
 }
 
 /** One co-existing REPRESENTATION of a concept at a period — a distinct delivery

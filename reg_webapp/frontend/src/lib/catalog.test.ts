@@ -290,6 +290,8 @@ describe("formatDataType", () => {
     expect(formatDataType("char", "")).toBe("char");
     expect(formatDataType("char", null)).toBe("char");
     expect(formatDataType("char", undefined)).toBe("char");
+    // SQL Server's varchar(MAX) sentinel — same meaningless-parenthetical class.
+    expect(formatDataType("nvarchar", "-1")).toBe("nvarchar");
   });
 
   it("keeps a meaningful non-zero length", () => {

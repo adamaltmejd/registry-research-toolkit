@@ -154,4 +154,24 @@ describe("LineagePanels — empty-section collapse (D1.2)", () => {
       .element(page.getByText("No source state covers 2015."))
       .toBeVisible();
   });
+
+  // Regression guard for the dangerous false negative: an ERRORED fetched arm
+  // must keep its section visible (with the error) — never collapse into
+  // "No succession or lineage links.", which would read as a confirmed absence.
+  it("keeps the Succession section visible (no compact line) when the predecessors fetch errors", async () => {
+    vi.mocked(getBindingPredecessors).mockRejectedValue(
+      new Error("backend down"),
+    );
+    await render(LineagePanels, { fqidPath: "scb/lisa/kon", node: node() });
+
+    await expect
+      .element(page.getByText(/Failed to load predecessors/))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Succession" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("No succession or lineage links."))
+      .not.toBeInTheDocument();
+  });
 });
