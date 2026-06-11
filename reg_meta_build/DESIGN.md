@@ -993,17 +993,25 @@ never co-occur, the exact opposite of 12 deliberately-parallel columns.
 #### Measurement and verification plan
 
 The instrument is `scripts/measure_subannual_codings.py` (reuses `_edition_bounds` /
-`extract_year` / the cosmetic threshold, so the measured classification cannot drift
-from build behavior). Baseline (real corpus, 2026-06-11): of 488,972
-`(variant, var, col, year)` groups, 6,406 carry ≥2 window classes; **VT-vs-HT: 239
-divergent** (94 cosmetic at `_COSMETIC_MAX_SYM`, 145 substantive across 51 distinct
-`(variant, var, col)` coding events); **term-vs-full-year: 244 divergent** (102
-cosmetic, 142 substantive across 43 events). The substantive populations sit in the
-niche registers the 2026-06-09 investigation named (Komvux, sfi, SSV/CFL school- and
-course-code enumerations) — same shape as its \~257/\~282/\~194 counts; the deltas trace
-to the script comparing raw delivered code keys where the retired spike read built-DB
-value sets. Internal consistency is the gate: before/after comparisons run this script
-on both sides.
+`extract_year` / the cosmetic threshold, and mirrors the build importer's Vardemangder
+row filtering exactly, so the measured classification cannot drift from build behavior).
+Baseline (real corpus, 2026-06-11, after the PR-#297 review fixes): of 488,972
+`(variant, var, col, year)` groups, 6,540 carry ≥2 distinct edition windows; **VT-vs-HT:
+290 divergent** (145 cosmetic at `_COSMETIC_MAX_SYM`, 145 substantive across 51 distinct
+`(variant, var, col)` coding events); **term-vs-full-year: 355 divergent** (200
+cosmetic, 155 substantive across 43 events — recorded as the *max* symdiff over
+diverging terms, so a substantive HT divergence is never masked by a cosmetic VT one);
+**other sub-annual windows (quarters/halves vs any counterpart): 82 divergent** (20
+cosmetic, 62 substantive across 62 events). The term populations sit in the niche
+registers the 2026-06-09 investigation named (Komvux, sfi, SSV/CFL school- and
+course-code enumerations) — same shape as its \~257/\~282/\~194 counts, the deltas
+tracing to the script comparing raw delivered code keys where the retired spike read
+built-DB value sets. The quarter/half population is dominated by RTB
+`forsamling`/`kommun` 2009–2010 (the LKF re-issue family): the instrument counts
+divergent *inputs*, not dropped codings — several of these already resolve correctly via
+the historical-grain and authority steps, which is why the per-PR gate diffs *resolver
+output*, with the instrument scoping which inputs to inspect. Internal consistency is
+the gate: before/after comparisons run this script on both sides.
 
 Every implementation PR gates on:
 
