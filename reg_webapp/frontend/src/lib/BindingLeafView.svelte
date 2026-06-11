@@ -11,6 +11,7 @@ import {
   type AddSegment,
   buildAddPlan,
   formatWindow,
+  grainsFromStates,
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
@@ -280,8 +281,11 @@ const repSegment = $derived(
     <dd>{node.is_identifier ? "yes" : "no"}</dd>
   </dl>
 
+  <!-- #308: the grain select is pre-narrowed to the grains this variable's
+       FULL state history exhibits (year always; finer from the #321 tokens). -->
   <PeriodPicker
     period={params.period ?? null}
+    grains={grainsFromStates(node.states)}
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />

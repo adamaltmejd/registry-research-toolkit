@@ -8,83 +8,61 @@ let _instanceSeq = 0;
 <script lang="ts">
 import { untrack } from "svelte";
 import FieldIssues from "./FieldIssues.svelte";
-import { looksLikePeriod } from "./period";
+import { looksLikePeriod, periodFromWire, periodToWire, rangeRepresentable } from "./period";
+import PeriodRangeInput from "./PeriodRangeInput.svelte";
 import type { Period } from "./project_data";
 import type { ValidationIssue } from "./validation";
 
 // Editable Source.period (see reg_schema/DESIGN.md → Two layers: models vs.
-// validator). YEAR-RANGE-FIRST (maintainer directive): the
-// DEFAULT mode is two numeric year spinners (from / to) so picking a year range is
-// the path of least resistance, not free text. Other modes cover the non-year
-// cases: "Token" (a text field for monthly 'YYYYMM' / special tokens) and
-// "Default" (the "_default" snapshot sentinel).
+// validator). RANGE-FIRST (#308, generalizing the earlier year-range-first
+// directive): the DEFAULT mode is the shared grain-aware from/to picker
+// (PeriodRangeInput — year/term/quarter/month/day), so picking any range is the
+// path of least resistance, not free text. The other modes cover the rest:
+// "Token" (free text for special/mixed-grain values — e.g. the #306 succession
+// clips like 1992..2009-06-30) and "Default" (the "_default" snapshot
+// sentinel).
 //
 // Per the Pydantic boundary (see reg_webapp/DESIGN.md → Pydantic boundary), this
 // NEVER validates structurally — a malformed value is echoed via the
 // backend's `invalid_period` on the period pointer (the mounted <FieldIssues>).
-// Emits a bare int when from===to (the single-year Period int arm), else {from,to}.
+// Emits through `periodFromWire`, so a single year is the bare int arm, a range
+// is the {from,to} OBJECT (the only schema-valid range shape), and an
+// incomplete selection is the unset "" (the amber incomplete hint below).
 const { period, issues, onchange } = $props<{
   period: Period;
   issues: ValidationIssue[];
   onchange: (next: Period) => void;
 }>();
 
-type Mode = "years" | "token" | "default";
+type Mode = "range" | "token" | "default";
 
-// Infer the initial mode from the incoming value's JS type. A malformed value
-// (boolean / array / unexpected object) falls back to Token raw-text so the editor
-// never crashes — the backend flags it. `{from,to}` and a bare number are both
-// "years"; numeric range endpoints fill the spinners, non-numeric ones (token
-// ranges) fall back to Token.
+// Infer the initial mode from the incoming value. A value the range UI can
+// REPRESENT (bare year int, "" unset, single grammar token, uniform-grain
+// range — numeric or token endpoints) opens in Range; "_default" in Default;
+// everything else (mixed-grain ranges, junk, malformed non-strings) falls back
+// to Token raw-text so the editor never crashes OR silently blanks a value —
+// the backend flags what's actually wrong.
 function inferMode(value: Period): Mode {
-  if (typeof value === "number") {
-    return "years";
-  }
   if (value === "_default") {
     return "default";
   }
-  if (typeof value === "string") {
-    // An empty/unset period (a fresh source seeds `period: ""`) defaults to the
-    // YEARS picker — the year-range-first common case (maintainer directive). A
-    // non-empty token string opens in Token mode.
-    return value === "" ? "years" : "token";
+  const wire = periodToWire(value);
+  if (wire === null) {
+    // Unset ("" / blank) → the range picker (the common path); a malformed
+    // non-string value also lands here via periodToWire's null — show IT as
+    // Token text instead (seedTokenText renders the JSON).
+    return typeof value === "string" || typeof value === "number"
+      ? "range"
+      : "token";
   }
-  if (
-    value != null &&
-    typeof value === "object" &&
-    "from" in value &&
-    "to" in value &&
-    typeof value.from === "number" &&
-    typeof value.to === "number"
-  ) {
-    return "years";
-  }
-  // Malformed (boolean / array / token-range object): show it as raw text.
-  return "token";
+  return rangeRepresentable(wire) ? "range" : "token";
 }
 
 // A unique radio-group name for THIS editor instance (fix C).
 const groupName = `period-mode-${_instanceSeq++}`;
 
-// The year spinners' seed: a numeric value / numeric range fills them; a
-// non-numeric start leaves them blank (so the inputs render blank, not NaN).
-function initialYears(value: Period): { from: string; to: string } {
-  if (typeof value === "number") {
-    return { from: String(value), to: String(value) };
-  }
-  if (
-    value != null &&
-    typeof value === "object" &&
-    typeof value.from === "number" &&
-    typeof value.to === "number"
-  ) {
-    return { from: String(value.from), to: String(value.to) };
-  }
-  return { from: "", to: "" };
-}
-
 // The token field's seed: the raw string when it's a token, the `from..to`
-// wire text for a {from,to} range (a TOKEN-endpoint range opens in Token mode —
+// wire text for a {from,to} range (a mixed-grain range opens in Token mode —
 // see inferMode — and must DISPLAY, not render a blank field; the #306
 // succession auto-split routinely writes such ranges), blank for a
 // numeric/default value, or the JSON of a malformed (non-string) value.
@@ -118,50 +96,48 @@ function seedTokenText(value: Period): string {
 // instance for another source, so there is no stale-period symptom to paper over.
 const initial: Period = untrack(() => period);
 let mode = $state<Mode>(inferMode(initial));
-const seedYears = initialYears(initial);
-let yearFrom = $state(seedYears.from);
-let yearTo = $state(seedYears.to);
+/** The wire value the range picker seeds from / last emitted. Non-null at
+ * mount when the incoming period is range-representable, so a complete period
+ * never shows the incomplete hint before any interaction. */
+let rangeWire = $state<string | null>(periodToWire(initial));
 let tokenText = $state(seedTokenText(initial));
 
 const tokenHint = $derived(
-  tokenText.trim() !== "" && !looksLikePeriod(tokenText.trim()),
+  mode === "token" &&
+    tokenText.trim() !== "" &&
+    !looksLikePeriod(tokenText.trim()),
 );
 
-// B1 (UI audit): the Years spinners render example placeholders ("e.g. 2015")
-// that read as EXAMPLES, not filled values — a fresh source no longer LOOKS
-// configured. Until a required endpoint is filled, surface a subtle inline
-// "incomplete" hint (NOT a red error wall — an empty period is a normal
-// mid-authoring state; the backend's invalid_period stays the authority once the
-// user submits). `incomplete` is true while either spinner is blank.
-const yearsIncomplete = $derived(
-  mode === "years" && (yearFrom.trim() === "" || yearTo.trim() === ""),
-);
+// B1 (UI audit): until the range selection is complete, surface a subtle
+// inline "incomplete" hint (NOT a red error wall — an empty period is a normal
+// mid-authoring state; the backend's invalid_period stays the authority once
+// the user submits).
+const rangeIncomplete = $derived(mode === "range" && rangeWire === null);
 
-// Emit the years value: a bare int when from===to (single year → the Period int
-// arm), else a {from,to} range. A blank/non-integer endpoint is emitted as the raw
-// string so the backend's invalid_period flags it rather than us coercing to NaN.
-function emitYears(): void {
-  const fromNum = Number.parseInt(yearFrom, 10);
-  const toNum = Number.parseInt(yearTo, 10);
-  const fromOk = yearFrom.trim() !== "" && String(fromNum) === yearFrom.trim();
-  const toOk = yearTo.trim() !== "" && String(toNum) === yearTo.trim();
-  const from: number | string = fromOk ? fromNum : yearFrom.trim();
-  const to: number | string = toOk ? toNum : yearTo.trim();
-  if (fromOk && toOk && fromNum === toNum) {
-    onchange(fromNum);
-    return;
-  }
-  onchange({ from, to });
+/** The range picker's emit: thread the wire through periodFromWire so the
+ * draft carries the schema-valid shape (int year / token string / {from,to}
+ * object); an incomplete selection is the unset "". */
+function onRangeChange(wire: string | null): void {
+  rangeWire = wire;
+  onchange(wire === null ? "" : periodFromWire(wire));
+}
+
+/** Token-mode emission ALSO threads through periodFromWire (#308 closes the
+ * pre-existing trap where a typed "2010..2020" landed as a raw range STRING —
+ * not a valid Source.period; the schema's only range shape is the {from,to}
+ * object). A junk string rides through verbatim for the backend to flag. */
+function emitToken(): void {
+  onchange(periodFromWire(tokenText.trim()));
 }
 
 function onModeChange(next: Mode): void {
   mode = next;
   if (next === "default") {
     onchange("_default");
-  } else if (next === "years") {
-    emitYears();
+  } else if (next === "range") {
+    onchange(rangeWire === null ? "" : periodFromWire(rangeWire));
   } else {
-    onchange(tokenText.trim());
+    emitToken();
   }
 }
 </script>
@@ -174,10 +150,10 @@ function onModeChange(next: Mode): void {
         <input
           type="radio"
           name={groupName}
-          checked={mode === "years"}
-          onchange={() => onModeChange("years")}
+          checked={mode === "range"}
+          onchange={() => onModeChange("range")}
         />
-        Years
+        Range
       </label>
       <label>
         <input
@@ -200,42 +176,13 @@ function onModeChange(next: Mode): void {
     </div>
   </div>
 
-  {#if mode === "years"}
-    <div class="years">
-      <label>
-        <span>From</span>
-        <!-- B1: example placeholder ("e.g. 2015"), not a bare "2010" that reads as
-             a filled value. An empty required endpoint is flagged by the inline
-             incomplete hint below (not a red wall — normal mid-authoring state). -->
-        <input
-          type="number"
-          value={yearFrom}
-          placeholder="e.g. 2015"
-          aria-invalid={yearFrom.trim() === "" ? "true" : undefined}
-          oninput={(e) => {
-            yearFrom = e.currentTarget.value;
-            emitYears();
-          }}
-        />
-      </label>
-      <label>
-        <span>To</span>
-        <input
-          type="number"
-          value={yearTo}
-          placeholder="e.g. 2020"
-          aria-invalid={yearTo.trim() === "" ? "true" : undefined}
-          oninput={(e) => {
-            yearTo = e.currentTarget.value;
-            emitYears();
-          }}
-        />
-      </label>
-      <p class="hint muted">A single year sets from = to.</p>
-      {#if yearsIncomplete}
+  {#if mode === "range"}
+    <div class="range">
+      <PeriodRangeInput value={rangeWire} onchange={onRangeChange} />
+      {#if rangeIncomplete}
         <!-- Subtle, non-blocking: the period isn't set yet. Distinct from a
              backend invalid_period error (which renders red via <FieldIssues>). -->
-        <p class="hint incomplete">Set both years to complete the period.</p>
+        <p class="hint incomplete">Pick at least “From” to complete the period.</p>
       {/if}
     </div>
   {:else if mode === "token"}
@@ -246,7 +193,7 @@ function onModeChange(next: Mode): void {
         placeholder="YYYYMM, HT2018, 2010..2020…"
         oninput={(e) => {
           tokenText = e.currentTarget.value;
-          onchange(tokenText.trim());
+          emitToken();
         }}
       />
       {#if tokenHint}
@@ -288,24 +235,10 @@ function onModeChange(next: Mode): void {
     align-items: center;
     gap: 0.25rem;
   }
-  .years {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-  .years label {
+  .range {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    font-size: 0.8rem;
-  }
-  .years input {
-    width: 6rem;
-    font: inherit;
-    padding: 0.3rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    gap: 0.3rem;
   }
   .token input {
     font: inherit;
@@ -322,6 +255,5 @@ function onModeChange(next: Mode): void {
      An empty period is a normal mid-authoring state, not a validation failure. */
   .hint.incomplete {
     color: var(--level-warning);
-    flex-basis: 100%;
   }
 </style>

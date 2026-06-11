@@ -15,7 +15,13 @@ import {
   type StatesResponse,
   type VariableStateModel,
 } from "./api";
-import { periodRangeEndpoints, periodTokenBounds } from "./period";
+import {
+  grainOfToken,
+  PERIOD_GRAINS,
+  type PeriodGrain,
+  periodRangeEndpoints,
+  periodTokenBounds,
+} from "./period";
 
 /** Narrow the catch-all browse response to a browsable `CatalogNode`, or `null`
  * for a no-`kind` payload (a `?period` `StatesResponse` or a sub-endpoint
@@ -633,6 +639,25 @@ export function formatStateWindow(s: VariableStateModel): string {
  * rather than leaking the raw 9999-12-31 (Codex P2 on #335). */
 export function windowTitle(validFrom: string, validTo: string): string {
   return `${validFrom} – ${validTo === OPEN_ENDED_VALID_TO ? "open-ended" : validTo}`;
+}
+
+/** The period grains a variable's states actually exhibit (#308 option b) —
+ * pre-narrows the range picker's grain select. Year is always offered (the
+ * coarse query everyone understands); finer grains come from the states'
+ * `period_token`s (the #321 coarsest-exact tokens — defensive on a stale
+ * payload missing them, the #317 rule: degrade to year-only). Coarse → fine. */
+export function grainsFromStates(states: VariableStateModel[]): PeriodGrain[] {
+  const found = new Set<PeriodGrain>(["year"]);
+  for (const s of states) {
+    const token = s.period_token;
+    if (typeof token === "string" && !token.includes("..")) {
+      const grain = grainOfToken(token);
+      if (grain) {
+        found.add(grain);
+      }
+    }
+  }
+  return PERIOD_GRAINS.filter((g) => found.has(g));
 }
 
 /**

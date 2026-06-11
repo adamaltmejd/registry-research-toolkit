@@ -10,6 +10,7 @@ import {
   formatDataType,
   formatStateWindow,
   fqidSegments,
+  grainsFromStates,
   matchesFilter,
   narrowCatalogNode,
   nodeLabel,
@@ -1124,5 +1125,26 @@ describe("windowTitle (#309 sentinel-free tooltips)", () => {
     expect(windowTitle("2016-01-01", "9999-12-31")).toBe(
       "2016-01-01 – open-ended",
     );
+  });
+});
+
+describe("grainsFromStates (#308 grain pre-narrowing)", () => {
+  it("always offers year; finer grains come from the #321 tokens, coarse → fine", () => {
+    expect(
+      grainsFromStates([
+        state({ state_id: 1, period_token: "VT2006" }),
+        state({ state_id: 2, period_token: "2007-08" }),
+        state({ state_id: 3, period_token: "2008" }),
+      ]),
+    ).toEqual(["year", "term", "month"]);
+  });
+
+  it("degrades to year-only on token-less payloads (stale edge cache) and lo..hi tokens", () => {
+    expect(grainsFromStates([state({ state_id: 1 })])).toEqual(["year"]);
+    expect(
+      grainsFromStates([
+        state({ state_id: 1, period_token: "1992-01-01..2009-12-31" }),
+      ]),
+    ).toEqual(["year"]);
   });
 });

@@ -198,6 +198,56 @@ export function periodRangeEndpoints(wire: string): [string, string] | null {
   return parts.length === 2 ? [parts[0].trim(), parts[1].trim()] : null;
 }
 
+// ── Grain model (#308 range-first picker) ────────────────────────────────────
+// The picker UI works in GRAINS (year/term/quarter/month/day) with from/to
+// controls per grain; the wire grammar stays the serialization. The `-H1`/`-H2`
+// half forms map onto the term grain (same bounds; reg_meta accepts them on
+// input but never emits them — the term spelling is canonical).
+
+export type PeriodGrain = "year" | "term" | "quarter" | "month" | "day";
+
+/** Coarse → fine — the grain `<select>` order. */
+export const PERIOD_GRAINS: PeriodGrain[] = [
+  "year",
+  "term",
+  "quarter",
+  "month",
+  "day",
+];
+
+/** Whether a wire period is representable by the RANGE UI (#308): a single
+ * grammar token, or a range whose endpoints share ONE grain. `_default`,
+ * mixed-grain ranges (the #306 succession clips), and junk need the text /
+ * token escape hatch — they must stay visible and editable, never silently
+ * blanked into empty range controls. */
+export function rangeRepresentable(wire: string): boolean {
+  const endpoints = periodRangeEndpoints(wire) ?? [wire, wire];
+  const gFrom = grainOfToken(endpoints[0]);
+  return gFrom !== null && gFrom === grainOfToken(endpoints[1]);
+}
+
+/** The grain of one single wire token, or null for a non-token (`_default`,
+ * ranges, junk). `YYYY-H1`/`-H2` report `term` (their VT/HT bounds twins). */
+export function grainOfToken(token: string): PeriodGrain | null {
+  const value = token.trim();
+  if (!isPeriodToken(value)) {
+    return null;
+  }
+  if (/^[HV]T/.test(value)) {
+    return "term";
+  }
+  if (/-Q[1-4]$/.test(value)) {
+    return "quarter";
+  }
+  if (/-H[12]$/.test(value)) {
+    return "term";
+  }
+  if (/^\d{4}$/.test(value)) {
+    return "year";
+  }
+  return /^\d{4}-\d{2}$/.test(value) ? "month" : "day";
+}
+
 /** Convert a structured `Source.period` (int | token-string | {from,to} |
  * "_default") into the wire `?period` string the catalog resolve takes (a bare
  * year, a `from..to` range, a token, or `_default`). Returns `null` when the

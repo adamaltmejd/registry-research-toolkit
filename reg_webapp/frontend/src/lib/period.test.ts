@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  grainOfToken,
   looksLikePeriod,
   nextResolutionQuery,
   periodFieldFromQuery,
@@ -9,6 +10,7 @@ import {
   periodTokenBounds,
   periodToWire,
   queryFromParams,
+  rangeRepresentable,
   VALUE_SET_VERSION_NONE,
 } from "./period";
 
@@ -354,5 +356,31 @@ describe("periodRangeEndpoints", () => {
   it("returns null for non-ranges and malformed ranges", () => {
     expect(periodRangeEndpoints("2020")).toBeNull();
     expect(periodRangeEndpoints("2018..2019..2020")).toBeNull();
+  });
+});
+
+describe("grainOfToken / rangeRepresentable (#308)", () => {
+  it("classifies every token form (H1/H2 map to term)", () => {
+    expect(grainOfToken("2020")).toBe("year");
+    expect(grainOfToken("VT2009")).toBe("term");
+    expect(grainOfToken("HT2009")).toBe("term");
+    expect(grainOfToken("2020-H1")).toBe("term");
+    expect(grainOfToken("2020-Q3")).toBe("quarter");
+    expect(grainOfToken("2020-08")).toBe("month");
+    expect(grainOfToken("2020-08-15")).toBe("day");
+    expect(grainOfToken("_default")).toBeNull();
+    expect(grainOfToken("2018..2020")).toBeNull();
+    expect(grainOfToken("junk")).toBeNull();
+  });
+
+  it("rangeRepresentable accepts single tokens and uniform-grain ranges only", () => {
+    expect(rangeRepresentable("2020")).toBe(true);
+    expect(rangeRepresentable("HT2018")).toBe(true);
+    expect(rangeRepresentable("2010..2020")).toBe(true);
+    expect(rangeRepresentable("VT2018..HT2019")).toBe(true);
+    // Mixed grains (the #306 succession clips) need the text/token escape.
+    expect(rangeRepresentable("1992..2009-06-30")).toBe(false);
+    expect(rangeRepresentable("_default")).toBe(false);
+    expect(rangeRepresentable("")).toBe(false);
   });
 });
