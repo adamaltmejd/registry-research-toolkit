@@ -29,6 +29,7 @@ reg-meta search --query "kommun"                     # search all fields
 reg-meta search --query "kommun" --field datacolumn  # column headers only
 reg-meta get register LISA                           # register overview
 reg-meta get schema --register LISA --years 2020     # columns for a year
+reg-meta get groups LISA                             # folded variable families
 reg-meta get varinfo "Kön"                           # variable details
 reg-meta resolve --columns "Kon,FodelseAr"           # map column names
 reg-meta docs search "disponibel inkomst"            # search documentation
@@ -45,6 +46,7 @@ Use `--help` on any command or subcommand for full flag documentation.
   | `search`              | Free-text search across registers, variables, columns, and value codes                                         |
   | `get register`        | Register overview with variants                                                                                |
   | `get schema`          | Column listing per register edition (validity window), with `--years`, `--columns-like`, `--summary`, `--flat` |
+  | `get groups`          | Concept groups (folded variable families) with member facets; `--classifications` for vintage families         |
   | `get varinfo`         | Variable details with per-era `variable_state` history                                                         |
   | `get values`          | Value-set members for a variable, year-projected per `variable_state` era                                      |
   | `get datacolumns`     | All column aliases for a variable across registers                                                             |
