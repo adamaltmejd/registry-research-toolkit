@@ -256,4 +256,124 @@ describe("addFromCatalog (C1)", () => {
       variant: "v1",
     });
   });
+
+  it("collapse case: page pins a column but the SOURCE period is single-rep → re-add is a duplicate (MAJOR 2)", async () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, {
+      register_variant: "scb/lisa/v1",
+      period: 2018,
+    });
+    // At the SOURCE's period the concept resolves to a SINGLE column (single-rep) —
+    // the single-rep derive clears `representation` to null, even though the PAGE saw
+    // it as multi-rep and pinned "Ssyk3".
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([
+        vstate({
+          delivery_column_name: "Ssyk3",
+          value_set_id: 1,
+          value_set: [{ code: "1", label: "a" }],
+          value_set_version_label: "3-digit",
+        }),
+      ]),
+    );
+
+    const a = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
+      SEED,
+    );
+    expect(a.status).toBe("added");
+    // The single-rep derive lands → representation cleared to null on the binding.
+    await vi.waitFor(() =>
+      expect(
+        projectStore.draft?.sources[0].bindings[0]?.representation,
+      ).toBeNull(),
+    );
+
+    // Re-adding with the SAME page-pinned column R must be caught as a duplicate: the
+    // stored representation is null ("the only column"), so any payload R collapses to
+    // it — no second binding (the desync the concept-level guard fixes).
+    const b = projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/ssyk", representation: "Ssyk3" }),
+      SEED,
+    );
+    expect(b.status).toBe("already-present");
+    expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
+  });
+});
+
+// ── Staleness: a catalog-add derive must not clobber a newer period re-derive ──
+// MAJOR 1: the add-derive now runs through the guarded rederiveSource pass (gen +
+// identity re-check). A deterministic interleave with deferred mocks proves a stale
+// add-derive at the OLD period is discarded once a period change starts a fresh pass.
+
+/** A controllable getCatalogNode mock: each call returns a promise settled by hand.
+ * `release(i, states)` settles the i-th call (in call order). */
+function deferredResolveMock() {
+  const settles: ((v: StatesResponse) => void)[] = [];
+  vi.mocked(getCatalogNode).mockImplementation(
+    () =>
+      new Promise<StatesResponse>((resolve) => {
+        settles.push(resolve);
+      }) as unknown as ReturnType<typeof getCatalogNode>,
+  );
+  return {
+    get count() {
+      return settles.length;
+    },
+    release(i: number, column: string, dataType = "int") {
+      settles[i](
+        statesResp([
+          vstate({ delivery_column_name: column, data_type: dataType }),
+        ]),
+      );
+    },
+  };
+}
+
+describe("addFromCatalog staleness (MAJOR 1)", () => {
+  it("a stale add-derive at the OLD period does NOT overwrite a newer period re-derive", async () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, {
+      register_variant: "scb/lisa/v1",
+      period: 2010, // the source starts at 2010
+    });
+
+    const mock = deferredResolveMock();
+
+    // Add a variable → the guarded add-derive dispatches a resolve at period 2010
+    // (held by the deferred mock).
+    projectStore.addFromCatalog(
+      konPayload({ variable: "scb/lisa/lon", resolvedPeriod: "2010" }),
+      SEED,
+    );
+    await vi.waitFor(() => expect(mock.count).toBe(1));
+
+    // The user edits the source period to 2018 → a NEW guarded rederive pass starts
+    // (bumps the source's gen), dispatching a second resolve at 2018.
+    projectStore.updateSource(0, { period: 2018 });
+    await vi.waitFor(() => expect(mock.count).toBe(2));
+
+    // The 2018 pass lands FIRST with its derived type + display "Lon2018".
+    mock.release(1, "Lon2018");
+    await vi.waitFor(() =>
+      expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
+        "Lon2018",
+      ),
+    );
+
+    // Now the STALE 2010 add-derive lands LAST with a DIFFERENT column — the gen guard
+    // must discard it so it can't overwrite the fresher 2018 derivation.
+    mock.release(0, "Lon2010");
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
+      "Lon2018",
+    );
+    // The provenance period reflects the WINNING (2018) pass, not the stale 2010 one.
+    expect(projectStore.bindingDerivation(0, 0)?.period).toBe("2018");
+    expect(projectStore.bindingDerivation(0, 0)?.status).toBe("derived");
+  });
 });

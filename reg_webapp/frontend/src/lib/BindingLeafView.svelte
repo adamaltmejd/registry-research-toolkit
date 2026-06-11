@@ -39,8 +39,10 @@ let {
   fqidPath: string;
   node: BindingNodeData;
   // C1: the deployment seed for an IMPLICIT "New project" when the store is
-  // pristine (App → CatalogNodeView → here). Empty until /api/context resolves; an
-  // add before then is an edge case the seed self-corrects on the next New.
+  // pristine (App → CatalogNodeView → here). Empty until /api/context resolves — an
+  // implicit project created with an empty seed is NEVER re-seeded (it carries a
+  // blank reg_meta_version into project_data.json), so the Add action is DISABLED
+  // until both seed fields are present (sub-second; see `seedReady`).
   regMetaVersion: string;
   steward: string;
 } = $props();
@@ -108,6 +110,11 @@ function setResolution(next: {
 // this variable, at this variant, and (when several columns co-exist) this delivery
 // column.
 const registerPrefix = $derived(registerPrefixOf(node.fqid));
+
+// The deployment seed is ready once /api/context has populated BOTH fields (MINOR 3).
+// An implicit project created with an empty seed is never re-seeded, so the Add
+// action stays disabled until the seed is present (sub-second).
+const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 
 // Whether the CURRENTLY-VISIBLE states carry MORE THAN ONE co-existing representation
 // (delivery column) — the same `representationsFromStates` the picker chooser uses.
@@ -246,7 +253,7 @@ function onAdd(state: VariableStateModel): void {
         onpickVariant={(variant) => setResolution({ variant })}
         onpickValueSetVersion={(value_set_version) =>
           setResolution({ value_set_version })}
-        onadd={onAdd}
+        onadd={seedReady ? onAdd : null}
         {addStatus}
       />
     {:else}
