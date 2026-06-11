@@ -214,6 +214,22 @@ def _check_register_variant(
     return True
 
 
+def period_display(period: int | str | PeriodRange) -> str:
+    """Human/wire string for a ``Source.period`` — for ISSUE MESSAGES and the
+    order manifest, never a Python ``repr``.
+
+    A ``PeriodRange`` renders as ``"<from>..<to>"`` (literal ``..``, matching the
+    ``?period=`` range form a researcher already sees in the URL); int / str
+    (incl. the ``"_default"`` sentinel) → ``str()``. We deliberately use the wire
+    grammar rather than the ``repr`` so messages that travel through the API to
+    CLI consumers and the SPA findings panel read as ``2015..2020``, not
+    ``PeriodRange(from_=2015, to=2020)``."""
+    if isinstance(period, (int, str)):
+        return str(period)
+    # PeriodRange: `from_` is the Python-safe alias of the wire key `from`.
+    return f"{period.from_}..{period.to}"
+
+
 def period_for_resolve(period: int | str | PeriodRange) -> Period:
     """Convert a `Source.period` (Pydantic) into the polymorphic `Period`
     `Catalog.resolve_at` expects (`int | str | dict`). A `PeriodRange` becomes a
@@ -485,7 +501,8 @@ def _check_binding_period(
                 caller,
                 var_path,
                 f"binding {binding.variable!r} has no state covering "
-                f"{source.register_variant} at period {source.period!r}",
+                f"{source.register_variant} at period "
+                f"{period_display(source.period)}",
             )
         )
         return
@@ -522,8 +539,8 @@ def _check_binding_period(
                     caller,
                     var_path,
                     f"binding {binding.variable!r} covers only part of requested "
-                    f"range {source.period!r} at {source.register_variant}; no "
-                    f"state delivers {spans}",
+                    f"range {period_display(source.period)} at "
+                    f"{source.register_variant}; no state delivers {spans}",
                 )
             )
 
@@ -548,8 +565,8 @@ def _check_binding_period(
                     var_path,
                     f"binding {binding.variable!r} representation "
                     f"{binding.representation!r} is not a delivery column at "
-                    f"{source.register_variant} period {source.period!r} "
-                    f"(available: {avail})",
+                    f"{source.register_variant} period "
+                    f"{period_display(source.period)} (available: {avail})",
                 )
             )
             return
@@ -574,8 +591,8 @@ def _check_binding_period(
                     var_path,
                     f"binding {binding.variable!r} representation "
                     f"{binding.representation!r} covers only part of period "
-                    f"{source.period!r} at {source.register_variant}; the rest of "
-                    f"the range has no state for that column",
+                    f"{period_display(source.period)} at {source.register_variant}; "
+                    f"the rest of the range has no state for that column",
                 )
             )
         states = matched
@@ -597,8 +614,8 @@ def _check_binding_period(
                 var_path,
                 f"binding {binding.variable!r} resolves to {len(coexisting)} "
                 f"co-existing representations {coexisting} at "
-                f"{source.register_variant} period {source.period!r}; set "
-                f"`representation` to one of them",
+                f"{source.register_variant} period {period_display(source.period)}; "
+                f"set `representation` to one of them",
             )
         )
         return
@@ -618,8 +635,8 @@ def _check_binding_period(
                 var_path,
                 f"binding {binding.variable!r} resolves to several co-delivered "
                 f"value sets {sorted(labels.values())} on one column at "
-                f"{source.register_variant} period {source.period!r} — this reg_meta "
-                f"build needs co-delivery curation",
+                f"{source.register_variant} period {period_display(source.period)} — "
+                f"this reg_meta build needs co-delivery curation",
             )
         )
         return
@@ -636,7 +653,7 @@ def _check_binding_period(
                 caller,
                 var_path,
                 f"binding {binding.variable!r} spans {len(states)} states across a "
-                f"transition within period {source.period!r}",
+                f"transition within period {period_display(source.period)}",
             )
         )
 

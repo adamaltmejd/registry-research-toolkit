@@ -200,6 +200,7 @@ async function onFilePicked(event: Event): Promise<void> {
     <ValidationPanel
       result={projectStore.validation}
       requestError={projectStore.requestError}
+      {sources}
     />
   {/if}
 </article>

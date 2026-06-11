@@ -37,11 +37,11 @@ from typing import TYPE_CHECKING
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import FqidError, parse
 
-from .semantic import period_for_resolve
+from .semantic import period_display, period_for_resolve
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
-    from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
+    from reg_schema.project_data import Binding, ProjectData, Source
 
 # The default order-export column header (fixed order is the contract).
 # `representation` is its OWN column (not folded into display_name): a custom
@@ -71,7 +71,7 @@ def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
     writer.writerow(ORDER_COLUMNS)
     for source in project.sources:
         provider, register, variant = _coordinate_parts(source.register_variant)
-        period_str = _period_str(source.period)
+        period_str = period_display(source.period)
         for binding in source.bindings:
             writer.writerow(
                 _csv_safe(cell)
@@ -117,16 +117,6 @@ def _coordinate_parts(register_variant: str) -> tuple[str, str, str]:
     parts = register_variant.split("/")
     parts += [""] * (3 - len(parts))
     return parts[0], parts[1], parts[2]
-
-
-def _period_str(period: int | str | PeriodRange) -> str:
-    """Serialize ``Source.period`` to its wire string. ``PeriodRange`` →
-    ``"<from>..<to>"`` (literal ``..``, matching the ``?period=`` range form); int
-    / str (incl. the ``"_default"`` sentinel) → ``str()``."""
-    if isinstance(period, (int, str)):
-        return str(period)
-    # PeriodRange: `from_` is the Python-safe alias of the wire key `from`.
-    return f"{period.from_}..{period.to}"
 
 
 def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:

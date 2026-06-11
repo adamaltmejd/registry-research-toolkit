@@ -11,6 +11,7 @@ import {
   issuesForPointer,
   issuesUnderPointer,
   jsonPointer,
+  sourceAnchorId,
   type ValidationIssue,
 } from "./validation";
 
@@ -62,7 +63,14 @@ function onPickVariant(registerVariant: string): void {
 }
 </script>
 
-<section class="source" aria-label="Source {sourceIndex + 1}">
+<!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
+     `sourceAnchorId`). `.locate-flash` (toggled by the panel on the element) briefly
+     highlights the card. -->
+<section
+  class="source"
+  id={sourceAnchorId(sourceIndex)}
+  aria-label="Source {sourceIndex + 1}"
+>
   <header class="source-head">
     <h3>
       {source.name || "(unnamed source)"}
@@ -181,6 +189,22 @@ function onPickVariant(registerVariant: string): void {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    scroll-margin-top: 1rem;
+  }
+  /* Briefly highlights a card when the findings panel locates it. `:global` because
+     the class is toggled imperatively on the DOM node by ValidationPanel, not bound
+     here (Svelte would otherwise prune the unused selector). */
+  :global(.locate-flash) {
+    animation: locate-flash 1.6s ease-out;
+  }
+  @keyframes locate-flash {
+    0%,
+    25% {
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    100% {
+      box-shadow: 0 0 0 2px transparent;
+    }
   }
   .source-head {
     display: flex;

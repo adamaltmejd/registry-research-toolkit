@@ -238,3 +238,72 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
 export function codeLabel(code: string): string {
   return KNOWN_CODES[code]?.label ?? code;
 }
+
+/** The DOM-anchor id of a source card. Mirrored by `SourceEditor.svelte`'s root
+ * `id` so the findings panel's click-to-locate can `scrollIntoView`. */
+export function sourceAnchorId(sourceIndex: number): string {
+  return `loc-source-${sourceIndex}`;
+}
+
+/** The DOM-anchor id of a binding card. Mirrored by `BindingEditor.svelte`. */
+export function bindingAnchorId(
+  sourceIndex: number,
+  bindingIndex: number,
+): string {
+  return `loc-source-${sourceIndex}-binding-${bindingIndex}`;
+}
+
+/** A user-facing LOCATION for a finding, derived from its RFC-6901 `path` plus the
+ * draft's sources — the summary list speaks "Source 'lisa_main' → binding
+ * scb/lisa/adeldag" instead of leaking the raw pointer, and carries the DOM-anchor
+ * id so a click scrolls to the relevant card.
+ *
+ * `anchorId` is the deepest card the path reaches (binding card if the path dives
+ * into `/bindings/{j}`, else the source card). `label` names the source by its
+ * authored `name` (falling back to the index when unnamed / out of range) and, for
+ * a binding path, appends the binding's `variable` FQID. A whole-document path
+ * (`""`) or a non-`/sources/...` path (e.g. a top-level `/name`) has no card to
+ * locate → `null`, and the panel falls back to showing the raw pointer. */
+export interface FindingLocation {
+  label: string;
+  anchorId: string;
+}
+
+export function findingLocation(
+  path: string,
+  sources: readonly { name?: unknown; bindings?: unknown }[],
+): FindingLocation | null {
+  const tokens = parseJsonPointer(path);
+  // Only /sources/<i>[/bindings/<j>/...] paths name a locatable card.
+  if (tokens == null || tokens[0] !== "sources" || tokens.length < 2) {
+    return null;
+  }
+  const sIdx = Number(tokens[1]);
+  if (!Number.isInteger(sIdx) || sIdx < 0) {
+    return null;
+  }
+  const source = sources[sIdx];
+  const rawName = source?.name;
+  const sourceLabel =
+    typeof rawName === "string" && rawName.length > 0
+      ? `Source '${rawName}'`
+      : `Source ${sIdx + 1}`;
+
+  if (tokens[2] === "bindings" && tokens.length >= 4) {
+    const bIdx = Number(tokens[3]);
+    if (Number.isInteger(bIdx) && bIdx >= 0) {
+      const bindings = Array.isArray(source?.bindings) ? source.bindings : [];
+      const variable = (bindings[bIdx] as { variable?: unknown } | undefined)
+        ?.variable;
+      const bindingLabel =
+        typeof variable === "string" && variable.length > 0
+          ? `binding ${variable}`
+          : `binding ${bIdx + 1}`;
+      return {
+        label: `${sourceLabel} → ${bindingLabel}`,
+        anchorId: bindingAnchorId(sIdx, bIdx),
+      };
+    }
+  }
+  return { label: sourceLabel, anchorId: sourceAnchorId(sIdx) };
+}
