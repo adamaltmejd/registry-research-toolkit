@@ -121,6 +121,13 @@ jobs:
       !cancelled() && (needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
+    env:
+      # Image tag for the pushed artifact. Dispatch re-builds on an existing
+      # main HEAD (e.g. after a data-only reg_meta release) get a -<run_id>
+      # suffix so they don't overwrite the plain :sha tag — keeping every
+      # pushed tag an immutable rollback handle (#290). Push builds use the
+      # bare sha. The deploy job computes the identical expression.
+      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
     steps:
       - uses: actions/checkout@v6
       - uses: docker/setup-buildx-action@v4
@@ -153,21 +160,25 @@ jobs:
           username: x
           password: ${{ secrets.FLY_API_TOKEN }}
       # Build context is the repo root (the Dockerfile needs the uv workspace);
-      # -f points at reg_webapp/Dockerfile. PRs build-only (`load` into the
-      # runner's docker, no push); main/dispatch pushes to Fly's registry
-      # addressed by commit SHA, so the deploy job (and a manual rollback)
-      # references an immutable tag. GHA layer cache keeps rebuilds cheap.
+      # -f points at reg_webapp/Dockerfile. PRs build-only: no push, no `load`
+      # (nothing ever runs the PR image — all gates execute during the build
+      # itself, and loading exports the full ~1 GB image into the runner's
+      # docker daemon for nothing, #290). main/dispatch pushes to Fly's
+      # registry addressed by IMAGE_TAG, so the deploy job (and a manual
+      # rollback) references an immutable tag. GHA layer cache keeps rebuilds
+      # cheap; cache is WRITTEN only on non-PR events — PR-scoped GHA cache is
+      # unreadable from main, so PR writes would only evict useful cache from
+      # the repo's 10 GB pool (#290). PRs still READ main's cache.
       - uses: docker/build-push-action@v7
         with:
           context: .
           file: reg_webapp/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: ${{ github.event_name == 'pull_request' && 'reg-webapp:ci' || format('registry.fly.io/reg-webapp-global:{0}', github.sha) }}
+          tags: ${{ github.event_name == 'pull_request' && 'reg-webapp:ci' || format('registry.fly.io/reg-webapp-global:{0}', env.IMAGE_TAG) }}
           build-args: |
             REG_META_TAG=${{ steps.regmeta.outputs.tag }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: ${{ github.event_name != 'pull_request' && 'type=gha,mode=max' || '' }}
 
   deploy:
     needs: [build-image, wait-ci]
@@ -209,10 +220,58 @@ jobs:
         run: >-
           flyctl deploy
           --config reg_webapp/fly.toml
-          --image registry.fly.io/reg-webapp-global:${{ github.sha }}
+          --image registry.fly.io/reg-webapp-global:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
           --ha=false
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      # Registry pruning (#290): keep the newest KEEP tags as rollback handles,
+      # delete older manifests so the registry doesn't grow unboundedly. Fly's
+      # registry supports standard v2 manifest DELETE (verified live
+      # 2026-06-11 — 202 Accepted, tag gone from tags/list). Ordering is by
+      # the image config's .created timestamp (buildx pushes OCI indexes; the
+      # real image manifest is the non-"unknown"-platform entry, the other is
+      # the provenance attestation). A digest shared with any kept tag is
+      # never deleted — deleting a manifest removes EVERY tag pointing at it.
+      # continue-on-error: a prune hiccup must not fail a successful deploy.
+      - name: Prune old registry tags
+        if: steps.head.outputs.skip != 'true'
+        continue-on-error: true
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          REPO_URL="https://registry.fly.io/v2/reg-webapp-global"
+          ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+          KEEP=10
+          auth="x:$FLY_API_TOKEN"
+          listing=""
+          for t in $(curl -fsS -u "$auth" "$REPO_URL/tags/list" | jq -r '.tags[]'); do
+            top_digest=$(curl -fsSI -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t" \
+              | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest" {print $2}')
+            manifest=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t")
+            if echo "$manifest" | jq -e '.manifests' >/dev/null; then
+              img=$(echo "$manifest" | jq -r '[.manifests[] | select(.platform.architecture != "unknown")][0].digest')
+              cfg=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$img" | jq -r '.config.digest')
+            else
+              cfg=$(echo "$manifest" | jq -r '.config.digest')
+            fi
+            created=$(curl -fsSL -u "$auth" "$REPO_URL/blobs/$cfg" | jq -r '.created')
+            listing+="$created $t $top_digest"$'\n'
+          done
+          kept=$(printf '%s' "$listing" | sort -r | head -n "$KEEP")
+          echo "Keeping $(printf '%s\n' "$kept" | wc -l | tr -d ' ') tags:"
+          printf '%s\n' "$kept"
+          kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
+          printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" \
+            | while read -r _ tag digest; do
+              if printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
+                echo "skip $tag (digest shared with a kept tag)"
+              else
+                echo "prune $tag"
+                curl -fsS -X DELETE -u "$auth" "$REPO_URL/manifests/$digest" \
+                  || echo "::warning::failed to delete $tag"
+              fi
+            done
 
   # Edge worker (SPA + /api passthrough) for catalog.swecov.se. Runs AFTER the
   # origin deploy (deploy-skew guard): on a contract-changing push the SPA must

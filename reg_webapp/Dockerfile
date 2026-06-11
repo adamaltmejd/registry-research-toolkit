@@ -7,10 +7,10 @@
 #
 #   docker build -f reg_webapp/Dockerfile -t reg-webapp .
 #
-# Three baked-in stages: (1) bun builds the SPA, (2) uv installs the Python
-# backend + workspace deps and runs `reg-meta update` to bake the release DB
-# pair into a layer, (3) a lean runtime that serves the JSON API with uvicorn
-# behind an entrypoint smoke gate.
+# Four baked-in stages: (1) bun builds the SPA, (2) a DB-bake stage fetches the
+# reg_meta release DB pair — isolated so app-code edits don't re-download it
+# (#290), (3) uv installs the Python backend + workspace deps, (4) a lean
+# runtime that serves the JSON API with uvicorn behind an entrypoint smoke gate.
 #
 # Base images are pinned by tag (not :latest) for deterministic rebuilds. Bump
 # the tags deliberately; floating tags would make image content non-reproducible.
@@ -46,9 +46,68 @@ COPY reg_webapp/frontend/ ./
 RUN bun run gen:types && bun run build
 
 # ---------------------------------------------------------------------------
-# Stage 2 — backend build: install the Python backend + bake the release DB.
+# Stage 2 — regmeta-db: fetch + bake the reg_meta release DB pair.
 # ---------------------------------------------------------------------------
-# Pin BOTH the interpreter and uv deterministically: base on python:3.13.7-slim
+# Isolated from the app-code stages (#290): its cache key covers only the
+# workspace skeleton (root pyproject + lockfile + member pyprojects/READMEs),
+# the reg_meta source tree, and REG_META_TAG — so backend/frontend edits reuse
+# the cached DB layer (~70 MB download, several hundred MB unpacked) instead of
+# re-fetching it on every build. `reg-meta update` (not raw curl) does the
+# fetch: it owns release resolution, asset naming, and zstd unpack, and tag
+# slashes (`reg_meta/vX.Y.Z`) make hand-built download URLs fragile.
+FROM python:3.13.13-slim-bookworm AS regmeta-db
+COPY --from=ghcr.io/astral-sh/uv:0.11.19 /uv /usr/local/bin/uv
+
+ENV UV_LINK_MODE=copy \
+    UV_NO_INSTALLER_METADATA=1
+
+WORKDIR /app
+
+# Workspace skeleton only: a frozen sync validates every [tool.uv.workspace]
+# member's pyproject (hatchling also reads declared READMEs at editable build),
+# but only reg_meta needs its real source here. Copying the other members' full
+# trees would couple this stage's cache to app-code churn — the exact coupling
+# this stage exists to break.
+COPY pyproject.toml uv.lock ./
+COPY reg_meta/ ./reg_meta/
+COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
+COPY reg_monabundle/pyproject.toml reg_monabundle/README.md ./reg_monabundle/
+COPY reg_schema/pyproject.toml reg_schema/README.md ./reg_schema/
+COPY reg_webapp/backend/pyproject.toml reg_webapp/backend/README.md ./reg_webapp/backend/
+COPY mock_data_wizard/pyproject.toml ./mock_data_wizard/
+
+# Install ONLY reg-meta + its runtime dep closure — just enough to run the
+# `reg-meta update` fetch below.
+RUN uv sync --frozen --no-dev --package reg-meta
+
+# Bake the matching reg_meta release DB pair (reg_meta.db + reg_meta_docs.db)
+# into an image layer. `reg-meta update` resolves a `reg_meta/v*` release
+# carrying reg_meta.db.zst / reg_meta_docs.db.zst and installs into --db <dir>.
+# The DB schema matches the installed reg_meta code (reg_meta/v0.9.0 → SCHEMA
+# 5.2.0); rebuilding after a reg_meta bump re-bakes the matching pair.
+#
+# Invoke the venv's reg-meta binary by ABSOLUTE PATH (NOT `uv run`, which would
+# re-sync: re-resolving the lockfile drops the global exclude-newer 7-day
+# release-age guard and reinstalls the dev group + all workspace members).
+#
+# REG_META_TAG is a cache-bust knob: a DATA-only reg_meta release reuses the same
+# code/lockfile, so the bake layer's cache key would otherwise never change and a
+# cached rebuild (GHA cache-from / local cache) would silently keep a stale DB.
+# Default `latest` resolves whatever release is newest at build time; CI always
+# passes the resolved concrete tag (`--build-arg REG_META_TAG=reg_meta/vX.Y.Z`).
+# ARG declared after the sync layer so a tag change re-runs only the bake.
+ARG REG_META_TAG=latest
+RUN /app/.venv/bin/reg-meta update --db /opt/reg_meta --tag "$REG_META_TAG" --yes \
+    && test -f /opt/reg_meta/reg_meta.db \
+    && test -f /opt/reg_meta/reg_meta_docs.db
+
+# Read-only confinement of the baked WAL-mode DBs relies on `open_db`'s
+# `immutable=1` (#283) — no WAL checkpoint / sidecar cleanup needed here.
+
+# ---------------------------------------------------------------------------
+# Stage 3 — backend build: install the Python backend venv.
+# ---------------------------------------------------------------------------
+# Pin BOTH the interpreter and uv deterministically: base on python:3.13-slim
 # (same image the runtime stage uses, so the baked venv's interpreter path
 # matches) and copy a version-pinned uv binary off its official image. uv's own
 # combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
@@ -66,14 +125,17 @@ WORKDIR /app
 
 # Copy the workspace skeleton needed for `uv sync --frozen` to resolve. The root
 # pyproject + uv.lock define the workspace; every member listed in
-# [tool.uv.workspace].members must have its source tree present for the locked
-# resolution to validate, even though we only install the reg-webapp package.
+# [tool.uv.workspace].members must have its pyproject present for the locked
+# resolution to validate. Full source trees only for the members this stage
+# actually installs (reg-webapp's dep closure); reg_meta_build /
+# mock_data_wizard stay pyproject-only so their churn doesn't bust the sync
+# layer (#290).
 COPY pyproject.toml uv.lock ./
 COPY reg_meta/ ./reg_meta/
-COPY reg_meta_build/ ./reg_meta_build/
+COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
 COPY reg_monabundle/ ./reg_monabundle/
 COPY reg_schema/ ./reg_schema/
-COPY mock_data_wizard/ ./mock_data_wizard/
+COPY mock_data_wizard/pyproject.toml ./mock_data_wizard/
 COPY reg_webapp/backend/ ./reg_webapp/backend/
 
 # Install ONLY the reg-webapp package + its runtime dep closure (reg-meta /
@@ -87,50 +149,8 @@ COPY reg_webapp/backend/ ./reg_webapp/backend/
 # the venv is not self-contained on its own.
 RUN uv sync --frozen --no-dev --package reg-webapp
 
-# Bake the matching reg_meta release DB pair (reg_meta.db + reg_meta_docs.db)
-# into an image layer. `reg-meta update` resolves a `reg_meta/v*` release
-# carrying reg_meta.db.zst / reg_meta_docs.db.zst and installs into --db <dir>.
-# The DB schema matches the installed reg_meta code (reg_meta/v0.9.0 → SCHEMA
-# 5.2.0); rebuilding after a reg_meta bump re-bakes the matching pair.
-#
-# Invoke the venv's reg-meta binary by ABSOLUTE PATH (NOT `uv run`, which would
-# re-sync: re-resolving the lockfile drops the global exclude-newer 7-day
-# release-age guard and reinstalls the dev group + all workspace members into the
-# venv that stage 3 ships to production). The frozen sync above already installed
-# reg-meta into /app/.venv; this RUN must not touch the environment.
-#
-# REG_META_TAG is a cache-bust knob: a DATA-only reg_meta release reuses the same
-# code/lockfile, so the bake layer's cache key would otherwise never change and a
-# cached rebuild (GHA cache-from / local cache) would silently keep a stale DB.
-# Default `latest` resolves whatever release is newest at build time; CI can pass
-# `--build-arg REG_META_TAG=reg_meta/vX.Y.Z` to pin + force a re-bake.
-ARG REG_META_TAG=latest
-ENV REG_META_DB=/opt/reg_meta
-RUN /app/.venv/bin/reg-meta update --db "$REG_META_DB" --tag "$REG_META_TAG" --yes \
-    && test -f "$REG_META_DB/reg_meta.db" \
-    && test -f "$REG_META_DB/reg_meta_docs.db"
-
-# Read-only confinement of the baked WAL-mode DBs now relies on `open_db`'s
-# `immutable=1` (#283) — the deploy-side WAL checkpoint + sidecar cleanup that
-# used to live here is gone (this image installs reg_meta from workspace source
-# above, so it carries the fix).
-
-# #224 provenance-confinement assertion #3 (deployment-side). Assertions #1
-# (bundle amalgamates no provenance-importing module) and #2 (no FastAPI route
-# references the provenance path — backend/tests/test_write_boundary.py) already
-# ship; this is the third. `reg-meta update` only fetches reg_meta.db.zst /
-# reg_meta_docs.db.zst (verified in reg_meta/download.py — no provenance asset),
-# so the maintainer-only reg_meta.provenance.db* debug sibling should never enter
-# the image. This RUN is defense in depth: it FAILS THE BUILD if any
-# provenance.db* file is present anywhere in the image filesystem (.dockerignore
-# also excludes local copies from the build context). Stable non-zero exit on hit.
-RUN if find / -name 'reg_meta.provenance.db*' -print -quit 2>/dev/null | grep -q .; then \
-        echo 'FATAL: reg_meta.provenance.db* present in image (provenance confinement #3 breached)' >&2; \
-        exit 1; \
-    fi
-
 # ---------------------------------------------------------------------------
-# Stage 3 — runtime: lean image serving the API with uvicorn.
+# Stage 4 — runtime: lean image serving the API with uvicorn.
 # ---------------------------------------------------------------------------
 # python:slim (no uv) — runtime needs only the interpreter + the baked .venv.
 # Pinned to the same 3.13 minor the backend stage built against so the venv's
@@ -154,13 +174,30 @@ COPY --from=backend /app/reg_meta/src /app/reg_meta/src
 COPY --from=backend /app/reg_schema/src /app/reg_schema/src
 COPY --from=backend /app/reg_monabundle/src /app/reg_monabundle/src
 COPY --from=backend /app/reg_webapp/backend/src /app/reg_webapp/backend/src
-COPY --from=backend /opt/reg_meta /opt/reg_meta
+COPY --from=regmeta-db /opt/reg_meta /opt/reg_meta
 COPY --from=frontend /build/frontend/dist /opt/reg_webapp/spa
 COPY reg_webapp/stewards/ /opt/reg_webapp/stewards/
 # chmod explicitly: don't rely on the source file's executable bit surviving the
 # CI checkout / build-context transfer.
 COPY reg_webapp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# #224 provenance-confinement assertion #3 (deployment-side). Assertions #1
+# (bundle amalgamates no provenance-importing module) and #2 (no FastAPI route
+# references the provenance path — backend/tests/test_write_boundary.py) already
+# ship; this is the third. `reg-meta update` only fetches reg_meta.db.zst /
+# reg_meta_docs.db.zst (verified in reg_meta/download.py — no provenance asset),
+# so the maintainer-only reg_meta.provenance.db* debug sibling should never enter
+# the image. This RUN is defense in depth: it FAILS THE BUILD if any
+# provenance.db* file is present anywhere in the image filesystem (.dockerignore
+# also excludes local copies from the build context). Stable non-zero exit on
+# hit. Runs in THIS stage (not the bake stage) so it scans the assembled
+# shipping filesystem — everything the stage COPYs in — not just the fetch
+# environment.
+RUN if find / -name 'reg_meta.provenance.db*' -print -quit 2>/dev/null | grep -q .; then \
+        echo 'FATAL: reg_meta.provenance.db* present in image (provenance confinement #3 breached)' >&2; \
+        exit 1; \
+    fi
 
 ENV PATH="/app/.venv/bin:$PATH" \
     # reg_meta read-only DB path (lifespan resolves REG_META_DB first).
