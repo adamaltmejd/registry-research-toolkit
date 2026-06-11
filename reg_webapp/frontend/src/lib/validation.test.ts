@@ -6,12 +6,15 @@ import { describe, expect, it } from "vitest";
 // the cross-package relative path.
 import expectedUnexpectedField from "../../../../reg_schema/test_corpus/unexpected_field_on_binding/expected_ValidationResult.json";
 import {
+  bindingAnchorId,
   codeLabel,
+  findingLocation,
   issuesForPointer,
   issuesUnderPointer,
   jsonPointer,
   KNOWN_CODES,
   parseJsonPointer,
+  sourceAnchorId,
   type ValidationIssue,
 } from "./validation";
 
@@ -162,6 +165,52 @@ describe("codeLabel / KNOWN_CODES", () => {
     ]) {
       expect(KNOWN_CODES[code]).toBeDefined();
     }
+  });
+});
+
+describe("findingLocation (pointer → human location)", () => {
+  const sources = [
+    {
+      name: "lisa_main",
+      bindings: [
+        { variable: "scb/lisa/adeldag" },
+        { variable: "scb/lisa/kon" },
+      ],
+    },
+    { name: "", bindings: [] }, // an unnamed source
+  ];
+
+  it("labels a binding path 'Source <name> → binding <fqid>' + binding anchor", () => {
+    const loc = findingLocation("/sources/0/bindings/0/variable", sources);
+    expect(loc).toEqual({
+      label: "Source 'lisa_main' → binding scb/lisa/adeldag",
+      anchorId: bindingAnchorId(0, 0),
+    });
+  });
+
+  it("labels a source-level path with the source anchor", () => {
+    const loc = findingLocation("/sources/0/register_variant", sources);
+    expect(loc).toEqual({
+      label: "Source 'lisa_main'",
+      anchorId: sourceAnchorId(0),
+    });
+  });
+
+  it("falls back to the 1-based index when the source is unnamed", () => {
+    const loc = findingLocation("/sources/1/bindings/0/variable", sources);
+    // unnamed source → "Source 2"; out-of-range binding → "binding 1"
+    expect(loc?.label).toBe("Source 2 → binding 1");
+    expect(loc?.anchorId).toBe(bindingAnchorId(1, 0));
+  });
+
+  it("returns null for a whole-document or non-source path (raw-pointer fallback)", () => {
+    expect(findingLocation("", sources)).toBeNull();
+    expect(findingLocation("/name", sources)).toBeNull();
+    expect(findingLocation("/panels/0/members", sources)).toBeNull();
+  });
+
+  it("returns null when the pointer is malformed (no leading slash)", () => {
+    expect(findingLocation("sources/0", sources)).toBeNull();
   });
 });
 

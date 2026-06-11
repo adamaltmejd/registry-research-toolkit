@@ -5,6 +5,7 @@ import FieldIssues from "./FieldIssues.svelte";
 import { type Binding, COLUMN_TYPES } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import {
+  bindingAnchorId,
   issuesForPointer,
   jsonPointer,
   type ValidationIssue,
@@ -138,7 +139,10 @@ const derivationMarker = $derived.by(() => {
 });
 </script>
 
-<div class="binding">
+<!-- `id` is the click-to-locate anchor the ValidationPanel scrolls to (matched via
+     `bindingAnchorId`); `.locate-flash` (defined globally in SourceEditor) briefly
+     highlights it. -->
+<div class="binding" id={bindingAnchorId(sourceIndex, bindingIndex)}>
   <div class="binding-grid">
     <!-- variable: read-ish + a Pick button (the derive-on-pick entry point). -->
     <div class="field variable">
@@ -292,6 +296,7 @@ const derivationMarker = $derived.by(() => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    scroll-margin-top: 1rem;
   }
   .binding-grid {
     display: flex;

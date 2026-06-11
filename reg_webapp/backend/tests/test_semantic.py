@@ -19,7 +19,7 @@ import reg_meta.db
 from reg_meta.catalog import Catalog
 from reg_schema.project_data import ProjectData
 from reg_webapp.catalog_index import build_catalog_index
-from reg_webapp.semantic import validate_semantic
+from reg_webapp.semantic import period_display, validate_semantic
 
 
 @pytest.fixture
@@ -29,6 +29,27 @@ def catalog(catalog_db):
         yield Catalog(conn)
     finally:
         conn.close()
+
+
+@pytest.mark.parametrize(
+    ("period", "expected"),
+    [
+        (2018, "2018"),
+        ("HT2020", "HT2020"),
+        ("_default", "_default"),
+    ],
+)
+def test_period_display_scalar(period, expected):
+    assert period_display(period) == expected
+
+
+def test_period_display_range_is_wire_form_not_repr():
+    from reg_schema.project_data import PeriodRange  # noqa: PLC0415
+
+    pr = PeriodRange.model_validate({"from": 2015, "to": 2020})
+    rendered = period_display(pr)
+    assert rendered == "2015..2020"
+    assert "PeriodRange" not in rendered and "from_=" not in rendered
 
 
 def _project(sources: list[dict]) -> ProjectData:
@@ -445,6 +466,13 @@ def test_range_crossing_version_transition_is_drift_not_ambiguous(transition_cat
     assert "binding_value_set_version_ambiguous" not in codes  # NOT co-delivered
     assert "binding_state_drifts_within_period" in codes
     assert result.ok  # drift is info-only, non-blocking
+    # MESSAGE HYGIENE: the range period renders in wire form (`2014..2018`), never
+    # a dataclass repr — the text travels through the API to CLI + SPA consumers.
+    drift = next(
+        i for i in result.issues if i.code == "binding_state_drifts_within_period"
+    )
+    assert "2014..2018" in drift.message, drift.message
+    assert "PeriodRange" not in drift.message and "from_=" not in drift.message
 
 
 def test_default_period_over_version_history_is_not_ambiguous(transition_catalog):
