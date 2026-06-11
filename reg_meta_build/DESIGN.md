@@ -924,15 +924,21 @@ as today), while authority simply never compares claims that share no segment.
 `_AUTH_SUBANNUAL`'s original job — "partial slices collide with the full year at year
 granularity" — reduces to its true meaning, "partial loses to full *where they actually
 compete*". Recency (`approval`) compares per segment among the claims covering it, same
-data as today's per-year max-merge. The cross-year steps move from year ints to ISO
-claim bounds: supersession's "latest introduction" reads min claim `lo` per value set,
-extends-later reads max claim `hi`, and `_pick_state_rep`'s era key follows. Consequence
-to verify, not design away: ties that today fall through to curation can now break (a
-VT-introduced vs HT-introduced vintage in one year is no longer "equal introduction"),
-so some `codelivery.toml` pins go inert (harmless by the file's contract) and — worse —
-a pin could be silently out-cascaded by a now-resolving earlier step. The measurement
-plan therefore includes a **pin re-validation diff**: per pinned column, before/after
-resolved winners must match or the pin is updated/retired in the same PR.
+data as today's per-year max-merge. The cross-year steps — supersession's "latest
+introduction", extends-later's "reaches later", `_pick_state_rep`'s era key — **stay
+year-grain, deliberately** (an implementation-discovered correction to this design's
+first draft, which moved them to ISO claim bounds): inside a drift-conflation class an
+ISO key reads a same-year VT-vs-HT drift pair as a vintage *sequence* and silently flips
+the cosmetic population's winners (supersession would fire before the
+freshness/largest-set steps that pick today's winner, breaking the zero-diff gate); and
+for genuinely different codings, interval claims make true sub-annual vintage
+transitions *disjoint* — resolved by their windows, never by supersession — so an ISO
+key would only ever arbitrate exotic window-overlapping same-year-introduction shapes
+that today's corpus doesn't contain. If a sub-annual-cadence provider ever presents
+those, the key becomes cadence-aware then. Pins can still go inert when their conflict
+dissolves into disjoint windows (harmless by the file's contract), so the measurement
+plan keeps the **pin re-validation diff**: per pinned column, before/after resolved
+winners must match or the pin is updated/retired in the same PR.
 
 #### The one-value-set-per-period invariant under intervals
 
@@ -947,9 +953,12 @@ them. The rewrite adds one **new failure-mode guard**: the current materializer 
 emit same-column same-value-set overlapping states by construction, but an interval
 sweep has new double-emission bug modes (segment vs hull), and the validator's conflict
 check requires *distinct* value sets — so the coalescer gains a post-emission assert
-(and validate.py a mirror check) that a column's emitted windows are pairwise
-non-overlapping regardless of value set. Genuine-conflict diagnostics
-(`coalesce_unresolved_codelivery`) and the validator's failure samples switch from bare
+(`coalesce_same_column_overlap`) that the timeline path's emitted windows on one column
+are pairwise non-overlapping regardless of value set. The guard is build-time only — no
+validate.py mirror, deliberately: the shipped DB legitimately contains same-column
+same-value-set overlaps outside the timeline path (a yearless coding's open span beside
+its column's year-bearing states), which a DB-level check cannot tell apart from a sweep
+bug. Genuine-conflict diagnostics (`coalesce_unresolved_codelivery`) switch from bare
 years to period descriptors.
 
 **Period-token formatter.** Diagnostics and display need the inverse of
@@ -1081,9 +1090,9 @@ Every implementation PR gates on:
    compaction-window parameter (default: calendar year; AGI declared `month`,
    output-inert), segment choice, run assembly, interval-grain open-top gate, segment
    diagnostics, the `reg_meta.fqid` period formatter, the same-column any-overlap guard
-   (coalescer assert + validate.py check), and the full measurement report. Gate: the
-   enumerated-population diff above (which also asserts the AGI declaration's
-   inertness).
+   (coalescer assert; no validate.py mirror — see the invariant section), and the full
+   measurement report. Gate: the enumerated-population diff above (which also asserts
+   the AGI declaration's inertness).
 3. **PR-C — provider-blind engine extraction, byte-identical.** The sweep (claims in,
    owned intervals out) moves to a shared module with no SCB grammar in it; `scb.py`
    keeps claim *extraction* (`registerversionnamn` parsing). SCB stays the only caller
