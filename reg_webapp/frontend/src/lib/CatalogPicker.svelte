@@ -3,7 +3,6 @@ import {
   type CatalogNode,
   getCatalogNode,
   getRegisterVariants,
-  isCatalogNode,
   type StatesResponse,
   type VariableStateModel,
 } from "./api";
@@ -16,6 +15,7 @@ import {
   rankFilter,
   representationsCollapse,
   representationsFromStates,
+  resolveBindingAt,
 } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
 
@@ -129,26 +129,23 @@ async function pickVariable(fqid: string): Promise<void> {
   }
   const p = props;
   pending = null;
-  // No period → can't resolve. Pick the bare FQID; no prefill (the backend Validate
-  // fills / flags type + display_name).
-  if (!p.period) {
-    p.onpickVariable({
-      variable: fqid,
-      type: "opaque",
-      displayNameDefault: null,
-    });
-    return;
-  }
+  // The derive-on-pick resolve is the SAME shared path the store's re-derive uses
+  // (catalog.resolveBindingAt) — one source of truth so a picked binding and a
+  // re-derived one never disagree. Period-unset / no-states resolve to the bare
+  // FQID with the opaque fallback (the backend Validate flags it; the binding row
+  // shows the "unresolved" marker via the store's re-derive tracking).
   resolving = true;
   resolveError = null;
   try {
-    const resolved = await getCatalogNode(fqid, {
-      period: p.period,
-      variant: p.variant || undefined,
-    });
-    // Not a StatesResponse (shouldn't happen with `?period`), or no state covers
-    // the period → pick the bare FQID with no prefill; the backend flags it.
-    if (isCatalogNode(resolved) || resolved.states.length === 0) {
+    const result = await resolveBindingAt(fqid, p.period, p.variant);
+    if (result.kind === "ambiguous") {
+      // >1 distinct delivery column → defer to the representation chooser below.
+      showAlternates = false;
+      pending = { fqid: result.fqid, states: result.states };
+      return;
+    }
+    if (result.kind === "unresolved") {
+      // Period-unset / no covering state → bare FQID, opaque fallback, no prefill.
       p.onpickVariable({
         variable: fqid,
         type: "opaque",
@@ -156,17 +153,11 @@ async function pickVariable(fqid: string): Promise<void> {
       });
       return;
     }
-    // >1 distinct delivery column → multi-representation; defer to the chooser.
-    if (representationsFromStates(resolved.states).length > 1) {
-      showAlternates = false;
-      pending = { fqid, states: resolved.states };
-      return;
-    }
-    const first = resolved.states[0];
     p.onpickVariable({
       variable: fqid,
-      type: deriveType(first),
-      displayNameDefault: first.delivery_column_name ?? null,
+      type: result.type,
+      displayNameDefault: result.displayNameDefault,
+      representation: result.representation,
     });
   } catch (e) {
     resolveError = e instanceof Error ? e.message : String(e);

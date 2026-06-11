@@ -70,12 +70,49 @@ describe("BindingEditor derive-on-pick", () => {
     await page.getByRole("button", { name: "Pick variable" }).click();
     await page.getByRole("button", { name: /Lön/ }).click();
 
-    // The pick funnels through onPickVariable → projectStore.updateBinding.
+    // The pick funnels through onPickVariable → projectStore.applyPickedBinding.
     await vi.waitFor(() => {
       const b = projectStore.draft?.sources[0].bindings[0];
       expect(b?.variable).toBe("scb/lisa/lon");
       expect(b?.type).toBe("numeric");
       expect(b?.display_name).toBe("Lon");
     });
+  });
+
+  // B2.1/B2.3: picking with the period UNSET must NOT silently dress the opaque
+  // fallback as a real type — the binding row shows an honest "unresolved" marker.
+  it("shows an unresolved marker when picked with the period unset", async () => {
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) =>
+      params
+        ? // resolve branch is unreachable with period null (the picker shortcuts)
+          ({ states: [] } as unknown as StatesResponse)
+        : ({
+            kind: "register",
+            fqid: "scb/lisa",
+            children: [{ kind: "binding", fqid: "scb/lisa/lon", name: "Lön" }],
+          } as unknown as CatalogNode),
+    );
+
+    const binding: Binding = { variable: "", type: "" };
+    await render(BindingEditor, {
+      sourceIndex: 0,
+      bindingIndex: 0,
+      binding,
+      registerPrefix: "scb/lisa",
+      period: null, // ← period unset
+      variant: "v1",
+      issues: [],
+    });
+
+    await page.getByRole("button", { name: "Pick variable" }).click();
+    await page.getByRole("button", { name: /Lön/ }).click();
+
+    // The binding stays opaque, and the marker explains why (set the period).
+    await vi.waitFor(() => {
+      expect(projectStore.draft?.sources[0].bindings[0]?.type).toBe("opaque");
+    });
+    await expect
+      .element(page.getByText(/Set the source period to resolve type/))
+      .toBeInTheDocument();
   });
 });

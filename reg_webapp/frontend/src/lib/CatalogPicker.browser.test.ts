@@ -114,12 +114,16 @@ describe("CatalogPicker", () => {
 
     await page.getByRole("button", { name: /Lön/ }).click();
 
-    // `int` storage type → numeric; the delivery column is the display_name default.
+    // `int` storage type → numeric; the delivery column is the display_name
+    // default. A single-representation derive now explicitly clears
+    // `representation: null` (the shared resolveBindingAt path), so a re-pick of a
+    // multi-rep variable can't leave a stale representation behind.
     await vi.waitFor(() =>
       expect(onpickVariable).toHaveBeenCalledWith({
         variable: "scb/lisa/lon",
         type: "numeric",
         displayNameDefault: "Lon",
+        representation: null,
       }),
     );
     // The resolve carried the source's (period, variant).

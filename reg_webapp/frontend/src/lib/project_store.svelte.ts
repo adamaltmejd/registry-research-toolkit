@@ -34,9 +34,18 @@ import {
   validateProject,
 } from "./api";
 import {
+  type BindingResolution,
+  resolveBindingAt,
+  type UnresolvedReason,
+  variantSeg,
+} from "./catalog";
+import { periodToWire } from "./period";
+import {
   addBinding,
   addSource,
+  type Binding,
   newProjectData,
+  type Period,
   type ProjectData,
   type ProjectSeed,
   removeBinding,
@@ -225,6 +234,81 @@ function buildIds(next: ProjectData | null): SourceIds[] {
   }));
 }
 
+// ── Derived-binding provenance (B2 — UI audit: stale derived fields) ──────────
+//
+// A binding's `type` / `display_name` / `representation` are DERIVED-ON-PICK from
+// reg_meta at the source's (period, variant) (see CatalogPicker derive-on-pick).
+// Two staleness bugs (the UI audit): (1) picking with the period unset left the
+// binding silently on the opaque fallback; (2) changing the source period/variant
+// AFTER a pick re-derived nothing, so types/representations/display defaults went
+// silently stale. The fix re-resolves every binding when its source's
+// (period, variant) changes — but must NEVER clobber a value the user edited by
+// hand.
+//
+// The mechanism: a PARALLEL provenance mirror (like the issue-#200 `sourceIds`
+// tree — editor-local, NEVER serialized, so project_data.json stays schema-pure
+// under `extra="forbid"`). For each binding we remember the LAST-DERIVED snapshot.
+// On re-derive we compare the binding's CURRENT field to the last-derived one:
+//   - field still equals last-derived  → it's still ours → update it.
+//   - field diverged (user edited it)  → KEEP the user value, surface a
+//     non-blocking mismatch hint on the binding row.
+// A binding never picked/derived (no provenance) is left entirely alone.
+
+/** The display status of a binding's derivation, surfaced on the binding row.
+ *  - `null`            — never derived (no marker).
+ *  - `derived`         — resolved cleanly at the current (period, variant).
+ *  - `unresolved`      — resolution impossible (period unset / no covering state).
+ *  - `ambiguous`       — >1 representation now co-exists; the author must re-pick.
+ *  - `error`           — the resolve fetch failed (network / 422).
+ * `mismatch` rides ALONGSIDE the status: a field the user hand-edited away from
+ * the last-derived value would have re-derived differently (non-blocking — the
+ * user value is kept; the validator stays the authority). */
+export interface BindingDerivation {
+  status: "derived" | "unresolved" | "ambiguous" | "error";
+  /** Why unresolved (only when `status === "unresolved"`). */
+  reason?: UnresolvedReason;
+  /** A human note for `ambiguous` / `error` (the resolve message). */
+  detail?: string;
+  /** The (period, variant) the last derivation ran at — so a no-op re-derive
+   * (period unchanged) can skip the fetch, and the mismatch note can name them. */
+  variant: string;
+  period: string | null;
+  /** The values the LAST derivation produced — the clobber-vs-keep baseline. A
+   * field still equal to these is still ours to update; a diverged field is the
+   * user's and is preserved. `undefined` type means "no derived type yet". */
+  derivedType?: string;
+  derivedDisplayName?: string | null;
+  derivedRepresentation?: string | null;
+  /** Set when a hand-edited field would now re-derive differently (advisory). */
+  mismatch?: { field: "type" | "display_name"; derived: string } | null;
+}
+
+/** The provenance mirror — `[sourceIndex][bindingIndex]`, positional like
+ * `sourceIds`. A `null` slot = no derivation yet (no marker). Rebuilt empty on a
+ * wholesale draft replacement (a restored/opened draft has no in-session
+ * derivation history — its bindings render markerless until the next pick or
+ * period change re-derives them, which is honest: we can't claim a value was
+ * auto-derived when we didn't derive it). */
+let bindingDerivations = $state<(BindingDerivation | null)[][]>([]);
+
+/** Build an empty derivation mirror matching a wholesale-replaced draft's shape. */
+function buildDerivations(
+  next: ProjectData | null,
+): (BindingDerivation | null)[][] {
+  const sources =
+    next != null && Array.isArray(next.sources) ? next.sources : [];
+  return sources.map((s) =>
+    Array.isArray(s?.bindings) ? s.bindings.map(() => null) : [],
+  );
+}
+
+// Per-source re-derivation generation counters. Re-resolution is async; rapid
+// period typing fires overlapping re-derive passes, so each pass captures the
+// source's generation at start and DISCARDS its writes if a newer pass has since
+// started (the same stale-response guard `asyncResource` / the `validate` snapshot
+// use). Keyed by the source's STABLE id so it survives index shifts.
+const rederiveGen = new Map<string, number>();
+
 /** The serialized text of the last DOWNLOAD (the dirty baseline). Set on
  * open (the opened raw text) and on download (the just-written text); `null` while
  * no draft is loaded. */
@@ -317,6 +401,8 @@ export const projectStore = {
     const ids = buildIds(next);
     draft = next;
     sourceIds = ids;
+    bindingDerivations = buildDerivations(next);
+    rederiveGen.clear();
     lastDownloaded = serializeProjectData(next);
     validation = null;
     openError = null;
@@ -368,6 +454,8 @@ export const projectStore = {
     const ids = buildIds(opened);
     draft = opened;
     sourceIds = ids;
+    bindingDerivations = buildDerivations(opened);
+    rederiveGen.clear();
     lastDownloaded = serializeProjectData(opened);
     validation = null;
     openError = null;
@@ -475,6 +563,18 @@ export const projectStore = {
   // them desyncs the mirror and resurrects the wrong-instance bug class issue #200
   // fixes. `updateField` therefore rebuilds the mirror when handed `sources`.
 
+  // ── Derived-binding provenance reads (B2) ─────────────────────────────────
+
+  /** The derivation status for the binding at `[sourceIndex][bindingIndex]`
+   * (`null` = never derived → no marker). Drives BindingEditor's unresolved /
+   * stale marker. */
+  bindingDerivation(
+    sourceIndex: number,
+    bindingIndex: number,
+  ): BindingDerivation | null {
+    return bindingDerivations[sourceIndex]?.[bindingIndex] ?? null;
+  },
+
   updateField<K extends keyof ProjectData>(
     key: K,
     value: ProjectData[K],
@@ -487,6 +587,8 @@ export const projectStore = {
       // mirror or it desyncs from the new array — keep them consistent.
       if (key === "sources") {
         sourceIds = buildIds(next);
+        bindingDerivations = buildDerivations(next);
+        rederiveGen.clear();
       }
     }
   },
@@ -495,17 +597,29 @@ export const projectStore = {
       setDraft(addSource(draft));
       // Keep the id mirror in lockstep: append a fresh source id (no bindings).
       sourceIds = [...sourceIds, { id: nextId(), bindings: [] }];
+      bindingDerivations = [...bindingDerivations, []];
     }
   },
   removeSource(index: number): void {
     if (draft != null) {
       setDraft(removeSource(draft, index));
       sourceIds = sourceIds.filter((_, i) => i !== index);
+      bindingDerivations = bindingDerivations.filter((_, i) => i !== index);
     }
   },
   updateSource(index: number, patch: Partial<Source>): void {
-    if (draft != null) {
-      setDraft(updateSource(draft, index, patch));
+    if (draft == null) {
+      return;
+    }
+    // B2: detect a (period, variant)-affecting change BEFORE the mutate so we can
+    // re-derive every binding of this source against the NEW coordinate. Both
+    // `period` and `register_variant` (which carries the variant seg) feed the
+    // resolve, so a change to either invalidates the derived fields.
+    const before = draft.sources?.[index];
+    setDraft(updateSource(draft, index, patch));
+    const after = draft.sources?.[index];
+    if (before && after && resolutionInputsChanged(before, after)) {
+      void rederiveSource(index);
     }
   },
   addBinding(sourceIndex: number): void {
@@ -513,6 +627,9 @@ export const projectStore = {
       setDraft(addBinding(draft, sourceIndex));
       sourceIds = sourceIds.map((s, i) =>
         i === sourceIndex ? { ...s, bindings: [...s.bindings, nextId()] } : s,
+      );
+      bindingDerivations = bindingDerivations.map((d, i) =>
+        i === sourceIndex ? [...d, null] : d,
       );
     }
   },
@@ -523,6 +640,9 @@ export const projectStore = {
         i === sourceIndex
           ? { ...s, bindings: s.bindings.filter((_, j) => j !== bindingIndex) }
           : s,
+      );
+      bindingDerivations = bindingDerivations.map((d, i) =>
+        i === sourceIndex ? d.filter((_, j) => j !== bindingIndex) : d,
       );
     }
   },
@@ -535,7 +655,303 @@ export const projectStore = {
       setDraft(updateBinding(draft, sourceIndex, bindingIndex, patch));
     }
   },
+
+  /**
+   * Apply a picker's derive-on-pick result to a binding AND record its provenance
+   * (B2). This is the pick path's single entry point: it writes the variable +
+   * derived type + (default) display name + representation through the immutable
+   * mutator, then stamps the last-derived snapshot so a later period/variant change
+   * knows which fields are still ours to update vs. user-diverged. `display_name`
+   * is only set when the resolve gave a default AND the user hasn't already set one
+   * (mirrors the old BindingEditor.onPickVariable contract).
+   */
+  applyPickedBinding(
+    sourceIndex: number,
+    bindingIndex: number,
+    picked: {
+      variable: string;
+      type: string;
+      displayNameDefault: string | null;
+      representation?: string | null;
+      // The resolution status from the picker so the row marker is honest even on
+      // a pick (e.g. picked with period unset → unresolved/opaque).
+      status?: BindingDerivation["status"];
+      reason?: UnresolvedReason;
+    },
+  ): void {
+    if (draft == null) {
+      return;
+    }
+    const existing = draft.sources?.[sourceIndex]?.bindings?.[bindingIndex] as
+      | Binding
+      | undefined;
+    const userHasDisplayName = (existing?.display_name ?? "") !== "";
+    const patch: Partial<Binding> = {
+      variable: picked.variable,
+      type: picked.type,
+      representation: picked.representation ?? null,
+    };
+    if (picked.displayNameDefault != null && !userHasDisplayName) {
+      patch.display_name = picked.displayNameDefault;
+    }
+    setDraft(updateBinding(draft, sourceIndex, bindingIndex, patch));
+
+    const source = draft.sources?.[sourceIndex];
+    setDerivation(sourceIndex, bindingIndex, {
+      status: picked.status ?? "derived",
+      reason: picked.reason,
+      variant: source ? variantSeg(registerVariantOf(source)) : "",
+      period: source ? periodToWire(source.period as Period) : null,
+      derivedType: picked.type,
+      // The display name we'd CLAIM as derived is the default — but only when we
+      // actually wrote it (user hadn't set one). When the user already had a name,
+      // the field is theirs from the start, so the derived baseline is that there
+      // is no derived display name to later clobber.
+      derivedDisplayName:
+        picked.displayNameDefault != null && !userHasDisplayName
+          ? picked.displayNameDefault
+          : null,
+      derivedRepresentation: picked.representation ?? null,
+      mismatch: null,
+    });
+  },
 };
+
+// ── Re-derivation engine (B2) ─────────────────────────────────────────────────
+
+/** The source's `register_variant` as a string (coerce non-string to ""). */
+function registerVariantOf(source: Source): string {
+  return typeof source.register_variant === "string"
+    ? source.register_variant
+    : "";
+}
+
+/** Whether two source revisions differ in a RESOLUTION input (period or the
+ * variant seg of register_variant). The register PREFIX change alone doesn't
+ * matter for re-derivation here (a prefix change means a different register
+ * entirely — the bindings' FQIDs would be wrong, which the validator flags), but
+ * the variant seg and the period both feed `resolveBindingAt`. */
+function resolutionInputsChanged(before: Source, after: Source): boolean {
+  const pBefore = periodToWire(before.period as Period);
+  const pAfter = periodToWire(after.period as Period);
+  const vBefore = variantSeg(registerVariantOf(before));
+  const vAfter = variantSeg(registerVariantOf(after));
+  return pBefore !== pAfter || vBefore !== vAfter;
+}
+
+/** Write one binding's derivation slot (allocates the source row if absent so a
+ * provenance write never throws on a not-yet-mirrored slot). */
+function setDerivation(
+  sourceIndex: number,
+  bindingIndex: number,
+  value: BindingDerivation | null,
+): void {
+  bindingDerivations = bindingDerivations.map((row, i) => {
+    if (i !== sourceIndex) {
+      return row;
+    }
+    const next = [...row];
+    next[bindingIndex] = value;
+    return next;
+  });
+}
+
+/**
+ * Re-resolve EVERY binding of the source at `sourceIndex` against its current
+ * (period, variant), updating only the fields the user hasn't hand-edited (B2).
+ * Serialized per source by a generation counter (keyed on the source's stable id):
+ * a newer call bumps the generation, so an in-flight pass discards its writes once
+ * superseded — rapid period typing can't land a stale response over a fresh one.
+ */
+async function rederiveSource(sourceIndex: number): Promise<void> {
+  const sourceId = projectStore.sourceId(sourceIndex);
+  const gen = (rederiveGen.get(sourceId) ?? 0) + 1;
+  rederiveGen.set(sourceId, gen);
+
+  const source = draft?.sources?.[sourceIndex];
+  if (!source || !Array.isArray(source.bindings)) {
+    return;
+  }
+  // The bindings carry full 3-seg variable FQIDs (registerPrefix-scoped at pick
+  // time), so the resolve takes the bare variable + the source's (period, variant).
+  const variant = variantSeg(registerVariantOf(source));
+  const period = periodToWire(source.period as Period);
+
+  // Snapshot the binding list (fqid + index) up front; resolve each in parallel.
+  const targets = source.bindings.map((b, j) => ({
+    bindingIndex: j,
+    variable: typeof b.variable === "string" ? b.variable : "",
+  }));
+
+  await Promise.all(
+    targets.map(async ({ bindingIndex, variable }) => {
+      // A binding with no variable picked yet has nothing to re-derive; leave it
+      // markerless.
+      if (!variable) {
+        return;
+      }
+      let result: BindingResolution;
+      try {
+        // Resolve through the SAME path the picker uses. The fqid is the bare
+        // 3-seg variable (registerPrefix-scoped at pick time); resolveBindingAt
+        // takes (period, variant).
+        result = await resolveBindingAt(variable, period, variant);
+      } catch (e) {
+        if (rederiveGen.get(sourceId) !== gen) {
+          return; // superseded — drop this stale response
+        }
+        applyResolution(sourceIndex, bindingIndex, period, variant, {
+          kind: "error",
+          detail: e instanceof Error ? e.message : String(e),
+        });
+        return;
+      }
+      // Stale-response guard: a newer re-derive (or a draft replacement) started
+      // while this fetch was in flight → discard.
+      if (rederiveGen.get(sourceId) !== gen) {
+        return;
+      }
+      applyResolution(sourceIndex, bindingIndex, period, variant, result);
+    }),
+  );
+}
+
+/** Apply one binding's re-resolution to the draft + provenance, honoring the
+ * clobber-vs-keep rule (B2.2): a field still equal to the last-derived value is
+ * updated to the freshly-derived one; a user-diverged field is KEPT and a
+ * non-blocking mismatch hint is recorded. `registerPrefix-scoped` `registerError`
+ * is the `error` pseudo-result. */
+function applyResolution(
+  sourceIndex: number,
+  bindingIndex: number,
+  period: string | null,
+  variant: string,
+  result: BindingResolution | { kind: "error"; detail: string },
+): void {
+  if (draft == null) {
+    return;
+  }
+  const binding = draft.sources?.[sourceIndex]?.bindings?.[bindingIndex] as
+    | Binding
+    | undefined;
+  if (!binding) {
+    return;
+  }
+  const prev = bindingDerivations[sourceIndex]?.[bindingIndex] ?? null;
+
+  if (result.kind === "error") {
+    // Keep all values; just mark the row so the user knows the resolve failed.
+    setDerivation(sourceIndex, bindingIndex, {
+      ...(prev ?? { variant, period }),
+      status: "error",
+      detail: result.detail,
+      variant,
+      period,
+    });
+    return;
+  }
+
+  if (result.kind === "unresolved") {
+    // Resolution impossible (period unset / no covering state). Do NOT clobber the
+    // existing type — the validator is the authority; the row shows WHY (B2.3).
+    setDerivation(sourceIndex, bindingIndex, {
+      ...(prev ?? {}),
+      status: "unresolved",
+      reason: result.reason,
+      variant,
+      period,
+      mismatch: null,
+    });
+    return;
+  }
+
+  if (result.kind === "ambiguous") {
+    // The concept now resolves to >1 co-existing representation; the store can't
+    // auto-pick (only the picker chooser can). Surface a non-blocking marker and
+    // leave the existing value (B2.4).
+    setDerivation(sourceIndex, bindingIndex, {
+      ...(prev ?? {}),
+      status: "ambiguous",
+      detail: `${result.states.length} delivery columns now co-exist — re-pick a representation.`,
+      variant,
+      period,
+      mismatch: null,
+    });
+    return;
+  }
+
+  // result.kind === "derived": the clobber-vs-keep core.
+  const currentType = typeof binding.type === "string" ? binding.type : "";
+  const currentDisplay =
+    typeof binding.display_name === "string" ? binding.display_name : "";
+  const patch: Partial<Binding> = {};
+
+  // TYPE: still ours (== last-derived, or never derived & still the opaque
+  // fallback) → update; user-diverged → keep + flag mismatch.
+  const lastType = prev?.derivedType;
+  const typeIsOurs =
+    lastType === undefined
+      ? currentType === "opaque" || currentType === ""
+      : currentType === lastType;
+  let typeMismatch: BindingDerivation["mismatch"] = null;
+  if (typeIsOurs) {
+    if (currentType !== result.type) {
+      patch.type = result.type;
+    }
+  } else if (currentType !== result.type) {
+    typeMismatch = { field: "type", derived: result.type };
+  }
+
+  // DISPLAY NAME: the derived default only ever auto-fills a blank/own name; a
+  // user-set name is never clobbered. A diverged name whose derived default
+  // changed is flagged.
+  const lastDisplay = prev?.derivedDisplayName ?? null;
+  const displayIsOurs =
+    lastDisplay === null
+      ? currentDisplay === ""
+      : currentDisplay === lastDisplay;
+  let displayMismatch: BindingDerivation["mismatch"] = null;
+  if (result.displayNameDefault != null) {
+    if (displayIsOurs) {
+      if (currentDisplay !== result.displayNameDefault) {
+        patch.display_name = result.displayNameDefault;
+      }
+    } else if (currentDisplay !== result.displayNameDefault) {
+      displayMismatch = {
+        field: "display_name",
+        derived: result.displayNameDefault,
+      };
+    }
+  }
+
+  // REPRESENTATION: a single-rep derive clears any stale representation we set.
+  // (Multi-rep is the `ambiguous` branch above.) Only touch it when WE own it
+  // (it equals the last-derived representation), never a user-typed value.
+  const lastRep = prev?.derivedRepresentation ?? null;
+  const currentRep =
+    typeof binding.representation === "string" ? binding.representation : null;
+  if (currentRep === lastRep && currentRep !== result.representation) {
+    patch.representation = result.representation;
+  }
+
+  if (Object.keys(patch).length > 0) {
+    setDraft(updateBinding(draft, sourceIndex, bindingIndex, patch));
+  }
+
+  // The new last-derived baseline. For an OURS field we just wrote the derived
+  // value, so the baseline is the derived value; for a diverged (mismatch) field
+  // the baseline stays the derived value too (so a later edit back to it clears
+  // the mismatch). The user's value remains in the draft.
+  setDerivation(sourceIndex, bindingIndex, {
+    status: "derived",
+    variant,
+    period,
+    derivedType: result.type,
+    derivedDisplayName: result.displayNameDefault,
+    derivedRepresentation: result.representation,
+    mismatch: typeMismatch ?? displayMismatch,
+  });
+}
 
 // ── Autosave + load-at-init (the A5.4 persistence wiring) ────────────────────
 
@@ -561,6 +977,8 @@ export function initPersistence(): Promise<void> {
       const ids = buildIds(restored);
       draft = restored;
       sourceIds = ids;
+      bindingDerivations = buildDerivations(restored);
+      rederiveGen.clear();
       // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
       // downloaded to the durable project_data.json this session, so it must read
       // as DIRTY (unsaved-changes warning). lastDownloaded stays null →
