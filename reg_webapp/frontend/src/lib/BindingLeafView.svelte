@@ -209,6 +209,12 @@ function chooseRep(column: string): void {
 /** Commit every segment through the store (synchronous appends; the guarded
  * derive lands per binding afterwards) and record the aggregate outcome. */
 function commit(segments: AddSegment[]): void {
+  if (segments.length === 0) {
+    // Defensive: an empty plan must not render a confirmation ("Already in
+    // project" would be a lie). Unreachable via the UI (the button is disabled
+    // without states; prompts re-plan over the same states).
+    return;
+  }
   const added: { name: string; period: string | null }[] = [];
   let already = 0;
   for (const seg of segments) {

@@ -53,9 +53,28 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
     expect(periodFromWire("_default")).toBe("_default");
   });
 
-  it("a range with a non-integer endpoint stays the raw token string", () => {
-    expect(periodFromWire("HT2018..VT2019")).toBe("HT2018..VT2019");
-    expect(periodFromWire("2019-03..2019-06")).toBe("2019-03..2019-06");
+  it("a token-endpoint range becomes the {from,to} object (the only valid range shape for Source.period)", () => {
+    expect(periodFromWire("HT2018..VT2019")).toEqual({
+      from: "HT2018",
+      to: "VT2019",
+    });
+    expect(periodFromWire("2019-03..2019-06")).toEqual({
+      from: "2019-03",
+      to: "2019-06",
+    });
+    // The #306 succession auto-split's mixed-grain clips.
+    expect(periodFromWire("1992..2009-06-30")).toEqual({
+      from: 1992,
+      to: "2009-06-30",
+    });
+    expect(periodFromWire("VT1992..2009")).toEqual({
+      from: "VT1992",
+      to: 2009,
+    });
+  });
+
+  it("a malformed multi-separator string stays the raw string (the backend flags it)", () => {
+    expect(periodFromWire("2018..2019..2020")).toBe("2018..2019..2020");
   });
 
   it("null / blank → the unset empty-string period", () => {
@@ -64,9 +83,13 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
     expect(periodFromWire("   ")).toBe("");
   });
 
-  it("round-trips a single year and an integer range through periodToWire", () => {
+  it("round-trips a single year and ranges (int + token endpoints) through periodToWire", () => {
     expect(periodToWire(periodFromWire("2018"))).toBe("2018");
     expect(periodToWire(periodFromWire("2010..2020"))).toBe("2010..2020");
+    expect(periodToWire(periodFromWire("VT1992..2009"))).toBe("VT1992..2009");
+    expect(periodToWire(periodFromWire("1992..2009-06-30"))).toBe(
+      "1992..2009-06-30",
+    );
   });
 });
 

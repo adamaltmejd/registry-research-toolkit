@@ -231,10 +231,15 @@ export function periodToWire(period: Period): string | null {
  * mirrors PeriodEditor's mode inference so a prefilled source opens in the right
  * editor mode:
  *   - a bare integer year (`"2018"`) → the `number` arm (years mode, from=to);
- *   - a `from..to` RANGE of two integer years (`"2010..2020"`) → `{from, to}`
- *     numbers (years range mode);
+ *   - ANY 2-endpoint `from..to` range → the `{from, to}` object, each endpoint
+ *     an integer year when it parses as one, else the token string verbatim
+ *     (`"VT1992..2009"` → `{from: "VT1992", to: 2009}`). The OBJECT form is the
+ *     only range shape `Source.period` accepts — reg_schema's string arm is
+ *     single-token-only, so a raw `"a..b"` string period would fail
+ *     `invalid_period` (bit the #306 succession auto-split, whose clipped
+ *     segments routinely carry date/token endpoints);
  *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`), a `_default`
- *     sentinel, or a range with a non-integer endpoint — rides through as the raw
+ *     sentinel, or a malformed multi-`..` string — rides through as the raw
  *     string (token mode), which is exactly how PeriodEditor would model it.
  * A null/blank wire string yields `""` (the fresh-source unset period: PR B's
  * unresolved marker + amber hint then guide the user). ADVISORY shaping only — the
@@ -247,13 +252,13 @@ export function periodFromWire(wire: string | null): Period {
   if (value.includes(RANGE_SEP)) {
     const parts = value.split(RANGE_SEP);
     if (parts.length === 2) {
-      const from = yearInt(parts[0]);
-      const to = yearInt(parts[1]);
-      // Both endpoints integer years → the structured years range; otherwise the
-      // raw token string (a token-endpoint range PeriodEditor shows as Token text).
-      if (from !== null && to !== null) {
-        return { from, to };
-      }
+      // ALWAYS the {from, to} object for a 2-endpoint range: int-year endpoints
+      // where they parse, token strings otherwise. Never the raw "a..b" string —
+      // that's not a valid Source.period (see the docstring).
+      return {
+        from: yearInt(parts[0]) ?? parts[0].trim(),
+        to: yearInt(parts[1]) ?? parts[1].trim(),
+      };
     }
     return value;
   }
