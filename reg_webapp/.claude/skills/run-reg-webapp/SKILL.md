@@ -106,6 +106,14 @@ Same two servers, then open <http://localhost:5173/> in a browser. Backend API d
   Probe with `curl` GETs, not `-I`.
 - The Vite proxy targets `http://localhost:8000` (hardcoded in
   `frontend/vite.config.ts`) — the backend must be on :8000, not a random port.
+- **From a git worktree (`.claude/worktrees/*`), `uv run uvicorn …` serves the main
+  checkout's code** — it (and the `preview_start` launch.json configs) resolves to the
+  main checkout's workspace venv, so you silently exercise stale main-branch behavior
+  instead of the worktree's changes (bit an agent 2026-06-11: a fix "didn't work"
+  because the servers ran main's code). Fix: `uv sync --frozen` inside the worktree,
+  then start the backend via the worktree's own venv binary
+  (`.venv/bin/uvicorn reg_webapp.app:create_app --factory --port 8000`) and the frontend
+  via `bun run dev` from the worktree's `reg_webapp/frontend/`.
 
 ## Troubleshooting
 
