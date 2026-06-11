@@ -19,15 +19,15 @@
 # deploy everything); the HEAD guards make a non-main dispatch a no-op at
 # the deploy steps, so it cannot ship branch code to prod.
 #
-# ─────────────────────────────────────────────────────────────────────────────
-# PROPOSAL — image filter scope (OPEN decision, REFACTOR_SPEC.md "Open /
-# deferred decisions → Container-build CI trigger"). The image filter below
-# deliberately does NOT include reg_schema / reg_monabundle even though they
-# are baked deps: that would rebuild on most monorepo PRs, and they're already
-# exercised by the backend test job in ci.yml. MAINTAINER: confirm whether the
-# baked workspace deps should also trigger a rebuild, or whether manual
-# `workflow_dispatch` is enough for those.
-# ─────────────────────────────────────────────────────────────────────────────
+# Nothing deploys without green CI: a `wait-ci` job polls the ci.yml run for
+# this commit and both deploy jobs require its success — an image that builds
+# but fails lint/types/tests never ships.
+#
+# Image filter scope (DECIDED 2026-06-11): reg_schema / reg_monabundle are
+# baked deps but deliberately NOT in the image filter — they'd rebuild on most
+# monorepo PRs and are already exercised by ci.yml's test job. After a baked-dep
+# change that should ship, run the manual `workflow_dispatch`. That is the
+# rule, not a gap.
 
 name: Container build
 
@@ -89,6 +89,32 @@ jobs:
               - "reg_webapp/backend/openapi.json"
               - ".github/workflows/container-build.yml"
 
+  # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
+  # (lint + ty + pytest + frontend jobs). CI runs on every main push (no paths
+  # filter), so a run always exists; for a workflow_dispatch the gate finds the
+  # CI run from the SHA's original push. Polls because ci.yml (~2 min) and the
+  # image build run in parallel — this usually resolves first.
+  wait-ci:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for green CI on this commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for _ in $(seq 1 40); do
+            run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml \
+              --commit "$GITHUB_SHA" --limit 1 --json status,conclusion \
+              -q '.[0] | (.status + " " + (.conclusion // ""))')
+            echo "ci.yml @ $GITHUB_SHA: ${run:-no run found yet}"
+            case "$run" in
+              "completed success") exit 0 ;;
+              completed*) echo "FATAL: CI did not succeed — refusing to deploy" >&2; exit 1 ;;
+            esac
+            sleep 30
+          done
+          echo "FATAL: timed out waiting for CI" >&2; exit 1
+
   build-image:
     needs: changes
     if: >-
@@ -144,9 +170,10 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    needs: build-image
+    needs: [build-image, wait-ci]
     if: >-
       !cancelled() && needs.build-image.result == 'success' &&
+      needs.wait-ci.result == 'success' &&
       github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     # One deploy at a time; queue rather than cancel — an interrupted flyctl
@@ -193,9 +220,10 @@ jobs:
   # being skipped (edge-only change → no image rebuild) is fine; a FAILED
   # image build/deploy blocks the edge ship.
   edge-deploy:
-    needs: [changes, build-image, deploy]
+    needs: [changes, build-image, deploy, wait-ci]
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
+      needs.wait-ci.result == 'success' &&
       needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
       (needs.changes.outputs.edge == 'true' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest

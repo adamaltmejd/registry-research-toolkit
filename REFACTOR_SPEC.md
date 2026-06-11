@@ -486,11 +486,6 @@ Carried from the testing strategy; the shipped categories are in
   #209.
 - **LISA composite-source presentation** — the lineage data + endpoints ship; the UX
   treatment (tooltip vs "see also" panel) is a webapp authoring-UI decision.
-- **Container-build CI trigger** — the container-build + deploy job ships
-  (`container-build.yml`: PR-gating build, main-push deploy), but its path-trigger set
-  is a recorded PROPOSAL in that workflow's header awaiting maintainer confirmation —
-  notably whether baked workspace deps (reg_schema/reg_monabundle) should also trigger a
-  rebuild or stay manual-dispatch-only.
 - **Sub-annual-coding providers (#271)** — before onboarding any provider whose *coding*
   changes within a year (FK/FHM/SKV event data, SCB monthly income, SOS half-year),
   build the interval-native co-delivery resolver first, in the provider-blind core. #271
