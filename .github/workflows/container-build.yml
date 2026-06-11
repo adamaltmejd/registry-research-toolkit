@@ -238,7 +238,7 @@ jobs:
       # image-baked copy stays pinned.
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "1.3.0"
+          bun-version: "1.3.14"
       - run: bun install --frozen-lockfile
         working-directory: reg_webapp/frontend
       # Same build sequence as the Dockerfile's frontend stage: regenerate

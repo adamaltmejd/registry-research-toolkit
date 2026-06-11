@@ -18,7 +18,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.1.0
+      - uses: astral-sh/setup-uv@v8.2.0
 
       # mock-data-wizard ships no release assets, so this step just confirms
       # the CLI entry point is wired correctly before publishing.
