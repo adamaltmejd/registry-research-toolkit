@@ -123,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
       # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
       # build-arg. Passing a literal `latest` would make the bake layer's
       # buildx cache key insensitive to data-only releases — worse, after a
@@ -147,7 +147,7 @@ jobs:
       # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
       - name: Log in to registry.fly.io
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: registry.fly.io
           username: x
@@ -157,7 +157,7 @@ jobs:
       # runner's docker, no push); main/dispatch pushes to Fly's registry
       # addressed by commit SHA, so the deploy job (and a manual rollback)
       # references an immutable tag. GHA layer cache keeps rebuilds cheap.
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v7
         with:
           context: .
           file: reg_webapp/Dockerfile
