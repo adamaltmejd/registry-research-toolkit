@@ -524,6 +524,7 @@ import {
   axisValues,
   countFoldedMembers,
   foldGroupedRows,
+  groupFilterKeys,
   groupMatchesFilter,
   memberAt,
 } from "./catalog";
@@ -582,6 +583,19 @@ describe("groupMatchesFilter", () => {
     expect(groupMatchesFilter("februari", group({}))).toBe(true);
     expect(groupMatchesFilter("inkjan", group({}))).toBe(true);
     expect(groupMatchesFilter("nomatch", group({}))).toBe(false);
+  });
+});
+
+describe("groupFilterKeys", () => {
+  it("carries the label/key plus every member's name and FQID (#322)", () => {
+    expect(groupFilterKeys(group({}))).toEqual([
+      "Inkomst",
+      "ink",
+      "Inkomst i januari",
+      "scb/lisa/inkjan",
+      "Inkomst i februari",
+      "scb/lisa/inkfeb",
+    ]);
   });
 });
 

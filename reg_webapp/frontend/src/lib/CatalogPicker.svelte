@@ -9,9 +9,13 @@ import {
   type VariableStateModel,
 } from "./api";
 import { asyncResource } from "./async.svelte";
+import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
   bindingChildren,
+  countFoldedMembers,
   deriveType,
+  foldGroupedRows,
+  groupFilterKeys,
   narrowCatalogNode,
   type PickedVariable,
   type Representation,
@@ -127,6 +131,15 @@ const registerNode = $derived(
 const variableChildren = $derived(
   registerNode ? bindingChildren(registerNode) : [],
 );
+// #322: fold the pickable variables under their concept groups, same as the
+// browse (a register's 740 variables open on a wall of near-identical `agi*`
+// rows otherwise). `foldGroupedRows` tolerates a stale pre-`groups` edge-cached
+// payload (#317) by degrading to the flat list.
+const variableRows = $derived(
+  registerNode && registerNode.kind === "register"
+    ? foldGroupedRows(variableChildren, registerNode.groups)
+    : [],
+);
 
 // The variant-pick list (only when an effective register is set).
 const variantList = $derived(
@@ -173,8 +186,16 @@ let filter = $state("");
 const filteredVariants = $derived(
   rankFilter(variantList, filter, (v) => [v.slug, v.name]),
 );
+// Variable rows are group-folded (#322): a group row matches/ranks on its
+// label/key + every member's name/FQID (`groupFilterKeys` — the same match set
+// as the browse's `groupMatchesFilter`), so target-hunting a member ("maj")
+// still surfaces the family that folded it.
 const filteredVariables = $derived(
-  rankFilter(variableChildren, filter, (c) => [c.fqid, c.name]),
+  rankFilter(variableRows, filter, (row) =>
+    row.kind === "group"
+      ? groupFilterKeys(row.group)
+      : [row.item.fqid, row.item.name],
+  ),
 );
 // C2: the browse-step lists, same rankFilter (target-hunt a provider/register).
 const filteredProviders = $derived(
@@ -428,27 +449,39 @@ function emitVariant(slug: string): void {
     {/if}
   {:else if registerNode && registerNode.kind === "register"}
     {#if variableChildren.length > 0}
+      <!-- Counts stay in VARIABLE units after folding (#322):
+           countFoldedMembers expands group rows to their member counts. -->
       <FilterInput
         bind:value={filter}
         total={variableChildren.length}
-        shown={filteredVariables.length}
+        shown={countFoldedMembers(filteredVariables)}
         placeholder="Filter variables…"
         label="Filter variables"
         autofocus
       />
       {#if filteredVariables.length > 0}
         <ul class="pick-list">
-          {#each filteredVariables as child (child.fqid)}
+          {#each filteredVariables as row (row.kind === "group" ? row.group.key : row.item.fqid)}
             <li>
-              <button
-                type="button"
-                class="pick"
-                disabled={resolving}
-                onclick={() => void pickVariable(child.fqid)}
-              >
-                <span class="slug">{child.name ?? child.fqid}</span>
-                <code class="leaf-fqid">{child.fqid}</code>
-              </button>
+              {#if row.kind === "group"}
+                <!-- Folded family (#322): expand to the facet picker; members
+                     emit through the same derive-on-pick path as leaf rows. -->
+                <ConceptGroupRow
+                  group={row.group}
+                  disabled={resolving}
+                  onpick={(fqid) => void pickVariable(fqid)}
+                />
+              {:else}
+                <button
+                  type="button"
+                  class="pick"
+                  disabled={resolving}
+                  onclick={() => void pickVariable(row.item.fqid)}
+                >
+                  <span class="slug">{row.item.name ?? row.item.fqid}</span>
+                  <code class="leaf-fqid">{row.item.fqid}</code>
+                </button>
+              {/if}
             </li>
           {/each}
         </ul>

@@ -396,4 +396,163 @@ describe("CatalogPicker", () => {
       expect(firstPick.element().textContent).toContain("Kön"),
     );
   });
+
+  // ── #322: concept-group folding in the variable list ────────────────────────
+  // A register node whose `groups` fold the month-suffixed `ink*` family; `kon`
+  // stays an ungrouped leaf. Mirrors the /api/catalog register payload shape.
+  function groupedRegisterNode(): CatalogNode {
+    const node = registerNode(
+      "scb/lisa",
+      { fqid: "scb/lisa/inkjan", name: "Inkomst januari" },
+      { fqid: "scb/lisa/inkfeb", name: "Inkomst februari" },
+      { fqid: "scb/lisa/inkmar", name: "Inkomst mars" },
+      { fqid: "scb/lisa/kon", name: "Kön" },
+    ) as unknown as Record<string, unknown>;
+    node.groups = [
+      {
+        key: "ink",
+        label: "Inkomst per månad",
+        source: "token",
+        axes: ["month"],
+        members: [
+          {
+            fqid: "scb/lisa/inkjan",
+            name: "Inkomst januari",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+          },
+          {
+            fqid: "scb/lisa/inkfeb",
+            name: "Inkomst februari",
+            facets: [{ axis: "month", value: "02", label: "februari" }],
+          },
+          {
+            fqid: "scb/lisa/inkmar",
+            name: "Inkomst mars",
+            facets: [{ axis: "month", value: "03", label: "mars" }],
+          },
+        ],
+      },
+    ];
+    return node as unknown as CatalogNode;
+  }
+
+  it("folds grouped variables into one expandable family row (#322)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    // One group row (label + member count) + the ungrouped leaf.
+    await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
+    await expect.element(page.getByText("3 variables")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Kön/ }))
+      .toBeVisible();
+    // The folded members are NOT flat pick rows.
+    await expect
+      .element(page.getByRole("button", { name: /Inkomst januari/ }))
+      .not.toBeInTheDocument();
+  });
+
+  it("filtering on a member surfaces its group; counts stay in variable units", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    // A member-only needle keeps the FAMILY visible (groupFilterKeys) and
+    // drops the unrelated leaf; the count expands the group to member units.
+    await page
+      .getByRole("textbox", { name: "Filter variables" })
+      .fill("februari");
+    await expect.element(page.getByText("Inkomst per månad")).toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Kön/ }))
+      .not.toBeInTheDocument();
+    await expect.element(page.getByText("3 of 4")).toBeVisible();
+  });
+
+  it("picks a member from the expanded family through derive-on-pick", async () => {
+    const onpickVariable = vi.fn();
+    // Browse (no params) → grouped register node; resolve (with params) → state.
+    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) =>
+      params
+        ? statesResponse([
+            {
+              delivery_column_name: "InkFeb",
+              data_type: "int",
+              value_set_id: null,
+              value_set: null,
+              value_set_version_label: "",
+              valid_from: "2010-01-01",
+              valid_to: "2020-12-31",
+            },
+          ])
+        : groupedRegisterNode(),
+    );
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: "2020",
+      variant: "v1",
+      onpickVariable,
+      oncancel: vi.fn(),
+    });
+
+    // Expand the family, pick the februari chip (single-axis → facet chips).
+    await page.getByText("Inkomst per månad").click();
+    await page.getByRole("button", { name: "februari" }).click();
+
+    // The member rides the SAME derive-on-pick path as a leaf row.
+    await vi.waitFor(() =>
+      expect(onpickVariable).toHaveBeenCalledWith({
+        variable: "scb/lisa/inkfeb",
+        type: "numeric",
+        displayNameDefault: "InkFeb",
+        representation: null,
+        resolution: "derived",
+      }),
+    );
+    expect(getCatalogNode).toHaveBeenCalledWith("scb/lisa/inkfeb", {
+      period: "2020",
+      variant: "v1",
+    });
+  });
+
+  it("degrades to the flat list on a stale pre-groups payload (#317)", async () => {
+    // An edge-cached register payload may lack `groups` for one deploy
+    // generation; the picker must render the flat list, not crash.
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      registerNode(
+        "scb/lisa",
+        { fqid: "scb/lisa/inkjan", name: "Inkomst januari" },
+        { fqid: "scb/lisa/kon", name: "Kön" },
+      ),
+    );
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    await expect
+      .element(page.getByRole("button", { name: /Inkomst januari/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Kön/ }))
+      .toBeVisible();
+  });
 });

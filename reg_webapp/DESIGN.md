@@ -148,7 +148,12 @@ grouped leaves hide under one expandable `ConceptGroupRow` (a month×rank value 
 for two facet axes, chips for one — months/vintages — and a plain member list for edge
 groups), ungrouped leaves render as before, and the type-to-filter matches a group on
 its label/key OR any member's name/FQID (`groupMatchesFilter`) so member searches still
-surface the folded group.
+surface the folded group. The CatalogPicker's variable list folds the same way (#322):
+`ConceptGroupRow` takes an optional `onpick` that renders members as pick buttons
+instead of catalogHref links, and the picker's `rankFilter` ranks a group row on
+`groupFilterKeys` (the shared match set behind `groupMatchesFilter`); a picked member
+rides the same derive-on-pick path as a leaf row. `foldGroupedRows` tolerates a stale
+pre-`groups` edge-cached payload (#317) by degrading to the flat list.
 
 **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
 `source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state
