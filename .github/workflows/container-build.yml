@@ -238,6 +238,13 @@ jobs:
         continue-on-error: true
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          # The tag this run just deployed — never pruned, regardless of
+          # .created ordering. A no-op dispatch rebuild gets a full buildx
+          # cache hit and inherits the ORIGINAL build's image-config .created,
+          # so on a >KEEP-releases-old commit the just-deployed tag could sort
+          # outside the keep window and the prune would delete the manifest
+          # prod is actively running (review on #296).
+          DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         run: |
           set -euo pipefail
           REPO_URL="https://registry.fly.io/v2/reg-webapp-global"
@@ -264,7 +271,9 @@ jobs:
           kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
           printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" \
             | while read -r _ tag digest; do
-              if printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
+              if [ "$tag" = "$DEPLOYED_TAG" ]; then
+                echo "skip $tag (just deployed)"
+              elif printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
                 echo "skip $tag (digest shared with a kept tag)"
               else
                 echo "prune $tag"
