@@ -398,6 +398,10 @@ export interface CatalogAddResult {
    * lets the confirmation distinguish "added to scb/lisa/v1" from "started a new
    * source". */
   createdSource: boolean;
+  /** The name of the source the binding landed in (or was already in) — the #312
+   * prefill on a created source, the existing name otherwise. Drives the page's
+   * "added as N sources: …" confirmation (#306 variant-segment split). */
+  sourceName: string;
 }
 
 /** Whether a source already carries a binding for this fqid (+ representation) — the
@@ -878,8 +882,17 @@ export const projectStore = {
     }
     if (draft == null) {
       // newProject always sets the draft; this guards the type-narrowing only.
-      return { status: "already-present", createdSource: false };
+      return {
+        status: "already-present",
+        createdSource: false,
+        sourceName: "",
+      };
     }
+    /** The landed source's name (read AFTER the create path's #312 prefill). */
+    const nameAt = (index: number): string => {
+      const name = draft?.sources?.[index]?.name;
+      return typeof name === "string" ? name : "";
+    };
 
     const sources = Array.isArray(draft.sources) ? draft.sources : [];
     let sourceIndex = sources.findIndex(
@@ -908,7 +921,11 @@ export const projectStore = {
       source &&
       sourceHasBinding(source, payload.variable, payload.representation)
     ) {
-      return { status: "already-present", createdSource };
+      return {
+        status: "already-present",
+        createdSource,
+        sourceName: nameAt(sourceIndex),
+      };
     }
 
     // 4. Append the binding and write its variable (+ provisional representation)
@@ -952,7 +969,7 @@ export const projectStore = {
     // later period change (or a remove) supersedes this in-flight add-derive instead
     // of letting a stale resolution clobber the binding (review MAJOR 1).
     void rederiveSource(sourceIndex);
-    return { status: "added", createdSource };
+    return { status: "added", createdSource, sourceName: nameAt(sourceIndex) };
   },
 };
 

@@ -87,7 +87,7 @@ if (cmd === "shot") {
   // the narrowing actually happened — settled() alone would pass on a silent
   // no-op resolve.
   await page.locator("input").first().fill("2022");
-  await page.getByRole("button", { name: "Resolve" }).click();
+  await page.getByRole("button", { name: "Apply" }).click();
   await settled();
   await page.waitForFunction(
     () => document.body.innerText.includes("narrowed to 2022"),

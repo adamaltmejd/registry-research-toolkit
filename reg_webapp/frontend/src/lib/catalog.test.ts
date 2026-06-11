@@ -3,6 +3,7 @@ import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import {
   bindingChildren,
   breadcrumbs,
+  buildAddPlan,
   catalogHref,
   deriveType,
   foldText,
@@ -700,5 +701,206 @@ describe("foldGroupedRows stale-cache tolerance", () => {
       { kind: "leaf", item: { fqid: "scb/lisa/kon" } },
       { kind: "leaf", item: { fqid: "scb/lisa/alder" } },
     ]);
+  });
+});
+
+describe("buildAddPlan (#306 one-click add)", () => {
+  // Two-variant succession shaped like LISA adeldag: "16plus" 1992–2009,
+  // "15plus" 2010–open. Distinct columns per era (a sequential rename, NOT a
+  // representation choice — representationsFromStates treats non-overlapping
+  // columns as drift).
+  const succession = [
+    state({
+      state_id: 1,
+      variant: "individer-16plus",
+      valid_from: "1992-01-01",
+      valid_to: "2009-12-31",
+      delivery_column_name: "ADelDag",
+    }),
+    state({
+      state_id: 2,
+      variant: "individer-15plus",
+      valid_from: "2010-01-01",
+      valid_to: "9999-12-31",
+      delivery_column_name: "ADelDag",
+    }),
+  ];
+
+  it("no states → an empty segments plan", () => {
+    expect(buildAddPlan([], "2018")).toEqual({
+      kind: "segments",
+      segments: [],
+    });
+  });
+
+  it("a single variant → one segment with the period verbatim", () => {
+    const plan = buildAddPlan(
+      [
+        state({
+          variant: "v1",
+          valid_from: "2010-01-01",
+          valid_to: "2020-12-31",
+        }),
+      ],
+      "2012..2014",
+    );
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments).toHaveLength(1);
+      expect(plan.segments[0].variant).toBe("v1");
+      expect(plan.segments[0].period).toBe("2012..2014");
+      expect(plan.segments[0].needsRepChoice).toBe(false);
+      expect(plan.segments[0].representation).toBeNull();
+    }
+  });
+
+  it("a range spanning a variant succession auto-splits, clipping each segment", () => {
+    const plan = buildAddPlan(succession, "1992..2023");
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments.map((s) => [s.variant, s.period])).toEqual([
+        ["individer-16plus", "1992..2009"],
+        ["individer-15plus", "2010..2023"],
+      ]);
+    }
+  });
+
+  it("the user's endpoint tokens survive verbatim at the range edges", () => {
+    const plan = buildAddPlan(succession, "VT1992..HT2023");
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments.map((s) => s.period)).toEqual([
+        "VT1992..2009",
+        "2010..HT2023",
+      ]);
+    }
+  });
+
+  it("a mid-year succession boundary stays an exact date token", () => {
+    const midYear = [
+      state({
+        state_id: 1,
+        variant: "a",
+        valid_from: "1992-01-01",
+        valid_to: "2009-06-30",
+      }),
+      state({
+        state_id: 2,
+        variant: "b",
+        valid_from: "2009-07-01",
+        valid_to: "9999-12-31",
+      }),
+    ];
+    const plan = buildAddPlan(midYear, "1992..2023");
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments.map((s) => s.period)).toEqual([
+        "1992..2009-06-30",
+        "2009-07-01..2023",
+      ]);
+    }
+  });
+
+  it("a single-year clip collapses to one token (no degenerate range)", () => {
+    const plan = buildAddPlan(succession, "2009..2010");
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments.map((s) => s.period)).toEqual(["2009", "2010"]);
+    }
+  });
+
+  it("co-existing variants inside the range → choose-variant", () => {
+    const coexisting = [
+      state({
+        state_id: 1,
+        variant: "individer",
+        valid_from: "1992-01-01",
+        valid_to: "9999-12-31",
+      }),
+      state({
+        state_id: 2,
+        variant: "arbetsstallen",
+        valid_from: "1992-01-01",
+        valid_to: "9999-12-31",
+      }),
+    ];
+    const plan = buildAddPlan(coexisting, "2010..2020");
+    expect(plan.kind).toBe("choose-variant");
+    if (plan.kind === "choose-variant") {
+      expect(plan.options.map((o) => o.variant)).toEqual([
+        "arbetsstallen",
+        "individer",
+      ]);
+    }
+  });
+
+  it("≥2 variants with a point period (or none) → choose-variant", () => {
+    // A point period can't span a succession; ≥2 remaining variants co-exist.
+    expect(buildAddPlan(succession, "2009").kind).toBe("choose-variant");
+    expect(buildAddPlan(succession, null).kind).toBe("choose-variant");
+    expect(buildAddPlan(succession, "_default").kind).toBe("choose-variant");
+  });
+
+  it("genuinely distinct co-existing codings flag a rep choice, primary preselected", () => {
+    const multiRep = [
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "Ssyk3",
+        value_set: [{ code: "1", label: "a" }],
+        value_set_version_label: "3-digit",
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2023-12-31",
+        delivery_column_name: "Ssyk4",
+        value_set: [{ code: "11", label: "b" }],
+        value_set_version_label: "4-digit",
+      }),
+    ];
+    const plan = buildAddPlan(multiRep, "2018");
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments[0].needsRepChoice).toBe(true);
+      // Primary = latest-era (Ssyk4, valid_to 2023) per #266.
+      expect(plan.segments[0].representation).toBe("Ssyk4");
+      expect(plan.segments[0].reps.map((r) => r.column)).toEqual([
+        "Ssyk4",
+        "Ssyk3",
+      ]);
+    }
+  });
+
+  it("coding-identical parallel columns auto-pick the primary (no prompt)", () => {
+    const identical = [
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "1980-01-01",
+        valid_to: "1987-12-31",
+        delivery_column_name: "UT0290",
+        value_set: [{ code: "1", label: "Ja" }],
+        value_set_version_label: "Ja nej 1",
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "1982-01-01",
+        valid_to: "1983-12-31",
+        delivery_column_name: "UT0280",
+        value_set: [{ code: "1", label: "Ja" }],
+        value_set_version_label: "Ja nej 1",
+      }),
+    ];
+    const plan = buildAddPlan(identical, "1982");
+    expect(plan.kind).toBe("segments");
+    if (plan.kind === "segments") {
+      expect(plan.segments[0].needsRepChoice).toBe(false);
+      expect(plan.segments[0].representation).toBe("UT0290");
+    }
   });
 });

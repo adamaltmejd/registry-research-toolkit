@@ -68,7 +68,11 @@ describe("addFromCatalog (C1)", () => {
     );
 
     const result = projectStore.addFromCatalog(konPayload(), SEED);
-    expect(result).toEqual({ status: "added", createdSource: true });
+    expect(result).toEqual({
+      status: "added",
+      createdSource: true,
+      sourceName: "LISA",
+    });
 
     // The project was created from the seed.
     expect(projectStore.draft).not.toBeNull();
@@ -122,7 +126,11 @@ describe("addFromCatalog (C1)", () => {
       SEED,
     );
     // No new source — appended to the existing one.
-    expect(result).toEqual({ status: "added", createdSource: false });
+    expect(result).toEqual({
+      status: "added",
+      createdSource: false,
+      sourceName: "LISA",
+    });
     expect(projectStore.draft?.sources).toHaveLength(1);
     expect(projectStore.draft?.sources[0].bindings).toHaveLength(1);
     expect(projectStore.draft?.sources[0].bindings[0]?.variable).toBe(
@@ -230,7 +238,11 @@ describe("addFromCatalog (C1)", () => {
     );
 
     const result = projectStore.addFromCatalog(konPayload(), SEED);
-    expect(result).toEqual({ status: "added", createdSource: true });
+    expect(result).toEqual({
+      status: "added",
+      createdSource: true,
+      sourceName: "LISA_2",
+    });
     expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
   });
 
@@ -242,7 +254,11 @@ describe("addFromCatalog (C1)", () => {
       konPayload({ resolvedPeriod: null }),
       SEED,
     );
-    expect(result).toEqual({ status: "added", createdSource: true });
+    expect(result).toEqual({
+      status: "added",
+      createdSource: true,
+      sourceName: "LISA",
+    });
     expect(projectStore.draft?.sources[0].period).toBe("");
     await vi.waitFor(() => {
       expect(projectStore.bindingDerivation(0, 0)?.status).toBe("unresolved");

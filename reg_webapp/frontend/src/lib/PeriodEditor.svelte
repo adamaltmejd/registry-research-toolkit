@@ -83,17 +83,24 @@ function initialYears(value: Period): { from: string; to: string } {
   return { from: "", to: "" };
 }
 
-// The token field's seed: the raw string when it's a token, blank for a
-// numeric/range/default value, or the JSON of a malformed (non-string) value.
+// The token field's seed: the raw string when it's a token, the `from..to`
+// wire text for a {from,to} range (a TOKEN-endpoint range opens in Token mode —
+// see inferMode — and must DISPLAY, not render a blank field; the #306
+// succession auto-split routinely writes such ranges), blank for a
+// numeric/default value, or the JSON of a malformed (non-string) value.
 function seedTokenText(value: Period): string {
   if (typeof value === "string" && value !== "_default") {
     return value;
   }
   if (
-    typeof value === "string" ||
-    typeof value === "number" ||
-    (value != null && typeof value === "object")
+    value != null &&
+    typeof value === "object" &&
+    "from" in value &&
+    "to" in value
   ) {
+    return `${value.from}..${value.to}`;
+  }
+  if (typeof value === "string" || typeof value === "number") {
     return "";
   }
   return JSON.stringify(value);
