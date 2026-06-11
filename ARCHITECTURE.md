@@ -199,8 +199,9 @@ in each owning DESIGN.md):
    asserted by `reg_monabundle/tests/test_bundle_determinism.py`. — shipped.
 4. **Kit reproducibility** — same spec + codes + stats → identical kit zip.
    **Remaining** (blocked on `/api/kit`).
-5. **Steward catalog filtering** — `fqid_outside_steward_catalog` semantics. Shipped:
-   boot-time catalog drop + wiring into `/validate` (issue #227).
+5. **Steward catalog filtering** — `fqid_outside_steward_catalog` /
+   `representation_outside_steward_catalog` semantics. Shipped: boot-time catalog drop +
+   wiring into `/validate` (issue #227); column-based admission (issue #206).
 6. **MONA-shape integration** — a `mcr.microsoft.com/mssql/server` Docker container
    running the bundle's extract SQL end-to-end via `pyodbc`
    (`reg_monabundle/tests/test_integration_mssql.py`), gated behind

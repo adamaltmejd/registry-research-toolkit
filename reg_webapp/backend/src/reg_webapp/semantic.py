@@ -26,13 +26,16 @@ committed catalog; the affected bindings are then dropped from the in-memory
 index (``catalog_index.py``), but ``ok`` stays True, so the caller must inspect
 the warnings, not just ``ok``.
 
-The *researcher* path additionally emits ``fqid_outside_steward_catalog`` (a
-non-blocking ``warning``) when an ``index`` (the loaded ``CatalogIndex``) is
-supplied and a RESOLVED FQID falls outside it — the column is real reg_meta-wide
-but this filtered deployment does not supply it. The steward-catalog load path
-passes NO ``index`` (it BUILDS the index from its own validated project
-afterward), and the ``global`` deployment's ``index`` is ``None`` (no filter), so
-neither ever emits the code.
+The *researcher* path additionally runs the COLUMN-based steward admission
+check (#206) when an ``index`` (the loaded ``CatalogIndex``) is supplied: a
+RESOLVED FQID whose concept the steward holds no column of emits
+``fqid_outside_steward_catalog``, and one whose RESOLVED delivery column the
+steward does not hold emits ``representation_outside_steward_catalog`` — both
+non-blocking ``warning``s (the column is real reg_meta-wide but this filtered
+deployment does not supply it). The steward-catalog load path passes NO
+``index`` (it BUILDS the index from its own validated project afterward), and
+the ``global`` deployment's ``index`` is ``None`` (no filter), so neither ever
+emits the codes.
 
 Inputs are the ``reg_schema`` Pydantic models (``ProjectData`` / ``Source`` /
 ``Binding``), which the webapp constructs only AFTER ``validate_structural``
@@ -103,9 +106,11 @@ def validate_semantic(
     — the caller owns the ``Catalog``'s lifetime.
 
     ``index`` is the loaded steward ``CatalogIndex`` (researcher path only): when
-    supplied, a RESOLVED FQID outside it yields ``fqid_outside_steward_catalog``
-    (warning). ``None`` (the steward-load path and the ``global`` deployment) never
-    emits it.
+    supplied, a RESOLVED binding outside it yields ``fqid_outside_steward_catalog``
+    (no column of the concept held) or ``representation_outside_steward_catalog``
+    (concept held, but not the binding's resolved column) — both warnings.
+    ``None`` (the steward-load path and the ``global`` deployment) never emits
+    them.
     """
     issues: list[ValidationIssue] = []
     for s_idx, source in enumerate(project.sources):
@@ -419,30 +424,7 @@ def _check_binding(
         _check_value_set(binding, bbase, catalog, caller, issues)
         return
 
-    # STEWARD CATALOG FILTER (#227). The FQID resolves reg_meta-wide (we are past
-    # the resolve-success path, so an unresolved FQID already got `fqid_unresolved`
-    # and returned — no double-report here), but a FILTERED steward deployment
-    # supplies only a subset of that universe. A resolved FQID outside the loaded
-    # `index` is a non-blocking `warning`: the column is real but unavailable in
-    # THIS deployment — also the deliberate "what would my project look like under
-    # steward X?" feature. `index=None` (the steward-load path AND the `global`
-    # deployment) never emits it. Admission is keyed on the LITERAL binding FQID and
-    # is variant-agnostic per the shipped `admits` probe; precise per-variant /
-    # value_set / same_as-aware keying is deferred to #206 — so this deliberately
-    # does NOT widen to value_sets / register_variants.
-    if index is not None and not index.admits(binding.variable):
-        issues.append(
-            _issue(
-                "fqid_outside_steward_catalog",
-                "warning",
-                caller,
-                var_path,
-                f"binding {binding.variable!r} resolves in reg_meta but is outside "
-                "this deployment's steward catalog — the steward does not supply it",
-            )
-        )
-
-    _check_binding_period(
+    resolved_columns = _check_binding_period(
         binding,
         source,
         bbase,
@@ -453,6 +435,20 @@ def _check_binding(
         caller,
         issues,
     )
+    # STEWARD CATALOG FILTER (#227, column-based per #206). The FQID resolves
+    # reg_meta-wide (we are past the resolve-success path, so an unresolved FQID
+    # already got `fqid_unresolved` and returned — no double-report here), but a
+    # FILTERED steward deployment supplies only a subset of that universe. Runs
+    # AFTER the period check because admission compares RESOLVED delivery columns
+    # (the binding's `resolved_columns`), which only the period resolution knows.
+    # `index=None` (the steward-load path AND the `global` deployment) never emits
+    # either code. Admission keying stays variant-agnostic and on the literal
+    # binding FQID (a curated same_as sibling names a DIFFERENT column, so under
+    # column-holdings semantics warning on it is correct, not a keying artifact).
+    if index is not None:
+        _check_steward_admission(
+            binding.variable, var_path, resolved_columns, index, caller, issues
+        )
     _check_value_set(binding, bbase, catalog, caller, issues)
 
 
@@ -466,7 +462,7 @@ def _check_binding_period(
     catalog: Catalog,
     caller: Caller,
     issues: list[ValidationIssue],
-) -> None:
+) -> frozenset[str | None] | None:
     """The binding must resolve to a `variable_state` at the source's
     variant AND period. Endpoints are already real calendar dates here (structural
     guarantee — see module docstring). No covering state →
@@ -477,11 +473,19 @@ def _check_binding_period(
     value sets co-delivered in that period → `binding_value_set_version_ambiguous`
     (error). That last case is a defensive backstop: the reg_meta build enforces one
     value set per `(variable, variant, period)` (its co-delivery curation + `validate`
-    invariant), so a clean catalog never trips it — there is no author-side pin."""
+    invariant), so a clean catalog never trips it — there is no author-side pin.
+
+    Returns the binding's RESOLVED delivery columns (the distinct
+    `delivery_column_name`s of its states, narrowed to `representation` when
+    pinned — >1 only across a sequential rename) for the steward admission check
+    (#206), or `None` when they are indeterminate: the variant/period didn't
+    resolve, the pinned representation is unknown, or the binding is ambiguous
+    (co-existing columns, no pin) — each of those already carries its own issue,
+    so admission stays silent rather than piling on."""
     # An unresolved variant already produced an `fqid_unresolved`; a period probe
     # against it would be derivative noise. Skip it.
     if not variant_ok:
-        return
+        return None
 
     variant = source.register_variant.split("/")[2]
     period = period_for_resolve(source.period)
@@ -491,7 +495,7 @@ def _check_binding_period(
         # resolve_at only raises when the binding FQID doesn't resolve — already
         # handled above — or on a malformed period (structurally pre-validated).
         # Either way nothing actionable to add here.
-        return
+        return None
 
     if not states:
         issues.append(
@@ -505,7 +509,7 @@ def _check_binding_period(
                 f"{period_display(source.period)}",
             )
         )
-        return
+        return None
 
     # PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case). The
     # author named an explicit `[from, to]`; `resolve_at` returned the states that
@@ -569,7 +573,7 @@ def _check_binding_period(
                     f"{period_display(source.period)} (available: {avail})",
                 )
             )
-            return
+            return None
         # The chosen column may not span the whole MULTI-period: resolve_at returns
         # only intersecting states, so narrowing to `matched` can silently drop a
         # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
@@ -618,7 +622,9 @@ def _check_binding_period(
                 f"set `representation` to one of them",
             )
         )
-        return
+        # Ambiguous — which column the author means is unknowable until they pin,
+        # so the admission check has nothing to compare.
+        return None
 
     # Backstop: distinct value sets on ONE column at the same instant — a reg_meta
     # build co-delivery the curation missed (the build `validate` invariant should
@@ -639,7 +645,9 @@ def _check_binding_period(
                 f"this reg_meta build needs co-delivery curation",
             )
         )
-        return
+        # The value-set ambiguity doesn't blur WHICH column(s) the binding
+        # denotes, so the resolved columns are still good for admission.
+        return frozenset(s.delivery_column_name for s in states)
 
     # Drift (info): a range / `_default` period crossing a state transition
     # resolves to several SEQUENTIAL states (non-overlapping windows) on ONE column,
@@ -654,6 +662,75 @@ def _check_binding_period(
                 var_path,
                 f"binding {binding.variable!r} spans {len(states)} states across a "
                 f"transition within period {period_display(source.period)}",
+            )
+        )
+
+    # >1 distinct column here only via a sequential rename across the period
+    # (co-existing columns errored out above); the steward must hold each one
+    # the extract would touch.
+    return frozenset(s.delivery_column_name for s in states)
+
+
+def _format_columns(columns: frozenset[str | None]) -> str:
+    """Render a set of delivery-column tokens for an issue message. ``None`` (a
+    state genuinely carrying no ``delivery_column_name``) renders as a readable
+    placeholder rather than a Python ``None``."""
+    return ", ".join(
+        repr(c) if c is not None else "(unnamed column)"
+        for c in sorted(columns, key=lambda c: (c is None, c or ""))
+    )
+
+
+def _check_steward_admission(
+    variable: str,
+    var_path: str,
+    resolved_columns: frozenset[str | None] | None,
+    index: CatalogIndex,
+    caller: Caller,
+    issues: list[ValidationIssue],
+) -> None:
+    """Column-based steward admission (#206). Two distinct findings, both
+    non-blocking ``warning``s (the "what would my project look like under
+    steward X?" feature relies on them enumerating, not blocking):
+
+    - ``fqid_outside_steward_catalog`` — the steward holds NO column of this
+      concept at all (the FQID appears nowhere in the index).
+    - ``representation_outside_steward_catalog`` — the steward holds the
+      concept, but not the column this binding resolves to; the message
+      enumerates what the steward DOES hold ("SSYK at 1-digit only" is the
+      actionable form of "not available").
+
+    ``resolved_columns=None`` means the binding's own column is indeterminate
+    (period/representation/ambiguity issues already reported) — only the
+    FQID-level check can run; the column-level check stays silent."""
+    held = index.held_columns(variable)
+    if not held:
+        issues.append(
+            _issue(
+                "fqid_outside_steward_catalog",
+                "warning",
+                caller,
+                var_path,
+                f"binding {variable!r} resolves in reg_meta but is outside "
+                "this deployment's steward catalog — the steward does not supply it",
+            )
+        )
+        return
+    if resolved_columns is None:
+        return
+    # Equivalent to probing `index.admits(variable, c)` per column: for one FQID,
+    # pair-admission across variants ⇔ membership in the held-column union.
+    missing = resolved_columns - held
+    if missing:
+        issues.append(
+            _issue(
+                "representation_outside_steward_catalog",
+                "warning",
+                caller,
+                var_path,
+                f"binding {variable!r} resolves to representation "
+                f"{_format_columns(missing)}, which this steward does not supply — "
+                f"available from this steward as {_format_columns(held)} only",
             )
         )
 

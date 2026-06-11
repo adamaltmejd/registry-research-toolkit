@@ -225,12 +225,25 @@ The in-memory **`CatalogIndex`** is built once at boot (`load_catalog_index`, wi
 boot connection) and held on `app.state` for the process lifetime. It is the filter that
 scopes a steward deployment to a subset of reg_meta's universe. It is an internal frozen
 `@dataclass` (never a response body — only response models are Pydantic; webapp
-internals are dataclasses), carrying two maps derived directly from the steward
-project's `sources[]`:
+internals are dataclasses), carrying two maps derived from the steward project's
+`sources[]` (building needs the same live `Catalog` the boot validation ran against —
+see column resolution below):
 
-- `bindings_by_variant` — `register_variant` coordinate → frozenset of admitted binding
-  FQIDs. Keys on the bare 3-segment binding FQID directly (no `@version` pin to
-  normalize away — that grammar is retired).
+- `bindings_by_variant` — `register_variant` coordinate → frozenset of admitted
+  `(binding FQID, resolved delivery column)` pairs. **Admission is column-based** (#206,
+  decided 2026-06-11): a steward is given a concrete dataset, so its catalog is a
+  statement of *holdings*, and holdings are physical delivery columns, not concepts —
+  bare-FQID admission cannot express "this steward has SSYK, but only at the 1-digit
+  level". The FQID side is the bare 3-segment binding FQID (no `@version` pin to
+  normalize away — that grammar is retired); the column side is the **resolved**
+  `delivery_column_name` of the steward binding's states (its `representation` when
+  pinned; every column its states deliver otherwise — a sequential rename inside the
+  steward's period contributes one pair per column), never the raw `representation`
+  string. Resolving both sides at their own validation time means a steward catalog
+  authored as `representation: None` back when the concept had one column still compares
+  equal to a researcher who must now pin (reg_meta grew a sibling column). `None` is
+  **not** a wildcard — it resolves to the unique column it denoted (pre-v1, no compat
+  layers).
 - `period_range_by_register` — register FQID → best-effort `(lo, hi)` period span for UI
   hinting **only**, NOT a validity gate (the semantic validator's per-binding
   `period_outside_state_validity` is the gate; mixed period grammars don't sort cleanly
@@ -576,21 +589,28 @@ can't be authored (no `{display_name + type, no FQID}` escape hatch in v1). New
 variables/registers/classifications onboard via slug-TOML PRs against `reg_meta_build`;
 once the next reg_meta release lands, the steward adds them to their catalog.
 
-**Steward catalog filtering — `fqid_outside_steward_catalog`.** When a researcher's
-project references an FQID outside the loaded steward catalog, the intent is to emit
-`fqid_outside_steward_catalog` at level **warning** (not error): this is also the
-deliberate "what would my project look like under steward X?" feature — load a spec
-against another steward's deployment and the warnings enumerate exactly which columns
-would be unavailable; the SPA offers a one-click "drop out-of-scope columns"
-remediation. The `global` deployment never emits it (no filter). The membership probe
-(`CatalogIndex.admits`) is built and unit-tested, and **is now wired into
-`/api/project/validate`**: `routes/project.py` threads `app.state.catalog_index` into
-`validate_semantic` via `run_in_threadpool`, and `admits` gates the `warning` for any
-resolved binding FQID the steward's filtered catalog does not admit. The `global`
-deployment (index `None`) never emits it. Admission keying is currently
-literal/variant-agnostic; per-variant, value_set, and same_as keying (e.g. a curated
-`kon→syss` same_as edge can produce a warning on a same_as sibling under literal keying)
-is deferred to issue #206.
+**Steward catalog filtering — `fqid_outside_steward_catalog` /
+`representation_outside_steward_catalog`.** When a researcher's project references a
+binding outside the loaded steward catalog, the column-based admission check (#206)
+emits one of two **warnings** (not errors): `fqid_outside_steward_catalog` when the
+steward holds *no* column of the concept, and the distinct
+`representation_outside_steward_catalog` when the steward holds the concept but not the
+column the binding **resolves** to — its message enumerates what the steward *does* hold
+("available from this steward as 'Ssyk1' only" is the actionable form of "not
+available"). Warnings, because this is also the deliberate "what would my project look
+like under steward X?" feature — load a spec against another steward's deployment and
+the warnings enumerate exactly which columns would be unavailable; the SPA offers a
+one-click "drop out-of-scope columns" remediation. The check is wired into
+`/api/project/validate`: `routes/project.py` threads `app.state.catalog_index` into
+`validate_semantic` via `run_in_threadpool`; the check runs **after** the per-binding
+period resolution because the researcher side's resolved columns are what
+`CatalogIndex.admits(fqid, column)` compares (when those are indeterminate — unresolved
+period, unknown pinned representation, ambiguous multi-column binding — the binding
+already carries its own error and only the FQID-level arm runs). The `global` deployment
+(index `None`) never emits either code. Admission keying stays variant-agnostic and on
+the literal binding FQID: a curated same_as sibling (e.g. `kon→syss`,
+`same_definition_different_column`) names a *different* physical column, so warning on
+it is correct under holdings semantics, not a keying artifact.
 
 ## Cost protection (`limits.py`)
 
