@@ -370,6 +370,18 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
   `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
   seconds.
+- **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
+  stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
+  source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
+  re-downloading the release pair. PR builds neither `load` the image into the runner's
+  docker (nothing runs it; all gates execute during the build) nor write GHA buildx
+  cache (PR-scoped cache is unreadable from main and would only evict useful entries
+  from the repo's 10 GB pool); PRs still read main's cache. Every pushed tag is an
+  immutable rollback handle: `workflow_dispatch` rebuilds on an existing HEAD get a
+  `-<run_id>` suffix instead of overwriting `:sha`. A post-deploy prune step keeps the
+  newest 10 tags and deletes older manifests via the registry v2 DELETE (supported by
+  Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age is read from the
+  image config's `.created`, and a digest shared with any kept tag is never deleted).
 - **Cloudflare zone**: `catalog.swecov.se`, orange-cloud A/AAAA → the Fly app's shared
   IPv4 + dedicated IPv6, plus a `_fly-ownership` TXT (proves ownership behind the proxy)
   and a grey-cloud `_acme-challenge` CNAME (DNS-01 cert issuance — the reliable path
