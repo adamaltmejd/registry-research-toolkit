@@ -1,73 +1,122 @@
-# reg_webapp deployment-image build + deploy (REFACTOR_SPEC.md §6.5).
+# reg_webapp build + deploy — origin image AND Cloudflare edge worker
+# (REFACTOR_SPEC.md §6.5; topology in reg_webapp/DESIGN.md → "Deployment").
 #
 # PRs: build-ONLY — proves the multi-stage Dockerfile still builds, including
 # the `reg-meta update` DB bake and the #224 provenance-confinement assertion
 # #3 (the RUN check fails the build if reg_meta.provenance.db* is present).
 #
-# Pushes to main (and manual dispatch): the same build is pushed to Fly's
-# registry and deployed to the `global` Fly app (origin platform decision +
-# topology: reg_webapp/DESIGN.md → "Deployment"). `global` is prod and staging
-# in one tier (§7.5), so every image-affecting main push deploys.
+# Pushes to main: a `changes` filter scopes the work — image-affecting paths
+# rebuild + push + `flyctl deploy` the origin; SPA/edge-affecting paths build
+# the SPA and `wrangler deploy` the edge worker. The edge job `needs:` the
+# origin deploy so a contract-changing push can never ship a new SPA against
+# an old origin (deploy-skew guard). Both deploy jobs also verify they are
+# still main's HEAD before shipping — GHA concurrency serializes deploys but
+# admits them in BUILD-COMPLETION order, so without the guard an older
+# commit's slow build could overwrite a newer deploy.
+#
+# `global` is prod and staging in one tier (§7.5), so every relevant main
+# push deploys. workflow_dispatch is the manual escape hatch (rebuild +
+# deploy everything); the HEAD guards make a non-main dispatch a no-op at
+# the deploy steps, so it cannot ship branch code to prod.
 #
 # ─────────────────────────────────────────────────────────────────────────────
-# PROPOSAL — path trigger (OPEN decision, REFACTOR_SPEC.md "Open / deferred
-# decisions → Container-build CI trigger"). The image content depends on:
-#   • the webapp itself (backend source + the SPA the frontend builds),
-#   • reg_meta (its code AND the `reg-meta update` DB pair baked in),
-#   • the Dockerfile / .dockerignore / entrypoint / this workflow.
-# So the proposed trigger set below covers exactly those surfaces. It deliberately
-# does NOT trigger on reg_schema / reg_monabundle changes even though they're
-# baked deps: that would rebuild on most monorepo PRs, and they're already
+# PROPOSAL — image filter scope (OPEN decision, REFACTOR_SPEC.md "Open /
+# deferred decisions → Container-build CI trigger"). The image filter below
+# deliberately does NOT include reg_schema / reg_monabundle even though they
+# are baked deps: that would rebuild on most monorepo PRs, and they're already
 # exercised by the backend test job in ci.yml. MAINTAINER: confirm whether the
-# baked workspace deps (reg_schema/reg_monabundle) should also trigger a rebuild,
-# or whether a manual `workflow_dispatch` (kept below) is enough for those.
+# baked workspace deps should also trigger a rebuild, or whether manual
+# `workflow_dispatch` is enough for those.
 # ─────────────────────────────────────────────────────────────────────────────
 
 name: Container build
 
 on:
-  # NOTE: the push/pull_request `paths` lists are kept in sync by hand (GitHub
-  # Actions supports YAML anchors, but they trip some third-party tooling — the
-  # short list is clearer inlined). `reg_webapp/**` already covers the Dockerfile
-  # and entrypoint; `reg_meta/**` covers the code whose release DB gets baked in.
   push:
     branches: [main]
-    paths:
-      - "reg_webapp/**"
-      - "reg_meta/**"
-      - ".dockerignore"
-      - ".github/workflows/container-build.yml"
-      # The DB bake + workspace resolution key on the lockfile/manifest.
-      - "uv.lock"
-      - "pyproject.toml"
   pull_request:
     branches: [main]
-    paths:
-      - "reg_webapp/**"
-      - "reg_meta/**"
-      - ".dockerignore"
-      - ".github/workflows/container-build.yml"
-      - "uv.lock"
-      - "pyproject.toml"
   # Manual escape hatch: rebuild + deploy after a baked-dep (reg_schema /
-  # reg_monabundle) change the path filter above intentionally skips, or after
-  # a DATA-only reg_meta release (pass reg_meta_tag to bust the bake layer's
-  # GHA cache — see the REG_META_TAG note in reg_webapp/Dockerfile).
+  # reg_monabundle) change the image filter intentionally skips, or after a
+  # DATA-only reg_meta release. The bake build-arg always carries the CONCRETE
+  # newest reg_meta/v* tag (resolved per run, below), so a data-only release
+  # busts the bake layer's cache by itself — no input needed unless pinning an
+  # OLDER release.
   workflow_dispatch:
     inputs:
       reg_meta_tag:
         description: >-
-          reg_meta release tag to bake (e.g. reg_meta/v0.9.0); `latest`
-          resolves the newest release but may reuse a cached bake layer.
+          reg_meta release tag to bake (e.g. reg_meta/v0.9.0). Leave empty to
+          resolve the newest reg_meta/v* release.
         required: false
-        default: latest
+        default: ""
 
 jobs:
+  # Path scoping runs as a job (not `on.paths`) so image and edge surfaces
+  # share one trigger and one filter definition. Skipped on dispatch — the
+  # downstream `if`s treat dispatch as "everything changed".
+  changes:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.filter.outputs.image }}
+      edge: ${{ steps.filter.outputs.edge }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          # `image` lists exactly what enters the Docker image (Dockerfile
+          # COPY surfaces + bake inputs) — NOT all of reg_webapp/**: edge/,
+          # .claude/, fly.toml and docs don't change image content, and an
+          # image deploy swaps the single prod machine (brief origin blip),
+          # so content-identical rebuilds are worth avoiding.
+          filters: |
+            image:
+              - "reg_webapp/backend/**"
+              - "reg_webapp/frontend/**"
+              - "reg_webapp/stewards/**"
+              - "reg_webapp/Dockerfile"
+              - "reg_webapp/docker-entrypoint.sh"
+              - "reg_meta/**"
+              - ".dockerignore"
+              - ".github/workflows/container-build.yml"
+              - "uv.lock"
+              - "pyproject.toml"
+            edge:
+              - "reg_webapp/frontend/**"
+              - "reg_webapp/edge/**"
+              - "reg_webapp/backend/openapi.json"
+              - ".github/workflows/container-build.yml"
+
   build-image:
+    needs: changes
+    if: >-
+      !cancelled() && (needs.changes.outputs.image == 'true' ||
+      github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: docker/setup-buildx-action@v3
+      # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
+      # build-arg. Passing a literal `latest` would make the bake layer's
+      # buildx cache key insensitive to data-only releases — worse, after a
+      # pinned-tag dispatch, the next `latest`-keyed build would resurrect the
+      # OLD cached layer and silently revert prod's DB. A concrete tag makes
+      # the cache key change exactly when the release does.
+      - name: Resolve reg_meta release tag
+        id: regmeta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ inputs.reg_meta_tag }}"
+          if [ -z "$tag" ]; then
+            tag=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 \
+              --json tagName -q '[.[].tagName | select(startswith("reg_meta/v"))][0]')
+          fi
+          [ -n "$tag" ] || { echo "FATAL: no reg_meta/v* release found" >&2; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Baking reg_meta release: $tag"
       # Registry push auth (main/dispatch only). The username is ignored by
       # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
       - name: Log in to registry.fly.io
@@ -90,31 +139,121 @@ jobs:
           load: ${{ github.event_name == 'pull_request' }}
           tags: ${{ github.event_name == 'pull_request' && 'reg-webapp:ci' || format('registry.fly.io/reg-webapp-global:{0}', github.sha) }}
           build-args: |
-            REG_META_TAG=${{ inputs.reg_meta_tag || 'latest' }}
+            REG_META_TAG=${{ steps.regmeta.outputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
-    if: github.event_name != 'pull_request'
     needs: build-image
+    if: >-
+      !cancelled() && needs.build-image.result == 'success' &&
+      github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     # One deploy at a time; queue rather than cancel — an interrupted flyctl
-    # run can strand the machine mid-update.
+    # run can strand the machine mid-update. NOTE: concurrency serializes but
+    # does NOT order by commit; the HEAD guard below handles ordering.
     concurrency:
       group: fly-deploy-global
       cancel-in-progress: false
     steps:
       # Checkout only for reg_webapp/fly.toml — the image is already pushed.
       - uses: actions/checkout@v6
+      # Stale-deploy guard: only ship if this commit is still main's HEAD.
+      # Build times vary (GHA cache hit vs miss), so an older commit's deploy
+      # can reach this job AFTER a newer commit already deployed; without this
+      # check it would roll prod back. Also blocks non-main dispatches.
+      - name: Skip unless HEAD of main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+          if [ "$main_sha" != "$GITHUB_SHA" ]; then
+            echo "::notice::skipping deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: superfly/flyctl-actions/setup-flyctl@v1.5
+        if: steps.head.outputs.skip != 'true'
       # Two gates guard a bad image: the container entrypoint runs the smoke
       # gate before uvicorn serves (a bad image exits non-zero), and fly.toml's
       # /api/context HTTP check must pass before flyctl reports success.
       # --ha=false keeps the single-machine topology (see fly.toml header).
-      - run: >-
+      - if: steps.head.outputs.skip != 'true'
+        run: >-
           flyctl deploy
           --config reg_webapp/fly.toml
           --image registry.fly.io/reg-webapp-global:${{ github.sha }}
           --ha=false
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  # Edge worker (SPA + /api passthrough) for catalog.swecov.se. Runs AFTER the
+  # origin deploy (deploy-skew guard): on a contract-changing push the SPA must
+  # not go live before the origin serves the new endpoints. `needs.deploy`
+  # being skipped (edge-only change → no image rebuild) is fine; a FAILED
+  # image build/deploy blocks the edge ship.
+  edge-deploy:
+    needs: [changes, build-image, deploy]
+    if: >-
+      !cancelled() && github.event_name != 'pull_request' &&
+      needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
+      (needs.changes.outputs.edge == 'true' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: edge-deploy-global
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v6
+      # Pinned to the same bun the Dockerfile's frontend stage uses
+      # (oven/bun:1.3.0-alpine) — bump both together. A floating toolchain
+      # here would make the production SPA bundle non-reproducible while the
+      # image-baked copy stays pinned.
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+      - run: bun install --frozen-lockfile
+        working-directory: reg_webapp/frontend
+      # Same build sequence as the Dockerfile's frontend stage: regenerate
+      # types from the committed contract (no-op on a clean tree), then build.
+      - run: bun run gen:types && bun run build
+        working-directory: reg_webapp/frontend
+      # Same stale-deploy guard as the origin job (see comment there).
+      - name: Skip unless HEAD of main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
+          if [ "$main_sha" != "$GITHUB_SHA" ]; then
+            echo "::notice::skipping edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      # wrangler reads CLOUDFLARE_API_TOKEN from the env; major-pinned so a
+      # breaking wrangler v5 can't land unreviewed.
+      - if: steps.head.outputs.skip != 'true'
+        run: bunx wrangler@4 deploy --config reg_webapp/edge/wrangler.jsonc
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+      # Standing #220 regression probe: the /api/* Cache Rule and the ETag
+      # contract are zone-dashboard state (click-ops, no IaC) — assert after
+      # every edge deploy that a catalog read still caches (MISS/HIT family,
+      # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
+      # Rule deletion / zone drift that nothing else in CI would notice.
+      - name: Edge cache probe (#220)
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          url="https://catalog.swecov.se/api/catalog"
+          curl -sfo /dev/null "$url"   # warm the colo
+          status=""
+          for _ in 1 2 3; do
+            sleep 2
+            status=$(curl -sfo /dev/null -w '%header{cf-cache-status}' "$url")
+            [ "$status" = "HIT" ] && break
+          done
+          echo "cf-cache-status: $status"
+          [ "$status" = "HIT" ] || { echo "FATAL: /api/* not edge-cached (Cache Rule missing?)" >&2; exit 1; }
+          etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          echo "If-None-Match → $code"
+          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }

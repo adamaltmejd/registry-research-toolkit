@@ -10,6 +10,9 @@ interface Env {
   ASSETS: Fetcher;
 }
 
+// LOCKSTEP: must match assets.run_worker_first in wrangler.jsonc (same set,
+// glob syntax there). The backend serves exactly these top-level paths
+// (create_app disables /redoc for this reason).
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/, /^\/docs(\/|$)/];
 
 export default {

@@ -26,10 +26,13 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   force_https = true
   # Always-on: Fly's ephemeral-rootfs I/O is throttled (~8 MiB/s), so a cold
   # boot re-reads the SQLite pair slowly — keep the page cache warm instead of
-  # scaling to zero (the machine costs ~$6/mo).
+  # scaling to zero (the machine costs ~$6/mo). No min_machines_running: it
+  # only applies when auto_stop is "stop"/"suspend".
   auto_stop_machines = "off"
+  # NOT a scale-to-zero lifecycle (auto_stop is off) — this is the
+  # wake-on-request safety net: if the machine is stopped manually or exits
+  # past its restart policy, the proxy boots it on the next request.
   auto_start_machines = true
-  min_machines_running = 1
 
   # Gate deploys on the live API, same endpoint the entrypoint smoke gate
   # validates in-process before exec'ing uvicorn.

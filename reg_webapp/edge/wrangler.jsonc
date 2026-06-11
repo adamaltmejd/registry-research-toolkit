@@ -23,7 +23,10 @@
     // Backend-owned paths ALWAYS hit the worker (→ origin), never the SPA
     // fallback. Without this, single-page-application mode serves index.html
     // to browser navigation requests directly, shadowing /api deep-opens.
-    "run_worker_first": ["/api/*", "/openapi.json", "/docs", "/docs/*"]
+    // LOCKSTEP: this glob list and ORIGIN_PATHS in src/index.ts encode the
+    // same set — edit both together (and create_app in the backend owns which
+    // paths exist; /redoc is deliberately disabled there).
+    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/docs", "/docs/*"]
   },
   "routes": [{ "pattern": "catalog.swecov.se/*", "zone_name": "swecov.se" }],
   "observability": { "enabled": true }

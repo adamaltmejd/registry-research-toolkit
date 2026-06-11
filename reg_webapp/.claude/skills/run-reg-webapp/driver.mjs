@@ -81,10 +81,16 @@ if (cmd === "shot") {
     console.log(`clicked → ${href} (now at ${new URL(page.url()).pathname})`);
     await shot(name);
   }
-  // Real form interaction: the binding page's Period → Resolve flow.
+  // Real form interaction: the binding page's Period → Resolve flow. Assert
+  // the narrowing actually happened — settled() alone would pass on a silent
+  // no-op resolve.
   await page.locator("input").first().fill("2022");
   await page.getByRole("button", { name: "Resolve" }).click();
   await settled();
+  await page.waitForFunction(
+    () => document.body.innerText.includes("narrowed to 2022"),
+    { timeout: 10_000 },
+  );
   await shot("04b-period-resolved");
   // Deep-link reload: a cold load of the current nested path must render the
   // same view (vite's SPA fallback in dev; the edge worker in production).

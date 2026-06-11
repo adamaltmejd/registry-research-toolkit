@@ -353,12 +353,21 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `--ha=false` keeps the machine count at one.
 - **Read-only SQLite on the ephemeral rootfs is the right model** — the DB pair is baked
   into the image and replaced with it. No volume, no LiteFS, nothing persists.
-- **Deploys**: `container-build.yml` pushes the CI-built image to `registry.fly.io`
-  (SHA-tagged) and runs `flyctl deploy --image` on image-affecting main pushes. Two
-  gates guard a bad image: the entrypoint smoke gate (container exits non-zero before
-  ever serving) and fly.toml's `/api/context` HTTP check (flyctl reports failure if it
-  never passes). Rollback: `flyctl releases --image` lists history;
-  `flyctl deploy --image <old>` restores in seconds.
+- **Deploys**: one workflow (`container-build.yml`) owns both deploy surfaces, scoped by
+  a `changes` paths-filter job. Image-affecting main pushes (Dockerfile COPY surfaces +
+  bake inputs — NOT baked deps reg_schema/reg_monabundle, which need a manual
+  `workflow_dispatch`; recorded open decision in the workflow header) build, push to
+  `registry.fly.io` (SHA-tagged), and `flyctl deploy --image`. The bake build-arg is the
+  RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` makes the bake
+  layer's buildx cache key insensitive to data-only releases and can even resurrect a
+  stale cached layer after a pinned dispatch). Both deploy jobs carry a HEAD-of-main
+  guard (GHA concurrency serializes by build-completion order, not commit order —
+  without the guard an older commit's slow build could overwrite a newer deploy; it also
+  makes non-main dispatches deploy-inert). Two gates guard a bad image: the entrypoint
+  smoke gate (container exits non-zero before ever serving) and fly.toml's
+  `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
+  `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
+  seconds.
 - **Cloudflare zone**: `catalog.swecov.se`, orange-cloud A/AAAA → the Fly app's shared
   IPv4 + dedicated IPv6, plus a `_fly-ownership` TXT (proves ownership behind the proxy)
   and a grey-cloud `_acme-challenge` CNAME (DNS-01 cert issuance — the reliable path
@@ -371,13 +380,23 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `fetch(request)` passthrough to the zone origin (Fly), so the origin
   ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
-  navigations without invoking the worker, shadowing `/api` deep-opens. Cloudflare
-  downgrades the origin's strong ETag to weak (`W/`) when compression applies — weak
-  comparison is correct for GET revalidation, not a bug. Deploys: CI (`edge-deploy.yml`)
-  rebuilds the SPA and runs `wrangler deploy` on main pushes touching the SPA, the edge
-  worker, or the committed `openapi.json` (`CLOUDFLARE_API_TOKEN` repo secret, "Edit
-  Cloudflare Workers" template scoped to the account + swecov.se). Manual fallback:
-  build the SPA, then `bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc`.
+  navigations without invoking the worker, shadowing `/api` deep-opens. The glob list
+  and the worker's `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files);
+  the backend disables `/redoc` (`create_app` passes `redoc_url=None`) so its surface is
+  exactly the forwarded set. Cloudflare downgrades the origin's strong ETag to weak
+  (`W/`) when compression applies — weak comparison is correct for GET revalidation, not
+  a bug. Deploys: the `edge-deploy` job in `container-build.yml` rebuilds the SPA (bun
+  pinned to the Dockerfile's version — bump together) and runs `wrangler deploy` on main
+  pushes touching the SPA, the edge worker, or the committed `openapi.json`
+  (`CLOUDFLARE_API_TOKEN` repo secret, "Edit Cloudflare Workers" template scoped to the
+  account + swecov.se). The job `needs:` the origin deploy — on a contract-changing push
+  the SPA never goes live before the origin serves the new endpoints (deploy-skew guard;
+  skew 404s are NOT negatively cached: the Cache Rule's Edge TTL is "bypass if no
+  cache-control", and the origin only stamps 200s). After each edge deploy a probe
+  asserts a catalog read returns `CF-Cache-Status: HIT` and an edge 304 — the #220 gate
+  as a standing regression check against silent Cache Rule / zone drift. Manual
+  fallback: build the SPA, then
+  `bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc`.
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with
   `Cache-Control: public` — without the rule every read is `cf-cache-status: DYNAMIC`),
