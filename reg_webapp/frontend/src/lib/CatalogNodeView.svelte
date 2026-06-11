@@ -108,7 +108,9 @@ $effect(() => {
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       {#if node.purpose}<p>{node.purpose}</p>{/if}
-      <h3>Bindings</h3>
+      <!-- "Variables" is the researcher-facing label for this list; the code/API
+           term is "binding" (the addressable variable leaf) — display copy only. -->
+      <h3>Variables</h3>
       {#if bindings.length > 0}
         <FilterInput
           bind:value={filter}
@@ -132,7 +134,7 @@ $effect(() => {
           <p class="muted">No variables match “{filter}”.</p>
         {/if}
       {:else}
-        <p class="muted">No bindings.</p>
+        <p class="muted">No variables.</p>
       {/if}
       <VariantBrowser registerFqid={node.fqid} />
     {:else if node.kind === "binding"}

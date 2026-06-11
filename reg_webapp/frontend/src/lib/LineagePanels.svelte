@@ -28,6 +28,33 @@ let { fqidPath, node }: { fqidPath: string; node: BindingNodeData } = $props();
 const predecessors = asyncResource(() => getBindingPredecessors(fqidPath));
 const warnings = asyncResource(() => getBindingLineageWarnings(fqidPath));
 
+// Empty metadata sections are OMITTED, not rendered as "None." walls (a typical
+// variable has no succession/related/lineage at all — five headed "None."
+// sections drown the page). A section is shown when it has data OR is still
+// loading OR errored (we never hide a section whose state is unknown). The two
+// embedded arms (replaced_by / related_to / lineage) are known synchronously;
+// the two fetched arms (predecessors / warnings) gate on their resource state.
+const hasReplacedBy = $derived(node.replaced_by.length > 0);
+const hasPredecessors = $derived(
+  predecessors.loading ||
+    !!predecessors.error ||
+    (predecessors.data?.predecessors.length ?? 0) > 0,
+);
+// SUCCESSION wraps both directions — show the section if EITHER has content.
+const showSuccession = $derived(hasReplacedBy || hasPredecessors);
+const showRelated = $derived(node.related_to.length > 0);
+const showLineage = $derived(node.lineage.length > 0);
+const showWarnings = $derived(
+  warnings.loading ||
+    !!warnings.error ||
+    (warnings.data?.lineage_warnings.length ?? 0) > 0,
+);
+// When every section is empty (the common case), render one compact line instead
+// of a bare gap — keeps the leaf layout from orphaning below the states view.
+const anySection = $derived(
+  showSuccession || showRelated || showLineage || showWarnings,
+);
+
 /** The provider/register/variable triple as plain text (the fallback identity
  * when a ref has no populated `fqid`). */
 function refTriple(ref: {
@@ -75,57 +102,63 @@ function succAnnotation(ref: VariableRefModel): string | null {
 {/snippet}
 
 <div class="lineage-panels">
-  <!-- SUCCESSION — both directions -->
-  <section aria-labelledby="succession-heading">
-    <h3 id="succession-heading">Succession</h3>
+  {#if !anySection}
+    <!-- Every section is empty (the common case) — one compact line instead of
+         four "None." walls, so the leaf layout doesn't orphan below the states. -->
+    <p class="muted no-links">No succession or lineage links.</p>
+  {/if}
 
-    <h4>Replaced by</h4>
-    {#if node.replaced_by.length > 0}
-      <ul class="refs">
-        {#each node.replaced_by as ref, i (ref.fqid ?? refTriple(ref) + i)}
-          {@render refItem(ref, succAnnotation(ref))}
-        {/each}
-      </ul>
-    {:else}
-      <p class="muted">None.</p>
-    {/if}
+  <!-- SUCCESSION — both directions; the whole section is omitted when NEITHER
+       direction has links, and each sub-heading is omitted when its side is empty
+       (so a variable that is only replaced_by doesn't show an empty "predecessors"). -->
+  {#if showSuccession}
+    <section aria-labelledby="succession-heading">
+      <h3 id="succession-heading">Succession</h3>
 
-    <h4>Replaces / predecessors</h4>
-    {#if predecessors.loading}
-      <p class="muted" aria-busy="true">Loading…</p>
-    {:else if predecessors.error}
-      <p class="error" role="alert">
-        Failed to load predecessors: {predecessors.error}
-      </p>
-    {:else if predecessors.data && predecessors.data.predecessors.length > 0}
-      <ul class="refs">
-        {#each predecessors.data.predecessors as ref, i (ref.fqid ?? refTriple(ref) + i)}
-          {@render refItem(ref, succAnnotation(ref))}
-        {/each}
-      </ul>
-    {:else}
-      <p class="muted">None.</p>
-    {/if}
-  </section>
+      {#if hasReplacedBy}
+        <h4>Replaced by</h4>
+        <ul class="refs">
+          {#each node.replaced_by as ref, i (ref.fqid ?? refTriple(ref) + i)}
+            {@render refItem(ref, succAnnotation(ref))}
+          {/each}
+        </ul>
+      {/if}
+
+      {#if hasPredecessors}
+        <h4>Replaces / predecessors</h4>
+        {#if predecessors.loading}
+          <p class="muted" aria-busy="true">Loading…</p>
+        {:else if predecessors.error}
+          <p class="error" role="alert">
+            Failed to load predecessors: {predecessors.error}
+          </p>
+        {:else if predecessors.data}
+          <ul class="refs">
+            {#each predecessors.data.predecessors as ref, i (ref.fqid ?? refTriple(ref) + i)}
+              {@render refItem(ref, succAnnotation(ref))}
+            {/each}
+          </ul>
+        {/if}
+      {/if}
+    </section>
+  {/if}
 
   <!-- RELATED — split siblings -->
-  <section aria-labelledby="related-heading">
-    <h3 id="related-heading">Related (split siblings)</h3>
-    {#if node.related_to.length > 0}
+  {#if showRelated}
+    <section aria-labelledby="related-heading">
+      <h3 id="related-heading">Related (split siblings)</h3>
       <ul class="refs">
         {#each node.related_to as ref, i (ref.fqid ?? refTriple(ref) + i)}
           {@render refItem(ref, ref.relation_kind)}
         {/each}
       </ul>
-    {:else}
-      <p class="muted">None.</p>
-    {/if}
-  </section>
+    </section>
+  {/if}
 
   <!-- LINEAGE — consumer/source edges -->
-  <section aria-labelledby="lineage-heading">
-    <h3 id="lineage-heading">Lineage</h3>
-    {#if node.lineage.length > 0}
+  {#if showLineage}
+    <section aria-labelledby="lineage-heading">
+      <h3 id="lineage-heading">Lineage</h3>
       <ul class="refs">
         {#each node.lineage as edge (edge.consumer_state_id + ":" + edge.source_state_id)}
           <li>
@@ -138,33 +171,31 @@ function succAnnotation(ref: VariableRefModel): string | null {
           </li>
         {/each}
       </ul>
-    {:else}
-      <p class="muted">None.</p>
-    {/if}
-  </section>
+    </section>
+  {/if}
 
   <!-- LINEAGE WARNINGS — fetched (not embedded) -->
-  <section aria-labelledby="lineage-warnings-heading">
-    <h3 id="lineage-warnings-heading">Lineage warnings</h3>
-    {#if warnings.loading}
-      <p class="muted" aria-busy="true">Loading…</p>
-    {:else if warnings.error}
-      <p class="error" role="alert">
-        Failed to load lineage warnings: {warnings.error}
-      </p>
-    {:else if warnings.data && warnings.data.lineage_warnings.length > 0}
-      <ul class="warnings">
-        {#each warnings.data.lineage_warnings as w (w.consumer_state_id + ":" + w.warning_kind)}
-          <li>
-            <code class="warn-kind">{w.warning_kind}</code>
-            <span>{w.message}</span>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      <p class="muted">None.</p>
-    {/if}
-  </section>
+  {#if showWarnings}
+    <section aria-labelledby="lineage-warnings-heading">
+      <h3 id="lineage-warnings-heading">Lineage warnings</h3>
+      {#if warnings.loading}
+        <p class="muted" aria-busy="true">Loading…</p>
+      {:else if warnings.error}
+        <p class="error" role="alert">
+          Failed to load lineage warnings: {warnings.error}
+        </p>
+      {:else if warnings.data}
+        <ul class="warnings">
+          {#each warnings.data.lineage_warnings as w (w.consumer_state_id + ":" + w.warning_kind)}
+            <li>
+              <code class="warn-kind">{w.warning_kind}</code>
+              <span>{w.message}</span>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </section>
+  {/if}
 </div>
 
 <style>
@@ -173,6 +204,10 @@ function succAnnotation(ref: VariableRefModel): string | null {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+  }
+  .no-links {
+    margin: 0;
+    font-size: 0.9rem;
   }
   h3 {
     margin: 0 0 0.5rem;

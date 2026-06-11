@@ -6,6 +6,7 @@ import {
   catalogHref,
   deriveType,
   foldText,
+  formatDataType,
   fqidSegments,
   matchesFilter,
   narrowCatalogNode,
@@ -279,6 +280,34 @@ describe("deriveType", () => {
     expect(deriveType(state({ data_type: "Sträng (text)" }))).toBe("opaque");
     expect(deriveType(state({ data_type: "" }))).toBe("opaque");
     expect(deriveType(state({ data_type: "<undefined>" }))).toBe("opaque");
+  });
+});
+
+describe("formatDataType", () => {
+  it("drops a meaningless length (the bigint(0) artifact)", () => {
+    expect(formatDataType("bigint", "0")).toBe("bigint");
+    expect(formatDataType("Heltal", "0")).toBe("Heltal");
+    expect(formatDataType("char", "")).toBe("char");
+    expect(formatDataType("char", null)).toBe("char");
+    expect(formatDataType("char", undefined)).toBe("char");
+    // SQL Server's varchar(MAX) sentinel — same meaningless-parenthetical class.
+    expect(formatDataType("nvarchar", "-1")).toBe("nvarchar");
+  });
+
+  it("keeps a meaningful non-zero length", () => {
+    expect(formatDataType("char", "25")).toBe("char(25)");
+    expect(formatDataType("alfanumerisk", "4")).toBe("alfanumerisk(4)");
+    expect(formatDataType("Decimaltal", "4")).toBe("Decimaltal(4)");
+  });
+
+  it("drops a non-numeric length rather than printing garbage", () => {
+    expect(formatDataType("char", "n/a")).toBe("char");
+  });
+
+  it("returns empty when there is no data_type", () => {
+    expect(formatDataType(null, "4")).toBe("");
+    expect(formatDataType("", "4")).toBe("");
+    expect(formatDataType("  ", "4")).toBe("");
   });
 });
 
