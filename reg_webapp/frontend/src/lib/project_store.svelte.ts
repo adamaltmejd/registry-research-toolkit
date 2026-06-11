@@ -45,6 +45,8 @@ import {
   addBinding,
   addSource,
   type Binding,
+  defaultSourceName,
+  isPrefilledSourceName,
   newProjectData,
   type Period,
   type ProjectData,
@@ -53,6 +55,7 @@ import {
   removeSource,
   type Source,
   serializeProjectData,
+  uniqueSourceName,
   updateBinding,
   updateField,
   updateSource,
@@ -710,6 +713,30 @@ export const projectStore = {
     // `period` and `register_variant` (which carries the variant seg) feed the
     // resolve, so a change to either invalidates the derived fields.
     const before = draft.sources?.[index];
+    // #312: a register_variant change prefills the source name from the register
+    // slug (uppercased, uniqueness-suffixed) — every variant-setting path funnels
+    // through here (addFromCatalog's source creation, the picker, hand-typing).
+    // Prefill-only: applies when the variant ACTUALLY changes (a no-op re-pick
+    // must not recompute a suffixed name, e.g. LISA_3 → LISA_2 after a sibling
+    // remove freed the slot), the patch doesn't set a name itself, AND the
+    // current name is empty or a previous prefill; a user-entered name survives.
+    if (
+      before &&
+      typeof patch.register_variant === "string" &&
+      patch.register_variant !== registerVariantOf(before) &&
+      patch.name === undefined &&
+      isPrefilledSourceName(
+        typeof before.name === "string" ? before.name : "",
+        registerVariantOf(before),
+      )
+    ) {
+      const base = defaultSourceName(patch.register_variant);
+      const sources = Array.isArray(draft.sources) ? draft.sources : [];
+      patch = {
+        ...patch,
+        name: base ? uniqueSourceName(sources, base, index) : "",
+      };
+    }
     setDraft(updateSource(draft, index, patch));
     const after = draft.sources?.[index];
     if (before && after && resolutionInputsChanged(before, after)) {

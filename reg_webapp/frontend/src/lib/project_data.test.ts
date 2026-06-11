@@ -2,13 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   addBinding,
   addSource,
+  defaultSourceName,
+  isPrefilledSourceName,
   MODEL_A_SCHEMA_VERSION,
   newProjectData,
   type ProjectData,
   regMetaReleaseTag,
   removeBinding,
   removeSource,
+  type Source,
   serializeProjectData,
+  uniqueSourceName,
   updateBinding,
   updateField,
   updateSource,
@@ -111,6 +115,57 @@ describe("immutable source edits", () => {
     expect(next.sources[0].name).toBe("s1"); // preserved
     expect(next.sources[0].bindings).toHaveLength(1); // preserved
     expect((next.sources[0] as Record<string, unknown>).extra_key).toBe("kept"); // unmapped key preserved
+  });
+});
+
+describe("source-name prefill helpers (#312)", () => {
+  const src = (name: string): Source => ({
+    name,
+    register_variant: "",
+    period: "",
+    bindings: [],
+  });
+
+  it("defaultSourceName uppercases the register slug (segment 2)", () => {
+    expect(defaultSourceName("scb/lisa/v1")).toBe("LISA");
+    expect(defaultSourceName("scb/rtb/v2")).toBe("RTB");
+    // A 2-seg prefix already carries the register slug.
+    expect(defaultSourceName("scb/lisa")).toBe("LISA");
+  });
+
+  it("defaultSourceName is empty without a register segment", () => {
+    expect(defaultSourceName("")).toBe("");
+    expect(defaultSourceName("scb")).toBe("");
+  });
+
+  it("isPrefilledSourceName accepts empty, the default, and a suffixed default", () => {
+    expect(isPrefilledSourceName("", "scb/lisa/v1")).toBe(true);
+    expect(isPrefilledSourceName("LISA", "scb/lisa/v1")).toBe(true);
+    expect(isPrefilledSourceName("LISA_2", "scb/lisa/v1")).toBe(true);
+    expect(isPrefilledSourceName("LISA_10", "scb/lisa/v1")).toBe(true);
+  });
+
+  it("isPrefilledSourceName rejects user-entered names", () => {
+    expect(isPrefilledSourceName("my source", "scb/lisa/v1")).toBe(false);
+    expect(isPrefilledSourceName("lisa", "scb/lisa/v1")).toBe(false); // case-sensitive
+    expect(isPrefilledSourceName("LISA_x", "scb/lisa/v1")).toBe(false);
+    expect(isPrefilledSourceName("LISAx", "scb/lisa/v1")).toBe(false);
+    // No register segment → only the empty name counts as prefilled.
+    expect(isPrefilledSourceName("LISA", "scb")).toBe(false);
+  });
+
+  it("uniqueSourceName suffixes _2, _3 … on collision (case-sensitive)", () => {
+    expect(uniqueSourceName([src("RTB")], "LISA", 1)).toBe("LISA");
+    expect(uniqueSourceName([src("LISA")], "LISA", 1)).toBe("LISA_2");
+    expect(uniqueSourceName([src("LISA"), src("LISA_2")], "LISA", 2)).toBe(
+      "LISA_3",
+    );
+    // Case differs → no collision (the schema compares case-sensitively).
+    expect(uniqueSourceName([src("lisa")], "LISA", 1)).toBe("LISA");
+  });
+
+  it("uniqueSourceName ignores the source being named itself", () => {
+    expect(uniqueSourceName([src("LISA")], "LISA", 0)).toBe("LISA");
   });
 });
 

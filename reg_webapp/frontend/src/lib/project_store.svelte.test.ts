@@ -584,3 +584,73 @@ describe("stable client-side ids (issue #200)", () => {
     });
   });
 });
+
+describe("source-name prefill on register_variant change (#312)", () => {
+  it("prefills the name from the register slug when the variant is set", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    expect(projectStore.draft?.sources[0]?.name).toBe("LISA");
+  });
+
+  it("follows a variant change while the name is still the prefill", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    projectStore.updateSource(0, { register_variant: "scb/rtb/v1" });
+    expect(projectStore.draft?.sources[0]?.name).toBe("RTB");
+  });
+
+  it("clears a prefilled name when the variant loses its register segment", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    projectStore.updateSource(0, { register_variant: "scb" });
+    expect(projectStore.draft?.sources[0]?.name).toBe("");
+  });
+
+  it("never clobbers a user-entered name", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { name: "my handle" });
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    expect(projectStore.draft?.sources[0]?.name).toBe("my handle");
+  });
+
+  it("an explicit name in the same patch wins over the prefill", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, {
+      register_variant: "scb/lisa/v1",
+      name: "explicit",
+    });
+    expect(projectStore.draft?.sources[0]?.name).toBe("explicit");
+  });
+
+  it("suffixes _2 when another source already took the default", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    projectStore.addSource();
+    projectStore.updateSource(1, { register_variant: "scb/lisa/v2" });
+    expect(projectStore.draft?.sources[0]?.name).toBe("LISA");
+    expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
+  });
+});
+
+describe("source-name prefill no-op guard (#312, Codex P2)", () => {
+  it("re-applying the SAME variant does not recompute a suffixed name", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" }); // LISA
+    projectStore.addSource();
+    projectStore.updateSource(1, { register_variant: "scb/lisa/v2" }); // LISA_2
+    projectStore.addSource();
+    projectStore.updateSource(2, { register_variant: "scb/lisa/v3" }); // LISA_3
+    projectStore.removeSource(1); // frees LISA_2
+    // Re-picking the same variant on the (now index-1) LISA_3 source must NOT
+    // rename it to the freed LISA_2 slot.
+    projectStore.updateSource(1, { register_variant: "scb/lisa/v3" });
+    expect(projectStore.draft?.sources[1]?.name).toBe("LISA_3");
+  });
+});
