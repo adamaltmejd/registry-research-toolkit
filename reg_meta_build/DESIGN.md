@@ -733,10 +733,10 @@ partial spring term (`Vårterminen`/`VT`, Jan–Jun): the year bound claims a ha
 variable was never delivered in.
 
 `_edition_bounds(versionname, year)` (#219) parses the Swedish term/quarter/half
-phrasings to an inclusive ISO `(lo, hi)` window and `_StateGroup` accumulates the
-per-group envelope (`from_iso` = min lo, `to_iso` = max hi) in parallel with the
-`regver_min`/`regver_max` year ints. The materializer applies the envelope **only at a
-state's lifetime start/end** — `from_iso` for the first emitted run when it begins at
+phrasings to an inclusive ISO `(lo, hi)` window; since #271 the per-group envelope
+(`from_iso` = min claim lo, `to_iso` = max claim hi) derives from the claim records
+rather than parallel accumulator fields. The materializer applies the envelope **only at
+a state's lifetime start/end** — `from_iso` for the first emitted run when it begins at
 `regver_min`, `to_iso` for the last when it ends at `regver_max`. Interior timeline
 handoffs between competing value sets stay year-aligned.
 
@@ -768,49 +768,33 @@ only ever becomes MORE specific (year → term), it can only split a previously-
 uniqueness-index key, never merge two distinct ones, so the year-keyed residual-collapse
 scope and the fast path's never-collides assumption are unaffected.
 
-### Year-granular resolver: intentional limitation
+### Interval-native co-delivery resolution (#271)
 
-The co-delivery resolver (`_resolve_year_winners` + the per-year `owned`/`_rle_runs`
-timeline) is deliberately **year-bucketed**; the boundary clamp above is its single
-sub-annual concession. Known consequence: when two sub-annual editions in one calendar
-year carry genuinely different value sets at equal authority, the recency tiebreak keeps
-the later-approved term and **silently drops the loser's coding** (invisible post-build
-— the dropped state never materializes). On today's corpus this affects only \~a couple
-dozen codings, all in niche registers (Komvux, sfi, gymnasium national tests,
-Kommunernas aktivitetsansvar, PSU waves) — none in LISA/income/RTB/population/health —
-so the recency-winner is a defensible default and a full interval resolver is not yet
-worth its cost.
+The co-delivery resolver is interval-native (shipped via #297 design / #313 claims
+plumbing / #315 sweep / the engine-extraction PR; the predecessor was deliberately
+year-bucketed, and its one known data loss — the recency tiebreak silently dropping a
+term's coding when two sub-annual editions of one year carried different value sets — is
+what this design removes).
 
-This was safe to defer because there is **no lock-in**: storage
-(`valid_from`/`valid_to`), the one-value-set-per-period invariant, reg_meta's query
-resolver, and the period grammar are all already interval-native, and the DB is
-regenerate-not-migrate — so making the resolver interval-native later is a localized
-change at flat cost. The original trigger ("the first provider/register with genuine
-sub-annual *coding* cadence") was **revised on 2026-06-11**: the named trigger case is
-already in the catalog (the monthly income column families, see the consumers note in
-the design below), and pre-v1 — slugs UNFROZEN, regenerate-not-migrate, no external
-users — is when identity-non-preserving re-derivation is cheapest. The interval-native
-resolver is being built now; the approved design is the next section. Decision
-rationale, real-corpus measurements, and the rejected narrow term-split alternative:
-issue #271. This limitation section describes the **current shipped behavior** and is
-deleted when the rewrite lands.
-
-### Interval-native co-delivery resolution (#271 — design)
-
-Approved design for replacing the year-bucketed resolver above with an interval-native
-sweep. Written before implementation; the *model* subsections below become the standing
-documentation of resolver behavior once the staged PRs land, at which point the
-year-granular-limitation section above and the *staging* subsection at the end of this
-section are deleted (the self-deleting gate).
-
-**Design goal.** Resolution must operate on the windows editions actually delivered
+**Design goal.** Resolution operates on the windows editions actually delivered
 (`_edition_bounds`), not on calendar-year buckets, so that two same-year editions with
 genuinely different value sets on disjoint windows (VT Jan–Jun vs HT Jul–Dec) BOTH ship
 as non-overlapping states — term-split falls out of interval correctness, with no
-special case. Everything the year bucket gets right must be preserved: cosmetic/drift
+special case. Everything the year bucket got right is preserved: cosmetic/drift
 collapses still pick one winner, authority still lets a full-year edition supersede a
-partial slice it overlaps, and the #270 boundary clamp must be subsumed exactly, never
-regressed.
+partial slice it overlaps, and the #270 boundary clamp is subsumed exactly, never
+regressed (verified by the enumerated-population diff gate when the sweep landed).
+
+**Module layout.** The engine — claims in, owned intervals out — is provider-blind and
+lives in `resolution.py` (`Claim`, `SweepHooks`, `resolve_year_intervals`,
+`assemble_runs`, the grammar successor tables); it contains no provider grammar and no
+SCB types, and is parameterized over an opaque candidate key through the hooks. The SCB
+adapter (`sources/scb.py`) supplies the provider conventions: claim extraction
+(`_edition_bounds` on `registerversionnamn`), the identity verdict
+(`_pool_single_coding`), the resolution cascade (`_resolve_column_year`, with its
+SCB-specific label-freshness and historical-grain steps), the curation pins, and the
+per-register cadence map — wired together in `_resolve_year_winners`. SCB stays the
+engine's only caller until a second provider needs co-delivery resolution.
 
 #### The model: claims → drift conflation → segment choice → runs
 
@@ -1079,24 +1063,6 @@ Every implementation PR gates on:
    pair (one winner, unchanged), overlapping sub-annual windows (mid-year handoff),
    VT/HT open-top selection, school-year/season/month editions (still full-year),
    quarter claims.
-
-#### Staging (deleted when the last PR ships)
-
-1. **PR-A — claims plumbing, byte-identical.** `_StateGroup` drops
-   `regyears`/`year_authority`/`year_approval`/`from_iso`/`to_iso` for the per-year
-   claim records; resolution and emission still read them at year grain. Gate: dbdiff
-   byte-identity on the real corpus.
-2. **PR-B — the interval sweep.** Drift conflation scoped by the per-variant
-   compaction-window parameter (default: calendar year; AGI declared `month`,
-   output-inert), segment choice, run assembly, interval-grain open-top gate, segment
-   diagnostics, the `reg_meta.fqid` period formatter, the same-column any-overlap guard
-   (coalescer assert; no validate.py mirror — see the invariant section), and the full
-   measurement report. Gate: the enumerated-population diff above (which also asserts
-   the AGI declaration's inertness).
-3. **PR-C — provider-blind engine extraction, byte-identical.** The sweep (claims in,
-   owned intervals out) moves to a shared module with no SCB grammar in it; `scb.py`
-   keeps claim *extraction* (`registerversionnamn` parsing). SCB stays the only caller
-   until a second provider needs co-delivery resolution. Gate: dbdiff byte-identity.
 
 ## Slug curation
 
