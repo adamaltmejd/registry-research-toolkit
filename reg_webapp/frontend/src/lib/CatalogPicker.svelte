@@ -193,7 +193,7 @@ function chooseRepresentation(rep: Representation): void {
   {/if}
 
   {#if resource.loading}
-    <p class="muted">Loading…</p>
+    <p class="muted" aria-busy="true">Loading…</p>
   {:else if resource.error}
     <p class="error" role="alert">Failed to load: {resource.error}</p>
   {:else if props.mode === "variant"}

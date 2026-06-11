@@ -92,7 +92,7 @@ function succAnnotation(ref: VariableRefModel): string | null {
 
     <h4>Replaces / predecessors</h4>
     {#if predecessors.loading}
-      <p class="muted">Loading…</p>
+      <p class="muted" aria-busy="true">Loading…</p>
     {:else if predecessors.error}
       <p class="error" role="alert">
         Failed to load predecessors: {predecessors.error}
@@ -147,7 +147,7 @@ function succAnnotation(ref: VariableRefModel): string | null {
   <section aria-labelledby="lineage-warnings-heading">
     <h3 id="lineage-warnings-heading">Lineage warnings</h3>
     {#if warnings.loading}
-      <p class="muted">Loading…</p>
+      <p class="muted" aria-busy="true">Loading…</p>
     {:else if warnings.error}
       <p class="error" role="alert">
         Failed to load lineage warnings: {warnings.error}

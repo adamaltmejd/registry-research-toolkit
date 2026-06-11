@@ -15,7 +15,7 @@ const variants = asyncResource(() => getRegisterVariants(registerFqid));
 <section class="variants" aria-labelledby="variants-heading">
   <h3 id="variants-heading">Variants</h3>
   {#if variants.loading}
-    <p class="muted">Loading variants…</p>
+    <p class="muted" aria-busy="true">Loading variants…</p>
   {:else if variants.error}
     <p class="error" role="alert">Failed to load variants: {variants.error}</p>
   {:else if variants.data && variants.data.variants.length > 0}

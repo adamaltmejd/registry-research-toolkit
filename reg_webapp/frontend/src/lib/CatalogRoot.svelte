@@ -12,7 +12,7 @@ const root = asyncResource(() => getCatalogRoot());
 <article>
   <h2>Catalog</h2>
   {#if root.loading}
-    <p class="muted">Loading…</p>
+    <p class="muted" aria-busy="true">Loading…</p>
   {:else if root.error}
     <p class="error" role="alert">Failed to load catalog: {root.error}</p>
   {:else if root.data}
