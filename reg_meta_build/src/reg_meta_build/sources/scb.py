@@ -34,7 +34,6 @@ from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
-    _MONTH_LAST_DAY,
     derive_variable_slug,
     period_token_for_bounds,
     period_token_to_bounds,
@@ -68,6 +67,12 @@ from reg_meta_build.ir import (
     IRVariableState,
     IRVariant,
     IRWarning,
+)
+from reg_meta_build.resolution import (
+    Claim,
+    SweepHooks,
+    assemble_runs,
+    resolve_year_intervals,
 )
 
 if TYPE_CHECKING:
@@ -770,25 +775,6 @@ def _parse_unika_year(raw: str | None) -> int | None:
 
 
 @dataclass
-class _Claim:
-    """One per-(group, edition-year) delivery claim (#271 PR-A): the inclusive
-    ISO hull of the year's edition windows (`_edition_bounds`; a multi-edition
-    year max-merges), plus the year's strongest `_edition_authority` and latest
-    approval date. Year-nested by construction — `_edition_bounds` ties every
-    marker to its own edition year — so a claim window never crosses a year
-    boundary. Replaces the year-keyed `regyears`/`year_authority`/
-    `year_approval` parallel structures and the #219 `from_iso`/`to_iso`
-    envelope (now derived: see `_StateGroup.from_iso`). The interval sweep
-    (DESIGN.md → Interval-native co-delivery resolution) resolves directly over
-    these; until it lands the readers stay year-grain."""
-
-    lo: str  # inclusive ISO start of the year's delivery hull
-    hi: str  # inclusive ISO end
-    authority: int  # max `_edition_authority` across the year's editions
-    approval: str  # max `registerversion_senastgodkanddatum` (ISO; '' unknown)
-
-
-@dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
     triage below can read it). The 9-component group key lives in the
@@ -832,7 +818,7 @@ class _StateGroup:
     # sub-annual variant (e.g. one with both HT2018 and VT2018) doesn't treat a
     # term-to-term column rename as a same-year co-delivery (Codex #139).
     regvers: set[int] = field(default_factory=set)
-    # #271 PR-A: one `_Claim` per REFERENCE year this group was observed in
+    # #271 PR-A: one `Claim` (resolution.py) per REFERENCE year this group was observed in
     # (parsed from `registerversionnamn`). The key set carries the GAPS — so the
     # materializer can partition a shape's window into contiguous runs instead
     # of collapsing to `[min, max]` and paving over years the shape wasn't
@@ -841,7 +827,7 @@ class _StateGroup:
     # previously lived in three parallel year-keyed structures (`regyears`,
     # `year_authority`, `year_approval`) plus the #219 envelope
     # (`from_iso`/`to_iso`, now the derived properties below).
-    claims: dict[int, _Claim] = field(default_factory=dict)
+    claims: dict[int, Claim] = field(default_factory=dict)
 
     def claim_authority(self, year: int) -> int:
         """The year's claim AUTHORITY (`_edition_authority` max across its
@@ -1868,29 +1854,15 @@ def _split_off_non_contested(
 # regver_max]`. That single span CANNOT express gaps: a value set delivered
 # 1998-2009 + 2011-2025 (with another value set in 2010) still emits 1998-2025,
 # overlapping the 2010 state — the co-delivery root cause (CODELIVERY_PLAN.md).
-# When a `(variable, variant)` has OVERLAPPING distinct-value-set groups, the
-# functions here rebuild its states from the OBSERVED edition claims
-# (`_StateGroup.claims`), resolving each contested year at INTERVAL grain
-# (DESIGN.md → Interval-native co-delivery resolution):
-#
-#   1. DRIFT CONFLATION (identity, per compaction window, blind to claim
-#      windows): a column-year pool that is one drifted coding — one value
-#      set, one source label, or within the cosmetic threshold — resolves to
-#      ONE carrier via the unchanged cascade; co-class losers are DROPPED (no
-#      carve, no run split). A VT and an HT delivery of one drifted coding
-#      still collapse, exactly as under the year bucket.
-#   2. SEGMENT CHOICE (window-aware): distinct codings compete only on the
-#      atomic segments their claim windows actually share; the cascade runs
-#      per segment. Disjoint windows are NOT a conflict — both ship (the
-#      term-split). A segment still holding >1 value set after cascade +
-#      curation is GENUINE: the build fails, naming the segment as a period
-#      token.
-#   3. RUN ASSEMBLY: a group's owned intervals form runs that break on a year
-#      with no owned interval (the old `_rle_runs` rule) or at a same-column
-#      rival-owned segment (mid-year handoffs). Interior unclaimed space
-#      inside a run stays paved; lost space never. Emission keeps year-grain
-#      boundaries except at lifetime edges (the #219/#270 clamp, now just the
-#      first/last owned bound) and at sub-year carve edges.
+# When a `(variable, variant)` has OVERLAPPING distinct-value-set groups, its
+# states are rebuilt from the OBSERVED edition claims (`_StateGroup.claims`)
+# at INTERVAL grain by the provider-blind engine in `resolution.py` (drift
+# conflation → segment choice → run assembly; see its module docstring and
+# DESIGN.md → Interval-native co-delivery resolution). THIS adapter supplies
+# the provider conventions the engine is parameterized over: the claim
+# extraction (`_edition_bounds` on `registerversionnamn`), the identity
+# verdict (`_pool_single_coding`), and the resolution cascade
+# (`_resolve_column_year`) — wired up in `_resolve_year_winners`.
 
 _COSMETIC_MAX_SYM = 2  # symmetric code-count diff treated as cosmetic drift
 
@@ -1907,70 +1879,6 @@ _COSMETIC_MAX_SYM = 2  # symmetric code-count diff treated as cosmetic drift
 # qualifiers of annual deliveries ('15 oktober YYYY' school snapshots), so
 # narrowing them would drop real coverage.
 _CADENCE_BY_REGISTER: dict[int, str] = {392: "month"}
-
-# Successor table for grammar-generated bounds. Every claim window comes from
-# `period_token_to_bounds` (term/quarter/half/month/year forms), so window
-# ends are always `_MONTH_LAST_DAY` month ends — including the SYNTHESIZED
-# Feb-29 in non-leap years, which `date.fromisoformat` would reject. A static
-# table keeps the sweep free of datetime entirely (and of that footgun).
-_MONTH_NEXT = {f"{m:02d}": f"{m + 1:02d}" for m in range(1, 12)}
-
-
-def _day_after_window_end(hi: str) -> str:
-    """The day after an inclusive grammar window end (always a month end)."""
-    year, month, day = hi[:4], hi[5:7], hi[8:10]
-    if _MONTH_LAST_DAY.get(month) != day:
-        raise AssertionError(f"non-grammar claim window end: {hi!r}")
-    if month == "12":
-        return f"{int(year) + 1:04d}-01-01"
-    return f"{year}-{_MONTH_NEXT[month]}-01"
-
-
-def _merge_adjacent(intervals: list[tuple[str, str]]) -> list[tuple[str, str]]:
-    """Merge sorted inclusive intervals that touch (next lo == day after
-    prev hi) or overlap into maximal contiguous intervals."""
-    merged: list[tuple[str, str]] = []
-    for lo, hi in intervals:
-        if merged and lo <= _day_after_window_end(merged[-1][1]):
-            merged[-1] = (merged[-1][0], max(merged[-1][1], hi))
-        else:
-            merged.append((lo, hi))
-    return merged
-
-
-def _assemble_runs(
-    intervals: list[tuple[str, str]],
-    rivals: list[tuple[str, str, tuple]],
-) -> list[tuple[list[tuple[str, str]], bool, bool]]:
-    """Group one column-owner's sorted owned intervals into emission runs.
-
-    Returns ``(intervals, cut_in, cut_out)`` per run. A run breaks between two
-    consecutive owned intervals when (a) a same-column RIVAL-owned interval
-    intersects the open gap between them — the carve rule, edges emitted at
-    the precise owned bounds (`cut_*` True; padding would overlap the rival) —
-    or (b) the next interval starts more than one calendar year after the
-    previous ends (the pre-#271 `_rle_runs` rule; nobody owns the gap, so the
-    edges stay year-aligned, `cut_*` False). Both at once counts as a carve:
-    for year-grain losses the owned intervals are full years, so the precise
-    edges coincide with the padded ones and the output is unchanged."""
-    runs: list[tuple[list[tuple[str, str]], bool, bool]] = []
-    cur = [intervals[0]]
-    cur_cut_in = False
-    for prev, nxt in zip(intervals, intervals[1:]):
-        rival_between = any(
-            r_hi > prev[1] and r_lo < nxt[0] for r_lo, r_hi, _ in rivals
-        )
-        if rival_between:
-            runs.append((cur, cur_cut_in, True))
-            cur, cur_cut_in = [nxt], True
-        elif int(nxt[0][:4]) > int(prev[1][:4]) + 1:
-            runs.append((cur, cur_cut_in, False))
-            cur, cur_cut_in = [nxt], False
-        else:
-            cur.append(nxt)
-    runs.append((cur, cur_cut_in, False))
-    return runs
-
 
 # Grain markers (ascii-folded substrings) flagging a HISTORICAL re-coding —
 # `Kommun historisk`, `Län historisk`, `… tidigare`. SCB co-delivers these
@@ -2026,20 +1934,17 @@ def _resolve_year_winners(
     list[tuple[tuple, str, str]],
     list[tuple[str, str, str, list[tuple]]],
 ]:
-    """Resolve one contested `year` at INTERVAL grain, COLUMN-AWARE (#271).
-
-    A delivery column (gkey[8]) is one representation of the concept; distinct
-    columns are parallel representations (SSYK 3/5-digit, age 5/10-yr brackets)
-    that legitimately CO-EXIST under one FQID — they are NOT a conflict. So
-    candidates are partitioned by column and each column resolves INDEPENDENTLY
-    (drift conflation, then segment choice — see the banner above).
+    """Resolve one contested `year` at INTERVAL grain, COLUMN-AWARE (#271) —
+    the SCB adapter onto the provider-blind engine (`resolution.py`): the
+    hooks close over this adapter's state groups, value-set accessors, and
+    curation context; the engine owns the conflation/segmentation mechanics.
 
     Returns ``(owned, genuine)``: ``owned`` is `(gkey, lo, hi)` triples — the
     inclusive ISO intervals of `year` each group owns, in deterministic
     first-win order (the materializer's emission order derives from it); a
     group may own several disjoint intervals of one year (a rival carved the
-    middle). ``genuine`` lists `(column, seg_lo, seg_hi, gkeys)` segments still
-    holding >1 distinct value set after the cascade and curation — the
+    middle). ``genuine`` lists `(column, seg_lo, seg_hi, gkeys)` segments
+    still holding >1 distinct value set after the cascade and curation — the
     materializer fails the build naming each as a period token.
 
     `codelivery` is the curation map (`(register_id, var_id, column) → keep
@@ -2049,18 +1954,20 @@ def _resolve_year_winners(
     drafts from), not the raw source `value_set_version_label` (which a
     fold/collapse may relabel).
     """
-    by_col: dict[str, list[tuple]] = defaultdict(list)
-    for gk in cands:
-        by_col[gk[8]].append(gk)
-    owned: list[tuple[tuple, str, str]] = []
-    genuine: list[tuple[str, str, str, list[tuple]]] = []
-    for col, col_cands in by_col.items():
-        col_owned, col_genuine = _resolve_column_year_intervals(
-            col_cands, groups, year, codes_fn, codelivery, labels, code_labels_fn
-        )
-        owned.extend((gk, lo, hi) for gk, lo, hi in col_owned)
-        genuine.extend((col, lo, hi, gks) for lo, hi, gks in col_genuine)
-    return owned, genuine
+    hooks = SweepHooks(
+        window=lambda gk: (groups[gk].claims[year].lo, groups[gk].claims[year].hi),
+        column=lambda gk: gk[8],
+        sort_key=_gk_sort_key,
+        coded=lambda gk: groups[gk].value_set_id is not None,
+        single_coding=lambda pool: _pool_single_coding(
+            pool, groups, codes_fn, code_labels_fn
+        ),
+        resolve_pool=lambda pool: _resolve_column_year(
+            pool, groups, year, codes_fn, codelivery, labels, code_labels_fn
+        ),
+    )
+    cadence = _CADENCE_BY_REGISTER.get(cands[0][0], "year")
+    return resolve_year_intervals(cands, hooks, cadence)
 
 
 def _pool_single_coding(
@@ -2095,153 +2002,6 @@ def _pool_single_coding(
     return max_sym <= _COSMETIC_MAX_SYM and not _shared_code_relabeled(
         vss, code_labels_fn
     )
-
-
-def _resolve_column_year_intervals(
-    cands: list[tuple],
-    groups: dict[tuple, _StateGroup],
-    year: int,
-    codes_fn: Callable[[int], frozenset[str]],
-    codelivery: CodeliveryMap | None = None,
-    labels: dict[tuple, str] | None = None,
-    code_labels_fn: Callable[[int], dict[str, str]] | None = None,
-) -> tuple[
-    list[tuple[tuple, str, str]],
-    list[tuple[str, str, list[tuple]]],
-]:
-    """Resolve ONE column's claims for `year`: drift conflation at compaction-
-    window grain, then segment choice where windows overlap.
-
-    Returns ``(owned, genuine)``: ``owned`` as `(gkey, lo, hi)` interval
-    triples, ``genuine`` as `(seg_lo, seg_hi, gkeys)` unresolved segments.
-
-    DRIFT CONFLATION: claims sharing a compaction window (the whole year by
-    default; single months under `cadence = month`) that form ONE drifted
-    coding (`_pool_single_coding`) resolve via the unchanged cascade to one
-    carrier owning ITS OWN claim window — window-blind, so a cosmetic VT/HT
-    pair still collapses to one winner exactly as under the year bucket, and
-    the dropped twin neither carves nor splits runs. A multi-coding pool sends
-    every member forward as a carrier (the segment cascade below handles both
-    choice and any segment-local drift).
-
-    SEGMENT CHOICE: the carriers' claim windows partition the year into atomic
-    segments; each segment is owned by its sole coded claimant or by the
-    cascade winner among its claimants. Disjoint windows never compete. A
-    code-less claimant can win a contested segment through the cascade
-    (out-ranking authority, as under the year bucket) but never owns a segment
-    by mere sole coverage in a multi-coding pool — the year bucket dropped
-    code-less groups whenever a coded rival took the year, and segment grain
-    must not silently grow them states (they are invariant-exempt shadows).
-    """
-    register_id = cands[0][0]
-    cadence = _CADENCE_BY_REGISTER.get(register_id, "year")
-
-    def claim_window(gk: tuple) -> tuple[str, str]:
-        c = groups[gk].claims[year]
-        return (c.lo, c.hi)
-
-    # ── drift conflation ────────────────────────────────────────────────
-    if cadence == "year":
-        pools = [sorted(cands, key=_gk_sort_key)]
-    else:  # month cadence: only claims fitting ONE month unit share a pool
-        by_unit: dict[str | None, list[tuple]] = defaultdict(list)
-        for gk in sorted(cands, key=_gk_sort_key):
-            lo, hi = claim_window(gk)
-            unit = lo[:7] if lo[:7] == hi[:7] else None
-            by_unit[unit].append(gk)
-        pools = []
-        for unit, gks in sorted(
-            by_unit.items(), key=lambda kv: (kv[0] is None, kv[0] or "")
-        ):
-            if unit is None:
-                # A window spanning >1 month is no single delivery period —
-                # it never conflates; each such claim is its own pool.
-                pools.extend([gk] for gk in gks)
-            else:
-                pools.append(gks)
-
-    carriers: list[tuple] = []
-    for pool in pools:
-        if len(pool) > 1 and _pool_single_coding(
-            pool, groups, codes_fn, code_labels_fn
-        ):
-            winners, genuine = _resolve_column_year(
-                pool, groups, year, codes_fn, codelivery, labels, code_labels_fn
-            )
-            if genuine:  # unreachable: a single-coding pool always collapses
-                raise AssertionError(
-                    f"single-coding pool failed to conflate (year {year})"
-                )
-            carriers.extend(winners)
-        else:
-            carriers.extend(pool)
-
-    if len(carriers) == 1:
-        lo, hi = claim_window(carriers[0])
-        return [(carriers[0], lo, hi)], []
-
-    # ── segment choice ──────────────────────────────────────────────────
-    cuts: set[str] = set()
-    for gk in carriers:
-        lo, hi = claim_window(gk)
-        cuts.add(lo)
-        cuts.add(_day_after_window_end(hi))
-    bounds = sorted(cuts)
-    owned: list[tuple[tuple, str, str]] = []
-    genuine_segs: list[tuple[str, str, list[tuple]]] = []
-    seg_owned: dict[tuple, list[tuple[str, str]]] = defaultdict(list)
-    for seg_lo, seg_next in zip(bounds, bounds[1:]):
-        covering = [
-            gk
-            for gk in carriers
-            if claim_window(gk)[0] <= seg_lo
-            and seg_next <= _day_after_window_end(claim_window(gk)[1])
-        ]
-        if not covering:
-            continue  # a gap between disjoint claim windows — unclaimed
-        seg_hi = _prev_day_from_cut(seg_next)
-        # Segmentation only runs for multi-coding pools (≤1-distinct-coding
-        # pools conflated above), so code-less claimants here are the shadows
-        # the year bucket dropped whenever a coded rival took the year: they
-        # never own by mere coverage, only by out-ranking through the cascade.
-        coded = [gk for gk in covering if groups[gk].value_set_id is not None]
-        if not coded:
-            continue
-        # ALWAYS the full cascade — even when the segment's claimants share one
-        # value set. The cascade's vs-fold exit picks its representative AFTER
-        # the authority/recency/historical filters; a bare `_pick_state_rep`
-        # shortcut here let a SUBANNUAL same-set sibling out-rep a PLAIN annual
-        # one (caught on the real corpus: GFBGrupp 2013 HT, where the year
-        # bucket's winner is the authority-filtered rep).
-        winners, genuine = _resolve_column_year(
-            covering, groups, year, codes_fn, codelivery, labels, code_labels_fn
-        )
-        if genuine:
-            genuine_segs.append((seg_lo, seg_hi, winners))
-        else:
-            # The winner may be code-less (it out-ranked every coded claimant
-            # through the filters) — the year bucket let it own the year in
-            # that case too, so no extra guard; mere-coverage shadows never
-            # get this far (the cascade's nonnull pool always beats them).
-            seg_owned[winners[0]].append((seg_lo, seg_hi))
-    # Deterministic first-win order: carriers order, intervals merged.
-    for gk in carriers:
-        if gk in seg_owned:
-            for lo, hi in _merge_adjacent(sorted(seg_owned[gk])):
-                owned.append((gk, lo, hi))
-    return owned, genuine_segs
-
-
-def _prev_day_from_cut(cut: str) -> str:
-    """The inclusive end just before a cut point (a month first): the previous
-    month's `_MONTH_LAST_DAY` end — the inverse of `_day_after_window_end`."""
-    year, month = cut[:4], cut[5:7]
-    if cut[8:10] != "01":
-        raise AssertionError(f"non-grammar cut point: {cut!r}")
-    if month == "01":
-        return f"{int(year) - 1:04d}-12-31"
-    prev = f"{int(month) - 1:02d}"
-    return f"{year}-{prev}-{_MONTH_LAST_DAY[prev]}"
 
 
 def _gk_sort_key(gk: tuple) -> tuple[str, ...]:
@@ -2790,7 +2550,7 @@ def _coalesce_variable_states(
             )
             claim = grp.claims.get(rver_year)
             if claim is None:
-                grp.claims[rver_year] = _Claim(ed[0], ed[1], _auth, _appr)
+                grp.claims[rver_year] = Claim(ed[0], ed[1], _auth, _appr)
             else:
                 claim.lo = min(claim.lo, ed[0])
                 claim.hi = max(claim.hi, ed[1])
@@ -3322,7 +3082,7 @@ def _coalesce_variable_states(
             grp = groups[gk]
             ints = sorted(ints)
             rivals = [iv for iv in col_owned[gk[8]] if iv[2] != gk]
-            runs = _assemble_runs(ints, rivals)
+            runs = assemble_runs(ints, rivals)
             open_to = _group_open_to(grp)
             # Within one column only the interval-latest coding keeps the open
             # top: a rival owning space AFTER this group's last owned bound

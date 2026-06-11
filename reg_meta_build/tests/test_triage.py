@@ -29,6 +29,7 @@ from reg_meta.db import open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import period_token_to_bounds
 from reg_meta_build.db import build_db
+from reg_meta_build.resolution import Claim, assemble_runs
 from reg_meta_build.sources.scb import (
     _AUTH_FINAL,
     _AUTH_PLAIN,
@@ -37,8 +38,6 @@ from reg_meta_build.sources.scb import (
     _apply_clustered,
     _apply_fold,
     _apply_split,
-    _assemble_runs,
-    _Claim,
     _cluster_contested,
     _collapse_residual,
     _common_prefix_len,
@@ -103,10 +102,10 @@ def _state(
     return gkey, g
 
 
-def _year_claim(year: int, authority: int = _AUTH_PLAIN, approval: str = "") -> _Claim:
-    """A full-year `_Claim` — the shorthand for tests that only care WHICH
+def _year_claim(year: int, authority: int = _AUTH_PLAIN, approval: str = "") -> Claim:
+    """A full-year `Claim` — the shorthand for tests that only care WHICH
     years a group claims (and optionally the year's cascade signals)."""
-    return _Claim(f"{year:04d}-01-01", f"{year:04d}-12-31", authority, approval)
+    return Claim(f"{year:04d}-01-01", f"{year:04d}-12-31", authority, approval)
 
 
 def _shape(data_type: str | None, data_length: str | None = None) -> _StateGroup:
@@ -277,13 +276,13 @@ def _spans(runs: list) -> list[tuple[str, str, bool, bool]]:
 
 class TestAssembleRuns:
     def test_contiguous(self) -> None:
-        runs = _assemble_runs([_yiv(2000), _yiv(2001), _yiv(2002)], [])
+        runs = assemble_runs([_yiv(2000), _yiv(2001), _yiv(2002)], [])
         assert _spans(runs) == [("2000-01-01", "2002-12-31", False, False)]
 
     def test_year_gap_splits_year_aligned(self) -> None:
         # The pre-#271 _rle_runs rule: nobody owns the gap year, so the run
         # edges stay year-aligned (cut flags False → padding allowed).
-        runs = _assemble_runs([_yiv(2000), _yiv(2002)], [])
+        runs = assemble_runs([_yiv(2000), _yiv(2002)], [])
         assert _spans(runs) == [
             ("2000-01-01", "2000-12-31", False, False),
             ("2002-01-01", "2002-12-31", False, False),
@@ -294,7 +293,7 @@ class TestAssembleRuns:
         # year-gap rule (full-year intervals → identical emitted bounds), but
         # flagged as cuts.
         rival = ("2001-01-01", "2001-12-31", ("r",))
-        runs = _assemble_runs([_yiv(2000), _yiv(2002)], [rival])
+        runs = assemble_runs([_yiv(2000), _yiv(2002)], [rival])
         assert _spans(runs) == [
             ("2000-01-01", "2000-12-31", False, True),
             ("2002-01-01", "2002-12-31", True, False),
@@ -305,7 +304,7 @@ class TestAssembleRuns:
         # as two runs whose carve edges are the precise owned bounds.
         owned = [("2009-01-01", "2009-03-31"), ("2009-10-01", "2009-12-31")]
         rival = ("2009-04-01", "2009-09-30", ("r",))
-        runs = _assemble_runs(owned, [rival])
+        runs = assemble_runs(owned, [rival])
         assert _spans(runs) == [
             ("2009-01-01", "2009-03-31", False, True),
             ("2009-10-01", "2009-12-31", True, False),
@@ -314,11 +313,11 @@ class TestAssembleRuns:
     def test_unrelated_rival_does_not_cut(self) -> None:
         # A rival entirely outside the gap between owned intervals is no cut.
         rival = ("2005-01-01", "2005-12-31", ("r",))
-        runs = _assemble_runs([_yiv(2000), _yiv(2001)], [rival])
+        runs = assemble_runs([_yiv(2000), _yiv(2001)], [rival])
         assert _spans(runs) == [("2000-01-01", "2001-12-31", False, False)]
 
     def test_single_interval(self) -> None:
-        runs = _assemble_runs([_yiv(1999)], [])
+        runs = assemble_runs([_yiv(1999)], [])
         assert _spans(runs) == [("1999-01-01", "1999-12-31", False, False)]
 
 
@@ -1906,7 +1905,7 @@ class TestIntervalSweepUnits:
 
     def _term_claims(self, gk_grp, year: int, term: str) -> None:
         lo, hi = period_token_to_bounds(f"{term}{year}")
-        gk_grp[1].claims = {year: _Claim(lo, hi, _AUTH_SUBANNUAL, "")}
+        gk_grp[1].claims = {year: Claim(lo, hi, _AUTH_SUBANNUAL, "")}
 
     def test_disjoint_substantive_owns_windows(self) -> None:
         a = _state(1, col="x")
@@ -1951,8 +1950,8 @@ class TestIntervalSweepUnits:
             ga.register_id = gb.register_id = register_id
             gka = (register_id,) + a[0][1:]
             gkb = (register_id,) + b[0][1:]
-            ga.claims = {2024: _Claim("2024-02-01", "2024-02-29", _AUTH_PLAIN, "")}
-            gb.claims = {2024: _Claim("2024-03-01", "2024-03-31", _AUTH_PLAIN, "")}
+            ga.claims = {2024: Claim("2024-02-01", "2024-02-29", _AUTH_PLAIN, "")}
+            gb.claims = {2024: Claim("2024-03-01", "2024-03-31", _AUTH_PLAIN, "")}
             return gka, gkb, {gka: ga, gkb: gb}
 
         gka, gkb, groups = month_pair(392)

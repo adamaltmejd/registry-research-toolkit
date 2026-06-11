@@ -484,12 +484,13 @@ Carried from the testing strategy; the shipped categories are in
   #209.
 - **LISA composite-source presentation** — the lineage data + endpoints ship; the UX
   treatment (tooltip vs "see also" panel) is a webapp authoring-UI decision.
-- **Sub-annual-coding providers (#271)** — before onboarding any provider whose *coding*
-  changes within a year (FK/FHM/SKV event data, SCB monthly income, SOS half-year),
-  build the interval-native co-delivery resolver first, in the provider-blind core. #271
-  is the design-ready record; the term-split bolt-on (Option A) is permanently rejected,
-  and the current year-bucketed resolver is a recorded intentional limitation (see
-  `reg_meta_build/DESIGN.md`). Post-v1; no numbered step fires the trigger.
+- **Sub-annual-coding providers (#271)** — SHIPPED ahead of the original post-v1 trigger
+  (2026-06-11, deferral revised): the co-delivery resolver is interval-native end-to-end
+  — provider-blind engine in `reg_meta_build/resolution.py`, SCB conventions in the
+  adapter (see `reg_meta_build/DESIGN.md` → Interval-native co-delivery resolution). The
+  term-split bolt-on (Option A) remains permanently rejected. Remaining #271 follow-up:
+  the monthly-column-family merge (the design's consumers section) and per-variant month
+  claim windows when a genuinely month-stamped provider lands.
 - **Materializer-owned value tables (#212)** — retiring the A4.3b content-shared interim
   is post-v1 work whose real deadline is the third provider adapter (FK/Skatteverket);
   nothing in this plan builds on who writes the value tables.
