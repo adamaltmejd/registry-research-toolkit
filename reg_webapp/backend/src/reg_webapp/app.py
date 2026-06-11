@@ -91,7 +91,13 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     cross-thread concurrency smoke tests) can raise it without disabling the
     middleware — the limiter is still IN the stack, just with a higher ceiling.
     Production callers use the default."""
-    app = FastAPI(title="reg_webapp", version=__version__, lifespan=lifespan)
+    # redoc_url=None: the deployed edge worker forwards a fixed backend-path set
+    # (/api, /openapi.json, /docs — see reg_webapp/edge/), and /redoc would fall
+    # through to the SPA shell there; disable it so the local and deployed
+    # surfaces match. Swagger at /docs is the one interactive-docs surface.
+    app = FastAPI(
+        title="reg_webapp", version=__version__, lifespan=lifespan, redoc_url=None
+    )
     # Middleware ordering (Starlette executes add_middleware in REVERSE order —
     # last-added runs OUTERMOST / first on the way in). Cost protection (see
     # DESIGN.md → Cost protection (limits.py)) must

@@ -1,0 +1,33 @@
+// Cloudflare edge worker for the reg_webapp `global` deployment (§6.5).
+//
+// Serves the SPA as Workers static assets on catalog.swecov.se and passes
+// API traffic through to the zone's DNS origin (the Fly app — the proxied
+// A/AAAA records for catalog.swecov.se). See reg_webapp/DESIGN.md →
+// "Deployment" for the topology and DESIGN.md → "SPA routing + production
+// fallback" for why the edge owns the deep-link → index.html rewrite.
+//
+// Deploy (after building the SPA: `bun run gen:types && bun run build` in
+// reg_webapp/frontend/):
+//
+//   bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc
+{
+  "name": "reg-webapp-global-edge",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    // Relative to this config file.
+    "directory": "../frontend/dist",
+    "binding": "ASSETS",
+    // Deep links to client routes (/catalog/...) fall back to index.html.
+    "not_found_handling": "single-page-application",
+    // Backend-owned paths ALWAYS hit the worker (→ origin), never the SPA
+    // fallback. Without this, single-page-application mode serves index.html
+    // to browser navigation requests directly, shadowing /api deep-opens.
+    // LOCKSTEP: this glob list and ORIGIN_PATHS in src/index.ts encode the
+    // same set — edit both together (and create_app in the backend owns which
+    // paths exist; /redoc is deliberately disabled there).
+    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/docs", "/docs/*"]
+  },
+  "routes": [{ "pattern": "catalog.swecov.se/*", "zone_name": "swecov.se" }],
+  "observability": { "enabled": true }
+}
