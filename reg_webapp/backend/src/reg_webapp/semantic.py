@@ -503,10 +503,14 @@ def _check_binding_period(
 
     The #307 LIST period (an interrupted series, structurally sorted and
     disjoint) resolves PER SEGMENT: `period_outside_state_validity` and
-    `range_period_partially_covered` fire per segment (naming it), while the
-    representation / ambiguity / drift checks below run on the
-    `state_id`-deduped UNION of every segment's states (which column(s) the
-    binding denotes is a property of the whole series).
+    `range_period_partially_covered` fire per segment (naming it), and the
+    PER-INSTANT probes — co-existence/ambiguity, the co-delivered-value-set
+    backstop, and the pinned representation's presence — also run per segment
+    (requested instants only exist inside segments; the whole-series union
+    would false-positive on windows overlapping BETWEEN segments). Only the
+    series-level properties — the resolved columns for steward admission and
+    the sequential-drift info — use the `state_id`-deduped UNION of every
+    segment's states.
 
     Returns the binding's RESOLVED delivery columns (the distinct
     `delivery_column_name`s of its states, narrowed to `representation` when
@@ -534,6 +538,13 @@ def _check_binding_period(
         f" (segment of {period_display(source.period)})" if len(segments) > 1 else ""
     )
     states_by_id: dict[int, VariableState] = {}
+    # Per-segment state lists, retained because two checks below are
+    # PER-INSTANT properties and must not see the whole-series union:
+    # co-existence/ambiguity (Codex P2 on #334 — two columns whose windows
+    # overlap only BETWEEN requested segments never extract together) and the
+    # pinned representation's per-segment presence (a MIDDLE segment the pin
+    # doesn't deliver is invisible to the outer-bounds drift check).
+    per_segment: list[tuple[int | str | PeriodRange, list[VariableState]]] = []
     uncovered: list[int | str | PeriodRange] = []
     for segment in segments:
         try:
@@ -549,6 +560,7 @@ def _check_binding_period(
             uncovered.append(segment)
             continue
         states_by_id.update((s.state_id, s) for s in seg_states)
+        per_segment.append((segment, seg_states))
 
         # PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case), PER
         # SEGMENT. The author named an explicit `[from, to]`; `resolve_at`
@@ -667,6 +679,27 @@ def _check_binding_period(
                     f"the rest of the range has no state for that column",
                 )
             )
+        # PER-SEGMENT presence (#307, Codex P2 on #334): the outer-bounds check
+        # above can't see a MIDDLE segment the pinned column doesn't deliver
+        # (e.g. segments [2010, 2015, 2020] where the pin exists at 2010 and
+        # 2020 but only a sibling column covers 2015 — outer bounds match, yet
+        # the 2015 extract would be silently empty for this column). Same
+        # `info` semantics as the under-coverage check above.
+        matched_ids = {s.state_id for s in matched}
+        for segment, seg_states in per_segment:
+            if not any(s.state_id in matched_ids for s in seg_states):
+                issues.append(
+                    _issue(
+                        "binding_state_drifts_within_period",
+                        "info",
+                        caller,
+                        var_path,
+                        f"binding {binding.variable!r} representation "
+                        f"{binding.representation!r} has no state at period "
+                        f"{period_display(segment)}{series_context}; only a "
+                        f"sibling column delivers that segment",
+                    )
+                )
         states = matched
 
     # ≥2 delivery columns CO-EXISTING (overlapping windows) and no `representation`
@@ -676,7 +709,25 @@ def _check_binding_period(
     # in NON-overlapping windows (a sequential rename) are NOT ambiguous — they fall
     # through to the drift-info case below. (When `representation` is set, `states`
     # is one column, so `coexisting` is empty and this never fires.)
-    coexisting = _coexisting_columns(states)
+    #
+    # PER SEGMENT (#307, Codex P2 on #334): co-existence is a PER-INSTANT
+    # property and the requested instants only exist inside segments — two
+    # columns whose windows overlap only BETWEEN two requested segments never
+    # extract together, so probing the whole-series union would false-positive
+    # a blocking error. Each segment's probe sees the states narrowed to the
+    # kept set (the pinned column when `representation` is set — so this still
+    # never fires on a pinned binding). For a scalar period this is exactly the
+    # old single-probe behavior (one segment, seg_states == the union).
+    kept_ids = {s.state_id for s in states}
+    coexisting = sorted(
+        {
+            column
+            for _segment, seg_states in per_segment
+            for column in _coexisting_columns(
+                [s for s in seg_states if s.state_id in kept_ids]
+            )
+        }
+    )
     if len(coexisting) > 1:
         issues.append(
             _issue(
@@ -696,8 +747,12 @@ def _check_binding_period(
 
     # Backstop: distinct value sets on ONE column at the same instant — a reg_meta
     # build co-delivery the curation missed (the build `validate` invariant should
-    # make this unreachable against a clean catalog).
-    if _has_codelivered_versions(states):
+    # make this unreachable against a clean catalog). Per segment for the same
+    # reason as the co-existence probe above (a per-instant property).
+    if any(
+        _has_codelivered_versions([s for s in seg_states if s.state_id in kept_ids])
+        for _segment, seg_states in per_segment
+    ):
         labels: dict[int | None, str] = {}
         for s in states:
             labels.setdefault(s.value_set_id, s.value_set_version_label)

@@ -8,6 +8,7 @@ import {
   periodQueryFromField,
   periodRangeEndpoints,
   periodTokenBounds,
+  periodToResolveWire,
   periodToWire,
   queryFromParams,
   VALUE_SET_VERSION_NONE,
@@ -126,6 +127,26 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
     expect(periodToWire(periodFromWire("2005..2010,2015..2020"))).toBe(
       "2005..2010,2015..2020",
     );
+  });
+});
+
+describe("periodToResolveWire (resolve-bound callers)", () => {
+  it("matches periodToWire for scalar periods", () => {
+    expect(periodToResolveWire(2020)).toBe("2020");
+    expect(periodToResolveWire({ from: 2018, to: 2020 })).toBe("2018..2020");
+    expect(periodToResolveWire("_default")).toBe("_default");
+    expect(periodToResolveWire("")).toBeNull();
+  });
+
+  it("a #307 list → null (the catalog ?period= endpoint has no comma form yet)", () => {
+    // The pickers/rederive then take their period-unset fallback instead of
+    // surfacing a guaranteed 422 as a resolver error.
+    expect(
+      periodToResolveWire([
+        { from: 2005, to: 2010 },
+        { from: 2015, to: 2020 },
+      ]),
+    ).toBeNull();
   });
 });
 

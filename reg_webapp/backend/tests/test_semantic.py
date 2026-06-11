@@ -1288,3 +1288,136 @@ def test_list_period_steward_index_resolves_columns(catalog):
     )
     # The best-effort register span hints off the FIRST (lowest) segment.
     assert index.period_range_by_register["scb/lisa"] == ("2018", "2018")
+
+
+@pytest.fixture
+def gap_overlap_catalog():
+    """Two DISTINCT columns whose validity windows overlap only BETWEEN the
+    requested segments of an interrupted series: `Kon` 2005-2014 and `KonNy`
+    2012-2025 (mutual overlap 2012-2014). A researcher binding segments
+    [2010, 2020] touches one column per segment — never both at one requested
+    instant — while the scalar range 2010..2020 includes the overlap window."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2005-01-01', "
+        "valid_to = '2014-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2012-01-01",
+        valid_to="2025-12-31",
+        delivery_column_name="KonNy",
+        value_set_version_label="ny",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_list_period_no_false_ambiguity_across_segment_gap(gap_overlap_catalog):
+    # Codex P2 (#334): the two columns' windows overlap only in 2012-2014 —
+    # BETWEEN the requested segments — so no requested instant extracts both.
+    # The per-segment probe must NOT raise the blocking ambiguity error; the
+    # series resolves to one column per segment (a drift info, like a rename).
+    result = validate_semantic(
+        _project([_kon_source([2010, 2020])]),
+        gap_overlap_catalog,
+        caller="researcher",
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert "binding_state_drifts_within_period" in codes
+    assert result.ok
+
+
+def test_scalar_range_through_the_overlap_is_still_ambiguous(gap_overlap_catalog):
+    # Control: the scalar range 2010..2020 INCLUDES the 2012-2014 overlap
+    # window, so the same catalog genuinely is ambiguous there — the
+    # per-segment probe must not have weakened the scalar behavior.
+    result = validate_semantic(
+        _project([_kon_source({"from": 2010, "to": 2020})]),
+        gap_overlap_catalog,
+        caller="researcher",
+    )
+    by_code = {i.code: i for i in result.issues}
+    assert "binding_value_set_version_ambiguous" in by_code
+    assert not result.ok
+
+
+@pytest.fixture
+def middle_segment_sibling_catalog():
+    """The pinned column `Kon` delivers 2009-2011 and 2019-2025 (two states);
+    only the sibling `KonAlt` delivers 2014-2016. Segments [2010, 2015, 2020]
+    have matching OUTER bounds for both the pin and the union — the middle
+    segment's hole is invisible to the outer-bounds drift check."""
+    from _slugged_db import add_state, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2009-01-01', "
+        "valid_to = '2011-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2019-01-01",
+        valid_to="2025-12-31",
+        delivery_column_name="Kon",
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2014-01-01",
+        valid_to="2016-12-31",
+        delivery_column_name="KonAlt",
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_pinned_representation_missing_middle_segment_is_flagged(
+    middle_segment_sibling_catalog,
+):
+    # Codex P2 (#334): the pin exists at the outer segments, so the
+    # outer-bounds comparison is silent — but the 2015 extract would be
+    # silently empty for the pinned column. The per-segment presence check
+    # surfaces it as the same drift info, naming the segment.
+    source = {
+        **_kon_source([2010, 2015, 2020]),
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "Kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), middle_segment_sibling_catalog, caller="researcher"
+    )
+    drift = [
+        i
+        for i in result.issues
+        if i.code == "binding_state_drifts_within_period"
+        and "no state at period 2015" in i.message
+    ]
+    assert len(drift) == 1
+    assert "segment of 2010,2015,2020" in drift[0].message
+    # Non-blocking (info): the covered segments still extract.
+    assert result.ok

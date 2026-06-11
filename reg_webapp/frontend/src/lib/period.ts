@@ -255,6 +255,21 @@ export function periodToWire(period: Period): string | null {
   return null;
 }
 
+/** `periodToWire` for RESOLVE-bound callers (the binding/variant pickers and
+ * `rederiveSource`, which feed `resolveBindingAt` → the catalog `?period=`
+ * query). The catalog resolve endpoint does NOT accept the #307 comma form yet
+ * (project-schema support shipped first), so a list period returns `null`
+ * here — the callers then take their existing period-unset/unresolved
+ * fallback instead of surfacing a guaranteed 422 as a resolver error. Display
+ * and round-trip callers keep using `periodToWire` (the canonical wire).
+ * Collapse the two when the catalog endpoint learns the comma form. */
+export function periodToResolveWire(period: Period): string | null {
+  if (Array.isArray(period)) {
+    return null;
+  }
+  return periodToWire(period);
+}
+
 /** The INVERSE of `periodToWire`: shape a wire `?period` string (as the catalog
  * page's PeriodPicker holds it) into a structured `Source.period` the editor's
  * PeriodEditor models (C1 — catalog→project handoff period prefill). The mapping
