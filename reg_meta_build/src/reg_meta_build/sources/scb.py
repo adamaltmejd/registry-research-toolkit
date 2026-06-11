@@ -2207,17 +2207,22 @@ def _resolve_column_year_intervals(
         coded = [gk for gk in covering if groups[gk].value_set_id is not None]
         if not coded:
             continue
-        if len({groups[gk].value_set_id for gk in coded}) == 1:
-            # One real value set on this segment (any code-less shadows drop):
-            # its representative owns outright — the cascade's vs-fold exit.
-            seg_owned[_pick_state_rep(coded, groups)].append((seg_lo, seg_hi))
-            continue
+        # ALWAYS the full cascade — even when the segment's claimants share one
+        # value set. The cascade's vs-fold exit picks its representative AFTER
+        # the authority/recency/historical filters; a bare `_pick_state_rep`
+        # shortcut here let a SUBANNUAL same-set sibling out-rep a PLAIN annual
+        # one (caught on the real corpus: GFBGrupp 2013 HT, where the year
+        # bucket's winner is the authority-filtered rep).
         winners, genuine = _resolve_column_year(
             covering, groups, year, codes_fn, codelivery, labels, code_labels_fn
         )
         if genuine:
             genuine_segs.append((seg_lo, seg_hi, winners))
         else:
+            # The winner may be code-less (it out-ranked every coded claimant
+            # through the filters) — the year bucket let it own the year in
+            # that case too, so no extra guard; mere-coverage shadows never
+            # get this far (the cascade's nonnull pool always beats them).
             seg_owned[winners[0]].append((seg_lo, seg_hi))
     # Deterministic first-win order: carriers order, intervals merged.
     for gk in carriers:
