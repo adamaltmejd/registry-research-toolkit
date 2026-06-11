@@ -152,6 +152,45 @@ class VariantsRef(BaseModel):
     register_fqid: str
 
 
+# ── Derived concept groups (#303; see reg_meta/DESIGN.md → Concept groups) ──
+# PRESENTATION-ONLY browse folding: the register / classification-root
+# responses carry `groups` ALONGSIDE the full flat children list (members
+# repeat in both); the SPA hides grouped leaves and renders group rows that
+# expand to a facet picker. A group is not FQID-addressable — members carry
+# the real leaf FQIDs.
+
+
+class GroupFacetModel(BaseModel):
+    """One facet assignment on a group member: `axis` names the dimension
+    ('month' / 'rank' / 'vintage'), `value` sorts, `label` displays."""
+
+    axis: str
+    value: str
+    label: str
+
+
+class ConceptGroupMemberModel(BaseModel):
+    """A group member: the leaf's real FQID (binding or `class/<slug>`), its
+    display name, and its facet assignments (empty on edge-group members)."""
+
+    fqid: str
+    name: str | None = None
+    facets: list[GroupFacetModel]
+
+
+class ConceptGroupModel(BaseModel):
+    """One derived concept group. `key` is the scope-unique derivation key (a
+    UI anchor, not an FQID); `source` records the derivation dimension; `axes`
+    are the sorted facet axes the members carry (empty for edge groups);
+    members are ordered by facet values along `axes`, then slug."""
+
+    key: str
+    label: str
+    source: Literal["edge", "token", "curated"]
+    axes: list[str]
+    members: list[ConceptGroupMemberModel]
+
+
 # ── Binding-leaf embedded longitudinal record ──────────────────────────────
 # The binding LEAF (3-seg) embeds the variable's FULL record from one
 # `Catalog.resolve` call: every state + variable-grain edges. These
@@ -283,16 +322,21 @@ class ProviderResponse(ProviderNode):
 
 class RegisterResponse(RegisterNode):
     """`GET /api/catalog/{provider}/{register}` — the register + its bindings and
-    the variant-browser reference stub as children."""
+    the variant-browser reference stub as children, plus the derived concept
+    `groups` (#303; grouped bindings ALSO appear in `children` — the flat list
+    stays complete, the SPA folds it)."""
 
     children: list[RegisterChild]
+    groups: list[ConceptGroupModel] = []
 
 
 class ClassificationRootResponse(ClassificationRootNode):
     """`GET /api/catalog/class` — the classification-root + every classification
-    as children."""
+    as children, plus the derived vintage `groups` (#303; grouped
+    classifications ALSO appear in `children`)."""
 
     children: list[ClassificationNode]
+    groups: list[ConceptGroupModel] = []
 
 
 class RootResponse(BaseModel):

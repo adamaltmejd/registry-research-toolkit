@@ -26,12 +26,9 @@ TOMLs — absent in wheel installs and synthetic test builds (empty map).
 
 from __future__ import annotations
 
-import tomllib
 from pathlib import Path
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-
-from ._curation import canonical_int, fold_column
+from ._curation import canonical_int, curation_error, fold_column, load_curation_entries
 
 # (register_id, var_id) — the same coordinates the triage's per-var split
 # container carries (`register.register_id`, `variable.provider_key`).
@@ -42,26 +39,6 @@ FoldOverrideKey = tuple[int, int]
 # coalescer's case-folded rule-2 components (`fold_column`) — a raw-cased entry
 # would silently never match.
 FoldOverrideMap = dict[FoldOverrideKey, list[frozenset[str]]]
-
-# The only legal top-level table is `[[fold]]`. Anything else (a misspelled
-# `[[folds]]`, a stray key) is a typo that would otherwise silently disable ALL
-# curation — reject it loudly, mirroring fqid_slugs' strict top-level typo check.
-_ALLOWED_TOPLEVEL_KEYS = frozenset({"fold"})
-
-
-def _fold_override_error(code: str, message: str, remediation: str) -> RegMetaError:
-    """A configuration-class error (EXIT_CONFIG). `fold_overrides.toml` is
-    maintainer-edited curation data like the slug / codelivery TOMLs, so a syntax
-    typo or a malformed entry is a config failure with actionable remediation —
-    not an internal build bug (which is how a raw tomllib/ValueError would surface
-    through the CLI's generic handler)."""
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code=code,
-        error_class="configuration",
-        message=message,
-        remediation=remediation,
-    )
 
 
 def repo_fold_overrides_path() -> Path | None:
@@ -90,46 +67,24 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
     split container, and every key must be consumed) lives in `_triage_groups`,
     where the contested set is known.
     """
-    if path is None or not path.is_file():
-        return {}
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise _fold_override_error(
-            "fold_override_toml_unreadable",
-            f"Could not parse fold-override curation TOML {path}: {exc}",
-            "Fix the TOML syntax in reg_meta_build/fold_overrides.toml.",
-        ) from exc
-    unknown_top = set(data) - _ALLOWED_TOPLEVEL_KEYS
-    if unknown_top:
-        raise _fold_override_error(
-            "fold_override_invalid",
-            f"fold-override TOML has unknown top-level key(s): {sorted(unknown_top)}.",
-            "The only legal table is `[[fold]]` — check for a typo like "
-            "`[[folds]]` in reg_meta_build/fold_overrides.toml.",
-        )
-    fold_entries = data.get("fold", [])
-    if not isinstance(fold_entries, list):
-        raise _fold_override_error(
-            "fold_override_invalid",
-            f"fold-override `fold` must be an array of tables (`[[fold]]`), got "
-            f"{type(fold_entries).__name__}.",
-            "Use `[[fold]]` table entries in reg_meta_build/fold_overrides.toml, "
-            "not `fold = …` or a single `[fold]` table.",
-        )
+    # Shared scaffold (parse + top-level typo guard + array-of-tables +
+    # per-entry table check) — see `_curation.load_curation_entries`.
+    entries = load_curation_entries(
+        path,
+        entry_key="fold",
+        label="fold-override",
+        prefix="fold-override",
+        code_base="fold_override",
+        file_name="fold_overrides.toml",
+        entry_fields="register_id / var_id / columns",
+    )
     out: FoldOverrideMap = {}
     seen_cols: dict[FoldOverrideKey, set[str]] = {}
-    for entry in fold_entries:
-        if not isinstance(entry, dict):
-            raise _fold_override_error(
-                "fold_override_invalid",
-                f"fold-override entry {entry!r} must be a `[[fold]]` table.",
-                "Each entry is a `[[fold]]` table with register_id / var_id / columns.",
-            )
+    for entry in entries:
         reg = canonical_int(entry.get("register_id"))
         var = canonical_int(entry.get("var_id"))
         if reg is None or var is None:
-            raise _fold_override_error(
+            raise curation_error(
                 "fold_override_invalid",
                 f"fold-override entry {entry!r} needs `register_id` and `var_id` "
                 f"as canonical integers (no leading zeros).",
@@ -142,7 +97,7 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
             or len(columns) < 2
             or not all(isinstance(c, str) and c for c in columns)
         ):
-            raise _fold_override_error(
+            raise curation_error(
                 "fold_override_invalid",
                 f"fold-override entry {key} `columns` must be a list of ≥2 "
                 f"non-empty strings (a singleton fold is a no-op).",
@@ -152,7 +107,7 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
         # triage's (folded) contested components; TOML casing is cosmetic.
         group: frozenset[str] = frozenset(fold_column(c) for c in columns)
         if len(group) != len(columns):
-            raise _fold_override_error(
+            raise curation_error(
                 "fold_override_invalid",
                 f"fold-override entry {key} repeats a column within its group "
                 f"(after case-folding): {columns}.",
@@ -162,7 +117,7 @@ def load_fold_overrides(path: Path | None) -> FoldOverrideMap:
         prior = seen_cols.setdefault(key, set())
         overlap = group & prior
         if overlap:
-            raise _fold_override_error(
+            raise curation_error(
                 "fold_override_invalid",
                 f"fold-override key {key} has column(s) {sorted(overlap)} in more "
                 f"than one [[fold]] group.",

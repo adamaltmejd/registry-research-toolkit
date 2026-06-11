@@ -152,7 +152,15 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   (`populate_slugs`); most variants stay NULL (curation is a later seam).
 #   `Catalog.list_variants` exposes them read-only. Additive within the 5.x
 #   line; a 5.1.0 DB lacks the columns, so it's rejected via the minor gate.
-SCHEMA_VERSION = "5.2.0"
+# - 5.3.0 (#303): additive derived concept-group layer — `concept_group` +
+#   `concept_group_variable`(+`_facet`) + `concept_group_classification`.
+#   PRESENTATION-ONLY grouping of near-identical browse rows (split-sibling
+#   edge components, month-suffixed variable families, classification vintage
+#   families, curated facet families); identity/FQIDs untouched. Derived every
+#   build by `reg_meta_build.concept_groups` (regenerate-not-migrate).
+#   `Catalog.list_concept_groups` / `list_classification_groups` read them; a
+#   5.2.0 DB lacks the tables, so it's rejected via the minor gate.
+SCHEMA_VERSION = "5.3.0"
 DB_FILENAME = "reg_meta.db"
 
 

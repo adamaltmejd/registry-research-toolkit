@@ -125,6 +125,52 @@ def test_classification_root_lists_classifications(client):
     assert all(c["kind"] == "classification" for c in body["children"])
 
 
+def test_register_node_carries_concept_groups(client):
+    """#303: the register response carries derived concept `groups`; grouped
+    members ALSO stay in `children` (the flat list is complete — the SPA folds)."""
+    resp = client.get("/api/catalog/scb/rams")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert len(body["groups"]) == 1
+    group = body["groups"][0]
+    assert group["key"] == "ink"
+    assert group["source"] == "token"
+    assert group["axes"] == ["month"]
+    assert [m["fqid"] for m in group["members"]] == [
+        "scb/rams/inkjan",
+        "scb/rams/inkfeb",
+    ]
+    assert group["members"][0]["facets"] == [
+        {"axis": "month", "value": "01", "label": "januari"}
+    ]
+    # The grouped members are still in the flat children list.
+    child_fqids = {c["fqid"] for c in body["children"] if c["kind"] == "binding"}
+    assert {"scb/rams/inkjan", "scb/rams/inkfeb"} <= child_fqids
+
+
+def test_register_without_groups_has_empty_list(client):
+    body = client.get("/api/catalog/scb/lisa").json()
+    assert body["groups"] == []
+
+
+def test_classification_root_carries_vintage_groups(client):
+    """#303: the classification root carries the derived vintage groups; the
+    grouped classifications ALSO stay in `children`."""
+    body = client.get("/api/catalog/class").json()
+    assert len(body["groups"]) == 1
+    group = body["groups"][0]
+    assert group["key"] == "sun"
+    assert group["axes"] == ["vintage"]
+    assert [m["fqid"] for m in group["members"]] == [
+        "class/sun2000",
+        "class/sun2020",
+    ]
+    assert group["members"][1]["facets"] == [
+        {"axis": "vintage", "value": "2020", "label": "2020"}
+    ]
+    assert {"class/sun2000", "class/sun2020"} <= {c["fqid"] for c in body["children"]}
+
+
 def test_classification_leaf_resolves(client):
     resp = client.get("/api/catalog/class/sun2020")
     assert resp.status_code == 200

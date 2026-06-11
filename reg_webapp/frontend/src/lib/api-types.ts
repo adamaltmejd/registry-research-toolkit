@@ -462,7 +462,8 @@ export interface components {
         /**
          * ClassificationRootResponse
          * @description `GET /api/catalog/class` — the classification-root + every classification
-         *     as children.
+         *     as children, plus the derived vintage `groups` (#303; grouped
+         *     classifications ALSO appear in `children`).
          */
         ClassificationRootResponse: {
             /** Children */
@@ -473,6 +474,11 @@ export interface components {
              */
             fqid: string;
             /**
+             * Groups
+             * @default []
+             */
+            groups: components["schemas"]["ConceptGroupModel"][];
+            /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
@@ -482,6 +488,41 @@ export interface components {
              * @default Classifications
              */
             name: string;
+        };
+        /**
+         * ConceptGroupMemberModel
+         * @description A group member: the leaf's real FQID (binding or `class/<slug>`), its
+         *     display name, and its facet assignments (empty on edge-group members).
+         */
+        ConceptGroupMemberModel: {
+            /** Facets */
+            facets: components["schemas"]["GroupFacetModel"][];
+            /** Fqid */
+            fqid: string;
+            /** Name */
+            name?: string | null;
+        };
+        /**
+         * ConceptGroupModel
+         * @description One derived concept group. `key` is the scope-unique derivation key (a
+         *     UI anchor, not an FQID); `source` records the derivation dimension; `axes`
+         *     are the sorted facet axes the members carry (empty for edge groups);
+         *     members are ordered by facet values along `axes`, then slug.
+         */
+        ConceptGroupModel: {
+            /** Axes */
+            axes: string[];
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Members */
+            members: components["schemas"]["ConceptGroupMemberModel"][];
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "edge" | "token" | "curated";
         };
         /**
          * ContextResponse
@@ -498,6 +539,19 @@ export interface components {
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
+        };
+        /**
+         * GroupFacetModel
+         * @description One facet assignment on a group member: `axis` names the dimension
+         *     ('month' / 'rank' / 'vintage'), `value` sorts, `label` displays.
+         */
+        GroupFacetModel: {
+            /** Axis */
+            axis: string;
+            /** Label */
+            label: string;
+            /** Value */
+            value: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -646,13 +700,20 @@ export interface components {
         /**
          * RegisterResponse
          * @description `GET /api/catalog/{provider}/{register}` — the register + its bindings and
-         *     the variant-browser reference stub as children.
+         *     the variant-browser reference stub as children, plus the derived concept
+         *     `groups` (#303; grouped bindings ALSO appear in `children` — the flat list
+         *     stays complete, the SPA folds it).
          */
         RegisterResponse: {
             /** Children */
             children: (components["schemas"]["BindingChild"] | components["schemas"]["VariantsRef"])[];
             /** Fqid */
             fqid: string;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: components["schemas"]["ConceptGroupModel"][];
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}

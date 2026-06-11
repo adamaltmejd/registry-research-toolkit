@@ -235,3 +235,142 @@ class TestListVariants:
 
     def test_unknown_provider_is_empty(self) -> None:
         assert _variants_catalog().list_variants("nope", "rams") == []
+
+
+def _groups_catalog() -> Catalog:
+    """scb/lisa with a curated month×rank matrix group, an edge group, and a
+    classification vintage group — seeded directly (the derivation passes are
+    reg_meta_build territory; this exercises the READ surface)."""
+    conn = build_slugged_db()  # scb/lisa + variable `kon`; classification sun2020
+    # Curated matrix group: 2 ranks × 2 months.
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (10, 'variable', 1, 'agiink', 'Inkomst', 'curated')"
+    )
+    for i, (slug, month, month_label, rank) in enumerate(
+        [
+            ("agi1inkjan", "01", "januari", "1"),
+            ("agi1inkfeb", "02", "februari", "1"),
+            ("agi2inkjan", "01", "januari", "2"),
+            ("agi2inkfeb", "02", "februari", "2"),
+        ]
+    ):
+        add_variable(
+            conn, register_id=1, var_id=800 + i, name=f"Inkomst {i}", slug=slug
+        )
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+            (slug,),
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, 10)",
+            (vid,),
+        )
+        conn.executemany(
+            "INSERT INTO concept_group_variable_facet (variable_id, axis, value, "
+            "label) VALUES (?, ?, ?, ?)",
+            [(vid, "month", month, month_label), (vid, "rank", rank, f"källa {rank}")],
+        )
+    # Edge group (no facets): two split siblings.
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (11, 'variable', 1, 'sun2000', 'Utbildning', 'edge')"
+    )
+    for i, slug in enumerate(["sun2000", "sun2020"]):
+        add_variable(conn, register_id=1, var_id=810 + i, name="Utbildning", slug=slug)
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+            (slug,),
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, 11)",
+            (vid,),
+        )
+    # Classification vintage group over the fixture's sun2020 + an added sun2000.
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES "
+        "(12, 'classification', NULL, 'sun', 'Svensk utbildningsnomenklatur', "
+        "'token')"
+    )
+    conn.executemany(
+        "INSERT INTO concept_group_classification (classification_id, group_id, "
+        "facet_value, facet_label) VALUES (?, 12, ?, ?)",
+        [
+            (50, "2000", "2000"),
+            (
+                conn.execute(
+                    "SELECT id FROM classification WHERE slug = 'sun2020'"
+                ).fetchone()[0],
+                "2020",
+                "2020",
+            ),
+        ],
+    )
+    conn.commit()
+    return Catalog(conn)
+
+
+class TestListConceptGroups:
+    def test_groups_ordered_by_key_with_axes(self) -> None:
+        groups = _groups_catalog().list_concept_groups("scb", "lisa")
+        assert [g.key for g in groups] == ["agiink", "sun2000"]
+        matrix, edge = groups
+        assert matrix.source == "curated"
+        assert matrix.axes == ("month", "rank")
+        assert edge.source == "edge"
+        assert edge.axes == ()
+        assert edge.label == "Utbildning"
+
+    def test_members_ordered_by_facet_values_then_slug(self) -> None:
+        matrix = _groups_catalog().list_concept_groups("scb", "lisa")[0]
+        # axes = (month, rank): jan/rank1, jan/rank2, feb/rank1, feb/rank2.
+        assert [str(m.fqid) for m in matrix.members] == [
+            "scb/lisa/agi1inkjan",
+            "scb/lisa/agi2inkjan",
+            "scb/lisa/agi1inkfeb",
+            "scb/lisa/agi2inkfeb",
+        ]
+        first = matrix.members[0]
+        assert [(f.axis, f.value, f.label) for f in first.facets] == [
+            ("month", "01", "januari"),
+            ("rank", "1", "källa 1"),
+        ]
+
+    def test_edge_members_carry_no_facets(self) -> None:
+        edge = _groups_catalog().list_concept_groups("scb", "lisa")[1]
+        assert [str(m.fqid) for m in edge.members] == [
+            "scb/lisa/sun2000",
+            "scb/lisa/sun2020",
+        ]
+        assert all(m.facets == () for m in edge.members)
+
+    def test_unknown_register_or_provider_is_empty(self) -> None:
+        cat = _groups_catalog()
+        assert cat.list_concept_groups("scb", "nope") == []
+        assert cat.list_concept_groups("nope", "lisa") == []
+
+    def test_register_without_groups_is_empty(self) -> None:
+        cat = _catalog()  # scb/lisa + scb/rams, no concept groups seeded
+        assert cat.list_concept_groups("scb", "rams") == []
+
+
+class TestListClassificationGroups:
+    def test_vintage_group_with_facets(self) -> None:
+        groups = _groups_catalog().list_classification_groups()
+        assert len(groups) == 1
+        (group,) = groups
+        assert group.key == "sun"
+        assert group.axes == ("vintage",)
+        assert [str(m.fqid) for m in group.members] == [
+            "class/sun2000",
+            "class/sun2020",
+        ]
+        assert [m.facets[0].value for m in group.members] == ["2000", "2020"]
+
+    def test_empty_without_groups(self) -> None:
+        assert _catalog().list_classification_groups() == []

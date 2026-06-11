@@ -215,6 +215,13 @@ export type RelatedRefModel = Schemas["RelatedRefModel"];
 export type LineageEdgeModel = Schemas["LineageEdgeModel"];
 export type LineageWarningModel = Schemas["LineageWarningModel"];
 
+/** A derived concept group (#303) on a register / classification-root node —
+ * a PRESENTATION-ONLY fold of near-identical rows. Members carry the real leaf
+ * FQIDs (the same entries also appear in `children`); the browse collapses the
+ * member rows under the group and expands to a facet picker. */
+export type ConceptGroup = Schemas["ConceptGroupModel"];
+export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
+
 // The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
 // binding leaf is queried with `?period` (the resolve_at subset), and a
 // SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished

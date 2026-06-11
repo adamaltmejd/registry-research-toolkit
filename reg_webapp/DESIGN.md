@@ -139,6 +139,17 @@ codegen sees one state-list type). `?variant` narrows to one variant;
 **ignored** on non-binding kinds (the register / provider / classification node resolves
 normally). An absent `?period` still returns the FULL embedded leaf.
 
+**Concept groups (#303).** The register and classification-root responses carry a
+`groups` list (`ConceptGroupModel`, mapped 1:1 from reg_meta's `ConceptGroupSummary` —
+see reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
+grouped members appear in both, so the contract stays additive and group-unaware
+consumers keep working. The SPA folds client-side (`catalog.ts::foldGroupedRows`):
+grouped leaves hide under one expandable `ConceptGroupRow` (a month×rank value matrix
+for two facet axes, chips for one — months/vintages — and a plain member list for edge
+groups), ungrouped leaves render as before, and the type-to-filter matches a group on
+its label/key OR any member's name/FQID (`groupMatchesFilter`) so member searches still
+surface the folded group.
+
 **`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
 `source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state
 shape (embedding each source state's variant / value_set / column) is a possible

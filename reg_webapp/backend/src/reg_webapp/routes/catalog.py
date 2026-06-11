@@ -74,6 +74,9 @@ from reg_webapp.models import (
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
+    ConceptGroupMemberModel,
+    ConceptGroupModel,
+    GroupFacetModel,
     LineageEdgeModel,
     LineageResponse,
     LineageWarningModel,
@@ -334,6 +337,27 @@ def _classification_node(resolved: ResolvedClassification) -> ClassificationNode
     )
 
 
+def _concept_group_model(group) -> ConceptGroupModel:
+    """Map a reg_meta `ConceptGroupSummary` (#303) 1:1 onto the wire model."""
+    return ConceptGroupModel(
+        key=group.key,
+        label=group.label,
+        source=group.source,
+        axes=list(group.axes),
+        members=[
+            ConceptGroupMemberModel(
+                fqid=str(m.fqid),
+                name=m.name,
+                facets=[
+                    GroupFacetModel(axis=f.axis, value=f.value, label=f.label)
+                    for f in m.facets
+                ],
+            )
+            for m in group.members
+        ],
+    )
+
+
 def _provider_response(
     catalog: Catalog, resolved: ResolvedProvider
 ) -> ProviderResponse:
@@ -368,18 +392,29 @@ def _register_response(
         name=resolved.name,
         purpose=resolved.purpose,
         children=children,
+        # #303 concept groups: grouped bindings ALSO stay in `children` (the
+        # flat list is complete); the SPA folds members under the group rows.
+        groups=[
+            _concept_group_model(g)
+            for g in catalog.list_concept_groups(provider_slug, register_slug)
+        ],
     )
 
 
 def _classification_root_response(
     conn: sqlite3.Connection,
 ) -> ClassificationRootResponse:
-    """The `class` (1 seg) classification-root: every classification as children.
-    Reuses `reg_meta.queries.list_classifications` (LOCKED — no new Catalog
-    method); the catch-all hands it the request connection directly, so there's
-    no reach into `Catalog`'s private `_conn`. A classification with a NULL slug
-    isn't FQID-addressable, so it's excluded from the browse children (symmetric
-    with `list_registers`'s slug filter)."""
+    """The `class` (1 seg) classification-root: every classification as
+    children, plus the #303 vintage groups. The CHILDREN list still reuses
+    `reg_meta.queries.list_classifications` (LOCKED — the children enumeration
+    grew no Catalog method); the GROUPS come from
+    `Catalog.list_classification_groups`, the reg_meta-owned read surface for
+    the concept-group layer — a `Catalog(conn)` wrapper over the request
+    connection. The wrapper is construction-only (no connection ownership);
+    `close()` is never called on it — the connection stays owned by the
+    handler's `_catalog_conn` contextmanager. A classification with a NULL
+    slug isn't FQID-addressable, so it's excluded from children and group
+    members alike (symmetric with `list_registers`'s slug filter)."""
     rows = list_classifications(conn)
     children: list[ClassificationNode] = []
     for row in rows:
@@ -393,7 +428,12 @@ def _classification_root_response(
                 name=row["name"],
             )
         )
-    return ClassificationRootResponse(children=children)
+    # #303 vintage groups (e.g. lkf1980…lkf2026 as one row). Grouped
+    # classifications ALSO stay in `children`; the SPA folds them.
+    groups = [
+        _concept_group_model(g) for g in Catalog(conn).list_classification_groups()
+    ]
+    return ClassificationRootResponse(children=children, groups=groups)
 
 
 def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:

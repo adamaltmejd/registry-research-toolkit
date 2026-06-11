@@ -53,6 +53,7 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
+from reg_meta_build._components import DisjointSet
 from reg_meta_build.db import PROVIDER_ID_SCB, PROVIDER_ID_SOS
 from reg_meta_build.id import _MINT_BIT
 
@@ -162,6 +163,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         if corpus:
             _check_sos_sanity(conn, result, tables)
         _check_sos_stateless_variables(conn, result, tables)
+        _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -754,6 +756,174 @@ def _check_sos_stateless_variables(
         result.info(
             f"{len(empty_regs)} SOS register(s) with ZERO states across all "
             f"variables: {names}"
+        )
+
+
+# Real-corpus floors for the derived concept-group layer (#303). The EDGE
+# dimension needs no floor — `_check_concept_groups` recomputes the
+# within-register `same_definition_different_column` components and requires
+# EXACT count parity with the edge groups (structural, corpus-independent, and
+# drift-proof: 2,193 == 2,193 today, N == N forever). The token/curated floors
+# below stay absolute: their candidate sets aren't recomputable without
+# replaying the vocabulary guards, and the families are small enumerable facts
+# (8 month families / lkf = 47 vintages / 1 curated family measured
+# 2026-06-11). The `lkf` floor is keyed to the literal stem on purpose — a
+# stem rename fails this check loudly, forcing the rename to update the gate.
+_CG_MIN_MONTH_GROUPS = 3
+_CG_MIN_LKF_VINTAGES = 40
+
+
+def _check_concept_groups(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#303 derived concept-group invariants (presentation-only layer; see
+    `concept_groups.py`).
+
+    Structural (always): the member-kind wiring is consistent (variable
+    members point at `kind='variable'` groups in the SAME register;
+    classification members at `kind='classification'` groups) and every group
+    has >= 2 members — a 1-member group is a derivation bug (the passes only
+    mint groups from >= 2 candidates; a curated absorb that emptied a group
+    would surface here).
+
+    Corpus (real build only): volume floors per derivation source, so a pass
+    that silently stops matching (slug-vocabulary drift, edge-kind rename)
+    fails the gate instead of shipping an ungrouped browse."""
+    result.section("[concept groups]")
+    required = {
+        "concept_group",
+        "concept_group_variable",
+        "concept_group_variable_facet",
+        "concept_group_classification",
+    }
+    missing_tables = required - tables
+    if missing_tables:
+        for name in sorted(missing_tables):
+            result.fail(f"{name} missing (schema 5.3.0 concept-group layer)")
+        return
+
+    undersized = conn.execute(
+        "SELECT COUNT(*) FROM concept_group g WHERE "
+        "(SELECT COUNT(*) FROM concept_group_variable m "
+        " WHERE m.group_id = g.group_id) + "
+        "(SELECT COUNT(*) FROM concept_group_classification c "
+        " WHERE c.group_id = g.group_id) < 2"
+    ).fetchone()[0]
+    if undersized:
+        result.fail(f"{undersized} concept group(s) with < 2 members")
+    else:
+        n_groups = conn.execute("SELECT COUNT(*) FROM concept_group").fetchone()[0]
+        result.ok(f"all {n_groups:,} concept groups have >= 2 members")
+
+    kind_mismatch = conn.execute(
+        "SELECT "
+        "(SELECT COUNT(*) FROM concept_group_variable m "
+        " JOIN concept_group g ON g.group_id = m.group_id "
+        " WHERE g.kind != 'variable') + "
+        "(SELECT COUNT(*) FROM concept_group_classification c "
+        " JOIN concept_group g ON g.group_id = c.group_id "
+        " WHERE g.kind != 'classification')"
+    ).fetchone()[0]
+    if kind_mismatch:
+        result.fail(f"{kind_mismatch} group member(s) under a wrong-kind group")
+    else:
+        result.ok("member tables wire to matching-kind groups")
+
+    cross_register = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_variable m "
+        "JOIN concept_group g ON g.group_id = m.group_id "
+        "JOIN variable v ON v.variable_id = m.variable_id "
+        "WHERE v.register_id != g.register_id"
+    ).fetchone()[0]
+    if cross_register:
+        result.fail(
+            f"{cross_register} variable member(s) outside their group's register"
+        )
+    else:
+        result.ok("variable members stay in their group's register")
+
+    _check_edge_group_parity(conn, result)
+
+    if not corpus:
+        return
+    by_source = {
+        (r[0], r[1]): r[2]
+        for r in conn.execute(
+            "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
+        )
+    }
+    n_month = by_source.get(("token", "variable"), 0)
+    n_curated = by_source.get(("curated", "variable"), 0)
+    if n_month >= _CG_MIN_MONTH_GROUPS:
+        result.ok(f"{n_month} month-token groups (>= {_CG_MIN_MONTH_GROUPS})")
+    else:
+        result.fail(f"only {n_month} month-token groups (< {_CG_MIN_MONTH_GROUPS})")
+    if n_curated >= 1:
+        result.ok(f"{n_curated} curated group(s) (>= 1)")
+    else:
+        result.fail("no curated concept groups (concept_groups.toml not applied?)")
+    lkf = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_classification c "
+        "JOIN concept_group g ON g.group_id = c.group_id "
+        "WHERE g.group_key = 'lkf'"
+    ).fetchone()[0]
+    if lkf >= _CG_MIN_LKF_VINTAGES:
+        result.ok(f"lkf vintage family has {lkf} members (>= {_CG_MIN_LKF_VINTAGES})")
+    else:
+        result.fail(
+            f"lkf vintage family has {lkf} members (< {_CG_MIN_LKF_VINTAGES}) — "
+            "classification vintage pass regression?"
+        )
+
+
+def _check_edge_group_parity(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    """#303 structural parity: the number of `source='edge'` concept groups
+    must EQUAL the number of within-register connected components of
+    `same_definition_different_column` edges — recomputed here independently of
+    the build pass. Corpus-independent (0 == 0 on a synthetic build with no
+    sibling edges) and drift-proof (no frozen floor): a derivation pass that
+    silently stops folding components, or folds across registers, breaks
+    parity and fails the gate."""
+    rows = conn.execute(
+        "SELECT va.variable_id, vb.variable_id "
+        "FROM variable_related_to e "
+        "JOIN provider pa ON pa.slug = e.a_provider "
+        "JOIN register ra ON ra.provider_id = pa.provider_id "
+        "  AND ra.slug = e.a_register "
+        "JOIN variable va ON va.register_id = ra.register_id "
+        "  AND va.slug = e.a_variable "
+        "JOIN provider pb ON pb.slug = e.b_provider "
+        "JOIN register rb ON rb.provider_id = pb.provider_id "
+        "  AND rb.slug = e.b_register "
+        "JOIN variable vb ON vb.register_id = rb.register_id "
+        "  AND vb.slug = e.b_variable "
+        "WHERE e.relation_kind = 'same_definition_different_column' "
+        "  AND va.register_id = vb.register_id"
+    ).fetchall()
+    ds: DisjointSet[int] = DisjointSet()
+    for a, b in rows:
+        ds.add(a)
+        ds.add(b)
+        ds.union(a, b)
+    n_components = len(ds.components())
+    n_edge_groups = conn.execute(
+        "SELECT COUNT(*) FROM concept_group WHERE source = 'edge'"
+    ).fetchone()[0]
+    if n_components == n_edge_groups:
+        result.ok(
+            f"{n_edge_groups:,} edge groups == {n_components:,} sibling-edge "
+            "components (parity)"
+        )
+    else:
+        result.fail(
+            f"{n_edge_groups:,} edge groups != {n_components:,} sibling-edge "
+            "components — edge derivation lost or invented groups"
         )
 
 

@@ -26,6 +26,11 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
+from .concept_groups import (
+    load_concept_groups,
+    materialize_concept_groups,
+    repo_concept_groups_path,
+)
 from .fqid_slugs import (
     load_lineage_config,
     materialize_same_as_edges,
@@ -753,6 +758,80 @@ CREATE TABLE variable_related_to (
         b_provider, b_register, b_variable
     )
 ) WITHOUT ROWID;
+
+-- Derived concept groups (#303): PRESENTATION-ONLY grouping of near-identical
+-- catalog rows for browse. Identity is untouched — bindings/orders/stats keep
+-- leaf FQIDs and `value_set: "class/<slug>"` keeps referencing the exact
+-- vintage; a wrong group is a cosmetic curation bug, not the identity
+-- corruption that killed identity-level folding (#223 part 2). Three
+-- derivation sources, in priority order (see `concept_groups.py`):
+--   'edge'    — connected components of within-register
+--               `same_definition_different_column` sibling edges (ground truth
+--               minted by the A2.2 split machinery; zero inference).
+--   'token'   — exact curated vocabularies only (no regex name-patterns):
+--               Swedish month slug tails for variables; 4-digit vintage-year
+--               slug tails for classifications (lkf1980…, sni2007).
+--   'curated' — maintainer TOML (`reg_meta_build/concept_groups.toml`), e.g.
+--               the LISA agi{1,2,3} rank facet over the month groups.
+-- A variable/classification belongs to AT MOST ONE group (single-column member
+-- PKs below). Derived every build from edges/slugs/TOML; regenerate-not-migrate.
+CREATE TABLE concept_group (
+    group_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    kind        TEXT NOT NULL CHECK (kind IN ('variable', 'classification')),
+    -- Scope: variable groups are register-scoped (sibling edges are
+    -- within-register; token stems are register-unique slug prefixes);
+    -- classification groups are catalog-scoped (slug is globally unique) and
+    -- carry NULL.
+    register_id INTEGER REFERENCES register(register_id),
+    -- Deterministic scope-unique key: min member slug ('edge'), the shared
+    -- slug stem ('token'), or the curated key. NOT an FQID segment — a group
+    -- is not an addressable entity, only a browse affordance.
+    group_key   TEXT NOT NULL,
+    label       TEXT NOT NULL,
+    source      TEXT NOT NULL CHECK (source IN ('edge', 'token', 'curated')),
+    CHECK ((kind = 'variable') = (register_id IS NOT NULL))
+);
+CREATE UNIQUE INDEX idx_concept_group_key
+    ON concept_group(kind, COALESCE(register_id, 0), group_key);
+-- Serves `Catalog.list_concept_groups`' per-register lookup. The unique key
+-- above leads with `kind` then a COALESCE *expression*, which the bare
+-- `register_id` join predicate can't use — without this, every register page
+-- load full-scans the ~2,200 groups.
+CREATE INDEX idx_concept_group_register ON concept_group(register_id);
+
+-- Membership, one table per kind (avoids nullable composite PKs). The
+-- single-column PK enforces the at-most-one-group invariant per member.
+CREATE TABLE concept_group_variable (
+    variable_id INTEGER PRIMARY KEY REFERENCES variable(variable_id),
+    group_id    INTEGER NOT NULL REFERENCES concept_group(group_id)
+);
+CREATE INDEX idx_concept_group_variable_group
+    ON concept_group_variable(group_id);
+
+-- Per-member facet assignments for variable groups: ('month', '05', 'maj'),
+-- ('rank', '1', 'största förvärvskällan'). `value` sorts (zero-padded);
+-- `label` displays. One value per axis per member; a member of a curated
+-- group that absorbed a month group carries two axes (the month × rank
+-- matrix); an edge-group member carries none (the member list IS the
+-- presentation).
+CREATE TABLE concept_group_variable_facet (
+    variable_id INTEGER NOT NULL REFERENCES concept_group_variable(variable_id),
+    axis        TEXT NOT NULL,
+    value       TEXT NOT NULL,
+    label       TEXT NOT NULL,
+    PRIMARY KEY (variable_id, axis)
+) WITHOUT ROWID;
+
+-- Classification members carry exactly one facet (the vintage year), so it
+-- lives inline — no separate facet table.
+CREATE TABLE concept_group_classification (
+    classification_id INTEGER PRIMARY KEY REFERENCES classification(id),
+    group_id          INTEGER NOT NULL REFERENCES concept_group(group_id),
+    facet_value       TEXT NOT NULL,
+    facet_label       TEXT NOT NULL
+);
+CREATE INDEX idx_concept_group_classification_group
+    ON concept_group_classification(group_id);
 
 -- Directional succession edges. Auto-derived from SCB
 -- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
@@ -2627,6 +2706,11 @@ def materialize(
         aliases=aliases,
     )
 
+    # Provider gate shared by the curated passes below: classifications and
+    # concept-group families whose provider isn't in this build are skipped,
+    # not errors (a `--providers=sos` build must not fail on an scb entry).
+    active_providers = frozenset(a.provider for a, _ in adapters)
+
     # Classifications — maintainer-curated normalized code systems.
     # Provider-skipped classifications (seed entries whose `provider` is set but
     # absent from this build) are threaded into populate_slugs so their slug
@@ -2654,7 +2738,6 @@ def materialize(
         valid_codes_dir = cls_dir if cls_dir.is_dir() else None
         # Provider gate: seed only classifications whose provider is in this
         # build (entries with no provider are always seeded).
-        active_providers = frozenset(a.provider for a, _ in adapters)
         n_classifications, skipped_classifications = populate_classifications(
             conn, seed, valid_codes_dir=valid_codes_dir, providers=active_providers
         )
@@ -2710,6 +2793,34 @@ def materialize(
         n_related = _materialize_variable_related_to(conn, related_edges)
         row_counts["variable_related_to"] = n_related
         _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
+
+        # Derived concept groups (#303) — presentation-only browse folding.
+        # Ordering: after variable slugs + related_to edges (the edge pass
+        # resolves slug-anchored edges) and after populate_classifications +
+        # populate_slugs (classification rows + slugs, both above). Skipped
+        # with the rest of the slug-dependent passes under --skip-slugs (every
+        # slug is NULL then — month stems and edge endpoints don't exist).
+        cg_counts = materialize_concept_groups(
+            conn,
+            load_concept_groups(repo_concept_groups_path()),
+            providers=active_providers,
+            warn=_progress,
+        )
+        row_counts["concept_groups"] = (
+            cg_counts["edge_groups"]
+            + cg_counts["month_groups"]
+            + cg_counts["vintage_groups"]
+            + cg_counts["curated_groups"]
+        )
+        _progress(
+            f"  {row_counts['concept_groups']:,} concept groups "
+            f"({cg_counts['edge_groups']:,} edge / "
+            f"{cg_counts['month_groups']:,} month / "
+            f"{cg_counts['vintage_groups']:,} vintage / "
+            f"{cg_counts['curated_groups']:,} curated; "
+            f"{cg_counts['grouped_variables']:,} variables + "
+            f"{cg_counts['grouped_classifications']:,} classifications grouped)"
+        )
 
     # same_as edges. Runs *after* populate_slugs so register /
     # variant / version slug columns are populated — the materializer

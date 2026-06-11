@@ -1,0 +1,35 @@
+# Curated concept-group families (#303) — dimension 2 of the derived
+# presentation-only concept-group layer (see concept_groups.py). Exact member
+# lists only, NO name patterns: a member either absorbs a derived token group
+# (`group = "<stem>"` — its variables keep their month facets and gain this
+# family's facet) or attaches a single variable (`variable = "<slug>"`).
+# References resolve against the built DB at materialize time; a dangling
+# reference FAILS the build (EXIT_CONFIG) — fix the entry, don't ignore it.
+#
+# Grouping is presentation, not identity: a group is not FQID-addressable and
+# never affects bindings/orders/stats. A wrong family here is a cosmetic bug.
+
+# LISA's AGI monthly-income family: one concept ("Löne- eller
+# företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
+# största / tredje största förvärvskälla) × the month axis the token pass
+# already derived. Absorbing the three month groups yields one 3×12 matrix.
+[[variable_group]]
+register = "scb/lisa"
+key = "agilonfink"
+label = "Löne- eller företagarinkomst per månad (AGI)"
+axis = "rank"
+
+[[variable_group.members]]
+group = "agi1lonfink"
+value = "1"
+label = "största förvärvskällan"
+
+[[variable_group.members]]
+group = "agi2lonfink"
+value = "2"
+label = "näst största förvärvskällan"
+
+[[variable_group.members]]
+group = "agi3lonfink"
+value = "3"
+label = "tredje största förvärvskällan"

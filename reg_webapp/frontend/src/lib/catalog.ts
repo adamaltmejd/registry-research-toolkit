@@ -7,6 +7,8 @@
 import {
   type BindingChild,
   type CatalogNode,
+  type ConceptGroup,
+  type ConceptGroupMember,
   encodeFqid,
   getCatalogNode,
   isCatalogNode,
@@ -33,6 +35,108 @@ export function bindingChildren(node: CatalogNode): BindingChild[] {
     return [];
   }
   return node.children.filter((c): c is BindingChild => c.kind === "binding");
+}
+
+// ── Concept-group folding (#303) ────────────────────────────────────────────
+// A register / classification-root node carries derived, PRESENTATION-ONLY
+// concept `groups` alongside its complete flat `children`. The browse folds:
+// grouped members render under one expandable group row; ungrouped children
+// stay leaf rows. Members carry the real leaf FQIDs.
+
+/** One browse row after concept-group folding: a group row or an ungrouped
+ * leaf. */
+export type GroupedRow<T> =
+  | { kind: "group"; group: ConceptGroup }
+  | { kind: "leaf"; item: T };
+
+/** Fold `items` (a node's flat children) under `groups`, PRESERVING the
+ * incoming item order (the API's — e.g. classifications arrive short_name-
+ * ordered): ungrouped items stay leaf rows in place; a group row replaces its
+ * FIRST member's position and the remaining members are hidden. A group with
+ * no member in `items` (shouldn't happen — the flat children list is
+ * complete) is appended so it can't silently vanish. */
+export function foldGroupedRows<T extends { fqid: string }>(
+  items: T[],
+  groups: ConceptGroup[],
+): GroupedRow<T>[] {
+  const groupOf = new Map<string, ConceptGroup>();
+  for (const g of groups) {
+    for (const m of g.members) {
+      groupOf.set(m.fqid, g);
+    }
+  }
+  const rows: GroupedRow<T>[] = [];
+  const emitted = new Set<ConceptGroup>();
+  for (const item of items) {
+    const group = groupOf.get(item.fqid);
+    if (!group) {
+      rows.push({ kind: "leaf", item });
+    } else if (!emitted.has(group)) {
+      emitted.add(group);
+      rows.push({ kind: "group", group });
+    }
+  }
+  for (const group of groups) {
+    if (!emitted.has(group)) {
+      rows.push({ kind: "group", group });
+    }
+  }
+  return rows;
+}
+
+/** The member count a folded row list represents — group rows count their
+ * members, leaves count 1. Keeps the "N variables" readout in VARIABLE units
+ * after folding (a register whose 36 variables fold into one matrix row still
+ * reports 36, not 1). */
+export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
+  return rows.reduce(
+    (n, row) => n + (row.kind === "group" ? row.group.members.length : 1),
+    0,
+  );
+}
+
+/** Whether a group row survives the type-to-filter: match on the group's own
+ * label/key OR any member's name/FQID — so filtering for a member (e.g. "maj")
+ * still surfaces the group that folded it. */
+export function groupMatchesFilter(
+  needle: string,
+  group: ConceptGroup,
+): boolean {
+  return (
+    matchesFilter(needle, group.label, group.key) ||
+    group.members.some((m) => matchesFilter(needle, m.name, m.fqid))
+  );
+}
+
+/** The distinct (value, label) pairs a group's members carry on `axis`,
+ * value-sorted — the rows/columns of the facet picker. */
+export function axisValues(
+  group: ConceptGroup,
+  axis: string,
+): { value: string; label: string }[] {
+  const seen = new Map<string, string>();
+  for (const m of group.members) {
+    const facet = m.facets.find((f) => f.axis === axis);
+    if (facet && !seen.has(facet.value)) {
+      seen.set(facet.value, facet.label);
+    }
+  }
+  return [...seen.entries()]
+    .map(([value, label]) => ({ value, label }))
+    .sort((a, b) => a.value.localeCompare(b.value));
+}
+
+/** The member at a facet-coordinate (one value per axis, in `axes` order), or
+ * undefined for an empty cell (partial families: a missing month/vintage). */
+export function memberAt(
+  group: ConceptGroup,
+  coords: { axis: string; value: string }[],
+): ConceptGroupMember | undefined {
+  return group.members.find((m) =>
+    coords.every((c) =>
+      m.facets.some((f) => f.axis === c.axis && f.value === c.value),
+    ),
+  );
 }
 
 /** A node's display label — its `name` when present, else its FQID (providers
