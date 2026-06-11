@@ -317,11 +317,19 @@ def search(
 
     if fold_groups:
         # Label hits ride the varname-ish surface (a group label is a concept
-        # name); they deliberately skip the --years filter — a group has no
-        # validity window of its own, and its members were already year-
-        # filtered above.
+        # name). A group has no validity window of its own, so --years applies
+        # through its MEMBERS: a variable-kind label hit needs at least one
+        # member state overlapping the range (member hits were already year-
+        # filtered above; this guards the label-only path). Classification
+        # groups are exempt — their members carry no delivery windows.
         label_hits = (
-            _search_group_labels(conn, like_pattern, reg_ids, type=type)
+            _search_group_labels(
+                conn,
+                like_pattern,
+                reg_ids,
+                type=type,
+                year_range=parse_year_range(years) if years else None,
+            )
             if field in ("varname", "all")
             else []
         )
@@ -613,6 +621,7 @@ def _search_group_labels(
     reg_ids: set[int] | None,
     *,
     type: str,
+    year_range: tuple[int | None, int | None] | None = None,
 ) -> list[sqlite3.Row]:
     """Concept groups whose LABEL or key matches the query (#322): the family
     itself is findable even when no single leaf row matches (e.g. searching
@@ -621,7 +630,9 @@ def _search_group_labels(
     Scope rules: variable groups respect a `--register` scope and pass the
     'variable' type filter (they fold variable hits); classification groups
     are catalog-scoped, so they only surface unscoped (`type == "all"`, no
-    register filter). `type == "register"` excludes groups entirely."""
+    register filter). `type == "register"` excludes groups entirely. Under a
+    `year_range` (--years), a variable group needs at least one member state
+    overlapping the range — the group itself has no validity window."""
     if type == "register":
         return []
     rows = conn.execute(
@@ -638,10 +649,34 @@ def _search_group_labels(
         if r["kind"] == "classification":
             if reg_ids or type == "variable":
                 continue
-        elif reg_ids and r["register_id"] not in reg_ids:
-            continue
+        else:
+            if reg_ids and r["register_id"] not in reg_ids:
+                continue
+            if year_range is not None and not _group_member_state_in_years(
+                conn, r["group_id"], *year_range
+            ):
+                continue
         hits.append(r)
     return hits
+
+
+def _group_member_state_in_years(
+    conn: sqlite3.Connection, group_id: int, lo: int | None, hi: int | None
+) -> bool:
+    """Whether any member variable of a variable-kind group has a
+    `variable_state` validity window overlapping the requested year range —
+    the --years semantics for a label-matched group (mirrors what
+    `_filter_search_by_years` does for leaf hits)."""
+    rows = conn.execute(
+        "SELECT vs.valid_from, vs.valid_to "
+        "FROM concept_group_variable cgv "
+        "JOIN variable_state vs ON vs.variable_id = cgv.variable_id "
+        "WHERE cgv.group_id = ?",
+        (group_id,),
+    ).fetchall()
+    return any(
+        _state_overlaps_years(r["valid_from"], r["valid_to"], lo, hi) for r in rows
+    )
 
 
 def _fold_concept_groups(

@@ -210,6 +210,18 @@ class TestSearchFolding:
         assert [r["type"] for r in kept] == ["group"]
         assert search(conn, "utbildningsnomenklatur", type="variable")["results"] == []
 
+    def test_label_only_match_respects_years_filter(self) -> None:
+        # Codex P2 on #331: --years must apply to the label-only path through
+        # the group's MEMBER states (the fixture seeds one member state
+        # 2018→open-ended; the other members have no states at all).
+        conn = _seeded_conn()
+        # Out of range: no member state overlaps 1900 → the group is dropped.
+        assert search(conn, "per månad", years="1900")["results"] == []
+        # In range (open-ended window covers 2020) → the group survives.
+        kept = search(conn, "per månad", years="2020")["results"]
+        assert [r["type"] for r in kept] == ["group"]
+        assert kept[0]["label_matched"] is True
+
 
 class TestGetConceptGroups:
     def test_lists_register_groups_with_members_and_facets(self) -> None:
