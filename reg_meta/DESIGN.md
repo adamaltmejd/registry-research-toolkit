@@ -549,6 +549,18 @@ sortable `value`, display `label`). The webapp's register / classification-root
 responses embed these alongside the complete flat children list, and the SPA folds
 (`reg_webapp/DESIGN.md`).
 
+**CLI/search surface (#322/#325)**: the same read surface backs three CLI shapes, all
+result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER` (and
+`get groups --classifications`) lists groups with members-with-facets, JSON-able like
+every other command. `search` folds sibling hits: when ≥2 distinct member variables of
+one group match, the leaf hits collapse into a single `type: "group"` result row
+(original hits under `matched`, the facet-ordered member list under `members`); a lone
+member hit stays a leaf annotated with `concept_group`/`concept_group_label`; and group
+LABELS themselves match (searching "Län, kommuner och församlingar" finds the lkf family
+even though no leaf row matches). `--no-fold` flattens. `get schema` carries
+`concept_group`(`_label`) per column so the fold is visible inline. Folding happens
+before pagination — a group row counts as one result.
+
 ## Storage optimization
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs use WITHOUT

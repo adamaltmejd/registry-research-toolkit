@@ -41,7 +41,9 @@ from .queries import (
     get_availability,
     get_classification,
     get_classification_codes,
+    get_classification_concept_groups,
     get_coded_variables,
+    get_concept_groups,
     get_datacolumns,
     get_diff,
     get_lineage,
@@ -147,6 +149,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "Search across metadata. By default searches all fields.\n"
             "Use --field to narrow. Doc results are included and hinted at the bottom.\n"
             "For full documentation search, use: reg-meta docs search <query>\n\n"
+            "Hits on members of a concept group (a folded variable family, e.g. a\n"
+            "month-suffixed series) collapse into one group row; group labels match\n"
+            "too. Use --no-fold for flat member rows, `get groups` for a family's\n"
+            "full member/facet listing.\n\n"
             "Note: --type and --register do different things:\n"
             "  --type register    Filter results to only show registers (not variables)\n"
             "  --register LISA    Restrict search scope to a specific register\n\n"
@@ -189,6 +195,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     search_p.add_argument(
         "--offset", type=int, default=0, help="Skip first N results (default: 0)."
+    )
+    search_p.add_argument(
+        "--no-fold",
+        action="store_true",
+        help="Disable concept-group folding (one row per member hit).",
     )
 
     get_p = sub.add_parser(
@@ -257,6 +268,38 @@ def _build_parser() -> argparse.ArgumentParser:
         "--flat",
         action="store_true",
         help="Flat output: one row per (year, alias, variable_name, register_variant_id).",
+    )
+
+    get_groups_p = get_sub.add_parser(
+        "groups",
+        help="List concept groups (folded variable families) with member facets.",
+        description=(
+            "Show a register's derived concept groups: families of near-identical\n"
+            "variables (month-suffixed series, split siblings, curated facet\n"
+            "families) folded into one labeled group, each member carrying its\n"
+            "facets (month/rank/...). Groups are presentation-only — members keep\n"
+            "their own FQIDs and metadata.\n\n"
+            "Examples:\n"
+            "  reg-meta get groups LISA\n"
+            "  reg-meta get groups --classifications   # vintage families (lkf1980..)\n"
+            "  reg-meta --format json get groups LISA  # member FQIDs + facets"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    get_groups_p.add_argument(
+        "register",
+        nargs="?",
+        default=None,
+        metavar="REGISTER",
+        help="Register name or numeric ID.",
+    )
+    get_groups_p.add_argument(
+        "--classifications",
+        action="store_true",
+        help=(
+            "List classification vintage groups (catalog-wide) instead of a "
+            "register's variable groups."
+        ),
     )
 
     get_varinfo_p = get_sub.add_parser(
@@ -841,6 +884,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             years=args.years,
             limit=args.limit,
             offset=args.offset,
+            fold_groups=not args.no_fold,
         )
     finally:
         conn.close()
@@ -874,6 +918,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "years": args.years,
             "limit": args.limit,
             "offset": args.offset,
+            "no_fold": args.no_fold,
         },
         db_info=info,
         data=out,
@@ -929,6 +974,42 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     return success_envelope(
         command="get schema",
         args_payload=args_out,
+        db_info=info,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_get_groups(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if bool(args.register) == bool(args.classifications):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="Provide either a REGISTER or --classifications (not both).",
+            remediation=(
+                "Usage: reg-meta get groups <REGISTER> | "
+                "reg-meta get groups --classifications"
+            ),
+        )
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    conn = open_db(db)
+    try:
+        info = get_db_info(conn)
+        if args.classifications:
+            data = get_classification_concept_groups(conn)
+        else:
+            data = get_concept_groups(conn, args.register)
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="get groups",
+        args_payload={
+            "register": args.register,
+            "classifications": args.classifications,
+        },
         db_info=info,
         data=data,
         duration_ms=duration_ms,
@@ -1394,6 +1475,36 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 # ---------------------------------------------------------------------------
 
 
+def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
+    """Project one search result onto the table/list renderer's keys.
+
+    `type: "group"` rows (#322) carry nested `members`/`matched` lists the
+    renderer can't show — flatten them to counts and fill the generic columns
+    (`variable_name` shows the group label) so a group row reads sensibly in
+    both the pure-group and the mixed-type column sets. Leaf rows pass through,
+    with the `concept_group` annotation re-keyed to a short `group` column."""
+    if r.get("type") != "group":
+        if r.get("concept_group"):
+            r = dict(r)
+            r["group"] = r["concept_group"]
+        return r
+    matched = len(r.get("matched") or [])
+    total = r.get("member_count") or 0
+    return {
+        "type": "group",
+        "group_key": r.get("group_key", ""),
+        "group_label": r.get("group_label", ""),
+        "group": r.get("group_key", ""),
+        "source": r.get("group_source", ""),
+        "register_id": r.get("register_id") or "",
+        "register_name": r.get("register_name") or "",
+        "var_id": "",
+        "variable_name": f"{r.get('group_label', '')} ({matched}/{total} members matched)",
+        "matched": matched,
+        "members": total,
+    }
+
+
 def _write_payload(
     key: tuple[str, str | None],
     payload: dict[str, Any],
@@ -1410,7 +1521,7 @@ def _write_payload(
 
     # Pick columns based on what result types are in the payload
     if key == ("search", None):
-        results = data.get("results", [])
+        results = [_search_display_row(r) for r in data.get("results", [])]
         types = {r.get("type") for r in results}
         if types == {"datacolumn"}:
             cols = [
@@ -1433,8 +1544,22 @@ def _write_payload(
             cols = ["variable_name", "register_id", "register_name", "var_id"]
         elif types == {"doc"}:
             cols = ["variable_name", "display_name"]
+        elif types == {"group"}:
+            # Pure group fold (#322) — e.g. every hit was one month family.
+            cols = [
+                "group_key",
+                "group_label",
+                "source",
+                "register_name",
+                "matched",
+                "members",
+            ]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
+        # Lone member hits carry a `concept_group` annotation (#322): surface
+        # it as a trailing column only when at least one row has it.
+        if types != {"group"} and any(r.get("group") for r in results):
+            cols.append("group")
         write_formatted(
             results, cols, output_path, fmt=fmt, fmt_explicit=fmt_explicit, hints=hints
         )
@@ -1462,6 +1587,40 @@ def _write_payload(
             fmt=fmt,
             fmt_explicit=fmt_explicit,
             hints=hints,
+        )
+    elif key == ("get", "groups"):
+        # Variable-group payload nests groups under registers; the
+        # --classifications payload is a flat group list. One row per group;
+        # member FQIDs/facets live in --format json (hinted).
+        rows = []
+        if "registers" in data:
+            for reg in data.get("registers", []):
+                for g in reg.get("groups", []):
+                    rows.append(
+                        {
+                            "register": reg.get("register_name", ""),
+                            "group_key": g.get("key", ""),
+                            "label": g.get("label", ""),
+                            "source": g.get("source", ""),
+                            "axes": ", ".join(g.get("axes", [])),
+                            "members": g.get("member_count", 0),
+                        }
+                    )
+            cols = ["register", "group_key", "label", "source", "axes", "members"]
+        else:
+            for g in data.get("groups", []):
+                rows.append(
+                    {
+                        "group_key": g.get("key", ""),
+                        "label": g.get("label", ""),
+                        "source": g.get("source", ""),
+                        "axes": ", ".join(g.get("axes", [])),
+                        "members": g.get("member_count", 0),
+                    }
+                )
+            cols = ["group_key", "label", "source", "axes", "members"]
+        write_formatted(
+            rows, cols, output_path, fmt=fmt, fmt_explicit=fmt_explicit, hints=hints
         )
     elif key == ("get", "schema"):
         schema_summary = getattr(args, "summary", False) if args else False
@@ -1516,11 +1675,17 @@ def _write_payload(
                                     "name": col.get("variable_name", ""),
                                     "source": col.get("source", ""),
                                     "var_id": col.get("var_id", ""),
+                                    "group": col.get("concept_group") or "",
                                 }
                             )
+            cols = ["register_variant_id", "year", "alias", "name", "source", "var_id"]
+            # #325: show the concept-group fold inline, but only when the
+            # register actually has grouped columns — no dead column otherwise.
+            if any(r["group"] for r in rows):
+                cols.append("group")
             write_formatted(
                 rows,
-                ["register_variant_id", "year", "alias", "name", "source", "var_id"],
+                cols,
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1546,19 +1711,25 @@ def _write_payload(
                                 # ordinary columns; e.g. sni92/sni2007 for a
                                 # folded variable's two states in one window).
                                 "vintage": col.get("value_set_version_label", ""),
+                                "group": col.get("concept_group") or "",
                             }
                         )
+            cols = [
+                "period",
+                "var_id",
+                "name",
+                "data_type",
+                "aliases",
+                "source",
+                "vintage",
+            ]
+            # #325: show the concept-group fold inline, but only when the
+            # register actually has grouped columns — no dead column otherwise.
+            if any(r["group"] for r in rows):
+                cols.append("group")
             write_formatted(
                 rows,
-                [
-                    "period",
-                    "var_id",
-                    "name",
-                    "data_type",
-                    "aliases",
-                    "source",
-                    "vintage",
-                ],
+                cols,
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -2043,10 +2214,18 @@ def _collect_hints(
 ) -> None:
     """Populate command-specific contextual hints."""
     if key == ("search", None):
-        if getattr(args, "field", "all") == "all":
-            hint_add(hints, "Searching all fields (--field to narrow)")
         total = data.get("total_count", 0)
         results = data.get("results", [])
+        group_rows = [r for r in results if r.get("type") == "group"]
+        folded = sum(len(r.get("matched") or []) for r in group_rows)
+        if folded:
+            hint_add(
+                hints,
+                f"{folded} hit(s) folded into {len(group_rows)} concept group(s) "
+                "(--no-fold to flatten; members in --format json)",
+            )
+        if getattr(args, "field", "all") == "all":
+            hint_add(hints, "Searching all fields (--field to narrow)")
         if total > len(results):
             hint_add(
                 hints,
@@ -2057,6 +2236,13 @@ def _collect_hints(
             hint_add(hints, doc_hint)
         if total == 0 and not results:
             hint_add(hints, "No results (try broader --field or reg-meta docs search)")
+
+    elif key == ("get", "groups"):
+        n_groups = sum(
+            len(reg.get("groups", [])) for reg in data.get("registers", [])
+        ) + len(data.get("groups", []))
+        if n_groups:
+            hint_add(hints, "Member FQIDs, names, and facets in --format json")
 
     elif key == ("get", "schema"):
         if not getattr(args, "summary", False) and not getattr(args, "flat", False):
@@ -2132,6 +2318,7 @@ COMMAND_DISPATCH = {
     ("search", None): _cmd_search,
     ("get", "register"): _cmd_get_register,
     ("get", "schema"): _cmd_get_schema,
+    ("get", "groups"): _cmd_get_groups,
     ("get", "varinfo"): _cmd_get_varinfo,
     ("get", "values"): _cmd_get_values,
     ("get", "datacolumns"): _cmd_get_datacolumns,
@@ -2171,6 +2358,12 @@ _KEY_CONCEPTS = [
         "value set",
         "Valid coded values for a categorical variable (e.g. 1=Man, 2=Kvinna).",
     ),
+    (
+        "group",
+        "A derived concept group: a family of near-identical variables (month "
+        "series, split siblings, vintages) folded for browse. Presentation-only "
+        "— members keep their own FQIDs. Surfaced by `get groups` and search.",
+    ),
 ]
 
 # (command_syntax, description) for the top-level overview. None = blank separator.
@@ -2188,6 +2381,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
     (
         "get schema [REGVAR_ID] [--register R] [--years Y] [--columns-like PAT] [--summary|--flat]",
         "Column listing per version.",
+    ),
+    (
+        "get groups REGISTER | get groups --classifications",
+        "Concept groups (folded variable families) with member facets.",
     ),
     ("get varinfo VARIABLE [--register R]", "Variable details with instance history."),
     (
@@ -2391,6 +2588,10 @@ search — Finding registers, variables, and values
 
   "What value codes include 0180?"
     reg-meta search --query 0180 --field value
+
+  Hits on members of a concept group (e.g. a per-month variable family)
+  collapse into one group row — its label matches too. Flatten with:
+    reg-meta search --query lonfink --no-fold
 """,
     "resolve": """\
 resolve — Mapping column headers to official definitions
@@ -2436,6 +2637,22 @@ get schema — What columns does a register have?
 
   For large registers, always narrow with --years, --columns-like,
   --summary, or --flat. Unfiltered output can be very long.
+""",
+    ("get", "groups"): """\
+get groups — Folded variable families (concept groups)
+──────────────────────────────────────────────────────
+
+  "Which variable families does LISA fold?"
+    reg-meta get groups LISA
+
+  "Show the member FQIDs and facets (month/rank/...) of each family"
+    reg-meta --format json get groups LISA
+
+  "Which classification vintage families exist (lkf1980…lkf2026 etc.)?"
+    reg-meta get groups --classifications
+
+  Groups are presentation-only: members keep their own FQIDs and
+  metadata. Search folds member hits into these same groups.
 """,
     ("get", "varinfo"): """\
 get varinfo — Variable details and history
@@ -2634,6 +2851,7 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     "resolve",
     ("get", "register"),
     ("get", "schema"),
+    ("get", "groups"),
     ("get", "varinfo"),
     ("get", "values"),
     ("get", "datacolumns"),
