@@ -7,6 +7,7 @@ import {
   bindingChildren,
   breadcrumbs,
   catalogHref,
+  countFoldedMembers,
   foldGroupedRows,
   groupMatchesFilter,
   matchesFilter,
@@ -130,10 +131,12 @@ $effect(() => {
            term is "binding" (the addressable variable leaf) — display copy only. -->
       <h3>Variables</h3>
       {#if rows.length > 0}
+        <!-- Counts stay in VARIABLE units after folding (a group row counts its
+             members), so the "x of y" readout still reflects register size. -->
         <FilterInput
           bind:value={filter}
-          total={rows.length}
-          shown={filteredRows.length}
+          total={countFoldedMembers(rows)}
+          shown={countFoldedMembers(filteredRows)}
           placeholder="Filter variables…"
           label="Filter variables"
         />

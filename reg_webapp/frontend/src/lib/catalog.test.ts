@@ -521,6 +521,7 @@ describe("representationsCollapse", () => {
 import type { ConceptGroup } from "./api";
 import {
   axisValues,
+  countFoldedMembers,
   foldGroupedRows,
   groupMatchesFilter,
   memberAt,
@@ -639,5 +640,52 @@ describe("axisValues / memberAt", () => {
         { axis: "rank", value: "2" },
       ]),
     ).toBeUndefined();
+  });
+});
+
+describe("foldGroupedRows order + countFoldedMembers", () => {
+  // (imported above with the other #303 helpers)
+  it("preserves the incoming item order (no re-sort)", () => {
+    // Deliberately NON-alphabetical: classification-root children arrive
+    // short_name-ordered; folding must not silently reorder them by slug.
+    const items = [
+      { fqid: "class/ssyk2012" },
+      { fqid: "class/atc" },
+      { fqid: "class/lkf1980" },
+      { fqid: "class/lkf2020" },
+      { fqid: "class/drg" },
+    ];
+    const lkf = group({
+      key: "lkf",
+      label: "LKF",
+      axes: ["vintage"],
+      members: [
+        { fqid: "class/lkf1980", name: null, facets: [] },
+        { fqid: "class/lkf2020", name: null, facets: [] },
+      ],
+    });
+    const rows = foldGroupedRows(items, [lkf]);
+    expect(
+      rows.map((r) => (r.kind === "group" ? `g:${r.group.key}` : r.item.fqid)),
+    ).toEqual(["class/ssyk2012", "class/atc", "g:lkf", "class/drg"]);
+  });
+
+  it("appends a group with no member present in items", () => {
+    const rows = foldGroupedRows([{ fqid: "scb/lisa/kon" }], [group({})]);
+    expect(
+      rows.map((r) => (r.kind === "group" ? `g:${r.group.key}` : r.item.fqid)),
+    ).toEqual(["scb/lisa/kon", "g:ink"]);
+  });
+
+  it("counts folded members in item units", () => {
+    const rows = foldGroupedRows(
+      [
+        { fqid: "scb/lisa/kon" },
+        { fqid: "scb/lisa/inkjan" },
+        { fqid: "scb/lisa/inkfeb" },
+      ],
+      [group({})],
+    );
+    expect(countFoldedMembers(rows)).toBe(3); // 1 leaf + 2 grouped members
   });
 });

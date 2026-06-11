@@ -49,29 +49,50 @@ export type GroupedRow<T> =
   | { kind: "group"; group: ConceptGroup }
   | { kind: "leaf"; item: T };
 
-/** Fold `items` (a node's flat children) under `groups`: each group becomes
- * one row anchored at its `key`; items not claimed by any group stay leaf rows
- * keyed by their FQID leaf segment. Rows sort by that shared key, so a group
- * lands roughly where its members sat in the flat slug-ordered list. */
+/** Fold `items` (a node's flat children) under `groups`, PRESERVING the
+ * incoming item order (the API's — e.g. classifications arrive short_name-
+ * ordered): ungrouped items stay leaf rows in place; a group row replaces its
+ * FIRST member's position and the remaining members are hidden. A group with
+ * no member in `items` (shouldn't happen — the flat children list is
+ * complete) is appended so it can't silently vanish. */
 export function foldGroupedRows<T extends { fqid: string }>(
   items: T[],
   groups: ConceptGroup[],
 ): GroupedRow<T>[] {
-  const grouped = new Set(groups.flatMap((g) => g.members.map((m) => m.fqid)));
-  const rows: { sortKey: string; row: GroupedRow<T> }[] = groups.map((g) => ({
-    sortKey: g.key,
-    row: { kind: "group", group: g },
-  }));
-  for (const item of items) {
-    if (!grouped.has(item.fqid)) {
-      rows.push({
-        sortKey: item.fqid.split("/").at(-1) ?? item.fqid,
-        row: { kind: "leaf", item },
-      });
+  const groupOf = new Map<string, ConceptGroup>();
+  for (const g of groups) {
+    for (const m of g.members) {
+      groupOf.set(m.fqid, g);
     }
   }
-  rows.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
-  return rows.map((r) => r.row);
+  const rows: GroupedRow<T>[] = [];
+  const emitted = new Set<ConceptGroup>();
+  for (const item of items) {
+    const group = groupOf.get(item.fqid);
+    if (!group) {
+      rows.push({ kind: "leaf", item });
+    } else if (!emitted.has(group)) {
+      emitted.add(group);
+      rows.push({ kind: "group", group });
+    }
+  }
+  for (const group of groups) {
+    if (!emitted.has(group)) {
+      rows.push({ kind: "group", group });
+    }
+  }
+  return rows;
+}
+
+/** The member count a folded row list represents — group rows count their
+ * members, leaves count 1. Keeps the "N variables" readout in VARIABLE units
+ * after folding (a register whose 36 variables fold into one matrix row still
+ * reports 36, not 1). */
+export function countFoldedMembers<T>(rows: GroupedRow<T>[]): number {
+  return rows.reduce(
+    (n, row) => n + (row.kind === "group" ? row.group.members.length : 1),
+    0,
+  );
 }
 
 /** Whether a group row survives the type-to-filter: match on the group's own

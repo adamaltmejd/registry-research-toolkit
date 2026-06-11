@@ -21,12 +21,9 @@ is autoincrement and is NOT used). It resolves the conflict one of two ways:
 
 from __future__ import annotations
 
-import tomllib
 from pathlib import Path
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-
-from ._curation import canonical_int, fold_column
+from ._curation import canonical_int, curation_error, fold_column, load_curation_entries
 
 # (register_id, var_id, delivery-column component) — the same coordinates the
 # coalescer's per-column resolver carries (gkey[0], gkey[2], gkey[8]). The column
@@ -39,27 +36,6 @@ CodeliveryRule = tuple[str | None, str | None]
 CodeliveryMap = dict[CodeliveryKey, CodeliveryRule]
 
 _KEEP_RULES = frozenset({"latest_year"})
-
-# The only legal top-level table is `[[resolve]]`. Anything else (a misspelled
-# `[[resolves]]`, a stray key) is a typo that would otherwise silently disable ALL
-# co-delivery curation — reject it loudly, mirroring fqid_slugs' / fold_overrides'
-# strict top-level typo check.
-_ALLOWED_TOPLEVEL_KEYS = frozenset({"resolve"})
-
-
-def _codelivery_error(code: str, message: str, remediation: str) -> RegMetaError:
-    """A configuration-class error (EXIT_CONFIG). `codelivery.toml` is
-    maintainer-edited curation data like the slug TOMLs, so a syntax typo or a
-    malformed entry is a config failure with actionable remediation — not an
-    internal build bug (which is how a raw tomllib/ValueError would surface
-    through the CLI's generic handler)."""
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code=code,
-        error_class="configuration",
-        message=message,
-        remediation=remediation,
-    )
 
 
 def repo_codelivery_path() -> Path | None:
@@ -87,42 +63,19 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
       - Exactly one of `keep` / `keep_rule`, each a string (`keep_rule` from a
         known set); a non-string rule — including an unhashable list/dict — is
         rejected, not crashed on the membership test."""
-    if path is None or not path.is_file():
-        return {}
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise _codelivery_error(
-            "codelivery_toml_unreadable",
-            f"Could not parse co-delivery curation TOML {path}: {exc}",
-            "Fix the TOML syntax in reg_meta_build/codelivery.toml.",
-        ) from exc
-    unknown_top = set(data) - _ALLOWED_TOPLEVEL_KEYS
-    if unknown_top:
-        raise _codelivery_error(
-            "codelivery_invalid",
-            f"codelivery TOML has unknown top-level key(s): {sorted(unknown_top)}.",
-            "The only legal table is `[[resolve]]` — check for a typo like "
-            "`[[resolves]]` in reg_meta_build/codelivery.toml.",
-        )
-    resolve_entries = data.get("resolve", [])
-    if not isinstance(resolve_entries, list):
-        raise _codelivery_error(
-            "codelivery_invalid",
-            f"codelivery `resolve` must be an array of tables (`[[resolve]]`), got "
-            f"{type(resolve_entries).__name__}.",
-            "Use `[[resolve]]` table entries in reg_meta_build/codelivery.toml, "
-            "not `resolve = …` or a single `[resolve]` table.",
-        )
+    # Shared scaffold (parse + top-level typo guard + array-of-tables +
+    # per-entry table check) — see `_curation.load_curation_entries`.
+    entries = load_curation_entries(
+        path,
+        entry_key="resolve",
+        label="co-delivery",
+        prefix="codelivery",
+        code_base="codelivery",
+        file_name="codelivery.toml",
+        entry_fields="register_id / var_id / column",
+    )
     out: CodeliveryMap = {}
-    for entry in resolve_entries:
-        if not isinstance(entry, dict):
-            raise _codelivery_error(
-                "codelivery_invalid",
-                f"codelivery entry {entry!r} must be a `[[resolve]]` table.",
-                "Each entry is a `[[resolve]]` table with register_id / var_id / "
-                "column.",
-            )
+    for entry in entries:
         # Canonicalize ids identically to fold_overrides (shared `canonical_int`):
         # `int(...)` would silently accept `1.5` (→1), `true` (→1), `"01"` (→1),
         # and negatives, producing an inert never-matching pin instead of a
@@ -130,7 +83,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         reg = canonical_int(entry.get("register_id"))
         var = canonical_int(entry.get("var_id"))
         if reg is None or var is None:
-            raise _codelivery_error(
+            raise curation_error(
                 "codelivery_invalid",
                 f"codelivery [[resolve]] entry {entry!r} needs `register_id` and "
                 f"`var_id` as canonical integers (no leading zeros).",
@@ -141,7 +94,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         # column — reject it at load, not as a confusing downstream mismatch.
         column = entry.get("column", "")
         if not isinstance(column, str):
-            raise _codelivery_error(
+            raise curation_error(
                 "codelivery_invalid",
                 f"codelivery [[resolve]] entry {entry!r} `column` must be a string, "
                 f"got {type(column).__name__}.",
@@ -153,7 +106,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         keep_label = entry.get("keep")
         keep_rule = entry.get("keep_rule")
         if (keep_label is None) == (keep_rule is None):
-            raise _codelivery_error(
+            raise curation_error(
                 "codelivery_invalid",
                 f"codelivery entry {key} must set exactly one of `keep`/`keep_rule`",
                 'Give the [[resolve]] entry either `keep = "<label>"` or '
@@ -166,7 +119,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         # (`keep_rule = [1]`) would raise a raw TypeError there (the test hashes the
         # candidate against the frozenset), escaping the EXIT_CONFIG contract.
         if keep_label is not None and not isinstance(keep_label, str):
-            raise _codelivery_error(
+            raise curation_error(
                 "codelivery_invalid",
                 f"codelivery entry {key} `keep` must be a string label, got "
                 f"{type(keep_label).__name__}.",
@@ -175,7 +128,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         if keep_rule is not None and (
             not isinstance(keep_rule, str) or keep_rule not in _KEEP_RULES
         ):
-            raise _codelivery_error(
+            raise curation_error(
                 "codelivery_invalid",
                 f"codelivery entry {key} has unknown keep_rule {keep_rule!r} "
                 f"(known: {sorted(_KEEP_RULES)})",

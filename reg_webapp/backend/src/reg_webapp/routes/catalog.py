@@ -404,12 +404,17 @@ def _register_response(
 def _classification_root_response(
     conn: sqlite3.Connection,
 ) -> ClassificationRootResponse:
-    """The `class` (1 seg) classification-root: every classification as children.
-    Reuses `reg_meta.queries.list_classifications` (LOCKED — no new Catalog
-    method); the catch-all hands it the request connection directly, so there's
-    no reach into `Catalog`'s private `_conn`. A classification with a NULL slug
-    isn't FQID-addressable, so it's excluded from the browse children (symmetric
-    with `list_registers`'s slug filter)."""
+    """The `class` (1 seg) classification-root: every classification as
+    children, plus the #303 vintage groups. The CHILDREN list still reuses
+    `reg_meta.queries.list_classifications` (LOCKED — the children enumeration
+    grew no Catalog method); the GROUPS come from
+    `Catalog.list_classification_groups`, the reg_meta-owned read surface for
+    the concept-group layer — a `Catalog(conn)` wrapper over the request
+    connection. The wrapper is construction-only (no connection ownership);
+    `close()` is never called on it — the connection stays owned by the
+    handler's `_catalog_conn` contextmanager. A classification with a NULL
+    slug isn't FQID-addressable, so it's excluded from children and group
+    members alike (symmetric with `list_registers`'s slug filter)."""
     rows = list_classifications(conn)
     children: list[ClassificationNode] = []
     for row in rows:

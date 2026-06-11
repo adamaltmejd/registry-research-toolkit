@@ -36,6 +36,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import derive_variable_slug, period_token_to_bounds
 from reg_meta.queries import extract_year
 
+from reg_meta_build._components import DisjointSet
 from reg_meta_build._curation import fold_column
 
 # Shared SCB-CSV / hashing / progress infra + the Vardemangder sentinel
@@ -1018,18 +1019,9 @@ def _cluster_contested(
     fiat, bypassing the stem verify. It is populated by the curated fold-override
     surface (#261), threaded in from `_triage_groups`."""
     folded = {c: _ascii_fold_lower(c) for c in contested_cols}
-    parent = {c: c for c in contested_cols}
-
-    def find(x: str) -> str:
-        while parent[x] != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
-        return x
-
-    def union(a: str, b: str) -> None:
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[max(ra, rb)] = min(ra, rb)  # deterministic root (lex-min)
+    ds: DisjointSet[str] = DisjointSet()  # deterministic lex-min roots
+    for c in contested_cols:
+        ds.add(c)
 
     # Curator fiat first: a forced group is one concept regardless of stem.
     # Membership is probed on the folded form — `forced_same` groups are
@@ -1039,17 +1031,17 @@ def _cluster_contested(
     for group in forced_same or ():
         members = [c for c in contested_cols if _ascii_fold_lower(c) in group]
         for a, b in combinations(members, 2):
-            union(a, b)
+            ds.union(a, b)
         forced_cols.update(members)
 
     # Stem-foldable pairwise unions (sorted for deterministic component roots).
     for a, b in combinations(sorted(contested_cols), 2):
         if _decide_fold_or_split([folded[a], folded[b]]) == "fold":
-            union(a, b)
+            ds.union(a, b)
 
     comps: dict[str, list[str]] = defaultdict(list)
     for c in contested_cols:
-        comps[find(c)].append(c)
+        comps[ds.find(c)].append(c)
 
     clusters: list[list[str]] = []
     for members in comps.values():
@@ -2328,21 +2320,7 @@ def _coalesce_variable_states(
         return fcol
 
     _ColNode = tuple[int, int, int, str]
-    col_parent: dict[_ColNode, _ColNode] = {}
-
-    def _col_find(node: _ColNode) -> _ColNode:
-        root = node
-        while col_parent[root] != root:
-            root = col_parent[root]
-        while col_parent[node] != root:  # path-compress
-            col_parent[node], node = root, col_parent[node]
-        return root
-
-    def _col_union(a: _ColNode, b: _ColNode) -> None:
-        ra, rb = _col_find(a), _col_find(b)
-        if ra != rb:
-            lo, hi = (ra, rb) if ra <= rb else (rb, ra)  # lex-smallest is root
-            col_parent[hi] = lo
+    col_ds: DisjointSet[_ColNode] = DisjointSet()  # deterministic lex-min roots
 
     cvid_anchor: dict[int, _ColNode] = {}
     for row in rows:
@@ -2357,12 +2335,12 @@ def _coalesce_variable_states(
                 row["register_id"], row["register_variant_id"], row["var_id"], col
             ),
         )
-        col_parent.setdefault(node, node)
+        col_ds.add(node)
         anchor = cvid_anchor.get(row["cvid"])
         if anchor is None:
             cvid_anchor[row["cvid"]] = node
         else:
-            _col_union(anchor, node)
+            col_ds.union(anchor, node)
 
     # Group accumulator: key → mutable `_StateGroup` (module scope; the
     # triage reads it). We iterate `rows` once and update the year-range
@@ -2409,7 +2387,7 @@ def _coalesce_variable_states(
         # component is the case-folded (+ merge-normalized) node-col — the
         # form the curated fold-override / codelivery column keys match.
         component = (
-            _col_find(
+            col_ds.find(
                 (
                     row["register_id"],
                     row["register_variant_id"],

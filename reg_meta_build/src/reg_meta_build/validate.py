@@ -53,6 +53,7 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
+from reg_meta_build._components import DisjointSet
 from reg_meta_build.db import PROVIDER_ID_SCB, PROVIDER_ID_SOS
 from reg_meta_build.id import _MINT_BIT
 
@@ -758,11 +759,16 @@ def _check_sos_stateless_variables(
         )
 
 
-# Real-corpus floors for the derived concept-group layer (#303). Measured
-# 2026-06-11: 2,193 edge groups / 8 month families / lkf = 47 vintages / 1
-# curated family. Generous floors so corpus drift doesn't false-fail; a
-# collapse to zero means a derivation-pass regression.
-_CG_MIN_EDGE_GROUPS = 1_000
+# Real-corpus floors for the derived concept-group layer (#303). The EDGE
+# dimension needs no floor — `_check_concept_groups` recomputes the
+# within-register `same_definition_different_column` components and requires
+# EXACT count parity with the edge groups (structural, corpus-independent, and
+# drift-proof: 2,193 == 2,193 today, N == N forever). The token/curated floors
+# below stay absolute: their candidate sets aren't recomputable without
+# replaying the vocabulary guards, and the families are small enumerable facts
+# (8 month families / lkf = 47 vintages / 1 curated family measured
+# 2026-06-11). The `lkf` floor is keyed to the literal stem on purpose — a
+# stem rename fails this check loudly, forcing the rename to update the gate.
 _CG_MIN_MONTH_GROUPS = 3
 _CG_MIN_LKF_VINTAGES = 40
 
@@ -840,6 +846,8 @@ def _check_concept_groups(
     else:
         result.ok("variable members stay in their group's register")
 
+    _check_edge_group_parity(conn, result)
+
     if not corpus:
         return
     by_source = {
@@ -848,13 +856,8 @@ def _check_concept_groups(
             "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
         )
     }
-    n_edge = by_source.get(("edge", "variable"), 0)
     n_month = by_source.get(("token", "variable"), 0)
     n_curated = by_source.get(("curated", "variable"), 0)
-    if n_edge >= _CG_MIN_EDGE_GROUPS:
-        result.ok(f"{n_edge:,} edge groups (>= {_CG_MIN_EDGE_GROUPS:,})")
-    else:
-        result.fail(f"only {n_edge:,} edge groups (< {_CG_MIN_EDGE_GROUPS:,})")
     if n_month >= _CG_MIN_MONTH_GROUPS:
         result.ok(f"{n_month} month-token groups (>= {_CG_MIN_MONTH_GROUPS})")
     else:
@@ -874,6 +877,53 @@ def _check_concept_groups(
         result.fail(
             f"lkf vintage family has {lkf} members (< {_CG_MIN_LKF_VINTAGES}) — "
             "classification vintage pass regression?"
+        )
+
+
+def _check_edge_group_parity(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    """#303 structural parity: the number of `source='edge'` concept groups
+    must EQUAL the number of within-register connected components of
+    `same_definition_different_column` edges — recomputed here independently of
+    the build pass. Corpus-independent (0 == 0 on a synthetic build with no
+    sibling edges) and drift-proof (no frozen floor): a derivation pass that
+    silently stops folding components, or folds across registers, breaks
+    parity and fails the gate."""
+    rows = conn.execute(
+        "SELECT va.variable_id, vb.variable_id "
+        "FROM variable_related_to e "
+        "JOIN provider pa ON pa.slug = e.a_provider "
+        "JOIN register ra ON ra.provider_id = pa.provider_id "
+        "  AND ra.slug = e.a_register "
+        "JOIN variable va ON va.register_id = ra.register_id "
+        "  AND va.slug = e.a_variable "
+        "JOIN provider pb ON pb.slug = e.b_provider "
+        "JOIN register rb ON rb.provider_id = pb.provider_id "
+        "  AND rb.slug = e.b_register "
+        "JOIN variable vb ON vb.register_id = rb.register_id "
+        "  AND vb.slug = e.b_variable "
+        "WHERE e.relation_kind = 'same_definition_different_column' "
+        "  AND va.register_id = vb.register_id"
+    ).fetchall()
+    ds: DisjointSet[int] = DisjointSet()
+    for a, b in rows:
+        ds.add(a)
+        ds.add(b)
+        ds.union(a, b)
+    n_components = len(ds.components())
+    n_edge_groups = conn.execute(
+        "SELECT COUNT(*) FROM concept_group WHERE source = 'edge'"
+    ).fetchone()[0]
+    if n_components == n_edge_groups:
+        result.ok(
+            f"{n_edge_groups:,} edge groups == {n_components:,} sibling-edge "
+            "components (parity)"
+        )
+    else:
+        result.fail(
+            f"{n_edge_groups:,} edge groups != {n_components:,} sibling-edge "
+            "components — edge derivation lost or invented groups"
         )
 
 

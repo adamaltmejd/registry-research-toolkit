@@ -18,6 +18,18 @@ const axes = $derived(group.axes);
 // Matrix orientation: first axis → rows, second axis → columns.
 const matrixRows = $derived(axes.length > 0 ? axisValues(group, axes[0]) : []);
 const matrixCols = $derived(axes.length > 1 ? axisValues(group, axes[1]) : []);
+// `axes` is the UNION across members — a curated family can mix absorbed
+// token-group members (month + rank) with single-variable members (rank
+// only). A member missing a facet on any axis never matches a matrix cell, so
+// it would silently vanish from the grid; render those below as a plain list
+// (keeps the rendered set == the "N {noun}" summary count).
+const ungridded = $derived(
+  axes.length >= 2
+    ? group.members.filter(
+        (m) => !axes.every((axis) => m.facets.some((f) => f.axis === axis)),
+      )
+    : [],
+);
 
 function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
@@ -64,6 +76,20 @@ function leafSlug(fqid: string): string {
         {/each}
       </tbody>
     </table>
+    {#if ungridded.length > 0}
+      <ul class="members">
+        {#each ungridded as member (member.fqid)}
+          <li>
+            <a href={catalogHref(member.fqid)}>
+              <code class="member-slug">{leafSlug(member.fqid)}</code>
+              {#if member.name && member.name !== group.label}
+                <span class="member-name">{member.name}</span>
+              {/if}
+            </a>
+          </li>
+        {/each}
+      </ul>
+    {/if}
   {:else if axes.length === 1}
     <ul class="facet-chips">
       {#each group.members as member (member.fqid)}

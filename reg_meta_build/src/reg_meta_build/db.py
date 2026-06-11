@@ -793,6 +793,11 @@ CREATE TABLE concept_group (
 );
 CREATE UNIQUE INDEX idx_concept_group_key
     ON concept_group(kind, COALESCE(register_id, 0), group_key);
+-- Serves `Catalog.list_concept_groups`' per-register lookup. The unique key
+-- above leads with `kind` then a COALESCE *expression*, which the bare
+-- `register_id` join predicate can't use — without this, every register page
+-- load full-scans the ~2,200 groups.
+CREATE INDEX idx_concept_group_register ON concept_group(register_id);
 
 -- Membership, one table per kind (avoids nullable composite PKs). The
 -- single-column PK enforces the at-most-one-group invariant per member.
@@ -2799,6 +2804,7 @@ def materialize(
             conn,
             load_concept_groups(repo_concept_groups_path()),
             providers=active_providers,
+            warn=_progress,
         )
         row_counts["concept_groups"] = (
             cg_counts["edge_groups"]

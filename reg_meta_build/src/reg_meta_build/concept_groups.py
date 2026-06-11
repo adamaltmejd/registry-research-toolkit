@@ -40,11 +40,15 @@ edge/rank/vintage duty.
 from __future__ import annotations
 
 import sqlite3
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+from ._components import DisjointSet
+from ._curation import curation_error, load_curation_entries
 
 # ── token vocabularies + guards ─────────────────────────────────────────────
 
@@ -111,25 +115,6 @@ _VINTAGE_YEARS = range(1900, 2100)
 
 _EDGE_RELATION_KIND = "same_definition_different_column"
 
-# The only legal top-level table is `[[variable_group]]`. Anything else (a
-# misspelled `[[variable_groups]]`, a stray key) is a typo that would silently
-# disable curation — reject it loudly (mirrors codelivery/fold_overrides).
-_ALLOWED_TOPLEVEL_KEYS = frozenset({"variable_group"})
-
-
-def _config_error(code: str, message: str, remediation: str) -> RegMetaError:
-    """A configuration-class error (EXIT_CONFIG). `concept_groups.toml` is
-    maintainer-edited curation like the slug TOMLs, so a typo / dangling
-    reference is a config failure with actionable remediation — not an
-    internal build bug."""
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code=code,
-        error_class="configuration",
-        message=message,
-        remediation=remediation,
-    )
-
 
 # ── curated TOML ────────────────────────────────────────────────────────────
 
@@ -172,7 +157,7 @@ def repo_concept_groups_path() -> Path | None:
 def _require_str(entry: dict, field: str, context: str) -> str:
     value = entry.get(field)
     if not isinstance(value, str) or not value:
-        raise _config_error(
+        raise curation_error(
             "concept_groups_invalid",
             f"concept_groups {context} needs `{field}` as a non-empty string, "
             f"got {value!r}.",
@@ -191,46 +176,24 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     each member sets exactly one of `group`/`variable` plus `value`/`label`;
     keys are unique. Reference RESOLUTION (register/group/variable exist)
     happens at materialize time against the built DB, not here."""
-    if path is None or not path.is_file():
-        return ()
-    try:
-        data = tomllib.loads(path.read_text(encoding="utf-8"))
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise _config_error(
-            "concept_groups_toml_unreadable",
-            f"Could not parse concept-group curation TOML {path}: {exc}",
-            "Fix the TOML syntax in reg_meta_build/concept_groups.toml.",
-        ) from exc
-    unknown_top = set(data) - _ALLOWED_TOPLEVEL_KEYS
-    if unknown_top:
-        raise _config_error(
-            "concept_groups_invalid",
-            f"concept_groups TOML has unknown top-level key(s): {sorted(unknown_top)}.",
-            "The only legal table is `[[variable_group]]` — check for a typo in "
-            "reg_meta_build/concept_groups.toml.",
-        )
-    entries = data.get("variable_group", [])
-    if not isinstance(entries, list):
-        raise _config_error(
-            "concept_groups_invalid",
-            "concept_groups `variable_group` must be an array of tables "
-            f"(`[[variable_group]]`), got {type(entries).__name__}.",
-            "Use `[[variable_group]]` table entries, not `variable_group = …`.",
-        )
+    # Shared scaffold (parse + top-level typo guard + array-of-tables +
+    # per-entry table check) — see `_curation.load_curation_entries`.
+    entries = load_curation_entries(
+        path,
+        entry_key="variable_group",
+        label="concept-group",
+        prefix="concept_groups",
+        code_base="concept_groups",
+        file_name="concept_groups.toml",
+        entry_fields="register / key / label / axis / members",
+    )
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
     for entry in entries:
-        if not isinstance(entry, dict):
-            raise _config_error(
-                "concept_groups_invalid",
-                f"concept_groups entry {entry!r} must be a `[[variable_group]]` table.",
-                "Each entry is a `[[variable_group]]` table with register / key / "
-                "label / axis / members.",
-            )
         register_fqid = _require_str(entry, "register", "[[variable_group]]")
         parts = register_fqid.split("/")
         if len(parts) != 2 or not all(parts):
-            raise _config_error(
+            raise curation_error(
                 "concept_groups_invalid",
                 f"concept_groups register {register_fqid!r} must be a 2-segment "
                 "`provider/register` FQID.",
@@ -241,7 +204,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         axis = _require_str(entry, "axis", "[[variable_group]]")
         scope_key = (parts[0], parts[1], key)
         if scope_key in seen_keys:
-            raise _config_error(
+            raise curation_error(
                 "concept_groups_invalid",
                 f"concept_groups duplicate key {key!r} under {register_fqid}.",
                 "Group keys must be unique per register.",
@@ -249,7 +212,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         seen_keys.add(scope_key)
         raw_members = entry.get("members", [])
         if not isinstance(raw_members, list) or not raw_members:
-            raise _config_error(
+            raise curation_error(
                 "concept_groups_invalid",
                 f"concept_groups group {key!r} needs a non-empty "
                 "`[[variable_group.members]]` array.",
@@ -259,7 +222,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         seen_refs: set[tuple[str, str]] = set()
         for raw in raw_members:
             if not isinstance(raw, dict):
-                raise _config_error(
+                raise curation_error(
                     "concept_groups_invalid",
                     f"concept_groups group {key!r} member {raw!r} must be a table.",
                     "Each member is a `[[variable_group.members]]` table.",
@@ -267,7 +230,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
             group_ref = raw.get("group")
             variable_ref = raw.get("variable")
             if (group_ref is None) == (variable_ref is None):
-                raise _config_error(
+                raise curation_error(
                     "concept_groups_invalid",
                     f"concept_groups group {key!r} member {raw!r} must set exactly "
                     "one of `group` / `variable`.",
@@ -277,7 +240,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
             ref_field = "group" if group_ref is not None else "variable"
             ref = _require_str(raw, ref_field, f"group {key!r} member")
             if (ref_field, ref) in seen_refs:
-                raise _config_error(
+                raise curation_error(
                     "concept_groups_invalid",
                     f"concept_groups group {key!r} references {ref_field} {ref!r} "
                     "twice.",
@@ -353,23 +316,12 @@ def _derive_edge_groups(conn: sqlite3.Connection) -> int:
     if not rows:
         return 0
 
-    parent: dict[int, int] = {}
-
-    def find(x: int) -> int:
-        root = x
-        while parent[root] != root:
-            root = parent[root]
-        while parent[x] != root:  # path compression
-            parent[x], x = root, parent[x]
-        return root
-
+    ds: DisjointSet[int] = DisjointSet()
     for r in rows:
         a, b = r[0], r[1]
-        parent.setdefault(a, a)
-        parent.setdefault(b, b)
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[max(ra, rb)] = min(ra, rb)
+        ds.add(a)
+        ds.add(b)
+        ds.union(a, b)
 
     # Full slugged-variable scan rather than an IN(...) over the ~8k involved
     # ids — bounded (~50k rows on the real corpus) and immune to SQLite's
@@ -381,9 +333,7 @@ def _derive_edge_groups(conn: sqlite3.Connection) -> int:
             "WHERE slug IS NOT NULL"
         )
     }
-    components: dict[int, list[int]] = {}
-    for vid in parent:
-        components.setdefault(find(vid), []).append(vid)
+    components = ds.components()
 
     # Deterministic order: by (register_id, min member slug). Key = min member
     # slug (components are disjoint, so it's scope-unique); label = the
@@ -430,11 +380,12 @@ def _trim_label(prefix: str) -> str:
     return trimmed.strip().rstrip(",;:")
 
 
-def _derive_month_groups(conn: sqlite3.Connection) -> int:
+def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) -> int:
     """Dimension 1 (variables): fold month-suffixed slug families. Candidates
     are ungrouped slugged variables whose slug ends in a month token; a
     (register, stem) family folds only past BOTH guards (>= 3 distinct months
-    AND a usable shared label prefix). Members get a `month` facet."""
+    AND a usable shared label prefix). Members get a `month` facet. A family
+    dropped on a group-key collision is reported via `warn` (never silent)."""
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, v.slug, v.name FROM variable v "
         "WHERE v.slug IS NOT NULL AND NOT EXISTS "
@@ -471,7 +422,15 @@ def _derive_month_groups(conn: sqlite3.Connection) -> int:
         if (register_id, stem) in existing_keys:
             # An edge group already claimed this key (its min member slug
             # equals the stem). Cosmetic collision on a presentation key —
-            # skip the fold rather than fail the build.
+            # skip the fold rather than fail the build, but say so: the family
+            # then renders as ~12 flat near-identical rows (the very symptom
+            # #303 fixes) and the corpus floors only count totals, so without
+            # this line the loss is invisible to the maintainer.
+            warn(
+                f"  WARN concept-groups: month family {stem!r} "
+                f"(register_id {register_id}, {len(members)} variables) NOT "
+                "folded — its stem collides with an existing group key"
+            )
             continue
         group_id = _insert_group(
             conn,
@@ -576,7 +535,7 @@ def _apply_curated_groups(
             (g.provider, g.register),
         ).fetchone()
         if reg is None:
-            raise _config_error(
+            raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: register does not resolve.",
                 "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
@@ -592,7 +551,7 @@ def _apply_curated_groups(
                 source="curated",
             )
         except sqlite3.IntegrityError as exc:
-            raise _config_error(
+            raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: key collides with a derived group in the same register.",
                 "Pick a curated `key` that no edge/token group already uses.",
@@ -606,7 +565,7 @@ def _apply_curated_groups(
                     (register_id, m.group),
                 ).fetchone()
                 if row is None:
-                    raise _config_error(
+                    raise curation_error(
                         "concept_groups_unresolved",
                         f"{ctx}: member references derived token group "
                         f"{m.group!r}, which this build did not derive (slug "
@@ -637,7 +596,7 @@ def _apply_curated_groups(
                         [(vid, g.axis, m.value, m.label) for vid in member_ids],
                     )
                 except sqlite3.IntegrityError as exc:
-                    raise _config_error(
+                    raise curation_error(
                         "concept_groups_unresolved",
                         f"{ctx}: axis {g.axis!r} collides with a facet the "
                         f"absorbed group {m.group!r} already assigned.",
@@ -651,7 +610,7 @@ def _apply_curated_groups(
                     (register_id, m.variable),
                 ).fetchone()
                 if var is None:
-                    raise _config_error(
+                    raise curation_error(
                         "concept_groups_unresolved",
                         f"{ctx}: member variable {m.variable!r} does not resolve "
                         "in that register.",
@@ -665,7 +624,7 @@ def _apply_curated_groups(
                         (var[0], group_id),
                     )
                 except sqlite3.IntegrityError as exc:
-                    raise _config_error(
+                    raise curation_error(
                         "concept_groups_unresolved",
                         f"{ctx}: member variable {m.variable!r} already belongs "
                         "to an edge/token group — absorb that group instead.",
@@ -678,7 +637,7 @@ def _apply_curated_groups(
                 )
                 n_members += 1
         if n_members < 2:
-            raise _config_error(
+            raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: resolves to {n_members} member variable(s); a group "
                 "needs >= 2.",
@@ -693,6 +652,7 @@ def materialize_concept_groups(
     curated: tuple[CuratedGroup, ...] = (),
     *,
     providers: frozenset[str] = frozenset(),
+    warn: Callable[[str], None] | None = None,
 ) -> dict[str, int]:
     """Derive the concept-group tables (#303). Ordering contract: runs after
     `populate_variable_slugs` + `_materialize_variable_related_to` (the edge
@@ -702,7 +662,7 @@ def materialize_concept_groups(
     `populate_classifications`' provider gate, so a `--providers=sos` build
     doesn't fail on an scb family)."""
     _derive_edge_groups(conn)
-    _derive_month_groups(conn)
+    _derive_month_groups(conn, warn or (lambda _msg: None))
     _derive_classification_vintage_groups(conn)
     _apply_curated_groups(conn, tuple(g for g in curated if g.provider in providers))
     # Recount from the final table — a curated absorb DELETEs its token

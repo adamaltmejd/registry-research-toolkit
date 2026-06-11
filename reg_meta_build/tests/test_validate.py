@@ -444,3 +444,87 @@ class TestBuildDbValidateFlag:
         assert sentinel.read_bytes() == sentinel_bytes
         tmp_file = sentinel.with_suffix(".db.tmp")
         assert not tmp_file.exists()
+
+
+class TestConceptGroupChecks:
+    """#303 `_check_concept_groups` — exercised against NON-EMPTY group tables
+    so CI covers the invariants (the e2e fixture build derives zero groups:
+    its synthetic corpus has no sibling edges / month families, and the
+    curated TOML is nulled by `_no_repo_curation`). Each test corrupts one
+    invariant on a hand-built slugged DB and asserts the gate bites."""
+
+    @staticmethod
+    def _grouped_db():
+        from _slugged_db import add_variable, build_slugged_db
+
+        conn = build_slugged_db(classification=None)  # scb/lisa (register 1)
+        add_variable(conn, register_id=1, var_id=901, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=901, name="A", slug="varb")
+        for a, b in (("vara", "varb"), ("varb", "vara")):
+            conn.execute(
+                "INSERT INTO variable_related_to (a_provider, a_register, "
+                "a_variable, b_provider, b_register, b_variable, relation_kind, "
+                "note) VALUES ('scb', 'lisa', ?, 'scb', 'lisa', ?, "
+                "'same_definition_different_column', 'auto:triage')",
+                (a, b),
+            )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (10, 'variable', 1, 'vara', 'A', 'edge')"
+        )
+        conn.executemany(
+            "INSERT INTO concept_group_variable (variable_id, group_id) "
+            "SELECT variable_id, 10 FROM variable WHERE slug = ?",
+            [("vara",), ("varb",)],
+        )
+        return conn
+
+    @staticmethod
+    def _run(conn):
+        from reg_meta_build.validate import ValidationResult, _check_concept_groups
+
+        result = ValidationResult()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        _check_concept_groups(conn, result, tables, corpus=False)
+        return result
+
+    def test_passes_on_coherent_groups(self):
+        result = self._run(self._grouped_db())
+        assert result.passed, result.failures
+        assert any("parity" in ln.text for ln in result.lines if ln.kind == "ok")
+
+    def test_undersized_group_fails(self):
+        conn = self._grouped_db()
+        conn.execute(
+            "DELETE FROM concept_group_variable WHERE variable_id IN "
+            "(SELECT variable_id FROM variable WHERE slug = 'varb')"
+        )
+        result = self._run(conn)
+        assert any("< 2 members" in f for f in result.failures)
+
+    def test_cross_register_member_fails(self):
+        conn = self._grouped_db()
+        conn.execute("UPDATE concept_group SET register_id = 99 WHERE group_id = 10")
+        result = self._run(conn)
+        assert any("outside their group's register" in f for f in result.failures)
+
+    def test_wrong_kind_wiring_fails(self):
+        conn = self._grouped_db()
+        conn.execute(
+            "UPDATE concept_group SET kind = 'classification', register_id = NULL "
+            "WHERE group_id = 10"
+        )
+        result = self._run(conn)
+        assert any("wrong-kind group" in f for f in result.failures)
+
+    def test_lost_edge_component_breaks_parity(self):
+        conn = self._grouped_db()
+        # Simulate the edge pass losing the component: drop the group while the
+        # sibling edges remain.
+        conn.execute("DELETE FROM concept_group_variable")
+        conn.execute("DELETE FROM concept_group")
+        result = self._run(conn)
+        assert any("parity" in f or "components" in f for f in result.failures)
