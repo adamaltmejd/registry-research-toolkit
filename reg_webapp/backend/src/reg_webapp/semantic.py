@@ -718,7 +718,9 @@ def _check_steward_admission(
         return
     if resolved_columns is None:
         return
-    missing = frozenset(c for c in resolved_columns if not index.admits(variable, c))
+    # Equivalent to probing `index.admits(variable, c)` per column: for one FQID,
+    # pair-admission across variants ⇔ membership in the held-column union.
+    missing = resolved_columns - held
     if missing:
         issues.append(
             _issue(
