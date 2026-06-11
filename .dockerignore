@@ -36,8 +36,6 @@ reg_meta_build/input_data/
 # --- Node / bun build state (bun reinstalls from the lockfile in-image) ---
 **/node_modules/
 reg_webapp/frontend/dist/
-mock_data_wizard/web/
-mock_data_wizard/src/mock_data_wizard/static/
 
 # --- Docs / specs not needed to build or run ---
 # NOTE: do NOT blanket-exclude **/*.md — several member pyprojects set

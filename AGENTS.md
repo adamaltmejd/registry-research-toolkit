@@ -105,11 +105,10 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   into a single file uploaded to MONA. Each added runtime dep must already be in MONA's
   WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
 
-`mock_data_wizard`'s old local editor/server (`editor.py`, `server.py`) are already
-removed; `classify.py` was **moved** to `reg_monabundle/runtime/classify.py` (not
-deleted — it backs the bundle's runtime classification). `mock-data-wizard ui` is a
-frozen stub and the `web/` SPA awaits final deletion (step 7 in `REFACTOR_SPEC.md`),
-superseded by `reg_webapp`. Don't revive that path — extend the new packages.
+`mock_data_wizard`'s old local authoring path (editor/server/`ui` subcommand and the
+`web/` SPA) is fully deleted, superseded by `reg_webapp`; `classify.py` was **moved** to
+`reg_monabundle/runtime/classify.py` (not deleted — it backs the bundle's runtime
+classification). Don't revive that path — extend the new packages.
 
 # Run (dev servers)
 
