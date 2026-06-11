@@ -228,4 +228,43 @@ describe("CatalogPicker", () => {
       .element(page.getByRole("button", { name: /Kön/ }))
       .not.toBeInTheDocument();
   });
+
+  it("ranks an exact match first even when it sorts late alphabetically", async () => {
+    // Incoming alphabetical order puts "Kön" LAST — only prefix-priority
+    // ranking can hoist it to row 1 (the lead's target-hunt requirement).
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      registerNode(
+        "scb/lisa",
+        {
+          fqid: "scb/lisa/anstku",
+          name: "Antal anställda enligt kontrolluppgift",
+        },
+        {
+          fqid: "scb/lisa/dispke",
+          name: "Disponibel inkomst per konsumtionsenhet",
+        },
+        { fqid: "scb/lisa/kefam", name: "Konsumtionsenheter, familj" },
+        { fqid: "scb/lisa/kon", name: "Kön" },
+      ),
+    );
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    await page.getByRole("textbox", { name: "Filter variables" }).fill("kon");
+
+    // "Kön" must be the FIRST pick row (folded-exact on slug `kon` + name `kon`),
+    // despite sorting last alphabetically — proves the ranking, not a coincidence.
+    // Buttons in document order: [0] = Cancel (picker head), [1] = first pick row.
+    const firstPick = page.getByRole("button").nth(1);
+    await expect.element(firstPick).toBeVisible();
+    await vi.waitFor(() =>
+      expect(firstPick.element().textContent).toContain("Kön"),
+    );
+  });
 });

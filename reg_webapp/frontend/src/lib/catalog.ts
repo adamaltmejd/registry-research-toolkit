@@ -74,6 +74,42 @@ export function matchesFilter(
   return haystacks.some((h) => h != null && foldText(h).includes(q));
 }
 
+/** Filter `items` by `matchesFilter` over `keys(item)`, THEN rank the survivors
+ * for target-hunting: (1) folded-exact key match, (2) folded-prefix key match,
+ * (3) other substring matches — each tier keeping the input order (a STABLE
+ * sort, so the caller's existing alphabetical order survives within a tier).
+ * Used by the PICKERS (where the user hunts a specific row: "kon" → Kön first),
+ * NOT the browse pages (which keep plain alphabetical order — the filter only
+ * narrows). An empty needle returns the matched list unchanged (every row is
+ * tier 3, stable). */
+export function rankFilter<T>(
+  items: T[],
+  needle: string,
+  keys: (item: T) => (string | null | undefined)[],
+): T[] {
+  const q = foldText(needle).trim();
+  const matched = items.filter((it) => matchesFilter(needle, ...keys(it)));
+  if (!q) {
+    return matched;
+  }
+  // 0 = exact, 1 = prefix, 2 = other. `Array.prototype.sort` is stable, so
+  // equal-tier rows keep their incoming (alphabetical) order.
+  const tier = (it: T): number => {
+    const folded = keys(it).map((k) => (k == null ? null : foldText(k)));
+    if (folded.some((f) => f === q)) {
+      return 0;
+    }
+    if (folded.some((f) => f?.startsWith(q))) {
+      return 1;
+    }
+    return 2;
+  };
+  return matched
+    .map((it, i) => ({ it, i, t: tier(it) }))
+    .sort((a, b) => a.t - b.t || a.i - b.i)
+    .map((e) => e.it);
+}
+
 // ── FQID path helpers ───────────────────────────────────────────────────────
 // The SPA routes mirror the API: `/catalog/<fqid-path>`. These split/join the
 // path portion (after `/catalog`) into FQID segments.

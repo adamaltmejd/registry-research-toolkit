@@ -10,6 +10,7 @@ import {
   matchesFilter,
   narrowCatalogNode,
   nodeLabel,
+  rankFilter,
   registerPrefixOf,
   representationsCollapse,
   representationsFromStates,
@@ -92,6 +93,45 @@ describe("matchesFilter", () => {
   it("skips null/undefined haystacks", () => {
     expect(matchesFilter("kon", null, undefined, "Kön")).toBe(true);
     expect(matchesFilter("kon", null, undefined)).toBe(false);
+  });
+});
+
+describe("rankFilter", () => {
+  // Alphabetical input (the picker's incoming order) with a few "kon" matches.
+  const items = [
+    { name: "Antal anställda enligt kontrolluppgift", fqid: "scb/lisa/anstku" },
+    {
+      name: "Disponibel inkomst per konsumtionsenhet",
+      fqid: "scb/lisa/dispke",
+    },
+    { name: "Konsumtionsenheter, familj", fqid: "scb/lisa/kefam" },
+    { name: "Kön", fqid: "scb/lisa/kon" },
+    { name: "Yrke", fqid: "scb/lisa/ykon" },
+  ];
+  const keys = (i: { name: string; fqid: string }) => [i.fqid, i.name];
+
+  it("ranks exact → prefix → other, keeping alphabetical order within a tier", () => {
+    const out = rankFilter(items, "kon", keys).map((i) => i.name);
+    // "Kön" (name folds to exact "kon") AND scb/lisa/kon (slug exact) → tier 0,
+    // first. Then prefix matches ("Konsumtionsenheter…"). Then the rest, each
+    // tier keeping the incoming alphabetical order.
+    expect(out[0]).toBe("Kön");
+    expect(out).toEqual([
+      "Kön", // exact (slug `kon` + folded name `kon`)
+      "Konsumtionsenheter, familj", // prefix
+      "Antal anställda enligt kontrolluppgift", // other (substring)
+      "Disponibel inkomst per konsumtionsenhet", // other
+      "Yrke", // other — slug `ykon` contains "kon"
+    ]);
+  });
+
+  it("empty needle returns every item, order unchanged", () => {
+    expect(rankFilter(items, "", keys)).toEqual(items);
+    expect(rankFilter(items, "  ", keys)).toEqual(items);
+  });
+
+  it("drops non-matches", () => {
+    expect(rankFilter(items, "zzz", keys)).toEqual([]);
   });
 });
 

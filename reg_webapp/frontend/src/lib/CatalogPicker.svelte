@@ -11,9 +11,9 @@ import { asyncResource } from "./async.svelte";
 import {
   bindingChildren,
   deriveType,
-  matchesFilter,
   narrowCatalogNode,
   type Representation,
+  rankFilter,
   representationsCollapse,
   representationsFromStates,
 } from "./catalog";
@@ -92,13 +92,16 @@ const variantList = $derived(
 
 // In-memory type-to-filter over whichever list this picker shows (740 register
 // variables open on a wall of near-identical `agi*` rows otherwise). Match on
-// BOTH slug/FQID and display name (matchesFilter folds diacritics + case).
+// BOTH slug/FQID and display name (rankFilter folds diacritics + case). Unlike
+// the browse pages, the picker RANKS the survivors (exact → prefix → other) so a
+// target-hunt ("kon" → Kön) surfaces the wanted row first; alphabetical order is
+// kept within each tier.
 let filter = $state("");
 const filteredVariants = $derived(
-  variantList.filter((v) => matchesFilter(filter, v.slug, v.name)),
+  rankFilter(variantList, filter, (v) => [v.slug, v.name]),
 );
 const filteredVariables = $derived(
-  variableChildren.filter((c) => matchesFilter(filter, c.fqid, c.name)),
+  rankFilter(variableChildren, filter, (c) => [c.fqid, c.name]),
 );
 
 // The derive-on-pick resolve state + the REPRESENTATION chooser. A concept can
