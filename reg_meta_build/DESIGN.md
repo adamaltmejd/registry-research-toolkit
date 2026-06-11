@@ -827,24 +827,26 @@ decomposes per year, and cross-year logic stays at year grain. (Lifting year-nes
 what a future cross-year edition form — läsår ranges — would change; the model
 accommodates it, see scope boundaries.)
 
-**Drift conflation — identity at year grain, window-blind.** The cascade's *identity*
-steps — value-set fold (one value set in several groups), same-label drift (`-N`
-collapse near-dups), cosmetic drift (symmetric diff ≤ `_COSMETIC_MAX_SYM`, no shared-
-code relabel) — decide "these are the SAME coding, re-delivered with drift". That
-judgment is about the coding, not the window: a VT and an HT delivery of one drifted
-coding must still collapse to ONE winner (the dominant population in the #271
-measurements — preserving it is a hard requirement), not fragment into two near-
-identical term states merely because their windows are disjoint. So per
-`(column, year)`, claims are first partitioned into same-coding classes and each class
-resolves to one **carrier** via the existing cascade order restricted to the class
-(authority → recency → … → largest-set). Class formation reuses today's *pool-level*
-predicates verbatim — value-set-id equality, one-source-label-across-the-pool, and the
-cosmetic test as the pool's max *pairwise* symmetric diff (no pairwise transitive
-closure: an A\~B\~C chain whose A↔C diff exceeds the threshold does NOT conflate,
-exactly as today's set-level check refuses it). The carrier keeps **its own claim
-window** — not the class hull — and co-class losers' claims are *dropped* (no carve, no
-run split), which is byte-for-byte today's drop semantics including the #270 corner
-where a boundary-year winner claims only its own term window.
+**Drift conflation — identity per compaction window, blind to claim windows.** The
+cascade's *identity* steps — value-set fold (one value set in several groups),
+same-label drift (`-N` collapse near-dups), cosmetic drift (symmetric diff ≤
+`_COSMETIC_MAX_SYM`, no shared-code relabel) — decide "these are the SAME coding,
+re-delivered with drift". That judgment is about the coding, not the claim window: a VT
+and an HT delivery of one drifted coding must still collapse to ONE winner (the dominant
+population in the #271 measurements — preserving it is a hard requirement), not fragment
+into two near-identical term states merely because their windows are disjoint. So per
+`(column, compaction window)` — a per-variant policy scope, **default: the calendar
+year** (see *Cadence policy* below) — claims are first partitioned into same-coding
+classes and each class resolves to one **carrier** via the existing cascade order
+restricted to the class (authority → recency → … → largest-set). Class formation reuses
+today's *pool-level* predicates verbatim — value-set-id equality,
+one-source-label-across-the-pool, and the cosmetic test as the pool's max *pairwise*
+symmetric diff (no pairwise transitive closure: an A\~B\~C chain whose A↔C diff exceeds
+the threshold does NOT conflate, exactly as today's set-level check refuses it). The
+carrier keeps **its own claim window** — not the class hull — and co-class losers'
+claims are *dropped* (no carve, no run split), which is byte-for-byte today's drop
+semantics including the #270 corner where a boundary-year winner claims only its own
+term window.
 
 **Segment choice — window-aware, per overlapped segment.** The surviving carriers'
 windows partition the year into atomic segments. Per segment, the carriers covering it
@@ -879,6 +881,38 @@ stay year-aligned, and the school-year/läsår/season/month forms still expand f
 (the narrowing subset of `_edition_bounds` is unchanged). The clamp's "only ever
 narrows, never crosses a year" property is inherited from claim year-nesting; the
 `coalesce_inverted_state_window` fail-fast stays as the backstop.
+
+#### Cadence policy: the compaction window is per-variant
+
+The principled scope for drift conflation is not the calendar year — it is the variant's
+**delivery period** (design review, 2026-06-11): one delivery fills one physical column
+with one value set, so *within* a delivery, union semantics are mandatory (a value a
+LISA variable gains in March belongs to that LISA year's set even though it was invalid
+in Jan–Feb — automatic, since the annual edition is a single claim), while *across*
+deliveries a value-set difference is two periods, not a conflict (a monthly-cadence
+variable whose March set differs from February is simply two months with different
+sets). Cross-delivery cosmetic collapse is therefore a **compaction policy** —
+fragmentation control, not correctness — and the engine takes the compaction window as
+an explicit per-variant parameter rather than hard-coding the year.
+
+- **Default: calendar year.** Every SCB edition is year-stamped, the term registers'
+  cosmetic VT/HT drift (school/course rosters) must keep collapsing to one winner, and
+  the default preserves the measured cosmetic baseline and the zero-diff gate.
+- **AGI is declared `cadence = month` from the start.** Register 392
+  (Arbetsgivardeklarationer på individnivå, variant *Individuppgifter (AGI)*) carries
+  monthly-cadence data even though its catalog editions are annual-stamped and no
+  value-set conflict exists at either grain today — the declaration is **output-inert
+  now** (asserted by the dbdiff gate) and pins the semantics before data forces them:
+  month-grain deliveries are never compacted across months as if they were one delivery.
+  The same setting is the onboarding knob for the first genuinely sub-annual-coding
+  provider (SOS half-year, FK/FHM/SKV events).
+- **`cadence = month` does not extend `_edition_bounds` month parsing.** Month tokens in
+  SCB edition names are overwhelmingly *measurement-date qualifiers of annual
+  deliveries* — the school registers' `15 oktober YYYY` census snapshots, the
+  `Mars 2006` survey waves — so globally narrowing month-named editions would drop
+  eleven months of real coverage. Month-grain **claim windows** remain a separate
+  per-variant opt-in that nothing in today's corpus needs; the cadence parameter alone
+  only scopes conflation.
 
 #### Authority and recency under segments
 
@@ -988,7 +1022,10 @@ period formatter for display. What it needs *beyond* it, decided in its own desi
 alias-window surface (`variable_alias` has no validity columns today — DDL addition or a
 sibling table) and the binding-side representation pick (#206/#217 column-based
 keyspaces). `column_merges.toml` is **not** the vehicle — it asserts era-renames that
-never co-occur, the exact opposite of 12 deliberately-parallel columns.
+never co-occur, the exact opposite of 12 deliberately-parallel columns. The AGI
+variant's `cadence = month` declaration (*Cadence policy* above) is orthogonal to this
+merge: the cadence scopes *edition* conflation on the AGI register, while these monthly
+*columns* ride annual LISA editions and get their windows from the family merge.
 
 #### Measurement and verification plan
 
@@ -1040,10 +1077,13 @@ Every implementation PR gates on:
    `regyears`/`year_authority`/`year_approval`/`from_iso`/`to_iso` for the per-year
    claim records; resolution and emission still read them at year grain. Gate: dbdiff
    byte-identity on the real corpus.
-2. **PR-B — the interval sweep.** Drift conflation, segment choice, run assembly,
-   interval-grain open-top gate, segment diagnostics, the `reg_meta.fqid` period
-   formatter, the same-column any-overlap guard (coalescer assert + validate.py check),
-   and the full measurement report. Gate: the enumerated-population diff above.
+2. **PR-B — the interval sweep.** Drift conflation scoped by the per-variant
+   compaction-window parameter (default: calendar year; AGI declared `month`,
+   output-inert), segment choice, run assembly, interval-grain open-top gate, segment
+   diagnostics, the `reg_meta.fqid` period formatter, the same-column any-overlap guard
+   (coalescer assert + validate.py check), and the full measurement report. Gate: the
+   enumerated-population diff above (which also asserts the AGI declaration's
+   inertness).
 3. **PR-C — provider-blind engine extraction, byte-identical.** The sweep (claims in,
    owned intervals out) moves to a shared module with no SCB grammar in it; `scb.py`
    keeps claim *extraction* (`registerversionnamn` parsing). SCB stays the only caller
