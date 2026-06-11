@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  grainOfToken,
   looksLikePeriod,
   nextResolutionQuery,
   periodFieldFromQuery,
-  periodFromTokenText,
   periodFromWire,
   periodQueryFromField,
   periodRangeEndpoints,
@@ -11,6 +11,7 @@ import {
   periodToResolveWire,
   periodToWire,
   queryFromParams,
+  rangeRepresentable,
   VALUE_SET_VERSION_NONE,
 } from "./period";
 
@@ -95,6 +96,14 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
     expect(periodFromWire("2018..2019..2020")).toBe("2018..2019..2020");
   });
 
+  it("a non-grammar 'year' is NOT coerced to int — it rides as a string the validator flags", () => {
+    // int Source.period passes reg_schema's int-literal arm unchecked, so a
+    // typo like "202" must stay a string for the grammar check to catch.
+    expect(periodFromWire("202")).toBe("202");
+    expect(periodFromWire("202..2009")).toEqual({ from: "202", to: 2009 });
+    expect(periodFromWire("3000")).toBe("3000");
+  });
+
   it("null / blank → the unset empty-string period", () => {
     expect(periodFromWire(null)).toBe("");
     expect(periodFromWire("")).toBe("");
@@ -150,23 +159,20 @@ describe("periodToResolveWire (resolve-bound callers)", () => {
   });
 });
 
-describe("periodFromTokenText (PeriodEditor token-mode emit shaping)", () => {
-  it("plain text stays the raw trimmed string (pre-#307 token behavior)", () => {
-    expect(periodFromTokenText("  2018  ")).toBe("2018");
-    expect(periodFromTokenText("HT2020")).toBe("HT2020");
-    expect(periodFromTokenText("2010..2020")).toBe("2010..2020");
-    expect(periodFromTokenText("junk")).toBe("junk");
-  });
-
-  it("comma text becomes the #307 segment list", () => {
-    expect(periodFromTokenText("2005..2010, 2015..2020")).toEqual([
+// periodFromTokenText was retired in the #308 merge: the editor's token-mode
+// emission threads through periodFromWire (which carries the #307 comma-list
+// arm AND the schema-valid scalar shaping), so the wire mapper below is the
+// single emit path. List/blank-member coverage lives on periodFromWire.
+describe("periodFromWire #307 list arm", () => {
+  it("comma text becomes the segment list (members shaped like scalars)", () => {
+    expect(periodFromWire("2005..2010, 2015..2020")).toEqual([
       { from: 2005, to: 2010 },
       { from: 2015, to: 2020 },
     ]);
   });
 
   it("malformed comma text (blank member) rides through as the raw string", () => {
-    expect(periodFromTokenText("2018,")).toBe("2018,");
+    expect(periodFromWire("2018,")).toBe("2018,");
   });
 });
 
@@ -436,5 +442,37 @@ describe("periodRangeEndpoints", () => {
   it("returns null for non-ranges and malformed ranges", () => {
     expect(periodRangeEndpoints("2020")).toBeNull();
     expect(periodRangeEndpoints("2018..2019..2020")).toBeNull();
+  });
+});
+
+describe("grainOfToken / rangeRepresentable (#308)", () => {
+  it("classifies every token form (H1/H2 map to term)", () => {
+    expect(grainOfToken("2020")).toBe("year");
+    expect(grainOfToken("VT2009")).toBe("term");
+    expect(grainOfToken("HT2009")).toBe("term");
+    expect(grainOfToken("2020-H1")).toBe("term");
+    expect(grainOfToken("2020-Q3")).toBe("quarter");
+    expect(grainOfToken("2020-08")).toBe("month");
+    expect(grainOfToken("2020-08-15")).toBe("day");
+    expect(grainOfToken("_default")).toBeNull();
+    expect(grainOfToken("2018..2020")).toBeNull();
+    expect(grainOfToken("junk")).toBeNull();
+  });
+
+  it("rangeRepresentable accepts single tokens and uniform-grain ranges only", () => {
+    expect(rangeRepresentable("2020")).toBe(true);
+    expect(rangeRepresentable("HT2018")).toBe(true);
+    expect(rangeRepresentable("2010..2020")).toBe(true);
+    expect(rangeRepresentable("VT2018..HT2019")).toBe(true);
+    // Mixed grains (the #306 succession clips) need the text/token escape.
+    expect(rangeRepresentable("1992..2009-06-30")).toBe(false);
+    expect(rangeRepresentable("_default")).toBe(false);
+    expect(rangeRepresentable("")).toBe(false);
+  });
+
+  it("rangeRepresentable is grains-aware: a value at an excluded grain needs the text mode", () => {
+    expect(rangeRepresentable("2020-08", ["year"])).toBe(false);
+    expect(rangeRepresentable("2020-08", ["year", "month"])).toBe(true);
+    expect(rangeRepresentable("2020", ["year"])).toBe(true);
   });
 });

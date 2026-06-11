@@ -11,6 +11,7 @@ import {
   type AddSegment,
   buildAddPlan,
   formatWindow,
+  grainsFromStates,
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
@@ -120,6 +121,10 @@ const registerPrefix = $derived(registerPrefixOf(node.fqid));
 // An implicit project created with an empty seed is never re-seeded, so the Add
 // action stays disabled until the seed is present (sub-second).
 const seedReady = $derived(regMetaVersion !== "" && steward !== "");
+
+// #308: the grains this variable's FULL state history exhibits (year always;
+// finer from the #321 tokens) — pre-narrows the period picker's grain select.
+const grains = $derived(grainsFromStates(node.states));
 
 // ── #306 one-click add: plan → (genuine prompts only) → commit ──────────────
 // The page-level "Add to project" runs `buildAddPlan` over the VISIBLE states
@@ -282,6 +287,7 @@ const repSegment = $derived(
 
   <PeriodPicker
     period={params.period ?? null}
+    {grains}
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />

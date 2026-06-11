@@ -214,6 +214,67 @@ export function periodRangeEndpoints(wire: string): [string, string] | null {
   return parts.length === 2 ? [parts[0].trim(), parts[1].trim()] : null;
 }
 
+// ── Grain model (#308 range-first picker) ────────────────────────────────────
+// The picker UI works in GRAINS (year/term/quarter/month/day) with from/to
+// controls per grain; the wire grammar stays the serialization. The `-H1`/`-H2`
+// half forms map onto the term grain (same bounds; reg_meta accepts them on
+// input but never emits them — the term spelling is canonical).
+
+export type PeriodGrain = "year" | "term" | "quarter" | "month" | "day";
+
+/** Coarse → fine — the grain `<select>` order. */
+export const PERIOD_GRAINS: PeriodGrain[] = [
+  "year",
+  "term",
+  "quarter",
+  "month",
+  "day",
+];
+
+/** Whether a wire period is representable by the RANGE UI (#308): a single
+ * grammar token, or a range whose endpoints share ONE grain. `_default`,
+ * mixed-grain ranges (the #306 succession clips), #307 segment LISTS, and junk
+ * need the text / token escape hatch — they must stay visible and editable,
+ * never silently blanked into empty range controls. */
+export function rangeRepresentable(
+  wire: string,
+  grains: PeriodGrain[] = PERIOD_GRAINS,
+): boolean {
+  const endpoints = periodRangeEndpoints(wire) ?? [wire, wire];
+  const gFrom = grainOfToken(endpoints[0]);
+  return (
+    gFrom !== null &&
+    gFrom === grainOfToken(endpoints[1]) &&
+    // A surface offering a NARROWED grain set (the catalog picker) can't
+    // render a value at an excluded grain either — it must fall back to the
+    // text mode, not show blank controls over a hidden value (Codex P2).
+    grains.includes(gFrom)
+  );
+}
+
+/** The grain of one single wire token, or null for a non-token (`_default`,
+ * ranges, lists, junk). `YYYY-H1`/`-H2` report `term` (their VT/HT bounds
+ * twins). */
+export function grainOfToken(token: string): PeriodGrain | null {
+  const value = token.trim();
+  if (!isPeriodToken(value)) {
+    return null;
+  }
+  if (/^[HV]T/.test(value)) {
+    return "term";
+  }
+  if (/-Q[1-4]$/.test(value)) {
+    return "quarter";
+  }
+  if (/-H[12]$/.test(value)) {
+    return "term";
+  }
+  if (/^\d{4}$/.test(value)) {
+    return "year";
+  }
+  return /^\d{4}-\d{2}$/.test(value) ? "month" : "day";
+}
+
 /** Convert a structured `Source.period` (int | token-string | {from,to} |
  * "_default" | segment list) into the wire `?period` string (a bare year, a
  * `from..to` range, a token, `_default`, or — for the #307 list form — the
@@ -333,26 +394,14 @@ function segmentFromWire(value: string): PeriodSegment {
   return year !== null ? year : value;
 }
 
-/** Token-mode text → `Source.period` (PeriodEditor's emit shaping). Plain
- * text stays the raw trimmed string (current token-mode behavior; the server
- * validates it), but comma text becomes the #307 segment LIST via
- * `periodFromWire` — the minimal interrupted-series authoring affordance
- * until the picker grows its dedicated mode (#308). Malformed list text (a
- * blank member) rides through as the raw string for the server to flag. */
-export function periodFromTokenText(raw: string): Period {
-  const value = raw.trim();
-  if (!value.includes(LIST_SEP)) {
-    return value;
-  }
-  return periodFromWire(value);
-}
-
-/** Parse a string as a bare integer year (no sign, round-trips), else null —
- * matching PeriodEditor's `emitYears` integer test. */
+/** Parse a string as a bare GRAMMAR year (19xx/20xx), else null. Stricter than
+ * "any integer" on purpose: an int Source.period passes reg_schema's int-literal
+ * arm unchecked, so coercing a typo like "202" to int 202 would slip a nonsense
+ * year past the structural gate — left as a string, the grammar check flags it
+ * (review on #308). */
 function yearInt(raw: string): number | null {
   const trimmed = raw.trim();
-  const n = Number.parseInt(trimmed, 10);
-  return trimmed !== "" && String(n) === trimmed ? n : null;
+  return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
 }
 
 // ── Query-string builder ─────────────────────────────────────────────────────
