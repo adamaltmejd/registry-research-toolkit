@@ -781,19 +781,313 @@ Kommunernas aktivitetsansvar, PSU waves) — none in LISA/income/RTB/population/
 so the recency-winner is a defensible default and a full interval resolver is not yet
 worth its cost.
 
-This is safe to defer because there is **no lock-in**: storage
+This was safe to defer because there is **no lock-in**: storage
 (`valid_from`/`valid_to`), the one-value-set-per-period invariant, reg_meta's query
 resolver, and the period grammar are all already interval-native, and the DB is
 regenerate-not-migrate — so making the resolver interval-native later is a localized
-change at flat cost. The **trigger** to do it: the first provider/register with genuine
-sub-annual *coding* cadence (value sets that change within a year — e.g. SOS half-year
-deliveries; Försäkringskassan/Folkhälsomyndig- heten/Skatteverket event data), since a
-year-bucketed resolver would silently drop its codings on arrival. At that point the
-resolver moves to an interval sweep in the shared provider-blind core (not this SCB
-adapter), designed against the new provider's real metadata. Mere high-frequency *data*
-with a stable annual coding (e.g. monthly income) does **not** trigger it. Decision
+change at flat cost. The original trigger ("the first provider/register with genuine
+sub-annual *coding* cadence") was **revised on 2026-06-11**: the named trigger case is
+already in the catalog (the monthly income column families, see the consumers note in
+the design below), and pre-v1 — slugs UNFROZEN, regenerate-not-migrate, no external
+users — is when identity-non-preserving re-derivation is cheapest. The interval-native
+resolver is being built now; the approved design is the next section. Decision
 rationale, real-corpus measurements, and the rejected narrow term-split alternative:
-issue #271.
+issue #271. This limitation section describes the **current shipped behavior** and is
+deleted when the rewrite lands.
+
+### Interval-native co-delivery resolution (#271 — design)
+
+Approved design for replacing the year-bucketed resolver above with an interval-native
+sweep. Written before implementation; the *model* subsections below become the standing
+documentation of resolver behavior once the staged PRs land, at which point the
+year-granular-limitation section above and the *staging* subsection at the end of this
+section are deleted (the self-deleting gate).
+
+**Design goal.** Resolution must operate on the windows editions actually delivered
+(`_edition_bounds`), not on calendar-year buckets, so that two same-year editions with
+genuinely different value sets on disjoint windows (VT Jan–Jun vs HT Jul–Dec) BOTH ship
+as non-overlapping states — term-split falls out of interval correctness, with no
+special case. Everything the year bucket gets right must be preserved: cosmetic/drift
+collapses still pick one winner, authority still lets a full-year edition supersede a
+partial slice it overlaps, and the #270 boundary clamp must be subsumed exactly, never
+regressed.
+
+#### The model: claims → drift conflation → segment choice → runs
+
+**Claims.** Each state group carries one *claim* per observed edition year:
+`(lo, hi, authority, approval)` — the inclusive ISO hull of the group's edition windows
+in that year (`_edition_bounds`, a full-year edition contributing
+`YYYY-01-01..YYYY-12-31`), with the year's max `_edition_authority` and max approval
+date. This single structure replaces `regyears`, `year_authority`, `year_approval` AND
+the #270 envelope (`from_iso`/`to_iso`): the envelope was the min/max hull of exactly
+these windows, so the boundary clamp becomes a *corollary* (below) rather than a bolted-
+on field pair. Claims are **year-nested by construction** — `_edition_bounds` ties every
+marker to its edition year — so segments never cross a year boundary, the sweep
+decomposes per year, and cross-year logic stays at year grain. (Lifting year-nesting is
+what a future cross-year edition form — läsår ranges — would change; the model
+accommodates it, see scope boundaries.)
+
+**Drift conflation — identity per compaction window, blind to claim windows.** The
+cascade's *identity* steps — value-set fold (one value set in several groups),
+same-label drift (`-N` collapse near-dups), cosmetic drift (symmetric diff ≤
+`_COSMETIC_MAX_SYM`, no shared-code relabel) — decide "these are the SAME coding,
+re-delivered with drift". That judgment is about the coding, not the claim window: a VT
+and an HT delivery of one drifted coding must still collapse to ONE winner (the dominant
+population in the #271 measurements — preserving it is a hard requirement), not fragment
+into two near-identical term states merely because their windows are disjoint. So per
+`(column, compaction window)` — a per-variant policy scope, **default: the calendar
+year** (see *Cadence policy* below) — claims are first partitioned into same-coding
+classes and each class resolves to one **carrier** via the existing cascade order
+restricted to the class (authority → recency → … → largest-set). Class formation reuses
+today's *pool-level* predicates verbatim — value-set-id equality,
+one-source-label-across-the-pool, and the cosmetic test as the pool's max *pairwise*
+symmetric diff (no pairwise transitive closure: an A\~B\~C chain whose A↔C diff exceeds
+the threshold does NOT conflate, exactly as today's set-level check refuses it). The
+carrier keeps **its own claim window** — not the class hull — and co-class losers'
+claims are *dropped* (no carve, no run split), which is byte-for-byte today's drop
+semantics including the #270 corner where a boundary-year winner claims only its own
+term window.
+
+**Segment choice — window-aware, per overlapped segment.** The surviving carriers'
+windows partition the year into atomic segments. Per segment, the carriers covering it
+run the existing *choice* cascade — authority → recency → historical-grain →
+supersession → label freshness → curation pin → extends-later — and the winner owns the
+segment. (The identity steps don't reappear here: distinct classes are by definition not
+same-coding, so value-set fold / same-label / cosmetic can never fire among carriers.) A
+sole-claimant segment is owned outright: **disjoint windows are not a conflict**, which
+is the entire fix. A segment still holding >1 distinct value set after the cascade and
+curation is GENUINE: the build fails before materializing, exactly as today, but the
+failure names the contested *segment* (via the period-token formatter below), not just
+the year.
+
+**Run assembly and emission.** A group's owned segments form runs, generalizing
+`_rle_runs`: a run breaks (a) on a year with no owned segment (today's rule —
+`_rle_runs` runs over *owned* years, so a year that was lost or dropped still splits)
+and (b) at any segment a *rival* owns on the same column (new — mid-year handoffs become
+expressible). Each run emits `[first owned lo .. last owned hi]`: **interior unclaimed
+space inside a run stays paved** (an interior VT-only year between owned years still
+reads as covered — today's behavior, deliberately kept so the rewrite is output-stable
+outside genuine conflicts), while **lost space never is** (a rival- owned segment
+carves, at whatever grain the rival won). No date arithmetic is needed: all bounds are
+grammar-generated ISO strings, ordering is lexical, and emission hulls per run rather
+than concatenating adjacent segments. (If month-grain narrowing ever lands, the
+synthesized `02-29` month-end bound from `period_token_to_bounds` must not round-trip
+through `date.fromisoformat` — a footgun to remember, not a current constraint.)
+
+**#270 subsumption (corollary).** A lifetime-boundary run's first/last owned claim IS
+the sub-annual envelope edge: a group whose earliest edition is HT starts its first run
+at `YYYY-07-01`, one ending on VT ends at `YYYY-06-30`, interior year-grain handoffs
+stay year-aligned, and the school-year/läsår/season/month forms still expand full-year
+(the narrowing subset of `_edition_bounds` is unchanged). The clamp's "only ever
+narrows, never crosses a year" property is inherited from claim year-nesting; the
+`coalesce_inverted_state_window` fail-fast stays as the backstop.
+
+#### Cadence policy: the compaction window is per-variant
+
+The principled scope for drift conflation is not the calendar year — it is the variant's
+**delivery period** (design review, 2026-06-11): one delivery fills one physical column
+with one value set, so *within* a delivery, union semantics are mandatory (a value a
+LISA variable gains in March belongs to that LISA year's set even though it was invalid
+in Jan–Feb — automatic, since the annual edition is a single claim), while *across*
+deliveries a value-set difference is two periods, not a conflict (a monthly-cadence
+variable whose March set differs from February is simply two months with different
+sets). Cross-delivery cosmetic collapse is therefore a **compaction policy** —
+fragmentation control, not correctness — and the engine takes the compaction window as
+an explicit per-variant parameter rather than hard-coding the year.
+
+- **Default: calendar year.** Every SCB edition is year-stamped, the term registers'
+  cosmetic VT/HT drift (school/course rosters) must keep collapsing to one winner, and
+  the default preserves the measured cosmetic baseline and the zero-diff gate.
+- **AGI is declared `cadence = month` from the start.** Register 392
+  (Arbetsgivardeklarationer på individnivå, variant *Individuppgifter (AGI)*) carries
+  monthly-cadence data even though its catalog editions are annual-stamped and no
+  value-set conflict exists at either grain today — the declaration is **output-inert
+  now** (asserted by the dbdiff gate) and pins the semantics before data forces them:
+  month-grain deliveries are never compacted across months as if they were one delivery.
+  The same setting is the onboarding knob for the first genuinely sub-annual-coding
+  provider (SOS half-year, FK/FHM/SKV events).
+- **`cadence = month` does not extend `_edition_bounds` month parsing.** Month tokens in
+  SCB edition names are overwhelmingly *measurement-date qualifiers of annual
+  deliveries* — the school registers' `15 oktober YYYY` census snapshots, the
+  `Mars 2006` survey waves — so globally narrowing month-named editions would drop
+  eleven months of real coverage. Month-grain **claim windows** remain a separate
+  per-variant opt-in that nothing in today's corpus needs; the cadence parameter alone
+  only scopes conflation.
+
+#### Authority and recency under segments
+
+The ranking itself is untouched
+(`_AUTH_FINAL > _AUTH_PLAIN > _AUTH_PRELIM > _AUTH_SUBANNUAL > _AUTH_OLD`), but its
+*reach* becomes exact: a full-year edition outranks a sub-annual slice **on the segments
+where they overlap** (all of the slice's window — so term-vs-full-year conflicts resolve
+as today), while authority simply never compares claims that share no segment.
+`_AUTH_SUBANNUAL`'s original job — "partial slices collide with the full year at year
+granularity" — reduces to its true meaning, "partial loses to full *where they actually
+compete*". Recency (`approval`) compares per segment among the claims covering it, same
+data as today's per-year max-merge. The cross-year steps move from year ints to ISO
+claim bounds: supersession's "latest introduction" reads min claim `lo` per value set,
+extends-later reads max claim `hi`, and `_pick_state_rep`'s era key follows. Consequence
+to verify, not design away: ties that today fall through to curation can now break (a
+VT-introduced vs HT-introduced vintage in one year is no longer "equal introduction"),
+so some `codelivery.toml` pins go inert (harmless by the file's contract) and — worse —
+a pin could be silently out-cascaded by a now-resolving earlier step. The measurement
+plan therefore includes a **pin re-validation diff**: per pinned column, before/after
+resolved winners must match or the pin is updated/retired in the same PR.
+
+#### The one-value-set-per-period invariant under intervals
+
+Unchanged in statement — `(variable, variant, period, column)` resolves to exactly one
+value set — and the enforcement was *already* interval-native end-to-end: the validator
+predicate is closed-interval ISO intersection
+(`a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to`, validate.py), the
+uniqueness index keys the full-date `valid_from` (db.py DDL), and reg_meta's
+`_states_in_bounds` intersects intervals. Two disjoint term states in one year pass all
+three *today*; the year-bucketed resolver is the only layer that refuses to produce
+them. The rewrite adds one **new failure-mode guard**: the current materializer cannot
+emit same-column same-value-set overlapping states by construction, but an interval
+sweep has new double-emission bug modes (segment vs hull), and the validator's conflict
+check requires *distinct* value sets — so the coalescer gains a post-emission assert
+(and validate.py a mirror check) that a column's emitted windows are pairwise
+non-overlapping regardless of value set. Genuine-conflict diagnostics
+(`coalesce_unresolved_codelivery`) and the validator's failure samples switch from bare
+years to period descriptors.
+
+**Period-token formatter.** Diagnostics and display need the inverse of
+`period_token_to_bounds`: `bounds → coarsest period token` (`2009-01-01..2009-06-30` →
+`VT2009`; `2009-07-01..2009-09-30` → `2009-Q3`; non-grammar windows render as an
+explicit ISO range). It lives in `reg_meta.fqid` beside its inverse so the two stay
+byte-agreed, and display must **never round a genuinely sub-annual window down to a bare
+year** — two term siblings both rendering "2009" would re-create exactly the ambiguity
+this work removes. Catalog display stays year-by-default otherwise (storage and display
+are orthogonal; `valid_from[:4]` remains the display-year source).
+
+#### State emission, identity, and lineage
+
+- **Identity.** States are slugless — identity is the compound key
+  `(variable_id, register_variant_id, valid_from, value_set_version_label)` — and the
+  rewrite is **deliberately identity-non-preserving**: re-deriving all \~116K states
+  with different `valid_from` values for the affected populations is accepted (pre-v1,
+  regenerate-not-migrate). Second-order churn: a changed `valid_from` changes which
+  states collide on the uniqueness key and hence which receive the cross-column
+  disambiguation label suffix; accepted as pre-v1 output diff, and curation pins are
+  unaffected (matched against triage/raw labels *before* disambiguation).
+- **Open-ended sentinel.** The "latest era" gate moves from year equality
+  (`regver_max == var_max_regver`) to interval grain: a group qualifies when its max
+  **surviving**-claim `hi` equals the variable's max surviving-claim `hi`. "Surviving"
+  (post-conflation, post-choice) keeps today's outcome when a VT carrier beat an HT
+  drift twin — the dropped HT claim must not disqualify the winner from staying open —
+  while a kept substantive VT/HT sibling pair hands the open top to the interval-latest
+  state only (two open tops on one column would overlap at the sentinel).
+- **Lineage.** `link_variable_state_lineage` already joins on interval overlap and emits
+  intersection windows — sub-annual consumer or source states produce finer
+  intersections with zero changes.
+- **Determinism.** Segments derive from sorted claim boundaries, owned intervals and
+  emission order from sorted structures; no wall-clock, no set-iteration order leaks.
+  Same guarantee as today, now stated as a requirement on the sweep.
+- **No DDL change.** Storage, indexes, and `SCHEMA_VERSION` are untouched — the schema
+  was already interval-native.
+
+#### What stays year-grain, by design
+
+- **`unika_summary`** parses to plain years and keeps exactly its current three narrow
+  roles — open-top signal, yearless fallback bounds, `_group_from_year` fallback.
+  Edition claims always win where present; a year-grain unika bound never narrows or
+  extends a sub-annual claim.
+- **Triage.** The contested-column gate already buckets by *edition id*, not year (Codex
+  #139) — no conversion. `_collapse_residual` passes 1–2 stay year-keyed: they reconcile
+  same-coding re-delivery drift, where year bucketing is a safe coarsening
+  (`_group_from_year`'s docstring argument), not coding conflicts.
+- **`_spans_overlap`** (the fast-path/timeline router) moves its span test from year
+  ints to claim-hull ISO bounds, so a partition whose only "overlap" was two disjoint
+  same-year terms keeps the fast path. Ripple: `_collapse_residual` pass 2 scopes on
+  this gate, so a few partitions shift between pass-2 clamping and timeline handling —
+  measured, not reasoned away.
+- **Display.** Year-by-default rendering is unchanged; only genuinely sub-annual windows
+  surface period tokens (formatter above).
+
+#### Consumers: monthly column families (designed-for; lands after the resolver)
+
+The catalog already carries \~9 monthly families ≈ 94 variables across
+lisa/ekonomiskt-bistand/rams/bas/hsl — 12 month-named delivery columns per concept (LISA
+`lonfink{jan..dec}`, `agi{1,2,3}lonfink{jan..dec}`, …). These ship inside **annual**
+editions, so the interval resolver does *not* by itself give them monthly windows
+(`_edition_bounds` reads the edition name, not column names — and the curated narrowing
+subset deliberately excludes month-named editions). The follow-up consumer is an
+**adapter-level curated family merge**: 12 columns → 1 variable, each column carrying a
+per-month alias window derived from its name's month suffix × delivered years (`YYYY-MM`
+period grammar). What it needs from this design: per-column interval claims (so 12
+sibling columns' windows coexist without a year-bucket collision), segment-grain
+supersession (so a family's vintage transitions resolve correctly mid-year), and the
+period formatter for display. What it needs *beyond* it, decided in its own design: an
+alias-window surface (`variable_alias` has no validity columns today — DDL addition or a
+sibling table) and the binding-side representation pick (#206/#217 column-based
+keyspaces). `column_merges.toml` is **not** the vehicle — it asserts era-renames that
+never co-occur, the exact opposite of 12 deliberately-parallel columns. The AGI
+variant's `cadence = month` declaration (*Cadence policy* above) is orthogonal to this
+merge: the cadence scopes *edition* conflation on the AGI register, while these monthly
+*columns* ride annual LISA editions and get their windows from the family merge.
+
+#### Measurement and verification plan
+
+The instrument is `scripts/measure_subannual_codings.py` (reuses `_edition_bounds` /
+`extract_year` / the cosmetic threshold, and mirrors the build importer's Vardemangder
+row filtering exactly, so the measured classification cannot drift from build behavior).
+Baseline (real corpus, 2026-06-11, after the PR-#297 review fixes): of 488,972
+`(variant, var, col, year)` groups, 6,540 carry ≥2 distinct edition windows; **VT-vs-HT:
+290 divergent** (145 cosmetic at `_COSMETIC_MAX_SYM`, 145 substantive across 51 distinct
+`(variant, var, col)` coding events); **term-vs-full-year: 355 divergent** (200
+cosmetic, 155 substantive across 43 events — recorded as the *max* symdiff over
+diverging terms, so a substantive HT divergence is never masked by a cosmetic VT one);
+**other sub-annual windows (quarters/halves vs any counterpart): 82 divergent** (20
+cosmetic, 62 substantive across 62 events). The term populations sit in the niche
+registers the 2026-06-09 investigation named (Komvux, sfi, SSV/CFL school- and
+course-code enumerations) — same shape as its \~257/\~282/\~194 counts, the deltas
+tracing to the script comparing raw delivered code keys where the retired spike read
+built-DB value sets. The quarter/half population is dominated by RTB
+`forsamling`/`kommun` 2009–2010 (the LKF re-issue family): the instrument counts
+divergent *inputs*, not dropped codings — several of these already resolve correctly via
+the historical-grain and authority steps, which is why the per-PR gate diffs *resolver
+output*, with the instrument scoping which inputs to inspect. Internal consistency is
+the gate: before/after comparisons run this script on both sides.
+
+Every implementation PR gates on:
+
+1. **Real-corpus build** — `build-db` with default validation against the maintainer
+   seed, green.
+2. **dbdiff against the pre-change DB** with a *stated expected diff*: the plumbing and
+   extraction PRs are byte-identical; the semantic PR's diff must be confined to the
+   enumerated populations — substantive disjoint same-year pairs (now two states),
+   mid-year handoffs, dissolved genuine conflicts/inert pins — and **zero diff** on the
+   cosmetic population.
+3. **Pin re-validation** — before/after resolved winner per `codelivery.toml`-pinned
+   column.
+4. **Regression corpus** — the known substantive cases (`Orsak` 2009 VT-15 vs HT-4
+   codes, `Lan` LKF vintages, Betyg/Gymnasieprogram/national-test grades, PSU waves)
+   asserted before/after: post-B both terms ship as non-overlapping states and
+   `resolve_at(VT…)`/`resolve_at(HT…)` return their own term's coding.
+5. **Synthetic suite** — full structural validator (`validate_built_db(corpus=False)`);
+   new fixtures: same-year disjoint substantive editions (both kept), same-year cosmetic
+   pair (one winner, unchanged), overlapping sub-annual windows (mid-year handoff),
+   VT/HT open-top selection, school-year/season/month editions (still full-year),
+   quarter claims.
+
+#### Staging (deleted when the last PR ships)
+
+1. **PR-A — claims plumbing, byte-identical.** `_StateGroup` drops
+   `regyears`/`year_authority`/`year_approval`/`from_iso`/`to_iso` for the per-year
+   claim records; resolution and emission still read them at year grain. Gate: dbdiff
+   byte-identity on the real corpus.
+2. **PR-B — the interval sweep.** Drift conflation scoped by the per-variant
+   compaction-window parameter (default: calendar year; AGI declared `month`,
+   output-inert), segment choice, run assembly, interval-grain open-top gate, segment
+   diagnostics, the `reg_meta.fqid` period formatter, the same-column any-overlap guard
+   (coalescer assert + validate.py check), and the full measurement report. Gate: the
+   enumerated-population diff above (which also asserts the AGI declaration's
+   inertness).
+3. **PR-C — provider-blind engine extraction, byte-identical.** The sweep (claims in,
+   owned intervals out) moves to a shared module with no SCB grammar in it; `scb.py`
+   keeps claim *extraction* (`registerversionnamn` parsing). SCB stays the only caller
+   until a second provider needs co-delivery resolution. Gate: dbdiff byte-identity.
 
 ## Slug curation
 
