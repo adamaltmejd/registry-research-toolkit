@@ -933,17 +933,17 @@ predicate is closed-interval ISO intersection
 uniqueness index keys the full-date `valid_from` (db.py DDL), and reg_meta's
 `_states_in_bounds` intersects intervals. Two disjoint term states in one year pass all
 three *today*; the year-bucketed resolver is the only layer that refuses to produce
-them. The rewrite adds one **new failure-mode guard**: the current materializer cannot
-emit same-column same-value-set overlapping states by construction, but an interval
-sweep has new double-emission bug modes (segment vs hull), and the validator's conflict
-check requires *distinct* value sets — so the coalescer gains a post-emission assert
-(`coalesce_same_column_overlap`) that the timeline path's emitted windows on one column
-are pairwise non-overlapping regardless of value set. The guard is build-time only — no
-validate.py mirror, deliberately: the shipped DB legitimately contains same-column
-same-value-set overlaps outside the timeline path (a yearless coding's open span beside
-its column's year-bearing states), which a DB-level check cannot tell apart from a sweep
-bug. Genuine-conflict diagnostics (`coalesce_unresolved_codelivery`) switch from bare
-years to period descriptors.
+them. The sweep carries one **failure-mode guard of its own**: the year-bucket
+materializer could not emit same-column same-value-set overlapping states by
+construction, but an interval sweep has double-emission bug modes (segment vs hull), and
+the validator's conflict check requires *distinct* value sets — so the coalescer runs a
+post-emission assert (`coalesce_same_column_overlap`) that the timeline path's emitted
+windows on one column are pairwise non-overlapping regardless of value set. The guard is
+build-time only — no validate.py mirror, deliberately: the shipped DB legitimately
+contains same-column same-value-set overlaps outside the timeline path (a yearless
+coding's open span beside its column's year-bearing states), which a DB-level check
+cannot tell apart from a sweep bug. Genuine-conflict diagnostics
+(`coalesce_unresolved_codelivery`) switch from bare years to period descriptors.
 
 **Period-token formatter.** Diagnostics and display need the inverse of
 `period_token_to_bounds`: `bounds → coarsest period token` (`2009-01-01..2009-06-30` →
