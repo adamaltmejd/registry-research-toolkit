@@ -90,3 +90,22 @@ def test_period_grammars_agree(value: str) -> None:
         f"reg_meta.is_period={is_period(value)} but "
         f"reg_schema._is_period_endpoint={_is_period_endpoint(value)}"
     )
+
+
+@pytest.mark.parametrize("value", [v for v in _CORPUS if is_period(v)])
+def test_period_bounds_expansions_agree(value: str) -> None:
+    """#307 widened the duplicate surface: ``reg_schema.structural`` now also
+    mirrors ``reg_meta.fqid.period_token_to_bounds`` (``_endpoint_bounds``) for
+    the period-list sorted/non-overlap rule. The same parity contract applies —
+    for every VALID token the two expansions must produce the same inclusive
+    ISO interval, or the structural overlap verdicts would drift from
+    reg_meta's interval-intersection verdicts (incl. the deliberate synthesized
+    Feb-29 upper bound both sides share)."""
+    from reg_meta.fqid import period_token_to_bounds  # noqa: PLC0415
+    from reg_schema.structural import _endpoint_bounds  # noqa: PLC0415
+
+    assert _endpoint_bounds(value) == period_token_to_bounds(value), (
+        f"period bounds drift for {value!r}: "
+        f"reg_meta.period_token_to_bounds={period_token_to_bounds(value)} but "
+        f"reg_schema._endpoint_bounds={_endpoint_bounds(value)}"
+    )

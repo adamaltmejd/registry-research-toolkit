@@ -62,9 +62,18 @@ from reg_meta.fqid import FqidError, parse, period_token_to_bounds
 from reg_schema.validation import ValidationIssue, ValidationResult
 
 if TYPE_CHECKING:
-    from reg_meta.catalog import Catalog, Period
+    from reg_meta.catalog import Catalog, Period, VariableState
     from reg_meta.fqid import Fqid
-    from reg_schema.project_data import Binding, PeriodRange, ProjectData, Source
+
+    # reg_schema's Source.period union (incl. the #307 list form) is aliased
+    # because reg_meta's resolve_at parameter type is already named `Period`.
+    from reg_schema.project_data import (
+        Binding,
+        Period as SchemaPeriod,
+        PeriodRange,
+        ProjectData,
+        Source,
+    )
 
     from reg_webapp.catalog_index import CatalogIndex
 
@@ -219,27 +228,44 @@ def _check_register_variant(
     return True
 
 
-def period_display(period: int | str | PeriodRange) -> str:
+def period_display(period: SchemaPeriod) -> str:
     """Human/wire string for a ``Source.period`` — for ISSUE MESSAGES and the
     order manifest, never a Python ``repr``.
 
     A ``PeriodRange`` renders as ``"<from>..<to>"`` (literal ``..``, matching the
     ``?period=`` range form a researcher already sees in the URL); int / str
-    (incl. the ``"_default"`` sentinel) → ``str()``. We deliberately use the wire
-    grammar rather than the ``repr`` so messages that travel through the API to
-    CLI consumers and the SPA findings panel read as ``2015..2020``, not
-    ``PeriodRange(from_=2015, to=2020)``."""
+    (incl. the ``"_default"`` sentinel) → ``str()``; the LIST form (#307,
+    an interrupted series) comma-joins its members — ``2005..2010,2015..2020``
+    is the decided wire grammar for a disjoint period set (the catalog
+    ``?period=`` query does NOT accept it yet; project-schema support came
+    first). We deliberately use the wire grammar rather than the ``repr`` so
+    messages that travel through the API to CLI consumers and the SPA findings
+    panel read as ``2015..2020``, not ``PeriodRange(from_=2015, to=2020)``."""
     if isinstance(period, (int, str)):
         return str(period)
+    if isinstance(period, tuple):
+        return ",".join(period_display(segment) for segment in period)
     # PeriodRange: `from_` is the Python-safe alias of the wire key `from`.
     return f"{period.from_}..{period.to}"
 
 
+def period_segments(period: SchemaPeriod) -> tuple[int | str | PeriodRange, ...]:
+    """The contiguous SEGMENTS of a ``Source.period``: the members of the list
+    form (#307 — structurally sorted and disjoint), or the period itself as a
+    one-segment tuple. Resolution and coverage checks are per-segment;
+    ``Catalog.resolve_at`` never sees the list form."""
+    if isinstance(period, tuple):
+        return period
+    return (period,)
+
+
 def period_for_resolve(period: int | str | PeriodRange) -> Period:
-    """Convert a `Source.period` (Pydantic) into the polymorphic `Period`
-    `Catalog.resolve_at` expects (`int | str | dict`). A `PeriodRange` becomes a
-    `{"from", "to"}` dict; int / str pass through (the `_default` sentinel rides
-    through as a plain str — `resolve_at` treats it as no-period-filter)."""
+    """Convert one period SEGMENT (a scalar `Source.period` or one member of
+    the #307 list form — never the list itself; callers iterate
+    `period_segments`) into the polymorphic `Period` `Catalog.resolve_at`
+    expects (`int | str | dict`). A `PeriodRange` becomes a `{"from", "to"}`
+    dict; int / str pass through (the `_default` sentinel rides through as a
+    plain str — `resolve_at` treats it as no-period-filter)."""
     if isinstance(period, (int, str)):
         return period
     # PeriodRange: `from_` is the Python-safe alias of the wire key `from`.
@@ -475,6 +501,17 @@ def _check_binding_period(
     value set per `(variable, variant, period)` (its co-delivery curation + `validate`
     invariant), so a clean catalog never trips it — there is no author-side pin.
 
+    The #307 LIST period (an interrupted series, structurally sorted and
+    disjoint) resolves PER SEGMENT: `period_outside_state_validity` and
+    `range_period_partially_covered` fire per segment (naming it), and the
+    PER-INSTANT probes — co-existence/ambiguity, the co-delivered-value-set
+    backstop, and the pinned representation's presence — also run per segment
+    (requested instants only exist inside segments; the whole-series union
+    would false-positive on windows overlapping BETWEEN segments). Only the
+    series-level properties — the resolved columns for steward admission and
+    the sequential-drift info — use the `state_id`-deduped UNION of every
+    segment's states.
+
     Returns the binding's RESOLVED delivery columns (the distinct
     `delivery_column_name`s of its states, narrowed to `representation` when
     pinned — >1 only across a sequential rename) for the steward admission check
@@ -488,65 +525,108 @@ def _check_binding_period(
         return None
 
     variant = source.register_variant.split("/")[2]
-    period = period_for_resolve(source.period)
-    try:
-        states = catalog.resolve_at(parsed, period, variant=variant)
-    except RegMetaError:
-        # resolve_at only raises when the binding FQID doesn't resolve — already
-        # handled above — or on a malformed period (structurally pre-validated).
-        # Either way nothing actionable to add here.
-        return None
-
-    if not states:
-        issues.append(
-            _issue(
-                "period_outside_state_validity",
-                "error",
-                caller,
-                var_path,
-                f"binding {binding.variable!r} has no state covering "
-                f"{source.register_variant} at period "
-                f"{period_display(source.period)}",
+    # Resolve PER SEGMENT (#307): the list form is structurally sorted and
+    # disjoint, and `Catalog.resolve_at` never sees it — each segment resolves
+    # on its own. The union is keyed by `state_id` because one state can
+    # intersect several segments and must count ONCE (a duplicate would falsely
+    # trip the sequential-drift info below). For a scalar period this is a
+    # single iteration over the same resolve_at call as before.
+    segments = period_segments(source.period)
+    # Loop-invariant whole-series context appended to per-segment messages
+    # (empty for a scalar period, so scalar message text is unchanged).
+    series_context = (
+        f" (segment of {period_display(source.period)})" if len(segments) > 1 else ""
+    )
+    states_by_id: dict[int, VariableState] = {}
+    # Per-segment state lists, retained because two checks below are
+    # PER-INSTANT properties and must not see the whole-series union:
+    # co-existence/ambiguity (Codex P2 on #334 — two columns whose windows
+    # overlap only BETWEEN requested segments never extract together) and the
+    # pinned representation's per-segment presence (a MIDDLE segment the pin
+    # doesn't deliver is invisible to the outer-bounds drift check).
+    per_segment: list[tuple[int | str | PeriodRange, list[VariableState]]] = []
+    uncovered: list[int | str | PeriodRange] = []
+    for segment in segments:
+        try:
+            seg_states = catalog.resolve_at(
+                parsed, period_for_resolve(segment), variant=variant
             )
-        )
-        return None
+        except RegMetaError:
+            # resolve_at only raises when the binding FQID doesn't resolve —
+            # already handled above — or on a malformed period (structurally
+            # pre-validated). Either way nothing actionable to add here.
+            return None
+        if not seg_states:
+            uncovered.append(segment)
+            continue
+        states_by_id.update((s.state_id, s) for s in seg_states)
+        per_segment.append((segment, seg_states))
 
-    # PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case). The
-    # author named an explicit `[from, to]`; `resolve_at` returned the states that
-    # INTERSECT it, but their union may leave a sub-range NO column delivers (e.g.
-    # SSYK first delivered 2014 under a `from:2010,to:2020` binding → 2010–2013 has
-    # no data at all). Zero coverage is already `period_outside_state_validity`
-    # above; this fires only on a PROPER gap inside the requested range. Scoped to
-    # an explicit `PeriodRange`: a point/token period is a single instant (no
-    # requested span to under-cover) and `_default` means "the full history",
-    # which has no author-requested window to compare against. This is distinct
-    # from #204's `binding_state_drifts_within_period`, which is about the CHOSEN
-    # representation under-covering vs a SIBLING column that DOES deliver the gap.
-    #
-    # `info`, not `warning`: the binding RESOLVED and is usable (the covered
-    # sub-range extracts fine) — the gap is a caveat, like the sibling drift codes.
-    # The steward index keys its binding-DROP on `warning` level (catalog_index.py),
-    # so an `info` correctly keeps a partially-covered binding in the index.
-    if not isinstance(source.period, (int, str)):
-        # Author endpoints are calendar-valid (structural guarantee);
-        # `_requested_range_bounds` additionally snaps the synthesized upper bound
-        # (a non-leap `YYYY-02` over-counts to `-02-29`) to the real month-end, so
-        # the real `date` arithmetic in `_range_coverage_gaps` can't raise.
-        lo, hi = _requested_range_bounds(source.period)
-        gaps = _range_coverage_gaps(states, lo, hi)
-        if gaps:
-            spans = ", ".join(f"{g_lo}..{g_hi}" for g_lo, g_hi in gaps)
+        # PARTIAL RANGE COVERAGE (the whole-concept-under-coverage case), PER
+        # SEGMENT. The author named an explicit `[from, to]`; `resolve_at`
+        # returned the states that INTERSECT it, but their union may leave a
+        # sub-range NO column delivers (e.g. SSYK first delivered 2014 under a
+        # `from:2010,to:2020` binding → 2010–2013 has no data at all). Zero
+        # coverage of a segment is `period_outside_state_validity` below; this
+        # fires only on a PROPER gap inside a requested range. Scoped to an
+        # explicit `PeriodRange` segment: a point/token segment is a single
+        # instant (no requested span to under-cover) and `_default` means "the
+        # full history", which has no author-requested window to compare
+        # against. This is distinct from #204's
+        # `binding_state_drifts_within_period`, which is about the CHOSEN
+        # representation under-covering vs a SIBLING column that DOES deliver
+        # the gap.
+        #
+        # `info`, not `warning`: the binding RESOLVED and is usable (the
+        # covered sub-range extracts fine) — the gap is a caveat, like the
+        # sibling drift codes. The steward index keys its binding-DROP on
+        # `warning` level (catalog_index.py), so an `info` correctly keeps a
+        # partially-covered binding in the index.
+        if not isinstance(segment, (int, str)):
+            # Author endpoints are calendar-valid (structural guarantee);
+            # `_requested_range_bounds` additionally snaps the synthesized upper
+            # bound (a non-leap `YYYY-02` over-counts to `-02-29`) to the real
+            # month-end, so the real `date` arithmetic in `_range_coverage_gaps`
+            # can't raise.
+            lo, hi = _requested_range_bounds(segment)
+            gaps = _range_coverage_gaps(seg_states, lo, hi)
+            if gaps:
+                spans = ", ".join(f"{g_lo}..{g_hi}" for g_lo, g_hi in gaps)
+                issues.append(
+                    _issue(
+                        "range_period_partially_covered",
+                        "info",
+                        caller,
+                        var_path,
+                        f"binding {binding.variable!r} covers only part of "
+                        f"requested range {period_display(segment)} at "
+                        f"{source.register_variant}{series_context}; "
+                        f"no state delivers {spans}",
+                    )
+                )
+
+    # A segment NO state covers is an error per segment — the binding as
+    # authored cannot be extracted as specified. (For a scalar period this is
+    # exactly the old single no-states error.) Columns are indeterminate.
+    if uncovered:
+        for segment in uncovered:
             issues.append(
                 _issue(
-                    "range_period_partially_covered",
-                    "info",
+                    "period_outside_state_validity",
+                    "error",
                     caller,
                     var_path,
-                    f"binding {binding.variable!r} covers only part of requested "
-                    f"range {period_display(source.period)} at "
-                    f"{source.register_variant}; no state delivers {spans}",
+                    f"binding {binding.variable!r} has no state covering "
+                    f"{source.register_variant} at period "
+                    f"{period_display(segment)}{series_context}",
                 )
             )
+        return None
+
+    # Chronological union across segments (resolve_at returns each segment
+    # ascending; segments are sorted, but a state spanning two segments lands
+    # once, so re-sort for the window math below).
+    states = sorted(states_by_id.values(), key=lambda s: (s.valid_from, s.valid_to))
 
     # REPRESENTATION. A FQID names one concept; the reg_meta build enforces
     # one value set per `(variable, variant, period, delivery_column)`, but a
@@ -599,6 +679,27 @@ def _check_binding_period(
                     f"the rest of the range has no state for that column",
                 )
             )
+        # PER-SEGMENT presence (#307, Codex P2 on #334): the outer-bounds check
+        # above can't see a MIDDLE segment the pinned column doesn't deliver
+        # (e.g. segments [2010, 2015, 2020] where the pin exists at 2010 and
+        # 2020 but only a sibling column covers 2015 — outer bounds match, yet
+        # the 2015 extract would be silently empty for this column). Same
+        # `info` semantics as the under-coverage check above.
+        matched_ids = {s.state_id for s in matched}
+        for segment, seg_states in per_segment:
+            if not any(s.state_id in matched_ids for s in seg_states):
+                issues.append(
+                    _issue(
+                        "binding_state_drifts_within_period",
+                        "info",
+                        caller,
+                        var_path,
+                        f"binding {binding.variable!r} representation "
+                        f"{binding.representation!r} has no state at period "
+                        f"{period_display(segment)}{series_context}; only a "
+                        f"sibling column delivers that segment",
+                    )
+                )
         states = matched
 
     # ≥2 delivery columns CO-EXISTING (overlapping windows) and no `representation`
@@ -608,7 +709,25 @@ def _check_binding_period(
     # in NON-overlapping windows (a sequential rename) are NOT ambiguous — they fall
     # through to the drift-info case below. (When `representation` is set, `states`
     # is one column, so `coexisting` is empty and this never fires.)
-    coexisting = _coexisting_columns(states)
+    #
+    # PER SEGMENT (#307, Codex P2 on #334): co-existence is a PER-INSTANT
+    # property and the requested instants only exist inside segments — two
+    # columns whose windows overlap only BETWEEN two requested segments never
+    # extract together, so probing the whole-series union would false-positive
+    # a blocking error. Each segment's probe sees the states narrowed to the
+    # kept set (the pinned column when `representation` is set — so this still
+    # never fires on a pinned binding). For a scalar period this is exactly the
+    # old single-probe behavior (one segment, seg_states == the union).
+    kept_ids = {s.state_id for s in states}
+    coexisting = sorted(
+        {
+            column
+            for _segment, seg_states in per_segment
+            for column in _coexisting_columns(
+                [s for s in seg_states if s.state_id in kept_ids]
+            )
+        }
+    )
     if len(coexisting) > 1:
         issues.append(
             _issue(
@@ -628,8 +747,12 @@ def _check_binding_period(
 
     # Backstop: distinct value sets on ONE column at the same instant — a reg_meta
     # build co-delivery the curation missed (the build `validate` invariant should
-    # make this unreachable against a clean catalog).
-    if _has_codelivered_versions(states):
+    # make this unreachable against a clean catalog). Per segment for the same
+    # reason as the co-existence probe above (a per-instant property).
+    if any(
+        _has_codelivered_versions([s for s in seg_states if s.state_id in kept_ids])
+        for _segment, seg_states in per_segment
+    ):
         labels: dict[int | None, str] = {}
         for s in states:
             labels.setdefault(s.value_set_id, s.value_set_version_label)

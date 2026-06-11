@@ -560,7 +560,14 @@ Rules, walking each source's `register_variant` + every binding:
 - The binding resolves to a covering `variable_state` at the source's variant AND
   period. None → `period_outside_state_validity` (error). A range / `_default` period
   crossing a state transition (sequential, non-overlapping states) →
-  `binding_state_drifts_within_period` (info).
+  `binding_state_drifts_within_period` (info). A **#307 list period** (interrupted
+  series; structurally sorted + disjoint, wire form comma-joined —
+  `2005..2010,2015..2020`) resolves **per segment**: `period_outside_state_validity` and
+  `range_period_partially_covered` fire per uncovered/under-covered segment (naming it),
+  while the representation/ambiguity/drift checks run on the `state_id`-deduped union of
+  every segment's states. `Catalog.resolve_at` (and the catalog `?period=` query) never
+  sees the list form — the catalog resolve endpoint learning the comma wire is a later,
+  separate step.
 - The binding's `value_set` (a `class/<slug>` FQID) resolves to a known classification →
   else `value_set_missing` (error).
 

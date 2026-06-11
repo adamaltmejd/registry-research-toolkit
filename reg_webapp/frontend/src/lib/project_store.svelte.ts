@@ -40,7 +40,7 @@ import {
   type UnresolvedReason,
   variantSeg,
 } from "./catalog";
-import { periodFromWire, periodToWire } from "./period";
+import { periodFromWire, periodToResolveWire } from "./period";
 import {
   addBinding,
   addSource,
@@ -833,7 +833,7 @@ export const projectStore = {
       status: picked.status ?? "derived",
       reason: picked.reason,
       variant: source ? variantSeg(registerVariantOf(source)) : "",
-      period: source ? periodToWire(source.period as Period) : null,
+      period: source ? periodToResolveWire(source.period as Period) : null,
       derivedType: picked.type,
       // The display name we'd CLAIM as derived is the default — but only when we
       // actually wrote it (user hadn't set one). When the user already had a name,
@@ -950,7 +950,7 @@ export const projectStore = {
     // landing derive corrects to the real status.
     const provSource = draft.sources?.[sourceIndex];
     const provPeriod = provSource
-      ? periodToWire(provSource.period as Period)
+      ? periodToResolveWire(provSource.period as Period)
       : null;
     setDerivation(sourceIndex, bindingIndex, {
       status: "unresolved",
@@ -988,8 +988,8 @@ function registerVariantOf(source: Source): string {
  * entirely — the bindings' FQIDs would be wrong, which the validator flags), but
  * the variant seg and the period both feed `resolveBindingAt`. */
 function resolutionInputsChanged(before: Source, after: Source): boolean {
-  const pBefore = periodToWire(before.period as Period);
-  const pAfter = periodToWire(after.period as Period);
+  const pBefore = periodToResolveWire(before.period as Period);
+  const pAfter = periodToResolveWire(after.period as Period);
   const vBefore = variantSeg(registerVariantOf(before));
   const vAfter = variantSeg(registerVariantOf(after));
   return pBefore !== pAfter || vBefore !== vAfter;
@@ -1031,7 +1031,7 @@ async function rederiveSource(sourceIndex: number): Promise<void> {
   // The bindings carry full 3-seg variable FQIDs (registerPrefix-scoped at pick
   // time), so the resolve takes the bare variable + the source's (period, variant).
   const variant = variantSeg(registerVariantOf(source));
-  const period = periodToWire(source.period as Period);
+  const period = periodToResolveWire(source.period as Period);
 
   // Snapshot the binding list (fqid + index) up front; resolve each in parallel.
   const targets = source.bindings.map((b, j) => ({

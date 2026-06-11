@@ -54,7 +54,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.fqid import parse
 
-from reg_webapp.semantic import period_for_resolve
+from reg_webapp.semantic import period_for_resolve, period_segments
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
@@ -212,6 +212,10 @@ def _period_token(source) -> str:  # noqa: ANN001 — reg_schema Source (TYPE_CH
     strings only loosely (mixed grammars don't), so this is a UI hint, never a
     gate — see the module docstring."""
     period = source.period
+    if isinstance(period, tuple):
+        # #307 list form: structurally sorted ascending, so the first segment
+        # carries the lower-bound token.
+        period = period[0]
     if isinstance(period, (int, str)):
         return str(period)
     # PeriodRange: use the `from_` endpoint as the lower-bound token.
@@ -230,21 +234,27 @@ def _resolved_columns(
     A kept binding MUST resolve here: the steward-mode validator just ran
     against the SAME ``catalog`` (one boot connection), every resolution
     failure was downgraded to a warning that dropped the binding before this
-    is called, and ``load_catalog_index`` fails fast on residual errors. An
-    empty resolution therefore means the index build and the validation
-    disagree — a bug, not drift — so fail fast rather than silently admitting
-    nothing."""
+    is called (a #307 LIST period warns per uncovered segment, so kept means
+    EVERY segment resolves), and ``load_catalog_index`` fails fast on residual
+    errors. An empty resolution therefore means the index build and the
+    validation disagree — a bug, not drift — so fail fast rather than silently
+    admitting nothing."""
     variant = source.register_variant.split("/")[2]
-    states = catalog.resolve_at(
-        parse(binding.variable), period_for_resolve(source.period), variant=variant
-    )
-    if binding.representation is not None:
-        states = [s for s in states if s.delivery_column_name == binding.representation]
-    if not states:
-        raise ValueError(
-            f"steward binding {binding.variable!r} passed steward-mode validation "
-            f"but resolved to no states at index build "
-            f"({source.register_variant}, period {source.period!r}, "
-            f"representation {binding.representation!r})"
+    columns: set[str | None] = set()
+    for segment in period_segments(source.period):
+        states = catalog.resolve_at(
+            parse(binding.variable), period_for_resolve(segment), variant=variant
         )
-    return frozenset(s.delivery_column_name for s in states)
+        if binding.representation is not None:
+            states = [
+                s for s in states if s.delivery_column_name == binding.representation
+            ]
+        if not states:
+            raise ValueError(
+                f"steward binding {binding.variable!r} passed steward-mode "
+                f"validation but resolved to no states at index build "
+                f"({source.register_variant}, period segment {segment!r} of "
+                f"{source.period!r}, representation {binding.representation!r})"
+            )
+        columns.update(s.delivery_column_name for s in states)
+    return frozenset(columns)

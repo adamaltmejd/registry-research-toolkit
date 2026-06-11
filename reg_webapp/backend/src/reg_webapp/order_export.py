@@ -11,7 +11,8 @@ default; per-steward jinja2 ``order_template`` overrides are DEFERRED (not v1).
 ``period`` follows the wire serialization (matching the ``/api/catalog``
 ``?period=`` and the catch-all): an int year prints as-is; a ``PeriodRange``
 prints ``"<from>..<to>"`` (literal ``..``); the ``"_default"`` snapshot sentinel
-prints literally.
+prints literally; a #307 segment list prints comma-joined
+(``2005..2010,2015..2020`` — the interrupted-series wire form).
 
 ``display_name`` defaults from reg_meta when ``Binding.display_name`` is None:
 the binding is resolved against the live ``Catalog`` at the source's
@@ -37,7 +38,7 @@ from typing import TYPE_CHECKING
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import FqidError, parse
 
-from .semantic import period_display, period_for_resolve
+from .semantic import period_display, period_for_resolve, period_segments
 
 if TYPE_CHECKING:
     from reg_meta.catalog import Catalog
@@ -144,14 +145,19 @@ def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
         if "/" in source.register_variant
         else None
     )
-    period = period_for_resolve(source.period)
-    try:
-        states = catalog.resolve_at(parsed, period, variant=variant)
-    except RegMetaError:
-        return _fqid_leaf(binding.variable)
-    for state in states:
-        if state.delivery_column_name:
-            return state.delivery_column_name
+    # A #307 list period resolves per segment (structurally sorted, so this
+    # walks the series chronologically); the first covering state with a
+    # delivery column wins — best-effort, like the rest of this renderer.
+    for segment in period_segments(source.period):
+        try:
+            states = catalog.resolve_at(
+                parsed, period_for_resolve(segment), variant=variant
+            )
+        except RegMetaError:
+            return _fqid_leaf(binding.variable)
+        for state in states:
+            if state.delivery_column_name:
+                return state.delivery_column_name
     return _fqid_leaf(binding.variable)
 
 
