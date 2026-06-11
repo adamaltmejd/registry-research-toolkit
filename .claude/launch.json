@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "reg-webapp-backend",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "uvicorn", "reg_webapp.app:create_app", "--factory", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "reg-webapp-frontend",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "--cwd", "reg_webapp/frontend", "dev"],
+      "port": 5173
+    }
+  ]
+}
