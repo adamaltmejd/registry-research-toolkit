@@ -22,10 +22,9 @@ personal data. The workflow has three on-MONA-and-back steps:
     # Upload to MONA. On MONA's batch client, run mdw_runner.py with
     # python -> writes mock_data_discovery.json next to the bundle.
     # Copy mock_data_discovery.json off MONA. Author project_data.json
-    # locally against the schema (reg_schema/DESIGN.md → "Two layers:
-    # models vs. validator"; the reg_webapp authoring surface,
-    # REFACTOR_SPEC.md → "7 — Webapp authoring hard-cut", will own
-    # this once it lands). Upload project_data.json next to the bundle.
+    # in the reg_webapp authoring UI (or by hand against the schema,
+    # reg_schema/DESIGN.md → "Two layers: models vs. validator").
+    # Upload project_data.json next to the bundle.
     # On MONA, set MODE = "extract" in the bundle and re-run
     # -> writes mock_data_stats.json.
     # Verify mock_data_stats.json contains no personal data, then copy
@@ -469,24 +468,6 @@ def _cmd_scan(args: argparse.Namespace) -> int:
     return 1
 
 
-def _cmd_ui(_args: argparse.Namespace) -> int:
-    """Frozen pending the webapp-authoring hard-cut.
-
-    The editor / server / Svelte UI are scheduled for hard deletion when
-    reg_webapp authoring takes over (REFACTOR_SPEC.md → "7 — Webapp
-    authoring hard-cut"). The supporting Python code (`editor.py`,
-    `server.py`, `_serialize.py`) is already gone; the Svelte source
-    under `web/` survives for cleaner deletion at the cut.
-    """
-    print(
-        "mock-data-wizard ui: frozen pending the webapp-authoring hard-cut.\n"
-        "Author project_data.json via the reg_webapp (not yet released)\n"
-        "or by hand against the project_data.json schema (reg_schema).",
-        file=sys.stderr,
-    )
-    return 2
-
-
 def _print_version() -> None:
     from . import __version__
     from .update import UpdateChecker
@@ -678,22 +659,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Don't delete the file on a match (inspection mode).",
     )
 
-    # ui — stub: editor + server + Svelte UI are scheduled for hard
-    # deletion at the webapp-authoring hard-cut (REFACTOR_SPEC.md →
-    # "7 — Webapp authoring hard-cut"). The subcommand survives as a
-    # discoverable pointer to the webapp.
-    sub.add_parser(
-        "ui",
-        help="(frozen) Launch the local web UI — disabled until the webapp hard-cut",
-        description=(
-            "Frozen pending the webapp-authoring hard-cut. The local "
-            "editor / server have been removed; author project_data.json "
-            "via the reg_webapp (not yet released) or by hand against the "
-            "project_data.json schema (reg_schema)."
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-
     return parser
 
 
@@ -734,8 +699,6 @@ def main(argv: list[str] | None = None) -> int:
             rc = _cmd_generate(args)
         elif args.command == "scan":
             rc = _cmd_scan(args)
-        elif args.command == "ui":
-            rc = _cmd_ui(args)
         else:
             parser.print_help()
             return 1

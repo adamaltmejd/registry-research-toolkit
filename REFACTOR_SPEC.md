@@ -22,13 +22,14 @@ autosave, validate / order / bundle endpoints).
 **Remaining (this document):** the realign-then-extract MONA workflow, kit-build
 (`/api/kit` + `codes.json` + stats v1), the `mock_data_wizard` → `reg_mockdata` split,
 composite panel keys, the real steward catalogs, and the v1 slug freeze. (Webapp
-deployment — step 6.5 — shipped 2026-06-11.)
+deployment — step 6.5 — shipped 2026-06-11; the webapp-authoring hard-cut — step 7 —
+shipped 2026-06-11.)
 
 The single biggest structural gap: **`reg_mockdata` does not exist yet.** Its code still
 lives in `mock_data_wizard/`, reg_meta-coupled and on the legacy `mock_data_stats.json`
-contract. `editor.py`/`server.py` are already deleted and `classify.py` moved to
+contract. `editor.py`/`server.py`/`web/` are already deleted and `classify.py` moved to
 `reg_monabundle/runtime/` (it backs the bundle's runtime classification), but the
-package is not renamed and `web/` still exists.
+package is not renamed.
 
 ## Sequence
 
@@ -63,15 +64,12 @@ the per-deploy smoke gate ship in the image; #278's resolvable `reg_meta/v*` rel
 
 ## 7 — Webapp authoring hard-cut
 
-Hard cut from any residual local-authoring path to webapp authoring.
-`mock_data_wizard.editor`/`server` are already deleted (`classify` moved to
-`reg_monabundle.runtime`); remaining here is deleting **`mock_data_wizard/web/`** (the
-superseded Svelte SPA) plus its collateral: the wheel-shipped built bundle
-`mock_data_wizard/src/mock_data_wizard/static/`, the frozen `mock-data-wizard ui` stub
-in `cli.py` with its two stub tests, and the `frontend` CI job + `web/`/`static/`
-paths-filter entries in `.github/workflows/ci.yml` (the package's only bun usage). No
-parallel run, no shim (per the compatibility policy). Testers re-author affected
-projects.
+**Shipped 2026-06-11.** `mock_data_wizard/web/` (the superseded Svelte SPA), the
+wheel-shipped `static/` bundle, the frozen `mock-data-wizard ui` stub + its stub tests,
+and the `frontend` CI job are all deleted — `reg_webapp` is the only authoring surface
+and the package's bun usage is gone. No parallel run, no shim. The package's stale
+narrative docs (`## Editor API`, `## Web UI` in `mock_data_wizard/DESIGN.md`) are
+rewritten at step 9 with the rename (see below). Testers re-author affected projects.
 
 **7.5 — `global` dogfood (2 weeks).** Testers exercise the loop that exists at this
 point — author → order → bundle → (legacy) extract → re-author — against `global` before

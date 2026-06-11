@@ -5,40 +5,15 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
-import pytest
-
 # conftest.py inserts reg_monabundle/tests onto sys.path (it is imported first
 # by pytest), so the shared Model A spec builder resolves here.
 from _project_data_fixtures import make_project_data, write_project_data  # noqa: E402
-from mock_data_wizard.cli import build_parser, main
+from mock_data_wizard.cli import main
 
 from .conftest import MINIMAL_STATS
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-# -- `ui` subcommand parsing ----------------------------------------------
-
-
-def test_ui_subcommand_returns_frozen_message(capsys):
-    """The ``ui`` subcommand is a stub pending hard deletion of the local
-    editor + server + Svelte UI (REFACTOR_SPEC.md → "7 — Webapp authoring
-    hard-cut"). It accepts no positional or flag arguments and exits with
-    code 2 + a frozen-message hint."""
-    rc = main(["ui"])
-    assert rc == 2
-    err = capsys.readouterr().err
-    assert "frozen" in err.lower()
-    assert "project_data.json" in err
-
-
-def test_ui_subcommand_takes_no_arguments():
-    """Pre-step-4 the ``ui`` subcommand carried project_dir + a sheet
-    of host/port flags; the stub drops them all."""
-    parser = build_parser()
-    with pytest.raises(SystemExit):
-        parser.parse_args(["ui", "/some/path"])
-
 
 # -- build-bundle --project-data error handling ---------------------------
 

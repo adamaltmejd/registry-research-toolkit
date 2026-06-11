@@ -47,7 +47,6 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      frontend: ${{ steps.filter.outputs.frontend }}
       webapp: ${{ steps.filter.outputs.webapp }}
     steps:
       - uses: actions/checkout@v6
@@ -55,34 +54,11 @@ jobs:
         id: filter
         with:
           filters: |
-            frontend:
-              - 'mock_data_wizard/web/**'
-              - 'mock_data_wizard/src/mock_data_wizard/static/**'
-              - '.github/workflows/ci.yml'
             webapp:
               - 'reg_webapp/frontend/**'
               - 'reg_webapp/backend/openapi.json'
               - 'reg_webapp/backend/src/**'
               - '.github/workflows/ci.yml'
-
-  frontend:
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true'
-    defaults:
-      run:
-        working-directory: mock_data_wizard/web
-    steps:
-      - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install --frozen-lockfile
-      - run: bun run check
-      - run: bun test
-      - run: bun run build
-      # Catches "edited the frontend without rebuilding the bundle"
-      # — the static dir ships in the wheel, so it must match source.
-      - name: Assert built bundle matches commit
-        run: git diff --exit-code -- ../src/mock_data_wizard/static/
 
   reg-webapp-frontend:
     runs-on: ubuntu-latest
