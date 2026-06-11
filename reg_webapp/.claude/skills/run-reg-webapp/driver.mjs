@@ -43,12 +43,14 @@ async function shot(name) {
 }
 
 // `networkidle` is NOT enough: Svelte swaps in fetched data after the network
-// settles, so a screenshot right after navigation captures the "Loading…"
-// placeholder. Wait for it to clear before asserting/screenshotting.
+// settles, so a screenshot right after navigation captures the loading
+// placeholder. Every loading placeholder carries aria-busy="true" (the
+// components' contract with this driver — don't key on UI copy, which changes
+// and can collide with catalog content). Wait for the last one to clear.
 async function settled() {
   await page.waitForLoadState("networkidle");
   await page.waitForFunction(
-    () => !document.body.innerText.includes("Loading"),
+    () => !document.querySelector('[aria-busy="true"]'),
     { timeout: 10_000 },
   );
 }

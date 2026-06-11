@@ -177,7 +177,7 @@ function setResolution(next: {
           setResolution({ value_set_version })}
       />
     {:else}
-      <p class="muted">Loading states…</p>
+      <p class="muted" aria-busy="true">Loading states…</p>
     {/if}
   </section>
 

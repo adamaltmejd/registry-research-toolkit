@@ -42,7 +42,7 @@ const crumbs = $derived(breadcrumbs(fqidPath));
 </nav>
 
 {#if resource.loading}
-  <p class="muted">Loading…</p>
+  <p class="muted" aria-busy="true">Loading…</p>
 {:else if resource.error}
   <p class="error" role="alert">
     {#if resource.status === 404}

@@ -91,9 +91,11 @@ Same two servers, then open <http://localhost:5173/> in a browser. Backend API d
 ## Gotchas
 
 - **`networkidle` is not "rendered".** Svelte swaps in fetched data after the network
-  settles; a screenshot taken straight after navigation captures the `Loading…`
-  placeholder. The driver's `settled()` waits for the placeholder to clear — use it
-  after every navigation/click.
+  settles; a screenshot taken straight after navigation captures the loading
+  placeholder. The driver's `settled()` waits for every `[aria-busy="true"]` element to
+  clear — use it after every navigation/click. The attribute is the contract: each
+  loading placeholder in `frontend/src/lib/*.svelte` carries `aria-busy="true"`, so new
+  loading states must too (don't make the driver key on UI copy like "Loading…").
 - **The first `a[href^="/catalog"]` is the header nav link** (it goes to `/catalog`, not
   deeper). To drill the tree, click the first link strictly deeper than the current path
   (`a[href^="<current>/"]`) — that's what `smoke` does.
