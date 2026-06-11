@@ -637,3 +637,20 @@ describe("source-name prefill on register_variant change (#312)", () => {
     expect(projectStore.draft?.sources[1]?.name).toBe("LISA_2");
   });
 });
+
+describe("source-name prefill no-op guard (#312, Codex P2)", () => {
+  it("re-applying the SAME variant does not recompute a suffixed name", () => {
+    projectStore.newProject(SEED);
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" }); // LISA
+    projectStore.addSource();
+    projectStore.updateSource(1, { register_variant: "scb/lisa/v2" }); // LISA_2
+    projectStore.addSource();
+    projectStore.updateSource(2, { register_variant: "scb/lisa/v3" }); // LISA_3
+    projectStore.removeSource(1); // frees LISA_2
+    // Re-picking the same variant on the (now index-1) LISA_3 source must NOT
+    // rename it to the freed LISA_2 slot.
+    projectStore.updateSource(1, { register_variant: "scb/lisa/v3" });
+    expect(projectStore.draft?.sources[1]?.name).toBe("LISA_3");
+  });
+});

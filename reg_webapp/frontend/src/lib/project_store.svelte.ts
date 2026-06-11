@@ -716,11 +716,14 @@ export const projectStore = {
     // #312: a register_variant change prefills the source name from the register
     // slug (uppercased, uniqueness-suffixed) — every variant-setting path funnels
     // through here (addFromCatalog's source creation, the picker, hand-typing).
-    // Prefill-only: applies when the patch doesn't set a name itself AND the
+    // Prefill-only: applies when the variant ACTUALLY changes (a no-op re-pick
+    // must not recompute a suffixed name, e.g. LISA_3 → LISA_2 after a sibling
+    // remove freed the slot), the patch doesn't set a name itself, AND the
     // current name is empty or a previous prefill; a user-entered name survives.
     if (
       before &&
       typeof patch.register_variant === "string" &&
+      patch.register_variant !== registerVariantOf(before) &&
       patch.name === undefined &&
       isPrefilledSourceName(
         typeof before.name === "string" ? before.name : "",
