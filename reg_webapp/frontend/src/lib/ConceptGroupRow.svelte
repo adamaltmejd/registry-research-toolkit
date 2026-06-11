@@ -6,12 +6,21 @@ import { axisValues, catalogHref, memberAt } from "./catalog";
 // picker — a value matrix for two axes (month × rank), chips for one axis
 // (months / vintages), and a plain member list for edge groups (split
 // siblings, no facets — names usually shared, so the slug is the signal).
+//
+// Two member-action modes (#322): browse (default) renders members as
+// catalogHref links; pick mode (`onpick` set — the CatalogPicker's variable
+// list) renders them as buttons that emit the member FQID instead of
+// navigating. `disabled` greys the buttons while the picker resolves.
 let {
   group,
   noun = "variables",
+  onpick,
+  disabled = false,
 }: {
   group: ConceptGroup;
   noun?: string;
+  onpick?: (fqid: string) => void;
+  disabled?: boolean;
 } = $props();
 
 const axes = $derived(group.axes);
@@ -35,6 +44,29 @@ function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
 }
 </script>
+
+{#snippet memberItem(member: ConceptGroup["members"][number])}
+  {#if onpick}
+    <button
+      type="button"
+      class="member-pick"
+      {disabled}
+      onclick={() => onpick?.(member.fqid)}
+    >
+      <code class="member-slug">{leafSlug(member.fqid)}</code>
+      {#if member.name && member.name !== group.label}
+        <span class="member-name">{member.name}</span>
+      {/if}
+    </button>
+  {:else}
+    <a href={catalogHref(member.fqid)}>
+      <code class="member-slug">{leafSlug(member.fqid)}</code>
+      {#if member.name && member.name !== group.label}
+        <span class="member-name">{member.name}</span>
+      {/if}
+    </a>
+  {/if}
+{/snippet}
 
 <details class="group">
   <summary>
@@ -62,7 +94,17 @@ function leafSlug(fqid: string): string {
                 { axis: axes[1], value: col.value },
               ])}
               <td>
-                {#if member}
+                {#if member && onpick}
+                  <button
+                    type="button"
+                    class="member-pick"
+                    {disabled}
+                    title={member.name ?? member.fqid}
+                    onclick={() => onpick?.(member.fqid)}
+                  >
+                    <code>{leafSlug(member.fqid)}</code>
+                  </button>
+                {:else if member}
                   <a href={catalogHref(member.fqid)} title={member.name ?? member.fqid}>
                     <code>{leafSlug(member.fqid)}</code>
                   </a>
@@ -79,14 +121,7 @@ function leafSlug(fqid: string): string {
     {#if ungridded.length > 0}
       <ul class="members">
         {#each ungridded as member (member.fqid)}
-          <li>
-            <a href={catalogHref(member.fqid)}>
-              <code class="member-slug">{leafSlug(member.fqid)}</code>
-              {#if member.name && member.name !== group.label}
-                <span class="member-name">{member.name}</span>
-              {/if}
-            </a>
-          </li>
+          <li>{@render memberItem(member)}</li>
         {/each}
       </ul>
     {/if}
@@ -95,27 +130,32 @@ function leafSlug(fqid: string): string {
       {#each group.members as member (member.fqid)}
         {@const facet = member.facets.find((f) => f.axis === axes[0])}
         <li>
-          <a
-            class="chip"
-            href={catalogHref(member.fqid)}
-            title={member.name ?? member.fqid}
-          >
-            {facet?.label ?? leafSlug(member.fqid)}
-          </a>
+          {#if onpick}
+            <button
+              type="button"
+              class="chip member-pick"
+              {disabled}
+              title={member.name ?? member.fqid}
+              onclick={() => onpick?.(member.fqid)}
+            >
+              {facet?.label ?? leafSlug(member.fqid)}
+            </button>
+          {:else}
+            <a
+              class="chip"
+              href={catalogHref(member.fqid)}
+              title={member.name ?? member.fqid}
+            >
+              {facet?.label ?? leafSlug(member.fqid)}
+            </a>
+          {/if}
         </li>
       {/each}
     </ul>
   {:else}
     <ul class="members">
       {#each group.members as member (member.fqid)}
-        <li>
-          <a href={catalogHref(member.fqid)}>
-            <code class="member-slug">{leafSlug(member.fqid)}</code>
-            {#if member.name && member.name !== group.label}
-              <span class="member-name">{member.name}</span>
-            {/if}
-          </a>
-        </li>
+        <li>{@render memberItem(member)}</li>
       {/each}
     </ul>
   {/if}
@@ -186,6 +226,29 @@ function leafSlug(fqid: string): string {
     display: flex;
     align-items: baseline;
     gap: 0.75rem;
+  }
+  /* Pick-mode members (#322): link-look buttons so the picker's group rows
+     read like the browse ones, just emitting instead of navigating. */
+  .member-pick {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .member-pick:disabled {
+    color: var(--muted);
+    cursor: default;
+  }
+  .members .member-pick {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .member-pick.chip {
+    border: 1px solid var(--muted);
+    padding: 0.1rem 0.55rem;
   }
   .member-name {
     color: var(--muted);
