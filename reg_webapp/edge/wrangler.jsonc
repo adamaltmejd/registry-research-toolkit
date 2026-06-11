@@ -9,11 +9,20 @@
 // Deploy (after building the SPA: `bun run gen:types && bun run build` in
 // reg_webapp/frontend/):
 //
-//   bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc
+//   bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc \
+//     --var DEPLOY_VERSION:"$(git rev-parse HEAD)-manual-$(date +%s)"
 {
   "name": "reg-webapp-global-edge",
   "main": "src/index.ts",
   "compatibility_date": "2026-06-01",
+  // DEPLOY_VERSION is the API cache generation (#318): src/index.ts stamps it
+  // onto every origin-bound URL, so each deploy with a NEW value orphans all
+  // prior /api/* edge-cache entries. CI overrides this default per deploy
+  // (--var in container-build.yml); manual deploys must pass a fresh value too
+  // (command above) — `wrangler deploy` REPLACES the var set, so deploying
+  // with this literal default would reuse the "dev" generation and can
+  // resurface stale entries from an earlier "dev" deploy.
+  "vars": { "DEPLOY_VERSION": "dev" },
   "assets": {
     // Relative to this config file.
     "directory": "../frontend/dist",

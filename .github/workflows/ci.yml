@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
   workflow_call:
+  # Manual re-fire (#326): GitHub occasionally drops a push event (hit on the
+  # #317 rollout — container-build.yml got the event, ci.yml didn't), and the
+  # deploy gate (wait-ci in container-build.yml) hard-requires a green ci.yml
+  # run on main HEAD. `gh workflow run ci.yml --ref main` unbricks the gate
+  # without an empty commit; wait-ci matches runs by SHA regardless of trigger.
+  workflow_dispatch:
 
 jobs:
   lint:
