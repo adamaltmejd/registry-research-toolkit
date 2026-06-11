@@ -57,10 +57,17 @@ export type GroupedRow<T> =
  * complete) is appended so it can't silently vanish. */
 export function foldGroupedRows<T extends { fqid: string }>(
   items: T[],
-  groups: ConceptGroup[],
+  groups: ConceptGroup[] | undefined,
 ): GroupedRow<T>[] {
+  // `groups` is required on the wire TYPE, but tolerate its absence at
+  // runtime: /api/catalog/* responses are edge-cached for up to 24h
+  // (Cache-Control max-age=86400), so right after a deploy that ADDS a field
+  // the new SPA can receive a stale pre-`groups` payload. Degrade to the flat
+  // ungrouped list rather than crash the browse (bit prod on the #303
+  // rollout, 2026-06-11).
+  const safeGroups = groups ?? [];
   const groupOf = new Map<string, ConceptGroup>();
-  for (const g of groups) {
+  for (const g of safeGroups) {
     for (const m of g.members) {
       groupOf.set(m.fqid, g);
     }
@@ -76,7 +83,7 @@ export function foldGroupedRows<T extends { fqid: string }>(
       rows.push({ kind: "group", group });
     }
   }
-  for (const group of groups) {
+  for (const group of safeGroups) {
     if (!emitted.has(group)) {
       rows.push({ kind: "group", group });
     }

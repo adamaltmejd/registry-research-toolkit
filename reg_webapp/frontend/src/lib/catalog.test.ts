@@ -689,3 +689,16 @@ describe("foldGroupedRows order + countFoldedMembers", () => {
     expect(countFoldedMembers(rows)).toBe(3); // 1 leaf + 2 grouped members
   });
 });
+
+describe("foldGroupedRows stale-cache tolerance", () => {
+  it("degrades to flat leaves when groups is missing (stale edge-cached payload)", () => {
+    const rows = foldGroupedRows(
+      [{ fqid: "scb/lisa/kon" }, { fqid: "scb/lisa/alder" }],
+      undefined,
+    );
+    expect(rows).toEqual([
+      { kind: "leaf", item: { fqid: "scb/lisa/kon" } },
+      { kind: "leaf", item: { fqid: "scb/lisa/alder" } },
+    ]);
+  });
+});
