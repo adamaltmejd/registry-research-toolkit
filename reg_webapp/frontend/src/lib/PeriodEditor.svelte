@@ -97,9 +97,17 @@ function seedTokenText(value: Period): string {
 const initial: Period = untrack(() => period);
 let mode = $state<Mode>(inferMode(initial));
 /** The wire value the range picker seeds from / last emitted. Non-null at
- * mount when the incoming period is range-representable, so a complete period
- * never shows the incomplete hint before any interaction. */
-let rangeWire = $state<string | null>(periodToWire(initial));
+ * mount ONLY when the incoming period is range-REPRESENTABLE: a mode switch to
+ * Range from an unrenderable value (`_default`, a mixed-grain clip, junk) must
+ * emit the unset "" and show the incomplete hint — never blank controls
+ * silently preserving a hidden value (Codex P2). Mode switches have always
+ * been edits in this editor (switching to Default emits immediately). */
+const _initialWire = periodToWire(initial);
+let rangeWire = $state<string | null>(
+  _initialWire !== null && rangeRepresentable(_initialWire)
+    ? _initialWire
+    : null,
+);
 let tokenText = $state(seedTokenText(initial));
 
 const tokenHint = $derived(

@@ -220,10 +220,20 @@ export const PERIOD_GRAINS: PeriodGrain[] = [
  * mixed-grain ranges (the #306 succession clips), and junk need the text /
  * token escape hatch — they must stay visible and editable, never silently
  * blanked into empty range controls. */
-export function rangeRepresentable(wire: string): boolean {
+export function rangeRepresentable(
+  wire: string,
+  grains: PeriodGrain[] = PERIOD_GRAINS,
+): boolean {
   const endpoints = periodRangeEndpoints(wire) ?? [wire, wire];
   const gFrom = grainOfToken(endpoints[0]);
-  return gFrom !== null && gFrom === grainOfToken(endpoints[1]);
+  return (
+    gFrom !== null &&
+    gFrom === grainOfToken(endpoints[1]) &&
+    // A surface offering a NARROWED grain set (the catalog picker) can't
+    // render a value at an excluded grain either — it must fall back to the
+    // text mode, not show blank controls over a hidden value (Codex P2).
+    grains.includes(gFrom)
+  );
 }
 
 /** The grain of one single wire token, or null for a non-token (`_default`,

@@ -391,4 +391,10 @@ describe("grainOfToken / rangeRepresentable (#308)", () => {
     expect(rangeRepresentable("_default")).toBe(false);
     expect(rangeRepresentable("")).toBe(false);
   });
+
+  it("rangeRepresentable is grains-aware: a value at an excluded grain needs the text mode", () => {
+    expect(rangeRepresentable("2020-08", ["year"])).toBe(false);
+    expect(rangeRepresentable("2020-08", ["year", "month"])).toBe(true);
+    expect(rangeRepresentable("2020", ["year"])).toBe(true);
+  });
 });

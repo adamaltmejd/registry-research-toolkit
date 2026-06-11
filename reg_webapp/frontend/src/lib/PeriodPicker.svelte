@@ -37,8 +37,9 @@ let {
 // text mode (it must be visible/editable, not silently blanked).
 let textMode = $state(
   // svelte-ignore state_referenced_locally — intentional one-time seed; the
-  // $effect below re-syncs on URL changes.
-  period !== null && period !== "" && !rangeRepresentable(period),
+  // $effect below re-syncs on URL changes. Grains-aware: a period at a grain
+  // this variable doesn't offer must open in text mode too.
+  period !== null && period !== "" && !rangeRepresentable(period, grains),
 );
 
 // ── Text mode (the wire-grammar escape hatch — unchanged semantics) ─────────
@@ -59,7 +60,8 @@ $effect(() => {
   // Re-derive the mode too: back/forward can land on a period the range UI
   // can't represent (`_default`, a mixed-grain range) — staying in range mode
   // would show BLANK controls while Apply re-submits the invisible value.
-  textMode = period !== null && period !== "" && !rangeRepresentable(period);
+  textMode =
+    period !== null && period !== "" && !rangeRepresentable(period, grains);
 });
 
 // ADVISORY only (text mode): a non-empty field that doesn't match the grammar

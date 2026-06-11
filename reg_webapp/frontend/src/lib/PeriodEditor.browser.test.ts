@@ -113,6 +113,18 @@ describe("PeriodEditor", () => {
       .toHaveValue("1992..2009-06-30");
   });
 
+  it("switching to Range from an unrenderable value emits the unset '' and shows the hint (never a hidden value behind blank controls)", async () => {
+    const onchange = vi.fn<(next: Period) => void>();
+    const screen = await render(PeriodEditor, {
+      period: { from: 1992, to: "2009-06-30" }, // mixed-grain → Token mode
+      issues: [],
+      onchange,
+    });
+    await screen.getByRole("radio", { name: "Range" }).click();
+    expect(onchange).toHaveBeenLastCalledWith("");
+    await expect.element(screen.getByText(/complete the period/)).toBeVisible();
+  });
+
   it("Token mode emits SCHEMA-VALID shapes through periodFromWire (a typed range is the object, not a raw string)", async () => {
     const onchange = vi.fn<(next: Period) => void>();
     const screen = await render(PeriodEditor, {
