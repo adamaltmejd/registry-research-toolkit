@@ -258,6 +258,39 @@ def period_token_to_bounds(token: str) -> tuple[str, str]:
     return token, token  # YYYY-MM-DD single day
 
 
+def period_token_for_bounds(lo: str, hi: str) -> str:
+    """Render an inclusive ISO interval as the COARSEST period token that
+    `period_token_to_bounds` expands back to exactly ``(lo, hi)`` — the
+    display/diagnostic inverse (#271).
+
+    A window outside the grammar renders as the explicit range ``"lo..hi"`` —
+    NEVER rounded to a containing year: two sub-annual sibling states both
+    reading "2009" would re-create exactly the ambiguity the interval resolver
+    removes. Month windows use the same synthesized `_MONTH_LAST_DAY` ends as
+    the forward expansion (incl. the intentional Feb-29 over-count), so the two
+    directions stay byte-agreed. Tie-break: ``VTYYYY``/``HTYYYY`` share bounds
+    with ``YYYY-H1``/``-H2``; the term form wins (these windows arise from
+    SCB's term registers, and the curated period grammar prefers the term
+    spelling) — the ``-H`` forms are accepted on input but never emitted."""
+    year, ylo_m = lo[:4], lo[5:7]
+    if hi[:4] == year:
+        if (lo, hi) == (f"{year}-01-01", f"{year}-12-31"):
+            return year
+        if lo[8:] == "01" and lo == f"{year}-{ylo_m}-01":
+            if (ylo_m, hi) == ("01", f"{year}-06-30"):
+                return f"VT{year}"
+            if (ylo_m, hi) == ("07", f"{year}-12-31"):
+                return f"HT{year}"
+            for q, (q_lo, q_hi) in _QUARTER_MONTHS.items():
+                if ylo_m == q_lo and hi == f"{year}-{q_hi}-{_MONTH_LAST_DAY[q_hi]}":
+                    return f"{year}-Q{q}"
+            if hi == f"{year}-{ylo_m}-{_MONTH_LAST_DAY[ylo_m]}":
+                return f"{year}-{ylo_m}"
+    if lo == hi and is_period(lo):
+        return lo
+    return f"{lo}..{hi}"
+
+
 def validate_slug(
     value: str,
     slot: FqidKind | str,

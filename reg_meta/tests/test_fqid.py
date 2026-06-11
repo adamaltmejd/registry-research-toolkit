@@ -20,6 +20,7 @@ from reg_meta.fqid import (
     is_period,
     is_slug,
     parse,
+    period_token_for_bounds,
     period_token_to_bounds,
     validate_slug,
 )
@@ -298,6 +299,62 @@ class TestPeriodGrammar:
         # unaffected — that is NOT an author-supplied day.
         with pytest.raises(FqidError):
             period_token_to_bounds(bad)
+
+
+class TestPeriodTokenForBounds:
+    @pytest.mark.parametrize(
+        "token",
+        # Every emittable token form round-trips bounds → token exactly. The
+        # -H forms are deliberately absent: their bounds are the term forms'.
+        [
+            "2018",
+            "VT2019",
+            "HT2020",
+            "2020-Q1",
+            "2020-Q3",
+            "2018-03",
+            "2018-02",
+            "2014-12-31",
+        ],
+    )
+    def test_round_trip(self, token: str) -> None:
+        assert period_token_for_bounds(*period_token_to_bounds(token)) == token
+
+    def test_half_year_ties_break_to_term(self) -> None:
+        # H1/H2 bounds are identical to VT/HT bounds; the term form wins and
+        # the -H spelling is never emitted.
+        assert period_token_for_bounds(*period_token_to_bounds("1995-H1")) == "VT1995"
+        assert period_token_for_bounds(*period_token_to_bounds("1995-H2")) == "HT1995"
+
+    def test_february_uses_synthesized_end(self) -> None:
+        # The month window carries the intentional Feb-29 over-count from
+        # `_MONTH_LAST_DAY` — the inverse must accept exactly that, leap year
+        # or not, and a calendar-Feb-28 window is NOT a month token.
+        assert period_token_for_bounds("2019-02-01", "2019-02-29") == "2019-02"
+        assert period_token_for_bounds("2019-02-01", "2019-02-28") == (
+            "2019-02-01..2019-02-28"
+        )
+
+    @pytest.mark.parametrize(
+        "lo,hi",
+        [
+            ("2009-01-01", "2009-09-30"),  # Q1-Q3 union — no single token
+            ("2009-04-01", "2009-12-31"),  # Q2-Q4 union
+            ("2010-01-01", "2012-12-31"),  # multi-year span
+            ("2009-07-01", "2010-06-30"),  # school-year span
+        ],
+    )
+    def test_non_grammar_window_renders_explicit_range(self, lo: str, hi: str) -> None:
+        # NEVER rounded down to a bare year — two sub-annual siblings both
+        # reading "2009" would re-create the ambiguity #271 removes.
+        assert period_token_for_bounds(lo, hi) == f"{lo}..{hi}"
+
+    def test_single_day(self) -> None:
+        assert period_token_for_bounds("2014-12-31", "2014-12-31") == "2014-12-31"
+        # A calendar-impossible day can't be a token → explicit range.
+        assert period_token_for_bounds("2019-02-29", "2019-02-29") == (
+            "2019-02-29..2019-02-29"
+        )
 
 
 # ---------------------------------------------------------------------------

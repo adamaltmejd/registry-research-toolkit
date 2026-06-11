@@ -26,6 +26,7 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from reg_meta.db import open_db
+from reg_meta.errors import RegMetaError
 from reg_meta.fqid import period_token_to_bounds
 from reg_meta_build.db import build_db
 from reg_meta_build.sources.scb import (
@@ -36,6 +37,7 @@ from reg_meta_build.sources.scb import (
     _apply_clustered,
     _apply_fold,
     _apply_split,
+    _assemble_runs,
     _Claim,
     _cluster_contested,
     _collapse_residual,
@@ -49,7 +51,6 @@ from reg_meta_build.sources.scb import (
     _looks_like_code_label_pair,
     _pick_state_rep,
     _resolve_year_winners,
-    _rle_runs,
     _spans_overlap,
     _split_off_non_contested,
     _split_relation_kind,
@@ -90,6 +91,13 @@ def _state(
         value_set_version_label=vlabel,
     )
     g.claims = {year: _year_claim(year, authority, approval)}
+    # Production invariant: regver_min/max are exactly the claimed-year bounds,
+    # so a helper-passed bound adds a matching full-year claim — the ISO era
+    # keys (supersession/extends-later/_pick_state_rep read from_iso/to_iso
+    # since #271) must see the same span the year ints describe.
+    for bound in (regver_min, regver_max):
+        if bound is not None and bound not in g.claims:
+            g.claims[bound] = _year_claim(bound)
     g.regver_max = regver_max
     g.regver_min = regver_min
     return gkey, g
@@ -257,17 +265,78 @@ class TestEditionBounds:
         assert _edition_bounds("Ekonomiskt bistånd, kvartal", None) is None
 
 
-class TestRleRuns:
+def _yiv(year: int) -> tuple[str, str]:
+    """A full-year owned interval — the year-bucket shorthand for run tests."""
+    return (f"{year:04d}-01-01", f"{year:04d}-12-31")
+
+
+def _spans(runs: list) -> list[tuple[str, str, bool, bool]]:
+    """(run lo, run hi, cut_in, cut_out) per assembled run."""
+    return [(ints[0][0], ints[-1][1], cin, cout) for ints, cin, cout in runs]
+
+
+class TestAssembleRuns:
     def test_contiguous(self) -> None:
-        assert _rle_runs([2000, 2001, 2002]) == [(2000, 2002)]
+        runs = _assemble_runs([_yiv(2000), _yiv(2001), _yiv(2002)], [])
+        assert _spans(runs) == [("2000-01-01", "2002-12-31", False, False)]
 
-    def test_gap_splits(self) -> None:
-        assert _rle_runs([2000, 2002]) == [(2000, 2000), (2002, 2002)]
-        assert _rle_runs([2000, 2001, 2003, 2004, 2005]) == [(2000, 2001), (2003, 2005)]
+    def test_year_gap_splits_year_aligned(self) -> None:
+        # The pre-#271 _rle_runs rule: nobody owns the gap year, so the run
+        # edges stay year-aligned (cut flags False → padding allowed).
+        runs = _assemble_runs([_yiv(2000), _yiv(2002)], [])
+        assert _spans(runs) == [
+            ("2000-01-01", "2000-12-31", False, False),
+            ("2002-01-01", "2002-12-31", False, False),
+        ]
 
-    def test_empty_and_single(self) -> None:
-        assert _rle_runs([]) == []
-        assert _rle_runs([1999]) == [(1999, 1999)]
+    def test_rival_between_years_cuts(self) -> None:
+        # A rival owning the intervening year carves: same split points as the
+        # year-gap rule (full-year intervals → identical emitted bounds), but
+        # flagged as cuts.
+        rival = ("2001-01-01", "2001-12-31", ("r",))
+        runs = _assemble_runs([_yiv(2000), _yiv(2002)], [rival])
+        assert _spans(runs) == [
+            ("2000-01-01", "2000-12-31", False, True),
+            ("2002-01-01", "2002-12-31", True, False),
+        ]
+
+    def test_within_year_carve(self) -> None:
+        # Mid-year handoff (#271): a rival owns Q2-Q3, the owner keeps Q1+Q4
+        # as two runs whose carve edges are the precise owned bounds.
+        owned = [("2009-01-01", "2009-03-31"), ("2009-10-01", "2009-12-31")]
+        rival = ("2009-04-01", "2009-09-30", ("r",))
+        runs = _assemble_runs(owned, [rival])
+        assert _spans(runs) == [
+            ("2009-01-01", "2009-03-31", False, True),
+            ("2009-10-01", "2009-12-31", True, False),
+        ]
+
+    def test_unrelated_rival_does_not_cut(self) -> None:
+        # A rival entirely outside the gap between owned intervals is no cut.
+        rival = ("2005-01-01", "2005-12-31", ("r",))
+        runs = _assemble_runs([_yiv(2000), _yiv(2001)], [rival])
+        assert _spans(runs) == [("2000-01-01", "2001-12-31", False, False)]
+
+    def test_single_interval(self) -> None:
+        runs = _assemble_runs([_yiv(1999)], [])
+        assert _spans(runs) == [("1999-01-01", "1999-12-31", False, False)]
+
+
+def _year_winners(
+    cands, groups, year, codes_fn, codelivery=None, labels=None, code_labels_fn=None
+):
+    """The pre-#271 (winners, any_genuine) view of `_resolve_year_winners`,
+    reconstructed from owned intervals + genuine segments. These tests express
+    the CASCADE semantics on full-year claims, where the interval sweep
+    degenerates to the year bucket — the interval-specific behavior has its
+    own tests (TestIntervalSweep / TestAssembleRuns)."""
+    owned, genuine = _resolve_year_winners(
+        cands, groups, year, codes_fn, codelivery, labels, code_labels_fn
+    )
+    gks = [gk for gk, _, _ in owned]
+    for _, _, _, seg_gks in genuine:
+        gks.extend(gk for gk in seg_gks if gk not in gks)
+    return gks, bool(genuine)
 
 
 class TestResolveYearWinners:
@@ -280,9 +349,7 @@ class TestResolveYearWinners:
 
     def test_single_candidate(self) -> None:
         a = _state(1)
-        winners, genuine = _resolve_year_winners(
-            [a[0]], dict([a]), 2020, self._codes({1: 3})
-        )
+        winners, genuine = _year_winners([a[0]], dict([a]), 2020, self._codes({1: 3}))
         assert winners == [a[0]]
         assert genuine is False
 
@@ -290,7 +357,7 @@ class TestResolveYearWinners:
         # same column, distinct value sets -> authority resolves within the column.
         a = _state(1, col="x", authority=_AUTH_FINAL)
         b = _state(2, col="x", authority=_AUTH_PRELIM)
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 3})
         )
         assert winners == [a[0]]
@@ -299,7 +366,7 @@ class TestResolveYearWinners:
     def test_recency_breaks_tie(self) -> None:
         a = _state(1, col="x", approval="2022-01-01")
         b = _state(2, col="x", approval="2014-01-01")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 3})
         )
         assert winners == [a[0]]
@@ -309,7 +376,7 @@ class TestResolveYearWinners:
         # same column + authority + approval, codes differ by 1 -> cosmetic.
         a = _state(1, col="x")
         b = _state(2, col="x")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 10})
         )
         assert winners == [a[0]]  # larger
@@ -321,7 +388,7 @@ class TestResolveYearWinners:
         # → A, proving the earlier step short-circuits.
         a = _state(1, col="x", authority=_AUTH_FINAL)
         b = _state(2, col="x", authority=_AUTH_PLAIN)
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3, 2: 4})
         )
         assert winners == [a[0]]  # authority, not the larger cosmetic pick
@@ -334,7 +401,7 @@ class TestResolveYearWinners:
         # which would keep the larger) decides → the later coding wins.
         old_big = _state(1, col="x", regver_min=2006)
         new_small = _state(2, col="x", regver_min=2008)
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [old_big[0], new_small[0]],
             dict([old_big, new_small]),
             2020,
@@ -347,9 +414,9 @@ class TestResolveYearWinners:
         # one column, sequential vintages overlapping at the transition year: the
         # later-introduced coding (higher min year) supersedes; big code diff so
         # only supersession (not cosmetic) can resolve it.
-        old = _state(1, col="NgS1", regver_min=2006)
-        new = _state(2, col="NgS1", regver_min=2008)
-        winners, genuine = _resolve_year_winners(
+        old = _state(1, col="NgS1", regver_min=2006, year=2008)
+        new = _state(2, col="NgS1", regver_min=2008, year=2008)
+        winners, genuine = _year_winners(
             [old[0], new[0]], dict([old, new]), 2008, self._codes({1: 778, 2: 821})
         )
         assert winners == [new[0]]  # latest-introduced supersedes the boundary
@@ -360,34 +427,34 @@ class TestResolveYearWinners:
         # sets, equal introduction -> keep the larger (most complete).
         small = _state(1, col="x", label="SEI_PSU")
         big = _state(2, col="x", label="SEI_PSU")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [small[0], big[0]], dict([small, big]), 2020, self._codes({1: 19, 2: 22})
         )
         assert winners == [big[0]]
         assert genuine is False
 
     def test_label_freshness_final_beats_preliminary(self) -> None:
-        a = _state(1, col="x", label="RTB 2021 preliminär")
-        b = _state(2, col="x", label="RTB 2021")
-        winners, genuine = _resolve_year_winners(
+        a = _state(1, col="x", label="RTB 2021 preliminär", year=2021)
+        b = _state(2, col="x", label="RTB 2021", year=2021)
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2021, self._codes({1: 234, 2: 251})
         )
         assert winners == [b[0]]  # final beats preliminary
         assert genuine is False
 
     def test_label_freshness_later_snapshot_wins(self) -> None:
-        a = _state(1, col="x", label="Skolenhetskod 2015-05-15")
-        b = _state(2, col="x", label="Skolenhetskod 2015-10-15")
-        winners, genuine = _resolve_year_winners(
+        a = _state(1, col="x", label="Skolenhetskod 2015-05-15", year=2015)
+        b = _state(2, col="x", label="Skolenhetskod 2015-10-15", year=2015)
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2015, self._codes({1: 8854, 2: 9110})
         )
         assert winners == [b[0]]  # later dated snapshot
         assert genuine is False
 
     def test_label_freshness_calendar_beats_academic(self) -> None:
-        a = _state(1, col="x", label="Komvux Kurskod 2001/2002")
-        b = _state(2, col="x", label="Komvux Kurskod 2001")
-        winners, genuine = _resolve_year_winners(
+        a = _state(1, col="x", label="Komvux Kurskod 2001/2002", year=2001)
+        b = _state(2, col="x", label="Komvux Kurskod 2001", year=2001)
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2001, self._codes({1: 5955, 2: 6473})
         )
         assert winners == [b[0]]  # calendar-year canonical over academic
@@ -395,9 +462,9 @@ class TestResolveYearWinners:
 
     def test_label_freshness_autumn_term_no_space(self) -> None:
         # the no-space `HT1986` form must match (regression: `\bht\b` missed it).
-        a = _state(1, col="x", label="Komvux Kurskod VT1986")
-        b = _state(2, col="x", label="Komvux Kurskod HT1986")
-        winners, genuine = _resolve_year_winners(
+        a = _state(1, col="x", label="Komvux Kurskod VT1986", year=1986)
+        b = _state(2, col="x", label="Komvux Kurskod HT1986", year=1986)
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 1986, self._codes({1: 837, 2: 780})
         )
         assert winners == [b[0]]  # autumn term wins despite fewer codes
@@ -406,9 +473,9 @@ class TestResolveYearWinners:
     def test_distinct_label_recoding_stays_genuine(self) -> None:
         # one column, SAME introduction, DIFFERENT source labels (Br92 vs Br07) →
         # genuine → curation.
-        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
-        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
-        winners, genuine = _resolve_year_winners(
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod", year=1998)
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod", year=1998)
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45})
         )
         assert genuine is True
@@ -416,12 +483,12 @@ class TestResolveYearWinners:
 
     def test_curation_pin_resolves_genuine(self) -> None:
         # a codelivery pin keeps the named label, resolving the genuine conflict.
-        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
-        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod", year=1998)
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod", year=1998)
         # gkey: [0]=register_id=1, [2]=var_id=1, [8]=column="AL2"
         # Map keys follow the loader contract: case-folded column ("al2").
         codelivery = {(1, 1, "al2"): ("Br07-kod", None)}
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
         assert winners == [b[0]]  # the pinned Br07 coding
@@ -436,7 +503,7 @@ class TestResolveYearWinners:
         b = _state(2, col="X", label="origB")
         emitted = {a[0]: "4pos", b[0]: "4pos-1"}
         codelivery = {(1, 1, "x"): ("4pos", None)}
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]],
             dict([a, b]),
             2020,
@@ -450,10 +517,10 @@ class TestResolveYearWinners:
     def test_curation_keep_rule_latest_year(self) -> None:
         # keep_rule=latest_year keeps the coding whose label embeds the latest year
         # (recurring SFI-year vintages on one column).
-        a = _state(1, col="Skolkod", label="Skolkod SFI 1999")
-        b = _state(2, col="Skolkod", label="Skolkod SFI 2000")
+        a = _state(1, col="Skolkod", label="Skolkod SFI 1999", year=1999)
+        b = _state(2, col="Skolkod", label="Skolkod SFI 2000", year=1999)
         codelivery = {(1, 1, "skolkod"): (None, "latest_year")}
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 1999, self._codes({1: 574, 2: 597}), codelivery
         )
         assert winners == [b[0]]  # SFI 2000 (later vintage)
@@ -462,10 +529,10 @@ class TestResolveYearWinners:
     def test_curation_pin_mismatch_falls_through(self) -> None:
         # a pin matching no surviving label at this year falls through to GENUINE
         # (no crash) — the year stays unresolved for --validate to flag.
-        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod")
-        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod")
+        a = _state(1, col="AL2", regver_min=1998, label="Br92-kod", year=1998)
+        b = _state(2, col="AL2", regver_min=1998, label="Br07-kod", year=1998)
         codelivery = {(1, 1, "al2"): ("Something else", None)}
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 1998, self._codes({1: 53, 2: 45}), codelivery
         )
         assert genuine is True
@@ -475,7 +542,7 @@ class TestResolveYearWinners:
         # SAME column, distinct value sets, big diff -> genuine same-column conflict.
         a = _state(1, col="x")
         b = _state(2, col="x")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 6})
         )
         assert genuine is True
@@ -486,7 +553,7 @@ class TestResolveYearWinners:
         # NOT a conflict (the SSYK 3/5-digit, age 5/10-yr bracket case).
         a = _state(1, col="agrupp")
         b = _state(2, col="agrupp2")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 11, 2: 6})
         )
         assert genuine is False
@@ -497,7 +564,7 @@ class TestResolveYearWinners:
         # one coding/period; historical is a superseded vintage).
         cur = _state(1, col="Kommun", grain="Kommun")
         hist = _state(2, col="Kommun", grain="Kommun historisk")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [cur[0], hist[0]], dict([cur, hist]), 2020, self._codes({1: 300, 2: 350})
         )
         assert winners == [cur[0]]  # current wins despite historical being larger
@@ -507,7 +574,7 @@ class TestResolveYearWinners:
         # one column, same value set, shape drift (data_length) -> one rep.
         a = _state(1, col="x", regver_max=2019, dlen="1")
         b = _state(1, col="x", regver_max=2020, dlen="2")
-        winners, genuine = _resolve_year_winners(
+        winners, genuine = _year_winners(
             [a[0], b[0]], dict([a, b]), 2020, self._codes({1: 3})
         )
         assert genuine is False
@@ -1569,6 +1636,344 @@ class TestSubAnnualBoundaryClamp:
             unika_extra=[unika_open],
         )
         assert self._state_bounds(conn, "952") == ("2018-01-01", "9999-12-31")
+
+
+class TestIntervalSweep:
+    """#271 interval-native resolution — behavior the year bucket could not
+    express. Build-level: full synthetic builds through the materializer."""
+
+    def _windows(
+        self, conn: sqlite3.Connection, col: str
+    ) -> list[tuple[str, str, int]]:
+        return [
+            (r["valid_from"], r["valid_to"], r["value_set_id"])
+            for r in conn.execute(
+                "SELECT valid_from, valid_to, value_set_id FROM variable_state "
+                "WHERE delivery_column_name = ? ORDER BY valid_from",
+                (col,),
+            )
+        ]
+
+    def test_term_split_substantive_both_kept(self, tmp_path: Path) -> None:
+        # GENUINELY different codings on VT vs HT of one year, equal approval:
+        # the year bucket ended GENUINE (build fail → pin); disjoint windows
+        # are not a conflict, so BOTH terms ship as non-overlapping states —
+        # the dissolved-conflict population (Orsak 2009 shape).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="TermCol",
+                    cvid=9800,
+                    var_id=960,
+                    varname="TermVar",
+                    year="2009",
+                    versionname="Vårterminen 2009",
+                    regver_id=9800,
+                ),
+                _var_row(
+                    colname="TermCol",
+                    cvid=9801,
+                    var_id=960,
+                    varname="TermVar",
+                    year="2009",
+                    versionname="Höstterminen 2009",
+                    regver_id=9801,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9800, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9801, "BetaB", _CLAMP_CODING_B)
+            ),
+        )
+        wins = self._windows(conn, "TermCol")
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2009-01-01", "2009-06-30"),
+            ("2009-07-01", "2009-12-31"),
+        ]
+        assert wins[0][2] != wins[1][2]  # each term keeps ITS coding
+
+    def test_term_drift_cosmetic_one_winner(self, tmp_path: Path) -> None:
+        # Same shape but the codings differ by ONE code: drift conflation is
+        # window-blind, so the pair still collapses to one winner (label
+        # freshness: HT beats VT) owning ITS OWN window — exactly the year
+        # bucket's outcome. The cosmetic population must show zero diff.
+        drifted = _CLAMP_CODING_A + [("14", "Alpha fyra")]
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="DriftCol",
+                    cvid=9810,
+                    var_id=961,
+                    varname="DriftVar",
+                    year="2009",
+                    versionname="Vårterminen 2009",
+                    regver_id=9810,
+                ),
+                _var_row(
+                    colname="DriftCol",
+                    cvid=9811,
+                    var_id=961,
+                    varname="DriftVar",
+                    year="2009",
+                    versionname="Höstterminen 2009",
+                    regver_id=9811,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9810, "VT-koder", _CLAMP_CODING_A)
+                + _vm_rows(9811, "HT-koder", drifted)
+            ),
+        )
+        wins = self._windows(conn, "DriftCol")
+        assert [(vf, vt) for vf, vt, _ in wins] == [("2009-07-01", "2009-12-31")]
+
+    def test_midyear_handoff_authority(self, tmp_path: Path) -> None:
+        # A full-year edition vs a FINAL autumn-term edition with a different
+        # coding: the term outranks on the SHARED segment only — the full-year
+        # coding keeps the spring half, the term takes the autumn half. The
+        # year bucket gave the whole year to the term.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="HandCol",
+                    cvid=9820,
+                    var_id=962,
+                    varname="HandVar",
+                    year="2009",
+                    versionname="2009",
+                    regver_id=9820,
+                ),
+                _var_row(
+                    colname="HandCol",
+                    cvid=9821,
+                    var_id=962,
+                    varname="HandVar",
+                    year="2009",
+                    versionname="Höstterminen 2009, slutlig version",
+                    regver_id=9821,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9820, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9821, "BetaB", _CLAMP_CODING_B)
+            ),
+        )
+        wins = self._windows(conn, "HandCol")
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2009-01-01", "2009-06-30"),
+            ("2009-07-01", "2009-12-31"),
+        ]
+        assert wins[0][2] != wins[1][2]
+
+    def test_quarter_carve_three_states(self, tmp_path: Path) -> None:
+        # A FINAL multi-quarter edition (Apr-Sep) carves the MIDDLE out of a
+        # plain full-year coding: the full-year coding keeps Q1 and Q4 as two
+        # rival-cut runs with precise edges — inexpressible pre-#271.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="CarveCol",
+                    cvid=9830,
+                    var_id=963,
+                    varname="CarveVar",
+                    year="2009",
+                    versionname="2009",
+                    regver_id=9830,
+                ),
+                _var_row(
+                    colname="CarveCol",
+                    cvid=9831,
+                    var_id=963,
+                    varname="CarveVar",
+                    year="2009",
+                    versionname="2009 kvartal 2-3, slutlig version",
+                    regver_id=9831,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9830, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9831, "BetaB", _CLAMP_CODING_B)
+            ),
+        )
+        wins = self._windows(conn, "CarveCol")
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2009-01-01", "2009-03-31"),
+            ("2009-04-01", "2009-09-30"),
+            ("2009-10-01", "2009-12-31"),
+        ]
+        assert wins[0][2] == wins[2][2] != wins[1][2]
+
+    def test_open_top_goes_to_interval_latest(self, tmp_path: Path) -> None:
+        # A kept substantive VT/HT sibling pair with the unika still-active
+        # signal: only the interval-latest state (HT) stays open — two open
+        # tops on one column would overlap at the sentinel.
+        unika_open = PIPE.join(
+            [
+                "TESTREG",
+                "Testregistret",
+                "Individer",
+                "Individer",
+                "OpenTermVar",
+                "OpenTermCol",
+                "2009",
+                "",
+                "0",
+                "0",
+                "0",
+            ]
+        )
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="OpenTermCol",
+                    cvid=9840,
+                    var_id=964,
+                    varname="OpenTermVar",
+                    year="2009",
+                    versionname="Vårterminen 2009",
+                    regver_id=9840,
+                ),
+                _var_row(
+                    colname="OpenTermCol",
+                    cvid=9841,
+                    var_id=964,
+                    varname="OpenTermVar",
+                    year="2009",
+                    versionname="Höstterminen 2009",
+                    regver_id=9841,
+                ),
+            ],
+            vm_extra=(
+                _vm_rows(9840, "AlphaA", _CLAMP_CODING_A)
+                + _vm_rows(9841, "BetaB", _CLAMP_CODING_B)
+            ),
+            unika_extra=[unika_open],
+        )
+        wins = self._windows(conn, "OpenTermCol")
+        assert [(vf, vt) for vf, vt, _ in wins] == [
+            ("2009-01-01", "2009-06-30"),
+            ("2009-07-01", "9999-12-31"),
+        ]
+
+    def test_genuine_segment_named_as_period_token(self, tmp_path: Path) -> None:
+        # Two substantive codings on the SAME term window still conflict —
+        # the build fails naming the contested SEGMENT as a period token
+        # (`VT2009`), not a bare year.
+        with pytest.raises(RegMetaError) as exc:
+            _build(
+                tmp_path,
+                [
+                    _var_row(
+                        colname="GenCol",
+                        cvid=9850,
+                        var_id=965,
+                        varname="GenVar",
+                        year="2009",
+                        versionname="Vårterminen 2009",
+                        regver_id=9850,
+                    ),
+                    _var_row(
+                        colname="GenCol",
+                        cvid=9851,
+                        var_id=965,
+                        varname="GenVar",
+                        year="2009",
+                        versionname="2009 vårtermin",
+                        regver_id=9851,
+                    ),
+                ],
+                vm_extra=(
+                    _vm_rows(9850, "AlphaA", _CLAMP_CODING_A)
+                    + _vm_rows(9851, "BetaB", _CLAMP_CODING_B)
+                ),
+            )
+        assert exc.value.code == "coalesce_unresolved_codelivery"
+        assert "VT2009" in exc.value.message
+
+
+class TestIntervalSweepUnits:
+    """#271 resolver units — the conflation/cadence mechanics that don't need
+    a full build."""
+
+    def _codes(self, sizes: dict[int, int]):
+        store = {vs: frozenset(f"c{i}" for i in range(n)) for vs, n in sizes.items()}
+        return lambda vs: store.get(vs, frozenset())
+
+    def _term_claims(self, gk_grp, year: int, term: str) -> None:
+        lo, hi = period_token_to_bounds(f"{term}{year}")
+        gk_grp[1].claims = {year: _Claim(lo, hi, _AUTH_SUBANNUAL, "")}
+
+    def test_disjoint_substantive_owns_windows(self) -> None:
+        a = _state(1, col="x")
+        b = _state(2, col="x")
+        self._term_claims(a, 2009, "VT")
+        self._term_claims(b, 2009, "HT")
+        owned, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2009, self._codes({1: 11, 2: 6})
+        )
+        assert genuine == []
+        assert sorted(owned, key=str) == sorted(
+            [
+                (a[0], "2009-01-01", "2009-06-30"),
+                (b[0], "2009-07-01", "2009-12-31"),
+            ],
+            key=str,
+        )
+
+    def test_cosmetic_disjoint_conflates_window_blind(self) -> None:
+        # Identity is blind to claim windows: a VT/HT drift pair (symdiff 1)
+        # collapses to one carrier owning ITS OWN window (HT via label-
+        # freshness's term rank on the version-derived labels — here labels
+        # carry no markers, so the largest set wins at the cosmetic step).
+        a = _state(1, col="x")
+        b = _state(2, col="x")
+        self._term_claims(a, 2009, "VT")
+        self._term_claims(b, 2009, "HT")
+        owned, genuine = _resolve_year_winners(
+            [a[0], b[0]], dict([a, b]), 2009, self._codes({1: 11, 2: 10})
+        )
+        assert genuine == []
+        assert owned == [(a[0], "2009-01-01", "2009-06-30")]  # larger set carries
+
+    def test_month_cadence_disables_cross_month_conflation(self) -> None:
+        # Under `cadence = month` (AGI, register 392) two months with
+        # cosmetically-different sets are two delivery periods, not drift:
+        # both ship. The same claims under the default year cadence conflate.
+        def month_pair(register_id: int):
+            a = _state(1, col="x")
+            b = _state(2, col="x")
+            ga, gb = a[1], b[1]
+            ga.register_id = gb.register_id = register_id
+            gka = (register_id,) + a[0][1:]
+            gkb = (register_id,) + b[0][1:]
+            ga.claims = {2024: _Claim("2024-02-01", "2024-02-29", _AUTH_PLAIN, "")}
+            gb.claims = {2024: _Claim("2024-03-01", "2024-03-31", _AUTH_PLAIN, "")}
+            return gka, gkb, {gka: ga, gkb: gb}
+
+        gka, gkb, groups = month_pair(392)
+        owned, genuine = _resolve_year_winners(
+            [gka, gkb], groups, 2024, self._codes({1: 11, 2: 10})
+        )
+        assert genuine == []
+        assert sorted(owned, key=str) == sorted(
+            [
+                (gka, "2024-02-01", "2024-02-29"),
+                (gkb, "2024-03-01", "2024-03-31"),
+            ],
+            key=str,
+        )
+
+        gka, gkb, groups = month_pair(1)  # default year cadence: conflates
+        owned, genuine = _resolve_year_winners(
+            [gka, gkb], groups, 2024, self._codes({1: 11, 2: 10})
+        )
+        assert genuine == []
+        assert owned == [(gka, "2024-02-01", "2024-02-29")]  # one carrier
 
 
 class TestSplit:
