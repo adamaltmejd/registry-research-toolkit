@@ -106,6 +106,16 @@ Same two servers, then open <http://localhost:5173/> in a browser. Backend API d
   Probe with `curl` GETs, not `-I`.
 - The Vite proxy targets `http://localhost:8000` (hardcoded in
   `frontend/vite.config.ts`) — the backend must be on :8000, not a random port.
+- **Verifying from a git worktree (`.claude/worktrees/*`): anything launched with the
+  main checkout as cwd serves main's code.** "Repo root" above means the checkout under
+  test — `uv run uvicorn …` at the main checkout's root, and the `preview_start`
+  launch.json configs (which always run there), bind the main checkout's venv and
+  silently exercise stale main-branch behavior (bit an agent 2026-06-11: a fix "didn't
+  work" because the servers ran main's code). Verified fix: `uv sync --frozen` inside
+  the worktree (uv stops at the worktree's own `pyproject.toml`, creating a
+  worktree-local `.venv`), then start the backend via that venv's binary
+  (`.venv/bin/uvicorn reg_webapp.app:create_app --factory --port 8000`) and the frontend
+  via `bun run dev` from the worktree's `reg_webapp/frontend/`.
 
 ## Troubleshooting
 
