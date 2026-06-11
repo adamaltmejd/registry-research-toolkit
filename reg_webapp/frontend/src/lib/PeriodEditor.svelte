@@ -19,7 +19,8 @@ import type { ValidationIssue } from "./validation";
 // (PeriodRangeInput — year/term/quarter/month/day), so picking any range is the
 // path of least resistance, not free text. The other modes cover the rest:
 // "Token" (free text for special/mixed-grain values — e.g. the #306 succession
-// clips like 1992..2009-06-30) and "Default" (the "_default" snapshot
+// clips like 1992..2009-06-30 — and the #307 interrupted-series comma list,
+// whose dedicated picker mode is #338) and "Default" (the "_default" snapshot
 // sentinel).
 //
 // Per the Pydantic boundary (see reg_webapp/DESIGN.md → Pydantic boundary), this
@@ -46,6 +47,11 @@ function inferMode(value: Period): Mode {
   if (value === "_default") {
     return "default";
   }
+  if (Array.isArray(value)) {
+    // The #307 interrupted-series list edits as comma-joined Token text — the
+    // minimal affordance; the dedicated picker list mode is #338.
+    return "token";
+  }
   const wire = periodToWire(value);
   if (wire === null) {
     // Unset ("" / blank) → the range picker (the common path); a malformed
@@ -69,6 +75,11 @@ const groupName = `period-mode-${_instanceSeq++}`;
 function seedTokenText(value: Period): string {
   if (typeof value === "string" && value !== "_default") {
     return value;
+  }
+  if (Array.isArray(value)) {
+    // The #307 segment list — comma-joined wire text (JSON only for a
+    // malformed list periodToWire can't serialize).
+    return periodToWire(value) ?? JSON.stringify(value);
   }
   if (
     value != null &&
@@ -133,7 +144,9 @@ function onRangeChange(wire: string | null): void {
 /** Token-mode emission ALSO threads through periodFromWire (#308 closes the
  * pre-existing trap where a typed "2010..2020" landed as a raw range STRING —
  * not a valid Source.period; the schema's only range shape is the {from,to}
- * object). A junk string rides through verbatim for the backend to flag. */
+ * object). Comma text becomes the #307 segment LIST (periodFromWire's list
+ * arm — subsumes the retired periodFromTokenText); junk rides through
+ * verbatim for the backend to flag. */
 function emitToken(): void {
   onchange(periodFromWire(tokenText.trim()));
 }

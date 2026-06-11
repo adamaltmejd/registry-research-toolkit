@@ -18,6 +18,7 @@ from reg_schema import (
     LiteralPeriod,
     Panel,
     PanelMember,
+    PeriodRange,
     ProjectData,
     Source,
     validate_structural,
@@ -136,6 +137,26 @@ def test_period_range_round_trips_through_validator() -> None:
         "from": "2018-01-01",
         "to": "2020-06-30",
     }
+    result = validate_structural(_project(sources=(src,)).model_dump(mode="json"))
+    assert "invalid_period" not in {i.code for i in result.issues}
+
+
+def test_period_list_form_coerces_and_round_trips() -> None:
+    # #307: the interrupted-series LIST form coerces to a tuple of segments
+    # (list → tuple like every other tuple field; range members become
+    # PeriodRange), and a json-mode dump re-validates clean through the
+    # structural list rules (sorted, disjoint).
+    src = Source(
+        name="s",
+        register_variant="scb/lisa/individer-15plus",
+        period=[{"from": 2005, "to": 2010}, 2013, "HT2022"],  # type: ignore[arg-type]
+        bindings=(_binding(),),
+    )
+    assert isinstance(src.period, tuple)
+    assert src.period[0] == PeriodRange.model_validate({"from": 2005, "to": 2010})
+    assert src.period[1:] == (2013, "HT2022")
+    dumped = src.model_dump(mode="json")["period"]
+    assert dumped == [{"from": 2005, "to": 2010}, 2013, "HT2022"]
     result = validate_structural(_project(sources=(src,)).model_dump(mode="json"))
     assert "invalid_period" not in {i.code for i in result.issues}
 

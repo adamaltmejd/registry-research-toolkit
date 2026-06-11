@@ -370,6 +370,112 @@ def test_period_range_out_of_bounds_endpoint_is_invalid() -> None:
         assert _at(result, "invalid_period") == ["/sources/0/period"], endpoint
 
 
+# ── #307: the period LIST form (interrupted series) ─────────────────────────
+
+
+def test_period_list_of_sorted_disjoint_segments_is_ok() -> None:
+    # The canonical interrupted-series shape: sorted ascending, non-overlapping,
+    # mixed segment forms (range objects, a bare year, a sub-annual token).
+    spec = _spec()
+    spec["sources"][0]["period"] = [
+        {"from": 2005, "to": 2010},
+        2013,
+        {"from": 2015, "to": 2020},
+        "HT2022",
+    ]
+    result = validate_structural(spec)
+    assert result.ok, result.issues
+
+
+def test_period_list_adjacent_segments_are_ok() -> None:
+    # Adjacency (contiguous segments) is allowed — only OVERLAP is rejected.
+    spec = _spec()
+    spec["sources"][0]["period"] = [
+        {"from": 2005, "to": 2010},
+        {"from": 2011, "to": 2015},
+    ]
+    assert validate_structural(spec).ok
+
+
+def test_period_empty_list_is_invalid() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = []
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
+
+
+def test_period_list_default_member_is_invalid() -> None:
+    # `_default` is whole-history — it makes no sense as one piece of a series.
+    spec = _spec()
+    spec["sources"][0]["period"] = [2018, "_default"]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
+
+
+def test_period_list_nested_list_member_is_invalid() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = [[2018, 2019]]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/0"]
+
+
+def test_period_list_bad_member_token_is_invalid_at_member_path() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = [2018, "nope"]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
+
+
+def test_period_list_unsorted_is_invalid() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = [
+        {"from": 2015, "to": 2020},
+        {"from": 2005, "to": 2010},
+    ]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
+    issue = next(i for i in result.issues if i.code == "invalid_period")
+    assert "sorted" in issue.message
+
+
+def test_period_list_overlapping_members_are_invalid() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = [
+        {"from": 2005, "to": 2015},
+        {"from": 2010, "to": 2020},
+    ]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
+    issue = next(i for i in result.issues if i.code == "invalid_period")
+    assert "overlap" in issue.message
+
+
+def test_period_list_mixed_grammar_overlap_is_caught() -> None:
+    # Overlap detection expands tokens to ISO bounds, so a sub-annual token
+    # inside a year range is caught (HT2018 ⊂ 2018): mixed grammars compare
+    # on real intervals, not token strings.
+    spec = _spec()
+    spec["sources"][0]["period"] = [2018, "HT2018"]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/1"]
+
+
+def test_period_list_inverted_member_range_is_invalid() -> None:
+    # An inverted member (from > to) would poison the sorted/overlap math.
+    spec = _spec()
+    spec["sources"][0]["period"] = [{"from": 2020, "to": 2010}]
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period/0"]
+
+
+def test_period_single_member_list_is_ok() -> None:
+    # A one-segment list is legal (the editor may produce it transiently);
+    # semantically identical to the scalar form.
+    spec = _spec()
+    spec["sources"][0]["period"] = [{"from": 2005, "to": 2010}]
+    assert validate_structural(spec).ok
+
+
 def test_period_calendar_invalid_full_date_scalar_is_invalid() -> None:
     # A `YYYY-MM-DD` token passes the syntactic 01-31 day regex but names an
     # impossible calendar day — `_is_period_endpoint` calendar-validates it, so it

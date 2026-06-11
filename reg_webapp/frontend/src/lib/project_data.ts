@@ -36,13 +36,18 @@ export interface Binding {
   [key: string]: unknown;
 }
 
-/** A `Source.period` value: a bare year, a period-token string, the
- * `"_default"` sentinel, or a `{from, to}` range object. Kept loose — the server
- * is the canonical period validator. */
-export type Period =
+/** One contiguous piece of a `Source.period`: a bare year, a period-token
+ * string, or a `{from, to}` range object. */
+export type PeriodSegment =
   | number
   | string
   | { from: number | string; to: number | string };
+
+/** A `Source.period` value: a segment, the `"_default"` sentinel (rides the
+ * string arm), or a LIST of segments — an interrupted series (#307; the
+ * backend enforces non-empty, sorted ascending, non-overlapping). Kept loose —
+ * the server is the canonical period validator. */
+export type Period = PeriodSegment | PeriodSegment[];
 
 /** A data source / table. Open: panel-referenced or future keys survive. */
 export interface Source {
