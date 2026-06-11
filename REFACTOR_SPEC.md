@@ -62,6 +62,12 @@ step numbering.
   `reg-meta update` resolves and installs it end-to-end.
 - `reg_webapp` Dockerfile runs `reg-meta update` at image-build time to bake the
   matching reg_meta release's DB into an image layer.
+- **Origin platform (decided 2026-06-11): Fly.io** — app `reg-webapp-global`, one
+  always-on `shared-cpu-1x`/1GB machine in `arn`, live at `reg-webapp-global.fly.dev`
+  (`/api/context` + ETag/304 verified). Rationale, topology, and the Cloudflare-zone
+  setup gotchas live in `reg_webapp/DESIGN.md` → "Deployment"; `container-build.yml`
+  pushes to `registry.fly.io` + deploys on image-affecting main pushes. Remaining for
+  6.5: the Cloudflare zone itself (domain + DNS), then the #220 gate below.
 - Cloudflare in front: edge caching with the ETag scheme (origin
   ETag/`Cache-Control`/rate-limit machinery already ships — see `reg_webapp/DESIGN.md`),
   per-IP rate limits, DDoS shielding.

@@ -333,6 +333,41 @@ backend contract can't drift. The catch-all returns the `kind`-discriminated
 `CatalogNode` union; components narrow on `kind` via `src/lib/catalog.ts` helpers
 (unit-tested).
 
+## Deployment (`global` on Fly.io, Cloudflare edge in front)
+
+§6.5's origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a
+Cloudflare zone in front. The deciding factor was the edge-cache contract: the origin
+ETag/`Cache-Control` machinery (above) and the #220 FQID round-trip gate assume a
+classic URL-addressed origin behind Cloudflare's zone cache. Cloudflare's own Containers
+product routes all traffic through a Worker via a Durable Object binding — zone Cache
+Rules never see those responses — so the shipped ETag design would need re-implementing
+in Worker code against a per-colo-only cache. Fly is also \~5x cheaper for this shape
+and officially documents the Cloudflare-in-front topology
+(`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
+plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
+
+- **App**: `reg-webapp-global` — a single always-on `shared-cpu-1x`/1GB machine in `arn`
+  (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
+  is throttled (\~8 MiB/s), so a cold boot re-reads the SQLite pair slowly — keep the OS
+  page cache warm rather than scale to zero (\~$6/mo). Config: `reg_webapp/fly.toml`;
+  `--ha=false` keeps the machine count at one.
+- **Read-only SQLite on the ephemeral rootfs is the right model** — the DB pair is baked
+  into the image and replaced with it. No volume, no LiteFS, nothing persists.
+- **Deploys**: `container-build.yml` pushes the CI-built image to `registry.fly.io`
+  (SHA-tagged) and runs `flyctl deploy --image` on image-affecting main pushes. Two
+  gates guard a bad image: the entrypoint smoke gate (container exits non-zero before
+  ever serving) and fly.toml's `/api/context` HTTP check (flyctl reports failure if it
+  never passes). Rollback: `flyctl releases --image` lists history;
+  `flyctl deploy --image <old>` restores in seconds.
+- **Cloudflare zone (pending)**: orange-cloud DNS → the Fly app. Setup gotchas, recorded
+  so they aren't re-derived: add the domain on Fly first (`fly certs add` + the
+  `_fly-ownership` TXT record so HTTP-01 issuance works through the proxy), SSL mode
+  **Full (strict)**, and never proxy a hostname pointing at `*.fly.dev` (Fly's edge has
+  no cert for the custom SNI → 525). No dedicated IPv4 — the free shared IPv4 works
+  behind the proxy. SPA on Workers static assets with SPA-fallback rewriting (previous
+  section); per-IP rate limits at the WAF. #220's FQID edge-cache validation runs once
+  the zone fronts the origin.
+
 ## Frontend unit tests (Vitest)
 
 `bun run test` runs **Vitest** (`vitest run`) — Vite-native, so it reuses

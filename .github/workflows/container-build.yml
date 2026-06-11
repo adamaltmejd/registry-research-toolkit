@@ -1,10 +1,13 @@
-# reg_webapp deployment-image build (REFACTOR_SPEC.md §6.5 — Deployment).
+# reg_webapp deployment-image build + deploy (REFACTOR_SPEC.md §6.5).
 #
-# Build-ONLY: no registry push. The registry / hosting target is not decided yet
-# (REFACTOR_SPEC.md §6.5); pushing is wired once that lands. This job proves the
-# multi-stage Dockerfile still builds — including the `reg-meta update` DB bake
-# and the #224 provenance-confinement assertion #3 (the RUN check fails the build
-# if reg_meta.provenance.db* is present).
+# PRs: build-ONLY — proves the multi-stage Dockerfile still builds, including
+# the `reg-meta update` DB bake and the #224 provenance-confinement assertion
+# #3 (the RUN check fails the build if reg_meta.provenance.db* is present).
+#
+# Pushes to main (and manual dispatch): the same build is pushed to Fly's
+# registry and deployed to the `global` Fly app (origin platform decision +
+# topology: reg_webapp/DESIGN.md → "Deployment"). `global` is prod and staging
+# in one tier (§7.5), so every image-affecting main push deploys.
 #
 # ─────────────────────────────────────────────────────────────────────────────
 # PROPOSAL — path trigger (OPEN decision, REFACTOR_SPEC.md "Open / deferred
@@ -46,9 +49,18 @@ on:
       - ".github/workflows/container-build.yml"
       - "uv.lock"
       - "pyproject.toml"
-  # Manual escape hatch for rebuilding after a baked-dep (reg_schema /
-  # reg_monabundle) change the path filter above intentionally skips.
+  # Manual escape hatch: rebuild + deploy after a baked-dep (reg_schema /
+  # reg_monabundle) change the path filter above intentionally skips, or after
+  # a DATA-only reg_meta release (pass reg_meta_tag to bust the bake layer's
+  # GHA cache — see the REG_META_TAG note in reg_webapp/Dockerfile).
   workflow_dispatch:
+    inputs:
+      reg_meta_tag:
+        description: >-
+          reg_meta release tag to bake (e.g. reg_meta/v0.9.0); `latest`
+          resolves the newest release but may reuse a cached bake layer.
+        required: false
+        default: latest
 
 jobs:
   build-image:
@@ -56,16 +68,53 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: docker/setup-buildx-action@v3
+      # Registry push auth (main/dispatch only). The username is ignored by
+      # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
+      - name: Log in to registry.fly.io
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: registry.fly.io
+          username: x
+          password: ${{ secrets.FLY_API_TOKEN }}
       # Build context is the repo root (the Dockerfile needs the uv workspace);
-      # -f points at reg_webapp/Dockerfile. Build-only — `push: false`, and the
-      # image is loaded into the runner's docker so a follow-up smoke job could
-      # run it. GHA layer cache keeps rebuilds cheap.
+      # -f points at reg_webapp/Dockerfile. PRs build-only (`load` into the
+      # runner's docker, no push); main/dispatch pushes to Fly's registry
+      # addressed by commit SHA, so the deploy job (and a manual rollback)
+      # references an immutable tag. GHA layer cache keeps rebuilds cheap.
       - uses: docker/build-push-action@v6
         with:
           context: .
           file: reg_webapp/Dockerfile
-          push: false
-          load: true
-          tags: reg-webapp:ci
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: ${{ github.event_name == 'pull_request' && 'reg-webapp:ci' || format('registry.fly.io/reg-webapp-global:{0}', github.sha) }}
+          build-args: |
+            REG_META_TAG=${{ inputs.reg_meta_tag || 'latest' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build-image
+    runs-on: ubuntu-latest
+    # One deploy at a time; queue rather than cancel — an interrupted flyctl
+    # run can strand the machine mid-update.
+    concurrency:
+      group: fly-deploy-global
+      cancel-in-progress: false
+    steps:
+      # Checkout only for reg_webapp/fly.toml — the image is already pushed.
+      - uses: actions/checkout@v6
+      - uses: superfly/flyctl-actions/setup-flyctl@v1.5
+      # Two gates guard a bad image: the container entrypoint runs the smoke
+      # gate before uvicorn serves (a bad image exits non-zero), and fly.toml's
+      # /api/context HTTP check must pass before flyctl reports success.
+      # --ha=false keeps the single-machine topology (see fly.toml header).
+      - run: >-
+          flyctl deploy
+          --config reg_webapp/fly.toml
+          --image registry.fly.io/reg-webapp-global:${{ github.sha }}
+          --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
