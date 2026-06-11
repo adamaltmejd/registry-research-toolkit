@@ -517,6 +517,38 @@ the most useful filter ("top-level only"); deeper parent/child queries fall back
 prefix matching on `value_code.code`. Code sets without prefix hierarchy (ICD-10, ATC)
 keep `level = NULL` and use their own conventions.
 
+## Concept groups (presentation layer)
+
+The catalog renders machine-stamped SCB column *families* as flat lists of
+near-identical rows (issue #303): month-suffixed variable families
+(`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
+(`sun2000inr`/`sun2020inr`), and classification vintage families (47 of 79
+classifications are `lkf1980`…`lkf2026`). The **concept-group layer** folds these for
+browse: `concept_group` + `concept_group_variable`(+`_facet`) +
+`concept_group_classification`, derived at build time
+(`reg_meta_build/concept_groups.py` documents the three derivation dimensions and their
+guards; see `reg_meta_build/DESIGN.md` → Concept-group derivation).
+
+**Presentation only, identity untouched.** A group is *not* an FQID kind and never
+becomes a binding/order/stats key — members keep their leaf FQIDs, and a binding's
+`value_set: "class/lkf2020"` keeps referencing the exact vintage. Identity-level folding
+by classification family was tried and dropped (#223 part 2, 195 measured over-folds);
+because grouping is presentation, a wrong group is a cosmetic curation bug, not identity
+corruption. A variable/classification belongs to **at most one** group (member-table
+PKs). When the interval-native model (#271) merges month columns into single variables,
+the month groups dissolve into real variables and the layer shrinks to edge/rank/vintage
+duty.
+
+**API**: `Catalog.list_concept_groups(provider, register)` (variable groups, register
+scope) and `Catalog.list_classification_groups()` (vintage groups, catalog scope) return
+`ConceptGroupSummary` — `key` (scope-unique derivation key, a UI anchor), `label`,
+`source` (`edge`/`token`/`curated`), `axes` (sorted facet axes; empty for edge groups),
+and members ordered by facet values then slug. Each `ConceptGroupMember` carries the
+leaf `Fqid`, display name, and `GroupFacet` assignments (`month`/`rank`/`vintage` —
+sortable `value`, display `label`). The webapp's register / classification-root
+responses embed these alongside the complete flat children list, and the SPA folds
+(`reg_webapp/DESIGN.md`).
+
 ## Storage optimization
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs use WITHOUT
