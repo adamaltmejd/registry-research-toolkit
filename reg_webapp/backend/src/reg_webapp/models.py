@@ -225,6 +225,14 @@ class VariableStateModel(BaseModel):
     value_set: list[ValueSetMember] | None
     is_identifier: bool
     classification_slug: str | None
+    # The COARSEST period token exactly covering [valid_from, valid_to]
+    # (`reg_meta.fqid.period_token_for_bounds` — the #271 display inverse:
+    # "2009", "VT2009", "2009-Q3", or an explicit "lo..hi" range for a
+    # non-grammar window). None for an open-ended state (valid_to is the
+    # `9999-12-31` sentinel — no finite token exists; clients render "since
+    # valid_from"). Defaulted (additive) per the #317 rule: the SPA must
+    # tolerate one edge-cache generation of payloads missing it (#321).
+    period_token: str | None = None
 
 
 class VariableRefModel(BaseModel):

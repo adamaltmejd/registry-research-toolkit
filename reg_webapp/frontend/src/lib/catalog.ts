@@ -551,6 +551,97 @@ export type AddPlan =
   | { kind: "segments"; segments: AddSegment[] }
   | { kind: "choose-variant"; options: VariantWindow[] };
 
+// ── State-window display (#309 + #321) ──────────────────────────────────────
+
+/** The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
+ * default) — never shown to the user (#309). */
+export const OPEN_ENDED_VALID_TO = "9999-12-31";
+
+/**
+ * The display form of a state's validity window (#309/#321):
+ *  - open-ended (the `9999-12-31` sentinel) → `"since <from>"` (year-collapsed);
+ *  - a closed window with a SINGLE backend period token (the coarsest grain
+ *    that exactly covers it — `"2009"`, `"VT2009"`, `"2009-Q3"`, `"2020-02"`)
+ *    → that token, so two same-year sub-annual siblings never both read as the
+ *    bare year (#271's display mandate);
+ *  - otherwise (a multi-year window, whose token is the explicit `lo..hi`
+ *    range, or a payload predating the `period_token` field — one edge-cache
+ *    generation of skew tolerated, the #317 rule) → `"<from> – <to>"` with
+ *    year-aligned bounds collapsed to bare years (`1992-01-01 – 2009-12-31` →
+ *    `1992 – 2009`).
+ * The raw ISO window stays available to the UI via a `title` tooltip.
+ */
+export function formatStateWindow(s: VariableStateModel): string {
+  if (s.valid_to === OPEN_ENDED_VALID_TO) {
+    return `since ${boundToken(s.valid_from, "from")}`;
+  }
+  const token = s.period_token;
+  if (typeof token === "string" && token !== "" && !token.includes("..")) {
+    return token;
+  }
+  const from = boundToken(s.valid_from, "from");
+  const to = boundToken(s.valid_to, "to");
+  return from === to ? from : `${from} – ${to}`;
+}
+
+/**
+ * Per-state "what changed" hints (#309): for each variant's states in
+ * `valid_from` order, diff every state against its predecessor and report the
+ * fields that actually changed — data type (formatted), delivery column, and
+ * value set (`value_set_id` is the CONTENT key: the coding can change even
+ * when the version label doesn't). Keyed by the LATER state's `state_id`.
+ * Cross-variant transitions are never hinted (the variant is its own visible
+ * column). Two states differing in none of these render identically without a
+ * hint — exactly the int→bigint invisibility this fixes, so every diffed field
+ * must also be VISIBLE in the row.
+ */
+export function stateChangeHints(
+  states: VariableStateModel[],
+): Map<number, string[]> {
+  const byVariant = new Map<string, VariableStateModel[]>();
+  for (const s of states) {
+    const group = byVariant.get(s.variant);
+    if (group) {
+      group.push(s);
+    } else {
+      byVariant.set(s.variant, [s]);
+    }
+  }
+  const hints = new Map<number, string[]>();
+  for (const group of byVariant.values()) {
+    const ordered = [...group].sort(
+      (a, b) =>
+        a.valid_from.localeCompare(b.valid_from) || a.state_id - b.state_id,
+    );
+    for (let i = 1; i < ordered.length; i++) {
+      const prev = ordered[i - 1];
+      const cur = ordered[i];
+      const changes: string[] = [];
+      const prevType = formatDataType(prev.data_type, prev.data_length);
+      const curType = formatDataType(cur.data_type, cur.data_length);
+      if (prevType !== curType) {
+        changes.push(`type ${prevType || "—"} → ${curType || "—"}`);
+      }
+      if (prev.delivery_column_name !== cur.delivery_column_name) {
+        changes.push(
+          `column ${prev.delivery_column_name ?? "—"} → ${cur.delivery_column_name ?? "—"}`,
+        );
+      }
+      if (prev.value_set_id !== cur.value_set_id) {
+        changes.push(
+          prev.value_set_version_label !== cur.value_set_version_label
+            ? `value set ${prev.value_set_version_label || "(no version)"} → ${cur.value_set_version_label || "(no version)"}`
+            : "value set changed",
+        );
+      }
+      if (changes.length > 0) {
+        hints.set(cur.state_id, changes);
+      }
+    }
+  }
+  return hints;
+}
+
 /** Render a clipped ISO bound as a period-range ENDPOINT token, collapsing
  * year-aligned bounds to the bare year (`2010-01-01` → `2010` as a start,
  * `2009-12-31` → `2009` as an end) so the common year-grain succession yields

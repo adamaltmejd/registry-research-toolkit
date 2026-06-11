@@ -59,6 +59,7 @@ from reg_meta.fqid import (
     FqidError,
     FqidKind,
     parse,
+    period_token_for_bounds,
 )
 from reg_meta.queries import list_classifications
 
@@ -212,6 +213,10 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
 # ── reg_meta dataclass → Pydantic mappers (1:1 wrappers; see DESIGN.md →
 # Pydantic boundary) ───────────────────────────────────────────────────────
 
+# The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
+# default). An open window has no finite period token (#321).
+OPEN_ENDED_VALID_TO = "9999-12-31"
+
 
 def _state_model(state) -> VariableStateModel:
     return VariableStateModel(
@@ -232,6 +237,15 @@ def _state_model(state) -> VariableStateModel:
         ),
         is_identifier=state.is_identifier,
         classification_slug=state.classification_slug,
+        # #321: the coarsest exact display token for the window; None for an
+        # open-ended state (the `9999-12-31` DDL-default sentinel — see
+        # reg_meta_build db.py — has no finite token; the SPA renders "since
+        # valid_from").
+        period_token=(
+            None
+            if state.valid_to == OPEN_ENDED_VALID_TO
+            else period_token_for_bounds(state.valid_from, state.valid_to)
+        ),
     )
 
 

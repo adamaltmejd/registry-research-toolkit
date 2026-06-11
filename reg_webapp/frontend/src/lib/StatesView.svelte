@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { VariableStateModel } from "./api";
-import { formatDataType } from "./catalog";
+import { formatDataType, formatStateWindow, stateChangeHints } from "./catalog";
 import { VALUE_SET_VERSION_NONE } from "./period";
 
 // Presentational view of a variable's `variable_state` rows (from the full
@@ -57,7 +57,42 @@ const versionChips = $derived(versionsAll.filter((v) => v !== ""));
 const hasEmptyVersion = $derived(versionsAll.includes(""));
 // Whether either narrowing axis can actually resolve the multi-state set to one.
 const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
+
+// #309: per-transition "what changed" hints (keyed by the LATER state's id) —
+// adjacent same-variant states that differ only invisibly (the int→bigint
+// case) get an explicit diff line under the row.
+const changeHints = $derived(stateChangeHints(states));
+
+// #310: inline per-state value-set expansion in LIST mode (keyed by state_id;
+// reassigned-on-toggle so the runes see the change). Cleared when the state
+// set changes underneath (narrowing) — keys are state_ids, so a surviving
+// state's open table legitimately survives a narrow.
+let expanded = $state<Record<number, boolean>>({});
+function toggleExpanded(stateId: number): void {
+  expanded = { ...expanded, [stateId]: !expanded[stateId] };
+}
 </script>
+
+<!-- The scrollable (code, label) table — the SAME rendering for the detail
+     mode and a list row's inline expansion (#310). Height-constrained: LISA
+     value sets can be hundreds of codes. -->
+{#snippet valueSetTable(valueSet: NonNullable<VariableStateModel["value_set"]>)}
+  <div class="value-set-scroll">
+    <table class="value-set">
+      <thead>
+        <tr><th>Code</th><th>Label</th></tr>
+      </thead>
+      <tbody>
+        {#each valueSet as member (member.code)}
+          <tr>
+            <td><code>{member.code}</code></td>
+            <td>{member.label}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+{/snippet}
 
 {#if states.length === 0}
   <p class="muted empty">
@@ -74,7 +109,9 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
       <dt>Variant</dt>
       <dd><code>{s.variant}</code></dd>
       <dt>Valid</dt>
-      <dd>{s.valid_from} – {s.valid_to}</dd>
+      <!-- #309/#321: sentinel-free, coarsest-exact window ("since 2016",
+           "VT2009"); the raw ISO window stays on the tooltip. -->
+      <dd title="{s.valid_from} – {s.valid_to}">{formatStateWindow(s)}</dd>
       {#if s.data_type}
         <dt>Data type</dt>
         <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
@@ -93,22 +130,7 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
       <h4 class="vs-heading">
         Value set <span class="muted">({s.value_set.length})</span>
       </h4>
-      <!-- Height-constrained: LISA value sets can be hundreds of codes. -->
-      <div class="value-set-scroll">
-        <table class="value-set">
-          <thead>
-            <tr><th>Code</th><th>Label</th></tr>
-          </thead>
-          <tbody>
-            {#each s.value_set as member (member.code)}
-              <tr>
-                <td><code>{member.code}</code></td>
-                <td>{member.label}</td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+      {@render valueSetTable(s.value_set)}
     {:else}
       <p class="muted">No value set.</p>
     {/if}
@@ -188,14 +210,46 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 
   <ul class="state-list">
     {#each states as s (s.state_id)}
+      {@const typeLabel = formatDataType(s.data_type, s.data_length)}
+      {@const hints = changeHints.get(s.state_id)}
       <li>
-        <span class="state-variant"><code>{s.variant}</code></span>
-        <span class="state-validity muted">{s.valid_from} – {s.valid_to}</span>
-        <span class="state-vsv muted">
-          {s.value_set_version_label || "(no version)"}
-        </span>
-        {#if s.delivery_column_name}
-          <code class="state-col">{s.delivery_column_name}</code>
+        <div class="state-row">
+          <span class="state-variant"><code>{s.variant}</code></span>
+          <!-- #309/#321: sentinel-free, coarsest-exact window; raw ISO on the
+               tooltip. -->
+          <span class="state-validity muted" title="{s.valid_from} – {s.valid_to}">
+            {formatStateWindow(s)}
+          </span>
+          {#if typeLabel}
+            <!-- #309: every diffed field must be VISIBLE — states can differ
+                 by data type alone (int → bigint). -->
+            <span class="state-type muted">{typeLabel}</span>
+          {/if}
+          <span class="state-vsv muted">
+            {s.value_set_version_label || "(no version)"}
+          </span>
+          {#if s.delivery_column_name}
+            <code class="state-col">{s.delivery_column_name}</code>
+          {/if}
+          {#if s.value_set && s.value_set.length > 0}
+            <!-- #310: inspect a state's codes WITHOUT narrowing to one state. -->
+            <button
+              type="button"
+              class="vs-toggle"
+              aria-expanded={!!expanded[s.state_id]}
+              onclick={() => toggleExpanded(s.state_id)}
+            >
+              {expanded[s.state_id] ? "Hide values" : "Values"} ({s.value_set.length})
+            </button>
+          {/if}
+        </div>
+        {#if hints && hints.length > 0}
+          <!-- #309: what actually changed vs the previous state of this
+               variant — the int→bigint case renders an explicit diff. -->
+          <p class="state-changed">changed: {hints.join(" · ")}</p>
+        {/if}
+        {#if expanded[s.state_id] && s.value_set && s.value_set.length > 0}
+          {@render valueSetTable(s.value_set)}
         {/if}
       </li>
     {/each}
@@ -285,15 +339,39 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
   }
   .state-list li {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.75rem;
+    flex-direction: column;
+    gap: 0.35rem;
     padding: 0.35rem 0.5rem;
     border: 1px solid var(--border);
     border-radius: 4px;
   }
+  .state-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
   .state-col {
     margin-left: auto;
     font-size: 0.85em;
+  }
+  .vs-toggle {
+    font: inherit;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .vs-toggle:hover {
+    border-color: var(--accent);
+  }
+  /* #309: the per-transition diff line — advisory amber, not an error. */
+  .state-changed {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--level-warning, #92600a);
   }
 </style>
