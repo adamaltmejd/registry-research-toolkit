@@ -13,9 +13,11 @@ import {
   deriveType,
   narrowCatalogNode,
   type Representation,
+  rankFilter,
   representationsCollapse,
   representationsFromStates,
 } from "./catalog";
+import FilterInput from "./FilterInput.svelte";
 
 // INLINE-EXPAND embedded pick-mode catalog browser (maintainer decision): NO
 // router import, NO overlay/modal. It reuses the catalog DATA LAYER only
@@ -86,6 +88,20 @@ const variantList = $derived(
   props.mode === "variant" && resource.data && "variants" in resource.data
     ? resource.data.variants
     : [],
+);
+
+// In-memory type-to-filter over whichever list this picker shows (740 register
+// variables open on a wall of near-identical `agi*` rows otherwise). Match on
+// BOTH slug/FQID and display name (rankFilter folds diacritics + case). Unlike
+// the browse pages, the picker RANKS the survivors (exact → prefix → other) so a
+// target-hunt ("kon" → Kön) surfaces the wanted row first; alphabetical order is
+// kept within each tier.
+let filter = $state("");
+const filteredVariants = $derived(
+  rankFilter(variantList, filter, (v) => [v.slug, v.name]),
+);
+const filteredVariables = $derived(
+  rankFilter(variableChildren, filter, (c) => [c.fqid, c.name]),
 );
 
 // The derive-on-pick resolve state + the REPRESENTATION chooser. A concept can
@@ -198,40 +214,64 @@ function chooseRepresentation(rep: Representation): void {
     <p class="error" role="alert">Failed to load: {resource.error}</p>
   {:else if props.mode === "variant"}
     {#if variantList.length > 0}
-      <ul class="pick-list">
-        {#each variantList as variant (variant.slug)}
-          <li>
-            <button
-              type="button"
-              class="pick"
-              onclick={() => props.mode === "variant" && props.onpickVariant(variant.slug)}
-            >
-              <span class="slug">{variant.slug}</span>
-              {#if variant.name}<span class="name">{variant.name}</span>{/if}
-            </button>
-          </li>
-        {/each}
-      </ul>
+      <FilterInput
+        bind:value={filter}
+        total={variantList.length}
+        shown={filteredVariants.length}
+        placeholder="Filter variants…"
+        label="Filter variants"
+        autofocus
+      />
+      {#if filteredVariants.length > 0}
+        <ul class="pick-list">
+          {#each filteredVariants as variant (variant.slug)}
+            <li>
+              <button
+                type="button"
+                class="pick"
+                onclick={() => props.mode === "variant" && props.onpickVariant(variant.slug)}
+              >
+                <span class="slug">{variant.slug}</span>
+                {#if variant.name}<span class="name">{variant.name}</span>{/if}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="muted">No variants match “{filter}”.</p>
+      {/if}
     {:else}
       <p class="muted">No variants for this register.</p>
     {/if}
   {:else if registerNode && registerNode.kind === "register"}
     {#if variableChildren.length > 0}
-      <ul class="pick-list">
-        {#each variableChildren as child (child.fqid)}
-          <li>
-            <button
-              type="button"
-              class="pick"
-              disabled={resolving}
-              onclick={() => void pickVariable(child.fqid)}
-            >
-              <span class="slug">{child.name ?? child.fqid}</span>
-              <code class="leaf-fqid">{child.fqid}</code>
-            </button>
-          </li>
-        {/each}
-      </ul>
+      <FilterInput
+        bind:value={filter}
+        total={variableChildren.length}
+        shown={filteredVariables.length}
+        placeholder="Filter variables…"
+        label="Filter variables"
+        autofocus
+      />
+      {#if filteredVariables.length > 0}
+        <ul class="pick-list">
+          {#each filteredVariables as child (child.fqid)}
+            <li>
+              <button
+                type="button"
+                class="pick"
+                disabled={resolving}
+                onclick={() => void pickVariable(child.fqid)}
+              >
+                <span class="slug">{child.name ?? child.fqid}</span>
+                <code class="leaf-fqid">{child.fqid}</code>
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="muted">No variables match “{filter}”.</p>
+      {/if}
     {:else}
       <p class="muted">No variables in this register.</p>
     {/if}

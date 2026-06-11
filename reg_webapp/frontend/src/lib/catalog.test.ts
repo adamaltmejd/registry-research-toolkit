@@ -5,9 +5,12 @@ import {
   breadcrumbs,
   catalogHref,
   deriveType,
+  foldText,
   fqidSegments,
+  matchesFilter,
   narrowCatalogNode,
   nodeLabel,
+  rankFilter,
   registerPrefixOf,
   representationsCollapse,
   representationsFromStates,
@@ -53,6 +56,84 @@ const classification = {
   name: "Education",
   short_name: "SUN",
 } as unknown as CatalogNode;
+
+describe("foldText", () => {
+  it("strips diacritics and lowercases", () => {
+    expect(foldText("Löne")).toBe("lone");
+    expect(foldText("lön")).toBe("lon");
+    expect(foldText("ÅÄÖ")).toBe("aao");
+    expect(foldText("Kön")).toBe("kon");
+  });
+});
+
+describe("matchesFilter", () => {
+  it("empty / whitespace-only needle matches everything", () => {
+    expect(matchesFilter("", "anything")).toBe(true);
+    expect(matchesFilter("   ", "anything")).toBe(true);
+  });
+
+  it("is case-insensitive and diacritic-blind on both needle and haystack", () => {
+    // "lon" matches "Löne…" (haystack has diacritic) and "lön" (needle-side).
+    expect(matchesFilter("lon", "Löneutbetalning")).toBe(true);
+    expect(matchesFilter("lön", "Loneutbetalning")).toBe(true);
+    expect(matchesFilter("KON", "Kön")).toBe(true);
+  });
+
+  it("matches a substring against ANY of the haystacks (name OR slug/fqid)", () => {
+    // Needle hits the FQID but not the display name.
+    expect(matchesFilter("agi", "Annual income", "scb/lisa/agi_2019")).toBe(
+      true,
+    );
+    // Needle hits neither.
+    expect(matchesFilter("xyz", "Annual income", "scb/lisa/agi_2019")).toBe(
+      false,
+    );
+  });
+
+  it("skips null/undefined haystacks", () => {
+    expect(matchesFilter("kon", null, undefined, "Kön")).toBe(true);
+    expect(matchesFilter("kon", null, undefined)).toBe(false);
+  });
+});
+
+describe("rankFilter", () => {
+  // Alphabetical input (the picker's incoming order) with a few "kon" matches.
+  const items = [
+    { name: "Antal anställda enligt kontrolluppgift", fqid: "scb/lisa/anstku" },
+    {
+      name: "Disponibel inkomst per konsumtionsenhet",
+      fqid: "scb/lisa/dispke",
+    },
+    { name: "Konsumtionsenheter, familj", fqid: "scb/lisa/kefam" },
+    { name: "Kön", fqid: "scb/lisa/kon" },
+    { name: "Yrke", fqid: "scb/lisa/ykon" },
+  ];
+  const keys = (i: { name: string; fqid: string }) => [i.fqid, i.name];
+
+  it("ranks exact → prefix → other, keeping alphabetical order within a tier", () => {
+    const out = rankFilter(items, "kon", keys).map((i) => i.name);
+    // "Kön" (name folds to exact "kon") AND scb/lisa/kon (slug exact) → tier 0,
+    // first. Then prefix matches ("Konsumtionsenheter…"). Then the rest, each
+    // tier keeping the incoming alphabetical order.
+    expect(out[0]).toBe("Kön");
+    expect(out).toEqual([
+      "Kön", // exact (slug `kon` + folded name `kon`)
+      "Konsumtionsenheter, familj", // prefix
+      "Antal anställda enligt kontrolluppgift", // other (substring)
+      "Disponibel inkomst per konsumtionsenhet", // other
+      "Yrke", // other — slug `ykon` contains "kon"
+    ]);
+  });
+
+  it("empty needle returns every item, order unchanged", () => {
+    expect(rankFilter(items, "", keys)).toEqual(items);
+    expect(rankFilter(items, "  ", keys)).toEqual(items);
+  });
+
+  it("drops non-matches", () => {
+    expect(rankFilter(items, "zzz", keys)).toEqual([]);
+  });
+});
 
 describe("nodeLabel", () => {
   it("uses name when present, else falls back to fqid", () => {

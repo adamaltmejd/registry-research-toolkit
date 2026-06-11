@@ -6,9 +6,11 @@ import {
   bindingChildren,
   breadcrumbs,
   catalogHref,
+  matchesFilter,
   narrowCatalogNode,
   nodeLabel,
 } from "./catalog";
+import FilterInput from "./FilterInput.svelte";
 import VariantBrowser from "./VariantBrowser.svelte";
 
 // Fetches and renders one catalog node by FQID path, switching on the `kind`
@@ -31,6 +33,18 @@ const notBrowsable = $derived(
   resource.data !== null && !isCatalogNode(resource.data),
 );
 const crumbs = $derived(breadcrumbs(fqidPath));
+
+// In-memory type-to-filter over the current node's child list (a provider's 238
+// registers / a register's 740 bindings render flat otherwise). Reset on
+// navigation so a new node opens unfiltered. Match on BOTH display name and FQID
+// (registers also match their purpose blurb); matchesFilter folds diacritics.
+let filter = $state("");
+$effect(() => {
+  // `fqidPath` is the navigation key — touching it here clears the filter when
+  // the route changes (the component is reused across catalog paths).
+  void fqidPath;
+  filter = "";
+});
 </script>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -54,41 +68,69 @@ const crumbs = $derived(breadcrumbs(fqidPath));
 {:else if node}
   <article>
     {#if node.kind === "provider"}
+      {@const registers = node.children.filter((r) =>
+        matchesFilter(filter, r.name, r.fqid, r.purpose),
+      )}
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       <h3>Registers</h3>
       {#if node.children.length > 0}
-        <ul class="children">
-          {#each node.children as register (register.fqid)}
-            <li>
-              <a href={catalogHref(register.fqid)}>
-                <span class="label">{register.name ?? register.fqid}</span>
-                <code class="child-fqid">{register.fqid}</code>
-              </a>
-              {#if register.purpose}<p class="muted">{register.purpose}</p>{/if}
-            </li>
-          {/each}
-        </ul>
+        <FilterInput
+          bind:value={filter}
+          total={node.children.length}
+          shown={registers.length}
+          placeholder="Filter registers…"
+          label="Filter registers"
+        />
+        {#if registers.length > 0}
+          <ul class="children">
+            {#each registers as register (register.fqid)}
+              <li>
+                <a href={catalogHref(register.fqid)}>
+                  <span class="label">{register.name ?? register.fqid}</span>
+                  <code class="child-fqid">{register.fqid}</code>
+                </a>
+                {#if register.purpose}<p class="muted">{register.purpose}</p>{/if}
+              </li>
+            {/each}
+          </ul>
+        {:else}
+          <p class="muted">No registers match “{filter}”.</p>
+        {/if}
       {:else}
         <p class="muted">No registers.</p>
       {/if}
     {:else if node.kind === "register"}
       {@const bindings = bindingChildren(node)}
+      {@const filteredBindings = bindings.filter((c) =>
+        matchesFilter(filter, c.name, c.fqid),
+      )}
       <h2>{nodeLabel(node)}</h2>
       <p class="fqid"><code>{node.fqid}</code></p>
       {#if node.purpose}<p>{node.purpose}</p>{/if}
       <h3>Bindings</h3>
       {#if bindings.length > 0}
-        <ul class="children">
-          {#each bindings as child (child.fqid)}
-            <li>
-              <a href={catalogHref(child.fqid)}>
-                <span class="label">{child.name ?? child.fqid}</span>
-                <code class="child-fqid">{child.fqid}</code>
-              </a>
-            </li>
-          {/each}
-        </ul>
+        <FilterInput
+          bind:value={filter}
+          total={bindings.length}
+          shown={filteredBindings.length}
+          placeholder="Filter variables…"
+          label="Filter variables"
+        />
+        {#if filteredBindings.length > 0}
+          <ul class="children">
+            {#each filteredBindings as child (child.fqid)}
+              <li>
+                <a href={catalogHref(child.fqid)}>
+                  <span class="label">{child.name ?? child.fqid}</span>
+                  <code class="child-fqid">{child.fqid}</code>
+                </a>
+              </li>
+            {/each}
+          </ul>
+        {:else}
+          <p class="muted">No variables match “{filter}”.</p>
+        {/if}
       {:else}
         <p class="muted">No bindings.</p>
       {/if}
