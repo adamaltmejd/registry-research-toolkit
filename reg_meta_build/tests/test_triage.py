@@ -36,6 +36,7 @@ from reg_meta_build.sources.scb import (
     _apply_clustered,
     _apply_fold,
     _apply_split,
+    _Claim,
     _cluster_contested,
     _collapse_residual,
     _common_prefix_len,
@@ -88,12 +89,16 @@ def _state(
         value_set_id=value_set_id,
         value_set_version_label=vlabel,
     )
-    g.regyears = {year}
-    g.year_authority = {year: authority}
-    g.year_approval = {year: approval}
+    g.claims = {year: _year_claim(year, authority, approval)}
     g.regver_max = regver_max
     g.regver_min = regver_min
     return gkey, g
+
+
+def _year_claim(year: int, authority: int = _AUTH_PLAIN, approval: str = "") -> _Claim:
+    """A full-year `_Claim` — the shorthand for tests that only care WHICH
+    years a group claims (and optionally the year's cascade signals)."""
+    return _Claim(f"{year:04d}-01-01", f"{year:04d}-12-31", authority, approval)
 
 
 def _shape(data_type: str | None, data_length: str | None = None) -> _StateGroup:
@@ -1993,7 +1998,7 @@ class TestCollapseResidualOverlap:
     def test_distinct_value_set_subgrouped_apart(self) -> None:
         # DISTINCT value sets land in distinct pass-2 sub-group keys (value_set_id
         # is in the key), so pass 2 never compares them — independent of routing.
-        # (regyears unset here → these are yearless on the fast path; the
+        # (claims unset here → these are yearless on the fast path; the
         # _spans_overlap-True timeline SKIP is covered by the next test.)
         gk_a = self._gk("a", 5)
         gk_b = self._gk("b", 6)
@@ -2005,11 +2010,11 @@ class TestCollapseResidualOverlap:
 
     def test_timeline_partition_skipped(self) -> None:
         # A partition routed to the per-year TIMELINE — two YEAR-BEARING (populated
-        # regyears) groups with DISTINCT value sets over overlapping windows →
+        # claims) groups with DISTINCT value sets over overlapping windows →
         # _spans_overlap path (a) True — is skipped WHOLESALE by pass 2. This is
         # load-bearing: the SAME-column same-value-set crossing pair (SameCol/vs5)
         # that pass 2 WOULD clamp on the fast path is left untouched, because the
-        # timeline owns the whole partition. (`_grp` doesn't init regyears, so set
+        # timeline owns the whole partition. (`_grp` doesn't init claims, so set
         # it here — without it both vs5/vs6 groups read as yearless and the
         # distinct-value-set overlap never trips path (a).)
         gk_x = self._gk("x", 5)
@@ -2018,11 +2023,11 @@ class TestCollapseResidualOverlap:
         gx = self._grp(5, 2010, 2012, alias="SameCol")
         gy = self._grp(5, 2011, 2013, alias="SameCol")
         gz = self._grp(6, 2012, 2016, alias="OtherCol")
-        gx.regyears = {2010, 2011, 2012}
-        gy.regyears = {2011, 2012, 2013}
-        gz.regyears = {2012, 2013, 2014, 2015, 2016}
+        gx.claims = {y: _year_claim(y) for y in (2010, 2011, 2012)}
+        gy.claims = {y: _year_claim(y) for y in (2011, 2012, 2013)}
+        gz.claims = {y: _year_claim(y) for y in (2012, 2013, 2014, 2015, 2016)}
         groups = {gk_x: gx, gk_y: gy, gk_z: gz}
-        # Path (a) actually fires (unlike the regyears-empty test above).
+        # Path (a) actually fires (unlike the claims-empty test above).
         assert _spans_overlap(groups, [gk_x, gk_y, gk_z]) is True
         res = self._res([gk_x, gk_y, gk_z])
         _collapse_residual(groups, res)

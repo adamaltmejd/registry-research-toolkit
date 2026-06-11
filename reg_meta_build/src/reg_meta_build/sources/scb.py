@@ -765,6 +765,25 @@ def _parse_unika_year(raw: str | None) -> int | None:
 
 
 @dataclass
+class _Claim:
+    """One per-(group, edition-year) delivery claim (#271 PR-A): the inclusive
+    ISO hull of the year's edition windows (`_edition_bounds`; a multi-edition
+    year max-merges), plus the year's strongest `_edition_authority` and latest
+    approval date. Year-nested by construction — `_edition_bounds` ties every
+    marker to its own edition year — so a claim window never crosses a year
+    boundary. Replaces the year-keyed `regyears`/`year_authority`/
+    `year_approval` parallel structures and the #219 `from_iso`/`to_iso`
+    envelope (now derived: see `_StateGroup.from_iso`). The interval sweep
+    (DESIGN.md → Interval-native co-delivery resolution) resolves directly over
+    these; until it lands the readers stay year-grain."""
+
+    lo: str  # inclusive ISO start of the year's delivery hull
+    hi: str  # inclusive ISO end
+    authority: int  # max `_edition_authority` across the year's editions
+    approval: str  # max `registerversion_senastgodkanddatum` (ISO; '' unknown)
+
+
+@dataclass
 class _StateGroup:
     """One pre-triage coalesced state group (lifted to module scope so the
     triage below can read it). The 9-component group key lives in the
@@ -798,16 +817,6 @@ class _StateGroup:
     unika_has_open_top: bool = False
     regver_min: int | None = None
     regver_max: int | None = None
-    # #219: inclusive sub-annual ISO envelope, parallel to the year-int
-    # regver_min/regver_max above. `from_iso` is the earliest actual delivery START
-    # and `to_iso` the latest delivery END across the group's editions (a full-year
-    # edition contributes YYYY-01-01/YYYY-12-31, so a sub-annual edition only narrows
-    # a boundary when NO full-year edition shares that boundary year). The
-    # materializer reads these ONLY at a state's lifetime start/end, to avoid
-    # over-claiming the boundary year (see `_edition_bounds`). None when no edition
-    # carried a parseable year (the yearless/unika fallback fires instead).
-    from_iso: str | None = None
-    to_iso: str | None = None
     # Latest-era alias: highest regver_id, ties broken by lexically smallest
     # delivery_column_name. regver_id alone orders alias selection; the row's
     # year only updates regver_min/max.
@@ -818,24 +827,44 @@ class _StateGroup:
     # sub-annual variant (e.g. one with both HT2018 and VT2018) doesn't treat a
     # term-to-term column rename as a same-year co-delivery (Codex #139).
     regvers: set[int] = field(default_factory=set)
-    # The set of REFERENCE years this group was observed in (parsed from
-    # `registerversionnamn`). Distinct from `regver_min/max`: this carries the
-    # GAPS, so the materializer can partition a shape's window into contiguous
-    # runs instead of collapsing to `[min, max]` and paving over years the shape
-    # wasn't delivered (the co-delivery root cause — see CODELIVERY_PLAN.md).
-    regyears: set[int] = field(default_factory=set)
-    # year → highest edition AUTHORITY (`_edition_authority`) observed for that
-    # year in this group. When two groups (distinct value sets) compete for a
-    # year, the per-year timeline picks the higher-authority one (final > plain
-    # > preliminary > sub-annual > old); equal top authority is a genuine tie.
-    year_authority: dict[int, int] = field(default_factory=dict)
-    # year → latest edition approval date (`registerversion_senastgodkanddatum`,
-    # ISO so lexical == chronological) observed for that year. The RECENCY
-    # tiebreak after authority: when same-authority value sets compete for a year,
-    # the one delivered by the most-recently-approved edition supersedes (the old
-    # coding lingering in a newer edition loses). Equal date = same delivery = a
-    # genuine parallel co-delivery the rule can't break.
-    year_approval: dict[int, str] = field(default_factory=dict)
+    # #271 PR-A: one `_Claim` per REFERENCE year this group was observed in
+    # (parsed from `registerversionnamn`). The key set carries the GAPS — so the
+    # materializer can partition a shape's window into contiguous runs instead
+    # of collapsing to `[min, max]` and paving over years the shape wasn't
+    # delivered (the co-delivery root cause — see CODELIVERY_PLAN.md) — and each
+    # value bundles the year's delivery-window hull + resolution signals that
+    # previously lived in three parallel year-keyed structures (`regyears`,
+    # `year_authority`, `year_approval`) plus the #219 envelope
+    # (`from_iso`/`to_iso`, now the derived properties below).
+    claims: dict[int, _Claim] = field(default_factory=dict)
+
+    def claim_authority(self, year: int) -> int:
+        """The year's claim AUTHORITY (`_edition_authority` max across its
+        editions); `_AUTH_PLAIN` when the year is unclaimed — the default the
+        per-year cascade always read for a missing year."""
+        c = self.claims.get(year)
+        return c.authority if c is not None else _AUTH_PLAIN
+
+    def claim_approval(self, year: int) -> str:
+        """The year's latest edition approval date ('' when unclaimed). ISO, so
+        lexical == chronological."""
+        c = self.claims.get(year)
+        return c.approval if c is not None else ""
+
+    # #219: inclusive sub-annual ISO envelope — earliest delivery START / latest
+    # delivery END across the group's claims (a full-year edition contributes
+    # YYYY-01-01/YYYY-12-31, so a sub-annual edition only narrows a boundary
+    # when NO full-year edition shares that boundary year). The materializer
+    # reads these ONLY at a state's lifetime start/end, to avoid over-claiming
+    # the boundary year (see `_edition_bounds`). None when no edition carried a
+    # parseable year (the yearless/unika fallback fires instead).
+    @property
+    def from_iso(self) -> str | None:
+        return min((c.lo for c in self.claims.values()), default=None)
+
+    @property
+    def to_iso(self) -> str | None:
+        return max((c.hi for c in self.claims.values()), default=None)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -1303,7 +1332,7 @@ def _spans_overlap(groups: dict[tuple, _StateGroup], gkeys: list[tuple]) -> bool
         if g.value_set_id is None:
             continue
         col_vs[gk[8]].add(g.value_set_id)
-        if not g.regyears:
+        if not g.claims:
             col_yearless[gk[8]] = True
         elif g.regver_min is not None and g.regver_max is not None:
             spans.append((g.regver_min, g.regver_max, g.value_set_id))
@@ -1836,7 +1865,7 @@ def _split_off_non_contested(
 # overlapping the 2010 state — the co-delivery root cause (CODELIVERY_PLAN.md).
 # When a `(variable, variant)` has OVERLAPPING distinct-value-set groups, the
 # functions here rebuild its states from per-year occupancy of the OBSERVED
-# editions (`_StateGroup.regyears`), resolving each contested year via a
+# editions (`_StateGroup.claims` keys), resolving each contested year via a
 # deterministic cascade (authority → recency → cosmetic) and re-deriving each
 # group's window as the contiguous RUNS of the years it actually won. Years a
 # group lost (a competitor superseded it) carve out of its window. A residual
@@ -1951,8 +1980,8 @@ def _resolve_column_year(
 ) -> tuple[list[tuple], bool]:
     """Resolve ONE column's groups for a contested year to a single winner. The
     within-column cascade:
-      1. AUTHORITY — keep groups at the highest `year_authority`.
-      2. RECENCY   — keep groups at the latest `year_approval`.
+      1. AUTHORITY — keep groups at the highest claim authority for the year.
+      2. RECENCY   — keep groups at the latest claim approval for the year.
       3. CURRENT   — drop HISTORICAL-grain groups if a non-historical one survives.
       4. value-set fold — survivors sharing one value set (or all code-less) → one rep.
       5. SUPERSESSION — sequential vintages: the latest-INTRODUCED value set (max
@@ -1976,14 +2005,10 @@ def _resolve_column_year(
     """
     if len(cands) == 1:
         return cands, False
-    top_auth = max(groups[gk].year_authority.get(year, _AUTH_PLAIN) for gk in cands)
-    cands = [
-        gk
-        for gk in cands
-        if groups[gk].year_authority.get(year, _AUTH_PLAIN) == top_auth
-    ]
-    top_appr = max(groups[gk].year_approval.get(year, "") for gk in cands)
-    cands = [gk for gk in cands if groups[gk].year_approval.get(year, "") == top_appr]
+    top_auth = max(groups[gk].claim_authority(year) for gk in cands)
+    cands = [gk for gk in cands if groups[gk].claim_authority(year) == top_auth]
+    top_appr = max(groups[gk].claim_approval(year) for gk in cands)
+    cands = [gk for gk in cands if groups[gk].claim_approval(year) == top_appr]
     non_hist = [gk for gk in cands if not _is_historical_grain(gk[7])]
     if non_hist and len(non_hist) < len(cands):
         cands = non_hist
@@ -2459,31 +2484,36 @@ def _coalesce_variable_states(
         # identify the latest-era group when clamping unika ranges.
         rver_year = extract_year(row["registerversionnamn"] or "")
         if rver_year is not None:
-            grp.regyears.add(rver_year)
             _auth = _edition_authority(row["registerversionnamn"])
-            if _auth > grp.year_authority.get(rver_year, -1):
-                grp.year_authority[rver_year] = _auth
             _appr = row["registerversion_senastgodkanddatum"] or ""
-            if _appr > grp.year_approval.get(rver_year, ""):
-                grp.year_approval[rver_year] = _appr
+            # #219/#271: the claim window is the edition's sub-annual ISO hull.
+            # String min/max is chronological for ISO dates. Bounds are tied to this
+            # edition's year (`rver_year`), so each edition contributes within its own
+            # year: a full-year edition gives YYYY-01-01/YYYY-12-31 (a min-year that
+            # ALSO has a full-year/spring edition keeps -01-01 — no spurious narrowing),
+            # and the claim hull can never escape `[regver_min, regver_max]`. The
+            # full-year fallback is unreachable belt-and-braces: a parsed `rver_year`
+            # implies a non-empty version name, so `_edition_bounds` never returns
+            # None here — but a claim MUST exist for every observed year (the key
+            # set carries the run/gap structure), so don't couple that to it.
+            ed = _edition_bounds(row["registerversionnamn"], rver_year) or (
+                f"{rver_year:04d}-01-01",
+                f"{rver_year:04d}-12-31",
+            )
+            claim = grp.claims.get(rver_year)
+            if claim is None:
+                grp.claims[rver_year] = _Claim(ed[0], ed[1], _auth, _appr)
+            else:
+                claim.lo = min(claim.lo, ed[0])
+                claim.hi = max(claim.hi, ed[1])
+                claim.authority = max(claim.authority, _auth)
+                claim.approval = max(claim.approval, _appr)
             grp.regver_min = (
                 rver_year if grp.regver_min is None else min(grp.regver_min, rver_year)
             )
             grp.regver_max = (
                 rver_year if grp.regver_max is None else max(grp.regver_max, rver_year)
             )
-            # #219: accumulate the sub-annual ISO envelope alongside the year ints.
-            # String min/max is chronological for ISO dates. Bounds are tied to this
-            # edition's year (`rver_year`), so each edition contributes within its own
-            # year: a full-year edition gives YYYY-01-01/YYYY-12-31 (a min-year that
-            # ALSO has a full-year/spring edition keeps -01-01 — no spurious narrowing),
-            # and `from_iso`/`to_iso` can never escape `[regver_min, regver_max]`.
-            ed = _edition_bounds(row["registerversionnamn"], rver_year)
-            if ed is not None:
-                grp.from_iso = (
-                    ed[0] if grp.from_iso is None else min(grp.from_iso, ed[0])
-                )
-                grp.to_iso = ed[1] if grp.to_iso is None else max(grp.to_iso, ed[1])
             vkey = (row["register_id"], row["register_variant_id"], row["var_id"])
             cur_max = var_max_regver.get(vkey)
             if cur_max is None or rver_year > cur_max:
@@ -2889,8 +2919,8 @@ def _coalesce_variable_states(
                 _emit_span(gk, groups[gk])
             continue
         timeline_vv += 1
-        year_bearing = [gk for gk in gkeys if groups[gk].regyears]
-        yearless = [gk for gk in gkeys if not groups[gk].regyears]
+        year_bearing = [gk for gk in gkeys if groups[gk].claims]
+        yearless = [gk for gk in gkeys if not groups[gk].claims]
         # A YEARLESS group has no per-year placement: it emits a single OPEN span
         # over the variable's lifetime, so on a column carrying >1 DISTINCT value
         # set it overlaps every other coding there. Resolve each yearless-bearing
@@ -2960,9 +2990,9 @@ def _coalesce_variable_states(
         owned: dict[tuple, set[int]] = defaultdict(set)
         all_years: set[int] = set()
         for gk in year_bearing:
-            all_years |= groups[gk].regyears
+            all_years |= groups[gk].claims.keys()
         for y in sorted(all_years):
-            cands = [gk for gk in year_bearing if y in groups[gk].regyears]
+            cands = [gk for gk in year_bearing if y in groups[gk].claims]
             winners, genuine = _resolve_year_winners(
                 cands, groups, y, _vs_codes, codelivery, triage.labels, _vs_code_labels
             )
