@@ -44,6 +44,36 @@ export function nodeLabel(node: CatalogNode): string {
   return node.name ?? node.fqid;
 }
 
+// ── Type-to-filter (catalog browse + pickers) ───────────────────────────────
+// The catalog/authoring lists render at scale (238 registers, 740 variables) —
+// every list surface needs an in-memory substring filter. One shared matcher so
+// all four surfaces fold identically: NFD-decompose + strip combining marks +
+// lowercase, so "lon" matches both "Löne…" and "lön" (diacritic-blind), and the
+// needle is matched against BOTH display name AND slug/FQID.
+
+/** Fold a string for diacritic-blind, case-insensitive substring matching:
+ * NFD-normalize then strip combining marks (U+0300–U+036F) and lowercase. */
+export function foldText(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "") // strip combining diacritical marks
+    .toLowerCase();
+}
+
+/** Whether any of `haystacks` contains the folded `needle` (substring). An empty
+ * (or whitespace-only) needle matches everything — the unfiltered full-list
+ * behavior. `null`/`undefined` haystacks are skipped. */
+export function matchesFilter(
+  needle: string,
+  ...haystacks: (string | null | undefined)[]
+): boolean {
+  const q = foldText(needle).trim();
+  if (!q) {
+    return true;
+  }
+  return haystacks.some((h) => h != null && foldText(h).includes(q));
+}
+
 // ── FQID path helpers ───────────────────────────────────────────────────────
 // The SPA routes mirror the API: `/catalog/<fqid-path>`. These split/join the
 // path portion (after `/catalog`) into FQID segments.

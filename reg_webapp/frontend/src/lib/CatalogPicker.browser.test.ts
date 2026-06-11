@@ -15,12 +15,16 @@ vi.mock("./api", async (importOriginal) => {
 // A register node whose `binding` children are the pickable variables.
 function registerNode(
   fqid: string,
-  leaf: { fqid: string; name: string },
+  ...leaves: { fqid: string; name: string }[]
 ): CatalogNode {
   return {
     kind: "register",
     fqid,
-    children: [{ kind: "binding", fqid: leaf.fqid, name: leaf.name }],
+    children: leaves.map((l) => ({
+      kind: "binding",
+      fqid: l.fqid,
+      name: l.name,
+    })),
   } as unknown as CatalogNode;
 }
 function statesResponse(rows: Array<Record<string, unknown>>): StatesResponse {
@@ -176,5 +180,52 @@ describe("CatalogPicker", () => {
       displayNameDefault: "Ssyk4",
       representation: "Ssyk4",
     });
+  });
+
+  // ── Scenario 3: type-to-filter the variable list ───────────────────────────
+  it("autofocuses the filter and narrows the variable list (name + fqid, folded)", async () => {
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      registerNode(
+        "scb/lisa",
+        { fqid: "scb/lisa/kon", name: "Kön" },
+        { fqid: "scb/lisa/agi_2019", name: "AGI 2019" },
+        { fqid: "scb/lisa/agi_2020", name: "AGI 2020" },
+      ),
+    );
+    await render(CatalogPicker, {
+      mode: "variable",
+      registerPrefix: "scb/lisa",
+      period: null,
+      variant: "",
+      onpickVariable: vi.fn(),
+      oncancel: vi.fn(),
+    });
+
+    const filter = page.getByRole("textbox", { name: "Filter variables" });
+    await expect.element(filter).toBeVisible();
+    // The filter is focused on open (the authoring blocker this PR fixes).
+    await vi.waitFor(() =>
+      expect(filter.element()).toBe(document.activeElement),
+    );
+
+    // Diacritic-blind, case-insensitive: "kon" surfaces "Kön", drops the agi rows.
+    await filter.fill("kon");
+    await expect
+      .element(page.getByRole("button", { name: /Kön/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /AGI 2019/ }))
+      .not.toBeInTheDocument();
+    // Result count reflects the narrowed list.
+    await expect.element(page.getByText("1 of 3")).toBeVisible();
+
+    // Matching on the FQID slug, not just the display name.
+    await filter.fill("agi_2020");
+    await expect
+      .element(page.getByRole("button", { name: /AGI 2020/ }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("button", { name: /Kön/ }))
+      .not.toBeInTheDocument();
   });
 });
