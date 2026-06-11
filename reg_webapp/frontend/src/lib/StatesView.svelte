@@ -1,6 +1,11 @@
 <script lang="ts">
 import type { VariableStateModel } from "./api";
-import { formatDataType, formatStateWindow, stateChangeHints } from "./catalog";
+import {
+  formatDataType,
+  formatStateWindow,
+  stateChangeHints,
+  windowTitle,
+} from "./catalog";
 import { VALUE_SET_VERSION_NONE } from "./period";
 
 // Presentational view of a variable's `variable_state` rows (from the full
@@ -111,7 +116,7 @@ function toggleExpanded(stateId: number): void {
       <dt>Valid</dt>
       <!-- #309/#321: sentinel-free, coarsest-exact window ("since 2016",
            "VT2009"); the raw ISO window stays on the tooltip. -->
-      <dd title="{s.valid_from} – {s.valid_to}">{formatStateWindow(s)}</dd>
+      <dd title={windowTitle(s.valid_from, s.valid_to)}>{formatStateWindow(s)}</dd>
       {#if s.data_type}
         <dt>Data type</dt>
         <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
@@ -217,7 +222,7 @@ function toggleExpanded(stateId: number): void {
           <span class="state-variant"><code>{s.variant}</code></span>
           <!-- #309/#321: sentinel-free, coarsest-exact window; raw ISO on the
                tooltip. -->
-          <span class="state-validity muted" title="{s.valid_from} – {s.valid_to}">
+          <span class="state-validity muted" title={windowTitle(s.valid_from, s.valid_to)}>
             {formatStateWindow(s)}
           </span>
           {#if typeLabel}

@@ -620,6 +620,12 @@ export function formatStateWindow(s: VariableStateModel): string {
   return formatWindow(s.valid_from, s.valid_to, s.period_token);
 }
 
+/** The exact-dates tooltip for a window — the sentinel reads "open-ended"
+ * rather than leaking the raw 9999-12-31 (Codex P2 on #335). */
+export function windowTitle(validFrom: string, validTo: string): string {
+  return `${validFrom} – ${validTo === OPEN_ENDED_VALID_TO ? "open-ended" : validTo}`;
+}
+
 /**
  * Per-state "what changed" hints (#309): for each variant's states in
  * `valid_from` order, diff every state against its predecessor and report the
@@ -644,6 +650,13 @@ export function stateChangeHints(
     for (let i = 1; i < ordered.length; i++) {
       const prev = ordered[i - 1];
       const cur = ordered[i];
+      // Only a genuine SUCCESSION is a transition: overlapping same-variant
+      // states (co-delivered vintages/columns at one period) are parallel
+      // ALTERNATIVES — diffing them as before→after would be misleading
+      // (Codex P2 on #335).
+      if (prev.valid_to >= cur.valid_from) {
+        continue;
+      }
       const changes: string[] = [];
       const prevType = formatDataType(prev.data_type, prev.data_length);
       const curType = formatDataType(cur.data_type, cur.data_length);

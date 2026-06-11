@@ -19,6 +19,7 @@ import {
   representationsFromStates,
   stateChangeHints,
   variantSeg,
+  windowTitle,
 } from "./catalog";
 
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
@@ -1049,6 +1050,30 @@ describe("stateChangeHints (#309 what-differs)", () => {
     expect(hints.get(2)).toEqual(["value set SSYK 96 → SSYK 2012"]);
   });
 
+  it("never diffs OVERLAPPING same-variant states (parallel alternatives, not a transition)", () => {
+    // Two co-delivered vintages at the same window (Codex P2 on #335): a
+    // chronological "changed" hint would be misleading — these co-exist.
+    const hints = stateChangeHints([
+      state({
+        state_id: 1,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2020-12-31",
+        delivery_column_name: "Ssyk3",
+        value_set_id: 1,
+      }),
+      state({
+        state_id: 2,
+        variant: "v1",
+        valid_from: "2010-01-01",
+        valid_to: "2023-12-31",
+        delivery_column_name: "Ssyk4",
+        value_set_id: 2,
+      }),
+    ]);
+    expect(hints.size).toBe(0);
+  });
+
   it("never hints across variants and stays silent for identical shapes", () => {
     const hints = stateChangeHints([
       state({
@@ -1074,5 +1099,16 @@ describe("stateChangeHints (#309 what-differs)", () => {
       }),
     ]);
     expect(hints.size).toBe(0);
+  });
+});
+
+describe("windowTitle (#309 sentinel-free tooltips)", () => {
+  it("renders exact dates; the sentinel reads open-ended", () => {
+    expect(windowTitle("2010-01-01", "2015-12-31")).toBe(
+      "2010-01-01 – 2015-12-31",
+    );
+    expect(windowTitle("2016-01-01", "9999-12-31")).toBe(
+      "2016-01-01 – open-ended",
+    );
   });
 });
