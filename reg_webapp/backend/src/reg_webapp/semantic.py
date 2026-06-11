@@ -528,7 +528,11 @@ def _check_binding_period(
     # trip the sequential-drift info below). For a scalar period this is a
     # single iteration over the same resolve_at call as before.
     segments = period_segments(source.period)
-    is_list_period = len(segments) > 1
+    # Loop-invariant whole-series context appended to per-segment messages
+    # (empty for a scalar period, so scalar message text is unchanged).
+    series_context = (
+        f" (segment of {period_display(source.period)})" if len(segments) > 1 else ""
+    )
     states_by_id: dict[int, VariableState] = {}
     uncovered: list[int | str | PeriodRange] = []
     for segment in segments:
@@ -584,13 +588,8 @@ def _check_binding_period(
                         var_path,
                         f"binding {binding.variable!r} covers only part of "
                         f"requested range {period_display(segment)} at "
-                        f"{source.register_variant}"
-                        + (
-                            f" (segment of {period_display(source.period)})"
-                            if is_list_period
-                            else ""
-                        )
-                        + f"; no state delivers {spans}",
+                        f"{source.register_variant}{series_context}; "
+                        f"no state delivers {spans}",
                     )
                 )
 
@@ -607,12 +606,7 @@ def _check_binding_period(
                     var_path,
                     f"binding {binding.variable!r} has no state covering "
                     f"{source.register_variant} at period "
-                    f"{period_display(segment)}"
-                    + (
-                        f" (segment of {period_display(source.period)})"
-                        if is_list_period
-                        else ""
-                    ),
+                    f"{period_display(segment)}{series_context}",
                 )
             )
         return None

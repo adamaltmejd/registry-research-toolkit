@@ -401,6 +401,15 @@ def _segment_bounds(segment: object) -> tuple[str, str]:
     return _endpoint_bounds(segment)  # type: ignore[arg-type]
 
 
+def _is_period_segment(value: object) -> bool:
+    """One contiguous piece of a ``Source.period``: an int year, a period
+    token, or a ``{"from","to"}`` range — the single definition of "segment"
+    the list rule keys on (mirrors the ``PeriodSegment`` alias on the Pydantic
+    side). ``"_default"`` and nested lists are NOT segments; a new top-level
+    period form must be added here deliberately to become list-legal."""
+    return _is_period_endpoint(value) or _is_period_range_obj(value)
+
+
 def _check_period_list(
     period: list[object], path: str, issues: list[ValidationIssue]
 ) -> None:
@@ -436,7 +445,7 @@ def _check_period_list(
         return
     members_ok = True
     for i, member in enumerate(period):
-        if _is_period_endpoint(member) or _is_period_range_obj(member):
+        if _is_period_segment(member):
             continue
         members_ok = False
         issues.append(
