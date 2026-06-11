@@ -10,6 +10,7 @@ import { asyncResource } from "./async.svelte";
 import {
   type AddSegment,
   buildAddPlan,
+  formatWindow,
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
@@ -236,10 +237,10 @@ function commit(segments: AddSegment[]): void {
   addOutcome = { added, already };
 }
 
-/** Human form of a variant's validity window for the variant prompt (the full
- * sentinel treatment is the #309 states-display rework; this stays minimal). */
+/** Human form of a variant's validity window for the variant prompt — the
+ * shared #309 window display. */
 function windowLabel(w: VariantWindow): string {
-  return w.to === "9999-12-31" ? `since ${w.from}` : `${w.from} – ${w.to}`;
+  return formatWindow(w.from, w.to);
 }
 
 /** The rep prompt's subject segment (null outside the rep stage). */

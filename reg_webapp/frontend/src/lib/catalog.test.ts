@@ -965,6 +965,19 @@ describe("formatStateWindow (#309 sentinel hiding + #321 period tokens)", () => 
         state({ valid_from: "2009-07-01", valid_to: "2010-06-30" }),
       ),
     ).toBe("2009-07-01 – 2010-06-30");
+    // A PARTIALLY year-aligned window keeps both exact dates — a one-sided
+    // collapse would read backwards ("2009-07-01 – 2009") for a stale-cached
+    // HT window.
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2009-07-01", valid_to: "2009-12-31" }),
+      ),
+    ).toBe("2009-07-01 – 2009-12-31");
+    expect(
+      formatStateWindow(
+        state({ valid_from: "2009-01-01", valid_to: "2009-06-30" }),
+      ),
+    ).toBe("2009-01-01 – 2009-06-30");
   });
 });
 

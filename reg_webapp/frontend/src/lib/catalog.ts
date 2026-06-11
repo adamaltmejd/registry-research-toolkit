@@ -557,31 +557,67 @@ export type AddPlan =
  * default) — never shown to the user (#309). */
 export const OPEN_ENDED_VALID_TO = "9999-12-31";
 
+/** Group state rows by their variant slug, preserving input order — shared by
+ * the add planner (#306) and the change-hint differ (#309). */
+function statesByVariant(
+  states: VariableStateModel[],
+): Map<string, VariableStateModel[]> {
+  const byVariant = new Map<string, VariableStateModel[]>();
+  for (const s of states) {
+    const group = byVariant.get(s.variant);
+    if (group) {
+      group.push(s);
+    } else {
+      byVariant.set(s.variant, [s]);
+    }
+  }
+  return byVariant;
+}
+
 /**
- * The display form of a state's validity window (#309/#321):
- *  - open-ended (the `9999-12-31` sentinel) → `"since <from>"` (year-collapsed);
- *  - a closed window with a SINGLE backend period token (the coarsest grain
- *    that exactly covers it — `"2009"`, `"VT2009"`, `"2009-Q3"`, `"2020-02"`)
- *    → that token, so two same-year sub-annual siblings never both read as the
+ * The display form of a validity window (#309/#321):
+ *  - open-ended (the `9999-12-31` sentinel) → `"since <from>"` (year-collapsed
+ *    when Jan-1-aligned);
+ *  - a closed window with a SINGLE period token (the coarsest grain that
+ *    exactly covers it — `"2009"`, `"VT2009"`, `"2009-Q3"`, `"2020-02"`) →
+ *    that token, so two same-year sub-annual siblings never both read as the
  *    bare year (#271's display mandate);
  *  - otherwise (a multi-year window, whose token is the explicit `lo..hi`
- *    range, or a payload predating the `period_token` field — one edge-cache
- *    generation of skew tolerated, the #317 rule) → `"<from> – <to>"` with
- *    year-aligned bounds collapsed to bare years (`1992-01-01 – 2009-12-31` →
- *    `1992 – 2009`).
+ *    range; an edge window with no token; or a payload predating the
+ *    `period_token` field — one edge-cache generation of skew tolerated, the
+ *    #317 rule) → `"<from> – <to>"`, collapsed to bare years ONLY when BOTH
+ *    bounds are year-aligned (`1992-01-01 – 2009-12-31` → `1992 – 2009`). A
+ *    one-sided collapse would read backwards for a stale-cached sub-annual
+ *    window (`2009-07-01 – 2009`), so a partially-aligned window keeps both
+ *    exact dates.
  * The raw ISO window stays available to the UI via a `title` tooltip.
  */
+export function formatWindow(
+  validFrom: string,
+  validTo: string,
+  periodToken?: string | null,
+): string {
+  if (validTo === OPEN_ENDED_VALID_TO) {
+    return `since ${validFrom.endsWith("-01-01") ? validFrom.slice(0, 4) : validFrom}`;
+  }
+  if (
+    typeof periodToken === "string" &&
+    periodToken !== "" &&
+    !periodToken.includes("..")
+  ) {
+    return periodToken;
+  }
+  if (validFrom.endsWith("-01-01") && validTo.endsWith("-12-31")) {
+    const fromYear = validFrom.slice(0, 4);
+    const toYear = validTo.slice(0, 4);
+    return fromYear === toYear ? fromYear : `${fromYear} – ${toYear}`;
+  }
+  return `${validFrom} – ${validTo}`;
+}
+
+/** `formatWindow` over a state row (its bounds + backend token). */
 export function formatStateWindow(s: VariableStateModel): string {
-  if (s.valid_to === OPEN_ENDED_VALID_TO) {
-    return `since ${boundToken(s.valid_from, "from")}`;
-  }
-  const token = s.period_token;
-  if (typeof token === "string" && token !== "" && !token.includes("..")) {
-    return token;
-  }
-  const from = boundToken(s.valid_from, "from");
-  const to = boundToken(s.valid_to, "to");
-  return from === to ? from : `${from} – ${to}`;
+  return formatWindow(s.valid_from, s.valid_to, s.period_token);
 }
 
 /**
@@ -598,15 +634,7 @@ export function formatStateWindow(s: VariableStateModel): string {
 export function stateChangeHints(
   states: VariableStateModel[],
 ): Map<number, string[]> {
-  const byVariant = new Map<string, VariableStateModel[]>();
-  for (const s of states) {
-    const group = byVariant.get(s.variant);
-    if (group) {
-      group.push(s);
-    } else {
-      byVariant.set(s.variant, [s]);
-    }
-  }
+  const byVariant = statesByVariant(states);
   const hints = new Map<number, string[]>();
   for (const group of byVariant.values()) {
     const ordered = [...group].sort(
@@ -685,15 +713,7 @@ export function buildAddPlan(
   states: VariableStateModel[],
   periodWire: string | null,
 ): AddPlan {
-  const byVariant = new Map<string, VariableStateModel[]>();
-  for (const s of states) {
-    const group = byVariant.get(s.variant);
-    if (group) {
-      group.push(s);
-    } else {
-      byVariant.set(s.variant, [s]);
-    }
-  }
+  const byVariant = statesByVariant(states);
   const windows: VariantWindow[] = [...byVariant.entries()].map(
     ([variant, ss]) => ({
       variant,

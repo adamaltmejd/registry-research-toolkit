@@ -7,7 +7,7 @@ import {
   type VariableRefModel,
 } from "./api";
 import { asyncResource } from "./async.svelte";
-import { catalogHref } from "./catalog";
+import { catalogHref, formatWindow } from "./catalog";
 
 // Stacked (always-visible, NOT tabbed) lineage sections for a binding leaf:
 //
@@ -162,7 +162,10 @@ function succAnnotation(ref: VariableRefModel): string | null {
       <ul class="refs">
         {#each node.lineage as edge (edge.consumer_state_id + ":" + edge.source_state_id)}
           <li>
-            <span class="muted edge-validity">{edge.valid_from} – {edge.valid_to}</span>
+            <!-- #309: sentinel-free window display (raw ISO on the tooltip). -->
+            <span class="muted edge-validity" title="{edge.valid_from} – {edge.valid_to}">
+              {formatWindow(edge.valid_from, edge.valid_to)}
+            </span>
             {#if edge.source_fqid}
               ← <a href={catalogHref(edge.source_fqid)}>{edge.source_fqid}</a>
             {:else}
