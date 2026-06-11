@@ -11,6 +11,7 @@ import {
   bindingChildren,
   deriveType,
   narrowCatalogNode,
+  type PickedVariable,
   type Representation,
   rankFilter,
   representationsCollapse,
@@ -49,14 +50,7 @@ interface VariableProps {
   registerPrefix: string; // 2-seg provider/register FQID
   period: string | null; // the source's period as a wire string (null → can't resolve)
   variant: string; // 3rd seg of register_variant
-  onpickVariable: (picked: {
-    variable: string;
-    type: string;
-    displayNameDefault: string | null;
-    // The chosen REPRESENTATION (delivery column) when the concept has >1 at the
-    // period; null/undefined when there is a single representation.
-    representation?: string | null;
-  }) => void;
+  onpickVariable: (picked: PickedVariable) => void;
   oncancel: () => void;
 }
 const props: VariantProps | VariableProps = $props();
@@ -146,10 +140,14 @@ async function pickVariable(fqid: string): Promise<void> {
     }
     if (result.kind === "unresolved") {
       // Period-unset / no covering state → bare FQID, opaque fallback, no prefill.
+      // Emit the resolution kind so the consumer marks the row honestly without
+      // re-inferring status from value tells.
       p.onpickVariable({
         variable: fqid,
         type: "opaque",
         displayNameDefault: null,
+        resolution: "unresolved",
+        unresolvedReason: result.reason,
       });
       return;
     }
@@ -158,6 +156,7 @@ async function pickVariable(fqid: string): Promise<void> {
       type: result.type,
       displayNameDefault: result.displayNameDefault,
       representation: result.representation,
+      resolution: "derived",
     });
   } catch (e) {
     resolveError = e instanceof Error ? e.message : String(e);
@@ -173,11 +172,13 @@ function chooseRepresentation(rep: Representation): void {
   const state = pending.states.find(
     (s) => s.delivery_column_name === rep.column,
   );
+  // A chooser pick always yields a concrete representation → a genuine derive.
   props.onpickVariable({
     variable: pending.fqid,
     type: deriveType(state),
     displayNameDefault: rep.column,
     representation: rep.column,
+    resolution: "derived",
   });
   pending = null;
 }

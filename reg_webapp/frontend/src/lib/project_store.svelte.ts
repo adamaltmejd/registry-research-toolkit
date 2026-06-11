@@ -309,6 +309,16 @@ function buildDerivations(
 // use). Keyed by the source's STABLE id so it survives index shifts.
 const rederiveGen = new Map<string, number>();
 
+/** Invalidate a source's in-flight re-derive pass and drop its gen entry. Any
+ * pending applyResolution captured the OLD generation, so bumping past it makes
+ * every in-flight write for this source a no-op. Called on a STRUCTURAL mutation
+ * (remove source / remove binding) that shifts positional indices the in-flight
+ * pass captured; also prevents the gen Map from leaking entries for removed
+ * sources. A `null`/empty id (a source with no mirror entry) is ignored. */
+function invalidateSourceGen(sourceId: string): void {
+  rederiveGen.delete(sourceId);
+}
+
 /** The serialized text of the last DOWNLOAD (the dirty baseline). Set on
  * open (the opened raw text) and on download (the just-written text); `null` while
  * no draft is loaded. */
@@ -602,6 +612,15 @@ export const projectStore = {
   },
   removeSource(index: number): void {
     if (draft != null) {
+      // A structural shift desyncs the positional (sourceIndex, bindingIndex) an
+      // in-flight rederiveSource captured: an applyResolution dispatched against
+      // the OLD layout would land on whatever source now sits at that index.
+      // INVALIDATE the removed source's generation (and drop its leaked gen entry)
+      // so any in-flight pass for it is discarded; the surviving sources keep their
+      // own gen — but applyResolution ALSO re-verifies the stable id before any
+      // write (belt-and-suspenders), so a shift that moves a survivor's index is
+      // caught there. The removed source's id is read BEFORE the filter below.
+      invalidateSourceGen(projectStore.sourceId(index));
       setDraft(removeSource(draft, index));
       sourceIds = sourceIds.filter((_, i) => i !== index);
       bindingDerivations = bindingDerivations.filter((_, i) => i !== index);
@@ -635,6 +654,13 @@ export const projectStore = {
   },
   removeBinding(sourceIndex: number, bindingIndex: number): void {
     if (draft != null) {
+      // Removing a binding shifts every later binding's index down by one. An
+      // in-flight rederiveSource pass dispatched applyResolution against the OLD
+      // binding indices, so a resolution for old binding j+1 would now land on old
+      // binding j+2. INVALIDATE this source's generation so that whole in-flight
+      // pass is discarded; the per-binding FQID re-check in applyResolution is the
+      // second line of defence.
+      invalidateSourceGen(projectStore.sourceId(sourceIndex));
       setDraft(removeBinding(draft, sourceIndex, bindingIndex));
       sourceIds = sourceIds.map((s, i) =>
         i === sourceIndex
@@ -790,6 +816,11 @@ async function rederiveSource(sourceIndex: number): Promise<void> {
       if (!variable) {
         return;
       }
+      // Capture the binding's stable id alongside the source id: applyResolution
+      // re-verifies BOTH (the source still sits at this index with this id, and the
+      // binding still sits at this index with this fqid) before any write, so a
+      // structural shift that slipped past the gen guard can't mis-attribute.
+      const bindingId = projectStore.bindingId(sourceIndex, bindingIndex);
       let result: BindingResolution;
       try {
         // Resolve through the SAME path the picker uses. The fqid is the bare
@@ -800,10 +831,12 @@ async function rederiveSource(sourceIndex: number): Promise<void> {
         if (rederiveGen.get(sourceId) !== gen) {
           return; // superseded — drop this stale response
         }
-        applyResolution(sourceIndex, bindingIndex, period, variant, {
-          kind: "error",
-          detail: e instanceof Error ? e.message : String(e),
-        });
+        applyResolution(
+          { sourceIndex, bindingIndex, sourceId, bindingId, variable },
+          period,
+          variant,
+          { kind: "error", detail: e instanceof Error ? e.message : String(e) },
+        );
         return;
       }
       // Stale-response guard: a newer re-derive (or a draft replacement) started
@@ -811,9 +844,28 @@ async function rederiveSource(sourceIndex: number): Promise<void> {
       if (rederiveGen.get(sourceId) !== gen) {
         return;
       }
-      applyResolution(sourceIndex, bindingIndex, period, variant, result);
+      applyResolution(
+        { sourceIndex, bindingIndex, sourceId, bindingId, variable },
+        period,
+        variant,
+        result,
+      );
     }),
   );
+}
+
+/** The captured identity of a re-derive target, threaded from dispatch to
+ * applyResolution so the write can be DROPPED if the layout shifted underneath an
+ * in-flight resolve (a remove during the fetch window). */
+interface RederiveTarget {
+  sourceIndex: number;
+  bindingIndex: number;
+  /** The source's stable client id at dispatch time. */
+  sourceId: string;
+  /** The binding's stable client id at dispatch time. */
+  bindingId: string;
+  /** The binding's variable FQID at dispatch time. */
+  variable: string;
 }
 
 /** Apply one binding's re-resolution to the draft + provenance, honoring the
@@ -822,8 +874,7 @@ async function rederiveSource(sourceIndex: number): Promise<void> {
  * non-blocking mismatch hint is recorded. `registerPrefix-scoped` `registerError`
  * is the `error` pseudo-result. */
 function applyResolution(
-  sourceIndex: number,
-  bindingIndex: number,
+  target: RederiveTarget,
   period: string | null,
   variant: string,
   result: BindingResolution | { kind: "error"; detail: string },
@@ -831,10 +882,30 @@ function applyResolution(
   if (draft == null) {
     return;
   }
+  const { sourceIndex, bindingIndex, sourceId, bindingId, variable } = target;
+  // IDENTITY RE-CHECK (the second line of defence behind the gen guard): a remove
+  // during the resolve's fetch window can shift the source/binding that now sits at
+  // (sourceIndex, bindingIndex). Verify the captured stable ids STILL map to these
+  // indices AND the binding still carries the same variable FQID — otherwise this
+  // resolution belongs to a binding that moved or was deleted; drop it silently so
+  // we never clobber a neighbour or mis-attribute a marker.
+  if (
+    projectStore.sourceId(sourceIndex) !== sourceId ||
+    projectStore.bindingId(sourceIndex, bindingIndex) !== bindingId
+  ) {
+    return;
+  }
   const binding = draft.sources?.[sourceIndex]?.bindings?.[bindingIndex] as
     | Binding
     | undefined;
   if (!binding) {
+    return;
+  }
+  // The binding must still hold the variable we resolved (a re-pick during the
+  // fetch could have swapped it under the same stable id).
+  if (
+    (typeof binding.variable === "string" ? binding.variable : "") !== variable
+  ) {
     return;
   }
   const prev = bindingDerivations[sourceIndex]?.[bindingIndex] ?? null;

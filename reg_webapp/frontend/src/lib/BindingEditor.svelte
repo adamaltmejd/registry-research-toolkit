@@ -1,5 +1,6 @@
 <script lang="ts">
 import CatalogPicker from "./CatalogPicker.svelte";
+import type { PickedVariable } from "./catalog";
 import FieldIssues from "./FieldIssues.svelte";
 import { type Binding, COLUMN_TYPES } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -52,27 +53,18 @@ function ptr(field: string): string {
 //
 // B2: funnel through `applyPickedBinding`, which records the derived snapshot
 // (provenance) so a LATER period/variant change can re-derive without clobbering
-// the user's hand-edits. A pick with the period unset resolves to the opaque
-// fallback → mark the row `unresolved` so the binding never silently dresses
-// opaque as a real type.
-function onPickVariable(picked: {
-  variable: string;
-  type: string;
-  displayNameDefault: string | null;
-  representation?: string | null;
-}): void {
-  // The picker hands us "opaque" + a null default ONLY when it could not resolve
-  // (no period, or no covering state); reflect that as an unresolved marker rather
-  // than a clean derivation. (A genuine opaque storage type resolves WITH a
-  // delivery-column display default, so the null default is the tell.)
-  const unresolved =
-    picked.type === "opaque" &&
-    picked.displayNameDefault == null &&
-    !picked.representation;
+// the user's hand-edits. The picker emits the ground-truth resolution KIND
+// (`derived` / `unresolved`) from resolveBindingAt, so we mark the row directly
+// from it — NEVER re-inferring status from value tells (a genuinely-derived
+// opaque/null-column state would otherwise be mislabeled "unresolved").
+function onPickVariable(picked: PickedVariable): void {
   projectStore.applyPickedBinding(sourceIndex, bindingIndex, {
-    ...picked,
-    status: unresolved ? "unresolved" : "derived",
-    reason: unresolved ? (period ? "no-states" : "period-unset") : undefined,
+    variable: picked.variable,
+    type: picked.type,
+    displayNameDefault: picked.displayNameDefault,
+    representation: picked.representation,
+    status: picked.resolution,
+    reason: picked.unresolvedReason,
   });
   picking = false;
 }

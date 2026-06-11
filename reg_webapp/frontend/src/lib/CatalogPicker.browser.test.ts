@@ -124,6 +124,9 @@ describe("CatalogPicker", () => {
         type: "numeric",
         displayNameDefault: "Lon",
         representation: null,
+        // The picker emits the ground-truth resolution kind so the consumer never
+        // re-infers status from value tells.
+        resolution: "derived",
       }),
     );
     // The resolve carried the source's (period, variant).
@@ -183,6 +186,8 @@ describe("CatalogPicker", () => {
       type: "categorical",
       displayNameDefault: "Ssyk4",
       representation: "Ssyk4",
+      // A chooser pick is always a concrete derive.
+      resolution: "derived",
     });
   });
 

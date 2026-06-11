@@ -168,3 +168,195 @@ describe("re-derive on period change (B2)", () => {
     expect(binding0()?.type).toBe("numeric");
   });
 });
+
+// ── Structural-mutation-during-in-flight-resolve races (reviewer BLOCKER) ─────
+// rederiveSource captures positional (sourceIndex, bindingIndex); an async resolve
+// (a network fetch, hundreds of ms) leaves a window where a remove can shift those
+// indices. The fix is belt-AND-suspenders: (1) remove{Source,Binding} invalidate
+// the source's rederiveGen so the in-flight pass is discarded; (2) applyResolution
+// re-verifies the captured stable ids + variable FQID before any write. These tests
+// use a DEFERRED-promise mock so the race is deterministic: hold every resolve open,
+// perform the structural mutation, THEN release — and assert nothing mis-attributes.
+
+/** A controllable mock: each getCatalogNode call returns a promise we resolve by
+ * hand. `release(i, states)` settles the i-th call (in call order). */
+function deferredResolveMock() {
+  const settles: ((v: StatesResponse) => void)[] = [];
+  vi.mocked(getCatalogNode).mockImplementation(
+    () =>
+      new Promise<StatesResponse>((resolve) => {
+        settles.push(resolve);
+      }) as unknown as ReturnType<typeof getCatalogNode>,
+  );
+  return {
+    /** Number of in-flight (un-settled) resolve calls so far. */
+    get count() {
+      return settles.length;
+    },
+    /** Settle the i-th call with a single int-typed delivery column. */
+    release(i: number, column = "Col") {
+      settles[i](
+        statesResp([
+          vstate({ delivery_column_name: column, data_type: "int" }),
+        ]),
+      );
+    },
+    /** Settle every pending call. */
+    releaseAll(column = "Col") {
+      const resp = statesResp([
+        vstate({ delivery_column_name: column, data_type: "int" }),
+      ]);
+      for (const s of settles) {
+        s(resp);
+      }
+    },
+  };
+}
+
+/** Build N sources, each with one binding pre-picked (variable set, derived
+ * provenance) at period 2015, register scb/lisa/v1. Uses an immediate mock so the
+ * setup picks resolve synchronously; the caller swaps in a deferred mock after. */
+function buildSources(n: number): void {
+  projectStore.newProject({
+    reg_meta_version: "reg_meta/v1.0.0",
+    steward: "global",
+  });
+  for (let i = 0; i < n; i++) {
+    projectStore.addSource();
+    projectStore.updateSource(i, { register_variant: "scb/lisa/v1" });
+    projectStore.addBinding(i);
+    // Record provenance directly (no fetch) so each binding has a derived baseline.
+    projectStore.updateSource(i, { period: 2015 });
+    projectStore.applyPickedBinding(i, 0, {
+      variable: `scb/lisa/var${i}`,
+      type: "numeric",
+      displayNameDefault: `Col${i}`,
+      status: "derived",
+    });
+  }
+}
+
+describe("structural mutation during an in-flight re-derive", () => {
+  it("(a) remove-source-mid-flight does not write onto the shifted source", async () => {
+    buildSources(3); // sources 0,1,2 each with a picked binding
+    const mock = deferredResolveMock();
+
+    // Kick off a re-derive of SOURCE 1 (change its period) — its binding's resolve
+    // is now in flight (held by the deferred mock).
+    projectStore.updateSource(1, { period: 2018 });
+    await vi.waitFor(() => expect(mock.count).toBe(1));
+
+    // The victim we must NOT clobber: source 2's binding. Snapshot its state.
+    const src2VarBefore = projectStore.draft?.sources[2].bindings[0]?.variable;
+    expect(src2VarBefore).toBe("scb/lisa/var2");
+
+    // Remove source 0 → old source 1 shifts to index 0, old source 2 to index 1.
+    projectStore.removeSource(0);
+
+    // Release the in-flight resolve (it was dispatched for OLD index 1). The
+    // identity re-check sees the stable id at index 1 no longer matches → DROP.
+    mock.release(0, "NewCol");
+
+    // Give microtasks a chance to flush, then assert nothing was mis-written.
+    await Promise.resolve();
+    await Promise.resolve();
+
+    // What is NOW at index 1 (old source 2) keeps its own variable + derived col —
+    // it was never the target of the in-flight resolve.
+    expect(projectStore.draft?.sources[1].bindings[0]?.variable).toBe(
+      "scb/lisa/var2",
+    );
+    expect(projectStore.draft?.sources[1].bindings[0]?.display_name).toBe(
+      "Col2",
+    );
+    // And it was not re-marked by the dropped resolution.
+    expect(projectStore.bindingDerivation(1, 0)?.status).toBe("derived");
+  });
+
+  it("(b) remove-binding-mid-flight does not write onto the shifted binding", async () => {
+    // One source, three picked bindings.
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    for (let j = 0; j < 3; j++) {
+      projectStore.addBinding(0);
+      projectStore.updateSource(0, { period: 2015 });
+      projectStore.applyPickedBinding(0, j, {
+        variable: `scb/lisa/b${j}`,
+        type: "numeric",
+        displayNameDefault: `Col${j}`,
+        status: "derived",
+      });
+    }
+    const mock = deferredResolveMock();
+
+    // Re-derive the whole source (period change) → 3 resolves in flight.
+    projectStore.updateSource(0, { period: 2019 });
+    await vi.waitFor(() => expect(mock.count).toBe(3));
+
+    // Remove binding 0 → bindings 1,2 shift down to indices 0,1.
+    projectStore.removeBinding(0, 0);
+
+    // Release every in-flight resolve. The gen for this source was invalidated by
+    // removeBinding, so all of them must be discarded (no shifted-binding writes).
+    mock.releaseAll("NewCol");
+    await Promise.resolve();
+    await Promise.resolve();
+
+    // The surviving bindings keep their own picked variables + display columns,
+    // NOT a neighbour's resolution.
+    expect(projectStore.draft?.sources[0].bindings[0]?.variable).toBe(
+      "scb/lisa/b1",
+    );
+    expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
+      "Col1",
+    );
+    expect(projectStore.draft?.sources[0].bindings[1]?.variable).toBe(
+      "scb/lisa/b2",
+    );
+    expect(projectStore.draft?.sources[0].bindings[1]?.display_name).toBe(
+      "Col2",
+    );
+  });
+
+  it("(c) the gen invalidation on removal discards in-flight resolutions", async () => {
+    // One source, one picked binding; hold its re-derive in flight, then remove a
+    // (second) binding to invalidate the source gen — the held resolve must no-op.
+    projectStore.newProject({
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+    });
+    projectStore.addSource();
+    projectStore.updateSource(0, { register_variant: "scb/lisa/v1" });
+    projectStore.addBinding(0);
+    projectStore.updateSource(0, { period: 2015 });
+    projectStore.applyPickedBinding(0, 0, {
+      variable: "scb/lisa/keep",
+      type: "numeric",
+      displayNameDefault: "KeepCol",
+      status: "derived",
+    });
+    projectStore.addBinding(0); // a second, un-picked binding (index 1)
+
+    const mock = deferredResolveMock();
+    projectStore.updateSource(0, { period: 2020 });
+    // Only binding 0 has a variable → exactly one in-flight resolve.
+    await vi.waitFor(() => expect(mock.count).toBe(1));
+
+    // Remove the second (empty) binding → invalidates the source's gen.
+    projectStore.removeBinding(0, 1);
+
+    // Release the held resolve for binding 0 with a DIFFERENT column; the gen guard
+    // must discard it, leaving binding 0's original derived values intact.
+    mock.release(0, "ChangedCol");
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(projectStore.draft?.sources[0].bindings[0]?.display_name).toBe(
+      "KeepCol",
+    );
+  });
+});
