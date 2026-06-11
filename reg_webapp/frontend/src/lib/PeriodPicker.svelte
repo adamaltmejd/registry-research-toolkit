@@ -56,6 +56,10 @@ let rangeWire = $state<string | null>(null);
 $effect(() => {
   field = periodFieldFromQuery(period);
   rangeWire = period;
+  // Re-derive the mode too: back/forward can land on a period the range UI
+  // can't represent (`_default`, a mixed-grain range) — staying in range mode
+  // would show BLANK controls while Apply re-submits the invisible value.
+  textMode = period !== null && period !== "" && !rangeRepresentable(period);
 });
 
 // ADVISORY only (text mode): a non-empty field that doesn't match the grammar

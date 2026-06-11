@@ -317,12 +317,14 @@ export function periodFromWire(wire: string | null): Period {
   return year !== null ? year : value;
 }
 
-/** Parse a string as a bare integer year (no sign, round-trips), else null —
- * matching PeriodEditor's `emitYears` integer test. */
+/** Parse a string as a bare GRAMMAR year (19xx/20xx), else null. Stricter than
+ * "any integer" on purpose: an int Source.period passes reg_schema's int-literal
+ * arm unchecked, so coercing a typo like "202" to int 202 would slip a nonsense
+ * year past the structural gate — left as a string, the grammar check flags it
+ * (review on #308). */
 function yearInt(raw: string): number | null {
   const trimmed = raw.trim();
-  const n = Number.parseInt(trimmed, 10);
-  return trimmed !== "" && String(n) === trimmed ? n : null;
+  return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
 }
 
 // ── Query-string builder ─────────────────────────────────────────────────────

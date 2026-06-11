@@ -122,6 +122,10 @@ const registerPrefix = $derived(registerPrefixOf(node.fqid));
 // action stays disabled until the seed is present (sub-second).
 const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 
+// #308: the grains this variable's FULL state history exhibits (year always;
+// finer from the #321 tokens) — pre-narrows the period picker's grain select.
+const grains = $derived(grainsFromStates(node.states));
+
 // ── #306 one-click add: plan → (genuine prompts only) → commit ──────────────
 // The page-level "Add to project" runs `buildAddPlan` over the VISIBLE states
 // (period-narrowed when a `?period` is active; further narrowed by any
@@ -281,11 +285,9 @@ const repSegment = $derived(
     <dd>{node.is_identifier ? "yes" : "no"}</dd>
   </dl>
 
-  <!-- #308: the grain select is pre-narrowed to the grains this variable's
-       FULL state history exhibits (year always; finer from the #321 tokens). -->
   <PeriodPicker
     period={params.period ?? null}
-    grains={grainsFromStates(node.states)}
+    {grains}
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />

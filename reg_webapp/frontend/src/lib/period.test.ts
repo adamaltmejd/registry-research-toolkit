@@ -79,6 +79,14 @@ describe("periodFromWire (?period wire string → Source.period, C1 prefill)", (
     expect(periodFromWire("2018..2019..2020")).toBe("2018..2019..2020");
   });
 
+  it("a non-grammar 'year' is NOT coerced to int — it rides as a string the validator flags", () => {
+    // int Source.period passes reg_schema's int-literal arm unchecked, so a
+    // typo like "202" must stay a string for the grammar check to catch.
+    expect(periodFromWire("202")).toBe("202");
+    expect(periodFromWire("202..2009")).toEqual({ from: "202", to: 2009 });
+    expect(periodFromWire("3000")).toBe("3000");
+  });
+
   it("null / blank → the unset empty-string period", () => {
     expect(periodFromWire(null)).toBe("");
     expect(periodFromWire("")).toBe("");
