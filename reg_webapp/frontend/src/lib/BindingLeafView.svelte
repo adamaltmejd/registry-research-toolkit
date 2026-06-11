@@ -5,10 +5,14 @@ import {
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
-  type VariableStateModel,
 } from "./api";
 import { asyncResource } from "./async.svelte";
-import { registerPrefixOf, representationsFromStates } from "./catalog";
+import {
+  type AddSegment,
+  buildAddPlan,
+  registerPrefixOf,
+  type VariantWindow,
+} from "./catalog";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
@@ -116,51 +120,128 @@ const registerPrefix = $derived(registerPrefixOf(node.fqid));
 // action stays disabled until the seed is present (sub-second).
 const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 
-// Whether the CURRENTLY-VISIBLE states carry MORE THAN ONE co-existing representation
-// (delivery column) — the same `representationsFromStates` the picker chooser uses.
-// Only then is the per-state delivery column a genuine REPRESENTATION choice to pin on
-// the binding; a single representation must NOT set `binding.representation` (it would
-// desync from the store's single-rep derive, which clears it to null — and break the
-// duplicate guard). `states` may be null while a narrow loads.
-const multiRepresentation = $derived(
-  states ? representationsFromStates(states).length > 1 : false,
-);
+// ── #306 one-click add: plan → (genuine prompts only) → commit ──────────────
+// The page-level "Add to project" runs `buildAddPlan` over the VISIBLE states
+// (period-narrowed when a `?period` is active; further narrowed by any
+// `?variant`/`?value_set_version` chips). Succession auto-splits into one
+// source per variant segment (informing afterward); coding-identical parallel
+// columns auto-pick the #266 primary. The user is prompted ONLY for genuine
+// choices: co-existing variants (a population choice) and genuinely distinct
+// codings. Commits go one-segment-at-a-time through `addFromCatalog` — the
+// store's guarded path (stable ids + gen counter) owns every async write.
 
-// Per-state add feedback keyed by state_id (drives StatesView's inline confirmation).
-let addStatus = $state<Record<number, "added" | "already-present">>({});
+/** The pending prompt, when the plan needs a genuine choice:
+ *  - `variant`: pick ONE co-existing register variant;
+ *  - `rep`: pick the delivery column for `segments[queue[current]]` (a queue —
+ *    a multi-segment split can carry several ambiguous segments). */
+let addPrompt = $state<
+  | { stage: "variant"; options: VariantWindow[] }
+  | { stage: "rep"; segments: AddSegment[]; queue: number[]; current: number }
+  | null
+>(null);
 
-// A fresh resolution clears stale confirmations (the visible states changed).
+/** The committed outcome (drives the inline confirmation): the sources bindings
+ * landed in (created or found) and how many were already present. */
+let addOutcome = $state<{
+  added: { name: string; period: string | null }[];
+  already: number;
+} | null>(null);
+
+// A fresh resolution clears the in-flight prompt + stale confirmation (the
+// visible states changed underneath the plan).
 $effect(() => {
   void params.period;
   void params.variant;
   void params.value_set_version;
-  addStatus = {};
+  addPrompt = null;
+  addOutcome = null;
 });
 
-/** Add ONE variant-state to the project (C1). Builds the register_variant from the
- * variable's prefix + the state's variant, hands the variable + (only when several
- * columns co-exist) the state's delivery column as the representation + the page's
- * resolved period to the store, and records the outcome for the inline confirmation.
- * The store creates the project + source as needed and derives the binding at the
- * source's period — no editor import here. */
-function onAdd(state: VariableStateModel): void {
-  const registerVariant = `${registerPrefix}/${state.variant}`;
-  const result = projectStore.addFromCatalog(
-    {
-      registerVariant,
-      variable: node.fqid,
-      // A representation is pinned ONLY when the concept genuinely has >1 co-existing
-      // column at this period (the explicit per-column choice); a single-rep variable
-      // adds representation-less, matching the store's single-rep derive.
-      representation: multiRepresentation
-        ? (state.delivery_column_name ?? null)
-        : null,
-      resolvedPeriod: params.period ?? null,
-    },
-    { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
-  );
-  addStatus = { ...addStatus, [state.state_id]: result.status };
+function startAdd(): void {
+  addOutcome = null;
+  const plan = buildAddPlan(states ?? [], params.period ?? null);
+  if (plan.kind === "choose-variant") {
+    addPrompt = { stage: "variant", options: plan.options };
+    return;
+  }
+  continueWithSegments(plan.segments);
 }
+
+/** A variant pick re-plans against ONLY that variant's states (now a
+ * single-variant plan — at most a rep prompt remains). */
+function chooseVariant(variant: string): void {
+  addPrompt = null;
+  const subset = (states ?? []).filter((s) => s.variant === variant);
+  const plan = buildAddPlan(subset, params.period ?? null);
+  if (plan.kind === "segments") {
+    continueWithSegments(plan.segments);
+  }
+}
+
+function continueWithSegments(segments: AddSegment[]): void {
+  const queue = segments.flatMap((s, i) => (s.needsRepChoice ? [i] : []));
+  if (queue.length > 0) {
+    addPrompt = { stage: "rep", segments, queue, current: 0 };
+    return;
+  }
+  commit(segments);
+}
+
+function chooseRep(column: string): void {
+  if (addPrompt?.stage !== "rep") {
+    return;
+  }
+  // Capture the narrowed prompt — TS can't keep the union narrowed inside the
+  // map callback over the reactive `addPrompt`.
+  const prompt = addPrompt;
+  const target = prompt.queue[prompt.current];
+  const segments = prompt.segments.map((s, i) =>
+    i === target ? { ...s, representation: column } : s,
+  );
+  if (prompt.current + 1 < prompt.queue.length) {
+    addPrompt = { ...prompt, segments, current: prompt.current + 1 };
+  } else {
+    addPrompt = null;
+    commit(segments);
+  }
+}
+
+/** Commit every segment through the store (synchronous appends; the guarded
+ * derive lands per binding afterwards) and record the aggregate outcome. */
+function commit(segments: AddSegment[]): void {
+  const added: { name: string; period: string | null }[] = [];
+  let already = 0;
+  for (const seg of segments) {
+    const result = projectStore.addFromCatalog(
+      {
+        registerVariant: `${registerPrefix}/${seg.variant}`,
+        variable: node.fqid,
+        representation: seg.representation,
+        resolvedPeriod: seg.period,
+      },
+      { reg_meta_version: regMetaReleaseTag(regMetaVersion), steward },
+    );
+    if (result.status === "added") {
+      added.push({ name: result.sourceName, period: seg.period });
+    } else {
+      already += 1;
+    }
+  }
+  addOutcome = { added, already };
+}
+
+/** Human form of a variant's validity window for the variant prompt (the full
+ * sentinel treatment is the #309 states-display rework; this stays minimal). */
+function windowLabel(w: VariantWindow): string {
+  return w.to === "9999-12-31" ? `since ${w.from}` : `${w.from} – ${w.to}`;
+}
+
+/** The rep prompt's subject segment (null outside the rep stage). */
+const repSegment = $derived(
+  addPrompt?.stage === "rep"
+    ? addPrompt.segments[addPrompt.queue[addPrompt.current]]
+    : null,
+);
 </script>
 
 <article>
@@ -197,6 +278,91 @@ function onAdd(state: VariableStateModel): void {
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />
+
+  <!-- #306: ONE page-level add for the variable at the chosen period. Disabled
+       until the deployment seed is ready and the visible states are loaded
+       (nothing to add when none cover the period). -->
+  <div class="page-add">
+    <button
+      type="button"
+      class="add-to-project"
+      disabled={!seedReady || !states || states.length === 0}
+      onclick={startAdd}
+    >
+      Add to project
+    </button>
+    {#if addOutcome}
+      {#if addOutcome.added.length === 0}
+        <span class="add-confirm already" role="status">Already in project</span>
+      {:else}
+        <span class="add-confirm" role="status">
+          {#if addOutcome.added.length === 1}
+            Added to project ({addOutcome.added[0].name})
+          {:else}
+            <!-- The succession split's "inform afterward" (#306). -->
+            Added as {addOutcome.added.length} sources:
+            {addOutcome.added
+              .map((a) => (a.period ? `${a.name} (${a.period})` : a.name))
+              .join(", ")}
+          {/if}
+          {#if addOutcome.already > 0}
+            · {addOutcome.already} already in project
+          {/if}
+          — <a href="/project">view</a>
+        </span>
+      {/if}
+    {/if}
+  </div>
+
+  {#if addPrompt?.stage === "variant"}
+    <div class="add-chooser" role="group" aria-label="Pick a register variant">
+      <p class="chooser-title">
+        Several register variants cover this period — pick the population to
+        extract:
+      </p>
+      <ul class="pick-list">
+        {#each addPrompt.options as w (w.variant)}
+          <li>
+            <button type="button" class="pick" onclick={() => chooseVariant(w.variant)}>
+              <span class="slug">{w.variant}</span>
+              <span class="name">{windowLabel(w)}</span>
+            </button>
+          </li>
+        {/each}
+      </ul>
+      <button type="button" class="cancel" onclick={() => (addPrompt = null)}>
+        Cancel
+      </button>
+    </div>
+  {:else if addPrompt?.stage === "rep" && repSegment}
+    <div class="add-chooser" role="group" aria-label="Pick a representation">
+      <!-- Genuinely distinct codings: an explicit pick, ranked latest-era first
+           so the primary leads (#266) — same semantics as the picker chooser. -->
+      <p class="chooser-title">
+        <code>{node.fqid}</code> has several representations at this period
+        {#if addPrompt.queue.length > 1}
+          (variant <code>{repSegment.variant}</code>)
+        {/if}
+        — pick one:
+      </p>
+      <ul class="pick-list">
+        {#each repSegment.reps as rep, i (rep.column)}
+          <li>
+            <button type="button" class="pick" onclick={() => chooseRep(rep.column)}>
+              <span class="slug">{rep.column}</span>
+              {#if i === 0}<span class="name">(primary)</span>{/if}
+              {#if rep.label}<span class="name">{rep.label}</span>{/if}
+              {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
+              {#if rep.classificationSlug}<code class="classification">{rep.classificationSlug}</code>{/if}
+            </button>
+          </li>
+        {/each}
+      </ul>
+      <button type="button" class="cancel" onclick={() => (addPrompt = null)}>
+        Cancel
+      </button>
+    </div>
+  {/if}
 
   {#if params.period && (params.variant || params.value_set_version)}
     <!-- Active narrowing modifiers, each clearable — so narrowing to one state
@@ -253,8 +419,6 @@ function onAdd(state: VariableStateModel): void {
         onpickVariant={(variant) => setResolution({ variant })}
         onpickValueSetVersion={(value_set_version) =>
           setResolution({ value_set_version })}
-        onadd={seedReady ? onAdd : null}
-        {addStatus}
       />
     {:else}
       <p class="muted" aria-busy="true">Loading states…</p>
@@ -312,5 +476,92 @@ function onAdd(state: VariableStateModel): void {
   }
   .modifier-chip:hover {
     background: var(--surface);
+  }
+  /* #306: the page-level add + its confirmation line. */
+  .page-add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0.75rem 0;
+  }
+  .add-to-project {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .add-to-project:hover:enabled {
+    background: var(--surface);
+  }
+  .add-to-project:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .add-confirm {
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+  .add-confirm.already {
+    color: var(--muted);
+  }
+  /* The genuine-choice prompts (variant / representation) — same visual
+     vocabulary as the CatalogPicker chooser. */
+  .add-chooser {
+    border: 1px dashed var(--accent);
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    margin: 0.5rem 0;
+  }
+  .chooser-title {
+    font-size: 0.85rem;
+    margin: 0 0 0.4rem;
+  }
+  .pick-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .pick {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    cursor: pointer;
+    text-align: left;
+  }
+  .pick:hover {
+    border-color: var(--accent);
+  }
+  .pick .slug {
+    font-family: var(--mono, monospace);
+    font-weight: 600;
+  }
+  .pick .name {
+    color: var(--muted);
+  }
+  .pick .classification {
+    font-size: 0.85em;
+  }
+  .cancel {
+    font: inherit;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface);
+    cursor: pointer;
   }
 </style>

@@ -5,6 +5,8 @@ import {
   periodFieldFromQuery,
   periodFromWire,
   periodQueryFromField,
+  periodRangeEndpoints,
+  periodTokenBounds,
   periodToWire,
   queryFromParams,
   VALUE_SET_VERSION_NONE,
@@ -264,5 +266,70 @@ describe("nextResolutionQuery (resolution-merge rule)", () => {
     expect(nextResolutionQuery(current, { period: "2019" })).toBe(
       "period=2019&variant=x",
     );
+  });
+});
+
+describe("periodTokenBounds (#306 advisory window math)", () => {
+  it("maps a year to its calendar window", () => {
+    expect(periodTokenBounds("2020")).toEqual({
+      from: "2020-01-01",
+      to: "2020-12-31",
+    });
+  });
+
+  it("maps terms, halves, and quarters", () => {
+    expect(periodTokenBounds("VT2009")).toEqual({
+      from: "2009-01-01",
+      to: "2009-06-30",
+    });
+    expect(periodTokenBounds("HT2009")).toEqual({
+      from: "2009-07-01",
+      to: "2009-12-31",
+    });
+    expect(periodTokenBounds("2020-H2")).toEqual({
+      from: "2020-07-01",
+      to: "2020-12-31",
+    });
+    expect(periodTokenBounds("2020-Q3")).toEqual({
+      from: "2020-07-01",
+      to: "2020-09-30",
+    });
+  });
+
+  it("maps months (leap-aware) and days", () => {
+    expect(periodTokenBounds("2020-02")).toEqual({
+      from: "2020-02-01",
+      to: "2020-02-29",
+    });
+    expect(periodTokenBounds("2019-02")).toEqual({
+      from: "2019-02-01",
+      to: "2019-02-28",
+    });
+    expect(periodTokenBounds("2020-08-15")).toEqual({
+      from: "2020-08-15",
+      to: "2020-08-15",
+    });
+  });
+
+  it("rejects non-tokens (ranges, _default, junk, impossible days)", () => {
+    expect(periodTokenBounds("2018..2020")).toBeNull();
+    expect(periodTokenBounds("_default")).toBeNull();
+    expect(periodTokenBounds("banana")).toBeNull();
+    expect(periodTokenBounds("2019-02-29")).toBeNull();
+  });
+});
+
+describe("periodRangeEndpoints", () => {
+  it("splits a 2-endpoint range", () => {
+    expect(periodRangeEndpoints("2018..2020")).toEqual(["2018", "2020"]);
+    expect(periodRangeEndpoints("VT2018..HT2020")).toEqual([
+      "VT2018",
+      "HT2020",
+    ]);
+  });
+
+  it("returns null for non-ranges and malformed ranges", () => {
+    expect(periodRangeEndpoints("2020")).toBeNull();
+    expect(periodRangeEndpoints("2018..2019..2020")).toBeNull();
   });
 });

@@ -16,6 +16,8 @@ import { VALUE_SET_VERSION_NONE } from "./period";
 //                  `&variant=`/`&value_set_version=` to narrow to length-1.
 //   length === 0 → a clean "no state delivered for this period" message (a valid
 //                  period outside every validity window — NOT an error).
+// No add affordance here: the page-level "Add to project" (#306) lives in
+// BindingLeafView — a state is an implementation concept, not a pick target.
 let {
   states,
   narrowed,
@@ -23,8 +25,6 @@ let {
   activeValueSetVersion = null,
   onpickVariant,
   onpickValueSetVersion,
-  onadd = null,
-  addStatus = null,
 }: {
   states: VariableStateModel[];
   /** True when these are the `?period`-narrowed subset (drives empty wording). */
@@ -33,16 +33,6 @@ let {
   activeValueSetVersion?: string | null;
   onpickVariant: (variant: string) => void;
   onpickValueSetVersion: (valueSetVersion: string) => void;
-  // C1 (catalog→project handoff): an "Add to project" action per variant-state. The
-  // parent (BindingLeafView) owns the store call + the inline-confirmation feedback;
-  // StatesView stays presentational — it only renders the button and the per-state
-  // confirmation it's told to show. `onadd === null` (no project context) hides the
-  // action entirely (StatesView is also used in pure-browse contexts).
-  onadd?: ((state: VariableStateModel) => void) | null;
-  /** Per-state add feedback keyed by `state_id`: the parent sets a state's entry to
-   * `added` / `already-present` after an add; StatesView renders the inline
-   * confirmation next to that state's button. */
-  addStatus?: Record<number, "added" | "already-present"> | null;
 } = $props();
 
 const single = $derived(states.length === 1 ? states[0] : null);
@@ -68,27 +58,6 @@ const hasEmptyVersion = $derived(versionsAll.includes(""));
 // Whether either narrowing axis can actually resolve the multi-state set to one.
 const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 </script>
-
-{#snippet addAction(state: VariableStateModel)}
-  {#if onadd}
-    <!-- C1: the per-state add — an EXPLICIT (variant, representation) choice (the
-         row already shows both). The confirmation is non-blocking inline copy with a
-         link to /project; no router redirect (the user is mid-browse). -->
-    {@const status = addStatus?.[state.state_id] ?? null}
-    <span class="add-cell">
-      <button type="button" class="add-to-project" onclick={() => onadd?.(state)}>
-        Add to project
-      </button>
-      {#if status === "added"}
-        <span class="add-confirm" role="status">
-          Added — <a href="/project">view</a>
-        </span>
-      {:else if status === "already-present"}
-        <span class="add-confirm already" role="status">Already in project</span>
-      {/if}
-    </span>
-  {/if}
-{/snippet}
 
 {#if states.length === 0}
   <p class="muted empty">
@@ -143,7 +112,6 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
     {:else}
       <p class="muted">No value set.</p>
     {/if}
-    {@render addAction(s)}
   </div>
 {:else}
   <!-- Multiple states. The narrowing picker writes `?variant`/`?value_set_version`,
@@ -229,7 +197,6 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
         {#if s.delivery_column_name}
           <code class="state-col">{s.delivery_column_name}</code>
         {/if}
-        {@render addAction(s)}
       </li>
     {/each}
   </ul>
@@ -328,42 +295,5 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
   .state-col {
     margin-left: auto;
     font-size: 0.85em;
-  }
-  /* C1: the add-to-project affordance. In a state-list row it sits at the far end
-     (after the delivery column pushes it right); in the single-state detail it sits
-     under the value set. */
-  .state-list .add-cell {
-    margin-left: auto;
-  }
-  .state-detail .add-cell {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin-top: 0.75rem;
-  }
-  .add-cell {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-  }
-  .add-to-project {
-    font: inherit;
-    font-size: 0.8rem;
-    padding: 0.2rem 0.6rem;
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    background: var(--accent-bg);
-    color: var(--accent);
-    cursor: pointer;
-  }
-  .add-to-project:hover {
-    background: var(--surface);
-  }
-  .add-confirm {
-    font-size: 0.8rem;
-    color: var(--accent);
-  }
-  .add-confirm.already {
-    color: var(--muted);
   }
 </style>

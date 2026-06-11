@@ -65,7 +65,9 @@ function submit(event: SubmitEvent): void {
       spellcheck="false"
       aria-describedby="period-help{advisoryInvalid ? ' period-advisory' : ''}"
     />
-    <button type="submit">Resolve</button>
+    <!-- #306: no "Resolve" verb — from the user's view they just choose a period
+         (it applies on submit/Enter; the URL-query mechanics are unchanged). -->
+    <button type="submit">Apply</button>
     {#if period !== null}
       <button type="button" class="clear" onclick={() => onclear()}>
         Clear
@@ -79,9 +81,9 @@ function submit(event: SubmitEvent): void {
     <code>_default</code>. Leave blank for full history.
   </p>
   {#if advisoryInvalid}
-    <!-- ADVISORY: the server validates; this never blocks Resolve. -->
+    <!-- ADVISORY: the server validates; this never blocks Apply. -->
     <p id="period-advisory" class="advisory" role="status">
-      This doesn't look like a period — you can still resolve it; the server will
+      This doesn't look like a period — you can still apply it; the server will
       confirm.
     </p>
   {/if}

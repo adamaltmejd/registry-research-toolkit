@@ -61,7 +61,7 @@ bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
 ```
 
 `smoke` loads `/catalog`, clicks provider → register → variable, fills the period input
-with `2022` and clicks **Resolve** (expects "narrowed to 2022"), then cold-reloads the
+with `2022` and clicks **Apply** (expects "narrowed to 2022"), then cold-reloads the
 deep link. Screenshots land in `/tmp/reg-webapp-shots/` (`01-root` …
 `05-deep-link-reload`) — **look at them**. Other commands:
 

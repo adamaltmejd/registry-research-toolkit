@@ -119,6 +119,85 @@ export function looksLikePeriod(raw: string): boolean {
   return isPeriodToken(value);
 }
 
+// ── Token bounds (advisory mirror of `reg_meta.fqid` interval semantics) ────
+// The #306 one-click add needs CLIENT-side window math (clip register-variant
+// validity windows to the user's range to tell succession from co-existence).
+// ADVISORY like `looksLikePeriod`: an unparseable token simply degrades to the
+// explicit variant prompt — the server stays the canonical period authority.
+
+/** Inclusive ISO date bounds of one period TOKEN. */
+export interface PeriodBounds {
+  from: string;
+  to: string;
+}
+
+const TERM_BOUNDS: Record<string, [string, string]> = {
+  VT: ["01-01", "06-30"], // spring term
+  HT: ["07-01", "12-31"], // autumn term
+  H1: ["01-01", "06-30"],
+  H2: ["07-01", "12-31"],
+  Q1: ["01-01", "03-31"],
+  Q2: ["04-01", "06-30"],
+  Q3: ["07-01", "09-30"],
+  Q4: ["10-01", "12-31"],
+};
+
+/** Last day of a month, as the 2-digit day string (UTC; day 0 of month+1). */
+function lastDayOfMonth(year: number, month: number): string {
+  return String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(
+    2,
+    "0",
+  );
+}
+
+/** The inclusive ISO date window a single period token denotes (`2020` →
+ * 2020-01-01..2020-12-31, `VT2009` → 2009-01-01..2009-06-30, `2020-03` →
+ * 2020-03-01..2020-03-31, a day → itself). `null` for anything that isn't a
+ * single grammar token (`_default`, ranges, junk). */
+export function periodTokenBounds(token: string): PeriodBounds | null {
+  const value = token.trim();
+  if (!isPeriodToken(value)) {
+    return null;
+  }
+  const term = /^([HV]T)((?:19|20)\d{2})$/.exec(value);
+  if (term) {
+    const [mmddFrom, mmddTo] = TERM_BOUNDS[term[1]];
+    return { from: `${term[2]}-${mmddFrom}`, to: `${term[2]}-${mmddTo}` };
+  }
+  const quarterHalf = /^((?:19|20)\d{2})-([QH][1-4])$/.exec(value);
+  if (quarterHalf) {
+    const [mmddFrom, mmddTo] = TERM_BOUNDS[quarterHalf[2]];
+    return {
+      from: `${quarterHalf[1]}-${mmddFrom}`,
+      to: `${quarterHalf[1]}-${mmddTo}`,
+    };
+  }
+  const month = /^((?:19|20)\d{2})-(\d{2})$/.exec(value);
+  if (month) {
+    const y = Number(month[1]);
+    const m = Number(month[2]);
+    return {
+      from: `${month[1]}-${month[2]}-01`,
+      to: `${month[1]}-${month[2]}-${lastDayOfMonth(y, m)}`,
+    };
+  }
+  if (FULL_DATE_RE.test(value)) {
+    return { from: value, to: value };
+  }
+  // A bare year (the only remaining single-token form).
+  return { from: `${value}-01-01`, to: `${value}-12-31` };
+}
+
+/** Split a wire period into its two RANGE endpoints (`"2010..2020"` →
+ * `["2010", "2020"]`), or `null` when it isn't a 2-endpoint range. */
+export function periodRangeEndpoints(wire: string): [string, string] | null {
+  if (!wire.includes(RANGE_SEP)) {
+    return null;
+  }
+  const parts = wire.split(RANGE_SEP);
+  return parts.length === 2 ? [parts[0].trim(), parts[1].trim()] : null;
+}
+
 /** Convert a structured `Source.period` (int | token-string | {from,to} |
  * "_default") into the wire `?period` string the catalog resolve takes (a bare
  * year, a `from..to` range, a token, or `_default`). Returns `null` when the

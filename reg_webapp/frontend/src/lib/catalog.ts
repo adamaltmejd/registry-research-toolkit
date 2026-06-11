@@ -15,6 +15,7 @@ import {
   type StatesResponse,
   type VariableStateModel,
 } from "./api";
+import { periodRangeEndpoints, periodTokenBounds } from "./period";
 
 /** Narrow the catch-all browse response to a browsable `CatalogNode`, or `null`
  * for a no-`kind` payload (a `?period` `StatesResponse` or a sub-endpoint
@@ -503,6 +504,178 @@ export function representationsFromStates(
  * list trivially collapses (no choice to make). */
 export function representationsCollapse(reps: Representation[]): boolean {
   return reps.every((r) => r.codingKey === reps[0]?.codingKey);
+}
+
+// ── One-click add plan (#306) ────────────────────────────────────────────────
+// The variable page's page-level "Add to project" auto-picks everything that
+// isn't a GENUINE choice: time-sequential register-variant succession within
+// the chosen range auto-splits into one source per variant segment (succession
+// is not a user choice — decided in #306), and coding-identical parallel
+// columns auto-pick the primary (#266 latest-era ranking). Only CO-EXISTING
+// variants (a population choice) and genuinely distinct codings prompt. Pure —
+// unit-tested in catalog.test.ts; the page (BindingLeafView) renders prompts
+// and commits segments through `addFromCatalog`.
+
+/** One register variant's overall validity window across a state set. */
+export interface VariantWindow {
+  variant: string;
+  from: string;
+  to: string;
+}
+
+/** One per-variant add: the (clipped) wire period for the source and the
+ * representation outcome for the binding. `representation` is pre-set to the
+ * PRIMARY column whenever >1 column co-exists (the #266 default — final when
+ * the columns are coding-identical, the prompt's preselect when
+ * `needsRepChoice`); null for a single/absent column (matching the
+ * pin-only-when-genuinely-multi rule the store's single-rep derive expects). */
+export interface AddSegment {
+  variant: string;
+  /** Wire period for this segment's source (the user's period, or the clipped
+   * sub-range for a succession segment); null when no period is chosen. */
+  period: string | null;
+  reps: Representation[];
+  /** True when the segment's columns are a GENUINE coding choice (>1
+   * co-existing, not coding-identical) — the page must prompt. */
+  needsRepChoice: boolean;
+  representation: string | null;
+}
+
+/** The page-level add decision:
+ *  - `segments`: proceed (after any rep prompts) — 1 segment, or several for a
+ *    range spanning a variant succession.
+ *  - `choose-variant`: ≥2 variants CO-EXIST inside the chosen period (or the
+ *    period is point/absent/unparseable with ≥2 variants present) — a genuine
+ *    population choice the user must make. */
+export type AddPlan =
+  | { kind: "segments"; segments: AddSegment[] }
+  | { kind: "choose-variant"; options: VariantWindow[] };
+
+/** Render a clipped ISO bound as a period-range ENDPOINT token, collapsing
+ * year-aligned bounds to the bare year (`2010-01-01` → `2010` as a start,
+ * `2009-12-31` → `2009` as an end) so the common year-grain succession yields
+ * year ranges; a mid-year bound stays an exact date token (valid grammar). */
+function boundToken(iso: string, edge: "from" | "to"): string {
+  if (edge === "from" && iso.endsWith("-01-01")) {
+    return iso.slice(0, 4);
+  }
+  if (edge === "to" && iso.endsWith("-12-31")) {
+    return iso.slice(0, 4);
+  }
+  return iso;
+}
+
+function segmentFor(
+  variant: string,
+  states: VariableStateModel[],
+  period: string | null,
+): AddSegment {
+  const reps = representationsFromStates(states);
+  const multi = reps.length > 1;
+  return {
+    variant,
+    period,
+    reps,
+    needsRepChoice: multi && !representationsCollapse(reps),
+    representation: multi ? reps[0].column : null,
+  };
+}
+
+/**
+ * Build the add plan for the VISIBLE states (the `?period`-narrowed subset when
+ * a period is active — already only the states overlapping it — else the full
+ * history) at the page's wire period. Splitting needs a parseable RANGE: a
+ * point/absent/unparseable period with ≥2 variants is a `choose-variant` (at a
+ * single window ≥2 remaining variants co-exist; with no time bound "all of
+ * them" isn't well-defined), which also covers the rare mid-year succession a
+ * point period straddles — one extra question, never a wrong auto-pick.
+ */
+export function buildAddPlan(
+  states: VariableStateModel[],
+  periodWire: string | null,
+): AddPlan {
+  const byVariant = new Map<string, VariableStateModel[]>();
+  for (const s of states) {
+    const group = byVariant.get(s.variant);
+    if (group) {
+      group.push(s);
+    } else {
+      byVariant.set(s.variant, [s]);
+    }
+  }
+  const windows: VariantWindow[] = [...byVariant.entries()].map(
+    ([variant, ss]) => ({
+      variant,
+      from: ss.reduce(
+        (m, s) => (s.valid_from < m ? s.valid_from : m),
+        ss[0].valid_from,
+      ),
+      to: ss.reduce(
+        (m, s) => (s.valid_to > m ? s.valid_to : m),
+        ss[0].valid_to,
+      ),
+    }),
+  );
+  if (windows.length === 0) {
+    return { kind: "segments", segments: [] };
+  }
+  if (windows.length === 1) {
+    const w = windows[0];
+    return {
+      kind: "segments",
+      segments: [
+        segmentFor(w.variant, byVariant.get(w.variant) ?? [], periodWire),
+      ],
+    };
+  }
+
+  // ≥2 variants: only a parseable token range can prove succession.
+  const endpoints = periodWire ? periodRangeEndpoints(periodWire) : null;
+  const loBounds = endpoints ? periodTokenBounds(endpoints[0]) : null;
+  const hiBounds = endpoints ? periodTokenBounds(endpoints[1]) : null;
+  const byFrom = [...windows].sort(
+    (a, b) =>
+      a.from.localeCompare(b.from) || a.variant.localeCompare(b.variant),
+  );
+  if (!endpoints || !loBounds || !hiBounds) {
+    return { kind: "choose-variant", options: byFrom };
+  }
+
+  // Clip each variant window to the range (ISO strings compare chronologically),
+  // then test pairwise overlap INSIDE the range: any overlap → co-existing.
+  const lo = loBounds.from;
+  const hi = hiBounds.to;
+  // The visible states are period-narrowed, so every window intersects the
+  // range; the inverted-clip filter is defensive (a non-covering variant must
+  // never yield an inverted segment period).
+  const clipped = byFrom
+    .map((w) => ({
+      ...w,
+      from: w.from > lo ? w.from : lo,
+      to: w.to < hi ? w.to : hi,
+    }))
+    .filter((w) => w.from <= w.to);
+  for (let i = 0; i < clipped.length; i++) {
+    for (let j = i + 1; j < clipped.length; j++) {
+      if (
+        clipped[i].from <= clipped[j].to &&
+        clipped[j].from <= clipped[i].to
+      ) {
+        return { kind: "choose-variant", options: byFrom };
+      }
+    }
+  }
+
+  // Pure succession: one segment per variant, period clipped to its window —
+  // the user's own endpoint tokens survive verbatim at the range edges.
+  const segments = clipped.map((w, i) => {
+    const fromTok = i === 0 ? endpoints[0] : boundToken(w.from, "from");
+    const toTok =
+      i === clipped.length - 1 ? endpoints[1] : boundToken(w.to, "to");
+    const period = fromTok === toTok ? fromTok : `${fromTok}..${toTok}`;
+    return segmentFor(w.variant, byVariant.get(w.variant) ?? [], period);
+  });
+  return { kind: "segments", segments };
 }
 
 // ── Shared binding resolution (picker derive-on-pick + store re-derive) ──────
