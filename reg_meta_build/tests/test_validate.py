@@ -326,7 +326,9 @@ class TestValidateModule:
     def test_delivery_column_whitespace_fails(self, fixture_db: Path, tmp_path: Path):
         """Hygiene invariant: a delivery_column_name with surrounding
         whitespace (on a state OR an alias) fails — the SCB read boundary
-        trims, so any padded value in a shipped DB is a build regression."""
+        trims, so any padded value in a shipped DB is a build regression.
+        Tab-padded deliberately: the check must match `str.strip()` semantics
+        (all whitespace), not SQLite TRIM() (ASCII space only)."""
         broken = tmp_path / "broken.db"
         broken.write_bytes(fixture_db.read_bytes())
         conn = sqlite3.connect(broken)
@@ -338,12 +340,12 @@ class TestValidateModule:
         ).fetchone()
         conn.execute(
             "UPDATE variable_state SET delivery_column_name = ? WHERE state_id = ?",
-            (col + " ", sid),
+            (col + "\t", sid),
         )
         conn.execute(
             "UPDATE variable_alias SET delivery_column_name = ? "
             "WHERE delivery_column_name = ?",
-            (col + " ", col),
+            (col + "\t", col),
         )
         conn.commit()
         conn.close()

@@ -576,13 +576,19 @@ def _check_delivery_column_hygiene(
     if not {"variable_alias", "variable_state"}.issubset(tables):
         result.ok("variable_alias / variable_state absent — check skipped")
         return
-    untrimmed = conn.execute(
-        "SELECT "
-        "  (SELECT COUNT(*) FROM variable_state "
-        "   WHERE delivery_column_name != TRIM(delivery_column_name)) "
-        "+ (SELECT COUNT(*) FROM variable_alias "
-        "   WHERE delivery_column_name != TRIM(delivery_column_name))"
-    ).fetchone()[0]
+    # Counted in Python, not SQL: the read boundary trims with `str.strip()`
+    # (all Unicode whitespace — tabs, NBSP, newlines), while SQLite's TRIM()
+    # strips ASCII spaces only. The tripwire must use the SAME definition of
+    # "trimmed" as the build, or a tab-padded regression slips through.
+    untrimmed = sum(
+        1
+        for (col,) in conn.execute(
+            "SELECT delivery_column_name FROM variable_state "
+            "WHERE delivery_column_name IS NOT NULL "
+            "UNION ALL SELECT delivery_column_name FROM variable_alias"
+        )
+        if col != col.strip()
+    )
     if untrimmed:
         result.fail(
             f"{untrimmed} delivery_column_name value(s) with surrounding "
