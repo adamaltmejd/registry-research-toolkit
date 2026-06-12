@@ -373,6 +373,30 @@ actually DOS cp850 remnants undefined in cp1252:
 These are mapped during import. The build reads \~1M backbone rows from
 `Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
 
+### Kolumnnamn hygiene (read-boundary trim)
+
+A handful of `Kolumnnamn` values in the SCB exports carry stray surrounding whitespace
+(`'  Pris'`, `'Lan '` — \~112 rows in Registerinformation, \~19 in
+UnikaRegisterOchVariabler), and \~28K rows ship a *blank* `Kolumnnamn`. Both are
+normalized where the CSVs are read (`_import_registerinformation` / `_import_unika`; SOS
+strips at parse via `_clean`):
+
+- **Trim**: a padded spelling is the same delivery column under a dirty name. Left
+  untrimmed, `'Bransle'` vs `'  Bransle'` never co-occur as identical strings, so rule-2
+  connectivity sharded one source variable into bogus split siblings (corpus: 9 such
+  pairs, e.g. `bransleforbrukning` + `bransleforbrukning-2`). Both import sites trim so
+  the `unika_join`/`unika_summary` keys keep matching `variable_alias_build`.
+- **Blank is not an alias**: a blank `Kolumnnamn` means the variable was registered with
+  no delivery header in that variant. That is represented as a NULL
+  `variable_state.delivery_column_name` and *row-absence* in `variable_alias` — never as
+  an `''` alias row (pre-fix the build shipped \~3.3K of those; they carried no header
+  information and polluted `get_datacolumns`/alias listings). No blank-Kolumnnamn unika
+  row carries sensitivity flags, so skipping them loses nothing in
+  `_populate_sensitivity_flags`.
+
+`validate_built_db` enforces both invariants (`[delivery-column hygiene]`): no
+surrounding whitespace on any shipped `delivery_column_name`, no empty-string values.
+
 ## Source-register resolution
 
 The `VariabelRegister_Källa` field is resolved using deterministic matching only — no

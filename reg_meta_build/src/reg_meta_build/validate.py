@@ -154,6 +154,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_one_value_set_per_period(conn, result, tables)
         _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
+        _check_delivery_column_hygiene(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
@@ -553,6 +554,60 @@ def _check_variable_alias_covers_state_columns(
         )
     else:
         result.ok("all variable_state delivery columns present in variable_alias")
+
+
+def _check_delivery_column_hygiene(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """No `delivery_column_name` ships with surrounding whitespace, and
+    `variable_alias` carries real headers only (no empty strings).
+
+    The SCB exports contain a handful of Kolumnnamn values with stray
+    leading/trailing spaces ('  Pris', 'Lan ') plus ~3.3K blank values
+    (variables delivered with no column header). Both are normalized at the
+    SCB read boundary (`_import_registerinformation` / `_import_unika`:
+    trim, and skip blanks for `variable_alias_build`); SOS strips at parse
+    (`_clean`). A dirty spelling that slips through shards rule-2
+    connectivity into bogus split-sibling variables, so this is a build
+    regression, not cosmetics. "No delivery header" is represented as NULL
+    on `variable_state` and as row-absence in `variable_alias` — never as
+    '' (empty string)."""
+    result.section("[delivery-column hygiene]")
+    if not {"variable_alias", "variable_state"}.issubset(tables):
+        result.ok("variable_alias / variable_state absent — check skipped")
+        return
+    # Counted in Python, not SQL: the read boundary trims with `str.strip()`
+    # (all Unicode whitespace — tabs, NBSP, newlines), while SQLite's TRIM()
+    # strips ASCII spaces only. The tripwire must use the SAME definition of
+    # "trimmed" as the build, or a tab-padded regression slips through.
+    untrimmed = sum(
+        1
+        for (col,) in conn.execute(
+            "SELECT delivery_column_name FROM variable_state "
+            "WHERE delivery_column_name IS NOT NULL "
+            "UNION ALL SELECT delivery_column_name FROM variable_alias"
+        )
+        if col != col.strip()
+    )
+    if untrimmed:
+        result.fail(
+            f"{untrimmed} delivery_column_name value(s) with surrounding "
+            "whitespace (read-boundary trim regression?)"
+        )
+    else:
+        result.ok("no delivery_column_name with surrounding whitespace")
+    empty = conn.execute(
+        "SELECT "
+        "  (SELECT COUNT(*) FROM variable_alias WHERE delivery_column_name = '') "
+        "+ (SELECT COUNT(*) FROM variable_state WHERE delivery_column_name = '')"
+    ).fetchone()[0]
+    if empty:
+        result.fail(
+            f"{empty} empty-string delivery_column_name value(s) "
+            "(no-header rows must be NULL states / absent alias rows)"
+        )
+    else:
+        result.ok("no empty-string delivery_column_name")
 
 
 def _check_panel_refs_resolve(

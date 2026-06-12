@@ -323,6 +323,62 @@ class TestValidateModule:
             result.failures
         )
 
+    def test_delivery_column_whitespace_fails(self, fixture_db: Path, tmp_path: Path):
+        """Hygiene invariant: a delivery_column_name with surrounding
+        whitespace (on a state OR an alias) fails — the SCB read boundary
+        trims, so any padded value in a shipped DB is a build regression.
+        Tab-padded deliberately: the check must match `str.strip()` semantics
+        (all whitespace), not SQLite TRIM() (ASCII space only)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # Pad a matched alias+state pair in lockstep so only the hygiene
+        # check (not the alias-covers-state-columns projection) fires.
+        sid, col = conn.execute(
+            "SELECT state_id, delivery_column_name FROM variable_state "
+            "WHERE delivery_column_name IS NOT NULL LIMIT 1"
+        ).fetchone()
+        conn.execute(
+            "UPDATE variable_state SET delivery_column_name = ? WHERE state_id = ?",
+            (col + "\t", sid),
+        )
+        conn.execute(
+            "UPDATE variable_alias SET delivery_column_name = ? "
+            "WHERE delivery_column_name = ?",
+            (col + "\t", col),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("surrounding whitespace" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_empty_delivery_column_alias_fails(self, fixture_db: Path, tmp_path: Path):
+        """Hygiene invariant: '' is not a delivery header — a no-header
+        variable is a NULL state column + alias-row absence, never an
+        empty-string alias row."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        vid, rvid = conn.execute(
+            "SELECT variable_id, register_variant_id FROM variable_alias LIMIT 1"
+        ).fetchone()
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, ?, '')",
+            (vid, rvid),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("empty-string delivery_column_name" in f for f in result.failures), (
+            result.failures
+        )
+
     def test_panel_refs_skip_when_no_variant_carries_them(self, fixture_db: Path):
         """A4.4c: the unmodified fixture carries NO panel refs (all variants have
         NULL panel keys), so the resolution check self-passes but still EMITS its
