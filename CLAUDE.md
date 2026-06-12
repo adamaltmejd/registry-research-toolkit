@@ -137,21 +137,28 @@ classification). Don't revive that path — extend the new packages.
 
 ## PR merge gate
 
-Green CI + one review is not sufficient to merge. Every PR must clear:
+Green CI alone is never sufficient to merge. Scale the rest to the PR's size and risk
+(see `.claude/skills/pr-pipeline/SKILL.md` for the full pipeline version):
 
+- **Independent review** — every PR gets at least one review independent of its author.
+  For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
+  PRs additionally need an independent Claude review pass (e.g. `/code-review` or a
+  reviewer subagent). Review is iterative: fix every finding, and if the fixes introduce
+  substantial new changes, run another round on the new diff — repeat until a round
+  produces no new findings.
+- **Bot-review window** — after the PR is ready (and after each substantive push), give
+  Codex/Copilot a bounded window: poll for either review comments or Codex's clean
+  verdict — a 👍 reaction on the PR body from `chatgpt-codex-connector[bot]` with no
+  review submitted (invisible to `gh pr view`; check
+  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`). Either signal ends the wait;
+  \~10 min with neither is the ceiling — bots can be out of tokens or skip a push
+  entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
+  requested by commenting `@codex review`). Only trust a verdict timestamped after the
+  latest push; absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
   point at it with an absolute `--input-dir <main-checkout>/reg_meta_build/input_data/`.
-- **Independent findings-only review** of the diff; fix every finding. Return findings
-  to the maintainer — never post them as PR comments.
-- **Bot reviews**: Codex + Copilot auto-review open PRs — address their inline comments,
-  waiting \~10 min after open/push for reviews to land. Codex's clean verdict is a 👍
-  reaction on the PR body from `chatgpt-codex-connector[bot]` with no review submitted;
-  reactions are invisible to `gh pr view` — check
-  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`. Reactions stick to the PR body
-  across pushes, so only trust a verdict (reaction or review) timestamped after the
-  latest push.
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip; after merging, confirm the PR's changes are actually present on main — the
   GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
