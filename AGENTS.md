@@ -139,18 +139,23 @@ classification). Don't revive that path — extend the new packages.
 
 Green CI + one review is not sufficient to merge. Every PR must clear:
 
-- **Real-data validation** when build-pipeline or DB content changed: run
-  `reg-meta-build build-db --validate` against the real seed at
-  `reg_meta_build/input_data/` (untracked; main checkout only), not just fixture tests.
+- **Real-data validation** when build-pipeline or DB content changed: run a real-seed
+  `reg-meta-build build-db --input-dir reg_meta_build/input_data/` (untracked seed; main
+  checkout only; validation runs by default), not just fixture tests.
 - **Independent findings-only review** of the diff; fix every finding. Return findings
   to the maintainer — never post them as PR comments.
 - **Bot reviews**: Codex + Copilot auto-review open PRs — address their inline comments,
   waiting \~10 min after open/push for reviews to land. Codex's clean verdict is a 👍
   reaction on the PR body from `chatgpt-codex-connector[bot]` with no review submitted;
   reactions are invisible to `gh pr view` — check
-  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`.
-- **After merging**, verify the merge commit's tree matches the branch tip — the GitHub
-  API can capture a stale head and silently drop just-pushed commits.
+  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`. Reactions stick to the PR body
+  across pushes, so only trust a verdict (reaction or review) timestamped after the
+  latest push.
+- **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
+  branch tip; after merging, confirm the PR's changes are actually present on main — the
+  GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
+  the merge commit's tree to the branch tip works only when the base didn't advance in
+  between.)
 
 # Layout
 
