@@ -94,6 +94,66 @@ class TestValidateModule:
             "yield" in f and "no projected codes" in f for f in result.failures
         ), result.failures
 
+    def test_open_ended_sentinel_passes_and_reports_on_fixture(self, fixture_db: Path):
+        """The sentinel-exactness check runs on the fixture and emits its
+        section, so a regression can't silently drop it from the suite."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert "[window: open-ended valid_to sentinel]" in result.format_report()
+
+    def test_near_sentinel_state_valid_to_fails(self, fixture_db: Path, tmp_path: Path):
+        """A 9999-prefixed `variable_state.valid_to` that is not exactly
+        '9999-12-31' must FAIL: downstream display (reg_webapp catalog routes
+        + the SPA's formatWindow) branches on the exact literal, so a
+        near-sentinel like '9999-06-30' would render as a garbage period
+        token instead of an open window."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        state_id = conn.execute("SELECT MIN(state_id) FROM variable_state").fetchone()[
+            0
+        ]
+        conn.execute(
+            "UPDATE variable_state SET valid_to = '9999-06-30' WHERE state_id = ?",
+            (state_id,),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "variable_state" in f and "9999-06-30" in f for f in result.failures
+        ), result.failures
+
+    def test_near_sentinel_lineage_valid_to_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Same exactness invariant on `variable_state_lineage.valid_to` (the
+        lineage edge windows carry the same '9999-12-31' open-end sentinel).
+
+        Plants '9999-00-00': malformed, sorts BELOW '9999-01-01', and lineage
+        has no date CHECK at all — so this locks the prefix match (a
+        `>= '9999-01-01'` range predicate would miss it)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        state_id = conn.execute("SELECT MIN(state_id) FROM variable_state").fetchone()[
+            0
+        ]
+        conn.execute(
+            "INSERT INTO variable_state_lineage "
+            "(consumer_state_id, source_state_id, valid_from, valid_to) "
+            "VALUES (?, ?, '2000-01-01', '9999-00-00')",
+            (state_id, state_id),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "variable_state_lineage" in f and "9999-00-00" in f for f in result.failures
+        ), result.failures
+
     def test_var_year_codes_anchor_self_skips_on_fixture(self, fixture_db: Path):
         """A2.7: the var_id-24193 code-membership anchor self-skips cleanly when
         the var_id is absent (the synthetic fixture has no var_id 24193), so it

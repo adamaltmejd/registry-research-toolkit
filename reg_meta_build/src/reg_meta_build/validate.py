@@ -23,6 +23,9 @@ Year projection correctness (two layers):
     (`_check_var_year_codes_anchor`). This is the wrong-code-membership
     guard (the original ArbSokNov 4/5 bug class); the corpus-wide check
     alone would pass a state that wrongly *includes* an out-of-window code.
+  - Open-ended window sentinel: every 9999-prefixed `valid_to` in
+    `variable_state` / `variable_state_lineage` equals '9999-12-31' exactly
+    (`_check_open_ended_sentinel`) — downstream display branches on the literal
   - PRAGMA foreign_key_check returns no rows
   - Freelist fraction < 1% of pages (`_check_operational`): the build drops
     several large build-only staging tables (`variable_instance`,
@@ -54,7 +57,7 @@ from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build.db import PROVIDER_ID_SCB, PROVIDER_ID_SOS
+from reg_meta_build.db import _VALID_TO_SENTINEL, PROVIDER_ID_SCB, PROVIDER_ID_SOS
 from reg_meta_build.id import _MINT_BIT
 
 if TYPE_CHECKING:
@@ -149,6 +152,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
         _check_one_value_set_per_period(conn, result, tables)
+        _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
@@ -466,6 +470,51 @@ def _check_one_value_set_per_period(
         f"across {len(affected)} (variable, column) — a period resolves to >1 "
         f"value set: {sample}"
     )
+
+
+def _check_open_ended_sentinel(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Open-ended validity windows must use the exact '9999-12-31' sentinel.
+
+    Downstream display code branches on the literal — reg_webapp's catalog
+    routes (`OPEN_ENDED_VALID_TO`) emit `period_token: None` for open
+    windows, and the SPA's `formatWindow`/`windowTitle` hide it the same
+    way. A near-sentinel like '9999-06-30' would slip past both and render
+    as a garbage token ('2016-01-01..9999-06-30') instead of an open
+    window. The DDL only CHECKs length/ordering, so the validator pins
+    exactness: any 9999-prefixed `valid_to` must be the sentinel itself.
+    Prefix match, not a `>= '9999-01-01'` range: a malformed value like
+    '9999-00-00' sorts below January yet still misses the downstream
+    literal branch. Applies to both tables that carry ISO-date windows
+    (`classification`'s valid_to is an integer year, out of scope).
+    """
+    result.section("[window: open-ended valid_to sentinel]")
+    for table in ("variable_state", "variable_state_lineage"):
+        if table not in tables:
+            result.ok(f"{table} absent — sentinel check skipped")
+            continue
+        bad = conn.execute(
+            f"SELECT valid_to, COUNT(*) FROM {table} "
+            "WHERE valid_to LIKE '9999%' AND valid_to != ? "
+            "GROUP BY valid_to ORDER BY valid_to LIMIT 5",
+            (_VALID_TO_SENTINEL,),
+        ).fetchall()
+        if bad:
+            sample = ", ".join(f"'{r[0]}' x{r[1]}" for r in bad)
+            result.fail(
+                f"{table}: 9999-prefixed valid_to that is not exactly "
+                f"'{_VALID_TO_SENTINEL}': {sample}"
+            )
+        else:
+            n_open = conn.execute(
+                f"SELECT COUNT(*) FROM {table} WHERE valid_to = ?",
+                (_VALID_TO_SENTINEL,),
+            ).fetchone()[0]
+            result.ok(
+                f"{table}: all 9999-prefixed valid_to are exactly "
+                f"'{_VALID_TO_SENTINEL}' ({n_open:,} open-ended)"
+            )
 
 
 def _check_variable_alias_covers_state_columns(
