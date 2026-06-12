@@ -4,7 +4,7 @@ import CatalogPicker from "./CatalogPicker.svelte";
 import { registerPrefixOf, variantSeg } from "./catalog";
 import FieldIssues from "./FieldIssues.svelte";
 import PeriodEditor from "./PeriodEditor.svelte";
-import { periodToResolveWire } from "./period";
+import { periodToWire } from "./period";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import {
@@ -49,7 +49,7 @@ const bindingsMalformed = $derived(
 );
 
 // The period as a wire string for the binding/variant pickers' resolve.
-const periodWire = $derived(periodToResolveWire(source.period as Period));
+const periodWire = $derived(periodToWire(source.period as Period));
 
 function ptr(field: string): string {
   return jsonPointer(["sources", sourceIndex, field]);

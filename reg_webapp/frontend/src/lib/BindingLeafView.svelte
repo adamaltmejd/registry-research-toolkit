@@ -419,8 +419,10 @@ const repSegment = $derived(
 
   <section aria-labelledby="states-heading">
     <h3 id="states-heading">
-      States{#if isNarrowed}<span class="muted narrowed-note">
-          · narrowed to {params.period}</span
+      <!-- A #307 comma list reads as segments joined with "+" (the union the
+           backend resolves since #340) — `2005..2010 + 2015..2020`. -->
+      States{#if isNarrowed && params.period}<span class="muted narrowed-note">
+          · narrowed to {params.period.split(",").join(" + ")}</span
         >{/if}
     </h3>
     {#if states}

@@ -281,11 +281,10 @@ export function grainOfToken(token: string): PeriodGrain | null {
  * comma-joined member wires, `2005..2010,2015..2020`). Returns `null` when the
  * period can't form a resolvable query (blank / malformed / a list with a
  * malformed member) — the picker then can't derive-on-pick and shows its "set
- * the period" hint. NOTE: the catalog `?period=` endpoint does not accept the
- * comma form yet (project-schema support came first) — a list wire submitted
- * there gets the server's 422, the same authority as any other malformed
- * query. ADVISORY shaping only; the backend is the canonical period
- * validator. */
+ * the period" hint. The ONE wire for display, round-trip, AND resolve: the
+ * catalog `?period=` accepts the comma form since #340 (per-segment resolve,
+ * state_id-deduped union). ADVISORY shaping only; the backend is the
+ * canonical period validator. */
 export function periodToWire(period: Period): string | null {
   if (Array.isArray(period)) {
     if (period.length === 0) {
@@ -314,21 +313,6 @@ export function periodToWire(period: Period): string | null {
     return from === "" || to === "" ? null : `${from}${RANGE_SEP}${to}`;
   }
   return null;
-}
-
-/** `periodToWire` for RESOLVE-bound callers (the binding/variant pickers and
- * `rederiveSource`, which feed `resolveBindingAt` → the catalog `?period=`
- * query). The catalog resolve endpoint does NOT accept the #307 comma form yet
- * (project-schema support shipped first), so a list period returns `null`
- * here — the callers then take their existing period-unset/unresolved
- * fallback instead of surfacing a guaranteed 422 as a resolver error. Display
- * and round-trip callers keep using `periodToWire` (the canonical wire).
- * Collapse the two when the catalog endpoint learns the comma form. */
-export function periodToResolveWire(period: Period): string | null {
-  if (Array.isArray(period)) {
-    return null;
-  }
-  return periodToWire(period);
 }
 
 /** The INVERSE of `periodToWire`: shape a wire `?period` string (as the catalog

@@ -243,6 +243,37 @@ def test_period_query_empty_when_no_state_covers(client):
     assert resp.json()["states"] == []
 
 
+# ── The #307/#340 comma LIST form: per-segment resolve, state_id-deduped union ─
+# The fixture kon has ONE state (2018→open), so the union assertions pin the
+# union/dedup MECHANICS: a covering segment's states must survive regardless of
+# its position (catches first-only/last-only bugs), and two segments hitting
+# the SAME state must count it once (catches concat-without-dedup).
+
+
+def test_period_list_query_unions_per_segment(client):
+    # First segment covers, second doesn't — and vice versa: both orders return
+    # the covered segment's state.
+    for wire in ("2020,1900", "1900,2020"):
+        resp = client.get(f"/api/catalog/{_KON}?period={wire}")
+        assert resp.status_code == 200, wire
+        assert len(resp.json()["states"]) == 1, wire
+
+
+def test_period_list_query_dedupes_by_state_id(client):
+    # Both segments intersect the SAME state → once, not twice.
+    resp = client.get(f"/api/catalog/{_KON}?period=2019,2020")
+    assert resp.status_code == 200
+    assert len(resp.json()["states"]) == 1
+
+
+def test_period_list_query_rejects_malformed(client):
+    # The list-member gate 422s before any connection opens: empty members,
+    # the whole-value-only `_default` sentinel, junk members.
+    for wire in ("2020,", "2020,,2021", "2005..2010,_default", "2020,abc"):
+        resp = client.get(f"/api/catalog/{_KON}?period={wire}")
+        assert resp.status_code == 422, wire
+
+
 def test_period_query_on_absent_binding_is_404(client):
     resp = client.get("/api/catalog/scb/lisa/doesnotexist?period=2020")
     assert resp.status_code == 404

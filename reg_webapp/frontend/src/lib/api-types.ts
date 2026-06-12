@@ -67,7 +67,8 @@ export interface paths {
          *     before `parse`.
          *
          *     `?period` semantics: present + binding leaf → `{states: [...]}` (the
-         *     resolve_at subset, narrowed by `?variant` / `?value_set_version`). present +
+         *     resolve_at subset, narrowed by `?variant` / `?value_set_version`; the #307
+         *     comma list form resolves per segment, unioned + deduped by state_id). present +
          *     non-binding kind → IGNORED (resolve normally). absent on a binding leaf → the
          *     full node (full history) UNLESS a narrowing modifier (`?variant` /
          *     `?value_set_version`) is set: those are inert without `?period`, so they 422

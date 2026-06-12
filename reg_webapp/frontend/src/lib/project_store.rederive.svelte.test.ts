@@ -89,6 +89,37 @@ describe("re-derive on period change (B2)", () => {
     expect(binding0()?.display_name).toBe("Lon");
   });
 
+  it("a #307 list period re-derives through the comma wire (#340: no period-unset fallback)", async () => {
+    freshDraftWithBinding();
+    projectStore.applyPickedBinding(0, 0, {
+      variable: "scb/lisa/lon",
+      type: "opaque",
+      displayNameDefault: null,
+      status: "unresolved",
+      reason: "period-unset",
+    });
+    vi.mocked(getCatalogNode).mockResolvedValue(
+      statesResp([vstate({ delivery_column_name: "Lon", data_type: "int" })]),
+    );
+    // Setting an interrupted-series period resolves like any other: the
+    // catalog ?period= accepts the comma wire since #340 (the old
+    // periodToResolveWire null → period-unset fallback is deleted).
+    projectStore.updateSource(0, {
+      period: [
+        { from: 2005, to: 2010 },
+        { from: 2015, to: 2020 },
+      ],
+    });
+    await vi.waitFor(() => {
+      expect(deriv0()?.status).toBe("derived");
+      expect(binding0()?.type).toBe("numeric");
+    });
+    expect(vi.mocked(getCatalogNode)).toHaveBeenCalledWith(
+      "scb/lisa/lon",
+      expect.objectContaining({ period: "2005..2010,2015..2020" }),
+    );
+  });
+
   it("a user-edited type is KEPT on re-derive, with a non-blocking mismatch hint", async () => {
     freshDraftWithBinding();
     // Pick at a period that derives `numeric`.
