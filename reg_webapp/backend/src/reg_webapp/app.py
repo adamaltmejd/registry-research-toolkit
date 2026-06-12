@@ -18,8 +18,10 @@ from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING
 
 import reg_meta.db
+import reg_meta.doc_db
 from fastapi import FastAPI
 from reg_meta.catalog import Catalog
+from reg_meta.errors import RegMetaError
 
 from . import __version__
 from .limits import (
@@ -28,11 +30,12 @@ from .limits import (
     RateLimitMiddleware,
 )
 from .middleware import ETagMiddleware
-from .routes import bundle, catalog, context, project, search
+from .routes import bundle, catalog, context, docs, project, search
 from .stewards import load_catalog_index, load_steward
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
+    from pathlib import Path
 
 # Manifest keys /api/context surfaces; validated at boot so a malformed DB fails
 # fast instead of as an opaque per-request 500. schema_version is already
@@ -80,7 +83,29 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # already validated by open_db above, so the per-request open skips the
     # re-check (check_schema=False) — see routes/catalog.py `_catalog_conn`.
     app.state.db_path = db_path
+    # Docs library (#354) is OPTIONAL: the deployed container ships
+    # reg_meta_docs.db, but a dev/test env (or a steward without docs) may lack
+    # it. Resolve + validate it ONCE here; on absence OR schema-incompat, leave
+    # `docs_db_path` None so the docs endpoints degrade to "not ingested" rather
+    # than 500 — a broken/missing docs index must NOT take down the catalog API.
+    # The validated path feeds the per-request open (check_schema=False) in
+    # routes/docs.py `docs_conn`.
+    app.state.docs_db_path = _resolve_docs_db_path()
     yield
+
+
+def _resolve_docs_db_path() -> Path | None:
+    """Resolve the docs DB the same way reg_meta does (REG_META_DB > XDG >
+    platform), validating it once. Returns the path when present + schema-compat,
+    else None (docs gracefully unavailable). Never raises — docs are auxiliary."""
+    docs_db_path = reg_meta.doc_db.doc_db_path(None)
+    try:
+        # Raises RegMetaError on missing file OR incompatible schema.
+        conn = reg_meta.doc_db.open_doc_db(docs_db_path)
+    except RegMetaError:
+        return None
+    conn.close()
+    return docs_db_path
 
 
 def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI:
@@ -115,6 +140,9 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     # Global FTS search (#350) — a GET read, so it rides the same ETag/edge-cache
     # axis as the catalog routes.
     app.include_router(search.router)
+    # Docs library (#354) — GET reads over the optional reg_meta_docs.db; same
+    # ETag/edge-cache axis as the catalog routes.
+    app.include_router(docs.router)
     # A5.2b-ii write surface: project validate/order + bundle build. The ETag
     # middleware skips these (method gate); the cap + limiter gate them.
     app.include_router(project.router)

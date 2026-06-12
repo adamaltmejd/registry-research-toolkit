@@ -23,6 +23,7 @@ from pathlib import Path
 
 import pytest
 import reg_meta.db
+import reg_meta.doc_db
 
 # `_slugged_db` is a bare-name helper in reg_meta_build/tests/. Add that dir to
 # sys.path so this backend conftest can import the catalog-fixture-DB builder
@@ -289,3 +290,62 @@ def catalog_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     _build_catalog_fixture_db(db_path)
     _point_app_at(monkeypatch, tmp_path)
     return db_path
+
+
+def _build_docs_fixture_db(db_path: Path) -> None:
+    """Build a minimal `reg_meta_docs.db` for the #354 docs-endpoint tests:
+    two LISA docs (so register-scoping + register-coverage have content) with the
+    FTS index rebuilt and the `schema_version` meta `open_doc_db` gates on."""
+    from reg_meta_build.doc_db import DOC_DDL
+
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.executescript(DOC_DDL)
+        conn.executemany(
+            "INSERT INTO doc (register, filename, variable, display_name, tags, "
+            "source, body, body_clean) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                (
+                    "lisa",
+                    "Kon.md",
+                    "Kon",
+                    "Kön",
+                    json.dumps(["type/variable", "topic/demography"]),
+                    "lisa-bakgrundsfakta-1990-2017",
+                    "**Kön Kon**\n\nKönstillhörighet för individen.",
+                    "Kön Kon Könstillhörighet för individen.",
+                ),
+                (
+                    "lisa",
+                    "Sysselsattning.md",
+                    "SyssStat",
+                    "Sysselsättningsstatus",
+                    json.dumps(["type/variable", "topic/employment"]),
+                    "lisa-bakgrundsfakta-1990-2017",
+                    "**Sysselsättningsstatus SyssStat**\n\nIndividens ställning.",
+                    "Sysselsättningsstatus SyssStat Individens ställning.",
+                ),
+            ],
+        )
+        conn.execute("INSERT INTO doc_fts(doc_fts) VALUES('rebuild')")
+        conn.executemany(
+            "INSERT INTO doc_meta(key, value) VALUES (?, ?)",
+            [
+                ("schema_version", reg_meta.doc_db.DOC_SCHEMA_VERSION),
+                ("doc_count", "2"),
+            ],
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+@pytest.fixture
+def docs_db(catalog_db: Path) -> Path:
+    """The catalog DB PLUS a `reg_meta_docs.db` in the same REG_META_DB dir, so
+    the app boots the main catalog AND opens the optional docs index (#354).
+    Returns the docs DB path. Tests that want the docs-ABSENT degradation use the
+    plain ``catalog_db`` fixture (no docs DB written)."""
+    docs_path = catalog_db.parent / reg_meta.doc_db.DOC_DB_FILENAME
+    _build_docs_fixture_db(docs_path)
+    return docs_path

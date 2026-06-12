@@ -628,6 +628,280 @@
         "title": "ContextResponse",
         "type": "object"
       },
+      "DocDetail": {
+        "description": "`GET /api/docs/doc/{identifier}` \u2014 metadata + source pointer + a BOUNDED\n`excerpt` (never the full converted body). `register` is the wire key\n(Python attr `register_name`).",
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excerpt"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "kind": {
+            "const": "doc",
+            "default": "doc",
+            "title": "Kind",
+            "type": "string"
+          },
+          "register": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Register"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "variable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variable"
+          }
+        },
+        "required": [
+          "filename"
+        ],
+        "title": "DocDetail",
+        "type": "object"
+      },
+      "DocResult": {
+        "description": "One documentation hit. `snippet` is a query-context EXCERPT (the FTS5\nsnippet), not full text. `source` is the SCB source-document identifier the\ndoc was derived from; `source_url` is a seam for a resolved SCB PDF link \u2014\nNone today (the data carries an identifier, not a URL; URL resolution is\nfuture enrichment / a steward concern). `fuzzy` marks a name/provider_key\nmatch (the \"mentioned in documentation\" variable hook) as a heuristic text\nmatch, not an authoritative variable\u2192doc link. `register` is the wire key;\nthe Python attr is `register_name` (avoids the `BaseModel.register` shadow).",
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "fuzzy": {
+            "default": false,
+            "title": "Fuzzy",
+            "type": "boolean"
+          },
+          "register": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Register"
+          },
+          "snippet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snippet"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "variable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variable"
+          }
+        },
+        "required": [
+          "filename"
+        ],
+        "title": "DocResult",
+        "type": "object"
+      },
+      "DocSearchResponse": {
+        "description": "`GET /api/docs/search`. `ingested` is False when the deployment ships no\ndocs index at all (`reg_meta_docs.db` absent) \u2014 \"no docs ingested\", distinct\nfrom an empty `results` for a real query against a present index.",
+        "properties": {
+          "ingested": {
+            "title": "Ingested",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "doc-search",
+            "default": "doc-search",
+            "title": "Kind",
+            "type": "string"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DocResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query",
+          "ingested",
+          "total_count",
+          "results"
+        ],
+        "title": "DocSearchResponse",
+        "type": "object"
+      },
+      "DocVariableMentions": {
+        "description": "`GET /api/docs/for-variable` \u2014 the \"mentioned in documentation\" hook for a\nvariable leaf. `ingested` is whether the docs index exists at all;\n`register_ingested` whether THIS register has any ingested docs \u2014 absence\nmeans \"no docs ingested for this register\" (coverage is LISA-only), NOT \"no\ndocumentation exists\". `results` are FUZZY name/provider_key text matches\n(each `fuzzy=True`). `register` is the wire key (Python attr\n`register_name`).",
+        "properties": {
+          "ingested": {
+            "title": "Ingested",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "doc-mentions",
+            "default": "doc-mentions",
+            "title": "Kind",
+            "type": "string"
+          },
+          "register": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Register"
+          },
+          "register_ingested": {
+            "title": "Register Ingested",
+            "type": "boolean"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DocResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ingested",
+          "register_ingested",
+          "total_count",
+          "results"
+        ],
+        "title": "DocVariableMentions",
+        "type": "object"
+      },
       "GroupFacetModel": {
         "description": "One facet assignment on a group member: `axis` names the dimension\n('month' / 'rank' / 'vintage'), `value` sorts, `label` displays.",
         "properties": {
@@ -2340,6 +2614,188 @@
           }
         },
         "summary": "Get Context"
+      }
+    },
+    "/api/docs/doc/{identifier}": {
+      "get": {
+        "description": "One doc by variable name or filename \u2014 metadata + source pointer + a\nBOUNDED excerpt (never the full body). 404 when the docs index is absent\n(detail says so, distinct from a genuine not-found) or the doc isn't found.",
+        "operationId": "get_doc_api_docs_doc__identifier__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "required": true,
+            "schema": {
+              "title": "Identifier",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Doc"
+      }
+    },
+    "/api/docs/for-variable": {
+      "get": {
+        "description": "The \"mentioned in documentation\" hook for a variable leaf: FUZZY\nname/provider_key text search over the docs index (the SPA passes the\nvariable's provider_key and/or name as `q`, scoped to its register).\n\n`register_ingested` encodes the coverage distinction \u2014 when the variable's\nregister has no ingested docs (coverage is LISA-only), absence reads as \"no\ndocs ingested for this register\", NOT \"this variable is undocumented\". Every\nresult is flagged `fuzzy` (a heuristic text match, not an authoritative\nvariable\u2192doc link).",
+        "operationId": "get_docs_for_variable_api_docs_for_variable_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "register",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Register"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocVariableMentions"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Docs For Variable"
+      }
+    },
+    "/api/docs/search": {
+      "get": {
+        "description": "Full-text docs search, optionally register-scoped. When the docs index is\nabsent, `ingested=False` with empty results (NOT a 500) \u2014 \"no docs ingested\",\ndistinct from an empty result set for a real query.",
+        "operationId": "get_docs_search_api_docs_search_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "register",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Register"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocSearchResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Docs Search"
       }
     },
     "/api/project/order": {

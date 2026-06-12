@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import re
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, Request
 from reg_meta.queries import search as reg_meta_search
 
 from reg_webapp.conn import catalog_conn
@@ -33,32 +33,16 @@ from reg_webapp.models import (
     VariableSearchGroup,
     VariableSearchResult,
 )
+from reg_webapp.query_input import validate_text_query
 
 router = APIRouter(prefix="/api")
 
-# Input bounds. The query is a bound FTS parameter (no SQLi surface), so these
-# guard cost/abuse and the NUL byte sqlite rejects — not injection.
-_MAX_QUERY_LEN = 200
 _DEFAULT_LIMIT = 20
 _MAX_LIMIT = 50
 
 # A "real" token carries at least one unicode alphanumeric char; pure
 # punctuation tokenizes to nothing in FTS5 and would yield an empty phrase.
 _WORD_CHAR = re.compile(r"[^\W_]", re.UNICODE)
-
-
-def _validated_query(q: str) -> str:
-    """``?q`` gate: reject an over-long query or one carrying a NUL byte (sqlite
-    raises on embedded NUL) with 422. A blank / whitespace / punctuation-only
-    query is NOT an error — it yields empty groups (see ``_has_searchable_token``)."""
-    if "\x00" in q:
-        raise HTTPException(status_code=422, detail="query may not contain NUL")
-    if len(q) > _MAX_QUERY_LEN:
-        raise HTTPException(
-            status_code=422,
-            detail=f"query too long (max {_MAX_QUERY_LEN} characters)",
-        )
-    return q
 
 
 def _validated_limit(limit: int = _DEFAULT_LIMIT) -> int:
@@ -142,7 +126,7 @@ def _group_result(r: dict) -> ConceptGroupSearchResult:
 @router.get("/search", response_model=SearchResponse)
 def get_search(
     request: Request,
-    q: str = Depends(_validated_query),
+    q: str = Depends(validate_text_query),
     limit: int = Depends(_validated_limit),
 ) -> SearchResponse:
     """Search registers, variables (concept-folded, #322), and classifications

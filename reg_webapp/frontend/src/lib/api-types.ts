@@ -252,6 +252,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/docs/doc/{identifier}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Doc
+         * @description One doc by variable name or filename — metadata + source pointer + a
+         *     BOUNDED excerpt (never the full body). 404 when the docs index is absent
+         *     (detail says so, distinct from a genuine not-found) or the doc isn't found.
+         */
+        get: operations["get_doc_api_docs_doc__identifier__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/for-variable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Docs For Variable
+         * @description The "mentioned in documentation" hook for a variable leaf: FUZZY
+         *     name/provider_key text search over the docs index (the SPA passes the
+         *     variable's provider_key and/or name as `q`, scoped to its register).
+         *
+         *     `register_ingested` encodes the coverage distinction — when the variable's
+         *     register has no ingested docs (coverage is LISA-only), absence reads as "no
+         *     docs ingested for this register", NOT "this variable is undocumented". Every
+         *     result is flagged `fuzzy` (a heuristic text match, not an authoritative
+         *     variable→doc link).
+         */
+        get: operations["get_docs_for_variable_api_docs_for_variable_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Docs Search
+         * @description Full-text docs search, optionally register-scoped. When the docs index is
+         *     absent, `ingested=False` with empty results (NOT a 500) — "no docs ingested",
+         *     distinct from an empty result set for a real query.
+         */
+        get: operations["get_docs_search_api_docs_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/project/order": {
         parameters: {
             query?: never;
@@ -655,6 +727,126 @@ export interface components {
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
+        };
+        /**
+         * DocDetail
+         * @description `GET /api/docs/doc/{identifier}` — metadata + source pointer + a BOUNDED
+         *     `excerpt` (never the full converted body). `register` is the wire key
+         *     (Python attr `register_name`).
+         */
+        DocDetail: {
+            /** Display Name */
+            display_name?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Filename */
+            filename: string;
+            /**
+             * Kind
+             * @default doc
+             * @constant
+             */
+            kind: "doc";
+            /** Register */
+            register?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Variable */
+            variable?: string | null;
+        };
+        /**
+         * DocResult
+         * @description One documentation hit. `snippet` is a query-context EXCERPT (the FTS5
+         *     snippet), not full text. `source` is the SCB source-document identifier the
+         *     doc was derived from; `source_url` is a seam for a resolved SCB PDF link —
+         *     None today (the data carries an identifier, not a URL; URL resolution is
+         *     future enrichment / a steward concern). `fuzzy` marks a name/provider_key
+         *     match (the "mentioned in documentation" variable hook) as a heuristic text
+         *     match, not an authoritative variable→doc link. `register` is the wire key;
+         *     the Python attr is `register_name` (avoids the `BaseModel.register` shadow).
+         */
+        DocResult: {
+            /** Display Name */
+            display_name?: string | null;
+            /** Filename */
+            filename: string;
+            /**
+             * Fuzzy
+             * @default false
+             */
+            fuzzy: boolean;
+            /** Register */
+            register?: string | null;
+            /** Snippet */
+            snippet?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Tags
+             * @default []
+             */
+            tags: string[];
+            /** Variable */
+            variable?: string | null;
+        };
+        /**
+         * DocSearchResponse
+         * @description `GET /api/docs/search`. `ingested` is False when the deployment ships no
+         *     docs index at all (`reg_meta_docs.db` absent) — "no docs ingested", distinct
+         *     from an empty `results` for a real query against a present index.
+         */
+        DocSearchResponse: {
+            /** Ingested */
+            ingested: boolean;
+            /**
+             * Kind
+             * @default doc-search
+             * @constant
+             */
+            kind: "doc-search";
+            /** Query */
+            query: string;
+            /** Results */
+            results: components["schemas"]["DocResult"][];
+            /** Total Count */
+            total_count: number;
+        };
+        /**
+         * DocVariableMentions
+         * @description `GET /api/docs/for-variable` — the "mentioned in documentation" hook for a
+         *     variable leaf. `ingested` is whether the docs index exists at all;
+         *     `register_ingested` whether THIS register has any ingested docs — absence
+         *     means "no docs ingested for this register" (coverage is LISA-only), NOT "no
+         *     documentation exists". `results` are FUZZY name/provider_key text matches
+         *     (each `fuzzy=True`). `register` is the wire key (Python attr
+         *     `register_name`).
+         */
+        DocVariableMentions: {
+            /** Ingested */
+            ingested: boolean;
+            /**
+             * Kind
+             * @default doc-mentions
+             * @constant
+             */
+            kind: "doc-mentions";
+            /** Register */
+            register?: string | null;
+            /** Register Ingested */
+            register_ingested: boolean;
+            /** Results */
+            results: components["schemas"]["DocResult"][];
+            /** Total Count */
+            total_count: number;
         };
         /**
          * GroupFacetModel
@@ -1542,6 +1734,104 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ContextResponse"];
+                };
+            };
+        };
+    };
+    get_doc_api_docs_doc__identifier__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_docs_for_variable_api_docs_for_variable_get: {
+        parameters: {
+            query: {
+                q: string;
+                register?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocVariableMentions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_docs_search_api_docs_search_get: {
+        parameters: {
+            query: {
+                offset?: number;
+                q: string;
+                register?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocSearchResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

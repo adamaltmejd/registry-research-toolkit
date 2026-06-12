@@ -5,6 +5,11 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
+# Shared FTS5 MATCH-expression builder (quoted prefix terms): same safety the
+# main `search` uses, so a raw user query with FTS operators can't raise on the
+# doc index either. Same-package internal helper.
+from .queries import _fts_match_query
+
 if TYPE_CHECKING:
     import sqlite3
 
@@ -32,10 +37,18 @@ def doc_search(
 ) -> dict:
     """FTS5 search over documentation.
 
+    The raw user query is rewritten to a safe FTS5 MATCH expression (quoted
+    prefix terms) so stray FTS syntax can't raise; a query with no searchable
+    token returns no results (rather than an empty-MATCH error).
+
     Returns {"total_count": int, "results": [...]}.
     """
+    match_query = _fts_match_query(query)
+    if match_query is None:
+        return {"total_count": 0, "results": []}
+
     where_parts = ["doc_fts MATCH ?"]
-    params: list[object] = [query]
+    params: list[object] = [match_query]
 
     if register:
         where_parts.append("d.register = ?")
@@ -57,7 +70,7 @@ def doc_search(
 
     sql = f"""
         SELECT d.filename, d.register, d.variable, d.display_name, d.tags,
-               rank,
+               d.source, rank,
                snippet(doc_fts, 2, '**', '**', '…', 24) AS snippet
         FROM doc_fts
         JOIN doc d ON d.doc_id = doc_fts.rowid
@@ -77,6 +90,9 @@ def doc_search(
                 "variable": row["variable"],
                 "display_name": row["display_name"],
                 "tags": json.loads(row["tags"]),
+                # The SCB source-document identifier the doc was derived from —
+                # a pointer for consumers that link out instead of republishing.
+                "source": row["source"],
                 "fts_rank": row["rank"],
                 "snippet": row["snippet"],
             }
@@ -118,6 +134,9 @@ def doc_get(
         "tags": json.loads(row["tags"]),
         "source": row["source"],
         "body": row["body"],
+        # The link-stripped, marker-free plain text — consumers that serve an
+        # EXCERPT (not full-text) build it from this rather than the raw `body`.
+        "body_clean": row["body_clean"],
     }
 
 
@@ -195,3 +214,12 @@ def doc_exists(conn: sqlite3.Connection, variable: str) -> bool:
         (variable,),
     ).fetchone()
     return row is not None
+
+
+def doc_registers(conn: sqlite3.Connection) -> set[str]:
+    """The set of registers that have ANY ingested documentation.
+
+    Lets a caller distinguish "no docs ingested for this register" (the register
+    isn't in this set — coverage is LISA-only today) from "no docs found for this
+    specific variable" (register present, but no matching doc)."""
+    return {r["register"] for r in conn.execute("SELECT DISTINCT register FROM doc")}

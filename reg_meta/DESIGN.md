@@ -93,6 +93,10 @@ which (1) neutralizes FTS5 operators so stray syntax can't raise, and (2) prefix
 pattern — only the FTS path is rewritten. Each register/variable/classification result
 row carries its navigable `fqid`.
 
+The docs index (`doc_queries.doc_search`, a separate `reg_meta_docs.db` FTS index) uses
+the same `_fts_match_query` builder, so a raw doc query is operator-safe and
+prefix-matched too.
+
 ## Register lookup strategy
 
 All commands accepting a register argument use a three-step resolution:
