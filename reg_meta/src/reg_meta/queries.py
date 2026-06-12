@@ -260,6 +260,13 @@ def _filter_search_by_years(
         elif rid is not None:
             if rid in valid_reg_ids:
                 filtered.append(r)
+        elif r.get("type") == "classification":
+            # Classifications carry no register/state validity window (#350), so a
+            # --years filter (a version/validity filter) can't confirm them in
+            # range — exclude rather than return as unfilterable false positives
+            # (Codex P2). The vintage lives in the slug, not a comparable column;
+            # vintage-year filtering is future work.
+            continue
         else:
             filtered.append(r)
     return filtered
@@ -383,6 +390,10 @@ def search(
         # overlapping the range (member hits were already year-filtered above;
         # this guards the label-only path). Classification groups are exempt —
         # their members carry no delivery windows.
+        # `fts_query is not None` == the query has a real searchable token. Gate
+        # label folding on it so an empty / punctuation-only query doesn't turn
+        # the raw `%%` LIKE pattern into a match-every-group (Codex P2) — the FTS
+        # leaf path already contributes nothing in that case.
         label_hits = (
             _search_group_labels(
                 conn,
@@ -391,7 +402,7 @@ def search(
                 type=type,
                 year_range=parse_year_range(years) if years else None,
             )
-            if field in ("varname", "description", "all")
+            if field in ("varname", "description", "all") and fts_query is not None
             else []
         )
         all_results = _fold_concept_groups(conn, all_results, label_hits)
@@ -747,11 +758,11 @@ def _search_group_labels(
     Scope rules: variable groups respect a `--register` scope and pass the
     'variable' type filter (they fold variable hits); classification groups
     are catalog-scoped, so they only surface unscoped (`type` in
-    ("all", "classification"), no register filter). `type == "register"`
-    excludes groups entirely; `type == "classification"` excludes variable
-    groups. Under a `year_range` (--years), a variable group needs at least one
-    member state overlapping the range — the group itself has no validity
-    window."""
+    ("all", "classification"), no register filter) AND with no `year_range`
+    (they carry no validity window). `type == "register"` excludes groups
+    entirely; `type == "classification"` excludes variable groups. Under a
+    `year_range` (--years), a variable group needs at least one member state
+    overlapping the range — the group itself has no validity window."""
     if type == "register":
         return []
     rows = conn.execute(
@@ -766,7 +777,11 @@ def _search_group_labels(
     hits = []
     for r in rows:
         if r["kind"] == "classification":
-            if reg_ids or type == "variable":
+            # Classifications are catalog-scoped (no register) and carry no
+            # validity window, so a --years filter excludes the family too —
+            # symmetric with the classification-leaf exclusion in
+            # `_filter_search_by_years` (#350).
+            if reg_ids or type == "variable" or year_range is not None:
                 continue
         else:
             # A variable-kind group has no place in a classifications-only query.

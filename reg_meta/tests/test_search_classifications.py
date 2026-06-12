@@ -188,3 +188,34 @@ def test_fts_special_chars_do_not_raise(db: sqlite3.Connection) -> None:
     # The whole point of the safe builder: stray FTS syntax must not raise.
     for q in ['foo"bar', "AND OR", "kon*", "(a b)", "ssyk:1", "-kon"]:
         search(db, q, field="description")
+
+
+def test_empty_description_query_folds_nothing(
+    db_with_cls_group: sqlite3.Connection,
+) -> None:
+    # No searchable token → the FTS path no-ops AND label folding is gated off,
+    # so an empty/punctuation query must NOT return every concept group via the
+    # raw `%%` LIKE pattern (Codex P2).
+    for q in ("", "   ", '"" -- ;'):
+        assert search(db_with_cls_group, q, field="description")["results"] == []
+
+
+def test_years_excludes_classifications(
+    db_with_cls_group: sqlite3.Connection,
+) -> None:
+    # Classifications carry no validity window, so a --years filter excludes both
+    # the leaves and the (label-matched) family — no unfilterable false positives
+    # (Codex P2). Without --years the same query DOES return the family.
+    assert search(
+        db_with_cls_group, "Svensk", field="description", type="classification"
+    )["results"]
+    assert (
+        search(
+            db_with_cls_group,
+            "Svensk",
+            field="description",
+            type="classification",
+            years="2010",
+        )["results"]
+        == []
+    )
