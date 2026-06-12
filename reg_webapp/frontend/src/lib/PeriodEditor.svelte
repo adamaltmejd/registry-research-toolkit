@@ -9,6 +9,7 @@ let _instanceSeq = 0;
 import { untrack } from "svelte";
 import FieldIssues from "./FieldIssues.svelte";
 import { looksLikePeriod, periodFromWire, periodToWire, rangeRepresentable } from "./period";
+import PeriodListInput from "./PeriodListInput.svelte";
 import PeriodRangeInput from "./PeriodRangeInput.svelte";
 import type { Period } from "./project_data";
 import type { ValidationIssue } from "./validation";
@@ -18,10 +19,11 @@ import type { ValidationIssue } from "./validation";
 // directive): the DEFAULT mode is the shared grain-aware from/to picker
 // (PeriodRangeInput — year/term/quarter/month/day), so picking any range is the
 // path of least resistance, not free text. The other modes cover the rest:
-// "Token" (free text for special/mixed-grain values — e.g. the #306 succession
-// clips like 1992..2009-06-30 — and the #307 interrupted-series comma list,
-// whose dedicated picker mode is #338) and "Default" (the "_default" snapshot
-// sentinel).
+// "List" (the #307/#338 interrupted-series mode — segments accumulated with
+// the same grain-aware controls via PeriodListInput; an explicit opt-in, never
+// the default), "Token" (free text for special/mixed-grain values — e.g. the
+// #306 succession clips like 1992..2009-06-30 — and the raw comma list) and
+// "Default" (the "_default" snapshot sentinel).
 //
 // Per the Pydantic boundary (see reg_webapp/DESIGN.md → Pydantic boundary), this
 // NEVER validates structurally — a malformed value is echoed via the
@@ -35,7 +37,7 @@ const { period, issues, onchange } = $props<{
   onchange: (next: Period) => void;
 }>();
 
-type Mode = "range" | "token" | "default";
+type Mode = "range" | "list" | "token" | "default";
 
 // Infer the initial mode from the incoming value. A value the range UI can
 // REPRESENT (bare year int, "" unset, single grammar token, uniform-grain
@@ -48,9 +50,11 @@ function inferMode(value: Period): Mode {
     return "default";
   }
   if (Array.isArray(value)) {
-    // The #307 interrupted-series list edits as comma-joined Token text — the
-    // minimal affordance; the dedicated picker list mode is #338.
-    return "token";
+    // The #307 interrupted-series list opens in the dedicated List mode
+    // (#338) when it serializes to a wire; a malformed list (a member
+    // periodToWire can't shape) falls back to Token raw-text like any other
+    // junk so it stays visible.
+    return periodToWire(value) !== null ? "list" : "token";
   }
   const wire = periodToWire(value);
   if (wire === null) {
@@ -119,6 +123,14 @@ let rangeWire = $state<string | null>(
     ? _initialWire
     : null,
 );
+/** The list mode's seed/last emit. Any wire-serializable period seeds it — a
+ * stored #307 list opens populated, and a scalar segment carries over when the
+ * user opts INTO List (the "add another segment to my range" upgrade path; the
+ * segment is visible as a chip, so nothing is silently preserved). `_default`
+ * and malformed values seed empty, exactly like the range arm. */
+let listWire = $state<string | null>(
+  initial !== "_default" && _initialWire !== null ? _initialWire : null,
+);
 let tokenText = $state(seedTokenText(initial));
 
 const tokenHint = $derived(
@@ -132,12 +144,22 @@ const tokenHint = $derived(
 // mid-authoring state; the backend's invalid_period stays the authority once
 // the user submits).
 const rangeIncomplete = $derived(mode === "range" && rangeWire === null);
+const listIncomplete = $derived(mode === "list" && listWire === null);
 
 /** The range picker's emit: thread the wire through periodFromWire so the
  * draft carries the schema-valid shape (int year / token string / {from,to}
  * object); an incomplete selection is the unset "". */
 function onRangeChange(wire: string | null): void {
   rangeWire = wire;
+  onchange(wire === null ? "" : periodFromWire(wire));
+}
+
+/** The list input's emit — same threading as the range arm. periodFromWire
+ * shapes a multi-segment wire into the #307 segment ARRAY; a single remaining
+ * segment collapses to its scalar shape (semantically identical, and the
+ * canonical form for an uninterrupted period). An empty list is the unset "". */
+function onListChange(wire: string | null): void {
+  listWire = wire;
   onchange(wire === null ? "" : periodFromWire(wire));
 }
 
@@ -157,6 +179,8 @@ function onModeChange(next: Mode): void {
     onchange("_default");
   } else if (next === "range") {
     onchange(rangeWire === null ? "" : periodFromWire(rangeWire));
+  } else if (next === "list") {
+    onchange(listWire === null ? "" : periodFromWire(listWire));
   } else {
     emitToken();
   }
@@ -175,6 +199,15 @@ function onModeChange(next: Mode): void {
           onchange={() => onModeChange("range")}
         />
         Range
+      </label>
+      <label>
+        <input
+          type="radio"
+          name={groupName}
+          checked={mode === "list"}
+          onchange={() => onModeChange("list")}
+        />
+        List
       </label>
       <label>
         <input
@@ -204,6 +237,17 @@ function onModeChange(next: Mode): void {
         <!-- Subtle, non-blocking: the period isn't set yet. Distinct from a
              backend invalid_period error (which renders red via <FieldIssues>). -->
         <p class="hint incomplete">Pick at least “From” to complete the period.</p>
+      {/if}
+    </div>
+  {:else if mode === "list"}
+    <div class="range">
+      <p class="hint muted">
+        An interrupted series: non-overlapping segments, each picked like a
+        range.
+      </p>
+      <PeriodListInput value={listWire} onchange={onListChange} />
+      {#if listIncomplete}
+        <p class="hint incomplete">Add at least one segment to complete the period.</p>
       {/if}
     </div>
   {:else if mode === "token"}

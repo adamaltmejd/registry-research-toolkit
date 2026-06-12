@@ -215,6 +215,11 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
       "This column is outside the steward's catalog (not supplied by this deployment)",
     hint: "warning",
   },
+  representation_outside_steward_catalog: {
+    label:
+      "The steward holds this variable, but not the chosen representation (see the message for what it does supply)",
+    hint: "warning",
+  },
   binding_state_drifts_within_period: {
     label: "The period crosses a state transition (per-state subsets returned)",
     hint: "info",
