@@ -738,6 +738,35 @@ def test_token_map_multi_target_emits_into_each_variant() -> None:
     assert len(variables) == 1, "multi-target mapping shares ONE variable"
 
 
+def test_duplicate_deldat_name_contributes_no_advisory_window() -> None:
+    # LOVA ships TWO 'LOVA' Deldatamängder rows (one minted variant). The rows
+    # may carry different data_från/till windows and there is no curated
+    # token<->row pairing, so a duplicate name is AMBIGUOUS as an
+    # advisory-window source: members resolving there get NO deldat bound (the
+    # variable window stands), instead of silently inheriting whichever
+    # duplicate row happened to be parsed last.
+    reg = _register(
+        "lova",
+        [_var("KOMMUN", deldatamangd="A_LOVA", data_from=1995, data_to=2022)],
+        deldatamangder=(
+            _deldat("LOVA", data_from=2010, data_to=2012),
+            _deldat("LOVA", data_from=1995),
+        ),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    # last-row window (1995-) would clip nothing, first-row (2010-2012) would
+    # clip hard; with the ambiguity rule NEITHER applies — the variable window
+    # survives untouched and no contradiction warning fires.
+    assert (states[0].valid_from, states[0].valid_to) == ("1995-01-01", "2022-12-31")
+    assert [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code == "sos_deldatamangd_bound_contradicts_variable"
+    ] == []
+
+
 def test_token_map_target_missing_from_sheet_warns() -> None:
     # Curation drift: the token IS mapped but its target name has no
     # Deldatamängder-sheet row (e.g. the workbook dropped the view). The member

@@ -24,6 +24,7 @@ from __future__ import annotations
 import calendar
 import re
 import zipfile
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -1401,7 +1402,15 @@ class SOSAdapter:
                     description=d.description or d.label,
                 )
 
-        deldat_by_name = {d.name: d for d in reg.deldatamangder}
+        # Advisory-window source per deldatamängd name. A name carried by >1
+        # sheet row (LOVA ships two 'LOVA' rows) is AMBIGUOUS: the rows mint ONE
+        # variant but may carry different data_från/till windows, and there is
+        # no curated token<->row pairing — so an ambiguous name contributes NO
+        # deldat window (None; the authoritative variable window still applies).
+        name_counts = Counter(d.name for d in reg.deldatamangder)
+        deldat_by_name = {
+            d.name: d for d in reg.deldatamangder if name_counts[d.name] == 1
+        }
 
         # -- kodlista resolution: variable_hint -> kodlista (case-insensitive).
         # Skip unparseable kodlistor (raw_rows non-empty) for value-set
