@@ -86,37 +86,46 @@ panel_entity_key = "pnr"
 panel_time_key = "dodsdat"
 panel_time_grain = "row"
 
+# Event register like its dors/dors-avi siblings (#211: the DORS-COV token map
+# gave the variant real states, so the row date column resolves here).
 [register_variant."5369119272181688462.5309929884760526431"]
 slug = "cov-dors-hermes"
 display_group = "COV_DORS_HERMES"
 panel_entity_key = "pnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_time_key = "dodsdat"
+panel_time_grain = "row"
 
 # Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA) (LOVA)
+#
+# #211: the A_LOVA* token map gave every variant real states, so the LOPNR
+# column resolves per variant (auto slug flipped name-derived
+# `lopnummer-som-ersatter-personnummer` -> column-derived `lopnr`). The data
+# variants are stacked multi-year extractions, so the time axis is the
+# per-row year/date column (row grain), not the delivery period. The
+# styrtabell variants (lova-agarkat etc.) are lookup tables — no panel keys.
 [register."7847722537922273761"]
 slug = "lova"
 
 [register_variant."7847722537922273761.6625693372895183876"]
 slug = "lova"
 display_group = "LOVA"
-panel_entity_key = "lopnummer-som-ersatter-personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_entity_key = "lopnr"
+panel_time_key = "ar"
+panel_time_grain = "row"
 
 [register_variant."7847722537922273761.5062264322777987324"]
 slug = "lova-examen"
 display_group = "LOVA EXAMEN"
-panel_entity_key = "lopnummer-som-ersatter-personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_entity_key = "lopnr"
+panel_time_key = "examar"
+panel_time_grain = "row"
 
 [register_variant."7847722537922273761.5782470112533969966"]
 slug = "lova-hosp"
 display_group = "LOVA HOSP"
-panel_entity_key = "lopnummer-som-ersatter-personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_entity_key = "lopnr"
+panel_time_key = "leg-specdatum"
+panel_time_grain = "row"
 
 [register_variant."7847722537922273761.4633578538773784614"]
 slug = "lova-agarkat"
@@ -158,10 +167,12 @@ display_group = "LOVA LEG_SPEC_EXAM"
 slug = "lova-examenskoder"
 display_group = "LOVA EXAMENSKODER"
 
+# Person directory (folkbokföringsuppgifter, one row per löpnummer) — no
+# per-row event axis, so the delivery-period sentinel stays.
 [register_variant."7847722537922273761.8897592339203104611"]
 slug = "lova-person"
 display_group = "LOVA PERSON"
-panel_entity_key = "lopnummer-som-ersatter-personnummer"
+panel_entity_key = "lopnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -263,29 +274,35 @@ panel_time_key = "indatum"
 panel_time_grain = "row"
 
 # Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
+#
+# #211: the lvm_* token map gave the variants real states, so the PNR column
+# resolves per variant (auto slug flipped name-derived `personnummer` ->
+# column-derived `pnr`). The variants are event registers (applications /
+# immediate-custody decisions / care episodes) — row grain on the numeric
+# event-date column of each, consistent with PAR/CAN/DORS.
 [register."6293204766641962219"]
 slug = "lvm"
 
 [register_variant."6293204766641962219.6579580878381606150"]
 slug = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
-panel_entity_key = "personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_entity_key = "pnr"
+panel_time_key = "ansdatumn"
+panel_time_grain = "row"
 
 [register_variant."6293204766641962219.5504744580319271019"]
 slug = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
-panel_entity_key = "personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_entity_key = "pnr"
+panel_time_key = "besdatumn"
+panel_time_grain = "row"
 
 [register_variant."6293204766641962219.5577711036561484975"]
 slug = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm"
 display_group = "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
-panel_entity_key = "personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
+panel_entity_key = "pnr"
+panel_time_key = "stdatumn"
+panel_time_grain = "row"
 
 # Registret över socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)
 [register."9047831179457584381"]

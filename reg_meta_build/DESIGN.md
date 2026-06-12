@@ -193,8 +193,9 @@ Socialstyrelsen delivers one `.xlsx` workbook per register, parsed by `SOSAdapte
 merge/split and `_default`-variant rules). A full structural catalog of the SOS delivery
 — sheet layout, kodlista shape, the deldatamängd ↔ variant mapping, and the
 classification/value path — is still to be written. The classification/value path itself
-shipped with #210 (PRs #273/#274); the LOVA/LVM deldatamängd → variant mapping is
-tracked in #211; the remaining vehicle for the catalog write-up is #212
+shipped with #210 (PRs #273/#274); the deldatamängd token → variant mapping
+(`DELDATAMANGD_TOKEN_MAP`: LOVA `A_LOVA*`, LVM `lvm_*`, DORS `DORS-COV`, LMED's combined
+token) shipped with #211; the remaining vehicle for the catalog write-up is #212
 (materializer-owned value tables).
 
 ## IR + adapter architecture
@@ -260,7 +261,10 @@ are normalized *here*, never leaked downstream:
   disjoint code-list shapes for one name (BU `FOD_DATUMN` date-vs-int, PAR `ATC`
   text-vs-int, both in `KNOWN_SPLIT_ALLOWLIST`). Any *other* same-name conflict
   warn-merges (fail-soft). Synthesizes a `_default` variant for variant-less registers
-  (LSS/BU/SOL).
+  (LSS/BU/SOL). Variable rows whose deldatamängd token is a technical extraction/view
+  name with no Deldatamängder-sheet row resolve through the curated
+  `DELDATAMANGD_TOKEN_MAP` (exact tokens only; a token can name several variants —
+  LMED's `FDDD`); an uncurated token warn-drops (`sos_deldatamangd_unresolved`).
 
 `emit()` yields IR in FK-topological order (register → classification → variant →
 value_set → variable → state/alias → edges → warning/provenance sinks) so the

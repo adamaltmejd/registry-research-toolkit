@@ -24,13 +24,14 @@ from __future__ import annotations
 import calendar
 import re
 import zipfile
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Callable, Iterable, Iterator
 
     from reg_meta_build.sources import IRObject
 
@@ -834,6 +835,54 @@ ENTITY_REGISTRY_KODLISTOR: frozenset[tuple[str, str]] = frozenset(
     {("mfr", "IVF_klinik")}
 )
 
+# Curated variable-sheet deldatamängd token -> Deldatamängder-sheet row name(s)
+# (#211, the A4.4 curation the `sos_deldatamangd_unresolved` warning deferred).
+# Four workbooks key their variable rows on a TECHNICAL extraction/view token
+# that never appears as a Deldatamängder-sheet name; without this map their
+# members warn-drop and the variants stay stateless. EXACT tokens only (the
+# standing curation rule: no regex/name-pattern inference) keyed on
+# (register_abbrev, variable-sheet token). A token can name SEVERAL variants
+# (LMED's combined token) — the member emits a state/alias into EACH.
+# Verified against the live workbooks at input_data/Socialstyrelsen/:
+#   - LVM: tokens are the lowercase technical `label`s of the Deldatamängder
+#     rows (lvm_ansok <-> 'LVM_ANSOK'), names are the long Swedish titles.
+#   - LOVA: tokens are A_LOVA* extraction-table names. The workbook ships TWO
+#     'LOVA' Deldatamängder rows (arbetsmarknadsstatus + the LISA-derived
+#     ekonomi subset) that dedup to ONE minted variant — both A_LOVA and
+#     A_LOVA_LISA land there. A_LOVA_STYR_* are the styrtabell lookups.
+#   - DORS: the Covid-19 Hermes view's 26 variable rows use 'DORS-COV'.
+#   - LMED: FDDD ships in BOTH variants; its token names them combined.
+DELDATAMANGD_TOKEN_MAP: dict[tuple[str, str], tuple[str, ...]] = {
+    ("lvm", "lvm_ansok"): (
+        "Ansökningar om tvångsvård enligt lagen om vård av missbrukare "
+        "i vissa fall, LVM",
+    ),
+    ("lvm", "lvm_omhtg"): (
+        "Beslut om omedelbart omhändertagande för tvångsvård enligt lagen "
+        "om vård av missbrukare i vissa fall, LVM",
+    ),
+    ("lvm", "lvm_utskr"): (
+        "Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM",
+    ),
+    ("lova", "A_LOVA"): ("LOVA",),
+    ("lova", "A_LOVA_LISA"): ("LOVA",),
+    ("lova", "A_LOVA_EXAMEN"): ("LOVA EXAMEN",),
+    ("lova", "A_LOVA_HOSP"): ("LOVA HOSP",),
+    ("lova", "A_LOVA_PERSON"): ("LOVA PERSON",),
+    ("lova", "A_LOVA_STYR_AGARKAT"): ("LOVA AGARKAT",),
+    ("lova", "A_LOVA_STYR_ARB_MARK_STATUS"): ("LOVA ARB_MARK_STAT",),
+    ("lova", "A_LOVA_STYR_EXAMENSKODER"): ("LOVA EXAMENSKODER",),
+    ("lova", "A_LOVA_STYR_HOSP_KODER"): ("LOVA HOSPKODER",),
+    ("lova", "A_LOVA_STYR_LANDSKOD"): ("LOVA LANDSKOD",),
+    ("lova", "A_LOVA_STYR_LEG_SPEC_EXAM_KOD"): ("LOVA LEG_SPEC_EXAM",),
+    ("lova", "A_LOVA_STYR_REGION"): ("LOVA REGION",),
+    ("lova", "A_LOVA_STYR_SEKTORKOD"): ("LOVA SEKTORKOD",),
+    ("lova", "A_LOVA_STYR_SYSSSTAT"): ("LOVA SYSSSTAT",),
+    ("lova", "A_LOVA_STYR_YRKSTALLN"): ("LOVA YRKSTALLN",),
+    ("dors", "DORS-COV"): ("COV_DORS_HERMES",),
+    ("lmed", "LMED VARA/LMED"): ("LMED", "LMED VARA"),
+}
+
 # Curated `Länk kodverk` (external_classification) → classification short_name.
 #
 # SOS has no `value_set_version_label`; the code system a variable uses is named
@@ -1353,7 +1402,15 @@ class SOSAdapter:
                     description=d.description or d.label,
                 )
 
-        deldat_by_name = {d.name: d for d in reg.deldatamangder}
+        # Advisory-window source per deldatamängd name. A name carried by >1
+        # sheet row (LOVA ships two 'LOVA' rows) is AMBIGUOUS: the rows mint ONE
+        # variant but may carry different data_från/till windows, and there is
+        # no curated token<->row pairing — so an ambiguous name contributes NO
+        # deldat window (None; the authoritative variable window still applies).
+        name_counts = Counter(d.name for d in reg.deldatamangder)
+        deldat_by_name = {
+            d.name: d for d in reg.deldatamangder if name_counts[d.name] == 1
+        }
 
         # -- kodlista resolution: variable_hint -> kodlista (case-insensitive).
         # Skip unparseable kodlistor (raw_rows non-empty) for value-set
@@ -1656,117 +1713,54 @@ class SOSAdapter:
 
         for v in members:
             # Variant resolution: variant-less -> the synthesized _default;
-            # else the member's deldatamängd (fall back to _default if a
-            # variable names a deldatamängd absent from the sheet).
+            # else the member's deldatamängd token, routed through the curated
+            # #211 token map when the token has no Deldatamängder-sheet row of
+            # its own. A mapped token can name SEVERAL variants (LMED FDDD) —
+            # the member emits into each.
             if variant_less:
-                variant_id = variant_id_of[None]
-                deldat = None
+                targets: list[tuple[int, SosDeldatamangd | None]] = [
+                    (variant_id_of[None], None)
+                ]
             else:
-                variant_id = variant_id_of.get(v.deldatamangd)
-                deldat = deldat_by_name.get(v.deldatamangd or "")
-                if variant_id is None:
-                    # P2#1: a variable-sheet deldatamängd token that has no
-                    # Deldatamängder-sheet row (LOVA A_LOVA*/LVM lvm_*) can't be
-                    # resolved to a variant here — the code->variant mapping is
-                    # A4.4 curation (maintainer domain knowledge); A4.3b only
-                    # WARNS so the drop is auditable, never silent. Do NOT invent
-                    # a mapping (e.g. by order) — skip the member after warning.
-                    yield IRWarning(
-                        entity_kind="variable",
-                        entity_id=variable_id,
-                        code="sos_deldatamangd_unresolved",
-                        detail=(
-                            f"{abbrev}/{v.name}: variable-sheet deldatamängd "
-                            f"{v.deldatamangd} has no Deldatamängder-sheet row; "
-                            "state dropped, code->variant mapping is A4.4 curation"
-                        ),
-                    )
-                    continue
-
-            var_from = _iso_bound(v.data_from, end=False)
-            var_to = _iso_bound(v.data_to, end=True)
-            deldat_from = _iso_bound(deldat.data_from, end=False) if deldat else None
-            deldat_to = _iso_bound(deldat.data_to, end=True) if deldat else None
-
-            # variable_alias: the delivery column == the variable name for SOS.
-            col = v.name
-            if col and (variant_id, col) not in seen_alias:
-                seen_alias.add((variant_id, col))
-                yield IRVariableAlias(
-                    variable_id=variable_id,
-                    register_variant_id=variant_id,
-                    delivery_column_name=col,
+                names = DELDATAMANGD_TOKEN_MAP.get(
+                    (abbrev, v.deldatamangd or ""), (v.deldatamangd,)
                 )
+                targets = []
+                for target_name in names:
+                    target_id = variant_id_of.get(target_name)
+                    if target_id is None:
+                        # P2#1: an UNCURATED variable-sheet deldatamängd token
+                        # (absent from both the Deldatamängder sheet and
+                        # DELDATAMANGD_TOKEN_MAP — e.g. a new workbook revision)
+                        # can't be resolved to a variant. WARN so the drop is
+                        # auditable, never silent; do NOT invent a mapping
+                        # (e.g. by order) — skip the member after warning. The
+                        # fix is always a curated token-map entry.
+                        yield IRWarning(
+                            entity_kind="variable",
+                            entity_id=variable_id,
+                            code="sos_deldatamangd_unresolved",
+                            detail=(
+                                f"{abbrev}/{v.name}: variable-sheet deldatamängd "
+                                f"{v.deldatamangd} has no Deldatamängder-sheet "
+                                "row; state dropped, add a DELDATAMANGD_TOKEN_MAP "
+                                "entry (A4.4 curation)"
+                            ),
+                        )
+                        continue
+                    targets.append((target_id, deldat_by_name.get(target_name or "")))
 
-            var_bound = (var_from, var_to)
-            deldat_bound = (deldat_from, deldat_to)
-            # P2#2: the deldatamängd window is ADVISORY; the variable (+ code)
-            # window is authoritative. `deldat_dropped` collects per-window
-            # contradictions so we WARN once per member (not per code/state).
-            deldat_dropped: list[bool] = []
-
-            if kodlista is None:
-                # Code-less state: one state over the variable window, with the
-                # deldat window applied only as an advisory bound.
-                window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
-                if window is None:
-                    continue
-                if dropped:
-                    deldat_dropped.append(True)
-                yield from _collect(
-                    IRVariableState(
-                        state_id=self._state_id(
-                            abbrev, variable_id, variant_id, window[0]
-                        ),
-                        variable_id=variable_id,
-                        register_variant_id=variant_id,
-                        valid_from=window[0] or _VALID_FROM_UNKNOWN,
-                        valid_to=window[1],
-                        data_type=_norm_data_type(v.data_type),
-                        data_length=None,
-                        delivery_column_name=col,
-                        value_set_id=None,
-                        value_set_version_label=None,
-                    )
-                )
-            elif entity_registry:
-                for obj in self._emit_entity_registry_state(
+            for variant_id, deldat in targets:
+                yield from self._emit_member_states(
                     abbrev=abbrev,
                     variable_id=variable_id,
                     variant_id=variant_id,
+                    deldat=deldat,
                     v=v,
-                    col=col,
+                    seen_alias=seen_alias,
                     kodlista=kodlista,
-                    var_bound=var_bound,
-                    deldat_bound=deldat_bound,
-                    deldat_dropped=deldat_dropped,
-                ):
-                    yield from _collect(obj)
-            else:
-                for obj in self._emit_windowed_states(
-                    abbrev=abbrev,
-                    variable_id=variable_id,
-                    variant_id=variant_id,
-                    v=v,
-                    col=col,
-                    kodlista=kodlista,
-                    var_bound=var_bound,
-                    deldat_bound=deldat_bound,
-                    deldat_dropped=deldat_dropped,
-                ):
-                    yield from _collect(obj)
-
-            if deldat_dropped:
-                yield IRWarning(
-                    entity_kind="variable",
-                    entity_id=variable_id,
-                    code="sos_deldatamangd_bound_contradicts_variable",
-                    detail=(
-                        f"{abbrev}/{v.name}: deldatamängd window "
-                        f"[{deldat_from or ''}..{deldat_to or ''}] excludes "
-                        f"variable window [{var_from or ''}..{var_to or ''}]; "
-                        "kept variable window"
-                    ),
+                    entity_registry=entity_registry,
+                    collect=_collect,
                 )
 
         # Flush the reconciled states (one per state_id, widest valid_to).
@@ -1783,6 +1777,107 @@ class SOSAdapter:
                 )
                 self._tagged_states += 1
         yield from states_by_id.values()
+
+    def _emit_member_states(
+        self,
+        *,
+        abbrev: str,
+        variable_id: int,
+        variant_id: int,
+        deldat: SosDeldatamangd | None,
+        v: SosVariable,
+        seen_alias: set[tuple[int, str]],
+        kodlista: SosKodlista | None,
+        entity_registry: bool,
+        collect: Callable[[IRObject], Iterator[IRObject]],
+    ) -> Iterator[IRObject]:
+        """One (member, resolved variant) emission: the alias row plus the
+        member's era-windowed states routed through ``collect`` (the
+        `_emit_states` same-state_id reconciliation buffer)."""
+        var_from = _iso_bound(v.data_from, end=False)
+        var_to = _iso_bound(v.data_to, end=True)
+        deldat_from = _iso_bound(deldat.data_from, end=False) if deldat else None
+        deldat_to = _iso_bound(deldat.data_to, end=True) if deldat else None
+
+        # variable_alias: the delivery column == the variable name for SOS.
+        col = v.name
+        if col and (variant_id, col) not in seen_alias:
+            seen_alias.add((variant_id, col))
+            yield IRVariableAlias(
+                variable_id=variable_id,
+                register_variant_id=variant_id,
+                delivery_column_name=col,
+            )
+
+        var_bound = (var_from, var_to)
+        deldat_bound = (deldat_from, deldat_to)
+        # P2#2: the deldatamängd window is ADVISORY; the variable (+ code)
+        # window is authoritative. `deldat_dropped` collects per-window
+        # contradictions so we WARN once per (member, variant) — each variant
+        # carries its own deldat window — not per code/state.
+        deldat_dropped: list[bool] = []
+
+        if kodlista is None:
+            # Code-less state: one state over the variable window, with the
+            # deldat window applied only as an advisory bound.
+            window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
+            if window is None:
+                return
+            if dropped:
+                deldat_dropped.append(True)
+            yield from collect(
+                IRVariableState(
+                    state_id=self._state_id(abbrev, variable_id, variant_id, window[0]),
+                    variable_id=variable_id,
+                    register_variant_id=variant_id,
+                    valid_from=window[0] or _VALID_FROM_UNKNOWN,
+                    valid_to=window[1],
+                    data_type=_norm_data_type(v.data_type),
+                    data_length=None,
+                    delivery_column_name=col,
+                    value_set_id=None,
+                    value_set_version_label=None,
+                )
+            )
+        elif entity_registry:
+            for obj in self._emit_entity_registry_state(
+                abbrev=abbrev,
+                variable_id=variable_id,
+                variant_id=variant_id,
+                v=v,
+                col=col,
+                kodlista=kodlista,
+                var_bound=var_bound,
+                deldat_bound=deldat_bound,
+                deldat_dropped=deldat_dropped,
+            ):
+                yield from collect(obj)
+        else:
+            for obj in self._emit_windowed_states(
+                abbrev=abbrev,
+                variable_id=variable_id,
+                variant_id=variant_id,
+                v=v,
+                col=col,
+                kodlista=kodlista,
+                var_bound=var_bound,
+                deldat_bound=deldat_bound,
+                deldat_dropped=deldat_dropped,
+            ):
+                yield from collect(obj)
+
+        if deldat_dropped:
+            yield IRWarning(
+                entity_kind="variable",
+                entity_id=variable_id,
+                code="sos_deldatamangd_bound_contradicts_variable",
+                detail=(
+                    f"{abbrev}/{v.name}: deldatamängd window "
+                    f"[{deldat_from or ''}..{deldat_to or ''}] excludes "
+                    f"variable window [{var_from or ''}..{var_to or ''}]; "
+                    "kept variable window"
+                ),
+            )
 
     def _emit_entity_registry_state(
         self,

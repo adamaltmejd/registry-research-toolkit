@@ -647,24 +647,157 @@ def test_merged_member_open_end_not_silently_closed() -> None:
 
 
 def test_unresolved_deldatamangd_warns_and_drops_member() -> None:
-    # LOVA/LVM shape: the variable names a deldatamängd (A_LOVA) that has NO row
-    # in the Deldatamängder sheet. A4.3b WARNS (sos_deldatamangd_unresolved) and
-    # drops the member — it does NOT silently `continue`, and does NOT invent a
-    # variant mapping (A4.4 curation).
+    # The variable names a deldatamängd token that has NO row in the
+    # Deldatamängder sheet AND no DELDATAMANGD_TOKEN_MAP entry (a new workbook
+    # revision shape). The adapter WARNS (sos_deldatamangd_unresolved) and drops
+    # the member — it does NOT silently `continue`, and does NOT invent a
+    # variant mapping (the fix is a curated token-map entry).
     reg = _register(
         "lova",
-        [_var("KOMMUN", deldatamangd="A_LOVA", data_type="Sträng (text)")],
-        # the only sheet deldatamängd is a DIFFERENT name -> A_LOVA unresolved
+        [_var("KOMMUN", deldatamangd="A_UNCURATED", data_type="Sträng (text)")],
+        # the only sheet deldatamängd is a DIFFERENT name -> A_UNCURATED unresolved
         deldatamangder=(_deldat("LOVA"),),
     )
     objs, _ = _emit(reg)
     warns = [w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"]
     assert len(warns) == 1, "unresolved deldatamängd must WARN, not drop silently"
-    assert "A_LOVA" in (warns[0].detail or "")
-    assert "A4.4" in (warns[0].detail or "")
+    assert "A_UNCURATED" in (warns[0].detail or "")
+    assert "DELDATAMANGD_TOKEN_MAP" in (warns[0].detail or "")
     # the member is dropped -> no state for it (the var still gets an IRVariable
     # row, but zero variable_state rows)
     assert _of(objs, IRVariableState) == []
+
+
+# ---------------------------------------------------------------------------
+# #211: curated deldatamängd token -> variant mapping (LOVA/LVM/DORS/LMED)
+# ---------------------------------------------------------------------------
+
+
+def test_token_map_resolves_lova_token_to_variant() -> None:
+    # LOVA shape: the variable row keys on the A_LOVA extraction token; the
+    # Deldatamängder sheet names the variant 'LOVA'. The curated map routes the
+    # member there -> a real state + alias in that variant, no warning.
+    reg = _register(
+        "lova",
+        [_var("KOMMUN", deldatamangd="A_LOVA", data_type="Sträng (text)")],
+        deldatamangder=(_deldat("LOVA"),),
+    )
+    objs, _ = _emit(reg)
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    lova_variant = mint("sos", "lova", "LOVA")
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].register_variant_id == lova_variant
+    aliases = _of(objs, IRVariableAlias)
+    assert len(aliases) == 1
+    assert aliases[0].register_variant_id == lova_variant
+    assert aliases[0].delivery_column_name == "KOMMUN"
+
+
+def test_token_map_two_tokens_one_variant_merge() -> None:
+    # A_LOVA and A_LOVA_LISA both map to the single 'LOVA' variant (the workbook
+    # ships two same-named Deldatamängder rows that dedup to one minted variant).
+    # Same column + same window start -> ONE reconciled state, valid_to widened
+    # to the open-ended member.
+    reg = _register(
+        "lova",
+        [
+            _var("AGARKAT", deldatamangd="A_LOVA", data_from=1995, data_to=2022),
+            _var("AGARKAT", deldatamangd="A_LOVA_LISA", data_from=1995),
+        ],
+        deldatamangder=(_deldat("LOVA"),),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].register_variant_id == mint("sos", "lova", "LOVA")
+    assert states[0].valid_to is None, "open-ended member widens the merged state"
+
+
+def test_token_map_multi_target_emits_into_each_variant() -> None:
+    # LMED FDDD shape: one member whose token names BOTH variants -> a state and
+    # an alias in each.
+    reg = _register(
+        "lmed",
+        [_var("FDDD", deldatamangd="LMED VARA/LMED", data_type="Decimal")],
+        deldatamangder=(_deldat("LMED"), _deldat("LMED VARA")),
+    )
+    objs, _ = _emit(reg)
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    expected = {mint("sos", "lmed", "LMED"), mint("sos", "lmed", "LMED VARA")}
+    states = _of(objs, IRVariableState)
+    assert {s.register_variant_id for s in states} == expected
+    assert len(states) == 2
+    aliases = _of(objs, IRVariableAlias)
+    assert {a.register_variant_id for a in aliases} == expected
+    variables = _of(objs, IRVariable)
+    assert len(variables) == 1, "multi-target mapping shares ONE variable"
+
+
+def test_duplicate_deldat_name_contributes_no_advisory_window() -> None:
+    # LOVA ships TWO 'LOVA' Deldatamängder rows (one minted variant). The rows
+    # may carry different data_från/till windows and there is no curated
+    # token<->row pairing, so a duplicate name is AMBIGUOUS as an
+    # advisory-window source: members resolving there get NO deldat bound (the
+    # variable window stands), instead of silently inheriting whichever
+    # duplicate row happened to be parsed last.
+    reg = _register(
+        "lova",
+        [_var("KOMMUN", deldatamangd="A_LOVA", data_from=1995, data_to=2022)],
+        deldatamangder=(
+            _deldat("LOVA", data_from=2010, data_to=2012),
+            _deldat("LOVA", data_from=1995),
+        ),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    # last-row window (1995-) would clip nothing, first-row (2010-2012) would
+    # clip hard; with the ambiguity rule NEITHER applies — the variable window
+    # survives untouched and no contradiction warning fires.
+    assert (states[0].valid_from, states[0].valid_to) == ("1995-01-01", "2022-12-31")
+    assert [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code == "sos_deldatamangd_bound_contradicts_variable"
+    ] == []
+
+
+def test_token_map_target_missing_from_sheet_warns() -> None:
+    # Curation drift: the token IS mapped but its target name has no
+    # Deldatamängder-sheet row (e.g. the workbook dropped the view). The member
+    # warn-drops like any unresolved token instead of crashing or guessing.
+    reg = _register(
+        "dors",
+        [_var("ULORSAK", deldatamangd="DORS-COV")],
+        deldatamangder=(_deldat("DORS"),),  # COV_DORS_HERMES row absent
+    )
+    objs, _ = _emit(reg)
+    warns = [w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"]
+    assert len(warns) == 1
+    assert _of(objs, IRVariableState) == []
+
+
+def test_token_map_lvm_tokens_resolve() -> None:
+    # LVM shape: lowercase technical tokens map to the long Swedish row names.
+    ansok = "Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM"
+    reg = _register(
+        "lvm",
+        [_var("PNR", deldatamangd="lvm_ansok", data_from=1994)],
+        deldatamangder=(_deldat(ansok),),
+    )
+    objs, _ = _emit(reg)
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].register_variant_id == mint("sos", "lvm", ansok)
+    assert states[0].valid_from == "1994-01-01"
 
 
 # ---------------------------------------------------------------------------
