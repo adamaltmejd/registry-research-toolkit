@@ -1804,7 +1804,8 @@ class SOSAdapter:
         deldat_bound = (deldat_from, deldat_to)
         # P2#2: the deldatamängd window is ADVISORY; the variable (+ code)
         # window is authoritative. `deldat_dropped` collects per-window
-        # contradictions so we WARN once per member (not per code/state).
+        # contradictions so we WARN once per (member, variant) — each variant
+        # carries its own deldat window — not per code/state.
         deldat_dropped: list[bool] = []
 
         if kodlista is None:
