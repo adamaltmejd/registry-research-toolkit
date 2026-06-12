@@ -732,3 +732,158 @@ class TestDeliveryColumnHygiene:
             ).fetchall()
             assert state_cols == [(None,)], (name, state_cols)
         conn.close()
+
+
+# ── name-field read-boundary hygiene (#366) ────────────────────────────────
+
+
+class TestNameFieldHygiene:
+    """Variabelnamn / Registernamn / Registervariantnamn are trimmed at the
+    SCB read boundary, in lockstep with the join keys they participate in.
+
+    The real export carries ~1,503 padded Variabelnamn rows (plus 9
+    Registernamn / 12 Registervariantnamn). Untrimmed they are display noise
+    and a latent join fragility: the same value under a dirty spelling would
+    silently drop the `unika_join` / sensitivity-flag (`v.name =
+    us.variabelnamn`) / coalescer joins the moment one CSV is cleaned but not
+    the other."""
+
+    def test_variable_name_trimmed_and_clean_spelling_wins(
+        self, tmp_path: Path
+    ) -> None:
+        # Same var_id delivered as 'LanVar ' (2020, padded) then 'LanVar'
+        # (2021, clean): one variable either way (identity is (rid, var_id)),
+        # but the first-non-empty fill runs on trimmed values, so the shipped
+        # name carries no padding regardless of row order.
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Lan",
+                    cvid=9201,
+                    var_id=920,
+                    varname="LanVar ",
+                    year="2020",
+                    regver_id=110,
+                ),
+                _var_row(
+                    colname="Lan",
+                    cvid=9202,
+                    var_id=920,
+                    varname="LanVar",
+                    year="2021",
+                    regver_id=111,
+                ),
+            ],
+        )
+        names = conn.execute(
+            "SELECT name FROM variable WHERE provider_key = '920'"
+        ).fetchall()
+        # One variable, trimmed name — regardless of which row was read first.
+        # (variable_instance is dropped by build's end, so the per-cvid raw
+        # name is asserted indirectly: the cross-file join test below would
+        # break if `variable_instance.variabelnamn` were left untrimmed.)
+        assert names == [("LanVar",)]
+        conn.close()
+
+    def test_unika_flags_match_across_dirty_varname(self, tmp_path: Path) -> None:
+        # Registerinformation ships the clean Variabelnamn, unika the padded
+        # one. Both sides trim at read, so the sensitivity-flag join
+        # (`v.name = us.variabelnamn`) still matches.
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Lan",
+                    cvid=9201,
+                    var_id=920,
+                    varname="LanVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+            ],
+            unika_extra=[
+                PIPE.join(
+                    [
+                        "TESTREG",
+                        "Testregistret",
+                        "Individer",
+                        "Individer",
+                        "LanVar ",
+                        "Lan",
+                        "2020",
+                        "2020",
+                        "1",
+                        "0",
+                        "0",
+                    ]
+                ),
+            ],
+        )
+        sensitive = conn.execute(
+            "SELECT is_sensitive FROM variable WHERE provider_key = '920'"
+        ).fetchone()[0]
+        assert sensitive == 1
+        conn.close()
+
+    def test_trimmed_unika_collision_keeps_sensitivity_flag(
+        self, tmp_path: Path
+    ) -> None:
+        # Two unika rows collapse onto one trimmed PK ('LanVar' / 'LanVar '):
+        # the non-sensitive ('0') row is listed FIRST, the sensitive ('1') row
+        # second. A plain `INSERT OR IGNORE` would keep the first and drop the
+        # flag (a PII-scanner false negative); the flag-OR accumulation must
+        # preserve is_sensitive=1 regardless of row order.
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Lan",
+                    cvid=9201,
+                    var_id=920,
+                    varname="LanVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+            ],
+            unika_extra=[
+                PIPE.join(
+                    [
+                        "TESTREG",
+                        "Testregistret",
+                        "Individer",
+                        "Individer",
+                        "LanVar",
+                        "Lan",
+                        "2020",
+                        "2020",
+                        "0",
+                        "0",
+                        "0",
+                    ]
+                ),
+                PIPE.join(
+                    [
+                        "TESTREG",
+                        "Testregistret",
+                        "Individer",
+                        "Individer",
+                        "LanVar ",
+                        "Lan",
+                        "2020",
+                        "2020",
+                        "1",
+                        "0",
+                        "0",
+                    ]
+                ),
+            ],
+        )
+        # unika_summary is dropped by build's end; the surviving signal is
+        # is_sensitive. With `INSERT OR IGNORE` the first ('0') row would win
+        # and this would be 0.
+        sensitive = conn.execute(
+            "SELECT is_sensitive FROM variable WHERE provider_key = '920'"
+        ).fetchone()[0]
+        assert sensitive == 1
+        conn.close()

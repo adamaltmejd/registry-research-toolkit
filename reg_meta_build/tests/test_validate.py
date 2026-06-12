@@ -379,6 +379,37 @@ class TestValidateModule:
             result.failures
         )
 
+    def test_name_field_whitespace_fails(self, fixture_db: Path, tmp_path: Path):
+        """Hygiene invariant (#366): a variable/register/register_variant
+        `name` with surrounding whitespace fails — the SCB read boundary
+        trims, so any padded name in a shipped DB is a build regression.
+        Tab-padded deliberately: the check must match `str.strip()` semantics
+        (all whitespace), not SQLite TRIM() (ASCII space only)."""
+        for table, column in (
+            ("variable", "name"),
+            ("register", "name"),
+            ("register_variant", "name"),
+        ):
+            broken = tmp_path / f"broken_{table}.db"
+            broken.write_bytes(fixture_db.read_bytes())
+            conn = sqlite3.connect(broken)
+            rowid, val = conn.execute(
+                f"SELECT rowid, {column} FROM {table} "
+                f"WHERE {column} IS NOT NULL LIMIT 1"
+            ).fetchone()
+            conn.execute(
+                f"UPDATE {table} SET {column} = ? WHERE rowid = ?",
+                (val + "\t", rowid),
+            )
+            conn.commit()
+            conn.close()
+            result = validate_built_db(broken)
+            assert not result.passed, (table, column)
+            assert any(
+                f"{table}.{column} value(s) with surrounding whitespace" in f
+                for f in result.failures
+            ), (table, result.failures)
+
     def test_panel_refs_skip_when_no_variant_carries_them(self, fixture_db: Path):
         """A4.4c: the unmodified fixture carries NO panel refs (all variants have
         NULL panel keys), so the resolution check self-passes but still EMITS its

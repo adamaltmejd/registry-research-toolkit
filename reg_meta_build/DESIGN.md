@@ -373,13 +373,15 @@ actually DOS cp850 remnants undefined in cp1252:
 These are mapped during import. The build reads \~1M backbone rows from
 `Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
 
-### Kolumnnamn hygiene (read-boundary trim)
+### SCB free-text hygiene (read-boundary trim)
 
-A handful of `Kolumnnamn` values in the SCB exports carry stray surrounding whitespace
-(`'  Pris'`, `'Lan '` — \~112 rows in Registerinformation, \~19 in
-UnikaRegisterOchVariabler), and \~28K rows ship a *blank* `Kolumnnamn`. Both are
-normalized where the CSVs are read (`_import_registerinformation` / `_import_unika`; SOS
-strips at parse via `_clean`):
+SCB exports carry stray surrounding whitespace on a subset of free-text fields. All of
+it is normalized where the CSVs are read (`_import_registerinformation` /
+`_import_unika`; SOS strips at parse via `_clean`).
+
+**Kolumnnamn** (#364): a handful of values are padded (`'  Pris'`, `'Lan '` — \~112 rows
+in Registerinformation, \~19 in UnikaRegisterOchVariabler), and \~28K rows ship a
+*blank* `Kolumnnamn`.
 
 - **Trim**: a padded spelling is the same delivery column under a dirty name. Left
   untrimmed, `'Bransle'` vs `'  Bransle'` never co-occur as identical strings, so rule-2
@@ -394,8 +396,28 @@ strips at parse via `_clean`):
   row carries sensitivity flags, so skipping them loses nothing in
   `_populate_sensitivity_flags`.
 
-`validate_built_db` enforces both invariants (`[delivery-column hygiene]`): no
-surrounding whitespace on any shipped `delivery_column_name`, no empty-string values.
+**Name fields** (#366): `Variabelnamn` (\~1,503 padded rows / 644 distinct dirty
+spellings), `Registernamn` (9), and `Registervariantnamn` (12) are trimmed the same way.
+These are not display-only: they key the `unika_join`, the sensitivity-flag join
+(`v.name = us.variabelnamn`), and the coalescer (`vi.variabelnamn`). The two CSVs
+currently carry byte-identical dirty spellings so the joins match today, but trimming
+both sides in lockstep makes that robust against a future export that cleans one file
+only (a silent join-drop otherwise) and removes the display noise. The variable
+first-non-empty fill runs on the trimmed values, so a clean later spelling wins over a
+padded earlier one.
+
+**Remaining free-text** (definitions, descriptions, register/variant/version names and
+descriptions, population and object-type names/definitions, measurement unit, source-
+register text): trimmed too — pure display hygiene, no join impact. Left untrimmed they
+are cosmetic noise in `reg-meta` output and the webapp. Numeric / flag / date / id
+columns are not touched (whitespace there is never legitimate and they are parsed, not
+displayed).
+
+`validate_built_db` enforces the trim invariant on the join/identity fields:
+`[delivery-column hygiene]` (no surrounding whitespace on any shipped
+`delivery_column_name`, no empty strings) and `[name-field hygiene]` (no surrounding
+whitespace on `variable` / `register` / `register_variant` `name`). The remaining
+display fields are trimmed but not validated.
 
 ## Source-register resolution
 

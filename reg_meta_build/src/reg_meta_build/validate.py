@@ -155,6 +155,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
+        _check_name_field_hygiene(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
@@ -608,6 +609,50 @@ def _check_delivery_column_hygiene(
         )
     else:
         result.ok("no empty-string delivery_column_name")
+
+
+def _check_name_field_hygiene(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """No `variable` / `register` / `register_variant` `name` ships with
+    surrounding whitespace.
+
+    The SCB exports carry stray leading/trailing spaces on a subset of name
+    fields (#366: ~1,503 Variabelnamn, 9 Registernamn, 12 Registervariantnamn
+    rows; 'Slag utbildning  ', 'Allmänna val ... '). All three are normalized
+    at the SCB read boundary (`_import_registerinformation` / `_import_unika`),
+    and the same values key the `unika_join` / sensitivity-flag
+    (`v.name = us.variabelnamn`) / coalescer joins — trimmed in lockstep so a
+    padded export can't silently shard those joins. A padded value in a
+    shipped DB is a read-boundary regression."""
+    result.section("[name-field hygiene]")
+    # Counted in Python, not SQL, to match `str.strip()` (all Unicode
+    # whitespace) rather than SQLite TRIM() (ASCII space only) — same
+    # definition of "trimmed" as the read boundary, or a tab-padded
+    # regression slips through. See `_check_delivery_column_hygiene`.
+    checks = [
+        ("variable", "name"),
+        ("register", "name"),
+        ("register_variant", "name"),
+    ]
+    for table, column in checks:
+        if table not in tables:
+            result.ok(f"{table} absent — {table}.{column} check skipped")
+            continue
+        untrimmed = sum(
+            1
+            for (val,) in conn.execute(
+                f"SELECT {column} FROM {table} WHERE {column} IS NOT NULL"
+            )
+            if val != val.strip()
+        )
+        if untrimmed:
+            result.fail(
+                f"{untrimmed} {table}.{column} value(s) with surrounding "
+                "whitespace (read-boundary trim regression?)"
+            )
+        else:
+            result.ok(f"no {table}.{column} with surrounding whitespace")
 
 
 def _check_panel_refs_resolve(
