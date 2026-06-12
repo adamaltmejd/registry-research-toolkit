@@ -155,6 +155,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_open_ended_sentinel(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
+        _check_panel_refs_have_states(conn, result, tables)
         _check_minted_id_bands(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
@@ -623,6 +624,79 @@ def _check_panel_refs_resolve(
     else:
         result.ok(
             f"all {n_refs:,} panel ref(s) across {len(rows):,} variant(s) resolve"
+        )
+
+
+def _check_panel_refs_have_states(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """#287: every curated panel reference must have ``variable_state`` rows in
+    the variant it decorates — not just resolve to a register-scoped slug.
+
+    `_check_panel_refs_resolve` (above) catches *dangling* refs; this is the
+    deeper mis-point class it is blind to: a key resolving to a sibling
+    fragment or register-mate whose states all live in OTHER variants. Such a
+    key passes resolution but renders an empty panel axis in the webapp —
+    the #285 audit found 97 of these manually. Requiring >= 1 ``variable_state``
+    row with the variant's own ``register_variant_id`` pins the key to a column
+    that actually ships in that variant's delivery.
+
+    Same reference decoding as the resolution check: composite
+    ``panel_entity_key`` JSON arrays check element-wise; the literal
+    ``panel_time_key = "period"`` sentinel (delivery-aligned time, not a
+    variable) is exempt. A ref that doesn't resolve at all is the resolution
+    check's finding, not double-reported here (the NOT EXISTS would also fire,
+    but resolution failures fail the build first anyway).
+    """
+    result.section("[panel: entity key has states in the variant]")
+    if not {"register_variant", "variable", "variable_state"}.issubset(tables):
+        result.ok("panel tables absent — panel-states check skipped")
+        return
+    rows = conn.execute(
+        "SELECT register_variant_id, register_id, slug, "
+        "       panel_entity_key, panel_time_key "
+        "FROM register_variant "
+        "WHERE panel_entity_key IS NOT NULL OR panel_time_key IS NOT NULL"
+    ).fetchall()
+    if not rows:
+        result.ok("no variant carries panel refs — nothing to check")
+        return
+    failures: list[str] = []
+    n_refs = 0
+    for r in rows:
+        refs: list[tuple[str, str]] = []
+        entity = _decode_panel_entity_key(r["panel_entity_key"])
+        if isinstance(entity, tuple):
+            refs.extend(("panel_entity_key", s) for s in entity)
+        elif entity is not None:
+            refs.append(("panel_entity_key", entity))
+        time_key = r["panel_time_key"]
+        if time_key is not None and time_key != "period":
+            refs.append(("panel_time_key", time_key))
+        for field_name, slug in refs:
+            n_refs += 1
+            hit = conn.execute(
+                "SELECT 1 FROM variable v "
+                "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = ? AND v.slug = ? "
+                "  AND vs.register_variant_id = ? LIMIT 1",
+                (r["register_id"], slug, r["register_variant_id"]),
+            ).fetchone()
+            if hit is None:
+                failures.append(
+                    f"variant {r['register_variant_id']} ({r['slug']!r}, "
+                    f"register {r['register_id']}) {field_name} {slug!r} has no "
+                    "variable_state rows in that variant"
+                )
+    if failures:
+        for msg in failures[:10]:
+            result.fail(msg)
+        if len(failures) > 10:
+            result.info(f"... and {len(failures) - 10} more state-less panel ref(s)")
+    else:
+        result.ok(
+            f"all {n_refs:,} panel ref(s) across {len(rows):,} variant(s) "
+            "have states in their variant"
         )
 
 
