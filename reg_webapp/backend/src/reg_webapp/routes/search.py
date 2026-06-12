@@ -111,6 +111,10 @@ def _classification_result(r: dict) -> ClassificationSearchResult:
         fqid=r.get("fqid"),
         short_name=r.get("short_name"),
         name=r.get("classification_name"),
+        # Preserve the lone-member family hint (symmetric with variables) so a
+        # non-folded vintage member stays discoverable.
+        concept_group=r.get("concept_group"),
+        concept_group_label=r.get("concept_group_label"),
     )
 
 

@@ -72,7 +72,10 @@ def test_classification_leaf_hit(client):
         client.get("/api/search", params={"q": "SUN2020"}).json(), "classifications"
     )
     leaves = [r for r in g["results"] if r["type"] == "classification"]
-    assert any(r["fqid"] == "class/sun2020" for r in leaves)
+    hit = next(r for r in leaves if r["fqid"] == "class/sun2020")
+    # A lone member keeps its family hint (symmetric with variable leaves).
+    assert hit["concept_group"] == "sun"
+    assert hit["concept_group_label"]
 
 
 # ── concept-group folding (#322) ─────────────────────────────────────────────

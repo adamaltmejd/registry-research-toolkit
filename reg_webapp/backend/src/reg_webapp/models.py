@@ -556,12 +556,18 @@ class VariableSearchResult(BaseModel):
 
 class ClassificationSearchResult(BaseModel):
     """A classification hit (`classification_fts` short_name/name/name_en/
-    description — #350 activates this previously-unsearched index)."""
+    description — #350 activates this previously-unsearched index). When the hit
+    is a LONE member of a vintage group (the family didn't fold because only one
+    member matched), `concept_group`/`concept_group_label` annotate the family so
+    it stays discoverable — symmetric with `VariableSearchResult`; both None
+    otherwise."""
 
     type: Literal["classification"] = "classification"
     fqid: str | None
     short_name: str | None = None
     name: str | None = None
+    concept_group: str | None = None
+    concept_group_label: str | None = None
 
 
 class ConceptGroupSearchResult(BaseModel):

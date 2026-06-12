@@ -373,8 +373,30 @@
         "type": "object"
       },
       "ClassificationSearchResult": {
-        "description": "A classification hit (`classification_fts` short_name/name/name_en/\ndescription \u2014 #350 activates this previously-unsearched index).",
+        "description": "A classification hit (`classification_fts` short_name/name/name_en/\ndescription \u2014 #350 activates this previously-unsearched index). When the hit\nis a LONE member of a vintage group (the family didn't fold because only one\nmember matched), `concept_group`/`concept_group_label` annotate the family so\nit stays discoverable \u2014 symmetric with `VariableSearchResult`; both None\notherwise.",
         "properties": {
+          "concept_group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concept Group"
+          },
+          "concept_group_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concept Group Label"
+          },
           "fqid": {
             "anyOf": [
               {

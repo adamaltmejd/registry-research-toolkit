@@ -532,9 +532,17 @@ export interface components {
         /**
          * ClassificationSearchResult
          * @description A classification hit (`classification_fts` short_name/name/name_en/
-         *     description — #350 activates this previously-unsearched index).
+         *     description — #350 activates this previously-unsearched index). When the hit
+         *     is a LONE member of a vintage group (the family didn't fold because only one
+         *     member matched), `concept_group`/`concept_group_label` annotate the family so
+         *     it stays discoverable — symmetric with `VariableSearchResult`; both None
+         *     otherwise.
          */
         ClassificationSearchResult: {
+            /** Concept Group */
+            concept_group?: string | null;
+            /** Concept Group Label */
+            concept_group_label?: string | null;
             /** Fqid */
             fqid: string | null;
             /** Name */

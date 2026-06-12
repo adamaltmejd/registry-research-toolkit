@@ -190,6 +190,25 @@ def test_fts_special_chars_do_not_raise(db: sqlite3.Connection) -> None:
         search(db, q, field="description")
 
 
+def test_cli_display_row_projects_classification() -> None:
+    # A classification row carries short_name/classification_name/fqid, none in
+    # the mixed-type fallback columns — the CLI projector fills the generic
+    # columns so a `--type all` table doesn't render it blank (Codex P2).
+    from reg_meta.cli import _search_display_row
+
+    row = _search_display_row(
+        {
+            "type": "classification",
+            "fqid": "class/sun2020",
+            "short_name": "SUN2020",
+            "classification_name": "Svensk utbildningsnomenklatur",
+            "fts_rank": -1.0,
+        }
+    )
+    assert row["register_name"] == "SUN2020"
+    assert row["variable_name"] == "Svensk utbildningsnomenklatur"
+
+
 def test_empty_description_query_folds_nothing(
     db_with_cls_group: sqlite3.Connection,
 ) -> None:
