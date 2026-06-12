@@ -133,7 +133,12 @@ has a stable slot in the discriminated union without the variant being an FQID.
 
 **The `?period` query** on the catch-all. On a binding leaf, `?period=...` returns
 `{binding, states: [...]}` — the `resolve_at` subset, **uniform with `/states`** (so
-codegen sees one state-list type). `?variant` narrows to one variant;
+codegen sees one state-list type). The **#307 comma list form**
+(`?period=2005..2010,2015..2020`, an interrupted series — #340) resolves **per
+segment**, returning the `state_id`-deduped union: `parse_period_query` splits the wire
+into segments and the handler calls `resolve_at` once per segment — `resolve_at` never
+sees the list form (keeps the list grammar out of the separately-released reg_meta,
+mirroring `semantic.py`'s per-segment iteration). `?variant` narrows to one variant;
 `?value_set_version` narrows to one vintage (a read-only browse filter matched against
 `value_set_version_label` by `resolve_at`, **not** a path pin). The period query is
 **ignored** on non-binding kinds (the register / provider / classification node resolves
@@ -174,8 +179,13 @@ unit-testable in isolation.
 
 - **Period wire format**: int year (`2020` → `int`), period token (`HT2020` / `2020-Q3`
   / `2020-08` / `2018-12-31` → `str`), range (`<from>..<to>`, literal `..` →
-  `{"from","to"}` dict), `_default` sentinel. A bare year maps to `int` (the documented
-  year arm); every other token to `str`.
+  `{"from","to"}` dict), `_default` sentinel, and the **#307 comma list**
+  (`2005..2010,2015..2020` → one segment per member via `parse_period_query`; #340). A
+  bare year maps to `int` (the documented year arm); every other token to `str`. List
+  members follow the scalar grammar — no empty members, `_default` whole-value-only;
+  order/overlap are deliberately NOT gated (the route's union is order-insensitive, and
+  the sorted/disjoint rule belongs to the AUTHORED `Source.period`, enforced by
+  reg_schema's structural validator).
 - **`?variant` ADMITS `_default`** (a real `register_variant` slug, see
   reg_meta/DESIGN.md → Two-level variable model) UNLIKE the path guard (which rejects
   `_default` because it's not a path segment). `?value_set_version` is the
@@ -564,10 +574,14 @@ Rules, walking each source's `register_variant` + every binding:
   series; structurally sorted + disjoint, wire form comma-joined —
   `2005..2010,2015..2020`) resolves **per segment**: `period_outside_state_validity` and
   `range_period_partially_covered` fire per uncovered/under-covered segment (naming it),
-  while the representation/ambiguity/drift checks run on the `state_id`-deduped union of
-  every segment's states. `Catalog.resolve_at` (and the catalog `?period=` query) never
-  sees the list form — the catalog resolve endpoint learning the comma wire is a later,
-  separate step.
+  and the PER-INSTANT probes — co-existence/ambiguity, the co-delivered-value-set
+  backstop, the pinned representation's presence — also run per segment (the
+  whole-series union would false-positive on windows overlapping only BETWEEN segments).
+  Only the series-level properties — the resolved columns for steward admission and the
+  sequential-drift info — use the `state_id`-deduped union of every segment's states.
+  `Catalog.resolve_at` never sees the list form; since #340 the catalog `?period=` query
+  accepts the comma wire by doing the same per-segment resolve + union in the route (see
+  The `?period` query above).
 - The binding's `value_set` (a `class/<slug>` FQID) resolves to a known classification →
   else `value_set_missing` (error).
 
