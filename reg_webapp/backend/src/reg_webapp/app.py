@@ -28,7 +28,7 @@ from .limits import (
     RateLimitMiddleware,
 )
 from .middleware import ETagMiddleware
-from .routes import bundle, catalog, context, project
+from .routes import bundle, catalog, context, project, search
 from .stewards import load_catalog_index, load_steward
 
 if TYPE_CHECKING:
@@ -112,6 +112,9 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
     app.include_router(context.router)
     app.include_router(catalog.router)
+    # Global FTS search (#350) — a GET read, so it rides the same ETag/edge-cache
+    # axis as the catalog routes.
+    app.include_router(search.router)
     # A5.2b-ii write surface: project validate/order + bundle build. The ETag
     # middleware skips these (method gate); the cap + limiter gate them.
     app.include_router(project.router)

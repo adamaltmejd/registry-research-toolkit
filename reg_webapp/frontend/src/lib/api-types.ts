@@ -320,6 +320,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Search
+         * @description Search registers, variables (concept-folded, #322), and classifications
+         *     over the shipped FTS indexes. Each group is an independent reg_meta
+         *     `search(field="description")` call (one per type) so each carries its own
+         *     `total_count` and per-group `limit`. A query with no usable token returns the
+         *     three groups empty (total 0) — not a 422.
+         */
+        get: operations["get_search_api_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -491,6 +515,39 @@ export interface components {
             name: string;
         };
         /**
+         * ClassificationSearchGroup
+         * @description The `classifications` result group (leaf hits ⧺ folded vintage groups).
+         */
+        ClassificationSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "classifications";
+            /** Results */
+            results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
+            /** Total Count */
+            total_count: number;
+        };
+        /**
+         * ClassificationSearchResult
+         * @description A classification hit (`classification_fts` short_name/name/name_en/
+         *     description — #350 activates this previously-unsearched index).
+         */
+        ClassificationSearchResult: {
+            /** Fqid */
+            fqid: string | null;
+            /** Name */
+            name?: string | null;
+            /** Short Name */
+            short_name?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "classification";
+        };
+        /**
          * ConceptGroupMemberModel
          * @description A group member: the leaf's real FQID (binding or `class/<slug>`), its
          *     display name, and its facet assignments (empty on edge-group members).
@@ -524,6 +581,56 @@ export interface components {
              * @enum {string}
              */
             source: "edge" | "token" | "curated";
+        };
+        /**
+         * ConceptGroupSearchResult
+         * @description A folded concept-group row (#322): ≥2 sibling members matched OR the
+         *     group's own label matched, so the family collapses to one result. `kind` is
+         *     'variable' or 'classification' (which group bucket it belongs to);
+         *     `member_count` is the family's full size, `matched_count` how many members
+         *     the query hit, `label_matched` whether the group label/key matched directly.
+         *     `members` is the full facet-ordered member list (each a real leaf FQID) so
+         *     the SPA can expand the family inline — a group is NOT itself FQID-addressable.
+         */
+        ConceptGroupSearchResult: {
+            /** Group Key */
+            group_key: string;
+            /** Group Label */
+            group_label: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "variable" | "classification";
+            /**
+             * Label Matched
+             * @default false
+             */
+            label_matched: boolean;
+            /**
+             * Matched Count
+             * @default 0
+             */
+            matched_count: number;
+            /**
+             * Member Count
+             * @default 0
+             */
+            member_count: number;
+            /**
+             * Members
+             * @default []
+             */
+            members: components["schemas"]["ConceptGroupMemberModel"][];
+            /** Register */
+            register?: string | null;
+            /** Source */
+            source?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "group";
         };
         /**
          * ContextResponse
@@ -726,6 +833,41 @@ export interface components {
             purpose?: string | null;
         };
         /**
+         * RegisterSearchGroup
+         * @description The `registers` result group. `total_count` is the folded result count
+         *     for this group BEFORE the per-group display limit (so the SPA can show
+         *     "showing N of M").
+         */
+        RegisterSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "registers";
+            /** Results */
+            results: components["schemas"]["RegisterSearchResult"][];
+            /** Total Count */
+            total_count: number;
+        };
+        /**
+         * RegisterSearchResult
+         * @description A register hit (`register_fts` name/purpose).
+         */
+        RegisterSearchResult: {
+            /** Fqid */
+            fqid: string | null;
+            /** Name */
+            name?: string | null;
+            /** Purpose */
+            purpose?: string | null;
+            /**
+             * Type
+             * @default register
+             * @constant
+             */
+            type: "register";
+        };
+        /**
          * RelatedRefModel
          * @description A split-sibling edge (`variable_related_to` — see reg_meta_build/DESIGN.md →
          *     Build-time triage (SCB)) with its
@@ -768,6 +910,24 @@ export interface components {
              * @constant
              */
             kind: "root";
+        };
+        /**
+         * SearchResponse
+         * @description `GET /api/search?q=` — typed result groups over the shipped FTS indexes.
+         *     `query` echoes the raw user query; `groups` is the ordered list of typed
+         *     groups (see the `SearchGroup` union for the extension contract).
+         */
+        SearchResponse: {
+            /** Groups */
+            groups: (components["schemas"]["RegisterSearchGroup"] | components["schemas"]["VariableSearchGroup"] | components["schemas"]["ClassificationSearchGroup"])[];
+            /**
+             * Kind
+             * @default search
+             * @constant
+             */
+            kind: "search";
+            /** Query */
+            query: string;
         };
         /**
          * StatesResponse
@@ -892,6 +1052,48 @@ export interface components {
             register: string;
             /** Variable */
             variable: string;
+        };
+        /**
+         * VariableSearchGroup
+         * @description The `variables` result group (leaf hits ⧺ folded concept groups).
+         */
+        VariableSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "variables";
+            /** Results */
+            results: (components["schemas"]["VariableSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
+            /** Total Count */
+            total_count: number;
+        };
+        /**
+         * VariableSearchResult
+         * @description A variable hit (`variable_fts` name/definition/description). `register` is
+         *     the owning register's display name (context for the omnibox). When the hit is
+         *     a LONE member of a concept group (#322 — the family didn't fold because only
+         *     one member matched), `concept_group`/`concept_group_label` annotate the
+         *     family so it stays discoverable; both None otherwise.
+         */
+        VariableSearchResult: {
+            /** Concept Group */
+            concept_group?: string | null;
+            /** Concept Group Label */
+            concept_group_label?: string | null;
+            /** Definition */
+            definition?: string | null;
+            /** Fqid */
+            fqid: string | null;
+            /** Name */
+            name?: string | null;
+            /** Register */
+            register?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "variable";
         };
         /**
          * VariableStateModel
@@ -1384,6 +1586,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationResultModel"];
+                };
+            };
+        };
+    };
+    get_search_api_search_get: {
+        parameters: {
+            query: {
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

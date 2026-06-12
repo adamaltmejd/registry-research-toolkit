@@ -179,8 +179,11 @@ def _build_parser() -> argparse.ArgumentParser:
     search_p.add_argument(
         "--type",
         default="all",
-        choices=["register", "variable", "all"],
-        help="Filter results by entity type: register or variable (default: all).",
+        choices=["register", "variable", "classification", "all"],
+        help=(
+            "Filter results by entity type: register, variable, or "
+            "classification (default: all)."
+        ),
     )
     search_p.add_argument(
         "--register", default=None, help="Filter by register (name or ID)."
@@ -1544,6 +1547,8 @@ def _write_payload(
             cols = ["variable_name", "register_id", "register_name", "var_id"]
         elif types == {"doc"}:
             cols = ["variable_name", "display_name"]
+        elif types == {"classification"}:
+            cols = ["short_name", "classification_name", "fqid"]
         elif types == {"group"}:
             # Pure group fold (#322) — e.g. every hit was one month family.
             cols = [

@@ -157,6 +157,34 @@ def _state_overlaps_years(
 
 
 SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "all"})
+# `register`/`variable` partition the two FTS-backed leaf surfaces; `classification`
+# (#350) covers the third shipped FTS index (`classification_fts`), previously built
+# but unsearched (see DESIGN.md → FTS5 configuration). `all` spans every type.
+SEARCH_TYPES = frozenset({"register", "variable", "classification", "all"})
+
+# A "real" FTS token carries at least one unicode alphanumeric char; pure
+# punctuation tokenizes to nothing in unicode61 and would yield an empty phrase.
+_FTS_WORD_CHAR = re.compile(r"[^\W_]", re.UNICODE)
+
+
+def _fts_match_query(raw: str) -> str | None:
+    """Build a safe FTS5 MATCH expression from a raw user query.
+
+    Each whitespace token becomes a quoted prefix term (``"tok"*``): quoting
+    neutralizes every FTS5 operator (AND/OR/NOT/NEAR/-/:/^/parens/quotes) so
+    stray or hostile syntax can neither raise a ``SyntaxError`` nor change
+    semantics; the trailing ``*`` makes it a prefix match ("ink" → "inkomst").
+    Tokens are space-joined (implicit AND). Embedded double quotes are doubled
+    per FTS5 string-literal escaping. Diacritics are NOT folded here — unicode61
+    folds both the index AND query side (å→a), so a Python fold would be
+    redundant (and would double-fold). Returns None when no token carries an
+    alphanumeric char (empty / whitespace / punctuation-only)."""
+    terms = [
+        f'"{tok.replace(chr(34), chr(34) * 2)}"*'
+        for tok in raw.split()
+        if _FTS_WORD_CHAR.search(tok)
+    ]
+    return " ".join(terms) if terms else None
 
 
 def _filter_search_by_years(
@@ -249,23 +277,30 @@ def search(
     offset: int = 0,
     fold_groups: bool = True,
 ) -> dict[str, Any]:
-    """Search across registers and variables.
+    """Search across registers, variables, and classifications.
 
     field controls what is searched:
       - "datacolumn": column aliases (LIKE pattern match)
       - "varname": canonical variable names (LIKE pattern match)
-      - "description": FTS on variable/register descriptions
+      - "description": FTS over the shipped indexes — register name/purpose,
+        variable name/definition/description, and classification
+        short_name/name/name_en/description (#350)
       - "value": value codes and labels (LIKE pattern match)
       - "all": all of the above (default)
+
+    type filters which entity surfaces are returned ("register" / "variable" /
+    "classification" / "all"). Classifications are catalog-scoped, so a `register`
+    scope excludes them. Each register/variable/classification leaf row carries
+    its navigable `fqid` (None when the entity isn't slugged).
 
     fold_groups (#322): when hits land on ≥2 member variables of one concept
     group (see DESIGN.md → Concept groups), the sibling hits collapse into a
     single `type: "group"` result row (original hits under `matched`, the full
     member list under `members`); a lone member hit stays a leaf row annotated
     with `concept_group`/`concept_group_label`. Group LABELS match too — for
-    `field` in ("varname", "all"), a query matching a group's label/key emits
-    the group row even when no leaf row matches. Result-shaping only; folding
-    happens before pagination, so a group row counts as one result.
+    `field` in ("varname", "description", "all"), a query matching a group's
+    label/key emits the group row even when no leaf row matches. Result-shaping
+    only; folding happens before pagination, so a group row counts as one result.
 
     Returns {"total_count": int, "results": [...]}.
     Doc results are NOT included here — the CLI layer merges them separately.
@@ -278,6 +313,14 @@ def search(
             message=f"Invalid search field '{field}'. Valid: {sorted(SEARCH_FIELDS)}",
             remediation="Use --datacolumn, --varname, --description, --value, or --all-fields.",
         )
+    if type not in SEARCH_TYPES:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message=f"Invalid search type '{type}'. Valid: {sorted(SEARCH_TYPES)}",
+            remediation="Use --type register, variable, classification, or all.",
+        )
 
     reg_ids: set[int] | None = None
     if register:
@@ -288,9 +331,17 @@ def search(
 
     _REGISTER_TYPES = {"register"}
     _VARIABLE_TYPES = {"variable", "varname", "datacolumn", "value"}
+    _CLASSIFICATION_TYPES = {"classification"}
 
     all_results: list[dict[str, Any]] = []
     like_pattern = f"%{query}%"
+    # The FTS path (register/variable/classification indexes) takes a SAFE FTS5
+    # MATCH expression built from the raw query — quoted prefix terms that
+    # neutralize FTS operators and won't error on stray syntax (see
+    # `_fts_match_query`). The LIKE paths (datacolumn/varname/value/group-label)
+    # keep the RAW substring `like_pattern`. None = the query had no usable
+    # token, so the FTS indexes contribute nothing.
+    fts_query = _fts_match_query(query)
 
     if field in ("datacolumn", "all"):
         all_results.extend(_search_datacolumns(conn, like_pattern, reg_ids))
@@ -298,11 +349,15 @@ def search(
     if field in ("varname", "all"):
         all_results.extend(_search_varnames(conn, like_pattern, reg_ids))
 
-    if field in ("description", "all"):
+    if field in ("description", "all") and fts_query is not None:
         if type in ("register", "all"):
-            all_results.extend(_search_description_registers(conn, query, reg_ids))
+            all_results.extend(_search_description_registers(conn, fts_query, reg_ids))
         if type in ("variable", "all"):
-            all_results.extend(_search_description_variables(conn, query, reg_ids))
+            all_results.extend(_search_description_variables(conn, fts_query, reg_ids))
+        # Classifications are catalog-scoped (no register), so a `--register` scope
+        # excludes them — `reg_ids` set means "registers only".
+        if type in ("classification", "all") and reg_ids is None:
+            all_results.extend(_search_classifications(conn, fts_query))
 
     if field in ("value", "all"):
         all_results.extend(_search_values(conn, like_pattern, reg_ids))
@@ -311,17 +366,23 @@ def search(
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
     elif type == "variable":
         all_results = [r for r in all_results if r["type"] in _VARIABLE_TYPES]
+    elif type == "classification":
+        all_results = [r for r in all_results if r["type"] in _CLASSIFICATION_TYPES]
 
     if years:
         all_results = _filter_search_by_years(conn, all_results, years)
 
     if fold_groups:
-        # Label hits ride the varname-ish surface (a group label is a concept
-        # name). A group has no validity window of its own, so --years applies
-        # through its MEMBERS: a variable-kind label hit needs at least one
-        # member state overlapping the range (member hits were already year-
-        # filtered above; this guards the label-only path). Classification
-        # groups are exempt — their members carry no delivery windows.
+        # Label hits ride the NAME surface (a group label is a concept name).
+        # `varname`/`all` search names directly; `description` (#350, the
+        # FTS-index field driving /api/search) folds by concept too, so a query
+        # matching a family LABEL but no member's FTS text still surfaces the
+        # group — `_search_group_labels` is the only path that finds it. A group
+        # has no validity window of its own, so --years applies through its
+        # MEMBERS: a variable-kind label hit needs at least one member state
+        # overlapping the range (member hits were already year-filtered above;
+        # this guards the label-only path). Classification groups are exempt —
+        # their members carry no delivery windows.
         label_hits = (
             _search_group_labels(
                 conn,
@@ -330,7 +391,7 @@ def search(
                 type=type,
                 year_range=parse_year_range(years) if years else None,
             )
-            if field in ("varname", "all")
+            if field in ("varname", "description", "all")
             else []
         )
         all_results = _fold_concept_groups(conn, all_results, label_hits)
@@ -418,10 +479,18 @@ def _search_description_registers(
 ) -> list[dict[str, Any]]:
     # register_fts now mirrors the renamed columns: `name` + `purpose`.
     # `registerrubrik` was dropped per the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk).
+    # Join `register`/`provider` for the slugs so each hit carries its 2-seg
+    # `fqid` — the navigation key discovery surfaces (#350 /api/search) need and
+    # the flat search row otherwise lacks. `try_emit` yields None for an
+    # unslugged register (not catalog-addressable); additive for CLI consumers.
     rows = conn.execute(
-        "SELECT register_id, name, purpose, rank "
-        "FROM register_fts WHERE register_fts MATCH ? "
-        "ORDER BY rank",
+        "SELECT rf.register_id, rf.name, rf.purpose, rf.rank, "
+        "r.slug AS register_slug, p.slug AS provider_slug "
+        "FROM register_fts rf "
+        "JOIN register r ON r.register_id = rf.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE register_fts MATCH ? "
+        "ORDER BY rf.rank",
         (query,),
     ).fetchall()
     results = []
@@ -431,6 +500,9 @@ def _search_description_registers(
         results.append(
             {
                 "type": "register",
+                "fqid": try_emit(
+                    Fqid.register_fqid, r["provider_slug"], r["register_slug"]
+                ),
                 "register_id": r["register_id"],
                 "register_name": r["name"],
                 "register_purpose": r["purpose"],
@@ -446,14 +518,20 @@ def _search_description_variables(
     # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
     # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
     # the variable_id — carried for concept-group folding (#322).
+    # Join `variable`/`provider` for the slugs so each hit carries its 3-seg
+    # binding `fqid` (#350) — the navigation key /api/search needs. `v.slug` /
+    # `p.slug` feed `try_emit`, which yields None for an unslugged variable.
     rows = conn.execute(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
         "CAST(vf.provider_key AS INTEGER) AS var_id, "
         "vf.name AS variable_name, vf.definition AS variable_definition, "
         "vf.description AS variable_description, vf.rank, "
-        "r.name AS register_name, r.purpose AS register_purpose "
+        "r.name AS register_name, r.purpose AS register_purpose, "
+        "r.slug AS register_slug, p.slug AS provider_slug, v.slug AS variable_slug "
         "FROM variable_fts vf "
         "JOIN register r ON vf.register_id = r.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "JOIN variable v ON v.variable_id = vf.rowid "
         "WHERE variable_fts MATCH ? "
         "ORDER BY vf.rank",
         (query,),
@@ -465,6 +543,12 @@ def _search_description_variables(
         results.append(
             {
                 "type": "variable",
+                "fqid": try_emit(
+                    Fqid.binding_fqid,
+                    r["provider_slug"],
+                    r["register_slug"],
+                    r["variable_slug"],
+                ),
                 "register_id": r["register_id"],
                 "register_name": r["register_name"],
                 "register_purpose": r["register_purpose"],
@@ -531,6 +615,35 @@ def _search_values(
             }
         )
     return results
+
+
+def _search_classifications(
+    conn: sqlite3.Connection, query: str
+) -> list[dict[str, Any]]:
+    """FTS search over `classification_fts` (#350) — the third shipped FTS index,
+    built but previously unsearched (see DESIGN.md → FTS5 configuration). Indexes
+    `short_name` + `name` + `name_en` + `description`; `classification_fts.rowid`
+    is `classification.id` (content_rowid='id'), so the join recovers the `slug`
+    for the `class/<slug>` FQID. A NULL-slug classification isn't FQID-addressable
+    (`try_emit` → None), mirroring the catalog enumeration's slug filter."""
+    rows = conn.execute(
+        "SELECT cf.short_name, cf.name, c.slug, cf.rank "
+        "FROM classification_fts cf "
+        "JOIN classification c ON c.id = cf.rowid "
+        "WHERE classification_fts MATCH ? "
+        "ORDER BY cf.rank",
+        (query,),
+    ).fetchall()
+    return [
+        {
+            "type": "classification",
+            "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
+            "short_name": r["short_name"],
+            "classification_name": r["name"],
+            "fts_rank": r["rank"],
+        }
+        for r in rows
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -629,10 +742,12 @@ def _search_group_labels(
 
     Scope rules: variable groups respect a `--register` scope and pass the
     'variable' type filter (they fold variable hits); classification groups
-    are catalog-scoped, so they only surface unscoped (`type == "all"`, no
-    register filter). `type == "register"` excludes groups entirely. Under a
-    `year_range` (--years), a variable group needs at least one member state
-    overlapping the range — the group itself has no validity window."""
+    are catalog-scoped, so they only surface unscoped (`type` in
+    ("all", "classification"), no register filter). `type == "register"`
+    excludes groups entirely; `type == "classification"` excludes variable
+    groups. Under a `year_range` (--years), a variable group needs at least one
+    member state overlapping the range — the group itself has no validity
+    window."""
     if type == "register":
         return []
     rows = conn.execute(
@@ -650,6 +765,9 @@ def _search_group_labels(
             if reg_ids or type == "variable":
                 continue
         else:
+            # A variable-kind group has no place in a classifications-only query.
+            if type == "classification":
+                continue
             if reg_ids and r["register_id"] not in reg_ids:
                 continue
             if year_range is not None and not _group_member_state_in_years(

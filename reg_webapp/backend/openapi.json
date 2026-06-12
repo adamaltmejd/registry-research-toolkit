@@ -330,6 +330,97 @@
         "title": "ClassificationRootResponse",
         "type": "object"
       },
+      "ClassificationSearchGroup": {
+        "description": "The `classifications` result group (leaf hits \u29fa folded vintage groups).",
+        "properties": {
+          "group": {
+            "const": "classifications",
+            "default": "classifications",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "classification": "#/components/schemas/ClassificationSearchResult",
+                  "group": "#/components/schemas/ConceptGroupSearchResult"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ConceptGroupSearchResult"
+                }
+              ]
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "ClassificationSearchGroup",
+        "type": "object"
+      },
+      "ClassificationSearchResult": {
+        "description": "A classification hit (`classification_fts` short_name/name/name_en/\ndescription \u2014 #350 activates this previously-unsearched index).",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "short_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Short Name"
+          },
+          "type": {
+            "const": "classification",
+            "default": "classification",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "ClassificationSearchResult",
+        "type": "object"
+      },
       "ConceptGroupMemberModel": {
         "description": "A group member: the leaf's real FQID (binding or `class/<slug>`), its\ndisplay name, and its facet assignments (empty on edge-group members).",
         "properties": {
@@ -406,6 +497,85 @@
           "members"
         ],
         "title": "ConceptGroupModel",
+        "type": "object"
+      },
+      "ConceptGroupSearchResult": {
+        "description": "A folded concept-group row (#322): \u22652 sibling members matched OR the\ngroup's own label matched, so the family collapses to one result. `kind` is\n'variable' or 'classification' (which group bucket it belongs to);\n`member_count` is the family's full size, `matched_count` how many members\nthe query hit, `label_matched` whether the group label/key matched directly.\n`members` is the full facet-ordered member list (each a real leaf FQID) so\nthe SPA can expand the family inline \u2014 a group is NOT itself FQID-addressable.",
+        "properties": {
+          "group_key": {
+            "title": "Group Key",
+            "type": "string"
+          },
+          "group_label": {
+            "title": "Group Label",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "variable",
+              "classification"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label_matched": {
+            "default": false,
+            "title": "Label Matched",
+            "type": "boolean"
+          },
+          "matched_count": {
+            "default": 0,
+            "title": "Matched Count",
+            "type": "integer"
+          },
+          "member_count": {
+            "default": 0,
+            "title": "Member Count",
+            "type": "integer"
+          },
+          "members": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupMemberModel"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "register": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Register"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "type": {
+            "const": "group",
+            "default": "group",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "group_key",
+          "group_label"
+        ],
+        "title": "ConceptGroupSearchResult",
         "type": "object"
       },
       "ContextResponse": {
@@ -808,6 +978,83 @@
         "title": "RegisterResponse",
         "type": "object"
       },
+      "RegisterSearchGroup": {
+        "description": "The `registers` result group. `total_count` is the folded result count\nfor this group BEFORE the per-group display limit (so the SPA can show\n\"showing N of M\").",
+        "properties": {
+          "group": {
+            "const": "registers",
+            "default": "registers",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/RegisterSearchResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "RegisterSearchGroup",
+        "type": "object"
+      },
+      "RegisterSearchResult": {
+        "description": "A register hit (`register_fts` name/purpose).",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "type": {
+            "const": "register",
+            "default": "register",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "RegisterSearchResult",
+        "type": "object"
+      },
       "RelatedRefModel": {
         "description": "A split-sibling edge (`variable_related_to` \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)) with its\n`relation_kind`. `register` is the alias for `register_name` (see\n`VariableRefModel`) \u2014 avoids the `BaseModel.register` method shadow.",
         "properties": {
@@ -899,6 +1146,52 @@
           "children"
         ],
         "title": "RootResponse",
+        "type": "object"
+      },
+      "SearchResponse": {
+        "description": "`GET /api/search?q=` \u2014 typed result groups over the shipped FTS indexes.\n`query` echoes the raw user query; `groups` is the ordered list of typed\ngroups (see the `SearchGroup` union for the extension contract).",
+        "properties": {
+          "groups": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "classifications": "#/components/schemas/ClassificationSearchGroup",
+                  "registers": "#/components/schemas/RegisterSearchGroup",
+                  "variables": "#/components/schemas/VariableSearchGroup"
+                },
+                "propertyName": "group"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/RegisterSearchGroup"
+                },
+                {
+                  "$ref": "#/components/schemas/VariableSearchGroup"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationSearchGroup"
+                }
+              ]
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "kind": {
+            "const": "search",
+            "default": "search",
+            "title": "Kind",
+            "type": "string"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query",
+          "groups"
+        ],
+        "title": "SearchResponse",
         "type": "object"
       },
       "StatesResponse": {
@@ -1140,6 +1433,130 @@
           "variable"
         ],
         "title": "VariableRefModel",
+        "type": "object"
+      },
+      "VariableSearchGroup": {
+        "description": "The `variables` result group (leaf hits \u29fa folded concept groups).",
+        "properties": {
+          "group": {
+            "const": "variables",
+            "default": "variables",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "group": "#/components/schemas/ConceptGroupSearchResult",
+                  "variable": "#/components/schemas/VariableSearchResult"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/VariableSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ConceptGroupSearchResult"
+                }
+              ]
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "VariableSearchGroup",
+        "type": "object"
+      },
+      "VariableSearchResult": {
+        "description": "A variable hit (`variable_fts` name/definition/description). `register` is\nthe owning register's display name (context for the omnibox). When the hit is\na LONE member of a concept group (#322 \u2014 the family didn't fold because only\none member matched), `concept_group`/`concept_group_label` annotate the\nfamily so it stays discoverable; both None otherwise.",
+        "properties": {
+          "concept_group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concept Group"
+          },
+          "concept_group_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Concept Group Label"
+          },
+          "definition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Definition"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "register": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Register"
+          },
+          "type": {
+            "const": "variable",
+            "default": "variable",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "VariableSearchResult",
         "type": "object"
       },
       "VariableStateModel": {
@@ -1957,6 +2374,56 @@
           }
         },
         "summary": "Validate Project"
+      }
+    },
+    "/api/search": {
+      "get": {
+        "description": "Search registers, variables (concept-folded, #322), and classifications\nover the shipped FTS indexes. Each group is an independent reg_meta\n`search(field=\"description\")` call (one per type) so each carries its own\n`total_count` and per-group `limit`. A query with no usable token returns the\nthree groups empty (total 0) \u2014 not a 422.",
+        "operationId": "get_search_api_search_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "title": "Q",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Search"
       }
     }
   }
