@@ -21,6 +21,7 @@ Single source of truth: the period grammar is ``reg_meta.fqid.is_period`` /
     ?period=2018..2020        range         → Period dict {"from": 2018, "to": 2020}
     ?period=2020-Q1..2020-Q4  range         → Period dict {"from": "...", "to": "..."}
     ?period=_default          snapshot      → Period str "_default"
+    ?period=2005..2010,2015..2020  list     → one Period per comma member (#307/#340)
 
 A bare 4-digit year is mapped to ``int`` (matches ``resolve_at``'s int-year
 arm); every other token stays a ``str``. The range ``..`` separator yields the
@@ -46,6 +47,7 @@ if TYPE_CHECKING:
     from reg_meta.catalog import Period
 
 RANGE_SEP = ".."
+LIST_SEP = ","
 
 # A bare year token (`2020`) is the one period form `resolve_at` wants as an
 # `int` rather than a `str` (both `_period_bounds` arms produce identical bounds,
@@ -129,6 +131,34 @@ def parse_period(raw: str) -> Period:
         return {"from": _parse_endpoint(lo_raw), "to": _parse_endpoint(hi_raw)}
     # A single token: bare year → int, every other period form → str.
     return _parse_endpoint(raw)
+
+
+def parse_period_query(raw: str) -> list[Period]:
+    """Parse a raw ``?period=`` wire value into resolve SEGMENTS: the #307
+    comma-joined list form (``2005..2010,2015..2020``) yields one ``Period``
+    per member, a scalar value a one-segment list. The catalog route resolves
+    per segment and unions the states deduped by ``state_id`` —
+    ``Catalog.resolve_at`` never sees the list form, mirroring the semantic
+    validator's per-segment iteration (#340; also keeps the list grammar out
+    of the separately-released reg_meta).
+
+    Member rules mirror reg_schema's list rules SYNTACTICALLY: no empty
+    members, and ``_default`` is whole-value-only (the full-history sentinel
+    is not one piece of a series). Order/overlap are NOT gated — the union is
+    order-insensitive, and a browse query is ephemeral, unlike an authored
+    ``Source.period`` (where structural enforces sorted/disjoint).
+    """
+    if LIST_SEP not in raw:
+        return [parse_period(raw)]
+    members = raw.split(LIST_SEP)
+    if any(not member for member in members):
+        raise PeriodParamError(f"period list admits no empty members: {raw!r}")
+    if DEFAULT_VARIANT_SLUG in members:
+        raise PeriodParamError(
+            f"{DEFAULT_VARIANT_SLUG!r} cannot be a period list member "
+            f"(whole-value only): {raw!r}"
+        )
+    return [parse_period(member) for member in members]
 
 
 def parse_variant(raw: str) -> str:

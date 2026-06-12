@@ -1,4 +1,5 @@
 <script lang="ts">
+import PeriodListInput from "./PeriodListInput.svelte";
 import PeriodRangeInput from "./PeriodRangeInput.svelte";
 import {
   looksLikePeriod,
@@ -10,12 +11,15 @@ import {
 
 // RANGE-FIRST period selection (#308): the default UI is a grain-aware
 // from/to picker (PeriodRangeInput) — no token grammar knowledge required;
-// the wire grammar stays the SERIALIZATION. A "Text" escape hatch keeps the
-// free-text wire field (special tokens, `_default`, mixed-grain ranges) with
-// its ADVISORY-only hint — the server is the CANONICAL validator and submit
-// is never blocked. A "clear" button removes the period (full history). The
-// chosen value is emitted UP to BindingLeafView, which writes it to the URL
-// query (apply-on-submit; #306 named the affordance Apply).
+// the wire grammar stays the SERIALIZATION. "Segments" (#338/#340) is the
+// explicit interrupted-series opt-in (PeriodListInput → the #307 comma wire,
+// which the catalog `?period=` resolves per segment since #340). A "Text"
+// escape hatch keeps the free-text wire field (special tokens, `_default`,
+// mixed-grain ranges) with its ADVISORY-only hint — the server is the
+// CANONICAL validator and submit is never blocked. A "clear" button removes
+// the period (full history). The chosen value is emitted UP to
+// BindingLeafView, which writes it to the URL query (apply-on-submit; #306
+// named the affordance Apply).
 let {
   period,
   grains = undefined,
@@ -33,46 +37,71 @@ let {
   onclear: () => void;
 } = $props();
 
-// Mode: range-first; an ACTIVE period the range UI can't represent opens in
-// text mode (it must be visible/editable, not silently blanked).
-let textMode = $state(
-  // svelte-ignore state_referenced_locally — intentional one-time seed; the
-  // $effect below re-syncs on URL changes. Grains-aware: a period at a grain
-  // this variable doesn't offer must open in text mode too.
-  period !== null && period !== "" && !rangeRepresentable(period, grains),
-);
+type PickerMode = "range" | "list" | "text";
+
+// Mode inference: range-first; an ACTIVE comma list opens in Segments; any
+// other period the range UI can't represent opens in text mode (it must be
+// visible/editable, not silently blanked). Grains-aware: a period at a grain
+// this variable doesn't offer must open in text mode too.
+function inferMode(p: string | null): PickerMode {
+  if (p === null || p === "") {
+    return "range";
+  }
+  if (p.includes(",")) {
+    return "list";
+  }
+  return rangeRepresentable(p, grains) ? "range" : "text";
+}
+
+// svelte-ignore state_referenced_locally — intentional one-time seed; the
+// $effect below re-syncs on URL changes.
+let mode = $state<PickerMode>(inferMode(period));
 
 // ── Text mode (the wire-grammar escape hatch — unchanged semantics) ─────────
 // svelte-ignore state_referenced_locally — intentional one-time seed (the
 // $effect keeps it in sync with the URL afterward).
 let field = $state(periodFieldFromQuery(period));
 
-// ── Range mode ───────────────────────────────────────────────────────────────
-// The range input's latest emit (null while FROM is incomplete). The controls
-// remount via {#key period} so back/forward (or an external narrowing)
-// re-seeds them from the URL — and the $effect below re-syncs BOTH modes'
-// values on the same trigger (without it, Apply after back/forward would
-// re-submit the stale pre-navigation value).
+// ── Range + Segments modes ───────────────────────────────────────────────────
+// Each input's latest emit (null while incomplete/empty). The controls remount
+// via {#key period} so back/forward (or an external narrowing) re-seeds them
+// from the URL — and the $effect below re-syncs every mode's value on the same
+// trigger (without it, Apply after back/forward would re-submit the stale
+// pre-navigation value).
 let rangeWire = $state<string | null>(null);
+let listWire = $state<string | null>(null);
+
+/** The list input's seed for the CURRENT period: any non-sentinel wire (a
+ * scalar carries over as the first segment — the upgrade path); `_default`
+ * is not a segment and seeds empty. */
+function listSeed(p: string | null): string | null {
+  return p !== null && p !== "" && p !== "_default" ? p : null;
+}
+
 $effect(() => {
   field = periodFieldFromQuery(period);
-  rangeWire = period;
-  // Re-derive the mode too: back/forward can land on a period the range UI
-  // can't represent (`_default`, a mixed-grain range) — staying in range mode
-  // would show BLANK controls while Apply re-submits the invisible value.
-  textMode =
-    period !== null && period !== "" && !rangeRepresentable(period, grains);
+  // Only a range-REPRESENTABLE value seeds the range buffer: an active
+  // `_default`/comma/mixed-grain period must not sit invisibly behind blank
+  // range controls where a manual switch to Picker + Apply would re-submit
+  // it (the #347/#349 stale-buffer class) — Apply no-ops on null instead.
+  rangeWire =
+    period !== null && rangeRepresentable(period, grains) ? period : null;
+  listWire = listSeed(period);
+  // Re-derive the mode too: back/forward can land on a period the active UI
+  // can't represent (`_default`, a mixed-grain range, a comma list) — staying
+  // put would show BLANK controls while Apply re-submits the invisible value.
+  mode = inferMode(period);
 });
 
 // ADVISORY only (text mode): a non-empty field that doesn't match the grammar
 // shows a hint. Submit is NEVER gated on it.
 const advisoryInvalid = $derived(
-  textMode && field.trim() !== "" && !looksLikePeriod(field),
+  mode === "text" && field.trim() !== "" && !looksLikePeriod(field),
 );
 
 function submit(event: SubmitEvent): void {
   event.preventDefault();
-  if (textMode) {
+  if (mode === "text") {
     const value = periodQueryFromField(field);
     if (value === null) {
       onclear();
@@ -81,26 +110,37 @@ function submit(event: SubmitEvent): void {
     }
     return;
   }
-  if (rangeWire !== null) {
-    onsubmit(rangeWire);
+  const wire = mode === "list" ? listWire : rangeWire;
+  if (wire !== null) {
+    onsubmit(wire);
   }
 }
+
+const MODE_LABELS: Record<PickerMode, string> = {
+  range: "Picker",
+  list: "Segments",
+  text: "Text",
+};
 </script>
 
 <form class="period-picker" onsubmit={submit}>
   <div class="head">
     <span class="title" id="period-label">Period</span>
-    <button
-      type="button"
-      class="mode-toggle"
-      aria-pressed={textMode}
-      onclick={() => (textMode = !textMode)}
-    >
-      {textMode ? "Use the picker" : "Type a period"}
-    </button>
+    <div class="mode-toggles" role="group" aria-label="Period input mode">
+      {#each ["range", "list", "text"] as const as m (m)}
+        <button
+          type="button"
+          class="mode-toggle"
+          aria-pressed={mode === m}
+          onclick={() => (mode = m)}
+        >
+          {MODE_LABELS[m]}
+        </button>
+      {/each}
+    </div>
   </div>
 
-  {#if textMode}
+  {#if mode === "text"}
     <div class="row">
       <input
         id="period-input"
@@ -133,6 +173,30 @@ function submit(event: SubmitEvent): void {
         will confirm.
       </p>
     {/if}
+  {:else if mode === "list"}
+    <div class="row range-row">
+      <!-- Keyed on the URL period: back/forward or an external change
+           re-seeds the segments (the component itself seeds once at mount). -->
+      {#key period}
+        <PeriodListInput
+          value={listSeed(period)}
+          {grains}
+          onchange={(wire) => (listWire = wire)}
+        />
+      {/key}
+      <div class="actions">
+        <button type="submit">Apply</button>
+        {#if period !== null}
+          <button type="button" class="clear" onclick={() => onclear()}>
+            Clear
+          </button>
+        {/if}
+      </div>
+    </div>
+    <p class="muted help">
+      An interrupted series: add each segment, then Apply narrows to their
+      union.
+    </p>
   {:else}
     <div class="row range-row">
       <!-- Keyed on the URL period: back/forward or an external change
@@ -174,6 +238,10 @@ function submit(event: SubmitEvent): void {
   .title {
     font-weight: 600;
   }
+  .mode-toggles {
+    display: flex;
+    gap: 0.3rem;
+  }
   .mode-toggle {
     font: inherit;
     font-size: 0.75rem;
@@ -186,6 +254,11 @@ function submit(event: SubmitEvent): void {
   }
   .mode-toggle:hover {
     border-color: var(--accent);
+  }
+  .mode-toggle[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
   }
   .row {
     display: flex;

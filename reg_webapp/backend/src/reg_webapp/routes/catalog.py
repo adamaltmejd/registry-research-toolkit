@@ -50,6 +50,7 @@ from reg_meta.catalog import (
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
+    VariableState,
     VariantSummary,
 )
 from reg_meta.errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
@@ -105,7 +106,7 @@ from reg_webapp.period_param import (
     PeriodParamError,
     ValueSetVersionParamError,
     VariantParamError,
-    parse_period,
+    parse_period_query,
     parse_value_set_version,
     parse_variant,
 )
@@ -149,19 +150,22 @@ def _validated_fqid(fqid: str) -> ValidatedFqidPath:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-def _validated_period(period: str | None = None) -> Period | None:
+def _validated_period(period: str | None = None) -> list[Period] | None:
     """``?period`` allow-list as a pre-open dependency (see DESIGN.md → query
     allow-list (period_param.py)) — FastAPI resolves it
     before the handler body, so a malformed period (SQLi / traversal / NUL /
     percent-encoded) returns 422 **before** any connection opens (zero SQL, zero
-    opens). Holds no connection, so it's threadpool-safe. ``None`` (no query)
-    means "no period filter" — distinct from the parsed ``_default`` sentinel,
-    but the catch-all treats an absent ``?period`` as a plain (no-period) resolve,
-    not a `resolve_at`. reg_meta's ``_period_bounds`` is the SEMANTIC backstop."""
+    opens). Holds no connection, so it's threadpool-safe. Parses to resolve
+    SEGMENTS (#340): the #307 comma list form yields one ``Period`` per member,
+    a scalar a one-segment list — the handler resolves per segment and unions.
+    ``None`` (no query) means "no period filter" — distinct from the parsed
+    ``_default`` sentinel, but the catch-all treats an absent ``?period`` as a
+    plain (no-period) resolve, not a `resolve_at`. reg_meta's
+    ``_period_bounds`` is the SEMANTIC backstop."""
     if period is None:
         return None
     try:
-        return parse_period(period)
+        return parse_period_query(period)
     except PeriodParamError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
@@ -692,7 +696,7 @@ def get_binding_lineage_warnings(
 def get_catalog_node(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-    period: Period | None = Depends(_validated_period),
+    period: list[Period] | None = Depends(_validated_period),
     variant: str | None = Depends(_validated_variant),
     value_set_version: str | None = Depends(_validated_value_set_version),
 ) -> CatalogNode | StatesResponse:
@@ -708,7 +712,8 @@ def get_catalog_node(
     before `parse`.
 
     `?period` semantics: present + binding leaf → `{states: [...]}` (the
-    resolve_at subset, narrowed by `?variant` / `?value_set_version`). present +
+    resolve_at subset, narrowed by `?variant` / `?value_set_version`; the #307
+    comma list form resolves per segment, unioned + deduped by state_id). present +
     non-binding kind → IGNORED (resolve normally). absent on a binding leaf → the
     full node (full history) UNLESS a narrowing modifier (`?variant` /
     `?value_set_version`) is set: those are inert without `?period`, so they 422
@@ -758,17 +763,27 @@ def get_catalog_node(
             # just before resolve_at's Python `label == value_set_version` filter.
             resolved_vsv = "" if vsv == VALUE_SET_VERSION_NONE else vsv
             with _catalog_conn(request) as conn:
+                catalog = Catalog(conn)
+                # Resolve PER SEGMENT (#340) — `resolve_at` never sees the #307
+                # list form (mirrors `semantic._check_binding_period`). The
+                # union dedupes by `state_id` (one state can intersect several
+                # segments); insertion order keeps the per-segment resolve_at
+                # ordering, chronological across a sorted list.
+                states_by_id: dict[int, VariableState] = {}
                 try:
-                    states = Catalog(conn).resolve_at(
-                        parsed,
-                        period,
-                        variant=variant,
-                        value_set_version=resolved_vsv,
-                    )
+                    for segment in period:
+                        for s in catalog.resolve_at(
+                            parsed,
+                            segment,
+                            variant=variant,
+                            value_set_version=resolved_vsv,
+                        ):
+                            states_by_id.setdefault(s.state_id, s)
                 except RegMetaError as exc:
                     _http_4xx_from_regmeta(exc)
             return StatesResponse(
-                binding=str(parsed), states=[_state_model(s) for s in states]
+                binding=str(parsed),
+                states=[_state_model(s) for s in states_by_id.values()],
             )
 
     with _catalog_conn(request) as conn:

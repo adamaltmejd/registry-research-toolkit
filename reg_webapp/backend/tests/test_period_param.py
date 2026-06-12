@@ -16,6 +16,7 @@ from reg_webapp.period_param import (
     ValueSetVersionParamError,
     VariantParamError,
     parse_period,
+    parse_period_query,
     parse_value_set_version,
     parse_variant,
 )
@@ -73,6 +74,47 @@ def test_parse_period_accepts(raw: str, expected):
 def test_parse_period_rejects(raw: str):
     with pytest.raises(PeriodParamError):
         parse_period(raw)
+
+
+# The #307/#340 comma LIST wire → one Period SEGMENT per member; a scalar is a
+# one-segment list. `_default` is whole-value-only; members follow the scalar
+# grammar. Order/overlap are deliberately NOT gated (the route's union is
+# order-insensitive; sorted/disjoint is the AUTHORED Source.period's rule).
+_ACCEPT_PERIOD_QUERIES = [
+    ("2020", [2020]),
+    ("_default", ["_default"]),
+    ("2005..2010,2015..2020", [{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]),
+    ("2005..2010,2013,HT2018", [{"from": 2005, "to": 2010}, 2013, "HT2018"]),
+    ("2020,2015", [2020, 2015]),  # unsorted accepted — browse query, not authored
+]
+
+_REJECT_PERIOD_QUERIES = [
+    "2020,",  # trailing comma → empty member
+    ",2020",  # leading comma → empty member
+    "2020,,2021",  # empty middle member
+    ",",  # only empty members
+    "2005..2010,_default",  # the sentinel is whole-value-only
+    "_default,2020",  # ditto, position-independent
+    "2020,abc",  # bad member
+]
+
+
+@pytest.mark.parametrize(("raw", "expected"), _ACCEPT_PERIOD_QUERIES)
+def test_parse_period_query_accepts(raw: str, expected):
+    assert parse_period_query(raw) == expected
+
+
+@pytest.mark.parametrize("raw", _REJECT_PERIOD_QUERIES)
+def test_parse_period_query_rejects(raw: str):
+    with pytest.raises(PeriodParamError):
+        parse_period_query(raw)
+
+
+@pytest.mark.parametrize("raw", _REJECT_PERIODS)
+def test_parse_period_query_rejects_scalar_junk(raw: str):
+    # The scalar reject set flows through unchanged (one-segment path).
+    with pytest.raises(PeriodParamError):
+        parse_period_query(raw)
 
 
 # ?variant ADMITS `_default` (a real register_variant slug) UNLIKE the
