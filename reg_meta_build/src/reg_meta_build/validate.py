@@ -484,8 +484,10 @@ def _check_open_ended_sentinel(
     as a garbage token ('2016-01-01..9999-06-30') instead of an open
     window. The DDL only CHECKs length/ordering, so the validator pins
     exactness: any 9999-prefixed `valid_to` must be the sentinel itself.
-    Applies to both tables that carry ISO-date windows (`classification`'s
-    valid_to is an integer year, out of scope).
+    Prefix match, not a `>= '9999-01-01'` range: a malformed value like
+    '9999-00-00' sorts below January yet still misses the downstream
+    literal branch. Applies to both tables that carry ISO-date windows
+    (`classification`'s valid_to is an integer year, out of scope).
     """
     result.section("[window: open-ended valid_to sentinel]")
     for table in ("variable_state", "variable_state_lineage"):
@@ -494,7 +496,7 @@ def _check_open_ended_sentinel(
             continue
         bad = conn.execute(
             f"SELECT valid_to, COUNT(*) FROM {table} "
-            "WHERE valid_to >= '9999-01-01' AND valid_to != ? "
+            "WHERE valid_to LIKE '9999%' AND valid_to != ? "
             "GROUP BY valid_to ORDER BY valid_to LIMIT 5",
             (_VALID_TO_SENTINEL,),
         ).fetchall()

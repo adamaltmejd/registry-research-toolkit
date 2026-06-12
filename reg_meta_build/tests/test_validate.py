@@ -129,7 +129,11 @@ class TestValidateModule:
         self, fixture_db: Path, tmp_path: Path
     ):
         """Same exactness invariant on `variable_state_lineage.valid_to` (the
-        lineage edge windows carry the same '9999-12-31' open-end sentinel)."""
+        lineage edge windows carry the same '9999-12-31' open-end sentinel).
+
+        Plants '9999-00-00': malformed, sorts BELOW '9999-01-01', and lineage
+        has no date CHECK at all — so this locks the prefix match (a
+        `>= '9999-01-01'` range predicate would miss it)."""
         broken = tmp_path / "broken.db"
         broken.write_bytes(fixture_db.read_bytes())
         conn = sqlite3.connect(broken)
@@ -139,7 +143,7 @@ class TestValidateModule:
         conn.execute(
             "INSERT INTO variable_state_lineage "
             "(consumer_state_id, source_state_id, valid_from, valid_to) "
-            "VALUES (?, ?, '2000-01-01', '9999-06-30')",
+            "VALUES (?, ?, '2000-01-01', '9999-00-00')",
             (state_id, state_id),
         )
         conn.commit()
@@ -147,7 +151,7 @@ class TestValidateModule:
         result = validate_built_db(broken)
         assert not result.passed
         assert any(
-            "variable_state_lineage" in f and "9999-06-30" in f for f in result.failures
+            "variable_state_lineage" in f and "9999-00-00" in f for f in result.failures
         ), result.failures
 
     def test_var_year_codes_anchor_self_skips_on_fixture(self, fixture_db: Path):
