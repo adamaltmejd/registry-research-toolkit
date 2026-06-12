@@ -1134,8 +1134,11 @@ sentinel). `seed-slugs` proposes defaults from SCB `Tabelldefinitioner.sql` PK
 declarations and `Identifierare.csv` (SOS: `is_join_variable` annotations); a curator
 confirms. These are grammar-checked at load so a typo fails loudly at build, not as a
 runtime JSON-decode crash when the webapp serves the variant. The structural validator
-(`validate.py::_check_panel_refs_resolve`) additionally fails the build if a panel key
-does not resolve to a real `variable.slug` in the variant's own register.
+fails the build if a panel key does not resolve to a real `variable.slug` in the
+variant's own register (`validate.py::_check_panel_refs_resolve`) or resolves but has no
+`variable_state` rows in the variant itself (`_check_panel_refs_have_states`, #287 — a
+key pointing at a sibling fragment passes resolution yet renders an empty panel axis in
+the webapp; the `panel_time_key = "period"` sentinel is exempt from both).
 
 ## Concept-group derivation (#303)
 

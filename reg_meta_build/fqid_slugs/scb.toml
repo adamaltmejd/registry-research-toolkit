@@ -157,10 +157,12 @@ display_group = "Asylsökande i Sverige"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: the RTB-family identity has no states here; the bostadshushåll is keyed
+# by its dwelling — Lägenhetsnyckel (RNPLGH_RIDLGH), as in bostadsbestand.
 [register_variant."2.1080"]
 slug = "hushall"
 display_group = "Hushåll"
-panel_entity_key = "familjeidentitet-rtb-familj"
+panel_entity_key = "rnplgh-ridlgh"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -363,12 +365,11 @@ panel_time_grain = "delivery"
 [register."22"]
 slug = "ekonomiskt-bistand"
 
+# #287: panel keys removed — personnr lives only in bistandsmottagare; the household
+# rows carry only a within-delivery (Omgang, Lopnr) row number, no stable entity.
 [register_variant."22.73"]
 slug = "bistandshushall"
 display_group = "Biståndshushåll"
-panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 [register_variant."22.435"]
 slug = "bistandsmottagare"
@@ -379,12 +380,11 @@ panel_time_grain = "delivery"
 
 # (keep) Quarterly-statistics umbrella; siblings 22.73 (biståndshushåll)
 # and 22.435 (biståndsmottagare) carve out specific units.
+# #287: panel keys removed — personnr lives only in bistandsmottagare; this quarterly
+# variant has no identity column with states at all.
 [register_variant."22.508"]
 slug = "ekonomiskt-bistand"
 display_group = "Ekonomiskt bistånd, kvartalsstatistik"
-panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 # Befolkningens utbildning (Utbildningsregistret)
 [register."24"]
@@ -892,10 +892,12 @@ panel_entity_key = "fastighetsbeteckning"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: uuid-adr lives only in adresser-fastigheter; the address entity here
+# is Riksnyckel (RIDADRPL, the adressplats riksnyckel).
 [register_variant."70.249"]
 slug = "adresser"
 display_group = "Adresser"
-panel_entity_key = "uuid-adr"
+panel_entity_key = "riksnyckel"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -990,11 +992,13 @@ panel_time_grain = "delivery"
 [register."76"]
 slug = "bylbbs"
 
+# #287: the bygglov date column has no states here; this variant carries
+# Påbörjandeår/-månad (DatPab/ArManPab) as its start-of-construction time axis.
 [register_variant."76.190"]
 slug = "nybyggnad-av-bostader"
 display_group = "Nybyggnad av bostäder"
 panel_entity_key = "fastighetsbeteckning"
-panel_time_key = "datum-for-byggnationens-paborjan"
+panel_time_key = "paborjandear-manad"
 panel_time_grain = "row"
 
 [register_variant."76.191"]
@@ -1016,17 +1020,21 @@ display_group = "Byggnadsprisindex"
 [register."86"]
 slug = "hut"
 
+# #287: personnr (Eget personnummer) lives only in individ-2021; the 2003-2012
+# individual is the composite household löpnummer + within-household ordinal.
 [register_variant."86.390"]
 slug = "individ-2003-2012"
 display_group = "Individ 2003-2012"
-panel_entity_key = "personnr"
+panel_entity_key = ["lopnummer-kosthushall", "ordningsnummer-inom-kosthushallet"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: bubnrh lives only in the 2021 variants; the 2003-2012 household id is
+# Löpnummer, kosthushåll (LOPNR).
 [register_variant."86.391"]
 slug = "hushall-2003-2012"
 display_group = "Hushåll 2003-2012"
-panel_entity_key = "bubnrh"
+panel_entity_key = "lopnummer-kosthushall"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1085,12 +1093,11 @@ panel_time_grain = "delivery"
 [register."97"]
 slug = "hek"
 
+# #287: panel keys removed — bidnrh (hushållsidentitet) lives only in individregister;
+# no household id is registered for this variant's delivery.
 [register_variant."97.93"]
 slug = "kosthushall"
 display_group = "Kosthushåll"
-panel_entity_key = "bidnrh"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 [register_variant."97.99"]
 slug = "individregister"
@@ -1296,10 +1303,12 @@ panel_entity_key = "personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: personnummer lives only in sibling variants; this survey variant keys
+# respondents on Löpnummer (UENR).
 [register_variant."111.400"]
 slug = "intradet-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland högskoleexaminerade"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1310,10 +1319,12 @@ panel_entity_key = "personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: personnummer lives only in sibling variants; this survey variant keys
+# respondents on Löpnummer (lopnr).
 [register_variant."111.1301"]
 slug = "intradet-gymnasieavgangna-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade"
-panel_entity_key = "personnummer"
+panel_entity_key = "lopnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1355,10 +1366,12 @@ panel_entity_key = "peorgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: peorgnr lives only in sibling variants; the tax-rate rows are per
+# municipality — Kommun (kommunkod).
 [register_variant."115.1227"]
 slug = "primarkommun-region"
 display_group = "Kommunalskatter - primärkommun och region/landsting"
-panel_entity_key = "peorgnr"
+panel_entity_key = "kommun"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -1869,10 +1882,12 @@ slug = "godselmedelsanvandning"
 
 # (keep) Pre-2016 methodology variant (covers 2007-2013); paired with
 # 147.1339 for the fr.o.m. 2016 redesign — register-slug echo is historical.
+# #287: peorgnr lives only in the 2016 sibling; this variant keys companies
+# on Företagsidentitet (Ftgid).
 [register_variant."147.214"]
 slug = "godselmedelsanvandning"
 display_group = "Gödselmedelsanvändning i jordbruket 2007-2013"
-panel_entity_key = "peorgnr"
+panel_entity_key = "foretagsidentitet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -2050,12 +2065,11 @@ panel_entity_key = "person-organisationsnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: panel keys removed — velopnr lives only in fek-blankettvariabler-ve; this variant
+# registers no VE id (fenr identifies the parent företagsenhet, the wrong grain).
 [register_variant."168.282"]
 slug = "fek-slutdata-verksamhetsenhet"
 display_group = "FEK Slutdata (verksamhetsenhet)"
-panel_entity_key = "velopnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 [register_variant."168.283"]
 slug = "fek-slutdata-lokal"
@@ -2435,19 +2449,17 @@ panel_entity_key = "fastbet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: panel keys removed — fastbet lives only in privatagda-flerbostadshus; the HOA
+# rows register no identity column.
 [register_variant."197.394"]
 slug = "bostadsrattsforeningar"
 display_group = "Bostadsrättsföreningar"
-panel_entity_key = "fastbet"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
+# #287: panel keys removed — fastbet lives only in privatagda-flerbostadshus; the company
+# rows register no identity column.
 [register_variant."197.395"]
 slug = "allmannyttiga-bostadsforetag"
 display_group = "Allmännyttiga bostadsföretag"
-panel_entity_key = "fastbet"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 # Avgifter/hyror för nybyggda lägenheter
 [register."198"]
@@ -3356,10 +3368,12 @@ panel_entity_key = "afnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: afnr (Fastighetsnyckel) lives only in fastighetsinformation; the building
+# entity here is its official UUID (UUIDREGBYG).
 [register_variant."276.971"]
 slug = "byggnadsinformation"
 display_group = "Byggnadsinformation"
-panel_entity_key = "afnr"
+panel_entity_key = "uuidregbyg"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3374,17 +3388,21 @@ panel_time_grain = "delivery"
 slug = "distriktsinformation"
 display_group = "Distriktsinformation"
 
+# #287: afnr lives only in fastighetsinformation; the property key in this
+# variant is FNR (Fastighetsnyckel).
 [register_variant."276.1257"]
 slug = "inskrivningsinformation"
 display_group = "Inskrivningsinformation"
-panel_entity_key = "afnr"
+panel_entity_key = "fnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: afnr lives only in fastighetsinformation; the property key in this
+# variant is PFNR (Fastighetsnyckel).
 [register_variant."276.1258"]
 slug = "planinformation"
 display_group = "Planinformation"
-panel_entity_key = "afnr"
+panel_entity_key = "pfnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3392,12 +3410,11 @@ panel_time_grain = "delivery"
 [register."282"]
 slug = "bostadsbestand"
 
+# #287: panel keys removed — the dwelling key lives only in the actual-stock sibling;
+# the calculated stock is aggregate (4 variables, per-kommun).
 [register_variant."282.704"]
 slug = "bostadsbestand-kalkylerat"
 display_group = "Bostadsbestånd (kalkylerat)"
-panel_entity_key = "rnplgh-ridlgh"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 # (keep) Actual bostadsbestånd data; sibling 282.704 is the calculated
 # (kalkylerat) estimate variant.
@@ -3555,10 +3572,12 @@ panel_entity_key = "peorgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: peorgnr lives only in the KPI/TPI siblings; the PPI company panel id is
+# Företagsidentitet (Fo_id, 'företagets unika företagsnummer').
 [register_variant."296.1085"]
 slug = "ppi"
 display_group = "Prisindex i producent- och importled (PPI)"
-panel_entity_key = "peorgnr"
+panel_entity_key = "fo-id"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3967,10 +3986,12 @@ panel_entity_key = "personnummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: personnummer has no states here; the row entity is the biological parent
+# pair (personnrfar, personnrmor).
 [register_variant."349.1180"]
 slug = "antal-barn"
 display_group = "Antal barn"
-panel_entity_key = "personnummer"
+panel_entity_key = ["personnummer-far", "personnummer-mor"]
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -3995,12 +4016,11 @@ panel_entity_key = "personnummer-barn"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: panel keys removed — personnummer has no states here; the personakt rows
+# register no person id (only Omg/Postnr).
 [register_variant."349.1485"]
 slug = "personakt-flyttning"
 display_group = "Personakt - Flyttning"
-panel_entity_key = "personnummer"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 # Grönytor i och omkring tätorter
 [register."350"]
@@ -4207,12 +4227,11 @@ panel_time_grain = "delivery"
 [register."367"]
 slug = "tidsanvandning"
 
+# #287: panel keys removed — personnr lives only in tidsstudien; the survey variant
+# registers no respondent id.
 [register_variant."367.1321"]
 slug = "tidsanvandningsundersokningen"
 display_group = "Tidsanvändningsundersökningen"
-panel_entity_key = "personnr"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 [register_variant."367.1666"]
 slug = "tidsstudien"
@@ -4345,12 +4364,11 @@ panel_entity_key = "bidnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: panel keys removed — bidnrhb has states in 14 sibling FASIT variants but not
+# here; no household id is registered for this variant's delivery.
 [register_variant."371.1438"]
 slug = "kosthushallsregister"
 display_group = "Kosthushållsregister"
-panel_entity_key = "bidnrhb"
-panel_time_key = "period"
-panel_time_grain = "delivery"
 
 # SCB:s företagsregister
 [register."372"]
@@ -4786,17 +4804,21 @@ panel_time_grain = "delivery"
 [register."405"]
 slug = "barn-ulf"
 
+# #287: personnr (Bakgrund: personnummer) lives only in the 2023 variant; the
+# child identity here is BarnID (Bakgrund: identitet).
 [register_variant."405.450"]
 slug = "barn-ulf-10-18-ar"
 display_group = "Barn-ULF 10-18 år"
-panel_entity_key = "personnr"
+panel_entity_key = "barnid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: personnr (Bakgrund: personnummer) lives only in the 2023 variant; the
+# child identity here is BarnID (Bakgrund: identitet).
 [register_variant."405.1249"]
 slug = "barn-ulf-12-18-ar"
 display_group = "Barn-ULF 12-18 år"
-panel_entity_key = "personnr"
+panel_entity_key = "barnid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
@@ -4818,10 +4840,12 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+# #287: id-inst (Organisationsnummer) lives only in the arbetsställe variant; the
+# juridiska-enhet id here is SCBID (Person-/organisationsnummer).
 [register_variant."407.1706"]
 slug = "innovation-juridiska"
 display_group = "Innovation i offentlig sektor - Juridiska enheter"
-panel_entity_key = "id-inst"
+panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 

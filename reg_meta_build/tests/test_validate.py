@@ -422,6 +422,86 @@ class TestValidateModule:
             result.failures
         )
 
+    def test_panel_ref_resolves_but_stateless_in_variant_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#287: the strict check's signature mis-point — a key that RESOLVES
+        (the variable exists in the variant's register) but whose states all
+        live in a SIBLING variant. Variant 999 is added next to variant 10 in
+        register 1; `kon`'s states are in variant 10 only, so the resolution
+        check passes and the states check must FAIL."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        reg = conn.execute(
+            "SELECT register_id FROM register_variant WHERE register_variant_id = 10"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, "
+            "slug, name, panel_entity_key, panel_time_key, panel_time_grain) "
+            "VALUES (999, ?, 'sibling', 'Sibling', 'kon', 'period', 'delivery')",
+            (reg,),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "panel_entity_key 'kon' has no variable_state rows in that variant" in f
+            for f in result.failures
+        ), result.failures
+        # The resolution check must NOT have fired — the slug resolves fine.
+        assert not any("resolves to no variable.slug" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_panel_ref_with_states_in_variant_passes_strict(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#287: `kon` carries states in variant 10 itself, so the strict check
+        emits its [OK] line (and the period time-key sentinel stays exempt)."""
+        ok_db = tmp_path / "ok.db"
+        ok_db.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(ok_db)
+        conn.execute(
+            "UPDATE register_variant SET panel_entity_key = 'kon', "
+            "panel_time_key = 'period' WHERE register_variant_id = 10"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(ok_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[panel: entity key has states in the variant]" in report
+        assert "have states in their variant" in report
+
+    def test_panel_ref_composite_stateless_element_fails_strict(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#287: composite keys check element-wise in the strict pass too. Both
+        elements resolve in register 1, but only `kon` has states in the
+        sibling variant (none) — both elements fail the states check while the
+        resolution check stays clean."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        reg = conn.execute(
+            "SELECT register_id FROM register_variant WHERE register_variant_id = 10"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, "
+            "slug, name, panel_entity_key) VALUES (998, ?, 'sib2', 'Sib2', ?)",
+            (reg, json.dumps(["kon"])),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "panel_entity_key 'kon' has no variable_state rows" in f
+            for f in result.failures
+        ), result.failures
+
 
 class TestBuildDbProvidersDefault:
     def test_cli_default_is_combined_scb_sos(self):
