@@ -77,6 +77,38 @@ def test_provider_register_coverage(db: sqlite3.Connection) -> None:
     assert lisa.open_ended is True
 
 
+def test_multistate_fan_out() -> None:
+    """A variable with multiple states + a register with multiple variables: the
+    GROUP BY aggregates stay correct under the LEFT JOIN fan-out (MIN/MAX span
+    all states, COUNT(DISTINCT) doesn't double-count)."""
+    conn = build_slugged_db()  # scb/lisa/kon, one open-ended state
+    add_variable(conn, register_id=1, var_id=300, name="Multi", slug="multi")
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="multi",
+        register_variant_id=10,
+        valid_from="2000-01-01",
+        valid_to="2005-12-31",
+    )
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="multi",
+        register_variant_id=10,
+        valid_from="2008-01-01",
+        valid_to="2012-12-31",
+    )
+    cov = Catalog(conn).register_variable_coverage("scb", "lisa")
+    assert cov["multi"].state_count == 2
+    assert cov["multi"].coverage_from == "2000-01-01"
+    assert cov["multi"].coverage_to == "2012-12-31"  # MAX across both windows
+    assert cov["multi"].open_ended is False
+
+    reg = Catalog(conn).provider_register_coverage("scb")["lisa"]
+    assert reg.variable_count == 2  # kon + multi, NOT fanned out by 3 states
+
+
 def test_coverage_bounds_mapping() -> None:
     # (coverage_from, coverage_to, open_ended).
     assert _coverage_bounds("2010-01-01", "9999-12-31") == ("2010-01-01", None, True)
