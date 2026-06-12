@@ -140,8 +140,9 @@ classification). Don't revive that path — extend the new packages.
 Green CI + one review is not sufficient to merge. Every PR must clear:
 
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
-  `reg-meta-build build-db --input-dir reg_meta_build/input_data/` (untracked seed; main
-  checkout only; validation runs by default), not just fixture tests.
+  `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
+  fixture tests. The untracked seed lives only in the main checkout — from a worktree,
+  point at it with an absolute `--input-dir <main-checkout>/reg_meta_build/input_data/`.
 - **Independent findings-only review** of the diff; fix every finding. Return findings
   to the maintainer — never post them as PR comments.
 - **Bot reviews**: Codex + Copilot auto-review open PRs — address their inline comments,
