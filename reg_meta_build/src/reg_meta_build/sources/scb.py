@@ -292,7 +292,20 @@ def _import_registerinformation(
                 },
             )
 
-            aliases.add((cvid, row["Kolumnnamn"]))
+            # SCB export hygiene: a handful of Kolumnnamn values carry stray
+            # surrounding whitespace ('  Pris', 'Lan ') — the same column under
+            # a dirty spelling, which shards rule-2 connectivity into bogus
+            # split siblings. Trim at the read boundary so every later join
+            # (unika_join → unika_summary, variable_alias_build) sees one
+            # spelling. `_import_unika` trims its side identically. A blank
+            # Kolumnnamn is "no delivery header", not an alias — skip it so
+            # `variable_alias` ships real headers only; the coalescer already
+            # treats those cvids as alias-less (NULL state column), and no
+            # blank-Kolumnnamn unika row carries sensitivity flags, so the
+            # `_populate_sensitivity_flags` join loses nothing.
+            kolumnnamn = row["Kolumnnamn"].strip()
+            if kolumnnamn:
+                aliases.add((cvid, kolumnnamn))
             populations.add(
                 (
                     rveid,
@@ -308,7 +321,7 @@ def _import_registerinformation(
                 (
                     row["Registernamn"],
                     row["Registervariantnamn"],
-                    row["Kolumnnamn"],
+                    kolumnnamn,
                     row["Variabelnamn"],
                 ),
                 (rid, rvid),
@@ -433,10 +446,15 @@ def _import_unika(
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
+            # Trimmed to mirror `_import_registerinformation`'s read-boundary
+            # trim — both the `unika_join` key lookup and the stored
+            # `unika_summary.kolumnnamn` must carry the same spelling as
+            # `variable_alias_build` for the sensitivity-flag join to match.
+            kolumnnamn = row["Kolumnnamn"].strip()
             key = (
                 row["Registernamn"],
                 row["Registervariantnamn"],
-                row["Kolumnnamn"],
+                kolumnnamn,
                 row["Variabelnamn"],
             )
             ids = unika_join.get(key)
@@ -447,7 +465,7 @@ def _import_unika(
                 (
                     register_id,
                     register_variant_id,
-                    row["Kolumnnamn"],
+                    kolumnnamn,
                     row["Variabelnamn"],
                     row["VersionForsta"],
                     row["VersionSista"],

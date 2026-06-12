@@ -14,7 +14,13 @@ import inspect
 import sqlite3
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import write_scb_input
+from _csv_fixtures import (
+    PIPE,
+    REGISTERINFORMATION_ROWS,
+    UNIKA_ROWS,
+    _var_row,
+    write_scb_input,
+)
 from reg_meta_build.db import DDL, build_db, seed_providers
 from reg_meta_build.dbdiff import diff_db_content
 from reg_meta_build.ir import (
@@ -557,3 +563,172 @@ class TestA43aFlipParity:
         ).fetchone()[0]
         conn.close()
         assert missing == 0
+
+
+# ── delivery-column read-boundary hygiene ──────────────────────────────────
+
+
+def _hygiene_build(
+    tmp_path: Path,
+    ri_extra: list[str],
+    unika_extra: list[str] | None = None,
+) -> sqlite3.Connection:
+    input_dir = tmp_path / "input"
+    write_scb_input(
+        input_dir,
+        registerinformation_rows=list(REGISTERINFORMATION_ROWS) + ri_extra,
+        unika_rows=list(UNIKA_ROWS) + (unika_extra or []),
+    )
+    db_dir = tmp_path / "db"
+    build_db(
+        input_dir=input_dir,
+        db_dir=db_dir,
+        skip_classifications=True,
+        skip_slugs=True,
+    )
+    return sqlite3.connect(db_dir / "reg_meta.db")
+
+
+class TestDeliveryColumnHygiene:
+    """Kolumnnamn is trimmed (and blanks skipped) at the SCB read boundary.
+
+    The real export carries a handful of whitespace-dirty spellings
+    ('  Pris', 'Lan ') and ~3.3K blank values. Untrimmed, the dirty
+    spellings shard rule-2 connectivity into bogus split-sibling variables
+    (corpus: 'Bransle' vs '  Bransle' split var 1721 into
+    bransleforbrukning + bransleforbrukning-2); blanks shipped as
+    empty-string `variable_alias` rows."""
+
+    def test_whitespace_twin_spellings_reunite(self, tmp_path: Path) -> None:
+        # Same var_id delivered as 'Lan ' (2020) then 'Lan' (2021): distinct
+        # raw spellings on distinct cvids — pre-trim these never co-occur, so
+        # rule 2 puts them in disjoint components and triage splits the
+        # variable. Post-trim they are one spelling, one component.
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Lan ",
+                    cvid=9001,
+                    var_id=900,
+                    varname="LanVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+                _var_row(
+                    colname="Lan",
+                    cvid=9002,
+                    var_id=900,
+                    varname="LanVar",
+                    year="2021",
+                    regver_id=111,
+                ),
+            ],
+        )
+        n_vars = conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE provider_key = '900'"
+        ).fetchone()[0]
+        assert n_vars == 1
+        aliases = conn.execute(
+            "SELECT DISTINCT va.delivery_column_name FROM variable_alias va "
+            "JOIN variable v ON v.variable_id = va.variable_id "
+            "WHERE v.provider_key = '900'"
+        ).fetchall()
+        assert aliases == [("Lan",)]
+        state_cols = conn.execute(
+            "SELECT DISTINCT vs.delivery_column_name FROM variable_state vs "
+            "JOIN variable v ON v.variable_id = vs.variable_id "
+            "WHERE v.provider_key = '900'"
+        ).fetchall()
+        assert state_cols == [("Lan",)]
+        conn.close()
+
+    def test_unika_flags_match_across_dirty_spelling(self, tmp_path: Path) -> None:
+        # Registerinformation ships the clean spelling, unika the padded one.
+        # Both sides trim at read, so the sensitivity-flag join
+        # (`va.delivery_column_name = us.kolumnnamn`) still matches.
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Lan",
+                    cvid=9001,
+                    var_id=900,
+                    varname="LanVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+            ],
+            unika_extra=[
+                PIPE.join(
+                    [
+                        "TESTREG",
+                        "Testregistret",
+                        "Individer",
+                        "Individer",
+                        "LanVar",
+                        "Lan ",
+                        "2020",
+                        "2020",
+                        "1",
+                        "0",
+                        "0",
+                    ]
+                ),
+            ],
+        )
+        sensitive = conn.execute(
+            "SELECT is_sensitive FROM variable WHERE provider_key = '900'"
+        ).fetchone()[0]
+        assert sensitive == 1
+        conn.close()
+
+    def test_blank_kolumnnamn_is_not_an_alias(self, tmp_path: Path) -> None:
+        # A blank (or whitespace-only) Kolumnnamn means "no delivery header":
+        # the variable still builds, its state carries NULL, and NO
+        # variable_alias row ships (empty string is not a header).
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="",
+                    cvid=9101,
+                    var_id=910,
+                    varname="HeaderlessVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+                _var_row(
+                    colname="  ",
+                    cvid=9102,
+                    var_id=911,
+                    varname="PaddedBlankVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+            ],
+        )
+        for key, name in (("910", "HeaderlessVar"), ("911", "PaddedBlankVar")):
+            assert (
+                conn.execute(
+                    "SELECT COUNT(*) FROM variable WHERE provider_key = ?", (key,)
+                ).fetchone()[0]
+                == 1
+            ), name
+            assert (
+                conn.execute(
+                    "SELECT COUNT(*) FROM variable_alias va "
+                    "JOIN variable v ON v.variable_id = va.variable_id "
+                    "WHERE v.provider_key = ?",
+                    (key,),
+                ).fetchone()[0]
+                == 0
+            ), name
+            state_cols = conn.execute(
+                "SELECT DISTINCT vs.delivery_column_name FROM variable_state vs "
+                "JOIN variable v ON v.variable_id = vs.variable_id "
+                "WHERE v.provider_key = ?",
+                (key,),
+            ).fetchall()
+            assert state_cols == [(None,)], (name, state_cols)
+        conn.close()
