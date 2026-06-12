@@ -220,14 +220,15 @@ carries its navigable `fqid`; results within a group are pre-sorted by FTS rank.
   classification) so each group gets its own `total_count` + per-group `limit`.
   `field="description"` is reg_meta's FTS path ONLY — the LIKE-based datacolumn/varname/
   **value** fields are excluded, so codes are absent here (they're #352's own group).
-- **Input gates** (`_validated_query` / `_validated_limit` / `_has_searchable_token`): a
-  query is length-capped (422 over 200 chars) and NUL-rejected (422); `limit` is clamped
-  to \[1, 50\] (not 422'd). A blank / whitespace / punctuation-only query returns the
-  three groups EMPTY (200, not 422) — it never reaches reg_meta (whose LIKE label-fold
-  would otherwise turn `%%` into a match-everything). FTS-operator neutralization +
-  prefix-matching + diacritic folding all live in reg_meta (`_fts_match_query`); the
-  webapp passes the raw query through. The query reaches FTS only as a bound parameter
-  (no SQLi surface), so the gates guard cost/abuse, not injection.
+- **Input gates** (`query_input.validate_text_query` / `_validated_limit` /
+  `_has_searchable_token`): a query is length-capped (422 over 200 chars) and
+  NUL-rejected (422); `limit` is clamped to \[1, 50\] (not 422'd). A blank / whitespace
+  / punctuation-only query returns the three groups EMPTY (200, not 422) — it never
+  reaches reg_meta (whose LIKE label-fold would otherwise turn `%%` into a
+  match-everything). FTS-operator neutralization + prefix-matching + diacritic folding
+  all live in reg_meta (`_fts_match_query`); the webapp passes the raw query through.
+  The query reaches FTS only as a bound parameter (no SQLi surface), so the gates guard
+  cost/abuse, not injection.
 - **Golden-boost seam** (`_apply_golden_boost`): a no-op identity hook where #311's
   curated golden/starred boost will reorder within a group. Wired now so the ordering
   contract and call sites already exist.
@@ -237,6 +238,49 @@ carries its navigable `fqid`; results within a group are pre-sorted by FTS rank.
 - **Connection seam** (`conn.py`): the per-request read-only open (`catalog_conn`, the
   threadpool-safe pattern from #168) is shared with the catalog routes — extracted to
   `conn.py` so search doesn't import the catalog route module just for the connection.
+
+The shared `?q=` input gate (`query_input.validate_text_query`: length cap + NUL reject,
+both → 422) is reused by the docs endpoints below; per-group `?limit` is clamped, not
+422'd.
+
+## Docs library endpoints (`routes/docs.py`)
+
+`GET /api/docs/*` (#354) exposes the prebuilt `reg_meta_docs.db` FTS index — already
+baked into the deployed container (the Dockerfile asserts it) but previously unopened by
+the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get` /
+`doc_registers`); no new query logic beyond plumbing + the response policy.
+
+- **Endpoints**: `GET /api/docs/search?q=&register=&limit=&offset=` (register-scoped
+  optional), `GET /api/docs/doc/{identifier}` (by variable name or filename), and
+  `GET /api/docs/for-variable?q=&register=` (the "mentioned in documentation"
+  variable-leaf hook).
+- **Policy — excerpts, never full text**: the detail endpoint returns metadata + a
+  `source` pointer + a BOUNDED `excerpt` (first `_EXCERPT_CHARS` of the cleaned body),
+  and search returns the FTS `snippet`. The full converted body is NEVER served
+  (marker+Gemini conversion quality + republication exposure). `source` is the SCB
+  source-document identifier; `source_url` is a seam (None today — the data carries an
+  identifier, not a URL; resolving it is future enrichment / a steward concern).
+- **Coverage distinction encoded in the response**: coverage is LISA-only today.
+  `ingested` is False when the docs index is absent entirely; the variable hook's
+  `register_ingested` is False when *that register* has no ingested docs — so a UI reads
+  "no docs ingested", never "this variable is undocumented". The variable hook's results
+  are flagged `fuzzy` (a name/provider_key text match, not an authoritative variable→doc
+  link).
+- **Optional DB / graceful degradation**: the docs DB is OPTIONAL. The boot seam
+  (`app._resolve_docs_db_path`) resolves + validates it once; on absence OR
+  schema-incompat it sets `app.state.docs_db_path = None` (never crashes — a broken docs
+  index must not take down the catalog API). Endpoints then return `ingested=False`
+  (search / for-variable) or 404 "not ingested" (doc get). When present, the per-request
+  open is `conn.docs_conn` (same threadpool-safe model as `catalog_conn`,
+  `check_schema=False`).
+- **Not yet folded into `/api/search`**: the `SearchGroup` union reserves a `docs` arm
+  (#350 contract), but wiring it in is deferred — the docs index is a *separate optional
+  DB* and its `ingested` degradation doesn't map onto a group's `total_count`/`results`
+  shape, so folding it into the omnibox endpoint would couple `/api/search` to a second
+  DB for no current consumer. The dedicated endpoints serve the need; the group joins
+  when the omnibox lands.
+- **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
+  edge cache key, in the body → ETag) — no per-route caching code.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
@@ -742,6 +786,9 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | GET    | `/api/context`                                | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                         |
   | GET    | `/api/catalog`                                | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                          |
   | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications`); extensible (codes/docs join as new groups). `?q=` required, `?limit=` per-group cap.                                                                                     |
+  | GET    | `/api/docs/search`                            | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                   |
+  | GET    | `/api/docs/doc/{identifier}`                  | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                              |
+  | GET    | `/api/docs/for-variable`                      | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                  |
   | GET    | `/api/catalog/{fqid}`                         | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). |
   | GET    | `/api/catalog/{provider}/{register}/variants` | The register's variant browser.                                                                                                                                                                                                                                            |
   | GET    | `/api/catalog/{fqid}/states`                  | Full state history for a binding.                                                                                                                                                                                                                                          |
@@ -762,8 +809,9 @@ the data provider couldn't tell representations apart. `period` serializes via t
 catalog `?period` wire form (range → `"<from>..<to>"`, snapshot → `"_default"`).
 Pluggable per-steward `order_template`s are remaining — see `REFACTOR_SPEC.md`.
 
-Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`) and
-`/api/docs/*` (#354). Global FTS search shipped as `GET /api/search` (#350).
+Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`). Global
+FTS search shipped as `GET /api/search` (#350); the docs library shipped as
+`/api/docs/*` (#354).
 
 ## §16 input-validation gates (security boundary)
 

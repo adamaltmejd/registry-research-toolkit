@@ -647,3 +647,78 @@ class SearchResponse(BaseModel):
     kind: Literal["search"] = "search"
     query: str
     groups: list[SearchGroup]
+
+
+# ── Docs library (#354; see DESIGN.md → Docs library endpoints) ─────────────
+# Read surface over the prebuilt `reg_meta_docs.db` FTS index. POLICY: serve
+# EXCERPTS + a pointer to the SCB source, NEVER the full converted body
+# (marker+Gemini conversion quality + republication exposure). Coverage is
+# LISA-only today — the response distinguishes "no docs INGESTED" (the index or
+# this register isn't covered) from "no doc found for this query/variable", so a
+# UI never implies a variable is undocumented when it's merely un-ingested.
+
+
+class DocResult(BaseModel):
+    """One documentation hit. `snippet` is a query-context EXCERPT (the FTS5
+    snippet), not full text. `source` is the SCB source-document identifier the
+    doc was derived from; `source_url` is a seam for a resolved SCB PDF link —
+    None today (the data carries an identifier, not a URL; URL resolution is
+    future enrichment / a steward concern). `fuzzy` marks a name/provider_key
+    match (the "mentioned in documentation" variable hook) as a heuristic text
+    match, not an authoritative variable→doc link. `register` is the wire key;
+    the Python attr is `register_name` (avoids the `BaseModel.register` shadow)."""
+
+    register_name: str | None = Field(default=None, alias="register")
+    variable: str | None = None
+    filename: str
+    display_name: str | None = None
+    tags: list[str] = []
+    snippet: str | None = None
+    source: str | None = None
+    source_url: str | None = None
+    fuzzy: bool = False
+
+
+class DocSearchResponse(BaseModel):
+    """`GET /api/docs/search`. `ingested` is False when the deployment ships no
+    docs index at all (`reg_meta_docs.db` absent) — "no docs ingested", distinct
+    from an empty `results` for a real query against a present index."""
+
+    kind: Literal["doc-search"] = "doc-search"
+    query: str
+    ingested: bool
+    total_count: int
+    results: list[DocResult]
+
+
+class DocDetail(BaseModel):
+    """`GET /api/docs/doc/{identifier}` — metadata + source pointer + a BOUNDED
+    `excerpt` (never the full converted body). `register` is the wire key
+    (Python attr `register_name`)."""
+
+    kind: Literal["doc"] = "doc"
+    register_name: str | None = Field(default=None, alias="register")
+    variable: str | None = None
+    filename: str
+    display_name: str | None = None
+    tags: list[str] = []
+    source: str | None = None
+    source_url: str | None = None
+    excerpt: str | None = None
+
+
+class DocVariableMentions(BaseModel):
+    """`GET /api/docs/for-variable` — the "mentioned in documentation" hook for a
+    variable leaf. `ingested` is whether the docs index exists at all;
+    `register_ingested` whether THIS register has any ingested docs — absence
+    means "no docs ingested for this register" (coverage is LISA-only), NOT "no
+    documentation exists". `results` are FUZZY name/provider_key text matches
+    (each `fuzzy=True`). `register` is the wire key (Python attr
+    `register_name`)."""
+
+    kind: Literal["doc-mentions"] = "doc-mentions"
+    ingested: bool
+    register_ingested: bool
+    register_name: str | None = Field(default=None, alias="register")
+    total_count: int
+    results: list[DocResult]

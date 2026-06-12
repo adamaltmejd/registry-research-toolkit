@@ -23,6 +23,7 @@ from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 import reg_meta.db
+import reg_meta.doc_db
 
 if TYPE_CHECKING:
     import sqlite3
@@ -38,6 +39,23 @@ def catalog_conn(request: Request) -> Iterator[sqlite3.Connection]:
     See the module docstring for the threadpool rationale. ``check_schema=False``:
     the lifespan already validated the schema at boot."""
     conn = reg_meta.db.open_db(request.app.state.db_path, check_schema=False)
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+@contextmanager
+def docs_conn(request: Request) -> Iterator[sqlite3.Connection]:
+    """A per-request read-only connection to the docs DB (#354), same
+    one-thread-per-request model as ``catalog_conn``. The caller MUST first
+    check ``request.app.state.docs_db_path is not None`` — the docs DB is
+    optional (the boot seam sets the path to None when absent / schema-incompat,
+    and the docs routes return a "not ingested" response in that case rather than
+    opening). ``check_schema=False``: the lifespan already validated it."""
+    conn = reg_meta.doc_db.open_doc_db(
+        request.app.state.docs_db_path, check_schema=False
+    )
     try:
         yield conn
     finally:
