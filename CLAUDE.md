@@ -135,6 +135,23 @@ classification). Don't revive that path — extend the new packages.
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
   pre-commit hook fails, fix the underlying issue rather than bypassing.
 
+## PR merge gate
+
+Green CI + one review is not sufficient to merge. Every PR must clear:
+
+- **Real-data validation** when build-pipeline or DB content changed: run
+  `reg-meta-build build-db --validate` against the real seed at
+  `reg_meta_build/input_data/` (untracked; main checkout only), not just fixture tests.
+- **Independent findings-only review** of the diff; fix every finding. Return findings
+  to the maintainer — never post them as PR comments.
+- **Bot reviews**: Codex + Copilot auto-review open PRs — address their inline comments,
+  waiting \~10 min after open/push for reviews to land. Codex's clean verdict is a 👍
+  reaction on the PR body from `chatgpt-codex-connector[bot]` with no review submitted;
+  reactions are invisible to `gh pr view` — check
+  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`.
+- **After merging**, verify the merge commit's tree matches the branch tip — the GitHub
+  API can capture a stale head and silently drop just-pushed commits.
+
 # Layout
 
 For per-package design rationale, see `<package>/DESIGN.md` (the reg_meta object model
