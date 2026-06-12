@@ -2,8 +2,18 @@
   "components": {
     "schemas": {
       "BindingChild": {
-        "description": "A binding child under a register node \u2014 a thin (fqid, name) entry, NOT\nthe embedded longitudinal record (that is only on the binding LEAF response).",
+        "description": "A binding child under a register node \u2014 a thin (fqid, name) entry, NOT\nthe embedded longitudinal record (that is only on the binding LEAF response).\n`coverage` (#351) is the per-variable study-window aggregate.",
         "properties": {
+          "coverage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VariableCoverageModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "fqid": {
             "title": "Fqid",
             "type": "string"
@@ -1160,9 +1170,58 @@
         "title": "RegMetaInfo",
         "type": "object"
       },
-      "RegisterNode": {
-        "description": "A register node (2-seg FQID, e.g. `scb/lisa`). Its `children` are the\nregister's bindings; `variants` is a forward-declared reference stub for\nA5.2's variant browser (a link, not data).",
+      "RegisterCoverageModel": {
+        "description": "Per-register coverage: `variable_count` slugged variables + the span over\nall their states.",
         "properties": {
+          "coverage_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage From"
+          },
+          "coverage_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage To"
+          },
+          "open_ended": {
+            "default": false,
+            "title": "Open Ended",
+            "type": "boolean"
+          },
+          "variable_count": {
+            "default": 0,
+            "title": "Variable Count",
+            "type": "integer"
+          }
+        },
+        "title": "RegisterCoverageModel",
+        "type": "object"
+      },
+      "RegisterNode": {
+        "description": "A register node (2-seg FQID, e.g. `scb/lisa`). Its `children` are the\nregister's bindings; `variants` is a forward-declared reference stub for\nA5.2's variant browser (a link, not data). `coverage` (#351) is populated\nwhen the node is a PROVIDER child (the register listing); None on the\nregister's own node.",
+        "properties": {
+          "coverage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RegisterCoverageModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "fqid": {
             "title": "Fqid",
             "type": "string"
@@ -1225,6 +1284,16 @@
             },
             "title": "Children",
             "type": "array"
+          },
+          "coverage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RegisterCoverageModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "fqid": {
             "title": "Fqid",
@@ -1671,6 +1740,45 @@
           "label"
         ],
         "title": "ValueSetMember",
+        "type": "object"
+      },
+      "VariableCoverageModel": {
+        "description": "Per-variable coverage over its `variable_state` windows.",
+        "properties": {
+          "coverage_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage From"
+          },
+          "coverage_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coverage To"
+          },
+          "open_ended": {
+            "default": false,
+            "title": "Open Ended",
+            "type": "boolean"
+          },
+          "state_count": {
+            "default": 0,
+            "title": "State Count",
+            "type": "integer"
+          }
+        },
+        "title": "VariableCoverageModel",
         "type": "object"
       },
       "VariableRefModel": {

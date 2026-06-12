@@ -282,6 +282,41 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
+## Coverage aggregates (#351)
+
+The catalog listing payloads carry an **additive** `coverage` object so a browse row
+shows its study-window span without resolving every state:
+
+- **Register-children** (`/api/catalog/{provider}/{register}` binding nodes):
+  per-variable `coverage` — `coverage_from` (min `valid_from`), `coverage_to` (max
+  finite `valid_to`; None when `open_ended`), `open_ended`, `state_count` (>1 in a
+  window = a break worth surfacing).
+- **Provider-children** (`/api/catalog/{provider}` register nodes): per-register
+  `coverage` — `variable_count` (slugged variables) + the span over all their states.
+
+**Query-time, not materialized — measured first** (the #351 design decision). The
+aggregates are one GROUP BY over `variable_state` per listing, in reg_meta
+(`Catalog.register_variable_coverage` / `provider_register_coverage`). Measured on the
+real v0.11.0 DB: the worst register (scb/ulf, 7.3k variables) computes per-variable
+coverage in \~9 ms (\~60 ms end-to-end serializing all 7.3k binding nodes); the heaviest
+provider (scb, 238 registers) \~34 ms end-to-end. Both sit behind the ETag/edge cache,
+so build-time materialized columns (which would ride the batched Lane R schema bump) are
+NOT needed.
+
+- **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
+  yet — it must tolerate its presence AND absence. It's None on a node that wasn't
+  enriched (e.g. a register's own node — coverage is populated only in the two LISTING
+  payloads).
+- **Open-ended sentinel**: `coverage_to` is None + `open_ended` True when the latest
+  window is the `9999-12-31` DDL sentinel ("ongoing"); a stateless variable is
+  `state_count == 0` with both bounds None (distinct from open-ended). The sentinel
+  constant (`reg_meta.catalog.OPEN_ENDED_VALID_TO`) is now single-sourced in reg_meta.
+- **Cadence DEFERRED**: #351 also lists a per-register "cadence", but reg_meta has no
+  cadence attribute and no clean derivation (a modal period-grain is fuzzy for
+  mixed-grain registers), and no UI consumes it yet. The load-bearing study-window
+  signal is span + counts; cadence is a follow-up (a defined source or a build-time
+  field) — not shipped here.
+
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (`/api/context`, the `/api/catalog` root + catch-all, the 7

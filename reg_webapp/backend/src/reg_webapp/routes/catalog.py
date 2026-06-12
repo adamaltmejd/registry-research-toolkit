@@ -42,6 +42,7 @@ from typing import TYPE_CHECKING
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from reg_meta.catalog import (
+    OPEN_ENDED_VALID_TO,
     Catalog,
     Period,
     ResolvedClassification,
@@ -86,6 +87,7 @@ from reg_webapp.models import (
     ProviderNode,
     ProviderResponse,
     RegisterChild,
+    RegisterCoverageModel,
     RegisterNode,
     RegisterResponse,
     RelatedRefModel,
@@ -94,6 +96,7 @@ from reg_webapp.models import (
     StatesResponse,
     SuccessorsResponse,
     ValueSetMember,
+    VariableCoverageModel,
     VariableRefModel,
     VariableStateModel,
     VariantModel,
@@ -201,9 +204,10 @@ def _http_404_if_not_found(exc: RegMetaError) -> None:
 # ── reg_meta dataclass → Pydantic mappers (1:1 wrappers; see DESIGN.md →
 # Pydantic boundary) ───────────────────────────────────────────────────────
 
-# The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
-# default). An open window has no finite period token (#321).
-OPEN_ENDED_VALID_TO = "9999-12-31"
+# `OPEN_ENDED_VALID_TO` (the open-ended `variable_state.valid_to` sentinel — an
+# open window has no finite period token, #321) is now imported from
+# `reg_meta.catalog`, the single source of the DDL-default constant (#351 added
+# it there for the coverage aggregates).
 
 
 def _state_model(state) -> VariableStateModel:
@@ -360,17 +364,51 @@ def _concept_group_model(group) -> ConceptGroupModel:
     )
 
 
+def _register_coverage_model(cov) -> RegisterCoverageModel | None:
+    if cov is None:
+        return None
+    return RegisterCoverageModel(
+        variable_count=cov.variable_count,
+        coverage_from=cov.coverage_from,
+        coverage_to=cov.coverage_to,
+        open_ended=cov.open_ended,
+    )
+
+
+def _variable_coverage_model(cov) -> VariableCoverageModel | None:
+    if cov is None:
+        return None
+    return VariableCoverageModel(
+        coverage_from=cov.coverage_from,
+        coverage_to=cov.coverage_to,
+        open_ended=cov.open_ended,
+        state_count=cov.state_count,
+    )
+
+
 def _provider_response(
     catalog: Catalog, resolved: ResolvedProvider
 ) -> ProviderResponse:
     provider_slug = resolved.fqid.provider
     assert provider_slug is not None
     registers = catalog.list_registers(provider_slug)
+    # #351 per-register coverage, keyed by register slug — one GROUP BY (~40 ms
+    # for scb's 238 registers), query-time behind the ETag/edge cache.
+    coverage = catalog.provider_register_coverage(provider_slug)
     return ProviderResponse(
         fqid=str(resolved.fqid),
         name=resolved.name,
         children=[
-            RegisterNode(fqid=str(r.fqid), name=r.name, purpose=r.purpose)
+            RegisterNode(
+                fqid=str(r.fqid),
+                name=r.name,
+                purpose=r.purpose,
+                # r.fqid.register is always set for a register summary; the guard
+                # keeps the dict key str-typed.
+                coverage=_register_coverage_model(
+                    coverage.get(r.fqid.register) if r.fqid.register else None
+                ),
+            )
             for r in registers
         ],
     )
@@ -383,10 +421,22 @@ def _register_response(
     register_slug = resolved.fqid.register
     assert provider_slug is not None and register_slug is not None
     bindings = catalog.list_bindings(provider_slug, register_slug)
+    # #351 per-variable coverage, keyed by variable slug — one GROUP BY (~9 ms on
+    # the worst real register, scb/ulf 7.3k vars), query-time behind ETag.
+    coverage = catalog.register_variable_coverage(provider_slug, register_slug)
     # A register's children are its bindings PLUS a `variants` reference
     # stub (the declared A5.2 variant-browser slot — a link, not data).
     children: list[RegisterChild] = [
-        BindingChild(fqid=str(b.fqid), name=b.name) for b in bindings
+        BindingChild(
+            fqid=str(b.fqid),
+            name=b.name,
+            # b.fqid.variable is always set for a binding summary; the guard keeps
+            # the dict key str-typed.
+            coverage=_variable_coverage_model(
+                coverage.get(b.fqid.variable) if b.fqid.variable else None
+            ),
+        )
+        for b in bindings
     ]
     children.append(VariantsRef(register_fqid=str(resolved.fqid)))
     return RegisterResponse(
