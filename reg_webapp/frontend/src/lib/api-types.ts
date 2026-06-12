@@ -424,8 +424,10 @@ export interface components {
          * BindingChild
          * @description A binding child under a register node — a thin (fqid, name) entry, NOT
          *     the embedded longitudinal record (that is only on the binding LEAF response).
+         *     `coverage` (#351) is the per-variable study-window aggregate.
          */
         BindingChild: {
+            coverage?: components["schemas"]["VariableCoverageModel"] | null;
             /** Fqid */
             fqid: string;
             /**
@@ -986,12 +988,36 @@ export interface components {
             schema_version: string;
         };
         /**
+         * RegisterCoverageModel
+         * @description Per-register coverage: `variable_count` slugged variables + the span over
+         *     all their states.
+         */
+        RegisterCoverageModel: {
+            /** Coverage From */
+            coverage_from?: string | null;
+            /** Coverage To */
+            coverage_to?: string | null;
+            /**
+             * Open Ended
+             * @default false
+             */
+            open_ended: boolean;
+            /**
+             * Variable Count
+             * @default 0
+             */
+            variable_count: number;
+        };
+        /**
          * RegisterNode
          * @description A register node (2-seg FQID, e.g. `scb/lisa`). Its `children` are the
          *     register's bindings; `variants` is a forward-declared reference stub for
-         *     A5.2's variant browser (a link, not data).
+         *     A5.2's variant browser (a link, not data). `coverage` (#351) is populated
+         *     when the node is a PROVIDER child (the register listing); None on the
+         *     register's own node.
          */
         RegisterNode: {
+            coverage?: components["schemas"]["RegisterCoverageModel"] | null;
             /** Fqid */
             fqid: string;
             /**
@@ -1015,6 +1041,7 @@ export interface components {
         RegisterResponse: {
             /** Children */
             children: (components["schemas"]["BindingChild"] | components["schemas"]["VariantsRef"])[];
+            coverage?: components["schemas"]["RegisterCoverageModel"] | null;
             /** Fqid */
             fqid: string;
             /**
@@ -1224,6 +1251,26 @@ export interface components {
             code: string;
             /** Label */
             label: string;
+        };
+        /**
+         * VariableCoverageModel
+         * @description Per-variable coverage over its `variable_state` windows.
+         */
+        VariableCoverageModel: {
+            /** Coverage From */
+            coverage_from?: string | null;
+            /** Coverage To */
+            coverage_to?: string | null;
+            /**
+             * Open Ended
+             * @default false
+             */
+            open_ended: boolean;
+            /**
+             * State Count
+             * @default 0
+             */
+            state_count: number;
         };
         /**
          * VariableRefModel

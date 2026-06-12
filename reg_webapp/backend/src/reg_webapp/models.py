@@ -109,15 +109,47 @@ class ClassificationRootNode(BaseModel):
     name: str = "Classifications"
 
 
+# ── Coverage aggregates (#351; see DESIGN.md → Coverage aggregates) ─────────
+# ADDITIVE, query-time browse aggregates over `variable_state`. `coverage` is
+# None on a node that wasn't enriched (e.g. a register's OWN node — coverage is
+# populated only in the PROVIDER-children and REGISTER-children listings). The
+# SPA does not read these yet and must tolerate their absence (payload-skew rule
+# #317). `coverage_to` is None when the latest window is open-ended (`open_ended`
+# True → "ongoing") OR there are no states; `state_count > 1` in a study window
+# signals a break.
+
+
+class VariableCoverageModel(BaseModel):
+    """Per-variable coverage over its `variable_state` windows."""
+
+    coverage_from: str | None = None
+    coverage_to: str | None = None
+    open_ended: bool = False
+    state_count: int = 0
+
+
+class RegisterCoverageModel(BaseModel):
+    """Per-register coverage: `variable_count` slugged variables + the span over
+    all their states."""
+
+    variable_count: int = 0
+    coverage_from: str | None = None
+    coverage_to: str | None = None
+    open_ended: bool = False
+
+
 class RegisterNode(BaseModel):
     """A register node (2-seg FQID, e.g. `scb/lisa`). Its `children` are the
     register's bindings; `variants` is a forward-declared reference stub for
-    A5.2's variant browser (a link, not data)."""
+    A5.2's variant browser (a link, not data). `coverage` (#351) is populated
+    when the node is a PROVIDER child (the register listing); None on the
+    register's own node."""
 
     kind: Literal["register"] = "register"
     fqid: str
     name: str | None = None
     purpose: str | None = None
+    coverage: RegisterCoverageModel | None = None
 
 
 class ClassificationNode(BaseModel):
@@ -135,11 +167,13 @@ class ClassificationNode(BaseModel):
 
 class BindingChild(BaseModel):
     """A binding child under a register node — a thin (fqid, name) entry, NOT
-    the embedded longitudinal record (that is only on the binding LEAF response)."""
+    the embedded longitudinal record (that is only on the binding LEAF response).
+    `coverage` (#351) is the per-variable study-window aggregate."""
 
     kind: Literal["binding"] = "binding"
     fqid: str
     name: str | None = None
+    coverage: VariableCoverageModel | None = None
 
 
 class VariantsRef(BaseModel):

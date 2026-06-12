@@ -84,6 +84,51 @@ class BindingSummary:
     name: str | None
 
 
+# The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
+# default). A window ending here is "ongoing" — it has no finite upper bound.
+OPEN_ENDED_VALID_TO = "9999-12-31"
+
+
+@dataclass(frozen=True)
+class VariableCoverage:
+    """Coverage aggregate for one variable over its `variable_state` windows
+    (#351): the study-window signal a browse row needs without resolving every
+    state. `coverage_from` is the earliest `valid_from`; `coverage_to` the latest
+    FINITE `valid_to` (None when the latest window is open-ended — see
+    `open_ended` — or when the variable has no states); `state_count` > 1 inside a
+    window signals a break worth surfacing. A variable with no states has
+    `state_count == 0` and both bounds None (distinct from open-ended)."""
+
+    coverage_from: str | None
+    coverage_to: str | None
+    open_ended: bool
+    state_count: int
+
+
+@dataclass(frozen=True)
+class RegisterCoverage:
+    """Coverage aggregate for one register (#351): `variable_count` is its
+    slugged (browsable) variables; the span is over ALL their states.
+    `coverage_to`/`open_ended` follow `VariableCoverage`."""
+
+    variable_count: int
+    coverage_from: str | None
+    coverage_to: str | None
+    open_ended: bool
+
+
+def _coverage_bounds(
+    cov_from: str | None, cov_to: str | None
+) -> tuple[str | None, str | None, bool]:
+    """Map a `(MIN(valid_from), MAX(valid_to))` SQL aggregate to
+    `(coverage_from, coverage_to, open_ended)`. The open-ended sentinel as the
+    max means "ongoing": `coverage_to` is None and `open_ended` True. NULLs (a
+    stateless variable / empty register) yield both bounds None and `open_ended`
+    False."""
+    open_ended = cov_to == OPEN_ENDED_VALID_TO
+    return cov_from, (None if open_ended else cov_to), open_ended
+
+
 # Concept-group browse shapes (#303; see DESIGN.md → Concept groups): a derived
 # PRESENTATION-ONLY grouping of near-identical browse rows (split-sibling edge
 # components, month-suffixed families, classification vintages, curated facet
@@ -481,6 +526,67 @@ class Catalog:
             )
             for r in rows
         ]
+
+    def register_variable_coverage(
+        self, provider_slug: str, register_slug: str
+    ) -> dict[str, VariableCoverage]:
+        """Per-variable coverage for a register's bindings (#351), keyed by
+        variable slug (the binding-FQID leaf, so the webapp zips it onto each
+        `list_bindings` child). One GROUP BY over `variable_state`; a LEFT JOIN
+        keeps stateless variables (coverage None, count 0). Measured ~9 ms on the
+        worst real register (scb/ulf, 7.3k variables) — query-time, no
+        materialized columns (see reg_webapp/DESIGN.md → Coverage aggregates)."""
+        rows = self._conn.execute(
+            "SELECT v.slug AS slug, MIN(vs.valid_from) AS cov_from, "
+            "MAX(vs.valid_to) AS cov_to, COUNT(vs.state_id) AS nstates "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug IS NOT NULL "
+            "GROUP BY v.variable_id",
+            (provider_slug, register_slug),
+        ).fetchall()
+        out: dict[str, VariableCoverage] = {}
+        for r in rows:
+            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
+            out[r["slug"]] = VariableCoverage(
+                coverage_from=cov_from,
+                coverage_to=cov_to,
+                open_ended=open_ended,
+                state_count=r["nstates"],
+            )
+        return out
+
+    def provider_register_coverage(
+        self, provider_slug: str
+    ) -> dict[str, RegisterCoverage]:
+        """Per-register coverage for a provider's registers (#351), keyed by
+        register slug. `variable_count` counts slugged variables (matching
+        `list_bindings`); the span is over all their states. One GROUP BY;
+        ~40 ms across scb's 238 registers (query-time — see DESIGN.md)."""
+        rows = self._conn.execute(
+            "SELECT r.slug AS slug, COUNT(DISTINCT v.variable_id) AS nvar, "
+            "MIN(vs.valid_from) AS cov_from, MAX(vs.valid_to) AS cov_to "
+            "FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "LEFT JOIN variable v "
+            "ON v.register_id = r.register_id AND v.slug IS NOT NULL "
+            "LEFT JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE p.slug = ? AND r.slug IS NOT NULL "
+            "GROUP BY r.register_id",
+            (provider_slug,),
+        ).fetchall()
+        out: dict[str, RegisterCoverage] = {}
+        for r in rows:
+            cov_from, cov_to, open_ended = _coverage_bounds(r["cov_from"], r["cov_to"])
+            out[r["slug"]] = RegisterCoverage(
+                variable_count=r["nvar"],
+                coverage_from=cov_from,
+                coverage_to=cov_to,
+                open_ended=open_ended,
+            )
+        return out
 
     def list_variants(
         self, provider_slug: str, register_slug: str
