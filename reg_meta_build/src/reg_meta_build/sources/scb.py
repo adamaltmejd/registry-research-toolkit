@@ -3267,8 +3267,15 @@ def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
+            # Read-boundary trim (#366): name/definition are display-only here
+            # (`identifier_semantics` joins on the numeric var_id, not the
+            # name), but trimmed for consistency with the other free-text.
             batch.append(
-                (int(row["VarID"]), row["Variabelnamn"], row["Variabeldefinition"])
+                (
+                    int(row["VarID"]),
+                    row["Variabelnamn"].strip(),
+                    row["Variabeldefinition"].strip(),
+                )
             )
 
     conn.executemany(
@@ -3287,12 +3294,14 @@ def _import_timeseries(conn: sqlite3.Connection, path: Path) -> int:
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
+            # Read-boundary trim (#366): the free-text columns only; the id
+            # columns (ID1/ID2/FilID) are left as raw tokens.
             batch.append(
                 (
-                    row["Namn"],
-                    row["Handelse"],
-                    row["Beskrivning"],
-                    row["Entitet"],
+                    row["Namn"].strip(),
+                    row["Handelse"].strip(),
+                    row["Beskrivning"].strip(),
+                    row["Entitet"].strip(),
                     row["ID1"],
                     row["ID2"],
                     row["FilID"],
