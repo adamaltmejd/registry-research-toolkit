@@ -511,3 +511,139 @@ class ValidationResultModel(BaseModel):
 
     ok: bool
     issues: list[ValidationIssueModel]
+
+
+# ── Global catalog search (#350; see DESIGN.md → Global catalog search) ──────
+# `GET /api/search` returns TYPED RESULT GROUPS over the shipped FTS5 indexes
+# (register_fts / variable_fts / classification_fts). THE GROUP LIST IS THE
+# EXTENSION POINT: codes (#352) and docs (#354) join later as NEW arms of the
+# `SearchGroup` union + new result models, each with its own `group` literal —
+# existing groups and their result models are never reshaped. The SPA must
+# tolerate an unknown `group` value (skip it), so a new group can ship before
+# the SPA learns to render it. Each result carries its navigable `fqid`; results
+# within a group are pre-sorted by FTS rank (after the #311 golden-boost seam),
+# so the wire carries no raw rank.
+
+
+class RegisterSearchResult(BaseModel):
+    """A register hit (`register_fts` name/purpose)."""
+
+    type: Literal["register"] = "register"
+    fqid: str | None
+    name: str | None = None
+    purpose: str | None = None
+
+
+class VariableSearchResult(BaseModel):
+    """A variable hit (`variable_fts` name/definition/description). `register` is
+    the owning register's display name (context for the omnibox). When the hit is
+    a LONE member of a concept group (#322 — the family didn't fold because only
+    one member matched), `concept_group`/`concept_group_label` annotate the
+    family so it stays discoverable; both None otherwise."""
+
+    type: Literal["variable"] = "variable"
+    fqid: str | None
+    name: str | None = None
+    # `register_name` aliased to the wire key `register` — a bare `register`
+    # field shadows `BaseModel.register` (see `VariableRefModel`). The alias is
+    # the canonical init param; FastAPI serializes by alias, so the JSON key is
+    # `register`.
+    register_name: str | None = Field(default=None, alias="register")
+    definition: str | None = None
+    concept_group: str | None = None
+    concept_group_label: str | None = None
+
+
+class ClassificationSearchResult(BaseModel):
+    """A classification hit (`classification_fts` short_name/name/name_en/
+    description — #350 activates this previously-unsearched index). When the hit
+    is a LONE member of a vintage group (the family didn't fold because only one
+    member matched), `concept_group`/`concept_group_label` annotate the family so
+    it stays discoverable — symmetric with `VariableSearchResult`; both None
+    otherwise."""
+
+    type: Literal["classification"] = "classification"
+    fqid: str | None
+    short_name: str | None = None
+    name: str | None = None
+    concept_group: str | None = None
+    concept_group_label: str | None = None
+
+
+class ConceptGroupSearchResult(BaseModel):
+    """A folded concept-group row (#322): ≥2 sibling members matched OR the
+    group's own label matched, so the family collapses to one result. `kind` is
+    'variable' or 'classification' (which group bucket it belongs to);
+    `member_count` is the family's full size, `matched_count` how many members
+    the query hit, `label_matched` whether the group label/key matched directly.
+    `members` is the full facet-ordered member list (each a real leaf FQID) so
+    the SPA can expand the family inline — a group is NOT itself FQID-addressable."""
+
+    type: Literal["group"] = "group"
+    kind: Literal["variable", "classification"]
+    group_key: str
+    group_label: str
+    source: str | None = None
+    # `register_name` aliased to the wire key `register` (avoids the
+    # `BaseModel.register` shadow — see `VariableRefModel`). None for a
+    # classification-kind group (catalog-scoped, no owning register).
+    register_name: str | None = Field(default=None, alias="register")
+    member_count: int = 0
+    matched_count: int = 0
+    label_matched: bool = False
+    members: list[ConceptGroupMemberModel] = []
+
+
+# Discriminated on `type`: a variables/classifications group mixes leaf hits with
+# folded concept-group rows; a registers group has leaves only.
+VariableSearchItem = Annotated[
+    VariableSearchResult | ConceptGroupSearchResult, Field(discriminator="type")
+]
+ClassificationSearchItem = Annotated[
+    ClassificationSearchResult | ConceptGroupSearchResult, Field(discriminator="type")
+]
+
+
+class RegisterSearchGroup(BaseModel):
+    """The `registers` result group. `total_count` is the folded result count
+    for this group BEFORE the per-group display limit (so the SPA can show
+    "showing N of M")."""
+
+    group: Literal["registers"] = "registers"
+    total_count: int
+    results: list[RegisterSearchResult]
+
+
+class VariableSearchGroup(BaseModel):
+    """The `variables` result group (leaf hits ⧺ folded concept groups)."""
+
+    group: Literal["variables"] = "variables"
+    total_count: int
+    results: list[VariableSearchItem]
+
+
+class ClassificationSearchGroup(BaseModel):
+    """The `classifications` result group (leaf hits ⧺ folded vintage groups)."""
+
+    group: Literal["classifications"] = "classifications"
+    total_count: int
+    results: list[ClassificationSearchItem]
+
+
+# The extension seam: append `CodeSearchGroup` (#352) / `DocSearchGroup` (#354)
+# arms here — each a new `group` literal with its own result model — without
+# touching the three above.
+SearchGroup = Annotated[
+    RegisterSearchGroup | VariableSearchGroup | ClassificationSearchGroup,
+    Field(discriminator="group"),
+]
+
+
+class SearchResponse(BaseModel):
+    """`GET /api/search?q=` — typed result groups over the shipped FTS indexes.
+    `query` echoes the raw user query; `groups` is the ordered list of typed
+    groups (see the `SearchGroup` union for the extension contract)."""
+
+    kind: Literal["search"] = "search"
+    query: str
+    groups: list[SearchGroup]

@@ -72,8 +72,7 @@ above; the provider-specific parsing that feeds it lives in
 
 ## FTS5 configuration
 
-Two content-synced FTS5 indexes power search (the build also maintains a
-`classification_fts` index the query layer does not currently search):
+Three content-synced FTS5 indexes power search:
 
 - **`register_fts`** — indexes register `name`, `purpose`.
 - **`variable_fts`** — indexes variable `name`, `definition`, `description`. Uses
@@ -81,6 +80,18 @@ Two content-synced FTS5 indexes power search (the build also maintains a
   (`variable_alias.delivery_column_name`) are deliberately excluded — they contain
   technical suffixes (e.g. `_LISA`) that pollute search results. Column name matching is
   handled by `resolve` instead.
+- **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
+  `description`. Searched via `search(..., type="classification")` (#350), the catalog
+  discovery surface. Catalog-scoped: a `--register` scope excludes it.
+
+`search` takes a RAW user query and builds the FTS5 MATCH expression internally
+(`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),
+which (1) neutralizes FTS5 operators so stray syntax can't raise, and (2) prefix-matches
+("ink" → "inkomst"). `unicode61` folds diacritics on BOTH the index and the query side
+(å→a), so callers pass the query through unfolded. The LIKE-based fields
+(datacolumn/varname/value, and concept-group label folding) keep the raw substring
+pattern — only the FTS path is rewritten. Each register/variable/classification result
+row carries its navigable `fqid`.
 
 ## Register lookup strategy
 

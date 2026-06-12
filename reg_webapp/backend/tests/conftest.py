@@ -160,6 +160,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     )
     _seed_kon_edges(src)
     _seed_concept_groups(src, add_variable)
+    _rebuild_fts(src)
     _stamp_manifest(src)
 
     dst = sqlite3.connect(db_path)
@@ -168,6 +169,15 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     finally:
         dst.close()
         src.close()
+
+
+def _rebuild_fts(src: sqlite3.Connection) -> None:
+    """Populate the external-content FTS5 indexes from their content tables, so
+    the slugged fixture exercises ``/api/search`` (#350). Base-table INSERTs
+    don't sync external-content FTS5; the 'rebuild' command repopulates each
+    index from its `content=` table — mirrors what the real build does."""
+    for index in ("register_fts", "variable_fts", "classification_fts"):
+        src.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
 
 
 def _seed_kon_edges(src: sqlite3.Connection) -> None:

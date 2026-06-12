@@ -199,6 +199,45 @@ NEVER a FastAPI generator `Depends` (which is entered on a different threadpool 
 cross-thread `ProgrammingError`). Each DB-backed route gets its OWN `ThreadPoolExecutor`
 concurrency smoke (the `TestClient` sequential default masks the bug).
 
+## Global catalog search (`routes/search.py` + `conn.py`)
+
+`GET /api/search?q=&limit=` (#350) is the discovery surface behind the planned omnibox.
+It returns **typed result groups** over the three shipped FTS5 indexes, reusing
+reg_meta's concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp
+does NOT reimplement folding or FTS.
+
+**The response contract is the point — designed to extend.** The body is
+`{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
+(`group` literal) carrying its own `total_count` + typed `results`. Today: `registers`,
+`variables` (leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
+vintage groups). **Codes (#352) and docs (#354) join as NEW arms of the `SearchGroup`
+union + new result models — existing groups are never reshaped.** The SPA must tolerate
+an unknown `group` value (skip it) so a new group can ship before the SPA renders it
+(the same payload-skew tolerance the `?period` additive fields rely on). Each result
+carries its navigable `fqid`; results within a group are pre-sorted by FTS rank.
+
+- **One reg_meta call per group** (`field="description"`, `type=` register/variable/
+  classification) so each group gets its own `total_count` + per-group `limit`.
+  `field="description"` is reg_meta's FTS path ONLY — the LIKE-based datacolumn/varname/
+  **value** fields are excluded, so codes are absent here (they're #352's own group).
+- **Input gates** (`_validated_query` / `_validated_limit` / `_has_searchable_token`): a
+  query is length-capped (422 over 200 chars) and NUL-rejected (422); `limit` is clamped
+  to \[1, 50\] (not 422'd). A blank / whitespace / punctuation-only query returns the
+  three groups EMPTY (200, not 422) — it never reaches reg_meta (whose LIKE label-fold
+  would otherwise turn `%%` into a match-everything). FTS-operator neutralization +
+  prefix-matching + diacritic folding all live in reg_meta (`_fts_match_query`); the
+  webapp passes the raw query through. The query reaches FTS only as a bound parameter
+  (no SQLi surface), so the gates guard cost/abuse, not injection.
+- **Golden-boost seam** (`_apply_golden_boost`): a no-op identity hook where #311's
+  curated golden/starred boost will reorder within a group. Wired now so the ordering
+  contract and call sites already exist.
+- **ETag/caching is automatic**: `/api/search` is a GET, so the `ETagMiddleware` stamps
+  a body-derived ETag (the query is part of the URL → part of the CF edge cache key, and
+  part of the body → part of the ETag). No per-route caching code.
+- **Connection seam** (`conn.py`): the per-request read-only open (`catalog_conn`, the
+  threadpool-safe pattern from #168) is shared with the catalog routes — extracted to
+  `conn.py` so search doesn't import the catalog route module just for the connection.
+
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (`/api/context`, the `/api/catalog` root + catch-all, the 7
@@ -702,6 +741,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | ------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | GET    | `/api/context`                                | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                         |
   | GET    | `/api/catalog`                                | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                          |
+  | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications`); extensible (codes/docs join as new groups). `?q=` required, `?limit=` per-group cap.                                                                                     |
   | GET    | `/api/catalog/{fqid}`                         | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). |
   | GET    | `/api/catalog/{provider}/{register}/variants` | The register's variant browser.                                                                                                                                                                                                                                            |
   | GET    | `/api/catalog/{fqid}/states`                  | Full state history for a binding.                                                                                                                                                                                                                                          |
@@ -722,8 +762,8 @@ the data provider couldn't tell representations apart. `period` serializes via t
 catalog `?period` wire form (range → `"<from>..<to>"`, snapshot → `"_default"`).
 Pluggable per-steward `order_template`s are remaining — see `REFACTOR_SPEC.md`.
 
-Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`),
-`/api/catalog-search` (FTS), and `/api/docs/*`.
+Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`) and
+`/api/docs/*` (#354). Global FTS search shipped as `GET /api/search` (#350).
 
 ## §16 input-validation gates (security boundary)
 

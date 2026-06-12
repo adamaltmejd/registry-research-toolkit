@@ -38,10 +38,8 @@ converter greedy-consumes any suffix. The catch-all MUST stay last.
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
-import reg_meta.db
 from fastapi import APIRouter, Depends, HTTPException, Request
 from reg_meta.catalog import (
     Catalog,
@@ -69,6 +67,7 @@ from reg_webapp.catalog_fqid import (
     ValidatedFqidPath,
     validate_fqid_path,
 )
+from reg_webapp.conn import catalog_conn as _catalog_conn
 from reg_webapp.models import (
     BindingChild,
     BindingNode,
@@ -113,28 +112,13 @@ from reg_webapp.period_param import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Iterator
 
 router = APIRouter(prefix="/api")
 
-
-@contextmanager
-def _catalog_conn(request: Request) -> Iterator[sqlite3.Connection]:
-    """A per-request reg_meta read-only connection, opened ON THE CALLING THREAD.
-
-    Used as a plain ``with`` INSIDE the sync route handler — NOT a FastAPI
-    ``Depends``. A sync endpoint's generator *dependency* is entered via the AnyIO
-    threadpool on a possibly-DIFFERENT thread than the handler runs on, so a
-    dependency-opened sqlite connection (default ``check_same_thread=True``) gets
-    used cross-thread → intermittent ``sqlite3.ProgrammingError`` under concurrency
-    (Codex P1 on #168, reproduced 72/80 before this fix). Opening within the
-    handler body keeps open + query + close on one thread. ``check_schema=False``:
-    the lifespan already validated the schema at boot."""
-    conn = reg_meta.db.open_db(request.app.state.db_path, check_schema=False)
-    try:
-        yield conn
-    finally:
-        conn.close()
+# `_catalog_conn` (the per-request read-only connection seam) now lives in
+# `reg_webapp.conn` so `routes/search.py` shares it without importing this route
+# module; imported above under its original local name to keep the call sites
+# (`with _catalog_conn(request)`) unchanged.
 
 
 def _validated_fqid(fqid: str) -> ValidatedFqidPath:

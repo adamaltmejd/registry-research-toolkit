@@ -179,8 +179,11 @@ def _build_parser() -> argparse.ArgumentParser:
     search_p.add_argument(
         "--type",
         default="all",
-        choices=["register", "variable", "all"],
-        help="Filter results by entity type: register or variable (default: all).",
+        choices=["register", "variable", "classification", "all"],
+        help=(
+            "Filter results by entity type: register, variable, or "
+            "classification (default: all)."
+        ),
     )
     search_p.add_argument(
         "--register", default=None, help="Filter by register (name or ID)."
@@ -1482,10 +1485,20 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
     renderer can't show — flatten them to counts and fill the generic columns
     (`variable_name` shows the group label) so a group row reads sensibly in
     both the pure-group and the mixed-type column sets. Leaf rows pass through,
-    with the `concept_group` annotation re-keyed to a short `group` column."""
+    with the `concept_group` annotation re-keyed to a short `group` column.
+
+    Classification rows (#350) carry `short_name`/`classification_name`/`fqid`,
+    none of which are in the mixed-type fallback columns — so in a `--type all`
+    table they'd render blank. Project their identity onto the generic columns
+    (mirroring the group-row treatment) so they read sensibly there too; the
+    pure-classification column set selects the native keys directly."""
     if r.get("type") != "group":
-        if r.get("concept_group"):
+        if r.get("type") == "classification" or r.get("concept_group"):
             r = dict(r)
+        if r.get("type") == "classification":
+            r.setdefault("register_name", r.get("short_name", ""))
+            r.setdefault("variable_name", r.get("classification_name", ""))
+        if r.get("concept_group"):
             r["group"] = r["concept_group"]
         return r
     matched = len(r.get("matched") or [])
@@ -1544,6 +1557,8 @@ def _write_payload(
             cols = ["variable_name", "register_id", "register_name", "var_id"]
         elif types == {"doc"}:
             cols = ["variable_name", "display_name"]
+        elif types == {"classification"}:
+            cols = ["short_name", "classification_name", "fqid"]
         elif types == {"group"}:
             # Pure group fold (#322) — e.g. every hit was one month family.
             cols = [
