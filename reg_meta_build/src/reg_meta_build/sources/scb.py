@@ -197,6 +197,25 @@ def _import_registerinformation(
             vid = int(row["VarId"])
             cvid = int(row["CVID"])
 
+            # SCB export hygiene (#366, follow-up to #364's Kolumnnamn): a
+            # subset of the name fields carry stray surrounding whitespace
+            # ('Slag utbildning  ', 'Allmänna val ...'). Trim at the read
+            # boundary. For the join keys (Registernamn/Registervariantnamn/
+            # Variabelnamn — plus Kolumnnamn below) a padded spelling is the
+            # same value under a dirty name; left untrimmed it would shard
+            # rule-2 connectivity and silently drop the `unika_join` /
+            # sensitivity-flag (`v.name = us.variabelnamn`) / coalescer
+            # (`vi.variabelnamn`) joins the moment one CSV is cleaned but not
+            # the other. `_import_unika` trims its join sides identically.
+            registernamn = row["Registernamn"].strip()
+            registervariantnamn = row["Registervariantnamn"].strip()
+            variabelnamn = row["Variabelnamn"].strip()
+            variabeldefinition = row["Variabeldefinition"].strip()
+            variabelbeskrivning = row["Variabelbeskrivning"].strip()
+            operationell_definition = row["VariabelOperationell_definition"].strip()
+            variabelregister_kalla = row["VariabelRegister_Källa"].strip()
+            mattenhet = row["Mattenhet"].strip()
+
             registers.setdefault(
                 rid,
                 {
@@ -205,8 +224,8 @@ def _import_registerinformation(
                     # in-memory dict and DB column are universal English.
                     # `Registerrubrik` is dropped (universal-vocabulary rename;
                     # see reg_meta/DESIGN.md → Glossary and Swedish↔English crosswalk).
-                    "name": row["Registernamn"],
-                    "purpose": row["Registersyfte"],
+                    "name": registernamn,
+                    "purpose": row["Registersyfte"].strip(),
                 },
             )
 
@@ -217,8 +236,8 @@ def _import_registerinformation(
                     "register_id": rid,
                     # `Registervariantrubrik` and `RegistervariantSekretess`
                     # are dropped.
-                    "name": row["Registervariantnamn"],
-                    "description": row["Registervariantbeskrivning"],
+                    "name": registervariantnamn,
+                    "description": row["Registervariantbeskrivning"].strip(),
                 },
             )
 
@@ -227,11 +246,13 @@ def _import_registerinformation(
                 {
                     "regver_id": rveid,
                     "register_variant_id": rvid,
-                    "registerversionnamn": row["Registerversionnamn"],
-                    "registerversionbeskrivning": row["Registerversionbeskrivning"],
+                    "registerversionnamn": row["Registerversionnamn"].strip(),
+                    "registerversionbeskrivning": row[
+                        "Registerversionbeskrivning"
+                    ].strip(),
                     "registerversionmatinformation": row[
                         "Registerversionmätinformation"
-                    ],
+                    ].strip(),
                     "registerversion_docstaus": row["Registerversion_DocStaus"],
                     "registerversion_forstagodkannandedatum": row[
                         "Registerversion_ForstaGodkannandeDatum"
@@ -252,27 +273,30 @@ def _import_registerinformation(
                     # `_merge_operational_definition` after the fill loop).
                     # `variabelreferenstid`, `variabelhamtadfran`, and
                     # `variabelextern_kommentar` are dropped entirely.
-                    "name": row["Variabelnamn"],
-                    "definition": row["Variabeldefinition"],
-                    "description": row["Variabelbeskrivning"],
-                    "_operational_definition": row["VariabelOperationell_definition"],
-                    "source_register_text": row["VariabelRegister_Källa"],
-                    "measurement_unit": row["Mattenhet"],
+                    "name": variabelnamn,
+                    "definition": variabeldefinition,
+                    "description": variabelbeskrivning,
+                    "_operational_definition": operationell_definition,
+                    "source_register_text": variabelregister_kalla,
+                    "measurement_unit": mattenhet,
                 },
             )
-            # Fill empty fields from later rows. The CSV header column on the
-            # right stays Swedish (wire format); the in-memory key on the left
-            # is universal English. `_operational_definition` is a transient
-            # carrier folded into `description` after this loop.
-            for tgt, src_col in [
-                ("name", "Variabelnamn"),
-                ("definition", "Variabeldefinition"),
-                ("description", "Variabelbeskrivning"),
-                ("_operational_definition", "VariabelOperationell_definition"),
-                ("source_register_text", "VariabelRegister_Källa"),
-                ("measurement_unit", "Mattenhet"),
+            # Fill empty fields from later rows. Values are the trimmed
+            # read-boundary locals above; `_first_non_empty` treats the
+            # now-empty (was whitespace-only) values as empty, so a clean
+            # later spelling wins over a padded earlier one instead of the
+            # raw-first row pinning surrounding whitespace.
+            # `_operational_definition` is a transient carrier folded into
+            # `description` after this loop.
+            for tgt, val in [
+                ("name", variabelnamn),
+                ("definition", variabeldefinition),
+                ("description", variabelbeskrivning),
+                ("_operational_definition", operationell_definition),
+                ("source_register_text", variabelregister_kalla),
+                ("measurement_unit", mattenhet),
             ]:
-                var[tgt] = _first_non_empty(var[tgt], row[src_col])
+                var[tgt] = _first_non_empty(var[tgt], val)
 
             instances.setdefault(
                 cvid,
@@ -282,26 +306,25 @@ def _import_registerinformation(
                     "register_variant_id": rvid,
                     "regver_id": rveid,
                     "var_id": vid,
-                    # Per-cvid raw variabelnamn. SCB ships one row per
-                    # (cvid, kolumnnamn) tuple — multiple rows per cvid agree
-                    # on Variabelnamn, so the first wins and `setdefault`
-                    # captures the intended value.
-                    "variabelnamn": row["Variabelnamn"],
+                    # Per-cvid raw variabelnamn (trimmed at the read
+                    # boundary). SCB ships one row per (cvid, kolumnnamn)
+                    # tuple — multiple rows per cvid agree on Variabelnamn, so
+                    # the first wins and `setdefault` captures the intended
+                    # value. Trimmed in lockstep with `unika_summary.variabelnamn`
+                    # so the coalescer (`vi.variabelnamn`) join keeps matching.
+                    "variabelnamn": variabelnamn,
                     "data_type": row["Datatyp"],
                     "data_length": row["Datalängd"],
                 },
             )
 
-            # SCB export hygiene: a handful of Kolumnnamn values carry stray
-            # surrounding whitespace ('  Pris', 'Lan ') — the same column under
-            # a dirty spelling, which shards rule-2 connectivity into bogus
-            # split siblings. Trim at the read boundary so every later join
-            # (unika_join → unika_summary, variable_alias_build) sees one
-            # spelling. `_import_unika` trims its side identically. A blank
-            # Kolumnnamn is "no delivery header", not an alias — skip it so
-            # `variable_alias` ships real headers only; the coalescer already
-            # treats those cvids as alias-less (NULL state column), and no
-            # blank-Kolumnnamn unika row carries sensitivity flags, so the
+            # Kolumnnamn (#364): trim at the read boundary like the name
+            # fields above (the same column under a dirty '  Pris'/'Lan '
+            # spelling shards rule-2 connectivity). A blank Kolumnnamn is "no
+            # delivery header", not an alias — skip it so `variable_alias`
+            # ships real headers only; the coalescer already treats those
+            # cvids as alias-less (NULL state column), and no blank-Kolumnnamn
+            # unika row carries sensitivity flags, so the
             # `_populate_sensitivity_flags` join loses nothing.
             kolumnnamn = row["Kolumnnamn"].strip()
             if kolumnnamn:
@@ -309,20 +332,26 @@ def _import_registerinformation(
             populations.add(
                 (
                     rveid,
-                    row["Populationnamn"],
-                    row["Populationdefinition"],
-                    row["Populationkommentar"],
-                    row["Populationdatum"],
+                    row["Populationnamn"].strip(),
+                    row["Populationdefinition"].strip(),
+                    row["Populationkommentar"].strip(),
+                    row["Populationdatum"].strip(),
                 )
             )
-            object_types.add((rveid, row["Objekttypnamn"], row["Objekttypdefinition"]))
+            object_types.add(
+                (
+                    rveid,
+                    row["Objekttypnamn"].strip(),
+                    row["Objekttypdefinition"].strip(),
+                )
+            )
 
             unika_join.setdefault(
                 (
-                    row["Registernamn"],
-                    row["Registervariantnamn"],
+                    registernamn,
+                    registervariantnamn,
                     kolumnnamn,
-                    row["Variabelnamn"],
+                    variabelnamn,
                 ),
                 (rid, rvid),
             )
@@ -447,15 +476,20 @@ def _import_unika(
         for _, row in rows:
             row_count += 1
             # Trimmed to mirror `_import_registerinformation`'s read-boundary
-            # trim — both the `unika_join` key lookup and the stored
-            # `unika_summary.kolumnnamn` must carry the same spelling as
-            # `variable_alias_build` for the sensitivity-flag join to match.
+            # trim — the `unika_join` key lookup and the stored
+            # `unika_summary.kolumnnamn` / `.variabelnamn` must carry the same
+            # spelling as `variable_alias_build` / `variable.name` for the
+            # `unika_join`, sensitivity-flag (`v.name = us.variabelnamn`) and
+            # coalescer joins to match.
+            registernamn = row["Registernamn"].strip()
+            registervariantnamn = row["Registervariantnamn"].strip()
             kolumnnamn = row["Kolumnnamn"].strip()
+            variabelnamn = row["Variabelnamn"].strip()
             key = (
-                row["Registernamn"],
-                row["Registervariantnamn"],
+                registernamn,
+                registervariantnamn,
                 kolumnnamn,
-                row["Variabelnamn"],
+                variabelnamn,
             )
             ids = unika_join.get(key)
             if ids is None:
@@ -466,7 +500,7 @@ def _import_unika(
                     register_id,
                     register_variant_id,
                     kolumnnamn,
-                    row["Variabelnamn"],
+                    variabelnamn,
                     row["VersionForsta"],
                     row["VersionSista"],
                     row["KansligVariabel"],
