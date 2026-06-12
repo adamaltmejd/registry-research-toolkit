@@ -92,6 +92,19 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
     return candidate or current
 
 
+# SCB encodes the unika flag columns as '1'/'0' (and defensively 'Ja'/'Nej' —
+# see `_populate_sensitivity_flags`). Truthy wins so a sensitivity flag is
+# never dropped when two rows collapse onto one `unika_summary` PK.
+_UNIKA_FLAG_TRUE = ("1", "Ja")
+
+
+def _or_unika_flag(current: str, candidate: str) -> str:
+    """Combine two unika flag values, preferring the truthy one. Mirrors the
+    `MAX(... IN ('1','Ja'))` aggregation in `_populate_sensitivity_flags`: the
+    combined value is truthy iff either input is."""
+    return current if current in _UNIKA_FLAG_TRUE else candidate
+
+
 _PAREN_ABBREV_RE = re.compile(r"\(([^)]+)\)")
 
 
@@ -470,7 +483,19 @@ def _import_unika(
 ) -> int:
     _progress("Importing UnikaRegisterOchVariabler.csv...")
     row_count = 0
-    batch: list[tuple[int | str, ...]] = []
+    matched = 0
+    # Keyed by the `unika_summary` PK (register_id, register_variant_id,
+    # kolumnnamn, variabelnamn). Trimming the name columns can collapse two
+    # raw spellings that differ only by surrounding whitespace onto one PK.
+    # A plain `INSERT OR IGNORE` would keep the first row and silently drop
+    # the rest — so a clean/'0' row arriving before a padded/'1' row would
+    # mask a sensitivity flag (a PII-scanner false negative for exactly the
+    # dirty-name inputs this trim normalizes). Accumulate instead, OR-ing the
+    # flag columns; non-flag fields keep the first row's value (the prior
+    # `INSERT OR IGNORE` first-wins behavior). The coalescer reads
+    # version_forsta/sista, so keeping the first row's versions preserves its
+    # output exactly.
+    summary: dict[tuple[int, int, str, str], list[Any]] = {}
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
@@ -494,9 +519,12 @@ def _import_unika(
             ids = unika_join.get(key)
             if ids is None:
                 continue
+            matched += 1
             register_id, register_variant_id = ids
-            batch.append(
-                (
+            pk = (register_id, register_variant_id, kolumnnamn, variabelnamn)
+            existing = summary.get(pk)
+            if existing is None:
+                summary[pk] = [
                     register_id,
                     register_variant_id,
                     kolumnnamn,
@@ -506,14 +534,20 @@ def _import_unika(
                     row["KansligVariabel"],
                     row["KansligVariabelIbland"],
                     row["Identitetsvariabel"],
-                )
-            )
+                ]
+            else:
+                existing[6] = _or_unika_flag(existing[6], row["KansligVariabel"])
+                existing[7] = _or_unika_flag(existing[7], row["KansligVariabelIbland"])
+                existing[8] = _or_unika_flag(existing[8], row["Identitetsvariabel"])
 
     conn.executemany(
-        "INSERT OR IGNORE INTO unika_summary VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        batch,
+        "INSERT INTO unika_summary VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [tuple(v) for v in summary.values()],
     )
-    _progress(f"  {row_count:,} rows read, {len(batch):,} matched")
+    _progress(
+        f"  {row_count:,} rows read, {matched:,} matched, "
+        f"{len(summary):,} unika_summary rows"
+    )
     return row_count
 
 

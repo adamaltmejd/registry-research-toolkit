@@ -825,3 +825,65 @@ class TestNameFieldHygiene:
         ).fetchone()[0]
         assert sensitive == 1
         conn.close()
+
+    def test_trimmed_unika_collision_keeps_sensitivity_flag(
+        self, tmp_path: Path
+    ) -> None:
+        # Two unika rows collapse onto one trimmed PK ('LanVar' / 'LanVar '):
+        # the non-sensitive ('0') row is listed FIRST, the sensitive ('1') row
+        # second. A plain `INSERT OR IGNORE` would keep the first and drop the
+        # flag (a PII-scanner false negative); the flag-OR accumulation must
+        # preserve is_sensitive=1 regardless of row order.
+        conn = _hygiene_build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Lan",
+                    cvid=9201,
+                    var_id=920,
+                    varname="LanVar",
+                    year="2020",
+                    regver_id=110,
+                ),
+            ],
+            unika_extra=[
+                PIPE.join(
+                    [
+                        "TESTREG",
+                        "Testregistret",
+                        "Individer",
+                        "Individer",
+                        "LanVar",
+                        "Lan",
+                        "2020",
+                        "2020",
+                        "0",
+                        "0",
+                        "0",
+                    ]
+                ),
+                PIPE.join(
+                    [
+                        "TESTREG",
+                        "Testregistret",
+                        "Individer",
+                        "Individer",
+                        "LanVar ",
+                        "Lan",
+                        "2020",
+                        "2020",
+                        "1",
+                        "0",
+                        "0",
+                    ]
+                ),
+            ],
+        )
+        # unika_summary is dropped by build's end; the surviving signal is
+        # is_sensitive. With `INSERT OR IGNORE` the first ('0') row would win
+        # and this would be 0.
+        sensitive = conn.execute(
+            "SELECT is_sensitive FROM variable WHERE provider_key = '920'"
+        ).fetchone()[0]
+        assert sensitive == 1
+        conn.close()
