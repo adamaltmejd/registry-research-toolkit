@@ -141,6 +141,13 @@ jobs:
       # pinned-tag dispatch, the next `latest`-keyed build would resurrect the
       # OLD cached layer and silently revert prod's DB. A concrete tag makes
       # the cache key change exactly when the release does.
+      #
+      # Newest-by-tag is asset-blind, which is safe because every published
+      # reg_meta release carries both DB assets — the release flow copies
+      # assets forward on code-only releases (self-contained releases,
+      # .claude/skills/release/SKILL.md step 8). A release violating that
+      # invariant fails the bake stage loudly (exit 10), which is exactly the
+      # #343 outage mode.
       - name: Resolve reg_meta release tag
         id: regmeta
         env:

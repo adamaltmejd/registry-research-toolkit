@@ -95,6 +95,10 @@ RUN uv sync --frozen --no-dev --package reg-meta
 # cached rebuild (GHA cache-from / local cache) would silently keep a stale DB.
 # Default `latest` resolves whatever release is newest at build time; CI always
 # passes the resolved concrete tag (`--build-arg REG_META_TAG=reg_meta/vX.Y.Z`).
+# A concrete tag fetches BOTH assets from that single release — valid because
+# every published reg_meta release is self-contained (release skill step 8
+# copies assets forward on code-only releases; an asset-less release broke
+# every main-push build in #343 and fails this RUN with exit 10).
 # ARG declared after the sync layer so a tag change re-runs only the bake.
 ARG REG_META_TAG=latest
 RUN /app/.venv/bin/reg-meta update --db /opt/reg_meta --tag "$REG_META_TAG" --yes \

@@ -676,14 +676,18 @@ GitHub release scoped to that package.
   | GitHub Release asset | Manual upload to the `reg_meta/v*` release                  | Pre-built main DB (`reg_meta.db.zst`)     |
   | GitHub Release asset | Manual upload to the `reg_meta/v*` release                  | Pre-built doc DB (`reg_meta_docs.db.zst`) |
 
-Both DB assets are **optional** per release. A package release only needs a new main DB
-when `SCHEMA_VERSION` changes, and only needs a new doc DB when `DOC_SCHEMA_VERSION`
-changes or `reg_meta_build/docs/` content changes. `resolve_latest_release()` walks
-recent releases backwards looking for each asset independently, so a doc-less or DB-less
-package release does not orphan older assets. The publish workflow's smoke step
-exercises `reg-meta update --force` before allowing PyPI publish, so a release that
-breaks the walker (e.g. incompatible assets, or no resolvable asset at all) fails CI
-instead of shipping.
+Every published release carries **both** assets (self-contained releases). A release
+only needs a **freshly built** main DB when `SCHEMA_VERSION` changes, and a fresh doc DB
+when `DOC_SCHEMA_VERSION` or `reg_meta_build/docs/` content changes — otherwise the
+release flow copies the prior release's asset forward (`.claude/skills/release/SKILL.md`
+step 8). The invariant exists because the container deploy pipeline resolves the newest
+`reg_meta/v*` release into a concrete `reg-meta update --tag`, which fetches both assets
+from that single tag — an asset-less release blocks every image deploy (#343).
+`resolve_latest_release()` still walks recent releases backwards looking for each asset
+independently, keeping `latest`-mode updates robust against historical asset-less
+releases. The publish workflow's smoke step exercises `reg-meta update --force` before
+allowing PyPI publish, so a release that breaks the walker (e.g. incompatible assets, or
+no resolvable asset at all) fails CI instead of shipping.
 
 The wheel contains Python source only. The markdown under `reg_meta_build/docs/` is
 maintainer source-of-truth and is **not** bundled — end users receive the built doc DB

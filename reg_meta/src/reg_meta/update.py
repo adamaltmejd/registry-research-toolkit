@@ -229,7 +229,11 @@ def run_update(
             latest_ver = resolution.version
     else:
         latest_ver = version_from_tag(tag)
-        db_tag = tag  # assume explicit tag has both assets
+        # Explicit tags are assumed self-contained: every published release
+        # carries both assets (the release flow copies them forward on
+        # code-only releases — release skill step 8, #343). A tag violating
+        # that fails loudly at download, not silently with stale assets.
+        db_tag = tag
         docs_tag = tag
 
     result: dict[str, Any] = {}

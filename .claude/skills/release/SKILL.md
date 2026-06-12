@@ -157,13 +157,21 @@ The tag is created by this command from the current HEAD — do not create it se
 The `--draft` flag means no workflow fires yet. If the tag already exists, something
 went wrong; see error recovery below.
 
-### 8. Build and upload release assets (reg_meta only, conditional)
+### 8. Build and upload release assets (reg_meta only)
 
-reg_meta ships two release assets. Each is optional per release — `maintain update`
-walks backwards through releases to find the most recent one carrying each asset, so a
-doc-less package release still serves the prior doc asset. Missing required assets must
-be uploaded **before** publishing the release: the CI smoke step runs `maintain update`
-and fails if the walker can't resolve a compatible pair of assets.
+reg_meta ships two release assets, and **every release must carry both before it is
+published** (self-contained releases). The container deploy pipeline
+(`.github/workflows/container-build.yml`) resolves the newest `reg_meta/v*` release into
+a concrete `reg-meta update --tag`, which fetches both assets from that single tag — a
+release published without them breaks every main-push image build until assets appear
+(#343, the asset-less `reg_meta/v0.11.0`). The conditions in 8a/8b decide whether each
+asset needs a **fresh build**; an asset that doesn't is **copied forward** from the
+prior release (8c). Never skip an asset outright.
+
+(`reg-meta update` in `latest` mode still walks backwards through releases to find the
+most recent one carrying each asset — that walker remains as robustness for historical
+asset-less releases, but new releases must not rely on it. The CI smoke step runs
+`reg-meta update` and fails if it can't resolve a compatible pair of assets.)
 
 The raw SCB CSV exports and curated classification CSVs live under
 `reg_meta_build/input_data/` (gitignored), with `SCB/`, `Socialstyrelsen/`, and
@@ -171,12 +179,12 @@ The raw SCB CSV exports and curated classification CSVs live under
 
 #### 8a. Main DB asset (`reg_meta.db.zst`)
 
-Upload if **either** condition is true:
+Build and upload fresh if **either** condition is true:
 
 - `SCHEMA_VERSION` was bumped (either already in the commits or by step 3)
 - The release is a **major** version bump
 
-Otherwise skip.
+Otherwise copy the prior release's asset forward (8c) and skip the rest of 8a.
 
 As of A4.5 the shipped DB is the **combined SCB+SOS** build, so `input_data/` **must**
 contain the `Socialstyrelsen/` workbooks as well as `SCB/` — the build hard-fails
@@ -216,13 +224,13 @@ sentinel filtering".
 
 #### 8b. Doc DB asset (`reg_meta_docs.db.zst`)
 
-Upload if **any** of these is true:
+Build and upload fresh if **any** of these is true:
 
 - `DOC_SCHEMA_VERSION` was bumped
 - `git diff <tag>..HEAD -- reg_meta_build/docs/` is non-empty (docs content changed)
 - The release is a **major** version bump
 
-Otherwise skip — users keep getting the prior release's doc asset via the walker.
+Otherwise copy the prior release's asset forward (8c) and skip the rest of 8b.
 
 If `reg_meta_build/docs/` changed because a newly-published SCB PDF was ingested, the
 PDF→markdown recipe (marker flags, `GEMINI_API_KEY`, \~$1-2 cost, multiprocessing-crash
@@ -244,7 +252,27 @@ gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
 rm reg_meta_docs.db.zst
 ```
 
-Verify the expected assets are present on the draft release before publishing:
+#### 8c. Copy-forward for assets not rebuilt
+
+For each asset whose 8a/8b conditions did **not** require a fresh build, copy the prior
+release's asset forward so the new release stays self-contained. `<prev>` is the newest
+existing `reg_meta/v*` release that carries the asset — normally the immediately
+previous release; check with `gh release view reg_meta/v<prev> --json assets`. This is
+safe precisely because the rebuild conditions did not fire: no schema bump and no docs
+change means the prior asset is still compatible with the new code.
+
+```bash
+gh release download reg_meta/v<prev> --pattern reg_meta.db.zst
+gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
+rm reg_meta.db.zst
+```
+
+(and analogously for `reg_meta_docs.db.zst`)
+
+#### 8d. Verify before publishing
+
+Verify **both** assets are present on the draft release — do not publish without them
+(#343):
 
 ```bash
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
