@@ -146,12 +146,34 @@ const tokenHint = $derived(
 const rangeIncomplete = $derived(mode === "range" && rangeWire === null);
 const listIncomplete = $derived(mode === "list" && listWire === null);
 
+/** Emit an edit AND back-fill the INACTIVE mode buffers from it (the same
+ * representability rules as the mount seeds), so a later mode switch carries
+ * the CURRENT value wherever the target mode can represent it, instead of
+ * re-emitting that buffer's stale mount-time snapshot (Codex P2 on #347:
+ * "remove a segment in List, click Range" must keep the remaining range, and
+ * Token must not resurrect the removed segment on the next keystroke). The
+ * ACTIVE mode's buffer is its own handler's — never overwritten here (token
+ * text mid-typing routinely round-trips lossily). */
+function emitEdit(next: Period): void {
+  const wire = periodToWire(next);
+  if (mode !== "range") {
+    rangeWire = wire !== null && rangeRepresentable(wire) ? wire : null;
+  }
+  if (mode !== "list") {
+    listWire = next !== "_default" && wire !== null ? wire : null;
+  }
+  if (mode !== "token") {
+    tokenText = next === "_default" || wire === null ? "" : wire;
+  }
+  onchange(next);
+}
+
 /** The range picker's emit: thread the wire through periodFromWire so the
  * draft carries the schema-valid shape (int year / token string / {from,to}
  * object); an incomplete selection is the unset "". */
 function onRangeChange(wire: string | null): void {
   rangeWire = wire;
-  onchange(wire === null ? "" : periodFromWire(wire));
+  emitEdit(wire === null ? "" : periodFromWire(wire));
 }
 
 /** The list input's emit — same threading as the range arm. periodFromWire
@@ -160,7 +182,7 @@ function onRangeChange(wire: string | null): void {
  * canonical form for an uninterrupted period). An empty list is the unset "". */
 function onListChange(wire: string | null): void {
   listWire = wire;
-  onchange(wire === null ? "" : periodFromWire(wire));
+  emitEdit(wire === null ? "" : periodFromWire(wire));
 }
 
 /** Token-mode emission ALSO threads through periodFromWire (#308 closes the
@@ -170,17 +192,19 @@ function onListChange(wire: string | null): void {
  * arm — subsumes the retired periodFromTokenText); junk rides through
  * verbatim for the backend to flag. */
 function emitToken(): void {
-  onchange(periodFromWire(tokenText.trim()));
+  emitEdit(periodFromWire(tokenText.trim()));
 }
 
 function onModeChange(next: Mode): void {
   mode = next;
+  // A mode switch is an edit: emit the target buffer's value (through
+  // emitEdit, so the OTHER inactive buffers re-sync to it too).
   if (next === "default") {
-    onchange("_default");
+    emitEdit("_default");
   } else if (next === "range") {
-    onchange(rangeWire === null ? "" : periodFromWire(rangeWire));
+    emitEdit(rangeWire === null ? "" : periodFromWire(rangeWire));
   } else if (next === "list") {
-    onchange(listWire === null ? "" : periodFromWire(listWire));
+    emitEdit(listWire === null ? "" : periodFromWire(listWire));
   } else {
     emitToken();
   }
