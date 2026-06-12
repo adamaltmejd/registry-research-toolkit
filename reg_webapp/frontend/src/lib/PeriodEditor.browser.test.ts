@@ -219,14 +219,40 @@ describe("PeriodEditor", () => {
     await screen.getByRole("button", { name: "Remove 2005..2010" }).click();
     expect(onchange).toHaveBeenLastCalledWith({ from: 2015, to: 2020 });
 
-    // → Token: the comma wire is still visible/editable as raw text (the
-    // mount-time seed — the original value) and a comma edit emits the LIST.
+    // → Token: shows the CURRENT value (the edit synced the inactive buffers —
+    // Codex P2 on #347: the removed segment must not resurrect), and a comma
+    // edit emits the LIST.
     await screen.getByRole("radio", { name: "Token" }).click();
-    await expect
-      .element(screen.getByRole("textbox"))
-      .toHaveValue("2005..2010,2015..2020");
+    await expect.element(screen.getByRole("textbox")).toHaveValue("2015..2020");
     await screen.getByRole("textbox").fill("2005..2010,2013");
     expect(onchange).toHaveBeenLastCalledWith([{ from: 2005, to: 2010 }, 2013]);
+  });
+
+  it("a List edit carries into Range mode (inactive buffers track edits — Codex P2 on #347)", async () => {
+    const onchange = vi.fn<(next: Period) => void>();
+    const screen = await render(PeriodEditor, {
+      period: [
+        { from: 2005, to: 2010 },
+        { from: 2015, to: 2020 },
+      ],
+      issues: [],
+      onchange,
+    });
+
+    // Remove a segment: the draft is now the scalar {2015..2020} range.
+    await screen.getByRole("button", { name: "Remove 2005..2010" }).click();
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2015, to: 2020 });
+
+    // → Range must KEEP that value (it is range-representable) — not emit the
+    // unset "" from the stale mount-time buffer (a 2-segment list wasn't).
+    await screen.getByRole("radio", { name: "Range" }).click();
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2015, to: 2020 });
+    await expect
+      .element(screen.getByRole("spinbutton", { name: "From" }))
+      .toHaveValue(2015);
+    await expect
+      .element(screen.getByRole("spinbutton", { name: "To" }))
+      .toHaveValue(2020);
   });
 
   it("List mode accumulates segments with the grain controls, sorted ascending regardless of pick order (#338)", async () => {
