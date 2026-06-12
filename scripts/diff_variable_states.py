@@ -103,7 +103,11 @@ def main() -> None:
             f"{'' if subannual else '  ** NO SUB-ANNUAL BOUND — OUT OF POPULATION **'}"
         )
         for tag in ("removed", "added"):
-            for vf, vt, vs, _ in sorted(rows[tag]):
+            # value_set_id is None for code-less states; map to -1 so the
+            # sort key stays comparable (real ids are positive rowids).
+            for vf, vt, vs, _ in sorted(
+                rows[tag], key=lambda r: (r[0], r[1], r[2] if r[2] is not None else -1)
+            ):
                 print(f"    {tag[0]:>1} [{vf} .. {vt}] vs={vs}")
 
     # Pin re-validation: every pinned column's state rows must be unchanged.
