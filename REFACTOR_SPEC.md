@@ -45,7 +45,7 @@ step numbering.
   | 9    | `mock_data_wizard` → `reg_mockdata` rename; drop reg_meta dep      | 8        | —                |
   | 10a  | Bundle merged-mode (realign-then-extract) + `reg_monabundle.types` | 9        | #240             |
   | 10b  | Composite `entity_key` / `time_key` support                        | 10a      | —                |
-  | 11   | Steward catalogs (ifau, swecov)                                    | 8        | #206, #211       |
+  | 11   | Steward catalogs (ifau, swecov)                                    | 8        | #206             |
   | 12   | Per-steward order templates + `extensions` toggles                 | 11       | —                |
   | —    | v1 slug freeze + arm immutability                                  | all      | #209, #196, #197 |
 
@@ -418,8 +418,8 @@ The SOS classification data path this step depended on shipped (#210, closed via
 #273/#274). Remaining sub-concern: steward-catalog admission keying (#206) — resolvable
 at step-11 kickoff, when it becomes observable whether IFAU/SWECOV actually restrict at
 representation level, but it must close before the first non-global catalog is committed
-and its hostname goes live. Batch the freeze-safe LOVA/LVM curation (#211) into this
-step (same SOS adapter and maintainer mode as the shipped #210 work).
+and its hostname goes live. The LOVA/LVM curation (#211) that was originally batched
+into this step shipped early (PR #359, 2026-06-12) — no longer a step-11 concern.
 
 The SPA catalog-authoring mode (distinct from project authoring) and a `reg-meta-build`
 steward-diff CLI are **deferred post-v1**: steward catalogs are plain `ProjectData`
@@ -504,11 +504,12 @@ Carried from the testing strategy; the shipped categories are in
 Open issues seeded from or feeding this plan: #206 (steward admission keying — decided
 column-based 2026-06-11 and implemented; the kit-contract facet lands with #217's
 implementation), #209 (v1 slug freeze), #217 (kit-build), #240 (MSSQL integration test —
-pre-10a gate), #196 + #197 (identity-churning curation — pre-freeze), #200 + #266
-(authoring-UX ride-alongs for the 7.5 dogfood), and #211 (LOVA/LVM curation —
-freeze-safe, batch with step 11). Deferred beyond v1 but recorded so pointers resolve:
-#212 (materializer-owned value tables) and #271 (interval-native resolver). Resolved
-since this spec was seeded: #220 + #224 + #278 (the 6.5 deployment set, closed when 6.5
-shipped 2026-06-11), #210 (SOS classification path, closed via PRs #273/#274), #208
+pre-10a gate), #196 + #197 (identity-churning curation — pre-freeze), and #200 + #266
+(authoring-UX ride-alongs for the 7.5 dogfood). Deferred beyond v1 but recorded so
+pointers resolve: #212 (materializer-owned value tables) and #271 (interval-native
+resolver). Resolved since this spec was seeded: #220 + #224 + #278 (the 6.5 deployment
+set, closed when 6.5 shipped 2026-06-11), #210 (SOS classification path, closed via PRs
+#273/#274), #211 (LOVA/LVM deldatamängd→variant curation, shipped early via PR #359
+2026-06-12 instead of batching with step 11; merge-quality follow-up in #362), #208
 (closed with the classification-slug surface, not the keyspace question), #227 (wire
 `fqid_outside_steward_catalog`), and #228 (reserved suffix slugs).
