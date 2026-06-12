@@ -193,11 +193,11 @@ describe("PeriodEditor", () => {
       .toBeChecked();
   });
 
-  it("opens a #307 list period in Token mode showing the comma wire, and comma text emits the list", async () => {
-    // The MINIMAL interrupted-series affordance (#307): a list period must be
-    // VISIBLE and editable as comma-joined token text (not a silently blanked
-    // field), and comma text typed in Token mode must emit the segment LIST —
-    // the dedicated picker mode is #308.
+  it("opens a #307 list period in List mode showing its segments; Token stays the comma-text escape hatch", async () => {
+    // #338: a stored interrupted series opens in the dedicated List mode with
+    // its segments visible as removable chips. The Token escape hatch still
+    // shows/edits the same value as comma-joined wire text (#307's minimal
+    // affordance, kept).
     const onchange = vi.fn<(next: Period) => void>();
     const screen = await render(PeriodEditor, {
       period: [
@@ -209,13 +209,91 @@ describe("PeriodEditor", () => {
     });
 
     await expect
-      .element(screen.getByRole("radio", { name: "Token" }))
+      .element(screen.getByRole("radio", { name: "List" }))
       .toBeChecked();
+    await expect.element(screen.getByText("2005..2010")).toBeVisible();
+    await expect.element(screen.getByText("2015..2020")).toBeVisible();
+
+    // Removing a segment emits the remaining period (one segment left → the
+    // scalar shape, the canonical form for an uninterrupted period).
+    await screen.getByRole("button", { name: "Remove 2005..2010" }).click();
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2015, to: 2020 });
+
+    // → Token: the comma wire is still visible/editable as raw text (the
+    // mount-time seed — the original value) and a comma edit emits the LIST.
+    await screen.getByRole("radio", { name: "Token" }).click();
     await expect
       .element(screen.getByRole("textbox"))
       .toHaveValue("2005..2010,2015..2020");
-
     await screen.getByRole("textbox").fill("2005..2010,2013");
     expect(onchange).toHaveBeenLastCalledWith([{ from: 2005, to: 2010 }, 2013]);
+  });
+
+  it("List mode accumulates segments with the grain controls, sorted ascending regardless of pick order (#338)", async () => {
+    const onchange = vi.fn<(next: Period) => void>();
+    const screen = await render(PeriodEditor, {
+      period: "",
+      issues: [],
+      onchange,
+    });
+
+    // Explicit opt-in: a fresh source stays range-first; List shows the
+    // incomplete hint until a segment is added (Add disabled meanwhile).
+    await screen.getByRole("radio", { name: "List" }).click();
+    expect(onchange).toHaveBeenLastCalledWith("");
+    await expect
+      .element(screen.getByText(/Add at least one segment/))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "Add segment" }))
+      .toBeDisabled();
+
+    // Segment 1: 2015..2020 (deliberately the LATER segment first).
+    await screen.getByRole("spinbutton", { name: "From" }).fill("2015");
+    await screen.getByRole("spinbutton", { name: "To" }).fill("2020");
+    await screen.getByRole("button", { name: "Add segment" }).click();
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2015, to: 2020 });
+
+    // The controls keep their values but Add disarms until they re-emit (no
+    // double-click duplicates).
+    await expect
+      .element(screen.getByRole("button", { name: "Add segment" }))
+      .toBeDisabled();
+
+    // Segment 2: 2005..2010 — earlier, so it sorts FIRST in the emitted list
+    // (the schema's ascending rule; pick order must not force invalid_period).
+    await screen.getByRole("spinbutton", { name: "From" }).fill("2005");
+    await screen.getByRole("spinbutton", { name: "To" }).fill("2010");
+    await screen.getByRole("button", { name: "Add segment" }).click();
+    expect(onchange).toHaveBeenLastCalledWith([
+      { from: 2005, to: 2010 },
+      { from: 2015, to: 2020 },
+    ]);
+
+    // Removing everything returns to the unset "" + the incomplete hint.
+    await screen.getByRole("button", { name: "Remove 2005..2010" }).click();
+    await screen.getByRole("button", { name: "Remove 2015..2020" }).click();
+    expect(onchange).toHaveBeenLastCalledWith("");
+    await expect
+      .element(screen.getByText(/Add at least one segment/))
+      .toBeVisible();
+  });
+
+  it("a scalar range carries over as the first segment when opting into List (the upgrade path)", async () => {
+    const onchange = vi.fn<(next: Period) => void>();
+    const screen = await render(PeriodEditor, {
+      period: { from: 2005, to: 2010 },
+      issues: [],
+      onchange,
+    });
+    await expect
+      .element(screen.getByRole("radio", { name: "Range" }))
+      .toBeChecked();
+
+    await screen.getByRole("radio", { name: "List" }).click();
+    // The existing range is visible as a chip (nothing silently preserved)
+    // and the mode-switch emit round-trips the same value.
+    await expect.element(screen.getByText("2005..2010")).toBeVisible();
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2005, to: 2010 });
   });
 });
