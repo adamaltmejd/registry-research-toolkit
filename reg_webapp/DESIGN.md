@@ -220,14 +220,15 @@ carries its navigable `fqid`; results within a group are pre-sorted by FTS rank.
   classification) so each group gets its own `total_count` + per-group `limit`.
   `field="description"` is reg_meta's FTS path ONLY — the LIKE-based datacolumn/varname/
   **value** fields are excluded, so codes are absent here (they're #352's own group).
-- **Input gates** (`_validated_query` / `_validated_limit` / `_has_searchable_token`): a
-  query is length-capped (422 over 200 chars) and NUL-rejected (422); `limit` is clamped
-  to \[1, 50\] (not 422'd). A blank / whitespace / punctuation-only query returns the
-  three groups EMPTY (200, not 422) — it never reaches reg_meta (whose LIKE label-fold
-  would otherwise turn `%%` into a match-everything). FTS-operator neutralization +
-  prefix-matching + diacritic folding all live in reg_meta (`_fts_match_query`); the
-  webapp passes the raw query through. The query reaches FTS only as a bound parameter
-  (no SQLi surface), so the gates guard cost/abuse, not injection.
+- **Input gates** (`query_input.validate_text_query` / `_validated_limit` /
+  `_has_searchable_token`): a query is length-capped (422 over 200 chars) and
+  NUL-rejected (422); `limit` is clamped to \[1, 50\] (not 422'd). A blank / whitespace
+  / punctuation-only query returns the three groups EMPTY (200, not 422) — it never
+  reaches reg_meta (whose LIKE label-fold would otherwise turn `%%` into a
+  match-everything). FTS-operator neutralization + prefix-matching + diacritic folding
+  all live in reg_meta (`_fts_match_query`); the webapp passes the raw query through.
+  The query reaches FTS only as a bound parameter (no SQLi surface), so the gates guard
+  cost/abuse, not injection.
 - **Golden-boost seam** (`_apply_golden_boost`): a no-op identity hook where #311's
   curated golden/starred boost will reorder within a group. Wired now so the ordering
   contract and call sites already exist.
