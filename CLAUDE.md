@@ -60,6 +60,11 @@ bridges agentic local work to MONA projects.
 - One-off tools (not project deps): `uvx <tool>` — e.g.
   `uvx pre-commit run --all-files`.
 - Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
+- 7-day minimum release age is project policy: `exclude-newer = "7 days"` in the root
+  `pyproject.toml` `[tool.uv]`, recorded in `uv.lock`'s `[options]` block. It applies on
+  every checkout with no global uv config needed. Don't remove either side: dropping
+  the pyproject setting makes plain `uv run` discard the committed lock on checkouts
+  without a matching global config.
 - `requires-python` floor is bound to MONA's bundled Python — see
   `mock_data_wizard/DESIGN.md` "MONA Python runtime" before raising it.
 

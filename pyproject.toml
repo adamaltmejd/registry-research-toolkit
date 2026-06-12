@@ -88,6 +88,11 @@ rules.not-subscriptable = "ignore"
 
 [tool.uv]
 package = false
+# Project-level 7-day minimum release age (supply-chain guard). uv records this in
+# uv.lock's [options] block; without it, checkouts lacking the maintainer's global
+# ~/.config/uv/uv.toml would discard the committed lock on plain `uv run` and
+# re-resolve against PyPI.
+exclude-newer = "7 days"
 
 [tool.uv.sources]
 mock-data-wizard = { workspace = true }
