@@ -478,10 +478,10 @@ class TestValidateModule:
     def test_panel_ref_composite_stateless_element_fails_strict(
         self, fixture_db: Path, tmp_path: Path
     ):
-        """#287: composite keys check element-wise in the strict pass too. Both
-        elements resolve in register 1, but only `kon` has states in the
-        sibling variant (none) — both elements fail the states check while the
-        resolution check stays clean."""
+        """#287: composite keys check element-wise in the strict pass too. The
+        json-array key decodes and its `kon` element resolves in register 1,
+        but carries no states in the fresh sibling variant — the element fails
+        the states check while the resolution check stays clean."""
         broken = tmp_path / "broken.db"
         broken.write_bytes(fixture_db.read_bytes())
         conn = sqlite3.connect(broken)
