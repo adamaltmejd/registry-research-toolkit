@@ -80,7 +80,12 @@ function listSeed(p: string | null): string | null {
 
 $effect(() => {
   field = periodFieldFromQuery(period);
-  rangeWire = period;
+  // Only a range-REPRESENTABLE value seeds the range buffer: an active
+  // `_default`/comma/mixed-grain period must not sit invisibly behind blank
+  // range controls where a manual switch to Picker + Apply would re-submit
+  // it (the #347/#349 stale-buffer class) — Apply no-ops on null instead.
+  rangeWire =
+    period !== null && rangeRepresentable(period, grains) ? period : null;
   listWire = listSeed(period);
   // Re-derive the mode too: back/forward can land on a period the active UI
   // can't represent (`_default`, a mixed-grain range, a comma list) — staying

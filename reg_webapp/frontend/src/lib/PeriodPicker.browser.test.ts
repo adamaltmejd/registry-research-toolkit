@@ -56,6 +56,20 @@ describe("PeriodPicker", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2015..2020");
   });
 
+  it("switching to Picker from an unrepresentable active period blanks the buffer — Apply no-ops, never re-submits the invisible value", async () => {
+    const onsubmit = vi.fn<(period: string) => void>();
+    const screen = await render(PeriodPicker, {
+      period: "2005..2010,2015..2020",
+      onsubmit,
+      onclear: vi.fn(),
+    });
+    await screen.getByRole("button", { name: "Picker" }).click();
+    // Blank controls + a null buffer: Apply must NOT submit the stale comma
+    // value hiding behind them (the #347/#349 stale-buffer class).
+    await screen.getByRole("button", { name: "Apply" }).click();
+    expect(onsubmit).not.toHaveBeenCalled();
+  });
+
   it("an unrepresentable active period (_default) still opens in Text, visible and editable", async () => {
     const screen = await render(PeriodPicker, {
       period: "_default",
