@@ -152,11 +152,12 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   Codex/Copilot a bounded window: poll for either review comments or Codex's clean
   verdict — a 👍 reaction on the PR body from `chatgpt-codex-connector[bot]` with no
   review submitted (invisible to `gh pr view`; check
-  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`). Either signal ends the wait;
-  \~10 min with neither is the ceiling — bots can be out of tokens or skip a push
-  entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
-  requested by commenting `@codex review`). Only trust a verdict timestamped after the
-  latest push; absence at the ceiling is not a blocker.
+  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`). A 👀 reaction there means Codex
+  is still reviewing — never conclude the window or merge while it's present. Otherwise,
+  either signal ends the wait; \~10 min with neither is the ceiling — bots can be out of
+  tokens or skip a push entirely (Codex auto-reviews on open/ready only; a verdict on a
+  new HEAD must be requested by commenting `@codex review`). Only trust a verdict
+  timestamped after the latest push; absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
