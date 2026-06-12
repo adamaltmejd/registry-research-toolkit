@@ -627,7 +627,7 @@ def _search_classifications(
     for the `class/<slug>` FQID. A NULL-slug classification isn't FQID-addressable
     (`try_emit` → None), mirroring the catalog enumeration's slug filter."""
     rows = conn.execute(
-        "SELECT cf.short_name, cf.name, c.slug, cf.rank "
+        "SELECT c.id AS classification_id, cf.short_name, cf.name, c.slug, cf.rank "
         "FROM classification_fts cf "
         "JOIN classification c ON c.id = cf.rowid "
         "WHERE classification_fts MATCH ? "
@@ -641,6 +641,10 @@ def _search_classifications(
             "short_name": r["short_name"],
             "classification_name": r["name"],
             "fts_rank": r["rank"],
+            # Internal fold key (stripped before public): maps the leaf to its
+            # vintage concept group so the fold can subsume it (symmetric with
+            # variables' `_variable_id`).
+            "_classification_id": r["classification_id"],
         }
         for r in rows
     ]
@@ -804,33 +808,26 @@ def _fold_concept_groups(
 ) -> list[dict[str, Any]]:
     """Collapse sibling search hits under their concept group (#322).
 
-    A group row replaces its member hits when ≥2 DISTINCT member variables
-    matched (one variable hit through several fields is not a family signal)
-    OR the group's own label matched. A lone member hit stays a leaf row,
-    annotated with `concept_group`/`concept_group_label` so the family is
-    still discoverable. Original leaf hits ride under the group row's
-    `matched`; the full member list (facet-ordered, via the Catalog reuse)
-    rides under `members`."""
-    vids = {r["_variable_id"] for r in results if r.get("_variable_id") is not None}
-    membership: dict[int, sqlite3.Row] = {}
-    if vids:
-        placeholders = ",".join("?" * len(vids))
-        rows = conn.execute(
-            "SELECT cgv.variable_id, g.group_id, g.kind, g.group_key, g.label, "
-            "g.source, g.register_id, r.name AS register_name "
-            "FROM concept_group_variable cgv "
-            "JOIN concept_group g ON g.group_id = cgv.group_id "
-            "LEFT JOIN register r ON r.register_id = g.register_id "
-            f"WHERE cgv.variable_id IN ({placeholders})",
-            list(vids),
-        ).fetchall()
-        membership = {row["variable_id"]: row for row in rows}
+    A group row replaces its member hits when ≥2 DISTINCT members matched (one
+    member hit through several fields is not a family signal) OR the group's own
+    label matched. A lone member hit stays a leaf row, annotated with
+    `concept_group`/`concept_group_label` so the family is still discoverable.
+    Original leaf hits ride under the group row's `matched`; the full member list
+    (facet-ordered, via the Catalog reuse) rides under `members`.
+
+    Both member kinds fold symmetrically: variable leaves key on `_variable_id`
+    (mapped via `concept_group_variable`), classification leaves on
+    `_classification_id` (via `concept_group_classification`). Without the
+    classification arm a label-matched vintage family would emit its group row
+    AND leave the matching classification leaves standing — the same entity
+    twice (#350 review)."""
+    membership = _member_group_index(conn, results)
 
     buckets: dict[int, list[dict[str, Any]]] = {}
     group_meta: dict[int, sqlite3.Row] = {}
     for r in results:
-        vid = r.get("_variable_id")
-        member = membership.get(vid) if vid is not None else None
+        key = _member_key(r)
+        member = membership.get(key) if key is not None else None
         if member is not None:
             buckets.setdefault(member["group_id"], []).append(r)
             group_meta.setdefault(member["group_id"], member)
@@ -841,15 +838,15 @@ def _fold_concept_groups(
 
     folded_ids = set(label_ids)
     for gid, hits in buckets.items():
-        if len({h["_variable_id"] for h in hits}) >= 2:
+        if len({_member_key(h) for h in hits}) >= 2:
             folded_ids.add(gid)
 
     summaries = _GroupSummaryLookup(conn)
     out: list[dict[str, Any]] = []
     emitted: set[int] = set()
     for r in results:
-        vid = r.get("_variable_id")
-        member = membership.get(vid) if vid is not None else None
+        key = _member_key(r)
+        member = membership.get(key) if key is not None else None
         if member is None:
             out.append(r)
             continue
@@ -873,6 +870,60 @@ def _fold_concept_groups(
             emitted.add(row["group_id"])
             out.append(_group_result_row(row, [], summaries, label_matched=True))
     return out
+
+
+def _member_key(r: dict[str, Any]) -> tuple[str, int] | None:
+    """The (kind, id) concept-group membership key for a leaf result row, or
+    None for a row that can't be a member (e.g. a register hit). Kind-tagged so
+    a variable_id and a classification_id can't collide across the two tables."""
+    vid = r.get("_variable_id")
+    if vid is not None:
+        return ("variable", vid)
+    cid = r.get("_classification_id")
+    if cid is not None:
+        return ("classification", cid)
+    return None
+
+
+def _member_group_index(
+    conn: sqlite3.Connection, results: list[dict[str, Any]]
+) -> dict[tuple[str, int], sqlite3.Row]:
+    """Map each member leaf's (kind, id) key to its `concept_group` row, across
+    BOTH membership tables (`concept_group_variable` / `concept_group_classification`)."""
+    index: dict[tuple[str, int], sqlite3.Row] = {}
+    vids = {r["_variable_id"] for r in results if r.get("_variable_id") is not None}
+    if vids:
+        placeholders = ",".join("?" * len(vids))
+        rows = conn.execute(
+            "SELECT cgv.variable_id AS member_id, g.group_id, g.kind, g.group_key, "
+            "g.label, g.source, g.register_id, r.name AS register_name "
+            "FROM concept_group_variable cgv "
+            "JOIN concept_group g ON g.group_id = cgv.group_id "
+            "LEFT JOIN register r ON r.register_id = g.register_id "
+            f"WHERE cgv.variable_id IN ({placeholders})",
+            list(vids),
+        ).fetchall()
+        for row in rows:
+            index[("variable", row["member_id"])] = row
+    cids = {
+        r["_classification_id"]
+        for r in results
+        if r.get("_classification_id") is not None
+    }
+    if cids:
+        placeholders = ",".join("?" * len(cids))
+        rows = conn.execute(
+            "SELECT cgc.classification_id AS member_id, g.group_id, g.kind, "
+            "g.group_key, g.label, g.source, g.register_id, r.name AS register_name "
+            "FROM concept_group_classification cgc "
+            "JOIN concept_group g ON g.group_id = cgc.group_id "
+            "LEFT JOIN register r ON r.register_id = g.register_id "
+            f"WHERE cgc.classification_id IN ({placeholders})",
+            list(cids),
+        ).fetchall()
+        for row in rows:
+            index[("classification", row["member_id"])] = row
+    return index
 
 
 class _GroupSummaryLookup:
@@ -945,13 +996,19 @@ def _group_result_row(
     }
 
 
+_INTERNAL_KEYS = ("_variable_id", "_classification_id")
+
+
 def _strip_internal_keys(results: list[dict[str, Any]]) -> None:
-    """Drop the fold-internal `_variable_id` from leaf rows and from the leaf
-    hits nested under a group row's `matched` before results go public."""
+    """Drop the fold-internal member keys (`_variable_id` / `_classification_id`)
+    from leaf rows and from the leaf hits nested under a group row's `matched`
+    before results go public."""
     for r in results:
-        r.pop("_variable_id", None)
+        for key in _INTERNAL_KEYS:
+            r.pop(key, None)
         for m in r.get("matched", ()):
-            m.pop("_variable_id", None)
+            for key in _INTERNAL_KEYS:
+                m.pop(key, None)
 
 
 # ---------------------------------------------------------------------------

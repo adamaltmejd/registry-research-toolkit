@@ -89,14 +89,22 @@ def test_variable_concept_group_folds(client):
     assert {m["fqid"] for m in grp["members"]} == {"scb/rams/inkjan", "scb/rams/inkfeb"}
 
 
-def test_classification_group_folds(client):
-    # sun2000 + sun2020 share the name "Svensk utbildningsnomenklatur" → fold.
+def test_classification_group_folds_without_duplicate_leaves(client):
+    # sun2000 + sun2020 share the name "Svensk utbildningsnomenklatur", which is
+    # also the `sun` group label → the family folds into ONE group row AND the
+    # member leaves are SUBSUMED (not emitted standalone too — the #350 review
+    # bug: classification leaves were duplicated as both leaf and folded member).
     g = _group(
         client.get("/api/search", params={"q": "utbildningsnomenklatur"}).json(),
         "classifications",
     )
     groups = [r for r in g["results"] if r["type"] == "group"]
-    assert any(r["kind"] == "classification" for r in groups)
+    grp = next(r for r in groups if r["kind"] == "classification")
+    member_fqids = {m["fqid"] for m in grp["members"]}
+    assert {"class/sun2000", "class/sun2020"} <= member_fqids
+    leaf_fqids = {r["fqid"] for r in g["results"] if r["type"] == "classification"}
+    # No member appears as a standalone leaf alongside its folded group row.
+    assert not (member_fqids & leaf_fqids)
 
 
 # ── diacritic parity with the SPA filter (å→a) ───────────────────────────────

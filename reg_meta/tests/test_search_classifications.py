@@ -43,6 +43,64 @@ def db() -> sqlite3.Connection:
     return conn
 
 
+@pytest.fixture
+def db_with_cls_group() -> sqlite3.Connection:
+    """Slugged DB with a 2-member classification vintage group (sun2000 +
+    sun2020, both named "Svensk utbildningsnomenklatur") so the fold path is
+    exercised at the library level."""
+    conn = build_slugged_db()  # ships sun2020 (id 1)
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token')"
+    )
+    sun2020_id = conn.execute(
+        "SELECT id FROM classification WHERE slug = 'sun2020'"
+    ).fetchone()[0]
+    conn.executemany(
+        "INSERT INTO concept_group_classification (classification_id, group_id, "
+        "facet_value, facet_label) VALUES (?, 11, ?, ?)",
+        [(50, "2000", "2000"), (sun2020_id, "2020", "2020")],
+    )
+    _rebuild_fts(conn)
+    return conn
+
+
+def test_classification_label_match_folds_and_subsumes_leaves(
+    db_with_cls_group: sqlite3.Connection,
+) -> None:
+    # The query matches both classification names (FTS) AND the group label
+    # (LIKE) → one group row, member leaves subsumed (no leaf + folded-member
+    # duplication, the #350 review bug).
+    out = search(
+        db_with_cls_group, "Svensk", field="description", type="classification"
+    )
+    rows = out["results"]
+    groups = [r for r in rows if r["type"] == "group"]
+    leaves = [r for r in rows if r["type"] == "classification"]
+    assert len(groups) == 1
+    assert groups[0]["kind"] == "classification"
+    assert groups[0]["group_key"] == "sun"
+    member_fqids = {m["fqid"] for m in groups[0]["members"]}
+    assert {"class/sun2000", "class/sun2020"} <= member_fqids
+    assert not ({r["fqid"] for r in leaves} & member_fqids)
+
+
+def test_classification_member_fold_without_label_match(
+    db_with_cls_group: sqlite3.Connection,
+) -> None:
+    # short_name search ("SUN") matches both members' FTS but NOT the group
+    # label "Svensk …" — ≥2 member hits still fold the family (symmetric with
+    # variables).
+    out = search(db_with_cls_group, "SUN", field="description", type="classification")
+    groups = [r for r in out["results"] if r["type"] == "group"]
+    assert any(r["group_key"] == "sun" for r in groups)
+
+
 def _types(results: list[dict]) -> set[str]:
     return {r["type"] for r in results}
 
