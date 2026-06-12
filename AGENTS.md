@@ -143,9 +143,10 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
   PRs additionally need an independent Claude review pass (e.g. `/code-review` or a
-  reviewer subagent). Review is iterative: fix every finding, and if the fixes introduce
-  substantial new changes, run another round on the new diff — repeat until a round
-  produces no new findings.
+  reviewer subagent). A subagent review reports its findings directly to the
+  orchestrating session — not as PR comments. Review is iterative: fix every finding,
+  and if the fixes introduce substantial new changes, run another round on the new diff
+  — repeat until a round produces no new findings.
 - **Bot-review window** — after the PR is ready (and after each substantive push), give
   Codex/Copilot a bounded window: poll for either review comments or Codex's clean
   verdict — a 👍 reaction on the PR body from `chatgpt-codex-connector[bot]` with no
