@@ -3010,10 +3010,16 @@ def materialize(
             warn=_progress,
         )
         row_counts["description_backfills"] = de_counts["applied"]
+        row_counts["delivery_aliases"] = de_counts["alias_applied"]
         _progress(
             f"  {de_counts['applied']:,} description backfills "
             f"({de_counts['skipped']:,} already set, "
             f"{de_counts['unresolved']:,} unresolved)"
+        )
+        _progress(
+            f"  {de_counts['alias_applied']:,} delivery aliases "
+            f"({de_counts['alias_skipped']:,} already present, "
+            f"{de_counts['alias_unresolved']:,} unresolved)"
         )
 
         # Curated cross-register thematic tags (#311) — discovery overlay. Runs

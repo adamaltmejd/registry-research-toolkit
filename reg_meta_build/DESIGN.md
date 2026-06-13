@@ -1294,11 +1294,23 @@ guards, so the committed rows are column-verified rather than fuzzily matched:
 Plus whitespace collapsed, trailing footnote `*` stripped, and `(register, variable)`
 pairs with conflicting cross-vintage descriptions dropped.
 
-PR1a ships the **description-backfill** kind only (`[[description]]`: fill an empty
-`variable.description` from the delivery-list prose); delivery-column aliases and
-gap-fill variable grafts are the next slice (#365 PR1b — the loader returns a
-`DeliveryEnrichment` wrapper so those tuples join without a signature change). The apply
-pass runs in the same slug-gated post-pass block as concept groups (after
+Two entry kinds ship today, both in `delivery_enrichment.toml`:
+
+- **`[[description]]`** (PR1a) — fill an empty `variable.description` from the
+  delivery-list prose.
+- **`[[alias]]`** (PR1c) — record `delivery_column` as an additional `variable_alias`
+  row for an existing variable (SWECOV delivers it under a name that differs from the
+  SCB metadata header, e.g. FEK `BidragForVerksamheten` ↔ `bidrag-for-verksamheten`).
+  The alias joins the variable's delivery-column history that `get_datacolumns` /
+  `resolve` read and the MONA bundle matches columns against; it is attached to every
+  `register_variant` in which the variable has a state. Adding *extra* alias rows is
+  safe because the validator invariant is one-directional — every `variable_state`
+  column must be in `variable_alias`, but not the reverse
+  (`_check_variable_alias_covers_state_columns`). No `variable_alias_window` (those are
+  #319's monthly per-month *expansion*, a different shape). Gap-fill variable grafts
+  remain deferred (the candidate set needs type curation; see #365).
+
+The apply pass runs in the same slug-gated post-pass block as concept groups (after
 `populate_variable_slugs`, so `(register, variable)` resolves off stored slugs) and is
 provider-gated like the classification seed.
 
@@ -1306,16 +1318,17 @@ Two guards, both deliberate:
 
 - **Gap-fill only.** A backfill never overwrites a non-empty description (the `UPDATE`'s
   `WHERE description IS NULL OR TRIM(description) = ''` clause), so an official SCB/SOS
-  description always outranks the delivery list, and the pass is idempotent.
-- **Strict load, lenient resolve.** A *structural* TOML defect (duplicate
-  `(register, variable)`, malformed FQID) FAILS the build (EXIT_CONFIG) like the other
-  curation surfaces. But a backfill whose slug no longer *resolves* is skipped + counted
-  (`unresolved` in the build summary), NOT a build failure — unlike `concept_groups`'
-  fail-fast. Rationale: pre-v1 variable slugs regenerate each build under `UNFROZEN`
-  (#209), and a gap-fill description is non-structural, so one stale row must not make
-  the whole global build fragile. Regenerate the TOML when the count drifts. No snapshot
-  / immutability machinery and no `SCHEMA_VERSION` bump — it only writes `description`
-  text on existing rows.
+  description always outranks the delivery list; an alias uses `INSERT OR IGNORE`, so a
+  column the variant already carries is a no-op. Both passes are idempotent.
+- **Strict load, lenient resolve.** A *structural* TOML defect (duplicate keys,
+  malformed FQID, multi-segment variable) FAILS the build (EXIT_CONFIG) like the other
+  curation surfaces. But a row whose slug no longer *resolves* (or, for an alias, whose
+  variable has no state) is skipped + counted (`unresolved`), NOT a build failure —
+  unlike `concept_groups`' fail-fast. Rationale: pre-v1 variable slugs regenerate each
+  build under `UNFROZEN` (#209), and an enrichment row is non-structural, so one stale
+  row must not make the whole global build fragile. Regenerate the TOML when the count
+  drifts. No snapshot / immutability machinery and no `SCHEMA_VERSION` bump —
+  descriptions write text and aliases add rows on existing variables.
 
 ## Thematic tags (#311)
 

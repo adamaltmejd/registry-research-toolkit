@@ -2218,3 +2218,199 @@ register = "scb/utrikeshandel"
 variable = "vikt"
 description = "Statistiskt värde i Kilo"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+# ── Delivery-column aliases (#365 PR1c) ───────────────────────────────────────
+# Record SWECOV's delivery column name as an additional variable_alias for an
+# EXISTING variable (its delivered header DIFFERS from the SCB metadata header).
+# GENERATED from build_catalog.py `globals` alias_candidates (normalized name ==
+# existing column/slug; human-confirmed), grounded against a fresh reg_meta.db:
+# an alias whose delivery_column already equals one of the variable's own
+# variable_state columns is dropped (redundant no-op, not an alternate name).
+# The apply pass attaches each to every register_variant where the variable has
+# a state; INSERT OR IGNORE so an already-known column is a no-op.
+# 37 aliases across 4 registers.
+
+[[alias]]
+register = "scb/agi"
+variable = "bostadsf-smahus-ul-ag-ag"
+delivery_column = "BOSTADSF_SMAHUS_ULAG_AG"
+
+[[alias]]
+register = "scb/agi"
+variable = "bostadsf-smahus-ul-ag-ea"
+delivery_column = "BOSTADSF_SMAHUS_ULAG_EA"
+
+[[alias]]
+register = "scb/fek"
+variable = "bidrag-for-verksamheten"
+delivery_column = "BidragForVerksamheten"
+
+[[alias]]
+register = "scb/fek"
+variable = "foradlingsvarde"
+delivery_column = "Foradlingsvarde"
+
+[[alias]]
+register = "scb/fek"
+variable = "forandring-av-lager-och-pagaende-arbete"
+delivery_column = "ForandringAvLagerOchPagaendeArbete"
+
+[[alias]]
+register = "scb/fek"
+variable = "forbrukningsvarde"
+delivery_column = "Forbrukningsvarde"
+
+[[alias]]
+register = "scb/fek"
+variable = "kostnader-for-loner-och-andra-ersattningar"
+delivery_column = "KostnaderForLonerOchAndraErsattningar"
+
+[[alias]]
+register = "scb/fek"
+variable = "kostnader-for-ovriga-sociala-avgifter"
+delivery_column = "KostnaderForOvrigaSocialaAvgifter"
+
+[[alias]]
+register = "scb/fek"
+variable = "medelantal-anstallda"
+delivery_column = "MedelantalAnstallda"
+
+[[alias]]
+register = "scb/fek"
+variable = "nettoomsattning"
+delivery_column = "Nettoomsattning"
+
+[[alias]]
+register = "scb/fek"
+variable = "nettoomsattning-justerad-for-merchanting"
+delivery_column = "NettoomsattningJusteradForMerchanting"
+
+[[alias]]
+register = "scb/fek"
+variable = "ovriga-personalkostnader"
+delivery_column = "OvrigaPersonalkostnader"
+
+[[alias]]
+register = "scb/fek"
+variable = "pensionskostnader"
+delivery_column = "Pensionskostnader"
+
+[[alias]]
+register = "scb/fek"
+variable = "produktionsvarde"
+delivery_column = "Produktionsvarde"
+
+[[alias]]
+register = "scb/fek"
+variable = "rorelseresultat"
+delivery_column = "Rorelseresultat"
+
+[[alias]]
+register = "scb/fek"
+variable = "rorelseresultat-fore-avskrivningar"
+delivery_column = "RorelseresultatForeAvskrivningar"
+
+[[alias]]
+register = "scb/fek"
+variable = "sociala-kostnader-och-andra-personalkostnader"
+delivery_column = "SocialaKostnaderOchAndraPersonalkostnader"
+
+[[alias]]
+register = "scb/fek"
+variable = "summa-bruttoinvesteringar"
+delivery_column = "SummaBruttoinvesteringar"
+
+[[alias]]
+register = "scb/fek"
+variable = "summa-eget-kapital"
+delivery_column = "SummaEgetKapital"
+
+[[alias]]
+register = "scb/fek"
+variable = "summa-kostnader-for-ravaror-och-handelsvaror"
+delivery_column = "SummaKostnaderForRavarorOchHandelsvaror"
+
+[[alias]]
+register = "scb/fek"
+variable = "summa-nettoinvesteringar"
+delivery_column = "SummaNettoinvesteringar"
+
+[[alias]]
+register = "scb/fek"
+variable = "utdelning"
+delivery_column = "Utdelning"
+
+[[alias]]
+register = "scb/fek"
+variable = "varulager"
+delivery_column = "Varulager"
+
+[[alias]]
+register = "scb/fou"
+variable = "redovisningsgrupp"
+delivery_column = "BGrupp"
+
+[[alias]]
+register = "scb/fou"
+variable = "sektor"
+delivery_column = "Sektor"
+
+[[alias]]
+register = "scb/fou"
+variable = "v700-1"
+delivery_column = "v7001"
+
+[[alias]]
+register = "scb/fou"
+variable = "v700-2"
+delivery_column = "v7002"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "eco-enu"
+delivery_column = "ECOENU"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "eco-ext"
+delivery_column = "ECOEXT"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "eco-rea"
+delivery_column = "ECOREA"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "eco-rep"
+delivery_column = "ECOREP"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "j20c"
+delivery_column = "ECOENO"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "miljoinnovation-atervunnit-avfall-vatten-eller-material"
+delivery_column = "ECOREC"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "miljoinnovation-materialersattning"
+delivery_column = "ECOSUB"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "miljoinnovation-minskad-materialatgang"
+delivery_column = "ECOMAT"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "miljoinnovation-reducerade-fororeningar-foretaget"
+delivery_column = "ECOPOL"
+
+[[alias]]
+register = "scb/innovation-foretag"
+variable = "miljoinnovation-reducerade-fororeningar-slutkonsumtion"
+delivery_column = "ECOPOS"

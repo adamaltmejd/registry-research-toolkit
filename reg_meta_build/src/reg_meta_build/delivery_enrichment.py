@@ -2,10 +2,21 @@
 
 Gap-fill catalog facts extracted from steward delivery / variable lists that
 describe the **shared** SCB/SOS world — not steward-private content — curated
-into a committed TOML and applied to the normal *global* build. PR1a ships the
-**description-backfill** kind only: filling an EMPTY ``variable.description``
-from the delivery list's prose. (Delivery-column aliases and gap-fill variable
-grafts are the next slice, #365 PR1b.)
+into a committed TOML and applied to the normal *global* build. Two entry kinds
+ship today, both in ``delivery_enrichment.toml``:
+
+* ``[[description]]`` (PR1a) — fill an EMPTY ``variable.description`` from the
+  delivery list's prose.
+* ``[[alias]]`` (PR1c) — record an additional ``variable_alias`` delivery column
+  for an existing variable (the name SWECOV delivers it under differs from the
+  SCB metadata header). The alias becomes part of the variable's delivery-column
+  history (``get_datacolumns`` / ``resolve`` read ``variable_alias``; the MONA
+  bundle matches a delivered column → variable through it). Adding *extra* alias
+  rows is safe: the validator invariant is one-directional (every state column
+  must be in ``variable_alias``; the reverse is not required).
+
+(Gap-fill variable grafts remain deferred — the candidate set needs type
+curation; see #365.)
 
 Scope follows what a fact is *about*, not where it was learned (revised
 2026-06-12, #365): a description of an AGI column is an AGI fact regardless of
@@ -59,11 +70,27 @@ class DescriptionBackfill:
 
 
 @dataclass(frozen=True)
+class CuratedAlias:
+    """One ``[[alias]]`` entry: record ``delivery_column`` as an additional
+    ``variable_alias`` delivery column for the existing variable at
+    ``provider/register`` slug ``variable``. Attached to every register_variant
+    in which that variable has a state, so the alias surfaces consistently with
+    the variable's delivered data. ``provenance`` is audit-only (not stored)."""
+
+    provider: str
+    register: str
+    variable: str
+    delivery_column: str
+    provenance: str
+
+
+@dataclass(frozen=True)
 class DeliveryEnrichment:
-    """The parsed delivery-enrichment overlay. PR1a carries only description
-    backfills; alias and graft tuples join here in PR1b."""
+    """The parsed delivery-enrichment overlay: description backfills (PR1a) and
+    delivery-column aliases (PR1c)."""
 
     descriptions: tuple[DescriptionBackfill, ...]
+    aliases: tuple[CuratedAlias, ...] = ()
 
 
 def repo_delivery_enrichment_path() -> Path | None:
@@ -89,6 +116,33 @@ def _require_str(entry: dict, field: str, context: str) -> str:
     return value
 
 
+def _parse_register_variable(entry: dict, kind: str) -> tuple[str, str, str]:
+    """Validate + split the shared ``register`` (2-segment ``provider/register``
+    FQID) and ``variable`` (single register-local slug) fields. Returns
+    ``(provider, register, variable)``. A multi-segment ``variable`` (``foo/bar``)
+    is a maintainer typo and fails the strict load rather than being silently
+    counted unresolved later."""
+    register_fqid = _require_str(entry, "register", kind)
+    parts = register_fqid.split("/")
+    if len(parts) != 2 or not all(parts):
+        raise curation_error(
+            "delivery_enrichment_invalid",
+            f"delivery_enrichment register {register_fqid!r} must be a "
+            "2-segment `provider/register` FQID.",
+            'Give `register = "scb/agi"`-style 2-segment FQIDs.',
+        )
+    variable = _require_str(entry, "variable", kind)
+    if "/" in variable:
+        raise curation_error(
+            "delivery_enrichment_invalid",
+            f"delivery_enrichment {kind} {register_fqid} variable {variable!r} "
+            "must be a single slug segment, not a path.",
+            'Give just the variable slug (`variable = "avdr-prel-skatt"`), '
+            "not a `provider/register/variable` FQID.",
+        )
+    return parts[0], parts[1], variable
+
+
 def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
     """Parse the delivery-enrichment TOML. Empty when no file (synthetic test
     builds, wheel installs).
@@ -106,47 +160,24 @@ def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
         code_base="delivery_enrichment",
         file_name="delivery_enrichment.toml",
         entry_fields="register / variable / description",
+        sibling_keys=frozenset({"alias"}),
     )
     out: list[DescriptionBackfill] = []
     seen: set[tuple[str, str, str]] = set()
     for entry in entries:
-        register_fqid = _require_str(entry, "register", "[[description]]")
-        parts = register_fqid.split("/")
-        if len(parts) != 2 or not all(parts):
-            raise curation_error(
-                "delivery_enrichment_invalid",
-                f"delivery_enrichment register {register_fqid!r} must be a "
-                "2-segment `provider/register` FQID.",
-                'Give `register = "scb/agi"`-style 2-segment FQIDs.',
-            )
-        variable = _require_str(entry, "variable", "[[description]]")
-        if "/" in variable:
-            # The variable is a single register-local slug, not an FQID path. A
-            # multi-segment value (`foo/bar`) is a maintainer typo that would
-            # otherwise be silently counted `unresolved` (lenient resolve) — but
-            # a malformed reference must fail the strict structural load path.
-            raise curation_error(
-                "delivery_enrichment_invalid",
-                f"delivery_enrichment [[description]] {register_fqid} variable "
-                f"{variable!r} must be a single slug segment, not a path.",
-                'Give just the variable slug (`variable = "avdr-prel-skatt"`), '
-                "not a `provider/register/variable` FQID.",
-            )
+        provider, register, variable = _parse_register_variable(
+            entry, "[[description]]"
+        )
         description = _require_str(entry, "description", "[[description]]")
-        provenance = entry.get("provenance", "")
-        if not isinstance(provenance, str):
-            raise curation_error(
-                "delivery_enrichment_invalid",
-                f"delivery_enrichment [[description]] {register_fqid}/{variable} "
-                f"`provenance` must be a string, got {provenance!r}.",
-                "Give `provenance` as a string or omit it.",
-            )
-        scope_key = (parts[0], parts[1], variable)
+        provenance = _opt_provenance(
+            entry, f"[[description]] {provider}/{register}/{variable}"
+        )
+        scope_key = (provider, register, variable)
         if scope_key in seen:
             raise curation_error(
                 "delivery_enrichment_invalid",
                 f"delivery_enrichment duplicate description for "
-                f"{register_fqid}/{variable}.",
+                f"{provider}/{register}/{variable}.",
                 "Each (register, variable) may have at most one [[description]] "
                 "— resolve the conflicting rows in "
                 "reg_meta_build/delivery_enrichment.toml.",
@@ -154,14 +185,68 @@ def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
         seen.add(scope_key)
         out.append(
             DescriptionBackfill(
-                provider=parts[0],
-                register=parts[1],
+                provider=provider,
+                register=register,
                 variable=variable,
                 description=description,
                 provenance=provenance,
             )
         )
-    return DeliveryEnrichment(descriptions=tuple(out))
+    return DeliveryEnrichment(descriptions=tuple(out), aliases=_load_aliases(path))
+
+
+def _opt_provenance(entry: dict, context: str) -> str:
+    provenance = entry.get("provenance", "")
+    if not isinstance(provenance, str):
+        raise curation_error(
+            "delivery_enrichment_invalid",
+            f"delivery_enrichment {context} `provenance` must be a string, "
+            f"got {provenance!r}.",
+            "Give `provenance` as a string or omit it.",
+        )
+    return provenance
+
+
+def _load_aliases(path: Path | None) -> tuple[CuratedAlias, ...]:
+    """Parse the ``[[alias]]`` entries (sibling to ``[[description]]`` in the same
+    file). Each ``(register, variable, delivery_column)`` triple is unique."""
+    entries = load_curation_entries(
+        path,
+        entry_key="alias",
+        label="delivery-enrichment",
+        prefix="delivery_enrichment",
+        code_base="delivery_enrichment",
+        file_name="delivery_enrichment.toml",
+        entry_fields="register / variable / delivery_column",
+        sibling_keys=frozenset({"description"}),
+    )
+    out: list[CuratedAlias] = []
+    seen: set[tuple[str, str, str]] = set()
+    for entry in entries:
+        provider, register, variable = _parse_register_variable(entry, "[[alias]]")
+        delivery_column = _require_str(entry, "delivery_column", "[[alias]]")
+        provenance = _opt_provenance(
+            entry, f"[[alias]] {provider}/{register}/{variable}"
+        )
+        key = (provider, register, variable + "\x00" + delivery_column.lower())
+        if key in seen:
+            raise curation_error(
+                "delivery_enrichment_invalid",
+                f"delivery_enrichment duplicate alias {delivery_column!r} for "
+                f"{provider}/{register}/{variable}.",
+                "Each (register, variable, delivery_column) may appear once.",
+            )
+        seen.add(key)
+        out.append(
+            CuratedAlias(
+                provider=provider,
+                register=register,
+                variable=variable,
+                delivery_column=delivery_column,
+                provenance=provenance,
+            )
+        )
+    return tuple(out)
 
 
 def _apply_description_backfills(
@@ -207,6 +292,59 @@ def _apply_description_backfills(
     return counts
 
 
+def _apply_aliases(
+    conn: sqlite3.Connection,
+    aliases: tuple[CuratedAlias, ...],
+    warn: Callable[[str], None],
+) -> dict[str, int]:
+    """Insert curated ``variable_alias`` rows. Each alias is attached to every
+    register_variant in which the target variable has a ``variable_state`` (so
+    the alias surfaces consistently with the delivered data; a variable with no
+    state — e.g. provider absent from this build — is counted ``unresolved``).
+    Lenient like the backfill pass: a slug that doesn't resolve is counted, not
+    fatal. ``INSERT OR IGNORE`` makes it idempotent and skips a column the
+    variant already carries (``skipped``)."""
+    counts = {"applied": 0, "skipped": 0, "unresolved": 0}
+    for al in aliases:
+        variant_rows = conn.execute(
+            "SELECT DISTINCT vs.register_variant_id FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
+            (al.provider, al.register, al.variable),
+        ).fetchall()
+        variable_row = conn.execute(
+            "SELECT v.variable_id FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
+            (al.provider, al.register, al.variable),
+        ).fetchone()
+        if variable_row is None or not variant_rows:
+            counts["unresolved"] += 1
+            continue
+        variable_id = variable_row[0]
+        for (register_variant_id,) in variant_rows:
+            cur = conn.execute(
+                "INSERT OR IGNORE INTO variable_alias "
+                "(variable_id, register_variant_id, delivery_column_name) "
+                "VALUES (?, ?, ?)",
+                (variable_id, register_variant_id, al.delivery_column),
+            )
+            if cur.rowcount:
+                counts["applied"] += 1
+            else:
+                counts["skipped"] += 1
+    if counts["unresolved"]:
+        warn(
+            f"  WARN delivery-enrichment: {counts['unresolved']:,} alias(es) did "
+            "not resolve (slug churn / no state) — regenerate "
+            "delivery_enrichment.toml from the delivery lists"
+        )
+    return counts
+
+
 def apply_delivery_enrichment(
     conn: sqlite3.Connection,
     enrichment: DeliveryEnrichment,
@@ -216,9 +354,16 @@ def apply_delivery_enrichment(
 ) -> dict[str, int]:
     """Apply the delivery-enrichment overlay to the built DB. ``providers`` gates
     entries to the providers in this build (a ``--providers=sos`` build skips scb
-    backfills rather than counting them all unresolved), mirroring
+    rows rather than counting them all unresolved), mirroring
     ``materialize_concept_groups``. Runs after ``populate_variable_slugs`` so
-    ``(register, variable)`` resolves off stored slugs."""
+    ``(register, variable)`` resolves off stored slugs. Returns merged counts with
+    ``alias_*`` keys for the alias pass."""
     warn = warn or (lambda _msg: None)
-    active = tuple(bf for bf in enrichment.descriptions if bf.provider in providers)
-    return _apply_description_backfills(conn, active, warn)
+    descriptions = tuple(
+        bf for bf in enrichment.descriptions if bf.provider in providers
+    )
+    aliases = tuple(al for al in enrichment.aliases if al.provider in providers)
+    counts = _apply_description_backfills(conn, descriptions, warn)
+    alias_counts = _apply_aliases(conn, aliases, warn)
+    counts.update({f"alias_{k}": v for k, v in alias_counts.items()})
+    return counts
