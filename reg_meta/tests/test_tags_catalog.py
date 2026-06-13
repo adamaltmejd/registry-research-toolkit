@@ -108,3 +108,66 @@ def test_tags_for_register_empty_for_untagged() -> None:
     # A register that exists but carries no register-grain tag membership.
     add_register(cat._conn, register_id=3, slug="bas", name="BAS")
     assert cat.tags_for_register(Fqid.register_fqid("scb", "bas")) == []
+
+
+def _multi_membership_tag(slug: str, label: str, member: TagMember) -> CuratedTag:
+    return CuratedTag(slug=slug, label=label, description=None, members=(member,))
+
+
+def test_tags_for_variable_orders_by_rank_then_slug() -> None:
+    # `kon` belongs to TWO tags with different rank: higher-rank `aaa` (rank 5)
+    # must come AFTER lower-rank `income` (rank 0).
+    conn = build_slugged_db(classification=None)
+    materialize_tags(
+        conn,
+        (
+            _multi_membership_tag(
+                "aaa", "AAA", TagMember("scb", "lisa", "kon", 5, False, None)
+            ),
+            _multi_membership_tag(
+                "income", "Income", TagMember("scb", "lisa", "kon", 0, True, None)
+            ),
+        ),
+        providers=_SCB,
+    )
+    memberships = Catalog(conn).tags_for_variable(
+        Fqid.binding_fqid("scb", "lisa", "kon")
+    )
+    # rank-then-slug: income (rank 0) before aaa (rank 5), despite slug order.
+    assert [m.slug for m in memberships] == ["income", "aaa"]
+
+
+def test_tags_for_register_orders_by_rank_then_slug() -> None:
+    conn = build_slugged_db(classification=None)
+    materialize_tags(
+        conn,
+        (
+            _multi_membership_tag(
+                "aaa", "AAA", TagMember("scb", "lisa", None, 5, False, None)
+            ),
+            _multi_membership_tag(
+                "income", "Income", TagMember("scb", "lisa", None, 0, False, None)
+            ),
+        ),
+        providers=_SCB,
+    )
+    memberships = Catalog(conn).tags_for_register(Fqid.register_fqid("scb", "lisa"))
+    assert [m.slug for m in memberships] == ["income", "aaa"]
+
+
+def test_starred_count_counts_register_grain_starred_member() -> None:
+    # A tag whose ONLY member is register-grain AND starred → starred_count == 1.
+    # Locks the grain-agnostic `starred` design (starred isn't variable-only).
+    conn = build_slugged_db(classification=None)
+    materialize_tags(
+        conn,
+        (
+            _multi_membership_tag(
+                "regstar", "RegStar", TagMember("scb", "lisa", None, 0, True, None)
+            ),
+        ),
+        providers=_SCB,
+    )
+    (tag,) = Catalog(conn).list_tags()
+    assert tag.member_count == 1
+    assert tag.starred_count == 1

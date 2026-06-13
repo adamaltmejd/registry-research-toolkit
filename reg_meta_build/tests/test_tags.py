@@ -71,16 +71,27 @@ def test_load_tags_empty_when_no_file() -> None:
     assert load_tags(None) == ()
 
 
-def test_load_tags_member_needs_exactly_one_grain(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "member_body",
+    [
+        # BOTH grains set.
+        '  variable = "scb/lisa/kon"\n  register = "scb/lisa"',
+        # NEITHER grain set (only a rank, no variable/register key).
+        "  rank = 0",
+    ],
+    ids=["both", "neither"],
+)
+def test_load_tags_member_needs_exactly_one_grain(
+    tmp_path: Path, member_body: str
+) -> None:
     path = _write_tags_toml(
         tmp_path,
-        """
+        f"""
 [[tag]]
 slug = "x"
 label = "X"
   [[tag.member]]
-  variable = "scb/lisa/kon"
-  register = "scb/lisa"
+{member_body}
 """,
     )
     with pytest.raises(RegMetaError) as exc:
@@ -266,6 +277,54 @@ def test_tag_member_per_grain_uniqueness() -> None:
             "VALUES (?, 1, NULL)",
             (tag_id,),
         )
+
+
+def test_tag_member_variable_grain_uniqueness() -> None:
+    """Symmetric to the register-grain test: a (tag, variable) pair must be unique
+    via `idx_tag_member_variable`. Guards against both partial indexes accidentally
+    keying on the SAME column (e.g. both on register_id), which would leave the
+    variable grain unprotected."""
+    import sqlite3
+
+    conn = build_slugged_db(classification=None)  # variable `kon` exists
+    materialize_tags(
+        conn,
+        (_tag((TagMember("scb", "lisa", "kon", 0, False, None),)),),
+        providers=_SCB,
+    )
+    tag_id, var_id = conn.execute(
+        "SELECT tm.tag_id, tm.variable_id FROM tag_member tm"
+    ).fetchone()
+    with pytest.raises(sqlite3.IntegrityError):
+        conn.execute(
+            "INSERT INTO tag_member (tag_id, register_id, variable_id) "
+            "VALUES (?, NULL, ?)",
+            (tag_id, var_id),
+        )
+
+
+def test_materialize_wraps_duplicate_pair_as_curation_error() -> None:
+    """The slug-rename collision escape hatch (#311): two members WITHIN ONE tag
+    resolving to the same id violate the partial unique index, and
+    `materialize_tags` wraps the IntegrityError as a `tags_invalid` curation error
+    (EXIT_CONFIG) — not a raw sqlite3 error through the CLI's generic handler.
+    Built as a `CuratedTag` directly so the load-time dedup (by literal FQID)
+    doesn't catch it first — mimicking two distinct FQID refs that a slug rename
+    collapsed onto one register_id.
+
+    NB: the unique index is per-TAG (`(tag_id, register_id)`), so the collision
+    must be WITHIN one tag — two different tags may each tag the same register."""
+    conn = build_slugged_db(classification=None)
+    colliding = _tag(
+        (
+            TagMember("scb", "lisa", None, 0, False, None),
+            TagMember("scb", "lisa", None, 1, False, None),  # same register, same tag
+        )
+    )
+    with pytest.raises(RegMetaError) as exc:
+        materialize_tags(conn, (colliding,), providers=_SCB)
+    assert exc.value.exit_code == EXIT_CONFIG
+    assert exc.value.code == "tags_invalid"
 
 
 def test_tag_member_exactly_one_grain_check() -> None:
