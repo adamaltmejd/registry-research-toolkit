@@ -262,7 +262,18 @@ def materialize_family_merges(
                 "(the stem is the column-name prefix before the month token).",
             )
         survivor = min(m.variable_id for m in members)
-        survivor_years = _delivered_years(conn, survivor)
+        # `_family_members` yields one member per (variable, variant), so a
+        # variable spanning several variants repeats its variable_id — cache the
+        # per-variable delivered-years lookup so it runs once per variable, not
+        # once per member.
+        delivered_years_cache: dict[int, dict[int, set[int]]] = {}
+
+        def _years_for(variable_id: int) -> dict[int, set[int]]:
+            if variable_id not in delivered_years_cache:
+                delivered_years_cache[variable_id] = _delivered_years(conn, variable_id)
+            return delivered_years_cache[variable_id]
+
+        survivor_years = _years_for(survivor)
 
         conn.execute(
             "UPDATE variable SET name = ? WHERE variable_id = ?",
@@ -272,9 +283,7 @@ def materialize_family_merges(
 
         # Window rows + alias re-point, per member column.
         for m in members:
-            years = _delivered_years(conn, m.variable_id).get(
-                m.register_variant_id, set()
-            )
+            years = _years_for(m.variable_id).get(m.register_variant_id, set())
             for year in sorted(years):
                 if year not in survivor_years.get(m.register_variant_id, set()):
                     raise curation_error(
