@@ -1779,6 +1779,31 @@ class TestStateOverlapHelpers:
         assert _state_overlaps_years("0001-01-01", "9999-12-31", None, 1990)
 
 
+class TestIsCodeShaped:
+    """#352: a query is code-shaped (→ also matches by value_code.code) iff it has
+    a digit AND length >= 3. Plain text (no digit) or too-short queries do label
+    FTS only."""
+
+    def test_code_shaped_queries(self):
+        from reg_meta.queries import _is_code_shaped
+
+        assert _is_code_shaped("F32")  # ICD-10
+        assert _is_code_shaped("0180")  # numeric kommun code
+        assert _is_code_shaped("47.11")  # SNI with separator
+        # Leading/trailing whitespace is stripped before the length test.
+        assert _is_code_shaped("  F32 ")
+
+    def test_non_code_shaped_queries(self):
+        from reg_meta.queries import _is_code_shaped
+
+        assert not _is_code_shaped("Ja")  # no digit, too short
+        assert not _is_code_shaped("Nej")  # no digit (len 3 but text-only)
+        assert not _is_code_shaped("F3")  # has digit but len 2
+        assert not _is_code_shaped("12")  # digits but len 2
+        assert not _is_code_shaped("")  # empty
+        assert not _is_code_shaped("inkomst")  # plain word, no digit
+
+
 class TestGetValuesYearOverlap:
     """get_values_by_variable filters states by cover-the-year overlap."""
 

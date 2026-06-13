@@ -22,15 +22,23 @@ from _shared_fixtures import build_with_rows, vm_rows
 if TYPE_CHECKING:
     from pathlib import Path
 
-# A value set mixing labels that must be HIDDEN from search (an exact-stoplist
-# label and a sentinel-prefix-family label) with two ordinary, searchable labels.
-# Distinct version + codes keep kod != version so the importer's drift guard stays
-# quiet. "Förvärvsarbetande" / "Studerande" are the searchable labels; "Nej" is an
-# exact stoplist entry; "Okänt värde" matches the "Okänt%" sentinel-prefix family.
+# A value set mixing labels that must be HIDDEN from search with ordinary,
+# searchable labels. Distinct version + codes keep kod != version so the importer's
+# drift guard stays quiet.
+#   searchable: "Förvärvsarbetande" / "Studerande"; "Småort" (a real legit label
+#     that does NOT start with a sentinel stem — proves prefixes don't over-reach
+#     into normal concepts, the issue's "don't hide real concepts" guard).
+#   exact stoplist: "Nej".
+#   sentinel-prefix families (`Okänt%` / `Okänd%` / `Felaktig%`): "Okänt värde",
+#     bare "Okänd", and "Felaktigt värde" — the last proves the prefix catches the
+#     INFLECTED form ("Felaktigt" ≠ "Felaktig", so only a stem-prefix excludes it).
 _MIXED_CODES = [
     ("10", "Förvärvsarbetande"),
     ("20", "Studerande"),
+    ("21", "Småort"),
     ("30", "Nej"),
+    ("97", "Okänd"),
+    ("98", "Felaktigt värde"),
     ("99", "Okänt värde"),
 ]
 
@@ -76,6 +84,28 @@ def test_searchable_labels_indexed(tmp_path: Path) -> None:
     try:
         assert _indexed(conn, "Förvärvsarbetande")
         assert _indexed(conn, "Studerande")
+        # A legit concept label that does NOT start with a sentinel stem stays
+        # indexed — the prefix families don't reach into normal labels (the issue's
+        # "don't hide real concepts" guard; Småort is a real, queried label).
+        assert _indexed(conn, "Småort")
+    finally:
+        conn.close()
+
+
+def test_sentinel_prefix_families_excluded(tmp_path: Path) -> None:
+    """#352: the `Okänt%` / `Okänd%` / `Felaktig%` prefix families (the issue spec's
+    `Okänt*` / `Okänd*` / `Felaktig*`) are excluded from the FTS index — covering
+    the bare sentinel ("Okänd") AND the space-separated ("Okänt värde") AND the
+    INFLECTED form ("Felaktigt värde", caught only because the stoplist is a stem
+    PREFIX, not an exact/word-boundary match). All stay in the leaf value_code."""
+    conn = _build(tmp_path)
+    try:
+        vc = _vc_labels(conn)
+        for hidden in ("Okänd", "Okänt värde", "Felaktigt värde"):
+            assert hidden in vc, f"{hidden!r} must remain in value_code"
+            assert not _indexed(conn, hidden), (
+                f"{hidden!r} must be excluded by its sentinel-prefix family"
+            )
     finally:
         conn.close()
 

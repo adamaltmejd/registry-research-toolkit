@@ -196,7 +196,12 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
     """Map the kon binding's value codes to the kon variable (#352) so a code/value
     search resolves each (code, label) to its owning variable and computes
     mapping_count. Mirrors the real build's `code_variable_map` + mapping_count
-    pass over the value_set on the kon state."""
+    pass over the value_set on the kon state.
+
+    Also links the "Man" code to the existing `sun2020` classification (a
+    `classification_code` row) so a code hit carries a non-empty
+    `classification_count` (the catalog-scoped owner side of #352). Runs AFTER
+    `_seed_concept_groups` (which inserts sun2020)."""
     kon_vid = src.execute(
         "SELECT variable_id FROM variable WHERE slug = 'kon'"
     ).fetchone()[0]
@@ -210,6 +215,17 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
     src.execute(
         "UPDATE value_code SET mapping_count = ("
         "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
+    )
+    man_code_id = src.execute(
+        "SELECT code_id FROM value_code WHERE label = 'Man'"
+    ).fetchone()[0]
+    sun2020_id = src.execute(
+        "SELECT id FROM classification WHERE slug = 'sun2020'"
+    ).fetchone()[0]
+    src.execute(
+        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
+        "VALUES (?, ?, NULL, 1)",
+        (sun2020_id, man_code_id),
     )
 
 

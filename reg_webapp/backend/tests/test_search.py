@@ -102,6 +102,16 @@ def test_code_label_hit_carries_owning_variable(client):
     assert hit["variable_count"] >= 1
 
 
+def test_code_hit_carries_owning_classification(client):
+    # The "Man" code is also linked to the sun2020 classification (seeded in
+    # conftest) → the hit carries a non-empty classification owner + count.
+    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    hit = next(r for r in g["results"] if r["label"] == "Man")
+    assert hit["classification_count"] >= 1
+    owner = next(c for c in hit["classifications"] if c["fqid"] == "class/sun2020")
+    assert owner["short_name"] == "SUN2020"
+
+
 def test_code_shaped_query_well_formed(client):
     # A code-shaped query (digit + len>=3) drives the value_code.code exact/prefix
     # path. The fixture has no "0180" code, so this asserts the group stays

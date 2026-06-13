@@ -101,7 +101,14 @@ _VALUE_CODE_STOPLIST_EXACT = frozenset(
 # Prefix families: SCB stuffs the missing/erroneous-value sentinels in many
 # variants ("Okänt värde", "Okänd kommun", "Felaktigt värde", ...). A prefix is
 # justified HERE (and only here) because these are open SCB sentinel FAMILIES, not
-# a fixed label set — matched with SQLite `label LIKE 'Okänt%'` etc.
+# a fixed label set — matched with SQLite `label LIKE 'Okänt%'` etc. The stem
+# (not the full word) is DELIBERATE: it must catch both the bare sentinel ("Okänd"),
+# the space-separated form ("Okänt värde"), AND the inflected form — "Felaktigt
+# värde" is only caught by `Felaktig%`, since "Felaktigt" != "Felaktig" so a
+# word-boundary match (`= p OR LIKE 'p %'`) would miss it. Accepted coarseness: a
+# hypothetical legit label starting with one of these stems as a longer single word
+# (e.g. "Okäntköping") would also be hidden — no such label occurs in the corpus,
+# and broader stoplist curation is out of #352 scope (initial dozen only).
 _VALUE_CODE_STOPLIST_PREFIXES = ("Okänt", "Okänd", "Felaktig")
 
 

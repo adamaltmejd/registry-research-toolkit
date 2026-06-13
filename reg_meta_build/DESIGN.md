@@ -309,11 +309,17 @@ aggregated over the 4.1M-row map at query time. The FTS pass also builds
 `value_code_fts` over value labels, EXCLUDING a curated junk-label stoplist
 (`_VALUE_CODE_STOPLIST_EXACT` / `_VALUE_CODE_STOPLIST_PREFIXES`: `Ja`/`Nej`,
 `Uppgift saknas`, the `Okänt*`/`Okänd*`/`Felaktig*` SCB sentinel-prefix families, …) —
-hidden from SEARCH only; the leaf `value_code` rows are untouched. The materializer
-enforces the build-time invariants the universal schema encodes — chiefly that
-`(variable_id, register_variant_id, valid_from)` is unique across `variable_state`
-unless explicitly marked multi-vintage via `value_set_version_label` (the variant
-coordinate is part of the uniqueness scope), and that `variable.slug` is
+hidden from SEARCH only; the leaf `value_code` rows are untouched. The prefix families
+are matched as STEM prefixes (`LIKE 'Felaktig%'`), intentionally, so they catch the bare
+sentinel (`Okänd`), the space-separated form (`Okänt värde`), AND the inflected form
+(`Felaktigt värde`, which a word-boundary match would miss since `Felaktigt` ≠
+`Felaktig`). The known coarseness — a legit label starting with one of these stems as a
+longer single word (e.g. `Okäntköping`) would also be hidden — is accepted: no such
+label occurs in the corpus, and broader stoplist curation is out of #352 scope (initial
+dozen). The materializer enforces the build-time invariants the universal schema encodes
+— chiefly that `(variable_id, register_variant_id, valid_from)` is unique across
+`variable_state` unless explicitly marked multi-vintage via `value_set_version_label`
+(the variant coordinate is part of the uniqueness scope), and that `variable.slug` is
 register-unique. The non-overlap invariant is what *requires* the build-time triage
 below.
 
