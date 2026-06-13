@@ -611,8 +611,9 @@ polymorphic membership table (`tag_member`): a row carries EXACTLY ONE grain —
 recommendation, where `starred` flags it and `note` carries the one-line rationale
 curation can give and popularity can't). Curated from `reg_meta_build/tags.toml`,
 derived every build (regenerate-not-migrate); a discovery overlay that leaves identity
-untouched, same family as concept groups (two package-root TOMLs). Ships EMPTY until
-curation content lands (machinery first — webapp facets / search boost are a later PR).
+untouched, same family as concept groups and delivery enrichment (package-root TOMLs).
+Ships EMPTY until curation content lands (machinery first — webapp facets / search boost
+are a later PR).
 
 **API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
 `starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /
