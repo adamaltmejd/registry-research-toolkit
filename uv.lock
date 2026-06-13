@@ -398,7 +398,7 @@ wheels = [
 
 [[package]]
 name = "reg-meta"
-version = "0.11.0"
+version = "0.12.0"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "zstandard" },
@@ -409,7 +409,7 @@ requires-dist = [{ name = "zstandard", specifier = ">=0.23" }]
 
 [[package]]
 name = "reg-meta-build"
-version = "0.2.0"
+version = "0.3.0"
 source = { editable = "reg_meta_build" }
 dependencies = [
     { name = "openpyxl" },
