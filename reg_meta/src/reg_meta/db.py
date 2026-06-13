@@ -168,6 +168,11 @@ from .errors import EXIT_CONFIG, RegMetaError
 #     (precomputed per-(code,label) variable count from code_variable_map, for
 #     rarity downweighting) + `value_code_fts` FTS5 index over value_code labels.
 #     A 5.3.0 DB has neither, so `search(type="value")` can't query it.
+#   - #311 (curated thematic tags): additive `tag` (global vocabulary) +
+#     `tag_member` (polymorphic register/variable membership with rank/starred/
+#     note) tables — a cross-register discovery overlay, derived from `tags.toml`
+#     (regenerate-not-migrate). Ship EMPTY until curation content lands. A 5.3.0
+#     DB lacks both tables, so `Catalog.list_tags` / `tags_for_*` can't query it.
 SCHEMA_VERSION = "5.4.0"
 DB_FILENAME = "reg_meta.db"
 

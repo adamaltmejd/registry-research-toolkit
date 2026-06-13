@@ -53,6 +53,11 @@ from .ir import (
     IRVariant,
     IRWarning,
 )
+from .tags import (
+    load_tags,
+    materialize_tags,
+    repo_tags_path,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -881,6 +886,56 @@ CREATE TABLE concept_group_classification (
 );
 CREATE INDEX idx_concept_group_classification_group
     ON concept_group_classification(group_id);
+
+-- Curated cross-register THEMATIC tag layer (#311). Orthogonal to concept_group
+-- (which folds column families *structurally* within one register): a tag cuts
+-- *across* providers/registers ("income", "health", …) for discovery without
+-- knowing the register. Curated from `tags.toml`; derived every build
+-- (regenerate-not-migrate); a presentation/discovery overlay that leaves identity
+-- untouched. Tables ship EMPTY until curation content lands (machinery first).
+--
+-- ONE global vocabulary (a tag slug is globally unique — cross-register discovery
+-- is the whole point) + ONE polymorphic membership table spanning both grains:
+-- register-grain rows for coarse thematic browse, variable-grain rows for the
+-- "golden/starred" recommendations (curation says *why* via `note`).
+CREATE TABLE tag (
+    tag_id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug        TEXT NOT NULL UNIQUE,
+    label       TEXT NOT NULL,
+    description TEXT
+);
+
+-- Polymorphic membership: EXACTLY ONE of register_id / variable_id is set (the
+-- CHECK). `rank` orders members within a tag (curated); `starred` flags a
+-- "golden"/recommended member; `note` carries the one-line curation rationale
+-- ("primary income measure"). `starred`/`note` are meaningful at the variable
+-- grain (a recommended variable) but the columns stay grain-agnostic.
+CREATE TABLE tag_member (
+    tag_id      INTEGER NOT NULL REFERENCES tag(tag_id),
+    register_id INTEGER REFERENCES register(register_id),
+    variable_id INTEGER REFERENCES variable(variable_id),
+    rank        INTEGER NOT NULL DEFAULT 0,
+    starred     INTEGER NOT NULL DEFAULT 0,
+    note        TEXT,
+    -- Exactly one grain per row (XOR): SQLite has no native XOR, so `!=` over the
+    -- two NULL tests does it (one NULL, one non-NULL → 1/true).
+    CHECK ((register_id IS NULL) != (variable_id IS NULL))
+);
+-- Uniqueness per grain: a (tag, register) and a (tag, variable) pair must each be
+-- unique. A plain composite key won't enforce it — SQLite treats NULLs as
+-- distinct, so the unused-grain NULL would let duplicates through. Two partial
+-- UNIQUE indexes (each over the rows where that grain is present) enforce it, and
+-- double as the "members-of-tag" lookup for each grain.
+CREATE UNIQUE INDEX idx_tag_member_register
+    ON tag_member(tag_id, register_id) WHERE register_id IS NOT NULL;
+CREATE UNIQUE INDEX idx_tag_member_variable
+    ON tag_member(tag_id, variable_id) WHERE variable_id IS NOT NULL;
+-- Reverse lookups: tags-of-variable / tags-of-register (the variable/register
+-- page surfaces). Partial so they only index the rows of that grain.
+CREATE INDEX idx_tag_member_by_variable
+    ON tag_member(variable_id) WHERE variable_id IS NOT NULL;
+CREATE INDEX idx_tag_member_by_register
+    ON tag_member(register_id) WHERE register_id IS NOT NULL;
 
 -- Directional succession edges. Auto-derived from SCB
 -- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
@@ -2906,6 +2961,20 @@ def materialize(
             f"({de_counts['skipped']:,} already set, "
             f"{de_counts['unresolved']:,} unresolved)"
         )
+
+        # Curated cross-register thematic tags (#311) — discovery overlay. Runs
+        # after populate_variable_slugs (member FQIDs resolve off stored
+        # register/variable slugs), same slug-dependent block as concept groups /
+        # delivery enrichment. Tables ship EMPTY until curation content lands; a
+        # dangling member reference fails the build LOUD (EXIT_CONFIG).
+        tag_counts = materialize_tags(
+            conn,
+            load_tags(repo_tags_path()),
+            providers=active_providers,
+            progress=_progress,
+        )
+        row_counts["tags"] = tag_counts["tags"]
+        row_counts["tag_members"] = tag_counts["members"]
 
     # same_as edges. Runs *after* populate_slugs so register /
     # variant / version slug columns are populated — the materializer
