@@ -62,9 +62,9 @@ bridges agentic local work to MONA projects.
 - Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
 - 7-day minimum release age is project policy: `exclude-newer = "7 days"` in the root
   `pyproject.toml` `[tool.uv]`, recorded in `uv.lock`'s `[options]` block. It applies on
-  every checkout with no global uv config needed. Don't remove either side: dropping
-  the pyproject setting makes plain `uv run` discard the committed lock on checkouts
-  without a matching global config.
+  every checkout with no global uv config needed. Don't remove either side: dropping the
+  pyproject setting makes plain `uv run` discard the committed lock on checkouts without
+  a matching global config.
 - `requires-python` floor is bound to MONA's bundled Python — see
   `mock_data_wizard/DESIGN.md` "MONA Python runtime" before raising it.
 
@@ -147,22 +147,28 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
 
 - **Independent review** — every PR gets at least one review independent of its author.
   For small, low-risk PRs the Codex/Copilot bot reviews can be enough; larger or riskier
-  PRs additionally need an independent Claude review pass (e.g. `/code-review` or a
-  reviewer subagent). A subagent review reports its findings directly to the
+  PRs additionally need an independent Claude review pass: `/code-review` (effort scaled
+  to risk; this is what `/pr-pipeline` runs), or the lighter `reviewer` subagent for
+  smaller/ad-hoc reviews. A subagent review reports its findings directly to the
   orchestrating session — not as PR comments. Address every finding: fix it, or dismiss
   it with a stated reason — findings can be wrong or immaterial, but none may go
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
 - **Bot-review window** — after the PR is ready (and after each substantive push), give
-  Codex/Copilot a bounded window: poll for either review comments or Codex's clean
-  verdict — a 👍 reaction on the PR body from `chatgpt-codex-connector[bot]` with no
-  review submitted (invisible to `gh pr view`; check
-  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`). A 👀 reaction there means Codex
-  is still reviewing — never conclude the window or merge while it's present. Otherwise,
-  either signal ends the wait; \~10 min with neither is the ceiling — bots can be out of
-  tokens or skip a push entirely (Codex auto-reviews on open/ready only; a verdict on a
-  new HEAD must be requested by commenting `@codex review`). Only trust a verdict
-  timestamped after the latest push; absence at the ceiling is not a blocker.
+  Codex/Copilot a bounded window. Poll for the **bot's own signal on the current HEAD**,
+  NOT for CI finishing — CI is a separate gate that usually goes green far sooner, so a
+  poller that exits on CI-done has not actually given the bot its window. The signal is
+  one of: a submitted review/comment; Codex's clean verdict — a 👍 reaction on the PR
+  body from `chatgpt-codex-connector[bot]` with no review submitted (invisible to
+  `gh pr view`; check `gh api repos/<owner>/<repo>/issues/<pr>/reactions`); or a 👀
+  reaction there meaning Codex is still reviewing — never conclude the window or merge
+  while 👀 is present. Codex can also run **out of tokens**, in which case it posts an
+  issue comment like "You have reached your Codex usage limits for code reviews" (in
+  `gh api repos/<owner>/<repo>/issues/<pr>/comments`, not a review or reaction) — treat
+  that as a definitive end-of-wait, not a blocker. Otherwise \~10 min with no signal is
+  the ceiling — bots may skip a push entirely (Codex auto-reviews on open/ready only; a
+  verdict on a new HEAD must be requested by commenting `@codex review`). Only trust a
+  verdict timestamped after the latest push; absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
