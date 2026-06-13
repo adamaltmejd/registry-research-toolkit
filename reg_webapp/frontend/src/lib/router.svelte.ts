@@ -97,14 +97,7 @@ class Router {
    * already at the full `url` (path + query + hash) — so a same-path/new-query
    * navigation is correctly NOT a no-op. */
   navigate(url: string): void {
-    const current =
-      window.location.pathname + window.location.search + window.location.hash;
-    if (url === current) {
-      return;
-    }
-    window.history.pushState({}, "", url);
-    this.route = parseRoute(window.location.pathname);
-    this.search = window.location.search;
+    this.go(url, false);
   }
 
   /** Like `navigate`, but REPLACES the current history entry
@@ -112,12 +105,23 @@ class Router {
    * query in place (the omnibox's per-keystroke `?q=` updates, #379) doesn't spam
    * the back-stack. Same no-op-when-equal guard as `navigate`. */
   replace(url: string): void {
+    this.go(url, true);
+  }
+
+  /** Shared body of `navigate`/`replace`: no-op when already at the full `url`
+   * (path + query + hash), else push or replace the history entry and re-sync the
+   * reactive route + query off the new location. */
+  private go(url: string, replace: boolean): void {
     const current =
       window.location.pathname + window.location.search + window.location.hash;
     if (url === current) {
       return;
     }
-    window.history.replaceState({}, "", url);
+    if (replace) {
+      window.history.replaceState({}, "", url);
+    } else {
+      window.history.pushState({}, "", url);
+    }
     this.route = parseRoute(window.location.pathname);
     this.search = window.location.search;
   }

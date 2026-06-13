@@ -3,7 +3,6 @@ import type {
   ClassificationSearchResult,
   CodeSearchResult,
   ConceptGroupSearchResult,
-  RegisterSearchResult,
   SearchResponse,
   VariableSearchResult,
 } from "./api";
@@ -50,14 +49,6 @@ function showingOf(shown: number, total: number): string | null {
   return shown < total ? `showing ${shown} of ${total}` : null;
 }
 
-/** A leaf result links only when it has a resolvable FQID; a null FQID renders as
- * plain text (the hit has no catalog node to navigate to). */
-function isRegister(
-  r: RegisterSearchResult,
-): r is RegisterSearchResult & { type: "register" } {
-  return r.type === "register";
-}
-
 // Discriminate a variable/classification group's mixed results on `type`.
 function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
   return r.type === "group";
@@ -90,21 +81,12 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
           {#if group.group === "registers"}
             <ul class="results">
               {#each group.results as result (result.fqid ?? result.name)}
-                {#if isRegister(result)}
-                  <li>
-                    {#if result.fqid}
-                      <a href={catalogHref(result.fqid)}>
-                        <span class="label">{result.name ?? result.fqid}</span>
-                        <code class="hit-fqid">{result.fqid}</code>
-                      </a>
-                    {:else}
-                      <span class="label">{result.name ?? "—"}</span>
-                    {/if}
-                    {#if result.purpose}
-                      <span class="hit-detail muted">{result.purpose}</span>
-                    {/if}
-                  </li>
-                {/if}
+                <li>
+                  {@render fqidLeaf(result.fqid, result.name)}
+                  {#if result.purpose}
+                    <span class="hit-detail muted">{result.purpose}</span>
+                  {/if}
+                </li>
               {/each}
             </ul>
           {:else if group.group === "variables"}
@@ -144,15 +126,23 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
   {/if}
 </article>
 
-{#snippet variableLeaf(result: VariableSearchResult)}
-  {#if result.fqid}
-    <a href={catalogHref(result.fqid)}>
-      <span class="label">{result.name ?? result.fqid}</span>
-      <code class="hit-fqid">{result.fqid}</code>
+<!-- The shared leaf shape across register / variable / classification / member
+     hits: a `label + <code>fqid</code>` link when FQID-addressable, else plain
+     text (the hit has no catalog node). `label` is the per-type display name
+     (the FQID is the fallback when linking, "—" when not). -->
+{#snippet fqidLeaf(fqid: string | null | undefined, label: string | null | undefined)}
+  {#if fqid}
+    <a href={catalogHref(fqid)}>
+      <span class="label">{label ?? fqid}</span>
+      <code class="hit-fqid">{fqid}</code>
     </a>
   {:else}
-    <span class="label">{result.name ?? "—"}</span>
+    <span class="label">{label ?? "—"}</span>
   {/if}
+{/snippet}
+
+{#snippet variableLeaf(result: VariableSearchResult)}
+  {@render fqidLeaf(result.fqid, result.name)}
   {#if result.register}
     <span class="hit-context muted">{result.register}</span>
   {/if}
@@ -162,14 +152,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
 {/snippet}
 
 {#snippet classificationLeaf(result: ClassificationSearchResult)}
-  {#if result.fqid}
-    <a href={catalogHref(result.fqid)}>
-      <span class="label">{result.short_name ?? result.name ?? result.fqid}</span>
-      <code class="hit-fqid">{result.fqid}</code>
-    </a>
-  {:else}
-    <span class="label">{result.short_name ?? result.name ?? "—"}</span>
-  {/if}
+  {@render fqidLeaf(result.fqid, result.short_name ?? result.name)}
   {#if result.name && result.name !== result.short_name}
     <span class="hit-detail muted">{result.name}</span>
   {/if}
