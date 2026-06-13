@@ -32,6 +32,7 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.concept_groups as _cg
     import reg_meta_build.db as _db
     import reg_meta_build.delivery_enrichment as _de
+    import reg_meta_build.family_merges as _fm
     import reg_meta_build.fold_overrides as _fo
     import reg_meta_build.tags as _tg
 
@@ -55,6 +56,11 @@ def _no_repo_curation() -> Iterator[None]:
     # imported the symbol directly — patch it there too.
     mp.setattr(_tg, "repo_tags_path", lambda: None)
     mp.setattr(_db, "repo_tags_path", lambda: None)
+    # family_merges.toml (#319) merges real LISA month columns; the materializer
+    # fails LOUD if a curated stem doesn't resolve, so a synthetic build must see
+    # an empty file. db.py imported the symbol directly — patch it there too.
+    mp.setattr(_fm, "repo_family_merges_path", lambda: None)
+    mp.setattr(_db, "repo_family_merges_path", lambda: None)
     yield
     mp.undo()
 

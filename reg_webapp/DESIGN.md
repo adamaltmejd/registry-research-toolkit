@@ -135,10 +135,13 @@ has a stable slot in the discriminated union without the variant being an FQID.
 `{binding, states: [...]}` — the `resolve_at` subset, **uniform with `/states`** (so
 codegen sees one state-list type). The **#307 comma list form**
 (`?period=2005..2010,2015..2020`, an interrupted series — #340) resolves **per
-segment**, returning the `state_id`-deduped union: `parse_period_query` splits the wire
-into segments and the handler calls `resolve_at` once per segment — `resolve_at` never
-sees the list form (keeps the list grammar out of the separately-released reg_meta,
-mirroring `semantic.py`'s per-segment iteration). `?variant` narrows to one variant;
+segment**, returning the compound-key-deduped union — keyed on
+`(state_id, delivery_column_name, valid_from)` since a merged monthly-family variable
+(#319) expands one annual state into 12 same-`state_id` per-month windows (keying on
+`state_id` alone would collapse 11 of them): `parse_period_query` splits the wire into
+segments and the handler calls `resolve_at` once per segment — `resolve_at` never sees
+the list form (keeps the list grammar out of the separately-released reg_meta, mirroring
+`semantic.py`'s per-segment iteration). `?variant` narrows to one variant;
 `?value_set_version` narrows to one vintage (a read-only browse filter matched against
 `value_set_version_label` by `resolve_at`, **not** a path pin). The period query is
 **ignored** on non-binding kinds (the register / provider / classification node resolves

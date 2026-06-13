@@ -171,6 +171,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
             _check_sos_sanity(conn, result, tables)
         _check_value_code_search(conn, result, tables, corpus=corpus)
         _check_tags(conn, result, tables)
+        _check_variable_alias_window(conn, result, tables, corpus=corpus)
         _check_sos_stateless_variables(conn, result, tables)
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
@@ -249,6 +250,12 @@ def _check_schema_shape(
             result.ok(f"{required} present")
         else:
             result.fail(f"{required} missing")
+
+    # #319: monthly-family per-month alias windows.
+    if "variable_alias_window" in tables:
+        result.ok("variable_alias_window present")
+    else:
+        result.fail("variable_alias_window missing")
 
     # The remaining checks depend on value_set / value_set_member existing;
     # skip them if a required table is missing rather than crashing.
@@ -1001,6 +1008,65 @@ def _check_tags(
             f"{orphan_reg:,} dangling register_id + {orphan_var:,} dangling "
             "variable_id in tag_member"
         )
+
+
+def _check_variable_alias_window(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#319 monthly-family alias-window structural closure (corpus-independent).
+    EMPTY without `family_merges.toml`, so no volume floor on synthetic builds.
+
+    Asserts: every window's (variable_id, register_variant_id) resolves to a live
+    variable / register_variant; valid_from <= valid_to; the window's
+    delivery_column_name is present in `variable_alias` for that variable+variant
+    (the merged variable retains all 12 columns there — same invariant
+    `_check_variable_alias_covers_state_columns` enforces for states). Corpus: a
+    real maintainer build merges >= 1 family, so the table is non-empty there."""
+    result.section("[monthly-family windows]")
+    if "variable_alias_window" not in tables:
+        result.ok("variable_alias_window absent — window check skipped")
+        return
+    n = conn.execute("SELECT COUNT(*) FROM variable_alias_window").fetchone()[0]
+    result.info(f"{n:,} alias windows")
+
+    bad_range = conn.execute(
+        "SELECT COUNT(*) FROM variable_alias_window WHERE valid_from > valid_to"
+    ).fetchone()[0]
+    if bad_range == 0:
+        result.ok("every window has valid_from <= valid_to")
+    else:
+        result.fail(f"{bad_range:,} window(s) with valid_from > valid_to")
+
+    orphan = conn.execute(
+        "SELECT COUNT(*) FROM variable_alias_window w WHERE NOT EXISTS "
+        "(SELECT 1 FROM variable v WHERE v.variable_id = w.variable_id) "
+        "OR NOT EXISTS (SELECT 1 FROM register_variant rv "
+        "  WHERE rv.register_variant_id = w.register_variant_id)"
+    ).fetchone()[0]
+    if orphan == 0:
+        result.ok("every window's variable_id/register_variant_id resolves")
+    else:
+        result.fail(f"{orphan:,} window(s) with a dangling variable/variant")
+
+    if "variable_alias" in tables:
+        uncovered = conn.execute(
+            "SELECT COUNT(*) FROM variable_alias_window w WHERE NOT EXISTS "
+            "(SELECT 1 FROM variable_alias va "
+            "  WHERE va.variable_id = w.variable_id "
+            "  AND va.register_variant_id = w.register_variant_id "
+            "  AND LOWER(va.delivery_column_name) = LOWER(w.delivery_column_name))"
+        ).fetchone()[0]
+        if uncovered == 0:
+            result.ok("every window column present in variable_alias")
+        else:
+            result.fail(f"{uncovered:,} window column(s) missing from variable_alias")
+
+    if corpus and n == 0:
+        result.fail("variable_alias_window is EMPTY on a corpus build")
 
 
 def _check_sos_sanity(

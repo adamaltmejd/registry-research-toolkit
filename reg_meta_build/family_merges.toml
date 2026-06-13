@@ -1,0 +1,36 @@
+# Curated monthly column-family merges (#319) — see family_merges.py.
+#
+# Each [[monthly_family]] folds the 12 month-named delivery columns under a
+# `family_stem` into ONE variable (slug = family_stem), keeping an ANNUAL
+# variable_state per delivery year. Each month column's validity window lands in
+# `variable_alias_window` so resolve_at("YYYY-MM") picks that month's column. The
+# merge runs BEFORE variable slugs (members are matched by delivery_column_name,
+# folded to slug form, ending in a month token); a stem that resolves to no
+# coherent monthly family FAILS the build (EXIT_CONFIG).
+#
+# NOT column_merges.toml: that asserts era-RENAMES that never co-occur — the
+# opposite of 12 deliberately-parallel month columns.
+#
+# Scope (#319 PR): the 4 documented LISA families only. The non-LISA monthly
+# families (ekonomiskt-bistand / rams / bas / hsl) are a content follow-up
+# enumerated against the real corpus separately.
+
+[[monthly_family]]
+register = "scb/lisa"
+family_stem = "lonfink"
+label = "Löne- eller företagarinkomst per månad"
+
+[[monthly_family]]
+register = "scb/lisa"
+family_stem = "agi1lonfink"
+label = "Löne- eller företagarinkomst per månad (största förvärvskällan)"
+
+[[monthly_family]]
+register = "scb/lisa"
+family_stem = "agi2lonfink"
+label = "Löne- eller företagarinkomst per månad (näst största förvärvskällan)"
+
+[[monthly_family]]
+register = "scb/lisa"
+family_stem = "agi3lonfink"
+label = "Löne- eller företagarinkomst per månad (tredje största förvärvskällan)"

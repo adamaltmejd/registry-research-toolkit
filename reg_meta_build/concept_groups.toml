@@ -11,8 +11,13 @@
 
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
-# största / tredje största förvärvskälla) × the month axis the token pass
-# already derived. Absorbing the three month groups yields one 3×12 matrix.
+# största / tredje största förvärvskälla). #319 merged each rank's 12 month
+# columns into ONE variable (slug agi1lonfink / agi2lonfink / agi3lonfink — the
+# family stem), so the per-rank month-token groups no longer derive. The members
+# are now plain `variable =` attachments carrying only the rank facet; the
+# per-month dimension lives in `variable_alias_window` (read-time via resolve_at),
+# not a concept group. The family merge runs BEFORE concept groups, so these
+# merged-variable slugs resolve.
 [[variable_group]]
 register = "scb/lisa"
 key = "agilonfink"
@@ -20,16 +25,16 @@ label = "Löne- eller företagarinkomst per månad (AGI)"
 axis = "rank"
 
 [[variable_group.members]]
-group = "agi1lonfink"
+variable = "agi1lonfink"
 value = "1"
 label = "största förvärvskällan"
 
 [[variable_group.members]]
-group = "agi2lonfink"
+variable = "agi2lonfink"
 value = "2"
 label = "näst största förvärvskällan"
 
 [[variable_group.members]]
-group = "agi3lonfink"
+variable = "agi3lonfink"
 value = "3"
 label = "tredje största förvärvskällan"

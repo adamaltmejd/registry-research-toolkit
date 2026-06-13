@@ -1062,27 +1062,54 @@ are orthogonal; `valid_from[:4]` remains the display-year source).
 - **Display.** Year-by-default rendering is unchanged; only genuinely sub-annual windows
   surface period tokens (formatter above).
 
-#### Consumers: monthly column families (designed-for; lands after the resolver)
+#### Consumers: monthly column families (#319, SHIPPED for the 4 LISA families)
 
-The catalog already carries \~9 monthly families ≈ 94 variables across
+The catalog carries \~9 monthly families ≈ 94 variables across
 lisa/ekonomiskt-bistand/rams/bas/hsl — 12 month-named delivery columns per concept (LISA
 `lonfink{jan..dec}`, `agi{1,2,3}lonfink{jan..dec}`, …). These ship inside **annual**
 editions, so the interval resolver does *not* by itself give them monthly windows
 (`_edition_bounds` reads the edition name, not column names — and the curated narrowing
-subset deliberately excludes month-named editions). The follow-up consumer is an
-**adapter-level curated family merge**: 12 columns → 1 variable, each column carrying a
-per-month alias window derived from its name's month suffix × delivered years (`YYYY-MM`
-period grammar). What it needs from this design: per-column interval claims (so 12
-sibling columns' windows coexist without a year-bucket collision), segment-grain
-supersession (so a family's vintage transitions resolve correctly mid-year), and the
-period formatter for display. What it needs *beyond* it, decided in its own design: an
-alias-window surface (`variable_alias` has no validity columns today — DDL addition or a
-sibling table) and the binding-side representation pick (#206/#217 column-based
-keyspaces). `column_merges.toml` is **not** the vehicle — it asserts era-renames that
-never co-occur, the exact opposite of 12 deliberately-parallel columns. The AGI
-variant's `cadence = month` declaration (*Cadence policy* above) is orthogonal to this
-merge: the cadence scopes *edition* conflation on the AGI register, while these monthly
-*columns* ride annual LISA editions and get their windows from the family merge.
+subset deliberately excludes month-named editions). #319 adds the **adapter-level
+curated family merge** (`family_merges.py`, driven by package-root
+`family_merges.toml`): 12 columns → ONE variable, each column carrying a per-month alias
+window (`variable_alias_window`) derived from its name's month suffix × delivered years
+(`YYYY-MM`). `column_merges.toml` is **not** the vehicle — it asserts era-renames that
+never co-occur, the opposite of 12 deliberately-parallel columns. The AGI variant's
+`cadence = month` (*Cadence policy* above) is orthogonal: cadence scopes *edition*
+conflation on the AGI register, while these monthly *columns* ride annual LISA editions
+and get their windows from the merge.
+
+**Mechanics.** `materialize_family_merges` runs POST-triage (so `variable_state` /
+`variable_alias` exist) but BEFORE `populate_variable_slugs`. Members are identified by
+`delivery_column_name` (slugs don't exist yet) — a column whose `derive_variable_slug`
+ends in a month token with stem == the curated `family_stem`. The merge: picks the
+lex-min member `variable_id` as the SURVIVOR; sets its name to the family label and
+registers `fold_slug_hints[survivor] = family_stem` so it slugs as the stem; emits one
+`variable_alias_window` row per (column, delivered year) — **ongoing states**
+(`valid_to = 9999`) are clamped to the opening year only, so an ongoing monthly family
+gets windows for its first year but not beyond (a known limitation; the 4 shipped LISA
+families are all bounded 2019–2023 and are unaffected); re-points the members'
+`variable_alias` (so `get_datacolumns` still returns all 12) AND the SCB cvid-scratch
+`variable_instance.variable_id` (the `code_variable_map` top-up reads it — leaving the
+sibling id dangles the FK); then deletes the N-1 sibling `variable_state` / `variable` /
+leftover-alias rows. The stored `variable_state` stays ONE annual single-claim row per
+year — **the merged variable is NOT sub-annual** (the per-month dimension is a
+representation/alias concern, not a coding boundary; DESIGN's *Cadence policy*). A stem
+that resolves to no coherent monthly family (< 3 distinct months) or a non-parallel
+member (a column delivering a year the annual claim doesn't) FAILS the build
+(`family_merges_unresolved`, EXIT_CONFIG). Scope shipped: the 4 LISA stems (`lonfink`,
+`agi{1,2,3}lonfink`); the non-LISA families are a `family_merges.toml` content
+follow-up.
+
+**Read side** (`reg_meta.catalog`): `resolve_at` / `states()` expand a merged variable's
+annual state READ-TIME into one `VariableState` per overlapping `variable_alias_window`
+(`resolve_at("2024-03")` → the mar column, `resolve_at("2024")` → 12). Non-merged
+variables have no window rows → 1:1 passthrough (byte-identical). Per-window display is
+`period_token_for_bounds` (the existing inverse formatter). The curated `agilonfink`
+concept group (#303) now references these merged variables as plain `variable =` members
+(the per-rank month-token groups no longer derive once merged). The `variable_state`
+non-overlap invariant and `_check_variable_alias_covers_state_columns` both still hold
+for the survivor (its annual state's single column is one of the 12 retained aliases).
 
 #### Measurement and verification plan
 

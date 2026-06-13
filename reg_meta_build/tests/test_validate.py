@@ -898,3 +898,88 @@ def test_tags_section_present_in_report(fixture_db: Path):
     report = validate_built_db(fixture_db).format_report()
     assert "[tags]" in report
     assert "0 tags / 0 tag members" in report
+
+
+class TestVariableAliasWindowChecks:
+    """#319 `_check_variable_alias_window` — exercised against NON-EMPTY window
+    rows (the e2e fixture ships none). Each test corrupts one invariant with FKs
+    OFF (so the corrupting DELETE can leave the dangling row the check catches)."""
+
+    @staticmethod
+    def _windowed_db():
+        from _slugged_db import build_slugged_db
+
+        conn = build_slugged_db(classification=None)  # scb/lisa, variable `kon`
+        # kon has a variable_alias row under variant 10 (its delivery column). Seed
+        # a window row reusing that exact (variable_id, variant, column).
+        vid, rvid, col = conn.execute(
+            "SELECT variable_id, register_variant_id, delivery_column_name "
+            "FROM variable_alias LIMIT 1"
+        ).fetchone()
+        conn.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to) "
+            "VALUES (?, ?, ?, '2018-01-01', '2018-01-31')",
+            (vid, rvid, col),
+        )
+        return conn
+
+    @staticmethod
+    def _run(conn):
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_variable_alias_window,
+        )
+
+        result = ValidationResult()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        _check_variable_alias_window(conn, result, tables, corpus=False)
+        return result
+
+    def test_passes_on_coherent_window(self):
+        assert self._run(self._windowed_db()).passed
+
+    def test_orphan_variable_id_fails(self):
+        conn = self._windowed_db()
+        conn.execute("PRAGMA foreign_keys=OFF")
+        conn.execute(
+            "DELETE FROM variable WHERE variable_id IN "
+            "(SELECT variable_id FROM variable_alias_window)"
+        )
+        result = self._run(conn)
+        assert any("dangling variable/variant" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_orphan_register_variant_id_fails(self):
+        conn = self._windowed_db()
+        conn.execute("PRAGMA foreign_keys=OFF")
+        conn.execute(
+            "DELETE FROM register_variant WHERE register_variant_id IN "
+            "(SELECT register_variant_id FROM variable_alias_window)"
+        )
+        result = self._run(conn)
+        assert any("dangling variable/variant" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_window_column_not_in_alias_fails(self):
+        conn = self._windowed_db()
+        conn.execute("PRAGMA foreign_keys=OFF")
+        # Make the window's column absent from variable_alias (rename the alias).
+        conn.execute("UPDATE variable_alias SET delivery_column_name = 'OtherCol'")
+        result = self._run(conn)
+        assert any("missing from variable_alias" in f for f in result.failures), (
+            result.failures
+        )
+
+
+def test_variable_alias_window_section_present_in_report(fixture_db: Path):
+    """#319: the `[monthly-family windows]` section must appear so the check can't
+    be silently de-registered (the fixture ships zero windows)."""
+    report = validate_built_db(fixture_db).format_report()
+    assert "[monthly-family windows]" in report
+    assert "0 alias windows" in report

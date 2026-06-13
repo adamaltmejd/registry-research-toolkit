@@ -162,6 +162,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     _seed_kon_edges(src)
     _seed_concept_groups(src, add_variable)
     _seed_code_variable_map(src)
+    _seed_merged_family(src, add_variable, add_state)
     _rebuild_fts(src)
     _stamp_manifest(src)
 
@@ -227,6 +228,46 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
         "VALUES (?, ?, NULL, 1)",
         (sun2020_id, man_code_id),
     )
+
+
+def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> None:
+    """Seed a MERGED monthly-family variable (#319) on scb/lisa: one variable
+    `lonfink` with ONE annual 2018 state + three month columns in `variable_alias`
+    and three `variable_alias_window` rows (jan/feb/mars 2018). Exercises the
+    resolver's read-time per-month expansion through `/api/catalog/{fqid}?period=`
+    and the backend's compound-key (state_id, column, valid_from) dedup."""
+    add_variable(src, register_id=1, var_id=950, name="Lön per månad", slug="lonfink")
+    add_state(
+        src,
+        register_id=1,
+        variable_slug="lonfink",
+        register_variant_id=10,  # lisa's default variant
+        valid_from="2018-01-01",
+        valid_to="2018-12-31",
+        delivery_column_name="LonFinkJan",
+    )
+    vid = src.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'lonfink'"
+    ).fetchone()[0]
+    for col, lo, hi in (
+        ("LonFinkJan", "2018-01-01", "2018-01-31"),
+        ("LonFinkFeb", "2018-02-01", "2018-02-28"),
+        ("LonFinkMars", "2018-03-01", "2018-03-31"),
+    ):
+        # All three columns live in variable_alias (get_datacolumns) + the window
+        # table (resolver). The annual state's own column (Jan) is already in
+        # variable_alias via add_state; add Feb/Mars.
+        src.execute(
+            "INSERT OR IGNORE INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, 10, ?)",
+            (vid, col),
+        )
+        src.execute(
+            "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to) VALUES (?, 10, ?, ?, ?)",
+            (vid, col, lo, hi),
+        )
 
 
 def _seed_kon_edges(src: sqlite3.Connection) -> None:

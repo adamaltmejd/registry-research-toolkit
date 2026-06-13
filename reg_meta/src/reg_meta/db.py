@@ -178,6 +178,12 @@ from .errors import EXIT_CONFIG, RegMetaError
 #     valid_to)` so the #351 coverage aggregates (MIN/MAX span per variable /
 #     register) run index-only. A 5.3.0 DB lacks it. Even a pure additive index
 #     rides this minor cut so the schema fingerprint stays consistent.
+#   - #319 (monthly column families): additive `variable_alias_window` table —
+#     per-month validity windows for curated monthly-family merges (12 month
+#     columns → 1 variable with an ANNUAL state; the per-month dimension is
+#     read-time from this sibling table, consulted by `resolve_at`). EMPTY for
+#     non-merged variables. A 5.3.0 DB lacks it, so the resolver can't expand
+#     merged families.
 SCHEMA_VERSION = "5.4.0"
 DB_FILENAME = "reg_meta.db"
 
