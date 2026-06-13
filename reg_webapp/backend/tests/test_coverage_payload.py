@@ -23,7 +23,7 @@ def test_provider_children_carry_register_coverage(client):
     body = client.get("/api/catalog/scb").json()
     by_fqid = {c["fqid"]: c for c in body["children"]}
     lisa = by_fqid["scb/lisa"]["coverage"]
-    assert lisa["variable_count"] == 1  # kon
+    assert lisa["variable_count"] == 2  # kon + lonfink (merged monthly family, #319)
     assert lisa["open_ended"] is True  # kon state is open-ended
     assert lisa["coverage_to"] is None
     rams = by_fqid["scb/rams"]["coverage"]

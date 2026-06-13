@@ -156,6 +156,16 @@ def _resolve_register_id(
     return row[0]
 
 
+def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
+    return (
+        conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+            (name,),
+        ).fetchone()
+        is not None
+    )
+
+
 def _stem_and_month(slug: str) -> tuple[str, int] | None:
     """Split a column-derived slug into (stem, month) if it ends in a month token,
     else None. Mirrors the concept-group month-fold detection."""
@@ -211,6 +221,80 @@ def _delivered_years(conn: sqlite3.Connection, variable_id: int) -> dict[int, se
             y_hi = y_lo
         out.setdefault(rvid, set()).update(range(y_lo, y_hi + 1))
     return out
+
+
+def _member_value_sets(
+    conn: sqlite3.Connection, variable_id: int
+) -> dict[tuple[int, int], set[int | None]]:
+    """Per (register_variant_id, delivery year) → the set of `value_set_id`s the
+    variable's annual states carry that year (NULL preserved as a member, so a
+    NULL-vs-non-NULL divergence is detectable). Used to gate the merge: all member
+    columns delivering a year must agree on the value domain (cadence policy:
+    within a delivery, union semantics — a silent drop of a divergent sibling's
+    value set would misrepresent the domain)."""
+    out: dict[tuple[int, int], set[int | None]] = {}
+    for rvid, vfrom, vto, vsid in conn.execute(
+        "SELECT register_variant_id, valid_from, valid_to, value_set_id "
+        "FROM variable_state WHERE variable_id = ?",
+        (variable_id,),
+    ):
+        y_lo, y_hi = int(vfrom[:4]), int(vto[:4])
+        if y_hi >= 9999:
+            y_hi = y_lo
+        for year in range(y_lo, y_hi + 1):
+            out.setdefault((rvid, year), set()).add(vsid)
+    return out
+
+
+def _check_value_set_agreement(
+    conn: sqlite3.Connection,
+    family: MonthlyFamily,
+    members: list[_Member],
+    ctx: str,
+) -> None:
+    """LOUD-FAIL if member columns delivering the SAME (variant, year) disagree on
+    `value_set_id` (#319). The merge keeps ONE annual claim per year (the
+    survivor's) and drops the siblings' states — so a divergent sibling value set
+    would be silently lost, misrepresenting the value domain. Per the cadence
+    policy a delivery's columns share the domain; a real divergence means the stem
+    matched non-parallel columns (or a genuinely mergeable family needs curation).
+    NULL is a value: all-NULL agrees, mixed NULL/non-NULL or differing non-NULL
+    ids diverge. The column→value-set provenance for the message comes from each
+    member's own states (a member is one (variable, variant))."""
+    # (variant, year) → {value_set_id, …} across every member.
+    per_year: dict[tuple[int, int], set[int | None]] = {}
+    # (variant, year) → {value_set_id: [columns]} for the actionable message.
+    cols_by_vs: dict[tuple[int, int], dict[int | None, list[str]]] = {}
+    vs_cache: dict[int, dict[tuple[int, int], set[int | None]]] = {}
+    for m in members:
+        if m.variable_id not in vs_cache:
+            vs_cache[m.variable_id] = _member_value_sets(conn, m.variable_id)
+        member_vs = vs_cache[m.variable_id]
+        for (rvid, year), vsids in member_vs.items():
+            if rvid != m.register_variant_id:
+                continue
+            key = (rvid, year)
+            per_year.setdefault(key, set()).update(vsids)
+            for vsid in vsids:
+                cols_by_vs.setdefault(key, {}).setdefault(vsid, []).append(
+                    m.delivery_column_name
+                )
+    for (rvid, year), vsids in sorted(per_year.items()):
+        if len(vsids) > 1:
+            detail = "; ".join(
+                f"value_set {vsid}: {sorted(set(cols_by_vs[(rvid, year)][vsid]))}"
+                for vsid in sorted(vsids, key=lambda v: (v is None, v))
+            )
+            raise curation_error(
+                "family_merges_value_set_conflict",
+                f"{ctx}: member columns disagree on value_set_id for variant "
+                f"{rvid}, year {year} — {detail}. The merge keeps one annual claim "
+                "per year, so a divergent sibling's value set would be dropped.",
+                "Confirm the family stem only matches columns sharing a value "
+                "domain, or curate the family (reg_meta_build/family_merges.toml). "
+                "Union/curation of a genuinely mergeable divergence is a "
+                "maintainer-build decision.",
+            )
 
 
 def materialize_family_merges(
@@ -274,6 +358,7 @@ def materialize_family_merges(
             return delivered_years_cache[variable_id]
 
         survivor_years = _years_for(survivor)
+        _check_value_set_agreement(conn, family, members, ctx)
 
         conn.execute(
             "UPDATE variable SET name = ? WHERE variable_id = ?",
@@ -319,12 +404,16 @@ def materialize_family_merges(
             # (db.py, runs AFTER this merge) reads `variable_instance.variable_id`
             # to attribute codes — leaving the sibling id there would re-insert
             # code_variable_map rows referencing the deleted sibling (dangling FK).
-            # No-op when SCB didn't run (the table is empty).
-            conn.execute(
-                f"UPDATE variable_instance SET variable_id = ? "
-                f"WHERE variable_id IN ({placeholders})",
-                (survivor, *siblings),
-            )
+            # No-op when SCB didn't run (the table is empty). Guarded on the
+            # table's existence: the merge runs pre-drop in a real build, but a
+            # direct call against a post-ship DB (where `variable_instance` is
+            # gone) has nothing to re-point — skip rather than error.
+            if _table_exists(conn, "variable_instance"):
+                conn.execute(
+                    f"UPDATE variable_instance SET variable_id = ? "
+                    f"WHERE variable_id IN ({placeholders})",
+                    (survivor, *siblings),
+                )
             conn.execute(
                 f"DELETE FROM variable_state WHERE variable_id IN ({placeholders})",
                 siblings,

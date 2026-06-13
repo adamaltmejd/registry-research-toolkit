@@ -167,3 +167,67 @@ def test_non_merged_variable_unaffected(merged_db: Path) -> None:
         assert all(s.delivery_column_name != "" for s in states)
     finally:
         conn.close()
+
+
+def _build_gap_year(tmp_path: Path, monkeypatch) -> Path:
+    """A family where `mars` delivers ONLY 2019 (not 2018) — so the 2018 annual
+    claim has jan/feb windows but NO march window. Exercises the
+    `_expand_state_windows` fallback: a query for a month with no window in that
+    year keeps the raw annual state (never silently dropped)."""
+    import reg_meta_build.db as _db
+    import reg_meta_build.family_merges as _fm
+
+    toml = tmp_path / "family_merges.toml"
+    toml.write_text(
+        '[[monthly_family]]\nregister = "scb/testreg"\n'
+        'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(_fm, "repo_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_db, "repo_family_merges_path", lambda: toml)
+
+    ri: list[str] = []
+    vm: list[str] = []
+    for mi, (token, _month) in enumerate(_MONTHS):
+        # jan/feb deliver both years; mars only 2019 → 2018 has no march window.
+        years = [2019] if token == "mars" else _YEARS
+        for year in years:
+            cvid = 8000 + mi * 10 + year
+            ri.append(
+                _var_row(
+                    colname=f"LonFink{token.capitalize()}",
+                    cvid=cvid,
+                    var_id=800 + mi,
+                    varname=f"Inkomst {token}",
+                    year=str(year),
+                    regver_id=8000 + mi * 10 + year,
+                    data_length="1",
+                )
+            )
+            vm.extend(vm_rows(cvid, f"LonFink{year}", _CODES))
+    conn = build_with_rows(tmp_path, ri, vm)
+    conn.close()
+    return tmp_path / "db" / "reg_meta.db"
+
+
+def test_gap_year_month_falls_back_to_annual_state(tmp_path: Path, monkeypatch) -> None:
+    db = _build_gap_year(tmp_path, monkeypatch)
+    conn = open_db(db)
+    try:
+        cat = Catalog(conn)
+        # 2018 has jan/feb windows but no march → query "2018-03" hits the annual
+        # state, no window overlaps → fallback returns the bare annual state (not
+        # silently dropped).
+        states = cat.resolve_at(_FQID, "2018-03")
+        assert len(states) == 1
+        s = states[0]
+        # The annual claim's own bounds (not a month window).
+        assert s.valid_from == "2018-01-01"
+        assert s.valid_to == "2018-12-31"
+        # Sanity: 2019 DOES have a march window (the gap is 2018-only).
+        mar2019 = cat.resolve_at(_FQID, "2019-03")
+        assert len(mar2019) == 1
+        assert mar2019[0].delivery_column_name == "LonFinkMars"
+        assert mar2019[0].valid_from == "2019-03-01"
+    finally:
+        conn.close()

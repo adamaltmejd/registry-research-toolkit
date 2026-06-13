@@ -262,3 +262,81 @@ def test_materialize_dangling_family_fails_loud(tmp_path: Path) -> None:
         assert exc.value.code == "family_merges_unresolved"
     finally:
         conn.close()
+
+
+def _divergent_ri_vm() -> tuple[list[str], list[str]]:
+    """Like `_family_ri_vm`, but the `mars` column carries a DIFFERENT value set in
+    the shared year 2018 (distinct codes → distinct value_set_id), while jan/feb
+    share one — an intra-year value-set divergence the merge must reject."""
+    ri: list[str] = []
+    vm: list[str] = []
+    for mi, (token, _month) in enumerate(_MONTHS):
+        var_id = 800 + mi
+        colname = f"LonFink{token.capitalize()}"
+        for yi, year in enumerate(_YEARS):
+            cvid = 8000 + mi * 10 + yi
+            ri.append(
+                _var_row(
+                    colname=colname,
+                    cvid=cvid,
+                    var_id=var_id,
+                    varname=f"Inkomst {token}",
+                    year=str(year),
+                    regver_id=800 + mi * 10 + yi,
+                    data_length="1",
+                )
+            )
+            # `mars` in 2018 gets disjoint codes → a distinct value_set_id from the
+            # jan/feb columns' shared set, within the same delivery year.
+            codes = (
+                [("7", "Annan"), ("8", "Extra")]
+                if token == "mars" and year == 2018
+                else _CODES
+            )
+            vm.extend(vm_rows(cvid, f"LonFink{year}", codes))
+    return ri, vm
+
+
+def test_intra_year_value_set_divergence_fails_loud(tmp_path: Path) -> None:
+    """#319: member columns disagreeing on value_set_id within ONE delivery year
+    must LOUD-FAIL — keeping only the survivor's annual claim would silently drop
+    the divergent sibling's value domain. Build WITHOUT the merge (curation nulled),
+    then run materialize directly so the conflict surfaces."""
+    from reg_meta_build.family_merges import materialize_family_merges
+
+    ri, vm = _divergent_ri_vm()
+    conn = build_with_rows(tmp_path, ri, vm)
+    conn.row_factory = sqlite3.Row
+    try:
+        with pytest.raises(RegMetaError) as exc:
+            materialize_family_merges(
+                conn,
+                (MonthlyFamily("scb", "testreg", "lonfink", "Lön per månad"),),
+                providers=frozenset({"scb"}),
+                fold_slug_hints={},
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "family_merges_value_set_conflict"
+        assert "2018" in exc.value.message
+    finally:
+        conn.close()
+
+
+def test_shared_value_set_merge_succeeds(tmp_path: Path) -> None:
+    """The agreement guard does NOT false-fire when all member columns share the
+    value domain (the standard family) — the merge completes."""
+    from reg_meta_build.family_merges import materialize_family_merges
+
+    ri, vm = _family_ri_vm()
+    conn = build_with_rows(tmp_path, ri, vm)
+    conn.row_factory = sqlite3.Row
+    try:
+        counts = materialize_family_merges(
+            conn,
+            (MonthlyFamily("scb", "testreg", "lonfink", "Lön per månad"),),
+            providers=frozenset({"scb"}),
+            fold_slug_hints={},
+        )
+        assert counts["families"] == 1
+    finally:
+        conn.close()

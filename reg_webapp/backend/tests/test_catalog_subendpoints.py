@@ -266,6 +266,34 @@ def test_period_list_query_dedupes_by_state_id(client):
     assert len(resp.json()["states"]) == 1
 
 
+# #319: the comma-list dedup keys on the COMPOUND (state_id, delivery_column_name,
+# valid_from), NOT state_id alone — a merged monthly-family variable expands ONE
+# annual state into per-month windows that share a state_id. The seeded `lonfink`
+# variable has 3 month windows (jan/feb/mars) for 2018.
+_LONFINK = "scb/lisa/lonfink"
+
+
+def test_period_list_merged_family_not_collapsed_by_shared_state_id(client):
+    # `?period=2018,2018`: both segments hit the same annual state, which expands
+    # to 3 month windows. Keying on state_id alone would collapse them to 1; the
+    # compound key keeps all 3 (deduped across the two identical segments).
+    resp = client.get(f"/api/catalog/{_LONFINK}?period=2018,2018")
+    assert resp.status_code == 200
+    states = resp.json()["states"]
+    assert len(states) == 3, states
+    cols = sorted(s["delivery_column_name"] for s in states)
+    assert cols == ["LonFinkFeb", "LonFinkJan", "LonFinkMars"]
+
+
+def test_period_single_month_resolves_one_column(client):
+    # A single month period on the merged variable → exactly the one month column.
+    resp = client.get(f"/api/catalog/{_LONFINK}?period=2018-02")
+    assert resp.status_code == 200
+    states = resp.json()["states"]
+    assert len(states) == 1
+    assert states[0]["delivery_column_name"] == "LonFinkFeb"
+
+
 def test_period_list_query_rejects_malformed(client):
     # The list-member gate 422s before any connection opens: empty members,
     # the whole-value-only `_default` sentinel, junk members.

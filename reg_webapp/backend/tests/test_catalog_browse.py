@@ -72,7 +72,8 @@ def test_register_node_lists_bindings_and_variants_ref(client):
     assert body["kind"] == "register"
     assert body["fqid"] == "scb/lisa"
     bindings = [c for c in body["children"] if c["kind"] == "binding"]
-    assert {b["fqid"] for b in bindings} == {"scb/lisa/kon"}
+    # `lonfink` is the merged monthly-family binding (#319) seeded alongside `kon`.
+    assert {b["fqid"] for b in bindings} == {"scb/lisa/kon", "scb/lisa/lonfink"}
     # The variant-browser slot (A5.2a, wired): carries the navigable register_fqid.
     variants_refs = [c for c in body["children"] if c["kind"] == "variants-ref"]
     assert len(variants_refs) == 1
