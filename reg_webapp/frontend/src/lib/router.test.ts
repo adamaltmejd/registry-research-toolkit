@@ -59,6 +59,14 @@ describe("parseRoute", () => {
     expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash
   });
 
+  it("parses the /search results route (#379) — query lives in ?q, not the path", () => {
+    // The route is keyed on the PATHNAME only; the `?q=` is read separately via
+    // getQueryParam, so the parsed route carries no query field (a refined `?q=`
+    // doesn't remount the view).
+    expect(parseRoute("/search")).toEqual({ name: "search" });
+    expect(parseRoute("/search/")).toEqual({ name: "search" }); // trailing slash
+  });
+
   it("maps anything else to not-found", () => {
     expect(parseRoute("/about")).toEqual({ name: "not-found", path: "/about" });
   });
@@ -133,6 +141,37 @@ describe("onNavClick", () => {
 
   it("intercepts the /project authoring route (A5.3c)", () => {
     expect(clickAnchor("/project").defaultPrevented).toBe(true);
+  });
+
+  it("intercepts the /search results route with a ?q query (#379)", () => {
+    // `/search` is an SPA-owned route, so an internal <a href="/search?q=…">
+    // (the omnibox routes via the URL, the shell intercepts the click) must be
+    // pushState-navigated rather than full-reloading.
+    expect(clickAnchor("/search?q=kon").defaultPrevented).toBe(true);
+  });
+});
+
+describe("router.replace (#379)", () => {
+  beforeEach(() => {
+    window.history.pushState({}, "", "/");
+    router.navigate("/search?q=a");
+  });
+  afterEach(() => {
+    window.history.pushState({}, "", "/");
+  });
+
+  it("updates the reactive route + query without growing the history length", () => {
+    const lenBefore = window.history.length;
+    router.replace("/search?q=ab");
+    expect(router.route).toEqual({ name: "search" });
+    expect(router.getQueryParam("q")).toBe("ab");
+    // replaceState swaps the current entry in place — the stack doesn't grow.
+    expect(window.history.length).toBe(lenBefore);
+  });
+
+  it("is a no-op when already at the full url (same guard as navigate)", () => {
+    router.replace("/search?q=a");
+    expect(router.getQueryParam("q")).toBe("a");
   });
 });
 

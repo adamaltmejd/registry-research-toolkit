@@ -6,6 +6,8 @@ import CatalogRoot from "./lib/CatalogRoot.svelte";
 import ProjectEditor from "./lib/ProjectEditor.svelte";
 import { projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
+import SearchOmnibox from "./lib/SearchOmnibox.svelte";
+import SearchView from "./lib/SearchView.svelte";
 
 // The shell: a header with steward branding (GET /api/context) + a catalog-drift
 // banner when present, and a routed main area. Internal <a> clicks are
@@ -78,6 +80,10 @@ const steward = $derived(context?.steward.id ?? "");
         schema {context.reg_meta.schema_version} · webapp {context.webapp.version}
       </div>
     {/if}
+    <!-- Full-width search row: the header wraps, so the omnibox sits on its own
+         line below brand/nav and stretches across (#379). Inside the use:link
+         div, so result-page links it routes to are interceptable. -->
+    <SearchOmnibox />
   </header>
 
   {#if contextError}
@@ -109,6 +115,8 @@ const steward = $derived(context?.steward.id ?? "");
       {/key}
     {:else if route.name === "project"}
       <ProjectEditor {regMetaVersion} {steward} />
+    {:else if route.name === "search"}
+      <SearchView />
     {:else}
       <article>
         <h2>Not found</h2>

@@ -16,11 +16,13 @@
 
 /** The parsed current route. `root` is `/` and `/catalog`; `catalog-node`
  * carries the FQID path after `/catalog/`; `project` is the authoring surface
- * (A5.3c); `not-found` is anything else. */
+ * (A5.3c); `search` is the results page (the query lives in `?q=`, not the path,
+ * #379); `not-found` is anything else. */
 export type Route =
   | { name: "root" }
   | { name: "catalog-node"; fqidPath: string }
   | { name: "project" }
+  | { name: "search" }
   | { name: "not-found"; path: string };
 
 /** `decodeURIComponent` that returns `null` on a malformed percent-sequence
@@ -45,6 +47,12 @@ export function parseRoute(pathname: string): Route {
   }
   if (path === "/project") {
     return { name: "project" };
+  }
+  if (path === "/search") {
+    // The query lives in `?q=` (read via getQueryParam), NOT the path — `route`
+    // stays keyed on the pathname only (like `?period`), so a refined `?q=` while
+    // already on `/search` doesn't remount the results view (#379).
+    return { name: "search" };
   }
   if (path.startsWith("/catalog/")) {
     // Decode each segment (the router stores the human FQID; the api layer
@@ -89,12 +97,31 @@ class Router {
    * already at the full `url` (path + query + hash) — so a same-path/new-query
    * navigation is correctly NOT a no-op. */
   navigate(url: string): void {
+    this.go(url, false);
+  }
+
+  /** Like `navigate`, but REPLACES the current history entry
+   * (`history.replaceState`) instead of pushing a new one — so refining a search
+   * query in place (the omnibox's per-keystroke `?q=` updates, #379) doesn't spam
+   * the back-stack. Same no-op-when-equal guard as `navigate`. */
+  replace(url: string): void {
+    this.go(url, true);
+  }
+
+  /** Shared body of `navigate`/`replace`: no-op when already at the full `url`
+   * (path + query + hash), else push or replace the history entry and re-sync the
+   * reactive route + query off the new location. */
+  private go(url: string, replace: boolean): void {
     const current =
       window.location.pathname + window.location.search + window.location.hash;
     if (url === current) {
       return;
     }
-    window.history.pushState({}, "", url);
+    if (replace) {
+      window.history.replaceState({}, "", url);
+    } else {
+      window.history.pushState({}, "", url);
+    }
     this.route = parseRoute(window.location.pathname);
     this.search = window.location.search;
   }
