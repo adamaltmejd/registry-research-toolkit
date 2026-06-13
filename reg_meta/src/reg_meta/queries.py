@@ -378,11 +378,11 @@ def search(
     # Code/value search (#352): FTS over value_code labels + exact/prefix code
     # match, annotated with owning variables / classifications. Emits `type:
     # "code"` rows. Gated on `value`/`all` field AND a non-`register`-only type
-    # scope (a `register` type request wants register leaves, not codes). Bounded
-    # internally by `limit` (the FTS path is small; the outer offset/limit slice
-    # below paginates the merged result set).
+    # scope (a `register` type request wants register leaves, not codes). Returns
+    # the FULL in-scope match set (like the other arms); the outer offset/limit
+    # slice below is what paginates, so total_count is the true count.
     if field in ("value", "all") and type in ("value", "all"):
-        all_results.extend(_search_values_fts(conn, query, reg_ids, limit))
+        all_results.extend(_search_values_fts(conn, query, reg_ids))
 
     if type == "register":
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
@@ -611,107 +611,163 @@ def _is_code_shaped(query: str) -> bool:
     return len(q) >= 3 and _CODE_SHAPED_RE.search(q) is not None
 
 
-def _code_owner_annotations(
-    conn: sqlite3.Connection, code_id: int, reg_ids: set[int] | None
-) -> dict[str, Any]:
-    """Resolve a code's owning variables and classifications (#352).
-
-    The actionable target is the variable / classification carrying the code, not
-    the bare (code, label) pair. Returns a bounded representative slice of each
-    plus the full counts. Variables come through `code_variable_map`
-    (variable_id-grained, so split siblings resolve to their true owner — see the
-    map DDL in reg_meta_build); classifications through `classification_code`.
-    `reg_ids` (a `--register` scope) constrains the variable owners only —
-    classifications are catalog-scoped (no owning register)."""
-    var_where = "cvm.code_id = ?"
-    var_params: list[Any] = [code_id]
-    if reg_ids:
-        var_where += " AND v.register_id IN (" + ",".join("?" * len(reg_ids)) + ")"
-        var_params.extend(sorted(reg_ids))
-
-    var_count = conn.execute(
-        "SELECT COUNT(*) FROM code_variable_map cvm "
-        "JOIN variable v ON cvm.variable_id = v.variable_id "
-        f"WHERE {var_where}",
-        var_params,
-    ).fetchone()[0]
-    # Order owners by the variable's own value-set size (mapping spread is a proxy:
-    # a code shared by fewer of the variable's siblings is more discriminative). We
-    # approximate with the variable's distinct code count so the cap surfaces the
-    # tightest enums first; ties broken by slug for determinism.
-    var_rows = conn.execute(
-        "SELECT v.name AS variable_name, v.slug AS variable_slug, "
-        "r.name AS register_name, r.slug AS register_slug, p.slug AS provider_slug, "
-        "(SELECT COUNT(*) FROM code_variable_map c2 "
-        "  WHERE c2.variable_id = v.variable_id) AS var_code_count "
-        "FROM code_variable_map cvm "
-        "JOIN variable v ON cvm.variable_id = v.variable_id "
-        "JOIN register r ON v.register_id = r.register_id "
-        "JOIN provider p ON p.provider_id = r.provider_id "
-        f"WHERE {var_where} "
-        "ORDER BY var_code_count ASC, v.slug "
-        "LIMIT ?",
-        (*var_params, _CODE_OWNERS_PER_HIT),
-    ).fetchall()
-    variables = [
-        {
-            "fqid": try_emit(
-                Fqid.binding_fqid,
-                r["provider_slug"],
-                r["register_slug"],
-                r["variable_slug"],
-            ),
-            "name": r["variable_name"],
-            "register": r["register_name"],
-        }
-        for r in var_rows
-    ]
-
-    # Classifications: catalog-scoped, so a register scope leaves them empty
-    # (mirrors _search_classifications' reg_ids guard).
-    classifications: list[dict[str, Any]] = []
-    cls_count = 0
-    if not reg_ids:
-        cls_count = conn.execute(
-            "SELECT COUNT(*) FROM classification_code WHERE code_id = ?", (code_id,)
-        ).fetchone()[0]
-        cls_rows = conn.execute(
-            "SELECT c.short_name, c.name, c.slug "
-            "FROM classification_code cc "
-            "JOIN classification c ON c.id = cc.classification_id "
-            "WHERE cc.code_id = ? "
-            "ORDER BY c.short_name "
-            "LIMIT ?",
-            (code_id, _CODE_OWNERS_PER_HIT),
-        ).fetchall()
-        classifications = [
-            {
-                "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
-                "short_name": r["short_name"],
-                "name": r["name"],
-            }
-            for r in cls_rows
-        ]
-
+def _empty_owner_annotation() -> dict[str, Any]:
     return {
-        "variables": variables,
-        "variable_count": var_count,
-        "classifications": classifications,
-        "classification_count": cls_count,
+        "variables": [],
+        "variable_count": 0,
+        "classifications": [],
+        "classification_count": 0,
     }
 
 
+def _code_owner_annotations_batch(
+    conn: sqlite3.Connection, code_ids: list[int], reg_ids: set[int] | None
+) -> dict[int, dict[str, Any]]:
+    """Resolve owning variables / classifications for a SET of codes at once (#352).
+
+    Set-based, NOT per-code: a single label token can match thousands of codes, so
+    a per-hit count+slice query (the old `_code_owner_annotations`) would be an N+1
+    blowup. We materialize the matched `code_id`s into a TEMP table and JOIN
+    `code_variable_map` / `classification_code` against it — JOIN (not
+    `WHERE code_id IN (<thousands>)`, which risks SQLite's bound-param limit). Owner
+    slices are capped to `_CODE_OWNERS_PER_HIT` per code via a window
+    `ROW_NUMBER()`; the counts are the FULL per-code totals.
+
+    Semantics preserved from the per-code version:
+      - variables via `code_variable_map` (variable_id-grained, so a split sibling
+        is attributed only the codes its own value set carried — no fan-out);
+      - owner ordering by the variable's own distinct-code count ASC (a code on a
+        tight enum is more discriminative than the same code on a 500-value
+        catalog), ties broken by slug for determinism;
+      - `reg_ids` (a `--register` scope) constrains BOTH the variable owners and
+        `variable_count`; classifications are catalog-scoped, so a register scope
+        leaves them empty (mirrors `_search_classifications`' guard)."""
+    out: dict[int, dict[str, Any]] = {
+        cid: _empty_owner_annotation() for cid in code_ids
+    }
+    if not code_ids:
+        return out
+
+    # TEMP table of the matched code_ids — the JOIN driver. Dropped on connection
+    # close; we also DROP explicitly so repeated search() calls on a long-lived
+    # connection (the webapp's per-request conn) don't collide.
+    conn.execute("DROP TABLE IF EXISTS _match_code_ids")
+    conn.execute("CREATE TEMP TABLE _match_code_ids (code_id INTEGER PRIMARY KEY)")
+    conn.executemany(
+        "INSERT INTO _match_code_ids (code_id) VALUES (?)",
+        [(cid,) for cid in code_ids],
+    )
+    try:
+        reg_filter = ""
+        reg_params: list[Any] = []
+        if reg_ids:
+            reg_filter = " AND v.register_id IN (" + ",".join("?" * len(reg_ids)) + ")"
+            reg_params = sorted(reg_ids)
+
+        # Full per-code variable count (register-scoped when reg_ids set).
+        for row in conn.execute(
+            "SELECT cvm.code_id, COUNT(*) AS n "
+            "FROM _match_code_ids m "
+            "JOIN code_variable_map cvm ON cvm.code_id = m.code_id "
+            "JOIN variable v ON cvm.variable_id = v.variable_id "
+            f"WHERE 1=1{reg_filter} "
+            "GROUP BY cvm.code_id",
+            reg_params,
+        ):
+            out[row["code_id"]]["variable_count"] = row["n"]
+
+        # Top-N variable owners per code via a windowed rank over the same ordering
+        # the per-code slice used (var_code_count ASC, slug). The outer filter on
+        # rn keeps the cap; provider/register/variable slugs feed the binding FQID.
+        var_rows = conn.execute(
+            "WITH owners AS ("
+            "  SELECT cvm.code_id, v.name AS variable_name, v.slug AS variable_slug, "
+            "         r.name AS register_name, r.slug AS register_slug, "
+            "         p.slug AS provider_slug, "
+            "         (SELECT COUNT(*) FROM code_variable_map c2 "
+            "            WHERE c2.variable_id = v.variable_id) AS var_code_count "
+            "  FROM _match_code_ids m "
+            "  JOIN code_variable_map cvm ON cvm.code_id = m.code_id "
+            "  JOIN variable v ON cvm.variable_id = v.variable_id "
+            "  JOIN register r ON v.register_id = r.register_id "
+            "  JOIN provider p ON p.provider_id = r.provider_id "
+            f"  WHERE 1=1{reg_filter}"
+            "), ranked AS ("
+            "  SELECT *, ROW_NUMBER() OVER ("
+            "    PARTITION BY code_id ORDER BY var_code_count ASC, variable_slug"
+            "  ) AS rn FROM owners"
+            ") SELECT * FROM ranked WHERE rn <= ? ORDER BY code_id, rn",
+            (*reg_params, _CODE_OWNERS_PER_HIT),
+        ).fetchall()
+        for r in var_rows:
+            out[r["code_id"]]["variables"].append(
+                {
+                    "fqid": try_emit(
+                        Fqid.binding_fqid,
+                        r["provider_slug"],
+                        r["register_slug"],
+                        r["variable_slug"],
+                    ),
+                    "name": r["variable_name"],
+                    "register": r["register_name"],
+                }
+            )
+
+        # Classifications: catalog-scoped, so a register scope leaves them empty.
+        if not reg_ids:
+            for row in conn.execute(
+                "SELECT cc.code_id, COUNT(*) AS n "
+                "FROM _match_code_ids m "
+                "JOIN classification_code cc ON cc.code_id = m.code_id "
+                "GROUP BY cc.code_id"
+            ):
+                out[row["code_id"]]["classification_count"] = row["n"]
+            cls_rows = conn.execute(
+                "WITH owners AS ("
+                "  SELECT cc.code_id, c.short_name, c.name, c.slug "
+                "  FROM _match_code_ids m "
+                "  JOIN classification_code cc ON cc.code_id = m.code_id "
+                "  JOIN classification c ON c.id = cc.classification_id "
+                "), ranked AS ("
+                "  SELECT *, ROW_NUMBER() OVER ("
+                "    PARTITION BY code_id ORDER BY short_name"
+                "  ) AS rn FROM owners"
+                ") SELECT * FROM ranked WHERE rn <= ? ORDER BY code_id, rn",
+                (_CODE_OWNERS_PER_HIT,),
+            ).fetchall()
+            for r in cls_rows:
+                out[r["code_id"]]["classifications"].append(
+                    {
+                        "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
+                        "short_name": r["short_name"],
+                        "name": r["name"],
+                    }
+                )
+    finally:
+        conn.execute("DROP TABLE IF EXISTS _match_code_ids")
+
+    return out
+
+
 def _search_values_fts(
-    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None, limit: int
+    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     """Code/value search over `value_code_fts` (#352).
+
+    Returns the FULL ranked, in-scope match set (NOT internally limited or offset),
+    exactly like the register/variable/classification arms — `search()` does the
+    `total_count = len(...)` + `[offset:offset+limit]` slice, so total_count is the
+    true match count and offset paginates. (An earlier draft truncated to `limit*4`
+    + `[:limit]` here, which false-emptied register-scoped queries whose top codes
+    were all out-of-scope, saturated total_count at `limit`, and broke offset.)
 
     Label FTS (bm25) is the primary surface — ~55% of codes are bare numbers, so
     labels carry the meaning. Each label hit JOINs `value_code` for the (code,
     label, mapping_count) and is annotated with its owning variables /
-    classifications (`_code_owner_annotations`). For a code-shaped query
-    (`_is_code_shaped`) an exact + prefix match on `value_code.code` is merged in
-    (deduped by code_id) — labels alone miss a researcher entering "F32".
+    classifications (`_code_owner_annotations_batch`, set-based to avoid an N+1).
+    For a code-shaped query (`_is_code_shaped`) an exact + prefix match on
+    `value_code.code` is merged in (deduped by code_id) — labels alone miss a
+    researcher entering "F32".
 
     Ranking: bm25 relevance, then `mapping_count` ASCENDING — a label shared by
     many variables (a generic enum) is less discriminative than a rare one, so it
@@ -740,16 +796,16 @@ def _search_values_fts(
     if fts_query is not None:
         # bm25 default weights; mapping_count downweight is a small additive term
         # (scaled by log so a 60k-mapping junk-ish label sinks but doesn't dwarf
-        # bm25). Both terms are smaller-is-better, so the sum sorts ascending.
+        # bm25). Both terms are smaller-is-better, so the sum sorts ascending. No
+        # LIMIT — the outer search() slice paginates; bounding here would re-break
+        # total_count / register-scope (see the docstring).
         label_rows = conn.execute(
             "SELECT vc.code_id, vc.code, vc.label, vc.mapping_count, "
             "bm25(value_code_fts) AS rank "
             "FROM value_code_fts "
             "JOIN value_code vc ON vc.code_id = value_code_fts.rowid "
-            "WHERE value_code_fts MATCH ? "
-            "ORDER BY rank "
-            "LIMIT ?",
-            (fts_query, limit * 4),
+            "WHERE value_code_fts MATCH ?",
+            (fts_query,),
         ).fetchall()
         for r in label_rows:
             base = r["rank"] + math.log1p(r["mapping_count"]) * 0.5
@@ -761,13 +817,15 @@ def _search_values_fts(
             "SELECT code_id, code, label, mapping_count "
             "FROM value_code "
             "WHERE code = ? OR code LIKE ? "
-            "ORDER BY (code = ?) DESC, length(code), code "
-            "LIMIT ?",
-            (q, f"{q}%", q, limit * 4),
+            "ORDER BY (code = ?) DESC, length(code), code",
+            (q, f"{q}%", q),
         ).fetchall()
         # Code matches are the strongest signal a code query gives — seed them
         # below the FTS rank floor (a large negative offset) so an exact "F32"
-        # outranks any label-text hit; exact before prefix via the -1 nudge.
+        # outranks any label-text hit; exact before prefix via the -1 nudge. (In
+        # the flat `type="all"` path this also puts code-exact hits ahead of other
+        # result types for a code-shaped query — the user typed a code; the webapp
+        # calls search() per-type, so its groups are unaffected.)
         for i, r in enumerate(code_rows):
             exact = r["code"] == q
             code_rank = -1_000_000 + (0 if exact else 1) + i
@@ -775,11 +833,16 @@ def _search_values_fts(
             if existing is None or code_rank < existing["base_rank"]:
                 hits[r["code_id"]] = _hit(r, code_rank)
 
-    ordered = sorted(hits.values(), key=lambda h: (h["base_rank"], h["code"]))[:limit]
+    ordered = sorted(hits.values(), key=lambda h: (h["base_rank"], h["code"]))
+
+    # One set-based owner-annotation pass over the full match set (no per-hit N+1).
+    owners_by_code = _code_owner_annotations_batch(
+        conn, [h["code_id"] for h in ordered], reg_ids
+    )
 
     results: list[dict[str, Any]] = []
     for h in ordered:
-        owners = _code_owner_annotations(conn, h["code_id"], reg_ids)
+        owners = owners_by_code[h["code_id"]]
         # A register scope can leave a code with no surviving owner (no in-scope
         # variable, no classification) — drop it rather than return a context-less
         # code/label pair.

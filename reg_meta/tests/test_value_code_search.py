@@ -181,3 +181,65 @@ def test_mapping_count_downweight_orders_rarer_first(conn: sqlite3.Connection) -
     # Rarer pair (code "2", mapping_count 1) sorts before the common one (code "1").
     assert rank["2"] < rank["1"]
     assert results[0]["code"] == "2"
+
+
+def _seed_n_label_codes(conn: sqlite3.Connection, n: int, label: str) -> None:
+    """Seed `n` distinct (code, label) pairs that all share `label` text (so one
+    label-FTS query matches all n), each owned by its own variable in register 1."""
+    _seed_register(conn, 1, "reg")
+    for i in range(n):
+        _seed_code(conn, 100 + i, str(100 + i), f"{label} {i:02d}")
+        vid = _seed_variable(conn, 1, str(100 + i), f"Var{i}", f"var{i}")
+        _map(conn, 100 + i, vid)
+    _finalize(conn)
+
+
+def test_total_count_reflects_true_match_count(conn: sqlite3.Connection) -> None:
+    """total_count is the FULL match count, not saturated at `limit` (regression:
+    the value arm used to truncate internally to `limit`, capping total_count)."""
+    _seed_n_label_codes(conn, 8, "Diagnos")
+    out = search(conn, "Diagnos", field="value", type="value", limit=3)
+    assert out["total_count"] == 8, out["total_count"]
+    assert len(out["results"]) == 3  # the page is still limit-bounded
+
+
+def test_offset_paginates_codes(conn: sqlite3.Connection) -> None:
+    """offset paginates the value arm (regression: offset>0 used to return [])."""
+    _seed_n_label_codes(conn, 8, "Diagnos")
+    page1 = search(conn, "Diagnos", field="value", type="value", limit=3, offset=0)[
+        "results"
+    ]
+    page2 = search(conn, "Diagnos", field="value", type="value", limit=3, offset=3)[
+        "results"
+    ]
+    assert len(page1) == 3
+    assert len(page2) == 3, "offset=limit must return the NEXT page, not []"
+    # Disjoint pages (same deterministic order across calls).
+    assert {r["code"] for r in page1}.isdisjoint({r["code"] for r in page2})
+
+
+def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> None:
+    """Register scope must surface an in-scope hit even when HIGHER-ranked codes are
+    all out-of-scope (regression: the arm truncated to `limit` BEFORE the register
+    filter, so a deep in-scope hit was fetched, capped off, then lost → [])."""
+    _seed_register(conn, 1, "rega")
+    _seed_register(conn, 2, "regb")
+    # 7 "Diagnos" codes owned only by regB + 1 owned by regA. They all share the
+    # label token, so all 8 are label-FTS matches; regA's is not guaranteed to be
+    # among the top few by rank.
+    for i in range(7):
+        _seed_code(conn, 200 + i, str(200 + i), f"Diagnos B{i:02d}")
+        vid_b = _seed_variable(conn, 2, str(200 + i), f"BVar{i}", f"bvar{i}")
+        _map(conn, 200 + i, vid_b)
+    _seed_code(conn, 299, "299", "Diagnos A")
+    vid_a = _seed_variable(conn, 1, "299", "AVar", "avar")
+    _map(conn, 299, vid_a)
+    _finalize(conn)
+
+    # Scoped to regA with a small limit: the single regA-owned code must still come
+    # back (the full in-scope set is built before the outer slice).
+    scoped = search(
+        conn, "Diagnos", field="value", type="value", register="rega", limit=3
+    )
+    assert scoped["total_count"] == 1, scoped["total_count"]
+    assert [r["label"] for r in scoped["results"]] == ["Diagnos A"]

@@ -99,9 +99,14 @@ Four content-synced FTS5 indexes power search:
   + length ≥ 3, e.g. "F32", "0180") ALSO does an exact/prefix match on `value_code.code`
     (via `idx_value_code_code`), merged + deduped with the label-FTS hits and seeded
     above them (an exact code match is the strongest signal); plain-text queries do
-    label FTS only. NB: `value_code_fts` is external-content, so `COUNT(*)`/`SELECT col`
-    read the CONTENT table (value_code) — the honest indexed-row count is the `_docsize`
-    shadow table.
+    label FTS only. The code-exact rank floor means that in the flat `type="all"` CLI
+    path, code-exact hits intentionally precede other result types for a code-shaped
+    query (the user typed a code); the webapp calls `search()` per type, so its typed
+    groups are unaffected. The value arm returns the FULL in-scope match set (no
+    internal limit/offset) — `search()` does the `total_count` + `[offset:offset+limit]`
+    slice, so total_count is true and offset paginates. NB: `value_code_fts` is
+    external-content, so `COUNT(*)`/`SELECT col` read the CONTENT table (value_code) —
+    the honest indexed-row count is the `_docsize` shadow table.
 
 `search` takes a RAW user query and builds the FTS5 MATCH expression internally
 (`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),
