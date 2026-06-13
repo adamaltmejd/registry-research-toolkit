@@ -787,6 +787,11 @@ CREATE TABLE code_variable_map (
 -- owning variables, whose per-variable count correlated-subquery
 -- (`COUNT(*) ... WHERE variable_id = ?`) full-scans this 4.1M-row table without
 -- this index (inkomst 286s → 0.51s with it). Mirrors idx_value_set_member_code.
+-- Additive index → SCHEMA_VERSION stays 5.4.0 (like #371's covering index): an
+-- old DB works fine without it, just slower, so it's NOT incompatible — the index
+-- lands in the deployed DB at the next reg_meta DB rebuild/release. The released
+-- 5.4.0 DB lacks it until then; the codes search falls back to the slow full-scan
+-- meanwhile.
 CREATE INDEX idx_code_variable_map_variable ON code_variable_map(variable_id);
 
 -- Curated cross-register / cross-provider equivalence edges (see reg_meta/DESIGN.md → Composite registers and source tracking).
