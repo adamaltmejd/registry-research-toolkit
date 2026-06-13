@@ -299,12 +299,12 @@ def materialize_tags(
         if not active:
             continue
         ctx = f"[[tag]] {tag.slug!r}"
+        mctx = f"{ctx} member"
         tag_id = conn.execute(
             "INSERT INTO tag (slug, label, description) VALUES (?, ?, ?)",
             (tag.slug, tag.label, tag.description),
         ).lastrowid
         for m in active:
-            mctx = f"{ctx} member"
             if m.variable is not None:
                 register_id: int | None = None
                 variable_id: int | None = _resolve_variable_id(
