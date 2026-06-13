@@ -538,6 +538,13 @@ CREATE INDEX idx_variable_state_value_set
 CREATE INDEX idx_variable_state_classification
     ON variable_state(classification_id)
     WHERE classification_id IS NOT NULL;
+-- #371: covering index for the #351 coverage aggregates
+-- (MIN(valid_from)/MAX(valid_to) span per variable / per register). With
+-- (variable_id, valid_from, valid_to) the MIN/MAX is satisfied index-only — no
+-- table b-tree lookup — since the leading variable_id groups and the two window
+-- bounds are both in the index.
+CREATE INDEX idx_variable_state_coverage
+    ON variable_state(variable_id, valid_from, valid_to);
 
 -- A2.7: the FULL delivery-column alias history, keyed by `variable_id` (was
 -- `cvid` through A2.6). It SURVIVES into the shipped DB — `get_datacolumns`
