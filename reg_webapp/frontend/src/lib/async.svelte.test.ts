@@ -75,6 +75,35 @@ describe("asyncResource", () => {
     stop();
   });
 
+  it("aborts the signal on teardown (input change), and a fn that ignores it still works (backward compat)", async () => {
+    // The two halves of the abort contract: (1) the signal handed to `fn` is
+    // aborted when the effect re-runs / unmounts, so a signal-aware fetch is
+    // cancelled in flight; (2) a `fn` that IGNORES the signal (every browse
+    // caller) is unaffected — it still resolves and exposes data.
+    let key = $state(1);
+    const seenSignals: AbortSignal[] = [];
+    let res!: ReturnType<typeof asyncResource<number>>;
+    const stop = $effect.root(() => {
+      res = asyncResource((signal) => {
+        seenSignals.push(signal);
+        return Promise.resolve(key); // ignores the signal — backward compat
+      });
+    });
+    flushSync();
+    await vi.waitFor(() => expect(res.data).toBe(1));
+    expect(seenSignals[0].aborted).toBe(false);
+
+    key = 2; // input change → effect re-runs → run 1's signal must abort
+    flushSync();
+    // The teardown aborts run 1's signal; poll rather than asserting synchronously
+    // (the re-run + teardown settle across the flush, not strictly inline).
+    await vi.waitFor(() => expect(seenSignals[0].aborted).toBe(true));
+    expect(seenSignals[1].aborted).toBe(false); // run 2's fresh signal stays open
+    await vi.waitFor(() => expect(res.data).toBe(2)); // ignore-signal fn still resolves
+    expect(res.error).toBeNull(); // a teardown-abort never surfaces as an error
+    stop();
+  });
+
   it("ignores a stale response after its tracked input changed", async () => {
     // The load-bearing guarantee for A5.3b's refetch-on-period: when the input
     // changes mid-flight, the first (now-stale) fetch's late resolution must NOT

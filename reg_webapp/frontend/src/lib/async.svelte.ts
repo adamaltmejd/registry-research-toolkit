@@ -5,10 +5,12 @@
  * browse components (and A5.3b's states/lineage views) all need. `fn` is
  * re-invoked whenever a reactive value it READS changes (Svelte 5 effect
  * dependency tracking), so `asyncResource(() => getNode(fqidPath))` refetches
- * when `fqidPath` changes. The in-flight fetch is not aborted, but its result is
- * DISCARDED on input change / unmount (the `$effect` teardown flips a `cancelled`
- * flag), so a response that arrives after its inputs moved on never clobbers
- * fresher state.
+ * when `fqidPath` changes. On input change / unmount the `$effect` teardown both
+ * (a) flips a `cancelled` flag so a late resolution never clobbers fresher state,
+ * AND (b) `abort()`s an `AbortController` whose signal is handed to `fn`, so a
+ * fetch that opts into the signal is actually cancelled server-side (not merely
+ * discarded). `fn` MAY ignore the signal — existing browse callers do; the search
+ * omnibox threads it into the HTTP request to cancel superseded queries.
  *
  * Must be called at component init (it registers an `$effect`). `.svelte.ts` so
  * the Svelte compiler processes the runes.
@@ -25,7 +27,9 @@ export interface AsyncResource<T> {
   readonly loading: boolean;
 }
 
-export function asyncResource<T>(fn: () => Promise<T>): AsyncResource<T> {
+export function asyncResource<T>(
+  fn: (signal: AbortSignal) => Promise<T>,
+): AsyncResource<T> {
   let data = $state<T | null>(null);
   let error = $state<string | null>(null);
   let status = $state<number | null>(null);
@@ -33,6 +37,13 @@ export function asyncResource<T>(fn: () => Promise<T>): AsyncResource<T> {
 
   $effect(() => {
     let cancelled = false;
+    // One controller per effect run; its signal is passed to `fn` and aborted in
+    // the teardown so a signal-aware fetch is cancelled in flight (not just its
+    // result discarded). A teardown-abort happens WHILE `cancelled` is true, so
+    // the resulting AbortError is funnelled through `setError`'s `cancelled`
+    // guard and stays silent — only a non-teardown abort (e.g. a timeout the
+    // caller layers onto the signal) surfaces as an error.
+    const controller = new AbortController();
     loading = true;
     error = null;
     status = null;
@@ -54,7 +65,7 @@ export function asyncResource<T>(fn: () => Promise<T>): AsyncResource<T> {
     // funnels a SYNCHRONOUS throw in `fn` into the same error path (so it can't
     // escape the effect and wedge `loading` at true).
     try {
-      fn()
+      fn(controller.signal)
         .then((resp) => {
           if (!cancelled) data = resp;
         })
@@ -67,6 +78,7 @@ export function asyncResource<T>(fn: () => Promise<T>): AsyncResource<T> {
     }
     return () => {
       cancelled = true;
+      controller.abort();
     };
   });
 

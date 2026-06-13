@@ -15,7 +15,11 @@ import { router } from "./router.svelte";
 // changes → the effect writes the box, but the debounced router write is a no-op
 // (already at that URL). Convergent in one tick.
 
-const DEBOUNCE_MS = 200;
+// 300ms (not 200) to further cut request volume: the omnibox is the first SPA
+// consumer of GET /api/search, whose codes/value sub-query is currently slow in
+// prod (a backend index fix is in flight), so a longer settle keeps superseded
+// queries from piling up server-side.
+const DEBOUNCE_MS = 300;
 
 // Seed from `?q=` so a cold deep-link to `/search?q=foo` populates the box.
 let query = $state(router.getQueryParam("q") ?? "");

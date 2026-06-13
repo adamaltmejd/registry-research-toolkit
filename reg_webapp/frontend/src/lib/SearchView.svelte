@@ -18,18 +18,38 @@ import { router } from "./router.svelte";
 
 const q = $derived((router.getQueryParam("q") ?? "").trim());
 
+// Don't fire /api/search below this — a single-char query is the most expensive
+// server-side AND the least useful. The "keep typing" hint covers 1 char; the
+// empty-query hint covers 0 (see the template's state branches).
+const MIN_QUERY_LENGTH = 2;
+
 // asyncResource registers an $effect, so it can't be created conditionally; the
-// fetch fn short-circuits an empty `q` to an EMPTY response WITHOUT a network call
-// (and reads `q` so it refetches when the query changes).
-const results = asyncResource<SearchResponse>(() =>
-  q ? search(q) : Promise.resolve({ kind: "search", query: q, groups: [] }),
+// fetch fn short-circuits a too-short `q` to an EMPTY response WITHOUT a network
+// call (and reads `q` so it refetches when the query changes). It also threads the
+// teardown `signal` into `search` so a superseded query aborts the in-flight HTTP
+// request (and the ~12s timeout `search` layers on can abort it too).
+const results = asyncResource<SearchResponse>((signal) =>
+  q.length >= MIN_QUERY_LENGTH
+    ? search(q, { signal })
+    : Promise.resolve({ kind: "search", query: q, groups: [] }),
 );
 
+// Distinguish a TIMEOUT abort from every other failure. A supersede/unmount abort
+// never reaches here (asyncResource's `cancelled` guard swallows it); a timeout
+// abort fires while NOT cancelled, surfacing as an error. asyncResource exposes
+// only the stringified error, and `String(e)` on a DOMException is name-prefixed
+// (`<name>: <message>`). AbortSignal.timeout's reason is a DOMException named
+// "TimeoutError", so match only the spec-stable NAME prefix — the message tail
+// after ": " is engine-specific (varies by browser) and must NOT be matched. Only
+// this maps to the friendly copy — other errors keep the generic "Search failed".
+const timedOut = $derived(results.error?.startsWith("TimeoutError") ?? false);
+
 const groups = $derived(results.data?.groups ?? []);
-// A non-empty query with zero results across every group (distinct from the
-// empty-query hint and from loading).
+// A searched query (≥ min length) with zero results across every group (distinct
+// from the empty / keep-typing hints and from loading). Gate on the min length so
+// a 1-char query shows the keep-typing hint, not a spurious "no matches".
 const noMatches = $derived(
-  q !== "" &&
+  q.length >= MIN_QUERY_LENGTH &&
     !results.loading &&
     !results.error &&
     groups.every((g) => g.results.length === 0),
@@ -62,8 +82,14 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
     <p class="muted">
       Start typing to search registers, variables, codes, classifications.
     </p>
+  {:else if q.length < MIN_QUERY_LENGTH}
+    <p class="muted">Keep typing to search…</p>
   {:else if results.loading}
     <p class="muted" aria-busy="true">Searching…</p>
+  {:else if timedOut}
+    <p class="error" role="alert">
+      Search timed out — try a more specific term.
+    </p>
   {:else if results.error}
     <p class="error" role="alert">Search failed: {results.error}</p>
   {:else if noMatches}
