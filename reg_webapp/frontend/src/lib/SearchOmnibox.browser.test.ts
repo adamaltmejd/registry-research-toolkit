@@ -91,6 +91,23 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     await expect.element(box).toHaveValue("");
   });
 
+  it("does not navigate when Enter follows an Escape-cleared box (blank commit is a no-op)", async () => {
+    // From a non-search route: type, clear via Escape, then submit. `commit`'s
+    // blank-trimmed early return must keep us off /search (no stray pushState).
+    await render(SearchOmnibox);
+    const box = page.getByRole("searchbox");
+    await box.fill("kon");
+    press(box.element() as HTMLInputElement, "Escape");
+    await expect.element(box).toHaveValue("");
+
+    const form = (box.element() as HTMLInputElement).form;
+    form?.requestSubmit();
+
+    // The route stays at root — a blank query never enters /search. Poll so a
+    // (hypothetical) async navigation would still be caught before asserting.
+    await expect.poll(() => router.route.name).toBe("root");
+  });
+
   it("adopts the URL's ?q on a back/forward (popstate) without ping-pong", async () => {
     setUrl("/search?q=first");
     await render(SearchOmnibox);

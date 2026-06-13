@@ -164,6 +164,33 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("showing 1 of 42")).toBeVisible();
   });
 
+  it("omits the 'showing N of M' caption when the slice is complete", async () => {
+    // Guards the strict `shown < total` boundary in `showingOf` — a `<=`
+    // regression would print "showing 1 of 1" on every complete group.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "lisa",
+      groups: [
+        {
+          group: "registers",
+          total_count: 1,
+          results: [
+            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("lisa");
+    await render(SearchView);
+
+    // The group + its hit render…
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    // …but no truncation caption (shown === total).
+    await expect.element(page.getByText(/showing/)).not.toBeInTheDocument();
+  });
+
   it("links code-hit owners and shows a muted '+N more' for the slice cap", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
@@ -197,6 +224,84 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
     // The slice cap surfaces as a muted, non-interactive "+5 more".
     await expect.element(page.getByText("+5 more")).toBeVisible();
+  });
+
+  it("omits '+N more' for a code hit's classification owners when the slice is complete", async () => {
+    // Symmetric to the variable-owner "+N more" test, but for the classification
+    // branch: classifications.length === classification_count → no overflow line.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Primary education",
+              variables: [],
+              variable_count: 0,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN", name: null },
+              ],
+              classification_count: 1,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun");
+    await render(SearchView);
+
+    // The owning classification is the link target…
+    await expect
+      .element(page.getByRole("link", { name: /SUN/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    // …and no overflow line, since the slice is complete.
+    await expect.element(page.getByText(/more/)).not.toBeInTheDocument();
+  });
+
+  it("renders BOTH owner lists for a code hit carrying variables and classifications", async () => {
+    // The two `<ul class="owners">` lists are independently gated — a regression
+    // coupling the classification list to the variable list being empty (or vice
+    // versa) would still pass the single-owner tests above, so exercise both at
+    // once and assert each link renders.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "1",
+      groups: [
+        {
+          group: "codes",
+          total_count: 1,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+              ],
+              variable_count: 1,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN", name: null },
+              ],
+              classification_count: 1,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("1");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("link", { name: /Kön/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa/kon");
+    await expect
+      .element(page.getByRole("link", { name: /SUN/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
   });
 
   it("expands a folded concept-group result to its member links", async () => {
