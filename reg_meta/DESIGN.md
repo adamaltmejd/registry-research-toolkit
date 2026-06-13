@@ -600,6 +600,28 @@ even though no leaf row matches). `--no-fold` flattens. `get schema` carries
 `concept_group`(`_label`) per column so the fold is visible inline. Folding happens
 before pagination — a group row counts as one result.
 
+## Thematic tags (discovery overlay, #311)
+
+Orthogonal to concept groups (which fold column families *structurally* within ONE
+register), the **tag layer** is a maintainer-curated *thematic* vocabulary that cuts
+*across* providers/registers — so a researcher can find "a measure of income" without
+already knowing the register. ONE global vocabulary (`tag`, slug globally unique) + ONE
+polymorphic membership table (`tag_member`): a row carries EXACTLY ONE grain — a
+`register_id` (coarse thematic browse) OR a `variable_id` (the "golden/starred"
+recommendation, where `starred` flags it and `note` carries the one-line rationale
+curation can give and popularity can't). Curated from `reg_meta_build/tags.toml`,
+derived every build (regenerate-not-migrate); a discovery overlay that leaves identity
+untouched, same family as concept groups and delivery enrichment (package-root TOMLs).
+Ships EMPTY until curation content lands (machinery first — webapp facets / search boost
+are a later PR).
+
+**API**: `Catalog.list_tags()` → `TagSummary` (slug, label, description, `member_count`,
+`starred_count`) is the vocabulary with counts; `tags_for_variable(fqid)` /
+`tags_for_register(fqid)` → `TagMembership` (the tag's slug/label + this membership's
+`rank`/`starred`/`note`), ordered by rank then slug. Build-side derivation +
+dangling-reference fail-fast live in `reg_meta_build/tags.py` (see
+`reg_meta_build/DESIGN.md`).
+
 ## Storage optimization
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs use WITHOUT

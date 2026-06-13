@@ -33,6 +33,7 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.db as _db
     import reg_meta_build.delivery_enrichment as _de
     import reg_meta_build.fold_overrides as _fo
+    import reg_meta_build.tags as _tg
 
     mp = pytest.MonkeyPatch()
     mp.setattr(_cd, "repo_codelivery_path", lambda: None)
@@ -49,6 +50,11 @@ def _no_repo_curation() -> Iterator[None]:
     # warning per build). db.py imported the symbol directly — patch it there.
     mp.setattr(_de, "repo_delivery_enrichment_path", lambda: None)
     mp.setattr(_db, "repo_delivery_enrichment_path", lambda: None)
+    # tags.toml (#311) references real scb slugs; the materializer fails LOUD on a
+    # dangling reference, so a synthetic build must see an empty file. db.py
+    # imported the symbol directly — patch it there too.
+    mp.setattr(_tg, "repo_tags_path", lambda: None)
+    mp.setattr(_db, "repo_tags_path", lambda: None)
     yield
     mp.undo()
 

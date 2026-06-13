@@ -1290,6 +1290,34 @@ Two guards, both deliberate:
   / immutability machinery and no `SCHEMA_VERSION` bump — it only writes `description`
   text on existing rows.
 
+## Thematic tags (#311)
+
+`tags.py` materializes a maintainer-curated cross-register THEMATIC tag layer — a
+discovery overlay so a researcher finds candidates ("a measure of income") without
+already knowing the register. Orthogonal to `concept_groups` (structural fold within ONE
+register); same overlay family, a sibling package-root `reg_meta_build/tags.toml` (NOT
+under `fqid_slugs/`).
+
+Schema: ONE global vocabulary `tag` (slug globally unique) + ONE polymorphic
+`tag_member` (EXACTLY ONE grain per row via a CHECK — a `register_id` for coarse browse
+OR a `variable_id` for the starred/golden recommendation; `rank`/`starred`/`note`).
+Per-grain uniqueness is two PARTIAL unique indexes (a plain composite key can't, since
+SQLite treats the unused-grain NULL as distinct).
+
+`tags.toml` shape: `[[tag]]` (slug/label/optional description) with nested
+`[[tag.member]]` tables, each referencing EXACTLY ONE of `variable` (3-seg FQID) /
+`register` (2-seg FQID), plus optional `rank`/`starred`/`note`. `load_tags` does strict
+shape validation (EXIT_CONFIG, via the shared `_curation.load_curation_entries`
+scaffold; empty on missing file for wheel installs + synthetic builds).
+`materialize_tags` runs in the same slug-gated post-pass block as concept groups /
+delivery enrichment, provider-gated; it resolves member FQIDs → ids and, UNLIKE delivery
+enrichment's lenient resolve, fails the build LOUD (`tags_unresolved`, EXIT_CONFIG) on a
+dangling reference — a tag is a curated structural overlay, so drift must be fixed, not
+dropped. Tables ship EMPTY until curation content lands (machinery first);
+`validate_built_db` runs a corpus-independent closure check
+(`tag_id`/`register_id`/`variable_id` resolve, exactly-one-grain holds) with NO volume
+floor.
+
 ## Slug immutability
 
 Both TOML files — hand-curated `<provider>.toml` and build-generated

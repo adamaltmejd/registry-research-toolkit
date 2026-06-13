@@ -170,6 +170,44 @@ class ConceptGroupSummary:
     members: tuple[ConceptGroupMember, ...]
 
 
+@dataclass(frozen=True)
+class TagSummary:
+    """One curated thematic tag (#311) in the global vocabulary. `slug` is the
+    globally-unique tag id; `member_count` / `starred_count` are this tag's total
+    members and the subset flagged golden/recommended (across both grains)."""
+
+    slug: str
+    label: str
+    description: str | None
+    member_count: int
+    starred_count: int
+
+
+@dataclass(frozen=True)
+class TagMembership:
+    """A tag a register/variable belongs to (#311), from its side: the tag's
+    `slug`/`label`, plus THIS membership's `rank` (curated order within the tag),
+    `starred` (golden/recommended flag) and one-line `note` rationale."""
+
+    slug: str
+    label: str
+    rank: int
+    starred: bool
+    note: str | None
+
+
+def _tag_membership(row: sqlite3.Row) -> TagMembership:
+    """Build a `TagMembership` from a `(slug, label, rank, starred, note)` row.
+    `starred` is stored as INTEGER 0/1 — coerce to bool."""
+    return TagMembership(
+        slug=row["slug"],
+        label=row["label"],
+        rank=row["rank"],
+        starred=bool(row["starred"]),
+        note=row["note"],
+    )
+
+
 # A2.5b variant-browser shape (see reg_webapp/DESIGN.md → Catalog router structure): a variant is a register sub-resource, NOT
 # an FQID-addressable node (the variant left the binding FQID; see DESIGN.md → Two-level variable model), so this
 # carries the variant `slug` (the `?variant=` browse coordinate) + display fields,
@@ -723,6 +761,65 @@ class Catalog:
             )
             for key, label, source, members in sorted(acc2.values(), key=lambda g: g[0])
         ]
+
+    def list_tags(self) -> list[TagSummary]:
+        """The curated thematic tag vocabulary (#311) with per-tag member counts,
+        ordered by slug. `member_count` spans both grains; `starred_count` is the
+        golden/recommended subset. Empty when no tags are curated (the machinery-
+        only ship state)."""
+        rows = self._conn.execute(
+            "SELECT t.slug, t.label, t.description, "
+            "COUNT(tm.tag_id) AS member_count, "
+            "COALESCE(SUM(tm.starred), 0) AS starred_count "
+            "FROM tag t "
+            "LEFT JOIN tag_member tm ON tm.tag_id = t.tag_id "
+            "GROUP BY t.tag_id "
+            "ORDER BY t.slug"
+        ).fetchall()
+        return [
+            TagSummary(
+                slug=r["slug"],
+                label=r["label"],
+                description=r["description"],
+                member_count=r["member_count"],
+                starred_count=r["starred_count"],
+            )
+            for r in rows
+        ]
+
+    def tags_for_variable(self, fqid: Fqid) -> list[TagMembership]:
+        """Tags the variable at `fqid` (a 3-seg binding FQID) belongs to (#311),
+        ordered by tag rank then slug. Each carries this membership's
+        rank/starred/note. Empty when the variable resolves to no tags (or the
+        FQID names no variable)."""
+        rows = self._conn.execute(
+            "SELECT t.slug, t.label, tm.rank, tm.starred, tm.note "
+            "FROM tag_member tm "
+            "JOIN tag t ON t.tag_id = tm.tag_id "
+            "JOIN variable v ON v.variable_id = tm.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ? "
+            "ORDER BY tm.rank, t.slug",
+            (fqid.provider, fqid.register, fqid.variable),
+        ).fetchall()
+        return [_tag_membership(r) for r in rows]
+
+    def tags_for_register(self, fqid: Fqid) -> list[TagMembership]:
+        """Tags the register at `fqid` (a 2-seg `provider/register` FQID) belongs
+        to (#311), ordered by tag rank then slug. Empty when none (or the FQID
+        names no register)."""
+        rows = self._conn.execute(
+            "SELECT t.slug, t.label, tm.rank, tm.starred, tm.note "
+            "FROM tag_member tm "
+            "JOIN tag t ON t.tag_id = tm.tag_id "
+            "JOIN register r ON r.register_id = tm.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? "
+            "ORDER BY tm.rank, t.slug",
+            (fqid.provider, fqid.register),
+        ).fetchall()
+        return [_tag_membership(r) for r in rows]
 
     def _resolve_provider(self, fqid: Fqid) -> ResolvedProvider:
         row = self._conn.execute(

@@ -809,3 +809,92 @@ class TestConceptGroupChecks:
         conn.execute("DELETE FROM concept_group")
         result = self._run(conn)
         assert any("parity" in f or "components" in f for f in result.failures)
+
+
+class TestTagChecks:
+    """#311 `_check_tags` closure — exercised against NON-EMPTY tag tables (the
+    e2e fixture build ships zero tags, so CI needs hand-built data). Each test
+    corrupts one invariant with FKs OFF (so the corrupting DELETE can leave a
+    dangling reference the check is meant to catch) and asserts the gate bites."""
+
+    @staticmethod
+    def _tagged_db():
+        from _slugged_db import add_variable, build_slugged_db
+        from reg_meta_build.tags import CuratedTag, TagMember, materialize_tags
+
+        conn = build_slugged_db(classification=None)  # scb/lisa (register 1), `kon`
+        add_variable(conn, register_id=1, var_id=90, name="Income", slug="dispink")
+        materialize_tags(
+            conn,
+            (
+                CuratedTag(
+                    slug="income",
+                    label="Income",
+                    description=None,
+                    members=(
+                        TagMember("scb", "lisa", "dispink", 0, True, "primary"),
+                        TagMember("scb", "lisa", None, 1, False, None),
+                    ),
+                ),
+            ),
+            providers=frozenset({"scb"}),
+        )
+        return conn
+
+    @staticmethod
+    def _run(conn):
+        from reg_meta_build.validate import ValidationResult, _check_tags
+
+        result = ValidationResult()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        _check_tags(conn, result, tables)
+        return result
+
+    def test_passes_on_coherent_tags(self):
+        result = self._run(self._tagged_db())
+        assert result.passed, result.failures
+
+    def test_missing_tag_row_fails(self):
+        conn = self._tagged_db()
+        conn.execute("PRAGMA foreign_keys=OFF")
+        conn.execute("DELETE FROM tag")
+        result = self._run(conn)
+        assert any("missing tag" in f for f in result.failures), result.failures
+
+    def test_dangling_register_member_fails(self):
+        conn = self._tagged_db()
+        conn.execute("PRAGMA foreign_keys=OFF")
+        # Drop the register a register-grain member points at.
+        conn.execute(
+            "DELETE FROM register WHERE register_id IN "
+            "(SELECT register_id FROM tag_member WHERE register_id IS NOT NULL)"
+        )
+        result = self._run(conn)
+        assert any("dangling register_id" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_dangling_variable_member_fails(self):
+        conn = self._tagged_db()
+        conn.execute("PRAGMA foreign_keys=OFF")
+        # Drop the variable a variable-grain member points at.
+        conn.execute(
+            "DELETE FROM variable WHERE variable_id IN "
+            "(SELECT variable_id FROM tag_member WHERE variable_id IS NOT NULL)"
+        )
+        result = self._run(conn)
+        assert any("dangling" in f and "variable_id" in f for f in result.failures), (
+            result.failures
+        )
+
+
+def test_tags_section_present_in_report(fixture_db: Path):
+    """#311: the `[tags]` section + its empty info line must appear in the full
+    report so `_check_tags` can't be silently de-registered from
+    `validate_built_db` (the fixture ships empty tags)."""
+    report = validate_built_db(fixture_db).format_report()
+    assert "[tags]" in report
+    assert "0 tags / 0 tag members" in report

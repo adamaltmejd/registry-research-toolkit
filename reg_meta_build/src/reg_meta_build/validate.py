@@ -170,6 +170,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         if corpus:
             _check_sos_sanity(conn, result, tables)
         _check_value_code_search(conn, result, tables, corpus=corpus)
+        _check_tags(conn, result, tables)
         _check_sos_stateless_variables(conn, result, tables)
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
@@ -241,6 +242,13 @@ def _check_schema_shape(
         result.ok("value_code_fts present")
     else:
         result.fail("value_code_fts missing")
+
+    # #311: curated thematic tag layer — tag + tag_member tables.
+    for required in ("tag", "tag_member"):
+        if required in tables:
+            result.ok(f"{required} present")
+        else:
+            result.fail(f"{required} missing")
 
     # The remaining checks depend on value_set / value_set_member existing;
     # skip them if a required table is missing rather than crashing.
@@ -942,6 +950,57 @@ def _check_value_code_search(
             result.ok(f"value_code_fts populated ({n_idx:,} labels)")
         else:
             result.fail("value_code_fts is EMPTY on a corpus build")
+
+
+def _check_tags(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """#311 curated tag-layer structural closure (corpus-independent; NO volume
+    floor — tables ship EMPTY until curation content lands). Asserts:
+      - every `tag_member.tag_id` references an existing `tag`;
+      - every member has EXACTLY ONE grain (the DDL CHECK, re-asserted);
+      - every `register_id` / `variable_id` resolves to a live row."""
+    result.section("[tags]")
+    if "tag" not in tables or "tag_member" not in tables:
+        result.ok("tag / tag_member absent — tag check skipped")
+        return
+    n_tags = conn.execute("SELECT COUNT(*) FROM tag").fetchone()[0]
+    n_members = conn.execute("SELECT COUNT(*) FROM tag_member").fetchone()[0]
+    result.info(f"{n_tags:,} tags / {n_members:,} tag members")
+
+    orphan_tag = conn.execute(
+        "SELECT COUNT(*) FROM tag_member tm "
+        "WHERE NOT EXISTS (SELECT 1 FROM tag t WHERE t.tag_id = tm.tag_id)"
+    ).fetchone()[0]
+    if orphan_tag == 0:
+        result.ok("every tag_member.tag_id resolves to a tag")
+    else:
+        result.fail(f"{orphan_tag:,} tag_member row(s) reference a missing tag")
+
+    bad_grain = conn.execute(
+        "SELECT COUNT(*) FROM tag_member "
+        "WHERE (register_id IS NULL) = (variable_id IS NULL)"
+    ).fetchone()[0]
+    if bad_grain == 0:
+        result.ok("every tag_member has exactly one grain")
+    else:
+        result.fail(f"{bad_grain:,} tag_member row(s) violate exactly-one-grain")
+
+    orphan_reg = conn.execute(
+        "SELECT COUNT(*) FROM tag_member tm WHERE tm.register_id IS NOT NULL "
+        "AND NOT EXISTS (SELECT 1 FROM register r WHERE r.register_id = tm.register_id)"
+    ).fetchone()[0]
+    orphan_var = conn.execute(
+        "SELECT COUNT(*) FROM tag_member tm WHERE tm.variable_id IS NOT NULL "
+        "AND NOT EXISTS (SELECT 1 FROM variable v WHERE v.variable_id = tm.variable_id)"
+    ).fetchone()[0]
+    if orphan_reg == 0 and orphan_var == 0:
+        result.ok("every tag_member register_id/variable_id resolves")
+    else:
+        result.fail(
+            f"{orphan_reg:,} dangling register_id + {orphan_var:,} dangling "
+            "variable_id in tag_member"
+        )
 
 
 def _check_sos_sanity(
