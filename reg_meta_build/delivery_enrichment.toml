@@ -2221,12 +2221,14 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 # ── Delivery-column aliases (#365 PR1c) ───────────────────────────────────────
 # Record SWECOV's delivery column name as an additional variable_alias for an
-# EXISTING variable (its delivered header differs from the SCB metadata header).
-# GENERATED from build_catalog.py `globals` alias_candidates (normalized
-# name == existing column/slug; human-confirmed). The apply pass attaches each
-# to every register_variant where the variable has a state; INSERT OR IGNORE so
-# an already-known column is a no-op.
-# 41 aliases across 4 registers.
+# EXISTING variable (its delivered header DIFFERS from the SCB metadata header).
+# GENERATED from build_catalog.py `globals` alias_candidates (normalized name ==
+# existing column/slug; human-confirmed), grounded against a fresh reg_meta.db:
+# an alias whose delivery_column already equals one of the variable's own
+# variable_state columns is dropped (redundant no-op, not an alternate name).
+# The apply pass attaches each to every register_variant where the variable has
+# a state; INSERT OR IGNORE so an already-known column is a no-op.
+# 37 aliases across 4 registers.
 
 [[alias]]
 register = "scb/agi"
@@ -2365,16 +2367,6 @@ delivery_column = "v7002"
 
 [[alias]]
 register = "scb/innovation-foretag"
-variable = "ckno-doc-std-com"
-delivery_column = "CKNO_DOC_STD_COM"
-
-[[alias]]
-register = "scb/innovation-foretag"
-variable = "ckno-pat-publ"
-delivery_column = "CKNO_PAT_PUBL"
-
-[[alias]]
-register = "scb/innovation-foretag"
 variable = "eco-enu"
 delivery_column = "ECOENU"
 
@@ -2392,16 +2384,6 @@ delivery_column = "ECOREA"
 register = "scb/innovation-foretag"
 variable = "eco-rep"
 delivery_column = "ECOREP"
-
-[[alias]]
-register = "scb/innovation-foretag"
-variable = "entgrp-hd-for"
-delivery_column = "ENTGRP_HD_FOR"
-
-[[alias]]
-register = "scb/innovation-foretag"
-variable = "entgrp-hd-nat"
-delivery_column = "ENTGRP_HD_NAT"
 
 [[alias]]
 register = "scb/innovation-foretag"
