@@ -106,7 +106,13 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
 
           {#if group.group === "registers"}
             <ul class="results">
-              {#each group.results as result (result.fqid ?? result.name)}
+              <!-- Key by array INDEX: result lists are replaced wholesale per
+                   query (never incrementally mutated), so the index is stable
+                   within a render and guaranteed unique. Natural keys collide —
+                   `fqid` can be null and a folded group_key is only register-scoped
+                   unique (#322) — and a SINGLE duplicate key crashes the whole
+                   keyed each (Svelte each_key_duplicate). See #379 omnibox-dup-key. -->
+              {#each group.results as result, i (i)}
                 <li>
                   {@render fqidLeaf(result.fqid, result.name)}
                   {#if result.purpose}
@@ -117,7 +123,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
             </ul>
           {:else if group.group === "variables"}
             <ul class="results">
-              {#each group.results as result (isConceptGroup(result) ? result.group_key : (result.fqid ?? result.name))}
+              {#each group.results as result, i (i)}
                 <li>
                   {#if isConceptGroup(result)}
                     {@render conceptGroup(result)}
@@ -129,7 +135,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
             </ul>
           {:else if group.group === "classifications"}
             <ul class="results">
-              {#each group.results as result (isConceptGroup(result) ? result.group_key : (result.fqid ?? result.short_name))}
+              {#each group.results as result, i (i)}
                 <li>
                   {#if isConceptGroup(result)}
                     {@render conceptGroup(result)}
@@ -141,7 +147,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
             </ul>
           {:else if group.group === "codes"}
             <ul class="results">
-              {#each group.results as result (`${result.code}|${result.label}`)}
+              {#each group.results as result, i (i)}
                 <li>{@render codeHit(result)}</li>
               {/each}
             </ul>
@@ -199,7 +205,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
       {/if}
     </summary>
     <ul class="members">
-      {#each result.members as member (member.fqid)}
+      {#each result.members as member, i (i)}
         <li>
           <a href={catalogHref(member.fqid)}>
             <span class="label">{member.name ?? member.fqid}</span>
@@ -223,7 +229,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
     </div>
     {#if result.variables.length > 0 || result.variable_count > 0}
       <ul class="owners">
-        {#each result.variables as owner (owner.fqid ?? owner.name)}
+        {#each result.variables as owner, i (i)}
           <li>
             {#if owner.fqid}
               <a href={catalogHref(owner.fqid)}>
@@ -246,7 +252,7 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
     {/if}
     {#if result.classifications.length > 0 || result.classification_count > 0}
       <ul class="owners">
-        {#each result.classifications as owner (owner.fqid ?? owner.short_name)}
+        {#each result.classifications as owner, i (i)}
           <li>
             {#if owner.fqid}
               <a href={catalogHref(owner.fqid)}>
