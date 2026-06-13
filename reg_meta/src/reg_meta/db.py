@@ -173,6 +173,11 @@ from .errors import EXIT_CONFIG, RegMetaError
 #     note) tables — a cross-register discovery overlay, derived from `tags.toml`
 #     (regenerate-not-migrate). Ship EMPTY until curation content lands. A 5.3.0
 #     DB lacks both tables, so `Catalog.list_tags` / `tags_for_*` can't query it.
+#   - #371 (coverage covering index): additive
+#     `idx_variable_state_coverage` on `variable_state(variable_id, valid_from,
+#     valid_to)` so the #351 coverage aggregates (MIN/MAX span per variable /
+#     register) run index-only. A 5.3.0 DB lacks it. Even a pure additive index
+#     rides this minor cut so the schema fingerprint stays consistent.
 SCHEMA_VERSION = "5.4.0"
 DB_FILENAME = "reg_meta.db"
 

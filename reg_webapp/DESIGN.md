@@ -304,7 +304,10 @@ real v0.11.0 DB: the worst register (scb/ulf, 7.3k variables) computes per-varia
 coverage in \~9 ms (\~60 ms end-to-end serializing all 7.3k binding nodes); the heaviest
 provider (scb, 238 registers) \~34 ms end-to-end. Both sit behind the ETag/edge cache,
 so build-time materialized columns (which would ride the batched Lane R schema bump) are
-NOT needed.
+NOT needed. The covering index `idx_variable_state_coverage` on
+`variable_state(variable_id, valid_from, valid_to)` (#371, the 5.4.0 schema cut) lets
+the grouped MIN/MAX span scan be satisfied index-only (no table b-tree lookup; EXPLAIN
+QUERY PLAN reports `USING COVERING INDEX`).
 
 - **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
   yet — it must tolerate its presence AND absence. It's None on a node that wasn't
