@@ -32,7 +32,7 @@ def _group(body: dict, name: str) -> dict:
 # ── shape / contract ────────────────────────────────────────────────────────
 
 
-def test_response_has_three_typed_groups(client):
+def test_response_has_typed_groups(client):
     body = client.get("/api/search", params={"q": "lisa"}).json()
     assert body["kind"] == "search"
     assert body["query"] == "lisa"
@@ -40,9 +40,10 @@ def test_response_has_three_typed_groups(client):
         "registers",
         "variables",
         "classifications",
+        "codes",
     }
     # Every group carries its own total_count + results list (the extensible
-    # per-group envelope codes/docs will reuse).
+    # per-group envelope docs will reuse).
     for g in body["groups"]:
         assert "total_count" in g
         assert isinstance(g["results"], list)
@@ -76,6 +77,38 @@ def test_classification_leaf_hit(client):
     # A lone member keeps its family hint (symmetric with variable leaves).
     assert hit["concept_group"] == "sun"
     assert hit["concept_group_label"]
+
+
+# ── codes group (#352) ───────────────────────────────────────────────────────
+
+
+def test_codes_group_always_present(client):
+    # Present even when nothing matches (keep all groups in the envelope).
+    g = _group(client.get("/api/search", params={"q": "zzqq"}).json(), "codes")
+    assert g["total_count"] == 0
+    assert g["results"] == []
+
+
+def test_code_label_hit_carries_owning_variable(client):
+    # "Man" is a value label on the kon binding's value set (seeded in conftest)
+    # → a code hit annotated with its owning variable.
+    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    hit = next(r for r in g["results"] if r["label"] == "Man")
+    assert hit["type"] == "code"
+    assert hit["code"] == "1"
+    # The owning variable carries the binding FQID + register context.
+    owner = next(v for v in hit["variables"] if v["fqid"] == "scb/lisa/kon")
+    assert owner["register"] == "LISA"
+    assert hit["variable_count"] >= 1
+
+
+def test_code_shaped_query_well_formed(client):
+    # A code-shaped query (digit + len>=3) drives the value_code.code exact/prefix
+    # path. The fixture has no "0180" code, so this asserts the group stays
+    # well-formed (no 500); the code-match resolution itself is covered by the
+    # reg_meta query-layer unit test.
+    g = _group(client.get("/api/search", params={"q": "0180"}).json(), "codes")
+    assert isinstance(g["results"], list)
 
 
 # ── concept-group folding (#322) ─────────────────────────────────────────────
@@ -131,6 +164,7 @@ def test_empty_query_returns_empty_groups(client):
         "registers",
         "variables",
         "classifications",
+        "codes",
     }
     assert all(g["total_count"] == 0 and g["results"] == [] for g in body["groups"])
 

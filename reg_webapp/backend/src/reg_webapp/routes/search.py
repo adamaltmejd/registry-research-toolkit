@@ -24,6 +24,10 @@ from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
     ClassificationSearchGroup,
     ClassificationSearchResult,
+    CodeOwnerClassification,
+    CodeOwnerVariable,
+    CodeSearchGroup,
+    CodeSearchResult,
     ConceptGroupMemberModel,
     ConceptGroupSearchResult,
     GroupFacetModel,
@@ -102,6 +106,32 @@ def _classification_result(r: dict) -> ClassificationSearchResult:
     )
 
 
+def _code_result(r: dict) -> CodeSearchResult:
+    # reg_meta's value/code search (type="value") already bounds the owner lists
+    # and carries the full counts; the webapp just re-shapes them. `register` is
+    # the owning register's display name for each variable owner.
+    return CodeSearchResult(
+        code=r["code"],
+        label=r["label"],
+        variables=[
+            CodeOwnerVariable(
+                fqid=v.get("fqid"), name=v.get("name"), register=v.get("register")
+            )
+            for v in r.get("variables", [])
+        ],
+        variable_count=r.get("variable_count", 0),
+        classifications=[
+            CodeOwnerClassification(
+                fqid=c.get("fqid"),
+                short_name=c.get("short_name"),
+                name=c.get("name"),
+            )
+            for c in r.get("classifications", [])
+        ],
+        classification_count=r.get("classification_count", 0),
+    )
+
+
 def _group_result(r: dict) -> ConceptGroupSearchResult:
     return ConceptGroupSearchResult(
         kind=r["kind"],
@@ -129,11 +159,12 @@ def get_search(
     q: str = Depends(validate_text_query),
     limit: int = Depends(_validated_limit),
 ) -> SearchResponse:
-    """Search registers, variables (concept-folded, #322), and classifications
-    over the shipped FTS indexes. Each group is an independent reg_meta
-    `search(field="description")` call (one per type) so each carries its own
-    `total_count` and per-group `limit`. A query with no usable token returns the
-    three groups empty (total 0) — not a 422."""
+    """Search registers, variables (concept-folded, #322), classifications, and
+    codes/values (#352) over the shipped FTS indexes. Each group is an independent
+    reg_meta `search()` call (register/variable/classification via the FTS
+    `field="description"` path; codes via the `field="value"` path) so each carries
+    its own `total_count` and per-group `limit`. A query with no usable token
+    returns all four groups empty (total 0) — not a 422."""
     if not _has_searchable_token(q):
         return SearchResponse(
             query=q,
@@ -141,6 +172,7 @@ def get_search(
                 RegisterSearchGroup(total_count=0, results=[]),
                 VariableSearchGroup(total_count=0, results=[]),
                 ClassificationSearchGroup(total_count=0, results=[]),
+                CodeSearchGroup(total_count=0, results=[]),
             ],
         )
 
@@ -173,10 +205,23 @@ def get_search(
             type="classification",
             limit=limit,
         )
+        # Codes (#352): the value/code surface — `value_code_fts` label match +
+        # code-shape exact/prefix match, NOT the FTS description path. reg_meta
+        # ranks (bm25 + rarity downweight) and annotates each hit with its owning
+        # variables/classifications. Codes don't fold into concept groups.
+        codes = reg_meta_search(
+            conn,
+            q,
+            field="value",
+            type="value",
+            limit=limit,
+            fold_groups=False,
+        )
 
     reg_results = _apply_golden_boost(reg["results"])
     var_results = _apply_golden_boost(var["results"])
     cls_results = _apply_golden_boost(cls["results"])
+    code_results = _apply_golden_boost(codes["results"])
 
     return SearchResponse(
         query=q,
@@ -200,6 +245,10 @@ def get_search(
                     else _classification_result(r)
                     for r in cls_results
                 ],
+            ),
+            CodeSearchGroup(
+                total_count=codes["total_count"],
+                results=[_code_result(r) for r in code_results],
             ),
         ],
     )

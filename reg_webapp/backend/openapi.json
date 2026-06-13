@@ -453,6 +453,171 @@
         "title": "ClassificationSearchResult",
         "type": "object"
       },
+      "CodeOwnerClassification": {
+        "description": "A classification that carries a code (#352) \u2014 catalog-scoped (no owning\nregister).",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "short_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Short Name"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "CodeOwnerClassification",
+        "type": "object"
+      },
+      "CodeOwnerVariable": {
+        "description": "A variable that carries a code (#352). `register` is the owning register's\ndisplay name (context for the omnibox); the Python attr is `register_name` to\navoid the `BaseModel.register` method shadow (see `VariableRefModel`).",
+        "properties": {
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "register": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Register"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "CodeOwnerVariable",
+        "type": "object"
+      },
+      "CodeSearchGroup": {
+        "description": "The `codes` result group (#352). `total_count` is the result count before\nthe per-group display limit (so the SPA can show \"showing N of M\").",
+        "properties": {
+          "group": {
+            "const": "codes",
+            "default": "codes",
+            "title": "Group",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/CodeSearchResult"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_count",
+          "results"
+        ],
+        "title": "CodeSearchGroup",
+        "type": "object"
+      },
+      "CodeSearchResult": {
+        "description": "A code/value hit (`value_code_fts` label match + code-shape match, #352).\n`code`/`label` are the SCB value pair; `variables`/`classifications` are a\nbounded representative slice of the owning entities (the researcher's actual\ntarget), and `variable_count`/`classification_count` are the full totals before\nthe slice cap.",
+        "properties": {
+          "classification_count": {
+            "default": 0,
+            "title": "Classification Count",
+            "type": "integer"
+          },
+          "classifications": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CodeOwnerClassification"
+            },
+            "title": "Classifications",
+            "type": "array"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "type": {
+            "const": "code",
+            "default": "code",
+            "title": "Type",
+            "type": "string"
+          },
+          "variable_count": {
+            "default": 0,
+            "title": "Variable Count",
+            "type": "integer"
+          },
+          "variables": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CodeOwnerVariable"
+            },
+            "title": "Variables",
+            "type": "array"
+          }
+        },
+        "required": [
+          "code",
+          "label"
+        ],
+        "title": "CodeSearchResult",
+        "type": "object"
+      },
       "ConceptGroupMemberModel": {
         "description": "A group member: the leaf's real FQID (binding or `class/<slug>`), its\ndisplay name, and its facet assignments (empty on edge-group members).",
         "properties": {
@@ -1521,6 +1686,7 @@
               "discriminator": {
                 "mapping": {
                   "classifications": "#/components/schemas/ClassificationSearchGroup",
+                  "codes": "#/components/schemas/CodeSearchGroup",
                   "registers": "#/components/schemas/RegisterSearchGroup",
                   "variables": "#/components/schemas/VariableSearchGroup"
                 },
@@ -1535,6 +1701,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ClassificationSearchGroup"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeSearchGroup"
                 }
               ]
             },
@@ -2964,7 +3133,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), and classifications\nover the shipped FTS indexes. Each group is an independent reg_meta\n`search(field=\"description\")` call (one per type) so each carries its own\n`total_count` and per-group `limit`. A query with no usable token returns the\nthree groups empty (total 0) \u2014 not a 422.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns all four groups empty (total 0) \u2014 not a 422.",
         "operationId": "get_search_api_search_get",
         "parameters": [
           {

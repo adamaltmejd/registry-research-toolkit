@@ -401,11 +401,12 @@ export interface paths {
         };
         /**
          * Get Search
-         * @description Search registers, variables (concept-folded, #322), and classifications
-         *     over the shipped FTS indexes. Each group is an independent reg_meta
-         *     `search(field="description")` call (one per type) so each carries its own
-         *     `total_count` and per-group `limit`. A query with no usable token returns the
-         *     three groups empty (total 0) — not a 422.
+         * @description Search registers, variables (concept-folded, #322), classifications, and
+         *     codes/values (#352) over the shipped FTS indexes. Each group is an independent
+         *     reg_meta `search()` call (register/variable/classification via the FTS
+         *     `field="description"` path; codes via the `field="value"` path) so each carries
+         *     its own `total_count` and per-group `limit`. A query with no usable token
+         *     returns all four groups empty (total 0) — not a 422.
          */
         get: operations["get_search_api_search_get"];
         put?: never;
@@ -628,6 +629,89 @@ export interface components {
              * @enum {string}
              */
             type: "classification";
+        };
+        /**
+         * CodeOwnerClassification
+         * @description A classification that carries a code (#352) — catalog-scoped (no owning
+         *     register).
+         */
+        CodeOwnerClassification: {
+            /** Fqid */
+            fqid: string | null;
+            /** Name */
+            name?: string | null;
+            /** Short Name */
+            short_name?: string | null;
+        };
+        /**
+         * CodeOwnerVariable
+         * @description A variable that carries a code (#352). `register` is the owning register's
+         *     display name (context for the omnibox); the Python attr is `register_name` to
+         *     avoid the `BaseModel.register` method shadow (see `VariableRefModel`).
+         */
+        CodeOwnerVariable: {
+            /** Fqid */
+            fqid: string | null;
+            /** Name */
+            name?: string | null;
+            /** Register */
+            register?: string | null;
+        };
+        /**
+         * CodeSearchGroup
+         * @description The `codes` result group (#352). `total_count` is the result count before
+         *     the per-group display limit (so the SPA can show "showing N of M").
+         */
+        CodeSearchGroup: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            group: "codes";
+            /** Results */
+            results: components["schemas"]["CodeSearchResult"][];
+            /** Total Count */
+            total_count: number;
+        };
+        /**
+         * CodeSearchResult
+         * @description A code/value hit (`value_code_fts` label match + code-shape match, #352).
+         *     `code`/`label` are the SCB value pair; `variables`/`classifications` are a
+         *     bounded representative slice of the owning entities (the researcher's actual
+         *     target), and `variable_count`/`classification_count` are the full totals before
+         *     the slice cap.
+         */
+        CodeSearchResult: {
+            /**
+             * Classification Count
+             * @default 0
+             */
+            classification_count: number;
+            /**
+             * Classifications
+             * @default []
+             */
+            classifications: components["schemas"]["CodeOwnerClassification"][];
+            /** Code */
+            code: string;
+            /** Label */
+            label: string;
+            /**
+             * Type
+             * @default code
+             * @constant
+             */
+            type: "code";
+            /**
+             * Variable Count
+             * @default 0
+             */
+            variable_count: number;
+            /**
+             * Variables
+             * @default []
+             */
+            variables: components["schemas"]["CodeOwnerVariable"][];
         };
         /**
          * ConceptGroupMemberModel
@@ -1146,7 +1230,7 @@ export interface components {
          */
         SearchResponse: {
             /** Groups */
-            groups: (components["schemas"]["RegisterSearchGroup"] | components["schemas"]["VariableSearchGroup"] | components["schemas"]["ClassificationSearchGroup"])[];
+            groups: (components["schemas"]["RegisterSearchGroup"] | components["schemas"]["VariableSearchGroup"] | components["schemas"]["ClassificationSearchGroup"] | components["schemas"]["CodeSearchGroup"])[];
             /**
              * Kind
              * @default search

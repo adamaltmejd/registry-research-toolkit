@@ -72,7 +72,7 @@ above; the provider-specific parsing that feeds it lives in
 
 ## FTS5 configuration
 
-Three content-synced FTS5 indexes power search:
+Four content-synced FTS5 indexes power search:
 
 - **`register_fts`** — indexes register `name`, `purpose`.
 - **`variable_fts`** — indexes variable `name`, `definition`, `description`. Uses
@@ -83,6 +83,25 @@ Three content-synced FTS5 indexes power search:
 - **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
   `description`. Searched via `search(..., type="classification")` (#350), the catalog
   discovery surface. Catalog-scoped: a `--register` scope excludes it.
+- **`value_code_fts`** (#352) — indexes value `label` ONLY (codes are matched
+  separately, see below). Searched via `search(..., field="value", type="value")`, which
+  emits `type: "code"` rows. \~55% of codes are bare numbers, so labels are the primary
+  search surface. A curated **stoplist** of junk labels (`NULL`, `Ja`/`Nej`,
+  `Uppgift saknas`, the `Okänt*`/`Okänd*`/`Felaktig*` SCB sentinel-prefix families, …)
+  is excluded at index-population time (build-side `_VALUE_CODE_STOPLIST_*`): hidden
+  from SEARCH only — the leaf `value_code` / `value_set` tables keep every row. Each
+  code hit pivots through `code_variable_map` → variable (and `classification_code` →
+  classification) and is annotated with a bounded representative slice of its owners
+  plus the full counts — the actionable target is the owning variable/classification,
+  not the bare (code, label) pair. **Ranking** is bm25 relevance with a `mapping_count`
+  (precomputed variable count per pair) DOWNWEIGHT, so a generic enum label shared by
+  many variables ranks below a rare, discriminative one. A **code-shaped** query (digit
+  + length ≥ 3, e.g. "F32", "0180") ALSO does an exact/prefix match on `value_code.code`
+    (via `idx_value_code_code`), merged + deduped with the label-FTS hits and seeded
+    above them (an exact code match is the strongest signal); plain-text queries do
+    label FTS only. NB: `value_code_fts` is external-content, so `COUNT(*)`/`SELECT col`
+    read the CONTENT table (value_code) — the honest indexed-row count is the `_docsize`
+    shadow table.
 
 `search` takes a RAW user query and builds the FTS5 MATCH expression internally
 (`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),

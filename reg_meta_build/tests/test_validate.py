@@ -26,6 +26,30 @@ class TestValidateModule:
         assert "[schema]" in report
         assert "[OK] value_set present" in report
 
+    def test_value_code_search_checks_pass(self, fixture_db: Path):
+        """#352: the schema-shape + value-code-search sections recognize
+        value_code.mapping_count and value_code_fts on a fresh build."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[OK] value_code.mapping_count present" in report
+        assert "[OK] value_code_fts present" in report
+        assert "[value-code search]" in report
+
+    def test_missing_value_code_fts_surfaces_failure(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#352: dropping value_code_fts must fail the schema-shape check."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.execute("DROP TABLE value_code_fts")
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("value_code_fts missing" in f for f in result.failures)
+
     def test_missing_db_raises(self, tmp_path: Path):
         with pytest.raises(FileNotFoundError):
             validate_built_db(tmp_path / "no_such.db")

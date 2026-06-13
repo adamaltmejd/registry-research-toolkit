@@ -102,15 +102,20 @@ class TestSearch:
         assert data["data"]["total_count"] >= 1
 
     def test_search_value_code(self, db_path: str):
-        """Search for a value code name should return value-type results via code_variable_map."""
+        """Search for a value label returns `code`-type hits (#352): label FTS over
+        value_code_fts, each annotated with its owning variable(s) via
+        code_variable_map."""
         data, code = _run_json(["--db", db_path, "search", "--query", "Man"])
         assert code == 0
-        value_results = [r for r in data["data"]["results"] if r["type"] == "value"]
-        assert len(value_results) >= 1
-        assert value_results[0]["label"] == "Man"
-        assert value_results[0]["code"] == "1"
-        # The result names the specific owning variable (variable_id-grained map).
-        assert value_results[0]["variable_slug"]
+        code_results = [r for r in data["data"]["results"] if r["type"] == "code"]
+        assert len(code_results) >= 1
+        man = next(r for r in code_results if r["label"] == "Man")
+        assert man["code"] == "1"
+        # The hit names its owning variable(s) (variable_id-grained map), each
+        # FQID-addressable; the full owner count is also reported.
+        assert man["variables"], "code hit should carry owning variables"
+        assert man["variables"][0]["fqid"]
+        assert man["variable_count"] >= 1
 
     def test_search_years_filter(self, db_path: str):
         """--years filters to results with versions in the given range."""
@@ -929,10 +934,18 @@ class TestGetValues:
             "INSERT INTO value_set (value_set_id, member_hash) VALUES (2, ?)",
             (b"\xbb" * 32,),
         )
-        conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
-        conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
-        conn.execute("INSERT INTO value_code VALUES (3, '1', 'Pojke')")
-        conn.execute("INSERT INTO value_code VALUES (4, '2', 'Flicka')")
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (1, '1', 'Man')"
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (2, '2', 'Kvinna')"
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (3, '1', 'Pojke')"
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (4, '2', 'Flicka')"
+        )
         conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
         conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
         conn.execute("INSERT INTO value_set_member VALUES (2, 3)")
@@ -1703,8 +1716,10 @@ def _overlap_db():
         "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
         (b"\xaa" * 32,),
     )
-    conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
-    conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
+    conn.execute("INSERT INTO value_code (code_id, code, label) VALUES (1, '1', 'Man')")
+    conn.execute(
+        "INSERT INTO value_code (code_id, code, label) VALUES (2, '2', 'Kvinna')"
+    )
     conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
     conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
     for valid_from, valid_to, label in (

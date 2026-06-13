@@ -301,8 +301,16 @@ REFACTOR_SPEC.md / #212.
 
 The shared post-passes (run once over both providers' rows): classifications, slugs,
 `same_as` / `replaced_by` / lineage edges, `code_variable_map`, the
-`variable_state.classification_id` backfill, FTS. The materializer enforces the
-build-time invariants the universal schema encodes — chiefly that
+`variable_state.classification_id` backfill, FTS. After `code_variable_map` is complete
+(base derivation + SCB cvid-scratch top-up), `value_code.mapping_count` (#352) is set to
+each pair's variable count — a precomputed rarity weight the code/value search
+downweights by (a generic enum shared by many variables ranks below a rare one), never
+aggregated over the 4.1M-row map at query time. The FTS pass also builds
+`value_code_fts` over value labels, EXCLUDING a curated junk-label stoplist
+(`_VALUE_CODE_STOPLIST_EXACT` / `_VALUE_CODE_STOPLIST_PREFIXES`: `Ja`/`Nej`,
+`Uppgift saknas`, the `Okänt*`/`Okänd*`/`Felaktig*` SCB sentinel-prefix families, …) —
+hidden from SEARCH only; the leaf `value_code` rows are untouched. The materializer
+enforces the build-time invariants the universal schema encodes — chiefly that
 `(variable_id, register_variant_id, valid_from)` is unique across `variable_state`
 unless explicitly marked multi-vintage via `value_set_version_label` (the variant
 coordinate is part of the uniqueness scope), and that `variable.slug` is
