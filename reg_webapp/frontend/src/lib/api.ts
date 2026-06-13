@@ -66,10 +66,17 @@ export function errMessage(e: unknown): string {
  * GET `path` (relative to `/api`) and return the parsed JSON typed as `T`.
  * Throws `ApiError` on any non-2xx response, parsing a JSON error body when it
  * can. `path` must already be URL-safe (segments are slug-validated server-side;
- * callers building catalog paths encode each segment).
+ * callers building catalog paths encode each segment). An optional `signal`
+ * cancels the in-flight request (the omnibox passes the asyncResource teardown
+ * signal so a superseded query aborts server-side); a `fetch` abort throws an
+ * `AbortError`/`TimeoutError`, NOT an `ApiError` — callers map it as they see fit.
  */
-export async function apiGet<T>(path: string): Promise<T> {
+export async function apiGet<T>(
+  path: string,
+  options?: { signal?: AbortSignal },
+): Promise<T> {
   const resp = await fetch(`${API_BASE}${path}`, {
+    signal: options?.signal,
     headers: { Accept: "application/json" },
   });
   if (!resp.ok) {
@@ -370,14 +377,32 @@ export type CodeSearchResult = Schemas["CodeSearchResult"];
 export type CodeOwnerVariable = Schemas["CodeOwnerVariable"];
 export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
 
+/** The omnibox's client-side timeout. The codes/value sub-query can be slow
+ * server-side (a separate backend index fix is in flight); past this the SPA
+ * aborts the request and shows a friendly "timed out" message rather than an
+ * infinite spinner. A timeout-abort throws a `TimeoutError` (distinct `name` from
+ * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
+const SEARCH_TIMEOUT_MS = 12_000;
+
 /** Search the catalog. `q` is the raw user query (encoded here); `limit` is the
  * per-group result cap — omit it to use the server default (20, clamped ≤50). A
  * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
- * error. */
-export function search(q: string, limit?: number): Promise<SearchResponse> {
+ * error. The request aborts on EITHER `signal` (the caller's teardown — a
+ * supersede/unmount, which stays silent) OR a ~12s timeout (surfaced as a
+ * `TimeoutError`); `AbortSignal.any` fires on whichever wins. */
+export function search(
+  q: string,
+  options?: { signal?: AbortSignal; limit?: number },
+): Promise<SearchResponse> {
   const params = new URLSearchParams({ q });
-  if (limit !== undefined) {
-    params.set("limit", String(limit));
+  if (options?.limit !== undefined) {
+    params.set("limit", String(options.limit));
   }
-  return apiGet<SearchResponse>(`/search?${params}`);
+  const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
+  if (options?.signal) {
+    signals.push(options.signal);
+  }
+  return apiGet<SearchResponse>(`/search?${params}`, {
+    signal: AbortSignal.any(signals),
+  });
 }

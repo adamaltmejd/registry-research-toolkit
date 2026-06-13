@@ -8,6 +8,7 @@ import {
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
+  search,
   validateProject,
 } from "./api";
 
@@ -232,6 +233,59 @@ describe("validateProject", () => {
     expect(err).toBeInstanceOf(ApiError);
     expect(err.status).toBe(400);
     expect(err.message).toBe("request body is not a JSON object");
+  });
+});
+
+describe("search", () => {
+  // Capture the URL + the fetch init for a single stubbed call.
+  async function callFor(
+    q: string,
+    options?: Parameters<typeof search>[1],
+  ): Promise<{ url: string; init: RequestInit | undefined }> {
+    let url = "";
+    let init: RequestInit | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((u: string, i?: RequestInit) => {
+        url = u;
+        init = i;
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({ kind: "search", query: q, groups: [] }),
+        });
+      }),
+    );
+    await search(q, options);
+    return { url, init };
+  }
+
+  it("encodes the query and omits limit by default", async () => {
+    const { url } = await callFor("kö n");
+    expect(url).toBe("/api/search?q=k%C3%B6+n");
+  });
+
+  it("appends an explicit limit", async () => {
+    const { url } = await callFor("kon", { limit: 5 });
+    expect(url).toBe("/api/search?q=kon&limit=5");
+  });
+
+  it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {
+    // Even with no caller signal, `search` layers AbortSignal.timeout so a hung
+    // request can't spin forever — fetch must always receive a signal.
+    const { init } = await callFor("kon");
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
+    expect(init?.signal?.aborted).toBe(false);
+  });
+
+  it("aborts fetch when the caller's signal aborts (supersede)", async () => {
+    // The combined signal (caller ∪ timeout) must abort when the CALLER aborts —
+    // this is the supersede path the omnibox relies on.
+    const controller = new AbortController();
+    const { init } = await callFor("kon", { signal: controller.signal });
+    expect(init?.signal?.aborted).toBe(false);
+    controller.abort();
+    expect(init?.signal?.aborted).toBe(true);
   });
 });
 

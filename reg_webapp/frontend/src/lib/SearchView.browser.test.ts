@@ -147,7 +147,7 @@ describe("SearchView — typed result groups (#379)", () => {
   it("shows 'showing N of M' only when the slice is truncated", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
-      query: "a",
+      query: "ab",
       groups: [
         {
           group: "registers",
@@ -158,7 +158,9 @@ describe("SearchView — typed result groups (#379)", () => {
         },
       ],
     } as unknown as SearchResponse);
-    setQuery("a");
+    // ≥ 2 chars so the min-length guard fetches (a 1-char query short-circuits to
+    // the keep-typing hint).
+    setQuery("ab");
     await render(SearchView);
 
     await expect.element(page.getByText("showing 1 of 42")).toBeVisible();
@@ -194,7 +196,7 @@ describe("SearchView — typed result groups (#379)", () => {
   it("links code-hit owners and shows a muted '+N more' for the slice cap", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
-      query: "1",
+      query: "11",
       groups: [
         {
           group: "codes",
@@ -215,7 +217,8 @@ describe("SearchView — typed result groups (#379)", () => {
         },
       ],
     } as unknown as SearchResponse);
-    setQuery("1");
+    // ≥ 2 chars so the min-length guard fetches.
+    setQuery("11");
     await render(SearchView);
 
     // The owning variable is the link target (not the bare code).
@@ -270,7 +273,7 @@ describe("SearchView — typed result groups (#379)", () => {
     // once and assert each link renders.
     vi.mocked(search).mockResolvedValue({
       kind: "search",
-      query: "1",
+      query: "11",
       groups: [
         {
           group: "codes",
@@ -293,7 +296,8 @@ describe("SearchView — typed result groups (#379)", () => {
         },
       ],
     } as unknown as SearchResponse);
-    setQuery("1");
+    // ≥ 2 chars so the min-length guard fetches.
+    setQuery("11");
     await render(SearchView);
 
     await expect
