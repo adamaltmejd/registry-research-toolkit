@@ -295,7 +295,8 @@ def search(
       - "description": FTS over the shipped indexes — register name/purpose,
         variable name/definition/description, and classification
         short_name/name/name_en/description (#350)
-      - "value": value codes and labels (LIKE pattern match)
+      - "value": value labels via `value_code_fts` (FTS) + exact/prefix match on
+        `value_code.code` for code-shaped queries; use with `type="value"` (#352)
       - "all": all of the above (default)
 
     type filters which entity surfaces are returned ("register" / "variable" /
@@ -334,7 +335,7 @@ def search(
             code="usage_error",
             error_class="usage",
             message=f"Invalid search type '{type}'. Valid: {sorted(SEARCH_TYPES)}",
-            remediation="Use --type register, variable, classification, or all.",
+            remediation="Use --type register, variable, classification, value, or all.",
         )
 
     reg_ids: set[int] | None = None
