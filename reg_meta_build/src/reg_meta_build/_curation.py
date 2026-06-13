@@ -84,6 +84,7 @@ def load_curation_entries(
     code_base: str,
     file_name: str,
     entry_fields: str,
+    sibling_keys: frozenset[str] = frozenset(),
 ) -> list[dict]:
     """The shared load scaffold for the curation TOMLs: read + parse, strict
     top-level-key guard (a misspelled ``[[{entry_key}s]]`` is a loud error, not
@@ -91,9 +92,13 @@ def load_curation_entries(
     per-entry table check. Returns the raw entry dicts — per-entry FIELD
     validation stays in each loader (their schemas differ).
 
-    ``[]`` when ``path`` is None/missing (synthetic test builds, wheel
-    installs). Errors carry ``{code_base}_toml_unreadable`` /
-    ``{code_base}_invalid`` so each surface keeps its established codes."""
+    ``sibling_keys`` lists OTHER legal top-level keys in the same file (a file
+    that carries more than one entry type, e.g. ``delivery_enrichment.toml``'s
+    ``[[description]]`` + ``[[alias]]``): they are not flagged as unknown, and
+    each is loaded by its own call. ``[]`` when ``path`` is None/missing
+    (synthetic test builds, wheel installs). Errors carry
+    ``{code_base}_toml_unreadable`` / ``{code_base}_invalid`` so each surface
+    keeps its established codes."""
     if path is None or not path.is_file():
         return []
     try:
@@ -104,7 +109,7 @@ def load_curation_entries(
             f"Could not parse {label} curation TOML {path}: {exc}",
             f"Fix the TOML syntax in reg_meta_build/{file_name}.",
         ) from exc
-    unknown_top = set(data) - {entry_key}
+    unknown_top = set(data) - {entry_key} - sibling_keys
     if unknown_top:
         raise curation_error(
             f"{code_base}_invalid",

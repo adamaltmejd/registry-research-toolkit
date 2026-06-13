@@ -50,10 +50,13 @@ def test_repo_concept_groups_parses() -> None:
 
 def test_repo_delivery_enrichment_parses() -> None:
     enr = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml")
-    assert enr.descriptions  # the #365 global description backfills ship with the repo
+    # the #365 global description backfills + delivery-column aliases ship together
+    assert enr.descriptions
+    assert enr.aliases
     # Slug RESOLUTION is lenient + maintainer-build territory; load-time shape
-    # (2-segment FQID, unique (register, variable)) is this gate.
+    # (2-segment FQID, unique keys) is this gate.
     assert all(d.provider and d.register and d.variable for d in enr.descriptions)
+    assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
 
 
 def test_repo_family_merges_parses() -> None:
