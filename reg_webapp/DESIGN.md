@@ -204,10 +204,19 @@ concurrency smoke (the `TestClient` sequential default masks the bug).
 
 ## Global catalog search (`routes/search.py` + `conn.py`)
 
-`GET /api/search?q=&limit=` (#350) is the discovery surface behind the planned omnibox.
-It returns **typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
-concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp does NOT
-reimplement folding or FTS.
+`GET /api/search?q=&limit=` (#350) is the discovery surface consumed by the global
+header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It returns **typed result
+groups** over the shipped FTS5 indexes, reusing reg_meta's concept-group-folded `search`
+(`reg_meta.queries.search`, #322) — the webapp does NOT reimplement folding or FTS.
+
+The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
+`/search?q=` results page (`SearchView.svelte`) that renders the four typed groups with
+navigation to catalog nodes. The router gained a `search` route (query lives in `?q=`,
+keyed on pathname so the page re-runs on every query change) and a `router.replace()`
+method (mirrors the `?period` URL-as-single-source-of-truth pattern: the omnibox syncs
+back to the URL, and the URL drives the view). `api.ts` gained `search(q, limit?)` typed
+off the codegen'd contract. The **docs group** (`/api/docs/search`) and a doc viewer are
+deliberately deferred to PR2 (#379) — see "Not yet folded" note below.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
@@ -283,8 +292,8 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   (#350 contract), but wiring it in is deferred — the docs index is a *separate optional
   DB* and its `ingested` degradation doesn't map onto a group's `total_count`/`results`
   shape, so folding it into the omnibox endpoint would couple `/api/search` to a second
-  DB for no current consumer. The dedicated endpoints serve the need; the group joins
-  when the omnibox lands.
+  DB for no current consumer. The dedicated endpoints serve the need; the docs group
+  joins `/api/search` and gains a doc viewer in PR2 (#379).
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
