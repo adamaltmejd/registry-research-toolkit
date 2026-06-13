@@ -799,11 +799,15 @@ def get_catalog_node(
             with _catalog_conn(request) as conn:
                 catalog = Catalog(conn)
                 # Resolve PER SEGMENT (#340) — `resolve_at` never sees the #307
-                # list form (mirrors `semantic._check_binding_period`). The
-                # union dedupes by `state_id` (one state can intersect several
-                # segments); insertion order keeps the per-segment resolve_at
-                # ordering, chronological across a sorted list.
-                states_by_id: dict[int, VariableState] = {}
+                # list form (mirrors `semantic._check_binding_period`). The union
+                # dedupes by the COMPOUND (state_id, delivery_column_name,
+                # valid_from): one state can intersect several segments, AND a
+                # merged monthly-family variable (#319) expands one annual state
+                # into 12 same-state_id per-month windows — keying on state_id
+                # alone would collapse 11 of them. Insertion order keeps the
+                # per-segment resolve_at ordering, chronological across a sorted
+                # list.
+                states_by_id: dict[tuple[int, str | None, str], VariableState] = {}
                 try:
                     for segment in period:
                         for s in catalog.resolve_at(
@@ -812,7 +816,9 @@ def get_catalog_node(
                             variant=variant,
                             value_set_version=resolved_vsv,
                         ):
-                            states_by_id.setdefault(s.state_id, s)
+                            states_by_id.setdefault(
+                                (s.state_id, s.delivery_column_name, s.valid_from), s
+                            )
                 except RegMetaError as exc:
                     _http_4xx_from_regmeta(exc)
             return StatesResponse(

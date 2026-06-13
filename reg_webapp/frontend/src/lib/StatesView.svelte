@@ -68,13 +68,22 @@ const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 // case) get an explicit diff line under the row.
 const changeHints = $derived(stateChangeHints(states));
 
-// #310: inline per-state value-set expansion in LIST mode (keyed by state_id;
-// reassigned-on-toggle so the runes see the change). Cleared when the state
-// set changes underneath (narrowing) — keys are state_ids, so a surviving
-// state's open table legitimately survives a narrow.
-let expanded = $state<Record<number, boolean>>({});
-function toggleExpanded(stateId: number): void {
-  expanded = { ...expanded, [stateId]: !expanded[stateId] };
+// Per-state stable key. NOT state_id alone: a merged monthly-family variable
+// (#319) expands ONE annual state into 12 same-state_id per-month windows, so
+// state_id is no longer unique in the list — the compound (state_id, column,
+// valid_from) is. Used for the #each key (Svelte requires uniqueness) and the
+// #310 inline-expansion map.
+function stateKey(s: VariableStateModel): string {
+  return `${s.state_id}:${s.delivery_column_name ?? ""}:${s.valid_from}`;
+}
+
+// #310: inline per-state value-set expansion in LIST mode (keyed by stateKey;
+// reassigned-on-toggle so the runes see the change). Cleared when the state set
+// changes underneath (narrowing) — a surviving state's open table legitimately
+// survives a narrow.
+let expanded = $state<Record<string, boolean>>({});
+function toggleExpanded(key: string): void {
+  expanded = { ...expanded, [key]: !expanded[key] };
 }
 </script>
 
@@ -214,7 +223,8 @@ function toggleExpanded(stateId: number): void {
   {/if}
 
   <ul class="state-list">
-    {#each states as s (s.state_id)}
+    {#each states as s (stateKey(s))}
+      {@const key = stateKey(s)}
       {@const typeLabel = formatDataType(s.data_type, s.data_length)}
       {@const hints = changeHints.get(s.state_id)}
       <li>
@@ -241,10 +251,10 @@ function toggleExpanded(stateId: number): void {
             <button
               type="button"
               class="vs-toggle"
-              aria-expanded={!!expanded[s.state_id]}
-              onclick={() => toggleExpanded(s.state_id)}
+              aria-expanded={!!expanded[key]}
+              onclick={() => toggleExpanded(key)}
             >
-              {expanded[s.state_id] ? "Hide values" : "Values"} ({s.value_set.length})
+              {expanded[key] ? "Hide values" : "Values"} ({s.value_set.length})
             </button>
           {/if}
         </div>
@@ -253,7 +263,7 @@ function toggleExpanded(stateId: number): void {
                variant — the int→bigint case renders an explicit diff. -->
           <p class="state-changed">changed: {hints.join(" · ")}</p>
         {/if}
-        {#if expanded[s.state_id] && s.value_set && s.value_set.length > 0}
+        {#if expanded[key] && s.value_set && s.value_set.length > 0}
           {@render valueSetTable(s.value_set)}
         {/if}
       </li>

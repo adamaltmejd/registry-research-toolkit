@@ -1116,9 +1116,84 @@ class Catalog:
     def _states_for_variable(self, variable_id: int) -> tuple[VariableState, ...]:
         """Full chronological state history for a variable (all variants)."""
         return tuple(
-            self._row_to_state(r)
-            for r in self._states_in_bounds(variable_id, None, None)
+            self._expand_state_windows(
+                variable_id, self._states_in_bounds(variable_id, None, None), None
+            )
         )
+
+    def _variable_windows(
+        self, variable_id: int
+    ) -> dict[int, list[tuple[str, str, str]]]:
+        """`variable_alias_window` rows (#319) for a merged monthly-family
+        variable, grouped by `register_variant_id` → [(delivery_column_name,
+        valid_from, valid_to), …] sorted by window start. EMPTY for every
+        non-merged variable (no window rows), so the per-month expansion is a
+        no-op there. One indexed point-lookup on `idx_variable_alias_window_lookup`."""
+        out: dict[int, list[tuple[str, str, str]]] = {}
+        for rvid, col, wfrom, wto in self._conn.execute(
+            "SELECT register_variant_id, delivery_column_name, valid_from, valid_to "
+            "FROM variable_alias_window WHERE variable_id = ? "
+            "ORDER BY register_variant_id, valid_from, delivery_column_name",
+            (variable_id,),
+        ):
+            out.setdefault(rvid, []).append((col, wfrom, wto))
+        return out
+
+    def _expand_state_windows(
+        self,
+        variable_id: int,
+        rows: list[sqlite3.Row],
+        bounds: tuple[str, str] | None,
+    ) -> list[VariableState]:
+        """Map period-filtered `variable_state` rows to `VariableState`s, expanding
+        a MERGED monthly-family variable's ANNUAL state into one `VariableState`
+        per month-column window that OVERLAPS `bounds` (#319). The stored state is
+        ONE annual single-claim row per year; the per-month dimension is READ-TIME
+        from `variable_alias_window` — `resolve_at("2024-03")` → the mar column,
+        `resolve_at("2024")` → 12 windows. Non-merged variables have no window
+        rows → each state maps 1:1 via `_row_to_state` (byte-identical behaviour).
+
+        D2: a year's 12 windows SHARE the annual state's `state_id` +
+        `value_set_version_label` (one claim, 12 representations); only
+        `delivery_column_name` + `valid_from`/`valid_to` are overridden per window.
+        The per-window identity is the compound (state_id, delivery_column_name,
+        valid_from). A window is attributed to the state whose validity range
+        contains it (windows were emitted per the state's delivery year)."""
+        windows_by_variant = self._variable_windows(variable_id)
+        if not windows_by_variant:
+            return [self._row_to_state(r) for r in rows]
+        lo, hi = bounds if bounds is not None else ("0001-01-01", "9999-12-31")
+        out: list[VariableState] = []
+        for row in rows:
+            base = self._row_to_state(row)
+            windows = windows_by_variant.get(row["register_variant_id"], [])
+            # Windows belonging to THIS annual state (within its validity range)
+            # that also overlap the queried bounds.
+            matched = [
+                (col, wfrom, wto)
+                for (col, wfrom, wto) in windows
+                if base.valid_from <= wfrom
+                and wto <= base.valid_to
+                and wfrom <= hi
+                and wto >= lo
+            ]
+            if not matched:
+                # A merged variable's state with no window in range (e.g. a year
+                # the family didn't deliver this column) — keep the annual row so
+                # the variable never silently drops a claim.
+                out.append(base)
+                continue
+            for col, wfrom, wto in matched:
+                out.append(
+                    replace(
+                        base,
+                        delivery_column_name=col,
+                        valid_from=wfrom,
+                        valid_to=wto,
+                    )
+                )
+        out.sort(key=lambda s: (s.valid_from, s.valid_to, s.delivery_column_name or ""))
+        return out
 
     def _variant_slug(self, register_variant_id: int) -> str | None:
         row = self._conn.execute(
@@ -1362,10 +1437,11 @@ class Catalog:
             register_variant_id = rvid
 
         bounds = _period_bounds(period)
-        states = [
-            self._row_to_state(r)
-            for r in self._states_in_bounds(variable_id, register_variant_id, bounds)
-        ]
+        states = self._expand_state_windows(
+            variable_id,
+            self._states_in_bounds(variable_id, register_variant_id, bounds),
+            bounds,
+        )
         if value_set_version is not None:
             states = [
                 s for s in states if s.value_set_version_label == value_set_version

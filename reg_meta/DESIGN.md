@@ -392,6 +392,19 @@ period (a crosswalk era, SNI92 + SNI2007 in a transition year). The list shape i
 contract; no exception is raised on ambiguity. Callers who know the variant pass
 `variant=…`; callers who know the vintage pass `value_set_version=…`.
 
+**Monthly column families (#319).** A curated monthly-family merge (build-side, see
+reg_meta_build/DESIGN.md → Consumers: monthly column families) folds 12 month-named
+delivery columns into ONE variable carrying an ANNUAL `variable_state` per year, with
+each month column's window in `variable_alias_window`. `resolve_at` / `states` EXPAND
+that annual state READ-TIME into one `VariableState` per overlapping month window —
+`resolve_at("2024-03")` → the `mar` column (window `2024-03-01..2024-03-31`),
+`resolve_at("2024")` → all 12. The expansion (`_expand_state_windows`) overrides only
+`delivery_column_name` + `valid_from`/`valid_to`; `value_set`/`data_type`/`state_id`/
+`value_set_version_label` come from the annual claim, so a year's windows SHARE one
+`state_id` (one claim, N representations) — the per-window identity is the compound
+(`state_id`, `delivery_column_name`, `valid_from`). A variable with no window rows
+(every non-merged variable) maps 1:1, byte-identically.
+
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
 `Source.period`): a bare year (`2018`), a period token
 (`"HT2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit range `{"from", "to"}`

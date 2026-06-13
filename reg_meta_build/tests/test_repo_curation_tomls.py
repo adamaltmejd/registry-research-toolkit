@@ -21,6 +21,7 @@ from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.column_merges import load_column_merges
 from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
+from reg_meta_build.family_merges import load_family_merges
 from reg_meta_build.fold_overrides import load_fold_overrides
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
@@ -53,3 +54,13 @@ def test_repo_delivery_enrichment_parses() -> None:
     # Slug RESOLUTION is lenient + maintainer-build territory; load-time shape
     # (2-segment FQID, unique (register, variable)) is this gate.
     assert all(d.provider and d.register and d.variable for d in enr.descriptions)
+
+
+def test_repo_family_merges_parses() -> None:
+    families = load_family_merges(_ROOT / "family_merges.toml")
+    assert families  # the #319 LISA monthly families ship with the repo
+    # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
+    # territory (the materializer fails fast); load-time shape is this gate.
+    assert all(
+        f.provider and f.register and f.family_stem and f.label for f in families
+    )

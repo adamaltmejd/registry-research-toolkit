@@ -36,6 +36,11 @@ from .delivery_enrichment import (
     load_delivery_enrichment,
     repo_delivery_enrichment_path,
 )
+from .family_merges import (
+    load_family_merges,
+    materialize_family_merges,
+    repo_family_merges_path,
+)
 from .fqid_slugs import (
     load_lineage_config,
     materialize_same_as_edges,
@@ -571,6 +576,29 @@ CREATE TABLE variable_alias (
     delivery_column_name TEXT NOT NULL,
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_name)
 );
+
+-- #319: per-month alias windows for CURATED MONTHLY-FAMILY merges. A monthly
+-- family (12 month-named delivery columns, e.g. lisa `agi1lonfink{jan..dec}`,
+-- shipped inside ANNUAL editions) is merged at build time into ONE variable
+-- carrying an annual `variable_state` per delivery year (NOT 12 — the per-month
+-- dimension is a representation/alias concern, not a coding boundary; see
+-- reg_meta_build/DESIGN.md → Consumers: monthly column families). This sibling
+-- table records each month column's validity window so `resolve_at` can pick the
+-- column for a queried sub-annual period: `resolve_at("2024-03")` → the `mar`
+-- column. EMPTY for every non-merged variable (the resolver no-ops then, leaving
+-- those variables' behaviour byte-identical). Windows are `YYYY-MM` expanded via
+-- `period_token_to_bounds` (same `_MONTH_LAST_DAY` ends the display formatter
+-- reads back). SHIPS — the query layer reads it.
+CREATE TABLE variable_alias_window (
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    delivery_column_name TEXT NOT NULL,
+    valid_from TEXT NOT NULL,   -- 'YYYY-MM-DD' inclusive
+    valid_to TEXT NOT NULL,     -- 'YYYY-MM-DD' inclusive
+    PRIMARY KEY (variable_id, register_variant_id, delivery_column_name, valid_from)
+);
+CREATE INDEX idx_variable_alias_window_lookup
+    ON variable_alias_window(variable_id, register_variant_id);
 
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
 -- Populated at build time from a maintainer-curated seed (classifications.toml)
@@ -2900,6 +2928,25 @@ def materialize(
             strict=True,
             skipped_classifications=skipped_classifications,
         )
+
+        # Monthly column-family merges (#319) — fold each curated family's 12
+        # month columns into ONE variable BEFORE variable slugs are assigned, so
+        # the survivor is slugged as the family stem (registered into
+        # `fold_slug_hints`, the same side channel the A2.2 fold uses) and the
+        # merged-away siblings never get a slug. Runs after the IR reinsert
+        # (variable_state / variable_alias exist) and after populate_slugs
+        # (register/variant slugs). Member columns are identified by
+        # `delivery_column_name` (slugs don't exist yet). A dangling/incoherent
+        # family fails the build (EXIT_CONFIG). Empty without family_merges.toml.
+        fm_counts = materialize_family_merges(
+            conn,
+            load_family_merges(repo_family_merges_path()),
+            providers=active_providers,
+            fold_slug_hints=fold_slug_hints,
+            progress=_progress,
+        )
+        row_counts["monthly_family_merges"] = fm_counts["families"]
+        row_counts["variable_alias_windows"] = fm_counts["windows"]
 
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
