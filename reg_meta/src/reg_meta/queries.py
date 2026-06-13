@@ -424,11 +424,21 @@ def search(
             else []
         )
         all_results = _fold_concept_groups(conn, all_results, label_hits)
-    _strip_internal_keys(all_results)
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
     results = all_results[offset : offset + limit]
+
+    # Annotate value/code rows AFTER the slice: the unscoped value arm
+    # (`reg_ids is None`) returns rows unannotated with a `_code_id` marker, so we
+    # only run the owner-annotation queries for the ≤limit codes actually shown
+    # (the omnibox-timeout fix for broad terms). No-op for the reg-scoped arm
+    # (those rows are already annotated and carry no `_code_id`).
+    _annotate_value_page(conn, results, reg_ids)
+    # Strip fold-internal keys from the SHOWN page only — non-page rows are
+    # discarded, so there's nothing to clean on them. (`_strip_internal_keys`
+    # touches only `_INTERNAL_KEYS`, never `fts_rank`, so the sort above is safe.)
+    _strip_internal_keys(results)
 
     return {"total_count": total_count, "results": results}
 
@@ -764,11 +774,20 @@ def _search_values_fts(
 
     Label FTS (bm25) is the primary surface — ~55% of codes are bare numbers, so
     labels carry the meaning. Each label hit JOINs `value_code` for the (code,
-    label, mapping_count) and is annotated with its owning variables /
-    classifications (`_code_owner_annotations_batch`, set-based to avoid an N+1).
-    For a code-shaped query (`_is_code_shaped`) an exact + prefix match on
-    `value_code.code` is merged in (deduped by code_id) — labels alone miss a
-    researcher entering "F32".
+    label, mapping_count). For a code-shaped query (`_is_code_shaped`) an exact +
+    prefix match on `value_code.code` is merged in (deduped by code_id) — labels
+    alone miss a researcher entering "F32".
+
+    Owner annotation (owning variables / classifications) splits on scope:
+      - `reg_ids is None` (the webapp path): annotation is DEFERRED to the shown
+        page. Rows come back unannotated (empty owners) with an internal
+        `_code_id` marker; `search()` annotates only the ≤limit page rows via
+        `_annotate_value_page`. A broad term matches thousands of codes, so
+        annotating the full set before the offset/limit slice was the omnibox
+        timeout this avoids.
+      - `reg_ids is not None` (`--register`): the full set is annotated up front
+        (`_code_owner_annotations_batch`, set-based to avoid an N+1) so the
+        reg-scope drop can run; the match set is small (one register's codes).
 
     Ranking: bm25 relevance, then `mapping_count` ASCENDING — a label shared by
     many variables (a generic enum) is less discriminative than a rare one, so it
@@ -836,7 +855,35 @@ def _search_values_fts(
 
     ordered = sorted(hits.values(), key=lambda h: (h["base_rank"], h["code"]))
 
-    # One set-based owner-annotation pass over the full match set (no per-hit N+1).
+    # Unscoped path (the webapp's `/api/search`, the perf-critical one): a broad
+    # term ("läkemedel", "cancer") matches thousands of codes, and annotating ALL
+    # of them before the outer offset/limit slice was the >60 s omnibox timeout.
+    # Defer owner annotation to the PAGE — return every ranked row unannotated
+    # (empty owners) carrying an internal `_code_id` marker, and let `search()`
+    # annotate only the ≤limit rows actually shown (`_annotate_value_page`). This
+    # keeps total_count = len(ordered) exact (no rows dropped here — there's no
+    # register scope to filter against) while doing O(matches) cheap dict-building
+    # instead of O(matches) owner queries.
+    if reg_ids is None:
+        return [
+            {
+                "type": "code",
+                # Glossary rename: SCB `vardekod`/`vardebenamning` surface under the
+                # universal English `code`/`label`.
+                "code": h["code"],
+                "label": h["label"],
+                "mapping_count": h["mapping_count"],
+                "fts_rank": h["base_rank"],
+                "_code_id": h["code_id"],
+                **_empty_owner_annotation(),
+            }
+            for h in ordered
+        ]
+
+    # Register-scoped path (CLI `--register`): the match set is small (one
+    # register's codes), and the reg-scope DROP below needs every code's owners.
+    # Annotate the full set up front + filter — total_count must reflect the
+    # post-filter count. These rows carry NO `_code_id` (already annotated).
     owners_by_code = _code_owner_annotations_batch(
         conn, [h["code_id"] for h in ordered], reg_ids
     )
@@ -847,7 +894,7 @@ def _search_values_fts(
         # A register scope can leave a code with no surviving owner (no in-scope
         # variable, no classification) — drop it rather than return a context-less
         # code/label pair.
-        if reg_ids and not owners["variables"] and not owners["classifications"]:
+        if not owners["variables"] and not owners["classifications"]:
             continue
         results.append(
             {
@@ -862,6 +909,38 @@ def _search_values_fts(
             }
         )
     return results
+
+
+def _annotate_value_page(
+    conn: sqlite3.Connection,
+    page: list[dict[str, Any]],
+    reg_ids: set[int] | None,
+) -> None:
+    """Annotate the value/code rows of a SHOWN page with their owning variables /
+    classifications, in place (#352 perf, the annotate-only-the-page optimization).
+
+    The unscoped value arm (`_search_values_fts` with `reg_ids is None`) returns
+    every ranked code row UNannotated, carrying an internal `_code_id` marker, so
+    `search()` can defer the (expensive) owner lookups to the ≤limit rows actually
+    paginated. This runs one set-based `_code_owner_annotations_batch` over just
+    those page code_ids and merges the result onto each row, then drops the marker.
+
+    No-op when no row carries `_code_id` — i.e. the reg-scoped arm, where rows were
+    already annotated up front (the reg-scope drop needed the full owner set). Only
+    `type == "code"` rows carry the marker, so a mixed `type="all"` page leaves its
+    other-type rows untouched. `reg_ids` is always None whenever marker rows exist
+    (they're only produced in the unscoped branch); it is threaded through for
+    symmetry with the batch helper's signature."""
+    code_ids = [
+        r["_code_id"] for r in page if r.get("type") == "code" and "_code_id" in r
+    ]
+    if not code_ids:
+        return
+    owners_by_code = _code_owner_annotations_batch(conn, code_ids, reg_ids)
+    for r in page:
+        if r.get("type") == "code" and "_code_id" in r:
+            r.update(owners_by_code[r["_code_id"]])
+            del r["_code_id"]
 
 
 def _search_classifications(
@@ -1247,7 +1326,10 @@ def _group_result_row(
     }
 
 
-_INTERNAL_KEYS = ("_variable_id", "_classification_id")
+# `_code_id` is the value-arm's deferred-annotation marker (#352 perf):
+# `_annotate_value_page` removes it on the shown page, but list it here so a stray
+# marker can never leak past `_strip_internal_keys` into a public result row.
+_INTERNAL_KEYS = ("_variable_id", "_classification_id", "_code_id")
 
 
 def _strip_internal_keys(results: list[dict[str, Any]]) -> None:
