@@ -37,10 +37,11 @@ const results = asyncResource<SearchResponse>((signal) =>
 // Distinguish a TIMEOUT abort from every other failure. A supersede/unmount abort
 // never reaches here (asyncResource's `cancelled` guard swallows it); a timeout
 // abort fires while NOT cancelled, surfacing as an error. asyncResource exposes
-// only the stringified error, and `String(timeoutError)` is name-prefixed
-// ("TimeoutError: signal timed out" — AbortSignal.timeout's reason is a
-// `DOMException` named "TimeoutError"), so match that prefix. Only this maps to
-// the friendly copy — other errors keep the generic "Search failed" banner.
+// only the stringified error, and `String(e)` on a DOMException is name-prefixed
+// (`<name>: <message>`). AbortSignal.timeout's reason is a DOMException named
+// "TimeoutError", so match only the spec-stable NAME prefix — the message tail
+// after ": " is engine-specific (varies by browser) and must NOT be matched. Only
+// this maps to the friendly copy — other errors keep the generic "Search failed".
 const timedOut = $derived(results.error?.startsWith("TimeoutError") ?? false);
 
 const groups = $derived(results.data?.groups ?? []);

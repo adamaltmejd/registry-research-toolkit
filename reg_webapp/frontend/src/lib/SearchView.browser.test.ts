@@ -420,5 +420,8 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect
       .element(page.getByText(/Search failed:.*backend down/))
       .toBeVisible();
+    // A generic error must NOT trip the timeout branch — pins the `startsWith`
+    // discriminator against accidental broadening (e.g. `includes`).
+    await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
   });
 });

@@ -86,6 +86,42 @@ describe("SearchView — request cancellation (supersede)", () => {
       .not.toBeInTheDocument();
     await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
   });
+
+  it("deleting back below the min length aborts the in-flight request and shows keep-typing (no error/no-matches flash)", async () => {
+    // Symmetric to the supersede case but the new query is TOO SHORT: the "ko"
+    // fetch is in flight; deleting to "k" hits the min-length short-circuit (no
+    // new fetch), and the effect re-run's teardown must still abort the "ko"
+    // request — without flashing a spurious "Search failed" / "No matches".
+    let inFlightSignal: AbortSignal | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_url: string, init?: RequestInit) => {
+        inFlightSignal = init?.signal ?? undefined;
+        return new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener("abort", () =>
+            reject(init.signal?.reason),
+          );
+        });
+      }),
+    );
+
+    setQuery("ko");
+    await render(SearchView);
+    await vi.waitFor(() => expect(inFlightSignal).toBeDefined());
+    expect(inFlightSignal?.aborted).toBe(false);
+
+    // Delete a character: "k" is below the min length → short-circuit, no fetch.
+    setQuery("k");
+    await vi.waitFor(() => expect(inFlightSignal?.aborted).toBe(true));
+
+    await expect
+      .element(page.getByText("Keep typing to search…"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText(/Search failed/))
+      .not.toBeInTheDocument();
+    await expect.element(page.getByText(/No matches/)).not.toBeInTheDocument();
+  });
 });
 
 describe("SearchView — min query length", () => {
@@ -150,6 +186,61 @@ describe("SearchView — timeout", () => {
       .element(page.getByText("Search timed out — try a more specific term."))
       .toBeVisible();
     // It is NOT the generic failure banner.
+    await expect
+      .element(page.getByText(/Search failed/))
+      .not.toBeInTheDocument();
+  });
+
+  it("a timeout that fires AFTER a successful resolution does not flip the good view to an error", async () => {
+    // The timeout signal still fires (50ms) after fetch already RESOLVED — but on
+    // a settled promise the abort is a no-op, so the rendered results must stay
+    // put (no "timed out" copy). Guards against a stray timeout clobbering a good
+    // view. Stub the floor low so the post-resolution wait is short.
+    const realTimeout = AbortSignal.timeout.bind(AbortSignal);
+    vi.spyOn(AbortSignal, "timeout").mockImplementation(() => realTimeout(50));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            kind: "search",
+            query: "kon",
+            groups: [
+              {
+                group: "registers",
+                total_count: 1,
+                results: [
+                  {
+                    type: "register",
+                    fqid: "scb/lisa",
+                    name: "LISA",
+                    purpose: null,
+                  },
+                ],
+              },
+            ],
+          }),
+        }),
+      ),
+    );
+
+    setQuery("kon");
+    await render(SearchView);
+
+    // Results render first (poll before sleeping past the stub timeout to avoid
+    // racing the resolution).
+    await expect
+      .element(page.getByRole("link", { name: /LISA/ }))
+      .toHaveAttribute("href", "/catalog/scb/lisa");
+
+    // Wait past the 50ms stub timeout, then confirm the view is unchanged.
+    await new Promise((r) => setTimeout(r, 100));
+    await expect
+      .element(page.getByRole("link", { name: /LISA/ }))
+      .toBeVisible();
+    await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
     await expect
       .element(page.getByText(/Search failed/))
       .not.toBeInTheDocument();
