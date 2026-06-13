@@ -695,9 +695,9 @@ CREATE VIRTUAL TABLE classification_fts USING fts5(
 -- value_code label search (#352). External-content over value_code, indexing
 -- ONLY `label` — the `code` column is matched separately via idx_value_code_code
 -- (exact/prefix), since ~55% of codes are purely numeric and useless under FTS.
--- Stoplisted junk labels (see _VALUE_CODE_SEARCH_STOPLIST) are excluded at
--- population time, so this index has fewer rows than value_code; the leaf
--- value_code / value_set tables keep every row (search-only hiding).
+-- Stoplisted junk labels (see _VALUE_CODE_STOPLIST_EXACT / _PREFIXES) are
+-- excluded at population time, so this index has fewer rows than value_code; the
+-- leaf value_code / value_set tables keep every row (search-only hiding).
 CREATE VIRTUAL TABLE value_code_fts USING fts5(
     label,
     content='value_code',

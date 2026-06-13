@@ -728,6 +728,15 @@ def _search_values_fts(
     # code-shape collapses to one hit (the stronger/lower rank wins).
     hits: dict[int, dict[str, Any]] = {}
 
+    def _hit(r: sqlite3.Row, base_rank: float) -> dict[str, Any]:
+        return {
+            "code_id": r["code_id"],
+            "code": r["code"],
+            "label": r["label"],
+            "mapping_count": r["mapping_count"],
+            "base_rank": base_rank,
+        }
+
     if fts_query is not None:
         # bm25 default weights; mapping_count downweight is a small additive term
         # (scaled by log so a 60k-mapping junk-ish label sinks but doesn't dwarf
@@ -744,13 +753,7 @@ def _search_values_fts(
         ).fetchall()
         for r in label_rows:
             base = r["rank"] + math.log1p(r["mapping_count"]) * 0.5
-            hits[r["code_id"]] = {
-                "code_id": r["code_id"],
-                "code": r["code"],
-                "label": r["label"],
-                "mapping_count": r["mapping_count"],
-                "base_rank": base,
-            }
+            hits[r["code_id"]] = _hit(r, base)
 
     if _is_code_shaped(query):
         q = query.strip()
@@ -770,13 +773,7 @@ def _search_values_fts(
             code_rank = -1_000_000 + (0 if exact else 1) + i
             existing = hits.get(r["code_id"])
             if existing is None or code_rank < existing["base_rank"]:
-                hits[r["code_id"]] = {
-                    "code_id": r["code_id"],
-                    "code": r["code"],
-                    "label": r["label"],
-                    "mapping_count": r["mapping_count"],
-                    "base_rank": code_rank,
-                }
+                hits[r["code_id"]] = _hit(r, code_rank)
 
     ordered = sorted(hits.values(), key=lambda h: (h["base_rank"], h["code"]))[:limit]
 
