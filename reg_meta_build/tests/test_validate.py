@@ -26,6 +26,60 @@ class TestValidateModule:
         assert "[schema]" in report
         assert "[OK] value_set present" in report
 
+    def test_value_code_search_checks_pass(self, fixture_db: Path):
+        """#352: the schema-shape + value-code-search sections recognize
+        value_code.mapping_count and value_code_fts on a fresh build."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[OK] value_code.mapping_count present" in report
+        assert "[OK] value_code_fts present" in report
+        assert "[value-code search]" in report
+
+    def test_missing_value_code_fts_surfaces_failure(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#352: dropping value_code_fts must fail the schema-shape check."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.execute("DROP TABLE value_code_fts")
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("value_code_fts missing" in f for f in result.failures)
+
+    def test_empty_fts_index_fails_corpus_check(self, fixture_db: Path, tmp_path: Path):
+        """#352: a populated-schema build whose value_code_fts INDEX is empty (table
+        present, content cleared) must FAIL the corpus value-code-search check. Uses
+        the FTS5 'delete-all' command so the table stays but the `_docsize` shadow
+        count drops to 0 — the honest indexed-row count the check reads (COUNT(*)
+        would still read the content table and miss this). Calls the check directly
+        so the synthetic fixture's SOS-volume corpus gate doesn't muddy the result."""
+        from reg_meta_build.validate import ValidationResult, _check_value_code_search
+
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.row_factory = sqlite3.Row
+        # Precondition: the index is non-empty before we clear it.
+        assert (
+            conn.execute("SELECT COUNT(*) FROM value_code_fts_docsize").fetchone()[0]
+            > 0
+        )
+        conn.execute("INSERT INTO value_code_fts(value_code_fts) VALUES('delete-all')")
+        conn.commit()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_value_code_search(conn, result, tables, corpus=True)
+        conn.close()
+        assert not result.passed
+        assert any("EMPTY" in f for f in result.failures), result.failures
+
     def test_missing_db_raises(self, tmp_path: Path):
         with pytest.raises(FileNotFoundError):
             validate_built_db(tmp_path / "no_such.db")

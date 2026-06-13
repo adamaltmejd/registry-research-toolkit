@@ -86,6 +86,31 @@ _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
 _VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
 _VARDEMANGDER_REAL_SHAPED = frozenset({"1", "2"})
 
+# value_code label-search stoplist (#352). Junk labels excluded from the
+# value_code_fts INDEX ONLY at population time — the leaf value_code / value_set
+# tables keep every row (this hides them from search, it does NOT drop data).
+# UNRELATED to `_VARDEMANGDER_SENTINELS` above (those gate value-set hashing /
+# row import). This is a whole-LABEL exclusion, not an FTS tokenizer stopword
+# list: a label matches iff it equals one of the exact strings OR matches one of
+# the prefix families. Initial curated dozen per #352; broader curation is out of
+# scope. The frequency head mixes junk with legitimate concepts (Småort, school
+# names), so frequency is NOT the hiding criterion — only this explicit list is.
+_VALUE_CODE_STOPLIST_EXACT = frozenset(
+    {"NULL", "Uppgift saknas", "Vill ej svara", "Ja", "Nej", "Ej tillämplig"}
+)
+# Prefix families: SCB stuffs the missing/erroneous-value sentinels in many
+# variants ("Okänt värde", "Okänd kommun", "Felaktigt värde", ...). A prefix is
+# justified HERE (and only here) because these are open SCB sentinel FAMILIES, not
+# a fixed label set — matched with SQLite `label LIKE 'Okänt%'` etc. The stem
+# (not the full word) is DELIBERATE: it must catch both the bare sentinel ("Okänd"),
+# the space-separated form ("Okänt värde"), AND the inflected form — "Felaktigt
+# värde" is only caught by `Felaktig%`, since "Felaktigt" != "Felaktig" so a
+# word-boundary match (`= p OR LIKE 'p %'`) would miss it. Accepted coarseness: a
+# hypothetical legit label starting with one of these stems as a longer single word
+# (e.g. "Okäntköping") would also be hidden — no such label occurs in the corpus,
+# and broader stoplist curation is out of #352 scope (initial dozen only).
+_VALUE_CODE_STOPLIST_PREFIXES = ("Okänt", "Okänd", "Felaktig")
+
 
 def _value_set_hash(pairs: list[tuple[str, str]]) -> bytes:
     """Content-addressed sha256 over sorted (vardekod, vardebenamning) pairs.
@@ -585,6 +610,12 @@ CREATE TABLE value_code (
     -- Values stay provider-native (SCB code strings like "01", "Man", "").
     code TEXT NOT NULL,
     label TEXT NOT NULL,
+    -- Precomputed count of variables carrying this (code, label) from
+    -- code_variable_map (#352). Build-time UPDATE after code_variable_map is
+    -- complete — search downweights high counts (a generic enum label shared by
+    -- many variables is less discriminative than a rare one). Never aggregated
+    -- over the 4.1M-row map at query time; JOINed from here instead.
+    mapping_count INTEGER NOT NULL DEFAULT 0,
     UNIQUE (code, label)
 );
 
@@ -665,6 +696,19 @@ CREATE VIRTUAL TABLE classification_fts USING fts5(
     description,
     content='classification',
     content_rowid='id',
+    tokenize='unicode61'
+);
+
+-- value_code label search (#352). External-content over value_code, indexing
+-- ONLY `label` — the `code` column is matched separately via idx_value_code_code
+-- (exact/prefix), since ~55% of codes are purely numeric and useless under FTS.
+-- Stoplisted junk labels (see _VALUE_CODE_STOPLIST_EXACT / _PREFIXES) are
+-- excluded at population time, so this index has fewer rows than value_code; the
+-- leaf value_code / value_set tables keep every row (search-only hiding).
+CREATE VIRTUAL TABLE value_code_fts USING fts5(
+    label,
+    content='value_code',
+    content_rowid='code_id',
     tokenize='unicode61'
 );
 
@@ -1890,6 +1934,24 @@ def _populate_fts(conn: sqlite3.Connection) -> None:
             v.description
         FROM variable v
     """)
+
+    # value_code_fts (#352): content-synced — rowid must match value_code.code_id.
+    # Indexes only `label`; stoplisted junk labels are excluded HERE so they never
+    # surface in search, while value_code keeps every row. The exclusion is a
+    # whole-label match (exact set OR sentinel prefix family); built from the two
+    # stoplist constants so the curated list lives in one place.
+    exact_placeholders = ",".join("?" * len(_VALUE_CODE_STOPLIST_EXACT))
+    prefix_clauses = " OR ".join("label LIKE ?" for _ in _VALUE_CODE_STOPLIST_PREFIXES)
+    conn.execute(
+        "INSERT INTO value_code_fts(rowid, label) "
+        "SELECT code_id, label FROM value_code "
+        f"WHERE label NOT IN ({exact_placeholders}) "
+        f"AND NOT ({prefix_clauses})",
+        (
+            *sorted(_VALUE_CODE_STOPLIST_EXACT),
+            *(f"{p}%" for p in _VALUE_CODE_STOPLIST_PREFIXES),
+        ),
+    )
     _progress("  FTS indexes built")
 
 
@@ -2958,6 +3020,18 @@ def materialize(
         )
     cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
     _progress(f"  {cvm_count:,} code×variable mappings")
+
+    # value_code.mapping_count (#352): precompute per-(code,label) variable count
+    # from the now-complete code_variable_map (base derivation + SCB top-up). Used
+    # by search(type="value") to downweight common labels — a generic enum shared
+    # by many variables is less discriminative than a rare one. Computed here (not
+    # in the FTS table) so it's JOINed at query time, never aggregated over the
+    # 4.1M-row map. Codes with no mapping keep the DEFAULT 0.
+    _progress("Computing value_code.mapping_count...")
+    conn.execute(
+        "UPDATE value_code SET mapping_count = ("
+        "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
+    )
 
     # A4.4e: SCB feed of the provider-blind `classification_candidate` table.
     # `populate_classifications` tags `variable_instance.classification_id` by

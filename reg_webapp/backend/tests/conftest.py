@@ -161,6 +161,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     )
     _seed_kon_edges(src)
     _seed_concept_groups(src, add_variable)
+    _seed_code_variable_map(src)
     _rebuild_fts(src)
     _stamp_manifest(src)
 
@@ -174,11 +175,58 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
 
 def _rebuild_fts(src: sqlite3.Connection) -> None:
     """Populate the external-content FTS5 indexes from their content tables, so
-    the slugged fixture exercises ``/api/search`` (#350). Base-table INSERTs
+    the slugged fixture exercises ``/api/search`` (#350/#352). Base-table INSERTs
     don't sync external-content FTS5; the 'rebuild' command repopulates each
-    index from its `content=` table — mirrors what the real build does."""
-    for index in ("register_fts", "variable_fts", "classification_fts"):
+    index from its `content=` table — mirrors what the real build does.
+
+    `value_code_fts` (#352) gets 'rebuild' too. The build-time stoplist exclusion
+    is NOT reproduced here (rebuild indexes every content row); the fixture's
+    value labels ("Man"/"Kvinna") aren't stoplisted anyway, so this is faithful
+    for the codes-group test."""
+    for index in (
+        "register_fts",
+        "variable_fts",
+        "classification_fts",
+        "value_code_fts",
+    ):
         src.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
+
+
+def _seed_code_variable_map(src: sqlite3.Connection) -> None:
+    """Map the kon binding's value codes to the kon variable (#352) so a code/value
+    search resolves each (code, label) to its owning variable and computes
+    mapping_count. Mirrors the real build's `code_variable_map` + mapping_count
+    pass over the value_set on the kon state.
+
+    Also links the "Man" code to the existing `sun2020` classification (a
+    `classification_code` row) so a code hit carries a non-empty
+    `classification_count` (the catalog-scoped owner side of #352). Runs AFTER
+    `_seed_concept_groups` (which inserts sun2020)."""
+    kon_vid = src.execute(
+        "SELECT variable_id FROM variable WHERE slug = 'kon'"
+    ).fetchone()[0]
+    src.execute(
+        "INSERT INTO code_variable_map (code_id, variable_id) "
+        "SELECT DISTINCT vsm.code_id, ? FROM value_set_member vsm "
+        "JOIN variable_state vs ON vs.value_set_id = vsm.value_set_id "
+        "WHERE vs.variable_id = ?",
+        (kon_vid, kon_vid),
+    )
+    src.execute(
+        "UPDATE value_code SET mapping_count = ("
+        "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
+    )
+    man_code_id = src.execute(
+        "SELECT code_id FROM value_code WHERE label = 'Man'"
+    ).fetchone()[0]
+    sun2020_id = src.execute(
+        "SELECT id FROM classification WHERE slug = 'sun2020'"
+    ).fetchone()[0]
+    src.execute(
+        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
+        "VALUES (?, ?, NULL, 1)",
+        (sun2020_id, man_code_id),
+    )
 
 
 def _seed_kon_edges(src: sqlite3.Connection) -> None:

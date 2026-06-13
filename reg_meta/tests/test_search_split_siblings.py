@@ -87,6 +87,20 @@ def _slug_by_column(conn) -> dict[str, str]:
     return {r["delivery_column_name"]: r["slug"] for r in rows}
 
 
+def _owner_slugs(hits: list) -> set[str]:
+    """Variable slugs across every code hit's owning-variable annotations (#352).
+
+    Each `type: "code"` hit (search field="value") carries owning variables under
+    `variables` as `{fqid, name, register}`; the variable slug is the binding
+    FQID's last segment (`provider/register/variable`)."""
+    slugs: set[str] = set()
+    for hit in hits:
+        for var in hit["variables"]:
+            assert var["fqid"], "owning variable should be FQID-addressable"
+            slugs.add(var["fqid"].split("/")[-1])
+    return slugs
+
+
 def test_value_search_attributes_code_to_owning_sibling_only(split_db: Path) -> None:
     conn = open_db(split_db)
     try:
@@ -100,12 +114,12 @@ def test_value_search_attributes_code_to_owning_sibling_only(split_db: Path) -> 
         # sibling — not Skolkommun, which shares var_id 920 but not the code.
         hits = search(conn, "Stockholms kommun", field="value")["results"]
         assert hits, "code should resolve to its owning variable"
-        leaked = {r["variable_slug"] for r in hits} - {hem_slug}
+        leaked = _owner_slugs(hits) - {hem_slug}
         assert not leaked, f"code leaked to non-owning sibling(s): {leaked}"
 
         # Symmetric check for the Skolkommun-only code.
         hits = search(conn, "Göteborgs kommun", field="value")["results"]
         assert hits
-        assert {r["variable_slug"] for r in hits} == {sko_slug}
+        assert _owner_slugs(hits) == {sko_slug}
     finally:
         conn.close()

@@ -664,11 +664,63 @@ class ClassificationSearchGroup(BaseModel):
     results: list[ClassificationSearchItem]
 
 
-# The extension seam: append `CodeSearchGroup` (#352) / `DocSearchGroup` (#354)
-# arms here — each a new `group` literal with its own result model — without
-# touching the three above.
+# ── Code/value search (#352; see reg_meta queries.search type="value") ───────
+# A code hit's actionable target is the VARIABLE or CLASSIFICATION carrying the
+# code, not the bare (code, label) pair — so each hit surfaces a bounded
+# representative slice of its owners plus the full count (the SPA shows "+N more").
+
+
+class CodeOwnerVariable(BaseModel):
+    """A variable that carries a code (#352). `register` is the owning register's
+    display name (context for the omnibox); the Python attr is `register_name` to
+    avoid the `BaseModel.register` method shadow (see `VariableRefModel`)."""
+
+    fqid: str | None
+    name: str | None = None
+    register_name: str | None = Field(default=None, alias="register")
+
+
+class CodeOwnerClassification(BaseModel):
+    """A classification that carries a code (#352) — catalog-scoped (no owning
+    register)."""
+
+    fqid: str | None
+    short_name: str | None = None
+    name: str | None = None
+
+
+class CodeSearchResult(BaseModel):
+    """A code/value hit (`value_code_fts` label match + code-shape match, #352).
+    `code`/`label` are the SCB value pair; `variables`/`classifications` are a
+    bounded representative slice of the owning entities (the researcher's actual
+    target), and `variable_count`/`classification_count` are the full totals before
+    the slice cap."""
+
+    type: Literal["code"] = "code"
+    code: str
+    label: str
+    variables: list[CodeOwnerVariable] = []
+    variable_count: int = 0
+    classifications: list[CodeOwnerClassification] = []
+    classification_count: int = 0
+
+
+class CodeSearchGroup(BaseModel):
+    """The `codes` result group (#352). `total_count` is the result count before
+    the per-group display limit (so the SPA can show "showing N of M")."""
+
+    group: Literal["codes"] = "codes"
+    total_count: int
+    results: list[CodeSearchResult]
+
+
+# The extension seam: append `DocSearchGroup` (#354) arms here — each a new
+# `group` literal with its own result model — without touching the others.
 SearchGroup = Annotated[
-    RegisterSearchGroup | VariableSearchGroup | ClassificationSearchGroup,
+    RegisterSearchGroup
+    | VariableSearchGroup
+    | ClassificationSearchGroup
+    | CodeSearchGroup,
     Field(discriminator="group"),
 ]
 

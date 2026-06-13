@@ -102,15 +102,20 @@ class TestSearch:
         assert data["data"]["total_count"] >= 1
 
     def test_search_value_code(self, db_path: str):
-        """Search for a value code name should return value-type results via code_variable_map."""
+        """Search for a value label returns `code`-type hits (#352): label FTS over
+        value_code_fts, each annotated with its owning variable(s) via
+        code_variable_map."""
         data, code = _run_json(["--db", db_path, "search", "--query", "Man"])
         assert code == 0
-        value_results = [r for r in data["data"]["results"] if r["type"] == "value"]
-        assert len(value_results) >= 1
-        assert value_results[0]["label"] == "Man"
-        assert value_results[0]["code"] == "1"
-        # The result names the specific owning variable (variable_id-grained map).
-        assert value_results[0]["variable_slug"]
+        code_results = [r for r in data["data"]["results"] if r["type"] == "code"]
+        assert len(code_results) >= 1
+        man = next(r for r in code_results if r["label"] == "Man")
+        assert man["code"] == "1"
+        # The hit names its owning variable(s) (variable_id-grained map), each
+        # FQID-addressable; the full owner count is also reported.
+        assert man["variables"], "code hit should carry owning variables"
+        assert man["variables"][0]["fqid"]
+        assert man["variable_count"] >= 1
 
     def test_search_years_filter(self, db_path: str):
         """--years filters to results with versions in the given range."""
@@ -929,10 +934,18 @@ class TestGetValues:
             "INSERT INTO value_set (value_set_id, member_hash) VALUES (2, ?)",
             (b"\xbb" * 32,),
         )
-        conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
-        conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
-        conn.execute("INSERT INTO value_code VALUES (3, '1', 'Pojke')")
-        conn.execute("INSERT INTO value_code VALUES (4, '2', 'Flicka')")
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (1, '1', 'Man')"
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (2, '2', 'Kvinna')"
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (3, '1', 'Pojke')"
+        )
+        conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (4, '2', 'Flicka')"
+        )
         conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
         conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
         conn.execute("INSERT INTO value_set_member VALUES (2, 3)")
@@ -1703,8 +1716,10 @@ def _overlap_db():
         "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
         (b"\xaa" * 32,),
     )
-    conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
-    conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
+    conn.execute("INSERT INTO value_code (code_id, code, label) VALUES (1, '1', 'Man')")
+    conn.execute(
+        "INSERT INTO value_code (code_id, code, label) VALUES (2, '2', 'Kvinna')"
+    )
     conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
     conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
     for valid_from, valid_to, label in (
@@ -1762,6 +1777,31 @@ class TestStateOverlapHelpers:
         assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, None)
         # Open-low request (lo=None → 0) matches a yearless window.
         assert _state_overlaps_years("0001-01-01", "9999-12-31", None, 1990)
+
+
+class TestIsCodeShaped:
+    """#352: a query is code-shaped (→ also matches by value_code.code) iff it has
+    a digit AND length >= 3. Plain text (no digit) or too-short queries do label
+    FTS only."""
+
+    def test_code_shaped_queries(self):
+        from reg_meta.queries import _is_code_shaped
+
+        assert _is_code_shaped("F32")  # ICD-10
+        assert _is_code_shaped("0180")  # numeric kommun code
+        assert _is_code_shaped("47.11")  # SNI with separator
+        # Leading/trailing whitespace is stripped before the length test.
+        assert _is_code_shaped("  F32 ")
+
+    def test_non_code_shaped_queries(self):
+        from reg_meta.queries import _is_code_shaped
+
+        assert not _is_code_shaped("Ja")  # no digit, too short
+        assert not _is_code_shaped("Nej")  # no digit (len 3 but text-only)
+        assert not _is_code_shaped("F3")  # has digit but len 2
+        assert not _is_code_shaped("12")  # digits but len 2
+        assert not _is_code_shaped("")  # empty
+        assert not _is_code_shaped("inkomst")  # plain word, no digit
 
 
 class TestGetValuesYearOverlap:

@@ -179,10 +179,10 @@ def _build_parser() -> argparse.ArgumentParser:
     search_p.add_argument(
         "--type",
         default="all",
-        choices=["register", "variable", "classification", "all"],
+        choices=["register", "variable", "classification", "value", "all"],
         help=(
-            "Filter results by entity type: register, variable, or "
-            "classification (default: all)."
+            "Filter results by entity type: register, variable, classification, "
+            "or value (codes/labels, #352) (default: all)."
         ),
     )
     search_p.add_argument(
@@ -1492,6 +1492,18 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
     table they'd render blank. Project their identity onto the generic columns
     (mirroring the group-row treatment) so they read sensibly there too; the
     pure-classification column set selects the native keys directly."""
+    if r.get("type") == "code":
+        # Code/value hits (#352) carry their owning variables/classifications as
+        # nested lists the table renderer can't show — flatten to a representative
+        # owner + the full counts (the full owner lists live in --format json).
+        r = dict(r)
+        first_var = (r.get("variables") or [{}])[0]
+        first_cls = (r.get("classifications") or [{}])[0]
+        r["variable_name"] = first_var.get("name", "")
+        r["register_name"] = first_var.get("register") or first_cls.get(
+            "short_name", ""
+        )
+        return r
     if r.get("type") != "group":
         if r.get("type") == "classification" or r.get("concept_group"):
             r = dict(r)
@@ -1544,14 +1556,16 @@ def _write_payload(
                 "var_id",
                 "variable_name",
             ]
-        elif types == {"value"}:
+        elif types == {"code"}:
+            # #352: one representative owner + the full counts; the complete
+            # owning-variable / classification lists are in --format json.
             cols = [
                 "code",
                 "label",
-                "register_id",
-                "var_id",
-                "variable_slug",
                 "variable_name",
+                "register_name",
+                "variable_count",
+                "classification_count",
             ]
         elif types == {"varname"}:
             cols = ["variable_name", "register_id", "register_name", "var_id"]

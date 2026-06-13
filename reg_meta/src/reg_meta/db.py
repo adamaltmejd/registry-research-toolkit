@@ -160,7 +160,15 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   build by `reg_meta_build.concept_groups` (regenerate-not-migrate).
 #   `Catalog.list_concept_groups` / `list_classification_groups` read them; a
 #   5.2.0 DB lacks the tables, so it's rejected via the minor gate.
-SCHEMA_VERSION = "5.3.0"
+# - 5.4.0: BATCHED additive cut for the schema-bump train (#352/#311/#371/#319 —
+#   each later PR appends its own sub-bullet under this entry). All additive, so
+#   one minor bump covers the batch; a 5.3.0 DB lacks every batch member's
+#   additions, so it's rejected via the minor gate. Members:
+#   - #352 (code/value search): additive `value_code.mapping_count` column
+#     (precomputed per-(code,label) variable count from code_variable_map, for
+#     rarity downweighting) + `value_code_fts` FTS5 index over value_code labels.
+#     A 5.3.0 DB has neither, so `search(type="value")` can't query it.
+SCHEMA_VERSION = "5.4.0"
 DB_FILENAME = "reg_meta.db"
 
 

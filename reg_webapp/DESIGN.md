@@ -202,33 +202,36 @@ concurrency smoke (the `TestClient` sequential default masks the bug).
 ## Global catalog search (`routes/search.py` + `conn.py`)
 
 `GET /api/search?q=&limit=` (#350) is the discovery surface behind the planned omnibox.
-It returns **typed result groups** over the three shipped FTS5 indexes, reusing
-reg_meta's concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp
-does NOT reimplement folding or FTS.
+It returns **typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
+concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp does NOT
+reimplement folding or FTS.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
 (`group` literal) carrying its own `total_count` + typed `results`. Today: `registers`,
 `variables` (leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
-vintage groups). **Codes (#352) and docs (#354) join as NEW arms of the `SearchGroup`
-union + new result models — existing groups are never reshaped.** The SPA must tolerate
-an unknown `group` value (skip it) so a new group can ship before the SPA renders it
-(the same payload-skew tolerance the `?period` additive fields rely on). Each result
-carries its navigable `fqid`; results within a group are pre-sorted by FTS rank.
+vintage groups), and `codes` (#352 — value-label hits annotated with their owning
+variables/classifications). **Docs (#354) join as a NEW arm of the `SearchGroup` union +
+new result models — existing groups are never reshaped.** The SPA must tolerate an
+unknown `group` value (skip it) so a new group can ship before the SPA renders it (the
+same payload-skew tolerance the `?period` additive fields rely on). Each result carries
+its navigable `fqid`; results within a group are pre-sorted by FTS rank.
 
-- **One reg_meta call per group** (`field="description"`, `type=` register/variable/
-  classification) so each group gets its own `total_count` + per-group `limit`.
-  `field="description"` is reg_meta's FTS path ONLY — the LIKE-based datacolumn/varname/
-  **value** fields are excluded, so codes are absent here (they're #352's own group).
+- **One reg_meta call per group**: register/variable/classification via the FTS
+  `field="description"` path; **codes (#352) via the `field="value", type="value"`
+  path** (`value_code_fts` label match + code-shape exact/prefix on `value_code.code`,
+  ranked bm25 + rarity-downweight, owner-annotated — see reg_meta DESIGN.md → FTS5
+  configuration). Each group gets its own `total_count` + per-group `limit`; codes don't
+  fold into concept groups (`fold_groups=False`).
 - **Input gates** (`query_input.validate_text_query` / `_validated_limit` /
   `_has_searchable_token`): a query is length-capped (422 over 200 chars) and
   NUL-rejected (422); `limit` is clamped to \[1, 50\] (not 422'd). A blank / whitespace
-  / punctuation-only query returns the three groups EMPTY (200, not 422) — it never
-  reaches reg_meta (whose LIKE label-fold would otherwise turn `%%` into a
-  match-everything). FTS-operator neutralization + prefix-matching + diacritic folding
-  all live in reg_meta (`_fts_match_query`); the webapp passes the raw query through.
-  The query reaches FTS only as a bound parameter (no SQLi surface), so the gates guard
-  cost/abuse, not injection.
+  / punctuation-only query returns ALL groups EMPTY (200, not 422) — it never reaches
+  reg_meta (whose LIKE label-fold would otherwise turn `%%` into a match-everything).
+  FTS-operator neutralization + prefix-matching + diacritic folding all live in reg_meta
+  (`_fts_match_query`); the webapp passes the raw query through. The query reaches FTS
+  only as a bound parameter (no SQLi surface), so the gates guard cost/abuse, not
+  injection.
 - **Golden-boost seam** (`_apply_golden_boost`): a no-op identity hook where #311's
   curated golden/starred boost will reorder within a group. Wired now so the ordering
   contract and call sites already exist.
@@ -820,7 +823,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | ------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | GET    | `/api/context`                                | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                         |
   | GET    | `/api/catalog`                                | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                          |
-  | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications`); extensible (codes/docs join as new groups). `?q=` required, `?limit=` per-group cap.                                                                                     |
+  | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible (docs join as a new group). `?q=` required, `?limit=` per-group cap.                                                                         |
   | GET    | `/api/docs/search`                            | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                   |
   | GET    | `/api/docs/doc/{identifier}`                  | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                              |
   | GET    | `/api/docs/for-variable`                      | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                  |
