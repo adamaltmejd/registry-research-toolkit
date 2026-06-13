@@ -782,6 +782,12 @@ CREATE TABLE code_variable_map (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     PRIMARY KEY (code_id, variable_id)
 ) WITHOUT ROWID;
+-- WITHOUT ROWID, so the (code_id, variable_id) PK can't serve a bare
+-- `variable_id` lookup. The #352 codes search annotates each code hit with its
+-- owning variables, whose per-variable count correlated-subquery
+-- (`COUNT(*) ... WHERE variable_id = ?`) full-scans this 4.1M-row table without
+-- this index (inkomst 286s → 0.51s with it). Mirrors idx_value_set_member_code.
+CREATE INDEX idx_code_variable_map_variable ON code_variable_map(variable_id);
 
 -- Curated cross-register / cross-provider equivalence edges (see reg_meta/DESIGN.md → Composite registers and source tracking).
 -- **Variable grain**: endpoints are `(provider, register, variable)` slug

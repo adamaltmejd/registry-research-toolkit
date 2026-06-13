@@ -184,7 +184,17 @@ from .errors import EXIT_CONFIG, RegMetaError
 #     read-time from this sibling table, consulted by `resolve_at`). EMPTY for
 #     non-merged variables. A 5.3.0 DB lacks it, so the resolver can't expand
 #     merged families.
-SCHEMA_VERSION = "5.4.0"
+# - 5.5.0 (#352 codes-search perf fix): additive
+#   `idx_code_variable_map_variable` on `code_variable_map(variable_id)`. The
+#   #352 codes search's owning-variable annotation runs a per-variable count
+#   correlated subquery that full-scans the 4.1M-row `code_variable_map` (its
+#   WITHOUT ROWID `(code_id, variable_id)` PK can't serve a bare `variable_id`
+#   lookup) — inkomst took 286s, hanging the live omnibox; the index drops it to
+#   0.51s. A 5.4.0 DB lacks it. Like #371's covering index, even a pure additive
+#   index rides a minor cut: the compat gate ignores PATCH, so a patch bump would
+#   leave stale 5.4.0 DBs (no index) silently accepted — the minor gate forces a
+#   rebuild that actually creates the index.
+SCHEMA_VERSION = "5.5.0"
 DB_FILENAME = "reg_meta.db"
 
 
