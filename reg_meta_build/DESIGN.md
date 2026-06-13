@@ -1085,7 +1085,10 @@ and get their windows from the merge.
 ends in a month token with stem == the curated `family_stem`. The merge: picks the
 lex-min member `variable_id` as the SURVIVOR; sets its name to the family label and
 registers `fold_slug_hints[survivor] = family_stem` so it slugs as the stem; emits one
-`variable_alias_window` row per (column, delivered year); re-points the members'
+`variable_alias_window` row per (column, delivered year) — **ongoing states**
+(`valid_to = 9999`) are clamped to the opening year only, so an ongoing monthly family
+gets windows for its first year but not beyond (a known limitation; the 4 shipped LISA
+families are all bounded 2019–2023 and are unaffected); re-points the members'
 `variable_alias` (so `get_datacolumns` still returns all 12) AND the SCB cvid-scratch
 `variable_instance.variable_id` (the `code_variable_map` top-up reads it — leaving the
 sibling id dangles the FK); then deletes the N-1 sibling `variable_state` / `variable` /
