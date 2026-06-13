@@ -357,6 +357,100 @@ describe("SearchView — typed result groups (#379)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/dispink-2019");
   });
 
+  it("renders two folded concept groups sharing a group_key across registers (no each_key_duplicate crash)", async () => {
+    // The `inkomst` production crash (#379 omnibox-dup-key): the variables group
+    // returns TWO type:"group" results with the SAME group_key ("tfoab") from
+    // DIFFERENT registers (IoT vs LINDA). Concept-group keys are register-scoped
+    // unique (#322), so the same key legitimately recurs across registers. Keying
+    // the each by group_key throws Svelte's each_key_duplicate at render time,
+    // crashing the WHOLE results render — the omnibox stays on "Searching…"
+    // forever. Index keys can't collide; this asserts both rows render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "inkomst",
+      groups: [
+        {
+          group: "variables",
+          total_count: 2,
+          results: [
+            {
+              type: "group",
+              group_key: "tfoab",
+              group_label: "Inkomst IoT",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "IoT",
+              source: "token",
+              members: [
+                { fqid: "scb/iot/tfoab-2019", name: "IoT 2019", facets: [] },
+              ],
+            },
+            {
+              type: "group",
+              group_key: "tfoab",
+              group_label: "Inkomst LINDA",
+              kind: "variable",
+              label_matched: false,
+              matched_count: 1,
+              member_count: 1,
+              register: "LINDA",
+              source: "token",
+              members: [
+                {
+                  fqid: "scb/linda/tfoab-2019",
+                  name: "LINDA 2019",
+                  facets: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("inkomst");
+    await render(SearchView);
+
+    // The view RENDERS (didn't crash / stay on "Searching…"): the group label
+    // and both register-distinct concept-group rows are visible.
+    await expect
+      .element(page.getByRole("heading", { name: "Variables" }))
+      .toBeVisible();
+    await expect.element(page.getByText("Inkomst IoT")).toBeVisible();
+    await expect.element(page.getByText("Inkomst LINDA")).toBeVisible();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+  });
+
+  it("renders two leaf hits sharing a null fqid and the same name (no each_key_duplicate crash)", async () => {
+    // The leaf-collision twin of the concept-group case: a null `fqid` plus an
+    // identical `name` made the old `(result.fqid ?? result.name)` key collide,
+    // crashing the render. Index keys tolerate it — both rows must render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "orphan",
+      groups: [
+        {
+          group: "registers",
+          total_count: 2,
+          results: [
+            { type: "register", fqid: null, name: "Orphan", purpose: "first" },
+            { type: "register", fqid: null, name: "Orphan", purpose: "second" },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("orphan");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    await expect.element(page.getByText("first")).toBeVisible();
+    await expect.element(page.getByText("second")).toBeVisible();
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+  });
+
   it("renders a null-fqid hit as plain text (not a link)", async () => {
     vi.mocked(search).mockResolvedValue({
       kind: "search",
