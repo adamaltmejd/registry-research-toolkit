@@ -96,6 +96,7 @@ class TestLoader:
             '[[description]]\nregister = "scb/agi"\nvariable = "kon"\n',  # no description
             '[[description]]\nregister = "agi"\nvariable = "kon"\ndescription = "K"\n',  # 1-seg FQID
             '[[description]]\nregister = "scb/x/y"\nvariable = "kon"\ndescription = "K"\n',  # 3-seg
+            '[[description]]\nregister = "scb/agi"\nvariable = "a/b"\ndescription = "K"\n',  # variable path
         ],
     )
     def test_malformed_entry_fails(self, tmp_path: Path, body: str) -> None:

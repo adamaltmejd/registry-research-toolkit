@@ -120,6 +120,18 @@ def load_delivery_enrichment(path: Path | None) -> DeliveryEnrichment:
                 'Give `register = "scb/agi"`-style 2-segment FQIDs.',
             )
         variable = _require_str(entry, "variable", "[[description]]")
+        if "/" in variable:
+            # The variable is a single register-local slug, not an FQID path. A
+            # multi-segment value (`foo/bar`) is a maintainer typo that would
+            # otherwise be silently counted `unresolved` (lenient resolve) — but
+            # a malformed reference must fail the strict structural load path.
+            raise curation_error(
+                "delivery_enrichment_invalid",
+                f"delivery_enrichment [[description]] {register_fqid} variable "
+                f"{variable!r} must be a single slug segment, not a path.",
+                'Give just the variable slug (`variable = "avdr-prel-skatt"`), '
+                "not a `provider/register/variable` FQID.",
+            )
         description = _require_str(entry, "description", "[[description]]")
         provenance = entry.get("provenance", "")
         if not isinstance(provenance, str):

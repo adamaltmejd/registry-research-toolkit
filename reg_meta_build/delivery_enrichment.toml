@@ -1,17 +1,21 @@
 # Delivery-list enrichment overlay — global build (#365 PR1a).
 #
 # GENERATED, do not hand-sort. Source: SWECOV delivery / variable lists
-# (untracked input_data/swecov/) → build_catalog.py `globals` →
-# derived/global_enrichment.json → projected here. Regenerate when the
-# delivery lists or the variable slugs change; a row whose (register,
-# variable) no longer resolves is skipped at build time with a warning.
+# (untracked input_data/swecov/) -> build_catalog.py `globals` ->
+# derived/global_enrichment.json -> projected here against a fresh reg_meta.db.
 #
-# [[description]] gap-fills an EMPTY variable.description only (an official
-# SCB/SOS description always wins). Projection rules: whitespace collapsed,
-# trailing footnote "*" stripped; a (register, variable) documented with
-# CONFLICTING descriptions across delivery vintages is DROPPED here and left
-# to the version-axis fold (#375) — 8 such pairs excluded.
-# 383 backfills across 27 registers.
+# [[description]] gap-fills an EMPTY variable.description only. Generation guards:
+#  1. exact column grounding — the delivery column (pseudonym P1105_LopNr_ prefix
+#     stripped) must equal one of the variable's real delivery columns; no fuzzy
+#     grounding.
+#  2. generic survey/helper codes excluded (^F\d+ / ^FR\d+ / ^help\d*) — they
+#     collide across surveys and mis-ground (e.g. utbildningsanalyser F-items).
+#  3. version-axis SUN slugs (^sun\d{4}) deferred to the version-axis fold (#375).
+#  4. grade (betyg-) variables never take a participation (deltar) description —
+#     the SVA column is overloaded (grade vs participation flag).
+# Projection also: whitespace collapsed, trailing footnote "*" stripped, and
+# (register, variable) pairs with conflicting cross-vintage descriptions dropped.
+# 367 backfills across 27 registers.
 
 [[description]]
 register = "scb/agi"
@@ -675,12 +679,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/grundskola-ak9"
-variable = "betyg-i-amnet-svenska-som-andrasprak"
-description = "Elever deltar i SVA (Svenska som andrasspråk)"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/grundskola-ak9"
 variable = "betyg-i-amnet-teknik"
 description = "Betyg i ämnet teknik"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
@@ -731,12 +729,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 register = "scb/grundskola-betyg-ak6"
 variable = "betyg-i-amnet-idrott-och-halsa"
 description = "Betyg i ämnet idrott och hälsa"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/grundskola-betyg-ak6"
-variable = "betyg-i-amnet-svenska-som-andrasprak"
-description = "Elever deltar i SVA (Svenska som andrasspråk)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
@@ -2007,24 +1999,6 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
 register = "scb/lisa"
-variable = "sun2000inr"
-description = "Utbildningsinriktning, högsta avslutade, SUN2000"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/lisa"
-variable = "sun2020inr"
-description = "Utbildningsinriktning, högsta avslutade, SUN2000"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/lisa"
-variable = "sun2020niva"
-description = "Utbildningsnivå, högsta avslutade, SUN2000"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/lisa"
 variable = "syssstat19"
 description = "Sysselsättningsstatus enligt justerad metod 2019"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
@@ -2210,24 +2184,6 @@ description = "Källa för uppgift om högsta utbildning"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]
-register = "scb/ureg"
-variable = "sun2000inr"
-description = "Utbildningsinriktning, högsta avslutade, SUN2000"
-provenance = "Bilaga 2 - Variabellista.xlsx"
-
-[[description]]
-register = "scb/ureg"
-variable = "sun2020grp"
-description = "Utbildningsgrupp, högsta avslutade, SUN2000"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/ureg"
-variable = "sun2020inr"
-description = "Utbildningsinriktning, högsta avslutade, SUN2000"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
 register = "scb/utbildningsanalyser"
 variable = "distansla2021-intervall"
 description = "Perioder av undervisning på distans under läsåret 2020/21 - intervall"
@@ -2241,56 +2197,8 @@ provenance = "Bilaga 2 - Variabellista.xlsx"
 
 [[description]]
 register = "scb/utbildningsanalyser"
-variable = "nuvarande-arbete-jamfort-med-tidigare-inom-skolvasendet"
-description = "Löpande stöd för att använda digitala verktyg"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "nuvarande-arbete-jamfort-med-tidigare-inom-skolvasendet-2"
-description = "Fortbildning i pedagogik vid undervisning på distans"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "nuvarande-arbete-jamfort-med-tidigare-inom-skolvasendet-3"
-description = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "nuvarande-arbete-jamfort-med-tidigare-inom-skolvasendet-4"
-description = "Löpande möten i personalgruppen"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
 variable = "personnummer"
 description = "Löpnummer i populationen"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "utbildningsniva"
-description = "Hjälpvariabel 2 - distans"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "vistelsetid-utomlands"
-description = "Stöd för bedömning istället för nationella proven - Vet inte"
-provenance = "Bilaga 2 - Variabellista.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "vistelsetid-utomlands-2"
-description = "Grad av lärarleddhet vid distans jämfört med närundervisning"
-provenance = "Bilaga 2 - Variabellista.xlsx"
-
-[[description]]
-register = "scb/utbildningsanalyser"
-variable = "vistelsetid-utomlands-4"
-description = "Metod för närvarokontroll - vet inte"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[description]]

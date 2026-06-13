@@ -1237,9 +1237,21 @@ flavor (scope follows what a fact is *about*, not where it was learned; see #365
 curated input is a package-root `reg_meta_build/delivery_enrichment.toml` (like
 `concept_groups.toml`, NOT under `fqid_slugs/`), a **generated** extract: the untracked
 `input_data/swecov/build_catalog.py globals` pass emits `global_enrichment.json`, which
-is projected into the committed TOML (whitespace collapsed, trailing footnote `*`
-stripped, `(register, variable)` pairs with conflicting cross-vintage descriptions
-dropped to the version-axis fold #375).
+is projected into the committed TOML against a fresh `reg_meta.db` under three grounding
+guards, so the committed rows are column-verified rather than fuzzily matched:
+
+1. **Exact column grounding** — the delivery column (pseudonymization `P1105_LopNr_`
+   prefix stripped) must equal one of the variable's real `delivery_column_name`s; a row
+   that does not ground exactly is dropped, never fuzzy-matched.
+2. **Generic survey/helper codes excluded** (`^F\d+` / `^FR\d+` / `^help\d*`) — one such
+   code is reused across unrelated surveys and so column-matches the wrong variable (the
+   SOS-styrtabell generic-column hazard #373 in SCB survey form, e.g.
+   `utbildningsanalyser`'s `F11`).
+3. **Version-axis SUN slugs deferred** (`^sun\d{4}`) — their descriptions are
+   vintage-specific and belong to the version-axis fold (#375).
+
+Plus whitespace collapsed, trailing footnote `*` stripped, and `(register, variable)`
+pairs with conflicting cross-vintage descriptions dropped.
 
 PR1a ships the **description-backfill** kind only (`[[description]]`: fill an empty
 `variable.description` from the delivery-list prose); delivery-column aliases and
