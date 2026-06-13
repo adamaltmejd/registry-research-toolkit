@@ -243,3 +243,149 @@ def test_register_scope_returns_deep_in_scope_hit(conn: sqlite3.Connection) -> N
     )
     assert scoped["total_count"] == 1, scoped["total_count"]
     assert [r["label"] for r in scoped["results"]] == ["Diagnos A"]
+
+
+# --------------------------------------------------------------------------- #
+# #352 perf: annotate only the shown page (unscoped path).
+# --------------------------------------------------------------------------- #
+
+
+def test_annotate_only_the_page_unscoped(
+    conn: sqlite3.Connection, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """THE regression guard for the perf fix: an unscoped (`reg_ids is None`)
+    value query matching MANY codes must annotate AT MOST `limit` (page) code_ids,
+    NOT the full match set — owner annotation is deferred to the shown page."""
+    from reg_meta import queries
+
+    _seed_n_label_codes(conn, 30, "Diagnos")
+
+    seen_batches: list[list[int]] = []
+    real_batch = queries._code_owner_annotations_batch
+
+    def _spy(c: sqlite3.Connection, code_ids: list[int], reg_ids: object) -> object:
+        seen_batches.append(list(code_ids))
+        return real_batch(c, code_ids, reg_ids)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(queries, "_code_owner_annotations_batch", _spy)
+
+    limit = 5
+    out = search(conn, "Diagnos", field="value", type="value", limit=limit)
+
+    # Every batch call (there is exactly one, post-slice) saw at most `limit` codes.
+    assert seen_batches, "owner annotation must run for the shown page"
+    for batch in seen_batches:
+        assert len(batch) <= limit, (
+            f"annotated {len(batch)} codes; the page is only {limit} — "
+            "the full match set is being annotated (perf regression)"
+        )
+    # Sanity: more codes matched than were annotated.
+    assert out["total_count"] == 30
+    assert len(out["results"]) == limit
+
+
+def test_total_count_unchanged_with_deferred_annotation(
+    conn: sqlite3.Connection,
+) -> None:
+    """total_count stays the FULL match count under deferred annotation, and the
+    page is limit-bounded (the unscoped arm returns every ranked row, just
+    unannotated, so len(all_results) is identical to the old full-annotate path)."""
+    _seed_n_label_codes(conn, 12, "Diagnos")
+    out = search(conn, "Diagnos", field="value", type="value", limit=4)
+    assert out["total_count"] == 12
+    assert len(out["results"]) == 4
+
+
+def test_page_rows_carry_correct_owners(conn: sqlite3.Connection) -> None:
+    """Owner-annotation CONTENT of the shown rows is identical to the old
+    full-annotate behaviour: a code with known owners is correctly annotated on
+    the page, and the internal `_code_id` marker never leaks out."""
+    _seed_register(conn, 1, "reg")
+    _seed_code(conn, 1, "7", "Delad kod")
+    for i in range(3):
+        vid = _seed_variable(conn, 1, str(100 + i), f"Var{i}", f"var{i}")
+        _map(conn, 1, vid)
+    _finalize(conn)
+
+    results = search(conn, "Delad kod", field="value", type="value")["results"]
+    hit = next(r for r in results if r["label"] == "Delad kod")
+    assert hit["variable_count"] == 3
+    assert len(hit["variables"]) == 3
+    assert hit["classification_count"] == 0
+    assert hit["classifications"] == []
+    # The deferred-annotation marker must be stripped before results go public.
+    assert "_code_id" not in hit
+
+
+def test_offset_page_annotated(conn: sqlite3.Connection) -> None:
+    """Pagination past offset 0 annotates the RIGHT page: the second page's rows
+    carry their own correct owner annotation (not the first page's)."""
+    # Two distinctly-owned codes sharing the label token, deterministic order.
+    _seed_register(conn, 1, "reg")
+    _seed_code(conn, 1, "1", "Diagnos AA")  # 1 owner
+    _seed_code(conn, 2, "2", "Diagnos BB")  # 2 owners
+    v0 = _seed_variable(conn, 1, "10", "V0", "v0")
+    _map(conn, 1, v0)
+    v1 = _seed_variable(conn, 1, "11", "V1", "v1")
+    v2 = _seed_variable(conn, 1, "12", "V2", "v2")
+    _map(conn, 2, v1)
+    _map(conn, 2, v2)
+    _finalize(conn)
+
+    page1 = search(conn, "Diagnos", field="value", type="value", limit=1, offset=0)
+    page2 = search(conn, "Diagnos", field="value", type="value", limit=1, offset=1)
+    assert len(page1["results"]) == 1
+    assert len(page2["results"]) == 1
+    # Disjoint pages, each annotated with its OWN code's owner count.
+    p1, p2 = page1["results"][0], page2["results"][0]
+    assert p1["code"] != p2["code"]
+    by_code = {p1["code"]: p1, p2["code"]: p2}
+    assert by_code["1"]["variable_count"] == 1
+    assert by_code["2"]["variable_count"] == 2
+    assert "_code_id" not in p1 and "_code_id" not in p2
+
+
+def test_reg_scope_does_not_use_code_id_marker(conn: sqlite3.Connection) -> None:
+    """The reg-scoped (`--register`) arm is byte-identical to before: it annotates
+    the full set + filters out-of-scope codes + reports the filtered total_count,
+    and its rows never carry the `_code_id` marker (annotated up front, not
+    deferred)."""
+    _seed_register(conn, 1, "rega")
+    _seed_register(conn, 2, "regb")
+    for i in range(4):
+        _seed_code(conn, 200 + i, str(200 + i), f"Diagnos B{i:02d}")
+        vid_b = _seed_variable(conn, 2, str(200 + i), f"BVar{i}", f"bvar{i}")
+        _map(conn, 200 + i, vid_b)
+    _seed_code(conn, 299, "299", "Diagnos A")
+    vid_a = _seed_variable(conn, 1, "299", "AVar", "avar")
+    _map(conn, 299, vid_a)
+    _finalize(conn)
+
+    scoped = search(conn, "Diagnos", field="value", type="value", register="rega")
+    # Only the regA-owned code survives the reg-scope drop.
+    assert scoped["total_count"] == 1
+    assert [r["label"] for r in scoped["results"]] == ["Diagnos A"]
+    assert all("_code_id" not in r for r in scoped["results"])
+    assert scoped["results"][0]["variable_count"] == 1
+
+
+def test_type_all_only_code_rows_annotated(conn: sqlite3.Connection) -> None:
+    """In a mixed `type="all"` page, only `type=="code"` rows get owner annotation;
+    other-type rows pass through untouched and no row leaks `_code_id`."""
+    _seed_register(conn, 1, "reg")
+    # A variable whose NAME matches the query (a varname/all hit), plus a code
+    # whose label matches it too.
+    _seed_variable(conn, 1, "10", "Cancer var", "cancer-var")
+    _seed_code(conn, 1, "1", "Cancer kod")
+    vid2 = _seed_variable(conn, 1, "11", "Owner", "owner")
+    _map(conn, 1, vid2)
+    _finalize(conn)
+
+    out = search(conn, "Cancer", field="all", type="all", fold_groups=False)
+    results = out["results"]
+    types = {r["type"] for r in results}
+    assert "code" in types, "the code/value row must be present"
+    code_row = next(r for r in results if r["type"] == "code")
+    assert code_row["variable_count"] == 1
+    # No row (code or otherwise) leaks the internal marker.
+    assert all("_code_id" not in r for r in results)
