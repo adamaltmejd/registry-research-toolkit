@@ -348,3 +348,36 @@ export function downloadOrderCsv(draft: ProjectDataBody): Promise<void> {
 export function downloadBundle(draft: ProjectDataBody): Promise<void> {
   return apiPostForBlob("/bundle", draft, "mona_bundle.py");
 }
+
+// ── Search surface (#379) ───────────────────────────────────────────────────
+// `GET /api/search?q=` returns four ORDERED, typed result groups over the shipped
+// FTS indexes (registers / variables / classifications / codes). Each group's
+// `total_count` is the full match count BEFORE the per-request `limit`, so the SPA
+// renders "showing N of M". A folded concept-group row (`type:"group"`) is NOT
+// itself FQID-addressable — its `members` carry the real leaf FQIDs. A `fqid` can
+// be `null` on any leaf (a hit with no resolvable catalog node).
+
+export type SearchResponse = Schemas["SearchResponse"];
+export type RegisterSearchGroup = Schemas["RegisterSearchGroup"];
+export type VariableSearchGroup = Schemas["VariableSearchGroup"];
+export type ClassificationSearchGroup = Schemas["ClassificationSearchGroup"];
+export type CodeSearchGroup = Schemas["CodeSearchGroup"];
+export type RegisterSearchResult = Schemas["RegisterSearchResult"];
+export type VariableSearchResult = Schemas["VariableSearchResult"];
+export type ClassificationSearchResult = Schemas["ClassificationSearchResult"];
+export type ConceptGroupSearchResult = Schemas["ConceptGroupSearchResult"];
+export type CodeSearchResult = Schemas["CodeSearchResult"];
+export type CodeOwnerVariable = Schemas["CodeOwnerVariable"];
+export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
+
+/** Search the catalog. `q` is the raw user query (encoded here); `limit` is the
+ * per-group result cap — omit it to use the server default (20, clamped ≤50). A
+ * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
+ * error. */
+export function search(q: string, limit?: number): Promise<SearchResponse> {
+  const params = new URLSearchParams({ q });
+  if (limit !== undefined) {
+    params.set("limit", String(limit));
+  }
+  return apiGet<SearchResponse>(`/search?${params}`);
+}
