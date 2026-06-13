@@ -32,10 +32,11 @@ def test_code_variable_map_variable_index_exists(fixture_db: Path) -> None:
 
 
 def test_owner_count_subquery_uses_variable_index() -> None:
-    """EXPLAIN QUERY PLAN proves the owner-count correlated subquery searches the
-    `variable_id` index — no `SCAN code_variable_map`. This is the exact subquery
-    shape from `reg_meta.queries._code_owner_annotations_batch` that hung the live
-    omnibox (full-scan per owner row); the plan is deterministic given the index."""
+    """EXPLAIN QUERY PLAN proves the owner-count correlated subquery SEARCHES the
+    `variable_id` index rather than full-scanning the table. This is the exact
+    subquery shape from `reg_meta.queries._code_owner_annotations_batch` that hung
+    the live omnibox (full-scan per owner row); the plan is deterministic given the
+    index."""
     conn = build_slugged_db(classification=None)
     plan = conn.execute(
         "EXPLAIN QUERY PLAN "
@@ -45,4 +46,8 @@ def test_owner_count_subquery_uses_variable_index() -> None:
     ).fetchall()
     detail = " ".join(str(r[-1]) for r in plan)
     assert "idx_code_variable_map_variable" in detail, detail
-    assert "SCAN code_variable_map" not in detail, detail
+    # The subquery aliases the table `c2`, so the plan names it `c2`: WITH the
+    # index it's `SEARCH c2 USING COVERING INDEX ...`; WITHOUT it the plan degrades
+    # to a full `SCAN c2`. So the real guard is the absence of `SCAN c2` (asserting
+    # `SCAN code_variable_map` would never fire — the alias hides the table name).
+    assert "SCAN c2" not in detail, detail
