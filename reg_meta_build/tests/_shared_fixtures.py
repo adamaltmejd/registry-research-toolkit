@@ -31,6 +31,7 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.column_merges as _cm
     import reg_meta_build.concept_groups as _cg
     import reg_meta_build.db as _db
+    import reg_meta_build.delivery_enrichment as _de
     import reg_meta_build.fold_overrides as _fo
 
     mp = pytest.MonkeyPatch()
@@ -43,6 +44,11 @@ def _no_repo_curation() -> Iterator[None]:
     # patch it there too.
     mp.setattr(_cg, "repo_concept_groups_path", lambda: None)
     mp.setattr(_db, "repo_concept_groups_path", lambda: None)
+    # delivery_enrichment.toml's backfills are keyed on real scb slugs; against a
+    # fixture DB every one is unresolved (lenient, but 383 wasted lookups + a
+    # warning per build). db.py imported the symbol directly — patch it there.
+    mp.setattr(_de, "repo_delivery_enrichment_path", lambda: None)
+    mp.setattr(_db, "repo_delivery_enrichment_path", lambda: None)
     yield
     mp.undo()
 

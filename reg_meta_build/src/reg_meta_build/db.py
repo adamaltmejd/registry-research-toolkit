@@ -31,6 +31,11 @@ from .concept_groups import (
     materialize_concept_groups,
     repo_concept_groups_path,
 )
+from .delivery_enrichment import (
+    apply_delivery_enrichment,
+    load_delivery_enrichment,
+    repo_delivery_enrichment_path,
+)
 from .fqid_slugs import (
     load_lineage_config,
     materialize_same_as_edges,
@@ -2820,6 +2825,24 @@ def materialize(
             f"{cg_counts['curated_groups']:,} curated; "
             f"{cg_counts['grouped_variables']:,} variables + "
             f"{cg_counts['grouped_classifications']:,} classifications grouped)"
+        )
+
+        # Delivery-list description backfill (#365 PR1a) — fill empty
+        # variable.description from curated delivery-list prose. Runs after
+        # populate_variable_slugs (resolves (register, variable) off stored
+        # slugs); gap-fill only (never overwrites an official description).
+        # Slug-dependent, so it lives in this --skip-slugs-guarded block.
+        de_counts = apply_delivery_enrichment(
+            conn,
+            load_delivery_enrichment(repo_delivery_enrichment_path()),
+            providers=active_providers,
+            warn=_progress,
+        )
+        row_counts["description_backfills"] = de_counts["applied"]
+        _progress(
+            f"  {de_counts['applied']:,} description backfills "
+            f"({de_counts['skipped']:,} already set, "
+            f"{de_counts['unresolved']:,} unresolved)"
         )
 
     # same_as edges. Runs *after* populate_slugs so register /

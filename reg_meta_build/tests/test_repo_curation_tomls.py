@@ -20,6 +20,7 @@ from pathlib import Path
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.column_merges import load_column_merges
 from reg_meta_build.concept_groups import load_concept_groups
+from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.fold_overrides import load_fold_overrides
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
@@ -44,3 +45,11 @@ def test_repo_concept_groups_parses() -> None:
     # Build-time resolution (register/group/variable exist) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(len(g.members) >= 2 for g in groups)
+
+
+def test_repo_delivery_enrichment_parses() -> None:
+    enr = load_delivery_enrichment(_ROOT / "delivery_enrichment.toml")
+    assert enr.descriptions  # the #365 global description backfills ship with the repo
+    # Slug RESOLUTION is lenient + maintainer-build territory; load-time shape
+    # (2-segment FQID, unique (register, variable)) is this gate.
+    assert all(d.provider and d.register and d.variable for d in enr.descriptions)

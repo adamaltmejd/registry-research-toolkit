@@ -1228,6 +1228,54 @@ the ≥2-member floor always, plus per-source volume floors (edge/month/curated/
 `corpus=True` builds so a derivation pass that silently stops matching fails the
 maintainer gate.
 
+## Delivery-list enrichment (#365)
+
+`delivery_enrichment.py` applies a maintainer-curated overlay of catalog facts extracted
+from steward delivery / variable lists that describe the **shared** SCB/SOS world — not
+steward-private content — so they belong in the normal *global* build, not a steward
+flavor (scope follows what a fact is *about*, not where it was learned; see #365). The
+curated input is a package-root `reg_meta_build/delivery_enrichment.toml` (like
+`concept_groups.toml`, NOT under `fqid_slugs/`), a **generated** extract: the untracked
+`input_data/swecov/build_catalog.py globals` pass emits `global_enrichment.json`, which
+is projected into the committed TOML against a fresh `reg_meta.db` under three grounding
+guards, so the committed rows are column-verified rather than fuzzily matched:
+
+1. **Exact column grounding** — the delivery column (pseudonymization `P1105_LopNr_`
+   prefix stripped) must equal one of the variable's real `delivery_column_name`s; a row
+   that does not ground exactly is dropped, never fuzzy-matched.
+2. **Generic survey/helper codes excluded** (`^F\d+` / `^FR\d+` / `^help\d*`) — one such
+   code is reused across unrelated surveys and so column-matches the wrong variable (the
+   SOS-styrtabell generic-column hazard #373 in SCB survey form, e.g.
+   `utbildningsanalyser`'s `F11`).
+3. **Version-axis SUN slugs deferred** (`^sun\d{4}`) — their descriptions are
+   vintage-specific and belong to the version-axis fold (#375).
+
+Plus whitespace collapsed, trailing footnote `*` stripped, and `(register, variable)`
+pairs with conflicting cross-vintage descriptions dropped.
+
+PR1a ships the **description-backfill** kind only (`[[description]]`: fill an empty
+`variable.description` from the delivery-list prose); delivery-column aliases and
+gap-fill variable grafts are the next slice (#365 PR1b — the loader returns a
+`DeliveryEnrichment` wrapper so those tuples join without a signature change). The apply
+pass runs in the same slug-gated post-pass block as concept groups (after
+`populate_variable_slugs`, so `(register, variable)` resolves off stored slugs) and is
+provider-gated like the classification seed.
+
+Two guards, both deliberate:
+
+- **Gap-fill only.** A backfill never overwrites a non-empty description (the `UPDATE`'s
+  `WHERE description IS NULL OR TRIM(description) = ''` clause), so an official SCB/SOS
+  description always outranks the delivery list, and the pass is idempotent.
+- **Strict load, lenient resolve.** A *structural* TOML defect (duplicate
+  `(register, variable)`, malformed FQID) FAILS the build (EXIT_CONFIG) like the other
+  curation surfaces. But a backfill whose slug no longer *resolves* is skipped + counted
+  (`unresolved` in the build summary), NOT a build failure — unlike `concept_groups`'
+  fail-fast. Rationale: pre-v1 variable slugs regenerate each build under `UNFROZEN`
+  (#209), and a gap-fill description is non-structural, so one stale row must not make
+  the whole global build fragile. Regenerate the TOML when the count drifts. No snapshot
+  / immutability machinery and no `SCHEMA_VERSION` bump — it only writes `description`
+  text on existing rows.
+
 ## Slug immutability
 
 Both TOML files — hand-curated `<provider>.toml` and build-generated

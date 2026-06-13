@@ -1,0 +1,2220 @@
+# Delivery-list enrichment overlay — global build (#365 PR1a).
+#
+# GENERATED, do not hand-sort. Source: SWECOV delivery / variable lists
+# (untracked input_data/swecov/) -> build_catalog.py `globals` ->
+# derived/global_enrichment.json -> projected here against a fresh reg_meta.db.
+#
+# [[description]] gap-fills an EMPTY variable.description only. Generation guards:
+#  1. exact column grounding — the delivery column (pseudonym P1105_LopNr_ prefix
+#     stripped) must equal one of the variable's real delivery columns; no fuzzy
+#     grounding.
+#  2. generic survey/helper codes excluded (^F\d+ / ^FR\d+ / ^help\d*) — they
+#     collide across surveys and mis-ground (e.g. utbildningsanalyser F-items).
+#  3. version-axis SUN slugs (^sun\d{4}) deferred to the version-axis fold (#375).
+#  4. grade (betyg-) variables never take a participation (deltar) description —
+#     the SVA column is overloaded (grade vs participation flag).
+# Projection also: whitespace collapsed, trailing footnote "*" stripped, and
+# (register, variable) pairs with conflicting cross-vintage descriptions dropped.
+# 367 backfills across 27 registers.
+
+[[description]]
+register = "scb/agi"
+variable = "avdr-prel-skatt"
+description = "Avdragen preliminär skatt"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "avdr-skatt-sink"
+description = "Avdragen skatt, SINK"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "avrakning-avgiftsfri-ers"
+description = "Avräkning från avgiftsfri ersättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "bilersattning"
+description = "Bilersättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "bostadsf-ej-smahus-ulag-ag"
+description = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "bostadsf-ej-smahus-ulag-ea"
+description = "Bostadsförmån som är underlag för egenavgifter där bostaden inte finns i en småhusfastighet (ej semesterbostad)."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "bostadsf-smahus-ej-ulag-sa"
+description = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "dm-vid-bilforman-ulag-ag"
+description = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "dm-vid-bilforman-ulag-ea"
+description = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "ers-ej-soc-avg-ej-jobbavd"
+description = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "ers-forman-bostad-mm-sink"
+description = "Ers/förm avs bostad/resa till/från anställning/förrättning (enbart SINK)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "forman-som-pension-ej-ulag-sa"
+description = "Förmån som pension som inte är underlag för socialavgifter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "hyresersattning"
+description = "Hyresersättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "kontant-ersattning-ulag-ea"
+description = "Kontant ersättning som är underlag för egenavgifter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "sp-bilforman-ulag-ag"
+description = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "sp-bilforman-ulag-ea"
+description = "Skattepliktig bilförmån som är underlag för egenavgifter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "sp-ovriga-formaner-ulag-ag"
+description = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "sp-ovriga-formaner-ulag-ea"
+description = "Övriga skattepliktiga förmåner som är underlag för egenavgifter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/agi"
+variable = "underlag-rotarbete"
+description = "Underlag för skattereduktion för rotarbete"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "ak1"
+description = "Jobbade du någonting den veckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "ampp1"
+description = "Inskriven på arbetsförmedlingen, de senaste 4 veckorna"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "ampp5b"
+description = "Ersättning från försäkringskassan"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "antal-personer-i-populationen-i-ett-visst-stratum-vid-ett"
+description = "Antal personer i populationen i ett visst stratum vid ett visst urvalstillfälle"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "ar-du-anstalld-egen-foretagare-eller-oavlonad-medhjalpare-i"
+description = "Är du anställd, egen företagare eller oavlönad medhjälpare (i bisysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "arbete-som-utfors-hemifran-den-egna-bostaden-i-huvudsysslan"
+description = "Arbetar du någonting hemifrån den egna bostaden? (Huvudsysslan.)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "arbetsledning-ingar-i-arbetsuppgifter-i-huvudsysslan"
+description = "Ingår det i dina arbetsuppgifter (i huvudsysslan) att leda och ha tillsyn över andra anställdas arbete?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "arverks3"
+description = "Drevs det företaget av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "bisnitttim"
+description = "Hur många timmar arbetar du i genomsnitt per vecka i bisysslan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "drevs-det-foretaget-av-nagon-i-ditt-hushall-personer-utan"
+description = "Drevs det företaget av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "drivs-det-foretaget-bisysslan-av-nagon-i-ditt-hushall"
+description = "Drivs det företaget av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "fast-anstallning-i-botten-huvudsysslan"
+description = "Har du en fast anställning i botten i huvudsysslan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "foredrar-fast-eller-tidsbegransad-anstallning"
+description = "Vilket föredrar du: fast eller tidsbegränsad anställning?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "gradk"
+description = "Vilken typ av anställning har du nu?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hade-du-mer-an-ett-arbete-som-du-var-franvarande-fran"
+description = "Hade du mer än ett arbete som du var frånvarande från?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hel-eller-deltidsarbete-i-huvudsysslan-aku2008"
+description = "Arbetar du heltid eller deltid (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hsarbhemma"
+description = "Arbete hemifrån egna bostaden i huvudsysslan, senaste månaden"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hu4a"
+description = "Är du anställd, egen företagare eller oavlönad medhjälpare (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hu4b"
+description = "Drivs det företaget/jordbruket av någon i ditt hushåll?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huanst"
+description = "Har du någon anställd? (Huvudsysslan.)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huarbhemmaant"
+description = "Arbetar du hemifrån bostaden minst hälften av dina arbetsdagar? (Huvudsysslan.)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huat13a"
+description = "Hur många timmar arbetade du just den veckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huat1a"
+description = "Var du frånvarande något under referensveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huat2b"
+description = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga At2a)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huat4"
+description = "Hur många veckor i rad har du varit helt frånvarande från arbetet?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huat4b"
+description = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufat3a"
+description = "Hur många timmar arbetade du just den veckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufat6b"
+description = "Vilken anledning var den huvudsakliga? (Frågan ställs endast om två anledningar angivits på fråga FAt6a)"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufat7"
+description = "Hur många veckor har du varit frånvarande från arbetet?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufat7b"
+description = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufrandelvtimanst"
+description = "Hur många timmar var du frånvarande (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufrandelvtimfo"
+description = "Antal frånvarotimmar i huvudsysslan, frånvarande del av veckan, företagare/medhjälpare. Variabeln beräknas som skillnaden mellan faktisk och genomsnittlig arbetstid referensveckan."
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufranhelvtimanst"
+description = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, anställda"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hufranhelvtimfo"
+description = "Antal frånvarotimmar i huvudsysslan, frånvarande hela veckan, företagare/medhjälpare"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huhelbott"
+description = "Har du en heltidsanställning i botten (i huvudsysslan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huotejerstim"
+description = "Hur många övertid-/mertidstimmar (i huvudsysslan) som du ej får ersättning för?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huoters"
+description = "Hade du någon övertid (i huvudsysslan) som du får ersättning för i tid eller pengar?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huottot"
+description = "Hade du någon övertid/mertid med eller utan ersättning?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "husnitttim"
+description = "Hur många timmar arbetar du i genomsnitt per vecka?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "hutafa"
+description = "Är det en tidsbegränsad eller en fast anställning?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "huyrke"
+description = "Till vilket yrke vill du räkna ditt arbete?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "iveck"
+description = "Kalendervecka"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "kbihu14a"
+description = "Är ... fortfarande ditt yrke?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "kfam2"
+description = "Du hade förra gången ... antal barn som bodde hemma. Är det fortfarande så?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "kfam4"
+description = "Antalet barn som bor hemma är alltså ...?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu14a"
+description = "Är ... fortfarande ditt yrke?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu16a"
+description = "Arbetar du fortfarande heltid?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu16b"
+description = "Arbetar du fortfarande deltid?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu17"
+description = "Är din deltid fortfarande ... procent?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu30"
+description = "Är din överenskomna arbetstid fortfarande ... timmar per vecka?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu31"
+description = "Arbetar du fortfarande ... timmar i genomsnitt per vecka?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "khu8"
+description = "Har du fortfarande samma typ av tidsbegränsad anställning som vid förra intervjun?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "land-for-arbetet-for-ett-ar-sedan"
+description = "I vilket land arbetade du (för ett år sedan)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "lon-under-franvaro-i-huvudsysslan-anstallda"
+description = "Har du under frånvarotiden fått minst 50% av lönen från din arbetsgivare, eller annan ersättning som uppgår till minst 50% av lönen?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "omb10b"
+description = "Du sa att du vill och kan öka din arbetstid. Hur många veckor i rad har det varit så?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "onskad-arbetstid-personer-utan-arbete"
+description = "Hur många timmar per vecka skulle du vilja arbeta?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "orsak-till-att-inte-kunna-arbeta-fler-timmar-sysselsatta"
+description = "Vilken var den främsta anledningen till att du inte kunde arbeta fler timmar under referensveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "overtid-utan-ersattning"
+description = "Hade du någon övertid (i huvudsysslan) som du inte får ersättning för i tid eller pengar?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "sysokaminska"
+description = "Skulle du vilja öka eller minska din arbetstid (totalt i både huvud- och bisyssla)?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "sysonsktim"
+description = "Hur många timmar per vecka skulle du vilja arbeta?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "syssokskal"
+description = "Vilken är den främsta anledningen till att du söker annat arbete?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "syssokt3"
+description = "Ej sökt annat arbete"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "velat-arbeta-under-referensveckan-personer-utan-arbete"
+description = "Skulle du velat ha arbete referensveckan?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/aku"
+variable = "verks1"
+description = "Vad betraktar du dig huvudsakligen som?"
+provenance = "P1105_Variabellista 2022.xlsx"
+
+[[description]]
+register = "scb/anst"
+variable = "ersdagar"
+description = "Antal ersättningsdagar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/anst"
+variable = "imp-ind-anst"
+description = "Anger om antal anställningar är imputerat eller inte."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/anst"
+variable = "peorgnrram"
+description = "Organisationsnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fdb"
+variable = "aststat"
+description = "AST-status"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "agkat"
+description = "Ägarkontroll"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "antman"
+description = "Antal månader som omfattas av företagets bokslut."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "bokslutsman"
+description = "Bokslutsmånad"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "fenr"
+description = "Företagsenhetens löpnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "jurform"
+description = "Juridisk form"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "person-organisationsnummer"
+description = "Företagets löpnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/fek"
+variable = "sektor"
+description = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "beh-est"
+description = "Gy-behörighet till estetiska programmet"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "beh-impro"
+description = "Programinriktat individuellt val"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "beh-nt"
+description = "Gy-behörighet till naturvetenskapsprogrammet och teknikprogrammet"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "beh-yrk"
+description = "Gy-behörighet till yrkesprogram"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg"
+description = "Anger om eleven ej har godkänt betyg i, dvs ej A-E."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-bild"
+description = "Betyg i ämnet bild"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-biologi"
+description = "Betyg i ämnet biologi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-fysik"
+description = "Betyg i ämnet fysik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-geografi"
+description = "Betyg i ämnet geografi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-historia"
+description = "Betyg i ämnet historia"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-kemi"
+description = "Betyg i ämnet kemi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-musik"
+description = "Betyg i ämnet musik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-religion"
+description = "Betyg i ämnet religion"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-samhallskunskap"
+description = "Betyg i ämnet samhällskunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-slojd"
+description = "Betyg i ämnet slöjd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-svenska"
+description = "Betyg i ämnet svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "betyg-i-amnet-teknik"
+description = "Betyg i ämnet teknik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "hkk"
+description = "Betyg i ämnet hem- och konsumentkunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "idh"
+description = "Betyg i ämnet idrott och hälsa"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "meritvarde-m2"
+description = "Meritvarde med betyg i moderna språk som språkval tillsammans med de 16 bästa betygen i övrigt"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "mspr1-sprak"
+description = "Moderna språk inom ramen för elevens val (språk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "mspr2-sprak"
+description = "Moderna språk inom ramen för språkval (språk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-ak9"
+variable = "tn"
+description = "Betyg i ämnet teckenspråk"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "antalf"
+description = "Antal ämnen som eleven har ej godkänt betyg (A-E)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "betyg-i-amnet-idrott-och-halsa"
+description = "Betyg i ämnet idrott och hälsa"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "bi"
+description = "Betyg i ämnet biologi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "bl"
+description = "Betyg i ämnet bild"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "blockbetyg-i-naturorienterade-amnen"
+description = "Betyg i naturorienterade ämnen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "en"
+description = "Betyg i ämnet engelska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "fy"
+description = "Betyg i ämnet fysik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "ge"
+description = "Betyg i ämnet geografi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "hi"
+description = "Betyg i ämnet historia"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "hkk"
+description = "Betyg i ämnet hem- och konsumentkunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "ke"
+description = "Betyg i ämnet kemi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "ma"
+description = "Betyg i matematik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "mu"
+description = "Betyg i ämnet musik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "re"
+description = "Betyg i ämnet religion"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "sh"
+description = "Betyg i ämnet samhällskunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "sl"
+description = "Betyg i ämnet slöjd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "so"
+description = "Betyg i samhällsorienterade ämnen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "sv"
+description = "Betyg i ämnet svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "tk"
+description = "Betyg i ämnet teknik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-betyg-ak6"
+variable = "tn"
+description = "Betyg i ämnet teckenspråk"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "anp-stud"
+description = "Anpassad studiegång"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "inriktning"
+description = "Typ av grundskola (Inriktning). From 2017 kan även kommunala skolor ha inriktning=14, tidigare var det bara fristående skolor som hade inriktningar."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "m2-spr-alt"
+description = "Alternativ till språkval"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "skola"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "skolkommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "skom"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "stud-handl-ml"
+description = "Studiehandlening på modersmål"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-elever"
+variable = "sva"
+description = "Elever deltar i SVA (Svenska som andrasspråk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "kommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "ma-f2-pr"
+description = "Elevens delprovsresultat i matematik, delprov F2"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "ma-g2-pr"
+description = "Elevens delprovsresultat i matematik, delprov G2"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "resultat-pa-delprov-f-i-matematik"
+description = "Elevens delprovsresultat i matematik, delprov F"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "resultat-pa-delprov-g-i-matematik"
+description = "Elevens delprovsresultat i matematik, delprov G"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "skolenhet"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak3"
+variable = "svenska-eller-svenska-som-andrasprak"
+description = "Anger vilken kursplan i svenska eleven följer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "kommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "sv-b-prp"
+description = "Resultat på delprov B i svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "sv-c-prp"
+description = "Resultat på delprov C i svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak6"
+variable = "svenska-eller-svenska-som-andrasprak"
+description = "Anger vilken kursplan i svenska eleven följer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "deltagit-i-undervisning-i-svenska-som-andrasprak"
+description = "Elever deltar i SVA (Svenska som andrasspråk)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "en-a-prp"
+description = "Resultat på delprov A i engelska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "en-b-prp"
+description = "Resultat på delprov B i engelska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "en-c-prp"
+description = "Resultat på delprov C i engelska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "ge-provbet"
+description = "Provbetyg i geografi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "hi-provbet"
+description = "Provbetyg i historia"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "provbetyg-i-biologi"
+description = "Provbetyg i biologi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "provbetyg-i-engelska"
+description = "Provbetyg i engelska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "provbetyg-i-fysik"
+description = "Provbetyg i fysik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "provbetyg-i-kemi"
+description = "Provbetyg i kemi"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "provbetyg-i-matematik"
+description = "Provbetyg i matematik"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "provbetyg-i-svenska"
+description = "Provbetyg i svenska / svenska som andra språk"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "re-provbet"
+description = "Provbetyg i religion"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "sh-provbet"
+description = "Provbetyg i samhällskunskap"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "so-prov"
+description = "Ange vilket so-prov eleven har deltagit i"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "sv-a-prp"
+description = "Resultat på delprov A i svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "sv-b-prp"
+description = "Resultat på delprov B i svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "sv-c-prp"
+description = "Resultat på delprov C i svenska"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/grundskola-prov-ak9"
+variable = "sv-kursplan"
+description = "Anger vilken kursplan i svenska eleven följer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-betyg"
+variable = "skolkod"
+description = "Skolkod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-betyg"
+variable = "utokad"
+description = "Kursen är en s.k. utökad kurs."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "arskurs"
+description = "Årskurs"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "inriktninggy"
+description = "Typ av fristående gymnasieskola"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "klassbeteckning"
+description = "Klassbeteckning. Ogranskad variabel som saknar egentlig defintionn. Denna brukar vi inte lämna ut."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "kommun"
+description = "Hemkommun"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "kommun-2"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "meritvarde-m2-ak9"
+description = "Meritvärde med betyg i moderna språk som språkval tillsammans med de 16 bästa betygen i övrigt."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-elever"
+variable = "skolkommun"
+description = "Skolkommun"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-prov"
+variable = "kurs"
+description = "Kurskod för vilken kurs det gäller"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-prov"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-prov"
+variable = "skolenhetskod"
+description = "Skolenhetskod (löpnummersätts vid leverans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-prov"
+variable = "stvkod"
+description = "Studieväg"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/gymnasieskola-prov"
+variable = "utbild"
+description = "Variabel som visar vilket program/utbidning eleven läser, klartext i hjälptabell"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "amnegrupp"
+description = "Ämnesgrupp för kursansökningar (ämnesgrupp på kursen)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "ar-for-registreringen"
+description = "År"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "forkunskapsniva-hogskolekurs"
+description = "Förkunskapsnivå, högskolekurs"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "hogskolans-programinriktning"
+description = "Programmets inriktning i klartext. Alla program har inte inriiktning. (Endast för ansökningar till program)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "hsnamn"
+description = "Lärosäte, klartext"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "kurskod-for-hogskolekurs"
+description = "Kurskod"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "kurskodben"
+description = "Kursenbs benämning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "kurslan"
+description = "Kurslän"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "kursort"
+description = "Studieort, kurs"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "lasar"
+description = "Läsår"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "linr"
+description = "Högskolans interna programinriktning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "lprog"
+description = "Lärosätets kod på programmet"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "lprogben"
+description = "Programmets benämning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "progort"
+description = "Studieort, program"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "takt"
+description = "Studietakt"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "termnr"
+description = "Terminsnummer för programstudier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "universitet-hogskola"
+description = "Lärosäte, kod (klartext i hjälptabell)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "uprog"
+description = "Utbytesprogram"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hreg"
+variable = "utbomr"
+description = "Utbildningsområde (klartext i hjälptabell)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hushallens-boende"
+variable = "boarea"
+description = "Bostadsarea"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/hushallens-boende"
+variable = "scb-upplatform"
+description = "Bostadens upplåtelseform"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/ivp"
+variable = "totkvant"
+description = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/ksju"
+variable = "glappantdag"
+description = "Dagar mellan sjukdagar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/ksju"
+variable = "helantdagar"
+description = "Dagar med sjuklön hela dagar (insamlad variabel)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/ksju"
+variable = "peorgnrram"
+description = "Organisationsnummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/ksju"
+variable = "stratam"
+description = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "forstelarare"
+description = "Läraren innehar karriärtjänsten Förstelärare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "impgm"
+description = "Läraren undervisar i IM (Introduktionsprogram) i Gymnasieskolan"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "ivpgm"
+description = "Anger om läraren undervisar på IV-program i gymnasiesärskola"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "jurform"
+description = "Juridisk form, kod"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "juridiskform"
+description = "Juridisk form, klartext"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "lektor"
+description = "Läraren innehar karriärtjänsten Lektor"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "sfityp"
+description = "Typ av anordnare i SFI. 1 = Kommun, 2 = Studieförbund, 3 = Folkhögskola, 4 = Landsting, 5 = Övriga"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "skola"
+description = "Löpnummer för skolorna"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "skolenhet"
+description = "Skolenhetskod, ersätts med löpnummer vid leverans"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "specialundervisning"
+description = "J = läraren har undervisning och har rapporterat undervisningsämnen. N = Läraren har inte ämnesundervisning, t.ex. speciallärare eller lärare som bara arbetar med mentorskap."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "tjledig"
+description = "J = Personen är helt tjänstledig från aktuell tjänst"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "traningssar"
+description = "Läraren undervisar i träningsskolan (Skolform Grundsärskolan)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lararreg"
+variable = "utbanord"
+description = "Typ av anordnare i Komvux. 1 = Kommun, 2 = Studieförbund, 3 = Folkhögskola, 4 = Landsting, 5 = Övriga"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "aktersviland"
+description = "Andel/grad för aktivitetsersättning (vilande) 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "antal-personer-vid-arbetsstallet"
+description = "Antal personer med KU under året"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "arbetsstallenummer-tredje-storsta-forvavskallan"
+description = "Arbetsställenummer"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-lonesum"
+description = "Arbetsställets utbetalda lönesumma under året"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-sni2002b"
+description = "Näringsgren, SNI2002, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-sni2002g"
+description = "Näringsgren, SNI2002, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-sni2007g"
+description = "Näringsgren, SNI2007, grov nivå (15 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-sni2007u"
+description = "Näringsgren, SNI2007, utökad nivå (51 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-sni92b"
+description = "Näringsgren, SNI92, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ast-sni92g"
+description = "Näringsgren, SNI92, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "bostbidrfam"
+description = "Bostadsbidrag för familj"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "bostbidru"
+description = "Bostadsbidrag (uppdelat på huvudsökande och medsökande)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "bosttillfam"
+description = "Bostadstillägg för familj"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "cfar-nummer-tredje-storsta-forvarvskallan"
+description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "cfarnr-lisa"
+description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "civil"
+description = "Civilstånd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "deklon"
+description = "Deklarerad löneinkomst"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "dispinkfam"
+description = "Disponibel inkomst för familj"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "famstf"
+description = "Familjeställning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "foretagets-organisationsnummer-nast-storsta-forvarvskallan"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "foretagets-organisationsnummer-storsta-forvarvskallan"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "foretagets-organisationsnummer-tredje-storsta-forvarvskallan"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-anlaggningstillgangar"
+description = "Anläggningstillgångar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-arets-resultat"
+description = "Årets resultat"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-avsattningar"
+description = "Avsättningar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-bruttoinv-byggnader-mark"
+description = "Bruttoinvestering i byggnader och mark"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-bruttoinv-maskiner-inventarier"
+description = "Bruttoinvestering i maskiner och inventarier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-foradlingsvarde"
+description = "Förädlingsvärde"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-g11"
+description = "Rörelsekapital/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-g8"
+description = "Personalkostnader/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-kortfristiga-skulder"
+description = "Kortfristiga skulder"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-langfristiga-skulder"
+description = "Långfristiga skulder"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-lonekostn-och-andra-ersattn"
+description = "Lönekostnader och andra ersättningar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-nettoinv-byggnader-mark"
+description = "Nettoinvestering i byggnader och mark"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-nettoinv-maskiner-inventarier"
+description = "Nettoinvestering i maskiner och inventarier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-nettoomsattning"
+description = "Nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-obeskattade-reserver"
+description = "Obeskattade reserver"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-omsattningstillgangar"
+description = "Omsättningstillgångar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-ovriga-rorelseintakter"
+description = "Övriga rörelseintäkter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-res-efter-finansiella-poster"
+description = "Resultat efter finansiella poster"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-rorelseresultat"
+description = "Rörelseresultat"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-skatt"
+description = "Skatt på årets resultat"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-sociala-kostn-och-andra-avg"
+description = "Sociala kostnader och andra avgifter"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-summa-bruttoinv"
+description = "Summa bruttoinvesteringar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-summa-nettoinv"
+description = "Summa nettoinvesteringar"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t11"
+description = "Immateriella anläggningstillgångar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t12"
+description = "Materiella anläggningstillgångar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t13"
+description = "Maskiner o inventarier/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t14"
+description = "Finansiella anläggningstillgångar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t15"
+description = "Lager o pågående arbeten/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t16"
+description = "Kundfordringar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t17"
+description = "Övriga kortfristiga fordringar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t18"
+description = "Kassa, bank o kortfristiga placeringar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t19"
+description = "Kortfristiga skulder/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t20"
+description = "Eget kapital/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t21"
+description = "Obeskattade reserver/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t22"
+description = "Avsättningar o långfristiga skulder/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t7"
+description = "Personalkostnader/förädlingsvärde"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ftg-t9"
+description = "Avskrivningar/nettoomsättning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "garpens"
+description = "Garantipension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "garpensand"
+description = "Andel/grad för garantipension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "inkpenstill"
+description = "Inkomstpensionstillägg"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "kapink"
+description = "Inkomst av kapital"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "karensers"
+description = "Ersättning för karens 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "matar-for-yrkesuppgift-storsta-forvarvskallan"
+description = "Årtal för yrkesuppgift, för yrkesverksamma"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-belkommun"
+description = "Belägenhetskommun för största arbetsstället"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-satekommun"
+description = "Säteskommunen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sektorkod"
+description = "Företagets sektorkod"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sni2002b"
+description = "Näringsgren, SNI2002, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sni2002g"
+description = "Näringsgren, SNI2002, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sni2007g"
+description = "Näringsgren, SNI2007, grov nivå (15 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sni2007u"
+description = "Näringsgren, SNI2007, utökad nivå (51 grupper)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sni92b"
+description = "Näringsgren, SNI92, begränsad nivå (42 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-sni92g"
+description = "Näringsgren, SNI92, grov nivå (10 grupper)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-typ"
+description = "Företagstyp (ett- eller flerarbetsställeföretag)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "org-typbas"
+description = "Typ av företag (ett- eller flerarbetsställeföretag, finns inte i Företagsdatabasen, uppgift saknas)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "peorgnr-lisa"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "prempens"
+description = "Premiepension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "riskgruppers"
+description = "Ersättning för riskgrupp 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "seninvar"
+description = "Senaste invandringsår"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "sjukersgarand"
+description = "Andel/grad för sjukersättning (garantiersättning) 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "sjukersviland"
+description = "Andel/grad för sjukersättning (vilande) 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "sjukre"
+description = "Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering 6"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "spentill"
+description = "Särskilt pensionstillägg"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ssyk3-2012-j16"
+description = "Yrke enligt SSYK2012, 3-siffernivå, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ssyk4-2012-j16"
+description = "Yrke enligt SSYK2012, 4-siffernivå, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ssykar-j16"
+description = "Årtal för yrkesuppgift, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "ssykstatus-j16"
+description = "Yrkets överensstämmelse med novemberjobbet, inkl. härledda yrken för företagare"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "stud"
+description = "Summa inkomst föranledd av studier"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "studmed"
+description = "Studiemedel och studiehjälp"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "syssstat19"
+description = "Sysselsättningsstatus enligt justerad metod 2019"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "tillaggspension"
+description = "Tilläggspension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "tillpensand"
+description = "Andel/grad för tilläggspension"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/lisa"
+variable = "yrkeskodens-overensstammelse-med-det-yrkesverksamma"
+description = "Yrkets överensstämmelse med största förvärvskälla"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "agkat"
+description = "Ägarkategori enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "anst"
+description = "Antal anställda på företaget enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "imputerad"
+description = "Anger om deklarationen är modellberäknad (imputerad) eller rättad."
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "jform"
+description = "Juridisk form enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "kommun"
+description = "Kommunkod 4 siffror (län+kommun)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "ng1"
+description = "Bransch i FDB enligt SNI2007"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "peorgnr"
+description = "Organisations-/personnummer (löpnumrerad)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "period"
+description = "Redovisningsgrupp för moms"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "sektor"
+description = "Sektorkod enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "sni"
+description = "Bransch i FDB enligt SNI2002"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/moms"
+variable = "stkl"
+description = "Storleksgrupp på företaget efter antal anställda enligt FDB"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "antal-sysselsatta-2"
+description = "Antal sysselsatta på arbetsstället enligt sysselsättningsregisret"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "astbelgata"
+description = "Arbetsställets belägenhetsgata"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "astbelgatnr"
+description = "Arbetsställets belägenhetsgatunummer"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "astbelort"
+description = "Arbetsställets belägenhetsort"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "cfar-nummer"
+description = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "institutionell-sektor"
+description = "Sektor"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "manfran"
+description = "Anställd från och med månad"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "mantill"
+description = "Anställd till och med månad"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "peorgnr-2"
+description = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rams"
+variable = "personnr"
+description = "Löpnummer i populationen"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/rtb"
+variable = "lan"
+description = "Bostadslän"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/rtb"
+variable = "medblandnamn"
+description = "Medborgarskapsland, enskilda länder"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/stativ"
+variable = "erfarenhet-i-sokt-yrke"
+description = "Erfarenhet i sökt yrke"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/stativ"
+variable = "kassagrupp-inom-arbetsloshetskassan"
+description = "Kassagrupp"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/stativ"
+variable = "utbildning-i-sokt-yrke"
+description = "Utbildning i sökt yrke"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/ureg"
+variable = "kallkod"
+description = "Källa för uppgift om högsta utbildning"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/utbildningsanalyser"
+variable = "distansla2021-intervall"
+description = "Perioder av undervisning på distans under läsåret 2020/21 - intervall"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/utbildningsanalyser"
+variable = "distansvt21-intervall"
+description = "Perioder av undervisning på distans under VT 2021 - intervall"
+provenance = "Bilaga 2 - Variabellista.xlsx"
+
+[[description]]
+register = "scb/utbildningsanalyser"
+variable = "personnummer"
+description = "Löpnummer i populationen"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/utbildningsanalyser"
+variable = "vt-veckor-termin"
+description = "Terminens längd"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/utrikeshandel"
+variable = "manad"
+description = "Månad (månadsdata finns från 2000)"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[description]]
+register = "scb/utrikeshandel"
+variable = "vikt"
+description = "Statistiskt värde i Kilo"
+provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
