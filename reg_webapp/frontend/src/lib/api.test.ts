@@ -3,9 +3,11 @@ import {
   ApiError,
   apiGet,
   type BindingNodeData,
+  docSearch,
   getBindingLineageWarnings,
   getBindingPredecessors,
   getCatalogNode,
+  getDoc,
   isCatalogNode,
   type StatesResponse,
   search,
@@ -286,6 +288,85 @@ describe("search", () => {
     expect(init?.signal?.aborted).toBe(false);
     controller.abort();
     expect(init?.signal?.aborted).toBe(true);
+  });
+});
+
+describe("docSearch (#394)", () => {
+  // Mirror the `search` suite's harness: capture the URL + fetch init for one call.
+  // docSearch shares search's `searchGet` plumbing, so the encoding/abort assertions
+  // are identical against the `/docs/search` path.
+  async function callFor(
+    q: string,
+    options?: Parameters<typeof docSearch>[1],
+  ): Promise<{ url: string; init: RequestInit | undefined }> {
+    let url = "";
+    let init: RequestInit | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((u: string, i?: RequestInit) => {
+        url = u;
+        init = i;
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            kind: "doc-search",
+            query: q,
+            ingested: true,
+            total_count: 0,
+            results: [],
+          }),
+        });
+      }),
+    );
+    await docSearch(q, options);
+    return { url, init };
+  }
+
+  it("encodes the query and omits limit by default (same encoding as search)", async () => {
+    const { url } = await callFor("kö n");
+    expect(url).toBe("/api/docs/search?q=k%C3%B6+n");
+  });
+
+  it("appends an explicit limit", async () => {
+    const { url } = await callFor("kon", { limit: 5 });
+    expect(url).toBe("/api/docs/search?q=kon&limit=5");
+  });
+
+  it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {
+    const { init } = await callFor("kon");
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
+    expect(init?.signal?.aborted).toBe(false);
+  });
+});
+
+describe("getDoc (#394)", () => {
+  it("GETs the doc endpoint with the WHOLE identifier as one encoded segment", async () => {
+    // A space AND a reserved char (`&`) prove encodeURIComponent runs over the
+    // entire identifier (one path segment / filename), not split on anything.
+    let seen = "";
+    stubFetch(async (url) => {
+      seen = url;
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ kind: "doc", filename: "lisa kon.md", tags: [] }),
+      };
+    });
+    await getDoc("lisa kon&x.md");
+    expect(seen).toBe("/api/docs/doc/lisa%20kon%26x.md");
+  });
+
+  it("throws ApiError carrying status 404 + backend detail when the doc is absent", async () => {
+    stubFetch(async () => ({
+      ok: false,
+      status: 404,
+      json: async () => ({ detail: "no documentation for 'x'" }),
+    }));
+    const err = (await getDoc("x").catch((e) => e)) as ApiError;
+    expect(err).toBeInstanceOf(ApiError);
+    expect(err.status).toBe(404);
+    expect(err.message).toBe("no documentation for 'x'");
   });
 });
 
