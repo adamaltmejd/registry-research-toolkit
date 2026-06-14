@@ -1235,7 +1235,7 @@ deliberately are not, so a cross-register "see also" can never trigger browse-le
 folding. Like the other curation TOMLs it is a maintainer artifact — absent in wheel
 installs and synthetic test builds (empty file → zero rows written); an edge whose
 `a_provider` or `b_provider` isn't in the current build is skipped rather than failed.
-The shipped TOML is currently empty; the loader is inert until edges are curated
+The first curated edges landed in #403 — three cross-register see-also pairs
 (auto-emitted split edges are unaffected and flow as before).
 
 **Panel-shape bootstrap.** `register_variant` rows also carry `panel_entity_key` /

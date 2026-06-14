@@ -11,8 +11,8 @@ Two layers, mirroring `test_concept_groups.py`:
     existing edge fails loud; and the curated kind is NOT folded by the
     concept-group edge pass (it is non-foldable by construction).
 
-Fully synthetic (CLAUDE.md): the shipped `variable_related_to.toml` is empty, so
-it never touches these fixtures."""
+Fully synthetic (CLAUDE.md): these tests build their own synthetic TOMLs
+(tmp_path) and never read the shipped `variable_related_to.toml`."""
 
 from __future__ import annotations
 
