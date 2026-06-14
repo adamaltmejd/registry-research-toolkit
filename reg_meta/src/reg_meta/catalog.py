@@ -1481,6 +1481,78 @@ class Catalog:
         _, _, _, variable_id = self._resolve_edge_triple(fqid)
         return list(self._lineage_warning_rows(variable_id))
 
+    def resolve_terminal_successor(self, fqid: str | Fqid) -> Fqid | None:
+        """Walk the `variable_replaced_by` succession chain from a (possibly
+        DEAD/renamed) binding FQID to its TERMINAL successor — the chain end with
+        NO further outbound edge. Returns that terminal as a binding `Fqid`, or
+        None when the start has no outbound succession at all (genuinely unknown
+        — the caller should 404). Used by the webapp to 301-redirect a citation of
+        a renamed slug to where it lives now (#355 PART 2).
+
+        Unlike `successors` / `_resolve_edge_triple`, this does NOT require the
+        FQID to resolve to a live `variable` row — that is the whole point: a
+        renamed slug 404s (its `variable` row is gone), and we walk purely on the
+        stored (provider, register, variable) string triple in `variable_replaced_by`
+        to find where the citation should redirect.
+
+        Always walks to the ABSOLUTE chain end, never hop-by-hop: a webapp 301 can
+        be cached, and double-rename churn (A→B then B→C) would leave a cached
+        A→B redirect pointing at a now-dead intermediate. Resolving to the terminal
+        every time keeps the redirect correct under churn.
+
+        Split simplification: the schema does NOT enforce 1:1 succession — a
+        predecessor may have several successors (a split). Renames are 1:1, so this
+        is rare; when it happens we pick deterministically (ORDER BY successor
+        triple, first row) so a 301 stays stable and never 404s, rather than
+        refusing. Cycle guard: a `seen` set defends against a malformed
+        double-rename loop (A→B→A) in the DB so the walk always terminates.
+        """
+        parsed = parse(fqid) if isinstance(fqid, str) else parse(str(fqid))
+        # Register/classification-grain renames are out of scope for this PR —
+        # only variable bindings redirect. Bail before any SQL.
+        if parsed.kind is not FqidKind.VARIABLE_BINDING:
+            return None
+        assert parsed.provider and parsed.register and parsed.variable
+        start = (parsed.provider, parsed.register, parsed.variable)
+        seen: set[tuple[str, str, str]] = {start}
+        current = start
+        while True:
+            nxt = self._first_successor_triple(*current)
+            if nxt is None or nxt in seen:
+                # Terminal (no outbound edge) or a defensive cycle break.
+                break
+            seen.add(nxt)
+            current = nxt
+        if current == start:
+            return None  # start had no outbound edge — genuinely unknown
+        return Fqid.binding_fqid(*current)
+
+    def _first_successor_triple(
+        self, provider: str, register: str, variable: str
+    ) -> tuple[str, str, str] | None:
+        """The deterministically-first outbound `variable_replaced_by` successor
+        triple for a predicate triple, or None when there is none. Reuses the
+        `_successor_edges` SELECT shape (predecessor-side keyed, ORDER BY successor
+        triple) but reads only the successor triple — the walk needs no `#142`
+        reason/effective_year. ORDER BY + LIMIT 1 makes the split pick (see
+        `resolve_terminal_successor`) deterministic in SQL."""
+        row = self._conn.execute(
+            "SELECT successor_provider, successor_register, successor_variable "
+            "FROM variable_replaced_by "
+            "WHERE predecessor_provider = ? AND predecessor_register = ? "
+            "AND predecessor_variable = ? "
+            "ORDER BY successor_provider, successor_register, successor_variable "
+            "LIMIT 1",
+            (provider, register, variable),
+        ).fetchone()
+        if row is None:
+            return None
+        return (
+            row["successor_provider"],
+            row["successor_register"],
+            row["successor_variable"],
+        )
+
     def _resolve_edge_triple(self, fqid: str | Fqid) -> tuple[str, str, str, int]:
         """Resolve a binding FQID to the canonical (provider, register, variable,
         variable_id) the edge tables key on. Raises `_not_found` when the binding

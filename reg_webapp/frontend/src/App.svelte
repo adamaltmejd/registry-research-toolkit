@@ -51,6 +51,10 @@ const driftWarnings = $derived(context?.catalog_drift_warnings ?? []);
 // the next New).
 const regMetaVersion = $derived(context?.webapp.reg_meta_version ?? "");
 const steward = $derived(context?.steward.id ?? "");
+// The catalog VINTAGE for the site-wide footer (#355 decision 2): the date the
+// reg_meta DB was built. `import_date` is a UTC timestamp string
+// (e.g. "2026-06-12T08:30:00Z"); show just the leading YYYY-MM-DD (split on "T").
+const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
 </script>
 
 <!-- Click interception is delegated from the root container via the `link`
@@ -130,6 +134,15 @@ const steward = $derived(context?.steward.id ?? "");
       </article>
     {/if}
   </main>
+
+  <!-- Site-wide citation vintage (#355 decision 2): renders on every route so a
+       reader citing any catalog node can see which reg_meta build it reflects.
+       Guarded on `context` like the header `.build` chip. -->
+  {#if context}
+    <footer class="vintage muted">
+      as of reg_meta v{regMetaVersion} · schema {context.reg_meta.schema_version} · built {buildDate}
+    </footer>
+  {/if}
 </div>
 
 <style>
@@ -240,5 +253,12 @@ const steward = $derived(context?.steward.id ?? "");
   .banner.error {
     background: var(--banner-error-bg);
     border: 1px solid var(--banner-error-border);
+  }
+  .vintage {
+    font-size: 0.8rem;
+    text-align: center;
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border);
   }
 </style>
