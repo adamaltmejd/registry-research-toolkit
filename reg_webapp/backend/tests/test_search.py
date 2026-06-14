@@ -120,6 +120,16 @@ def test_scoped_empty_query_returns_only_selected_empty_group(client):
     assert body["groups"][0]["results"] == []
 
 
+def test_scoped_empty_query_non_value_scope(client):
+    # A blank query under a non-`value` scope returns ONLY that scope's group,
+    # empty — guards the register/variable/classification arms of the empty-query
+    # short-circuit (the existing scoped-empty test covers only `value`).
+    body = client.get("/api/search", params={"q": "  ", "type": "register"}).json()
+    assert [g["group"] for g in body["groups"]] == ["registers"]
+    assert body["groups"][0]["total_count"] == 0
+    assert body["groups"][0]["results"] == []
+
+
 # ── leaf hits + navigable FQIDs ──────────────────────────────────────────────
 
 
@@ -320,6 +330,22 @@ def test_etag_covers_query(client):
     a = client.get("/api/search", params={"q": "lisa"}).headers["etag"]
     b = client.get("/api/search", params={"q": "rams"}).headers["etag"]
     assert a != b
+
+
+def test_etag_covers_type(client):
+    # ?type= changes the response body (which groups it carries), so the
+    # body-derived ETag must differ across scopes for the same query — else a
+    # scoped request could be served the wrong scope's cached validator.
+    a = client.get("/api/search", params={"q": "Man"}).headers["etag"]
+    b = client.get("/api/search", params={"q": "Man", "type": "value"}).headers["etag"]
+    assert a != b
+    # The all-scope ETag must NOT revalidate (304) a different-scope request.
+    resp = client.get(
+        "/api/search",
+        params={"q": "Man", "type": "value"},
+        headers={"If-None-Match": a},
+    )
+    assert resp.status_code == 200
 
 
 # ── pure helpers ─────────────────────────────────────────────────────────────
