@@ -89,16 +89,21 @@ def _var(
 
 
 def _deldat(
-    name: str, *, data_from: int | None = None, data_to: int | None = None
+    name: str,
+    *,
+    data_from: int | None = None,
+    data_to: int | None = None,
+    label: str | None = None,
+    aggregation_level: str | None = None,
 ) -> SosDeldatamangd:
     return SosDeldatamangd(
         name=name,
-        label=None,
+        label=label,
         description=None,
         data_from=data_from,
         data_to=data_to,
         update_frequency=None,
-        aggregation_level=None,
+        aggregation_level=aggregation_level,
     )
 
 
@@ -798,6 +803,86 @@ def test_token_map_lvm_tokens_resolve() -> None:
     assert len(states) == 1
     assert states[0].register_variant_id == mint("sos", "lvm", ansok)
     assert states[0].valid_from == "1994-01-01"
+
+
+# ---------------------------------------------------------------------------
+# #373: styrtabell (value-set decode table) exclusion
+# ---------------------------------------------------------------------------
+
+
+def test_styrtabell_excluded_from_variant_and_variable_minting() -> None:
+    # LOVA shape: a real deldatamängd (Individ-grained) carrying a coded
+    # variable, plus a styrtabell deldatamängd (Aggregeringsnivå='Ej relevant' +
+    # a 'Styrtabell …' label) whose variable rows include the coded column AND a
+    # decode-only KLARTEXT column. The styrtabell deldatamängd mints NO variant,
+    # its decode-only column mints NO variable/state, but the real coded variable
+    # (also present under the real deldatamängd) still emits.
+    reg = _register(
+        "lova",
+        [
+            _var("AGARKAT", deldatamangd="A_LOVA", data_from=1995),
+            # styrtabell rows route via DELDATAMANGD_TOKEN_MAP to the excluded
+            # 'LOVA AGARKAT' deldatamängd: AGARKAT (the code) + KLARTEXT (decode).
+            _var("AGARKAT", deldatamangd="A_LOVA_STYR_AGARKAT", data_from=1995),
+            _var("KLARTEXT", deldatamangd="A_LOVA_STYR_AGARKAT", data_from=1995),
+        ],
+        deldatamangder=(
+            _deldat("LOVA", aggregation_level="Individ"),
+            _deldat(
+                "LOVA AGARKAT",
+                label="Styrtabell för ägarkategori",
+                aggregation_level="Ej relevant",
+            ),
+        ),
+    )
+    objs, _ = _emit(reg)
+    # No variant for the styrtabell deldatamängd.
+    variant_names = {v.name for v in _of(objs, IRVariant)}
+    assert variant_names == {"LOVA"}
+    assert "LOVA AGARKAT" not in variant_names
+    # No variable for the decode-only column; the real coded variable survives.
+    variable_names = {v.name for v in _of(objs, IRVariable)}
+    assert variable_names == {"AGARKAT"}
+    assert "KLARTEXT" not in variable_names
+    # No mismatch warning (both signals agree) and no unresolved-drop warning.
+    assert [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code in {"sos_styrtabell_signal_mismatch", "sos_deldatamangd_unresolved"}
+    ] == []
+    # The surviving coded variable emits its state in the real variant only.
+    states = _of(objs, IRVariableState)
+    assert {s.register_variant_id for s in states} == {mint("sos", "lova", "LOVA")}
+
+
+def test_styrtabell_signal_mismatch_warns_and_does_not_exclude() -> None:
+    # Drift: only ONE styrtabell signal present (the 'Styrtabell …' label, but
+    # Aggregeringsnivå is a normal grain). The adapter WARNS
+    # (sos_styrtabell_signal_mismatch) and does NOT exclude the deldatamängd — it
+    # still mints a variant and its variable.
+    reg = _register(
+        "lova",
+        [_var("KLARTEXT", deldatamangd="A_LOVA_STYR_AGARKAT", data_from=1995)],
+        deldatamangder=(
+            _deldat(
+                "LOVA AGARKAT",
+                label="Styrtabell för ägarkategori",
+                aggregation_level="Individ",  # the second signal is ABSENT
+            ),
+        ),
+    )
+    objs, _ = _emit(reg)
+    warns = [
+        w for w in _of(objs, IRWarning) if w.code == "sos_styrtabell_signal_mismatch"
+    ]
+    assert len(warns) == 1
+    assert "LOVA AGARKAT" in (warns[0].detail or "")
+    # Not excluded: the variant is minted and the variable emits its state.
+    assert "LOVA AGARKAT" in {v.name for v in _of(objs, IRVariant)}
+    assert "KLARTEXT" in {v.name for v in _of(objs, IRVariable)}
+    assert {s.register_variant_id for s in _of(objs, IRVariableState)} == {
+        mint("sos", "lova", "LOVA AGARKAT")
+    }
 
 
 # ---------------------------------------------------------------------------

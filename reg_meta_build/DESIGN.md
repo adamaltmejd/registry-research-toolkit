@@ -195,8 +195,9 @@ merge/split and `_default`-variant rules). A full structural catalog of the SOS 
 classification/value path — is still to be written. The classification/value path itself
 shipped with #210 (PRs #273/#274); the deldatamängd token → variant mapping
 (`DELDATAMANGD_TOKEN_MAP`: LOVA `A_LOVA*`, LVM `lvm_*`, DORS `DORS-COV`, LMED's combined
-token) shipped with #211; the remaining vehicle for the catalog write-up is #212
-(materializer-owned value tables).
+token) shipped with #211 (also retained as the bridge for styrtabell exclusion — see
+below); the remaining vehicle for the catalog write-up is #212 (materializer-owned value
+tables).
 
 ## IR + adapter architecture
 
@@ -265,6 +266,16 @@ are normalized *here*, never leaked downstream:
   name with no Deldatamängder-sheet row resolve through the curated
   `DELDATAMANGD_TOKEN_MAP` (exact tokens only; a token can name several variants —
   LMED's `FDDD`); an uncurated token warn-drops (`sos_deldatamangd_unresolved`).
+  **Styrtabeller** (value-set decode tables, e.g. LOVA's 10 `A_LOVA_STYR_*`
+  deldatamängder) are detected by a two-signal check —
+  `Aggregeringsnivå == "Ej relevant"` on the Deldatamängder sheet AND a
+  `Deldatamängdsetikett` prefix of "Styrtabell" — and excluded from variant and variable
+  minting so decode-only columns (KLARTEXT/KLARTEXT_GRP/BESKRIVNING/…) don't surface as
+  research variables. `DELDATAMANGD_TOKEN_MAP` is kept intact because the exclusion
+  reuses it to resolve which deldatamängd a Variabelnivå row belongs to before deciding
+  whether to drop it. A `sos_styrtabell_signal_mismatch` IRWarning fires when the two
+  signals disagree. Binding styrtabell Värdemängd rows to the coded variables they
+  decode (e.g. AGARKAT, SYSSSTAT) is deferred to a follow-up (#401).
 
 `emit()` yields IR in FK-topological order (register → classification → variant →
 value_set → variable → state/alias → edges → warning/provenance sinks) so the
