@@ -1117,3 +1117,74 @@ class TestEdgeAccessors:
         assert [(s.provider, s.register, s.variable) for s in succ] == [
             ("scb", "lisa", "civilstand")
         ]
+
+
+class TestResolveTerminalSuccessor:
+    """#355 PART 2: walk `variable_replaced_by` from a (possibly dead/renamed)
+    binding FQID to its terminal successor — the chain end with no outbound edge.
+    Edges are raw string triples; a DEAD predecessor needs no `variable` row (the
+    whole point — its row is gone after the rename)."""
+
+    @staticmethod
+    def _add_edge(
+        conn: sqlite3.Connection,
+        predecessor: tuple[str, str, str],
+        successor: tuple[str, str, str],
+    ) -> None:
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, note) "
+            "VALUES (?,?,?,?,?,?,'auto:test')",
+            (*predecessor, *successor),
+        )
+        conn.commit()
+
+    def test_multi_hop_chain_returns_terminal(self) -> None:
+        # old-a → old-b → kon (the live, edge-free leaf from build_slugged_db).
+        # old-a / old-b are dead: NO variable rows, only edges.
+        conn = build_slugged_db()
+        self._add_edge(conn, ("scb", "lisa", "old-a"), ("scb", "lisa", "old-b"))
+        self._add_edge(conn, ("scb", "lisa", "old-b"), ("scb", "lisa", "kon"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/lisa/old-a")
+        assert terminal is not None
+        assert str(terminal) == "scb/lisa/kon"
+
+    def test_no_outbound_edge_returns_none(self) -> None:
+        # kon is the live terminal with no outbound edge → genuinely unknown.
+        conn = build_slugged_db()
+        assert Catalog(conn).resolve_terminal_successor(_KON) is None
+
+    def test_non_binding_fqid_returns_none(self) -> None:
+        # Register/classification-grain renames are out of scope (no SQL).
+        conn = build_slugged_db()
+        cat = Catalog(conn)
+        assert cat.resolve_terminal_successor("scb/lisa") is None
+        assert cat.resolve_terminal_successor("scb") is None
+        assert cat.resolve_terminal_successor("class/sun2020") is None
+
+    def test_cycle_guard_terminates(self) -> None:
+        # Malformed double-rename loop A→B→A. The walk must terminate (not hang)
+        # and land deterministically on B (start=A hops to B, B→A is already
+        # seen → stop).
+        conn = build_slugged_db()
+        self._add_edge(conn, ("scb", "lisa", "loop-a"), ("scb", "lisa", "loop-b"))
+        self._add_edge(conn, ("scb", "lisa", "loop-b"), ("scb", "lisa", "loop-a"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/lisa/loop-a")
+        assert terminal is not None
+        assert str(terminal) == "scb/lisa/loop-b"
+
+    def test_split_pick_is_lexicographically_first(self) -> None:
+        # Deterministic split pick: when a predecessor has TWO distinct
+        # successors, the walk takes the lexicographically-FIRST per
+        # `_first_successor_triple`'s `ORDER BY successor_provider,
+        # successor_register, successor_variable LIMIT 1`. Both successors are
+        # dead leaves (no variable rows, no further edges) so each is itself
+        # terminal — this isolates the split pick, not the walk depth.
+        conn = build_slugged_db()
+        self._add_edge(conn, ("scb", "lisa", "split-src"), ("scb", "lisa", "zzz-high"))
+        self._add_edge(conn, ("scb", "lisa", "split-src"), ("scb", "lisa", "aaa-low"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/lisa/split-src")
+        assert terminal is not None
+        # "aaa-low" < "zzz-high" → the lower-sorted successor wins.
+        assert str(terminal) == "scb/lisa/aaa-low"

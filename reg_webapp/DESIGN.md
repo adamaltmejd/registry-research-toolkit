@@ -147,6 +147,18 @@ the list form (keeps the list grammar out of the separately-released reg_meta, m
 **ignored** on non-binding kinds (the register / provider / classification node resolves
 normally). An absent `?period` still returns the FULL embedded leaf.
 
+**301 redirect for renamed/dead binding slugs (#355 PART 2).** When the no-period
+catch-all path returns a genuine `fqid_not_found` 404 on a binding FQID, the route calls
+`Catalog.resolve_terminal_successor` before surfacing the 404. If the FQID has a
+successor chain, the handler returns an HTTP 301 to the canonical `/api/catalog/<path>`
+of the terminal successor (each path segment percent-encoded via `urllib.parse.quote`).
+A truly-unknown slug — no successor edge — re-raises the original 404 unchanged. Scope
+of the deferral: the `?period` branch (resolved via `resolve_at`) and the suffixed
+sub-endpoints (`/states`, `/predecessors`, etc.) still 404 on dead slugs; only the
+no-period node path redirects. The 301 is permanent and cache-eligible; the terminal
+resolution guarantees the redirect target stays stable under double renames (see
+`reg_meta/DESIGN.md → resolve_terminal_successor`).
+
 **Concept groups (#303).** The register and classification-root responses carry a
 `groups` list (`ConceptGroupModel`, mapped 1:1 from reg_meta's `ConceptGroupSummary` —
 see reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
@@ -319,7 +331,15 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   under the unscoped (`all`) view (#393): the scope toggle has no Docs option, and a
   non-`all` `?type=` short-circuits the docs fetch so a scoped search shows just its one
   group. The reserved `docs` `SearchGroup` arm stays unused; the separation is the right
-  call given the optional-DB / degradation rationale above.
+  call given the optional-DB / degradation rationale above. The `/api/docs/for-variable`
+  leaf hook has its own SPA consumer (#402): `BindingLeafView.svelte` renders a
+  `DocMentionsPanel` sibling of the lineage panels, firing a SEPARATE independent
+  `asyncResource` at `/api/docs/for-variable` — a distinct failure domain (a docs error,
+  timeout, or absent index never blanks the leaf). Coverage-aware copy distinguishes
+  `ingested:false` (no docs DB), `register_ingested:false` (LISA-only; displayed as "no
+  docs ingested for this register", never "undocumented"), empty results, and fuzzy
+  hits; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet as
+  plain text (not `{@html}`).
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
@@ -506,6 +526,17 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
   does see template usage.
 - The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely (codegen output,
   never hand-formatted).
+
+## Site-wide catalog vintage footer (#355 decision 2)
+
+`App.svelte` renders a `<footer class="vintage">` on every route showing the reg_meta
+version, schema version, and DB build date sourced from `/api/context`
+(`context.webapp.reg_meta_version`, `context.reg_meta.schema_version`,
+`context.reg_meta.import_date`). The footer is guarded on `context` (same as the header
+`.build` chip) so it is absent until `/api/context` resolves. `import_date` is a UTC
+timestamp string (`"2026-06-12T08:30:00Z"`); the footer displays only the leading
+`YYYY-MM-DD` (split on `"T"`). The intent is citation stability: a reader quoting any
+catalog node can see which reg_meta build it reflects without navigating away.
 
 ## SPA routing + production fallback
 
@@ -860,25 +891,25 @@ The committed `backend/openapi.json` is the canonical contract; this table is th
 orientation map. All endpoints are under `/api/`; read GETs are edge-cacheable, write
 POSTs are not. Catalog browse paths use FQID segments directly.
 
-  | Method | Path                                          | Purpose                                                                                                                                                                                                                                                                    |
-  | ------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                         |
-  | GET    | `/api/catalog`                                | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                          |
-  | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible (docs join as a new group). `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                     |
-  | GET    | `/api/docs/search`                            | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                   |
-  | GET    | `/api/docs/doc/{identifier}`                  | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                              |
-  | GET    | `/api/docs/for-variable`                      | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}`                         | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). |
-  | GET    | `/api/catalog/{provider}/{register}/variants` | The register's variant browser.                                                                                                                                                                                                                                            |
-  | GET    | `/api/catalog/{fqid}/states`                  | Full state history for a binding.                                                                                                                                                                                                                                          |
-  | GET    | `/api/catalog/{fqid}/predecessors`            | Inbound `variable_replaced_by` edges.                                                                                                                                                                                                                                      |
-  | GET    | `/api/catalog/{fqid}/successors`              | Outbound `variable_replaced_by` edges.                                                                                                                                                                                                                                     |
-  | GET    | `/api/catalog/{fqid}/related`                 | `variable_related_to` edges (sibling-grain variables).                                                                                                                                                                                                                     |
-  | GET    | `/api/catalog/{fqid}/lineage`                 | Materialized `variable_state_lineage` edges (consumer ← source).                                                                                                                                                                                                           |
-  | GET    | `/api/catalog/{fqid}/lineage_warnings`        | Linker-emitted lineage coverage warnings.                                                                                                                                                                                                                                  |
-  | POST   | `/api/project/validate`                       | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                               |
-  | POST   | `/api/project/order`                          | Default order-export CSV download.                                                                                                                                                                                                                                         |
-  | POST   | `/api/bundle`                                 | Build the MONA `.py` bundle from a spec.                                                                                                                                                                                                                                   |
+  | Method | Path                                          | Purpose                                                                                                                                                                                                                                                                                                                                                                                             |
+  | ------ | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | GET    | `/api/context`                                | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                  |
+  | GET    | `/api/catalog`                                | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                   |
+  | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible (docs join as a new group). `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                                                                                                                                              |
+  | GET    | `/api/docs/search`                            | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                            |
+  | GET    | `/api/docs/doc/{identifier}`                  | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                       |
+  | GET    | `/api/docs/for-variable`                      | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                           |
+  | GET    | `/api/catalog/{fqid}`                         | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding slug with a successor 301-redirects to its terminal successor (no-period path only; #355 PART 2). |
+  | GET    | `/api/catalog/{provider}/{register}/variants` | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                     |
+  | GET    | `/api/catalog/{fqid}/states`                  | Full state history for a binding.                                                                                                                                                                                                                                                                                                                                                                   |
+  | GET    | `/api/catalog/{fqid}/predecessors`            | Inbound `variable_replaced_by` edges.                                                                                                                                                                                                                                                                                                                                                               |
+  | GET    | `/api/catalog/{fqid}/successors`              | Outbound `variable_replaced_by` edges.                                                                                                                                                                                                                                                                                                                                                              |
+  | GET    | `/api/catalog/{fqid}/related`                 | `variable_related_to` edges (sibling-grain variables).                                                                                                                                                                                                                                                                                                                                              |
+  | GET    | `/api/catalog/{fqid}/lineage`                 | Materialized `variable_state_lineage` edges (consumer ← source).                                                                                                                                                                                                                                                                                                                                    |
+  | GET    | `/api/catalog/{fqid}/lineage_warnings`        | Linker-emitted lineage coverage warnings.                                                                                                                                                                                                                                                                                                                                                           |
+  | POST   | `/api/project/validate`                       | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                        |
+  | POST   | `/api/project/order`                          | Default order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                  |
+  | POST   | `/api/bundle`                                 | Build the MONA `.py` bundle from a spec.                                                                                                                                                                                                                                                                                                                                                            |
 
 **Order-export CSV columns** (the v1 default; fixed order is the contract):
 `provider,register,variant,variable,representation,period,display_name` — one row per

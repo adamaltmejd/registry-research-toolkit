@@ -195,6 +195,47 @@ def test_missing_binding_returns_404(client):
     assert resp.status_code == 404
 
 
+def test_renamed_binding_redirects_301_to_terminal(client):
+    """#355 PART 2: a citation of a renamed/dead binding slug 301-redirects to its
+    TERMINAL successor. The fixture seeds the chain
+    `scb/lisa/renamed-head → scb/lisa/renamed-mid → scb/rams/syss` (head + mid
+    have no `variable` row); a GET on the head must land at the terminal.
+
+    `follow_redirects=False` is REQUIRED — TestClient follows 301s by default, so
+    without it we'd see the followed 200 from the terminal, not the redirect."""
+    resp = client.get("/api/catalog/scb/lisa/renamed-head", follow_redirects=False)
+    assert resp.status_code == 301
+    assert resp.headers["location"] == "/api/catalog/scb/rams/syss"
+
+
+def test_renamed_binding_redirect_walks_to_absolute_chain_end(client):
+    """The redirect always resolves to the ABSOLUTE chain end, never one hop: a
+    GET on the MIDDLE dead slug also lands at the terminal `scb/rams/syss`."""
+    resp = client.get("/api/catalog/scb/lisa/renamed-mid", follow_redirects=False)
+    assert resp.status_code == 301
+    assert resp.headers["location"] == "/api/catalog/scb/rams/syss"
+
+
+def test_unknown_dead_binding_still_404(client):
+    """A truly-unknown dead slug with NO successor edge stays 404 (not a
+    redirect) — `resolve_terminal_successor` returns None, so the original 404
+    re-raises unchanged."""
+    resp = client.get("/api/catalog/scb/lisa/never-existed", follow_redirects=False)
+    assert resp.status_code == 404
+
+
+def test_dead_binding_with_period_still_404_no_redirect(client):
+    """The redirect lives ONLY on the no-period node path; the `?period` branch
+    resolves via `resolve_at` and stays 404. This guards the intentional
+    deferral — a dead slug WITH `?period` (here the chain head `renamed-head`,
+    which redirects 301 without a period) must NOT silently turn into a
+    redirect."""
+    resp = client.get(
+        "/api/catalog/scb/lisa/renamed-head?period=2019", follow_redirects=False
+    )
+    assert resp.status_code == 404
+
+
 def test_too_many_segments_returns_422(client):
     # Every segment is a valid slug, so the per-segment guard admits it; the
     # >3-segment arity is rejected by `reg_meta.fqid.parse` → 422 (a structural

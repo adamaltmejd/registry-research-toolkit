@@ -1,6 +1,6 @@
 ---
 name: pr-pipeline
-description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → simplifier → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), or a feature/problem description>"
+description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), or a feature/problem description>"
 argument-hint: "<issue number(s) or a feature/problem description>"
 disable-model-invocation: true
 ---
@@ -18,8 +18,8 @@ You are the **lead** for this request:
 You plan the work and own ALL git (stage / commit / push / open / merge). You dispatch
 **one-shot subagents** for the edits and run **`/code-review`** for the review step
 (Step C), then merge the result yourself. The role subagents live in `.claude/agents/`:
-`implementer`, `simplifier`, `tester`, `docs-updater` — dispatch each with the `Agent`
-tool, `subagent_type` set to the role (this is what loads its `.md` system prompt + tool
+`implementer`, `tester`, `docs-updater` — dispatch each with the `Agent` tool,
+`subagent_type` set to the role (this is what loads its `.md` system prompt + tool
 restrictions; omitting it gives a generic agent with the wrong prompt).
 
 ## How dispatch works
@@ -29,12 +29,12 @@ prompt naming the scope + Verify commands. The subagent edits files in your chec
 (or, for read-only roles, just inspects), then **its final message returns to you as the
 tool result** — that IS its report.
 
-- **You own all git.** Mutating roles (implementer / simplifier / docs-updater) edit and
-  report a summary + the files they touched; they do NOT `git add` / `commit` / `push` /
-  `merge`. After a role reports, glance at `git status`, stage the real working-tree
-  delta (`git add -A`), commit, and push. One writer on the git index = no races and no
-  commit sweeping up a half-done edit. Treat a role's reported file list as a
-  cross-check, never the source of truth — stage the actual delta so an under-reported
+- **You own all git.** Mutating roles (implementer / docs-updater) edit and report a
+  summary + the files they touched; they do NOT `git add` / `commit` / `push` / `merge`.
+  After a role reports, glance at `git status`, stage the real working-tree delta
+  (`git add -A`), commit, and push. One writer on the git index = no races and no commit
+  sweeping up a half-done edit. Treat a role's reported file list as a cross-check,
+  never the source of truth — stage the actual delta so an under-reported
   create/rename/delete is never dropped.
 - **Re-dispatch = a fresh pass on the delta.** To apply review fixes, dispatch a fresh
   `implementer` with the findings; to re-review, re-run `/code-review` on the fix range
@@ -65,16 +65,14 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 3. **Pick the roles per PR.** implementer ALWAYS runs, and `/code-review` ALWAYS reviews
    (Step C). The rest are conditional — a role you won't use is one you must NOT
    dispatch:
-   - **simplifier** — only if the diff adds/changes real logic worth de-duplicating (a
-     comment / config / rename sweep has nothing to simplify).
    - **tester** — only if behaviour changes (existing snapshot/idempotence tests already
      cover it → skip).
    - **docs-updater** — only if code/contract drifts from AUTHORED docs (a change that
      edits docs directly, or touches no documented surface, has no drift).
 
-   Skipping a role is a decision you NAME in the final report, never a silent omission.
-   A large *mechanical* change (even 100+ files) is still implementer + `/code-review`
-   only.
+   Skipping a role is a decision you NAME in your closeout report, never a silent
+   omission. A large *mechanical* change (even 100+ files) is still implementer +
+   `/code-review` only.
 
 4. **Settle forks up front.** Resolve any open fork (naming, schema, scope) with
    `AskUserQuestion` now — only you can reach the human.
@@ -96,23 +94,23 @@ near-final). Outward-facing `gh` actions (PR create / merge / comment) may be de
 the session's permission mode — if one is denied, surface it to the human, don't work
 around it.
 
-**B · Simplify + test.** Run each only if its role applies (Step 0.3). simplifier first
-→ commit its result → THEN tester against the committed HEAD (the tester only
-*suggests*; you pick which suggestions to accept and dispatch a fresh implementer to add
-them → commit). Then mark the PR **ready** — auto-review (Codex/Copilot) and CI-on-ready
-fire once, on near-final code.
+**B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
+against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
+implementer to add them → commit. Then, whether or not the tester ran, mark the PR
+**ready** — auto-review (Codex/Copilot) and CI-on-ready fire once, on near-final code.
 
 **C · Review loop.** Run **`/code-review <effort>`** on the PR — it fans out lenses
-(bugs, CLAUDE.md/DESIGN adherence, git history, prior-PR comments, code comments),
-scores its own findings for confidence, then reports them **back to you**. Do NOT pass
-`--comment` or `--fix` — you route fixes and own git. Scale effort to risk: `medium` by
-default, `high`/`max` for large or high-risk diffs (DDL/schema/build-affecting,
-data-safety, concurrency). **Never `ultra`** — it's a billed cloud tier that isn't
-enabled. Route blocking findings (and questions you resolve) to a fresh implementer →
-fix, re-verify, report → you commit + push → re-run `/code-review` on the fix delta.
-Repeat until a pass reports no further material findings. Safety valve: if it won't
-settle after a few rounds or keeps re-raising the same point, STOP and surface it via
-`AskUserQuestion` — never loop forever.
+(bugs, CLAUDE.md/DESIGN adherence, git history, prior-PR comments, code comments, plus
+reuse / simplification / efficiency / altitude cleanup), scores its own findings for
+confidence, then reports them **back to you**. Do NOT pass `--comment` or `--fix` — you
+route fixes and own git. Scale effort to risk: `medium` by default, `high`/`max` for
+large or high-risk diffs (DDL/schema/build-affecting, data-safety, concurrency). **Never
+`ultra`** — it's a billed cloud tier that isn't enabled. Route the fixes you're taking —
+blocking bugs, resolved questions, and any worthwhile reuse / simplification cleanup —
+to a fresh implementer → re-verify, report → you commit + push → re-run `/code-review`
+on the fix delta. Repeat until a pass reports no further material findings. Safety
+valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
+and surface it via `AskUserQuestion` — never loop forever.
 
 **D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and

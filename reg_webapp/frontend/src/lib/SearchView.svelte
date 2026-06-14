@@ -11,7 +11,7 @@ import type {
 } from "./api";
 import { docSearch, search } from "./api";
 import { asyncResource } from "./async.svelte";
-import { catalogHref } from "./catalog";
+import { catalogHref, showingOf } from "./catalog";
 import { router } from "./router.svelte";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
@@ -133,13 +133,6 @@ const GROUP_HEADINGS = {
   classifications: "Classifications",
   codes: "Codes / values",
 } as const;
-
-/** The "showing N of M" caption when the displayed slice is smaller than the full
- * match count (N = rendered rows, M = total before the server's per-request
- * limit), else null (don't caption a complete group). */
-function showingOf(shown: number, total: number): string | null {
-  return shown < total ? `showing ${shown} of ${total}` : null;
-}
 
 // Discriminate a variable/classification group's mixed results on `type`.
 function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
