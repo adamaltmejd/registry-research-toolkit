@@ -72,10 +72,22 @@ def test_repo_family_merges_parses() -> None:
 
 
 def test_repo_variable_related_to_parses() -> None:
-    # The shipped file is EMPTY (no edges curated yet) — unlike the other repo
-    # TOMLs above, the regression lock is an EMPTY assertion, not truthiness. It
-    # starts failing loudly the day a real edge lands, prompting an update here.
-    assert load_related_to(_ROOT / "variable_related_to.toml") == ()
+    # The first curated "see also" edges landed (#403) — the regression lock
+    # flips from an EMPTY assertion to truthiness + shape, like the other repo
+    # curation gates above. Endpoint RESOLUTION (both FQIDs exist) is
+    # maintainer-build territory (the materializer fails fast on a dangling FQID).
+    edges = load_related_to(_ROOT / "variable_related_to.toml")
+    assert edges
+    assert all(
+        e.a_provider
+        and e.a_register
+        and e.a_variable
+        and e.b_provider
+        and e.b_register
+        and e.b_variable
+        and e.relation_kind
+        for e in edges
+    )
 
 
 def test_repo_variable_grafts_parses() -> None:
