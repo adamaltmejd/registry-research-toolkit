@@ -37,6 +37,9 @@ from .errors import (
     EXIT_USAGE,
     RegMetaError,
 )
+from .fqid import (
+    period_token_for_bounds,
+)
 from .queries import (
     get_availability,
     get_classification,
@@ -1724,9 +1727,13 @@ def _write_payload(
             rows = []
             for v in data.get("variants", []):
                 for ver in v.get("versions", []):
-                    # A2.6: editions are validity windows now; show the period
-                    # as `valid_from..valid_to` instead of a register_version name.
-                    period = f"{ver.get('valid_from', '')}..{ver.get('valid_to', '')}"
+                    # A2.6: editions are validity windows now. #321: render the
+                    # window at its COARSEST exact period token (never round a
+                    # sub-annual span down to a bare year) — raw `lo..hi` only
+                    # when the window falls outside the period grammar.
+                    period = period_token_for_bounds(
+                        ver.get("valid_from", ""), ver.get("valid_to", "")
+                    )
                     for col in ver.get("columns", []):
                         rows.append(
                             {
@@ -1777,8 +1784,8 @@ def _write_payload(
                         # A2.6: per-state validity window instead of a
                         # register_version name + cvid.
                         "variant": inst.get("variant_name", ""),
-                        "period": (
-                            f"{inst.get('valid_from', '')}..{inst.get('valid_to', '')}"
+                        "period": period_token_for_bounds(
+                            inst.get("valid_from", ""), inst.get("valid_to", "")
                         ),
                         "data_type": inst.get("data_type", ""),
                         "aliases": ", ".join(inst.get("aliases", [])),
