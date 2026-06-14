@@ -272,6 +272,21 @@ describe("search", () => {
     expect(url).toBe("/api/search?q=kon&limit=5");
   });
 
+  it("appends an explicit non-'all' type (#393 item 1)", async () => {
+    const { url } = await callFor("kon", { type: "value" });
+    expect(url).toBe("/api/search?q=kon&type=value");
+  });
+
+  it("OMITS type=all (the server default → clean canonical URL)", async () => {
+    const { url } = await callFor("kon", { type: "all" });
+    expect(url).toBe("/api/search?q=kon");
+  });
+
+  it("omits type when not provided", async () => {
+    const { url } = await callFor("kon");
+    expect(url).toBe("/api/search?q=kon");
+  });
+
   it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {
     // Even with no caller signal, `search` layers AbortSignal.timeout so a hung
     // request can't spin forever — fetch must always receive a signal.

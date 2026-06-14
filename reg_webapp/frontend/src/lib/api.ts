@@ -384,20 +384,34 @@ export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
  * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
 const SEARCH_TIMEOUT_MS = 12_000;
 
+/** The scoped-search toggle values (#393 item 1). `all` (the default) returns the
+ * four typed groups; any single value scopes the search to that one group. Mirrors
+ * reg_meta's `SEARCH_TYPES` (the backend 422s an unknown value). */
+export type SearchType =
+  | "all"
+  | "register"
+  | "variable"
+  | "classification"
+  | "value";
+
 /** GET a search endpoint (`path` relative to `/api`) with the shared query +
  * abort plumbing both search surfaces use: `q` is encoded, an explicit `limit`
- * appended (server default otherwise), and the request aborts on EITHER the
- * caller's `signal` (a supersede/unmount teardown, which stays silent) OR a ~12s
- * timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on whichever
- * wins. */
+ * appended (server default otherwise), an explicit non-`all` `type` appended
+ * (#393 item 1 — `all` is the server default, so it's OMITTED to keep the URL +
+ * ETag stable), and the request aborts on EITHER the caller's `signal` (a
+ * supersede/unmount teardown, which stays silent) OR a ~12s timeout (surfaced as a
+ * `TimeoutError`) — `AbortSignal.any` fires on whichever wins. */
 function searchGet<T>(
   path: string,
   q: string,
-  options?: { signal?: AbortSignal; limit?: number },
+  options?: { signal?: AbortSignal; limit?: number; type?: SearchType },
 ): Promise<T> {
   const params = new URLSearchParams({ q });
   if (options?.limit !== undefined) {
     params.set("limit", String(options.limit));
+  }
+  if (options?.type !== undefined && options.type !== "all") {
+    params.set("type", options.type);
   }
   const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
   if (options?.signal) {
@@ -409,12 +423,13 @@ function searchGet<T>(
 }
 
 /** Search the catalog. `q` is the raw user query (encoded); `limit` is the
- * per-group result cap — omit it to use the server default (20, clamped ≤50). A
- * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
- * error. */
+ * per-group result cap — omit it to use the server default (20, clamped ≤50);
+ * `type` scopes the search to one group (#393 item 1) — omit it (or pass `all`)
+ * for the four-group default. A blank/punctuation-only query returns the selected
+ * group(s) empty (`total_count: 0`), not an error. */
 export function search(
   q: string,
-  options?: { signal?: AbortSignal; limit?: number },
+  options?: { signal?: AbortSignal; limit?: number; type?: SearchType },
 ): Promise<SearchResponse> {
   return searchGet<SearchResponse>("/search", q, options);
 }

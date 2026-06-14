@@ -710,6 +710,11 @@ class CodeSearchResult(BaseModel):
     variable_count: int = 0
     classifications: list[CodeOwnerClassification] = []
     classification_count: int = 0
+    # Inferred from the owning classification: the primary/first owning
+    # classification's short_name (fall back to its name). None for
+    # register-local / bespoke codes with no owning classification (#393 item 3).
+    # The SPA groups the codes group into per-code-system subsections off this.
+    code_system: str | None = None
 
 
 class CodeSearchGroup(BaseModel):

@@ -108,6 +108,28 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     await expect.poll(() => router.route.name).toBe("root");
   });
 
+  it("preserves an active ?type= scope when refining the query (#393 item 1)", async () => {
+    // On a scoped /search URL, typing more into the box must NOT reset the scope
+    // back to "all" — the committed URL carries the existing ?type= forward.
+    setUrl("/search?q=ko&type=value");
+    await render(SearchOmnibox);
+    const box = page.getByRole("searchbox");
+    await box.fill("kon");
+
+    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
+    await expect.poll(() => router.getQueryParam("type")).toBe("value");
+  });
+
+  it("does not add a ?type= when none is present (default scope stays clean)", async () => {
+    setUrl("/search?q=ko");
+    await render(SearchOmnibox);
+    const box = page.getByRole("searchbox");
+    await box.fill("kon");
+
+    await expect.poll(() => router.getQueryParam("q")).toBe("kon");
+    await expect.poll(() => router.getQueryParam("type")).toBeNull();
+  });
+
   it("adopts the URL's ?q on a back/forward (popstate) without ping-pong", async () => {
     setUrl("/search?q=first");
     await render(SearchOmnibox);
