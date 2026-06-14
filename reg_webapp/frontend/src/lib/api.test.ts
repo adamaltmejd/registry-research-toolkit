@@ -8,6 +8,7 @@ import {
   getBindingPredecessors,
   getCatalogNode,
   getDoc,
+  getDocsForVariable,
   isCatalogNode,
   type StatesResponse,
   search,
@@ -367,6 +368,73 @@ describe("getDoc (#394)", () => {
     expect(err).toBeInstanceOf(ApiError);
     expect(err.status).toBe(404);
     expect(err.message).toBe("no documentation for 'x'");
+  });
+});
+
+describe("getDocsForVariable (#402)", () => {
+  // Mirror the `docSearch`/`search` harness: capture the URL + fetch init for one
+  // call. `getDocsForVariable` shares the same `searchGet` plumbing against the
+  // `/docs/for-variable` path, plus the `register` filter the for-variable hook
+  // appends — so the encoding/abort assertions are the same shape.
+  async function callFor(
+    q: string,
+    options?: Parameters<typeof getDocsForVariable>[1],
+  ): Promise<{ url: string; init: RequestInit | undefined }> {
+    let url = "";
+    let init: RequestInit | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((u: string, i?: RequestInit) => {
+        url = u;
+        init = i;
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            ingested: true,
+            kind: "doc-mentions",
+            register: "lisa",
+            register_ingested: true,
+            total_count: 0,
+            results: [],
+          }),
+        });
+      }),
+    );
+    await getDocsForVariable(q, options);
+    return { url, init };
+  }
+
+  it("encodes q + register + limit (the register filter is appended)", async () => {
+    // `searchGet` appends params in q → limit → register order; `kö n` exercises
+    // the URLSearchParams encoding (space → `+`, ö → `%C3%B6`).
+    const { url } = await callFor("kö n", { register: "lisa", limit: 5 });
+    expect(url).toBe(
+      "/api/docs/for-variable?q=k%C3%B6+n&limit=5&register=lisa",
+    );
+  });
+
+  it("omits register from the URL when not passed", async () => {
+    const { url } = await callFor("kon");
+    expect(url).toBe("/api/docs/for-variable?q=kon");
+  });
+
+  it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {
+    // Even with no caller signal, the shared `searchGet` layers AbortSignal.timeout
+    // so a hung request can't spin forever — fetch must always receive a signal.
+    const { init } = await callFor("kon");
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
+    expect(init?.signal?.aborted).toBe(false);
+  });
+
+  it("aborts fetch when the caller's signal aborts (supersede)", async () => {
+    // The combined signal (caller ∪ timeout) must abort when the CALLER aborts —
+    // the supersede path the panel's asyncResource teardown relies on.
+    const controller = new AbortController();
+    const { init } = await callFor("kon", { signal: controller.signal });
+    expect(init?.signal?.aborted).toBe(false);
+    controller.abort();
+    expect(init?.signal?.aborted).toBe(true);
   });
 });
 

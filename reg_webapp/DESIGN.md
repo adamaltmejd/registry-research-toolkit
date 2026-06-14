@@ -304,7 +304,14 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   sibling group — failure-isolated, silently omitted when the docs index is absent or
   empty, and never able to blank the four main groups. The reserved `docs` `SearchGroup`
   arm stays unused; the separation is the right call given the optional-DB / degradation
-  rationale above.
+  rationale above. The `/api/docs/for-variable` leaf hook has its own SPA consumer
+  (#402): `BindingLeafView.svelte` renders a `DocMentionsPanel` sibling of the lineage
+  panels, firing a SEPARATE independent `asyncResource` at `/api/docs/for-variable` — a
+  distinct failure domain (a docs error, timeout, or absent index never blanks the
+  leaf). Coverage-aware copy distinguishes `ingested:false` (no docs DB),
+  `register_ingested:false` (LISA-only; displayed as "no docs ingested for this
+  register", never "undocumented"), empty results, and fuzzy hits; each hit links to the
+  `/doc/<filename>` viewer and renders the FTS snippet as plain text (not `{@html}`).
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 
