@@ -50,25 +50,11 @@ You MAY run tests to confirm a suspicion (`uv run python -m pytest <pkg>/`,
 `uvx ty check`, or `bun run check`) — these read/execute only. (The real `build-db` is a
 \~20-min lead-only merge-gate check; don't run it as a reviewer.)
 
-Also bring these review lenses (inspired by `/code-review`), scaled to diff size (deeper
-on a large/risky diff):
-
-- **CLAUDE.md / DESIGN.md adherence** — does the change honour the repo conventions and
-  the touched package's documented design/constraints? (CLAUDE.md is guidance for
-  *writing* code, so apply judgement — not every line is a review rule.)
-- **Historical context** — `git log` / `git blame` the touched lines: does the change
-  reintroduce a bug a past commit fixed, or contradict why the code was written that
-  way?
-- **Prior-PR guidance** — `gh pr list --state merged` / `gh pr view` on PRs that touched
-  these files: does recurring review feedback there also apply here?
-- **Code-comment adherence** — does the change violate guidance in nearby comments?
-
-**Fan-out mode:** on a large/high-risk diff the lead may scope you to ONE lens (e.g.
-"review only contracts/data-safety") and run you in parallel with other lens-reviewers.
-Focus on your assigned lens — but still flag any clearly-blocking bug you happen to spot
-outside it; never withhold a real bug because it's "not my lens." The lead synthesizes
-across reviewers and applies the confidence bar, so don't worry about duplicating a
-neighbour's finding.
+Also weigh CLAUDE.md/DESIGN.md adherence, historical context (`git log` / `git blame`
+the touched lines), prior-PR review feedback on the same files, and nearby code-comment
+guidance — scaled to diff size. For a large or high-risk diff, prefer `/code-review` (it
+fans these lenses out in parallel and scores confidence); this subagent is the lighter
+single-pass option.
 
 ## Confidence & false positives
 
