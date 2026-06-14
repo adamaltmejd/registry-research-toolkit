@@ -550,13 +550,20 @@ class ValidationResultModel(BaseModel):
 # ── Global catalog search (#350; see DESIGN.md → Global catalog search) ──────
 # `GET /api/search` returns TYPED RESULT GROUPS over the shipped FTS5 indexes
 # (register_fts / variable_fts / classification_fts). THE GROUP LIST IS THE
-# EXTENSION POINT: codes (#352) and docs (#354) join later as NEW arms of the
-# `SearchGroup` union + new result models, each with its own `group` literal —
-# existing groups and their result models are never reshaped. The SPA must
-# tolerate an unknown `group` value (skip it), so a new group can ship before
-# the SPA learns to render it. Each result carries its navigable `fqid`; results
-# within a group are pre-sorted by FTS rank (after the #311 golden-boost seam),
-# so the wire carries no raw rank.
+# EXTENSION POINT: codes (#352) DID join as a new arm of the `SearchGroup` union
+# (+ result model, own `group` literal) — the codes group is part of this
+# endpoint. Docs (#354) deliberately did NOT join: its separate-optional-DB +
+# `ingested` degradation doesn't map onto a group's `total_count`/`results`
+# shape, so docs is served by the SEPARATE optional `GET /api/docs/search`
+# endpoint that the SPA consumes directly as a 5th group + the `/doc/<filename>`
+# viewer (#394); the `docs` arm of `SearchGroup` stays RESERVED / unused. The
+# group list remains the extension point for any FUTURE arm: a new arm is a new
+# `SearchGroup` member + result model with its own `group` literal — existing
+# groups and their result models are never reshaped. The SPA must tolerate an
+# unknown `group` value (skip it), so a new arm can ship before the SPA learns
+# to render it. Each result carries its navigable `fqid`; results within a group
+# are pre-sorted by FTS rank (after the #311 golden-boost seam), so the wire
+# carries no raw rank.
 
 
 class RegisterSearchResult(BaseModel):
