@@ -2097,3 +2097,132 @@ class TestSchemaCompat:
         db = self._db_with_manifest_version(tmp_path, SCHEMA_VERSION)
         conn = open_db(db, check_schema=True)  # must not raise
         conn.close()
+
+
+class TestPeriodTokenRendering:
+    """#321: the `period` column in `get schema` / `get varinfo` table output
+    renders each state's validity window at the COARSEST exact period token
+    (via `period_token_for_bounds`), never rounding a sub-annual window down to
+    a bare year. These drive `_write_payload` directly with hand-built payloads
+    in the exact JSON shape the queries layer emits, so they're self-contained
+    (no DB build) and pin the rendering, not the data path.
+
+    `fmt="list"` is forced so each `period` value renders full-text as
+    `period  <token>` — no table column truncation to fight."""
+
+    @staticmethod
+    def _render_schema(tmp_path, valid_from: str, valid_to: str) -> str:
+        from reg_meta.cli import _write_payload
+
+        out = tmp_path / "schema.txt"
+        payload = {
+            "data": {
+                "variants": [
+                    {
+                        "register_variant_id": 10,
+                        "versions": [
+                            {
+                                "valid_from": valid_from,
+                                "valid_to": valid_to,
+                                "year": int(valid_from[:4]),
+                                "columns": [
+                                    {
+                                        "var_id": "44",
+                                        "variable_name": "Kön",
+                                        "data_type": "int",
+                                        "aliases": "Kon",
+                                        "source": "",
+                                        "value_set_version_label": "",
+                                        "concept_group": "",
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                ]
+            }
+        }
+        _write_payload(("get", "schema"), payload, str(out), fmt="list")
+        return out.read_text(encoding="utf-8")
+
+    @staticmethod
+    def _render_varinfo(tmp_path, valid_from: str, valid_to: str) -> str:
+        from reg_meta.cli import _write_payload
+
+        out = tmp_path / "varinfo.txt"
+        payload = {
+            "data": {
+                "register_id": "1",
+                "var_id": "44",
+                "name": "Kön",
+                "instances": [
+                    {
+                        "variant_name": "individer",
+                        "valid_from": valid_from,
+                        "valid_to": valid_to,
+                        "data_type": "int",
+                        "aliases": ["Kon"],
+                        "value_set_count": 2,
+                    }
+                ],
+            }
+        }
+        _write_payload(("get", "varinfo"), payload, str(out), fmt="list")
+        return out.read_text(encoding="utf-8")
+
+    # ── sub-annual windows render as their coarsest token (NOT a bare year) ──
+
+    def test_schema_spring_term(self, tmp_path):
+        text = self._render_schema(tmp_path, "2015-01-01", "2015-06-30")
+        assert "period" in text
+        assert "VT2015" in text
+        assert "2015-01-01..2015-06-30" not in text  # not the raw range
+
+    def test_schema_autumn_term(self, tmp_path):
+        text = self._render_schema(tmp_path, "2015-07-01", "2015-12-31")
+        assert "HT2015" in text
+
+    def test_schema_quarter(self, tmp_path):
+        text = self._render_schema(tmp_path, "2018-04-01", "2018-06-30")
+        assert "2018-Q2" in text
+
+    def test_schema_single_month(self, tmp_path):
+        text = self._render_schema(tmp_path, "2019-03-01", "2019-03-31")
+        assert "2019-03" in text
+
+    def test_varinfo_spring_term(self, tmp_path):
+        text = self._render_varinfo(tmp_path, "2015-01-01", "2015-06-30")
+        assert "VT2015" in text
+
+    def test_varinfo_autumn_term(self, tmp_path):
+        text = self._render_varinfo(tmp_path, "2015-07-01", "2015-12-31")
+        assert "HT2015" in text
+
+    def test_varinfo_quarter(self, tmp_path):
+        text = self._render_varinfo(tmp_path, "2018-04-01", "2018-06-30")
+        assert "2018-Q2" in text
+
+    # ── full-year window stays the bare year (year-by-default preserved) ──
+
+    def test_schema_full_year_is_bare_year(self, tmp_path):
+        text = self._render_schema(tmp_path, "2020-01-01", "2020-12-31")
+        assert "2020" in text
+        assert "2020-01-01" not in text  # not the raw ISO bound
+
+    def test_varinfo_full_year_is_bare_year(self, tmp_path):
+        text = self._render_varinfo(tmp_path, "2020-01-01", "2020-12-31")
+        assert "2020" in text
+        assert "2020-01-01" not in text
+
+    # ── open-ended window stays the raw range (sentinel, not collapsed) ──
+
+    def test_schema_open_ended_is_raw_range(self, tmp_path):
+        # `9999-12-31` = OPEN_ENDED_VALID_TO; the years differ so it falls
+        # outside the grammar and must render as the explicit range — NOT a
+        # bare year, and without crashing.
+        text = self._render_schema(tmp_path, "2021-01-01", "9999-12-31")
+        assert "2021-01-01..9999-12-31" in text
+
+    def test_varinfo_open_ended_is_raw_range(self, tmp_path):
+        text = self._render_varinfo(tmp_path, "2021-01-01", "9999-12-31")
+        assert "2021-01-01..9999-12-31" in text
