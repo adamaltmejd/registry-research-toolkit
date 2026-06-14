@@ -52,7 +52,7 @@ const doc = $derived(resource.data);
         <a href={doc.source_url}>{doc.source ?? doc.source_url}</a>
       </p>
     {:else if doc.source}
-      <p class="source"><span>{doc.source}</span></p>
+      <p class="source">{doc.source}</p>
     {/if}
 
     {#if doc.excerpt}

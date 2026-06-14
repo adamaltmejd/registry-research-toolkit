@@ -384,16 +384,17 @@ export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
  * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
 const SEARCH_TIMEOUT_MS = 12_000;
 
-/** Search the catalog. `q` is the raw user query (encoded here); `limit` is the
- * per-group result cap — omit it to use the server default (20, clamped ≤50). A
- * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
- * error. The request aborts on EITHER `signal` (the caller's teardown — a
- * supersede/unmount, which stays silent) OR a ~12s timeout (surfaced as a
- * `TimeoutError`); `AbortSignal.any` fires on whichever wins. */
-export function search(
+/** GET a search endpoint (`path` relative to `/api`) with the shared query +
+ * abort plumbing both search surfaces use: `q` is encoded, an explicit `limit`
+ * appended (server default otherwise), and the request aborts on EITHER the
+ * caller's `signal` (a supersede/unmount teardown, which stays silent) OR a ~12s
+ * timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on whichever
+ * wins. */
+function searchGet<T>(
+  path: string,
   q: string,
   options?: { signal?: AbortSignal; limit?: number },
-): Promise<SearchResponse> {
+): Promise<T> {
   const params = new URLSearchParams({ q });
   if (options?.limit !== undefined) {
     params.set("limit", String(options.limit));
@@ -402,9 +403,20 @@ export function search(
   if (options?.signal) {
     signals.push(options.signal);
   }
-  return apiGet<SearchResponse>(`/search?${params}`, {
+  return apiGet<T>(`${path}?${params}`, {
     signal: AbortSignal.any(signals),
   });
+}
+
+/** Search the catalog. `q` is the raw user query (encoded); `limit` is the
+ * per-group result cap — omit it to use the server default (20, clamped ≤50). A
+ * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
+ * error. */
+export function search(
+  q: string,
+  options?: { signal?: AbortSignal; limit?: number },
+): Promise<SearchResponse> {
+  return searchGet<SearchResponse>("/search", q, options);
 }
 
 // ── Docs surface (#354/#394) ────────────────────────────────────────────────
@@ -422,25 +434,15 @@ export type DocSearchResponse = Schemas["DocSearchResponse"];
 export type DocResult = Schemas["DocResult"];
 export type DocDetail = Schemas["DocDetail"];
 
-/** Search documentation. Mirrors `search`'s abort/timeout structure: a ~12s
- * client timeout (surfaced as a `TimeoutError`) layered with the caller's teardown
- * `signal` via `AbortSignal.any`. `limit` is the per-request result cap (server
- * default otherwise). An absent docs index returns `ingested:false`, not an error. */
+/** Search documentation. Shares `search`'s query + abort/timeout plumbing (a ~12s
+ * client `TimeoutError` layered with the caller's teardown `signal`); `limit` is
+ * the per-request result cap (server default otherwise). An absent docs index
+ * returns `ingested:false`, not an error. */
 export function docSearch(
   q: string,
   options?: { signal?: AbortSignal; limit?: number },
 ): Promise<DocSearchResponse> {
-  const params = new URLSearchParams({ q });
-  if (options?.limit !== undefined) {
-    params.set("limit", String(options.limit));
-  }
-  const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
-  if (options?.signal) {
-    signals.push(options.signal);
-  }
-  return apiGet<DocSearchResponse>(`/docs/search?${params}`, {
-    signal: AbortSignal.any(signals),
-  });
+  return searchGet<DocSearchResponse>("/docs/search", q, options);
 }
 
 /** Resolve one doc by its `identifier` (a filename — a single path segment, so
