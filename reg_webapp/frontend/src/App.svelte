@@ -3,6 +3,7 @@ import { onMount } from "svelte";
 import { type Context, errMessage, getContext } from "./lib/api";
 import CatalogNodeView from "./lib/CatalogNodeView.svelte";
 import CatalogRoot from "./lib/CatalogRoot.svelte";
+import DocView from "./lib/DocView.svelte";
 import ProjectEditor from "./lib/ProjectEditor.svelte";
 import { projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
@@ -117,6 +118,10 @@ const steward = $derived(context?.steward.id ?? "");
       <ProjectEditor {regMetaVersion} {steward} />
     {:else if route.name === "search"}
       <SearchView />
+    {:else if route.name === "doc"}
+      {#key route.identifier}
+        <DocView identifier={route.identifier} />
+      {/key}
     {:else}
       <article>
         <h2>Not found</h2>

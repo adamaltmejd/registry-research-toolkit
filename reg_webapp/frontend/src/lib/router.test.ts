@@ -67,6 +67,39 @@ describe("parseRoute", () => {
     expect(parseRoute("/search/")).toEqual({ name: "search" }); // trailing slash
   });
 
+  it("parses the /doc viewer route (#394) — identifier is the filename segment", () => {
+    expect(parseRoute("/doc/lisa_kon.md")).toEqual({
+      name: "doc",
+      identifier: "lisa_kon.md",
+    });
+  });
+
+  it("decodes a percent-encoded /doc identifier (#394)", () => {
+    expect(parseRoute("/doc/lisa%20kon.md")).toEqual({
+      name: "doc",
+      identifier: "lisa kon.md",
+    });
+  });
+
+  it("routes a malformed percent-sequence in /doc to not-found (#394)", () => {
+    // Same cold-deep-link safety as /catalog: a bare `%` would throw a URIError in
+    // decodeURIComponent; safeDecode must degrade it to not-found, not white-screen.
+    expect(parseRoute("/doc/%")).toEqual({
+      name: "not-found",
+      path: "/doc/%",
+    });
+  });
+
+  it("routes a bare /doc/ (empty identifier) to not-found (#394)", () => {
+    // The trailing slash is stripped to `/doc`, which doesn't match the `/doc/`
+    // prefix, so it falls through to the catch-all not-found (path is the stripped
+    // `/doc`, NOT the original `/doc/`).
+    expect(parseRoute("/doc/")).toEqual({
+      name: "not-found",
+      path: "/doc",
+    });
+  });
+
   it("maps anything else to not-found", () => {
     expect(parseRoute("/about")).toEqual({ name: "not-found", path: "/about" });
   });
@@ -148,6 +181,13 @@ describe("onNavClick", () => {
     // (the omnibox routes via the URL, the shell intercepts the click) must be
     // pushState-navigated rather than full-reloading.
     expect(clickAnchor("/search?q=kon").defaultPrevented).toBe(true);
+  });
+
+  it("intercepts the /doc viewer route (#394)", () => {
+    // A docs search hit links to `/doc/<filename>`; now that the route exists,
+    // onNavClick's "parseRoute(...).name !== 'not-found'" guard intercepts it
+    // automatically (no special case in onNavClick).
+    expect(clickAnchor("/doc/lisa_kon.md").defaultPrevented).toBe(true);
   });
 });
 

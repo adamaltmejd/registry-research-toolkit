@@ -211,12 +211,19 @@ groups** over the shipped FTS5 indexes, reusing reg_meta's concept-group-folded 
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
 `/search?q=` results page (`SearchView.svelte`) that renders the four typed groups with
-navigation to catalog nodes. The router gained a `search` route (query lives in `?q=`,
-keyed on pathname so the page re-runs on every query change) and a `router.replace()`
-method (mirrors the `?period` URL-as-single-source-of-truth pattern: the omnibox syncs
-back to the URL, and the URL drives the view). `api.ts` gained `search(q, limit?)` typed
-off the codegen'd contract. The **docs group** (`/api/docs/search`) and a doc viewer are
-deliberately deferred to PR2 (#379) — see "Not yet folded" note below.
+navigation to catalog nodes. The router gained `search` and `doc` routes (query lives in
+`?q=`, keyed on pathname so the page re-runs on every query change) and a
+`router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth pattern:
+the omnibox syncs back to the URL, and the URL drives the view). `api.ts` gained
+`search(q, limit?)` typed off the codegen'd contract. The **docs group** ships as a 5th
+sibling group in `SearchView.svelte` (#394): it calls the DEDICATED `/api/docs/search`
+endpoint via a SECOND, independent `asyncResource` — failure-isolated from the four main
+groups (a docs failure, an absent index returning `ingested:false`, or an empty result
+silently omits the docs section and never blanks the main groups). The `/doc/<filename>`
+route (router `Route` union arm `{name:"doc",identifier}`) renders `DocView.svelte`:
+title, register/variable/tags, a `source_url` seam (None today, link-ready), and a
+bounded `excerpt`; 404 distinguishes "not ingested" vs "not found"; `snippet`/`excerpt`
+are rendered as TEXT, never `{@html}`, and the full converted body is never fetched.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
@@ -288,12 +295,16 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   (search / for-variable) or 404 "not ingested" (doc get). When present, the per-request
   open is `conn.docs_conn` (same threadpool-safe model as `catalog_conn`,
   `check_schema=False`).
-- **Not yet folded into `/api/search`**: the `SearchGroup` union reserves a `docs` arm
-  (#350 contract), but wiring it in is deferred — the docs index is a *separate optional
-  DB* and its `ingested` degradation doesn't map onto a group's `total_count`/`results`
-  shape, so folding it into the omnibox endpoint would couple `/api/search` to a second
-  DB for no current consumer. The dedicated endpoints serve the need; the docs group
-  joins `/api/search` and gains a doc viewer in PR2 (#379).
+- **Not folded into `/api/search`**: the `SearchGroup` union reserves a `docs` arm (#350
+  contract), but it remains unused — the docs index is a *separate optional DB* and its
+  `ingested` degradation doesn't map onto a group's `total_count`/`results` shape, so
+  folding it into the omnibox endpoint would couple `/api/search` to a second DB open on
+  every search request. Instead (#394), `SearchView.svelte` fires a SECOND, independent
+  `asyncResource` directly at `/api/docs/search` and renders the results as a 5th
+  sibling group — failure-isolated, silently omitted when the docs index is absent or
+  empty, and never able to blank the four main groups. The reserved `docs` `SearchGroup`
+  arm stays unused; the separation is the right call given the optional-DB / degradation
+  rationale above.
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 

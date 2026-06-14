@@ -384,16 +384,17 @@ export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
  * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
 const SEARCH_TIMEOUT_MS = 12_000;
 
-/** Search the catalog. `q` is the raw user query (encoded here); `limit` is the
- * per-group result cap — omit it to use the server default (20, clamped ≤50). A
- * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
- * error. The request aborts on EITHER `signal` (the caller's teardown — a
- * supersede/unmount, which stays silent) OR a ~12s timeout (surfaced as a
- * `TimeoutError`); `AbortSignal.any` fires on whichever wins. */
-export function search(
+/** GET a search endpoint (`path` relative to `/api`) with the shared query +
+ * abort plumbing both search surfaces use: `q` is encoded, an explicit `limit`
+ * appended (server default otherwise), and the request aborts on EITHER the
+ * caller's `signal` (a supersede/unmount teardown, which stays silent) OR a ~12s
+ * timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on whichever
+ * wins. */
+function searchGet<T>(
+  path: string,
   q: string,
   options?: { signal?: AbortSignal; limit?: number },
-): Promise<SearchResponse> {
+): Promise<T> {
   const params = new URLSearchParams({ q });
   if (options?.limit !== undefined) {
     params.set("limit", String(options.limit));
@@ -402,7 +403,51 @@ export function search(
   if (options?.signal) {
     signals.push(options.signal);
   }
-  return apiGet<SearchResponse>(`/search?${params}`, {
+  return apiGet<T>(`${path}?${params}`, {
     signal: AbortSignal.any(signals),
   });
+}
+
+/** Search the catalog. `q` is the raw user query (encoded); `limit` is the
+ * per-group result cap — omit it to use the server default (20, clamped ≤50). A
+ * blank/punctuation-only query returns all groups empty (`total_count: 0`), not an
+ * error. */
+export function search(
+  q: string,
+  options?: { signal?: AbortSignal; limit?: number },
+): Promise<SearchResponse> {
+  return searchGet<SearchResponse>("/search", q, options);
+}
+
+// ── Docs surface (#354/#394) ────────────────────────────────────────────────
+// `GET /api/docs/search?q=` returns a single documentation result group over the
+// docs FTS index; `GET /api/docs/doc/{identifier}` returns one doc's metadata +
+// source pointer + a BOUNDED excerpt (never the full body). When the deployment
+// ships no docs index, search returns `ingested:false` with empty results (NOT a
+// 500), and the doc endpoint returns 404 — the SPA degrades silently on search
+// (failure isolation in SearchView) and shows a clear note on the doc viewer.
+// Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
+// `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
+// document lives at the SCB source, not here).
+
+export type DocSearchResponse = Schemas["DocSearchResponse"];
+export type DocResult = Schemas["DocResult"];
+export type DocDetail = Schemas["DocDetail"];
+
+/** Search documentation. Shares `search`'s query + abort/timeout plumbing (a ~12s
+ * client `TimeoutError` layered with the caller's teardown `signal`); `limit` is
+ * the per-request result cap (server default otherwise). An absent docs index
+ * returns `ingested:false`, not an error. */
+export function docSearch(
+  q: string,
+  options?: { signal?: AbortSignal; limit?: number },
+): Promise<DocSearchResponse> {
+  return searchGet<DocSearchResponse>("/docs/search", q, options);
+}
+
+/** Resolve one doc by its `identifier` (a filename — a single path segment, so
+ * `encodeURIComponent` the whole thing). 404 when the index is absent OR the doc
+ * isn't found (the `detail` distinguishes them — surfaced via the resource error). */
+export function getDoc(identifier: string): Promise<DocDetail> {
+  return apiGet<DocDetail>(`/docs/doc/${encodeURIComponent(identifier)}`);
 }

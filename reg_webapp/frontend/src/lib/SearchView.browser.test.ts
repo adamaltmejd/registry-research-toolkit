@@ -1,21 +1,34 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { SearchResponse } from "./api";
-import { search } from "./api";
+import type { DocSearchResponse, SearchResponse } from "./api";
+import { docSearch, search } from "./api";
 import { router } from "./router.svelte";
 import SearchView from "./SearchView.svelte";
 
-// Stub the single GET the view drives; keep the rest of api.ts real (the type
-// exports). SearchView reads `?q=` off the `router` singleton, so each case sets
-// the URL (and re-syncs the singleton's reactive `search`) before rendering.
+// Stub the two GETs the view drives (`search` + the independent `docSearch`, #394);
+// keep the rest of api.ts real (the type exports). SearchView reads `?q=` off the
+// `router` singleton, so each case sets the URL (and re-syncs the singleton's
+// reactive `search`) before rendering. `docSearch` is mocked in EVERY test so it
+// never hits a real fetch — defaulted to a no-hit response in `beforeEach`.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
     search: vi.fn(),
+    docSearch: vi.fn(),
   };
 });
+
+// A docs response with no hits — the default for the #379 suite, so its existing
+// assertions are unaffected by the additive docs group.
+const NO_DOC_HITS: DocSearchResponse = {
+  kind: "doc-search",
+  query: "",
+  ingested: true,
+  total_count: 0,
+  results: [],
+};
 
 function setQuery(q: string): void {
   // Reset to a SENTINEL URL distinct from the target first so `navigate` isn't a
@@ -29,6 +42,11 @@ function setQuery(q: string): void {
 
 beforeEach(() => {
   vi.mocked(search).mockReset();
+  // Default the docs resource to a no-hit response so the docs group is omitted
+  // and the #379 suite's assertions stand unchanged. Tests that exercise the docs
+  // group override this.
+  vi.mocked(docSearch).mockReset();
+  vi.mocked(docSearch).mockResolvedValue(NO_DOC_HITS);
 });
 
 afterEach(() => {
@@ -517,5 +535,177 @@ describe("SearchView — typed result groups (#379)", () => {
     // A generic error must NOT trip the timeout branch — pins the `startsWith`
     // discriminator against accidental broadening (e.g. `includes`).
     await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
+  });
+});
+
+describe("SearchView — docs group (#394)", () => {
+  // A one-register main-search response so the main groups have a visible heading
+  // (lets the failure-isolation cases assert the main groups are unaffected).
+  const ONE_REGISTER: SearchResponse = {
+    kind: "search",
+    query: "kon",
+    groups: [
+      {
+        group: "registers",
+        total_count: 1,
+        results: [
+          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+        ],
+      },
+    ],
+  } as unknown as SearchResponse;
+
+  // A docs response with N hits (total defaults to results.length; override for the
+  // truncation-caption case).
+  function docHits(
+    results: DocSearchResponse["results"],
+    total = results.length,
+  ): DocSearchResponse {
+    return {
+      kind: "doc-search",
+      query: "kon",
+      ingested: true,
+      total_count: total,
+      results,
+    };
+  }
+
+  it("(A) keeps the main groups and omits Documentation when docSearch REJECTS", async () => {
+    // Failure isolation: a docs fetch error must NOT error or blank the main
+    // groups, and the docs group is silently omitted.
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockRejectedValue(new Error("docs index down"));
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .not.toBeInTheDocument();
+  });
+
+  it("(B) omits Documentation when the docs index is absent (ingested:false)", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue({
+      kind: "doc-search",
+      query: "kon",
+      ingested: false,
+      total_count: 0,
+      results: [],
+    });
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .not.toBeInTheDocument();
+  });
+
+  it("(C) omits Documentation when the index is present but has zero hits", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue(docHits([]));
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .not.toBeInTheDocument();
+  });
+
+  it("(D) renders Documentation even when the MAIN search errors (sibling/independent)", async () => {
+    // The highest-value invariant: the docs group is a SIBLING of the main `{#if}`,
+    // so a main-search failure shows its error AND the resolved docs group renders.
+    vi.mocked(search).mockRejectedValue(new Error("backend down"));
+    vi.mocked(docSearch).mockResolvedValue(
+      docHits([
+        {
+          filename: "lisa_kon.md",
+          display_name: "LISA — Kön",
+          fuzzy: false,
+          register: "LISA",
+          snippet: null,
+          source: null,
+          source_url: null,
+          tags: [],
+          variable: null,
+        },
+      ]),
+    );
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByText(/Search failed:.*backend down/))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .toBeVisible();
+    await expect.element(page.getByText("LISA — Kön")).toBeVisible();
+  });
+
+  it("(E) renders docs hits with display_name, /doc link, and the truncation caption", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue(
+      // total_count 9 > 1 rendered → the "showing 1 of 9" caption shows; the
+      // filename carries a space to assert the href is encoded.
+      docHits(
+        [
+          {
+            filename: "lisa kon.md",
+            display_name: "LISA — Kön",
+            fuzzy: false,
+            register: "LISA",
+            snippet: null,
+            source: null,
+            source_url: null,
+            tags: [],
+            variable: null,
+          },
+        ],
+        9,
+      ),
+    );
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: /LISA — Kön/ }))
+      .toHaveAttribute("href", "/doc/lisa%20kon.md");
+    await expect.element(page.getByText("showing 1 of 9")).toBeVisible();
+  });
+
+  it("renders a docs snippet as LITERAL TEXT, never parsed HTML (republication guard)", async () => {
+    // The snippet may carry FTS markers; `{value}` auto-escapes. A `<b>` in the
+    // snippet must surface as literal characters, not a parsed element — so no
+    // `<b>` exists inside the docs section.
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue(
+      docHits([
+        {
+          filename: "lisa_kon.md",
+          display_name: "LISA — Kön",
+          fuzzy: false,
+          register: "LISA",
+          snippet: "foo <b>bar</b> baz",
+          source: null,
+          source_url: null,
+          tags: [],
+          variable: null,
+        },
+      ]),
+    );
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect.element(page.getByText("foo <b>bar</b> baz")).toBeVisible();
+    expect(document.querySelector(".search-view b")).toBeNull();
   });
 });
