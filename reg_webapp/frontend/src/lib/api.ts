@@ -406,3 +406,46 @@ export function search(
     signal: AbortSignal.any(signals),
   });
 }
+
+// ── Docs surface (#354/#394) ────────────────────────────────────────────────
+// `GET /api/docs/search?q=` returns a single documentation result group over the
+// docs FTS index; `GET /api/docs/doc/{identifier}` returns one doc's metadata +
+// source pointer + a BOUNDED excerpt (never the full body). When the deployment
+// ships no docs index, search returns `ingested:false` with empty results (NOT a
+// 500), and the doc endpoint returns 404 — the SPA degrades silently on search
+// (failure isolation in SearchView) and shows a clear note on the doc viewer.
+// Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
+// `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
+// document lives at the SCB source, not here).
+
+export type DocSearchResponse = Schemas["DocSearchResponse"];
+export type DocResult = Schemas["DocResult"];
+export type DocDetail = Schemas["DocDetail"];
+
+/** Search documentation. Mirrors `search`'s abort/timeout structure: a ~12s
+ * client timeout (surfaced as a `TimeoutError`) layered with the caller's teardown
+ * `signal` via `AbortSignal.any`. `limit` is the per-request result cap (server
+ * default otherwise). An absent docs index returns `ingested:false`, not an error. */
+export function docSearch(
+  q: string,
+  options?: { signal?: AbortSignal; limit?: number },
+): Promise<DocSearchResponse> {
+  const params = new URLSearchParams({ q });
+  if (options?.limit !== undefined) {
+    params.set("limit", String(options.limit));
+  }
+  const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
+  if (options?.signal) {
+    signals.push(options.signal);
+  }
+  return apiGet<DocSearchResponse>(`/docs/search?${params}`, {
+    signal: AbortSignal.any(signals),
+  });
+}
+
+/** Resolve one doc by its `identifier` (a filename — a single path segment, so
+ * `encodeURIComponent` the whole thing). 404 when the index is absent OR the doc
+ * isn't found (the `detail` distinguishes them — surfaced via the resource error). */
+export function getDoc(identifier: string): Promise<DocDetail> {
+  return apiGet<DocDetail>(`/docs/doc/${encodeURIComponent(identifier)}`);
+}

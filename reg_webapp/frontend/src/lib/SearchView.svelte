@@ -3,10 +3,12 @@ import type {
   ClassificationSearchResult,
   CodeSearchResult,
   ConceptGroupSearchResult,
+  DocResult,
+  DocSearchResponse,
   SearchResponse,
   VariableSearchResult,
 } from "./api";
-import { search } from "./api";
+import { docSearch, search } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref } from "./catalog";
 import { router } from "./router.svelte";
@@ -34,6 +36,29 @@ const results = asyncResource<SearchResponse>((signal) =>
     : Promise.resolve({ kind: "search", query: q, groups: [] }),
 );
 
+// A SEPARATE resource for the additive "Documentation" group (#394), keyed on the
+// same `q`. Kept independent from `results` for FAILURE ISOLATION: a docs failure
+// (error/timeout) or an absent docs index (`ingested:false`) must NEVER blank or
+// error the four main groups — there is intentionally no docs loading indicator
+// and no docs error banner; silent omission IS the isolation. Short-circuits a
+// too-short query to an empty response without a network call (mirrors `results`).
+const docs = asyncResource<DocSearchResponse>((signal) =>
+  q.length >= MIN_QUERY_LENGTH
+    ? docSearch(q, { signal })
+    : Promise.resolve({
+        kind: "doc-search",
+        query: q,
+        ingested: false,
+        total_count: 0,
+        results: [],
+      }),
+);
+
+// The docs group renders ONLY when the index is present AND there are hits.
+const docsHasHits = $derived(
+  !!docs.data?.ingested && (docs.data?.results.length ?? 0) > 0,
+);
+
 // Distinguish a TIMEOUT abort from every other failure. A supersede/unmount abort
 // never reaches here (asyncResource's `cancelled` guard swallows it); a timeout
 // abort fires while NOT cancelled, surfacing as an error. asyncResource exposes
@@ -48,11 +73,16 @@ const groups = $derived(results.data?.groups ?? []);
 // A searched query (≥ min length) with zero results across every group (distinct
 // from the empty / keep-typing hints and from loading). Gate on the min length so
 // a 1-char query shows the keep-typing hint, not a spurious "no matches".
+// The docs group participates in "any results at all" so we never show "No
+// matches" above a rendered docs group; gated on `!docs.loading && !docsHasHits`
+// so a docs failure/empty/absent-index still lets the main "No matches" show.
 const noMatches = $derived(
   q.length >= MIN_QUERY_LENGTH &&
     !results.loading &&
     !results.error &&
-    groups.every((g) => g.results.length === 0),
+    groups.every((g) => g.results.length === 0) &&
+    !docs.loading &&
+    !docsHasHits,
 );
 
 const GROUP_HEADINGS = {
@@ -155,6 +185,37 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
         </section>
       {/if}
     {/each}
+  {/if}
+
+  <!-- Additive "Documentation" group (#394), driven by the SEPARATE `docs`
+       resource and rendered as a SIBLING of the main-search `{#if}` block — so it
+       shows whenever it has hits REGARDLESS of the main groups' loading / error /
+       timeout / no-match state (full failure isolation: e.g. the main /api/search
+       codes sub-query can time out while the separate docs index resolves fine).
+       Its own <section> with a literal heading (NOT folded into GROUP_HEADINGS,
+       which is keyed on the four main group literals). A docs failure / empty /
+       absent index is silently omitted; the empty + too-short query states
+       short-circuit `docs` to `ingested:false`, so `docsHasHits` is false there. -->
+  {#if docsHasHits && docs.data}
+    {@const caption = showingOf(
+      docs.data.results.length,
+      docs.data.total_count,
+    )}
+    <section class="group">
+      <h3>
+        Documentation
+        {#if caption}<span class="count">{caption}</span>{/if}
+      </h3>
+      <ul class="results">
+        <!-- Key by array INDEX: like the other groups, this list is replaced
+             wholesale per query, so the index is stable + unique within a render
+             (a natural key like `filename` could collide and crash the keyed
+             each — see the #379/#391 each_key_duplicate lesson above). -->
+        {#each docs.data.results as result, i (i)}
+          <li>{@render docHit(result)}</li>
+        {/each}
+      </ul>
+    </section>
   {/if}
 </article>
 
@@ -273,6 +334,23 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
       </ul>
     {/if}
   </div>
+{/snippet}
+
+<!-- A documentation hit (#394): links to the minimal /doc viewer (the shell's
+     use:link intercepts it). `snippet` is an FTS EXCERPT rendered as TEXT only
+     (Svelte auto-escapes `{value}`) — NEVER {@html}, as it may carry highlight
+     markers and the full body is never fetched/rendered (it lives at the SCB
+     source). -->
+{#snippet docHit(result: DocResult)}
+  <a href={`/doc/${encodeURIComponent(result.filename)}`}>
+    <span class="label">{result.display_name ?? result.filename}</span>
+  </a>
+  {#if result.register}
+    <span class="hit-context muted">{result.register}</span>
+  {/if}
+  {#if result.snippet}
+    <span class="hit-detail muted">{result.snippet}</span>
+  {/if}
 {/snippet}
 
 <style>
