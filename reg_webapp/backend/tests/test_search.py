@@ -15,7 +15,12 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-from reg_webapp.routes.search import _has_searchable_token, _validated_limit
+from reg_webapp.routes.search import (
+    _code_system,
+    _has_searchable_token,
+    _rank_codes,
+    _validated_limit,
+)
 
 
 @pytest.fixture
@@ -47,6 +52,82 @@ def test_response_has_typed_groups(client):
     for g in body["groups"]:
         assert "total_count" in g
         assert isinstance(g["results"], list)
+
+
+# ── scoped search: ?type= toggle (#393 item 1) ───────────────────────────────
+
+
+def test_type_register_returns_only_registers_group(client):
+    body = client.get("/api/search", params={"q": "LISA", "type": "register"}).json()
+    assert [g["group"] for g in body["groups"]] == ["registers"]
+    # …and the scoped group still carries the expected hit.
+    g = _group(body, "registers")
+    assert "scb/lisa" in [r["fqid"] for r in g["results"]]
+
+
+def test_type_value_returns_only_codes_group(client):
+    body = client.get("/api/search", params={"q": "Man", "type": "value"}).json()
+    assert [g["group"] for g in body["groups"]] == ["codes"]
+    g = _group(body, "codes")
+    assert any(r["label"] == "Man" for r in g["results"])
+
+
+def test_type_variable_returns_only_variables_group(client):
+    body = client.get("/api/search", params={"q": "Kön", "type": "variable"}).json()
+    assert [g["group"] for g in body["groups"]] == ["variables"]
+
+
+def test_type_classification_returns_only_classifications_group(client):
+    body = client.get(
+        "/api/search", params={"q": "SUN2020", "type": "classification"}
+    ).json()
+    assert [g["group"] for g in body["groups"]] == ["classifications"]
+
+
+def test_invalid_type_is_422(client):
+    assert (
+        client.get("/api/search", params={"q": "x", "type": "bogus"}).status_code == 422
+    )
+
+
+def test_default_type_is_all_four_groups(client):
+    # No ?type= preserves today's exact four-group behavior (order included).
+    body = client.get("/api/search", params={"q": "lisa"}).json()
+    assert [g["group"] for g in body["groups"]] == [
+        "registers",
+        "variables",
+        "classifications",
+        "codes",
+    ]
+
+
+def test_type_all_explicit_matches_default(client):
+    # Passing type=all explicitly is equivalent to omitting it.
+    body = client.get("/api/search", params={"q": "lisa", "type": "all"}).json()
+    assert [g["group"] for g in body["groups"]] == [
+        "registers",
+        "variables",
+        "classifications",
+        "codes",
+    ]
+
+
+def test_scoped_empty_query_returns_only_selected_empty_group(client):
+    # The empty-query short-circuit honors ?type= too — one empty group, not four.
+    body = client.get("/api/search", params={"q": "", "type": "value"}).json()
+    assert [g["group"] for g in body["groups"]] == ["codes"]
+    assert body["groups"][0]["total_count"] == 0
+    assert body["groups"][0]["results"] == []
+
+
+def test_scoped_empty_query_non_value_scope(client):
+    # A blank query under a non-`value` scope returns ONLY that scope's group,
+    # empty — guards the register/variable/classification arms of the empty-query
+    # short-circuit (the existing scoped-empty test covers only `value`).
+    body = client.get("/api/search", params={"q": "  ", "type": "register"}).json()
+    assert [g["group"] for g in body["groups"]] == ["registers"]
+    assert body["groups"][0]["total_count"] == 0
+    assert body["groups"][0]["results"] == []
 
 
 # ── leaf hits + navigable FQIDs ──────────────────────────────────────────────
@@ -119,6 +200,24 @@ def test_code_shaped_query_well_formed(client):
     # reg_meta query-layer unit test.
     g = _group(client.get("/api/search", params={"q": "0180"}).json(), "codes")
     assert isinstance(g["results"], list)
+
+
+def test_code_hit_carries_code_system(client):
+    # The "Man" code is owned by the sun2020 classification (short_name SUN2020),
+    # so its inferred `code_system` is that short_name (#393 item 3).
+    g = _group(client.get("/api/search", params={"q": "Man"}).json(), "codes")
+    hit = next(r for r in g["results"] if r["label"] == "Man")
+    assert hit["code_system"] == "SUN2020"
+
+
+def test_register_local_code_has_null_code_system(client):
+    # A code with NO owning classification (the kvinna_only value, seeded as a
+    # register-local value with no classification owner) has code_system == null.
+    g = _group(client.get("/api/search", params={"q": "Kvinna"}).json(), "codes")
+    hit = next(
+        r for r in g["results"] if r["label"] == "Kvinna" and not r["classifications"]
+    )
+    assert hit["code_system"] is None
 
 
 # ── concept-group folding (#322) ─────────────────────────────────────────────
@@ -233,6 +332,22 @@ def test_etag_covers_query(client):
     assert a != b
 
 
+def test_etag_covers_type(client):
+    # ?type= changes the response body (which groups it carries), so the
+    # body-derived ETag must differ across scopes for the same query — else a
+    # scoped request could be served the wrong scope's cached validator.
+    a = client.get("/api/search", params={"q": "Man"}).headers["etag"]
+    b = client.get("/api/search", params={"q": "Man", "type": "value"}).headers["etag"]
+    assert a != b
+    # The all-scope ETag must NOT revalidate (304) a different-scope request.
+    resp = client.get(
+        "/api/search",
+        params={"q": "Man", "type": "value"},
+        headers={"If-None-Match": a},
+    )
+    assert resp.status_code == 200
+
+
 # ── pure helpers ─────────────────────────────────────────────────────────────
 
 
@@ -248,6 +363,63 @@ def test_validated_limit_clamps():
     assert _validated_limit(0) == 1
     assert _validated_limit(999) == 50
     assert _validated_limit(10) == 10
+
+
+def test_rank_codes_classification_backed_precede():
+    # classification_count > 0 sorts ahead of == 0 regardless of variable_count.
+    results = [
+        {"code": "a", "classification_count": 0, "variable_count": 99},
+        {"code": "b", "classification_count": 1, "variable_count": 0},
+    ]
+    assert [r["code"] for r in _rank_codes(results)] == ["b", "a"]
+
+
+def test_rank_codes_orders_by_classification_then_variable_count():
+    results = [
+        {"code": "a", "classification_count": 1, "variable_count": 1},
+        {"code": "b", "classification_count": 3, "variable_count": 0},
+        {"code": "c", "classification_count": 1, "variable_count": 5},
+    ]
+    # b (cls 3) leads; among cls==1, c (var 5) precedes a (var 1).
+    assert [r["code"] for r in _rank_codes(results)] == ["b", "c", "a"]
+
+
+def test_rank_codes_is_stable_on_ties():
+    # Equal sort keys preserve the incoming (FTS) order.
+    results = [
+        {"code": "a", "classification_count": 2, "variable_count": 1},
+        {"code": "b", "classification_count": 2, "variable_count": 1},
+        {"code": "c", "classification_count": 2, "variable_count": 1},
+    ]
+    assert [r["code"] for r in _rank_codes(results)] == ["a", "b", "c"]
+
+
+def test_rank_codes_tolerates_missing_counts():
+    # Missing count keys default to 0 (a code with no annotation sinks below a
+    # backed one rather than raising).
+    results = [{"code": "a"}, {"code": "b", "classification_count": 1}]
+    assert [r["code"] for r in _rank_codes(results)] == ["b", "a"]
+
+
+def test_code_system_first_short_name():
+    assert _code_system([{"short_name": "SUN2020", "name": "Svensk u."}]) == "SUN2020"
+
+
+def test_code_system_falls_back_to_name():
+    assert _code_system([{"short_name": None, "name": "Bespoke set"}]) == "Bespoke set"
+
+
+def test_code_system_none_when_empty():
+    assert _code_system([]) is None
+
+
+def test_code_system_uses_first_owner():
+    # The PRIMARY (first) owning classification wins when there are several.
+    classifications = [
+        {"short_name": "SUN2020", "name": None},
+        {"short_name": "SUN2000", "name": None},
+    ]
+    assert _code_system(classifications) == "SUN2020"
 
 
 def test_limit_param_clamped_end_to_end(client):

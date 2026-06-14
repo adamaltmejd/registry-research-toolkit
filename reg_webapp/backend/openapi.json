@@ -587,6 +587,17 @@
             "title": "Code",
             "type": "string"
           },
+          "code_system": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code System"
+          },
           "label": {
             "title": "Label",
             "type": "string"
@@ -3133,7 +3144,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns all four groups empty (total 0) \u2014 not a 422.",
+        "description": "Search registers, variables (concept-folded, #322), classifications, and\ncodes/values (#352) over the shipped FTS indexes. Each group is an independent\nreg_meta `search()` call (register/variable/classification via the FTS\n`field=\"description\"` path; codes via the `field=\"value\"` path) so each carries\nits own `total_count` and per-group `limit`. A query with no usable token\nreturns the selected group(s) empty (total 0) \u2014 not a 422.\n\n``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the\nfour-group register\u2192variable\u2192classification\u2192code behavior; any single type runs\nAND emits only that one group. Group ORDER is fixed for the ``all`` case.",
         "operationId": "get_search_api_search_get",
         "parameters": [
           {
@@ -3153,6 +3164,16 @@
               "default": 20,
               "title": "Limit",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "default": "all",
+              "title": "Type",
+              "type": "string"
             }
           }
         ],

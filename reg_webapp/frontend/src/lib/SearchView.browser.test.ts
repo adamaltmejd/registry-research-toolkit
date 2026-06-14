@@ -682,6 +682,46 @@ describe("SearchView — docs group (#394)", () => {
     await expect.element(page.getByText("showing 1 of 9")).toBeVisible();
   });
 
+  it("renders Documentation under the default (all) scope but NOT under a non-all scope (#393)", async () => {
+    // The #393 toggle has no Docs option, so a scoped search means "only that one
+    // group" — the additive docs section must be skipped (no fetch) and hidden
+    // whenever ?type= is anything but the default `all`.
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue(
+      docHits([
+        {
+          filename: "lisa_kon.md",
+          display_name: "LISA — Kön",
+          fuzzy: false,
+          register: "LISA",
+          snippet: null,
+          source: null,
+          source_url: null,
+          tags: [],
+          variable: null,
+        },
+      ]),
+    );
+
+    // Default (all) scope → Documentation renders.
+    setQuery("kon");
+    const allView = await render(SearchView);
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .toBeVisible();
+    allView.unmount();
+    vi.mocked(docSearch).mockClear();
+
+    // A scoped (?type=value) search → docs is short-circuited (no fetch) and hidden.
+    window.history.pushState({}, "", "/__reset__");
+    router.navigate("/search?q=kon&type=value");
+    await render(SearchView);
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .not.toBeInTheDocument();
+    expect(docSearch).not.toHaveBeenCalled();
+  });
+
   it("renders a docs snippet as LITERAL TEXT, never parsed HTML (republication guard)", async () => {
     // The snippet may carry FTS markers; `{value}` auto-escapes. A `<b>` in the
     // snippet must surface as literal characters, not a parsed element — so no
@@ -707,5 +747,221 @@ describe("SearchView — docs group (#394)", () => {
 
     await expect.element(page.getByText("foo <b>bar</b> baz")).toBeVisible();
     expect(document.querySelector(".search-view b")).toBeNull();
+  });
+});
+
+describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
+  const ONE_REGISTER: SearchResponse = {
+    kind: "search",
+    query: "kon",
+    groups: [
+      {
+        group: "registers",
+        total_count: 1,
+        results: [
+          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+        ],
+      },
+    ],
+  } as unknown as SearchResponse;
+
+  it("renders the toggle whenever there's a query and marks 'All' active by default", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("group", { name: "Search scope" }))
+      .toBeVisible();
+    // No ?type= → "All" is the active (aria-pressed) button.
+    await expect
+      .element(page.getByRole("button", { name: "All" }))
+      .toHaveAttribute("aria-pressed", "true");
+    await expect
+      .element(page.getByRole("button", { name: "Registers" }))
+      .toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("passes the URL's ?type= to search() so the scoped result set fetches", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    // Deep-link straight to a scoped URL.
+    window.history.pushState({}, "", "/__reset__");
+    router.navigate("/search?q=kon&type=register");
+    await render(SearchView);
+
+    // The fetcher reads searchType and forwards it.
+    await expect
+      .poll(() =>
+        vi
+          .mocked(search)
+          .mock.calls.some(([, opts]) => opts?.type === "register"),
+      )
+      .toBe(true);
+    // The scoped button is the active one.
+    await expect
+      .element(page.getByRole("button", { name: "Registers" }))
+      .toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("clicking a scope button routes ?type= and refetches scoped", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    setQuery("kon");
+    await render(SearchView);
+
+    await page.getByRole("button", { name: "Codes" }).click();
+
+    // The URL gains ?type=value (the "Codes" toggle value).
+    await expect.poll(() => router.getQueryParam("type")).toBe("value");
+    // …and search refetches with that scope.
+    await expect
+      .poll(() =>
+        vi.mocked(search).mock.calls.some(([, opts]) => opts?.type === "value"),
+      )
+      .toBe(true);
+  });
+
+  it("clicking 'All' OMITS ?type= from the URL (clean canonical URL)", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    window.history.pushState({}, "", "/__reset__");
+    router.navigate("/search?q=kon&type=register");
+    await render(SearchView);
+    await expect.poll(() => router.getQueryParam("type")).toBe("register");
+
+    await page.getByRole("button", { name: "All" }).click();
+
+    // Back to the default scope: no ?type= in the URL.
+    await expect.poll(() => router.getQueryParam("type")).toBeNull();
+  });
+
+  it("degrades an unknown ?type= to 'all' (no crash, All active)", async () => {
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    window.history.pushState({}, "", "/__reset__");
+    router.navigate("/search?q=kon&type=bogus");
+    await render(SearchView);
+
+    await expect
+      .element(page.getByRole("button", { name: "All" }))
+      .toHaveAttribute("aria-pressed", "true");
+    // An unknown scope is sent to the server as "all" (omitted by the api layer).
+    await expect
+      .poll(() =>
+        vi.mocked(search).mock.calls.some(([, opts]) => opts?.type === "all"),
+      )
+      .toBe(true);
+  });
+
+  it("renders the toggle while loading (so the user can switch scope mid-search)", async () => {
+    // A never-resolving search keeps the view in the loading state.
+    vi.mocked(search).mockReturnValue(new Promise<SearchResponse>(() => {}));
+    setQuery("kon");
+    await render(SearchView);
+
+    await expect.element(page.getByText("Searching…")).toBeVisible();
+    await expect
+      .element(page.getByRole("group", { name: "Search scope" }))
+      .toBeVisible();
+  });
+});
+
+describe("SearchView — codes grouped by code system (#393 item 3)", () => {
+  it("renders per-code-system subsections, curated first, Register-local trailing", async () => {
+    // Two SUN2020 codes and one register-local (null code_system). The codes are
+    // already item-2-ordered upstream; the view groups by code_system preserving
+    // first-appearance, so SUN2020 leads and Register-local trails.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "code",
+      groups: [
+        {
+          group: "codes",
+          total_count: 3,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [],
+              variable_count: 0,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+              ],
+              classification_count: 1,
+              code_system: "SUN2020",
+            },
+            {
+              type: "code",
+              code: "2",
+              label: "Woman",
+              variables: [],
+              variable_count: 0,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+              ],
+              classification_count: 1,
+              code_system: "SUN2020",
+            },
+            {
+              type: "code",
+              code: "9",
+              label: "Local",
+              variables: [
+                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
+              ],
+              variable_count: 1,
+              classifications: [],
+              classification_count: 0,
+              code_system: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("code");
+    await render(SearchView);
+
+    // Both subsection headings render.
+    await expect
+      .element(page.getByRole("heading", { name: "SUN2020" }))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("heading", { name: "Register-local" }))
+      .toBeVisible();
+    // The SUN2020 subsection appears BEFORE Register-local in the DOM (curated
+    // first; null/empty folds into the trailing bucket).
+    const headings = Array.from(
+      document.querySelectorAll<HTMLElement>(".code-system-heading"),
+    ).map((h) => h.textContent?.trim());
+    expect(headings).toEqual(["SUN2020", "Register-local"]);
+  });
+
+  it("keeps the 'showing N of M' caption on the codes group header", async () => {
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "code",
+      groups: [
+        {
+          group: "codes",
+          total_count: 9,
+          results: [
+            {
+              type: "code",
+              code: "1",
+              label: "Man",
+              variables: [],
+              variable_count: 0,
+              classifications: [
+                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+              ],
+              classification_count: 1,
+              code_system: "SUN2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("code");
+    await render(SearchView);
+
+    await expect.element(page.getByText("showing 1 of 9")).toBeVisible();
   });
 });

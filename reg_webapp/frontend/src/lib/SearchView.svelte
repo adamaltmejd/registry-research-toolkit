@@ -6,6 +6,7 @@ import type {
   DocResult,
   DocSearchResponse,
   SearchResponse,
+  SearchType,
   VariableSearchResult,
 } from "./api";
 import { docSearch, search } from "./api";
@@ -20,6 +21,40 @@ import { router } from "./router.svelte";
 
 const q = $derived((router.getQueryParam("q") ?? "").trim());
 
+// The scoped-search toggle (#393 item 1). `?type=` lives in the URL (deep-linkable
+// / shareable / back-forward-correct, like `?q=`/`?period`). An unknown value
+// degrades to "all" (don't 422 the SPA over a hand-edited URL — the toggle just
+// renders nothing active). Read inside the `results` fetcher below so the resource
+// refetches when `?type=` changes.
+const SEARCH_TYPES: readonly SearchType[] = [
+  "all",
+  "register",
+  "variable",
+  "classification",
+  "value",
+];
+const searchType = $derived.by<SearchType>(() => {
+  const raw = router.getQueryParam("type");
+  return SEARCH_TYPES.includes(raw as SearchType) ? (raw as SearchType) : "all";
+});
+
+// The toggle's button set: label + the `?type=` value it routes to.
+const TYPE_TOGGLE: ReadonlyArray<{ value: SearchType; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "register", label: "Registers" },
+  { value: "variable", label: "Variables" },
+  { value: "classification", label: "Classifications" },
+  { value: "value", label: "Codes" },
+];
+
+/** Route to the current query scoped to `type` (in-place replace — scope is a
+ * refinement, not a new history entry). OMIT `?type=` for `all` (the server
+ * default) so the canonical/shareable URL stays clean and the ETag is stable. */
+function selectType(type: SearchType): void {
+  const base = `/search?q=${encodeURIComponent(q)}`;
+  router.replace(type === "all" ? base : `${base}&type=${type}`);
+}
+
 // Don't fire /api/search below this — a single-char query is the most expensive
 // server-side AND the least useful. The "keep typing" hint covers 1 char; the
 // empty-query hint covers 0 (see the template's state branches).
@@ -31,8 +66,10 @@ const MIN_QUERY_LENGTH = 2;
 // teardown `signal` into `search` so a superseded query aborts the in-flight HTTP
 // request (and the ~12s timeout `search` layers on can abort it too).
 const results = asyncResource<SearchResponse>((signal) =>
+  // Read `searchType` HERE so the resource refetches when `?type=` changes (the
+  // scoped-search toggle, #393 item 1).
   q.length >= MIN_QUERY_LENGTH
-    ? search(q, { signal })
+    ? search(q, { signal, type: searchType })
     : Promise.resolve({ kind: "search", query: q, groups: [] }),
 );
 
@@ -42,8 +79,13 @@ const results = asyncResource<SearchResponse>((signal) =>
 // error the four main groups — there is intentionally no docs loading indicator
 // and no docs error banner; silent omission IS the isolation. Short-circuits a
 // too-short query to an empty response without a network call (mirrors `results`).
+// Docs is shown ONLY in the unscoped (`all`) view: the #393 toggle has no Docs
+// option, and a scoped search means "show only that one group", so any non-`all`
+// scope short-circuits to the empty `ingested:false` response (no fetch, and
+// `docsHasHits` stays false → the section is hidden). Read `searchType` HERE so the
+// resource refetches when the scope returns to `all`.
 const docs = asyncResource<DocSearchResponse>((signal) =>
-  q.length >= MIN_QUERY_LENGTH
+  q.length >= MIN_QUERY_LENGTH && searchType === "all"
     ? docSearch(q, { signal })
     : Promise.resolve({
         kind: "doc-search",
@@ -96,10 +138,57 @@ const GROUP_HEADINGS = {
 function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
   return r.type === "group";
 }
+
+// The codes group, bucketed by code system (#393 item 3). STABLE group-by on
+// `code_system`, preserving FIRST-APPEARANCE order — so the item-2 ranking (which
+// already floats classification-backed/curated codes to the front) decides which
+// systems lead. `null`/empty → a trailing "Register-local" bucket. `label` is the
+// subsection heading; `key` is a stable each-key (the raw code_system, or JS
+// `null` for the register-local bucket — a Map treats `null` as a distinct key
+// that can never collide with any real code_system string). Map iteration is
+// insertion order, so its values come back in first-appearance order directly.
+const REGISTER_LOCAL_LABEL = "Register-local";
+type CodeSystemBucket = {
+  key: string | null;
+  label: string;
+  codes: CodeSearchResult[];
+};
+function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
+  const buckets = new Map<string | null, CodeSystemBucket>();
+  for (const code of results) {
+    const key = code.code_system || null;
+    let bucket = buckets.get(key);
+    if (!bucket) {
+      bucket = { key, label: key ?? REGISTER_LOCAL_LABEL, codes: [] };
+      buckets.set(key, bucket);
+    }
+    bucket.codes.push(code);
+  }
+  return [...buckets.values()];
+}
 </script>
 
 <article class="search-view">
   <h2>Search</h2>
+
+  <!-- Scoped-search toggle (#393 item 1): visible whenever there's a query (incl.
+       loading / no-match / results) so the user can switch scope from any state.
+       Each button routes `?type=` (omitting it for `all`); `aria-pressed` marks the
+       active scope. A `role="group"` segmented control. -->
+  {#if q !== ""}
+    <div class="type-toggle" role="group" aria-label="Search scope">
+      {#each TYPE_TOGGLE as option (option.value)}
+        <button
+          type="button"
+          class="type-button"
+          aria-pressed={searchType === option.value}
+          onclick={() => selectType(option.value)}
+        >
+          {option.label}
+        </button>
+      {/each}
+    </div>
+  {/if}
 
   {#if q === ""}
     <p class="muted">
@@ -169,11 +258,23 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
               {/each}
             </ul>
           {:else if group.group === "codes"}
-            <ul class="results">
-              {#each group.results as result, i (i)}
-                <li>{@render codeHit(result)}</li>
-              {/each}
-            </ul>
+            <!-- Per-code-system subsections (#393 item 3). The codes are already
+                 item-2-ordered (classification-backed first), and groupCodesBySystem
+                 preserves first-appearance order, so curated systems lead;
+                 null/empty code_system folds into a trailing "Register-local"
+                 subsection. Each row keeps the codeHit snippet; the per-subsection
+                 `{#each}` keys stay INDEX-based (the #379/#391 each_key_duplicate
+                 lesson — natural keys can collide and crash the keyed each). -->
+            {#each groupCodesBySystem(group.results) as system (system.key)}
+              <div class="code-system">
+                <h4 class="code-system-heading">{system.label}</h4>
+                <ul class="results">
+                  {#each system.codes as result, i (i)}
+                    <li>{@render codeHit(result)}</li>
+                  {/each}
+                </ul>
+              </div>
+            {/each}
           {/if}
         </section>
       {/if}
@@ -350,8 +451,42 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
   .search-view h2 {
     margin-bottom: 1rem;
   }
+  .type-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .type-button {
+    padding: 0.3rem 0.7rem;
+    font: inherit;
+    font-size: 0.85rem;
+    color: inherit;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .type-button:hover {
+    border-color: var(--accent);
+  }
+  .type-button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--surface);
+    font-weight: 600;
+  }
   .group {
     margin-bottom: 1.5rem;
+  }
+  .code-system {
+    margin-bottom: 1rem;
+  }
+  .code-system-heading {
+    margin: 0 0 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
   }
   .group h3 {
     display: flex;

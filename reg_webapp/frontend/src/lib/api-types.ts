@@ -406,7 +406,11 @@ export interface paths {
          *     reg_meta `search()` call (register/variable/classification via the FTS
          *     `field="description"` path; codes via the `field="value"` path) so each carries
          *     its own `total_count` and per-group `limit`. A query with no usable token
-         *     returns all four groups empty (total 0) — not a 422.
+         *     returns the selected group(s) empty (total 0) — not a 422.
+         *
+         *     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
+         *     four-group register→variable→classification→code behavior; any single type runs
+         *     AND emits only that one group. Group ORDER is fixed for the ``all`` case.
          */
         get: operations["get_search_api_search_get"];
         put?: never;
@@ -694,6 +698,8 @@ export interface components {
             classifications: components["schemas"]["CodeOwnerClassification"][];
             /** Code */
             code: string;
+            /** Code System */
+            code_system?: string | null;
             /** Label */
             label: string;
             /**
@@ -2024,6 +2030,7 @@ export interface operations {
             query: {
                 q: string;
                 limit?: number;
+                type?: string;
             };
             header?: never;
             path?: never;
