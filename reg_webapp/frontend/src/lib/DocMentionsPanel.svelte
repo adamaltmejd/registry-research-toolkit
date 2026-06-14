@@ -1,0 +1,132 @@
+<script lang="ts">
+import { type BindingNodeData, getDocsForVariable } from "./api";
+import { asyncResource } from "./async.svelte";
+import { fqidSegments } from "./catalog";
+
+// The binding-leaf "Mentioned in documentation" panel (#402). A SIBLING of
+// LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
+// (the docs FTS index), so it's an independent FAILURE DOMAIN: a docs fetch
+// error / timeout / absent index must NEVER blank or wedge the leaf (mirrors how
+// #394's SearchView fires a second independent asyncResource for its docs group).
+// The whole panel's worst case is one inline muted/error line inside this section.
+//
+// The hook is FUZZY (every result is `fuzzy:true`) — a name/provider_key text
+// match, NOT an authoritative variable→doc link; the section-level caption marks
+// the list as heuristic.
+let { node }: { node: BindingNodeData } = $props();
+
+// The bare register slug = 2nd FQID segment (`scb/lisa/kon` → `lisa`); the
+// backend matches it verbatim against the bare register slug, NOT `scb/lisa`.
+const register = $derived(fqidSegments(node.fqid)[1]);
+// The query: the variable's display name when present, else its slug (3rd
+// segment). $derived off `node` so the fetch refetches when the leaf changes.
+const q = $derived(node.name?.trim() || fqidSegments(node.fqid)[2]);
+
+// Read `q`/`register` SYNCHRONOUSLY inside `fn` so the effect tracks them and
+// refetches when the leaf changes (same pattern as BindingLeafView's
+// periodResource / LineagePanels' resources). The teardown `signal` aborts a
+// superseded request; `getDocsForVariable` layers its ~12s timeout on top.
+const resource = asyncResource((signal) =>
+  getDocsForVariable(q, { register, limit: 5, signal }),
+);
+
+const data = $derived(resource.data);
+const results = $derived(data?.results ?? []);
+</script>
+
+<section class="doc-mentions" aria-labelledby="doc-mentions-heading">
+  <h3 id="doc-mentions-heading">Mentioned in documentation</h3>
+
+  {#if resource.loading}
+    <p class="muted" aria-busy="true">Loading…</p>
+  {:else if resource.error}
+    <!-- Any docs failure (error / timeout / 5xx / network drop) stays INLINE —
+         it never throws past this section and never blanks the leaf. -->
+    <p class="error" role="alert">
+      Failed to load documentation mentions: {resource.error}
+    </p>
+  {:else if data && !data.ingested}
+    <!-- No docs index at all in this deployment (dev/steward without the asset;
+         prod always ships it). -->
+    <p class="muted">Documentation index not available in this deployment.</p>
+  {:else if data && !data.register_ingested}
+    <!-- The index exists, but THIS register has no ingested docs. Coverage is
+         LISA-only today — this is "no docs for this register", NOT "undocumented". -->
+    <p class="muted">
+      No documentation ingested for this register — coverage is LISA-only today.
+    </p>
+  {:else if data && results.length === 0}
+    <p class="muted">No documentation mentions found for this variable.</p>
+  {:else if data}
+    <!-- One section-level caption marks the WHOLE list as fuzzy/heuristic name
+         matches (every result is `fuzzy:true`) — cleaner than per-row badges. -->
+    <p class="muted fuzzy-note">
+      Heuristic name matches — not authoritative variable→documentation links.
+    </p>
+    <ul class="mentions">
+      {#each results as r (r.filename)}
+        <li>
+          <!-- Links to the minimal /doc viewer; the App shell's use:link
+               intercepts same-origin SPA links (mirrors SearchView's docHit). -->
+          <a href={`/doc/${encodeURIComponent(r.filename)}`}>
+            <span class="label">{r.display_name ?? r.filename}</span>
+          </a>
+          {#if r.snippet}
+            <!-- An FTS EXCERPT rendered as TEXT only (Svelte auto-escapes
+                 `{value}`) — NEVER {@html}: it may carry highlight markers and the
+                 full body lives at the SCB source (republication policy; see
+                 reg_webapp/DESIGN.md → Docs library endpoints). -->
+            <span class="hit-detail muted">{r.snippet}</span>
+          {/if}
+        </li>
+      {/each}
+    </ul>
+    {#if data.total_count > results.length}
+      <p class="muted count">
+        showing {results.length} of {data.total_count}
+      </p>
+    {/if}
+  {/if}
+</section>
+
+<style>
+  /* Match LineagePanels' section/h3 vocabulary (scoped styles don't pierce into
+     this child component, so the minimal h3 rules are copied here). */
+  .doc-mentions {
+    margin-top: 1.5rem;
+  }
+  h3 {
+    margin: 0 0 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .fuzzy-note {
+    margin: 0 0 0.5rem;
+    font-size: 0.85em;
+  }
+  .mentions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .mentions li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 0.75rem;
+  }
+  .label {
+    font-weight: 600;
+  }
+  .hit-detail {
+    flex-basis: 100%;
+    font-size: 0.9em;
+  }
+  .count {
+    margin: 0.5rem 0 0;
+    font-size: 0.85em;
+  }
+</style>

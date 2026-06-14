@@ -385,19 +385,23 @@ export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
 const SEARCH_TIMEOUT_MS = 12_000;
 
 /** GET a search endpoint (`path` relative to `/api`) with the shared query +
- * abort plumbing both search surfaces use: `q` is encoded, an explicit `limit`
- * appended (server default otherwise), and the request aborts on EITHER the
- * caller's `signal` (a supersede/unmount teardown, which stays silent) OR a ~12s
- * timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on whichever
- * wins. */
+ * abort plumbing every search surface uses: `q` is encoded, an explicit `limit`
+ * appended (server default otherwise), an optional `register` filter appended
+ * (the for-variable hook scopes by register; `search`/`docSearch` pass none), and
+ * the request aborts on EITHER the caller's `signal` (a supersede/unmount
+ * teardown, which stays silent) OR a ~12s timeout (surfaced as a `TimeoutError`)
+ * — `AbortSignal.any` fires on whichever wins. */
 function searchGet<T>(
   path: string,
   q: string,
-  options?: { signal?: AbortSignal; limit?: number },
+  options?: { signal?: AbortSignal; limit?: number; register?: string },
 ): Promise<T> {
   const params = new URLSearchParams({ q });
   if (options?.limit !== undefined) {
     params.set("limit", String(options.limit));
+  }
+  if (options?.register !== undefined) {
+    params.set("register", options.register);
   }
   const signals = [AbortSignal.timeout(SEARCH_TIMEOUT_MS)];
   if (options?.signal) {
@@ -419,13 +423,16 @@ export function search(
   return searchGet<SearchResponse>("/search", q, options);
 }
 
-// ── Docs surface (#354/#394) ────────────────────────────────────────────────
+// ── Docs surface (#354/#394/#402) ───────────────────────────────────────────
 // `GET /api/docs/search?q=` returns a single documentation result group over the
 // docs FTS index; `GET /api/docs/doc/{identifier}` returns one doc's metadata +
-// source pointer + a BOUNDED excerpt (never the full body). When the deployment
-// ships no docs index, search returns `ingested:false` with empty results (NOT a
-// 500), and the doc endpoint returns 404 — the SPA degrades silently on search
-// (failure isolation in SearchView) and shows a clear note on the doc viewer.
+// source pointer + a BOUNDED excerpt (never the full body); `GET
+// /api/docs/for-variable?q=&register=` is the binding-leaf "mentioned in
+// documentation" hook (#402) — FUZZY name/provider_key text matches for one
+// variable, scoped to its register. When the deployment ships no docs index,
+// search returns `ingested:false` with empty results (NOT a 500), and the doc
+// endpoint returns 404 — the SPA degrades silently on search (failure isolation
+// in SearchView + DocMentionsPanel) and shows a clear note on the doc viewer.
 // Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
 // `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
 // document lives at the SCB source, not here).
@@ -433,6 +440,7 @@ export function search(
 export type DocSearchResponse = Schemas["DocSearchResponse"];
 export type DocResult = Schemas["DocResult"];
 export type DocDetail = Schemas["DocDetail"];
+export type DocVariableMentions = Schemas["DocVariableMentions"];
 
 /** Search documentation. Shares `search`'s query + abort/timeout plumbing (a ~12s
  * client `TimeoutError` layered with the caller's teardown `signal`); `limit` is
@@ -450,4 +458,20 @@ export function docSearch(
  * isn't found (the `detail` distinguishes them — surfaced via the resource error). */
 export function getDoc(identifier: string): Promise<DocDetail> {
   return apiGet<DocDetail>(`/docs/doc/${encodeURIComponent(identifier)}`);
+}
+
+/** The binding-leaf "mentioned in documentation" hook (#402): FUZZY
+ * name/provider_key text matches for `q`, scoped to the bare `register` slug
+ * (e.g. `"lisa"`, matched verbatim). Shares the search query + abort/timeout
+ * plumbing (a ~12s client `TimeoutError` layered with the caller's teardown
+ * `signal`); `limit` caps the results. An absent docs index returns
+ * `ingested:false`, and a register with no ingested docs `register_ingested:false`
+ * — neither is an error; the panel distinguishes both from "no mentions found"
+ * (every `DocResult` is `fuzzy:true` — a heuristic match, NOT an authoritative
+ * variable→doc link). */
+export function getDocsForVariable(
+  q: string,
+  options?: { register?: string; limit?: number; signal?: AbortSignal },
+): Promise<DocVariableMentions> {
+  return searchGet<DocVariableMentions>("/docs/for-variable", q, options);
 }

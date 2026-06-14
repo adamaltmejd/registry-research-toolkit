@@ -15,6 +15,7 @@ import {
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
+import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import { nextResolutionQuery, VALUE_SET_VERSION_NONE } from "./period";
@@ -441,6 +442,11 @@ const repSegment = $derived(
   </section>
 
   <LineagePanels {fqidPath} {node} />
+
+  <!-- #402: "Mentioned in documentation" — a SIBLING of the lineage panels,
+       deliberately a separate component over a separate optional DB (its own
+       failure domain; a docs error/timeout/absent-index never blanks the leaf). -->
+  <DocMentionsPanel {node} />
 </article>
 
 <style>
