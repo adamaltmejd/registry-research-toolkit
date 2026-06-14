@@ -37,6 +37,9 @@ class _Deldat:
     description: str | None = None
     data_from: int | None = None
     data_to: int | None = None
+    # Aggregeringsnivå controlled-vocab cell; 'Ej relevant' + a 'Styrtabell …'
+    # label flags a styrtabell decode table the adapter excludes (#373).
+    aggregation_level: str | None = None
 
 
 @dataclass(frozen=True)
@@ -198,10 +201,20 @@ def _write_register(path: Path, reg: _Register) -> None:
                 "Deldatamängdsbeskrivning",
                 "Data från",
                 "Data till",
+                "Aggregeringsnivå",
             ]
         )
         for d in reg.deldatamangder:
-            dd.append([d.name, d.label, d.description, d.data_from, d.data_to])
+            dd.append(
+                [
+                    d.name,
+                    d.label,
+                    d.description,
+                    d.data_from,
+                    d.data_to,
+                    d.aggregation_level,
+                ]
+            )
 
     # -- Metadata - Variabelnivå (required).
     var = wb.create_sheet("Metadata - Variabelnivå")

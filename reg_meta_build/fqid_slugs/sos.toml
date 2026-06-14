@@ -102,7 +102,9 @@ panel_time_grain = "row"
 # `lopnummer-som-ersatter-personnummer` -> column-derived `lopnr`). The data
 # variants are stacked multi-year extractions, so the time axis is the
 # per-row year/date column (row grain), not the delivery period. The
-# styrtabell variants (lova-agarkat etc.) are lookup tables — no panel keys.
+# styrtabell tokens (A_LOVA_STYR_*) are no longer minted as variants (#373):
+# they are value-set decode tables (kod->klartext), bound to the coded
+# variables' value sets — so there are no styrtabell variants here to slug.
 [register."7847722537922273761"]
 slug = "lova"
 
@@ -126,46 +128,6 @@ display_group = "LOVA HOSP"
 panel_entity_key = "lopnr"
 panel_time_key = "leg-specdatum"
 panel_time_grain = "row"
-
-[register_variant."7847722537922273761.4633578538773784614"]
-slug = "lova-agarkat"
-display_group = "LOVA AGARKAT"
-
-[register_variant."7847722537922273761.6109873184706521781"]
-slug = "lova-arb-mark-stat"
-display_group = "LOVA ARB_MARK_STAT"
-
-[register_variant."7847722537922273761.6725406064067685601"]
-slug = "lova-sektorkod"
-display_group = "LOVA SEKTORKOD"
-
-[register_variant."7847722537922273761.6421767783079273516"]
-slug = "lova-syssstat"
-display_group = "LOVA SYSSSTAT"
-
-[register_variant."7847722537922273761.5119334885992855332"]
-slug = "lova-yrkstalln"
-display_group = "LOVA YRKSTALLN"
-
-[register_variant."7847722537922273761.5135897315882757553"]
-slug = "lova-hospkoder"
-display_group = "LOVA HOSPKODER"
-
-[register_variant."7847722537922273761.5481088017788934871"]
-slug = "lova-region"
-display_group = "LOVA REGION"
-
-[register_variant."7847722537922273761.5544805317603535070"]
-slug = "lova-landskod"
-display_group = "LOVA LANDSKOD"
-
-[register_variant."7847722537922273761.6891402975879538230"]
-slug = "lova-leg-spec-exam"
-display_group = "LOVA LEG_SPEC_EXAM"
-
-[register_variant."7847722537922273761.6583785043766617643"]
-slug = "lova-examenskoder"
-display_group = "LOVA EXAMENSKODER"
 
 # Person directory (folkbokföringsuppgifter, one row per löpnummer) — no
 # per-row event axis, so the delivery-period sentinel stays.

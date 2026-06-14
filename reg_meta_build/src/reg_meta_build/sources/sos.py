@@ -835,6 +835,21 @@ ENTITY_REGISTRY_KODLISTOR: frozenset[tuple[str, str]] = frozenset(
     {("mfr", "IVF_klinik")}
 )
 
+
+def _is_styrtabell(d: SosDeldatamangd) -> bool:
+    """A styrtabell (value-set decode table), not a research data subset.
+
+    Requires BOTH structural signals (they agree across every current SOS
+    delivery): the controlled-vocab Aggregeringsnivå == 'Ej relevant' AND the
+    'Styrtabell …' Deldatamängdsetikett. Decode tables are excluded from
+    variant/variable minting (#373) — their rows are data + point-in-time
+    klartext, bound to the coded variable's value set, not minted as variables.
+    """
+    agg = (d.aggregation_level or "").strip().casefold() == "ej relevant"
+    etikett = (d.label or "").strip().casefold().startswith("styrtabell")
+    return agg and etikett
+
+
 # Curated variable-sheet deldatamängd token -> Deldatamängder-sheet row name(s)
 # (#211, the A4.4 curation the `sos_deldatamangd_unresolved` warning deferred).
 # Four workbooks key their variable rows on a TECHNICAL extraction/view token
@@ -843,13 +858,26 @@ ENTITY_REGISTRY_KODLISTOR: frozenset[tuple[str, str]] = frozenset(
 # standing curation rule: no regex/name-pattern inference) keyed on
 # (register_abbrev, variable-sheet token). A token can name SEVERAL variants
 # (LMED's combined token) — the member emits a state/alias into EACH.
+#
+# This map is the ONLY bridge between the Variabelnivå sheet's technical tokens
+# and the Deldatamängder sheet's display names (SOS tokens never equal the sheet
+# names), so it is load-bearing for ALL listed tokens — including the styrtabell
+# entries below, which the styrtabell exclusion (#373) reuses to resolve a
+# variable row's deldatamängd token to its sheet name. styrtabell deldatamängder
+# are detected via `_is_styrtabell` and EXCLUDED from BOTH variant and variable
+# minting, so decode tables (kod->klartext) don't surface as research variables;
+# their `A_LOVA_STYR_*` entries REMAIN here precisely because that exclusion uses
+# them as the token->name bridge.
+#
 # Verified against the live workbooks at input_data/Socialstyrelsen/:
 #   - LVM: tokens are the lowercase technical `label`s of the Deldatamängder
 #     rows (lvm_ansok <-> 'LVM_ANSOK'), names are the long Swedish titles.
 #   - LOVA: tokens are A_LOVA* extraction-table names. The workbook ships TWO
 #     'LOVA' Deldatamängder rows (arbetsmarknadsstatus + the LISA-derived
 #     ekonomi subset) that dedup to ONE minted variant — both A_LOVA and
-#     A_LOVA_LISA land there. A_LOVA_STYR_* are the styrtabell lookups.
+#     A_LOVA_LISA land there. The A_LOVA_STYR_* entries name the styrtabell
+#     decode tables; they stay mapped (the #373 exclusion needs them) but the
+#     deldatamängder they point at are excluded from minting.
 #   - DORS: the Covid-19 Hermes view's 26 variable rows use 'DORS-COV'.
 #   - LMED: FDDD ships in BOTH variants; its token names them combined.
 DELDATAMANGD_TOKEN_MAP: dict[tuple[str, str], tuple[str, ...]] = {
@@ -1368,6 +1396,34 @@ class SOSAdapter:
                 detail=w,
             )
 
+        # -- styrtabell detection (#373): decode tables (kod->klartext) are
+        # EXCLUDED from variant + variable minting — their rows bind to the
+        # coded variable's value set, not to a research variable. A styrtabell
+        # is identified by BOTH structural signals agreeing (`_is_styrtabell`).
+        # When exactly one signal is present (XOR) the shape has drifted — warn
+        # so the half-flagged table surfaces instead of silently minting; such a
+        # deldatamängd is NOT excluded (it stays in variant/variable minting).
+        styr_names = {d.name for d in reg.deldatamangder if _is_styrtabell(d)}
+        for d in reg.deldatamangder:
+            agg = (d.aggregation_level or "").strip().casefold() == "ej relevant"
+            etikett = (d.label or "").strip().casefold().startswith("styrtabell")
+            if agg != etikett:
+                present, missing = (
+                    ("Aggregeringsnivå='Ej relevant'", "Deldatamängdsetikett")
+                    if agg
+                    else ("Deldatamängdsetikett='Styrtabell …'", "Aggregeringsnivå")
+                )
+                yield IRWarning(
+                    entity_kind="register",
+                    entity_id=register_id,
+                    code="sos_styrtabell_signal_mismatch",
+                    detail=(
+                        f"{abbrev}/{d.name}: styrtabell signal {present} present "
+                        f"but {missing} signal missing; not excluded — check "
+                        "whether this is a decode table (#373)"
+                    ),
+                )
+
         # -- variant synthesis: detect via DELDATAMÄNGDER-SHEET ABSENCE
         # (r.deldatamangder == ()), NOT var.deldatamangd (BU populates that from
         # a Datavynamn column yet has no Deldatamängder sheet -> variant-less).
@@ -1390,6 +1446,10 @@ class SOSAdapter:
             # variant id, so emit ONE IRVariant (first occurrence wins) or the
             # reinsert hits a register_variant PK collision.
             for d in reg.deldatamangder:
+                # styrtabell decode tables (#373): never minted as a variant —
+                # skip before variant_id_of/provenance/deldat_by_name see them.
+                if d.name in styr_names:
+                    continue
                 if d.name in variant_id_of:
                     continue
                 vid = mint("sos", abbrev, d.name)
@@ -1427,9 +1487,22 @@ class SOSAdapter:
                 continue
             kodlista_by_var[k.variable_hint.lower()] = k
 
-        # -- group variables by name (the merge key + provider_key).
+        # -- group variables by name (the merge key + provider_key). Drop
+        # styrtabell decode-column rows first (#373): a row whose deldatamängd
+        # token resolves ENTIRELY to styrtabell names (same resolution the
+        # member loop uses) carries decode-only columns (KLARTEXT/BESKRIVNING …)
+        # bound to a value set, not a research variable. A coded variable that
+        # ALSO appears under a real deldatamängd survives via its other rows.
+        def _is_styrtabell_var(v: SosVariable) -> bool:
+            targets = DELDATAMANGD_TOKEN_MAP.get(
+                (abbrev, v.deldatamangd or ""), (v.deldatamangd,)
+            )
+            return bool(targets) and all(t in styr_names for t in targets)
+
         groups: dict[str, list[SosVariable]] = {}
         for v in reg.variables:
+            if _is_styrtabell_var(v):
+                continue
             groups.setdefault(v.name, []).append(v)
 
         for name_key in sorted(groups):
