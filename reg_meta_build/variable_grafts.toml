@@ -1,0 +1,488 @@
+# Variable grafts (#365 PR1d) — mint catalog variables reg_meta lacks but the
+# steward delivers, onto an EXISTING (register, variant). GENERATED from
+# build_catalog.py `grafts` (untracked input_data/swecov/ → graft_candidates.json):
+# variant data-derived (mapped/split-by-table-stem); flavor + pseudonymized +
+# doc-documented (#400) candidates excluded upstream; case/diacritic-folded dups
+# collapsed. Slug auto-derives from the delivery column at build (the pass runs
+# before populate_variable_slugs); source_label="swecov-graft"; data_type absent ⇒ NULL.
+# 80 grafts across 15 (register,variant). (1 sos deferred — minted-id band; 2 folded dups dropped.)
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "DIST_HU_SAKNAS"
+description = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för redovisningsperioden."
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "FORSTA_ANSTALLD"
+description = "1:a anställd"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "KONVENTION_MED"
+description = "Konvention med"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "LANDSKOD_ARBETSLAND"
+description = "Landskod arbetsland"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "LANDSKOD_MEDBORGARE"
+description = "Landskod medborgarskap ej svenskt"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "LANDSKOD_POSTORT"
+description = "Landskod postort (om ifylld)"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "LANDSKOD_TIN"
+description = "Landskod TIN"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "LOKALANSTALLD"
+description = "Lokalanställd"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "NARFART_FJARRFART"
+description = "Närfart/Fjärrfart"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "PERIOD"
+description = "Redovisningsperiod"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "PERSONALOPTION"
+description = "Personaloption som inte ska förmånbeskattas har utnyttjats för förvärv av andel"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "SKATTEBEFR_ENL_AVTAL"
+description = "Skattebefriad enligt skatteavtal"
+
+[[graft]]
+register = "scb/agi"
+variant = "individuppgifter-agi"
+column = "UTSAND_UNDER_TID"
+description = "Betalningsmottagaren utsänd under tid"
+
+[[graft]]
+register = "scb/aku"
+variant = "aku-april-2005-dec-2020"
+column = "HsArbHemmaAntV"
+description = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
+
+[[graft]]
+register = "scb/aku"
+variant = "aku-april-2005-dec-2020"
+column = "HsArbhemmaV"
+description = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
+
+[[graft]]
+register = "scb/aku"
+variant = "aku-april-2005-dec-2020"
+column = "Hu12a"
+description = "När upphör din tidsbegränsade anställning?"
+
+[[graft]]
+register = "scb/fdb"
+variant = "arbetsstalleenheter"
+column = "avregdatktid"
+description = "Avregistreringsår"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "AretsResultat"
+description = "Årets resultat"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "ImputeradeForetag"
+description = "Imputerade företag"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "KassaOchBank"
+description = "Kassa och bank"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "Leverantorsskulder"
+description = "Leverantörsskulder"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "MaskinerOchInventarier"
+description = "Maskiner och inventarier"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "RedovisatResultat"
+description = "Redovisat årsresultat"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "ResultatEfterFinansiellaPoster"
+description = "Resultat efter finansiella poster"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "Skattekostnader"
+description = "Skatt"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "Stg"
+description = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaAnlTillg"
+description = "Summa anläggningstillgångar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaEgetKapitalOchSkulder"
+description = "Summa eget kapital och skulder"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaFinansiellaTillg"
+description = "Summa finansiella anläggningstillgångar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaKortfristigaFordringar"
+description = "Summa kortfristiga fordringar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaKortfristigaPlaceringar"
+description = "Summa kortfristiga placeringar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaKortfristigaSkulder"
+description = "Summa kortfristiga skulder"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaLangfristigaSkulder"
+description = "Summa långfristiga skulder"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaMateriellaAnlaggningstillgangar"
+description = "Summa materiella anläggningstillgångar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaObeskattadeReserver"
+description = "Summa obeskattade reserver"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaOmsattningstillgangar"
+description = "Summa omsättningstillgångar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaPersonalkostnader"
+description = "Summa personalkostnader"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "SummaTillgangar"
+description = "Summa tillgångar"
+
+[[graft]]
+register = "scb/fek"
+variant = "fek-slutdata"
+column = "UppstallnForm"
+description = "Anger om företaget har kostnadsslagsindelat eller funktionsindelat bokslut."
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "Ar"
+description = "År"
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "FTH"
+description = "Anger om eleven är inskriven i fritidshem"
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "GRREKTFTH"
+description = "Gemensam rektor med fritidshem"
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "HMANFTH"
+description = "Huvudman fritidshem"
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "MSPR1_SPRAK"
+description = "Moderna språk inom ramen för elevens val (språk)"
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "MSPR2_SPRAK"
+description = "Moderna språk inom ramen för språkval (språk)"
+
+[[graft]]
+register = "scb/grundskola-elever"
+variant = "individregister"
+column = "OBTIDFTH"
+description = "Eleven är inskriven på fritidshem under obekväma tider."
+
+[[graft]]
+register = "scb/gymnasieskola-betyg"
+variant = "slutbetyg"
+column = "AvgAr"
+description = "Avgångsår"
+
+[[graft]]
+register = "scb/gymnasieskola-betyg"
+variant = "slutbetyg"
+column = "utbildningstyp"
+description = "Visar om en elev läser Högskole(förberedande) program (HP), yrkes(förberedande) program (YP) ,IV-program (IV), introduktionsprogram(IM) eller specialutformade program (SM) som inte klan anknytas till något nationellt program"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "FFGArTermin_Stud"
+description = "År+Termin för första registrering på svenskt lärosäte"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "FFG_Stud"
+description = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "FFG_Yprog"
+description = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "FFG_hskod"
+description = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "FFG_lprog"
+description = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "THPoang"
+description = "Kursregistreringens högskolepoäng inom terminen"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-1993"
+column = "TermNrKurs"
+description = "Kursens terminsnummer"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "SUN2020Inr"
+description = "SUN-inriktning, 2020-års nomenklatur"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "SUN2020Niva"
+description = "SUN-nivå, 2020-års nomenklatur"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "benamning"
+description = "Benämning till namnare. Lärosätets detaljerade examensbenämning."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "grp1niv1"
+description = "Examensinriktningsgrupp, detaljerad nivå"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "grp1niv1namn"
+description = "Examensinriktningsgrupp, detaljerad nivå. Benämning."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "grp1niv2"
+description = "Examensinriktningsgrupp, mellannivå"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "grp1niv2namn"
+description = "Examensinriktningsgrupp, mellannivå. Benämning."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "grp1niv3"
+description = "Examensinriktningsgrupp, grov nivå"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "grp1niv3namn"
+description = "Examensinriktningsgrupp, grov nivå. Benämning."
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "sun2000inr"
+description = "SUN-inriktning, 2000-års nomenklatur"
+
+[[graft]]
+register = "scb/hreg"
+variant = "grundutbildning-examina"
+column = "sun2000niva"
+description = "SUN-nivå, 2000-års nomenklatur"
+
+[[graft]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "SUN2000Inr_lprog"
+description = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+
+[[graft]]
+register = "scb/hreg"
+variant = "sokande-grund-avancerad"
+column = "SUN2020Niva3_lprog"
+description = "Programmets sunnivå på 3-siffernivå (SUN2020)"
+
+[[graft]]
+register = "scb/ivp"
+variant = "industrins-varuproduktion"
+column = "KvantText"
+description = "Anger vilken kvantitetsenhet som gäller för levererad och totalt producerad kvantitet."
+
+[[graft]]
+register = "scb/konkurser"
+variant = "konkurser-offentliga-ackord"
+column = "tidning"
+description = "Nummer på postgumman (från och med 1997)"
+
+[[graft]]
+register = "scb/ksju"
+variant = "sjukfranvaro-sjukloneperioden"
+column = "Felaktig"
+description = "Är alltid 0 (eller NULL)"
+
+[[graft]]
+register = "scb/ksju"
+variant = "sjukfranvaro-sjukloneperioden"
+column = "ersdag1"
+description = "Antal ersättningsdagar, oviktade"
+
+[[graft]]
+register = "scb/ksju"
+variant = "sjukfranvaro-sjukloneperioden"
+column = "one_sni"
+description = "1 eller NULL (1 om det bara finns ett arbetsställe)"
+
+[[graft]]
+register = "scb/ksju"
+variant = "sjukfranvaro-sjukloneperioden"
+column = "pnra"
+description = "? - (inehåller värde 0 eller 1)"
+
+[[graft]]
+register = "scb/ksju"
+variant = "sjukfranvaro-sjukloneperioden"
+column = "tillagg"
+description = "Alltid tom för de godkända, men kod för de med statuskod 18"
+
+[[graft]]
+register = "scb/rtb"
+variant = "folkbokforda-personer"
+column = "Fodelseland"
+description = "Födelseland, enskilda länder"
+
+[[graft]]
+register = "scb/rtb"
+variant = "inrikes-flyttningar"
+column = "PostNrG"
+description = "Tidigare postnummer"
+
+[[graft]]
+register = "scb/rtb"
+variant = "inrikes-flyttningar"
+column = "UtdAdr1"
+description = "Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnamn."
+
+[[graft]]
+register = "scb/rtb"
+variant = "inrikes-flyttningar"
+column = "UtdAdr1G"
+description = "Tidigare Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnamn."
+
+[[graft]]
+register = "scb/utrikeshandel"
+variant = "varu-landfordelat-intrastat"
+column = "KN8"
+description = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"

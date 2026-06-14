@@ -23,6 +23,7 @@ from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.family_merges import load_family_merges
 from reg_meta_build.fold_overrides import load_fold_overrides
+from reg_meta_build.variable_grafts import load_variable_grafts
 from reg_meta_build.variable_related_to import load_related_to
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
@@ -75,3 +76,11 @@ def test_repo_variable_related_to_parses() -> None:
     # TOMLs above, the regression lock is an EMPTY assertion, not truthiness. It
     # starts failing loudly the day a real edge lands, prompting an update here.
     assert load_related_to(_ROOT / "variable_related_to.toml") == ()
+
+
+def test_repo_variable_grafts_parses() -> None:
+    grafts = load_variable_grafts(_ROOT / "variable_grafts.toml")
+    assert grafts  # the #365 SWECOV grafts ship with the repo
+    # Load-time shape (2-segment FQID, non-empty variant/column/description,
+    # unique triple); variant/column RESOLUTION is maintainer-build territory.
+    assert all(g.provider and g.register and g.variant and g.column for g in grafts)
