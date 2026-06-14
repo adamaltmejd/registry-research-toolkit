@@ -224,6 +224,18 @@ def test_unknown_dead_binding_still_404(client):
     assert resp.status_code == 404
 
 
+def test_dead_binding_with_period_still_404_no_redirect(client):
+    """The redirect lives ONLY on the no-period node path; the `?period` branch
+    resolves via `resolve_at` and stays 404. This guards the intentional
+    deferral — a dead slug WITH `?period` (here the chain head `renamed-head`,
+    which redirects 301 without a period) must NOT silently turn into a
+    redirect."""
+    resp = client.get(
+        "/api/catalog/scb/lisa/renamed-head?period=2019", follow_redirects=False
+    )
+    assert resp.status_code == 404
+
+
 def test_too_many_segments_returns_422(client):
     # Every segment is a valid slug, so the per-segment guard admits it; the
     # >3-segment arity is rejected by `reg_meta.fqid.parse` → 422 (a structural

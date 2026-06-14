@@ -1173,3 +1173,18 @@ class TestResolveTerminalSuccessor:
         terminal = Catalog(conn).resolve_terminal_successor("scb/lisa/loop-a")
         assert terminal is not None
         assert str(terminal) == "scb/lisa/loop-b"
+
+    def test_split_pick_is_lexicographically_first(self) -> None:
+        # Deterministic split pick: when a predecessor has TWO distinct
+        # successors, the walk takes the lexicographically-FIRST per
+        # `_first_successor_triple`'s `ORDER BY successor_provider,
+        # successor_register, successor_variable LIMIT 1`. Both successors are
+        # dead leaves (no variable rows, no further edges) so each is itself
+        # terminal — this isolates the split pick, not the walk depth.
+        conn = build_slugged_db()
+        self._add_edge(conn, ("scb", "lisa", "split-src"), ("scb", "lisa", "zzz-high"))
+        self._add_edge(conn, ("scb", "lisa", "split-src"), ("scb", "lisa", "aaa-low"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/lisa/split-src")
+        assert terminal is not None
+        # "aaa-low" < "zzz-high" → the lower-sorted successor wins.
+        assert str(terminal) == "scb/lisa/aaa-low"
