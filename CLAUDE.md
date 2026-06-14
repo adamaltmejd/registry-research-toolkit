@@ -179,6 +179,13 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   the merge commit's tree to the branch tip works only when the base didn't advance in
   between.)
 
+**Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
+without the user invoking the skill, run the same shape — plan → implement →
+`/code-review` (effort scaled to risk) → docs — then **stop and hand the PR back for this
+gate**. Don't self-merge: the merge decision and the bot-review window are the human's,
+and `/pr-pipeline` (the only flow that carries a PR all the way to merge) is user-invoked
+by design.
+
 # Layout
 
 For per-package design rationale, see `<package>/DESIGN.md` (the reg_meta object model
