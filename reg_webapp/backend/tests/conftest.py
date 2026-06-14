@@ -160,6 +160,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
         "VALUES ('scb','lisa','kon','scb','rams','syss')"
     )
     _seed_kon_edges(src)
+    _seed_succession_chain(src)
     _seed_concept_groups(src, add_variable)
     _seed_code_variable_map(src)
     _seed_merged_family(src, add_variable, add_state)
@@ -313,6 +314,30 @@ def _seed_kon_edges(src: sqlite3.Connection) -> None:
         "INSERT INTO variable_state_lineage_warning "
         "(consumer_state_id, warning_kind, message) VALUES (?, ?, ?)",
         (kon_state, "no_source_state", "no source state for 2017"),
+    )
+
+
+def _seed_succession_chain(src: sqlite3.Connection) -> None:
+    """Seed a SELF-CONTAINED multi-hop succession chain of DEAD (renamed) binding
+    slugs for the #355 PART 2 catalog 301-redirect tests:
+
+        scb/lisa/renamed-head → scb/lisa/renamed-mid → scb/rams/syss
+
+    The head + mid are dead (NO ``variable`` rows — exactly the renamed-slug case:
+    citing them 404s); the chain terminates at the LIVE, edge-free ``scb/rams/syss``
+    leaf (added above; it's a succession *successor* of kon, so it has no OUTBOUND
+    edge of its own → a genuine chain end). A GET on the head must 301 to the
+    terminal. Kept as its own helper (not folded into ``_seed_kon_edges``) so the
+    existing predecessor/successor count assertions on kon/syss are untouched."""
+    src.executemany(
+        "INSERT INTO variable_replaced_by "
+        "(predecessor_provider, predecessor_register, predecessor_variable, "
+        "successor_provider, successor_register, successor_variable, note) "
+        "VALUES (?,?,?,?,?,?,'auto:test')",
+        [
+            ("scb", "lisa", "renamed-head", "scb", "lisa", "renamed-mid"),
+            ("scb", "lisa", "renamed-mid", "scb", "rams", "syss"),
+        ],
     )
 
 

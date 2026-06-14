@@ -38,9 +38,11 @@ converter greedy-consumes any suffix. The catch-all MUST stay last.
 
 from __future__ import annotations
 
+import urllib.parse
 from typing import TYPE_CHECKING
 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from reg_meta.catalog import (
     OPEN_ENDED_VALID_TO,
     Catalog,
@@ -488,6 +490,17 @@ def _classification_root_response(
     return ClassificationRootResponse(children=children, groups=groups)
 
 
+def _catalog_url(fqid: Fqid) -> str:
+    """The canonical catalog API URL for a terminal FQID — `/api/catalog/<path>`
+    with each path segment percent-encoded (#355 PART 2 redirect target). Mirrors
+    the frontend `encodeFqid` intent: split the FQID string on `/`, `quote` each
+    segment, rejoin on `/`. A no-op for valid slugs (they have no reserved chars),
+    but correct/defensive — and `quote` does NOT touch `/`, so the segments stay
+    separate."""
+    path = "/".join(urllib.parse.quote(seg) for seg in str(fqid).split("/"))
+    return f"/api/catalog/{path}"
+
+
 def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
     """Dispatch a parsed FQID to its Catalog resolver and map to a Pydantic node.
     Raises 404 (via `_http_404_if_not_found`) when the FQID resolves to nothing."""
@@ -733,7 +746,7 @@ def get_catalog_node(
     period: list[Period] | None = Depends(_validated_period),
     variant: str | None = Depends(_validated_variant),
     value_set_version: str | None = Depends(_validated_value_set_version),
-) -> CatalogNode | StatesResponse:
+) -> CatalogNode | StatesResponse | RedirectResponse:
     """Resolve any catalog node by FQID path; on a binding leaf, an optional
     `?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at
     state subset.
@@ -827,4 +840,18 @@ def get_catalog_node(
             )
 
     with _catalog_conn(request) as conn:
-        return _resolve_to_node(Catalog(conn), parsed)
+        catalog = Catalog(conn)
+        try:
+            return _resolve_to_node(catalog, parsed)
+        except HTTPException as exc:
+            # #355 PART 2: a renamed/dead binding slug 404s (its `variable` row is
+            # gone). Before surfacing that 404, walk `variable_replaced_by` to the
+            # TERMINAL successor and 301-redirect the citation there. A non-404
+            # (corrupt-DB / 500) must propagate UNCHANGED — only a genuine
+            # `fqid_not_found` (mapped to 404 by `_resolve_to_node`) is a candidate.
+            if exc.status_code != 404:
+                raise
+            terminal = catalog.resolve_terminal_successor(parsed)
+            if terminal is None:
+                raise  # genuinely unknown — re-raise the original 404
+            return RedirectResponse(_catalog_url(terminal), status_code=301)
