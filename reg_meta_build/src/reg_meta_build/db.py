@@ -63,6 +63,11 @@ from .tags import (
     materialize_tags,
     repo_tags_path,
 )
+from .variable_related_to import (
+    load_related_to,
+    materialize_curated_related_to,
+    repo_variable_related_to_path,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -2980,6 +2985,19 @@ def materialize(
         n_related = _materialize_variable_related_to(conn, related_edges)
         row_counts["variable_related_to"] = n_related
         _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
+
+        # Curated cross-register "see also" edges (#353). Runs right after the
+        # auto:triage pass (both write `variable_related_to`, on disjoint
+        # relation-kind vocabularies) so it shares the --skip-slugs guard; the
+        # curated kinds are NON-foldable, so the concept-group edge pass below
+        # ignores them. `providers` gates each edge to this build's providers.
+        n_curated_related = materialize_curated_related_to(
+            conn,
+            load_related_to(repo_variable_related_to_path()),
+            providers=active_providers,
+        )
+        row_counts["variable_related_to_curated"] = n_curated_related
+        _progress(f"  {n_curated_related:,} curated variable_related_to edges")
 
         # Derived concept groups (#303) — presentation-only browse folding.
         # Ordering: after variable slugs + related_to edges (the edge pass
