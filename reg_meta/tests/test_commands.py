@@ -2189,6 +2189,7 @@ class TestPeriodTokenRendering:
     def test_schema_single_month(self, tmp_path):
         text = self._render_schema(tmp_path, "2019-03-01", "2019-03-31")
         assert "2019-03" in text
+        assert "2019-03-01" not in text  # not the raw range
 
     def test_varinfo_spring_term(self, tmp_path):
         text = self._render_varinfo(tmp_path, "2015-01-01", "2015-06-30")
@@ -2201,6 +2202,11 @@ class TestPeriodTokenRendering:
     def test_varinfo_quarter(self, tmp_path):
         text = self._render_varinfo(tmp_path, "2018-04-01", "2018-06-30")
         assert "2018-Q2" in text
+
+    def test_varinfo_single_month(self, tmp_path):
+        text = self._render_varinfo(tmp_path, "2019-03-01", "2019-03-31")
+        assert "2019-03" in text
+        assert "2019-03-01" not in text  # not the raw range
 
     # ── full-year window stays the bare year (year-by-default preserved) ──
 
