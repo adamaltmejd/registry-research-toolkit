@@ -79,8 +79,13 @@ const results = asyncResource<SearchResponse>((signal) =>
 // error the four main groups — there is intentionally no docs loading indicator
 // and no docs error banner; silent omission IS the isolation. Short-circuits a
 // too-short query to an empty response without a network call (mirrors `results`).
+// Docs is shown ONLY in the unscoped (`all`) view: the #393 toggle has no Docs
+// option, and a scoped search means "show only that one group", so any non-`all`
+// scope short-circuits to the empty `ingested:false` response (no fetch, and
+// `docsHasHits` stays false → the section is hidden). Read `searchType` HERE so the
+// resource refetches when the scope returns to `all`.
 const docs = asyncResource<DocSearchResponse>((signal) =>
-  q.length >= MIN_QUERY_LENGTH
+  q.length >= MIN_QUERY_LENGTH && searchType === "all"
     ? docSearch(q, { signal })
     : Promise.resolve({
         kind: "doc-search",

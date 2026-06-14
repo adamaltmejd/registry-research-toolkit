@@ -682,6 +682,46 @@ describe("SearchView — docs group (#394)", () => {
     await expect.element(page.getByText("showing 1 of 9")).toBeVisible();
   });
 
+  it("renders Documentation under the default (all) scope but NOT under a non-all scope (#393)", async () => {
+    // The #393 toggle has no Docs option, so a scoped search means "only that one
+    // group" — the additive docs section must be skipped (no fetch) and hidden
+    // whenever ?type= is anything but the default `all`.
+    vi.mocked(search).mockResolvedValue(ONE_REGISTER);
+    vi.mocked(docSearch).mockResolvedValue(
+      docHits([
+        {
+          filename: "lisa_kon.md",
+          display_name: "LISA — Kön",
+          fuzzy: false,
+          register: "LISA",
+          snippet: null,
+          source: null,
+          source_url: null,
+          tags: [],
+          variable: null,
+        },
+      ]),
+    );
+
+    // Default (all) scope → Documentation renders.
+    setQuery("kon");
+    const allView = await render(SearchView);
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .toBeVisible();
+    allView.unmount();
+    vi.mocked(docSearch).mockClear();
+
+    // A scoped (?type=value) search → docs is short-circuited (no fetch) and hidden.
+    window.history.pushState({}, "", "/__reset__");
+    router.navigate("/search?q=kon&type=value");
+    await render(SearchView);
+    await expect
+      .element(page.getByRole("heading", { name: "Documentation" }))
+      .not.toBeInTheDocument();
+    expect(docSearch).not.toHaveBeenCalled();
+  });
+
   it("renders a docs snippet as LITERAL TEXT, never parsed HTML (republication guard)", async () => {
     // The snippet may carry FTS markers; `{value}` auto-escapes. A `<b>` in the
     // snippet must surface as literal characters, not a parsed element — so no
