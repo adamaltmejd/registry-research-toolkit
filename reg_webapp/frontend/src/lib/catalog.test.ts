@@ -19,6 +19,7 @@ import {
   representationsCollapse,
   representationsFromStates,
   stateChangeHints,
+  stateKey,
   variantSeg,
   windowTitle,
 } from "./catalog";
@@ -999,70 +1000,138 @@ describe("formatStateWindow (#309 sentinel hiding + #321 period tokens)", () => 
 
 describe("stateChangeHints (#309 what-differs)", () => {
   it("flags a data-type-only change between adjacent same-variant states (int → bigint)", () => {
-    const hints = stateChangeHints([
-      state({
-        state_id: 1,
-        variant: "v1",
-        valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
-        data_type: "int",
-      }),
-      state({
-        state_id: 2,
-        variant: "v1",
-        valid_from: "2016-01-01",
-        valid_to: "2023-12-31",
-        data_type: "bigint",
-      }),
-    ]);
-    expect(hints.get(2)).toEqual(["type int → bigint"]);
-    expect(hints.has(1)).toBe(false);
+    const s1 = state({
+      state_id: 1,
+      variant: "v1",
+      valid_from: "2010-01-01",
+      valid_to: "2015-12-31",
+      data_type: "int",
+    });
+    const s2 = state({
+      state_id: 2,
+      variant: "v1",
+      valid_from: "2016-01-01",
+      valid_to: "2023-12-31",
+      data_type: "bigint",
+    });
+    const hints = stateChangeHints([s1, s2]);
+    expect(hints.get(stateKey(s2))).toEqual(["type int → bigint"]);
+    expect(hints.has(stateKey(s1))).toBe(false);
   });
 
   it("flags a column rename and a value-set content change (same label → 'value set changed')", () => {
-    const hints = stateChangeHints([
-      state({
-        state_id: 1,
-        variant: "v1",
-        valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
-        delivery_column_name: "Old",
-        value_set_id: 10,
-        value_set_version_label: "v",
-      }),
-      state({
-        state_id: 2,
-        variant: "v1",
-        valid_from: "2016-01-01",
-        valid_to: "2023-12-31",
-        delivery_column_name: "New",
-        value_set_id: 11, // content key differs, label does NOT
-        value_set_version_label: "v",
-      }),
+    const s1 = state({
+      state_id: 1,
+      variant: "v1",
+      valid_from: "2010-01-01",
+      valid_to: "2015-12-31",
+      delivery_column_name: "Old",
+      value_set_id: 10,
+      value_set_version_label: "v",
+    });
+    const s2 = state({
+      state_id: 2,
+      variant: "v1",
+      valid_from: "2016-01-01",
+      valid_to: "2023-12-31",
+      delivery_column_name: "New",
+      value_set_id: 11, // content key differs, label does NOT
+      value_set_version_label: "v",
+    });
+    const hints = stateChangeHints([s1, s2]);
+    expect(hints.get(stateKey(s2))).toEqual([
+      "column Old → New",
+      "value set changed",
     ]);
-    expect(hints.get(2)).toEqual(["column Old → New", "value set changed"]);
   });
 
   it("names the labels when the value-set version label changes too", () => {
+    const s1 = state({
+      state_id: 1,
+      variant: "v1",
+      valid_from: "2010-01-01",
+      valid_to: "2015-12-31",
+      value_set_id: 10,
+      value_set_version_label: "SSYK 96",
+    });
+    const s2 = state({
+      state_id: 2,
+      variant: "v1",
+      valid_from: "2016-01-01",
+      valid_to: "2023-12-31",
+      value_set_id: 11,
+      value_set_version_label: "SSYK 2012",
+    });
+    const hints = stateChangeHints([s1, s2]);
+    expect(hints.get(stateKey(s2))).toEqual(["value set SSYK 96 → SSYK 2012"]);
+  });
+
+  it("never diffs across the same-state_id windows of a merged monthly family (#319/#384)", () => {
+    // ONE annual state (state_id 10) expanded into 3 per-month windows: SAME
+    // variant + state_id, distinct per-month delivery columns and
+    // non-overlapping consecutive months. The windows are 3 representations of
+    // a single claim, not a column succession — no spurious
+    // "column LonFinkJan → LonFinkFeb" hint.
     const hints = stateChangeHints([
       state({
-        state_id: 1,
+        state_id: 10,
         variant: "v1",
-        valid_from: "2010-01-01",
-        valid_to: "2015-12-31",
-        value_set_id: 10,
-        value_set_version_label: "SSYK 96",
+        valid_from: "2020-01-01",
+        valid_to: "2020-01-31",
+        delivery_column_name: "LonFinkJan",
       }),
       state({
-        state_id: 2,
+        state_id: 10,
         variant: "v1",
-        valid_from: "2016-01-01",
-        valid_to: "2023-12-31",
-        value_set_id: 11,
-        value_set_version_label: "SSYK 2012",
+        valid_from: "2020-02-01",
+        valid_to: "2020-02-29",
+        delivery_column_name: "LonFinkFeb",
+      }),
+      state({
+        state_id: 10,
+        variant: "v1",
+        valid_from: "2020-03-01",
+        valid_to: "2020-03-31",
+        delivery_column_name: "LonFinkMar",
       }),
     ]);
-    expect(hints.get(2)).toEqual(["value set SSYK 96 → SSYK 2012"]);
+    expect(hints.size).toBe(0);
+  });
+
+  it("hints a genuine transition INTO a merged family without collapsing onto its sibling windows (#384)", () => {
+    // A prior annual state (state_id 9, earlier non-overlapping window, distinct
+    // column) succeeded by a merged monthly family (state_id 10, ≥2 windows).
+    const prior = state({
+      state_id: 9,
+      variant: "v1",
+      valid_from: "2019-01-01",
+      valid_to: "2019-12-31",
+      delivery_column_name: "LonFinkArs",
+    });
+    const jan = state({
+      state_id: 10,
+      variant: "v1",
+      valid_from: "2020-01-01",
+      valid_to: "2020-01-31",
+      delivery_column_name: "LonFinkJan",
+    });
+    const feb = state({
+      state_id: 10,
+      variant: "v1",
+      valid_from: "2020-02-01",
+      valid_to: "2020-02-29",
+      delivery_column_name: "LonFinkFeb",
+    });
+    const hints = stateChangeHints([prior, jan, feb]);
+    // Exactly ONE hint — the prior → first-family-window transition. Keyed by
+    // the compound key, so it lands on the first window only…
+    expect(hints.size).toBe(1);
+    expect(hints.get(stateKey(jan))).toEqual([
+      "column LonFinkArs → LonFinkJan",
+    ]);
+    // …and the sibling window neither collapses the hint onto itself nor gets a
+    // spurious cross-window hint of its own.
+    expect(hints.get(stateKey(feb))).toBeUndefined();
   });
 
   it("never diffs OVERLAPPING same-variant states (parallel alternatives, not a transition)", () => {
