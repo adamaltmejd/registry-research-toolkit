@@ -35,6 +35,7 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.family_merges as _fm
     import reg_meta_build.fold_overrides as _fo
     import reg_meta_build.tags as _tg
+    import reg_meta_build.variable_related_to as _vrt
 
     mp = pytest.MonkeyPatch()
     mp.setattr(_cd, "repo_codelivery_path", lambda: None)
@@ -61,6 +62,14 @@ def _no_repo_curation() -> Iterator[None]:
     # an empty file. db.py imported the symbol directly — patch it there too.
     mp.setattr(_fm, "repo_family_merges_path", lambda: None)
     mp.setattr(_db, "repo_family_merges_path", lambda: None)
+    # variable_related_to.toml (#353) curates cross-register "see also" edges
+    # keyed on real scb/sos slugs; the materializer fails LOUD on a dangling
+    # endpoint, so a synthetic build must see an empty file. The shipped TOML is
+    # empty today (silent no-op), but the moment a maintainer adds one edge every
+    # fixture build would resolve it against synthetic registers and fail. db.py
+    # imported the symbol directly — patch it there too.
+    mp.setattr(_vrt, "repo_variable_related_to_path", lambda: None)
+    mp.setattr(_db, "repo_variable_related_to_path", lambda: None)
     yield
     mp.undo()
 

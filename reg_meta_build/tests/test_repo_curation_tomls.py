@@ -23,6 +23,7 @@ from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.family_merges import load_family_merges
 from reg_meta_build.fold_overrides import load_fold_overrides
+from reg_meta_build.variable_related_to import load_related_to
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
 _ROOT = Path(__file__).resolve().parent.parent
@@ -67,3 +68,10 @@ def test_repo_family_merges_parses() -> None:
     assert all(
         f.provider and f.register and f.family_stem and f.label for f in families
     )
+
+
+def test_repo_variable_related_to_parses() -> None:
+    # The shipped file is EMPTY (no edges curated yet) — unlike the other repo
+    # TOMLs above, the regression lock is an EMPTY assertion, not truthiness. It
+    # starts failing loudly the day a real edge lands, prompting an update here.
+    assert load_related_to(_ROOT / "variable_related_to.toml") == ()
