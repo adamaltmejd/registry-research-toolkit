@@ -274,6 +274,18 @@ class TestMaterialize:
         assert "does-not-exist" in exc.value.message
         assert _related_rows(conn) == []  # nothing written
 
+    def test_dangling_a_endpoint_fails_fast(self) -> None:
+        # Symmetric to the b-endpoint case: the `a` FQID dangles. Guards against a
+        # copy-paste bug that drops the `a` resolution check.
+        conn = _cross_register_db()
+        edge = _edge(a="scb/lisa/does-not-exist")
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_related_to(conn, (edge,), providers=_SCB)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "variable_related_to_unresolved"
+        assert "does-not-exist" in exc.value.message
+        assert _related_rows(conn) == []  # nothing written
+
     def test_inactive_provider_edge_is_skipped(self) -> None:
         conn = _cross_register_db()
         # scb endpoints, but this build only carries sos → skip, don't fail.
