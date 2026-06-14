@@ -94,10 +94,10 @@ near-final). Outward-facing `gh` actions (PR create / merge / comment) may be de
 the session's permission mode — if one is denied, surface it to the human, don't work
 around it.
 
-**B · Test.** Run only if the tester role applies (Step 0.3). The tester only *suggests*
+**B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
-implementer to add them → commit. Then mark the PR **ready** — auto-review
-(Codex/Copilot) and CI-on-ready fire once, on near-final code.
+implementer to add them → commit. Then, whether or not the tester ran, mark the PR
+**ready** — auto-review (Codex/Copilot) and CI-on-ready fire once, on near-final code.
 
 **C · Review loop.** Run **`/code-review <effort>`** on the PR — it fans out lenses
 (bugs, CLAUDE.md/DESIGN adherence, git history, prior-PR comments, code comments, plus
@@ -105,13 +105,12 @@ reuse / simplification / efficiency / altitude cleanup), scores its own findings
 confidence, then reports them **back to you**. Do NOT pass `--comment` or `--fix` — you
 route fixes and own git. Scale effort to risk: `medium` by default, `high`/`max` for
 large or high-risk diffs (DDL/schema/build-affecting, data-safety, concurrency). **Never
-`ultra`** — it's a billed cloud tier that isn't enabled. Route fixes to a fresh
-implementer — blocking bugs and resolved questions always, plus any reuse /
-simplification cleanup worth taking (there's no separate simplify pass) → re-verify,
-report → you commit + push → re-run `/code-review` on the fix delta. Repeat until a pass
-reports no further material findings. Safety valve: if it won't settle after a few
-rounds or keeps re-raising the same point, STOP and surface it via `AskUserQuestion` —
-never loop forever.
+`ultra`** — it's a billed cloud tier that isn't enabled. Route the fixes you're taking —
+blocking bugs, resolved questions, and any worthwhile reuse / simplification cleanup —
+to a fresh implementer → re-verify, report → you commit + push → re-run `/code-review`
+on the fix delta. Repeat until a pass reports no further material findings. Safety
+valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
+and surface it via `AskUserQuestion` — never loop forever.
 
 **D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
