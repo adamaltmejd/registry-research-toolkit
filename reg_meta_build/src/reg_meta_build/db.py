@@ -2964,6 +2964,30 @@ def materialize(
         row_counts["monthly_family_merges"] = fm_counts["families"]
         row_counts["variable_alias_windows"] = fm_counts["windows"]
 
+        # Variable grafts (#365 PR1d) — mint catalog variables reg_meta lacks but
+        # a steward delivers, onto an existing (register, variant). Runs AFTER
+        # populate_slugs (register/variant slugs resolve the target) and BEFORE
+        # populate_variable_slugs (the minted variable's NULL slug auto-derives
+        # from its delivery column, like any other). Gap-fill only; banded ids.
+        from .variable_grafts import (
+            load_variable_grafts,
+            materialize_grafts,
+            repo_variable_grafts_path,
+        )
+
+        graft_counts = materialize_grafts(
+            conn,
+            load_variable_grafts(repo_variable_grafts_path()),
+            providers=active_providers,
+            warn=_progress,
+        )
+        row_counts["variable_grafts"] = graft_counts["minted"]
+        _progress(
+            f"  {graft_counts['minted']:,} variable grafts "
+            f"({graft_counts['skipped']:,} already present, "
+            f"{graft_counts['unresolved']:,} unresolved)"
+        )
+
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),
