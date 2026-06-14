@@ -226,11 +226,14 @@ def get_search(
     want_classification = req_type in ("all", "classification")
     want_value = req_type in ("all", "value")
 
+    # Groups are appended in the fixed register→variable→classification→code order
+    # so the `all` case keeps today's exact 4-group shape; a single-type scope emits
+    # just its one group.
+    groups: list[SearchGroup] = []
+
     # The empty-query / no-usable-token short-circuit: same group selection as the
-    # live path, just empty. Built in the fixed register→variable→classification→
-    # code order so the `all` case keeps today's exact 4-group shape.
+    # live path, just empty.
     if not _has_searchable_token(q):
-        groups: list[SearchGroup] = []
         if want_register:
             groups.append(RegisterSearchGroup(total_count=0, results=[]))
         if want_variable:
@@ -241,9 +244,6 @@ def get_search(
             groups.append(CodeSearchGroup(total_count=0, results=[]))
         return SearchResponse(query=q, groups=groups)
 
-    groups = []
-    # `groups` is re-declared in this branch (the short-circuit returned above);
-    # the type from the first declaration carries over.
     with catalog_conn(request) as conn:
         # `field="description"` is reg_meta's FTS path (register_fts +
         # variable_fts + classification_fts) — NOT the LIKE-based

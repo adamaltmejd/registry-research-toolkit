@@ -147,35 +147,26 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
 // systems lead. `null`/empty → a trailing "Register-local" bucket. `label` is the
 // subsection heading; `key` is a stable each-key (the raw code_system, or JS
 // `null` for the register-local bucket — a Map treats `null` as a distinct key
-// that can never collide with any real code_system string).
+// that can never collide with any real code_system string). Map iteration is
+// insertion order, so its values come back in first-appearance order directly.
 const REGISTER_LOCAL_LABEL = "Register-local";
-function groupCodesBySystem(
-  results: CodeSearchResult[],
-): Array<{ key: string | null; label: string; codes: CodeSearchResult[] }> {
-  const order: (string | null)[] = [];
-  const buckets = new Map<
-    string | null,
-    { label: string; codes: CodeSearchResult[] }
-  >();
+type CodeSystemBucket = {
+  key: string | null;
+  label: string;
+  codes: CodeSearchResult[];
+};
+function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
+  const buckets = new Map<string | null, CodeSystemBucket>();
   for (const code of results) {
     const key = code.code_system || null;
     let bucket = buckets.get(key);
     if (!bucket) {
-      bucket = { label: key ?? REGISTER_LOCAL_LABEL, codes: [] };
+      bucket = { key, label: key ?? REGISTER_LOCAL_LABEL, codes: [] };
       buckets.set(key, bucket);
-      order.push(key);
     }
     bucket.codes.push(code);
   }
-  return order.map((key) => {
-    const bucket = buckets.get(key);
-    if (!bucket) {
-      // Unreachable: every `key` in `order` was just set in `buckets`. Guard kept
-      // so the return type carries no `undefined`.
-      return { key, label: REGISTER_LOCAL_LABEL, codes: [] };
-    }
-    return { key, label: bucket.label, codes: bucket.codes };
-  });
+  return [...buckets.values()];
 }
 </script>
 
