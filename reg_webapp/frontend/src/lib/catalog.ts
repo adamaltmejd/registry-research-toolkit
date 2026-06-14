@@ -630,6 +630,13 @@ export function formatWindow(
   return `${validFrom} – ${validTo}`;
 }
 
+/** The "showing N of M" caption when the displayed slice is smaller than the full
+ * match count (N = rendered rows, M = total before the server's per-request
+ * limit), else null (don't caption a complete group). */
+export function showingOf(shown: number, total: number): string | null {
+  return shown < total ? `showing ${shown} of ${total}` : null;
+}
+
 /** `formatWindow` over a state row (its bounds + backend token). */
 export function formatStateWindow(s: VariableStateModel): string {
   return formatWindow(s.valid_from, s.valid_to, s.period_token);

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { type BindingNodeData, getDocsForVariable } from "./api";
 import { asyncResource } from "./async.svelte";
-import { fqidSegments } from "./catalog";
+import { fqidSegments, showingOf } from "./catalog";
 
 // The binding-leaf "Mentioned in documentation" panel (#402). A SIBLING of
 // LineagePanels — a deliberately SEPARATE component over a SEPARATE optional DB
@@ -64,7 +64,10 @@ const results = $derived(data?.results ?? []);
       Heuristic name matches — not authoritative variable→documentation links.
     </p>
     <ul class="mentions">
-      {#each results as r (r.filename)}
+      <!-- key by array INDEX — the list is replaced wholesale per fetch; a
+           natural key like filename could collide and crash the keyed each, per
+           the #391 lesson. -->
+      {#each results as r, i (i)}
         <li>
           <!-- Links to the minimal /doc viewer; the App shell's use:link
                intercepts same-origin SPA links (mirrors SearchView's docHit). -->
@@ -81,10 +84,9 @@ const results = $derived(data?.results ?? []);
         </li>
       {/each}
     </ul>
-    {#if data.total_count > results.length}
-      <p class="muted count">
-        showing {results.length} of {data.total_count}
-      </p>
+    {@const caption = showingOf(results.length, data.total_count)}
+    {#if caption}
+      <p class="muted count">{caption}</p>
     {/if}
   {/if}
 </section>
