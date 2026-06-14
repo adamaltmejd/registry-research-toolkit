@@ -4,6 +4,7 @@ import {
   formatDataType,
   formatStateWindow,
   stateChangeHints,
+  stateKey,
   windowTitle,
 } from "./catalog";
 import { VALUE_SET_VERSION_NONE } from "./period";
@@ -63,19 +64,10 @@ const hasEmptyVersion = $derived(versionsAll.includes(""));
 // Whether either narrowing axis can actually resolve the multi-state set to one.
 const canNarrow = $derived(variants.length > 1 || versionsAll.length > 1);
 
-// #309: per-transition "what changed" hints (keyed by the LATER state's id) —
-// adjacent same-variant states that differ only invisibly (the int→bigint
-// case) get an explicit diff line under the row.
+// #309: per-transition "what changed" hints (keyed by the LATER state's
+// compound `stateKey`) — adjacent same-variant states that differ only
+// invisibly (the int→bigint case) get an explicit diff line under the row.
 const changeHints = $derived(stateChangeHints(states));
-
-// Per-state stable key. NOT state_id alone: a merged monthly-family variable
-// (#319) expands ONE annual state into 12 same-state_id per-month windows, so
-// state_id is no longer unique in the list — the compound (state_id, column,
-// valid_from) is. Used for the #each key (Svelte requires uniqueness) and the
-// #310 inline-expansion map.
-function stateKey(s: VariableStateModel): string {
-  return `${s.state_id}:${s.delivery_column_name ?? ""}:${s.valid_from}`;
-}
 
 // #310: inline per-state value-set expansion in LIST mode (keyed by stateKey;
 // reassigned-on-toggle so the runes see the change). Cleared when the state set
@@ -226,7 +218,7 @@ function toggleExpanded(key: string): void {
     {#each states as s (stateKey(s))}
       {@const key = stateKey(s)}
       {@const typeLabel = formatDataType(s.data_type, s.data_length)}
-      {@const hints = changeHints.get(s.state_id)}
+      {@const hints = changeHints.get(stateKey(s))}
       <li>
         <div class="state-row">
           <span class="state-variant"><code>{s.variant}</code></span>

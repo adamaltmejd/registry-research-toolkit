@@ -660,22 +660,37 @@ export function grainsFromStates(states: VariableStateModel[]): PeriodGrain[] {
   return PERIOD_GRAINS.filter((g) => found.has(g));
 }
 
+/** Per-state stable key — NOT `state_id` alone. A merged monthly-family
+ * variable (#319) expands ONE annual `variable_state` row into up to 12
+ * same-`state_id` per-month windows (they SHARE the annual state's `state_id`
+ * and `value_set_version_label`; only `delivery_column_name` + the validity
+ * bounds are overridden per window — see reg_meta `catalog.py`
+ * `_expand_state_windows`). So `state_id` is no longer unique in the list — the
+ * compound `(state_id, delivery_column_name, valid_from)` is. Single source of
+ * truth for the `StatesView` `#each` key, its #310 inline-expansion map, and the
+ * `stateChangeHints` Map key (#384). */
+export function stateKey(s: VariableStateModel): string {
+  return `${s.state_id}:${s.delivery_column_name ?? ""}:${s.valid_from}`;
+}
+
 /**
  * Per-state "what changed" hints (#309): for each variant's states in
  * `valid_from` order, diff every state against its predecessor and report the
  * fields that actually changed — data type (formatted), delivery column, and
  * value set (`value_set_id` is the CONTENT key: the coding can change even
- * when the version label doesn't). Keyed by the LATER state's `state_id`.
- * Cross-variant transitions are never hinted (the variant is its own visible
- * column). Two states differing in none of these render identically without a
- * hint — exactly the int→bigint invisibility this fixes, so every diffed field
- * must also be VISIBLE in the row.
+ * when the version label doesn't). Keyed by the LATER state's compound
+ * `stateKey` — `state_id` alone collides across the same-`state_id` windows a
+ * merged monthly family (#319) expands into, collapsing all 12 month rows onto
+ * one Map entry (#384). Cross-variant transitions are never hinted (the variant
+ * is its own visible column). Two states differing in none of these render
+ * identically without a hint — exactly the int→bigint invisibility this fixes,
+ * so every diffed field must also be VISIBLE in the row.
  */
 export function stateChangeHints(
   states: VariableStateModel[],
-): Map<number, string[]> {
+): Map<string, string[]> {
   const byVariant = statesByVariant(states);
-  const hints = new Map<number, string[]>();
+  const hints = new Map<string, string[]>();
   for (const group of byVariant.values()) {
     const ordered = [...group].sort(
       (a, b) =>
@@ -684,6 +699,14 @@ export function stateChangeHints(
     for (let i = 1; i < ordered.length; i++) {
       const prev = ordered[i - 1];
       const cur = ordered[i];
+      // The windows of a merged monthly family (#319) SHARE one annual
+      // `state_id`: they are 12 representations of a SINGLE claim, not a
+      // before→after succession. They are non-overlapping consecutive months,
+      // so the overlap guard below does NOT catch them — skip them explicitly
+      // (a spurious "column LonFinkJan → LonFinkFeb" hint otherwise, #384).
+      if (prev.state_id === cur.state_id) {
+        continue;
+      }
       // Only a genuine SUCCESSION is a transition: overlapping same-variant
       // states (co-delivered vintages/columns at one period) are parallel
       // ALTERNATIVES — diffing them as before→after would be misleading
@@ -710,7 +733,7 @@ export function stateChangeHints(
         );
       }
       if (changes.length > 0) {
-        hints.set(cur.state_id, changes);
+        hints.set(stateKey(cur), changes);
       }
     }
   }
