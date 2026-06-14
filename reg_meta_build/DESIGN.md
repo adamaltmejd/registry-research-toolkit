@@ -1211,9 +1211,21 @@ keyed `{ provider, register, variable_slug }` (note: `variable_slug`, not `varia
 materialized into `variable_same_as` edges that `Catalog.resolve` follows transitively
 (build rejects cycles). `replaced_by` is a **single in-file key string** (a
 typo-correction pointer to another row's TOML key in the same file), validated for shape
-and cycle-freedom — *not* a cross-provider tuple. `related_to` is **not a curatable TOML
-field at all**: it is auto-emitted by triage splits only (the per-pair split
-`relation_kind`s, above).
+and cycle-freedom — *not* a cross-provider tuple. `related_to` is **not a curatable
+inline field** in provider TOMLs — inline-declared edges are identity relationships the
+resolver BFS-follows and that lineage materializes from, the wrong vehicle for a weak
+"see also." Cross-register "see also" edges instead live in a standalone
+`reg_meta_build/variable_related_to.toml` (`#353`), loaded by `variable_related_to.py`
+and materialized right after the auto:triage pass into the same `variable_related_to`
+table on a **disjoint** curated relation-kind vocabulary (`CURATED_RELATION_KINDS` —
+currently `similar_concept`). The auto:triage kind `same_definition_different_column` is
+foldable (the concept-group edge pass uses it for browse grouping); the curated kinds
+deliberately are not, so a cross-register "see also" can never trigger browse-level
+folding. Like the other curation TOMLs it is a maintainer artifact — absent in wheel
+installs and synthetic test builds (empty file → zero rows written); an edge whose
+`a_provider` or `b_provider` isn't in the current build is skipped rather than failed.
+The shipped TOML is currently empty; the loader is inert until edges are curated
+(auto-emitted split edges are unaffected and flow as before).
 
 **Panel-shape bootstrap.** `register_variant` rows also carry `panel_entity_key` /
 `panel_time_key` / `panel_time_grain` (a variable-slug reference or the `"period"`
@@ -1242,8 +1254,10 @@ pass never claims an already-grouped member:
    machinery minted these edges between the delivery columns of ONE SCB variable
    definition, so folding them back into one browse row cannot over-fold. Measured
    2026-06-11: 2,193 components / 8,151 variables (16% of the catalog), 2,191 sharing a
-   single name (the group label; key = min member slug). Other `relation_kind`s
-   (`code_vs_label_pair`, `import_bug_suspect`) do NOT group.
+   single name (the group label; key = min member slug). Other auto:triage
+   `relation_kind`s (`code_vs_label_pair`, `import_bug_suspect`) do NOT group; neither
+   do curated kinds from `variable_related_to.toml` (`similar_concept`) — the curated
+   vocabulary is disjoint from the foldable auto kind by construction.
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms
    (SCB mixes them within one family); guard = ≥3 distinct months on one stem AND a
