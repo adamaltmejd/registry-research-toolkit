@@ -55,9 +55,9 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 
 ## Step 0 — plan (first, before any coding)
 
-1. **Gather context.** Read the referenced issue(s) **including comments** (decisions
-   are recorded there), the relevant code, `CLAUDE.md`, and the touched
-   `<package>/DESIGN.md`.
+1. **Gather context.** Read the referenced issue(s) **including comments and linked
+   relationships** — the parent epic, blockers, and follow-ups (decisions are recorded
+   there); the relevant code, `CLAUDE.md`, and the touched `<package>/DESIGN.md`.
 
 2. **Shape the work.** Break the request into the smallest set of coherent,
    independently mergeable PRs; write a one-line scope for each; sequence by dependency.
@@ -189,7 +189,12 @@ Then end with a **report**:
 2. **Deferred / outstanding** — anything intentionally left out of scope, a finding
    dismissed as "later", a confirmed TODO/FIXME, or a doc left stale by design. Say
    "none" if there are none.
-3. **Recommended new issues** — for each follow-up worth tracking, propose a GH issue: a
-   one-line title + the rationale + rough scope. **Do NOT file them unprompted** (filing
-   is the human's call) — list them and offer to file the ones they pick. Say "none" if
-   the change is fully self-contained.
+3. **Recommended new issues** — for each follow-up worth tracking, first
+   `gh issue list --state all --search "<keywords>"` for an existing match (point at it,
+   don't propose a duplicate). For a genuinely new one, draft it to the AGENTS.md
+   **Issue tracker** conventions: a `<type>(<package>):` title, area + type labels, and
+   a `Relationships` block wiring it to where it came from
+   (`Follow-up to #<this issue>`, `Part of #<epic>`, any `Blocked by`). **Do NOT file
+   them unprompted** (filing is the human's call) — list them and offer to file the ones
+   they pick; when filed, set the parent with `gh issue edit <n> --parent <epic>`. Say
+   "none" if the change is fully self-contained.
