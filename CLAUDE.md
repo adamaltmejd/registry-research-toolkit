@@ -158,7 +158,7 @@ issue is part of a tracked epic.
   they churn too fast to maintain as a taxonomy.
 
 **Body** — use the house skeleton, dropping any section that doesn't apply (don't pad):
-`Problem`/`Context` · `Approach` · `Scope` (In / Out) · `Relationships` ·
+`Problem`/`Context` · `Approach` · `Scope` (In / Out) · `Relationships` · `Touches` ·
 `Open questions` · `Non-goals`. Worked examples and concrete file paths earn their
 space.
 
@@ -176,8 +176,27 @@ a keyword + number:
 - PR → issue closure uses closing keywords in the **PR** body (`Closes #N` /
   `Fixes #N`), never in the issue.
 
+**Touches** — when the issue will change code, add a fenced `touches` block (info string
+`touches`) listing the repo-relative paths or globs the work is expected to modify, one
+per line (`#` line-comments allowed; paths that don't exist yet are fine). It lets the
+sequencing pass compute which issues can run in parallel by set-intersection instead of
+re-reading the tree. Omit it for discussion- or decision-only issues.
+
+````
+```touches
+reg_meta_build/src/reg_meta_build/sources/sos.py
+reg_meta_build/concept_groups.toml
+```
+````
+
 **Epics** — a tracking issue labeled `epic` that owns its children as sub-issues; the
 epic body carries the sequencing/lane reasoning, each child carries its own scope.
+
+**Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
+`issue-hygiene.yml`) checks these rules read-only: required labels, resolvable
+relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement, `touches`-glob
+resolution, plus drift alerts (a merged PR that left its issue open; `reg_meta_build` DB
+content changed since the last `reg_meta_build/v*` tag, i.e. a release is pending).
 
 # Git
 

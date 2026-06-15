@@ -1,0 +1,40 @@
+name: Issue hygiene
+
+# Enforces the AGENTS.md "# Issue tracker" conventions. Read-only: the default
+# GITHUB_TOKEN gets read scopes only, so the job can never edit issues — it reports.
+#   - `issues` events: validate the touched issue, fail the run on a hard violation
+#     (the write-time nudge — a red run + a job summary; issues have no merge gate).
+#   - schedule + manual: validate the whole corpus, report-only (drift + the
+#     merged-but-unreleased reg_meta_build alert), never fails.
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, reopened]
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: read
+  pull-requests: read
+  contents: read
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Full history + tags: the merged-but-unreleased check diffs HEAD against
+          # the latest reg_meta_build/v* tag.
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v8.2.0
+      - name: Validate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            uv run --no-project python scripts/check_issue_hygiene.py \
+              --issue "${{ github.event.issue.number }}"
+          else
+            uv run --no-project python scripts/check_issue_hygiene.py --all
+          fi
