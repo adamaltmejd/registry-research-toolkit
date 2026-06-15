@@ -37,6 +37,11 @@ Thumbs.db
 # into a parent dir that's been ignored at the directory level).
 reg_meta_build/input_data/*
 !reg_meta_build/input_data/classifications/
+# Thin curated providers (#422): each agency's hand-authored <provider>.toml IS
+# the committed source delivery (no machine export exists), so its dir stays
+# tracked. One exception line per curated agency — NOT a broad `*/` exception,
+# which would start tracking the untracked SCB/Socialstyrelsen/swecov seed dirs.
+!reg_meta_build/input_data/Folkhalsomyndigheten/
 # Under classifications/ only the normalized CSVs (+ manifest.json) are tracked.
 # The raw SOS source workbooks the fetch script downloads are not — they
 # regenerate from scripts/fetch_sos_classifications.py.
@@ -76,6 +81,12 @@ mdw_upload_probe_*.txt
 
 # reg_meta database (built from SCB exports, not committed)
 *.db
+
+# Build-generated auto-slug TOMLs (variable slugs; regenerate each build while
+# UNFROZEN holds — only the curated <provider>.toml + .snapshot.json are
+# committed). Covers the global dir and per-steward subdirs (fqid_slugs/swecov/).
+# See reg_meta_build/DESIGN.md → Slug immutability.
+reg_meta_build/fqid_slugs/**/*.auto.toml
 
 # SCB source PDFs (binary, copyrighted, not committed)
 *.pdf

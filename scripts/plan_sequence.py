@@ -14,6 +14,27 @@ the issue-edit history records when; the body stays diff-stable when nothing cha
 Read-only by default (prints the block to stdout). `--write <epic#>` splices it into that
 epic's body via `gh issue edit`.
 
+A SECOND marked region — `<!-- plan-lanes:start --> … <!-- plan-lanes:end -->` — carries
+the *ranked* lanes. Their content is agentic (the `/plan-lanes` skill ranks what
+set-intersection over `touches` can't see), so the script doesn't generate it: `--write-
+lanes` reads the agent's text from stdin, frames it with a machine-readable `basis` (the
+ready/running sets the ranking was computed against, plus a `sig` over every work issue's
+lane-affecting projection — status, area, `touches`, `priority`, `Relationships`), and
+splices it as its own region. `--lanes-stale` prints the live basis and exit-codes whether
+the stored block matches it — the trigger the `/loop` heartbeat keys off, since once CI
+event-refreshes the *projection* block the projection delta no longer signals that the
+ready/running sets moved (the refresh absorbed it). The `sig` extends staleness past
+membership: an area/`touches`/`priority`/`Relationships` edit that re-shapes the lane graph
+without moving an issue between sections still flips it. The heartbeat
+passes the printed basis back via `--write-lanes --basis` so the stamp reflects the state
+the rank actually saw, not a post-rank recompute (which could mark a stale ranking fresh).
+
+`--tick` is the heartbeat's one-fetch combined read: from a single corpus build it prints
+the projection status delta (stderr) and the live lanes basis (stdout) and exit-codes the
+lanes staleness — so the `/loop` tick does one fetch instead of `--diff` + `--lanes-stale`.
+It never writes: CI (`plan-sequence.yml`) + the daily cron own the projection block; the
+loop's only write is the lanes block, when stale.
+
 The hardened parsers + gh fetchers are reused from the sibling validator
 (check_issue_hygiene.py); if a third consumer appears, lift them into a shared module.
 """
@@ -22,9 +43,11 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import hashlib
 import importlib.util
 import re
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -36,6 +59,7 @@ _h = importlib.util.module_from_spec(_HSPEC)
 _HSPEC.loader.exec_module(_h)
 
 AREA_LABELS = _h.AREA_LABELS
+PRIORITY_LABELS = _h.PRIORITY_LABELS
 BLOCKING_KEYWORDS = _h.BLOCKING_KEYWORDS
 FETCH_CAP = _h.FETCH_CAP
 gh_json = _h.gh_json
@@ -44,6 +68,12 @@ parse_touches = _h.parse_touches
 
 START = "<!-- plan-sequence:start -->"
 END = "<!-- plan-sequence:end -->"
+
+# The lanes block is a SECOND, independent marked region in the same epic body. Its
+# content is agent-supplied (`/plan-lanes` ranks; the script only frames + splices it),
+# which is why this is a separate region from the deterministic plan-sequence block.
+LANES_START = "<!-- plan-lanes:start -->"
+LANES_END = "<!-- plan-lanes:end -->"
 
 
 @dataclass
@@ -57,7 +87,24 @@ class Rec:
     parent: int | None
     open_blockers: list[int]
     open_prs: list[int]
+    # All parsed `Relationships` ties (keyword, target) — the full graph `/plan-lanes`
+    # reads for coherence/ordering, not just the blocking subset in `open_blockers`.
+    relationships: list[tuple[str, int]] = field(default_factory=list)
+    # "high" | "normal" | "low" — the maintainer's `priority:*` label (default normal).
+    priority: str = field(default="normal")
     status: str = field(default="")
+
+
+def priority_of(labels: set[str]) -> str:
+    """The priority bucket from `priority:*` labels (default "normal").
+
+    At most one is expected (hygiene flags >1); if both slip through, high wins.
+    """
+    if "priority:high" in labels:
+        return "high"
+    if "priority:low" in labels:
+        return "low"
+    return "normal"
 
 
 def classify(rec: Rec) -> str:
@@ -134,21 +181,27 @@ def parallel_groups(ready: list[Rec]) -> list[list[int]]:
     return sorted(sorted(g) for g in groups.values())
 
 
-def splice_block(body: str, block: str) -> str:
-    """Replace the marked region with `block`, or append it if the markers are absent.
+def splice_block(body: str, block: str, start: str = START, end: str = END) -> str:
+    """Replace the `start`…`end` marked region with `block`, or append it if absent.
 
-    Only a well-formed, ordered START…END pair is replaced. A lone or reversed marker
+    Defaults to the plan-sequence markers; the lanes write passes the plan-lanes pair.
+    Only a well-formed, ordered start…end pair is replaced. A lone or reversed marker
     (e.g. a half-copied end-comment in the human narrative) falls through to append, so a
     malformed body is never scrambled on write.
     """
-    start, end = body.find(START), body.find(END)
-    if start != -1 and end != -1 and end > start:
-        return body[:start] + block + body[end + len(END) :]
+    s, e = body.find(start), body.find(end)
+    if s != -1 and e != -1 and e > s:
+        return body[:s] + block + body[e + len(end) :]
     sep = "" if not body else ("\n" if body.endswith("\n") else "\n\n")
     return f"{body}{sep}{block}\n"
 
 
 # --- data ----------------------------------------------------------------------------
+
+
+def epic_body(epic: int) -> str:
+    """The epic issue's body, or '' if unset — the read every body-edit path starts from."""
+    return gh_json(["issue", "view", str(epic), "--json", "body"])["body"] or ""
 
 
 def fetch_open_prs_by_issue() -> dict[int, list[int]]:
@@ -183,6 +236,8 @@ def build_records(
                 {t for kw, t in rels if kw in BLOCKING_KEYWORDS and t in open_numbers}
             ),
             open_prs=sorted(prs_by_issue.get(num, [])),
+            relationships=sorted(rels),
+            priority=priority_of(labels),
         )
         rec.status = classify(rec)
         recs.append(rec)
@@ -192,13 +247,19 @@ def build_records(
 # --- dispatch (read-only input for the agent's lane judgment) ------------------------
 
 
+def _prio_tag(rec: Rec) -> str:
+    """`[high] `/`[low] ` inline marker for non-normal priority, else "" (normal = quiet)."""
+    return f"[{rec.priority}] " if rec.priority != "normal" else ""
+
+
 def dispatch_view(records: list[Rec]) -> str:
     """Read-only dispatch candidates for the agent to compose a lane from.
 
     Lists ready issues that DON'T touch in-flight (running) work, grouped by area, with
-    `touches` and must-serialize groups. Which issues form a lane, and how many, is a
-    judgment call left to the agent — the script supplies the deterministic facts and
-    excludes only what would collide with work already in flight.
+    `touches`, `priority:*` (the agent's primary ranking key), and must-serialize groups.
+    Which issues form a lane, and how many, is a judgment call left to the agent — the
+    script supplies the deterministic facts and excludes only what would collide with work
+    already in flight.
     """
     in_flight = [t for r in records if r.status == "running" for t in r.touches]
     ready = [r for r in records if r.status == "ready" and not r.is_epic]
@@ -222,11 +283,23 @@ def dispatch_view(records: list[Rec]) -> str:
     for area in sorted(by_area):
         out.append(f"{area} ({len(by_area[area])}):")
         out += [
-            f"  #{r.number} {r.title}  —  "
+            f"  #{r.number} {_prio_tag(r)}{r.title}  —  "
             + (", ".join(r.touches) if r.touches else "(no touches declared)")
             for r in sorted(by_area[area], key=lambda r: r.number)
         ]
         out.append("")
+    by_prio = {
+        p: sorted(r.number for r in free if r.priority == p) for p in ("high", "low")
+    }
+    if by_prio["high"] or by_prio["low"]:
+        out.append(
+            "Priority (rank by this first): "
+            + "; ".join(
+                f"{p}: " + ", ".join(f"#{n}" for n in by_prio[p])
+                for p in ("high", "low")
+                if by_prio[p]
+            )
+        )
     serial = [g for g in parallel_groups(free) if len(g) > 1]
     if serial:
         out.append("Must serialize (share files): " +
@@ -309,6 +382,137 @@ def render_block(recs: list[Rec], debt: str | None) -> str:
     return "\n".join(out)
 
 
+# `sig` is optional in the pattern so a pre-signature basis (written before this field
+# existed) still parses — it reads back with an empty sig, which differs from any live
+# signature, so the lanes re-rank once and self-upgrade to the new stamp.
+_BASIS_RE = re.compile(
+    r"<!-- plan-lanes:basis ready=([\d,]*) running=([\d,]*)(?: sig=(\w+))? -->"
+)
+
+
+def lanes_signature(records: list[Rec]) -> str:
+    """A short stable hash of every work issue's lane-affecting projection.
+
+    Membership (*which* issues are ready/running) is already in the basis's `ready`/
+    `running` sets. This signature adds everything else the ranking depends on, so an edit
+    that re-shapes the lane graph without moving an issue between sections still re-ranks.
+    `/plan-lanes` ranks over the `--lane` dispatch view — which groups by `area`, keys
+    parallel-safety on `touches`, sorts by `priority`, and reads the full `Relationships`
+    graph for coherence + implicit ordering — so the signed projection is, per work issue:
+
+      number | status | area | touches | priority | relationships
+
+    Signed over **all** work records (not just ready/running) because the ranking also
+    depends on *other* issues' edges: a still-blocked issue's `Blocked by #N` rewrite
+    changes which ready issue has unblocking power, and `Related to`/`Follow-up to` ties
+    signal coherence — neither moves a section nor touches the ready issues' own fields.
+    Signing the whole projection covers those without per-finding special-casing; the cost
+    is an occasional re-rank when an edit didn't actually change the order — the safe
+    direction (re-rank when unsure), matching the `touches`-overlap conservatism.
+
+    Structured-inputs-only — never title/body prose, which doesn't change the lane graph.
+    Sorted throughout so it's deterministic; flows through `--basis` verbatim (it's part of
+    the stamped comment string), so the TOCTOU capture path needs no change.
+    """
+    parts = [
+        "{}|{}|{}|{}|{}|{}".format(
+            r.number,
+            r.status,
+            r.area or "",
+            ",".join(sorted(r.touches)),
+            r.priority,
+            ",".join(f"{kw}#{t}" for kw, t in sorted(r.relationships)),
+        )
+        for r in sorted(records, key=lambda r: r.number)
+    ]
+    return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:12]
+
+
+def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
+    """The machine-readable freshness basis embedded in the lanes block.
+
+    Records the ready + running issue numbers AND a `sig` over their lane-affecting inputs
+    (`lanes_signature`) — the state the ranking was computed against — so `--lanes-stale`
+    can tell whether the agentic lanes still match the live state. The projection block
+    can't serve as that signal once CI refreshes it on every event (a refresh there would
+    absorb the delta the loop keys off). The `sig` makes a `touches`/area/`priority`/
+    `Relationships` edit that moves no issue trip staleness too — no longer an accepted miss.
+    """
+    r = ",".join(str(n) for n in sorted(ready))
+    g = ",".join(str(n) for n in sorted(running))
+    return f"<!-- plan-lanes:basis ready={r} running={g} sig={sig} -->"
+
+
+def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
+    """The (ready, running, sig) a lanes block was computed against, or None if absent.
+
+    `sig` is "" for a pre-signature basis (the field was absent) — distinct from any live
+    signature, so such a block reads as stale and re-ranks once to gain the new stamp.
+    """
+    m = _BASIS_RE.search(block)
+    if not m:
+        return None
+    nums = lambda s: {int(x) for x in s.split(",") if x}  # noqa: E731
+    return nums(m.group(1)), nums(m.group(2)), m.group(3) or ""
+
+
+def lanes_are_stale(block: str, ready: set[int], running: set[int], sig: str) -> bool:
+    """Whether the lanes block needs re-ranking vs the current ready/running set + sig."""
+    basis = parse_basis(block)
+    return basis is None or basis != (set(ready), set(running), sig)
+
+
+def reject_lanes_stdin(content: str) -> str | None:
+    """Why agent-supplied lanes `content` can't be spliced, or None if it's fine.
+
+    A literal region marker inside the content would make a later splice mis-detect the
+    region (truncate/orphan it), so refuse rather than corrupt the epic body.
+    """
+    if not content.strip():
+        return "empty stdin (nothing to splice)"
+    if LANES_START in content or LANES_END in content:
+        return "stdin contains a plan-lanes marker; refusing to splice"
+    return None
+
+
+def render_lanes_block(content: str, basis: str = "") -> str:
+    """Frame agent-supplied ranked-lane text as the epic's plan-lanes block.
+
+    `/plan-lanes` produces the ranking (the judgment the script can't); this only wraps it
+    in the marked region + the do-not-edit header + the deterministic `basis` stamp,
+    mirroring `render_block`'s framing. No timestamp — the issue-edit history records when;
+    the body stays diff-stable.
+    """
+    head = [
+        LANES_START,
+        "## Lanes — generated",
+        "",
+        "<!-- Generated by `/plan-lanes` (run by `/issue-pulse` when the lanes go stale); "
+        "edits inside this block are overwritten. The ranking is agentic, not "
+        "deterministic. -->",
+    ]
+    if basis:
+        head.append(basis)
+    return "\n".join(head + ["", content.strip(), "", LANES_END])
+
+
+def write_lanes_block(epic: int, block: str) -> int:
+    """Splice a framed lanes `block` into the epic body; no-op if unchanged. Exit code."""
+    current = epic_body(epic)
+    new_body = splice_block(current, block, LANES_START, LANES_END)
+    if new_body == current:
+        print(f"#{epic} lanes already up to date.")
+        return 0
+    subprocess.run(
+        ["gh", "issue", "edit", str(epic), "--body-file", "-"],
+        input=new_body,
+        text=True,
+        check=True,
+    )
+    print(f"Updated #{epic} lanes.")
+    return 0
+
+
 def build_debt_line() -> str | None:
     """The reg_meta_build rebuild-pending signal, reusing the validator's classifier."""
     out = _h.Findings()
@@ -326,10 +530,13 @@ _SECTIONS = ("Ready now", "Running", "Blocked")
 _SECTION_LABEL = {"Ready now": "ready", "Running": "running", "Blocked": "blocked"}
 
 
-def extract_block(body: str) -> str:
-    """The current generated block in `body` (between the markers), or '' if absent."""
-    start, end = body.find(START), body.find(END)
-    return body[start : end + len(END)] if (start != -1 and end > start) else ""
+def extract_block(body: str, start: str = START, end: str = END) -> str:
+    """The marked block in `body` (between `start`…`end`), or '' if absent.
+
+    Defaults to the plan-sequence markers; pass the plan-lanes pair to pull that region.
+    """
+    s, e = body.find(start), body.find(end)
+    return body[s : e + len(end)] if (s != -1 and e > s) else ""
 
 
 def _section_numbers(block: str) -> dict[str, set[int]]:
@@ -374,16 +581,78 @@ def main() -> int:
                     help="print the status delta vs the epic's current block (no write)")  # fmt: skip
     ap.add_argument("--lane", action="store_true",
                     help="print read-only dispatch candidates (ready, not touching in-flight work)")  # fmt: skip
+    ap.add_argument("--write-lanes", action="store_true",
+                    help="frame the ranked-lanes block (read from stdin) + splice it into the epic body")  # fmt: skip
+    ap.add_argument("--lanes-stale", action="store_true",
+                    help="print the live basis; exit 1 if the epic's lanes block is stale vs it, else 0")  # fmt: skip
+    ap.add_argument("--tick", action="store_true",
+                    help="read-only heartbeat: one fetch emits the projection delta (stderr) + the lanes basis (stdout); exit 1 if lanes stale")  # fmt: skip
+    ap.add_argument("--basis", default="",
+                    help="for --write-lanes: stamp this exact basis (captured from --lanes-stale/--tick) instead of recomputing")  # fmt: skip
     args = ap.parse_args()
+
+    # Fast path: --write-lanes with a basis captured at staleness-check time needs no
+    # corpus — and MUST stamp THAT basis, not a fresh recompute. If the ready/running set
+    # moved while the forked /plan-lanes pass was ranking, recomputing here would stamp the
+    # newer set onto an older ranking, so the next --lanes-stale would read it as fresh and
+    # the stale ranking would persist. Stamping the ranked-against basis avoids that.
+    if args.write_lanes and args.basis:
+        content = sys.stdin.read()
+        if (why := reject_lanes_stdin(content)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
+        return write_lanes_block(args.epic, render_lanes_block(content, args.basis))
 
     owner, name = _h.repo_owner_name()
     _known, _issue_state, open_numbers = _h.fetch_number_states()
     parent_of = _h.fetch_parents(owner, name)
     recs = build_records(_h.fetch_open_issues(), open_numbers, parent_of)
+    work = [r for r in recs if not r.is_epic]
+    ready_nums = {r.number for r in work if r.status == "ready"}
+    running_nums = {r.number for r in work if r.status == "running"}
+    # The lanes' freshness basis: the ready/running sets + a signature over EVERY work
+    # issue's lane-affecting projection (so an edit that re-shapes ranking without moving a
+    # section still re-ranks — see FU-2 / lanes_signature).
+    sig = lanes_signature(work)
+    live_basis = basis_comment(ready_nums, running_nums, sig)
 
     if args.lane:
         print(dispatch_view(recs))
         return 0
+
+    if args.lanes_stale:
+        body = epic_body(args.epic)
+        stale = lanes_are_stale(
+            extract_block(body, LANES_START, LANES_END), ready_nums, running_nums, sig
+        )
+        # stdout = the basis to re-pass to --write-lanes (so the stamp matches what was
+        # ranked); stderr = the human verdict; exit code = the machine signal.
+        print(live_basis)
+        print("stale" if stale else "fresh", file=sys.stderr)
+        return 1 if stale else 0
+
+    if args.tick:
+        # One-fetch heartbeat: emit BOTH the projection delta and the lanes verdict from
+        # the single corpus build above. Read-only — CI (plan-sequence.yml) + the daily
+        # cron own the projection WRITE now; the loop's only write is the lanes block when
+        # stale. stdout = the basis to re-pass to --write-lanes; stderr = the human report
+        # (projection delta + verdict); exit code = the lanes staleness signal.
+        body = epic_body(args.epic)
+        delta = diff_report(extract_block(body), render_block(recs, build_debt_line()))
+        stale = lanes_are_stale(
+            extract_block(body, LANES_START, LANES_END), ready_nums, running_nums, sig
+        )
+        print(live_basis)
+        print(f"projection delta:\n{delta}", file=sys.stderr)
+        print("lanes: stale" if stale else "lanes: fresh", file=sys.stderr)
+        return 1 if stale else 0
+
+    if args.write_lanes:
+        content = sys.stdin.read()
+        if (why := reject_lanes_stdin(content)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
+        return write_lanes_block(args.epic, render_lanes_block(content, live_basis))
 
     block = render_block(recs, build_debt_line())
 
@@ -391,7 +660,7 @@ def main() -> int:
         print(block)
         return 0
 
-    current = gh_json(["issue", "view", str(args.epic), "--json", "body"])["body"] or ""
+    current = epic_body(args.epic)
     delta = diff_report(extract_block(current), block)  # computed before any write
 
     if args.diff:

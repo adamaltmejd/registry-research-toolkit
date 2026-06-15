@@ -157,14 +157,15 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     build_p.add_argument(
         "--providers",
-        default="scb,sos",
+        default="scb,sos,fohm",
         help=(
-            "Comma-separated provider adapters to build (default: scb,sos — the "
-            "first combined build, A4.5). Pass `--providers scb` for the SCB-only "
-            "DB that reproduces the byte-identical A4.3b dbdiff gate. SOS is purely "
-            "additive: it adds rows in a disjoint id band (>= 2^62), never alters "
-            "SCB's. (The `build_db()` function default stays `('scb',)` so synthetic "
-            "SCB-only test fixtures need no SOS workbooks.)"
+            "Comma-separated provider adapters to build (default: scb,sos,fohm). "
+            "Pass `--providers scb` for the SCB-only DB that reproduces the "
+            "byte-identical A4.3b dbdiff gate. Non-SCB providers are purely "
+            "additive: they add rows in a disjoint id band (>= 2^62), never alter "
+            "SCB's. `fohm` (#422) is a thin curated provider whose committed TOML "
+            "ships with the repo. (The `build_db()` function default stays "
+            "`('scb',)` so synthetic SCB-only test fixtures need no extra inputs.)"
         ),
     )
 

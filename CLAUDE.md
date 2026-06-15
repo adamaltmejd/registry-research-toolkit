@@ -159,6 +159,12 @@ issue is part of a tracked epic.
 - Lanes (the ad-hoc S/L/G/… streams) live in the epic/tracker prose, **not** as labels —
   they churn too fast to maintain as a taxonomy.
 
+**Optional** — `priority:high` / `priority:low` (absence = normal; **at most one**). The
+maintainer's "what's most important next" signal: `/plan-lanes` ranks by priority bucket
+**first** (unblocking-power breaks ties within a bucket). Coarse and stable enough to be
+a label — unlike the churny S/L/G lanes above — so it's machine-sortable, not buried in
+prose. Hygiene flags more than one priority label.
+
 **Body** — use the house skeleton, dropping any section that doesn't apply (don't pad):
 `Problem`/`Context` · `Approach` · `Scope` (In / Out) · `Relationships` · `Touches` ·
 `Open questions` · `Non-goals`. Worked examples and concrete file paths earn their
@@ -199,15 +205,45 @@ blocked / parallel-safe / pending-release** — is rendered by `/plan-sequence`
 (`scripts/plan_sequence.py`) into a `<!-- plan-sequence -->` block in the epic body. To
 see what's ready to pick up and which issues are file-disjoint, **read that block** (or
 re-run `/plan-sequence`); **don't hand-edit inside the markers** — it's overwritten. The
-lane/decision narrative *around* the block is the editorial layer you do edit.
-`/issue-pulse` (run via `/loop`) refreshes the block and reports deltas on a cadence.
-The sequencing epic is #328.
+lane/decision narrative *around* the block is the editorial layer you do edit. The block
+is **event-refreshed by CI** — `plan-sequence.yml` runs `--write` on every issue/PR
+event (plus a daily cron safety-net), so it tracks reality without waiting for a human
+or the loop. CI + cron are the **sole writers** of this block; `/issue-pulse` (run via
+`/loop`) reads it read-only (`--tick`) and reports deltas, but no longer writes it. The
+sequencing epic is #328.
+
+**Lanes are ranked agentically.** `/plan-sequence` gives only the deterministic *floor*
+— file-disjoint groups by `touches` set-intersection. **`/plan-lanes`** is the judgment
+layer on top: it reads the issue bodies to fold in what set-intersection can't see
+(semantic conflicts with no file overlap, implicit blockers, what coheres into one
+PR-stream), then returns **ranked, parallel-safe candidate lanes** as markdown — ranked
+by `priority:*` bucket first, then unblocking-power + size. It runs **forked** (its own
+context), so callers get the ranked lanes back without the corpus-reading bloating
+theirs: `/issue-pulse` re-ranks when the lanes go **stale**; `/pr-pipeline next`
+consumes the ranking to pick a lane instead of composing one from raw candidates; you
+can run it on demand. `/plan-lanes` is itself **read-only** — it ranks and returns,
+never editing issues or opening PRs. `/issue-pulse` then **persists** the ranking into a
+second generated block — `<!-- plan-lanes -->`, alongside `<!-- plan-sequence -->` — via
+`plan_sequence.py --write-lanes` (single writer; `/pr-pipeline` only reads). Staleness
+is deterministic: the lanes block stamps the ready/running sets it was ranked against
+**plus a signature over every work issue's lane-affecting projection** (status, area,
+`touches`, `priority`, and the full `Relationships` graph), and `--lanes-stale` compares
+both to the live state — necessary because once CI event-refreshes the projection, the
+projection delta no longer signals that the work moved (the refresh absorbed it). The
+signature extends staleness past membership: an area relabel, a `touches` edit, a
+`priority` change, or any `Relationships` edit (including a blocked issue's `Blocked by`
+rewrite, which shifts which ready issue has unblocking power) re-shapes the lane graph
+without moving a section, yet still re-ranks. Same edit rule as the projection: **don't
+hand-edit inside the markers** — it's overwritten.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
-`issue-hygiene.yml`) checks these rules read-only: required labels, resolvable
-relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement, `touches`-glob
-resolution, plus drift alerts (a merged PR that left its issue open; `reg_meta_build` DB
-content changed since the last `reg_meta_build/v*` tag, i.e. a release is pending).
+`issue-hygiene.yml`, **read-only** — `issues:read`) checks these rules: required labels,
+at most one `priority:*` label, resolvable relationship targets, `blocked`-label /
+sub-issue ↔ `Part of` agreement, `touches`-glob resolution, plus drift alerts (a merged
+PR that left its issue open; `reg_meta_build` DB content changed since the last
+`reg_meta_build/v*` tag, i.e. a release is pending). The write-capable refresh lives in
+a **separate** workflow (`plan-sequence.yml`, `issues:write`) so the hygiene job's
+read-only guarantee stays intact.
 
 **Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
 ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight
@@ -262,11 +298,15 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
-`/code-review` (effort scaled to risk) → docs — then **stop and hand the PR back for
-this gate**. Don't merge on your own initiative: the merge decision and the bot-review
-window are the human's (they invoke `/pr-pipeline`, or tell you to merge).
-`/pr-pipeline` is the flow that carries a PR through to merge, and it's user-invoked by
-design.
+`/code-review` (effort scaled to risk) → docs — then **mark the PR ready for review**
+(`gh pr ready <pr>`) and hand it back for this gate. Marking it ready is the step that
+**starts the bot-review window** — Codex auto-reviews on the open/ready transition,
+never on a draft, so a PR handed back as a draft stalls the gate. Leave a PR draft only
+while it's genuinely still being built (the draft is also the in-flight claim). Once
+ready, you may poll and report the bot-review window (above). But **don't merge on your
+own initiative** — the *merge decision* is the human's (they invoke `/pr-pipeline`, or
+tell you to merge). `/pr-pipeline` is the flow that carries a PR through to merge, and
+it's user-invoked by design.
 
 # Layout
 

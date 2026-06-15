@@ -3,21 +3,25 @@
 reg_meta is intentionally data-provider-agnostic: one metadata DB, one docs
 DB, one query surface. Each upstream provider has its own parser module
 here that reads the provider's native delivery format and yields a
-structured representation intended for downstream ingestion (e.g. by
-`build-db`, currently a planned consumer for the SoS parser).
+structured representation consumed by `build-db`.
 
 Current providers:
 
 - `scb` — Statistics Sweden microdata-catalog CSV/SQL/xlsx exports
   (`reg_meta_build.sources.scb.SCBAdapter`, A4.1).
 - `sos` — Socialstyrelsen metadata Excel workbooks.
+- `fohm` — Folkhälsomyndigheten (SmiNet + national vaccination register);
+  thin curated provider with no machine-readable export, read from
+  `input_data/Folkhalsomyndigheten/fohm.toml` via `CuratedAdapter`.
 
 The post-refactor contract every adapter must implement is the `IRAdapter`
-protocol below — concrete adapters live at
-`reg_meta_build/sources/<provider>.py` (e.g. `scb.py`, future: `fk.py`,
-etc.) and emit a stream of IR objects (`reg_meta_build.ir.*`) consumed
-by the provider-blind materializer in `reg_meta_build.db`. See
-DESIGN.md → IR + adapter architecture.
+protocol below. Native-format providers get their own module (`scb.py`,
+`sos.py`); thin curated providers — agencies without machine-readable
+exports (FOHM today; Försäkringskassan/Skatteverket to follow) — share
+`curated.py`, parameterized by provider. All adapters emit a stream of
+IR objects (`reg_meta_build.ir.*`) consumed by the provider-blind
+materializer in `reg_meta_build.db`. See DESIGN.md → IR + adapter
+architecture, and → Curated thin providers.
 """
 
 from __future__ import annotations

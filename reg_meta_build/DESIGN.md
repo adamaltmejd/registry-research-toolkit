@@ -201,6 +201,44 @@ token) shipped with #211 (also retained as the bridge for styrtabell exclusion �
 below); the remaining vehicle for the catalog write-up is #212 (materializer-owned value
 tables).
 
+### Curated thin providers (FOHM, Försäkringskassan, …)
+
+Some providers ship no machine-readable microdata-metadata export at all — a public
+agency whose register/variable documentation exists only as prose on a website or in
+PDFs. These onboard as **thin curated providers** (#422): a maintainer transcribes the
+agency's PUBLIC register/variable documentation into a hand-authored TOML, and that TOML
+**is** the source delivery — the authoritative, citable artifact, committed under
+`input_data/<Agency>/<provider>.toml` (unlike the untracked SCB/SOS seed). They ship in
+the GLOBAL build (everyone gets them), distinct from the steward-flavor `extend-db`
+track (#365): a thin provider is a global-catalog addition, not a steward overlay.
+
+One shared `CuratedAdapter` (`sources/curated.py`) reads any such TOML rather than a
+near-identical adapter per agency. Adding a thin provider is four steps:
+
+1. append a `provider` seed row (`db._PROVIDER_SEED`; never renumber);
+2. register the agency's input dir (`db._CURATED_PROVIDERS`: `(slug, subdir)`);
+3. author `input_data/<Agency>/<provider>.toml` (registers → optional variants →
+   variables; a register with no `[[register.variant]]` gets a synthesized `_default`
+   variant, the single-table case — like SOS LSS/BU);
+4. curate register/variant slugs in `fqid_slugs/<provider>.toml` (minted-id keys, same
+   as `sos.toml`); variable slugs stay AUTO (derived from each variable's clean delivery
+   column).
+
+Ids are `mint("<provider>", …)`-ed into the high band `[2^62, 2^63)` (the provider name
+is the first `mint` part, so a thin provider never collides with SOS or another minted
+provider — see *Deterministic ID minting*). The adapter is **pure IR** (no
+build-scratch, like SOS) and emits **no value sets** in the first cut: categorical code
+lists are a follow-up. Where a categorical variable uses an existing catalog
+classification (SmiNet `diagnos` → ICD-10, NVR `vaccin` → ATC), the value-set linkage is
+deferred to that follow-up rather than re-minting codes. FOHM (SmiNet + the national
+vaccination register) is the first thin provider; Försäkringskassan (MiDAS) follows.
+
+The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
+(`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
+from `_PROVIDER_SEED`, so a new curated provider is covered the moment it is seeded),
+and the flavored (`extend-db`) check additionally covers dynamically minted steward
+providers (see *Provenance / validation*).
+
 ## IR + adapter architecture
 
 The build is structured around a provider-neutral **intermediate representation** (IR)
@@ -293,7 +331,9 @@ constrains only the types an adapter actually emits — an adapter MAY emit a su
 (`SCBAdapter` leaves classifications and lineage materializer-derived). Every `*_id` is
 an explicit int the adapter bakes in; emit order is independent of ID assignment.
 
-Remaining: future-provider adapters (FK, Skatteverket) — see REFACTOR_SPEC.md.
+Thin curated providers (FOHM today, Försäkringskassan/Skatteverket/IAF to follow) share
+the one `CuratedAdapter` instead of a per-agency module — see *Curated thin providers*
+above.
 
 ## Materializer
 
@@ -1507,7 +1547,17 @@ parallel to the global `fqid_slugs/` but consumed by `extend-db` rather than `bu
 It uses the same grow-only snapshot machinery as the global dir (`diff_snapshot` /
 `precheck-slugs --update-snapshot`) and the same `UNFROZEN` escape hatch. Only the
 steward-inserted rows are slugged here; global register/variant slugs come from the
-global build and are never touched.
+global build and are never touched. As with the global dir, only the hand-curated
+`<provider>.toml` (register + register_variant slugs) is committed — the build-generated
+`<provider>.auto.toml` (variable slugs) regenerates each run while `UNFROZEN` holds and
+stays out of the tree.
+
+The populated `fqid_slugs/swecov/` snapshot (#421) is emitted by the untracked,
+maintainer-local generator `input_data/swecov/build_catalog.py flavor`, which projects
+the steward-only SWECOV holdings (commercial, regional/municipal, national quality
+registers, and Källa-empty SWECOV-constructed columns — public-agency and canonical-SCB
+content is routed to the global track instead) into the inventory JSON `extend-db`
+consumes and the per-provider slug TOMLs.
 
 ### Supporting seams
 

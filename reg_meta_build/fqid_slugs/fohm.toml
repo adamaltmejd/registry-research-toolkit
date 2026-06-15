@@ -1,0 +1,40 @@
+# Curated FQID slugs for Folkhälsomyndigheten (FOHM) registers (#422).
+#
+# Companion to scb.toml / sos.toml; same grammar/shape (see
+# reg_meta/DESIGN.md → FQID grammar and reg_meta_build/DESIGN.md → Slug curation).
+# The TOML keys are the minted FOHM ids — mint("fohm", <reg_key>) for a register,
+# mint("fohm", <reg_key>, <variant_key>) for a variant — NOT SCB's low source
+# ids: FOHM registers carry no SCB RegisterId, so the minted id IS the source id
+# populate_slugs looks up (the curated TOML content lives in
+# input_data/Folkhalsomyndigheten/fohm.toml; the adapter mints these ids from the
+# same keys).
+#
+# Both FOHM registers are single-table, so each takes the synthesized `_default`
+# variant — the project-wide default-variant sentinel (validate_slug(...,
+# allow_default=True) permits it for register_variant; the runtime resolver looks
+# it up exactly). Variable slugs stay AUTO (populate_variable_slugs ->
+# fohm.auto.toml, transient/not committed), derived from each variable's clean
+# delivery column. Regenerate .snapshot.json after edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+# SmiNet (anmälningspliktiga smittsamma sjukdomar)
+[register."9022860280161092196"]
+slug = "sminet"
+
+[register_variant."9022860280161092196.5579831904407731840"]
+slug = "_default"
+display_group = "SmiNet"
+panel_entity_key = "personnummer"
+panel_time_key = "diagnosdatum"
+panel_time_grain = "row"
+
+# Nationella vaccinationsregistret (NVR)
+[register."7553527605692442211"]
+slug = "nvr"
+
+[register_variant."7553527605692442211.5026533077223577043"]
+slug = "_default"
+display_group = "NVR"
+panel_entity_key = "personnummer"
+panel_time_key = "vaccinationsdatum"
+panel_time_grain = "row"
