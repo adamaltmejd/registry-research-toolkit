@@ -296,11 +296,15 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
-`/code-review` (effort scaled to risk) → docs — then **stop and hand the PR back for
-this gate**. Don't merge on your own initiative: the merge decision and the bot-review
-window are the human's (they invoke `/pr-pipeline`, or tell you to merge).
-`/pr-pipeline` is the flow that carries a PR through to merge, and it's user-invoked by
-design.
+`/code-review` (effort scaled to risk) → docs — then **mark the PR ready for review**
+(`gh pr ready <pr>`) and hand it back for this gate. Marking it ready is the step that
+**starts the bot-review window** — Codex auto-reviews on the open/ready transition,
+never on a draft, so a PR handed back as a draft stalls the gate. Leave a PR draft only
+while it's genuinely still being built (the draft is also the in-flight claim). Once
+ready, you may poll and report the bot-review window (above). But **don't merge on your
+own initiative** — the *merge decision* is the human's (they invoke `/pr-pipeline`, or
+tell you to merge). `/pr-pipeline` is the flow that carries a PR through to merge, and
+it's user-invoked by design.
 
 # Layout
 
