@@ -844,9 +844,12 @@ def get_catalog_node(
         try:
             return _resolve_to_node(catalog, parsed)
         except HTTPException as exc:
-            # #355 PART 2: a renamed/dead binding slug 404s (its `variable` row is
-            # gone). Before surfacing that 404, walk `variable_replaced_by` to the
-            # TERMINAL successor and 301-redirect the citation there. A non-404
+            # #355 PART 2 / #412: a renamed/dead slug 404s (its `variable` or
+            # `register` row is gone). Before surfacing that 404, walk to the
+            # TERMINAL successor and 301-redirect the citation there.
+            # `resolve_terminal_successor` dispatches on FQID kind (binding →
+            # `variable_replaced_by`, register → `register_replaced_by`), so this
+            # branch handles both grains with no kind-branching here. A non-404
             # (corrupt-DB / 500) must propagate UNCHANGED — only a genuine
             # `fqid_not_found` (mapped to 404 by `_resolve_to_node`) is a candidate.
             if exc.status_code != 404:

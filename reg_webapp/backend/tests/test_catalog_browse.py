@@ -208,6 +208,27 @@ def test_renamed_binding_redirects_301_to_terminal(client):
     assert resp.headers["location"] == "/api/catalog/scb/rams/syss"
 
 
+def test_renamed_register_redirects_301_to_terminal(client):
+    """#412: a citation of a renamed/dead REGISTER slug 301-redirects to its
+    terminal successor, the same way a renamed binding does. The fixture seeds
+    `scb/oldreg → scb/lisa` (`oldreg` has no `register` row); a GET on the dead
+    register must land at the live `scb/lisa` register node.
+
+    `follow_redirects=False` is REQUIRED — TestClient follows 301s by default, so
+    without it we'd see the followed 200 from the terminal, not the redirect."""
+    resp = client.get("/api/catalog/scb/oldreg", follow_redirects=False)
+    assert resp.status_code == 301
+    assert resp.headers["location"] == "/api/catalog/scb/lisa"
+
+
+def test_unknown_dead_register_still_404(client):
+    """#412: a truly-unknown dead REGISTER slug with NO successor edge stays 404
+    (not a redirect) — `resolve_terminal_successor` returns None, so the original
+    404 re-raises unchanged (mirrors `test_unknown_dead_binding_still_404`)."""
+    resp = client.get("/api/catalog/scb/never-existed-reg", follow_redirects=False)
+    assert resp.status_code == 404
+
+
 def test_renamed_binding_redirect_walks_to_absolute_chain_end(client):
     """The redirect always resolves to the ABSOLUTE chain end, never one hop: a
     GET on the MIDDLE dead slug also lands at the terminal `scb/rams/syss`."""
