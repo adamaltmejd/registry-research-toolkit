@@ -759,12 +759,13 @@ class SearchResponse(BaseModel):
 class DocResult(BaseModel):
     """One documentation hit. `snippet` is a query-context EXCERPT (the FTS5
     snippet), not full text. `source` is the SCB source-document identifier the
-    doc was derived from; `source_url` is a seam for a resolved SCB PDF link —
-    None today (the data carries an identifier, not a URL; URL resolution is
-    future enrichment / a steward concern). `fuzzy` marks a name/provider_key
-    match (the "mentioned in documentation" variable hook) as a heuristic text
-    match, not an authoritative variable→doc link. `register` is the wire key;
-    the Python attr is `register_name` (avoids the `BaseModel.register` shadow)."""
+    doc was derived from; `source_url` is the resolved SCB PDF link (a curated
+    source→PDF map applied at doc-DB build, #372), None when the source is
+    uncurated; `source_title` is the human-readable publication title for that
+    source (also None when uncurated). `fuzzy` marks a name/provider_key match
+    (the "mentioned in documentation" variable hook) as a heuristic text match,
+    not an authoritative variable→doc link. `register` is the wire key; the
+    Python attr is `register_name` (avoids the `BaseModel.register` shadow)."""
 
     register_name: str | None = Field(default=None, alias="register")
     variable: str | None = None
@@ -774,6 +775,7 @@ class DocResult(BaseModel):
     snippet: str | None = None
     source: str | None = None
     source_url: str | None = None
+    source_title: str | None = None
     fuzzy: bool = False
 
 
@@ -791,8 +793,10 @@ class DocSearchResponse(BaseModel):
 
 class DocDetail(BaseModel):
     """`GET /api/docs/doc/{identifier}` — metadata + source pointer + a BOUNDED
-    `excerpt` (never the full converted body). `register` is the wire key
-    (Python attr `register_name`)."""
+    `excerpt` (never the full converted body). `source_url` is the resolved SCB
+    PDF link (curated source→PDF map applied at doc-DB build, #372), None when
+    uncurated; `source_title` is the human-readable publication title for that
+    source. `register` is the wire key (Python attr `register_name`)."""
 
     kind: Literal["doc"] = "doc"
     register_name: str | None = Field(default=None, alias="register")
@@ -802,6 +806,7 @@ class DocDetail(BaseModel):
     tags: list[str] = []
     source: str | None = None
     source_url: str | None = None
+    source_title: str | None = None
     excerpt: str | None = None
 
 

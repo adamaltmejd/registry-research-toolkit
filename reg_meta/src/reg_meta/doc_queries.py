@@ -70,7 +70,7 @@ def doc_search(
 
     sql = f"""
         SELECT d.filename, d.register, d.variable, d.display_name, d.tags,
-               d.source, rank,
+               d.source, d.source_url, d.source_title, rank,
                snippet(doc_fts, 2, '**', '**', '…', 24) AS snippet
         FROM doc_fts
         JOIN doc d ON d.doc_id = doc_fts.rowid
@@ -93,6 +93,10 @@ def doc_search(
                 # The SCB source-document identifier the doc was derived from —
                 # a pointer for consumers that link out instead of republishing.
                 "source": row["source"],
+                # The resolved SCB-PDF link + human title for `source`, populated
+                # at doc-DB build from the curated map (#372); None when uncurated.
+                "source_url": row["source_url"],
+                "source_title": row["source_title"],
                 "fts_rank": row["rank"],
                 "snippet": row["snippet"],
             }
@@ -133,6 +137,10 @@ def doc_get(
         "display_name": row["display_name"],
         "tags": json.loads(row["tags"]),
         "source": row["source"],
+        # Resolved SCB-PDF link + human title (#372), populated at doc-DB build
+        # from the curated map; None when uncurated.
+        "source_url": row["source_url"],
+        "source_title": row["source_title"],
         "body": row["body"],
         # The link-stripped, marker-free plain text — consumers that serve an
         # EXCERPT (not full-text) build it from this rather than the raw `body`.

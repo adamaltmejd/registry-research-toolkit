@@ -68,9 +68,10 @@ def _doc_result(r: dict, *, fuzzy: bool = False) -> DocResult:
         tags=r.get("tags", []),
         snippet=r.get("snippet"),
         source=r.get("source"),
-        # source_url: a seam for a resolved SCB PDF link. The data carries a
-        # source-document identifier, not a URL, so it's None today.
-        source_url=None,
+        # Resolved at doc-DB build from the curated source→PDF map (#372); None
+        # when the source is uncurated.
+        source_url=r.get("source_url"),
+        source_title=r.get("source_title"),
         fuzzy=fuzzy,
     )
 
@@ -170,6 +171,7 @@ def get_doc(request: Request, identifier: str) -> DocDetail:
         display_name=doc.get("display_name"),
         tags=doc.get("tags", []),
         source=doc.get("source"),
-        source_url=None,
+        source_url=doc.get("source_url"),
+        source_title=doc.get("source_title"),
         excerpt=_excerpt(doc.get("body_clean")),
     )

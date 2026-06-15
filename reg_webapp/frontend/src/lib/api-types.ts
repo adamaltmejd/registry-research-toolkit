@@ -823,8 +823,10 @@ export interface components {
         /**
          * DocDetail
          * @description `GET /api/docs/doc/{identifier}` — metadata + source pointer + a BOUNDED
-         *     `excerpt` (never the full converted body). `register` is the wire key
-         *     (Python attr `register_name`).
+         *     `excerpt` (never the full converted body). `source_url` is the resolved SCB
+         *     PDF link (curated source→PDF map applied at doc-DB build, #372), None when
+         *     uncurated; `source_title` is the human-readable publication title for that
+         *     source. `register` is the wire key (Python attr `register_name`).
          */
         DocDetail: {
             /** Display Name */
@@ -843,6 +845,8 @@ export interface components {
             register?: string | null;
             /** Source */
             source?: string | null;
+            /** Source Title */
+            source_title?: string | null;
             /** Source Url */
             source_url?: string | null;
             /**
@@ -857,12 +861,13 @@ export interface components {
          * DocResult
          * @description One documentation hit. `snippet` is a query-context EXCERPT (the FTS5
          *     snippet), not full text. `source` is the SCB source-document identifier the
-         *     doc was derived from; `source_url` is a seam for a resolved SCB PDF link —
-         *     None today (the data carries an identifier, not a URL; URL resolution is
-         *     future enrichment / a steward concern). `fuzzy` marks a name/provider_key
-         *     match (the "mentioned in documentation" variable hook) as a heuristic text
-         *     match, not an authoritative variable→doc link. `register` is the wire key;
-         *     the Python attr is `register_name` (avoids the `BaseModel.register` shadow).
+         *     doc was derived from; `source_url` is the resolved SCB PDF link (a curated
+         *     source→PDF map applied at doc-DB build, #372), None when the source is
+         *     uncurated; `source_title` is the human-readable publication title for that
+         *     source (also None when uncurated). `fuzzy` marks a name/provider_key match
+         *     (the "mentioned in documentation" variable hook) as a heuristic text match,
+         *     not an authoritative variable→doc link. `register` is the wire key; the
+         *     Python attr is `register_name` (avoids the `BaseModel.register` shadow).
          */
         DocResult: {
             /** Display Name */
@@ -880,6 +885,8 @@ export interface components {
             snippet?: string | null;
             /** Source */
             source?: string | null;
+            /** Source Title */
+            source_title?: string | null;
             /** Source Url */
             source_url?: string | null;
             /**
