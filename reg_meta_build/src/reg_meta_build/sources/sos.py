@@ -827,6 +827,34 @@ KNOWN_SPLIT_ALLOWLIST: frozenset[tuple[str, str]] = frozenset(
     {("bu", "FOD_DATUMN"), ("par", "ATC")}
 )
 
+# (register_abbrev, var.name) same-name MERGES that are intentional and
+# type-lossless, so they should NOT emit `sos_unanticipated_same_name_conflict`.
+# These keys still MERGE exactly as before — the guard only silences the warn.
+# Data_type lives on `variable_state`, so a divergent data_type across members is
+# preserved per state; the merge loses no information. #362.
+#   - LOVA EXAMAR: `Examensår` (Heltal, A_LOVA & A_LOVA_HOSP) vs
+#     `Utbildningsår (avslutningsår högsta utb.)` (Sträng (text), A_LOVA_EXAMEN).
+#     Real-data verified against input_data/Socialstyrelsen/ (the LOVA workbook).
+KNOWN_MERGE_ALLOWLIST: frozenset[tuple[str, str]] = frozenset({("lova", "EXAMAR")})
+
+# Curated single-row variable-name corrections, keyed on the EXACT
+# (register_abbrev, name, etikett) tuple — NOT a name pattern (the standing
+# no-regex/name-pattern curation rule). Fixes an upstream typo where two
+# DISTINCT variables ship under one name, disambiguated only by their etikett
+# (`label`); the correction re-keys the mistyped row so the two no longer merge.
+# #362.
+#   - LOVA A_LOVA_PERSON ships INVARN1..INVARN9 (numeric immigration dates), but
+#     the 9th event is mistyped as a SECOND INVARN8 (both `Heltal`, both
+#     A_LOVA_PERSON). They share name AND normalized data_type, so the conflict
+#     detector never fires and they merge SILENTLY, dropping invarn9. The two
+#     rows differ ONLY in etikett: 'Invandringsdatum 8 numerisk' (the real
+#     INVARN8) vs 'Invandringsdatum 9 numerisk' (the mistyped row → INVARN9),
+#     so the etikett is the disambiguator. Real-data verified against the LOVA
+#     workbook at input_data/Socialstyrelsen/.
+VARIABLE_NAME_CORRECTIONS: dict[tuple[str, str, str], str] = {
+    ("lova", "INVARN8", "Invandringsdatum 9 numerisk"): "INVARN9",
+}
+
 # (register_abbrev, SosKodlista.variable_hint) kodlistor that are ENTITY
 # REGISTRIES (a stable directory whose entries each have their own active
 # window), not value-set drift. Collapse to ONE state with per-code
@@ -1503,7 +1531,14 @@ class SOSAdapter:
         for v in reg.variables:
             if _is_styrtabell_var(v):
                 continue
-            groups.setdefault(v.name, []).append(v)
+            # Apply curated single-row name corrections (#362) before grouping,
+            # so a mistyped duplicate-name row keys into its OWN group instead of
+            # silently merging. The corrected name flows through unchanged: the
+            # group key becomes provider_key/mint/slug in _emit_merged.
+            name = VARIABLE_NAME_CORRECTIONS.get(
+                (abbrev, v.name, v.label or ""), v.name
+            )
+            groups.setdefault(name, []).append(v)
 
         for name_key in sorted(groups):
             group = groups[name_key]
@@ -1565,8 +1600,10 @@ class SOSAdapter:
             )
             return
 
-        if conflict:
+        if conflict and key not in KNOWN_MERGE_ALLOWLIST:
             # Fail-soft: unanticipated same-name conflict -> WARN + MERGE.
+            # Allow-listed keys (#362) still merge below; only the warn is
+            # silenced — the merge is intentional and type-lossless.
             yield IRWarning(
                 entity_kind="variable",
                 entity_id=mint("sos", abbrev, name),

@@ -275,6 +275,77 @@ def test_warn_merge_unanticipated_conflict() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 4b. Curated single-row name correction (#362) + known-merge warn-silence
+# ---------------------------------------------------------------------------
+
+
+def test_variable_name_correction_demerges_invarn() -> None:
+    # LOVA A_LOVA_PERSON mistypes the 9th immigration-date row as a SECOND
+    # INVARN8 (both Heltal). Disambiguated only by etikett; the curated
+    # ("lova", "INVARN8", "Invandringsdatum 9 numerisk") -> "INVARN9" correction
+    # re-keys it so the two no longer merge silently.
+    reg = _register(
+        "lova",
+        [
+            _var(
+                "INVARN8",
+                deldatamangd="A_LOVA_PERSON",
+                data_type="Heltal",
+                label="Invandringsdatum 8 numerisk",
+            ),
+            _var(
+                "INVARN8",
+                deldatamangd="A_LOVA_PERSON",
+                data_type="Heltal",
+                label="Invandringsdatum 9 numerisk",
+            ),
+        ],
+        deldatamangder=(_deldat("A_LOVA_PERSON"),),
+    )
+    objs, _ = _emit(reg)
+    variables = _of(objs, IRVariable)
+    assert len(variables) == 2, "the correction de-merges into two variables"
+    by_key = {v.provider_key: v for v in variables}
+    assert set(by_key) == {"INVARN8", "INVARN9"}, "corrected name keys its own var"
+    # IRVariable.name is the etikett (label or name); each variable carries its
+    # OWN row's etikett, so the corrected variable keeps the mistyped row's label.
+    assert by_key["INVARN8"].name == "Invandringsdatum 8 numerisk"
+    assert by_key["INVARN9"].name == "Invandringsdatum 9 numerisk"
+
+
+def test_known_merge_allowlist_silences_warn() -> None:
+    # LOVA EXAMAR is an intentional, type-lossless same-name merge (data_type is
+    # per-state): Examensår (Heltal) vs Utbildningsår… (Sträng (text)). It is in
+    # KNOWN_MERGE_ALLOWLIST, so it still MERGEs to one variable but emits no warn.
+    reg = _register(
+        "lova",
+        [
+            _var(
+                "EXAMAR",
+                deldatamangd="A_LOVA",
+                data_type="Heltal",
+                label="Examensår",
+            ),
+            _var(
+                "EXAMAR",
+                deldatamangd="A_LOVA_EXAMEN",
+                data_type="Sträng (text)",
+                label="Utbildningsår (avslutningsår högsta utb.)",
+            ),
+        ],
+        deldatamangder=(_deldat("A_LOVA"), _deldat("A_LOVA_EXAMEN")),
+    )
+    objs, _ = _emit(reg)
+    assert len(_of(objs, IRVariable)) == 1, "allow-listed conflict still MERGEs"
+    warns = [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code == "sos_unanticipated_same_name_conflict"
+    ]
+    assert warns == [], "allow-listed merge emits NO conflict warning"
+
+
+# ---------------------------------------------------------------------------
 # 5. Variant synthesis (LSS/BU/SOL) — detect via sheet absence
 # ---------------------------------------------------------------------------
 
