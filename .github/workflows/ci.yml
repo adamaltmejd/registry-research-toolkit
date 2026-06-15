@@ -25,14 +25,16 @@ jobs:
       # Backstop: run the pre-commit suite that an agent could have bypassed
       # locally with `--no-verify`. Covers panache + ty + ruff hooks.
       # SKIP=pytest avoids duplicating the test job below.
-      - run: uvx pre-commit run --all-files
+      - run: uvx --from pre-commit==4.6.0 pre-commit run --all-files
         env:
           SKIP: pytest
-      # Type check via ty (Astral, beta). Pinned via uvx so it tracks latest
-      # without needing lockfile bumps. Baseline triage landed (scripts/tests
-      # excluded, structural.py validator-narrow noise suppressed via
-      # [tool.ty.overrides] in pyproject.toml); the check is now blocking.
-      - run: uvx ty check
+      # Type check via ty (Astral, beta). Pinned via uvx so CI, pre-commit,
+      # and cached Codex environments resolve the same checker without making
+      # ty a workspace dev dependency. ty moves quickly, so bump this pin
+      # deliberately/frequently. Baseline triage landed (scripts/tests excluded,
+      # structural.py validator-narrow noise suppressed via [tool.ty.overrides]
+      # in pyproject.toml); the check is now blocking.
+      - run: uvx --from ty==0.0.44 ty check
 
   check-versions:
     runs-on: ubuntu-latest

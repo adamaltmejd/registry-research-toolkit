@@ -16,11 +16,12 @@ repos:
         pass_filenames: false
         files: ^(CLAUDE|AGENTS)\.md$
         stages: [pre-commit]
-      # ty (Astral, beta): unpinned via uvx to track latest, same as CI. Whole-program
-      # check, so pass_filenames: false. files gate skips doc-only commits.
+      # ty (Astral, beta): pinned via uvx, same as CI. It moves quickly, so
+      # bump this pin deliberately/frequently. Whole-program check, so
+      # pass_filenames: false. files gate skips doc-only commits.
       - id: ty
         name: ty check
-        entry: uvx ty check
+        entry: uvx --from ty==0.0.44 ty check
         language: system
         pass_filenames: false
         files: \.py$

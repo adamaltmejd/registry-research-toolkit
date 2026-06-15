@@ -57,8 +57,8 @@ bridges agentic local work to MONA projects.
 - Add with `uv add` (runtime) / `uv add --dev` (dev) — don't hand-edit `pyproject.toml`
   for new deps; uv writes to the right PEP 735 group. Hand-editing is fine for bumping
   an existing constraint (then `uv lock`).
-- One-off tools (not project deps): `uvx <tool>` — e.g.
-  `uvx pre-commit run --all-files`.
+- One-off tools (not project deps): `uvx --from <package> <tool>` — e.g.
+  `uvx --from pre-commit==4.6.0 pre-commit run --all-files`.
 - Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
 - 7-day minimum release age is project policy: `exclude-newer = "7 days"` in the root
   `pyproject.toml` `[tool.uv]`, recorded in `uv.lock`'s `[options]` block. It applies on
@@ -104,8 +104,10 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
   gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`, which
   validates by default with `corpus=True` (opt out with `--no-validate`).
-- **Type checking**: `uvx ty check` (Astral, beta). Blocking in CI; runs latest via
-  `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
+- **Type checking**: `uvx --from ty==0.0.44 ty check` (Astral, beta). Blocking in
+  CI; pinned via `uvx` so CI, pre-commit, and cached Codex environments use the
+  same checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a
+  dev dep — keep `pyproject.toml` clean.
 - **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates
   into a single file uploaded to MONA. Each added runtime dep must already be in MONA's
   WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
