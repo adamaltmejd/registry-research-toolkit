@@ -257,6 +257,19 @@ def test_dead_binding_with_period_redirects_301_preserving_query(client):
     assert resp.headers["location"] == "/api/catalog/scb/rams/syss?period=2019"
 
 
+def test_live_binding_inverted_period_range_stays_422(client):
+    """#411: a syntactically-valid but lo>hi `?period` range on a LIVE binding must
+    stay 422 — `_redirect_or_4xx` redirects ONLY on `fqid_not_found`; the inverted
+    range passes the syntactic `_validated_period` dependency (reg_meta is the
+    semantic backstop) and is rejected inside `resolve_at` as an EXIT_USAGE
+    `invalid_period` error, which falls back to `_http_4xx_from_regmeta` (422),
+    never a 301."""
+    resp = client.get(
+        "/api/catalog/scb/lisa/kon?period=2020..2019", follow_redirects=False
+    )
+    assert resp.status_code == 422
+
+
 # The 6 suffixed binding sub-endpoints — the redirect must preserve the suffix.
 _SUB_ENDPOINTS = [
     "states",
