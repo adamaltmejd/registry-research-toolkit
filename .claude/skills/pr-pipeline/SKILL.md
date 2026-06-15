@@ -192,9 +192,10 @@ Then end with a **report**:
 3. **Recommended new issues** — for each follow-up worth tracking, first
    `gh issue list --state all --search "<keywords>"` for an existing match (point at it,
    don't propose a duplicate). For a genuinely new one, draft it to the AGENTS.md
-   **Issue tracker** conventions: a `<type>(<package>):` title, area + type labels, and
-   a `Relationships` block wiring it to where it came from
-   (`Follow-up to #<this issue>`, `Part of #<epic>`, any `Blocked by`). **Do NOT file
-   them unprompted** (filing is the human's call) — list them and offer to file the ones
-   they pick; when filed, set the parent with `gh issue edit <n> --parent <epic>`. Say
-   "none" if the change is fully self-contained.
+   **Issue tracker** conventions: a `<type>(<package>):` title, area + type labels, a
+   `Relationships` block wiring it to where it came from (`Follow-up to #<this issue>`,
+   `Part of #<epic>`, any `Blocked by`), and a `touches` block when it'll change code
+   (it feeds the sequencing projection's parallel-safety). **Do NOT file them
+   unprompted** (filing is the human's call) — list them and offer to file the ones they
+   pick; when filed, set the parent with `gh issue edit <n> --parent <epic>`. Say "none"
+   if the change is fully self-contained.
