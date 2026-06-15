@@ -17,12 +17,14 @@ epic's body via `gh issue edit`.
 A SECOND marked region — `<!-- plan-lanes:start --> … <!-- plan-lanes:end -->` — carries
 the *ranked* lanes. Their content is agentic (the `/plan-lanes` skill ranks what
 set-intersection over `touches` can't see), so the script doesn't generate it: `--write-
-lanes` reads the agent's text from stdin, frames it (stamping a machine-readable `basis`
-of the ready/running sets it was ranked against), and splices it as its own region.
-`--lanes-stale` reports whether that basis still matches the live state — the trigger the
-`/loop` heartbeat keys off, since once CI event-refreshes the *projection* block, the
-projection delta no longer signals that the ready/running sets moved (the refresh
-absorbed it).
+lanes` reads the agent's text from stdin, frames it with a machine-readable `basis` (the
+ready/running sets the ranking was computed against), and splices it as its own region.
+`--lanes-stale` prints the live basis and exit-codes whether the stored block matches it —
+the trigger the `/loop` heartbeat keys off, since once CI event-refreshes the *projection*
+block the projection delta no longer signals that the ready/running sets moved (the
+refresh absorbed it). The heartbeat passes the printed basis back via `--write-lanes
+--basis` so the stamp reflects the set the rank actually saw, not a post-rank recompute
+(which could mark a stale ranking as fresh).
 
 The hardened parsers + gh fetchers are reused from the sibling validator
 (check_issue_hygiene.py); if a third consumer appears, lift them into a shared module.
@@ -393,6 +395,23 @@ def render_lanes_block(content: str, basis: str = "") -> str:
     return "\n".join(head + ["", content.strip(), "", LANES_END])
 
 
+def write_lanes_block(epic: int, block: str) -> int:
+    """Splice a framed lanes `block` into the epic body; no-op if unchanged. Exit code."""
+    current = gh_json(["issue", "view", str(epic), "--json", "body"])["body"] or ""
+    new_body = splice_block(current, block, LANES_START, LANES_END)
+    if new_body == current:
+        print(f"#{epic} lanes already up to date.")
+        return 0
+    subprocess.run(
+        ["gh", "issue", "edit", str(epic), "--body-file", "-"],
+        input=new_body,
+        text=True,
+        check=True,
+    )
+    print(f"Updated #{epic} lanes.")
+    return 0
+
+
 def build_debt_line() -> str | None:
     """The reg_meta_build rebuild-pending signal, reusing the validator's classifier."""
     out = _h.Findings()
@@ -464,8 +483,22 @@ def main() -> int:
     ap.add_argument("--write-lanes", action="store_true",
                     help="frame the ranked-lanes block (read from stdin) + splice it into the epic body")  # fmt: skip
     ap.add_argument("--lanes-stale", action="store_true",
-                    help="exit 1 if the epic's lanes block is stale vs the live ready/running sets, else 0")  # fmt: skip
+                    help="print the live basis; exit 1 if the epic's lanes block is stale vs it, else 0")  # fmt: skip
+    ap.add_argument("--basis", default="",
+                    help="for --write-lanes: stamp this exact basis (captured from --lanes-stale) instead of recomputing")  # fmt: skip
     args = ap.parse_args()
+
+    # Fast path: --write-lanes with a basis captured at staleness-check time needs no
+    # corpus — and MUST stamp THAT basis, not a fresh recompute. If the ready/running set
+    # moved while the forked /plan-lanes pass was ranking, recomputing here would stamp the
+    # newer set onto an older ranking, so the next --lanes-stale would read it as fresh and
+    # the stale ranking would persist. Stamping the ranked-against basis avoids that.
+    if args.write_lanes and args.basis:
+        content = sys.stdin.read()
+        if (why := reject_lanes_stdin(content)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
+        return write_lanes_block(args.epic, render_lanes_block(content, args.basis))
 
     owner, name = _h.repo_owner_name()
     _known, _issue_state, open_numbers = _h.fetch_number_states()
@@ -486,7 +519,10 @@ def main() -> int:
         stale = lanes_are_stale(
             extract_block(body, LANES_START, LANES_END), ready_nums, running_nums
         )
-        print("stale" if stale else "fresh")
+        # stdout = the basis to re-pass to --write-lanes (so the stamp matches what was
+        # ranked); stderr = the human verdict; exit code = the machine signal.
+        print(basis_comment(ready_nums, running_nums))
+        print("stale" if stale else "fresh", file=sys.stderr)
         return 1 if stale else 0
 
     if args.write_lanes:
@@ -494,22 +530,10 @@ def main() -> int:
         if (why := reject_lanes_stdin(content)) is not None:
             print(f"--write-lanes: {why}", file=sys.stderr)
             return 2
-        block = render_lanes_block(content, basis_comment(ready_nums, running_nums))
-        current = (
-            gh_json(["issue", "view", str(args.epic), "--json", "body"])["body"] or ""
+        return write_lanes_block(
+            args.epic,
+            render_lanes_block(content, basis_comment(ready_nums, running_nums)),
         )
-        new_body = splice_block(current, block, LANES_START, LANES_END)
-        if new_body == current:
-            print(f"#{args.epic} lanes already up to date.")
-            return 0
-        subprocess.run(
-            ["gh", "issue", "edit", str(args.epic), "--body-file", "-"],
-            input=new_body,
-            text=True,
-            check=True,
-        )
-        print(f"Updated #{args.epic} lanes.")
-        return 0
 
     block = render_block(recs, build_debt_line())
 

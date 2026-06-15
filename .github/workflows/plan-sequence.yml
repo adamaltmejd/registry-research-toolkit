@@ -40,6 +40,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          # Run the TRUSTED default-branch script, never a PR's. pull_request events
+          # default to checking out the PR merge ref, which would (a) execute PR-authored
+          # `plan_sequence.py` while this job holds issues:write, and (b) compute the
+          # pending-release line from unmerged `reg_meta_build` content → a premature
+          # release signal. The fork-PR `if:` already blocks external forks; this is
+          # defence-in-depth for same-repo PRs and the correct base for the projection.
+          ref: main
           # Full history + tags: the projection's pending-release line diffs HEAD against
           # the latest reg_meta_build/v* tag.
           fetch-depth: 0

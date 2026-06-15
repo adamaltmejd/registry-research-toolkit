@@ -51,23 +51,28 @@ run them and report the result.
    ```
 
 3. **Lanes stale? Re-rank + persist.** Ask the script whether the agentic lanes still
-   match the live ready/running sets (this keys off the lanes block's own basis, **not**
-   the step-1 delta — CI absorbs that):
+   match the live ready/running sets — keying off the lanes block's own basis, **not**
+   the step-1 delta (CI absorbs that). It prints the live basis to **stdout** and the
+   verdict to stderr; capture the basis, because you re-stamp it on the write:
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py --lanes-stale --epic <N>
+   basis="$(uv run --no-project python scripts/plan_sequence.py --lanes-stale --epic <N>)"
    ```
 
-   - `fresh` (exit 0) → skip both; nothing to re-rank.
+   - exit `0` (`fresh`) → skip both; nothing to re-rank.
 
-   - `stale` (exit 1) → the ready or in-flight set moved since the last ranking: invoke
-     `/plan-lanes` via the `Skill` tool (it runs **forked**, so the corpus-reading stays
-     out of this heartbeat's context, and returns the ranked lanes as markdown), then
-     **persist** that markdown into the epic's `<!-- plan-lanes -->` block —
-     `/plan-lanes` is read-only, so you are the writer — by piping its return to:
+   - exit `1` (`stale`) → the ready or in-flight set moved since the last ranking.
+     `$basis` now holds the set **as of this check**. Invoke `/plan-lanes` via the
+     `Skill` tool (it runs **forked**, so the corpus-reading stays out of this
+     heartbeat's context, and returns the ranked lanes as markdown), then **persist**
+     that markdown into the epic's `<!-- plan-lanes -->` block — `/plan-lanes` is
+     read-only, so you are the writer — stamping the captured `$basis` (so the stamp
+     matches the set the rank saw, not a post-rank recompute that could mark the new
+     ranking fresh while it's already stale):
 
      ```sh
-     uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N>
+     printf '%s' "<the /plan-lanes markdown>" |
+       uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N> --basis "$basis"
      ```
 
    Gating on staleness is the point: pay for lane-planning only when the ready work
