@@ -49,7 +49,8 @@ label = "tredje största förvärvskällan"
 # attached as plain `variable =` members because the series carries no month/edge
 # token group. Slugs are SOS column names (INVDATUM/INVLAND/UTVDATUM/UTVLAND).
 # The parallel NUMERIC date representation (columns INVARN/UTVARN → slugs
-# invarn*/utvarn*, "… N numerisk") stays flat — out of scope.
+# invarn*/utvarn*, "… N numerisk") is folded the same way below, in its own
+# invarn/utvarn families (#420).
 
 [[variable_group]]
 register = "sos/lova"
@@ -252,5 +253,107 @@ label = "8:e"
 
 [[variable_group.members]]
 variable = "utvland9"
+value = "9"
+label = "9:e"
+
+[[variable_group]]
+register = "sos/lova"
+key = "invarn"
+label = "Invandringsdatum, numerisk (per invandringstillfälle)"
+axis = "ordinal"
+
+[[variable_group.members]]
+variable = "invarn1"
+value = "1"
+label = "1:a"
+
+[[variable_group.members]]
+variable = "invarn2"
+value = "2"
+label = "2:a"
+
+[[variable_group.members]]
+variable = "invarn3"
+value = "3"
+label = "3:e"
+
+[[variable_group.members]]
+variable = "invarn4"
+value = "4"
+label = "4:e"
+
+[[variable_group.members]]
+variable = "invarn5"
+value = "5"
+label = "5:e"
+
+[[variable_group.members]]
+variable = "invarn6"
+value = "6"
+label = "6:e"
+
+[[variable_group.members]]
+variable = "invarn7"
+value = "7"
+label = "7:e"
+
+[[variable_group.members]]
+variable = "invarn8"
+value = "8"
+label = "8:e"
+
+[[variable_group.members]]
+variable = "invarn9"
+value = "9"
+label = "9:e"
+
+[[variable_group]]
+register = "sos/lova"
+key = "utvarn"
+label = "Utvandringsdatum, numerisk (per utvandringstillfälle)"
+axis = "ordinal"
+
+[[variable_group.members]]
+variable = "utvarn1"
+value = "1"
+label = "1:a"
+
+[[variable_group.members]]
+variable = "utvarn2"
+value = "2"
+label = "2:a"
+
+[[variable_group.members]]
+variable = "utvarn3"
+value = "3"
+label = "3:e"
+
+[[variable_group.members]]
+variable = "utvarn4"
+value = "4"
+label = "4:e"
+
+[[variable_group.members]]
+variable = "utvarn5"
+value = "5"
+label = "5:e"
+
+[[variable_group.members]]
+variable = "utvarn6"
+value = "6"
+label = "6:e"
+
+[[variable_group.members]]
+variable = "utvarn7"
+value = "7"
+label = "7:e"
+
+[[variable_group.members]]
+variable = "utvarn8"
+value = "8"
+label = "8:e"
+
+[[variable_group.members]]
+variable = "utvarn9"
 value = "9"
 label = "9:e"
