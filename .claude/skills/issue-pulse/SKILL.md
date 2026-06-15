@@ -2,7 +2,6 @@
 name: issue-pulse
 description: "One heartbeat of the issue-tracker — refresh the generated sequencing projection in the epic body, check for drift (stale labels, done-but-open, merged-but-unreleased build content), and surface what changed plus propose fixes. Built to run on a cadence via /loop. Usage: /loop [interval] /issue-pulse"
 argument-hint: "[epic-number, default 328]"
-disable-model-invocation: true
 ---
 
 # issue-pulse — one tick of the issue-tracking heartbeat
@@ -46,8 +45,13 @@ reflex; this is the heartbeat and the push.
    - **drift** from the hygiene check (missing labels, stale `blocked`, done-but-open,
      half-wired sub-issues).
 
-   If step 1 said `already up to date` and there is no drift, say so in one line and
-   stop — no noise.
+   `touches … matches no files (ok if it's a new file)` warnings are **benign and
+   recurring** — issues legitimately point `touches` at paths a future PR will create.
+   Don't re-surface them every tick; only flag one if it looks like a typo (a real path
+   gone wrong) or is new since the last tick.
+
+   If step 1 said `already up to date` and the only warnings are those benign new-file
+   ones, say so in one line and stop — no noise.
 
 4. **Propose fixes, tiered by risk:**
    - **Auto (safe):** the projection refresh in step 1 is already applied.
