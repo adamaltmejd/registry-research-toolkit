@@ -816,6 +816,21 @@ class TestBuildDbErrors:
             build_db(input_dir=tmp_path, db_dir=tmp_path)
         assert exc_info.value.code == "scb_dir_not_found"
 
+    def test_missing_fohm_dir(self, tmp_path: Path):
+        # #422: a fohm-only build whose input_dir exists but has no
+        # Folkhalsomyndigheten/ subdirectory fails with the per-provider
+        # curated-dir error (mirrors test_missing_scb_dir for the curated path).
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()  # exists (passes input_dir.is_dir()), but no curated subdir
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                providers=("fohm",),
+                input_dir=input_dir,
+                db_dir=tmp_path / "db",
+                skip_classifications=True,
+            )
+        assert exc_info.value.code == "fohm_dir_not_found"
+
     def test_missing_backbone(self, tmp_path: Path):
         scb_dir = tmp_path / "SCB"
         scb_dir.mkdir()

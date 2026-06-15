@@ -141,6 +141,57 @@ valid_from = "2000-01-01"
     assert variants[0].register_variant_id == mint("fohm", "solo", "_default")
 
 
+_TWO_REGISTERS = """\
+[[register]]
+key = "alpha"
+name = "Alpha"
+valid_from = "2010-01-01"
+
+  [[register.variable]]
+  name = "A1"
+  column = "a1"
+
+  [[register.variable]]
+  name = "A2"
+  column = "a2"
+
+[[register]]
+key = "beta"
+name = "Beta"
+valid_from = "2012-01-01"
+
+  [[register.variable]]
+  name = "B1"
+  column = "b1"
+"""
+
+
+def test_emit_two_registers_side_channels(tmp_path: Path) -> None:
+    # Drive the adapter over a two-register TOML and capture the instance so the
+    # materializer-drained side channels (per-register row_counts + the single
+    # source checksum) can be asserted directly.
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(_TWO_REGISTERS, encoding="utf-8")
+    adapter = CuratedAdapter("fohm")
+    objs = list(adapter.emit(src))
+
+    # row_counts is keyed `<provider>:<register key>` with the per-register
+    # variable count.
+    assert adapter.row_counts == {"fohm:alpha": 2, "fohm:beta": 1}
+
+    # One source checksum, named after the TOML, a 64-char sha256 hex digest.
+    assert list(adapter.source_checksums) == ["fohm.toml"]
+    digest = adapter.source_checksums["fohm.toml"]
+    assert len(digest) == 64
+    assert all(c in "0123456789abcdef" for c in digest)
+
+    # The two registers mint DISTINCT ids (no key collision across registers).
+    reg_ids = [o.register_id for o in objs if isinstance(o, IRRegister)]
+    assert reg_ids == [mint("fohm", "alpha"), mint("fohm", "beta")]
+    assert len(set(reg_ids)) == 2
+
+
 @pytest.mark.parametrize(
     "toml, fragment",
     [
@@ -159,6 +210,13 @@ valid_from = "2000-01-01"
             '[[register.variable]]\nname="A"\ncolumn="c"\n'
             '[[register.variable]]\nname="B"\ncolumn="c"\n',
             "duplicate column",
+        ),
+        (
+            '[[register]]\nkey="dup"\nname="R1"\nvalid_from="2000-01-01"\n'
+            '[[register.variable]]\nname="A"\ncolumn="a"\n'
+            '[[register]]\nkey="dup"\nname="R2"\nvalid_from="2001-01-01"\n'
+            '[[register.variable]]\nname="B"\ncolumn="b"\n',
+            "duplicate register",
         ),
     ],
 )
