@@ -275,6 +275,121 @@ def test_warn_merge_unanticipated_conflict() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 4b. Curated single-row name correction (#362) + known-merge warn-silence
+# ---------------------------------------------------------------------------
+
+
+def test_variable_name_correction_demerges_invarn() -> None:
+    # LOVA A_LOVA_PERSON mistypes the 9th immigration-date row as a SECOND
+    # INVARN8 (both Heltal). Disambiguated only by etikett; the curated
+    # ("lova", "INVARN8", "Invandringsdatum 9 numerisk") -> "INVARN9" correction
+    # re-keys it so the two no longer merge silently.
+    reg = _register(
+        "lova",
+        [
+            _var(
+                "INVARN8",
+                deldatamangd="A_LOVA_PERSON",
+                data_type="Heltal",
+                label="Invandringsdatum 8 numerisk",
+            ),
+            _var(
+                "INVARN8",
+                deldatamangd="A_LOVA_PERSON",
+                data_type="Heltal",
+                label="Invandringsdatum 9 numerisk",
+            ),
+        ],
+        # The variable rows key on the A_LOVA_PERSON extraction token; the
+        # Deldatamängder sheet names the variant 'LOVA PERSON', and the curated
+        # map routes the token there (without it both members drop, unstated).
+        deldatamangder=(_deldat("LOVA PERSON"),),
+    )
+    objs, _ = _emit(reg)
+    variables = _of(objs, IRVariable)
+    assert len(variables) == 2, "the correction de-merges into two variables"
+    by_key = {v.provider_key: v for v in variables}
+    assert set(by_key) == {"INVARN8", "INVARN9"}, "corrected name keys its own var"
+    # IRVariable.name is the etikett (label or name); each variable carries its
+    # OWN row's etikett, so the corrected variable keeps the mistyped row's label.
+    assert by_key["INVARN8"].name == "Invandringsdatum 8 numerisk"
+    assert by_key["INVARN9"].name == "Invandringsdatum 9 numerisk"
+    # The de-merge must actually emit one state per variable (the regression: a
+    # dropped invarn9 state would still pass the IRVariable count above). Both
+    # belong to the LOVA PERSON variant the token resolves to, with no
+    # unresolved-token warning.
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    states = _of(objs, IRVariableState)
+    lova_person = mint("sos", "lova", "LOVA PERSON")
+    assert len(states) == 2, "one state per de-merged variable"
+    assert {s.register_variant_id for s in states} == {lova_person}
+    # Regression (#362 bug): for SOS the delivery column IS the variable name, so
+    # the correction must also rewrite the column. If only the group key were
+    # corrected, the de-merged INVARN9 variable would emit its alias/state with
+    # column "INVARN8" — colliding with the real INVARN8 in the same variant. The
+    # two variables must NOT share a delivery column.
+    aliases = _of(objs, IRVariableAlias)
+    assert len(aliases) == 2, "one alias per de-merged variable"
+    assert {a.delivery_column_name for a in aliases} == {"INVARN8", "INVARN9"}
+    # The corrected INVARN9 *variable* owns the INVARN9 column; INVARN8 owns its own.
+    col_by_var = {a.variable_id: a.delivery_column_name for a in aliases}
+    assert col_by_var[by_key["INVARN8"].variable_id] == "INVARN8"
+    assert col_by_var[by_key["INVARN9"].variable_id] == "INVARN9"
+    # Each de-merged variable's state carries its OWN column, too.
+    state_col_by_var = {s.variable_id: s.delivery_column_name for s in states}
+    assert state_col_by_var[by_key["INVARN8"].variable_id] == "INVARN8"
+    assert state_col_by_var[by_key["INVARN9"].variable_id] == "INVARN9"
+
+
+def test_known_merge_allowlist_silences_warn() -> None:
+    # LOVA EXAMAR is an intentional, type-lossless same-name merge (data_type is
+    # per-state): Examensår (Heltal) vs Utbildningsår… (Sträng (text)). It is in
+    # KNOWN_MERGE_ALLOWLIST, so it still MERGEs to one variable but emits no warn.
+    reg = _register(
+        "lova",
+        [
+            _var(
+                "EXAMAR",
+                deldatamangd="A_LOVA",
+                data_type="Heltal",
+                label="Examensår",
+            ),
+            _var(
+                "EXAMAR",
+                deldatamangd="A_LOVA_EXAMEN",
+                data_type="Sträng (text)",
+                label="Utbildningsår (avslutningsår högsta utb.)",
+            ),
+        ],
+        # Variable rows key on the A_LOVA / A_LOVA_EXAMEN tokens; the
+        # Deldatamängder sheet names the variants 'LOVA' / 'LOVA EXAMEN' that the
+        # curated map routes the tokens to (else both members drop, unstated).
+        deldatamangder=(_deldat("LOVA"), _deldat("LOVA EXAMEN")),
+    )
+    objs, _ = _emit(reg)
+    assert len(_of(objs, IRVariable)) == 1, "allow-listed conflict still MERGEs"
+    warns = [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code == "sos_unanticipated_same_name_conflict"
+    ]
+    assert warns == [], "allow-listed merge emits NO conflict warning"
+    # The single merged variable must carry a state per variant (the regression
+    # this guards: a dropped state would still pass the merge/no-warn asserts).
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2, "one state per variant on the merged variable"
+    assert {s.register_variant_id for s in states} == {
+        mint("sos", "lova", "LOVA"),
+        mint("sos", "lova", "LOVA EXAMEN"),
+    }
+
+
+# ---------------------------------------------------------------------------
 # 5. Variant synthesis (LSS/BU/SOL) — detect via sheet absence
 # ---------------------------------------------------------------------------
 

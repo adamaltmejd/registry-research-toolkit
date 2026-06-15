@@ -262,8 +262,15 @@ are normalized *here*, never leaked downstream:
   variable by default** (the structured kodlistor are register-level and shared),
   splitting only on a genuine meaning conflict — incompatible normalized `data_type` or
   disjoint code-list shapes for one name (BU `FOD_DATUMN` date-vs-int, PAR `ATC`
-  text-vs-int, both in `KNOWN_SPLIT_ALLOWLIST`). Any *other* same-name conflict
-  warn-merges (fail-soft). Synthesizes a `_default` variant for variant-less registers
+  text-vs-int, both in `KNOWN_SPLIT_ALLOWLIST`). Intentional type-lossless merges in
+  `KNOWN_MERGE_ALLOWLIST` merge silently (no warn; `data_type` survives per
+  `variable_state`). Any *other* same-name conflict warn-merges (fail-soft,
+  `sos_unanticipated_same_name_conflict`). Upstream typos where two DISTINCT variables
+  ship under one name (disambiguated only by etikett) are corrected before grouping via
+  `VARIABLE_NAME_CORRECTIONS` — an exact `(register_abbrev, name, etikett)` key rewrites
+  the mistyped name (and because for SOS the delivery column equals the variable name,
+  the corrected name also flows to the alias/state `delivery_column_name`), de-merging
+  it into its own variable. Synthesizes a `_default` variant for variant-less registers
   (LSS/BU/SOL). Variable rows whose deldatamängd token is a technical extraction/view
   name with no Deldatamängder-sheet row resolve through the curated
   `DELDATAMANGD_TOKEN_MAP` (exact tokens only; a token can name several variants —
