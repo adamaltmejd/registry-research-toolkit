@@ -49,14 +49,14 @@ gets a synthesized `_default` variant, the single-table case):
 
 from __future__ import annotations
 
-import hashlib
 import re
 import tomllib
 from dataclasses import dataclass
+from datetime import date
 from typing import TYPE_CHECKING
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-
+from reg_meta_build._curation import curation_error
+from reg_meta_build.db import _file_sha256
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
     IRRegister,
@@ -79,19 +79,28 @@ _DEFAULT_VARIANT = "_default"
 
 _ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
-
-def _err(code: str, message: str, remediation: str) -> RegMetaError:
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code=code,
-        error_class="configuration",
-        message=message,
-        remediation=remediation,
-    )
-
-
-def _file_sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+# Allowed keys per table type — rejected-on-unknown so a curated typo
+# (`is_identifer`, `purpse`) fails the build loudly instead of silently
+# defaulting, mirroring the IR's `extra="forbid"` strict contract.
+_REGISTER_KEYS = frozenset(
+    {"key", "name", "purpose", "valid_from", "variant", "variable"}
+)
+_VARIANT_KEYS = frozenset({"key", "name", "description"})
+_VARIABLE_KEYS = frozenset(
+    {
+        "name",
+        "column",
+        "definition",
+        "description",
+        "data_type",
+        "measurement_unit",
+        "is_identifier",
+        "is_sensitive",
+        "valid_from",
+        "valid_to",
+        "variants",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -146,7 +155,7 @@ class CuratedAdapter:
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         toml_path = source_dir / f"{self.provider}.toml"
         if not toml_path.is_file():
-            raise _err(
+            raise curation_error(
                 "curated_toml_not_found",
                 f"Curated provider file not found: {toml_path}",
                 f"Author {self.provider}.toml under {source_dir}.",
@@ -162,15 +171,16 @@ class CuratedAdapter:
         try:
             raw = tomllib.loads(path.read_text(encoding="utf-8"))
         except (OSError, tomllib.TOMLDecodeError) as exc:
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: cannot parse TOML: {exc}",
                 "Fix the TOML syntax.",
             ) from exc
 
+        self._reject_unknown(path, raw, frozenset({"register"}), "top level")
         reg_tables = raw.get("register")
         if not isinstance(reg_tables, list) or not reg_tables:
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: expected a non-empty `[[register]]` array.",
                 "Declare at least one [[register]] with a key and name.",
@@ -188,19 +198,20 @@ class CuratedAdapter:
     ) -> _CuratedRegister:
         key = self._req_str(path, entry, "key", "register")
         if key in seen_reg_keys:
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: duplicate register key {key!r}.",
                 "Each register key must be unique within the provider.",
             )
         seen_reg_keys.add(key)
+        self._reject_unknown(path, entry, _REGISTER_KEYS, f"register {key!r}")
         name = self._req_str(path, entry, "name", f"register {key!r}")
         valid_from = self._req_str(path, entry, "valid_from", f"register {key!r}")
         self._check_iso(path, valid_from, f"register {key!r} valid_from")
 
         variant_entries = entry.get("variant", [])
         if not isinstance(variant_entries, list):
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: register {key!r}: `variant` must be an array.",
                 "Use [[register.variant]] tables.",
@@ -210,12 +221,15 @@ class CuratedAdapter:
         for v in variant_entries:
             vk = self._req_str(path, v, "key", f"register {key!r} variant")
             if vk in seen_variant_keys:
-                raise _err(
+                raise curation_error(
                     "curated_toml_invalid",
                     f"{path.name}: register {key!r}: duplicate variant key {vk!r}.",
                     "Each variant key must be unique within the register.",
                 )
             seen_variant_keys.add(vk)
+            self._reject_unknown(
+                path, v, _VARIANT_KEYS, f"register {key!r} variant {vk!r}"
+            )
             variants.append(
                 _CuratedVariant(
                     key=vk,
@@ -240,7 +254,7 @@ class CuratedAdapter:
 
         var_entries = entry.get("variable", [])
         if not isinstance(var_entries, list) or not var_entries:
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: register {key!r}: expected a non-empty "
                 "`[[register.variable]]` array.",
@@ -271,13 +285,16 @@ class CuratedAdapter:
     ) -> _CuratedVariable:
         ctx = f"register {reg_key!r} variable"
         name = self._req_str(path, entry, "name", ctx)
+        self._reject_unknown(
+            path, entry, _VARIABLE_KEYS, f"register {reg_key!r} variable {name!r}"
+        )
         column = self._req_str(
             path, entry, "column", f"register {reg_key!r} variable {name!r}"
         )
         # The auto-slug derives from `column`; a duplicate would mint a colliding
         # variable id and a non-unique slug, so reject it at load.
         if column in seen_columns:
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: register {reg_key!r}: duplicate column {column!r}.",
                 "Each variable's delivery column must be unique within the register.",
@@ -296,14 +313,14 @@ class CuratedAdapter:
             if not isinstance(variants, list) or not all(
                 isinstance(x, str) for x in variants
             ):
-                raise _err(
+                raise curation_error(
                     "curated_toml_invalid",
                     f"{path.name}: {ctx} {name!r}: `variants` must be a string array.",
                     "List the variant keys this variable is delivered in.",
                 )
             unknown = [x for x in variants if x not in variant_keys]
             if unknown:
-                raise _err(
+                raise curation_error(
                     "curated_toml_invalid",
                     f"{path.name}: {ctx} {name!r}: unknown variant(s) {unknown}.",
                     f"Use declared variant keys: {sorted(variant_keys)}.",
@@ -327,7 +344,7 @@ class CuratedAdapter:
     def _req_str(self, path: Path, entry: dict, field: str, ctx: str) -> str:
         value = entry.get(field)
         if not isinstance(value, str) or not value.strip():
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: {ctx}: `{field}` must be a non-empty string.",
                 f"Set a string `{field}`.",
@@ -339,7 +356,7 @@ class CuratedAdapter:
         if value is None:
             return None
         if not isinstance(value, str):
-            raise _err(
+            raise curation_error(
                 "curated_toml_invalid",
                 f"`{field}` must be a string when present.",
                 f"Quote `{field}` or drop it.",
@@ -347,11 +364,34 @@ class CuratedAdapter:
         return value.strip() or None
 
     def _check_iso(self, path: Path, value: str, ctx: str) -> None:
-        if not _ISO_DATE.match(value):
-            raise _err(
+        # Regex pins the exact YYYY-MM-DD shape; date.fromisoformat additionally
+        # rejects a calendar-impossible date (e.g. 2021-13-01) that the DDL's
+        # length/ordering CHECKs would otherwise let through.
+        valid = bool(_ISO_DATE.match(value))
+        if valid:
+            try:
+                date.fromisoformat(value)
+            except ValueError:
+                valid = False
+        if not valid:
+            raise curation_error(
                 "curated_toml_invalid",
-                f"{path.name}: {ctx}: {value!r} must be a full ISO date YYYY-MM-DD.",
-                "Use a ten-character ISO 8601 date.",
+                f"{path.name}: {ctx}: {value!r} must be a valid ISO date YYYY-MM-DD.",
+                "Use a real ten-character ISO 8601 date.",
+            )
+
+    def _reject_unknown(
+        self, path: Path, entry: dict, allowed: frozenset[str], ctx: str
+    ) -> None:
+        """Fail on any unrecognized key — the curated-TOML analogue of the IR's
+        `extra="forbid"`, so a typo (`is_identifer`, `purpse`) is loud, not a
+        silent default."""
+        unknown = sorted(set(entry) - allowed)
+        if unknown:
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{path.name}: {ctx}: unknown key(s) {unknown}.",
+                f"Allowed keys: {sorted(allowed)}.",
             )
 
     # -- emit ----------------------------------------------------------------
@@ -381,7 +421,7 @@ class CuratedAdapter:
                 synthesized=variant.synthesized,
             )
 
-        all_variant_keys = tuple(reg.variants[i].key for i in range(len(reg.variants)))
+        all_variant_keys = tuple(v.key for v in reg.variants)
         for var in reg.variables:
             yield from self._emit_variable(
                 reg, register_id, variant_ids, all_variant_keys, var

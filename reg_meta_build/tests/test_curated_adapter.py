@@ -190,6 +190,51 @@ valid_from = "2000-01-01"
     assert "unknown variant" in exc.value.message
 
 
+@pytest.mark.parametrize(
+    "bad_line, ctx_fragment",
+    [
+        ('purpse = "x"', "register"),  # register-level typo
+        ("is_identifer = true", "variable"),  # variable-level typo (the footgun)
+    ],
+)
+def test_unknown_key_rejected(tmp_path: Path, bad_line: str, ctx_fragment: str) -> None:
+    # The curated-TOML analogue of the IR's extra="forbid": a misspelled key must
+    # fail loudly, not silently default (e.g. is_identifer → is_identifier=False).
+    reg_extra = bad_line if ctx_fragment == "register" else ""
+    var_extra = bad_line if ctx_fragment == "variable" else ""
+    toml = f"""\
+[[register]]
+key = "r"
+name = "R"
+valid_from = "2000-01-01"
+{reg_extra}
+
+  [[register.variable]]
+  name = "X"
+  column = "x"
+  {var_extra}
+"""
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fohm", toml, tmp_path)
+    assert "unknown key" in exc.value.message
+
+
+def test_calendar_invalid_date_rejected(tmp_path: Path) -> None:
+    toml = """\
+[[register]]
+key = "r"
+name = "R"
+valid_from = "2021-13-01"
+
+  [[register.variable]]
+  name = "X"
+  column = "x"
+"""
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fohm", toml, tmp_path)
+    assert "valid ISO date" in exc.value.message
+
+
 def test_missing_file_raises(tmp_path: Path) -> None:
     (tmp_path / "src").mkdir()
     with pytest.raises(RegMetaError) as exc:
