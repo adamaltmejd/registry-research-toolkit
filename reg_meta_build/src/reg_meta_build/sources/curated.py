@@ -318,6 +318,16 @@ class CuratedAdapter:
                     f"{path.name}: {ctx} {name!r}: `variants` must be a string array.",
                     "List the variant keys this variable is delivered in.",
                 )
+            if not variants:
+                # An empty list passes the isinstance/all checks vacuously but
+                # would pin the variable to NO variant — no states, no aliases.
+                # Reject it; omitting the key delivers in every variant.
+                raise curation_error(
+                    "curated_toml_invalid",
+                    f"{path.name}: {ctx} {name!r}: `variants` must list at least "
+                    "one variant key (omit the key to deliver in every variant).",
+                    "List the variant keys, or drop the `variants` key entirely.",
+                )
             unknown = [x for x in variants if x not in variant_keys]
             if unknown:
                 raise curation_error(
@@ -334,8 +344,10 @@ class CuratedAdapter:
             description=self._opt_str(entry, "description"),
             data_type=self._opt_str(entry, "data_type"),
             measurement_unit=self._opt_str(entry, "measurement_unit"),
-            is_identifier=bool(entry.get("is_identifier", False)),
-            is_sensitive=bool(entry.get("is_sensitive", False)),
+            is_identifier=self._opt_bool(
+                path, entry, "is_identifier", f"{ctx} {name!r}"
+            ),
+            is_sensitive=self._opt_bool(path, entry, "is_sensitive", f"{ctx} {name!r}"),
             valid_from=valid_from,
             valid_to=valid_to,
             variants=variants,
@@ -362,6 +374,20 @@ class CuratedAdapter:
                 f"Quote `{field}` or drop it.",
             )
         return value.strip() or None
+
+    def _opt_bool(self, path: Path, entry: dict, field: str, ctx: str) -> bool:
+        # `bool(...)` on a present non-bool is a footgun — `bool("false")` is True,
+        # silently flipping a sensitivity flag. Demand a real TOML boolean.
+        value = entry.get(field)
+        if value is None:
+            return False
+        if not isinstance(value, bool):
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{path.name}: {ctx}: `{field}` must be a boolean when present.",
+                f"Use a bare true/false for `{field}` (no quotes).",
+            )
+        return value
 
     def _check_iso(self, path: Path, value: str, ctx: str) -> None:
         # Regex pins the exact YYYY-MM-DD shape; date.fromisoformat additionally

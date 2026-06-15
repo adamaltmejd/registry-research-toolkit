@@ -218,6 +218,24 @@ def test_emit_two_registers_side_channels(tmp_path: Path) -> None:
             '[[register.variable]]\nname="B"\ncolumn="b"\n',
             "duplicate register",
         ),
+        (
+            # Quoted "false" — bool("false") is True, so a lenient bool() would
+            # silently flip the flag; demand a real boolean.
+            '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
+            '[[register.variable]]\nname="X"\ncolumn="x"\nis_identifier="false"\n',
+            "is_identifier",
+        ),
+        (
+            '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
+            '[[register.variable]]\nname="X"\ncolumn="x"\nis_sensitive="true"\n',
+            "is_sensitive",
+        ),
+        (
+            # Empty `variants` list pins the variable to no variant at all.
+            '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
+            '[[register.variable]]\nname="X"\ncolumn="x"\nvariants=[]\n',
+            "variants",
+        ),
     ],
 )
 def test_malformed_toml_raises(tmp_path: Path, toml: str, fragment: str) -> None:
