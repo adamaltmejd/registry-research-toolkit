@@ -17,10 +17,10 @@ Two reasons the vocabularies MUST stay disjoint:
     relation_kind is the load-bearing signal consumers branch on; keeping the
     vocabularies disjoint means a consumer can trust the kind alone.
 
-This is the loader machinery; the shipped TOML ships empty, so until edges are
-curated the change is fully INERT (no rows written). Like the other curation
-TOMLs (`concept_groups.toml`, `fold_overrides.toml`) it is a maintainer
-artifact — absent in wheel installs and synthetic test builds.
+This is the loader machinery. The first curated edges landed in #403 — three
+cross-register "see also" pairs. Like the other curation TOMLs
+(`concept_groups.toml`, `fold_overrides.toml`) it is a maintainer artifact —
+absent in wheel installs and synthetic test builds.
 """
 
 from __future__ import annotations
