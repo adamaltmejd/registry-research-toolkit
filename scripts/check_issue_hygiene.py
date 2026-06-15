@@ -50,11 +50,15 @@ AREA_LABELS = {
 }
 TYPE_LABELS = {"enhancement", "bug", "documentation"}
 
-# Relationship keywords from the AGENTS.md "# Issue tracker" convention. Order the
-# alternation longest-first so "Follow-up to" wins over a bare "to"-prefix mismatch.
+# A relationship tie from the AGENTS.md "# Issue tracker" convention. Anchored to the
+# start of a line (after optional bullet/quote markup) so a casual prose mention
+# ("…related to #99 in passing…") does NOT mint a tie. Keyword whitespace is `\s+` so a
+# reflow-inserted double space / newline still matches; the number group captures a
+# comma list (`Blocked by #1, #2`) so every target is seen.
 REL_RE = re.compile(
-    r"\b(Part of|Depends on|Blocked by|Follow-up to|Supersedes|Related to)\s+#(\d+)",
-    re.IGNORECASE,
+    r"(?im)^[ \t>*+-]*"
+    r"(Part\s+of|Depends\s+on|Blocked\s+by|Follow-up\s+to|Supersedes|Related\s+to)"
+    r"\s+(#\d+(?:\s*,\s*#\d+)*)",
 )
 BLOCKING_KEYWORDS = {"depends on", "blocked by"}
 
@@ -69,10 +73,14 @@ FENCE_RE = re.compile(r"^(`{3,}).*?^\1", re.MULTILINE | re.DOTALL)
 
 # reg_meta_build paths whose change alters the GLOBAL built DB (the released
 # reg_meta_build/v* asset): src/**, top-level *.toml, and the top-level slug snapshots.
-# Excluded: tests, DESIGN.md, the version bump (pyproject.toml), and steward-flavor
-# content under fqid_slugs/<steward>/ — that rides a separate release line (#365).
+# Excluded: tests, DESIGN.md, the version bump (pyproject.toml + the __version__-only
+# __init__.py — both move on every release and would otherwise trip the alert forever),
+# and steward-flavor content under fqid_slugs/<steward>/ (separate release line, #365).
 BUILD_CONTENT_RE = re.compile(r"^reg_meta_build/(src/.+|[^/]+\.toml|fqid_slugs/[^/]+)$")
-BUILD_IGNORE = {"reg_meta_build/pyproject.toml"}
+BUILD_IGNORE = {
+    "reg_meta_build/pyproject.toml",
+    "reg_meta_build/src/reg_meta_build/__init__.py",
+}
 
 
 class Findings:
@@ -119,7 +127,11 @@ def _normalize(body: str | None) -> str:
 def parse_relationships(body: str) -> list[tuple[str, int]]:
     # Strip fenced code so a quoted/example `… #N` can't mint a false target.
     text = FENCE_RE.sub("", _normalize(body))
-    return [(kw.lower(), int(num)) for kw, num in REL_RE.findall(text)]
+    rels: list[tuple[str, int]] = []
+    for kw, nums in REL_RE.findall(text):
+        keyword = re.sub(r"\s+", " ", kw.lower())
+        rels += [(keyword, int(n)) for n in re.findall(r"#(\d+)", nums)]
+    return rels
 
 
 def parse_touches(body: str) -> list[str]:
@@ -132,11 +144,49 @@ def parse_touches(body: str) -> list[str]:
     return globs
 
 
+FETCH_CAP = (
+    5000  # well above the live corpus; a hit is reported, never silently dropped
+)
+
+
+def _warn_if_truncated(rows: list, what: str) -> None:
+    if len(rows) >= FETCH_CAP:
+        sys.stderr.write(
+            f"warning: {what} fetch hit the {FETCH_CAP} cap; results may be "
+            f"truncated — raise FETCH_CAP or paginate\n"
+        )
+
+
 def fetch_open_issues() -> list[dict]:
-    return gh_json(
-        ["issue", "list", "--state", "open", "--limit", "500",
-         "--json", "number,title,labels,body"]
-    )  # fmt: skip
+    rows = gh_json(["issue", "list", "--state", "open", "--limit", str(FETCH_CAP),
+                    "--json", "number,title,labels,body"])  # fmt: skip
+    _warn_if_truncated(rows, "open issues")
+    return rows
+
+
+def fetch_one_open_issue(number: int) -> dict | None:
+    """The issue's fields if #number is an OPEN issue, else None (closed / PR / missing).
+
+    Fetched directly so one issue's body/labels don't require listing the whole corpus.
+    The caller still gates on `issue_state` (PR-excluding) before trusting OPEN here —
+    `gh issue view` resolves a PR number too.
+    """
+    proc = subprocess.run(
+        [
+            "gh",
+            "issue",
+            "view",
+            str(number),
+            "--json",
+            "number,title,labels,body,state",
+        ],  # fmt: skip
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:  # not an issue (a PR, or it doesn't exist)
+        return None
+    data = json.loads(proc.stdout)
+    return data if data.get("state") == "OPEN" else None
 
 
 def fetch_number_states() -> tuple[set[int], dict[int, str]]:
@@ -145,10 +195,12 @@ def fetch_number_states() -> tuple[set[int], dict[int, str]]:
     PRs share the issue number space, so a `Related to #<pr>` must resolve too — but
     only issues carry the open/closed semantics the blocked-label check needs.
     """
-    issues = gh_json(["issue", "list", "--state", "all", "--limit", "2000",
+    issues = gh_json(["issue", "list", "--state", "all", "--limit", str(FETCH_CAP),
                       "--json", "number,state"])  # fmt: skip
-    prs = gh_json(["pr", "list", "--state", "all", "--limit", "2000",
+    prs = gh_json(["pr", "list", "--state", "all", "--limit", str(FETCH_CAP),
                    "--json", "number"])  # fmt: skip
+    _warn_if_truncated(issues, "issues")
+    _warn_if_truncated(prs, "PRs")
     issue_state = {i["number"]: i["state"] for i in issues}
     known = set(issue_state) | {p["number"] for p in prs}
     return known, issue_state
@@ -229,16 +281,26 @@ def check_issue(
                       f"'Part of #{native_parent}'")  # fmt: skip
 
     for pattern in parse_touches(body):
-        if not any(repo_root.glob(pattern)):
+        # Must be repo-relative: an absolute / "." pattern raises in Path.glob, and ".."
+        # escapes the repo (could spuriously match a sibling) — flag, never glob those.
+        if pattern.startswith("/") or pattern == "." or ".." in pattern.split("/"):
+            out.warn(num, f"touches '{pattern}' is not a repo-relative path")
+            continue
+        try:
+            matched = any(repo_root.glob(pattern))
+        except (OSError, ValueError, NotImplementedError):
+            out.warn(num, f"touches '{pattern}' is not a valid glob")
+            continue
+        if not matched:
             out.warn(
                 num, f"touches '{pattern}' matches no files (ok if it's a new file)"
             )
 
 
 def check_done_but_open(issue_state: dict[int, str], out: Findings) -> None:
-    # Limit comfortably exceeds total merged PRs — covers the full closing history.
-    prs = gh_json(["pr", "list", "--state", "merged", "--limit", "2000",
+    prs = gh_json(["pr", "list", "--state", "merged", "--limit", str(FETCH_CAP),
                    "--json", "number,closingIssuesReferences"])  # fmt: skip
+    _warn_if_truncated(prs, "merged PRs")
     for pr in prs:
         for ref in pr.get("closingIssuesReferences") or []:
             if issue_state.get(ref["number"]) == "OPEN":
@@ -299,10 +361,11 @@ def main() -> int:
     out = Findings()
 
     if args.issue is not None:
-        issues = fetch_open_issues()
-        issue = next((i for i in issues if i["number"] == args.issue), None)
+        # issue_state comes from `gh issue list` (PR-excluding), so it is the authority
+        # on "is this an OPEN issue" — `gh issue view <n>` resolves a PR number too.
+        is_open_issue = issue_state.get(args.issue) == "OPEN"
+        issue = fetch_one_open_issue(args.issue) if is_open_issue else None
         if issue is None:
-            # Not an open issue (closed, or a PR) — nothing to validate, not a failure.
             print(f"#{args.issue} is not an open issue; skipping.")
             return 0
         check_issue(issue, known, issue_state, parent_of, repo_root, out)
