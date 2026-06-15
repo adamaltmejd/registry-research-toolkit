@@ -240,9 +240,11 @@ via a SECOND, independent `asyncResource` — failure-isolated from the four mai
 (a docs failure, an absent index returning `ingested:false`, or an empty result silently
 omits the docs section and never blanks the main groups). The `/doc/<filename>` route
 (router `Route` union arm `{name:"doc",identifier}`) renders `DocView.svelte`: title,
-register/variable/tags, a `source_url` seam (None today, link-ready), and a bounded
-`excerpt`; 404 distinguishes "not ingested" vs "not found"; `snippet`/`excerpt` are
-rendered as TEXT, never `{@html}`, and the full converted body is never fetched.
+register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
+curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
+and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
+`snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
+is never fetched.
 
 **The response contract is the point — designed to extend.** The body is
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
@@ -305,8 +307,10 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   `source` pointer + a BOUNDED `excerpt` (first `_EXCERPT_CHARS` of the cleaned body),
   and search returns the FTS `snippet`. The full converted body is NEVER served
   (marker+Gemini conversion quality + republication exposure). `source` is the SCB
-  source-document identifier; `source_url` is a seam (None today — the data carries an
-  identifier, not a URL; resolving it is future enrichment / a steward concern).
+  source-document identifier; `source_url` is the resolved SCB PDF link (populated at
+  doc-DB build from the curated `doc_sources.toml` map, #372), None when the source is
+  uncurated; `source_title` is the human-readable publication title (also None when
+  uncurated). Coverage is LISA-only today.
 - **Coverage distinction encoded in the response**: coverage is LISA-only today.
   `ingested` is False when the docs index is absent entirely; the variable hook's
   `register_ingested` is False when *that register* has no ingested docs — so a UI reads
