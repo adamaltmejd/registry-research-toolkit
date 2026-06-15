@@ -17,11 +17,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.column_merges import load_column_merges
 from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
-from reg_meta_build.doc_db import load_doc_sources
+from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.family_merges import load_family_merges
 from reg_meta_build.fold_overrides import load_fold_overrides
 from reg_meta_build.variable_grafts import load_variable_grafts
@@ -108,3 +110,15 @@ def test_repo_doc_sources_parses() -> None:
     sources = load_doc_sources()
     assert sources  # the #372 LISA source map ships with the repo
     assert all(entry["url"] and entry["title"] for entry in sources.values())
+
+
+def test_doc_sources_malformed_entry_raises_curation_error() -> None:
+    # A missing/empty/wrong-type `url`/`title` is an actionable config error
+    # (EXIT_CONFIG), not a bare KeyError. `load_doc_sources` resolves the repo
+    # file by __file__, so exercise its per-entry validator directly.
+    for bad in ({"title": "T"}, {"url": "", "title": "T"}, {"url": 1, "title": "T"}):
+        with pytest.raises(RegMetaError) as exc_info:
+            _require_doc_source_str(bad, "url", "some-slug")
+        assert exc_info.value.code == "doc_sources_invalid"
+        assert exc_info.value.exit_code == EXIT_CONFIG
+        assert "some-slug" in exc_info.value.message

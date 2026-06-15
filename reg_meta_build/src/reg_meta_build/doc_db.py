@@ -17,6 +17,8 @@ from pathlib import Path
 
 from reg_meta.doc_db import DOC_DB_FILENAME, DOC_SCHEMA_VERSION
 
+from ._curation import curation_error
+
 # No logging.basicConfig here -- messages surface only when the caller
 # (e.g. CLI --verbose) configures a handler.  This is intentional for
 # CLI feedback that should not appear in quiet/programmatic usage.
@@ -141,6 +143,19 @@ def repo_docs_dir() -> Path | None:
 DOC_SOURCES_FILE = "doc_sources.toml"
 
 
+def _require_doc_source_str(entry: dict, field: str, slug: str) -> str:
+    value = entry.get(field)
+    if not isinstance(value, str) or not value:
+        raise curation_error(
+            code="doc_sources_invalid",
+            message=f"doc_sources `{slug}` needs `{field}` as a non-empty string, "
+            f"got {value!r}.",
+            remediation=f'Give `{field} = "<value>"` under `[sources."{slug}"]` in '
+            "reg_meta_build/doc_sources.toml.",
+        )
+    return value
+
+
 def load_doc_sources() -> dict[str, dict[str, str]]:
     """Load the curated `doc_sources.toml` map (#372).
 
@@ -155,10 +170,21 @@ def load_doc_sources() -> dict[str, dict[str, str]]:
         return {}
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     sources = data.get("sources", {})
-    return {
-        slug: {"url": entry["url"], "title": entry["title"]}
-        for slug, entry in sources.items()
-    }
+    out: dict[str, dict[str, str]] = {}
+    for slug, entry in sources.items():
+        if not isinstance(entry, dict):
+            raise curation_error(
+                code="doc_sources_invalid",
+                message=f'doc_sources `{slug}` must be a `[sources."{slug}"]` '
+                f"table, got {type(entry).__name__}.",
+                remediation=f'Give a `[sources."{slug}"]` table with `url` / '
+                "`title` in reg_meta_build/doc_sources.toml.",
+            )
+        out[slug] = {
+            field: _require_doc_source_str(entry, field, slug)
+            for field in ("url", "title")
+        }
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -242,14 +268,14 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
             # in the curated map (#372). The stored `source` is the canonical
             # form; `source_url`/`source_title` are None when uncurated.
             raw_source = meta.get("source")
-            source = (
-                raw_source.removesuffix(".md")
-                if isinstance(raw_source, str)
-                else raw_source
-            )
-            mapping = source_map.get(source) if isinstance(source, str) else None
-            if isinstance(source, str) and mapping is None:
-                unmapped_sources.add(source)
+            if isinstance(raw_source, str):
+                source = raw_source.removesuffix(".md")
+                mapping = source_map.get(source)
+                if mapping is None:
+                    unmapped_sources.add(source)
+            else:
+                source = raw_source
+                mapping = None
 
             body_clean = _clean_body_for_search(body)
             conn.execute(
