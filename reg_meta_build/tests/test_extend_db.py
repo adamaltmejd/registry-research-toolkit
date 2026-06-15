@@ -23,7 +23,13 @@ from _csv_fixtures import write_scb_input
 from _shared_fixtures import _write_fixture_slug_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.db import build_db
-from reg_meta_build.extend_db import extend_db, load_inventory
+from reg_meta_build.extend_db import (
+    InvProvider,
+    _expand_window,
+    _insert_providers,
+    extend_db,
+    load_inventory,
+)
 from reg_meta_build.id import mint
 from reg_meta_build.validate import validate_built_db
 
@@ -90,6 +96,23 @@ def _base_inventory() -> dict:
                         ],
                     }
                 ],
+            }
+        ],
+    }
+
+
+def _reg_stub(provider: str, key: str) -> dict:
+    """A minimal structurally-valid register dict (one variant, one variable) —
+    used to exercise the loader's duplicate-(provider, key) guard."""
+    return {
+        "provider": provider,
+        "key": key,
+        "name": "N",
+        "variants": [
+            {
+                "key": "v",
+                "name": "V",
+                "variables": [{"key": "x", "name": "X", "column": "C"}],
             }
         ],
     }
@@ -170,6 +193,24 @@ def _run_extend(
         pre_rename_hook=hook,
     )
     return counts, out_dir / "reg_meta.db"
+
+
+# ── _expand_window ─────────────────────────────────────────────────────────────
+
+
+class TestExpandWindow:
+    def test_month_from_open_to(self) -> None:
+        # YYYY-MM lower bound expands to the month's first day; None upper → open.
+        assert _expand_window("2018-06", None) == ("2018-06-01", "9999-12-31")
+
+    def test_open_from_month_to(self) -> None:
+        # None lower → open sentinel; YYYY-MM upper expands to month-last-day.
+        assert _expand_window(None, "2020-12") == ("0001-01-01", "2020-12-31")
+
+    def test_malformed_token_is_config_error(self) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _expand_window("not-a-date", None)
+        assert exc.value.exit_code == EXIT_CONFIG
 
 
 # ── overlay inserts ──────────────────────────────────────────────────────────────
@@ -716,6 +757,45 @@ class TestLoader:
                 ]
             ),  # empty variables
             lambda d: d.update(providers=[{"slug": "p"}]),  # missing name
+            # A non-bool `is_identifier` on a variable must be rejected (the
+            # field is INTEGER-flag-backed; a stray int is a generator bug).
+            lambda d: d.update(
+                registers=[
+                    {
+                        "provider": "p",
+                        "key": "k",
+                        "name": "N",
+                        "variants": [
+                            {
+                                "key": "v",
+                                "name": "V",
+                                "variables": [
+                                    {
+                                        "key": "x",
+                                        "name": "X",
+                                        "column": "C",
+                                        "is_identifier": 1,
+                                    }
+                                ],
+                            }
+                        ],
+                    }
+                ]
+            ),  # non-bool is_identifier
+            # Duplicate provider slug.
+            lambda d: d.update(
+                providers=[
+                    {"slug": "p", "name": "P"},
+                    {"slug": "p", "name": "P2"},
+                ]
+            ),
+            # Duplicate (provider, register key).
+            lambda d: d.update(
+                registers=[
+                    _reg_stub("p", "k"),
+                    _reg_stub("p", "k"),
+                ]
+            ),
         ],
     )
     def test_structural_defects_fail(self, tmp_path: Path, mutate) -> None:
@@ -723,6 +803,14 @@ class TestLoader:
         mutate(inv)
         path = tmp_path / "inv.json"
         path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_non_object_root_is_config_error(self, tmp_path: Path) -> None:
+        # A JSON array (or any non-object) root must fail strict load.
+        path = tmp_path / "inv.json"
+        path.write_bytes(b"[]")
         with pytest.raises(RegMetaError) as exc:
             load_inventory(path)
         assert exc.value.exit_code == EXIT_CONFIG
@@ -742,3 +830,174 @@ class TestLoader:
                 skip_slugs=True,
             )
         assert exc.value.exit_code == EXIT_CONFIG
+
+
+# ── failure / edge paths ─────────────────────────────────────────────────────
+
+
+def _run_extend_skip_slugs(
+    tmp_path: Path, base_db: Path, inventory: dict, *, out_name: str = "out"
+) -> tuple[dict, Path]:
+    """`extend_db` with `skip_slugs=True` (no slug dir needed) — for failure/edge
+    tests that don't exercise slugging."""
+    inv_path = tmp_path / f"{out_name}-inventory.json"
+    inv_path.write_text(json.dumps(inventory), encoding="utf-8")
+    out_dir = tmp_path / out_name
+    out_dir.mkdir()
+    counts = extend_db(
+        base_db=base_db,
+        inventory_path=inv_path,
+        db_dir=out_dir,
+        steward=_STEWARD,
+        skip_slugs=True,
+    )
+    return counts, out_dir / "reg_meta.db"
+
+
+class TestFailurePaths:
+    def test_missing_base_db(self, tmp_path: Path) -> None:
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        out = tmp_path / "out"
+        out.mkdir()
+        with pytest.raises(RegMetaError) as exc:
+            extend_db(
+                base_db=tmp_path / "nonexistent.db",
+                inventory_path=inv_path,
+                db_dir=out,
+                steward=_STEWARD,
+                skip_slugs=True,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "extend_base_db_not_found"
+
+    def test_register_names_undeclared_provider(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        # A register whose provider is neither declared in `providers[]` nor live
+        # in the DB is a hard structural error in `_insert_core_graph`.
+        inv = _base_inventory()
+        inv["providers"] = []  # drop the declaration; `swedbank` is not live
+        with pytest.raises(RegMetaError) as exc:
+            _run_extend_skip_slugs(tmp_path, global_db, inv)
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_pre_rename_hook_failure_cleans_up(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        out = tmp_path / "out"
+        out.mkdir()
+
+        class _HookError(RuntimeError):
+            pass
+
+        def hook(_staging: Path) -> None:
+            raise _HookError("validation refused the overlay")
+
+        with pytest.raises(_HookError):
+            extend_db(
+                base_db=global_db,
+                inventory_path=inv_path,
+                db_dir=out,
+                steward=_STEWARD,
+                skip_slugs=True,
+                pre_rename_hook=hook,
+            )
+        # The staging tmp is removed and no final DB was written (nothing to
+        # rotate — this is a first overlay into a fresh dir).
+        assert not (out / "reg_meta.db.tmp").exists()
+        assert not (out / "reg_meta.db").exists()
+
+    def test_skip_slugs_leaves_null_slugs(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _, out = _run_extend_skip_slugs(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        null_slugs = conn.execute(
+            "SELECT COUNT(*) FROM variable WHERE register_id = ? AND slug IS NULL",
+            (ids["register"],),
+        ).fetchone()[0]
+        assert null_slugs == 2  # belopp + kontonr both unslugged
+
+    def test_empty_inventory_is_zero_counts_and_no_change(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        before = _global_snapshot(sqlite3.connect(global_db))
+        inv = {"steward": _STEWARD, "source_label": "swecov-empty"}
+        counts, out = _run_extend_skip_slugs(tmp_path, global_db, inv)
+        for key in ("providers", "registers", "variants", "variables", "states"):
+            assert counts[key] == 0
+        # Core graph unchanged vs base, and the result validates clean.
+        assert _global_snapshot(sqlite3.connect(out)) == before
+        assert not validate_built_db(out, flavored=True).failures
+
+
+# ── provider idempotency (_insert_providers) ─────────────────────────────────
+
+
+class TestProviderIdempotency:
+    def test_existing_slug_name_mismatch_fails(self) -> None:
+        from reg_meta_build.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        # `scb` is seeded; re-declaring it with a DIFFERENT name must fail.
+        with pytest.raises(RegMetaError) as exc:
+            _insert_providers(conn, (InvProvider(slug="scb", name="Wrong Name"),))
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_existing_slug_matching_name_is_noop(self) -> None:
+        from reg_meta_build.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        # Query the real seeded SCB name rather than hardcoding it.
+        seeded_name = conn.execute(
+            "SELECT name FROM provider WHERE slug = 'scb'"
+        ).fetchone()[0]
+        before = conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0]
+        inserted = _insert_providers(conn, (InvProvider(slug="scb", name=seeded_name),))
+        assert inserted == 0  # matching name → skip
+        after = conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0]
+        assert after == before  # no duplicate row
+
+
+# ── CLI handler ──────────────────────────────────────────────────────────────
+
+
+class TestCli:
+    def test_cmd_extend_db_envelope(self, tmp_path: Path, global_db: Path) -> None:
+        import argparse
+
+        from reg_meta_build.cli import _cmd_extend_db
+
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        slug_dir = tmp_path / "sslug"
+        slug_dir.mkdir()
+        _write_steward_slug_dir(slug_dir)
+        out_dir = tmp_path / "out"
+        out_dir.mkdir()
+
+        args = argparse.Namespace(
+            db=str(out_dir),
+            base_db=str(global_db),
+            inventory=str(inv_path),
+            steward=_STEWARD,
+            slug_dir=str(slug_dir),
+            skip_slugs=False,
+            no_validate=False,
+        )
+        envelope, exit_code = _cmd_extend_db(args)
+        assert exit_code == 0
+        data = envelope["data"]
+        for key in ("providers", "registers", "variants", "variables", "states"):
+            assert key in data
+        assert data["variables"] == 2
+        assert "db_path" in data
+        assert data["db_path"] == str(out_dir / "reg_meta.db")
