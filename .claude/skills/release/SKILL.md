@@ -179,10 +179,19 @@ The raw SCB CSV exports and curated classification CSVs live under
 
 #### 8a. Main DB asset (`reg_meta.db.zst`)
 
-Build and upload fresh if **either** condition is true:
+Build and upload fresh if **any** condition is true:
 
 - `SCHEMA_VERSION` was bumped (either already in the commits or by step 3)
 - The release is a **major** version bump
+- The builder or its curated inputs changed since the prior release's asset —
+  `git log <prev reg_meta tag>..HEAD -- reg_meta_build/` is non-empty. Build-side
+  changes (curated TOMLs, `sources/`, `db.py` content, new indexes, grafts) alter DB
+  **content** without necessarily bumping `SCHEMA_VERSION`, so copying the old asset
+  forward would ship a **stale** DB. A `reg_meta`-only release (CLI/query code, no
+  `reg_meta_build/` change) is still safe to copy-forward. This condition is what makes
+  a content-only, no-schema-bump release rebuild correctly (e.g. `reg_meta` v0.12.1's
+  codes index and v0.13.0's styrtabell/grafts/edges/fold both required a rebuild with no
+  schema bump).
 
 Otherwise copy the prior release's asset forward (8c) and skip the rest of 8a.
 
