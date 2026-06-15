@@ -3108,6 +3108,32 @@
         "summary": "Get Docs Search"
       }
     },
+    "/api/kit": {
+      "post": {
+        "description": "Build the generation kit from the posted ``project_data.json`` and return\nthe ZIP bytes. Reads the raw dict (preserving namespaced blocks) and offloads\nthe blocking validate-then-build to the threadpool.",
+        "operationId": "build_kit_api_kit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/zip": {}
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Build Kit"
+      }
+    },
     "/api/project/order": {
       "post": {
         "description": "Render the steward's default v1 order-export CSV.\n\nReads the raw dict and runs the STRUCTURAL gate (see reg_schema/DESIGN.md \u2192\nStructural rules and issue codes) before rendering: the\n``ProjectData`` model enforces only field types, while the structural rules\n(FQID shape, period grammar, the binding/source-prefix match) live in\n``validate_structural`` \u2014 so a Pydantic-valid-but-structurally-invalid spec\n(e.g. a malformed ``register_variant`` or bad period token) would otherwise\nrender a bad provider order at 200. A structurally invalid spec \u2192 422.\n``async`` + ``run_in_threadpool`` (blocking display_name resolution off the\nevent loop), mirroring ``/validate``.",

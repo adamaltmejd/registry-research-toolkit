@@ -83,7 +83,7 @@ def render_order_csv(project: ProjectData, catalog: Catalog) -> str:
                     binding.variable,
                     binding.representation or "",
                     period_str,
-                    _display_name(binding, source, catalog),
+                    resolve_display_name(binding, source, catalog),
                 )
             )
     return buffer.getvalue()
@@ -120,7 +120,7 @@ def _coordinate_parts(register_variant: str) -> tuple[str, str, str]:
     return parts[0], parts[1], parts[2]
 
 
-def _display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
+def resolve_display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
     """The binding's ``display_name``, defaulting from reg_meta when unset.
 
     Explicit ``display_name`` wins. Otherwise resolve the binding at the source's

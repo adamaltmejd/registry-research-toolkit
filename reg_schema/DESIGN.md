@@ -49,9 +49,10 @@ root `ARCHITECTURE.md`; remaining/unbuilt schema work lives in `REFACTOR_SPEC.md
   `reg_webapp` (and any local CLI that loads reg_meta). The split is what lets
   `reg_schema` ship reg_meta-free.
 - The `project_data.codes.json` sibling file (see REFACTOR_SPEC.md → 8 — Kit-build).
-  Codes live alongside the spec but are written by kit-build in `reg_webapp`; the SPA
-  carries pre-kit ad-hoc codes in IndexedDB. Either may grow a schema dataclass here
-  later; phase 1 keeps it out.
+  Codes live alongside the spec but are dereferenced from reg_meta by kit-build in
+  `reg_webapp` (decided #217 — no SPA ad-hoc-code authoring path; the SPA's IndexedDB
+  persists the full draft only). It may grow a schema dataclass here later; phase 1
+  keeps it out.
 - **Per-source SQL filtering (`where`).** There is no `where` field in the v1 baseline
   `Source`. Cohort/row filtering is a property of the MONA-side runner, not the order
   spec — it lives in `reg_monabundle`'s `configure()` (per `sql_table` / `file_source`).
@@ -241,8 +242,12 @@ homogeneity, `literal_time_key_duplicate` uniqueness, member-vs-panel
 pre-kit authoring spec valid even while inheritance is still unresolved — it never
 materializes defaults, only checks shapes.
 
-Remaining: kit-build inheritance materialization (resolving `panel_template` into
-explicit keys before emitting a kit/bundle) — see `REFACTOR_SPEC.md` / #217.
+The `panel_inheritance_unresolvable` **check** ships at kit-build (A5.2c, #217:
+`reg_webapp.semantic.validate_panel_inheritance`, run by `POST /api/kit`) — a member
+that resolves no effective key from override → panel default → variant `panel_template`
+is a 422. Remaining: the inheritance **materialization** (writing the resolved keys into
+the emitted kit/bundle `project_data.json` the way `display_name` is) — deferred until
+`reg_mockdata`'s panel contract settles (step 10b); see `REFACTOR_SPEC.md` / #217.
 
 ### Semantic codes — defined, not emitted by `reg_schema`
 

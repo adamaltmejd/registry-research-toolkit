@@ -30,7 +30,7 @@ from .limits import (
     RateLimitMiddleware,
 )
 from .middleware import ETagMiddleware
-from .routes import bundle, catalog, context, docs, project, search
+from .routes import bundle, catalog, context, docs, kit, project, search
 from .stewards import load_catalog_index, load_steward
 
 if TYPE_CHECKING:
@@ -147,4 +147,7 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     # middleware skips these (method gate); the cap + limiter gate them.
     app.include_router(project.router)
     app.include_router(bundle.router)
+    # A5.2c kit-build (§8): validate + assemble the downloadable generation kit.
+    # A write POST → same cap/limiter gates, skipped by the GET-only ETag mw.
+    app.include_router(kit.router)
     return app
