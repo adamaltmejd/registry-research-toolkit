@@ -13,9 +13,3 @@ slug = "population"
 
 [register_variant."4969117928487263745.9041324741277064675"]
 slug = "_default"
-
-[register."7658352934386894347"]
-slug = "postnummer"
-
-[register_variant."7658352934386894347.5228923986048541878"]
-slug = "_default"
