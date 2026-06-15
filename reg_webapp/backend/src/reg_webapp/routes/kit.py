@@ -40,25 +40,25 @@ pyodbc; the kit is pure file packaging with no ``reg_mockdata`` dependency.
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
-import reg_meta.db
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
-from reg_monabundle.build.spec_loader import binding_options_issues, block_issue
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 
-from reg_webapp.kit import build_kit_archive
+from reg_webapp.kit import KitBuildError, build_kit_archive
+from reg_webapp.project_validation import (
+    block_issues,
+    per_request_conn,
+    semantic_issues,
+)
 from reg_webapp.request_body import read_raw_json_object
-from reg_webapp.semantic import validate_panel_inheritance, validate_semantic
+from reg_webapp.semantic import validate_panel_inheritance
 
 if TYPE_CHECKING:
-    import sqlite3
-    from collections.abc import Iterator
     from pathlib import Path
 
     from reg_schema.validation import ValidationIssue
@@ -66,21 +66,6 @@ if TYPE_CHECKING:
     from reg_webapp.catalog_index import CatalogIndex
 
 router = APIRouter(prefix="/api")
-
-
-@contextmanager
-def _kit_conn(db_path: Path) -> Iterator[sqlite3.Connection]:
-    """A per-request reg_meta read-only connection, opened ON THE CALLING THREAD
-    (the threadpool thread running the offloaded build). Used as a plain ``with``
-    (NOT a FastAPI ``Depends``) so open + query + close stay on ONE thread — the
-    load-bearing cross-thread-safety property the A5.2a/b-i P1 established (see
-    ``routes/project.py`` ``_project_conn``). ``check_schema=False``: the lifespan
-    already validated the schema at boot."""
-    conn = reg_meta.db.open_db(db_path, check_schema=False)
-    try:
-        yield conn
-    finally:
-        conn.close()
 
 
 # The bundle/kit is a binary ZIP DOWNLOAD (application/zip), the same
@@ -138,19 +123,18 @@ def _kit_blocking(
         # unreachable under today's models) — a 422, never a 500.
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
+    # The block + semantic + cross-block layers are the SHARED composition with
+    # `/api/project/validate` (project_validation.py) — a new layer lands there once
+    # and gates both. The kit adds only its kit-only panel_inheritance check + the
+    # error-GATE (vs /validate's 200 diagnostic).
     issues: list[ValidationIssue] = list(structural.issues)
-    issue = block_issue(raw.get("reg_monabundle"))
-    if issue is not None:
-        issues.append(issue)
+    issues.extend(block_issues(raw))
 
     from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
 
-    with _kit_conn(db_path) as conn:
+    with per_request_conn(db_path) as conn:
         catalog = Catalog(conn)
-        issues.extend(
-            validate_semantic(project, catalog, caller="researcher", index=index).issues
-        )
-        issues.extend(binding_options_issues(raw.get("reg_monabundle"), project))
+        issues.extend(semantic_issues(project, raw, catalog, index))
         issues.extend(validate_panel_inheritance(project, catalog).issues)
 
         errors = [i for i in issues if i.level == "error"]
@@ -158,8 +142,13 @@ def _kit_blocking(
             _raise_422("an invalid spec", tuple(errors))
 
         # Validation passed (warnings/info don't block) — assemble the archive on
-        # the same connection (it dereferences codes + resolves display names).
-        archive = build_kit_archive(raw, project, catalog, conn)
+        # the same connection (it dereferences codes + resolves display names). A
+        # spec that validates but can't be packaged into a coherent kit (a
+        # same-FQID codes-keyspace collision) is bad input → 422, never a 500.
+        try:
+            archive = build_kit_archive(raw, project, catalog, conn)
+        except KitBuildError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     return Response(
         content=archive,

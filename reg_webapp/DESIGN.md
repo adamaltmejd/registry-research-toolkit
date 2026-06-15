@@ -791,25 +791,38 @@ The archive (`application/zip`) holds three files:
   #206/#217: `(binding FQID,   resolved delivery column)`); post-validation the resolved
   column is implied by the binding FQID within a source (co-existing columns without a
   `representation` are a blocking `binding_value_set_version_ambiguous` error), so the
-  pair collapses to the binding-FQID key the §8 consumer contract reads. The `sources`
-  codes are **dereferenced from reg_meta at kit-build** — NOT SPA-authored (the §8
-  IndexedDB-authoring affordance is out of #217's scope; decision recorded on #217).
+  pair collapses to the binding-FQID key the §8 consumer contract reads. The one
+  residual case it does not cover — two bindings in ONE source sharing a `variable` FQID
+  (distinct `representation`s; structurally legal, since `display_name_collision`
+  catches only EXPLICIT same names) — would collide on the FQID key, so kit-build raises
+  `KitBuildError` → **422** rather than silently dropping a column's codes (the §8
+  consumer keys by FQID too, so the contract genuinely can't represent it). The
+  `sources` codes are **dereferenced from reg_meta at kit-build** — NOT SPA-authored
+  (the §8 IndexedDB-authoring affordance is out of #217's scope; decision recorded on
+  #217).
 - **`README.md`** — what the kit is + the `reg-mockdata generate` command. It notes the
   researcher must drop their MONA-returned `project_data.stats.json` beside the kit
   before running (the kit endpoint does not emit stats — that file is the extract
   output).
 
-**Determinism.** Same validated spec → byte-identical archive (a kit committed to git
-re-zips identically), mirroring `/bundle`: ZIP entries are written in fixed order with a
-fixed timestamp + normalized mode bits, and the JSON is `sort_keys`-dumped.
+**Determinism.** Same validated spec → byte-identical archive *within a build
+environment* (stable for content-hash caching + the round-trip tests), mirroring
+`/bundle`: ZIP entries are written in fixed order with a fixed timestamp + normalized
+mode bits, and the JSON is `sort_keys`-dumped. (The DEFLATE byte stream is only
+reproducible for a given zlib build — the kit's *value* is the extracted JSON files, not
+the archive bytes.)
 
 **Validation = the `/validate` composition PLUS a kit-only check.** Structural → block →
 semantic (researcher) → cross-block referential, then `validate_panel_inheritance`
-(`semantic.py`) — the kit-only `panel_inheritance_unresolvable` gate. That check is
-deliberately NOT in `validate_semantic`: the structural layer keeps a pre-kit SPA spec
-VALID while panel inheritance is unresolved (a member may have no override + no panel
-default mid-authoring, expecting the variant `panel_template`), so only kit-build —
-where inheritance is materialized — flags a member that resolves no effective
+(`semantic.py`) — the kit-only `panel_inheritance_unresolvable` gate. The block +
+semantic + cross-block layers are the SHARED composition with `/api/project/validate`
+(`project_validation.py` — `block_issues` / `semantic_issues` / the per-request-conn
+helper, used by both routes) so a new validation layer lands once and gates both; the
+kit adds only the panel check + the error-GATE (vs `/validate`'s 200 diagnostic). That
+check is deliberately NOT in `validate_semantic`: the structural layer keeps a pre-kit
+SPA spec VALID while panel inheritance is unresolved (a member may have no override + no
+panel default mid-authoring, expecting the variant `panel_template`), so only kit-build
+— where inheritance is materialized — flags a member that resolves no effective
 `entity_key` / `time_key` from override → panel default → variant template. A
 `/validate`-clean spec can therefore still 422 here on panel inheritance — the
 documented kit-build residual.

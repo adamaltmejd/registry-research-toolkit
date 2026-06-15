@@ -25,10 +25,13 @@ beside the kit before ``generate``; the README says so):
 - ``project_data.codes.json`` — dereferenced code lists (see ``build_codes``).
 - ``README.md`` — what the kit is + the ready-to-run command.
 
-**Determinism.** Same validated spec → byte-identical kit (mirrors the
-``/api/bundle`` determinism property): the ZIP entries are written in a fixed
-order with a fixed timestamp, the JSON is ``sort_keys``-dumped, and the code lists
-are deterministically ordered. A kit committed to git re-zips identically.
+**Determinism.** Same validated spec → byte-identical kit *within a build
+environment* (mirrors the ``/api/bundle`` determinism property — stable for
+content-hash caching + the round-trip tests): the ZIP entries are written in a
+fixed order with a fixed timestamp + normalized mode bits, the JSON is
+``sort_keys``-dumped, and the code lists are deterministically ordered. (The
+DEFLATE byte stream is only guaranteed reproducible for a given zlib build — the
+kit's *value* is the extracted JSON files, not the archive bytes.)
 """
 
 from __future__ import annotations
@@ -57,6 +60,12 @@ if TYPE_CHECKING:
 _ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
 
 KIT_FILES = ("project_data.json", "project_data.codes.json", "README.md")
+
+
+class KitBuildError(ValueError):
+    """A spec that VALIDATES but cannot be packaged into a coherent kit (e.g. two
+    same-FQID bindings in one source that collide in the codes keyspace). Raised by
+    the domain layer; the route maps it to a 422 (it is bad INPUT, not a 500)."""
 
 
 def build_codes(
@@ -106,7 +115,23 @@ def build_codes(
                         binding.value_set, catalog, conn
                     )
             else:
-                sources.setdefault(source.name, {})[binding.variable] = _binding_codes(
+                source_codes = sources.setdefault(source.name, {})
+                # The `sources` keyspace is keyed by binding FQID, so two bindings
+                # in one source that share a `variable` FQID (distinct
+                # `representation` pins — structurally legal; `display_name_collision`
+                # only catches EXPLICIT same names) would collide and silently drop
+                # one code list. The §8 consumer reads `sources[name][fqid]`, so that
+                # key cannot represent two same-FQID bindings either — fail loudly
+                # rather than ship a kit that's silently missing a column's codes.
+                if binding.variable in source_codes:
+                    raise KitBuildError(
+                        f"source {source.name!r} binds {binding.variable!r} more "
+                        "than once (distinct representations of one variable); the "
+                        "codes.json `sources` keyspace is keyed by binding FQID and "
+                        "cannot represent two same-FQID bindings in one source — "
+                        "split them into separate sources"
+                    )
+                source_codes[binding.variable] = _binding_codes(
                     binding, source, catalog
                 )
     return {"classifications": classifications, "sources": sources}

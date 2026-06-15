@@ -203,6 +203,32 @@ def test_codes_keyspace_is_total_even_when_empty(client):
     assert codes["sources"]["rams-2018"]["scb/rams/syss"] == []
 
 
+def test_same_fqid_collision_in_one_source_is_422(client):
+    """Two ad-hoc categorical bindings sharing the same `variable` FQID within one
+    source collide in the binding-FQID-keyed `sources` keyspace (structurally legal —
+    `display_name_collision` only catches EXPLICIT same names). Rather than silently
+    drop one binding's codes, kit-build fails loudly with a 422."""
+    resp = client.post(
+        "/api/kit",
+        json=_spec(
+            bindings=[
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "categorical",
+                    "display_name": "Sex A",
+                },
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "categorical",
+                    "display_name": "Sex B",
+                },
+            ]
+        ),
+    )
+    assert resp.status_code == 422
+    assert "more than once" in resp.json()["detail"]
+
+
 def test_non_categorical_binding_has_no_codes(client):
     """An id/numeric/etc. binding carries no codes at all."""
     files = _kit(
