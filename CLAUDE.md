@@ -137,6 +137,69 @@ classification). Don't revive that path — extend the new packages.
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix
   `scripts/parse_lisa_docs.py`, not the output
 
+# Issue tracker
+
+GitHub Issues is the coordination surface — keep it queryable and connected, not a pile
+of prose. Before filing, **search open AND closed issues**
+(`gh issue list --state all --search "<keywords>"`) for an existing match: extend or
+comment on it rather than opening a duplicate, and read its relationships so you know
+where the new work sits in the graph.
+
+**Title** — mirror the commit convention: `<type>(<package>): <imperative summary>`
+(e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`). Append `(#<epic>)` when the
+issue is part of a tracked epic.
+
+**Labels — required on every issue:**
+
+- exactly **one area label** — a package (`reg_meta`, `reg_meta_build`, `reg_schema`,
+  `reg_monabundle`, `reg_webapp`, `mock_data_wizard`) or `cross-package`;
+- a **type** — `enhancement`, `bug`, or `documentation`;
+- `epic` on a tracking issue; `blocked` while an open dependency stalls it (remove once
+  cleared).
+- Lanes (the ad-hoc S/L/G/… streams) live in the epic/tracker prose, **not** as labels —
+  they churn too fast to maintain as a taxonomy.
+
+**Body** — use the house skeleton, dropping any section that doesn't apply (don't pad):
+`Problem`/`Context` · `Approach` · `Scope` (In / Out) · `Relationships` · `Touches` ·
+`Open questions` · `Non-goals`. Worked examples and concrete file paths earn their
+space.
+
+**Relationships — make every cross-issue tie explicit** so the graph is reconstructable
+from text, not implied by a title suffix. In a `Relationships` block, name each tie with
+a keyword + number:
+
+- `Part of #N (epic)` · `Depends on #N` / `Blocked by #N` · `Follow-up to #N` ·
+  `Supersedes #N` · `Related to #N`.
+- Wire epic ↔ child as **native sub-issues**, not only prose:
+  `gh issue edit <child> --parent <epic>` (or
+  `gh issue edit <epic> --add-sub-issue <child>`). Prefer this over a hand-maintained
+  checklist-in-comments tracker — a latest-comment-is-truth surface goes stale and
+  forces readers to re-read every comment.
+- PR → issue closure uses closing keywords in the **PR** body (`Closes #N` /
+  `Fixes #N`), never in the issue.
+
+**Touches** — when the issue will change code, add a fenced `touches` block (info string
+`touches`) listing the repo-relative paths or globs the work is expected to modify, one
+per line (`#` line-comments allowed; paths that don't exist yet are fine). It lets the
+sequencing pass compute which issues can run in parallel by set-intersection instead of
+re-reading the tree. Omit it for discussion- or decision-only issues.
+
+````
+```touches
+reg_meta_build/src/reg_meta_build/sources/sos.py
+reg_meta_build/concept_groups.toml
+```
+````
+
+**Epics** — a tracking issue labeled `epic` that owns its children as sub-issues; the
+epic body carries the sequencing/lane reasoning, each child carries its own scope.
+
+**Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
+`issue-hygiene.yml`) checks these rules read-only: required labels, resolvable
+relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement, `touches`-glob
+resolution, plus drift alerts (a merged PR that left its issue open; `reg_meta_build` DB
+content changed since the last `reg_meta_build/v*` tag, i.e. a release is pending).
+
 # Git
 
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
@@ -183,10 +246,11 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
 
 **Agent-driven PR work outside `/pr-pipeline`:** when you build a change end to end
 without the user invoking the skill, run the same shape — plan → implement →
-`/code-review` (effort scaled to risk) → docs — then **stop and hand the PR back for this
-gate**. Don't merge on your own initiative: the merge decision and the bot-review window
-are the human's (they invoke `/pr-pipeline`, or tell you to merge). `/pr-pipeline` is the
-flow that carries a PR through to merge, and it's user-invoked by design.
+`/code-review` (effort scaled to risk) → docs — then **stop and hand the PR back for
+this gate**. Don't merge on your own initiative: the merge decision and the bot-review
+window are the human's (they invoke `/pr-pipeline`, or tell you to merge).
+`/pr-pipeline` is the flow that carries a PR through to merge, and it's user-invoked by
+design.
 
 # Layout
 
