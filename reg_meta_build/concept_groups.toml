@@ -38,3 +38,219 @@ label = "näst största förvärvskällan"
 variable = "agi3lonfink"
 value = "3"
 label = "tredje största förvärvskällan"
+
+# LOVA repeated-event ordinal families (#374; spun out of #362.4). LOVA records
+# up to nine immigration/emigration events per person, each as a numbered series.
+# The Nth occurrence is a DISTINCT variable — correctly NOT merged (each holds a
+# different event) — but the flat 1..9 rows surface as N near-identical browse
+# rows. These fold the human-readable date and country series into one
+# presentation group each, under an `ordinal` facet. Members are an exact
+# hand-listed vocabulary (the standing curation rule forbids regex name-patterns),
+# attached as plain `variable =` members because the series carries no month/edge
+# token group. Slugs are SOS column names (INVDATUM/INVLAND/UTVDATUM/UTVLAND).
+# The parallel NUMERIC date representation (columns INVARN/UTVARN → slugs
+# invarn*/utvarn*, "… N numerisk") stays flat — out of scope.
+
+[[variable_group]]
+register = "sos/lova"
+key = "invdatum"
+label = "Invandringsdatum (per invandringstillfälle)"
+axis = "ordinal"
+
+[[variable_group.members]]
+variable = "invdatum1"
+value = "1"
+label = "1:a"
+
+[[variable_group.members]]
+variable = "invdatum2"
+value = "2"
+label = "2:a"
+
+[[variable_group.members]]
+variable = "invdatum3"
+value = "3"
+label = "3:e"
+
+[[variable_group.members]]
+variable = "invdatum4"
+value = "4"
+label = "4:e"
+
+[[variable_group.members]]
+variable = "invdatum5"
+value = "5"
+label = "5:e"
+
+[[variable_group.members]]
+variable = "invdatum6"
+value = "6"
+label = "6:e"
+
+[[variable_group.members]]
+variable = "invdatum7"
+value = "7"
+label = "7:e"
+
+[[variable_group.members]]
+variable = "invdatum8"
+value = "8"
+label = "8:e"
+
+[[variable_group.members]]
+variable = "invdatum9"
+value = "9"
+label = "9:e"
+
+[[variable_group]]
+register = "sos/lova"
+key = "invland"
+label = "Invandringsland (per invandringstillfälle)"
+axis = "ordinal"
+
+[[variable_group.members]]
+variable = "invland1"
+value = "1"
+label = "1:a"
+
+[[variable_group.members]]
+variable = "invland2"
+value = "2"
+label = "2:a"
+
+[[variable_group.members]]
+variable = "invland3"
+value = "3"
+label = "3:e"
+
+[[variable_group.members]]
+variable = "invland4"
+value = "4"
+label = "4:e"
+
+[[variable_group.members]]
+variable = "invland5"
+value = "5"
+label = "5:e"
+
+[[variable_group.members]]
+variable = "invland6"
+value = "6"
+label = "6:e"
+
+[[variable_group.members]]
+variable = "invland7"
+value = "7"
+label = "7:e"
+
+[[variable_group.members]]
+variable = "invland8"
+value = "8"
+label = "8:e"
+
+[[variable_group.members]]
+variable = "invland9"
+value = "9"
+label = "9:e"
+
+[[variable_group]]
+register = "sos/lova"
+key = "utvdatum"
+label = "Utvandringsdatum (per utvandringstillfälle)"
+axis = "ordinal"
+
+[[variable_group.members]]
+variable = "utvdatum1"
+value = "1"
+label = "1:a"
+
+[[variable_group.members]]
+variable = "utvdatum2"
+value = "2"
+label = "2:a"
+
+[[variable_group.members]]
+variable = "utvdatum3"
+value = "3"
+label = "3:e"
+
+[[variable_group.members]]
+variable = "utvdatum4"
+value = "4"
+label = "4:e"
+
+[[variable_group.members]]
+variable = "utvdatum5"
+value = "5"
+label = "5:e"
+
+[[variable_group.members]]
+variable = "utvdatum6"
+value = "6"
+label = "6:e"
+
+[[variable_group.members]]
+variable = "utvdatum7"
+value = "7"
+label = "7:e"
+
+[[variable_group.members]]
+variable = "utvdatum8"
+value = "8"
+label = "8:e"
+
+[[variable_group.members]]
+variable = "utvdatum9"
+value = "9"
+label = "9:e"
+
+[[variable_group]]
+register = "sos/lova"
+key = "utvland"
+label = "Utvandringsland (per utvandringstillfälle)"
+axis = "ordinal"
+
+[[variable_group.members]]
+variable = "utvland1"
+value = "1"
+label = "1:a"
+
+[[variable_group.members]]
+variable = "utvland2"
+value = "2"
+label = "2:a"
+
+[[variable_group.members]]
+variable = "utvland3"
+value = "3"
+label = "3:e"
+
+[[variable_group.members]]
+variable = "utvland4"
+value = "4"
+label = "4:e"
+
+[[variable_group.members]]
+variable = "utvland5"
+value = "5"
+label = "5:e"
+
+[[variable_group.members]]
+variable = "utvland6"
+value = "6"
+label = "6:e"
+
+[[variable_group.members]]
+variable = "utvland7"
+value = "7"
+label = "7:e"
+
+[[variable_group.members]]
+variable = "utvland8"
+value = "8"
+label = "8:e"
+
+[[variable_group.members]]
+variable = "utvland9"
+value = "9"
+label = "9:e"
