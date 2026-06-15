@@ -209,6 +209,13 @@ relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement, `touc
 resolution, plus drift alerts (a merged PR that left its issue open; `reg_meta_build` DB
 content changed since the last `reg_meta_build/v*` tag, i.e. a release is pending).
 
+**Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
+ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight
+claim: the sequencing view counts an open PR's `Closes #N` as work-in-progress, so
+concurrent dispatches skip that issue and anything touching its files. The draft PR is
+the marker (no `in-progress` label); merging or closing it clears the claim. For a known
+multi-issue effort, open the drafts up front; open more as new work surfaces.
+
 # Git
 
 - Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a

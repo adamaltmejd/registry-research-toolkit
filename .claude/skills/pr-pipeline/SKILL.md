@@ -1,7 +1,7 @@
 ---
 name: pr-pipeline
-description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), or a feature/problem description>"
-argument-hint: "<issue number(s) or a feature/problem description>"
+description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), a feature/problem description, or `next` to carve a fresh lane from the sequencing projection>"
+argument-hint: "<issue number(s), a description, or `next` for a fresh lane>"
 disable-model-invocation: true
 ---
 
@@ -55,6 +55,15 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 
 ## Step 0 — plan (first, before any coding)
 
+0. **No target given? Carve a fresh lane.** If the request is "what's next" / "the next
+   lane" rather than specific issues or a description, run
+   `uv run --no-project python scripts/plan_sequence.py --lane` first — it lists the
+   ready issues free of in-flight conflicts (grouped by area, with `touches` +
+   must-serialize hints). **Compose a coherent lane from them yourself** (which issues
+   go together and how many is your judgment, not the script's), then treat that as the
+   target. You MUST confirm the chosen lane with the human (step 5) before opening any
+   drafts.
+
 1. **Gather context.** Read the referenced issue(s) **including comments and linked
    relationships** — the parent epic, blockers, and follow-ups (decisions are recorded
    there); the relevant code, `CLAUDE.md`, and the touched `<package>/DESIGN.md`.
@@ -82,17 +91,30 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 
 ## Per-PR pipeline (repeat for each, in dependency order)
 
+**Claim the lane up front.** As soon as Step 0 has shaped the work into PRs, open a
+**draft PR** (`Closes #<its issue(s)>`) for each *known* PR — not just the first — so
+the whole lane is marked in-flight before you implement, and a concurrent dispatch can't
+pick a colliding issue (see CLAUDE.md "Marking work in-flight"). If a new PR becomes
+necessary mid-flight, open its draft the moment you know. Each PR's draft is opened in
+its Step A below; for a multi-PR lane, do all the known ones first.
+
 **A · Implement.** Branch off the remote —
 `git fetch origin main && git checkout -b s/<slug> origin/main` (you may be in a
-worktree with `main` checked out elsewhere, so don't `checkout main`). Dispatch the
-implementer(s) with the scope + the FAST Verify only (lint / format / `ty` / `pytest`);
-the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min merge-gate
-check (Step E). When they report, validate the real diff, `git add -A`, commit, push,
-then open a **draft** PR (`gh pr create --draft --body-file <file>` — an inline `--body`
-heredoc can trip the permission classifier; draft keeps review bots off until
-near-final). Outward-facing `gh` actions (PR create / merge / comment) may be denied by
-the session's permission mode — if one is denied, surface it to the human, don't work
-around it.
+worktree with `main` checked out elsewhere, so don't `checkout main`). **Open the draft
+PR first**, before any code lands: an empty WIP commit
+(`git commit --allow-empty -m "wip: <scope>"`), push, then
+`gh pr create --draft --body-file <file>` whose body carries
+`Closes #<each issue this PR resolves>`. This marks the issue(s) **in-flight**
+(`running` in the sequencing projection) immediately, so a concurrent dispatch skips
+them and anything touching their files — it's how lanes stay non-colliding without a
+separate claim. Draft also keeps review bots off until near-final, and an inline
+`--body` heredoc can trip the permission classifier, so use `--body-file`. Then dispatch
+the implementer(s) with the scope + the FAST Verify only (lint / format / `ty` /
+`pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min
+merge-gate check (Step E). When they report, validate the real diff, `git add -A`,
+commit, and push onto the draft PR's branch. Outward-facing `gh` actions (PR create /
+merge / comment) may be denied by the session's permission mode — if one is denied,
+surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh

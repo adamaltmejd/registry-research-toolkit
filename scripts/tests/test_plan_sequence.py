@@ -209,3 +209,43 @@ def test_render_block_excludes_epics_from_work() -> None:
     ready_section = block.split("### Ready now")[1].split("### Running")[0]
     assert "#328" not in ready_section
     assert "#10" in ready_section
+
+
+# --- dispatch view -------------------------------------------------------------------
+
+
+def test_dispatch_view_groups_ready_by_area_excludes_epics() -> None:
+    recs = [
+        _rec(1, area="reg_webapp", touches=["a.py"]),
+        _rec(2, area="reg_meta_build", touches=["b.py"]),
+        _rec(99, is_epic=True),  # epic excluded
+        _rec(3, open_prs=[5], touches=["c.py"]),  # running, excluded
+    ]
+    view = ps.dispatch_view(recs)
+    assert "reg_webapp (1):" in view and "#1" in view
+    assert "reg_meta_build (1):" in view and "#2" in view
+    assert "#99" not in view and "#3" not in view
+
+
+def test_dispatch_view_holds_issues_touching_in_flight() -> None:
+    recs = [
+        _rec(9, area="reg_webapp", open_prs=[100], touches=["shared.py"]),  # in-flight
+        _rec(1, area="reg_webapp", touches=["shared.py"]),  # conflicts → held
+        _rec(2, area="reg_webapp", touches=["other.py"]),  # free
+    ]
+    view = ps.dispatch_view(recs)
+    assert "Held — touch in-flight work: #1" in view
+    assert "#2" in view.split("Held")[0]  # #2 is a free candidate
+
+
+def test_dispatch_view_flags_must_serialize() -> None:
+    recs = [
+        _rec(1, area="reg_meta_build", touches=["db.py"]),
+        _rec(2, area="reg_meta_build", touches=["db.py"]),
+    ]
+    assert "Must serialize (share files): #1+#2" in ps.dispatch_view(recs)
+
+
+def test_dispatch_view_empty_when_nothing_free() -> None:
+    recs = [_rec(1, open_prs=[1]), _rec(2, blocked_label=True)]
+    assert ps.dispatch_view(recs) == "No ready issues free of in-flight conflicts."
