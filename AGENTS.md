@@ -104,10 +104,10 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
   gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`, which
   validates by default with `corpus=True` (opt out with `--no-validate`).
-- **Type checking**: `uvx --from ty==0.0.44 ty check` (Astral, beta). Blocking in
-  CI; pinned via `uvx` so CI, pre-commit, and cached Codex environments use the
-  same checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a
-  dev dep — keep `pyproject.toml` clean.
+- **Type checking**: `uvx --from ty==0.0.44 ty check` (Astral, beta). Blocking in CI;
+  pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
+  checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
+  keep `pyproject.toml` clean.
 - **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates
   into a single file uploaded to MONA. Each added runtime dep must already be in MONA's
   WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
@@ -191,8 +191,17 @@ reg_meta_build/concept_groups.toml
 ```
 ````
 
-**Epics** — a tracking issue labeled `epic` that owns its children as sub-issues; the
-epic body carries the sequencing/lane reasoning, each child carries its own scope.
+**Epics** — a tracking issue labeled `epic` that owns its children as sub-issues; each
+child carries its own scope.
+
+**Sequencing is generated, not hand-written.** An epic's status — **ready / running /
+blocked / parallel-safe / pending-release** — is rendered by `/plan-sequence`
+(`scripts/plan_sequence.py`) into a `<!-- plan-sequence -->` block in the epic body. To
+see what's ready to pick up and which issues are file-disjoint, **read that block** (or
+re-run `/plan-sequence`); **don't hand-edit inside the markers** — it's overwritten. The
+lane/decision narrative *around* the block is the editorial layer you do edit.
+`/issue-pulse` (run via `/loop`) refreshes the block and reports deltas on a cadence.
+The sequencing epic is #328.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
 `issue-hygiene.yml`) checks these rules read-only: required labels, resolvable
