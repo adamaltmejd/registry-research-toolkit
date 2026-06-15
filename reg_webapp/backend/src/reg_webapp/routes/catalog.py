@@ -556,7 +556,11 @@ def _redirect_or_4xx(
     re-raise on a build-invariant 500) — those never redirect. Returns the redirect
     so the caller can `return` it. Shares the SAME not-found predicate as
     `_http_4xx_from_regmeta` (only `fqid_not_found` redirects; a 422 usage error or a
-    500 build-invariant break NEVER becomes a redirect)."""
+    500 build-invariant break NEVER becomes a redirect).
+
+    SIBLING: the no-period node path in `get_catalog_node` implements the SAME 301
+    successor policy for the already-mapped `HTTPException` layer — keep the two in
+    sync (e.g. a 301→308 switch or a redirect header must land in both)."""
     is_not_found = exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE
     if is_not_found:
         terminal = catalog.resolve_terminal_successor(parsed)
@@ -900,6 +904,8 @@ def get_catalog_node(
             # branch handles both grains with no kind-branching here. A non-404
             # (corrupt-DB / 500) must propagate UNCHANGED — only a genuine
             # `fqid_not_found` (mapped to 404 by `_resolve_to_node`) is a candidate.
+            # SIBLING: `_redirect_or_4xx` is the same 301 successor policy for the
+            # `?period`/sub-endpoint `RegMetaError` layer — keep the two in sync.
             if exc.status_code != 404:
                 raise
             terminal = catalog.resolve_terminal_successor(parsed)
