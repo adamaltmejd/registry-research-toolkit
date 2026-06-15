@@ -51,7 +51,10 @@ from their own warehouses instead of each project going through SCB directly:
 - **swecov** — the subset in the SWECOV research program.
 
 One codebase, three steward-scoped views: same UX, different catalog and order export.
-See [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the runtime steward dispatch.
+See [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the runtime steward dispatch;
+[`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) § "Steward-flavored DB —
+extend-db (#365 PR2)" for the build-side `extend-db` machinery (ships steward-only
+registers/variables on top of a released global DB).
 
 ## What the toolkit is
 

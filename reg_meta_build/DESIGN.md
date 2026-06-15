@@ -57,6 +57,7 @@ and helpers both packages agree on — lives in `reg_meta`.
   | `classifications.py`                                                                             | `reg_meta_build` |
   | `validate.py`                                                                                    | `reg_meta_build` |
   | `dbdiff.py` (content diff harness)                                                               | `reg_meta_build` |
+  | `extend_db.py` (steward-flavored DB overlay, extend-db)                                          | `reg_meta_build` |
   | `sources/` (per-provider IR adapters: scb, sos)                                                  | `reg_meta_build` |
   | `fqid.py`, `catalog.py`, `queries.py`, `doc_queries.py`, `errors.py`, `update.py`, `download.py` | `reg_meta`       |
 
@@ -66,6 +67,7 @@ Top-level commands (no `maintain` subgroup; that group is dissolved):
 
 ```text
 reg-meta-build build-db [--no-validate] [--skip-slugs] ...
+reg-meta-build extend-db --base-db DB --inventory JSON [--steward S] ...
 reg-meta-build build-docs ...
 reg-meta-build seed-slugs [--out-dir DIR] [--propose-panel] ...
 reg-meta-build precheck-slugs ...
@@ -1394,6 +1396,124 @@ Discipline:
 - **Provenance** — every grafted `variable.source_label = "swecov-graft"`, so the SPA
   can badge inventory-sourced variables; `data_type` absent ⇒ NULL state type
   (catalog-only, untyped). No `SCHEMA_VERSION` bump — rows on existing tables.
+
+## Steward-flavored DB — extend-db (#365 PR2)
+
+`extend_db.py` builds a **steward-flavored** `reg_meta.db` by overlaying steward-only
+content onto a *released global* DB. This is the build-side architecture piece for the
+steward track; steward catalogs (`stewards/swecov/`) and deploy are later (#365 PR3/PR4,
+see REFACTOR_SPEC.md §11).
+
+### Scope model
+
+The global catalog covers SCB/SOS plus any new *global* providers curated into
+`input_data`. A steward with additional information about a global provider enriches the
+*global* build via the shipped PR1 mechanisms (`delivery_enrichment.py` for descriptions
+and aliases, `variable_grafts.py` for shared-column grafts) — "scope follows what a fact
+is about." `extend-db` carries ONLY content that is steward-private and has no global
+home: a new provider (e.g. a bank like Swedbank) and the registers/variants/variables
+they deliver. Enrichment of existing global entities is explicitly NOT its job.
+
+The untracked generator (`input_data/swecov/build_catalog.py`) produces the inventory
+JSON. The PR ships zero real steward content — the synthetic fixture proof only; real
+content is generated outside the repo.
+
+### Mechanics
+
+`extend_db` copies the released global DB with `shutil.copy2` (the base is a read-only
+input, never mutated), then runs an insert-only overlay on the copy:
+
+1. **INSERT** steward providers (idempotent — slug/name mismatch fails like
+   `seed_providers`).
+2. **INSERT** the steward core graph (registers → variants → variables → states + the
+   per-state alias row). All ids are deterministically minted via `id.mint()` in the
+   high band `[2^62, 2^63)`. `variable.source_label` is set from the inventory's
+   `source_label` field for provenance. Each state's delivery column also inserts a
+   `variable_alias` row, preserving the `variable_alias ⊇ state delivery columns`
+   invariant.
+3. **Slug** the new rows using `populate_slugs(strict=False)` for registers/variants
+   (the steward TOML covers only the inserted rows; global rows keep their published
+   slugs untouched) and `populate_variable_slugs(incremental=True)` for variables
+   (derives only NULL-slug variables, uniquifying against the already-published global
+   slugs). `_assert_steward_rows_slugged` then guards that no steward register or
+   variant shipped without a slug (an unaddressable FQID).
+4. **FTS rebuild** — `register_fts` and `variable_fts` are cleared with
+   `INSERT INTO <fts>(<fts>) VALUES('delete-all')` and repopulated. `value_code_fts` is
+   deliberately skipped (`_populate_fts(include_value_code=False)`) — the overlay
+   inserts no `value_code` rows, so the index copied from the base DB is already in
+   sync; rebuilding \~4M rows would be pure waste.
+5. **Flavored validate** via `validate_built_db(flavored=True)` as the
+   `pre_rename_hook`: the full structural suite runs (corpus floors stay off — the
+   flavor has a steward tail, not SCB/SOS bulk), but `_check_minted_id_bands` is
+   tightened to require every non-SCB provider's ids in `[2^62, 2^63)`.
+6. **Atomic rotate + rename** into `<db_dir>/reg_meta.db` (same `rotate_db_to_prev`
+   discipline as `build-db`). No VACUUM — the overlay is insert-only; nothing is freed.
+
+No `SCHEMA_VERSION` bump — rows on existing tables only.
+
+### Inventory JSON contract
+
+`extend_db` reads a single JSON file the generator produces:
+
+```json
+{
+  "steward": "swecov",
+  "source_label": "swecov-inventory-2025-12-11",
+  "providers": [
+    {"slug": "swedbank", "name": "Swedbank AB"}
+  ],
+  "registers": [
+    {
+      "provider": "swedbank", "key": "transaktioner",
+      "name": "Transaktioner", "purpose": null, "description": null,
+      "variants": [
+        {
+          "key": "_default", "name": "Transaktioner", "description": null,
+          "variables": [
+            {
+              "key": "belopp", "name": "Belopp", "definition": null,
+              "description": "Transaktionsbelopp i SEK.",
+              "column": "BELOPP", "data_type": "float",
+              "is_identifier": false, "is_sensitive": false,
+              "valid_from": null, "valid_to": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Top-level keys: `steward` and `source_label` (both required strings); `providers` and
+`registers` (both optional arrays). Any other top-level key is a structural defect.
+Per-level key sets are closed (`_reject_unknown_keys`); a variable `key` must not
+contain `.` (it becomes `variable.provider_key`, whose slug source-ID grammar uses `.`
+as a segment separator). An undeclared provider on a register, an inverted validity
+window, or `base == output` are all `EXIT_CONFIG` structural errors — the overlay's
+content is steward-only, so there is no lenient `unresolved` count.
+
+### Per-steward slug snapshot
+
+The steward slug dir lives at `fqid_slugs/<steward>/` (e.g. `fqid_slugs/swecov/`),
+parallel to the global `fqid_slugs/` but consumed by `extend-db` rather than `build-db`.
+It uses the same grow-only snapshot machinery as the global dir (`diff_snapshot` /
+`precheck-slugs --update-snapshot`) and the same `UNFROZEN` escape hatch. Only the
+steward-inserted rows are slugged here; global register/variant slugs come from the
+global build and are never touched.
+
+### Supporting seams
+
+- **`populate_variable_slugs(incremental=True)`** — restricts the per-provider
+  `variables` query to `WHERE v.slug IS NULL` (published global slugs are never
+  re-derived) and seeds each register's `used` set with its existing non-NULL slugs (a
+  new auto slug gets a `-N` suffix rather than colliding with a published global FQID).
+  The default `incremental=False` leaves the global build path byte-identical.
+- **`validate_built_db(flavored=True)`** — runs the full structural suite plus the
+  tightened minted-id band check (every non-SCB provider must be high-band). Independent
+  of `corpus`; a flavor build never sets `corpus=True`.
+- **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
+  full build keeps `include_value_code=True` (the default), so its call is unchanged.
 
 ## Thematic tags (#311)
 
