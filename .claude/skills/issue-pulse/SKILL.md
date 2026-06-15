@@ -17,15 +17,20 @@ reflex; this is the heartbeat and the push.
 
 ## The tick
 
-1. **Refresh the projection** — bounded and reversible (the splice overwrites only the
-   marked region):
+`--epic <N>` defaults to `328`; pass the skill's argument through.
+
+1. **Refresh the projection + capture the delta** — `--write` computes the status delta
+   against the epic's *current* block (i.e. the last tick) **before** splicing, so this
+   one call both updates the body and tells you what changed:
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py --write 328
+   uv run --no-project python scripts/plan_sequence.py --epic 328 --write
    ```
 
-   - `Spliced …` → the projection **changed** since the last tick.
+   - `Updated #328` + a delta (`newly ready: #…`, `left blocked: #…`) → it **changed**.
    - `already up to date` → nothing changed; this tick is quiet.
+
+   (The splice overwrites only the marked region — bounded and reversible.)
 
 2. **Drift + release check** — read-only:
 
@@ -33,15 +38,16 @@ reflex; this is the heartbeat and the push.
    uv run --no-project python scripts/check_issue_hygiene.py --all
    ```
 
-3. **Surface — emphasize DELTAS, not the whole state.** Report only:
-   - if the projection changed: what is newly **ready** / newly **unblocked** / newly
-     **running**;
+3. **Surface the DELTAS, not the whole state.** Report only:
+   - the status delta from step 1 (newly ready / newly unblocked / newly running, or
+     what left a section);
    - **pending release** (merged-but-unreleased `reg_meta_build`);
    - **decisions owed** (open questions gating downstream work);
    - **drift** from the hygiene check (missing labels, stale `blocked`, done-but-open,
      half-wired sub-issues).
 
-   If nothing changed and there is no drift, say so in one line and stop — no noise.
+   If step 1 said `already up to date` and there is no drift, say so in one line and
+   stop — no noise.
 
 4. **Propose fixes, tiered by risk:**
    - **Auto (safe):** the projection refresh in step 1 is already applied.

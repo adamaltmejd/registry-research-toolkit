@@ -181,6 +181,25 @@ def test_render_block_orders_sections_by_number() -> None:
     assert ps.render_block(recs, None) == ps.render_block(list(reversed(recs)), None)
 
 
+def test_extract_block() -> None:
+    body = f"intro\n{ps.START}\nx\n{ps.END}\nouter"
+    assert ps.extract_block(body) == f"{ps.START}\nx\n{ps.END}"
+    assert ps.extract_block("no markers here") == ""
+
+
+def test_diff_report_added_and_removed() -> None:
+    old = f"{ps.START}\n### Ready now\n- #1 a\n### Running\n_none_\n### Blocked\n- #3 c ← x\n{ps.END}"
+    new = f"{ps.START}\n### Ready now\n- #1 a\n- #2 b\n### Running\n_none_\n### Blocked\n_none_\n{ps.END}"
+    report = ps.diff_report(old, new)
+    assert "newly ready: #2" in report
+    assert "left blocked: #3" in report
+
+
+def test_diff_report_no_change() -> None:
+    block = ps.render_block([_rec(1, area="x")], None)
+    assert ps.diff_report(block, block) == "no status changes"
+
+
 def test_render_block_excludes_epics_from_work() -> None:
     recs = [_rec(328, is_epic=True), _rec(10, area="reg_meta")]
     block = ps.render_block(recs, None)

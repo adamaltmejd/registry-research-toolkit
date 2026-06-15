@@ -35,25 +35,27 @@ re-running with no state change leaves the body byte-identical (clean diffs).
 
 ## Steps
 
+`--epic <N>` selects the target (default `328`); pass the skill's argument through.
+
 1. **Preview (read-only):**
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py
+   uv run --no-project python scripts/plan_sequence.py --epic <N>
    ```
 
    Read the block. If you want to change the *narrative* (lane reasoning, decisions
    owed, recommended start), edit that in the epic body **outside** the markers — the
    script never touches it.
 
-2. **Publish** — splice the generated block into the sequencing epic (default `#328`):
+2. **Publish** — splice the generated block into the epic:
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py --write 328
+   uv run --no-project python scripts/plan_sequence.py --epic <N> --write
    ```
 
-   This replaces only the marked region (or appends it once if the markers are absent).
-   It is a mutating `gh issue edit` — show the user the rendered block (step 1) and get
-   a go-ahead before `--write`.
+   This replaces only the marked region (or appends it once if the markers are absent),
+   and prints the status delta vs the previous block. It is a mutating `gh issue edit` —
+   show the user the rendered block (step 1) and get a go-ahead before `--write`.
 
 ## Notes
 

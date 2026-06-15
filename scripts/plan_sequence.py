@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import importlib.util
+import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -271,13 +272,58 @@ def build_debt_line() -> str | None:
     return debts[0] if debts else None
 
 
+# --- delta (for the /loop heartbeat) -------------------------------------------------
+
+_SECTIONS = ("Ready now", "Running", "Blocked")
+_SECTION_LABEL = {"Ready now": "ready", "Running": "running", "Blocked": "blocked"}
+
+
+def extract_block(body: str) -> str:
+    """The current generated block in `body` (between the markers), or '' if absent."""
+    start, end = body.find(START), body.find(END)
+    return body[start : end + len(END)] if (start != -1 and end > start) else ""
+
+
+def _section_numbers(block: str) -> dict[str, set[int]]:
+    by_section: dict[str, set[int]] = {s: set() for s in _SECTIONS}
+    current: str | None = None
+    for line in block.splitlines():
+        header = re.match(r"### (.+)", line)
+        if header:
+            current = header.group(1).strip()
+        elif current in by_section:
+            item = re.match(r"- #(\d+)\b", line)
+            if item:
+                by_section[current].add(int(item.group(1)))
+    return by_section
+
+
+def diff_report(old_block: str, new_block: str) -> str:
+    """Per-section issue-number delta between two rendered blocks — the tick's signal."""
+    old, new = _section_numbers(old_block), _section_numbers(new_block)
+    lines: list[str] = []
+    for section in _SECTIONS:
+        label = _SECTION_LABEL[section]
+        added = sorted(new[section] - old[section])
+        gone = sorted(old[section] - new[section])
+        if added:
+            lines.append(f"newly {label}: " + ", ".join(f"#{n}" for n in added))
+        if gone:
+            lines.append(f"left {label}: " + ", ".join(f"#{n}" for n in gone))
+    return "\n".join(lines) if lines else "no status changes"
+
+
 # --- main ----------------------------------------------------------------------------
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--write", type=int, metavar="EPIC",
-                    help="splice the block into epic <EPIC>'s body (default: print)")  # fmt: skip
+    ap.add_argument("--epic", type=int, default=328,
+                    help="the epic issue to render for / write to (default: 328)")  # fmt: skip
+    ap.add_argument("--write", action="store_true",
+                    help="splice the block into the epic's body (default: print)")  # fmt: skip
+    ap.add_argument("--diff", action="store_true",
+                    help="print the status delta vs the epic's current block (no write)")  # fmt: skip
     args = ap.parse_args()
 
     owner, name = _h.repo_owner_name()
@@ -286,24 +332,28 @@ def main() -> int:
     recs = build_records(_h.fetch_open_issues(), open_numbers, parent_of)
     block = render_block(recs, build_debt_line())
 
-    if args.write is None:
+    if not args.write and not args.diff:
         print(block)
         return 0
 
-    current = (
-        gh_json(["issue", "view", str(args.write), "--json", "body"])["body"] or ""
-    )
+    current = gh_json(["issue", "view", str(args.epic), "--json", "body"])["body"] or ""
+    delta = diff_report(extract_block(current), block)  # computed before any write
+
+    if args.diff:
+        print(delta)
+        return 0
+
     new_body = splice_block(current, block)
     if new_body == current:
-        print(f"#{args.write} already up to date.")
+        print(f"#{args.epic} already up to date.")
         return 0
     subprocess.run(
-        ["gh", "issue", "edit", str(args.write), "--body-file", "-"],
+        ["gh", "issue", "edit", str(args.epic), "--body-file", "-"],
         input=new_body,
         text=True,
         check=True,
     )
-    print(f"Spliced the sequencing block into #{args.write}.")
+    print(f"Updated #{args.epic}.\n{delta}")
     return 0
 
 
