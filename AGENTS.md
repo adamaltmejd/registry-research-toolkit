@@ -220,8 +220,8 @@ the ranking into a second generated block — `<!-- plan-lanes -->`, alongside
 `/pr-pipeline` only reads). Staleness is deterministic: the lanes block stamps the
 ready/running sets it was ranked against, and `--lanes-stale` compares them to the live
 state — necessary because once CI event-refreshes the projection, the projection delta
-no longer signals that the ready set moved (the refresh absorbed it). Same edit rule as
-the projection: **don't hand-edit inside the markers** — it's overwritten.
+no longer signals that the ready/running sets moved (the refresh absorbed it). Same edit
+rule as the projection: **don't hand-edit inside the markers** — it's overwritten.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
 `issue-hygiene.yml`, **read-only** — `issues:read`) checks these rules: required labels,

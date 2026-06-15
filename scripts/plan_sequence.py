@@ -21,7 +21,8 @@ lanes` reads the agent's text from stdin, frames it (stamping a machine-readable
 of the ready/running sets it was ranked against), and splices it as its own region.
 `--lanes-stale` reports whether that basis still matches the live state — the trigger the
 `/loop` heartbeat keys off, since once CI event-refreshes the *projection* block, the
-projection delta no longer signals "the ready set moved" (the refresh absorbed it).
+projection delta no longer signals that the ready/running sets moved (the refresh
+absorbed it).
 
 The hardened parsers + gh fetchers are reused from the sibling validator
 (check_issue_hygiene.py); if a third consumer appears, lift them into a shared module.
@@ -358,6 +359,19 @@ def lanes_are_stale(block: str, ready: set[int], running: set[int]) -> bool:
     return basis is None or basis != (set(ready), set(running))
 
 
+def reject_lanes_stdin(content: str) -> str | None:
+    """Why agent-supplied lanes `content` can't be spliced, or None if it's fine.
+
+    A literal region marker inside the content would make a later splice mis-detect the
+    region (truncate/orphan it), so refuse rather than corrupt the epic body.
+    """
+    if not content.strip():
+        return "empty stdin (nothing to splice)"
+    if LANES_START in content or LANES_END in content:
+        return "stdin contains a plan-lanes marker; refusing to splice"
+    return None
+
+
 def render_lanes_block(content: str, basis: str = "") -> str:
     """Frame agent-supplied ranked-lane text as the epic's plan-lanes block.
 
@@ -477,8 +491,8 @@ def main() -> int:
 
     if args.write_lanes:
         content = sys.stdin.read()
-        if not content.strip():
-            print("--write-lanes: empty stdin (nothing to splice)", file=sys.stderr)
+        if (why := reject_lanes_stdin(content)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
             return 2
         block = render_lanes_block(content, basis_comment(ready_nums, running_nums))
         current = (

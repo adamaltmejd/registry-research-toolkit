@@ -197,6 +197,15 @@ def test_parse_basis_absent_is_none() -> None:
     assert ps.parse_basis(ps.render_lanes_block("no basis here")) is None
 
 
+def test_reject_lanes_stdin() -> None:
+    assert ps.reject_lanes_stdin("  \n\t") is not None  # empty/whitespace
+    assert (
+        ps.reject_lanes_stdin(f"prose {ps.LANES_END} more") is not None
+    )  # marker leak
+    assert ps.reject_lanes_stdin(f"{ps.LANES_START}\nx") is not None
+    assert ps.reject_lanes_stdin("1. lane A — #1") is None  # clean content passes
+
+
 def test_lanes_are_stale_against_live_sets() -> None:
     fresh = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}))
     assert not ps.lanes_are_stale(fresh, {1, 2}, {3})  # basis matches → fresh

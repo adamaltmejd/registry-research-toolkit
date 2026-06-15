@@ -105,8 +105,10 @@ run them and report the result.
 ## Notes
 
 - Self-paced `/loop` keys cadence to activity — wake often when PRs are in flight, sleep
-  long when quiet. The projection's deterministic, timestamp-free output makes "did
-  anything change?" the byte-diff in step 1's message.
+  long when quiet. CI keeps the projection fresh on events, so the heartbeat's "is there
+  anything to do?" is the **`--lanes-stale`** check in step 3, not step 1's byte-diff
+  (which CI usually already absorbed).
 - The write mandate is narrow: **auto-refresh the two generated blocks only** — the
-  projection (step 1) and, on a material tick, the lanes (step 3). Everything structural
-  (closing issues, labels, sub-issue wiring) stays propose-not-apply.
+  projection (step 1, a safety net over CI) and, when the lanes go stale, the lanes
+  (step 3). Everything structural (closing issues, labels, sub-issue wiring) stays
+  propose-not-apply.
