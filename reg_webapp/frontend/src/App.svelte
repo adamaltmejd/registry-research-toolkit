@@ -80,11 +80,6 @@ const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
         {#if projectStore.dirty}<span class="nav-dirty" title="Unsaved changes">●</span>{/if}
       </a>
     </nav>
-    {#if context}
-      <div class="build muted" title="reg_meta DB build / installed versions">
-        schema {context.reg_meta.schema_version} · webapp {context.webapp.version}
-      </div>
-    {/if}
     <!-- Full-width search row: the header wraps, so the omnibox sits on its own
          line below brand/nav and stretches across (#379). Inside the use:link
          div, so result-page links it routes to are interceptable. -->
@@ -137,7 +132,7 @@ const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
 
   <!-- Site-wide citation vintage (#355 decision 2): renders on every route so a
        reader citing any catalog node can see which reg_meta build it reflects.
-       Guarded on `context` like the header `.build` chip. -->
+       Guarded on `context` (rendered only once the deployment context has loaded). -->
   {#if context}
     <footer class="vintage muted">
       as of reg_meta v{regMetaVersion} · schema {context.reg_meta.schema_version} · built {buildDate}
@@ -234,9 +229,6 @@ const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
     color: var(--level-warning);
     font-size: 0.7rem;
     vertical-align: super;
-  }
-  .build {
-    font-size: 0.8rem;
   }
   .banner {
     padding: 0.75rem 1rem;
