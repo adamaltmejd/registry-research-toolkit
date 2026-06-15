@@ -68,11 +68,14 @@ serialize across lanes) — never call them parallel-safe.
      NOT parallel — same lane or an explicit "run #A before #B."
    - Keep lanes small and coherent — don't bundle unrelated areas just to fill one.
 
-4. **Rank.** No priority labels exist, so rank by, in order: **unblocking power** (a
-   lane that clears a blocker gating downstream work ranks first), then **maintainer
-   signal** from the epic narrative / open-question threads, then **smallest coherent**
-   (fastest to land, frees its files). Note where the epic prose already names a
-   priority — defer to it.
+4. **Rank.** In order: **priority bucket** first — `--lane` annotates each candidate's
+   `priority:*` label (`[high]`/`[low]`; unmarked = normal) and lists the buckets under
+   "Priority (rank by this first)". A lane's bucket is its highest-priority member: any
+   `[high]` member ranks the lane above all-normal lanes, `[low]`-only lanes rank last.
+   Within a bucket, break ties by **unblocking power** (a lane that clears a blocker
+   gating downstream work ranks first), then **maintainer signal** from the epic
+   narrative / open-question threads, then **smallest coherent** (fastest to land, frees
+   its files). Where the epic prose names a finer priority than the labels, defer to it.
 
 ## Return format
 
@@ -108,5 +111,7 @@ what you just read; callers re-rank live rather than trusting a stale copy.
   just reads the return value.
 - **Trust the floor on conflicts, augment on everything else.** Never downgrade a
   script-declared must-serialize to parallel-safe.
-- **Don't invent priority.** If nothing signals priority, say the ranking is by
-  unblocking-power + size and leave the final pick to the caller.
+- **Priority labels are the primary key; don't invent finer priority.** Rank by the
+  `priority:*` buckets the floor reports, then unblocking-power + size. If no issue is
+  labelled, every lane is normal — fall back to unblocking-power + size and leave the
+  final pick to the caller. Don't manufacture a priority the labels/prose don't state.

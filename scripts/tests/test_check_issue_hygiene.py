@@ -146,6 +146,21 @@ def test_two_area_labels_error() -> None:
     assert _has(items, "ERROR", "area label")
 
 
+def test_multiple_priority_labels_error() -> None:
+    items = _check(labels=("reg_meta", "bug", "priority:high", "priority:low"))
+    assert _has(items, "ERROR", "priority label")
+
+
+def test_single_priority_label_ok() -> None:
+    items = _check(labels=("reg_meta", "bug", "priority:high"))
+    assert not _has(items, "ERROR", "priority label")
+
+
+def test_no_priority_label_ok() -> None:
+    items = _check(labels=("reg_meta", "bug"))
+    assert not _has(items, "ERROR", "priority label")
+
+
 def test_dangling_relationship_error() -> None:
     items = _check(labels=("reg_meta", "bug"), body="Depends on #999", known={1})
     assert _has(items, "ERROR", "#999")
@@ -240,7 +255,7 @@ def test_doc_touches_example_parses() -> None:
 
 
 def test_area_and_type_labels_documented() -> None:
-    for label in h.AREA_LABELS | h.TYPE_LABELS:
+    for label in h.AREA_LABELS | h.TYPE_LABELS | h.PRIORITY_LABELS:
         assert label in _AGENTS, f"label '{label}' missing from AGENTS.md"
 
 

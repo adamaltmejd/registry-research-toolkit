@@ -33,6 +33,7 @@ def _rec(
     touches: list[str] | None = None,
     open_blockers: list[int] | None = None,
     open_prs: list[int] | None = None,
+    priority: str = "normal",
 ):
     rec = ps.Rec(
         number=number,
@@ -44,6 +45,7 @@ def _rec(
         parent=None,
         open_blockers=open_blockers or [],
         open_prs=open_prs or [],
+        priority=priority,
     )
     rec.status = ps.classify(rec)
     return rec
@@ -182,19 +184,65 @@ def test_render_lanes_block_frames_and_strips() -> None:
 
 
 def test_basis_comment_round_trips_through_parse() -> None:
-    block = ps.render_lanes_block("lanes", ps.basis_comment({3, 1}, {2}))
-    assert ps.parse_basis(block) == ({1, 3}, {2})  # sorted in, set out
+    block = ps.render_lanes_block("lanes", ps.basis_comment({3, 1}, {2}, "abc123"))
+    assert ps.parse_basis(block) == ({1, 3}, {2}, "abc123")  # sorted in, set out
     # Empty sets are representable (and distinct from "no basis").
     assert ps.parse_basis(
-        ps.render_lanes_block("x", ps.basis_comment(set(), set()))
+        ps.render_lanes_block("x", ps.basis_comment(set(), set(), "deadbeef"))
     ) == (
         set(),
         set(),
+        "deadbeef",
     )
 
 
 def test_parse_basis_absent_is_none() -> None:
     assert ps.parse_basis(ps.render_lanes_block("no basis here")) is None
+
+
+def test_parse_basis_pre_signature_reads_empty_sig() -> None:
+    # A basis written before the `sig` field existed must still parse — with sig="", which
+    # differs from any live signature, so the block reads stale and self-upgrades once.
+    legacy = ps.render_lanes_block(
+        "lanes", "<!-- plan-lanes:basis ready=1,2 running=3 -->"
+    )
+    assert ps.parse_basis(legacy) == ({1, 2}, {3}, "")
+    assert ps.lanes_are_stale(legacy, {1, 2}, {3}, "livesig")  # sig differs → stale
+
+
+# --- lanes signature (FU-2) ----------------------------------------------------------
+
+
+def test_lanes_signature_is_stable_and_order_independent() -> None:
+    a = _rec(1, touches=["x.py"], priority="high")
+    b = _rec(2, touches=["y.py"], open_blockers=[9])
+    assert ps.lanes_signature([a, b]) == ps.lanes_signature([b, a])  # sorted internally
+    assert ps.lanes_signature([a, b]) == ps.lanes_signature([a, b])  # deterministic
+
+
+def test_lanes_signature_changes_on_touches_blockers_or_priority() -> None:
+    base = ps.lanes_signature([_rec(1, touches=["x.py"])])
+    assert base != ps.lanes_signature([_rec(1, touches=["y.py"])])  # touches edit
+    assert base != ps.lanes_signature([_rec(1, touches=["x.py"], open_blockers=[5])])
+    assert base != ps.lanes_signature([_rec(1, touches=["x.py"], priority="high")])
+
+
+def test_signature_flips_staleness_on_touches_edit_no_section_move() -> None:
+    # The FU-2 fix: a `touches` edit that moves no issue between sections must still flip
+    # staleness, where a membership-only basis (same ready/running sets) would miss it.
+    ready, running = {1}, set()
+    old_sig = ps.lanes_signature([_rec(1, touches=["a.py"])])
+    new_sig = ps.lanes_signature([_rec(1, touches=["a.py", "b.py"])])
+    block = ps.render_lanes_block("lanes", ps.basis_comment(ready, running, old_sig))
+    assert not ps.lanes_are_stale(block, ready, running, old_sig)  # unchanged → fresh
+    assert ps.lanes_are_stale(block, ready, running, new_sig)  # touches moved → stale
+
+
+def test_membership_only_change_still_trips_via_sets() -> None:
+    # Sets remain the primary signal: a membership move trips staleness even if (by some
+    # coincidence) the signature matched — the basis compares the sets too.
+    block = ps.render_lanes_block("lanes", ps.basis_comment({1}, set(), "sig"))
+    assert ps.lanes_are_stale(block, {1, 2}, set(), "sig")  # ready grew → stale
 
 
 def test_reject_lanes_stdin() -> None:
@@ -207,11 +255,12 @@ def test_reject_lanes_stdin() -> None:
 
 
 def test_lanes_are_stale_against_live_sets() -> None:
-    fresh = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}))
-    assert not ps.lanes_are_stale(fresh, {1, 2}, {3})  # basis matches → fresh
-    assert ps.lanes_are_stale(fresh, {1, 2, 4}, {3})  # ready moved → stale
-    assert ps.lanes_are_stale(fresh, {1, 2}, set())  # running cleared → stale
-    assert ps.lanes_are_stale("", {1}, set())  # no block at all → stale
+    fresh = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig"))
+    assert not ps.lanes_are_stale(fresh, {1, 2}, {3}, "sig")  # basis matches → fresh
+    assert ps.lanes_are_stale(fresh, {1, 2, 4}, {3}, "sig")  # ready moved → stale
+    assert ps.lanes_are_stale(fresh, {1, 2}, set(), "sig")  # running cleared → stale
+    assert ps.lanes_are_stale(fresh, {1, 2}, {3}, "other")  # sig moved → stale
+    assert ps.lanes_are_stale("", {1}, set(), "sig")  # no block at all → stale
 
 
 # --- render --------------------------------------------------------------------------
@@ -307,3 +356,36 @@ def test_dispatch_view_flags_must_serialize() -> None:
 def test_dispatch_view_empty_when_nothing_free() -> None:
     recs = [_rec(1, open_prs=[1]), _rec(2, blocked_label=True)]
     assert ps.dispatch_view(recs) == "No ready issues free of in-flight conflicts."
+
+
+# --- priority (FU-1) -----------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("labels", "expected"),
+    [
+        (set(), "normal"),
+        ({"priority:high"}, "high"),
+        ({"priority:low"}, "low"),
+        (
+            {"priority:high", "priority:low"},
+            "high",
+        ),  # both → high wins (hygiene flags it)
+        ({"reg_meta", "bug"}, "normal"),  # unrelated labels
+    ],
+)
+def test_priority_of(labels: set[str], expected: str) -> None:
+    assert ps.priority_of(labels) == expected
+
+
+def test_dispatch_view_annotates_priority_and_summarizes() -> None:
+    recs = [
+        _rec(1, area="reg_meta", touches=["a.py"], priority="high"),
+        _rec(2, area="reg_meta", touches=["b.py"], priority="low"),
+        _rec(3, area="reg_meta", touches=["c.py"]),  # normal — no tag
+    ]
+    view = ps.dispatch_view(recs)
+    assert "[high] " in view and "[low] " in view
+    assert "#3 t" in view and "[normal]" not in view  # normal stays quiet
+    # The explicit ranking-hint summary lists the non-normal buckets.
+    assert "Priority (rank by this first): high: #1; low: #2" in view

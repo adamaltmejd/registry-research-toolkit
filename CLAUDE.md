@@ -159,6 +159,12 @@ issue is part of a tracked epic.
 - Lanes (the ad-hoc S/L/G/… streams) live in the epic/tracker prose, **not** as labels —
   they churn too fast to maintain as a taxonomy.
 
+**Optional** — `priority:high` / `priority:low` (absence = normal; **at most one**). The
+maintainer's "what's most important next" signal: `/plan-lanes` ranks by priority bucket
+**first** (unblocking-power breaks ties within a bucket). Coarse and stable enough to be
+a label — unlike the churny S/L/G lanes above — so it's machine-sortable, not buried in
+prose. Hygiene flags more than one priority label.
+
 **Body** — use the house skeleton, dropping any section that doesn't apply (don't pad):
 `Problem`/`Context` · `Approach` · `Scope` (In / Out) · `Relationships` · `Touches` ·
 `Open questions` · `Non-goals`. Worked examples and concrete file paths earn their
@@ -201,36 +207,41 @@ see what's ready to pick up and which issues are file-disjoint, **read that bloc
 re-run `/plan-sequence`); **don't hand-edit inside the markers** — it's overwritten. The
 lane/decision narrative *around* the block is the editorial layer you do edit. The block
 is **event-refreshed by CI** — `plan-sequence.yml` runs `--write` on every issue/PR
-event, so it tracks reality without waiting for a human or the loop. `/issue-pulse` (run
-via `/loop`) re-runs the refresh as an idempotent safety net and reports deltas. The
+event (plus a daily cron safety-net), so it tracks reality without waiting for a human
+or the loop. CI + cron are the **sole writers** of this block; `/issue-pulse` (run via
+`/loop`) reads it read-only (`--tick`) and reports deltas, but no longer writes it. The
 sequencing epic is #328.
 
 **Lanes are ranked agentically.** `/plan-sequence` gives only the deterministic *floor*
 — file-disjoint groups by `touches` set-intersection. **`/plan-lanes`** is the judgment
 layer on top: it reads the issue bodies to fold in what set-intersection can't see
 (semantic conflicts with no file overlap, implicit blockers, what coheres into one
-PR-stream), then returns **ranked, parallel-safe candidate lanes** as markdown. It runs
-**forked** (its own context), so callers get the ranked lanes back without the
-corpus-reading bloating theirs: `/issue-pulse` re-ranks when the lanes go **stale**;
-`/pr-pipeline next` consumes the ranking to pick a lane instead of composing one from
-raw candidates; you can run it on demand. `/plan-lanes` is itself **read-only** — it
-ranks and returns, never editing issues or opening PRs. `/issue-pulse` then **persists**
-the ranking into a second generated block — `<!-- plan-lanes -->`, alongside
-`<!-- plan-sequence -->` — via `plan_sequence.py --write-lanes` (single writer;
-`/pr-pipeline` only reads). Staleness is deterministic: the lanes block stamps the
-ready/running sets it was ranked against, and `--lanes-stale` compares them to the live
-state — necessary because once CI event-refreshes the projection, the projection delta
-no longer signals that the ready/running sets moved (the refresh absorbed it). Same edit
-rule as the projection: **don't hand-edit inside the markers** — it's overwritten.
+PR-stream), then returns **ranked, parallel-safe candidate lanes** as markdown — ranked
+by `priority:*` bucket first, then unblocking-power + size. It runs **forked** (its own
+context), so callers get the ranked lanes back without the corpus-reading bloating
+theirs: `/issue-pulse` re-ranks when the lanes go **stale**; `/pr-pipeline next`
+consumes the ranking to pick a lane instead of composing one from raw candidates; you
+can run it on demand. `/plan-lanes` is itself **read-only** — it ranks and returns,
+never editing issues or opening PRs. `/issue-pulse` then **persists** the ranking into a
+second generated block — `<!-- plan-lanes -->`, alongside `<!-- plan-sequence -->` — via
+`plan_sequence.py --write-lanes` (single writer; `/pr-pipeline` only reads). Staleness
+is deterministic: the lanes block stamps the ready/running sets it was ranked against
+**plus a signature over those issues' `touches`/blockers/`priority`**, and
+`--lanes-stale` compares both to the live state — necessary because once CI
+event-refreshes the projection, the projection delta no longer signals that the work
+moved (the refresh absorbed it). The signature extends staleness past membership: a
+`touches`/`Relationships`/`priority` edit that re-shapes the lane graph without moving
+an issue between sections still re-ranks. Same edit rule as the projection: **don't
+hand-edit inside the markers** — it's overwritten.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
 `issue-hygiene.yml`, **read-only** — `issues:read`) checks these rules: required labels,
-resolvable relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement,
-`touches`-glob resolution, plus drift alerts (a merged PR that left its issue open;
-`reg_meta_build` DB content changed since the last `reg_meta_build/v*` tag, i.e. a
-release is pending). The write-capable refresh lives in a **separate** workflow
-(`plan-sequence.yml`, `issues:write`) so the hygiene job's read-only guarantee stays
-intact.
+at most one `priority:*` label, resolvable relationship targets, `blocked`-label /
+sub-issue ↔ `Part of` agreement, `touches`-glob resolution, plus drift alerts (a merged
+PR that left its issue open; `reg_meta_build` DB content changed since the last
+`reg_meta_build/v*` tag, i.e. a release is pending). The write-capable refresh lives in
+a **separate** workflow (`plan-sequence.yml`, `issues:write`) so the hygiene job's
+read-only guarantee stays intact.
 
 **Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
 ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight
