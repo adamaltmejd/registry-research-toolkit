@@ -541,6 +541,38 @@ def _http_4xx_from_regmeta(exc: RegMetaError) -> None:
     raise exc
 
 
+def _redirect_or_4xx(
+    catalog: Catalog,
+    parsed: Fqid,
+    exc: RegMetaError,
+    request: Request,
+    suffix: str = "",
+) -> RedirectResponse:
+    """On a `fqid_not_found` 404 for a (dead/renamed) binding, walk to the TERMINAL
+    successor and 301-redirect — preserving the query string (so `?period=2019` /
+    `?variant` ride along) and the sub-endpoint `suffix` (e.g. `/states`), so a cited
+    dead-slug URL stays alive regardless of query or sub-resource (#411). Falls back
+    to `_http_4xx_from_regmeta` (422 on usage, 404 when there is no successor edge,
+    re-raise on a build-invariant 500) — those never redirect. Returns the redirect
+    so the caller can `return` it. Shares the SAME not-found predicate as
+    `_http_4xx_from_regmeta` (only `fqid_not_found` redirects; a 422 usage error or a
+    500 build-invariant break NEVER becomes a redirect).
+
+    SIBLING: the no-period node path in `get_catalog_node` implements the SAME 301
+    successor policy for the already-mapped `HTTPException` layer — keep the two in
+    sync (e.g. a 301→308 switch or a redirect header must land in both)."""
+    is_not_found = exc.exit_code == EXIT_NOT_FOUND and exc.code == _FQID_NOT_FOUND_CODE
+    if is_not_found:
+        terminal = catalog.resolve_terminal_successor(parsed)
+        if terminal is not None:
+            target = f"{_catalog_url(terminal)}{suffix}"
+            if request.url.query:
+                target = f"{target}?{request.url.query}"
+            return RedirectResponse(target, status_code=301)
+    _http_4xx_from_regmeta(exc)  # raises 422 / 404 / re-raises 500
+    raise exc  # unreachable — _http_4xx_from_regmeta always raises (satisfies the type)
+
+
 def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
     """Parse a validated path into an Fqid, mapping a grammar/arity FqidError to
     422 (DB-free — runs before any connection opens). Used by the suffixed
@@ -628,16 +660,18 @@ def get_register_variants(
 def get_binding_states(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> StatesResponse:
+) -> StatesResponse | RedirectResponse:
     """Full state history for a binding. ≡ the leaf's embedded `states`,
     standalone. Same shape the `?period` catch-all returns (codegen sees one
-    state-list type)."""
+    state-list type). A dead/renamed binding 301s to `/states` on its terminal
+    successor (#411)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
         try:
-            states = Catalog(conn).states(parsed)
+            states = catalog.states(parsed)
         except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)
+            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/states")
     return StatesResponse(binding=str(parsed), states=[_state_model(s) for s in states])
 
 
@@ -645,14 +679,18 @@ def get_binding_states(
 def get_binding_predecessors(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> PredecessorsResponse:
-    """Variables this binding's variable replaced (inbound succession)."""
+) -> PredecessorsResponse | RedirectResponse:
+    """Variables this binding's variable replaced (inbound succession). A
+    dead/renamed binding 301s to `/predecessors` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
         try:
-            refs = Catalog(conn).predecessors(parsed)
+            refs = catalog.predecessors(parsed)
         except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)
+            return _redirect_or_4xx(
+                catalog, parsed, exc, request, suffix="/predecessors"
+            )
     return PredecessorsResponse(
         binding=str(parsed), predecessors=[_var_ref_model(r) for r in refs]
     )
@@ -662,14 +700,16 @@ def get_binding_predecessors(
 def get_binding_successors(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> SuccessorsResponse:
-    """Variables that replaced this binding's variable (outbound succession)."""
+) -> SuccessorsResponse | RedirectResponse:
+    """Variables that replaced this binding's variable (outbound succession). A
+    dead/renamed binding 301s to `/successors` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
         try:
-            refs = Catalog(conn).successors(parsed)
+            refs = catalog.successors(parsed)
         except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)
+            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/successors")
     return SuccessorsResponse(
         binding=str(parsed), successors=[_var_ref_model(r) for r in refs]
     )
@@ -679,15 +719,17 @@ def get_binding_successors(
 def get_binding_related(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> RelatedResponse:
+) -> RelatedResponse | RedirectResponse:
     """Split-sibling variables (variable grain — see reg_meta_build/DESIGN.md →
-    Build-time triage (SCB))."""
+    Build-time triage (SCB)). A dead/renamed binding 301s to `/related` on its
+    terminal successor (#411)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
         try:
-            refs = Catalog(conn).related(parsed)
+            refs = catalog.related(parsed)
         except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)
+            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/related")
     return RelatedResponse(
         binding=str(parsed), related=[_related_ref_model(r) for r in refs]
     )
@@ -697,17 +739,19 @@ def get_binding_related(
 def get_binding_lineage(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> LineageResponse:
+) -> LineageResponse | RedirectResponse:
     """Consumer-side composite lineage edges (state grain — see
     reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)).
     Maps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a
-    possible reg_meta enhancement (not blocked on here — see DESIGN.md)."""
+    possible reg_meta enhancement (not blocked on here — see DESIGN.md). A
+    dead/renamed binding 301s to `/lineage` on its terminal successor (#411)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
         try:
-            edges = Catalog(conn).lineage(parsed)
+            edges = catalog.lineage(parsed)
         except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)
+            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/lineage")
     return LineageResponse(
         binding=str(parsed), lineage_edges=[_lineage_edge_model(e) for e in edges]
     )
@@ -719,15 +763,20 @@ def get_binding_lineage(
 def get_binding_lineage_warnings(
     request: Request,
     validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> LineageWarningsResponse:
+) -> LineageWarningsResponse | RedirectResponse:
     """Build-time lineage warnings for the binding. Empty when lineage
-    resolved cleanly. The leaf does NOT embed these — this is their endpoint."""
+    resolved cleanly. The leaf does NOT embed these — this is their endpoint. A
+    dead/renamed binding 301s to `/lineage_warnings` on its terminal successor
+    (#411)."""
     parsed = _parsed_binding(validated)
     with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
         try:
-            warnings = Catalog(conn).lineage_warnings(parsed)
+            warnings = catalog.lineage_warnings(parsed)
         except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)
+            return _redirect_or_4xx(
+                catalog, parsed, exc, request, suffix="/lineage_warnings"
+            )
     return LineageWarningsResponse(
         binding=str(parsed),
         lineage_warnings=[_lineage_warning_model(w) for w in warnings],
@@ -833,7 +882,10 @@ def get_catalog_node(
                                 (s.state_id, s.delivery_column_name, s.valid_from), s
                             )
                 except RegMetaError as exc:
-                    _http_4xx_from_regmeta(exc)
+                    # #411: a dead/renamed binding cited WITH `?period` 301s to its
+                    # terminal successor, query string preserved (so `?period=2019` /
+                    # `?variant` ride along), uniform with the no-period node path.
+                    return _redirect_or_4xx(catalog, parsed, exc, request)
             return StatesResponse(
                 binding=str(parsed),
                 states=[_state_model(s) for s in states_by_id.values()],
@@ -852,6 +904,8 @@ def get_catalog_node(
             # branch handles both grains with no kind-branching here. A non-404
             # (corrupt-DB / 500) must propagate UNCHANGED — only a genuine
             # `fqid_not_found` (mapped to 404 by `_resolve_to_node`) is a candidate.
+            # SIBLING: `_redirect_or_4xx` is the same 301 successor policy for the
+            # `?period`/sub-endpoint `RegMetaError` layer — keep the two in sync.
             if exc.status_code != 404:
                 raise
             terminal = catalog.resolve_terminal_successor(parsed)

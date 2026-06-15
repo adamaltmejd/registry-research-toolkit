@@ -98,7 +98,8 @@ export interface paths {
          * @description Consumer-side composite lineage edges (state grain — see
          *     reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage)).
          *     Maps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a
-         *     possible reg_meta enhancement (not blocked on here — see DESIGN.md).
+         *     possible reg_meta enhancement (not blocked on here — see DESIGN.md). A
+         *     dead/renamed binding 301s to `/lineage` on its terminal successor (#411).
          */
         get: operations["get_binding_lineage_api_catalog__fqid__lineage_get"];
         put?: never;
@@ -119,7 +120,9 @@ export interface paths {
         /**
          * Get Binding Lineage Warnings
          * @description Build-time lineage warnings for the binding. Empty when lineage
-         *     resolved cleanly. The leaf does NOT embed these — this is their endpoint.
+         *     resolved cleanly. The leaf does NOT embed these — this is their endpoint. A
+         *     dead/renamed binding 301s to `/lineage_warnings` on its terminal successor
+         *     (#411).
          */
         get: operations["get_binding_lineage_warnings_api_catalog__fqid__lineage_warnings_get"];
         put?: never;
@@ -139,7 +142,8 @@ export interface paths {
         };
         /**
          * Get Binding Predecessors
-         * @description Variables this binding's variable replaced (inbound succession).
+         * @description Variables this binding's variable replaced (inbound succession). A
+         *     dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).
          */
         get: operations["get_binding_predecessors_api_catalog__fqid__predecessors_get"];
         put?: never;
@@ -160,7 +164,8 @@ export interface paths {
         /**
          * Get Binding Related
          * @description Split-sibling variables (variable grain — see reg_meta_build/DESIGN.md →
-         *     Build-time triage (SCB)).
+         *     Build-time triage (SCB)). A dead/renamed binding 301s to `/related` on its
+         *     terminal successor (#411).
          */
         get: operations["get_binding_related_api_catalog__fqid__related_get"];
         put?: never;
@@ -182,7 +187,8 @@ export interface paths {
          * Get Binding States
          * @description Full state history for a binding. ≡ the leaf's embedded `states`,
          *     standalone. Same shape the `?period` catch-all returns (codegen sees one
-         *     state-list type).
+         *     state-list type). A dead/renamed binding 301s to `/states` on its terminal
+         *     successor (#411).
          */
         get: operations["get_binding_states_api_catalog__fqid__states_get"];
         put?: never;
@@ -202,7 +208,8 @@ export interface paths {
         };
         /**
          * Get Binding Successors
-         * @description Variables that replaced this binding's variable (outbound succession).
+         * @description Variables that replaced this binding's variable (outbound succession). A
+         *     dead/renamed binding 301s to `/successors` on its terminal successor (#411).
          */
         get: operations["get_binding_successors_api_catalog__fqid__successors_get"];
         put?: never;
