@@ -195,6 +195,11 @@ def splice_block(body: str, block: str, start: str = START, end: str = END) -> s
 # --- data ----------------------------------------------------------------------------
 
 
+def epic_body(epic: int) -> str:
+    """The epic issue's body, or '' if unset — the read every body-edit path starts from."""
+    return gh_json(["issue", "view", str(epic), "--json", "body"])["body"] or ""
+
+
 def fetch_open_prs_by_issue() -> dict[int, list[int]]:
     prs = gh_json(["pr", "list", "--state", "open", "--limit", str(FETCH_CAP),
                    "--json", "number,closingIssuesReferences"])  # fmt: skip
@@ -478,7 +483,7 @@ def render_lanes_block(content: str, basis: str = "") -> str:
 
 def write_lanes_block(epic: int, block: str) -> int:
     """Splice a framed lanes `block` into the epic body; no-op if unchanged. Exit code."""
-    current = gh_json(["issue", "view", str(epic), "--json", "body"])["body"] or ""
+    current = epic_body(epic)
     new_body = splice_block(current, block, LANES_START, LANES_END)
     if new_body == current:
         print(f"#{epic} lanes already up to date.")
@@ -600,9 +605,7 @@ def main() -> int:
         return 0
 
     if args.lanes_stale:
-        body = (
-            gh_json(["issue", "view", str(args.epic), "--json", "body"])["body"] or ""
-        )
+        body = epic_body(args.epic)
         stale = lanes_are_stale(
             extract_block(body, LANES_START, LANES_END), ready_nums, running_nums, sig
         )
@@ -618,9 +621,7 @@ def main() -> int:
         # cron own the projection WRITE now; the loop's only write is the lanes block when
         # stale. stdout = the basis to re-pass to --write-lanes; stderr = the human report
         # (projection delta + verdict); exit code = the lanes staleness signal.
-        body = (
-            gh_json(["issue", "view", str(args.epic), "--json", "body"])["body"] or ""
-        )
+        body = epic_body(args.epic)
         delta = diff_report(extract_block(body), render_block(recs, build_debt_line()))
         stale = lanes_are_stale(
             extract_block(body, LANES_START, LANES_END), ready_nums, running_nums, sig
@@ -643,7 +644,7 @@ def main() -> int:
         print(block)
         return 0
 
-    current = gh_json(["issue", "view", str(args.epic), "--json", "body"])["body"] or ""
+    current = epic_body(args.epic)
     delta = diff_report(extract_block(current), block)  # computed before any write
 
     if args.diff:
