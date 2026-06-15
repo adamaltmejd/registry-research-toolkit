@@ -331,6 +331,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/kit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Build Kit
+         * @description Build the generation kit from the posted ``project_data.json`` and return
+         *     the ZIP bytes. Reads the raw dict (preserving namespaced blocks) and offloads
+         *     the blocking validate-then-build to the threadpool.
+         */
+        post: operations["build_kit_api_kit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/project/order": {
         parameters: {
             query?: never;
@@ -1983,6 +2005,32 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    build_kit_api_kit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/zip": unknown;
                 };
             };
         };
