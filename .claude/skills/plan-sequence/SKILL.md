@@ -57,6 +57,23 @@ re-running with no state change leaves the body byte-identical (clean diffs).
    and prints the status delta vs the previous block. It is a mutating `gh issue edit` —
    show the user the rendered block (step 1) and get a go-ahead before `--write`.
 
+## Carve a lane to dispatch
+
+```sh
+uv run --no-project python scripts/plan_sequence.py --lane
+```
+
+Read-only. Lists the **ready** issues that don't touch anything **in flight** (a running
+issue's `touches`), grouped by area, with each issue's `touches` and a "must serialize"
+hint for file-sharers. It deliberately does **not** pick the lane for you — *which*
+issues go together and *how many* is a judgment call. Read the candidates, compose a
+coherent lane, and dispatch it with `/pr-pipeline #… #…`.
+
+**In-flight is tracked by the draft PR, not a label.** `/pr-pipeline` opens a draft PR
+(`Closes #N`) for each issue up front, which makes those issues `running` — so the next
+`--lane` automatically excludes them and anything touching their files. No claim step to
+remember; merging the PR (or closing it) clears the marker.
+
 ## Notes
 
 - **Backfill first for full value.** Parallel-safety needs `touches` blocks on issues,

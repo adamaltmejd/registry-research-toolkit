@@ -84,15 +84,21 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 
 **A · Implement.** Branch off the remote —
 `git fetch origin main && git checkout -b s/<slug> origin/main` (you may be in a
-worktree with `main` checked out elsewhere, so don't `checkout main`). Dispatch the
-implementer(s) with the scope + the FAST Verify only (lint / format / `ty` / `pytest`);
-the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min merge-gate
-check (Step E). When they report, validate the real diff, `git add -A`, commit, push,
-then open a **draft** PR (`gh pr create --draft --body-file <file>` — an inline `--body`
-heredoc can trip the permission classifier; draft keeps review bots off until
-near-final). Outward-facing `gh` actions (PR create / merge / comment) may be denied by
-the session's permission mode — if one is denied, surface it to the human, don't work
-around it.
+worktree with `main` checked out elsewhere, so don't `checkout main`). **Open the draft
+PR first**, before any code lands: an empty WIP commit
+(`git commit --allow-empty -m "wip: <scope>"`), push, then
+`gh pr create --draft --body-file <file>` whose body carries
+`Closes #<each issue this PR resolves>`. This marks the issue(s) **in-flight**
+(`running` in the sequencing projection) immediately, so a concurrent dispatch skips
+them and anything touching their files — it's how lanes stay non-colliding without a
+separate claim. Draft also keeps review bots off until near-final, and an inline
+`--body` heredoc can trip the permission classifier, so use `--body-file`. Then dispatch
+the implementer(s) with the scope + the FAST Verify only (lint / format / `ty` /
+`pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min
+merge-gate check (Step E). When they report, validate the real diff, `git add -A`,
+commit, and push onto the draft PR's branch. Outward-facing `gh` actions (PR create /
+merge / comment) may be denied by the session's permission mode — if one is denied,
+surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh

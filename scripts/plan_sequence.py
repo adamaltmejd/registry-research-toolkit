@@ -189,6 +189,54 @@ def build_records(
     return sorted(recs, key=lambda r: r.number)
 
 
+# --- dispatch (read-only input for the agent's lane judgment) ------------------------
+
+
+def dispatch_view(records: list[Rec]) -> str:
+    """Read-only dispatch candidates for the agent to compose a lane from.
+
+    Lists ready issues that DON'T touch in-flight (running) work, grouped by area, with
+    `touches` and must-serialize groups. Which issues form a lane, and how many, is a
+    judgment call left to the agent — the script supplies the deterministic facts and
+    excludes only what would collide with work already in flight.
+    """
+    in_flight = [t for r in records if r.status == "running" for t in r.touches]
+    ready = [r for r in records if r.status == "ready" and not r.is_epic]
+    held = {
+        r.number for r in ready if r.touches and touches_overlap(r.touches, in_flight)
+    }
+    free = [r for r in ready if r.number not in held]
+    if not free:
+        return "No ready issues free of in-flight conflicts."
+
+    out = [
+        "Dispatch candidates — ready, not touching in-flight work. Compose a coherent",
+        "lane (you judge which issues go together and how many), then run",
+        "`/pr-pipeline #…` — it opens a draft PR per issue up front, marking the lane",
+        "in-flight so the next dispatch skips it.",
+        "",
+    ]
+    by_area: dict[str, list[Rec]] = {}
+    for r in free:
+        by_area.setdefault(r.area or "(no area)", []).append(r)
+    for area in sorted(by_area):
+        out.append(f"{area} ({len(by_area[area])}):")
+        out += [
+            f"  #{r.number} {r.title}  —  "
+            + (", ".join(r.touches) if r.touches else "(no touches declared)")
+            for r in sorted(by_area[area], key=lambda r: r.number)
+        ]
+        out.append("")
+    serial = [g for g in parallel_groups(free) if len(g) > 1]
+    if serial:
+        out.append("Must serialize (share files): " +
+                   "; ".join("+".join(f"#{n}" for n in g) for g in serial))  # fmt: skip
+    if held:
+        out.append("Held — touch in-flight work: "
+                   + ", ".join(f"#{n}" for n in sorted(held)))  # fmt: skip
+    return "\n".join(out).rstrip()
+
+
 # --- render --------------------------------------------------------------------------
 
 
@@ -324,12 +372,19 @@ def main() -> int:
                     help="splice the block into the epic's body (default: print)")  # fmt: skip
     ap.add_argument("--diff", action="store_true",
                     help="print the status delta vs the epic's current block (no write)")  # fmt: skip
+    ap.add_argument("--lane", action="store_true",
+                    help="print read-only dispatch candidates (ready, not touching in-flight work)")  # fmt: skip
     args = ap.parse_args()
 
     owner, name = _h.repo_owner_name()
     _known, _issue_state, open_numbers = _h.fetch_number_states()
     parent_of = _h.fetch_parents(owner, name)
     recs = build_records(_h.fetch_open_issues(), open_numbers, parent_of)
+
+    if args.lane:
+        print(dispatch_view(recs))
+        return 0
+
     block = render_block(recs, build_debt_line())
 
     if not args.write and not args.diff:
