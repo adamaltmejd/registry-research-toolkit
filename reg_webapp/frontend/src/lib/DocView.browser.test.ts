@@ -27,6 +27,7 @@ function doc(overrides: Partial<DocDetail> = {}): DocDetail {
     variable: "Kön",
     source: null,
     source_url: null,
+    source_title: null,
     tags: [],
     ...overrides,
   };
@@ -85,19 +86,47 @@ describe("DocView (#394)", () => {
       .toBeVisible();
   });
 
-  it("renders the source pointer as a link when source_url is present", async () => {
+  it("renders the source pointer as an off-site link, labelled by source_title", async () => {
     vi.mocked(getDoc).mockResolvedValue(
-      doc({ source: "SCB LISA 2021", source_url: "https://scb.se/lisa" }),
+      doc({
+        source: "lisa-bakgrundsfakta-1990-2017",
+        source_url: "https://scb.se/lisa.pdf",
+        source_title: "LISA bakgrundsfakta 1990-2017",
+      }),
+    );
+    await render(DocView, { identifier: "lisa_kon.md" });
+
+    // The title is the preferred label (over the raw source slug); the link
+    // opens off-site, so it must be target=_blank + noopener.
+    const link = page.getByRole("link", {
+      name: "LISA bakgrundsfakta 1990-2017",
+    });
+    await expect
+      .element(link)
+      .toHaveAttribute("href", "https://scb.se/lisa.pdf");
+    await expect.element(link).toHaveAttribute("target", "_blank");
+    await expect.element(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("falls back to the source slug as the link label when source_title is null", async () => {
+    vi.mocked(getDoc).mockResolvedValue(
+      doc({
+        source: "lisa-bakgrundsfakta-1990-2017",
+        source_url: "https://scb.se/lisa.pdf",
+        source_title: null,
+      }),
     );
     await render(DocView, { identifier: "lisa_kon.md" });
 
     await expect
-      .element(page.getByRole("link", { name: "SCB LISA 2021" }))
-      .toHaveAttribute("href", "https://scb.se/lisa");
+      .element(
+        page.getByRole("link", { name: "lisa-bakgrundsfakta-1990-2017" }),
+      )
+      .toHaveAttribute("href", "https://scb.se/lisa.pdf");
   });
 
   it("renders the source as plain text (no link) when source_url is null", async () => {
-    // source_url is null today; the source identifier shows as text, not a link.
+    // An uncurated source has no resolved URL → the identifier shows as text.
     vi.mocked(getDoc).mockResolvedValue(
       doc({ source: "SCB LISA 2021", source_url: null }),
     );

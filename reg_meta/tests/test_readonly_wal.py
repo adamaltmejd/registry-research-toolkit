@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING
 import pytest
 from reg_meta.db import DB_FILENAME, SCHEMA_VERSION, open_db
 from reg_meta.doc_db import DOC_DB_FILENAME, DOC_SCHEMA_VERSION, open_doc_db
+from reg_meta.errors import RegMetaError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -116,3 +117,22 @@ def test_open_doc_db_reads_wal_db_in_readonly_dir(
         assert conn.execute("SELECT n FROM probe").fetchone()[0] == 7
     finally:
         conn.close()
+
+
+def test_open_doc_db_rejects_stale_1_0_0_schema(tmp_path: Path) -> None:
+    """The 1.0.0→1.1.0 bump (source_url/source_title, #372) is the gate that
+    stops new code from opening a doc DB lacking those columns. A same-major,
+    older-minor DB must be refused with `doc_schema_incompatible`."""
+    db_file = tmp_path / DOC_DB_FILENAME
+    _make_wal_db(
+        db_file,
+        setup_sql=(
+            "CREATE TABLE doc_meta (key TEXT PRIMARY KEY, value TEXT);"
+            "INSERT INTO doc_meta VALUES ('schema_version', '1.0.0');"
+        ),
+    )
+
+    assert DOC_SCHEMA_VERSION == "1.1.0"  # guard: the bump this test locks
+    with pytest.raises(RegMetaError) as exc_info:
+        open_doc_db(db_file)
+    assert exc_info.value.code == "doc_schema_incompatible"

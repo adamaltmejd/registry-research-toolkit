@@ -79,8 +79,45 @@ source: "test-bakgrundsfakta"
 
 Förvärvsarbetande avgränsas med hjälp av kontrolluppgifter.
 """,
+        # A mapped source carrying a stray `.md` — the build strips it before
+        # the curated-map lookup, so this resolves to the LISA bakgrundsfakta
+        # URL/title and stores a de-`.md`'d `source` (#372).
+        "MappedVar.md": """\
+---
+variable: MappedVar
+display_name: "Mappad variabel"
+tags:
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017.md"
+---
+
+**Mappad variabel MappedVar**
+
+Denna variabel har en kurerad källänk.
+""",
+        # An unmapped source: both source_url and source_title stay NULL (#372).
+        "UnmappedVar.md": """\
+---
+variable: UnmappedVar
+display_name: "Omappad variabel"
+tags:
+  - type/variable
+source: "some-uncurated-source"
+---
+
+**Omappad variabel UnmappedVar**
+
+Denna variabel saknar kurerad källänk.
+""",
     }
 }
+
+# Curated values from reg_meta_build/doc_sources.toml (#372), for assertions.
+_LISA_BAKGRUNDSFAKTA_URL = (
+    "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/"
+    "lisa-bakgrundsfakta-1990-2017.pdf"
+)
+_LISA_BAKGRUNDSFAKTA_TITLE = "LISA bakgrundsfakta 1990-2017"
 
 
 @pytest.fixture(scope="session")
@@ -265,6 +302,46 @@ class TestDocGet:
 
 
 # ---------------------------------------------------------------------------
+# source_url / source_title (#372)
+# ---------------------------------------------------------------------------
+
+
+class TestDocSourceUrl:
+    """The build-time curated source→PDF map (#372) flows through search/get."""
+
+    def test_get_mapped_strips_md_and_resolves(self, doc_db_path: str):
+        # The fixture's source `lisa-bakgrundsfakta-1990-2017.md` resolves: the
+        # build strips the trailing `.md` for both the stored source and the
+        # curated-map lookup.
+        data, code = _run_json(["--db", doc_db_path, "docs", "get", "MappedVar"])
+        assert code == 0
+        assert data["source"] == "lisa-bakgrundsfakta-1990-2017"  # `.md` stripped
+        assert data["source_url"] == _LISA_BAKGRUNDSFAKTA_URL
+        assert data["source_title"] == _LISA_BAKGRUNDSFAKTA_TITLE
+
+    def test_get_unmapped_has_null_url_and_title(self, doc_db_path: str):
+        data, code = _run_json(["--db", doc_db_path, "docs", "get", "UnmappedVar"])
+        assert code == 0
+        assert data["source"] == "some-uncurated-source"
+        assert data["source_url"] is None
+        assert data["source_title"] is None
+
+    def test_search_carries_source_url_and_title(self, doc_db_path: str):
+        data, code = _run_json(["--db", doc_db_path, "docs", "search", "kurerad"])
+        assert code == 0
+        hit = next(r for r in data["results"] if r["variable"] == "MappedVar")
+        assert hit["source_url"] == _LISA_BAKGRUNDSFAKTA_URL
+        assert hit["source_title"] == _LISA_BAKGRUNDSFAKTA_TITLE
+
+    def test_search_unmapped_has_null_url_and_title(self, doc_db_path: str):
+        data, code = _run_json(["--db", doc_db_path, "docs", "search", "omappad"])
+        assert code == 0
+        hit = next(r for r in data["results"] if r["variable"] == "UnmappedVar")
+        assert hit["source_url"] is None
+        assert hit["source_title"] is None
+
+
+# ---------------------------------------------------------------------------
 # doc list
 # ---------------------------------------------------------------------------
 
@@ -273,15 +350,15 @@ class TestDocList:
     def test_list_summary(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "list"])
         assert code == 0
-        assert data["total_count"] == 4
+        assert data["total_count"] == 6
         assert "testreg" in data["registers"]
-        assert data["registers"]["testreg"] == 4
+        assert data["registers"]["testreg"] == 6
 
     def test_list_summary_has_types(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "list"])
         assert code == 0
         assert "type/variable" in data["types"]
-        assert data["types"]["type/variable"] == 2
+        assert data["types"]["type/variable"] == 4
 
     def test_list_summary_has_topics(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "list"])
@@ -309,7 +386,7 @@ class TestDocList:
             ["--db", doc_db_path, "docs", "list", "--register", "testreg"]
         )
         assert code == 0
-        assert data["total_count"] == 4
+        assert data["total_count"] == 6
 
     def test_list_omits_docs_dir(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "list"])

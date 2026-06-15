@@ -1,0 +1,44 @@
+# Curated doc source → SCB source-PDF map (#372).
+#
+# Resolves a doc's `source` frontmatter slug to the public SCB PDF it was
+# derived from, so the doc index can link out to the original instead of
+# republishing the converted body. Consumed at doc-DB BUILD time
+# (`reg_meta_build.doc_db.build_doc_db`), which writes the resolved
+# `source_url` / `source_title` onto each `doc` row.
+#
+# Keyed by the doc `source` slug WITH A TRAILING `.md` STRIPPED — most SCB
+# source slugs carry a stray `.md` (an artifact of how they were minted), one
+# does not, so the build strips a single trailing `.md` before lookup. The
+# `_` vs `-` inconsistencies in the slugs (and URLs) are SCB's own real
+# filename quirks — kept verbatim in both the key and the URL.
+#
+# All 6 URLs verified 2026-06-15 to return `200 application/pdf` from the SCB
+# LISA register page; all live under the shared contentassets hash
+# `0521204f13e649299dec73f091e691e0`.
+#
+# Coverage is LISA-only today and grows as new registers' docs land. An
+# unmapped source is a build-time WARNING, never a failure.
+
+[sources."lisa-bakgrundsfakta-1990-2017"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa-bakgrundsfakta-1990-2017.pdf"
+title = "LISA bakgrundsfakta 1990-2017"
+
+[sources."hushallsinformation-i-lisa-2011-"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/hushallsinformation-i-lisa-2011-.pdf"
+title = "Hushållsinformation i LISA 2011-"
+
+[sources."lisa-2019---forandringar"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa-2019---forandringar.pdf"
+title = "LISA 2019 - förändringar"
+
+[sources."lisa_2020-forandringar"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa_2020-forandringar.pdf"
+title = "LISA 2020 - förändringar"
+
+[sources."lisa-2022-forandringar"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa-2022-forandringar.pdf"
+title = "LISA 2022 - förändringar"
+
+[sources."lisa_2023-forandringar"]
+url = "https://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa_2023-forandringar.pdf"
+title = "LISA 2023 - förändringar"
