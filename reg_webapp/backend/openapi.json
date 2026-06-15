@@ -2599,7 +2599,7 @@
     },
     "/api/catalog/{fqid}/lineage": {
       "get": {
-        "description": "Consumer-side composite lineage edges (state grain \u2014 see\nreg_meta_build/DESIGN.md \u2192 Consumer-side lineage (variable_state_lineage)).\nMaps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a\npossible reg_meta enhancement (not blocked on here \u2014 see DESIGN.md).",
+        "description": "Consumer-side composite lineage edges (state grain \u2014 see\nreg_meta_build/DESIGN.md \u2192 Consumer-side lineage (variable_state_lineage)).\nMaps what reg_meta's `LineageEdge` carries; the richer per-source-state shape is a\npossible reg_meta enhancement (not blocked on here \u2014 see DESIGN.md). A\ndead/renamed binding 301s to `/lineage` on its terminal successor (#411).",
         "operationId": "get_binding_lineage_api_catalog__fqid__lineage_get",
         "parameters": [
           {
@@ -2639,7 +2639,7 @@
     },
     "/api/catalog/{fqid}/lineage_warnings": {
       "get": {
-        "description": "Build-time lineage warnings for the binding. Empty when lineage\nresolved cleanly. The leaf does NOT embed these \u2014 this is their endpoint.",
+        "description": "Build-time lineage warnings for the binding. Empty when lineage\nresolved cleanly. The leaf does NOT embed these \u2014 this is their endpoint. A\ndead/renamed binding 301s to `/lineage_warnings` on its terminal successor\n(#411).",
         "operationId": "get_binding_lineage_warnings_api_catalog__fqid__lineage_warnings_get",
         "parameters": [
           {
@@ -2679,7 +2679,7 @@
     },
     "/api/catalog/{fqid}/predecessors": {
       "get": {
-        "description": "Variables this binding's variable replaced (inbound succession).",
+        "description": "Variables this binding's variable replaced (inbound succession). A\ndead/renamed binding 301s to `/predecessors` on its terminal successor (#411).",
         "operationId": "get_binding_predecessors_api_catalog__fqid__predecessors_get",
         "parameters": [
           {
@@ -2719,7 +2719,7 @@
     },
     "/api/catalog/{fqid}/related": {
       "get": {
-        "description": "Split-sibling variables (variable grain \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)).",
+        "description": "Split-sibling variables (variable grain \u2014 see reg_meta_build/DESIGN.md \u2192\nBuild-time triage (SCB)). A dead/renamed binding 301s to `/related` on its\nterminal successor (#411).",
         "operationId": "get_binding_related_api_catalog__fqid__related_get",
         "parameters": [
           {
@@ -2759,7 +2759,7 @@
     },
     "/api/catalog/{fqid}/states": {
       "get": {
-        "description": "Full state history for a binding. \u2261 the leaf's embedded `states`,\nstandalone. Same shape the `?period` catch-all returns (codegen sees one\nstate-list type).",
+        "description": "Full state history for a binding. \u2261 the leaf's embedded `states`,\nstandalone. Same shape the `?period` catch-all returns (codegen sees one\nstate-list type). A dead/renamed binding 301s to `/states` on its terminal\nsuccessor (#411).",
         "operationId": "get_binding_states_api_catalog__fqid__states_get",
         "parameters": [
           {
@@ -2799,7 +2799,7 @@
     },
     "/api/catalog/{fqid}/successors": {
       "get": {
-        "description": "Variables that replaced this binding's variable (outbound succession).",
+        "description": "Variables that replaced this binding's variable (outbound succession). A\ndead/renamed binding 301s to `/successors` on its terminal successor (#411).",
         "operationId": "get_binding_successors_api_catalog__fqid__successors_get",
         "parameters": [
           {

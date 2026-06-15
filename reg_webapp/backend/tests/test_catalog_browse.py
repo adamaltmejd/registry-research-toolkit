@@ -245,14 +245,68 @@ def test_unknown_dead_binding_still_404(client):
     assert resp.status_code == 404
 
 
-def test_dead_binding_with_period_still_404_no_redirect(client):
-    """The redirect lives ONLY on the no-period node path; the `?period` branch
-    resolves via `resolve_at` and stays 404. This guards the intentional
-    deferral — a dead slug WITH `?period` (here the chain head `renamed-head`,
-    which redirects 301 without a period) must NOT silently turn into a
-    redirect."""
+def test_dead_binding_with_period_redirects_301_preserving_query(client):
+    """#411: a dead/renamed binding cited WITH `?period` now 301s to its terminal
+    successor (previously a deferred 404). The query string rides along, so the
+    Location keeps `?period=2019`. The chain head `renamed-head` → terminal
+    `scb/rams/syss`."""
     resp = client.get(
         "/api/catalog/scb/lisa/renamed-head?period=2019", follow_redirects=False
+    )
+    assert resp.status_code == 301
+    assert resp.headers["location"] == "/api/catalog/scb/rams/syss?period=2019"
+
+
+# The 6 suffixed binding sub-endpoints — the redirect must preserve the suffix.
+_SUB_ENDPOINTS = [
+    "states",
+    "predecessors",
+    "successors",
+    "related",
+    "lineage",
+    "lineage_warnings",
+]
+
+
+@pytest.mark.parametrize("suffix", _SUB_ENDPOINTS)
+def test_dead_binding_subendpoint_redirects_301_to_same_suffix(client, suffix):
+    """#411: a dead/renamed binding cited on any of the 6 suffixed sub-endpoints
+    301s to the SAME suffix on its terminal successor. The chain head
+    `renamed-head/<suffix>` → `scb/rams/syss/<suffix>`."""
+    resp = client.get(
+        f"/api/catalog/scb/lisa/renamed-head/{suffix}", follow_redirects=False
+    )
+    assert resp.status_code == 301
+    assert resp.headers["location"] == f"/api/catalog/scb/rams/syss/{suffix}"
+
+
+def test_dead_binding_with_period_redirect_walks_to_absolute_chain_end(client):
+    """#411: the `?period` redirect resolves to the ABSOLUTE chain end, never one
+    hop — a GET on the MIDDLE dead slug also lands at the terminal, query
+    preserved."""
+    resp = client.get(
+        "/api/catalog/scb/lisa/renamed-mid?period=2019", follow_redirects=False
+    )
+    assert resp.status_code == 301
+    assert resp.headers["location"] == "/api/catalog/scb/rams/syss?period=2019"
+
+
+def test_unknown_dead_binding_with_period_still_404(client):
+    """#411: an UNKNOWN dead binding (no successor edge) WITH `?period` still 404s —
+    `resolve_terminal_successor` returns None, so `_redirect_or_4xx` falls back to
+    the 404 (a 422 usage / 500 build-invariant error would NEVER redirect either)."""
+    resp = client.get(
+        "/api/catalog/scb/lisa/never-existed?period=2019", follow_redirects=False
+    )
+    assert resp.status_code == 404
+
+
+@pytest.mark.parametrize("suffix", _SUB_ENDPOINTS)
+def test_unknown_dead_binding_subendpoint_still_404(client, suffix):
+    """#411: an UNKNOWN dead binding (no successor edge) on a sub-endpoint still
+    404s — no terminal to redirect to."""
+    resp = client.get(
+        f"/api/catalog/scb/lisa/never-existed/{suffix}", follow_redirects=False
     )
     assert resp.status_code == 404
 
