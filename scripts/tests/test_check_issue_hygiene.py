@@ -53,6 +53,13 @@ def test_parse_relationships_ignores_fenced_code() -> None:
     assert h.parse_relationships(body) == [("depends on", 5)]
 
 
+def test_parse_relationships_ignores_indented_fenced_code() -> None:
+    # A fence nested under a list item (indented) must still be stripped, else the
+    # line-anchored REL_RE matches the keyword inside it → false dangling-target ERROR.
+    body = "- example\n    ```\n    Related to #999\n    ```\n"
+    assert h.parse_relationships(body) == []
+
+
 # --- parse_touches -------------------------------------------------------------------
 
 
@@ -103,7 +110,7 @@ def _check(
     body: str = "",
     labels: tuple[str, ...] = (),
     known: set[int] = frozenset(),  # type: ignore[assignment]
-    issue_state: dict[int, str] | None = None,
+    open_numbers: set[int] = frozenset(),  # type: ignore[assignment]
     parent_of: dict[int, int] | None = None,
     num: int = 1,
 ) -> list[tuple[str, int | None, str]]:
@@ -114,7 +121,7 @@ def _check(
         "body": body,
     }
     h.check_issue(
-        issue, set(known), dict(issue_state or {}), dict(parent_of or {}), _ROOT, out
+        issue, set(known), set(open_numbers), dict(parent_of or {}), _ROOT, out
     )
     return out.items
 
@@ -145,21 +152,16 @@ def test_dangling_relationship_error() -> None:
 
 
 def test_resolvable_relationship_no_error() -> None:
-    items = _check(
-        labels=("reg_meta", "bug"),
-        body="Depends on #2",
-        known={1, 2},
-        issue_state={2: "CLOSED"},
-    )
+    items = _check(labels=("reg_meta", "bug"), body="Depends on #2", known={1, 2})
     assert not _has(items, "ERROR", "#2")
 
 
 def test_blocked_label_without_open_blocker_warns() -> None:
+    # #2 exists (known) but is not open → the blocked label is stale.
     items = _check(
         labels=("reg_meta", "bug", "blocked"),
         body="Blocked by #2",
         known={1, 2},
-        issue_state={2: "CLOSED"},
     )
     assert _has(items, "WARN", "blocked")
 
@@ -169,7 +171,18 @@ def test_open_blocker_without_blocked_label_warns() -> None:
         labels=("reg_meta", "bug"),
         body="Blocked by #2",
         known={1, 2},
-        issue_state={2: "OPEN"},
+        open_numbers={2},
+    )
+    assert _has(items, "WARN", "blocker")
+
+
+def test_blocked_by_open_pr_counts_as_blocker() -> None:
+    # `Blocked by #<open PR>` is a real blocker — open_numbers carries open PRs too.
+    items = _check(
+        labels=("reg_meta", "bug"),
+        body="Blocked by #50",
+        known={1, 50},
+        open_numbers={50},
     )
     assert _has(items, "WARN", "blocker")
 

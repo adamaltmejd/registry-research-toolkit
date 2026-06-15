@@ -69,7 +69,9 @@ TOUCHES_RE = re.compile(
 )
 # A fenced code block of N≥3 backticks and its matching close — stripped before the
 # relationship scan so example/quoted `… #N` inside fences can't mint false targets.
-FENCE_RE = re.compile(r"^(`{3,}).*?^\1", re.MULTILINE | re.DOTALL)
+# Leading indentation is allowed on both fences: GitHub renders a fence nested under a
+# list item, and REL_RE tolerates indentation, so a column-0-only strip would leak it.
+FENCE_RE = re.compile(r"^[ \t]*(`{3,}).*?^[ \t]*\1", re.MULTILINE | re.DOTALL)
 
 # reg_meta_build paths whose change alters the GLOBAL built DB (the released
 # reg_meta_build/v* asset): src/**, top-level *.toml, and the top-level slug snapshots.
@@ -189,21 +191,25 @@ def fetch_one_open_issue(number: int) -> dict | None:
     return data if data.get("state") == "OPEN" else None
 
 
-def fetch_number_states() -> tuple[set[int], dict[int, str]]:
-    """All issue+PR numbers that exist, and each issue's open/closed state.
+def fetch_number_states() -> tuple[set[int], dict[int, str], set[int]]:
+    """`(known, issue_state, open_numbers)`.
 
-    PRs share the issue number space, so a `Related to #<pr>` must resolve too — but
-    only issues carry the open/closed semantics the blocked-label check needs.
+    `known` — every issue+PR number that exists (PRs share the number space, so a
+    `Related to #<pr>` must resolve). `issue_state` — issues only (number → state), the
+    PR-excluding authority for the `--issue` gate. `open_numbers` — open issues AND open
+    PRs, since `Blocked by #<open PR>` is a real blocker (blocked until the PR merges).
     """
     issues = gh_json(["issue", "list", "--state", "all", "--limit", str(FETCH_CAP),
                       "--json", "number,state"])  # fmt: skip
     prs = gh_json(["pr", "list", "--state", "all", "--limit", str(FETCH_CAP),
-                   "--json", "number"])  # fmt: skip
+                   "--json", "number,state"])  # fmt: skip
     _warn_if_truncated(issues, "issues")
     _warn_if_truncated(prs, "PRs")
     issue_state = {i["number"]: i["state"] for i in issues}
-    known = set(issue_state) | {p["number"] for p in prs}
-    return known, issue_state
+    pr_state = {p["number"]: p["state"] for p in prs}
+    known = set(issue_state) | set(pr_state)
+    open_numbers = {n for n, s in (issue_state | pr_state).items() if s == "OPEN"}
+    return known, issue_state, open_numbers
 
 
 def fetch_parents(owner: str, name: str) -> dict[int, int]:
@@ -235,7 +241,7 @@ def fetch_parents(owner: str, name: str) -> dict[int, int]:
 def check_issue(
     issue: dict,
     known: set[int],
-    issue_state: dict[int, str],
+    open_numbers: set[int],
     parent_of: dict[int, int],
     repo_root: Path,
     out: Findings,
@@ -257,11 +263,7 @@ def check_issue(
             out.error(num, f"'{kw} #{target}' points to a non-existent issue/PR")
 
     open_blockers = sorted(
-        {
-            t
-            for kw, t in rels
-            if kw in BLOCKING_KEYWORDS and issue_state.get(t) == "OPEN"
-        }
+        {t for kw, t in rels if kw in BLOCKING_KEYWORDS and t in open_numbers}
     )
     if "blocked" in labels and not open_blockers:
         out.warn(num, "has 'blocked' label but no open Depends-on/Blocked-by target — "
@@ -361,7 +363,7 @@ def main() -> int:
 
     repo_root = Path(run(["git", "rev-parse", "--show-toplevel"]).strip())
     owner, name = repo_owner_name()
-    known, issue_state = fetch_number_states()
+    known, issue_state, open_numbers = fetch_number_states()
     parent_of = fetch_parents(owner, name)
     out = Findings()
 
@@ -373,12 +375,12 @@ def main() -> int:
         if issue is None:
             print(f"#{args.issue} is not an open issue; skipping.")
             return 0
-        check_issue(issue, known, issue_state, parent_of, repo_root, out)
+        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
         emit(out, f"#{args.issue}")
         return 1 if out.errors else 0
 
     for issue in fetch_open_issues():
-        check_issue(issue, known, issue_state, parent_of, repo_root, out)
+        check_issue(issue, known, open_numbers, parent_of, repo_root, out)
     check_done_but_open(issue_state, out)
     check_unreleased_build_debt(repo_root, out)
     emit(out, "all open issues")
