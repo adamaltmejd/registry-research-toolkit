@@ -7,9 +7,9 @@ disable-model-invocation: true
 
 # issue-pulse — one tick of the issue-tracking heartbeat
 
-Run on a cadence with `/loop` (`/loop 30m /issue-pulse`, or bare `/loop /issue-pulse` to
-self-pace). Each invocation does **one tick and stops** — `/loop` handles re-invocation
-and sleeping.
+Run on a cadence with `/loop` (`/loop 30m /issue-pulse [epic-number]`, or bare
+`/loop /issue-pulse` to self-pace the default epic). Each invocation does **one tick and
+stops** — `/loop` handles re-invocation and sleeping.
 
 This is the agentic layer over the deterministic scripts: it doesn't recompute anything,
 it runs them and adds judgment (deltas + proposals). CI (`issue-hygiene.yml`) is the
@@ -24,10 +24,10 @@ reflex; this is the heartbeat and the push.
    one call both updates the body and tells you what changed:
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py --epic 328 --write
+   uv run --no-project python scripts/plan_sequence.py --epic <N> --write
    ```
 
-   - `Updated #328` + a delta (`newly ready: #…`, `left blocked: #…`) → it **changed**.
+   - `Updated #<N>` + a delta (`newly ready: #…`, `left blocked: #…`) → it **changed**.
    - `already up to date` → nothing changed; this tick is quiet.
 
    (The splice overwrites only the marked region — bounded and reversible.)
