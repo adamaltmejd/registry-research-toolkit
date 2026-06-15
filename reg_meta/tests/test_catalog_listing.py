@@ -35,9 +35,9 @@ def _catalog() -> Catalog:
 
 
 class TestListProviders:
-    def test_lists_both_seeded_providers_slug_ordered(self) -> None:
+    def test_lists_seeded_providers_slug_ordered(self) -> None:
         providers = _catalog().list_providers()
-        assert [p.fqid.provider for p in providers] == ["scb", "sos"]
+        assert [p.fqid.provider for p in providers] == ["fohm", "scb", "sos"]
         assert all(isinstance(p, ProviderSummary) for p in providers)
 
     def test_carries_fqid_and_name(self) -> None:

@@ -81,6 +81,8 @@
     "SUN2020-NIVA": "sun-niva2020"
   },
   "register": {
+    "fohm/7553527605692442211": "nvr",
+    "fohm/9022860280161092196": "sminet",
     "scb/1": "fdb",
     "scb/10": "lbr",
     "scb/102": "gymnasieskola-betyg",
@@ -334,6 +336,8 @@
     "sos/9047831179457584381": "sol"
   },
   "register_variant": {
+    "fohm/7553527605692442211.5026533077223577043": "_default",
+    "fohm/9022860280161092196.5579831904407731840": "_default",
     "scb/1.424": "arbetsstalleenheter",
     "scb/1.425": "administrativa",
     "scb/1.426": "foretagsenheter",
