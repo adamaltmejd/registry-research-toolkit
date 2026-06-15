@@ -49,6 +49,9 @@ AREA_LABELS = {
     "cross-package",
 }
 TYPE_LABELS = {"enhancement", "bug", "documentation"}
+# Optional ranking signal for /plan-lanes (default = neither label = normal). At most one;
+# coarse + stable enough to be a label (unlike the churny S/L/G lanes, which stay prose).
+PRIORITY_LABELS = {"priority:high", "priority:low"}
 
 # A relationship tie from the AGENTS.md "# Issue tracker" convention. Anchored to the
 # start of a line (after optional bullet/quote markup) so a casual prose mention
@@ -256,6 +259,12 @@ def check_issue(
     type_ = labels & TYPE_LABELS
     if len(type_) != 1:
         out.error(num, f"needs exactly one type label (has: {sorted(type_) or 'none'})")
+    # Priority is optional (absence = normal) but mutually exclusive — at most one bucket.
+    prio = labels & PRIORITY_LABELS
+    if len(prio) > 1:
+        out.error(
+            num, f"has multiple priority labels ({sorted(prio)}); keep at most one"
+        )
 
     rels = parse_relationships(body)
     for kw, target in rels:
