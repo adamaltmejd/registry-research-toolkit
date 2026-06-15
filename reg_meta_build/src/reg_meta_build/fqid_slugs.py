@@ -1309,6 +1309,8 @@ def populate_variable_slugs(
     conn: sqlite3.Connection,
     slug_dir: Path,
     fold_slugs: dict[int, str] | None = None,
+    *,
+    incremental: bool = False,
 ) -> dict[str, int]:
     """Populate register-unique `variable.slug` (see DESIGN.md → Slug curation) — always succeeds.
 
@@ -1317,6 +1319,23 @@ def populate_variable_slugs(
     several representation columns (`Ssyk3` / `Ssyk5`), so the latest-column
     auto-derive would pick one representation (`ssyk5`) instead of the stem
     (`ssyk`); the triage-supplied stem overrides that for first-sight slugs.
+
+    `incremental=True` is the steward-overlay (#365 PR2) mode: the global build
+    has ALREADY slugged every register's variables, and `extend_db` only INSERTs
+    new (NULL-slug) variables on top. Two scoped changes then apply:
+      - the per-provider `variables` query gains `AND v.slug IS NULL`, so only
+        the newly-inserted variables are derived — published global slugs are
+        never re-derived or re-written (their immutability is the no-clobber
+        guarantee the overlay must preserve);
+      - each register's first-sight `used` set is seeded with that register's
+        EXISTING non-NULL slugs, so a new variable uniquifies against the
+        published global slugs (a `-N` suffix avoids colliding with a slug the
+        global build already shipped in this register).
+    The default `incremental=False` leaves the global build path
+    BYTE-IDENTICAL: the slug filter and the extra `used` seeding only apply
+    under the flag, and a fresh global build has all-NULL slugs anyway (so the
+    filter would be a no-op there — but it is gated regardless to keep the two
+    paths textually distinct and the global path provably untouched).
 
     `variable` is register-scoped, so each row gets exactly one slug and the
     natural key `(register_id, slug)` is register-unique (`idx_variable_slug`).
@@ -1383,7 +1402,27 @@ def populate_variable_slugs(
     }
     applied_curated: set[tuple[str, str]] = set()
 
-    for provider_slug in _live_providers(conn):
+    # `incremental` (#365 PR2): only providers that actually gained NULL-slug
+    # variables need processing — the steward overlay adds rows under ONE new
+    # provider, so running the heavy per-provider `variables` SELECT (two
+    # correlated subqueries per row) for SCB/SOS would scan their full variable
+    # tables to derive zero slugs. Restrict the loop to providers with >= 1
+    # NULL-slug variable; the per-provider work for those is unchanged. The
+    # non-incremental (global build) path keeps the full live-provider loop.
+    provider_slugs = _live_providers(conn)
+    if incremental:
+        with_null = {
+            r[0]
+            for r in conn.execute(
+                "SELECT DISTINCT p.slug FROM provider p "
+                "JOIN register r ON r.provider_id = p.provider_id "
+                "JOIN variable v ON v.register_id = r.register_id "
+                "WHERE v.slug IS NULL"
+            )
+        }
+        provider_slugs = [s for s in provider_slugs if s in with_null]
+
+    for provider_slug in provider_slugs:
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
         auto: dict[str, str] = {}
         # A4.4a: source_id → derivation class — the `# source:` comment basis for
@@ -1407,6 +1446,12 @@ def populate_variable_slugs(
         # NOT slug from its latest column (a version-specific name like
         # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Ordered by
         # register so the per-register uniqueness scope is one groupby pass.
+        # `incremental` (#365 PR2): process ONLY newly-inserted variables (NULL
+        # slug). The global build's already-published slugs stay untouched — the
+        # overlay's no-clobber guarantee. The filter is gated so the global
+        # build path (incremental=False) is byte-identical (a fresh build has
+        # all-NULL slugs, so the predicate would be vacuous there anyway).
+        incremental_filter = "AND v.slug IS NULL " if incremental else ""
         variables = conn.execute(
             "SELECT v.variable_id, v.register_id, v.provider_key, v.name, "
             "(SELECT vs.delivery_column_name FROM variable_state vs "
@@ -1424,6 +1469,7 @@ def populate_variable_slugs(
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? "
+            f"{incremental_filter}"
             "ORDER BY v.register_id, v.variable_id",
             (provider_slug,),
         ).fetchall()
@@ -1492,6 +1538,23 @@ def populate_variable_slugs(
         for (cprov, csid), cslug in curated.items():
             if cprov == provider_slug and csid not in live_sids:
                 reserved_by_register[int(csid.partition(".")[0])].add(cslug)
+        if incremental:
+            # #365 PR2: the new variables (the only rows in `variables` now) must
+            # uniquify against the PUBLISHED global slugs already stored on their
+            # register — those rows were filtered out above, so they aren't in
+            # `auto`/`curated` for this overlay run. Seed every register's `used`
+            # set with its existing non-NULL slugs so a new auto slug gets a `-N`
+            # suffix rather than colliding with a shipped global FQID
+            # (UNIQUE(register_id, slug) would otherwise raise at the UPDATE).
+            for reg_id, existing_slug in conn.execute(
+                "SELECT register_id, slug FROM variable "
+                "WHERE slug IS NOT NULL AND register_id IN "
+                "(SELECT r.register_id FROM register r "
+                " JOIN provider p ON r.provider_id = p.provider_id "
+                " WHERE p.slug = ?)",
+                (provider_slug,),
+            ).fetchall():
+                reserved_by_register[reg_id].add(existing_slug)
 
         auto_dirty = False
         # The build connection yields plain tuples (not sqlite3.Row), so unpack

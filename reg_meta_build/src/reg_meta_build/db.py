@@ -2015,8 +2015,16 @@ def dump_classification_linkage(
     ]
 
 
-def _populate_fts(conn: sqlite3.Connection) -> None:
-    """Populate FTS5 search indexes."""
+def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) -> None:
+    """Populate FTS5 search indexes.
+
+    ``include_value_code=False`` skips ONLY the ``value_code_fts`` INSERT — the
+    register_fts + variable_fts inserts always run. The extend-db overlay
+    (#365 PR2) uses this: it never inserts ``value_code`` rows, so the
+    value_code_fts index copied from the base DB is already in sync and
+    re-populating its ~4M rows would be pure build-time waste. The full build
+    keeps the default ``True``, so its ``_populate_fts(conn)`` call is unchanged.
+    """
     _progress("Building search indexes...")
 
     # register_fts: content-synced — rowid must match register.rowid
@@ -2041,23 +2049,27 @@ def _populate_fts(conn: sqlite3.Connection) -> None:
         FROM variable v
     """)
 
-    # value_code_fts (#352): content-synced — rowid must match value_code.code_id.
-    # Indexes only `label`; stoplisted junk labels are excluded HERE so they never
-    # surface in search, while value_code keeps every row. The exclusion is a
-    # whole-label match (exact set OR sentinel prefix family); built from the two
-    # stoplist constants so the curated list lives in one place.
-    exact_placeholders = ",".join("?" * len(_VALUE_CODE_STOPLIST_EXACT))
-    prefix_clauses = " OR ".join("label LIKE ?" for _ in _VALUE_CODE_STOPLIST_PREFIXES)
-    conn.execute(
-        "INSERT INTO value_code_fts(rowid, label) "
-        "SELECT code_id, label FROM value_code "
-        f"WHERE label NOT IN ({exact_placeholders}) "
-        f"AND NOT ({prefix_clauses})",
-        (
-            *sorted(_VALUE_CODE_STOPLIST_EXACT),
-            *(f"{p}%" for p in _VALUE_CODE_STOPLIST_PREFIXES),
-        ),
-    )
+    if include_value_code:
+        # value_code_fts (#352): content-synced — rowid must match
+        # value_code.code_id. Indexes only `label`; stoplisted junk labels are
+        # excluded HERE so they never surface in search, while value_code keeps
+        # every row. The exclusion is a whole-label match (exact set OR sentinel
+        # prefix family); built from the two stoplist constants so the curated
+        # list lives in one place.
+        exact_placeholders = ",".join("?" * len(_VALUE_CODE_STOPLIST_EXACT))
+        prefix_clauses = " OR ".join(
+            "label LIKE ?" for _ in _VALUE_CODE_STOPLIST_PREFIXES
+        )
+        conn.execute(
+            "INSERT INTO value_code_fts(rowid, label) "
+            "SELECT code_id, label FROM value_code "
+            f"WHERE label NOT IN ({exact_placeholders}) "
+            f"AND NOT ({prefix_clauses})",
+            (
+                *sorted(_VALUE_CODE_STOPLIST_EXACT),
+                *(f"{p}%" for p in _VALUE_CODE_STOPLIST_PREFIXES),
+            ),
+        )
     _progress("  FTS indexes built")
 
 

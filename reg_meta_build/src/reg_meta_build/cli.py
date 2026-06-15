@@ -40,6 +40,7 @@ from reg_meta.errors import (
 
 from .db import build_db
 from .doc_db import build_doc_db, repo_docs_dir
+from .extend_db import extend_db
 from .fqid_slugs import (
     SNAPSHOT_FILENAME,
     diff_snapshot,
@@ -164,6 +165,61 @@ def _build_parser() -> argparse.ArgumentParser:
             "additive: it adds rows in a disjoint id band (>= 2^62), never alters "
             "SCB's. (The `build_db()` function default stays `('scb',)` so synthetic "
             "SCB-only test fixtures need no SOS workbooks.)"
+        ),
+    )
+
+    extend_db_p = sub.add_parser(
+        "extend-db",
+        help="Overlay a steward inventory onto a released global DB (maintainer-only).",
+        description=(
+            "Build a steward-FLAVORED metadata DB (#365 PR2): an insert-only\n"
+            "overlay of steward-ONLY content (the steward's own providers,\n"
+            "registers, and variables) onto a RELEASED global reg_meta.db. The\n"
+            "base DB is a read-only input — never mutated; the result is written\n"
+            "to the --db output directory. Enrichment of existing global entities\n"
+            "(descriptions, aliases, shared-column grafts) is global-build work.\n\n"
+            "Examples:\n"
+            "  reg-meta-build --db /tmp/swecov extend-db \\\n"
+            "      --base-db ~/.reg_meta/reg_meta.db \\\n"
+            "      --inventory input_data/swecov/inventory.json"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    extend_db_p.add_argument(
+        "--base-db",
+        required=True,
+        help="Path to the released global reg_meta.db to overlay onto (read-only).",
+    )
+    extend_db_p.add_argument(
+        "--inventory",
+        required=True,
+        help="Path to the steward inventory JSON (see extend_db.py for the contract).",
+    )
+    extend_db_p.add_argument(
+        "--steward",
+        default="swecov",
+        help="Steward slug (default: swecov). Must match the inventory's `steward`.",
+    )
+    extend_db_p.add_argument(
+        "--slug-dir",
+        default=None,
+        help=(
+            "Directory of the steward's curated slug TOMLs "
+            "(default: reg_meta_build/fqid_slugs/<steward>/ from a repo checkout)."
+        ),
+    )
+    extend_db_p.add_argument(
+        "--skip-slugs",
+        action="store_true",
+        help="Skip steward slug population (the overlaid rows keep NULL slugs).",
+    )
+    extend_db_p.add_argument(
+        "--no-validate",
+        action="store_true",
+        help=(
+            "Skip the post-overlay flavored validation. By default extend-db runs "
+            "the full structural suite plus the tightened non-SCB minted-id band "
+            "check and fails with EXIT_CONFIG on any violation."
         ),
     )
 
@@ -359,6 +415,69 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "schema_version": SCHEMA_VERSION,
             "import_date": result["import_date"],
         },
+        data=result,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _flavored_validate_hook() -> Callable[[Path], None]:
+    """Return an extend_db pre_rename_hook running the FLAVORED validator against
+    the staging DB. Same fail-on-failures shape as ``_build_validate_hook``, but
+    ``flavored=True`` (the tightened non-SCB minted-id band check) and
+    ``corpus=False`` (a flavor adds a steward tail, not the SCB/SOS bulk, so the
+    real-corpus volume floors don't apply)."""
+
+    def hook(staging_db: Path) -> None:
+        validation = validate_built_db(staging_db, flavored=True)
+        sys.stderr.write(validation.format_report() + "\n")
+        sys.stderr.flush()
+        if validation.failures:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="validation_failed",
+                error_class="configuration",
+                message=(
+                    f"Post-overlay flavored validation failed: "
+                    f"{len(validation.failures)} check(s) — "
+                    f"{'; '.join(validation.failures)}"
+                ),
+                remediation=(
+                    "Inspect the [FAIL] lines above. The staging DB has been "
+                    "discarded and any previously-installed flavored DB is "
+                    "unchanged. Fix the inventory and rerun `reg-meta-build "
+                    "extend-db` (pass `--no-validate` to skip these checks)."
+                ),
+            )
+
+    return hook
+
+
+def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db_dir = Path(args.db) if args.db else default_db_dir()
+    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
+
+    pre_rename_hook = None if args.no_validate else _flavored_validate_hook()
+    result = extend_db(
+        base_db=Path(args.base_db),
+        inventory_path=Path(args.inventory),
+        db_dir=db_dir,
+        steward=args.steward,
+        slug_dir=slug_dir,
+        skip_slugs=args.skip_slugs,
+        pre_rename_hook=pre_rename_hook,
+    )
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="extend-db",
+        args_payload={
+            "base_db": args.base_db,
+            "inventory": args.inventory,
+            "steward": args.steward,
+            "skip_slugs": args.skip_slugs,
+            "validate": not args.no_validate,
+        },
+        db_info={"schema_version": SCHEMA_VERSION},
         data=result,
         duration_ms=duration_ms,
     ), 0
@@ -669,6 +788,7 @@ COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
     "build-db": _cmd_build_db,
+    "extend-db": _cmd_extend_db,
     "build-docs": _cmd_build_docs,
     "seed-slugs": _cmd_seed_slugs,
     "precheck-slugs": _cmd_precheck_slugs,
@@ -685,6 +805,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "build-db --input-dir DIR",
         "Build the metadata DB from SCB CSV exports.",
+    ),
+    (
+        "extend-db --base-db DB --inventory JSON [--steward S]",
+        "Overlay a steward inventory onto a released global DB (flavored DB).",
     ),
     (
         "build-docs [--docs-dir DIR]",

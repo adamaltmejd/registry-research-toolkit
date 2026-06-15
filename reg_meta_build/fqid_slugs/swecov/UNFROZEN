@@ -1,0 +1,16 @@
+# Pre-v1 escape hatch — per-steward slug snapshot (see reg_meta_build/DESIGN.md → Slug immutability)
+
+This is the SWECOV steward flavor's slug snapshot dir (#365 PR2). It sits
+parallel to the global `reg_meta_build/fqid_slugs/` but is consumed by
+`extend-db`, not `build-db`: the steward overlay slugs only the rows it
+INSERTS, never the published global registers/variants.
+
+While this file exists, slug renames and removals in the steward `.snapshot.json`
+flow through `precheck-slugs --update-snapshot` instead of being refused. Diffs
+are still reported so drift stays visible.
+
+The point is to encourage curation iteration before v1 — fixing typos,
+normalizing conventions — without per-rename ceremony.
+
+At v1 release: **delete this file**. The grow-only guarantee then re-arms for
+the steward flavor too.
