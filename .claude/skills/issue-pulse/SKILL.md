@@ -10,11 +10,11 @@ Run on a cadence with `/loop` (`/loop 30m /issue-pulse [epic-number]`, or bare
 `/loop /issue-pulse` to self-pace the default epic). Each invocation does **one tick and
 stops** — `/loop` handles re-invocation and sleeping.
 
-This is the agentic layer over the deterministic scripts: it doesn't recompute anything,
-it runs them and adds judgment (deltas + proposals). On a **material** tick (the ready
-set moved) it also fires `/plan-lanes` — forked — to re-rank the ready work into
-runnable lanes. CI (`issue-hygiene.yml`) is the reflex; this is the heartbeat and the
-push.
+This is the agentic layer over the deterministic scripts. The **projection** block is
+kept fresh by CI on every issue/PR event (`plan-sequence.yml` runs `--write`), so the
+heartbeat's real job is the part CI can't do: re-rank the **lanes** via `/plan-lanes`
+(forked) when they go stale vs the live ready/running sets, surface what changed, and
+propose structural fixes. CI is the reflex; this is the heartbeat and the push.
 
 ## The tick
 
@@ -28,17 +28,21 @@ restating the whole projection, no explaining the tooling. Don't narrate the ste
 run them and report the result.
 
 1. **Refresh the projection + capture the delta** — `--write` computes the status delta
-   against the epic's *current* block (i.e. the last tick) **before** splicing, so this
-   one call both updates the body and tells you what changed:
+   against the epic's *current* block **before** splicing, so this one call both updates
+   the body and tells you what changed:
 
    ```sh
    uv run --no-project python scripts/plan_sequence.py --epic <N> --write
    ```
 
    - `Updated #<N>` + a delta (`newly ready: #…`, `left blocked: #…`) → it **changed**.
-   - `already up to date` → nothing changed; this tick is quiet.
+   - `already up to date` → nothing changed since the block was last written.
 
-   (The splice overwrites only the marked region — bounded and reversible.)
+   CI (`plan-sequence.yml`) usually wrote it on the triggering event already, so this is
+   mostly an idempotent safety net + the source of the human-facing delta. (The splice
+   overwrites only the marked region — bounded and reversible.) **Don't** use this delta
+   to decide whether to re-rank lanes — CI absorbs it; step 3 keys off the lanes' own
+   basis instead.
 
 2. **Drift + release check** — read-only:
 
@@ -46,20 +50,29 @@ run them and report the result.
    uv run --no-project python scripts/check_issue_hygiene.py --all
    ```
 
-3. **Material tick? Re-rank + persist the lanes.** If step 1 reported a status delta —
-   anything other than `already up to date` / `no status changes` — the ready set moved:
-   invoke `/plan-lanes` via the `Skill` tool (it runs **forked**, so the corpus-reading
-   stays out of this heartbeat's context, and returns the ranked lanes as markdown).
-   Then **persist** that markdown into the epic's `<!-- plan-lanes -->` block —
-   `/plan-lanes` is read-only, so you are the writer — by piping its return to:
+3. **Lanes stale? Re-rank + persist.** Ask the script whether the agentic lanes still
+   match the live ready/running sets (this keys off the lanes block's own basis, **not**
+   the step-1 delta — CI absorbs that):
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N>
+   uv run --no-project python scripts/plan_sequence.py --lanes-stale --epic <N>
    ```
 
-   On a **quiet tick, skip both** — gating on change is the point: pay for lane-planning
-   only when the ready work actually moved. (A `touches`/`Relationships` edit that moves
-   no issue's section won't trip this — an acceptable miss for now.)
+   - `fresh` (exit 0) → skip both; nothing to re-rank.
+
+   - `stale` (exit 1) → the ready or in-flight set moved since the last ranking: invoke
+     `/plan-lanes` via the `Skill` tool (it runs **forked**, so the corpus-reading stays
+     out of this heartbeat's context, and returns the ranked lanes as markdown), then
+     **persist** that markdown into the epic's `<!-- plan-lanes -->` block —
+     `/plan-lanes` is read-only, so you are the writer — by piping its return to:
+
+     ```sh
+     uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N>
+     ```
+
+   Gating on staleness is the point: pay for lane-planning only when the ready work
+   actually moved. (A `touches`/`Relationships` edit that moves no issue's section won't
+   trip this — an acceptable miss for now.)
 
 4. **Surface the DELTAS, not the whole state.** Report only:
    - the status delta from step 1 (newly ready / newly unblocked / newly running, or

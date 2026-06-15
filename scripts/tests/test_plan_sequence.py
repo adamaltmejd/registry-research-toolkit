@@ -181,6 +181,30 @@ def test_render_lanes_block_frames_and_strips() -> None:
     assert ps.render_lanes_block("  1. lane A — #1\n") == block
 
 
+def test_basis_comment_round_trips_through_parse() -> None:
+    block = ps.render_lanes_block("lanes", ps.basis_comment({3, 1}, {2}))
+    assert ps.parse_basis(block) == ({1, 3}, {2})  # sorted in, set out
+    # Empty sets are representable (and distinct from "no basis").
+    assert ps.parse_basis(
+        ps.render_lanes_block("x", ps.basis_comment(set(), set()))
+    ) == (
+        set(),
+        set(),
+    )
+
+
+def test_parse_basis_absent_is_none() -> None:
+    assert ps.parse_basis(ps.render_lanes_block("no basis here")) is None
+
+
+def test_lanes_are_stale_against_live_sets() -> None:
+    fresh = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}))
+    assert not ps.lanes_are_stale(fresh, {1, 2}, {3})  # basis matches → fresh
+    assert ps.lanes_are_stale(fresh, {1, 2, 4}, {3})  # ready moved → stale
+    assert ps.lanes_are_stale(fresh, {1, 2}, set())  # running cleared → stale
+    assert ps.lanes_are_stale("", {1}, set())  # no block at all → stale
+
+
 # --- render --------------------------------------------------------------------------
 
 

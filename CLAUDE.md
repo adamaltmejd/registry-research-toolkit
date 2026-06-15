@@ -199,9 +199,11 @@ blocked / parallel-safe / pending-release** — is rendered by `/plan-sequence`
 (`scripts/plan_sequence.py`) into a `<!-- plan-sequence -->` block in the epic body. To
 see what's ready to pick up and which issues are file-disjoint, **read that block** (or
 re-run `/plan-sequence`); **don't hand-edit inside the markers** — it's overwritten. The
-lane/decision narrative *around* the block is the editorial layer you do edit.
-`/issue-pulse` (run via `/loop`) refreshes the block and reports deltas on a cadence.
-The sequencing epic is #328.
+lane/decision narrative *around* the block is the editorial layer you do edit. The block
+is **event-refreshed by CI** — `plan-sequence.yml` runs `--write` on every issue/PR
+event, so it tracks reality without waiting for a human or the loop. `/issue-pulse` (run
+via `/loop`) re-runs the refresh as an idempotent safety net and reports deltas. The
+sequencing epic is #328.
 
 **Lanes are ranked agentically.** `/plan-sequence` gives only the deterministic *floor*
 — file-disjoint groups by `touches` set-intersection. **`/plan-lanes`** is the judgment
@@ -209,21 +211,26 @@ layer on top: it reads the issue bodies to fold in what set-intersection can't s
 (semantic conflicts with no file overlap, implicit blockers, what coheres into one
 PR-stream), then returns **ranked, parallel-safe candidate lanes** as markdown. It runs
 **forked** (its own context), so callers get the ranked lanes back without the
-corpus-reading bloating theirs: `/issue-pulse` fires it on a material tick (the ready
-set moved); `/pr-pipeline next` consumes it to pick a lane instead of composing one from
+corpus-reading bloating theirs: `/issue-pulse` re-ranks when the lanes go **stale**;
+`/pr-pipeline next` consumes the ranking to pick a lane instead of composing one from
 raw candidates; you can run it on demand. `/plan-lanes` is itself **read-only** — it
 ranks and returns, never editing issues or opening PRs. `/issue-pulse` then **persists**
-the returned ranking into a second generated block in the epic body —
-`<!-- plan-lanes -->`, alongside `<!-- plan-sequence -->` — via
-`plan_sequence.py --write-lanes` (single writer; `/pr-pipeline` only reads). Same rule
-as the projection block: **don't hand-edit inside the markers** — it's overwritten; the
-narrative around it is yours.
+the ranking into a second generated block — `<!-- plan-lanes -->`, alongside
+`<!-- plan-sequence -->` — via `plan_sequence.py --write-lanes` (single writer;
+`/pr-pipeline` only reads). Staleness is deterministic: the lanes block stamps the
+ready/running sets it was ranked against, and `--lanes-stale` compares them to the live
+state — necessary because once CI event-refreshes the projection, the projection delta
+no longer signals that the ready set moved (the refresh absorbed it). Same edit rule as
+the projection: **don't hand-edit inside the markers** — it's overwritten.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
-`issue-hygiene.yml`) checks these rules read-only: required labels, resolvable
-relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement, `touches`-glob
-resolution, plus drift alerts (a merged PR that left its issue open; `reg_meta_build` DB
-content changed since the last `reg_meta_build/v*` tag, i.e. a release is pending).
+`issue-hygiene.yml`, **read-only** — `issues:read`) checks these rules: required labels,
+resolvable relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement,
+`touches`-glob resolution, plus drift alerts (a merged PR that left its issue open;
+`reg_meta_build` DB content changed since the last `reg_meta_build/v*` tag, i.e. a
+release is pending). The write-capable refresh lives in a **separate** workflow
+(`plan-sequence.yml`, `issues:write`) so the hygiene job's read-only guarantee stays
+intact.
 
 **Marking work in-flight** — when you start developing an issue — in `/pr-pipeline` **or
 ad-hoc** — open a **draft PR** early whose body has `Closes #N`. That is the in-flight
