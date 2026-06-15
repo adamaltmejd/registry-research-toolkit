@@ -1,0 +1,245 @@
+"""Unit tests for scripts/check_issue_hygiene.py — the issue-tracker hygiene validator.
+
+The validator's parsing logic (the relationship + touches regexes and the build-debt
+path classifier) is the bug-prone surface — two review passes found ~15 defects in it.
+These tests pin that behaviour and the per-issue checks. The `gh`/`git`-calling functions
+(fetch_*, check_done_but_open, check_unreleased_build_debt, main) are covered by live runs.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+from pathlib import Path
+
+import pytest
+
+_SCRIPTS = Path(__file__).resolve().parents[1]
+_ROOT = _SCRIPTS.parent
+_SPEC = importlib.util.spec_from_file_location(
+    "check_issue_hygiene", _SCRIPTS / "check_issue_hygiene.py"
+)
+assert _SPEC and _SPEC.loader
+h = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(h)
+
+_AGENTS = (_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+
+
+# --- parse_relationships -------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        ("this work is related to #99 in passing", []),  # prose mid-line → not a tie
+        ("Part of #365", [("part of", 365)]),  # plain line
+        ("- Part of #365", [("part of", 365)]),  # bullet
+        ("> Blocked by #5", [("blocked by", 5)]),  # blockquote
+        ("depends on #7", [("depends on", 7)]),  # case-insensitive
+        ("Follow-up to #42", [("follow-up to", 42)]),
+        ("Depends  on #6", [("depends on", 6)]),  # reflow double space
+        (
+            "Blocked by #1, #2, #3",
+            [("blocked by", 1), ("blocked by", 2), ("blocked by", 3)],
+        ),  # comma list
+    ],
+)
+def test_parse_relationships(body: str, expected: list[tuple[str, int]]) -> None:
+    assert h.parse_relationships(body) == expected
+
+
+def test_parse_relationships_ignores_fenced_code() -> None:
+    body = "Depends on #5\n```\nRelated to #999\n```\n"
+    assert h.parse_relationships(body) == [("depends on", 5)]
+
+
+# --- parse_touches -------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("body", "expected"),
+    [
+        ("```touches\nreg_meta/x.py\n```", ["reg_meta/x.py"]),
+        ("```touches\r\nreg_meta/x.py\r\n```\r\n", ["reg_meta/x.py"]),  # CRLF
+        ("- item\n    ```touches\n    a/b.py\n    ```", ["a/b.py"]),  # indented
+        ("```touches\npath.py  # note\n# full comment\n\n```", ["path.py"]),
+        ("no touches block here", []),
+    ],
+)
+def test_parse_touches(body: str, expected: list[str]) -> None:
+    assert h.parse_touches(body) == expected
+
+
+# --- build-debt path classifier ------------------------------------------------------
+
+
+def _is_global_content(f: str) -> bool:
+    return f not in h.BUILD_IGNORE and bool(h.BUILD_CONTENT_RE.match(f))
+
+
+@pytest.mark.parametrize(
+    ("path", "is_content"),
+    [
+        ("reg_meta_build/src/reg_meta_build/db.py", True),
+        ("reg_meta_build/concept_groups.toml", True),
+        ("reg_meta_build/fqid_slugs/sos.toml", True),
+        ("reg_meta_build/fqid_slugs/swecov/.snapshot.json", False),  # steward flavor
+        ("reg_meta_build/pyproject.toml", False),  # version bump
+        ("reg_meta_build/src/reg_meta_build/__init__.py", False),  # __version__ only
+        ("reg_meta_build/tests/test_x.py", False),
+        ("reg_meta_build/DESIGN.md", False),
+        ("reg_meta/src/reg_meta/db.py", False),  # different package
+    ],
+)
+def test_build_debt_classifier(path: str, is_content: bool) -> None:
+    assert _is_global_content(path) is is_content
+
+
+# --- check_issue (per-issue checks) --------------------------------------------------
+
+
+def _check(
+    *,
+    body: str = "",
+    labels: tuple[str, ...] = (),
+    known: set[int] = frozenset(),  # type: ignore[assignment]
+    issue_state: dict[int, str] | None = None,
+    parent_of: dict[int, int] | None = None,
+    num: int = 1,
+) -> list[tuple[str, int | None, str]]:
+    out = h.Findings()
+    issue = {
+        "number": num,
+        "labels": [{"name": label} for label in labels],
+        "body": body,
+    }
+    h.check_issue(
+        issue, set(known), dict(issue_state or {}), dict(parent_of or {}), _ROOT, out
+    )
+    return out.items
+
+
+def _has(items: list[tuple[str, int | None, str]], level: str, needle: str) -> bool:
+    return any(lvl == level and needle in msg for lvl, _, msg in items)
+
+
+def test_missing_labels_two_errors() -> None:
+    items = _check(labels=())
+    assert _has(items, "ERROR", "area label")
+    assert _has(items, "ERROR", "type label")
+
+
+def test_valid_labels_no_label_error() -> None:
+    items = _check(labels=("reg_meta", "bug"))
+    assert not any("label" in msg for _, _, msg in items)
+
+
+def test_two_area_labels_error() -> None:
+    items = _check(labels=("reg_meta", "reg_webapp", "bug"))
+    assert _has(items, "ERROR", "area label")
+
+
+def test_dangling_relationship_error() -> None:
+    items = _check(labels=("reg_meta", "bug"), body="Depends on #999", known={1})
+    assert _has(items, "ERROR", "#999")
+
+
+def test_resolvable_relationship_no_error() -> None:
+    items = _check(
+        labels=("reg_meta", "bug"),
+        body="Depends on #2",
+        known={1, 2},
+        issue_state={2: "CLOSED"},
+    )
+    assert not _has(items, "ERROR", "#2")
+
+
+def test_blocked_label_without_open_blocker_warns() -> None:
+    items = _check(
+        labels=("reg_meta", "bug", "blocked"),
+        body="Blocked by #2",
+        known={1, 2},
+        issue_state={2: "CLOSED"},
+    )
+    assert _has(items, "WARN", "blocked")
+
+
+def test_open_blocker_without_blocked_label_warns() -> None:
+    items = _check(
+        labels=("reg_meta", "bug"),
+        body="Blocked by #2",
+        known={1, 2},
+        issue_state={2: "OPEN"},
+    )
+    assert _has(items, "WARN", "blocker")
+
+
+def test_part_of_without_native_parent_warns() -> None:
+    items = _check(labels=("reg_meta", "bug"), body="Part of #5", known={1, 5})
+    assert _has(items, "WARN", "Part of #5")
+
+
+def test_part_of_matches_native_parent_ok() -> None:
+    items = _check(
+        labels=("reg_meta", "bug"), body="Part of #5", known={1, 5}, parent_of={1: 5}
+    )
+    assert not any("Part of" in msg for _, _, msg in items)
+
+
+def test_native_parent_without_part_of_warns() -> None:
+    items = _check(labels=("reg_meta", "bug"), parent_of={1: 5})
+    assert _has(items, "WARN", "native sub-issue")
+
+
+@pytest.mark.parametrize("pattern", ["/etc/passwd", ".", "../sibling/x.py"])
+def test_touches_non_relative_warns_not_crash(pattern: str) -> None:
+    items = _check(labels=("reg_meta", "bug"), body=f"```touches\n{pattern}\n```")
+    assert _has(items, "WARN", "not a repo-relative path")
+
+
+def test_touches_matching_file_no_warn() -> None:
+    items = _check(
+        labels=("reg_meta", "bug"),
+        body="```touches\nscripts/check_issue_hygiene.py\n```",
+    )
+    assert not any("touches" in msg for _, _, msg in items)
+
+
+def test_touches_missing_file_warns() -> None:
+    items = _check(labels=("reg_meta", "bug"), body="```touches\nno/such/file.xyz\n```")
+    assert _has(items, "WARN", "matches no files")
+
+
+# --- doc <-> code agreement ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "keyword",
+    ["Part of", "Depends on", "Blocked by", "Follow-up to", "Supersedes", "Related to"],
+)
+def test_doc_relationship_keywords_parse(keyword: str) -> None:
+    assert keyword in _AGENTS  # documented
+    assert h.parse_relationships(f"- {keyword} #1") == [(keyword.lower(), 1)]
+
+
+def test_doc_touches_example_parses() -> None:
+    assert "reg_meta_build/concept_groups.toml" in h.parse_touches(_AGENTS)
+
+
+def test_area_and_type_labels_documented() -> None:
+    for label in h.AREA_LABELS | h.TYPE_LABELS:
+        assert label in _AGENTS, f"label '{label}' missing from AGENTS.md"
+
+
+# --- emit ordering -------------------------------------------------------------------
+
+
+def test_emit_is_deterministic(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
+    out = h.Findings()
+    out.warn(50, "later issue")
+    out.warn(None, "corpus alert")
+    out.error(10, "earlier issue")
+    h.emit(out, "test")
+    printed = capsys.readouterr().out
+    assert printed.index("#10") < printed.index("#50") < printed.index("corpus alert")

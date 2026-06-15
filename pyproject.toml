@@ -30,6 +30,7 @@ testpaths = [
   "reg_monabundle",
   "reg_schema",
   "reg_webapp/backend/tests",
+  "scripts/tests",
 ]
 markers = ["integration: full pipeline tests requiring Docker"]
 

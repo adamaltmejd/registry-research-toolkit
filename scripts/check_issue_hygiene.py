@@ -336,7 +336,12 @@ def emit(out: Findings, scope: str) -> None:
         warns = len(out.items) - errs
         lines.append(f"**{errs} error(s), {warns} warning(s)**")
         lines.append("")
-        for level, num, msg in out.items:
+        # Deterministic order (stable diffs): by issue number, ERROR before WARN,
+        # corpus-wide alerts (num=None) last.
+        ordered = sorted(
+            out.items, key=lambda it: (it[1] is None, it[1] or 0, it[0] == "WARN")
+        )
+        for level, num, msg in ordered:
             where = f"#{num}: " if num is not None else ""
             lines.append(f"- **{level}** {where}{msg}")
     report = "\n".join(lines)
