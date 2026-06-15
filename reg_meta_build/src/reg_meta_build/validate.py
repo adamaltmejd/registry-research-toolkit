@@ -116,7 +116,9 @@ class ValidationResult:
         return "\n".join(parts)
 
 
-def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResult:
+def validate_built_db(
+    db_path: Path, *, corpus: bool = False, flavored: bool = False
+) -> ValidationResult:
     """Run the build invariants against ``db_path``.
 
     The result records ``[OK]`` / ``[FAIL]`` lines per check; callers
@@ -135,6 +137,17 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
     ``corpus=True``. Every other check is corpus-independent and always
     runs, so synthetic CI exercises the full structural suite without any
     real data.
+
+    ``flavored`` (#365 PR2) validates a steward-flavored DB: an ``extend-db``
+    overlay (global core + steward registers/variables/grafts/aliases) on top
+    of a released global DB. It runs the SAME full structural suite as
+    ``corpus=False`` (the real-corpus volume floors stay OFF — a flavor adds a
+    small, steward-specific tail, not the SCB/SOS bulk), but TIGHTENS the
+    minted-id band check: every non-SCB provider's ids must be in the high
+    minted band ``[2^62, 2^63)`` (steward providers are ``mint()``-ed). SCB
+    stays unchanged — SCB-register grafts legitimately keep low-band sequential
+    ids. ``flavored`` is independent of ``corpus``; a flavor build never sets
+    ``corpus`` (it has no full SCB/SOS corpus to floor-check).
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -158,7 +171,7 @@ def validate_built_db(db_path: Path, *, corpus: bool = False) -> ValidationResul
         _check_name_field_hygiene(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
-        _check_minted_id_bands(conn, result, tables)
+        _check_minted_id_bands(conn, result, tables, flavored=flavored)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
         # writes variable_state directly (no scratch intermediary like SCB's
@@ -830,7 +843,11 @@ def _check_panel_refs_have_states(
 
 
 def _check_minted_id_bands(
-    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    flavored: bool = False,
 ) -> None:
     """A4.3b: every SOS-provider id (register -> ... -> variable_state) is in the
     minted band [2^62, 2^63); every SCB-provider id is below 2^62.
@@ -842,6 +859,15 @@ def _check_minted_id_bands(
     they belong to neither band. Self-skips when no SOS rows are present (the
     SCB-only fixture / `--providers=scb` build), so it only bites on a combined
     build.
+
+    ``flavored=True`` (#365 PR2) GENERALIZES the SOS rule to every non-SCB
+    provider: a steward-flavored DB (``extend-db``) mints its steward registers
+    via ``id.mint()``, so EVERY non-SCB provider's ids must be in the high band
+    ``[2^62, 2^63)``. This catches a steward overlay that forgot to mint a row
+    (it would land low and risk an SCB-band collision). The SCB rule is
+    UNCHANGED — SCB-register grafts legitimately keep low-band sequential ids,
+    so SCB ids stay ``< 2^62``. With ``flavored=False`` (the global build) the
+    behavior is identical to before: only SOS is checked on the high side.
     """
     result.section("[bands: minted-id disjointness]")
     if "register" not in tables:
@@ -869,38 +895,54 @@ def _check_minted_id_bands(
         ),
     ]
     failures = 0
-    n_sos = 0
+    n_high = 0  # rows expected in the minted band (SOS, or all non-SCB if flavored)
     for label, sql in grains:
-        # SCB ids must be < 2^62.
+        # SCB ids must be < 2^62 (UNCHANGED in both modes — grafts stay low).
         bad_scb = conn.execute(
             f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id >= ?",
             (PROVIDER_ID_SCB, _MINT_BIT),
         ).fetchone()[0]
-        # SOS ids must be >= 2^62.
-        bad_sos = conn.execute(
-            f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id < ?",
-            (PROVIDER_ID_SOS, _MINT_BIT),
-        ).fetchone()[0]
-        n_sos += conn.execute(
-            f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ?",
-            (PROVIDER_ID_SOS,),
-        ).fetchone()[0]
+        if flavored:
+            # Every NON-SCB provider's ids must be >= 2^62 (steward + SOS, all
+            # minted). A single predicate covers them: provider_id != SCB.
+            bad_high = conn.execute(
+                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id != ? AND id < ?",
+                (PROVIDER_ID_SCB, _MINT_BIT),
+            ).fetchone()[0]
+            n_high += conn.execute(
+                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id != ?",
+                (PROVIDER_ID_SCB,),
+            ).fetchone()[0]
+            high_label = "non-SCB"
+        else:
+            # SOS ids must be >= 2^62 (the original global-build rule).
+            bad_high = conn.execute(
+                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id < ?",
+                (PROVIDER_ID_SOS, _MINT_BIT),
+            ).fetchone()[0]
+            n_high += conn.execute(
+                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ?",
+                (PROVIDER_ID_SOS,),
+            ).fetchone()[0]
+            high_label = "SOS"
         if bad_scb:
             result.fail(
                 f"{bad_scb} {label} SCB id(s) overflow the minted band (>= 2^62)"
             )
             failures += 1
-        if bad_sos:
+        if bad_high:
             result.fail(
-                f"{bad_sos} {label} SOS id(s) below the minted band (< 2^62) — "
-                "un-minted?"
+                f"{bad_high} {label} {high_label} id(s) below the minted band "
+                "(< 2^62) — un-minted?"
             )
             failures += 1
     if failures == 0:
-        if n_sos == 0:
-            result.ok("no SOS rows — minted-id band check trivially holds")
+        if n_high == 0:
+            label = "non-SCB" if flavored else "SOS"
+            result.ok(f"no {label} rows — minted-id band check trivially holds")
         else:
-            result.ok("all SCB ids < 2^62 and all SOS ids >= 2^62")
+            high_label = "non-SCB" if flavored else "SOS"
+            result.ok(f"all SCB ids < 2^62 and all {high_label} ids >= 2^62")
 
 
 # A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by

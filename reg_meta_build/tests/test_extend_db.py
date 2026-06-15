@@ -1,0 +1,863 @@
+"""Tests for the steward-flavored DB overlay (#365 PR2; `extend_db.py`).
+
+Synthetic-only: a small global DB is built from the SCB CSV fixtures, then
+`extend_db` overlays a steward inventory onto a COPY. Minted ids are computed
+via `id.mint(...)` (deterministic) so a temp steward slug dir can be keyed on
+them. Covers the four operation kinds, the no-clobber guarantee, base-DB
+immutability, incremental slugging, FTS rebuild, flavored validation, and
+deterministic re-run.
+
+The `_no_repo_curation` autouse fixture (session-scoped, in `_shared_fixtures`)
+is in scope, so the global build runs with empty curation maps.
+"""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+from typing import TYPE_CHECKING
+
+import pytest
+from _csv_fixtures import write_scb_input
+from _shared_fixtures import _write_fixture_slug_dir
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.db import build_db
+from reg_meta_build.extend_db import extend_db, load_inventory
+from reg_meta_build.id import mint
+from reg_meta_build.validate import validate_built_db
+
+from reg_meta_build.fqid_slugs import populate_variable_slugs
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+_MINT_BIT = 1 << 62
+
+# Steward + provider used across the inventory fixtures.
+_STEWARD = "swecov"
+_BANK = "swedbank"
+
+
+# ── inventory fixtures ─────────────────────────────────────────────────────────
+
+
+def _base_inventory() -> dict:
+    """A full inventory exercising all four kinds against the synthetic global
+    DB (registers testreg/otherreg, variants individer/foretag, vars incl.
+    scb/otherreg/lopnr)."""
+    return {
+        "steward": _STEWARD,
+        "source_label": "swecov-inventory-test",
+        "providers": [{"slug": _BANK, "name": "Swedbank AB"}],
+        "registers": [
+            {
+                "provider": _BANK,
+                "key": "transaktioner",
+                "name": "Transaktioner",
+                "purpose": None,
+                "description": "Bankkontotransaktioner.",
+                "variants": [
+                    {
+                        "key": "_default",
+                        "name": "Transaktioner",
+                        "description": None,
+                        "variables": [
+                            {
+                                "key": "belopp",
+                                "name": "Belopp",
+                                "definition": None,
+                                "description": "Transaktionsbelopp i SEK.",
+                                "column": "BELOPP",
+                                "data_type": "float",
+                                "is_identifier": False,
+                                "is_sensitive": False,
+                                "valid_from": None,
+                                "valid_to": None,
+                            },
+                            {
+                                "key": "kontonr",
+                                "name": "Kontonummer",
+                                "definition": None,
+                                "description": None,
+                                "column": "KONTO",
+                                "data_type": "varchar",
+                                "is_identifier": True,
+                                "is_sensitive": True,
+                                "valid_from": "2018",
+                                "valid_to": None,
+                            },
+                        ],
+                    }
+                ],
+            }
+        ],
+        # Graft onto an EXISTING SCB register/variant (testreg/individer).
+        "grafts": [
+            {
+                "register": "scb/testreg",
+                "variant": "individer",
+                "column": "STEWARD_GRAFT_COL",
+                "name": "Steward graft",
+                "description": "A SCB column the steward documents.",
+                "data_type": "varchar",
+            }
+        ],
+        # Alias a pseudonym column onto an EXISTING SCB variable.
+        "aliases": [
+            {
+                "variable": "scb/otherreg/lopnr",
+                "register": "scb/otherreg",
+                "variant": "foretag",
+                "delivery_column": "P1105_LopNr_PersonNr",
+            }
+        ],
+    }
+
+
+def _steward_register_ids() -> dict[str, int]:
+    """Deterministic minted ids for the base inventory's steward graph."""
+    return {
+        "provider": mint("provider", _BANK),
+        "register": mint("register", _BANK, "transaktioner"),
+        "variant": mint("variant", _BANK, "transaktioner", "_default"),
+        "var_belopp": mint("variable", _BANK, "transaktioner", "_default", "belopp"),
+        "var_kontonr": mint("variable", _BANK, "transaktioner", "_default", "kontonr"),
+    }
+
+
+def _write_steward_slug_dir(slug_dir: Path) -> None:
+    """Author a steward slug dir keyed on the minted ids: a `swedbank.toml`
+    register/variant slug entry + an UNFROZEN sentinel + empty snapshot. No
+    variable entries — the new variables auto-slug incrementally."""
+    ids = _steward_register_ids()
+    (slug_dir / "UNFROZEN").write_text("test steward unfrozen\n", encoding="utf-8")
+    (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
+    (slug_dir / f"{_BANK}.toml").write_text(
+        f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
+        f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
+        'slug = "transaktioner-default"\n',
+        encoding="utf-8",
+    )
+
+
+# ── build helpers ──────────────────────────────────────────────────────────────
+
+
+@pytest.fixture()
+def global_db(tmp_path: Path) -> Path:
+    """Build a synthetic global DB from the SCB CSV fixtures; return its path."""
+    inp, dbdir, slug = tmp_path / "in", tmp_path / "globaldb", tmp_path / "gslug"
+    for d in (inp, dbdir, slug):
+        d.mkdir()
+    write_scb_input(inp)
+    _write_fixture_slug_dir(slug)
+    build_db(input_dir=inp, db_dir=dbdir, skip_classifications=True, slug_dir=slug)
+    return dbdir / "reg_meta.db"
+
+
+def _run_extend(
+    tmp_path: Path,
+    base_db: Path,
+    inventory: dict,
+    *,
+    out_name: str = "out",
+    validate: bool = False,
+) -> tuple[dict, Path]:
+    """Write the inventory + a steward slug dir, run extend_db, return
+    (counts, output_db_path)."""
+    inv_path = tmp_path / f"{out_name}-inventory.json"
+    inv_path.write_text(json.dumps(inventory), encoding="utf-8")
+    slug_dir = tmp_path / f"{out_name}-sslug"
+    slug_dir.mkdir()
+    _write_steward_slug_dir(slug_dir)
+    out_dir = tmp_path / out_name
+    out_dir.mkdir()
+    hook = None
+    if validate:
+
+        def hook(staging: Path) -> None:
+            result = validate_built_db(staging, flavored=True)
+            if result.failures:
+                raise AssertionError(f"flavored validation failed: {result.failures}")
+
+    counts = extend_db(
+        base_db=base_db,
+        inventory_path=inv_path,
+        db_dir=out_dir,
+        steward=_STEWARD,
+        slug_dir=slug_dir,
+        pre_rename_hook=hook,
+    )
+    return counts, out_dir / "reg_meta.db"
+
+
+# ── overlay inserts ──────────────────────────────────────────────────────────────
+
+
+class TestOverlayInserts:
+    def test_new_core_graph_rows_present_with_source_label(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        counts, out = _run_extend(tmp_path, global_db, _base_inventory())
+        assert counts["providers"] == 1
+        assert counts["registers"] == 1
+        assert counts["variants"] == 1
+        assert counts["variables"] == 2
+        assert counts["states"] == 2
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+
+        prov = conn.execute(
+            "SELECT provider_id, name FROM provider WHERE slug = ?", (_BANK,)
+        ).fetchone()
+        assert prov == (ids["provider"], "Swedbank AB")
+
+        reg = conn.execute(
+            "SELECT register_id, provider_id, name FROM register WHERE register_id = ?",
+            (ids["register"],),
+        ).fetchone()
+        assert reg == (ids["register"], ids["provider"], "Transaktioner")
+
+        # Both steward variables carry the inventory source_label.
+        labels = {
+            r[0]
+            for r in conn.execute(
+                "SELECT DISTINCT source_label FROM variable WHERE register_id = ?",
+                (ids["register"],),
+            )
+        }
+        assert labels == {"swecov-inventory-test"}
+
+        # Each state's delivery column has a variable_alias row.
+        for var_id, column in (
+            (ids["var_belopp"], "BELOPP"),
+            (ids["var_kontonr"], "KONTO"),
+        ):
+            state = conn.execute(
+                "SELECT delivery_column_name FROM variable_state WHERE variable_id = ?",
+                (var_id,),
+            ).fetchone()
+            assert state == (column,)
+            alias = conn.execute(
+                "SELECT 1 FROM variable_alias WHERE variable_id = ? "
+                "AND delivery_column_name = ?",
+                (var_id, column),
+            ).fetchone()
+            assert alias is not None
+
+    def test_flags_and_validity_window_round_trip(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        # kontonr: is_identifier/is_sensitive set, valid_from "2018" expanded.
+        flags = conn.execute(
+            "SELECT is_identifier, is_sensitive FROM variable WHERE variable_id = ?",
+            (ids["var_kontonr"],),
+        ).fetchone()
+        assert flags == (1, 1)
+        window = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state WHERE variable_id = ?",
+            (ids["var_kontonr"],),
+        ).fetchone()
+        # valid_from "2018" expands to full ISO bounds (the DDL CHECKs
+        # length=10); valid_to (None) falls back to the open sentinel.
+        assert window == ("2018-01-01", "9999-12-31")
+        # belopp: open-range fallback on both ends.
+        belopp_window = conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state WHERE variable_id = ?",
+            (ids["var_belopp"],),
+        ).fetchone()
+        assert belopp_window == ("0001-01-01", "9999-12-31")
+
+    def test_steward_provider_id_in_high_band(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _run_extend(tmp_path, global_db, _base_inventory())
+        ids = _steward_register_ids()
+        for key in ("provider", "register", "variant", "var_belopp", "var_kontonr"):
+            assert ids[key] >= _MINT_BIT
+
+
+# ── grafts ───────────────────────────────────────────────────────────────────
+
+
+class TestGrafts:
+    def test_graft_minted_onto_existing_scb_register_in_low_band(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        counts, out = _run_extend(tmp_path, global_db, _base_inventory())
+        assert counts["grafts_minted"] == 1
+        assert counts["grafts_skipped"] == 0
+        conn = sqlite3.connect(out)
+        row = conn.execute(
+            "SELECT variable_id, source_label FROM variable "
+            "WHERE provider_key = 'graft:STEWARD_GRAFT_COL'"
+        ).fetchone()
+        assert row is not None
+        var_id, source_label = row
+        # SCB-register graft stays in the SCB low band.
+        assert var_id < _MINT_BIT
+        assert source_label == "swecov-inventory-test"
+        # state + alias present on the target variant (individer = 10).
+        state = conn.execute(
+            "SELECT register_variant_id, delivery_column_name FROM variable_state "
+            "WHERE variable_id = ?",
+            (var_id,),
+        ).fetchone()
+        assert state == (10, "STEWARD_GRAFT_COL")
+        assert conn.execute(
+            "SELECT 1 FROM variable_alias WHERE variable_id = ? "
+            "AND delivery_column_name = ?",
+            (var_id, "STEWARD_GRAFT_COL"),
+        ).fetchone()
+
+    def test_graft_gap_fill_skips_existing_column(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        inv = _base_inventory()
+        # Kon already delivers in scb/testreg/individer.
+        inv["grafts"] = [
+            {
+                "register": "scb/testreg",
+                "variant": "individer",
+                "column": "Kon",
+                "name": "x",
+                "description": None,
+                "data_type": None,
+            }
+        ]
+        counts, _ = _run_extend(tmp_path, global_db, inv)
+        assert counts["grafts_minted"] == 0
+        assert counts["grafts_skipped"] == 1
+
+    def test_unresolved_graft_counted_not_fatal(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        inv = _base_inventory()
+        inv["grafts"] = [
+            {
+                "register": "scb/testreg",
+                "variant": "no-such-variant",
+                "column": "X",
+                "name": "x",
+                "description": None,
+                "data_type": None,
+            }
+        ]
+        counts, _ = _run_extend(tmp_path, global_db, inv)
+        assert counts["grafts_minted"] == 0
+        assert counts["unresolved"] == 1
+
+
+# ── aliases ──────────────────────────────────────────────────────────────────
+
+
+class TestAliases:
+    def test_alias_inserted_on_existing_variable(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        counts, out = _run_extend(tmp_path, global_db, _base_inventory())
+        assert counts["aliases"] == 1
+        conn = sqlite3.connect(out)
+        # The pseudonym column is now an alias of scb/otherreg/lopnr (variant 20).
+        row = conn.execute(
+            "SELECT va.register_variant_id FROM variable_alias va "
+            "JOIN variable v ON va.variable_id = v.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "WHERE r.slug = 'otherreg' AND v.slug = 'lopnr' "
+            "AND va.delivery_column_name = 'P1105_LopNr_PersonNr'"
+        ).fetchone()
+        assert row == (20,)
+
+    def test_alias_idempotent_within_run(self, tmp_path: Path, global_db: Path) -> None:
+        inv = _base_inventory()
+        # Same alias twice → INSERT OR IGNORE collapses; only one applied.
+        inv["aliases"] = inv["aliases"] * 2
+        counts, out = _run_extend(tmp_path, global_db, inv)
+        assert counts["aliases"] == 1
+        conn = sqlite3.connect(out)
+        n = conn.execute(
+            "SELECT COUNT(*) FROM variable_alias "
+            "WHERE delivery_column_name = 'P1105_LopNr_PersonNr'"
+        ).fetchone()[0]
+        assert n == 1
+
+    def test_unresolved_alias_counted(self, tmp_path: Path, global_db: Path) -> None:
+        inv = _base_inventory()
+        inv["aliases"] = [
+            {
+                "variable": "scb/otherreg/no-such-var",
+                "register": "scb/otherreg",
+                "variant": "foretag",
+                "delivery_column": "X",
+            }
+        ]
+        counts, _ = _run_extend(tmp_path, global_db, inv)
+        assert counts["aliases"] == 0
+        assert counts["unresolved"] == 1
+
+
+# ── no-clobber + base-DB immutability ────────────────────────────────────────
+
+
+class TestNoClobber:
+    def test_global_core_rows_and_slugs_byte_identical(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        before = _global_snapshot(sqlite3.connect(global_db))
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        after = _global_snapshot(sqlite3.connect(out))
+        assert before == after
+
+    def test_base_db_not_mutated(self, tmp_path: Path, global_db: Path) -> None:
+        size_before = global_db.stat().st_size
+        mtime_before = global_db.stat().st_mtime_ns
+        digest_before = _global_snapshot(sqlite3.connect(global_db))
+        _run_extend(tmp_path, global_db, _base_inventory())
+        assert global_db.stat().st_size == size_before
+        assert global_db.stat().st_mtime_ns == mtime_before
+        assert _global_snapshot(sqlite3.connect(global_db)) == digest_before
+
+
+def _global_snapshot(conn: sqlite3.Connection) -> dict:
+    """Snapshot the pre-existing SCB global core graph (provider_id 1) for the
+    no-clobber comparison: every register/variant/variable row + its slug."""
+    return {
+        "registers": conn.execute(
+            "SELECT register_id, slug, name FROM register WHERE provider_id = 1 "
+            "ORDER BY register_id"
+        ).fetchall(),
+        "variants": conn.execute(
+            "SELECT rv.register_variant_id, rv.slug, rv.name FROM register_variant rv "
+            "JOIN register r ON rv.register_id = r.register_id "
+            "WHERE r.provider_id = 1 ORDER BY rv.register_variant_id"
+        ).fetchall(),
+        # Exclude graft variables (provider_key LIKE 'graft:%') — those are an
+        # additive overlay insert onto the SCB band, not a mutation of a
+        # pre-existing global row. The pre-existing global variables' slugs must
+        # be untouched.
+        "variables": conn.execute(
+            "SELECT v.variable_id, v.slug, v.name FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "WHERE r.provider_id = 1 AND v.provider_key NOT LIKE 'graft:%' "
+            "ORDER BY v.variable_id"
+        ).fetchall(),
+    }
+
+
+# ── slugs ────────────────────────────────────────────────────────────────────
+
+
+class TestSlugs:
+    def test_steward_register_variant_slugged_from_toml(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        assert (
+            conn.execute(
+                "SELECT slug FROM register WHERE register_id = ?", (ids["register"],)
+            ).fetchone()[0]
+            == "transaktioner"
+        )
+        assert (
+            conn.execute(
+                "SELECT slug FROM register_variant WHERE register_variant_id = ?",
+                (ids["variant"],),
+            ).fetchone()[0]
+            == "transaktioner-default"
+        )
+
+    def test_new_variables_auto_slugged(self, tmp_path: Path, global_db: Path) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        slugs = {
+            r[0]
+            for r in conn.execute(
+                "SELECT slug FROM variable WHERE register_id = ?", (ids["register"],)
+            )
+        }
+        assert None not in slugs
+        assert len(slugs) == 2  # belopp, kontonr both got distinct slugs
+
+    def test_steward_auto_toml_written(self, tmp_path: Path, global_db: Path) -> None:
+        inv_path = tmp_path / "inventory.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        slug_dir = tmp_path / "sslug"
+        slug_dir.mkdir()
+        _write_steward_slug_dir(slug_dir)
+        out_dir = tmp_path / "out"
+        out_dir.mkdir()
+        extend_db(
+            base_db=global_db,
+            inventory_path=inv_path,
+            db_dir=out_dir,
+            steward=_STEWARD,
+            slug_dir=slug_dir,
+        )
+        auto_path = slug_dir / f"{_BANK}.auto.toml"
+        assert auto_path.is_file()
+        assert "[variable" in auto_path.read_text(encoding="utf-8")
+
+
+# ── FTS rebuild ──────────────────────────────────────────────────────────────
+
+
+class TestFts:
+    def test_new_register_and_variable_searchable(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        # New register name "Transaktioner" indexed.
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM register_fts WHERE register_fts MATCH 'Transaktioner'"
+            ).fetchone()[0]
+            >= 1
+        )
+        # New variable name "Belopp" indexed.
+        assert (
+            conn.execute(
+                "SELECT COUNT(*) FROM variable_fts WHERE variable_fts MATCH 'Belopp'"
+            ).fetchone()[0]
+            >= 1
+        )
+
+    def test_no_duplicate_fts_rows(self, tmp_path: Path, global_db: Path) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        # External-content FTS rows must match the base-table row count exactly
+        # (a full rebuild, not a double-insert).
+        for tbl, fts in (("register", "register_fts"), ("variable", "variable_fts")):
+            assert (
+                conn.execute(f"SELECT COUNT(*) FROM {fts}").fetchone()[0]
+                == conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
+            )
+
+
+# ── flavored validation ──────────────────────────────────────────────────────
+
+
+class TestFlavoredValidation:
+    def test_overlaid_db_passes_flavored_validation(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        # validate=True runs the flavored validator as the pre_rename_hook; it
+        # raises on failure, so reaching here means it passed.
+        counts, out = _run_extend(tmp_path, global_db, _base_inventory(), validate=True)
+        assert counts["variables"] == 2
+        result = validate_built_db(out, flavored=True)
+        assert not result.failures, result.failures
+
+    def test_un_minted_steward_id_caught_by_band_check(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        # Deliberately corrupt a steward register id into the LOW band — the
+        # flavored band check must catch it (non-SCB id < 2^62).
+        conn.execute(
+            "UPDATE register SET register_id = 5 WHERE register_id = ?",
+            (ids["register"],),
+        )
+        conn.execute(
+            "UPDATE register_variant SET register_id = 5 WHERE register_id = ?",
+            (ids["register"],),
+        )
+        conn.execute(
+            "UPDATE variable SET register_id = 5 WHERE register_id = ?",
+            (ids["register"],),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(out, flavored=True)
+        assert any("below the minted band" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_low_band_steward_id_passes_non_flavored(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        # The same low-band non-SCB register passes the NON-flavored check (which
+        # only constrains SOS), proving the tightening is flavored-only.
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        conn = sqlite3.connect(out)
+        ids = _steward_register_ids()
+        conn.execute(
+            "UPDATE register SET register_id = 5 WHERE register_id = ?",
+            (ids["register"],),
+        )
+        conn.execute(
+            "UPDATE register_variant SET register_id = 5 WHERE register_id = ?",
+            (ids["register"],),
+        )
+        conn.execute(
+            "UPDATE variable SET register_id = 5 WHERE register_id = ?",
+            (ids["register"],),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(out, flavored=False)
+        assert not any("below the minted band" in f for f in result.failures)
+
+
+# ── idempotent re-run ────────────────────────────────────────────────────────
+
+
+class TestIdempotentReRun:
+    def test_two_runs_onto_fresh_copies_give_identical_counts_and_ids(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        counts_a, out_a = _run_extend(
+            tmp_path, global_db, _base_inventory(), out_name="a"
+        )
+        counts_b, out_b = _run_extend(
+            tmp_path, global_db, _base_inventory(), out_name="b"
+        )
+        # `db_path` is the per-run output dir; compare only the integer counts.
+        del counts_a["db_path"], counts_b["db_path"]
+        assert counts_a == counts_b
+        ids_a = _minted_overlay_ids(sqlite3.connect(out_a))
+        ids_b = _minted_overlay_ids(sqlite3.connect(out_b))
+        assert ids_a == ids_b
+
+
+def _minted_overlay_ids(conn: sqlite3.Connection) -> dict:
+    """All overlay-inserted ids (steward high-band + the SCB-band graft),
+    deterministic across runs."""
+    return {
+        "registers": conn.execute(
+            "SELECT register_id FROM register WHERE provider_id != 1 ORDER BY register_id"
+        ).fetchall(),
+        "variables": conn.execute(
+            "SELECT variable_id FROM variable WHERE provider_key LIKE 'graft:%' "
+            "OR variable_id >= ? ORDER BY variable_id",
+            (_MINT_BIT,),
+        ).fetchall(),
+    }
+
+
+# ── populate_variable_slugs(incremental=False) unchanged ─────────────────────
+
+
+class TestIncrementalFlagDefault:
+    def test_non_incremental_processes_all_variables(self, tmp_path: Path) -> None:
+        """incremental=False (the global build path) must derive a slug for EVERY
+        variable, including ones whose slug is already set — proving the
+        `AND v.slug IS NULL` filter is gated behind the flag and the global build
+        path is untouched."""
+        from reg_meta_build.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name, slug) "
+            "VALUES (1, 1, 'R', 'r')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
+            "VALUES (10, 1, 'V', 'v')"
+        )
+        # Two variables: one already-slugged, one NULL.
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (1, 1, '100', 'Alpha', 'preexisting')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
+            "VALUES (2, 1, '200', 'Beta')"
+        )
+        for vid in (1, 2):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
+                (vid, f"COL{vid}"),
+            )
+        conn.commit()
+
+        slug_dir = tmp_path / "slug"
+        slug_dir.mkdir()
+        # Non-incremental rewrites the already-slugged variable too (its prior
+        # slug isn't in any auto.toml, so it re-derives → 2 auto_new).
+        counts = populate_variable_slugs(conn, slug_dir, incremental=False)
+        assert counts["auto_new"] == 2
+
+    def test_incremental_processes_only_null_slug_variables(
+        self, tmp_path: Path
+    ) -> None:
+        from reg_meta_build.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name, slug) "
+            "VALUES (1, 1, 'R', 'r')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
+            "VALUES (10, 1, 'V', 'v')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (1, 1, '100', 'Alpha', 'preexisting')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
+            "VALUES (2, 1, '200', 'Beta')"
+        )
+        for vid in (1, 2):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
+                (vid, f"COL{vid}"),
+            )
+        conn.commit()
+
+        slug_dir = tmp_path / "slug"
+        slug_dir.mkdir()
+        counts = populate_variable_slugs(conn, slug_dir, incremental=True)
+        # Only the NULL-slug variable (id 2) is processed.
+        assert counts["auto_new"] == 1
+        assert (
+            conn.execute("SELECT slug FROM variable WHERE variable_id = 1").fetchone()[
+                0
+            ]
+            == "preexisting"  # untouched
+        )
+        assert (
+            conn.execute("SELECT slug FROM variable WHERE variable_id = 2").fetchone()[
+                0
+            ]
+            is not None
+        )
+
+    def test_incremental_uniquifies_against_published_slug(
+        self, tmp_path: Path
+    ) -> None:
+        """A new variable whose auto-derived slug collides with a PUBLISHED global
+        slug in the same register must get a `-N` suffix, not raise on
+        UNIQUE(register_id, slug)."""
+        from reg_meta.fqid import derive_variable_slug
+        from reg_meta_build.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name, slug) "
+            "VALUES (1, 1, 'R', 'r')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
+            "VALUES (10, 1, 'V', 'v')"
+        )
+        published = derive_variable_slug("KON")
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (1, 1, '100', 'Alpha', ?)",
+            (published,),
+        )
+        # New variable delivers the SAME column KON AND has a name that slugs to
+        # the same base, so both the kolumnnamn and name fallback arms collide
+        # with the published slug — forcing the `-N` suffix that proves the
+        # `used` set was seeded with the published global slug.
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
+            "VALUES (2, 1, '200', 'Kön')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (2, 10, '2018-01-01', '9999-12-31', 'int', 'KON')"
+        )
+        conn.commit()
+
+        slug_dir = tmp_path / "slug"
+        slug_dir.mkdir()
+        # Without the `used` seeding this would raise UNIQUE(register_id, slug).
+        populate_variable_slugs(conn, slug_dir, incremental=True)
+        new_slug = conn.execute(
+            "SELECT slug FROM variable WHERE variable_id = 2"
+        ).fetchone()[0]
+        assert new_slug != published
+        assert new_slug.startswith(published)  # `-N` suffix variant
+        # The published slug on the pre-existing variable is untouched.
+        assert (
+            conn.execute("SELECT slug FROM variable WHERE variable_id = 1").fetchone()[
+                0
+            ]
+            == published
+        )
+
+
+# ── loader strictness ────────────────────────────────────────────────────────
+
+
+class TestLoader:
+    def test_minimal_inventory_parses(self, tmp_path: Path) -> None:
+        inv = {"steward": "swecov", "source_label": "x"}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        parsed = load_inventory(path)
+        assert parsed.steward == "swecov"
+        assert parsed.registers == ()
+
+    @pytest.mark.parametrize(
+        "mutate",
+        [
+            lambda d: d.pop("steward"),
+            lambda d: d.pop("source_label"),
+            lambda d: d.update(unexpected_key=1),
+            lambda d: d.update(
+                grafts=[{"register": "agi", "variant": "v", "column": "C", "name": "N"}]
+            ),  # 1-seg FQID
+            lambda d: d.update(
+                aliases=[
+                    {
+                        "variable": "scb/rtb",
+                        "register": "scb/rtb",
+                        "variant": "v",
+                        "delivery_column": "C",
+                    }
+                ]
+            ),  # 2-seg FQID
+            lambda d: d.update(
+                registers=[{"provider": "p", "key": "k", "name": "N", "variants": []}]
+            ),  # empty variants
+            lambda d: d.update(providers=[{"slug": "p"}]),  # missing name
+        ],
+    )
+    def test_structural_defects_fail(self, tmp_path: Path, mutate) -> None:
+        inv = {"steward": "swecov", "source_label": "x"}
+        mutate(inv)
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_steward_mismatch_fails(self, tmp_path: Path, global_db: Path) -> None:
+        inv = {"steward": "other", "source_label": "x"}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        out = tmp_path / "out"
+        out.mkdir()
+        with pytest.raises(RegMetaError) as exc:
+            extend_db(
+                base_db=global_db,
+                inventory_path=path,
+                db_dir=out,
+                steward="swecov",
+                skip_slugs=True,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
