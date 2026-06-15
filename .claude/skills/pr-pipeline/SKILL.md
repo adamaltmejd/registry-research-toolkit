@@ -1,7 +1,7 @@
 ---
 name: pr-pipeline
-description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), or a feature/problem description>"
-argument-hint: "<issue number(s) or a feature/problem description>"
+description: "Drive a feature, fix, or request from intake to merge: plan the work into one or more PRs, then for each dispatch implementer → tester → /code-review loop → docs-updater, and merge through the CLAUDE.md PR merge gate. The invoking session is the lead and owns all git. Usage: /pr-pipeline <issue number(s), a feature/problem description, or `next` to carve a fresh lane from the sequencing projection>"
+argument-hint: "<issue number(s), a description, or `next` for a fresh lane>"
 disable-model-invocation: true
 ---
 
@@ -54,6 +54,15 @@ tool result** — that IS its report.
 Run the PRs themselves **strictly serially** — one merged before the next starts.
 
 ## Step 0 — plan (first, before any coding)
+
+0. **No target given? Carve a fresh lane.** If the request is "what's next" / "the next
+   lane" rather than specific issues or a description, run
+   `uv run --no-project python scripts/plan_sequence.py --lane` first — it lists the
+   ready issues free of in-flight conflicts (grouped by area, with `touches` +
+   must-serialize hints). **Compose a coherent lane from them yourself** (which issues
+   go together and how many is your judgment, not the script's), then treat that as the
+   target. You MUST confirm the chosen lane with the human (step 5) before opening any
+   drafts.
 
 1. **Gather context.** Read the referenced issue(s) **including comments and linked
    relationships** — the parent epic, blockers, and follow-ups (decisions are recorded
