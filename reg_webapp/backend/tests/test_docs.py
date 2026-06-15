@@ -41,7 +41,17 @@ def test_docs_search_finds_doc(client):
     assert hit["register"] == "lisa"  # wire key is `register`, not `register_name`
     assert hit["source"] == "lisa-bakgrundsfakta-1990-2017"
     assert hit["snippet"]  # an excerpt, not full text
-    assert hit["source_url"] is None  # seam, no URL in the data yet
+    # Kon carries the curated source→PDF link + title (#372).
+    assert hit["source_url"].endswith("lisa-bakgrundsfakta-1990-2017.pdf")
+    assert hit["source_title"] == "LISA bakgrundsfakta 1990-2017"
+
+
+def test_docs_search_uncurated_source_has_null_url(client):
+    # SyssStat's source is uncurated → source_url/source_title stay None (#372).
+    body = client.get("/api/docs/search", params={"q": "ställning"}).json()
+    hit = next(r for r in body["results"] if r["filename"] == "Sysselsattning.md")
+    assert hit["source_url"] is None
+    assert hit["source_title"] is None
 
 
 def test_docs_search_register_scope(client):
@@ -80,6 +90,9 @@ def test_doc_get_by_variable(client):
     assert body["variable"] == "Kon"
     assert body["register"] == "lisa"
     assert body["source"] == "lisa-bakgrundsfakta-1990-2017"
+    # The resolved SCB-PDF link + human title (#372 curated map).
+    assert body["source_url"].endswith("lisa-bakgrundsfakta-1990-2017.pdf")
+    assert body["source_title"] == "LISA bakgrundsfakta 1990-2017"
     assert body["excerpt"]
     # Never the full converted body — only metadata/excerpt fields are exposed.
     assert "body" not in body

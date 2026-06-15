@@ -1594,8 +1594,15 @@ a repo checkout of `reg_meta_build/docs/` before upload. The build:
 1. Walks the curated markdown tree.
 2. Parses Obsidian frontmatter (`parse_frontmatter`).
 3. Cleans inline markdown noise for FTS indexing (`_clean_body_for_search`).
-4. Writes rows into the `DOC_DDL` schema with `DOC_SCHEMA_VERSION` in `doc_meta`.
-5. Builds the FTS5 indexes and seals the file.
+4. Resolves each doc's `source` frontmatter slug against the curated
+   `reg_meta_build/doc_sources.toml` map (stripped of any trailing `.md` before lookup)
+   to populate `source_url` + `source_title` on the `doc` row. An unmapped source is a
+   build WARNING, not a failure — the doc still indexes, just without a resolved link.
+   Coverage is LISA-only today; the map grows as new registers' docs land.
+5. Writes rows into the `DOC_DDL` schema (schema 1.1.0: `doc` carries `source_url` and
+   `source_title` columns in addition to the 1.0.0 fields) with `DOC_SCHEMA_VERSION` in
+   `doc_meta`.
+6. Builds the FTS5 indexes and seals the file.
 
 The doc-DB schema constants (`DOC_*`, `open_doc_db`, `ensure_doc_db`) stay in `reg_meta`
 so the wheel can read the doc DB at runtime without pulling the builder.

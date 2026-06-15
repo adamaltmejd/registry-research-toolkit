@@ -815,7 +815,7 @@
         "type": "object"
       },
       "DocDetail": {
-        "description": "`GET /api/docs/doc/{identifier}` \u2014 metadata + source pointer + a BOUNDED\n`excerpt` (never the full converted body). `register` is the wire key\n(Python attr `register_name`).",
+        "description": "`GET /api/docs/doc/{identifier}` \u2014 metadata + source pointer + a BOUNDED\n`excerpt` (never the full converted body). `source_url` is the resolved SCB\nPDF link (curated source\u2192PDF map applied at doc-DB build, #372), None when\nuncurated; `source_title` is the human-readable publication title for that\nsource. `register` is the wire key (Python attr `register_name`).",
         "properties": {
           "display_name": {
             "anyOf": [
@@ -871,6 +871,17 @@
             ],
             "title": "Source"
           },
+          "source_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Title"
+          },
           "source_url": {
             "anyOf": [
               {
@@ -909,7 +920,7 @@
         "type": "object"
       },
       "DocResult": {
-        "description": "One documentation hit. `snippet` is a query-context EXCERPT (the FTS5\nsnippet), not full text. `source` is the SCB source-document identifier the\ndoc was derived from; `source_url` is a seam for a resolved SCB PDF link \u2014\nNone today (the data carries an identifier, not a URL; URL resolution is\nfuture enrichment / a steward concern). `fuzzy` marks a name/provider_key\nmatch (the \"mentioned in documentation\" variable hook) as a heuristic text\nmatch, not an authoritative variable\u2192doc link. `register` is the wire key;\nthe Python attr is `register_name` (avoids the `BaseModel.register` shadow).",
+        "description": "One documentation hit. `snippet` is a query-context EXCERPT (the FTS5\nsnippet), not full text. `source` is the SCB source-document identifier the\ndoc was derived from; `source_url` is the resolved SCB PDF link (a curated\nsource\u2192PDF map applied at doc-DB build, #372), None when the source is\nuncurated; `source_title` is the human-readable publication title for that\nsource (also None when uncurated). `fuzzy` marks a name/provider_key match\n(the \"mentioned in documentation\" variable hook) as a heuristic text match,\nnot an authoritative variable\u2192doc link. `register` is the wire key; the\nPython attr is `register_name` (avoids the `BaseModel.register` shadow).",
         "properties": {
           "display_name": {
             "anyOf": [
@@ -963,6 +974,17 @@
               }
             ],
             "title": "Source"
+          },
+          "source_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Title"
           },
           "source_url": {
             "anyOf": [

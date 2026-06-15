@@ -44,12 +44,14 @@ const doc = $derived(resource.data);
       </dl>
     {/if}
 
-    <!-- Source pointer: a link when a resolved URL exists, else plain text.
-         `source_url` is null today (the data carries an identifier, not a URL),
-         so this renders as text now and lights up as a link with no code change. -->
+    <!-- Source pointer: an off-site link to the SCB PDF when a curated URL was
+         resolved at doc-DB build (#372), else the bare source identifier as text.
+         Prefer the human title as the label; off-site link so target=_blank. -->
     {#if doc.source_url}
       <p class="source">
-        <a href={doc.source_url}>{doc.source ?? doc.source_url}</a>
+        <a href={doc.source_url} target="_blank" rel="noopener noreferrer">
+          {doc.source_title ?? doc.source ?? doc.source_url}
+        </a>
       </p>
     {:else if doc.source}
       <p class="source">{doc.source}</p>

@@ -429,8 +429,12 @@ def _build_docs_fixture_db(db_path: Path) -> None:
         conn.executescript(DOC_DDL)
         conn.executemany(
             "INSERT INTO doc (register, filename, variable, display_name, tags, "
-            "source, body, body_clean) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            "source, source_url, source_title, body, body_clean) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
+                # Kon carries a resolved source_url/source_title (#372 curated map
+                # applied at doc-DB build); SyssStat leaves them NULL (uncurated)
+                # so both the populated and unmapped wire shapes are covered.
                 (
                     "lisa",
                     "Kon.md",
@@ -438,6 +442,10 @@ def _build_docs_fixture_db(db_path: Path) -> None:
                     "Kön",
                     json.dumps(["type/variable", "topic/demography"]),
                     "lisa-bakgrundsfakta-1990-2017",
+                    "https://www.scb.se/contentassets/"
+                    "0521204f13e649299dec73f091e691e0/"
+                    "lisa-bakgrundsfakta-1990-2017.pdf",
+                    "LISA bakgrundsfakta 1990-2017",
                     "**Kön Kon**\n\nKönstillhörighet för individen.",
                     "Kön Kon Könstillhörighet för individen.",
                 ),
@@ -448,6 +456,8 @@ def _build_docs_fixture_db(db_path: Path) -> None:
                     "Sysselsättningsstatus",
                     json.dumps(["type/variable", "topic/employment"]),
                     "lisa-bakgrundsfakta-1990-2017",
+                    None,
+                    None,
                     "**Sysselsättningsstatus SyssStat**\n\nIndividens ställning.",
                     "Sysselsättningsstatus SyssStat Individens ställning.",
                 ),
