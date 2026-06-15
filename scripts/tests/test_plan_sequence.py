@@ -28,6 +28,7 @@ def _rec(
     *,
     title: str = "t",
     area: str | None = None,
+    is_epic: bool = False,
     blocked_label: bool = False,
     touches: list[str] | None = None,
     open_blockers: list[int] | None = None,
@@ -37,7 +38,7 @@ def _rec(
         number=number,
         title=title,
         area=area,
-        is_epic=False,
+        is_epic=is_epic,
         blocked_label=blocked_label,
         touches=touches or [],
         parent=None,
@@ -78,6 +79,11 @@ def test_classify_ready() -> None:
         (["a/b.py"], ["a/c.py"], False),  # siblings, disjoint
         (["a/b"], ["a/bc"], False),  # prefix string but not a path segment
         ([], ["x"], False),  # empty
+        (["reg_webapp/**"], ["reg_webapp/backend/app.py"], True),  # ** matches the file
+        (["a/*.py"], ["a/b.py"], True),  # * matches a sibling file
+        (["a/*.py"], ["b/c.py"], False),  # different dir
+        (["reg_webapp/**"], ["reg_meta/**"], False),  # disjoint globs
+        (["reg_webapp/**"], ["reg_webapp/frontend/**"], True),  # nested globs
     ],
 )
 def test_touches_overlap(a: list[str], b: list[str], overlap: bool) -> None:
@@ -104,6 +110,16 @@ def test_parallel_groups_overlap_merges() -> None:
 def test_parallel_groups_excludes_touchless() -> None:
     recs = [_rec(1, touches=["a.py"]), _rec(2)]  # #2 has no touches
     assert ps.parallel_groups(recs) == [[1]]
+
+
+def test_parallel_groups_merges_glob_and_concrete() -> None:
+    # A `**` glob must conflict with a concrete file under it (the P2 regression).
+    recs = [
+        _rec(1, touches=["reg_webapp/**"]),
+        _rec(2, touches=["reg_webapp/backend/app.py"]),
+        _rec(3, touches=["reg_meta/db.py"]),
+    ]
+    assert ps.parallel_groups(recs) == [[1, 2], [3]]
 
 
 # --- splice --------------------------------------------------------------------------
@@ -163,3 +179,14 @@ def test_render_block_orders_sections_by_number() -> None:
     block = ps.render_block(recs, None)
     assert block.index("#10") < block.index("#20") < block.index("#30")
     assert ps.render_block(recs, None) == ps.render_block(list(reversed(recs)), None)
+
+
+def test_render_block_excludes_epics_from_work() -> None:
+    recs = [_rec(328, is_epic=True), _rec(10, area="reg_meta")]
+    block = ps.render_block(recs, None)
+    assert "**Epics:** #328" in block
+    assert "1 work · 1 ready" in block  # epic not counted as work
+    # the epic is not listed as a ready work item
+    ready_section = block.split("### Ready now")[1].split("### Running")[0]
+    assert "#328" not in ready_section
+    assert "#10" in ready_section
