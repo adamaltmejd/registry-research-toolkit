@@ -82,6 +82,13 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 
 ## Per-PR pipeline (repeat for each, in dependency order)
 
+**Claim the lane up front.** As soon as Step 0 has shaped the work into PRs, open a
+**draft PR** (`Closes #<its issue(s)>`) for each *known* PR — not just the first — so
+the whole lane is marked in-flight before you implement, and a concurrent dispatch can't
+pick a colliding issue (see CLAUDE.md "Marking work in-flight"). If a new PR becomes
+necessary mid-flight, open its draft the moment you know. Each PR's draft is opened in
+its Step A below; for a multi-PR lane, do all the known ones first.
+
 **A · Implement.** Branch off the remote —
 `git fetch origin main && git checkout -b s/<slug> origin/main` (you may be in a
 worktree with `main` checked out elsewhere, so don't `checkout main`). **Open the draft
