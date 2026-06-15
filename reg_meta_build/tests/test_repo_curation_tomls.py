@@ -21,6 +21,7 @@ from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.column_merges import load_column_merges
 from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
+from reg_meta_build.doc_db import load_doc_sources
 from reg_meta_build.family_merges import load_family_merges
 from reg_meta_build.fold_overrides import load_fold_overrides
 from reg_meta_build.variable_grafts import load_variable_grafts
@@ -96,3 +97,14 @@ def test_repo_variable_grafts_parses() -> None:
     # Load-time shape (2-segment FQID, non-empty variant/column/description,
     # unique triple); variant/column RESOLUTION is maintainer-build territory.
     assert all(g.provider and g.register and g.variant and g.column for g in grafts)
+
+
+def test_repo_doc_sources_parses() -> None:
+    # `doc_sources.toml` (#372) maps a doc `source` slug → public SCB PDF; a
+    # missing `url`/`title` key would otherwise surface only at doc-DB build
+    # time. `load_doc_sources` resolves its own path relative to __file__, so
+    # the in-repo file is what's exercised here. URL RESOLUTION (the PDFs 200)
+    # is out of scope — load-time shape is this gate.
+    sources = load_doc_sources()
+    assert sources  # the #372 LISA source map ships with the repo
+    assert all(entry["url"] and entry["title"] for entry in sources.values())
