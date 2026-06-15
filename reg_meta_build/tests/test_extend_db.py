@@ -3,7 +3,8 @@
 Synthetic-only: a small global DB is built from the SCB CSV fixtures, then
 `extend_db` overlays a steward inventory onto a COPY. Minted ids are computed
 via `id.mint(...)` (deterministic) so a temp steward slug dir can be keyed on
-them. Covers the four operation kinds, the no-clobber guarantee, base-DB
+them. Covers the two steward-only operation kinds (providers +
+registers/variants/variables/states), the no-clobber guarantee, base-DB
 immutability, incremental slugging, FTS rebuild, flavored validation, and
 deterministic re-run.
 
@@ -42,9 +43,9 @@ _BANK = "swedbank"
 
 
 def _base_inventory() -> dict:
-    """A full inventory exercising all four kinds against the synthetic global
-    DB (registers testreg/otherreg, variants individer/foretag, vars incl.
-    scb/otherreg/lopnr)."""
+    """A steward-only inventory: one new provider with a register/variant and
+    two variables. No global-entity enrichment (grafts/aliases) — that is
+    global-build work, not flavor content."""
     return {
         "steward": _STEWARD,
         "source_label": "swecov-inventory-test",
@@ -89,26 +90,6 @@ def _base_inventory() -> dict:
                         ],
                     }
                 ],
-            }
-        ],
-        # Graft onto an EXISTING SCB register/variant (testreg/individer).
-        "grafts": [
-            {
-                "register": "scb/testreg",
-                "variant": "individer",
-                "column": "STEWARD_GRAFT_COL",
-                "name": "Steward graft",
-                "description": "A SCB column the steward documents.",
-                "data_type": "varchar",
-            }
-        ],
-        # Alias a pseudonym column onto an EXISTING SCB variable.
-        "aliases": [
-            {
-                "variable": "scb/otherreg/lopnr",
-                "register": "scb/otherreg",
-                "variant": "foretag",
-                "delivery_column": "P1105_LopNr_PersonNr",
             }
         ],
     }
@@ -280,125 +261,6 @@ class TestOverlayInserts:
             assert ids[key] >= _MINT_BIT
 
 
-# ── grafts ───────────────────────────────────────────────────────────────────
-
-
-class TestGrafts:
-    def test_graft_minted_onto_existing_scb_register_in_low_band(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        counts, out = _run_extend(tmp_path, global_db, _base_inventory())
-        assert counts["grafts_minted"] == 1
-        assert counts["grafts_skipped"] == 0
-        conn = sqlite3.connect(out)
-        row = conn.execute(
-            "SELECT variable_id, source_label FROM variable "
-            "WHERE provider_key = 'graft:STEWARD_GRAFT_COL'"
-        ).fetchone()
-        assert row is not None
-        var_id, source_label = row
-        # SCB-register graft stays in the SCB low band.
-        assert var_id < _MINT_BIT
-        assert source_label == "swecov-inventory-test"
-        # state + alias present on the target variant (individer = 10).
-        state = conn.execute(
-            "SELECT register_variant_id, delivery_column_name FROM variable_state "
-            "WHERE variable_id = ?",
-            (var_id,),
-        ).fetchone()
-        assert state == (10, "STEWARD_GRAFT_COL")
-        assert conn.execute(
-            "SELECT 1 FROM variable_alias WHERE variable_id = ? "
-            "AND delivery_column_name = ?",
-            (var_id, "STEWARD_GRAFT_COL"),
-        ).fetchone()
-
-    def test_graft_gap_fill_skips_existing_column(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        inv = _base_inventory()
-        # Kon already delivers in scb/testreg/individer.
-        inv["grafts"] = [
-            {
-                "register": "scb/testreg",
-                "variant": "individer",
-                "column": "Kon",
-                "name": "x",
-                "description": None,
-                "data_type": None,
-            }
-        ]
-        counts, _ = _run_extend(tmp_path, global_db, inv)
-        assert counts["grafts_minted"] == 0
-        assert counts["grafts_skipped"] == 1
-
-    def test_unresolved_graft_counted_not_fatal(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        inv = _base_inventory()
-        inv["grafts"] = [
-            {
-                "register": "scb/testreg",
-                "variant": "no-such-variant",
-                "column": "X",
-                "name": "x",
-                "description": None,
-                "data_type": None,
-            }
-        ]
-        counts, _ = _run_extend(tmp_path, global_db, inv)
-        assert counts["grafts_minted"] == 0
-        assert counts["unresolved"] == 1
-
-
-# ── aliases ──────────────────────────────────────────────────────────────────
-
-
-class TestAliases:
-    def test_alias_inserted_on_existing_variable(
-        self, tmp_path: Path, global_db: Path
-    ) -> None:
-        counts, out = _run_extend(tmp_path, global_db, _base_inventory())
-        assert counts["aliases"] == 1
-        conn = sqlite3.connect(out)
-        # The pseudonym column is now an alias of scb/otherreg/lopnr (variant 20).
-        row = conn.execute(
-            "SELECT va.register_variant_id FROM variable_alias va "
-            "JOIN variable v ON va.variable_id = v.variable_id "
-            "JOIN register r ON v.register_id = r.register_id "
-            "WHERE r.slug = 'otherreg' AND v.slug = 'lopnr' "
-            "AND va.delivery_column_name = 'P1105_LopNr_PersonNr'"
-        ).fetchone()
-        assert row == (20,)
-
-    def test_alias_idempotent_within_run(self, tmp_path: Path, global_db: Path) -> None:
-        inv = _base_inventory()
-        # Same alias twice → INSERT OR IGNORE collapses; only one applied.
-        inv["aliases"] = inv["aliases"] * 2
-        counts, out = _run_extend(tmp_path, global_db, inv)
-        assert counts["aliases"] == 1
-        conn = sqlite3.connect(out)
-        n = conn.execute(
-            "SELECT COUNT(*) FROM variable_alias "
-            "WHERE delivery_column_name = 'P1105_LopNr_PersonNr'"
-        ).fetchone()[0]
-        assert n == 1
-
-    def test_unresolved_alias_counted(self, tmp_path: Path, global_db: Path) -> None:
-        inv = _base_inventory()
-        inv["aliases"] = [
-            {
-                "variable": "scb/otherreg/no-such-var",
-                "register": "scb/otherreg",
-                "variant": "foretag",
-                "delivery_column": "X",
-            }
-        ]
-        counts, _ = _run_extend(tmp_path, global_db, inv)
-        assert counts["aliases"] == 0
-        assert counts["unresolved"] == 1
-
-
 # ── no-clobber + base-DB immutability ────────────────────────────────────────
 
 
@@ -434,14 +296,13 @@ def _global_snapshot(conn: sqlite3.Connection) -> dict:
             "JOIN register r ON rv.register_id = r.register_id "
             "WHERE r.provider_id = 1 ORDER BY rv.register_variant_id"
         ).fetchall(),
-        # Exclude graft variables (provider_key LIKE 'graft:%') — those are an
-        # additive overlay insert onto the SCB band, not a mutation of a
-        # pre-existing global row. The pre-existing global variables' slugs must
-        # be untouched.
+        # Every provider_id=1 variable is a pre-existing global row (the overlay
+        # inserts ONLY steward-provider rows, never onto SCB), so its slug must
+        # be byte-identical after the overlay — the no-clobber guarantee.
         "variables": conn.execute(
             "SELECT v.variable_id, v.slug, v.name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE r.provider_id = 1 AND v.provider_key NOT LIKE 'graft:%' "
+            "WHERE r.provider_id = 1 "
             "ORDER BY v.variable_id"
         ).fetchall(),
     }
@@ -648,15 +509,15 @@ class TestIdempotentReRun:
 
 
 def _minted_overlay_ids(conn: sqlite3.Connection) -> dict:
-    """All overlay-inserted ids (steward high-band + the SCB-band graft),
-    deterministic across runs."""
+    """All overlay-inserted ids — steward-only, so every one is high-band
+    (provider_id != SCB / variable_id >= 2^62). Deterministic across runs."""
     return {
         "registers": conn.execute(
             "SELECT register_id FROM register WHERE provider_id != 1 ORDER BY register_id"
         ).fetchall(),
         "variables": conn.execute(
-            "SELECT variable_id FROM variable WHERE provider_key LIKE 'graft:%' "
-            "OR variable_id >= ? ORDER BY variable_id",
+            "SELECT variable_id FROM variable WHERE variable_id >= ? "
+            "ORDER BY variable_id",
             (_MINT_BIT,),
         ).fetchall(),
     }
@@ -837,22 +698,23 @@ class TestLoader:
             lambda d: d.pop("steward"),
             lambda d: d.pop("source_label"),
             lambda d: d.update(unexpected_key=1),
-            lambda d: d.update(
-                grafts=[{"register": "agi", "variant": "v", "column": "C", "name": "N"}]
-            ),  # 1-seg FQID
-            lambda d: d.update(
-                aliases=[
-                    {
-                        "variable": "scb/rtb",
-                        "register": "scb/rtb",
-                        "variant": "v",
-                        "delivery_column": "C",
-                    }
-                ]
-            ),  # 2-seg FQID
+            # grafts/aliases are now UNKNOWN top-level keys (trimmed to global
+            # build) — the strict top-level check must reject them.
+            lambda d: d.update(grafts=[]),
+            lambda d: d.update(aliases=[]),
             lambda d: d.update(
                 registers=[{"provider": "p", "key": "k", "name": "N", "variants": []}]
             ),  # empty variants
+            lambda d: d.update(
+                registers=[
+                    {
+                        "provider": "p",
+                        "key": "k",
+                        "name": "N",
+                        "variants": [{"key": "v", "name": "V", "variables": []}],
+                    }
+                ]
+            ),  # empty variables
             lambda d: d.update(providers=[{"slug": "p"}]),  # missing name
         ],
     )

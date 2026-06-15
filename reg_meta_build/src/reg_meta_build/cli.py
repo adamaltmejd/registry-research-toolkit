@@ -173,10 +173,11 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Overlay a steward inventory onto a released global DB (maintainer-only).",
         description=(
             "Build a steward-FLAVORED metadata DB (#365 PR2): an insert-only\n"
-            "overlay of steward-private content (registers, variables, grafts,\n"
-            "pseudonym aliases) onto a RELEASED global reg_meta.db. The base DB\n"
-            "is a read-only input — never mutated; the result is written to the\n"
-            "--db output directory.\n\n"
+            "overlay of steward-ONLY content (the steward's own providers,\n"
+            "registers, and variables) onto a RELEASED global reg_meta.db. The\n"
+            "base DB is a read-only input — never mutated; the result is written\n"
+            "to the --db output directory. Enrichment of existing global entities\n"
+            "(descriptions, aliases, shared-column grafts) is global-build work.\n\n"
             "Examples:\n"
             "  reg-meta-build --db /tmp/swecov extend-db \\\n"
             "      --base-db ~/.reg_meta/reg_meta.db \\\n"
