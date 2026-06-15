@@ -18,13 +18,14 @@ A SECOND marked region — `<!-- plan-lanes:start --> … <!-- plan-lanes:end --
 the *ranked* lanes. Their content is agentic (the `/plan-lanes` skill ranks what
 set-intersection over `touches` can't see), so the script doesn't generate it: `--write-
 lanes` reads the agent's text from stdin, frames it with a machine-readable `basis` (the
-ready/running sets the ranking was computed against, plus a `sig` over those issues'
-`touches`/blockers), and splices it as its own region. `--lanes-stale` prints the live
-basis and exit-codes whether the stored block matches it — the trigger the `/loop`
-heartbeat keys off, since once CI event-refreshes the *projection* block the projection
-delta no longer signals that the ready/running sets moved (the refresh absorbed it). The
-`sig` extends staleness past membership: a `touches`/`Relationships` edit that re-shapes
-the lane graph without moving an issue between sections still flips it. The heartbeat
+ready/running sets the ranking was computed against, plus a `sig` over every work issue's
+lane-affecting projection — status, area, `touches`, `priority`, `Relationships`), and
+splices it as its own region. `--lanes-stale` prints the live basis and exit-codes whether
+the stored block matches it — the trigger the `/loop` heartbeat keys off, since once CI
+event-refreshes the *projection* block the projection delta no longer signals that the
+ready/running sets moved (the refresh absorbed it). The `sig` extends staleness past
+membership: an area/`touches`/`priority`/`Relationships` edit that re-shapes the lane graph
+without moving an issue between sections still flips it. The heartbeat
 passes the printed basis back via `--write-lanes --basis` so the stamp reflects the state
 the rank actually saw, not a post-rank recompute (which could mark a stale ranking fresh).
 
@@ -86,6 +87,9 @@ class Rec:
     parent: int | None
     open_blockers: list[int]
     open_prs: list[int]
+    # All parsed `Relationships` ties (keyword, target) — the full graph `/plan-lanes`
+    # reads for coherence/ordering, not just the blocking subset in `open_blockers`.
+    relationships: list[tuple[str, int]] = field(default_factory=list)
     # "high" | "normal" | "low" — the maintainer's `priority:*` label (default normal).
     priority: str = field(default="normal")
     status: str = field(default="")
@@ -232,6 +236,7 @@ def build_records(
                 {t for kw, t in rels if kw in BLOCKING_KEYWORDS and t in open_numbers}
             ),
             open_prs=sorted(prs_by_issue.get(num, [])),
+            relationships=sorted(rels),
             priority=priority_of(labels),
         )
         rec.status = classify(rec)
@@ -386,27 +391,37 @@ _BASIS_RE = re.compile(
 
 
 def lanes_signature(records: list[Rec]) -> str:
-    """A short stable hash of the lane-affecting inputs for the ready/running set.
+    """A short stable hash of every work issue's lane-affecting projection.
 
-    The ranking depends on more than *which* issues are ready/running (that membership is
-    already in the basis's `ready`/`running` sets): it also depends on each issue's
-    `touches` globs (the parallel-safety graph), its open blockers (implicit ordering), and
-    its `priority` (the primary ranking key). An edit to any of those that moves no issue
-    between sections leaves the sets unchanged, so a membership-only basis misses it.
-    Folding those per-issue inputs into this signature closes that gap: the signature
-    flips, the basis differs, the lanes re-rank.
+    Membership (*which* issues are ready/running) is already in the basis's `ready`/
+    `running` sets. This signature adds everything else the ranking depends on, so an edit
+    that re-shapes the lane graph without moving an issue between sections still re-ranks.
+    `/plan-lanes` ranks over the `--lane` dispatch view — which groups by `area`, keys
+    parallel-safety on `touches`, sorts by `priority`, and reads the full `Relationships`
+    graph for coherence + implicit ordering — so the signed projection is, per work issue:
 
-    Deliberately structured-inputs-only (number + `touches` + open blockers + priority),
-    never title/body prose — those don't change the lane graph and would churn the
-    signature. Sorted throughout so it's deterministic; flows through `--basis` verbatim
-    (it's part of the stamped comment string), so the TOCTOU capture path needs no change.
+      number | status | area | touches | priority | relationships
+
+    Signed over **all** work records (not just ready/running) because the ranking also
+    depends on *other* issues' edges: a still-blocked issue's `Blocked by #N` rewrite
+    changes which ready issue has unblocking power, and `Related to`/`Follow-up to` ties
+    signal coherence — neither moves a section nor touches the ready issues' own fields.
+    Signing the whole projection covers those without per-finding special-casing; the cost
+    is an occasional re-rank when an edit didn't actually change the order — the safe
+    direction (re-rank when unsure), matching the `touches`-overlap conservatism.
+
+    Structured-inputs-only — never title/body prose, which doesn't change the lane graph.
+    Sorted throughout so it's deterministic; flows through `--basis` verbatim (it's part of
+    the stamped comment string), so the TOCTOU capture path needs no change.
     """
     parts = [
-        "{}|{}|{}|{}".format(
+        "{}|{}|{}|{}|{}|{}".format(
             r.number,
+            r.status,
+            r.area or "",
             ",".join(sorted(r.touches)),
-            ",".join(str(b) for b in sorted(r.open_blockers)),
             r.priority,
+            ",".join(f"{kw}#{t}" for kw, t in sorted(r.relationships)),
         )
         for r in sorted(records, key=lambda r: r.number)
     ]
@@ -420,8 +435,8 @@ def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
     (`lanes_signature`) — the state the ranking was computed against — so `--lanes-stale`
     can tell whether the agentic lanes still match the live state. The projection block
     can't serve as that signal once CI refreshes it on every event (a refresh there would
-    absorb the delta the loop keys off). The `sig` makes a `touches`/`Relationships` edit
-    that moves no issue trip staleness too — no longer an accepted miss.
+    absorb the delta the loop keys off). The `sig` makes a `touches`/area/`priority`/
+    `Relationships` edit that moves no issue trip staleness too — no longer an accepted miss.
     """
     r = ",".join(str(n) for n in sorted(ready))
     g = ",".join(str(n) for n in sorted(running))
@@ -595,9 +610,10 @@ def main() -> int:
     work = [r for r in recs if not r.is_epic]
     ready_nums = {r.number for r in work if r.status == "ready"}
     running_nums = {r.number for r in work if r.status == "running"}
-    # The lanes' freshness basis: the ready/running sets + a signature over their
-    # touches/blockers (so an edit that moves no issue still re-ranks — see FU-2).
-    sig = lanes_signature([r for r in work if r.status in ("ready", "running")])
+    # The lanes' freshness basis: the ready/running sets + a signature over EVERY work
+    # issue's lane-affecting projection (so an edit that re-shapes ranking without moving a
+    # section still re-ranks — see FU-2 / lanes_signature).
+    sig = lanes_signature(work)
     live_basis = basis_comment(ready_nums, running_nums, sig)
 
     if args.lane:

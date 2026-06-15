@@ -226,12 +226,14 @@ never editing issues or opening PRs. `/issue-pulse` then **persists** the rankin
 second generated block — `<!-- plan-lanes -->`, alongside `<!-- plan-sequence -->` — via
 `plan_sequence.py --write-lanes` (single writer; `/pr-pipeline` only reads). Staleness
 is deterministic: the lanes block stamps the ready/running sets it was ranked against
-**plus a signature over those issues' `touches`/blockers/`priority`**, and
-`--lanes-stale` compares both to the live state — necessary because once CI
-event-refreshes the projection, the projection delta no longer signals that the work
-moved (the refresh absorbed it). The signature extends staleness past membership: a
-`touches`/`Relationships`/`priority` edit that re-shapes the lane graph without moving
-an issue between sections still re-ranks. Same edit rule as the projection: **don't
+**plus a signature over every work issue's lane-affecting projection** (status, area,
+`touches`, `priority`, and the full `Relationships` graph), and `--lanes-stale` compares
+both to the live state — necessary because once CI event-refreshes the projection, the
+projection delta no longer signals that the work moved (the refresh absorbed it). The
+signature extends staleness past membership: an area relabel, a `touches` edit, a
+`priority` change, or any `Relationships` edit (including a blocked issue's `Blocked by`
+rewrite, which shifts which ready issue has unblocking power) re-shapes the lane graph
+without moving a section, yet still re-ranks. Same edit rule as the projection: **don't
 hand-edit inside the markers** — it's overwritten.
 
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`

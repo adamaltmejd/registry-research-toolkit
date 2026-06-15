@@ -57,14 +57,15 @@ run them and report the result.
    ```
 
 3. **Lanes stale? Re-rank + persist.** Only if step 1 exited `1` (`lanes: stale`). The
-   ready/running set — or one of those issues' `touches`/blockers/`priority` — moved
-   since the last ranking. `$basis` now holds the state **as of step 1's check**. Invoke
-   `/plan-lanes` via the `Skill` tool (it runs **forked**, so the corpus-reading stays
-   out of this heartbeat's context, and returns the ranked lanes as markdown), then
-   **persist** that markdown into the epic's `<!-- plan-lanes -->` block — `/plan-lanes`
-   is read-only, so you are the writer — stamping the captured `$basis` (so the stamp
-   matches the state the rank saw, not a post-rank recompute that could mark the new
-   ranking fresh while it's already stale):
+   ready/running set — or a lane-affecting input of some work issue (its area,
+   `touches`, `priority`, or `Relationships`) — moved since the last ranking. `$basis`
+   now holds the state **as of step 1's check**. Invoke `/plan-lanes` via the `Skill`
+   tool (it runs **forked**, so the corpus-reading stays out of this heartbeat's
+   context, and returns the ranked lanes as markdown), then **persist** that markdown
+   into the epic's `<!-- plan-lanes -->` block — `/plan-lanes` is read-only, so you are
+   the writer — stamping the captured `$basis` (so the stamp matches the state the rank
+   saw, not a post-rank recompute that could mark the new ranking fresh while it's
+   already stale):
 
    ```sh
    printf '%s' "<the /plan-lanes markdown>" |
@@ -72,9 +73,10 @@ run them and report the result.
    ```
 
    Gating on staleness is the point: pay for lane-planning only when the work actually
-   moved. The basis now stamps a signature over the ready/running issues'
-   `touches`/blockers/`priority`, so a `touches`/`Relationships`/`priority` edit that
-   moves no issue between sections trips it too (no longer the old acceptable miss).
+   moved. The basis now stamps a signature over every work issue's lane-affecting
+   projection (status, area, `touches`, `priority`, `Relationships`), so an edit to any
+   of those that moves no issue between sections trips it too (no longer the old
+   acceptable miss).
 
 4. **Surface the DELTAS, not the whole state.** Report only:
    - the status delta from step 1 (newly ready / newly unblocked / newly running, or

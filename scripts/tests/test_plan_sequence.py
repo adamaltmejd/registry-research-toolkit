@@ -33,6 +33,7 @@ def _rec(
     touches: list[str] | None = None,
     open_blockers: list[int] | None = None,
     open_prs: list[int] | None = None,
+    relationships: list[tuple[str, int]] | None = None,
     priority: str = "normal",
 ):
     rec = ps.Rec(
@@ -45,6 +46,7 @@ def _rec(
         parent=None,
         open_blockers=open_blockers or [],
         open_prs=open_prs or [],
+        relationships=relationships or [],
         priority=priority,
     )
     rec.status = ps.classify(rec)
@@ -214,17 +216,34 @@ def test_parse_basis_pre_signature_reads_empty_sig() -> None:
 
 
 def test_lanes_signature_is_stable_and_order_independent() -> None:
-    a = _rec(1, touches=["x.py"], priority="high")
-    b = _rec(2, touches=["y.py"], open_blockers=[9])
+    a = _rec(1, area="reg_meta", touches=["x.py"], priority="high")
+    b = _rec(2, touches=["y.py"], relationships=[("related to", 9)])
     assert ps.lanes_signature([a, b]) == ps.lanes_signature([b, a])  # sorted internally
     assert ps.lanes_signature([a, b]) == ps.lanes_signature([a, b])  # deterministic
 
 
-def test_lanes_signature_changes_on_touches_blockers_or_priority() -> None:
-    base = ps.lanes_signature([_rec(1, touches=["x.py"])])
-    assert base != ps.lanes_signature([_rec(1, touches=["y.py"])])  # touches edit
-    assert base != ps.lanes_signature([_rec(1, touches=["x.py"], open_blockers=[5])])
-    assert base != ps.lanes_signature([_rec(1, touches=["x.py"], priority="high")])
+def test_lanes_signature_changes_on_each_lane_affecting_input() -> None:
+    # Every input `/plan-lanes` ranks on must flip the signature (FU-2 + the Codex P2s:
+    # area grouping, full Relationships graph — not just touches/priority).
+    base = ps.lanes_signature([_rec(1, area="reg_meta", touches=["x.py"])])
+    assert base != ps.lanes_signature([_rec(1, area="reg_meta", touches=["y.py"])])
+    assert base != ps.lanes_signature([_rec(1, area="reg_webapp", touches=["x.py"])])
+    assert base != ps.lanes_signature(
+        [_rec(1, area="reg_meta", touches=["x.py"], priority="high")]
+    )
+    # A non-blocking coherence tie (Related to / Follow-up to) — Codex P2 #3.
+    assert base != ps.lanes_signature(
+        [_rec(1, area="reg_meta", touches=["x.py"], relationships=[("related to", 7)])]
+    )
+
+
+def test_lanes_signature_catches_blocked_dependent_edge_rewrite() -> None:
+    # Codex P2 #1: a still-blocked issue's `Blocked by` rewrite changes which ready issue
+    # has unblocking power, though no section moves. Signing ALL work records catches it.
+    ready = _rec(1, touches=["x.py"])  # the candidate
+    dep_old = _rec(50, blocked_label=True, relationships=[("blocked by", 1)])
+    dep_new = _rec(50, blocked_label=True, relationships=[("blocked by", 2)])
+    assert ps.lanes_signature([ready, dep_old]) != ps.lanes_signature([ready, dep_new])
 
 
 def test_signature_flips_staleness_on_touches_edit_no_section_move() -> None:
