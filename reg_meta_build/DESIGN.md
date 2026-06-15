@@ -1507,7 +1507,17 @@ parallel to the global `fqid_slugs/` but consumed by `extend-db` rather than `bu
 It uses the same grow-only snapshot machinery as the global dir (`diff_snapshot` /
 `precheck-slugs --update-snapshot`) and the same `UNFROZEN` escape hatch. Only the
 steward-inserted rows are slugged here; global register/variant slugs come from the
-global build and are never touched.
+global build and are never touched. As with the global dir, only the hand-curated
+`<provider>.toml` (register + register_variant slugs) is committed — the build-generated
+`<provider>.auto.toml` (variable slugs) regenerates each run while `UNFROZEN` holds and
+stays out of the tree.
+
+The populated `fqid_slugs/swecov/` snapshot (#421) is emitted by the untracked,
+maintainer-local generator `input_data/swecov/build_catalog.py flavor`, which projects
+the steward-only SWECOV holdings (commercial, regional/municipal, national quality
+registers, and Källa-empty SWECOV-constructed columns — public-agency and canonical-SCB
+content is routed to the global track instead) into the inventory JSON `extend-db`
+consumes and the per-provider slug TOMLs.
 
 ### Supporting seams
 

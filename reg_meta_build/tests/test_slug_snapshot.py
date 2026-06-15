@@ -26,12 +26,31 @@ from reg_meta_build.fqid_slugs import (
 )
 
 
-@pytest.fixture(scope="module")
-def slug_dir():
-    d = repo_slug_dir()
-    if d is None:
+def _all_slug_dirs() -> list:
+    """The global slug dir plus every steward subdir that carries its own
+    snapshot (e.g. ``fqid_slugs/swecov/``, #421). Steward dirs use the SAME
+    grow-only snapshot machinery (DESIGN.md → Per-steward slug snapshot), so the
+    immutability guards must cover them too — ``load_slug_dir`` only globs one
+    dir's immediate ``*.toml``, so a nested steward dir is invisible to CI unless
+    enumerated here."""
+    root = repo_slug_dir()
+    if root is None:
+        return []
+    steward = sorted(
+        d for d in root.iterdir() if d.is_dir() and (d / SNAPSHOT_FILENAME).is_file()
+    )
+    return [root, *steward]
+
+
+@pytest.fixture(
+    scope="module",
+    params=_all_slug_dirs() or [None],
+    ids=lambda d: d.name if d is not None else "missing",
+)
+def slug_dir(request):
+    if request.param is None:
         pytest.skip("reg_meta_build/fqid_slugs/ not present (wheel install)")
-    return d
+    return request.param
 
 
 def test_committed_slugs_parse(slug_dir):
