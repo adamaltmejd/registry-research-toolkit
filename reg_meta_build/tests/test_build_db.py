@@ -671,13 +671,16 @@ class TestBuildDb:
 
     def test_provider_seed(self, db_conn: sqlite3.Connection):
         # provider_id values are stable across releases — downstream pins
-        # against them (PROVIDER_ID_SCB = 1, PROVIDER_ID_SOS = 2).
+        # against them (PROVIDER_ID_SCB = 1, PROVIDER_ID_SOS = 2,
+        # PROVIDER_ID_FOHM = 3). Every seeded provider is present regardless of
+        # which adapters this build ran.
         rows = db_conn.execute(
             "SELECT provider_id, slug, name FROM provider ORDER BY provider_id"
         ).fetchall()
         assert [(r["provider_id"], r["slug"]) for r in rows] == [
             (1, "scb"),
             (2, "sos"),
+            (3, "fohm"),
         ]
 
     def test_scb_registers_tagged_scb(self, db_conn: sqlite3.Connection):
@@ -747,6 +750,7 @@ class TestBuildDb:
         assert [(r["provider_id"], r["slug"]) for r in rows] == [
             (1, "scb"),
             (2, "sos"),
+            (3, "fohm"),
         ]
         conn.close()
 
@@ -811,6 +815,21 @@ class TestBuildDbErrors:
         with pytest.raises(RegMetaError) as exc_info:
             build_db(input_dir=tmp_path, db_dir=tmp_path)
         assert exc_info.value.code == "scb_dir_not_found"
+
+    def test_missing_fohm_dir(self, tmp_path: Path):
+        # #422: a fohm-only build whose input_dir exists but has no
+        # Folkhalsomyndigheten/ subdirectory fails with the per-provider
+        # curated-dir error (mirrors test_missing_scb_dir for the curated path).
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()  # exists (passes input_dir.is_dir()), but no curated subdir
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                providers=("fohm",),
+                input_dir=input_dir,
+                db_dir=tmp_path / "db",
+                skip_classifications=True,
+            )
+        assert exc_info.value.code == "fohm_dir_not_found"
 
     def test_missing_backbone(self, tmp_path: Path):
         scb_dir = tmp_path / "SCB"

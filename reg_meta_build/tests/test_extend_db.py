@@ -513,8 +513,11 @@ class TestFlavoredValidation:
     def test_low_band_steward_id_passes_non_flavored(
         self, tmp_path: Path, global_db: Path
     ) -> None:
-        # The same low-band non-SCB register passes the NON-flavored check (which
-        # only constrains SOS), proving the tightening is flavored-only.
+        # #422: the GLOBAL (non-flavored) band check enforces high-band for every
+        # SEEDED non-SCB provider (sos + fohm; scb is excluded). A steward
+        # provider is dynamically minted, NOT in `_PROVIDER_SEED`, so it stays
+        # out of scope of the non-flavored check — its low-band id passes here
+        # and is caught only by `flavored=True` (the test above).
         _, out = _run_extend(tmp_path, global_db, _base_inventory())
         conn = sqlite3.connect(out)
         ids = _steward_register_ids()

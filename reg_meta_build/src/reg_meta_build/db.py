@@ -77,10 +77,21 @@ if TYPE_CHECKING:
 # from `register.provider_id`. Add new providers by appending — never renumber.
 PROVIDER_ID_SCB = 1
 PROVIDER_ID_SOS = 2
+PROVIDER_ID_FOHM = 3
 _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
     (PROVIDER_ID_SCB, "scb", "Statistics Sweden"),
     (PROVIDER_ID_SOS, "sos", "Socialstyrelsen"),
+    (PROVIDER_ID_FOHM, "fohm", "Folkhälsomyndigheten"),
 )
+
+# Thin CURATED global providers (#422): public agencies with no machine-readable
+# native export — their catalog content is a maintainer-authored TOML read by the
+# shared `CuratedAdapter` (sources/curated.py). Each entry is
+# (provider_slug, input_data subdir holding `<provider_slug>.toml`). Unlike the
+# untracked SCB/SOS seed, this TOML is committed, so the subdir always exists on
+# any checkout — which requires a per-agency `.gitignore` un-ignore line (the
+# `input_data/*` rule otherwise hides it). See DESIGN.md → Curated thin providers.
+_CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (("fohm", "Folkhalsomyndigheten"),)
 
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
 # disjoint cases observed; build-db classifies each row using these allowlists:
@@ -3457,6 +3468,19 @@ def build_db(
             remediation="Place SOS register workbooks under <input_dir>/Socialstyrelsen/.",
         )
 
+    for prov_slug, dirname in _CURATED_PROVIDERS:
+        if prov_slug in providers and not (input_dir / dirname).is_dir():
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code=f"{prov_slug}_dir_not_found",
+                error_class="configuration",
+                message=f"{dirname} subdirectory not found: {input_dir / dirname}",
+                remediation=(
+                    f"The curated {prov_slug}.toml ships with the repo under "
+                    f"<input_dir>/{dirname}/; build from a checkout that has it."
+                ),
+            )
+
     db_dir.mkdir(parents=True, exist_ok=True)
     final_path = db_dir / DB_FILENAME
     tmp_path = final_path.with_suffix(".db.tmp")
@@ -3497,6 +3521,7 @@ def build_db(
         from .codelivery import load_codelivery, repo_codelivery_path
         from .column_merges import load_column_merges, repo_column_merges_path
         from .fold_overrides import load_fold_overrides, repo_fold_overrides_path
+        from .sources.curated import CuratedAdapter
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
 
@@ -3521,6 +3546,12 @@ def build_db(
             )
         if "sos" in providers:
             adapters.append((SOSAdapter(conn), sos_dir))
+        # Thin curated providers (#422): one shared adapter per agency, each
+        # reading its committed `<provider>.toml`. Additive like SOS — minted
+        # high-band ids, no scratch.
+        for prov_slug, dirname in _CURATED_PROVIDERS:
+            if prov_slug in providers:
+                adapters.append((CuratedAdapter(prov_slug), input_dir / dirname))
 
         mat = materialize(
             conn,

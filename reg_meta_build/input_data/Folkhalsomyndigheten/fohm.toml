@@ -1,0 +1,231 @@
+# Curated thin-provider catalog — Folkhälsomyndigheten (FOHM), the Public Health
+# Agency of Sweden. Read by reg_meta_build.sources.curated.CuratedAdapter (#422).
+#
+# FOHM publishes no machine-readable microdata-metadata export, so this TOML is
+# the authoritative, hand-curated source, transcribed from FOHM's PUBLIC register
+# documentation. Both registers are confidential restricted-access microdata
+# (delivered to researchers after ethics review, typically via SCB MONA); only
+# the METADATA below is public.
+#
+# Scope (phase 1, maintainer-confirmed): SmiNet + the national vaccination
+# register — the SWECOV-core FOHM registers (COVID-19 cases and vaccinations).
+# HLV (the public-health survey) is deliberately deferred (per-round survey, run
+# by SCB; poor fit for the register variable/state model).
+#
+# Value sets / code lists are a follow-up (#422): categorical variables carry a
+# data_type + a note, but no enumerated codes yet. SmiNet `diagnos` is ICD-10 and
+# NVR `vaccin` is ATC — both already shipped as catalog classifications, to be
+# linked in the follow-up.
+#
+# Sources:
+#   SmiNet — klinisk-anmälan användarmanual (per-field list):
+#     https://www.folkhalsomyndigheten.se/sminet/anmala-till-sminet/anvandarmanual-for-klinisk-anmalan/
+#   SmiNet — allmän beskrivning (scope, ~60 anmälningspliktiga sjukdomar, STI Rikskod):
+#     https://referensmetodik.folkhalsomyndigheten.se/w/SmiNet,_allm%C3%A4n_beskrivning
+#   NVR — Om vaccinationsregistret (lagrade variabler, täckning, rättslig grund):
+#     https://www.folkhalsomyndigheten.se/smittskydd-beredskap/vaccinationer/nationella-vaccinationsregistret/om-vaccinationsregistret/
+#   NVR — Tjänstebeskrivning NVR API (rapporterade fält):
+#     https://www.folkhalsomyndigheten.se/globalassets/smittskydd-sjukdomar/vaccinationer/vaccinationsregister/tjanstebeskrivning-nvr-api.pdf
+#
+# NOTE: FOHM does not publish exact delivery column headers; the `column` values
+# are clean tokens derived from the documented field names (they back the
+# variable auto-slug and the variable_alias rows). Refine if a definitive
+# variabelförteckning becomes available (NVR's canonical list was bot-blocked at
+# curation time and should be browser-verified).
+
+[[register]]
+key = "sminet"
+name = "SmiNet"
+valid_from = "2004-01-01"  # electronic SmiNet in national use since 2004
+purpose = """
+Nationellt övervakningsregister för anmälningspliktiga smittsamma sjukdomar \
+enligt smittskyddslagen. Sammanför klinikers anmälningar med laboratoriernas \
+anmälningar per fall. Central källa för SWECOV (covid-19-fall och provsvar).\
+"""
+
+# SmiNet ships as one per-case notification record; modeled as a single
+# (`_default`) variant. The field set is partly diagnosis-dependent — the
+# variables below are the common core of the clinical notification.
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för det anmälda fallet."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Rikskod"
+column = "rikskod"
+definition = """
+Pseudonym fallkod (ÅÅÅÅ-XXXX) som används i stället för personnummer för \
+anmälningar av vissa STI (hiv, gonorré, klamydia, syfilis).\
+"""
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Kön"
+column = "kon"
+definition = "Juridiskt kön för det anmälda fallet."
+data_type = "text"
+
+[[register.variable]]
+name = "Diagnos"
+column = "diagnos"
+definition = """
+Anmäld smittsam sjukdom (anmälningspliktig enligt smittskyddslagen). Styr vilka \
+diagnosspecifika fält som visas. Kodas mot ICD-10.\
+"""
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Grund för diagnos"
+column = "grund_for_diagnos"
+definition = """
+Diagnosgrund: epidemiologiskt samband, klinisk bild eller laboratorieverifierad.\
+"""
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Typ av infektion"
+column = "typ_av_infektion"
+definition = "Akut sjukdom eller symtomfri bärare."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Insjuknandedatum"
+column = "insjuknandedatum"
+definition = "Datum för symtomdebut."
+data_type = "date"
+is_sensitive = true
+
+[[register.variable]]
+name = "Diagnosdatum"
+column = "diagnosdatum"
+definition = "Datum då diagnosen fastställdes."
+data_type = "date"
+is_sensitive = true
+
+[[register.variable]]
+name = "Sannolikt smittland"
+column = "smittland"
+definition = "Land där smittan sannolikt förvärvades."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Smittväg"
+column = "smittvag"
+definition = "Sannolik smittväg (diagnosberoende kodning)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vaccinationsstatus"
+column = "vaccinationsstatus"
+definition = "Fallets vaccinationsstatus för den aktuella sjukdomen."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Smittspårningsstatus"
+column = "smittsparningsstatus"
+definition = "Status för smittspårningen kring fallet."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Ansvarig smittskyddsenhet"
+column = "smittskyddsenhet"
+definition = "Den regionala smittskyddsenhet som ansvarar för fallet."
+data_type = "text"
+
+
+[[register]]
+key = "nvr"
+name = "Nationella vaccinationsregistret"
+valid_from = "2013-01-01"  # barnvaccinationsprogrammet fr.o.m. 2013-01-01
+purpose = """
+Nationellt register över vaccinationer inom de nationella vaccinations\
+programmen och mot covid-19. Används för statistik, uppföljning och utvärdering \
+av vaccinationsprogram samt epidemiologisk forskning. Central källa för SWECOV \
+(covid-19-vaccinationer). Täckning: barnvaccinationer fr.o.m. 2013, covid-19 \
+fr.o.m. 2021, pneumokock (riskgrupper) fr.o.m. 2022, tuberkulos fr.o.m. 2025.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för den vaccinerade."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Födelsedatum"
+column = "fodelsedatum"
+definition = "Födelsedatum (från folkbokföringen)."
+data_type = "date"
+
+[[register.variable]]
+name = "Kön"
+column = "kon"
+definition = "Kön (härlett ur personnumret)."
+data_type = "text"
+
+[[register.variable]]
+name = "Folkbokföringsort"
+column = "folkbokforingsort"
+definition = "Folkbokföringsort (län/kommun), aktuell och historisk."
+data_type = "text"
+
+[[register.variable]]
+name = "Vaccinationsdatum"
+column = "vaccinationsdatum"
+definition = "Datum för vaccinationen."
+data_type = "date"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vaccin"
+column = "vaccin"
+definition = "Vaccinpreparat som använts. Kan kodas mot ATC."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Satsnummer"
+column = "satsnummer"
+definition = "Vaccinets sats-/batchnummer."
+data_type = "text"
+
+[[register.variable]]
+name = "Dosnummer"
+column = "dosnummer"
+definition = "Dosnummer i vaccinationsserien (registreras endast för covid-19)."
+data_type = "integer"
+is_sensitive = true
+valid_from = "2021-01-01"  # covid-19-rapportering fr.o.m. 2021
+
+[[register.variable]]
+name = "Vaccintyp"
+column = "vaccintyp"
+definition = "Vaccintyp / sjukdom som vaccinet skyddar mot."
+data_type = "text"
+
+[[register.variable]]
+name = "Ansvarig vårdgivare"
+column = "vardgivare"
+definition = "Ansvarig vårdgivare (namn och organisationsnummer)."
+data_type = "text"
+
+[[register.variable]]
+name = "Utförande vårdenhet"
+column = "vardenhet"
+definition = "Vårdenhet som utförde vaccinationen."
+data_type = "text"

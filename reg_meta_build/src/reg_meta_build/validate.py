@@ -57,8 +57,22 @@ from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build.db import _VALID_TO_SENTINEL, PROVIDER_ID_SCB, PROVIDER_ID_SOS
+from reg_meta_build.db import (
+    _PROVIDER_SEED,
+    _VALID_TO_SENTINEL,
+    PROVIDER_ID_SCB,
+    PROVIDER_ID_SOS,
+)
 from reg_meta_build.id import _MINT_BIT
+
+# Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
+# mints into the high band). The global build's minted-id band check enforces
+# the high band for these; the flavored check additionally covers dynamically
+# minted STEWARD providers (provider_id != SCB), which are NOT seeded here. New
+# curated providers (#422) join automatically by appending to `_PROVIDER_SEED`.
+_GLOBAL_NONSCB_PROVIDER_IDS: tuple[int, ...] = tuple(
+    pid for pid, _slug, _name in _PROVIDER_SEED if pid != PROVIDER_ID_SCB
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -849,25 +863,29 @@ def _check_minted_id_bands(
     *,
     flavored: bool = False,
 ) -> None:
-    """A4.3b: every SOS-provider id (register -> ... -> variable_state) is in the
-    minted band [2^62, 2^63); every SCB-provider id is below 2^62.
+    """A4.3b: every minted-provider id (register -> ... -> variable_state) is in
+    the band [2^62, 2^63); every SCB-provider id is below 2^62.
 
-    Catches a SOS adapter that forgot to `mint()` (its id would land in the SCB
-    low band and risk an id collision) and, symmetrically, an SCB id that
-    overflowed into the minted band. value_set/value_code/code_variable_map.code_id
-    are EXCLUDED — they are content-addressed, autoincrement, PROVIDER-SHARED, so
-    they belong to neither band. Self-skips when no SOS rows are present (the
+    Catches an adapter that forgot to `mint()` (its id would land in the SCB low
+    band and risk an id collision) and, symmetrically, an SCB id that overflowed
+    into the minted band. value_set/value_code/code_variable_map.code_id are
+    EXCLUDED — they are content-addressed, autoincrement, PROVIDER-SHARED, so
+    they belong to neither band. Self-skips when no minted rows are present (the
     SCB-only fixture / `--providers=scb` build), so it only bites on a combined
     build.
 
-    ``flavored=True`` (#365 PR2) GENERALIZES the SOS rule to every non-SCB
-    provider: a steward-flavored DB (``extend-db``) mints its steward registers
-    via ``id.mint()``, so EVERY non-SCB provider's ids must be in the high band
-    ``[2^62, 2^63)``. This catches a steward overlay that forgot to mint a row
-    (it would land low and risk an SCB-band collision). The SCB rule is
-    UNCHANGED — SCB-register grafts legitimately keep low-band sequential ids,
-    so SCB ids stay ``< 2^62``. With ``flavored=False`` (the global build) the
-    behavior is identical to before: only SOS is checked on the high side.
+    GLOBAL build (``flavored=False``): every SEEDED non-SCB provider (SOS, FOHM,
+    … — #422 generalized this from the original SOS-only rule) must be high-band.
+    The set is derived from ``_PROVIDER_SEED``, so a new curated provider is
+    covered the moment it is seeded.
+
+    ``flavored=True`` (#365 PR2) additionally covers dynamically minted STEWARD
+    providers (an ``extend-db`` overlay): EVERY non-SCB provider's ids must be
+    high-band (``provider_id != SCB``), catching a steward overlay that forgot to
+    mint. Steward providers are not in ``_PROVIDER_SEED``, so they are out of
+    scope for the global check — hence the two predicates. The SCB rule is
+    UNCHANGED in both modes: SCB-register grafts legitimately keep low-band
+    sequential ids, so SCB ids stay ``< 2^62``.
     """
     result.section("[bands: minted-id disjointness]")
     if "register" not in tables:
@@ -895,7 +913,7 @@ def _check_minted_id_bands(
         ),
     ]
     failures = 0
-    n_high = 0  # rows expected in the minted band (SOS, or all non-SCB if flavored)
+    n_high = 0  # rows expected in the minted band (seeded non-SCB, or all non-SCB if flavored)
     for label, sql in grains:
         # SCB ids must be < 2^62 (UNCHANGED in both modes — grafts stay low).
         bad_scb = conn.execute(
@@ -915,16 +933,23 @@ def _check_minted_id_bands(
             ).fetchone()[0]
             high_label = "non-SCB"
         else:
-            # SOS ids must be >= 2^62 (the original global-build rule).
+            # Every SEEDED non-SCB provider (SOS, FOHM, … — #422) must be
+            # >= 2^62 in the GLOBAL build. This generalizes the original
+            # SOS-only rule: a global build's non-SCB providers all mint. Steward
+            # providers are only present in a flavored overlay and are NOT seeded,
+            # so they stay out of scope here (the flavored branch covers them via
+            # `!= SCB`), preserving the global/flavored distinction.
+            placeholders = ",".join("?" * len(_GLOBAL_NONSCB_PROVIDER_IDS))
             bad_high = conn.execute(
-                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ? AND id < ?",
-                (PROVIDER_ID_SOS, _MINT_BIT),
+                f"SELECT COUNT(*) FROM ({sql}) "
+                f"WHERE provider_id IN ({placeholders}) AND id < ?",
+                (*_GLOBAL_NONSCB_PROVIDER_IDS, _MINT_BIT),
             ).fetchone()[0]
             n_high += conn.execute(
-                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id = ?",
-                (PROVIDER_ID_SOS,),
+                f"SELECT COUNT(*) FROM ({sql}) WHERE provider_id IN ({placeholders})",
+                _GLOBAL_NONSCB_PROVIDER_IDS,
             ).fetchone()[0]
-            high_label = "SOS"
+            high_label = "non-SCB"
         if bad_scb:
             result.fail(
                 f"{bad_scb} {label} SCB id(s) overflow the minted band (>= 2^62)"
@@ -938,11 +963,9 @@ def _check_minted_id_bands(
             failures += 1
     if failures == 0:
         if n_high == 0:
-            label = "non-SCB" if flavored else "SOS"
-            result.ok(f"no {label} rows — minted-id band check trivially holds")
+            result.ok("no non-SCB rows — minted-id band check trivially holds")
         else:
-            high_label = "non-SCB" if flavored else "SOS"
-            result.ok(f"all SCB ids < 2^62 and all {high_label} ids >= 2^62")
+            result.ok("all SCB ids < 2^62 and all non-SCB ids >= 2^62")
 
 
 # A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by
