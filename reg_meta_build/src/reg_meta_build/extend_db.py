@@ -130,10 +130,19 @@ def _expand_window(valid_from: str | None, valid_to: str | None) -> tuple[str, s
             ) from exc
         return hi if end == "hi" else lo
 
-    return (
-        _expand(valid_from, end="lo", default=_OPEN_FROM),
-        _expand(valid_to, end="hi", default=_OPEN_TO),
-    )
+    lo = _expand(valid_from, end="lo", default=_OPEN_FROM)
+    hi = _expand(valid_to, end="hi", default=_OPEN_TO)
+    # An inverted window would violate the `variable_state` DDL CHECK
+    # (valid_to >= valid_from) and surface as an opaque sqlite3.IntegrityError
+    # at INSERT time — far from the inventory. Catch it here as a clean
+    # structural defect (ISO 8601 strings sort lexically == chronologically).
+    if lo > hi:
+        raise _cfg_error(
+            f"extend-db inventory validity window is inverted: valid_from "
+            f"{valid_from!r} ({lo}) is after valid_to {valid_to!r} ({hi}).",
+            "Make valid_from <= valid_to (or omit one for an open end).",
+        )
+    return (lo, hi)
 
 
 # ---------------------------------------------------------------------------
@@ -388,8 +397,21 @@ def _load_variant(obj: dict, provider: str, reg_key: str, idx: int) -> InvVarian
 def _load_variable(obj: dict, variant_ctx: str, idx: int) -> InvVariable:
     ctx = f"{variant_ctx}.variables[{idx}]"
     _reject_unknown_keys(obj, _VARIABLE_KEYS, ctx)
+    key = _require_str(obj, "key", ctx)
+    # The variable key becomes `variable.provider_key`, and the slug source-ID
+    # grammar uses '.' as its segment separator — `populate_variable_slugs.
+    # _source_id` raises `slug_toml_invalid` on any '.' in a provider_key, a
+    # confusing failure far from the inventory. Reject it here (register/variant
+    # keys only feed `mint()`, so they're exempt).
+    if "." in key:
+        raise _cfg_error(
+            f"extend-db inventory {ctx} variable key {key!r} must not contain '.' "
+            "(it becomes the variable provider_key, whose slug source-ID grammar "
+            "uses '.' as a segment separator).",
+            "Rename the variable key so it has no dot.",
+        )
     return InvVariable(
-        key=_require_str(obj, "key", ctx),
+        key=key,
         name=_require_str(obj, "name", ctx),
         column=_require_str(obj, "column", ctx),
         definition=_opt_str(obj, "definition", ctx),
@@ -561,6 +583,43 @@ def _insert_core_graph(
     return counts
 
 
+def _assert_steward_rows_slugged(conn: sqlite3.Connection) -> None:
+    """Fail (EXIT_CONFIG) if any steward (non-SCB/SOS provider) ``register`` or
+    ``register_variant`` row is left NULL-slug after slug population.
+
+    ``populate_slugs(strict=False)`` is intentionally lenient (it must not touch
+    the published global scb/sos rows), so a steward register/variant whose slug
+    TOML entry is missing slips through silently — and nothing downstream catches
+    it, so an unaddressable steward FQID would ship. Built-in global providers
+    (scb/sos) are EXCLUDED: their slugs come from the global build, not the
+    steward dir, and are not this overlay's concern."""
+    missing: list[str] = []
+    for row in conn.execute(
+        "SELECT 'register', p.slug, r.register_id, r.name FROM register r "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE p.slug NOT IN ('scb', 'sos') AND r.slug IS NULL "
+        "ORDER BY r.register_id"
+    ):
+        missing.append(f"register {row[1]}#{row[2]} ({row[3]!r})")
+    for row in conn.execute(
+        "SELECT 'register_variant', p.slug, rv.register_variant_id, rv.name "
+        "FROM register_variant rv "
+        "JOIN register r ON r.register_id = rv.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE p.slug NOT IN ('scb', 'sos') AND rv.slug IS NULL "
+        "ORDER BY rv.register_variant_id"
+    ):
+        missing.append(f"register_variant {row[1]}#{row[2]} ({row[3]!r})")
+    if missing:
+        sample = "; ".join(missing[:5])
+        raise _cfg_error(
+            f"{len(missing)} steward register/variant row(s) have no slug after "
+            f"slug population. Sample: {sample}.",
+            "Add the missing [register] / [register_variant] entries to the "
+            "steward slug dir, or pass --skip-slugs.",
+        )
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -580,9 +639,10 @@ def extend_db(
     released global DB ``base_db``, writing the result to ``<db_dir>/reg_meta.db``.
 
     Mirrors ``build_db``'s file discipline: copy the base DB to a ``.tmp``,
-    insert on the copy (``foreign_keys=OFF`` during inserts, FK-check + VACUUM
-    before commit), run ``pre_rename_hook`` against the tmp, then atomically
-    rotate + rename into place. The base DB is a READ-ONLY input, never mutated.
+    insert on the copy (``foreign_keys=OFF`` during inserts, FK-check before
+    commit), run ``pre_rename_hook`` against the tmp, then atomically rotate +
+    rename into place. No VACUUM (the overlay is insert-only — see the commit
+    block). The base DB is a READ-ONLY input, never mutated.
 
     ``steward`` selects the steward slug dir
     (``reg_meta_build/fqid_slugs/<steward>/`` from a repo checkout) unless
@@ -591,7 +651,12 @@ def extend_db(
     Returns a counts dict: ``{providers, registers, variants, variables,
     states}``.
     """
-    from .db import _populate_fts, _progress, rotate_db_to_prev
+    from .db import (
+        _populate_fts,
+        _progress,
+        _unlink_wal_sidecars,
+        rotate_db_to_prev,
+    )
     from .fqid_slugs import populate_slugs, populate_variable_slugs, repo_slug_dir
 
     base_db = base_db.expanduser().resolve()
@@ -605,6 +670,22 @@ def extend_db(
             error_class="configuration",
             message=f"Base global DB not found: {base_db}",
             remediation="Pass --base-db pointing at a released reg_meta.db.",
+        )
+
+    # The base DB is a READ-ONLY input, but the end-of-run `rotate_db_to_prev`
+    # moves whatever sits at the output path aside — so if `--base-db` resolves
+    # to the output `reg_meta.db`, that rotate would silently move the "read-only"
+    # base. Reject the overlap up front.
+    if base_db == (db_dir / DB_FILENAME):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_base_db_is_output",
+            error_class="configuration",
+            message=(
+                f"--base-db {base_db} resolves to the output DB path; the base is "
+                "read-only and must differ from the output."
+            ),
+            remediation="Point --db at a different output directory.",
         )
 
     inventory = load_inventory(inventory_path)
@@ -691,6 +772,13 @@ def extend_db(
             # Incremental variable slugs: derive ONLY the new (NULL-slug)
             # variables, uniquifying against the published global slugs.
             populate_variable_slugs(conn, steward_slug_dir, incremental=True)
+            # `populate_slugs(strict=False)` silently leaves a steward register/
+            # variant NULL-slug when the steward dir lacks its entry, and no
+            # flavored-validation check catches it → an unaddressable steward
+            # FQID would ship. Guard the steward (non-SCB/SOS) provider rows
+            # here. Variables always auto-slug (incremental fallback chain), so
+            # only registers + variants need the check.
+            _assert_steward_rows_slugged(conn)
 
         # FTS rebuild: the overlay only INSERTs register / variable rows, so
         # those two indexes need a content-synced rebuild — cheap (a few extra
@@ -725,7 +813,12 @@ def extend_db(
             )
         conn.execute("PRAGMA foreign_keys=ON")
         conn.commit()
-        conn.execute("VACUUM")  # must run outside a transaction
+        # NO VACUUM: unlike `build_db` (which VACUUMs to reclaim pages freed by
+        # its build-time-only DROP TABLEs), this overlay is INSERT-only and drops
+        # nothing, so a VACUUM would rewrite the whole multi-GB copy of the global
+        # DB to reclaim ~nothing — a dominant cost on the real flavored build. The
+        # FTS delete-all + repopulate churns a few pages, but freelist stays far
+        # below the validator's >=1% staging-bloat ceiling.
         write_failed = False
     finally:
         conn.close()
@@ -751,8 +844,3 @@ def extend_db(
     # the CLI envelope (separate dict so `counts` stays homogeneously int-typed).
     result: dict[str, Any] = {**counts, "db_path": str(final_path)}
     return result
-
-
-def _unlink_wal_sidecars(db_path: Path) -> None:
-    for sidecar in ("-wal", "-shm"):
-        db_path.with_name(db_path.name + sidecar).unlink(missing_ok=True)

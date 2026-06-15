@@ -1402,7 +1402,27 @@ def populate_variable_slugs(
     }
     applied_curated: set[tuple[str, str]] = set()
 
-    for provider_slug in _live_providers(conn):
+    # `incremental` (#365 PR2): only providers that actually gained NULL-slug
+    # variables need processing — the steward overlay adds rows under ONE new
+    # provider, so running the heavy per-provider `variables` SELECT (two
+    # correlated subqueries per row) for SCB/SOS would scan their full variable
+    # tables to derive zero slugs. Restrict the loop to providers with >= 1
+    # NULL-slug variable; the per-provider work for those is unchanged. The
+    # non-incremental (global build) path keeps the full live-provider loop.
+    provider_slugs = _live_providers(conn)
+    if incremental:
+        with_null = {
+            r[0]
+            for r in conn.execute(
+                "SELECT DISTINCT p.slug FROM provider p "
+                "JOIN register r ON r.provider_id = p.provider_id "
+                "JOIN variable v ON v.register_id = r.register_id "
+                "WHERE v.slug IS NULL"
+            )
+        }
+        provider_slugs = [s for s in provider_slugs if s in with_null]
+
+    for provider_slug in provider_slugs:
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
         auto: dict[str, str] = {}
         # A4.4a: source_id → derivation class — the `# source:` comment basis for

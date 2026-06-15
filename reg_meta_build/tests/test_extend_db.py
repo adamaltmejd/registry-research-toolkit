@@ -212,6 +212,14 @@ class TestExpandWindow:
             _expand_window("not-a-date", None)
         assert exc.value.exit_code == EXIT_CONFIG
 
+    def test_inverted_window_is_config_error(self) -> None:
+        # valid_from after valid_to would violate the variable_state DDL CHECK
+        # (valid_to >= valid_from) as an opaque IntegrityError at INSERT — caught
+        # here as a clean structural defect instead.
+        with pytest.raises(RegMetaError) as exc:
+            _expand_window("2020", "2018")
+        assert exc.value.exit_code == EXIT_CONFIG
+
 
 # ── overlay inserts ──────────────────────────────────────────────────────────────
 
@@ -662,6 +670,78 @@ class TestIncrementalFlagDefault:
             is not None
         )
 
+    def test_incremental_skips_providers_with_no_null_slug_variables(
+        self, tmp_path: Path
+    ) -> None:
+        # #365 PR2 perf: under incremental=True, a provider whose variables are
+        # ALL already slugged must not be processed at all. Observable via its
+        # `<provider>.auto.toml` NOT being written (only a processed provider
+        # with first-sight slugs writes it) and its slugs staying untouched.
+        from reg_meta_build.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.executescript(DDL)
+        seed_providers(conn)
+        # SCB (provider 1): one variable, already slugged → no NULL rows.
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name, slug) "
+            "VALUES (1, 1, 'R', 'r')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
+            "VALUES (10, 1, 'V', 'v')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+            "VALUES (1, 1, '100', 'Alpha', 'preexisting')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (1, 10, '2018-01-01', '9999-12-31', 'int', 'COL1')"
+        )
+        # A steward provider (high-band id) with one NULL-slug variable.
+        bank_pid = mint("provider", "bankx")
+        conn.execute(
+            "INSERT INTO provider (provider_id, slug, name) VALUES (?, 'bankx', 'Bank X')",
+            (bank_pid,),
+        )
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name, slug) "
+            "VALUES (2000, ?, 'BR', 'br')",
+            (bank_pid,),
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
+            "VALUES (2010, 2000, 'BV', 'bv')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, name) "
+            "VALUES (2001, 2000, 'belopp', 'Belopp')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (2001, 2010, '2018-01-01', '9999-12-31', 'float', 'BELOPP')"
+        )
+        conn.commit()
+
+        slug_dir = tmp_path / "slug"
+        slug_dir.mkdir()
+        counts = populate_variable_slugs(conn, slug_dir, incremental=True)
+        # Only the steward NULL-slug variable was processed.
+        assert counts["auto_new"] == 1
+        # SCB (no NULL rows) was skipped → its auto.toml is never written.
+        assert not (slug_dir / "scb.auto.toml").exists()
+        assert (slug_dir / "bankx.auto.toml").exists()
+        # SCB's published slug is untouched.
+        assert (
+            conn.execute("SELECT slug FROM variable WHERE variable_id = 1").fetchone()[
+                0
+            ]
+            == "preexisting"
+        )
+
     def test_incremental_uniquifies_against_published_slug(
         self, tmp_path: Path
     ) -> None:
@@ -815,6 +895,18 @@ class TestLoader:
             load_inventory(path)
         assert exc.value.exit_code == EXIT_CONFIG
 
+    def test_dotted_variable_key_is_config_error(self, tmp_path: Path) -> None:
+        # A variable key with a '.' becomes a provider_key the slug source-ID
+        # grammar would mis-parse — rejected at load, not deep in slugging.
+        reg = _reg_stub("swedbank", "tx")
+        reg["variants"][0]["variables"][0]["key"] = "a.b"
+        inv = {"steward": "swecov", "source_label": "x", "registers": [reg]}
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+
     def test_steward_mismatch_fails(self, tmp_path: Path, global_db: Path) -> None:
         inv = {"steward": "other", "source_label": "x"}
         path = tmp_path / "inv.json"
@@ -870,6 +962,28 @@ class TestFailurePaths:
             )
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "extend_base_db_not_found"
+
+    def test_base_db_equals_output_path(self, tmp_path: Path, global_db: Path) -> None:
+        # If --base-db resolves to <db_dir>/reg_meta.db, the end-of-run rotate
+        # would move the "read-only" base aside — reject up front.
+        import shutil
+
+        out = tmp_path / "out"
+        out.mkdir()
+        base_in_out = out / "reg_meta.db"
+        shutil.copy2(global_db, base_in_out)
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            extend_db(
+                base_db=base_in_out,
+                inventory_path=inv_path,
+                db_dir=out,
+                steward=_STEWARD,
+                skip_slugs=True,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "extend_base_db_is_output"
 
     def test_register_names_undeclared_provider(
         self, tmp_path: Path, global_db: Path
@@ -933,6 +1047,55 @@ class TestFailurePaths:
         # Core graph unchanged vs base, and the result validates clean.
         assert _global_snapshot(sqlite3.connect(out)) == before
         assert not validate_built_db(out, flavored=True).failures
+
+    def test_no_wal_sidecars_after_run(self, tmp_path: Path, global_db: Path) -> None:
+        # #365 PR2: extend_db reuses db._unlink_wal_sidecars (no local dupe). A
+        # successful run must leave no orphaned `-wal`/`-shm` next to the output.
+        _, out = _run_extend_skip_slugs(tmp_path, global_db, _base_inventory())
+        assert out.exists()
+        assert not out.with_name(out.name + "-wal").exists()
+        assert not out.with_name(out.name + "-shm").exists()
+
+    def test_unlink_wal_sidecars_is_db_function(self) -> None:
+        # The local definition was deleted in favor of importing from .db; assert
+        # the symbol used by extend_db IS the db.py one (no silent re-divergence).
+        import reg_meta_build.db as _db
+        import reg_meta_build.extend_db as _ext
+
+        assert not hasattr(_ext, "_unlink_wal_sidecars")
+        assert hasattr(_db, "_unlink_wal_sidecars")
+
+    def test_steward_register_missing_slug_fails(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        # A steward slug dir that slugs the VARIANT but omits the REGISTER entry:
+        # populate_slugs(strict=False) leaves the steward register NULL-slug, and
+        # the scoped guard must catch it as a clean EXIT_CONFIG (otherwise an
+        # unaddressable steward FQID would ship).
+        ids = _steward_register_ids()
+        slug_dir = tmp_path / "sslug"
+        slug_dir.mkdir()
+        (slug_dir / "UNFROZEN").write_text("u\n", encoding="utf-8")
+        (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
+        # Variant entry present, register entry DELIBERATELY absent.
+        (slug_dir / f"{_BANK}.toml").write_text(
+            f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
+            'slug = "transaktioner-default"\n',
+            encoding="utf-8",
+        )
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        out = tmp_path / "out"
+        out.mkdir()
+        with pytest.raises(RegMetaError) as exc:
+            extend_db(
+                base_db=global_db,
+                inventory_path=inv_path,
+                db_dir=out,
+                steward=_STEWARD,
+                slug_dir=slug_dir,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
 
 
 # ── provider idempotency (_insert_providers) ─────────────────────────────────
