@@ -1120,10 +1120,12 @@ class TestEdgeAccessors:
 
 
 class TestResolveTerminalSuccessor:
-    """#355 PART 2: walk `variable_replaced_by` from a (possibly dead/renamed)
-    binding FQID to its terminal successor — the chain end with no outbound edge.
-    Edges are raw string triples; a DEAD predecessor needs no `variable` row (the
-    whole point — its row is gone after the rename)."""
+    """#355 PART 2 / #412: walk a succession chain from a (possibly dead/renamed)
+    FQID to its terminal successor — the chain end with no outbound edge. The walk
+    dispatches on FQID kind: bindings walk `variable_replaced_by` (raw string
+    triples), registers walk `register_replaced_by` (raw string pairs). A DEAD
+    predecessor needs no live row (the whole point — its row is gone after the
+    rename)."""
 
     @staticmethod
     def _add_edge(
@@ -1136,6 +1138,21 @@ class TestResolveTerminalSuccessor:
             "predecessor_provider, predecessor_register, predecessor_variable, "
             "successor_provider, successor_register, successor_variable, note) "
             "VALUES (?,?,?,?,?,?,'auto:test')",
+            (*predecessor, *successor),
+        )
+        conn.commit()
+
+    @staticmethod
+    def _add_register_edge(
+        conn: sqlite3.Connection,
+        predecessor: tuple[str, str],
+        successor: tuple[str, str],
+    ) -> None:
+        conn.execute(
+            "INSERT INTO register_replaced_by ("
+            "predecessor_provider, predecessor_register, "
+            "successor_provider, successor_register, note) "
+            "VALUES (?,?,?,?,'auto:test')",
             (*predecessor, *successor),
         )
         conn.commit()
@@ -1155,13 +1172,17 @@ class TestResolveTerminalSuccessor:
         conn = build_slugged_db()
         assert Catalog(conn).resolve_terminal_successor(_KON) is None
 
-    def test_non_binding_fqid_returns_none(self) -> None:
-        # Register/classification-grain renames are out of scope (no SQL).
+    def test_unsupported_kinds_return_none(self) -> None:
+        # Provider and classification grains have NO succession table, so a rename
+        # there has nowhere to redirect → None (no SQL). A register with no
+        # outbound `register_replaced_by` edge is also None — genuinely unknown,
+        # same as the no-edge binding case (#412 made register grain in scope, so
+        # this is now "no edge", not "out of scope").
         conn = build_slugged_db()
         cat = Catalog(conn)
-        assert cat.resolve_terminal_successor("scb/lisa") is None
         assert cat.resolve_terminal_successor("scb") is None
         assert cat.resolve_terminal_successor("class/sun2020") is None
+        assert cat.resolve_terminal_successor("scb/lisa") is None
 
     def test_cycle_guard_terminates(self) -> None:
         # Malformed double-rename loop A→B→A. The walk must terminate (not hang)
@@ -1188,3 +1209,44 @@ class TestResolveTerminalSuccessor:
         assert terminal is not None
         # "aaa-low" < "zzz-high" → the lower-sorted successor wins.
         assert str(terminal) == "scb/lisa/aaa-low"
+
+    # #412: register-grain renames now redirect too. These mirror the binding
+    # tests above on `register_replaced_by`; dead predecessor registers need no
+    # `register` row (same dead-slug premise), and `scb/lisa` is the live,
+    # edge-free terminal from build_slugged_db.
+
+    def test_register_multi_hop_chain_returns_terminal(self) -> None:
+        # old-reg-a → old-reg-b → lisa (the live, edge-free register). old-reg-a /
+        # old-reg-b are dead: NO register rows, only edges.
+        conn = build_slugged_db()
+        self._add_register_edge(conn, ("scb", "old-reg-a"), ("scb", "old-reg-b"))
+        self._add_register_edge(conn, ("scb", "old-reg-b"), ("scb", "lisa"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/old-reg-a")
+        assert terminal is not None
+        assert str(terminal) == "scb/lisa"
+
+    def test_register_cycle_guard_terminates(self) -> None:
+        # Malformed double-rename loop A→B→A. The walk must terminate (not hang)
+        # and land deterministically on B (start=A hops to B, B→A is already
+        # seen → stop).
+        conn = build_slugged_db()
+        self._add_register_edge(conn, ("scb", "loop-reg-a"), ("scb", "loop-reg-b"))
+        self._add_register_edge(conn, ("scb", "loop-reg-b"), ("scb", "loop-reg-a"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/loop-reg-a")
+        assert terminal is not None
+        assert str(terminal) == "scb/loop-reg-b"
+
+    def test_register_split_pick_is_lexicographically_first(self) -> None:
+        # Deterministic split pick: when a predecessor register has TWO distinct
+        # successors, the walk takes the lexicographically-FIRST per
+        # `_first_register_successor_pair`'s `ORDER BY successor_provider,
+        # successor_register LIMIT 1`. Both successors are dead leaves (no register
+        # rows, no further edges) so each is itself terminal — this isolates the
+        # split pick, not the walk depth.
+        conn = build_slugged_db()
+        self._add_register_edge(conn, ("scb", "split-reg"), ("scb", "zzz-reg"))
+        self._add_register_edge(conn, ("scb", "split-reg"), ("scb", "aaa-reg"))
+        terminal = Catalog(conn).resolve_terminal_successor("scb/split-reg")
+        assert terminal is not None
+        # "aaa-reg" < "zzz-reg" → the lower-sorted successor wins.
+        assert str(terminal) == "scb/aaa-reg"

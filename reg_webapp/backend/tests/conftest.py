@@ -318,17 +318,23 @@ def _seed_kon_edges(src: sqlite3.Connection) -> None:
 
 
 def _seed_succession_chain(src: sqlite3.Connection) -> None:
-    """Seed a SELF-CONTAINED multi-hop succession chain of DEAD (renamed) binding
-    slugs for the #355 PART 2 catalog 301-redirect tests:
+    """Seed a SELF-CONTAINED succession chain of DEAD (renamed) slugs for the
+    catalog 301-redirect tests, at BOTH grains the redirect walk supports:
 
+    Binding grain (#355 PART 2):
         scb/lisa/renamed-head → scb/lisa/renamed-mid → scb/rams/syss
 
-    The head + mid are dead (NO ``variable`` rows — exactly the renamed-slug case:
-    citing them 404s); the chain terminates at the LIVE, edge-free ``scb/rams/syss``
-    leaf (added above; it's a succession *successor* of kon, so it has no OUTBOUND
-    edge of its own → a genuine chain end). A GET on the head must 301 to the
-    terminal. Kept as its own helper (not folded into ``_seed_kon_edges``) so the
-    existing predecessor/successor count assertions on kon/syss are untouched."""
+    Register grain (#412):
+        scb/oldreg → scb/lisa
+
+    The dead predecessors carry NO live row (no ``variable`` / ``register`` — exactly
+    the renamed-slug case: citing them 404s). Each chain terminates at a LIVE,
+    edge-free leaf so the redirect target itself resolves 200 when followed:
+    ``scb/rams/syss`` (a succession *successor* of kon, added above, so it has no
+    OUTBOUND binding edge) and the live ``scb/lisa`` register. A GET on a dead head
+    must 301 to its terminal. Kept as its own helper (not folded into
+    ``_seed_kon_edges``) so the existing predecessor/successor count assertions on
+    kon/syss are untouched."""
     src.executemany(
         "INSERT INTO variable_replaced_by "
         "(predecessor_provider, predecessor_register, predecessor_variable, "
@@ -338,6 +344,12 @@ def _seed_succession_chain(src: sqlite3.Connection) -> None:
             ("scb", "lisa", "renamed-head", "scb", "lisa", "renamed-mid"),
             ("scb", "lisa", "renamed-mid", "scb", "rams", "syss"),
         ],
+    )
+    src.execute(
+        "INSERT INTO register_replaced_by "
+        "(predecessor_provider, predecessor_register, "
+        "successor_provider, successor_register, note) "
+        "VALUES ('scb','oldreg','scb','lisa','auto:test')"
     )
 
 
