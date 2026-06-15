@@ -25,7 +25,7 @@ import calendar
 import re
 import zipfile
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -1533,12 +1533,17 @@ class SOSAdapter:
                 continue
             # Apply curated single-row name corrections (#362) before grouping,
             # so a mistyped duplicate-name row keys into its OWN group instead of
-            # silently merging. The corrected name flows through unchanged: the
-            # group key becomes provider_key/mint/slug in _emit_merged.
-            name = VARIABLE_NAME_CORRECTIONS.get(
-                (abbrev, v.name, v.label or ""), v.name
-            )
-            groups.setdefault(name, []).append(v)
+            # silently merging. Rewrite the MEMBER's name (not just the group key):
+            # for SOS the delivery column == the variable name, so the corrected
+            # name must flow through to col/delivery_column_name in
+            # _emit_member_states — otherwise the de-merged variable would emit its
+            # alias/state with the WRONG (mistyped) column, colliding with the real
+            # variable that legitimately owns it. The corrected name then becomes
+            # the group key -> provider_key/mint/slug in _emit_merged.
+            corrected = VARIABLE_NAME_CORRECTIONS.get((abbrev, v.name, v.label or ""))
+            if corrected is not None:
+                v = replace(v, name=corrected)
+            groups.setdefault(v.name, []).append(v)
 
         for name_key in sorted(groups):
             group = groups[name_key]

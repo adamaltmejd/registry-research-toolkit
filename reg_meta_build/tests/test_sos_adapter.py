@@ -325,6 +325,22 @@ def test_variable_name_correction_demerges_invarn() -> None:
     lova_person = mint("sos", "lova", "LOVA PERSON")
     assert len(states) == 2, "one state per de-merged variable"
     assert {s.register_variant_id for s in states} == {lova_person}
+    # Regression (#362 bug): for SOS the delivery column IS the variable name, so
+    # the correction must also rewrite the column. If only the group key were
+    # corrected, the de-merged INVARN9 variable would emit its alias/state with
+    # column "INVARN8" — colliding with the real INVARN8 in the same variant. The
+    # two variables must NOT share a delivery column.
+    aliases = _of(objs, IRVariableAlias)
+    assert len(aliases) == 2, "one alias per de-merged variable"
+    assert {a.delivery_column_name for a in aliases} == {"INVARN8", "INVARN9"}
+    # The corrected INVARN9 *variable* owns the INVARN9 column; INVARN8 owns its own.
+    col_by_var = {a.variable_id: a.delivery_column_name for a in aliases}
+    assert col_by_var[by_key["INVARN8"].variable_id] == "INVARN8"
+    assert col_by_var[by_key["INVARN9"].variable_id] == "INVARN9"
+    # Each de-merged variable's state carries its OWN column, too.
+    state_col_by_var = {s.variable_id: s.delivery_column_name for s in states}
+    assert state_col_by_var[by_key["INVARN8"].variable_id] == "INVARN8"
+    assert state_col_by_var[by_key["INVARN9"].variable_id] == "INVARN9"
 
 
 def test_known_merge_allowlist_silences_warn() -> None:
