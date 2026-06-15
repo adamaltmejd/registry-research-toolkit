@@ -300,7 +300,10 @@ def test_variable_name_correction_demerges_invarn() -> None:
                 label="Invandringsdatum 9 numerisk",
             ),
         ],
-        deldatamangder=(_deldat("A_LOVA_PERSON"),),
+        # The variable rows key on the A_LOVA_PERSON extraction token; the
+        # Deldatamängder sheet names the variant 'LOVA PERSON', and the curated
+        # map routes the token there (without it both members drop, unstated).
+        deldatamangder=(_deldat("LOVA PERSON"),),
     )
     objs, _ = _emit(reg)
     variables = _of(objs, IRVariable)
@@ -311,6 +314,17 @@ def test_variable_name_correction_demerges_invarn() -> None:
     # OWN row's etikett, so the corrected variable keeps the mistyped row's label.
     assert by_key["INVARN8"].name == "Invandringsdatum 8 numerisk"
     assert by_key["INVARN9"].name == "Invandringsdatum 9 numerisk"
+    # The de-merge must actually emit one state per variable (the regression: a
+    # dropped invarn9 state would still pass the IRVariable count above). Both
+    # belong to the LOVA PERSON variant the token resolves to, with no
+    # unresolved-token warning.
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    states = _of(objs, IRVariableState)
+    lova_person = mint("sos", "lova", "LOVA PERSON")
+    assert len(states) == 2, "one state per de-merged variable"
+    assert {s.register_variant_id for s in states} == {lova_person}
 
 
 def test_known_merge_allowlist_silences_warn() -> None:
@@ -333,7 +347,10 @@ def test_known_merge_allowlist_silences_warn() -> None:
                 label="Utbildningsår (avslutningsår högsta utb.)",
             ),
         ],
-        deldatamangder=(_deldat("A_LOVA"), _deldat("A_LOVA_EXAMEN")),
+        # Variable rows key on the A_LOVA / A_LOVA_EXAMEN tokens; the
+        # Deldatamängder sheet names the variants 'LOVA' / 'LOVA EXAMEN' that the
+        # curated map routes the tokens to (else both members drop, unstated).
+        deldatamangder=(_deldat("LOVA"), _deldat("LOVA EXAMEN")),
     )
     objs, _ = _emit(reg)
     assert len(_of(objs, IRVariable)) == 1, "allow-listed conflict still MERGEs"
@@ -343,6 +360,17 @@ def test_known_merge_allowlist_silences_warn() -> None:
         if w.code == "sos_unanticipated_same_name_conflict"
     ]
     assert warns == [], "allow-listed merge emits NO conflict warning"
+    # The single merged variable must carry a state per variant (the regression
+    # this guards: a dropped state would still pass the merge/no-warn asserts).
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_deldatamangd_unresolved"
+    ] == []
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2, "one state per variant on the merged variable"
+    assert {s.register_variant_id for s in states} == {
+        mint("sos", "lova", "LOVA"),
+        mint("sos", "lova", "LOVA EXAMEN"),
+    }
 
 
 # ---------------------------------------------------------------------------
