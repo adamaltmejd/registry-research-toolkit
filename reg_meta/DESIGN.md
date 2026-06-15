@@ -385,21 +385,24 @@ uniformly. The longitudinal `resolve(fqid).replaced_by` attribute carries the
 inbound traversal is the explicit `predecessors(fqid)` call.
 
 **`resolve_terminal_successor(fqid)` — citation-stable renamed-slug redirect (#355 PART
-2).** Walks `variable_replaced_by` from an arbitrary binding FQID — which **does NOT
-need to resolve to a live `variable` row** — to the TERMINAL chain end (the node with no
-further outbound edge), returning that terminal as a `Fqid` or `None` when the start has
-no outbound edge at all (genuinely unknown). This is the key distinction from
+2; register grain added in #412).** Dispatches on FQID kind and walks the appropriate
+succession table to the TERMINAL chain end (the node with no further outbound edge),
+returning that terminal as an `Fqid` of the **same kind**, or `None` when the start has
+no outbound edge at all (genuinely unknown). Kind dispatch: VARIABLE_BINDING walks
+`variable_replaced_by` on the stored (provider, register, variable) triple; REGISTER
+walks `register_replaced_by` on the stored (provider, register) pair;
+PROVIDER/CLASSIFICATION have no succession table and return `None` immediately. The
+start FQID **does NOT need to resolve to a live row** — that is the key distinction from
 `successors`: `successors` requires the FQID to resolve (it calls `_resolve_edge_triple`
 which raises `fqid_not_found` on a dead slug), whereas `resolve_terminal_successor`
-walks purely on the stored string triple, so it can follow a renamed slug whose
-`variable` row is gone. Always resolves to the ABSOLUTE chain end (never hop-by-hop): a
-301 redirect can be cached, so returning an intermediate would leave a cached redirect
-pointing at a now-dead slug after a double rename (A→B then B→C). Split pick: when a
-predecessor has multiple successors, takes the lexicographically first per
-`ORDER BY successor_provider, successor_register, successor_variable LIMIT 1`. Cycle
-guard: a `seen` set terminates a malformed loop (A→B→A) without hanging. Non-binding
-FQIDs (register/provider/classification grain) return `None` immediately —
-register-grain renames are out of scope.
+walks purely on the stored string tuple, so it can follow a renamed slug whose
+`variable` / `register` row is gone. Always resolves to the ABSOLUTE chain end (never
+hop-by-hop): a 301 redirect can be cached, so returning an intermediate would leave a
+cached redirect pointing at a now-dead slug after a double rename (A→B then B→C). Split
+pick: when a predecessor has multiple successors, takes the lexicographically first per
+`ORDER BY successor_... LIMIT 1` (same rule for both grains). Cycle guard: a `seen` set
+terminates a malformed loop (A→B→A) without hanging. PROVIDER/CLASSIFICATION FQIDs
+return `None` immediately — those grains have no succession table.
 
 **Multi-state at a period is normal, not an edge case.** `resolve_at` returns a list
 because length N is genuinely common: several variants delivered the variable at the
