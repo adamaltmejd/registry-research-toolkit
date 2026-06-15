@@ -970,16 +970,20 @@ def extend_db(
             # variables, uniquifying against the published global slugs.
             populate_variable_slugs(conn, steward_slug_dir, incremental=True)
 
-        # FTS rebuild: a content-synced full rebuild is the simplest correct
-        # build-time op (the overlay touched register / variable / value_code
-        # only by INSERT, but a full rebuild is cheap and avoids partial-sync
-        # bugs). These are EXTERNAL-CONTENT FTS5 tables (content='register' etc.),
-        # so the index is cleared with the special `'delete-all'` command — a
-        # plain `DELETE FROM <fts>` corrupts an external-content index ("database
-        # disk image is malformed"). Then `_populate_fts` re-inserts every row.
-        for fts in ("register_fts", "variable_fts", "value_code_fts"):
+        # FTS rebuild: the overlay only INSERTs register / variable rows, so
+        # those two indexes need a content-synced rebuild — cheap (a few extra
+        # rows over the base) and avoids partial-sync bugs. These are
+        # EXTERNAL-CONTENT FTS5 tables (content='register' etc.), so the index is
+        # cleared with the special `'delete-all'` command — a plain
+        # `DELETE FROM <fts>` corrupts an external-content index ("database disk
+        # image is malformed"). value_code_fts is DELIBERATELY skipped: the
+        # overlay never inserts a `value_code` row (grafts/aliases/steward
+        # variables carry no value sets), so the index copied from the base DB is
+        # already in sync — rebuilding it would re-insert ~4M rows for nothing on
+        # a real flavored DB (#365 PR2 review).
+        for fts in ("register_fts", "variable_fts"):
             conn.execute(f"INSERT INTO {fts}({fts}) VALUES('delete-all')")
-        _populate_fts(conn)
+        _populate_fts(conn, include_value_code=False)
 
         violations = list(conn.execute("PRAGMA foreign_key_check"))
         if violations:

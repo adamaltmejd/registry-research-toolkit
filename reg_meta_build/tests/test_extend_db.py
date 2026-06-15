@@ -539,6 +539,25 @@ class TestFts:
                 == conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
             )
 
+    def test_value_code_fts_unchanged(self, tmp_path: Path, global_db: Path) -> None:
+        """The overlay never inserts value_code rows, so extend_db SKIPS the
+        value_code_fts rebuild — the copied index is already in sync. Assert the
+        honest indexed-row count (the `_docsize` shadow table — COUNT(*) on the
+        external-content FTS reads `value_code` and can't see a double-insert)
+        equals the base DB's, guarding against a regression that re-inserts it."""
+        base_n = (
+            sqlite3.connect(global_db)
+            .execute("SELECT COUNT(*) FROM value_code_fts_docsize")
+            .fetchone()[0]
+        )
+        _, out = _run_extend(tmp_path, global_db, _base_inventory())
+        out_n = (
+            sqlite3.connect(out)
+            .execute("SELECT COUNT(*) FROM value_code_fts_docsize")
+            .fetchone()[0]
+        )
+        assert out_n == base_n
+
 
 # ── flavored validation ──────────────────────────────────────────────────────
 
