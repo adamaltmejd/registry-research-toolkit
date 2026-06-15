@@ -18,6 +18,12 @@ reflex; this is the heartbeat and the push.
 
 `--epic <N>` defaults to `328`; pass the skill's argument through.
 
+**Output budget — this runs every tick, so be terse.** A **quiet tick** (no status
+delta; only benign new-file warnings) gets **one short line and nothing else**, e.g.
+`✓ tick — no change · 0 errors · sleeping`. An **active tick** gets only the deltas +
+real drift as a short bullet list — no preamble, no restating the whole projection, no
+explaining the tooling. Don't narrate the steps; just run them and report the result.
+
 1. **Refresh the projection + capture the delta** — `--write` computes the status delta
    against the epic's *current* block (i.e. the last tick) **before** splicing, so this
    one call both updates the body and tells you what changed:
