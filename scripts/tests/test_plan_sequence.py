@@ -156,6 +156,31 @@ def test_splice_lone_end_marker_appends_not_corrupts() -> None:
     assert block in result
 
 
+def test_splice_lanes_region_independent_of_sequence_region() -> None:
+    # The two marked regions coexist: writing one must not disturb the other.
+    body = (
+        f"{ps.START}\nseq\n{ps.END}\n\nnarrative\n\n"
+        f"{ps.LANES_START}\nold lanes\n{ps.LANES_END}\n"
+    )
+    new_lanes = f"{ps.LANES_START}\nnew lanes\n{ps.LANES_END}"
+    result = ps.splice_block(body, new_lanes, ps.LANES_START, ps.LANES_END)
+    assert "new lanes" in result and "old lanes" not in result
+    assert f"{ps.START}\nseq\n{ps.END}" in result  # sequence region untouched
+    assert "narrative" in result
+
+
+# --- lanes framing -------------------------------------------------------------------
+
+
+def test_render_lanes_block_frames_and_strips() -> None:
+    block = ps.render_lanes_block("  1. lane A — #1\n")
+    assert block.startswith(ps.LANES_START) and block.endswith(ps.LANES_END)
+    assert "1. lane A — #1" in block
+    assert "overwritten" in block  # carries the do-not-edit header
+    # No timestamp: identical input renders byte-identical (diff-stable).
+    assert ps.render_lanes_block("  1. lane A — #1\n") == block
+
+
 # --- render --------------------------------------------------------------------------
 
 

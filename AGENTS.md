@@ -203,6 +203,22 @@ lane/decision narrative *around* the block is the editorial layer you do edit.
 `/issue-pulse` (run via `/loop`) refreshes the block and reports deltas on a cadence.
 The sequencing epic is #328.
 
+**Lanes are ranked agentically.** `/plan-sequence` gives only the deterministic *floor*
+— file-disjoint groups by `touches` set-intersection. **`/plan-lanes`** is the judgment
+layer on top: it reads the issue bodies to fold in what set-intersection can't see
+(semantic conflicts with no file overlap, implicit blockers, what coheres into one
+PR-stream), then returns **ranked, parallel-safe candidate lanes** as markdown. It runs
+**forked** (its own context), so callers get the ranked lanes back without the
+corpus-reading bloating theirs: `/issue-pulse` fires it on a material tick (the ready
+set moved); `/pr-pipeline next` consumes it to pick a lane instead of composing one from
+raw candidates; you can run it on demand. `/plan-lanes` is itself **read-only** — it
+ranks and returns, never editing issues or opening PRs. `/issue-pulse` then **persists**
+the returned ranking into a second generated block in the epic body —
+`<!-- plan-lanes -->`, alongside `<!-- plan-sequence -->` — via
+`plan_sequence.py --write-lanes` (single writer; `/pr-pipeline` only reads). Same rule
+as the projection block: **don't hand-edit inside the markers** — it's overwritten; the
+narrative around it is yours.
+
 **Enforcement** — `scripts/check_issue_hygiene.py` (run by `.github/workflows/`
 `issue-hygiene.yml`) checks these rules read-only: required labels, resolvable
 relationship targets, `blocked`-label / sub-issue ↔ `Part of` agreement, `touches`-glob

@@ -56,13 +56,18 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 ## Step 0 — plan (first, before any coding)
 
 0. **No target given? Carve a fresh lane.** If the request is "what's next" / "the next
-   lane" rather than specific issues or a description, run
-   `uv run --no-project python scripts/plan_sequence.py --lane` first — it lists the
-   ready issues free of in-flight conflicts (grouped by area, with `touches` +
-   must-serialize hints). **Compose a coherent lane from them yourself** (which issues
-   go together and how many is your judgment, not the script's), then treat that as the
-   target. You MUST confirm the chosen lane with the human (step 5) before opening any
-   drafts.
+   lane" rather than specific issues or a description, invoke **`/plan-lanes`** (the
+   `Skill` tool) first — it runs **forked** and returns the ready work already composed
+   into **ranked, parallel-safe candidate lanes** (each with members, a one-line
+   rationale, and which lanes can run concurrently). It augments the deterministic
+   `plan_sequence.py --lane` floor with the semantic conflicts, implicit blockers, and
+   coherence that set-intersection over `touches` can't see — so you consume a ranked
+   plan rather than re-deriving the grouping from raw candidates. **Pick the top lane**
+   (or another by judgment — the ranking is advice, not a mandate) and treat it as the
+   target; if shaping it into PRs (steps 1–2) surfaces a conflict or blocker the ranking
+   missed, trust your read and re-scope, don't follow a wrong grouping off a cliff. The
+   lanes are computed live, so they're fresh against what's in flight right now; you
+   MUST still confirm the chosen lane with the human (step 5) before opening any drafts.
 
 1. **Gather context.** Read the referenced issue(s) **including comments and linked
    relationships** — the parent epic, blockers, and follow-ups (decisions are recorded
