@@ -97,10 +97,10 @@ export interface paths {
          * Get Binding Dimensions
          * @description Concept-group dimension memberships for this binding's variable (#489):
          *     the 'pick your variant' facet groups (level / population / rank / …) that
-         *     contain it. We list the register's concept groups and keep only those whose
-         *     members include this exact binding FQID. Binding-only like the other suffixed
-         *     sub-endpoints (a non-binding kind 422s); a dead/renamed binding 301s to
-         *     `/dimensions` on its terminal successor (#411).
+         *     contain it. Delegates to `Catalog.dimensions`, which resolves `same_as` like
+         *     the sibling edge endpoints — an alias cites its resolved target's groups, not
+         *     the requested register's. Binding-only (a non-binding kind 422s); a
+         *     dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).
          */
         get: operations["get_binding_dimensions_api_catalog__fqid__dimensions_get"];
         put?: never;
