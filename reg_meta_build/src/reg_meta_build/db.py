@@ -383,10 +383,11 @@ CREATE INDEX idx_variable_natkey ON variable(register_id, provider_key);
 -- all BEFORE `DROP TABLE variable_instance`. The shipped query layer reads
 -- `variable_state` / `variable` / re-parented `variable_alias` instead (the
 -- per-cvid grain has no FQID — the 3-seg binding FQID is variable-grained).
--- A4.4e: BUILD-TIME-ONLY provider-blind classification linkage. Both adapters
--- feed it (SCB projects `variable_instance` verbatim; SOS contributes 0 rows for
--- now), and `_backfill_state_classifications` reads ONLY this table — so the
--- backfill no longer knows which provider supplied a candidate (the GAP-1
+-- A4.4e: BUILD-TIME-ONLY provider-blind classification linkage. Every adapter
+-- feeds it (SCB projects `variable_instance` verbatim; SOS resolves
+-- `external_classification`; curated thin providers name a catalog short_name
+-- directly — #446), and `_backfill_state_classifications` reads ONLY this table —
+-- so the backfill no longer knows which provider supplied a candidate (the GAP-1
 -- close-out). A (variable_id, value_set_id) state key MAY have SEVERAL candidate
 -- rows — cvids that share the key but carry different value-set-version labels
 -- resolve to different classifications — so the backfill folds them to the min()
@@ -1891,22 +1892,24 @@ _CLASSIFICATION_CANDIDATE_FEED_SQL = (
 )
 
 
-def _feed_sos_classification_candidates(
+def _feed_classification_candidates(
     conn: sqlite3.Connection,
     candidates: list[tuple[int, int | None, str]],
 ) -> int:
-    """A4.4e PR2: feed the SOS adapter's classification candidates into the
+    """A4.4e PR2: feed adapter-supplied classification candidates into the
     provider-blind `classification_candidate` table.
 
-    The SOS adapter resolves each variable's free-text `external_classification`
-    (it carries no `value_set_version_label`) to a seeded classification
-    short_name and hands the materializer `(variable_id, value_set_id,
-    short_name)` per variable_state. This resolves short_name → classification_id
-    against the populated `classification` table and INSERTs the same
-    `(variable_id, value_set_id, classification_id)` shape the SCB feed produces,
-    so `_backfill_state_classifications` stays provider-blind (it reads only the
+    Drains the `(variable_id, value_set_id, short_name)` candidates that ANY
+    adapter contributes — SOS resolves each variable's free-text
+    `external_classification` (it carries no `value_set_version_label`) to a
+    seeded classification short_name; curated thin providers (#446) name an
+    existing catalog classification's short_name directly (value_set_id is None,
+    no codes). This resolves short_name → classification_id against the populated
+    `classification` table and INSERTs the same `(variable_id, value_set_id,
+    classification_id)` shape the SCB feed produces, so
+    `_backfill_state_classifications` stays provider-blind (it reads only the
     candidate table). Candidates whose short_name is absent (e.g. a
-    provider-skipped SOS classification in an SCB-only build, or a typo) are
+    provider-skipped classification in an SCB-only build, or a typo) are
     dropped — no row, no error. Returns the number of candidate rows inserted.
     """
     if not candidates:
@@ -1936,11 +1939,12 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     sibling's state.
 
     `classification_candidate(variable_id, value_set_id, classification_id)` is a
-    build-time-only table both adapters feed (SCB projects `variable_instance`
-    verbatim; SOS contributes 0 rows for now — see the STEP 2 feed in
-    `materialize`). The backfill reads ONLY this table, so it no longer knows
-    which provider supplied a candidate — the GAP-1 close-out. It runs after the
-    feeds and is one of the last passes before the scratch tables drop.
+    build-time-only table every adapter feeds (SCB projects `variable_instance`
+    verbatim; SOS resolves `external_classification`; curated thin providers name
+    a catalog short_name directly — see the STEP 2 feed in `materialize`). The
+    backfill reads ONLY this table, so it no longer knows which provider supplied
+    a candidate — the GAP-1 close-out. It runs after the feeds and is one of the
+    last passes before the scratch tables drop.
 
     Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
     siblings share one `provider_key`). Each candidate row carries its OWNING
@@ -2869,10 +2873,10 @@ def materialize(
         row_counts.update(adapter.row_counts)
         source_checksums.update(adapter.source_checksums)
         related_edges.extend(adapter.related_edges)
-        # Only the SOS adapter populates classification candidates today; SCB
-        # tags classification on `variable_instance` and feeds the candidate
-        # table via SQL (the SCB feed below). getattr keeps this loop blind to
-        # which adapter carries the attribute.
+        # SOS and curated thin providers (#446) populate classification
+        # candidates; SCB instead tags classification on `variable_instance` and
+        # feeds the candidate table via SQL (the SCB feed below). getattr keeps
+        # this loop blind to which adapter carries the attribute.
         classification_candidates.extend(
             getattr(adapter, "classification_candidates", ())
         )
@@ -3251,7 +3255,8 @@ def materialize(
     # per-state-key min() tie-break is LOAD-BEARING: value_set→classification is
     # NOT 1:1 (≈5,161 value_sets span >1 classification on the real corpus), so
     # the candidate-level linkage cannot be replaced by a value_set-derived map.
-    # SOS contributes 0 candidate rows for now (out of scope). Guarded on
+    # This feeds ONLY the SCB rows; SOS + curated candidates are fed separately
+    # below via `_feed_classification_candidates`. Guarded on
     # `scb_ran`: `variable_instance` is only POPULATED when the SCB adapter ran (it
     # is in the BASE DDL, so it always exists but is empty otherwise) — the guard
     # makes the intent explicit and leaves `classification_candidate` empty in an
@@ -3260,19 +3265,19 @@ def materialize(
     if scb_ran:
         conn.execute(_CLASSIFICATION_CANDIDATE_FEED_SQL)
 
-    # A4.4e PR2: SOS feed of the same provider-blind candidate table. Runs after
-    # `populate_classifications` (so `classification.id` exists for short_name
-    # resolution) AND after the SCB feed (both write into one table the backfill
-    # reads). The SOS adapter resolved `external_classification` → short_name per
-    # state; this resolves short_name → classification_id and INSERTs the
-    # SCB-shaped rows. Guarded on SOS candidates being present: an SCB-only build
-    # produces none, leaving the table byte-identical to the SCB-only state.
-    n_sos_candidates = _feed_sos_classification_candidates(
-        conn, classification_candidates
-    )
+    # A4.4e PR2 (+ #446): adapter feed of the same provider-blind candidate
+    # table. Runs after `populate_classifications` (so `classification.id` exists
+    # for short_name resolution) AND after the SCB feed (both write into one table
+    # the backfill reads). SOS resolved `external_classification` → short_name per
+    # state; curated thin providers name an existing classification's short_name
+    # directly (value_set_id None). This resolves short_name → classification_id
+    # and INSERTs the SCB-shaped rows. Guarded on candidates being present: an
+    # SCB-only build produces none, leaving the table byte-identical to the
+    # SCB-only state.
+    n_candidates_fed = _feed_classification_candidates(conn, classification_candidates)
     if classification_candidates:
         _progress(
-            f"  {n_sos_candidates:,} SOS classification candidates fed "
+            f"  {n_candidates_fed:,} classification candidates fed "
             f"(of {len(classification_candidates):,} resolved states)"
         )
         for adapter, _ in adapters:
@@ -3551,7 +3556,12 @@ def build_db(
         # high-band ids, no scratch.
         for prov_slug, dirname in _CURATED_PROVIDERS:
             if prov_slug in providers:
-                adapters.append((CuratedAdapter(prov_slug), input_dir / dirname))
+                adapters.append(
+                    (
+                        CuratedAdapter(prov_slug, classification_seed_path=seed_path),
+                        input_dir / dirname,
+                    )
+                )
 
         mat = materialize(
             conn,

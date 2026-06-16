@@ -18,9 +18,11 @@ agency's input dir (`db._CURATED_PROVIDERS`), drop the curated TOML under
 Ids are `mint()`ed into the high band `[2^62, 2^63)` (the provider name is the
 first `mint` part, so a thin provider never collides with SOS's
 `mint("sos", …)` ids — same disjointness argument as DESIGN.md → Deterministic
-ID minting). The adapter emits no value sets (categorical code lists are a
+ID minting). The adapter emits no value sets (categorical code *lists* are a
 follow-up; see #422) and writes no build-scratch — it is pure IR, like the SOS
-adapter.
+adapter. A categorical variable may still LINK to an existing catalog
+classification via the optional `classification` key (it reuses the catalog
+classification, minting no codes; see #446).
 
 TOML shape (one entry per register; a register with no `[[register.variant]]`
 gets a synthesized `_default` variant, the single-table case):
@@ -45,6 +47,9 @@ gets a synthesized `_default` variant, the single-table case):
       is_sensitive = true
       valid_from = "2004-01-01"    # OPTIONAL per-variable override
       variants = ["fall"]          # OPTIONAL; default = every variant of register
+      classification = "ICD-10-SE" # OPTIONAL; short_name of an existing catalog
+                                   # classification — links the variable's states,
+                                   # mints no codes
 """
 
 from __future__ import annotations
@@ -56,6 +61,7 @@ from datetime import date
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import curation_error
+from reg_meta_build.classifications import declared_short_names
 from reg_meta_build.db import _file_sha256
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
@@ -99,6 +105,7 @@ _VARIABLE_KEYS = frozenset(
         "valid_from",
         "valid_to",
         "variants",
+        "classification",
     }
 )
 
@@ -116,6 +123,7 @@ class _CuratedVariable:
     valid_from: str | None  # None → inherit the register coverage start
     valid_to: str | None  # None → open-ended (materializer writes the sentinel)
     variants: tuple[str, ...] | None  # None → delivered in every variant
+    classification: str | None  # None → unlinked; else an existing catalog short_name
 
 
 @dataclass(frozen=True)
@@ -143,14 +151,25 @@ class CuratedAdapter:
     first `mint()` part and the TOML basename `emit()` reads from `source_dir`.
     """
 
-    def __init__(self, provider: str) -> None:
+    def __init__(
+        self, provider: str, *, classification_seed_path: Path | None = None
+    ) -> None:
         self.provider = provider
+        # The seed the build was invoked with (`build_db(seed_path=...)`), so
+        # `classification` validation checks the SAME manifest
+        # `populate_classifications` seeds; None → the in-repo default.
+        self._classification_seed_path = classification_seed_path
         # Side channels the materializer drains off every adapter (db.materialize).
         # A thin provider has no related edges, fold hints, or coalesce stats.
         self.row_counts: dict[str, int] = {}
         self.source_checksums: dict[str, str] = {}
         self.related_edges: list[tuple[int, int, str]] = []
         self.fold_slug_hints: dict[int, str] = {}
+        # `(variable_id, value_set_id, short_name)` — the same provider-blind
+        # classification side channel SOS feeds; the materializer drains it and
+        # resolves short_name → classification_id at feed time. value_set_id is
+        # always None here (curated emits no value sets).
+        self.classification_candidates: list[tuple[int, int | None, str]] = []
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         toml_path = source_dir / f"{self.provider}.toml"
@@ -191,6 +210,34 @@ class CuratedAdapter:
         for entry in reg_tables:
             reg = self._load_register(path, entry, seen_reg_keys)
             registers.append(reg)
+
+        # Validate `classification` references against the seed manifest in a
+        # single pass once everything is parsed (PROVIDER-AGNOSTIC: a declared
+        # but provider-gated short_name passes even in a build that won't seed
+        # it — the link just drops at feed time; only an UNDECLARED short_name,
+        # i.e. a typo, fails). Resolve the seed only when something references a
+        # classification, so a curated TOML with no `classification` keys needs
+        # neither the seed nor `declared_short_names()`.
+        if any(
+            var.classification is not None for reg in registers for var in reg.variables
+        ):
+            declared = declared_short_names(self._classification_seed_path)
+            for reg in registers:
+                for var in reg.variables:
+                    if (
+                        var.classification is not None
+                        and var.classification not in declared
+                    ):
+                        raise curation_error(
+                            "curated_toml_invalid",
+                            f"{path.name}: register {reg.key!r} variable "
+                            f"{var.name!r}: classification {var.classification!r} "
+                            f"is not a declared classification "
+                            f"(classifications.toml).",
+                            "Use an existing classification short_name (e.g. "
+                            "'ICD-10-SE', 'ATC') or declare it in "
+                            "classifications.toml.",
+                        )
         return registers
 
     def _load_register(
@@ -351,6 +398,7 @@ class CuratedAdapter:
             valid_from=valid_from,
             valid_to=valid_to,
             variants=variants,
+            classification=self._opt_str(entry, "classification"),
         )
 
     def _req_str(self, path: Path, entry: dict, field: str, ctx: str) -> str:
@@ -462,6 +510,15 @@ class CuratedAdapter:
         var: _CuratedVariable,
     ) -> Iterator[IRObject]:
         variable_id = mint(self.provider, reg.key, var.column)
+        if var.classification is not None:
+            # ONE candidate per variable (not per state): the candidate keys on
+            # variable_id, and all this variable's states share value_set_id=None
+            # (curated providers emit no value sets). The link is by the catalog
+            # classification's `short_name`, resolved provider-blind at feed time
+            # (db._feed_classification_candidates) — no codes minted here.
+            self.classification_candidates.append(
+                (variable_id, None, var.classification)
+            )
         yield IRVariable(
             variable_id=variable_id,
             register_id=register_id,

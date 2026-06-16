@@ -12,10 +12,12 @@
 # HLV (the public-health survey) is deliberately deferred (per-round survey, run
 # by SCB; poor fit for the register variable/state model).
 #
-# Value sets / code lists are a follow-up (#422): categorical variables carry a
-# data_type + a note, but no enumerated codes yet. SmiNet `diagnos` is ICD-10 and
-# NVR `vaccin` is ATC — both already shipped as catalog classifications, to be
-# linked in the follow-up.
+# Enumerated code lists (the actual categorical value sets) remain a follow-up
+# (#422): categorical variables carry a data_type + a note, but mint no codes
+# yet. The two variables that map onto an EXISTING catalog classification are now
+# linked to it (#446): SmiNet `diagnos` → ICD-10-SE, NVR `vaccin` → ATC, via the
+# per-variable `classification = "<short_name>"` key. That reuses the shipped
+# classification (tagging the variable's states) without re-minting codes.
 #
 # Sources:
 #   SmiNet — klinisk-anmälan användarmanual (per-field list):
@@ -80,6 +82,7 @@ diagnosspecifika fält som visas. Kodas mot ICD-10.\
 """
 data_type = "text"
 is_sensitive = true
+classification = "ICD-10-SE"  # links to the catalog ICD-10-SE classification (#446)
 
 [[register.variable]]
 name = "Grund för diagnos"
@@ -197,6 +200,7 @@ column = "vaccin"
 definition = "Vaccinpreparat som använts. Kan kodas mot ATC."
 data_type = "text"
 is_sensitive = true
+classification = "ATC"  # links to the catalog ATC classification (#446)
 
 [[register.variable]]
 name = "Satsnummer"

@@ -787,16 +787,17 @@ class TestPopulateClassifications:
 
 
 # ---------------------------------------------------------------------------
-# PR2: SOS classification candidate feed (_feed_sos_classification_candidates)
+# PR2 / #446: adapter classification candidate feed (_feed_classification_candidates)
 # ---------------------------------------------------------------------------
 
 
-class TestFeedSosClassificationCandidates:
-    """Unit-pins the SOS candidate feed: it resolves short_name → classification_id
-    against the populated `classification` table and INSERTs the SCB-shaped
-    `(variable_id, value_set_id, classification_id)` rows. Unknown short_names are
-    dropped silently (no row, no raise) so a provider-skipped SOS classification
-    (or a typo) can't abort the build."""
+class TestFeedClassificationCandidates:
+    """Unit-pins the adapter candidate feed: it resolves short_name →
+    classification_id against the populated `classification` table and INSERTs the
+    SCB-shaped `(variable_id, value_set_id, classification_id)` rows. Unknown
+    short_names are dropped silently (no row, no raise) so a provider-skipped
+    classification (or a typo) can't abort the build. Feeds SOS and curated
+    thin-provider candidates alike — the resolver is provider-blind."""
 
     @staticmethod
     def _conn() -> sqlite3.Connection:
@@ -818,43 +819,43 @@ class TestFeedSosClassificationCandidates:
         ).fetchall()
 
     def test_empty_inserts_nothing(self) -> None:
-        from reg_meta_build.db import _feed_sos_classification_candidates
+        from reg_meta_build.db import _feed_classification_candidates
 
         conn = self._conn()
-        assert _feed_sos_classification_candidates(conn, []) == 0
+        assert _feed_classification_candidates(conn, []) == 0
         assert self._rows(conn) == []
 
     def test_known_short_name_inserted(self) -> None:
-        from reg_meta_build.db import _feed_sos_classification_candidates
+        from reg_meta_build.db import _feed_classification_candidates
 
         conn = self._conn()
         icd_id = conn.execute(
             "SELECT id FROM classification WHERE short_name = 'ICD-10-SE'"
         ).fetchone()[0]
         # One code-less (value_set_id None) + one code-bearing candidate.
-        n = _feed_sos_classification_candidates(
+        n = _feed_classification_candidates(
             conn, [(920, None, "ICD-10-SE"), (921, 5000, "ICD-10-SE")]
         )
         assert n == 2
         assert self._rows(conn) == [(920, None, icd_id), (921, 5000, icd_id)]
 
     def test_unknown_short_name_dropped_without_raise(self) -> None:
-        from reg_meta_build.db import _feed_sos_classification_candidates
+        from reg_meta_build.db import _feed_classification_candidates
 
         conn = self._conn()
         # No raise; the unknown short_name simply contributes no row.
-        n = _feed_sos_classification_candidates(conn, [(920, None, "NOPE")])
+        n = _feed_classification_candidates(conn, [(920, None, "NOPE")])
         assert n == 0
         assert self._rows(conn) == []
 
     def test_mixed_inserts_only_known(self) -> None:
-        from reg_meta_build.db import _feed_sos_classification_candidates
+        from reg_meta_build.db import _feed_classification_candidates
 
         conn = self._conn()
         icd_id = conn.execute(
             "SELECT id FROM classification WHERE short_name = 'ICD-10-SE'"
         ).fetchone()[0]
-        n = _feed_sos_classification_candidates(
+        n = _feed_classification_candidates(
             conn,
             [(920, None, "ICD-10-SE"), (921, None, "KVA"), (922, 7, "NOPE")],
         )

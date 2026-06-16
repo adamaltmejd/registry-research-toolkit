@@ -192,6 +192,202 @@ def test_emit_two_registers_side_channels(tmp_path: Path) -> None:
     assert len(set(reg_ids)) == 2
 
 
+# ── classification linkage (#446) ────────────────────────────────────────────
+
+_CLASSIFICATION_TOML = """\
+[[register]]
+key = "reg1"
+name = "Register One"
+valid_from = "2010-01-01"
+
+  [[register.variant]]
+  key = "fall"
+  name = "Fall"
+
+  [[register.variant]]
+  key = "manad"
+  name = "Månad"
+
+  [[register.variable]]
+  name = "Diagnos"
+  column = "diagnos"
+  classification = "ICD-10-SE"
+
+  [[register.variable]]
+  name = "Kön"
+  column = "kon"
+"""
+
+
+def test_classification_records_one_candidate_per_variable(tmp_path: Path) -> None:
+    # A variable with `classification` records exactly ONE candidate keyed on its
+    # variable_id with value_set_id=None (curated mints no codes), even though it
+    # spans two variants. A variable WITHOUT the key records nothing.
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(_CLASSIFICATION_TOML, encoding="utf-8")
+    adapter = CuratedAdapter("fohm")
+    list(adapter.emit(src))
+
+    diagnos_id = mint("fohm", "reg1", "diagnos")
+    assert adapter.classification_candidates == [(diagnos_id, None, "ICD-10-SE")]
+    # `kon` carries no classification → no candidate for it.
+    assert all(c[0] == diagnos_id for c in adapter.classification_candidates)
+
+
+def test_no_classification_records_no_candidate(tmp_path: Path) -> None:
+    # The two-variant fixture above carries no `classification` keys at all.
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fk.toml").write_text(_TWO_VARIANT, encoding="utf-8")
+    adapter = CuratedAdapter("fk")
+    list(adapter.emit(src))
+    assert adapter.classification_candidates == []
+
+
+def test_undeclared_classification_raises(tmp_path: Path) -> None:
+    # `"ICD-10"` is a hand-authoring typo — the declared short_name is
+    # `"ICD-10-SE"`. The single-pass validation against the in-repo
+    # `classifications.toml` seed (read by `declared_short_names()`) must fail
+    # the build fast, naming the offending value.
+    toml = """\
+[[register]]
+key = "reg1"
+name = "Register One"
+valid_from = "2010-01-01"
+
+  [[register.variable]]
+  name = "Diagnos"
+  column = "diagnos"
+  classification = "ICD-10"
+"""
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fohm", toml, tmp_path)
+    assert exc.value.code == "curated_toml_invalid"
+    assert "ICD-10" in exc.value.message
+    assert "not a declared classification" in exc.value.message
+
+
+def test_classification_seed_path_is_honored(tmp_path: Path) -> None:
+    # The validation must check the SAME seed the build seeds: a programmatic
+    # `build_db(seed_path=...)` threads its seed down to the adapter. Declare a
+    # short_name that does NOT exist in the in-repo seed, then prove the custom
+    # seed path makes the reference valid — and that the DEFAULT (in-repo) seed
+    # rejects it. This proves `classification_seed_path` is threaded and used.
+    custom_seed = tmp_path / "classifications.toml"
+    custom_seed.write_text(
+        '[[classification]]\nshort_name = "FAKE-CLASS-XYZ"\nname = "Fake Class"\n',
+        encoding="utf-8",
+    )
+    toml = """\
+[[register]]
+key = "reg1"
+name = "Register One"
+valid_from = "2010-01-01"
+
+  [[register.variable]]
+  name = "Diagnos"
+  column = "diagnos"
+  classification = "FAKE-CLASS-XYZ"
+"""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(toml, encoding="utf-8")
+
+    # Custom seed declares FAKE-CLASS-XYZ → emit succeeds.
+    adapter = CuratedAdapter("fohm", classification_seed_path=custom_seed)
+    list(adapter.emit(src))
+    diagnos_id = mint("fohm", "reg1", "diagnos")
+    assert adapter.classification_candidates == [(diagnos_id, None, "FAKE-CLASS-XYZ")]
+
+    # Default adapter (in-repo seed, which lacks FAKE-CLASS-XYZ) → raises.
+    with pytest.raises(RegMetaError) as exc:
+        list(CuratedAdapter("fohm").emit(src))
+    assert exc.value.code == "curated_toml_invalid"
+    assert "FAKE-CLASS-XYZ" in exc.value.message
+    assert "not a declared classification" in exc.value.message
+
+
+def test_classification_empty_string_records_no_candidate(tmp_path: Path) -> None:
+    # `_opt_str` normalizes ""/whitespace to None, so an empty `classification`
+    # is ABSENT, not a "" short_name — no candidate. Locks the contract against a
+    # future truthy-guard regression in `_emit_variable`.
+    toml = (
+        '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
+        '[[register.variable]]\nname="X"\ncolumn="x"\nclassification="   "\n'
+    )
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(toml, encoding="utf-8")
+    adapter = CuratedAdapter("fohm")
+    list(adapter.emit(src))
+    assert adapter.classification_candidates == []
+
+
+def test_classification_candidate_backfills_state(tmp_path: Path) -> None:
+    """End-to-end of the curated → feed → backfill path WITHOUT the SOS corpus:
+    the candidate the adapter emits, once fed into the provider-blind
+    `classification_candidate` table and run through `_backfill_state_classifications`,
+    tags the code-less `variable_state` row (keyed on `(variable_id, NULL)`).
+
+    A full `build_db` end-to-end assertion is NOT used: ICD-10-SE/ATC are
+    `provider = "sos"` seed entries, so a `fohm`-only build skips them (the
+    provider gate) and the candidate would resolve to nothing — the real corpus
+    builds SOS too, where the link lands. This focused test exercises the same
+    provider-blind feed + backfill the build runs, without the SOS seed.
+    """
+    from reg_meta_build.db import (
+        DDL,
+        _backfill_state_classifications,
+        _feed_classification_candidates,
+    )
+
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(_CLASSIFICATION_TOML, encoding="utf-8")
+    adapter = CuratedAdapter("fohm")
+    objs = list(adapter.emit(src))
+
+    diagnos_id = mint("fohm", "reg1", "diagnos")
+    diagnos_states = [
+        o
+        for o in objs
+        if isinstance(o, IRVariableState) and o.variable_id == diagnos_id
+    ]
+    assert diagnos_states and all(s.value_set_id is None for s in diagnos_states)
+
+    conn = sqlite3.connect(":memory:")
+    try:
+        conn.executescript(DDL)
+        cls_id = conn.execute(
+            "INSERT INTO classification (short_name, name, publisher) "
+            "VALUES ('ICD-10-SE', 'ICD-10-SE', 'Socialstyrelsen') RETURNING id"
+        ).fetchone()[0]
+        # Insert the code-less states the adapter emitted.
+        conn.executemany(
+            "INSERT INTO variable_state "
+            "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
+            "value_set_id) VALUES (?, ?, ?, ?, '9999-12-31', NULL)",
+            [
+                (s.state_id, s.variable_id, s.register_variant_id, s.valid_from)
+                for s in diagnos_states
+            ],
+        )
+        # Feed the adapter's candidates, then run the provider-blind backfill.
+        n = _feed_classification_candidates(conn, adapter.classification_candidates)
+        assert n == 1
+        _backfill_state_classifications(conn)
+
+        tagged = conn.execute(
+            "SELECT DISTINCT classification_id FROM variable_state "
+            "WHERE variable_id = ?",
+            (diagnos_id,),
+        ).fetchall()
+        assert tagged == [(cls_id,)]
+    finally:
+        conn.close()
+
+
 @pytest.mark.parametrize(
     "toml, fragment",
     [
@@ -235,6 +431,13 @@ def test_emit_two_registers_side_channels(tmp_path: Path) -> None:
             '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
             '[[register.variable]]\nname="X"\ncolumn="x"\nvariants=[]\n',
             "variants",
+        ),
+        (
+            # `classification` must be a string when present (it names a catalog
+            # short_name); a non-string is an `_opt_str` validation failure.
+            '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
+            '[[register.variable]]\nname="X"\ncolumn="x"\nclassification=7\n',
+            "classification",
         ),
     ],
 )

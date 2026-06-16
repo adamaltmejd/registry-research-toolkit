@@ -54,6 +54,36 @@ def repo_seed_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
+def declared_short_names(seed_path: Path | None = None) -> frozenset[str]:
+    """Every classification ``short_name`` declared in the seed, provider-agnostic
+    — includes provider-gated entries (e.g. ``provider = "sos"``) that a given
+    build may not seed. For build-time validation of references to a
+    classification (e.g. a curated thin-provider's ``classification`` link).
+
+    ``seed_path`` defaults to the in-repo seed via ``repo_seed_path()``; pass the
+    build's own seed (``build_db(seed_path=...)``) so validation matches what
+    ``populate_classifications`` seeds. Resolution mirrors
+    ``materialize``'s ``seed_path or repo_seed_path()`` exactly, keeping the two
+    consistent. Build-time only; raises if the seed is not locatable (an
+    installed wheel doesn't ship it — but no build runs there)."""
+    path = seed_path or repo_seed_path()
+    if path is None:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="classification_seed_unreadable",
+            error_class="configuration",
+            message=(
+                "classifications.toml seed not found; cannot validate "
+                "classification references."
+            ),
+            remediation=(
+                "Run build-db from the maintainer repo checkout where "
+                "classifications.toml is present."
+            ),
+        )
+    return frozenset(entry["short_name"] for entry in load_seed(path))
+
+
 def load_valid_codes(path: Path) -> dict[str, str]:
     """Read a canonical valid-codes CSV and return ``{code: label}``.
 
