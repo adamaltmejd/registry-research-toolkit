@@ -1215,6 +1215,121 @@ def test_disjoint_members_distinct_vardemangd_stay_bound() -> None:
 
 
 # ---------------------------------------------------------------------------
+# #401 Fix A (Codex P2): the divergent-window reconciliation + overlap-
+# suppression post-pass are VÄRDEMÄNGD-ONLY (kodlista is None). A KODLISTA-backed
+# variable keeps the ORIGINAL pre-#401 reconciliation (always widen valid_to) and
+# is EXEMPT from the post-pass — kodlista paths own their own value sets and a
+# genuine conflict is caught by the build invariant, never silently nulled here.
+# ---------------------------------------------------------------------------
+
+
+def test_kodlista_collision_widens_valid_to_and_stays_bound() -> None:
+    # Two variant-less merged members (bu shape: all -> _default) of a
+    # KODLISTA-backed variable share valid_from=1960 but end in different years.
+    # The shared kodlista is open (no Tidsperiod) -> each member emits one
+    # single-segment state (label "") with seg_from=1960 -> the SAME state_id, and
+    # since `_ensure_value_set` hashes only (code, label) both carry the SAME
+    # value_set_id. For a kodlista collision the reconciliation keeps the ORIGINAL
+    # behavior: ALWAYS widen valid_to (no divergent-window clamp, no prefer-coded
+    # path). The post-pass is Värdemängd-only, so the kodlista value set is NOT
+    # nulled.
+    rows = [SosKodlistaRow(tidsperiod=None, kod="A01", beskrivning="d")]
+    reg = _register(
+        "bu",
+        [
+            _var("DIAG", data_type="Sträng (text)", data_from=1960, data_to=2013),
+            _var("DIAG", data_type="Sträng (text)", data_from=1960, data_to=2016),
+        ],
+        kodlistor=(_kodlista("DIAG", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start kodlista members collapse to one state"
+    assert states[0].value_set_id is not None, (
+        "kodlista value set must NOT be nulled by the Värdemängd-only post-pass"
+    )
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {("A01", "d")}
+    assert states[0].valid_to == "2016-12-31", (
+        "kodlista collision keeps the original widen-always reconciliation"
+    )
+    # neither the Värdemängd conflict nor the overlap-suppression warning fires
+    # for a kodlista-backed variable.
+    assert [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code in ("sos_value_set_text_conflict", "sos_value_set_text_overlap")
+    ] == []
+
+
+def test_kodlista_windowed_drift_states_not_suppressed() -> None:
+    # A kodlista-backed variable whose codes drift across two windows fans into
+    # two states with DISTINCT value sets (one per era). They sit on the same
+    # variant+column with distinct value sets — exactly the shape the Värdemängd
+    # post-pass would null — but because the variable is kodlista-backed the
+    # post-pass leaves both value sets intact (the kodlista path segmented on
+    # Tidsperiod, so the windows are disjoint and the invariant already holds).
+    rows = [
+        SosKodlistaRow(tidsperiod="2000-2010", kod="1", beskrivning="A"),
+        SosKodlistaRow(tidsperiod="2011-2020", kod="2", beskrivning="B"),
+    ]
+    reg = _register(
+        "dors",
+        [_var("FODLAND", deldatamangd="DORS", data_type="Sträng (text)")],
+        deldatamangder=(_deldat("DORS"),),
+        kodlistor=(_kodlista("FODLAND", rows),),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    assert all(s.value_set_id is not None for s in states), (
+        "kodlista-derived value sets must never be nulled by the post-pass"
+    )
+    assert len({s.value_set_id for s in states}) == 2
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_overlap"
+    ] == []
+
+
+# ---------------------------------------------------------------------------
+# #401 Fix B: a variable with a kodlista sheet that was skipped as unparseable
+# (raw_rows) reaches the Värdemängd branch with kodlista is None, but
+# kodlista-wins -> it stays code-less, never fabricating codes from Värdemängd.
+# Defensive (0 corpus occurrences); the warning still fires per the existing
+# unparseable-kodlista path.
+# ---------------------------------------------------------------------------
+
+
+def test_raw_kodlista_wins_over_vardemangd_stays_codeless() -> None:
+    # The variable HAS a Kodlista_DIAG sheet, but it parsed as raw_rows
+    # (unparseable header) -> skipped from kodlista_by_var. The variable also
+    # carries a classifiable Värdemängd. Kodlista-wins: the variable must stay
+    # code-less (value_set_id None), the Värdemängd is NOT bound.
+    reg = _register(
+        "dors",
+        [
+            _var(
+                "DIAG",
+                deldatamangd="DORS",
+                value_set_text="1=Man; 2=Kvinna",  # would classify if not suppressed
+                data_from=2001,
+            )
+        ],
+        deldatamangder=(_deldat("DORS", data_from=2001),),
+        kodlistor=(_kodlista("DIAG", [], raw=True),),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is None, (
+        "an unparseable kodlista sheet still wins: no Värdemängd fabrication"
+    )
+    # the existing unparseable-kodlista warning still fires.
+    assert [w for w in _of(objs, IRWarning) if w.code == "sos_kodlista_unparseable"], (
+        "the raw kodlista still surfaces its skip warning"
+    )
+
+
+# ---------------------------------------------------------------------------
 # P2#1: unresolved variable-sheet deldatamängd -> WARN + drop (not silent)
 # ---------------------------------------------------------------------------
 
