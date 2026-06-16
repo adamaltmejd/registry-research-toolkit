@@ -330,12 +330,31 @@ are normalized *here*, never leaked downstream:
   colon), or duplicate codes are rejected, leaving the variable code-less — exactly the
   prior behavior — so a wrong reject is a no-op. This applies to **all** kodlista-less
   variables, not only styrtabell-decoded ones (styrtabell is the motivating example).
-  `Värdemängd` carries no `Tidsperiod`, so `value_set_version_label` is always `None`;
-  two merged members that both classify can collide on one `state_id`. `_collect`
-  reconciles with **prefer-coded** (a codeless member never drops a sibling's value set,
-  regardless of delivery order); when two members classify to **divergent** value sets,
-  the first in delivery order wins and a `sos_value_set_text_conflict` IRWarning is
-  emitted.
+  `Värdemängd` carries no `Tidsperiod`, so `value_set_version_label` is always `None`.
+  All reconciliation below is **Värdemängd-only** (`kodlista is None`); the kodlista
+  (windowed) and entity-registry paths keep the original pre-#401 behavior — always
+  widen `valid_to`, keep `prior` — and are never subject to overlap-suppression. For the
+  Värdemängd path, two merged members can collide on one `state_id` (same variant + same
+  `valid_from`). `_collect` reconciles with **prefer-coded** (a codeless member never
+  drops a sibling's value set, regardless of delivery order); when two members classify
+  to **divergent** value sets, the first in delivery order wins and a
+  `sos_value_set_text_conflict` IRWarning is emitted. `_collect` reconciles only
+  same-`state_id` collisions. Two Värdemängd members with **different** `valid_from`
+  mint different state_ids and are not compared by `_collect` — yet they can still
+  produce overlapping windows on the same `(variable, variant, column)` with distinct
+  value sets, violating the build invariant. Unlike the kodlista paths (which
+  era-segment on `Tidsperiod`), Värdemängd has no segmentation anchor, so `_emit_states`
+  runs an **overlap-suppression post-pass**: after the member loop it groups buffered
+  states by `(register_variant_id, delivery_column_name)`, finds every pair with
+  overlapping windows and distinct non-null value sets, and nulls every conflicting
+  state's `value_set_id` back to code-less (the exact pre-#401 behavior — no
+  regression), emitting one `sos_value_set_text_overlap` IRWarning per affected column.
+  Disjoint-window multi-era variables (legitimate era changes) stay bound.
+  **Kodlista-wins** (`has_kodlista_sheet`): a variable whose `Kodlista_*` sheet exists
+  but was skipped as unparseable (`raw_rows`) arrives at `_emit_states` with
+  `kodlista is None` but `has_kodlista_sheet=True`; the Värdemängd fallback does not
+  fire, leaving the variable code-less — fabricating inline codes when a real code list
+  exists is never acceptable.
 
 `emit()` yields IR in FK-topological order (register → classification → variant →
 value_set → variable → state/alias → edges → warning/provenance sinks) so the
