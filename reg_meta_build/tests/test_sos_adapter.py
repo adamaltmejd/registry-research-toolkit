@@ -1027,6 +1027,46 @@ def test_merged_member_asymmetric_vardemangd_prefers_coded(coded_first: bool) ->
     }
 
 
+def test_merged_member_prefer_coded_keeps_prior_data_type() -> None:
+    # #401 correctness: prefer-coded must NOT flip `data_type`. A divergent
+    # data_type across same-name members is a WARN-MERGE (one variable), and the
+    # members share valid_from=2001 -> the SAME state_id, so they collide in
+    # `_emit_states._collect`. The codeless member arrives FIRST (becomes
+    # `prior`, data_type "heltal"); the coded member arrives second (`obj`,
+    # data_type "sträng (text)"). The stored row must adopt obj's value_set_id
+    # (prefer-coded) while KEEPING prior's data_type — `data_type` is excluded
+    # from the state_id basis, so basing the row on obj would silently flip it.
+    codeless = _var(
+        "KON",
+        value_set_text="Fritext, ingen kodning",
+        data_type="Heltal",
+        data_from=2001,
+    )
+    coded = _var(
+        "KON",
+        value_set_text="1=Man; 2=Kvinna",
+        data_type="Sträng (text)",
+        data_from=2001,
+    )
+    reg = _register("bu", [codeless, coded])  # codeless first -> prior
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert states[0].data_type == "heltal", (
+        "stored row keeps prior (codeless, first) data_type, not obj's"
+    )
+    assert states[0].value_set_id is not None, "the coded value set is still adopted"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+    # Prefer-coded coalesce is not a value-set conflict; the divergent data_type
+    # is the separate (expected) warn-merge signal.
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
+
+
 def test_merged_member_identical_vardemangd_does_not_warn() -> None:
     # Same shape as the conflict test but the members carry the SAME Värdemängd:
     # they content-share one value_set, no collision, no warning.

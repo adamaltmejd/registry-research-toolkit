@@ -1268,6 +1268,22 @@ def _widest_valid_to(a: str | None, b: str | None) -> str | None:
     return max(a, b)
 
 
+def _value_code(
+    code: str, label: str | None, window: tuple[str | None, str | None]
+) -> IRValueCode:
+    """Build a value-set IRValueCode with placeholder ids (code_id/value_set_id
+    are assigned at write-back by `_ensure_value_set`). `window` =
+    (valid_from, valid_to)."""
+    return IRValueCode(
+        code_id=0,
+        value_set_id=0,
+        code=code,
+        label=label or "",
+        valid_from=window[0],
+        valid_to=window[1],
+    )
+
+
 _SEG_LO = date(1, 1, 1)  # open-start sentinel (−∞)
 # Open-end sentinel (+∞). A real closed window literally ending 9999-12-31 would
 # be conflated with open-ended and emitted as `None`, but `_parse_tidsperiod`
@@ -1900,11 +1916,15 @@ class SOSAdapter:
             a codeless member arriving first must not drop a later member's
             value set.
           - both None or both equal -> keep the prior.
-        Only `valid_to` and `value_set_id` need reconciling: a state_id collision
-        implies an identical `valid_from` (the state_id basis includes the window
-        start), and every other field is provably equal across the colliding
-        members, so the stored row is the surviving-value_set side widened to the
-        widest `valid_to`.
+        The stored row is ALWAYS based on `prior`, with ONLY `valid_to` (widest)
+        and `value_set_id` (prefer-coded) reconciled onto it. Other scalars are
+        NOT reconciled: `data_type` in particular is excluded from the state_id
+        basis, and a warn-/allowlist-merge group can put members of different
+        `data_type` under one variable_id — so two colliding members may differ
+        in it. Basing the row on `prior` keeps `data_type` (and every other
+        non-reconciled field) delivery-order-deterministic regardless of which
+        side carried the value set; prefer-coded means a codeless `prior` adopts
+        a later coded member's `value_set_id` but never its `data_type`.
         """
         # Build the value-set rows for this variable's kodlista once.
         # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
@@ -1933,10 +1953,11 @@ class SOSAdapter:
                 #     arriving first); no warning.
                 #   - both None / both equal -> keep prior.
                 valid_to = _widest_valid_to(prior.valid_to, obj.valid_to)
-                both_coded = (
-                    prior.value_set_id is not None and obj.value_set_id is not None
-                )
-                if both_coded and prior.value_set_id != obj.value_set_id:
+                if (
+                    prior.value_set_id is not None
+                    and obj.value_set_id is not None
+                    and prior.value_set_id != obj.value_set_id
+                ):
                     yield IRWarning(
                         entity_kind="variable",
                         entity_id=variable_id,
@@ -1947,19 +1968,21 @@ class SOSAdapter:
                             "Värdemängd value sets; kept first in delivery order"
                         ),
                     )
-                # The side carrying the surviving value_set becomes the stored
-                # row (only valid_to/value_set_id differ; every other field is
-                # provably equal). PRIOR wins unless it is the lone codeless side
-                # (prior None, obj coded) — i.e. prior wins ties, the both-coded
-                # conflict ("first in delivery order"), and any case where it
-                # already carries a value set; obj only wins when it supplies the
-                # value set prior lacks.
-                obj_supplies_value_set = (
-                    prior.value_set_id is None and obj.value_set_id is not None
+                # ALWAYS base the stored row on `prior`, reconciling only the two
+                # fields that legitimately differ on a state_id collision:
+                # `valid_to` (widest) and `value_set_id` (prefer-coded — a codeless
+                # prior adopts obj's set; two divergent coded sets are the conflict
+                # warned above, where prior still wins for determinism). Every
+                # other scalar (notably `data_type`, excluded from the state_id
+                # basis) stays prior's, so the merge is delivery-order-deterministic
+                # regardless of which side carried the value set.
+                value_set_id = (
+                    obj.value_set_id
+                    if prior.value_set_id is None
+                    else prior.value_set_id
                 )
-                survivor = obj if obj_supplies_value_set else prior
-                states_by_id[obj.state_id] = survivor.model_copy(
-                    update={"valid_to": valid_to}
+                states_by_id[obj.state_id] = prior.model_copy(
+                    update={"valid_to": valid_to, "value_set_id": value_set_id}
                 )
                 return
             yield obj
@@ -2085,18 +2108,9 @@ class SOSAdapter:
             value_set_id = None
             classified = _classify_value_set_text(v.value_set_text)
             if classified is not None:
+                # Värdemängd carries no Tidsperiod -> the whole-variable window.
                 value_set_id = self._ensure_value_set(
-                    [
-                        IRValueCode(
-                            code_id=0,  # autoincrement; assigned at write-back
-                            value_set_id=0,
-                            code=code,
-                            label=label or "",
-                            valid_from=window[0],
-                            valid_to=window[1],
-                        )
-                        for code, label in classified
-                    ]
+                    [_value_code(code, label, window) for code, label in classified]
                 )
             yield from collect(
                 IRVariableState(
@@ -2188,16 +2202,8 @@ class SOSAdapter:
                 continue  # code's window empty under var/code -> drop the code
             if dropped:
                 deldat_dropped.append(True)
-            codes.append(
-                IRValueCode(
-                    code_id=0,  # autoincrement; assigned at write-back
-                    value_set_id=0,
-                    code=r.kod,
-                    label=r.beskrivning or "",
-                    valid_from=window[0],
-                    valid_to=window[1],
-                )
-            )
+            # Per-code window (decides survival; not persisted on value_code).
+            codes.append(_value_code(r.kod, r.beskrivning, window))
         if not codes:
             return
         value_set_id = self._ensure_value_set(codes)
@@ -2273,19 +2279,10 @@ class SOSAdapter:
                 continue
             if dropped:
                 deldat_dropped.append(True)
+            # Per-code (3-way-intersected) segment window, carried into
+            # `_segment_windowed_codes` to sweep into non-overlapping segments.
             windowed.append(
-                (
-                    window[0],
-                    window[1],
-                    IRValueCode(
-                        code_id=0,
-                        value_set_id=0,
-                        code=r.kod,
-                        label=r.beskrivning or "",
-                        valid_from=window[0],
-                        valid_to=window[1],
-                    ),
-                )
+                (window[0], window[1], _value_code(r.kod, r.beskrivning, window))
             )
         segments = _segment_windowed_codes(windowed)
         if not segments:
