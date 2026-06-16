@@ -916,6 +916,26 @@ class _Graph:
                 (cls_id, code_id, level),
             )
 
+    def add_no_csv_classification(
+        self, cls_id: int, short_name: str, codes: list[tuple[str, str]]
+    ) -> None:
+        """Seed a classification with `is_valid=NULL` canonical rows — the no-CSV
+        shape (ICD-10-SE in production): its observed codes ARE its code set, so
+        the detector's `is_valid IS NOT 0` filter must keep them. Same level rule
+        as `add_classification`."""
+        self.conn.execute(
+            "INSERT INTO classification (id, short_name, name) VALUES (?, ?, ?)",
+            (cls_id, short_name, short_name),
+        )
+        for code, label in codes:
+            code_id = self._intern_code(code, label)
+            level = len(code) if code.isdigit() else None
+            self.conn.execute(
+                "INSERT INTO classification_code "
+                "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, NULL)",
+                (cls_id, code_id, level),
+            )
+
     def add_value_set(self, value_set_id: int, codes: list[tuple[str, str]]) -> None:
         # member_hash is UNIQUE NOT NULL (32 bytes); derive a deterministic one.
         member_hash = hashlib.sha256(repr((value_set_id, codes)).encode()).digest()
@@ -931,10 +951,17 @@ class _Graph:
             )
 
     def add_variable_state(
-        self, variable_id: int, value_set_id: int | None, slug: str | None = None
+        self,
+        variable_id: int,
+        value_set_id: int | None,
+        slug: str | None = None,
+        valid_from: str = "2020-01-01",
     ) -> None:
         """A variable + a single `variable_state` carrying `value_set_id`. The slug
-        lets the curated loader resolve `scb/ulf/<slug>`."""
+        lets the curated loader resolve `scb/ulf/<slug>`. `valid_from` is exposed
+        so a test can attach a SECOND state to the same variable without tripping
+        the `variable_state` UNIQUE (variable_id, register_variant_id, valid_from,
+        value_set_version_label) constraint."""
         existing = self.conn.execute(
             "SELECT 1 FROM variable WHERE variable_id = ?", (variable_id,)
         ).fetchone()
@@ -947,8 +974,8 @@ class _Graph:
         self.conn.execute(
             "INSERT INTO variable_state "
             "(variable_id, register_variant_id, valid_from, valid_to, value_set_id) "
-            "VALUES (?, 1, '2020-01-01', '9999-12-31', ?)",
-            (variable_id, value_set_id),
+            "VALUES (?, 1, ?, '9999-12-31', ?)",
+            (variable_id, valid_from, value_set_id),
         )
 
     def _intern_code(self, code: str, label: str) -> int:
@@ -1112,10 +1139,194 @@ class TestLinkValueSetClassifications:
         # The single emitted candidate points at the 4-digit (level-4) family.
         assert g.candidates() == [(905, 105, 17)]
 
+    def test_idempotent_rerun_does_not_double_candidates(self) -> None:
+        """Running the detector TWICE on the same DB must not duplicate the
+        candidate: the second run's additive NOT EXISTS guard sees its own
+        first-run row and skips emission. value_sets_linked stays 1 (it counts the
+        confident population, which is stable across re-runs)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(30, "ICD-10-SE", codes)
+        g.add_value_set(120, codes)
+        g.add_variable_state(920, 120)
+
+        first = link_value_set_classifications(g.conn)
+        second = link_value_set_classifications(g.conn)
+        assert first["value_sets_linked"] == 1
+        assert second["value_sets_linked"] == 1
+        # Exactly one candidate for the state key — the re-run added nothing.
+        assert g.candidates() == [(920, 120, 30)]
+
+    def test_additive_guard_is_per_state_key_not_per_value_set(self) -> None:
+        """The additive guard is keyed on `(variable_id, value_set_id)`, not on the
+        value set alone: two variables share ONE confident (single-family) value
+        set, and only the FIRST already has a candidate. The detector must leave the
+        first untouched AND link the second (unclaimed) variable's state key.
+
+        cls_id 99 is a sentinel not in the classification table, so the pre-existing
+        candidate is distinguishable from anything the detector would emit (31)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(31, "ICD-10-SE", codes)  # single family → confident
+        g.add_value_set(121, codes)
+        g.add_variable_state(921, 121)  # state key already claimed below
+        g.add_variable_state(922, 121)  # unclaimed → detector should link it
+        # Pre-existing candidate for ONLY the first variable's state key.
+        g.conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (921, 121, 99)"
+        )
+
+        link_value_set_classifications(g.conn)
+        # First variable's candidate is untouched (99); second is freshly linked (31).
+        assert g.candidates() == [(921, 121, 99), (922, 121, 31)]
+
+    def test_confident_count_independent_of_guard_skipped_emission(self) -> None:
+        """`value_sets_linked` counts the CONFIDENT population, not emitted rows: a
+        single-family ≥15-code set whose ONLY state key already has a candidate is
+        counted (== 1) even though the additive guard skips emission. Pins the
+        documented count-is-confident-population semantics."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(36, "ICD-10-SE", codes)  # single family → confident
+        g.add_value_set(125, codes)
+        g.add_variable_state(926, 125)
+        # Pre-existing candidate (sentinel cls 99) on the set's only state key.
+        g.conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (926, 125, 99)"
+        )
+
+        counts = link_value_set_classifications(g.conn)
+        # Counted as confident even though no row was emitted (guard held).
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(926, 125, 99)]
+
+    def test_no_csv_null_is_valid_codes_still_link(self) -> None:
+        """A no-CSV classification carries `is_valid=NULL` canonical rows (its
+        observed codes ARE its code set — the ICD-10-SE production case). The
+        detector's `is_valid IS NOT 0` filter must keep NULL rows so a value set
+        enumerating those codes links."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_no_csv_classification(33, "ICD-10-SE", codes)
+        g.add_value_set(122, codes)
+        g.add_variable_state(923, 122)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(923, 122, 33)]
+
+    def test_alphanumeric_codes_dom_level_null_link(self) -> None:
+        """ICD-shaped alphanumeric codes (`A01`, `B99`, not all-digit) give
+        `dom_level=NULL`, disabling the grain filter. A ≥15-code single-family set
+        of such codes still auto-links on size — exercises the `dom_level IS NULL`
+        match branch (the real ICD shape)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # 20 alphanumeric codes; none is all-digit → dom_level NULL.
+        codes = [
+            (f"{chr(65 + i // 10)}{i % 10}{i % 10}", f"ICD {i}") for i in range(20)
+        ]
+        g.add_classification(34, "ICD-10-SE", codes)
+        g.add_value_set(123, codes)
+        g.add_variable_state(924, 123)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(924, 123, 34)]
+
+    def test_below_min_codes_floor_emits_nothing(self) -> None:
+        """A value set with fewer than `_MIN_CODES` (8) distinct codes never enters
+        `_vs_cls` at all — even a perfect single-family match. So it produces no
+        candidate AND is counted in NEITHER the single-below-threshold nor the
+        multi-family tally (those size the ≥8-code curation tail)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("SUN", 7, 3)  # 7 < _MIN_CODES
+        g.add_classification(35, "SUN2000", codes)
+        g.add_value_set(124, codes)
+        g.add_variable_state(925, 124)
+
+        counts = link_value_set_classifications(g.conn)
+        assert g.candidates() == []
+        assert counts["value_sets_linked"] == 0
+        assert counts["single_below_threshold"] == 0
+        assert counts["multi_family"] == 0
+
 
 class TestCuratedClassificationLinks:
     """The curated tail loader (#416): load-time validation + delete-then-insert
     precedence at materialize."""
+
+    def test_materialize_links_every_value_set_state_key(self) -> None:
+        """One curated entry on a variable with TWO `variable_state` rows carrying
+        DIFFERENT `value_set_id`s links BOTH state keys: n_inserted == 2 and a
+        candidate is written for each (the loader iterates the variable's distinct
+        value-set states, not just one)."""
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        g.add_classification(40, "ICD-10-SE", _numeric_codes("ICD", 5, 4))
+        g.add_value_set(130, _numeric_codes("ICD", 5, 4))
+        g.add_value_set(131, _numeric_codes("ICD", 5, 4))
+        g.add_variable_state(930, 130, slug="ha0611m")
+        # Second state on the SAME variable; distinct valid_from avoids the
+        # variable_state UNIQUE collision (same variable, same NULL version label).
+        g.add_variable_state(930, 131, slug="ha0611m", valid_from="2021-01-01")
+
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="ha0611m",
+            classification="ICD-10-SE",
+            note=None,
+        )
+        n = materialize_classification_links(
+            g.conn, (entry,), providers=frozenset({"scb"})
+        )
+        assert n == 2
+        assert g.candidates() == [(930, 130, 40), (930, 131, 40)]
+
+    def test_materialize_skips_code_less_only_variable(self) -> None:
+        """A variable whose only states have `value_set_id IS NULL` has no value-set
+        state key to target, so a curated link writes NOTHING: n_inserted == 0, no
+        candidate, no error (a curated classification link is about the variable's
+        inline code set)."""
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        g.add_classification(41, "ICD-10-SE", _numeric_codes("ICD", 5, 4))
+        g.add_variable_state(931, None, slug="ha0611m")
+
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="ha0611m",
+            classification="ICD-10-SE",
+            note=None,
+        )
+        n = materialize_classification_links(
+            g.conn, (entry,), providers=frozenset({"scb"})
+        )
+        assert n == 0
+        assert g.candidates() == []
 
     def test_curated_override_takes_precedence(self) -> None:
         from reg_meta_build.classification_links import (
