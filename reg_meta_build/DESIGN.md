@@ -1366,6 +1366,37 @@ installs and synthetic test builds (empty file → zero rows written); an edge w
 The first curated edges landed in #403 — three cross-register see-also pairs
 (auto-emitted split edges are unaffected and flow as before).
 
+**Curated succession edges (`[[replaced_by]]`, #440).** A **top-level `[[replaced_by]]`
+array-of-tables** in a provider TOML (alongside `lineage` / `lineage_defaults`, parsed
+by `load_curated_replaced_by` — DB-free, mirroring `load_lineage_config`) materializes
+hand-authored succession edges into the same `register_replaced_by` /
+`variable_replaced_by` tables the `timeseries_event` pass writes, **alongside** the
+auto-derived edges. Each row is `predecessor` + `successor` (both **full FQID
+strings**), optional `note` (the human transition reason) and `effective_year`. Grain is
+inferred from FQID part-count — 2 segments (`provider/register`) → register grain, 3
+(`provider/register/variable`) → variable grain — and both ends must be the same grain
+(the variant grain is out of scope; a variant is a delivery coordinate, not a curation
+surface). Resolution is asymmetric and is the whole point of the curated path over the
+event-derived one: the **successor MUST resolve** to a live, slugged DB entity (a
+non-resolving successor is a curation error → `EXIT_CONFIG`, fail-fast, unlike the
+event-path's best-effort skip of noisy historical `timeseries_event` data), while the
+**predecessor MAY be dead** — a retired / renamed / cross-provider FQID with no live
+row, inserted verbatim (slug-anchored). This carries the two moves `timeseries_event`
+cannot express: **cross-provider** succession (e.g. SOS→SCB) and a **dead-predecessor**
+edge (the first real consumer is the LISA definition-era successions, which have no
+`timeseries_event` source at all). Curated edges dedup against event-derived ones (and
+each other) via the SHARED `seen_*` PK sets in the materializer, so a curated row
+duplicating an event edge collapses (counted as a curated skip). Provenance is
+`note = 'curated:slug_toml'` in the edge's `note` column (distinct from the auto path's
+`'auto:timeseries_event'`), with the row's own `note` carried into `beskrivning` —
+exactly mirroring the auto path so a consumer can tell curated from auto-derived. This
+is a **DIFFERENT relation** from the per-entry `replaced_by` key-string field above:
+that field is a *within-file slug-typo rename pointer* (one TOML key → another in the
+same file, same provider, validated for cycle-freedom); a `[[replaced_by]]` row is a
+*succession edge* between two full FQIDs that may be cross-provider and
+dead-predecessor. It is also distinct from `variable_state_lineage` (consumer↔source
+binding overlap, a different graph; see below).
+
 **Panel-shape bootstrap.** `register_variant` rows also carry `panel_entity_key` /
 `panel_time_key` / `panel_time_grain` (a variable-slug reference or the `"period"`
 sentinel). `seed-slugs` proposes defaults from SCB `Tabelldefinitioner.sql` PK

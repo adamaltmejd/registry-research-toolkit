@@ -25,8 +25,11 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
+    Fqid,
+    FqidError,
     FqidKind,
     derive_variable_slug,
+    parse as parse_fqid,
     validate_slug,
 )
 
@@ -62,9 +65,10 @@ _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classificat
 
 # Top-level keys accepted in a provider TOML; anything else is a typo
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
-# silently no-op. `lineage_defaults` / `lineage` are NOT SlugEntry rows
-# — `load_lineage_config` parses them separately — but they're legal top-level
-# tables, so the strict typo check must accept them.
+# silently no-op. `lineage_defaults` / `lineage` / `replaced_by` are NOT
+# SlugEntry rows — `load_lineage_config` / `load_curated_replaced_by` parse them
+# separately — but they're legal top-level tables, so the strict typo check must
+# accept them.
 _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
     {
         "register",
@@ -72,6 +76,7 @@ _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
         "variable",
         "lineage_defaults",
         "lineage",
+        "replaced_by",
     }
 )
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
@@ -121,9 +126,12 @@ class SlugEntry:
     # only short-circuits the missing-row branch on this — a still-live row
     # with `deprecated = true` is still slugged so resolution keeps working.
     deprecated: bool = False
-    # Validated for shape and cycle-freedom but not yet applied to the
-    # DB; the resolver-side typo-correction lands with consumer-side binding
-    # materialization in step 1e.
+    # Within-file slug-typo rename pointer (another row's TOML key in the SAME
+    # file/provider). Validated for shape and cycle-freedom but not yet applied
+    # to the DB; the resolver-side typo-correction lands with consumer-side
+    # binding materialization in step 1e. NOT succession — the cross-provider /
+    # dead-predecessor succession surface is the top-level `[[replaced_by]]`
+    # array-of-tables (`load_curated_replaced_by`, #440), a different relation.
     replaced_by: str | None = None
     # Cross-rename equivalence; materialized into `variable_same_as` /
     # `classification_same_as` edge tables by `materialize_same_as_edges`.
@@ -2196,6 +2204,262 @@ def load_lineage_config(slug_dir: Path) -> LineageConfig:
             overrides[override_key] = (source_register, source_variant)
 
     return LineageConfig(defaults=defaults, overrides=overrides)
+
+
+# ---------------------------------------------------------------------------
+# Curated succession edges (#440): inline `[[replaced_by]]` rows in a provider
+# TOML, materialized into `register_replaced_by` / `variable_replaced_by`
+# ALONGSIDE the `timeseries_event`-derived edges (`_materialize_replaced_by_edges`
+# in db.py). This is a DIFFERENT relation from the per-entry `SlugEntry.replaced_by`
+# field: that field is a WITHIN-FILE slug-typo rename pointer (one TOML key →
+# another, same provider, validated by `_resolve_replaced_by`, reserved for "step
+# 1e"); a `[[replaced_by]]` row is a SUCCESSION edge between two full FQIDs that
+# may be CROSS-PROVIDER (e.g. SOS→SCB) and whose PREDECESSOR need not resolve to a
+# live row (retired/renamed). The whole point of the curated path vs the
+# event-derived one: SCB's `timeseries_event` can carry neither a cross-provider
+# move nor a dead-predecessor edge (the LISA definition-era successions, the first
+# real consumer, have no `timeseries_event` source at all).
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class CuratedReplacedByEdge:
+    """One `[[replaced_by]]` succession row, parsed FQID-shaped but DB-unverified.
+
+    `predecessor` / `successor` are parsed `Fqid`s of the SAME grain — both
+    register (`provider/register`, 2 segs) or both variable
+    (`provider/register/variable`, 3 segs). Grain is `fqid.kind`
+    (`FqidKind.REGISTER` / `FqidKind.VARIABLE_BINDING`); the variant grain is out
+    of #440 scope and rejected at load. `note` / `effective_year` are optional
+    provenance (the human transition reason and the year it took effect).
+
+    Existence (the successor must resolve to a live, slugged DB entity; the
+    predecessor MAY be dead) is checked downstream by
+    `_materialize_curated_replaced_by_edges` against the built DB — this loader
+    stays DB-free so it's testable in isolation (mirrors `load_lineage_config`).
+    """
+
+    predecessor: Fqid
+    successor: Fqid
+    note: str | None
+    effective_year: int | None
+
+
+_REPLACED_BY_ROW_KEYS: frozenset[str] = frozenset(
+    {"predecessor", "successor", "note", "effective_year"}
+)
+_REPLACED_BY_REQUIRED_KEYS: frozenset[str] = frozenset({"predecessor", "successor"})
+# Curated succession is register- or variable-grain only. The variant grain
+# (`variant_replaced_by`) is deliberately out of #440 scope: a variant is a
+# delivery coordinate, not a curation surface for cross-provider succession.
+_REPLACED_BY_GRAINS: frozenset[FqidKind] = frozenset(
+    {FqidKind.REGISTER, FqidKind.VARIABLE_BINDING}
+)
+
+
+def _parse_replaced_by_fqid(path_name: str, field: str, raw: Any) -> Fqid:
+    """Parse one endpoint FQID string against the FQID grammar (the same
+    `reg_meta.fqid.parse` the resolver uses), restricted to the register /
+    variable grains. A bad shape, a provider/classification/variant-grain FQID,
+    or a non-string fails loud (EXIT_CONFIG)."""
+    if not isinstance(raw, str) or not raw:
+        raise _err(
+            "replaced_by_invalid",
+            f"{path_name}: [[replaced_by]] `{field}` must be a non-empty FQID "
+            f"string, got {raw!r}.",
+            'Quote a register or variable FQID, e.g. "scb/lisa" or "scb/lisa/kon".',
+        )
+    try:
+        fqid = parse_fqid(raw)
+    except FqidError as exc:
+        raise _err(
+            "replaced_by_invalid",
+            f"{path_name}: [[replaced_by]] `{field}` {raw!r} is not a valid "
+            f"FQID: {exc}.",
+            "Use a register (provider/register) or variable "
+            "(provider/register/variable) FQID.",
+        ) from exc
+    if fqid.kind not in _REPLACED_BY_GRAINS:
+        raise _err(
+            "replaced_by_invalid",
+            f"{path_name}: [[replaced_by]] `{field}` {raw!r} is a "
+            f"{fqid.kind.value}-grain FQID; only register and variable grains are "
+            f"supported.",
+            "Use a 2-segment register or 3-segment variable FQID (the variant "
+            "grain is out of scope).",
+        )
+    return fqid
+
+
+def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
+    """Parse `[[replaced_by]]` array-of-tables from every provider TOML under
+    ``slug_dir`` (excluding ``classifications.toml``), in deterministic
+    filename order.
+
+    Load-time validation (all EXIT_CONFIG, actionable — the DB-free half):
+      - `replaced_by` is an array of tables; each row is a table.
+      - `predecessor` / `successor` are present, non-empty FQID strings parsing
+        to a register- or variable-grain FQID (`_parse_replaced_by_fqid`).
+      - Both endpoints are the SAME grain (no register→variable mix).
+      - No self-loop (`predecessor == successor`).
+      - `note` is an optional string; `effective_year` an optional int.
+      - No unknown keys.
+
+    Existence checks (successor must resolve to a live slugged DB entity;
+    predecessor may be dead) are deferred to the DB-aware materializer — keeping
+    this loader DB-free mirrors `load_lineage_config`. The directed-cycle check
+    (length>=2 cycles, e.g. A→B + B→A) is ALSO deferred there: a curated edge can
+    close a cycle with an event-derived edge this loader can't see, so it must
+    run on the combined graph (`reject_replaced_by_cycles` in the materializer).
+    """
+    edges: list[CuratedReplacedByEdge] = []
+    for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
+        if path.name == CLASSIFICATIONS_FILE:
+            continue
+        data = _parse_toml(path)
+        raw_rows = data.get("replaced_by")
+        if raw_rows is None:
+            continue
+        if not isinstance(raw_rows, list):
+            raise _err(
+                "replaced_by_invalid",
+                f"{path.name}: `replaced_by` must be an array of tables.",
+                "Use [[replaced_by]] rows, each with predecessor / successor.",
+            )
+        for raw in raw_rows:
+            if not isinstance(raw, dict):
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: each `replaced_by` entry must be a table.",
+                    "Use the [[replaced_by]] array-of-tables form.",
+                )
+            unknown = set(raw) - _REPLACED_BY_ROW_KEYS
+            if unknown:
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: [[replaced_by]] has unknown key(s): "
+                    f"{sorted(unknown)}.",
+                    f"Allowed keys: {sorted(_REPLACED_BY_ROW_KEYS)}.",
+                )
+            missing = _REPLACED_BY_REQUIRED_KEYS - raw.keys()
+            if missing:
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: [[replaced_by]] missing required key(s): "
+                    f"{sorted(missing)}.",
+                    f"Required: {sorted(_REPLACED_BY_REQUIRED_KEYS)}.",
+                )
+            predecessor = _parse_replaced_by_fqid(
+                path.name, "predecessor", raw["predecessor"]
+            )
+            successor = _parse_replaced_by_fqid(
+                path.name, "successor", raw["successor"]
+            )
+            if predecessor.kind is not successor.kind:
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: [[replaced_by]] predecessor "
+                    f"{str(predecessor)!r} ({predecessor.kind.value}) and successor "
+                    f"{str(successor)!r} ({successor.kind.value}) are different "
+                    f"grains.",
+                    "Both endpoints must be the same grain (register→register or "
+                    "variable→variable).",
+                )
+            if str(predecessor) == str(successor):
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: [[replaced_by]] self-loop on {str(predecessor)!r}.",
+                    "An entity cannot replace itself; remove the row.",
+                )
+            note = raw.get("note")
+            if note is not None and (not isinstance(note, str) or not note):
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: [[replaced_by]] `note` must be a non-empty "
+                    f"string when present.",
+                    "Quote a short transition reason, or drop the key.",
+                )
+            effective_year = raw.get("effective_year")
+            # `isinstance(True, int)` is True in Python — reject a bare bool so a
+            # `effective_year = true` typo can't masquerade as the year 1.
+            if effective_year is not None and (
+                isinstance(effective_year, bool) or not isinstance(effective_year, int)
+            ):
+                raise _err(
+                    "replaced_by_invalid",
+                    f"{path.name}: [[replaced_by]] `effective_year` must be an "
+                    f"integer when present, got {type(effective_year).__name__}.",
+                    "Use a bare integer year, e.g. effective_year = 2012.",
+                )
+            edges.append(
+                CuratedReplacedByEdge(
+                    predecessor=predecessor,
+                    successor=successor,
+                    note=note,
+                    effective_year=effective_year,
+                )
+            )
+    # NB: cycle rejection does NOT run here. The load-time graph sees only the
+    # curated edges, but a curated edge can close a cycle WITH an event-derived
+    # edge materialized in the same build (e.g. event A->B + curated B->A). That
+    # combined-graph check lives in `_materialize_curated_replaced_by_edges`,
+    # which holds the event edges too. Self-loops are still caught per-row above.
+    return edges
+
+
+def reject_replaced_by_cycles(edges: list[tuple[Any, Any]]) -> None:
+    """Reject directed cycles in a `[[replaced_by]]` succession graph.
+
+    ``edges`` is a list of ``(predecessor_node, successor_node)`` pairs; a node
+    is any hashable key (the build passes the FQID slug tuple — register node
+    ``(provider, register)``, variable node ``(provider, register, variable)``).
+    A cyclic succession graph has no terminal successor, so the webapp's
+    successors()/predecessors() walks would contradict each other.
+
+    Pure and DB-free so it's testable in isolation. The build runs it on the
+    COMBINED per-grain graph (event-derived edges ∪ curated edges to insert) —
+    a curated edge can close a cycle with an event-derived one, which a
+    curated-only view can't see. Self-loops are rejected per-row at load
+    (`load_curated_replaced_by`); this catches length>=2 cycles a per-row check
+    can't see. Mirrors `_reject_same_as_cycles`.
+    """
+    if not edges:
+        return
+    adj: dict[Any, list[Any]] = {}
+    for a, b in edges:
+        adj.setdefault(a, []).append(b)
+        adj.setdefault(b, [])
+
+    # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
+    color: dict[Any, int] = dict.fromkeys(adj, 0)
+    parent: dict[Any, Any] = {}
+
+    def visit(node: Any) -> None:
+        color[node] = 1
+        for nxt in adj[node]:
+            if color[nxt] == 1:
+                # Reconstruct the cycle for a useful error.
+                cycle = [nxt, node]
+                cur = node
+                while parent.get(cur) is not None and parent[cur] != nxt:
+                    cur = parent[cur]
+                    cycle.append(cur)
+                cycle.append(nxt)
+                raise _err(
+                    "replaced_by_cycle",
+                    "[[replaced_by]] forms a succession cycle: "
+                    f"{' -> '.join(repr(n) for n in reversed(cycle))}.",
+                    "A succession chain must be acyclic (it needs a terminal "
+                    "successor); remove the edge that closes the loop.",
+                )
+            if color[nxt] == 0:
+                parent[nxt] = node
+                visit(nxt)
+        color[node] = 2
+
+    for start in list(adj):
+        if color[start] == 0:
+            visit(start)
 
 
 # ---------------------------------------------------------------------------
