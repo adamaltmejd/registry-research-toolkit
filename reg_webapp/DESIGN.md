@@ -420,9 +420,9 @@ in `etag.py` (`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI mi
   The ETag keeps revalidation cheap — a 304 when nothing changed, a fresh 200 the moment
   a deploy bumps the version. Catalog/search/docs keep `max-age=86400` because a
   sub-day-stale list is acceptable and their ETag (version-prefixed) still guarantees
-  correctness on revalidation. The edge worker (`reg_webapp/edge/`) is a transparent
-  proxy that defers to this origin contract, so the per-route policy needs no edge
-  change.
+  correctness on revalidation. The edge worker (`reg_webapp/edge/`) defers to this
+  origin's `Cache-Control` contract (it only stamps the `__edge_v` cache-generation
+  param, orthogonal to caching policy), so the per-route policy needs no edge change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a
