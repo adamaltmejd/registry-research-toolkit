@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -52,6 +53,27 @@ def _parse_version(v: str) -> tuple[int, ...]:
     if m.group(6):  # aN
         return (major, minor, patch, -1, int(m.group(7)))
     return (major, minor, patch, 0, 0)  # final
+
+
+def _is_uv_tool_install() -> bool:
+    """True if the CURRENTLY-RUNNING reg-meta is itself a uv-tool install — i.e.
+    its environment lives under ``uv tool dir``, so ``uv tool upgrade reg-meta``
+    would upgrade THIS install. A venv/editable/pipx install (Docker bake,
+    ``uv sync``) returns False — there ``uv tool upgrade`` would either fail or
+    upgrade an unrelated global uv tool while this install stays stale.
+
+    Any failure (uv missing, non-zero, unparseable) → False: we can't confirm
+    the upgrade targets this install, so we must not attempt it.
+    """
+    try:
+        proc = subprocess.run(["uv", "tool", "dir"], capture_output=True, text=True)
+    except FileNotFoundError:
+        return False
+    if proc.returncode != 0 or not proc.stdout.strip():
+        return False
+    tool_dir = os.path.realpath(proc.stdout.strip())
+    prefix = os.path.realpath(sys.prefix)
+    return prefix == tool_dir or prefix.startswith(tool_dir + os.sep)
 
 
 def _check_cache_path() -> Path:
@@ -248,6 +270,19 @@ def run_update(
                 f"Package v{current} is ahead of latest release v{latest_ver}.\n"
             )
         result["package"] = "up_to_date"
+    elif not _is_uv_tool_install():
+        # reg-meta is behind the latest release but was NOT installed as a uv
+        # tool (Docker bake / `uv sync` / editable install). `uv tool upgrade`
+        # can only fail here, so skip it and fetch the DB/doc assets only — the
+        # bake still gets its DB and the build succeeds.
+        sys.stderr.write(
+            f"Source reg_meta v{current} is behind release v{latest_ver}, but "
+            "reg_meta is not a uv-tool install — skipping the package upgrade "
+            "and fetching DB/doc assets only.\n"
+            f"  To ship newer code, bump/rebase source reg_meta to v{latest_ver}; "
+            "to upgrade an installed copy, reinstall via your package manager.\n"
+        )
+        result["package"] = "skipped_not_uv_tool"
     else:
         sys.stderr.write(f"Upgrading package: v{current} → v{latest_ver}\n")
         try:

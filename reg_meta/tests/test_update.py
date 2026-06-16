@@ -505,6 +505,9 @@ class TestRunUpdatePypiBehind:
         monkeypatch.setattr(
             update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
         )
+        # This test exercises the uv-tool upgrade path; declare it's a uv-tool
+        # install so the non-uv-tool skip branch doesn't short-circuit it.
+        monkeypatch.setattr(update, "_is_uv_tool_install", lambda: True)
 
         def fake_run(cmd, capture_output, text):
             return _subprocess.CompletedProcess(
@@ -515,6 +518,178 @@ class TestRunUpdatePypiBehind:
 
         result = run_update(db_dir=tmp_path, yes=True)
         assert result["package"] == "no_upgrade"
+
+
+class TestIsUvToolInstall:
+    """_is_uv_tool_install asks whether the CURRENTLY-RUNNING env lives under
+    `uv tool dir`. It compares `sys.prefix` against the `uv tool dir` output;
+    any failure → False."""
+
+    @staticmethod
+    def _patch(monkeypatch, *, tool_dir_out, returncode=0, raises=None):
+        import subprocess as _subprocess
+
+        from reg_meta import update
+
+        def fake_run(cmd, capture_output, text):
+            if raises is not None:
+                raise raises
+            return _subprocess.CompletedProcess(
+                cmd, returncode=returncode, stdout=tool_dir_out, stderr=""
+            )
+
+        monkeypatch.setattr(update.subprocess, "run", fake_run)
+        return update
+
+    def test_prefix_under_tool_dir_returns_true(self, monkeypatch: pytest.MonkeyPatch):
+        from reg_meta import update
+
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
+        assert u._is_uv_tool_install() is True
+
+    def test_prefix_not_under_tool_dir_returns_false(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        # The Docker-bake / `uv sync` case: a venv prefix that is not a uv tool.
+        from reg_meta import update
+
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
+        monkeypatch.setattr(update.sys, "prefix", "/app/.venv")
+        assert u._is_uv_tool_install() is False
+
+    def test_sibling_string_prefix_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        # `/x/uv/tools-evil` shares a string prefix with `/x/uv/tools` but is
+        # NOT a real subpath — the `+ os.sep` guard must reject it.
+        from reg_meta import update
+
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools-evil")
+        assert u._is_uv_tool_install() is False
+
+    def test_nonzero_returncode_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        from reg_meta import update
+
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n", returncode=1)
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
+        assert u._is_uv_tool_install() is False
+
+    def test_empty_stdout_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        from reg_meta import update
+
+        u = self._patch(monkeypatch, tool_dir_out="")
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
+        assert u._is_uv_tool_install() is False
+
+    def test_uv_not_found_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        u = self._patch(monkeypatch, tool_dir_out="", raises=FileNotFoundError("uv"))
+        assert u._is_uv_tool_install() is False
+
+
+class TestRunUpdateNonUvToolSkip:
+    """When source reg_meta is behind the latest release but is NOT a uv-tool
+    install (Docker bake / `uv sync`), the package upgrade is skipped (it can
+    only fail) and the DB/doc assets are still fetched."""
+
+    def test_non_uv_tool_skips_upgrade_still_fetches_assets(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        from reg_meta.download import ReleaseResolution
+        from reg_meta.update import run_update
+
+        from reg_meta import update
+
+        newer_tag = "reg_meta/v99.99.99"
+        # No local DB/doc DB present → both asset branches must fetch.
+        monkeypatch.setattr(
+            update,
+            "resolve_latest_release",
+            lambda *, timeout=15: ReleaseResolution(
+                release_tag=newer_tag,
+                version="99.99.99",
+                db_tag=newer_tag,
+                docs_tag=newer_tag,
+            ),
+        )
+        monkeypatch.setattr(
+            update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
+        )
+        # Not a uv-tool install → upgrade must be skipped.
+        monkeypatch.setattr(update, "_is_uv_tool_install", lambda: False)
+
+        # `uv tool upgrade` must never be invoked from run_update.
+        def forbid_run(cmd, *args, **kwargs):
+            raise AssertionError(f"subprocess.run must not be called: {cmd!r}")
+
+        monkeypatch.setattr(update.subprocess, "run", forbid_run)
+
+        # Stub the asset downloads so they "succeed" without network.
+        def fake_download_db(*, db_dir, tag, force, yes):
+            return {"tag": tag}
+
+        def fake_download_docs_db(*, db_dir, tag, force):
+            return {"tag": tag}
+
+        monkeypatch.setattr(update, "download_db", fake_download_db)
+        monkeypatch.setattr(update, "download_docs_db", fake_download_docs_db)
+
+        result = run_update(db_dir=tmp_path, yes=True)
+
+        assert result["package"] == "skipped_not_uv_tool"
+        # DB/doc fetch happened (not left broken / up_to_date).
+        assert result["database"] == {"tag": newer_tag}
+        assert result["docs"] == {"tag": newer_tag}
+
+    def test_uv_tool_install_still_attempts_upgrade(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        import subprocess as _subprocess
+
+        from reg_meta.download import ReleaseResolution
+        from reg_meta.update import run_update
+
+        from reg_meta import update
+
+        newer_tag = "reg_meta/v99.99.99"
+        # Local assets already match the target tag → asset branches no-op.
+        (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
+        (tmp_path / ".db_source").write_text(f'{{"tag": "{newer_tag}"}}')
+        (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
+        (tmp_path / ".docs_source").write_text(f'{{"tag": "{newer_tag}"}}')
+
+        monkeypatch.setattr(
+            update,
+            "resolve_latest_release",
+            lambda *, timeout=15: ReleaseResolution(
+                release_tag=newer_tag,
+                version="99.99.99",
+                db_tag=newer_tag,
+                docs_tag=newer_tag,
+            ),
+        )
+        monkeypatch.setattr(
+            update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
+        )
+        # A genuine uv-tool install → upgrade path runs.
+        monkeypatch.setattr(update, "_is_uv_tool_install", lambda: True)
+
+        upgrade_calls: list[list[str]] = []
+
+        def fake_run(cmd, capture_output, text):
+            upgrade_calls.append(cmd)
+            return _subprocess.CompletedProcess(
+                cmd, returncode=0, stdout="Upgraded reg-meta\n", stderr=""
+            )
+
+        monkeypatch.setattr(update.subprocess, "run", fake_run)
+
+        result = run_update(db_dir=tmp_path, yes=True)
+
+        assert ["uv", "tool", "upgrade", "reg_meta"] in upgrade_calls
+        assert result["package"] == {
+            "old_version": update.__version__,
+            "new_version": "99.99.99",
+        }
 
 
 class TestUpdateCheckerUsesPypi:
