@@ -1092,6 +1092,89 @@ def _parse_tidsperiod(tp: str | None) -> tuple[str | None, str | None]:
     return None, None
 
 
+# Code charset for a `Värdemängd` enumeration: digits + Latin/Swedish letters
+# plus `.`/`_`/`-` (no whitespace, comma, or colon). A bare `-` separating two
+# digits (`0-744`) is a NUMERIC RANGE descriptor, not an enumeration, so it is
+# rejected even though `-` is otherwise an allowed code char.
+_VALUE_CODE_CHARSET = re.compile(r"[0-9A-Za-zÅÄÖåäö._-]+")
+
+
+def _clean_value_code(c: str) -> str | None:
+    """Validate one `Värdemängd` code token; return it stripped, or ``None`` if
+    it isn't a clean enumeration code.
+
+    Rejects: empty; embedded whitespace/comma/colon (label/prose leakage);
+    a numeric range (`0-744`); anything outside `_VALUE_CODE_CHARSET`. Only the
+    CODE is constrained this tightly — labels are free-form (see the classifier).
+    """
+    c = c.strip()
+    if not c:
+        return None
+    if any(ch in c for ch in (" ", "\t", ",", ":")):
+        return None
+    if re.search(r"\d-\d", c):  # numeric range like 0-744, not a code
+        return None
+    if not _VALUE_CODE_CHARSET.fullmatch(c):
+        return None
+    return c
+
+
+def _classify_value_set_text(text: str | None) -> list[tuple[str, str | None]] | None:
+    """Classify a raw SOS `Värdemängd` cell into (code, label) pairs, or reject.
+
+    This is the #401 fallback that promotes a variable's INLINE enumerated code
+    list to a value set when the variable has no `Kodlista_*` sheet (the #373
+    deferral — styrtabell decode tables were excluded from minting, but their
+    `Värdemängd` enumeration was never bound). It is deliberately CONSERVATIVE:
+    rejecting (returning ``None``) leaves the variable exactly as today (no value
+    set), so a wrong reject is a no-op while a wrong ACCEPT would mint garbage.
+
+    Two accepted forms (real-corpus-verified):
+      - `kod=klartext` pairs — every segment carries `=`: code with inline label
+        (`1=ja; 0=nej`, newline-delimited lists). Label is the right of the first
+        `=` (labels may contain spaces/commas/colons — only the code is checked).
+      - bare codes — no segment carries `=`: code-only (`1;2;3;4;5;9`, `LEG;SPEC`).
+
+    Rejected (free-text trap): single segment (a descriptor like `Fritext`);
+    MIXED `=`/no-`=` (catches trailing-prose cells like `0=…; …; strängen är
+    tom`); any invalid code (range, comma, colon, whitespace); duplicate codes.
+    """
+    if not text or not text.strip():
+        return None
+    # Split on `;` AND newline simultaneously — both are clean SOS separators.
+    segments = [s.strip() for s in re.split(r"[;\n]+", text) if s.strip()]
+    # A single segment is a free-text descriptor, not an enumeration.
+    if len(segments) < 2:
+        return None
+
+    with_eq = sum(1 for s in segments if "=" in s)
+    if with_eq == len(segments):
+        # kod=klartext: partition each on the FIRST `=`.
+        pairs: list[tuple[str, str | None]] = []
+        for s in segments:
+            raw_code, _, raw_label = s.partition("=")
+            code = _clean_value_code(raw_code)
+            label = raw_label.strip()
+            if code is None or not label:
+                return None
+            pairs.append((code, label))
+    elif with_eq == 0:
+        # bare codes: each segment IS the code, no label.
+        pairs = []
+        for s in segments:
+            code = _clean_value_code(s)
+            if code is None:
+                return None
+            pairs.append((code, None))
+    else:
+        # MIXED `=`/no-`=` -> trailing-prose / malformed cell. Reject.
+        return None
+
+    if len({code for code, _ in pairs}) != len(pairs):  # duplicate codes -> reject
+        return None
+    return pairs
+
+
 def _iso_bound(value: int | None, *, end: bool) -> str | None:
     """Normalize a SOS `data_från`/`data_till` int to a full ISO date.
 
@@ -1798,10 +1881,19 @@ class SOSAdapter:
         `valid_to`. They are NOT duplicates: each carries its member's own
         `valid_to`. Keeping the first in delivery order would silently truncate
         the variable's coverage (and close an open-ended state), so reconcile
-        `valid_to` to the WIDEST window instead of dropping. `value_set_id` is
-        provably identical on a same-state_id collision — a distinguishing code
-        buckets into a non-empty `value_set_version_label`, which changes the
-        state_id — so widening `valid_to` is the only reconciliation needed.
+        `valid_to` to the WIDEST window instead of dropping.
+
+        `value_set_id` reconciliation: for the kodlista paths it is provably
+        identical on a same-state_id collision — a distinguishing code buckets
+        into a non-empty `value_set_version_label`, which changes the state_id.
+        The #401 `Värdemängd` fallback breaks that proof: each MERGED member
+        carries its OWN inline `Värdemängd`, those can classify to DIFFERENT
+        value sets, and the fallback emits `value_set_version_label=None`, so two
+        such members CAN collide on one state_id with divergent `value_set_id`.
+        That is a real corpus case (e.g. LMED VARUTYP, MFR ICD — members whose
+        Värdemängd cells differ by a code). `_collect` keeps the first
+        deterministically (delivery order) and WARNS so the dropped alternative
+        is auditable; it is never silent.
         """
         # Build the value-set rows for this variable's kodlista once.
         # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
@@ -1814,6 +1906,27 @@ class SOSAdapter:
         def _collect(obj: IRObject) -> Iterator[IRObject]:
             if isinstance(obj, IRVariableState):
                 prior = states_by_id.get(obj.state_id)
+                if prior is not None and (
+                    prior.value_set_id is not None
+                    and obj.value_set_id is not None
+                    and prior.value_set_id != obj.value_set_id
+                ):
+                    # #401: two merged members collided on one state_id with
+                    # DIVERGENT value sets (only reachable via the Värdemängd
+                    # fallback, where value_set_version_label is always None — the
+                    # kodlista paths bucket distinguishing codes into a non-None
+                    # label that changes the state_id). Keep the first
+                    # deterministically; WARN so the drop is auditable.
+                    yield IRWarning(
+                        entity_kind="variable",
+                        entity_id=variable_id,
+                        code="sos_value_set_text_conflict",
+                        detail=(
+                            f"{abbrev}/{members[0].name}: merged members share "
+                            f"state_id {obj.state_id} but classify to different "
+                            "Värdemängd value sets; kept first in delivery order"
+                        ),
+                    )
                 states_by_id[obj.state_id] = (
                     obj
                     if prior is None
@@ -1933,13 +2046,33 @@ class SOSAdapter:
         deldat_dropped: list[bool] = []
 
         if kodlista is None:
-            # Code-less state: one state over the variable window, with the
-            # deldat window applied only as an advisory bound.
+            # No `Kodlista_*` sheet for this variable. Fall back to the inline
+            # `Värdemängd` cell (#401, the #373 deferral): when it is a clean
+            # enumerated code list, promote it to a value set; otherwise it's
+            # free text and the state stays code-less (exactly today's behavior).
+            # Värdemängd carries no Tidsperiod, so there is no per-code windowing
+            # and no era drift — one value set over the whole variable window.
             window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
             if window is None:
                 return
             if dropped:
                 deldat_dropped.append(True)
+            value_set_id = None
+            classified = _classify_value_set_text(v.value_set_text)
+            if classified is not None:
+                value_set_id = self._ensure_value_set(
+                    [
+                        IRValueCode(
+                            code_id=0,  # autoincrement; assigned at write-back
+                            value_set_id=0,
+                            code=code,
+                            label=label or "",
+                            valid_from=window[0],
+                            valid_to=window[1],
+                        )
+                        for code, label in classified
+                    ]
+                )
             yield from collect(
                 IRVariableState(
                     state_id=self._state_id(abbrev, variable_id, variant_id, window[0]),
@@ -1950,7 +2083,7 @@ class SOSAdapter:
                     data_type=_norm_data_type(v.data_type),
                     data_length=None,
                     delivery_column_name=col,
-                    value_set_id=None,
+                    value_set_id=value_set_id,
                     value_set_version_label=None,
                 )
             )

@@ -39,6 +39,7 @@ from reg_meta_build.sources.sos import (
     SosKodlistaRow,
     SosRegister,
     SosVariable,
+    _classify_value_set_text,
     _intersect_window,
     _iso_bound,
     _parse_tidsperiod,
@@ -67,6 +68,7 @@ def _var(
     data_from: int | None = None,
     data_to: int | None = None,
     external_classification: str | None = None,
+    value_set_text: str | None = None,
 ) -> SosVariable:
     return SosVariable(
         deldatamangd=deldatamangd,
@@ -74,7 +76,7 @@ def _var(
         label=label,
         description=description,
         object_type=None,
-        value_set_text=None,
+        value_set_text=value_set_text,
         external_classification=external_classification,
         data_type=data_type,
         is_join_variable=None,
@@ -759,6 +761,248 @@ def test_merged_member_open_end_not_silently_closed() -> None:
         states = _of(_emit(reg)[0], IRVariableState)
         assert len(states) == 1
         assert states[0].valid_to is None, "open-ended member must not be closed"
+
+
+# ---------------------------------------------------------------------------
+# #401: inline `Värdemängd` -> value set, fallback when the variable has no
+# Kodlista_* sheet (the #373 deferral). Classifier rules are pinned against the
+# real-corpus shapes (verified against input_data/Socialstyrelsen/).
+# ---------------------------------------------------------------------------
+
+
+class TestClassifyValueSetText:
+    """`_classify_value_set_text` is conservative: it returns (code, label)
+    pairs ONLY for clean enumerations and ``None`` for anything ambiguous (a
+    wrong reject is a no-op — the variable stays code-less, exactly today)."""
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            None,
+            "",
+            "   ",
+            "Fritext",  # single descriptor, not an enumeration
+            "1=ja",  # single pair -> not an enumeration
+        ],
+    )
+    def test_none_empty_or_single_segment_rejected(self, text: str | None) -> None:
+        assert _classify_value_set_text(text) is None
+
+    def test_kod_klartext_semicolon(self) -> None:
+        assert _classify_value_set_text("1=ja; 0=nej; 9=uppgift saknas") == [
+            ("1", "ja"),
+            ("0", "nej"),
+            ("9", "uppgift saknas"),
+        ]
+
+    def test_kod_klartext_newline_is_dominant_form(self) -> None:
+        text = (
+            "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer"
+        )
+        assert _classify_value_set_text(text) == [
+            ("0", "Korrekt personnummer"),
+            ("4", "Samordningsnummer"),
+            ("8", "Ogiltigt personnummer"),
+        ]
+
+    def test_alpha_codes_with_labels(self) -> None:
+        # Letter codes (BM/LK/...) carry labels; labels may contain spaces.
+        assert _classify_value_set_text("1=Man; 2=Kvinna") == [
+            ("1", "Man"),
+            ("2", "Kvinna"),
+        ]
+
+    def test_label_may_contain_comma_and_colon(self) -> None:
+        # Only the CODE is charset-constrained; the label is free text.
+        assert _classify_value_set_text(
+            "1=riksavtal; 2=regionalt, flerregionalt: avtal"
+        ) == [("1", "riksavtal"), ("2", "regionalt, flerregionalt: avtal")]
+
+    def test_bare_codes_semicolon(self) -> None:
+        # The LOVA styrtabell case: bare codes, no inline labels.
+        assert _classify_value_set_text("1;2;3;4;5;9") == [
+            ("1", None),
+            ("2", None),
+            ("3", None),
+            ("4", None),
+            ("5", None),
+            ("9", None),
+        ]
+
+    def test_bare_alpha_codes(self) -> None:
+        assert _classify_value_set_text("LEG;SPEC") == [("LEG", None), ("SPEC", None)]
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "0-744 = antal timmar",  # numeric range in code
+            "1964-1968: ICD-7 i Klassifikation",  # year-prose (single segment anyway)
+            "0=giltigt pnr; 4=samordningsnummer; strängen är tom",  # trailing prose (mixed =)
+            "1;5,6;7;8",  # comma inside a code
+            "1;2;1",  # duplicate code
+            "01=till moder  02=till fader",  # multi-space (single segment, embedded =)
+        ],
+    )
+    def test_messy_cells_rejected(self, text: str) -> None:
+        assert _classify_value_set_text(text) is None
+
+
+def _value_set_codes(
+    conn: sqlite3.Connection, value_set_id: int
+) -> set[tuple[str, str]]:
+    return {
+        (r[0], r[1])
+        for r in conn.execute(
+            "SELECT vc.code, vc.label FROM value_set_member vsm "
+            "JOIN value_code vc ON vc.code_id = vsm.code_id "
+            "WHERE vsm.value_set_id = ?",
+            (value_set_id,),
+        )
+    }
+
+
+def test_vardemangd_binds_when_no_kodlista() -> None:
+    # No Kodlista_KON sheet -> the inline Värdemängd promotes to a value set.
+    reg = _register(
+        "bu",
+        [_var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001)],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is not None
+    assert states[0].value_set_version_label is None, "Värdemängd has no Tidsperiod"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+
+
+def test_vardemangd_bare_codes_bind_with_empty_labels() -> None:
+    # bu shape: variant-less (all -> _default), so no deldatamängd token to
+    # resolve — isolates the bare-code binding. (The LOVA styrtabell case is the
+    # real-corpus source of bare codes; LOVA tokens go through the curated map.)
+    reg = _register(
+        "bu",
+        [_var("STYR", value_set_text="1;2;3", data_from=2001)],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is not None
+    # bare codes -> label is the empty string in value_code (label=None classifies
+    # to "" at IRValueCode, matching the kodlista path's `r.beskrivning or ""`).
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", ""),
+        ("2", ""),
+        ("3", ""),
+    }
+
+
+def test_vardemangd_free_text_stays_codeless() -> None:
+    # A free-text descriptor (single segment) is NOT promoted — exactly today's
+    # behavior: the variable still emits a state, with value_set_id None.
+    reg = _register(
+        "bu",
+        [_var("NOTE", value_set_text="Fritext, ingen kodning", data_from=2001)],
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is None
+
+
+def test_kodlista_wins_over_vardemangd() -> None:
+    # A variable WITH a Kodlista_* sheet ignores its Värdemängd cell entirely:
+    # binding only fires in the kodlista-less branch.
+    rows = [SosKodlistaRow(tidsperiod="2001-2010", kod="A01", beskrivning="d")]
+    reg = _register(
+        "dors",
+        [
+            _var(
+                "DIAG",
+                deldatamangd="DORS",
+                value_set_text="1=Man; 2=Kvinna",  # would classify, but kodlista wins
+                data_from=2001,
+            )
+        ],
+        deldatamangder=(_deldat("DORS", data_from=2001),),
+        kodlistor=(_kodlista("DIAG", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is not None
+    # the kodlista code, NOT the Värdemängd codes
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {("A01", "d")}
+
+
+def test_vardemangd_content_shares_value_set() -> None:
+    # Two distinct kodlista-less variables with the SAME Värdemängd cell
+    # content-share one value_set (the _ensure_value_set member-hash dedup).
+    reg = _register(
+        "bu",
+        [
+            _var("A", value_set_text="1=ja; 0=nej", data_from=2001),
+            _var("B", value_set_text="1=ja; 0=nej", data_from=2001),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    ids = {s.value_set_id for s in states}
+    assert len(ids) == 1 and None not in ids, "identical Värdemängd shares one set"
+
+
+def test_merged_member_vardemangd_conflict_warns_keeps_first() -> None:
+    # Two variant-less merged members (BU shape: all -> _default) share
+    # valid_from=2001 -> the SAME state_id (value_set_version_label is None for
+    # the Värdemängd path), but classify to DIFFERENT value sets. The second's
+    # value_set_id would be silently dropped by the valid_to-widening
+    # reconciliation; instead the adapter WARNS and keeps the first deterministically.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "VARUTYP",
+                value_set_text="EX=Receptfritt; HA=Handelsvara",
+                data_from=2001,
+            ),
+            _var(
+                "VARUTYP",
+                value_set_text="EX=Receptfritt; HA=Handelsvara; OV=Ovrigt",
+                data_from=2001,
+            ),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    warns = [w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"]
+    assert len(warns) == 1, "divergent Värdemängd on a shared state_id must WARN"
+    assert "VARUTYP" in (warns[0].detail or "")
+    # first member's value set kept (2 codes), not the second's (3 codes).
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("EX", "Receptfritt"),
+        ("HA", "Handelsvara"),
+    }
+
+
+def test_merged_member_identical_vardemangd_does_not_warn() -> None:
+    # Same shape as the conflict test but the members carry the SAME Värdemängd:
+    # they content-share one value_set, no collision, no warning.
+    reg = _register(
+        "bu",
+        [
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+        ],
+    )
+    objs, _ = _emit(reg)
+    assert _of(objs, IRVariableState)
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
 
 
 # ---------------------------------------------------------------------------
