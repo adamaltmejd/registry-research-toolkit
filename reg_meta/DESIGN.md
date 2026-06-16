@@ -791,11 +791,14 @@ Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition but
 releases must use the `reg_meta/v*` prefix.
 
 **Update command**: `reg-meta update` is the single command that brings everything
-current — it runs `uv tool upgrade reg-meta` for the package and walks releases to find
-the latest main-DB and doc-DB assets. Already-current assets are skipped (tracked via
-`.db_source` and `.docs_source` in the cache dir). A background version checker runs
-once per week (cached in `~/.local/share/reg_meta/.update_check`) and prints a hint on
-interactive runs when a newer release exists.
+current — it walks releases to find the latest main-DB and doc-DB assets, and (when
+reg-meta was installed as a uv tool) also runs `uv tool upgrade reg-meta` to upgrade the
+package itself. On a venv/editable install (e.g. the Docker bake) the self-upgrade is
+skipped (`result["package"] = "skipped_not_uv_tool"`) and only the DB/doc assets are
+fetched; the package is managed by whatever installed the venv. Already-current assets
+are skipped (tracked via `.db_source` and `.docs_source` in the cache dir). A background
+version checker runs once per week (cached in `~/.local/share/reg_meta/.update_check`)
+and prints a hint on interactive runs when a newer release exists.
 
 **Auto-download on first use**: query commands (`search`, `get`, `resolve`, `docs/*`)
 prompt to download whichever artifacts are missing when invoked interactively, so users
