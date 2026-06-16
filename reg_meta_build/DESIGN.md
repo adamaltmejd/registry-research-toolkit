@@ -410,27 +410,29 @@ REFACTOR_SPEC.md / #212.
 
 The shared post-passes (run once over both providers' rows): classifications, slugs,
 `same_as` / `replaced_by` / lineage edges, `code_variable_map`, the
-`variable_state.classification_id` backfill, FTS. After `code_variable_map` is complete
-(base derivation + SCB cvid-scratch top-up), `value_code.mapping_count` (#352) is set to
-each pair's variable count — a precomputed rarity weight the code/value search
-downweights by (a generic enum shared by many variables ranks below a rare one), never
-aggregated over the 4.1M-row map at query time. The FTS pass also builds
-`value_code_fts` over value labels, EXCLUDING a curated junk-label stoplist
-(`_VALUE_CODE_STOPLIST_EXACT` / `_VALUE_CODE_STOPLIST_PREFIXES`: `Ja`/`Nej`,
-`Uppgift saknas`, the `Okänt*`/`Okänd*`/`Felaktig*` SCB sentinel-prefix families, …) —
-hidden from SEARCH only; the leaf `value_code` rows are untouched. The prefix families
-are matched as STEM prefixes (`LIKE 'Felaktig%'`), intentionally, so they catch the bare
-sentinel (`Okänd`), the space-separated form (`Okänt värde`), AND the inflected form
-(`Felaktigt värde`, which a word-boundary match would miss since `Felaktigt` ≠
-`Felaktig`). The known coarseness — a legit label starting with one of these stems as a
-longer single word (e.g. `Okäntköping`) would also be hidden — is accepted: no such
-label occurs in the corpus, and broader stoplist curation is out of #352 scope (initial
-dozen). The materializer enforces the build-time invariants the universal schema encodes
-— chiefly that `(variable_id, register_variant_id, valid_from)` is unique across
-`variable_state` unless explicitly marked multi-vintage via `value_set_version_label`
-(the variant coordinate is part of the uniqueness scope), and that `variable.slug` is
-register-unique. The non-overlap invariant is what *requires* the build-time triage
-below.
+`classification_candidate` feeds (SCB/SOS/#446 + curated `classification_links.toml` +
+the code-set-containment auto-detector — all three run in that order before
+`_backfill_state_classifications`), the `variable_state.classification_id` backfill,
+FTS. After `code_variable_map` is complete (base derivation + SCB cvid-scratch top-up),
+`value_code.mapping_count` (#352) is set to each pair's variable count — a precomputed
+rarity weight the code/value search downweights by (a generic enum shared by many
+variables ranks below a rare one), never aggregated over the 4.1M-row map at query time.
+The FTS pass also builds `value_code_fts` over value labels, EXCLUDING a curated
+junk-label stoplist (`_VALUE_CODE_STOPLIST_EXACT` / `_VALUE_CODE_STOPLIST_PREFIXES`:
+`Ja`/`Nej`, `Uppgift saknas`, the `Okänt*`/`Okänd*`/`Felaktig*` SCB sentinel-prefix
+families, …) — hidden from SEARCH only; the leaf `value_code` rows are untouched. The
+prefix families are matched as STEM prefixes (`LIKE 'Felaktig%'`), intentionally, so
+they catch the bare sentinel (`Okänd`), the space-separated form (`Okänt värde`), AND
+the inflected form (`Felaktigt värde`, which a word-boundary match would miss since
+`Felaktigt` ≠ `Felaktig`). The known coarseness — a legit label starting with one of
+these stems as a longer single word (e.g. `Okäntköping`) would also be hidden — is
+accepted: no such label occurs in the corpus, and broader stoplist curation is out of
+#352 scope (initial dozen). The materializer enforces the build-time invariants the
+universal schema encodes — chiefly that `(variable_id, register_variant_id, valid_from)`
+is unique across `variable_state` unless explicitly marked multi-vintage via
+`value_set_version_label` (the variant coordinate is part of the uniqueness scope), and
+that `variable.slug` is register-unique. The non-overlap invariant is what *requires*
+the build-time triage below.
 
 ## Provenance DB sibling
 
@@ -765,6 +767,93 @@ extraction recipes that produced the shipped CSVs.
 The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled in any wheel —
 same status as `reg_meta_build/docs/`. End users receive the already-populated
 classification tables via the prebuilt DB asset.
+
+### Code-set-containment auto-detector (#416)
+
+Many value sets carry a classification's codes verbatim — e.g. an ULF health variable
+listing 2000+ ICD-10-SE codes — but sit unlinked
+(`variable_state.classification_id IS NULL`) because SCB declared no
+`vardemangdsversion` for them. The name-map feed and the SOS / #446 adapter feeds cover
+the declared cases; `link_value_set_classifications` (`classifications.py`) catches the
+rest by their codes, without name patterns.
+
+It runs AFTER all three named feeds and BEFORE `_backfill_state_classifications`, and
+feeds its results into the same provider-blind `classification_candidate` table those
+feeds write. An additive `NOT EXISTS` guard on the `(variable_id, value_set_id)` state
+key means it NEVER overrides an existing candidate. Inline value codes are never deleted
+or re-pointed — linkage is additive.
+
+**Algorithm (SQL temp tables; no Python row loops over \~60k value sets):**
+
+1. Build `_canon_codes` from `classification_code WHERE is_valid IS NOT 0` (covers both
+   CSV-canonical rows (`is_valid=1`) and no-CSV classifications whose observed codes are
+   their only code set (`is_valid NULL`)).
+2. Build `_vs_stats` per value set: distinct-code count `n_codes` and `dom_level` — the
+   single digit-length when EVERY code is an all-digit string of that length, else NULL.
+3. `_vs_cls` — containment per `(value_set_id, cls_id)` under a grain filter: when
+   `dom_level` is set, a value-set code matches a canonical row only at the same `level`
+   (a 4-digit set matches the classification's 4-digit codes, not its 2-digit chapter
+   codes). Kept when `n_codes >= 8` AND `matched/n_codes >= 0.90`.
+4. `_vs_single` — value sets with EXACTLY one surviving candidate.
+5. `_vs_confident` — single-family AND (`n_codes >= 15` OR label agreement `>= 0.90`).
+   Label agreement: the fraction of distinct value-set codes that have an exact
+   `(code, label)` match against the candidate classification's canonical pairs. This is
+   a precision lever, not a recall one — relabeled SCB code lists share no labels, so
+   label agreement distinguishes a short genuine match from ambiguity, never boosts an
+   unrelated set.
+6. Emit confident candidates into `classification_candidate` additively.
+
+**Design decisions:**
+
+- **Grain is a level FILTER on one classification instance, not a separate instance.** A
+  4-digit value set tests against only the classification's 4-digit `level` rows, so a
+  code set of ICD-10 chapter codes (2 digits) does not auto-link as ICD-10-SE — the
+  containment signal is genuine, but the grain is wrong. No schema bump:
+  `variable_state.classification_id` already exists.
+- **Confident floor = single-family AND (≥15 codes OR label≥0.90).** Measured on the
+  real corpus (2026-06-15): at ≥8 codes, 930 of 1,532 classification-candidate value
+  sets are family-ambiguous; at ≥15 codes, that collapses to 78. A shorter single-family
+  set is rescued only if its labels also agree. The unconfident residue (single-family
+  below threshold and multi-family ambiguous) is sized and logged at build time — drift
+  in the curated tail is visible without logging row-level content.
+- **`is_valid IS NOT 0` includes `NULL`.** A no-CSV classification has `is_valid NULL`
+  on all its codes; those observed codes are the only code set available and must
+  participate in containment. `IS NOT 0` preserves that: it matches `1` and `NULL`,
+  excludes `0` (observed-only codes of a CSV-backed classification that the canonical
+  CSV does not list). Deferred: vintage-period disambiguation (a value set that appears
+  in multiple vintages of one classification — e.g. an LKF year edition — remains a
+  residue item for curation).
+
+### Curated classification links (`classification_links.toml`, #416 tail)
+
+`reg_meta_build/classification_links.toml` (package root, like
+`variable_related_to.toml` — NOT under `fqid_slugs/`) lets a maintainer override or
+supplement the auto-detector for the residue the detector deliberately leaves unlinked:
+the family-ambiguous short numeric sets where SNI/SSYK/SUN coincide below \~15 codes.
+
+Each `[[link]]` entry maps a `variable` (3-segment `provider/register/variable` FQID) to
+a `classification` (`short_name`). An optional `note` records provenance. Resolution
+(variable and classification both exist in the built DB) happens at materialize time,
+not at load — the same load/resolve split as `variable_related_to` / `concept_groups`.
+
+**Precedence mechanism.** `materialize_classification_links` runs BEFORE the
+auto-detector. For each of the variable's `(variable_id, value_set_id)` state keys it
+DELETE-then-INSERTs into `classification_candidate`, so the curated link wins over every
+auto/feed candidate. The auto-detector's additive guard then skips those keys. A
+code-less state (`value_set_id NULL`) is deliberately not targeted — a classification
+link is about the inline code set, not an external reference (that is the #446
+thin-provider path). The overall precedence order is: name-map/SCB/SOS/#446 + curated >
+auto-containment.
+
+**Guard:** entries share the `--skip-slugs` guard (FQIDs resolve off stored slugs, which
+are NULL under `--skip-slugs`). The auto-detector needs only `value_set_id` /
+`variable_id` and runs unconditionally. An entry whose provider is not in the current
+build is SKIPPED (a partial `--providers=sos` build can't represent an SCB variable —
+deferral, not drift). An entry whose FQID or `short_name` does resolve but to nothing
+fails the build (`EXIT_CONFIG`).
+
+The file SHIPS EMPTY today: the residue curation is a deferred follow-up. The loader
+handles zero entries cleanly.
 
 ## Build-time triage (SCB)
 
@@ -1367,6 +1456,13 @@ installs and synthetic test builds (empty file → zero rows written); an edge w
 `a_provider` or `b_provider` isn't in the current build is skipped rather than failed.
 The first curated edges landed in #403 — three cross-register see-also pairs
 (auto-emitted split edges are unaffected and flow as before).
+
+Curated variable → classification overrides live in a parallel standalone
+`reg_meta_build/classification_links.toml` (#416), loaded by `classification_links.py`
+(same load/resolve split as `variable_related_to`). See *Classification seed → Curated
+classification links* above for the full contract. Like `variable_related_to.toml` it is
+a maintainer artifact absent in wheel installs and synthetic builds, and it ships empty
+today.
 
 **Curated succession edges (`[[replaced_by]]`, #440).** A **top-level `[[replaced_by]]`
 array-of-tables** in a provider TOML (alongside `lineage` / `lineage_defaults`, parsed
