@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 import subprocess
@@ -862,6 +863,652 @@ class TestFeedClassificationCandidates:
         # KVA + NOPE are absent from the classification table → dropped.
         assert n == 1
         assert self._rows(conn) == [(920, None, icd_id)]
+
+
+# ---------------------------------------------------------------------------
+# #416: code-set-containment detector + curated link loader
+# ---------------------------------------------------------------------------
+
+
+class _Graph:
+    """Tiny in-memory build graph for the #416 detector: provider/register/
+    variant + variables + value sets (code,label members) + classifications with
+    canonical codes, all keyed by caller-chosen ids so a test can assert against
+    them directly. Mirrors `TestFeedClassificationCandidates`'s full-DDL `:memory:`
+    approach (the detector reads value_set_member / classification_code /
+    variable_state / classification_candidate, none of which a focused subset
+    could shortcut)."""
+
+    def __init__(self) -> None:
+        from reg_meta_build.db import DDL
+
+        self.conn = sqlite3.connect(":memory:")
+        self.conn.executescript(DDL)
+        self.conn.execute(
+            "INSERT INTO provider (provider_id, slug, name) VALUES (1, 'scb', 'SCB')"
+        )
+        self.conn.execute(
+            "INSERT INTO register (register_id, provider_id, name, slug) "
+            "VALUES (1, 1, 'ULF', 'ulf')"
+        )
+        self.conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, slug) "
+            "VALUES (1, 1, '_default')"
+        )
+        self._code_id = 0
+
+    def add_classification(
+        self, cls_id: int, short_name: str, codes: list[tuple[str, str]]
+    ) -> None:
+        """Seed a classification whose canonical code set is `codes` (each a
+        (code, label) pair). is_valid=1 (canonical); level is the digit-length for
+        all-digit codes, NULL otherwise — same rule as the build."""
+        self.conn.execute(
+            "INSERT INTO classification (id, short_name, name) VALUES (?, ?, ?)",
+            (cls_id, short_name, short_name),
+        )
+        for code, label in codes:
+            code_id = self._intern_code(code, label)
+            level = len(code) if code.isdigit() else None
+            self.conn.execute(
+                "INSERT INTO classification_code "
+                "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, 1)",
+                (cls_id, code_id, level),
+            )
+
+    def add_no_csv_classification(
+        self, cls_id: int, short_name: str, codes: list[tuple[str, str]]
+    ) -> None:
+        """Seed a classification with `is_valid=NULL` canonical rows — the no-CSV
+        shape (ICD-10-SE in production): its observed codes ARE its code set, so
+        the detector's `is_valid IS NOT 0` filter must keep them. Same level rule
+        as `add_classification`."""
+        self.conn.execute(
+            "INSERT INTO classification (id, short_name, name) VALUES (?, ?, ?)",
+            (cls_id, short_name, short_name),
+        )
+        for code, label in codes:
+            code_id = self._intern_code(code, label)
+            level = len(code) if code.isdigit() else None
+            self.conn.execute(
+                "INSERT INTO classification_code "
+                "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, NULL)",
+                (cls_id, code_id, level),
+            )
+
+    def add_value_set(self, value_set_id: int, codes: list[tuple[str, str]]) -> None:
+        # member_hash is UNIQUE NOT NULL (32 bytes); derive a deterministic one.
+        member_hash = hashlib.sha256(repr((value_set_id, codes)).encode()).digest()
+        self.conn.execute(
+            "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
+            (value_set_id, member_hash),
+        )
+        for code, label in codes:
+            code_id = self._intern_code(code, label)
+            self.conn.execute(
+                "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+                (value_set_id, code_id),
+            )
+
+    def add_variable_state(
+        self,
+        variable_id: int,
+        value_set_id: int | None,
+        slug: str | None = None,
+        valid_from: str = "2020-01-01",
+    ) -> None:
+        """A variable + a single `variable_state` carrying `value_set_id`. The slug
+        lets the curated loader resolve `scb/ulf/<slug>`. `valid_from` is exposed
+        so a test can attach a SECOND state to the same variable without tripping
+        the `variable_state` UNIQUE (variable_id, register_variant_id, valid_from,
+        value_set_version_label) constraint."""
+        existing = self.conn.execute(
+            "SELECT 1 FROM variable WHERE variable_id = ?", (variable_id,)
+        ).fetchone()
+        if existing is None:
+            self.conn.execute(
+                "INSERT INTO variable (variable_id, register_id, provider_key, slug) "
+                "VALUES (?, 1, ?, ?)",
+                (variable_id, str(variable_id), slug or f"v{variable_id}"),
+            )
+        self.conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, value_set_id) "
+            "VALUES (?, 1, ?, '9999-12-31', ?)",
+            (variable_id, valid_from, value_set_id),
+        )
+
+    def _intern_code(self, code: str, label: str) -> int:
+        row = self.conn.execute(
+            "SELECT code_id FROM value_code WHERE code = ? AND label = ?",
+            (code, label),
+        ).fetchone()
+        if row is not None:
+            return row[0]
+        self._code_id += 1
+        self.conn.execute(
+            "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
+            (self._code_id, code, label),
+        )
+        return self._code_id
+
+    def candidates(self) -> list[tuple]:
+        return self.conn.execute(
+            "SELECT variable_id, value_set_id, classification_id "
+            "FROM classification_candidate "
+            "ORDER BY variable_id, value_set_id, classification_id"
+        ).fetchall()
+
+    def tagged_classification(self, variable_id: int) -> int | None:
+        row = self.conn.execute(
+            "SELECT classification_id FROM variable_state WHERE variable_id = ?",
+            (variable_id,),
+        ).fetchone()
+        return row[0] if row else None
+
+
+def _numeric_codes(prefix: str, n: int, width: int) -> list[tuple[str, str]]:
+    """`n` zero-padded numeric (code, label) pairs of fixed digit `width`."""
+    return [(str(i).zfill(width), f"{prefix} {i}") for i in range(1, n + 1)]
+
+
+class TestLinkValueSetClassifications:
+    """The code-set-containment detector (#416): additive producer of
+    `classification_candidate` rows for value sets whose inline codes match one
+    classification, never overriding an existing state-key candidate."""
+
+    def test_confident_single_family_over_15_codes(self) -> None:
+        from reg_meta_build.classifications import link_value_set_classifications
+        from reg_meta_build.db import _backfill_state_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(10, "ICD-10-SE", codes)
+        g.add_value_set(100, codes)  # identical → containment 1.0, n_codes 20
+        g.add_variable_state(900, 100)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert counts["variables_linked"] == 1
+        assert g.candidates() == [(900, 100, 10)]
+
+        # The backfill then tags the state from the emitted candidate.
+        _backfill_state_classifications(g.conn)
+        assert g.tagged_classification(900) == 10
+
+    def test_single_family_under_15_codes_label_agree_links(self) -> None:
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("SUN", 10, 3)  # < 15 codes
+        g.add_classification(11, "SUN2000", codes)
+        # Identical (code,label) → label_agree 1.0 ≥ 0.90.
+        g.add_value_set(101, codes)
+        g.add_variable_state(901, 101)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(901, 101, 11)]
+
+    def test_single_family_under_15_codes_label_disagree_not_linked(self) -> None:
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("SUN", 10, 3)  # < 15 codes
+        g.add_classification(12, "SUN2000", codes)
+        # Same CODES (containment 1.0, single-family) but RELABELED → label_agree 0.
+        relabeled = [(code, f"renamed {code}") for code, _ in codes]
+        g.add_value_set(102, relabeled)
+        g.add_variable_state(902, 102)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 0
+        assert counts["single_below_threshold"] == 1
+        assert g.candidates() == []
+
+    def test_label_agree_counts_distinct_kods_not_pairs(self) -> None:
+        # A <15-code single-family set where ONE code is carried under TWO labels
+        # that both match canonical (kod, label). Distinct-kod agreement is 8/10 =
+        # 0.80 (< 0.90 → must NOT link), but the OLD COUNT(*) pair-count was 9/10 =
+        # 0.90 (would have linked). Guards Fix 1: numerator = COUNT(DISTINCT v.kod).
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Canonical: 10 distinct 3-digit codes 001..010 each under one label, PLUS
+        # a SECOND canonical row for 001 under label "LX" (a code legitimately
+        # carrying two canonical labels).
+        canon = [(str(i).zfill(3), f"L{i}") for i in range(1, 11)]
+        canon.append(("001", "LX"))
+        g.add_classification(40, "SUN2000", canon)
+
+        # Value set (n_codes = 10 distinct kods, containment 1.0, single-family):
+        #  - 001..008 under their matching labels L1..L8  → 8 distinct matching kods
+        #  - 009, 010 RELABELED → 2 distinct non-matching kods
+        #  - 001 ALSO under "LX" (the duplicate): a second matching PAIR, same kod
+        members = [(str(i).zfill(3), f"L{i}") for i in range(1, 9)]
+        members += [("009", "renamed 009"), ("010", "renamed 010")]
+        members.append(("001", "LX"))  # duplicate kod, second matching label
+        g.add_value_set(140, members)
+        g.add_variable_state(940, 140)
+
+        counts = link_value_set_classifications(g.conn)
+        # Distinct-kod agreement 0.80 < 0.90 → not confident; pair-count 0.90 would
+        # have falsely linked under the old metric.
+        assert counts["value_sets_linked"] == 0
+        assert counts["single_below_threshold"] == 1
+        assert g.candidates() == []
+
+    def test_multi_family_ambiguous_not_linked(self) -> None:
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # One 10-code 4-digit set ≥0.90-contained in BOTH classifications: the two
+        # classifications share the value set's codes (plus a distinct extra each).
+        shared = _numeric_codes("X", 10, 4)
+        g.add_classification(13, "FAM_A", shared + [("9001", "A only")])
+        g.add_classification(14, "FAM_B", shared + [("9002", "B only")])
+        g.add_value_set(103, shared)
+        g.add_variable_state(903, 103)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 0
+        assert counts["multi_family"] == 1
+        assert g.candidates() == []
+
+    def test_additive_guard_does_not_override_existing_candidate(self) -> None:
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(15, "ICD-10-SE", codes)
+        g.add_classification(16, "OTHER", codes)  # would also match, but...
+        g.add_value_set(104, codes)
+        g.add_variable_state(904, 104)
+        # Pre-existing candidate for the SAME state key (e.g. a name-based/SCB
+        # link). The detector must NOT add a second row for (904, 104).
+        g.conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (904, 104, 16)"
+        )
+
+        link_value_set_classifications(g.conn)
+        # Only the pre-existing candidate remains; no detector row was added.
+        assert g.candidates() == [(904, 104, 16)]
+
+    def test_grain_filter_matches_4_digit_family_not_2_digit(self) -> None:
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # A 4-digit family (SSYK4-like) and a 2-digit family (SNI2-like) whose
+        # canonical CODE STRINGS overlap: the same digit string "12" is a 2-digit
+        # SNI code AND the prefix of the 4-digit SSYK codes "1201".."1220". Without
+        # a grain filter the 4-digit value set's "1201" wouldn't match the 2-digit
+        # "12" anyway (full-string match), so to make the test bite we put the
+        # IDENTICAL 4-digit strings in BOTH families but at DIFFERENT declared
+        # levels — SNI2 lists them as level-2 noise, SSYK4 as level-4. The value
+        # set is all-4-digit (dom_level=4), so the grain filter keeps only the
+        # level-4 canonical rows → SSYK4 alone, never the level-2 SNI2 rows.
+        four_digit = _numeric_codes("SSYK", 20, 4)  # 0001..0020, level 4
+        g.add_classification(17, "SSYK4", four_digit)
+        # SNI2 carries the SAME code strings but declared at level 2 (canonical
+        # rows inserted with level=2 to model a coarser-grain family that happens
+        # to share the strings). Build the classification_code rows directly so we
+        # control `level`.
+        g.add_classification(18, "SNI2", [])
+        for code, label in four_digit:
+            code_id = g._intern_code(code, label)
+            g.conn.execute(
+                "INSERT INTO classification_code "
+                "(classification_id, code_id, level, is_valid) VALUES (18, ?, 2, 1)",
+                (code_id,),
+            )
+        g.add_value_set(105, four_digit)
+        g.add_variable_state(905, 105)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert counts["multi_family"] == 0
+        # The single emitted candidate points at the 4-digit (level-4) family.
+        assert g.candidates() == [(905, 105, 17)]
+
+    def test_idempotent_rerun_does_not_double_candidates(self) -> None:
+        """Running the detector TWICE on the same DB must not duplicate the
+        candidate: the second run's additive NOT EXISTS guard sees its own
+        first-run row and skips emission. value_sets_linked stays 1 (it counts the
+        confident population, which is stable across re-runs)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(30, "ICD-10-SE", codes)
+        g.add_value_set(120, codes)
+        g.add_variable_state(920, 120)
+
+        first = link_value_set_classifications(g.conn)
+        second = link_value_set_classifications(g.conn)
+        assert first["value_sets_linked"] == 1
+        assert second["value_sets_linked"] == 1
+        # Exactly one candidate for the state key — the re-run added nothing.
+        assert g.candidates() == [(920, 120, 30)]
+
+    def test_additive_guard_is_per_state_key_not_per_value_set(self) -> None:
+        """The additive guard is keyed on `(variable_id, value_set_id)`, not on the
+        value set alone: two variables share ONE confident (single-family) value
+        set, and only the FIRST already has a candidate. The detector must leave the
+        first untouched AND link the second (unclaimed) variable's state key.
+
+        cls_id 99 is a sentinel not in the classification table, so the pre-existing
+        candidate is distinguishable from anything the detector would emit (31)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(31, "ICD-10-SE", codes)  # single family → confident
+        g.add_value_set(121, codes)
+        g.add_variable_state(921, 121)  # state key already claimed below
+        g.add_variable_state(922, 121)  # unclaimed → detector should link it
+        # Pre-existing candidate for ONLY the first variable's state key.
+        g.conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (921, 121, 99)"
+        )
+
+        link_value_set_classifications(g.conn)
+        # First variable's candidate is untouched (99); second is freshly linked (31).
+        assert g.candidates() == [(921, 121, 99), (922, 121, 31)]
+
+    def test_confident_count_independent_of_guard_skipped_emission(self) -> None:
+        """`value_sets_linked` counts the CONFIDENT population, not emitted rows: a
+        single-family ≥15-code set whose ONLY state key already has a candidate is
+        counted (== 1) even though the additive guard skips emission. Pins the
+        documented count-is-confident-population semantics."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(36, "ICD-10-SE", codes)  # single family → confident
+        g.add_value_set(125, codes)
+        g.add_variable_state(926, 125)
+        # Pre-existing candidate (sentinel cls 99) on the set's only state key.
+        g.conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (926, 125, 99)"
+        )
+
+        counts = link_value_set_classifications(g.conn)
+        # Counted as confident even though no row was emitted (guard held).
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(926, 125, 99)]
+
+    def test_no_csv_null_is_valid_codes_still_link(self) -> None:
+        """A no-CSV classification carries `is_valid=NULL` canonical rows (its
+        observed codes ARE its code set — the ICD-10-SE production case). The
+        detector's `is_valid IS NOT 0` filter must keep NULL rows so a value set
+        enumerating those codes links."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_no_csv_classification(33, "ICD-10-SE", codes)
+        g.add_value_set(122, codes)
+        g.add_variable_state(923, 122)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(923, 122, 33)]
+
+    def test_alphanumeric_codes_dom_level_null_link(self) -> None:
+        """ICD-shaped alphanumeric codes (`A01`, `B99`, not all-digit) give
+        `dom_level=NULL`, disabling the grain filter. A ≥15-code single-family set
+        of such codes still auto-links on size — exercises the `dom_level IS NULL`
+        match branch (the real ICD shape)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # 20 alphanumeric codes; none is all-digit → dom_level NULL.
+        codes = [
+            (f"{chr(65 + i // 10)}{i % 10}{i % 10}", f"ICD {i}") for i in range(20)
+        ]
+        g.add_classification(34, "ICD-10-SE", codes)
+        g.add_value_set(123, codes)
+        g.add_variable_state(924, 123)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["value_sets_linked"] == 1
+        assert g.candidates() == [(924, 123, 34)]
+
+    def test_below_min_codes_floor_emits_nothing(self) -> None:
+        """A value set with fewer than `_MIN_CODES` (8) distinct codes never enters
+        `_vs_cls` at all — even a perfect single-family match. So it produces no
+        candidate AND is counted in NEITHER the single-below-threshold nor the
+        multi-family tally (those size the ≥8-code curation tail)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        codes = _numeric_codes("SUN", 7, 3)  # 7 < _MIN_CODES
+        g.add_classification(35, "SUN2000", codes)
+        g.add_value_set(124, codes)
+        g.add_variable_state(925, 124)
+
+        counts = link_value_set_classifications(g.conn)
+        assert g.candidates() == []
+        assert counts["value_sets_linked"] == 0
+        assert counts["single_below_threshold"] == 0
+        assert counts["multi_family"] == 0
+
+
+class TestCuratedClassificationLinks:
+    """The curated tail loader (#416): load-time validation + delete-then-insert
+    precedence at materialize."""
+
+    def test_materialize_links_every_value_set_state_key(self) -> None:
+        """One curated entry on a variable with TWO `variable_state` rows carrying
+        DIFFERENT `value_set_id`s links BOTH state keys: n_inserted == 2 and a
+        candidate is written for each (the loader iterates the variable's distinct
+        value-set states, not just one)."""
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        g.add_classification(40, "ICD-10-SE", _numeric_codes("ICD", 5, 4))
+        g.add_value_set(130, _numeric_codes("ICD", 5, 4))
+        g.add_value_set(131, _numeric_codes("ICD", 5, 4))
+        g.add_variable_state(930, 130, slug="ha0611m")
+        # Second state on the SAME variable; distinct valid_from avoids the
+        # variable_state UNIQUE collision (same variable, same NULL version label).
+        g.add_variable_state(930, 131, slug="ha0611m", valid_from="2021-01-01")
+
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="ha0611m",
+            classification="ICD-10-SE",
+            note=None,
+        )
+        n = materialize_classification_links(
+            g.conn, (entry,), providers=frozenset({"scb"})
+        )
+        assert n == 2
+        assert g.candidates() == [(930, 130, 40), (930, 131, 40)]
+
+    def test_materialize_skips_code_less_only_variable(self) -> None:
+        """A variable whose only states have `value_set_id IS NULL` has no value-set
+        state key to target, so a curated link writes NOTHING: n_inserted == 0, no
+        candidate, no error (a curated classification link is about the variable's
+        inline code set)."""
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        g.add_classification(41, "ICD-10-SE", _numeric_codes("ICD", 5, 4))
+        g.add_variable_state(931, None, slug="ha0611m")
+
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="ha0611m",
+            classification="ICD-10-SE",
+            note=None,
+        )
+        n = materialize_classification_links(
+            g.conn, (entry,), providers=frozenset({"scb"})
+        )
+        assert n == 0
+        assert g.candidates() == []
+
+    def test_curated_override_takes_precedence(self) -> None:
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        codes = _numeric_codes("ICD", 20, 4)
+        g.add_classification(20, "ICD-10-SE", codes)
+        g.add_classification(21, "WRONG", codes)
+        g.add_value_set(110, codes)
+        g.add_variable_state(910, 110, slug="ha0611m")
+        # A pre-existing (auto/feed) candidate pointing at the WRONG classification.
+        g.conn.execute(
+            "INSERT INTO classification_candidate "
+            "(variable_id, value_set_id, classification_id) VALUES (910, 110, 21)"
+        )
+
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="ha0611m",
+            classification="ICD-10-SE",
+            note=None,
+        )
+        n = materialize_classification_links(
+            g.conn, (entry,), providers=frozenset({"scb"})
+        )
+        assert n == 1
+        # The WRONG row is gone (delete-then-insert); ICD-10-SE (20) wins.
+        assert g.candidates() == [(910, 110, 20)]
+
+    def test_provider_not_built_is_skipped_not_failed(self) -> None:
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        entry = CuratedClassificationLink(
+            provider="sos",  # not in the build
+            register="r",
+            variable="v",
+            classification="ICD-10-SE",
+            note=None,
+        )
+        n = materialize_classification_links(
+            g.conn, (entry,), providers=frozenset({"scb"})
+        )
+        assert n == 0
+        assert g.candidates() == []
+
+    def test_unresolved_variable_fails(self) -> None:
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        g.add_classification(22, "ICD-10-SE", _numeric_codes("ICD", 5, 4))
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="nope",  # no such variable
+            classification="ICD-10-SE",
+            note=None,
+        )
+        with pytest.raises(RegMetaError) as ei:
+            materialize_classification_links(
+                g.conn, (entry,), providers=frozenset({"scb"})
+            )
+        assert ei.value.code == "classification_links_unresolved"
+
+    def test_unresolved_classification_fails(self) -> None:
+        from reg_meta_build.classification_links import (
+            CuratedClassificationLink,
+            materialize_classification_links,
+        )
+
+        g = _Graph()
+        g.add_value_set(111, _numeric_codes("ICD", 5, 4))
+        g.add_variable_state(911, 111, slug="ha0611m")
+        entry = CuratedClassificationLink(
+            provider="scb",
+            register="ulf",
+            variable="ha0611m",
+            classification="NO-SUCH-CLS",
+            note=None,
+        )
+        with pytest.raises(RegMetaError) as ei:
+            materialize_classification_links(
+                g.conn, (entry,), providers=frozenset({"scb"})
+            )
+        assert ei.value.code == "classification_links_unresolved"
+
+    def test_load_bad_fqid_fails(self, tmp_path: Path) -> None:
+        from reg_meta_build.classification_links import load_classification_links
+
+        path = tmp_path / "classification_links.toml"
+        path.write_text(
+            '[[link]]\nvariable = "scb/ulf"\nclassification = "ICD-10-SE"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as ei:
+            load_classification_links(path)
+        assert ei.value.code == "classification_links_invalid"
+
+    def test_load_missing_classification_fails(self, tmp_path: Path) -> None:
+        from reg_meta_build.classification_links import load_classification_links
+
+        path = tmp_path / "classification_links.toml"
+        path.write_text('[[link]]\nvariable = "scb/ulf/ha0611m"\n', encoding="utf-8")
+        with pytest.raises(RegMetaError) as ei:
+            load_classification_links(path)
+        assert ei.value.code == "classification_links_invalid"
+
+    def test_load_duplicate_variable_fails(self, tmp_path: Path) -> None:
+        from reg_meta_build.classification_links import load_classification_links
+
+        path = tmp_path / "classification_links.toml"
+        path.write_text(
+            '[[link]]\nvariable = "scb/ulf/ha0611m"\nclassification = "ICD-10-SE"\n'
+            '[[link]]\nvariable = "scb/ulf/ha0611m"\nclassification = "OTHER"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as ei:
+            load_classification_links(path)
+        assert ei.value.code == "classification_links_invalid"
+
+    def test_load_empty_or_missing_is_clean(self, tmp_path: Path) -> None:
+        from reg_meta_build.classification_links import load_classification_links
+
+        assert load_classification_links(None) == ()
+        assert load_classification_links(tmp_path / "absent.toml") == ()
+        empty = tmp_path / "classification_links.toml"
+        empty.write_text("# only comments\n", encoding="utf-8")
+        assert load_classification_links(empty) == ()
+
+    def test_repo_toml_loads_clean_and_empty(self) -> None:
+        """The shipped maintainer artifact parses and currently carries no
+        entries (residue curation is deferred)."""
+        from reg_meta_build.classification_links import (
+            load_classification_links,
+            repo_classification_links_path,
+        )
+
+        path = repo_classification_links_path()
+        assert path is not None, "classification_links.toml must ship in the repo"
+        assert load_classification_links(path) == ()
 
 
 # ---------------------------------------------------------------------------

@@ -28,7 +28,16 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import Fqid, FqidKind
 from reg_meta.queries import extract_year
 
-from .classifications import populate_classifications, repo_seed_path
+from .classification_links import (
+    load_classification_links,
+    materialize_classification_links,
+    repo_classification_links_path,
+)
+from .classifications import (
+    link_value_set_classifications,
+    populate_classifications,
+    repo_seed_path,
+)
 from .concept_groups import (
     load_concept_groups,
     materialize_concept_groups,
@@ -3648,6 +3657,32 @@ def materialize(
             summary = getattr(adapter, "classification_summary", None)
             if summary is not None:
                 _progress(f"  {summary()}")
+
+    # #416: two more producers of `classification_candidate`, both AFTER the
+    # SCB/SOS/#446 feeds and BEFORE `_backfill_state_classifications`.
+    #
+    # Order is LOAD-BEARING: curated links FIRST (delete-then-insert → curated
+    # wins), then the auto code-set-containment detector, whose additive guard
+    # (NOT EXISTS for the state key) then skips every key the feeds or the curated
+    # links already claimed. So precedence is name-map/SCB/SOS/#446 + curated >
+    # auto.
+    #
+    # The curated loader resolves FQIDs off stored slugs, so it shares the
+    # `--skip-slugs` guard (every slug is NULL then). The auto detector needs no
+    # slugs — only `value_set_id` / `variable_id` — so it runs UNCONDITIONALLY.
+    if skip_slugs:
+        _progress("Skipping curated classification links (skip_slugs=True)")
+    else:
+        n_curated_links = materialize_classification_links(
+            conn,
+            load_classification_links(repo_classification_links_path()),
+            providers=active_providers,
+        )
+        row_counts["classification_links_curated"] = n_curated_links
+        _progress(f"  {n_curated_links:,} curated classification links")
+
+    cls_link_counts = link_value_set_classifications(conn)
+    row_counts["classification_links_auto"] = cls_link_counts["value_sets_linked"]
 
     # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
     # already wrote `variable_alias` from IRVariableAlias (the FULL historical
