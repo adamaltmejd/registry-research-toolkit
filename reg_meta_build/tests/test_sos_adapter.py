@@ -818,6 +818,17 @@ class TestClassifyValueSetText:
             "1=riksavtal; 2=regionalt, flerregionalt: avtal"
         ) == [("1", "riksavtal"), ("2", "regionalt, flerregionalt: avtal")]
 
+    def test_label_may_contain_equals(self) -> None:
+        # Partition on the FIRST `=` only; a label may itself contain `=`.
+        assert _classify_value_set_text("1=a=b; 2=c") == [("1", "a=b"), ("2", "c")]
+
+    def test_swedish_char_codes_accepted(self) -> None:
+        # Codes may carry Swedish letters (_clean_value_code accepts them).
+        assert _classify_value_set_text("Å=alternativ; Ö=övrigt") == [
+            ("Å", "alternativ"),
+            ("Ö", "övrigt"),
+        ]
+
     def test_bare_codes_semicolon(self) -> None:
         # The LOVA styrtabell case: bare codes, no inline labels.
         assert _classify_value_set_text("1;2;3;4;5;9") == [
@@ -841,6 +852,7 @@ class TestClassifyValueSetText:
             "1;5,6;7;8",  # comma inside a code
             "1;2;1",  # duplicate code
             "01=till moder  02=till fader",  # multi-space (single segment, embedded =)
+            "1= ; 2=nej",  # whitespace-only label -> rejected (empty after strip)
         ],
     )
     def test_messy_cells_rejected(self, text: str) -> None:
@@ -985,6 +997,33 @@ def test_merged_member_vardemangd_conflict_warns_keeps_first() -> None:
     assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
         ("EX", "Receptfritt"),
         ("HA", "Handelsvara"),
+    }
+
+
+@pytest.mark.parametrize("coded_first", [True, False])
+def test_merged_member_asymmetric_vardemangd_prefers_coded(coded_first: bool) -> None:
+    # #401 regression (prefer-coded): one merged member classifies, the other is
+    # free text (value_set_id None). They share valid_from=2001 -> the SAME
+    # state_id, so they collide in the valid_to-widening reconciliation. The
+    # CODED member must win regardless of delivery order — a codeless member
+    # arriving first must NOT silently drop the sibling's value set — and this is
+    # a coalesce, not a conflict, so NO warning fires.
+    coded = _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001)
+    codeless = _var("KON", value_set_text="Fritext, ingen kodning", data_from=2001)
+    reg = _register(
+        "bu",
+        [coded, codeless] if coded_first else [codeless, coded],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == [], "coded-vs-codeless is a coalesce, not a conflict"
+    assert states[0].value_set_id is not None, "the coded value set survives"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
     }
 
 

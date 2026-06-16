@@ -1883,17 +1883,28 @@ class SOSAdapter:
         the variable's coverage (and close an open-ended state), so reconcile
         `valid_to` to the WIDEST window instead of dropping.
 
-        `value_set_id` reconciliation: for the kodlista paths it is provably
-        identical on a same-state_id collision — a distinguishing code buckets
-        into a non-empty `value_set_version_label`, which changes the state_id.
-        The #401 `Värdemängd` fallback breaks that proof: each MERGED member
-        carries its OWN inline `Värdemängd`, those can classify to DIFFERENT
-        value sets, and the fallback emits `value_set_version_label=None`, so two
-        such members CAN collide on one state_id with divergent `value_set_id`.
-        That is a real corpus case (e.g. LMED VARUTYP, MFR ICD — members whose
-        Värdemängd cells differ by a code). `_collect` keeps the first
-        deterministically (delivery order) and WARNS so the dropped alternative
-        is auditable; it is never silent.
+        `value_set_id` reconciliation (PREFER-CODED): for the kodlista paths it
+        is provably identical on a same-state_id collision — a distinguishing
+        code buckets into a non-empty `value_set_version_label`, which changes
+        the state_id. The #401 `Värdemängd` fallback breaks that proof: each
+        MERGED member carries its OWN inline `Värdemängd`, the fallback emits
+        `value_set_version_label=None`, so two such members CAN collide on one
+        state_id. `_collect` reconciles the surviving `value_set_id`:
+          - both non-None and DIFFERENT -> genuine conflict (e.g. LMED VARUTYP,
+            MFR ICD — members whose Värdemängd cells classify to divergent value
+            sets): keep the first deterministically (delivery order) and WARN so
+            the dropped alternative is auditable; never silent.
+          - exactly one non-None (one member classified, the other was free
+            text) -> keep the coded one; this is a coalesce, not a conflict, so
+            no warning. Prefer-coded makes the merge delivery-order-independent:
+            a codeless member arriving first must not drop a later member's
+            value set.
+          - both None or both equal -> keep the prior.
+        Only `valid_to` and `value_set_id` need reconciling: a state_id collision
+        implies an identical `valid_from` (the state_id basis includes the window
+        start), and every other field is provably equal across the colliding
+        members, so the stored row is the surviving-value_set side widened to the
+        widest `valid_to`.
         """
         # Build the value-set rows for this variable's kodlista once.
         # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
@@ -1906,17 +1917,26 @@ class SOSAdapter:
         def _collect(obj: IRObject) -> Iterator[IRObject]:
             if isinstance(obj, IRVariableState):
                 prior = states_by_id.get(obj.state_id)
-                if prior is not None and (
-                    prior.value_set_id is not None
-                    and obj.value_set_id is not None
-                    and prior.value_set_id != obj.value_set_id
-                ):
-                    # #401: two merged members collided on one state_id with
-                    # DIVERGENT value sets (only reachable via the Värdemängd
-                    # fallback, where value_set_version_label is always None — the
-                    # kodlista paths bucket distinguishing codes into a non-None
-                    # label that changes the state_id). Keep the first
-                    # deterministically; WARN so the drop is auditable.
+                if prior is None:
+                    states_by_id[obj.state_id] = obj
+                    return
+                # #401: two merged members collided on one state_id (only
+                # reachable via the Värdemängd fallback, where
+                # value_set_version_label is always None — the kodlista paths
+                # bucket a distinguishing code into a non-None label that changes
+                # the state_id). Reconcile valid_to to the widest window and pick
+                # the surviving value_set with PREFER-CODED:
+                #   - both non-None and DIFFERENT -> genuine conflict: keep the
+                #     first (delivery order) and WARN so the drop is auditable.
+                #   - exactly one non-None -> keep the coded one (coalesce: a
+                #     free-text member must not drop a sibling's value set just by
+                #     arriving first); no warning.
+                #   - both None / both equal -> keep prior.
+                valid_to = _widest_valid_to(prior.valid_to, obj.valid_to)
+                both_coded = (
+                    prior.value_set_id is not None and obj.value_set_id is not None
+                )
+                if both_coded and prior.value_set_id != obj.value_set_id:
                     yield IRWarning(
                         entity_kind="variable",
                         entity_id=variable_id,
@@ -1927,14 +1947,19 @@ class SOSAdapter:
                             "Värdemängd value sets; kept first in delivery order"
                         ),
                     )
-                states_by_id[obj.state_id] = (
-                    obj
-                    if prior is None
-                    else prior.model_copy(
-                        update={
-                            "valid_to": _widest_valid_to(prior.valid_to, obj.valid_to)
-                        }
-                    )
+                # The side carrying the surviving value_set becomes the stored
+                # row (only valid_to/value_set_id differ; every other field is
+                # provably equal). PRIOR wins unless it is the lone codeless side
+                # (prior None, obj coded) — i.e. prior wins ties, the both-coded
+                # conflict ("first in delivery order"), and any case where it
+                # already carries a value set; obj only wins when it supplies the
+                # value set prior lacks.
+                obj_supplies_value_set = (
+                    prior.value_set_id is None and obj.value_set_id is not None
+                )
+                survivor = obj if obj_supplies_value_set else prior
+                states_by_id[obj.state_id] = survivor.model_copy(
+                    update={"valid_to": valid_to}
                 )
                 return
             yield obj
