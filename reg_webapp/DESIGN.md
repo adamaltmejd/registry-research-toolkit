@@ -796,12 +796,13 @@ The archive (`application/zip`) holds three files:
   pair collapses to the binding-FQID key the §8 consumer contract reads. The one
   residual case it does not cover — two bindings in ONE source sharing a `variable` FQID
   (distinct `representation`s; structurally legal, since `display_name_collision`
-  catches only EXPLICIT same names) — would collide on the FQID key, so kit-build raises
-  `KitBuildError` → **422** rather than silently dropping a column's codes (the §8
-  consumer keys by FQID too, so the contract genuinely can't represent it). The
-  `sources` codes are **dereferenced from reg_meta at kit-build** — NOT SPA-authored
-  (the §8 IndexedDB-authoring affordance is out of #217's scope; decision recorded on
-  #217).
+  catches only EXPLICIT same names) — is rejected up front by
+  `check_unique_binding_fqids` (a `KitBuildError` → **422**, for EVERY binding type,
+  since both the codes `sources` and the stats `bindings` keyspaces key by source name →
+  binding FQID) rather than silently dropping a column (#450 tracks lifting this with
+  resolved-column keying). The `sources` codes are **dereferenced from reg_meta at
+  kit-build** — NOT SPA-authored (the §8 IndexedDB-authoring affordance is out of #217's
+  scope; decision recorded on #217).
 - **`README.md`** — what the kit is + the `reg-mockdata generate` command. It notes the
   researcher must drop their MONA-returned `project_data.stats.json` beside the kit
   before running (the kit endpoint does not emit stats — that file is the extract
@@ -829,8 +830,12 @@ panel default mid-authoring, expecting the variant `panel_template`), so only ki
 `/validate`-clean spec can therefore still 422 here on panel inheritance — one of the
 documented kit-build residuals.
 
-Two more gates run **after** the shared composition, because they need reg_meta defaults
-the structural layer can't see, or the generator's contract:
+More gates run **after** the shared composition, because they need reg_meta defaults the
+structural layer can't see, or the generator's / kit's own contract. `display_name`
+materialization first NORMALIZES blanks: `resolve_display_name` treats a blank /
+whitespace explicit name as unset (a blank header is unusable, and the generator rejects
+falsey names), so it resolves the reg_meta default instead of shipping an empty header.
+Then:
 
 - **Re-validate structural on the materialized spec.** After `materialize_display_names`
   fills every `display_name`, `validate_structural` is re-run on the result. The
@@ -847,6 +852,18 @@ the structural layer can't see, or the generator's contract:
   rather than failing opaquely at `reg-mockdata generate`. Held as a small webapp-local
   constant rather than importing the runtime's `COLUMN_TYPES` (the webapp import graph
   excludes `reg_monabundle.runtime.*`; the kit takes no `reg_mockdata` dep).
+- **Duplicate-FQID gate** (`check_unique_binding_fqids`) — see the codes bullet above: a
+  source binding the same `variable` FQID twice is unrepresentable in the FQID-keyed
+  codes/stats contract for every type.
+- **Single-delivery-column gate** (`check_single_delivery_column`). A binding (without a
+  `representation` to disambiguate) that resolves to MORE THAN ONE delivery column over
+  its period — a sequential rename (`KonOld` → `KonNew` across a range) or a merged
+  monthly family bound at annual grain (#319) — can't map to the kit's one
+  `display_name` = one output column, so the renamed/other column would be lost. The
+  semantic layer only flags `binding_state_drifts_within_period` (info), so kit-build
+  escalates it to a 422: pin a `representation` or narrow the source period (a pinned
+  binding resolves to its one column, so this never fires on it). #450 tracks
+  representing multi-column bindings properly.
 
 **Remaining (deferred).** Panel-key *materialization* (writing the resolved `entity_key`
 / `time_key` into the kit's `project_data.json` the way `display_name` is) is NOT done:

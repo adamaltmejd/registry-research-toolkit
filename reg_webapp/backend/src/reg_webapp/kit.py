@@ -45,7 +45,7 @@ from reg_meta.fqid import parse
 from reg_meta.queries import get_classification_codes
 
 from reg_webapp.order_export import resolve_display_name
-from reg_webapp.semantic import period_for_resolve, period_segments
+from reg_webapp.semantic import period_display, period_for_resolve, period_segments
 
 if TYPE_CHECKING:
     import sqlite3
@@ -115,26 +115,83 @@ def build_codes(
                         binding.value_set, catalog, conn
                     )
             else:
-                source_codes = sources.setdefault(source.name, {})
-                # The `sources` keyspace is keyed by binding FQID, so two bindings
-                # in one source that share a `variable` FQID (distinct
-                # `representation` pins — structurally legal; `display_name_collision`
-                # only catches EXPLICIT same names) would collide and silently drop
-                # one code list. The §8 consumer reads `sources[name][fqid]`, so that
-                # key cannot represent two same-FQID bindings either — fail loudly
-                # rather than ship a kit that's silently missing a column's codes.
-                if binding.variable in source_codes:
-                    raise KitBuildError(
-                        f"source {source.name!r} binds {binding.variable!r} more "
-                        "than once (distinct representations of one variable); the "
-                        "codes.json `sources` keyspace is keyed by binding FQID and "
-                        "cannot represent two same-FQID bindings in one source — "
-                        "split them into separate sources"
-                    )
-                source_codes[binding.variable] = _binding_codes(
+                # `check_unique_binding_fqids` already proved no source binds a
+                # `variable` twice, so this key is collision-free.
+                sources.setdefault(source.name, {})[binding.variable] = _binding_codes(
                     binding, source, catalog
                 )
     return {"classifications": classifications, "sources": sources}
+
+
+def check_unique_binding_fqids(project: ProjectData) -> None:
+    """Raise ``KitBuildError`` if any source binds the same ``variable`` FQID more
+    than once. The kit/stats contract keys BOTH ``project_data.codes.json``
+    ``sources`` and ``project_data.stats.json`` ``bindings`` on ``source.name`` →
+    binding FQID, so a source with two same-FQID bindings (distinct
+    ``representation``s — structurally legal; ``display_name_collision`` catches
+    only EXPLICIT same names) is unrepresentable for EVERY binding type, not just
+    the ad-hoc-coded case. Fail loudly rather than silently drop a column (#450
+    tracks lifting this with resolved-column keying)."""
+    for source in project.sources:
+        seen: set[str] = set()
+        for binding in source.bindings:
+            if binding.variable in seen:
+                raise KitBuildError(
+                    f"source {source.name!r} binds {binding.variable!r} more than "
+                    "once (distinct representations of one variable); the kit/stats "
+                    "contract keys by source name → binding FQID and cannot represent "
+                    "two same-FQID bindings in one source — split them into separate "
+                    "sources or pin distinct variables (see #450)"
+                )
+            seen.add(binding.variable)
+
+
+def _resolved_columns(
+    binding: Binding, source: Source, catalog: Catalog
+) -> set[str | None]:
+    """The distinct delivery columns the binding's ``(variant, period)`` resolves
+    to (per #307 segment), narrowed to the pinned ``representation``. >1 means the
+    binding maps to several real columns — a sequential delivery-column rename or a
+    merged monthly family (#319)."""
+    parsed = parse(binding.variable)
+    variant = source.register_variant.split("/")[2]
+    cols: set[str | None] = set()
+    for segment in period_segments(source.period):
+        for state in catalog.resolve_at(
+            parsed, period_for_resolve(segment), variant=variant
+        ):
+            if (
+                binding.representation is not None
+                and state.delivery_column_name != binding.representation
+            ):
+                continue
+            cols.add(state.delivery_column_name)
+    return cols
+
+
+def check_single_delivery_column(project: ProjectData, catalog: Catalog) -> None:
+    """Raise ``KitBuildError`` if a binding (without a disambiguating
+    ``representation``) resolves to MORE THAN ONE delivery column over its source
+    period — a sequential rename (``KonOld`` → ``KonNew`` across a range) or a
+    merged monthly family bound at annual grain (#319). The kit maps one binding to
+    ONE materialized ``display_name`` (one output column), and the MONA runtime /
+    generator index overrides by ``display_name`` — so the second real column would
+    be lost. The semantic layer only flags this ``binding_state_drifts_within_period``
+    (info), so kit-build escalates it: the author must pin a ``representation`` or
+    narrow the source period. A pinned binding resolves to its one column (even if
+    it under-covers — the author's explicit choice), so this never fires on it."""
+    for source in project.sources:
+        for binding in source.bindings:
+            columns = _resolved_columns(binding, source, catalog)
+            if len(columns) > 1:
+                shown = ", ".join(sorted(c for c in columns if c is not None))
+                raise KitBuildError(
+                    f"binding {binding.variable!r} in source {source.name!r} "
+                    f"resolves to multiple delivery columns ({shown}) over period "
+                    f"{period_display(source.period)} — a column rename or a merged "
+                    "monthly family. The kit maps one binding to one column; pin a "
+                    "`representation` or narrow the source period (see #450)"
+                )
 
 
 def _code_pairs(pairs: list[tuple[str, str]]) -> list[dict[str, str]]:
@@ -232,10 +289,14 @@ def materialize_display_names(
         new_bindings = []
         for b_idx, raw_binding in enumerate(raw_source.get("bindings", [])):
             new_binding = dict(raw_binding)
-            if new_binding.get("display_name") is None:
-                new_binding["display_name"] = resolve_display_name(
-                    source.bindings[b_idx], source, catalog
-                )
+            # Set display_name on EVERY binding: `resolve_display_name` returns a
+            # non-blank explicit name unchanged, and resolves the reg_meta default for
+            # an unset OR blank/whitespace one (a blank header is unusable and the
+            # generator rejects falsey names). So this both fills defaults and
+            # normalizes blanks, while preserving genuine names.
+            new_binding["display_name"] = resolve_display_name(
+                source.bindings[b_idx], source, catalog
+            )
             new_bindings.append(new_binding)
         new_source["bindings"] = new_bindings
         out_sources.append(new_source)
@@ -327,9 +388,12 @@ def build_kit_archive(
     ``display_name`` filled (the caller owns materialization + re-validation, so the
     deferred default-dependent structural checks have already gated). Pure given a
     validated project + a live ``Catalog`` — the caller owns the connection lifetime.
-    Raises ``KitBuildError`` on a spec that validates but can't be packaged (an
-    unsupported generator type, or a same-FQID codes-keyspace collision)."""
+    Raises ``KitBuildError`` on a spec that validates but can't be packaged: an
+    unsupported generator type, a duplicate binding FQID in one source, or a binding
+    that resolves to several delivery columns (rename / merged family)."""
     check_generatable(project)
+    check_unique_binding_fqids(project)
+    check_single_delivery_column(project, catalog)
     codes = build_codes(project, catalog, conn)
     files = {
         "project_data.json": _json_bytes(materialized),

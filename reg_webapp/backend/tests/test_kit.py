@@ -210,7 +210,9 @@ def test_materialized_display_name_collision_is_422(client):
                 # Resolves its default display_name to the delivery column "Kon".
                 {"variable": "scb/lisa/kon", "type": "categorical"},
                 # Same source/register, explicitly named "Kon" → collides with the
-                # first binding's materialized default.
+                # first binding's materialized default. The collision is caught at
+                # re-validation, BEFORE the single-delivery-column gate, so the
+                # multi-column `lonfink` is fine to use here.
                 {
                     "variable": "scb/lisa/lonfink",
                     "type": "numeric",
@@ -222,6 +224,75 @@ def test_materialized_display_name_collision_is_422(client):
     )
     assert resp.status_code == 422
     assert "display_name_collision" in resp.json()["detail"]
+
+
+def test_blank_display_name_is_materialized(client):
+    """An explicit blank `display_name` (`""`) is an unusable column header the
+    generator rejects; kit-build treats it as unset and fills the reg_meta default
+    ("Kon") rather than shipping a kit with an empty header."""
+    files = _kit(
+        client.post(
+            "/api/kit",
+            json=_spec(
+                bindings=[
+                    {
+                        "variable": "scb/lisa/kon",
+                        "type": "categorical",
+                        "display_name": "   ",
+                    }
+                ]
+            ),
+        ).content
+    )
+    project = json.loads(files["project_data.json"])
+    assert project["sources"][0]["bindings"][0]["display_name"] == "Kon"
+
+
+def test_duplicate_binding_fqid_is_422_any_type(client):
+    """Two bindings sharing a `variable` FQID in one source are unrepresentable in
+    the FQID-keyed kit/stats contract for EVERY type (not just ad-hoc categorical) —
+    gated before branching on type/value_set."""
+    resp = client.post(
+        "/api/kit",
+        json=_spec(
+            bindings=[
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "categorical",
+                    "value_set": "class/sun2020",
+                    "display_name": "A",
+                },
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "categorical",
+                    "value_set": "class/sun2020",
+                    "display_name": "B",
+                },
+            ]
+        ),
+    )
+    assert resp.status_code == 422
+    assert "more than once" in resp.json()["detail"]
+
+
+def test_multi_column_binding_is_422(client):
+    """A binding that resolves to several delivery columns over its period (here the
+    merged monthly family `lonfink` at annual grain → many month columns) with no
+    `representation` to disambiguate can't map to one output column → 422."""
+    resp = client.post(
+        "/api/kit",
+        json=_spec(
+            bindings=[
+                {
+                    "variable": "scb/lisa/lonfink",
+                    "type": "numeric",
+                    "numeric_subtype": "double",
+                }
+            ]
+        ),
+    )
+    assert resp.status_code == 422
+    assert "multiple delivery columns" in resp.json()["detail"]
 
 
 def test_codes_keyspace_is_total_even_when_empty(client):

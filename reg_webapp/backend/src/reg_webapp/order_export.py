@@ -123,13 +123,14 @@ def _coordinate_parts(register_variant: str) -> tuple[str, str, str]:
 def resolve_display_name(binding: Binding, source: Source, catalog: Catalog) -> str:
     """The binding's ``display_name``, defaulting from reg_meta when unset.
 
-    Explicit ``display_name`` wins. Otherwise resolve the binding at the source's
-    ``(register_variant, period)`` and use the first covering state's
-    ``delivery_column_name``. If the binding doesn't resolve, has no covering
+    A NON-BLANK explicit ``display_name`` wins. Otherwise (unset OR blank /
+    whitespace — a blank label is unusable, so it is treated as unset) resolve the
+    binding at the source's ``(register_variant, period)`` and use the first covering
+    state's ``delivery_column_name``. If the binding doesn't resolve, has no covering
     state, or that state has a NULL ``delivery_column_name``, fall back to the
     bare FQID leaf — a manifest needs *a* label, and unresolved bindings are the
     validator's job to flag (this renderer is best-effort)."""
-    if binding.display_name is not None:
+    if binding.display_name is not None and binding.display_name.strip():
         return binding.display_name
     # A `representation` is the chosen delivery column — it IS the default label.
     if binding.representation is not None:
