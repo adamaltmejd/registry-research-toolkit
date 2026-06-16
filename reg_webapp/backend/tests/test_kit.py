@@ -248,6 +248,39 @@ def test_blank_display_name_is_materialized(client):
     assert project["sources"][0]["bindings"][0]["display_name"] == "Kon"
 
 
+def test_blank_display_name_normalized_before_structural_gate(client):
+    """A blank `display_name` is stripped BEFORE the first structural pass, so a
+    panel column-ref to the value that WOULD be materialized resolves. Pre-fix, the
+    first `validate_structural(raw)` saw the blank as an explicit "" → kept
+    `all_have_display` True → flagged the panel ref as `entity_key_unknown_column`
+    before normalization ran."""
+    resp = client.post(
+        "/api/kit",
+        json=_panel_spec(
+            source={
+                "name": "lisa-2018",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                # Blank name → materializes to the delivery column "Kon".
+                "bindings": [
+                    {
+                        "variable": "scb/lisa/kon",
+                        "type": "categorical",
+                        "display_name": "",
+                    }
+                ],
+            },
+            panel={
+                "panel_id": "p1",
+                "entity_key": "Kon",
+                "time_key": 2018,
+                "members": [{"source": "lisa-2018"}],
+            },
+        ),
+    )
+    assert resp.status_code == 200
+
+
 def test_duplicate_binding_fqid_is_422_any_type(client):
     """Two bindings sharing a `variable` FQID in one source are unrepresentable in
     the FQID-keyed kit/stats contract for EVERY type (not just ad-hoc categorical) —

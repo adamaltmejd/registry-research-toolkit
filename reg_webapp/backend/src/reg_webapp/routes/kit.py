@@ -53,6 +53,7 @@ from reg_webapp.kit import (
     KitBuildError,
     build_kit_archive,
     materialize_display_names,
+    strip_blank_display_names,
 )
 from reg_webapp.project_validation import (
     block_issues,
@@ -115,6 +116,11 @@ def _kit_blocking(
     run first; the reg_meta connection opens on THIS thread (one thread → the
     cross-thread sqlite P1 can't recur) for the semantic layer + the
     dereference/materialize the archive needs."""
+    # BLANK display_name = unset, normalized BEFORE the first structural pass: a
+    # blank is otherwise an explicit "" string to `validate_structural`, tripping
+    # `display_name_collision` / `entity_key_unknown_column` against a blank instead
+    # of deferring to the materialized default. Everything downstream uses this view.
+    raw = strip_blank_display_names(raw)
     # Structural is DB-free and a precondition for building the model the rest of
     # the pipeline (and the archive) needs — gate on it first, like `/order`.
     structural = validate_structural(raw)

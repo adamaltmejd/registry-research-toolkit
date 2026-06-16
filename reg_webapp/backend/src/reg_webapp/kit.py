@@ -268,6 +268,51 @@ def _binding_codes(
     return _code_pairs(pairs)
 
 
+def strip_blank_display_names(raw: dict[str, Any]) -> dict[str, Any]:
+    """Return a copy of the raw spec with BLANK (``""`` / whitespace) binding
+    ``display_name``s REMOVED (treated as unset), to run BEFORE the first
+    ``validate_structural`` pass.
+
+    A blank label is unusable, so the kit treats it as unset and materializes the
+    reg_meta default. But ``validate_structural`` sees a blank as an explicit string:
+    two blank names trip ``display_name_collision``, and a blank keeps
+    ``all_have_display`` True so panel column-ref checks fire against the blank
+    (``entity_key_unknown_column``) — both rejecting the spec BEFORE normalization.
+    Stripping blanks up front makes blank-as-unset consistent across the whole
+    pipeline (the structural gate, the model, materialization, and the re-validation).
+
+    Runs on UNVALIDATED input, so it is defensive about shape — a malformed source /
+    binding passes through untouched for ``validate_structural`` to flag."""
+    sources = raw.get("sources")
+    if not isinstance(sources, list):
+        return raw
+    out = dict(raw)
+    new_sources: list[Any] = []
+    for raw_source in sources:
+        bindings = raw_source.get("bindings") if isinstance(raw_source, dict) else None
+        if not isinstance(bindings, list):
+            new_sources.append(raw_source)
+            continue
+        new_source = dict(raw_source)
+        new_bindings: list[Any] = []
+        for raw_binding in bindings:
+            dn = (
+                raw_binding.get("display_name")
+                if isinstance(raw_binding, dict)
+                else None
+            )
+            if isinstance(dn, str) and not dn.strip():
+                stripped = dict(raw_binding)
+                del stripped["display_name"]
+                new_bindings.append(stripped)
+            else:
+                new_bindings.append(raw_binding)
+        new_source["bindings"] = new_bindings
+        new_sources.append(new_source)
+    out["sources"] = new_sources
+    return out
+
+
 def materialize_display_names(
     raw: dict[str, Any], project: ProjectData, catalog: Catalog
 ) -> dict[str, Any]:
