@@ -1,18 +1,30 @@
 #!/usr/bin/env python3
-"""schema-pending-bump — does a build-image bake failure mean a *pending* release?
+"""schema-pending-bump — classify code-vs-released-asset schema: break / pending / compatible.
 
 The `build-image` job (`.github/workflows/container-build.yml`) bakes the newest
 `reg_meta/v*` release's DB + doc assets via `reg-meta update`. That refuses an asset
-whose schema is BEHIND the code (`incompatible_docs_asset`, exit 10) → red build →
-all deploys pause. When `main`'s `SCHEMA_VERSION` / `DOC_SCHEMA_VERSION` is ahead of
-the latest released asset, that refusal is **expected and self-clearing**: the owed
-reg_meta release will ship a matching asset. A major mismatch, a missing asset, or a
-genuinely broken bake must STILL fail red (the #343 loud-failure behavior).
+whose schema is BEHIND the code (`incompatible_docs_asset`, exit 10). When `main`'s
+`SCHEMA_VERSION` / `DOC_SCHEMA_VERSION` is merely AHEAD of the latest released asset
+(same major, higher minor), that refusal is **expected and self-clearing**: the owed
+reg_meta release will ship a matching asset. A MAJOR mismatch — or a schema-behind
+release that is ALSO missing an asset — is a genuine #343 incompatibility.
 
 This helper is the pure, unit-testable comparison the workflow can't exercise on a
 normal commit (main's schema usually equals the latest release). It classifies each
-axis (db, doc) of code-vs-asset and prints `true` (pending — neutralize) or `false`
-(not pending — let the bake fail / proceed).
+axis (db, doc) of code-vs-asset and folds them into a THREE-way verdict, printed as a
+single token to stdout:
+
+- ``break``      — any axis is a major mismatch: a genuine incompatibility.
+- ``pending``    — no break, ≥1 axis is code-ahead (same major): the neutralizable
+                   pending-release case.
+- ``compatible`` — otherwise (asset == code, or asset ahead on the same major).
+
+The explanation goes to stderr; exit is 0 for any well-formed verdict (a malformed
+version still exits non-zero). The WORKFLOW turns ``break`` (and a ``pending`` whose
+release is missing a DB asset) into a FAILED `schema-guard` job — failing red blocks
+build-image + deploy + edge-deploy (all gated on `schema-guard` success), closing the
+edge-only hole where a skipped bake left nothing to fail. Only ``pending`` with both
+assets present is green-neutralized; ``compatible`` proceeds normally.
 
 Source of truth for the compat rule is ``_check_schema_compat`` in
 ``reg_meta/src/reg_meta/db.py`` (mirrored in ``doc_db.py``): code ``M.m.p`` requires
@@ -60,51 +72,48 @@ def classify_axis(code: str, asset: str) -> str:
     return "compatible"
 
 
-def is_pending_bump(
+def classify_overall(
     code_db: str, code_doc: str, asset_db: str, asset_doc: str
-) -> tuple[bool, str]:
-    """Overall verdict across both axes plus a one-line human explanation.
+) -> tuple[str, str]:
+    """Fold both axes into a three-way verdict plus a one-line human explanation.
 
-    A ``break`` on EITHER axis suppresses any ``pending`` — a genuine
-    incompatibility is never neutralized. Pending only when at least one axis is
-    pending and no axis breaks.
+    A ``break`` on EITHER axis dominates — a genuine incompatibility is never
+    neutralized. Absent a break, a ``pending`` on either axis makes the overall
+    verdict pending; otherwise compatible.
+
+    Returns ``(verdict, explanation)`` where verdict is ``"break"`` | ``"pending"``
+    | ``"compatible"``.
     """
     db = classify_axis(code_db, asset_db)
     doc = classify_axis(code_doc, asset_doc)
+    axes = (
+        ("main DB", db, code_db, asset_db),
+        ("doc", doc, code_doc, asset_doc),
+    )
 
     breaks = [
-        (label, code, asset)
-        for label, axis, code, asset in (
-            ("main DB", db, code_db, asset_db),
-            ("doc", doc, code_doc, asset_doc),
-        )
-        if axis == "break"
+        (label, code, asset) for label, axis, code, asset in axes if axis == "break"
     ]
     if breaks:
         label, code, asset = breaks[0]
-        return False, (
+        return "break", (
             f"{label} schema: major mismatch code {code} vs asset {asset} "
-            f"→ genuine break, will fail bake"
+            f"→ genuine break"
         )
 
     pendings = [
-        (label, code, asset)
-        for label, axis, code, asset in (
-            ("main DB", db, code_db, asset_db),
-            ("doc", doc, code_doc, asset_doc),
-        )
-        if axis == "pending"
+        (label, code, asset) for label, axis, code, asset in axes if axis == "pending"
     ]
     if pendings:
         label, code, asset = pendings[0]
-        return True, (
+        return "pending", (
             f"{label} schema: code {code} ahead of asset {asset} "
             f"→ pending reg_meta release"
         )
 
-    return False, (
+    return "compatible", (
         f"schemas compatible: DB code {code_db} / asset {asset_db}, "
-        f"doc code {code_doc} / asset {asset_doc} → not pending"
+        f"doc code {code_doc} / asset {asset_doc}"
     )
 
 
@@ -117,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
-        pending, explanation = is_pending_bump(
+        verdict, explanation = classify_overall(
             args.code_db, args.code_doc, args.asset_db, args.asset_doc
         )
     except ValueError as exc:
@@ -125,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     print(explanation, file=sys.stderr)
-    print("true" if pending else "false")
+    print(verdict)
     return 0
 
 

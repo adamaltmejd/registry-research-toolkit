@@ -23,42 +23,42 @@ sys.modules[_SPEC.name] = spb
 _SPEC.loader.exec_module(spb)
 
 
-def _verdict(code_db: str, code_doc: str, asset_db: str, asset_doc: str) -> bool:
-    pending, _ = spb.is_pending_bump(code_db, code_doc, asset_db, asset_doc)
-    return pending
+def _verdict(code_db: str, code_doc: str, asset_db: str, asset_doc: str) -> str:
+    verdict, _ = spb.classify_overall(code_db, code_doc, asset_db, asset_doc)
+    return verdict
 
 
 def test_pending_on_doc_minor_behind() -> None:
     # The #437 case: code doc 1.1.0, released asset still on 1.0.0.
-    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.0.0") is True
+    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.0.0") == "pending"
 
 
 def test_pending_on_db_minor_behind() -> None:
-    assert _verdict("5.4.0", "1.1.0", "5.3.0", "1.1.0") is True
+    assert _verdict("5.4.0", "1.1.0", "5.3.0", "1.1.0") == "pending"
 
 
 def test_compatible_when_asset_equals_code() -> None:
-    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.1.0") is False
+    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.1.0") == "compatible"
 
 
 def test_compatible_when_asset_ahead_same_major() -> None:
     # Asset minor > code minor: forward-compatible, never pending.
-    assert _verdict("5.4.0", "1.1.0", "5.5.0", "1.2.0") is False
+    assert _verdict("5.4.0", "1.1.0", "5.5.0", "1.2.0") == "compatible"
 
 
-def test_break_on_major_mismatch_is_not_pending() -> None:
-    # Major mismatch is a genuine incompatibility, must fail red (NOT pending).
-    assert _verdict("6.0.0", "1.1.0", "5.4.0", "1.1.0") is False
+def test_break_on_major_mismatch() -> None:
+    # Major mismatch is a genuine incompatibility — the guard must fail red.
+    assert _verdict("6.0.0", "1.1.0", "5.4.0", "1.1.0") == "break"
 
 
 def test_pending_on_one_axis_while_other_compatible() -> None:
     # DB compatible (equal), doc minor behind → pending overall.
-    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.0.0") is True
+    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.0.0") == "pending"
 
 
 def test_break_suppresses_pending_on_other_axis() -> None:
-    # Doc would be pending (1.1 > 1.0) but the DB major break dominates → not pending.
-    assert _verdict("6.4.0", "1.1.0", "5.4.0", "1.0.0") is False
+    # Doc would be pending (1.1 > 1.0) but the DB major break dominates → break.
+    assert _verdict("6.4.0", "1.1.0", "5.4.0", "1.0.0") == "break"
 
 
 def test_classify_axis_buckets() -> None:
@@ -90,7 +90,8 @@ def test_malformed_version_nonzero_exit() -> None:
 
 
 def test_subprocess_stdout_contract() -> None:
-    # Smoke the CLI: stdout is exactly `true`/`false` (the workflow captures it).
+    # Smoke the CLI: stdout is exactly the three-way verdict token (the workflow
+    # case-matches it). The doc-minor-behind args yield `pending`.
     proc = subprocess.run(
         [
             sys.executable,
@@ -108,5 +109,5 @@ def test_subprocess_stdout_contract() -> None:
         text=True,
         check=True,
     )
-    assert proc.stdout.strip() == "true"
+    assert proc.stdout.strip() == "pending"
     assert proc.stderr.strip()  # human explanation on stderr
