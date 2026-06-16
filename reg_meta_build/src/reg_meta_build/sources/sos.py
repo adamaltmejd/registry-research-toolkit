@@ -1268,6 +1268,22 @@ def _widest_valid_to(a: str | None, b: str | None) -> str | None:
     return max(a, b)
 
 
+def _windows_overlap(
+    a_from: str | None, a_to: str | None, b_from: str | None, b_to: str | None
+) -> bool:
+    """Closed-interval overlap test, mirroring the build invariant's SQL
+    (``validate.py`` → "one value_set per (variable, variant, period, column)")
+    and ``catalog._states_in_bounds``: ``a_from <= b_to AND b_from <= a_to``.
+    A ``None`` ``valid_from`` is open-start (−∞); a ``None`` ``valid_to`` is
+    open-end (+∞). Full-date ISO strings sort chronologically, so once the open
+    bounds are substituted the comparison is a plain string compare."""
+    lo = "0001-01-01"  # −∞ (open-start)
+    hi = "9999-12-31"  # +∞ (open-end); the sentinel the validator compares to
+    af, at_ = a_from or lo, a_to or hi
+    bf, bt = b_from or lo, b_to or hi
+    return af <= bt and bf <= at_
+
+
 def _value_code(
     code: str, label: str | None, window: tuple[str | None, str | None]
 ) -> IRValueCode:
@@ -1895,36 +1911,75 @@ class SOSAdapter:
         deldatamängd, or members whose windows share a start) -> the same minted
         state_id, because the `idx_variable_state_unique` basis EXCLUDES
         `valid_to`. They are NOT duplicates: each carries its member's own
-        `valid_to`. Keeping the first in delivery order would silently truncate
-        the variable's coverage (and close an open-ended state), so reconcile
-        `valid_to` to the WIDEST window instead of dropping.
+        `valid_to`.
 
-        `value_set_id` reconciliation (PREFER-CODED): for the kodlista paths it
-        is provably identical on a same-state_id collision — a distinguishing
-        code buckets into a non-empty `value_set_version_label`, which changes
-        the state_id. The #401 `Värdemängd` fallback breaks that proof: each
-        MERGED member carries its OWN inline `Värdemängd`, the fallback emits
-        `value_set_version_label=None`, so two such members CAN collide on one
-        state_id. `_collect` reconciles the surviving `value_set_id`:
-          - both non-None and DIFFERENT -> genuine conflict (e.g. LMED VARUTYP,
-            MFR ICD — members whose Värdemängd cells classify to divergent value
-            sets): keep the first deterministically (delivery order) and WARN so
-            the dropped alternative is auditable; never silent.
-          - exactly one non-None (one member classified, the other was free
-            text) -> keep the coded one; this is a coalesce, not a conflict, so
-            no warning. Prefer-coded makes the merge delivery-order-independent:
-            a codeless member arriving first must not drop a later member's
-            value set.
-          - both None or both equal -> keep the prior.
-        The stored row is ALWAYS based on `prior`, with ONLY `valid_to` (widest)
-        and `value_set_id` (prefer-coded) reconciled onto it. Other scalars are
-        NOT reconciled: `data_type` in particular is excluded from the state_id
+        `valid_to` + `value_set_id` reconciliation. Widening `valid_to` is only
+        safe when the colliding members carry the SAME value set: then it is a
+        genuine coverage union with no code over-claim. When the members carry
+        DIVERGENT value sets the surviving (prefer-coded) set must keep ITS OWN
+        member's `valid_to` — widening would extend that set's codes past the
+        source row that defined them (Codex P2: `bu/SPEC` coded 1960–2014 +
+        codeless 1960–2016 must NOT emit codes for 2015–2016, a code-search
+        false positive). The dropped member's extra coverage is forfeited; for a
+        research catalog an over-claimed code window (false positive) is worse
+        than a dropped codeless tail.
+
+          - SAME value set (both non-None equal, or both None) -> safe coverage
+            union: widen `valid_to` to the WIDEST window. Keeping the first in
+            delivery order would silently truncate coverage / close an
+            open-ended state.
+          - DIVERGENT value sets -> survivor keeps its own member window (no
+            widening):
+            * exactly one non-None (one member classified, the other was free
+              text) -> the CODED member survives with its set + its window; a
+              coalesce, not a conflict, so no warning. Prefer-coded makes the
+              merge delivery-order-independent: a codeless member arriving first
+              must not drop a later member's value set.
+            * both non-None and DIFFERENT -> genuine conflict (e.g. LMED VARUTYP,
+              MFR ICD): keep `prior` deterministically (delivery order) and WARN
+              so the dropped alternative is auditable; never silent.
+
+        The #401 `Värdemängd` fallback is what makes a same-state_id collision
+        carry divergent value sets at all: the kodlista paths bucket a
+        distinguishing code into a non-empty `value_set_version_label` (which
+        changes the state_id), but each MERGED member carries its OWN inline
+        `Värdemängd` and the fallback emits `value_set_version_label=None`, so
+        two such members CAN collide on one state_id.
+
+        The stored row is ALWAYS based on `prior`, with ONLY the survivor's
+        `valid_to` and `value_set_id` reconciled onto it. Other scalars are NOT
+        reconciled: `data_type` in particular is excluded from the state_id
         basis, and a warn-/allowlist-merge group can put members of different
         `data_type` under one variable_id — so two colliding members may differ
         in it. Basing the row on `prior` keeps `data_type` (and every other
         non-reconciled field) delivery-order-deterministic regardless of which
         side carried the value set; prefer-coded means a codeless `prior` adopts
-        a later coded member's `value_set_id` but never its `data_type`.
+        a later coded member's `value_set_id` (and that member's `valid_to`) but
+        never its `data_type`.
+
+        OVERLAP-SUPPRESSION POST-PASS (#401, complementary to `_collect`):
+        `_collect` only reconciles members that collide on ONE state_id (same
+        variant + same `valid_from`). Two members with DIFFERENT `valid_from` mint
+        DIFFERENT state_ids, so `_collect` never compares them — yet they can
+        still violate the build invariant ("one value_set per (variable, variant,
+        period, column)", `validate.py`): OVERLAPPING windows on the same column
+        with DISTINCT non-null value sets resolve a period to >1 value set. The
+        kodlista paths avoid this by era-SEGMENTING on `Tidsperiod`
+        (`_segment_windowed_codes` → non-overlapping segments; equal-content
+        segments content-share one `value_set_id`); the #401 Värdemängd binding
+        has NO `Tidsperiod` to segment on, so two members whose own data windows
+        (data_från/till) clip the shared kodlista to DIFFERENT code subsets over
+        an overlap produce two distinct value sets there. After the member loop, a
+        post-pass groups the buffered states by `(register_variant_id,
+        delivery_column_name)` (mirroring the validator key; `variable_id` is fixed
+        in this call), finds every overlapping pair with distinct non-null value
+        sets, and nulls EVERY involved state's `value_set_id` back to code-less —
+        the exact pre-#401 behavior, so no regression — where the metadata is too
+        ambiguous to auto-bind. One `sos_value_set_text_overlap` IRWarning per
+        affected column makes the drop auditable. Disjoint-window multi-value-set
+        variables (legitimate era changes) do NOT overlap and stay bound. Runs
+        BEFORE the classification-candidate append so a suppressed state
+        contributes its final (None) value_set_id.
         """
         # Build the value-set rows for this variable's kodlista once.
         # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
@@ -1944,45 +1999,54 @@ class SOSAdapter:
                 # reachable via the Värdemängd fallback, where
                 # value_set_version_label is always None — the kodlista paths
                 # bucket a distinguishing code into a non-None label that changes
-                # the state_id). Reconcile valid_to to the widest window and pick
-                # the surviving value_set with PREFER-CODED:
-                #   - both non-None and DIFFERENT -> genuine conflict: keep the
-                #     first (delivery order) and WARN so the drop is auditable.
-                #   - exactly one non-None -> keep the coded one (coalesce: a
-                #     free-text member must not drop a sibling's value set just by
-                #     arriving first); no warning.
-                #   - both None / both equal -> keep prior.
-                valid_to = _widest_valid_to(prior.valid_to, obj.valid_to)
-                if (
-                    prior.value_set_id is not None
-                    and obj.value_set_id is not None
-                    and prior.value_set_id != obj.value_set_id
-                ):
-                    yield IRWarning(
-                        entity_kind="variable",
-                        entity_id=variable_id,
-                        code="sos_value_set_text_conflict",
-                        detail=(
-                            f"{abbrev}/{members[0].name}: merged members share "
-                            f"state_id {obj.state_id} but classify to different "
-                            "Värdemängd value sets; kept first in delivery order"
-                        ),
+                # the state_id).
+                #
+                # Same value set (both non-None equal, or both None): widening
+                # `valid_to` is a safe coverage union — keeping the first in
+                # delivery order would silently truncate coverage / close an
+                # open-ended state, so reconcile to the WIDEST window.
+                if prior.value_set_id == obj.value_set_id:
+                    states_by_id[obj.state_id] = prior.model_copy(
+                        update={
+                            "valid_to": _widest_valid_to(prior.valid_to, obj.valid_to)
+                        }
                     )
-                # ALWAYS base the stored row on `prior`, reconciling only the two
-                # fields that legitimately differ on a state_id collision:
-                # `valid_to` (widest) and `value_set_id` (prefer-coded — a codeless
-                # prior adopts obj's set; two divergent coded sets are the conflict
-                # warned above, where prior still wins for determinism). Every
-                # other scalar (notably `data_type`, excluded from the state_id
-                # basis) stays prior's, so the merge is delivery-order-deterministic
-                # regardless of which side carried the value set.
-                value_set_id = (
-                    obj.value_set_id
-                    if prior.value_set_id is None
-                    else prior.value_set_id
-                )
+                    return
+                # Divergent value sets: the surviving (prefer-coded) set keeps
+                # ITS OWN member's window — never extend codes past their source
+                # row (Codex P2). The dropped member's extra coverage is
+                # forfeited; for a research catalog an over-claimed code window
+                # (false positive) is worse than a dropped codeless tail. `prior`
+                # wins ties and the both-coded conflict (delivery order); `obj`
+                # wins only when `prior` is the codeless side.
+                if prior.value_set_id is None:
+                    survivor = obj  # adopt obj's coded set + obj's window
+                else:
+                    survivor = prior  # keep prior's coded set + prior's window
+                    if obj.value_set_id is not None:
+                        # both coded & DIFFERENT -> genuine conflict (kept first)
+                        yield IRWarning(
+                            entity_kind="variable",
+                            entity_id=variable_id,
+                            code="sos_value_set_text_conflict",
+                            detail=(
+                                f"{abbrev}/{members[0].name}: merged members share "
+                                f"state_id {obj.state_id} but classify to different "
+                                "Värdemängd value sets; kept first in delivery order"
+                            ),
+                        )
+                # ALWAYS base the stored row on `prior`: `data_type` (and every
+                # other non-reconciled scalar) is excluded from the state_id
+                # basis, so a warn-/allowlist-merge group can put members of
+                # different `data_type` under one variable_id — basing the row on
+                # `obj` would silently flip it. When `obj` supplies the value set,
+                # copy only its `value_set_id` + `valid_to` onto `prior`, never
+                # its `data_type`.
                 states_by_id[obj.state_id] = prior.model_copy(
-                    update={"valid_to": valid_to, "value_set_id": value_set_id}
+                    update={
+                        "valid_to": survivor.valid_to,
+                        "value_set_id": survivor.value_set_id,
+                    }
                 )
                 return
             yield obj
@@ -2037,6 +2101,63 @@ class SOSAdapter:
                     kodlista=kodlista,
                     entity_registry=entity_registry,
                     collect=_collect,
+                )
+
+        # Overlap-suppression post-pass (#401, complementary to `_collect`).
+        # `_collect` only reconciles members that collide on ONE state_id (same
+        # variant + same valid_from). Two members with DIFFERENT valid_from mint
+        # DIFFERENT state_ids, so they sit as separate `states_by_id` entries and
+        # `_collect` never compares them — yet OVERLAPPING windows on the same
+        # column carrying DISTINCT non-null value sets still violate the build
+        # invariant (one value_set per (variable, variant, period, column)). The
+        # #401 Värdemängd path binds one value set over each member's WHOLE window
+        # with no Tidsperiod to segment on, so two members whose windows overlap
+        # but whose Värdemängd cells classify to different sets are unresolvable
+        # (e.g. bu/SPEC: a single-code 1960–2016 cell vs a full-enumeration
+        # 2001–2014 cell). Conservatively null EVERY conflicting state back to
+        # code-less (the exact pre-#401 behavior — no regression) and WARN once
+        # per column. Disjoint-window multi-value-set variables (legitimate era
+        # changes) do NOT overlap and stay bound. Group key mirrors the validator
+        # exactly; variable_id is fixed within this call.
+        by_column: dict[tuple[int, str | None], list[int]] = {}
+        for sid, state in states_by_id.items():
+            by_column.setdefault(
+                (state.register_variant_id, state.delivery_column_name), []
+            ).append(sid)
+        conflicted: set[int] = set()
+        for sids in by_column.values():
+            for i in range(len(sids)):
+                a = states_by_id[sids[i]]
+                if a.value_set_id is None:
+                    continue
+                for j in range(i + 1, len(sids)):
+                    b = states_by_id[sids[j]]
+                    if (
+                        b.value_set_id is None
+                        or a.value_set_id == b.value_set_id
+                        or not _windows_overlap(
+                            a.valid_from, a.valid_to, b.valid_from, b.valid_to
+                        )
+                    ):
+                        continue
+                    conflicted.add(sids[i])
+                    conflicted.add(sids[j])
+        warned_columns: set[str | None] = set()
+        for sid in conflicted:
+            state = states_by_id[sid]
+            col = state.delivery_column_name
+            states_by_id[sid] = state.model_copy(update={"value_set_id": None})
+            if col not in warned_columns:
+                warned_columns.add(col)
+                yield IRWarning(
+                    entity_kind="variable",
+                    entity_id=variable_id,
+                    code="sos_value_set_text_overlap",
+                    detail=(
+                        f"{abbrev}/{col}: overlapping members classified to "
+                        "distinct Värdemängd value sets (no Tidsperiod to segment "
+                        "on); binding dropped (code-less) where ambiguous"
+                    ),
                 )
 
         # Flush the reconciled states (one per state_id, widest valid_to).

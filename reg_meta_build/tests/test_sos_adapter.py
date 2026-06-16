@@ -971,7 +971,11 @@ def test_merged_member_vardemangd_conflict_warns_keeps_first() -> None:
     # valid_from=2001 -> the SAME state_id (value_set_version_label is None for
     # the Värdemängd path), but classify to DIFFERENT value sets. The second's
     # value_set_id would be silently dropped by the valid_to-widening
-    # reconciliation; instead the adapter WARNS and keeps the first deterministically.
+    # reconciliation; instead the adapter WARNS and keeps the first
+    # deterministically. The first member ends EARLIER (data_to=2010) than the
+    # second (data_to=2016): because the sets diverge, `valid_to` must NOT widen
+    # — the surviving (first) set keeps its OWN 2010 window, never claiming its
+    # codes for 2011-2016.
     reg = _register(
         "bu",
         [
@@ -979,11 +983,13 @@ def test_merged_member_vardemangd_conflict_warns_keeps_first() -> None:
                 "VARUTYP",
                 value_set_text="EX=Receptfritt; HA=Handelsvara",
                 data_from=2001,
+                data_to=2010,
             ),
             _var(
                 "VARUTYP",
                 value_set_text="EX=Receptfritt; HA=Handelsvara; OV=Ovrigt",
                 data_from=2001,
+                data_to=2016,
             ),
         ],
     )
@@ -998,18 +1004,30 @@ def test_merged_member_vardemangd_conflict_warns_keeps_first() -> None:
         ("EX", "Receptfritt"),
         ("HA", "Handelsvara"),
     }
+    assert states[0].valid_to == "2010-12-31", (
+        "divergent sets: surviving set keeps its OWN window, valid_to NOT widened"
+    )
 
 
 @pytest.mark.parametrize("coded_first", [True, False])
 def test_merged_member_asymmetric_vardemangd_prefers_coded(coded_first: bool) -> None:
-    # #401 regression (prefer-coded): one merged member classifies, the other is
-    # free text (value_set_id None). They share valid_from=2001 -> the SAME
-    # state_id, so they collide in the valid_to-widening reconciliation. The
-    # CODED member must win regardless of delivery order — a codeless member
+    # #401 regression (prefer-coded + Codex P2 window-clamp): one merged member
+    # classifies, the other is free text (value_set_id None). They share
+    # valid_from=1960 -> the SAME state_id, so they collide in the reconciliation.
+    # The CODED member must win regardless of delivery order — a codeless member
     # arriving first must NOT silently drop the sibling's value set — and this is
     # a coalesce, not a conflict, so NO warning fires.
-    coded = _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001)
-    codeless = _var("KON", value_set_text="Fritext, ingen kodning", data_from=2001)
+    #
+    # This is the real `bu/SPEC` shape: coded set ends 2014, codeless tail runs
+    # to 2016. The surviving coded set must keep ITS OWN window (valid_to 2014),
+    # never widen to 2016 — extending codes 2015-2016 where the metadata never
+    # defined them is a code-search false positive. The codeless tail's extra
+    # coverage is forfeited (a dropped codeless tail < an over-claimed code
+    # window).
+    coded = _var("SPEC", value_set_text="1=Man; 2=Kvinna", data_from=1960, data_to=2014)
+    codeless = _var(
+        "SPEC", value_set_text="Fritext, ingen kodning", data_from=1960, data_to=2016
+    )
     reg = _register(
         "bu",
         [coded, codeless] if coded_first else [codeless, coded],
@@ -1025,6 +1043,9 @@ def test_merged_member_asymmetric_vardemangd_prefers_coded(coded_first: bool) ->
         ("1", "Man"),
         ("2", "Kvinna"),
     }
+    assert states[0].valid_to == "2014-12-31", (
+        "coded set keeps its OWN window; codeless 2016 tail must NOT extend codes"
+    )
 
 
 def test_merged_member_prefer_coded_keeps_prior_data_type() -> None:
@@ -1081,6 +1102,115 @@ def test_merged_member_identical_vardemangd_does_not_warn() -> None:
     assert _of(objs, IRVariableState)
     assert [
         w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
+
+
+def test_merged_member_same_value_set_different_window_widens() -> None:
+    # Two merged members with the SAME Värdemängd (content-shared value set) but
+    # DIFFERENT end years collide on one state_id. Because the value set is
+    # identical, widening `valid_to` is a genuine coverage union (no code
+    # over-claim) — the surviving state must carry the WIDEST window, not the
+    # narrower first-in-order one.
+    reg = _register(
+        "bu",
+        [
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001, data_to=2010),
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001, data_to=2016),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert states[0].value_set_id is not None
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+    assert states[0].valid_to == "2016-12-31", (
+        "identical value set: widening valid_to is a safe coverage union"
+    )
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
+
+
+# ---------------------------------------------------------------------------
+# Overlap-suppression post-pass (#401): two merged members on the same
+# variant+column with DIFFERENT valid_from (so DISTINCT state_ids, never
+# reconciled by `_collect`) whose Värdemängd cells classify to DISTINCT value
+# sets over OVERLAPPING windows would resolve a period to >1 value set (the
+# build invariant). The Värdemängd path has no Tidsperiod to segment on, so
+# the adapter conservatively nulls BOTH conflicting states back to code-less
+# and WARNS. Disjoint windows are a legitimate era change and stay bound.
+# ---------------------------------------------------------------------------
+
+
+def test_overlapping_members_distinct_vardemangd_suppressed() -> None:
+    # bu/SPEC shape: two variant-less merged members (all -> _default, one
+    # column) classify to DIFFERENT value sets over OVERLAPPING windows
+    # (1960-2016 vs 2001-2014). Different valid_from -> distinct state_ids, so
+    # `_collect` never sees them; the post-pass must null BOTH back to
+    # code-less (no Tidsperiod to segment the Värdemängd on) and warn once.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna",
+                data_from=1960,
+                data_to=2016,
+            ),
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna; 3=Annat",
+                data_from=2001,
+                data_to=2014,
+            ),
+        ],
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2, "different valid_from -> two distinct states"
+    assert all(s.value_set_id is None for s in states), (
+        "both conflicting states reverted to code-less (pre-#401 behavior)"
+    )
+    warns = [w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_overlap"]
+    assert len(warns) == 1, "one warning per affected (variable, column)"
+    assert "SPEC" in (warns[0].detail or "")
+
+
+def test_disjoint_members_distinct_vardemangd_stay_bound() -> None:
+    # Negative: same variant+column, distinct Värdemängd, but DISJOINT windows
+    # (2001-2005 vs 2006-2010) — a legitimate era change. No overlap, so both
+    # states keep their (distinct) value sets and NO suppression warning fires.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna",
+                data_from=2001,
+                data_to=2005,
+            ),
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna; 3=Annat",
+                data_from=2006,
+                data_to=2010,
+            ),
+        ],
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    assert all(s.value_set_id is not None for s in states), (
+        "disjoint-window era change must stay bound"
+    )
+    assert len({s.value_set_id for s in states}) == 2, (
+        "the two eras carry their own distinct value sets"
+    )
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_overlap"
     ] == []
 
 
