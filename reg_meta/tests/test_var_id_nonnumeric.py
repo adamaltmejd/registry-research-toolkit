@@ -1,14 +1,25 @@
-"""#466: `var_id` is the SCB legacy numeric variable id (= a pure-digit
-`provider_key`). SOS variables carry a Swedish *name* as `provider_key` and
-curated thin providers carry a delivery *column* token; both are non-numeric, so
+"""#474 (was #466): `var_id` is the SCB legacy numeric variable id (= SCB's
+numeric `provider_key`). SOS variables carry a Swedish *name* as `provider_key`
+and curated thin providers carry a delivery *column* token; both are non-SCB, so
 the old `CAST(provider_key AS INTEGER)` yielded a meaningless `var_id: 0`. The
-digit-guarded `_VAR_ID_EXPR` now emits the numeric id for a pure-digit
-`provider_key` and NULL (→ Python None) otherwise.
+`_VAR_ID_EXPR` now classifies by the build's minted-id BAND — every SCB
+`variable_id` is `< 2^62`, every non-SCB (SOS, curated, FOHM, steward)
+`variable_id` is `>= 2^62` (`reg_meta_build/validate.py::_check_minted_id_bands`)
+— emitting the numeric id for an SCB-band variable and NULL (→ Python None)
+otherwise.
+
+The band guard supersedes #466's pure-digit `provider_key` heuristic: it is
+strictly more correct, because a non-SCB `provider_key` that happens to be
+digit-only (a curated column literally named `2020`) is still in the high band,
+so its `var_id` resolves to None rather than a bogus `2020`.
 
 Builds a synthetic DB directly (the SCB CSV pipeline can only mint numeric
 provider_keys) with one variable per provider flavour, each in its own register
 (a register belongs to one provider, so provider_key shape is uniform within a
-register — no int/None mixing inside a single query result).
+register — no int/None mixing inside a single query result). Each fixture
+variable gets a band-correct EXPLICIT `variable_id`: SCB vars low (< 2^62),
+non-SCB vars high (>= 2^62) — SQLite's autoincrement would otherwise hand out
+low ids (1, 2, 3, …) that wrongly read as SCB-band.
 """
 
 from __future__ import annotations
@@ -38,31 +49,42 @@ from _slugged_db import (  # noqa: E402
 if TYPE_CHECKING:
     import sqlite3
 
-# provider_key flavours: SCB numeric, SOS name, curated column token, plus a
-# MIXED leading-digit value that the OLD `CAST` would have truncated to 44 but
-# the digit-guard must reject (→ None).
+# provider_key flavours: SCB numeric, SOS name, curated column token, plus two
+# non-SCB values whose `provider_key` would fool a digit heuristic — a MIXED
+# leading-digit value and a DIGIT-ONLY value — both of which the BAND guard
+# rejects (→ None) purely on their high-band `variable_id`.
 _SCB_KEY = "44"
 _SOS_KEY = "Diagnos"  # a Swedish variable name (SOS provider_key shape)
 _CURATED_KEY = "diagnos"  # a delivery-column token (curated provider_key shape)
-_MIXED_KEY = "44abc"  # leading-digit-but-not-pure-digit
+_MIXED_KEY = "44abc"  # leading-digit-but-not-pure-digit (non-SCB, high band)
+_DIGIT_KEY = "2020"  # PURE-digit but non-SCB (high band) — the band guard's edge
+# over the old digit guard (which would have leaked `2020`)
+
+# Minted-id band boundary (mirrors reg_meta_build.id._MINT_BIT / queries
+# `_SCB_ID_CEILING`): SCB variable_id < 2^62, non-SCB >= 2^62.
+_MINT_BIT = 2**62
 
 
 def _insert_variable(
     conn: sqlite3.Connection,
     *,
+    variable_id: int,
     register_id: int,
     provider_key: str,
     name: str,
     slug: str,
 ) -> int:
-    """Insert a `variable` with an explicit (possibly non-numeric) provider_key.
+    """Insert a `variable` with an EXPLICIT band-correct `variable_id` and a
+    (possibly non-numeric) `provider_key`.
 
-    `_slugged_db.add_variable` types `var_id` as `int`; here provider_key is a
-    raw string, so go straight to the INSERT (provider_key is TEXT)."""
+    `_slugged_db.add_variable` types `var_id` as `int` and lets SQLite assign the
+    `variable_id` (low autoincrement) — useless here, since the band guard reads
+    `variable_id`, so we must place each id in its provider's band by hand.
+    `provider_key` is a raw string, so go straight to the INSERT (it is TEXT)."""
     cur = conn.execute(
-        "INSERT INTO variable (register_id, provider_key, name, slug) "
-        "VALUES (?, ?, ?, ?)",
-        (register_id, provider_key, name, slug),
+        "INSERT INTO variable (variable_id, register_id, provider_key, name, slug) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (variable_id, register_id, provider_key, name, slug),
     )
     assert cur.lastrowid is not None
     return cur.lastrowid
@@ -70,11 +92,16 @@ def _insert_variable(
 
 @pytest.fixture
 def db() -> sqlite3.Connection:
-    """One SCB register (numeric key), one SOS register (name key), one curated
-    register (column-token key), plus a SCB var with a mixed leading-digit key.
-    Each variable gets a variant + an open-range state tagged with the shipped
-    SUN2020 classification (id 1) so the classification→variables query returns
-    them all."""
+    """One SCB register (numeric key, LOW-band id), one SOS register (name key,
+    HIGH-band id), one curated register (column-token key, HIGH-band id), plus two
+    non-SCB curated vars whose provider_keys are digit-shaped (`44abc` / `2020`)
+    yet HIGH-band — the band guard must still resolve those to None. Each variable
+    gets a variant + an open-range state tagged with the shipped SUN2020
+    classification (id 1) so the classification→variables query returns them all.
+
+    The `variable_id`s are placed explicitly in their provider's minted-id band
+    (SCB < 2^62, non-SCB >= 2^62); SQLite autoincrement would hand out low ids
+    that the band guard would misread as SCB."""
     # Drop the default LISA variable so we control every provider_key explicitly;
     # keep the default classification (SUN2020, id 1).
     conn = build_slugged_db(variable=None)
@@ -94,15 +121,22 @@ def db() -> sqlite3.Connection:
         "SELECT id FROM classification WHERE slug = 'sun2020'"
     ).fetchone()[0]
 
+    # (variable_id, register_id, variant_id, provider_key, name, slug). SCB var
+    # gets a LOW id; every non-SCB var gets a HIGH (>= 2^62) id. The digit-shaped
+    # non-SCB keys (`44abc`, `2020`) live on the CURATED (non-SCB) register — an
+    # SCB register never carries a non-numeric/leading-zero key, so the band guard
+    # only has to defend the non-SCB side.
     specs = [
-        (1, 10, _SCB_KEY, "Kön", "kon"),
-        (2, 20, _SOS_KEY, "Diagnos", "diagnos-sos"),
-        (3, 30, _CURATED_KEY, "Diagnos curated", "diagnos-cur"),
-        (1, 10, _MIXED_KEY, "Mixed", "mixed"),
+        (44, 1, 10, _SCB_KEY, "Kön", "kon"),
+        (_MINT_BIT + 1, 2, 20, _SOS_KEY, "Diagnos", "diagnos-sos"),
+        (_MINT_BIT + 2, 3, 30, _CURATED_KEY, "Diagnos curated", "diagnos-cur"),
+        (_MINT_BIT + 3, 3, 30, _MIXED_KEY, "Mixed", "mixed"),
+        (_MINT_BIT + 4, 3, 30, _DIGIT_KEY, "DigitOnly", "digit-only"),
     ]
-    for register_id, variant_id, provider_key, name, slug in specs:
+    for variable_id, register_id, variant_id, provider_key, name, slug in specs:
         _insert_variable(
             conn,
+            variable_id=variable_id,
             register_id=register_id,
             provider_key=provider_key,
             name=name,
@@ -124,15 +158,19 @@ def db() -> sqlite3.Connection:
 def test_classification_to_variables_var_id_guard(db: sqlite3.Connection) -> None:
     rows = search_variables_by_classification(db, "sun2020")
     by_name = {r["variable_name"]: r["var_id"] for r in rows}
-    # SCB pure-digit provider_key → the numeric var_id (int 44).
+    # SCB var (low-band variable_id) → the numeric var_id (int 44).
     assert by_name["Kön"] == 44
     assert isinstance(by_name["Kön"], int)
-    # SOS (name) + curated (column) provider_keys → None, not 0.
+    # SOS (name) + curated (column) provider_keys, both HIGH band → None, not 0.
     assert by_name["Diagnos"] is None
     assert by_name["Diagnos curated"] is None
-    # Mixed leading-digit value is rejected by the pure-digit guard → None,
-    # distinguishing it from the old leading-digit CAST (which would give 44).
+    # The band guard rejects on `variable_id`, not on provider_key shape, so a
+    # non-SCB var (high band) resolves to None regardless of its key text:
+    #   - "44abc" (leading-digit but not pure-digit), and
+    #   - "2020"  (PURE digit) — the band guard's edge over the old digit guard,
+    #     which would have leaked 2020 as a var_id.
     assert by_name["Mixed"] is None
+    assert by_name["DigitOnly"] is None
 
 
 def test_search_varname_var_id_guard(db: sqlite3.Connection) -> None:
@@ -147,7 +185,7 @@ def test_search_varname_var_id_guard(db: sqlite3.Connection) -> None:
 
 
 def test_varinfo_var_id_guard(db: sqlite3.Connection) -> None:
-    # SCB var addressable by numeric var_id, surfaces var_id 44.
+    # SCB var (low-band id) addressable by numeric var_id, surfaces var_id 44.
     scb = get_varinfo(db, "44", register="lisa")
     assert scb and scb[0]["var_id"] == 44
 
@@ -161,12 +199,20 @@ def test_varinfo_var_id_guard(db: sqlite3.Connection) -> None:
     assert cur and cur[0]["var_id"] is None
 
 
-def test_mixed_leading_digit_key_is_none(db: sqlite3.Connection) -> None:
-    # The guard is pure-digit, NOT leading-digit: "44abc" → None. The old
-    # `CAST('44abc' AS INTEGER)` would have yielded 44 (SQLite leading-digit
-    # parse) — this is the behaviour the guard fixes.
-    mixed = get_varinfo(db, "Mixed", register="lisa")
+def test_digit_shaped_nonscb_key_is_none(db: sqlite3.Connection) -> None:
+    # The BAND guard classifies on `variable_id` band, NOT on provider_key shape,
+    # so a non-SCB var (high-band id) resolves to None even when its key would
+    # have fooled the old digit guard. Both digit-shaped non-SCB vars live on the
+    # curated (non-SCB) register:
+    #   - "44abc": leading-digit but not pure-digit — the old `CAST(... AS INTEGER)`
+    #     would have parsed 44; the digit guard already rejected it, the band guard
+    #     keeps rejecting it (for the right reason: high band, not "has letters").
+    mixed = get_varinfo(db, "Mixed", register="Curated Register")
     assert mixed and mixed[0]["var_id"] is None
+    #   - "2020": PURE digit — the OLD digit guard would have LEAKED 2020 as a
+    #     var_id; the band guard correctly returns None because its id is high band.
+    digit = get_varinfo(db, "DigitOnly", register="Curated Register")
+    assert digit and digit[0]["var_id"] is None
 
 
 def test_none_var_id_renders_blank_not_none() -> None:

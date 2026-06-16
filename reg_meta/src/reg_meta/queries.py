@@ -24,19 +24,35 @@ if TYPE_CHECKING:
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
 # var_id is the SCB legacy numeric variable id (= SCB's numeric provider_key).
-# SOS (provider_key=name) and curated thin providers (provider_key=column) are
-# non-numeric, so the bare CAST yielded a meaningless 0; emit NULL for them (#466).
-# Mirrors reg_meta_build/.../classifications.py::_LEVEL_EXPR's digit-guard.
+# SOS (provider_key=name) and curated thin providers (provider_key=column) carry
+# a non-SCB provider_key, so emit NULL for them (#466) — the display contract is
+# "numeric for SCB, blank for everyone else".
+#
+# Provider gate = the build's minted-id BAND (#474, replacing the #466 digit
+# heuristic): every SCB variable_id is `< 2^62`, every non-SCB (SOS, FOHM, curated,
+# steward) variable_id is `>= 2^62`. reg_meta_build/validate.py enforces this
+# (`_check_minted_id_bands`: SCB ids `< _MINT_BIT`, non-SCB ids `>= _MINT_BIT`), so
+# the band is a hard build invariant we can read off `variable_id` with no provider
+# join. It is strictly more correct than the digit guard: a non-SCB provider_key
+# that happens to be digit-only (e.g. a curated column literally named `2020`) is
+# still in the high band, so its var_id correctly resolves to NULL rather than a
+# bogus `2020`.
+# build-invariant: SCB variable_id < 2^62, non-SCB >= 2^62 (band check)
+_SCB_ID_CEILING = 2**62
 _VAR_ID_EXPR = (
-    "CASE WHEN {col} GLOB '[0-9]*' AND NOT {col} GLOB '*[^0-9]*' "
-    "THEN CAST({col} AS INTEGER) ELSE NULL END"
+    "CASE WHEN {vid} < " + str(_SCB_ID_CEILING) + " THEN CAST({pk} AS INTEGER) "
+    "ELSE NULL END"
 )
-# Pre-rendered per qualifier (the column reference varies by query alias). Plain
-# strings so they splice into the SQL fragments by concatenation, no f-string.
-_VAR_ID_V = _VAR_ID_EXPR.format(col="v.provider_key") + " AS var_id"
-_VAR_ID_VF = _VAR_ID_EXPR.format(col="vf.provider_key") + " AS var_id"
-_VAR_ID_VAR = _VAR_ID_EXPR.format(col="var.provider_key") + " AS var_id"
-_VAR_ID_BARE = _VAR_ID_EXPR.format(col="provider_key") + " AS var_id"
+# Pre-rendered per qualifier (the variable_id / provider_key column references vary
+# by query alias). Plain strings so they splice into the SQL fragments by
+# concatenation, no f-string. `vf` is `variable_fts`, whose `rowid` IS the
+# variable_id (content-synced rowid alias; see `_search_description_variables`).
+_VAR_ID_V = _VAR_ID_EXPR.format(vid="v.variable_id", pk="v.provider_key") + " AS var_id"
+_VAR_ID_VF = _VAR_ID_EXPR.format(vid="vf.rowid", pk="vf.provider_key") + " AS var_id"
+_VAR_ID_VAR = (
+    _VAR_ID_EXPR.format(vid="var.variable_id", pk="var.provider_key") + " AS var_id"
+)
+_VAR_ID_BARE = _VAR_ID_EXPR.format(vid="variable_id", pk="provider_key") + " AS var_id"
 
 
 def _try_int(value: str) -> int | str:
@@ -215,41 +231,40 @@ def _filter_search_by_years(
     if not results:
         return results
 
-    # Collect unique register_ids and (register_id, var_id) pairs to check
-    var_pairs: set[tuple[int, int]] = set()
+    # Collect the variable hits to year-filter at VARIABLE granularity and the
+    # register hits to filter register-wide (#474). A variable hit carries its
+    # unique `_variable_id`; the displayed `var_id` is NULL for every non-SCB
+    # variable, so keying on it folded every non-SCB hit into the register-level
+    # branch (kept if ANY sibling overlapped). `_variable_id` filters each hit by
+    # its OWN states. Non-variable hits (register / classification / code) carry
+    # no `_variable_id`.
+    var_ids_to_check: set[int] = set()
     reg_only_ids: set[int] = set()
     for r in results:
         rid = r.get("register_id")
-        vid = r.get("var_id")
-        if rid is not None and vid is not None:
-            var_pairs.add((rid, vid))
+        variable_id = r.get("_variable_id")
+        if variable_id is not None:
+            var_ids_to_check.add(variable_id)
         elif rid is not None:
             reg_only_ids.add(rid)
 
     # A2.6: edition years come from `variable_state` validity windows now (the
-    # register_version table is dropped before ship). A (register_id, var_id)
-    # pair is in-range if any of its states' validity window overlaps the year
-    # range; `var_id` is the variable's `provider_key`.
-    valid_var_pairs: set[tuple[int, int]] = set()
-    if var_pairs:
-        all_reg_ids = {p[0] for p in var_pairs}
-        placeholders = ",".join("?" * len(all_reg_ids))
+    # register_version table is dropped before ship). A variable is in-range if
+    # any of its states' validity window overlaps the year range.
+    valid_var_ids: set[int] = set()
+    if var_ids_to_check:
+        placeholders = ",".join("?" * len(var_ids_to_check))
         rows = conn.execute(
-            "SELECT DISTINCT v.register_id, " + _VAR_ID_V + ", "
-            "vs.valid_from, vs.valid_to "
+            "SELECT DISTINCT vs.variable_id, vs.valid_from, vs.valid_to "
             "FROM variable_state vs "
-            "JOIN variable v ON vs.variable_id = v.variable_id "
-            f"WHERE v.register_id IN ({placeholders})",
-            list(all_reg_ids),
+            f"WHERE vs.variable_id IN ({placeholders})",
+            list(var_ids_to_check),
         ).fetchall()
         for row in rows:
-            pair = (row["register_id"], row["var_id"])
-            if pair not in var_pairs:
-                continue
             if _state_overlaps_years(
                 row["valid_from"], row["valid_to"], year_lo, year_hi
             ):
-                valid_var_pairs.add(pair)
+                valid_var_ids.add(row["variable_id"])
 
     # For register-type results: check if register has any state in range.
     valid_reg_ids: set[int] = set()
@@ -271,9 +286,10 @@ def _filter_search_by_years(
     filtered = []
     for r in results:
         rid = r.get("register_id")
-        vid = r.get("var_id")
-        if rid is not None and vid is not None:
-            if (rid, vid) in valid_var_pairs:
+        variable_id = r.get("_variable_id")
+        if variable_id is not None:
+            # Variable hit — filtered by its OWN states (#474), not register-wide.
+            if variable_id in valid_var_ids:
                 filtered.append(r)
         elif rid is not None:
             if rid in valid_reg_ids:
@@ -1495,7 +1511,7 @@ def get_schema(
         state_rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
-            "" + _VAR_ID_V + ", v.slug AS variable_slug, "
+            "v.variable_id, " + _VAR_ID_V + ", v.slug AS variable_slug, "
             "v.name AS variable_name, COALESCE(v.source_label, '') AS source, "
             "cg.group_key AS concept_group, cg.label AS concept_group_label "
             "FROM variable_state vs "
@@ -1531,6 +1547,10 @@ def get_schema(
             for s in states:
                 col_dicts.append(
                     {
+                        # `variable_id` (always present + unique) is the key
+                        # `compare()` dedups on (#474); `var_id` rides along as
+                        # the display value (blank for non-SCB).
+                        "variable_id": s["variable_id"],
                         "var_id": s["var_id"],
                         "data_type": s["data_type"],
                         "data_length": s["data_length"],
@@ -2305,20 +2325,21 @@ def _columns_at_year(
     overlaps that calendar year. Returns an empty dict when the variant has no
     state covering the year (the caller treats that like "version absent").
 
-    Keyed by `var_id` (NOT `variable_id`) on purpose: `get_diff` is a
-    GROUP-level schema diff whose public contract diffs a register's columns by
-    `var_id` (from/to var_id set intersection), so this collapses to one row per
-    var_id. After an A2.2 split several siblings share a var_id; if more than one
-    is active in the same (variant, year) we take the lexically-smallest delivery
-    column for determinism — the diff under-reports the extra siblings as one
-    column rather than leaking them onto an unrelated single variable. That is an
-    accepted imprecision of var_id-grained diffing, distinct from the
-    matched-variable sibling leak the get_varinfo / get_values fixes address.
+    Keyed by `variable_id` (#474): each variable is a distinct schema column, so
+    one entry per variable. The DISPLAYED `var_id` (numeric for SCB, blank for
+    non-SCB) rides on the row but is NOT the key — keying by it collapsed every
+    non-SCB variable (shared NULL var_id) into one entry, dropping all but the
+    first column from the diff. `variable_id` is always present and unique.
+
+    A2.2 split siblings get distinct `variable_id`s, so they no longer collapse;
+    each surfaces as its own column. (The old "lex-smallest column wins per
+    var_id" de-dup is gone — it only collapsed siblings that share a var_id, which
+    was the bug, not a feature.)
     """
     iso_lo = f"{year:04d}-12-31"  # any state starting on/before year-end ...
     iso_hi = f"{year:04d}-01-01"  # ... and ending on/after year-start overlaps
     rows = conn.execute(
-        "SELECT " + _VAR_ID_V + ", vs.data_type, "
+        "SELECT v.variable_id, " + _VAR_ID_V + ", vs.data_type, "
         "vs.data_length, v.name AS variable_name, vs.delivery_column_name "
         "FROM variable_state vs "
         "JOIN variable v ON vs.variable_id = v.variable_id "
@@ -2329,10 +2350,11 @@ def _columns_at_year(
     ).fetchall()
     result: dict[int, dict[str, Any]] = {}
     for r in rows:
-        if r["var_id"] in result:
-            continue  # first (lex-smallest column) wins per var_id
+        if r["variable_id"] in result:
+            continue  # one row per variable; first (lex-smallest column) wins
         col = r["delivery_column_name"]
-        result[r["var_id"]] = {
+        result[r["variable_id"]] = {
+            "variable_id": r["variable_id"],
             "var_id": r["var_id"],
             "variable_name": r["variable_name"],
             "data_type": r["data_type"],
@@ -2372,16 +2394,19 @@ def get_diff(
             reg_ids,
         ).fetchall()
 
-    # Resolve each variable input to var_ids, tracking name mapping
-    filter_var_ids: set[int] | None = None
-    var_id_to_name: dict[int, str] = {}
-    var_id_to_input: dict[int, str] = {}
+    # Resolve each variable input to `variable_id`s (#474 — the unique key the
+    # diff is keyed by; the displayed `var_id` rides alongside for output but is
+    # NOT the key, since it collapses non-SCB variables under one NULL).
+    filter_variable_ids: set[int] | None = None
+    var_name_by_id: dict[int, str] = {}
+    var_input_by_id: dict[int, str] = {}
+    var_id_display_by_id: dict[int, int | None] = {}
     if variables:
-        filter_var_ids = set()
+        filter_variable_ids = set()
         ph = _in_placeholders(reg_ids)
         for v in variables:
             rows = conn.execute(
-                "SELECT " + _VAR_ID_BARE + ", name FROM variable "
+                "SELECT variable_id, " + _VAR_ID_BARE + ", name FROM variable "
                 f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
                 f"AND register_id IN ({ph})",
                 [_try_int(v), v, *reg_ids],
@@ -2390,18 +2415,19 @@ def get_diff(
                 # A2.7: `variable_alias` is variable_id-keyed; join straight to
                 # `variable`. `var_id` is the variable's `provider_key`.
                 rows = conn.execute(
-                    "SELECT DISTINCT " + _VAR_ID_VAR + ", var.name "
+                    "SELECT DISTINCT var.variable_id, " + _VAR_ID_VAR + ", var.name "
                     f"FROM variable_alias va "
                     f"JOIN variable var ON va.variable_id = var.variable_id "
                     f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND var.register_id IN ({ph})",
                     [v, *reg_ids],
                 ).fetchall()
             for r in rows:
-                filter_var_ids.add(r["var_id"])
-                var_id_to_name[r["var_id"]] = r["name"]
-                var_id_to_input[r["var_id"]] = v
+                filter_variable_ids.add(r["variable_id"])
+                var_name_by_id[r["variable_id"]] = r["name"]
+                var_input_by_id[r["variable_id"]] = v
+                var_id_display_by_id[r["variable_id"]] = r["var_id"]
 
-        if not filter_var_ids:
+        if not filter_variable_ids:
             names = ", ".join(f"'{v}'" for v in variables)
             raise RegMetaError(
                 exit_code=EXIT_NOT_FOUND,
@@ -2412,6 +2438,7 @@ def get_diff(
             )
 
     variants_out: list[dict[str, Any]] = []
+    # Keyed by `variable_id` (#474), matching `_columns_at_year`'s dict keys.
     unchanged_by_var: dict[int, list[str]] = {}
     changed_any_variant: set[int] = set()
     any_versions_found = False
@@ -2428,6 +2455,9 @@ def get_diff(
             continue
         any_versions_found = True
 
+        # `*_cols` are keyed by `variable_id` (#474), so the set arithmetic and
+        # all the `*_ids` below are variable_ids — the displayed `var_id` is
+        # carried on each row for output but is never the key.
         from_ids = set(from_cols)
         to_ids = set(to_cols)
 
@@ -2449,7 +2479,8 @@ def get_diff(
             if changes:
                 changed.append(
                     {
-                        "var_id": vid,
+                        "variable_id": vid,
+                        "var_id": tc["var_id"],
                         "variable_name": tc["variable_name"],
                         "changes": changes,
                     }
@@ -2457,22 +2488,22 @@ def get_diff(
             else:
                 unchanged_count += 1
 
-        if filter_var_ids is not None:
-            changed_var_ids = (
-                {a["var_id"] for a in added}
-                | {r["var_id"] for r in removed}
-                | {c["var_id"] for c in changed}
-            ) & filter_var_ids
-            changed_any_variant.update(changed_var_ids)
-            for vid in filter_var_ids - changed_var_ids:
+        if filter_variable_ids is not None:
+            changed_variable_ids = (
+                {a["variable_id"] for a in added}
+                | {r["variable_id"] for r in removed}
+                | {c["variable_id"] for c in changed}
+            ) & filter_variable_ids
+            changed_any_variant.update(changed_variable_ids)
+            for vid in filter_variable_ids - changed_variable_ids:
                 if vid in from_ids or vid in to_ids:
                     # `name` is the glossary rename (see DESIGN.md → Glossary and Swedish↔English crosswalk) of
                     # `registervariantnamn` on register_variant.
                     unchanged_by_var.setdefault(vid, []).append(rv["name"])
 
-            added = [a for a in added if a["var_id"] in filter_var_ids]
-            removed = [r for r in removed if r["var_id"] in filter_var_ids]
-            changed = [c for c in changed if c["var_id"] in filter_var_ids]
+            added = [a for a in added if a["variable_id"] in filter_variable_ids]
+            removed = [r for r in removed if r["variable_id"] in filter_variable_ids]
+            changed = [c for c in changed if c["variable_id"] in filter_variable_ids]
 
         if not added and not removed and not changed:
             continue
@@ -2512,17 +2543,19 @@ def get_diff(
         "to_year": to_year,
         "variants": variants_out,
     }
-    if var_id_to_input:
+    if var_input_by_id:
+        # Keyed/sorted by `variable_id` internally; the displayed `var_id` (numeric
+        # for SCB, None for non-SCB) is the carried display value, not the key.
         result["resolved_variables"] = [
             {
-                "input": var_id_to_input[vid],
-                "variable_name": var_id_to_name[vid],
-                "var_id": vid,
+                "input": var_input_by_id[vid],
+                "variable_name": var_name_by_id[vid],
+                "var_id": var_id_display_by_id[vid],
             }
-            for vid in sorted(var_id_to_name)
+            for vid in sorted(var_name_by_id)
         ]
     fully_unchanged = [
-        var_id_to_name[vid]
+        var_name_by_id[vid]
         for vid in sorted(unchanged_by_var)
         if vid not in changed_any_variant
     ]
@@ -2864,23 +2897,30 @@ def compare(
             )
             continue
 
-        # Flatten schema: build alias→variable mapping
+        # Flatten schema: build alias→variable mapping.
+        # Keyed by `variable_id` (#474) — the displayed `var_id` is NULL for every
+        # non-SCB column, so keying `all_registry_vars` / `matched_var_ids` by it
+        # collapsed every non-SCB registry column into one entry (matching one
+        # local column then suppressed all the others as "matched"). `variable_id`
+        # is always present and unique; `var_id` rides along for display.
         alias_to_var: dict[str, dict[str, Any]] = {}
         all_registry_vars: dict[int, dict[str, Any]] = {}
         for variant in schema.get("variants", []):
             for version in variant.get("versions", []):
                 for col in version.get("columns", []):
+                    variable_id = col["variable_id"]
                     vid = col["var_id"]
                     vname = col["variable_name"]
                     aliases_str = col.get("aliases") or ""
                     aliases = [a.strip() for a in aliases_str.split(",") if a.strip()]
 
                     var_info = {
+                        "variable_id": variable_id,
                         "var_id": vid,
                         "variable_name": vname,
                         "aliases": aliases,
                     }
-                    all_registry_vars[vid] = var_info
+                    all_registry_vars[variable_id] = var_info
 
                     for alias in aliases:
                         alias_to_var[alias.lower()] = var_info
@@ -2889,7 +2929,7 @@ def compare(
         # Classify local columns
         matched = []
         extra_local = []
-        matched_var_ids: set[int] = set()
+        matched_variable_ids: set[int] = set()
         local_lower = set()
 
         for col in local_columns:
@@ -2904,14 +2944,14 @@ def compare(
                         "variable_name": var_info["variable_name"],
                     }
                 )
-                matched_var_ids.add(var_info["var_id"])
+                matched_variable_ids.add(var_info["variable_id"])
             else:
                 extra_local.append(col)
 
         # Registry variables not in local columns
         missing_from_registry = []
-        for vid, var_info in sorted(all_registry_vars.items()):
-            if vid in matched_var_ids:
+        for variable_id, var_info in sorted(all_registry_vars.items()):
+            if variable_id in matched_variable_ids:
                 continue
             if any(a.lower() in local_lower for a in var_info["aliases"]):
                 continue
