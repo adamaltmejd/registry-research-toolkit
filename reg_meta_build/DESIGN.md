@@ -235,8 +235,12 @@ reusing it rather than re-minting codes. The adapter contributes one
 `classification_candidate` per such variable with `value_set_id = NULL` (no codes),
 feeding the same provider-blind candidate path SOS uses (`external_classification`
 resolver); the `_backfill_state_classifications` pass then tags the variable's states,
-keying on `(variable_id, NULL)`. FOHM (SmiNet + the national vaccination register) is
-the first thin provider; Försäkringskassan (MiDAS) follows.
+keying on `(variable_id, NULL)`. The `classification` short_name is validated at TOML
+load against the seed manifest (`classifications.toml`): an **undeclared** short_name
+fails the build fast (a typo guard — `"ICD-10"` for `"ICD-10-SE"`), while a **declared**
+but provider-gated classification not seeded in the current build's provider subset is
+allowed and the link simply drops at feed time. FOHM (SmiNet + the national vaccination
+register) is the first thin provider; Försäkringskassan (MiDAS) follows.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived

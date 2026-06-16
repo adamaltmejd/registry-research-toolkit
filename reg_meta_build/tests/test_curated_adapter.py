@@ -245,6 +245,29 @@ def test_no_classification_records_no_candidate(tmp_path: Path) -> None:
     assert adapter.classification_candidates == []
 
 
+def test_undeclared_classification_raises(tmp_path: Path) -> None:
+    # `"ICD-10"` is a hand-authoring typo — the declared short_name is
+    # `"ICD-10-SE"`. The single-pass validation against the in-repo
+    # `classifications.toml` seed (read by `declared_short_names()`) must fail
+    # the build fast, naming the offending value.
+    toml = """\
+[[register]]
+key = "reg1"
+name = "Register One"
+valid_from = "2010-01-01"
+
+  [[register.variable]]
+  name = "Diagnos"
+  column = "diagnos"
+  classification = "ICD-10"
+"""
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fohm", toml, tmp_path)
+    assert exc.value.code == "curated_toml_invalid"
+    assert "ICD-10" in exc.value.message
+    assert "not a declared classification" in exc.value.message
+
+
 def test_classification_empty_string_records_no_candidate(tmp_path: Path) -> None:
     # `_opt_str` normalizes ""/whitespace to None, so an empty `classification`
     # is ABSENT, not a "" short_name — no candidate. Locks the contract against a

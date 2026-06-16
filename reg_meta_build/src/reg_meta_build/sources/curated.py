@@ -61,6 +61,7 @@ from datetime import date
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import curation_error
+from reg_meta_build.classifications import declared_short_names
 from reg_meta_build.db import _file_sha256
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
@@ -203,6 +204,34 @@ class CuratedAdapter:
         for entry in reg_tables:
             reg = self._load_register(path, entry, seen_reg_keys)
             registers.append(reg)
+
+        # Validate `classification` references against the seed manifest in a
+        # single pass once everything is parsed (PROVIDER-AGNOSTIC: a declared
+        # but provider-gated short_name passes even in a build that won't seed
+        # it — the link just drops at feed time; only an UNDECLARED short_name,
+        # i.e. a typo, fails). Resolve the seed only when something references a
+        # classification, so a curated TOML with no `classification` keys needs
+        # neither the seed nor `declared_short_names()`.
+        if any(
+            var.classification is not None for reg in registers for var in reg.variables
+        ):
+            declared = declared_short_names()
+            for reg in registers:
+                for var in reg.variables:
+                    if (
+                        var.classification is not None
+                        and var.classification not in declared
+                    ):
+                        raise curation_error(
+                            "curated_toml_invalid",
+                            f"{path.name}: register {reg.key!r} variable "
+                            f"{var.name!r}: classification {var.classification!r} "
+                            f"is not a declared classification "
+                            f"(classifications.toml).",
+                            "Use an existing classification short_name (e.g. "
+                            "'ICD-10-SE', 'ATC') or declare it in "
+                            "classifications.toml.",
+                        )
         return registers
 
     def _load_register(
