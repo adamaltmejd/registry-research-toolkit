@@ -1201,10 +1201,10 @@ are orthogonal; `valid_from[:4]` remains the display-year source).
 - **Display.** Year-by-default rendering is unchanged; only genuinely sub-annual windows
   surface period tokens (formatter above).
 
-#### Consumers: monthly column families (#319, SHIPPED for the 4 LISA families)
+#### Consumers: monthly column families (#319 LISA families; #383 non-LISA families)
 
-The catalog carries \~9 monthly families ≈ 94 variables across
-lisa/ekonomiskt-bistand/rams/bas/hsl — 12 month-named delivery columns per concept (LISA
+The catalog carries 8 monthly families ≈ 96 columns across
+lisa/ekonomiskt-bistand/rams/bas — 12 month-named delivery columns per concept (LISA
 `lonfink{jan..dec}`, `agi{1,2,3}lonfink{jan..dec}`, …). These ship inside **annual**
 editions, so the interval resolver does *not* by itself give them monthly windows
 (`_edition_bounds` reads the edition name, not column names — and the curated narrowing
@@ -1226,9 +1226,9 @@ lex-min member `variable_id` as the SURVIVOR; sets its name to the family label 
 registers `fold_slug_hints[survivor] = family_stem` so it slugs as the stem; emits one
 `variable_alias_window` row per (column, delivered year) — **ongoing states**
 (`valid_to = 9999`) are clamped to the opening year only, so an ongoing monthly family
-gets windows for its first year but not beyond (a known limitation; the 4 shipped LISA
-families are all bounded 2019–2023 and are unaffected); re-points the members'
-`variable_alias` (so `get_datacolumns` still returns all 12) AND the SCB cvid-scratch
+gets windows for its first year but not beyond (a known limitation; all 8 shipped
+families are bounded and are unaffected); re-points the members' `variable_alias` (so
+`get_datacolumns` still returns all 12) AND the SCB cvid-scratch
 `variable_instance.variable_id` (the `code_variable_map` top-up reads it — leaving the
 sibling id dangles the FK); then deletes the N-1 sibling `variable_state` / `variable` /
 leftover-alias rows. The stored `variable_state` stays ONE annual single-claim row per
@@ -1236,9 +1236,11 @@ year — **the merged variable is NOT sub-annual** (the per-month dimension is a
 representation/alias concern, not a coding boundary; DESIGN's *Cadence policy*). A stem
 that resolves to no coherent monthly family (< 3 distinct months) or a non-parallel
 member (a column delivering a year the annual claim doesn't) FAILS the build
-(`family_merges_unresolved`, EXIT_CONFIG). Scope shipped: the 4 LISA stems (`lonfink`,
-`agi{1,2,3}lonfink`); the non-LISA families are a `family_merges.toml` content
-follow-up.
+(`family_merges_unresolved`, EXIT_CONFIG). Scope shipped (#319): 4 LISA stems
+(`lonfink`, `agi{1,2,3}lonfink`). Extended (#383): 4 non-LISA bounded families —
+`scb/bas` / `jobbink` (2020–2024), `scb/ekonomiskt-bistand` / `ibel` + `sbel` (2006),
+`scb/rams` / `lonfink` (2019–2021). HSL was checked against the real corpus and carries
+no column family with ≥3 distinct months, so it is intentionally absent.
 
 **Read side** (`reg_meta.catalog`): `resolve_at` / `states()` expand a merged variable's
 annual state READ-TIME into one `VariableState` per overlapping `variable_alias_window`
