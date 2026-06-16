@@ -75,9 +75,13 @@ def _is_uv_tool_install() -> bool:
     if proc.returncode != 0:
         return False
     # uv normalizes reg-meta/reg_meta; the install line starts with the tool
-    # name (e.g. "reg-meta v0.14.0").
+    # name (e.g. "reg-meta v0.14.0"). The name must be a complete token
+    # (whitespace- or EOL-terminated) so the sibling line "reg-meta-build
+    # v0.5.0" does NOT false-match — a plain `\b` would, since it sits between
+    # the `a` of `reg-meta` and the following `-`.
     return any(
-        re.match(r"^reg[-_]meta\b", line) for line in (proc.stdout or "").splitlines()
+        re.match(r"^reg[-_]meta(?:\s|$)", line)
+        for line in (proc.stdout or "").splitlines()
     )
 
 

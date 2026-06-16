@@ -539,6 +539,24 @@ class TestIsUvToolInstall:
         monkeypatch.setattr(update.subprocess, "run", fake_run)
         assert update._is_uv_tool_install() is True
 
+    def test_sibling_build_does_not_false_match(self, monkeypatch: pytest.MonkeyPatch):
+        # `reg-meta-build` is a distinct uv tool; its line must NOT count as
+        # reg-meta being a uv-tool install (a plain `\b` regex false-matched it).
+        import subprocess as _subprocess
+
+        from reg_meta import update
+
+        def fake_run(cmd, capture_output, text):
+            return _subprocess.CompletedProcess(
+                cmd,
+                returncode=0,
+                stdout="reg-meta-build v0.5.0\nother-tool v1.0.0\n",
+                stderr="",
+            )
+
+        monkeypatch.setattr(update.subprocess, "run", fake_run)
+        assert update._is_uv_tool_install() is False
+
     def test_absent_returns_false(self, monkeypatch: pytest.MonkeyPatch):
         import subprocess as _subprocess
 
