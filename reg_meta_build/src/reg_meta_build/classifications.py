@@ -40,6 +40,21 @@ _LEVEL_EXPR = (
     "THEN length({col}) ELSE NULL END"
 )
 
+# --- code-set-containment detector (#416) -----------------------------------
+# Thresholds for `link_value_set_classifications`. Measured on a real scb,sos
+# build (2026-06-15, issue #416): a value set whose code STRINGS are ≥0.90
+# contained in a classification's canonical codes (≥8 distinct codes) "looks
+# like" that classification. Code-set SIZE — not labels — is the de-ambiguator:
+# at ≥8 codes 930 of 1532 candidates are family-ambiguous; ≥15 codes collapses
+# that to 78, so a single-family set with ≥15 codes is treated as confident.
+# A shorter single-family set is rescued only when its (code,label) pairs also
+# agree (≥0.90) — relabeled SCB sets share no labels, so label agreement is a
+# precision lever, not a recall one.
+_MIN_CONTAINMENT = 0.90  # consideration floor: matched / n_codes
+_MIN_CODES = 8  # consideration floor: distinct codes in the value set
+_CONFIDENT_MIN_CODES = 15  # single-family at/above this auto-links on size alone
+_CONFIDENT_LABEL_AGREE = 0.90  # else rescue a shorter single-family set on labels
+
 
 def repo_seed_path() -> Path | None:
     """Return the in-repo classifications seed, for build-time use only.
@@ -813,3 +828,254 @@ def populate_classifications(
     _progress(f"  {n_cls} classifications, {total_codes:,} codes tagged")
 
     return len(entries), frozenset(skipped)
+
+
+def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
+    """Detect value sets that enumerate a known classification's codes inline and
+    feed the confident matches into `classification_candidate` (#416).
+
+    Many value sets list a classification's codes verbatim (e.g. an ULF health
+    variable carrying 2043/2057 ICD-10-SE codes) but sit unlinked
+    (`variable_state.classification_id IS NULL`) because SCB declared no
+    classification for them. SCB's `populate_classifications` name-map and the SOS
+    / #446 feeds only catch the DECLARED cases; this pass catches the rest by their
+    CODES — a deterministic containment test, no name patterns.
+
+    Additive producer: it INSERTs `(variable_id, value_set_id, classification_id)`
+    rows into the provider-blind `classification_candidate` table (the same seam
+    `_backfill_state_classifications` folds), guarded so it NEVER emits a candidate
+    for a `(variable_id, value_set_id)` state key that already has one. Curated /
+    name-based / SCB / SOS / #446 links therefore always win; this only fills gaps.
+    Inline value codes are never deleted or re-pointed — linkage is additive.
+
+    Algorithm (temp-table SQL, mirroring `_apply_valid_codes` — no Python row
+    loops over the ~60k value sets):
+
+      1. `_canon_codes`: canonical (cls_id, kod, level, label) from
+         `classification_code` where `is_valid IS NOT 0` (1 OR NULL; NULL = a
+         no-CSV classification whose observed codes ARE its code set).
+      2. `_vs_codes` / `_vs_stats`: per value set, the distinct code strings, the
+         distinct-code count `n_codes`, and `dom_level` = the single digit-length
+         when EVERY code is an all-digit string of that length, else NULL.
+      3. `_vs_cls`: containment per (value_set_id, cls_id) with a GRAIN filter —
+         when `dom_level` is set, a value-set code matches a canonical row only at
+         the same `level` (a 4-digit set matches the cls's 4-digit codes, not its
+         2-digit ones); kept when `n_codes >= 8 AND containment >= 0.90`.
+      4. Single-family value sets (EXACTLY one surviving cls), with label agreement
+         for that one candidate.
+      5. `_vs_confident`: single-family AND (`n_codes >= 15` OR `label_agree >=
+         0.90`).
+      6. Emit the confident map into `classification_candidate`, additively.
+
+    Returns counts (also logged) — value sets / variables auto-linked, plus the
+    single-family-below-threshold and multi-family (ambiguous) populations, so
+    drift in the curated tail stays visible. No row-level content is logged.
+    """
+    _progress("Linking inline classification-coded value sets (#416)...")
+
+    for tmp in (
+        "_canon_codes",
+        "_vs_codes",
+        "_vs_stats",
+        "_vs_cls",
+        "_vs_single",
+        "_vs_confident",
+    ):
+        conn.execute(f"DROP TABLE IF EXISTS {tmp}")
+
+    # 1. Canonical (cls_id, kod, level, label). is_valid IS NOT 0 keeps both the
+    # CSV-canonical rows (is_valid=1) and the no-CSV classifications (is_valid
+    # NULL — their observed codes are the only code set we have). TRIM mirrors the
+    # query-time rule and `_apply_valid_codes`.
+    conn.execute(
+        "CREATE TEMP TABLE _canon_codes ("
+        "  cls_id INTEGER NOT NULL,"
+        "  kod TEXT NOT NULL,"
+        "  level INTEGER,"
+        "  label TEXT NOT NULL"
+        ")"
+    )
+    conn.execute(
+        """
+        INSERT INTO _canon_codes (cls_id, kod, level, label)
+        SELECT cc.classification_id, TRIM(vc.code), cc.level, TRIM(vc.label)
+        FROM classification_code cc
+        JOIN value_code vc ON cc.code_id = vc.code_id
+        WHERE cc.is_valid IS NOT 0
+        """
+    )
+    conn.execute("CREATE INDEX _canon_codes_kod ON _canon_codes(kod, level)")
+    conn.execute(
+        "CREATE INDEX _canon_codes_kod_label ON _canon_codes(kod, label, cls_id)"
+    )
+
+    # 2. Per value set: the distinct (kod, label) pairs, then n_codes and
+    # dom_level. dom_level is the single digit-length shared by EVERY code (an
+    # all-digit string of that length) — the grain key — else NULL.
+    conn.execute(
+        "CREATE TEMP TABLE _vs_codes ("
+        "  value_set_id INTEGER NOT NULL,"
+        "  kod TEXT NOT NULL,"
+        "  label TEXT NOT NULL"
+        ")"
+    )
+    conn.execute(
+        """
+        INSERT INTO _vs_codes (value_set_id, kod, label)
+        SELECT DISTINCT vsm.value_set_id, TRIM(vc.code), TRIM(vc.label)
+        FROM value_set_member vsm
+        JOIN value_code vc ON vsm.code_id = vc.code_id
+        """
+    )
+    conn.execute("CREATE INDEX _vs_codes_vs ON _vs_codes(value_set_id, kod)")
+
+    # dom_level: COUNT(DISTINCT digit-length over all-digit codes) = 1 AND every
+    # code is all-digit (no NULL length) → that one length; else NULL. Reuses the
+    # `_LEVEL_EXPR` digit-length idea (length when all-digit, NULL otherwise).
+    conn.execute(
+        f"""
+        CREATE TEMP TABLE _vs_stats AS
+        SELECT
+            value_set_id,
+            COUNT(DISTINCT kod) AS n_codes,
+            CASE
+                WHEN COUNT(DISTINCT CASE WHEN {_LEVEL_EXPR.format(col="kod")} IS NULL
+                                         THEN kod END) = 0
+                 AND COUNT(DISTINCT {_LEVEL_EXPR.format(col="kod")}) = 1
+                THEN MAX({_LEVEL_EXPR.format(col="kod")})
+                ELSE NULL
+            END AS dom_level
+        FROM _vs_codes
+        GROUP BY value_set_id
+        """
+    )
+    conn.execute("CREATE UNIQUE INDEX _vs_stats_pk ON _vs_stats(value_set_id)")
+
+    # 3. Containment per (value_set_id, cls_id) under the grain filter: a value-set
+    # code matches a canonical row on `kod`, and when dom_level IS NOT NULL also on
+    # `level = dom_level` (no level restriction when dom_level IS NULL). Kept when
+    # n_codes >= _MIN_CODES AND matched/n_codes >= _MIN_CONTAINMENT.
+    conn.execute(
+        f"""
+        CREATE TEMP TABLE _vs_cls AS
+        SELECT
+            v.value_set_id,
+            c.cls_id,
+            COUNT(DISTINCT v.kod) AS matched,
+            s.n_codes,
+            (CAST(COUNT(DISTINCT v.kod) AS REAL) / s.n_codes) AS containment
+        FROM _vs_codes v
+        JOIN _vs_stats s ON s.value_set_id = v.value_set_id
+        JOIN _canon_codes c
+          ON c.kod = v.kod
+         AND (s.dom_level IS NULL OR c.level = s.dom_level)
+        WHERE s.n_codes >= {_MIN_CODES}
+        GROUP BY v.value_set_id, c.cls_id
+        HAVING containment >= {_MIN_CONTAINMENT}
+        """
+    )
+    conn.execute("CREATE INDEX _vs_cls_vs ON _vs_cls(value_set_id)")
+
+    # 4. Single-family value sets: EXACTLY one surviving candidate cls.
+    conn.execute(
+        """
+        CREATE TEMP TABLE _vs_single AS
+        SELECT value_set_id, MIN(cls_id) AS cls_id
+        FROM _vs_cls
+        GROUP BY value_set_id
+        HAVING COUNT(*) = 1
+        """
+    )
+    conn.execute("CREATE UNIQUE INDEX _vs_single_pk ON _vs_single(value_set_id)")
+
+    # 5. Confident auto-link: single-family AND (n_codes >= _CONFIDENT_MIN_CODES OR
+    # label_agree >= _CONFIDENT_LABEL_AGREE). label_agree = the count of value-set
+    # (kod, label) pairs that match a canonical (kod, label) for the candidate cls,
+    # divided by n_codes.
+    conn.execute(
+        f"""
+        CREATE TEMP TABLE _vs_confident AS
+        SELECT sg.value_set_id, sg.cls_id
+        FROM _vs_single sg
+        JOIN _vs_stats st ON st.value_set_id = sg.value_set_id
+        WHERE st.n_codes >= {_CONFIDENT_MIN_CODES}
+           OR (
+               CAST((
+                   SELECT COUNT(*)
+                   FROM _vs_codes v
+                   WHERE v.value_set_id = sg.value_set_id
+                     AND EXISTS (
+                         SELECT 1 FROM _canon_codes c
+                         WHERE c.cls_id = sg.cls_id
+                           AND c.kod = v.kod
+                           AND c.label = v.label
+                     )
+               ) AS REAL) / st.n_codes
+           ) >= {_CONFIDENT_LABEL_AGREE}
+        """
+    )
+    conn.execute("CREATE UNIQUE INDEX _vs_confident_pk ON _vs_confident(value_set_id)")
+
+    # 6. Emit candidates additively: one INSERT...SELECT from variable_state joined
+    # to the confident map, guarded by NOT EXISTS against an already-present
+    # candidate for the same (variable_id, value_set_id) state key. `IS` is
+    # NULL-safe; the join already constrains value_set_id non-NULL (a confident
+    # value set has members), but the guard mirrors the backfill's IS-keying so the
+    # additive contract holds for any state key.
+    conn.execute(
+        """
+        INSERT INTO classification_candidate (variable_id, value_set_id, classification_id)
+        SELECT vs.variable_id, vs.value_set_id, cf.cls_id
+        FROM variable_state vs
+        JOIN _vs_confident cf ON cf.value_set_id = vs.value_set_id
+        WHERE NOT EXISTS (
+            SELECT 1 FROM classification_candidate c
+            WHERE c.variable_id = vs.variable_id
+              AND c.value_set_id IS vs.value_set_id
+        )
+        """
+    )
+
+    # Counts for the report (no row-level content). value_sets/variables linked
+    # are measured off the confident map joined to variable_state, so they reflect
+    # what was actually emitted. The two unresolved tallies size the curated tail:
+    # single-family-but-below-threshold and multi-family (ambiguous).
+    value_sets_linked = conn.execute("SELECT COUNT(*) FROM _vs_confident").fetchone()[0]
+    variables_linked = conn.execute(
+        "SELECT COUNT(DISTINCT vs.variable_id) "
+        "FROM variable_state vs "
+        "JOIN _vs_confident cf ON cf.value_set_id = vs.value_set_id"
+    ).fetchone()[0]
+    single_below_threshold = conn.execute(
+        "SELECT COUNT(*) FROM _vs_single sg "
+        "WHERE NOT EXISTS (SELECT 1 FROM _vs_confident cf "
+        "WHERE cf.value_set_id = sg.value_set_id)"
+    ).fetchone()[0]
+    multi_family = conn.execute(
+        "SELECT COUNT(*) FROM ("
+        "  SELECT value_set_id FROM _vs_cls GROUP BY value_set_id HAVING COUNT(*) > 1"
+        ")"
+    ).fetchone()[0]
+
+    for tmp in (
+        "_vs_confident",
+        "_vs_single",
+        "_vs_cls",
+        "_vs_stats",
+        "_vs_codes",
+        "_canon_codes",
+    ):
+        conn.execute(f"DROP TABLE IF EXISTS {tmp}")
+
+    _progress(
+        f"  {value_sets_linked:,} value sets / {variables_linked:,} variables "
+        f"auto-linked by code-set containment "
+        f"({single_below_threshold:,} single-family below threshold, "
+        f"{multi_family:,} multi-family ambiguous → curation)"
+    )
+    return {
+        "value_sets_linked": value_sets_linked,
+        "variables_linked": variables_linked,
+        "single_below_threshold": single_below_threshold,
+        "multi_family": multi_family,
+    }
