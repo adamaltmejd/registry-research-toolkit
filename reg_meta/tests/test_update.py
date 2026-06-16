@@ -521,87 +521,69 @@ class TestRunUpdatePypiBehind:
 
 
 class TestIsUvToolInstall:
-    """_is_uv_tool_install parses `uv tool list`; any failure → False."""
+    """_is_uv_tool_install asks whether the CURRENTLY-RUNNING env lives under
+    `uv tool dir`. It compares `sys.prefix` against the `uv tool dir` output;
+    any failure → False."""
 
-    def test_present_returns_true(self, monkeypatch: pytest.MonkeyPatch):
+    @staticmethod
+    def _patch(monkeypatch, *, tool_dir_out, returncode=0, raises=None):
         import subprocess as _subprocess
 
         from reg_meta import update
 
         def fake_run(cmd, capture_output, text):
+            if raises is not None:
+                raise raises
             return _subprocess.CompletedProcess(
-                cmd,
-                returncode=0,
-                stdout="reg-meta v0.14.0\n- reg-meta\nother-tool v1.0.0\n",
-                stderr="",
+                cmd, returncode=returncode, stdout=tool_dir_out, stderr=""
             )
 
         monkeypatch.setattr(update.subprocess, "run", fake_run)
-        assert update._is_uv_tool_install() is True
+        return update
 
-    def test_sibling_build_does_not_false_match(self, monkeypatch: pytest.MonkeyPatch):
-        # `reg-meta-build` is a distinct uv tool; its line must NOT count as
-        # reg-meta being a uv-tool install (a plain `\b` regex false-matched it).
-        import subprocess as _subprocess
-
+    def test_prefix_under_tool_dir_returns_true(self, monkeypatch: pytest.MonkeyPatch):
         from reg_meta import update
 
-        def fake_run(cmd, capture_output, text):
-            return _subprocess.CompletedProcess(
-                cmd,
-                returncode=0,
-                stdout="reg-meta-build v0.5.0\nother-tool v1.0.0\n",
-                stderr="",
-            )
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
+        assert u._is_uv_tool_install() is True
 
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-        assert update._is_uv_tool_install() is False
-
-    def test_absent_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        import subprocess as _subprocess
-
+    def test_prefix_not_under_tool_dir_returns_false(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        # The Docker-bake / `uv sync` case: a venv prefix that is not a uv tool.
         from reg_meta import update
 
-        def fake_run(cmd, capture_output, text):
-            return _subprocess.CompletedProcess(
-                cmd, returncode=0, stdout="other-tool v1.0.0\n", stderr=""
-            )
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
+        monkeypatch.setattr(update.sys, "prefix", "/app/.venv")
+        assert u._is_uv_tool_install() is False
 
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-        assert update._is_uv_tool_install() is False
-
-    def test_empty_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        import subprocess as _subprocess
-
+    def test_sibling_string_prefix_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        # `/x/uv/tools-evil` shares a string prefix with `/x/uv/tools` but is
+        # NOT a real subpath — the `+ os.sep` guard must reject it.
         from reg_meta import update
 
-        def fake_run(cmd, capture_output, text):
-            return _subprocess.CompletedProcess(cmd, returncode=0, stdout="", stderr="")
-
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-        assert update._is_uv_tool_install() is False
-
-    def test_uv_not_found_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        from reg_meta import update
-
-        def fake_run(cmd, capture_output, text):
-            raise FileNotFoundError("uv")
-
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-        assert update._is_uv_tool_install() is False
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n")
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools-evil")
+        assert u._is_uv_tool_install() is False
 
     def test_nonzero_returncode_returns_false(self, monkeypatch: pytest.MonkeyPatch):
-        import subprocess as _subprocess
-
         from reg_meta import update
 
-        def fake_run(cmd, capture_output, text):
-            return _subprocess.CompletedProcess(
-                cmd, returncode=1, stdout="reg-meta v0.14.0\n", stderr="boom"
-            )
+        u = self._patch(monkeypatch, tool_dir_out="/x/uv/tools\n", returncode=1)
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
+        assert u._is_uv_tool_install() is False
 
-        monkeypatch.setattr(update.subprocess, "run", fake_run)
-        assert update._is_uv_tool_install() is False
+    def test_empty_stdout_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        from reg_meta import update
+
+        u = self._patch(monkeypatch, tool_dir_out="")
+        monkeypatch.setattr(update.sys, "prefix", "/x/uv/tools/reg-meta")
+        assert u._is_uv_tool_install() is False
+
+    def test_uv_not_found_returns_false(self, monkeypatch: pytest.MonkeyPatch):
+        u = self._patch(monkeypatch, tool_dir_out="", raises=FileNotFoundError("uv"))
+        assert u._is_uv_tool_install() is False
 
 
 class TestRunUpdateNonUvToolSkip:

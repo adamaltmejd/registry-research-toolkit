@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -55,34 +56,24 @@ def _parse_version(v: str) -> tuple[int, ...]:
 
 
 def _is_uv_tool_install() -> bool:
-    """True if reg-meta was installed via ``uv tool install`` (so
-    ``uv tool upgrade`` can work). A venv/editable install (Docker bake,
-    ``uv sync``, ``pip -e``) returns False — ``uv tool upgrade`` would fail
-    there with an opaque error.
+    """True if the CURRENTLY-RUNNING reg-meta is itself a uv-tool install — i.e.
+    its environment lives under ``uv tool dir``, so ``uv tool upgrade reg-meta``
+    would upgrade THIS install. A venv/editable/pipx install (Docker bake,
+    ``uv sync``) returns False — there ``uv tool upgrade`` would either fail or
+    upgrade an unrelated global uv tool while this install stays stale.
 
-    Detected by parsing ``uv tool list``. Any failure (uv missing, non-zero,
-    parse error) is treated as "not a uv-tool install": the upgrade can't
-    succeed anyway, so we must not attempt it.
+    Any failure (uv missing, non-zero, unparseable) → False: we can't confirm
+    the upgrade targets this install, so we must not attempt it.
     """
     try:
-        proc = subprocess.run(
-            ["uv", "tool", "list"],
-            capture_output=True,
-            text=True,
-        )
+        proc = subprocess.run(["uv", "tool", "dir"], capture_output=True, text=True)
     except FileNotFoundError:
         return False
-    if proc.returncode != 0:
+    if proc.returncode != 0 or not proc.stdout.strip():
         return False
-    # uv normalizes reg-meta/reg_meta; the install line starts with the tool
-    # name (e.g. "reg-meta v0.14.0"). The name must be a complete token
-    # (whitespace- or EOL-terminated) so the sibling line "reg-meta-build
-    # v0.5.0" does NOT false-match — a plain `\b` would, since it sits between
-    # the `a` of `reg-meta` and the following `-`.
-    return any(
-        re.match(r"^reg[-_]meta(?:\s|$)", line)
-        for line in (proc.stdout or "").splitlines()
-    )
+    tool_dir = os.path.realpath(proc.stdout.strip())
+    prefix = os.path.realpath(sys.prefix)
+    return prefix == tool_dir or prefix.startswith(tool_dir + os.sep)
 
 
 def _check_cache_path() -> Path:
