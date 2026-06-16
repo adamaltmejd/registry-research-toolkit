@@ -294,6 +294,45 @@ def test_content_signature_excludes_running_own_projection() -> None:
     assert ps.lanes_content_signature(a) == ps.lanes_content_signature(b)
 
 
+def test_content_signature_signs_running_blocking_edge_onto_candidate() -> None:
+    # A running (in-flight) issue's BLOCKING edge onto a ready candidate confers unblocking
+    # power on that candidate — rewriting which candidate it points at re-shapes ranking
+    # with no section move, so it must flip the sig (the regression the review caught).
+    cand1, cand2 = _rec(1, touches=["a.py"]), _rec(2, touches=["b.py"])
+    run_old = _rec(
+        9, open_prs=[100], touches=["z.py"], relationships=[("blocked by", 1)]
+    )
+    run_new = _rec(
+        9, open_prs=[100], touches=["z.py"], relationships=[("blocked by", 2)]
+    )
+    assert ps.lanes_content_signature(
+        [cand1, cand2, run_old]
+    ) != ps.lanes_content_signature([cand1, cand2, run_new])
+
+
+def test_content_signature_ignores_running_nonblocking_and_off_candidate_edges() -> (
+    None
+):
+    # The churn guard: a running issue's `Part of #<epic>` (non-blocking) tie, or a blocking
+    # edge onto a NON-candidate, signs nothing — so the common sub-issue merge (its only tie
+    # is `Part of`) stays a re-stamp, not a re-rank.
+    base = ps.lanes_content_signature([_rec(1, touches=["a.py"])])  # candidate alone
+    # Running #9 tied only `Part of #328` (epic, not a candidate) → no effect.
+    assert base == ps.lanes_content_signature(
+        [
+            _rec(1, touches=["a.py"]),
+            _rec(9, open_prs=[5], relationships=[("part of", 328)]),
+        ]
+    )
+    # Running #9 blocked by #99, which is NOT a ready candidate (absent) → no effect.
+    assert base == ps.lanes_content_signature(
+        [
+            _rec(1, touches=["a.py"]),
+            _rec(9, open_prs=[5], relationships=[("blocked by", 99)]),
+        ]
+    )
+
+
 def test_reject_lanes_stdin() -> None:
     assert ps.reject_lanes_stdin("  \n\t") is not None  # empty/whitespace
     assert (
@@ -394,6 +433,23 @@ def test_restamp_lanes_block_falls_back_to_rerank_without_block(monkeypatch) -> 
     monkeypatch.setattr(ps, "epic_body", lambda epic: "intro, no lanes block\n")
     # Exit 1 signals the caller to re-rank instead.
     assert ps.restamp_lanes_block(328, ps.basis_comment({1}, set(), "s")) == 1
+
+
+@pytest.mark.parametrize("basis", ["", "garbage", "<!-- plan-lanes:basis bad -->"])
+def test_restamp_lanes_cli_refuses_malformed_basis(monkeypatch, basis: str) -> None:
+    # A basis that fails _BASIS_RE must NOT be stamped — writing it would yield a block that
+    # parses as no-basis, pinning every later tick to `rerank`. The CLI guard returns 2
+    # before any gh fetch (epic_body would explode the test otherwise).
+    def boom(*a, **k):  # pragma: no cover - must never be reached
+        raise AssertionError("malformed basis reached the writer")
+
+    monkeypatch.setattr(ps, "epic_body", boom)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["plan_sequence.py", "--restamp-lanes", "--epic", "1", "--basis", basis],
+    )
+    assert ps.main() == 2
 
 
 # --- render --------------------------------------------------------------------------

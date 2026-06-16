@@ -456,18 +456,27 @@ def lanes_content_signature(records: list[Rec]) -> str:
 
       number | status | free? | area | touches | priority | relationships
 
-    Running issues are excluded from the projection — their own number/area/touches/priority/
-    relationships sign nothing — so a running issue arriving or leaving (the common PR-merge
-    tick) does not by itself flip the signature. One that actually changes which ready issue
-    is held flips a `free?` flag and so still re-ranks; one whose merge unblocks a dependent
+    A running issue's own *self* fields — status/area/touches/priority — sign nothing (it's
+    never a candidate), so a running issue arriving or leaving (the common PR-merge tick)
+    does not by itself flip the signature. One that actually changes which ready issue is
+    held flips a `free?` flag and so still re-ranks; one whose merge unblocks a dependent
     moves that dependent into the ready set, which the projection also catches.
 
-    Blocked issues are signed (not just ready) because their `Blocked by #N` edges set the
-    unblocking power of the candidates, and their `Related to`/`Follow-up to` ties signal
-    coherence — the same reason the prior all-work signature included them. Membership
-    (*which* issues are ready/running) is also in the basis's `ready`/`running` sets; this
-    signature adds the rest of the ranking inputs so an edit that re-shapes the lane graph
-    without moving an issue between sections still re-ranks.
+    Two classes of edge *into* the candidate graph are signed so an order-changing rewrite
+    re-ranks even with no section move:
+
+    - Blocked issues are signed in full (not just ready) because their `Blocked by #N` edges
+      set the unblocking power of the candidates, and their `Related to`/`Follow-up to` ties
+      signal coherence — the same reason the prior all-work signature included them.
+    - A *running* issue's relationships are otherwise dropped (signing them in full would
+      re-rank every merge, as the closing issue's `Part of #<epic>`/coherence ties leave the
+      corpus — the churn this signature exists to kill), EXCEPT a blocking edge it points at
+      a ready candidate: that confers unblocking power on the candidate, so it is signed. A
+      normal sub-issue merge (whose only tie is `Part of #<epic>`) signs none of these, so it
+      re-stamps; rewriting which candidate an in-flight issue depends on re-ranks.
+
+    Membership (*which* issues are ready/running) is also in the basis's `ready`/`running`
+    sets; this signature adds the rest of the ranking inputs.
 
     Structured-inputs-only — never title/body prose, which doesn't change the lane graph.
     Sorted throughout so it's deterministic; flows through `--basis` verbatim (it's part of
@@ -487,6 +496,19 @@ def lanes_content_signature(records: list[Rec]) -> str:
         for r in sorted(records, key=lambda r: r.number)
         if r.status != "running" and not r.is_epic
     ]
+    # The one running-issue input that still ranks: a blocking edge onto a ready candidate
+    # (unblocking power). Keyed by source so two in-flight dependents of the same candidate
+    # are distinguishable, and so rewriting one's target re-ranks even if another still
+    # points there. Non-blocking ties (e.g. `Part of #<epic>`) are NOT here, so the common
+    # merge stays a re-stamp.
+    unblock = sorted(
+        (r.number, kw, t)
+        for r in records
+        if r.status == "running"
+        for kw, t in r.relationships
+        if kw in BLOCKING_KEYWORDS and t in free
+    )
+    parts.append("unblock|" + ",".join(f"{src}:{kw}#{t}" for src, kw, t in unblock))
     return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:12]
 
 
@@ -730,13 +752,19 @@ def main() -> int:
         if (why := reject_lanes_stdin(content)) is not None:
             print(f"--write-lanes: {why}", file=sys.stderr)
             return 2
+        if not _BASIS_RE.search(args.basis):
+            print(f"--write-lanes: malformed --basis: {args.basis!r}", file=sys.stderr)
+            return 2
         return write_lanes_block(args.epic, render_lanes_block(content, args.basis))
 
     # Fast path: re-stamp keeps the existing ranking and only swaps the basis stamp, so it
-    # also needs no corpus — the heartbeat passes the live basis captured from --tick.
+    # also needs no corpus — the heartbeat passes the live basis captured from --tick. A
+    # missing/malformed basis is refused (not stamped): a basis that fails _BASIS_RE would
+    # write a block that parses as no-basis, pinning every later tick to `rerank`.
     if args.restamp_lanes:
-        if not args.basis:
-            print("--restamp-lanes requires --basis", file=sys.stderr)
+        if not args.basis or not _BASIS_RE.search(args.basis):
+            print(f"--restamp-lanes needs a well-formed --basis (got {args.basis!r})",
+                  file=sys.stderr)  # fmt: skip
             return 2
         return restamp_lanes_block(args.epic, args.basis)
 

@@ -49,6 +49,9 @@ tooling. Don't narrate the steps; just run them and report the result.
      **re-rank** in step 3. **exit `2`** → only the in-flight (running) set moved (a PR
      merged or opened); lane content is unchanged, so **re-stamp** in step 3 — no
      `/plan-lanes`.
+   - A non-zero exit with **empty stdout** is a transient fetch failure (gh rate-limit /
+     network), not a verdict — `$basis` is empty. Skip step 3 this tick (do **not**
+     re-rank against an empty basis); the next tick retries.
 
    The projection delta is for the human surface in step 4 — **not** the re-rank trigger
    (CI absorbs projection moves); the exit code is. (Need only one signal standalone?
@@ -77,6 +80,10 @@ tooling. Don't narrate the steps; just run them and report the result.
      ```sh
      uv run --no-project python scripts/plan_sequence.py --restamp-lanes --epic <N> --basis "$basis"
      ```
+
+     If `--restamp-lanes` itself exits **1** (`no existing lanes content to re-stamp` —
+     a stamped-but-empty block, so there's no ranking to keep), fall through to the
+     re-rank path below instead.
 
    - **exit `1` (re-rank).** Lane content moved — the ready set, or a lane-affecting
      input of some work issue (its area, `touches`, `priority`, or `Relationships`).
