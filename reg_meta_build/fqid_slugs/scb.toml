@@ -46,6 +46,68 @@ successor = "scb/lisa/anninkf18"
 effective_year = 2018
 note = "Summa annan inkomst recut to the 2018 års definition"
 
+# ── LISA näringsgren: kontrolluppgift → arbetsgivardeklaration source switch (#375) ──
+#    In 2019 SCB switched the income-source näringsgren (rank 1/2/3 förvärvskälla)
+#    from kontrolluppgift (KU, ≤2018) to arbetsgivardeklaration på individnivå
+#    (AGI, 2019+) — same definition + SNI 2007 value sets, clean disjoint handoff.
+#    A replaced_by succession per rank × granularity (detalj / grov / utökad).
+#    NOT modeled here: the parallel axes (granularity g/u/b, the individ/arbetsställe/
+#    företag panels, the rank definitions, the overlapping SNI vintages) — those are
+#    dimensional grouping for a concept-group follow-up, not succession edges.
+[[replaced_by]]
+predecessor = "scb/lisa/ku1astsni"
+successor = "scb/lisa/agi1astsni2007"
+effective_year = 2019
+note = "Näringsgren (rank 1) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku1astsni2007g"
+successor = "scb/lisa/agi1astsni2007g"
+effective_year = 2019
+note = "Näringsgren (rank 1, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku1astsni2007u"
+successor = "scb/lisa/agi1astsni2007u"
+effective_year = 2019
+note = "Näringsgren (rank 1, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku2astsni"
+successor = "scb/lisa/agi2astsni2007"
+effective_year = 2019
+note = "Näringsgren (rank 2) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku2astsni2007g"
+successor = "scb/lisa/agi2astsni2007g"
+effective_year = 2019
+note = "Näringsgren (rank 2, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku2astsni2007u"
+successor = "scb/lisa/agi2astsni2007u"
+effective_year = 2019
+note = "Näringsgren (rank 2, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku3astsni"
+successor = "scb/lisa/agi3astsni2007"
+effective_year = 2019
+note = "Näringsgren (rank 3) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku3astsni2007g"
+successor = "scb/lisa/agi3astsni2007g"
+effective_year = 2019
+note = "Näringsgren (rank 3, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[replaced_by]]
+predecessor = "scb/lisa/ku3astsni2007u"
+successor = "scb/lisa/agi3astsni2007u"
+effective_year = 2019
+note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
 # Företagsdatabasen (FDB)
 [register."1"]
 slug = "fdb"
