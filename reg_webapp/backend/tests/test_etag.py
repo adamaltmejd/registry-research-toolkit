@@ -10,7 +10,13 @@ from __future__ import annotations
 
 import hashlib
 
-from reg_webapp.etag import CACHE_CONTROL, compute_etag, etag_matches
+from reg_webapp.etag import (
+    CACHE_CONTROL,
+    CACHE_CONTROL_REVALIDATE,
+    cache_control_for,
+    compute_etag,
+    etag_matches,
+)
 
 
 def test_compute_etag_shape():
@@ -48,6 +54,13 @@ def test_compute_etag_is_deterministic():
 
 def test_cache_control_value():
     assert CACHE_CONTROL == "public, max-age=86400, must-revalidate"
+
+
+def test_cache_control_for_per_route():
+    # /api/context revalidates every request (the vintage footer asserts a deploy
+    # version/date — a stale copy lies); every other read keeps the 24h policy.
+    assert cache_control_for("/api/context") == CACHE_CONTROL_REVALIDATE
+    assert cache_control_for("/api/catalog") == CACHE_CONTROL
 
 
 def test_etag_matches_exact():
