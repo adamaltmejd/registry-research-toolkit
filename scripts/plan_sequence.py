@@ -276,6 +276,14 @@ def dispatch_view(records: list[Rec]) -> str:
         "`/pr-pipeline #…` — it opens a draft PR per issue up front, marking the lane",
         "in-flight so the next dispatch skips it.",
         "",
+        # Flat, copy-pasteable candidate set — the authoritative ranking floor. Ranking
+        # an issue NOT in this line is contamination (it came from stale epic narrative,
+        # not the live ready set). Lets `/plan-lanes` self-check exactly instead of
+        # re-tallying the verbose per-area lists below.
+        f"Candidate set ({len(free)}) — rank ONLY these; any other number is "
+        "contamination:",
+        "  " + " ".join(f"#{n}" for n in sorted(r.number for r in free)),
+        "",
     ]
     by_area: dict[str, list[Rec]] = {}
     for r in free:

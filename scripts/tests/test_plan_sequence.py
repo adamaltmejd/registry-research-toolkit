@@ -353,6 +353,35 @@ def test_dispatch_view_groups_ready_by_area_excludes_epics() -> None:
     assert "#99" not in view and "#3" not in view
 
 
+def test_dispatch_view_emits_flat_candidate_set_line() -> None:
+    # The flat `Candidate set (N) …` line is the authoritative floor /plan-lanes
+    # self-checks against — it must list every free candidate, sorted, and count them,
+    # while excluding epics and in-flight/held issues.
+    recs = [
+        _rec(3, area="reg_webapp", touches=["a.py"]),
+        _rec(1, area="reg_meta_build", touches=["b.py"]),
+        _rec(99, is_epic=True),  # epic excluded
+        _rec(7, open_prs=[5], touches=["c.py"]),  # running, excluded
+    ]
+    view = ps.dispatch_view(recs)
+    assert "Candidate set (2) — rank ONLY these" in view
+    # sorted, flat, and only the free candidates
+    assert "  #1 #3" in view
+    assert "#99" not in view and "#7" not in view
+
+
+def test_dispatch_view_candidate_set_excludes_held() -> None:
+    recs = [
+        _rec(9, area="reg_webapp", open_prs=[100], touches=["shared.py"]),  # in-flight
+        _rec(1, area="reg_webapp", touches=["shared.py"]),  # conflicts → held
+        _rec(2, area="reg_webapp", touches=["other.py"]),  # free
+    ]
+    candidate_line = next(
+        ln for ln in ps.dispatch_view(recs).splitlines() if ln.startswith("  #")
+    )
+    assert candidate_line == "  #2"  # held #1 is not a candidate
+
+
 def test_dispatch_view_holds_issues_touching_in_flight() -> None:
     recs = [
         _rec(9, area="reg_webapp", open_prs=[100], touches=["shared.py"]),  # in-flight

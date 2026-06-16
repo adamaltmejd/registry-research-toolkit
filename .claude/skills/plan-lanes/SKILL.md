@@ -48,15 +48,30 @@ serialize across lanes) — never call them parallel-safe.
    groups, and what's held (touches in-flight). If it says "No ready issues free of
    in-flight conflicts," report exactly that and stop.
 
+   The output's first content line is `Candidate set (N) — rank ONLY these …` followed
+   by a flat, sorted list of issue numbers. **That line is the authoritative floor** —
+   copy it verbatim and rank only those `N` numbers. The per-area lists below it are the
+   same set with detail; the flat line is your checklist.
+
    `--lane` is **not** epic-filtered — it ranks over every open ready issue (the script
    ignores `--epic` on this path). That's fine: #328 is the umbrella epic. The epic arg
    you were passed scopes only the **narrative you read for ranking** (step 4) and the
    header label, not the candidate set.
 
-2. **Read the candidates.** For each free candidate, read its body + comments +
-   `Relationships` (`gh issue view <n> --comments`). You're hunting for the four things
-   the floor can't see (above): implicit blockers, semantic conflicts, coherence, and
-   stale/missing `touches`.
+   **Hard guardrail — the floor IS the candidate set.** Your candidate set is *exactly*
+   the free candidates the floor just listed. Never add an issue the floor didn't list,
+   even if the epic narrative or comments mention it — those threads contain shipped and
+   historical issues (closed work the narrative never pruned; e.g. #328's consolidated
+   plan still names long-since-merged lanes). Steps 2 and 4 read issue bodies and the
+   epic narrative **only to order and prioritize the step-1 candidates, never to expand
+   the set.** If a number you're about to rank isn't in the step-1 floor, drop it — it's
+   contamination, not a candidate.
+
+2. **Read the candidates.** For each free candidate **from step 1 — and no others**,
+   read its body + comments + `Relationships` (`gh issue view <n> --comments`). You're
+   hunting for the four things the floor can't see (above): implicit blockers, semantic
+   conflicts, coherence, and stale/missing `touches`. This read informs *ordering and
+   grouping*; it never adds a number the floor didn't list.
 
 3. **Compose lanes.** A **lane** is a coherent unit of work to hand to one
    `/pr-pipeline` run — one issue, or a few that belong together (a lane may span
@@ -76,6 +91,21 @@ serialize across lanes) — never call them parallel-safe.
    gating downstream work ranks first), then **maintainer signal** from the epic
    narrative / open-question threads, then **smallest coherent** (fastest to land, frees
    its files). Where the epic prose names a finer priority than the labels, defer to it.
+   The narrative is an **ordering signal only** — it lists shipped/closed issues and
+   stale lane names, so never let it introduce a candidate the step-1 floor didn't list
+   (see the hard guardrail in step 1).
+
+5. **Self-check against the `Candidate set` line (mandatory before returning).** Take
+   the flat `Candidate set (N) — …` line from step 1 as the source of truth. Collect
+   every distinct issue number that appears in your **ranked lanes** (the numbered list)
+   and confirm two things: (a) every ranked number is in that line — drop any that isn't
+   (it came from the narrative: a shipped/closed/blocked issue); (b) every number in
+   that line is ranked somewhere — add any you dropped. When both hold, the count of
+   ranked issues equals `N`. The only numbers allowed *outside* the candidate set are
+   the floor's **Held** entries and the **in-flight PR numbers** the floor reported, and
+   only on the held/in-flight lines — a PR number is never a ranked candidate. Then set
+   the header `open issues <count>` to `N` exactly; a mismatch means you still have
+   contamination or a dropped candidate — fix it and recount.
 
 ## Return format
 
@@ -100,8 +130,12 @@ this shape:
 
 The header's `open issues <count>` + in-flight list is the **freshness stamp** — it's
 content-derived, not a timestamp, so the block stays diff-stable when nothing changed,
-and callers can see what graph the ranking was computed against. Make it accurate to
-what you just read; callers re-rank live rather than trusting a stale copy.
+and callers can see what graph the ranking was computed against. `<count>` is exactly
+`N` from the floor's `Candidate set (N) …` line — and every issue number in your ranked
+lanes must be one of those `N` (see the step-5 self-check). If the count doesn't match,
+you've either pulled in narrative contamination or dropped a candidate — reconcile and
+recount. Make it accurate to the floor you just read; callers re-rank live rather than
+trusting a stale copy.
 
 ## Boundaries
 
@@ -111,6 +145,9 @@ what you just read; callers re-rank live rather than trusting a stale copy.
   just reads the return value.
 - **Trust the floor on conflicts, augment on everything else.** Never downgrade a
   script-declared must-serialize to parallel-safe.
+- **The floor is the whole candidate set.** Never rank an issue the step-1 floor didn't
+  list — the epic narrative names shipped/closed work, and that is ordering context, not
+  a candidate source (see step 1's hard guardrail).
 - **Priority labels are the primary key; don't invent finer priority.** Rank by the
   `priority:*` buckets the floor reports, then unblocking-power + size. If no issue is
   labelled, every lane is normal — fall back to unblocking-power + size and leave the
