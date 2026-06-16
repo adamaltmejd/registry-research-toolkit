@@ -321,8 +321,21 @@ are normalized *here*, never leaked downstream:
   research variables. `DELDATAMANGD_TOKEN_MAP` is kept intact because the exclusion
   reuses it to resolve which deldatamängd a Variabelnivå row belongs to before deciding
   whether to drop it. A `sos_styrtabell_signal_mismatch` IRWarning fires when the two
-  signals disagree. Binding styrtabell Värdemängd rows to the coded variables they
-  decode (e.g. AGARKAT, SYSSSTAT) is deferred to a follow-up (#401).
+  signals disagree. When a variable has **no `Kodlista_*` sheet**, its inline
+  `Värdemängd` cell is promoted to a value set by `_classify_value_set_text` (#401,
+  closing the #373 deferral). The classifier is conservative: only two forms are
+  accepted — `kod=klartext` pairs (every segment has `=`) and bare code lists (no
+  segment has `=`; e.g. LOVA's `1;2;3;4;5;9`), both split on `;` and newline. Cells with
+  a single segment, mixed `=`/no-`=`, invalid code tokens (ranges, whitespace, comma,
+  colon), or duplicate codes are rejected, leaving the variable code-less — exactly the
+  prior behavior — so a wrong reject is a no-op. This applies to **all** kodlista-less
+  variables, not only styrtabell-decoded ones (styrtabell is the motivating example).
+  `Värdemängd` carries no `Tidsperiod`, so `value_set_version_label` is always `None`;
+  two merged members that both classify can collide on one `state_id`. `_collect`
+  reconciles with **prefer-coded** (a codeless member never drops a sibling's value set,
+  regardless of delivery order); when two members classify to **divergent** value sets,
+  the first in delivery order wins and a `sos_value_set_text_conflict` IRWarning is
+  emitted.
 
 `emit()` yields IR in FK-topological order (register → classification → variant →
 value_set → variable → state/alias → edges → warning/provenance sinks) so the
