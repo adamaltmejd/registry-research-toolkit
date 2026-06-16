@@ -49,8 +49,10 @@ _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 # build-invariant: SCB variable_id < 2^62, non-SCB >= 2^62 (band check).
 # This literal MIRRORS `reg_meta_build/id.py::_MINT_BIT` (= 1 << 62) — the
 # build/runtime boundary keeps `_MINT_BIT` out of reg_meta, so it's duplicated,
-# not imported. If `_MINT_BIT` ever moves, update this too (the two have no
-# cross-package test tying them together).
+# not imported. If `_MINT_BIT` ever moves, update this too;
+# `test_band_constant_in_sync_with_build` in
+# `reg_meta/tests/test_var_id_nonnumeric.py` asserts equality and will fail CI
+# if the two literals diverge.
 _SCB_ID_CEILING = 2**62
 _VAR_ID_EXPR = (
     "CASE WHEN {vid} < " + str(_SCB_ID_CEILING) + " "
