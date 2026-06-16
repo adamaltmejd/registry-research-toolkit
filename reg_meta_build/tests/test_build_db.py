@@ -2838,6 +2838,7 @@ class TestReplacedByEdges:
                 "n_curated_register_replaced_by",
                 "n_curated_variable_replaced_by",
                 "n_curated_skipped_duplicate",
+                "n_curated_skipped_inactive_provider",
             }
             assert stats["n_register_replaced_by"] == 1
             # Scanned counts only Ersatt av/Ersätter rows on the four target
@@ -3063,7 +3064,11 @@ class TestReplacedByEdges:
 
     def test_curated_unresolved_successor_fails_fast(self, tmp_path: Path) -> None:
         """A curated successor that does NOT resolve to a live slugged entity is
-        a curation error → EXIT_CONFIG (unlike the best-effort event path)."""
+        a curation error → EXIT_CONFIG (unlike the best-effort event path).
+
+        The successor's provider IS in this build (scb) — only the slug is
+        missing; that's the real curation error the inactive-provider skip below
+        must NOT swallow."""
         extra = (
             "\n[[replaced_by]]\n"
             'predecessor = "scb/testreg/testcol"\n'
@@ -3072,6 +3077,56 @@ class TestReplacedByEdges:
         with pytest.raises(RegMetaError) as exc:
             self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
         assert exc.value.code == "replaced_by_unresolved_successor"
+
+    def test_curated_inactive_provider_successor_skipped(self, tmp_path: Path) -> None:
+        """A curated edge whose SUCCESSOR's provider isn't in this (scb-only)
+        build is SKIPPED, not failed — a partial build genuinely lacks the sos
+        tables, so it can't resolve an sos successor. The build completes (and
+        validates), no edge is inserted, and the new skip counter is 1.
+
+        Without the provider gate this raised `replaced_by_unresolved_successor`
+        and crashed the partial build (the Codex P2 this test pins)."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "sos/par/diagnos"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            stats = self._stats(conn)
+            assert stats["n_curated_skipped_inactive_provider"] == 1
+            assert stats["n_curated_variable_replaced_by"] == 0
+        finally:
+            conn.close()
+
+    def test_curated_active_provider_successor_materializes(
+        self, tmp_path: Path
+    ) -> None:
+        """The flip side of the inactive-provider skip: an edge whose successor's
+        provider IS active (scb, in this scb-only build) still materializes —
+        the gate doesn't over-skip."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 1
+            )
+            stats = self._stats(conn)
+            assert stats["n_curated_variable_replaced_by"] == 1
+            assert stats["n_curated_skipped_inactive_provider"] == 0
+        finally:
+            conn.close()
 
     def test_curated_edge_dedups_against_event_derived(self, tmp_path: Path) -> None:
         """A curated edge duplicating an event-derived edge collapses (no double

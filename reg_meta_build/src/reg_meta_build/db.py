@@ -1533,6 +1533,11 @@ _REPLACED_BY_STAT_KEYS = (
     "n_curated_register_replaced_by",
     "n_curated_variable_replaced_by",
     "n_curated_skipped_duplicate",
+    # A curated edge whose SUCCESSOR's provider isn't in this (partial) build is
+    # SKIPPED, not failed — a `--providers=sos` build must not crash on an scb
+    # successor. The predecessor's provider is never gated (it may be dead /
+    # cross-provider; it's inserted verbatim, never resolved).
+    "n_curated_skipped_inactive_provider",
 )
 
 
@@ -1543,7 +1548,7 @@ def _empty_replaced_by_stats() -> dict[str, int]:
 
 
 def _materialize_replaced_by_edges(
-    conn: sqlite3.Connection, slug_dir: Path
+    conn: sqlite3.Connection, slug_dir: Path, *, providers: frozenset[str]
 ) -> dict[str, int]:
     """Materialize succession edges from `timeseries_event`.
 
@@ -1935,7 +1940,7 @@ def _materialize_replaced_by_edges(
     # (Curated rows are register/variable grain only — no variant — so the
     # variant seen-set is not passed.)
     curated = _materialize_curated_replaced_by_edges(
-        conn, slug_dir, seen_register, seen_variable
+        conn, slug_dir, seen_register, seen_variable, providers=providers
     )
 
     # Keys (and their meaning) live on `_REPLACED_BY_STAT_KEYS`; fill the zeroed
@@ -1955,6 +1960,7 @@ def _materialize_replaced_by_edges(
         n_curated_register_replaced_by=curated["register"],
         n_curated_variable_replaced_by=curated["variable"],
         n_curated_skipped_duplicate=curated["skipped_duplicate"],
+        n_curated_skipped_inactive_provider=curated["skipped_inactive_provider"],
     )
     return stats
 
@@ -2013,6 +2019,8 @@ def _materialize_curated_replaced_by_edges(
     slug_dir: Path,
     seen_register: set[tuple[str, str, str, str]],
     seen_variable: set[tuple[str, str, str, str, str, str]],
+    *,
+    providers: frozenset[str],
 ) -> dict[str, int]:
     """Materialize curated `[[replaced_by]]` succession edges from the slug TOMLs.
 
@@ -2027,20 +2035,31 @@ def _materialize_curated_replaced_by_edges(
         variable slug present in the build). A non-resolving successor is a
         CURATION ERROR → fail fast (EXIT_CONFIG), unlike the event-derived path's
         best-effort skip (`timeseries_event` is noisy historical data; a curated
-        TOML row is a hand-authored assertion).
+        TOML row is a hand-authored assertion). EXCEPTION: a successor whose
+        PROVIDER isn't in this (partial) build is SKIPPED, not failed — a
+        `--providers=sos` build genuinely lacks the scb tables, so it can't (and
+        shouldn't) resolve an scb successor. `providers` gates this, mirroring the
+        other curated passes (classifications / grafts / related_to).
       - The PREDECESSOR MAY be dead (no live row) — it's inserted VERBATIM
         (slug-anchored). A curated edge exists precisely to record a succession
         OFF a retired / renamed / cross-provider FQID that `timeseries_event`
-        can't carry.
+        can't carry. The predecessor's provider is NEVER gated (it may legitimately
+        be a dead / cross-provider FQID absent from any build).
 
     `note = 'curated:slug_toml'` marks the provenance (distinct from the auto
     path's `'auto:timeseries_event'`); the row's own `note` (the human transition
     reason) lands in `beskrivning`, mirroring the auto path. Returns
-    `{"register": n, "variable": n, "skipped_duplicate": n}`.
+    `{"register": n, "variable": n, "skipped_duplicate": n,
+    "skipped_inactive_provider": n}`.
     """
     edges = load_curated_replaced_by(slug_dir)
     if not edges:
-        return {"register": 0, "variable": 0, "skipped_duplicate": 0}
+        return {
+            "register": 0,
+            "variable": 0,
+            "skipped_duplicate": 0,
+            "skipped_inactive_provider": 0,
+        }
 
     _progress("Materializing curated replaced_by edges from slug TOMLs...")
     live_registers = _slugged_register_fqids(conn)
@@ -2049,10 +2068,19 @@ def _materialize_curated_replaced_by_edges(
     n_register = 0
     n_variable = 0
     n_skipped_duplicate = 0
+    n_skipped_inactive_provider = 0
 
     for edge in edges:
         pred = edge.predecessor
         succ = edge.successor
+        # Provider gate on the SUCCESSOR only: a partial build that excludes the
+        # successor's provider can't resolve it, so skip the edge instead of
+        # failing. (The predecessor may be a dead / cross-provider FQID by design,
+        # so it's never gated.)
+        assert succ.provider is not None
+        if succ.provider not in providers:
+            n_skipped_inactive_provider += 1
+            continue
         if succ.kind is FqidKind.REGISTER:
             assert succ.provider is not None and succ.register is not None
             assert pred.provider is not None and pred.register is not None
@@ -2120,12 +2148,15 @@ def _materialize_curated_replaced_by_edges(
 
     _progress(
         f"  {n_register:,} register / {n_variable:,} variable curated "
-        f"replaced_by edges ({n_skipped_duplicate:,} dedup-collapsed)"
+        f"replaced_by edges ({n_skipped_duplicate:,} dedup-collapsed, "
+        f"{n_skipped_inactive_provider:,} skipped — successor provider "
+        f"not in this build)"
     )
     return {
         "register": n_register,
         "variable": n_variable,
         "skipped_duplicate": n_skipped_duplicate,
+        "skipped_inactive_provider": n_skipped_inactive_provider,
     }
 
 
@@ -3436,7 +3467,9 @@ def materialize(
         _progress("Skipping replaced_by edges (skip_slugs=True)")
         replaced_by_stats: dict[str, int] = _empty_replaced_by_stats()
     else:
-        replaced_by_stats = _materialize_replaced_by_edges(conn, slug_root)
+        replaced_by_stats = _materialize_replaced_by_edges(
+            conn, slug_root, providers=active_providers
+        )
 
     # Lineage edges. Runs *after* populate_variable_slugs so
     # `variable.slug` is non-NULL on both sides. `source_register_id` was

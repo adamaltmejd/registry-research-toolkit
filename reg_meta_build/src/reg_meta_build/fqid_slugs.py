@@ -2302,6 +2302,8 @@ def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
         to a register- or variable-grain FQID (`_parse_replaced_by_fqid`).
       - Both endpoints are the SAME grain (no register→variable mix).
       - No self-loop (`predecessor == successor`).
+      - No directed cycle across the global edge list (length>=2 cycles, e.g.
+        A→B + B→A; a cyclic chain has no terminal successor).
       - `note` is an optional string; `effective_year` an optional int.
       - No unknown keys.
 
@@ -2396,7 +2398,62 @@ def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
                     effective_year=effective_year,
                 )
             )
+    # Reject directed cycles across the GLOBAL edge list (a cycle can span
+    # provider files). Self-loops are caught per-row above; this catches
+    # length>=2 cycles (A->B + B->A, or longer), which have no terminal
+    # successor and make the webapp successors()/predecessors() contradictory.
+    _reject_replaced_by_cycles(edges)
     return edges
+
+
+def _reject_replaced_by_cycles(edges: list[CuratedReplacedByEdge]) -> None:
+    """Reject directed cycles in the curated `[[replaced_by]]` succession graph.
+
+    The graph is keyed by FQID string (predecessor -> successor). A cyclic
+    succession graph has no terminal successor, so the webapp's
+    successors()/predecessors() walks would contradict each other. Self-loops
+    are rejected per-row in `load_curated_replaced_by`; this catches the
+    length>=2 cycles a per-row check can't see (the cycle can span provider
+    files, hence the GLOBAL edge list). Mirrors `_reject_same_as_cycles`.
+    """
+    if not edges:
+        return
+    adj: dict[str, list[str]] = {}
+    for edge in edges:
+        a, b = str(edge.predecessor), str(edge.successor)
+        adj.setdefault(a, []).append(b)
+        adj.setdefault(b, [])
+
+    # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
+    color: dict[str, int] = dict.fromkeys(adj, 0)
+    parent: dict[str, str] = {}
+
+    def visit(node: str) -> None:
+        color[node] = 1
+        for nxt in adj[node]:
+            if color[nxt] == 1:
+                # Reconstruct the cycle for a useful error.
+                cycle = [nxt, node]
+                cur = node
+                while parent.get(cur) is not None and parent[cur] != nxt:
+                    cur = parent[cur]
+                    cycle.append(cur)
+                cycle.append(nxt)
+                raise _err(
+                    "replaced_by_cycle",
+                    "[[replaced_by]] forms a succession cycle: "
+                    f"{' -> '.join(repr(n) for n in reversed(cycle))}.",
+                    "A succession chain must be acyclic (it needs a terminal "
+                    "successor); remove the edge that closes the loop.",
+                )
+            if color[nxt] == 0:
+                parent[nxt] = node
+                visit(nxt)
+        color[node] = 2
+
+    for start in list(adj):
+        if color[start] == 0:
+            visit(start)
 
 
 # ---------------------------------------------------------------------------

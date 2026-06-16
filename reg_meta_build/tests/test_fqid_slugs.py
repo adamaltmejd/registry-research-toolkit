@@ -3467,6 +3467,70 @@ class TestLoadCuratedReplacedBy:
             load_curated_replaced_by(tmp_path)
         assert exc.value.code == "replaced_by_invalid"
 
+    def test_two_cycle_rejected(self, tmp_path: Path) -> None:
+        """A→B + B→A has no terminal successor — rejected as a cycle."""
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/a"\n'
+            'successor = "scb/b"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/b"\n'
+            'successor = "scb/a"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_three_cycle_rejected(self, tmp_path: Path) -> None:
+        """A→B→C→A is a length-3 cycle — also rejected."""
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/a"\n'
+            'successor = "scb/b"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/b"\n'
+            'successor = "scb/c"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/c"\n'
+            'successor = "scb/a"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_cycle_spanning_provider_files_rejected(self, tmp_path: Path) -> None:
+        """The cycle check is GLOBAL: an edge in each of two provider files
+        closing a loop is still rejected."""
+        (tmp_path / "scb.toml").write_text(
+            '[[replaced_by]]\npredecessor = "scb/reg/a"\nsuccessor = "sos/par/v"\n',
+            encoding="utf-8",
+        )
+        (tmp_path / "sos.toml").write_text(
+            '[[replaced_by]]\npredecessor = "sos/par/v"\nsuccessor = "scb/reg/a"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_long_acyclic_chain_loads(self, tmp_path: Path) -> None:
+        """A→B→C is a valid succession chain (no cycle) — loads fine."""
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/a"\n'
+            'successor = "scb/b"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/b"\n'
+            'successor = "scb/c"\n',
+            encoding="utf-8",
+        )
+        edges = load_curated_replaced_by(tmp_path)
+        assert len(edges) == 2
+        assert [str(e.predecessor) for e in edges] == ["scb/a", "scb/b"]
+        assert [str(e.successor) for e in edges] == ["scb/b", "scb/c"]
+
     def test_bad_fqid_shape_rejected(self, tmp_path: Path) -> None:
         (tmp_path / "scb.toml").write_text(
             '[[replaced_by]]\npredecessor = "a/b/c/d"\nsuccessor = "scb/reg"\n',
