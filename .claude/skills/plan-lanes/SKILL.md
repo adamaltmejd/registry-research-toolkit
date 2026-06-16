@@ -48,10 +48,11 @@ serialize across lanes) — never call them parallel-safe.
    groups, and what's held (touches in-flight). If it says "No ready issues free of
    in-flight conflicts," report exactly that and stop.
 
-   The output's first content line is `Candidate set (N) — rank ONLY these …` followed
-   by a flat, sorted list of issue numbers. **That line is the authoritative floor** —
-   copy it verbatim and rank only those `N` numbers. The per-area lists below it are the
-   same set with detail; the flat line is your checklist.
+   Just below the intro paragraph the output has a
+   `Candidate set (N) — rank ONLY these …` line followed by a flat, sorted list of issue
+   numbers. **That line is the authoritative floor** — copy it verbatim and rank only
+   those `N` numbers. The per-area lists below it are the same set with detail; the flat
+   line is your checklist.
 
    `--lane` is **not** epic-filtered — it ranks over every open ready issue (the script
    ignores `--epic` on this path). That's fine: #328 is the umbrella epic. The epic arg
