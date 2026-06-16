@@ -1931,12 +1931,14 @@ def _write_payload(
         if resolved:
             lines = ["Resolved variables:"]
             for rv in resolved:
+                # var_id is None for non-SCB providers (#466) — omit the suffix
+                # rather than print "(var_id None)"; SOS/curated vars carry no
+                # numeric var_id.
+                suffix = f" (var_id {rv['var_id']})" if rv["var_id"] is not None else ""
                 if rv["input"].lower() != rv["variable_name"].lower():
-                    lines.append(
-                        f"  {rv['input']} → {rv['variable_name']} (var_id {rv['var_id']})"
-                    )
+                    lines.append(f"  {rv['input']} → {rv['variable_name']}{suffix}")
                 else:
-                    lines.append(f"  {rv['variable_name']} (var_id {rv['var_id']})")
+                    lines.append(f"  {rv['variable_name']}{suffix}")
             write_to("\n".join(lines) + "\n\n", output_path)
         write_formatted(
             rows,
