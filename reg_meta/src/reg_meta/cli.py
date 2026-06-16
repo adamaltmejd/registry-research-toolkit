@@ -2721,8 +2721,10 @@ get values — What do the coded values mean?
     reg-meta get values 44
 
   TARGET is a variable name, column alias, or var_id (numeric input
-  resolves as a var_id). Codes are year-projected through SCB validity
-  windows at build time, so each state carries the year-correct set.
+  resolves as a var_id). var_id is SCB-only — the legacy numeric id;
+  SOS and curated variables have no var_id (it shows blank), so address
+  them by name or column alias. Codes are year-projected through SCB
+  validity windows at build time, so each state carries the year-correct set.
 
   When --year is given, instances sharing the same code/label set
   collapse to a single flat list (the answer is unambiguous even when
