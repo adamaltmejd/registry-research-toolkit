@@ -3416,9 +3416,9 @@ def _import_vardemangder(
         first occurrence of each unique code (~0.7M) instead of every row.
       - version / nivå: decoded once per cvid (first occurrence).
 
-    Sentinel/empty filters run on the raw strings: the sentinel allowlists are
-    ASCII, and a row only matches when kod==version==niva ∈ SENTINELS, which
-    forces all three ASCII (raw == decoded), so the filter is exact.
+    The sentinel skip and drift detector compare the SAME `_CP850_CANON` forms
+    used for the dedup key, so they match a decode-every-field build exactly
+    (the empty-row filter is truthiness, which canon/decode preserve).
     """
     _progress("Importing Vardemangder.csv (this may take a while)...")
     row_count = 0
@@ -3470,24 +3470,26 @@ def _import_vardemangder(
             version = fields[i_ver]
             niva = fields[i_niva]
 
-            # Sentinel skip + drift detector run on RAW strings. A row only
-            # matches when kod==version==niva ∈ SENTINELS (an ASCII allowlist),
-            # which forces all three ASCII, so raw == decoded and the skip is
-            # exact. The drift branch (kod==version, kod not a known real shape)
-            # also compares raw: it targets ASCII SCB type-tag placeholders, the
-            # only shape that is kod==version, so a non-ASCII fold-twin (raw
-            # 0x8F vs 0xC5, both decode to 'Å') is not a drift candidate anyway.
-            # Both produce an empty drift set on the real corpus. NOTE: the
-            # byte-identity guarantee is about the EMITTED tables (value_code
-            # dedup / code_id / staging), not this diagnostic's raw-vs-decoded
-            # equality on a pathological fold-twin input.
-            if vardekod == version == niva and vardekod in sentinels:
-                skipped_sentinel += 1
-                continue
+            # Canonicalize the comparison/dedup fields ONCE (folds the 5 cp850
+            # remnant bytes onto their cp1252 twins — see _CP850_CANON). This is
+            # the value_code dedup key AND the basis for the sentinel skip + drift
+            # detector, so all three match a decode-every-field build EXACTLY: a
+            # mixed-encoding kod/version that decode-equal but differ raw (one
+            # byte 0x8F='Å', the other 0xC5='Å') still compares equal, so the
+            # drift gate can't be slipped by a non-ASCII placeholder. Full decode
+            # is deferred to first-occurrence (value_code) / first-per-cvid
+            # (version, niva).
+            kod_c = vardekod if vardekod.isascii() else vardekod.translate(canon)
+            ver_c = version if version.isascii() else version.translate(canon)
 
-            if vardekod and vardekod == version and vardekod not in real_shaped:
-                drift_key = _decode_cp1252(vardekod)
-                drift_samples[drift_key] = drift_samples.get(drift_key, 0) + 1
+            if kod_c == ver_c:
+                niva_c = niva if niva.isascii() else niva.translate(canon)
+                if kod_c == niva_c and kod_c in sentinels:
+                    skipped_sentinel += 1
+                    continue
+                if kod_c and kod_c not in real_shaped:
+                    drift_key = _decode_cp1252(vardekod)
+                    drift_samples[drift_key] = drift_samples.get(drift_key, 0) + 1
 
             vardebenamning = fields[i_namn]
             raw_item = fields[i_item]
@@ -3496,13 +3498,12 @@ def _import_vardemangder(
                 skipped_empty += 1
                 continue
 
-            kod_key = vardekod if vardekod.isascii() else vardekod.translate(canon)
             namn_key = (
                 vardebenamning
                 if vardebenamning.isascii()
                 else vardebenamning.translate(canon)
             )
-            code_key = (kod_key, namn_key)
+            code_key = (kod_c, namn_key)
             code_id = get_code(code_key)
             if code_id is None:
                 code_id = next_code_id
