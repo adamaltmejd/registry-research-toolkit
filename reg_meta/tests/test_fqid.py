@@ -126,7 +126,7 @@ class TestSlugGrammar:
 
 
 class TestReservedHttpSuffixSlugs:
-    # The 7 reserved variable-slot tokens = the 6 binding suffixes + `variants`.
+    # The reserved variable-slot tokens = the binding suffixes + `variants`.
     ALL_VARIABLE_RESERVED = sorted(
         RESERVED_HTTP_SUFFIX_SLUGS | {RESERVED_VARIANTS_SLUG}
     )
@@ -138,9 +138,9 @@ class TestReservedHttpSuffixSlugs:
     SLUG_SHAPED_SUFFIXES = sorted(t for t in RESERVED_HTTP_SUFFIX_SLUGS if is_slug(t))
 
     @pytest.mark.parametrize("token", ALL_VARIABLE_RESERVED)
-    def test_variable_slot_rejects_all_seven(self, token: str) -> None:
-        # All 7 are rejected as a variable slug (5 suffixes + `variants` via the
-        # reservation; `lineage_warnings` via the underscore grammar bar).
+    def test_variable_slot_rejects_all_reserved(self, token: str) -> None:
+        # All are rejected as a variable slug (the slug-shaped suffixes + `variants`
+        # via the reservation; `lineage_warnings` via the underscore grammar bar).
         with pytest.raises(FqidError):
             validate_slug(token, "variable")
 
@@ -150,12 +150,12 @@ class TestReservedHttpSuffixSlugs:
             validate_slug(token, "variable")
 
     @pytest.mark.parametrize("token", sorted(RESERVED_HTTP_SUFFIX_SLUGS))
-    def test_register_slot_rejects_the_six(self, token: str) -> None:
+    def test_register_slot_rejects_suffix_slugs(self, token: str) -> None:
         with pytest.raises(FqidError):
             validate_slug(token, FqidKind.REGISTER)
 
     @pytest.mark.parametrize("token", sorted(RESERVED_HTTP_SUFFIX_SLUGS))
-    def test_classification_slot_rejects_the_six(self, token: str) -> None:
+    def test_classification_slot_rejects_suffix_slugs(self, token: str) -> None:
         with pytest.raises(FqidError):
             validate_slug(token, FqidKind.CLASSIFICATION)
 

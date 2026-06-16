@@ -80,6 +80,7 @@ from reg_webapp.models import (
     ClassificationRootResponse,
     ConceptGroupMemberModel,
     ConceptGroupModel,
+    DimensionsResponse,
     GroupFacetModel,
     LineageEdgeModel,
     LineageResponse,
@@ -712,6 +713,48 @@ def get_binding_successors(
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/successors")
     return SuccessorsResponse(
         binding=str(parsed), successors=[_var_ref_model(r) for r in refs]
+    )
+
+
+@router.get("/catalog/{fqid:path}/dimensions", response_model=DimensionsResponse)
+def get_binding_dimensions(
+    request: Request,
+    validated: ValidatedFqidPath = Depends(_validated_fqid),
+) -> DimensionsResponse | RedirectResponse:
+    """Concept-group dimension memberships for this binding's variable (#489):
+    the 'pick your variant' facet groups (level / population / rank / …) that
+    contain it. We list the register's concept groups and keep only those whose
+    members include this exact binding FQID. Binding-only like the other suffixed
+    sub-endpoints (a non-binding kind 422s); a dead/renamed binding 301s to
+    `/dimensions` on its terminal successor (#411)."""
+    parsed = _parsed_binding(validated)
+    fqid_str = str(parsed)
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        try:
+            # `states()` routes through reg_meta's `_parse_binding` + binding
+            # resolve, so it raises the SAME structured errors the sibling
+            # edge endpoints do — `not_a_binding_fqid` (→ 422) for a non-binding
+            # FQID, `fqid_not_found` (→ 404/301) for an absent/renamed one — and
+            # so distinguishes "binding has no groups" from "no such binding"
+            # (list_concept_groups alone can't). We don't use the states; the
+            # group filter keys on the cited binding's slug.
+            catalog.states(parsed)
+        except RegMetaError as exc:
+            return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/dimensions")
+        # A binding FQID carries provider + register; list_concept_groups keys on
+        # those slugs, then we keep only the groups whose members include this
+        # exact binding FQID.
+        provider_slug = parsed.provider
+        register_slug = parsed.register
+        assert provider_slug is not None and register_slug is not None
+        groups = [
+            g
+            for g in catalog.list_concept_groups(provider_slug, register_slug)
+            if any(str(m.fqid) == fqid_str for m in g.members)
+        ]
+    return DimensionsResponse(
+        binding=fqid_str, dimensions=[_concept_group_model(g) for g in groups]
     )
 
 

@@ -73,11 +73,12 @@ describe("LineagePanels — empty-section collapse (D1.2)", () => {
       .not.toBeInTheDocument();
   });
 
-  it("renders the Succession section (and only the populated direction) when replaced_by exists", async () => {
+  it("renders the Succession section (with the current var marked in place) when replaced_by exists", async () => {
     await render(LineagePanels, {
       fqidPath: "scb/slk/utbildningsinriktning",
       node: node({
         fqid: "scb/slk/utbildningsinriktning",
+        name: "Utbildningsinriktning",
         replaced_by: [
           {
             provider: "scb",
@@ -95,18 +96,80 @@ describe("LineagePanels — empty-section collapse (D1.2)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Succession" }))
       .toBeVisible();
-    // The populated direction shows…
+    // The current variable is marked in place (a non-link "this variable" node).
+    await expect.element(page.getByText("(this variable)")).toBeVisible();
+    // …and the successor renders as a link in the same chain.
     await expect
-      .element(page.getByRole("heading", { name: "Replaced by" }))
+      .element(
+        page.getByRole("link", {
+          name: "utbildningens-inriktning-enligt-sun-2000",
+        }),
+      )
       .toBeVisible();
-    // …the empty inbound direction is omitted (no empty "predecessors" sub-block).
-    await expect
-      .element(page.getByRole("heading", { name: "Replaces / predecessors" }))
-      .not.toBeInTheDocument();
     // The compact fallback is gone once a section has content.
     await expect
       .element(page.getByText("No succession or lineage links."))
       .not.toBeInTheDocument();
+  });
+
+  it("renders succession as ONE chain ordered by effective_year: predecessors → this var → successors", async () => {
+    // Predecessor effective_year 2004 + an undated predecessor (nulls last);
+    // successor effective_year 2018. The chain must read top-to-bottom in
+    // period order with THIS variable between the arms.
+    vi.mocked(getBindingPredecessors).mockResolvedValue({
+      predecessors: [
+        {
+          provider: "scb",
+          register: "lisa",
+          variable: "anninkf-undated",
+          fqid: "scb/lisa/anninkf-undated",
+          reason: null,
+          effective_year: null,
+        },
+        {
+          provider: "scb",
+          register: "lisa",
+          variable: "anninkf04",
+          fqid: "scb/lisa/anninkf04",
+          reason: null,
+          effective_year: 2004,
+        },
+      ],
+    } as unknown as PredecessorsResponse);
+
+    await render(LineagePanels, {
+      fqidPath: "scb/lisa/anninkf",
+      node: node({
+        fqid: "scb/lisa/anninkf",
+        name: "Annan inkomst",
+        replaced_by: [
+          {
+            provider: "scb",
+            register: "lisa",
+            variable: "anninkf18",
+            fqid: "scb/lisa/anninkf18",
+            reason: null,
+            effective_year: 2018,
+          },
+        ] as unknown as BindingNodeData["replaced_by"],
+      }),
+    });
+
+    // The chain is a single ordered list; read its node FQIDs top-to-bottom.
+    const chain = page.getByRole("listitem").elements();
+    const fqidOrder = chain
+      .map((li) => li.querySelector("code")?.textContent ?? "")
+      .filter((t) => t.startsWith("scb/lisa/"));
+    // Predecessors first (2004 before the undated null, nulls last), then THIS
+    // var, then the 2018 successor.
+    expect(fqidOrder).toEqual([
+      "scb/lisa/anninkf04",
+      "scb/lisa/anninkf-undated",
+      "scb/lisa/anninkf",
+      "scb/lisa/anninkf18",
+    ]);
+    // The current node is the non-link one (it carries the marker text).
+    await expect.element(page.getByText("(this variable)")).toBeVisible();
   });
 
   it("renders the Related section when split-sibling edges exist", async () => {
