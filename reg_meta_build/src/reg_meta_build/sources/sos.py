@@ -260,6 +260,28 @@ def parse_register_file(path: Path | str) -> SosRegister:
                     warnings.extend(kod_warnings)
                 except Exception as exc:
                     warnings.append(f"kodlista {sheet_name!r}: {exc}")
+                    # Preserve kodlista-wins (#401): a sheet that FAILS to parse is
+                    # still a kodlista sheet — record its hint as a raw/unparseable
+                    # placeholder so the Värdemängd fallback won't fabricate codes
+                    # for its variable. Flows through the SAME raw_rows skip path as
+                    # a genuinely raw sheet (excluded from value-set construction in
+                    # _emit_register, counted in raw_kodlista_hints). Suffix derived
+                    # exactly as in _parse_kodlista. (0 corpus occurrences today.)
+                    hint = (
+                        sheet_name.split("_", 1)[1] if "_" in sheet_name else sheet_name
+                    )
+                    hint = hint.split("!", 1)[0].strip()
+                    kodlistor.append(
+                        SosKodlista(
+                            sheet_name=sheet_name,
+                            variable_hint=hint,
+                            codeset_name=None,
+                            variable_header=None,
+                            background=None,
+                            rows=(),
+                            raw_rows=(("<unparseable: parse error>",),),
+                        )
+                    )
             elif low.startswith("kvalitet"):
                 quality_sheets.append(_parse_quality_sheet(wb[sheet_name]))
 
