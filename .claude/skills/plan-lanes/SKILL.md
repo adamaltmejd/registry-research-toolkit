@@ -106,12 +106,12 @@ serialize across lanes) — never call them parallel-safe.
    one-line reason. Never silently drop a floor number, and never force a
    discovered-blocked one into a ranked lane — `/pr-pipeline next` would dispatch it as
    runnable. Each of the `N` floor numbers must appear **exactly once**, across your
-   ranked lanes plus the Held/Notes lines. The only numbers allowed *outside* the
-   candidate set are **PR numbers**, and only on the held/in-flight lines, taken from
-   the floor's `In-flight PRs:` and `Held — … ← PR #…` lines — never from the epic
-   narrative; a PR number is never a ranked candidate. Then set the header
-   `open issues <count>` to `N` exactly; a mismatch means contamination or a dropped
-   candidate — fix it and recount.
+   ranked lanes plus the Held/Notes lines. Apart from the header's own `epic #<N>`, the
+   only numbers allowed *outside* the candidate set are **PR numbers**, and only on the
+   held/in-flight lines, taken from the floor's `In-flight PRs:` and `Held — … ← PR #…`
+   lines — never from the epic narrative; a PR number is never a ranked candidate. Then
+   set the header `open issues <count>` to `N` exactly; a mismatch means contamination
+   or a dropped candidate — fix it and recount.
 
 ## Return format
 
