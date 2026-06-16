@@ -1119,6 +1119,117 @@ class TestEdgeAccessors:
         ]
 
 
+class TestDimensions:
+    """#489: `dimensions(fqid)` returns the register's concept groups whose
+    members include this binding's variable. Like the other edge accessors it
+    resolves `same_as` (via `_resolve_edge_triple`), so an alias cites its
+    resolved target's groups — the regression guard for the bug where the old
+    webapp handler keyed the filter on the REQUESTED register/fqid and returned
+    `[]` for an alias."""
+
+    @staticmethod
+    def _add_group(
+        conn: sqlite3.Connection,
+        *,
+        group_id: int,
+        register_id: int,
+        group_key: str,
+        member_slugs: list[str],
+    ) -> None:
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (?, 'variable', ?, ?, ?, 'curated')",
+            (group_id, register_id, group_key, f"Group {group_key}"),
+        )
+        for slug in member_slugs:
+            vid = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
+                (register_id, slug),
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (vid, group_id),
+            )
+        conn.commit()
+
+    def test_returns_group_containing_variable(self) -> None:
+        conn = build_slugged_db()
+        # A sibling variable so the group has >1 member and the filter is real.
+        add_variable(
+            conn, register_id=1, var_id=45, name="Civilstånd", slug="civilstand"
+        )
+        self._add_group(
+            conn,
+            group_id=30,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+        )
+        groups = Catalog(conn).dimensions(_KON)
+        assert [g.key for g in groups] == ["demog"]
+        assert {str(m.fqid) for m in groups[0].members} == {
+            "scb/lisa/kon",
+            "scb/lisa/civilstand",
+        }
+
+    def test_excludes_group_without_variable(self) -> None:
+        conn = build_slugged_db()
+        # A group over a DIFFERENT variable only — kon is not a member.
+        add_variable(
+            conn, register_id=1, var_id=45, name="Civilstånd", slug="civilstand"
+        )
+        self._add_group(
+            conn,
+            group_id=31,
+            register_id=1,
+            group_key="other",
+            member_slugs=["civilstand"],
+        )
+        assert Catalog(conn).dimensions(_KON) == []
+
+    def test_resolves_through_same_as_to_target_group(self) -> None:
+        # P2-A guard: lisa/phantom ≡ rtb/kon (cross-register same_as). The group
+        # lives under RTB over rtb/kon; querying the lisa alias must cite the
+        # TARGET register's group, not lisa's (which has none).
+        conn = build_slugged_db()
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="personer", name="P"
+        )
+        add_version(conn, regver_id=200, register_variant_id=20, name="RTB 2018")
+        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
+        for src, tgt in (
+            (("scb", "lisa", "phantom"), ("scb", "rtb", "kon")),
+            (("scb", "rtb", "kon"), ("scb", "lisa", "phantom")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        self._add_group(
+            conn,
+            group_id=32,
+            register_id=2,
+            group_key="rtbdemog",
+            member_slugs=["kon"],
+        )
+        groups = Catalog(conn).dimensions("scb/lisa/phantom")
+        assert [g.key for g in groups] == ["rtbdemog"]
+        assert [str(m.fqid) for m in groups[0].members] == ["scb/rtb/kon"]
+
+    def test_raises_on_non_binding_fqid(self, slugged_conn: sqlite3.Connection) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).dimensions("scb/lisa")
+        assert exc.value.code == "not_a_binding_fqid"
+
+    def test_raises_on_unknown_binding(self, slugged_conn: sqlite3.Connection) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).dimensions("scb/lisa/nonexistent")
+        assert exc.value.code == "fqid_not_found"
+
+
 class TestResolveTerminalSuccessor:
     """#355 PART 2 / #412: walk a succession chain from a (possibly dead/renamed)
     FQID to its terminal successor — the chain end with no outbound edge. The walk

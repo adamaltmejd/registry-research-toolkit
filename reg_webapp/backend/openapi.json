@@ -814,6 +814,28 @@
         "title": "ContextResponse",
         "type": "object"
       },
+      "DimensionsResponse": {
+        "description": "`GET /api/catalog/{fqid}/dimensions` (#489) \u2014 the concept-group\ndimension memberships containing this binding's variable (the\n'pick your variant' facet groups: level / population / rank / \u2026). A\n`ConceptGroupModel` per containing group; empty when the variable is in\nno group.",
+        "properties": {
+          "binding": {
+            "title": "Binding",
+            "type": "string"
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupModel"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding",
+          "dimensions"
+        ],
+        "title": "DimensionsResponse",
+        "type": "object"
+      },
       "DocDetail": {
         "description": "`GET /api/docs/doc/{identifier}` \u2014 metadata + source pointer + a BOUNDED\n`excerpt` (never the full converted body). `source_url` is the resolved SCB\nPDF link (curated source\u2192PDF map applied at doc-DB build, #372), None when\nuncurated; `source_title` is the human-readable publication title for that\nsource. `register` is the wire key (Python attr `register_name`).",
         "properties": {
@@ -2617,6 +2639,46 @@
           }
         },
         "summary": "Get Catalog Node"
+      }
+    },
+    "/api/catalog/{fqid}/dimensions": {
+      "get": {
+        "description": "Concept-group dimension memberships for this binding's variable (#489):\nthe 'pick your variant' facet groups (level / population / rank / \u2026) that\ncontain it. Delegates to `Catalog.dimensions`, which resolves `same_as` like\nthe sibling edge endpoints \u2014 an alias cites its resolved target's groups, not\nthe requested register's. Binding-only (a non-binding kind 422s); a\ndead/renamed binding 301s to `/dimensions` on its terminal successor (#411).",
+        "operationId": "get_binding_dimensions_api_catalog__fqid__dimensions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fqid",
+            "required": true,
+            "schema": {
+              "title": "Fqid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DimensionsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Binding Dimensions"
       }
     },
     "/api/catalog/{fqid}/lineage": {

@@ -235,6 +235,7 @@ export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
 // from a browsable node by `isCatalogNode` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
 export type PredecessorsResponse = Schemas["PredecessorsResponse"];
+export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
 /** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
@@ -311,6 +312,17 @@ export function getBindingLineageWarnings(
 ): Promise<LineageWarningsResponse> {
   return apiGet<LineageWarningsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
+  );
+}
+
+/** The concept-group dimension memberships for this binding's variable (#489) —
+ * the "pick your variant" facet groups (level / population / rank / …) that
+ * contain it. Empty `dimensions` when the variable is in no group. */
+export function getBindingDimensions(
+  fqidPath: string,
+): Promise<DimensionsResponse> {
+  return apiGet<DimensionsResponse>(
+    `/catalog/${encodeFqid(fqidPath)}/dimensions`,
   );
 }
 

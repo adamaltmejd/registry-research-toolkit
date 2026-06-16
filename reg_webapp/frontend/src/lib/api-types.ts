@@ -86,6 +86,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/{fqid}/dimensions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Binding Dimensions
+         * @description Concept-group dimension memberships for this binding's variable (#489):
+         *     the 'pick your variant' facet groups (level / population / rank / …) that
+         *     contain it. Delegates to `Catalog.dimensions`, which resolves `same_as` like
+         *     the sibling edge endpoints — an alias cites its resolved target's groups, not
+         *     the requested register's. Binding-only (a non-binding kind 422s); a
+         *     dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).
+         */
+        get: operations["get_binding_dimensions_api_catalog__fqid__dimensions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/{fqid}/lineage": {
         parameters: {
             query?: never;
@@ -848,6 +873,20 @@ export interface components {
             reg_meta: components["schemas"]["RegMetaInfo"];
             steward: components["schemas"]["StewardInfo"];
             webapp: components["schemas"]["WebappInfo"];
+        };
+        /**
+         * DimensionsResponse
+         * @description `GET /api/catalog/{fqid}/dimensions` (#489) — the concept-group
+         *     dimension memberships containing this binding's variable (the
+         *     'pick your variant' facet groups: level / population / rank / …). A
+         *     `ConceptGroupModel` per containing group; empty when the variable is in
+         *     no group.
+         */
+        DimensionsResponse: {
+            /** Binding */
+            binding: string;
+            /** Dimensions */
+            dimensions: components["schemas"]["ConceptGroupModel"][];
         };
         /**
          * DocDetail
@@ -1660,6 +1699,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"]) | components["schemas"]["StatesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_binding_dimensions_api_catalog__fqid__dimensions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fqid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DimensionsResponse"];
                 };
             };
             /** @description Validation Error */

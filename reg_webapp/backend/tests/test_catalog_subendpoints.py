@@ -28,6 +28,10 @@ from reg_webapp.etag import CACHE_CONTROL, CACHE_CONTROL_REVALIDATE
 
 _KON = "scb/lisa/kon"
 _SYSS = "scb/rams/syss"
+# `inkjan`/`inkfeb` are the two members of the `ink` token concept group on
+# scb/rams (seeded by `_seed_concept_groups`); `syss` is on scb/rams but in NO
+# variable concept group (the #489 dimensions tests pin both).
+_INKJAN = "scb/rams/inkjan"
 
 
 @pytest.fixture
@@ -107,6 +111,54 @@ def test_lineage_warnings_endpoint(client):
     assert "2017" in w["message"]
 
 
+def test_dimensions_endpoint(client):
+    # `inkjan` is a member of the `ink` token concept group on scb/rams (#489) —
+    # the endpoint returns that group, with `inkjan` among its members.
+    resp = client.get(f"/api/catalog/{_INKJAN}/dimensions")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["binding"] == _INKJAN
+    keys = {g["key"] for g in body["dimensions"]}
+    assert keys == {"ink"}, body
+    ink = next(g for g in body["dimensions"] if g["key"] == "ink")
+    member_fqids = {m["fqid"] for m in ink["members"]}
+    assert _INKJAN in member_fqids
+    assert "scb/rams/inkfeb" in member_fqids  # the group is fully populated
+
+
+def test_dimensions_endpoint_excludes_non_member_groups(client):
+    # `syss` lives on scb/rams (which HAS the `ink` group) but is itself in NO
+    # group — so its dimensions are empty (the filter excludes groups that don't
+    # contain this exact binding, NOT every group on the register).
+    resp = client.get(f"/api/catalog/{_SYSS}/dimensions")
+    assert resp.status_code == 200
+    assert resp.json()["dimensions"] == []
+
+
+def test_dimensions_endpoint_resolves_through_same_as(client):
+    # #489 P2-A: `scb/lisa/inkjan-alias` has no live row — it resolves only via
+    # `variable_same_as` to the grouped target `scb/rams/inkjan`. The endpoint must
+    # cite the TARGET register's `ink` group (the old handler keyed the filter on
+    # the REQUESTED register/fqid and returned []). `binding` echoes the request.
+    resp = client.get("/api/catalog/scb/lisa/inkjan-alias/dimensions")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["binding"] == "scb/lisa/inkjan-alias"
+    assert {g["key"] for g in body["dimensions"]} == {"ink"}, body
+    member_fqids = {m["fqid"] for g in body["dimensions"] for m in g["members"]}
+    assert _INKJAN in member_fqids  # the resolved target's group, not lisa's
+
+
+def test_dimensions_endpoint_dead_binding_301s_to_successor(client):
+    # A dead/renamed binding 301s to /dimensions on its terminal successor (#411),
+    # uniform with the other sub-endpoints. `renamed-head` → … → scb/rams/syss.
+    resp = client.get(
+        "/api/catalog/scb/lisa/renamed-head/dimensions", follow_redirects=False
+    )
+    assert resp.status_code == 301
+    assert resp.headers["location"] == f"/api/catalog/{_SYSS}/dimensions"
+
+
 def test_clean_binding_has_empty_lineage_and_warnings(client):
     # syss has no consumer lineage / warnings — empty lists, 200 (not 404).
     assert client.get(f"/api/catalog/{_SYSS}/lineage").json()["lineage_edges"] == []
@@ -175,7 +227,15 @@ def test_variants_reserved_segment_422_not_500(client, path: str):
 
 @pytest.mark.parametrize(
     "suffix",
-    ["states", "predecessors", "successors", "related", "lineage", "lineage_warnings"],
+    [
+        "states",
+        "predecessors",
+        "successors",
+        "related",
+        "lineage",
+        "lineage_warnings",
+        "dimensions",
+    ],
 )
 def test_subendpoint_on_register_fqid_is_422(client, suffix: str):
     # A 2-seg (register) FQID is not a binding — reg_meta raises
@@ -189,7 +249,15 @@ def test_subendpoint_on_register_fqid_is_422(client, suffix: str):
 
 @pytest.mark.parametrize(
     "suffix",
-    ["states", "predecessors", "successors", "related", "lineage", "lineage_warnings"],
+    [
+        "states",
+        "predecessors",
+        "successors",
+        "related",
+        "lineage",
+        "lineage_warnings",
+        "dimensions",
+    ],
 )
 def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
     resp = client.get(f"/api/catalog/scb/lisa/doesnotexist/{suffix}")
@@ -198,7 +266,15 @@ def test_subendpoint_on_absent_binding_is_404(client, suffix: str):
 
 @pytest.mark.parametrize(
     "suffix",
-    ["states", "predecessors", "successors", "related", "lineage", "lineage_warnings"],
+    [
+        "states",
+        "predecessors",
+        "successors",
+        "related",
+        "lineage",
+        "lineage_warnings",
+        "dimensions",
+    ],
 )
 def test_subendpoint_rejects_at_version_pin(client, suffix: str):
     # The `@version` pin is retired — a binding leaf is a bare slug, so the `@` is a
@@ -413,6 +489,7 @@ _READ_PATHS = [
     f"/api/catalog/{_KON}/related",
     f"/api/catalog/{_KON}/lineage",
     f"/api/catalog/{_KON}/lineage_warnings",
+    f"/api/catalog/{_INKJAN}/dimensions",
     "/api/catalog/scb/lisa/variants",
 ]
 
@@ -464,6 +541,7 @@ _CONCURRENT_DB_ROUTES = [
     f"/api/catalog/{_KON}/related",
     f"/api/catalog/{_KON}/lineage",
     f"/api/catalog/{_KON}/lineage_warnings",
+    f"/api/catalog/{_INKJAN}/dimensions",
     "/api/catalog/scb/lisa/variants",
     f"/api/catalog/{_KON}?period=2020",
     f"/api/catalog/{_KON}?period=2018..2020&variant=individer-15plus",

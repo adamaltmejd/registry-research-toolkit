@@ -325,9 +325,9 @@ route and make the entity unreachable. Two constants in `fqid.py` encode the
 reservation:
 
 - `RESERVED_HTTP_SUFFIX_SLUGS` —
-  `{states, predecessors, successors,   related, lineage, lineage_warnings}`. The six
-  binding-suffix routes (`/catalog/{fqid:path}/<suffix>`) greedy-match any FQID path, so
-  each collides with a 3-segment variable leaf, a 2-segment register, and a
+  `{states, predecessors, successors, related, lineage, lineage_warnings, dimensions}`.
+  The binding-suffix routes (`/catalog/{fqid:path}/<suffix>`) greedy-match any FQID
+  path, so each collides with a 3-segment variable leaf, a 2-segment register, and a
   classification. All three slots are therefore reserved.
 - `RESERVED_VARIANTS_SLUG` — `"variants"`. The `/catalog/{provider}/{register}/variants`
   register sub-resource shadows only a 3-segment variable leaf, so `variants` is
@@ -403,6 +403,13 @@ pick: when a predecessor has multiple successors, takes the lexicographically fi
 `ORDER BY successor_... LIMIT 1` (same rule for both grains). Cycle guard: a `seen` set
 terminates a malformed loop (A→B→A) without hanging. PROVIDER/CLASSIFICATION FQIDs
 return `None` immediately — those grains have no succession table.
+
+**`dimensions(fqid)` — concept-group memberships for a binding (#489).** Returns the
+register's `ConceptGroupSummary` groups (the variant facet groups — level / population /
+rank / …) whose members include this binding's variable. Resolves `same_as` via
+`_resolve_edge_triple` like the other edge accessors, so an alias cites its **resolved
+target's** groups (not the requested register's), and raises `fqid_not_found` /
+`not_a_binding_fqid` on a dead or non-binding FQID for the webapp's 4xx/301 path.
 
 **Multi-state at a period is normal, not an edge case.** `resolve_at` returns a list
 because length N is genuinely common: several variants delivered the variable at the

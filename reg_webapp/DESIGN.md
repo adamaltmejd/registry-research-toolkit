@@ -120,10 +120,10 @@ grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable s
 `states` can't shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map
 flow is factored into reusable helpers.
 
-The suffixed surface is six **binding-suffix routes** (`/states`, `/predecessors`,
-`/successors`, `/related`, `/lineage`, `/lineage_warnings`), each mapping 1:1 to a
-`Catalog` accessor and returning a thin `{binding, <list>}` envelope so the SPA codegen
-sees one response type per endpoint; plus one **register sub-resource**
+The suffixed surface is seven **binding-suffix routes** (`/states`, `/predecessors`,
+`/successors`, `/related`, `/lineage`, `/lineage_warnings`, `/dimensions`), each mapping
+1:1 to a `Catalog` accessor and returning a thin `{binding, <list>}` envelope so the SPA
+codegen sees one response type per endpoint; plus one **register sub-resource**
 `/{provider}/{register}/variants` (a FIXED 3-seg shape with a literal `variants` tail —
 explicit `{provider}`/`{register}` segments, NOT an `{fqid:path}` suffix). The suffixed
 routes are binding-only: a non-binding FQID raises reg_meta's `not_a_binding_fqid`
@@ -160,16 +160,16 @@ edge, or a PROVIDER/CLASSIFICATION FQID — re-raises the original 404 unchanged
 
 The redirect covers all entry points into a dead binding slug (#411): the no-period
 catch-all node path, the `?period` branch (query string preserved, so `?period=2019` /
-`?variant` ride to the terminal), and all six suffixed sub-endpoints (`/states`,
-`/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings`), which
-redirect to the **same suffix** on the terminal (e.g. a dead slug `/states` → terminal
-slug `/states`). The shared `_redirect_or_4xx` helper implements this policy for the
-`?period` branch and all sub-endpoints; the no-period node path has a sibling
-implementation at the `HTTPException` layer (keep the two in sync on any 301→308
-switch). Only a genuine `fqid_not_found` ever redirects — a usage 422 (e.g. an inverted
-`?period` range) and a build-invariant 500 are never turned into redirects. The 301 is
-permanent and cache-eligible; the terminal resolution guarantees the redirect target
-stays stable under double renames (see
+`?variant` ride to the terminal), and all seven suffixed sub-endpoints (`/states`,
+`/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings`,
+`/dimensions`), which redirect to the **same suffix** on the terminal (e.g. a dead slug
+`/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper implements
+this policy for the `?period` branch and all sub-endpoints; the no-period node path has
+a sibling implementation at the `HTTPException` layer (keep the two in sync on any
+301→308 switch). Only a genuine `fqid_not_found` ever redirects — a usage 422 (e.g. an
+inverted `?period` range) and a build-invariant 500 are never turned into redirects. The
+301 is permanent and cache-eligible; the terminal resolution guarantees the redirect
+target stays stable under double renames (see
 `reg_meta/DESIGN.md → resolve_terminal_successor`).
 
 **Concept groups (#303).** The register and classification-root responses carry a
@@ -1091,6 +1091,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | GET    | `/api/catalog/{fqid}/related`                 | `variable_related_to` edges (sibling-grain variables). Dead/renamed binding 301s to `/related` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                            |
   | GET    | `/api/catalog/{fqid}/lineage`                 | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                  |
   | GET    | `/api/catalog/{fqid}/lineage_warnings`        | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                |
+  | GET    | `/api/catalog/{fqid}/dimensions`              | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                              |
   | POST   | `/api/project/validate`                       | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                |
   | POST   | `/api/project/order`                          | Default order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
   | POST   | `/api/bundle`                                 | Build the MONA `.py` bundle from a spec.                                                                                                                                                                                                                                                                                                                                                                                                                                    |

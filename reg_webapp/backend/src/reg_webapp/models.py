@@ -467,6 +467,17 @@ class SuccessorsResponse(BaseModel):
     successors: list[VariableRefModel]
 
 
+class DimensionsResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/dimensions` (#489) — the concept-group
+    dimension memberships containing this binding's variable (the
+    'pick your variant' facet groups: level / population / rank / …). A
+    `ConceptGroupModel` per containing group; empty when the variable is in
+    no group."""
+
+    binding: str
+    dimensions: list[ConceptGroupModel]
+
+
 class RelatedResponse(BaseModel):
     """`GET /api/catalog/{fqid}/related` — split-sibling edges."""
 

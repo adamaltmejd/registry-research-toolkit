@@ -15,6 +15,7 @@ import {
   registerPrefixOf,
   type VariantWindow,
 } from "./catalog";
+import DimensionsPanel from "./DimensionsPanel.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineagePanels from "./LineagePanels.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
@@ -440,6 +441,12 @@ const repSegment = $derived(
       <p class="muted" aria-busy="true">Loading states…</p>
     {/if}
   </section>
+
+  <!-- #489: the concept-group dimensions this variable belongs to (the "pick your
+       variant" facet groups). A SIBLING of LineagePanels — a separate component
+       over a separate fetch (its own failure domain; a dimensions error never
+       blanks the leaf). Omits itself entirely when the variable is in no group. -->
+  <DimensionsPanel {fqidPath} />
 
   <LineagePanels {fqidPath} {node} />
 

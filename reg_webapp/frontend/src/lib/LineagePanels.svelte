@@ -77,6 +77,42 @@ function succAnnotation(ref: VariableRefModel): string | null {
   }
   return bits.length > 0 ? `(${bits.join(" · ")})` : null;
 }
+
+// #489: render succession as ONE period-ordered chain — predecessors → THIS
+// variable → successors — so a renamed measure (e.g. anninkf → anninkf04 →
+// anninkf18) reads top-to-bottom as one thing over time, instead of two
+// disconnected "replaces"/"replaced by" lists. `effective_year` is the temporal
+// signal on the edges (succession edges only — NOT same_as/related_to, which are
+// equivalence/sibling, not temporal); we sort ascending with nulls last (an
+// undated edge has no place on the timeline, so it trails). Per-direction sorts
+// are sufficient — the leaf only embeds its immediate neighbours, so the chain
+// is predecessors (oldest→) then this node then (→newest) successors.
+function byEffectiveYearAsc(a: VariableRefModel, b: VariableRefModel): number {
+  const ay = a.effective_year ?? null;
+  const by = b.effective_year ?? null;
+  if (ay === by) {
+    return 0;
+  }
+  if (ay === null) {
+    return 1; // nulls last
+  }
+  if (by === null) {
+    return -1;
+  }
+  return ay - by;
+}
+
+// The current variable's leaf slug (last FQID segment) for the in-place "current"
+// chain node — derived from the leaf's own `fqid` (always the 3-seg binding).
+const currentSlug = $derived(node.fqid.split("/").at(-1) ?? node.fqid);
+
+// The chain's successor arm — `replaced_by` (outbound), sorted ascending.
+const successorChain = $derived([...node.replaced_by].sort(byEffectiveYearAsc));
+// The chain's predecessor arm — the fetched inbound `/predecessors`, sorted
+// ascending (recomputed only when the fetch resolves).
+const predecessorChain = $derived(
+  [...(predecessors.data?.predecessors ?? [])].sort(byEffectiveYearAsc),
+);
 </script>
 
 <!-- One ref row: a link to its 3-seg `fqid` (with the FQID as a code), or the
@@ -101,6 +137,27 @@ function succAnnotation(ref: VariableRefModel): string | null {
   </li>
 {/snippet}
 
+<!-- One node of the #489 succession chain: a link to the neighbour's fqid (or
+     the triple when absent) with a leading rail marker + the optional #142
+     annotation. -->
+{#snippet chainNode(ref: VariableRefModel, annotation: string | null)}
+  <li class="chain-node">
+    <span class="marker" aria-hidden="true">○</span>
+    <span class="chain-ref">
+      {#if ref.fqid}
+        <a href={catalogHref(ref.fqid)}>{ref.variable}</a>
+        <code class="ref-fqid">{ref.fqid}</code>
+      {:else}
+        <span>{ref.variable}</span>
+        <code class="ref-fqid muted">{refTriple(ref)}</code>
+      {/if}
+      {#if annotation}
+        <span class="muted ann">{annotation}</span>
+      {/if}
+    </span>
+  </li>
+{/snippet}
+
 <div class="lineage-panels">
   {#if !anySection}
     <!-- Every section is empty (the common case) — one compact line instead of
@@ -108,38 +165,40 @@ function succAnnotation(ref: VariableRefModel): string | null {
     <p class="muted no-links">No succession or lineage links.</p>
   {/if}
 
-  <!-- SUCCESSION — both directions; the whole section is omitted when NEITHER
-       direction has links, and each sub-heading is omitted when its side is empty
-       (so a variable that is only replaced_by doesn't show an empty "predecessors"). -->
+  <!-- SUCCESSION — ONE period-ordered chain (#489): predecessors → THIS variable
+       → successors, so a renamed measure reads top-to-bottom as one thing over
+       time. The whole section is omitted when NEITHER direction has links. The
+       inbound (predecessors) arm is fetched, so its loading/error states gate the
+       chain head; the current node + outbound (replaced_by) arm are synchronous. -->
   {#if showSuccession}
     <section aria-labelledby="succession-heading">
       <h3 id="succession-heading">Succession</h3>
 
-      {#if hasReplacedBy}
-        <h4>Replaced by</h4>
-        <ul class="refs">
-          {#each node.replaced_by as ref, i (ref.fqid ?? refTriple(ref) + i)}
-            {@render refItem(ref, succAnnotation(ref))}
-          {/each}
-        </ul>
+      {#if predecessors.loading}
+        <p class="muted" aria-busy="true">Loading predecessors…</p>
+      {:else if predecessors.error}
+        <p class="error" role="alert">
+          Failed to load predecessors: {predecessors.error}
+        </p>
       {/if}
 
-      {#if hasPredecessors}
-        <h4>Replaces / predecessors</h4>
-        {#if predecessors.loading}
-          <p class="muted" aria-busy="true">Loading…</p>
-        {:else if predecessors.error}
-          <p class="error" role="alert">
-            Failed to load predecessors: {predecessors.error}
-          </p>
-        {:else if predecessors.data}
-          <ul class="refs">
-            {#each predecessors.data.predecessors as ref, i (ref.fqid ?? refTriple(ref) + i)}
-              {@render refItem(ref, succAnnotation(ref))}
-            {/each}
-          </ul>
-        {/if}
-      {/if}
+      <ol class="chain">
+        {#each predecessorChain as ref, i (ref.fqid ?? refTriple(ref) + i)}
+          {@render chainNode(ref, succAnnotation(ref))}
+        {/each}
+        <!-- THIS variable, marked in place — a non-link "current" node. -->
+        <li class="chain-node current" aria-current="true">
+          <span class="marker" aria-hidden="true">●</span>
+          <span class="this-var">
+            <span class="var-name">{node.name ?? currentSlug}</span>
+            <code class="ref-fqid">{node.fqid}</code>
+            <span class="muted ann">(this variable)</span>
+          </span>
+        </li>
+        {#each successorChain as ref, i (ref.fqid ?? refTriple(ref) + i)}
+          {@render chainNode(ref, succAnnotation(ref))}
+        {/each}
+      </ol>
     </section>
   {/if}
 
@@ -217,10 +276,6 @@ function succAnnotation(ref: VariableRefModel): string | null {
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--border);
   }
-  h4 {
-    margin: 0.75rem 0 0.4rem;
-    font-size: 0.95rem;
-  }
   .refs {
     list-style: none;
     padding: 0;
@@ -241,6 +296,48 @@ function succAnnotation(ref: VariableRefModel): string | null {
   }
   .ann {
     font-size: 0.85em;
+  }
+  /* #489: the succession chain — a vertical rail (left border on each node)
+     with a marker per node, so predecessors → this var → successors reads as
+     one continuous timeline. The current node's marker is filled + bold to mark
+     it in place. */
+  .chain {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .chain-node {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.3rem 0 0.3rem 0.85rem;
+    border-left: 2px solid var(--border);
+    margin-left: 0.4rem;
+  }
+  .chain-node .marker {
+    margin-left: -1.3rem;
+    color: var(--muted);
+    font-size: 0.7em;
+  }
+  .chain-node.current {
+    border-left-color: var(--accent);
+  }
+  .chain-node.current .marker {
+    color: var(--accent);
+    font-size: 0.85em;
+  }
+  .chain-node.current .var-name {
+    font-weight: 600;
+  }
+  .chain-ref,
+  .this-var {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
   }
   .edge-validity {
     font-size: 0.85em;
