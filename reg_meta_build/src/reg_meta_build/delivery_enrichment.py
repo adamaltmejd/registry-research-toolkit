@@ -34,7 +34,7 @@ which project's delivery list surfaced it. Two guards keep that honest:
 **Deliberate deviation from `concept_groups` strictness:** a backfill whose
 ``(register, variable)`` no longer *resolves* against the built DB is skipped
 with a warning and counted, NOT a build failure. Rationale: pre-v1 variable
-slugs regenerate each build while the `UNFROZEN` sentinel is present (#209), and
+slugs regenerate each build while their provider zone is `churning` (#470), and
 a description backfill is non-structural — making the global build fragile to one
 stale enrichment row would trade a real robustness loss for a cosmetic gain. The
 unresolved count surfaces in the build summary so drift stays visible; regenerate

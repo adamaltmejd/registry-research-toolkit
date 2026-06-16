@@ -728,7 +728,7 @@ def extend_db(
                 error_class="configuration",
                 message=f"Steward slug dir not found: {steward_slug_dir}",
                 remediation=(
-                    f"Create fqid_slugs/{steward}/ (with an UNFROZEN sentinel) or "
+                    f"Create fqid_slugs/{steward}/ (defaults to churning) or "
                     "pass --skip-slugs."
                 ),
             )

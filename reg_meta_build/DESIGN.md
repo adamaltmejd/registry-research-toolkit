@@ -897,10 +897,10 @@ Two notes on the triage signals:
 
   **Pre-v1 churn** — the curation content in `fold_overrides.toml` churns freely pre-v1;
   no freeze or immutability is in effect for this surface yet. Arming snapshot-style
-  immutability (analogous to the `fqid_slugs/UNFROZEN` sentinel for register-version
-  slugs) is tracked as #209 and explicitly out of scope here. `fold_overrides.toml` is a
-  separate package-root file like `codelivery.toml` — it is not under the `fqid_slugs/`
-  snapshot machinery.
+  immutability (analogous to the `fqid_slugs/` per-provider freeze model, #470) is
+  tracked as #209 and explicitly out of scope here. `fold_overrides.toml` is a separate
+  package-root file like `codelivery.toml` — it is not under the `fqid_slugs/` snapshot
+  machinery.
 
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`), from the
   pair's two delivery columns, most specific first: `code_vs_label_pair` (name-based — a
@@ -1511,10 +1511,11 @@ Two guards, both deliberate:
   curation surfaces. But a row whose slug no longer *resolves* (or, for an alias, whose
   variable has no state) is skipped + counted (`unresolved`), NOT a build failure —
   unlike `concept_groups`' fail-fast. Rationale: pre-v1 variable slugs regenerate each
-  build under `UNFROZEN` (#209), and an enrichment row is non-structural, so one stale
-  row must not make the whole global build fragile. Regenerate the TOML when the count
-  drifts. No snapshot / immutability machinery and no `SCHEMA_VERSION` bump —
-  descriptions write text and aliases add rows on existing variables.
+  build while their provider zone is `churning` (#470), and an enrichment row is
+  non-structural, so one stale row must not make the whole global build fragile.
+  Regenerate the TOML when the count drifts. No snapshot / immutability machinery and no
+  `SCHEMA_VERSION` bump — descriptions write text and aliases add rows on existing
+  variables.
 
 ## Variable grafts (#365 PR1d)
 
@@ -1657,12 +1658,13 @@ content is steward-only, so there is no lenient `unresolved` count.
 The steward slug dir lives at `fqid_slugs/<steward>/` (e.g. `fqid_slugs/swecov/`),
 parallel to the global `fqid_slugs/` but consumed by `extend-db` rather than `build-db`.
 It uses the same grow-only snapshot machinery as the global dir (`diff_snapshot` /
-`precheck-slugs --update-snapshot`) and the same `UNFROZEN` escape hatch. Only the
+`precheck-slugs --update-snapshot`) and the same per-provider freeze model (#470): the
+steward dir carries its own `freeze.toml`, and its zones default to `churning`. Only the
 steward-inserted rows are slugged here; global register/variant slugs come from the
 global build and are never touched. As with the global dir, only the hand-curated
 `<provider>.toml` (register + register_variant slugs) is committed — the build-generated
-`<provider>.auto.toml` (variable slugs) regenerates each run while `UNFROZEN` holds and
-stays out of the tree.
+`<provider>.auto.toml` (variable slugs) regenerates each run while the zone is
+`churning` and stays out of the tree.
 
 The populated `fqid_slugs/swecov/` snapshot (#421) is emitted by the untracked,
 maintainer-local generator `input_data/swecov/build_catalog.py flavor`, which projects
@@ -1723,20 +1725,47 @@ place. CI enforces this with a snapshot test: `snapshot_payload` distills the cu
 `{key: slug}` set into `.snapshot.json`, and `diff_snapshot` allows adds but flags
 removes and renames.
 
-**Pre-v1 escape hatch — the `UNFROZEN` sentinel.** While
-`reg_meta_build/fqid_slugs/UNFROZEN` exists, `is_unfrozen` lifts the grow-only *refusal*
-(not the *visibility* — renames are still reported): `precheck-slugs --update-snapshot`
-writes rename/removal diffs through to the snapshot, and the immutability CI test skips
-its rename guard. This is deliberate friction-removal — pre-v1, the right move is to let
-curators fix typos, normalize conventions, and reshape sibling groups freely before any
-external artifact pins these FQIDs. Consequently, pre-v1 reality: no committed
-`<provider>.auto.toml` exists on disk (auto slugs regenerate from scratch each build
-while UNFROZEN holds), and `.snapshot.json` carries **0 variable entries** —
-auto-derived variables aren't part of the hand-frozen curated set. The committed
-snapshot covers only register / variant / classification.
+**Per-provider freeze model (#470) — `churning` → `curating` → `frozen`.** A slug dir's
+immutability is set **per zone**, not globally. A **zone** is a provider slug (the
+`<provider>.toml` filename stem) plus the reserved zone name `classifications` (the
+provider-independent `classifications.toml`, whose entries key on bare `source_id`).
+State lives in `<slug_dir>/freeze.toml`, a flat TOML map `<zone> = "<state>"`. An
+**absent file or an unlisted zone defaults to `churning`** (so an empty dir is
+all-churning), and an unknown zone key or an invalid state value fails fast
+(`EXIT_CONFIG`). Each slug dir has its own `freeze.toml` — the global `fqid_slugs/` and
+each steward subdir (`fqid_slugs/swecov/`).
 
-Remaining: arming immutability at v1 (delete UNFROZEN in the release commit; that
-snapshot becomes the immutable baseline) — see REFACTOR_SPEC.md / #209.
+The three states advance deliberately; **`frozen` is a one-way seal**:
+
+- **`churning`** (default) — auto slugs regenerate every build (the committed
+  `<provider>.auto.toml`, if any, is ignored on load and rewritten from scratch), and
+  renames/removals flow freely. This is the right pre-v1 posture: curators fix typos,
+  normalize conventions, and reshape sibling groups before any external artifact pins
+  these FQIDs. Consequently a churning provider has no committed `<provider>.auto.toml`
+  and contributes **0 variable entries** to `.snapshot.json` (the snapshot covers only
+  register / variant / classification slugs, which live in the curated
+  `<provider>.toml`).
+- **`curating`** — the committed `<provider>.auto.toml` is **pinned**: its slugs are
+  read back and never recomputed (a kolumnnamn/name change can't rot a published slug),
+  and new variables append. Renames/removals on the curated surface are still
+  **allowed** (written through by `precheck-slugs --update-snapshot`). This is the
+  curation window — pin the auto slugs, then iterate the curated names before sealing.
+- **`frozen`** — pinned **and** grow-only: `precheck-slugs --update-snapshot`
+  **refuses** any rename or removal in a frozen zone (`diff_snapshot`'s `blocked` list),
+  and the snapshot CI test fails on it. Only additions are accepted; a typo is fixed by
+  adding a new entry plus a `replaced_by` pointer, never by editing in place.
+
+The two gates are **decoupled**: `freeze_state(states, zone)` drives the
+auto-regeneration gate in `populate_variable_slugs` (churning re-derives;
+curating/frozen pin), while `frozen_zones(states)` (only the `frozen` zones) drives the
+rename/removal refusal in `diff_snapshot` / `precheck-slugs`. So a `curating` zone pins
+its auto slugs *without* yet arming the rename refusal. Renames are always *reported* in
+the CLI envelope regardless of state — freeze gates the *refusal*, not the *visibility*.
+
+The repo ships **all-churning**: no `freeze.toml` is committed (absence ⇒ every zone
+churning ⇒ today's behavior). Arming immutability at v1 is a deliberate per-provider
+advance to `frozen` (commit the pinned `<provider>.auto.toml`, then seal) — see
+REFACTOR_SPEC.md / #209 (machinery #470 / curation #471 / seal #472).
 
 ## Doc-DB build
 

@@ -82,9 +82,10 @@ mdw_upload_probe_*.txt
 # reg_meta database (built from SCB exports, not committed)
 *.db
 
-# Build-generated auto-slug TOMLs (variable slugs; regenerate each build while
-# UNFROZEN holds — only the curated <provider>.toml + .snapshot.json are
-# committed). Covers the global dir and per-steward subdirs (fqid_slugs/swecov/).
+# Build-generated auto-slug TOMLs (variable slugs). A `churning` provider (the
+# #470 default) regenerates these from scratch each build — only the curated
+# <provider>.toml, the freeze.toml state map, and .snapshot.json are committed.
+# Covers the global dir and per-steward subdirs (fqid_slugs/swecov/).
 # See reg_meta_build/DESIGN.md → Slug immutability.
 reg_meta_build/fqid_slugs/**/*.auto.toml
 

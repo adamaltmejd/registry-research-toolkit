@@ -35,7 +35,7 @@ from reg_meta.fqid import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable, Iterator
+    from collections.abc import Callable, Iterator, Mapping
 
 # A2.6: `register_version` is gone — the FQID grammar has no version segment;
 # version slugs are no longer curated or persisted, and the build-time
@@ -665,23 +665,89 @@ def load_classifications_toml(path: Path) -> list[SlugEntry]:
     return entries
 
 
-UNFROZEN_MARKER = "UNFROZEN"
+# Per-provider slug-freeze model (#470). A zone advances deliberately through
+# three states; `frozen` is a one-way seal (see DESIGN.md → Slug immutability):
+#   - "churning" (DEFAULT): auto slugs regenerate every build; renames flow freely.
+#   - "curating": the committed `<provider>.auto.toml` is pinned (kept+appended);
+#     renames still allowed.
+#   - "frozen": pinned + grow-only — only additions, no renames/removals.
+# State lives in `<slug_dir>/freeze.toml`, a flat `<zone> = "<state>"` map. An
+# absent file OR an unlisted zone ⇒ "churning" (today's UNFROZEN-present behavior).
+SlugFreezeState = Literal["churning", "curating", "frozen"]
+FREEZE_STATE_FILE = "freeze.toml"
+# Reserved zone for the provider-independent classifications.toml — its entries
+# key on a bare `source_id` (short_name), so they have no provider zone.
+CLASSIFICATIONS_ZONE = "classifications"
+_FREEZE_STATES: frozenset[str] = frozenset({"churning", "curating", "frozen"})
 
 
-def is_unfrozen(slug_dir: Path) -> bool:
-    """Pre-v1 escape hatch (see DESIGN.md → Slug immutability): returns True iff ``UNFROZEN`` sentinel file
-    exists in ``slug_dir``.
+def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
+    """Provider zones in ``slug_dir`` — the ``<provider>.toml`` filename stems.
 
-    While the file is present, ``precheck-slugs --update-snapshot`` writes
-    rename/removal diffs through to ``.snapshot.json`` instead of refusing,
-    and the snapshot-immutability CI test skips its rename guard. Removing
-    the file at v1 release restores the grow-only guarantee.
-
-    Renames are still *reported* in CLI output and JSON envelopes so a
-    pre-v1 maintainer sees what's drifting; the sentinel only lifts the
-    refusal, not the visibility.
+    Excludes ``classifications.toml`` (the reserved CLASSIFICATIONS_ZONE keys on
+    bare short_name), ``freeze.toml`` itself, and the build-generated
+    ``*.auto.toml`` (its provider is already covered by the curated companion).
     """
-    return (slug_dir / UNFROZEN_MARKER).is_file()
+    stems: set[str] = set()
+    for path in slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"):
+        if (
+            path.name == CLASSIFICATIONS_FILE
+            or path.name == FREEZE_STATE_FILE
+            or path.name.endswith(AUTO_FILE_SUFFIX)
+        ):
+            continue
+        stems.add(path.stem)
+    return frozenset(stems)
+
+
+def load_freeze_states(slug_dir: Path) -> dict[str, str]:
+    """Parse ``<slug_dir>/freeze.toml`` into ``{zone: state}``.
+
+    An absent file → ``{}`` (every zone defaults to "churning"). Fails fast
+    (``EXIT_CONFIG``) on an unknown state value, a non-string value, or an
+    unknown zone key — a zone must be a known provider stem in this dir or the
+    reserved CLASSIFICATIONS_ZONE, so a typo (a dropped/renamed provider TOML)
+    is caught rather than silently treated as churning.
+    """
+    path = slug_dir / FREEZE_STATE_FILE
+    if not path.is_file():
+        return {}
+    data = _parse_toml(path)
+    known_zones = _known_provider_stems(slug_dir) | {CLASSIFICATIONS_ZONE}
+    states: dict[str, str] = {}
+    for zone, state in data.items():
+        if not isinstance(state, str):
+            raise _err(
+                "slug_freeze_state_invalid",
+                f"{FREEZE_STATE_FILE}: zone {zone!r} state must be a string, "
+                f"got {type(state).__name__}.",
+                f"Set it to one of {sorted(_FREEZE_STATES)}.",
+            )
+        if state not in _FREEZE_STATES:
+            raise _err(
+                "slug_freeze_state_invalid",
+                f"{FREEZE_STATE_FILE}: zone {zone!r} has unknown state {state!r}.",
+                f"Use one of {sorted(_FREEZE_STATES)}.",
+            )
+        if zone not in known_zones:
+            raise _err(
+                "slug_freeze_zone_unknown",
+                f"{FREEZE_STATE_FILE}: unknown zone {zone!r}.",
+                f"A zone is a provider stem ({sorted(known_zones - {CLASSIFICATIONS_ZONE})}) "
+                f"or {CLASSIFICATIONS_ZONE!r}.",
+            )
+        states[zone] = state
+    return states
+
+
+def freeze_state(states: Mapping[str, str], zone: str) -> str:
+    """The freeze state of ``zone`` — "churning" when the zone is unlisted."""
+    return states.get(zone, "churning")
+
+
+def frozen_zones(states: Mapping[str, str]) -> frozenset[str]:
+    """The subset of zones sealed to "frozen" (grow-only, no rename/removal)."""
+    return frozenset(z for z, s in states.items() if s == "frozen")
 
 
 def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
@@ -694,6 +760,8 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
         )
     entries: list[SlugEntry] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
+        if path.name == FREEZE_STATE_FILE:
+            continue  # #470 state map, not a curation TOML
         if path.name == CLASSIFICATIONS_FILE:
             entries.extend(load_classifications_toml(path))
         else:
@@ -1285,8 +1353,9 @@ def _split_sibling_disc(
 
     **Immutability scope — DEFERRED to #141, NOT solved here.** This gives split
     siblings *distinct, rebuild-stable* slugs, which is all the pre-v1
-    regenerate-every-build model needs: ``UNFROZEN`` regenerates ``scb.auto.toml``
-    each build, so no published FQID exists to break yet. Full slug immutability
+    regenerate-every-build model needs: a churning provider (#470) regenerates
+    ``scb.auto.toml`` each build, so no published FQID exists to break yet. Full
+    slug immutability
     across triage transitions — a sibling's delivery column being renamed, or a
     1:1 variable *becoming* a split (migrating the old 2-part auto slug onto the
     right sibling) — needs the slug-freeze format / rename-tracking and is tracked
@@ -1390,6 +1459,7 @@ def populate_variable_slugs(
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
         if path.name != CLASSIFICATIONS_FILE
+        and path.name != FREEZE_STATE_FILE  # #470 state map, not a curation TOML
         and not path.name.endswith(AUTO_FILE_SUFFIX)
         for e in load_provider_toml(path)
     ]
@@ -1430,6 +1500,14 @@ def populate_variable_slugs(
         }
         provider_slugs = [s for s in provider_slugs if s in with_null]
 
+    # Per-provider slug-freeze model (#470): in "churning" (the default) a
+    # provider's committed `<provider>.auto.toml` is IGNORED on load, so every
+    # variable is first-sight and re-derives fresh each build (today's UNFROZEN
+    # behavior). "curating"/"frozen" pin the auto file — its slugs are read back
+    # and never recomputed. Loaded once; the steward overlay (incremental=True)
+    # uses the same gate — steward zones default churning.
+    states = load_freeze_states(slug_dir)
+
     for provider_slug in provider_slugs:
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
         auto: dict[str, str] = {}
@@ -1438,10 +1516,11 @@ def populate_variable_slugs(
         # EXISTING file's markers so an incremental rewrite (the prior file + new
         # appended slugs, the slug-freeze workflow) preserves the provenance of
         # rows it isn't re-deriving; Pass 3 below overwrites/adds for first-sight
-        # slugs. Pre-v1 the file regenerates from scratch (UNFROZEN, no prior
-        # file), so this is a no-op then and every slug is freshly classed.
+        # slugs. A churning provider (#470) reads NEITHER the prior slugs nor
+        # their markers — it regenerates the whole file from scratch, so every
+        # slug is freshly classed (the gitignored auto.toml is still rewritten).
         auto_derivation: dict[str, str] = {}
-        if auto_path.is_file():
+        if freeze_state(states, provider_slug) != "churning" and auto_path.is_file():
             auto = _auto_variable_slugs(load_provider_toml(auto_path))
             auto_derivation.update(read_auto_derivations(auto_path))
         # variable_state.delivery_column_name is the coalesced per-era column
@@ -2120,8 +2199,8 @@ def load_lineage_config(slug_dir: Path) -> LineageConfig:
     overrides: dict[tuple[str, str, str], tuple[str, str]] = {}
 
     for path in sorted(slug_dir.glob("*.toml")):
-        if path.name == "classifications.toml":
-            continue
+        if path.name in (CLASSIFICATIONS_FILE, FREEZE_STATE_FILE):
+            continue  # #470 freeze.toml is a state map, not a curation TOML
         provider = _provider_from_path(path)
         data = _parse_toml(path)
 
@@ -2314,8 +2393,8 @@ def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
     """
     edges: list[CuratedReplacedByEdge] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
-        if path.name == CLASSIFICATIONS_FILE:
-            continue
+        if path.name in (CLASSIFICATIONS_FILE, FREEZE_STATE_FILE):
+            continue  # #470 freeze.toml is a state map, not a curation TOML
         data = _parse_toml(path)
         raw_rows = data.get("replaced_by")
         if raw_rows is None:
@@ -3220,48 +3299,83 @@ def write_snapshot(snapshot_path: Path, payload: dict[str, dict[str, str]]) -> N
     )
 
 
+def _zone_of(kind: str, key: str) -> str:
+    """The freeze zone a snapshot entry belongs to (#470).
+
+    Classification keys are bare ``source_id`` (no provider) → the reserved
+    CLASSIFICATIONS_ZONE. Every other key is ``<provider>/<source_id>``, so the
+    leading segment is the provider zone.
+    """
+    return CLASSIFICATIONS_ZONE if kind == "classification" else key.split("/", 1)[0]
+
+
 def diff_snapshot(
     previous: dict[str, dict[str, str]],
     current: dict[str, dict[str, str]],
+    *,
+    frozen_zones: frozenset[str] = frozenset(),
 ) -> dict[str, list[str]]:
     """Compare two snapshot payloads. Adds are allowed; removes and slug
-    renames are reported. Returned dict has three keys: ``removed``,
-    ``renamed``, ``added``."""
+    renames are reported. Returned dict has four keys: ``removed``, ``renamed``,
+    ``added``, and ``blocked``.
+
+    ``blocked`` is the subset of removed+renamed entries whose zone
+    (:func:`_zone_of`) is in ``frozen_zones`` — the grow-only seal violations.
+    The default ``frozen_zones=frozenset()`` ⇒ ``blocked`` is always empty and
+    the other three keys are byte-identical to the pre-#470 output, so every
+    caller that ignores ``blocked`` is unchanged.
+    """
     removed: list[str] = []
     renamed: list[str] = []
     added: list[str] = []
+    blocked: list[str] = []
     for kind in ENTITY_KINDS:
         prev = previous.get(kind, {})
         cur = current.get(kind, {})
         for key, slug in prev.items():
             if key not in cur:
-                removed.append(f"{kind}/{key} (was {slug!r})")
+                msg = f"{kind}/{key} (was {slug!r})"
+                removed.append(msg)
+                if _zone_of(kind, key) in frozen_zones:
+                    blocked.append(msg)
                 continue
             if cur[key] != slug:
-                renamed.append(f"{kind}/{key}: {slug!r} -> {cur[key]!r}")
+                msg = f"{kind}/{key}: {slug!r} -> {cur[key]!r}"
+                renamed.append(msg)
+                if _zone_of(kind, key) in frozen_zones:
+                    blocked.append(msg)
         for key, slug in cur.items():
             if key not in prev:
                 added.append(f"{kind}/{key} = {slug!r}")
-    return {"removed": removed, "renamed": renamed, "added": added}
+    return {
+        "removed": removed,
+        "renamed": renamed,
+        "added": added,
+        "blocked": blocked,
+    }
 
 
 __all__ = (
     "AUTO_FILE_SUFFIX",
     "CLASSIFICATIONS_FILE",
+    "CLASSIFICATIONS_ZONE",
     "ENTITY_KINDS",
+    "FREEZE_STATE_FILE",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
     "EntityKind",
     "PrecheckResult",
     "SNAPSHOT_FILENAME",
     "SlugEntry",
-    "UNFROZEN_MARKER",
+    "SlugFreezeState",
     "classify_default_candidate",
     "diff_snapshot",
     "format_default_slug_hints",
-    "is_unfrozen",
+    "freeze_state",
+    "frozen_zones",
     "iter_default_slug_candidates",
     "load_classifications_toml",
+    "load_freeze_states",
     "load_provider_toml",
     "load_slug_dir",
     "populate_slugs",
