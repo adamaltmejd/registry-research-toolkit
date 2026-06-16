@@ -151,8 +151,14 @@ class CuratedAdapter:
     first `mint()` part and the TOML basename `emit()` reads from `source_dir`.
     """
 
-    def __init__(self, provider: str) -> None:
+    def __init__(
+        self, provider: str, *, classification_seed_path: Path | None = None
+    ) -> None:
         self.provider = provider
+        # The seed the build was invoked with (`build_db(seed_path=...)`), so
+        # `classification` validation checks the SAME manifest
+        # `populate_classifications` seeds; None → the in-repo default.
+        self._classification_seed_path = classification_seed_path
         # Side channels the materializer drains off every adapter (db.materialize).
         # A thin provider has no related edges, fold hints, or coalesce stats.
         self.row_counts: dict[str, int] = {}
@@ -215,7 +221,7 @@ class CuratedAdapter:
         if any(
             var.classification is not None for reg in registers for var in reg.variables
         ):
-            declared = declared_short_names()
+            declared = declared_short_names(self._classification_seed_path)
             for reg in registers:
                 for var in reg.variables:
                     if (

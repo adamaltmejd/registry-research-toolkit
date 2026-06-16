@@ -3556,7 +3556,12 @@ def build_db(
         # high-band ids, no scratch.
         for prov_slug, dirname in _CURATED_PROVIDERS:
             if prov_slug in providers:
-                adapters.append((CuratedAdapter(prov_slug), input_dir / dirname))
+                adapters.append(
+                    (
+                        CuratedAdapter(prov_slug, classification_seed_path=seed_path),
+                        input_dir / dirname,
+                    )
+                )
 
         mat = materialize(
             conn,

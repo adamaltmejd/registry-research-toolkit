@@ -268,6 +268,46 @@ valid_from = "2010-01-01"
     assert "not a declared classification" in exc.value.message
 
 
+def test_classification_seed_path_is_honored(tmp_path: Path) -> None:
+    # The validation must check the SAME seed the build seeds: a programmatic
+    # `build_db(seed_path=...)` threads its seed down to the adapter. Declare a
+    # short_name that does NOT exist in the in-repo seed, then prove the custom
+    # seed path makes the reference valid — and that the DEFAULT (in-repo) seed
+    # rejects it. This proves `classification_seed_path` is threaded and used.
+    custom_seed = tmp_path / "classifications.toml"
+    custom_seed.write_text(
+        '[[classification]]\nshort_name = "FAKE-CLASS-XYZ"\nname = "Fake Class"\n',
+        encoding="utf-8",
+    )
+    toml = """\
+[[register]]
+key = "reg1"
+name = "Register One"
+valid_from = "2010-01-01"
+
+  [[register.variable]]
+  name = "Diagnos"
+  column = "diagnos"
+  classification = "FAKE-CLASS-XYZ"
+"""
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(toml, encoding="utf-8")
+
+    # Custom seed declares FAKE-CLASS-XYZ → emit succeeds.
+    adapter = CuratedAdapter("fohm", classification_seed_path=custom_seed)
+    list(adapter.emit(src))
+    diagnos_id = mint("fohm", "reg1", "diagnos")
+    assert adapter.classification_candidates == [(diagnos_id, None, "FAKE-CLASS-XYZ")]
+
+    # Default adapter (in-repo seed, which lacks FAKE-CLASS-XYZ) → raises.
+    with pytest.raises(RegMetaError) as exc:
+        list(CuratedAdapter("fohm").emit(src))
+    assert exc.value.code == "curated_toml_invalid"
+    assert "FAKE-CLASS-XYZ" in exc.value.message
+    assert "not a declared classification" in exc.value.message
+
+
 def test_classification_empty_string_records_no_candidate(tmp_path: Path) -> None:
     # `_opt_str` normalizes ""/whitespace to None, so an empty `classification`
     # is ABSENT, not a "" short_name — no candidate. Locks the contract against a
