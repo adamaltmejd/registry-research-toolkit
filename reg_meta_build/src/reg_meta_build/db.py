@@ -50,6 +50,7 @@ from .fqid_slugs import (
     materialize_same_as_edges,
     populate_slugs,
     populate_variable_slugs,
+    reject_replaced_by_cycles,
     repo_slug_dir,
 )
 from .ir import (
@@ -2028,7 +2029,15 @@ def _materialize_curated_replaced_by_edges(
     sharing its `seen_register` / `seen_variable` PK sets so a curated edge
     dedups against an event-derived one (and against another curated row). The
     rows are parsed/shape-validated DB-free by `load_curated_replaced_by`; this
-    pass does the DB-aware existence checks and the INSERTs.
+    pass does the DB-aware existence checks, the COMBINED-graph cycle check, and
+    the INSERTs.
+
+    Acyclicity (Codex P2): the load-time check sees only the curated edges, so it
+    can't catch a curated edge that closes a cycle WITH an event-derived edge
+    (event A->B + curated B->A). This pass reconstructs the event edges from the
+    shared `seen_*` PK tuples and runs `reject_replaced_by_cycles` on the combined
+    per-grain graph (event ∪ curated-to-insert) BEFORE any INSERT, so a cycle
+    aborts the build with no partial rows.
 
     Resolution rules (#440 — these are the whole point of the curated path):
       - The SUCCESSOR must resolve to a live, slugged DB entity (a register or
@@ -2065,10 +2074,29 @@ def _materialize_curated_replaced_by_edges(
     live_registers = _slugged_register_fqids(conn)
     live_variables = _slugged_variable_fqids(conn)
 
-    n_register = 0
-    n_variable = 0
+    # Combined-graph cycle check (Codex P2): the event-derived edges already in
+    # `seen_*` plus the curated edges this pass will insert must be acyclic
+    # PER GRAIN. The load-time check (`load_curated_replaced_by`) sees only the
+    # curated edges, so it can't catch event A->B + curated B->A. Reconstruct the
+    # event edges from the shared seen-set PK tuples snapshotted at pass entry:
+    #   register PK (pp, pr, sp, sr)        -> (pp, pr) -> (sp, sr)
+    #   variable PK (pp, pr, pv, sp, sr, sv) -> (pp, pr, pv) -> (sp, sr, sv)
+    # The check runs BEFORE any INSERT, so a cycle aborts the build cleanly with
+    # no partial rows; only the curated edges that WILL be inserted (post
+    # provider-gate / successor-resolution / dedup) join the curated side.
+    register_cycle_edges: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
+        (pk[:2], pk[2:]) for pk in seen_register
+    ]
+    variable_cycle_edges: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
+        (pk[:3], pk[3:]) for pk in seen_variable
+    ]
+
     n_skipped_duplicate = 0
     n_skipped_inactive_provider = 0
+    # Defer INSERTs until after the cycle check. Each pending row is its full
+    # parameter tuple, already in the seen-set so intra-pass curated dups collapse.
+    pending_register: list[tuple] = []
+    pending_variable: list[tuple] = []
 
     for edge in edges:
         pred = edge.predecessor
@@ -2076,7 +2104,8 @@ def _materialize_curated_replaced_by_edges(
         # Provider gate on the SUCCESSOR only: a partial build that excludes the
         # successor's provider can't resolve it, so skip the edge instead of
         # failing. (The predecessor may be a dead / cross-provider FQID by design,
-        # so it's never gated.)
+        # so it's never gated.) A gated / dedup-skipped edge never enters the
+        # cycle graph — only edges that actually insert do.
         assert succ.provider is not None
         if succ.provider not in providers:
             n_skipped_inactive_provider += 1
@@ -2093,19 +2122,10 @@ def _materialize_curated_replaced_by_edges(
                 n_skipped_duplicate += 1
                 continue
             seen_register.add(pk)
-            conn.execute(
-                "INSERT INTO register_replaced_by ("
-                "predecessor_provider, predecessor_register, "
-                "successor_provider, successor_register, "
-                "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (
-                    *pk,
-                    edge.effective_year,
-                    _REPLACED_BY_NOTE_CURATED,
-                    edge.note,
-                ),
+            register_cycle_edges.append(((pred.provider, pred.register), succ_key))
+            pending_register.append(
+                (*pk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
             )
-            n_register += 1
         else:  # FqidKind.VARIABLE_BINDING (the loader admits only these two grains)
             assert (
                 succ.provider is not None
@@ -2132,19 +2152,33 @@ def _materialize_curated_replaced_by_edges(
                 n_skipped_duplicate += 1
                 continue
             seen_variable.add(pk)
-            conn.execute(
-                "INSERT INTO variable_replaced_by ("
-                "predecessor_provider, predecessor_register, predecessor_variable, "
-                "successor_provider, successor_register, successor_variable, "
-                "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (
-                    *pk,
-                    edge.effective_year,
-                    _REPLACED_BY_NOTE_CURATED,
-                    edge.note,
-                ),
+            variable_cycle_edges.append(
+                ((pred.provider, pred.register, pred.variable), succ_key)
             )
-            n_variable += 1
+            pending_variable.append(
+                (*pk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
+            )
+
+    # Reject any cycle in the COMBINED graph before writing a single row.
+    reject_replaced_by_cycles(register_cycle_edges)
+    reject_replaced_by_cycles(variable_cycle_edges)
+
+    conn.executemany(
+        "INSERT INTO register_replaced_by ("
+        "predecessor_provider, predecessor_register, "
+        "successor_provider, successor_register, "
+        "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        pending_register,
+    )
+    conn.executemany(
+        "INSERT INTO variable_replaced_by ("
+        "predecessor_provider, predecessor_register, predecessor_variable, "
+        "successor_provider, successor_register, successor_variable, "
+        "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        pending_variable,
+    )
+    n_register = len(pending_register)
+    n_variable = len(pending_variable)
 
     _progress(
         f"  {n_register:,} register / {n_variable:,} variable curated "

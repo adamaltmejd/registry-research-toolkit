@@ -3216,6 +3216,71 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
+    def test_curated_edge_closing_cycle_with_event_edge_fails(
+        self, tmp_path: Path
+    ) -> None:
+        """The combined-graph cycle check (Codex P2): an event-derived edge A→B
+        plus a curated edge B→A close a cycle that NEITHER source sees alone. The
+        event pass emits testcol→uniqcol (var_id 100→300); the curated row names
+        the reverse uniqcol→testcol. Both successors resolve, so this is caught by
+        the cycle check, not the unresolved-successor guard. The build fails fast
+        with `replaced_by_cycle` and no partial rows survive."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/otherreg/uniqcol"\n'
+            'successor = "scb/testreg/testcol"\n'
+        )
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        with pytest.raises(RegMetaError) as exc:
+            self._build(tmp_path, timeseries_rows=rows, scb_extra=extra)
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_curated_only_two_cycle_fails_via_materializer(
+        self, tmp_path: Path
+    ) -> None:
+        """A curated-only 2-cycle (no event edge) still fails — the materializer
+        runs the cycle check over the curated-to-insert edges too, since the
+        load-time helper no longer fires. testcol→uniqcol + uniqcol→testcol both
+        resolve, so only the cycle check catches them."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/otherreg/uniqcol"\n'
+            'successor = "scb/testreg/testcol"\n'
+        )
+        with pytest.raises(RegMetaError) as exc:
+            self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        assert exc.value.code == "replaced_by_cycle"
+
+    def test_curated_edge_not_closing_cycle_materializes(self, tmp_path: Path) -> None:
+        """The cycle check doesn't over-reject: an event-derived edge A→B plus a
+        curated edge B→C (extending the chain, not closing a loop) both land. The
+        event pass emits testcol→uniqcol; the curated row uniqcol→parencol adds a
+        forward edge, so two distinct `variable_replaced_by` rows result."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/otherreg/uniqcol"\n'
+            'successor = "scb/otherreg/parencol"\n'
+        )
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, timeseries_rows=rows, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_variable, successor_variable, note "
+                "FROM variable_replaced_by ORDER BY note"
+            ).fetchall()
+            assert len(edges) == 2
+            assert tuple(edges[0]) == ("testcol", "uniqcol", "auto:timeseries_event")
+            assert tuple(edges[1]) == ("uniqcol", "parencol", "curated:slug_toml")
+            stats = self._stats(conn)
+            assert stats["n_curated_variable_replaced_by"] == 1
+            assert stats["n_variable_replaced_by"] == 2
+        finally:
+            conn.close()
+
 
 class TestProvenanceDbRotation:
     """A4.2: the universal DB and the sibling provenance DB rotate to `.prev`

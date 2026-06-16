@@ -2302,14 +2302,15 @@ def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
         to a register- or variable-grain FQID (`_parse_replaced_by_fqid`).
       - Both endpoints are the SAME grain (no register→variable mix).
       - No self-loop (`predecessor == successor`).
-      - No directed cycle across the global edge list (length>=2 cycles, e.g.
-        A→B + B→A; a cyclic chain has no terminal successor).
       - `note` is an optional string; `effective_year` an optional int.
       - No unknown keys.
 
     Existence checks (successor must resolve to a live slugged DB entity;
     predecessor may be dead) are deferred to the DB-aware materializer — keeping
-    this loader DB-free mirrors `load_lineage_config`.
+    this loader DB-free mirrors `load_lineage_config`. The directed-cycle check
+    (length>=2 cycles, e.g. A→B + B→A) is ALSO deferred there: a curated edge can
+    close a cycle with an event-derived edge this loader can't see, so it must
+    run on the combined graph (`reject_replaced_by_cycles` in the materializer).
     """
     edges: list[CuratedReplacedByEdge] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
@@ -2398,37 +2399,42 @@ def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
                     effective_year=effective_year,
                 )
             )
-    # Reject directed cycles across the GLOBAL edge list (a cycle can span
-    # provider files). Self-loops are caught per-row above; this catches
-    # length>=2 cycles (A->B + B->A, or longer), which have no terminal
-    # successor and make the webapp successors()/predecessors() contradictory.
-    _reject_replaced_by_cycles(edges)
+    # NB: cycle rejection does NOT run here. The load-time graph sees only the
+    # curated edges, but a curated edge can close a cycle WITH an event-derived
+    # edge materialized in the same build (e.g. event A->B + curated B->A). That
+    # combined-graph check lives in `_materialize_curated_replaced_by_edges`,
+    # which holds the event edges too. Self-loops are still caught per-row above.
     return edges
 
 
-def _reject_replaced_by_cycles(edges: list[CuratedReplacedByEdge]) -> None:
-    """Reject directed cycles in the curated `[[replaced_by]]` succession graph.
+def reject_replaced_by_cycles(edges: list[tuple[Any, Any]]) -> None:
+    """Reject directed cycles in a `[[replaced_by]]` succession graph.
 
-    The graph is keyed by FQID string (predecessor -> successor). A cyclic
-    succession graph has no terminal successor, so the webapp's
-    successors()/predecessors() walks would contradict each other. Self-loops
-    are rejected per-row in `load_curated_replaced_by`; this catches the
-    length>=2 cycles a per-row check can't see (the cycle can span provider
-    files, hence the GLOBAL edge list). Mirrors `_reject_same_as_cycles`.
+    ``edges`` is a list of ``(predecessor_node, successor_node)`` pairs; a node
+    is any hashable key (the build passes the FQID slug tuple — register node
+    ``(provider, register)``, variable node ``(provider, register, variable)``).
+    A cyclic succession graph has no terminal successor, so the webapp's
+    successors()/predecessors() walks would contradict each other.
+
+    Pure and DB-free so it's testable in isolation. The build runs it on the
+    COMBINED per-grain graph (event-derived edges ∪ curated edges to insert) —
+    a curated edge can close a cycle with an event-derived one, which a
+    curated-only view can't see. Self-loops are rejected per-row at load
+    (`load_curated_replaced_by`); this catches length>=2 cycles a per-row check
+    can't see. Mirrors `_reject_same_as_cycles`.
     """
     if not edges:
         return
-    adj: dict[str, list[str]] = {}
-    for edge in edges:
-        a, b = str(edge.predecessor), str(edge.successor)
+    adj: dict[Any, list[Any]] = {}
+    for a, b in edges:
         adj.setdefault(a, []).append(b)
         adj.setdefault(b, [])
 
     # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
-    color: dict[str, int] = dict.fromkeys(adj, 0)
-    parent: dict[str, str] = {}
+    color: dict[Any, int] = dict.fromkeys(adj, 0)
+    parent: dict[Any, Any] = {}
 
-    def visit(node: str) -> None:
+    def visit(node: Any) -> None:
         color[node] = 1
         for nxt in adj[node]:
             if color[nxt] == 1:
