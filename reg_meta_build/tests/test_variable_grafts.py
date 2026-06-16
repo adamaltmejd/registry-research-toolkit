@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _slugged_db import build_slugged_db
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.id import _MINT_BIT
 from reg_meta_build.variable_grafts import (
     CuratedGraft,
     load_variable_grafts,
@@ -23,7 +24,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 _SCB = frozenset({"scb"})
-_MINT_BIT = 1 << 62
 
 
 def _g(
