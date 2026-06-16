@@ -1392,6 +1392,97 @@ def test_deferred_identical_vardemangd_still_content_shares_one_set() -> None:
     )
 
 
+def test_eager_kodlista_and_deferred_vardemangd_share_one_value_set() -> None:
+    # Cross-path content-share lock: an EAGERLY-written kodlista set and a
+    # DEFERRED Värdemängd set with IDENTICAL (code, label) content must collapse
+    # to ONE value_set_id. The two write paths hash differently if they ever
+    # diverge — the kodlista path calls `_ensure_value_set` inline, the #464
+    # Värdemängd path computes a deferred `member_hash` over the SAME
+    # `[(c.code, c.label)]` pairs and replays them into `_ensure_value_set` at the
+    # survivor write. Both must content-address onto the same row. In ONE adapter
+    # run: variable A is kodlista-backed {1=Man; 2=Kvinna} (eager write), variable
+    # B carries the same content as a Värdemängd cell (deferred write). Assert both
+    # surviving states reference the SAME non-None value_set_id AND exactly one
+    # value_set row exists. Fails if the deferred path hashed differently and
+    # created a duplicate set.
+    rows = [
+        SosKodlistaRow(tidsperiod=None, kod="1", beskrivning="Man"),
+        SosKodlistaRow(tidsperiod=None, kod="2", beskrivning="Kvinna"),
+    ]
+    reg = _register(
+        "bu",
+        [
+            _var("A", data_type="Sträng (text)", data_from=2001),
+            _var("B", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+        ],
+        kodlistor=(_kodlista("A", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2, "one state per variable (A kodlista, B Värdemängd)"
+    ids = {s.value_set_id for s in states}
+    assert len(ids) == 1 and None not in ids, (
+        "#464: eager kodlista + deferred Värdemängd of identical content share "
+        "ONE value_set_id"
+    )
+    assert _orphan_value_sets(objs, adapter.conn) == set()
+    # the cross-path share writes exactly one value_set row, not two.
+    assert adapter.conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0] == 1, (
+        "cross-path content-share writes exactly one value_set row"
+    )
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+
+
+def test_resolved_surviving_vardemangd_candidate_reads_final_value_set_id() -> None:
+    # Survivor-write-BEFORE-candidate-append ordering lock. The #464 survivor write
+    # materializes the deferred Värdemängd value set and `model_copy`s its id onto
+    # the state; the classification-candidate append then reads `state.value_set_id`.
+    # If that append were ever reordered ahead of the survivor write it would read
+    # the pre-write placeholder (None) and record a STALE code-less candidate for a
+    # variable whose set actually survives.
+    #
+    # DEVIATION from the original sketch (a RESOLVED variable whose overlapping
+    # members are overlap-SUPPRESSED, asserting a `(variable_id, None, ...)`
+    # candidate): that shape is VACUOUS for this invariant. A suppressed state's
+    # `value_set_id` is None under BOTH orderings (the pre-survivor-write state
+    # already carries None, and suppression nulls the pending), so the candidate is
+    # `(variable_id, None, ...)` whether or not the append is reordered — it does
+    # NOT fail-on-break (verified by simulating the reorder). The ordering is only
+    # observable on a SURVIVING set, where the correct order records the non-None id
+    # and the reordered break records None. So this locks the surviving case: one
+    # resolved (ICD-10-SE via an icd.who.int URL) Värdemängd-backed variable whose
+    # set survives -> the candidate's value_set_id must equal the state's non-None
+    # id (only true if the survivor write ran first). The Värdemängd path is the
+    # only candidate path sensitive to this reorder (kodlista/entity-registry write
+    # their id onto the state directly, not via the deferred survivor write).
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "DX",
+                value_set_text="1=Man; 2=Kvinna",
+                data_from=2001,
+                external_classification="https://icd.who.int/browse10/2019/en",
+            )
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    variables = _of(objs, IRVariable)
+    assert len(states) == 1 and len(variables) == 1
+    state = states[0]
+    assert state.value_set_id is not None, "the Värdemängd set survives (not dropped)"
+    assert adapter.classification_candidates == [
+        (variables[0].variable_id, state.value_set_id, "ICD-10-SE")
+    ], (
+        "#464: the candidate append must read the FINAL (survivor-written) "
+        "value_set_id, never the pre-write None"
+    )
+
+
 # ---------------------------------------------------------------------------
 # #401 Fix A (Codex P2): the divergent-window reconciliation + overlap-
 # suppression post-pass are VÄRDEMÄNGD-ONLY (kodlista is None). A KODLISTA-backed
