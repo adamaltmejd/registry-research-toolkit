@@ -33,15 +33,13 @@ from reg_meta_build.extend_db import (
     extend_db,
     load_inventory,
 )
-from reg_meta_build.id import mint
+from reg_meta_build.id import _MINT_BIT, mint
 from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build.fqid_slugs import populate_variable_slugs
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-_MINT_BIT = 1 << 62
 
 # Steward + provider used across the inventory fixtures.
 _STEWARD = "swecov"

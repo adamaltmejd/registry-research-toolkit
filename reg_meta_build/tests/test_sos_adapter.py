@@ -20,7 +20,7 @@ from _sos_fixtures import (
     _Var as _SosFixtureVar,
 )
 from reg_meta_build.db import DDL, build_db, seed_providers
-from reg_meta_build.id import mint
+from reg_meta_build.id import _MINT_BIT, mint
 from reg_meta_build.ir import (
     IRRegister,
     IRRelatedToEdge,
@@ -49,7 +49,6 @@ from reg_meta_build.sources.sos import (
     _sos_abbrev,
 )
 
-_MINT_BIT = 1 << 62
 _HIGH = 1 << 63
 
 
