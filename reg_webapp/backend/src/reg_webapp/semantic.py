@@ -59,6 +59,11 @@ from typing import TYPE_CHECKING, Literal
 
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import FqidError, parse, period_token_to_bounds
+
+# Runtime import (not just TYPE_CHECKING): the representation drift split below
+# branches on `isinstance(source.period, PeriodRange)` to scope the gap-based
+# under-coverage check to explicit ranges only.
+from reg_schema.project_data import PeriodRange
 from reg_schema.validation import ValidationIssue, ValidationResult
 
 if TYPE_CHECKING:
@@ -72,7 +77,6 @@ if TYPE_CHECKING:
         Panel,
         PanelMember,
         Period as SchemaPeriod,
-        PeriodRange,
         ProjectData,
         Source,
     )
@@ -660,15 +664,49 @@ def _check_binding_period(
         # only intersecting states, so narrowing to `matched` can silently drop a
         # sub-range the column doesn't cover (e.g. SSYK5 from 2014 under a 2010–2020
         # binding → 2010–2013 lost). Surface it as info. A point int period is a
-        # single instant (no gap); `_default` returns the FULL state history, so it
-        # CAN under-cover just like a PeriodRange and must be checked too.
-        is_multi_period = (
-            not isinstance(source.period, (int, str)) or source.period == "_default"
-        )
-        if is_multi_period and (
-            min(s.valid_from for s in matched) > min(s.valid_from for s in states)
-            or max(s.valid_to for s in matched) < max(s.valid_to for s in states)
-        ):
+        # single instant (no gap), so neither branch below fires for it.
+        #
+        # The drift detection splits BY PERIOD TYPE because the two cases need
+        # different coverage math:
+        #
+        # (1) An explicit `PeriodRange` has a FINITE author-supplied `[lo, hi]`,
+        #     so we can do real `date`-interval gap math against it. Comparing
+        #     only the OUTER bounds (the old min/max test) misses an INTERNAL gap:
+        #     a column delivering 2010–2012 AND 2018–2020 (two disjoint states)
+        #     under a 2010..2020 binding has the same min_from/max_to as a sibling
+        #     covering 2013–2017, so the outer test stays silent while the
+        #     2013–2017 extract is empty for the pinned column. Instead, compute
+        #     the uncovered sub-ranges for the pinned column (`matched`) vs all
+        #     columns (`states`) over `[lo, hi]`. Since `matched ⊆ states`,
+        #     `all_gaps` is always a subset of `matched_gaps`; they DIFFER exactly
+        #     when a sibling column fills a sub-range the pinned column does not —
+        #     which is precisely the under-coverage we want to flag. This
+        #     SUBSUMES the old outer-bounds test (a leading/trailing gap is just
+        #     another gap) AND catches internal gaps, so the `PeriodRange` case
+        #     runs ONLY this check (running the old min/max too would double-report).
+        #
+        # (2) `_default` (full history) and a list period stay on the OUTER-bounds
+        #     min/max test. `_default`'s upper bound is the open-end sentinel
+        #     `9999-12-31`, and `_range_coverage_gaps` does `valid_to + 1 day`,
+        #     which would overflow `date.max` on an open-ended state — so `_default`
+        #     can't use the gap path and stays on the overflow-safe comparison.
+        #     The internal-gap sub-case for `_default`, and per-range-segment of a
+        #     list, is a deferred follow-up; the per-segment presence loop just
+        #     below already flags a list segment NO pinned state covers.
+        if isinstance(source.period, PeriodRange):
+            lo, hi = _requested_range_bounds(source.period)
+            matched_gaps = _range_coverage_gaps(matched, lo, hi)
+            all_gaps = _range_coverage_gaps(states, lo, hi)
+            under_covers = matched_gaps != all_gaps
+        else:
+            is_multi_period = (
+                not isinstance(source.period, (int, str)) or source.period == "_default"
+            )
+            under_covers = is_multi_period and (
+                min(s.valid_from for s in matched) > min(s.valid_from for s in states)
+                or max(s.valid_to for s in matched) < max(s.valid_to for s in states)
+            )
+        if under_covers:
             issues.append(
                 _issue(
                     "binding_state_drifts_within_period",
