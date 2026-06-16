@@ -31,7 +31,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable, Iterator
+    from collections.abc import Iterable, Iterator
+    from typing import Protocol
 
     from reg_meta_build.sources import IRObject
 
@@ -1306,6 +1307,41 @@ def _windows_overlap(
     return af <= bt and bf <= at_
 
 
+# Deferred-write identity for a #401 Värdemängd value set (see `_emit_states`):
+# (member_hash, codes). `member_hash` is the SAME content-addressed digest
+# `_ensure_value_set` computes — over `[(c.code, c.label) for c in codes]` — so a
+# deferred write content-SHARES identically; `codes` is the IRValueCode list the
+# survivor write replays into `_ensure_value_set`. `None` marks a code-less state
+# (free-text Värdemängd, or a binding suppressed by reconciliation). Only the
+# Värdemängd path defers; kodlista + entity-registry paths still write eagerly
+# (they segment/collapse so they can never orphan).
+PendingValueSet = tuple[bytes, list[IRValueCode]]
+
+
+# Sentinel for `collect`'s pending-identity arg meaning "eager path, no #464
+# deferral": the kodlista + entity-registry callers pass no identity, distinct
+# from the Värdemängd path passing `None` (an explicit code-less deferral). The
+# sentinel keeps the Värdemängd `None` from being mistaken for "untracked".
+class _NoPending:
+    __slots__ = ()
+
+
+_NO_PENDING = _NoPending()
+
+# `collect`'s signature: (state, pending) where `pending` defaults to the eager
+# sentinel so kodlista-path callers keep calling `collect(obj)` with one arg. A
+# Protocol (not a `Callable[...]` alias) is required to express the optional
+# second parameter — `Callable` can't carry a default.
+if TYPE_CHECKING:
+
+    class _CollectFn(Protocol):
+        def __call__(
+            self,
+            obj: IRObject,
+            pending: PendingValueSet | None | _NoPending = ...,
+        ) -> Iterator[IRObject]: ...
+
+
 def _value_code(
     code: str, label: str | None, window: tuple[str | None, str | None]
 ) -> IRValueCode:
@@ -2047,12 +2083,27 @@ class SOSAdapter:
         # State buffer keyed by state_id; flushed after the member loop so the
         # reinsert sees one (widest-valid_to) row per state_id.
         states_by_id: dict[int, IRVariableState] = {}
+        # #464 parallel buffer: the PENDING Värdemängd value-set identity per
+        # surviving state_id, written only by the Värdemängd path (via `collect`'s
+        # second arg). `None` = code-less (free text or suppressed); absent key =
+        # an eager kodlista/entity-registry state (id already on the state row).
+        # The survivor write (post-pass) reads this to materialize sets ONLY for
+        # states that survive reconciliation — so dropped sets never orphan.
+        pending_by_id: dict[int, PendingValueSet | None] = {}
 
-        def _collect(obj: IRObject) -> Iterator[IRObject]:
+        def _collect(
+            obj: IRObject,
+            pending: PendingValueSet | None | _NoPending = _NO_PENDING,
+        ) -> Iterator[IRObject]:
             if isinstance(obj, IRVariableState):
                 prior = states_by_id.get(obj.state_id)
                 if prior is None:
                     states_by_id[obj.state_id] = obj
+                    # #464: record the Värdemängd path's pending identity (the
+                    # eager kodlista/entity-registry paths pass `_NO_PENDING` and
+                    # carry their value_set_id on the state itself).
+                    if not isinstance(pending, _NoPending):
+                        pending_by_id[obj.state_id] = pending
                     return
                 # kodlista paths (entity-registry + windowed): the #401
                 # divergent-window / prefer-coded reconciliation is Värdemängd-ONLY
@@ -2073,13 +2124,27 @@ class SOSAdapter:
                 # #401 Värdemängd fallback (`kodlista is None`): two merged members
                 # collided on one state_id, where value_set_version_label is always
                 # None — so two such members CAN carry divergent inline Värdemängd
-                # value sets.
-                #
-                # Same value set (both non-None equal, or both None): widening
+                # value sets. #464: reconcile on the BUFFERED `pending` identity
+                # (member_hash) rather than `obj.value_set_id` (now always None —
+                # the write is deferred). `prior_pending` is the survivor recorded
+                # by an earlier `_collect`; `pending` is obj's identity.
+                prior_pending = pending_by_id.get(obj.state_id)
+                prior_hash = None if prior_pending is None else prior_pending[0]
+                # In the `kodlista is None` branch every state came from the
+                # Värdemängd path, which always passes a real pending (tuple or
+                # None) — never `_NO_PENDING`. Normalize the sentinel to None so
+                # `obj_pending` is the clean `PendingValueSet | None` the buffer
+                # stores, and narrow the type for the survivor-buffer write below.
+                obj_pending: PendingValueSet | None = (
+                    None if isinstance(pending, _NoPending) else pending
+                )
+                obj_hash = None if obj_pending is None else obj_pending[0]
+                # Same value set (equal member_hash, or both code-less): widening
                 # `valid_to` is a safe coverage union — keeping the first in
                 # delivery order would silently truncate coverage / close an
-                # open-ended state, so reconcile to the WIDEST window.
-                if prior.value_set_id == obj.value_set_id:
+                # open-ended state, so reconcile to the WIDEST window. The pending
+                # identity is unchanged (same content), so no rewrite needed.
+                if prior_hash == obj_hash:
                     states_by_id[obj.state_id] = prior.model_copy(
                         update={
                             "valid_to": _widest_valid_to(prior.valid_to, obj.valid_to)
@@ -2092,12 +2157,18 @@ class SOSAdapter:
                 # forfeited; for a research catalog an over-claimed code window
                 # (false positive) is worse than a dropped codeless tail. `prior`
                 # wins ties and the both-coded conflict (delivery order); `obj`
-                # wins only when `prior` is the codeless side.
-                if prior.value_set_id is None:
-                    survivor = obj  # adopt obj's coded set + obj's window
+                # wins only when `prior` is the codeless side. The survivor's
+                # PENDING identity is buffered (so the deferred write materializes
+                # only the kept set); the dropped side's identity is discarded and
+                # never written -> no orphan.
+                if prior_hash is None:
+                    survivor_valid_to = obj.valid_to  # adopt obj's coded window
+                    pending_by_id[obj.state_id] = obj_pending  # obj's coded set
                 else:
-                    survivor = prior  # keep prior's coded set + prior's window
-                    if obj.value_set_id is not None:
+                    survivor_valid_to = prior.valid_to  # keep prior's coded window
+                    # prior's identity already buffered; leave it. (Both-coded
+                    # conflict keeps prior; the obj identity is dropped, unwritten.)
+                    if obj_hash is not None:
                         # both coded & DIFFERENT -> genuine conflict (kept first)
                         yield IRWarning(
                             entity_kind="variable",
@@ -2113,14 +2184,11 @@ class SOSAdapter:
                 # other non-reconciled scalar) is excluded from the state_id
                 # basis, so a warn-/allowlist-merge group can put members of
                 # different `data_type` under one variable_id — basing the row on
-                # `obj` would silently flip it. When `obj` supplies the value set,
-                # copy only its `value_set_id` + `valid_to` onto `prior`, never
-                # its `data_type`.
+                # `obj` would silently flip it. Only `valid_to` is reconciled here
+                # (value_set_id stays None until the deferred survivor write),
+                # never `data_type`.
                 states_by_id[obj.state_id] = prior.model_copy(
-                    update={
-                        "valid_to": survivor.valid_to,
-                        "value_set_id": survivor.value_set_id,
-                    }
+                    update={"valid_to": survivor_valid_to}
                 )
                 return
             yield obj
@@ -2210,18 +2278,24 @@ class SOSAdapter:
             conflicted: set[int] = set()
             for sids in by_column.values():
                 for i in range(len(sids)):
-                    a = states_by_id[sids[i]]
-                    if a.value_set_id is None:
+                    # #464: compare the PENDING member_hash (not value_set_id —
+                    # the write is deferred, so all states carry None until the
+                    # survivor write below). None pending = code-less, skip.
+                    a_pending = pending_by_id.get(sids[i])
+                    if a_pending is None:
                         continue
+                    a = states_by_id[sids[i]]
+                    a_hash = a_pending[0]
                     for j in range(i + 1, len(sids)):
+                        b_pending = pending_by_id.get(sids[j])
+                        if b_pending is None:
+                            continue
                         b = states_by_id[sids[j]]
-                        if (
-                            b.value_set_id is None
-                            or a.value_set_id == b.value_set_id
-                            or not _windows_overlap(
-                                a.valid_from, a.valid_to, b.valid_from, b.valid_to
-                            )
+                        if a_hash == b_pending[0] or not _windows_overlap(
+                            a.valid_from, a.valid_to, b.valid_from, b.valid_to
                         ):
+                            # Equal hash = same set (not a conflict); disjoint
+                            # windows = no invariant violation. Leave bound.
                             continue
                         conflicted.add(sids[i])
                         conflicted.add(sids[j])
@@ -2229,7 +2303,10 @@ class SOSAdapter:
             for sid in conflicted:
                 state = states_by_id[sid]
                 col = state.delivery_column_name
-                states_by_id[sid] = state.model_copy(update={"value_set_id": None})
+                # #464: null the PENDING identity so the survivor write below
+                # never materializes this set -> no orphan. The state stays
+                # value_set_id=None (it already is, pre-survivor-write).
+                pending_by_id[sid] = None
                 if col not in warned_columns:
                     warned_columns.add(col)
                     yield IRWarning(
@@ -2242,6 +2319,27 @@ class SOSAdapter:
                             "segment on); binding dropped (code-less) where ambiguous"
                         ),
                     )
+
+        # #464 SURVIVOR WRITE: now that reconciliation (`_collect` + the overlap
+        # post-pass) has settled which Värdemängd states survive, materialize a
+        # value set ONLY for each surviving state with a non-None pending identity.
+        # `_ensure_value_set` is content-addressed (INSERT OR IGNORE on
+        # UNIQUE(member_hash), cached in `_set_id_by_hash`), so two surviving
+        # states with identical content still collapse to ONE shared value_set_id —
+        # the deferred write hashed the SAME pairs, so the id is identical to the
+        # old eager path. Dropped/nulled sets are simply never written -> the only
+        # build-output change vs the eager path is that orphaned rows disappear.
+        # Runs BEFORE the classification-candidate append so that append reads the
+        # FINAL value_set_id (unchanged keying logic). Code-less survivors keep
+        # value_set_id=None. (Eager kodlista/entity-registry states have no
+        # pending_by_id entry and keep the value_set_id already on their row.)
+        for sid, state in list(states_by_id.items()):
+            pending = pending_by_id.get(sid)
+            if pending is None:
+                continue
+            _member_hash, codes = pending
+            value_set_id = self._ensure_value_set(codes)
+            states_by_id[sid] = state.model_copy(update={"value_set_id": value_set_id})
 
         # Flush the reconciled states (one per state_id, widest valid_to).
         # For a RESOLVED variable, append one classification candidate per emitted
@@ -2269,12 +2367,22 @@ class SOSAdapter:
         seen_alias: set[tuple[int, str]],
         kodlista: SosKodlista | None,
         entity_registry: bool,
-        collect: Callable[[IRObject], Iterator[IRObject]],
+        collect: _CollectFn,
         has_kodlista_sheet: bool = False,
     ) -> Iterator[IRObject]:
         """One (member, resolved variant) emission: the alias row plus the
         member's era-windowed states routed through ``collect`` (the
         `_emit_states` same-state_id reconciliation buffer).
+
+        #464 deferral: the Värdemängd branch does NOT write its value set here
+        (eager writes orphan rows when reconciliation later drops the state's
+        set). It computes the pending (member_hash, codes) — or `None` for a
+        code-less state — and passes it to ``collect`` as the second arg, which
+        reconciles same-state_id collisions and buffers the SURVIVOR's identity;
+        `_emit_states` writes only surviving states' sets after reconciliation.
+        kodlista + entity-registry paths are untouched: they still write eagerly
+        (segmented/collapsed, so they never orphan) and call ``collect(obj)`` with
+        no pending identity (`_NO_PENDING`).
 
         `has_kodlista_sheet`: the variable HAS a kodlista sheet that was skipped
         as unparseable (`raw_rows`), so `kodlista is None` here only because the
@@ -2318,17 +2426,39 @@ class SOSAdapter:
                 return
             if dropped:
                 deldat_dropped.append(True)
-            value_set_id = None
             classified = (
                 None
                 if has_kodlista_sheet
                 else _classify_value_set_text(v.value_set_text)
             )
-            if classified is not None:
+            # #464 DEFERRAL: do NOT write the value set here. An eager
+            # `_ensure_value_set` persists value_set/value_code/value_set_member
+            # rows that `_emit_states` reconciliation can later orphan (a
+            # divergent-collision drop in `_collect`, or an overlap-suppression
+            # null in the post-pass) — orphaned codes then leak into unscoped
+            # value search as context-less mapping_count=0 hits. Instead compute
+            # the PENDING identity and hand it to `collect` (`_collect`), which
+            # reconciles same-state_id collisions and records the SURVIVOR's
+            # identity in `pending_by_id`; `_emit_states` then writes only
+            # surviving states' sets. The state yields value_set_id=None;
+            # `_emit_states` `model_copy`s the final id onto survivors.
+            #
+            # Footgun: the pending identity rides ALONGSIDE the state (not on it —
+            # IRVariableState is a frozen content row), so it must travel through
+            # `collect`, not via a `pending_by_id[state_id]` write here: two merged
+            # members minting one state_id would otherwise clobber each other's
+            # entry before `_collect` could compare them.
+            pending: PendingValueSet | None
+            if classified is None:
+                pending = None  # free-text -> code-less
+            else:
                 # Värdemängd carries no Tidsperiod -> the whole-variable window.
-                value_set_id = self._ensure_value_set(
-                    [_value_code(code, label, window) for code, label in classified]
-                )
+                codes = [_value_code(code, label, window) for code, label in classified]
+                # Hash the SAME pairs `_ensure_value_set` hashes (it builds
+                # `[(c.code, c.label) for c in codes]`), so the deferred survivor
+                # write content-shares onto the identical value_set_id.
+                member_hash = _value_set_hash([(c.code, c.label) for c in codes])
+                pending = (member_hash, codes)
             yield from collect(
                 IRVariableState(
                     state_id=self._state_id(abbrev, variable_id, variant_id, window[0]),
@@ -2339,9 +2469,10 @@ class SOSAdapter:
                     data_type=_norm_data_type(v.data_type),
                     data_length=None,
                     delivery_column_name=col,
-                    value_set_id=value_set_id,
+                    value_set_id=None,  # #464: assigned at survivor write
                     value_set_version_label=None,
-                )
+                ),
+                pending,
             )
         elif entity_registry:
             for obj in self._emit_entity_registry_state(

@@ -358,12 +358,20 @@ are normalized *here*, never leaked downstream:
   overlapping windows and distinct non-null value sets, and nulls every conflicting
   state's `value_set_id` back to code-less (the exact pre-#401 behavior — no
   regression), emitting one `sos_value_set_text_overlap` IRWarning per affected column.
-  Disjoint-window multi-era variables (legitimate era changes) stay bound.
-  **Kodlista-wins** (`has_kodlista_sheet`): a variable whose `Kodlista_*` sheet exists
-  but was skipped as unparseable (`raw_rows`) arrives at `_emit_states` with
-  `kodlista is None` but `has_kodlista_sheet=True`; the Värdemängd fallback does not
-  fire, leaving the variable code-less — fabricating inline codes when a real code list
-  exists is never acceptable.
+  Disjoint-window multi-era variables (legitimate era changes) stay bound. The
+  Värdemängd value-set **write is deferred** (#464): the member loop only records each
+  state's pending `(member_hash, codes)` identity; `_ensure_value_set` is called once
+  per *surviving* state **after** `_collect` + the overlap post-pass settle, so a set
+  that reconciliation drops (a divergent collision, or a nulled overlap) is never
+  written and leaves no orphaned `value_set` / `value_code` rows for value search to
+  surface. Content-share is unchanged — the deferred write hashes the same pairs, so two
+  surviving states with identical content still collapse onto one `value_set_id`. The
+  kodlista + entity-registry paths write eagerly as before (they segment/collapse, so
+  they can never orphan). **Kodlista-wins** (`has_kodlista_sheet`): a variable whose
+  `Kodlista_*` sheet exists but was skipped as unparseable (`raw_rows`) arrives at
+  `_emit_states` with `kodlista is None` but `has_kodlista_sheet=True`; the Värdemängd
+  fallback does not fire, leaving the variable code-less — fabricating inline codes when
+  a real code list exists is never acceptable.
 
 `emit()` yields IR in FK-topological order (register → classification → variant →
 value_set → variable → state/alias → edges → warning/provenance sinks) so the

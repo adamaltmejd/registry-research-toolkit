@@ -1215,6 +1215,275 @@ def test_disjoint_members_distinct_vardemangd_stay_bound() -> None:
 
 
 # ---------------------------------------------------------------------------
+# #464: defer the Värdemängd value-set write until AFTER conflict resolution, so
+# a set that reconciliation later drops (a `_collect` divergent collision or an
+# overlap-post-pass null) never leaves orphaned value_set/value_code rows. Pre-#464
+# the eager member-loop write persisted those rows even when the surviving state
+# referenced a different set (or none) — they then leaked into unscoped value
+# search as context-less mapping_count=0 hits. These tests assert at the DB-ROW
+# level (the behavior tests above only inspect the surviving state's value_set_id,
+# which was already correct — the orphan was invisible to them).
+# ---------------------------------------------------------------------------
+
+
+def _orphan_value_sets(objs: list, conn: sqlite3.Connection) -> set[int]:
+    """value_set rows in the DB NOT referenced by any emitted state's
+    value_set_id — i.e. orphans. Empty set == no orphan."""
+    referenced = {
+        s.value_set_id for s in _of(objs, IRVariableState) if s.value_set_id is not None
+    }
+    written = {r[0] for r in conn.execute("SELECT value_set_id FROM value_set")}
+    return written - referenced
+
+
+def _all_value_codes(conn: sqlite3.Connection) -> set[tuple[str, str]]:
+    """Every (code, label) reachable from a value_set_member row — i.e. every
+    code that `_populate_fts(include_value_code=True)` would index."""
+    return {
+        (r[0], r[1])
+        for r in conn.execute(
+            "SELECT DISTINCT vc.code, vc.label FROM value_set_member vsm "
+            "JOIN value_code vc ON vc.code_id = vsm.code_id"
+        )
+    }
+
+
+def test_overlap_suppressed_vardemangd_writes_no_orphan_rows() -> None:
+    # bu/SPEC shape (the measured 2-set / 3-unique-code orphan): two merged
+    # members, distinct Värdemängd, overlapping windows -> the post-pass nulls
+    # BOTH. Pre-#464 each member's eager write left its value_set + the unique
+    # codes orphaned (no surviving state references them); #464 defers the write,
+    # so the suppressed sets are NEVER written. Assert ZERO orphans and that the
+    # suppressed-only codes (the unique "3=Annat" tail) are absent from the DB.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "SPEC", value_set_text="1=Man; 2=Kvinna", data_from=1960, data_to=2016
+            ),
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna; 3=Annat",
+                data_from=2001,
+                data_to=2014,
+            ),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert all(s.value_set_id is None for s in states), "both states suppressed"
+    assert _orphan_value_sets(objs, adapter.conn) == set(), (
+        "#464: a post-pass-nulled Värdemängd set must leave NO orphaned value_set row"
+    )
+    # The suppressed codes never reach the DB -> they can't surface in value search.
+    codes = _all_value_codes(adapter.conn)
+    assert ("3", "Annat") not in codes, "suppressed-set-only code must be absent"
+    assert ("1", "Man") not in codes and ("2", "Kvinna") not in codes, (
+        "both members were suppressed; none of their codes should be written"
+    )
+
+
+def test_collect_divergent_collision_writes_only_survivor() -> None:
+    # `_collect` prefer-coded path: a codeless `prior` + a coded `obj` share one
+    # state_id (same valid_from). The coded set survives. There is no losing set
+    # here (the dropped side is free text), so this asserts the survivor IS the
+    # only value_set written and there are no orphans. The both-coded conflict
+    # variant (a real dropped set) is the next test.
+    reg = _register(
+        "bu",
+        [
+            _var("KON", value_set_text="Fritext, ingen kodning", data_from=2001),
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1 and states[0].value_set_id is not None
+    assert _orphan_value_sets(objs, adapter.conn) == set(), "survivor only, no orphan"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+
+
+def test_collect_both_coded_conflict_drops_loser_no_orphan() -> None:
+    # `_collect` both-coded conflict: two merged members share state_id but
+    # classify to DIFFERENT non-None sets. `prior` (first in delivery order) is
+    # kept + a conflict warning fires; the loser's set is dropped. Pre-#464 the
+    # loser's eager write orphaned its value_set + its unique code ("OV"); #464
+    # never writes it. Assert the survivor's 2 codes are present, the loser's
+    # unique code is ABSENT, and there are no orphaned value_set rows.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "VARUTYP",
+                value_set_text="EX=Receptfritt; HA=Handelsvara",
+                data_from=2001,
+                data_to=2010,
+            ),
+            _var(
+                "VARUTYP",
+                value_set_text="EX=Receptfritt; HA=Handelsvara; OV=Ovrigt",
+                data_from=2001,
+                data_to=2016,
+            ),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ], "both-coded divergence still warns"
+    assert _orphan_value_sets(objs, adapter.conn) == set(), (
+        "#464: the dropped (loser) value set must leave NO orphaned row"
+    )
+    codes = _all_value_codes(adapter.conn)
+    assert ("OV", "Ovrigt") not in codes, "loser-set-only code must be absent"
+    # survivor's codes are still written and bound.
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("EX", "Receptfritt"),
+        ("HA", "Handelsvara"),
+    }
+
+
+def test_surviving_vardemangd_set_is_still_written_and_bound() -> None:
+    # Regression lock (happy path unchanged): a NON-dropped Värdemängd set is
+    # still written and bound after the deferral, with NO orphans.
+    reg = _register(
+        "bu",
+        [_var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001)],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1 and states[0].value_set_id is not None
+    assert _orphan_value_sets(objs, adapter.conn) == set()
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+
+
+def test_deferred_identical_vardemangd_still_content_shares_one_set() -> None:
+    # Regression lock (content-share intact): two SURVIVING states with identical
+    # Värdemängd content must still collapse to ONE value_set_id after the
+    # deferral — the deferred survivor write hashes the SAME (code, label) pairs,
+    # so `_ensure_value_set` content-addresses them onto the same row. (Two
+    # distinct variables so neither is dropped.)
+    reg = _register(
+        "bu",
+        [
+            _var("A", value_set_text="1=ja; 0=nej", data_from=2001),
+            _var("B", value_set_text="1=ja; 0=nej", data_from=2001),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    ids = {s.value_set_id for s in states}
+    assert len(ids) == 1 and None not in ids, (
+        "#464: identical deferred content still shares one value_set_id"
+    )
+    assert _orphan_value_sets(objs, adapter.conn) == set()
+    # exactly one value_set row exists for this single shared set.
+    assert adapter.conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0] == 1, (
+        "content-share writes exactly one value_set row"
+    )
+
+
+def test_eager_kodlista_and_deferred_vardemangd_share_one_value_set() -> None:
+    # Cross-path content-share lock: an EAGERLY-written kodlista set and a
+    # DEFERRED Värdemängd set with IDENTICAL (code, label) content must collapse
+    # to ONE value_set_id. The two write paths hash differently if they ever
+    # diverge — the kodlista path calls `_ensure_value_set` inline, the #464
+    # Värdemängd path computes a deferred `member_hash` over the SAME
+    # `[(c.code, c.label)]` pairs and replays them into `_ensure_value_set` at the
+    # survivor write. Both must content-address onto the same row. In ONE adapter
+    # run: variable A is kodlista-backed {1=Man; 2=Kvinna} (eager write), variable
+    # B carries the same content as a Värdemängd cell (deferred write). Assert both
+    # surviving states reference the SAME non-None value_set_id AND exactly one
+    # value_set row exists. Fails if the deferred path hashed differently and
+    # created a duplicate set.
+    rows = [
+        SosKodlistaRow(tidsperiod=None, kod="1", beskrivning="Man"),
+        SosKodlistaRow(tidsperiod=None, kod="2", beskrivning="Kvinna"),
+    ]
+    reg = _register(
+        "bu",
+        [
+            _var("A", data_type="Sträng (text)", data_from=2001),
+            _var("B", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+        ],
+        kodlistor=(_kodlista("A", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2, "one state per variable (A kodlista, B Värdemängd)"
+    ids = {s.value_set_id for s in states}
+    assert len(ids) == 1 and None not in ids, (
+        "#464: eager kodlista + deferred Värdemängd of identical content share "
+        "ONE value_set_id"
+    )
+    assert _orphan_value_sets(objs, adapter.conn) == set()
+    # the cross-path share writes exactly one value_set row, not two.
+    assert adapter.conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0] == 1, (
+        "cross-path content-share writes exactly one value_set row"
+    )
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+
+
+def test_resolved_surviving_vardemangd_candidate_reads_final_value_set_id() -> None:
+    # Survivor-write-BEFORE-candidate-append ordering lock. The #464 survivor write
+    # materializes the deferred Värdemängd value set and `model_copy`s its id onto
+    # the state; the classification-candidate append then reads `state.value_set_id`.
+    # If that append were ever reordered ahead of the survivor write it would read
+    # the pre-write placeholder (None) and record a STALE code-less candidate for a
+    # variable whose set actually survives.
+    #
+    # DEVIATION from the original sketch (a RESOLVED variable whose overlapping
+    # members are overlap-SUPPRESSED, asserting a `(variable_id, None, ...)`
+    # candidate): that shape is VACUOUS for this invariant. A suppressed state's
+    # `value_set_id` is None under BOTH orderings (the pre-survivor-write state
+    # already carries None, and suppression nulls the pending), so the candidate is
+    # `(variable_id, None, ...)` whether or not the append is reordered — it does
+    # NOT fail-on-break (verified by simulating the reorder). The ordering is only
+    # observable on a SURVIVING set, where the correct order records the non-None id
+    # and the reordered break records None. So this locks the surviving case: one
+    # resolved (ICD-10-SE via an icd.who.int URL) Värdemängd-backed variable whose
+    # set survives -> the candidate's value_set_id must equal the state's non-None
+    # id (only true if the survivor write ran first). The Värdemängd path is the
+    # only candidate path sensitive to this reorder (kodlista/entity-registry write
+    # their id onto the state directly, not via the deferred survivor write).
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "DX",
+                value_set_text="1=Man; 2=Kvinna",
+                data_from=2001,
+                external_classification="https://icd.who.int/browse10/2019/en",
+            )
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    variables = _of(objs, IRVariable)
+    assert len(states) == 1 and len(variables) == 1
+    state = states[0]
+    assert state.value_set_id is not None, "the Värdemängd set survives (not dropped)"
+    assert adapter.classification_candidates == [
+        (variables[0].variable_id, state.value_set_id, "ICD-10-SE")
+    ], (
+        "#464: the candidate append must read the FINAL (survivor-written) "
+        "value_set_id, never the pre-write None"
+    )
+
+
+# ---------------------------------------------------------------------------
 # #401 Fix A (Codex P2): the divergent-window reconciliation + overlap-
 # suppression post-pass are VÄRDEMÄNGD-ONLY (kodlista is None). A KODLISTA-backed
 # variable keeps the ORIGINAL pre-#401 reconciliation (always widen valid_to) and
