@@ -245,6 +245,22 @@ def test_no_classification_records_no_candidate(tmp_path: Path) -> None:
     assert adapter.classification_candidates == []
 
 
+def test_classification_empty_string_records_no_candidate(tmp_path: Path) -> None:
+    # `_opt_str` normalizes ""/whitespace to None, so an empty `classification`
+    # is ABSENT, not a "" short_name — no candidate. Locks the contract against a
+    # future truthy-guard regression in `_emit_variable`.
+    toml = (
+        '[[register]]\nkey="r"\nname="R"\nvalid_from="2000-01-01"\n'
+        '[[register.variable]]\nname="X"\ncolumn="x"\nclassification="   "\n'
+    )
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "fohm.toml").write_text(toml, encoding="utf-8")
+    adapter = CuratedAdapter("fohm")
+    list(adapter.emit(src))
+    assert adapter.classification_candidates == []
+
+
 def test_classification_candidate_backfills_state(tmp_path: Path) -> None:
     """End-to-end of the curated → feed → backfill path WITHOUT the SOS corpus:
     the candidate the adapter emits, once fed into the provider-blind
