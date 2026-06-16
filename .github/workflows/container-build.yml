@@ -132,8 +132,17 @@ jobs:
       # pushed tag an immutable rollback handle (#290). Push builds use the
       # bare sha. The deploy job computes the identical expression.
       IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
+    # Surfaces the pending-schema-bump verdict (below) so the deploy jobs can wait
+    # for the owed reg_meta release instead of treating a paused bake as a failure.
+    outputs:
+      pending_bump: ${{ steps.schemaguard.outputs.pending_bump }}
     steps:
+      # fetch-depth: 0 + tags so the schema guard below can `git show <tag>:...`
+      # the released asset's schema constants (the resolved reg_meta/v* tag).
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - uses: docker/setup-buildx-action@v4
       # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
       # build-arg. Passing a literal `latest` would make the bake layer's
@@ -161,10 +170,40 @@ jobs:
           [ -n "$tag" ] || { echo "FATAL: no reg_meta/v* release found" >&2; exit 1; }
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "Baking reg_meta release: $tag"
+      # Pending-schema-bump guard (#448). The bake (`reg-meta update`) refuses an
+      # asset whose schema is BEHIND the code (exit 10) → red build → every deploy
+      # pauses. When main's SCHEMA_VERSION / DOC_SCHEMA_VERSION is merely AHEAD of
+      # the latest released asset (same major, higher minor), that refusal is
+      # expected and self-clearing — the owed reg_meta release ships the matching
+      # asset. This step detects ONLY that code-ahead case and, when it holds,
+      # skips the bake + deploy with a GREEN build-image + a `::notice::`. A major
+      # mismatch, a missing asset, or a genuinely broken bake stays unguarded and
+      # still fails red (preserving the #343 loud-failure behavior). The asset
+      # schema is read from the release tag's source (a data-only release keeps the
+      # tag-commit schema), so the comparison needs the tag history (checkout above).
+      # Trade-off: on a schema-bumping window the Dockerfile bake isn't exercised
+      # (a build-only PR goes green-skipped); it's re-exercised once the release
+      # ships and branches rebase onto the now-caught-up asset.
+      - name: Pending-schema-bump guard
+        id: schemaguard
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.regmeta.outputs.tag }}"
+          # Anchored grep (^…) so it can't match an f-string/usage of the constant.
+          code_db=$(grep -oP '^SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/db.py)
+          code_doc=$(grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/doc_db.py)
+          asset_db=$(git show "$TAG:reg_meta/src/reg_meta/db.py" | grep -oP '^SCHEMA_VERSION = "\K[^"]+')
+          asset_doc=$(git show "$TAG:reg_meta/src/reg_meta/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+')
+          pending=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --asset-db "$asset_db" --asset-doc "$asset_doc")
+          echo "pending_bump=$pending" >> "$GITHUB_OUTPUT"
+          if [ "$pending" = "true" ]; then
+            echo "::notice::pending reg_meta release — build-image bake + deploy paused by design (code schema ahead of latest released asset $TAG). The owed release will clear this; check_issue_hygiene.py also flags it."
+          fi
       # Registry push auth (main/dispatch only). The username is ignored by
-      # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
+      # Fly's registry — the FLY_API_TOKEN deploy token authenticates. Skipped on a
+      # pending bump (#448) — nothing to push when the bake is deferred.
       - name: Log in to registry.fly.io
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && steps.schemaguard.outputs.pending_bump != 'true'
         uses: docker/login-action@v4
         with:
           registry: registry.fly.io
@@ -180,7 +219,11 @@ jobs:
       # cheap; cache is WRITTEN only on non-PR events — PR-scoped GHA cache is
       # unreadable from main, so PR writes would only evict useful cache from
       # the repo's 10 GB pool (#290). PRs still READ main's cache.
-      - uses: docker/build-push-action@v7
+      # Skipped on a pending bump (#448): the bake would refuse the behind-schema
+      # asset (exit 10) by design — defer it to the owed reg_meta release rather
+      # than fail red. build-image stays green; deploys wait (job output below).
+      - if: steps.schemaguard.outputs.pending_bump != 'true'
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: reg_webapp/Dockerfile
@@ -193,8 +236,12 @@ jobs:
 
   deploy:
     needs: [build-image, wait-ci]
+    # A pending schema bump (#448) leaves build-image GREEN with the bake skipped —
+    # there is no new image to ship, so the deploy waits for the owed reg_meta
+    # release (after which a rebase re-runs the now-passing bake and deploys).
     if: >-
       !cancelled() && needs.build-image.result == 'success' &&
+      needs.build-image.outputs.pending_bump != 'true' &&
       needs.wait-ci.result == 'success' &&
       github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -303,9 +350,13 @@ jobs:
   # serving pre-deploy /api/* payloads for up to the 24h TTL.
   edge-deploy:
     needs: [changes, build-image, deploy, wait-ci]
+    # Also gated on the pending-bump guard (#448): when the bake is deferred the
+    # origin never deployed, so there is no fresh cache generation to ship and the
+    # edge must wait for the owed release alongside `deploy`.
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
+      needs.build-image.outputs.pending_bump != 'true' &&
       needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
       (needs.changes.outputs.edge == 'true' ||
       needs.changes.outputs.image == 'true' ||

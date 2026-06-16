@@ -619,6 +619,23 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
   `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
   seconds.
+- **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
+  `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
+  higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
+  and turn `build-image` red — pausing **all** deploys for a state that is expected and
+  self-clearing (the owed reg_meta release ships the matching asset). A `schemaguard`
+  step compares the code constants against the released tag's (`git show <tag>:…`) via
+  the pure `scripts/schema_pending_bump.py` helper and, on a detected code-ahead bump,
+  skips the bake + deploy with a GREEN `build-image` and a `::notice::`; the deploy jobs
+  gate on its `pending_bump` job output and wait. Once the release ships, a rebase
+  re-runs the now-passing bake and deploys. Only the code-ahead case is neutralized — a
+  major mismatch, a missing asset, or a genuinely broken bake stays unguarded and still
+  fails red (the #343 loud-failure behavior). The comparison rule is unit-tested because
+  CI can't reach the code-ahead branch on a normal commit (main's schema usually equals
+  the latest release); its source of truth is `_check_schema_compat` in
+  `reg_meta/src/reg_meta/db.py`. Trade-off: during the bump window the Dockerfile bake
+  isn't exercised (a build-only PR goes green-skipped), re-exercised once the release
+  lands.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
   source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
