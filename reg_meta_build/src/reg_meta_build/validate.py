@@ -1075,6 +1075,11 @@ def _check_tags(
         )
 
 
+# The 4 LISA + 4 non-LISA monthly families merged today (#319/#383); absolute
+# floor like the lkf one — adding/removing a family forces a gate update.
+_AW_MIN_MERGED_FAMILIES = 8
+
+
 def _check_variable_alias_window(
     conn: sqlite3.Connection,
     result: ValidationResult,
@@ -1090,7 +1095,10 @@ def _check_variable_alias_window(
     delivery_column_name is present in `variable_alias` for that variable+variant
     (the merged variable retains all 12 columns there — same invariant
     `_check_variable_alias_covers_state_columns` enforces for states). Corpus: a
-    real maintainer build merges >= 1 family, so the table is non-empty there."""
+    real maintainer build merges the 8 monthly families (#319/#383), so this is
+    also the regression floor for family-merge (>= `_AW_MIN_MERGED_FAMILIES`
+    survivors) now that the month-token-group floor in `_check_concept_groups`
+    is gone — the merge consumes every month-suffixed family pre-fold."""
     result.section("[monthly-family windows]")
     if "variable_alias_window" not in tables:
         result.ok("variable_alias_window absent — window check skipped")
@@ -1130,8 +1138,19 @@ def _check_variable_alias_window(
         else:
             result.fail(f"{uncovered:,} window column(s) missing from variable_alias")
 
-    if corpus and n == 0:
-        result.fail("variable_alias_window is EMPTY on a corpus build")
+    if corpus:
+        n_families = conn.execute(
+            "SELECT COUNT(DISTINCT variable_id) FROM variable_alias_window"
+        ).fetchone()[0]
+        if n_families >= _AW_MIN_MERGED_FAMILIES:
+            result.ok(
+                f"{n_families} merged monthly families (>= {_AW_MIN_MERGED_FAMILIES})"
+            )
+        else:
+            result.fail(
+                f"only {n_families} merged monthly families "
+                f"(< {_AW_MIN_MERGED_FAMILIES}) — family-merge regression?"
+            )
 
 
 def _check_sos_sanity(
@@ -1232,13 +1251,16 @@ def _check_sos_stateless_variables(
 # dimension needs no floor — `_check_concept_groups` recomputes the
 # within-register `same_definition_different_column` components and requires
 # EXACT count parity with the edge groups (structural, corpus-independent, and
-# drift-proof: 2,193 == 2,193 today, N == N forever). The token/curated floors
-# below stay absolute: their candidate sets aren't recomputable without
-# replaying the vocabulary guards, and the families are small enumerable facts
-# (8 month families / lkf = 47 vintages / 1 curated family measured
-# 2026-06-11). The `lkf` floor is keyed to the literal stem on purpose — a
-# stem rename fails this check loudly, forcing the rename to update the gate.
-_CG_MIN_MONTH_GROUPS = 3
+# drift-proof: 2,193 == 2,193 today, N == N forever). There is NO token
+# month-group floor here: the #319/#383 family merge runs before the
+# concept-group month-fold and consumes every month-suffixed family, so the 8
+# monthly families are guarded at their true home — `_check_variable_alias_window`
+# (>= `_AW_MIN_MERGED_FAMILIES` survivors). The curated/lkf floors below stay
+# absolute: their candidate sets aren't recomputable without replaying the
+# vocabulary guards, and the families are small enumerable facts (lkf = 47
+# vintages / 1 curated family measured 2026-06-11). The `lkf` floor is keyed to
+# the literal stem on purpose — a stem rename fails this check loudly, forcing
+# the rename to update the gate.
 _CG_MIN_LKF_VINTAGES = 40
 
 
@@ -1327,10 +1349,12 @@ def _check_concept_groups(
     }
     n_month = by_source.get(("token", "variable"), 0)
     n_curated = by_source.get(("curated", "variable"), 0)
-    if n_month >= _CG_MIN_MONTH_GROUPS:
-        result.ok(f"{n_month} month-token groups (>= {_CG_MIN_MONTH_GROUPS})")
-    else:
-        result.fail(f"only {n_month} month-token groups (< {_CG_MIN_MONTH_GROUPS})")
+    # No month-token-group floor: the #319/#383 family merge runs BEFORE the
+    # concept-group month-fold and consumes every month-suffixed family in the
+    # corpus, so `source='token'` month groups are 0 by design (a non-zero count
+    # would mean family-merge silently stopped merging). The merged families are
+    # guarded at their true home — `_check_variable_alias_window` (>= N survivors).
+    result.info(f"{n_month} token month group(s) (superseded by family merge)")
     if n_curated >= 1:
         result.ok(f"{n_curated} curated group(s) (>= 1)")
     else:
