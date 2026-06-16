@@ -24,7 +24,8 @@ issue; a residual model-construction failure is a thin defensive issue (still co
 ``async`` only to read the body off the wire; the BLOCKING work (structural parse
 + the semantic layer's per-binding sqlite resolution) is offloaded to the
 threadpool via ``run_in_threadpool`` so it never stalls the event loop — the
-catalog routes are plain ``def`` for the same reason. ``_project_conn`` opens the
+catalog routes are plain ``def`` for the same reason.
+``project_validation.per_request_conn`` (shared with ``/api/kit``) opens the
 reg_meta connection on that worker thread (``/order`` is a sync ``def``, so on its
 threadpool thread): open + query + close stay on ONE thread — NOT a generator
 ``Depends``, which would run on a possibly-different AnyIO thread → cross-thread
@@ -43,15 +44,12 @@ lazily, so this stays out of the import graph; the import-graph test pins it).
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
-import reg_meta.db
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import Response
 from pydantic import ValidationError
-from reg_monabundle.build.spec_loader import binding_options_issues, block_issue
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 from reg_schema.validation import ValidationIssue, ValidationResult
@@ -61,12 +59,14 @@ from reg_webapp.models import (
     ValidationResultModel,
 )
 from reg_webapp.order_export import render_order_csv
+from reg_webapp.project_validation import (
+    block_issues,
+    per_request_conn,
+    semantic_issues,
+)
 from reg_webapp.request_body import read_raw_json_object
-from reg_webapp.semantic import validate_semantic
 
 if TYPE_CHECKING:
-    import sqlite3
-    from collections.abc import Iterator
     from pathlib import Path
 
     from reg_meta.catalog import Catalog
@@ -74,24 +74,6 @@ if TYPE_CHECKING:
     from reg_webapp.catalog_index import CatalogIndex
 
 router = APIRouter(prefix="/api/project")
-
-
-@contextmanager
-def _project_conn(db_path: Path) -> Iterator[sqlite3.Connection]:
-    """A per-request reg_meta read-only connection, opened ON THE CALLING THREAD
-    (the threadpool thread for ``/validate``'s offloaded work, the sync handler
-    thread for ``/order``).
-
-    Used as a plain ``with`` (NOT a FastAPI ``Depends``) so open + query + close
-    stay on ONE thread — the load-bearing cross-thread-safety property (a generator
-    dependency runs on a possibly-different AnyIO threadpool thread →
-    ``sqlite3.ProgrammingError`` under concurrency). ``check_schema=False``: the
-    lifespan already validated the schema at boot."""
-    conn = reg_meta.db.open_db(db_path, check_schema=False)
-    try:
-        yield conn
-    finally:
-        conn.close()
 
 
 def _model_issue(message: str, exc: ValidationError) -> ValidationIssue:
@@ -128,40 +110,25 @@ def _to_result_model(result: ValidationResult) -> ValidationResultModel:
     )
 
 
-def _block_issues(raw: dict[str, Any]) -> list[ValidationIssue]:
-    """The ``reg_monabundle`` block layer (see reg_monabundle/DESIGN.md → The two
-    halves), as an issue list (tuple-concatenation composition). The code now
-    lives in its OWNER:
-    ``reg_monabundle.build.spec_loader.block_issue`` runs the amalgamation-safe
-    raise-based ``validate_block`` and wraps its single raise into one canonical
-    ``invalid_block`` ``ValidationIssue`` (None when clean) — the webapp no longer
-    invents the code. An absent block validates trivially."""
-    issue = block_issue(raw.get("reg_monabundle"))
-    return [issue] if issue is not None else []
-
-
 def _semantic_issues(
     raw: dict[str, Any], catalog: Catalog, index: CatalogIndex | None
 ) -> list[ValidationIssue]:
-    """Build the ``ProjectData`` model, run the semantic layer (see DESIGN.md →
-    Semantic validation (semantic.py)), AND the
-    build-time cross-block referential checks (orphan ``binding_options`` keys /
-    suppress_k-on-non-categorical, via
-    ``reg_monabundle.build.spec_loader.binding_options_issues``).
-    The cross-block check closes the documented ``/validate``↔``/bundle``
-    divergence — a spec that bundles must also validate clean on that class.
+    """Build the ``ProjectData`` model, then run the SHARED semantic + cross-block
+    referential layer (``project_validation.semantic_issues``, also used by
+    ``/api/kit``). The cross-block check closes the documented
+    ``/validate``↔``/bundle`` divergence — a spec that bundles must also validate
+    clean on that class.
 
     ``index`` is the deployment's loaded steward ``CatalogIndex`` (``None`` for the
     ``global`` deployment); the semantic layer consults it to flag a resolvable
     binding outside the steward's filtered subset (``fqid_outside_steward_catalog``
     / ``representation_outside_steward_catalog`` — column-based admission, #206).
 
-    Reached only when the structural layer passed. The model build is now a THIN
-    DEFENSIVE catch: ``validate_structural`` already flags missing / mistyped /
-    unexpected keys (incl. ``unexpected_field`` on the closed objects), so a
-    residual model ``ValidationError`` is a constraint structural didn't replicate
-    — surfaced as an issue (NOT a 500), and the semantic step is skipped (it needs
-    a built model)."""
+    Reached only when the structural layer passed. The model build is the
+    ``/validate``-specific bit (kept here, not shared): a residual model
+    ``ValidationError`` is a constraint structural didn't replicate — surfaced as a
+    200 ISSUE (NOT a 500), and the semantic step is skipped (it needs a built
+    model). The kit's route makes the opposite choice (422 on the same case)."""
     try:
         project = ProjectData.model_validate(raw)
     except ValidationError as exc:
@@ -172,11 +139,7 @@ def _semantic_issues(
                 exc,
             )
         ]
-    issues = list(
-        validate_semantic(project, catalog, caller="researcher", index=index).issues
-    )
-    issues.extend(binding_options_issues(raw.get("reg_monabundle"), project))
-    return issues
+    return semantic_issues(project, raw, catalog, index)
 
 
 # The body is read RAW (not a typed param), so FastAPI emits no `requestBody` in
@@ -249,14 +212,14 @@ def _validate_blocking(
     issues: list[ValidationIssue] = []
     structural = validate_structural(raw)
     issues.extend(structural.issues)
-    issues.extend(_block_issues(raw))
+    issues.extend(block_issues(raw))
 
     if structural.ok:
         # The connection opens HERE on this threadpool thread (one thread), AFTER
         # the DB-free layers — a structurally invalid body never reaches the open.
         from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
 
-        with _project_conn(db_path) as conn:
+        with per_request_conn(db_path) as conn:
             issues.extend(_semantic_issues(raw, Catalog(conn), index))
 
     return _to_result_model(ValidationResult(issues=tuple(issues)))
@@ -323,7 +286,7 @@ def _order_blocking(db_path: Path, raw: dict[str, Any]) -> Response:
 
     from reg_meta.catalog import Catalog  # noqa: PLC0415 — lazy: DB-bound
 
-    with _project_conn(db_path) as conn:
+    with per_request_conn(db_path) as conn:
         csv_text = render_order_csv(project, Catalog(conn))
     return Response(
         content=csv_text,

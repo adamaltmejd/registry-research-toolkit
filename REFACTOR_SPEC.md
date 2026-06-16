@@ -82,17 +82,31 @@ staging environment; no separate staging tier.
 
 ## 8 — Kit-build (`POST /api/kit`)
 
-`/api/kit` does not exist yet (#217). Kit-build is just file packaging — no
-Python-package logic — so `reg_webapp` does **not** depend on `reg_mockdata`. The webapp
-emits a downloadable **generation kit**:
+`POST /api/kit` **shipped** (A5.2c, #217 — see `reg_webapp/DESIGN.md` → Kit-build
+surface). Kit-build is just file packaging — no Python-package logic — so `reg_webapp`
+does **not** depend on `reg_mockdata`. The webapp emits a downloadable **generation
+kit** (`application/zip`):
 
-- `project_data.json` — the spec with FQID references.
+- `project_data.json` — the spec with FQID references, every binding's `display_name`
+  materialized.
 - `project_data.codes.json` — dereferenced codes (see below).
-- `project_data.stats.json` — the extract output (uploaded earlier).
+- `project_data.stats.json` — the extract output (researcher-supplied; the kit endpoint
+  does NOT emit it — the README tells the researcher to drop their MONA-returned stats
+  file beside the kit before running).
 - A README and a ready-to-run command.
 
 The user runs `reg-mockdata generate` locally against the kit; `reg_mockdata` consumes
 JSON only — no reg_meta dep, fully offline.
+
+Validation gates on errors before assembling (structural → block → semantic →
+cross-block referential, plus the kit-only `panel_inheritance_unresolvable` check).
+**Panel-key materialization** (writing inherited `entity_key`/`time_key` into the kit's
+`project_data.json` the way `display_name` is) is deferred until `reg_mockdata`'s panel
+contract settles (step 10b) — the check guarantees inheritance is resolvable, which is
+what unblocks #217's kit half. **Still open (not kit-coupled, may land separately —
+#217):** the `deprecated_traversal` (needs a reg_meta `deprecated` flag) and
+`variable_replaced` (needs a structured-successor-hint slot on the issue) semantic
+codes.
 
 ### `project_data.codes.json`
 
@@ -142,14 +156,13 @@ After kit-build the trio is **freestanding from reg_meta**: a project committed 
 regenerates the same mock data years later, regardless of how reg_meta evolves
 steward-side. Kit-build derives the codes file fresh each run (orphaned entries from a
 prior kit are silently dropped — no explicit GC) and errors loudly when a referenced
-FQID no longer resolves. **Codes during authoring (open decision, currently unowned):**
-the planned affordance is that the SPA stores ad-hoc inline codes in IndexedDB and
-offers a companion `project_data.codes.json` download (ad-hoc entries only), with
-kit-build later populating the `classifications` block. None of this exists yet
-(IndexedDB persists only the full draft) and #217's scope does not include it — at
-step-8 kickoff, decide whether `sources` codes are SPA-authored or dereferenced from
-reg_meta at kit-build, record the decision on #217, and scope the frontend work
-explicitly if the SPA path survives.
+FQID no longer resolves. **Codes during authoring — DECIDED (#217, 2026-06-15):** the
+`sources` codes are **dereferenced from reg_meta at kit-build**, not SPA-authored. The
+A5.2c kit-build dereferences both keyspaces (`classifications` + `sources`) from
+reg_meta; the SPA-authored-IndexedDB affordance (ad-hoc inline codes + a companion
+`project_data.codes.json` download) was explicitly out of #217's scope and is **not
+built** — if it is ever wanted, it is a separate frontend effort. IndexedDB persists
+only the full draft today.
 
 ### `project_data.stats.json` schema (v1)
 

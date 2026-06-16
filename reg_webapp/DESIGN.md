@@ -760,6 +760,117 @@ The order CSV cell values are passed through a **spreadsheet formula-injection**
 otherwise execute as a formula when the data provider opens the manifest. A leading
 formula-trigger char (`=+-@\t\r`) is prefixed with a single quote.
 
+## Kit-build surface (`routes/kit.py` + `kit.py`)
+
+`POST /api/kit` (A5.2c, REFACTOR_SPEC.md §8) assembles the downloadable **generation
+kit** — the reg_meta-free, offline bundle of files a researcher runs
+`reg-mockdata generate` against. Kit-build is just **file packaging** (no `reg_mockdata`
+dependency). Like `/order` / `/bundle` it reads the **raw dict** (preserving
+steward-namespaced blocks) and **gates** — a kit is built from a *validated* project, so
+an invalid spec is a **422** carrying the blocking errors, not a 200 with a half-built
+kit. The route owns HTTP + the connection lifetime (the same locked
+per-request-open-on-one-thread guard as `routes/project.py`); `kit.py` is the pure
+domain half (no IO/FastAPI).
+
+The archive (`application/zip`) holds three files:
+
+- **`project_data.json`** — the spec with every binding's `display_name`
+  **materialized** (resolved from reg_meta's `delivery_column_name` when the author left
+  it unset, reusing `order_export.resolve_display_name`), so the reg_meta-free consumer
+  never resolves one. Materialized onto the RAW dict, not the `extra="ignore"` model, so
+  namespaced blocks survive.
+- **`project_data.codes.json`** — dereferenced code lists, two keyspaces
+  (REFACTOR_SPEC.md §8): `classifications` keyed by the binding's `value_set` FQID (the
+  canonical, period-invariant list, dereferenced via `Catalog.resolve` → `same_as`-aware
+  classification id → `reg_meta.queries.get_classification_codes`, filtered to
+  **canonical rows** — observed-only `is_valid=0` noise is dropped, but a classification
+  with no canonical CSV keeps its full list, so NOT `only_valid=True`), and `sources`
+  keyed by `source.name` then binding FQID (the ad-hoc value-set codes of a categorical
+  no-`value_set` binding, unioned across the states its `(variant, period)` resolves to,
+  narrowed to the pinned `representation`). Only **categorical** bindings contribute a
+  key; the keyspace is TOTAL (every such binding contributes a key, possibly an empty
+  list) so the consumer's lookup never KeyErrors. **Keying is column-based** (decided
+  #206/#217: `(binding FQID,   resolved delivery column)`); post-validation the resolved
+  column is implied by the binding FQID within a source (co-existing columns without a
+  `representation` are a blocking `binding_value_set_version_ambiguous` error), so the
+  pair collapses to the binding-FQID key the §8 consumer contract reads. The one
+  residual case it does not cover — two bindings in ONE source sharing a `variable` FQID
+  (distinct `representation`s; structurally legal, since `display_name_collision`
+  catches only EXPLICIT same names) — is rejected up front by
+  `check_unique_binding_fqids` (a `KitBuildError` → **422**, for EVERY binding type,
+  since both the codes `sources` and the stats `bindings` keyspaces key by source name →
+  binding FQID) rather than silently dropping a column (#450 tracks lifting this with
+  resolved-column keying). The `sources` codes are **dereferenced from reg_meta at
+  kit-build** — NOT SPA-authored (the §8 IndexedDB-authoring affordance is out of #217's
+  scope; decision recorded on #217).
+- **`README.md`** — what the kit is + the `reg-mockdata generate` command. It notes the
+  researcher must drop their MONA-returned `project_data.stats.json` beside the kit
+  before running (the kit endpoint does not emit stats — that file is the extract
+  output).
+
+**Determinism.** Same validated spec → byte-identical archive *within a build
+environment* (stable for content-hash caching + the round-trip tests), mirroring
+`/bundle`: ZIP entries are written in fixed order with a fixed timestamp + normalized
+mode bits, and the JSON is `sort_keys`-dumped. (The DEFLATE byte stream is only
+reproducible for a given zlib build — the kit's *value* is the extracted JSON files, not
+the archive bytes.)
+
+**Validation = the `/validate` composition PLUS a kit-only check.** Structural → block →
+semantic (researcher) → cross-block referential, then `validate_panel_inheritance`
+(`semantic.py`) — the kit-only `panel_inheritance_unresolvable` gate. The block +
+semantic + cross-block layers are the SHARED composition with `/api/project/validate`
+(`project_validation.py` — `block_issues` / `semantic_issues` / the per-request-conn
+helper, used by both routes) so a new validation layer lands once and gates both; the
+kit adds only the panel check + the error-GATE (vs `/validate`'s 200 diagnostic). That
+check is deliberately NOT in `validate_semantic`: the structural layer keeps a pre-kit
+SPA spec VALID while panel inheritance is unresolved (a member may have no override + no
+panel default mid-authoring, expecting the variant `panel_template`), so only kit-build
+— where inheritance is materialized — flags a member that resolves no effective
+`entity_key` / `time_key` from override → panel default → variant template. A
+`/validate`-clean spec can therefore still 422 here on panel inheritance — one of the
+documented kit-build residuals.
+
+More gates run **after** the shared composition, because they need reg_meta defaults the
+structural layer can't see, or the generator's / kit's own contract. `display_name`
+materialization first NORMALIZES blanks: `resolve_display_name` treats a blank /
+whitespace explicit name as unset (a blank header is unusable, and the generator rejects
+falsey names), so it resolves the reg_meta default instead of shipping an empty header.
+Then:
+
+- **Re-validate structural on the materialized spec.** After `materialize_display_names`
+  fills every `display_name`, `validate_structural` is re-run on the result. The
+  structural layer DEFERS its default-dependent checks when any `display_name` is unset
+  (the implicit half of `display_name_collision` — an explicit name colliding with a
+  resolved default; and the `entity_key_unknown_column` / `time_key_unknown_column`
+  panel column-ref checks). Kit-build is where defaults materialize, so it is the
+  documented home of those checks — a duplicate output column, or a panel ref typo'd
+  against a defaulted column, gates the kit (`/validate` can't see either
+  pre-materialization).
+- **Generator-type gate** (`check_generatable`). A `datetime` binding is valid in
+  `reg_schema` but the local generator's `COLUMN_TYPES`
+  (id/categorical/numeric/opaque/date) excludes it, so it is rejected up front (→ 422)
+  rather than failing opaquely at `reg-mockdata generate`. Held as a small webapp-local
+  constant rather than importing the runtime's `COLUMN_TYPES` (the webapp import graph
+  excludes `reg_monabundle.runtime.*`; the kit takes no `reg_mockdata` dep).
+- **Duplicate-FQID gate** (`check_unique_binding_fqids`) — see the codes bullet above: a
+  source binding the same `variable` FQID twice is unrepresentable in the FQID-keyed
+  codes/stats contract for every type.
+- **Single-delivery-column gate** (`check_single_delivery_column`). A binding (without a
+  `representation` to disambiguate) that resolves to MORE THAN ONE delivery column over
+  its period — a sequential rename (`KonOld` → `KonNew` across a range) or a merged
+  monthly family bound at annual grain (#319) — can't map to the kit's one
+  `display_name` = one output column, so the renamed/other column would be lost. The
+  semantic layer only flags `binding_state_drifts_within_period` (info), so kit-build
+  escalates it to a 422: pin a `representation` or narrow the source period (a pinned
+  binding resolves to its one column, so this never fires on it). #450 tracks
+  representing multi-column bindings properly.
+
+**Remaining (deferred).** Panel-key *materialization* (writing the resolved `entity_key`
+/ `time_key` into the kit's `project_data.json` the way `display_name` is) is NOT done:
+the check guarantees inheritance is resolvable, but `reg_mockdata`'s panel contract is
+step-10b work, so baking a key shape before that contract settles is premature.
+`project_data.stats.json` is researcher-supplied, not emitted here.
+
 ## Semantic validation (`semantic.py`)
 
 The §6.8.3 reg_meta-backed validation layer. It lives in the webapp — NOT `reg_schema` —
@@ -927,6 +1038,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | POST   | `/api/project/validate`                       | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                |
   | POST   | `/api/project/order`                          | Default order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
   | POST   | `/api/bundle`                                 | Build the MONA `.py` bundle from a spec.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+  | POST   | `/api/kit`                                    | Build the downloadable generation kit (`application/zip`: `project_data.json` w/ materialized display names + `project_data.codes.json` + README) from a validated spec; gates on errors (incl. kit-only `panel_inheritance_unresolvable`).                                                                                                                                                                                                                                 |
 
 **Order-export CSV columns** (the v1 default; fixed order is the contract):
 `provider,register,variant,variable,representation,period,display_name` — one row per
@@ -936,8 +1048,8 @@ the data provider couldn't tell representations apart. `period` serializes via t
 catalog `?period` wire form (range → `"<from>..<to>"`, snapshot → `"_default"`).
 Pluggable per-steward `order_template`s are remaining — see `REFACTOR_SPEC.md`.
 
-Remaining (not yet routes): `POST /api/kit` (kit-build — see `REFACTOR_SPEC.md`). Global
-FTS search shipped as `GET /api/search` (#350); the docs library shipped as
+`POST /api/kit` (kit-build) shipped as A5.2c (#217 — see Kit-build surface above);
+Global FTS search shipped as `GET /api/search` (#350); the docs library shipped as
 `/api/docs/*` (#354).
 
 ## §16 input-validation gates (security boundary)

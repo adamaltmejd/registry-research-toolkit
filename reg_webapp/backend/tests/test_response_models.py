@@ -25,6 +25,7 @@ from reg_webapp.app import create_app
 _DOWNLOAD_ENDPOINTS: dict[str, str] = {
     "/api/project/order": "text/csv",
     "/api/bundle": "application/octet-stream",
+    "/api/kit": "application/zip",
 }
 
 
