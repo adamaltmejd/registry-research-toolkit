@@ -174,8 +174,10 @@ jobs:
       # asset whose schema is BEHIND the code (exit 10) → red build → every deploy
       # pauses. When main's SCHEMA_VERSION / DOC_SCHEMA_VERSION is merely AHEAD of
       # the latest released asset (same major, higher minor), that refusal is
-      # expected and self-clearing — the owed reg_meta release ships the matching
-      # asset. This step detects ONLY that code-ahead case and, when it holds,
+      # expected — the owed reg_meta release ships the matching asset. Once it does,
+      # the BUILD self-clears on the next image-affecting main push; the DEPLOY needs
+      # that push (or a manual workflow_dispatch) — this workflow does NOT trigger on
+      # release-publish. This step detects ONLY that code-ahead case and, when it holds,
       # skips the bake + deploy with a GREEN build-image + a `::notice::`. A major
       # mismatch, a missing asset, or a genuinely broken bake stays unguarded and
       # still fails red (preserving the #343 loud-failure behavior). The asset
@@ -191,6 +193,8 @@ jobs:
       # ships and branches rebase onto the now-caught-up asset.
       - name: Pending-schema-bump guard
         id: schemaguard
+        env:
+          GH_TOKEN: ${{ github.token }}  # for `gh release view` (missing-asset check below)
         run: |
           set -euo pipefail
           # An explicit `reg_meta_tag` dispatch pin is a deliberate operator choice — the
@@ -209,6 +213,19 @@ jobs:
           asset_db=$(git show "$TAG:reg_meta/src/reg_meta/db.py" | grep -oP '^SCHEMA_VERSION = "\K[^"]+')
           asset_doc=$(git show "$TAG:reg_meta/src/reg_meta/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+')
           pending=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --asset-db "$asset_db" --asset-doc "$asset_doc")
+          # The schema comparison above reads the released tag's SOURCE constants, so it
+          # can't see whether the release actually CARRIES both DB assets. A release can be
+          # schema-behind AND missing a .zst asset (a #343 invariant violation); the bake
+          # fetches BOTH assets from the EXACT $TAG (explicit --tag, self-contained-release
+          # assumption), so a missing asset still fails the bake red. Only neutralize when
+          # the release carries both assets — otherwise let the bake fail loud (#343).
+          if [ "$pending" = "true" ]; then
+            assets=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '[.assets[].name] | join(" ")')
+            if ! printf '%s' "$assets" | grep -Fq 'reg_meta.db.zst' || ! printf '%s' "$assets" | grep -Fq 'reg_meta_docs.db.zst'; then
+              echo "::warning::release $TAG is schema-behind AND missing a DB asset — NOT neutralizing; letting the bake fail red (#343 loud-failure preserved)."
+              pending=false
+            fi
+          fi
           echo "pending_bump=$pending" >> "$GITHUB_OUTPUT"
           if [ "$pending" = "true" ]; then
             echo "::notice::pending reg_meta release — build-image bake + deploy paused by design (code schema ahead of latest released asset $TAG). The owed release will clear this; check_issue_hygiene.py also flags it."
