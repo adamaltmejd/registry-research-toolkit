@@ -45,8 +45,9 @@ from .fqid_slugs import (
     SNAPSHOT_FILENAME,
     diff_snapshot,
     format_default_slug_hints,
-    is_unfrozen,
+    frozen_zones,
     iter_default_slug_candidates,
+    load_freeze_states,
     precheck_slugs,
     read_snapshot,
     repo_slug_dir,
@@ -611,7 +612,10 @@ def _cmd_precheck_slugs(
     start = time.perf_counter()
     slug_dir = _resolve_slug_dir(args.slug_dir)
     snapshot_path = slug_dir / SNAPSHOT_FILENAME
-    unfrozen = is_unfrozen(slug_dir)
+    # Per-provider slug-freeze model (#470): only `frozen` zones gate
+    # rename/removal; `churning`/`curating` zones still write through.
+    states = load_freeze_states(slug_dir)
+    fz = frozen_zones(states)
     db = db_path_from_args(args.db)
     conn = open_db(db, check_schema=False)
     try:
@@ -619,7 +623,10 @@ def _cmd_precheck_slugs(
     finally:
         conn.close()
 
-    snapshot_status: dict[str, Any] = {"path": str(snapshot_path), "unfrozen": unfrozen}
+    snapshot_status: dict[str, Any] = {
+        "path": str(snapshot_path),
+        "freeze_states": states,
+    }
     exit_code = EXIT_CONFIG if not result.ok else 0
     current = snapshot_payload(list(result.entries))
     if args.update_snapshot:
@@ -631,41 +638,45 @@ def _cmd_precheck_slugs(
             snapshot_status["updated"] = False
             snapshot_status["update_skipped_reason"] = "parse_errors"
         else:
-            # Grow-only enforcement (see DESIGN.md → Slug immutability): `--update-snapshot` must NOT bless
-            # a removal or a slug rename — that's how committed FQIDs rot in
-            # researcher project_data.json files. The `UNFROZEN` sentinel in
-            # the slug dir lifts the refusal pre-v1 so curators can iterate
-            # freely; diffs are still reported so drift stays visible. At v1
-            # release the sentinel is deleted and refusal becomes active.
+            # Grow-only enforcement (see DESIGN.md → Slug immutability):
+            # `--update-snapshot` must NOT bless a removal or a slug rename in a
+            # `frozen` zone — that's how committed FQIDs rot in researcher
+            # project_data.json files. Per-provider (#470): only `frozen` zones
+            # refuse (`diff["blocked"]`); `churning`/`curating` zones write
+            # rename/removal diffs through so curators can still iterate, with
+            # the diffs reported so drift stays visible. Real providers advance
+            # to `frozen` deliberately at v1.
             previous = read_snapshot(snapshot_path)
-            diff = diff_snapshot(previous, current)
+            diff = diff_snapshot(previous, current, frozen_zones=fz)
             non_additive = bool(diff["removed"] or diff["renamed"])
-            if non_additive and not unfrozen:
+            if diff["blocked"]:
                 snapshot_status["updated"] = False
-                snapshot_status["update_skipped_reason"] = "non_additive_change"
+                snapshot_status["update_skipped_reason"] = "frozen_zone_violation"
                 snapshot_status["removed"] = diff["removed"]
                 snapshot_status["renamed"] = diff["renamed"]
+                snapshot_status["blocked"] = diff["blocked"]
                 exit_code = EXIT_CONFIG
             else:
                 write_snapshot(snapshot_path, current)
                 snapshot_status["updated"] = True
                 snapshot_status["added"] = diff["added"]
                 if non_additive:
-                    # Pre-v1 write-through: surface what drifted so reviewers
-                    # see the rename/removal explicitly in the envelope.
+                    # Churning/curating write-through: surface what drifted so
+                    # reviewers see the rename/removal explicitly in the envelope.
                     snapshot_status["removed"] = diff["removed"]
                     snapshot_status["renamed"] = diff["renamed"]
     else:
         previous = read_snapshot(snapshot_path)
-        diff = diff_snapshot(previous, current)
+        diff = diff_snapshot(previous, current, frozen_zones=fz)
         snapshot_status["added"] = diff["added"]
         snapshot_status["removed"] = diff["removed"]
         snapshot_status["renamed"] = diff["renamed"]
-        # `added` is non-fatal in spirit but must fail CI so a maintainer
-        # doesn't merge new slugs without refreshing .snapshot.json; mirrors
-        # test_slug_snapshot.test_snapshot_covers_committed_additions. The
-        # pre-v1 `UNFROZEN` sentinel doesn't relax this — drift must still
-        # round-trip through `--update-snapshot` to commit cleanly.
+        # The read-only branch is a snapshot-FRESHNESS check, freeze-agnostic:
+        # ANY added/removed/renamed fails CI so a maintainer can't merge slug
+        # drift without round-tripping through `--update-snapshot` to commit a
+        # refreshed .snapshot.json (mirrors
+        # test_slug_snapshot.test_snapshot_covers_committed_additions). Zone
+        # freeze state doesn't relax this — it only gates the write side above.
         if diff["removed"] or diff["renamed"] or diff["added"]:
             exit_code = EXIT_CONFIG
 

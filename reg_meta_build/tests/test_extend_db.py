@@ -132,10 +132,10 @@ def _steward_register_ids() -> dict[str, int]:
 
 def _write_steward_slug_dir(slug_dir: Path) -> None:
     """Author a steward slug dir keyed on the minted ids: a `swedbank.toml`
-    register/variant slug entry + an UNFROZEN sentinel + empty snapshot. No
-    variable entries — the new variables auto-slug incrementally."""
+    register/variant slug entry + empty snapshot. No variable entries — the new
+    variables auto-slug incrementally. No freeze.toml ⇒ the steward zone defaults
+    to churning (#470), which is the regenerate-each-build overlay posture."""
     ids = _steward_register_ids()
-    (slug_dir / "UNFROZEN").write_text("test steward unfrozen\n", encoding="utf-8")
     (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
     (slug_dir / f"{_BANK}.toml").write_text(
         f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
@@ -1079,7 +1079,7 @@ class TestFailurePaths:
         ids = _steward_register_ids()
         slug_dir = tmp_path / "sslug"
         slug_dir.mkdir()
-        (slug_dir / "UNFROZEN").write_text("u\n", encoding="utf-8")
+        # No freeze.toml ⇒ steward zone defaults to churning (#470).
         (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
         # Variant entry present, register entry DELIBERATELY absent.
         (slug_dir / f"{_BANK}.toml").write_text(

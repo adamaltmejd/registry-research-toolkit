@@ -12,15 +12,20 @@ from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
+    CLASSIFICATIONS_ZONE,
+    FREEZE_STATE_FILE,
     SNAPSHOT_FILENAME,
     SlugEntry,
     _parse_variable_id,
     classify_default_candidate,
     diff_snapshot,
     format_default_slug_hints,
+    freeze_state,
+    frozen_zones,
     iter_default_slug_candidates,
     load_classifications_toml,
     load_curated_replaced_by,
+    load_freeze_states,
     load_provider_toml,
     load_slug_dir,
     materialize_same_as_edges,
@@ -1294,8 +1299,15 @@ class TestPopulateVariableSlugs:
         return conn
 
     @staticmethod
-    def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
+    def _slug_dir(tmp_path: Path, scb_body: str = "", *, scb_freeze: str = "") -> Path:
         (tmp_path / "scb.toml").write_text(scb_body, encoding="utf-8")
+        # #470: by default no freeze.toml ⇒ the `scb` zone is churning (auto
+        # slugs regenerate each build). A test exercising the pinned-auto
+        # behavior (curating/frozen) passes `scb_freeze=`.
+        if scb_freeze:
+            (tmp_path / FREEZE_STATE_FILE).write_text(
+                f'scb = "{scb_freeze}"\n', encoding="utf-8"
+            )
         return tmp_path
 
     def _stored_slug(self, conn: sqlite3.Connection, var_id: int) -> str | None:
@@ -1378,8 +1390,11 @@ class TestPopulateVariableSlugs:
     def test_curated_override_reusing_auto_slug_rejected(self, tmp_path: Path) -> None:
         # A curated override must not reuse a slug frozen for a DIFFERENT source
         # in auto.toml — it would duplicate a published FQID (or hit UNIQUE).
+        # The auto.toml is only read back (pinned) under curating/frozen (#470).
         conn = self._db(kol="Kon")  # live var 44
-        d = self._slug_dir(tmp_path, '[variable."1.44"]\nslug = "ghost"\n')
+        d = self._slug_dir(
+            tmp_path, '[variable."1.44"]\nslug = "ghost"\n', scb_freeze="curating"
+        )
         # "ghost" is already frozen for a different (pruned) source 1.999.
         (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
             '[variable."1.999"]\nslug = "ghost"\n', encoding="utf-8"
@@ -1389,9 +1404,11 @@ class TestPopulateVariableSlugs:
         assert exc.value.code == "slug_variable_override_conflict"
 
     def test_existing_auto_not_recomputed_on_rename(self, tmp_path: Path) -> None:
+        # The pinned-auto behavior is curating/frozen (#470): a churning zone
+        # would re-derive `konkod` on the rebuild instead.
         # First build: auto-derives `kon` from `Kon`, persists to .auto.toml.
         conn = self._db(kol="Kon")
-        d = self._slug_dir(tmp_path)
+        d = self._slug_dir(tmp_path, scb_freeze="curating")
         populate_variable_slugs(conn, d)
         # SCB renames the delivery column; rebuild reads the existing
         # .auto.toml and keeps the original slug (immutability).
@@ -1404,9 +1421,10 @@ class TestPopulateVariableSlugs:
     def test_retired_auto_slug_not_reused(self, tmp_path: Path) -> None:
         # Immutability: a frozen auto slug whose variable was pruned from
         # the delivery stays reserved — a live/new variable can't be assigned it,
-        # which would duplicate the slug in the rewritten auto.toml.
+        # which would duplicate the slug in the rewritten auto.toml. The auto.toml
+        # is only pinned (read back) under curating/frozen (#470).
         conn = self._db(kol="Kon")  # live var 44, kolumnnamn → "kon"
-        d = self._slug_dir(tmp_path)
+        d = self._slug_dir(tmp_path, scb_freeze="curating")
         # Retired var 1.999 (absent from the DB) froze "kon" in auto.toml.
         (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
             '[variable."1.999"]\nslug = "kon"\n', encoding="utf-8"
@@ -1651,11 +1669,17 @@ class TestAutoDerivationMarker:
     snapshot while remaining readable by `read_auto_derivations`."""
 
     @staticmethod
-    def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
+    def _slug_dir(tmp_path: Path, scb_body: str = "", *, scb_freeze: str = "") -> Path:
         d = tmp_path / "slugs"
         d.mkdir()
         (d / "scb.toml").write_text(scb_body, encoding="utf-8")
         (d / "classifications.toml").write_text("", encoding="utf-8")
+        # #470: default churning. A rebuild test that needs the prior auto.toml
+        # markers carried forward pins the `scb` zone via `scb_freeze=`.
+        if scb_freeze:
+            (d / FREEZE_STATE_FILE).write_text(
+                f'scb = "{scb_freeze}"\n', encoding="utf-8"
+            )
         return d
 
     @staticmethod
@@ -1875,10 +1899,12 @@ class TestAutoDerivationMarker:
         # must PRESERVE the pre-existing rows' `# source:` markers, not strip them
         # — else the worklist shrinks over time. populate_variable_slugs seeds
         # auto_derivation from the prior file before Pass 3 re-derives only the new.
+        # This carry-forward is the pinned-auto behavior — `curating` (#470); a
+        # churning zone re-derives all three vars from scratch each build.
         conn = build_slugged_db(variable=None)
         self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
         self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
+        d = self._slug_dir(tmp_path, scb_freeze="curating")
         populate_variable_slugs(conn, d)
         first = read_auto_derivations(self._auto_path(d))
         assert first["1.20"] == "name-fallback"
@@ -1924,11 +1950,13 @@ class TestAutoDerivationMarker:
     def test_worklist_excludes_curated_override(self, tmp_path: Path) -> None:
         # A variable a curator FIXED via a [variable] override in <provider>.toml
         # is no longer backlog, even though its frozen auto entry + marker linger
-        # in the auto file across the rebuild.
+        # in the auto file across the rebuild. The lingering auto entry across the
+        # rebuild is the pinned-auto behavior — `curating` (#470); churning would
+        # re-derive 1.21 (now the only pending var) to a non-fallback slug.
         conn = build_slugged_db(variable=None)
         self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
         self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
+        d = self._slug_dir(tmp_path, scb_freeze="curating")
         populate_variable_slugs(conn, d)
         before = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
         assert {"1.20", "1.21"} <= before
@@ -2615,12 +2643,14 @@ class TestPrecheckCliGrowOnly:
         return db_dir, slug_dir
 
     def test_rename_refused_even_with_update(self, tmp_path: Path):
-        """A maintainer renames a previously-published slug, then tries to
-        bless it via --update-snapshot. The CLI must refuse and leave the
-        snapshot unchanged."""
+        """A maintainer renames a previously-published slug in a FROZEN zone,
+        then tries to bless it via --update-snapshot. The CLI must refuse and
+        leave the snapshot unchanged (#470: only frozen zones refuse)."""
         from reg_meta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
+        # The `scb` zone is sealed → its rename is blocked.
+        (slug_dir / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
         # Baseline has `lisa`; the new TOML renames it to `lisa-individuals`.
         snapshot_before = (
             '{"classification":{"SUN2020":"sun2020"},'
@@ -2666,10 +2696,13 @@ class TestPrecheckCliGrowOnly:
         )
 
     def test_removal_refused_even_with_update(self, tmp_path: Path):
-        """Maintainer drops a previously-published row from the TOML."""
+        """Maintainer drops a previously-published row from a FROZEN zone's TOML
+        (#470: only frozen zones refuse)."""
         from reg_meta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
+        # The `scb` zone is sealed → dropping its variant row is blocked.
+        (slug_dir / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
         snapshot_before = (
             '{"classification":{"SUN2020":"sun2020"},'
             '"register":{"scb/1":"lisa"},'
@@ -2701,14 +2734,12 @@ class TestPrecheckCliGrowOnly:
             snapshot_before
         )
 
-    def test_rename_accepted_under_update_when_unfrozen(self, tmp_path: Path):
-        """Pre-v1 escape hatch: an ``UNFROZEN`` sentinel in the slug dir
+    def test_rename_accepted_under_update_when_churning(self, tmp_path: Path):
+        """#470: a rename in a CHURNING zone (the default — no freeze.toml)
         flips `--update-snapshot` from refuse-and-fail to write-through. The
         rename is still reported in the envelope so drift stays visible.
         """
         from reg_meta_build.cli import run
-
-        from reg_meta_build.fqid_slugs import UNFROZEN_MARKER
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
@@ -2718,7 +2749,7 @@ class TestPrecheckCliGrowOnly:
             '"variable":{}}'
         )
         (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
-        (slug_dir / UNFROZEN_MARKER).write_text("pre-v1\n", encoding="utf-8")
+        # No freeze.toml ⇒ the `scb` zone is churning ⇒ rename writes through.
 
         import sqlite3 as _sql
 
@@ -2789,6 +2820,261 @@ class TestPrecheckCliGrowOnly:
         contents = (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8")
         assert "lisa" in contents
         assert "individer-15plus" in contents
+
+    def test_classifications_zone_frozen_refuses_rename(self, tmp_path: Path):
+        """#470: the reserved `classifications` zone gates the classification
+        slug independently. A frozen `classifications` zone refuses a rename
+        while a churning `scb` zone writes its rename through (per-zone scope).
+        """
+        import sqlite3 as _sql
+
+        from reg_meta_build.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        # `classifications` sealed, `scb` left churning (unlisted).
+        (slug_dir / FREEZE_STATE_FILE).write_text(
+            f'{CLASSIFICATIONS_ZONE} = "frozen"\n', encoding="utf-8"
+        )
+        snapshot_before = (
+            '{"classification":{"SUN2020":"sun2020"},'
+            '"register":{"scb/1":"lisa"},'
+            '"register_variant":{"scb/1.10":"individer-15plus"},'
+            '"variable":{}}'
+        )
+        (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
+        # Rename BOTH a frozen-zone (classification) AND a churning-zone (scb)
+        # slug; keep the DB rows matching so the only divergence is vs snapshot.
+        conn = _sql.connect(db_dir / "reg_meta.db")
+        conn.execute("UPDATE register SET slug = 'lisa-2' WHERE register_id = 1")
+        conn.execute(
+            "UPDATE classification SET slug = 'sun2020-v2' WHERE short_name = 'SUN2020'"
+        )
+        conn.commit()
+        conn.close()
+        _write(
+            slug_dir / "scb.toml",
+            '[register."1"]\nslug = "lisa-2"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            slug_dir / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun2020-v2"\n',
+        )
+
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        # The classification rename is in a frozen zone → refuse, snapshot
+        # untouched (the churning scb rename can't write through either, since
+        # the whole update is refused as a unit).
+        assert exit_code != 0
+        assert (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8") == (
+            snapshot_before
+        )
+
+
+# ---------------------------------------------------------------------------
+# Per-provider slug-freeze model (#470)
+# ---------------------------------------------------------------------------
+
+
+class TestLoadFreezeStates:
+    """`freeze.toml` parsing + the `freeze_state`/`frozen_zones` accessors."""
+
+    @staticmethod
+    def _dir(tmp_path: Path, *, providers=("scb",), freeze_body: str | None = None):
+        for p in providers:
+            (tmp_path / f"{p}.toml").write_text("", encoding="utf-8")
+        if freeze_body is not None:
+            (tmp_path / FREEZE_STATE_FILE).write_text(freeze_body, encoding="utf-8")
+        return tmp_path
+
+    def test_absent_file_is_empty_all_churning(self, tmp_path: Path) -> None:
+        d = self._dir(tmp_path)
+        states = load_freeze_states(d)
+        assert states == {}
+        assert freeze_state(states, "scb") == "churning"
+        assert frozen_zones(states) == frozenset()
+
+    def test_valid_map(self, tmp_path: Path) -> None:
+        d = self._dir(
+            tmp_path,
+            providers=("scb", "sos"),
+            freeze_body='scb = "frozen"\nsos = "curating"\n',
+        )
+        states = load_freeze_states(d)
+        assert states == {"scb": "frozen", "sos": "curating"}
+        assert freeze_state(states, "scb") == "frozen"
+        assert freeze_state(states, "sos") == "curating"
+        # An unlisted (but present) provider still defaults churning.
+        assert freeze_state(states, "unlisted") == "churning"
+        assert frozen_zones(states) == frozenset({"scb"})
+
+    def test_classifications_zone_allowed(self, tmp_path: Path) -> None:
+        # The reserved CLASSIFICATIONS_ZONE is a valid key even though there's
+        # no `classifications` provider TOML.
+        d = self._dir(tmp_path, freeze_body=f'{CLASSIFICATIONS_ZONE} = "frozen"\n')
+        states = load_freeze_states(d)
+        assert states == {CLASSIFICATIONS_ZONE: "frozen"}
+        assert frozen_zones(states) == frozenset({CLASSIFICATIONS_ZONE})
+
+    def test_unknown_state_value_rejected(self, tmp_path: Path) -> None:
+        d = self._dir(tmp_path, freeze_body='scb = "thawing"\n')
+        with pytest.raises(RegMetaError) as exc:
+            load_freeze_states(d)
+        assert exc.value.code == "slug_freeze_state_invalid"
+        assert "thawing" in exc.value.message
+
+    def test_non_string_value_rejected(self, tmp_path: Path) -> None:
+        d = self._dir(tmp_path, freeze_body="scb = true\n")
+        with pytest.raises(RegMetaError) as exc:
+            load_freeze_states(d)
+        assert exc.value.code == "slug_freeze_state_invalid"
+
+    def test_unknown_zone_rejected(self, tmp_path: Path) -> None:
+        # `ghost` is neither a provider stem in this dir nor the reserved zone.
+        d = self._dir(tmp_path, freeze_body='ghost = "frozen"\n')
+        with pytest.raises(RegMetaError) as exc:
+            load_freeze_states(d)
+        assert exc.value.code == "slug_freeze_zone_unknown"
+        assert "ghost" in exc.value.message
+
+    def test_auto_toml_is_not_a_zone(self, tmp_path: Path) -> None:
+        # A `<provider>.auto.toml` doesn't introduce a separate zone — its
+        # provider is already covered by the curated companion.
+        (tmp_path / "scb.toml").write_text("", encoding="utf-8")
+        (tmp_path / f"scb{AUTO_FILE_SUFFIX}").write_text("", encoding="utf-8")
+        (tmp_path / FREEZE_STATE_FILE).write_text('scb = "frozen"\n', encoding="utf-8")
+        assert load_freeze_states(tmp_path) == {"scb": "frozen"}
+        # But naming the auto stem as a zone is rejected — `scb.auto` is no zone.
+        (tmp_path / FREEZE_STATE_FILE).write_text(
+            '"scb.auto" = "frozen"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_freeze_states(tmp_path)
+        assert exc.value.code == "slug_freeze_zone_unknown"
+
+
+class TestDiffSnapshotFrozenZones:
+    """`diff_snapshot`'s `blocked` list scopes rename/removal refusal per zone."""
+
+    _PREV = {
+        "register": {"scb/1": "lisa", "sos/9": "deaths"},
+        "register_variant": {},
+        "variable": {},
+        "classification": {"SUN2020": "sun2020"},
+    }
+
+    def test_default_frozen_zones_empty_keeps_legacy_keys(self) -> None:
+        # No frozen_zones ⇒ blocked is empty and removed/renamed/added are
+        # byte-identical to the pre-#470 three-key output.
+        cur = {
+            "register": {"sos/9": "deaths"},  # scb/1 removed
+            "register_variant": {},
+            "variable": {},
+            "classification": {"SUN2020": "sun2020-v2"},  # renamed
+        }
+        diff = diff_snapshot(self._PREV, cur)
+        assert diff["blocked"] == []
+        assert diff["removed"] == ["register/scb/1 (was 'lisa')"]
+        assert diff["renamed"] == ["classification/SUN2020: 'sun2020' -> 'sun2020-v2'"]
+        assert diff["added"] == []
+
+    def test_only_frozen_zone_violations_block(self) -> None:
+        cur = {
+            "register": {"scb/1": "lisa-renamed"},  # scb rename + sos/9 removed
+            "register_variant": {},
+            "variable": {},
+            "classification": {},  # SUN2020 removed
+        }
+        # Freeze only `scb` → the sos removal and the classification removal are
+        # reported but NOT blocked.
+        diff = diff_snapshot(self._PREV, cur, frozen_zones=frozenset({"scb"}))
+        assert diff["blocked"] == ["register/scb/1: 'lisa' -> 'lisa-renamed'"]
+        assert "register/sos/9 (was 'deaths')" in diff["removed"]
+        assert "classification/SUN2020 (was 'sun2020')" in diff["removed"]
+
+    def test_classifications_zone_blocks(self) -> None:
+        cur = {
+            "register": {"scb/1": "lisa", "sos/9": "deaths"},
+            "register_variant": {},
+            "variable": {},
+            "classification": {"SUN2020": "sun2020-v2"},  # renamed
+        }
+        diff = diff_snapshot(
+            self._PREV, cur, frozen_zones=frozenset({CLASSIFICATIONS_ZONE})
+        )
+        assert diff["blocked"] == ["classification/SUN2020: 'sun2020' -> 'sun2020-v2'"]
+
+
+class TestFreezeStateAutoRegenerate:
+    """The auto-regeneration gate in `populate_variable_slugs` (#470): a
+    churning zone re-derives a present `<provider>.auto.toml`; curating/frozen
+    pin it (read back, never recompute)."""
+
+    @staticmethod
+    def _db(kol: str) -> sqlite3.Connection:
+        conn = build_slugged_db(variable=("Kön", 44, 1001, kol))
+        conn.execute("UPDATE variable SET slug = NULL")
+        conn.commit()
+        return conn
+
+    @staticmethod
+    def _stored(conn: sqlite3.Connection) -> str | None:
+        row = conn.execute(
+            "SELECT slug FROM variable WHERE provider_key = CAST(44 AS TEXT)"
+        ).fetchone()
+        return row[0] if row else None
+
+    def _dir(self, tmp_path: Path, *, freeze: str | None) -> Path:
+        (tmp_path / "scb.toml").write_text("", encoding="utf-8")
+        # A stale auto.toml pins "kon" for var 1.44 (the column now folds to
+        # "konkod"); whether it's honored is the whole question.
+        (tmp_path / f"scb{AUTO_FILE_SUFFIX}").write_text(
+            '[variable."1.44"]\nslug = "kon"\n', encoding="utf-8"
+        )
+        if freeze is not None:
+            (tmp_path / FREEZE_STATE_FILE).write_text(
+                f'scb = "{freeze}"\n', encoding="utf-8"
+            )
+        return tmp_path
+
+    def test_churning_rederives_present_auto(self, tmp_path: Path) -> None:
+        # Default (no freeze.toml) ⇒ churning ⇒ the committed auto slug is
+        # IGNORED and the slug re-derives from the current column ("konkod").
+        conn = self._db(kol="Konkod")
+        d = self._dir(tmp_path, freeze=None)
+        counts = populate_variable_slugs(conn, d)
+        assert self._stored(conn) == "konkod"
+        assert counts["auto_existing"] == 0
+        assert counts["auto_new"] == 1
+        # The gitignored auto.toml is still rewritten with the fresh slug.
+        slugs = [
+            e.slug
+            for e in load_provider_toml(d / f"scb{AUTO_FILE_SUFFIX}")
+            if e.kind == "variable"
+        ]
+        assert slugs == ["konkod"]
+
+    @pytest.mark.parametrize("state", ["curating", "frozen"])
+    def test_curating_and_frozen_pin_present_auto(
+        self, tmp_path: Path, state: str
+    ) -> None:
+        # curating/frozen ⇒ the committed auto slug is read back and kept even
+        # though the column now folds to "konkod".
+        conn = self._db(kol="Konkod")
+        d = self._dir(tmp_path, freeze=state)
+        counts = populate_variable_slugs(conn, d)
+        assert self._stored(conn) == "kon"
+        assert counts["auto_existing"] == 1
+        assert counts["auto_new"] == 0
 
 
 # ---------------------------------------------------------------------------

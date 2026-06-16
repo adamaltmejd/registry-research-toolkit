@@ -18,7 +18,8 @@ import pytest
 from reg_meta_build.fqid_slugs import (
     SNAPSHOT_FILENAME,
     diff_snapshot,
-    is_unfrozen,
+    frozen_zones,
+    load_freeze_states,
     load_slug_dir,
     read_snapshot,
     repo_slug_dir,
@@ -59,28 +60,21 @@ def test_committed_slugs_parse(slug_dir):
 
 
 def test_no_removed_or_renamed_slugs(slug_dir):
-    """Committed slugs are grow-only. Removals or slug renames here
-    rot every project_data.json that pinned the old FQID.
+    """Committed slugs in a ``frozen`` zone are grow-only. Removals or slug
+    renames there rot every project_data.json that pinned the old FQID.
 
-    Skipped while the pre-v1 ``UNFROZEN`` sentinel exists in ``slug_dir``.
-    Delete the sentinel at v1 release to re-arm this guard.
+    Per-provider (#470): only ``frozen`` zones are guarded — a rename/removal in
+    a ``churning``/``curating`` zone is allowed (curators iterate pre-seal).
+    The repo ships all-churning (no ``freeze.toml``), so this actively verifies
+    that no zone advanced to ``frozen`` has been violated.
     """
-    if is_unfrozen(slug_dir):
-        pytest.skip(
-            f"{slug_dir}/UNFROZEN present — pre-v1 curation iteration; "
-            "rename guard re-arms when the sentinel is removed at v1."
-        )
+    fz = frozen_zones(load_freeze_states(slug_dir))
     previous = read_snapshot(slug_dir / SNAPSHOT_FILENAME)
     current = snapshot_payload(load_slug_dir(slug_dir))
-    diff = diff_snapshot(previous, current)
-    msgs = []
-    if diff["removed"]:
-        msgs.append("Removed entries (forbidden):")
-        msgs.extend(f"  {r}" for r in diff["removed"])
-    if diff["renamed"]:
-        msgs.append("Renamed slugs (forbidden):")
-        msgs.extend(f"  {r}" for r in diff["renamed"])
-    if msgs:
+    diff = diff_snapshot(previous, current, frozen_zones=fz)
+    if diff["blocked"]:
+        msgs = ["Removed/renamed slugs in a frozen zone (forbidden):"]
+        msgs.extend(f"  {b}" for b in diff["blocked"])
         msgs.append(
             "Restore the entry or mark the old row deprecated=true with a "
             "replaced_by link."

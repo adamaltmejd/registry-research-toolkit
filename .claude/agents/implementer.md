@@ -68,7 +68,8 @@ until the pipeline has converged.
   boundaries.
 - Deps via `uv add` / `uv add --dev`; `bun`/`bunx`, never npm.
 - Don't touch generated artifacts (`reg_meta_build/docs/lisa/*.md` → fix the generator)
-  or the `reg_meta_build/fqid_slugs/UNFROZEN` sentinel (v1 slug freeze deferred).
+  or `reg_meta_build/fqid_slugs/<slug-dir>/freeze.toml` (per-provider slug freeze; all
+  zones default to `churning` pre-v1).
 
 ## Decisions and forks — do NOT guess
 
