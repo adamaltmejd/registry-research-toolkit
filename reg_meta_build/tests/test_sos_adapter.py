@@ -39,6 +39,7 @@ from reg_meta_build.sources.sos import (
     SosKodlistaRow,
     SosRegister,
     SosVariable,
+    _classify_value_set_text,
     _intersect_window,
     _iso_bound,
     _parse_tidsperiod,
@@ -67,6 +68,7 @@ def _var(
     data_from: int | None = None,
     data_to: int | None = None,
     external_classification: str | None = None,
+    value_set_text: str | None = None,
 ) -> SosVariable:
     return SosVariable(
         deldatamangd=deldatamangd,
@@ -74,7 +76,7 @@ def _var(
         label=label,
         description=description,
         object_type=None,
-        value_set_text=None,
+        value_set_text=value_set_text,
         external_classification=external_classification,
         data_type=data_type,
         is_join_variable=None,
@@ -759,6 +761,572 @@ def test_merged_member_open_end_not_silently_closed() -> None:
         states = _of(_emit(reg)[0], IRVariableState)
         assert len(states) == 1
         assert states[0].valid_to is None, "open-ended member must not be closed"
+
+
+# ---------------------------------------------------------------------------
+# #401: inline `Värdemängd` -> value set, fallback when the variable has no
+# Kodlista_* sheet (the #373 deferral). Classifier rules are pinned against the
+# real-corpus shapes (verified against input_data/Socialstyrelsen/).
+# ---------------------------------------------------------------------------
+
+
+class TestClassifyValueSetText:
+    """`_classify_value_set_text` is conservative: it returns (code, label)
+    pairs ONLY for clean enumerations and ``None`` for anything ambiguous (a
+    wrong reject is a no-op — the variable stays code-less, exactly today)."""
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            None,
+            "",
+            "   ",
+            "Fritext",  # single descriptor, not an enumeration
+            "1=ja",  # single pair -> not an enumeration
+        ],
+    )
+    def test_none_empty_or_single_segment_rejected(self, text: str | None) -> None:
+        assert _classify_value_set_text(text) is None
+
+    def test_kod_klartext_semicolon(self) -> None:
+        assert _classify_value_set_text("1=ja; 0=nej; 9=uppgift saknas") == [
+            ("1", "ja"),
+            ("0", "nej"),
+            ("9", "uppgift saknas"),
+        ]
+
+    def test_kod_klartext_newline_is_dominant_form(self) -> None:
+        text = (
+            "0 = Korrekt personnummer\n4 = Samordningsnummer\n8 = Ogiltigt personnummer"
+        )
+        assert _classify_value_set_text(text) == [
+            ("0", "Korrekt personnummer"),
+            ("4", "Samordningsnummer"),
+            ("8", "Ogiltigt personnummer"),
+        ]
+
+    def test_alpha_codes_with_labels(self) -> None:
+        # Letter codes (BM/LK/...) carry labels; labels may contain spaces.
+        assert _classify_value_set_text("1=Man; 2=Kvinna") == [
+            ("1", "Man"),
+            ("2", "Kvinna"),
+        ]
+
+    def test_label_may_contain_comma_and_colon(self) -> None:
+        # Only the CODE is charset-constrained; the label is free text.
+        assert _classify_value_set_text(
+            "1=riksavtal; 2=regionalt, flerregionalt: avtal"
+        ) == [("1", "riksavtal"), ("2", "regionalt, flerregionalt: avtal")]
+
+    def test_label_may_contain_equals(self) -> None:
+        # Partition on the FIRST `=` only; a label may itself contain `=`.
+        assert _classify_value_set_text("1=a=b; 2=c") == [("1", "a=b"), ("2", "c")]
+
+    def test_swedish_char_codes_accepted(self) -> None:
+        # Codes may carry Swedish letters (_clean_value_code accepts them).
+        assert _classify_value_set_text("Å=alternativ; Ö=övrigt") == [
+            ("Å", "alternativ"),
+            ("Ö", "övrigt"),
+        ]
+
+    def test_bare_codes_semicolon(self) -> None:
+        # The LOVA styrtabell case: bare codes, no inline labels.
+        assert _classify_value_set_text("1;2;3;4;5;9") == [
+            ("1", None),
+            ("2", None),
+            ("3", None),
+            ("4", None),
+            ("5", None),
+            ("9", None),
+        ]
+
+    def test_bare_alpha_codes(self) -> None:
+        assert _classify_value_set_text("LEG;SPEC") == [("LEG", None), ("SPEC", None)]
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "0-744 = antal timmar",  # numeric range in code
+            "1964-1968: ICD-7 i Klassifikation",  # year-prose (single segment anyway)
+            "0=giltigt pnr; 4=samordningsnummer; strängen är tom",  # trailing prose (mixed =)
+            "1;5,6;7;8",  # comma inside a code
+            "1;2;1",  # duplicate code
+            "01=till moder  02=till fader",  # multi-space (single segment, embedded =)
+            "1= ; 2=nej",  # whitespace-only label -> rejected (empty after strip)
+        ],
+    )
+    def test_messy_cells_rejected(self, text: str) -> None:
+        assert _classify_value_set_text(text) is None
+
+
+def _value_set_codes(
+    conn: sqlite3.Connection, value_set_id: int
+) -> set[tuple[str, str]]:
+    return {
+        (r[0], r[1])
+        for r in conn.execute(
+            "SELECT vc.code, vc.label FROM value_set_member vsm "
+            "JOIN value_code vc ON vc.code_id = vsm.code_id "
+            "WHERE vsm.value_set_id = ?",
+            (value_set_id,),
+        )
+    }
+
+
+def test_vardemangd_binds_when_no_kodlista() -> None:
+    # No Kodlista_KON sheet -> the inline Värdemängd promotes to a value set.
+    reg = _register(
+        "bu",
+        [_var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001)],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is not None
+    assert states[0].value_set_version_label is None, "Värdemängd has no Tidsperiod"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+
+
+def test_vardemangd_bare_codes_bind_with_empty_labels() -> None:
+    # bu shape: variant-less (all -> _default), so no deldatamängd token to
+    # resolve — isolates the bare-code binding. (The LOVA styrtabell case is the
+    # real-corpus source of bare codes; LOVA tokens go through the curated map.)
+    reg = _register(
+        "bu",
+        [_var("STYR", value_set_text="1;2;3", data_from=2001)],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is not None
+    # bare codes -> label is the empty string in value_code (label=None classifies
+    # to "" at IRValueCode, matching the kodlista path's `r.beskrivning or ""`).
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", ""),
+        ("2", ""),
+        ("3", ""),
+    }
+
+
+def test_vardemangd_free_text_stays_codeless() -> None:
+    # A free-text descriptor (single segment) is NOT promoted — exactly today's
+    # behavior: the variable still emits a state, with value_set_id None.
+    reg = _register(
+        "bu",
+        [_var("NOTE", value_set_text="Fritext, ingen kodning", data_from=2001)],
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is None
+
+
+def test_kodlista_wins_over_vardemangd() -> None:
+    # A variable WITH a Kodlista_* sheet ignores its Värdemängd cell entirely:
+    # binding only fires in the kodlista-less branch.
+    rows = [SosKodlistaRow(tidsperiod="2001-2010", kod="A01", beskrivning="d")]
+    reg = _register(
+        "dors",
+        [
+            _var(
+                "DIAG",
+                deldatamangd="DORS",
+                value_set_text="1=Man; 2=Kvinna",  # would classify, but kodlista wins
+                data_from=2001,
+            )
+        ],
+        deldatamangder=(_deldat("DORS", data_from=2001),),
+        kodlistor=(_kodlista("DIAG", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is not None
+    # the kodlista code, NOT the Värdemängd codes
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {("A01", "d")}
+
+
+def test_vardemangd_content_shares_value_set() -> None:
+    # Two distinct kodlista-less variables with the SAME Värdemängd cell
+    # content-share one value_set (the _ensure_value_set member-hash dedup).
+    reg = _register(
+        "bu",
+        [
+            _var("A", value_set_text="1=ja; 0=nej", data_from=2001),
+            _var("B", value_set_text="1=ja; 0=nej", data_from=2001),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    ids = {s.value_set_id for s in states}
+    assert len(ids) == 1 and None not in ids, "identical Värdemängd shares one set"
+
+
+def test_merged_member_vardemangd_conflict_warns_keeps_first() -> None:
+    # Two variant-less merged members (BU shape: all -> _default) share
+    # valid_from=2001 -> the SAME state_id (value_set_version_label is None for
+    # the Värdemängd path), but classify to DIFFERENT value sets. The second's
+    # value_set_id would be silently dropped by the valid_to-widening
+    # reconciliation; instead the adapter WARNS and keeps the first
+    # deterministically. The first member ends EARLIER (data_to=2010) than the
+    # second (data_to=2016): because the sets diverge, `valid_to` must NOT widen
+    # — the surviving (first) set keeps its OWN 2010 window, never claiming its
+    # codes for 2011-2016.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "VARUTYP",
+                value_set_text="EX=Receptfritt; HA=Handelsvara",
+                data_from=2001,
+                data_to=2010,
+            ),
+            _var(
+                "VARUTYP",
+                value_set_text="EX=Receptfritt; HA=Handelsvara; OV=Ovrigt",
+                data_from=2001,
+                data_to=2016,
+            ),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    warns = [w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"]
+    assert len(warns) == 1, "divergent Värdemängd on a shared state_id must WARN"
+    assert "VARUTYP" in (warns[0].detail or "")
+    # first member's value set kept (2 codes), not the second's (3 codes).
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("EX", "Receptfritt"),
+        ("HA", "Handelsvara"),
+    }
+    assert states[0].valid_to == "2010-12-31", (
+        "divergent sets: surviving set keeps its OWN window, valid_to NOT widened"
+    )
+
+
+@pytest.mark.parametrize("coded_first", [True, False])
+def test_merged_member_asymmetric_vardemangd_prefers_coded(coded_first: bool) -> None:
+    # #401 regression (prefer-coded + Codex P2 window-clamp): one merged member
+    # classifies, the other is free text (value_set_id None). They share
+    # valid_from=1960 -> the SAME state_id, so they collide in the reconciliation.
+    # The CODED member must win regardless of delivery order — a codeless member
+    # arriving first must NOT silently drop the sibling's value set — and this is
+    # a coalesce, not a conflict, so NO warning fires.
+    #
+    # This is the real `bu/SPEC` shape: coded set ends 2014, codeless tail runs
+    # to 2016. The surviving coded set must keep ITS OWN window (valid_to 2014),
+    # never widen to 2016 — extending codes 2015-2016 where the metadata never
+    # defined them is a code-search false positive. The codeless tail's extra
+    # coverage is forfeited (a dropped codeless tail < an over-claimed code
+    # window).
+    coded = _var("SPEC", value_set_text="1=Man; 2=Kvinna", data_from=1960, data_to=2014)
+    codeless = _var(
+        "SPEC", value_set_text="Fritext, ingen kodning", data_from=1960, data_to=2016
+    )
+    reg = _register(
+        "bu",
+        [coded, codeless] if coded_first else [codeless, coded],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == [], "coded-vs-codeless is a coalesce, not a conflict"
+    assert states[0].value_set_id is not None, "the coded value set survives"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+    assert states[0].valid_to == "2014-12-31", (
+        "coded set keeps its OWN window; codeless 2016 tail must NOT extend codes"
+    )
+
+
+def test_merged_member_prefer_coded_keeps_prior_data_type() -> None:
+    # #401 correctness: prefer-coded must NOT flip `data_type`. A divergent
+    # data_type across same-name members is a WARN-MERGE (one variable), and the
+    # members share valid_from=2001 -> the SAME state_id, so they collide in
+    # `_emit_states._collect`. The codeless member arrives FIRST (becomes
+    # `prior`, data_type "heltal"); the coded member arrives second (`obj`,
+    # data_type "sträng (text)"). The stored row must adopt obj's value_set_id
+    # (prefer-coded) while KEEPING prior's data_type — `data_type` is excluded
+    # from the state_id basis, so basing the row on obj would silently flip it.
+    codeless = _var(
+        "KON",
+        value_set_text="Fritext, ingen kodning",
+        data_type="Heltal",
+        data_from=2001,
+    )
+    coded = _var(
+        "KON",
+        value_set_text="1=Man; 2=Kvinna",
+        data_type="Sträng (text)",
+        data_from=2001,
+    )
+    reg = _register("bu", [codeless, coded])  # codeless first -> prior
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert states[0].data_type == "heltal", (
+        "stored row keeps prior (codeless, first) data_type, not obj's"
+    )
+    assert states[0].value_set_id is not None, "the coded value set is still adopted"
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+    # Prefer-coded coalesce is not a value-set conflict; the divergent data_type
+    # is the separate (expected) warn-merge signal.
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
+
+
+def test_merged_member_identical_vardemangd_does_not_warn() -> None:
+    # Same shape as the conflict test but the members carry the SAME Värdemängd:
+    # they content-share one value_set, no collision, no warning.
+    reg = _register(
+        "bu",
+        [
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001),
+        ],
+    )
+    objs, _ = _emit(reg)
+    assert _of(objs, IRVariableState)
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
+
+
+def test_merged_member_same_value_set_different_window_widens() -> None:
+    # Two merged members with the SAME Värdemängd (content-shared value set) but
+    # DIFFERENT end years collide on one state_id. Because the value set is
+    # identical, widening `valid_to` is a genuine coverage union (no code
+    # over-claim) — the surviving state must carry the WIDEST window, not the
+    # narrower first-in-order one.
+    reg = _register(
+        "bu",
+        [
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001, data_to=2010),
+            _var("KON", value_set_text="1=Man; 2=Kvinna", data_from=2001, data_to=2016),
+        ],
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start members collapse to one state"
+    assert states[0].value_set_id is not None
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {
+        ("1", "Man"),
+        ("2", "Kvinna"),
+    }
+    assert states[0].valid_to == "2016-12-31", (
+        "identical value set: widening valid_to is a safe coverage union"
+    )
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_conflict"
+    ] == []
+
+
+# ---------------------------------------------------------------------------
+# Overlap-suppression post-pass (#401): two merged members on the same
+# variant+column with DIFFERENT valid_from (so DISTINCT state_ids, never
+# reconciled by `_collect`) whose Värdemängd cells classify to DISTINCT value
+# sets over OVERLAPPING windows would resolve a period to >1 value set (the
+# build invariant). The Värdemängd path has no Tidsperiod to segment on, so
+# the adapter conservatively nulls BOTH conflicting states back to code-less
+# and WARNS. Disjoint windows are a legitimate era change and stay bound.
+# ---------------------------------------------------------------------------
+
+
+def test_overlapping_members_distinct_vardemangd_suppressed() -> None:
+    # bu/SPEC shape: two variant-less merged members (all -> _default, one
+    # column) classify to DIFFERENT value sets over OVERLAPPING windows
+    # (1960-2016 vs 2001-2014). Different valid_from -> distinct state_ids, so
+    # `_collect` never sees them; the post-pass must null BOTH back to
+    # code-less (no Tidsperiod to segment the Värdemängd on) and warn once.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna",
+                data_from=1960,
+                data_to=2016,
+            ),
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna; 3=Annat",
+                data_from=2001,
+                data_to=2014,
+            ),
+        ],
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2, "different valid_from -> two distinct states"
+    assert all(s.value_set_id is None for s in states), (
+        "both conflicting states reverted to code-less (pre-#401 behavior)"
+    )
+    warns = [w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_overlap"]
+    assert len(warns) == 1, "one warning per affected (variable, column)"
+    assert "SPEC" in (warns[0].detail or "")
+
+
+def test_disjoint_members_distinct_vardemangd_stay_bound() -> None:
+    # Negative: same variant+column, distinct Värdemängd, but DISJOINT windows
+    # (2001-2005 vs 2006-2010) — a legitimate era change. No overlap, so both
+    # states keep their (distinct) value sets and NO suppression warning fires.
+    reg = _register(
+        "bu",
+        [
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna",
+                data_from=2001,
+                data_to=2005,
+            ),
+            _var(
+                "SPEC",
+                value_set_text="1=Man; 2=Kvinna; 3=Annat",
+                data_from=2006,
+                data_to=2010,
+            ),
+        ],
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    assert all(s.value_set_id is not None for s in states), (
+        "disjoint-window era change must stay bound"
+    )
+    assert len({s.value_set_id for s in states}) == 2, (
+        "the two eras carry their own distinct value sets"
+    )
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_overlap"
+    ] == []
+
+
+# ---------------------------------------------------------------------------
+# #401 Fix A (Codex P2): the divergent-window reconciliation + overlap-
+# suppression post-pass are VÄRDEMÄNGD-ONLY (kodlista is None). A KODLISTA-backed
+# variable keeps the ORIGINAL pre-#401 reconciliation (always widen valid_to) and
+# is EXEMPT from the post-pass — kodlista paths own their own value sets and a
+# genuine conflict is caught by the build invariant, never silently nulled here.
+# ---------------------------------------------------------------------------
+
+
+def test_kodlista_collision_widens_valid_to_and_stays_bound() -> None:
+    # Two variant-less merged members (bu shape: all -> _default) of a
+    # KODLISTA-backed variable share valid_from=1960 but end in different years.
+    # The shared kodlista is open (no Tidsperiod) -> each member emits one
+    # single-segment state (label "") with seg_from=1960 -> the SAME state_id, and
+    # since `_ensure_value_set` hashes only (code, label) both carry the SAME
+    # value_set_id. For a kodlista collision the reconciliation keeps the ORIGINAL
+    # behavior: ALWAYS widen valid_to (no divergent-window clamp, no prefer-coded
+    # path). The post-pass is Värdemängd-only, so the kodlista value set is NOT
+    # nulled.
+    rows = [SosKodlistaRow(tidsperiod=None, kod="A01", beskrivning="d")]
+    reg = _register(
+        "bu",
+        [
+            _var("DIAG", data_type="Sträng (text)", data_from=1960, data_to=2013),
+            _var("DIAG", data_type="Sträng (text)", data_from=1960, data_to=2016),
+        ],
+        kodlistor=(_kodlista("DIAG", rows),),
+    )
+    objs, adapter = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1, "same-start kodlista members collapse to one state"
+    assert states[0].value_set_id is not None, (
+        "kodlista value set must NOT be nulled by the Värdemängd-only post-pass"
+    )
+    assert _value_set_codes(adapter.conn, states[0].value_set_id) == {("A01", "d")}
+    assert states[0].valid_to == "2016-12-31", (
+        "kodlista collision keeps the original widen-always reconciliation"
+    )
+    # neither the Värdemängd conflict nor the overlap-suppression warning fires
+    # for a kodlista-backed variable.
+    assert [
+        w
+        for w in _of(objs, IRWarning)
+        if w.code in ("sos_value_set_text_conflict", "sos_value_set_text_overlap")
+    ] == []
+
+
+def test_kodlista_windowed_drift_states_not_suppressed() -> None:
+    # A kodlista-backed variable whose codes drift across two windows fans into
+    # two states with DISTINCT value sets (one per era). They sit on the same
+    # variant+column with distinct value sets — exactly the shape the Värdemängd
+    # post-pass would null — but because the variable is kodlista-backed the
+    # post-pass leaves both value sets intact (the kodlista path segmented on
+    # Tidsperiod, so the windows are disjoint and the invariant already holds).
+    rows = [
+        SosKodlistaRow(tidsperiod="2000-2010", kod="1", beskrivning="A"),
+        SosKodlistaRow(tidsperiod="2011-2020", kod="2", beskrivning="B"),
+    ]
+    reg = _register(
+        "dors",
+        [_var("FODLAND", deldatamangd="DORS", data_type="Sträng (text)")],
+        deldatamangder=(_deldat("DORS"),),
+        kodlistor=(_kodlista("FODLAND", rows),),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 2
+    assert all(s.value_set_id is not None for s in states), (
+        "kodlista-derived value sets must never be nulled by the post-pass"
+    )
+    assert len({s.value_set_id for s in states}) == 2
+    assert [
+        w for w in _of(objs, IRWarning) if w.code == "sos_value_set_text_overlap"
+    ] == []
+
+
+# ---------------------------------------------------------------------------
+# #401 Fix B: a variable with a kodlista sheet that was skipped as unparseable
+# (raw_rows) reaches the Värdemängd branch with kodlista is None, but
+# kodlista-wins -> it stays code-less, never fabricating codes from Värdemängd.
+# Defensive (0 corpus occurrences); the warning still fires per the existing
+# unparseable-kodlista path.
+# ---------------------------------------------------------------------------
+
+
+def test_raw_kodlista_wins_over_vardemangd_stays_codeless() -> None:
+    # The variable HAS a Kodlista_DIAG sheet, but it parsed as raw_rows
+    # (unparseable header) -> skipped from kodlista_by_var. The variable also
+    # carries a classifiable Värdemängd. Kodlista-wins: the variable must stay
+    # code-less (value_set_id None), the Värdemängd is NOT bound.
+    reg = _register(
+        "dors",
+        [
+            _var(
+                "DIAG",
+                deldatamangd="DORS",
+                value_set_text="1=Man; 2=Kvinna",  # would classify if not suppressed
+                data_from=2001,
+            )
+        ],
+        deldatamangder=(_deldat("DORS", data_from=2001),),
+        kodlistor=(_kodlista("DIAG", [], raw=True),),
+    )
+    objs, _ = _emit(reg)
+    states = _of(objs, IRVariableState)
+    assert len(states) == 1
+    assert states[0].value_set_id is None, (
+        "an unparseable kodlista sheet still wins: no Värdemängd fabrication"
+    )
+    # the existing unparseable-kodlista warning still fires.
+    assert [w for w in _of(objs, IRWarning) if w.code == "sos_kodlista_unparseable"], (
+        "the raw kodlista still surfaces its skip warning"
+    )
 
 
 # ---------------------------------------------------------------------------

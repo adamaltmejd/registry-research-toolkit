@@ -371,6 +371,35 @@ def test_synthetic_unrecognised_kodlista_preserves_raw_rows(tmp_path: Path) -> N
     assert any("Karolinska" in str(c) for row in weird.raw_rows for c in row)
 
 
+def test_kodlista_parse_exception_records_raw_hint_placeholder(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # #401 Fix B, second skip path: if `_parse_kodlista` RAISES (vs. parsing as
+    # raw_rows), `parse_register_file` must still record the sheet as a raw
+    # placeholder so the kodlista-wins guard sees its variable HAD a kodlista
+    # sheet (`raw_rows` truthy -> raw_kodlista_hints) and won't fabricate a value
+    # set from the variable's Värdemängd. Force the raise via monkeypatch (no
+    # real-corpus sheet triggers it today — 0 occurrences).
+    import reg_meta_build.sources.sos as sos
+
+    def _boom(ws: object) -> None:
+        raise ValueError("synthetic parse failure")
+
+    monkeypatch.setattr(sos, "_parse_kodlista", _boom)
+
+    p = tmp_path / "Test.xlsx"
+    _write_minimal_workbook(p, kod_rows=[("2024", "1", "first")])
+    reg = parse_register_file(p)
+
+    # the placeholder is recorded with the suffix-derived hint and truthy
+    # raw_rows (so it flows through the SAME raw skip path as a genuinely raw
+    # sheet), and the warning still fires.
+    placeholder = next(k for k in reg.kodlistor if k.variable_hint == "TEST")
+    assert placeholder.rows == ()
+    assert placeholder.raw_rows  # truthy -> excluded from value-set construction
+    assert any("synthetic parse failure" in w for w in reg.warnings)
+
+
 def test_synthetic_phantom_rows_do_not_inflate_variable_count(tmp_path: Path) -> None:
     # openpyxl's max_row is unreliable; `_row_iter` skips empty rows so trailing
     # phantom rows never become variables.

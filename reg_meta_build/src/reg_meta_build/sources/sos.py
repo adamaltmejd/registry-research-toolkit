@@ -260,6 +260,28 @@ def parse_register_file(path: Path | str) -> SosRegister:
                     warnings.extend(kod_warnings)
                 except Exception as exc:
                     warnings.append(f"kodlista {sheet_name!r}: {exc}")
+                    # Preserve kodlista-wins (#401): a sheet that FAILS to parse is
+                    # still a kodlista sheet — record its hint as a raw/unparseable
+                    # placeholder so the Värdemängd fallback won't fabricate codes
+                    # for its variable. Flows through the SAME raw_rows skip path as
+                    # a genuinely raw sheet (excluded from value-set construction in
+                    # _emit_register, counted in raw_kodlista_hints). Suffix derived
+                    # exactly as in _parse_kodlista. (0 corpus occurrences today.)
+                    hint = (
+                        sheet_name.split("_", 1)[1] if "_" in sheet_name else sheet_name
+                    )
+                    hint = hint.split("!", 1)[0].strip()
+                    kodlistor.append(
+                        SosKodlista(
+                            sheet_name=sheet_name,
+                            variable_hint=hint,
+                            codeset_name=None,
+                            variable_header=None,
+                            background=None,
+                            rows=(),
+                            raw_rows=(("<unparseable: parse error>",),),
+                        )
+                    )
             elif low.startswith("kvalitet"):
                 quality_sheets.append(_parse_quality_sheet(wb[sheet_name]))
 
@@ -1092,6 +1114,89 @@ def _parse_tidsperiod(tp: str | None) -> tuple[str | None, str | None]:
     return None, None
 
 
+# Code charset for a `Värdemängd` enumeration: digits + Latin/Swedish letters
+# plus `.`/`_`/`-` (no whitespace, comma, or colon). A bare `-` separating two
+# digits (`0-744`) is a NUMERIC RANGE descriptor, not an enumeration, so it is
+# rejected even though `-` is otherwise an allowed code char.
+_VALUE_CODE_CHARSET = re.compile(r"[0-9A-Za-zÅÄÖåäö._-]+")
+
+
+def _clean_value_code(c: str) -> str | None:
+    """Validate one `Värdemängd` code token; return it stripped, or ``None`` if
+    it isn't a clean enumeration code.
+
+    Rejects: empty; embedded whitespace/comma/colon (label/prose leakage);
+    a numeric range (`0-744`); anything outside `_VALUE_CODE_CHARSET`. Only the
+    CODE is constrained this tightly — labels are free-form (see the classifier).
+    """
+    c = c.strip()
+    if not c:
+        return None
+    if any(ch in c for ch in (" ", "\t", ",", ":")):
+        return None
+    if re.search(r"\d-\d", c):  # numeric range like 0-744, not a code
+        return None
+    if not _VALUE_CODE_CHARSET.fullmatch(c):
+        return None
+    return c
+
+
+def _classify_value_set_text(text: str | None) -> list[tuple[str, str | None]] | None:
+    """Classify a raw SOS `Värdemängd` cell into (code, label) pairs, or reject.
+
+    This is the #401 fallback that promotes a variable's INLINE enumerated code
+    list to a value set when the variable has no `Kodlista_*` sheet (the #373
+    deferral — styrtabell decode tables were excluded from minting, but their
+    `Värdemängd` enumeration was never bound). It is deliberately CONSERVATIVE:
+    rejecting (returning ``None``) leaves the variable exactly as today (no value
+    set), so a wrong reject is a no-op while a wrong ACCEPT would mint garbage.
+
+    Two accepted forms (real-corpus-verified):
+      - `kod=klartext` pairs — every segment carries `=`: code with inline label
+        (`1=ja; 0=nej`, newline-delimited lists). Label is the right of the first
+        `=` (labels may contain spaces/commas/colons — only the code is checked).
+      - bare codes — no segment carries `=`: code-only (`1;2;3;4;5;9`, `LEG;SPEC`).
+
+    Rejected (free-text trap): single segment (a descriptor like `Fritext`);
+    MIXED `=`/no-`=` (catches trailing-prose cells like `0=…; …; strängen är
+    tom`); any invalid code (range, comma, colon, whitespace); duplicate codes.
+    """
+    if not text or not text.strip():
+        return None
+    # Split on `;` AND newline simultaneously — both are clean SOS separators.
+    segments = [s.strip() for s in re.split(r"[;\n]+", text) if s.strip()]
+    # A single segment is a free-text descriptor, not an enumeration.
+    if len(segments) < 2:
+        return None
+
+    with_eq = sum(1 for s in segments if "=" in s)
+    if with_eq == len(segments):
+        # kod=klartext: partition each on the FIRST `=`.
+        pairs: list[tuple[str, str | None]] = []
+        for s in segments:
+            raw_code, _, raw_label = s.partition("=")
+            code = _clean_value_code(raw_code)
+            label = raw_label.strip()
+            if code is None or not label:
+                return None
+            pairs.append((code, label))
+    elif with_eq == 0:
+        # bare codes: each segment IS the code, no label.
+        pairs = []
+        for s in segments:
+            code = _clean_value_code(s)
+            if code is None:
+                return None
+            pairs.append((code, None))
+    else:
+        # MIXED `=`/no-`=` -> trailing-prose / malformed cell. Reject.
+        return None
+
+    if len({code for code, _ in pairs}) != len(pairs):  # duplicate codes -> reject
+        return None
+    return pairs
+
+
 def _iso_bound(value: int | None, *, end: bool) -> str | None:
     """Normalize a SOS `data_från`/`data_till` int to a full ISO date.
 
@@ -1183,6 +1288,38 @@ def _widest_valid_to(a: str | None, b: str | None) -> str | None:
     if a is None or b is None:
         return None
     return max(a, b)
+
+
+def _windows_overlap(
+    a_from: str | None, a_to: str | None, b_from: str | None, b_to: str | None
+) -> bool:
+    """Closed-interval overlap test, mirroring the build invariant's SQL
+    (``validate.py`` → "one value_set per (variable, variant, period, column)")
+    and ``catalog._states_in_bounds``: ``a_from <= b_to AND b_from <= a_to``.
+    A ``None`` ``valid_from`` is open-start (−∞); a ``None`` ``valid_to`` is
+    open-end (+∞). Full-date ISO strings sort chronologically, so once the open
+    bounds are substituted the comparison is a plain string compare."""
+    lo = "0001-01-01"  # −∞ (open-start)
+    hi = "9999-12-31"  # +∞ (open-end); the sentinel the validator compares to
+    af, at_ = a_from or lo, a_to or hi
+    bf, bt = b_from or lo, b_to or hi
+    return af <= bt and bf <= at_
+
+
+def _value_code(
+    code: str, label: str | None, window: tuple[str | None, str | None]
+) -> IRValueCode:
+    """Build a value-set IRValueCode with placeholder ids (code_id/value_set_id
+    are assigned at write-back by `_ensure_value_set`). `window` =
+    (valid_from, valid_to)."""
+    return IRValueCode(
+        code_id=0,
+        value_set_id=0,
+        code=code,
+        label=label or "",
+        valid_from=window[0],
+        valid_to=window[1],
+    )
 
 
 _SEG_LO = date(1, 1, 1)  # open-start sentinel (−∞)
@@ -1503,9 +1640,15 @@ class SOSAdapter:
         # -- kodlista resolution: variable_hint -> kodlista (case-insensitive).
         # Skip unparseable kodlistor (raw_rows non-empty) for value-set
         # construction; warn instead of fabricating.
+        # `raw_kodlista_hints` records hints that HAD a kodlista sheet but were
+        # skipped as raw: kodlista-wins means such a variable must stay code-less
+        # (`kodlista is None` below) rather than fall back to fabricating inline
+        # codes from its Värdemängd (#401 Fix B; defensive — 0 corpus occurrences).
         kodlista_by_var: dict[str, SosKodlista] = {}
+        raw_kodlista_hints: set[str] = set()
         for k in reg.kodlistor:
             if k.raw_rows:
+                raw_kodlista_hints.add(k.variable_hint.lower())
                 yield IRWarning(
                     entity_kind="register",
                     entity_id=register_id,
@@ -1556,6 +1699,7 @@ class SOSAdapter:
                 variant_less=variant_less,
                 deldat_by_name=deldat_by_name,
                 kodlista=kodlista_by_var.get(name_key.lower()),
+                has_kodlista_sheet=name_key.lower() in raw_kodlista_hints,
             )
 
         # -- delivery provenance, one per variant. SOS carries no approval
@@ -1582,9 +1726,14 @@ class SOSAdapter:
         variant_less: bool,
         deldat_by_name: dict[str, SosDeldatamangd],
         kodlista: SosKodlista | None,
+        has_kodlista_sheet: bool,
     ) -> Iterator[IRObject]:
         """Emit one variable group: MERGE (default), SPLIT (allow-list), or
         WARN-MERGE (unanticipated conflict). Then emit its era-windowed states.
+
+        `has_kodlista_sheet`: this variable HAD a kodlista sheet that was skipped
+        as unparseable (`raw_rows`) — kodlista-wins, so its Värdemängd fallback is
+        suppressed downstream (stays code-less) instead of fabricating codes.
         """
         # -- conflict detection: incompatible normalized data_type OR disjoint
         # structured code-list shape (NEVER value_set_text — the free-text trap).
@@ -1602,6 +1751,7 @@ class SOSAdapter:
                 variant_less=variant_less,
                 deldat_by_name=deldat_by_name,
                 kodlista=kodlista,
+                has_kodlista_sheet=has_kodlista_sheet,
             )
             return
 
@@ -1628,6 +1778,7 @@ class SOSAdapter:
             variant_less=variant_less,
             deldat_by_name=deldat_by_name,
             kodlista=kodlista,
+            has_kodlista_sheet=has_kodlista_sheet,
         )
 
     def _emit_merged(
@@ -1641,6 +1792,7 @@ class SOSAdapter:
         variant_less: bool,
         deldat_by_name: dict[str, SosDeldatamangd],
         kodlista: SosKodlista | None,
+        has_kodlista_sheet: bool,
     ) -> Iterator[IRObject]:
         variable_id = mint("sos", abbrev, name)
         # Deterministic winner for scalar fields: first non-null across the
@@ -1676,6 +1828,7 @@ class SOSAdapter:
             if kodlista
             else False,
             classification=classification,
+            has_kodlista_sheet=has_kodlista_sheet,
         )
 
     def _emit_split(
@@ -1689,6 +1842,7 @@ class SOSAdapter:
         variant_less: bool,
         deldat_by_name: dict[str, SosDeldatamangd],
         kodlista: SosKodlista | None,
+        has_kodlista_sheet: bool,
     ) -> Iterator[IRObject]:
         # Partition the group by normalized data_type seam (the known SOS splits
         # are data_type-only, no codelist). One sibling per distinct shape.
@@ -1729,6 +1883,7 @@ class SOSAdapter:
                 kodlista=kodlista,
                 entity_registry=False,
                 classification=classification,
+                has_kodlista_sheet=has_kodlista_sheet,
             )
         # (N choose 2) sibling related-to edges -> self.related_edges. The
         # materializer resolves variable_id -> FQID slug after slugs exist; it
@@ -1787,6 +1942,7 @@ class SOSAdapter:
         kodlista: SosKodlista | None,
         entity_registry: bool,
         classification: str | None,
+        has_kodlista_sheet: bool = False,
     ) -> Iterator[IRObject]:
         """Emit IRVariableState(+IRValueSet/IRValueCode) + IRVariableAlias for
         each (member, resolved-era windowed value-set) of a variable.
@@ -1796,12 +1952,93 @@ class SOSAdapter:
         deldatamängd, or members whose windows share a start) -> the same minted
         state_id, because the `idx_variable_state_unique` basis EXCLUDES
         `valid_to`. They are NOT duplicates: each carries its member's own
-        `valid_to`. Keeping the first in delivery order would silently truncate
-        the variable's coverage (and close an open-ended state), so reconcile
-        `valid_to` to the WIDEST window instead of dropping. `value_set_id` is
-        provably identical on a same-state_id collision — a distinguishing code
-        buckets into a non-empty `value_set_version_label`, which changes the
-        state_id — so widening `valid_to` is the only reconciliation needed.
+        `valid_to`.
+
+        `valid_to` + `value_set_id` reconciliation. The divergent-window /
+        prefer-coded reconciliation below is VÄRDEMÄNGD-ONLY (`kodlista is None`):
+        a kodlista-derived collision (entity-registry or windowed) keeps the
+        ORIGINAL pre-#401 behavior — always widen `valid_to`, keep `prior` (incl.
+        its value_set_id) — because a distinguishing kodlista code buckets into a
+        non-None `value_set_version_label` that changes the state_id, so a
+        same-state_id kodlista collision provably carries the SAME value set.
+
+        For the Värdemängd path, widening `valid_to` is only safe when the
+        colliding members carry the SAME value set: then it is a genuine coverage
+        union with no code over-claim. When the members carry DIVERGENT value sets
+        the surviving (prefer-coded) set must keep ITS OWN member's `valid_to` —
+        widening would extend that set's codes past the source row that defined
+        them (Codex P2: `bu/SPEC` coded 1960–2014 + codeless 1960–2016 must NOT
+        emit codes for 2015–2016, a code-search false positive). The dropped
+        member's extra coverage is forfeited; for a research catalog an
+        over-claimed code window (false positive) is worse than a dropped codeless
+        tail.
+
+          - SAME value set (both non-None equal, or both None) -> safe coverage
+            union: widen `valid_to` to the WIDEST window. Keeping the first in
+            delivery order would silently truncate coverage / close an
+            open-ended state.
+          - DIVERGENT value sets -> survivor keeps its own member window (no
+            widening):
+            * exactly one non-None (one member classified, the other was free
+              text) -> the CODED member survives with its set + its window; a
+              coalesce, not a conflict, so no warning. Prefer-coded makes the
+              merge delivery-order-independent: a codeless member arriving first
+              must not drop a later member's value set.
+            * both non-None and DIFFERENT -> genuine conflict (e.g. LMED VARUTYP,
+              MFR ICD): keep `prior` deterministically (delivery order) and WARN
+              so the dropped alternative is auditable; never silent.
+
+        The #401 `Värdemängd` fallback is what makes a same-state_id collision
+        carry divergent value sets at all: the kodlista paths bucket a
+        distinguishing code into a non-empty `value_set_version_label` (which
+        changes the state_id), but each MERGED member carries its OWN inline
+        `Värdemängd` and the fallback emits `value_set_version_label=None`, so
+        two such members CAN collide on one state_id.
+
+        The stored row is ALWAYS based on `prior`, with ONLY the survivor's
+        `valid_to` and `value_set_id` reconciled onto it. Other scalars are NOT
+        reconciled: `data_type` in particular is excluded from the state_id
+        basis, and a warn-/allowlist-merge group can put members of different
+        `data_type` under one variable_id — so two colliding members may differ
+        in it. Basing the row on `prior` keeps `data_type` (and every other
+        non-reconciled field) delivery-order-deterministic regardless of which
+        side carried the value set; prefer-coded means a codeless `prior` adopts
+        a later coded member's `value_set_id` (and that member's `valid_to`) but
+        never its `data_type`.
+
+        OVERLAP-SUPPRESSION POST-PASS (#401, complementary to `_collect`,
+        VÄRDEMÄNGD-ONLY — gated to `kodlista is None`): `_collect` only reconciles
+        members that collide on ONE state_id (same variant + same `valid_from`).
+        Two members with DIFFERENT `valid_from` mint DIFFERENT state_ids, so
+        `_collect` never compares them — yet they can still violate the build
+        invariant ("one value_set per (variable, variant, period, column)",
+        `validate.py`): OVERLAPPING windows on the same column with DISTINCT
+        non-null value sets resolve a period to >1 value set. The kodlista paths
+        avoid this by era-SEGMENTING on `Tidsperiod` (`_segment_windowed_codes` →
+        non-overlapping segments; equal-content segments content-share one
+        `value_set_id`) and the entity-registry path collapses to one state, so
+        they own their own value sets and the post-pass NEVER touches them — a
+        genuine kodlista conflict is caught by the build invariant / curation, not
+        silently nulled here. Only the #401 Värdemängd binding has NO `Tidsperiod`
+        to segment on, so two members whose own data windows (data_från/till) clip
+        the shared kodlista to DIFFERENT code subsets over an overlap produce two
+        distinct value sets there. After the member loop, the post-pass groups the
+        buffered states by `(register_variant_id, delivery_column_name)` (mirroring
+        the validator key; `variable_id` is fixed in this call), finds every
+        overlapping pair with distinct non-null value sets, and nulls EVERY
+        involved state's `value_set_id` back to code-less — the exact pre-#401
+        behavior, so no regression — where the metadata is too ambiguous to
+        auto-bind. One `sos_value_set_text_overlap` IRWarning per affected column
+        makes the drop auditable. Disjoint-window multi-value-set variables
+        (legitimate era changes) do NOT overlap and stay bound. Runs BEFORE the
+        classification-candidate append so a suppressed state contributes its final
+        (None) value_set_id.
+
+        KODLISTA-WINS (#401 Fix B): a variable that HAS a kodlista sheet which was
+        only skipped as unparseable (`raw_rows`) reaches the Värdemängd branch with
+        `kodlista is None`, but `has_kodlista_sheet=True` keeps it code-less — never
+        fabricate inline codes from Värdemängd when a (real) code list exists.
+        Defensive: 0 corpus occurrences today, so inert on current output.
         """
         # Build the value-set rows for this variable's kodlista once.
         # entity_registry (MFR IVF_klinik): collapse to ONE state, per-code
@@ -1814,14 +2051,76 @@ class SOSAdapter:
         def _collect(obj: IRObject) -> Iterator[IRObject]:
             if isinstance(obj, IRVariableState):
                 prior = states_by_id.get(obj.state_id)
-                states_by_id[obj.state_id] = (
-                    obj
-                    if prior is None
-                    else prior.model_copy(
+                if prior is None:
+                    states_by_id[obj.state_id] = obj
+                    return
+                # kodlista paths (entity-registry + windowed): the #401
+                # divergent-window / prefer-coded reconciliation is Värdemängd-ONLY
+                # (`kodlista is None`). A kodlista-derived same-state_id collision
+                # keeps the original pre-#401 behavior — ALWAYS widen `valid_to`,
+                # keep `prior` (incl. its value_set_id). A distinguishing kodlista
+                # code buckets into a non-None `value_set_version_label` that
+                # changes the state_id, so a same-state_id kodlista collision
+                # provably carries the SAME value set; widening is the only
+                # reconciliation needed and never over-claims codes.
+                if kodlista is not None:
+                    states_by_id[obj.state_id] = prior.model_copy(
                         update={
                             "valid_to": _widest_valid_to(prior.valid_to, obj.valid_to)
                         }
                     )
+                    return
+                # #401 Värdemängd fallback (`kodlista is None`): two merged members
+                # collided on one state_id, where value_set_version_label is always
+                # None — so two such members CAN carry divergent inline Värdemängd
+                # value sets.
+                #
+                # Same value set (both non-None equal, or both None): widening
+                # `valid_to` is a safe coverage union — keeping the first in
+                # delivery order would silently truncate coverage / close an
+                # open-ended state, so reconcile to the WIDEST window.
+                if prior.value_set_id == obj.value_set_id:
+                    states_by_id[obj.state_id] = prior.model_copy(
+                        update={
+                            "valid_to": _widest_valid_to(prior.valid_to, obj.valid_to)
+                        }
+                    )
+                    return
+                # Divergent value sets: the surviving (prefer-coded) set keeps
+                # ITS OWN member's window — never extend codes past their source
+                # row (Codex P2). The dropped member's extra coverage is
+                # forfeited; for a research catalog an over-claimed code window
+                # (false positive) is worse than a dropped codeless tail. `prior`
+                # wins ties and the both-coded conflict (delivery order); `obj`
+                # wins only when `prior` is the codeless side.
+                if prior.value_set_id is None:
+                    survivor = obj  # adopt obj's coded set + obj's window
+                else:
+                    survivor = prior  # keep prior's coded set + prior's window
+                    if obj.value_set_id is not None:
+                        # both coded & DIFFERENT -> genuine conflict (kept first)
+                        yield IRWarning(
+                            entity_kind="variable",
+                            entity_id=variable_id,
+                            code="sos_value_set_text_conflict",
+                            detail=(
+                                f"{abbrev}/{members[0].name}: merged members share "
+                                f"state_id {obj.state_id} but classify to different "
+                                "Värdemängd value sets; kept first in delivery order"
+                            ),
+                        )
+                # ALWAYS base the stored row on `prior`: `data_type` (and every
+                # other non-reconciled scalar) is excluded from the state_id
+                # basis, so a warn-/allowlist-merge group can put members of
+                # different `data_type` under one variable_id — basing the row on
+                # `obj` would silently flip it. When `obj` supplies the value set,
+                # copy only its `value_set_id` + `valid_to` onto `prior`, never
+                # its `data_type`.
+                states_by_id[obj.state_id] = prior.model_copy(
+                    update={
+                        "valid_to": survivor.valid_to,
+                        "value_set_id": survivor.value_set_id,
+                    }
                 )
                 return
             yield obj
@@ -1876,7 +2175,73 @@ class SOSAdapter:
                     kodlista=kodlista,
                     entity_registry=entity_registry,
                     collect=_collect,
+                    has_kodlista_sheet=has_kodlista_sheet,
                 )
+
+        # Overlap-suppression post-pass — Värdemängd-ONLY (`kodlista is None`),
+        # complementary to `_collect`. `_collect` only reconciles members that
+        # collide on ONE state_id (same variant + same valid_from). Two members
+        # with DIFFERENT valid_from mint DIFFERENT state_ids, so they sit as
+        # separate `states_by_id` entries and `_collect` never compares them — yet
+        # OVERLAPPING windows on the same column carrying DISTINCT non-null value
+        # sets still violate the build invariant (one value_set per (variable,
+        # variant, period, column)). The #401 Värdemängd path binds one value set
+        # over each member's WHOLE window with no Tidsperiod to segment on, so two
+        # members whose windows overlap but whose Värdemängd cells classify to
+        # different sets are unresolvable (e.g. bu/SPEC: a single-code 1960–2016
+        # cell vs a full-enumeration 2001–2014 cell). Conservatively null EVERY
+        # conflicting state back to code-less (the exact pre-#401 behavior — no
+        # regression) and WARN once per column. Disjoint-window multi-value-set
+        # variables (legitimate era changes) do NOT overlap and stay bound. Group
+        # key mirrors the validator exactly; variable_id is fixed within this call.
+        #
+        # Gated to `kodlista is None`: the kodlista paths segment on Tidsperiod
+        # (`_segment_windowed_codes`, non-overlapping segments) and the
+        # entity-registry path collapses to one state, so they own their own value
+        # sets and never need this suppression. NEVER null a kodlista-derived value
+        # set here — a genuine kodlista conflict is caught by the build invariant /
+        # curation, not silently dropped.
+        if kodlista is None:
+            by_column: dict[tuple[int, str | None], list[int]] = {}
+            for sid, state in states_by_id.items():
+                by_column.setdefault(
+                    (state.register_variant_id, state.delivery_column_name), []
+                ).append(sid)
+            conflicted: set[int] = set()
+            for sids in by_column.values():
+                for i in range(len(sids)):
+                    a = states_by_id[sids[i]]
+                    if a.value_set_id is None:
+                        continue
+                    for j in range(i + 1, len(sids)):
+                        b = states_by_id[sids[j]]
+                        if (
+                            b.value_set_id is None
+                            or a.value_set_id == b.value_set_id
+                            or not _windows_overlap(
+                                a.valid_from, a.valid_to, b.valid_from, b.valid_to
+                            )
+                        ):
+                            continue
+                        conflicted.add(sids[i])
+                        conflicted.add(sids[j])
+            warned_columns: set[str | None] = set()
+            for sid in conflicted:
+                state = states_by_id[sid]
+                col = state.delivery_column_name
+                states_by_id[sid] = state.model_copy(update={"value_set_id": None})
+                if col not in warned_columns:
+                    warned_columns.add(col)
+                    yield IRWarning(
+                        entity_kind="variable",
+                        entity_id=variable_id,
+                        code="sos_value_set_text_overlap",
+                        detail=(
+                            f"{abbrev}/{col}: overlapping members classified to "
+                            "distinct Värdemängd value sets (no Tidsperiod to "
+                            "segment on); binding dropped (code-less) where ambiguous"
+                        ),
+                    )
 
         # Flush the reconciled states (one per state_id, widest valid_to).
         # For a RESOLVED variable, append one classification candidate per emitted
@@ -1905,10 +2270,16 @@ class SOSAdapter:
         kodlista: SosKodlista | None,
         entity_registry: bool,
         collect: Callable[[IRObject], Iterator[IRObject]],
+        has_kodlista_sheet: bool = False,
     ) -> Iterator[IRObject]:
         """One (member, resolved variant) emission: the alias row plus the
         member's era-windowed states routed through ``collect`` (the
-        `_emit_states` same-state_id reconciliation buffer)."""
+        `_emit_states` same-state_id reconciliation buffer).
+
+        `has_kodlista_sheet`: the variable HAS a kodlista sheet that was skipped
+        as unparseable (`raw_rows`), so `kodlista is None` here only because the
+        sheet couldn't be parsed. Kodlista-wins: stay code-less rather than
+        fabricating inline codes from Värdemängd (#401 Fix B)."""
         var_from = _iso_bound(v.data_from, end=False)
         var_to = _iso_bound(v.data_to, end=True)
         deldat_from = _iso_bound(deldat.data_from, end=False) if deldat else None
@@ -1933,13 +2304,31 @@ class SOSAdapter:
         deldat_dropped: list[bool] = []
 
         if kodlista is None:
-            # Code-less state: one state over the variable window, with the
-            # deldat window applied only as an advisory bound.
+            # No parsed `Kodlista_*` sheet for this variable. Fall back to the
+            # inline `Värdemängd` cell (#401, the #373 deferral): when it is a
+            # clean enumerated code list, promote it to a value set; otherwise it's
+            # free text and the state stays code-less (exactly today's behavior).
+            # Värdemängd carries no Tidsperiod, so there is no per-code windowing
+            # and no era drift — one value set over the whole variable window.
+            # EXCEPTION (#401 Fix B): if the variable HAS a kodlista sheet that was
+            # only skipped as unparseable (`has_kodlista_sheet`), kodlista-wins —
+            # never fabricate codes from Värdemängd; stay code-less.
             window, dropped = _intersect_advisory_deldat([var_bound], deldat_bound)
             if window is None:
                 return
             if dropped:
                 deldat_dropped.append(True)
+            value_set_id = None
+            classified = (
+                None
+                if has_kodlista_sheet
+                else _classify_value_set_text(v.value_set_text)
+            )
+            if classified is not None:
+                # Värdemängd carries no Tidsperiod -> the whole-variable window.
+                value_set_id = self._ensure_value_set(
+                    [_value_code(code, label, window) for code, label in classified]
+                )
             yield from collect(
                 IRVariableState(
                     state_id=self._state_id(abbrev, variable_id, variant_id, window[0]),
@@ -1950,7 +2339,7 @@ class SOSAdapter:
                     data_type=_norm_data_type(v.data_type),
                     data_length=None,
                     delivery_column_name=col,
-                    value_set_id=None,
+                    value_set_id=value_set_id,
                     value_set_version_label=None,
                 )
             )
@@ -2030,16 +2419,8 @@ class SOSAdapter:
                 continue  # code's window empty under var/code -> drop the code
             if dropped:
                 deldat_dropped.append(True)
-            codes.append(
-                IRValueCode(
-                    code_id=0,  # autoincrement; assigned at write-back
-                    value_set_id=0,
-                    code=r.kod,
-                    label=r.beskrivning or "",
-                    valid_from=window[0],
-                    valid_to=window[1],
-                )
-            )
+            # Per-code window (decides survival; not persisted on value_code).
+            codes.append(_value_code(r.kod, r.beskrivning, window))
         if not codes:
             return
         value_set_id = self._ensure_value_set(codes)
@@ -2115,19 +2496,10 @@ class SOSAdapter:
                 continue
             if dropped:
                 deldat_dropped.append(True)
+            # Per-code (3-way-intersected) segment window, carried into
+            # `_segment_windowed_codes` to sweep into non-overlapping segments.
             windowed.append(
-                (
-                    window[0],
-                    window[1],
-                    IRValueCode(
-                        code_id=0,
-                        value_set_id=0,
-                        code=r.kod,
-                        label=r.beskrivning or "",
-                        valid_from=window[0],
-                        valid_to=window[1],
-                    ),
-                )
+                (window[0], window[1], _value_code(r.kod, r.beskrivning, window))
             )
         segments = _segment_windowed_codes(windowed)
         if not segments:
