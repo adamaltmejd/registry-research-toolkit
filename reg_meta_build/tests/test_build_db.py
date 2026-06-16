@@ -28,6 +28,13 @@ from reg_meta_build.db import (
     build_db,
 )
 
+# A single irrelevant Timeseries.csv row (handelse not in the succession set, so
+# it's ignored before resolution and emits NO event-derived edge). `write_csv`
+# can't take an empty row list (it appends a stray blank line the strict CSV
+# parser rejects), so curated-only `[[replaced_by]]` builds use this no-op row to
+# isolate the curated pass.
+_NO_EVENT_ROWS = [timeseries_row(handelse="Kodändring", entitet="Variabel", id1="100")]
+
 
 class TestDecodeCP1252:
     def test_plain_ascii(self):
@@ -2224,14 +2231,18 @@ class TestReplacedByEdges:
     """
 
     @staticmethod
-    def _write_slugs(slug_dir: Path) -> None:
+    def _write_slugs(slug_dir: Path, scb_extra: str = "") -> None:
         """Minimal slug TOML for the two fixture registers + variants. Variable
-        slugs auto-derive via `populate_variable_slugs` into scb.auto.toml."""
+        slugs auto-derive via `populate_variable_slugs` into scb.auto.toml.
+
+        ``scb_extra`` is appended verbatim to ``scb.toml`` — used by the #440
+        curated-`[[replaced_by]]` tests to inject succession rows.
+        """
         (slug_dir / "scb.toml").write_text(
             '[register."1"]\nslug = "testreg"\n'
             '[register."2"]\nslug = "otherreg"\n'
             '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."2.20"]\nslug = "foretag"\n',
+            '[register_variant."2.20"]\nslug = "foretag"\n' + scb_extra,
             encoding="utf-8",
         )
         (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
@@ -2242,11 +2253,13 @@ class TestReplacedByEdges:
         tmp_path: Path,
         timeseries_rows: list[str],
         registerinformation_rows: list[str] | None = None,
+        scb_extra: str = "",
     ) -> Path:
         """Build a DB with custom Timeseries.csv rows. Returns the DB path.
 
         ``registerinformation_rows=None`` uses the standard fixture; pass a
         custom list (e.g. to inject a triage split) to vary the variables.
+        ``scb_extra`` is appended to ``scb.toml`` (e.g. `[[replaced_by]]` rows).
         """
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
@@ -2257,7 +2270,7 @@ class TestReplacedByEdges:
             registerinformation_rows=registerinformation_rows,
             timeseries_rows=timeseries_rows,
         )
-        cls._write_slugs(slug_dir)
+        cls._write_slugs(slug_dir, scb_extra=scb_extra)
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -2821,6 +2834,10 @@ class TestReplacedByEdges:
                 "n_skipped_ambiguous_variable",
                 "n_skipped_collapsed_inverse",
                 "n_skipped_duplicate",
+                # #440 curated-TOML pass
+                "n_curated_register_replaced_by",
+                "n_curated_variable_replaced_by",
+                "n_curated_skipped_duplicate",
             }
             assert stats["n_register_replaced_by"] == 1
             # Scanned counts only Ersatt av/Ersätter rows on the four target
@@ -2919,6 +2936,166 @@ class TestReplacedByEdges:
             )
             # Scanned count includes only target-entitet rows.
             assert self._stats(conn)["n_timeseries_event_rows_scanned"] == 1
+        finally:
+            conn.close()
+
+    # ------------------------------------------------------------------
+    # #440 curated inline `[[replaced_by]]` edges. These materialize ALONGSIDE
+    # the event-derived edges, into the SAME tables, sharing the dedup seen-set.
+    # ------------------------------------------------------------------
+
+    def test_curated_variable_edge_live_predecessor(self, tmp_path: Path) -> None:
+        """A within-provider curated variable edge whose predecessor is LIVE
+        (both ends resolve) → one `variable_replaced_by` row with the curated
+        provenance marker in `note` and the row's transition reason in
+        `beskrivning`. testcol (reg1) → uniqcol (reg2)."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+            'note = "renamed in 2012"\n'
+            "effective_year = 2012\n"
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, "
+                "predecessor_variable, successor_provider, successor_register, "
+                "successor_variable, effective_year, note, beskrivning "
+                "FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "testreg",
+                "testcol",
+                "scb",
+                "otherreg",
+                "uniqcol",
+                2012,
+                "curated:slug_toml",
+                "renamed in 2012",
+            )
+            stats = self._stats(conn)
+            assert stats["n_curated_variable_replaced_by"] == 1
+            assert stats["n_variable_replaced_by"] == 1
+        finally:
+            conn.close()
+
+    def test_curated_register_edge(self, tmp_path: Path) -> None:
+        """A curated register-grain edge → one `register_replaced_by` row, grain
+        inferred from the 2-segment FQID."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg"\n'
+            'successor = "scb/otherreg"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_register, successor_register, "
+                "effective_year, note FROM register_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == ("testreg", "otherreg", None, "curated:slug_toml")
+            assert self._stats(conn)["n_curated_register_replaced_by"] == 1
+        finally:
+            conn.close()
+
+    def test_curated_edge_dead_predecessor_still_inserted(self, tmp_path: Path) -> None:
+        """The whole point of #440: a curated edge whose PREDECESSOR has no live
+        row is still inserted verbatim (slug-anchored). The successor (uniqcol)
+        resolves; the predecessor names a register/variable not in the build."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/retired-reg/retired-var"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variable, "
+                "successor_register, successor_variable FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "retired-reg",
+                "retired-var",
+                "otherreg",
+                "uniqcol",
+            )
+        finally:
+            conn.close()
+
+    def test_curated_cross_provider_edge(self, tmp_path: Path) -> None:
+        """A cross-provider curated edge (predecessor under a DIFFERENT provider
+        than the live successor) → inserted at the correct grain. The predecessor
+        provider `sos` doesn't exist in this SCB-only build (dead predecessor);
+        cross-provider succession is exactly what `timeseries_event` cannot
+        carry."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "sos/par/diagnos"\n'
+            'successor = "scb/testreg/testcol"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, "
+                "predecessor_variable, successor_provider, successor_register, "
+                "successor_variable FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "sos",
+                "par",
+                "diagnos",
+                "scb",
+                "testreg",
+                "testcol",
+            )
+        finally:
+            conn.close()
+
+    def test_curated_unresolved_successor_fails_fast(self, tmp_path: Path) -> None:
+        """A curated successor that does NOT resolve to a live slugged entity is
+        a curation error → EXIT_CONFIG (unlike the best-effort event path)."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/ghost-var"\n'
+        )
+        with pytest.raises(RegMetaError) as exc:
+            self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        assert exc.value.code == "replaced_by_unresolved_successor"
+
+    def test_curated_edge_dedups_against_event_derived(self, tmp_path: Path) -> None:
+        """A curated edge duplicating an event-derived edge collapses (no double
+        row, counted as a curated skip). The event pass emits testcol→uniqcol
+        first; the curated row over the SAME slug-PK is deduped via the shared
+        seen-set."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+        )
+        # var_id 100 → 300 is testcol → uniqcol (same edge the curated row names).
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, timeseries_rows=rows, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute("SELECT note FROM variable_replaced_by").fetchall()
+            assert len(edges) == 1
+            # The event-derived edge wins (it ran first); the curated dup collapsed.
+            assert edges[0][0] == "auto:timeseries_event"
+            stats = self._stats(conn)
+            assert stats["n_curated_skipped_duplicate"] == 1
+            assert stats["n_curated_variable_replaced_by"] == 0
+            assert stats["n_variable_replaced_by"] == 1
         finally:
             conn.close()
 

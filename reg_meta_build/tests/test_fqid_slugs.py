@@ -20,6 +20,7 @@ from reg_meta_build.fqid_slugs import (
     format_default_slug_hints,
     iter_default_slug_candidates,
     load_classifications_toml,
+    load_curated_replaced_by,
     load_provider_toml,
     load_slug_dir,
     materialize_same_as_edges,
@@ -3395,3 +3396,173 @@ class TestMaterializeSameAsEdges:
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_toml_invalid"
+
+
+class TestLoadCuratedReplacedBy:
+    """DB-free load + shape validation of the #440 `[[replaced_by]]` section.
+
+    Existence checks (successor-resolves / dead-predecessor-allowed) and the
+    materialization/dedup live in `TestReplacedByEdges` (test_build_db.py) — they
+    need a built DB. These cover the loader's grammar/grain/field rules.
+    """
+
+    def test_parses_register_and_variable_grains(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/oldreg"\n'
+            'successor = "scb/newreg"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "sos/par/diagnos"\n'
+            'successor = "scb/lisa/icd"\n'
+            'note = "moved to SCB"\n'
+            "effective_year = 2015\n",
+            encoding="utf-8",
+        )
+        edges = load_curated_replaced_by(tmp_path)
+        assert len(edges) == 2
+        reg, var = edges
+        assert str(reg.predecessor) == "scb/oldreg"
+        assert str(reg.successor) == "scb/newreg"
+        assert reg.note is None
+        assert reg.effective_year is None
+        assert str(var.predecessor) == "sos/par/diagnos"
+        assert str(var.successor) == "scb/lisa/icd"
+        assert var.note == "moved to SCB"
+        assert var.effective_year == 2015
+
+    def test_classifications_toml_skipped(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            '[[replaced_by]]\npredecessor = "scb/a"\nsuccessor = "scb/b"\n',
+            encoding="utf-8",
+        )
+        (tmp_path / "classifications.toml").write_text(
+            '[classification."SUN2020"]\nslug = "sun2020"\n', encoding="utf-8"
+        )
+        edges = load_curated_replaced_by(tmp_path)
+        assert len(edges) == 1
+
+    def test_empty_dir_yields_no_edges(self, tmp_path: Path) -> None:
+        assert load_curated_replaced_by(tmp_path) == []
+
+    def test_section_passes_top_level_typo_guard(self, tmp_path: Path) -> None:
+        """`[[replaced_by]]` is a legal top-level table — `load_provider_toml`'s
+        strict unknown-top-level check must accept it (not flag it as a typo)."""
+        (tmp_path / "scb.toml").write_text(
+            '[register."1"]\nslug = "oldreg"\n'
+            "[[replaced_by]]\n"
+            'predecessor = "scb/oldreg"\n'
+            'successor = "scb/newreg"\n',
+            encoding="utf-8",
+        )
+        # No raise: the section coexists with SlugEntry rows.
+        entries = load_provider_toml(tmp_path / "scb.toml")
+        assert any(e.source_id == "1" for e in entries)
+
+    def test_self_loop_rejected(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            '[[replaced_by]]\npredecessor = "scb/reg"\nsuccessor = "scb/reg"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_bad_fqid_shape_rejected(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            '[[replaced_by]]\npredecessor = "a/b/c/d"\nsuccessor = "scb/reg"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_provider_grain_rejected(self, tmp_path: Path) -> None:
+        """A 1-segment provider FQID is not a register/variable grain."""
+        (tmp_path / "scb.toml").write_text(
+            '[[replaced_by]]\npredecessor = "scb"\nsuccessor = "sos"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_classification_grain_rejected(self, tmp_path: Path) -> None:
+        """A `class/<slug>` FQID is not a succession grain."""
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "class/sun96"\n'
+            'successor = "class/sun2020"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_mixed_grain_rejected(self, tmp_path: Path) -> None:
+        """Register predecessor + variable successor → grain mismatch."""
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/oldreg"\n'
+            'successor = "scb/newreg/var"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_missing_predecessor_rejected(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            '[[replaced_by]]\nsuccessor = "scb/newreg"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_unknown_key_rejected(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/a"\n'
+            'successor = "scb/b"\n'
+            'reason = "typo for note"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_non_array_section_rejected(self, tmp_path: Path) -> None:
+        """`[replaced_by]` (a single table) instead of `[[replaced_by]]` (array)
+        is a malformed section, not a silent no-op."""
+        (tmp_path / "scb.toml").write_text(
+            '[replaced_by]\npredecessor = "scb/a"\nsuccessor = "scb/b"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_non_int_effective_year_rejected(self, tmp_path: Path) -> None:
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/a"\n'
+            'successor = "scb/b"\n'
+            'effective_year = "2015"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
+
+    def test_bool_effective_year_rejected(self, tmp_path: Path) -> None:
+        """`isinstance(True, int)` is True in Python — a bare bool must not slip
+        through as the year 1."""
+        (tmp_path / "scb.toml").write_text(
+            "[[replaced_by]]\n"
+            'predecessor = "scb/a"\n'
+            'successor = "scb/b"\n'
+            "effective_year = true\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_curated_replaced_by(tmp_path)
+        assert exc.value.code == "replaced_by_invalid"
