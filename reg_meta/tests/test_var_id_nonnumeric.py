@@ -215,6 +215,34 @@ def test_digit_shaped_nonscb_key_is_none(db: sqlite3.Connection) -> None:
     assert digit and digit[0]["var_id"] is None
 
 
+def test_low_band_graft_key_is_none(db: sqlite3.Connection) -> None:
+    # Locks the graft regression Codex caught (#474): SCB variable GRAFTS
+    # (reg_meta_build/variable_grafts.py) are minted in the SCB band
+    # (variable_id < 2^62) but carry a NON-numeric `provider_key` of the form
+    # `graft:<column>`. The band-only guard CAST('graft:col' AS INTEGER) = 0,
+    # leaking a bogus var_id 0; the digit check makes it resolve to None.
+    register_id = 1  # LISA (SCB, provider 1)
+    _insert_variable(
+        db,
+        variable_id=99,  # low band (< 2^62) → reads as SCB
+        register_id=register_id,
+        provider_key="graft:somecol",  # non-numeric SCB graft key
+        name="Grafted",
+        slug="grafted",
+    )
+    add_state(
+        db,
+        register_id=register_id,
+        variable_slug="grafted",
+        register_variant_id=10,
+        delivery_column_name="Grafted",
+    )
+    db.commit()
+
+    graft = get_varinfo(db, "Grafted", register="lisa")
+    assert graft and graft[0]["var_id"] is None
+
+
 def test_none_var_id_renders_blank_not_none() -> None:
     # A None var_id must render as an empty cell, never the literal "None" or
     # "0" — both the table and list renderers coerce it (#466). >5 rows forces

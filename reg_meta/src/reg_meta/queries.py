@@ -28,15 +28,24 @@ _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 # a non-SCB provider_key, so emit NULL for them (#466) — the display contract is
 # "numeric for SCB, blank for everyone else".
 #
-# Provider gate = the build's minted-id BAND (#474, replacing the #466 digit
-# heuristic): every SCB variable_id is `< 2^62`, every non-SCB (SOS, FOHM, curated,
-# steward) variable_id is `>= 2^62`. reg_meta_build/validate.py enforces this
-# (`_check_minted_id_bands`: SCB ids `< _MINT_BIT`, non-SCB ids `>= _MINT_BIT`), so
-# the band is a hard build invariant we can read off `variable_id` with no provider
-# join. It is strictly more correct than the digit guard: a non-SCB provider_key
-# that happens to be digit-only (e.g. a curated column literally named `2020`) is
-# still in the high band, so its var_id correctly resolves to NULL rather than a
-# bogus `2020`.
+# Provider gate = the build's minted-id BAND (#474) AND a pure-digit check on
+# provider_key — BOTH are needed:
+#
+#  - The BAND gates out non-SCB providers: every SCB variable_id is `< 2^62`,
+#    every non-SCB (SOS, FOHM, curated, steward) variable_id is `>= 2^62`.
+#    reg_meta_build/validate.py enforces this (`_check_minted_id_bands`: SCB ids
+#    `< _MINT_BIT`, non-SCB ids `>= _MINT_BIT`), so the band is a hard build
+#    invariant readable off `variable_id` with no provider join. It catches what
+#    the #466 digit heuristic alone could not: a non-SCB provider_key that happens
+#    to be digit-only (e.g. a curated column literally named `2020`) is high-band,
+#    so it resolves to NULL rather than a bogus `2020`.
+#  - The DIGIT check gates out low-band SCB variables whose provider_key is NOT
+#    numeric: SCB variable GRAFTS (reg_meta_build/variable_grafts.py) are minted
+#    in the SCB band (variable_id < 2^62) but carry a non-numeric provider_key of
+#    the form `graft:<column>`. Band-only would `CAST('graft:col' AS INTEGER)` = 0,
+#    leaking a bogus `var_id: 0`. The digit check rejects them → NULL. (Restores
+#    the #466 behaviour the band-only #474 guard regressed.)
+#
 # build-invariant: SCB variable_id < 2^62, non-SCB >= 2^62 (band check).
 # This literal MIRRORS `reg_meta_build/id.py::_MINT_BIT` (= 1 << 62) — the
 # build/runtime boundary keeps `_MINT_BIT` out of reg_meta, so it's duplicated,
@@ -44,8 +53,9 @@ _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 # cross-package test tying them together).
 _SCB_ID_CEILING = 2**62
 _VAR_ID_EXPR = (
-    "CASE WHEN {vid} < " + str(_SCB_ID_CEILING) + " THEN CAST({pk} AS INTEGER) "
-    "ELSE NULL END"
+    "CASE WHEN {vid} < " + str(_SCB_ID_CEILING) + " "
+    "AND {pk} GLOB '[0-9]*' AND NOT {pk} GLOB '*[^0-9]*' "
+    "THEN CAST({pk} AS INTEGER) ELSE NULL END"
 )
 # Pre-rendered per qualifier (the variable_id / provider_key column references vary
 # by query alias). Plain strings so they splice into the SQL fragments by
