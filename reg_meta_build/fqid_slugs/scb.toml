@@ -24,6 +24,28 @@
 [lineage_defaults]
 rtb = "folkbokforda-personer"
 
+# ── LISA "Summa annan inkomst" definition-era succession (#375) ──
+#    SCB minted a new VarId each time the definition was recut, so one measure
+#    fragments across three variables with sequential validity:
+#      anninkf   (VarId 41660) 1990–2004  "Summa annan inkomst"
+#      anninkf04 (VarId 37046) 2004–2017  "…, 2004 års definition"
+#      anninkf18 (VarId 40264) 2018–2023  "…, 2018 års definition"
+#    Modeled as a replaced_by succession, NOT same_as: the definitions genuinely
+#    differ across eras, so the variables are superseded, not interchangeable
+#    (see #375). All three predecessors are live, so the 404→301 redirect stays
+#    dormant; the edges drive the cross-era "same view" grouping.
+[[replaced_by]]
+predecessor = "scb/lisa/anninkf"
+successor = "scb/lisa/anninkf04"
+effective_year = 2004
+note = "Summa annan inkomst recut to the 2004 års definition"
+
+[[replaced_by]]
+predecessor = "scb/lisa/anninkf04"
+successor = "scb/lisa/anninkf18"
+effective_year = 2018
+note = "Summa annan inkomst recut to the 2018 års definition"
+
 # Företagsdatabasen (FDB)
 [register."1"]
 slug = "fdb"
