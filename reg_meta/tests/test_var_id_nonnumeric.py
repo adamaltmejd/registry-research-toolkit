@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta.queries import (
+    _SCB_ID_CEILING,
     get_varinfo,
     search,
     search_variables_by_classification,
@@ -60,9 +61,10 @@ _MIXED_KEY = "44abc"  # leading-digit-but-not-pure-digit (non-SCB, high band)
 _DIGIT_KEY = "2020"  # PURE-digit but non-SCB (high band) — the band guard's edge
 # over the old digit guard (which would have leaked `2020`)
 
-# Minted-id band boundary (mirrors reg_meta_build.id._MINT_BIT / queries
-# `_SCB_ID_CEILING`): SCB variable_id < 2^62, non-SCB >= 2^62.
-_MINT_BIT = 2**62
+# Minted-id band base for the fixture: the production `_SCB_ID_CEILING`
+# (SCB variable_id < it, non-SCB >= it). `test_band_constant_in_sync_with_build`
+# guards that this mirrors reg_meta_build.id._MINT_BIT across the build/runtime
+# boundary, so the fixture never carries its own divergent literal.
 
 
 def _insert_variable(
@@ -128,10 +130,10 @@ def db() -> sqlite3.Connection:
     # only has to defend the non-SCB side.
     specs = [
         (44, 1, 10, _SCB_KEY, "Kön", "kon"),
-        (_MINT_BIT + 1, 2, 20, _SOS_KEY, "Diagnos", "diagnos-sos"),
-        (_MINT_BIT + 2, 3, 30, _CURATED_KEY, "Diagnos curated", "diagnos-cur"),
-        (_MINT_BIT + 3, 3, 30, _MIXED_KEY, "Mixed", "mixed"),
-        (_MINT_BIT + 4, 3, 30, _DIGIT_KEY, "DigitOnly", "digit-only"),
+        (_SCB_ID_CEILING + 1, 2, 20, _SOS_KEY, "Diagnos", "diagnos-sos"),
+        (_SCB_ID_CEILING + 2, 3, 30, _CURATED_KEY, "Diagnos curated", "diagnos-cur"),
+        (_SCB_ID_CEILING + 3, 3, 30, _MIXED_KEY, "Mixed", "mixed"),
+        (_SCB_ID_CEILING + 4, 3, 30, _DIGIT_KEY, "DigitOnly", "digit-only"),
     ]
     for variable_id, register_id, variant_id, provider_key, name, slug in specs:
         _insert_variable(
@@ -266,3 +268,18 @@ def test_none_var_id_renders_blank_not_none() -> None:
     listed = render_list(rows, cols)
     assert "None" not in listed
     assert "44" in listed
+
+
+def test_band_constant_in_sync_with_build() -> None:
+    # The var_id band boundary is duplicated by design across the build/runtime
+    # boundary (reg_meta can't import build-only code at runtime), so only this
+    # test ties the two literals together. Importing _MINT_BIT here is fine — a
+    # test is dev-time, not the runtime boundary id.py's docstring protects.
+    from reg_meta_build.id import _MINT_BIT
+
+    assert _SCB_ID_CEILING == _MINT_BIT, (
+        "var_id band constant drift: "
+        f"reg_meta/queries.py::_SCB_ID_CEILING ({_SCB_ID_CEILING}) != "
+        f"reg_meta_build/id.py::_MINT_BIT ({_MINT_BIT}). They mirror each other "
+        "across the build/runtime boundary — update both."
+    )
