@@ -1767,6 +1767,12 @@ churning ⇒ today's behavior). Arming immutability at v1 is a deliberate per-pr
 advance to `frozen` (commit the pinned `<provider>.auto.toml`, then seal) — see
 REFACTOR_SPEC.md / #209 (machinery #470 / curation #471 / seal #472).
 
+Note: `*.auto.toml` is gitignored by default, so advancing a provider to `curating` or
+`frozen` requires force-adding its generated file
+(`git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`). The per-provider
+`.gitignore` exception and any pin-failure safeguard ship with the actual curation/seal
+work (#471 / #472) — this PR ships all-churning, so no `auto.toml` is committed yet.
+
 ## Doc-DB build
 
 `reg-meta-build build-docs` is the maintainer-only command that rebuilds the doc DB from

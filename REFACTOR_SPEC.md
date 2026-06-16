@@ -450,21 +450,29 @@ block), concrete shape deferred until SWECOV onboarding.
 
 ## v1 slug freeze (#209)
 
-The grow-only slug-immutability gate is intentionally lifted pre-v1 by the on-disk
-`reg_meta_build/fqid_slugs/UNFROZEN` sentinel; slugs regenerate from source each build
-and aren't yet frozen. At the v1 release tag: curate the SCB name-fallback auto-slugs
-(\~325 pairs — the long-pole human task; overrides are safe to add any time while
-`UNFROZEN` exists, so chip at it in parallel with steps 8–12), commit/freeze the
-generated `<provider>.auto.toml` files, delete `UNFROZEN`, and arm the immutability
-gate.
+The grow-only slug-immutability gate is **per-provider**, not global. There is no
+`UNFROZEN` sentinel file; freeze state lives in
+`reg_meta_build/fqid_slugs/<slug-dir>/freeze.toml` as a flat TOML map
+`<zone> = "<state>"` (absent file or unlisted zone ⇒ `churning`). The three states
+advance one-way: `churning` → `curating` → `frozen`. The repo ships all-churning — no
+`freeze.toml` is committed — so slugs regenerate freely until each provider is
+deliberately advanced.
 
-**Preconditions — resolve before committing auto-TOMLs or deleting `UNFROZEN`:** #196
-(curated column-merge primitive + auto case-fold + panel-key re-curation) and #197 (the
-FRIDA `borgnr` cross-var_id attribution decision) both churn variable identity — merges
-collapse sibling variables and re-mint slugs — which is exactly what the grow-only gate
-locks. Land them in a pre-freeze curation pass (natural slot: around step 7.5); arming
-the gate while either is unresolved either bakes fragmented identities into v1 or forces
-post-freeze immutability exceptions.
+At the v1 release: curate the SCB name-fallback auto-slugs (\~325 pairs — the long-pole
+human task; safe to chip at in parallel with steps 8–12), then advance each provider by (1)
+force-committing its generated file
+(`git add -f reg_meta_build/fqid_slugs/<provider>.auto.toml`) and (2) setting its zone
+to `curating` then `frozen` in `freeze.toml`. There is no single global delete to arm
+the gate — immutability is per-provider and per-zone. See #470 (machinery), #471
+(curation), #472 (seal).
+
+**Preconditions — resolve before committing auto-TOMLs or advancing to `curating`:**
+#196 (curated column-merge primitive + auto case-fold + panel-key re-curation) and #197
+(the FRIDA `borgnr` cross-var_id attribution decision) both churn variable identity —
+merges collapse sibling variables and re-mint slugs — which is exactly what the
+grow-only gate locks. Land them in a pre-freeze curation pass (natural slot: around step
+7.5); arming the gate while either is unresolved either bakes fragmented identities into
+v1 or forces post-freeze immutability exceptions.
 
 The reserved HTTP-suffix slug rejection (`states`/`predecessors`/…/`variants`) shipped
 in #228 — it is already enforced at curation time and does not need to precede the
