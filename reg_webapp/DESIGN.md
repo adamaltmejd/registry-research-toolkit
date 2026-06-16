@@ -623,21 +623,24 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
   higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
   and turn `build-image` red — pausing **all** deploys for a state that is expected (the
-  owed reg_meta release ships the matching asset). A `schemaguard` step compares the
-  code constants against the released tag's (`git show <tag>:…`) via the pure
-  `scripts/schema_pending_bump.py` helper and, on a detected code-ahead bump, skips the
-  bake + deploy with a GREEN `build-image` and a `::notice::`; the deploy jobs gate on
-  its `pending_bump` job output and wait. Once the owed release ships, the **build**
-  self-clears on the next image-affecting main push (the bake now passes), but the
-  **main deploy** requires that next push OR a manual `workflow_dispatch` — this
+  owed reg_meta release ships the matching asset). A standalone `schema-guard` job
+  compares the code constants against the released tag's (`git show <tag>:…`) via the
+  pure `scripts/schema_pending_bump.py` helper and, on a detected code-ahead bump,
+  publishes a `pending_bump` job output that defers the bake + deploy with a GREEN
+  `build-image` and a `::notice::`. The guard is its **own** job (not a step inside
+  `build-image`) so **every** deploy path can consult it — `build-image`, `deploy`, AND
+  `edge-deploy` all gate on `needs.schema-guard.outputs.pending_bump`; it runs whenever
+  the image OR edge filter matches (or on dispatch), so an edge-only push still gets a
+  verdict even though `build-image` is skipped. Once the owed release ships, the
+  **build** self-clears on the next image-affecting main push (the bake now passes), but
+  the **main deploy** requires that next push OR a manual `workflow_dispatch` — this
   workflow does not trigger on release-publish (consistent with the data-only-release
-  dispatch model). A known limitation (pre-existing, not introduced by this guard):
-  during a pending-bump window a later **edge-only** main push still deploys its
-  SPA/cache-gen, because `build-image` is skipped on edge-only pushes so the
-  `pending_bump` guard can't see the un-deployed origin bump — the same cross-commit
-  edge/origin skew any stale-origin window carries. Only the code-ahead case is
+  dispatch model). During a pending-bump window a later **edge-only** main push now
+  correctly waits too: `schema-guard` ran (the edge filter matched), so `edge-deploy`
+  sees `pending_bump == true` and holds its SPA/cache-gen ship alongside the origin,
+  rather than going live against the still-pre-bump origin. Only the code-ahead case is
   neutralized — a major mismatch, a missing asset, or a genuinely broken bake stays
-  unguarded and still fails red (the #343 loud-failure behavior): the `schemaguard` step
+  unguarded and still fails red (the #343 loud-failure behavior): the `schema-guard` job
   additionally verifies (via `gh release view`) that the resolved tag actually carries
   both `.zst` assets and refuses to neutralize when one is absent, because the
   source-constant comparison can't see a missing asset. The guard is also bypassed for
