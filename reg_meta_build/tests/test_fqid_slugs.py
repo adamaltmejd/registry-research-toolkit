@@ -3566,3 +3566,30 @@ class TestLoadCuratedReplacedBy:
         with pytest.raises(RegMetaError) as exc:
             load_curated_replaced_by(tmp_path)
         assert exc.value.code == "replaced_by_invalid"
+
+    def test_empty_array_is_noop(self, tmp_path: Path) -> None:
+        """`replaced_by = []` present-but-empty is a no-op — `data.get` returns
+        the empty list, the per-row loop runs zero times, no error. Distinct from
+        the key-absent path (`test_empty_dir_yields_no_edges`), which returns
+        before the `isinstance(..., list)` check."""
+        (tmp_path / "scb.toml").write_text("replaced_by = []\n", encoding="utf-8")
+        assert load_curated_replaced_by(tmp_path) == []
+
+    def test_multi_provider_filename_sorted_order(self, tmp_path: Path) -> None:
+        """Edges from several provider TOMLs are returned in deterministic
+        filename order — guards the `sorted(slug_dir.glob(...))` iteration.
+        `aaa.toml` (scb/a→scb/b) precedes `zzz.toml` (scb/c→scb/d)."""
+        (tmp_path / "aaa.toml").write_text(
+            '[[replaced_by]]\npredecessor = "scb/a"\nsuccessor = "scb/b"\n',
+            encoding="utf-8",
+        )
+        (tmp_path / "zzz.toml").write_text(
+            '[[replaced_by]]\npredecessor = "scb/c"\nsuccessor = "scb/d"\n',
+            encoding="utf-8",
+        )
+        edges = load_curated_replaced_by(tmp_path)
+        assert len(edges) == 2
+        assert [(str(e.predecessor), str(e.successor)) for e in edges] == [
+            ("scb/a", "scb/b"),
+            ("scb/c", "scb/d"),
+        ]

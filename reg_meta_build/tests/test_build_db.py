@@ -3099,6 +3099,68 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
+    def test_curated_edge_dedups_against_curated(self, tmp_path: Path) -> None:
+        """Two curated `[[replaced_by]]` rows naming the SAME predecessor/
+        successor collapse to one `variable_replaced_by` row via the shared
+        seen-set. Without that seen-set update on the curated branch the second
+        INSERT would hit the slug-PK constraint and crash the build."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/testreg/testcol"\n'
+            'successor = "scb/otherreg/uniqcol"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 1
+            )
+            stats = self._stats(conn)
+            assert stats["n_curated_skipped_duplicate"] == 1
+            assert stats["n_curated_variable_replaced_by"] == 1
+        finally:
+            conn.close()
+
+    def test_curated_register_edge_dead_predecessor_inserted(
+        self, tmp_path: Path
+    ) -> None:
+        """Register-grain twin of `test_curated_edge_dead_predecessor_still_inserted`:
+        a 2-segment edge whose PREDECESSOR register is not live (successor is) is
+        still inserted verbatim, exercising the `succ.kind is FqidKind.REGISTER`
+        branch's slug-anchored insert. With no `note`, `beskrivning` stays NULL
+        and `note` carries the curated provenance marker (the register branch is
+        a separate INSERT from the variable branch the variable-grain test locks)."""
+        extra = (
+            "\n[[replaced_by]]\n"
+            'predecessor = "scb/retired-reg"\n'
+            'successor = "scb/otherreg"\n'
+        )
+        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, "
+                "successor_provider, successor_register, "
+                "effective_year, note, beskrivning FROM register_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "retired-reg",
+                "scb",
+                "otherreg",
+                None,
+                "curated:slug_toml",
+                None,
+            )
+            assert self._stats(conn)["n_curated_register_replaced_by"] == 1
+        finally:
+            conn.close()
+
 
 class TestProvenanceDbRotation:
     """A4.2: the universal DB and the sibling provenance DB rotate to `.prev`
