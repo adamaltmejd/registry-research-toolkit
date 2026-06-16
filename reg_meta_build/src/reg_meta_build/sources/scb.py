@@ -47,14 +47,18 @@ from reg_meta_build._curation import fold_column
 # allowlists + the SCB provider id stay in `db.py` (used by the materializer
 # too); import them rather than duplicate.
 from reg_meta_build.db import (
+    _CP850_CANON,
     _VALID_FROM_UNKNOWN,
     _VALID_TO_SENTINEL,
     _VARDEMANGDER_REAL_SHAPED,
     _VARDEMANGDER_SENTINELS,
     PROVIDER_ID_SCB,
+    _decode_cp1252,
     _file_sha256,
     _open_scb_csv,
+    _open_scb_csv_raw,
     _progress,
+    _stage_timer,
     _value_set_hash,
 )
 from reg_meta_build.ir import (
@@ -3396,103 +3400,131 @@ def _import_vardemangder(
     cvid → (vardemangdsversion, vardemangdsniva). CVIDs whose only Vardemangder
     rows were sentinels or fully-empty get no entry here, so their
     variable_instance.vardemangds{version,niva} stay NULL.
+
+    PERFORMANCE — this is the build's hot loop (102M rows on the real corpus).
+    The generic `_open_scb_csv` would build a decoded {col: val} dict PER ROW
+    (~102M dicts + ~612M `_decode_cp1252` calls over 6 columns), which alone
+    dominated the build. Instead it reads RAW latin-1 field lists
+    (`_open_scb_csv_raw`), indexes columns positionally, and decodes only what it
+    keeps:
+
+      - CVID / ItemId: ``int()`` straight off the raw ASCII-digit string.
+      - value_code dedup key: a `_CP850_CANON` canonicalization of the raw
+        (kod, label) — proven to induce the SAME equivalence as comparing
+        decoded strings (see `_CP850_CANON`), so code_ids and dedup are
+        byte-identical to a decoded-key build. Full decode is deferred to the
+        first occurrence of each unique code (~0.7M) instead of every row.
+      - version / nivå: decoded once per cvid (first occurrence).
+
+    Sentinel/empty filters run on the raw strings: the sentinel allowlists are
+    ASCII, and a row only matches when kod==version==niva ∈ SENTINELS, which
+    forces all three ASCII (raw == decoded), so the filter is exact.
     """
     _progress("Importing Vardemangder.csv (this may take a while)...")
     row_count = 0
     batch_size = 50_000
 
-    # Build value_code lookup: (vardekod, vardebenamning) → code_id
     code_lookup: dict[tuple[str, str], int] = {}
     next_code_id = 0
+    # value_code rows captured at first-occurrence (decoded), keyed by emission
+    # order so the INSERT matches the decoded-key build's code_id → (code, label).
+    code_rows: list[tuple[int, str, str]] = []
 
     cvid_value_set_info: dict[int, tuple[str, str]] = {}
-
-    # Stage triples (cvid, code_id, item_id) for projection. item_id=0 is the
-    # sentinel for "Vardemangder.csv shipped this row with empty ItemId" (SCB's
-    # actual ItemIds are positive integers, so 0 is unambiguous). The PK
-    # (cvid, code_id, item_id) dedups identical triples and groups rows for
-    # the per-cvid projection pass.
     stage_batch: list[tuple[int, int, int]] = []
 
     skipped_sentinel = 0
     skipped_empty = 0
     drift_samples: dict[str, int] = {}
 
-    with _open_scb_csv(path) as (_, rows):
-        for _, row in rows:
+    sql = (
+        "INSERT OR IGNORE INTO staging._build_cvid_pair "
+        "(cvid, code_id, item_id) VALUES (?, ?, ?)"
+    )
+
+    with _open_scb_csv_raw(path) as (header, rows):
+        i_cvid = header.index("CVID")
+        i_kod = header.index("Värdekod")
+        i_namn = header.index("Värdebenämning")
+        i_ver = header.index("Värdemängdsversion")
+        i_niva = header.index("Värdemängdsnivå")
+        i_item = header.index("ItemId")
+        # Locals for the hot loop (skip attribute/global lookups per row).
+        get_code = code_lookup.get
+        append_triple = stage_batch.append
+        canon = _CP850_CANON
+        sentinels = _VARDEMANGDER_SENTINELS
+        real_shaped = _VARDEMANGDER_REAL_SHAPED
+        executemany = conn.executemany
+
+        for _, fields in rows:
             row_count += 1
             if row_count % 5_000_000 == 0:
                 _progress(f"  ...{row_count:,} rows read")
 
-            cvid = int(row["CVID"])
+            cvid = int(fields[i_cvid])
             if cvid not in known_cvids:
                 continue
 
-            vardekod = row["Värdekod"]
-            vardebenamning = row["Värdebenämning"]
-            version = row["Värdemängdsversion"]
-            niva = row["Värdemängdsnivå"]
-            raw_item = row["ItemId"]
+            vardekod = fields[i_kod]
+            version = fields[i_ver]
+            niva = fields[i_niva]
 
-            # Drop SCB type-tag rows masquerading as value codes. Tight match
-            # on the documented sentinel shape (kod==version==niva). Looser
-            # variants fall through to the drift detector below.
-            if vardekod == version == niva and vardekod in _VARDEMANGDER_SENTINELS:
+            if vardekod == version == niva and vardekod in sentinels:
                 skipped_sentinel += 1
                 continue
 
-            # Drift detector: kod==version with kod in neither allowlist (or in
-            # SENTINELS but with niva diverging from the tight skip rule). See
-            # `_VARDEMANGDER_*` docstrings.
-            if (
-                vardekod
-                and vardekod == version
-                and vardekod not in _VARDEMANGDER_REAL_SHAPED
-            ):
-                drift_samples[vardekod] = drift_samples.get(vardekod, 0) + 1
+            if vardekod and vardekod == version and vardekod not in real_shaped:
+                drift_key = _decode_cp1252(vardekod)
+                drift_samples[drift_key] = drift_samples.get(drift_key, 0) + 1
 
-            # Drop fully-empty rows (kod, label, item all empty).
+            vardebenamning = fields[i_namn]
+            raw_item = fields[i_item]
+
             if not (vardekod or vardebenamning or raw_item):
                 skipped_empty += 1
                 continue
 
-            code_key = (vardekod, vardebenamning)
-
-            if code_key not in code_lookup:
-                code_lookup[code_key] = next_code_id
+            kod_key = vardekod if vardekod.isascii() else vardekod.translate(canon)
+            namn_key = (
+                vardebenamning
+                if vardebenamning.isascii()
+                else vardebenamning.translate(canon)
+            )
+            code_key = (kod_key, namn_key)
+            code_id = get_code(code_key)
+            if code_id is None:
+                code_id = next_code_id
+                code_lookup[code_key] = code_id
                 next_code_id += 1
-
-            code_id = code_lookup[code_key]
+                code_rows.append(
+                    (code_id, _decode_cp1252(vardekod), _decode_cp1252(vardebenamning))
+                )
 
             if cvid not in cvid_value_set_info:
-                cvid_value_set_info[cvid] = (version, niva)
+                cvid_value_set_info[cvid] = (
+                    _decode_cp1252(version),
+                    _decode_cp1252(niva),
+                )
 
             item_id = int(raw_item) if raw_item else 0
-            stage_batch.append((cvid, code_id, item_id))
+            append_triple((cvid, code_id, item_id))
 
             if len(stage_batch) >= batch_size:
-                conn.executemany(
-                    "INSERT OR IGNORE INTO staging._build_cvid_pair "
-                    "(cvid, code_id, item_id) VALUES (?, ?, ?)",
-                    stage_batch,
-                )
+                executemany(sql, stage_batch)
                 stage_batch.clear()
 
     if stage_batch:
-        conn.executemany(
-            "INSERT OR IGNORE INTO staging._build_cvid_pair "
-            "(cvid, code_id, item_id) VALUES (?, ?, ?)",
-            stage_batch,
-        )
+        conn.executemany(sql, stage_batch)
 
-    _progress(f"  Writing {len(code_lookup):,} value codes...")
+    _progress(f"  Writing {len(code_rows):,} value codes...")
     conn.executemany(
         "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
-        [(cid, k[0], k[1]) for k, cid in code_lookup.items()],
+        code_rows,
     )
 
     _progress(
-        f"  {row_count:,} rows read, {len(code_lookup):,} unique codes, "
+        f"  {row_count:,} rows read, {len(code_rows):,} unique codes, "
         f"{len(cvid_value_set_info):,} CVIDs with values"
     )
     if skipped_sentinel or skipped_empty:
@@ -3883,7 +3915,10 @@ class SCBAdapter:
 
         # Core backbone: Registerinformation.csv (required).
         self.source_checksums["Registerinformation.csv"] = _file_sha256(ri_path)
-        ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
+        with _stage_timer("scb:registerinformation"):
+            ri_count, unika_join, known_cvids = _import_registerinformation(
+                conn, ri_path
+            )
         self.row_counts["Registerinformation.csv"] = ri_count
 
         # Pre-load validity windows (consumed by Vardemangder year-projection).
@@ -3924,7 +3959,10 @@ class SCBAdapter:
             elif filename == "Timeseries.csv":
                 self.row_counts[filename] = _import_timeseries(conn, path)
             elif filename == "Vardemangder.csv":
-                vm_count, cvid_vs_info = _import_vardemangder(conn, path, known_cvids)
+                with _stage_timer("scb:vardemangder_import"):
+                    vm_count, cvid_vs_info = _import_vardemangder(
+                        conn, path, known_cvids
+                    )
                 self.row_counts[filename] = vm_count
                 if cvid_vs_info:
                     _progress(
@@ -3940,7 +3978,10 @@ class SCBAdapter:
                         ],
                     )
                 # Year-project staging pairs and link variable_instance.value_set_id.
-                self.projection_stats = _project_and_mint_value_sets(conn, validity_map)
+                with _stage_timer("scb:project_and_mint_value_sets"):
+                    self.projection_stats = _project_and_mint_value_sets(
+                        conn, validity_map
+                    )
 
         # A1.2: lift sensitivity / identifier flags from unika_summary into the
         # variable table. Runs after the enrichment loop so both source and
@@ -3950,9 +3991,10 @@ class SCBAdapter:
         # A2.1: coalesce variable_instance rows into variable_state. Reads
         # `unika_summary` and `register_version`; must run before the
         # unika_summary DROP below.
-        self.coalesce_stats = _coalesce_variable_states(
-            conn, self.codelivery, self.fold_overrides, self.column_merges
-        )
+        with _stage_timer("scb:coalesce_variable_states"):
+            self.coalesce_stats = _coalesce_variable_states(
+                conn, self.codelivery, self.fold_overrides, self.column_merges
+            )
         self.row_counts["variable_state"] = self.coalesce_stats["n_variable_states"]
         # R8 side channels (NOT manifest values): consumed by the materializer's
         # slug + related-to post-passes.
