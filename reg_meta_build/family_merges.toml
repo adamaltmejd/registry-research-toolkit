@@ -11,9 +11,12 @@
 # NOT column_merges.toml: that asserts era-RENAMES that never co-occur — the
 # opposite of 12 deliberately-parallel month columns.
 #
-# Scope (#319 PR): the 4 documented LISA families only. The non-LISA monthly
-# families (ekonomiskt-bistand / rams / bas / hsl) are a content follow-up
-# enumerated against the real corpus separately.
+# Scope (#383, follow-up to #319): the 4 LISA families plus the 4 non-LISA
+# monthly families the corpus actually carries (scb bas/jobbink,
+# ekonomiskt-bistand/ibel, ekonomiskt-bistand/sbel, rams/lonfink) — all
+# enumerated against the real corpus, all 12-month and bounded-delivery-year.
+# HSL was checked and carries no ≥3-month family (no SOS register surfaces a
+# monthly family), so it is intentionally absent.
 
 [[monthly_family]]
 register = "scb/lisa"
@@ -34,3 +37,23 @@ label = "Löne- eller företagarinkomst per månad (näst största förvärvskä
 register = "scb/lisa"
 family_stem = "agi3lonfink"
 label = "Löne- eller företagarinkomst per månad (tredje största förvärvskällan)"
+
+[[monthly_family]]
+register = "scb/bas"
+family_stem = "jobbink"
+label = "Löne- eller företagarinkomst per månad"
+
+[[monthly_family]]
+register = "scb/ekonomiskt-bistand"
+family_stem = "ibel"
+label = "Introduktionsersättning per månad"
+
+[[monthly_family]]
+register = "scb/ekonomiskt-bistand"
+family_stem = "sbel"
+label = "Socialbidrag per månad"
+
+[[monthly_family]]
+register = "scb/rams"
+family_stem = "lonfink"
+label = "Löne- eller företagarinkomst per månad"
