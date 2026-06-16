@@ -152,8 +152,11 @@ def test_sources_codes_dereferenced_for_adhoc_binding(client):
 
 def test_classification_codes_dereferenced_for_value_set(client):
     """A categorical binding with ``value_set: class/sun2020`` → the
-    classification's canonical code list under ``classifications[value_set]``
-    (the fixture links code '1'/'Man' to sun2020)."""
+    classification's **canonical** code list under ``classifications[value_set]``.
+    The fixture links code '1'/'Man' to sun2020 as canonical (`is_valid=1`) and
+    code '2'/'Kvinna' as an observed-but-non-canonical (`is_valid=0`) noise row —
+    so this also pins that the noise row is FILTERED out of the kit's canonical
+    list (else mock generation would sample a code the steward excluded)."""
     files = _kit(
         client.post(
             "/api/kit",
@@ -172,6 +175,53 @@ def test_classification_codes_dereferenced_for_value_set(client):
     assert codes["classifications"]["class/sun2020"] == [{"code": "1", "label": "Man"}]
     # A value_set'd binding contributes to classifications, NOT sources.
     assert "lisa-2018" not in codes["sources"]
+
+
+def test_datetime_binding_is_422(client):
+    """A `datetime` binding is valid in reg_schema but the local generator's
+    COLUMN_TYPES excludes it, so a kit built with one would fail at
+    `reg-mockdata generate`. Kit-build gates it up front with an actionable 422."""
+    resp = client.post(
+        "/api/kit",
+        json=_spec(
+            bindings=[
+                {
+                    "variable": "scb/lisa/kon",
+                    "type": "datetime",
+                    "datetime_format": "%Y-%m-%d %H:%M:%S",
+                }
+            ]
+        ),
+    )
+    assert resp.status_code == 422
+    assert "datetime" in resp.json()["detail"]
+
+
+def test_materialized_display_name_collision_is_422(client):
+    """An explicit `display_name` that collides with another binding's RESOLVED
+    default (both → "Kon") is invisible to the structural layer (it checks only
+    explicit names) but is caught when kit-build re-runs structural on the
+    materialized spec — the reg_meta-free consumer can't disambiguate two columns
+    named "Kon"."""
+    resp = client.post(
+        "/api/kit",
+        json=_spec(
+            bindings=[
+                # Resolves its default display_name to the delivery column "Kon".
+                {"variable": "scb/lisa/kon", "type": "categorical"},
+                # Same source/register, explicitly named "Kon" → collides with the
+                # first binding's materialized default.
+                {
+                    "variable": "scb/lisa/lonfink",
+                    "type": "numeric",
+                    "numeric_subtype": "double",
+                    "display_name": "Kon",
+                },
+            ]
+        ),
+    )
+    assert resp.status_code == 422
+    assert "display_name_collision" in resp.json()["detail"]
 
 
 def test_codes_keyspace_is_total_even_when_empty(client):
@@ -313,7 +363,9 @@ def test_panel_inherits_from_variant_template(client):
 
 def test_panel_inherits_from_panel_level_default(client):
     """Panel-level entity_key + time_key satisfy inheritance even on the
-    template-less lisa variant → 200."""
+    template-less lisa variant → 200. The entity_key column ref (`Kon`) must match
+    a materialized display_name on the source (kit-build re-validates panel refs
+    after defaulting); `time_key` is an int literal period, not a column ref."""
     resp = client.post(
         "/api/kit",
         json=_panel_spec(
@@ -325,13 +377,38 @@ def test_panel_inherits_from_panel_level_default(client):
             },
             panel={
                 "panel_id": "p1",
-                "entity_key": "lopnr",
+                "entity_key": "Kon",
                 "time_key": 2018,
                 "members": [{"source": "lisa-2018"}],
             },
         ),
     )
     assert resp.status_code == 200
+
+
+def test_panel_ref_unresolved_after_defaulting_is_422(client):
+    """A panel column ref that matches no materialized display_name (a typo) is
+    caught when kit-build re-runs structural on the defaulted spec — structural
+    skips the ref check pre-materialization because display_name is unset."""
+    resp = client.post(
+        "/api/kit",
+        json=_panel_spec(
+            source={
+                "name": "lisa-2018",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}],
+            },
+            panel={
+                "panel_id": "p1",
+                "entity_key": "Lopnrr",
+                "time_key": 2018,
+                "members": [{"source": "lisa-2018"}],
+            },
+        ),
+    )
+    assert resp.status_code == 422
+    assert "entity_key_unknown_column" in resp.json()["detail"]
 
 
 # ── Validation gate ──────────────────────────────────────────────────────────

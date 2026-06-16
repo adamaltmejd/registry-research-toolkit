@@ -782,8 +782,10 @@ The archive (`application/zip`) holds three files:
 - **`project_data.codes.json`** — dereferenced code lists, two keyspaces
   (REFACTOR_SPEC.md §8): `classifications` keyed by the binding's `value_set` FQID (the
   canonical, period-invariant list, dereferenced via `Catalog.resolve` → `same_as`-aware
-  classification id → `reg_meta.queries.get_classification_codes`), and `sources` keyed
-  by `source.name` then binding FQID (the ad-hoc value-set codes of a categorical
+  classification id → `reg_meta.queries.get_classification_codes`, filtered to
+  **canonical rows** — observed-only `is_valid=0` noise is dropped, but a classification
+  with no canonical CSV keeps its full list, so NOT `only_valid=True`), and `sources`
+  keyed by `source.name` then binding FQID (the ad-hoc value-set codes of a categorical
   no-`value_set` binding, unioned across the states its `(variant, period)` resolves to,
   narrowed to the pinned `representation`). Only **categorical** bindings contribute a
   key; the keyspace is TOTAL (every such binding contributes a key, possibly an empty
@@ -824,8 +826,27 @@ SPA spec VALID while panel inheritance is unresolved (a member may have no overr
 panel default mid-authoring, expecting the variant `panel_template`), so only kit-build
 — where inheritance is materialized — flags a member that resolves no effective
 `entity_key` / `time_key` from override → panel default → variant template. A
-`/validate`-clean spec can therefore still 422 here on panel inheritance — the
-documented kit-build residual.
+`/validate`-clean spec can therefore still 422 here on panel inheritance — one of the
+documented kit-build residuals.
+
+Two more gates run **after** the shared composition, because they need reg_meta defaults
+the structural layer can't see, or the generator's contract:
+
+- **Re-validate structural on the materialized spec.** After `materialize_display_names`
+  fills every `display_name`, `validate_structural` is re-run on the result. The
+  structural layer DEFERS its default-dependent checks when any `display_name` is unset
+  (the implicit half of `display_name_collision` — an explicit name colliding with a
+  resolved default; and the `entity_key_unknown_column` / `time_key_unknown_column`
+  panel column-ref checks). Kit-build is where defaults materialize, so it is the
+  documented home of those checks — a duplicate output column, or a panel ref typo'd
+  against a defaulted column, gates the kit (`/validate` can't see either
+  pre-materialization).
+- **Generator-type gate** (`check_generatable`). A `datetime` binding is valid in
+  `reg_schema` but the local generator's `COLUMN_TYPES`
+  (id/categorical/numeric/opaque/date) excludes it, so it is rejected up front (→ 422)
+  rather than failing opaquely at `reg-mockdata generate`. Held as a small webapp-local
+  constant rather than importing the runtime's `COLUMN_TYPES` (the webapp import graph
+  excludes `reg_monabundle.runtime.*`; the kit takes no `reg_mockdata` dep).
 
 **Remaining (deferred).** Panel-key *materialization* (writing the resolved `entity_key`
 / `time_key` into the kit's `project_data.json` the way `display_name` is) is NOT done:

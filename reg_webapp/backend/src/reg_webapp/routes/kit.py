@@ -49,7 +49,11 @@ from pydantic import ValidationError
 from reg_schema.project_data import ProjectData
 from reg_schema.structural import validate_structural
 
-from reg_webapp.kit import KitBuildError, build_kit_archive
+from reg_webapp.kit import (
+    KitBuildError,
+    build_kit_archive,
+    materialize_display_names,
+)
 from reg_webapp.project_validation import (
     block_issues,
     per_request_conn,
@@ -141,12 +145,30 @@ def _kit_blocking(
         if errors:
             _raise_422("an invalid spec", tuple(errors))
 
-        # Validation passed (warnings/info don't block) — assemble the archive on
-        # the same connection (it dereferences codes + resolves display names). A
-        # spec that validates but can't be packaged into a coherent kit (a
-        # same-FQID codes-keyspace collision) is bad input → 422, never a 500.
+        # MATERIALIZE display names, then RE-RUN structural on the result: the
+        # structural layer DEFERS its default-dependent checks
+        # (`display_name_collision` between an explicit name and a resolved default,
+        # `entity_key_unknown_column` / `time_key_unknown_column` panel refs) when any
+        # display_name is unset (see reg_schema/DESIGN.md → the "ref exists on source"
+        # lenience). Kit-build is where defaults materialize, so it is the documented
+        # home of those checks — a duplicate output column or a typo'd panel ref must
+        # gate the kit (the reg_meta-free consumer can't disambiguate). The original
+        # spec already passed structural, so any error here is materialization-induced.
+        materialized = materialize_display_names(raw, project, catalog)
+        mat_structural = validate_structural(materialized)
+        if not mat_structural.ok:
+            _raise_422(
+                "a spec whose resolved display names collide or whose panel column "
+                "refs don't resolve after defaulting",
+                mat_structural.issues,
+            )
+
+        # Validation passed (warnings/info don't block) — assemble from the
+        # materialized spec. A spec that validates but can't be packaged into a
+        # coherent kit (an unsupported generator type, or a same-FQID codes-keyspace
+        # collision) is bad input → 422, never a 500.
         try:
-            archive = build_kit_archive(raw, project, catalog, conn)
+            archive = build_kit_archive(materialized, project, catalog, conn)
         except KitBuildError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
 

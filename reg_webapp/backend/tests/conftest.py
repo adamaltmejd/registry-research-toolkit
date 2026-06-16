@@ -229,6 +229,20 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
         "VALUES (?, ?, NULL, 1)",
         (sun2020_id, man_code_id),
     )
+    # A dedicated OBSERVED-but-non-canonical (`is_valid = 0`) code on sun2020, so
+    # kit-build's canonical-only dereference (which drops `is_valid = 0`) is exercised:
+    # sun2020's canonical list stays just "Man"; this noise row must be filtered. A
+    # fresh value_code (NOT the Kvinna code, which a search test pins as
+    # classification-less) so existing code-search assertions are untouched.
+    noise_code_id = src.execute(
+        "INSERT INTO value_code (code, label, mapping_count) "
+        "VALUES ('X0', 'Icke-kanonisk kod', 0)"
+    ).lastrowid
+    src.execute(
+        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
+        "VALUES (?, ?, NULL, 0)",
+        (sun2020_id, noise_code_id),
+    )
 
 
 def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> None:

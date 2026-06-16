@@ -154,8 +154,17 @@ def _classification_codes(
 
     Resolve the FQID via ``Catalog.resolve`` (which follows the curated
     ``classification_same_as`` graph) to the live ``classification_id``, then read
-    its full canonical code list. The semantic validator already proved the FQID
-    resolves before kit-build gates, so ``resolve`` does not raise here."""
+    its canonical code list. The semantic validator already proved the FQID
+    resolves before kit-build gates, so ``resolve`` does not raise here.
+
+    **Canonical only.** ``get_classification_codes`` returns BOTH the canonical
+    rows (``is_valid=1``) and observed-only noise rows (``is_valid=0``) for a
+    classification that has a curated canonical CSV. The kit is documented as the
+    canonical list, so the noise rows are dropped (``is_valid != 0``). We do NOT
+    pass ``only_valid=True``: a classification WITHOUT a canonical CSV has
+    ``is_valid`` NULL everywhere (stripped from the row), and ``only_valid`` would
+    return ZERO codes for it — keeping the ``is_valid``-absent rows preserves its
+    full code list."""
     from reg_meta.catalog import ResolvedClassification  # noqa: PLC0415 — lazy
 
     resolved = catalog.resolve(parse(value_set))
@@ -168,7 +177,9 @@ def _classification_codes(
     # Pass the live id id-resolved (a str int → WHERE id = ?) so we read the SAME
     # classification `same_as` redirected to, not a fuzzy short_name match.
     meta = get_classification_codes(conn, str(resolved.classification_id))
-    return _code_pairs([(c["code"], c["label"]) for c in meta["codes"]])
+    return _code_pairs(
+        [(c["code"], c["label"]) for c in meta["codes"] if c.get("is_valid") != 0]
+    )
 
 
 def _binding_codes(
@@ -279,16 +290,46 @@ def assemble_kit(files: dict[str, bytes]) -> bytes:
     return buffer.getvalue()
 
 
+# reg_schema ColumnType values the local generator cannot consume. The generator's
+# supported set is `reg_monabundle.runtime.classify.COLUMN_TYPES`
+# (id/categorical/numeric/opaque/date); `datetime` is the one reg_schema type with no
+# generator support (it lands with composite keys in step 10b). Held as a small constant
+# rather than importing the runtime's COLUMN_TYPES — the webapp import graph deliberately
+# excludes `reg_monabundle.runtime.*` (pinned by a test), and the kit takes NO
+# reg_mockdata dependency (it is pure file packaging).
+_GENERATOR_UNSUPPORTED_TYPES: frozenset[str] = frozenset({"datetime"})
+
+
+def check_generatable(project: ProjectData) -> None:
+    """Raise ``KitBuildError`` if a binding declares a column type the local
+    generator cannot produce. The kit's whole point is a runnable ``reg-mockdata
+    generate``, so a type the generator rejects (today only ``datetime``) is gated
+    HERE with an actionable message rather than failing opaquely at generate time —
+    the same class of capability gate ``/api/bundle`` runs for the MONA runtime."""
+    for source in project.sources:
+        for binding in source.bindings:
+            if binding.type in _GENERATOR_UNSUPPORTED_TYPES:
+                raise KitBuildError(
+                    f"binding {binding.variable!r} in source {source.name!r} has "
+                    f"type {binding.type!r}, which the generator cannot produce yet "
+                    "(datetime support lands with composite keys in step 10b)"
+                )
+
+
 def build_kit_archive(
-    raw: dict[str, Any],
+    materialized: dict[str, Any],
     project: ProjectData,
     catalog: Catalog,
     conn: sqlite3.Connection,
 ) -> bytes:
-    """The full kit-build: materialize display names, dereference codes, render
-    the README, and pack the deterministic ZIP. Pure given a validated project +
-    a live ``Catalog`` — the caller owns validation + the connection lifetime."""
-    materialized = materialize_display_names(raw, project, catalog)
+    """Dereference codes, render the README, and pack the deterministic ZIP from
+    the already-materialized spec. ``materialized`` is the raw dict with every
+    ``display_name`` filled (the caller owns materialization + re-validation, so the
+    deferred default-dependent structural checks have already gated). Pure given a
+    validated project + a live ``Catalog`` — the caller owns the connection lifetime.
+    Raises ``KitBuildError`` on a spec that validates but can't be packaged (an
+    unsupported generator type, or a same-FQID codes-keyspace collision)."""
+    check_generatable(project)
     codes = build_codes(project, catalog, conn)
     files = {
         "project_data.json": _json_bytes(materialized),
