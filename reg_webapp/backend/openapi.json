@@ -2643,7 +2643,7 @@
     },
     "/api/catalog/{fqid}/dimensions": {
       "get": {
-        "description": "Concept-group dimension memberships for this binding's variable (#489):\nthe 'pick your variant' facet groups (level / population / rank / \u2026) that\ncontain it. We list the register's concept groups and keep only those whose\nmembers include this exact binding FQID. Binding-only like the other suffixed\nsub-endpoints (a non-binding kind 422s); a dead/renamed binding 301s to\n`/dimensions` on its terminal successor (#411).",
+        "description": "Concept-group dimension memberships for this binding's variable (#489):\nthe 'pick your variant' facet groups (level / population / rank / \u2026) that\ncontain it. Delegates to `Catalog.dimensions`, which resolves `same_as` like\nthe sibling edge endpoints \u2014 an alias cites its resolved target's groups, not\nthe requested register's. Binding-only (a non-binding kind 422s); a\ndead/renamed binding 301s to `/dimensions` on its terminal successor (#411).",
         "operationId": "get_binding_dimensions_api_catalog__fqid__dimensions_get",
         "parameters": [
           {

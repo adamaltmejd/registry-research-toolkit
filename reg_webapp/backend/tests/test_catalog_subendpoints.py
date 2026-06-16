@@ -135,6 +135,20 @@ def test_dimensions_endpoint_excludes_non_member_groups(client):
     assert resp.json()["dimensions"] == []
 
 
+def test_dimensions_endpoint_resolves_through_same_as(client):
+    # #489 P2-A: `scb/lisa/inkjan-alias` has no live row — it resolves only via
+    # `variable_same_as` to the grouped target `scb/rams/inkjan`. The endpoint must
+    # cite the TARGET register's `ink` group (the old handler keyed the filter on
+    # the REQUESTED register/fqid and returned []). `binding` echoes the request.
+    resp = client.get("/api/catalog/scb/lisa/inkjan-alias/dimensions")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["binding"] == "scb/lisa/inkjan-alias"
+    assert {g["key"] for g in body["dimensions"]} == {"ink"}, body
+    member_fqids = {m["fqid"] for g in body["dimensions"] for m in g["members"]}
+    assert _INKJAN in member_fqids  # the resolved target's group, not lisa's
+
+
 def test_dimensions_endpoint_dead_binding_301s_to_successor(client):
     # A dead/renamed binding 301s to /dimensions on its terminal successor (#411),
     # uniform with the other sub-endpoints. `renamed-head` → … → scb/rams/syss.

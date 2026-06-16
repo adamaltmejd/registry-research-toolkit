@@ -404,6 +404,13 @@ pick: when a predecessor has multiple successors, takes the lexicographically fi
 terminates a malformed loop (A→B→A) without hanging. PROVIDER/CLASSIFICATION FQIDs
 return `None` immediately — those grains have no succession table.
 
+**`dimensions(fqid)` — concept-group memberships for a binding (#489).** Returns the
+register's `ConceptGroupSummary` groups (the variant facet groups — level / population /
+rank / …) whose members include this binding's variable. Resolves `same_as` via
+`_resolve_edge_triple` like the other edge accessors, so an alias cites its **resolved
+target's** groups (not the requested register's), and raises `fqid_not_found` /
+`not_a_binding_fqid` on a dead or non-binding FQID for the webapp's 4xx/301 path.
+
 **Multi-state at a period is normal, not an edge case.** `resolve_at` returns a list
 because length N is genuinely common: several variants delivered the variable at the
 period (omitting `variant`), a range period crosses transitions, or — the common case

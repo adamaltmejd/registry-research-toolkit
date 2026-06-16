@@ -1476,6 +1476,19 @@ class Catalog:
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._related_edges(provider, register, variable))
 
+    def dimensions(self, fqid: str | Fqid) -> list[ConceptGroupSummary]:
+        """see DESIGN.md → Catalog API surface: the concept-group dimension
+        memberships (the variant facet groups — level / population / rank / …)
+        that contain this binding's variable. Resolves `same_as` like the other
+        edge accessors, so an alias cites its resolved target's groups (#489)."""
+        provider, register, variable, _ = self._resolve_edge_triple(fqid)
+        target = str(Fqid.binding_fqid(provider, register, variable))
+        return [
+            g
+            for g in self.list_concept_groups(provider, register)
+            if any(str(m.fqid) == target for m in g.members)
+        ]
+
     def lineage(self, fqid: str | Fqid) -> list[LineageEdge]:
         """see DESIGN.md → Catalog API surface: consumer-side composite lineage edges (state grain; see reg_meta_build/DESIGN.md → Consumer-side lineage (variable_state_lineage))."""
         _, _, _, variable_id = self._resolve_edge_triple(fqid)

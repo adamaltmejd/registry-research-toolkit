@@ -162,6 +162,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     _seed_kon_edges(src)
     _seed_succession_chain(src)
     _seed_concept_groups(src, add_variable)
+    _seed_same_as_alias_to_grouped(src)
     _seed_code_variable_map(src)
     _seed_merged_family(src, add_variable, add_state)
     _rebuild_fts(src)
@@ -417,6 +418,25 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
             ),
         ],
     )
+
+
+def _seed_same_as_alias_to_grouped(src: sqlite3.Connection) -> None:
+    """#489 P2-A guard: a curated `variable_same_as` edge from a phantom lisa slug
+    (`scb/lisa/inkjan-alias`, no live `variable` row) to the grouped target
+    `scb/rams/inkjan`. Querying the alias resolves THROUGH same_as to inkjan, so
+    `/dimensions` must cite the TARGET register's `ink` group — the regression the
+    old register/fqid-from-the-request handler returned `[]` for. Runs AFTER
+    `_seed_concept_groups` (which mints inkjan)."""
+    for a, b in (
+        (("scb", "lisa", "inkjan-alias"), ("scb", "rams", "inkjan")),
+        (("scb", "rams", "inkjan"), ("scb", "lisa", "inkjan-alias")),
+    ):
+        src.execute(
+            "INSERT INTO variable_same_as "
+            "(a_provider, a_register, a_variable, b_provider, b_register, b_variable) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            (*a, *b),
+        )
 
 
 @pytest.fixture
