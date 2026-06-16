@@ -56,3 +56,25 @@ jobs:
 
       - run: uv build reg_meta/ --out-dir dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+
+  # Self-clearing deploy (#448): a reg_meta release can ship the DB asset an
+  # already-merged schema bump was waiting on — the schema-bump's main-push
+  # build-image went green-skipped, deferring the origin deploy. Publishing the
+  # release fires THIS workflow, not container-build.yml, so without this the
+  # origin would sit on the pre-bump image until the next image-affecting push or
+  # a manual dispatch. Dispatch container-build.yml on main so it re-resolves the
+  # newest reg_meta/v* release (now this one), rebakes its asset, and deploys.
+  # Reuses container-build's workflow_dispatch path (everything-changed, run_id-
+  # suffixed image tag, HEAD guards). workflow_dispatch is the documented
+  # exception to the GITHUB_TOKEN no-recursion rule, so the default token works.
+  # Also auto-deploys data-only releases (previously a manual workflow_dispatch).
+  deploy-image:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Dispatch container build + deploy on main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run container-build.yml --repo "$GITHUB_REPOSITORY" --ref main

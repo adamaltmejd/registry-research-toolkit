@@ -46,6 +46,9 @@ on:
   # newest reg_meta/v* tag (resolved per run, below), so a data-only release
   # busts the bake layer's cache by itself — no input needed unless pinning an
   # OLDER release.
+  # A reg_meta/v* release ALSO reaches this workflow indirectly: publish_reg_meta.yml
+  # dispatches this workflow after publishing, so an owed-bump or data-only release
+  # auto-rebakes + deploys without a manual run (the #448 self-clearing path).
   workflow_dispatch:
     inputs:
       reg_meta_tag:

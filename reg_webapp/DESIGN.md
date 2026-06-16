@@ -632,13 +632,15 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `edge-deploy` all gate on `needs.schema-guard.outputs.pending_bump`; it runs whenever
   the image OR edge filter matches (or on dispatch), so an edge-only push still gets a
   verdict even though `build-image` is skipped. Once the owed release ships, the
-  **build** self-clears on the next image-affecting main push (the bake now passes), but
-  the **main deploy** requires that next push OR a manual `workflow_dispatch` — this
-  workflow does not trigger on release-publish (consistent with the data-only-release
-  dispatch model). During a pending-bump window a later **edge-only** main push now
-  correctly waits too: `schema-guard` ran (the edge filter matched), so `edge-deploy`
-  sees `pending_bump == true` and holds its SPA/cache-gen ship alongside the origin,
-  rather than going live against the still-pre-bump origin. Only the code-ahead case is
+  **build** self-clears on the next image-affecting main push (the bake now passes), and
+  the **deploy** is self-clearing on release too: publishing the owed `reg_meta/v*`
+  release auto-dispatches `container-build.yml` (via `publish_reg_meta.yml`'s
+  `deploy-image` job, after the PyPI publish succeeds), which re-resolves the
+  now-current asset and deploys — no manual `workflow_dispatch` needed. During a
+  pending-bump window a later **edge-only** main push now correctly waits too:
+  `schema-guard` ran (the edge filter matched), so `edge-deploy` sees
+  `pending_bump == true` and holds its SPA/cache-gen ship alongside the origin, rather
+  than going live against the still-pre-bump origin. Only the code-ahead case is
   neutralized — a major mismatch, a missing asset, or a genuinely broken bake stays
   unguarded and still fails red (the #343 loud-failure behavior): the `schema-guard` job
   additionally verifies (via `gh release view`) that the resolved tag actually carries
