@@ -227,11 +227,16 @@ near-identical adapter per agency. Adding a thin provider is four steps:
 Ids are `mint("<provider>", …)`-ed into the high band `[2^62, 2^63)` (the provider name
 is the first `mint` part, so a thin provider never collides with SOS or another minted
 provider — see *Deterministic ID minting*). The adapter is **pure IR** (no
-build-scratch, like SOS) and emits **no value sets** in the first cut: categorical code
-lists are a follow-up. Where a categorical variable uses an existing catalog
-classification (SmiNet `diagnos` → ICD-10, NVR `vaccin` → ATC), the value-set linkage is
-deferred to that follow-up rather than re-minting codes. FOHM (SmiNet + the national
-vaccination register) is the first thin provider; Försäkringskassan (MiDAS) follows.
+build-scratch, like SOS) and emits **no value-set code lists**: minting categorical
+codes is a follow-up (#422). A variable may still **link** to an existing catalog
+classification via a per-variable `classification = "<short_name>"` field (#446): it
+names a shipped classification (SmiNet `diagnos` → `ICD-10-SE`, NVR `vaccin` → `ATC`),
+reusing it rather than re-minting codes. The adapter contributes one
+`classification_candidate` per such variable with `value_set_id = NULL` (no codes),
+feeding the same provider-blind candidate path SOS uses (`external_classification`
+resolver); the `_backfill_state_classifications` pass then tags the variable's states,
+keying on `(variable_id, NULL)`. FOHM (SmiNet + the national vaccination register) is
+the first thin provider; Försäkringskassan (MiDAS) follows.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived

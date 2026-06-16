@@ -18,9 +18,11 @@ agency's input dir (`db._CURATED_PROVIDERS`), drop the curated TOML under
 Ids are `mint()`ed into the high band `[2^62, 2^63)` (the provider name is the
 first `mint` part, so a thin provider never collides with SOS's
 `mint("sos", …)` ids — same disjointness argument as DESIGN.md → Deterministic
-ID minting). The adapter emits no value sets (categorical code lists are a
+ID minting). The adapter emits no value sets (categorical code *lists* are a
 follow-up; see #422) and writes no build-scratch — it is pure IR, like the SOS
-adapter.
+adapter. A categorical variable may still LINK to an existing catalog
+classification via the optional `classification` key (it reuses the catalog
+classification, minting no codes; see #446).
 
 TOML shape (one entry per register; a register with no `[[register.variant]]`
 gets a synthesized `_default` variant, the single-table case):
@@ -45,6 +47,9 @@ gets a synthesized `_default` variant, the single-table case):
       is_sensitive = true
       valid_from = "2004-01-01"    # OPTIONAL per-variable override
       variants = ["fall"]          # OPTIONAL; default = every variant of register
+      classification = "ICD-10-SE" # OPTIONAL; short_name of an existing catalog
+                                   # classification — links the variable's states,
+                                   # mints no codes
 """
 
 from __future__ import annotations
@@ -99,6 +104,7 @@ _VARIABLE_KEYS = frozenset(
         "valid_from",
         "valid_to",
         "variants",
+        "classification",
     }
 )
 
@@ -116,6 +122,7 @@ class _CuratedVariable:
     valid_from: str | None  # None → inherit the register coverage start
     valid_to: str | None  # None → open-ended (materializer writes the sentinel)
     variants: tuple[str, ...] | None  # None → delivered in every variant
+    classification: str | None  # None → unlinked; else an existing catalog short_name
 
 
 @dataclass(frozen=True)
@@ -151,6 +158,11 @@ class CuratedAdapter:
         self.source_checksums: dict[str, str] = {}
         self.related_edges: list[tuple[int, int, str]] = []
         self.fold_slug_hints: dict[int, str] = {}
+        # `(variable_id, value_set_id, short_name)` — the same provider-blind
+        # classification side channel SOS feeds; the materializer drains it and
+        # resolves short_name → classification_id at feed time. value_set_id is
+        # always None here (curated emits no value sets).
+        self.classification_candidates: list[tuple[int, int | None, str]] = []
 
     def emit(self, source_dir: Path) -> Iterator[IRObject]:
         toml_path = source_dir / f"{self.provider}.toml"
@@ -351,6 +363,7 @@ class CuratedAdapter:
             valid_from=valid_from,
             valid_to=valid_to,
             variants=variants,
+            classification=self._opt_str(entry, "classification"),
         )
 
     def _req_str(self, path: Path, entry: dict, field: str, ctx: str) -> str:
@@ -462,6 +475,15 @@ class CuratedAdapter:
         var: _CuratedVariable,
     ) -> Iterator[IRObject]:
         variable_id = mint(self.provider, reg.key, var.column)
+        if var.classification is not None:
+            # ONE candidate per variable (not per state): the candidate keys on
+            # variable_id, and all this variable's states share value_set_id=None
+            # (curated providers emit no value sets). The link is by the catalog
+            # classification's `short_name`, resolved provider-blind at feed time
+            # (db._feed_classification_candidates) — no codes minted here.
+            self.classification_candidates.append(
+                (variable_id, None, var.classification)
+            )
         yield IRVariable(
             variable_id=variable_id,
             register_id=register_id,
