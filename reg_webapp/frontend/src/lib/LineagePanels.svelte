@@ -139,15 +139,9 @@ const predecessorChain = $derived(
 
 <!-- One node of the #489 succession chain: a link to the neighbour's fqid (or
      the triple when absent) with a leading rail marker + the optional #142
-     annotation. The `current` flag is unused here (the current node is rendered
-     inline, not via this snippet) but kept in the signature so a future "mark a
-     neighbour current" stays a one-line change. -->
-{#snippet chainNode(
-  ref: VariableRefModel,
-  annotation: string | null,
-  current: boolean,
-)}
-  <li class="chain-node" class:current>
+     annotation. -->
+{#snippet chainNode(ref: VariableRefModel, annotation: string | null)}
+  <li class="chain-node">
     <span class="marker" aria-hidden="true">○</span>
     <span class="chain-ref">
       {#if ref.fqid}
@@ -190,7 +184,7 @@ const predecessorChain = $derived(
 
       <ol class="chain">
         {#each predecessorChain as ref, i (ref.fqid ?? refTriple(ref) + i)}
-          {@render chainNode(ref, succAnnotation(ref), false)}
+          {@render chainNode(ref, succAnnotation(ref))}
         {/each}
         <!-- THIS variable, marked in place — a non-link "current" node. -->
         <li class="chain-node current" aria-current="true">
@@ -202,7 +196,7 @@ const predecessorChain = $derived(
           </span>
         </li>
         {#each successorChain as ref, i (ref.fqid ?? refTriple(ref) + i)}
-          {@render chainNode(ref, succAnnotation(ref), false)}
+          {@render chainNode(ref, succAnnotation(ref))}
         {/each}
       </ol>
     </section>

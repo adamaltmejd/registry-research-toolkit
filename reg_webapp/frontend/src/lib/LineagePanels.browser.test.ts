@@ -170,6 +170,57 @@ describe("LineagePanels — empty-section collapse (D1.2)", () => {
     ]);
     // The current node is the non-link one (it carries the marker text).
     await expect.element(page.getByText("(this variable)")).toBeVisible();
+
+    // The current node renders as plain text, never a self-link: the <li>
+    // holding "(this variable)" must have no <a> descendant.
+    const currentLi = chain.find((li) =>
+      li.textContent?.includes("(this variable)"),
+    );
+    expect(currentLi, "no listitem held the current-node marker").toBeTruthy();
+    expect(currentLi?.querySelector("a")).toBeNull();
+  });
+
+  it("renders a terminal chain (predecessors → this var, no successors) when replaced_by is empty", async () => {
+    // The terminal-variant case: inbound predecessors but an empty `replaced_by`
+    // — the chain ends at THIS variable, with NO successor node after it.
+    vi.mocked(getBindingPredecessors).mockResolvedValue({
+      predecessors: [
+        {
+          provider: "scb",
+          register: "lisa",
+          variable: "anninkf04",
+          fqid: "scb/lisa/anninkf04",
+          reason: null,
+          effective_year: 2004,
+        },
+      ],
+    } as unknown as PredecessorsResponse);
+
+    await render(LineagePanels, {
+      fqidPath: "scb/lisa/anninkf18",
+      node: node({
+        fqid: "scb/lisa/anninkf18",
+        name: "Annan inkomst",
+        replaced_by: [], // terminal: no successor
+      }),
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Succession" }))
+      .toBeVisible();
+
+    // The chain reads: predecessor THEN this var, and nothing after it.
+    const chain = page.getByRole("listitem").elements();
+    const fqidOrder = chain
+      .map((li) => li.querySelector("code")?.textContent ?? "")
+      .filter((t) => t.startsWith("scb/lisa/"));
+    expect(fqidOrder).toEqual(["scb/lisa/anninkf04", "scb/lisa/anninkf18"]);
+
+    // The current node is last (terminal) — no successor follows it.
+    const currentIdx = chain.findIndex((li) =>
+      li.textContent?.includes("(this variable)"),
+    );
+    expect(currentIdx).toBe(chain.length - 1);
   });
 
   it("renders the Related section when split-sibling edges exist", async () => {
