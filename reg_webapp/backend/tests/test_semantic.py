@@ -619,6 +619,107 @@ def test_representation_under_covering_default_is_drift(uneven_representation_ca
     assert result.ok
 
 
+@pytest.fixture
+def representation_internal_gap_catalog():
+    """The PINNED column `kon` is delivered in TWO disjoint windows (2010-2012 and
+    2018-2020); a SIBLING column `kon_detalj` fills the middle (2013-2017). All
+    three windows are non-overlapping, so no column co-exists with another (no
+    `binding_value_set_version_ambiguous`). Over a 2010..2020 range the OUTER
+    bounds of the pinned column (min_from 2010, max_to 2020) equal those of the
+    full state set, so the old outer-bounds check stays silent — yet the pinned
+    column's 2013-2017 extract is empty because only the sibling delivers it. This
+    is the #342 internal-gap case the gap-based check must catch."""
+    from _slugged_db import add_state, add_value_set, build_slugged_db  # noqa: PLC0415
+
+    conn = build_slugged_db()
+    # Re-window the seeded `kon` state to the FIRST pinned-column era.
+    conn.execute(
+        "UPDATE variable_state SET delivery_column_name = 'kon', "
+        "valid_from = '2010-01-01', valid_to = '2012-12-31' "
+        "WHERE variable_id = (SELECT variable_id FROM variable WHERE slug = 'kon')"
+    )
+    # Second pinned-column era, leaving a 2013-2017 hole in `kon`.
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2018-01-01",
+        valid_to="2020-12-31",
+        delivery_column_name="kon",
+    )
+    # Sibling column filling the gap between the two pinned eras.
+    add_value_set(conn, value_set_id=702, codes=[("1", "M"), ("2", "K"), ("3", "X")])
+    add_state(
+        conn,
+        register_id=1,
+        variable_slug="kon",
+        register_variant_id=10,
+        valid_from="2013-01-01",
+        valid_to="2017-12-31",
+        delivery_column_name="kon_detalj",
+        value_set_version_label="detalj",
+        value_set_id=702,
+    )
+    conn.commit()
+    try:
+        yield Catalog(conn)
+    finally:
+        conn.close()
+
+
+def test_representation_internal_gap_in_range_is_drift(
+    representation_internal_gap_catalog,
+):
+    # #342: the pinned `kon` column is gapped 2013-2017 (a sibling fills it). Outer
+    # bounds match the full set, so this is the case that is SILENT on `main`; the
+    # gap-based check must flag the internal under-coverage as info (non-blocking).
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2010, "to": 2020},
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), representation_internal_gap_catalog, caller="researcher"
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_state_drifts_within_period" in codes
+    assert "binding_value_set_version_ambiguous" not in codes
+    assert result.ok
+
+
+def test_representation_full_coverage_range_is_no_drift(
+    representation_internal_gap_catalog,
+):
+    # Control: pinning the SIBLING column over the exact window it fully covers
+    # leaves no gap vs the full state set → no drift info.
+    source = {
+        "name": "s",
+        "register_variant": "scb/lisa/individer-15plus",
+        "period": {"from": 2013, "to": 2017},
+        "bindings": [
+            {
+                "variable": "scb/lisa/kon",
+                "type": "categorical",
+                "representation": "kon_detalj",
+            }
+        ],
+    }
+    result = validate_semantic(
+        _project([source]), representation_internal_gap_catalog, caller="researcher"
+    )
+    codes = {i.code for i in result.issues}
+    assert "binding_state_drifts_within_period" not in codes
+    assert result.ok
+
+
 # ── #207: an explicit range PARTIALLY covered by the concept's states.
 # `resolve_at` returns the states INTERSECTING the requested `[from, to]`; if their
 # union leaves a gap NO column delivers, the binding silently drops that sub-range.
