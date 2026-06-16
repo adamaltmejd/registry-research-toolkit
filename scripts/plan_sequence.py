@@ -18,22 +18,32 @@ A SECOND marked region — `<!-- plan-lanes:start --> … <!-- plan-lanes:end --
 the *ranked* lanes. Their content is agentic (the `/plan-lanes` skill ranks what
 set-intersection over `touches` can't see), so the script doesn't generate it: `--write-
 lanes` reads the agent's text from stdin, frames it with a machine-readable `basis` (the
-ready/running sets the ranking was computed against, plus a `sig` over every work issue's
-lane-affecting projection — status, area, `touches`, `priority`, `Relationships`), and
-splices it as its own region. `--lanes-stale` prints the live basis and exit-codes whether
-the stored block matches it — the trigger the `/loop` heartbeat keys off, since once CI
-event-refreshes the *projection* block the projection delta no longer signals that the
-ready/running sets moved (the refresh absorbed it). The `sig` extends staleness past
-membership: an area/`touches`/`priority`/`Relationships` edit that re-shapes the lane graph
-without moving an issue between sections still flips it. The heartbeat
-passes the printed basis back via `--write-lanes --basis` so the stamp reflects the state
-the rank actually saw, not a post-rank recompute (which could mark a stale ranking fresh).
+ready/running sets the ranking was computed against, plus a content `sig` over the
+lane-affecting projection — see `lanes_content_signature`), and splices it as its own
+region. `--lanes-stale` prints the live basis and exit-codes whether the stored block
+matches it — the trigger the `/loop` heartbeat keys off, since once CI event-refreshes the
+*projection* block the projection delta no longer signals that the ready set moved (the
+refresh absorbed it). The `sig` extends staleness past membership: an
+area/`touches`/`priority`/`Relationships` edit that re-shapes the lane graph without moving
+an issue between sections still flips it. The heartbeat passes the printed basis back via
+`--write-lanes --basis` so the stamp reflects the state the rank actually saw, not a
+post-rank recompute (which could mark a stale ranking fresh).
+
+Staleness is **three-way**, not boolean — because the running set is in-flight work, never
+a lane member (`/plan-lanes` ranks only the ready candidates). A delta confined to the
+running set (a PR merges, its issue closes, the claim clears) can't change lane *content*,
+so it routes to a cheap **re-stamp** (rewrite the basis stamp, keep the ranked lanes —
+`--restamp-lanes`) instead of an expensive, non-deterministic **re-rank**. The content
+`sig` excludes running issues' own projection precisely so this common tick doesn't trip a
+re-rank; their one content effect (HOLDING a ready candidate) is folded in via the free
+set. The classifier (`lanes_freshness`) returns fresh / re-stamp / re-rank, surfaced as the
+exit code: **0** fresh · **1** re-rank · **2** re-stamp.
 
 `--tick` is the heartbeat's one-fetch combined read: from a single corpus build it prints
 the projection status delta (stderr) and the live lanes basis (stdout) and exit-codes the
-lanes staleness — so the `/loop` tick does one fetch instead of `--diff` + `--lanes-stale`.
-It never writes: CI (`plan-sequence.yml`) + the daily cron own the projection block; the
-loop's only write is the lanes block, when stale.
+lanes freshness (0/1/2 above) — so the `/loop` tick does one fetch instead of `--diff` +
+`--lanes-stale`. It never writes: CI (`plan-sequence.yml`) + the daily cron own the
+projection block; the loop's only write is the lanes block, when it moves.
 
 The hardened parsers + gh fetchers are reused from the sibling validator
 (check_issue_hygiene.py); if a third consumer appears, lift them into a shared module.
@@ -264,6 +274,22 @@ def _holding_prs(rec: Rec, running: list[Rec]) -> list[int]:
     )
 
 
+def free_candidates(records: list[Rec]) -> list[Rec]:
+    """Ready issues NOT held back by in-flight (running) work — the rank-able candidates.
+
+    Mirrors `dispatch_view`'s candidate set: a ready issue whose `touches` overlap any
+    running issue's `touches` is HELD (would collide with work already in flight) and
+    excluded. Held is a pure function of the live running set, so this is the one channel
+    by which the running set reaches lane *content* — `lanes_content_signature` folds the
+    running set in via this free set rather than its raw membership (see there).
+    """
+    in_flight = [t for r in records if r.status == "running" for t in r.touches]
+    ready = [r for r in records if r.status == "ready" and not r.is_epic]
+    return [
+        r for r in ready if not (r.touches and touches_overlap(r.touches, in_flight))
+    ]
+
+
 def dispatch_view(records: list[Rec]) -> str:
     """Read-only dispatch candidates for the agent to compose a lane from.
 
@@ -274,12 +300,11 @@ def dispatch_view(records: list[Rec]) -> str:
     already in flight.
     """
     running = [r for r in records if r.status == "running"]
-    in_flight = [t for r in running for t in r.touches]
     in_flight_prs = sorted({p for r in running for p in r.open_prs})
     ready = [r for r in records if r.status == "ready" and not r.is_epic]
-    held = [r for r in ready if r.touches and touches_overlap(r.touches, in_flight)]
-    held_nums = {r.number for r in held}
-    free = [r for r in ready if r.number not in held_nums]
+    free = free_candidates(records)
+    free_nums = {r.number for r in free}
+    held = [r for r in ready if r.number not in free_nums]
     if not free:
         return "No ready issues free of in-flight conflicts."
 
@@ -418,53 +443,86 @@ _BASIS_RE = re.compile(
 )
 
 
-def lanes_signature(records: list[Rec]) -> str:
-    """A short stable hash of every work issue's lane-affecting projection.
+def lanes_content_signature(records: list[Rec]) -> str:
+    """A short stable hash of only what determines lane CONTENT — never the running churn.
 
-    Membership (*which* issues are ready/running) is already in the basis's `ready`/
-    `running` sets. This signature adds everything else the ranking depends on, so an edit
-    that re-shapes the lane graph without moving an issue between sections still re-ranks.
-    `/plan-lanes` ranks over the `--lane` dispatch view — which groups by `area`, keys
-    parallel-safety on `touches`, sorts by `priority`, and reads the full `Relationships`
-    graph for coherence + implicit ordering — so the signed projection is, per work issue:
+    The lanes block is ranked over the `ready` candidates (see `dispatch_view`). A `running`
+    issue is in-flight, never a candidate, so a PR merging — its issue closing, the claim
+    clearing — moves the rendered in-flight line but NOT which issues get ranked or their
+    order. The *one* way the running set reaches content is by HOLDING a ready issue
+    (touches-overlap → excluded from candidates); that is folded in by signing the FREE
+    candidate set (`free_candidates`, recomputed against the live running set), rather than
+    the raw running membership. So the signed projection, per non-running work issue:
 
-      number | status | area | touches | priority | relationships
+      number | status | free? | area | touches | priority | relationships
 
-    Signed over **all** work records (not just ready/running) because the ranking also
-    depends on *other* issues' edges: a still-blocked issue's `Blocked by #N` rewrite
-    changes which ready issue has unblocking power, and `Related to`/`Follow-up to` ties
-    signal coherence — neither moves a section nor touches the ready issues' own fields.
-    Signing the whole projection covers those without per-finding special-casing; the cost
-    is an occasional re-rank when an edit didn't actually change the order — the safe
-    direction (re-rank when unsure), matching the `touches`-overlap conservatism.
+    A running issue's own *self* fields — status/area/touches/priority — sign nothing (it's
+    never a candidate), so a running issue arriving or leaving (the common PR-merge tick)
+    does not by itself flip the signature. One that actually changes which ready issue is
+    held flips a `free?` flag and so still re-ranks; one whose merge unblocks a dependent
+    moves that dependent into the ready set, which the projection also catches.
+
+    Two classes of edge *into* the candidate graph are signed so an order-changing rewrite
+    re-ranks even with no section move:
+
+    - Blocked issues are signed in full (not just ready) because their `Blocked by #N` edges
+      set the unblocking power of the candidates, and their `Related to`/`Follow-up to` ties
+      signal coherence — the same reason the prior all-work signature included them.
+    - A *running* issue's relationships are otherwise dropped (signing them in full would
+      re-rank every merge, as the closing issue's `Part of #<epic>`/coherence ties leave the
+      corpus — the churn this signature exists to kill), EXCEPT a blocking edge it points at
+      a ready candidate: that confers unblocking power on the candidate, so it is signed. A
+      normal sub-issue merge (whose only tie is `Part of #<epic>`) signs none of these, so it
+      re-stamps; rewriting which candidate an in-flight issue depends on re-ranks.
+
+    Membership (*which* issues are ready/running) is also in the basis's `ready`/`running`
+    sets; this signature adds the rest of the ranking inputs.
 
     Structured-inputs-only — never title/body prose, which doesn't change the lane graph.
     Sorted throughout so it's deterministic; flows through `--basis` verbatim (it's part of
     the stamped comment string), so the TOCTOU capture path needs no change.
     """
+    free = {r.number for r in free_candidates(records)}
     parts = [
-        "{}|{}|{}|{}|{}|{}".format(
+        "{}|{}|{}|{}|{}|{}|{}".format(
             r.number,
             r.status,
+            "free" if r.number in free else "",
             r.area or "",
             ",".join(sorted(r.touches)),
             r.priority,
             ",".join(f"{kw}#{t}" for kw, t in sorted(r.relationships)),
         )
         for r in sorted(records, key=lambda r: r.number)
+        if r.status != "running" and not r.is_epic
     ]
+    # The one running-issue input that still ranks: a blocking edge onto a ready candidate
+    # (unblocking power). Keyed by source so two in-flight dependents of the same candidate
+    # are distinguishable, and so rewriting one's target re-ranks even if another still
+    # points there. Non-blocking ties (e.g. `Part of #<epic>`) are NOT here, so the common
+    # merge stays a re-stamp.
+    unblock = sorted(
+        (r.number, kw, t)
+        for r in records
+        if r.status == "running"
+        for kw, t in r.relationships
+        if kw in BLOCKING_KEYWORDS and t in free
+    )
+    parts.append("unblock|" + ",".join(f"{src}:{kw}#{t}" for src, kw, t in unblock))
     return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:12]
 
 
 def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
     """The machine-readable freshness basis embedded in the lanes block.
 
-    Records the ready + running issue numbers AND a `sig` over their lane-affecting inputs
-    (`lanes_signature`) — the state the ranking was computed against — so `--lanes-stale`
-    can tell whether the agentic lanes still match the live state. The projection block
-    can't serve as that signal once CI refreshes it on every event (a refresh there would
-    absorb the delta the loop keys off). The `sig` makes a `touches`/area/`priority`/
-    `Relationships` edit that moves no issue trip staleness too — no longer an accepted miss.
+    Records the ready + running issue numbers AND a content `sig`
+    (`lanes_content_signature`) — the state the ranking was computed against — so
+    `--lanes-stale` can tell whether the agentic lanes still match the live state. The
+    projection block can't serve as that signal once CI refreshes it on every event (a
+    refresh there would absorb the delta the loop keys off). The `sig` makes a
+    `touches`/area/`priority`/`Relationships` edit that moves no issue trip staleness too;
+    keeping `running` as its own field lets `lanes_freshness` tell a content move (re-rank)
+    apart from a running-set-only move (cheap re-stamp).
     """
     r = ",".join(str(n) for n in sorted(ready))
     g = ",".join(str(n) for n in sorted(running))
@@ -484,10 +542,63 @@ def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
     return nums(m.group(1)), nums(m.group(2)), m.group(3) or ""
 
 
-def lanes_are_stale(block: str, ready: set[int], running: set[int], sig: str) -> bool:
-    """Whether the lanes block needs re-ranking vs the current ready/running set + sig."""
+def lanes_freshness(block: str, ready: set[int], running: set[int], sig: str) -> str:
+    """Classify the lanes block vs the live state: 'fresh' | 'restamp' | 'rerank'.
+
+    - **rerank** — lane CONTENT moved (the content `sig` differs, the ready set differs, or
+      there's no parsable basis): the ranking must be recomputed by `/plan-lanes`.
+    - **restamp** — only the in-flight (running) set moved (a PR merged/opened); content is
+      identical, so the existing ranking stands and just its basis stamp needs refreshing
+      (no `/plan-lanes`). This is the common PR-merge tick.
+    - **fresh** — nothing relevant moved.
+
+    The ready check is belt-and-suspenders: a ready-set move already flips the content `sig`
+    (every non-running issue is signed with its status), but comparing the set too guards
+    against a hash blind spot and keeps the re-stamp path provably running-set-only.
+    """
     basis = parse_basis(block)
-    return basis is None or basis != (set(ready), set(running), sig)
+    if basis is None:
+        return "rerank"
+    b_ready, b_running, b_sig = basis
+    if b_sig != sig or b_ready != set(ready):
+        return "rerank"
+    return "fresh" if b_running == set(running) else "restamp"
+
+
+def extract_lanes_content(block: str) -> str:
+    """The agentic ranked-lane text inside a framed lanes block, minus the framing.
+
+    Inverse of `render_lanes_block`'s wrapping: everything between the `basis` stamp and
+    `LANES_END`. Returns '' if there's no parsable basis (a pre-stamp/legacy block) — the
+    re-stamp caller then falls back to a full re-rank rather than guess where content starts
+    (and `lanes_freshness` already classifies a basis-less block as `rerank`, so re-stamp is
+    never reached for one in practice).
+    """
+    m = _BASIS_RE.search(block)
+    end = block.find(LANES_END)
+    if not m or end == -1 or end < m.end():
+        return ""
+    return block[m.end() : end].strip()
+
+
+def restamp_lanes_block(epic: int, basis: str) -> int:
+    """Refresh ONLY the lanes block's basis stamp, keeping the existing ranked content.
+
+    The re-stamp path for a running-set-only delta: lane content is unchanged, so the
+    expensive, non-deterministic `/plan-lanes` re-rank is skipped — we rewrite the machine
+    basis (its `running=`/`sig=` fields) so the next staleness check reads fresh, leaving the
+    ranked lanes verbatim. The human-visible in-flight prose inside the block may lag until
+    the next genuine re-rank — cosmetic, and never a contamination source (`/plan-lanes`
+    sources its candidate floor from the live `--lane` view, not the stored block).
+
+    Falls back to exit 1 (caller should re-rank) if there's no existing content to keep.
+    """
+    block = extract_block(epic_body(epic), LANES_START, LANES_END)
+    content = extract_lanes_content(block)
+    if not content:
+        print("no existing lanes content to re-stamp; re-rank instead", file=sys.stderr)
+        return 1
+    return write_lanes_block(epic, render_lanes_block(content, basis))
 
 
 def reject_lanes_stdin(content: str) -> str | None:
@@ -598,6 +709,16 @@ def diff_report(old_block: str, new_block: str) -> str:
 
 # --- main ----------------------------------------------------------------------------
 
+# The three-way lanes freshness, surfaced as the `--tick`/`--lanes-stale` exit code so the
+# heartbeat can branch: 0 skip · 1 re-rank via /plan-lanes · 2 cheap re-stamp (running-set-
+# only). `restamp` is between fresh and rerank — work moved, but not lane content.
+_FRESHNESS_EXIT = {"fresh": 0, "rerank": 1, "restamp": 2}
+_FRESHNESS_MSG = {
+    "fresh": "fresh",
+    "rerank": "stale (re-rank)",
+    "restamp": "stale (re-stamp — running-set-only; no re-rank)",
+}
+
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
@@ -611,12 +732,14 @@ def main() -> int:
                     help="print read-only dispatch candidates (ready, not touching in-flight work)")  # fmt: skip
     ap.add_argument("--write-lanes", action="store_true",
                     help="frame the ranked-lanes block (read from stdin) + splice it into the epic body")  # fmt: skip
+    ap.add_argument("--restamp-lanes", action="store_true",
+                    help="re-stamp the epic's existing lanes block with --basis, keeping the ranked content (running-set-only delta; no re-rank)")  # fmt: skip
     ap.add_argument("--lanes-stale", action="store_true",
-                    help="print the live basis; exit 1 if the epic's lanes block is stale vs it, else 0")  # fmt: skip
+                    help="print the live basis; exit 0 fresh / 1 re-rank / 2 re-stamp (running-set-only)")  # fmt: skip
     ap.add_argument("--tick", action="store_true",
-                    help="read-only heartbeat: one fetch emits the projection delta (stderr) + the lanes basis (stdout); exit 1 if lanes stale")  # fmt: skip
+                    help="read-only heartbeat: one fetch emits the projection delta (stderr) + the lanes basis (stdout); exit 0 fresh / 1 re-rank / 2 re-stamp")  # fmt: skip
     ap.add_argument("--basis", default="",
-                    help="for --write-lanes: stamp this exact basis (captured from --lanes-stale/--tick) instead of recomputing")  # fmt: skip
+                    help="for --write-lanes/--restamp-lanes: stamp this exact basis (captured from --lanes-stale/--tick) instead of recomputing")  # fmt: skip
     args = ap.parse_args()
 
     # Fast path: --write-lanes with a basis captured at staleness-check time needs no
@@ -629,7 +752,21 @@ def main() -> int:
         if (why := reject_lanes_stdin(content)) is not None:
             print(f"--write-lanes: {why}", file=sys.stderr)
             return 2
+        if not _BASIS_RE.search(args.basis):
+            print(f"--write-lanes: malformed --basis: {args.basis!r}", file=sys.stderr)
+            return 2
         return write_lanes_block(args.epic, render_lanes_block(content, args.basis))
+
+    # Fast path: re-stamp keeps the existing ranking and only swaps the basis stamp, so it
+    # also needs no corpus — the heartbeat passes the live basis captured from --tick. A
+    # missing/malformed basis is refused (not stamped): a basis that fails _BASIS_RE would
+    # write a block that parses as no-basis, pinning every later tick to `rerank`.
+    if args.restamp_lanes:
+        if not args.basis or not _BASIS_RE.search(args.basis):
+            print(f"--restamp-lanes needs a well-formed --basis (got {args.basis!r})",
+                  file=sys.stderr)  # fmt: skip
+            return 2
+        return restamp_lanes_block(args.epic, args.basis)
 
     owner, name = _h.repo_owner_name()
     _known, _issue_state, open_numbers = _h.fetch_number_states()
@@ -638,11 +775,12 @@ def main() -> int:
     work = [r for r in recs if not r.is_epic]
     ready_nums = {r.number for r in work if r.status == "ready"}
     running_nums = {r.number for r in work if r.status == "running"}
-    # The lanes' freshness basis: the ready/running sets + a signature over EVERY work
-    # issue's lane-affecting projection (so an edit that re-shapes ranking without moving a
-    # section still re-ranks — see FU-2 / lanes_signature).
-    sig = lanes_signature(work)
-    live_basis = basis_comment(ready_nums, running_nums, sig)
+    # The lanes' freshness basis: the ready/running sets + a content signature over the
+    # lane-affecting projection (so an edit that re-shapes ranking without moving a section
+    # still re-ranks, while a running-set-only delta only re-stamps — see
+    # lanes_content_signature / lanes_freshness).
+    content_sig = lanes_content_signature(work)
+    live_basis = basis_comment(ready_nums, running_nums, content_sig)
 
     if args.lane:
         print(dispatch_view(recs))
@@ -650,30 +788,38 @@ def main() -> int:
 
     if args.lanes_stale:
         body = epic_body(args.epic)
-        stale = lanes_are_stale(
-            extract_block(body, LANES_START, LANES_END), ready_nums, running_nums, sig
+        freshness = lanes_freshness(
+            extract_block(body, LANES_START, LANES_END),
+            ready_nums,
+            running_nums,
+            content_sig,
         )
-        # stdout = the basis to re-pass to --write-lanes (so the stamp matches what was
-        # ranked); stderr = the human verdict; exit code = the machine signal.
+        # stdout = the basis to re-pass to --write-lanes/--restamp-lanes (so the stamp
+        # matches what was ranked); stderr = the human verdict; exit code = the machine
+        # signal (0 fresh / 1 re-rank / 2 re-stamp).
         print(live_basis)
-        print("stale" if stale else "fresh", file=sys.stderr)
-        return 1 if stale else 0
+        print(_FRESHNESS_MSG[freshness], file=sys.stderr)
+        return _FRESHNESS_EXIT[freshness]
 
     if args.tick:
         # One-fetch heartbeat: emit BOTH the projection delta and the lanes verdict from
         # the single corpus build above. Read-only — CI (plan-sequence.yml) + the daily
         # cron own the projection WRITE now; the loop's only write is the lanes block when
-        # stale. stdout = the basis to re-pass to --write-lanes; stderr = the human report
-        # (projection delta + verdict); exit code = the lanes staleness signal.
+        # it moves. stdout = the basis to re-pass to --write-lanes/--restamp-lanes; stderr =
+        # the human report (projection delta + verdict); exit code = the lanes freshness
+        # (0 fresh / 1 re-rank / 2 re-stamp).
         body = epic_body(args.epic)
         delta = diff_report(extract_block(body), render_block(recs, build_debt_line()))
-        stale = lanes_are_stale(
-            extract_block(body, LANES_START, LANES_END), ready_nums, running_nums, sig
+        freshness = lanes_freshness(
+            extract_block(body, LANES_START, LANES_END),
+            ready_nums,
+            running_nums,
+            content_sig,
         )
         print(live_basis)
         print(f"projection delta:\n{delta}", file=sys.stderr)
-        print("lanes: stale" if stale else "lanes: fresh", file=sys.stderr)
-        return 1 if stale else 0
+        print(f"lanes: {_FRESHNESS_MSG[freshness]}", file=sys.stderr)
+        return _FRESHNESS_EXIT[freshness]
 
     if args.write_lanes:
         content = sys.stdin.read()
