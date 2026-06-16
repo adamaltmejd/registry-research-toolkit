@@ -32,7 +32,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
 import reg_meta
-from reg_webapp.etag import CACHE_CONTROL, compute_etag, etag_matches
+from reg_webapp.etag import cache_control_for, compute_etag, etag_matches
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -71,7 +71,11 @@ class ETagMiddleware(BaseHTTPMiddleware):
         # ever emits a duplicate-key header.
         headers = dict(response.headers)
         headers["etag"] = etag
-        headers["cache-control"] = CACHE_CONTROL
+        # Per-route Cache-Control: most reads carry the 24h policy, but the
+        # deployment-identity reads (e.g. /api/context) revalidate every request
+        # so the vintage footer can't serve a stale version after a deploy.
+        # Computed once here so both the 200 and the reused-`headers` 304 carry it.
+        headers["cache-control"] = cache_control_for(request.url.path)
 
         if etag_matches(request.headers.get("if-none-match"), etag):
             # 304: no body. Keep the validating headers (ETag/Cache-Control) and

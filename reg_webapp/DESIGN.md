@@ -402,10 +402,11 @@ QUERY PLAN reports `USING COVERING INDEX`).
 
 Every read endpoint (`/api/context`, the `/api/catalog` root + catch-all, the 7
 sub-endpoints) carries `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and
-`Cache-Control: public, max-age=86400, must-revalidate`; a matching `If-None-Match`
-yields a **304** with no body. The pure logic lives in `etag.py` (`compute_etag` +
-`etag_matches`); an ASGI middleware (`ETagMiddleware`) wires it DRY onto every GET read
-response.
+a per-route `Cache-Control` (`cache_control_for`): the catalog/search/docs reads keep
+`public, max-age=86400, must-revalidate`, while `/api/context` revalidates always (see
+below). A matching `If-None-Match` yields a **304** with no body. The pure logic lives
+in `etag.py` (`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
+(`ETagMiddleware`) wires it DRY onto every GET read response.
 
 - **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
   package release), NOT the DB `schema_version` manifest. `steward_id` is
@@ -413,6 +414,15 @@ response.
 - **The body-hash** makes `If-None-Match` per-URL coherent — the `?period` / `?variant`
   query is part of the URL, so it's already part of the cache key (different periods are
   different ETags).
+- **`/api/context` revalidates always** (`Cache-Control: no-cache`, in
+  `REVALIDATE_ALWAYS_PATHS`): the SPA vintage footer reads it to assert a specific
+  deploy version/date, so a sub-24h-stale copy would *visibly lie* right after a deploy.
+  The ETag keeps revalidation cheap — a 304 when nothing changed, a fresh 200 the moment
+  a deploy bumps the version. Catalog/search/docs keep `max-age=86400` because a
+  sub-day-stale list is acceptable and their ETag (version-prefixed) still guarantees
+  correctness on revalidation. The edge worker (`reg_webapp/edge/`) is a transparent
+  proxy that defers to this origin contract, so the per-route policy needs no edge
+  change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a
