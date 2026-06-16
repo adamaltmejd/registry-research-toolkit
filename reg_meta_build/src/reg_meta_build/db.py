@@ -25,7 +25,7 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import FqidKind
+from reg_meta.fqid import Fqid, FqidKind
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -1990,6 +1990,24 @@ def _slugged_variable_fqids(
     }
 
 
+def _unresolved_curated_successor(successor: Fqid, grain_noun: str) -> RegMetaError:
+    """The fail-fast error when a curated [[replaced_by]] successor names no live,
+    slugged entity in this build (#440 — a curated successor must resolve, unlike
+    the event-derived path's best-effort skip)."""
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="replaced_by_unresolved_successor",
+        error_class="configuration",
+        message=(
+            f"Curated [[replaced_by]] successor {str(successor)!r} does not "
+            f"resolve to a live, slugged {grain_noun} in this build."
+        ),
+        remediation=(
+            f"A curated successor must exist; fix the FQID or add the {grain_noun} slug."
+        ),
+    )
+
+
 def _materialize_curated_replaced_by_edges(
     conn: sqlite3.Connection,
     slug_dir: Path,
@@ -2040,19 +2058,7 @@ def _materialize_curated_replaced_by_edges(
             assert pred.provider is not None and pred.register is not None
             succ_key = (succ.provider, succ.register)
             if succ_key not in live_registers:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="replaced_by_unresolved_successor",
-                    error_class="configuration",
-                    message=(
-                        f"Curated [[replaced_by]] successor {str(succ)!r} does "
-                        f"not resolve to a live, slugged register in this build."
-                    ),
-                    remediation=(
-                        "A curated successor must exist; fix the FQID or add the "
-                        "register slug."
-                    ),
-                )
+                raise _unresolved_curated_successor(succ, "register")
             # The predecessor MAY be dead — insert it verbatim (slug-anchored).
             pk = (pred.provider, pred.register, succ.provider, succ.register)
             if pk in seen_register:
@@ -2085,19 +2091,7 @@ def _materialize_curated_replaced_by_edges(
             )
             succ_key = (succ.provider, succ.register, succ.variable)
             if succ_key not in live_variables:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="replaced_by_unresolved_successor",
-                    error_class="configuration",
-                    message=(
-                        f"Curated [[replaced_by]] successor {str(succ)!r} does "
-                        f"not resolve to a live, slugged variable in this build."
-                    ),
-                    remediation=(
-                        "A curated successor must exist; fix the FQID or add the "
-                        "variable slug."
-                    ),
-                )
+                raise _unresolved_curated_successor(succ, "variable")
             pk = (
                 pred.provider,
                 pred.register,
