@@ -2873,10 +2873,10 @@ def materialize(
         row_counts.update(adapter.row_counts)
         source_checksums.update(adapter.source_checksums)
         related_edges.extend(adapter.related_edges)
-        # Only the SOS adapter populates classification candidates today; SCB
-        # tags classification on `variable_instance` and feeds the candidate
-        # table via SQL (the SCB feed below). getattr keeps this loop blind to
-        # which adapter carries the attribute.
+        # SOS and curated thin providers (#446) populate classification
+        # candidates; SCB instead tags classification on `variable_instance` and
+        # feeds the candidate table via SQL (the SCB feed below). getattr keeps
+        # this loop blind to which adapter carries the attribute.
         classification_candidates.extend(
             getattr(adapter, "classification_candidates", ())
         )
