@@ -989,9 +989,14 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     conn.execute("CREATE UNIQUE INDEX _vs_single_pk ON _vs_single(value_set_id)")
 
     # 5. Confident auto-link: single-family AND (n_codes >= _CONFIDENT_MIN_CODES OR
-    # label_agree >= _CONFIDENT_LABEL_AGREE). label_agree = the count of value-set
-    # (kod, label) pairs that match a canonical (kod, label) for the candidate cls,
-    # divided by n_codes.
+    # label_agree >= _CONFIDENT_LABEL_AGREE). label_agree = the number of DISTINCT
+    # value-set codes (kods) that have at least one exact (kod, label) match against
+    # the candidate cls's canonical (kod, label) pairs, divided by n_codes. The
+    # numerator is COUNT(DISTINCT v.kod) — not COUNT(*) — because `_vs_codes` holds
+    # distinct (kod, label) rows, so a single code carried under two matching labels
+    # would otherwise count twice against a DISTINCT-kod denominator and let
+    # label_agree exceed 1.0. Distinct-kod keeps it bounded ≤ 1.0 and matches the
+    # issue's intended "exact code+label ≥0.90" metric.
     conn.execute(
         f"""
         CREATE TEMP TABLE _vs_confident AS
@@ -1001,7 +1006,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         WHERE st.n_codes >= {_CONFIDENT_MIN_CODES}
            OR (
                CAST((
-                   SELECT COUNT(*)
+                   SELECT COUNT(DISTINCT v.kod)
                    FROM _vs_codes v
                    WHERE v.value_set_id = sg.value_set_id
                      AND EXISTS (
@@ -1022,6 +1027,15 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # NULL-safe; the join already constrains value_set_id non-NULL (a confident
     # value set has members), but the guard mirrors the backfill's IS-keying so the
     # additive contract holds for any state key.
+    #
+    # classification_candidate is an unindexed scratch table (by design), so the
+    # NOT EXISTS guard would full-scan it per candidate row — O(N×M) at real-corpus
+    # scale. Index the state key for the guard, then drop it (mirrors the temp-index
+    # lifecycle in `_apply_valid_codes` / `populate_classifications`).
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS _cc_state_key "
+        "ON classification_candidate(variable_id, value_set_id)"
+    )
     conn.execute(
         """
         INSERT INTO classification_candidate (variable_id, value_set_id, classification_id)
@@ -1035,6 +1049,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         )
         """
     )
+    conn.execute("DROP INDEX IF EXISTS _cc_state_key")
 
     # Counts for the report (no row-level content). value_sets/variables linked
     # are measured off the confident map joined to variable_state, so they reflect

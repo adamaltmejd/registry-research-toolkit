@@ -1066,6 +1066,38 @@ class TestLinkValueSetClassifications:
         assert counts["single_below_threshold"] == 1
         assert g.candidates() == []
 
+    def test_label_agree_counts_distinct_kods_not_pairs(self) -> None:
+        # A <15-code single-family set where ONE code is carried under TWO labels
+        # that both match canonical (kod, label). Distinct-kod agreement is 8/10 =
+        # 0.80 (< 0.90 → must NOT link), but the OLD COUNT(*) pair-count was 9/10 =
+        # 0.90 (would have linked). Guards Fix 1: numerator = COUNT(DISTINCT v.kod).
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Canonical: 10 distinct 3-digit codes 001..010 each under one label, PLUS
+        # a SECOND canonical row for 001 under label "LX" (a code legitimately
+        # carrying two canonical labels).
+        canon = [(str(i).zfill(3), f"L{i}") for i in range(1, 11)]
+        canon.append(("001", "LX"))
+        g.add_classification(40, "SUN2000", canon)
+
+        # Value set (n_codes = 10 distinct kods, containment 1.0, single-family):
+        #  - 001..008 under their matching labels L1..L8  → 8 distinct matching kods
+        #  - 009, 010 RELABELED → 2 distinct non-matching kods
+        #  - 001 ALSO under "LX" (the duplicate): a second matching PAIR, same kod
+        members = [(str(i).zfill(3), f"L{i}") for i in range(1, 9)]
+        members += [("009", "renamed 009"), ("010", "renamed 010")]
+        members.append(("001", "LX"))  # duplicate kod, second matching label
+        g.add_value_set(140, members)
+        g.add_variable_state(940, 140)
+
+        counts = link_value_set_classifications(g.conn)
+        # Distinct-kod agreement 0.80 < 0.90 → not confident; pair-count 0.90 would
+        # have falsely linked under the old metric.
+        assert counts["value_sets_linked"] == 0
+        assert counts["single_below_threshold"] == 1
+        assert g.candidates() == []
+
     def test_multi_family_ambiguous_not_linked(self) -> None:
         from reg_meta_build.classifications import link_value_set_classifications
 
