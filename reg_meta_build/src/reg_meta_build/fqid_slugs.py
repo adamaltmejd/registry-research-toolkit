@@ -21,7 +21,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
@@ -678,7 +678,15 @@ FREEZE_STATE_FILE = "freeze.toml"
 # Reserved zone for the provider-independent classifications.toml — its entries
 # key on a bare `source_id` (short_name), so they have no provider zone.
 CLASSIFICATIONS_ZONE = "classifications"
-_FREEZE_STATES: frozenset[str] = frozenset({"churning", "curating", "frozen"})
+_FREEZE_STATES: frozenset[str] = frozenset(get_args(SlugFreezeState))
+
+# Reserved TOMLs under a slug dir that are NOT per-provider curation files:
+# the provider-independent classifications.toml and the #470 freeze.toml state
+# map. Every provider-TOML glob site must skip these. (`<provider>.auto.toml` is
+# handled separately — `load_slug_dir` LOADS it, others exclude it.)
+_RESERVED_NON_PROVIDER_TOMLS: frozenset[str] = frozenset(
+    {CLASSIFICATIONS_FILE, FREEZE_STATE_FILE}
+)
 
 
 def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
@@ -690,17 +698,15 @@ def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
     """
     stems: set[str] = set()
     for path in slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"):
-        if (
-            path.name == CLASSIFICATIONS_FILE
-            or path.name == FREEZE_STATE_FILE
-            or path.name.endswith(AUTO_FILE_SUFFIX)
+        if path.name in _RESERVED_NON_PROVIDER_TOMLS or path.name.endswith(
+            AUTO_FILE_SUFFIX
         ):
             continue
         stems.add(path.stem)
     return frozenset(stems)
 
 
-def load_freeze_states(slug_dir: Path) -> dict[str, str]:
+def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
     """Parse ``<slug_dir>/freeze.toml`` into ``{zone: state}``.
 
     An absent file → ``{}`` (every zone defaults to "churning"). Fails fast
@@ -714,7 +720,7 @@ def load_freeze_states(slug_dir: Path) -> dict[str, str]:
         return {}
     data = _parse_toml(path)
     known_zones = _known_provider_stems(slug_dir) | {CLASSIFICATIONS_ZONE}
-    states: dict[str, str] = {}
+    states: dict[str, SlugFreezeState] = {}
     for zone, state in data.items():
         if not isinstance(state, str):
             raise _err(
@@ -736,16 +742,16 @@ def load_freeze_states(slug_dir: Path) -> dict[str, str]:
                 f"A zone is a provider stem ({sorted(known_zones - {CLASSIFICATIONS_ZONE})}) "
                 f"or {CLASSIFICATIONS_ZONE!r}.",
             )
-        states[zone] = state
+        states[zone] = cast("SlugFreezeState", state)  # membership-checked above
     return states
 
 
-def freeze_state(states: Mapping[str, str], zone: str) -> str:
+def freeze_state(states: Mapping[str, SlugFreezeState], zone: str) -> SlugFreezeState:
     """The freeze state of ``zone`` — "churning" when the zone is unlisted."""
     return states.get(zone, "churning")
 
 
-def frozen_zones(states: Mapping[str, str]) -> frozenset[str]:
+def frozen_zones(states: Mapping[str, SlugFreezeState]) -> frozenset[str]:
     """The subset of zones sealed to "frozen" (grow-only, no rename/removal)."""
     return frozenset(z for z, s in states.items() if s == "frozen")
 
@@ -1458,8 +1464,7 @@ def populate_variable_slugs(
     curated_entries = [
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
-        if path.name != CLASSIFICATIONS_FILE
-        and path.name != FREEZE_STATE_FILE  # #470 state map, not a curation TOML
+        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
         and not path.name.endswith(AUTO_FILE_SUFFIX)
         for e in load_provider_toml(path)
     ]
@@ -2199,8 +2204,8 @@ def load_lineage_config(slug_dir: Path) -> LineageConfig:
     overrides: dict[tuple[str, str, str], tuple[str, str]] = {}
 
     for path in sorted(slug_dir.glob("*.toml")):
-        if path.name in (CLASSIFICATIONS_FILE, FREEZE_STATE_FILE):
-            continue  # #470 freeze.toml is a state map, not a curation TOML
+        if path.name in _RESERVED_NON_PROVIDER_TOMLS:
+            continue
         provider = _provider_from_path(path)
         data = _parse_toml(path)
 
@@ -2393,8 +2398,8 @@ def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
     """
     edges: list[CuratedReplacedByEdge] = []
     for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
-        if path.name in (CLASSIFICATIONS_FILE, FREEZE_STATE_FILE):
-            continue  # #470 freeze.toml is a state map, not a curation TOML
+        if path.name in _RESERVED_NON_PROVIDER_TOMLS:
+            continue
         data = _parse_toml(path)
         raw_rows = data.get("replaced_by")
         if raw_rows is None:
