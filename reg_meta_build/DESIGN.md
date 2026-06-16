@@ -493,8 +493,38 @@ actually DOS cp850 remnants undefined in cp1252:
   | 0x90 | É     | É         |
   | 0x9D | Ø     | Ø         |
 
-These are mapped during import. The build reads \~1M backbone rows from
-`Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
+These are mapped during import (`_decode_cp1252`). The build reads \~1M backbone rows
+from `Registerinformation.csv` and \~102M value-item rows from `Vardemangder.csv`.
+
+### Build performance
+
+The \~102M-row `Vardemangder.csv` import is the build's hot loop (it dominated total
+build time). Two properties keep it cheap without changing output:
+
+- **Decode only what is kept.** The generic `_open_scb_csv` builds a decoded
+  `{column: value}` dict per row; at 102M rows × 6 columns that per-row dict + per-field
+  `_decode_cp1252` dominated everything. `_import_vardemangder` instead reads raw
+  latin-1 field *lists* (`_open_scb_csv_raw`), indexes columns positionally, parses
+  `CVID`/`ItemId` with `int()` straight off the raw ASCII-digit string, and **defers
+  cp1252 decode to the first occurrence of each unique value code** (\~0.7M) rather than
+  every row. The `value_code` dedup key is a `_CP850_CANON` translate of the raw
+  `(kod, label)` — it canonicalizes exactly the five DOS-remnant bytes, which induces
+  the *same* equivalence as comparing `_decode_cp1252` outputs (`_decode_cp1252` is
+  injective on every byte except it folds each remnant byte onto its cp1252 twin). So
+  `code_id` minting and every downstream table are byte-identical to a decode-every-row
+  build — a property a unit test pins over all 256×256 byte pairs, and the real-corpus
+  `dbdiff` gate enforces end-to-end. `_decode_cp1252` also short-circuits pure-ASCII
+  strings, which speeds every CSV import.
+- **Build PRAGMAs.** `build_db` runs the working DB with `journal_mode=OFF`,
+  `synchronous=OFF`, and a large page cache (on both `main` and the attached `staging`
+  schema — PRAGMAs are per-database and do not propagate to a database attached after
+  they were set; `journal_mode` also requires autocommit, so a `commit()` precedes the
+  staging PRAGMAs). This is safe **only** because the build writes to a temp file and
+  atomically renames on success, unlinking it on any failure — there is nothing to
+  crash-recover. Never reuse this connection config to open the published DB.
+
+`--timing` (or `REG_META_BUILD_TIMING=1`) emits per-stage `[timing] <stage>: <s>` lines
+to stderr — a profiler-free way to see where build time goes. Off by default.
 
 ### SCB free-text hygiene (read-boundary trim)
 

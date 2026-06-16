@@ -11,9 +11,11 @@ import csv
 import hashlib
 import io
 import json
+import os
 import sqlite3
 import struct
 import sys
+import time
 from contextlib import contextmanager
 from typing import TYPE_CHECKING, Any
 
@@ -160,6 +162,17 @@ def _value_set_hash(pairs: list[tuple[str, str]]) -> bytes:
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
 # Map to their cp850 equivalents rather than rejecting.
 _CP850_FIXUP = {0x8F: "Å", 0x90: "É", 0x9D: "Ø", 0x81: "ü", 0x8D: "ì"}
+
+# str.translate table mapping each DOS-remnant byte (read as a latin-1
+# codepoint) to its cp1252-twin codepoint — the same char a normal cp1252 byte
+# would decode to (0x8F→Å is also reachable as 0xC5→Å, etc.). Applying it to a
+# raw latin-1 string yields a dedup key whose equality is IDENTICAL to comparing
+# `_decode_cp1252` results: `_decode_cp1252` is injective on every byte EXCEPT it
+# folds each fixup byte onto its twin, so canonicalizing exactly those five bytes
+# induces the same equivalence — without paying a full per-row decode. Lets the
+# Vardemangder hot loop key value_code dedup on raw fields and defer decode to
+# first-occurrence while staying byte-identical to the decoded-key build.
+_CP850_CANON = {b: ord(ch) for b, ch in _CP850_FIXUP.items()}
 
 EXPECTED_HEADERS: dict[str, list[str]] = {
     "Registerinformation.csv": [
@@ -1139,6 +1152,11 @@ CREATE TABLE import_manifest (
 # (SCHEMA_VERSION gates the universal DB only).
 PROVENANCE_DB_FILENAME = "reg_meta.provenance.db"
 
+# build-db page cache (negative = KiB, so ~2 GiB) applied per-database to both
+# `main` and the attached `staging` schema. Keeps the heavy index maintenance and
+# the projection DISTINCT/ORDER-BY sorts off disk during the bulk build.
+_BUILD_PAGE_CACHE_KIB = -2_000_000
+
 PROVENANCE_DDL = """\
 -- Ties this provenance DB to the exact universal DB it was built against.
 CREATE TABLE build_manifest (
@@ -1322,13 +1340,16 @@ def _file_sha256(path: Path) -> str:
 
 
 @contextmanager
-def _open_scb_csv(
+def _open_scb_csv_raw(
     path: Path,
-) -> Iterator[tuple[list[str], Iterator[tuple[int, dict[str, str]]]]]:
-    """Open a pipe-delimited cp1252 CSV and yield (header, row_iterator).
+) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str]]]]]:
+    """Open a pipe-delimited cp1252 CSV; yield (header, raw-field-list iterator).
 
-    Reads bytes as latin-1 (single-byte passthrough), validates against
-    known-invalid cp1252 bytes, then decodes to proper cp1252 text.
+    Same open + header/field-count validation as `_open_scb_csv`, but each row
+    is the RAW latin-1 field LIST — NOT decoded, NOT keyed into a dict. The
+    102M-row Vardemangder loop indexes columns positionally and decodes only the
+    few it keeps; per-row dict-building and per-field `_decode_cp1252` otherwise
+    dominate the whole build. The header IS decoded (cheap, once).
     """
     with path.open("rb") as raw_handle:
         text_handle = io.TextIOWrapper(raw_handle, encoding="latin-1", newline="")
@@ -1356,16 +1377,38 @@ def _open_scb_csv(
                 remediation="Ensure the file is an unmodified SCB metadata export.",
             )
 
-        def row_iter() -> Iterator[tuple[int, dict[str, str]]]:
+        ncols = len(header)
+
+        def raw_iter() -> Iterator[tuple[int, list[str]]]:
             for row_number, fields in enumerate(reader, start=2):
-                if len(fields) != len(header):
+                if len(fields) != ncols:
                     raise RegMetaError(
                         exit_code=EXIT_CONFIG,
                         code="csv_bad_row",
                         error_class="configuration",
-                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {len(header)}.",
+                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
                         remediation="Re-export the file from mikrometadata.scb.se.",
                     )
+                yield row_number, fields
+
+        yield header, raw_iter()
+
+
+@contextmanager
+def _open_scb_csv(
+    path: Path,
+) -> Iterator[tuple[list[str], Iterator[tuple[int, dict[str, str]]]]]:
+    """Open a pipe-delimited cp1252 CSV and yield (header, row_iterator).
+
+    Reads bytes as latin-1 (single-byte passthrough), validates against
+    known-invalid cp1252 bytes, then decodes to proper cp1252 text. Each row is
+    a fully-decoded ``{column: value}`` dict. Built on `_open_scb_csv_raw`; hot
+    paths that don't need every column decoded should use the raw helper.
+    """
+    with _open_scb_csv_raw(path) as (header, raw_rows):
+
+        def row_iter() -> Iterator[tuple[int, dict[str, str]]]:
+            for row_number, fields in raw_rows:
                 yield (
                     row_number,
                     {h: _decode_cp1252(v) for h, v in zip(header, fields, strict=True)},
@@ -1379,7 +1422,14 @@ def _decode_cp1252(raw: str) -> str:
 
     Bytes undefined in cp1252 but present as DOS cp850 remnants are mapped
     to their cp850 equivalents instead of rejecting the whole import.
+
+    ASCII fast path: for a pure-ASCII string (the overwhelmingly common case
+    across every SCB CSV), latin-1, cp1252, and the read string all agree on
+    0x00–0x7F and none of the DOS-remnant fixup bytes (all >= 0x81) can occur —
+    so the input is already correct and the encode + per-byte scan are skipped.
     """
+    if raw.isascii():
+        return raw
     raw_bytes = raw.encode("latin-1")
     if not any(b in _CP850_FIXUP for b in raw_bytes):
         return raw_bytes.decode("cp1252")
@@ -1392,6 +1442,39 @@ def _decode_cp1252(raw: str) -> str:
 def _progress(msg: str) -> None:
     sys.stderr.write(msg + "\n")
     sys.stderr.flush()
+
+
+def _timing_enabled() -> bool:
+    """True when per-stage build timing should be emitted.
+
+    Opt-in via ``--timing`` (build-db) / ``REG_META_BUILD_TIMING=1`` — off by
+    default so normal builds stay quiet. Checked at call time, not import, so the
+    CLI flag (which sets the env var) takes effect.
+    """
+    return os.environ.get("REG_META_BUILD_TIMING") == "1"
+
+
+def _emit_timing(label: str, t0: float) -> None:
+    """Emit a greppable ``[timing] <label>: <s>`` stderr line if timing is on."""
+    if _timing_enabled():
+        _progress(f"[timing] {label}: {time.perf_counter() - t0:.1f}s")
+
+
+@contextmanager
+def _stage_timer(label: str):  # noqa: ANN201 - internal timing context manager
+    """Time a build stage, emitting ``[timing] <label>: <s>`` when timing is on.
+
+    Near-zero cost when off (a `perf_counter` + the `_emit_timing` env lookup);
+    the ``[timing]`` prefix is greppable so a build log yields a per-stage
+    breakdown — a profiler-free way to locate build-time hot spots. Enable with
+    ``--timing`` / ``REG_META_BUILD_TIMING=1``. Delegates the format + gate to
+    `_emit_timing` so the line shape lives in exactly one place.
+    """
+    t0 = time.perf_counter()
+    try:
+        yield
+    finally:
+        _emit_timing(label, t0)
 
 
 # A2.3: SCB ships succession in `timeseries_event` under two handelse values.
@@ -2806,6 +2889,7 @@ def materialize(
     # SOS writes none), and MERGE its row_counts/source_checksums/related_edges/
     # fold_slug_hints. The reinsert + shared post-passes then run ONCE below.
     for adapter, source_dir in adapters:
+        _adapter_t0 = time.perf_counter()
         for obj in adapter.emit(source_dir):
             if isinstance(obj, IRRegister):
                 registers.append(obj)
@@ -2890,6 +2974,7 @@ def materialize(
                     adapter.projection_stats.cvids_empty_after_projection
                 ),
             }
+        _emit_timing(f"adapter.emit[{adapter.provider}]", _adapter_t0)
 
     _progress(
         f"  IR stream: collected {len(delivery_approvals):,} delivery-approval + "
@@ -2897,6 +2982,7 @@ def materialize(
     )
 
     # The flip: re-insert the combined core graph from the IR (sole-writer).
+    _t = time.perf_counter()
     _reinsert_core_graph_from_ir(
         conn,
         registers=registers,
@@ -2905,6 +2991,7 @@ def materialize(
         states=states,
         aliases=aliases,
     )
+    _emit_timing("reinsert_core_graph", _t)
 
     # Provider gate shared by the curated passes below: classifications and
     # concept-group families whose provider isn't in this build are skipped,
@@ -3194,6 +3281,7 @@ def materialize(
     # real data is the gate. A state with NULL value_set_id contributes nothing
     # (the WHERE guard mirrors the old `value_set_id IS NOT NULL` skip).
     _progress("Building code_variable_map...")
+    _t = time.perf_counter()
     conn.execute(
         "INSERT INTO code_variable_map (code_id, variable_id) "
         "SELECT DISTINCT vsm.code_id, vs.variable_id "
@@ -3229,6 +3317,7 @@ def materialize(
         )
     cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
     _progress(f"  {cvm_count:,} code×variable mappings")
+    _emit_timing("code_variable_map", _t)
 
     # value_code.mapping_count (#352): precompute per-(code,label) variable count
     # from the now-complete code_variable_map (base derivation + SCB top-up). Used
@@ -3331,7 +3420,9 @@ def materialize(
     conn.execute("DROP TABLE register_version")
     _progress("Dropped register_version + population + object_type (A2.6).")
 
+    _t = time.perf_counter()
     _populate_fts(conn)
+    _emit_timing("populate_fts", _t)
 
     # Match the legacy `import_manifest.row_counts` key order (byte-identity,
     # dbdiff R5): the SCB-reference table counts ran physically LAST in the
@@ -3501,8 +3592,16 @@ def build_db(
         staging_path.unlink()
 
     conn = sqlite3.connect(tmp_path)
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA synchronous=NORMAL")
+    # The build writes to a temp file and atomically renames on success,
+    # unlinking it on ANY failure (see `finally` below) — there is nothing to
+    # crash-recover, so journaling + fsync buy the artifact nothing. journal_mode
+    # OFF + synchronous OFF drop both (the bulk of the ~10% wall win is removed
+    # fsync/journal I/O); the page-cache bump keeps the heavy index maintenance
+    # and DISTINCT/ORDER-BY sorts off disk. Safe ONLY because of temp-then-rename
+    # — do not copy this config to a connection that opens the published DB.
+    conn.execute("PRAGMA journal_mode=OFF")
+    conn.execute("PRAGMA synchronous=OFF")
+    conn.execute(f"PRAGMA cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB main page cache
     conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
     build_failed = True
@@ -3516,6 +3615,18 @@ def build_db(
         # reference the staging table. Path is bound (not interpolated) so
         # quotes/specials in the parent dir can't break or inject SQL.
         conn.execute("ATTACH DATABASE ? AS staging", (str(staging_path),))
+        # journal_mode/synchronous/cache_size are PER-DATABASE and do NOT
+        # propagate to a database attached AFTER they were set on `main`. The
+        # 102M-row WITHOUT ROWID staging B-tree — the dominant insert — lives
+        # here, so it needs its own OFF/OFF + large cache or it keeps paying
+        # rollback-journal + fsync cost. journal_mode can only change in
+        # autocommit mode, but seed_providers() left an implicit txn open — commit
+        # it first or the change is silently refused (DELETE stays). (Persisting
+        # the seed rows early is safe: build-failure unlinks the temp file.)
+        conn.commit()
+        conn.execute("PRAGMA staging.journal_mode=OFF")
+        conn.execute("PRAGMA staging.synchronous=OFF")
+        conn.execute(f"PRAGMA staging.cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB
 
         # Provider-blind materialization. Each selected adapter parses its native
         # exports and emits the IR stream; `materialize` loops over them and runs
@@ -3563,6 +3674,7 @@ def build_db(
                     )
                 )
 
+        _t_mat = time.perf_counter()
         mat = materialize(
             conn,
             adapters,
@@ -3572,6 +3684,7 @@ def build_db(
             slug_dir=slug_dir,
             skip_slugs=skip_slugs,
         )
+        _emit_timing("materialize (total)", _t_mat)
         source_checksums = mat["source_checksums"]
         row_counts = mat["row_counts"]
         provenance_payload = mat["provenance"]
@@ -3611,7 +3724,9 @@ def build_db(
         # speed; toggling within an active transaction is a no-op, so FK
         # declarations alone don't validate the data. PRAGMA foreign_key_check
         # returns rows on violation; the enabling-flip below is cosmetic.
+        _t = time.perf_counter()
         violations = list(conn.execute("PRAGMA foreign_key_check"))
+        _emit_timing("foreign_key_check", _t)
         if violations:
             sample = ", ".join(f"{v[0]}#{v[1]}" for v in violations[:5])
             raise RegMetaError(
@@ -3645,7 +3760,9 @@ def build_db(
         # preceding commit ensures it does. ATTACH-staging was already
         # detached implicitly when the staging path was passed (or stays
         # attached harmlessly; VACUUM only touches `main`).
+        _t = time.perf_counter()
         conn.execute("VACUUM")
+        _emit_timing("VACUUM", _t)
 
         _progress("Database built successfully.")
         build_failed = False

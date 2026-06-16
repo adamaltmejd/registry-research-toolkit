@@ -21,7 +21,12 @@ from _csv_fixtures import (
 from reg_meta.db import SCHEMA_VERSION, get_manifest, open_db
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import extract_year
-from reg_meta_build.db import _decode_cp1252, _value_set_hash, build_db
+from reg_meta_build.db import (
+    _CP850_CANON,
+    _decode_cp1252,
+    _value_set_hash,
+    build_db,
+)
 
 
 class TestDecodeCP1252:
@@ -49,6 +54,26 @@ class TestDecodeCP1252:
         # "MURCI<0x90>LAGO" → "MURCIÉLAGO"
         raw = b"MURCI\x90LAGO".decode("latin-1")
         assert _decode_cp1252(raw) == "MURCIÉLAGO"
+
+    def test_ascii_fast_path_matches_full_decode(self):
+        # The isascii() short-circuit must be identical to the full decode for
+        # every ASCII string (latin-1/cp1252/ASCII agree on 0x00-0x7F).
+        for s in ("hello", "ABC_123", "", "a-b.c/d", "0000"):
+            assert _decode_cp1252(s) == s
+
+    def test_cp850_canon_induces_decode_equivalence(self):
+        # The Vardemängder hot loop keys value_code dedup on a `_CP850_CANON`
+        # translate of the RAW latin-1 string instead of decoding every row —
+        # correct ONLY if canon-equality == decoded-equality. `_decode_cp1252`
+        # and `str.translate(_CP850_CANON)` are both per-character maps that
+        # preserve length, so proving the relation per single byte over the full
+        # 0..255 space proves it for arbitrary strings (position-wise compare).
+        chars = [bytes([b]).decode("latin-1") for b in range(256)]
+        decoded = [_decode_cp1252(c) for c in chars]
+        canon = [c.translate(_CP850_CANON) for c in chars]
+        for i, a in enumerate(chars):
+            for j, b in enumerate(chars):
+                assert (decoded[i] == decoded[j]) == (canon[i] == canon[j]), (a, b)
 
 
 class TestBuildDb:

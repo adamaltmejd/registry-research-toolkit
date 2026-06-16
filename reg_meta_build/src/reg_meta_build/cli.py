@@ -168,6 +168,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "`('scb',)` so synthetic SCB-only test fixtures need no extra inputs.)"
         ),
     )
+    build_p.add_argument(
+        "--timing",
+        action="store_true",
+        help=(
+            "Emit per-stage `[timing] <stage>: <s>` lines to stderr (equivalent to "
+            "REG_META_BUILD_TIMING=1). Off by default; a profiler-free way to see "
+            "where build time goes."
+        ),
+    )
 
     extend_db_p = sub.add_parser(
         "extend-db",
@@ -389,6 +398,10 @@ def _build_validate_hook() -> Callable[[Path], None]:
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
+    # `--timing` is surfaced to the build internals (db.py `_timing_enabled`) via
+    # the env var so the deep helpers need no extra plumbing.
+    if args.timing:
+        os.environ["REG_META_BUILD_TIMING"] = "1"
     db_dir = Path(args.db) if args.db else default_db_dir()
     slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
 
