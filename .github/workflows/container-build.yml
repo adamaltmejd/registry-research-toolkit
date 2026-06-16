@@ -181,6 +181,11 @@ jobs:
       # still fails red (preserving the #343 loud-failure behavior). The asset
       # schema is read from the release tag's source (a data-only release keeps the
       # tag-commit schema), so the comparison needs the tag history (checkout above).
+      # The guard applies to the AUTO-RESOLVED newest reg_meta/v* tag (push/PR, or a
+      # dispatch with an empty `reg_meta_tag`); an explicit `workflow_dispatch`
+      # `reg_meta_tag` pin BYPASSES it (the "owed release will catch up" rationale
+      # only holds for the newest tag — a deliberate pin must fail loud, not green-
+      # no-op, if its asset is incompatible with the current code).
       # Trade-off: on a schema-bumping window the Dockerfile bake isn't exercised
       # (a build-only PR goes green-skipped); it's re-exercised once the release
       # ships and branches rebase onto the now-caught-up asset.
@@ -188,6 +193,15 @@ jobs:
         id: schemaguard
         run: |
           set -euo pipefail
+          # An explicit `reg_meta_tag` dispatch pin is a deliberate operator choice — the
+          # "owed release will catch up" rationale only holds for the auto-resolved newest
+          # tag, so never neutralize an explicit pin. Let the bake run (and fail loud if the
+          # pinned asset is incompatible with the current code), rather than green-no-op.
+          if [ -n "${{ inputs.reg_meta_tag }}" ]; then
+            echo "pending_bump=false" >> "$GITHUB_OUTPUT"
+            echo "explicit reg_meta_tag pin (${{ inputs.reg_meta_tag }}) — pending-bump guard bypassed; bake runs as directed."
+            exit 0
+          fi
           TAG="${{ steps.regmeta.outputs.tag }}"
           # Anchored grep (^…) so it can't match an f-string/usage of the constant.
           code_db=$(grep -oP '^SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/db.py)

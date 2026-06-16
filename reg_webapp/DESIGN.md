@@ -630,12 +630,14 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   gate on its `pending_bump` job output and wait. Once the release ships, a rebase
   re-runs the now-passing bake and deploys. Only the code-ahead case is neutralized — a
   major mismatch, a missing asset, or a genuinely broken bake stays unguarded and still
-  fails red (the #343 loud-failure behavior). The comparison rule is unit-tested because
-  CI can't reach the code-ahead branch on a normal commit (main's schema usually equals
-  the latest release); its source of truth is `_check_schema_compat` in
-  `reg_meta/src/reg_meta/db.py`. Trade-off: during the bump window the Dockerfile bake
-  isn't exercised (a build-only PR goes green-skipped), re-exercised once the release
-  lands.
+  fails red (the #343 loud-failure behavior). The guard is also bypassed for an explicit
+  `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific (possibly
+  older) release has no owed release coming, so it must fail loud if incompatible, not
+  green-no-op. The comparison rule is unit-tested because CI can't reach the code-ahead
+  branch on a normal commit (main's schema usually equals the latest release); its
+  source of truth is `_check_schema_compat` in `reg_meta/src/reg_meta/db.py`. Trade-off:
+  during the bump window the Dockerfile bake isn't exercised (a build-only PR goes
+  green-skipped), re-exercised once the release lands.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
   source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
