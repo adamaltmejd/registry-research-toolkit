@@ -3470,6 +3470,17 @@ def _import_vardemangder(
             version = fields[i_ver]
             niva = fields[i_niva]
 
+            # Sentinel skip + drift detector run on RAW strings. A row only
+            # matches when kod==version==niva ∈ SENTINELS (an ASCII allowlist),
+            # which forces all three ASCII, so raw == decoded and the skip is
+            # exact. The drift branch (kod==version, kod not a known real shape)
+            # also compares raw: it targets ASCII SCB type-tag placeholders, the
+            # only shape that is kod==version, so a non-ASCII fold-twin (raw
+            # 0x8F vs 0xC5, both decode to 'Å') is not a drift candidate anyway.
+            # Both produce an empty drift set on the real corpus. NOTE: the
+            # byte-identity guarantee is about the EMITTED tables (value_code
+            # dedup / code_id / staging), not this diagnostic's raw-vs-decoded
+            # equality on a pathological fold-twin input.
             if vardekod == version == niva and vardekod in sentinels:
                 skipped_sentinel += 1
                 continue

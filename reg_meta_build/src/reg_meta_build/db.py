@@ -1152,6 +1152,11 @@ CREATE TABLE import_manifest (
 # (SCHEMA_VERSION gates the universal DB only).
 PROVENANCE_DB_FILENAME = "reg_meta.provenance.db"
 
+# build-db page cache (negative = KiB, so ~2 GiB) applied per-database to both
+# `main` and the attached `staging` schema. Keeps the heavy index maintenance and
+# the projection DISTINCT/ORDER-BY sorts off disk during the bulk build.
+_BUILD_PAGE_CACHE_KIB = -2_000_000
+
 PROVENANCE_DDL = """\
 -- Ties this provenance DB to the exact universal DB it was built against.
 CREATE TABLE build_manifest (
@@ -1417,7 +1422,14 @@ def _decode_cp1252(raw: str) -> str:
 
     Bytes undefined in cp1252 but present as DOS cp850 remnants are mapped
     to their cp850 equivalents instead of rejecting the whole import.
+
+    ASCII fast path: for a pure-ASCII string (the overwhelmingly common case
+    across every SCB CSV), latin-1, cp1252, and the read string all agree on
+    0x00–0x7F and none of the DOS-remnant fixup bytes (all >= 0x81) can occur —
+    so the input is already correct and the encode + per-byte scan are skipped.
     """
+    if raw.isascii():
+        return raw
     raw_bytes = raw.encode("latin-1")
     if not any(b in _CP850_FIXUP for b in raw_bytes):
         return raw_bytes.decode("cp1252")
@@ -1452,19 +1464,17 @@ def _emit_timing(label: str, t0: float) -> None:
 def _stage_timer(label: str):  # noqa: ANN201 - internal timing context manager
     """Time a build stage, emitting ``[timing] <label>: <s>`` when timing is on.
 
-    Near-zero cost when off (one env lookup); the ``[timing]`` prefix is
-    greppable so a build log yields a per-stage breakdown — a profiler-free way
-    to locate build-time hot spots. Enable with ``--timing`` /
-    ``REG_META_BUILD_TIMING=1``.
+    Near-zero cost when off (a `perf_counter` + the `_emit_timing` env lookup);
+    the ``[timing]`` prefix is greppable so a build log yields a per-stage
+    breakdown — a profiler-free way to locate build-time hot spots. Enable with
+    ``--timing`` / ``REG_META_BUILD_TIMING=1``. Delegates the format + gate to
+    `_emit_timing` so the line shape lives in exactly one place.
     """
-    if not _timing_enabled():
-        yield
-        return
     t0 = time.perf_counter()
     try:
         yield
     finally:
-        _progress(f"[timing] {label}: {time.perf_counter() - t0:.1f}s")
+        _emit_timing(label, t0)
 
 
 # A2.3: SCB ships succession in `timeseries_event` under two handelse values.
@@ -3591,7 +3601,7 @@ def build_db(
     # — do not copy this config to a connection that opens the published DB.
     conn.execute("PRAGMA journal_mode=OFF")
     conn.execute("PRAGMA synchronous=OFF")
-    conn.execute("PRAGMA cache_size=-2000000")  # ~2 GiB main-DB page cache
+    conn.execute(f"PRAGMA cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB main page cache
     conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
     build_failed = True
@@ -3616,7 +3626,7 @@ def build_db(
         conn.commit()
         conn.execute("PRAGMA staging.journal_mode=OFF")
         conn.execute("PRAGMA staging.synchronous=OFF")
-        conn.execute("PRAGMA staging.cache_size=-2000000")  # ~2 GiB
+        conn.execute(f"PRAGMA staging.cache_size={_BUILD_PAGE_CACHE_KIB}")  # ~2 GiB
 
         # Provider-blind materialization. Each selected adapter parses its native
         # exports and emits the IR stream; `materialize` loops over them and runs
