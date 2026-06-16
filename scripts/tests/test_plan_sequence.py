@@ -209,59 +209,89 @@ def test_parse_basis_pre_signature_reads_empty_sig() -> None:
         "lanes", "<!-- plan-lanes:basis ready=1,2 running=3 -->"
     )
     assert ps.parse_basis(legacy) == ({1, 2}, {3}, "")
-    assert ps.lanes_are_stale(legacy, {1, 2}, {3}, "livesig")  # sig differs → stale
+    assert ps.lanes_freshness(legacy, {1, 2}, {3}, "livesig") == "rerank"  # sig differs
 
 
-# --- lanes signature (FU-2) ----------------------------------------------------------
+# --- lanes content signature (FU-2 + running-set-only re-stamp, #468) -----------------
 
 
-def test_lanes_signature_is_stable_and_order_independent() -> None:
+def test_lanes_content_signature_is_stable_and_order_independent() -> None:
     a = _rec(1, area="reg_meta", touches=["x.py"], priority="high")
     b = _rec(2, touches=["y.py"], relationships=[("related to", 9)])
-    assert ps.lanes_signature([a, b]) == ps.lanes_signature([b, a])  # sorted internally
-    assert ps.lanes_signature([a, b]) == ps.lanes_signature([a, b])  # deterministic
+    assert ps.lanes_content_signature([a, b]) == ps.lanes_content_signature([b, a])
+    assert ps.lanes_content_signature([a, b]) == ps.lanes_content_signature([a, b])
 
 
-def test_lanes_signature_changes_on_each_lane_affecting_input() -> None:
+def test_lanes_content_signature_changes_on_each_lane_affecting_input() -> None:
     # Every input `/plan-lanes` ranks on must flip the signature (FU-2 + the Codex P2s:
     # area grouping, full Relationships graph — not just touches/priority).
-    base = ps.lanes_signature([_rec(1, area="reg_meta", touches=["x.py"])])
-    assert base != ps.lanes_signature([_rec(1, area="reg_meta", touches=["y.py"])])
-    assert base != ps.lanes_signature([_rec(1, area="reg_webapp", touches=["x.py"])])
-    assert base != ps.lanes_signature(
+    base = ps.lanes_content_signature([_rec(1, area="reg_meta", touches=["x.py"])])
+    assert base != ps.lanes_content_signature(
+        [_rec(1, area="reg_meta", touches=["y.py"])]
+    )
+    assert base != ps.lanes_content_signature(
+        [_rec(1, area="reg_webapp", touches=["x.py"])]
+    )
+    assert base != ps.lanes_content_signature(
         [_rec(1, area="reg_meta", touches=["x.py"], priority="high")]
     )
     # A non-blocking coherence tie (Related to / Follow-up to) — Codex P2 #3.
-    assert base != ps.lanes_signature(
+    assert base != ps.lanes_content_signature(
         [_rec(1, area="reg_meta", touches=["x.py"], relationships=[("related to", 7)])]
     )
 
 
-def test_lanes_signature_catches_blocked_dependent_edge_rewrite() -> None:
+def test_lanes_content_signature_catches_blocked_dependent_edge_rewrite() -> None:
     # Codex P2 #1: a still-blocked issue's `Blocked by` rewrite changes which ready issue
-    # has unblocking power, though no section moves. Signing ALL work records catches it.
+    # has unblocking power, though no section moves. Signing blocked (non-running) records
+    # alongside the candidates catches it.
     ready = _rec(1, touches=["x.py"])  # the candidate
     dep_old = _rec(50, blocked_label=True, relationships=[("blocked by", 1)])
     dep_new = _rec(50, blocked_label=True, relationships=[("blocked by", 2)])
-    assert ps.lanes_signature([ready, dep_old]) != ps.lanes_signature([ready, dep_new])
+    assert ps.lanes_content_signature([ready, dep_old]) != ps.lanes_content_signature(
+        [ready, dep_new]
+    )
 
 
-def test_signature_flips_staleness_on_touches_edit_no_section_move() -> None:
-    # The FU-2 fix: a `touches` edit that moves no issue between sections must still flip
-    # staleness, where a membership-only basis (same ready/running sets) would miss it.
-    ready, running = {1}, set()
-    old_sig = ps.lanes_signature([_rec(1, touches=["a.py"])])
-    new_sig = ps.lanes_signature([_rec(1, touches=["a.py", "b.py"])])
-    block = ps.render_lanes_block("lanes", ps.basis_comment(ready, running, old_sig))
-    assert not ps.lanes_are_stale(block, ready, running, old_sig)  # unchanged → fresh
-    assert ps.lanes_are_stale(block, ready, running, new_sig)  # touches moved → stale
+def test_content_signature_invariant_to_running_issue_leaving() -> None:
+    # The #468 core: a running issue that holds NO ready candidate contributes nothing to
+    # the content signature, so its PR merging + issue closing (it leaves the corpus) does
+    # NOT flip the signature — that delta is running-set-only and re-stamps, not re-ranks.
+    before = [
+        _rec(1, area="reg_meta", touches=["a.py"]),  # free candidate
+        _rec(
+            9, area="reg_meta", open_prs=[100], touches=["z.py"]
+        ),  # in-flight, disjoint
+    ]
+    after = [_rec(1, area="reg_meta", touches=["a.py"])]  # #9 merged + closed → gone
+    assert ps.lanes_content_signature(before) == ps.lanes_content_signature(after)
 
 
-def test_membership_only_change_still_trips_via_sets() -> None:
-    # Sets remain the primary signal: a membership move trips staleness even if (by some
-    # coincidence) the signature matched — the basis compares the sets too.
-    block = ps.render_lanes_block("lanes", ps.basis_comment({1}, set(), "sig"))
-    assert ps.lanes_are_stale(block, {1, 2}, set(), "sig")  # ready grew → stale
+def test_content_signature_flips_when_running_merge_unholds_a_candidate() -> None:
+    # The held↔free guard: when the leaving running issue WAS holding a ready issue (shared
+    # touches), that issue becomes a free candidate → content moved → must re-rank, not
+    # re-stamp. The free flag in the signature catches it though no section label moves.
+    before = [
+        _rec(1, touches=["shared.py"]),  # ready but HELD by #9
+        _rec(9, open_prs=[100], touches=["shared.py"]),  # in-flight, holds #1
+    ]
+    after = [_rec(1, touches=["shared.py"])]  # #9 gone → #1 now free
+    assert ps.lanes_content_signature(before) != ps.lanes_content_signature(after)
+
+
+def test_content_signature_excludes_running_own_projection() -> None:
+    # A running issue's own area/touches/priority sign nothing (it's never a candidate);
+    # only the held-set effect would. Two corpora identical but for a running issue's area
+    # must hash the same.
+    a = [
+        _rec(1, touches=["a.py"]),
+        _rec(9, area="reg_meta", open_prs=[5], touches=["z.py"]),
+    ]
+    b = [
+        _rec(1, touches=["a.py"]),
+        _rec(9, area="reg_webapp", open_prs=[5], touches=["z.py"]),
+    ]
+    assert ps.lanes_content_signature(a) == ps.lanes_content_signature(b)
 
 
 def test_reject_lanes_stdin() -> None:
@@ -273,13 +303,97 @@ def test_reject_lanes_stdin() -> None:
     assert ps.reject_lanes_stdin("1. lane A — #1") is None  # clean content passes
 
 
-def test_lanes_are_stale_against_live_sets() -> None:
-    fresh = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig"))
-    assert not ps.lanes_are_stale(fresh, {1, 2}, {3}, "sig")  # basis matches → fresh
-    assert ps.lanes_are_stale(fresh, {1, 2, 4}, {3}, "sig")  # ready moved → stale
-    assert ps.lanes_are_stale(fresh, {1, 2}, set(), "sig")  # running cleared → stale
-    assert ps.lanes_are_stale(fresh, {1, 2}, {3}, "other")  # sig moved → stale
-    assert ps.lanes_are_stale("", {1}, set(), "sig")  # no block at all → stale
+# --- lanes freshness: fresh / re-stamp / re-rank (#468) -------------------------------
+
+
+def test_lanes_freshness_three_way() -> None:
+    block = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig"))
+    assert ps.lanes_freshness(block, {1, 2}, {3}, "sig") == "fresh"  # nothing moved
+    # Running-set-only delta (PR #3 merged → its issue cleared): content sig + ready set
+    # unchanged, only `running` moved → cheap re-stamp, no /plan-lanes.
+    assert ps.lanes_freshness(block, {1, 2}, set(), "sig") == "restamp"
+    assert ps.lanes_freshness(block, {1, 2}, {3, 4}, "sig") == "restamp"  # PR opened
+    # Content moved → re-rank.
+    assert ps.lanes_freshness(block, {1, 2, 4}, {3}, "sig") == "rerank"  # ready grew
+    assert (
+        ps.lanes_freshness(block, {1, 2}, {3}, "other") == "rerank"
+    )  # content sig moved
+    assert ps.lanes_freshness("", {1}, set(), "sig") == "rerank"  # no parsable basis
+
+
+def test_signature_flips_freshness_on_touches_edit_no_section_move() -> None:
+    # The FU-2 fix carried over: a `touches` edit that moves no issue between sections must
+    # still re-rank, where a membership-only basis (same ready/running sets) would miss it.
+    ready, running = {1}, set()
+    old_sig = ps.lanes_content_signature([_rec(1, touches=["a.py"])])
+    new_sig = ps.lanes_content_signature([_rec(1, touches=["a.py", "b.py"])])
+    block = ps.render_lanes_block("lanes", ps.basis_comment(ready, running, old_sig))
+    assert ps.lanes_freshness(block, ready, running, old_sig) == "fresh"  # unchanged
+    assert (
+        ps.lanes_freshness(block, ready, running, new_sig) == "rerank"
+    )  # touches moved
+
+
+def test_running_set_only_merge_is_restamp_end_to_end() -> None:
+    # End-to-end of the #468 fix: build the basis from a corpus, merge an in-flight PR (its
+    # issue leaves), recompute, and confirm the live state classifies as re-stamp — the
+    # exact two-tick scenario that used to force a re-rank.
+    before = [
+        _rec(1, area="reg_meta", touches=["a.py"]),  # free candidate
+        _rec(
+            9, area="reg_meta", open_prs=[100], touches=["z.py"]
+        ),  # in-flight, disjoint
+    ]
+    basis = ps.basis_comment({1}, {9}, ps.lanes_content_signature(before))
+    block = ps.render_lanes_block("1. lane — #1", basis)
+    after = [_rec(1, area="reg_meta", touches=["a.py"])]  # #9 merged + closed
+    assert (
+        ps.lanes_freshness(block, {1}, set(), ps.lanes_content_signature(after))
+        == "restamp"
+    )
+
+
+# --- re-stamp (keep ranked content, swap basis) (#468) -------------------------------
+
+
+def test_extract_lanes_content_round_trips() -> None:
+    content = "1. lane A — #1\n2. lane B — #2"
+    block = ps.render_lanes_block(content, ps.basis_comment({1, 2}, set(), "sig"))
+    assert ps.extract_lanes_content(block) == content
+
+
+def test_extract_lanes_content_empty_without_basis() -> None:
+    # A pre-stamp/legacy block has no basis to anchor on → '' so the caller re-ranks.
+    assert ps.extract_lanes_content(ps.render_lanes_block("lanes")) == ""
+    assert ps.extract_lanes_content("") == ""
+
+
+def test_restamp_lanes_block_keeps_content_swaps_basis(monkeypatch) -> None:
+    # Re-stamp must preserve the agentic ranking verbatim and only refresh the basis stamp
+    # (new `running=`, same `sig`) — no /plan-lanes, no content churn.
+    old = ps.render_lanes_block("1. lane A — #1", ps.basis_comment({1}, {9}, "sig"))
+    body = f"intro\n\n{old}\n\nnarrative\n"
+    captured: dict[str, str] = {}
+
+    def fake_write(epic: int, block: str) -> int:
+        captured["block"] = block
+        return 0
+
+    monkeypatch.setattr(ps, "epic_body", lambda epic: body)
+    monkeypatch.setattr(ps, "write_lanes_block", fake_write)
+
+    new_basis = ps.basis_comment({1}, set(), "sig")  # running cleared (PR #9 merged)
+    assert ps.restamp_lanes_block(328, new_basis) == 0
+    block = captured["block"]
+    assert "1. lane A — #1" in block  # ranked content preserved verbatim
+    assert ps.parse_basis(block) == ({1}, set(), "sig")  # new basis stamped
+    assert "running=9" not in block  # stale in-flight set gone
+
+
+def test_restamp_lanes_block_falls_back_to_rerank_without_block(monkeypatch) -> None:
+    monkeypatch.setattr(ps, "epic_body", lambda epic: "intro, no lanes block\n")
+    # Exit 1 signals the caller to re-rank instead.
+    assert ps.restamp_lanes_block(328, ps.basis_comment({1}, set(), "s")) == 1
 
 
 # --- render --------------------------------------------------------------------------
