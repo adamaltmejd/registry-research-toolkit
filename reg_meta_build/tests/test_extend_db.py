@@ -14,7 +14,10 @@ is in scope, so the global build runs with empty curation maps.
 
 from __future__ import annotations
 
+import ast
+import inspect
 import json
+import re
 import sqlite3
 from typing import TYPE_CHECKING
 
@@ -1131,6 +1134,89 @@ class TestProviderIdempotency:
         assert inserted == 0  # matching name → skip
         after = conn.execute("SELECT COUNT(*) FROM provider").fetchone()[0]
         assert after == before  # no duplicate row
+
+
+# ── CLI handler ──────────────────────────────────────────────────────────────
+
+
+# ── core-graph INSERT column parity (#425) ───────────────────────────────────
+
+# Two writers hand-roll the shipped core-graph INSERTs and their column lists
+# must stay identical: `extend_db._insert_core_graph` (steward overlay, per-row
+# `conn.execute`) and `db._reinsert_core_graph_from_ir` (materializer sole-writer,
+# `conn.executemany`). FOOTGUN: a future *nullable* column added to one writer but
+# not the other compiles, runs, and silently leaves the other writer's rows unset
+# (no NOT NULL to trip). No shared helper joins them — the two call sites differ
+# structurally (per-row positional vs bulk named binds), so a shared writer would
+# be an invasive refactor for a parity concern. This test is the chosen lock.
+
+_CORE_GRAPH_TABLES = frozenset(
+    {"register", "register_variant", "variable", "variable_state", "variable_alias"}
+)
+
+# `variable_alias` uses `INSERT OR IGNORE`, hence the optional clause.
+_INSERT_RE = re.compile(
+    r"INSERT(?:\s+OR\s+IGNORE)?\s+INTO\s+(\w+)\s*\(([^)]*)\)",
+    re.IGNORECASE,
+)
+
+
+def _insert_columns_by_table(func) -> dict[str, frozenset[str]]:
+    """Walk ``func``'s source for ``conn.execute``/``conn.executemany`` calls whose
+    first positional arg is a string constant, and from each ``INSERT INTO`` string
+    extract ``{table: frozenset(columns)}`` for the core-graph tables.
+
+    Both writers spell the SQL as implicitly-concatenated multi-line string
+    literals (``"INSERT INTO variable " "(...) "``); Python's parser folds those
+    into a single ``ast.Constant``, so the whole INSERT statement reaches us as one
+    string — no manual re-joining needed."""
+    tree = ast.parse(inspect.getsource(func))
+    columns: dict[str, frozenset[str]] = {}
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        callee = node.func
+        if not (
+            isinstance(callee, ast.Attribute)
+            and callee.attr in ("execute", "executemany")
+        ):
+            continue
+        if not node.args:
+            continue
+        first = node.args[0]
+        if not (isinstance(first, ast.Constant) and isinstance(first.value, str)):
+            continue
+        match = _INSERT_RE.search(first.value)
+        if match is None:
+            continue
+        table = match.group(1)
+        if table not in _CORE_GRAPH_TABLES:
+            continue
+        columns[table] = frozenset(
+            col.strip() for col in match.group(2).split(",") if col.strip()
+        )
+    return columns
+
+
+class TestCoreGraphInsertParity:
+    def test_overlay_and_materializer_insert_same_columns(self) -> None:
+        from reg_meta_build.db import _reinsert_core_graph_from_ir
+        from reg_meta_build.extend_db import _insert_core_graph
+
+        overlay = _insert_columns_by_table(_insert_core_graph)
+        materializer = _insert_columns_by_table(_reinsert_core_graph_from_ir)
+
+        # Both writers must INSERT into every core-graph table (else the parse
+        # missed one and the per-table check below would vacuously pass).
+        assert set(overlay) == _CORE_GRAPH_TABLES, overlay
+        assert set(materializer) == _CORE_GRAPH_TABLES, materializer
+
+        for table in sorted(_CORE_GRAPH_TABLES):
+            assert overlay[table] == materializer[table], (
+                f"{table}: _insert_core_graph and _reinsert_core_graph_from_ir "
+                f"INSERT different columns; symmetric difference "
+                f"{set(overlay[table] ^ materializer[table])}"
+            )
 
 
 # ── CLI handler ──────────────────────────────────────────────────────────────

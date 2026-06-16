@@ -492,8 +492,10 @@ def _insert_core_graph(
     """INSERT the steward-private core graph (registers/variants/variables/
     states + the per-state alias row). Ids are deterministically minted
     high-band; the column lists mirror ``_reinsert_core_graph_from_ir`` (the
-    materializer's sole-writer INSERTs). Slugs insert NULL — the steward TOML /
-    incremental auto-derive fills them afterwards.
+    materializer's sole-writer INSERTs). Parity with that writer (a nullable
+    column added here but not there silently leaves the other's rows unset) is
+    locked by ``test_extend_db.py::TestCoreGraphInsertParity``. Slugs insert
+    NULL — the steward TOML / incremental auto-derive fills them afterwards.
 
     Each register's provider must resolve to a live ``provider_id`` (a steward
     provider just inserted, or a built-in). A register whose provider is
