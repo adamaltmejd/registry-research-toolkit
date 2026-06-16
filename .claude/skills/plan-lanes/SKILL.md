@@ -49,10 +49,10 @@ serialize across lanes) — never call them parallel-safe.
    in-flight conflicts," report exactly that and stop.
 
    Just below the intro paragraph the output has a
-   `Candidate set (N) — rank ONLY these …` line followed by a flat, sorted list of issue
-   numbers. **That line is the authoritative floor** — copy it verbatim and rank only
-   those `N` numbers. The per-area lists below it are the same set with detail; the flat
-   line is your checklist.
+   `Candidate set (N) — rank ONLY these … : #… #…` line — the `N` issue numbers sit on
+   **that same line**, flat and sorted. **That line is the authoritative floor** — copy
+   it verbatim and rank only those `N` numbers. The per-area lists below it are the same
+   set with detail; the flat line is your checklist.
 
    `--lane` is **not** epic-filtered — it ranks over every open ready issue (the script
    ignores `--epic` on this path). That's fine: #328 is the umbrella epic. The epic arg
@@ -97,16 +97,21 @@ serialize across lanes) — never call them parallel-safe.
    (see the hard guardrail in step 1).
 
 5. **Self-check against the `Candidate set` line (mandatory before returning).** Take
-   the flat `Candidate set (N) — …` line from step 1 as the source of truth. Collect
-   every distinct issue number that appears in your **ranked lanes** (the numbered list)
-   and confirm two things: (a) every ranked number is in that line — drop any that isn't
-   (it came from the narrative: a shipped/closed/blocked issue); (b) every number in
-   that line is ranked somewhere — add any you dropped. When both hold, the count of
-   ranked issues equals `N`. The only numbers allowed *outside* the candidate set are
-   the floor's **Held** entries and the **in-flight PR numbers** the floor reported, and
-   only on the held/in-flight lines — a PR number is never a ranked candidate. Then set
-   the header `open issues <count>` to `N` exactly; a mismatch means you still have
-   contamination or a dropped candidate — fix it and recount.
+   the flat `Candidate set (N) — … : #… #…` line from step 1 as the source of truth.
+   Confirm two things: (a) every issue number you **rank in a lane** is on that line —
+   drop any that isn't (it came from the narrative: a shipped/closed/blocked issue); (b)
+   every number on that line is **accounted for** — either ranked in a lane, or, if step
+   2 revealed it's actually blocked/not-ready despite being on the floor (an implicit
+   blocker the `touches` floor couldn't see), moved to the **Held/Notes** line with a
+   one-line reason. Never silently drop a floor number, and never force a
+   discovered-blocked one into a ranked lane — `/pr-pipeline next` would dispatch it as
+   runnable. Each of the `N` floor numbers must appear **exactly once**, across your
+   ranked lanes plus the Held/Notes lines. The only numbers allowed *outside* the
+   candidate set are **PR numbers**, and only on the held/in-flight lines, taken from
+   the floor's `In-flight PRs:` and `Held — … ← PR #…` lines — never from the epic
+   narrative; a PR number is never a ranked candidate. Then set the header
+   `open issues <count>` to `N` exactly; a mismatch means contamination or a dropped
+   candidate — fix it and recount.
 
 ## Return format
 
@@ -129,14 +134,19 @@ this shape:
 **Notes:** <implicit blockers / semantic conflicts the `touches` floor missed> _(omit if none)_
 ```
 
+Fill the header's `in-flight PRs:` from the floor's `In-flight PRs:` line verbatim (or
+`none` if the floor has no such line); fill each `Held` line's `← PR #<p>` from the
+floor's `Held — … ← PR #…` line. Both come from the live `--lane` output — **never**
+from the epic narrative or comments (the stale source this skill fences off).
+
 The header's `open issues <count>` + in-flight list is the **freshness stamp** — it's
 content-derived, not a timestamp, so the block stays diff-stable when nothing changed,
 and callers can see what graph the ranking was computed against. `<count>` is exactly
-`N` from the floor's `Candidate set (N) …` line — and every issue number in your ranked
-lanes must be one of those `N` (see the step-5 self-check). If the count doesn't match,
-you've either pulled in narrative contamination or dropped a candidate — reconcile and
-recount. Make it accurate to the floor you just read; callers re-rank live rather than
-trusting a stale copy.
+`N` from the floor's `Candidate set (N) …` line — and every issue number you rank must
+be one of those `N` (see the step-5 self-check). If the count doesn't match, you've
+either pulled in narrative contamination or dropped a candidate — reconcile and recount.
+Make it accurate to the floor you just read; callers re-rank live rather than trusting a
+stale copy.
 
 ## Boundaries
 

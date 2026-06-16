@@ -252,6 +252,18 @@ def _prio_tag(rec: Rec) -> str:
     return f"[{rec.priority}] " if rec.priority != "normal" else ""
 
 
+def _holding_prs(rec: Rec, running: list[Rec]) -> list[int]:
+    """Open PR numbers of the in-flight issues whose `touches` hold `rec` back."""
+    return sorted(
+        {
+            p
+            for r in running
+            if touches_overlap(rec.touches, r.touches)
+            for p in r.open_prs
+        }
+    )
+
+
 def dispatch_view(records: list[Rec]) -> str:
     """Read-only dispatch candidates for the agent to compose a lane from.
 
@@ -261,12 +273,13 @@ def dispatch_view(records: list[Rec]) -> str:
     script supplies the deterministic facts and excludes only what would collide with work
     already in flight.
     """
-    in_flight = [t for r in records if r.status == "running" for t in r.touches]
+    running = [r for r in records if r.status == "running"]
+    in_flight = [t for r in running for t in r.touches]
+    in_flight_prs = sorted({p for r in running for p in r.open_prs})
     ready = [r for r in records if r.status == "ready" and not r.is_epic]
-    held = {
-        r.number for r in ready if r.touches and touches_overlap(r.touches, in_flight)
-    }
-    free = [r for r in ready if r.number not in held]
+    held = [r for r in ready if r.touches and touches_overlap(r.touches, in_flight)]
+    held_nums = {r.number for r in held}
+    free = [r for r in ready if r.number not in held_nums]
     if not free:
         return "No ready issues free of in-flight conflicts."
 
@@ -276,13 +289,13 @@ def dispatch_view(records: list[Rec]) -> str:
         "`/pr-pipeline #…` — it opens a draft PR per issue up front, marking the lane",
         "in-flight so the next dispatch skips it.",
         "",
-        # Flat, copy-pasteable candidate set — the authoritative ranking floor. Ranking
-        # an issue NOT in this line is contamination (it came from stale epic narrative,
-        # not the live ready set). Lets `/plan-lanes` self-check exactly instead of
-        # re-tallying the verbose per-area lists below.
+        # Flat, copy-pasteable candidate set — the authoritative ranking floor. The issue
+        # numbers are ON this line (not the next) so `/plan-lanes`'s self-check can verify
+        # "every ranked number is on the Candidate set line" literally. Ranking an issue
+        # NOT on this line is contamination (it came from stale epic narrative, not the
+        # live ready set).
         f"Candidate set ({len(free)}) — rank ONLY these; any other number is "
-        "contamination:",
-        "  " + " ".join(f"#{n}" for n in sorted(r.number for r in free)),
+        "contamination: " + " ".join(f"#{n}" for n in sorted(r.number for r in free)),
         "",
     ]
     by_area: dict[str, list[Rec]] = {}
@@ -312,9 +325,16 @@ def dispatch_view(records: list[Rec]) -> str:
     if serial:
         out.append("Must serialize (share files): " +
                    "; ".join("+".join(f"#{n}" for n in g) for g in serial))  # fmt: skip
+    # In-flight PR numbers come from the live `running` set — give them to the agent so
+    # the return-format header's `in-flight PRs:` field has a fresh source, never the
+    # stale epic narrative.
+    if in_flight_prs:
+        out.append("In-flight PRs: " + ", ".join(f"#{p}" for p in in_flight_prs))
     if held:
-        out.append("Held — touch in-flight work: "
-                   + ", ".join(f"#{n}" for n in sorted(held)))  # fmt: skip
+        out.append("Held — touch in-flight work: " + "; ".join(
+            f"#{r.number} ← PR " + ", ".join(f"#{p}" for p in _holding_prs(r, running))
+            for r in sorted(held, key=lambda r: r.number)
+        ))  # fmt: skip
     return "\n".join(out).rstrip()
 
 

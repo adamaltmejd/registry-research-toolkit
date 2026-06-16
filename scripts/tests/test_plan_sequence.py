@@ -353,9 +353,14 @@ def test_dispatch_view_groups_ready_by_area_excludes_epics() -> None:
     assert "#99" not in view and "#3" not in view
 
 
+def _candidate_line(view: str) -> str:
+    return next(ln for ln in view.splitlines() if ln.startswith("Candidate set ("))
+
+
 def test_dispatch_view_emits_flat_candidate_set_line() -> None:
     # The flat `Candidate set (N) …` line is the authoritative floor /plan-lanes
-    # self-checks against — it must list every free candidate, sorted, and count them,
+    # self-checks against — it must list every free candidate, sorted, ON THE LINE (so
+    # the literal "every ranked number is on that line" check works), and count them,
     # while excluding epics and in-flight/held issues.
     recs = [
         _rec(3, area="reg_webapp", touches=["a.py"]),
@@ -364,9 +369,9 @@ def test_dispatch_view_emits_flat_candidate_set_line() -> None:
         _rec(7, open_prs=[5], touches=["c.py"]),  # running, excluded
     ]
     view = ps.dispatch_view(recs)
-    assert "Candidate set (2) — rank ONLY these" in view
-    # sorted, flat, and only the free candidates
-    assert "  #1 #3" in view
+    line = _candidate_line(view)
+    assert line.startswith("Candidate set (2) — rank ONLY these")
+    assert line.endswith("#1 #3")  # numbers on the line, sorted, free-only
     assert "#99" not in view and "#7" not in view
 
 
@@ -376,10 +381,8 @@ def test_dispatch_view_candidate_set_excludes_held() -> None:
         _rec(1, area="reg_webapp", touches=["shared.py"]),  # conflicts → held
         _rec(2, area="reg_webapp", touches=["other.py"]),  # free
     ]
-    candidate_line = next(
-        ln for ln in ps.dispatch_view(recs).splitlines() if ln.startswith("  #")
-    )
-    assert candidate_line == "  #2"  # held #1 is not a candidate
+    line = _candidate_line(ps.dispatch_view(recs))
+    assert line.endswith(": #2")  # held #1 is not a candidate
 
 
 def test_dispatch_view_holds_issues_touching_in_flight() -> None:
@@ -389,7 +392,10 @@ def test_dispatch_view_holds_issues_touching_in_flight() -> None:
         _rec(2, area="reg_webapp", touches=["other.py"]),  # free
     ]
     view = ps.dispatch_view(recs)
-    assert "Held — touch in-flight work: #1" in view
+    # Held line carries the holding PR so the agent never sources PR numbers from the
+    # epic narrative; the in-flight PR set is also surfaced for the return-format header.
+    assert "Held — touch in-flight work: #1 ← PR #100" in view
+    assert "In-flight PRs: #100" in view
     assert "#2" in view.split("Held")[0]  # #2 is a free candidate
 
 
