@@ -46,6 +46,9 @@ on:
   # newest reg_meta/v* tag (resolved per run, below), so a data-only release
   # busts the bake layer's cache by itself — no input needed unless pinning an
   # OLDER release.
+  # A reg_meta/v* release ALSO reaches this workflow indirectly: publish_reg_meta.yml
+  # dispatches this workflow after publishing, so an owed-bump or data-only release
+  # auto-rebakes + deploys without a manual run (the #448 self-clearing path).
   workflow_dispatch:
     inputs:
       reg_meta_tag:
@@ -93,6 +96,129 @@ jobs:
               - "reg_webapp/backend/openapi.json"
               - ".github/workflows/container-build.yml"
 
+  # Pending-schema-bump guard (#448) — its OWN job so EVERY deploy path can consult
+  # it, including an edge-only push that skips build-image. Resolves the reg_meta/v*
+  # tag to bake and decides whether main's schema is merely AHEAD of that released
+  # asset (a self-clearing pending release → neutralize) vs a genuine break (fail red).
+  schema-guard:
+    needs: changes
+    if: >-
+      !cancelled() && (needs.changes.outputs.image == 'true' ||
+      needs.changes.outputs.edge == 'true' ||
+      github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.regmeta.outputs.tag }}
+      pending_bump: ${{ steps.schemaguard.outputs.pending_bump }}
+    steps:
+      # fetch-depth: 0 + tags so the schema guard below can `git show <tag>:...`
+      # the released asset's schema constants (the resolved reg_meta/v* tag).
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
+      # build-arg. Passing a literal `latest` would make the bake layer's
+      # buildx cache key insensitive to data-only releases — worse, after a
+      # pinned-tag dispatch, the next `latest`-keyed build would resurrect the
+      # OLD cached layer and silently revert prod's DB. A concrete tag makes
+      # the cache key change exactly when the release does.
+      #
+      # Newest-by-tag is asset-blind, which is safe because every published
+      # reg_meta release carries both DB assets — the release flow copies
+      # assets forward on code-only releases (self-contained releases,
+      # .claude/skills/release/SKILL.md step 8). A release violating that
+      # invariant fails the bake stage loudly (exit 10), which is exactly the
+      # #343 outage mode.
+      - name: Resolve reg_meta release tag
+        id: regmeta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ inputs.reg_meta_tag }}"
+          if [ -z "$tag" ]; then
+            tag=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 \
+              --json tagName -q '[.[].tagName | select(startswith("reg_meta/v"))][0]')
+          fi
+          [ -n "$tag" ] || { echo "FATAL: no reg_meta/v* release found" >&2; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Baking reg_meta release: $tag"
+      # Pending-schema-bump guard (#448). Compares main's SCHEMA_VERSION /
+      # DOC_SCHEMA_VERSION against the released tag's via a three-way verdict
+      # (break / pending / compatible) and FAILS RED (non-zero exit) on a genuine
+      # break or a schema-behind release that's also MISSING a DB asset. Because
+      # build-image, deploy, AND edge-deploy all gate on `needs.schema-guard.result
+      # == 'success'`, a failed guard blocks every deploy path — including an
+      # edge-only main push that has NO bake to fail (pre-#448 the break surfaced
+      # only as the bake's exit 10 on image pushes; an edge-only push then shipped a
+      # new SPA/cache generation against a still-stuck origin). It green-neutralizes
+      # ONLY the safe code-ahead case where main's schema is merely AHEAD of the
+      # latest released asset (same major, higher minor) AND the release carries both
+      # `.zst` assets — that refusal is expected and self-clearing (the owed reg_meta
+      # release ships the matching asset). For that case it emits `pending_bump=true`,
+      # deferring the bake + deploy with a GREEN build-image + a `::notice::`; the
+      # BUILD self-clears on the next image-affecting main push, the DEPLOY is
+      # self-clearing on release (publish_reg_meta.yml dispatches this workflow). A
+      # `compatible` verdict emits `pending_bump=false` and proceeds normally. The
+      # asset schema is read from the release tag's source (a data-only release keeps
+      # the tag-commit schema), so the comparison needs the tag history (checkout
+      # above). The guard applies to the AUTO-RESOLVED newest reg_meta/v* tag
+      # (push/PR, or a dispatch with an empty `reg_meta_tag`); an explicit
+      # `workflow_dispatch` `reg_meta_tag` pin BYPASSES it (the "owed release will
+      # catch up" rationale only holds for the newest tag — a deliberate pin must
+      # fail loud in the bake, not green-no-op, if its asset is incompatible; dispatch
+      # always runs build-image so there's no edge-only leak there).
+      # Trade-off: on a schema-bumping window the Dockerfile bake isn't exercised
+      # (a build-only PR goes green-skipped); it's re-exercised once the release
+      # ships and branches rebase onto the now-caught-up asset.
+      - name: Pending-schema-bump guard
+        id: schemaguard
+        env:
+          GH_TOKEN: ${{ github.token }}  # for `gh release view` (missing-asset check below)
+        run: |
+          set -euo pipefail
+          # An explicit `reg_meta_tag` dispatch pin is a deliberate operator choice — the
+          # "owed release will catch up" rationale only holds for the auto-resolved newest
+          # tag, so never neutralize an explicit pin. Let the bake run (and fail loud if the
+          # pinned asset is incompatible with the current code), rather than green-no-op.
+          if [ -n "${{ inputs.reg_meta_tag }}" ]; then
+            echo "pending_bump=false" >> "$GITHUB_OUTPUT"
+            echo "explicit reg_meta_tag pin (${{ inputs.reg_meta_tag }}) — pending-bump guard bypassed; bake runs as directed."
+            exit 0
+          fi
+          TAG="${{ steps.regmeta.outputs.tag }}"
+          # Anchored grep (^…) so it can't match an f-string/usage of the constant.
+          code_db=$(grep -oP '^SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/db.py)
+          code_doc=$(grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/doc_db.py)
+          asset_db=$(git show "$TAG:reg_meta/src/reg_meta/db.py" | grep -oP '^SCHEMA_VERSION = "\K[^"]+')
+          asset_doc=$(git show "$TAG:reg_meta/src/reg_meta/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+')
+          verdict=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --asset-db "$asset_db" --asset-doc "$asset_doc")
+          case "$verdict" in
+            break)
+              # A major schema mismatch is a genuine incompatibility — NOT the neutralizable
+              # code-ahead case. Fail the guard so build-image/deploy/edge-deploy (all gated on
+              # schema-guard success) are blocked red, including an edge-only push that has no
+              # bake to fail. (Pre-#448 this surfaced as the bake's exit 10 on image pushes only.)
+              echo "::error::schema-guard: major schema mismatch between code and latest release $TAG — genuine break, deploys blocked."
+              exit 1 ;;
+            pending)
+              # Code is a minor ahead (same major) — the neutralizable pending-release case, BUT
+              # only if the release actually carries both DB assets. A schema-behind release that
+              # is ALSO missing an asset is a #343 invariant violation: fail red, don't mask it
+              # (an edge-only push has no bake to catch it otherwise).
+              assets=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '[.assets[].name] | join(" ")')
+              if ! printf '%s' "$assets" | grep -Fq 'reg_meta.db.zst' || ! printf '%s' "$assets" | grep -Fq 'reg_meta_docs.db.zst'; then
+                echo "::error::schema-guard: release $TAG is schema-behind AND missing a DB asset (#343) — deploys blocked."
+                exit 1
+              fi
+              echo "pending_bump=true" >> "$GITHUB_OUTPUT"
+              echo "::notice::pending reg_meta release — bake + deploy paused by design (code schema ahead of latest released asset $TAG). The owed release (publish_reg_meta.yml → container-build dispatch) clears this; check_issue_hygiene.py also flags it." ;;
+            compatible)
+              echo "pending_bump=false" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "::error::schema-guard: unexpected verdict '$verdict'"; exit 1 ;;
+          esac
+
   # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
   # (lint + ty + pytest + frontend jobs). CI runs on every main push (no paths
   # filter), so a run always exists; for a workflow_dispatch the gate finds the
@@ -120,9 +246,10 @@ jobs:
           echo "FATAL: timed out waiting for CI" >&2; exit 1
 
   build-image:
-    needs: changes
+    needs: [changes, schema-guard]
     if: >-
-      !cancelled() && (needs.changes.outputs.image == 'true' ||
+      !cancelled() && needs.schema-guard.result == 'success' &&
+      (needs.changes.outputs.image == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     env:
@@ -135,36 +262,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: docker/setup-buildx-action@v4
-      # Resolve the CONCRETE newest reg_meta/v* release tag for the bake
-      # build-arg. Passing a literal `latest` would make the bake layer's
-      # buildx cache key insensitive to data-only releases — worse, after a
-      # pinned-tag dispatch, the next `latest`-keyed build would resurrect the
-      # OLD cached layer and silently revert prod's DB. A concrete tag makes
-      # the cache key change exactly when the release does.
-      #
-      # Newest-by-tag is asset-blind, which is safe because every published
-      # reg_meta release carries both DB assets — the release flow copies
-      # assets forward on code-only releases (self-contained releases,
-      # .claude/skills/release/SKILL.md step 8). A release violating that
-      # invariant fails the bake stage loudly (exit 10), which is exactly the
-      # #343 outage mode.
-      - name: Resolve reg_meta release tag
-        id: regmeta
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          tag="${{ inputs.reg_meta_tag }}"
-          if [ -z "$tag" ]; then
-            tag=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 100 \
-              --json tagName -q '[.[].tagName | select(startswith("reg_meta/v"))][0]')
-          fi
-          [ -n "$tag" ] || { echo "FATAL: no reg_meta/v* release found" >&2; exit 1; }
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "Baking reg_meta release: $tag"
       # Registry push auth (main/dispatch only). The username is ignored by
-      # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
+      # Fly's registry — the FLY_API_TOKEN deploy token authenticates. Skipped on a
+      # pending bump (#448) — nothing to push when the bake is deferred.
       - name: Log in to registry.fly.io
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && needs.schema-guard.outputs.pending_bump != 'true'
         uses: docker/login-action@v4
         with:
           registry: registry.fly.io
@@ -180,21 +282,29 @@ jobs:
       # cheap; cache is WRITTEN only on non-PR events — PR-scoped GHA cache is
       # unreadable from main, so PR writes would only evict useful cache from
       # the repo's 10 GB pool (#290). PRs still READ main's cache.
-      - uses: docker/build-push-action@v7
+      # Skipped on a pending bump (#448): the bake would refuse the behind-schema
+      # asset (exit 10) by design — defer it to the owed reg_meta release rather
+      # than fail red. build-image stays green; deploys wait (job output below).
+      - if: needs.schema-guard.outputs.pending_bump != 'true'
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: reg_webapp/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ github.event_name == 'pull_request' && 'reg-webapp:ci' || format('registry.fly.io/reg-webapp-global:{0}', env.IMAGE_TAG) }}
           build-args: |
-            REG_META_TAG=${{ steps.regmeta.outputs.tag }}
+            REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
           cache-from: type=gha
           cache-to: ${{ github.event_name != 'pull_request' && 'type=gha,mode=max' || '' }}
 
   deploy:
-    needs: [build-image, wait-ci]
+    needs: [build-image, wait-ci, schema-guard]
+    # A pending schema bump (#448) leaves build-image GREEN with the bake skipped —
+    # there is no new image to ship, so the deploy waits for the owed reg_meta
+    # release (after which a rebase re-runs the now-passing bake and deploys).
     if: >-
       !cancelled() && needs.build-image.result == 'success' &&
+      needs.schema-guard.outputs.pending_bump != 'true' &&
       needs.wait-ci.result == 'success' &&
       github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -302,10 +412,19 @@ jobs:
   # DEPLOY_VERSION cache generation (#318), without which the edge would keep
   # serving pre-deploy /api/* payloads for up to the 24h TTL.
   edge-deploy:
-    needs: [changes, build-image, deploy, wait-ci]
+    needs: [changes, build-image, deploy, wait-ci, schema-guard]
+    # Also gated on the pending-bump guard (#448), now its OWN `schema-guard` job:
+    # during a pending-bump window an edge-only main push consults `schema-guard`
+    # directly (it ran because the edge filter matched, even though build-image was
+    # skipped), so the edge correctly waits for the owed release alongside the origin
+    # — closing the prior edge-only gap where a skipped build-image left the verdict
+    # empty. A guard FAILURE also blocks the edge: build-image being skipped is
+    # tolerated below, so a failed guard must not fall through to an empty output.
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
+      needs.schema-guard.result == 'success' &&
+      needs.schema-guard.outputs.pending_bump != 'true' &&
       needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
       (needs.changes.outputs.edge == 'true' ||
       needs.changes.outputs.image == 'true' ||

@@ -619,6 +619,48 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
   `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
   seconds.
+- **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
+  `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
+  higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
+  and turn `build-image` red — pausing **all** deploys for a state that is expected (the
+  owed reg_meta release ships the matching asset). A standalone `schema-guard` job
+  compares the code constants against the released tag's (`git show <tag>:…`) via the
+  pure `scripts/schema_pending_bump.py` helper, which returns a three-way verdict
+  (`break` / `pending` / `compatible`). On a detected code-ahead `pending` bump (with
+  both assets present) it publishes a `pending_bump=true` job output that defers the
+  bake + deploy with a GREEN `build-image` and a `::notice::`. The guard is its **own**
+  job (not a step inside `build-image`) so **every** deploy path can consult it —
+  `build-image`, `deploy`, AND `edge-deploy` all gate on
+  `needs.schema-guard.result == 'success'` (and on `pending_bump`); it runs whenever the
+  image OR edge filter matches (or on dispatch), so an edge-only push still gets a
+  verdict even though `build-image` is skipped. Once the owed release ships, the
+  **build** self-clears on the next image-affecting main push (the bake now passes), and
+  the **deploy** is self-clearing on release too: publishing the owed `reg_meta/v*`
+  release auto-dispatches `container-build.yml` (via `publish_reg_meta.yml`'s
+  `deploy-image` job, after the PyPI publish succeeds), which re-resolves the
+  now-current asset and deploys — no manual `workflow_dispatch` needed. During a
+  pending-bump window a later **edge-only** main push now correctly waits too:
+  `schema-guard` ran (the edge filter matched), so `edge-deploy` sees
+  `pending_bump == true` and holds its SPA/cache-gen ship alongside the origin, rather
+  than going live against the still-pre-bump origin. The guard green-neutralizes
+  **only** the safe code-ahead case; on a genuine **major break** — or a `pending`
+  release that is ALSO **missing** a `.zst` asset (a #343 invariant violation, verified
+  via `gh release view`) — `schema-guard` **fails red (exits non-zero)** rather than
+  emitting `pending_bump=false`. Because all three deploy jobs gate on
+  `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks build-image +
+  deploy + edge-deploy — closing the edge-only hole where a skipped bake left nothing to
+  fail (pre-fix the break surfaced only as the bake's exit 10 on image pushes, so an
+  edge-only push shipped a new SPA/cache generation against a still-stuck origin) and
+  giving a clearer red than a bake exit-10. The guard is also bypassed for an explicit
+  `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific (possibly
+  older) release has no owed release coming, so it must fail loud in the bake if
+  incompatible, not green-no-op (and dispatch always runs build-image, so there is no
+  edge-only leak there). The comparison rule is unit-tested because CI can't reach the
+  code-ahead branch on a normal commit (main's schema usually equals the latest
+  release); its source of truth is `_check_schema_compat` in
+  `reg_meta/src/reg_meta/db.py`. Trade-off: during the bump window the Dockerfile bake
+  isn't exercised (a build-only PR goes green-skipped), re-exercised once the release
+  lands.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
   source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
