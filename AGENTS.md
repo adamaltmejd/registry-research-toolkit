@@ -198,7 +198,12 @@ reg_meta_build/concept_groups.toml
 ````
 
 **Epics** — a tracking issue labeled `epic` that owns its children as sub-issues; each
-child carries its own scope.
+child carries its own scope. An epic's plan lives in its **body** — the generated
+`<!-- plan-sequence -->` / `<!-- plan-lanes -->` blocks plus thin editorial (e.g.
+Parked, Self-close); decisions live on the child issues. **Don't post
+status-consolidation comments on an epic** — a recurring "current state" comment is the
+retired prose-as-state anti-pattern (latest-comment-is-truth goes stale); comments are
+for one-off notes, not the running plan.
 
 **Sequencing is generated, not hand-written.** An epic's status — **ready / running /
 blocked / parallel-safe / pending-release** — is rendered by `/plan-sequence`
