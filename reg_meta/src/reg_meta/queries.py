@@ -23,6 +23,21 @@ if TYPE_CHECKING:
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
+# var_id is the SCB legacy numeric variable id (= SCB's numeric provider_key).
+# SOS (provider_key=name) and curated thin providers (provider_key=column) are
+# non-numeric, so the bare CAST yielded a meaningless 0; emit NULL for them (#466).
+# Mirrors reg_meta_build/.../classifications.py::_LEVEL_EXPR's digit-guard.
+_VAR_ID_EXPR = (
+    "CASE WHEN {col} GLOB '[0-9]*' AND NOT {col} GLOB '*[^0-9]*' "
+    "THEN CAST({col} AS INTEGER) ELSE NULL END"
+)
+# Pre-rendered per qualifier (the column reference varies by query alias). Plain
+# strings so they splice into the SQL fragments by concatenation, no f-string.
+_VAR_ID_V = _VAR_ID_EXPR.format(col="v.provider_key") + " AS var_id"
+_VAR_ID_VF = _VAR_ID_EXPR.format(col="vf.provider_key") + " AS var_id"
+_VAR_ID_VAR = _VAR_ID_EXPR.format(col="var.provider_key") + " AS var_id"
+_VAR_ID_BARE = _VAR_ID_EXPR.format(col="provider_key") + " AS var_id"
+
 
 def _try_int(value: str) -> int | str:
     """Convert to int if the string is numeric, otherwise return as-is."""
@@ -220,7 +235,7 @@ def _filter_search_by_years(
         all_reg_ids = {p[0] for p in var_pairs}
         placeholders = ",".join("?" * len(all_reg_ids))
         rows = conn.execute(
-            "SELECT DISTINCT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
+            "SELECT DISTINCT v.register_id, " + _VAR_ID_V + ", "
             "vs.valid_from, vs.valid_to "
             "FROM variable_state vs "
             "JOIN variable v ON vs.variable_id = v.variable_id "
@@ -454,7 +469,7 @@ def _search_datacolumns(
     # `provider_key`.
     rows = conn.execute(
         "SELECT DISTINCT va.delivery_column_name, v.register_id, v.variable_id, "
-        "CAST(v.provider_key AS INTEGER) AS var_id, "
+        "" + _VAR_ID_V + ", "
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable_alias va "
         "JOIN variable v ON va.variable_id = v.variable_id "
@@ -487,7 +502,7 @@ def _search_varnames(
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT v.register_id, v.variable_id, "
-        "CAST(v.provider_key AS INTEGER) AS var_id, "
+        "" + _VAR_ID_V + ", "
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
@@ -562,7 +577,7 @@ def _search_description_variables(
     # `p.slug` feed `try_emit`, which yields None for an unslugged variable.
     rows = conn.execute(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
-        "CAST(vf.provider_key AS INTEGER) AS var_id, "
+        "" + _VAR_ID_VF + ", "
         "vf.name AS variable_name, vf.definition AS variable_definition, "
         "vf.description AS variable_description, vf.rank, "
         "r.name AS register_name, r.purpose AS register_purpose, "
@@ -1480,7 +1495,7 @@ def get_schema(
         state_rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
-            "CAST(v.provider_key AS INTEGER) AS var_id, v.slug AS variable_slug, "
+            "" + _VAR_ID_V + ", v.slug AS variable_slug, "
             "v.name AS variable_name, COALESCE(v.source_label, '') AS source, "
             "cg.group_key AS concept_group, cg.label AS concept_group_label "
             "FROM variable_state vs "
@@ -1608,26 +1623,26 @@ def get_varinfo(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         vars_by_id = conn.execute(
-            f"SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
+            "SELECT v.*, " + _VAR_ID_V + ", r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE v.provider_key = CAST(? AS TEXT) AND v.register_id IN ({ph})",
             [int_variable, *reg_ids],
         ).fetchall()
         vars_by_name = conn.execute(
-            f"SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
+            "SELECT v.*, " + _VAR_ID_V + ", r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE LOWER(v.name) = LOWER(?) AND v.register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         vars_by_id = conn.execute(
-            "SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
+            "SELECT v.*, " + _VAR_ID_V + ", r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE v.provider_key = CAST(? AS TEXT)",
             (int_variable,),
         ).fetchall()
         vars_by_name = conn.execute(
-            "SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
+            "SELECT v.*, " + _VAR_ID_V + ", r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE LOWER(v.name) = LOWER(?)",
             (variable,),
@@ -1639,7 +1654,9 @@ def get_varinfo(
     if not matched_vars:
         # A2.7: `variable_alias` is variable_id-keyed; join straight to `variable`.
         alias_sql = (
-            "SELECT DISTINCT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable_alias a "
+            "SELECT DISTINCT v.*, "
+            + _VAR_ID_V
+            + ", r.name AS register_name FROM variable_alias a "
             "JOIN variable v ON a.variable_id = v.variable_id "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
@@ -1816,7 +1833,9 @@ def _get_availability_variable(
         params.extend(ids)
 
     var_rows = conn.execute(
-        "SELECT v.variable_id, v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name, "
+        "SELECT v.variable_id, v.register_id, "
+        + _VAR_ID_V
+        + ", v.name AS variable_name, "
         "r.name AS register_name FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
         f"WHERE (v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)){reg_filter}",
@@ -2009,23 +2028,27 @@ def get_values_by_variable(
         ph = _in_placeholders(reg_ids)
         if int_variable is not None:
             rows_by_id = conn.execute(
-                f"SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+                "SELECT variable_id, register_id, "
+                + _VAR_ID_BARE
+                + ", name FROM variable "
                 f"WHERE provider_key = CAST(? AS TEXT) AND register_id IN ({ph})",
                 [int_variable, *reg_ids],
             ).fetchall()
         rows_by_name = conn.execute(
-            f"SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+            "SELECT variable_id, register_id, " + _VAR_ID_BARE + ", name FROM variable "
             f"WHERE LOWER(name) = LOWER(?) AND register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         if int_variable is not None:
             rows_by_id = conn.execute(
-                "SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable WHERE provider_key = CAST(? AS TEXT)",
+                "SELECT variable_id, register_id, "
+                + _VAR_ID_BARE
+                + ", name FROM variable WHERE provider_key = CAST(? AS TEXT)",
                 (int_variable,),
             ).fetchall()
         rows_by_name = conn.execute(
-            "SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+            "SELECT variable_id, register_id, " + _VAR_ID_BARE + ", name FROM variable "
             "WHERE LOWER(name) = LOWER(?)",
             (variable,),
         ).fetchall()
@@ -2035,7 +2058,7 @@ def get_values_by_variable(
     if not matched:
         # A2.7: `variable_alias` is variable_id-keyed; join straight to `variable`.
         alias_sql = (
-            "SELECT DISTINCT v.variable_id, v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name "
+            "SELECT DISTINCT v.variable_id, v.register_id, " + _VAR_ID_V + ", v.name "
             "FROM variable_alias a "
             "JOIN variable v ON a.variable_id = v.variable_id "
             "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
@@ -2096,9 +2119,9 @@ def get_values_by_variable(
     vid_ph = _in_placeholders(variable_ids)
 
     state_rows = conn.execute(
-        f"SELECT vs.state_id, vs.value_set_id, vs.valid_from, vs.valid_to, "
-        f"vs.variable_id, v.slug AS variable_slug, "
-        f"v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
+        "SELECT vs.state_id, vs.value_set_id, vs.valid_from, vs.valid_to, "
+        "vs.variable_id, v.slug AS variable_slug, "
+        "v.register_id, " + _VAR_ID_V + ", "
         f"vs.register_variant_id, r.name AS register_name, rv.name AS variant_name "
         f"FROM variable_state vs "
         f"JOIN variable v ON vs.variable_id = v.variable_id "
@@ -2209,14 +2232,14 @@ def get_datacolumns(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         var_rows = conn.execute(
-            f"SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
+            "SELECT variable_id, register_id, " + _VAR_ID_BARE + " FROM variable "
             f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
             f"AND register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         var_rows = conn.execute(
-            "SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
+            "SELECT variable_id, register_id, " + _VAR_ID_BARE + " FROM variable "
             "WHERE provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)",
             (int_variable, variable),
         ).fetchall()
@@ -2295,7 +2318,7 @@ def _columns_at_year(
     iso_lo = f"{year:04d}-12-31"  # any state starting on/before year-end ...
     iso_hi = f"{year:04d}-01-01"  # ... and ending on/after year-start overlaps
     rows = conn.execute(
-        "SELECT CAST(v.provider_key AS INTEGER) AS var_id, vs.data_type, "
+        "SELECT " + _VAR_ID_V + ", vs.data_type, "
         "vs.data_length, v.name AS variable_name, vs.delivery_column_name "
         "FROM variable_state vs "
         "JOIN variable v ON vs.variable_id = v.variable_id "
@@ -2358,7 +2381,7 @@ def get_diff(
         ph = _in_placeholders(reg_ids)
         for v in variables:
             rows = conn.execute(
-                f"SELECT CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+                "SELECT " + _VAR_ID_BARE + ", name FROM variable "
                 f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
                 f"AND register_id IN ({ph})",
                 [_try_int(v), v, *reg_ids],
@@ -2367,7 +2390,7 @@ def get_diff(
                 # A2.7: `variable_alias` is variable_id-keyed; join straight to
                 # `variable`. `var_id` is the variable's `provider_key`.
                 rows = conn.execute(
-                    f"SELECT DISTINCT CAST(var.provider_key AS INTEGER) AS var_id, var.name "
+                    "SELECT DISTINCT " + _VAR_ID_VAR + ", var.name "
                     f"FROM variable_alias va "
                     f"JOIN variable var ON va.variable_id = var.variable_id "
                     f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND var.register_id IN ({ph})",
@@ -2528,7 +2551,7 @@ def get_lineage(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         matched = conn.execute(
-            f"SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
+            "SELECT v.*, " + _VAR_ID_V + ", r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE (v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)) "
             f"AND v.register_id IN ({ph})",
@@ -2536,7 +2559,7 @@ def get_lineage(
         ).fetchall()
     else:
         matched = conn.execute(
-            "SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
+            "SELECT v.*, " + _VAR_ID_V + ", r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)",
             (int_variable, variable),
@@ -2702,8 +2725,8 @@ def resolve(
         if reg_ids:
             ph = _in_placeholders(reg_ids)
             exact_rows = conn.execute(
-                f"SELECT va.delivery_column_name, v.register_id, "
-                f"CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name "
+                "SELECT va.delivery_column_name, v.register_id, "
+                "" + _VAR_ID_V + ", v.name AS variable_name "
                 f"FROM variable_alias va "
                 f"JOIN variable v ON va.variable_id = v.variable_id "
                 f"WHERE LOWER(va.delivery_column_name) = ? AND v.register_id IN ({ph}) "
@@ -2714,7 +2737,7 @@ def resolve(
         else:
             exact_rows = conn.execute(
                 "SELECT va.delivery_column_name, v.register_id, "
-                "CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name "
+                "" + _VAR_ID_V + ", v.name AS variable_name "
                 "FROM variable_alias va "
                 "JOIN variable v ON va.variable_id = v.variable_id "
                 "WHERE LOWER(va.delivery_column_name) = ? "
@@ -3090,9 +3113,9 @@ def search_variables_by_classification(
     """
     cls_id = _resolve_classification_id(conn, identifier)
     rows = conn.execute(
-        """
+        f"""
         SELECT DISTINCT v.register_id, r.name AS register_name,
-               CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name
+               {_VAR_ID_V}, v.name AS variable_name
         FROM variable_state vs
         JOIN variable v ON vs.variable_id = v.variable_id
         JOIN register r ON v.register_id = r.register_id

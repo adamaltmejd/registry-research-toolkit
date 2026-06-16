@@ -108,6 +108,13 @@ def terminal_width(output_path: str | None) -> int:
     return shutil.get_terminal_size().columns
 
 
+def _cell(value: Any) -> str:
+    """Render a cell value as a display string. None → "" (blank), so a NULL
+    column (e.g. a non-SCB var_id, #466) shows empty rather than the literal
+    "None"."""
+    return "" if value is None else str(value)
+
+
 def render_table(
     rows: list[dict[str, Any]],
     columns: list[str],
@@ -117,7 +124,9 @@ def render_table(
     widths = {c: len(c) for c in columns}
     str_rows = []
     for row in rows:
-        str_row = {c: str(row.get(c, "")) for c in columns}
+        # None renders blank, not the literal "None" — a NULL cell (e.g. a
+        # non-SCB var_id, #466) is empty in tabular output.
+        str_row = {c: _cell(row.get(c)) for c in columns}
         for c in columns:
             widths[c] = max(widths[c], len(str_row[c]))
         str_rows.append(str_row)
@@ -158,7 +167,8 @@ def render_list(rows: list[dict[str, Any]], columns: list[str]) -> str:
         if i > 0:
             lines.append("")
         for c in columns:
-            lines.append(f"  {c.ljust(key_width)}  {row.get(c, '')}")
+            # None renders blank, not "None" (#466) — mirrors render_table.
+            lines.append(f"  {c.ljust(key_width)}  {_cell(row.get(c))}")
     return "\n".join(lines) + "\n"
 
 
