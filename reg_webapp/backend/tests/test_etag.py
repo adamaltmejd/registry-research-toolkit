@@ -13,6 +13,7 @@ import hashlib
 from reg_webapp.etag import (
     CACHE_CONTROL,
     CACHE_CONTROL_REVALIDATE,
+    CACHE_CONTROL_SHORT,
     cache_control_for,
     compute_etag,
     etag_matches,
@@ -54,13 +55,26 @@ def test_compute_etag_is_deterministic():
 
 def test_cache_control_value():
     assert CACHE_CONTROL == "public, max-age=86400, must-revalidate"
+    assert CACHE_CONTROL_SHORT == "public, max-age=60, must-revalidate"
 
 
 def test_cache_control_for_per_route():
-    # /api/context revalidates every request (the vintage footer asserts a deploy
-    # version/date — a stale copy lies); every other read keeps the 24h policy.
+    # Three tiers: /api/context revalidates every request (the vintage footer
+    # asserts a deploy version/date — a stale copy lies); /api/catalog/* reads get
+    # the short 60s window (curated folds must surface promptly); docs/search keep
+    # the 24h policy.
     assert cache_control_for("/api/context") == CACHE_CONTROL_REVALIDATE
-    assert cache_control_for("/api/catalog") == CACHE_CONTROL
+
+    # Catalog root + sub-endpoints (prefix match) all get the short window.
+    assert cache_control_for("/api/catalog") == CACHE_CONTROL_SHORT
+    assert cache_control_for("/api/catalog/sos/lova") == CACHE_CONTROL_SHORT
+    assert (
+        cache_control_for("/api/catalog/scb/lisa/sun2000/states") == CACHE_CONTROL_SHORT
+    )
+
+    # Docs/search reads are rebuild-stable → keep the 24h policy.
+    assert cache_control_for("/api/docs/search") == CACHE_CONTROL
+    assert cache_control_for("/api/search") == CACHE_CONTROL
 
 
 def test_etag_matches_exact():

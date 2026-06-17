@@ -24,7 +24,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
-from reg_webapp.etag import CACHE_CONTROL, CACHE_CONTROL_REVALIDATE
+from reg_webapp.etag import CACHE_CONTROL_REVALIDATE, CACHE_CONTROL_SHORT
 
 _KON = "scb/lisa/kon"
 _SYSS = "scb/rams/syss"
@@ -500,8 +500,12 @@ def test_read_endpoint_sets_etag_and_cache_control(client, path: str):
     assert resp.status_code == 200
     etag = resp.headers.get("etag")
     assert etag and etag.startswith('"') and etag.endswith('"')
-    # /api/context (the vintage-footer source, #447) revalidates always; other reads cache 24h.
-    expected_cc = CACHE_CONTROL_REVALIDATE if path == "/api/context" else CACHE_CONTROL
+    # /api/context (the vintage-footer source, #447) revalidates always; every
+    # other path here is a /api/catalog/* read, which gets the short 60s window
+    # (#499) so curated concept-group folds surface promptly for returning users.
+    expected_cc = (
+        CACHE_CONTROL_REVALIDATE if path == "/api/context" else CACHE_CONTROL_SHORT
+    )
     assert resp.headers.get("cache-control") == expected_cc
 
 
@@ -513,8 +517,12 @@ def test_if_none_match_returns_304(client, path: str):
     assert resp.content == b""
     # The validating headers survive on the 304.
     assert resp.headers["etag"] == etag
-    # /api/context (the vintage-footer source, #447) revalidates always; other reads cache 24h.
-    expected_cc = CACHE_CONTROL_REVALIDATE if path == "/api/context" else CACHE_CONTROL
+    # /api/context (the vintage-footer source, #447) revalidates always; every
+    # other path here is a /api/catalog/* read, which gets the short 60s window
+    # (#499) so curated concept-group folds surface promptly for returning users.
+    expected_cc = (
+        CACHE_CONTROL_REVALIDATE if path == "/api/context" else CACHE_CONTROL_SHORT
+    )
     assert resp.headers.get("cache-control") == expected_cc
 
 
