@@ -24,7 +24,7 @@ sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
 )
 
-from _slugged_db import build_slugged_db  # noqa: E402
+from _slugged_db import add_value_set, build_slugged_db  # noqa: E402
 
 if TYPE_CHECKING:
     import sqlite3
@@ -68,6 +68,125 @@ def db_with_cls_group() -> sqlite3.Connection:
     )
     _rebuild_fts(conn)
     return conn
+
+
+def _link_code_to_classification(
+    conn: sqlite3.Connection, slug: str, code_id: int, is_valid: int = 1
+) -> None:
+    cls_id = conn.execute(
+        "SELECT id FROM classification WHERE slug = ?", (slug,)
+    ).fetchone()[0]
+    conn.execute(
+        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
+        "VALUES (?, ?, NULL, ?)",
+        (cls_id, code_id, is_valid),
+    )
+
+
+@pytest.fixture
+def db_with_class_codes() -> sqlite3.Connection:
+    """Slugged DB whose sun2020 classification CONTAINS two code-shaped codes
+    ('C12', 'C120') so a code-shaped query surfaces it via code-containment even
+    though 'C12' matches no classification NAME.
+
+    A SECOND classification (icd10, name 'C12-titled') deliberately carries 'C12'
+    in its NAME so it's a name-FTS hit too — exercising the dedup (it must not be
+    double-emitted) and the name-before-code ranking."""
+    conn = build_slugged_db()  # ships sun2020 (no codes)
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (60, 'ICD10', 'C12 malignant neoplasm', 'icd10')"
+    )
+    add_value_set(conn, value_set_id=1, codes=[("C12", "Tongue base"), ("C120", "Sub")])
+    code_ids = {
+        row["code"]: row["code_id"]
+        for row in conn.execute("SELECT code_id, code FROM value_code").fetchall()
+    }
+    _link_code_to_classification(conn, "sun2020", code_ids["C12"])
+    _link_code_to_classification(conn, "sun2020", code_ids["C120"])
+    _rebuild_fts(conn)
+    return conn
+
+
+def test_code_shaped_query_surfaces_owning_classification(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # 'C12' matches no classification NAME under sun2020, but sun2020 CONTAINS the
+    # code → it surfaces via code-containment with a navigable fqid.
+    out = search(db_with_class_codes, "C12", field="description", type="classification")
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/sun2020" in fqids
+
+
+def test_code_containment_dedups_against_name_hit(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # icd10's NAME contains 'C12' (a name-FTS hit) AND it would be a code-
+    # containment candidate if it owned the code — but it owns no code here, so the
+    # real dedup target is the general invariant: each classification appears once.
+    out = search(db_with_class_codes, "C12", field="description", type="classification")
+    leaves = [r for r in out["results"] if r["type"] == "classification"]
+    fqids = [r["fqid"] for r in leaves]
+    assert len(fqids) == len(set(fqids)), f"duplicate classification rows: {fqids}"
+    # icd10 is the name hit; sun2020 the code-containment hit.
+    assert "class/icd10" in fqids
+    assert "class/sun2020" in fqids
+
+
+def test_name_fts_hits_precede_code_containment_hits(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # icd10 matches by NAME (negative bm25 rank); sun2020 only by code-containment
+    # (positive base rank) → the name hit sorts first.
+    out = search(db_with_class_codes, "C12", field="description", type="classification")
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert fqids.index("class/icd10") < fqids.index("class/sun2020")
+
+
+def test_code_containment_excluded_under_register_scope(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # Classifications are catalog-scoped: a --register scope means "registers
+    # only", so neither the name arm nor the code-containment arm contributes.
+    out = search(
+        db_with_class_codes,
+        "C12",
+        field="description",
+        type="classification",
+        register="lisa",
+    )
+    assert out["results"] == []
+
+
+def test_code_containment_in_type_all(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # type="all" also surfaces the code-containing classification.
+    out = search(db_with_class_codes, "C12", field="description", type="all")
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/sun2020" in fqids
+
+
+def test_non_code_shaped_query_has_no_code_containment(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # A plain word ('Tongue', the C12 label) is NOT code-shaped (no digit), so the
+    # code-containment arm never runs — sun2020 isn't surfaced by its code's label.
+    out = search(
+        db_with_class_codes, "Tongue", field="description", type="classification"
+    )
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/sun2020" not in fqids
+
+
+def test_two_char_code_query_has_no_code_containment(
+    db_with_class_codes: sqlite3.Connection,
+) -> None:
+    # A 2-char code ('C1') fails the len>=3 code-shape gate, so no code-containment
+    # rows — guards the gate's length floor.
+    out = search(db_with_class_codes, "C1", field="description", type="classification")
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/sun2020" not in fqids
 
 
 def test_classification_label_match_folds_and_subsumes_leaves(

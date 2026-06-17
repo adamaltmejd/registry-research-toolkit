@@ -407,6 +407,10 @@ def search(
     # token, so the FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
+    # Classifications surfaced by the name-FTS arm; the code-containment arm
+    # (#393 item 5) excludes them so a both-ways match isn't emitted twice.
+    classification_name_ids: set[int] = set()
+
     if field in ("datacolumn", "all"):
         all_results.extend(_search_datacolumns(conn, like_pattern, reg_ids))
 
@@ -421,7 +425,26 @@ def search(
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
-            all_results.extend(_search_classifications(conn, fts_query))
+            cls_rows = _search_classifications(conn, fts_query)
+            classification_name_ids = {r["_classification_id"] for r in cls_rows}
+            all_results.extend(cls_rows)
+
+    # Code-aware classification surfacing (#393 item 5): a code-shaped query also
+    # surfaces the classifications that CONTAIN a matching code (C12 -> ICD-10-SE),
+    # so "find the classification for this code" works even with no NAME match.
+    # SEPARATE top-level block (NOT under the `fts_query is not None` gate): it
+    # matches the RAW code against `value_code.code`, not the FTS index. Ranked
+    # AFTER the name-FTS hits (positive vs negative `fts_rank`) and catalog-scoped
+    # — excluded under a `--register` scope, exactly like the name-FTS arm.
+    if (
+        field in ("description", "all")
+        and type in ("classification", "all")
+        and reg_ids is None
+        and _is_code_shaped(query)
+    ):
+        all_results.extend(
+            _search_classifications_by_code(conn, query, classification_name_ids)
+        )
 
     # Code/value search (#352): FTS over value_code labels + exact/prefix code
     # match, annotated with owning variables / classifications. Emits `type:
@@ -1036,6 +1059,69 @@ def _search_classifications(
         }
         for r in rows
     ]
+
+
+# Code-containment classification hits rank AFTER all name-FTS hits. Name-FTS
+# ranks are bm25 (negative = better), so any positive base sinks below them; the
+# enumeration index preserves the SQL order (exact-containing classifications
+# first) within the code-containment block.
+_CLASS_CODE_RANK_BASE = 1000.0
+
+
+def _search_classifications_by_code(
+    conn: sqlite3.Connection, query: str, exclude_ids: set[int]
+) -> list[dict[str, Any]]:
+    """Surface the classifications that CONTAIN a code-shaped query (#393 item 5).
+
+    A code-shaped query ("C12", "F32") should find the classification whose code
+    SET includes a matching code — "find the classification for this code" — even
+    when the query matches no classification NAME (the `_search_classifications`
+    FTS arm). The match is exact OR prefix on `value_code.code`, mirroring the
+    value arm's `code = ? OR code LIKE ?` predicate (`_search_values_fts`).
+
+    The `classification_code` JOIN inherently restricts the result to codes that
+    OWN a classification, so the context-less-code drop the value arm needs (#478,
+    its `mapping_count > 0 OR EXISTS classification_code` owner filter) is implicit
+    here — a code with no `classification_code` row simply doesn't join.
+
+    `exclude_ids` are the classifications already surfaced by the name-FTS arm; we
+    skip them so a classification matched by BOTH name and code-containment appears
+    ONCE (as its name hit), not twice. Emits rows with the SAME keys as
+    `_search_classifications` so they flow identically through `_fold_concept_groups`
+    (keyed on `_classification_id`), pagination, and `_strip_internal_keys`.
+
+    `fts_rank` is a POSITIVE base + enumeration index, so these rows sort AFTER all
+    (negative-rank) name-FTS hits while preserving the SQL order (exact-containing
+    classifications first)."""
+    q = query.strip()
+    rows = conn.execute(
+        "SELECT c.id AS classification_id, c.short_name, c.name AS classification_name, "
+        "c.slug, MAX(CASE WHEN vc.code = ? THEN 1 ELSE 0 END) AS has_exact "
+        "FROM value_code vc "
+        "JOIN classification_code cc ON cc.code_id = vc.code_id "
+        "JOIN classification c ON c.id = cc.classification_id "
+        "WHERE vc.code = ? OR vc.code LIKE ? "
+        "GROUP BY c.id, c.short_name, c.name, c.slug "
+        "ORDER BY has_exact DESC, c.short_name",
+        (q, q, f"{q}%"),
+    ).fetchall()
+    results: list[dict[str, Any]] = []
+    i = 0
+    for r in rows:
+        if r["classification_id"] in exclude_ids:
+            continue
+        results.append(
+            {
+                "type": "classification",
+                "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
+                "short_name": r["short_name"],
+                "classification_name": r["classification_name"],
+                "fts_rank": _CLASS_CODE_RANK_BASE + i,
+                "_classification_id": r["classification_id"],
+            }
+        )
+        i += 1
+    return results
 
 
 # ---------------------------------------------------------------------------
