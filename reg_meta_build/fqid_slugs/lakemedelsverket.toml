@@ -1,0 +1,30 @@
+# Curated FQID slugs for Läkemedelsverket (LV) registers (#443).
+#
+# Companion to scb.toml / sos.toml / fohm.toml / fk.toml; same grammar (see
+# reg_meta_build/DESIGN.md → Slug curation). TOML keys are the minted LV ids —
+# mint("lakemedelsverket", <reg_key>) for the register, mint(..., <variant_key>)
+# for each variant. The biverkningar register has two delivered tables modeled as
+# variants (handlagda / arbetsflode). Panel keys: entity = the report löpnummer
+# (seqrpt, always present — IdNumber/personnummer is often missing), time = the
+# first-received date, grain = row. Variable slugs stay AUTO
+# (lakemedelsverket.auto.toml). Regenerate .snapshot.json after edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+
+# Misstänkta läkemedelsbiverkningar
+[register."7228002101699435108"]
+slug = "biverkningar"
+
+[register_variant."7228002101699435108.7807483842367253820"]
+slug = "handlagda"
+display_group = "Misstänkta läkemedelsbiverkningar"
+panel_entity_key = "seqrpt"
+panel_time_key = "initreceivedate"
+panel_time_grain = "row"
+
+[register_variant."7228002101699435108.7812619579915107644"]
+slug = "arbetsflode"
+display_group = "Misstänkta läkemedelsbiverkningar"
+panel_entity_key = "seqrpt"
+panel_time_key = "initreceivedate"
+panel_time_grain = "row"

@@ -246,10 +246,15 @@ variabelförteckningar (each with one variant per documented delivery table —
 fall/delfall, mottagare/barn/beviljanden/avslag, the tandvård delivery tables — e.g.
 sjukpenning, sjuk- och aktivitetsersättning, föräldrapenning, tandvardsstodet) plus 16
 thin SWECOV-core benefits with no public variable doc (barnbidrag, bostadsbidrag, … — a
-single `_default` variant carrying the payment/period core). FK ships no
-`classification` links yet: its sickness-diagnosis fields are ICD-9/10-coded and a
-strong ICD-10-SE candidate, but the ICD-9 vintage split is deferred to a follow-up (the
-SmiNet precedent linked, FK does not, pending maintainer confirmation).
+single `_default` variant carrying the payment/period core). FK's diagnosis-CODE fields
+are linked to the catalog `ICD-10-SE` classification (the SmiNet precedent): FK codes
+diagnoses per the version current in the data year, so ICD-10-SE tags the modern bulk
+while the pre-1997 ICD-9 tail is a known caveat. **Läkemedelsverket** (#443) is the
+third thin provider — the suspected-adverse-drug-reaction register (`biverkningar`, two
+variants `handlagda`/`arbetsflode` for the assessed vs in-workflow reports). Reaction
+fields are MedDRA-coded (`Pt`/`Hlt`/`Hlgt`/`Soc`); MedDRA is not a declared catalog
+classification (licensed), so they stay unlinked, while the vaccine `atc4pos` field is
+linked to `ATC`.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
