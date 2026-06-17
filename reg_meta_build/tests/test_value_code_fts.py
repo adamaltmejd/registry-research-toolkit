@@ -14,10 +14,12 @@ keeps the repo TOMLs out of the synthetic build.
 
 from __future__ import annotations
 
+import sqlite3
 from typing import TYPE_CHECKING
 
 from _csv_fixtures import _var_row
 from _shared_fixtures import build_with_rows, vm_rows
+from reg_meta_build.db import DDL, _populate_fts
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -152,6 +154,62 @@ def test_mapping_count_computed(tmp_path: Path) -> None:
             "SELECT COUNT(*) FROM value_code WHERE mapping_count < 0"
         ).fetchone()[0]
         assert n_neg == 0
+    finally:
+        conn.close()
+
+
+def test_owner_filter_drops_ownerless_dangling_codes() -> None:
+    """#478: value_code_fts indexes a code ONLY if it has an owner — a variable
+    (mapping_count > 0, the code_variable_map count) OR a classification (a
+    classification_code row). This mirrors the query-side owner definition in
+    reg_meta/queries.py `_code_owner_annotations_batch` (variables ∪
+    classifications); the register-scoped value search already drops ownerless
+    codes (queries.py:944), but the unscoped path defers owner annotation to the
+    shown page and so leaked the ~2,562 ownerless year-projection orphans as
+    context-less hits. Mirroring the filter at index-build time removes them
+    while keeping classification-owned dangling codes (no value_set_member after
+    the year-projection, findable ONLY via value_code_fts) searchable.
+
+    Reproducing a real year-projection orphan via build_with_rows is impractical,
+    so this drives `_populate_fts` directly on a minimal DDL-built DB:
+      1. reachable code (mapping_count=2)            → indexed;
+      2. ownerless dangling code (mapping_count=0,
+         no classification_code)                     → NOT indexed, leaf kept;
+      3. classification-owned dangling code
+         (mapping_count=0, has classification_code)  → STILL indexed.
+    """
+    conn = sqlite3.connect(":memory:")
+    try:
+        conn.executescript(DDL)
+        conn.executemany(
+            "INSERT INTO value_code (code_id, code, label, mapping_count) "
+            "VALUES (?, ?, ?, ?)",
+            [
+                (1, "10", "Reachable label", 2),
+                (2, "20", "Ownerless dangling", 0),
+                (3, "30", "Classification dangling", 0),
+            ],
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name) VALUES (?, ?)",
+            ("test-class", "Test classification"),
+        )
+        class_id = conn.execute(
+            "SELECT id FROM classification WHERE short_name = ?", ("test-class",)
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO classification_code "
+            "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, ?)",
+            (class_id, 3, None, 1),
+        )
+
+        _populate_fts(conn, include_value_code=True)
+
+        assert _indexed(conn, "Reachable label")
+        assert _indexed(conn, "Classification dangling")
+        assert not _indexed(conn, "Ownerless dangling")
+        # The ownerless code is hidden from search but kept in the leaf table.
+        assert "Ownerless dangling" in _vc_labels(conn)
     finally:
         conn.close()
 

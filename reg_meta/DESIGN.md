@@ -88,25 +88,35 @@ Four content-synced FTS5 indexes power search:
   emits `type: "code"` rows. \~55% of codes are bare numbers, so labels are the primary
   search surface. A curated **stoplist** of junk labels (`NULL`, `Ja`/`Nej`,
   `Uppgift saknas`, the `Okänt*`/`Okänd*`/`Felaktig*` SCB sentinel-prefix families, …)
-  is excluded at index-population time (build-side `_VALUE_CODE_STOPLIST_*`): hidden
-  from SEARCH only — the leaf `value_code` / `value_set` tables keep every row. Each
-  code hit pivots through `code_variable_map` → variable (and `classification_code` →
-  classification) and is annotated with a bounded representative slice of its owners
-  plus the full counts — the actionable target is the owning variable/classification,
-  not the bare (code, label) pair. **Ranking** is bm25 relevance with a `mapping_count`
-  (precomputed variable count per pair) DOWNWEIGHT, so a generic enum label shared by
-  many variables ranks below a rare, discriminative one. A **code-shaped** query (digit
+  is excluded at index-population time (build-side `_VALUE_CODE_STOPLIST_*`). Alongside
+  the stoplist, **ownerless codes** — no owning variable (`mapping_count = 0`) AND not
+  present in `classification_code` (#478) — are also excluded: they are
+  year-projection-dangling orphans with no owner to annotate, and indexing them would
+  surface context-less hits in unscoped value search. Classification-owned codes (no
+  variable mapping but linked via `classification_code`) remain indexed, since
+  classification search is name-only. All exclusions are hidden from SEARCH only — the
+  leaf `value_code` / `value_set` tables keep every row. Each code hit pivots through
+  `code_variable_map` → variable (and `classification_code` → classification) and is
+  annotated with a bounded representative slice of its owners plus the full counts — the
+  actionable target is the owning variable/classification, not the bare (code, label)
+  pair. **Ranking** is bm25 relevance with a `mapping_count` (precomputed variable count
+  per pair) DOWNWEIGHT, so a generic enum label shared by many variables ranks below a
+  rare, discriminative one. A **code-shaped** query (digit
   + length ≥ 3, e.g. "F32", "0180") ALSO does an exact/prefix match on `value_code.code`
     (via `idx_value_code_code`), merged + deduped with the label-FTS hits and seeded
     above them (an exact code match is the strongest signal); plain-text queries do
-    label FTS only. The code-exact rank floor means that in the flat `type="all"` CLI
-    path, code-exact hits intentionally precede other result types for a code-shaped
-    query (the user typed a code); the webapp calls `search()` per type, so its typed
-    groups are unaffected. The value arm returns the FULL in-scope match set (no
-    internal limit/offset) — `search()` does the `total_count` + `[offset:offset+limit]`
-    slice, so total_count is true and offset paginates. NB: `value_code_fts` is
-    external-content, so `COUNT(*)`/`SELECT col` read the CONTENT table (value_code) —
-    the honest indexed-row count is the `_docsize` shadow table.
+    label FTS only. The ownerless-drop applies to BOTH paths: the label-FTS index
+    (build-side filter) AND this code-shaped direct `value_code` lookup, which carries
+    the same owner predicate in `_search_values_fts` (#478) — without it a code-shaped
+    exact/prefix query would bypass the index and leak the context-less hit. The
+    code-exact rank floor means that in the flat `type="all"` CLI path, code-exact hits
+    intentionally precede other result types for a code-shaped query (the user typed a
+    code); the webapp calls `search()` per type, so its typed groups are unaffected. The
+    value arm returns the FULL in-scope match set (no internal limit/offset) —
+    `search()` does the `total_count` + `[offset:offset+limit]` slice, so total_count is
+    true and offset paginates. NB: `value_code_fts` is external-content, so
+    `COUNT(*)`/`SELECT col` read the CONTENT table (value_code) — the honest indexed-row
+    count is the `_docsize` shadow table.
 
 `search` takes a RAW user query and builds the FTS5 MATCH expression internally
 (`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),

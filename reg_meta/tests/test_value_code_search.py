@@ -389,3 +389,55 @@ def test_type_all_only_code_rows_annotated(conn: sqlite3.Connection) -> None:
     assert code_row["variable_count"] == 1
     # No row (code or otherwise) leaks the internal marker.
     assert all("_code_id" not in r for r in results)
+
+
+def test_code_shaped_drops_ownerless_dangling_code(conn: sqlite3.Connection) -> None:
+    # #478: a code-shaped query must not return an ownerless dangling code (no
+    # variable owner AND not in classification_code) via the direct value_code
+    # lookup. Owned / classification-owned codes are still returned. Mirrors the
+    # build-side value_code_fts owner filter for the code-shape bypass path.
+    # NOTE: _finalize's FTS 'rebuild' indexes ALL value_code rows (the build-side
+    # owner filter is NOT applied in this harness), so searching by CODE string
+    # (not label) isolates the QUERY-side code-shape filter under test.
+    _seed_register(conn, 1, "reg")
+    vid = _seed_variable(conn, 1, "10", "Var", "var")
+    _seed_code(conn, 1, "9001", "Owned code label")
+    _map(conn, 1, vid)  # owned (mapping_count ≥ 1)
+    _seed_code(conn, 2, "9002", "Ownerless dangling")  # no _map, no classification
+    _seed_code(conn, 3, "9003", "Classification dangling")  # no _map, but classified
+    classification_id = conn.execute(
+        "INSERT INTO classification (short_name, name) VALUES ('c', 'C')"
+    ).lastrowid
+    conn.execute(
+        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
+        "VALUES (?, 3, NULL, 1)",
+        (classification_id,),
+    )
+    _finalize(conn)
+
+    def _codes(query: str) -> list[str]:
+        return [
+            r["code"]
+            for r in search(conn, query, field="value", type="value")["results"]
+        ]
+
+    owned = _codes("9001")
+    assert "9001" in owned, f"owned code must be returned, got {owned}"
+
+    ownerless = _codes("9002")
+    assert "9002" not in ownerless, (
+        f"ownerless dangling code must be dropped, got {ownerless}"
+    )
+
+    classified = _codes("9003")
+    assert "9003" in classified, (
+        f"classification-owned code must be returned, got {classified}"
+    )
+
+    prefix = _codes("900")
+    assert "9001" in prefix and "9003" in prefix, (
+        f"owned/classified prefix hits must be present, got {prefix}"
+    )
+    assert "9002" not in prefix, (
+        f"ownerless code must be dropped from prefix search too, got {prefix}"
+    )

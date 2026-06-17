@@ -772,6 +772,12 @@ def _code_owner_annotations_batch(
             )
 
         # Classifications: catalog-scoped, so a register scope leaves them empty.
+        # This owner definition (variables ∪ classifications, with NO is_valid/validity
+        # filter on classification_code) is MIRRORED at build time by the value_code_fts
+        # owner filter in reg_meta_build/db.py `_populate_fts` (#478). Any change to what
+        # counts as a classification owner here (e.g. adding an is_valid predicate) MUST
+        # be mirrored there, or the search index and the owner annotation desync —
+        # context-less hits leak into search, or valid classification codes vanish.
         if not reg_ids:
             for row in conn.execute(
                 "SELECT cc.code_id, COUNT(*) AS n "
@@ -880,10 +886,19 @@ def _search_values_fts(
 
     if _is_code_shaped(query):
         q = query.strip()
+        # The owner clause mirrors the build-side `value_code_fts` owner filter in
+        # `reg_meta_build/db.py` `_populate_fts` and the owner definition in
+        # `_code_owner_annotations_batch` (variables ∪ classifications, no is_valid
+        # filter): without it this direct code-shape lookup bypasses the index and
+        # leaks context-less hits for exact/prefix code searches (#478). The
+        # correlated ref is qualified `value_code.code_id` so it binds to the outer
+        # FROM, not classification_code.code_id inside the subquery.
         code_rows = conn.execute(
             "SELECT code_id, code, label, mapping_count "
             "FROM value_code "
-            "WHERE code = ? OR code LIKE ? "
+            "WHERE (code = ? OR code LIKE ?) "
+            "AND (mapping_count > 0 OR EXISTS ("
+            "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id)) "
             "ORDER BY (code = ?) DESC, length(code), code",
             (q, f"{q}%", q),
         ).fetchall()
