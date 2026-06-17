@@ -866,10 +866,20 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
       5. `_vs_confident`: single-family AND (`n_codes >= 15` OR `label_agree >=
          0.90`).
       6. Emit the confident map into `classification_candidate`, additively.
+      7. Vintage-period reclaim (#494 PART 1): much of the multi-family residue is
+         ONE family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
+         editions) — distinct `classification` rows on one `supersedes_id` chain.
+         Resolve a multi-family value set ONLY when EVERY candidate cls sits on the
+         same supersedes-chain root (`_chain_root`); if even one candidate is
+         off-chain (a genuine cross-family coincidence, e.g. SNI vs SSYK), leave the
+         whole set in the residue for curation. For each such (variable_id,
+         value_set_id), pick the LATEST candidate vintage whose [valid_from,valid_to]
+         overlaps the pair's aggregate state span — then emit it additively too.
 
-    Returns counts (also logged) — value sets / variables auto-linked, plus the
-    single-family-below-threshold and multi-family (ambiguous) populations, so
-    drift in the curated tail stays visible. No row-level content is logged.
+    Returns counts (also logged) — value sets / variables auto-linked, the
+    single-family-below-threshold and multi-family (ambiguous) populations, plus the
+    vintage-reclaimed counts and the still-ambiguous residue after reclaim, so drift
+    in the curated tail stays visible. No row-level content is logged.
     """
     _progress("Linking inline classification-coded value sets (#416)...")
 
@@ -880,6 +890,10 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "_vs_cls",
         "_vs_single",
         "_vs_confident",
+        "_chain_root",
+        "_vs_multi_onechain",
+        "_vs_span",
+        "_vs_vintage",
     ):
         conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
@@ -1030,8 +1044,10 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     #
     # classification_candidate is an unindexed scratch table (by design), so the
     # NOT EXISTS guard would full-scan it per candidate row — O(N×M) at real-corpus
-    # scale. Index the state key for the guard, then drop it (mirrors the temp-index
-    # lifecycle in `_apply_valid_codes` / `populate_classifications`).
+    # scale. Index the state key for the guard, then drop it after BOTH emits
+    # (confident + vintage) — mirrors the temp-index lifecycle in
+    # `_apply_valid_codes` / `populate_classifications`. The vintage emit (step 7)
+    # also guards against this index, so it must outlive that INSERT.
     conn.execute(
         "CREATE INDEX IF NOT EXISTS _cc_state_key "
         "ON classification_candidate(variable_id, value_set_id)"
@@ -1046,6 +1062,129 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
             SELECT 1 FROM classification_candidate c
             WHERE c.variable_id = vs.variable_id
               AND c.value_set_id IS vs.value_set_id
+        )
+        """
+    )
+
+    # 7. Vintage-period reclaim (#494 PART 1). The multi-family residue from step 3
+    # is largely ONE classification family across vintages (SNI2002↔SNI2007 etc.),
+    # distinct `classification` rows chained by `supersedes_id`. Collapse that
+    # by-vintage ambiguity and auto-link; genuine cross-family coincidences stay in
+    # the residue for curation.
+
+    # 7a. Every classification's chain root, via a recursive CTE walking
+    # `supersedes_id` UP from each chain root (supersedes_id IS NULL). A standalone
+    # classification (no predecessor, no successor) is its own root. reg_meta_build
+    # is maintainer-local (not MONA-runtime), so the recursive CTE is fine here.
+    conn.execute(
+        """
+        CREATE TEMP TABLE _chain_root AS
+        WITH RECURSIVE chain(id, root) AS (
+            SELECT id, id FROM classification WHERE supersedes_id IS NULL
+            UNION ALL
+            SELECT c.id, ch.root
+            FROM classification c
+            JOIN chain ch ON c.supersedes_id = ch.id
+        )
+        SELECT id AS cls_id, root FROM chain
+        """
+    )
+    conn.execute("CREATE UNIQUE INDEX _chain_root_pk ON _chain_root(cls_id)")
+
+    # 7b. Multi-family value sets whose candidate cls (those in `_vs_cls` — i.e.
+    # whose codes the value set actually matches) ALL share one chain root. The
+    # LEFT JOIN + `COUNT(*) = COUNT(cr.root)` guard defensively requires every
+    # candidate to have resolved a root, so a hypothetical root-less classification
+    # can't make a multi-family set look single-chain.
+    conn.execute(
+        """
+        CREATE TEMP TABLE _vs_multi_onechain AS
+        SELECT vc.value_set_id
+        FROM _vs_cls vc
+        LEFT JOIN _chain_root cr ON cr.cls_id = vc.cls_id
+        GROUP BY vc.value_set_id
+        HAVING COUNT(*) > 1
+           AND COUNT(*) = COUNT(cr.root)
+           AND COUNT(DISTINCT cr.root) = 1
+        """
+    )
+    conn.execute(
+        "CREATE UNIQUE INDEX _vs_multi_onechain_pk ON _vs_multi_onechain(value_set_id)"
+    )
+
+    # 7c. Per (variable_id, value_set_id) for those value sets, the AGGREGATE state
+    # span: s_start = MIN(year(valid_from)), s_end = MAX(year(valid_to)) across the
+    # pair's states. valid_from/valid_to are TEXT 'YYYY-MM-DD' (open-ended uses the
+    # '9999-12-31' sentinel → s_end 9999); extract the year with substr+CAST.
+    #
+    # The span — not per-state period — is the correlation key BECAUSE the emit
+    # grain is (variable_id, value_set_id): `_backfill_state_classifications` folds
+    # candidates to min(classification_id) per (variable_id, value_set_id) and
+    # applies ONE classification to ALL that pair's states (it is NOT
+    # per-state-period). So we MUST resolve to one vintage per pair over its
+    # aggregate span and emit exactly one row — do not "fix" this to per-state.
+    conn.execute(
+        """
+        CREATE TEMP TABLE _vs_span AS
+        SELECT
+            vs.variable_id,
+            vs.value_set_id,
+            MIN(CAST(substr(vs.valid_from, 1, 4) AS INTEGER)) AS s_start,
+            MAX(CAST(substr(vs.valid_to, 1, 4) AS INTEGER)) AS s_end
+        FROM variable_state vs
+        JOIN _vs_multi_onechain mo ON mo.value_set_id = vs.value_set_id
+        GROUP BY vs.variable_id, vs.value_set_id
+        """
+    )
+    conn.execute(
+        "CREATE UNIQUE INDEX _vs_span_pk ON _vs_span(variable_id, value_set_id)"
+    )
+
+    # 7d. For each pair, among its CANDIDATE chain vintages (JOIN `_vs_cls` so we
+    # only pick vintages the value set actually matches) that OVERLAP the span, pick
+    # the LATEST overlapping edition: max valid_from, deterministic tie-break by max
+    # id. classification.valid_from/valid_to are INTEGER years, NULLABLE (NULL =
+    # unbounded on that side); overlap of [s_start, s_end] with cls [c_from, c_to] is
+    # (c_from IS NULL OR c_from <= s_end) AND (c_to IS NULL OR c_to >= s_start).
+    # If NO candidate vintage overlaps the span, the pair emits nothing — it stays
+    # in the residue (safe by omission). The window picks rank 1 per pair.
+    conn.execute(
+        """
+        CREATE TEMP TABLE _vs_vintage AS
+        SELECT variable_id, value_set_id, cls_id
+        FROM (
+            SELECT
+                sp.variable_id,
+                sp.value_set_id,
+                cl.id AS cls_id,
+                ROW_NUMBER() OVER (
+                    PARTITION BY sp.variable_id, sp.value_set_id
+                    ORDER BY cl.valid_from DESC, cl.id DESC
+                ) AS rn
+            FROM _vs_span sp
+            JOIN _vs_cls vc ON vc.value_set_id = sp.value_set_id
+            JOIN classification cl ON cl.id = vc.cls_id
+            WHERE (cl.valid_from IS NULL OR cl.valid_from <= sp.s_end)
+              AND (cl.valid_to IS NULL OR cl.valid_to >= sp.s_start)
+        )
+        WHERE rn = 1
+        """
+    )
+
+    # 7e. Emit the vintage map additively — same NOT EXISTS guard as the confident
+    # emit, so curated/feed/SCB/SOS candidates (and the confident emit above) always
+    # win; this only fills gaps. The `_cc_state_key` index created before step 6 is
+    # still live. Confident and multi-family sets are disjoint in `_vs_cls`, so the
+    # two emits never target the same value set.
+    conn.execute(
+        """
+        INSERT INTO classification_candidate (variable_id, value_set_id, classification_id)
+        SELECT vv.variable_id, vv.value_set_id, vv.cls_id
+        FROM _vs_vintage vv
+        WHERE NOT EXISTS (
+            SELECT 1 FROM classification_candidate c
+            WHERE c.variable_id = vv.variable_id
+              AND c.value_set_id IS vv.value_set_id
         )
         """
     )
@@ -1072,7 +1211,23 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         ")"
     ).fetchone()[0]
 
+    # Vintage-reclaim counts (#494): value sets / variables resolved by step 7, and
+    # the still-ambiguous residue (multi_family minus the distinct value sets the
+    # vintage step actually reclaimed → the curation tail). multi_family keeps its
+    # pre-reclaim meaning (total multi-family BEFORE vintage reclaim).
+    vintage_value_sets_linked = conn.execute(
+        "SELECT COUNT(DISTINCT value_set_id) FROM _vs_vintage"
+    ).fetchone()[0]
+    vintage_variables_linked = conn.execute(
+        "SELECT COUNT(DISTINCT variable_id) FROM _vs_vintage"
+    ).fetchone()[0]
+    multi_family_after = multi_family - vintage_value_sets_linked
+
     for tmp in (
+        "_vs_vintage",
+        "_vs_span",
+        "_vs_multi_onechain",
+        "_chain_root",
         "_vs_confident",
         "_vs_single",
         "_vs_cls",
@@ -1088,9 +1243,17 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         f"({single_below_threshold:,} single-family below threshold, "
         f"{multi_family:,} multi-family ambiguous → curation)"
     )
+    _progress(
+        f"  {vintage_value_sets_linked:,} value sets / "
+        f"{vintage_variables_linked:,} variables reclaimed by vintage-period "
+        f"({multi_family_after:,} multi-family still ambiguous → curation)"
+    )
     return {
         "value_sets_linked": value_sets_linked,
         "variables_linked": variables_linked,
         "single_below_threshold": single_below_threshold,
         "multi_family": multi_family,
+        "vintage_value_sets_linked": vintage_value_sets_linked,
+        "vintage_variables_linked": vintage_variables_linked,
+        "multi_family_after": multi_family_after,
     }
