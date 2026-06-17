@@ -67,11 +67,12 @@ export function foldGroupedRows<T extends { fqid: string }>(
   groups: ConceptGroup[] | undefined,
 ): GroupedRow<T>[] {
   // `groups` is required on the wire TYPE, but tolerate its absence at
-  // runtime: /api/catalog/* responses are edge-cached for up to 24h
-  // (Cache-Control max-age=86400), so right after a deploy that ADDS a field
-  // the new SPA can receive a stale pre-`groups` payload. Degrade to the flat
-  // ungrouped list rather than crash the browse (bit prod on the #303
-  // rollout, 2026-06-11).
+  // runtime: /api/catalog/* responses are cached `max-age=60` (since #499),
+  // and an edge cache-generation predating a deploy (bounded by `__edge_v`
+  // busting) or a browser copy within the 60s window can still be stale, so
+  // right after a deploy that ADDS a field the new SPA can receive a stale
+  // pre-`groups` payload. Degrade to the flat ungrouped list rather than
+  // crash the browse (bit prod on the #303 rollout, 2026-06-11).
   const safeGroups = groups ?? [];
   const groupOf = new Map<string, ConceptGroup>();
   for (const g of safeGroups) {
