@@ -36,6 +36,25 @@ Read linked issues, comments, repository guidance (`AGENTS.md`; `CLAUDE.md` is
 intentionally equivalent for agent surfaces that use it), relevant
 `<package>/DESIGN.md`, `ARCHITECTURE.md` for cross-package work, and touched code.
 
+## Review Method
+
+1. Establish context before reading line-by-line:
+   - identify the intended behavior from the issue/PR body and linked comments;
+   - note PR size, touched packages, generated files, and CI/check status;
+   - decide whether the diff needs package design docs, workflow graph inspection,
+     frontend smoke testing, or real-data validation evidence.
+2. Do a high-level pass:
+   - compare the implementation shape to the issue scope and repo architecture;
+   - inspect changed public contracts, schemas, CLIs, API responses, workflows, and
+     persisted/generated artifacts;
+   - check whether tests exercise the behavior that could actually regress.
+3. Do a line-level pass:
+   - trace changed control/data flow through call sites, not just the edited lines;
+   - search for existing helpers or adjacent patterns before accepting new abstractions;
+   - verify edge cases, failure paths, cleanup, determinism, and boundary validation.
+4. Re-review only the current head. On follow-up passes, confirm which prior findings
+   were fixed and report only remaining material issues.
+
 ## Review Lens
 
 Look for material problems in the changed behavior:
