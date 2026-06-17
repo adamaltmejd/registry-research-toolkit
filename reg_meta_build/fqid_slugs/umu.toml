@@ -3,7 +3,8 @@
 # Same grammar as pliktverket/riksarkivet.toml. TOML keys are minted ids —
 # mint("umu", <reg_key>) / mint(..., "_default"). Single-table provresultat
 # register → synthesized _default variant. Panel: entity = personnummer, time =
-# ar (provår, year grain), grain = row. Variable slugs stay AUTO. Regenerate
+# tillfalle (provtillfälle YYYYA/YYYYB — occasion-level, since a participant may sit
+# more than one test in a year), grain = row. Variable slugs stay AUTO. Regenerate
 # .snapshot.json after edits:  reg-meta-build precheck-slugs --update-snapshot
 
 
@@ -15,5 +16,5 @@ slug = "hogskoleprovet"
 slug = "_default"
 display_group = "Högskoleprovet (provresultat)"
 panel_entity_key = "personnummer"
-panel_time_key = "ar"
+panel_time_key = "tillfalle"
 panel_time_grain = "row"
