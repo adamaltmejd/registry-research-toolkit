@@ -82,6 +82,10 @@ from .variable_related_to import (
     materialize_curated_related_to,
     repo_variable_related_to_path,
 )
+from .variable_same_as import (
+    load_same_as,
+    repo_variable_same_as_path,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -3531,9 +3535,15 @@ def materialize(
     if skip_slugs:
         _progress("Skipping same_as edges (skip_slugs=True)")
     else:
-        sa_counts = materialize_same_as_edges(conn, slug_root)
+        sa_counts = materialize_same_as_edges(
+            conn,
+            slug_root,
+            curated_same_as=load_same_as(repo_variable_same_as_path()),
+            providers=active_providers,
+        )
         _progress(
-            f"  {sa_counts['variable']:,} variable same_as edges, "
+            f"  {sa_counts['variable']:,} variable same_as edges "
+            f"({sa_counts['variable_curated']:,} curated), "
             f"{sa_counts['classification']:,} classification same_as edges"
         )
 

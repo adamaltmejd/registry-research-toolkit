@@ -1,0 +1,39 @@
+# Curated variable identity (`same_as`) edges (#417) — see
+# reg_meta_build/variable_same_as.py.
+#
+# A same_as edge asserts that two variables are the SAME definition — one
+# concept, two FQIDs. Unlike `variable_related_to` (a weak "see also"), same_as
+# is RESOLVER-LOAD-BEARING: `Catalog.resolve` follows it transitively and the
+# build cycle-checks the as-declared graph, so a WRONG edge corrupts resolution.
+# Only CONFIRMED identity belongs here.
+#
+# Each [[same_as]] entry is an UNORDERED pair of 3-segment
+# provider/register/variable FQIDs (`a` / `b`); the build writes BOTH directions.
+# There is NO `relation_kind` field — same_as carries no kind vocabulary
+# (identity is identity). `note` is optional (e.g. a curation rationale, or the
+# `candidate:tierN` provenance left by the generator below).
+#
+# References resolve against the built DB at materialize time: provider+register
+# must exist for both sides (a typo FAILS the build, EXIT_CONFIG); the variable
+# SLUG is not checked — same_as is slug-anchored and survives renames, consistent
+# with the inline `same_as` field. An edge whose provider isn't in the build is
+# SKIPPED (a partial --providers build can't represent it). Curated edges merge
+# with the inline `same_as` edges before the SHARED cycle check, so a curated
+# edge that closes a cycle with an inline edge is rejected.
+#
+# This file ships EMPTY (zero edges, resolver-safe) like `variable_related_to.toml`
+# and `classification_links.toml`. To generate a review worklist of candidate
+# pairs from a built DB, run:
+#
+#   reg-meta-build same-as-candidates --output-toml /tmp/same_as_candidates.toml
+#
+# That command infers tiered candidates from structured signals (shared
+# classification, shared value set, name agreement) and emits a `[[same_as]]`
+# TOML. High-fanout "hub" signals (e.g. municipality/industry classifications
+# spanning dozens of registers) are suppressed unless the variable names agree,
+# so the worklist stays reviewable; pass `--max-signal-fanout 0` to include the
+# hub cliques. Review each pair and copy ONLY confirmed identities here. The
+# generator never writes this file and nothing auto-materializes — the human
+# gate is the point.
+
+# (No [[same_as]] entries yet — see above.)

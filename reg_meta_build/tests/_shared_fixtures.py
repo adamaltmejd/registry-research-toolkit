@@ -36,6 +36,7 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.fold_overrides as _fo
     import reg_meta_build.tags as _tg
     import reg_meta_build.variable_related_to as _vrt
+    import reg_meta_build.variable_same_as as _vsa
 
     mp = pytest.MonkeyPatch()
     mp.setattr(_cd, "repo_codelivery_path", lambda: None)
@@ -70,6 +71,14 @@ def _no_repo_curation() -> Iterator[None]:
     # imported the symbol directly — patch it there too.
     mp.setattr(_vrt, "repo_variable_related_to_path", lambda: None)
     mp.setattr(_db, "repo_variable_related_to_path", lambda: None)
+    # variable_same_as.toml (#417) curates resolver-load-bearing identity edges
+    # keyed on real scb/sos slugs; the materializer fails LOUD on an unknown
+    # provider/register, so a synthetic build must see an empty file. The shipped
+    # TOML is empty today, but the moment a maintainer adds one edge every fixture
+    # build would resolve it against synthetic registers and fail. db.py imported
+    # the symbol directly — patch it there too.
+    mp.setattr(_vsa, "repo_variable_same_as_path", lambda: None)
+    mp.setattr(_db, "repo_variable_same_as_path", lambda: None)
     # variable_grafts.toml (#365 PR1d) mints variables onto real scb (register,
     # variant); against a fixture DB every one is unresolved. db.py LOCAL-imports
     # the symbol (like codelivery), so patching the module alone suffices.

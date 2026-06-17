@@ -57,6 +57,10 @@ from .fqid_slugs import (
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
 from .validate import validate_built_db
+from .variable_same_as import (
+    infer_same_as_candidates,
+    render_candidates_toml,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -350,6 +354,67 @@ def _build_parser() -> argparse.ArgumentParser:
     parse_sos_p.add_argument(
         "path",
         help="Path to an .xlsx file or a directory containing them.",
+    )
+
+    same_as_p = sub.add_parser(
+        "same-as-candidates",
+        help="Generate variable_same_as candidate pairs (maintainer review worklist).",
+        description=(
+            "Infer cross-register `same_as` identity candidates from a BUILT DB\n"
+            "(shared classification, shared value set, name agreement) and emit a\n"
+            "tiered `[[same_as]]` TOML review worklist. NOTHING is materialized —\n"
+            "same_as is resolver-load-bearing, so a maintainer reviews each pair and\n"
+            "copies ONLY confirmed identities into reg_meta_build/variable_same_as.toml.\n"
+            "Reads a built DB; never mutates it.\n\n"
+            "Tiers (strongest first): 1 = classification + value set + name; 2 =\n"
+            "classification + name; 3 = classification + value set; 4 = a shared\n"
+            "classification-NULL value set with >= --min-value-set-codes codes.\n"
+            "A shared value set corroborates a tier only when it meets that code\n"
+            "floor (a generic 2-code hub never lifts a pair's tier).\n\n"
+            "Hub suppression (--max-signal-fanout): a signal spanning more than N\n"
+            "registers is a hub and generates O(N^2) cross-register pairs; its pairs\n"
+            "are dropped UNLESS the two variables' names agree (name-corroborated\n"
+            "pairs are kept). The dropped count is reported, never silently truncated.\n\n"
+            "Examples:\n"
+            "  reg-meta-build same-as-candidates --output-toml /tmp/candidates.toml\n"
+            "  reg-meta-build same-as-candidates --max-tier 2\n"
+            "  reg-meta-build same-as-candidates --max-signal-fanout 0  # uncapped"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    same_as_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the candidate TOML worklist to this path. Without it the JSON "
+            "counts summary still prints; the TOML is included in the payload."
+        ),
+    )
+    same_as_p.add_argument(
+        "--max-tier",
+        type=int,
+        default=4,
+        help="Highest tier to emit (1=strongest .. 4=value-set-only). Default 4.",
+    )
+    same_as_p.add_argument(
+        "--min-value-set-codes",
+        type=int,
+        default=15,
+        help=(
+            "A shared value set must carry at least this many codes to corroborate "
+            "a pair at ANY tier (excludes generic Ja/Nej hubs). Default 15."
+        ),
+    )
+    same_as_p.add_argument(
+        "--max-signal-fanout",
+        type=int,
+        default=12,
+        help=(
+            "Suppress pairs generated only by a signal spanning more than N "
+            "registers (a hub); name-agreeing pairs are exempt. 0 disables. "
+            "Default 12."
+        ),
     )
 
     # `reg-meta-build` has no `--examples` handler (the query CLI's `--examples`
@@ -804,6 +869,72 @@ def _cmd_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _cmd_same_as_candidates(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    # Schema-checked open: the generator reads current-schema tables
+    # (variable_same_as, variable_state.classification_id), so a stale DB should
+    # fail fast with the standard actionable schema-mismatch error, not crash
+    # deep in a query.
+    conn = open_db(db)
+    # CLI contract: <=0 means DISABLED; the API takes None for ∞.
+    fanout = args.max_signal_fanout if args.max_signal_fanout > 0 else None
+    try:
+        result = infer_same_as_candidates(
+            conn,
+            max_tier=args.max_tier,
+            min_value_set_codes=args.min_value_set_codes,
+            max_signal_fanout=fanout,
+        )
+    finally:
+        conn.close()
+    candidates = result.candidates
+
+    counts_by_tier: dict[int, int] = {}
+    for c in candidates:
+        counts_by_tier[c.tier] = counts_by_tier.get(c.tier, 0) + 1
+    toml = render_candidates_toml(
+        candidates,
+        counts_by_tier=counts_by_tier,
+        max_signal_fanout=fanout,
+        hub_suppressed=result.hub_suppressed,
+    )
+
+    data: dict[str, Any] = {
+        "total": len(candidates),
+        # Sorted-key dict so the JSON counts read tier-ascending.
+        "counts_by_tier": {str(t): counts_by_tier[t] for t in sorted(counts_by_tier)},
+        "max_tier": args.max_tier,
+        "min_value_set_codes": args.min_value_set_codes,
+        # `None` (disabled) serializes to JSON null; the raw CLI arg is in args_payload.
+        "max_signal_fanout": fanout,
+        "hub_suppressed": result.hub_suppressed,
+    }
+    if args.output_toml:
+        out_path = Path(args.output_toml).expanduser().resolve()
+        out_path.write_text(toml, encoding="utf-8")
+        data["output_toml"] = str(out_path)
+    else:
+        # No file target — carry the TOML in the payload so the worklist isn't lost.
+        data["toml"] = toml
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="same-as-candidates",
+        args_payload={
+            "max_tier": args.max_tier,
+            "min_value_set_codes": args.min_value_set_codes,
+            "max_signal_fanout": args.max_signal_fanout,
+            "output_toml": args.output_toml,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 # ---------------------------------------------------------------------------
 # Dispatch
 # ---------------------------------------------------------------------------
@@ -818,6 +949,7 @@ COMMAND_DISPATCH: dict[
     "seed-slugs": _cmd_seed_slugs,
     "precheck-slugs": _cmd_precheck_slugs,
     "parse-sos": _cmd_parse_sos,
+    "same-as-candidates": _cmd_same_as_candidates,
 }
 
 
@@ -850,6 +982,11 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     (
         "parse-sos PATH",
         "Parse Socialstyrelsen metadata Excel files; emit JSON.",
+    ),
+    (
+        "same-as-candidates [-o TOML] [--max-tier N] [--min-value-set-codes N] "
+        "[--max-signal-fanout N]",
+        "Infer variable_same_as candidate pairs (maintainer review worklist).",
     ),
 ]
 

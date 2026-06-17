@@ -37,6 +37,8 @@ if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable, Iterator, Mapping
 
+    from .variable_same_as import CuratedSameAs
+
 # A2.6: `register_version` is gone — the FQID grammar has no version segment;
 # version slugs are no longer curated or persisted, and the build-time
 # `register_version` table is dropped before ship.
@@ -2041,8 +2043,105 @@ def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
             visit(start)
 
 
+def _register_exists(
+    conn: sqlite3.Connection, provider_slug: str, register_slug: str
+) -> bool:
+    """True iff `provider_slug/register_slug` resolves to a real register (the
+    same provider+register existence check `_validate_variable_target` uses)."""
+    row = conn.execute(
+        "SELECT 1 FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND r.slug = ?",
+        (provider_slug, register_slug),
+    ).fetchone()
+    return row is not None
+
+
+def _merge_curated_same_as_edges(
+    conn: sqlite3.Connection,
+    var_edges: list[tuple[_VarKey, _VarKey]],
+    curated_same_as: tuple[CuratedSameAs, ...],
+    providers: frozenset[str],
+) -> int:
+    """Merge curated `variable_same_as.toml` edges into `var_edges` (the shared
+    list the cycle check + insert below span). Mirrors how replaced_by merges
+    event+curated edges before its cycle check, so a curated edge that closes a
+    cycle with an inline edge is caught by the SAME `_reject_same_as_cycles`.
+
+    The curated `a`/`b` are slug-anchored `(provider, register, variable_slug)`
+    `_VarKey` triples — appended DIRECTLY (no slug resolution; same_as survives
+    renames, consistent with the inline path). Each edge is:
+      - provider-GATED — if either provider isn't built, SKIP (a partial
+        `--providers` build genuinely can't represent the endpoint; deferral, not
+        drift), mirroring `materialize_curated_related_to`.
+      - provider+register existence-validated for BOTH sides (the variable slug
+        is NOT checked — slug-anchored). An unknown provider/register IS drift →
+        fail fast (EXIT_CONFIG).
+
+    A curated edge whose UNORDERED variable pair is already declared — either by
+    an inline `SlugEntry.same_as` edge already in `var_edges`, or by an earlier
+    curated edge merged in THIS call — is maintainer drift, not an internal
+    invariant break. Caught here as EXIT_CONFIG (`variable_same_as_duplicate`)
+    rather than slipping past the cycle check (which only rejects
+    cycles/reciprocals/self-loops, not an exact same-direction duplicate) into a
+    raw `sqlite3.IntegrityError` on the plain INSERT — that maps to EXIT_INTERNAL
+    "report to maintainers", the wrong failure mode for curation drift. The
+    unordered frozenset also catches a curated `b→a` against an inline `a→b` with
+    this clearer message instead of leaning on the cycle check.
+
+    Returns the count of curated edges merged (one per pair; both directions are
+    written by the shared insert below)."""
+    # Unordered variable pairs already declared (inline edges built before this
+    # call), extended as curated edges merge so a curated-vs-curated duplicate is
+    # caught too. load_same_as already dedups within the curated file, so this
+    # covers curated-vs-inline (and the belt-and-braces curated-vs-curated case).
+    seen_pairs: set[frozenset[_VarKey]] = {frozenset(pair) for pair in var_edges}
+    n_merged = 0
+    for e in curated_same_as:
+        if e.a_provider not in providers or e.b_provider not in providers:
+            continue
+        a_fqid = f"{e.a_provider}/{e.a_register}/{e.a_variable}"
+        b_fqid = f"{e.b_provider}/{e.b_register}/{e.b_variable}"
+        if not _register_exists(conn, e.a_provider, e.a_register):
+            raise _err(
+                "variable_same_as_unknown_register",
+                f"variable_same_as.toml: same_as edge endpoint {a_fqid!r} names "
+                f"provider/register {e.a_provider}/{e.a_register} which does not "
+                "exist in this build.",
+                "Fix the `a` FQID in reg_meta_build/variable_same_as.toml.",
+            )
+        if not _register_exists(conn, e.b_provider, e.b_register):
+            raise _err(
+                "variable_same_as_unknown_register",
+                f"variable_same_as.toml: same_as edge endpoint {b_fqid!r} names "
+                f"provider/register {e.b_provider}/{e.b_register} which does not "
+                "exist in this build.",
+                "Fix the `b` FQID in reg_meta_build/variable_same_as.toml.",
+            )
+        a_key: _VarKey = (e.a_provider, e.a_register, e.a_variable)
+        b_key: _VarKey = (e.b_provider, e.b_register, e.b_variable)
+        pair = frozenset({a_key, b_key})
+        if pair in seen_pairs:
+            raise _err(
+                "variable_same_as_duplicate",
+                f"variable_same_as.toml: same_as edge {{{a_fqid}, {b_fqid}}} is "
+                "already declared.",
+                "Remove the duplicate — the pair is already declared (inline slug "
+                "`same_as` or another `[[same_as]]` entry); same_as is symmetric "
+                "so a→b and b→a are the same edge.",
+            )
+        seen_pairs.add(pair)
+        var_edges.append((a_key, b_key))
+        n_merged += 1
+    return n_merged
+
+
 def materialize_same_as_edges(
-    conn: sqlite3.Connection, slug_dir: Path
+    conn: sqlite3.Connection,
+    slug_dir: Path,
+    *,
+    curated_same_as: tuple[CuratedSameAs, ...] = (),
+    providers: frozenset[str] = frozenset(),
 ) -> dict[str, int]:
     """Translate `SlugEntry.same_as` references into edge rows.
 
@@ -2053,6 +2152,12 @@ def materialize_same_as_edges(
 
     Runs after `populate_slugs` — register/variant/version slugs must be
     written before we can validate same_as targets against them.
+
+    `curated_same_as` (from `variable_same_as.toml`, #417) is merged into the
+    variable edge set BEFORE the cycle check + insert, so the shared cycle check
+    spans inline + curated edges. `providers` gates each curated edge to this
+    build's providers (a partial `--providers` build skips out-of-build
+    endpoints rather than failing). See `_merge_curated_same_as_edges`.
     """
     entries = load_slug_dir(slug_dir)
 
@@ -2131,6 +2236,12 @@ def materialize_same_as_edges(
                 tgt_key = _validate_classification_target(entry, ref, class_by_slug)
                 class_edges.append((src_key, tgt_key))
 
+    # Merge curated edges into the variable edge set BEFORE the cycle check so a
+    # curated edge that closes a cycle with an inline edge is rejected too.
+    n_curated = _merge_curated_same_as_edges(
+        conn, var_edges, curated_same_as, providers
+    )
+
     _reject_same_as_cycles(list(var_edges), label="variable same_as")
     _reject_same_as_cycles(list(class_edges), label="classification same_as")
 
@@ -2155,7 +2266,11 @@ def materialize_same_as_edges(
                 (*src_c, *tgt_c),
             )
 
-    return {"variable": len(var_edges), "classification": len(class_edges)}
+    return {
+        "variable": len(var_edges),
+        "variable_curated": n_curated,
+        "classification": len(class_edges),
+    }
 
 
 # ---------------------------------------------------------------------------

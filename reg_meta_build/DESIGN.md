@@ -1473,6 +1473,48 @@ classification links* above for the full contract. Like `variable_related_to.tom
 a maintainer artifact absent in wheel installs and synthetic builds, and it ships empty
 today.
 
+**Curated identity edges (`variable_same_as.toml`, #417).** Cross-register variable
+identity — two FQIDs that name the SAME concept definition — live in a standalone
+`reg_meta_build/variable_same_as.toml` (package root, like `classification_links.toml` —
+NOT under `fqid_slugs/`), loaded by `variable_same_as.py::load_same_as`. Each
+`[[same_as]]` entry declares a symmetric FQID pair (`a` / `b`, each a 3-segment
+`provider/register/variable` string) with an optional `note`. Unlike
+`variable_related_to` (a weak "see also"), `same_as` is **resolver-load-bearing**:
+`Catalog.resolve` follows it transitively and the build cycle-checks the full graph. A
+wrong edge corrupts resolution, so **nothing auto-materializes** — only confirmed
+curated entries load into a build. The file ships empty; the loader handles zero entries
+cleanly. Like the other curation TOMLs it is a maintainer artifact absent in wheel
+installs and synthetic builds; a provider not in the current build is provider-gated
+(skipped). The load/resolve split mirrors `variable_related_to` / `concept_groups`:
+shape validation at load, endpoint resolution against the built DB at materialize time.
+
+*Candidate generator.* `reg-meta-build same-as-candidates` (`infer_same_as_candidates`
+in `variable_same_as.py`) reads a BUILT DB and emits a tiered review worklist as a
+`[[same_as]]` TOML — the same schema the curated loader accepts, so a confirmed
+candidate copies across verbatim (drop or replace the `note = "candidate:tierN"`
+marker). The generator is **read-only**; it never writes the curated file. Candidates
+are ranked by tier (1 = strongest):
+
+- **Tier 1** — shared classification + shared value set + name agreement.
+- **Tier 2** — shared classification + name agreement (value sets may differ).
+- **Tier 3** — shared classification + shared value set (names differ).
+- **Tier 4** — shared value set that is `classification_id NULL` on BOTH sides —
+  value-set-only identity the classification-linkage auto-detector (#416) hasn't
+  reached.
+
+A shared value set corroborates at any tier only when its code count ≥
+`--min-value-set-codes` (default 15); a 2-code hub like Ja/Nej is not evidence. Pairs
+already present in `variable_same_as` are excluded. Only cross-register pairs are
+emitted — two variables in one register cannot be identity candidates.
+
+**Hub suppression.** A signal (classification or value set) spanning more than
+`--max-signal-fanout` distinct registers (default 12) is a hub; its O(N²) cross-register
+pairs are suppressed UNLESS the two variables' names agree. The exemption keeps
+name-corroborated tier-1/2 pairs (measured: a bare cap would drop \~17,720 of them —
+kommun/län/näringsgren/utbildningsnivå). The suppressed count is always reported in the
+output header — no silent truncation. Pass `--max-signal-fanout 0` to disable the cap
+and include all hub-clique pairs.
+
 **Curated succession edges (`[[replaced_by]]`, #440).** A **top-level `[[replaced_by]]`
 array-of-tables** in a provider TOML (alongside `lineage` / `lineage_defaults`, parsed
 by `load_curated_replaced_by` — DB-free, mirroring `load_lineage_config`) materializes
