@@ -1,0 +1,19 @@
+# Curated FQID slugs for Umeå universitet / högskoleprovet (#443).
+#
+# Same grammar as pliktverket/riksarkivet.toml. TOML keys are minted ids —
+# mint("umu", <reg_key>) / mint(..., "_default"). Single-table provresultat
+# register → synthesized _default variant. Panel: entity = personnummer, time =
+# ar (provår, year grain), grain = row. Variable slugs stay AUTO. Regenerate
+# .snapshot.json after edits:  reg-meta-build precheck-slugs --update-snapshot
+
+
+# Högskoleprovet (provresultat)
+[register."5444831050852607094"]
+slug = "hogskoleprovet"
+
+[register_variant."5444831050852607094.5876203108261893022"]
+slug = "_default"
+display_group = "Högskoleprovet (provresultat)"
+panel_entity_key = "personnummer"
+panel_time_key = "ar"
+panel_time_grain = "row"

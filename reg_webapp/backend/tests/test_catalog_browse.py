@@ -49,9 +49,9 @@ def test_root_lists_providers_and_classification_root(client):
     assert "provider" in kinds
     assert kinds[-1] == "classification-root"
     providers = [c for c in body["children"] if c["kind"] == "provider"]
-    # `fohm` + `fk` (#422) and `lakemedelsverket` / `pliktverket` / `riksarkivet`
-    # (#443) are seeded providers, so the catalog root lists them alongside scb/sos
-    # (list_providers enumerates every seeded provider).
+    # `fohm` + `fk` (#422) and `lakemedelsverket` / `pliktverket` / `riksarkivet` /
+    # `umu` (#443) are seeded providers, so the catalog root lists them alongside
+    # scb/sos (list_providers enumerates every seeded provider).
     assert {p["fqid"] for p in providers} == {
         "scb",
         "sos",
@@ -60,6 +60,7 @@ def test_root_lists_providers_and_classification_root(client):
         "lakemedelsverket",
         "pliktverket",
         "riksarkivet",
+        "umu",
     }
     class_root = next(c for c in body["children"] if c["kind"] == "classification-root")
     assert class_root["fqid"] == "class"

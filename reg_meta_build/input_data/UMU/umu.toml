@@ -1,0 +1,165 @@
+# Curated thin-provider catalog — Umeå universitet (#443), the steward of the
+# högskoleprovet (Swedish Scholastic Aptitude Test / SweSAT) research database.
+# Read by reg_meta_build.sources.curated.CuratedAdapter.
+#
+# Source: Umeå universitet's public SweSAT "Description of variables"
+# (https://www.umu.se/en/department-of-applied-educational-science/swesat/
+# for-researchers/description-of-variables/) — the authoritative researcher-facing
+# documentation of the provresultat variables. Confidential restricted-access
+# individdata (released via SCB MONA); only the METADATA below is public. `column`
+# tokens are SOURCE-EXACT to the delivery (the subtest abbreviations ORD/LÄS/MEK/…
+# are also the published variable names); variable slugs stay AUTO (NFKD-folded:
+# LÄS → las, Lärosäte → larosate, År → ar). The delivery's pseudonymized
+# `P1105_LopNr_PersonNr` key is modelled as the documented field `Personnummer`.
+#
+# Coverage: the SweSAT database runs from spring 1977 (provtillfälle YYYYA/YYYYB)
+# and is ongoing → register valid_from = 1977, open-ended. A few variables carry a
+# documented later introduction (per-variable valid_from): the quantitative
+# comparison subtest KVA and the verbal/quantitative SECTION scores were added in
+# 2011; the English reading subtest ELF in 1992; the general-knowledge subtest AO
+# was discontinued after 1995 (per-variable valid_to). FLAG: the exact introduction
+# dates of the other post-1977 subtests (DTK/NOG/XYZ in their modern form) are not
+# precisely modelled — they inherit the 1977 register start. STUF is undocumented in
+# the public variable list (flagged below).
+
+
+[[register]]
+key = "hogskoleprovet"
+name = "Högskoleprovet (provresultat)"
+valid_from = "1977-01-01"  # SweSAT introduced spring 1977; ongoing (open-ended)
+purpose = "Provresultat från högskoleprovet (SweSAT): normerade och råa poäng per delprov (verbala ORD/LÄS/MEK/ELF, kvantitativa XYZ/KVA/NOG/DTK), verbal och kvantitativ delsumma, totalt normerat resultat, samt provtillfälle, provår och provort/lärosäte. Databasen förvaltas av Umeå universitet."
+
+[[register.variable]]
+name = "Personnummer"
+column = "Personnummer"
+definition = "Personnummer (avidentifieras till löpnummer hos SCB)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Provår"
+column = "År"
+definition = "Provår (året provet skrevs)."
+data_type = "text"
+
+[[register.variable]]
+name = "Provtillfälle"
+column = "Tillfälle"
+definition = "Provtillfälle inom året — vårprov (A) eller höstprov (B), kodat YYYYA/YYYYB."
+data_type = "text"
+
+[[register.variable]]
+name = "Lärosäte"
+column = "Lärosäte"
+definition = "Lärosäte/provort där provet skrevs."
+data_type = "text"
+
+[[register.variable]]
+name = "Län"
+column = "Län"
+definition = "Län för provorten."
+data_type = "text"
+
+[[register.variable]]
+name = "Ordförståelse (ORD)"
+column = "ORD"
+definition = "Delprov ORD — ordförståelse (verbal del). Råpoäng."
+data_type = "text"
+
+[[register.variable]]
+name = "Läsförståelse (LÄS)"
+column = "LÄS"
+definition = "Delprov LÄS — svensk läsförståelse (verbal del). Råpoäng."
+data_type = "text"
+
+[[register.variable]]
+name = "Meningskomplettering (MEK)"
+column = "MEK"
+definition = "Delprov MEK — meningskomplettering (verbal del). Råpoäng."
+data_type = "text"
+
+[[register.variable]]
+name = "Engelsk läsförståelse (ELF)"
+column = "ELF"
+definition = "Delprov ELF — engelsk läsförståelse (verbal del). Råpoäng."
+data_type = "text"
+valid_from = "1992-01-01"  # ELF introduced 1992
+
+[[register.variable]]
+name = "Matematisk problemlösning (XYZ)"
+column = "XYZ"
+definition = "Delprov XYZ — matematisk problemlösning (kvantitativ del). Råpoäng."
+data_type = "text"
+
+[[register.variable]]
+name = "Kvantitativa jämförelser (KVA)"
+column = "KVA"
+definition = "Delprov KVA — kvantitativa jämförelser (kvantitativ del). Råpoäng."
+data_type = "text"
+valid_from = "2011-01-01"  # KVA introduced 2011
+
+[[register.variable]]
+name = "Kvantitativa resonemang (NOG)"
+column = "NOG"
+definition = "Delprov NOG — kvantitativa resonemang (tillräcklig information; kvantitativ del). Råpoäng."
+data_type = "text"
+
+[[register.variable]]
+name = "Diagram, tabeller och kartor (DTK)"
+column = "DTK"
+definition = "Delprov DTK — diagram, tabeller och kartor (kvantitativ del). Råpoäng."
+data_type = "text"
+
+[[register.variable]]
+name = "Allmän orientering (AO)"
+column = "AO"
+definition = "Delprov AO — allmän orientering (allmänkunskap). Råpoäng."
+data_type = "text"
+valid_to = "1995-12-31"  # AO discontinued after 1995
+
+[[register.variable]]
+name = "Verbal delsumma (Verb)"
+column = "Verb"
+definition = "Verbal delprovssumma (sammanvägt verbalt resultat)."
+data_type = "text"
+valid_from = "2011-01-01"  # verbal/quantitative section split from 2011
+
+[[register.variable]]
+name = "Kvantitativ delsumma (Kvant)"
+column = "Kvant"
+definition = "Kvantitativ delprovssumma (sammanvägt kvantitativt resultat)."
+data_type = "text"
+valid_from = "2011-01-01"  # verbal/quantitative section split from 2011
+
+[[register.variable]]
+name = "Verbalt normerat resultat (VeNorm)"
+column = "VeNorm"
+definition = "Verbalt normerat resultat (0,00–2,00)."
+data_type = "text"
+valid_from = "2011-01-01"  # section normed scores from 2011
+
+[[register.variable]]
+name = "Kvantitativt normerat resultat (KvNorm)"
+column = "KvNorm"
+definition = "Kvantitativt normerat resultat (0,00–2,00)."
+data_type = "text"
+valid_from = "2011-01-01"  # section normed scores from 2011
+
+[[register.variable]]
+name = "Normerat resultat (Norm)"
+column = "Norm"
+definition = "Totalt normerat provresultat på skalan 0,00–2,00 (steg 0,05)."
+data_type = "text"
+
+[[register.variable]]
+name = "Total råpoäng (Total)"
+column = "Total"
+definition = "Total råpoäng (summa över delproven)."
+data_type = "text"
+
+[[register.variable]]
+name = "STUF"
+column = "STUF"
+definition = "STUF — ej dokumenterat i Umeå universitets publika variabelbeskrivning (osäker innebörd, flaggad för verifiering)."
+data_type = "text"
