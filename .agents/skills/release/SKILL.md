@@ -36,13 +36,22 @@ approval pause.
    `<package>/vX.Y.Z` tag:
 
    ```sh
-   git log --oneline <tag>..HEAD -- <package>/
+   package="<package>"
+   git fetch --tags origin
+   tag="$(git tag --list "$package/v*" --sort=-v:refname | head -n 1)"
+   if [ -n "$tag" ]; then
+     git log --oneline "$tag"..HEAD -- "$package/"
+   else
+     git log --oneline -- "$package/"
+   fi
    ```
 
    Also compare `reg_meta_build/` changes since the last `reg_meta/v*` tag. Builder
    content changes that affect the built DBs, including curated TOMLs, provider source,
    and docs inputs, require a matching `reg_meta` release so the prebuilt DB assets are
-   refreshed even when no `reg_meta/` code changed.
+   refreshed even when no `reg_meta/` code changed. Use the same tag-fetch/no-tag
+   fallback for this comparison; if there is no prior `reg_meta/v*` tag, inspect all
+   `reg_meta_build/` history.
 
 3. If multiple packages changed, release sequentially. For schema-affecting DDL or doc
    DB changes shared by `reg_meta` and `reg_meta_build`, keep `reg_meta` ahead of the

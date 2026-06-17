@@ -121,11 +121,12 @@ default release/build shape; only narrow the provider set when the work is expli
 SCB/SOS-only and that is stated in the PR:
 
 ```sh
-reg-meta-build --db /tmp/regmeta-<slug> build-db \
+db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"
+uv run reg-meta-build --db "$db_dir" build-db \
   --input-dir <main-checkout>/reg_meta_build/input_data
 ```
 
-Clean scratch outputs afterward.
+Clean scratch outputs afterward: `rm -r "$db_dir"`.
 
 ## Closeout
 

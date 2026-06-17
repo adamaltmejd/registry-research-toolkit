@@ -20,7 +20,8 @@ Default epic is `328`.
 1. Run the read-only freshness check:
 
    ```sh
-   uv run --no-project python scripts/plan_sequence.py --tick --epic <N>
+   basis="$(uv run --no-project python scripts/plan_sequence.py --tick --epic <N>)"
+   tick_status=$?
    ```
 
    Capture stdout as the lanes basis and stderr as the human-facing delta. Exit code
@@ -39,7 +40,10 @@ Default epic is `328`.
    uv run --no-project python scripts/check_issue_hygiene.py --all
    ```
 
-3. If exit code was `2`, restamp:
+   Hygiene is report-only and may overwrite `$?`; branch on the saved `tick_status` from
+   step 1, not the latest command's exit status.
+
+3. If `tick_status` was `2`, restamp:
 
    ```sh
    uv run --no-project python scripts/plan_sequence.py --restamp-lanes --epic <N> --basis "$basis"
@@ -48,8 +52,8 @@ Default epic is `328`.
    If restamp exits `1` because no existing lanes content exists, fall through to
    re-rank.
 
-4. If exit code was `1`, use the `plan-lanes` procedure to produce ranked markdown, then
-   persist it:
+4. If `tick_status` was `1`, use the `plan-lanes` procedure to produce ranked markdown,
+   then persist it:
 
    ```sh
    printf '%s' "<ranked lanes markdown>" |
