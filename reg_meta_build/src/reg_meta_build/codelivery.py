@@ -57,7 +57,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
         not a raw uncaught crash).
       - `register_id` / `var_id` present and canonical int (no leading zeros,
         no bool/float — shared `_curation.canonical_int`, identical to
-        fold_overrides), and `column` a string (or absent → ""); a leniently
+        source_column_repairs), and `column` a string (or absent → ""); a leniently
         coerced id or a str()-coerced column would produce an inert
         never-matching pin instead of a load-time error.
       - Exactly one of `keep` / `keep_rule`, each a string (`keep_rule` from a
@@ -76,7 +76,7 @@ def load_codelivery(path: Path | None) -> CodeliveryMap:
     )
     out: CodeliveryMap = {}
     for entry in entries:
-        # Canonicalize ids identically to fold_overrides (shared `canonical_int`):
+        # Canonicalize ids identically to source_column_repairs (shared `canonical_int`):
         # `int(...)` would silently accept `1.5` (→1), `true` (→1), `"01"` (→1),
         # and negatives, producing an inert never-matching pin instead of a
         # load-time error.

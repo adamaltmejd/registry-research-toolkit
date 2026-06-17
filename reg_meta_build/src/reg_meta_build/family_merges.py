@@ -10,8 +10,9 @@ representation/alias concern, NOT a coding boundary — see DESIGN.md → Consum
 monthly column families), and records each month column's validity window in
 `variable_alias_window` so `resolve_at("2024-03")` picks the `mar` column.
 
-NOT `column_merges.toml`: that asserts era-RENAMES that never co-occur — the exact
-opposite of 12 deliberately-parallel columns.
+NOT the `[[column_merge]]` surface (`curation/scb/source_column_repairs.toml`):
+that asserts era-RENAMES that never co-occur — the exact opposite of 12
+deliberately-parallel columns.
 
 Member resolution is by `delivery_column_name`, not slug: the merge runs BEFORE
 `populate_variable_slugs`, so the month columns are identified by their delivery

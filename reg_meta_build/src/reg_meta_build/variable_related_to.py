@@ -19,8 +19,8 @@ Two reasons the vocabularies MUST stay disjoint:
 
 This is the loader machinery. The first curated edges landed in #403 — three
 cross-register "see also" pairs. Like the other curation TOMLs
-(`concept_groups.toml`, `fold_overrides.toml`) it is a maintainer artifact —
-absent in wheel installs and synthetic test builds.
+(`concept_groups.toml`, `curation/scb/source_column_repairs.toml`) it is a
+maintainer artifact — absent in wheel installs and synthetic test builds.
 """
 
 from __future__ import annotations
