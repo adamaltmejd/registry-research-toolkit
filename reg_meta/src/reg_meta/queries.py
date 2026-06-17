@@ -886,10 +886,19 @@ def _search_values_fts(
 
     if _is_code_shaped(query):
         q = query.strip()
+        # The owner clause mirrors the build-side `value_code_fts` owner filter in
+        # `reg_meta_build/db.py` `_populate_fts` and the owner definition in
+        # `_code_owner_annotations_batch` (variables ∪ classifications, no is_valid
+        # filter): without it this direct code-shape lookup bypasses the index and
+        # leaks context-less hits for exact/prefix code searches (#478). The
+        # correlated ref is qualified `value_code.code_id` so it binds to the outer
+        # FROM, not classification_code.code_id inside the subquery.
         code_rows = conn.execute(
             "SELECT code_id, code, label, mapping_count "
             "FROM value_code "
-            "WHERE code = ? OR code LIKE ? "
+            "WHERE (code = ? OR code LIKE ?) "
+            "AND (mapping_count > 0 OR EXISTS ("
+            "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id)) "
             "ORDER BY (code = ?) DESC, length(code), code",
             (q, f"{q}%", q),
         ).fetchall()
