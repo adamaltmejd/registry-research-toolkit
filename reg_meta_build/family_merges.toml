@@ -8,8 +8,9 @@
 # folded to slug form, ending in a month token); a stem that resolves to no
 # coherent monthly family FAILS the build (EXIT_CONFIG).
 #
-# NOT column_merges.toml: that asserts era-RENAMES that never co-occur — the
-# opposite of 12 deliberately-parallel month columns.
+# NOT the [[column_merge]] surface (curation/scb/source_column_repairs.toml):
+# that asserts era-RENAMES that never co-occur — the opposite of 12
+# deliberately-parallel month columns.
 #
 # Scope (#383, follow-up to #319): the 4 LISA families plus the 4 non-LISA
 # monthly families the corpus actually carries (scb bas/jobbink,

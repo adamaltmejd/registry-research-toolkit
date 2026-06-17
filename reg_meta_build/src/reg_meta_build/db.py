@@ -4011,8 +4011,11 @@ def build_db(
         # infra from this one). ORDER IS LOAD-BEARING: SCB runs before SOS so SOS
         # value_sets content-collapse onto SCB's already-written rows (R2 hybrid).
         from .codelivery import load_codelivery, repo_codelivery_path
-        from .column_merges import load_column_merges, repo_column_merges_path
-        from .fold_overrides import load_fold_overrides, repo_fold_overrides_path
+        from .source_column_repairs import (
+            load_column_merges,
+            load_fold_overrides,
+            repo_source_column_repairs_path,
+        )
         from .sources.curated import CuratedAdapter
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
@@ -4025,14 +4028,16 @@ def build_db(
             # codelivery.toml can't fail an SOS-only build that never reads it.
             # Empty when the file is absent (wheel installs, synthetic builds).
             codelivery = load_codelivery(repo_codelivery_path())
-            # Fold-override curation (#261), same maintainer-artifact shape: folds
-            # disjoint-stem columns the triage stem rule would split. Empty file
-            # ⇒ no behavioral change vs the stem-only partition.
-            fold_overrides = load_fold_overrides(repo_fold_overrides_path())
-            # Column-merge curation (#196), same shape again: unifies
-            # never-co-occurring era-rename column twins in the coalescer's
-            # rule-2 union-find. Empty file ⇒ connectivity unchanged.
-            column_merges = load_column_merges(repo_column_merges_path())
+            # SCB source-column repairs (#196 / #261), same maintainer-artifact
+            # shape — two sibling sections in ONE SCB-scoped file
+            # (`curation/scb/source_column_repairs.toml`), loaded once and read
+            # twice. Fold-overrides fold disjoint-stem CONTESTED columns the
+            # triage stem rule would split; column-merges unify never-co-occurring
+            # era-rename column twins in the coalescer's rule-2 union-find. Empty
+            # file ⇒ no behavioral change (triage/connectivity unchanged).
+            repairs_path = repo_source_column_repairs_path()
+            fold_overrides = load_fold_overrides(repairs_path)
+            column_merges = load_column_merges(repairs_path)
             adapters.append(
                 (SCBAdapter(conn, codelivery, fold_overrides, column_merges), scb_dir)
             )
