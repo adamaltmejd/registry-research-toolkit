@@ -21,9 +21,10 @@ Agent-surface notes:
   and the current environment allows it.
 - Use an independent review capability only when it is callable in the current agent
   surface. Slash-command reviews may be available to the top-level user/session without
-  being invokable from inside this skill workflow. When no callable built-in review is
-  exposed, run `registry-code-review` as the fallback checklist. On GitHub PRs, still
-  use the configured bot-review window described by the repository guidance.
+  being invokable from inside this skill workflow. Do not substitute a repo-local
+  checklist for an independent reviewer. When no callable review is exposed, state that
+  review is unavailable from this workflow and use the GitHub bot-review window
+  described by the repository guidance.
 - Do not merge unless the user explicitly asked for merge/full pipeline or confirms at
   the merge gate. Otherwise finish by marking the PR ready and reporting the gate state.
 
@@ -95,9 +96,9 @@ Run focused verification as the work evolves:
    explicitly.
 3. Run an independent review on the actual implementation diff. Prefer a callable
    built-in review capability; do not try to invoke slash commands that are only exposed
-   to the top-level session. If built-in review is unavailable from this workflow, run
-   `registry-code-review` as the fallback checklist. Fix or explicitly dismiss every
-   material finding with a reason.
+   to the top-level session. If no independent review is callable from this workflow,
+   state that limitation instead of running a local checklist. Fix or explicitly dismiss
+   every material finding with a reason.
 4. Re-review substantial fixes until the review converges.
 5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
