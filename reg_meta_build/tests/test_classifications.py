@@ -1522,12 +1522,17 @@ class TestLinkValueSetClassifications:
         assert g.candidates() == [(964, 164, 99)]
         # The counts must reflect ACTUAL emits (Codex P2): the pair satisfies the
         # one-chain vintage heuristic but its (variable_id, value_set_id) was already
-        # claimed, so the emit guard skips it — it is NOT counted as reclaimed and
-        # stays in the residue. The pre-fix code counted off `_vs_vintage` and would
-        # report 1 here.
+        # claimed, so the emit guard skips it — it is NOT counted as reclaimed. The
+        # pre-fix code counted off `_vs_vintage` and would report 1 here.
         assert counts["vintage_value_sets_linked"] == 0
         assert counts["vintage_variables_linked"] == 0
-        assert counts["multi_family_after"] == counts["multi_family"]
+        # Residual is grain-precise (#494 Codex P2 FIX 2): the value set's only pair
+        # already HAS a candidate (the curated cls 99), so it is NOT in the curation
+        # residue even though the vintage step reclaimed nothing — it was resolved by
+        # the curated/feed claim. (Under the retired `multi_family -
+        # vintage_value_sets_linked` subtraction this read 1.)
+        assert counts["multi_family"] == 1
+        assert counts["multi_family_after"] == 0
 
     def test_multi_state_span_aggregation_picks_latest(self) -> None:
         """One (variable_id, value_set_id) with TWO states — 2003–2006 (overlaps the
@@ -1573,6 +1578,127 @@ class TestLinkValueSetClassifications:
             "WHERE variable_id = 965"
         ).fetchall()
         assert tagged == [(71,)]
+
+    def test_disjoint_states_skip_gap_vintage(self) -> None:
+        """FIX 1 (#494 Codex P2): a pair with TWO DISJOINT states straddling a CLOSED
+        gap vintage, where the gap vintage is the LATEST that overlaps the aggregate
+        span — so the RETIRED span logic would have emitted it. States 2003–2006 and
+        2018–2020; candidates SNI2002 [2002,2007] (covers state1) and a CLOSED SNIgap
+        [2010,2015] (covers NEITHER state — sits in the temporal hole). No candidate
+        covers the 2018–2020 state. The aggregate MIN/MAX span [2003,2020] "overlaps"
+        SNIgap (2010<=2020 AND 2015>=2003), and SNIgap has the higher valid_from, so
+        the OLD span logic would have ranked SNIgap rn=1 and emitted it — tagging the
+        variable with a vintage NONE of its states fall in. Per-state overlap anchors
+        to a real window: only SNI2002 overlaps a real state (2003–2006), so SNI2002 is
+        emitted, NOT the gap edition."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("SNI", 10, 4)
+        g.add_classification(
+            80,
+            "SNI2002",
+            shared + [("9001", "2002 only")],
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            81,
+            "SNIgap",  # CLOSED edition in the hole between the two states
+            shared + [("9002", "gap only")],
+            supersedes_id=80,
+            valid_from=2010,
+            valid_to=2015,
+        )
+        g.add_value_set(180, shared)
+        # Two DISJOINT states: 2003–2006 (covered by SNI2002) and 2018–2020 (covered by
+        # NEITHER edition). The gap edition's window 2010–2015 touches NO real state.
+        g.add_variable_state(980, 180, valid_from="2003-01-01", valid_to="2006-12-31")
+        g.add_variable_state(980, 180, valid_from="2018-01-01", valid_to="2020-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        assert counts["vintage_value_sets_linked"] == 1
+        # Emitted vintage overlaps a REAL state (SNI2002 overlaps 2003–2006), NOT the
+        # gap edition 81 (overlaps the aggregate span but no real state). The retired
+        # span logic would have emitted (980, 180, 81).
+        assert g.candidates() == [(980, 180, 80)]
+
+    def test_latest_among_real_overlapping_not_latest_overlapping_span(self) -> None:
+        """FIX 1 focused variant: the ONLY candidate overlapping any REAL state is the
+        OLDER one. States 2003–2006 only; candidates SNI2002 [2002,2007] and a later
+        SNI-late [2016, unbounded]. The aggregate span is [2003, 2006] here (single
+        state), but the point is the pick is "latest among real-overlapping" — only
+        SNI2002 overlaps the 2003–2006 state, so it wins over the later edition."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("SNI", 10, 4)
+        g.add_classification(
+            83,
+            "SNI2002",
+            shared + [("9001", "2002 only")],
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            84,
+            "SNI-late",
+            shared + [("9003", "late only")],
+            supersedes_id=83,
+            valid_from=2016,
+            valid_to=None,
+        )
+        g.add_value_set(181, shared)
+        g.add_variable_state(981, 181, valid_from="2003-01-01", valid_to="2006-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["vintage_value_sets_linked"] == 1
+        # Only SNI2002 overlaps a real state; the later edition does not.
+        assert g.candidates() == [(981, 181, 83)]
+
+    def test_shared_value_set_partial_reclaim_residual_count(self) -> None:
+        """FIX 2 (#494 Codex P2): a multi-family value_set shared by TWO variables.
+        Variable A's state (2008–open) overlaps a vintage → reclaimed. Variable B's
+        state (2018–2020) overlaps NO candidate vintage → NOT reclaimed. The value set
+        therefore still has an unresolved (variable_id, value_set_id) pair, so it stays
+        in the residue: vintage_value_sets_linked == 1 (A reclaimed) but
+        multi_family_after == 1 (the value set is still residual, NOT 0 — the naive
+        `multi_family - vintage_value_sets_linked` would wrongly report 0)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        shared = _numeric_codes("SNI", 10, 4)
+        # Two chain vintages, both CLOSED before 2018 so variable B's 2018–2020 state
+        # overlaps neither.
+        g.add_classification(
+            85,
+            "SNI2002",
+            shared + [("9001", "2002 only")],
+            valid_from=2002,
+            valid_to=2007,
+        )
+        g.add_classification(
+            86,
+            "SNI2007",
+            shared + [("9002", "2007 only")],
+            supersedes_id=85,
+            valid_from=2008,
+            valid_to=2015,
+        )
+        g.add_value_set(182, shared)
+        # Variable A: state 2008–2015 overlaps SNI2007 → reclaimed.
+        g.add_variable_state(982, 182, valid_from="2008-01-01", valid_to="2015-12-31")
+        # Variable B (same value set): state 2018–2020 overlaps NEITHER → not reclaimed.
+        g.add_variable_state(983, 182, valid_from="2018-01-01", valid_to="2020-12-31")
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        assert counts["vintage_value_sets_linked"] == 1  # variable A reclaimed
+        # The value set still has an unresolved pair (variable B) → residual, NOT 0.
+        assert counts["multi_family_after"] == 1
+        # Only A got a candidate; B has none.
+        assert g.candidates() == [(982, 182, 86)]
 
 
 class TestCuratedClassificationLinks:

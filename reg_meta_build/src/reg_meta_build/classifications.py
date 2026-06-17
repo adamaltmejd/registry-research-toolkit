@@ -874,7 +874,9 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
          off-chain (a genuine cross-family coincidence, e.g. SNI vs SSYK), leave the
          whole set in the residue for curation. For each such (variable_id,
          value_set_id), pick the LATEST candidate vintage whose [valid_from,valid_to]
-         overlaps the pair's aggregate state span — then emit it additively too.
+         overlaps AT LEAST ONE of the pair's real state windows (per-state, NOT the
+         aggregate MIN/MAX span — a disjoint-states span would falsely "overlap" a
+         gap vintage) — then emit it additively too.
 
     Returns counts (also logged) — value sets / variables auto-linked, the
     single-family-below-threshold and multi-family (ambiguous) populations, plus the
@@ -892,7 +894,6 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "_vs_confident",
         "_chain_root",
         "_vs_multi_onechain",
-        "_vs_span",
         "_vs_vintage",
         "_vs_vintage_emit",
     ):
@@ -1113,57 +1114,71 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "CREATE UNIQUE INDEX _vs_multi_onechain_pk ON _vs_multi_onechain(value_set_id)"
     )
 
-    # 7c. Per (variable_id, value_set_id) for those value sets, the AGGREGATE state
-    # span: s_start = MIN(year(valid_from)), s_end = MAX(year(valid_to)) across the
-    # pair's states. valid_from/valid_to are TEXT 'YYYY-MM-DD' (open-ended uses the
-    # '9999-12-31' sentinel → s_end 9999); extract the year with substr+CAST.
+    # 7c. For each (variable_id, value_set_id) pair of those value sets, pick the
+    # LATEST candidate vintage that overlaps AT LEAST ONE of the pair's REAL state
+    # windows (max valid_from, deterministic tie-break by max id).
     #
-    # The span — not per-state period — is the correlation key BECAUSE the emit
-    # grain is (variable_id, value_set_id): `_backfill_state_classifications` folds
-    # candidates to min(classification_id) per (variable_id, value_set_id) and
-    # applies ONE classification to ALL that pair's states (it is NOT
-    # per-state-period). So we MUST resolve to one vintage per pair over its
-    # aggregate span and emit exactly one row — do not "fix" this to per-state.
-    conn.execute(
-        """
-        CREATE TEMP TABLE _vs_span AS
-        SELECT
-            vs.variable_id,
-            vs.value_set_id,
-            MIN(CAST(substr(vs.valid_from, 1, 4) AS INTEGER)) AS s_start,
-            MAX(CAST(substr(vs.valid_to, 1, 4) AS INTEGER)) AS s_end
-        FROM variable_state vs
-        JOIN _vs_multi_onechain mo ON mo.value_set_id = vs.value_set_id
-        GROUP BY vs.variable_id, vs.value_set_id
-        """
-    )
-
-    # 7d. For each pair, among its CANDIDATE chain vintages (JOIN `_vs_cls` so we
-    # only pick vintages the value set actually matches) that OVERLAP the span, pick
-    # the LATEST overlapping edition: max valid_from, deterministic tie-break by max
-    # id. classification.valid_from/valid_to are INTEGER years, NULLABLE (NULL =
-    # unbounded on that side); overlap of [s_start, s_end] with cls [c_from, c_to] is
-    # (c_from IS NULL OR c_from <= s_end) AND (c_to IS NULL OR c_to >= s_start).
-    # If NO candidate vintage overlaps the span, the pair emits nothing — it stays
-    # in the residue (safe by omission). The window picks rank 1 per pair.
+    # Overlap is per-real-state, NOT against the pair's aggregate MIN/MAX span — the
+    # aggregate span is a TRAP when a pair has DISJOINT states (e.g. 2003–2006 and
+    # 2018–2020): the span collapses to a continuous [2003, 2020], so a candidate
+    # vintage sitting in the GAP (a closed 2008–2015 edition) would "overlap" the
+    # span though NO actual state touches it — the emit would then tag the variable
+    # with a vintage none of its states fall in. Anchoring overlap to a single real
+    # state window closes the gap trap; the "latest overlapping" intent is unchanged.
+    #
+    # We still emit ONE row per (variable_id, value_set_id) BECAUSE the emit grain is
+    # the pair: `_backfill_state_classifications` folds candidates to
+    # min(classification_id) per (variable_id, value_set_id) and applies ONE
+    # classification to ALL that pair's states (it is NOT per-state-period). So we
+    # resolve to one vintage per pair — the latest among those overlapping a real
+    # state — and emit exactly one row; do not "fix" this to per-state.
+    #
+    # JOIN `variable_state vs` (restricted to the one-chain value sets) to `_vs_cls
+    # vc` (the candidate vintages the value set actually matches) to `classification
+    # cl`, keeping rows where cl overlaps THAT state's year range. vs.valid_from /
+    # vs.valid_to are TEXT NOT NULL 'YYYY-MM-DD' (open-ended uses the '9999-12-31'
+    # sentinel → year 9999); extract the year with substr+CAST.
+    # classification.valid_from/valid_to are INTEGER years, NULLABLE (NULL =
+    # unbounded on that side); per-state overlap of [year(vs.valid_from),
+    # year(vs.valid_to)] with cls [c_from, c_to] is
+    # (c_from IS NULL OR c_from <= year(vs.valid_to))
+    #   AND (c_to IS NULL OR c_to >= year(vs.valid_from)).
+    # DISTINCT collapses the same (variable_id, value_set_id, cls_id) reached via
+    # several overlapping states; ROW_NUMBER then picks rank 1 (latest) per pair. If
+    # NO candidate vintage overlaps any real state, the pair emits nothing — it stays
+    # in the residue (safe by omission).
     conn.execute(
         """
         CREATE TEMP TABLE _vs_vintage AS
         SELECT variable_id, value_set_id, cls_id
         FROM (
             SELECT
-                sp.variable_id,
-                sp.value_set_id,
-                cl.id AS cls_id,
+                pc.variable_id,
+                pc.value_set_id,
+                pc.cls_id,
                 ROW_NUMBER() OVER (
-                    PARTITION BY sp.variable_id, sp.value_set_id
-                    ORDER BY cl.valid_from DESC, cl.id DESC
+                    PARTITION BY pc.variable_id, pc.value_set_id
+                    ORDER BY pc.valid_from DESC, pc.cls_id DESC
                 ) AS rn
-            FROM _vs_span sp
-            JOIN _vs_cls vc ON vc.value_set_id = sp.value_set_id
-            JOIN classification cl ON cl.id = vc.cls_id
-            WHERE (cl.valid_from IS NULL OR cl.valid_from <= sp.s_end)
-              AND (cl.valid_to IS NULL OR cl.valid_to >= sp.s_start)
+            FROM (
+                SELECT DISTINCT
+                    vs.variable_id,
+                    vs.value_set_id,
+                    cl.id AS cls_id,
+                    cl.valid_from AS valid_from
+                FROM variable_state vs
+                JOIN _vs_multi_onechain mo ON mo.value_set_id = vs.value_set_id
+                JOIN _vs_cls vc ON vc.value_set_id = vs.value_set_id
+                JOIN classification cl ON cl.id = vc.cls_id
+                WHERE (
+                        cl.valid_from IS NULL
+                        OR cl.valid_from <= CAST(substr(vs.valid_to, 1, 4) AS INTEGER)
+                      )
+                  AND (
+                        cl.valid_to IS NULL
+                        OR cl.valid_to >= CAST(substr(vs.valid_from, 1, 4) AS INTEGER)
+                      )
+            ) pc
         )
         WHERE rn = 1
         """
@@ -1199,6 +1214,34 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         FROM _vs_vintage_emit
         """
     )
+
+    # The TRUE post-vintage residue (#494 Codex P2): the count of DISTINCT
+    # multi-family value sets that STILL have at least one (variable_id,
+    # value_set_id) state with NO `classification_candidate` row after the vintage
+    # emit. The naive `multi_family - vintage_value_sets_linked` is WRONG when a
+    # multi-family value_set_id is reused across variables — reclaimed for one
+    # (variable_id, value_set_id) pair but not another — because subtracting distinct
+    # emitted value sets removes it from the residue though unresolved pairs remain.
+    # Grain-consistent: a value set counts as residual iff EXISTS a (variable_id,
+    # value_set_id) state lacking a candidate. Computed BEFORE dropping
+    # `_cc_state_key`, whose index keeps the per-state EXISTS cheap at real scale.
+    multi_family_after = conn.execute(
+        """
+        SELECT COUNT(*) FROM (
+            SELECT mc.value_set_id
+            FROM (
+                SELECT value_set_id FROM _vs_cls GROUP BY value_set_id HAVING COUNT(*) > 1
+            ) mc
+            JOIN variable_state vs ON vs.value_set_id = mc.value_set_id
+            WHERE NOT EXISTS (
+                SELECT 1 FROM classification_candidate c
+                WHERE c.variable_id = vs.variable_id
+                  AND c.value_set_id IS vs.value_set_id
+            )
+            GROUP BY mc.value_set_id
+        )
+        """
+    ).fetchone()[0]
     conn.execute("DROP INDEX IF EXISTS _cc_state_key")
 
     # Counts for the report (no row-level content). value_sets/variables linked
@@ -1222,25 +1265,23 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         ")"
     ).fetchone()[0]
 
-    # Vintage-reclaim counts (#494): value sets / variables resolved by step 7, and
-    # the still-ambiguous residue (multi_family minus the distinct value sets the
-    # vintage step actually reclaimed → the curation tail). Counted off
-    # `_vs_vintage_emit` (the post-guard set), NOT `_vs_vintage` (Codex P2): a vintage
-    # pick already claimed by a feed/curated/confident candidate is skipped by the
-    # emit guard, so it is NOT counted as reclaimed and stays in the residue.
-    # multi_family keeps its pre-reclaim meaning (total multi-family BEFORE reclaim).
+    # Vintage-reclaim counts (#494): distinct value sets / variables resolved by
+    # step 7 (genuinely-new links). Counted off `_vs_vintage_emit` (the post-guard
+    # set), NOT `_vs_vintage` (Codex P2): a vintage pick already claimed by a
+    # feed/curated/confident candidate is skipped by the emit guard, so it is NOT
+    # counted as reclaimed and stays in the residue. `multi_family` keeps its
+    # pre-reclaim meaning (total multi-family BEFORE reclaim); `multi_family_after`
+    # (computed above, before the index drop) is the precise post-vintage residue.
     vintage_value_sets_linked = conn.execute(
         "SELECT COUNT(DISTINCT value_set_id) FROM _vs_vintage_emit"
     ).fetchone()[0]
     vintage_variables_linked = conn.execute(
         "SELECT COUNT(DISTINCT variable_id) FROM _vs_vintage_emit"
     ).fetchone()[0]
-    multi_family_after = multi_family - vintage_value_sets_linked
 
     for tmp in (
         "_vs_vintage_emit",
         "_vs_vintage",
-        "_vs_span",
         "_vs_multi_onechain",
         "_chain_root",
         "_vs_confident",
