@@ -18,8 +18,9 @@ override.
 
 `expect`:
   - ``hit`` — the intended result should rank well TODAY (a regression guard).
-  - ``gap`` — known-unsurfaced today; documents a planned lever (e.g. Swedish<->English
-    synonyms, #393 item 8). A `gap` that becomes a hit is progress, not a failure.
+  - ``gap`` — a confirmed-correct intended that does NOT surface today: a curation /
+    concept-group target (e.g. golden-boost #311, or folding a classification family).
+    A `gap` that becomes a hit is progress (`closed!`), not a failure.
 
 Usage:
     uv run python reg_webapp/backend/scripts/run_search_eval.py [--db DIR_OR_FILE] [--limit N]
@@ -151,8 +152,8 @@ def main() -> int:
     print(f"gap cases:  {gap_closed}/{gap_total} now surfaced (closed)")
     if hit_total and hit_found < hit_total:
         print(
-            "\nMISS on an `expect=hit` case = a relevance regression OR a wrong `intended` "
-            "(this is DRAFT ground truth — confirm/correct it)."
+            "\nMISS on an `expect=hit` case = a likely relevance REGRESSION (the intended "
+            "is steward-confirmed) — investigate the ranking change that dropped it."
         )
     return 0
 

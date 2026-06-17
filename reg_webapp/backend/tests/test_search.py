@@ -515,6 +515,22 @@ def test_apply_golden_boost_dedups_when_pin_is_already_a_hit(conn, pinned):
     assert [r["fqid"] for r in boosted] == ["scb/lisa"]
 
 
+def test_apply_golden_boost_promotes_on_page_hit_to_rank_1(conn, pinned):
+    # The pin (scb/lisa) is on the page but NOT at rank 1 in the FTS order: it must
+    # be PROMOTED to rank 1, appear EXACTLY ONCE (removed from its FTS slot, not
+    # duplicated), and the page length is unchanged → the route's total_count delta
+    # is 0 (it was already counted by FTS).
+    fts = [
+        {"fqid": "scb/other", "register_name": "Other", "register_purpose": None},
+        {"fqid": "scb/lisa", "register_name": "LISA", "register_purpose": None},
+        {"fqid": "scb/third", "register_name": "Third", "register_purpose": None},
+    ]
+    boosted = apply_golden_boost(conn, "LISA", "register", fts)
+    assert [r["fqid"] for r in boosted] == ["scb/lisa", "scb/other", "scb/third"]
+    assert [r["fqid"] for r in boosted].count("scb/lisa") == 1
+    assert len(boosted) == len(fts)  # delta 0: no net-new injection
+
+
 def test_apply_golden_boost_normalizes_query(conn, pinned):
     # casefold + strip: "  GIZMO  " resolves to the "gizmo" pin.
     boosted = apply_golden_boost(conn, "  GIZMO  ", "register", [])
