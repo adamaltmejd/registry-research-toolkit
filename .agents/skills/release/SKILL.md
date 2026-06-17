@@ -1,7 +1,7 @@
 ---
 name: release
-description: Registry Research Toolkit release workflow for
-  /Users/adam/Code/registry-research-toolkit. Use when the user explicitly asks to run
+description: >-
+  Registry Research Toolkit release workflow. Use when the user explicitly asks to run
   the release workflow, bump and publish reg_meta, reg_meta_build, or mock_data_wizard,
   create package tags/releases, upload reg_meta DB assets, or monitor publish workflows.
 ---
@@ -39,9 +39,12 @@ approval pause.
    git log --oneline <tag>..HEAD -- <package>/
    ```
 
-3. If multiple packages changed, release sequentially. For schema-affecting builder
-   changes, release `reg_meta_build` before the `reg_meta` asset release that consumes
-   it.
+3. If multiple packages changed, release sequentially. For schema-affecting DDL or doc
+   DB changes shared by `reg_meta` and `reg_meta_build`, keep `reg_meta` ahead of the
+   builder: publish the `reg_meta` release containing the new
+   `SCHEMA_VERSION`/`DOC_SCHEMA_VERSION` first, or bump `reg_meta_build`'s minimum
+   `reg-meta` dependency to the new version before publishing the builder. Do not ship a
+   builder that can resolve against stale schema constants.
 
 ## Per-Package Steps
 
@@ -82,11 +85,15 @@ approval pause.
    Bump <package> version to X.Y.Z
    ```
 
-7. Push, then create a draft GitHub release. The tag is created by this command; do not
-   create it separately.
+7. Push and verify the bump commit is on `origin/main`, then create a draft GitHub
+   release. The tag is created by this command; do not create it separately. Pass the
+   verified main commit as `--target` so the tag cannot be created from an older default
+   branch head.
 
    ```sh
-   gh release create <package>/vX.Y.Z --draft --title "<package> vX.Y.Z" --notes-file <notes-file>
+   git fetch origin main
+   target="$(git rev-parse origin/main)"
+   gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package> vX.Y.Z" --notes-file <notes-file>
    ```
 
 ## reg_meta Assets
@@ -101,7 +108,7 @@ Build a fresh main DB if `SCHEMA_VERSION` changed, the release is major, or cons
 Fresh main DB:
 
 ```sh
-uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ --providers scb,sos
+uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" ~/.local/share/reg_meta/reg_meta.db
 zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst

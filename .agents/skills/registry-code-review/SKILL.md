@@ -1,10 +1,10 @@
 ---
 name: registry-code-review
-description: Registry Research Toolkit fallback code review checklist for
-  /Users/adam/Code/registry-research-toolkit. Use only when the built-in review
-  capability is unavailable, when the user explicitly asks for this skill, or when a
-  repo-specific checklist is needed in addition to built-in review; do not use as the
-  default independent review pass.
+description: >-
+  Registry Research Toolkit fallback code review checklist. Use only when the built-in
+  review capability is unavailable, when the user explicitly asks for this skill, or
+  when a repo-specific checklist is needed in addition to built-in review; do not use
+  as the default independent review pass.
 ---
 
 # Registry Code Review

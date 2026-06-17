@@ -1,16 +1,17 @@
 ---
 name: plan-sequence
-description: Registry Research Toolkit issue sequencing workflow for
-  /Users/adam/Code/registry-research-toolkit. Use when asked to run the plan-sequence
-  workflow, preview or refresh
-  epic #328 sequencing, inspect ready/running/blocked/parallel-safe issues, update the generated plan-sequence block, or carve the deterministic ready lane floor with scripts/plan_sequence.py.
+description: >-
+  Registry Research Toolkit issue sequencing workflow. Use when asked to run the
+  plan-sequence workflow, preview or refresh epic #328 sequencing, inspect
+  ready/running/blocked/parallel-safe issues, update the generated plan-sequence
+  block, or carve the deterministic ready lane floor with scripts/plan_sequence.py.
 ---
 
 # Registry Plan Sequence
 
 ## Scope
 
-Run this only in `/Users/adam/Code/registry-research-toolkit`.
+Run this from the repository root of the current Registry Research Toolkit checkout.
 
 The generated projection lives in an epic body between `<!-- plan-sequence:start -->`
 and `<!-- plan-sequence:end -->`. Treat everything inside those markers as script-owned.

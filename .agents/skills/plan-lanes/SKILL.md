@@ -1,10 +1,10 @@
 ---
 name: plan-lanes
-description: Registry Research Toolkit lane-ranking workflow for
-  /Users/adam/Code/registry-research-toolkit. Use when asked to run the plan-lanes
-  workflow, choose the next issue lane, rank ready issues, interpret
-  scripts/plan_sequence.py --lane output, or identify parallel-safe work for
-  epic #328 without editing issues or files.
+description: >-
+  Registry Research Toolkit lane-ranking workflow. Use when asked to run the
+  plan-lanes workflow, choose the next issue lane, rank ready issues, interpret
+  scripts/plan_sequence.py --lane output, or identify parallel-safe work for epic #328
+  without editing issues or files.
 ---
 
 # Registry Plan Lanes

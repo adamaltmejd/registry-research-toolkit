@@ -1,7 +1,7 @@
 ---
 name: issue-pulse
-description: Registry Research Toolkit issue heartbeat for
-  /Users/adam/Code/registry-research-toolkit. Use when asked to run the issue-pulse
+description: >-
+  Registry Research Toolkit issue heartbeat. Use when asked to run the issue-pulse
   workflow, perform one issue-tracker tick, check plan-sequence drift, refresh or
   restamp plan-lanes, inspect issue hygiene, or report changes for epic #328.
 ---

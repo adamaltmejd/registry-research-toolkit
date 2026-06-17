@@ -1,9 +1,9 @@
 ---
 name: pr-pipeline
-description: Registry Research Toolkit PR development pipeline for
-  /Users/adam/Code/registry-research-toolkit. Use when asked to run the PR pipeline
-  workflow, including prompts like "$pr-pipeline issue 510"; develop issue(s), take a
-  ranked lane through implementation, open draft PRs with closing keywords, run
+description: >-
+  Registry Research Toolkit PR development pipeline. Use when asked to run the PR
+  pipeline workflow, including prompts like "$pr-pipeline issue 510"; develop issue(s),
+  take a ranked lane through implementation, open draft PRs with closing keywords, run
   review/test/docs gates, mark PRs ready, or continue toward merge when the user
   explicitly asks for merge.
 ---
@@ -110,12 +110,13 @@ For merge, satisfy the repo gate:
 - stale-head check before and after merge.
 
 Run the real `build-db` last and once for build-affecting work, using the main
-checkout's untracked seed if working from a worktree:
+checkout's untracked seed if working from a worktree. Do not pass `--providers` for the
+default release/build shape; only narrow the provider set when the work is explicitly
+SCB/SOS-only and that is stated in the PR:
 
 ```sh
 reg-meta-build --db /tmp/regmeta-<slug> build-db \
-  --input-dir /Users/adam/Code/registry-research-toolkit/reg_meta_build/input_data \
-  --providers scb,sos
+  --input-dir <main-checkout>/reg_meta_build/input_data
 ```
 
 Clean scratch outputs afterward.
