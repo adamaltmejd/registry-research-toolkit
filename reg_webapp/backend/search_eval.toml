@@ -1,8 +1,9 @@
 # Search-relevance eval set — DRAFT (#393 item 10).
 #
-# ~21 real `(query -> intended result)` pairs (a DRAFT seed; the steward should grow it
-# bounded, curated catalog, so ranking changes become MEASURABLE (the precondition
-# #393 calls out; it gates the ranking items 2/5/6/7). Run with:
+# ~20 real `(query -> intended result)` pairs (a DRAFT seed; the steward should grow it)
+# that define "smarter search" for this bounded, curated catalog, so ranking changes
+# become MEASURABLE (the precondition #393 calls out; it gates the ranking items
+# 2/5/6/7). Run with:
 #
 #     uv run python reg_webapp/backend/scripts/run_search_eval.py
 #
@@ -12,7 +13,7 @@
 # !!! DRAFT GROUND TRUTH — STEWARD MUST CONFIRM !!!
 # Every `intended` below is a PROPOSED answer, grounded in what the live search returns
 # today, NOT a steward verdict. Review each: fix wrong `intended`s, then flip
-# `confirmed = false` -> true. Several are deliberately ambiguous (noted) — that is the
+# `confirmed = false` -> true. Several are deliberately contestable (noted) — that is the
 # judgment the eval exists to capture.
 #
 # Fields:
@@ -22,11 +23,14 @@
 #   intended  - the navigable target: an FQID (scb/iot, class/icd-10-se) or, for a
 #               folded concept group, "group:<group_key>".
 #   expect    - "hit": should rank well today (regression guard).
-#               "gap": known-unsurfaced today; documents a planned lever (e.g. the
-#               Swedish<->English synonym map, #393 item 8). A gap that turns into a hit
-#               is progress, flagged "closed!" by the runner.
+#               "gap": the steward-wanted answer does NOT surface today — a curation /
+#               concept-group target (e.g. golden-boost #311, or folding a classification
+#               family). A gap that turns into a hit is progress, flagged "closed!".
 #   note      - what the case exercises / why the intended is what it is.
 #   confirmed - false until a steward signs off on this pair.
+#
+# OUT OF SCOPE (deliberately): English<->Swedish query expansion / synonyms — a separate
+# POST-FREEZE topic (#393 item 8). No English-query cases here.
 
 # ── Exact register acronym -> that register ──────────────────────────────────
 [[case]]
@@ -38,12 +42,12 @@ confirmed = false
 note = "Exact acronym -> register, rank 1."
 
 [[case]]
-query = "RAMS"
+query = "HEK"
 group = "register"
-intended = "scb/rams"
+intended = "scb/hek"
 expect = "hit"
 confirmed = false
-note = "Exact acronym -> register, rank 1."
+note = "Exact acronym -> register, rank 1. (RAMS deliberately NOT used as an example — it is stale, superseded by BAS = scb/bas.)"
 
 # ── Topical term -> canonical register ───────────────────────────────────────
 [[case]]
@@ -65,10 +69,10 @@ note = "Befolkningens utbildning (Utbildningsregistret)."
 [[case]]
 query = "sysselsättning"
 group = "register"
-intended = "scb/rams"
-expect = "hit"
+intended = "scb/lisa"
+expect = "gap"
 confirmed = false
-note = "RAMS = canonical employment register; KS (Kortperiodisk) ranks first today."
+note = "Steer employment queries to LISA. RAMS (ranks ~3 today) is stale, superseded by BAS (scb/bas); LISA is the register to point users at but does NOT surface for 'sysselsättning' today — a golden-boost/curation target (#311)."
 
 [[case]]
 query = "diagnos"
@@ -76,7 +80,7 @@ group = "register"
 intended = "sos/par"
 expect = "gap"
 confirmed = false
-note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' (only Cancerregistret does, via its purpose text) — a ranking/curation gap (golden-boost #311 / item 4). Steward may instead accept sos/can as the answer (then -> expect=hit, intended=sos/can)."
+note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' (only Cancerregistret does, via its purpose text) — a ranking/curation gap (golden-boost #311). Steward may instead accept sos/can (then -> expect=hit, intended=sos/can)."
 
 [[case]]
 query = "läkemedel"
@@ -84,7 +88,15 @@ group = "register"
 intended = "sos/lmed"
 expect = "hit"
 confirmed = false
-note = "Medicine -> Läkemedelsregistret. (The ATC classification does NOT surface for 'läkemedel' — a separate synonym/curation gap.)"
+note = "Medicine -> Läkemedelsregistret, rank 1."
+
+[[case]]
+query = "cancer"
+group = "register"
+intended = "sos/can"
+expect = "hit"
+confirmed = false
+note = "cancer -> Cancerregistret, rank 1."
 
 [[case]]
 query = "cancerregistret"
@@ -167,7 +179,7 @@ group = "classification"
 intended = "group:ssyk"
 expect = "hit"
 confirmed = false
-note = "Occupation (SV) -> the SSYK classification group, rank 1."
+note = "Occupation -> the SSYK classification group, rank 1."
 
 [[case]]
 query = "näringsgren"
@@ -178,27 +190,9 @@ confirmed = false
 note = "Industry sector -> the SNI classification group, rank 1."
 
 [[case]]
-query = "SUN2000"
+query = "SUN"
 group = "classification"
-intended = "class/sun-niva2000"
-expect = "hit"
-confirmed = false
-note = "SUN2000 splits into niva/inriktning/grupp facets — which is canonical for the bare acronym? Steward picks."
-
-# ── English query -> Swedish canonical result (synonym GAP, #393 item 8) ──────
-# These fail today (no cross-language expansion) — they document the lever, not a bug.
-[[case]]
-query = "income"
-group = "register"
-intended = "scb/iot"
+intended = "group:sun"
 expect = "gap"
 confirmed = false
-note = "EN income <-> SV inkomst. Today surfaces scb/ulf only; needs the synonym map (item 8)."
-
-[[case]]
-query = "education"
-group = "register"
-intended = "scb/ureg"
-expect = "gap"
-confirmed = false
-note = "EN education <-> SV utbildning. Today surfaces ISCED + a PIAAC variable, not Utbildningsregistret."
+note = "SUN should fold into ONE group like group:ssyk. Today it is split into facet groups (group:sun-niva / group:sun-inriktning / group:sun-grupp) + standalone vintages (class/sun1996) — a concept-group modeling gap."
