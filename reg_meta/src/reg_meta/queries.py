@@ -237,6 +237,12 @@ def _fts_match_query(raw: str) -> str | None:
     return " ".join(terms) if terms else None
 
 
+def _escape_like(s: str) -> str:
+    """Escape SQL LIKE metacharacters so a user query matches as a literal
+    prefix, not a pattern. Escape the escape char first."""
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 def _filter_search_by_years(
     conn: sqlite3.Connection,
     results: list[dict[str, Any]],
@@ -407,6 +413,10 @@ def search(
     # token, so the FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
+    # Classifications surfaced by the name-FTS arm; the code-containment arm
+    # (#393 item 5) excludes them so a both-ways match isn't emitted twice.
+    classification_name_ids: set[int] = set()
+
     if field in ("datacolumn", "all"):
         all_results.extend(_search_datacolumns(conn, like_pattern, reg_ids))
 
@@ -421,7 +431,26 @@ def search(
         # Classifications are catalog-scoped (no register), so a `--register` scope
         # excludes them — `reg_ids` set means "registers only".
         if type in ("classification", "all") and reg_ids is None:
-            all_results.extend(_search_classifications(conn, fts_query))
+            cls_rows = _search_classifications(conn, fts_query)
+            classification_name_ids = {r["_classification_id"] for r in cls_rows}
+            all_results.extend(cls_rows)
+
+    # Code-aware classification surfacing (#393 item 5): a code-shaped query also
+    # surfaces the classifications that CONTAIN a matching code (C12 -> ICD-10-SE),
+    # so "find the classification for this code" works even with no NAME match.
+    # SEPARATE top-level block (NOT under the `fts_query is not None` gate): it
+    # matches the RAW code against `value_code.code`, not the FTS index. Ranked
+    # AFTER the name-FTS hits (positive vs negative `fts_rank`) and catalog-scoped
+    # — excluded under a `--register` scope, exactly like the name-FTS arm.
+    if (
+        field in ("description", "all")
+        and type in ("classification", "all")
+        and reg_ids is None
+        and _is_code_shaped(query)
+    ):
+        all_results.extend(
+            _search_classifications_by_code(conn, query, classification_name_ids)
+        )
 
     # Code/value search (#352): FTS over value_code labels + exact/prefix code
     # match, annotated with owning variables / classifications. Emits `type:
@@ -1005,6 +1034,34 @@ def _annotate_value_page(
             del r["_code_id"]
 
 
+def _classification_leaf(
+    slug: str | None,
+    short_name: str,
+    classification_name: str,
+    fts_rank: float,
+    classification_id: int,
+) -> dict[str, Any]:
+    """The classification-leaf result row emitted by both classification search
+    arms (name-FTS `_search_classifications` and code-containment
+    `_search_classifications_by_code`). One builder so the leaf contract — the
+    keys `_fold_concept_groups` (`_classification_id`), pagination, and
+    `_strip_internal_keys` depend on — can't drift between the two arms.
+
+    `_classification_id` is the internal fold key (stripped before public): maps
+    the leaf to its vintage concept group so the fold can subsume it (symmetric
+    with variables' `_variable_id`). A NULL-slug classification isn't
+    FQID-addressable (`try_emit` → None), mirroring the catalog enumeration's
+    slug filter."""
+    return {
+        "type": "classification",
+        "fqid": try_emit(Fqid.classification_fqid, slug),
+        "short_name": short_name,
+        "classification_name": classification_name,
+        "fts_rank": fts_rank,
+        "_classification_id": classification_id,
+    }
+
+
 def _search_classifications(
     conn: sqlite3.Connection, query: str
 ) -> list[dict[str, Any]]:
@@ -1023,18 +1080,88 @@ def _search_classifications(
         (query,),
     ).fetchall()
     return [
-        {
-            "type": "classification",
-            "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
-            "short_name": r["short_name"],
-            "classification_name": r["name"],
-            "fts_rank": r["rank"],
-            # Internal fold key (stripped before public): maps the leaf to its
-            # vintage concept group so the fold can subsume it (symmetric with
-            # variables' `_variable_id`).
-            "_classification_id": r["classification_id"],
-        }
+        _classification_leaf(
+            slug=r["slug"],
+            short_name=r["short_name"],
+            classification_name=r["name"],
+            fts_rank=r["rank"],
+            classification_id=r["classification_id"],
+        )
         for r in rows
+    ]
+
+
+# Code-containment classification hits rank AFTER all name-FTS hits. Name-FTS
+# ranks are bm25 (negative = better), so any positive base sinks below them; the
+# enumeration index preserves the SQL order (exact-containing classifications
+# first) within the code-containment block.
+_CLASS_CODE_RANK_BASE = 1000.0
+
+
+def _search_classifications_by_code(
+    conn: sqlite3.Connection, query: str, exclude_ids: set[int]
+) -> list[dict[str, Any]]:
+    """Surface the classifications that CONTAIN a code-shaped query (#393 item 5).
+
+    A code-shaped query ("C12", "F32") should find the classification whose code
+    SET includes a matching code — "find the classification for this code" — even
+    when the query matches no classification NAME (the `_search_classifications`
+    FTS arm). The match is exact OR prefix on `value_code.code`. The LIKE matches
+    a LITERAL code prefix: the query's LIKE metacharacters (backslash, percent,
+    underscore) are escaped via `_escape_like` with an ESCAPE clause, so a
+    code-shaped query like "12_" matches literal "12_…" codes, NOT "120"/"129"
+    (where a raw underscore would wildcard-match any single char). The exact-match
+    parts (`vc.code = ?` and the `has_exact` `=` test) take the RAW `q` — they are
+    equality, not LIKE, so they need no escaping. This is STRICTER than the value
+    arm (`_search_values_fts`), whose `code LIKE ?` does NOT escape — a known
+    module-wide gap, tracked as a follow-up, not fixed here.
+
+    The `classification_code` JOIN inherently restricts the result to codes that
+    OWN a classification, so the context-less-code drop the value arm needs (#478,
+    its `mapping_count > 0 OR EXISTS classification_code` owner filter) is implicit
+    here — a code with no `classification_code` row simply doesn't join.
+
+    `exclude_ids` are the classifications already surfaced by the name-FTS arm; we
+    skip them so a classification matched by BOTH name and code-containment appears
+    ONCE (as its name hit), not twice. Emits rows with the SAME keys as
+    `_search_classifications` so they flow identically through `_fold_concept_groups`
+    (keyed on `_classification_id`), pagination, and `_strip_internal_keys`.
+
+    `fts_rank` is a POSITIVE base + enumeration index, so these rows sort AFTER all
+    (negative-rank) name-FTS hits while preserving the SQL order (exact-containing
+    classifications first, then `short_name`). Because `classification.short_name`
+    is `NOT NULL UNIQUE` (see reg_meta_build/db.py), `(has_exact DESC, short_name)`
+    is already a TOTAL order, so the Python enumeration below freezes a deterministic
+    order into `fts_rank` — no extra tiebreak needed.
+
+    The `has_exact` test collates NOCASE to match the WHERE LIKE, which is already
+    ASCII-case-insensitive: a lowercase query "c12" admits a stored uppercase "C12"
+    via LIKE, so the case-SENSITIVE `=` would score the true exact hit has_exact=0
+    and let a prefix-only sibling ("C120") that sorts earlier by short_name rank
+    above it. COLLATE NOCASE makes exact-precedence hold for any-case code query
+    (the WHERE already surfaces them — LIKE is case-insensitive)."""
+    q = query.strip()
+    rows = conn.execute(
+        "SELECT c.id AS classification_id, c.short_name, c.name AS classification_name, "
+        "c.slug, MAX(CASE WHEN vc.code = ? COLLATE NOCASE THEN 1 ELSE 0 END) AS has_exact "
+        "FROM value_code vc "
+        "JOIN classification_code cc ON cc.code_id = vc.code_id "
+        "JOIN classification c ON c.id = cc.classification_id "
+        "WHERE vc.code = ? OR vc.code LIKE ? ESCAPE '\\' "
+        "GROUP BY c.id, c.short_name, c.name, c.slug "
+        "ORDER BY has_exact DESC, c.short_name",
+        (q, q, f"{_escape_like(q)}%"),
+    ).fetchall()
+    kept = [r for r in rows if r["classification_id"] not in exclude_ids]
+    return [
+        _classification_leaf(
+            slug=r["slug"],
+            short_name=r["short_name"],
+            classification_name=r["classification_name"],
+            fts_rank=_CLASS_CODE_RANK_BASE + i,
+            classification_id=r["classification_id"],
+        )
+        for i, r in enumerate(kept)
     ]
 
 

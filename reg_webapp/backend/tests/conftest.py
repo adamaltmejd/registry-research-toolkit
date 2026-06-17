@@ -244,6 +244,23 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
         "VALUES (?, ?, NULL, 0)",
         (sun2020_id, noise_code_id),
     )
+    # A CODE-SHAPED code (digit + len>=3) owned by sun2020 so a code-shaped query
+    # ('C12') surfaces sun2020 in the classifications group via code-containment
+    # (#393 item 5). Its label is unique so existing code-search assertions (which
+    # pin Man/Kvinna) are untouched. `is_valid=0` (observed-but-non-canonical): the
+    # code-containment search has NO is_valid filter (it joins classification_code
+    # regardless), so this surfaces sun2020 in search WITHOUT leaking into the kit's
+    # canonical code list (which drops is_valid=0) — keeping the kit test's pinned
+    # canonical list intact while proving search surfaces by any owned code.
+    c12_code_id = src.execute(
+        "INSERT INTO value_code (code, label, mapping_count) "
+        "VALUES ('C12', 'Malign tumör i tungbas', 0)"
+    ).lastrowid
+    src.execute(
+        "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
+        "VALUES (?, ?, NULL, 0)",
+        (sun2020_id, c12_code_id),
+    )
 
 
 def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> None:
