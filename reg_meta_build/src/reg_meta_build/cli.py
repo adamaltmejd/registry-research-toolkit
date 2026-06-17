@@ -162,10 +162,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     build_p.add_argument(
         "--providers",
-        default="scb,sos,fohm,fk,lakemedelsverket,pliktverket",
+        default="scb,sos,fohm,fk,lakemedelsverket,pliktverket,skatteverket",
         help=(
             "Comma-separated provider adapters to build (default: "
-            "scb,sos,fohm,fk,lakemedelsverket,pliktverket). Pass `--providers scb` for the "
+            "scb,sos,fohm,fk,lakemedelsverket,pliktverket,skatteverket). Pass `--providers scb` for the "
             "SCB-only DB that reproduces the byte-identical A4.3b dbdiff gate. "
             "Non-SCB providers are purely additive: they add rows in a disjoint id "
             "band (>= 2^62), never alter SCB's. `fohm`/`fk` (#422) and "

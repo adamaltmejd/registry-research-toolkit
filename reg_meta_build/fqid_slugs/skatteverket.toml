@@ -1,0 +1,102 @@
+# Curated FQID slugs for Skatteverket registers (#443).
+#
+# Companion to fohm/fk/lakemedelsverket/pliktverket.toml; same grammar. TOML
+# keys are the minted ids — mint("skatteverket", <reg_key>) for the register,
+# mint("skatteverket", <reg_key>, <variant_key>) for each variant. Panel keys:
+# entity = persorgnr; time = the per-stage event date (or YYYYMM redovisnings-
+# period); grain = row. The annual egenavgift snapshot has no time column
+# (entity-only cross-section). Variable slugs stay AUTO. Regenerate
+# .snapshot.json after edits:  reg-meta-build precheck-slugs --update-snapshot
+
+
+# Omställningsstöd
+[register."8842601759567099944"]
+slug = "omstallningsstod"
+
+[register_variant."8842601759567099944.5836263651649918924"]
+slug = "ansokt"
+display_group = "Omställningsstöd"
+panel_entity_key = "persorgnr"
+panel_time_key = "ansokt-datum"
+panel_time_grain = "row"
+
+[register_variant."8842601759567099944.6922376429432170921"]
+slug = "beviljat"
+display_group = "Omställningsstöd"
+panel_entity_key = "persorgnr"
+panel_time_key = "beviljat-datum"
+panel_time_grain = "row"
+
+[register_variant."8842601759567099944.6370467322366634338"]
+slug = "avslag"
+display_group = "Omställningsstöd"
+panel_entity_key = "persorgnr"
+panel_time_key = "avslag-datum"
+panel_time_grain = "row"
+
+
+# Tillfälligt anstånd med skatteinbetalning
+[register."5585768188006740933"]
+slug = "tillfalligt-anstand"
+
+[register_variant."5585768188006740933.7076478160343398369"]
+slug = "ansokt"
+display_group = "Tillfälligt anstånd med skatteinbetalning"
+panel_entity_key = "persorgnr"
+panel_time_key = "dat-skapad-ref"
+panel_time_grain = "row"
+
+[register_variant."5585768188006740933.7443028008238759189"]
+slug = "beviljat"
+display_group = "Tillfälligt anstånd med skatteinbetalning"
+panel_entity_key = "persorgnr"
+panel_time_key = "dat-trans"
+panel_time_grain = "row"
+
+[register_variant."5585768188006740933.8012147413383888941"]
+slug = "upphort"
+display_group = "Tillfälligt anstånd med skatteinbetalning"
+panel_entity_key = "persorgnr"
+panel_time_key = "dat-trans"
+panel_time_grain = "row"
+
+[register_variant."5585768188006740933.5514125468717342141"]
+slug = "aterkallat"
+display_group = "Tillfälligt anstånd med skatteinbetalning"
+panel_entity_key = "persorgnr"
+panel_time_key = "dat-trans"
+panel_time_grain = "row"
+
+
+# Nedsättning egenavgifter inkomstår 2020
+[register."6082834545600937861"]
+slug = "egenavgifter-nedsattning-2020"
+
+[register_variant."6082834545600937861.5451767900218727492"]
+slug = "_default"
+display_group = "Nedsättning egenavgifter inkomstår 2020"
+panel_entity_key = "persorgnr"
+
+
+# Uppgifter från arbetsgivardeklaration
+[register."7681954797109992357"]
+slug = "arbetsgivardeklaration"
+
+[register_variant."7681954797109992357.5763981468755750264"]
+slug = "_default"
+display_group = "Uppgifter från arbetsgivardeklaration"
+panel_entity_key = "persorgnr"
+panel_time_key = "period-from"
+panel_time_grain = "row"
+
+
+# Uppgifter från momsdeklaration
+[register."4961604374408729822"]
+slug = "momsdeklaration"
+
+[register_variant."4961604374408729822.4747239651774967613"]
+slug = "_default"
+display_group = "Uppgifter från momsdeklaration"
+panel_entity_key = "persorgnr"
+panel_time_key = "period-from"
+panel_time_grain = "row"

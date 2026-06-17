@@ -43,6 +43,7 @@ class TestListProviders:
             "lakemedelsverket",
             "pliktverket",
             "scb",
+            "skatteverket",
             "sos",
         ]
         assert all(isinstance(p, ProviderSummary) for p in providers)

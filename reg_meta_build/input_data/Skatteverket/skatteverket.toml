@@ -1,0 +1,393 @@
+# Curated thin-provider catalog — Skatteverket (the Swedish Tax Agency), #443.
+# Read by reg_meta_build.sources.curated.CuratedAdapter.
+#
+# Source: Skatteverket's own field documentation `Variabellista_20210421_2.xlsx`
+# ("Variabelförteckning", delivered to SCB 2021-04-21) — the authoritative
+# delivery field list. Confidential restricted-access individ-/företagsdata
+# (released via SCB MONA); only the METADATA below is public. `column` tokens are
+# SOURCE-EXACT (persorgnr, ARENDENUMMER, Ansokt_Belopp, …); variable slugs stay
+# AUTO (NFKD-folded: Återkallat_anståndsbelopp → aterkallat-anstandsbelopp).
+#
+# Scope: the COVID-19 business-support microdata SWECOV holds — pandemic relief
+# schemes the Tax Agency administered, plus the employer/VAT-declaration context
+# tables. Two lifecycle-staged schemes are modelled as one register each with a
+# variant per stage (mirrors fk.toml): `omstallningsstod` (ansökt/beviljat/avslag)
+# and `tillfalligt-anstand` (ansökt/beviljat/upphört/återkallat). Three standalone
+# tables follow. No classification linkage (amounts, dates, periods — no coded
+# value sets).
+#
+# COVERAGE WINDOWS are sourced from each scheme's public statutory period, not the
+# delivery file (which carries no per-table date range). Flagged for maintainer
+# review — see the PR. omställningsstöd ran the support periods mars 2020 →
+# 2021; the egenavgift reduction is explicitly income-year 2020; the anstånd
+# (deferral) scheme opened mars 2020 and runs open-ended (repayment timelines
+# extend for years); the declaration tables are bounded below by the pandemic
+# delivery but left open-ended above.
+
+
+# ── Omställningsstöd — COVID-19 transition support (turnover-loss compensation) ──
+[[register]]
+key = "omstallningsstod"
+name = "Omställningsstöd"
+valid_from = "2020-03-01"  # first support period mars–april 2020
+valid_to = "2021-12-31"  # scheme's final support periods ran through 2021
+purpose = "Omställningsstöd (COVID-19): statligt stöd till företag med kraftigt minskad omsättning under pandemin. Ärendets livscykel levereras i tre tabeller — ansökt, beviljat och avslag."
+
+[[register.variant]]
+key = "ansokt"
+name = "Ansökt omställningsstöd"
+
+[[register.variant]]
+key = "beviljat"
+name = "Beviljat omställningsstöd"
+
+[[register.variant]]
+key = "avslag"
+name = "Avslag omställningsstöd"
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "persorgnr"
+definition = "Person- eller organisationsnummer. Byts ut mot ett löpnummer hos SCB (avidentifiering)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Ärendenummer"
+column = "ARENDENUMMER"
+definition = "Ärendenummer — kopplar ärende mellan ansökan, beviljande och avslag."
+data_type = "text"
+
+[[register.variable]]
+name = "Period omställningsstöd"
+column = "Omstallningsstod_Period"
+definition = "Perioden omställningsstödet avser."
+data_type = "text"
+
+[[register.variable]]
+name = "Ansökt belopp"
+column = "Ansokt_Belopp"
+definition = "Ansökt belopp."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Datum för ansökan"
+column = "Ansokt_Datum"
+definition = "Datum för ansökan."
+data_type = "date"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Rapporterad nettoomsättning aktuell period"
+column = "NettOms_aktuellperiod"
+definition = "Rapporterad nettoomsättning aktuell period. Uppgifterna om omsättning och rörelseresultat är vad företaget rapporterat i ansökan."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Rapporterad nettoomsättning jämförelseperiod 2019"
+column = "NettOms2019"
+definition = "Rapporterad nettoomsättning jämförelseperiod 2019."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Rapporterat rörelseresultat aktuell period"
+column = "RorelseRes_aktuellperiod"
+definition = "Rapporterat rörelseresultat aktuell period."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Rapporterat rörelseresultat jämförelseperiod 2019"
+column = "RorelseRes2019"
+definition = "Rapporterat rörelseresultat jämförelseperiod 2019."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Förlust rörelseresultat"
+column = "ForlustRorelseRes"
+definition = "Förlust rörelseresultat."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Kostnader från ansökan"
+column = "Kostnader1"
+definition = "Uppgifter om kostnader från ansökan. Underkategorier i leveransen: AvrakningElEnergiskatt, AvrakningUppvarmningEnergiskatt, Djurfoder, El, ElSumma, Farledsavgifter, Fastighetsskatt, Forsakringar, Franchiseavgifter, HyraOchLeasing, Rantor, RoyaltiesOchLicensavgifter, StadningSophanteringOchLarm, Textiltvatt, TillstandTillsynsOchKontrollavgifter, Uppvarmning, UppvarmningSumma, Vardeminskning, VattenAvloppInternetTelefon."
+data_type = "decimal"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Beviljat belopp"
+column = "Beviljat_Belopp"
+definition = "Beviljat belopp — alltid det senaste totala beloppet för skattebetalaren respektive period."
+data_type = "decimal"
+variants = ["beviljat"]
+
+[[register.variable]]
+name = "Beviljat belopp till skattekontot"
+column = "Beviljat_Belopp_sk"
+definition = "Beviljat belopp till skattekontot för just det ärendet."
+data_type = "decimal"
+variants = ["beviljat"]
+
+[[register.variable]]
+name = "Datum för beviljat omställningsstöd"
+column = "Beviljat_datum"
+definition = "Datum för beviljat omställningsstöd."
+data_type = "date"
+variants = ["beviljat"]
+
+[[register.variable]]
+name = "Datum för avslag"
+column = "Avslag_datum"
+definition = "Datum för avslag på omställningsstöd."
+data_type = "date"
+variants = ["avslag"]
+
+
+# ── Tillfälligt anstånd — COVID-19 temporary tax-payment deferral ──
+[[register]]
+key = "tillfalligt-anstand"
+name = "Tillfälligt anstånd med skatteinbetalning"
+valid_from = "2020-03-01"  # deferral scheme opened 2020-03-30, retroactive to jan 2020
+# valid_to omitted: open-ended — granted deferrals carry repayment timelines that
+# extend for years past the application window.
+purpose = "Tillfälligt anstånd med inbetalning av skatt (COVID-19): uppskjuten betalning av moms och arbetsgivaravgifter under pandemin. Ärendets livscykel levereras i fyra tabeller — ansökt, beviljat, upphört och återkallat."
+
+[[register.variant]]
+key = "ansokt"
+name = "Ansökt tillfälligt anstånd"
+
+[[register.variant]]
+key = "beviljat"
+name = "Beviljat tillfälligt anstånd"
+
+[[register.variant]]
+key = "upphort"
+name = "Upphört tillfälligt anstånd"
+
+[[register.variant]]
+key = "aterkallat"
+name = "Återkallat tillfälligt anstånd"
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "persorgnr"
+definition = "Person- eller organisationsnummer. Byts ut mot ett löpnummer hos SCB (avidentifiering)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Datum när ärendet skapades"
+column = "dat_skapad_ref"
+definition = "Datum när ärendet skapades. Endast vilka som ansökt och när syns — inte belopp."
+data_type = "date"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Datum när ärendet avslutades"
+column = "dat_avslutad_ref"
+definition = "Datum när ärendet avslutades."
+data_type = "date"
+variants = ["ansokt"]
+
+[[register.variable]]
+name = "Transaktionsdatum (skattekonto)"
+column = "dat_trans"
+definition = "Transaktionsdatum (skattekonto) — datum för när anståndet bokfördes."
+data_type = "date"
+variants = ["beviljat", "upphort", "aterkallat"]
+
+[[register.variable]]
+name = "Period från och med"
+column = "period_from"
+definition = "Perioden (från och med) anståndet gäller för moms eller arbetsgivaravgifter — år och månad."
+data_type = "text"
+variants = ["beviljat", "upphort", "aterkallat"]
+
+[[register.variable]]
+name = "Period till och med"
+column = "period_tom"
+definition = "Perioden (till och med) anståndet gäller för moms eller arbetsgivaravgifter — år och månad."
+data_type = "text"
+variants = ["beviljat", "upphort", "aterkallat"]
+
+[[register.variable]]
+name = "Beviljat anståndsbelopp"
+column = "Beviljat_anståndsbelopp"
+definition = "Det belopp som tillfälligt anstånd avser. Faktiskt belopp hämtat från skattekontot."
+data_type = "decimal"
+variants = ["beviljat"]
+
+[[register.variable]]
+name = "Upphört anståndsbelopp"
+column = "Upphört_anståndsbelopp"
+definition = "Belopp för upphört tillfälligt anstånd. Faktiskt belopp hämtat från skattekontot (kan vara minusbelopp)."
+data_type = "decimal"
+variants = ["upphort"]
+
+[[register.variable]]
+name = "Återkallat anståndsbelopp"
+column = "Återkallat_anståndsbelopp"
+definition = "Belopp för återkallat tillfälligt anstånd. Faktiskt belopp hämtat från skattekontot."
+data_type = "decimal"
+variants = ["aterkallat"]
+
+
+# ── Nedsättning egenavgifter inkomstår 2020 (Inkomstdeklarationen) ──
+[[register]]
+key = "egenavgifter-nedsattning-2020"
+name = "Nedsättning egenavgifter inkomstår 2020"
+valid_from = "2020-01-01"  # explicitly income year 2020
+valid_to = "2020-12-31"
+purpose = "Tillfällig nedsättning av egenavgifter inkomstår 2020 (COVID-19), redovisad i inkomstdeklarationen — för överskott upp till 100 000 kr."
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "persorgnr"
+definition = "Person- eller organisationsnummer. Byts ut mot ett löpnummer hos SCB (avidentifiering)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Tillfällig nedsättning egenavgifter"
+column = "AVDR_EGENAVG_TILLF_NED"
+definition = "Tillfällig nedsättning av egenavgifter (corona-stöd) — tillfällig nedsättning för överskott upp till 100 000 kr, gäller 2020."
+data_type = "decimal"
+
+
+# ── Uppgifter från arbetsgivardeklaration ──
+[[register]]
+key = "arbetsgivardeklaration"
+name = "Uppgifter från arbetsgivardeklaration"
+valid_from = "2020-01-01"  # delivered for the pandemic window
+# valid_to omitted: open-ended monthly declaration series.
+purpose = "Uppgifter från arbetsgivardeklarationen — bruttolön, förmåner, arbetsgivaravgifter, avdragen skatt samt växastöd och nedsatta avgifter för unga. Levererad i pandemikontexten."
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "persorgnr"
+definition = "Person- eller organisationsnummer. Byts ut mot ett löpnummer hos SCB (avidentifiering)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Redovisningsperiod"
+column = "period_from"
+definition = "Redovisningsperiod — år och månad."
+data_type = "text"
+
+[[register.variable]]
+name = "Avgiftspliktig bruttolön utom förmåner"
+column = "lon_brutto"
+definition = "Avgiftspliktig bruttolön utom förmåner."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avgiftspliktiga förmåner"
+column = "forman"
+definition = "Avgiftspliktiga förmåner."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Kostnadsavdrag"
+column = "avdr_kostn"
+definition = "Kostnadsavdrag."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag växastöd"
+column = "ulag_vaxa_stod2"
+definition = "Underlag för den lön som är föremål för reducerad arbetsgivaravgift, så kallat växastöd."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avgift växastöd"
+column = "AVG_VAXA_STOD"
+definition = "Avgift växastöd — den arbetsgivaravgift som betalas när man har växastöd."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Summa arbetsgivaravgift"
+column = "sum_avg_betala"
+definition = "Summa arbetsgivaravgift."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Summa avdragen skatt"
+column = "SUM_SK_AVDR"
+definition = "Summa avdragen skatt."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avdragen skatt lön och förmåner"
+column = "sk_avdr_lon"
+definition = "Avdragen skatt lön och förmåner."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag avgift yngre ungdom"
+column = "ulag_avg_yngre_ungdom"
+definition = "Endast ålderspensionsavgift betalas för anställd på ersättning t.o.m. 25 000 kr, fr.o.m. det år den fyller 16 år t.o.m. det år den fyller 18 år."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avgift yngre ungdom"
+column = "avg_yngre_ungdom"
+definition = "Den uträknade avgiften för anställd på ersättning t.o.m. 25 000 kr, fr.o.m. det år den fyller 16 år t.o.m. det år den fyller 18 år."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avgift ungdom 19–23"
+column = "AVG_UNGDOM_1923"
+definition = "Den uträknade avgiften för anställd på ersättning t.o.m. 25 000 kr, fr.o.m. det år den fyller 19 år t.o.m. det år den fyller 23 år."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag ungdom 19–23"
+column = "ULAG_UNGDOM_1923"
+definition = "Endast ålderspensionsavgift samt nio tjugondelar av övrig arbetsgivaravgift betalas för anställd på ersättning t.o.m. 25 000 kr, fr.o.m. det år den fyller 19 år t.o.m. det år den fyller 23 år."
+data_type = "decimal"
+
+
+# ── Uppgifter från momsdeklaration ──
+[[register]]
+key = "momsdeklaration"
+name = "Uppgifter från momsdeklaration"
+valid_from = "2020-01-01"  # delivered for the pandemic window
+# valid_to omitted: open-ended VAT-declaration series.
+purpose = "Uppgifter från momsdeklarationen — moms att betala eller få tillbaka per redovisningsperiod. Levererad i pandemikontexten."
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "persorgnr"
+definition = "Person- eller organisationsnummer. Byts ut mot ett löpnummer hos SCB (avidentifiering)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Period från och med"
+column = "period_from"
+definition = "Perioden från och med för moms — år och månad."
+data_type = "text"
+
+[[register.variable]]
+name = "Period till och med"
+column = "period_tom"
+definition = "Perioden till och med för moms — år och månad."
+data_type = "text"
+
+[[register.variable]]
+name = "Moms att betala eller få tillbaka"
+column = "MOMS_BETALA"
+definition = "Moms att betala eller få tillbaka."
+data_type = "decimal"

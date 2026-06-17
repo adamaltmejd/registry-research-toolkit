@@ -263,6 +263,15 @@ follow-up — no codes minted). Pliktverket is a **closed** register (1997–201
 conscription deactivated 2010): it sets a register-level `valid_to` — a primitive the
 curated adapter materializes onto every variable state (a per-variable `valid_to` still
 overrides it), so the catalog reports the data as ending 2010 rather than open-ended.
+**Skatteverket** (#443) is the fifth — the COVID-19 business-support microdata
+(`omstallningsstod` and `tillfalligt-anstand`, each one register with a variant per
+lifecycle stage — ansökt/beviljat/avslag, ansökt/beviljat/upphört/återkallat — plus
+standalone `egenavgifter-nedsattning-2020`, `arbetsgivardeklaration` and
+`momsdeklaration` tables). It carries no classification linkage (amounts, dates and
+YYYYMM periods, no coded value sets). Coverage windows are per-register and sourced from
+each scheme's public statutory period rather than the delivery file: omställningsstöd is
+closed (2020–2021), the egenavgift reduction is income-year 2020 only, and the anstånd /
+declaration tables open in 2020 but stay open-ended.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
