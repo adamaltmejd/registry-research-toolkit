@@ -1028,6 +1028,34 @@ def _annotate_value_page(
             del r["_code_id"]
 
 
+def _classification_leaf(
+    slug: str | None,
+    short_name: str,
+    classification_name: str,
+    fts_rank: float,
+    classification_id: int,
+) -> dict[str, Any]:
+    """The classification-leaf result row emitted by both classification search
+    arms (name-FTS `_search_classifications` and code-containment
+    `_search_classifications_by_code`). One builder so the leaf contract — the
+    keys `_fold_concept_groups` (`_classification_id`), pagination, and
+    `_strip_internal_keys` depend on — can't drift between the two arms.
+
+    `_classification_id` is the internal fold key (stripped before public): maps
+    the leaf to its vintage concept group so the fold can subsume it (symmetric
+    with variables' `_variable_id`). A NULL-slug classification isn't
+    FQID-addressable (`try_emit` → None), mirroring the catalog enumeration's
+    slug filter."""
+    return {
+        "type": "classification",
+        "fqid": try_emit(Fqid.classification_fqid, slug),
+        "short_name": short_name,
+        "classification_name": classification_name,
+        "fts_rank": fts_rank,
+        "_classification_id": classification_id,
+    }
+
+
 def _search_classifications(
     conn: sqlite3.Connection, query: str
 ) -> list[dict[str, Any]]:
@@ -1046,17 +1074,13 @@ def _search_classifications(
         (query,),
     ).fetchall()
     return [
-        {
-            "type": "classification",
-            "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
-            "short_name": r["short_name"],
-            "classification_name": r["name"],
-            "fts_rank": r["rank"],
-            # Internal fold key (stripped before public): maps the leaf to its
-            # vintage concept group so the fold can subsume it (symmetric with
-            # variables' `_variable_id`).
-            "_classification_id": r["classification_id"],
-        }
+        _classification_leaf(
+            slug=r["slug"],
+            short_name=r["short_name"],
+            classification_name=r["name"],
+            fts_rank=r["rank"],
+            classification_id=r["classification_id"],
+        )
         for r in rows
     ]
 
@@ -1108,23 +1132,17 @@ def _search_classifications_by_code(
         "ORDER BY has_exact DESC, c.short_name",
         (q, q, f"{q}%"),
     ).fetchall()
-    results: list[dict[str, Any]] = []
-    i = 0
-    for r in rows:
-        if r["classification_id"] in exclude_ids:
-            continue
-        results.append(
-            {
-                "type": "classification",
-                "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
-                "short_name": r["short_name"],
-                "classification_name": r["classification_name"],
-                "fts_rank": _CLASS_CODE_RANK_BASE + i,
-                "_classification_id": r["classification_id"],
-            }
+    kept = [r for r in rows if r["classification_id"] not in exclude_ids]
+    return [
+        _classification_leaf(
+            slug=r["slug"],
+            short_name=r["short_name"],
+            classification_name=r["classification_name"],
+            fts_rank=_CLASS_CODE_RANK_BASE + i,
+            classification_id=r["classification_id"],
         )
-        i += 1
-    return results
+        for i, r in enumerate(kept)
+    ]
 
 
 # ---------------------------------------------------------------------------
