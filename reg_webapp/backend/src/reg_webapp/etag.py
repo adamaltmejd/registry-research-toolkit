@@ -24,8 +24,10 @@ when the body moves:
   304); we keep it ``public`` (NOT ``no-cache``) so the Cloudflare edge stays
   cacheable — ``CF-Cache-Status: HIT`` and the #220 probe survive, which
   ``no-cache`` would break.
-- Every other read (docs/search) keeps the 24h ``max-age=86400`` window — that
-  content is rebuild-stable and the edge self-heals on deploy via ``__edge_v``.
+- Every other read (docs/search) keeps the 24h ``max-age=86400`` window by SCOPE
+  decision — #499 is scoped to ``/api/catalog/*``. ``/api/search`` shares the same
+  fold-staleness (it embeds the #322 concept-group folds too), so it is NOT
+  stale-immune and could be lowered to the short window in a follow-up.
 
 The body-hash component makes ``If-None-Match`` per-URL coherent (every URL —
 including its ``?period`` / ``?variant`` query, already part of the URL — gets
