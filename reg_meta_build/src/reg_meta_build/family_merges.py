@@ -22,13 +22,19 @@ a coherent member set FAILS the build (EXIT_CONFIG) — curation drift, fix it.
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_meta.fqid import derive_variable_slug, period_token_to_bounds
 
-from ._curation import curation_error, load_curation_entries
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_str,
+    resolve_register_id,
+)
 from .concept_groups import _MONTH_TOKENS
 
 if TYPE_CHECKING:
@@ -62,16 +68,12 @@ def repo_family_merges_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_str(entry: dict, field: str, context: str) -> str:
-    value = entry.get(field)
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "family_merges_invalid",
-            f"family_merges {context} needs `{field}` as a non-empty string, "
-            f"got {value!r}.",
-            f'Give `{field} = "<value>"` in reg_meta_build/family_merges.toml.',
-        )
-    return value
+_require_str = functools.partial(
+    require_str,
+    code="family_merges_invalid",
+    prefix="family_merges",
+    file_name="family_merges.toml",
+)
 
 
 def load_family_merges(path: Path | None) -> tuple[MonthlyFamily, ...]:
@@ -136,24 +138,6 @@ class _Member:
     register_variant_id: int
     month: int
     delivery_column_name: str
-
-
-def _resolve_register_id(
-    conn: sqlite3.Connection, provider: str, register: str, ctx: str
-) -> int:
-    row = conn.execute(
-        "SELECT r.register_id FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ?",
-        (provider, register),
-    ).fetchone()
-    if row is None:
-        raise curation_error(
-            "family_merges_unresolved",
-            f"{ctx}: register {provider}/{register!r} does not resolve.",
-            "Fix the `register` FQID in reg_meta_build/family_merges.toml.",
-        )
-    return row[0]
 
 
 def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
@@ -333,7 +317,14 @@ def materialize_family_merges(
         if family.provider not in providers:
             continue
         ctx = f"[[monthly_family]] {family.family_stem!r} ({family.provider}/{family.register})"
-        register_id = _resolve_register_id(conn, family.provider, family.register, ctx)
+        register_id = resolve_register_id(conn, family.provider, family.register)
+        if register_id is None:
+            raise curation_error(
+                "family_merges_unresolved",
+                f"{ctx}: register {family.provider}/{family.register!r} does not "
+                "resolve.",
+                "Fix the `register` FQID in reg_meta_build/family_merges.toml.",
+            )
         members = _family_members(conn, register_id, family.family_stem)
         distinct_months = {m.month for m in members}
         if len(distinct_months) < _MIN_FAMILY_MONTHS:
