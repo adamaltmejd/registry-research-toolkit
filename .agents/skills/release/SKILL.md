@@ -22,9 +22,9 @@ current and planned versions.
 - `reg_meta_build`: `reg_meta_build/pyproject.toml`,
   `reg_meta_build/src/reg_meta_build/__init__.py`, workflow
   `publish_reg_meta_build.yml`.
-- `reg_schema`: `reg_schema/pyproject.toml`, `reg_schema/src/reg_schema/__init__.py`; no
-  publish workflow exists yet. Before the first PyPI release, stop and add or confirm
-  the publish path instead of silently omitting the package.
+- `reg_schema`: `reg_schema/pyproject.toml` only; no checked `__version__` and no
+  publish workflow exist yet. Before the first PyPI release, stop and add or confirm the
+  publish path instead of silently omitting the package.
 - `reg_monabundle`: `reg_monabundle/pyproject.toml`,
   `reg_monabundle/src/reg_monabundle/__init__.py`; no publish workflow exists yet.
   Before the first PyPI release, stop and add or confirm the publish path instead of
@@ -75,10 +75,13 @@ approval pause.
    PR/issue numbers and contributor credit where applicable. Show notes before
    proceeding.
 
-3. Bump both version files:
+3. Bump the package's listed version file(s):
 
    - `<package>/pyproject.toml`
    - `<package>/src/<package>/__init__.py`
+
+   `reg_schema` is currently pyproject-only; do not invent an unchecked
+   `reg_schema.__version__` just for a release.
 
 4. For `reg_meta`, check schema changes:
 
@@ -112,7 +115,12 @@ approval pause.
    branch head.
 
    ```sh
+   git push origin HEAD:main
    git fetch origin main
+   if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+     echo "release bump is not origin/main; merge or push it before creating the tag" >&2
+     exit 1
+   fi
    target="$(git rev-parse origin/main)"
    gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package> vX.Y.Z" --notes-file <notes-file>
    ```
