@@ -99,6 +99,7 @@ PROVIDER_ID_FOHM = 3
 PROVIDER_ID_FK = 4
 PROVIDER_ID_LV = 5
 PROVIDER_ID_PLIKT = 6
+PROVIDER_ID_RA = 7
 _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
     (PROVIDER_ID_SCB, "scb", "Statistics Sweden"),
     (PROVIDER_ID_SOS, "sos", "Socialstyrelsen"),
@@ -106,6 +107,7 @@ _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
     (PROVIDER_ID_FK, "fk", "Försäkringskassan"),
     (PROVIDER_ID_LV, "lakemedelsverket", "Läkemedelsverket"),
     (PROVIDER_ID_PLIKT, "pliktverket", "Pliktverket"),
+    (PROVIDER_ID_RA, "riksarkivet", "Riksarkivet"),
 )
 
 # Thin CURATED global providers (#422): public agencies with no machine-readable
@@ -120,6 +122,7 @@ _CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
     ("fk", "Forsakringskassan"),
     ("lakemedelsverket", "Lakemedelsverket"),
     ("pliktverket", "Pliktverket"),
+    ("riksarkivet", "Riksarkivet"),
 )
 
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two

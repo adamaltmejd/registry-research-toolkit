@@ -42,6 +42,7 @@ class TestListProviders:
             "fohm",
             "lakemedelsverket",
             "pliktverket",
+            "riksarkivet",
             "scb",
             "sos",
         ]
