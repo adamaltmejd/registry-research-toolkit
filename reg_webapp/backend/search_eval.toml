@@ -1,0 +1,204 @@
+# Search-relevance eval set — DRAFT (#393 item 10).
+#
+# ~21 real `(query -> intended result)` pairs (a DRAFT seed; the steward should grow it
+# bounded, curated catalog, so ranking changes become MEASURABLE (the precondition
+# #393 calls out; it gates the ranking items 2/5/6/7). Run with:
+#
+#     uv run python reg_webapp/backend/scripts/run_search_eval.py
+#
+# against a real reg_meta.db — it reports, per case, whether `intended` appears in its
+# group and at what rank.
+#
+# !!! DRAFT GROUND TRUTH — STEWARD MUST CONFIRM !!!
+# Every `intended` below is a PROPOSED answer, grounded in what the live search returns
+# today, NOT a steward verdict. Review each: fix wrong `intended`s, then flip
+# `confirmed = false` -> true. Several are deliberately ambiguous (noted) — that is the
+# judgment the eval exists to capture.
+#
+# Fields:
+#   query     - the omnibox input.
+#   group     - which result group the intended result should land in
+#               (register | variable | classification | value).
+#   intended  - the navigable target: an FQID (scb/iot, class/icd-10-se) or, for a
+#               folded concept group, "group:<group_key>".
+#   expect    - "hit": should rank well today (regression guard).
+#               "gap": known-unsurfaced today; documents a planned lever (e.g. the
+#               Swedish<->English synonym map, #393 item 8). A gap that turns into a hit
+#               is progress, flagged "closed!" by the runner.
+#   note      - what the case exercises / why the intended is what it is.
+#   confirmed - false until a steward signs off on this pair.
+
+# ── Exact register acronym -> that register ──────────────────────────────────
+[[case]]
+query = "LISA"
+group = "register"
+intended = "scb/lisa"
+expect = "hit"
+confirmed = false
+note = "Exact acronym -> register, rank 1."
+
+[[case]]
+query = "RAMS"
+group = "register"
+intended = "scb/rams"
+expect = "hit"
+confirmed = false
+note = "Exact acronym -> register, rank 1."
+
+# ── Topical term -> canonical register ───────────────────────────────────────
+[[case]]
+query = "inkomst"
+group = "register"
+intended = "scb/iot"
+expect = "hit"
+confirmed = false
+note = "Income+taxation register. HEK ranks first today — is IoT or HEK the canonical answer? Steward decides."
+
+[[case]]
+query = "utbildning"
+group = "register"
+intended = "scb/ureg"
+expect = "hit"
+confirmed = false
+note = "Befolkningens utbildning (Utbildningsregistret)."
+
+[[case]]
+query = "sysselsättning"
+group = "register"
+intended = "scb/rams"
+expect = "hit"
+confirmed = false
+note = "RAMS = canonical employment register; KS (Kortperiodisk) ranks first today."
+
+[[case]]
+query = "diagnos"
+group = "register"
+intended = "sos/par"
+expect = "gap"
+confirmed = false
+note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' (only Cancerregistret does, via its purpose text) — a ranking/curation gap (golden-boost #311 / item 4). Steward may instead accept sos/can as the answer (then -> expect=hit, intended=sos/can)."
+
+[[case]]
+query = "läkemedel"
+group = "register"
+intended = "sos/lmed"
+expect = "hit"
+confirmed = false
+note = "Medicine -> Läkemedelsregistret. (The ATC classification does NOT surface for 'läkemedel' — a separate synonym/curation gap.)"
+
+[[case]]
+query = "cancerregistret"
+group = "register"
+intended = "sos/can"
+expect = "hit"
+confirmed = false
+note = "Full register name -> register."
+
+# ── Topical term -> a variable (no single owning register) ───────────────────
+[[case]]
+query = "civilstånd"
+group = "variable"
+intended = "scb/rtb/civilgrel"
+expect = "hit"
+confirmed = false
+note = "Marital status; base-population register variable. Steward may prefer a different canonical civilstånd variable."
+
+[[case]]
+query = "medborgarskap"
+group = "variable"
+intended = "group:medb"
+expect = "hit"
+confirmed = false
+note = "Citizenship folds into a concept group (group:medb)."
+
+# ── Code query -> the classification that CONTAINS it (#393 item 5, PR #504) ──
+[[case]]
+query = "C12"
+group = "classification"
+intended = "class/icd-10-se"
+expect = "hit"
+confirmed = false
+note = "The #393 motivating case: C12 = malignant neoplasm in ICD-10-SE (also an SNI2007 code). Item 5 surfaces the owning classification."
+
+[[case]]
+query = "F32"
+group = "classification"
+intended = "class/icd-10-se"
+expect = "hit"
+confirmed = false
+note = "F32 = depressive episode (ICD-10-SE), via code-containment."
+
+[[case]]
+query = "Z59.6"
+group = "classification"
+intended = "class/icd-10-se"
+expect = "hit"
+confirmed = false
+note = "Dotted ICD code -> ICD-10-SE via code-containment."
+
+# ── Classification name / acronym -> that classification ─────────────────────
+[[case]]
+query = "ICD-10"
+group = "classification"
+intended = "class/icd-10-se"
+expect = "hit"
+confirmed = false
+note = "Classification acronym -> classification, rank 1."
+
+[[case]]
+query = "SNI 2007"
+group = "classification"
+intended = "class/sni2007"
+expect = "hit"
+confirmed = false
+note = "Classification name + vintage."
+
+[[case]]
+query = "SSYK"
+group = "classification"
+intended = "group:ssyk"
+expect = "hit"
+confirmed = false
+note = "Occupation classification folds across vintages into group:ssyk."
+
+[[case]]
+query = "yrke"
+group = "classification"
+intended = "group:ssyk"
+expect = "hit"
+confirmed = false
+note = "Occupation (SV) -> the SSYK classification group, rank 1."
+
+[[case]]
+query = "näringsgren"
+group = "classification"
+intended = "group:sni"
+expect = "hit"
+confirmed = false
+note = "Industry sector -> the SNI classification group, rank 1."
+
+[[case]]
+query = "SUN2000"
+group = "classification"
+intended = "class/sun-niva2000"
+expect = "hit"
+confirmed = false
+note = "SUN2000 splits into niva/inriktning/grupp facets — which is canonical for the bare acronym? Steward picks."
+
+# ── English query -> Swedish canonical result (synonym GAP, #393 item 8) ──────
+# These fail today (no cross-language expansion) — they document the lever, not a bug.
+[[case]]
+query = "income"
+group = "register"
+intended = "scb/iot"
+expect = "gap"
+confirmed = false
+note = "EN income <-> SV inkomst. Today surfaces scb/ulf only; needs the synonym map (item 8)."
+
+[[case]]
+query = "education"
+group = "register"
+intended = "scb/ureg"
+expect = "gap"
+confirmed = false
+note = "EN education <-> SV utbildning. Today surfaces ISCED + a PIAAC variable, not Utbildningsregistret."
