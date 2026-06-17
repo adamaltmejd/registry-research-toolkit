@@ -95,14 +95,14 @@ slug = "bilstod"
 [register_variant."5488356780395367498.8025025971550859246"]
 slug = "utbetalningar"
 display_group = "Bilstöd"
-panel_entity_key = "lopnr-sokande"
+panel_entity_key = ["lopnr-sokande", "lopnr-barn"]
 panel_time_key = "utbetalningsdatum"
 panel_time_grain = "row"
 
 [register_variant."5488356780395367498.7315139012955295030"]
 slug = "ansokningar-beslut"
 display_group = "Bilstöd"
-panel_entity_key = "lopnr-sokande"
+panel_entity_key = ["lopnr-sokande", "lopnr-barn"]
 panel_time_key = "ansokningsdatum"
 panel_time_grain = "row"
 
@@ -120,7 +120,7 @@ panel_time_grain = "row"
 [register_variant."7724610645254369578.6642064092255968002"]
 slug = "fp-delfall1"
 display_group = "Föräldrapenning"
-panel_entity_key = "persid"
+panel_entity_key = ["persid", "persid-barn"]
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
@@ -134,7 +134,7 @@ panel_time_grain = "row"
 [register_variant."7724610645254369578.4684116283909747746"]
 slug = "fl-delfall1"
 display_group = "Föräldrapenning"
-panel_entity_key = "persid"
+panel_entity_key = ["persid", "persid-barn"]
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
@@ -152,7 +152,7 @@ panel_time_grain = "row"
 [register_variant."6486633934264544358.5584742198526159311"]
 slug = "delfall1-1-8"
 display_group = "Tillfällig föräldrapenning"
-panel_entity_key = "lopnr"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
@@ -255,21 +255,21 @@ panel_time_grain = "row"
 [register_variant."7493079423846267575.5703128771691645425"]
 slug = "barn"
 display_group = "Merkostnadsersättning"
-panel_entity_key = "lopnr-barn"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
 [register_variant."7493079423846267575.8958889425760040105"]
 slug = "beviljanden"
 display_group = "Merkostnadsersättning"
-panel_entity_key = "lopnr"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "beslutsdatum"
 panel_time_grain = "row"
 
 [register_variant."7493079423846267575.6966641877688731962"]
 slug = "avslag"
 display_group = "Merkostnadsersättning"
-panel_entity_key = "lopnr"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "beslutsdatum"
 panel_time_grain = "row"
 
@@ -287,21 +287,21 @@ panel_time_grain = "row"
 [register_variant."6302817431190760455.9055963153352559129"]
 slug = "barn"
 display_group = "Omvårdnadsbidrag"
-panel_entity_key = "lopnr-barn"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
 [register_variant."6302817431190760455.5148735333309541992"]
 slug = "beviljanden"
 display_group = "Omvårdnadsbidrag"
-panel_entity_key = "lopnr"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "beslutsdatum"
 panel_time_grain = "row"
 
 [register_variant."6302817431190760455.5322547415543745301"]
 slug = "avslag"
 display_group = "Omvårdnadsbidrag"
-panel_entity_key = "lopnr"
+panel_entity_key = ["lopnr", "lopnr-barn"]
 panel_time_key = "beslutsdatum"
 panel_time_grain = "row"
 
@@ -388,28 +388,28 @@ panel_time_grain = "row"
 [register_variant."9011624717046135047.8699076028733205250"]
 slug = "beslut"
 display_group = "Underhållsstöd"
-panel_entity_key = "lopnr-bm"
+panel_entity_key = ["lopnr-bs", "lopnr-barn"]
 panel_time_key = "datum"
 panel_time_grain = "row"
 
 [register_variant."9011624717046135047.8368711561888390862"]
 slug = "utbetalningar-manad"
 display_group = "Underhållsstöd"
-panel_entity_key = "lopnr-bm"
+panel_entity_key = ["lopnr-bs", "lopnr-barn"]
 panel_time_key = "datum"
 panel_time_grain = "row"
 
 [register_variant."9011624717046135047.7561693197164962636"]
 slug = "beslut-bidragsskyldig"
 display_group = "Underhållsstöd"
-panel_entity_key = "lopnr-bs"
+panel_entity_key = ["lopnr-bs", "lopnr-barn"]
 panel_time_key = "datum"
 panel_time_grain = "row"
 
 [register_variant."9011624717046135047.6749975705142537045"]
 slug = "inbetalningar"
 display_group = "Underhållsstöd"
-panel_entity_key = "lopnr-bs"
+panel_entity_key = ["lopnr-bs", "lopnr-barn"]
 panel_time_key = "datum-inbet"
 panel_time_grain = "row"
 
@@ -585,6 +585,6 @@ slug = "vardbidrag"
 [register_variant."5430440157686027706.5740549366009254918"]
 slug = "_default"
 display_group = "Vårdbidrag"
-panel_entity_key = "personnummer"
+panel_entity_key = ["personnummer", "personnummer-barn"]
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"

@@ -1069,7 +1069,7 @@ data_type = "integer"
 name = "FALL_NETTODAGAR"
 column = "FALL_NETTODAGAR"
 definition = "Antalet ersatta dagar under fallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
-data_type = "integer"
+data_type = "decimal"
 
 [[register.variable]]
 name = "PERSID_BARN"
@@ -1140,7 +1140,7 @@ variants = ["fp-delfall1", "fl-delfall1"]
 name = "DELFALL_NETTODAGAR"
 column = "DELFALL_NETTODAGAR"
 definition = "Antalet ersatta dagar under delfallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
-data_type = "integer"
+data_type = "decimal"
 variants = ["fp-delfall1", "fl-delfall1"]
 
 [[register.variable]]
@@ -1230,7 +1230,7 @@ variants = ["fall-1", "fall-2"]
 name = "FALL_NETTODAGAR"
 column = "FALL_NETTODAGAR"
 definition = "Antalet ersatta dagar under fallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
-data_type = "integer"
+data_type = "decimal"
 variants = ["fall-1", "fall-2"]
 
 [[register.variable]]
@@ -1244,7 +1244,7 @@ variants = ["fall-1"]
 name = "FALL_ANT_TYP"
 column = "FALL_ANT_TYP"
 definition = "Antal olika typer (delförmåner) det har betalats ut för under fallet"
-data_type = "text"
+data_type = "integer"
 variants = ["fall-1", "fall-2"]
 
 [[register.variable]]
@@ -1386,7 +1386,7 @@ variants = ["delfall1-1-8", "delfall2-1-8"]
 name = "DEL_NETTODAGAR"
 column = "DEL_NETTODAGAR"
 definition = "Antalet ersatta dagar under delfallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
-data_type = "integer"
+data_type = "decimal"
 variants = ["delfall1-1-8", "delfall2-1-8"]
 
 [[register.variable]]
@@ -1430,7 +1430,7 @@ variants = ["delfall2-1-8"]
 name = "del_ant_typ"
 column = "del_ant_typ"
 definition = "Antal olika typer av TFP under delfallet"
-data_type = "text"
+data_type = "integer"
 variants = ["delfall2-1-8"]
 
 
@@ -1491,7 +1491,7 @@ variants = ["fall-1", "fall-2"]
 name = "Fall_dagar_netto"
 column = "Fall_dagar_netto"
 definition = "Antalet ersatta dagar under fallet omräknat till hela dagar (netto). 30 dagar med halv omfattning ger 15 nettodagar."
-data_type = "integer"
+data_type = "decimal"
 variants = ["fall-1", "fall-2"]
 
 [[register.variable]]
@@ -1670,7 +1670,7 @@ variants = ["delfall-1-1", "delfall-2-1"]
 name = "Del_dagar_netto"
 column = "Del_dagar_netto"
 definition = "Antalet ersatta nettodagar under delfallet (två dagar med halv omfattning ger en nettodag)"
-data_type = "integer"
+data_type = "decimal"
 variants = ["delfall-1-1", "delfall-2-1"]
 
 [[register.variable]]
@@ -1769,7 +1769,7 @@ variants = ["fall-1"]
 name = "Fall_dagar_netto"
 column = "Fall_dagar_netto"
 definition = "Antalet ersatta dagar under sjukfallet omräknat till hel omfattning i förhållande till arbetstid (netto). Två dagar med halv omfattning ger en nettodag"
-data_type = "integer"
+data_type = "decimal"
 variants = ["fall-1"]
 
 [[register.variable]]
@@ -1996,7 +1996,7 @@ variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
 name = "Del_dagar_netto"
 column = "Del_dagar_netto"
 definition = "Antalet ersatta dagar under delsjukfallet omräknat till hel omfattning i förhållande till arbetstid (netto). Två dagar med halv omfattning ger en nettodag"
-data_type = "integer"
+data_type = "decimal"
 variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
 
 [[register.variable]]
@@ -3065,8 +3065,8 @@ data_type = "text"
 variants = ["abonnemang"]
 
 [[register.variable]]
-name = "MOTTAGNING_LAN_BESK"  # source förteckning typo "MOTTANING"; corrected to pair with MOTTAGNING_LAN_KOD
-column = "MOTTAGNING_LAN_BESK"
+name = "MOTTANING_LAN_BESK"  # sic — source förteckning spells it thus (missing g); kept source-exact since column is the delivery alias
+column = "MOTTANING_LAN_BESK"
 definition = "Mottagningens (i abonnemangsavtalet) län vid tidpunkten för sista dagen i laddningsmånaden."
 data_type = "text"
 variants = ["abonnemang"]
@@ -3419,7 +3419,7 @@ variants = ["arenden-detaljerat"]
 name = "STB_TILLGANGLIGT"
 column = "STB_TILLGANGLIGT"
 definition = "Tillgängligt STB som patienten har kvar att utnyttja inom bidragsperioden innan ärendet."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
