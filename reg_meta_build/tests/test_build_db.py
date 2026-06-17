@@ -29,6 +29,7 @@ from reg_meta_build.db import (
     _value_set_hash,
     build_db,
 )
+from reg_meta_build.sources.scb import _canon_data_type
 
 # A single irrelevant Timeseries.csv row (handelse not in the succession set, so
 # it's ignored before resolution and emits NO event-derived edge). `write_csv`
@@ -83,6 +84,41 @@ class TestDecodeCP1252:
         for i, a in enumerate(chars):
             for j, b in enumerate(chars):
                 assert (decoded[i] == decoded[j]) == (canon[i] == canon[j]), (a, b)
+
+
+class TestCanonDataType:
+    """#526: `_canon_data_type` is the low-trust `data_type` grouping key —
+    ASCII-fold + lowercase + whitespace-collapse, the text family
+    (`char`/`varchar`/`nchar`/`nvarchar`) mapped to one `"text"` token so a
+    per-delivery char\u2194varchar wobble stops splitting a state, with embedded
+    `(n)` widths stripped. Numeric/date families are NOT folded into text \u2014 a
+    class flip there is real shape evidence on a valueless column."""
+
+    @pytest.mark.parametrize(
+        ("raw", "expected"),
+        [
+            # None / blank \u2192 empty key.
+            (None, ""),
+            ("", ""),
+            # Whole text family collapses to one token.
+            ("char", "text"),
+            ("varchar", "text"),
+            ("nchar", "text"),
+            ("nvarchar", "text"),
+            # Case-insensitive (ASCII-fold + lowercase).
+            ("NVARCHAR", "text"),
+            # Embedded length is stripped before the family lookup.
+            ("varchar(1)", "text"),
+            # Whitespace is trimmed/collapsed.
+            ("  varchar  ", "text"),
+            # Numeric / date families are NOT folded into the text token.
+            ("int", "int"),
+            ("float", "float"),
+            ("date", "date"),
+        ],
+    )
+    def test_canon(self, raw: str | None, expected: str):
+        assert _canon_data_type(raw) == expected
 
 
 class TestBuildDb:
@@ -2286,6 +2322,58 @@ class TestVariableStateTypeFold:
             # regver_id 921 (char) is the latest era → char wins over varchar.
             assert states[0]["data_type"] == "char"
             assert states[0]["data_length"] == "1"
+        finally:
+            conn.close()
+
+    def test_distinct_value_sets_still_split(self, tmp_path: Path):
+        """Guard against over-merge: when the value set ALSO changes between
+        editions, `value_set_id` (gkey position 5) still discriminates even
+        though the type changed too. era-1 carries {Man, Kvinna} as varchar;
+        era-2 adds an 'Okänd' code as char \u2014 a DIFFERENT value set. The fold
+        only collapses type/length wobble WITHIN a stable value set, so these
+        two eras must stay TWO states with distinct, non-null value_set_ids."""
+        man_kvinna_okand = self._MAN_KVINNA + [("9", "Okänd")]
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "1", self._MAN_KVINNA),
+                ("2021", 921, 9301, "char", "1", man_kvinna_okand),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 2
+            vsids = [s["value_set_id"] for s in states]
+            assert all(v is not None for v in vsids)
+            assert vsids[0] != vsids[1]
+        finally:
+            conn.close()
+
+    def test_same_regver_tie_picks_lex_smaller_type(self, tmp_path: Path):
+        """Tiebreak determinism: two cvids share the SAME `regver_id` (one
+        edition) on the same column + same value set but differ on `data_type`
+        (char vs varchar, same length). The merge yields exactly ONE state, and
+        the displayed `data_type` is the lexicographically smaller (type, length)
+        winner \u2014 'char' \u2014 so the result is independent of which row the
+        coalescer happened to visit first. `_build` appends the eras in order;
+        giving both entries the same `regver_id` (922) and year ('2022') puts two
+        cvids on one edition."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2022", 922, 9302, "varchar", "1", self._MAN_KVINNA),
+                ("2022", 922, 9303, "char", "1", self._MAN_KVINNA),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 1
+            # char < varchar lexically at the same length and same regver_id.
+            assert states[0]["data_type"] == "char"
+            assert states[0]["data_length"] == "1"
+            assert states[0]["value_set_id"] is not None
         finally:
             conn.close()
 
