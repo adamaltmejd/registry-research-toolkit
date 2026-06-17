@@ -237,6 +237,12 @@ def _fts_match_query(raw: str) -> str | None:
     return " ".join(terms) if terms else None
 
 
+def _escape_like(s: str) -> str:
+    """Escape SQL LIKE metacharacters so a user query matches as a literal
+    prefix, not a pattern. Escape the escape char first."""
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 def _filter_search_by_years(
     conn: sqlite3.Connection,
     results: list[dict[str, Any]],
@@ -1100,8 +1106,15 @@ def _search_classifications_by_code(
     A code-shaped query ("C12", "F32") should find the classification whose code
     SET includes a matching code — "find the classification for this code" — even
     when the query matches no classification NAME (the `_search_classifications`
-    FTS arm). The match is exact OR prefix on `value_code.code`, mirroring the
-    value arm's `code = ? OR code LIKE ?` predicate (`_search_values_fts`).
+    FTS arm). The match is exact OR prefix on `value_code.code`. The LIKE matches
+    a LITERAL code prefix: the query's LIKE metacharacters (backslash, percent,
+    underscore) are escaped via `_escape_like` with an ESCAPE clause, so a
+    code-shaped query like "12_" matches literal "12_…" codes, NOT "120"/"129"
+    (where a raw underscore would wildcard-match any single char). The exact-match
+    parts (`vc.code = ?` and the `has_exact` `=` test) take the RAW `q` — they are
+    equality, not LIKE, so they need no escaping. This is STRICTER than the value
+    arm (`_search_values_fts`), whose `code LIKE ?` does NOT escape — a known
+    module-wide gap, tracked as a follow-up, not fixed here.
 
     The `classification_code` JOIN inherently restricts the result to codes that
     OWN a classification, so the context-less-code drop the value arm needs (#478,
@@ -1134,10 +1147,10 @@ def _search_classifications_by_code(
         "FROM value_code vc "
         "JOIN classification_code cc ON cc.code_id = vc.code_id "
         "JOIN classification c ON c.id = cc.classification_id "
-        "WHERE vc.code = ? OR vc.code LIKE ? "
+        "WHERE vc.code = ? OR vc.code LIKE ? ESCAPE '\\' "
         "GROUP BY c.id, c.short_name, c.name, c.slug "
         "ORDER BY has_exact DESC, c.short_name",
-        (q, q, f"{q}%"),
+        (q, q, f"{_escape_like(q)}%"),
     ).fetchall()
     kept = [r for r in rows if r["classification_id"] not in exclude_ids]
     return [

@@ -170,6 +170,59 @@ def db_with_exact_and_prefix_classifications() -> sqlite3.Connection:
     return conn
 
 
+@pytest.fixture
+def db_with_like_metachar_codes() -> sqlite3.Connection:
+    """Two classifications splitting a LIKE-metacharacter query: classification A
+    (slug 'underscore-owner') owns a code with a LITERAL underscore ('12_5');
+    classification B (slug 'plain-owner') owns plain codes '120' and '125'. Neither
+    carries the query in its NAME, so both can only surface via code-containment.
+    (Slugs avoid `_` — the FQID grammar forbids it; the literal `_` lives in the
+    CODE, which is the surface under test.)
+
+    A query of '12_' must match A literally (its '12_5' code is a literal '12_…'
+    prefix) and must NOT match B: unescaped, the `_` in `LIKE '12_%'` wildcards any
+    single char and would wrongly surface B's '120'/'125'."""
+    conn = build_slugged_db()  # ships sun2020 (no codes), name has no '12'
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (60, 'CLSUNDERSCORE', 'Underscore owner', 'underscore-owner')"
+    )
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (61, 'CLSPLAIN', 'Plain owner', 'plain-owner')"
+    )
+    add_value_set(conn, value_set_id=1, codes=[("12_5", "Literal underscore")])
+    add_value_set(conn, value_set_id=2, codes=[("120", "Plain a"), ("125", "Plain b")])
+    code_ids = {
+        row["code"]: row["code_id"]
+        for row in conn.execute("SELECT code_id, code FROM value_code").fetchall()
+    }
+    _link_code_to_classification(conn, "underscore-owner", code_ids["12_5"])
+    _link_code_to_classification(conn, "plain-owner", code_ids["120"])
+    _link_code_to_classification(conn, "plain-owner", code_ids["125"])
+    _rebuild_fts(conn)
+    return conn
+
+
+def test_like_metacharacter_query_matches_literally(
+    db_with_like_metachar_codes: sqlite3.Connection,
+) -> None:
+    # '12_' is code-shaped (digit + len>=3), so the code-containment arm runs. Its
+    # LIKE prefix must be treated LITERALLY: cls_underscore owns '12_5' (a literal
+    # '12_…' prefix) and surfaces; cls_plain owns '120'/'125', which an UNESCAPED
+    # `_` wildcard would wrongly match — it must NOT surface. Fails before the fix
+    # (cls_plain leaks in via the wildcard); passes after (escaped + ESCAPE clause).
+    from reg_meta.queries import _is_code_shaped
+
+    assert _is_code_shaped("12_")
+    out = search(
+        db_with_like_metachar_codes, "12_", field="description", type="classification"
+    )
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/underscore-owner" in fqids
+    assert "class/plain-owner" not in fqids
+
+
 def test_code_shaped_query_surfaces_owning_classification(
     db_with_class_codes: sqlite3.Connection,
 ) -> None:
