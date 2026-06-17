@@ -330,7 +330,7 @@ is_sensitive = true
 name = "Hörselkapacitet"
 column = "horskap"
 definition = "Hörselkapacitet. Koder: Skala 1-9, senare A-C,  A=godkänd, B=godkänd för vissa befattningar, C=Underkänd"
-data_type = "integer"
+data_type = "text"
 is_sensitive = true
 
 [[register.variable]]
@@ -456,7 +456,7 @@ is_sensitive = true
 name = "Synkapacitet"
 column = "synkap"
 definition = "Synkapacitet. Koder: Skala 1-9, senare A-D,  A=Fullgod syn utan hjälpmedel, B=Ej fullgod syn utan synhjälpmedel, men fullgod syn med synhjälpmedel, C=Begränsad syn utan synhjälpmedel och inte fullgod syn med synhjälpmedel, men uppfyller körkortskrav även för tungt fordon, D=Underkänd"
-data_type = "integer"
+data_type = "text"
 is_sensitive = true
 
 [[register.variable]]
@@ -498,7 +498,7 @@ data_type = "integer"
 [[register.variable]]
 name = "Hälsotillståndskod/Tjänstbarhet"
 column = "hals"
-definition = "Hälsotillståndskod/Tjänstbarhet"
+definition = "Hälsotillståndskod/Tjänstbarhet (separat lista)."
 data_type = "text"
 is_sensitive = true
 
@@ -511,7 +511,7 @@ data_type = "text"
 [[register.variable]]
 name = "Poängsummering av frågor gällande vilja att göra värnplikt"
 column = "vilja"
-definition = "Poängsummering av frågor gällande vilja att göra värnplikt"
+definition = "Poängsummering av frågor gällande vilja att göra värnplikt (skala 0-21)."
 data_type = "integer"
 is_sensitive = true
 
@@ -532,14 +532,14 @@ is_sensitive = true
 [[register.variable]]
 name = "Uppresning höger ben (Jägartest)"
 column = "upprh"
-definition = "Uppresning höger ben (Jägartest)"
+definition = "Uppresning höger ben (Jägartest) (skala 0-5)."
 data_type = "integer"
 is_sensitive = true
 
 [[register.variable]]
 name = "Uppresning vänster ben  (Jägartest)"
 column = "upprv"
-definition = "Uppresning vänster ben  (Jägartest)"
+definition = "Uppresning vänster ben  (Jägartest) (skala 0-5)."
 data_type = "integer"
 is_sensitive = true
 
@@ -553,14 +553,14 @@ is_sensitive = true
 [[register.variable]]
 name = "Step höger ben  (Jägartest)"
 column = "steph"
-definition = "Step höger ben  (Jägartest)"
+definition = "Step höger ben  (Jägartest) (0-75)."
 data_type = "integer"
 is_sensitive = true
 
 [[register.variable]]
 name = "Step vänster ben  (Jägartest)"
 column = "stepv"
-definition = "Step vänster ben  (Jägartest)"
+definition = "Step vänster ben  (Jägartest) (0-75)."
 data_type = "integer"
 is_sensitive = true
 
@@ -641,13 +641,13 @@ is_sensitive = true
 [[register.variable]]
 name = "Provtyp"
 column = "provtyp"
-definition = "Provtyp"
+definition = "Provtyp (t.ex. iprov9; separat lista)."
 data_type = "text"
 
 [[register.variable]]
 name = "Batteri"
 column = "batteri"
-definition = "Batteri"
+definition = "Batteri (t.ex. DP2000; separat lista)."
 data_type = "text"
 
 [[register]]
@@ -669,6 +669,7 @@ name = "Diagnosdatum"
 column = "diagdat"
 definition = "Diagnosdatum"
 data_type = "date"
+is_sensitive = true
 
 [[register.variable]]
 name = "Händelsekod"
