@@ -29,7 +29,17 @@ parallel agent work and the current environment permits it.
 2. Copy the flat `Candidate set (N) ... : #...` line. This line is authoritative. Rank
    only those issue numbers.
 
-3. For each candidate, read the issue body and comments:
+3. Read the epic body and comments for ordering context. Default epic is `328` unless
+   the caller passed another epic:
+
+   ```sh
+   gh issue view <N> --comments
+   ```
+
+   The epic narrative is context for ranking and parked/maintainer signals, not an
+   additional candidate source.
+
+4. For each candidate, read the issue body and comments:
 
    ```sh
    gh issue view <n> --comments
@@ -38,15 +48,15 @@ parallel agent work and the current environment permits it.
    Look for semantic conflicts with no file overlap, implicit blockers, coherence across
    issues, stale or missing `touches`, priority labels, and relationships.
 
-4. Compose small coherent lanes. Never downgrade a script-declared must-serialize group
+5. Compose small coherent lanes. Never downgrade a script-declared must-serialize group
    to parallel-safe. If a candidate is actually blocked despite appearing in the floor,
    place it in Held/Notes with a one-line reason rather than ranking it.
 
-5. Rank by priority bucket first: any `priority:high` member beats normal;
+6. Rank by priority bucket first: any `priority:high` member beats normal;
    `priority:low`-only lanes go last. Within a bucket, prefer unblocking power,
    maintainer signal in the epic narrative, and smallest coherent work.
 
-6. Self-check: every candidate from the flat line appears exactly once across ranked
+7. Self-check: every candidate from the flat line appears exactly once across ranked
    lanes or Held/Notes. No ranked issue may be absent from the flat candidate set.
 
 ## Return Format
