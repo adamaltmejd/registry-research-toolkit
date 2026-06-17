@@ -73,10 +73,11 @@ class ETagMiddleware(BaseHTTPMiddleware):
         headers["etag"] = etag
         # Per-route Cache-Control (three tiers, see cache_control_for): the
         # deployment-identity read (/api/context) revalidates every request so the
-        # vintage footer can't serve a stale version after a deploy; /api/catalog/*
-        # reads carry a short 60s window so curated concept-group folds surface
-        # promptly for returning users; docs/search keep the 24h policy. Computed
-        # from request.url.path (query stripped) once here so both the 200 and the
+        # vintage footer can't serve a stale version after a deploy; the fold-bearing
+        # /api/catalog/* and /api/search reads carry a short 60s window so curated
+        # concept-group folds surface promptly for returning users; the
+        # rebuild-stable /api/docs/* reads keep the 24h policy. Computed from
+        # request.url.path (query stripped) once here so both the 200 and the
         # reused-`headers` 304 carry it.
         headers["cache-control"] = cache_control_for(request.url.path)
 
