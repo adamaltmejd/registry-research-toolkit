@@ -44,6 +44,10 @@ Agent-surface notes:
 When building issue work, open draft PRs early so the sequencing projection marks issues
 running.
 
+For a known multi-issue or multi-PR effort, create all known draft PR claims before
+implementation, not just the first branch. Each draft body must close the issue(s) that
+PR is expected to resolve so the sequencing projection holds the whole planned lane.
+
 ```sh
 git fetch origin main
 git checkout -b s/<slug> origin/main

@@ -20,6 +20,7 @@ Default epic is `328`.
 1. Run the read-only freshness check:
 
    ```sh
+   git fetch --tags origin
    basis="$(uv run --no-project python scripts/plan_sequence.py --tick --epic <N>)"
    tick_status=$?
    ```
@@ -37,6 +38,7 @@ Default epic is `328`.
 2. Run hygiene:
 
    ```sh
+   git fetch --tags origin
    uv run --no-project python scripts/check_issue_hygiene.py --all
    ```
 

@@ -22,6 +22,7 @@ Do not hand-edit it.
 Default epic is `328`; pass another number only if the user asks.
 
 ```sh
+git fetch --tags origin
 uv run --no-project python scripts/plan_sequence.py --epic <N>
 ```
 
@@ -35,6 +36,7 @@ explicitly asked to refresh/update the epic, or after showing the preview and ge
 go-ahead.
 
 ```sh
+git fetch --tags origin
 uv run --no-project python scripts/plan_sequence.py --epic <N> --write
 ```
 
@@ -46,6 +48,7 @@ It should produce no timestamp-driven churn.
 For a read-only list of ready issues not blocked by in-flight PR touches:
 
 ```sh
+git fetch --tags origin
 uv run --no-project python scripts/plan_sequence.py --lane
 ```
 

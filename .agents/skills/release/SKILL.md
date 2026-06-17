@@ -137,9 +137,11 @@ Build a fresh main DB if `SCHEMA_VERSION` changed, the release is major, or cons
 Fresh main DB:
 
 ```sh
+set -euo pipefail
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta.XXXXXX")"
 db_path="$db_dir/reg_meta.db"
 uv run reg-meta-build --db "$db_dir" build-db --input-dir reg_meta_build/input_data/
+test -f "$db_path"
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db_path"
 zstd -3 -T0 "$db_path" -o reg_meta.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
@@ -154,9 +156,11 @@ doc-DB consumed input/build logic changed: `reg_meta_build/docs/`,
 Fresh doc DB:
 
 ```sh
+set -euo pipefail
 docs_db_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_docs.XXXXXX")"
 docs_db_path="$docs_db_dir/reg_meta_docs.db"
 uv run reg-meta-build --db "$docs_db_dir" build-docs
+test -f "$docs_db_path"
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$docs_db_path"
 zstd -3 -T0 "$docs_db_path" -o reg_meta_docs.db.zst
 gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
@@ -188,6 +192,9 @@ gh release edit <package>/vX.Y.Z --draft=false
 Monitor:
 
 ```sh
+git fetch --tags origin
+tag="<package>/vX.Y.Z"
+target="$(git rev-list -n 1 "$tag")"
 run_id=""
 while [ -z "$run_id" ]; do
   run_id="$(gh run list --workflow=<workflow> --event release --commit "$target" --json databaseId,headSha,event,createdAt --jq '.[0].databaseId // ""')"
