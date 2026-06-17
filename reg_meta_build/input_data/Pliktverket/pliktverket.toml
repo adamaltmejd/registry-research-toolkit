@@ -18,6 +18,7 @@
 key = "insark"
 name = "Mönstringsregister"
 valid_from = "1997-01-01"  # Mönstringsregister för forskning, 1997-2010
+valid_to = "2010-12-31"  # research register closed 1997-2010 (conscription deactivated 2010)
 purpose = "Mönstringsregister för forskning (1997–2010): resultat från mönstringen — status, fysiska och medicinska mått (blodtryck, kondition, hörsel, syn), psykologisk och fysisk kapacitet samt befattning."
 
 [[register.variable]]
@@ -493,7 +494,7 @@ data_type = "integer"
 name = "Utbildningsansvarig enhet/organisation"
 column = "utan"
 definition = "Utbildningsansvarig enhet/organisation (ZZZZZZZZZ (Ex. 124330000, separat lista))"
-data_type = "integer"
+data_type = "text"
 
 [[register.variable]]
 name = "Hälsotillståndskod/Tjänstbarhet"
@@ -601,6 +602,7 @@ is_sensitive = true
 key = "insiprov"
 name = "Inskrivningsprov"
 valid_from = "1997-01-01"  # Mönstringsregister för forskning, 1997-2010
+valid_to = "2010-12-31"  # research register closed 1997-2010 (conscription deactivated 2010)
 purpose = "Inskrivningsprovet (G-faktor) vid mönstring 1997–2010: resultat från det skriftliga inskrivningsprovet (allmän, spatial och verbal förmåga)."
 
 [[register.variable]]
@@ -654,6 +656,7 @@ data_type = "text"
 key = "diagnos"
 name = "Diagnoser"
 valid_from = "1997-01-01"  # Mönstringsregister för forskning, 1997-2010
+valid_to = "2010-12-31"  # research register closed 1997-2010 (conscription deactivated 2010)
 purpose = "Diagnoser registrerade vid mönstring 1997–2010, kodade enligt klassifikation av sjukdomar (ICD)."
 
 [[register.variable]]

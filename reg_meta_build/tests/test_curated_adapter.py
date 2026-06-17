@@ -122,6 +122,34 @@ def test_emit_two_variant_register(tmp_path: Path) -> None:
     )
 
 
+_REGISTER_VALID_TO = """\
+[[register]]
+key = "closed"
+name = "Closed register"
+valid_from = "1997-01-01"
+valid_to = "2010-12-31"
+
+  [[register.variable]]
+  name = "Personnummer"
+  column = "pnr"
+
+  [[register.variable]]
+  name = "Override"
+  column = "ovr"
+  valid_to = "2005-12-31"
+"""
+
+
+def test_register_valid_to_bounds_states(tmp_path: Path) -> None:
+    """A register-level `valid_to` (#443, Pliktverket 1997-2010) bounds every
+    variable state's window; a per-variable `valid_to` still overrides it."""
+    objs = _emit("pliktverket", _REGISTER_VALID_TO, tmp_path)
+    states = {s.delivery_column_name: s for s in objs if isinstance(s, IRVariableState)}
+    assert states["pnr"].valid_from == "1997-01-01"
+    assert states["pnr"].valid_to == "2010-12-31"  # inherits the register bound
+    assert states["ovr"].valid_to == "2005-12-31"  # per-variable override wins
+
+
 def test_emit_synthesizes_default_variant(tmp_path: Path) -> None:
     toml = """\
 [[register]]

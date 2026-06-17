@@ -259,7 +259,10 @@ assessment data (1997–2010), three registers `insark` (mönstringsresultat: ph
 medical, psychological measures), `insiprov` (the inskrivningsprov/G-factor) and
 `diagnos`; the diagnosis `sjnr` (sjukdomsnummer) links to `ICD-10-SE`. Its documented
 "Mer info" code lists are embedded in each variable definition (value sets are a
-follow-up — no codes minted).
+follow-up — no codes minted). Pliktverket is a **closed** register (1997–2010,
+conscription deactivated 2010): it sets a register-level `valid_to` — a primitive the
+curated adapter materializes onto every variable state (a per-variable `valid_to` still
+overrides it), so the catalog reports the data as ending 2010 rather than open-ended.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
