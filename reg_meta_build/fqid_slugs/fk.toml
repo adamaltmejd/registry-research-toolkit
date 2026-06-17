@@ -388,28 +388,28 @@ panel_time_grain = "row"
 [register_variant."9011624717046135047.8699076028733205250"]
 slug = "beslut"
 display_group = "Underhållsstöd"
-panel_entity_key = ["lopnr-bs", "lopnr-barn"]
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
 panel_time_key = "datum"
 panel_time_grain = "row"
 
 [register_variant."9011624717046135047.8368711561888390862"]
 slug = "utbetalningar-manad"
 display_group = "Underhållsstöd"
-panel_entity_key = ["lopnr-bs", "lopnr-barn"]
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
 panel_time_key = "datum"
 panel_time_grain = "row"
 
 [register_variant."9011624717046135047.7561693197164962636"]
 slug = "beslut-bidragsskyldig"
 display_group = "Underhållsstöd"
-panel_entity_key = ["lopnr-bs", "lopnr-barn"]
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
 panel_time_key = "datum"
 panel_time_grain = "row"
 
 [register_variant."9011624717046135047.6749975705142537045"]
 slug = "inbetalningar"
 display_group = "Underhållsstöd"
-panel_entity_key = ["lopnr-bs", "lopnr-barn"]
+panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
 panel_time_key = "datum-inbet"
 panel_time_grain = "row"
 

@@ -354,6 +354,7 @@ name = "Anordnartyp"
 column = "Anordnartyp"
 definition = "Typ av anordnare. Denna uppgift finns från 2013."
 data_type = "text"
+valid_from = "2013-01-01"
 variants = ["pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
 
 [[register.variable]]
@@ -361,6 +362,7 @@ name = "Betalningsmottagartyp"
 column = "Betalningsmottagartyp"
 definition = "Typ av betalningsmottagare. Denna uppgift finns från 2013."
 data_type = "text"
+valid_from = "2013-01-01"
 variants = ["pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
 
 [[register.variable]]
@@ -511,6 +513,7 @@ name = "Timmar_grund_forebygga_skada"
 column = "Timmar_grund_forebygga_skada"
 definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet förebygga skada. Denna uppgift finns från 2023."
 data_type = "decimal"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -518,6 +521,7 @@ name = "Timmar_grund_medicinskt_tillst"
 column = "Timmar_grund_medicinskt_tillst"
 definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet stöd medicinskt tillstånd. Denna uppgift finns från 2023."
 data_type = "decimal"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -630,6 +634,7 @@ name = "Timmar_andra_nodvandig_atgard"
 column = "Timmar_andra_nodvandig_atgard"
 definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov nödvändiga åtgärder. Denna uppgift finns från 2023."
 data_type = "decimal"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -637,6 +642,7 @@ name = "Kval_insats_hygien"
 column = "Kval_insats_hygien"
 definition = "Anger om det grundläggande behovet personlig hygien har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
 data_type = "text"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -644,6 +650,7 @@ name = "Kval_insats_kladning"
 column = "Kval_insats_kladning"
 definition = "Anger om det grundläggande behovet personlig på- och avklädning har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
 data_type = "text"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -651,6 +658,7 @@ name = "Kval_insats_maltider"
 column = "Kval_insats_maltider"
 definition = "Anger om det grundläggande behovet måltider har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
 data_type = "text"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -658,6 +666,7 @@ name = "Kval_insats_kommunikation"
 column = "Kval_insats_kommunikation"
 definition = "Anger om det grundläggande behovet kommunikation har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
 data_type = "text"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -665,6 +674,7 @@ name = "Timmar_foraldraavdrag"
 column = "Timmar_foraldraavdrag"
 definition = "Antal timmar per vecka som dragits av för aktuellt typ av avdrag p.g.a. föräldraansvaret. Denna uppgift finns från 2023."
 data_type = "decimal"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -672,6 +682,7 @@ name = "Timmar_grund_foraldraavdrag"
 column = "Timmar_grund_foraldraavdrag"
 definition = "Antal timmar per vecka som dragits av för aktuellt typ av grundläggande behov p.g.a. föräldraansvaret. Denna uppgift finns från 2023."
 data_type = "decimal"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -679,6 +690,7 @@ name = "Timmar_andra_foraldraavdrag"
 column = "Timmar_andra_foraldraavdrag"
 definition = "Antal timmar per vecka som dragits av för aktuellt typ av andra personliga behov p.g.a. föräldraansvaret. Denna uppgift finns från 2023."
 data_type = "decimal"
+valid_from = "2023-01-01"
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
 
 [[register.variable]]
@@ -693,6 +705,7 @@ name = "Avslagsanledning"
 column = "Avslagsanledning"
 definition = "Anledningen till att personen fick ett avslag på rätten till assistansersättning. Denna uppgift finns från 1999."
 data_type = "text"
+valid_from = "1999-01-01"
 variants = ["avslag", "fattade-beslut"]
 
 [[register.variable]]
@@ -891,6 +904,7 @@ name = "Anpassningskategori"
 column = "Anpassningskategori"
 definition = "Vilken/vilka anpassningar som har genomförts på fordonet. Denna uppgift finns från 2014."
 data_type = "text"
+valid_from = "2014-01-01"
 variants = ["utbetalningar"]
 
 [[register.variable]]
@@ -898,6 +912,7 @@ name = "Anpassningstyp"
 column = "Anpassningstyp"
 definition = "Vilken typ av anpassning utbetalningen avser. Denna uppgift finns från 2014."
 data_type = "text"
+valid_from = "2014-01-01"
 variants = ["utbetalningar"]
 
 [[register.variable]]
@@ -941,6 +956,7 @@ name = "Diagnos_1"
 column = "Diagnos_1"
 definition = "Diagnoskod på den sökande/barnet. Uppgiften finns från år 2014, men täckningen är väldigt dålig. Majoriteten av alla ansökningar och beslut saknar diagnoskod."
 data_type = "text"
+valid_from = "2014-01-01"
 is_sensitive = true
 variants = ["ansokningar-beslut"]
 classification = "ICD-10-SE"
@@ -950,6 +966,7 @@ name = "Diagnos_2"
 column = "Diagnos_2"
 definition = "Diagnoskod på den sökande/barnet. Uppgiften finns från år 2014, men täckningen är väldigt dålig. Majoriteten av alla ansökningar och beslut saknar diagnoskod."
 data_type = "text"
+valid_from = "2014-01-01"
 is_sensitive = true
 variants = ["ansokningar-beslut"]
 classification = "ICD-10-SE"
@@ -959,6 +976,7 @@ name = "Reparation"
 column = "Reparation"
 definition = "Visar om registreringen gäller en reparation. Uppgiften finns från år 2014 och enbart för ansökningar."
 data_type = "text"
+valid_from = "2014-01-01"
 variants = ["ansokningar-beslut"]
 
 [[register.variable]]
@@ -966,6 +984,7 @@ name = "Ansokan_period"
 column = "Ansokan_period"
 definition = "Visar om ansökan har gjorts inom en tidsperiod för när det egentligen inte får beviljas nytt bilstöd. Uppgiften finns från år 2014 med varierande kvalité."
 data_type = "text"
+valid_from = "2014-01-01"
 variants = ["ansokningar-beslut"]
 
 [[register.variable]]
@@ -973,6 +992,7 @@ name = "Beviljandeorsak_period"
 column = "Beviljandeorsak_period"
 definition = "Orsaken till varför bilstöd har beviljats inom tidsperioden för när det egentligen inte får beviljas nytt bilstöd. Uppgiften finns från år 2014."
 data_type = "text"
+valid_from = "2014-01-01"
 variants = ["ansokningar-beslut"]
 
 [[register.variable]]
@@ -1001,6 +1021,7 @@ name = "Sokande"
 column = "Sokande"
 definition = "Anger vem ansökan gäller. Enbart den sökande, enbart barnet eller båda. Uppgiften finns från år 2021, men är inte heltäckande."
 data_type = "text"
+valid_from = "2021-01-01"
 variants = ["ansokningar-beslut"]
 
 [[register.variable]]
@@ -1008,6 +1029,7 @@ name = "Beslutat_belopp"
 column = "Beslutat_belopp"
 definition = "Beviljat belopp för beslutet. Det beviljade beloppet kan skilja sig från det utbetalda beloppet. Uppgiften finns från år 2021, men är inte heltäckande."
 data_type = "decimal"
+valid_from = "2021-01-01"
 variants = ["ansokningar-beslut"]
 
 
@@ -3648,7 +3670,7 @@ variants = ["utbetalningar-barn"]
 [[register.variable]]
 name = "BELOPP"
 column = "BELOPP"
-definition = "Det bokförda beloppet för utbetalningen."
+definition = "Bokfört belopp (kronor) för posten. Innebörden följer tabellen — utbetalt belopp i utbetalnings-/beslutstabellerna, inbetalt belopp i inbetalningstabellen."
 data_type = "decimal"
 variants = ["utbetalningar-barn", "beslut", "beslut-bidragsskyldig", "inbetalningar"]
 
