@@ -2078,8 +2078,24 @@ def _merge_curated_same_as_edges(
         is NOT checked — slug-anchored). An unknown provider/register IS drift →
         fail fast (EXIT_CONFIG).
 
+    A curated edge whose UNORDERED variable pair is already declared — either by
+    an inline `SlugEntry.same_as` edge already in `var_edges`, or by an earlier
+    curated edge merged in THIS call — is maintainer drift, not an internal
+    invariant break. Caught here as EXIT_CONFIG (`variable_same_as_duplicate`)
+    rather than slipping past the cycle check (which only rejects
+    cycles/reciprocals/self-loops, not an exact same-direction duplicate) into a
+    raw `sqlite3.IntegrityError` on the plain INSERT — that maps to EXIT_INTERNAL
+    "report to maintainers", the wrong failure mode for curation drift. The
+    unordered frozenset also catches a curated `b→a` against an inline `a→b` with
+    this clearer message instead of leaning on the cycle check.
+
     Returns the count of curated edges merged (one per pair; both directions are
     written by the shared insert below)."""
+    # Unordered variable pairs already declared (inline edges built before this
+    # call), extended as curated edges merge so a curated-vs-curated duplicate is
+    # caught too. load_same_as already dedups within the curated file, so this
+    # covers curated-vs-inline (and the belt-and-braces curated-vs-curated case).
+    seen_pairs: set[frozenset[_VarKey]] = {frozenset(pair) for pair in var_edges}
     n_merged = 0
     for e in curated_same_as:
         if e.a_provider not in providers or e.b_provider not in providers:
@@ -2104,6 +2120,17 @@ def _merge_curated_same_as_edges(
             )
         a_key: _VarKey = (e.a_provider, e.a_register, e.a_variable)
         b_key: _VarKey = (e.b_provider, e.b_register, e.b_variable)
+        pair = frozenset({a_key, b_key})
+        if pair in seen_pairs:
+            raise _err(
+                "variable_same_as_duplicate",
+                f"variable_same_as.toml: same_as edge {{{a_fqid}, {b_fqid}}} is "
+                "already declared.",
+                "Remove the duplicate — the pair is already declared (inline slug "
+                "`same_as` or another `[[same_as]]` entry); same_as is symmetric "
+                "so a→b and b→a are the same edge.",
+            )
+        seen_pairs.add(pair)
         var_edges.append((a_key, b_key))
         n_merged += 1
     return n_merged

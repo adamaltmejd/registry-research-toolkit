@@ -267,12 +267,14 @@ class TestMaterialize:
         assert counts["variable_curated"] == 0
         assert _same_as_rows(conn) == []
 
-    def test_curated_edge_closing_cycle_with_inline_is_rejected(
+    def test_curated_reverse_of_inline_rejected_as_duplicate(
         self, tmp_path: Path
     ) -> None:
-        # Inline edge inkomst → rinkomst; curated edge rinkomst → inkomst closes a
-        # directed 2-cycle. The SHARED cycle check (curated merged before it) must
-        # reject it, exactly as it rejects a reciprocal inline declaration.
+        # Inline edge inkomst → rinkomst; curated edge rinkomst → inkomst is the
+        # SAME unordered pair (same_as is symmetric). The duplicate check runs
+        # before the cycle check and uses an unordered frozenset, so a reciprocal
+        # curated-vs-inline gets the clearer `variable_same_as_duplicate` message
+        # rather than relying on the cycle check.
         conn = _cross_register_db()
         (tmp_path / "scb.toml").write_text(
             '[variable."1.900"]\n'
@@ -281,13 +283,54 @@ class TestMaterialize:
             encoding="utf-8",
         )
         (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
-        # Curated edge in the reverse direction.
+        # Curated edge in the reverse direction = same unordered pair.
         curated = (_edge(a="scb/rams/rinkomst", b="scb/lisa/inkomst"),)
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(
                 conn, tmp_path, curated_same_as=curated, providers=_SCB
             )
-        assert exc.value.code == "slug_same_as_cycle"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "variable_same_as_duplicate"
+
+    def test_curated_duplicate_of_inline_same_direction_rejected(
+        self, tmp_path: Path
+    ) -> None:
+        # Inline edge inkomst → rinkomst; curated edge in the SAME direction is an
+        # exact duplicate. The plain INSERT would raise a raw sqlite3.IntegrityError
+        # (→ EXIT_INTERNAL "report to maintainers"); the duplicate check turns it
+        # into an actionable EXIT_CONFIG curation error instead.
+        conn = _cross_register_db()
+        (tmp_path / "scb.toml").write_text(
+            '[variable."1.900"]\n'
+            'same_as = [{ provider = "scb", register = "rams", '
+            'variable_slug = "rinkomst" }]\n',
+            encoding="utf-8",
+        )
+        (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
+        curated = (_edge(a="scb/lisa/inkomst", b="scb/rams/rinkomst"),)
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(
+                conn, tmp_path, curated_same_as=curated, providers=_SCB
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "variable_same_as_duplicate"
+        assert "lisa/inkomst" in exc.value.message
+
+    def test_two_curated_entries_for_same_pair_rejected(self, tmp_path: Path) -> None:
+        # load_same_as dedups within the curated FILE; this guards the in-call
+        # accumulation directly (two CuratedSameAs for the same unordered pair,
+        # second in reverse order) — caught before the plain INSERT collides.
+        conn = _cross_register_db()
+        curated = (
+            _edge(a="scb/lisa/inkomst", b="scb/rams/rinkomst"),
+            _edge(a="scb/rams/rinkomst", b="scb/lisa/inkomst"),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(
+                conn, _slug_dir(tmp_path), curated_same_as=curated, providers=_SCB
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "variable_same_as_duplicate"
 
 
 # ---------------------------------------------------------------------------

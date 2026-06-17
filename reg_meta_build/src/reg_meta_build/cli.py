@@ -874,9 +874,11 @@ def _cmd_same_as_candidates(
 ) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
-    # Read-only worklist generation; check_schema=False keeps it usable against a
-    # DB built by a slightly newer/older build (it only reads stable tables).
-    conn = open_db(db, check_schema=False)
+    # Schema-checked open: the generator reads current-schema tables
+    # (variable_same_as, variable_state.classification_id), so a stale DB should
+    # fail fast with the standard actionable schema-mismatch error, not crash
+    # deep in a query.
+    conn = open_db(db)
     # CLI contract: <=0 means DISABLED; the API takes None for ∞.
     fanout = args.max_signal_fanout if args.max_signal_fanout > 0 else None
     try:
