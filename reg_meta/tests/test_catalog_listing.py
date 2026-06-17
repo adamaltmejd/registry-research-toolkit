@@ -41,6 +41,7 @@ class TestListProviders:
             "fk",
             "fohm",
             "lakemedelsverket",
+            "pliktverket",
             "scb",
             "sos",
         ]

@@ -58,6 +58,7 @@ def test_root_lists_providers_and_classification_root(client):
         "fohm",
         "fk",
         "lakemedelsverket",
+        "pliktverket",
     }
     class_root = next(c for c in body["children"] if c["kind"] == "classification-root")
     assert class_root["fqid"] == "class"

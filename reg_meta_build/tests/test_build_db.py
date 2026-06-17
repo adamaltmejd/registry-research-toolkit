@@ -716,6 +716,7 @@ class TestBuildDb:
             (3, "fohm"),
             (4, "fk"),
             (5, "lakemedelsverket"),
+            (6, "pliktverket"),
         ]
 
     def test_scb_registers_tagged_scb(self, db_conn: sqlite3.Connection):
@@ -788,6 +789,7 @@ class TestBuildDb:
             (3, "fohm"),
             (4, "fk"),
             (5, "lakemedelsverket"),
+            (6, "pliktverket"),
         ]
         conn.close()
 

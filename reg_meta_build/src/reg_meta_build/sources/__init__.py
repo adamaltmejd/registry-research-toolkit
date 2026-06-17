@@ -19,6 +19,9 @@ Current providers:
 - `lakemedelsverket` — Läkemedelsverket (suspected adverse-drug-reaction
   register); thin curated provider read from
   `input_data/Lakemedelsverket/lakemedelsverket.toml` via `CuratedAdapter`.
+- `pliktverket` — Pliktverket / Plikt- och prövningsverket (enlistment/
+  conscription assessment register, 1997-2010); thin curated provider read from
+  `input_data/Pliktverket/pliktverket.toml` via `CuratedAdapter`.
 
 The post-refactor contract every adapter must implement is the `IRAdapter`
 protocol below. Native-format providers get their own module (`scb.py`,

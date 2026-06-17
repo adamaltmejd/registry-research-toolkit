@@ -254,7 +254,12 @@ third thin provider — the suspected-adverse-drug-reaction register (`biverknin
 variants `handlagda`/`arbetsflode` for the assessed vs in-workflow reports). Reaction
 fields are MedDRA-coded (`Pt`/`Hlt`/`Hlgt`/`Soc`); MedDRA is not a declared catalog
 classification (licensed), so they stay unlinked, while the vaccine `atc4pos` field is
-linked to `ATC`.
+linked to `ATC`. **Pliktverket** (#443) is the fourth — the enlistment/conscription
+assessment data (1997–2010), three registers `insark` (mönstringsresultat: physical,
+medical, psychological measures), `insiprov` (the inskrivningsprov/G-factor) and
+`diagnos`; the diagnosis `sjnr` (sjukdomsnummer) links to `ICD-10-SE`. Its documented
+"Mer info" code lists are embedded in each variable definition (value sets are a
+follow-up — no codes minted).
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
