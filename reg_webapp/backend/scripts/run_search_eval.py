@@ -35,6 +35,7 @@ from pathlib import Path
 
 from reg_meta.db import db_path_from_args
 from reg_meta.queries import search
+from reg_webapp.golden import apply_golden_boost
 
 EVAL_PATH = Path(__file__).resolve().parents[1] / "search_eval.toml"
 
@@ -98,7 +99,13 @@ def main() -> int:
             limit=args.limit,
             fold_groups=fold,
         )
-        rank = _rank_of(res["results"], c["intended"])
+        # Apply golden-boost the same way `/api/search` does (over the raw dicts),
+        # so the eval reflects the route's true post-boost ranking. The net-new
+        # injection bumps the displayed total too, matching the route's
+        # total_count adjustment.
+        boosted = apply_golden_boost(conn, c["query"], c["group"], res["results"])
+        total = res["total_count"] + (len(boosted) - len(res["results"]))
+        rank = _rank_of(boosted, c["intended"])
         found = rank is not None
         if c["expect"] == "hit":
             hit_total += 1
@@ -115,7 +122,7 @@ def main() -> int:
                 c["intended"],
                 c["expect"],
                 str(rank) if found else "-",
-                f"{res['total_count']}",
+                f"{total}",
                 status,
             )
         )

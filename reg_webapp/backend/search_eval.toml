@@ -70,17 +70,17 @@ note = "Befolkningens utbildning (Utbildningsregistret)."
 query = "sysselsättning"
 group = "register"
 intended = "scb/lisa"
-expect = "gap"
+expect = "hit"
 confirmed = true
-note = "Steer employment queries to LISA. RAMS (ranks ~3 today) is stale, superseded by BAS (scb/bas); LISA is the register to point users at but does NOT surface for 'sysselsättning' today — a golden-boost/curation target (#311)."
+note = "Steer employment queries to LISA. RAMS (ranks ~3 today) is stale, superseded by BAS (scb/bas); LISA does NOT surface for 'sysselsättning' via FTS, so it is pinned to the top of the register group by the golden-boost (search_golden.toml, #311 / #393 item 4)."
 
 [[case]]
 query = "diagnos"
 group = "register"
 intended = "sos/par"
-expect = "gap"
+expect = "hit"
 confirmed = true
-note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' (only Cancerregistret does, via its purpose text) — a ranking/curation gap (golden-boost #311). Steward may instead accept sos/can (then -> expect=hit, intended=sos/can)."
+note = "Patientregistret is the broad diagnosis register but does NOT surface for 'diagnos' via FTS (only Cancerregistret does, via its purpose text), so it is pinned to the top of the register group by the golden-boost (search_golden.toml, #311 / #393 item 4)."
 
 [[case]]
 query = "läkemedel"

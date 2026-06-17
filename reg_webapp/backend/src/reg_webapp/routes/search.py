@@ -20,6 +20,7 @@ import re
 from fastapi import APIRouter, Depends, HTTPException, Request
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
+from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
     ClassificationSearchGroup,
@@ -80,14 +81,6 @@ def _has_searchable_token(q: str) -> bool:
     folds diacritics on both index and query side (å→a), matching the SPA's
     ``foldText``."""
     return _WORD_CHAR.search(q) is not None
-
-
-def _apply_golden_boost(results: list[dict]) -> list[dict]:
-    """No-op seam for the curated golden/starred boost (#311). reg_meta already
-    sorted ``results`` by FTS rank; once #311 ships a golden list, this is where
-    starred hits get promoted within their group. Identity until then — kept as a
-    named hook so the call sites and ordering contract are already in place."""
-    return results
 
 
 def _rank_codes(results: list[dict]) -> list[dict]:
@@ -260,10 +253,11 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
             )
-            reg_results = _apply_golden_boost(reg["results"])
+            reg_results = golden.apply_golden_boost(conn, q, "register", reg["results"])
             groups.append(
                 RegisterSearchGroup(
-                    total_count=reg["total_count"],
+                    total_count=reg["total_count"]
+                    + (len(reg_results) - len(reg["results"])),
                     results=[_register_result(r) for r in reg_results],
                 )
             )
@@ -275,10 +269,11 @@ def get_search(
                 type="variable",
                 limit=limit,
             )
-            var_results = _apply_golden_boost(var["results"])
+            var_results = golden.apply_golden_boost(conn, q, "variable", var["results"])
             groups.append(
                 VariableSearchGroup(
-                    total_count=var["total_count"],
+                    total_count=var["total_count"]
+                    + (len(var_results) - len(var["results"])),
                     results=[
                         _group_result(r)
                         if r["type"] == "group"
@@ -295,10 +290,13 @@ def get_search(
                 type="classification",
                 limit=limit,
             )
-            cls_results = _apply_golden_boost(cls["results"])
+            cls_results = golden.apply_golden_boost(
+                conn, q, "classification", cls["results"]
+            )
             groups.append(
                 ClassificationSearchGroup(
-                    total_count=cls["total_count"],
+                    total_count=cls["total_count"]
+                    + (len(cls_results) - len(cls["results"])),
                     results=[
                         _group_result(r)
                         if r["type"] == "group"
@@ -312,8 +310,9 @@ def get_search(
             # code-shape exact/prefix match, NOT the FTS description path. reg_meta
             # ranks (bm25 + rarity downweight) and annotates each hit with its
             # owning variables/classifications. Codes don't fold into concept
-            # groups. `_rank_codes` re-sorts the page so classification-backed
-            # codes lead (#393 item 2) — AFTER the golden-boost seam.
+            # groups. Golden-boost runs first (a no-op here — no `value` pins are
+            # supported, see reg_webapp.golden), THEN `_rank_codes` re-sorts the
+            # page so classification-backed codes lead (#393 item 2).
             codes = reg_meta_search(
                 conn,
                 q,
@@ -322,10 +321,14 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
             )
-            code_results = _rank_codes(_apply_golden_boost(codes["results"]))
+            boosted_codes = golden.apply_golden_boost(
+                conn, q, "value", codes["results"]
+            )
+            code_results = _rank_codes(boosted_codes)
             groups.append(
                 CodeSearchGroup(
-                    total_count=codes["total_count"],
+                    total_count=codes["total_count"]
+                    + (len(boosted_codes) - len(codes["results"])),
                     results=[_code_result(r) for r in code_results],
                 )
             )
