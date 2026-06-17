@@ -2440,16 +2440,53 @@ def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) 
         prefix_clauses = " OR ".join(
             "label LIKE ?" for _ in _VALUE_CODE_STOPLIST_PREFIXES
         )
+        # Owner filter (#478): a code is indexed only if it has an owner —
+        # `mapping_count = 0` ⟺ no variable owner (mapping_count is the
+        # code_variable_map count, UPDATEd above this call), and the
+        # `OR classification_code` arm keeps classification-owned codes
+        # searchable (they have no value_set_member after the year-projection,
+        # yet are findable ONLY via value_code_fts because classification search
+        # is name-only). This MIRRORS the query-side owner definition in
+        # reg_meta/queries.py `_code_owner_annotations_batch` (variables via
+        # code_variable_map ∪ classifications via classification_code), which the
+        # register-scoped drop at queries.py:944 already applies — the unscoped
+        # path defers owner annotation to the shown page and so cannot drop the
+        # ~2,562 ownerless year-projection orphans there. Mirroring at index
+        # build is source-agnostic: every orphaning pass converges here. The
+        # correlated reference is qualified `value_code.code_id` (NOT bare
+        # `code_id`, which would bind to classification_code.code_id inside the
+        # subquery); `idx_classification_code_code` makes the EXISTS fast.
+        owner_clause = (
+            "(mapping_count > 0 "
+            "OR EXISTS (SELECT 1 FROM classification_code cc "
+            "WHERE cc.code_id = value_code.code_id))"
+        )
+        stoplist_where = (
+            f"label NOT IN ({exact_placeholders}) AND NOT ({prefix_clauses})"
+        )
+        stoplist_params = (
+            *sorted(_VALUE_CODE_STOPLIST_EXACT),
+            *(f"{p}%" for p in _VALUE_CODE_STOPLIST_PREFIXES),
+        )
         conn.execute(
             "INSERT INTO value_code_fts(rowid, label) "
             "SELECT code_id, label FROM value_code "
-            f"WHERE label NOT IN ({exact_placeholders}) "
-            f"AND NOT ({prefix_clauses})",
-            (
-                *sorted(_VALUE_CODE_STOPLIST_EXACT),
-                *(f"{p}%" for p in _VALUE_CODE_STOPLIST_PREFIXES),
-            ),
+            f"WHERE {stoplist_where} AND {owner_clause}",
+            stoplist_params,
         )
+        # Drift visibility (#478): report how many codes the owner filter
+        # EXCLUDED that would otherwise have passed the stoplist. Reuses the SAME
+        # stoplist construction; only the NEGATION of the owner clause is added.
+        (n_excluded,) = conn.execute(
+            "SELECT COUNT(*) FROM value_code "
+            f"WHERE {stoplist_where} AND NOT {owner_clause}",
+            stoplist_params,
+        ).fetchone()
+        if n_excluded > 0:
+            _progress(
+                f"  {n_excluded:,} context-less value_codes excluded "
+                "from value search (#478)"
+            )
     _progress("  FTS indexes built")
 
 
