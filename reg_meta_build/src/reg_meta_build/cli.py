@@ -169,8 +169,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "SCB-only DB that reproduces the byte-identical A4.3b dbdiff gate. "
             "Non-SCB providers are purely additive: they add rows in a disjoint id "
             "band (>= 2^62), never alter SCB's. `fohm`/`fk` (#422) and "
-            "`lakemedelsverket`/`pliktverket` (#443) are thin curated providers whose committed "
-            "TOMLs ship with the repo. (The `build_db()` function default stays "
+            "`lakemedelsverket`/`pliktverket`/`skatteverket` (#443) are thin curated "
+            "providers whose committed TOMLs ship with the repo. (The `build_db()` function default stays "
             "`('scb',)` so synthetic SCB-only test fixtures need no extra inputs.)"
         ),
     )
