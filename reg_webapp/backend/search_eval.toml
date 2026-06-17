@@ -19,7 +19,7 @@
 # Fields:
 #   query     - the omnibox input.
 #   group     - which result group the intended result should land in
-#               (register | variable | classification | value).
+#               (register | variable | classification).
 #   intended  - the navigable target: an FQID (scb/iot, class/icd-10-se) or, for a
 #               folded concept group, "group:<group_key>".
 #   expect    - "hit": should rank well today (regression guard).

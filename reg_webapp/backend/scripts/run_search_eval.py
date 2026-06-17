@@ -4,8 +4,8 @@ The eval set is ~steward-authored `(query -> intended result)` pairs; this runne
 makes ranking changes *measurable* (the precondition #393 item 10 calls out): for
 each case it runs the query the way `/api/search` does — one `reg_meta.queries.search`
 call per result group (register / variable / classification via the FTS
-`field="description"` path; codes via `field="value"`) — and reports whether the
-case's `intended` result appears in its expected group, and at what rank.
+`field="description"` path) — and reports whether the case's `intended` result appears
+in its expected group, and at what rank.
 
 This is a MAINTAINER tool, not a CI test: it needs a real `reg_meta.db` (the synthetic
 test fixtures don't carry catalog-scale content), so it is a `scripts/` runner rather
@@ -23,7 +23,7 @@ override.
     A `gap` that becomes a hit is progress (`closed!`), not a failure.
 
 Usage:
-    uv run python reg_webapp/backend/scripts/run_search_eval.py [--db DIR_OR_FILE] [--limit N]
+    uv run python reg_webapp/backend/scripts/run_search_eval.py [--db PATH] [--limit N]
 """
 
 from __future__ import annotations
@@ -42,12 +42,35 @@ EVAL_PATH = Path(__file__).resolve().parents[1] / "search_eval.toml"
 
 # Map a case's `group` to the (field, fold_groups) reg_meta.search uses for that arm,
 # mirroring reg_webapp/backend/src/reg_webapp/routes/search.py.
+#
+# `value` is deliberately absent: reg_meta.search(..., type="value") returns type:"code"
+# rows (code/label, NO fqid), so `_result_id` is None and a `value` case can never match
+# (false miss). The actionable target is always the owning entity (register / variable /
+# classification), not a bare code, so the eval has no `value` group.
 _GROUP_CALL = {
     "register": ("description", False),
     "variable": ("description", True),
     "classification": ("description", True),
-    "value": ("value", False),
 }
+
+
+def _resolve_db(db_arg: str | None) -> Path:
+    """Resolve ``--db``: an explicit FILE path is used directly; otherwise treat the arg
+    (or None) as a directory and apply reg_meta's resolution rules."""
+    if db_arg and Path(db_arg).is_file():
+        return Path(db_arg)
+    return db_path_from_args(db_arg)
+
+
+def _group_call(group: str) -> tuple[str, bool]:
+    """The (field, fold_groups) for a case's `group`, failing fast on an unknown group."""
+    try:
+        return _GROUP_CALL[group]
+    except KeyError:
+        supported = " | ".join(_GROUP_CALL)
+        raise ValueError(
+            f"unsupported eval group {group!r}; supported: {supported}"
+        ) from None
 
 
 def _result_id(row: dict) -> str | None:
@@ -70,13 +93,20 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description="Measure search relevance vs search_eval.toml"
     )
-    ap.add_argument("--db", default=None, help="reg_meta.db file or its directory")
+    ap.add_argument(
+        "--db",
+        default=None,
+        help=(
+            "path to reg_meta.db, or the directory containing it (default: "
+            "reg_meta's resolution — $REG_META_DB > XDG > platform default)"
+        ),
+    )
     ap.add_argument(
         "--limit", type=int, default=10, help="per-group result cap (rank window)"
     )
     args = ap.parse_args()
 
-    db_file = db_path_from_args(args.db)
+    db_file = _resolve_db(args.db)
     if not db_file.exists():
         print(
             f"error: no reg_meta.db at {db_file} (set --db or $REG_META_DB)",
@@ -91,7 +121,7 @@ def main() -> int:
     rows: list[tuple] = []
     hit_total = hit_found = gap_total = gap_closed = 0
     for c in cases:
-        field, fold = _GROUP_CALL[c["group"]]
+        field, fold = _group_call(c["group"])
         res = search(
             conn,
             c["query"],
