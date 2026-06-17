@@ -23,8 +23,10 @@ Agent-surface notes:
 - For review, prefer a callable built-in review capability when one is exposed.
   Slash-command reviews may be available to the top-level user/session without being
   invokable from inside this skill workflow. When no callable built-in review is
-  exposed, run `registry-code-review` as the repo-scoped callable review workflow. The
-  GitHub bot-review window described by the repository guidance still applies.
+  exposed, run `registry-code-review` as the repo-scoped callable review workflow in a
+  fresh subagent. If the review can only run in the authoring session, treat it as a
+  diagnostic checklist, not as independent review evidence. The GitHub bot-review window
+  described by the repository guidance still applies.
 - Do not merge unless the user explicitly asked for merge/full pipeline or confirms at
   the merge gate. Otherwise finish by marking the PR ready and reporting the gate state.
 
@@ -100,8 +102,10 @@ Run focused verification as the work evolves:
    capability; do not try to invoke slash commands that are only exposed to the
    top-level session. If no built-in review is callable from this workflow, have the
    subagent run `registry-code-review` on the PR number or branch/range. If subagents
-   are unavailable, run `registry-code-review` in-session and state that limitation in
-   closeout. Fix or explicitly dismiss every material finding with a reason.
+   are unavailable, run `registry-code-review` in-session only as a diagnostic
+   checklist, state that it does not satisfy the independent review gate, and stop
+   before ready/merge until an external or subagent review signal is available. Fix or
+   explicitly dismiss every material finding with a reason.
 4. Re-review substantial fixes until the review converges.
 5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,

@@ -20,8 +20,9 @@ regenerate artifacts, apply fixes, or post GitHub comments unless explicitly ins
 Findings lead the response, ordered by severity, with file and line references.
 
 When this skill is run by the same session that authored the patch because subagents are
-unavailable, state that review surface in the closeout; it is still useful as a
-structured review pass, but it is not the same evidence as a separate reviewer.
+unavailable, state that review surface in the closeout. It is a diagnostic checklist,
+not independent review evidence, and must not satisfy the `pr-pipeline` ready/merge gate
+by itself.
 
 ## Inputs
 
