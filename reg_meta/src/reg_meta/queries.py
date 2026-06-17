@@ -1092,7 +1092,10 @@ def _search_classifications_by_code(
 
     `fts_rank` is a POSITIVE base + enumeration index, so these rows sort AFTER all
     (negative-rank) name-FTS hits while preserving the SQL order (exact-containing
-    classifications first)."""
+    classifications first, then `short_name`). Because `classification.short_name`
+    is `NOT NULL UNIQUE` (see reg_meta_build/db.py), `(has_exact DESC, short_name)`
+    is already a TOTAL order, so the Python enumeration below freezes a deterministic
+    order into `fts_rank` — no extra tiebreak needed."""
     q = query.strip()
     rows = conn.execute(
         "SELECT c.id AS classification_id, c.short_name, c.name AS classification_name, "

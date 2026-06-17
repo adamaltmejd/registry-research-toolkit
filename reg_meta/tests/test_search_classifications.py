@@ -108,6 +108,68 @@ def db_with_class_codes() -> sqlite3.Connection:
     return conn
 
 
+@pytest.fixture
+def db_with_class_code_group() -> sqlite3.Connection:
+    """`db_with_cls_group` (sun2000 + sun2020 siblings in classification group
+    'sun') PLUS a code-shaped code 'V10' linked to BOTH siblings via
+    `classification_code`. 'V10' matches NO classification NAME, so each sibling
+    surfaces ONLY via code-containment — exercising the fold of ≥2 code-
+    containment hits into one `type:"group"` row (the interaction point between
+    `_search_classifications_by_code` and `_fold_concept_groups`, keyed on
+    `_classification_id`)."""
+    conn = build_slugged_db()  # ships sun2020 (id 1)
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
+    )
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token')"
+    )
+    sun2020_id = conn.execute(
+        "SELECT id FROM classification WHERE slug = 'sun2020'"
+    ).fetchone()[0]
+    conn.executemany(
+        "INSERT INTO concept_group_classification (classification_id, group_id, "
+        "facet_value, facet_label) VALUES (?, 11, ?, ?)",
+        [(50, "2000", "2000"), (sun2020_id, "2020", "2020")],
+    )
+    add_value_set(conn, value_set_id=1, codes=[("V10", "Some code")])
+    v10_id = conn.execute(
+        "SELECT code_id FROM value_code WHERE code = 'V10'"
+    ).fetchone()[0]
+    _link_code_to_classification(conn, "sun2000", v10_id)
+    _link_code_to_classification(conn, "sun2020", v10_id)
+    _rebuild_fts(conn)
+    return conn
+
+
+@pytest.fixture
+def db_with_exact_and_prefix_classifications() -> sqlite3.Connection:
+    """Two DISTINCT classifications splitting an exact-vs-prefix code match:
+    icd10 owns the EXACT query code 'C12'; sun2020 owns only a prefix-extension
+    'C120'. Neither carries 'C12' in its NAME, so both surface ONLY via code-
+    containment — isolating the `has_exact DESC` ordering ACROSS classifications
+    (the shipped `db_with_class_codes` puts C12 + C120 on the SAME classification,
+    so cross-classification exact-precedence is never exercised there)."""
+    conn = build_slugged_db()  # ships sun2020 (no codes), name has no 'C12'
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (60, 'ICD10', 'Internationell sjukdomsklassifikation', 'icd10')"
+    )
+    add_value_set(conn, value_set_id=1, codes=[("C12", "Tongue base")])
+    add_value_set(conn, value_set_id=2, codes=[("C120", "Sub")])
+    code_ids = {
+        row["code"]: row["code_id"]
+        for row in conn.execute("SELECT code_id, code FROM value_code").fetchall()
+    }
+    _link_code_to_classification(conn, "icd10", code_ids["C12"])
+    _link_code_to_classification(conn, "sun2020", code_ids["C120"])
+    _rebuild_fts(conn)
+    return conn
+
+
 def test_code_shaped_query_surfaces_owning_classification(
     db_with_class_codes: sqlite3.Connection,
 ) -> None:
@@ -187,6 +249,46 @@ def test_two_char_code_query_has_no_code_containment(
     out = search(db_with_class_codes, "C1", field="description", type="classification")
     fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
     assert "class/sun2020" not in fqids
+
+
+def test_code_containment_hits_fold_into_concept_group(
+    db_with_class_code_group: sqlite3.Connection,
+) -> None:
+    # 'V10' matches no classification NAME but is owned by BOTH sun2000 and
+    # sun2020 — siblings of the 'sun' classification group. Two code-containment
+    # leaf hits (keyed on `_classification_id`) must FOLD into one `type:"group"`
+    # row, not stand as two leaves.
+    out = search(
+        db_with_class_code_group, "V10", field="description", type="classification"
+    )
+    rows = out["results"]
+    groups = [r for r in rows if r["type"] == "group"]
+    leaves = [r for r in rows if r["type"] == "classification"]
+    assert len(groups) == 1
+    assert groups[0]["kind"] == "classification"
+    assert groups[0]["group_key"] == "sun"
+    member_fqids = {m["fqid"] for m in groups[0]["members"]}
+    assert {"class/sun2000", "class/sun2020"} <= member_fqids
+    # No leaf row may duplicate a folded member's fqid.
+    assert not ({r["fqid"] for r in leaves} & member_fqids)
+
+
+def test_exact_code_classification_precedes_prefix_across_classifications(
+    db_with_exact_and_prefix_classifications: sqlite3.Connection,
+) -> None:
+    # icd10 owns the EXACT 'C12'; sun2020 owns only the prefix-extension 'C120'.
+    # `has_exact DESC` must rank the exact-containing classification first ACROSS
+    # the two distinct classifications.
+    out = search(
+        db_with_exact_and_prefix_classifications,
+        "C12",
+        field="description",
+        type="classification",
+    )
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/icd10" in fqids
+    assert "class/sun2020" in fqids
+    assert fqids.index("class/icd10") < fqids.index("class/sun2020")
 
 
 def test_classification_label_match_folds_and_subsumes_leaves(
