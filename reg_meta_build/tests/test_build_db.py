@@ -31,6 +31,8 @@ from reg_meta_build.db import (
 )
 from reg_meta_build.sources.scb import _canon_data_type
 
+from reg_meta_build.fqid_slugs import populate_variable_slugs, read_auto_derivations
+
 # A single irrelevant Timeseries.csv row (handelse not in the succession set, so
 # it's ignored before resolution and emits NO event-derived edge). `write_csv`
 # can't take an empty row list (it appends a stray blank line the strict CSV
@@ -2095,7 +2097,10 @@ class TestVariableStateTypeFold:
         *,
         var_id: int = 920,
         column: str = "FoldCol",
+        columns: list[str] | None = None,
         varname: str = "FoldVar",
+        skip_slugs: bool = True,
+        slug_dir: Path | None = None,
     ) -> Path:
         """Build a DB with ONE fresh variable delivered across `eras`. Each era
         is (year, regver_id, cvid, data_type, data_length, value_members) where
@@ -2103,10 +2108,20 @@ class TestVariableStateTypeFold:
         (kod, label) pairs. Same members across eras ⇒ same `value_set_id`
         (content-hash dedup), so those eras share a value set. Value codes use an
         UNTRACKED ItemID (no VardemangderValidDates row) ⇒ always-valid ⇒ the
-        instance keeps a non-NULL value_set_id."""
+        instance keeps a non-NULL value_set_id.
+
+        `columns` overrides the delivery column PER ERA (else every era uses
+        `column`); the case-variant fold test (#526) needs two distinct delivery
+        columns on one folded variable to exercise the `variable_alias`-sourced
+        drift signal. `skip_slugs=False` runs `populate_variable_slugs` so the
+        derived `variable.slug` is observable."""
+        per_era_cols = columns if columns is not None else [column] * len(eras)
+        assert len(per_era_cols) == len(eras)
         ri_rows: list[str] = list(REGISTERINFORMATION_ROWS)
         vardemangder_rows: list[str] = list(VARDEMANGDER_ROWS)
-        for year, regver_id, cvid, dt, dl, members in eras:
+        for (year, regver_id, cvid, dt, dl, members), column in zip(
+            eras, per_era_cols, strict=True
+        ):
             ri_rows.append(
                 _ri_row(
                     "TESTREG",
@@ -2154,8 +2169,8 @@ class TestVariableStateTypeFold:
                         PIPE.join([varname, "1", kod, label, str(cvid), ""])
                     )
 
-        # One bounded unika row spanning the full lifetime; the coalescer must
-        # NOT fan it out across folded eras.
+        # One bounded unika row per distinct delivery column spanning the full
+        # lifetime; the coalescer must NOT fan it out across folded eras.
         years = [e[0] for e in eras]
         unika_rows = list(UNIKA_ROWS) + [
             PIPE.join(
@@ -2165,7 +2180,7 @@ class TestVariableStateTypeFold:
                     "Individer",
                     "Individer",
                     varname,
-                    column,
+                    col,
                     min(years),
                     max(years),
                     "Nej",
@@ -2173,6 +2188,7 @@ class TestVariableStateTypeFold:
                     "Nej",
                 ]
             )
+            for col in dict.fromkeys(per_era_cols)
         ]
 
         input_dir = tmp_path / "input"
@@ -2187,7 +2203,8 @@ class TestVariableStateTypeFold:
             input_dir=input_dir,
             db_dir=db_dir,
             skip_classifications=True,
-            skip_slugs=True,
+            skip_slugs=skip_slugs,
+            slug_dir=slug_dir,
         )
         return db_dir / "reg_meta.db"
 
@@ -2376,6 +2393,98 @@ class TestVariableStateTypeFold:
             assert states[0]["value_set_id"] is not None
         finally:
             conn.close()
+
+    def test_drift_signal_reads_fold_immune_variable_alias(self, tmp_path: Path):
+        """#526 regression guard: the `populate_variable_slugs` #143 drift signal
+        (`n_cols` = COUNT(DISTINCT delivery_column_name)) must read
+        `variable_alias` — the fold-immune full historical column set — NOT the
+        coalesced `variable_state`.
+
+        Reproduces the real-data break: a variable delivered across two editions
+        under CASE-VARIANT columns (`PersonNrSamh` / `PersonNrsamh`) with a
+        char↔varchar type wobble that #526 now FOLDS into ONE `variable_state`.
+        The fold collapses the state's delivery column to a single (latest-era)
+        value, so `COUNT(DISTINCT variable_state.delivery_column_name)` drops to
+        1 — which would wrongly de-classify the variable as a non-drifter and
+        flip its slug from the earliest-column basis to the variable NAME
+        (`personnr`→`personnummer` in the reported case, dangling 11 curated
+        panel-key refs). `variable_alias` keeps BOTH columns (it is the full
+        pre-fold column history, `variable_alias ⊇ state delivery columns`), so
+        the alias-sourced count stays 2 → the variable stays a drifter."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "1", None),
+                ("2021", 921, 9301, "char", "1", None),
+            ],
+            columns=["PersonNrSamh", "PersonNrsamh"],
+            varname="PersonNrSamh",
+        )
+        conn = open_db(db_path)
+        try:
+            (variable_id,) = conn.execute(
+                "SELECT variable_id FROM variable "
+                "WHERE register_id = 1 AND provider_key = '920'"
+            ).fetchone()
+
+            # #526 fold engaged: the two case-variant editions coalesced into ONE
+            # state, so the (buggy) variable_state-sourced drift count is 1.
+            n_cols_from_state = conn.execute(
+                "SELECT COUNT(DISTINCT vs.delivery_column_name) "
+                "FROM variable_state vs WHERE vs.variable_id = ? "
+                "AND vs.delivery_column_name IS NOT NULL",
+                (variable_id,),
+            ).fetchone()[0]
+            assert n_cols_from_state == 1
+
+            # The fix's source: variable_alias retains the FULL pre-fold column
+            # set, so the drift signal stays >1 — the property the slug router
+            # relies on to keep this variable a #143 drifter after a #526 fold.
+            n_cols_from_alias = conn.execute(
+                "SELECT COUNT(DISTINCT va.delivery_column_name) "
+                "FROM variable_alias va WHERE va.variable_id = ?",
+                (variable_id,),
+            ).fetchone()[0]
+            assert n_cols_from_alias == 2
+            alias_cols = {
+                r["delivery_column_name"]
+                for r in conn.execute(
+                    "SELECT delivery_column_name FROM variable_alias "
+                    "WHERE variable_id = ?",
+                    (variable_id,),
+                )
+            }
+            assert alias_cols == {"PersonNrSamh", "PersonNrsamh"}
+
+            (register_id, provider_key) = conn.execute(
+                "SELECT register_id, provider_key FROM variable WHERE variable_id = ?",
+                (variable_id,),
+            ).fetchone()
+        finally:
+            conn.close()
+
+        # Drive the actual slug derivation (build ran skip_slugs=True ⇒ slugs are
+        # NULL). With the alias-sourced drift signal (n_cols=2) the variable is a
+        # #143 DRIFTER, so its slug derives from a drift-stable basis (`drift-*`) —
+        # NOT the latest folded column (`kolumnnamn`) or a plain name fallback the
+        # bug (n_cols=1) would have taken. open_db is read-only, so run the pass on
+        # a writable connection.
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        wconn = sqlite3.connect(str(db_path))
+        try:
+            populate_variable_slugs(wconn, slug_dir)
+            wconn.commit()
+            slug = wconn.execute(
+                "SELECT slug FROM variable WHERE variable_id = ?",
+                (variable_id,),
+            ).fetchone()[0]
+        finally:
+            wconn.close()
+        assert slug is not None
+        derivation = read_auto_derivations(slug_dir / "scb.auto.toml")
+        kind = derivation[f"{register_id}.{provider_key}"]
+        assert kind.startswith("drift-"), kind
 
 
 class TestVariableStateRenameMidLife:
@@ -2583,12 +2692,20 @@ class TestReplacedByEdges:
 
         ``scb_extra`` is appended verbatim to ``scb.toml`` — used by the #440
         curated-`[[replaced_by]]` tests to inject succession rows.
-        """
+
+        var_id 100 (`TestVar`) is delivered under TWO columns (`TestCol` /
+        `TestKolumn`, see `test_alias_anomaly`), so it is a #143 multi-column
+        DRIFTER — its auto slug derives from the variable NAME (`testvar`), not a
+        single column. This suite tests succession-edge RESOLUTION, not slug
+        derivation, and pins the `testcol` FQID in its curated `[[replaced_by]]`
+        rows, so curate its variable slug to keep those FQIDs stable (the same
+        isolation the register/variant slugs above already use)."""
         (slug_dir / "scb.toml").write_text(
             '[register."1"]\nslug = "testreg"\n'
             '[register."2"]\nslug = "otherreg"\n'
             '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."2.20"]\nslug = "foretag"\n' + scb_extra,
+            '[register_variant."2.20"]\nslug = "foretag"\n'
+            '[variable."1.100"]\nslug = "testcol"\n' + scb_extra,
             encoding="utf-8",
         )
         (slug_dir / "classifications.toml").write_text("", encoding="utf-8")

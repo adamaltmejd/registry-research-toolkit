@@ -989,16 +989,24 @@ class TestPrecheckSlugs:
             "INSERT INTO variable (register_id, provider_key, name) "
             "VALUES (1, '65', 'Utbildningsinriktning')"
         ).lastrowid
+        drift_cols = ("SunInr", "sun2000inr1", "sun2020inr1")
         for yr, col in (
-            ("2000", "SunInr"),
-            ("2016", "sun2000inr1"),
-            ("2020", "sun2020inr1"),
+            ("2000", drift_cols[0]),
+            ("2016", drift_cols[1]),
+            ("2020", drift_cols[2]),
         ):
             conn.execute(
                 "INSERT INTO variable_state (variable_id, register_variant_id, "
                 "valid_from, valid_to, data_type, delivery_column_name) "
                 "VALUES (?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        # #143 drift now reads variable_alias (fold-immune full column history).
+        for col in drift_cols:
+            conn.execute(
+                "INSERT INTO variable_alias (variable_id, register_variant_id, "
+                "delivery_column_name) VALUES (?, 10, ?)",
+                (vid, col),
             )
         conn.commit()
         populate_variable_slugs(conn, d)
@@ -1033,6 +1041,13 @@ class TestPrecheckSlugs:
                 "valid_from, valid_to, data_type, delivery_column_name) "
                 "VALUES (?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        # #143 drift now reads variable_alias (fold-immune full column history).
+        for col in ("BefKom", "BefKommun"):
+            conn.execute(
+                "INSERT INTO variable_alias (variable_id, register_variant_id, "
+                "delivery_column_name) VALUES (?, 10, ?)",
+                (vid, col),
             )
         conn.commit()
         populate_variable_slugs(conn, d)
@@ -1572,7 +1587,14 @@ class TestPopulateVariableSlugs:
         `delivery_column_name` drifts across editions. `cols` is earliest→latest
         (era N spans year 2000+N), so `cols[0]` is the earliest delivery column.
         Repeating a column (`["Syss", "Syss"]`) yields a constant, NON-drifting
-        variable (COUNT(DISTINCT)=1)."""
+        variable (COUNT(DISTINCT)=1).
+
+        The #143 drift signal (`n_cols`) reads `variable_alias` — the fold-immune
+        full column history — so mirror the production model: write one
+        `variable_alias` row per DISTINCT column alongside the per-era states
+        (`variable_alias ⊇ state delivery columns`). Without this the alias-
+        sourced count would be 0 and the variable would never register as a
+        drifter."""
         vid = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) VALUES (?, ?, ?)",
             (register_id, str(var_id), name),
@@ -1585,6 +1607,12 @@ class TestPopulateVariableSlugs:
                 "valid_from, valid_to, data_type, delivery_column_name) "
                 "VALUES (?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        for col in dict.fromkeys(cols):
+            conn.execute(
+                "INSERT INTO variable_alias (variable_id, register_variant_id, "
+                "delivery_column_name) VALUES (?, 10, ?)",
+                (vid, col),
             )
         conn.commit()
         return vid
@@ -1692,7 +1720,11 @@ class TestAutoDerivationMarker:
         register_id: int = 1,
     ) -> int:
         """Variable + one variable_state era per column. A single col → constant
-        (no drift); repeated/distinct cols exercise the drift arm."""
+        (no drift); repeated/distinct cols exercise the drift arm.
+
+        The #143 drift signal reads `variable_alias` (the fold-immune full column
+        history), so seed one alias row per DISTINCT column to mirror production
+        (`variable_alias ⊇ state delivery columns`)."""
         vid = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) VALUES (?, ?, ?)",
             (register_id, str(var_id), name),
@@ -1705,6 +1737,12 @@ class TestAutoDerivationMarker:
                 "valid_from, valid_to, data_type, delivery_column_name) "
                 "VALUES (?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        for col in dict.fromkeys(cols):
+            conn.execute(
+                "INSERT INTO variable_alias (variable_id, register_variant_id, "
+                "delivery_column_name) VALUES (?, 10, ?)",
+                (vid, col),
             )
         conn.commit()
         return vid
@@ -1882,6 +1920,13 @@ class TestAutoDerivationMarker:
                 "valid_from, valid_to, data_type, delivery_column_name) "
                 "VALUES (?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        # #143 drift now reads variable_alias (fold-immune full column history).
+        for col in ("BefKom", "BefKommun"):
+            conn.execute(
+                "INSERT INTO variable_alias (variable_id, register_variant_id, "
+                "delivery_column_name) VALUES (?, 10, ?)",
+                (vid, col),
             )
         conn.commit()
         d = self._slug_dir(tmp_path)
