@@ -1517,9 +1517,17 @@ class TestLinkValueSetClassifications:
             "(variable_id, value_set_id, classification_id) VALUES (964, 164, 99)"
         )
 
-        link_value_set_classifications(g.conn)
+        counts = link_value_set_classifications(g.conn)
         # Pre-existing claim untouched; vintage step added nothing.
         assert g.candidates() == [(964, 164, 99)]
+        # The counts must reflect ACTUAL emits (Codex P2): the pair satisfies the
+        # one-chain vintage heuristic but its (variable_id, value_set_id) was already
+        # claimed, so the emit guard skips it — it is NOT counted as reclaimed and
+        # stays in the residue. The pre-fix code counted off `_vs_vintage` and would
+        # report 1 here.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["vintage_variables_linked"] == 0
+        assert counts["multi_family_after"] == counts["multi_family"]
 
     def test_multi_state_span_aggregation_picks_latest(self) -> None:
         """One (variable_id, value_set_id) with TWO states — 2003–2006 (overlaps the

@@ -894,6 +894,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         "_vs_multi_onechain",
         "_vs_span",
         "_vs_vintage",
+        "_vs_vintage_emit",
     ):
         conn.execute(f"DROP TABLE IF EXISTS {tmp}")
 
@@ -1168,14 +1169,20 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         """
     )
 
-    # 7e. Emit the vintage map additively — same NOT EXISTS guard as the confident
-    # emit, so curated/feed/SCB/SOS candidates (and the confident emit above) always
-    # win; this only fills gaps. The `_cc_state_key` index created before step 6 is
-    # still live. Confident and multi-family sets are disjoint in `_vs_cls`, so the
-    # two emits never target the same value set.
+    # 7e. Materialize the post-guard emit set BEFORE emitting, so both the INSERT
+    # and the reclaim counts reflect what is ACTUALLY emitted (#494 Codex P2). The
+    # NOT EXISTS guard is the same the confident emit uses — curated/feed/SCB/SOS
+    # candidates (and the confident emit above) always win; this only fills gaps.
+    # Critically, evaluate the guard against the PRE-vintage state (feeds + curated +
+    # confident emit), so a vintage pick already claimed by another candidate is
+    # excluded here — and therefore NOT counted as reclaimed below. The
+    # `value_set_id IS ...` predicate is NULL-safe; the `_cc_state_key` index
+    # (created before step 6) is still live, which keeps the NOT EXISTS cheap, so it
+    # MUST be materialized before the `DROP INDEX` below. Confident and multi-family
+    # sets are disjoint in `_vs_cls`, so the two emits never target the same value set.
     conn.execute(
         """
-        INSERT INTO classification_candidate (variable_id, value_set_id, classification_id)
+        CREATE TEMP TABLE _vs_vintage_emit AS
         SELECT vv.variable_id, vv.value_set_id, vv.cls_id
         FROM _vs_vintage vv
         WHERE NOT EXISTS (
@@ -1183,6 +1190,13 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
             WHERE c.variable_id = vv.variable_id
               AND c.value_set_id IS vv.value_set_id
         )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO classification_candidate (variable_id, value_set_id, classification_id)
+        SELECT variable_id, value_set_id, cls_id
+        FROM _vs_vintage_emit
         """
     )
     conn.execute("DROP INDEX IF EXISTS _cc_state_key")
@@ -1210,17 +1224,21 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
 
     # Vintage-reclaim counts (#494): value sets / variables resolved by step 7, and
     # the still-ambiguous residue (multi_family minus the distinct value sets the
-    # vintage step actually reclaimed → the curation tail). multi_family keeps its
-    # pre-reclaim meaning (total multi-family BEFORE vintage reclaim).
+    # vintage step actually reclaimed → the curation tail). Counted off
+    # `_vs_vintage_emit` (the post-guard set), NOT `_vs_vintage` (Codex P2): a vintage
+    # pick already claimed by a feed/curated/confident candidate is skipped by the
+    # emit guard, so it is NOT counted as reclaimed and stays in the residue.
+    # multi_family keeps its pre-reclaim meaning (total multi-family BEFORE reclaim).
     vintage_value_sets_linked = conn.execute(
-        "SELECT COUNT(DISTINCT value_set_id) FROM _vs_vintage"
+        "SELECT COUNT(DISTINCT value_set_id) FROM _vs_vintage_emit"
     ).fetchone()[0]
     vintage_variables_linked = conn.execute(
-        "SELECT COUNT(DISTINCT variable_id) FROM _vs_vintage"
+        "SELECT COUNT(DISTINCT variable_id) FROM _vs_vintage_emit"
     ).fetchone()[0]
     multi_family_after = multi_family - vintage_value_sets_linked
 
     for tmp in (
+        "_vs_vintage_emit",
         "_vs_vintage",
         "_vs_span",
         "_vs_multi_onechain",
