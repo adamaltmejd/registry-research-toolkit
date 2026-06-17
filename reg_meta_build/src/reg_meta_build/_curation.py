@@ -8,7 +8,8 @@ The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `delivery_enrichment.py`, `variable_grafts.py`, `variable_related_to.py`,
 `variable_same_as.py`, `classification_links.py`. Each loader threads its own
 `code` / `prefix` / `file_name` through (typically via a module-level
-`functools.partial`) so its established error codes and messages are preserved.
+`functools.partial`) so its established error codes (and near-identical
+messages) are preserved.
 The exceptions are `classifications.py` / `fqid_slugs.py` / `extend_db.py`, whose
 data shapes differ enough that they don't share this scaffold.
 

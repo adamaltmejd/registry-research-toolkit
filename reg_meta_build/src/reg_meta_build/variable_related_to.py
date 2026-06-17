@@ -30,7 +30,12 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-from ._curation import curation_error, load_curation_entries, require_fqid
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_fqid,
+    resolve_variable_id,
+)
 
 # Curated relation-kind vocabulary. Grows with curation needs (add the kind here
 # + document its meaning). MUST stay disjoint from the auto:triage kind
@@ -178,22 +183,6 @@ def load_related_to(path: Path | None) -> tuple[CuratedRelatedTo, ...]:
     return tuple(out)
 
 
-def _resolve_variable(
-    conn: sqlite3.Connection, provider: str, register: str, variable: str
-) -> bool:
-    """True iff `provider/register/variable` resolves to a real variable (the
-    same provider.slug/register.slug/variable.slug join the auto materializer
-    uses, run in reverse: FQID → existence)."""
-    row = conn.execute(
-        "SELECT 1 FROM variable v "
-        "JOIN register r ON v.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
-        (provider, register, variable),
-    ).fetchone()
-    return row is not None
-
-
 def materialize_curated_related_to(
     conn: sqlite3.Connection,
     entries: tuple[CuratedRelatedTo, ...],
@@ -220,14 +209,14 @@ def materialize_curated_related_to(
             continue
         a_fqid = f"{e.a_provider}/{e.a_register}/{e.a_variable}"
         b_fqid = f"{e.b_provider}/{e.b_register}/{e.b_variable}"
-        if not _resolve_variable(conn, e.a_provider, e.a_register, e.a_variable):
+        if resolve_variable_id(conn, e.a_provider, e.a_register, e.a_variable) is None:
             raise curation_error(
                 "variable_related_to_unresolved",
                 f"variable_related_to edge endpoint {a_fqid!r} does not resolve "
                 "to a variable.",
                 "Fix the `a` FQID in reg_meta_build/variable_related_to.toml.",
             )
-        if not _resolve_variable(conn, e.b_provider, e.b_register, e.b_variable):
+        if resolve_variable_id(conn, e.b_provider, e.b_register, e.b_variable) is None:
             raise curation_error(
                 "variable_related_to_unresolved",
                 f"variable_related_to edge endpoint {b_fqid!r} does not resolve "
