@@ -38,12 +38,12 @@
 #
 # Enumerated code lists (the categorical value sets) remain a follow-up (#422):
 # categorical variables carry a data_type and embed the förteckning's inline code
-# list in `definition`, but mint no codes yet. The diagnosis fields (FK `Diagnos`/
-# `Diagnoskod`/`Diagnos1`/`Diagnos2`/`DIAGNOSKOD`) are ICD-9/10-coded and are
-# strong `classification = "ICD-10-SE"` candidates (FOHM SmiNet `diagnos`
-# precedent, #446), but the link is DEFERRED: older MiDAS periods are ICD-9, not
-# ICD-10-SE, and the vintage split needs maintainer confirmation before tagging.
-# Tracked as a #446-style follow-up. Diagnosis columns are marked is_sensitive.
+# list in `definition`, but mint no codes yet. The diagnosis-CODE fields
+# (`Diagnos*_kod`/`Diagnoskod`/`DIAGNOSKOD`/`BIDIAGNOS*`) ARE linked to the catalog
+# `ICD-10-SE` classification (FOHM SmiNet `diagnos` precedent, #446): FK codes
+# diagnoses per the version current in the data year, so ICD-10-SE tags the modern
+# bulk while the pre-1997 ICD-9 tail is a known historical caveat. Klartext (name)
+# diagnosis fields stay unlinked. All diagnosis columns are marked is_sensitive.
 #
 # valid_from is the register's documented coverage start where FK publishes one
 # (read from the förteckning's Information sheet / table titles). Where FK
@@ -222,7 +222,7 @@ definition = "Ersättningsslag:\n1. Egenlivränta \n2. Tandvård \n3. Särskilt 
 data_type = "text"
 variants = ["beslut"]
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnoskod"
 column = "Diagnoskod"
@@ -230,6 +230,7 @@ definition = "Diagnoskod enligt ICD-10."
 data_type = "text"
 is_sensitive = true
 variants = ["beslut"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Avslutsanledning"
@@ -369,7 +370,7 @@ definition = "Typ av timbelopp."
 data_type = "text"
 variants = ["pagaende-beslut-2002-201809", "pagaende-beslut-201810"]
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnos"
 column = "Diagnos"
@@ -377,6 +378,7 @@ definition = "Brukarens huvuddiagnos. Täckningen för denna uppgift är dålig.
 data_type = "text"
 is_sensitive = true
 variants = ["pagaende-beslut-201810", "fattade-beslut"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Dubbel_assistans"
@@ -933,7 +935,7 @@ definition = "Beslutsutfallet för beslutet."
 data_type = "text"
 variants = ["ansokningar-beslut"]
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnos_1"
 column = "Diagnos_1"
@@ -941,6 +943,7 @@ definition = "Diagnoskod på den sökande/barnet. Uppgiften finns från år 2014
 data_type = "text"
 is_sensitive = true
 variants = ["ansokningar-beslut"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Diagnos_2"
@@ -949,6 +952,7 @@ definition = "Diagnoskod på den sökande/barnet. Uppgiften finns från år 2014
 data_type = "text"
 is_sensitive = true
 variants = ["ansokningar-beslut"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Reparation"
@@ -1612,7 +1616,7 @@ definition = "Utbetald månadsersättning under delfallet"
 data_type = "decimal"
 variants = ["delfall-1-1", "delfall-2-1"]
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnos1_kod"
 column = "Diagnos1_kod"
@@ -1620,6 +1624,7 @@ definition = "Kod för registrerad huvuddiagnos enligt ICD-9/10, treställsnivå
 data_type = "text"
 is_sensitive = true
 variants = ["delfall-1-1", "delfall-2-1"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Diagnos1"
@@ -1636,6 +1641,7 @@ definition = "Kod för registrerad bidiagnos enligt ICD-9/10, treställsnivå"
 data_type = "text"
 is_sensitive = true
 variants = ["delfall-1-1", "delfall-2-1"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Diagnos2"
@@ -1791,7 +1797,7 @@ column = "Forsakradtyp"
 definition = "Klartext av skattad sysselsättning vid sjukfallets start"
 data_type = "text"
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnos_kod"
 column = "Diagnos_kod"
@@ -1799,6 +1805,7 @@ definition = "Kod för huvuddiagnos enligt ICD-10 vid sjukfallets start, trestä
 data_type = "text"
 is_sensitive = true
 variants = ["fall-1"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Diagnos"
@@ -1815,6 +1822,7 @@ definition = "Kod för huvuddiagnos enligt ICD-10 vid sjukfallets start, finaste
 data_type = "text"
 is_sensitive = true
 variants = ["fall-1"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Diagnos_fullstandig"
@@ -2104,7 +2112,7 @@ definition = "Sista dag i ersättningsperioden som utbetalningen gäller"
 data_type = "date"
 variants = ["mottagare", "barn"]
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnoskod (den vuxnas)"
 column = "Diagnoskod_vuxen"
@@ -2112,6 +2120,7 @@ definition = "Vi levererar oftast huvuddiagnos men även diagnoskod nr 2 finns"
 data_type = "text"
 is_sensitive = true
 variants = ["mottagare", "beviljanden"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Lopnr_barn"
@@ -2143,6 +2152,7 @@ definition = "Vi levererar oftast huvuddiagnos men även diagnoskod nr 2 finns"
 data_type = "text"
 is_sensitive = true
 variants = ["barn", "beviljanden"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Beslutsdatum"
@@ -2272,7 +2282,7 @@ definition = "Antal barn i ärendet, behövs för att förstå uppgift om nivå 
 data_type = "integer"
 variants = ["barn"]
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "Diagnoskod"
 column = "Diagnoskod"
@@ -2280,6 +2290,7 @@ definition = "Vi levererar oftast huvuddiagnos men även diagnoskod nr 2 finns"
 data_type = "text"
 is_sensitive = true
 variants = ["barn", "beviljanden"]
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "Beslutsdatum"
@@ -2320,7 +2331,7 @@ variants = ["beviljanden"]
 [[register]]
 key = "lakarintygsregistret"
 name = "Läkarintygsregistret"
-valid_from = "2016-01-01"
+valid_from = "2016-01-01"  # FLAG/GAP: no documented coverage start; heuristic (FK7804 e-intyg era). Register also holds older FK7263 intyg, so the real start is likely earlier — maintainer to confirm.
 purpose = "Läkarintyg (blankett FK7804, tidigare FK7263) med svar och delsvar som ligger till grund för bl.a. sjukpenning. Innehåller intygens fält: diagnoskod, sjukskrivningsperioder per omfattningsnivå, åtgärder och prognos."
 
 [[register.variable]]
@@ -2405,13 +2416,14 @@ column = "STUDIER"
 definition = "Fält 3 i intyget - kryssruta studier"
 data_type = "text"
 
-# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+# Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
 [[register.variable]]
 name = "DIAGNOSKOD"
 column = "DIAGNOSKOD"
 definition = "Fält 4 i intyget - kod huvuddiagnos"
 data_type = "text"
 is_sensitive = true
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "DIAGNOS_KLARTEXT"
@@ -2426,6 +2438,7 @@ column = "BIDIAGNOS1"
 definition = "Fält 4 i intyget - kod bidiagnos 1"
 data_type = "text"
 is_sensitive = true
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "BIDIAGNOS2"
@@ -2433,6 +2446,7 @@ column = "BIDIAGNOS2"
 definition = "Fält 4 i intyget - kod bidiagnos 2"
 data_type = "text"
 is_sensitive = true
+classification = "ICD-10-SE"
 
 [[register.variable]]
 name = "PERIOD_FROM"
@@ -3837,83 +3851,6 @@ variants = ["inbetalningar"]
 # ============================================================================
 # TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
 # ============================================================================
-
-# ============================================================================
-# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
-# ============================================================================
-
-# ============================================================================
-# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
-# ============================================================================
-
-# ============================================================================
-# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
-# ============================================================================
-
-# ============================================================================
-# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
-# ============================================================================
-
-# Curated thin-provider catalog — Försäkringskassan (FK), the Swedish Social
-# Insurance Agency. Read by reg_meta_build.sources.curated.CuratedAdapter (#422,
-# phase 2; FOHM was phase 1).
-#
-# FK publishes no machine-readable microdata-metadata export, so this TOML is the
-# authoritative, hand-curated source, transcribed from FK's PUBLIC register
-# documentation (the MiDAS variabelförteckningar + benefit/legal descriptions).
-# The delivered microdata is confidential restricted-access individdata (released
-# to researchers after review, pseudonymised: personnummer/organisationsnummer →
-# löpnummer, typically via SCB MONA); only the METADATA below is public.
-#
-# Scope (phase 2, maintainer-confirmed): the SWECOV-core benefit set — one
-# register per förmån (benefit), 26 registers. Source MiDAS ("Mikrodata för
-# analys av socialförsäkringen", successor to STORE) is FK's analysis-database
-# umbrella; most benefits ship as a monthly payment register, the four richest
-# (sjukpenning, sjuk- och aktivitetsersättning, föräldrapenning, tillfällig
-# föräldrapenning) as MiDAS fall/delfall data. Each is modeled as a single-table
-# (`_default`) variant — the MiDAS panel/episode explosion (Fall/Delfall × time
-# grain) is a delivery-construction shape, not a catalog variable axis.
-#
-# COLUMN TOKENS ARE CLEAN PUBLIC FIELD NAMES, NOT DELIVERY HEADERS. FK publishes
-# no delivery column headers (same situation as FOHM); each `column` is an ASCII
-# token derived from the documented public field name. The confidential SWECOV
-# delivery's delivery-shaped tokens (`P1105_LopNr_PersonNr`, `_lev2`/`_lev3`
-# suffixes, `DELFALL_*`/`DEL_*` aggregation artifacts, per-delivery spelling drift
-# `UTTAG_MANAD`/`utbetalningsmanad`/`Ar_manad`) were used ONLY to fix the register
-# scope and cross-check coverage — never copied into the global model.
-#
-# Enumerated code lists (the categorical value sets) remain a follow-up (#422):
-# categorical variables carry a data_type but mint no codes yet. The sickness
-# diagnosis fields (`sjukpenning.diagnos`, `sjuk-aktivitetsersattning.diagnos1/2`)
-# are ICD-9/10-coded and are strong `classification = "ICD-10-SE"` candidates
-# (FOHM SmiNet `diagnos` precedent, #446), but the link is DEFERRED: older MiDAS
-# periods are ICD-9, not ICD-10-SE, and the vintage split needs maintainer
-# confirmation before tagging. Tracked as a #446-style follow-up.
-#
-# valid_from is the register's documented coverage start where FK publishes one
-# (the 2018/2019 reforms, the 2020 pandemic benefits, the MiDAS 1994/2006/2014
-# starts). For long-history benefits where FK publishes no register data-coverage
-# start, it is the BENEFIT-INTRODUCTION date — a lower bound, flagged per register
-# `# valid_from: benefit-introduction lower bound — maintainer to confirm coverage`.
-# The real per-register MONA extract coverage is maintainer-held.
-#
-# Sources:
-#   MiDAS overview + the public catalog of variabelförteckningar — FK,
-#   "Beställning av individdata för forskning":
-#     https://www.forsakringskassan.se/statistik-och-analys/bestallning-av-individdata-och-statistik/bestallning-av-individdata-for-forskning
-#   MiDAS Sjukpenning och rehabiliteringspenning, version 1.02 (förmånsbeskrivning
-#   + Delfall 4-1 variabelförteckning + förmån/delförmån-koder):
-#     https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11f/1666183936381/dokumentation-av-midas-sjukpenning-och-rehabiliteringspenning.pdf
-#   MiDAS Föräldrapenning, PM 2020:2 (fall/delfall/panel variabelförteckning):
-#     https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1749726780627/midas-foraldrapenning-pm-2020-2.pdf
-#
-# NOTE: FK delivers pseudonymised ids; the catalog still models the source concept
-# as `personnummer`/`personnummer_barn`/`organisationsnummer` with is_identifier +
-# is_sensitive (matching FOHM's `personnummer`). Variable slugs stay AUTO
-# (populate_variable_slugs -> fk.auto.toml, transient/not committed), derived from
-# each variable's clean column. Regenerate .snapshot.json after edits:
-#   reg-meta-build precheck-slugs --update-snapshot
-
 
 [[register]]
 key = "aktivitetsstod"
