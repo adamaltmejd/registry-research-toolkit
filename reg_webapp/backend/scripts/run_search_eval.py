@@ -29,12 +29,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import sqlite3
 import sys
 import tomllib
 from pathlib import Path
 
-from reg_meta.db import db_path_from_args
+from reg_meta.db import db_path_from_args, open_db
 from reg_meta.queries import search
 from reg_webapp.golden import apply_golden_boost
 
@@ -57,8 +56,11 @@ _GROUP_CALL = {
 def _resolve_db(db_arg: str | None) -> Path:
     """Resolve ``--db``: an explicit FILE path is used directly; otherwise treat the arg
     (or None) as a directory and apply reg_meta's resolution rules."""
-    if db_arg and Path(db_arg).is_file():
-        return Path(db_arg)
+    if db_arg:
+        p = Path(db_arg).expanduser()
+        if p.is_file():
+            return p
+    # `db_path_from_args` handles its own expansion for the directory/None case.
     return db_path_from_args(db_arg)
 
 
@@ -115,8 +117,11 @@ def main() -> int:
         return 2
 
     cases = tomllib.loads(EVAL_PATH.read_text(encoding="utf-8"))["case"]
-    conn = sqlite3.connect(f"file:{db_file}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
+    # Open the release DB the way the app/CLI does — `open_db` uses `immutable=1`
+    # so a published WAL-mode DB on a read-only/shared install doesn't try to touch
+    # `-wal`/`-shm` sidecars (see reg_meta.db.open_db). `check_schema=False` mirrors
+    # the webapp's `catalog_conn` and `open_db` sets `row_factory = sqlite3.Row`.
+    conn = open_db(db_file, check_schema=False)
 
     rows: list[tuple] = []
     hit_total = hit_found = gap_total = gap_closed = 0

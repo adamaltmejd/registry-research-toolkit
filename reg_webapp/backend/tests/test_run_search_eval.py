@@ -35,6 +35,17 @@ def test_resolve_db_treats_directory_as_container(tmp_path: Path) -> None:
     assert run_search_eval._resolve_db(str(tmp_path)) == tmp_path / "reg_meta.db"
 
 
+def test_resolve_db_expands_tilde_file_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A ``~``-prefixed FILE path is expanded before the is-file check, so the
+    documented ``--db ~/.local/share/reg_meta/reg_meta.db`` form resolves."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    db_file = tmp_path / "reg_meta.db"
+    db_file.write_bytes(b"")
+    assert run_search_eval._resolve_db("~/reg_meta.db") == db_file
+
+
 def test_group_call_known_groups() -> None:
     assert run_search_eval._group_call("register") == ("description", False)
     assert run_search_eval._group_call("variable") == ("description", True)
