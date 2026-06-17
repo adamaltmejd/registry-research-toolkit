@@ -133,9 +133,9 @@ Four content-synced FTS5 indexes power search:
 which (1) neutralizes FTS5 operators so stray syntax can't raise, and (2) prefix-matches
 ("ink" → "inkomst"). `unicode61` folds diacritics on BOTH the index and the query side
 (å→a), so callers pass the query through unfolded. The LIKE-based fields
-(datacolumn/varname/value, and concept-group label folding) keep the raw substring
-pattern — only the FTS path is rewritten. Each register/variable/classification result
-row carries its navigable `fqid`.
+(datacolumn/varname/value, and concept-group label folding) bind escaped LIKE patterns
+so `%` and `_` in the user query match literally rather than as wildcards. Each
+register/variable/classification result row carries its navigable `fqid`.
 
 The docs index (`doc_queries.doc_search`, a separate `reg_meta_docs.db` FTS index) uses
 the same `_fts_match_query` builder, so a raw doc query is operator-safe and

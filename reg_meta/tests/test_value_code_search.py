@@ -114,6 +114,29 @@ def test_dedup_code_id_appears_once(conn: sqlite3.Connection) -> None:
     assert codes.count("0180") == 1, f"expected one dedup'd hit, got {codes}"
 
 
+def test_code_like_metacharacters_match_literally(conn: sqlite3.Connection) -> None:
+    _seed_register(conn, 1, "reg")
+    vid = _seed_variable(conn, 1, "10", "Var", "var")
+    for code_id, code in (
+        (1, "12_5"),
+        (2, "120"),
+        (3, "12%5"),
+        (4, "129"),
+    ):
+        _seed_code(conn, code_id, code, f"Label {code_id}")
+        _map(conn, code_id, vid)
+    _finalize(conn)
+
+    def _codes(query: str) -> set[str]:
+        return {
+            r["code"]
+            for r in search(conn, query, field="value", type="value")["results"]
+        }
+
+    assert _codes("12_") == {"12_5"}
+    assert _codes("12%") == {"12%5"}
+
+
 def test_register_scope_drops_out_of_scope_only_owners(
     conn: sqlite3.Connection,
 ) -> None:
