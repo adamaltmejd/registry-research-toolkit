@@ -3075,7 +3075,7 @@ variants = ["abonnemang"]
 name = "LANGD_AVTAL_MANAD"
 column = "LANGD_AVTAL_MANAD"
 definition = "Längd på abonnemangsavtal i antal påbörjade månader."
-data_type = "text"
+data_type = "integer"
 variants = ["abonnemang"]
 
 [[register.variable]]
@@ -3346,8 +3346,8 @@ data_type = "decimal"
 variants = ["arenden-detaljerat", "arende-atgard"]
 
 [[register.variable]]
-name = "KORR_ BELOPP"
-column = "KORR__BELOPP"
+name = "KORR_BELOPP"  # source förteckning label "KORR_ BELOPP" (stray space); canonical field KORR_BELOPP
+column = "KORR_BELOPP"
 definition = "Den totala förändring av tandvårdsstödet som sker i ett ärende av typ Korrigeringsärende eller Korrigering BTB Det tandvårdsstöd som betalas ut ytterligare om positivt belopp, återkrav genom kvittning om negativt belopp."
 data_type = "decimal"
 variants = ["arenden-detaljerat"]
