@@ -822,8 +822,12 @@ or re-pointed — linkage is additive.
    candidate vintage whose `[valid_from, valid_to]` (INTEGER years, NULL = unbounded)
    overlaps the span, then emit it additively. If even one candidate is off-chain (a
    genuine cross-family coincidence, e.g. SNI vs SSYK), the whole set stays in the
-   residue for curation. Real-corpus result: 1,027 value sets / 962 variables reclaimed;
-   multi-family residue 2,215 → 1,188.
+   residue for curation. The emit is additive (NOT EXISTS guard), and the reclaim count
+   is measured off the emitted set — a one-chain pair the SCB/SOS feed already
+   classified is skipped and NOT counted as reclaimed. Real-corpus result: 224 value
+   sets / 235 variables newly reclaimed (multi-family residue 2,215 → 1,991; most
+   one-chain picks were already feed-classified, so the genuinely-new contribution is
+   the 224).
 
 **Design decisions:**
 
