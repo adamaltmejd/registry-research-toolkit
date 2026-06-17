@@ -1,20 +1,28 @@
 ---
 name: registry-code-review
 description: >-
-  Registry Research Toolkit fallback code review checklist. Use only when the built-in
-  review capability is unavailable, when the user explicitly asks for this skill, or
-  when a repo-specific checklist is needed in addition to built-in review; do not use
-  as the default independent review pass.
+  Registry Research Toolkit callable code review workflow. Use when asked to review a
+  Registry PR, branch, range, or working-tree diff; when pr-pipeline needs a callable
+  review pass because slash-command review is unavailable; or when a repo-specific
+  review checklist is needed. Review only; do not mutate files.
 ---
 
 # Registry Code Review
 
 ## Scope
 
-Review only. Prefer the built-in review capability for normal independent review. Use
-this skill as an explicit fallback or supplemental repository checklist. Do not mutate
-files, commit, push, regenerate artifacts, or apply fixes. Findings lead the response,
-ordered by severity, with file and line references.
+Review only. This is the repo-scoped callable review workflow for Registry PRs/diffs.
+Use it when the top-level built-in review command is unavailable from the current
+workflow or when explicitly asked. In `pr-pipeline`, run this skill in a fresh subagent
+when available so the review is independent of the authoring session. The subagent
+reports findings back to the lead agent; it does not mutate files, commit, push,
+regenerate artifacts, apply fixes, or post GitHub comments unless explicitly instructed.
+Findings lead the response, ordered by severity, with file and line references.
+
+When this skill is run by the same session that authored the patch because subagents are
+unavailable, state that review surface in the closeout. It is a diagnostic checklist,
+not independent review evidence, and must not satisfy the `pr-pipeline` ready/merge gate
+by itself.
 
 ## Inputs
 
@@ -30,6 +38,25 @@ gh api "repos/<owner>/<repo>/pulls/<pr>/comments"
 Read linked issues, comments, repository guidance (`AGENTS.md`; `CLAUDE.md` is
 intentionally equivalent for agent surfaces that use it), relevant
 `<package>/DESIGN.md`, `ARCHITECTURE.md` for cross-package work, and touched code.
+
+## Review Method
+
+1. Establish context before reading line-by-line:
+   - identify the intended behavior from the issue/PR body and linked comments;
+   - note PR size, touched packages, generated files, and CI/check status;
+   - decide whether the diff needs package design docs, workflow graph inspection,
+     frontend smoke testing, or real-data validation evidence.
+2. Do a high-level pass:
+   - compare the implementation shape to the issue scope and repo architecture;
+   - inspect changed public contracts, schemas, CLIs, API responses, workflows, and
+     persisted/generated artifacts;
+   - check whether tests exercise the behavior that could actually regress.
+3. Do a line-level pass:
+   - trace changed control/data flow through call sites, not just the edited lines;
+   - search for existing helpers or adjacent patterns before accepting new abstractions;
+   - verify edge cases, failure paths, cleanup, determinism, and boundary validation.
+4. Re-review only the current head. On follow-up passes, confirm which prior findings
+   were fixed and report only remaining material issues.
 
 ## Review Lens
 
