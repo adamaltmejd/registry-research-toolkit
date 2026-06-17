@@ -255,7 +255,7 @@ panel_time_grain = "row"
 [register_variant."7493079423846267575.5703128771691645425"]
 slug = "barn"
 display_group = "Merkostnadsersättning"
-panel_entity_key = "lopnr"
+panel_entity_key = "lopnr-barn"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
@@ -287,7 +287,7 @@ panel_time_grain = "row"
 [register_variant."6302817431190760455.9055963153352559129"]
 slug = "barn"
 display_group = "Omvårdnadsbidrag"
-panel_entity_key = "lopnr"
+panel_entity_key = "lopnr-barn"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 

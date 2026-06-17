@@ -1084,7 +1084,7 @@ variants = ["fp-delfall1", "fl-delfall1"]
 name = "FODDAT_BARN"
 column = "FODDAT_BARN"
 definition = "Födelsedatum för barnet"
-data_type = "text"
+data_type = "date"
 variants = ["fp-delfall1", "fl-delfall1"]
 
 [[register.variable]]
@@ -1408,6 +1408,8 @@ name = "MOTTAGARE"
 column = "MOTTAGARE"
 definition = "Löpnummerför samtliga mottagare under fallet."
 data_type = "text"
+is_identifier = true
+is_sensitive = true
 variants = ["fall-2", "delfall2-1-8"]
 
 [[register.variable]]
@@ -2746,6 +2748,8 @@ name = "VÅRDGIVARE"
 column = "VÅRDGIVARE"
 definition = "Löpnummer"
 data_type = "text"
+is_identifier = true
+is_sensitive = true
 variants = ["atgarder", "betalningar", "efterhandskontroll", "arenden-detaljerat"]
 
 [[register.variable]]
@@ -2753,6 +2757,8 @@ name = "MOTTAGNING"
 column = "MOTTAGNING"
 definition = "Löpnummer"
 data_type = "text"
+is_identifier = true
+is_sensitive = true
 variants = ["atgarder", "betalningar", "efterhandskontroll", "arenden-detaljerat"]
 
 [[register.variable]]
@@ -2767,6 +2773,8 @@ name = "BEHANDLARE"
 column = "BEHANDLARE"
 definition = "Löpnummer. Anger behandlande tandläkare/tandhygienist för åtgärden."
 data_type = "text"
+is_identifier = true
+is_sensitive = true
 variants = ["atgarder", "arenden-detaljerat"]
 
 [[register.variable]]
@@ -3057,8 +3065,8 @@ data_type = "text"
 variants = ["abonnemang"]
 
 [[register.variable]]
-name = "MOTTANING_LAN_BESK"
-column = "MOTTANING_LAN_BESK"
+name = "MOTTAGNING_LAN_BESK"  # source förteckning typo "MOTTANING"; corrected to pair with MOTTAGNING_LAN_KOD
+column = "MOTTAGNING_LAN_BESK"
 definition = "Mottagningens (i abonnemangsavtalet) län vid tidpunkten för sista dagen i laddningsmånaden."
 data_type = "text"
 variants = ["abonnemang"]
@@ -3237,14 +3245,14 @@ variants = ["efterhandskontroll", "arenden-detaljerat"]
 name = "BESLUTSTIDPUNKT"
 column = "BESLUTSTIDPUNKT"
 definition = "Datum då beslut fattades i efterhandskontrollen"
-data_type = "text"
+data_type = "date"
 variants = ["efterhandskontroll", "arenden-detaljerat", "arende-atgard"]
 
 [[register.variable]]
 name = "TANDVARDSSTOD"
 column = "TANDVARDSSTOD"
 definition = "Totalt tandvårdsstöd för ärendet. Detta är en summering av utnyttjat ATB, STB och högkostnadsskydd i ärendet."
-data_type = "text"
+data_type = "decimal"
 variants = ["efterhandskontroll", "arenden-detaljerat"]
 
 [[register.variable]]
@@ -3292,21 +3300,21 @@ variants = ["arenden-detaljerat"]
 name = "HCP_INTERVALL_0"
 column = "HCP_INTERVALL_0"
 definition = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som är grundat på den del av det ersättningsgrundande belopp i besöket (inom ersättningsperioden) som ligger under 3000 kr. Detta fält stämmer inte alltid för korrigeringsärenden, speciellt de ärenden där manuell korrigering gjorts."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
 name = "HCP_INTERVALL_1"
 column = "HCP_INTERVALL_1"
 definition = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som är grundat på den del av ersättningsgrundande belopp i besöket (inom ersättningsperioden) som ligger mellan 3000 – 15000 kr. Detta fält stämmer inte alltid för korrigeringsärenden, speciellt de ärenden där manuell korrigering gjorts."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
 name = "HCP_INTERVALL_2"
 column = "HCP_INTERVALL_2"
 definition = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som är grundat på den del av ersättningsgrundande belopp i besöket (inom ersättningsperioden) som ligger över 15000 kr. Detta fält stämmer inte alltid för korrigeringsärenden, speciellt de ärenden där manuell korrigering gjorts."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
@@ -3383,21 +3391,21 @@ variants = ["arenden-detaljerat"]
 name = "TANDVARDSSTOD_FORE_KORR"
 column = "TANDVARDSSTOD_FORE_KORR"
 definition = "Totalt tandvårdsstöd som betalats ut till och med föregående ärende i ärendekedjan vid korrigering."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
 name = "MAN_TANDVARDSSTOD"
 column = "MAN_TANDVARDSSTOD"
 definition = "Det belopp som totalt tandvårdsstöd (TANDVARDSSTOD) manuellt har justerats med."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
 name = "KORR_MAN_TANDVARDSSTOD"
 column = "KORR_MAN_TANDVARDSSTOD"
 definition = "Den korrigering som skett av manuellt tandvårdsstöd (MAN_TANDVARDSSTOD) i aktuellt ärende."
-data_type = "text"
+data_type = "decimal"
 variants = ["arenden-detaljerat"]
 
 [[register.variable]]
