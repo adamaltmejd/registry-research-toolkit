@@ -772,6 +772,12 @@ def _code_owner_annotations_batch(
             )
 
         # Classifications: catalog-scoped, so a register scope leaves them empty.
+        # This owner definition (variables ∪ classifications, with NO is_valid/validity
+        # filter on classification_code) is MIRRORED at build time by the value_code_fts
+        # owner filter in reg_meta_build/db.py `_populate_fts` (#478). Any change to what
+        # counts as a classification owner here (e.g. adding an is_valid predicate) MUST
+        # be mirrored there, or the search index and the owner annotation desync —
+        # context-less hits leak into search, or valid classification codes vanish.
         if not reg_ids:
             for row in conn.execute(
                 "SELECT cc.code_id, COUNT(*) AS n "
