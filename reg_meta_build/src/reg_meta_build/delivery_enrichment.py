@@ -43,11 +43,12 @@ the TOML from the delivery lists when it grows.
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error, load_curation_entries
+from ._curation import curation_error, load_curation_entries, require_str
 
 if TYPE_CHECKING:
     import sqlite3
@@ -104,16 +105,12 @@ def repo_delivery_enrichment_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_str(entry: dict, field: str, context: str) -> str:
-    value = entry.get(field)
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "delivery_enrichment_invalid",
-            f"delivery_enrichment {context} needs `{field}` as a non-empty "
-            f"string, got {value!r}.",
-            f'Give `{field} = "<value>"` in reg_meta_build/delivery_enrichment.toml.',
-        )
-    return value
+_require_str = functools.partial(
+    require_str,
+    code="delivery_enrichment_invalid",
+    prefix="delivery_enrichment",
+    file_name="delivery_enrichment.toml",
+)
 
 
 def _parse_register_variable(entry: dict, kind: str) -> tuple[str, str, str]:

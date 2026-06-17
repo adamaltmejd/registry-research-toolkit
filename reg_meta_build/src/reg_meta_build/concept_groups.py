@@ -39,6 +39,7 @@ edge/rank/vintage duty.
 
 from __future__ import annotations
 
+import functools
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
@@ -48,7 +49,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 from ._components import DisjointSet
-from ._curation import curation_error, load_curation_entries
+from ._curation import curation_error, load_curation_entries, require_str
 
 # ── token vocabularies + guards ─────────────────────────────────────────────
 
@@ -154,16 +155,12 @@ def repo_concept_groups_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_str(entry: dict, field: str, context: str) -> str:
-    value = entry.get(field)
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "concept_groups_invalid",
-            f"concept_groups {context} needs `{field}` as a non-empty string, "
-            f"got {value!r}.",
-            f'Give `{field} = "<value>"` in reg_meta_build/concept_groups.toml.',
-        )
-    return value
+_require_str = functools.partial(
+    require_str,
+    code="concept_groups_invalid",
+    prefix="concept_groups",
+    file_name="concept_groups.toml",
+)
 
 
 def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:

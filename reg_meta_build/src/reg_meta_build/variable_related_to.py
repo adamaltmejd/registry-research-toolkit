@@ -25,11 +25,12 @@ absent in wheel installs and synthetic test builds.
 
 from __future__ import annotations
 
+import functools
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-from ._curation import curation_error, load_curation_entries
+from ._curation import curation_error, load_curation_entries, require_fqid
 
 # Curated relation-kind vocabulary. Grows with curation needs (add the kind here
 # + document its meaning). MUST stay disjoint from the auto:triage kind
@@ -75,27 +76,13 @@ def repo_variable_related_to_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_fqid(entry: dict, field: str) -> tuple[str, str, str]:
-    """Parse a `provider/register/variable` 3-segment FQID string (mirrors
-    concept_groups' inline 2-segment split)."""
-    value = entry.get(field)
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "variable_related_to_invalid",
-            f"variable_related_to [[related]] needs `{field}` as a non-empty "
-            f"string, got {value!r}.",
-            f'Give `{field} = "scb/lisa/<variable>"`-style 3-segment FQIDs in '
-            "reg_meta_build/variable_related_to.toml.",
-        )
-    parts = value.split("/")
-    if len(parts) != 3 or not all(parts):
-        raise curation_error(
-            "variable_related_to_invalid",
-            f"variable_related_to {field} {value!r} must be a 3-segment "
-            "`provider/register/variable` FQID.",
-            'Give `a = "scb/lisa/<variable>"`-style 3-segment FQIDs.',
-        )
-    return (parts[0], parts[1], parts[2])
+_require_fqid = functools.partial(
+    require_fqid,
+    code="variable_related_to_invalid",
+    prefix="variable_related_to",
+    entry_table="[[related]]",
+    file_name="variable_related_to.toml",
+)
 
 
 def load_related_to(path: Path | None) -> tuple[CuratedRelatedTo, ...]:

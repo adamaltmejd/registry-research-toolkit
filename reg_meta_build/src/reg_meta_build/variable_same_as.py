@@ -28,11 +28,12 @@ synthetic test builds.
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error, load_curation_entries
+from ._curation import curation_error, load_curation_entries, require_fqid
 
 if TYPE_CHECKING:
     import sqlite3
@@ -67,27 +68,13 @@ def repo_variable_same_as_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_fqid(entry: dict, field: str) -> tuple[str, str, str]:
-    """Parse a `provider/register/variable` 3-segment FQID string (mirrors
-    `variable_related_to._require_fqid`)."""
-    value = entry.get(field)
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "variable_same_as_invalid",
-            f"variable_same_as [[same_as]] needs `{field}` as a non-empty "
-            f"string, got {value!r}.",
-            f'Give `{field} = "scb/lisa/<variable>"`-style 3-segment FQIDs in '
-            "reg_meta_build/variable_same_as.toml.",
-        )
-    parts = value.split("/")
-    if len(parts) != 3 or not all(parts):
-        raise curation_error(
-            "variable_same_as_invalid",
-            f"variable_same_as {field} {value!r} must be a 3-segment "
-            "`provider/register/variable` FQID.",
-            'Give `a = "scb/lisa/<variable>"`-style 3-segment FQIDs.',
-        )
-    return (parts[0], parts[1], parts[2])
+_require_fqid = functools.partial(
+    require_fqid,
+    code="variable_same_as_invalid",
+    prefix="variable_same_as",
+    entry_table="[[same_as]]",
+    file_name="variable_same_as.toml",
+)
 
 
 def load_same_as(path: Path | None) -> tuple[CuratedSameAs, ...]:
