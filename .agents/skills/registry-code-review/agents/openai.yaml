@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Code Review"
+  short_description: "Fallback registry review checklist"
+  default_prompt: "Use $registry-code-review as a fallback checklist for a registry PR diff."
+policy:
+  allow_implicit_invocation: false

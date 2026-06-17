@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Issue Pulse"
+  short_description: "Run issue tracker heartbeat"
+  default_prompt: "Use $issue-pulse to run one registry issue tracker heartbeat tick."
+policy:
+  allow_implicit_invocation: true

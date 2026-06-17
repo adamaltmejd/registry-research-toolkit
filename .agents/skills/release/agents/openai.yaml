@@ -1,0 +1,6 @@
+interface:
+  display_name: "Registry Release"
+  short_description: "Run registry package releases"
+  default_prompt: "Use $release to prepare and publish a registry toolkit package release."
+policy:
+  allow_implicit_invocation: true

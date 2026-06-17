@@ -1,0 +1,163 @@
+---
+name: release
+description: Registry Research Toolkit release workflow for
+  /Users/adam/Code/registry-research-toolkit. Use when the user explicitly asks to run
+  the release workflow, bump and publish reg_meta, reg_meta_build, or mock_data_wizard,
+  create package tags/releases, upload reg_meta DB assets, or monitor publish workflows.
+---
+
+# Registry Release
+
+## Start Condition
+
+Never start a release unless the user explicitly asks for one. Stop and ask if package
+or bump level remains ambiguous. Major bumps require explicit confirmation after showing
+current and planned versions.
+
+## Packages
+
+- `reg_meta`: `reg_meta/pyproject.toml`, `reg_meta/src/reg_meta/__init__.py`, workflow
+  `publish_reg_meta.yml`.
+- `reg_meta_build`: `reg_meta_build/pyproject.toml`,
+  `reg_meta_build/src/reg_meta_build/__init__.py`, workflow
+  `publish_reg_meta_build.yml`.
+- `mock_data_wizard`: `mock_data_wizard/pyproject.toml`,
+  `mock_data_wizard/src/mock_data_wizard/__init__.py`, workflow
+  `publish_mock_data_wizard.yml`.
+
+Publish workflows are unattended as of 2026-06-10; do not rely on a PyPI environment
+approval pause.
+
+## Resolve Inputs
+
+1. Resolve bump: `patch`, `minor`, or `major`.
+
+2. Resolve package. If omitted, compare unreleased commits since each package's last
+   `<package>/vX.Y.Z` tag:
+
+   ```sh
+   git log --oneline <tag>..HEAD -- <package>/
+   ```
+
+3. If multiple packages changed, release sequentially. For schema-affecting builder
+   changes, release `reg_meta_build` before the `reg_meta` asset release that consumes
+   it.
+
+## Per-Package Steps
+
+1. Determine new semver from `<package>/pyproject.toml`.
+
+2. Draft release notes from commits since the last package tag. Include relevant
+   PR/issue numbers and contributor credit where applicable. Show notes before
+   proceeding.
+
+3. Bump both version files:
+
+   - `<package>/pyproject.toml`
+   - `<package>/src/<package>/__init__.py`
+
+4. For `reg_meta`, check schema changes:
+
+   ```sh
+   git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/db.py reg_meta/src/reg_meta/db.py
+   git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/doc_db.py reg_meta/src/reg_meta/doc_db.py
+   ```
+
+   If DDL or doc DB reads changed, ensure `SCHEMA_VERSION` or `DOC_SCHEMA_VERSION` was
+   bumped appropriately.
+
+5. Update lockfile and verify:
+
+   ```sh
+   uv lock
+   bash scripts/check_versions.sh
+   uv run python -m pytest <package>/ -x -q
+   uv run ruff check
+   uv run ruff format --check
+   ```
+
+6. Commit only version/lock/schema-bump files:
+
+   ```text
+   Bump <package> version to X.Y.Z
+   ```
+
+7. Push, then create a draft GitHub release. The tag is created by this command; do not
+   create it separately.
+
+   ```sh
+   gh release create <package>/vX.Y.Z --draft --title "<package> vX.Y.Z" --notes-file <notes-file>
+   ```
+
+## reg_meta Assets
+
+Every `reg_meta` release must carry both `reg_meta.db.zst` and `reg_meta_docs.db.zst`
+before publishing.
+
+Build a fresh main DB if `SCHEMA_VERSION` changed, the release is major, or consumed
+`reg_meta_build/` content changed since the prior `reg_meta` tag excluding
+`reg_meta_build/docs/`. Otherwise copy forward the newest prior asset.
+
+Fresh main DB:
+
+```sh
+uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ --providers scb,sos
+uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" ~/.local/share/reg_meta/reg_meta.db
+zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
+gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
+rm reg_meta.db.zst
+```
+
+Build a fresh doc DB if `DOC_SCHEMA_VERSION` changed, `reg_meta_build/docs/` changed, or
+the release is major. Otherwise copy forward the newest prior docs asset.
+
+Fresh doc DB:
+
+```sh
+uv run reg-meta-build build-docs
+uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" ~/.local/share/reg_meta/reg_meta_docs.db
+zstd -3 -T0 ~/.local/share/reg_meta/reg_meta_docs.db -o reg_meta_docs.db.zst
+gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
+rm reg_meta_docs.db.zst
+```
+
+Copy forward:
+
+```sh
+gh release download reg_meta/v<prev> --pattern <asset-name>
+gh release upload reg_meta/vX.Y.Z <asset-name>
+rm <asset-name>
+```
+
+Verify both assets before publishing:
+
+```sh
+gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
+```
+
+## Publish And Monitor
+
+Publish:
+
+```sh
+gh release edit <package>/vX.Y.Z --draft=false
+```
+
+Monitor:
+
+```sh
+gh run list --workflow=<workflow> --limit 1 --json databaseId,url
+gh run watch <run-id> --exit-status
+```
+
+Verify PyPI:
+
+```sh
+curl -s https://pypi.org/pypi/<package>/json | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['version'])"
+```
+
+## Recovery
+
+If release creation fails after the bump commit was pushed, retry creation. If CI fails
+after release creation, delete the release and tag, fix the issue, and restart from the
+verified bump step.
