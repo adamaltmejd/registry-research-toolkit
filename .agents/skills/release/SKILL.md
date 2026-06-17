@@ -2,9 +2,9 @@
 name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
-  the release workflow, bump and publish reg_meta, reg_meta_build, reg_monabundle, or
-  mock_data_wizard, create package tags/releases, upload reg_meta DB assets, or monitor
-  publish workflows.
+  the release workflow, bump and publish reg_meta, reg_meta_build, reg_schema,
+  reg_monabundle, or mock_data_wizard, create package tags/releases, upload reg_meta DB
+  assets, or monitor publish workflows.
 ---
 
 # Registry Release
@@ -22,6 +22,9 @@ current and planned versions.
 - `reg_meta_build`: `reg_meta_build/pyproject.toml`,
   `reg_meta_build/src/reg_meta_build/__init__.py`, workflow
   `publish_reg_meta_build.yml`.
+- `reg_schema`: `reg_schema/pyproject.toml`, `reg_schema/src/reg_schema/__init__.py`; no
+  publish workflow exists yet. Before the first PyPI release, stop and add or confirm
+  the publish path instead of silently omitting the package.
 - `reg_monabundle`: `reg_monabundle/pyproject.toml`,
   `reg_monabundle/src/reg_monabundle/__init__.py`; no publish workflow exists yet.
   Before the first PyPI release, stop and add or confirm the publish path instead of
