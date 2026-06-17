@@ -16,6 +16,9 @@ Current providers:
 - `fk` — Försäkringskassan (MiDAS social-insurance benefit registers); thin
   curated provider read from `input_data/Forsakringskassan/fk.toml` via
   `CuratedAdapter`.
+- `lakemedelsverket` — Läkemedelsverket (suspected adverse-drug-reaction
+  register); thin curated provider read from
+  `input_data/Lakemedelsverket/lakemedelsverket.toml` via `CuratedAdapter`.
 
 The post-refactor contract every adapter must implement is the `IRAdapter`
 protocol below. Native-format providers get their own module (`scb.py`,

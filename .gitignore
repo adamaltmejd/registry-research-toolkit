@@ -43,6 +43,7 @@ reg_meta_build/input_data/*
 # which would start tracking the untracked SCB/Socialstyrelsen/swecov seed dirs.
 !reg_meta_build/input_data/Folkhalsomyndigheten/
 !reg_meta_build/input_data/Forsakringskassan/
+!reg_meta_build/input_data/Lakemedelsverket/
 # Under classifications/ only the normalized CSVs (+ manifest.json) are tracked.
 # The raw SOS source workbooks the fetch script downloads are not — they
 # regenerate from scripts/fetch_sos_classifications.py.

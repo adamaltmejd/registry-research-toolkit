@@ -1,0 +1,195 @@
+# Curated thin-provider catalog — Läkemedelsverket (LV), the Swedish Medical
+# Products Agency (MPA). Read by reg_meta_build.sources.curated.CuratedAdapter
+# (#443; FOHM/FK were the first thin providers).
+#
+# Source: Läkemedelsverket's own field documentation `fältbeskrivning.xlsx`
+# (dated 2023-03-27), the authoritative delivery field list for the suspected
+# adverse-drug-reaction register. The microdata is confidential restricted-access
+# individdata (released to researchers via SCB MONA); only the METADATA below is
+# public. `column` tokens are kept SOURCE-EXACT (the documented SAS field names —
+# `IdNumber`, `atc4pos`, `Pt`/`Hlt`/`Hlgt`/`Soc`, `SeqRpt`, …) since the column is
+# the delivery alias + auto-slug; `Event Reported Term` (the one field name with
+# spaces) is tokenised to `Event_Reported_Term`.
+#
+# Scope: the documented/delivered field set is the VACCINE adverse-reaction part
+# of the register — covid-19 vaccines + Pandemrix (the `Vaccin` field), plus other
+# vaccines by 4-position ATC (`atc4pos`). The underlying national spontaneous-ADR
+# database (SWEDIS) has run since 1965; this documented extract is vaccine-focused
+# and Pandemrix-era onward, so valid_from is flagged below.
+#
+# Reactions are MedDRA-coded (Pt/Hlt/Hlgt/Soc — PT/HLT/HLGT/SOC levels). MedDRA is
+# NOT a declared catalog classification (it is licensed, not open-shippable), so
+# those fields carry no `classification` link — a follow-up if a MedDRA
+# classification is ever seeded. `atc4pos` IS linked to the catalog ATC
+# classification (FOHM NVR `vaccin` precedent, #446), at the coarse 4-position
+# (chemical-subgroup) level the register delivers.
+#
+# Sources:
+#   Läkemedelsverket — Rapportera misstänkta biverkningar:
+#     https://www.lakemedelsverket.se/sv/rapportera-biverkningar
+#   Spontanrapportering av misstänkta biverkningar (Läkemedelsboken):
+#     https://lakemedelsboken.se/generella-kapitel/biverkningar-av-lakemedel/spontanrapportering-av-misstankta-biverkningar/
+#   National spontaneous-reporting database since 1965 (peer-reviewed):
+#     https://pubmed.ncbi.nlm.nih.gov/16739241/
+#
+# Two delivered SAS tables → two variants of one register: `handlagda`
+# (SU_Handlagda_klar, 451 467 färdighandlagda poster, 16 fält) and `arbetsflode`
+# (SU_WF_klar, 24 609 poster i arbetsflödet, 17 fält — adds the free-text
+# `Event Reported Term`). Variable slugs stay AUTO (lakemedelsverket.auto.toml).
+
+[[register]]
+key = "biverkningar"
+name = "Misstänkta läkemedelsbiverkningar"
+valid_from = "1965-01-01"  # FLAG/GAP: SWEDIS spontaneous-ADR reporting since 1965, but the documented vaccine-focused fields cover Pandemrix (2009) + covid-19 (2021) onward — maintainer to confirm the modeled coverage start
+purpose = """
+Läkemedelsverkets register över misstänkta biverkningar av läkemedel och vacciner \
+(spontanrapporter från hälso- och sjukvården och från privatpersoner). Efter \
+granskning vidarebefordras avidentifierade rapporter till den europeiska \
+biverkningsdatabasen EudraVigilance. Reaktioner kodas med MedDRA, vacciner med \
+ATC. Det dokumenterade fältsetet avser vaccinbiverkningar (covid-19-vacciner och \
+Pandemrix samt övriga vacciner).\
+"""
+
+  [[register.variant]]
+  key = "handlagda"
+  name = "Färdighandlagda biverkningsrapporter"
+  description = """
+Färdighandlagda (granskade och avslutade) biverkningsrapporter \
+(SU_Handlagda_klar): 451 467 poster, 16 fält. Saknar den fria texten \
+Event Reported Term.\
+"""
+
+  [[register.variant]]
+  key = "arbetsflode"
+  name = "Biverkningsrapporter i arbetsflödet"
+  description = """
+Biverkningsrapporter som ännu inte är färdighandlagda, i arbetsflödet \
+(SU_WF_klar): 24 609 poster, 17 fält. Innehåller även den fria texten \
+Event Reported Term (rapporterad misstänkt biverkning i klartext).\
+"""
+
+[[register.variable]]
+name = "Datum första mottagande"
+column = "InitReceiveDate"
+definition = "Datum då rapporten först mottogs."
+data_type = "date"
+
+[[register.variable]]
+name = "Förnamn"
+column = "FirstName"
+definition = "Förnamn på den drabbade (anges endast om personnummer saknas)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Efternamn"
+column = "LastName"
+definition = "Efternamn på den drabbade (anges endast om personnummer saknas)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Personnummer"
+column = "IdNumber"
+definition = "Person- eller samordningsnummer för den drabbade (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Födelsedatum"
+column = "DateOfBirth"
+definition = "Födelsedatum för den drabbade (anges endast om personnummer saknas)."
+data_type = "date"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vaccin"
+column = "Vaccin"
+definition = "Vaccinnamn (covid-19-vacciner eller Pandemrix)."
+data_type = "text"
+is_sensitive = true
+
+# atc4pos carries 4-position ATC codes for övriga vacciner → linked to the catalog
+# ATC classification (FOHM NVR `vaccin` precedent, #446), coarse subgroup level.
+[[register.variable]]
+name = "ATC-kod (4 positioner)"
+column = "atc4pos"
+definition = "Övriga vacciner: de fyra första positionerna i ATC-koden (kemisk undergrupp)."
+data_type = "text"
+classification = "ATC"
+
+[[register.variable]]
+name = "Dagar till biverkning"
+column = "DaysToOnset"
+definition = "Antal dagar mellan vaccination och rapporterad biverkning. Beräknat fält; kräver datum för både vaccin och biverkning."
+data_type = "integer"
+
+[[register.variable]]
+name = "Rapportörstyp"
+column = "ReporterType"
+definition = "Typ av rapportör (klartext), t.ex. hälso- och sjukvård eller privatperson."
+data_type = "text"
+
+[[register.variable]]
+name = "Allvarlig"
+column = "Allvarlig"
+definition = "Anger om biverkningen är allvarlig (ja eller nej)."
+data_type = "text"
+is_sensitive = true
+
+# MedDRA-coded reaction fields (PT/HLT/HLGT/SOC). MedDRA is not a declared catalog
+# classification (licensed) → no classification link; follow-up if MedDRA is seeded.
+[[register.variable]]
+name = "MedDRA PT (Preferred Term)"
+column = "Pt"
+definition = "MedDRA-kod på PT-nivå (Preferred Term) för den rapporterade biverkningen."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "MedDRA HLT (High Level Term)"
+column = "Hlt"
+definition = "MedDRA-kod på HLT-nivå (High Level Term)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "MedDRA HLGT (High Level Group Term)"
+column = "Hlgt"
+definition = "MedDRA-kod på HLGT-nivå (High Level Group Term)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "MedDRA SOC (System Organ Class)"
+column = "Soc"
+definition = "MedDRA-kod på SOC-nivå (System Organ Class)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Utfall"
+column = "Outcome"
+definition = "Utfall av den rapporterade biverkningen (klartext)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Löpnummer biverkningsrapport"
+column = "SeqRpt"
+definition = "Löpnummer för biverkningsrapporten (ersätter diarienummer; håller samman flera rader per rapport)."
+data_type = "integer"
+is_identifier = true
+is_sensitive = true
+
+# Only delivered in the arbetsflöde-variant (not in the färdighandlagda table).
+[[register.variable]]
+name = "Event Reported Term"
+column = "Event_Reported_Term"
+definition = "Rapporterad misstänkt biverkning i klartext (levereras endast för rapporter i arbetsflödet)."
+data_type = "text"
+is_sensitive = true
+variants = ["arbetsflode"]

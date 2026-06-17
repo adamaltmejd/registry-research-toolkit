@@ -656,7 +656,7 @@ class TestBuildDbProvidersDefault:
 
         parser = _build_parser()
         ns = parser.parse_args(["build-db", "--input-dir", "x"])
-        assert ns.providers == "scb,sos,fohm,fk"
+        assert ns.providers == "scb,sos,fohm,fk,lakemedelsverket"
         ns = parser.parse_args(["build-db", "--input-dir", "x", "--providers", "scb"])
         assert ns.providers == "scb"
 
