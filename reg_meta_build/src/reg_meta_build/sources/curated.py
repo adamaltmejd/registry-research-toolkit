@@ -32,6 +32,10 @@ gets a synthesized `_default` variant, the single-table case):
     name = "SmiNet"
     purpose = "…"                  # catalog browse-card prose (register.purpose)
     valid_from = "2004-01-01"      # coverage start; default for its variables
+    valid_to = "2010-12-31"        # OPTIONAL; a closed register (Pliktverket
+                                   # 1997-2010, a discontinued benefit) — bounds
+                                   # every variable state unless the variable
+                                   # overrides it. Omit → open-ended (9999 sentinel)
 
       [[register.variant]]         # OPTIONAL; omit for a single-table register
       key = "fall"
@@ -89,7 +93,7 @@ _ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 # (`is_identifer`, `purpse`) fails the build loudly instead of silently
 # defaulting, mirroring the IR's `extra="forbid"` strict contract.
 _REGISTER_KEYS = frozenset(
-    {"key", "name", "purpose", "valid_from", "variant", "variable"}
+    {"key", "name", "purpose", "valid_from", "valid_to", "variant", "variable"}
 )
 _VARIANT_KEYS = frozenset({"key", "name", "description"})
 _VARIABLE_KEYS = frozenset(
@@ -140,6 +144,7 @@ class _CuratedRegister:
     name: str
     purpose: str | None
     valid_from: str
+    valid_to: str | None  # None → open-ended; default valid_to for its variables
     variants: tuple[_CuratedVariant, ...]
     variables: tuple[_CuratedVariable, ...]
 
@@ -255,6 +260,9 @@ class CuratedAdapter:
         name = self._req_str(path, entry, "name", f"register {key!r}")
         valid_from = self._req_str(path, entry, "valid_from", f"register {key!r}")
         self._check_iso(path, valid_from, f"register {key!r} valid_from")
+        valid_to = self._opt_str(entry, "valid_to")
+        if valid_to is not None:
+            self._check_iso(path, valid_to, f"register {key!r} valid_to")
 
         variant_entries = entry.get("variant", [])
         if not isinstance(variant_entries, list):
@@ -318,6 +326,7 @@ class CuratedAdapter:
             name=name,
             purpose=self._opt_str(entry, "purpose"),
             valid_from=valid_from,
+            valid_to=valid_to,
             variants=tuple(variants),
             variables=tuple(variables),
         )
@@ -536,6 +545,9 @@ class CuratedAdapter:
         )
 
         valid_from = var.valid_from or reg.valid_from
+        # A closed register (1997-2010 Pliktverket, a discontinued benefit, …) sets
+        # register-level `valid_to`; a per-variable `valid_to` overrides it.
+        valid_to = var.valid_to or reg.valid_to
         target_keys = var.variants if var.variants is not None else all_variant_keys
         for vk in target_keys:
             variant_id = variant_ids[vk]
@@ -544,7 +556,7 @@ class CuratedAdapter:
                 variable_id=variable_id,
                 register_variant_id=variant_id,
                 valid_from=valid_from,
-                valid_to=var.valid_to,  # None → materializer writes the open-ended sentinel
+                valid_to=valid_to,  # None → materializer writes the open-ended sentinel
                 data_type=var.data_type,
                 data_length=None,
                 delivery_column_name=var.column,

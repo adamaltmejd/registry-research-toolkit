@@ -1,0 +1,42 @@
+# Curated FQID slugs for Pliktverket registers (#443).
+#
+# Companion to fohm.toml / fk.toml / lakemedelsverket.toml; same grammar. TOML
+# keys are the minted ids — mint("pliktverket", <reg_key>) for the register (each
+# is single-table → synthesized `_default` variant). Panel keys: entity = penr
+# (personnummer), time = the mönstrings-/prov-/diagnos-datum, grain = row.
+# Variable slugs stay AUTO. Regenerate .snapshot.json after edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+
+# Mönstringsregister
+[register."7137015638745956087"]
+slug = "insark"
+
+[register_variant."7137015638745956087.5842664909372042601"]
+slug = "_default"
+display_group = "Mönstringsregister"
+panel_entity_key = "penr"
+panel_time_key = "mofdag"
+panel_time_grain = "row"
+
+# Inskrivningsprov
+[register."8006336455308083750"]
+slug = "insiprov"
+
+[register_variant."8006336455308083750.6194374819318977043"]
+slug = "_default"
+display_group = "Inskrivningsprov"
+panel_entity_key = "penr"
+panel_time_key = "pkapdat"
+panel_time_grain = "row"
+
+# Diagnoser
+[register."6636188647364956026"]
+slug = "diagnos"
+
+[register_variant."6636188647364956026.6063080116017535578"]
+slug = "_default"
+display_group = "Diagnoser"
+panel_entity_key = "penr"
+panel_time_key = "diagdat"
+panel_time_grain = "row"

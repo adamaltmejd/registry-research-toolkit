@@ -1,0 +1,703 @@
+# Curated thin-provider catalog — Pliktverket / Plikt- och prövningsverket (#443),
+# the Swedish enlistment/conscription assessment authority. Read by
+# reg_meta_build.sources.curated.CuratedAdapter.
+#
+# Source: Pliktverket's own field documentation `pliktverket_variabler.xls`
+# ("Mönstringsregister för forskning, 1997-2010") — the authoritative delivery
+# field list. Confidential restricted-access individdata (released via SCB MONA);
+# only the METADATA below is public. `column` tokens are SOURCE-EXACT (penr, lkf,
+# befl, psyf, …); inline code lists from the doc's "Mer info" column are embedded
+# in each definition (categorical value sets are a follow-up — no codes minted,
+# same as FOHM/FK). Three registers cover the same 1997-2010 mönstring: `insark`
+# (mönstringsresultat), `insiprov` (inskrivningsprovet/G-faktor), `diagnos`. The
+# diagnosis `sjnr` (sjukdomsnummer) is ICD-coded (ICD-10-SE era) → linked to the
+# catalog ICD-10-SE classification. Variable slugs stay AUTO.
+
+
+[[register]]
+key = "insark"
+name = "Mönstringsregister"
+valid_from = "1997-01-01"  # Mönstringsregister för forskning, 1997-2010
+valid_to = "2010-12-31"  # research register closed 1997-2010 (conscription deactivated 2010)
+purpose = "Mönstringsregister för forskning (1997–2010): resultat från mönstringen — status, fysiska och medicinska mått (blodtryck, kondition, hörsel, syn), psykologisk och fysisk kapacitet samt befattning."
+
+[[register.variable]]
+name = "Personnummer"
+column = "penr"
+definition = "Personnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Församlingskod (Län, kommun, församling)"
+column = "lkf"
+definition = "Församlingskod (Län, kommun, församling)"
+data_type = "text"
+
+[[register.variable]]
+name = "Inskrivande regionkontor"
+column = "inrk"
+definition = "Inskrivande regionkontor. Koder: 0=Huvudkontoret, 1=Kristianstad, 2=Göteborg, 3=Stockholm, 4=Karlstad, 5=Norrland, 6=Boden, 9=Huvudkontoret"
+data_type = "text"
+
+[[register.variable]]
+name = "Redovisande regionskontor"
+column = "rerk"
+definition = "Redovisande regionskontor. Koder: 0=Huvudkontoret, 1=Kristianstad, 2=Göteborg, 3=Stockholm, 4=Karlstad, 5=Norrland, 6=Boden, 9=Huvudkontoret"
+data_type = "text"
+
+[[register.variable]]
+name = "Status efter mönstring"
+column = "statu"
+definition = "Status efter mönstring. Koder: A=Ej ianspråktagen, B=Värnplikig, C=Civilpliktig, D=Utbildningsreserv, E=Anställd/Avtalspersonal"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vapenfri"
+column = "vpfri"
+definition = "Vapenfri. Koder: X=Vapenfri"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Kön"
+column = "kon"
+definition = "Kön. Koder: M=Man, K=Kvinna"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Cellskräck"
+column = "cellskr"
+definition = "Cellskräck. Koder: X=Cellskräck"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Svindel"
+column = "svindel"
+definition = "Svindel. Koder: X=Svindel"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Snusare"
+column = "snusvan"
+definition = "Snusare. Koder: 1=Ja, 2=Nej"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Rökare"
+column = "rokvan"
+definition = "Rökare. Koder: 2=Nej, 3=Ja, 1-10 cigaretter per dag, 4=Ja, 11-20 cigaretter per dag, 5=Ja, >20 cigaretter per dag, 6=Ja, 1 paket tobak per vecka, 7=Ja, 1-2 paket tobak per vecka, 8=Ja, >2 paket tobak per vecka"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Befälslämplighet"
+column = "befl"
+definition = "Befälslämplighet (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Psykisk funktionsförmåga"
+column = "psyf"
+definition = "Psykisk funktionsförmåga (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Systoliskt blodtryck"
+column = "syst"
+definition = "Systoliskt blodtryck (ZZZ (Ex. 140))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Diastoliskt blodtryck"
+column = "dias"
+definition = "Diastoliskt blodtryck (ZZZ (Ex. 80))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vilopuls"
+column = "vpul"
+definition = "Vilopuls (ZZZ (Ex. 70))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Kod för klassning av ekg"
+column = "ekgklass"
+definition = "Kod för klassning av ekg. Koder: 0=Inget ekg taget, 1=Normalt, 2=Sannolikt normalt, 3=Misstänkt patologiskt, 4=Patologiskt, 5=Ekg taget, ej bedömt"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Antal fellästa tavlor"
+column = "tavl"
+definition = "Antal fellästa tavlor (Färgseende)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Kapacitet färgseende"
+column = "fargkap"
+definition = "Kapacitet färgseende. Koder: 1=Defekt  9=Fullgott"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Startbelastning"
+column = "startbel"
+definition = "Startbelastning (ZZZZ (Ex. 125))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Arbetspuls"
+column = "apul"
+definition = "Arbetspuls (ZZZ (Ex. 140))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Slutpuls"
+column = "spul"
+definition = "Slutpuls (ZZZ (Ex. 190))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Maximal effekt cykelprov (Watt)"
+column = "wmax"
+definition = "Maximal effekt cykelprov (Watt) (ZZZ (Ex. 270))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Effekt (Watt per kg kroppsvikt)"
+column = "wattkg"
+definition = "Effekt (Watt per kg kroppsvikt) (ZZ,Z (Ex. 2,9))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syreupptagningsförmåga kilo (Syre i kg per minut)"
+column = "syrkgmn"
+definition = "Syreupptagningsförmåga kilo (Syre i kg per minut) (ZZ (Ex. 38))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syreupptagningsförmåga liter (Syre i liter per minut)"
+column = "syrelmn"
+definition = "Syreupptagningsförmåga liter (Syre i liter per minut) (Z,Z (Ex. 2,9))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Fysisk kapacitet"
+column = "fyskap"
+definition = "Fysisk kapacitet (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skattad fysisk arbetsförmåga"
+column = "skattfy"
+definition = "Skattad fysisk arbetsförmåga. Koder: X=Skattad"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 250 Hz höger öra"
+column = "orh1"
+definition = "Mätfrekvens 250 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 500 Hz höger öra"
+column = "orh2"
+definition = "Mätfrekvens 500 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 1000 Hz höger öra"
+column = "orh3"
+definition = "Mätfrekvens 1000 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 2000 Hz höger öra"
+column = "orh4"
+definition = "Mätfrekvens 2000 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 3000 Hz höger öra"
+column = "orh5"
+definition = "Mätfrekvens 3000 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 4000 Hz höger öra"
+column = "orh6"
+definition = "Mätfrekvens 4000 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 6000 Hz höger öra"
+column = "orh7"
+definition = "Mätfrekvens 6000 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 8000 Hz höger öra"
+column = "orh8"
+definition = "Mätfrekvens 8000 Hz höger öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 250 Hz vänster öra"
+column = "orv1"
+definition = "Mätfrekvens 250 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 500 Hz vänster öra"
+column = "orv2"
+definition = "Mätfrekvens 500 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 1000 Hz vänster öra"
+column = "orv3"
+definition = "Mätfrekvens 1000 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 2000 Hz vänster öra"
+column = "orv4"
+definition = "Mätfrekvens 2000 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 3000 Hz vänster öra"
+column = "orv5"
+definition = "Mätfrekvens 3000 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 4000 Hz vänster öra"
+column = "orv6"
+definition = "Mätfrekvens 4000 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 6000 Hz vänster öra"
+column = "orv7"
+definition = "Mätfrekvens 6000 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mätfrekvens 8000 Hz vänster öra"
+column = "orv8"
+definition = "Mätfrekvens 8000 Hz vänster öra (ZZ (Ex. 75))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Hörselkapacitet"
+column = "horskap"
+definition = "Hörselkapacitet. Koder: Skala 1-9, senare A-C,  A=godkänd, B=godkänd för vissa befattningar, C=Underkänd"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Längd (cm)"
+column = "lngd"
+definition = "Längd (cm) (ZZZ (Ex. 187))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Kroppsvikt (kg)"
+column = "mass"
+definition = "Kroppsvikt (kg) (ZZZ (Ex. 80))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Bodymassindex (BMI)"
+column = "bodymass"
+definition = "Bodymassindex (BMI) (ZZ,Z (Ex. 22,5))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Längdkapacitet"
+column = "lngdkap"
+definition = "Längdkapacitet (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Muskelfaktor (Newton)"
+column = "mufak"
+definition = "Muskelfaktor (Newton) (ZZZZ (Ex. 890))"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Muskelkraft"
+column = "muskkap"
+definition = "Muskelkraft (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skattad muskelkapacitet"
+column = "skattmu"
+definition = "Skattad muskelkapacitet. Koder: X=Skattad"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Synskärpa på höger öga"
+column = "syoh"
+definition = "Synskärpa på höger öga (Z,Z (Ex. 1,0))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Synskärpa på vänster öga"
+column = "syov"
+definition = "Synskärpa på vänster öga (Z,Z (Ex. 1,0))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Fingerräkning höger öga"
+column = "fingh"
+definition = "Fingerräkning höger öga. Koder: 00=Test ej genomfört, F1=Godkänd på 1 meter, F2=Godkänd på 2 meter, F3=Godkänd på 3 meter, F4=Godkänd på 4 meter"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Fingerräkning vänster öga"
+column = "fingv"
+definition = "Fingerräkning vänster öga. Koder: 00=Test ej genomfört, F1=Godkänd på 1 meter, F2=Godkänd på 2 meter, F3=Godkänd på 3 meter, F4=Godkänd på 4 meter"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Korrigerad synskärpa höger öga"
+column = "sykh"
+definition = "Korrigerad synskärpa höger öga (Z,Z (Ex. 1,0))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Korrigerad synskärpa vänster öga"
+column = "sykv"
+definition = "Korrigerad synskärpa vänster öga (Z,Z (Ex. 1,0))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Sfärisk korr höger öga"
+column = "refh"
+definition = "Sfärisk korr höger öga (Z,Z (Ex. 0,5))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Sfärisk korr vänster öga"
+column = "refv"
+definition = "Sfärisk korr vänster öga (Z,Z (Ex. 0,5))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Cylinder höger öga"
+column = "cylh"
+definition = "Cylinder höger öga (Z,Z (Ex. 0,5))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Cylinder vänster öga"
+column = "cylv"
+definition = "Cylinder vänster öga (Z,Z (Ex. 0,5))"
+data_type = "decimal"
+is_sensitive = true
+
+[[register.variable]]
+name = "Synkapacitet"
+column = "synkap"
+definition = "Synkapacitet. Koder: Skala 1-9, senare A-D,  A=Fullgod syn utan hjälpmedel, B=Ej fullgod syn utan synhjälpmedel, men fullgod syn med synhjälpmedel, C=Begränsad syn utan synhjälpmedel och inte fullgod syn med synhjälpmedel, men uppfyller körkortskrav även för tungt fordon, D=Underkänd"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Inskrivningsdatum till befattning"
+column = "inskdat"
+definition = "Inskrivningsdatum till befattning"
+data_type = "date"
+
+[[register.variable]]
+name = "Befattningskod efter mönstring"
+column = "btkd"
+definition = "Befattningskod efter mönstring (AAZZZ (Ex. GA902, separat lista))"
+data_type = "text"
+
+[[register.variable]]
+name = "Inryckningsdag"
+column = "inrdag"
+definition = "Inryckningsdag"
+data_type = "integer"
+
+[[register.variable]]
+name = "Inryckningsmånad"
+column = "inrman"
+definition = "Inryckningsmånad"
+data_type = "integer"
+
+[[register.variable]]
+name = "Inryckningsår"
+column = "inrar"
+definition = "Inryckningsår"
+data_type = "integer"
+
+[[register.variable]]
+name = "Utbildningsansvarig enhet/organisation"
+column = "utan"
+definition = "Utbildningsansvarig enhet/organisation (ZZZZZZZZZ (Ex. 124330000, separat lista))"
+data_type = "text"
+
+[[register.variable]]
+name = "Hälsotillståndskod/Tjänstbarhet"
+column = "hals"
+definition = "Hälsotillståndskod/Tjänstbarhet (separat lista)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Intresse av plikt"
+column = "intrkod"
+definition = "Intresse av plikt. Koder: 1=Positiv, 2=Neutral, 3=Negativ"
+data_type = "text"
+
+[[register.variable]]
+name = "Poängsummering av frågor gällande vilja att göra värnplikt"
+column = "vilja"
+definition = "Poängsummering av frågor gällande vilja att göra värnplikt (skala 0-21)."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Avslutad mönstring, orsakskod"
+column = "avslut"
+definition = "Avslutad mönstring, orsakskod. Koder: 1=Hörsel, 2=Buller, 3=Syn, 4=G-faktor, 5=Diagnos sjuksköterska, 6=Diagnos läkare, 7=Diagnos psykolog, 8=Muskel, 9=Psykisk funktionsförmåga, 10=Återtagit ansökan, 11=Fysisk arbetsförmåga, 12=Återtagit ansökan hos MÖF, 13=Avslag hos MÖF, 14=Avvikit, 15=Ej inställt sig, 17=Ej inställt sig dag 2, 18=Ej giltig legitimation, 19=Medicinska skäl, 20=Befälslämlighet"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Avslutad mönstring, datum"
+column = "avsldat"
+definition = "Avslutad mönstring, datum"
+data_type = "date"
+is_sensitive = true
+
+[[register.variable]]
+name = "Uppresning höger ben (Jägartest)"
+column = "upprh"
+definition = "Uppresning höger ben (Jägartest) (skala 0-5)."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Uppresning vänster ben  (Jägartest)"
+column = "upprv"
+definition = "Uppresning vänster ben  (Jägartest) (skala 0-5)."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Godkänd uppresning  (Jägartest)"
+column = "upprgod"
+definition = "Godkänd uppresning  (Jägartest). Koder: X=Godkänd"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Step höger ben  (Jägartest)"
+column = "steph"
+definition = "Step höger ben  (Jägartest) (0-75)."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Step vänster ben  (Jägartest)"
+column = "stepv"
+definition = "Step vänster ben  (Jägartest) (0-75)."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Godkänd step  (Jägartest)"
+column = "stepgod"
+definition = "Godkänd step  (Jägartest). Koder: X=Godkänd"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mönstringsdag"
+column = "mofdag"
+definition = "Mönstringsdag"
+data_type = "date"
+
+[[register.variable]]
+name = "Befattningskod vid mönstring"
+column = "mofbtkd"
+definition = "Befattningskod vid mönstring (AAZZZ (Ex. GA902, separat lista))"
+data_type = "text"
+
+[[register.variable]]
+name = "Status vid mönstring"
+column = "mofstat"
+definition = "Status vid mönstring. Koder: A=Ej ianspråktagen, B=Värnplikig, C=Civilpliktig, D=Utbildningsreserv, E=Anställd/Avtalspersonal"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vapenfri efter mönstring"
+column = "mofvfri"
+definition = "Vapenfri efter mönstring. Koder: X=Vapenfri"
+data_type = "text"
+is_sensitive = true
+
+[[register]]
+key = "insiprov"
+name = "Inskrivningsprov"
+valid_from = "1997-01-01"  # Mönstringsregister för forskning, 1997-2010
+valid_to = "2010-12-31"  # research register closed 1997-2010 (conscription deactivated 2010)
+purpose = "Inskrivningsprovet (G-faktor) vid mönstring 1997–2010: resultat från det skriftliga inskrivningsprovet (allmän, spatial och verbal förmåga)."
+
+[[register.variable]]
+name = "Personnummer"
+column = "penr"
+definition = "Personnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Iprovsdatum"
+column = "pkapdat"
+definition = "Iprovsdatum"
+data_type = "date"
+
+[[register.variable]]
+name = "Inskrivningsprov/G-faktor/Provgrupp"
+column = "gkap"
+definition = "Inskrivningsprov/G-faktor/Provgrupp (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Inskrivningsprovsvärde, spatial förmåga"
+column = "gvkap"
+definition = "Inskrivningsprovsvärde, spatial förmåga (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Inskrivningsprovsvärde, verbal förmåga"
+column = "gckap"
+definition = "Inskrivningsprovsvärde, verbal förmåga (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "Provtyp"
+column = "provtyp"
+definition = "Provtyp (t.ex. iprov9; separat lista)."
+data_type = "text"
+
+[[register.variable]]
+name = "Batteri"
+column = "batteri"
+definition = "Batteri (t.ex. DP2000; separat lista)."
+data_type = "text"
+
+[[register]]
+key = "diagnos"
+name = "Diagnoser"
+valid_from = "1997-01-01"  # Mönstringsregister för forskning, 1997-2010
+valid_to = "2010-12-31"  # research register closed 1997-2010 (conscription deactivated 2010)
+purpose = "Diagnoser registrerade vid mönstring 1997–2010, kodade enligt klassifikation av sjukdomar (ICD)."
+
+[[register.variable]]
+name = "Personnummer"
+column = "penr"
+definition = "Personnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Diagnosdatum"
+column = "diagdat"
+definition = "Diagnosdatum"
+data_type = "date"
+is_sensitive = true
+
+[[register.variable]]
+name = "Händelsekod"
+column = "diahand"
+definition = "Händelsekod"
+data_type = "text"
+
+[[register.variable]]
+name = "Sjukdomsnummer diagnos"
+column = "sjnr"
+definition = "Sjukdomsnummer diagnos"
+data_type = "text"
+is_sensitive = true
+classification = "ICD-10-SE"  # sjukdomsnummer, ICD-10-SE era (1997-2010)
+
+[[register.variable]]
+name = "Gradering av diagnos"
+column = "grader"
+definition = "Gradering av diagnos"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Kapitelnummer i klassifikation av sjukdomar"
+column = "kap"
+definition = "Kapitelnummer i klassifikation av sjukdomar"
+data_type = "text"
+is_sensitive = true
