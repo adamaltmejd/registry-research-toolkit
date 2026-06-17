@@ -67,6 +67,12 @@ approval pause.
    `reg_meta` version before publishing the builder. Do not ship a builder that can
    resolve against stale schema constants.
 
+4. Release upstream dependencies before downstream packages, and verify they exist on
+   PyPI before publishing dependents. `reg_monabundle` depends on `reg_schema`;
+   `mock_data_wizard` depends on `reg_monabundle`. If an upstream package has no
+   confirmed publish workflow/path yet, stop instead of publishing a downstream wheel
+   that cannot resolve its dependency.
+
 ## Per-Package Steps
 
 1. Determine new semver from `<package>/pyproject.toml`.
@@ -170,9 +176,16 @@ rm -r "$docs_db_dir" reg_meta_docs.db.zst
 Copy forward:
 
 ```sh
-gh release download reg_meta/v<prev> --pattern <asset-name>
-gh release upload reg_meta/vX.Y.Z <asset-name>
-rm <asset-name>
+set -euo pipefail
+asset="<asset-name>"
+asset_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_asset.XXXXXX")"
+(
+  cd "$asset_dir"
+  gh release download reg_meta/v<prev> --pattern "$asset" --clobber
+  test -f "$asset"
+  gh release upload reg_meta/vX.Y.Z "$asset"
+)
+rm -r "$asset_dir"
 ```
 
 Verify both assets before publishing:
