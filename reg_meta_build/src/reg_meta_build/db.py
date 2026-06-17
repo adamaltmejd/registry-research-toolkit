@@ -3734,7 +3734,12 @@ def materialize(
         _progress(f"  {n_curated_links:,} curated classification links")
 
     cls_link_counts = link_value_set_classifications(conn)
-    row_counts["classification_links_auto"] = cls_link_counts["value_sets_linked"]
+    # Auto classification links = the confident tier PLUS the vintage-period reclaim
+    # (#494); counting only the confident tier under-reports by the vintage population.
+    row_counts["classification_links_auto"] = (
+        cls_link_counts["value_sets_linked"]
+        + cls_link_counts["vintage_value_sets_linked"]
+    )
 
     # A4.3a: the `variable_alias` re-parent is GONE — `_reinsert_core_graph_from_ir`
     # already wrote `variable_alias` from IRVariableAlias (the FULL historical

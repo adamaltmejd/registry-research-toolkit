@@ -79,6 +79,14 @@ def _no_repo_curation() -> Iterator[None]:
     # the symbol directly — patch it there too.
     mp.setattr(_vsa, "repo_variable_same_as_path", lambda: None)
     mp.setattr(_db, "repo_variable_same_as_path", lambda: None)
+    # classification_links.toml (#416/#494) links real scb variables to seeded
+    # classifications; `materialize_classification_links` fails LOUD on an
+    # unresolved FQID, so a synthetic build must see an empty file. Latent until
+    # #494 populated it. db.py imported the symbol directly — patch it there too.
+    import reg_meta_build.classification_links as _cl
+
+    mp.setattr(_cl, "repo_classification_links_path", lambda: None)
+    mp.setattr(_db, "repo_classification_links_path", lambda: None)
     # variable_grafts.toml (#365 PR1d) mints variables onto real scb (register,
     # variant); against a fixture DB every one is unresolved. db.py LOCAL-imports
     # the symbol (like codelivery), so patching the module alone suffices.

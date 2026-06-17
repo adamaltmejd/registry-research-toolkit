@@ -24,10 +24,85 @@
 # provider isn't in the build is SKIPPED (a partial --providers build can't
 # represent it). An empty file is a no-op — no links written.
 #
-# This file SHIPS EMPTY today: the residue curation is a deferred follow-up. The
-# example below is commented out — uncomment and adapt to add a real link.
+# #494 part 2 — the FIRST curated residue entries. The vintage-period reclaim
+# (part 1) clears the same-family-across-vintages residue; what's left is genuine
+# cross-family numeric coincidence. The entries below are the SAFE subset of that
+# tail: residual value sets whose LABELS uniquely identify ONE STANDALONE
+# (single-edition, no per-year vintage) seeded classification — so there is exactly
+# one correct short_name and no "which vintage" choice. Verified against a real
+# scb,sos build (label agreement ≥0.90 to the named class, <0.90 to every other
+# candidate). The bulk of the residue (county/LKF codes — a per-year vintage with
+# no single short_name; short numeric sets whose true family isn't even a
+# candidate) is NOT single-short_name-curatable and stays for the deferred
+# follow-up.
 
-# [[link]]
-# variable       = "scb/ulf/ha0611m"   # an ICD-coded ULF health variable
-# classification = "ICD-10-SE"
-# note           = "curated:#416 family-ambiguous tail"
+# Institutional sector (SEKTOR2000) — codes 12/13/14/21/… ("Statliga affärsverk",
+# "Kommunal förvaltning", "Landsting"/"Region", "Aktiebolag …") coincide numerically
+# with SNI/SSYK/LKF division codes, but the labels are unambiguously sector.
+[[link]]
+variable       = "scb/arbetskraftsbarometern/sektor"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes (coincide cross-family by digits)"
+
+[[link]]
+variable       = "scb/fortroendevalda/sektor"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/kommunalekonomisk-utjamning/sektor"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/lisa/ast-sektorkod"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/lisa/org-sektorkod"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/lisa/sektorkod"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/rams/institutionell-sektorkod"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/yrkesreg/sektor"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/yrkesreg/sektorkod"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/yrkesreg/sektorkod-2"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+[[link]]
+variable       = "scb/yrkesreg/sektorkod-storsta-forvarvskalla"
+classification = "SEKTOR2000"
+note           = "curated:#494 label-unambiguous sector codes"
+
+# Education (ISCED) — the variable slug itself names the classification; the codes
+# coincide with other numeric families but the labels are the ISCED level / field
+# names verbatim.
+[[link]]
+variable       = "scb/ureg/isced2011niva"
+classification = "ISCED2011"
+note           = "curated:#494 ISCED 2011 education-level labels"
+
+[[link]]
+variable       = "scb/ureg/isced-f-2013"
+classification = "ISCED-F2013"
+note           = "curated:#494 ISCED-F 2013 field-of-education labels"
