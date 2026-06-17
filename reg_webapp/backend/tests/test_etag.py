@@ -60,9 +60,10 @@ def test_cache_control_value():
 
 def test_cache_control_for_per_route():
     # Three tiers: /api/context revalidates every request (the vintage footer
-    # asserts a deploy version/date — a stale copy lies); /api/catalog/* reads get
-    # the short 60s window (curated folds must surface promptly); docs/search keep
-    # the 24h policy.
+    # asserts a deploy version/date — a stale copy lies); the fold-bearing
+    # /api/catalog/* and /api/search reads get the short 60s window (curated folds
+    # must surface promptly); the rebuild-stable /api/docs/* reads keep the 24h
+    # policy.
     assert cache_control_for("/api/context") == CACHE_CONTROL_REVALIDATE
 
     # Catalog root + sub-endpoints (prefix match) all get the short window.
@@ -72,9 +73,14 @@ def test_cache_control_for_per_route():
         cache_control_for("/api/catalog/scb/lisa/sun2000/states") == CACHE_CONTROL_SHORT
     )
 
-    # Docs/search reads are rebuild-stable → keep the 24h policy.
+    # The variable/code search route embeds the same #322 concept-group folds, so
+    # it joins the short window (#506).
+    assert cache_control_for("/api/search") == CACHE_CONTROL_SHORT
+
+    # The doc-library search is rebuild-stable and lives under /api/docs → keeps
+    # the 24h policy. It does NOT collide with the /api/search prefix
+    # (`/api/docs/search`.startswith(`/api/search`) is False).
     assert cache_control_for("/api/docs/search") == CACHE_CONTROL
-    assert cache_control_for("/api/search") == CACHE_CONTROL
 
 
 def test_etag_matches_exact():
