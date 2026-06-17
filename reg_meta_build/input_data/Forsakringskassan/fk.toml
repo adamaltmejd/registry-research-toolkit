@@ -1,0 +1,4745 @@
+# Curated thin-provider catalog — Försäkringskassan (FK), the Swedish Social
+# Insurance Agency. Read by reg_meta_build.sources.curated.CuratedAdapter (#422,
+# phase 2; FOHM was phase 1).
+#
+# FK publishes no machine-readable microdata-metadata export, so this TOML is the
+# authoritative, hand-curated source. It models FK's individdata catalog in two
+# tiers:
+#
+#   1. TWELVE publicly-documented registers, grounded directly in FK's published
+#      variabelförteckningar (the per-förmån xlsx "Information om mikrodata"
+#      workbooks). Each carries one [[register.variant]] per documented delivery
+#      table (fall/delfall, mottagare/barn/beviljanden/avslag, the tandvård
+#      delivery tables, …) with the variables transcribed VERBATIM from the
+#      förteckning's `Variabel | Beskrivning` sheets. A variable delivered in
+#      several variants is declared once with a `variants = [...]` subset (omit
+#      ⇒ every variant). Registers: arbetsskadeersattning, assistansersattning,
+#      bilstod, foraldrapenning, tillfallig-foraldrapenning,
+#      sjuk-aktivitetsersattning, sjukpenning, merkostnadsersattning,
+#      omvardnadsbidrag, lakarintygsregistret, tandvardsstodet, underhallsstod.
+#
+#   2. SIXTEEN thin SWECOV-core benefit registers with NO public variable
+#      documentation — modeled as a single (`_default`) variant with the common
+#      payment/period core (personnummer/organisationsnummer + utbetalningsmånad
+#      + period + belopp). These transcribe the benefit-level description only.
+#
+# The delivered microdata is confidential restricted-access individdata (released
+# to researchers after review, pseudonymised: personnummer/organisationsnummer →
+# löpnummer, typically via SCB MONA); only the METADATA below is public.
+#
+# COLUMN TOKENS. For the 12 documented registers the `column` is the FK field
+# name AS PUBLISHED in the förteckning (case preserved, e.g. `Lopnr`, `Ar_manad`,
+# `Manadsbelopp_ASL_fs`); a parenthetical field ("Diagnoskod (den vuxnas)") is
+# given a clean unique token (`Diagnoskod_vuxen`) with the full name kept in
+# `name`. For the 16 thin registers the `column` is a clean ASCII token derived
+# from the documented benefit field name (same situation as FOHM). The variable
+# auto-slug folds each column (underscores→hyphens, lowercased), so panel-key
+# refs use the hyphenated/lowercased form (e.g. `Del_from_datum` → `del-from-datum`).
+#
+# Enumerated code lists (the categorical value sets) remain a follow-up (#422):
+# categorical variables carry a data_type and embed the förteckning's inline code
+# list in `definition`, but mint no codes yet. The diagnosis fields (FK `Diagnos`/
+# `Diagnoskod`/`Diagnos1`/`Diagnos2`/`DIAGNOSKOD`) are ICD-9/10-coded and are
+# strong `classification = "ICD-10-SE"` candidates (FOHM SmiNet `diagnos`
+# precedent, #446), but the link is DEFERRED: older MiDAS periods are ICD-9, not
+# ICD-10-SE, and the vintage split needs maintainer confirmation before tagging.
+# Tracked as a #446-style follow-up. Diagnosis columns are marked is_sensitive.
+#
+# valid_from is the register's documented coverage start where FK publishes one
+# (read from the förteckning's Information sheet / table titles). Where FK
+# publishes no register data-coverage start it is the BENEFIT-INTRODUCTION date —
+# a lower bound; uncertainty is flagged in a per-register `# FLAG/GAP` comment.
+# The real per-register MONA extract coverage is maintainer-held.
+#
+# Sources:
+#   MiDAS overview + the public catalog of variabelförteckningar — FK,
+#   "Beställning av individdata för forskning":
+#     https://www.forsakringskassan.se/statistik-och-analys/bestallning-av-individdata-och-statistik/bestallning-av-individdata-for-forskning
+#
+# NOTE: FK delivers pseudonymised ids; the catalog still models the source concept
+# as a löpnummer / organisationsnummer with is_identifier + is_sensitive. Variable
+# slugs stay AUTO (populate_variable_slugs -> fk.auto.toml, transient/not
+# committed), derived from each variable's column. Regenerate .snapshot.json after
+# edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+
+# ============================================================================
+# TIER 1 — 12 publicly-documented registers (variabelförteckningar)
+# ============================================================================
+
+[[register]]
+key = "arbetsskadeersattning"
+name = "Arbetsskadeersättning"
+valid_from = "1999-01-01"
+purpose = "Ersättning för arbetsskador (egenlivränta enligt arbetsskade- och yrkesskadeförsäkringen samt beslut om arbetsskadeersättning). Innehåller månadsvisa utbetalningar av livränta och beslutsdata."
+
+[[register.variant]]
+key = "arbetsskadelivranta-manadsdata"
+name = "Arbetsskadelivränta utbetalningar per månad 1999-"
+description = "Månadspanel med utbetalningar av egenlivränta enligt arbetsskadeförsäkringen. Observera att olika regelverk gäller för personer födda efter 1937 sedan år 2003. För personer födda efter 1937 upphör livräntan i regel från och med den månad personen fyller 65 år men senast månaden innan den fyller 67 år. Personer som är födda 1937 eller tidigare kan vid en låg pension få livränta även efter 65 års ålder. OBS! Åren 1999-2002 finns endast data för december månad. Från år 2003 och framåt finns data för alla årets månader."
+
+[[register.variant]]
+key = "yrkesskadelivranta-manadsdata"
+name = "Yrkesskadelivränta utbetalningar per månad 1999-"
+description = "Månadspanel med utbetalningar av livränta enligt lagen om yrkesskadeförsäkring som gäller i de fall skadetidpunkten var före 1 juli 1977. Yrkesskadelivränta kan betalas ut som egenlivränta och efterlevandelivränta. OBS! Åren 1999-2001 finns endast data för december månad. Året 2002 har januari och december data. Från år 2003 och framåt finns data för alla årets månader."
+
+[[register.variant]]
+key = "beslut"
+name = "Beslut om arbetsskadeersättning 2013-"
+description = "Innehåller information om beslut av ersättning enligt Arbetsskadeförsäkringen. Ersättning kan vara i form av livränta, ersättning för sjukvårds- och tandvårdskostnader, ersättning för kostnader för särskilda hjälpmedel eller för sjukvård utomlands. Beslut om ett sjukfall eller en skada är en arbetsskada s.k. serviceprövning finns även med i tabellen. Liksom serviceprövning dödsfall som Försäkringskassan utreder åt Pensionsmyndigheten. Tabellen innehåller både beslut som görs i samband med att en arbetsskada prövas för första gången samt beslut för redan godkända arbetsskador."
+
+[[register.variable]]
+name = "Lopnr"
+column = "Lopnr"
+definition = "Individspecifikt löpnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Ar_manad"
+column = "Ar_manad"
+definition = "Sista dagen i månaden som utbetalningen skett."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata", "yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Kon"
+column = "Kon"
+definition = "Det kön den försäkrade har sista dagen i utbetalningsmånaden."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata", "yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Alder"
+column = "Alder"
+definition = "Personens ålder sista dagen i utbetalningsmånaden."
+data_type = "integer"
+variants = ["arbetsskadelivranta-manadsdata", "yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Lan"
+column = "Lan"
+definition = "Det län personen är mantalsskriven sista dagen i utbetalningsmånaden."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata", "yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Kommun"
+column = "Kommun"
+definition = "Det kommun personen är mantalsskriven sista dagen i utbetalningsmånaden."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata", "yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Skadedatum"
+column = "Skadedatum"
+definition = "Personens skadedatum för livräntan."
+data_type = "date"
+
+[[register.variable]]
+name = "Livranteorsak"
+column = "Livranteorsak"
+definition = "Livränteorsak: Arbetsoförmåga till följd av arbetssjukdom, Arbetsoförmåga till följd av olycksfall i arbetet, Arbetsoförmåga till följd av olycksfall vid färd till och från arbetet, Rehabilitering till följd av arbetssjukdom, Rehabilitering till följd av olycksfall i arbetet, Rehabilitering till följd av olycksfall vid färd till och från arbetet."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Livrantetyp"
+column = "Livrantetyp"
+definition = "Egenlivränta."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata", "yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Manadsbelopp_ASL_fs"
+column = "Manadsbelopp_ASL_fs"
+definition = "Belopp livränta före samordning med andra ersättningar."
+data_type = "decimal"
+variants = ["arbetsskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Manadsbelopp_ASL_es"
+column = "Manadsbelopp_ASL_es"
+definition = "Belopp livränta efter samordning med andra ersättningar."
+data_type = "decimal"
+variants = ["arbetsskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Fodd_efter_1937"
+column = "Fodd_efter_1937"
+definition = "1 om personen är född efter 1937 och 0 om personen är född innan."
+data_type = "text"
+variants = ["arbetsskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Manadsbelopp_YFL"
+column = "Manadsbelopp_YFL"
+definition = "Belopp som betalas ut i livränta före skatt."
+data_type = "decimal"
+variants = ["yrkesskadelivranta-manadsdata"]
+
+[[register.variable]]
+name = "Beslutsår"
+column = "Beslutsår"
+definition = "Året som slutmeddelandet expedieras."
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Startdatum"
+column = "Startdatum"
+definition = "Datum då ansökan inkomststämplas."
+data_type = "date"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Slutdatum"
+column = "Slutdatum"
+definition = "Datum då slutmeddelandet expedieras."
+data_type = "date"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Skadetyp"
+column = "Skadetyp"
+definition = "Skadetyp:\n1. Arbetssjukdom \n2. Olycksfall\n3. Färdolycksfall."
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Lag"
+column = "Lag"
+definition = "Lagrum som beslutet tagits inom:\n1. Lag från 2002-07-01 (LAF 3)\n2. Lag från 1993-01-01 (LAF 2)\n3. Lag från 1977-07-01 (LAF 1)\n4. Personskador LSP (lag om statligt personskadeskydd)"
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Ersattningsslag"
+column = "Ersattningsslag"
+definition = "Ersättningsslag:\n1. Egenlivränta \n2. Tandvård \n3. Särskilt hjälpmedel \n6. Sjukvård \n7. Sjukpenning \n8. Serviceprövning\n9. Sjukvård utomlands \n10. Vårdförmån I Sverige enl EG-förordning \n11. Ej ersättningsbart yrkande \n12. Efterkontroll \n13. Serviceprövning dödsfall."
+data_type = "text"
+variants = ["beslut"]
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnoskod"
+column = "Diagnoskod"
+definition = "Diagnoskod enligt ICD-10."
+data_type = "text"
+is_sensitive = true
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Avslutsanledning"
+column = "Avslutsanledning"
+definition = "Avslutsanledning:\n1. Bifall\n2. Avslag - ej nedsatt 1/15\n3. Avslag - ej nedsatt ¼\n4. Avslag - ej varaktigt nedsatt\n5. Avslag - ej arbetsskada\n6. Avslag - ej arbetsskada psyk. – undantag\n7. Endast ändrad samordningsprocent\n8. Avvisat\n9. Makulerat\n11. Höjning av livränta enl. 4 kap. 12 § LAF (kan ej registreras from febR 2013)\n12. Indragning av livränta enl. 4 kap. 12 § LAF (kan ej registreras from febR 2013)\n13. Nedsättning av livränta enl. 4 kap. 12 § LAF (kan ej registreras from febR 2013)\n14. Beslut oförändrat enl. 4 kap. 12 § LAF (kan ej registreras from febR 2013)\n15. Indragning av livränta enl. 6 kap. 7 § LAF (kan ej registreras from febR 2013)\n16. Nedsättning av livränta enl. 6 kap. 7 § LAF (kan ej registreras from febR 2013)\n17. Beslut oförändrat enl. 6 kap. 7 § LAF (kan ej registreras from febR 2013)\n18. Ändring enl. 8 kap. 12 § LAF (kan ej registreras from febR 2013)\n19. Beslut oförändrat enl. 8 kap. 12 § LAF (kan ej registreras from febR 2013)\n20. Avslag\n21. Höjning (gäller from febR 2013)\n22. Stoppat (gäller from febR 2013)\n23. Sänkning (gäller from febR 2013)\n24. Oförändrat (gäller from febR 2013)\n25. Utbetalning."
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "Skadlig_inverkan"
+column = "Skadlig_inverkan"
+definition = "Skadlig inverkan:\n0. Uppgift saknas \n10. Fysisk belastning, tunga lyft \n11. Fysisk belastning, förflyttningar av bördor \n12. Fysisk belastning, ensidigt och monotont arbete \n13. Fysisk belastning, olämpliga arbetsställningar \n14. Fysisk belastning, annat \n20. Organisatoriska eller sociala faktorer, trakasserier \n21. Organisatoriska eller sociala faktorer, hög arbetsbelastning \n22. Organisatoriska eller sociala faktorer, annat \n30. Kemiska eller biologiska ämnen/faktorer \n40. Buller \n50. Vibrationer \n60. Smitta \n90. Övrigt, oklart."
+data_type = "text"
+variants = ["beslut"]
+
+
+[[register]]
+key = "assistansersattning"
+name = "Assistansersättning"
+valid_from = "1994-01-01"
+purpose = "Statlig assistansersättning enligt socialförsäkringsbalken (tidigare LSS/LASS) för personer med omfattande funktionsnedsättning. Innehåller pågående beslut, beviljanden, avslag och fattade beslut med timmar och timbelopp."
+
+[[register.variant]]
+key = "pagaende-beslut-1994-2001"
+name = "Assistansersättning - Pågående beslut, 1994-2001"
+description = "Innehåller alla pågående beslut för personer som har rätt till assistansersättning vid månadsskifte, d.v.s. den sista per månad. Har personen rätt till assistansersättning en del av månaden, men inte den sista dagen i månaden, kommer den personen inte med i urvalet. Har ett beslut om rätten till fattats aktuell månad, men avser period efter månadsskiftet, kommer den personen inte med. Alla attribut avser den sista dagen i månaden där det är relevant, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variant]]
+key = "pagaende-beslut-2002-201809"
+name = "Assistansersättning - Pågående beslut, 2002-201809"
+description = "Innehåller alla pågående beslut för personer som har rätt till assistansersättning vid månadsskifte, d.v.s. den sista per månad. Har personen rätt till assistansersättning en del av månaden, men inte den sista dagen i månaden, kommer den personen inte med i urvalet. Har ett beslut om rätten till fattats aktuell månad, men avser period efter månadsskiftet, kommer den personen inte med. Alla attribut avser den sista dagen i månaden där det är relevant, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variant]]
+key = "pagaende-beslut-201810"
+name = "Assistansersättning - Pågående beslut, 201810-"
+description = "Innehåller alla pågående beslut för personer som har rätt till assistansersättning vid månadsskifte, d.v.s. den sista per månad. Har personen rätt till assistansersättning en del av månaden, men inte den sista dagen i månaden, kommer den personen inte med i urvalet. Har ett beslut om rätten till fattats aktuell månad, men avser period efter månadsskiftet, kommer den personen inte med. Alla attribut avser den sista dagen i månaden där det är relevant, t.ex. personens ålder och geografi. Detaljerade uppgifter om timmarna finns för personer som har fått ett nytt beslut efter 201809. Annars finns bara uppgift om totala antalet timmar. Data uppdateras månadsvis."
+
+[[register.variant]]
+key = "beviljanden"
+name = "Assistansersättning - Beviljanden, 1994-201809"
+description = "Beviljanden från år 1994 och framåt går att få som antingen enbart förstagångsbeviljanden eller förstagångsbeviljanden tillsammans med återvändare. Ett förstagångsbeviljande är första gången en person har blivit beviljad assistansersättning och en återvändare är när en person tidigare har haft rätt till assistansersättning, blivit av med den av någon anledning och sedan blir beviljad igen. Alla attribut avser tidpunkten vid beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variant]]
+key = "avslag"
+name = "Assistansersättning - Avslag, 1994-201809"
+description = "Innehåller avslag på rätten till assistansersättning. Alla attribut avser tidpunkten vid beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variant]]
+key = "fattade-beslut"
+name = "Assistansersättning - Fattade beslut, 201810-"
+description = "Innehåller alla fattade beslut (bl.a. både beviljanden och avslag) för personer gällande assistansersättningen. Varje rad avser ett beslut och en person. Alla attribut avser tidpunkten vid beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variable]]
+name = "Lopnr"
+column = "Lopnr"
+definition = "Individspecifikt löpnummer för brukaren."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Ar_manad"
+column = "Ar_manad"
+definition = "Det året och månaden som brukaren har ett pågående beslut."
+data_type = "text"
+variants = ["pagaende-beslut-1994-2001", "pagaende-beslut-2002-201809", "pagaende-beslut-201810"]
+
+[[register.variable]]
+name = "Kon"
+column = "Kon"
+definition = "Brukarens kön."
+data_type = "text"
+
+[[register.variable]]
+name = "Alder"
+column = "Alder"
+definition = "Brukarens ålder."
+data_type = "integer"
+
+[[register.variable]]
+name = "Lan"
+column = "Lan"
+definition = "Brukarens län."
+data_type = "text"
+
+[[register.variable]]
+name = "Kommun"
+column = "Kommun"
+definition = "Brukarens kommun."
+data_type = "text"
+
+[[register.variable]]
+name = "Fodelseland"
+column = "Fodelseland"
+definition = "Brukarens födelseland."
+data_type = "text"
+
+[[register.variable]]
+name = "Personkrets"
+column = "Personkrets"
+definition = "Brukarens personkrets."
+data_type = "text"
+variants = ["pagaende-beslut-1994-2001", "pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timbelopp"
+column = "Timbelopp"
+definition = "Det beviljade timbeloppet i kronor."
+data_type = "decimal"
+variants = ["pagaende-beslut-1994-2001", "pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_per_vecka"
+column = "Timmar_per_vecka"
+definition = "Genomsnittligt antal beviljade timmar per vecka."
+data_type = "decimal"
+variants = ["pagaende-beslut-1994-2001", "pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
+
+[[register.variable]]
+name = "Anordnartyp"
+column = "Anordnartyp"
+definition = "Typ av anordnare. Denna uppgift finns från 2013."
+data_type = "text"
+variants = ["pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
+
+[[register.variable]]
+name = "Betalningsmottagartyp"
+column = "Betalningsmottagartyp"
+definition = "Typ av betalningsmottagare. Denna uppgift finns från 2013."
+data_type = "text"
+variants = ["pagaende-beslut-2002-201809", "pagaende-beslut-201810", "beviljanden", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timbeloppstyp"
+column = "Timbeloppstyp"
+definition = "Typ av timbelopp."
+data_type = "text"
+variants = ["pagaende-beslut-2002-201809", "pagaende-beslut-201810"]
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnos"
+column = "Diagnos"
+definition = "Brukarens huvuddiagnos. Täckningen för denna uppgift är dålig. Ca. 56 % av populationen hade inte en registrerad diagnoskod i december 2024."
+data_type = "text"
+is_sensitive = true
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Dubbel_assistans"
+column = "Dubbel_assistans"
+definition = "Om brukaren har dubbel assistans."
+data_type = "text"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_dubbel_assistans"
+column = "Timmar_dubbel_assistans"
+definition = "Genomsnittligt antal beviljade timmar per vecka för dubbel assistans."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_aktiv_tid"
+column = "Timmar_aktiv_tid"
+definition = "Genomsnittligt antal beviljade timmar per vecka för aktiv tid under dygnsvila."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund"
+column = "Timmar_grund"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behov."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_dubbel_assistans"
+column = "Timmar_grund_dubbel_assistans"
+definition = "Genomsnittligt antal beviljade timmar per vecka för dubbel assistans för grundläggande behov."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_aktiv_tid"
+column = "Timmar_grund_aktiv_tid"
+definition = "Genomsnittligt antal beviljade timmar per vecka för aktiv tid under dygnsvila för grundläggande behov."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra"
+column = "Timmar_andra"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_dubbel_assistans"
+column = "Timmar_andra_dubbel_assistans"
+definition = "Genomsnittligt antal beviljade timmar per vecka för dubbel assistans för andra personliga behov."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_aktiv_tid"
+column = "Timmar_andra_aktiv_tid"
+definition = "Genomsnittligt antal beviljade timmar per vecka för aktiv tid under dygnsvila för andra personliga behov."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_beredskapstid"
+column = "Timmar_beredskapstid"
+definition = "Genomsnittligt antal beviljade timmar per vecka för beredskapstid."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_vantetid"
+column = "Timmar_vantetid"
+definition = "Genomsnittligt antal beviljade timmar per vecka för väntetid."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_hygien"
+column = "Timmar_grund_hygien"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet personlig hygien."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_kladning"
+column = "Timmar_grund_kladning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet på- och avklädning."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_maltider"
+column = "Timmar_grund_maltider"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet måltider."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_kommunikation"
+column = "Timmar_grund_kommunikation"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet kommunikation."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_kunskap"
+column = "Timmar_grund_kunskap"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet ingående kunskap."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_andning"
+column = "Timmar_grund_andning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet andning."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_sondmatning"
+column = "Timmar_grund_sondmatning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet sondmatning. Sondmatning ingår i behovet maltider men redovisas separat i denna tabell."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_forebygga_skada"
+column = "Timmar_grund_forebygga_skada"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet förebygga skada. Denna uppgift finns från 2023."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_medicinskt_tillst"
+column = "Timmar_grund_medicinskt_tillst"
+definition = "Genomsnittligt antal beviljade timmar per vecka för grundläggande behovet stöd medicinskt tillstånd. Denna uppgift finns från 2023."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_hygien"
+column = "Timmar_andra_hygien"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov personlig hygien."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_kladning"
+column = "Timmar_andra_kladning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov på- och avklädning."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_maltider"
+column = "Timmar_andra_maltider"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov måltider."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_kommunikation"
+column = "Timmar_andra_kommunikation"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov kommunikation."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_arenden"
+column = "Timmar_andra_arenden"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov handla/uträtta ärenden."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_hushallsarbete"
+column = "Timmar_andra_hushallsarbete"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov hushållsarbete."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_skota_halsa"
+column = "Timmar_andra_skota_halsa"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov sköta hälsa/besöka vårdinrättningar."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_trana"
+column = "Timmar_andra_trana"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov träna."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_forflyttning"
+column = "Timmar_andra_forflyttning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov handräckning/förflyttning."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_arbete_studier"
+column = "Timmar_andra_arbete_studier"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov arbete/studier."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_fritidsaktiviteter"
+column = "Timmar_andra_fritidsaktiviteter"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov fritidsaktiviteter."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_foralder"
+column = "Timmar_andra_foralder"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov fungera som förälder."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_ovrigt"
+column = "Timmar_andra_ovrigt"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov övrigt."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_andning"
+column = "Timmar_andra_andning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov andning."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_sondmatning"
+column = "Timmar_andra_sondmatning"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov sondmatning. Sondmatning ingår i behovet maltider men redovisas separat i denna tabell."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_nodvandig_atgard"
+column = "Timmar_andra_nodvandig_atgard"
+definition = "Genomsnittligt antal beviljade timmar per vecka för andra personliga behov nödvändiga åtgärder. Denna uppgift finns från 2023."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Kval_insats_hygien"
+column = "Kval_insats_hygien"
+definition = "Anger om det grundläggande behovet personlig hygien har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
+data_type = "text"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Kval_insats_kladning"
+column = "Kval_insats_kladning"
+definition = "Anger om det grundläggande behovet personlig på- och avklädning har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
+data_type = "text"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Kval_insats_maltider"
+column = "Kval_insats_maltider"
+definition = "Anger om det grundläggande behovet måltider har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
+data_type = "text"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Kval_insats_kommunikation"
+column = "Kval_insats_kommunikation"
+definition = "Anger om det grundläggande behovet kommunikation har bedömts som en kvalificerad aktiverings- och motiveringsinsats. Denna uppgift finns från 2023."
+data_type = "text"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_foraldraavdrag"
+column = "Timmar_foraldraavdrag"
+definition = "Antal timmar per vecka som dragits av för aktuellt typ av avdrag p.g.a. föräldraansvaret. Denna uppgift finns från 2023."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_grund_foraldraavdrag"
+column = "Timmar_grund_foraldraavdrag"
+definition = "Antal timmar per vecka som dragits av för aktuellt typ av grundläggande behov p.g.a. föräldraansvaret. Denna uppgift finns från 2023."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Timmar_andra_foraldraavdrag"
+column = "Timmar_andra_foraldraavdrag"
+definition = "Antal timmar per vecka som dragits av för aktuellt typ av andra personliga behov p.g.a. föräldraansvaret. Denna uppgift finns från 2023."
+data_type = "decimal"
+variants = ["pagaende-beslut-201810", "fattade-beslut"]
+
+[[register.variable]]
+name = "Beslutsdatum"
+column = "Beslutsdatum"
+definition = "Datumet då beslutet fattades."
+data_type = "date"
+variants = ["beviljanden", "avslag", "fattade-beslut"]
+
+[[register.variable]]
+name = "Avslagsanledning"
+column = "Avslagsanledning"
+definition = "Anledningen till att personen fick ett avslag på rätten till assistansersättning. Denna uppgift finns från 1999."
+data_type = "text"
+variants = ["avslag", "fattade-beslut"]
+
+[[register.variable]]
+name = "Daglig_verksamhet"
+column = "Daglig_verksamhet"
+definition = "Om daglig verksamhet har påverkat bedömningen av hjälpbehovet. I de fall personen har daglig verksamhet bedöms om särskilda skäl föreligger att få använda assistans under den dagliga verksamheten."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Barnomsorg"
+column = "Barnomsorg"
+definition = "Om barnomsorg har påverkat bedömningen av hjälpbehovet. I de fall personen har barnomsorg bedöms om särkilda skäl föreligger att få använda assistans under barnomsorg."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Vistelse_skolan"
+column = "Vistelse_skolan"
+definition = "Om vistelse i skolan påverkat bedömningen av hjälpbehovet. I de fall kunden har vistelse i skolan bedöms om särskilda skäl föreligger att få använda assistans under vistelse i skolan."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Foraldraansvar"
+column = "Foraldraansvar"
+definition = "Om föräldraansvar påverkat bedömningen av hjälpbehovet. Föräldraansvar gäller då personen med hjälpbehov är ett barn."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Forandringsstatus"
+column = "Forandringsstatus"
+definition = "Förändring av antalet timmar jämfört med föregående beslut. Är skillnaden mindre än en timme per vecka jämfört med föregående beslut blir det oförändrat. Är skillnaden större blir det höjt/sänkt. Har personen haft rätt till assistansersättning, men fått avslag, blir det indrag."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Sjukhusvistelse"
+column = "Sjukhusvistelse"
+definition = "Om kunden har rätt till assistans under sjukhusvistelse."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Beviljat_beslut"
+column = "Beviljat_beslut"
+definition = "Visar om beslutet är personens första beviljande (förstagångsbeviljande) eller om personen har haft ett uppehåll och blivit beviljad igen (återvändare)."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Första_beslutsutfall"
+column = "Första_beslutsutfall"
+definition = "Beslutsutfallet på personens första beslut."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Interimistiskt"
+column = "Interimistiskt"
+definition = "Om beslutet är interimistiskt."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Provningstyp"
+column = "Provningstyp"
+definition = "Vilken typ av prövning beslutet gäller."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Beslutsutfall"
+column = "Beslutsutfall"
+definition = "Beslutsutfallet för beslutet."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+[[register.variable]]
+name = "Anledning tidsbegränsat"
+column = "Anledning_tidsbegränsat"
+definition = "Anledningen till tidsbegränsat rätten till assistansersättning."
+data_type = "text"
+variants = ["fattade-beslut"]
+
+
+[[register]]
+key = "bilstod"
+name = "Bilstöd"
+valid_from = "1988-10-01"
+purpose = "Bilstöd till personer med funktionsnedsättning (och föräldrar till barn med funktionsnedsättning) för att anskaffa eller anpassa fordon. Innehåller utbetalningar samt ansökningar och beslut."
+
+[[register.variant]]
+key = "utbetalningar"
+name = "Bilstöd - Utbetalningar"
+description = "Innehåller alla utbetalningar för bilstöd. Alla attribut avser tidpunkten vid utbetalningen, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variant]]
+key = "ansokningar-beslut"
+name = "Bilstöd - Ansökningar & beslut"
+description = "Innehåller alla ansökningar och beslut för bilstöd. Alla attribut avser tidpunkten vid ansökan eller beslutet, t.ex. personens ålder och geografi. Data uppdateras månadsvis."
+
+[[register.variable]]
+name = "Lopnr_sokande"
+column = "Lopnr_sokande"
+definition = "Individspecifikt löpnummer för betalningsmottagare."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Lopnr_barn"
+column = "Lopnr_barn"
+definition = "Individspecifikt löpnummer för barnet som utbetalningen gäller."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsdatum"
+column = "Utbetalningsdatum"
+definition = "Bokföringsdatum, d.v.s. det datum som utbetalningen bokfördes."
+data_type = "date"
+variants = ["utbetalningar"]
+
+[[register.variable]]
+name = "Kon_sokande"
+column = "Kon_sokande"
+definition = "Den sökandes kön."
+data_type = "text"
+
+[[register.variable]]
+name = "Kon_barn"
+column = "Kon_barn"
+definition = "Barnets kön."
+data_type = "text"
+
+[[register.variable]]
+name = "Alder_sokande"
+column = "Alder_sokande"
+definition = "Den sökandes ålder."
+data_type = "integer"
+
+[[register.variable]]
+name = "Alder_barn"
+column = "Alder_barn"
+definition = "Barnets ålder."
+data_type = "integer"
+
+[[register.variable]]
+name = "Lan_sokande"
+column = "Lan_sokande"
+definition = "Den sökandes län."
+data_type = "text"
+
+[[register.variable]]
+name = "Lan_barn"
+column = "Lan_barn"
+definition = "Barnets län."
+data_type = "text"
+
+[[register.variable]]
+name = "Kommun_sokande"
+column = "Kommun_sokande"
+definition = "Den sökandes kommun."
+data_type = "text"
+
+[[register.variable]]
+name = "Kommun_barn"
+column = "Kommun_barn"
+definition = "Barnets kommun."
+data_type = "text"
+
+[[register.variable]]
+name = "Bidragstyp"
+column = "Bidragstyp"
+definition = "Vilket typ av bidrag utbetalningen avser."
+data_type = "text"
+variants = ["utbetalningar"]
+
+[[register.variable]]
+name = "Fordonsslag"
+column = "Fordonsslag"
+definition = "Vilket typ av fordon utbetalningen avser. Denna uppgift finns mellan 2014-2022."
+data_type = "text"
+
+[[register.variable]]
+name = "Bidragsgrupp"
+column = "Bidragsgrupp"
+definition = "Vilken bidragsgrupp som den sökande tillhör."
+data_type = "text"
+
+[[register.variable]]
+name = "Anpassningskategori"
+column = "Anpassningskategori"
+definition = "Vilken/vilka anpassningar som har genomförts på fordonet. Denna uppgift finns från 2014."
+data_type = "text"
+variants = ["utbetalningar"]
+
+[[register.variable]]
+name = "Anpassningstyp"
+column = "Anpassningstyp"
+definition = "Vilken typ av anpassning utbetalningen avser. Denna uppgift finns från 2014."
+data_type = "text"
+variants = ["utbetalningar"]
+
+[[register.variable]]
+name = "Utbetalt_belopp"
+column = "Utbetalt_belopp"
+definition = "Utbetalt belopp."
+data_type = "decimal"
+variants = ["utbetalningar"]
+
+[[register.variable]]
+name = "Ansokningsdatum"
+column = "Ansokningsdatum"
+definition = "Datumet då ansökan inkom."
+data_type = "date"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Beslutsdatum"
+column = "Beslutsdatum"
+definition = "Datumet då beslutet fattades."
+data_type = "date"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Uppgiftstyp"
+column = "Uppgiftstyp"
+definition = "Vilken typ av uppgift registreringen gäller, ansökan eller något av de ollika bidragsbesluten."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Beslutsutfall"
+column = "Beslutsutfall"
+definition = "Beslutsutfallet för beslutet."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnos_1"
+column = "Diagnos_1"
+definition = "Diagnoskod på den sökande/barnet. Uppgiften finns från år 2014, men täckningen är väldigt dålig. Majoriteten av alla ansökningar och beslut saknar diagnoskod."
+data_type = "text"
+is_sensitive = true
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Diagnos_2"
+column = "Diagnos_2"
+definition = "Diagnoskod på den sökande/barnet. Uppgiften finns från år 2014, men täckningen är väldigt dålig. Majoriteten av alla ansökningar och beslut saknar diagnoskod."
+data_type = "text"
+is_sensitive = true
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Reparation"
+column = "Reparation"
+definition = "Visar om registreringen gäller en reparation. Uppgiften finns från år 2014 och enbart för ansökningar."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Ansokan_period"
+column = "Ansokan_period"
+definition = "Visar om ansökan har gjorts inom en tidsperiod för när det egentligen inte får beviljas nytt bilstöd. Uppgiften finns från år 2014 med varierande kvalité."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Beviljandeorsak_period"
+column = "Beviljandeorsak_period"
+definition = "Orsaken till varför bilstöd har beviljats inom tidsperioden för när det egentligen inte får beviljas nytt bilstöd. Uppgiften finns från år 2014."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Avslagsorsak"
+column = "Avslagsorsak"
+definition = "Orsak till avslag eller delvis beviljande. Uppgiften finns för beslut från år 2014."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Villkorat_beslut"
+column = "Villkorat_beslut"
+definition = "Beslutsutfallet för rätten till bidrag är ett beviljande, men kommande utbetalningar är förenade med villkor. Uppgiften finns för beslut från år 2014."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Sokt_bidrag"
+column = "Sokt_bidrag"
+definition = "Anger vilka bidrag som har sökts för i ansökningarna."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Sokande"
+column = "Sokande"
+definition = "Anger vem ansökan gäller. Enbart den sökande, enbart barnet eller båda. Uppgiften finns från år 2021, men är inte heltäckande."
+data_type = "text"
+variants = ["ansokningar-beslut"]
+
+[[register.variable]]
+name = "Beslutat_belopp"
+column = "Beslutat_belopp"
+definition = "Beviljat belopp för beslutet. Det beviljade beloppet kan skilja sig från det utbetalda beloppet. Uppgiften finns från år 2021, men är inte heltäckande."
+data_type = "decimal"
+variants = ["ansokningar-beslut"]
+
+
+[[register]]
+key = "foraldrapenning"
+name = "Föräldrapenning"
+valid_from = "1993-01-01"
+purpose = "Föräldrapenning och skattad föräldraledighet i samband med uttag av föräldrapenning. MiDAS-data i form av sammanhängande perioder (fall) och delfall per mottagare och barn, med ersättningsnivå, omfattning, brutto-/nettodagar och belopp."
+
+[[register.variant]]
+key = "fp-fall"
+name = "MiDAS - Barn och familj - Föräldrapenning - FP_Fall"
+description = "Innehåller episoder med sammanhängande utbetalningar av föräldrapenning (\"fall\") sedan 1993. Vissa perioder kan börja innan 1993."
+
+[[register.variant]]
+key = "fp-delfall1"
+name = "MiDAS - Barn och familj - Föräldrapenning - FP_Delfall1"
+description = "Innehåller episoder med sammanhängande utbetalningar av föräldrapenning (”fall”) sedan 1993. Förändringar i omfattning, nivå, typ av dag eller för vilket barn föräldrapenning tas ut för genererar ”delfall”. Parallella delfall kan uppstå om en mottagare tar ut föräldrapenning för olika barn, olika nivåer eller olika typer under samma period. Vissa perioder kan börja innan 1993."
+
+[[register.variant]]
+key = "fl-fall"
+name = "MiDAS - Barn och familj -  Föräldrapenning och skattad föräldraledighet - FL_Fall"
+description = "Innehåller episoder med sammanhängande skattat föräldraledighet (”fall”) i samband med uttag av föräldrapenning sedan 1993. Vissa perioder kan börja innan 1993."
+
+[[register.variant]]
+key = "fl-delfall1"
+name = "MiDAS - Barn och familj - Föräldrapenning och skattad föräldraledighet - FL_Delfall1"
+description = "Innehåller episoder med sammanhängande skattat föräldraledighet (”fall”) i samband med uttag av föräldrapenning sedan 1993. Förändringar i omfattning, nivå, typ av dag eller för vilket barn personen är ledig med genererar ”delfall”. Parallella delfall kan uppstå om en personen är ledig med olika barn, på olika nivåer eller olika typer under samma period. Vissa perioder kan börja innan 1993."
+
+[[register.variable]]
+name = "PERSID"
+column = "PERSID"
+definition = "Individspecifikt löpnummer för mottagaren av föräldrapenning"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "FALL_FROM_DATUM"
+column = "FALL_FROM_DATUM"
+definition = "Det första datumet i den sammanhängande perioden av föräldrapenningutbetalningar (\"fallet\")"
+data_type = "date"
+
+[[register.variable]]
+name = "FALL_TOM_DATUM"
+column = "FALL_TOM_DATUM"
+definition = "Det sista datumet i den sammanhängande perioden av föräldrapenningutbetalningar (\"fallet\")"
+data_type = "date"
+
+[[register.variable]]
+name = "FALL_BELOPP"
+column = "FALL_BELOPP"
+definition = "Utbetalt belopp före skatt under fallet"
+data_type = "decimal"
+
+[[register.variable]]
+name = "FALL_BRUTTODAGAR"
+column = "FALL_BRUTTODAGAR"
+definition = "Antalet ersatta dagar under fallet oavsett omfattning (brutto)"
+data_type = "integer"
+
+[[register.variable]]
+name = "FALL_NETTODAGAR"
+column = "FALL_NETTODAGAR"
+definition = "Antalet ersatta dagar under fallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
+data_type = "integer"
+
+[[register.variable]]
+name = "PERSID_BARN"
+column = "PERSID_BARN"
+definition = "Individspecifikt löpnummer för barnet"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "FODDAT_BARN"
+column = "FODDAT_BARN"
+definition = "Födelsedatum för barnet"
+data_type = "text"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "DAGTYP"
+column = "DAGTYP"
+definition = "Anger typ av dag, om det är dubbeldag [2] eller vanlig föräldrapenning [1]"
+data_type = "text"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "NIVA"
+column = "NIVA"
+definition = "Anger föräldrapenningens nivå, lägstanivå [1] eller SGI-nivå [2]"
+data_type = "text"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "OMFATTNING"
+column = "OMFATTNING"
+definition = "Föräldrapenningens omfattning i heltal"
+data_type = "decimal"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "DEL_FROM_DATUM"
+column = "DEL_FROM_DATUM"
+definition = "\"Delfallets\" första dag"
+data_type = "date"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "DEL_TOM_DATUM"
+column = "DEL_TOM_DATUM"
+definition = "\"Delfallets\" sista dag"
+data_type = "date"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "DELFALL_BELOPP"
+column = "DELFALL_BELOPP"
+definition = "Utbetalt belopp före skatt under delfallet"
+data_type = "decimal"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "DELFALL_BRUTTODAGAR"
+column = "DELFALL_BRUTTODAGAR"
+definition = "Antalet ersatta dagar under delfallet oavsett omfattning (brutto)"
+data_type = "integer"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "DELFALL_NETTODAGAR"
+column = "DELFALL_NETTODAGAR"
+definition = "Antalet ersatta dagar under delfallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
+data_type = "integer"
+variants = ["fp-delfall1", "fl-delfall1"]
+
+[[register.variable]]
+name = "FALL_DAGAR_TOT"
+column = "FALL_DAGAR_TOT"
+definition = "Totalt antal dagar under den sammanhängande skattade ledigheten, inklusive icke ersatt ledighet"
+data_type = "integer"
+variants = ["fl-fall", "fl-delfall1"]
+
+[[register.variable]]
+name = "DELFALL_DAGAR_TOT"
+column = "DELFALL_DAGAR_TOT"
+definition = "Totalt antal dagar under delfallet, inklusive icke ersatt ledighet"
+data_type = "integer"
+variants = ["fl-delfall1"]
+
+[[register.variable]]
+name = "DELFALL_DAGAR_LO_SO"
+column = "DELFALL_DAGAR_LO_SO"
+definition = "Antalet lördagar och söndagar under delfallet"
+data_type = "integer"
+variants = ["fl-delfall1"]
+
+
+[[register]]
+key = "tillfallig-foraldrapenning"
+name = "Tillfällig föräldrapenning"
+valid_from = "2006-01-01"
+purpose = "Tillfällig föräldrapenning (bl.a. vård av sjukt barn, VAB) ur mottagarens och barnets perspektiv. MiDAS-data per mottagare och barn med typ av tillfällig föräldrapenning (delförmån), omfattning, belopp och brutto-/nettodagar i fall och delfall."
+
+[[register.variant]]
+key = "fall-1"
+name = "MiDAS - Barn och familj - Tillfällig föräldrapenning - Fall_1"
+description = "Innehåller episoder med sammanhängande utbetalningar av tillfällig föräldrapenning sedan 2006 ur mottagarens perspektiv Kan innehålla perioder innan 2006, dessa bör användas med försiktighet"
+
+[[register.variant]]
+key = "delfall1-1-8"
+name = "MiDAS - Barn och familj - Tillfällig föräldrapenning - Delfall1_1_8"
+description = "Innehåller episoder med sammanhängande utbetalningar av tillfällig föräldrapenning sedan 2006 ur mottagarens perspektiv Kan innehålla perioder innan 2006, dessa bör användas med försiktighet Förändringar i omfattning, typ av tfp eller för vilket barn mottagaren tar ut tfp för genererar ”delfall”."
+
+[[register.variant]]
+key = "fall-2"
+name = "MiDAS - Barn och familj - Tillfällig föräldrapenning - Fall_2"
+description = "Innehåller episoder med sammanhängande utbetalningar av tillfällig föräldrapenning sedan 2006 ur barnets perspektiv Kan innehålla perioder innan 2006, dessa bör användas med försiktighet"
+
+[[register.variant]]
+key = "delfall2-1-8"
+name = "MiDAS - Barn och familj - Tillfällig föräldrapenning - Delfall2_1_8"
+description = "Innehåller episoder med sammanhängande utbetalningar av tillfällig föräldrapenning sedan 2006 ur barnets perspektiv Kan innehålla perioder innan 2006, dessa bör användas med försiktighet Förändringar i omfattning, typ av tillfällig föräldrapenning eller vilken mottagare som har tagit ut för barnet genererar ”delfall”."
+
+[[register.variable]]
+name = "LOPNR"
+column = "LOPNR"
+definition = "Avidentifierat löpnummer för mottagaren"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["fall-1", "delfall1-1-8"]
+
+[[register.variable]]
+name = "FALL_FROM_DATUM"
+column = "FALL_FROM_DATUM"
+definition = "Det första datumet i den sammanhängande perioden av tillfällig föräldrapenning (\"fallet\")"
+data_type = "date"
+
+[[register.variable]]
+name = "FALL_TOM_DATUM"
+column = "FALL_TOM_DATUM"
+definition = "Det sista datumet i den sammanhängande perioden av tillfällig föräldrapenning (\"fallet\")"
+data_type = "date"
+
+[[register.variable]]
+name = "FALL_BELOPP"
+column = "FALL_BELOPP"
+definition = "Utbetalt belopp före skatt under fallet"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "FALL_BRUTTODAGAR"
+column = "FALL_BRUTTODAGAR"
+definition = "Antalet ersatta dagar under fallet oavsett omfattning (brutto)"
+data_type = "integer"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "FALL_NETTODAGAR"
+column = "FALL_NETTODAGAR"
+definition = "Antalet ersatta dagar under fallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
+data_type = "integer"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "FALL_ANT_BARN"
+column = "FALL_ANT_BARN"
+definition = "Antal barn det har betalats ut tillfällig föräldrapenning för under fallet"
+data_type = "integer"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "FALL_ANT_TYP"
+column = "FALL_ANT_TYP"
+definition = "Antal olika typer (delförmåner) det har betalats ut för under fallet"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "VAB"
+column = "VAB"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med Vård av barn"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "ASJ"
+column = "ASJ"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med Allvarligt sjukt barn"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "OVS"
+column = "OVS"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med Ordinarie vårdares sjukdom"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "F10"
+column = "F10"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med 10 dagar vid barnets födsel"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "A10"
+column = "A10"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med 10 dagar vid barnets adoption"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "KD"
+column = "KD"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med Kontaktdagar"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "DAB"
+column = "DAB"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med Dagar i samband med att ett barn har avlidit"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "DAB_ASJ"
+column = "DAB_ASJ"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med Dagar i samband med att ett barn har avlidit och allvarligt sjukt barn"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "OMF_FROM"
+column = "OMF_FROM"
+definition = "Omfattning vid fallets första dag"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "OMF_TOM"
+column = "OMF_TOM"
+definition = "Omfattning vid fallets sista (senast kända) ersatta dag"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "LOPNR_BARN"
+column = "LOPNR_BARN"
+definition = "Individspecifikt löpnummer för barnet"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["delfall1-1-8", "fall-2", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DELFORMAN_KOD_1"
+column = "DELFORMAN_KOD_1"
+definition = "Typ av TFP som har ersatts för under delfallet"
+data_type = "text"
+variants = ["delfall1-1-8"]
+
+[[register.variable]]
+name = "DELFORMAN_KOD_2"
+column = "DELFORMAN_KOD_2"
+definition = "Eventuell ytterligare typ av TFP som har ersatts för under delfallet"
+data_type = "text"
+variants = ["delfall1-1-8"]
+
+[[register.variable]]
+name = "DELFORMAN_KOD_3"
+column = "DELFORMAN_KOD_3"
+definition = "Eventuell ytterligare typ av TFP som har ersatts för under delfallet"
+data_type = "text"
+variants = ["delfall1-1-8"]
+
+[[register.variable]]
+name = "OMFATTNING"
+column = "OMFATTNING"
+definition = "Tillfälliga föräldrapenningens omfattning i heltal"
+data_type = "decimal"
+variants = ["delfall1-1-8", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_FROM_DATUM"
+column = "DEL_FROM_DATUM"
+definition = "\"Delfallets\" första dag"
+data_type = "date"
+variants = ["delfall1-1-8", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_TOM_DATUM"
+column = "DEL_TOM_DATUM"
+definition = "\"Delfallets\" sista dag"
+data_type = "date"
+variants = ["delfall1-1-8", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_BELOPP"
+column = "DEL_BELOPP"
+definition = "Utbetalt belopp före skatt under delfallet"
+data_type = "decimal"
+variants = ["delfall1-1-8", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_BRUTTODAGAR"
+column = "DEL_BRUTTODAGAR"
+definition = "Antalet ersatta dagar under delfallet oavsett omfattning (brutto)"
+data_type = "integer"
+variants = ["delfall1-1-8", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_NETTODAGAR"
+column = "DEL_NETTODAGAR"
+definition = "Antalet ersatta dagar under delfallet omräknat till hela dagar (netto). Två dagar med halv omfattning ger en nettodag."
+data_type = "integer"
+variants = ["delfall1-1-8", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_ANT_BARN"
+column = "DEL_ANT_BARN"
+definition = "Antal barn det har betalats ut tillfällig föräldrapenning för under delfallet"
+data_type = "integer"
+variants = ["delfall1-1-8"]
+
+[[register.variable]]
+name = "FALL_ANT_MOTTAGARE"
+column = "FALL_ANT_MOTTAGARE"
+definition = "Antal mottagare som har tagit ut tillfällig föräldrapenning för barnet under fallet"
+data_type = "integer"
+variants = ["fall-2"]
+
+[[register.variable]]
+name = "MOTTAGARE"
+column = "MOTTAGARE"
+definition = "Löpnummerför samtliga mottagare under fallet."
+data_type = "text"
+variants = ["fall-2", "delfall2-1-8"]
+
+[[register.variable]]
+name = "DEL_ANT_MOTTAGARE"
+column = "DEL_ANT_MOTTAGARE"
+definition = "Antal mottagare under delfallet"
+data_type = "integer"
+variants = ["delfall2-1-8"]
+
+[[register.variable]]
+name = "DELFORMANER"
+column = "DELFORMANER"
+definition = "Typ av TFP som har ersatts för under delfallet"
+data_type = "text"
+variants = ["delfall2-1-8"]
+
+[[register.variable]]
+name = "del_ant_typ"
+column = "del_ant_typ"
+definition = "Antal olika typer av TFP under delfallet"
+data_type = "text"
+variants = ["delfall2-1-8"]
+
+
+[[register]]
+key = "sjuk-aktivitetsersattning"
+name = "Sjuk- och aktivitetsersättning"
+valid_from = "1994-01-01"
+purpose = "Sjuk- och aktivitetsersättning (tidigare förtidspension/sjukbidrag) till personer med varaktigt eller långvarigt nedsatt arbetsförmåga. MiDAS-data i form av sammanhängande perioder (fall) och delfall, med förmån/delförmån, omfattning, diagnos (ICD-9/10), brutto-/nettodagar och belopp."
+
+[[register.variant]]
+key = "fall-1"
+name = "MiDAS - Ohälsa - Förtidspension/SA - Fall 1"
+description = "Innehåller episoder med sammanhängande utbetalningar av förtidspension, sjukbidrag, sjukersättning och aktivitetsersättning sedan 1994."
+
+[[register.variant]]
+key = "fall-2"
+name = "MiDAS - Ohälsa - Förtidspension/SA - Fall 2"
+description = "Innehåller episoder med sammanhängande utbetalningar av förtidspension, sjukbidrag, sjukersättning och aktivitetsersättning sedan 1994. Fallen kan innehålla kortare uppehåll utan ersättning om max 3 månader."
+
+[[register.variant]]
+key = "delfall-1-1"
+name = "MiDAS - Ohälsa - Förtidspension/SA - Delfall 1-1"
+description = "Innehåller episoder med sammanhängande utbetalningar av förtidspension, sjukbidrag, sjukersättning och aktivitetsersättning sedan 1994. Händelser som definierar slutet på ett delfall och början på ett nytt är förändring av delförmån, omfattning, diagnos eller månadsbelopp."
+
+[[register.variant]]
+key = "delfall-2-1"
+name = "MiDAS - Ohälsa - Förtidspension/SA - Delfall 2-1"
+description = "Innehåller episoder med sammanhängande utbetalningar av förtidspension, sjukbidrag, sjukersättning och aktivitetsersättning sedan 1994. Fallen kan innehålla kortare uppehåll utan ersättning om max 3 månader. Händelser som definierar slutet på ett delfall och början på ett nytt är förändring av delförmån, omfattning, diagnos eller månadsbelopp."
+
+[[register.variable]]
+name = "Lopnr"
+column = "Lopnr"
+definition = "Individspecifikt löpnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Fall_from_datum"
+column = "Fall_from_datum"
+definition = "Fallets första dag"
+data_type = "date"
+
+[[register.variable]]
+name = "Fall_tom_datum"
+column = "Fall_tom_datum"
+definition = "Fallets senast kända (sista) dag"
+data_type = "date"
+
+[[register.variable]]
+name = "Fall_dagar_brutto"
+column = "Fall_dagar_brutto"
+definition = "Antalet ersatta dagar under fallet oavsett omfattning (brutto)"
+data_type = "integer"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Fall_dagar_netto"
+column = "Fall_dagar_netto"
+definition = "Antalet ersatta dagar under fallet omräknat till hela dagar (netto). 30 dagar med halv omfattning ger 15 nettodagar."
+data_type = "integer"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Fall_belopp_brutto"
+column = "Fall_belopp_brutto"
+definition = "Utbetalt belopp före skatt under fallet"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Fall_belopp_gar_brutto"
+column = "Fall_belopp_gar_brutto"
+definition = "Utbetalt belopp garanti/folkpension/pensionstillskott före skatt under fallet"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Fall_belopp_ink_brutto"
+column = "Fall_belopp_ink_brutto"
+definition = "Utbetalt belopp inkomstrelaterad/atp före skatt under fallet"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Manader"
+column = "Manader"
+definition = "Antalet månader fallet pågick/har pågått"
+data_type = "integer"
+
+[[register.variable]]
+name = "Ftp"
+column = "Ftp"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med förtidspension"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Sjb"
+column = "Sjb"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med sjukbidrag"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "S"
+column = "S"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med sjukersättning"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "A"
+column = "A"
+definition = "0/1-variabel med \"etta\" om fallet innehåller någon ersättningsperiod med aktivitetsersättning"
+data_type = "text"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Omf_from"
+column = "Omf_from"
+definition = "Omfattning vid fallets första dag"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Omf_tom"
+column = "Omf_tom"
+definition = "Omfattning vid fallets sista (senast kända) ersatta dag"
+data_type = "decimal"
+variants = ["fall-1", "fall-2"]
+
+[[register.variable]]
+name = "Fall_dagar_tot"
+column = "Fall_dagar_tot"
+definition = "Antalet dagar under fallet (inkl. eventuella perioder utan ersättning)"
+data_type = "integer"
+variants = ["fall-2"]
+
+[[register.variable]]
+name = "Forman_kod"
+column = "Forman_kod"
+definition = "Kod för aktuell förmån under delfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Forman"
+column = "Forman"
+definition = "Klartext för aktuell förmån under delfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Delforman_kod"
+column = "Delforman_kod"
+definition = "Kod för aktuell delförmån under delfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Delforman"
+column = "Delforman"
+definition = "Klartext för aktuell delförmån under delfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Omfattning"
+column = "Omfattning"
+definition = "Omfattning i decimaltal"
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Manbelopp"
+column = "Manbelopp"
+definition = "Utbetald månadsersättning under delfallet"
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnos1_kod"
+column = "Diagnos1_kod"
+definition = "Kod för registrerad huvuddiagnos enligt ICD-9/10, treställsnivå"
+data_type = "text"
+is_sensitive = true
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Diagnos1"
+column = "Diagnos1"
+definition = "Klartext för registrerad huvuddiagnos enligt ICD-9/10"
+data_type = "text"
+is_sensitive = true
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Diagnos2_kod"
+column = "Diagnos2_kod"
+definition = "Kod för registrerad bidiagnos enligt ICD-9/10, treställsnivå"
+data_type = "text"
+is_sensitive = true
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Diagnos2"
+column = "Diagnos2"
+definition = "Klartext för registrerad bidiagnos enligt ICD-9/10"
+data_type = "text"
+is_sensitive = true
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_from_datum"
+column = "Del_from_datum"
+definition = "Delfallets första dag"
+data_type = "date"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_tom_datum"
+column = "Del_tom_datum"
+definition = "Delfallets senast kända (sista) ersatta dag"
+data_type = "date"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_dagar_brutto"
+column = "Del_dagar_brutto"
+definition = "Antalet ersatta bruttodagar under delfallet"
+data_type = "integer"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_dagar_netto"
+column = "Del_dagar_netto"
+definition = "Antalet ersatta nettodagar under delfallet (två dagar med halv omfattning ger en nettodag)"
+data_type = "integer"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_belopp_brutto"
+column = "Del_belopp_brutto"
+definition = "Utbetalt belopp totalt före skatt under delfallet"
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_belopp_gar_brutto"
+column = "Del_belopp_gar_brutto"
+definition = "Utbetalt belopp garanti/folkpension/pensionstillskott före skatt under delfallet"
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Del_belopp_ink_brutto"
+column = "Del_belopp_ink_brutto"
+definition = "Utbetalt belopp inkomstrelaterad/atp före skatt under delfallet"
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+
+[[register]]
+key = "sjukpenning"
+name = "Sjukpenning och rehabiliteringspenning"
+valid_from = "1994-01-01"
+purpose = "Sjukpenning, förebyggande sjukpenning, rehabiliteringspenning och arbetsskadesjukpenning — dagersättningar vid nedsatt arbetsförmåga. MiDAS-data i form av sammanhängande sjukfall (fall) och delsjukfall (delfall), med förmån/delförmån, inkomsttyp, omfattning, dagbelopp, brutto-/nettodagar, diagnos och belopp."
+
+[[register.variant]]
+key = "fall-1"
+name = "MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning - Fall1"
+description = "Innehåller episoder med sammanhängande utbetalningar av sjukpenning, förebyggande sjukpenning, rehabiliteringspenning och arbetsskadesjukpenning sedan 1994. Kan innehålla kortare perioder utan ersättning från Försäkringskassan till följd av karenstid, sjuklön, semester och återinsjuknande."
+
+[[register.variant]]
+key = "delfall-1-1"
+name = "MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning - Delfall 1-1"
+description = "Innehåller episoder med sammanhängande utbetalningar av sjukpenning, förebyggande sjukpenning, rehabiliteringspenning och arbetsskadesjukpenning sedan 1994 med samma delförmån och inkomsttyp. Händelser som definierar slutet på ett delsjukfall och början på ett nytt är förändring av omfattning eller dagbelopp. Parallella delsjukfall för en individ uppstår vid parallella ersättningsperioder med olika delförmåner eller inkomsttyper."
+
+[[register.variant]]
+key = "delfall-2-1"
+name = "MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning - Delfall 2-1"
+description = "Innehåller episoder med sammanhängande utbetalningar av sjukpenning, förebyggande sjukpenning, rehabiliteringspenning och arbetsskadesjukpenning sedan 1994 med samma delförmån. Händelser som definierar slutet på ett delsjukfall och början på ett nytt är förändring av inkomsttyp, omfattning eller dagbelopp. Parallella delsjukfall för en individ uppstår vid parallella ersättningsperioder med olika delförmåner. Vid parallella inkomsttyper används kombinationskoden för SGI blandinkomst."
+
+[[register.variant]]
+key = "delfall-3-1"
+name = "MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning - Delfall 3-1"
+description = "Innehåller episoder med sammanhängande utbetalningar av sjukpenning, förebyggande sjukpenning, rehabiliteringspenning och arbetsskadesjukpenning sedan 1994 med samma förmån. Händelser som definierar slutet på ett delsjukfall och början på ett nytt är förändring av inkomsttyp, omfattning eller dagbelopp. Parallella delsjukfall för en individ uppstår vid parallella ersättningsperioder med olika förmåner. Vid parallella inkomsttyper används kombinationskoden för SGI blandinkomst. Produkten saknar information om delförmån."
+
+[[register.variant]]
+key = "delfall-4-1"
+name = "MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning - Delfall 4-1"
+description = "Innehåller episoder med sammanhängande utbetalningar av sjukpenning, förebyggande sjukpenning, rehabiliteringspenning och arbetsskadesjukpenning sedan 1994. Händelser som definierar slutet på ett delsjukfall och början på ett nytt är förändring av delförmån, inkomsttyp, omfattning eller dagbelopp. Det förekommer här inga parallella delsjukfall för en individ. Vid parallella delförmåner används istället två delförmånsvariabler och vid parallella inkomsttyper används kombinationskoden för SGI blandinkomst."
+
+[[register.variable]]
+name = "Lopnr"
+column = "Lopnr"
+definition = "Individspecifikt löpnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Fall_from_datum"
+column = "Fall_from_datum"
+definition = "Sjukfallets första dag"
+data_type = "date"
+
+[[register.variable]]
+name = "Fall_from_datum2"
+column = "Fall_from_datum2"
+definition = "Sjukfallets första ersatta dag från Försäkringskassan"
+data_type = "date"
+
+[[register.variable]]
+name = "Fall_tom_datum"
+column = "Fall_tom_datum"
+definition = "Sjukfallets sista (senast kända) ersatta dag"
+data_type = "date"
+
+[[register.variable]]
+name = "Fall_dagar_tot"
+column = "Fall_dagar_tot"
+definition = "Antalet dagar i sjukfallet oavsett förmån. Motsvarar antalet dagar mellan fall_from_datum och fall_tom_datum."
+data_type = "integer"
+
+[[register.variable]]
+name = "Fall_dagar_brutto"
+column = "Fall_dagar_brutto"
+definition = "Antalet ersatta dagar under sjukfallet oavsett omfattning (brutto)"
+data_type = "integer"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Fall_dagar_netto"
+column = "Fall_dagar_netto"
+definition = "Antalet ersatta dagar under sjukfallet omräknat till hel omfattning i förhållande till arbetstid (netto). Två dagar med halv omfattning ger en nettodag"
+data_type = "integer"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Fall_belopp_brutto"
+column = "Fall_belopp_brutto"
+definition = "Utbetalt belopp före skatt under sjukfallet"
+data_type = "decimal"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Forsakradtyp_kod"
+column = "Forsakradtyp_kod"
+definition = "Kod för skattad sysselsättning vid sjukfallets start"
+data_type = "text"
+
+[[register.variable]]
+name = "Forsakradtyp"
+column = "Forsakradtyp"
+definition = "Klartext av skattad sysselsättning vid sjukfallets start"
+data_type = "text"
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnos_kod"
+column = "Diagnos_kod"
+definition = "Kod för huvuddiagnos enligt ICD-10 vid sjukfallets start, treställig nivå"
+data_type = "text"
+is_sensitive = true
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Diagnos"
+column = "Diagnos"
+definition = "Klartext för huvuddiagnos enligt ICD-10 vid sjukfallets start, treställig nivå"
+data_type = "text"
+is_sensitive = true
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Diagnos_kod_fullstandig"
+column = "Diagnos_kod_fullstandig"
+definition = "Kod för huvuddiagnos enligt ICD-10 vid sjukfallets start, finaste nivå"
+data_type = "text"
+is_sensitive = true
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Diagnos_fullstandig"
+column = "Diagnos_fullstandig"
+definition = "Klartext för huvuddiagnos enligt ICD-10 vid sjukfallets start, finaste nivå"
+data_type = "text"
+is_sensitive = true
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Sjp"
+column = "Sjp"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med sjukpenning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Fb_sjp"
+column = "Fb_sjp"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med förebyggande sjukpenning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Rehabp"
+column = "Rehabp"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med rehabiliteringspening"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Askp"
+column = "Askp"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med arbetsskadesjukpenning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Sig_a"
+column = "Sig_a"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med ersättning för A-inkomst"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Sig_b"
+column = "Sig_b"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med ersättning för B-inkomst"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Kvart"
+column = "Kvart"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med en fjärdedels omfattning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Halv"
+column = "Halv"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med halv omfattning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Tre_kvart"
+column = "Tre_kvart"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med tre fjärdedels omfattning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Hel"
+column = "Hel"
+definition = "0/1-variabel med \"etta\" om sjukfallet innehåller någon ersättningsperiod med hel omfattning"
+data_type = "text"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Omf_from"
+column = "Omf_from"
+definition = "Omfattning vid sjukfallets första ersatta dag från Försäkringskassan*"
+data_type = "decimal"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Omf_tom"
+column = "Omf_tom"
+definition = "Omfattning vid sjukfallets sista (senast kända) ersatta dag*"
+data_type = "decimal"
+variants = ["fall-1"]
+
+[[register.variable]]
+name = "Forman_kod"
+column = "Forman_kod"
+definition = "Kod för ersatt förmån under delsjukfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1"]
+
+[[register.variable]]
+name = "Forman"
+column = "Forman"
+definition = "Klartext för ersatt förmån under delsjukfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1"]
+
+[[register.variable]]
+name = "Delforman_kod"
+column = "Delforman_kod"
+definition = "Kod för ersatt delförmån under delsjukfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Delforman"
+column = "Delforman"
+definition = "Klartext för ersatt delförmån under delsjukfallet"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1"]
+
+[[register.variable]]
+name = "Inkomsttyp_kod"
+column = "Inkomsttyp_kod"
+definition = "Kod för inkomsttyp (SGI) som ligger till grund för ersättningen. Kombinationskoden för SGI blandinkomst används inte eftersom A- och B-inkomst redovisas för sig."
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Inkomsttyp"
+column = "Inkomsttyp"
+definition = "Klaretxt för inkomsttyp (SGI) som ligger till grund för ersättningen"
+data_type = "text"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Omfattning"
+column = "Omfattning"
+definition = "Omfattning (sjukskrivningsgrad) i decimaltal i förhållande till arbetstid. En person som har 50% arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga kommer att ha 100% i omfattning."
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Dagbelopp"
+column = "Dagbelopp"
+definition = "Utbetald dagersättning under delsjukfallet. Motsvarar del_belopp_brutto dividerat med del_dagar_brutto. Dagbeloppet förändras under ett sjukfall främst vid förändrad SGI , omfattning och vissa fall delförmån. Dagbeloppet kan däremot också förändras av datatekniska skäl där det inte har gått att återskapa ett enhetligt dagbelopp och bör därmed analyseras med viss försiktighet."
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Del_from_datum"
+column = "Del_from_datum"
+definition = "Delsjukfallets första dag. Motsvarar fall_from_datum för ett sjukfalls första delsjukfall."
+data_type = "date"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Del_tom_datum"
+column = "Del_tom_datum"
+definition = "Delsjukfallets sista dag. Motsvarar fall_tom_datum för ett sjukfalls sista delsjukfall."
+data_type = "date"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Del_dagar_tot"
+column = "Del_dagar_tot"
+definition = "Antalet dagar i delsjukfallet. Motsvarar antalet dagar mellan del_from_datum och del_tom_datum."
+data_type = "integer"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Del_dagar_brutto"
+column = "Del_dagar_brutto"
+definition = "Antalet ersatta dagar under delsjukfallet oavsett omfattning (brutto)"
+data_type = "integer"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Del_dagar_netto"
+column = "Del_dagar_netto"
+definition = "Antalet ersatta dagar under delsjukfallet omräknat till hel omfattning i förhållande till arbetstid (netto). Två dagar med halv omfattning ger en nettodag"
+data_type = "integer"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Del_belopp_brutto"
+column = "Del_belopp_brutto"
+definition = "Utbetalt belopp före skatt under delsjukfallet"
+data_type = "decimal"
+variants = ["delfall-1-1", "delfall-2-1", "delfall-3-1", "delfall-4-1"]
+
+[[register.variable]]
+name = "Delforman1_kod"
+column = "Delforman1_kod"
+definition = "Kod för ersatt delförmån under delsjukfallet"
+data_type = "text"
+variants = ["delfall-4-1"]
+
+[[register.variable]]
+name = "Delforman1"
+column = "Delforman1"
+definition = "Klartext för ersatt delförmån under delsjukfallet"
+data_type = "text"
+variants = ["delfall-4-1"]
+
+[[register.variable]]
+name = "Delforman2_kod"
+column = "Delforman2_kod"
+definition = "Kod för eventuell ytterligare ersatt delförmån under delsjukfallet. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån."
+data_type = "text"
+variants = ["delfall-4-1"]
+
+[[register.variable]]
+name = "Delforman2"
+column = "Delforman2"
+definition = "Klartext för eventuell ytterligare ersatt delförmån under delsjukfallet. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån."
+data_type = "text"
+variants = ["delfall-4-1"]
+
+
+[[register]]
+key = "merkostnadsersattning"
+name = "Merkostnadsersättning"
+valid_from = "2019-01-01"
+purpose = "Merkostnadsersättning för merkostnader till följd av en vuxens eller ett barns funktionsnedsättning. Infördes 2019 och ersatte handikappersättningen (och, tillsammans med omvårdnadsbidrag, vårdbidraget). Innehåller mottagare, barn, beviljanden och avslag."
+
+[[register.variant]]
+key = "mottagare"
+name = "Merkostnadsersättning – beståndet/populationen/utbetalningar — Tabell 1. Mottagare"
+description = "Data visar vilka vuxna och vilka föräldrar som har rätt till merkostnadsersättningen."
+
+[[register.variant]]
+key = "barn"
+name = "Merkostnadsersättning – beståndet/populationen/utbetalningar — Tabell 2. Barn"
+description = "Data visar vilka föräldrar och barn som har rätt till merkostnadsersättningen."
+
+[[register.variant]]
+key = "beviljanden"
+name = "Merkostnadsersättning – beviljanden — Tabell 3. Beviljanden"
+description = "Data visar vilka vuxna och vilka föräldrar och barn som fått beviljad ansökan om rätt till merkostnadsersättning."
+
+[[register.variant]]
+key = "avslag"
+name = "Merkostnadsersättning – avslag — Tabell 4. Avslag"
+description = "Data visar vilka vuxna och vilka föräldrar och barn som fått avslag på sin ansökan om rätt till merkostnadsersättning."
+
+[[register.variable]]
+name = "Lopnr"
+column = "Lopnr"
+definition = "Individspecifikt löpnummer för betalningsmottagare (förälder /likställd med förälder eller den vuxen som ansöker om ersättning för sig själv)"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmanad"
+column = "Utbetalningsmanad"
+definition = "Månad som utbetalning gjorts"
+data_type = "text"
+variants = ["mottagare", "barn"]
+
+[[register.variable]]
+name = "Belopp"
+column = "Belopp"
+definition = "Utbetalt belopp"
+data_type = "decimal"
+variants = ["mottagare"]
+
+[[register.variable]]
+name = "Niva"
+column = "Niva"
+definition = "Nivå på merkostnadsersättningen"
+data_type = "text"
+variants = ["mottagare", "barn", "beviljanden"]
+
+[[register.variable]]
+name = "Ersattningsperiod_fromdat"
+column = "Ersattningsperiod_fromdat"
+definition = "Första dag i ersättningsperioden som utbetalningen gäller"
+data_type = "date"
+variants = ["mottagare", "barn"]
+
+[[register.variable]]
+name = "Ersattningsperiod_tomdat"
+column = "Ersattningsperiod_tomdat"
+definition = "Sista dag i ersättningsperioden som utbetalningen gäller"
+data_type = "date"
+variants = ["mottagare", "barn"]
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnoskod (den vuxnas)"
+column = "Diagnoskod_vuxen"
+definition = "Vi levererar oftast huvuddiagnos men även diagnoskod nr 2 finns"
+data_type = "text"
+is_sensitive = true
+variants = ["mottagare", "beviljanden"]
+
+[[register.variable]]
+name = "Lopnr_barn"
+column = "Lopnr_barn"
+definition = "Unikt löpnummer för barnet som utbetalningen gäller"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["barn", "beviljanden", "avslag"]
+
+[[register.variable]]
+name = "Skattat_belopp"
+column = "Skattat_belopp"
+definition = "Utbetalt belopp per barn. I ärenden med flera barn delas utbetalt belopp genom antal barn i ärendet."
+data_type = "decimal"
+variants = ["barn"]
+
+[[register.variable]]
+name = "Antal_barn"
+column = "Antal_barn"
+definition = "Antal barn i ärendet, behövs för att förstå uppgift om nivå om det finns fler än ett barn i ärendet"
+data_type = "integer"
+variants = ["barn"]
+
+[[register.variable]]
+name = "Diagnoskod (barnets)"
+column = "Diagnoskod_barn"
+definition = "Vi levererar oftast huvuddiagnos men även diagnoskod nr 2 finns"
+data_type = "text"
+is_sensitive = true
+variants = ["barn", "beviljanden"]
+
+[[register.variable]]
+name = "Beslutsdatum"
+column = "Beslutsdatum"
+definition = "Beslutsdatum"
+data_type = "date"
+variants = ["beviljanden", "avslag"]
+
+[[register.variable]]
+name = "Formansperiod_from"
+column = "Formansperiod_from"
+definition = "Första dag i hela förmånsperioden som beslutats i ärendet. Den kan sedan vara uppdelad i flera mindre periodbeslut."
+data_type = "date"
+variants = ["beviljanden"]
+
+[[register.variable]]
+name = "Formansperiod_tom"
+column = "Formansperiod_tom"
+definition = "Sista dag i hela förmånsperioden som beslutats i ärendet."
+data_type = "date"
+variants = ["beviljanden"]
+
+[[register.variable]]
+name = "Periodbeslut_from"
+column = "Periodbeslut_from"
+definition = "Första dag i periodbeslutet. Samma beslut kan beviljas med olika ersättningsnivåer för olika perioder."
+data_type = "date"
+variants = ["beviljanden"]
+
+[[register.variable]]
+name = "Periodbeslut_tom"
+column = "Periodbeslut_tom"
+definition = "Sista dag i periodbeslutet"
+data_type = "date"
+variants = ["beviljanden"]
+
+
+[[register]]
+key = "omvardnadsbidrag"
+name = "Omvårdnadsbidrag"
+valid_from = "2019-01-01"
+purpose = "Omvårdnadsbidrag till föräldrar för den omvårdnad och tillsyn ett barn med funktionsnedsättning behöver. Infördes 2019 och ersatte (tillsammans med merkostnadsersättning) vårdbidraget. Innehåller mottagare, barn, beviljanden och avslag."
+
+[[register.variant]]
+key = "mottagare"
+name = "Omvårdnadsbidrag – beståndet/populationen/utbetalningar — Tabell 1. Mottagare"
+description = "Data visar vilka föräldrar som har rätt till omvårdnadsbidraget."
+
+[[register.variant]]
+key = "barn"
+name = "Omvårdnadsbidrag – beståndet/populationen/utbetalningar — Tabell 2. Barn"
+description = "Data visar vilka föräldrar och barn som har rätt till omvårdnadsbidraget."
+
+[[register.variant]]
+key = "beviljanden"
+name = "Omvårdnadsbidrag – beviljanden — Tabell 3. Beviljanden"
+description = "Data visar vilka föräldrar och barn som fått beviljad ansökan om rätt till omvårdnadsbidrag"
+
+[[register.variant]]
+key = "avslag"
+name = "Omvårdnadsbidrag – avslag — Tabell 4. Avslag"
+description = "Data visar vilka föräldrar och barn som fått avslag på sin ansökan om rätt till omvårdnadsbidrag"
+
+[[register.variable]]
+name = "Lopnr"
+column = "Lopnr"
+definition = "Individspecifikt löpnummer för betalningsmottagare (förälder eller likställd med förälder)"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmanad"
+column = "Utbetalningsmanad"
+definition = "Månad som utbetalning gjorts"
+data_type = "text"
+variants = ["mottagare", "barn"]
+
+[[register.variable]]
+name = "Belopp"
+column = "Belopp"
+definition = "Utbetalt belopp"
+data_type = "decimal"
+variants = ["mottagare"]
+
+[[register.variable]]
+name = "Niva"
+column = "Niva"
+definition = "Nivå på omvårdnadsbidraget"
+data_type = "text"
+variants = ["mottagare", "barn", "beviljanden"]
+
+[[register.variable]]
+name = "Ersattningsperiod_fromdat"
+column = "Ersattningsperiod_fromdat"
+definition = "Första dag i ersättningsperioden som utbetalningen gäller"
+data_type = "date"
+variants = ["mottagare", "barn"]
+
+[[register.variable]]
+name = "Ersattningsperiod_tomdat"
+column = "Ersattningsperiod_tomdat"
+definition = "Sista dag i ersättningsperioden som utbetalningen gäller"
+data_type = "date"
+variants = ["mottagare", "barn"]
+
+[[register.variable]]
+name = "Lopnr_barn"
+column = "Lopnr_barn"
+definition = "Unikt löpnummer för barnet som utbetalningen gäller"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["barn", "beviljanden", "avslag"]
+
+[[register.variable]]
+name = "Skattat_belopp"
+column = "Skattat_belopp"
+definition = "Utbetalt belopp per barn. I ärenden med flera barn delas utbetalt belopp genom antal barn i ärendet."
+data_type = "decimal"
+variants = ["barn"]
+
+[[register.variable]]
+name = "Antal_barn"
+column = "Antal_barn"
+definition = "Antal barn i ärendet, behövs för att förstå uppgift om nivå om det finns fler än ett barn i ärendet"
+data_type = "integer"
+variants = ["barn"]
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "Diagnoskod"
+column = "Diagnoskod"
+definition = "Vi levererar oftast huvuddiagnos men även diagnoskod nr 2 finns"
+data_type = "text"
+is_sensitive = true
+variants = ["barn", "beviljanden"]
+
+[[register.variable]]
+name = "Beslutsdatum"
+column = "Beslutsdatum"
+definition = "Beslutsdatum"
+data_type = "date"
+variants = ["beviljanden", "avslag"]
+
+[[register.variable]]
+name = "Formansperiod_from"
+column = "Formansperiod_from"
+definition = "Första dag i hela förmånsperioden som beslutats i ärendet. Den kan sedan vara uppdelad i flera mindre periodbeslut."
+data_type = "date"
+variants = ["beviljanden"]
+
+[[register.variable]]
+name = "Formansperiod_tom"
+column = "Formansperiod_tom"
+definition = "Sista dag i hela förmånsperioden som beslutats i ärendet."
+data_type = "date"
+variants = ["beviljanden"]
+
+[[register.variable]]
+name = "Periodbeslut_from"
+column = "Periodbeslut_from"
+definition = "Första dag i periodbeslutet. Samma beslut kan beviljas med olika ersättningsnivåer för olika perioder."
+data_type = "date"
+variants = ["beviljanden"]
+
+[[register.variable]]
+name = "Periodbeslut_tom"
+column = "Periodbeslut_tom"
+definition = "Sista dag i periodbeslutet"
+data_type = "date"
+variants = ["beviljanden"]
+
+
+[[register]]
+key = "lakarintygsregistret"
+name = "Läkarintygsregistret"
+valid_from = "2016-01-01"
+purpose = "Läkarintyg (blankett FK7804, tidigare FK7263) med svar och delsvar som ligger till grund för bl.a. sjukpenning. Innehåller intygens fält: diagnoskod, sjukskrivningsperioder per omfattningsnivå, åtgärder och prognos."
+
+[[register.variable]]
+name = "LOPNR"
+column = "LOPNR"
+definition = "Individspecifikt löpnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "DETALJ_LOPNR"
+column = "DETALJ_LOPNR"
+definition = "Unik nyckel för intyget"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "SYFTE"
+column = "SYFTE"
+definition = "Kod för intygets syfte ( LI_SJP eller LI_7268). LI_SJP avser den nya typen av intyg, FK7804, LI_7263 avser den gamla."
+data_type = "text"
+
+[[register.variable]]
+name = "KANAL"
+column = "KANAL"
+definition = "Kanal i klartext, hur intyget kom in. Det är enbart intyg av typen 7804 som kommer in elektroniskt som kan ha alla attribut"
+data_type = "text"
+
+[[register.variable]]
+name = "SMITTBARARPENNING"
+column = "SMITTBARARPENNING"
+definition = "Fält 1 i intyget. J/N om intyget avser smittbärarpenning"
+data_type = "text"
+
+[[register.variable]]
+name = "UNDERSOKNING_DATUM"
+column = "UNDERSOKNING_DATUM"
+definition = "Fält 2 i intyget - datum undersökning"
+data_type = "date"
+
+[[register.variable]]
+name = "TELEFONKONTAKT_DATUM"
+column = "TELEFONKONTAKT_DATUM"
+definition = "Fält 2 i intyget - datum telefonkontakt"
+data_type = "date"
+
+[[register.variable]]
+name = "JOURNALUPPGIFTER_DATUM"
+column = "JOURNALUPPGIFTER_DATUM"
+definition = "Fält 2 i intyget - datum journaluppgifter"
+data_type = "date"
+
+[[register.variable]]
+name = "ANNAT_DATUM"
+column = "ANNAT_DATUM"
+definition = "Fält 2 i intyget - datum annat"
+data_type = "date"
+
+[[register.variable]]
+name = "NUVARANDE_ARBETE"
+column = "NUVARANDE_ARBETE"
+definition = "Fält 3 i intyget"
+data_type = "text"
+
+[[register.variable]]
+name = "ARBETSSOKANDE"
+column = "ARBETSSOKANDE"
+definition = "Fält 3 i intyget - kryssruta arbetssökande"
+data_type = "text"
+
+[[register.variable]]
+name = "FORALDRALEDIG"
+column = "FORALDRALEDIG"
+definition = "Fält 3 i intyget - kryssruta föräldraledig"
+data_type = "text"
+
+[[register.variable]]
+name = "STUDIER"
+column = "STUDIER"
+definition = "Fält 3 i intyget - kryssruta studier"
+data_type = "text"
+
+# Diagnosis columns below are ICD-9/10-coded — deferred classification = "ICD-10-SE" candidate (#446-style follow-up; ICD-9 vintage split needs maintainer confirmation).
+[[register.variable]]
+name = "DIAGNOSKOD"
+column = "DIAGNOSKOD"
+definition = "Fält 4 i intyget - kod huvuddiagnos"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "DIAGNOS_KLARTEXT"
+column = "DIAGNOS_KLARTEXT"
+definition = "Fält 4 i intyget - klartext huvuddiagnos"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "BIDIAGNOS1"
+column = "BIDIAGNOS1"
+definition = "Fält 4 i intyget - kod bidiagnos 1"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "BIDIAGNOS2"
+column = "BIDIAGNOS2"
+definition = "Fält 4 i intyget - kod bidiagnos 2"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "PERIOD_FROM"
+column = "PERIOD_FROM"
+definition = "Intygets start, härledd från fält 8 i intyget - lägsta fromdatum"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_TOM"
+column = "PERIOD_TOM"
+definition = "intygets slut, härledd från fält 8 i intyget - högsta tomdatum"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_100_FROM"
+column = "PERIOD_100_FROM"
+definition = "Fält 8 i intyget, fromdatum 100 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_100_TOM"
+column = "PERIOD_100_TOM"
+definition = "Fält 8 i intyget, tomdatum 100 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_75_FROM"
+column = "PERIOD_75_FROM"
+definition = "Fält 8 i intyget, fromdatum 75 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_75_TOM"
+column = "PERIOD_75_TOM"
+definition = "Fält 8 i intyget, tomdatum 75 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_50_FROM"
+column = "PERIOD_50_FROM"
+definition = "Fält 8 i intyget, fromdatum 50 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_50_TOM"
+column = "PERIOD_50_TOM"
+definition = "Fält 8 i intyget, tomdatum 50 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_25_FROM"
+column = "PERIOD_25_FROM"
+definition = "Fält 8 i intyget, fromdatum 25 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "PERIOD_25_TOM"
+column = "PERIOD_25_TOM"
+definition = "Fält 8 i intyget, tomdatum 25 procent"
+data_type = "date"
+
+[[register.variable]]
+name = "ARBETSRESOR"
+column = "ARBETSRESOR"
+definition = "Fält 8 i intyget - kryssruta Resor till och från arbetet med annat färdmedel än normalt…"
+data_type = "text"
+
+[[register.variable]]
+name = "ARBETSTIDSFORLAGGNING"
+column = "ARBETSTIDSFORLAGGNING"
+definition = "Fält 8 i intyget - kryssruta Nej/Ja."
+data_type = "text"
+
+[[register.variable]]
+name = "PROGNOS"
+column = "PROGNOS"
+definition = "Fält 9 i intyget, kryssruta prognos"
+data_type = "text"
+
+[[register.variable]]
+name = "PROGNOS_DAGAR"
+column = "PROGNOS_DAGAR"
+definition = "Fält 9 i intyget, dagar rullista prognos"
+data_type = "integer"
+
+[[register.variable]]
+name = "ARBETSTRANING"
+column = "ARBETSTRANING"
+definition = "Fält 10 i intyget - kryssruta arbetsträning"
+data_type = "text"
+
+[[register.variable]]
+name = "ARBETSANPASSNING"
+column = "ARBETSANPASSNING"
+definition = "Fält 10 i intyget - kryssruta arbetsanpassning"
+data_type = "text"
+
+[[register.variable]]
+name = "SOKA_NYTT_ARBETE"
+column = "SOKA_NYTT_ARBETE"
+definition = "Fält 10 i intyget - kryssruta söka nytt arbete"
+data_type = "text"
+
+[[register.variable]]
+name = "BESOK_ARBETSPLATS"
+column = "BESOK_ARBETSPLATS"
+definition = "Fält 10 i intyget - kryssruta besök på arbetsplats"
+data_type = "text"
+
+[[register.variable]]
+name = "ERGONOMISK"
+column = "ERGONOMISK"
+definition = "Fält 10 i intyget - kryssruta ergonomisk bedömning"
+data_type = "text"
+
+[[register.variable]]
+name = "HJALPMEDEL"
+column = "HJALPMEDEL"
+definition = "Fält 10 i intyget - kryssruta hjälpmedel"
+data_type = "text"
+
+[[register.variable]]
+name = "KONFLIKTHANTERING"
+column = "KONFLIKTHANTERING"
+definition = "Fält 10 i intyget - kryssruta konflikthantering"
+data_type = "text"
+
+[[register.variable]]
+name = "KONTAKT_FHV"
+column = "KONTAKT_FHV"
+definition = "Fält 10 i intyget - kryssruta kontakt företagshälsovård"
+data_type = "text"
+
+[[register.variable]]
+name = "OMFORDELNING"
+column = "OMFORDELNING"
+definition = "Fält 10 i intyget - kryssruta omfördelning av arbetsuppgifter"
+data_type = "decimal"
+
+[[register.variable]]
+name = "OVRIGA_ATGARDER"
+column = "OVRIGA_ATGARDER"
+definition = "Fält 10 i intyget - kryssruta övrigt"
+data_type = "text"
+
+[[register.variable]]
+name = "EJ_AKTUELLT"
+column = "EJ_AKTUELLT"
+definition = "Fält 10 i intyget - kryssruta inte aktuellt"
+data_type = "text"
+
+[[register.variable]]
+name = "ANKOMSTTIDPUNKT"
+column = "ANKOMSTTIDPUNKT"
+definition = "Ankomsttidpunkt intyg"
+data_type = "text"
+
+[[register.variable]]
+name = "Variabler"
+column = "Variabler"
+definition = "Beskrivning (referens till fält avser blankett FK7804)"
+data_type = "text"
+
+[[register.variable]]
+name = "Grund för medicinskt underlag (MU)"
+column = "Grund_för_medicinskt_underlag_mu"
+definition = "Fält 2 i intyget - Ange vad annat är"
+data_type = "text"
+
+[[register.variable]]
+name = "Funktionsnedsättning"
+column = "Funktionsnedsättning"
+definition = "Fält 5 i intyget"
+data_type = "text"
+
+[[register.variable]]
+name = "Aktivitetsbegränsning"
+column = "Aktivitetsbegränsning"
+definition = "Fält 6 i intyget"
+data_type = "text"
+
+[[register.variable]]
+name = "Pågående medicinsk behandling"
+column = "Pågående_medicinsk_behandling"
+definition = "Fält 7 i intyget"
+data_type = "text"
+
+[[register.variable]]
+name = "Planerad medicinsk behandling"
+column = "Planerad_medicinsk_behandling"
+definition = "Fält 7 i intyget"
+data_type = "text"
+
+[[register.variable]]
+name = "Försäkringsmedicinskt beslutsstöd"
+column = "Försäkringsmedicinskt_beslutsstöd"
+definition = "Fält 8 i intyget - Patientens arbetsförmåga bedömns nedsatt längre tid än den som Socialstyrelsens försäkringsmedicinska beslutsstös anger, därför att"
+data_type = "text"
+
+[[register.variable]]
+name = "Medicinska förutsättningar för arbete"
+column = "Medicinska_förutsättningar_för_arbete"
+definition = "Fält 8 i intyget - Beskriv de medicinska skälen till att möjligheterna till återgång i arbete försämras"
+data_type = "text"
+
+[[register.variable]]
+name = "Övriga upplysningar"
+column = "Övriga_upplysningar"
+definition = "Fält 11 i intyget"
+data_type = "text"
+
+
+[[register]]
+key = "tandvardsstodet"
+name = "Tandvårdsstödet"
+valid_from = "2008-01-01"
+purpose = "Det statliga tandvårdsstödet (allmänt och särskilt tandvårdsbidrag, högkostnadsskydd och tandvård till hälso- och sjukvårdsavgift). Innehåller åtgärder, betalningar, abonnemang, ersättningsperioder, efterhandskontroll och ärenden."
+
+[[register.variant]]
+key = "atgarder"
+name = "Åtgärder"
+
+[[register.variant]]
+key = "betalningar"
+name = "Betalningar"
+
+[[register.variant]]
+key = "abonnemang"
+name = "Abonnemang"
+
+[[register.variant]]
+key = "abonnemang-detaljerat"
+name = "Abonnemang detaljerat"
+
+[[register.variant]]
+key = "ersattningsperioder"
+name = "Ersättningsperioder"
+
+[[register.variant]]
+key = "efterhandskontroll"
+name = "Efterhandskontroll"
+
+[[register.variant]]
+key = "arenden-detaljerat"
+name = "Ärenden detaljerat"
+
+[[register.variant]]
+key = "arende-atgard"
+name = "TVS_ODS_ARENDE_ATGARD"
+
+[[register.variable]]
+name = "LOPNR_ARENDE_ID"
+column = "LOPNR_ARENDE_ID"
+definition = "Löpnummer för ärendets id."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["atgarder", "betalningar", "abonnemang", "abonnemang-detaljerat", "efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "BESOKSDATUM"
+column = "BESOKSDATUM"
+definition = "Besöksdatum i det ärende som åtgärden är utförd i. Datum då besöket ägt rum och behandlingen avslutades."
+data_type = "date"
+variants = ["atgarder", "betalningar", "efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "BESLUTSDATUM"
+column = "BESLUTSDATUM"
+definition = "Datum då beslut fattades i ärendet (benämns avslutsdatum i källsystemet TANDEN SAP CRM)."
+data_type = "date"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "LOPNUMMER"
+column = "LOPNUMMER"
+definition = "Patientens löpnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["atgarder", "betalningar", "abonnemang", "abonnemang-detaljerat", "ersattningsperioder", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "KON_PATIENT"
+column = "KON_PATIENT"
+definition = "Patientens kön."
+data_type = "text"
+variants = ["atgarder", "betalningar", "abonnemang", "ersattningsperioder"]
+
+[[register.variable]]
+name = "ALDER_PATIENT"
+column = "ALDER_PATIENT"
+definition = "Ålder i år som patienten uppnått under året i ärendets besöksdatum. Ålder ökas m.a.o. den första dagen i året för besöksdatumet."
+data_type = "integer"
+variants = ["atgarder", "betalningar", "abonnemang", "ersattningsperioder"]
+
+[[register.variable]]
+name = "LAN_PATIENT"
+column = "LAN_PATIENT"
+definition = "Patientens län vid besöksdatum (enligt folkbokföring)."
+data_type = "text"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "KOMMUN_PATIENT"
+column = "KOMMUN_PATIENT"
+definition = "Patientens kommun vid besöksdatum (enligt folkbokföring)."
+data_type = "text"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "VÅRDGIVARE"
+column = "VÅRDGIVARE"
+definition = "Löpnummer"
+data_type = "text"
+variants = ["atgarder", "betalningar", "efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "MOTTAGNING"
+column = "MOTTAGNING"
+definition = "Löpnummer"
+data_type = "text"
+variants = ["atgarder", "betalningar", "efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "VARDGIVARE_KATEGORI"
+column = "VARDGIVARE_KATEGORI"
+definition = "Anger den vårdgivarkategori som vårdgivaren ingår i vid ärendets beslutstidpunkt."
+data_type = "text"
+variants = ["atgarder", "betalningar", "efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "BEHANDLARE"
+column = "BEHANDLARE"
+definition = "Löpnummer. Anger behandlande tandläkare/tandhygienist för åtgärden."
+data_type = "text"
+variants = ["atgarder", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "LAN_MOTTAGNING"
+column = "LAN_MOTTAGNING"
+definition = "Mottagningens geografiska hemvist vid ärendets beslutstidpunkt. För mottagningar som saknar ett korrekt postnummer (postnummer kontrolleras inte i källsystemet) lagras saknas/okänd. Kod för län."
+data_type = "text"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "KOMMUN_MOTTAGNING"
+column = "KOMMUN_MOTTAGNING"
+definition = "Mottagningens geografiska hemvist vid ärendets beslutstidpunkt. För mottagningar som saknar ett korrekt postnummer (postnummer kontrolleras inte i källsystemet) lagras saknas/okänd. Kod för kommun."
+data_type = "text"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "EU_PATIENT"
+column = "EU_PATIENT"
+definition = "Anger om patient är EU patient eller inte. EU patient = patienten är från EU/EES eller ett konventionsland , är inte hemmahörande i Sverige men har fått ersättningsberättigande vård i Sverige."
+data_type = "text"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "EGFORDRAGSVARD_LAND"
+column = "EGFORDRAGSVARD_LAND"
+definition = "Anger det land patienten fått vård i vid ärenden av typ EG fördragsvård (ZRV1). Övriga ärenden har Ej tillämplig."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "EGFORDRAGSVARD_ANLEDNING"
+column = "EGFORDRAGSVARD_ANLEDNING"
+definition = "Anger anledning till varför patienten behandlas i ett annat land vid ärenden av typ EG fördragsvård (ZRV1). Övriga ärenden har Ej tillämplig."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "EGFORDRAGSVARD_FORM"
+column = "EGFORDRAGSVARD_FORM"
+definition = "Anger om behandlingen varit planerad eller akut (vårdform) vid ärenden av typ EG fördragsvård (ZRV1). Övriga ärenden har Ej tillämplig."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "EGFORDRAGSVARD_AVSLAGSORSAK"
+column = "EGFORDRAGSVARD_AVSLAGSORSAK"
+definition = "Anger ev. anledning till varför ärendet avslagits vid ärenden av typ EG fördragsvård (ZRV1). Övriga ärenden har Ej tillämplig."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ARENDETYP_KOD"
+column = "ARENDETYP_KOD"
+definition = "Ärendetyp i ärendet, kod."
+data_type = "text"
+variants = ["atgarder", "betalningar", "abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "ARENDETYP_BESK"
+column = "ARENDETYP_BESK"
+definition = "Ärendetyp i ärendet, beskrivning."
+data_type = "text"
+variants = ["atgarder", "betalningar", "abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "ARENDE_STATUS"
+column = "ARENDE_STATUS"
+definition = "Huvudstatus i ärendet."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "AVSLAGSANLEDNING_ATGARD"
+column = "AVSLAGSANLEDNING_ATGARD"
+definition = "Anger ev. anledning till varför åtgärden avslagits. Övriga poster har ej tillämpligt (ZRVO, ZRV4) eller ej obligatorisk (ZRV3 som saknar avslagsanledning)."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ANLEDNING_KORRIGERING_KOD"
+column = "ANLEDNING_KORRIGERING_KOD"
+definition = "Anledning till korrigering (ärende). Uppgiften finns i Korrigeringsärende (ZRV3). Övriga ärenden har Ej tillämpligt."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ANLEDNING_KORRIGERING_BESK"
+column = "ANLEDNING_KORRIGERING_BESK"
+definition = "Beskrivning av korrigeringsanledning"
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ATGARD_KOD"
+column = "ATGARD_KOD"
+definition = "Anger den åtgärdskod som utförts."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ATGARD_BESK"
+column = "ATGARD_BESK"
+definition = "Anger beskrivningen till åtgärden."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "TILLSTAND"
+column = "TILLSTAND"
+definition = "Anger det tillstånd som ligger till grund för åtgärden."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "TANDPOSITION"
+column = "TANDPOSITION"
+definition = "Anger tandposition där åtgärden gjorts."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "TANDNUMMER"
+column = "TANDNUMMER"
+definition = "Anger tandnummer där åtgärden gjorts."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ATGARD_STATUS_KOD"
+column = "ATGARD_STATUS_KOD"
+definition = "Anger statuskod på utförd åtgärd."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ATGARD_STATUS_BESK"
+column = "ATGARD_STATUS_BESK"
+definition = "Anger beskrivning av åtgärdsstatus"
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "ATGARDSPAKET"
+column = "ATGARDSPAKET"
+definition = "Anger om en åtgärd har registrerats i ärendet via ett åtgärdspaket eller inte."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "REFERENSPRIS_SPECIALIST"
+column = "REFERENSPRIS_SPECIALIST"
+definition = "Anger om åtgärden har specialistreferenspris eller inte."
+data_type = "decimal"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "VARDGIVARPRIS"
+column = "VARDGIVARPRIS"
+definition = "Det pris som vårdgivaren har angett att åtgärden kostar. I de fall åtgärden har registrerats i ärendet via ett åtgärdspaket saknas belopp för åtgärden. Observera att ingen tvätt av orimliga värden görs, det förekommer att mottagningar rapporterar in värden med tex en eller flera nollor för mycket. En bedömning av rimiligheten kan eventuellt göras mot REFERENSPRIS_ATGARD. Prissättningen för tandvård är dock fri. Försäkringskassan betalar endast ut ersättning baserat på det lägsta beloppet av VARDGIVARPRIS OCH REFERENSPRIS_ATGARD."
+data_type = "decimal"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "REFERENSPRIS_ATGARD"
+column = "REFERENSPRIS_ATGARD"
+definition = "Anger referenspris enligt TLV som är använt i åtgärden. Kan vara referenspris för allmäntandvård eller referenspris för specialisttandvård. Dimension SRP_SEKVNR (Specialistreferenspris) anger specialistreferenspris J/N. I de fall åtgärden har registrerats i ärendet via ett åtgärdspaket saknas belopp för åtgärden."
+data_type = "decimal"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "KORRIGERAT"
+column = "KORRIGERAT"
+definition = "Markering (J/N) om det finns ett korrigeringsärende på ärendet som denna åtgärd ingår i. Samtliga poster ska vara N, då urvalet görs på KORRIGERAT=N."
+data_type = "text"
+variants = ["atgarder"]
+
+[[register.variable]]
+name = "UPDATEDATE"
+column = "UPDATEDATE"
+definition = "Tidpunkt för när raden uppdaterades. Samma tidpunkt för samtliga rader uppdaterade under en och samma laddning. Den uppgift som kan uppdateras är KORRIGERAT"
+data_type = "text"
+variants = ["atgarder", "betalningar"]
+
+[[register.variable]]
+name = "BETALNINGSDATUM"
+column = "BETALNINGSDATUM"
+definition = "Betalningens planerade utbetalningsdatum. Uppgiften saknas i källsystemet och räknas därför fram i Store. Planerat betalningsdatum var fram till 2015-09-29 alltid näst-nästkommande tisdag med utgångspunkt från ärendets beslutsdatum. Därefter är planerat betalningsdatum nästkommande tisdag + 1 dag med utgångspunkt från ärendets beslutsdatum."
+data_type = "date"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "BELOPP"
+column = "BELOPP"
+definition = "Det belopp som utbetalas. Om beloppet är negativt innebär det att betalningsmottagaren skall återbetala en tidigare utbetalad ersättning. Återbetalning sker genom kvittning."
+data_type = "decimal"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "ERSATTNING_TYP"
+column = "ERSATTNING_TYP"
+definition = "Ersättningstyp på betalning (ATB, STB, HCP). Fkey till TVS_STR_ERSATTNINGSTYP_D."
+data_type = "text"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "PERIOD_FROMDAT"
+column = "PERIOD_FROMDAT"
+definition = "Bidragsperiodens startdatum när ersättningstypen är ATB."
+data_type = "date"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "ARENDETYP_ORIGINAL_KOD"
+column = "ARENDETYP_ORIGINAL_KOD"
+definition = "Ärendetyp i det originalärende som betalningen avser. Finns endast för korrigeringsärenden."
+data_type = "text"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "ARENDETYP_ORIGINAL_BESK"
+column = "ARENDETYP_ORIGINAL_BESK"
+definition = "Beskrivning av ärendetyp original"
+data_type = "text"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "STATISTIK_RELEVANT"
+column = "STATISTIK_RELEVANT"
+definition = "Om posten ska räknas med i officiell statistik (J/N). Markeringen beror på om betalningsposten har korrigerats eller inte, om summan för ett ursrpungsärende och en ersättningstyp inkl alla korrigerigeringsärende är lika med 0 sätts alla betalningsposter för den ersättningstypen och ärendekedjan till N, annars J"
+data_type = "text"
+variants = ["betalningar"]
+
+[[register.variable]]
+name = "CREATIONDATE"
+column = "CREATIONDATE"
+definition = "Tidpunkt när raden skapades. Samma tidpunkt för samtliga rader skapande under en och samma laddning."
+data_type = "text"
+variants = ["betalningar", "arende-atgard"]
+
+[[register.variable]]
+name = "AVTALSSTART"
+column = "AVTALSSTART"
+definition = "Abonnemangets startdatum dvs. det datum när avtalet börjar gälla."
+data_type = "date"
+variants = ["abonnemang", "abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "AVTALSUPPHORANDE"
+column = "AVTALSUPPHORANDE"
+definition = "Abonnemangets slutdatum dvs. det datum när avtalet upphör gälla."
+data_type = "date"
+variants = ["abonnemang", "abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "MANAD"
+column = "MANAD"
+definition = "Laddningsmånad, månad under vilken abonnemang pågår."
+data_type = "text"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "VARDGIVARKAT"
+column = "VARDGIVARKAT"
+definition = "Anger den vårdgivarkategori som vårdgivaren (i abonnemangsavtalet) ingår i vid tidpunkten för sista dagen i laddningsmånaden."
+data_type = "text"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "LAN_PATIENT_KOD"
+column = "LAN_PATIENT_KOD"
+definition = "Län (folkbokföring) för patient (i abonnemangsavtalet) vid tidpunkten för sista dagen i laddningsmånaden."
+data_type = "text"
+variants = ["abonnemang", "ersattningsperioder"]
+
+[[register.variable]]
+name = "LAN_PATIENT_BESK"
+column = "LAN_PATIENT_BESK"
+definition = "Län (folkbokföring) för patient (i abonnemangsavtalet) vid tidpunkten för sista dagen i laddningsmånaden."
+data_type = "text"
+variants = ["abonnemang", "ersattningsperioder"]
+
+[[register.variable]]
+name = "MOTTAGNING_LAN_KOD"
+column = "MOTTAGNING_LAN_KOD"
+definition = "Mottagningens (i abonnemangsavtalet) län vid tidpunkten för sista dagen i laddningsmånaden."
+data_type = "text"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "MOTTANING_LAN_BESK"
+column = "MOTTANING_LAN_BESK"
+definition = "Mottagningens (i abonnemangsavtalet) län vid tidpunkten för sista dagen i laddningsmånaden."
+data_type = "text"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "LANGD_AVTAL_MANAD"
+column = "LANGD_AVTAL_MANAD"
+definition = "Längd på abonnemangsavtal i antal påbörjade månader."
+data_type = "text"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "LANGD_AVTAL_DAGAR"
+column = "LANGD_AVTAL_DAGAR"
+definition = "Längd på abonnemangsavtal i antal dagar."
+data_type = "integer"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "ANTAL_BESOK"
+column = "ANTAL_BESOK"
+definition = "Antal beslutade patientbesök (ZRVO) och förhandsprövade besök (ZRV4) som har ett besöksdatum inom abonnemangsavtalet. Bara besök som använt abonnemangsavtalet räknas."
+data_type = "integer"
+variants = ["abonnemang", "ersattningsperioder"]
+
+[[register.variable]]
+name = "ANTAL_DAGAR"
+column = "ANTAL_DAGAR"
+definition = "Längd på abonnemangsavtal i antal dagar Antal dagar räknas mellan avtalsstart och det tidigaste av avtalsupphörande och sista dag i laddningsmånaden."
+data_type = "integer"
+variants = ["abonnemang", "ersattningsperioder"]
+
+[[register.variable]]
+name = "BORTTAGEN"
+column = "BORTTAGEN"
+definition = "Markering (J/N) som anger om abonnemangsposten är borttagen eller inte. Väljer endast icke borttagna poster så alla bör ha N."
+data_type = "text"
+variants = ["abonnemang"]
+
+[[register.variable]]
+name = "SENAST_ANDRAD"
+column = "SENAST_ANDRAD"
+definition = "Tidpunkt när uppgiften ändrades i källsystemet TANDEN SAP CRM."
+data_type = "text"
+variants = ["abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "ABONNEMANG_PRIS"
+column = "ABONNEMANG_PRIS"
+definition = "Vårdgivarens totala pris för avtal om abonnemangstandvård."
+data_type = "decimal"
+variants = ["abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "ARENDE_STATUS_BESK"
+column = "ARENDE_STATUS_BESK"
+definition = "Anger ärendets huvudstatus."
+data_type = "text"
+variants = ["abonnemang-detaljerat", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "INSKICKAD_TIDPUNKT"
+column = "INSKICKAD_TIDPUNKT"
+definition = "Inskickad tidpunkt anger den tidpunkt då abonnemangsavtalet ankom/skickades in till Försäkringskassan"
+data_type = "text"
+variants = ["abonnemang-detaljerat"]
+
+[[register.variable]]
+name = "ERSPERIOD_STARTDATUM"
+column = "ERSPERIOD_STARTDATUM"
+definition = "Ersättningsperiodens fr.o.m. datum dvs. det datum när perioden börjar gälla."
+data_type = "date"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "ERSPERIOD_SLUTDATUM"
+column = "ERSPERIOD_SLUTDATUM"
+definition = "Ersättningsperiodens t.o.m. datum dvs. det datum när perioden upphör gälla."
+data_type = "date"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "LADD_MANAD"
+column = "LADD_MANAD"
+definition = "Laddningsmånad, månaden avser de ersättningsperioder som avslutats under månaden."
+data_type = "text"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "KOMMUN_PATIENT_KOD"
+column = "KOMMUN_PATIENT_KOD"
+definition = "Patientens kommuntillhörighet (folkbokföring) vid tidpunkten för sista dagen den månad ersättningsperioden avslutas. Kod för kommun."
+data_type = "text"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "KOMMUN_PATIENT_BESK"
+column = "KOMMUN_PATIENT_BESK"
+definition = "Kommun i klartext"
+data_type = "text"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "ERSGR_BELOPP"
+column = "ERSGR_BELOPP"
+definition = "Det totala ersättningsgrundande belopp som patienten har tjänat in under ersättningsperioden."
+data_type = "decimal"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "UTBETALT_HCP_BELOPP"
+column = "UTBETALT_HCP_BELOPP"
+definition = "Det HCP-belopp/tandvårdsersättning som totalt är utbetalt inom ersättningsperioden."
+data_type = "decimal"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "HCP_INTERVALL_KOD"
+column = "HCP_INTERVALL_KOD"
+definition = "Intervall för det ersättningsgrundande belopp som patienten har tjänat in under ersättningsperioden."
+data_type = "text"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "HCP_INTERVALL_BESK"
+column = "HCP_INTERVALL_BESK"
+definition = "Intervall för det ersättningsgrundande belopp som patienten har tjänat in under ersättningsperioden."
+data_type = "text"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "ANTAL_ARENDEN"
+column = "ANTAL_ARENDEN"
+definition = "Antal beslutade patientbesök(ZRVO), EG fördragsvård (ZRV1), korrigeringsärende (ZRV3) och förhandsprövat besök (ZRV4) som har ett besöksdatum inom ersättningsperioden."
+data_type = "integer"
+variants = ["ersattningsperioder"]
+
+[[register.variable]]
+name = "LOPNR_ARENDE_ID_EHK"
+column = "LOPNR_ARENDE_ID_EHK"
+definition = "Löpnummer för efterhandskontrollärendets id"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["efterhandskontroll"]
+
+[[register.variable]]
+name = "ÄRENDETYP URSPRUNG"
+column = "ÄRENDETYP_URSPRUNG"
+definition = "Ursprungsärendets ärendetyp, oftast patientbesök"
+data_type = "text"
+variants = ["efterhandskontroll"]
+
+[[register.variable]]
+name = "HUVUDSTATUS EHK"
+column = "HUVUDSTATUS_EHK"
+definition = "Efterhandkontrollens huvudstatus"
+data_type = "text"
+variants = ["efterhandskontroll"]
+
+[[register.variable]]
+name = "LÄN"
+column = "LÄN"
+definition = "Län till mottagning"
+data_type = "text"
+variants = ["efterhandskontroll"]
+
+[[register.variable]]
+name = "BESK_KORRANLEDNING"
+column = "BESK_KORRANLEDNING"
+definition = "Anger anledningen till korrigering"
+data_type = "text"
+variants = ["efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "BESLUTSTIDPUNKT"
+column = "BESLUTSTIDPUNKT"
+definition = "Datum då beslut fattades i efterhandskontrollen"
+data_type = "text"
+variants = ["efterhandskontroll", "arenden-detaljerat", "arende-atgard"]
+
+[[register.variable]]
+name = "TANDVARDSSTOD"
+column = "TANDVARDSSTOD"
+definition = "Totalt tandvårdsstöd för ärendet. Detta är en summering av utnyttjat ATB, STB och högkostnadsskydd i ärendet."
+data_type = "text"
+variants = ["efterhandskontroll", "arenden-detaljerat"]
+
+[[register.variable]]
+name = "LOPNR_ARENDE_ID_ABONNEMANG"
+column = "LOPNR_ARENDE_ID_ABONNEMANG"
+definition = "Anger löpnummer för det ev. Abonnemangsavtal (ZCON) som ärendet hör till"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "LOPNR_ARENDE_ID_ORIGINAL"
+column = "LOPNR_ARENDE_ID_ORIGINAL"
+definition = "Anger löpnummer till relaterat originalärende när ärendet är av typ Korrigeringsärende/Korrigering BTB eller relaterat ursprungsärende om Ärendet är av typ Omprövning/Överklagan"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "LOPNR_ARENDE_ID_FOREGAENDE"
+column = "LOPNR_ARENDE_ID_FOREGAENDE"
+definition = "Anger löpnummer till ev. relaterat föregående ärende i ärendekedjan när ärendet är av typ Korrigeringsärende/Korrigering BTB"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "VARDGIVARENS_PRIS"
+column = "VARDGIVARENS_PRIS"
+definition = "Vårdgivarens totala pris för ärendet."
+data_type = "decimal"
+variants = ["arenden-detaljerat", "arende-atgard"]
+
+[[register.variable]]
+name = "PATIENTENS_PRIS"
+column = "PATIENTENS_PRIS"
+definition = "Patientens pris för aktuellt ärende, dvs. det pris patienten ska betala efter att totalt tandvårdsstöd dragits av från totalt vårdgivarpris."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "HCP_INTERVALL_0"
+column = "HCP_INTERVALL_0"
+definition = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som är grundat på den del av det ersättningsgrundande belopp i besöket (inom ersättningsperioden) som ligger under 3000 kr. Detta fält stämmer inte alltid för korrigeringsärenden, speciellt de ärenden där manuell korrigering gjorts."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "HCP_INTERVALL_1"
+column = "HCP_INTERVALL_1"
+definition = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som är grundat på den del av ersättningsgrundande belopp i besöket (inom ersättningsperioden) som ligger mellan 3000 – 15000 kr. Detta fält stämmer inte alltid för korrigeringsärenden, speciellt de ärenden där manuell korrigering gjorts."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "HCP_INTERVALL_2"
+column = "HCP_INTERVALL_2"
+definition = "Den del av tandvårdsersättningen som ska betalas till mottagningen och som är grundat på den del av ersättningsgrundande belopp i besöket (inom ersättningsperioden) som ligger över 15000 kr. Detta fält stämmer inte alltid för korrigeringsärenden, speciellt de ärenden där manuell korrigering gjorts."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "ING_ERSGR_BELOPP"
+column = "ING_ERSGR_BELOPP"
+definition = "Det sammanlagda ersättningsgrundande belopp som patienten har uppnått inom ersättningsperioden innan det aktuella ärendet. (I ett korrigeringsärende är detta Utg. ersättnings belopp i föregående ärendeid dvs. patientens ersättningsgrundande belopp som var efter föregående ärendeid godkändes. Det finns dock undantag bl. a. …. Vid en makuleringskorrigering sätts ingående ersgr belopp till det ingående ersgr. Belopp i det föregående ärendet. Vid en makuleringskorrigering sätts ingående ersgr belopp till det ingående ersgr. Belopp i det föregående ärendet."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "UTG_ERSGR_BELOPP"
+column = "UTG_ERSGR_BELOPP"
+definition = "Det sammanlagda ersättningsgrundande belopp som patienten har uppnått inom ersättningsperioden i och med det aktuella ärendet. (Ing. ersättningsgrundande belopp (ING_ERSGR_BELOPP) + Ersättningsgrundande belopp i Besök (ERSGR_BELOPP) + Man korr av Ersättningsgrundande belopp (MAN_KORR_ERSGR_BELOPP)."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "HCP_ERS"
+column = "HCP_ERS"
+definition = "Total tandvårdsersättning i ärendet (uppnått högkostnadsskydd/HCP)"
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "ATB_ERS"
+column = "ATB_ERS"
+definition = "Totalt utnyttjat bidragsbelopp (ATB) i ärendet. I de fall utbetalningar kan skapas för ärendet motsvarar detta belopp vad som är utbetalt i detta ärende. Om utbetalningar kan skapas för ärendet styrs av vilken huvudstatus ärendet har (se TVS_ODS_HUVUDSTATUS_ARETYP_U). För korrigeringsärenden är detta totalt utnyttjat bidragsbelopp från och med original-ärendet och inte specifikt vad som utnyttjats i korrigeringsärendet."
+data_type = "decimal"
+variants = ["arenden-detaljerat", "arende-atgard"]
+
+[[register.variable]]
+name = "KORR_ BELOPP"
+column = "KORR__BELOPP"
+definition = "Den totala förändring av tandvårdsstödet som sker i ett ärende av typ Korrigeringsärende eller Korrigering BTB Det tandvårdsstöd som betalas ut ytterligare om positivt belopp, återkrav genom kvittning om negativt belopp."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "KORR_ATB_ERS"
+column = "KORR_ATB_ERS"
+definition = "Korrigeringsbelopp avseende ATB (del av KORR_BELOPP)"
+data_type = "decimal"
+variants = ["arenden-detaljerat", "arende-atgard"]
+
+[[register.variable]]
+name = "KORR_HCP_ERS"
+column = "KORR_HCP_ERS"
+definition = "Korrigeringsbelopp avseende Tandvårdsersättning/HCP (del av KORR_BELOPP)"
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "ERSGR_BELOPP_FORE_KORR"
+column = "ERSGR_BELOPP_FORE_KORR"
+definition = "I ett korrigeringsärende är detta Utg. ersättningsgrundande belopp i föregående ärende, dvs. Patientens ersättningsgrundande belopp som det var efter att föregående ärende godkändes. Verkar vara: Utg ersgr belopp i det senaste beslutade ärendet inom ersättningsperioden innan beslutstidpunkten på korrigeringsärendet. Behöver verifieras!"
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "ERSGR_BELOPP_EFTER_KORR"
+column = "ERSGR_BELOPP_EFTER_KORR"
+definition = "Patientens totala ersättningsgrundande belopp inom ersättningsperioden efter korrigeringen. Motsvarar alltid utg.ersgr belopp på korrigeringsärendet (UTG_ERSGR_BELOPP)."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "MAN_KORR_ERSGR_BELOPP"
+column = "MAN_KORR_ERSGR_BELOPP"
+definition = "Korrigeringsbelopp som används för att inom korrigeringen justera det ersättningsgrundande beloppet så att patientens tandvårdsstöd inte påverkas men att det utgående ersättningsgrundande beloppet ändå kan uppdateras."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "TANDVARDSSTOD_FORE_KORR"
+column = "TANDVARDSSTOD_FORE_KORR"
+definition = "Totalt tandvårdsstöd som betalats ut till och med föregående ärende i ärendekedjan vid korrigering."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "MAN_TANDVARDSSTOD"
+column = "MAN_TANDVARDSSTOD"
+definition = "Det belopp som totalt tandvårdsstöd (TANDVARDSSTOD) manuellt har justerats med."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "KORR_MAN_TANDVARDSSTOD"
+column = "KORR_MAN_TANDVARDSSTOD"
+definition = "Den korrigering som skett av manuellt tandvårdsstöd (MAN_TANDVARDSSTOD) i aktuellt ärende."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "MAN_VARDGIVARPRIS"
+column = "MAN_VARDGIVARPRIS"
+definition = "Det belopp som totalt vårdgivarpris (VARDGIVARPRIS) manuellt har satts till, om detta belopp är satt ersätter det summan av åtgärdernas vårdgivarpris."
+data_type = "decimal"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "STB_TILLGANGLIGT"
+column = "STB_TILLGANGLIGT"
+definition = "Tillgängligt STB som patienten har kvar att utnyttja inom bidragsperioden innan ärendet."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "STB_ANLEDNING"
+column = "STB_ANLEDNING"
+definition = "Anger anledningen till varför patienten ska berättigas STB."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "LAND_FORDRAGSVARD"
+column = "LAND_FORDRAGSVARD"
+definition = "Anger det land patienten fått vård i vid ärenden av typ EG fördragsvård (ZRV1)."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "ANLEDNING_FORDRAGSVARD"
+column = "ANLEDNING_FORDRAGSVARD"
+definition = "Anger anledningen till varför patienten behandlats i ett annat land vid ärenden av typ EG fördragsvård (ZRV1)."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "AVSLAGSORSAK_EGFORDRAGSVARD"
+column = "AVSLAGSORSAK_EGFORDRAGSVARD"
+definition = "Anger anledningen till varför ärendet avslagits vid ärenden av typ EG fördragsvård (ZRV1)."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "AKUT_FORDRAGSVARD"
+column = "AKUT_FORDRAGSVARD"
+definition = "Anger om behandlingen varit planerad eller akut vid ärenden av typ EG fördragsvård (ZRV1)."
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "ARBETSSKADA"
+column = "ARBETSSKADA"
+definition = "Flagga J/N. Anger om behandlingen i ärendet avser abonnemangspatient som behandlas för arbetsskada eller olycksfall"
+data_type = "text"
+variants = ["arenden-detaljerat"]
+
+[[register.variable]]
+name = "SEKVNR"
+column = "SEKVNR"
+definition = "SEKVNR_ODS_ARENDE_ATGARD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "ARO_SEKVNR"
+column = "ARO_SEKVNR"
+definition = "ARENDE_ID"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "TSD_SEKVNR"
+column = "TSD_SEKVNR"
+definition = "TILLSTAND_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "ARD_SEKVNR"
+column = "ARD_SEKVNR"
+definition = "ATGARD_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "ARD_SEKVNR_UTBYTE"
+column = "ARD_SEKVNR_UTBYTE"
+definition = "UTBYTESATGARD_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "AUS_SEKVNR"
+column = "AUS_SEKVNR"
+definition = "ATGARD_STATUS_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "TPN_SEKVNR_TANDNUMMER"
+column = "TPN_SEKVNR_TANDNUMMER"
+definition = "TANDNUMMER_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "TPN_SEKVNR_TANDPOS"
+column = "TPN_SEKVNR_TANDPOS"
+definition = "TANDPOSITION_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "AIG_SEKVNR"
+column = "AIG_SEKVNR"
+definition = "AVSLAGSANLEDNING_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "FPL_SEKVNR"
+column = "FPL_SEKVNR"
+definition = "ANLEDNING_FORHANDSPROVNING_KOD"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "REMISS"
+column = "REMISS"
+definition = "REMISS"
+data_type = "text"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "REFERENSPRIS"
+column = "REFERENSPRIS"
+definition = "REFERENSPRIS"
+data_type = "decimal"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "STB_ERS"
+column = "STB_ERS"
+definition = "STB_ERS"
+data_type = "decimal"
+variants = ["arende-atgard"]
+
+[[register.variable]]
+name = "ERSGRUND_BELOPP"
+column = "ERSGRUND_BELOPP"
+definition = "ERSGRUND_BELOPP"
+data_type = "decimal"
+variants = ["arende-atgard"]
+
+
+[[register]]
+key = "underhallsstod"
+name = "Underhållsstöd"
+valid_from = "1996-12-01"  # earliest documented coverage (Innehållsförteckning); per-variant coverage drifts (utbetalningar-barn from 2018, beslut/utbetalningar-manad from 1997)
+purpose = "Underhållsstöd till barn vars föräldrar inte bor tillsammans, när den bidragsskyldiga föräldern inte betalar underhåll. Innehåller utbetalningar, beslut och inbetalningar på barnnivå."
+
+[[register.variant]]
+key = "utbetalningar-barn"
+name = "Barn och familj - Underhållsstöd — Utbetalningar barn"
+description = "Varje rad är en utbetalning av underhållsstöd på barnnivå. Data finns från 2018-01-01 och framåt."
+
+[[register.variant]]
+key = "beslut"
+name = "Barn och familj - Underhållsstöd — Beslut"
+description = "Denna tabell innehåller beslut om underhållsstöd, där varje rad motsvarar ett beslut kopplat till ett specifikt barn. Datan sträcker sig från 1997 och framåt."
+
+[[register.variant]]
+key = "utbetalningar-manad"
+name = "Barn och familj - Underhållsstöd — Utbetalningar manad"
+description = "Den här tabellen visar faktiska utbetalningar av underhållsstöd per barn och månad. Varje rad motsvarar en utbetalning. Data finns från 1997 och framåt."
+
+[[register.variant]]
+key = "beslut-bidragsskyldig"
+name = "Barn och familj - Underhållsstöd — Beslut bidragsskyldig"
+description = "Den här tabellen innehåller beslut om återbetalningsbelopp som ska debiteras den bidragsskyldige per månad. Varje rad motsvarar ett sådant beslut, kopplat till ett visst barn och månad."
+
+[[register.variant]]
+key = "inbetalningar"
+name = "Barn och familj - Underhållsstöd — Inbetalningar"
+description = "Den här tabellen innehåller uppgifter om inbetalningar från den bidragsskyldige. Varje rad motsvarar ett avräknat belopp kopplat till ett visst barn och en viss period."
+
+[[register.variable]]
+name = "LOPNR_BM"
+column = "LOPNR_BM"
+definition = "Individspecifikt löpnummer för bidragsmottagare"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["utbetalningar-barn", "beslut", "utbetalningar-manad"]
+
+[[register.variable]]
+name = "FORMAN"
+column = "FORMAN"
+definition = "Kod för typ av förmån: 141 för förlängt underhållsstöd och 169 för underhållsstöd."
+data_type = "text"
+variants = ["utbetalningar-barn"]
+
+[[register.variable]]
+name = "ERSATTNINGPERIOD_FROM"
+column = "ERSATTNINGPERIOD_FROM"
+definition = "Startdatum för den period som betalningen avser."
+data_type = "date"
+variants = ["utbetalningar-barn"]
+
+[[register.variable]]
+name = "ERSATTNINGPERIOD_TOM"
+column = "ERSATTNINGPERIOD_TOM"
+definition = "Slutdatum för den period som betalningen avser."
+data_type = "date"
+variants = ["utbetalningar-barn"]
+
+[[register.variable]]
+name = "BETALNINGSDATUM"
+column = "BETALNINGSDATUM"
+definition = "Datum då beloppet betalades ut eller gjordes tillgängligt för mottagaren."
+data_type = "date"
+variants = ["utbetalningar-barn"]
+
+[[register.variable]]
+name = "BELOPP"
+column = "BELOPP"
+definition = "Det bokförda beloppet för utbetalningen."
+data_type = "decimal"
+variants = ["utbetalningar-barn", "beslut", "beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "LOPNR_BS"
+column = "LOPNR_BS"
+definition = "Individspecifikt löpnummer för bidragsskyldige"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "LOPNR_D85"
+column = "LOPNR_D85"
+definition = "Individspecifikt löpnummer för individer som saknar personnummer (t.ex. utländska medborgare)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "LOPNR_BARN"
+column = "LOPNR_BARN"
+definition = "Individspecifikt löpnummer för barn"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+variants = ["beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "ARENDE_STATUS"
+column = "ARENDE_STATUS"
+definition = "Kod för om ärende är beviljat eller avslaget"
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "DATUM"
+column = "DATUM"
+definition = "Referens till vilken månad beslutet gäller"
+data_type = "date"
+variants = ["beslut", "utbetalningar-manad", "beslut-bidragsskyldig"]
+
+[[register.variable]]
+name = "FODELSEMANAD_BS"
+column = "FODELSEMANAD_BS"
+definition = "Födelsemånad bidragsskyldig"
+data_type = "text"
+variants = ["beslut", "utbetalningar-manad", "inbetalningar"]
+
+[[register.variable]]
+name = "FODELSEMANAD_BM"
+column = "FODELSEMANAD_BM"
+definition = "Födelsemånad bidragsmottagare"
+data_type = "text"
+variants = ["beslut", "utbetalningar-manad"]
+
+[[register.variable]]
+name = "TYP"
+column = "TYP"
+definition = "Kod för typ av underhållsstöd. Se tabell nedan"
+data_type = "text"
+variants = ["beslut", "utbetalningar-manad"]
+
+[[register.variable]]
+name = "ANSTAND_BESLUT"
+column = "ANSTAND_BESLUT"
+definition = "Typ av beslut om anstånd (Beviljat,Avslag,Nej, Ej tillämplig)"
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "EFTERGIFT_BESLUT"
+column = "EFTERGIFT_BESLUT"
+definition = "Typ av beslut om eftergift (Helt, Delvis, Nej, Ej tillämplig)"
+data_type = "text"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "NETTOBELOPP"
+column = "NETTOBELOPP"
+definition = "Nettobelopp"
+data_type = "decimal"
+variants = ["beslut"]
+
+[[register.variable]]
+name = "BELOPP_BM"
+column = "BELOPP_BM"
+definition = "Totalt utbetalt belopp till bidragsmottagaren för aktuell månad."
+data_type = "decimal"
+variants = ["utbetalningar-manad"]
+
+[[register.variable]]
+name = "FODELSEMANAD_BARN"
+column = "FODELSEMANAD_BARN"
+definition = "Födelsemånad barn"
+data_type = "text"
+variants = ["utbetalningar-manad"]
+
+[[register.variable]]
+name = "KON_BM"
+column = "KON_BM"
+definition = "Kön bidragsmottagare"
+data_type = "text"
+variants = ["utbetalningar-manad"]
+
+[[register.variable]]
+name = "KON_BS"
+column = "KON_BS"
+definition = "Kön bidragsskyldig"
+data_type = "text"
+variants = ["utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "BELOPP_RETRO"
+column = "BELOPP_RETRO"
+definition = "Summa av retroaktiva belopp som ska betalas ut eller in under gällande månad."
+data_type = "decimal"
+variants = ["utbetalningar-manad"]
+
+[[register.variable]]
+name = "BELOPP_BARN"
+column = "BELOPP_BARN"
+definition = "Justerat belopp per barn. Summan för alla barn ska matcha BM_TOT_BELOPP"
+data_type = "decimal"
+variants = ["utbetalningar-manad"]
+
+[[register.variable]]
+name = "TYP_BESLUT"
+column = "TYP_BESLUT"
+definition = "Typ av beslut (Saknas/Okänd,ÅBB-ärende,UHB-ärende, Ej tillämplig)"
+data_type = "text"
+variants = ["beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "ALDER_BS"
+column = "ALDER_BS"
+definition = "Ålder bidragsskyldig"
+data_type = "integer"
+variants = ["beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "KOMMUN_BS"
+column = "KOMMUN_BS"
+definition = "Kommun bidragsskyldig"
+data_type = "text"
+variants = ["beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "ALDER_BARN"
+column = "ALDER_BARN"
+definition = "Ålder barn"
+data_type = "integer"
+variants = ["beslut-bidragsskyldig", "inbetalningar"]
+
+[[register.variable]]
+name = "SKULD"
+column = "SKULD"
+definition = "Ursprunglig skuld"
+data_type = "decimal"
+variants = ["inbetalningar"]
+
+[[register.variable]]
+name = "DATUM_INBET"
+column = "DATUM_INBET"
+definition = "Månad då inbetalningen registrerades"
+data_type = "date"
+variants = ["inbetalningar"]
+
+[[register.variable]]
+name = "DATUM_AVR"
+column = "DATUM_AVR"
+definition = "Månad då inbetalningen avräknades mot skulden."
+data_type = "date"
+variants = ["inbetalningar"]
+
+[[register.variable]]
+name = "TYP_INBET"
+column = "TYP_INBET"
+definition = "Inbetalningstyp. Se tabell nedan"
+data_type = "text"
+variants = ["inbetalningar"]
+
+[[register.variable]]
+name = "FODRINGSAGARE"
+column = "FODRINGSAGARE"
+definition = "Fordringsägare (Barn, Försäkringskassan, Saknas)"
+data_type = "text"
+variants = ["inbetalningar"]
+
+[[register.variable]]
+name = "LOKALKONTOR_BS"
+column = "LOKALKONTOR_BS"
+definition = "Lokalkontor bidragsskyldig"
+data_type = "text"
+variants = ["inbetalningar"]
+
+
+# ============================================================================
+# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
+# ============================================================================
+
+# ============================================================================
+# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
+# ============================================================================
+
+# ============================================================================
+# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
+# ============================================================================
+
+# ============================================================================
+# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
+# ============================================================================
+
+# ============================================================================
+# TIER 2 — 16 thin SWECOV-core benefit registers (no public variable doc)
+# ============================================================================
+
+# Curated thin-provider catalog — Försäkringskassan (FK), the Swedish Social
+# Insurance Agency. Read by reg_meta_build.sources.curated.CuratedAdapter (#422,
+# phase 2; FOHM was phase 1).
+#
+# FK publishes no machine-readable microdata-metadata export, so this TOML is the
+# authoritative, hand-curated source, transcribed from FK's PUBLIC register
+# documentation (the MiDAS variabelförteckningar + benefit/legal descriptions).
+# The delivered microdata is confidential restricted-access individdata (released
+# to researchers after review, pseudonymised: personnummer/organisationsnummer →
+# löpnummer, typically via SCB MONA); only the METADATA below is public.
+#
+# Scope (phase 2, maintainer-confirmed): the SWECOV-core benefit set — one
+# register per förmån (benefit), 26 registers. Source MiDAS ("Mikrodata för
+# analys av socialförsäkringen", successor to STORE) is FK's analysis-database
+# umbrella; most benefits ship as a monthly payment register, the four richest
+# (sjukpenning, sjuk- och aktivitetsersättning, föräldrapenning, tillfällig
+# föräldrapenning) as MiDAS fall/delfall data. Each is modeled as a single-table
+# (`_default`) variant — the MiDAS panel/episode explosion (Fall/Delfall × time
+# grain) is a delivery-construction shape, not a catalog variable axis.
+#
+# COLUMN TOKENS ARE CLEAN PUBLIC FIELD NAMES, NOT DELIVERY HEADERS. FK publishes
+# no delivery column headers (same situation as FOHM); each `column` is an ASCII
+# token derived from the documented public field name. The confidential SWECOV
+# delivery's delivery-shaped tokens (`P1105_LopNr_PersonNr`, `_lev2`/`_lev3`
+# suffixes, `DELFALL_*`/`DEL_*` aggregation artifacts, per-delivery spelling drift
+# `UTTAG_MANAD`/`utbetalningsmanad`/`Ar_manad`) were used ONLY to fix the register
+# scope and cross-check coverage — never copied into the global model.
+#
+# Enumerated code lists (the categorical value sets) remain a follow-up (#422):
+# categorical variables carry a data_type but mint no codes yet. The sickness
+# diagnosis fields (`sjukpenning.diagnos`, `sjuk-aktivitetsersattning.diagnos1/2`)
+# are ICD-9/10-coded and are strong `classification = "ICD-10-SE"` candidates
+# (FOHM SmiNet `diagnos` precedent, #446), but the link is DEFERRED: older MiDAS
+# periods are ICD-9, not ICD-10-SE, and the vintage split needs maintainer
+# confirmation before tagging. Tracked as a #446-style follow-up.
+#
+# valid_from is the register's documented coverage start where FK publishes one
+# (the 2018/2019 reforms, the 2020 pandemic benefits, the MiDAS 1994/2006/2014
+# starts). For long-history benefits where FK publishes no register data-coverage
+# start, it is the BENEFIT-INTRODUCTION date — a lower bound, flagged per register
+# `# valid_from: benefit-introduction lower bound — maintainer to confirm coverage`.
+# The real per-register MONA extract coverage is maintainer-held.
+#
+# Sources:
+#   MiDAS overview + the public catalog of variabelförteckningar — FK,
+#   "Beställning av individdata för forskning":
+#     https://www.forsakringskassan.se/statistik-och-analys/bestallning-av-individdata-och-statistik/bestallning-av-individdata-for-forskning
+#   MiDAS Sjukpenning och rehabiliteringspenning, version 1.02 (förmånsbeskrivning
+#   + Delfall 4-1 variabelförteckning + förmån/delförmån-koder):
+#     https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11f/1666183936381/dokumentation-av-midas-sjukpenning-och-rehabiliteringspenning.pdf
+#   MiDAS Föräldrapenning, PM 2020:2 (fall/delfall/panel variabelförteckning):
+#     https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1749726780627/midas-foraldrapenning-pm-2020-2.pdf
+#
+# NOTE: FK delivers pseudonymised ids; the catalog still models the source concept
+# as `personnummer`/`personnummer_barn`/`organisationsnummer` with is_identifier +
+# is_sensitive (matching FOHM's `personnummer`). Variable slugs stay AUTO
+# (populate_variable_slugs -> fk.auto.toml, transient/not committed), derived from
+# each variable's clean column. Regenerate .snapshot.json after edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+
+[[register]]
+key = "aktivitetsstod"
+name = "Aktivitetsstöd"
+valid_from = "1996-01-01"  # benefit-introduction lower bound — maintainer to confirm coverage
+purpose = """
+Aktivitetsstöd som Försäkringskassan betalar ut till deltagare i \
+arbetsmarknadspolitiska program. Registret innehåller utbetalda belopp per \
+ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat som löpnummer)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period utbetalningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period utbetalningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp (kronor) under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "barnbidrag"
+name = "Barnbidrag"
+valid_from = "1948-01-01"  # benefit-introduction lower bound (allmänt barnbidrag, lag 1947:529) — maintainer to confirm coverage
+purpose = """
+Allmänt barnbidrag (och flerbarnstillägg) som betalas ut för barn bosatta i \
+Sverige. Registret innehåller utbetalt belopp per utbetalningsmånad.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för bidragsmottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) barnbidraget betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt barnbidragsbelopp under månaden."
+data_type = "decimal"
+
+
+[[register]]
+key = "bostadsbidrag"
+name = "Bostadsbidrag"
+valid_from = "1994-01-01"  # benefit-introduction lower bound (lag 1993:737) — maintainer to confirm coverage
+purpose = """
+Bostadsbidrag till barnfamiljer och unga som betalas ut av Försäkringskassan. \
+Registret innehåller utbetalt belopp per ersättningsperiod, inklusive markering \
+av medsökande och tilläggsbidrag.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för den sökande (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Medsökande"
+column = "medsokande"
+definition = "Uppgift om medsökande i hushållet ingår i bidraget."
+data_type = "text"  # DERIVED definition (lev3 `medsok`); no published FK field definition
+
+[[register.variable]]
+name = "Tilläggsbidrag"
+column = "tillaggsbidrag"
+definition = "Tilläggsbidrag (för barn) som ingår i bostadsbidraget."
+data_type = "decimal"  # DERIVED definition (lev3 `tillaggsbidrag`)
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) bidraget betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period bidraget avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period bidraget avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt bostadsbidragsbelopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "bostadsersattning"
+name = "Bostadsersättning"
+valid_from = "2018-01-01"  # FK admin från 2018-01-01 (etablering; förordning 2010:407)
+purpose = """
+Bostadsersättning till nyanlända som deltar i etableringsinsatser. Registret \
+innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "bostadstillagg"
+name = "Bostadstillägg"
+valid_from = "1995-01-01"  # benefit-introduction lower bound — maintainer to confirm coverage
+purpose = """
+Bostadstillägg till personer med sjuk- eller aktivitetsersättning (och \
+pensionärer). Registret innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt bostadstilläggsbelopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "ersattning-karens"
+name = "Ersättning för karens"
+valid_from = "2020-03-11"  # pandemic; karensdagar fr.o.m. 2020-03-11 t.o.m. 2022-03-31
+purpose = """
+Tillfällig ersättning för karensavdrag/karensdag under covid-19-pandemin \
+(ersättningsperioder 2020-03-11–2022-03-31). Registret innehåller utbetalt \
+belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "ersattning-riskgrupper"
+name = "Ersättning till riskgrupper"
+valid_from = "2020-07-01"  # pandemic; ersättningsperioder fr.o.m. 2020-07-01
+purpose = """
+Tillfällig ersättning till personer i riskgrupp (och vissa anhöriga) som behövde \
+avstå arbete under covid-19-pandemin. Registret innehåller utbetalt belopp per \
+ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "ersattning-sjuklonekostnader"
+name = "Ersättning för sjuklönekostnader"
+valid_from = "2020-04-01"  # pandemic; tillfälliga regler avsåg kostnader fr.o.m. våren 2020 — maintainer to confirm
+purpose = """
+Tillfällig ersättning till arbetsgivare för sjuklönekostnader under \
+covid-19-pandemin. Registret är arbetsgivarbaserat och innehåller löne- och \
+sjuklönekostnader samt beslutat ersättningsbelopp per period.\
+"""
+
+# Org-keyed register: the identifier is organisationsnummer, not personnummer.
+[[register.variable]]
+name = "Organisationsnummer"
+column = "organisationsnummer"
+definition = "Organisationsnummer för arbetsgivaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen beslutades/betalades ut (lev3 `beslutsmanad`)."
+data_type = "text"
+
+[[register.variable]]
+name = "Lönekostnad"
+column = "lonekostnad"
+definition = "Arbetsgivarens totala lönekostnad som underlag."
+data_type = "decimal"  # DERIVED definition (lev3 `LONEKOSTNAD`)
+
+[[register.variable]]
+name = "Sjuklönekostnad"
+column = "sjuklonekostnad"
+definition = "Arbetsgivarens sjuklönekostnad."
+data_type = "decimal"  # DERIVED definition (lev3 `SJUKLONEKOSTNAD`)
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Beslutat/utbetalt ersättningsbelopp."
+data_type = "decimal"
+
+
+[[register]]
+key = "etableringsersattning"
+name = "Etableringsersättning"
+valid_from = "2018-01-01"  # FK admin från 2018-01-01 (ansvarsövergång från Arbetsförmedlingen; förordning 2010:407)
+purpose = """
+Etableringsersättning till nyanlända invandrare som deltar i etableringsinsatser. \
+Registret innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "etableringstillagg"
+name = "Etableringstillägg"
+valid_from = "2018-01-01"  # FK admin från 2018-01-01 (förordning 2010:407)
+purpose = """
+Etableringstillägg till nyanlända med barn som deltar i etableringsinsatser. \
+Registret innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+# Tier B — MiDAS fall/delfall. Modeled with the public Bilaga-1 column set plus
+# the high-value MiDAS analytic variables (fall dates, brutto/netto days, belopp,
+# omfattning); the full delfall panel explosion is delivery-specific and omitted.
+
+
+[[register]]
+key = "graviditetspenning"
+name = "Graviditetspenning"
+valid_from = "1980-01-01"  # benefit-introduction lower bound (havandeskapspenning 1980) — maintainer to confirm coverage
+purpose = """
+Graviditetspenning till gravida som inte kan arbeta på grund av fysiskt \
+ansträngande arbete eller risker i arbetsmiljön. Registret innehåller utbetalt \
+belopp och omfattning per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Omfattning"
+column = "omfattning"
+definition = "Ersättningens omfattning (andel av heltid)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt graviditetspenningbelopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "handikappersattning"
+name = "Handikappersättning"
+valid_from = "1975-01-01"  # benefit-introduction lower bound; avvecklad 2019 (ersatt av merkostnadsersättning) — maintainer to confirm coverage
+purpose = """
+Handikappersättning till personer med funktionsnedsättning eller sjukdom som \
+medför merkostnader eller behov av hjälp. Ersattes från 2019 av \
+merkostnadsersättning. Registret innehåller utbetalt belopp och omfattning per \
+ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Omfattning"
+column = "omfattning"
+definition = "Ersättningens omfattning (andel av heltid)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt handikappersättningsbelopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "narstaendepenning"
+name = "Närståendepenning"
+valid_from = "1989-01-01"  # benefit-introduction lower bound — maintainer to confirm coverage
+purpose = """
+Närståendepenning till den som avstår från arbete för att vårda en svårt sjuk \
+närstående. Registret innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "smittbararpenning"
+name = "Smittbärarpenning"
+valid_from = "2004-07-01"  # benefit-introduction lower bound (smittskyddslagen 2004:168) — maintainer to confirm coverage
+purpose = """
+Smittbärarpenning till den som inte får arbeta på grund av risk för att smitta \
+andra (smittbärare) eller på grund av läkarundersökning enligt smittskyddslagen. \
+Registret innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+# Tier B — MiDAS TFP (prototyp). Public Bilaga-1 + TFP-typ.
+
+
+[[register]]
+key = "utvecklingsersattning"
+name = "Utvecklingsersättning"
+valid_from = "2007-01-01"  # benefit-introduction lower bound (jobbgaranti för ungdomar 2007) — maintainer to confirm coverage
+purpose = """
+Utvecklingsersättning till unga (15–24 år) som deltar i arbetsmarknadspolitiska \
+program. Registret innehåller utbetalt belopp per ersättningsperiod.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period ersättningen avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt belopp under perioden."
+data_type = "decimal"
+
+
+[[register]]
+key = "vardbidrag"
+name = "Vårdbidrag"
+valid_from = "1975-01-01"  # benefit-introduction lower bound; avvecklat 2019 (ersatt av omvårdnadsbidrag + merkostnadsersättning) — maintainer to confirm coverage
+purpose = """
+Vårdbidrag till föräldrar som vårdar ett barn med funktionsnedsättning eller \
+långvarig sjukdom. Avvecklades från 2019 och ersattes av omvårdnadsbidrag och \
+merkostnadsersättning. Registret innehåller utbetalt belopp och omfattning per \
+ersättningsperiod, kopplat till barnet.\
+"""
+
+[[register.variable]]
+name = "Personnummer"
+column = "personnummer"
+definition = "Person- eller samordningsnummer för mottagaren/föräldern (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Personnummer barn"
+column = "personnummer_barn"
+definition = "Person- eller samordningsnummer för barnet bidraget avser (levereras pseudonymiserat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Omfattning"
+column = "omfattning"
+definition = "Vårdbidragets omfattning (andel av heltid)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "utbetalningsmanad"
+definition = "Den månad (ÅÅÅÅMM) bidraget betalades ut."
+data_type = "text"
+
+[[register.variable]]
+name = "Utbetalningsperiod från och med"
+column = "utbetalningsperiod_from"
+definition = "Första dagen i den period bidraget avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Utbetalningsperiod till och med"
+column = "utbetalningsperiod_tom"
+definition = "Sista dagen i den period bidraget avser."
+data_type = "date"
+
+[[register.variable]]
+name = "Belopp"
+column = "belopp"
+definition = "Utbetalt vårdbidragsbelopp under perioden."
+data_type = "decimal"

@@ -1,0 +1,590 @@
+# Curated FQID slugs for Försäkringskassan (FK) registers (#422, phase 2).
+#
+# Companion to scb.toml / sos.toml / fohm.toml; same grammar/shape (see
+# reg_meta/DESIGN.md → FQID grammar and reg_meta_build/DESIGN.md → Slug
+# curation). TOML keys are the minted FK ids — mint("fk", <reg_key>) for a
+# register, mint("fk", <reg_key>, <variant_key>) for a variant (the
+# synthesized single-table register uses mint("fk", <reg_key>, "_default")).
+# FK registers carry no SCB RegisterId, so the minted id IS the source id
+# populate_slugs looks up. The register slug equals the register key; the
+# variant slug equals the variant key (or `_default`). Variable slugs stay
+# AUTO (populate_variable_slugs -> fk.auto.toml, transient/not committed),
+# derived from each variable's clean column (underscores fold to hyphens,
+# e.g. `Del_from_datum` -> `del-from-datum`). Panel keys: entity = the
+# variant's primary person/child/org-id column slug; time = a date column
+# (delfall/fall start, betalnings-/besluts-/besöksdatum) or the monthly
+# payment label; grain = row. Regenerate .snapshot.json after edits:
+#   reg-meta-build precheck-slugs --update-snapshot
+
+
+# Arbetsskadeersättning
+[register."5285952033367956531"]
+slug = "arbetsskadeersattning"
+
+[register_variant."5285952033367956531.7947960492149761686"]
+slug = "arbetsskadelivranta-manadsdata"
+display_group = "Arbetsskadeersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+[register_variant."5285952033367956531.7870777863327006367"]
+slug = "yrkesskadelivranta-manadsdata"
+display_group = "Arbetsskadeersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+[register_variant."5285952033367956531.7267190485107607471"]
+slug = "beslut"
+display_group = "Arbetsskadeersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "startdatum"
+panel_time_grain = "row"
+
+# Assistansersättning
+[register."5301353483611203358"]
+slug = "assistansersattning"
+
+[register_variant."5301353483611203358.8082812782473033108"]
+slug = "pagaende-beslut-1994-2001"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+[register_variant."5301353483611203358.9122333370064831819"]
+slug = "pagaende-beslut-2002-201809"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+[register_variant."5301353483611203358.8349704866364345844"]
+slug = "pagaende-beslut-201810"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "ar-manad"
+panel_time_grain = "row"
+
+[register_variant."5301353483611203358.8104491224819817108"]
+slug = "beviljanden"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+[register_variant."5301353483611203358.5293102147601684719"]
+slug = "avslag"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+[register_variant."5301353483611203358.4901572278486996155"]
+slug = "fattade-beslut"
+display_group = "Assistansersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+# Bilstöd
+[register."5488356780395367498"]
+slug = "bilstod"
+
+[register_variant."5488356780395367498.8025025971550859246"]
+slug = "utbetalningar"
+display_group = "Bilstöd"
+panel_entity_key = "lopnr-sokande"
+panel_time_key = "utbetalningsdatum"
+panel_time_grain = "row"
+
+[register_variant."5488356780395367498.7315139012955295030"]
+slug = "ansokningar-beslut"
+display_group = "Bilstöd"
+panel_entity_key = "lopnr-sokande"
+panel_time_key = "ansokningsdatum"
+panel_time_grain = "row"
+
+# Föräldrapenning
+[register."7724610645254369578"]
+slug = "foraldrapenning"
+
+[register_variant."7724610645254369578.6145127829134819148"]
+slug = "fp-fall"
+display_group = "Föräldrapenning"
+panel_entity_key = "persid"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."7724610645254369578.6642064092255968002"]
+slug = "fp-delfall1"
+display_group = "Föräldrapenning"
+panel_entity_key = "persid"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+[register_variant."7724610645254369578.5372217754457252716"]
+slug = "fl-fall"
+display_group = "Föräldrapenning"
+panel_entity_key = "persid"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."7724610645254369578.4684116283909747746"]
+slug = "fl-delfall1"
+display_group = "Föräldrapenning"
+panel_entity_key = "persid"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Tillfällig föräldrapenning
+[register."6486633934264544358"]
+slug = "tillfallig-foraldrapenning"
+
+[register_variant."6486633934264544358.8505472833822035600"]
+slug = "fall-1"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."6486633934264544358.5584742198526159311"]
+slug = "delfall1-1-8"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+[register_variant."6486633934264544358.8701685101033115090"]
+slug = "fall-2"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr-barn"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."6486633934264544358.4620932338325394957"]
+slug = "delfall2-1-8"
+display_group = "Tillfällig föräldrapenning"
+panel_entity_key = "lopnr-barn"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Sjuk- och aktivitetsersättning
+[register."5597417723181852215"]
+slug = "sjuk-aktivitetsersattning"
+
+[register_variant."5597417723181852215.6330066145803678545"]
+slug = "fall-1"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."5597417723181852215.6093759863560621400"]
+slug = "fall-2"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."5597417723181852215.6020698618216972271"]
+slug = "delfall-1-1"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+[register_variant."5597417723181852215.5460191306533415219"]
+slug = "delfall-2-1"
+display_group = "Sjuk- och aktivitetsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Sjukpenning och rehabiliteringspenning
+[register."8881065292063230279"]
+slug = "sjukpenning"
+
+[register_variant."8881065292063230279.4739195128977886243"]
+slug = "fall-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "fall-from-datum"
+panel_time_grain = "row"
+
+[register_variant."8881065292063230279.7521274023055426126"]
+slug = "delfall-1-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+[register_variant."8881065292063230279.5507715832563318729"]
+slug = "delfall-2-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+[register_variant."8881065292063230279.9184404571588539037"]
+slug = "delfall-3-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+[register_variant."8881065292063230279.6060610150443815866"]
+slug = "delfall-4-1"
+display_group = "Sjukpenning och rehabiliteringspenning"
+panel_entity_key = "lopnr"
+panel_time_key = "del-from-datum"
+panel_time_grain = "row"
+
+# Merkostnadsersättning
+[register."7493079423846267575"]
+slug = "merkostnadsersattning"
+
+[register_variant."7493079423846267575.5086889710066742540"]
+slug = "mottagare"
+display_group = "Merkostnadsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+[register_variant."7493079423846267575.5703128771691645425"]
+slug = "barn"
+display_group = "Merkostnadsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+[register_variant."7493079423846267575.8958889425760040105"]
+slug = "beviljanden"
+display_group = "Merkostnadsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+[register_variant."7493079423846267575.6966641877688731962"]
+slug = "avslag"
+display_group = "Merkostnadsersättning"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+# Omvårdnadsbidrag
+[register."6302817431190760455"]
+slug = "omvardnadsbidrag"
+
+[register_variant."6302817431190760455.4988674510339160094"]
+slug = "mottagare"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = "lopnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+[register_variant."6302817431190760455.9055963153352559129"]
+slug = "barn"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = "lopnr"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+[register_variant."6302817431190760455.5148735333309541992"]
+slug = "beviljanden"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+[register_variant."6302817431190760455.5322547415543745301"]
+slug = "avslag"
+display_group = "Omvårdnadsbidrag"
+panel_entity_key = "lopnr"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+# Läkarintygsregistret
+[register."7970092672219058188"]
+slug = "lakarintygsregistret"
+
+[register_variant."7970092672219058188.4967946144295878372"]
+slug = "_default"
+display_group = "Läkarintygsregistret"
+panel_entity_key = "lopnr"
+panel_time_key = "period-from"
+panel_time_grain = "row"
+
+# Tandvårdsstödet
+[register."7664376130118991107"]
+slug = "tandvardsstodet"
+
+[register_variant."7664376130118991107.5077766157907221193"]
+slug = "atgarder"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "beslutsdatum"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.7671954325840591968"]
+slug = "betalningar"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "betalningsdatum"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.5853774716918891216"]
+slug = "abonnemang"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "manad"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.5617756065568718224"]
+slug = "abonnemang-detaljerat"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "avtalsstart"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.4978493193100727668"]
+slug = "ersattningsperioder"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnummer"
+panel_time_key = "ersperiod-startdatum"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.7488921345828009336"]
+slug = "efterhandskontroll"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "besoksdatum"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.5778824113583968346"]
+slug = "arenden-detaljerat"
+display_group = "Tandvårdsstödet"
+panel_entity_key = "lopnr-arende-id"
+panel_time_key = "besoksdatum"
+panel_time_grain = "row"
+
+[register_variant."7664376130118991107.6332006637200314922"]
+slug = "arende-atgard"
+display_group = "Tandvårdsstödet"
+panel_time_grain = "row"
+
+# Underhållsstöd
+[register."9011624717046135047"]
+slug = "underhallsstod"
+
+[register_variant."9011624717046135047.8680353104330860502"]
+slug = "utbetalningar-barn"
+display_group = "Underhållsstöd"
+panel_entity_key = "lopnr-bm"
+panel_time_key = "ersattningperiod-from"
+panel_time_grain = "row"
+
+[register_variant."9011624717046135047.8699076028733205250"]
+slug = "beslut"
+display_group = "Underhållsstöd"
+panel_entity_key = "lopnr-bm"
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+[register_variant."9011624717046135047.8368711561888390862"]
+slug = "utbetalningar-manad"
+display_group = "Underhållsstöd"
+panel_entity_key = "lopnr-bm"
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+[register_variant."9011624717046135047.7561693197164962636"]
+slug = "beslut-bidragsskyldig"
+display_group = "Underhållsstöd"
+panel_entity_key = "lopnr-bs"
+panel_time_key = "datum"
+panel_time_grain = "row"
+
+[register_variant."9011624717046135047.6749975705142537045"]
+slug = "inbetalningar"
+display_group = "Underhållsstöd"
+panel_entity_key = "lopnr-bs"
+panel_time_key = "datum-inbet"
+panel_time_grain = "row"
+
+# Aktivitetsstöd
+[register."5184724777840514491"]
+slug = "aktivitetsstod"
+
+[register_variant."5184724777840514491.6697432127942940279"]
+slug = "_default"
+display_group = "Aktivitetsstöd"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Barnbidrag
+[register."4635732609514065093"]
+slug = "barnbidrag"
+
+[register_variant."4635732609514065093.5324721756578836203"]
+slug = "_default"
+display_group = "Barnbidrag"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Bostadsbidrag
+[register."8901855898588660269"]
+slug = "bostadsbidrag"
+
+[register_variant."8901855898588660269.6926768036030898876"]
+slug = "_default"
+display_group = "Bostadsbidrag"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Bostadsersättning
+[register."6540524901503254771"]
+slug = "bostadsersattning"
+
+[register_variant."6540524901503254771.5937192435242425286"]
+slug = "_default"
+display_group = "Bostadsersättning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Bostadstillägg
+[register."7208666679773615290"]
+slug = "bostadstillagg"
+
+[register_variant."7208666679773615290.8993303221003818160"]
+slug = "_default"
+display_group = "Bostadstillägg"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Ersättning för karens
+[register."7296709609943288914"]
+slug = "ersattning-karens"
+
+[register_variant."7296709609943288914.9204483061530265555"]
+slug = "_default"
+display_group = "Ersättning för karens"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Ersättning till riskgrupper
+[register."5304830980745799212"]
+slug = "ersattning-riskgrupper"
+
+[register_variant."5304830980745799212.8049980962017583996"]
+slug = "_default"
+display_group = "Ersättning till riskgrupper"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Ersättning för sjuklönekostnader
+[register."7791929252178908414"]
+slug = "ersattning-sjuklonekostnader"
+
+[register_variant."7791929252178908414.6117630078032501785"]
+slug = "_default"
+display_group = "Ersättning för sjuklönekostnader"
+panel_entity_key = "organisationsnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Etableringsersättning
+[register."5110940353417222695"]
+slug = "etableringsersattning"
+
+[register_variant."5110940353417222695.9051315687489963701"]
+slug = "_default"
+display_group = "Etableringsersättning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Etableringstillägg
+[register."5025807446792777547"]
+slug = "etableringstillagg"
+
+[register_variant."5025807446792777547.6060193209099644170"]
+slug = "_default"
+display_group = "Etableringstillägg"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Graviditetspenning
+[register."7612505802412930990"]
+slug = "graviditetspenning"
+
+[register_variant."7612505802412930990.4921892111850379854"]
+slug = "_default"
+display_group = "Graviditetspenning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Handikappersättning
+[register."6861565800980927454"]
+slug = "handikappersattning"
+
+[register_variant."6861565800980927454.5002536168826239399"]
+slug = "_default"
+display_group = "Handikappersättning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Närståendepenning
+[register."5136717806447986475"]
+slug = "narstaendepenning"
+
+[register_variant."5136717806447986475.6449766685553259956"]
+slug = "_default"
+display_group = "Närståendepenning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Smittbärarpenning
+[register."7588615323625434168"]
+slug = "smittbararpenning"
+
+[register_variant."7588615323625434168.6987757354346637054"]
+slug = "_default"
+display_group = "Smittbärarpenning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Utvecklingsersättning
+[register."5517508967525103350"]
+slug = "utvecklingsersattning"
+
+[register_variant."5517508967525103350.8173457916985157617"]
+slug = "_default"
+display_group = "Utvecklingsersättning"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"
+
+# Vårdbidrag
+[register."5430440157686027706"]
+slug = "vardbidrag"
+
+[register_variant."5430440157686027706.5740549366009254918"]
+slug = "_default"
+display_group = "Vårdbidrag"
+panel_entity_key = "personnummer"
+panel_time_key = "utbetalningsmanad"
+panel_time_grain = "row"

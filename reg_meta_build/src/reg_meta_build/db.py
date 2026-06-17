@@ -80,10 +80,12 @@ if TYPE_CHECKING:
 PROVIDER_ID_SCB = 1
 PROVIDER_ID_SOS = 2
 PROVIDER_ID_FOHM = 3
+PROVIDER_ID_FK = 4
 _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
     (PROVIDER_ID_SCB, "scb", "Statistics Sweden"),
     (PROVIDER_ID_SOS, "sos", "Socialstyrelsen"),
     (PROVIDER_ID_FOHM, "fohm", "Folkhälsomyndigheten"),
+    (PROVIDER_ID_FK, "fk", "Försäkringskassan"),
 )
 
 # Thin CURATED global providers (#422): public agencies with no machine-readable
@@ -93,7 +95,10 @@ _PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
 # untracked SCB/SOS seed, this TOML is committed, so the subdir always exists on
 # any checkout — which requires a per-agency `.gitignore` un-ignore line (the
 # `input_data/*` rule otherwise hides it). See DESIGN.md → Curated thin providers.
-_CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (("fohm", "Folkhalsomyndigheten"),)
+_CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
+    ("fohm", "Folkhalsomyndigheten"),
+    ("fk", "Forsakringskassan"),
+)
 
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
 # disjoint cases observed; build-db classifies each row using these allowlists:

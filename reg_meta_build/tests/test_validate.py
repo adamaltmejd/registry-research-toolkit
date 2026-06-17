@@ -647,15 +647,16 @@ class TestValidateModule:
 class TestBuildDbProvidersDefault:
     def test_cli_default_is_combined_global_build(self):
         """The CLI `--providers` default is the full global build: `scb,sos`
-        (A4.5) plus the thin curated `fohm` provider (#422). `--providers scb`
-        still selects the SCB-only DB (the A4.3b byte-identical gate). Only the
-        CLI surface carries the default — `build_db()`'s function default stays
-        `('scb',)` so synthetic SCB-only fixtures need no extra inputs."""
+        (A4.5) plus the thin curated `fohm` + `fk` providers (#422).
+        `--providers scb` still selects the SCB-only DB (the A4.3b byte-identical
+        gate). Only the CLI surface carries the default — `build_db()`'s function
+        default stays `('scb',)` so synthetic SCB-only fixtures need no extra
+        inputs."""
         from reg_meta_build.cli import _build_parser
 
         parser = _build_parser()
         ns = parser.parse_args(["build-db", "--input-dir", "x"])
-        assert ns.providers == "scb,sos,fohm"
+        assert ns.providers == "scb,sos,fohm,fk"
         ns = parser.parse_args(["build-db", "--input-dir", "x", "--providers", "scb"])
         assert ns.providers == "scb"
 

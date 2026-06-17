@@ -13,12 +13,15 @@ Current providers:
 - `fohm` — Folkhälsomyndigheten (SmiNet + national vaccination register);
   thin curated provider with no machine-readable export, read from
   `input_data/Folkhalsomyndigheten/fohm.toml` via `CuratedAdapter`.
+- `fk` — Försäkringskassan (MiDAS social-insurance benefit registers); thin
+  curated provider read from `input_data/Forsakringskassan/fk.toml` via
+  `CuratedAdapter`.
 
 The post-refactor contract every adapter must implement is the `IRAdapter`
 protocol below. Native-format providers get their own module (`scb.py`,
 `sos.py`); thin curated providers — agencies without machine-readable
-exports (FOHM today; Försäkringskassan/Skatteverket to follow) — share
-`curated.py`, parameterized by provider. All adapters emit a stream of
+exports (FOHM and Försäkringskassan today; Skatteverket etc. to follow) —
+share `curated.py`, parameterized by provider. All adapters emit a stream of
 IR objects (`reg_meta_build.ir.*`) consumed by the provider-blind
 materializer in `reg_meta_build.db`. See DESIGN.md → IR + adapter
 architecture, and → Curated thin providers.
