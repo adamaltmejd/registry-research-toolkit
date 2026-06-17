@@ -72,7 +72,13 @@ function leafSlug(fqid: string): string {
   <summary>
     <span class="label">{group.label}</span>
     <span class="count">{group.members.length} {noun}</span>
-    <code class="child-fqid">{group.key}</code>
+    <!-- The group key is a presentation anchor (slug stem / min-member slug /
+         curated key per ConceptGroupSummary), NOT an addressable variable
+         (#498). Deliberately NOT a <code>/.child-fqid: monospace + that class
+         read as a pickable leaf FQID and confused a maintainer. Render it as a
+         muted non-monospace group-id badge so it reads as a grouping anchor —
+         don't "restore" the code look. -->
+    <span class="group-key">{group.key}</span>
   </summary>
   {#if axes.length >= 2}
     <table class="facet-matrix">
@@ -176,9 +182,18 @@ function leafSlug(fqid: string): string {
     font-size: 0.85em;
     white-space: nowrap;
   }
-  .child-fqid {
+  /* Group-id badge (#498): the folded-group key is a presentation anchor, not
+     a pickable variable FQID. Non-monospace + a faint pill keeps it visible as
+     a disambiguator while reading as a grouping label, distinct from the
+     monospace leaf <code>s and the bordered member .chips. Do NOT make this
+     look like a code/FQID. */
+  .group-key {
     color: var(--muted);
-    font-size: 0.85em;
+    font-size: 0.8em;
+    padding: 0.05rem 0.4rem;
+    border-radius: 0.75rem;
+    background: var(--accent-bg);
+    white-space: nowrap;
   }
   .facet-matrix {
     margin: 0.5rem 0 0.5rem 1rem;
