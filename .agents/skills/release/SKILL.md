@@ -2,8 +2,9 @@
 name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
-  the release workflow, bump and publish reg_meta, reg_meta_build, or mock_data_wizard,
-  create package tags/releases, upload reg_meta DB assets, or monitor publish workflows.
+  the release workflow, bump and publish reg_meta, reg_meta_build, reg_monabundle, or
+  mock_data_wizard, create package tags/releases, upload reg_meta DB assets, or monitor
+  publish workflows.
 ---
 
 # Registry Release
@@ -21,6 +22,10 @@ current and planned versions.
 - `reg_meta_build`: `reg_meta_build/pyproject.toml`,
   `reg_meta_build/src/reg_meta_build/__init__.py`, workflow
   `publish_reg_meta_build.yml`.
+- `reg_monabundle`: `reg_monabundle/pyproject.toml`,
+  `reg_monabundle/src/reg_monabundle/__init__.py`; no publish workflow exists yet.
+  Before the first PyPI release, stop and add or confirm the publish path instead of
+  silently omitting the package.
 - `mock_data_wizard`: `mock_data_wizard/pyproject.toml`,
   `mock_data_wizard/src/mock_data_wizard/__init__.py`, workflow
   `publish_mock_data_wizard.yml`.
@@ -55,10 +60,9 @@ approval pause.
 
 3. If multiple packages changed, release sequentially. For schema-affecting DDL or doc
    DB changes shared by `reg_meta` and `reg_meta_build`, keep `reg_meta` ahead of the
-   builder: publish the `reg_meta` release containing the new
-   `SCHEMA_VERSION`/`DOC_SCHEMA_VERSION` first, or bump `reg_meta_build`'s minimum
-   `reg-meta` dependency to the new version before publishing the builder. Do not ship a
-   builder that can resolve against stale schema constants.
+   builder and bump `reg_meta_build`'s minimum `reg-meta` dependency to the new
+   `reg_meta` version before publishing the builder. Do not ship a builder that can
+   resolve against stale schema constants.
 
 ## Per-Package Steps
 
@@ -173,9 +177,17 @@ gh release edit <package>/vX.Y.Z --draft=false
 Monitor:
 
 ```sh
-gh run list --workflow=<workflow> --limit 1 --json databaseId,url
-gh run watch <run-id> --exit-status
+run_id=""
+while [ -z "$run_id" ]; do
+  run_id="$(gh run list --workflow=<workflow> --event release --commit "$target" --json databaseId,headSha,event,createdAt --jq '.[0].databaseId // ""')"
+  [ -n "$run_id" ] || sleep 10
+done
+gh run watch "$run_id" --exit-status
 ```
+
+Do not watch `gh run list --workflow=<workflow> --limit 1` without filtering or
+verifying the run belongs to this release; GitHub may not have queued the new release
+event yet, so the latest run can be stale.
 
 Verify PyPI:
 
