@@ -40,7 +40,7 @@
 [[register]]
 key = "biverkningar"
 name = "Misstänkta läkemedelsbiverkningar"
-valid_from = "1965-01-01"  # FLAG/GAP: SWEDIS spontaneous-ADR reporting since 1965, but the documented vaccine-focused fields cover Pandemrix (2009) + covid-19 (2021) onward — maintainer to confirm the modeled coverage start
+valid_from = "2009-01-01"  # Pandemrix (H1N1, 2009) is the earliest in-scope vaccine; the documented extract is vaccine-focused (Pandemrix 2009 + covid-19 2021). The underlying SWEDIS spontaneous-ADR database runs since 1965, but valid_from materializes as the coverage-start on every state, so it reflects this delivered extract — maintainer to confirm the exact extract start.
 purpose = """
 Läkemedelsverkets register över misstänkta biverkningar av läkemedel och vacciner \
 (spontanrapporter från hälso- och sjukvården och från privatpersoner). Efter \
