@@ -811,6 +811,19 @@ or re-pointed — linkage is additive.
    label agreement distinguishes a short genuine match from ambiguity, never boosts an
    unrelated set.
 6. Emit confident candidates into `classification_candidate` additively.
+7. **Vintage-period reclaim** (#494): much of the multi-family residue from step 3 is
+   one classification family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
+   editions) — distinct `classification` rows linked by `supersedes_id`. For each
+   remaining multi-family value set, compute every candidate classification's chain root
+   via a recursive CTE over `supersedes_id`. If ALL candidates share one chain root
+   (i.e. every candidate sits on the same supersedes chain), resolve by period: for the
+   `(variable_id, value_set_id)` pair's aggregate state span (MIN/MAX of
+   `variable_state.valid_from/valid_to` across the pair's states), pick the LATEST
+   candidate vintage whose `[valid_from, valid_to]` (INTEGER years, NULL = unbounded)
+   overlaps the span, then emit it additively. If even one candidate is off-chain (a
+   genuine cross-family coincidence, e.g. SNI vs SSYK), the whole set stays in the
+   residue for curation. Real-corpus result: 1,027 value sets / 962 variables reclaimed;
+   multi-family residue 2,215 → 1,188.
 
 **Design decisions:**
 
@@ -823,15 +836,21 @@ or re-pointed — linkage is additive.
   real corpus (2026-06-15): at ≥8 codes, 930 of 1,532 classification-candidate value
   sets are family-ambiguous; at ≥15 codes, that collapses to 78. A shorter single-family
   set is rescued only if its labels also agree. The unconfident residue (single-family
-  below threshold and multi-family ambiguous) is sized and logged at build time — drift
-  in the curated tail is visible without logging row-level content.
+  below threshold and multi-family ambiguous) feeds the vintage step; drift in the
+  curated tail is visible without logging row-level content.
 - **`is_valid IS NOT 0` includes `NULL`.** A no-CSV classification has `is_valid NULL`
   on all its codes; those observed codes are the only code set available and must
   participate in containment. `IS NOT 0` preserves that: it matches `1` and `NULL`,
   excludes `0` (observed-only codes of a CSV-backed classification that the canonical
-  CSV does not list). Deferred: vintage-period disambiguation (a value set that appears
-  in multiple vintages of one classification — e.g. an LKF year edition — remains a
-  residue item for curation).
+  CSV does not list).
+- **Vintage step uses aggregate span, not per-state period.**
+  `_backfill_state_classifications` folds candidates to `min(classification_id)` per
+  `(variable_id, value_set_id)` and applies ONE classification to ALL that pair's
+  states. The vintage emit therefore resolves to one vintage per pair over its aggregate
+  span — do not attempt per-state-period resolution; the backfill grain forbids it.
+  County/LKF per-year vintages remain in the residue when an off-chain coincidence (SNI, MDC)
+  is present among their candidates, because the conservative all-on-one-chain rule
+  requires every candidate to share the chain root.
 
 ### Curated classification links (`classification_links.toml`, #416 tail)
 
@@ -861,8 +880,14 @@ build is SKIPPED (a partial `--providers=sos` build can't represent an SCB varia
 deferral, not drift). An entry whose FQID or `short_name` does resolve but to nothing
 fails the build (`EXIT_CONFIG`).
 
-The file SHIPS EMPTY today: the residue curation is a deferred follow-up. The loader
-handles zero entries cleanly.
+The file carries the first 13 curated entries (#494 part 2): the SAFE subset of the
+post-vintage residue whose labels uniquely identify one STANDALONE (single-edition, no
+per-year vintage) seeded classification — 11 institutional-sector variables linking to
+SEKTOR2000, `scb/ureg/isced2011niva` → ISCED2011, and `scb/ureg/isced-f-2013` →
+ISCED-F2013. The bulk residue (county/LKF codes whose true family is a per-year vintage
+with no single `short_name`; short numeric sets whose true family is not even a
+candidate) is not single-`short_name`-curatable and stays for a deferred follow-up. The
+loader handles zero entries cleanly.
 
 ## Build-time triage (SCB)
 
