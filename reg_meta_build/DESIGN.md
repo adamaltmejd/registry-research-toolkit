@@ -263,6 +263,15 @@ follow-up — no codes minted). Pliktverket is a **closed** register (1997–201
 conscription deactivated 2010): it sets a register-level `valid_to` — a primitive the
 curated adapter materializes onto every variable state (a per-variable `valid_to` still
 overrides it), so the catalog reports the data as ending 2010 rather than open-ended.
+**Riksarkivet** (#443) is the fifth — the historical conscription/mönstring
+`inskrivning` register held at Krigsarkivet that predates Pliktverket's digital era (one
+register, 104 fields from Krigsarkivet's own codebook). It mirrors Pliktverket but
+older: data types are undocumented in the source → all `text`; the six historical
+`sjn1`–`sjn6` sjukdomsnummer predate ICD-10-SE so they stay **unlinked**; the coverage
+window (`valid_from=1969`/`valid_to=1996`) is sourced from the variable content (the
+standardized inskrivningsprov regime) and the Pliktverket 1997 takeover, flagged in the
+TOML for maintainer confirmation. (Note Skatteverket's COVID-support delivery went to
+the **swecov flavor**, not here — a bespoke steward extract, not a standing register.)
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived

@@ -162,15 +162,16 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     build_p.add_argument(
         "--providers",
-        default="scb,sos,fohm,fk,lakemedelsverket,pliktverket",
+        default="scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet",
         help=(
             "Comma-separated provider adapters to build (default: "
-            "scb,sos,fohm,fk,lakemedelsverket,pliktverket). Pass `--providers scb` for the "
+            "scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet). Pass "
+            "`--providers scb` for the "
             "SCB-only DB that reproduces the byte-identical A4.3b dbdiff gate. "
             "Non-SCB providers are purely additive: they add rows in a disjoint id "
             "band (>= 2^62), never alter SCB's. `fohm`/`fk` (#422) and "
-            "`lakemedelsverket`/`pliktverket` (#443) are thin curated providers whose committed "
-            "TOMLs ship with the repo. (The `build_db()` function default stays "
+            "`lakemedelsverket`/`pliktverket`/`riksarkivet` (#443) are thin curated "
+            "providers whose committed TOMLs ship with the repo. (The `build_db()` function default stays "
             "`('scb',)` so synthetic SCB-only test fixtures need no extra inputs.)"
         ),
     )
