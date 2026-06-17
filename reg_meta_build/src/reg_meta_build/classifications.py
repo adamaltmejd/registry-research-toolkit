@@ -1136,9 +1136,6 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         GROUP BY vs.variable_id, vs.value_set_id
         """
     )
-    conn.execute(
-        "CREATE UNIQUE INDEX _vs_span_pk ON _vs_span(variable_id, value_set_id)"
-    )
 
     # 7d. For each pair, among its CANDIDATE chain vintages (JOIN `_vs_cls` so we
     # only pick vintages the value set actually matches) that OVERLAP the span, pick
