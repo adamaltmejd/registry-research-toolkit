@@ -165,6 +165,42 @@ class TestSearchFolding:
         assert group["matched"] == []
         assert group["member_count"] == 3
 
+    def test_group_label_like_metacharacters_match_literally(self) -> None:
+        conn = _seeded_conn()
+        groups = (
+            (20, 900, "literal-underscore", "Family 12_5"),
+            (21, 901, "plain-digits", "Family 120"),
+            (22, 902, "literal-percent", "Family 99%5"),
+            (23, 903, "plain-percent-candidate", "Family 994"),
+        )
+        for group_id, var_id, group_key, label in groups:
+            conn.execute(
+                "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+                "label, source) VALUES (?, 'variable', 1, ?, ?, 'curated')",
+                (group_id, group_key, label),
+            )
+            slug = f"{group_key}-member"
+            add_variable(conn, register_id=1, var_id=var_id, name=label, slug=slug)
+            variable_id = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+                (slug,),
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (variable_id, group_id),
+            )
+
+        underscore = search(conn, "12_", field="description")["results"]
+        assert {r["group_key"] for r in underscore if r["type"] == "group"} == {
+            "literal-underscore"
+        }
+
+        percent = search(conn, "99%", field="description")["results"]
+        assert {r["group_key"] for r in percent if r["type"] == "group"} == {
+            "literal-percent"
+        }
+
     def test_classification_group_label_matches(self) -> None:
         conn = _seeded_conn()
         results = search(conn, "utbildningsnomenklatur")["results"]

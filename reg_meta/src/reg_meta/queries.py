@@ -238,8 +238,10 @@ def _fts_match_query(raw: str) -> str | None:
 
 
 def _escape_like(s: str) -> str:
-    """Escape SQL LIKE metacharacters so a user query matches as a literal
-    prefix, not a pattern. Escape the escape char first."""
+    """Escape SQL LIKE metacharacters so user text matches literally.
+
+    Escape the escape char first.
+    """
     return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
@@ -404,13 +406,13 @@ def search(
     _VALUE_TYPES = {"code"}
 
     all_results: list[dict[str, Any]] = []
-    like_pattern = f"%{query}%"
+    like_pattern = f"%{_escape_like(query)}%"
     # The FTS path (register/variable/classification indexes) takes a SAFE FTS5
     # MATCH expression built from the raw query — quoted prefix terms that
     # neutralize FTS operators and won't error on stray syntax (see
-    # `_fts_match_query`). The LIKE paths (datacolumn/varname/value/group-label)
-    # keep the RAW substring `like_pattern`. None = the query had no usable
-    # token, so the FTS indexes contribute nothing.
+    # `_fts_match_query`). LIKE paths use an escaped substring pattern so user
+    # `%` / `_` input stays literal. None = the query had no usable token, so the
+    # FTS indexes contribute nothing.
     fts_query = _fts_match_query(query)
 
     # Classifications surfaced by the name-FTS arm; the code-containment arm
@@ -535,7 +537,7 @@ def _search_datacolumns(
         "FROM variable_alias va "
         "JOIN variable v ON va.variable_id = v.variable_id "
         "JOIN register r ON v.register_id = r.register_id "
-        "WHERE va.delivery_column_name LIKE ? "
+        "WHERE va.delivery_column_name LIKE ? ESCAPE '\\' "
         "ORDER BY va.delivery_column_name, v.register_id",
         (like_pattern,),
     ).fetchall()
@@ -567,7 +569,7 @@ def _search_varnames(
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
-        "WHERE v.name LIKE ? "
+        "WHERE v.name LIKE ? ESCAPE '\\' "
         "ORDER BY v.name, v.register_id",
         (like_pattern,),
     ).fetchall()
@@ -925,11 +927,11 @@ def _search_values_fts(
         code_rows = conn.execute(
             "SELECT code_id, code, label, mapping_count "
             "FROM value_code "
-            "WHERE (code = ? OR code LIKE ?) "
+            "WHERE (code = ? COLLATE NOCASE OR code LIKE ? ESCAPE '\\') "
             "AND (mapping_count > 0 OR EXISTS ("
             "    SELECT 1 FROM classification_code cc WHERE cc.code_id = value_code.code_id)) "
-            "ORDER BY (code = ?) DESC, length(code), code",
-            (q, f"{q}%", q),
+            "ORDER BY (code = ? COLLATE NOCASE) DESC, length(code), code",
+            (q, f"{_escape_like(q)}%", q),
         ).fetchall()
         # Code matches are the strongest signal a code query gives — seed them
         # below the FTS rank floor (a large negative offset) so an exact "F32"
@@ -938,7 +940,7 @@ def _search_values_fts(
         # result types for a code-shaped query — the user typed a code; the webapp
         # calls search() per-type, so its groups are unaffected.)
         for i, r in enumerate(code_rows):
-            exact = r["code"] == q
+            exact = r["code"].casefold() == q.casefold()
             code_rank = -1_000_000 + (0 if exact else 1) + i
             existing = hits.get(r["code_id"])
             if existing is None or code_rank < existing["base_rank"]:
@@ -1112,9 +1114,7 @@ def _search_classifications_by_code(
     code-shaped query like "12_" matches literal "12_…" codes, NOT "120"/"129"
     (where a raw underscore would wildcard-match any single char). The exact-match
     parts (`vc.code = ?` and the `has_exact` `=` test) take the RAW `q` — they are
-    equality, not LIKE, so they need no escaping. This is STRICTER than the value
-    arm (`_search_values_fts`), whose `code LIKE ?` does NOT escape — a known
-    module-wide gap, tracked as a follow-up, not fixed here.
+    equality, not LIKE, so they need no escaping.
 
     The `classification_code` JOIN inherently restricts the result to codes that
     OWN a classification, so the context-less-code drop the value arm needs (#478,
@@ -1274,7 +1274,7 @@ def _search_group_labels(
         "g.register_id, r.name AS register_name "
         "FROM concept_group g "
         "LEFT JOIN register r ON r.register_id = g.register_id "
-        "WHERE g.label LIKE ? OR g.group_key LIKE ? "
+        "WHERE g.label LIKE ? ESCAPE '\\' OR g.group_key LIKE ? ESCAPE '\\' "
         "ORDER BY g.kind, g.group_key",
         (like_pattern, like_pattern),
     ).fetchall()
