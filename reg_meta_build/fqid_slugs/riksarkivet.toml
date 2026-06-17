@@ -3,7 +3,9 @@
 # Companion to pliktverket.toml (the modern mönstring half); same grammar.
 # TOML keys are minted ids — mint("riksarkivet", <reg_key>) / mint(..., "_default").
 # Single-table historical inskrivningsregister → synthesized _default variant.
-# Panel: entity = penr, time = inst (inställelsedatum), grain = row. Variable
+# Panel: entity = penr, time = bari (år för inskrivning — the enrollment-year field
+# that is actually present in the RA_Insark delivery; inställelsedatum/inst is
+# codebook-only), grain = row. Variable
 # slugs stay AUTO. Regenerate .snapshot.json after edits:
 #   reg-meta-build precheck-slugs --update-snapshot
 
@@ -16,5 +18,5 @@ slug = "inskrivning"
 slug = "_default"
 display_group = "Inskrivningsregister (mönstring)"
 panel_entity_key = "penr"
-panel_time_key = "inst"
+panel_time_key = "bari"
 panel_time_grain = "row"
