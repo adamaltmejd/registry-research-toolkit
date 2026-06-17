@@ -13,13 +13,15 @@ description: >-
 
 Review only. This is the repo-scoped callable review workflow for Registry PRs/diffs.
 Use it when the top-level built-in review command is unavailable from the current
-workflow or when explicitly asked. Do not mutate files, commit, push, regenerate
-artifacts, or apply fixes. Findings lead the response, ordered by severity, with file
-and line references.
+workflow or when explicitly asked. In `pr-pipeline`, run this skill in a fresh subagent
+when available so the review is independent of the authoring session. The subagent
+reports findings back to the lead agent; it does not mutate files, commit, push,
+regenerate artifacts, apply fixes, or post GitHub comments unless explicitly instructed.
+Findings lead the response, ordered by severity, with file and line references.
 
-When this skill is run by the same session that authored the patch, state that review
-surface in the closeout; it is still useful as a structured review pass, but it is not
-the same evidence as a separate reviewer.
+When this skill is run by the same session that authored the patch because subagents are
+unavailable, state that review surface in the closeout; it is still useful as a
+structured review pass, but it is not the same evidence as a separate reviewer.
 
 ## Inputs
 

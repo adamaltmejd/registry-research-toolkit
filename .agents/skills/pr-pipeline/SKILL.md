@@ -16,9 +16,10 @@ Turn an issue, a lane, or a feature request into one or more tightly scoped PRs.
 
 Agent-surface notes:
 
-- The lead agent implements directly by default.
-- Use subagents only when the user explicitly asked for delegation/parallel agent work
-  and the current environment allows it.
+- The lead agent implements directly by default, except for review: launch the review
+  pass in a fresh subagent when the current environment allows it, so findings are
+  independent of the authoring session. The review subagent reports findings back to the
+  lead agent; the lead agent fixes or dismisses them.
 - For review, prefer a callable built-in review capability when one is exposed.
   Slash-command reviews may be available to the top-level user/session without being
   invokable from inside this skill workflow. When no callable built-in review is
@@ -93,11 +94,14 @@ Run focused verification as the work evolves:
    review of that stale diff as the independent review for the actual patch. If running
    a callable built-in review locally before push, target the current local diff
    explicitly.
-3. Run review on the actual implementation diff. Prefer a callable built-in review
+3. Run review on the actual implementation diff. Launch a fresh review subagent when
+   available, and pass only the PR number or branch/range plus necessary issue context,
+   not the author's intended fixes or conclusions. Prefer a callable built-in review
    capability; do not try to invoke slash commands that are only exposed to the
-   top-level session. If no built-in review is callable from this workflow, run
-   `registry-code-review` on the PR number or branch/range. Fix or explicitly dismiss
-   every material finding with a reason.
+   top-level session. If no built-in review is callable from this workflow, have the
+   subagent run `registry-code-review` on the PR number or branch/range. If subagents
+   are unavailable, run `registry-code-review` in-session and state that limitation in
+   closeout. Fix or explicitly dismiss every material finding with a reason.
 4. Re-review substantial fixes until the review converges.
 5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
