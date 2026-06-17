@@ -333,7 +333,7 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Färgsinne, tavelundersökning"
-column = "TAVl"
+column = "TAVL"  # codebook renders "TAVl" (lowercase-l artifact); normalized to the canonical uppercase 4-char form (codebook-only field, not in the RA_Insark delivery)
 definition = "Färgsinne, tavelundersökning"
 data_type = "text"
 is_sensitive = true
@@ -431,7 +431,7 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Vilopuls"
-column = "VPUl"
+column = "VPUL"  # codebook renders "VPUl" (lowercase-l artifact); normalized to uppercase (codebook-only field, not in the RA_Insark delivery)
 definition = "Vilopuls"
 data_type = "text"
 is_sensitive = true
@@ -485,9 +485,13 @@ data_type = "text"
 is_sensitive = true
 
 [[register.variable]]
-name = "Maximal syreupptagningsförmåga"
+# DEVIATION: the krigsarkivet codebook labels APUL "Maximal syreupptagningsförmåga",
+# but that duplicates SYRE (Syreupptagningsförmåga) and the token parallels the pulse
+# family vpul (vilopuls) / spul (slutpuls) — apul = arbetspuls. Pliktverket's codebook
+# independently labels APUL "Arbetspuls". Corrected here; column stays source-exact.
+name = "Arbetspuls"
 column = "APUL"
-definition = "Maximal syreupptagningsförmåga"
+definition = "Arbetspuls (krigsarkivet-kodboken anger felaktigt \"Maximal syreupptagningsförmåga\", en dubblett av SYRE)."
 data_type = "text"
 is_sensitive = true
 
