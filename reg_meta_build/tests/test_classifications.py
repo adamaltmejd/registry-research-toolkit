@@ -1768,17 +1768,41 @@ class TestCuratedClassificationLinks:
         empty.write_text("# only comments\n", encoding="utf-8")
         assert load_classification_links(empty) == ()
 
-    def test_repo_toml_loads_clean_and_empty(self) -> None:
-        """The shipped maintainer artifact parses and currently carries no
-        entries (residue curation is deferred)."""
-        from reg_meta_build.classification_links import (
-            load_classification_links,
-            repo_classification_links_path,
-        )
+    def test_repo_toml_loads_clean(self) -> None:
+        """The shipped maintainer artifact parses and carries the #494 part-2
+        curated residue (13 entries). Asserting the exact set so future TOML
+        drift is caught here.
 
-        path = repo_classification_links_path()
-        assert path is not None, "classification_links.toml must ship in the repo"
-        assert load_classification_links(path) == ()
+        Reconstructs the repo path directly (not via
+        `repo_classification_links_path()`): the session-scoped
+        `_no_repo_curation` autouse fixture patches that getter to `None` so
+        synthetic builds see no curation, which would otherwise mask the shipped
+        file from this assertion."""
+        from pathlib import Path
+
+        from reg_meta_build.classification_links import load_classification_links
+
+        path = Path(__file__).resolve().parent.parent / "classification_links.toml"
+        assert path.is_file(), "classification_links.toml must ship in the repo"
+        expected = {
+            ("scb", "ureg", "isced2011niva"): "ISCED2011",
+            ("scb", "ureg", "isced-f-2013"): "ISCED-F2013",
+            ("scb", "arbetskraftsbarometern", "sektor"): "SEKTOR2000",
+            ("scb", "fortroendevalda", "sektor"): "SEKTOR2000",
+            ("scb", "kommunalekonomisk-utjamning", "sektor"): "SEKTOR2000",
+            ("scb", "lisa", "ast-sektorkod"): "SEKTOR2000",
+            ("scb", "lisa", "org-sektorkod"): "SEKTOR2000",
+            ("scb", "lisa", "sektorkod"): "SEKTOR2000",
+            ("scb", "rams", "institutionell-sektorkod"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektor"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektorkod"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektorkod-2"): "SEKTOR2000",
+            ("scb", "yrkesreg", "sektorkod-storsta-forvarvskalla"): "SEKTOR2000",
+        }
+        links = load_classification_links(path)
+        assert {
+            (e.provider, e.register, e.variable): e.classification for e in links
+        } == expected
 
 
 # ---------------------------------------------------------------------------
