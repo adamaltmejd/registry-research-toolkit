@@ -12,6 +12,8 @@ without the app.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 import reg_meta.db
 from fastapi.testclient import TestClient
@@ -594,3 +596,86 @@ def test_golden_boost_unpinned_query_total_count_unchanged(client):
     body = client.get("/api/search", params={"q": "kon"}).json()
     for g in body["groups"]:
         assert g["total_count"] >= 0  # well-formed; no boost-driven inflation
+
+
+# ── Fix 2: golden-boost must respect ?limit (#393 item 2) ────────────────────
+
+
+def test_golden_boost_respects_limit(client, monkeypatch):
+    # A net-new pin prepended onto an already-`limit`-full FTS page must NOT push the
+    # group past the requested cap: with limit=1 and a query that BOTH FTS-matches a
+    # register (`LISA` → scb/lisa) AND pins a DIFFERENT register (scb/rams, net-new),
+    # the displayed page is capped to 1 result, while total_count reflects the full
+    # count (2: the FTS hit + the net-new pin).
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("lisa", "register"): _Pin(
+                query="lisa", group="register", fqids=("scb/rams",), note=None
+            )
+        },
+    )
+    g = _group(
+        client.get("/api/search", params={"q": "LISA", "limit": 1}).json(), "registers"
+    )
+    assert len(g["results"]) == 1  # page capped at ?limit
+    assert g["results"][0]["fqid"] == "scb/rams"  # the pin still leads at rank 1
+    assert g["total_count"] == 2  # full count: FTS hit + net-new pin (not capped)
+
+
+# ── Fix 3: diacritic fold in the pin lookup key ──────────────────────────────
+
+
+def test_normalize_folds_diacritics():
+    # A diacriticless query normalizes identically to its diacritic spelling, so a
+    # `sysselsättning` pin is resolved by a `sysselsattning` query (FTS folds å/ä→a
+    # on both sides; the pin key must fold the same way or the pin never fires).
+    assert golden._normalize("sysselsattning") == golden._normalize("sysselsättning")
+    assert golden._normalize("DIAGNOS") == golden._normalize("diagnos")
+    assert golden._normalize("  Kön  ") == golden._normalize("kon")
+
+
+def test_diacriticless_query_resolves_diacritic_pin(conn, monkeypatch):
+    # End-to-end on the resolver: a pin keyed under the FOLDED `sysselsättning` key is
+    # hit by the diacriticless `sysselsattning` spelling (the eval gap Fix 3 closes).
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            (golden._normalize("sysselsättning"), "register"): _Pin(
+                query="sysselsättning",
+                group="register",
+                fqids=("scb/rams",),
+                note=None,
+            )
+        },
+    )
+    boosted = apply_golden_boost(conn, "sysselsattning", "register", [])
+    assert [r["fqid"] for r in boosted] == ["scb/rams"]
+
+
+# ── Fix 1: packaging + fail-fast on a missing config ─────────────────────────
+
+
+def test_golden_path_is_packaged():
+    # GOLDEN_PATH must live INSIDE the reg_webapp package dir so it ships with the src
+    # tree the runtime Docker stage copies — a sibling at backend/ would be absent in
+    # the deployed image → silent no-op.
+    import reg_webapp
+
+    package_dir = Path(reg_webapp.__file__).resolve().parent
+    assert package_dir in golden.GOLDEN_PATH.resolve().parents
+
+
+def test_load_pins_missing_file_raises(tmp_path):
+    # A MISSING config is a packaging bug, not a "no pins" state — `_load_pins` fails
+    # fast (CLAUDE.md) rather than silently disabling golden-boost.
+    with pytest.raises(FileNotFoundError):
+        golden._load_pins(tmp_path / "nonexistent.toml")
+
+
+def test_committed_pins_non_empty():
+    # The committed/packaged _PINS must load ≥1 pin — guards the silent-no-op
+    # regression where a mislocated config parsed to an empty pin set.
+    assert len(golden._PINS) >= 1

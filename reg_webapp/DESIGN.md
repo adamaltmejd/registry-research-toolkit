@@ -292,20 +292,23 @@ its navigable `fqid`; results within a group are pre-sorted by FTS rank.
   only as a bound parameter (no SQLi surface), so the gates guard cost/abuse, not
   injection.
 - **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
-  INJECTION (no longer the old no-op seam). For an exact (normalized: casefold+strip)
-  query, a steward pin (`reg_webapp/backend/search_golden.toml`) prepends a canonical
-  result to the TOP of its group even when FTS would not surface it — e.g.
-  `sysselsättning` → `scb/lisa` (RAMS is stale → BAS; steer to LISA) and `diagnos` →
-  `sos/par` (Patientregistret), both registers that don't rank for those terms today. It
-  operates on the RAW reg_meta result dicts (pre-shaping) so the route AND the eval
-  runner (`scripts/run_search_eval.py`) apply the SAME function — that's what makes the
-  eval measure the route's TRUE behavior. Pins dedup by `fqid` (a pin already an FTS hit
-  injects nothing), and a group's `total_count` adds the count of net-new injected
-  results. `register` + `classification` pins are implemented (resolve cheaply by slug);
-  a `variable`/`value` pin is a config error at LOAD (fail fast). The TOML is parsed +
-  validated once at import; a typo'd fqid raises at apply (never silently drops). Eval
-  gaps the pins close are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains
-  the lone gap — a concept-group modeling issue, not a golden-boost one).
+  INJECTION (no longer the old no-op seam). For an exact (normalized: diacritic-fold +
+  casefold + strip — so `sysselsattning` matches the `sysselsättning` pin, consistent
+  with FTS unicode61 folding) query, a steward pin
+  (`reg_webapp/backend/src/reg_webapp/search_golden.toml`, packaged inside reg_webapp so
+  it ships with the runtime image) prepends a canonical result to the TOP of its group
+  even when FTS would not surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale
+  → BAS; steer to LISA) and `diagnos` → `sos/par` (Patientregistret), both registers
+  that don't rank for those terms today. It operates on the RAW reg_meta result dicts
+  (pre-shaping) so the route AND the eval runner (`scripts/run_search_eval.py`) apply
+  the SAME function — that's what makes the eval measure the route's TRUE behavior. Pins
+  dedup by `fqid` (a pin already an FTS hit injects nothing), and a group's
+  `total_count` adds the count of net-new injected results. `register` +
+  `classification` pins are implemented (resolve cheaply by slug); a `variable`/`value`
+  pin is a config error at LOAD (fail fast). The TOML is parsed + validated once at
+  import; a typo'd fqid raises at apply (never silently drops). Eval gaps the pins close
+  are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone gap — a
+  concept-group modeling issue, not a golden-boost one).
 - **ETag/caching is automatic**: `/api/search` is a GET, so the `ETagMiddleware` stamps
   a body-derived ETag (the query is part of the URL → part of the CF edge cache key, and
   part of the body → part of the ETag). No per-route caching code.

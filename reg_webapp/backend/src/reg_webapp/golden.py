@@ -13,17 +13,23 @@ the route AND the eval runner (`scripts/run_search_eval.py`, which works on raw
 dicts) apply the SAME function. That is what makes the eval measure the route's
 TRUE behavior rather than an approximation of it.
 
-The curated pins live in ``reg_webapp/backend/search_golden.toml`` (parallels
-``search_eval.toml``); steward-authored, grow as needed. The TOML is parsed once
-at import and validated fail-fast (CLAUDE.md): a pin with an unknown ``group`` or
-an unsupported group is a config error at LOAD, not a silent no-op. fqid
-RESOLVABILITY needs a DB connection, so it is checked at apply time — a typo'd
-fqid raises there rather than silently dropping the pin.
+The curated pins live in ``reg_webapp/backend/src/reg_webapp/search_golden.toml``
+(INSIDE the importable package so it travels with the src tree the runtime Docker
+stage copies — `search_eval.toml` stays at `reg_webapp/backend/`, read only by the
+dev eval runner, never shipped). Steward-authored, grow as needed. The TOML is parsed
+once at import and validated fail-fast (CLAUDE.md): a pin with an unknown ``group`` or
+an unsupported group is a config error at LOAD, not a silent no-op. A MISSING file is
+likewise a packaging bug, not a "no pins" state — `_load_pins` raises rather than
+silently disabling the feature; to intentionally ship no pins, commit a TOML with no
+``[[pin]]`` entries (parses to ``{}`` gracefully). fqid RESOLVABILITY needs a DB
+connection, so it is checked at apply time — a typo'd fqid raises there rather than
+silently dropping the pin.
 """
 
 from __future__ import annotations
 
 import tomllib
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -33,13 +39,27 @@ from reg_meta.fqid import FqidError, parse as parse_fqid
 if TYPE_CHECKING:
     import sqlite3
 
-GOLDEN_PATH = Path(__file__).resolve().parents[2] / "search_golden.toml"
+# Packaged INSIDE reg_webapp (beside this module) so it ships with the src tree the
+# runtime Docker stage copies (Dockerfile: `COPY .../reg_webapp/backend/src ...`); a
+# sibling TOML at backend/ would be absent in the deployed image → silent no-op.
+GOLDEN_PATH = Path(__file__).resolve().parent / "search_golden.toml"
 
 
 def _normalize(query: str) -> str:
-    """The pin lookup key normalization: casefold + strip. Mirrors a forgiving
-    omnibox match (case-insensitive, surrounding whitespace ignored)."""
-    return query.casefold().strip()
+    """The pin lookup key normalization: ASCII-fold diacritics, then casefold +
+    strip. Mirrors a forgiving omnibox match (case-insensitive, surrounding
+    whitespace ignored, diacritics folded). The diacritic fold (NFKD decompose +
+    drop combining marks) keeps the pin lookup consistent with the rest of
+    `/api/search`, where FTS unicode61 folds å/ä→a, ö→o on both index and query
+    side — so a diacriticless `sysselsattning` still hits the `sysselsättning` pin.
+    Same ASCII-fold approach as `reg_meta.fqid.derive_variable_slug`. Pin keys are
+    built via this too, so both sides fold identically."""
+    folded = "".join(
+        ch
+        for ch in unicodedata.normalize("NFKD", query)
+        if not unicodedata.combining(ch)
+    )
+    return folded.casefold().strip()
 
 
 @dataclass(frozen=True)
@@ -113,8 +133,16 @@ def _load_pins(path: Path) -> dict[tuple[str, str], _Pin]:
     ``query``, a supported ``group``, and a non-empty ``fqids`` list whose entries
     parse as FQIDs of the group's kind. Resolvability against the DB is deferred to
     `apply_golden_boost` (no connection at import)."""
+    # The config is committed AND packaged inside reg_webapp, so its absence is a
+    # packaging bug — fail loud (CLAUDE.md fail-fast) rather than silently disabling
+    # golden-boost. To ship NO pins, commit a TOML with no `[[pin]]` entries (it
+    # parses to `{}` gracefully via the loop below).
     if not path.exists():
-        return {}
+        raise FileNotFoundError(
+            f"golden config missing at {path} (it is committed + packaged with "
+            "reg_webapp — its absence is a packaging bug; to ship no pins, commit a "
+            "TOML with no `[[pin]]` entries)"
+        )
     raw = tomllib.loads(path.read_text(encoding="utf-8"))
     pins: dict[tuple[str, str], _Pin] = {}
     for i, p in enumerate(raw.get("pin", [])):

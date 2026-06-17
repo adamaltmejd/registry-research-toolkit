@@ -106,7 +106,10 @@ def main() -> int:
         # total_count adjustment.
         boosted = apply_golden_boost(conn, c["query"], c["group"], res["results"])
         total = res["total_count"] + (len(boosted) - len(res["results"]))
-        rank = _rank_of(boosted, c["intended"])
+        # The route caps the displayed page at `limit` (a net-new pin must not push the
+        # group past the cap), so measure the rank against the page the user sees — not
+        # the un-trimmed boosted list. `total` stays the full count (computed above).
+        rank = _rank_of(boosted[: args.limit], c["intended"])
         found = rank is not None
         if c["expect"] == "hit":
             hit_total += 1

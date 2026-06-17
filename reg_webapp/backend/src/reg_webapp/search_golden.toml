@@ -1,6 +1,6 @@
 # Curated golden answers (#393 item 4 / #311): pin a canonical result to the top of
-# its search group for an exact (normalized: casefold+strip) query, even when FTS
-# would not surface it. Steward-curated; grow as needed.
+# its search group for an exact (normalized: diacritic-fold + casefold + strip) query,
+# even when FTS would not surface it. Steward-curated; grow as needed.
 #
 # Loaded + validated fail-fast by reg_webapp.golden at import. A pin needs a
 # supported `group` (register | classification) and `fqids` that parse as FQIDs of
