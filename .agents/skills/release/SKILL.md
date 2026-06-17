@@ -191,7 +191,9 @@ rm -r "$asset_dir"
 Verify both assets before publishing:
 
 ```sh
-gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
+assets="$(gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name')"
+printf '%s\n' "$assets" | rg -qx 'reg_meta\.db\.zst'
+printf '%s\n' "$assets" | rg -qx 'reg_meta_docs\.db\.zst'
 ```
 
 ## Publish And Monitor
@@ -223,7 +225,14 @@ event yet, so the latest run can be stale.
 Verify PyPI:
 
 ```sh
-curl -s https://pypi.org/pypi/<package>/json | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['version'])"
+expected="X.Y.Z"
+actual=""
+for _ in {1..30}; do
+  actual="$(curl -s https://pypi.org/pypi/<package>/json | python3 -c 'import sys,json; print(json.load(sys.stdin)["info"]["version"])')"
+  [ "$actual" = "$expected" ] && break
+  sleep 10
+done
+[ "$actual" = "$expected" ]
 ```
 
 ## Recovery
