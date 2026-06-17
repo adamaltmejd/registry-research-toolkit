@@ -3467,7 +3467,7 @@ class TestMaterializeSameAsEdges:
             'variable_slug = "civilstand" }]\n',
         )
         counts = materialize_same_as_edges(conn, slug_dir)
-        assert counts == {"variable": 1, "classification": 0}
+        assert counts == {"variable": 1, "variable_curated": 0, "classification": 0}
         rows = conn.execute(
             "SELECT a_variable, b_variable FROM variable_same_as ORDER BY a_variable"
         ).fetchall()
@@ -3599,7 +3599,7 @@ class TestMaterializeSameAsEdges:
             encoding="utf-8",
         )
         counts = materialize_same_as_edges(conn, slug_dir)
-        assert counts == {"variable": 0, "classification": 1}
+        assert counts == {"variable": 0, "variable_curated": 0, "classification": 1}
         rows = conn.execute(
             "SELECT a_classification_slug, b_classification_slug "
             "FROM classification_same_as ORDER BY a_classification_slug"
@@ -3635,7 +3635,7 @@ class TestMaterializeSameAsEdges:
             "]\n",
         )
         counts = materialize_same_as_edges(conn, slug_dir)
-        assert counts == {"variable": 2, "classification": 0}
+        assert counts == {"variable": 2, "variable_curated": 0, "classification": 0}
         rows = conn.execute(
             "SELECT a_variable, b_variable FROM variable_same_as "
             "ORDER BY a_variable, b_variable"

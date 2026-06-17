@@ -28,6 +28,7 @@ from reg_meta_build.family_merges import load_family_merges
 from reg_meta_build.fold_overrides import load_fold_overrides
 from reg_meta_build.variable_grafts import load_variable_grafts
 from reg_meta_build.variable_related_to import load_related_to
+from reg_meta_build.variable_same_as import load_same_as
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
 _ROOT = Path(__file__).resolve().parent.parent
@@ -91,6 +92,14 @@ def test_repo_variable_related_to_parses() -> None:
         and e.relation_kind
         for e in edges
     )
+
+
+def test_repo_variable_same_as_parses() -> None:
+    # `variable_same_as.toml` (#417) ships EMPTY (resolver-load-bearing identity;
+    # only confirmed edges ever land). The gate is that the header-only file
+    # PARSES cleanly — a malformed entry would otherwise surface only on a real
+    # build. Empty is correct, so assert it parses to the empty tuple (no error).
+    assert load_same_as(_ROOT / "variable_same_as.toml") == ()
 
 
 def test_repo_variable_grafts_parses() -> None:
