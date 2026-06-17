@@ -49,11 +49,12 @@ git fetch origin main
 git checkout -b s/<slug> origin/main
 git commit --allow-empty -m "wip: <scope>"
 git push -u origin s/<slug>
-gh pr create --draft --body-file <body-file>
+gh pr create --draft --title "wip: <scope>" --body-file <body-file>
 ```
 
 The PR body must contain `Closes #<issue>` for each issue the PR resolves. Use
-`--body-file`, not an inline heredoc.
+`--body-file`, not an inline heredoc. Supply `--title` (or `--fill` when appropriate) so
+the draft claim works in noninteractive agent runs.
 
 If the user asked only for local implementation and not PR creation, skip the draft
 claim and say why.
@@ -83,14 +84,19 @@ Run focused verification as the work evolves:
 1. Check test coverage pragmatically. Add regression tests for fixed bugs, new branches,
    contract boundaries, validation codes, exit codes, and deterministic ordering where
    they matter.
-2. Run the built-in review capability on the PR diff. Fix or explicitly dismiss every
-   material finding with a reason. If built-in review is unavailable, run
-   `registry-code-review` as a fallback checklist.
-3. Re-review substantial fixes until the review converges.
-4. Update authored docs only where the diff made them stale: package `DESIGN.md`,
+2. Commit and push the implementation before any GitHub-based PR review or bot-review
+   window. The early draft PR may contain only the empty claim commit; do not count a
+   review of that stale diff as the independent review for the actual patch. If running
+   the built-in review locally before push, target the current local diff explicitly.
+3. Run the built-in review capability on the actual implementation diff. Fix or
+   explicitly dismiss every material finding with a reason. If built-in review is
+   unavailable, run `registry-code-review` as a fallback checklist.
+4. Re-review substantial fixes until the review converges.
+5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,
    validation-code docs. Never edit generated `reg_meta_build/docs/lisa/*.md`.
-5. Commit and push. Never use `--no-verify` or `-n`; fix hook failures.
+6. Commit and push any review/doc fixes. Never use `--no-verify` or `-n`; fix hook
+   failures.
 
 ## Ready Or Merge Gate
 

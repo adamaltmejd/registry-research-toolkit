@@ -39,6 +39,11 @@ approval pause.
    git log --oneline <tag>..HEAD -- <package>/
    ```
 
+   Also compare `reg_meta_build/` changes since the last `reg_meta/v*` tag. Builder
+   content changes that affect the built DBs, including curated TOMLs, provider source,
+   and docs inputs, require a matching `reg_meta` release so the prebuilt DB assets are
+   refreshed even when no `reg_meta/` code changed.
+
 3. If multiple packages changed, release sequentially. For schema-affecting DDL or doc
    DB changes shared by `reg_meta` and `reg_meta_build`, keep `reg_meta` ahead of the
    builder: publish the `reg_meta` release containing the new
@@ -165,6 +170,13 @@ curl -s https://pypi.org/pypi/<package>/json | python3 -c "import sys,json; prin
 
 ## Recovery
 
-If release creation fails after the bump commit was pushed, retry creation. If CI fails
-after release creation, delete the release and tag, fix the issue, and restart from the
-verified bump step.
+If release creation fails after the bump commit was pushed, retry creation.
+
+If validation or CI fails before PyPI publication, delete the draft release/tag, fix the
+issue, and restart from the verified bump step.
+
+If PyPI publication succeeded, do not delete the GitHub release/tag or restart the same
+version: PyPI versions are immutable. Fix downstream failures in place when possible
+(for example a deploy-image failure), or publish a new patch version if the released
+package or assets are wrong. Before deleting any release/tag, verify PyPI does not
+already list `X.Y.Z`.

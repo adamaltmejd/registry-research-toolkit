@@ -24,6 +24,7 @@ Accept a PR number, branch/range, or current working-tree diff. For GitHub PRs, 
 gh pr view <pr> --json number,title,body,headRefOid,baseRefName,headRefName,closingIssuesReferences
 gh pr diff <pr>
 gh pr view <pr> --comments
+gh api "repos/<owner>/<repo>/pulls/<pr>/comments"
 ```
 
 Read linked issues, comments, repository guidance (`AGENTS.md`; `CLAUDE.md` is
