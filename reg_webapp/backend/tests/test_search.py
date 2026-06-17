@@ -12,9 +12,13 @@ without the app.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+import reg_meta.db
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
+from reg_webapp.golden import _Pin, apply_golden_boost
 from reg_webapp.routes.search import (
     _code_system,
     _has_searchable_token,
@@ -22,11 +26,25 @@ from reg_webapp.routes.search import (
     _validated_limit,
 )
 
+from reg_webapp import golden
+
 
 @pytest.fixture
 def client(catalog_db):
     with TestClient(create_app()) as c:
         yield c
+
+
+@pytest.fixture
+def conn(catalog_db):
+    # A raw read-only connection on the slugged fixture DB for unit-testing the
+    # pure golden-boost resolver (no app / request needed). sqlite3.Row factory is
+    # set by open_db, which golden.py's row["..."] access relies on.
+    c = reg_meta.db.open_db(catalog_db, check_schema=False)
+    try:
+        yield c
+    finally:
+        c.close()
 
 
 def _group(body: dict, name: str) -> dict:
@@ -440,3 +458,224 @@ def test_limit_param_clamped_end_to_end(client):
     body = client.get("/api/search", params={"q": "kon", "limit": 1}).json()
     for g in body["groups"]:
         assert len(g["results"]) <= 1
+
+
+# ── golden-boost: curated-pin injection (#393 item 4 / #311) ─────────────────
+#
+# The synthetic catalog fixture has no scb/lisa-for-sysselsättning / sos/par
+# content, so these tests pin fqids the fixture DOES carry (scb/rams register,
+# class/sun2020 classification) under test-only `_PINS`, exercising the real
+# `apply_golden_boost` resolver + the route's total_count adjustment.
+
+
+@pytest.fixture
+def pinned(monkeypatch):
+    """Swap golden._PINS for a test-only pin set so injection is exercised against
+    the fixture's own entities. `gizmo` matches nothing via FTS, so the register it
+    pins (scb/rams) is purely injected; `LISA` IS an FTS hit, so its pin tests
+    dedup. A classification pin (class/sun2020) covers that builder too."""
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("gizmo", "register"): _Pin(
+                query="gizmo", group="register", fqids=("scb/rams",), note=None
+            ),
+            ("lisa", "register"): _Pin(
+                query="lisa", group="register", fqids=("scb/lisa",), note=None
+            ),
+            ("gizmo", "classification"): _Pin(
+                query="gizmo",
+                group="classification",
+                fqids=("class/sun2020",),
+                note=None,
+            ),
+        },
+    )
+
+
+def test_apply_golden_boost_injects_register_at_rank_1(conn, pinned):
+    # 'gizmo' has no register FTS hit, so the pinned scb/rams is the only result —
+    # rank 1, raw-dict keys match what _register_result reads.
+    boosted = apply_golden_boost(conn, "gizmo", "register", [])
+    assert [r["fqid"] for r in boosted] == ["scb/rams"]
+    assert boosted[0]["register_name"] == "RAMS"
+    assert "register_purpose" in boosted[0]
+
+
+def test_apply_golden_boost_prepends_before_fts(conn, pinned):
+    # The pin lands at rank 1 even when FTS already returned other registers.
+    fts = [{"fqid": "scb/other", "register_name": "Other", "register_purpose": None}]
+    boosted = apply_golden_boost(conn, "gizmo", "register", fts)
+    assert [r["fqid"] for r in boosted] == ["scb/rams", "scb/other"]
+
+
+def test_apply_golden_boost_dedups_when_pin_is_already_a_hit(conn, pinned):
+    # 'LISA' is an FTS hit AND pinned to scb/lisa → no duplicate, order unchanged.
+    fts = [{"fqid": "scb/lisa", "register_name": "LISA", "register_purpose": None}]
+    boosted = apply_golden_boost(conn, "LISA", "register", fts)
+    assert [r["fqid"] for r in boosted] == ["scb/lisa"]
+
+
+def test_apply_golden_boost_promotes_on_page_hit_to_rank_1(conn, pinned):
+    # The pin (scb/lisa) is on the page but NOT at rank 1 in the FTS order: it must
+    # be PROMOTED to rank 1, appear EXACTLY ONCE (removed from its FTS slot, not
+    # duplicated), and the page length is unchanged → the route's total_count delta
+    # is 0 (it was already counted by FTS).
+    fts = [
+        {"fqid": "scb/other", "register_name": "Other", "register_purpose": None},
+        {"fqid": "scb/lisa", "register_name": "LISA", "register_purpose": None},
+        {"fqid": "scb/third", "register_name": "Third", "register_purpose": None},
+    ]
+    boosted = apply_golden_boost(conn, "LISA", "register", fts)
+    assert [r["fqid"] for r in boosted] == ["scb/lisa", "scb/other", "scb/third"]
+    assert [r["fqid"] for r in boosted].count("scb/lisa") == 1
+    assert len(boosted) == len(fts)  # delta 0: no net-new injection
+
+
+def test_apply_golden_boost_normalizes_query(conn, pinned):
+    # casefold + strip: "  GIZMO  " resolves to the "gizmo" pin.
+    boosted = apply_golden_boost(conn, "  GIZMO  ", "register", [])
+    assert [r["fqid"] for r in boosted] == ["scb/rams"]
+
+
+def test_apply_golden_boost_non_pinned_query_unchanged(conn, pinned):
+    fts = [{"fqid": "scb/other", "register_name": "Other", "register_purpose": None}]
+    boosted = apply_golden_boost(conn, "no-such-pin", "register", fts)
+    assert boosted is fts  # identity fast-path: the common case is cheap
+
+
+def test_apply_golden_boost_classification_builder(conn, pinned):
+    # The classification arm builds the raw dict _classification_result reads.
+    boosted = apply_golden_boost(conn, "gizmo", "classification", [])
+    assert [r["fqid"] for r in boosted] == ["class/sun2020"]
+    assert boosted[0]["short_name"] == "SUN2020"
+    assert "classification_name" in boosted[0]
+
+
+def test_apply_golden_boost_unresolvable_fqid_raises(conn, monkeypatch):
+    # A pin fqid that doesn't resolve fails fast at apply (not a silent drop).
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("gizmo", "register"): _Pin(
+                query="gizmo", group="register", fqids=("scb/nonexistent",), note=None
+            )
+        },
+    )
+    with pytest.raises(ValueError, match="does not resolve to a register"):
+        apply_golden_boost(conn, "gizmo", "register", [])
+
+
+def test_golden_boost_register_injection_end_to_end(client, pinned):
+    # Through the route: the pinned register surfaces at rank 1 in the registers
+    # group AND total_count reflects the net-new injection (1 here — gizmo has no
+    # register FTS hit, so the pinned scb/rams is the lone net-new result).
+    g = _group(client.get("/api/search", params={"q": "gizmo"}).json(), "registers")
+    assert g["results"][0]["fqid"] == "scb/rams"
+    assert g["total_count"] == 1
+
+
+def test_golden_boost_no_double_count_when_pin_is_fts_hit(client, pinned):
+    # 'LISA' is BOTH an FTS register hit and pinned to scb/lisa: it must appear
+    # ONCE and NOT inflate total_count (net-new = 0).
+    body = client.get("/api/search", params={"q": "LISA"}).json()
+    g = _group(body, "registers")
+    fqids = [r["fqid"] for r in g["results"]]
+    assert fqids.count("scb/lisa") == 1
+    # The dedup'd pin added nothing, so total_count == the result count (no
+    # net-new injection inflating it).
+    assert g["total_count"] == len(fqids)
+
+
+def test_golden_boost_unpinned_query_total_count_unchanged(client):
+    # A query with no pin (default production _PINS, which targets sysselsättning /
+    # diagnos — absent from the fixture) leaves every group's total_count as the
+    # raw FTS count: no injection, no off-by-one.
+    body = client.get("/api/search", params={"q": "kon"}).json()
+    for g in body["groups"]:
+        assert g["total_count"] >= 0  # well-formed; no boost-driven inflation
+
+
+# ── Fix 2: golden-boost must respect ?limit (#393 item 2) ────────────────────
+
+
+def test_golden_boost_respects_limit(client, monkeypatch):
+    # A net-new pin prepended onto an already-`limit`-full FTS page must NOT push the
+    # group past the requested cap: with limit=1 and a query that BOTH FTS-matches a
+    # register (`LISA` → scb/lisa) AND pins a DIFFERENT register (scb/rams, net-new),
+    # the displayed page is capped to 1 result, while total_count reflects the full
+    # count (2: the FTS hit + the net-new pin).
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            ("lisa", "register"): _Pin(
+                query="lisa", group="register", fqids=("scb/rams",), note=None
+            )
+        },
+    )
+    g = _group(
+        client.get("/api/search", params={"q": "LISA", "limit": 1}).json(), "registers"
+    )
+    assert len(g["results"]) == 1  # page capped at ?limit
+    assert g["results"][0]["fqid"] == "scb/rams"  # the pin still leads at rank 1
+    assert g["total_count"] == 2  # full count: FTS hit + net-new pin (not capped)
+
+
+# ── Fix 3: diacritic fold in the pin lookup key ──────────────────────────────
+
+
+def test_normalize_folds_diacritics():
+    # A diacriticless query normalizes identically to its diacritic spelling, so a
+    # `sysselsättning` pin is resolved by a `sysselsattning` query (FTS folds å/ä→a
+    # on both sides; the pin key must fold the same way or the pin never fires).
+    assert golden._normalize("sysselsattning") == golden._normalize("sysselsättning")
+    assert golden._normalize("DIAGNOS") == golden._normalize("diagnos")
+    assert golden._normalize("  Kön  ") == golden._normalize("kon")
+
+
+def test_diacriticless_query_resolves_diacritic_pin(conn, monkeypatch):
+    # End-to-end on the resolver: a pin keyed under the FOLDED `sysselsättning` key is
+    # hit by the diacriticless `sysselsattning` spelling (the eval gap Fix 3 closes).
+    monkeypatch.setattr(
+        golden,
+        "_PINS",
+        {
+            (golden._normalize("sysselsättning"), "register"): _Pin(
+                query="sysselsättning",
+                group="register",
+                fqids=("scb/rams",),
+                note=None,
+            )
+        },
+    )
+    boosted = apply_golden_boost(conn, "sysselsattning", "register", [])
+    assert [r["fqid"] for r in boosted] == ["scb/rams"]
+
+
+# ── Fix 1: packaging + fail-fast on a missing config ─────────────────────────
+
+
+def test_golden_path_is_packaged():
+    # GOLDEN_PATH must live INSIDE the reg_webapp package dir so it ships with the src
+    # tree the runtime Docker stage copies — a sibling at backend/ would be absent in
+    # the deployed image → silent no-op.
+    import reg_webapp
+
+    package_dir = Path(reg_webapp.__file__).resolve().parent
+    assert package_dir in golden.GOLDEN_PATH.resolve().parents
+
+
+def test_load_pins_missing_file_raises(tmp_path):
+    # A MISSING config is a packaging bug, not a "no pins" state — `_load_pins` fails
+    # fast (CLAUDE.md) rather than silently disabling golden-boost.
+    with pytest.raises(FileNotFoundError):
+        golden._load_pins(tmp_path / "nonexistent.toml")
+
+
+def test_committed_pins_non_empty():
+    # The committed/packaged _PINS must load ≥1 pin — guards the silent-no-op
+    # regression where a mislocated config parsed to an empty pin set.
+    assert len(golden._PINS) >= 1

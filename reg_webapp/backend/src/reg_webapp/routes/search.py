@@ -20,6 +20,7 @@ import re
 from fastapi import APIRouter, Depends, HTTPException, Request
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
+from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
     ClassificationSearchGroup,
@@ -80,14 +81,6 @@ def _has_searchable_token(q: str) -> bool:
     folds diacritics on both index and query side (å→a), matching the SPA's
     ``foldText``."""
     return _WORD_CHAR.search(q) is not None
-
-
-def _apply_golden_boost(results: list[dict]) -> list[dict]:
-    """No-op seam for the curated golden/starred boost (#311). reg_meta already
-    sorted ``results`` by FTS rank; once #311 ships a golden list, this is where
-    starred hits get promoted within their group. Identity until then — kept as a
-    named hook so the call sites and ordering contract are already in place."""
-    return results
 
 
 def _rank_codes(results: list[dict]) -> list[dict]:
@@ -260,11 +253,15 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
             )
-            reg_results = _apply_golden_boost(reg["results"])
+            reg_results = golden.apply_golden_boost(conn, q, "register", reg["results"])
+            # total_count counts the full boosted set (incl. a net-new pin), but the
+            # displayed page is capped at `limit` — a pin prepended onto an already-full
+            # FTS page must not push the group past the requested cap (#393 item 2).
             groups.append(
                 RegisterSearchGroup(
-                    total_count=reg["total_count"],
-                    results=[_register_result(r) for r in reg_results],
+                    total_count=reg["total_count"]
+                    + (len(reg_results) - len(reg["results"])),
+                    results=[_register_result(r) for r in reg_results[:limit]],
                 )
             )
         if want_variable:
@@ -275,15 +272,16 @@ def get_search(
                 type="variable",
                 limit=limit,
             )
-            var_results = _apply_golden_boost(var["results"])
+            var_results = golden.apply_golden_boost(conn, q, "variable", var["results"])
             groups.append(
                 VariableSearchGroup(
-                    total_count=var["total_count"],
+                    total_count=var["total_count"]
+                    + (len(var_results) - len(var["results"])),
                     results=[
                         _group_result(r)
                         if r["type"] == "group"
                         else _variable_result(r)
-                        for r in var_results
+                        for r in var_results[:limit]
                     ],
                 )
             )
@@ -295,15 +293,18 @@ def get_search(
                 type="classification",
                 limit=limit,
             )
-            cls_results = _apply_golden_boost(cls["results"])
+            cls_results = golden.apply_golden_boost(
+                conn, q, "classification", cls["results"]
+            )
             groups.append(
                 ClassificationSearchGroup(
-                    total_count=cls["total_count"],
+                    total_count=cls["total_count"]
+                    + (len(cls_results) - len(cls["results"])),
                     results=[
                         _group_result(r)
                         if r["type"] == "group"
                         else _classification_result(r)
-                        for r in cls_results
+                        for r in cls_results[:limit]
                     ],
                 )
             )
@@ -312,8 +313,9 @@ def get_search(
             # code-shape exact/prefix match, NOT the FTS description path. reg_meta
             # ranks (bm25 + rarity downweight) and annotates each hit with its
             # owning variables/classifications. Codes don't fold into concept
-            # groups. `_rank_codes` re-sorts the page so classification-backed
-            # codes lead (#393 item 2) — AFTER the golden-boost seam.
+            # groups. Golden-boost runs first (a no-op here — no `value` pins are
+            # supported, see reg_webapp.golden), THEN `_rank_codes` re-sorts the
+            # page so classification-backed codes lead (#393 item 2).
             codes = reg_meta_search(
                 conn,
                 q,
@@ -322,10 +324,17 @@ def get_search(
                 limit=limit,
                 fold_groups=False,
             )
-            code_results = _rank_codes(_apply_golden_boost(codes["results"]))
+            boosted_codes = golden.apply_golden_boost(
+                conn, q, "value", codes["results"]
+            )
+            # Rank the FULL boosted set first (so a high-ranking net-new pin can lead),
+            # THEN cap the displayed page at `limit`; total_count still counts the full
+            # boosted set (incl. net-new) so the cap doesn't hide the true match volume.
+            code_results = _rank_codes(boosted_codes)[:limit]
             groups.append(
                 CodeSearchGroup(
-                    total_count=codes["total_count"],
+                    total_count=codes["total_count"]
+                    + (len(boosted_codes) - len(codes["results"])),
                     results=[_code_result(r) for r in code_results],
                 )
             )
