@@ -816,18 +816,21 @@ or re-pointed — linkage is additive.
    editions) — distinct `classification` rows linked by `supersedes_id`. For each
    remaining multi-family value set, compute every candidate classification's chain root
    via a recursive CTE over `supersedes_id`. If ALL candidates share one chain root
-   (i.e. every candidate sits on the same supersedes chain), resolve by period: for the
-   `(variable_id, value_set_id)` pair's aggregate state span (MIN/MAX of
-   `variable_state.valid_from/valid_to` across the pair's states), pick the LATEST
-   candidate vintage whose `[valid_from, valid_to]` (INTEGER years, NULL = unbounded)
-   overlaps the span, then emit it additively. If even one candidate is off-chain (a
-   genuine cross-family coincidence, e.g. SNI vs SSYK), the whole set stays in the
-   residue for curation. The emit is additive (NOT EXISTS guard), and the reclaim count
-   is measured off the emitted set — a one-chain pair the SCB/SOS feed already
+   (i.e. every candidate sits on the same supersedes chain), resolve by period: for each
+   `(variable_id, value_set_id)` pair, pick the LATEST candidate vintage (max
+   `valid_from`) whose `[valid_from, valid_to]` (INTEGER years, NULL = unbounded)
+   overlaps AT LEAST ONE of the pair's REAL state windows, then emit it additively.
+   Overlap is anchored to a real state window, NOT the pair's aggregate MIN/MAX span — a
+   disjoint-states span (e.g. 2003–2006 + 2018–2020) would falsely overlap a gap vintage
+   (a closed 2008–2015 edition) that no actual state touches. If even one candidate is
+   off-chain (a genuine cross-family coincidence, e.g. SNI vs SSYK), the whole set stays
+   in the residue for curation. The emit is additive (NOT EXISTS guard), and the reclaim
+   count is measured off the emitted set — a one-chain pair the SCB/SOS feed already
    classified is skipped and NOT counted as reclaimed. Real-corpus result: 224 value
-   sets / 235 variables newly reclaimed (multi-family residue 2,215 → 1,991; most
-   one-chain picks were already feed-classified, so the genuinely-new contribution is
-   the 224).
+   sets / 235 variables newly reclaimed (most one-chain picks were already
+   feed-classified). The precise post-linkage curation residue — multi-family value sets
+   with a still-unclassified state — is 994 (of 2,215 multi-family-by-codes; the rest
+   are fully classified by the feeds, confident tier, vintage reclaim, or curation).
 
 **Design decisions:**
 
