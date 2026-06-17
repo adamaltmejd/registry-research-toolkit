@@ -291,6 +291,58 @@ def test_exact_code_classification_precedes_prefix_across_classifications(
     assert fqids.index("class/icd10") < fqids.index("class/sun2020")
 
 
+@pytest.fixture
+def db_with_exact_sorts_after_prefix() -> sqlite3.Connection:
+    """Like `db_with_exact_and_prefix_classifications` but with the short_name
+    sort order INVERTED relative to ownership: the EXACT-code owner (sun2020,
+    short_name 'SUN2020') sorts AFTER the prefix-only owner (icd10, short_name
+    'ICD10') under `ORDER BY ..., c.short_name` ('ICD10' < 'SUN2020').
+
+    This is what isolates the case-sensitivity bug: with the exact owner sorting
+    LATER, a broken `has_exact` (both 0) lets the prefix owner rank first — wrong.
+    Only a correctly-set `has_exact` on the exact owner pulls it back to the top.
+    (In the original fixture the exact owner 'ICD10' already sorts first by
+    short_name, so a broken `has_exact` happens to produce the right order and
+    the bug stays invisible.)"""
+    conn = build_slugged_db()  # ships sun2020 (no codes), name has no 'C12'
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (60, 'ICD10', 'Internationell sjukdomsklassifikation', 'icd10')"
+    )
+    add_value_set(conn, value_set_id=1, codes=[("C12", "Tongue base")])
+    add_value_set(conn, value_set_id=2, codes=[("C120", "Sub")])
+    code_ids = {
+        row["code"]: row["code_id"]
+        for row in conn.execute("SELECT code_id, code FROM value_code").fetchall()
+    }
+    _link_code_to_classification(conn, "sun2020", code_ids["C12"])  # exact owner
+    _link_code_to_classification(conn, "icd10", code_ids["C120"])  # prefix owner
+    _rebuild_fts(conn)
+    return conn
+
+
+def test_lowercase_code_query_ranks_exact_first(
+    db_with_exact_sorts_after_prefix: sqlite3.Connection,
+) -> None:
+    # Lowercase "c12" admits the stored uppercase "C12"/"C120" via the
+    # case-insensitive LIKE, so BOTH classifications surface. The exact owner is
+    # sun2020 (short_name 'SUN2020'), the prefix-only owner icd10 (short_name
+    # 'ICD10'); 'ICD10' sorts EARLIER, so without a case-insensitive `has_exact`
+    # the exact owner scores has_exact=0 and the prefix owner wrongly ranks first.
+    # COLLATE NOCASE on the exact test pulls sun2020 (the true exact hit) back to
+    # the top. Fails before the fix; passes after.
+    out = search(
+        db_with_exact_sorts_after_prefix,
+        "c12",
+        field="description",
+        type="classification",
+    )
+    fqids = [r["fqid"] for r in out["results"] if r["type"] == "classification"]
+    assert "class/icd10" in fqids
+    assert "class/sun2020" in fqids
+    assert fqids.index("class/sun2020") < fqids.index("class/icd10")
+
+
 def test_classification_label_match_folds_and_subsumes_leaves(
     db_with_cls_group: sqlite3.Connection,
 ) -> None:

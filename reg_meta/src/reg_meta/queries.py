@@ -1119,11 +1119,18 @@ def _search_classifications_by_code(
     classifications first, then `short_name`). Because `classification.short_name`
     is `NOT NULL UNIQUE` (see reg_meta_build/db.py), `(has_exact DESC, short_name)`
     is already a TOTAL order, so the Python enumeration below freezes a deterministic
-    order into `fts_rank` — no extra tiebreak needed."""
+    order into `fts_rank` — no extra tiebreak needed.
+
+    The `has_exact` test collates NOCASE to match the WHERE LIKE, which is already
+    ASCII-case-insensitive: a lowercase query "c12" admits a stored uppercase "C12"
+    via LIKE, so the case-SENSITIVE `=` would score the true exact hit has_exact=0
+    and let a prefix-only sibling ("C120") that sorts earlier by short_name rank
+    above it. COLLATE NOCASE makes exact-precedence hold for any-case code query
+    (the WHERE already surfaces them — LIKE is case-insensitive)."""
     q = query.strip()
     rows = conn.execute(
         "SELECT c.id AS classification_id, c.short_name, c.name AS classification_name, "
-        "c.slug, MAX(CASE WHEN vc.code = ? THEN 1 ELSE 0 END) AS has_exact "
+        "c.slug, MAX(CASE WHEN vc.code = ? COLLATE NOCASE THEN 1 ELSE 0 END) AS has_exact "
         "FROM value_code vc "
         "JOIN classification_code cc ON cc.code_id = vc.code_id "
         "JOIN classification c ON c.id = cc.classification_id "
