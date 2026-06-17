@@ -240,7 +240,16 @@ load against the seed manifest (`classifications.toml`): an **undeclared** short
 fails the build fast (a typo guard — `"ICD-10"` for `"ICD-10-SE"`), while a **declared**
 but provider-gated classification not seeded in the current build's provider subset is
 allowed and the link simply drops at feed time. FOHM (SmiNet + the national vaccination
-register) is the first thin provider; Försäkringskassan (MiDAS) follows.
+register) is the first thin provider; Försäkringskassan is the second, modeled in two
+tiers (28 registers): 12 publicly-documented registers grounded in FK's published
+variabelförteckningar (each with one variant per documented delivery table —
+fall/delfall, mottagare/barn/beviljanden/avslag, the tandvård delivery tables — e.g.
+sjukpenning, sjuk- och aktivitetsersättning, föräldrapenning, tandvardsstodet) plus 16
+thin SWECOV-core benefits with no public variable doc (barnbidrag, bostadsbidrag, … — a
+single `_default` variant carrying the payment/period core). FK ships no
+`classification` links yet: its sickness-diagnosis fields are ICD-9/10-coded and a
+strong ICD-10-SE candidate, but the ICD-9 vintage split is deferred to a follow-up (the
+SmiNet precedent linked, FK does not, pending maintainer confirmation).
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived

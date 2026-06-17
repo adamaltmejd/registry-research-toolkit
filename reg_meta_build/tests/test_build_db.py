@@ -704,7 +704,8 @@ class TestBuildDb:
     def test_provider_seed(self, db_conn: sqlite3.Connection):
         # provider_id values are stable across releases — downstream pins
         # against them (PROVIDER_ID_SCB = 1, PROVIDER_ID_SOS = 2,
-        # PROVIDER_ID_FOHM = 3). Every seeded provider is present regardless of
+        # PROVIDER_ID_FOHM = 3, PROVIDER_ID_FK = 4). Every seeded provider is
+        # present regardless of
         # which adapters this build ran.
         rows = db_conn.execute(
             "SELECT provider_id, slug, name FROM provider ORDER BY provider_id"
@@ -713,6 +714,7 @@ class TestBuildDb:
             (1, "scb"),
             (2, "sos"),
             (3, "fohm"),
+            (4, "fk"),
         ]
 
     def test_scb_registers_tagged_scb(self, db_conn: sqlite3.Connection):
@@ -783,6 +785,7 @@ class TestBuildDb:
             (1, "scb"),
             (2, "sos"),
             (3, "fohm"),
+            (4, "fk"),
         ]
         conn.close()
 
