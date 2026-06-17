@@ -2788,15 +2788,31 @@ def _coalesce_variable_states(
                     "data_types": sorted(
                         f"{dt or ''}({dl or ''})" for dt, dl in grp.seen_types
                     ),
+                    # Full gkey, sort-only: register_id+var_id+column is a
+                    # NON-total key (distinct groups can share them and differ
+                    # only on value_set/grain/vintage), so the cap could keep
+                    # different entries depending on un-ORDER-BY'd source-query
+                    # order. Dropped before the sample is stored.
+                    "_gk": gk,
                 }
             )
     # Sort BEFORE capping so the sample membership is row-order-independent
     # (dict iteration is insertion order = row order, which xdist/shard order
-    # could perturb). Cap at _SAMPLE_CAP — enough to identify the culprits.
+    # could perturb). The full gkey is the final, total tiebreaker — guaranteed
+    # unique per group — so cap membership is deterministic across SQLite
+    # plan/version changes. Cap at _SAMPLE_CAP — enough to identify the culprits.
     _class_flip_groups.sort(
-        key=lambda e: (e["register_id"], e["var_id"], str(e["column"]))
+        key=lambda e: (
+            e["register_id"],
+            e["var_id"],
+            str(e["column"]),
+            tuple("" if x is None else str(x) for x in e["_gk"]),
+        )
     )
-    type_class_fold_sample = _class_flip_groups[:_SAMPLE_CAP]
+    type_class_fold_sample = [
+        {k: v for k, v in e.items() if k != "_gk"}
+        for e in _class_flip_groups[:_SAMPLE_CAP]
+    ]
 
     # Pull all relevant unika_summary rows in one shot. The PK lookup is
     # fast (~5 unika rows per group on average), but doing it per-group
