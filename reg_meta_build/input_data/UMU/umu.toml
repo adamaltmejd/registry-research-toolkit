@@ -13,14 +13,14 @@
 # `P1105_LopNr_PersonNr` key is modelled as the documented field `Personnummer`.
 #
 # Coverage: the SweSAT database runs from spring 1977 (provtillfälle YYYYA/YYYYB)
-# and is ongoing → register valid_from = 1977, open-ended. A few variables carry a
-# documented later introduction (per-variable valid_from): the quantitative
-# comparison subtest KVA and the verbal/quantitative SECTION scores were added in
-# 2011; the English reading subtest ELF in 1992; the general-knowledge subtest AO
-# was discontinued after 1995 (per-variable valid_to). FLAG: the exact introduction
-# dates of the other post-1977 subtests (DTK/NOG/XYZ in their modern form) are not
-# precisely modelled — they inherit the 1977 register start. STUF is undocumented in
-# the public variable list (flagged below).
+# and is ongoing → register valid_from = 1977, open-ended. Variables with a
+# documented lifecycle carry per-variable validity: the quantitative subtests KVA +
+# XYZ and the verbal/quantitative SECTION scores were added in the 2011 restructure;
+# the English reading subtest ELF in 1992 (it replaced STUF, the original
+# study-technique subtest, which ran 1977–1991); the general-knowledge subtest AO
+# was discontinued after 1995. FLAG: the exact introduction dates of DTK and NOG (in
+# their modern form) are not precisely modelled — they inherit the 1977 register
+# start.
 
 
 [[register]]
@@ -91,6 +91,7 @@ name = "Matematisk problemlösning (XYZ)"
 column = "XYZ"
 definition = "Delprov XYZ — matematisk problemlösning (kvantitativ del). Råpoäng."
 data_type = "text"
+valid_from = "2011-01-01"  # XYZ introduced in the 2011 quantitative restructure (with KVA)
 
 [[register.variable]]
 name = "Kvantitativa jämförelser (KVA)"
@@ -159,7 +160,8 @@ definition = "Total råpoäng (summa över delproven)."
 data_type = "text"
 
 [[register.variable]]
-name = "STUF"
+name = "Studietekniska färdigheter (STUF)"
 column = "STUF"
-definition = "STUF — ej dokumenterat i Umeå universitets publika variabelbeskrivning (osäker innebörd, flaggad för verifiering)."
+definition = "Delprov STUF — studietekniska färdigheter (verbal del; ett av de ursprungliga delproven från 1977, utgick 1991 och ersattes av ELF 1992). Råpoäng."
 data_type = "text"
+valid_to = "1991-12-31"  # STUF discontinued 1991 (replaced by ELF 1992)
