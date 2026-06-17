@@ -904,6 +904,17 @@ class _StateGroup:
     # year only updates regver_min/max.
     latest_alias: str | None = None
     latest_alias_regver: int | None = None
+    # Latest-era data_type/data_length (#526). A value-set-anchored group now
+    # merges rows of differing type/length, so the displayed shape must track
+    # the latest delivery, NOT the arbitrary first row. Selected exactly like
+    # `latest_alias` (highest regver_id; deterministic tiebreak) via this
+    # tracker. For valueless groups type+length are in the gkey, so every merged
+    # row already shares them — the tracker is a no-op there.
+    latest_type_regver: int | None = None
+    # Distinct raw (data_type, data_length) pairs the group merged — drives the
+    # class-flip fold stat (`n_type_class_folds`). Bounded: SCB's per-delivery
+    # type wobble is tiny per column, so this set never grows large.
+    seen_types: set[tuple[str | None, str | None]] = field(default_factory=set)
     # The set of register_version (edition) ids this group was observed in. The
     # The contested-column gate buckets by *edition*, not calendar year, so a
     # sub-annual variant (e.g. one with both HT2018 and VT2018) doesn't treat a
@@ -1702,6 +1713,38 @@ def _data_type_class(dt: str | None) -> str:
     return "other"
 
 
+# Text-family `data_type` tokens that SCB's low-trust per-delivery `Datatyp`
+# wobbles between for the SAME logical column (`char` ↔ `varchar`, with the
+# national-character `n…` variants). Folded to one token so a char↔varchar flip
+# on a valueless column stops minting a fresh `variable_state` (#526). Numeric /
+# date families are deliberately NOT folded together — a class flip there is real
+# shape evidence, kept split for valueless columns.
+_TEXT_FAMILY_CANON = "text"
+_TEXT_FAMILY_TYPES = frozenset({"char", "varchar", "nchar", "nvarchar"})
+_EMBEDDED_LEN_RE = re.compile(r"\(\s*\d+\s*\)")
+_WS_RE = re.compile(r"\s+")
+
+
+def _canon_data_type(dt: str | None) -> str:
+    """Canonical low-trust `data_type` key for STATE GROUPING (#526).
+
+    ASCII-folds + lowercases + collapses whitespace, then maps the text family
+    (`char`/`varchar`/`nchar`/`nvarchar`) to one token so a per-delivery
+    char↔varchar wobble no longer splits a state. Does NOT collapse across
+    classes — numeric/date/other stay distinct, preserving legitimate class
+    splits on valueless columns. Length is NOT part of this key (it rides the
+    separate `data_length` gkey slot). `None`/blank → `""`.
+
+    Defensive: SCB ships bare type names with the width in the separate
+    `Datalängd` column (verified over the corpus — only the SOS-flavoured
+    `sträng (text)` label carries a parenthetical, and that's a descriptor not a
+    width). Should SCB ever embed a `varchar(1)`, the redundant `(n)` is stripped
+    so it canonicalizes identically to the bare `varchar`."""
+    s = _WS_RE.sub(" ", _ascii_fold_lower(dt).strip())
+    s = _EMBEDDED_LEN_RE.sub("", s).strip()
+    return _TEXT_FAMILY_CANON if s in _TEXT_FAMILY_TYPES else s
+
+
 def _representative_group(
     gkeys: list[tuple], groups: dict[tuple, _StateGroup]
 ) -> _StateGroup | None:
@@ -2332,8 +2375,17 @@ def _coalesce_variable_states(
 ) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` (see reg_meta/DESIGN.md → Two-level variable model).
 
-    Group key: `(register_id, register_variant_id, var_id, data_type, data_length,
-    value_set_id, value_set_version_label, grain)`.
+    Group key: `(register_id, register_variant_id, var_id, <type>, <length>,
+    value_set_id, value_set_version_label, grain, component)`.
+
+    State-identity rule (#526): the VALUE SET anchors a valued variable's
+    temporal state — SCB's per-delivery `data_type`/`data_length` are low-trust
+    passthrough, so for `value_set_id is not None` the `<type>`/`<length>` slots
+    are blanked (every delivery of the same (value_set, label, grain, component)
+    folds into ONE state; the displayed type follows the latest era). For a
+    valueless column (`value_set_id is None`) the slots hold
+    `_canon_data_type(data_type)` + `data_length` — the only shape signal — so a
+    char↔varchar wobble folds while a genuine class flip (date→int) still splits.
 
     `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`
     (still present on `variable_instance` through A2.2). Keeping it in the
@@ -2566,12 +2618,25 @@ def _coalesce_variable_states(
             if col
             else ""
         )
+        # State-identity rule (#526): the VALUE SET anchors a valued variable's
+        # temporal-state identity — SCB's per-delivery `Datatyp`/`Datalängd` are
+        # low-trust passthrough, so a same-(value_set, label, grain, component)
+        # column folds into ONE state regardless of type/length wobble (the
+        # displayed type is set to the latest era below). Positions 3/4 stay the
+        # type/length slots (gkey arity/positions are read by index downstream);
+        # only their VALUES change. Valueless columns keep type+length as the
+        # only shape signal — but `data_type` is canonicalized so a char↔varchar
+        # flip folds while a genuine class flip (date→int) still splits.
+        if row["value_set_id"] is not None:
+            gtype, glen = "", ""
+        else:
+            gtype, glen = _canon_data_type(row["data_type"]), row["data_length"] or ""
         gkey = (
             row["register_id"],
             row["register_variant_id"],
             row["var_id"],
-            row["data_type"] or "",
-            row["data_length"] or "",
+            gtype,
+            glen,
             row["value_set_id"],
             row["value_set_version_label"] or "",
             grain,
@@ -2594,6 +2659,28 @@ def _coalesce_variable_states(
         # Editions this group was delivered in — the contested gate buckets
         # by edition, not year (regver_id is NOT NULL on variable_instance).
         grp.regvers.add(row["regver_id"])
+
+        # Latest-era data_type/data_length (#526). A value-set-anchored group can
+        # merge rows of differing type/length; the displayed shape must follow
+        # the latest delivery (mirrors the `latest_alias` rule below): highest
+        # regver_id wins, ties broken deterministically by the (type, length)
+        # tuple so output is row-order-independent. Track every distinct raw
+        # (type, length) seen so the class-flip stat can detect a folded flip.
+        grp.seen_types.add((row["data_type"], row["data_length"]))
+        _type_regver = row["regver_id"]
+        _cur_type_regver = grp.latest_type_regver
+        if (
+            _cur_type_regver is None
+            or _type_regver > _cur_type_regver
+            or (
+                _type_regver == _cur_type_regver
+                and (row["data_type"] or "", row["data_length"] or "")
+                < (grp.data_type or "", grp.data_length or "")
+            )
+        ):
+            grp.data_type = row["data_type"]
+            grp.data_length = row["data_length"]
+            grp.latest_type_regver = _type_regver
 
         # Track register_version year per cvid (fallback signal) on the
         # group, and also on the per-variable max so the materializer can
@@ -2672,6 +2759,44 @@ def _coalesce_variable_states(
             unika_index.setdefault(ukey, set()).add(gkey)
 
     _progress(f"  {len(groups):,} state groups from {len(rows):,} instance rows")
+
+    # #526 fold telemetry — over value-set-anchored groups only (valueless
+    # groups still split on canonical type/length, so they never fold a type).
+    # `n_type_folds`: anchored groups that absorbed >1 distinct (data_type,
+    # data_length). `n_type_class_folds`: of those, the ones spanning >1
+    # `_data_type_class` — the SCB-error class flips (float(53)-on-categorical
+    # and friends) that this change deliberately swallows. A capped, ordered
+    # sample identifies the culprits without dumping the whole tail.
+    n_type_folds = 0
+    n_type_class_folds = 0
+    _class_flip_groups: list[dict[str, object]] = []
+    _SAMPLE_CAP = 10
+    for gk, grp in groups.items():
+        if grp.value_set_id is None or len(grp.seen_types) <= 1:
+            continue
+        n_type_folds += 1
+        classes = {_data_type_class(dt) for dt, _ in grp.seen_types}
+        if len(classes) > 1:
+            n_type_class_folds += 1
+            _class_flip_groups.append(
+                {
+                    "register_id": grp.register_id,
+                    "var_id": grp.var_id,
+                    # gkey[8] = column component; identifies WHICH column.
+                    "column": gk[8],
+                    "value_set_id": grp.value_set_id,
+                    "data_types": sorted(
+                        f"{dt or ''}({dl or ''})" for dt, dl in grp.seen_types
+                    ),
+                }
+            )
+    # Sort BEFORE capping so the sample membership is row-order-independent
+    # (dict iteration is insertion order = row order, which xdist/shard order
+    # could perturb). Cap at _SAMPLE_CAP — enough to identify the culprits.
+    _class_flip_groups.sort(
+        key=lambda e: (e["register_id"], e["var_id"], str(e["column"]))
+    )
+    type_class_fold_sample = _class_flip_groups[:_SAMPLE_CAP]
 
     # Pull all relevant unika_summary rows in one shot. The PK lookup is
     # fast (~5 unika rows per group on average), but doing it per-group
@@ -3275,6 +3400,10 @@ def _coalesce_variable_states(
         f"{triage.stats.get('clustered', 0):,} clustered, "
         f"{len(triage.clamped_to):,} clamped"
     )
+    _progress(
+        f"  type-fold (#526): {n_type_folds:,} value-set-anchored groups folded "
+        f">1 (data_type, data_length), {n_type_class_folds:,} of them a class flip"
+    )
     return {
         "n_state_groups": len(groups),
         "n_variable_states": state_count,
@@ -3289,11 +3418,20 @@ def _coalesce_variable_states(
         "n_triage_splits": triage.stats.get("splits", 0),
         "n_triage_collapsed": len(triage.dropped),
         "n_triage_clamped": len(triage.clamped_to),
+        # #526 type-fold telemetry: value-set-anchored groups that swallowed a
+        # per-delivery type/length wobble, and the class-flip subset (SCB-error
+        # float(53)-on-categorical). Lets a maintainer eyeball the fold rate
+        # without re-running the build.
+        "n_type_folds": n_type_folds,
+        "n_type_class_folds": n_type_class_folds,
         # Build-only routing consumed downstream by build_db (NOT manifest
         # values): fold-slug hints → populate_variable_slugs; sibling edges →
         # _materialize_variable_related_to (after slugs exist).
         "_fold_slug_hints": triage.fold_slug_hints,
         "_related_edges": triage.related_edges,
+        # #526 class-flip exemplars (capped, deterministic) — private key, like
+        # the two above: surfaced for maintainer eyeballing, not a manifest count.
+        "_type_class_fold_sample": type_class_fold_sample,
     }
 
 
