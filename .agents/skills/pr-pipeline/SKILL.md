@@ -131,9 +131,13 @@ For merge, satisfy the repo gate:
 - stale-head check before and after merge.
 
 Run the real `build-db` last and once for build-affecting work, using the main
-checkout's untracked seed if working from a worktree. Do not pass `--providers` for the
-default release/build shape; only narrow the provider set when the work is explicitly
-SCB/SOS-only and that is stated in the PR:
+checkout's untracked seed if working from a worktree. Do **not** pass `--providers` —
+build the full global set. A restricted build (e.g. `--providers scb,sos`) orphans the
+global thin providers' mandatory entity-key pins (#554) and hard-fails
+`slug_variable_override_stale` (#563 tracks restoring provider-scoped builds). If the PR
+itself changes a tracked `input_data/<provider>/*.toml`, the absolute `--input-dir`
+below reads the main checkout's copy, so your change isn't built — overlay the PR-HEAD
+tracked files onto the main seed (symlink-merge) and point `--input-dir` there:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"

@@ -171,6 +171,12 @@ green. Pipeline-specific operational notes the gate doesn't carry:
   carry every global provider's seed dir). (#563 tracks gating the staleness check to
   built providers, which would restore provider-scoped validation builds.)
 
+  If the PR itself changes a **tracked** `input_data/<provider>/*.toml`, the absolute
+  `--input-dir` above reads the *main* checkout's copy — your change won't be built.
+  Overlay the PR-HEAD tracked files onto the main seed (symlink-merge: \`ln -s
+  <main>/input_data/* /tmp/in/`, then replace the changed provider's dir with the
+  worktree's) and point `--input-dir /tmp/in` instead.
+
   Then clean up — the build writes **gitignored** `*.auto.toml` into the slug dir, and
   the scratch DB is yours to remove. The slug files are ignored, so plain `git clean -f`
   SKIPS them — you need `-X` (clean ignored) or they survive and the next commit's
