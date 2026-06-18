@@ -85,6 +85,41 @@ register = "sos/lmed"
 key = "spkod"
 axis = "ordinal"
 
+# Batch 2 (#496): more multi-instance families — a child's numbered diagnosis-code
+# slots (mfr `bdiag1..20`, distinct from batch-1's `bdiag-bk`), and two-slot person
+# identifiers (guardian / other-person / parent). All verified one concept per
+# numbered slot against the real corpus.
+[[accept]]
+register = "sos/mfr"
+key = "bdiag"
+label = "Diagnoskod, barnet"
+axis = "ordinal"
+
+[[accept]]
+register = "scb/rtb"
+key = "personnrvard"
+axis = "ordinal"
+
+[[accept]]
+register = "scb/breg"
+key = "personnrvard"
+axis = "ordinal"
+
+[[accept]]
+register = "scb/rtb"
+key = "personnrap"
+axis = "ordinal"
+
+[[accept]]
+register = "scb/breg"
+key = "personnrap"
+axis = "ordinal"
+
+[[accept]]
+register = "scb/flergenreg"
+key = "personnrf"
+axis = "ordinal"
+
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
 # största / tredje största förvärvskälla). #319 merged each rank's 12 month
