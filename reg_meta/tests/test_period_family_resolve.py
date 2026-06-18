@@ -1,4 +1,4 @@
-"""Resolver-side coverage for the monthly column-family merge (#319).
+"""Resolver-side coverage for the period column-family merge (#319).
 
 A merged family's stored `variable_state` is ONE annual single-claim row per
 year; `resolve_at` / `states()` expand it READ-TIME into one `VariableState` per
@@ -29,16 +29,16 @@ _FQID = "scb/testreg/lonfink"
 
 def _build(tmp_path: Path, monkeypatch) -> Path:
     import reg_meta_build.db as _db
-    import reg_meta_build.family_merges as _fm
+    import reg_meta_build.period_family_merges as _fm
 
-    toml = tmp_path / "family_merges.toml"
+    toml = tmp_path / "period_family_merges.toml"
     toml.write_text(
-        '[[monthly_family]]\nregister = "scb/testreg"\n'
+        '[[period_family]]\nregister = "scb/testreg"\n'
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(_fm, "repo_family_merges_path", lambda: toml)
-    monkeypatch.setattr(_db, "repo_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_fm, "repo_period_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_db, "repo_period_family_merges_path", lambda: toml)
 
     ri: list[str] = []
     vm: list[str] = []
@@ -175,16 +175,16 @@ def _build_gap_year(tmp_path: Path, monkeypatch) -> Path:
     `_expand_state_windows` fallback: a query for a month with no window in that
     year keeps the raw annual state (never silently dropped)."""
     import reg_meta_build.db as _db
-    import reg_meta_build.family_merges as _fm
+    import reg_meta_build.period_family_merges as _fm
 
-    toml = tmp_path / "family_merges.toml"
+    toml = tmp_path / "period_family_merges.toml"
     toml.write_text(
-        '[[monthly_family]]\nregister = "scb/testreg"\n'
+        '[[period_family]]\nregister = "scb/testreg"\n'
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(_fm, "repo_family_merges_path", lambda: toml)
-    monkeypatch.setattr(_db, "repo_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_fm, "repo_period_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_db, "repo_period_family_merges_path", lambda: toml)
 
     ri: list[str] = []
     vm: list[str] = []

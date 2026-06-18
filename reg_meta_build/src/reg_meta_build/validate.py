@@ -1088,7 +1088,8 @@ def _check_variable_alias_window(
     corpus: bool,
 ) -> None:
     """#319 monthly-family alias-window structural closure (corpus-independent).
-    EMPTY without `family_merges.toml`, so no volume floor on synthetic builds.
+    EMPTY without `curation/period_family_merges.toml`, so no volume floor on
+    synthetic builds.
 
     Asserts: every window's (variable_id, register_variant_id) resolves to a live
     variable / register_variant; valid_from <= valid_to; the window's

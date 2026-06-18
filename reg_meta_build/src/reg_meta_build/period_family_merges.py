@@ -1,22 +1,22 @@
-"""Curated monthly-column-family merges (#319) — the first consumer of the
+"""Curated period-column-family merges (#319) — the first consumer of the
 interval-native resolver (#271).
 
-A monthly family is 12 month-named delivery columns for one concept, shipped
-inside ANNUAL editions (LISA `lonfink{jan..dec}`, `agi{1,2,3}lonfink{jan..dec}`).
-Today each is 12 separate catalog variables; a researcher must know the
-month-suffix convention. This merge folds the 12 columns into ONE variable that
-keeps an ANNUAL `variable_state` per delivery year (the per-month dimension is a
-representation/alias concern, NOT a coding boundary — see DESIGN.md → Consumers:
-monthly column families), and records each month column's validity window in
-`variable_alias_window` so `resolve_at("2024-03")` picks the `mar` column.
+A period family is the period-named delivery columns for one concept (today the 12
+month-named columns), shipped inside ANNUAL editions (LISA `lonfink{jan..dec}`,
+`agi{1,2,3}lonfink{jan..dec}`). Today each is a separate catalog variable; a
+researcher must know the month-suffix convention. This merge folds the columns
+into ONE variable that keeps an ANNUAL `variable_state` per delivery year (the
+per-period dimension is a representation/alias concern, NOT a coding boundary — see
+DESIGN.md → Consumers: monthly column families), and records each column's validity
+window in `variable_alias_window` so `resolve_at("2024-03")` picks the `mar` column.
 
 NOT the `[[column_merge]]` surface (`curation/scb/source_column_repairs.toml`):
-that asserts era-RENAMES that never co-occur — the exact opposite of 12
-deliberately-parallel columns.
+that asserts era-RENAMES that never co-occur — the exact opposite of deliberately-
+parallel period columns.
 
 Member resolution is by `delivery_column_name`, not slug: the merge runs BEFORE
-`populate_variable_slugs`, so the month columns are identified by their delivery
-column ending in a month token (the same `_MONTH_TOKENS` vocab the concept-group
+`populate_variable_slugs`, so the period columns are identified by their delivery
+column ending in a period token (the same `_MONTH_TOKENS` vocab the concept-group
 month pass uses), folded the same way slugs are. A family that does not resolve to
 a coherent member set FAILS the build (EXIT_CONFIG) — curation drift, fix it.
 """
@@ -42,17 +42,17 @@ if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable
 
-# A monthly family must resolve to at least this many distinct months to be a
+# A period family must resolve to at least this many distinct months to be a
 # coherent merge target (mirrors the concept-group month-fold guard
-# `_MIN_MONTH_SIBLINGS`). Fewer means the stem didn't actually name a monthly
+# `_MIN_MONTH_SIBLINGS`). Fewer means the stem didn't actually name a period
 # family — a curation error, not a 1-or-2-column merge.
 _MIN_FAMILY_MONTHS = 3
 
 
 @dataclass(frozen=True)
-class MonthlyFamily:
-    """One `[[monthly_family]]` entry: the 12 month columns under
-    `provider/register` whose delivery-column name is `family_stem` + a month
+class PeriodFamily:
+    """One `[[period_family]]` entry: the period columns under
+    `provider/register` whose delivery-column name is `family_stem` + a period
     token merge into one variable slugged `family_stem`, labelled `label`."""
 
     provider: str
@@ -61,66 +61,70 @@ class MonthlyFamily:
     label: str
 
 
-def repo_family_merges_path() -> Path | None:
-    """`reg_meta_build/family_merges.toml` from a repo checkout, or None (wheel
-    installs don't ship curation — a maintainer artifact like the slug TOMLs and
-    `concept_groups.toml`). Package root, NOT under `fqid_slugs/`."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "family_merges.toml"
+def repo_period_family_merges_path() -> Path | None:
+    """`reg_meta_build/curation/period_family_merges.toml` from a repo checkout, or
+    None (wheel installs don't ship curation — a maintainer artifact like the slug
+    TOMLs and `concept_groups.toml`)."""
+    candidate = (
+        Path(__file__).resolve().parent.parent.parent
+        / "curation"
+        / "period_family_merges.toml"
+    )
     return candidate if candidate.is_file() else None
 
 
 _require_str = functools.partial(
     require_str,
-    code="family_merges_invalid",
-    prefix="family_merges",
-    file_name="family_merges.toml",
+    code="period_family_merges_invalid",
+    prefix="period_family_merges",
+    file_name="curation/period_family_merges.toml",
 )
 
 
-def load_family_merges(path: Path | None) -> tuple[MonthlyFamily, ...]:
-    """Parse the monthly-family-merge TOML. Empty when no file (synthetic test
+def load_period_family_merges(path: Path | None) -> tuple[PeriodFamily, ...]:
+    """Parse the period-family-merge TOML. Empty when no file (synthetic test
     builds, wheel installs).
 
-    Load-time validation (all EXIT_CONFIG, actionable): only `[[monthly_family]]`
+    Load-time validation (all EXIT_CONFIG, actionable): only `[[period_family]]`
     top-level; `register` is a 2-segment `provider/register` FQID; `family_stem` /
     `label` non-empty strings; each (register, family_stem) unique. Member
-    RESOLUTION (do 12 month columns with that stem exist?) happens at materialize
+    RESOLUTION (do the period columns with that stem exist?) happens at materialize
     time against the built DB, not here."""
     entries = load_curation_entries(
         path,
-        entry_key="monthly_family",
-        label="monthly-family-merge",
-        prefix="family_merges",
-        code_base="family_merges",
-        file_name="family_merges.toml",
+        entry_key="period_family",
+        label="period-family-merge",
+        prefix="period_family_merges",
+        code_base="period_family_merges",
+        file_name="curation/period_family_merges.toml",
         entry_fields="register / family_stem / label",
     )
-    out: list[MonthlyFamily] = []
+    out: list[PeriodFamily] = []
     seen: set[tuple[str, str, str]] = set()
     for entry in entries:
-        register_fqid = _require_str(entry, "register", "[[monthly_family]]")
+        register_fqid = _require_str(entry, "register", "[[period_family]]")
         parts = register_fqid.split("/")
         if len(parts) != 2 or not all(parts):
             raise curation_error(
-                "family_merges_invalid",
-                f"family_merges register {register_fqid!r} must be a 2-segment "
-                "`provider/register` FQID.",
+                "period_family_merges_invalid",
+                f"period_family_merges register {register_fqid!r} must be a "
+                "2-segment `provider/register` FQID.",
                 'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
             )
-        family_stem = _require_str(entry, "family_stem", "[[monthly_family]]")
-        label = _require_str(entry, "label", "[[monthly_family]]")
+        family_stem = _require_str(entry, "family_stem", "[[period_family]]")
+        label = _require_str(entry, "label", "[[period_family]]")
         scope_key = (parts[0], parts[1], family_stem)
         if scope_key in seen:
             raise curation_error(
-                "family_merges_invalid",
-                f"family_merges duplicate family_stem {family_stem!r} under "
+                "period_family_merges_invalid",
+                f"period_family_merges duplicate family_stem {family_stem!r} under "
                 f"{register_fqid}.",
                 "Each (register, family_stem) may appear once in "
-                "reg_meta_build/family_merges.toml.",
+                "reg_meta_build/curation/period_family_merges.toml.",
             )
         seen.add(scope_key)
         out.append(
-            MonthlyFamily(
+            PeriodFamily(
                 provider=parts[0],
                 register=parts[1],
                 family_stem=family_stem,
@@ -233,7 +237,7 @@ def _member_value_sets(
 
 def _check_value_set_agreement(
     conn: sqlite3.Connection,
-    family: MonthlyFamily,
+    family: PeriodFamily,
     members: list[_Member],
     ctx: str,
 ) -> None:
@@ -271,26 +275,27 @@ def _check_value_set_agreement(
                 for vsid in sorted(vsids, key=lambda v: (v is None, v))
             )
             raise curation_error(
-                "family_merges_value_set_conflict",
+                "period_family_merges_value_set_conflict",
                 f"{ctx}: member columns disagree on value_set_id for variant "
                 f"{rvid}, year {year} — {detail}. The merge keeps one annual claim "
                 "per year, so a divergent sibling's value set would be dropped.",
                 "Confirm the family stem only matches columns sharing a value "
-                "domain, or curate the family (reg_meta_build/family_merges.toml). "
+                "domain, or curate the family "
+                "(reg_meta_build/curation/period_family_merges.toml). "
                 "Union/curation of a genuinely mergeable divergence is a "
                 "maintainer-build decision.",
             )
 
 
-def materialize_family_merges(
+def materialize_period_family_merges(
     conn: sqlite3.Connection,
-    families: tuple[MonthlyFamily, ...],
+    families: tuple[PeriodFamily, ...],
     *,
     providers: frozenset[str],
     fold_slug_hints: dict[int, str],
     progress: Callable[[str], None] | None = None,
 ) -> dict[str, int]:
-    """Merge each curated monthly family into ONE variable (#319).
+    """Merge each curated period family into ONE variable (#319).
 
     Runs POST-triage (so `variable_state` / `variable_alias` exist) but BEFORE
     `populate_variable_slugs` (so the survivor is slugged as the family stem via
@@ -298,7 +303,7 @@ def materialize_family_merges(
 
     1. Resolve the member month columns (`_family_members`) — LOUD-FAIL if fewer
        than `_MIN_FAMILY_MONTHS` distinct months resolve (the stem named no
-       coherent monthly family).
+       coherent period family).
     2. Pick the lex-min `variable_id` as the survivor; set its `name` to the
        family label and register `fold_slug_hints[survivor] = family_stem`.
     3. Emit `variable_alias_window` rows: one per (column, delivered year) →
@@ -309,7 +314,7 @@ def materialize_family_merges(
        migrate; the stored state stays one annual row/year — the per-month
        dimension is read-time from the window table). The survivor's own annual
        states are the claims; a sibling delivering a year the survivor does NOT is
-       a coherence break (LOUD-FAIL) — monthly families are parallel by design.
+       a coherence break (LOUD-FAIL) — period families are parallel by design.
 
     `providers` gates families to this build (mirrors the other curation passes).
     Returns `{"families": n, "columns": n, "windows": n}`."""
@@ -317,24 +322,26 @@ def materialize_family_merges(
     for family in families:
         if family.provider not in providers:
             continue
-        ctx = f"[[monthly_family]] {family.family_stem!r} ({family.provider}/{family.register})"
+        ctx = f"[[period_family]] {family.family_stem!r} ({family.provider}/{family.register})"
         register_id = resolve_register_id(conn, family.provider, family.register)
         if register_id is None:
             raise curation_error(
-                "family_merges_unresolved",
+                "period_family_merges_unresolved",
                 f"{ctx}: register {family.provider}/{family.register!r} does not "
                 "resolve.",
-                "Fix the `register` FQID in reg_meta_build/family_merges.toml.",
+                "Fix the `register` FQID in "
+                "reg_meta_build/curation/period_family_merges.toml.",
             )
         members = _family_members(conn, register_id, family.family_stem)
         distinct_months = {m.month for m in members}
         if len(distinct_months) < _MIN_FAMILY_MONTHS:
             raise curation_error(
-                "family_merges_unresolved",
+                "period_family_merges_unresolved",
                 f"{ctx}: resolved {len(distinct_months)} distinct month column(s) "
                 f"(need >= {_MIN_FAMILY_MONTHS}). The stem named no coherent "
-                "monthly family in this build.",
-                "Fix `family_stem` / `register` in reg_meta_build/family_merges.toml "
+                "period family in this build.",
+                "Fix `family_stem` / `register` in "
+                "reg_meta_build/curation/period_family_merges.toml "
                 "(the stem is the column-name prefix before the month token).",
             )
         survivor = min(m.variable_id for m in members)
@@ -364,12 +371,13 @@ def materialize_family_merges(
             for year in sorted(years):
                 if year not in survivor_years.get(m.register_variant_id, set()):
                     raise curation_error(
-                        "family_merges_unresolved",
+                        "period_family_merges_unresolved",
                         f"{ctx}: column {m.delivery_column_name!r} delivers "
                         f"{year} in variant {m.register_variant_id} but the merged "
-                        "annual claim does not — monthly families must be parallel.",
+                        "annual claim does not — period families must be parallel.",
                         "Verify the family stem only matches truly parallel "
-                        "month columns (reg_meta_build/family_merges.toml).",
+                        "period columns "
+                        "(reg_meta_build/curation/period_family_merges.toml).",
                     )
                 lo, hi = period_token_to_bounds(f"{year}-{m.month:02d}")
                 conn.execute(
@@ -425,7 +433,7 @@ def materialize_family_merges(
 
     if progress is not None:
         progress(
-            f"  {counts['families']:,} monthly families merged "
+            f"  {counts['families']:,} period families merged "
             f"({counts['columns']:,} columns, {counts['windows']:,} alias windows)"
         )
     return counts

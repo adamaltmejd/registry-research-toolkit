@@ -47,11 +47,6 @@ from .delivery_enrichment import (
     load_delivery_enrichment,
     repo_delivery_enrichment_path,
 )
-from .family_merges import (
-    load_family_merges,
-    materialize_family_merges,
-    repo_family_merges_path,
-)
 from .fqid_slugs import (
     load_lineage_config,
     populate_slugs,
@@ -67,6 +62,11 @@ from .ir import (
     IRVariableState,
     IRVariant,
     IRWarning,
+)
+from .period_family_merges import (
+    load_period_family_merges,
+    materialize_period_family_merges,
+    repo_period_family_merges_path,
 )
 from .relations import (
     load_relations,
@@ -3188,22 +3188,30 @@ def materialize(
             skipped_classifications=skipped_classifications,
         )
 
-        # Monthly column-family merges (#319) — fold each curated family's 12
-        # month columns into ONE variable BEFORE variable slugs are assigned, so
-        # the survivor is slugged as the family stem (registered into
+        # Period column-family merges (#319) — fold each curated family's period
+        # (today, month) columns into ONE variable BEFORE variable slugs are
+        # assigned, so the survivor is slugged as the family stem (registered into
         # `fold_slug_hints`, the same side channel the A2.2 fold uses) and the
         # merged-away siblings never get a slug. Runs after the IR reinsert
         # (variable_state / variable_alias exist) and after populate_slugs
         # (register/variant slugs). Member columns are identified by
         # `delivery_column_name` (slugs don't exist yet). A dangling/incoherent
-        # family fails the build (EXIT_CONFIG). Empty without family_merges.toml.
-        fm_counts = materialize_family_merges(
+        # family fails the build (EXIT_CONFIG). Empty without
+        # curation/period_family_merges.toml.
+        fm_counts = materialize_period_family_merges(
             conn,
-            load_family_merges(repo_family_merges_path()),
+            load_period_family_merges(repo_period_family_merges_path()),
             providers=active_providers,
             fold_slug_hints=fold_slug_hints,
             progress=_progress,
         )
+        # Manifest row-count key deliberately kept as the pre-rename
+        # `monthly_family_merges` (the surface is now `period_family_merges`): the
+        # whole `row_counts` dict is serialized into the dbdiff-compared
+        # `import_manifest`, so renaming this label would break the byte-identity of
+        # an otherwise pure relocation (#518/#523) and owe a release for no content
+        # change. It's an internal metric label with no runtime consumer; rename it
+        # in a future build that already owes a manifest delta.
         row_counts["monthly_family_merges"] = fm_counts["families"]
         row_counts["variable_alias_windows"] = fm_counts["windows"]
 

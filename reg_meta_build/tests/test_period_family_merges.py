@@ -1,11 +1,12 @@
-"""End-to-end coverage for the monthly column-family merge (#319).
+"""End-to-end coverage for the period column-family merge (#319).
 
 Fabricates a small monthly family (a stem + jan/feb/mars columns across two
-delivery years) in the SCB build fixtures, activates a curated `family_merges.toml`
-for it, runs a REAL `build_db`, and asserts the 12→1 merge shape: one variable
-slugged as the stem with ANNUAL states (not per-month), the per-month alias
-windows, the resolver expansion, the deleted siblings, no dangling FK, and the
-validator closure. Loader-shape tests live alongside.
+delivery years) in the SCB build fixtures, activates a curated
+`curation/period_family_merges.toml` for it, runs a REAL `build_db`, and asserts the
+12→1 merge shape: one variable slugged as the stem with ANNUAL states (not
+per-month), the per-month alias windows, the resolver expansion, the deleted
+siblings, no dangling FK, and the validator closure. Loader-shape tests live
+alongside.
 """
 
 from __future__ import annotations
@@ -17,7 +18,10 @@ import pytest
 from _csv_fixtures import _var_row
 from _shared_fixtures import build_with_rows, vm_rows
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.family_merges import MonthlyFamily, load_family_merges
+from reg_meta_build.period_family_merges import (
+    PeriodFamily,
+    load_period_family_merges,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -56,25 +60,26 @@ def _family_ri_vm() -> tuple[list[str], list[str]]:
     return ri, vm
 
 
-_LISA_FAMILY = MonthlyFamily(
+_LISA_FAMILY = PeriodFamily(
     provider="scb", register="testreg", family_stem="lonfink", label="Lön per månad"
 )
 
 
 def _build_with_family(tmp_path: Path, monkeypatch) -> sqlite3.Connection:
-    """Build the fixture + the monthly family with a curated family_merges.toml
-    active (the autouse `_no_repo_curation` nulls it; re-point it here, after)."""
+    """Build the fixture + the period family with a curated
+    period_family_merges.toml active (the autouse `_no_repo_curation` nulls it;
+    re-point it here, after)."""
     import reg_meta_build.db as _db
-    import reg_meta_build.family_merges as _fm
+    import reg_meta_build.period_family_merges as _fm
 
-    toml = tmp_path / "family_merges.toml"
+    toml = tmp_path / "period_family_merges.toml"
     toml.write_text(
-        '[[monthly_family]]\nregister = "scb/testreg"\n'
+        '[[period_family]]\nregister = "scb/testreg"\n'
         'family_stem = "lonfink"\nlabel = "Lön per månad"\n',
         encoding="utf-8",
     )
-    monkeypatch.setattr(_fm, "repo_family_merges_path", lambda: toml)
-    monkeypatch.setattr(_db, "repo_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_fm, "repo_period_family_merges_path", lambda: toml)
+    monkeypatch.setattr(_db, "repo_period_family_merges_path", lambda: toml)
     ri, vm = _family_ri_vm()
     conn = build_with_rows(tmp_path, ri, vm)
     conn.row_factory = sqlite3.Row
@@ -92,20 +97,20 @@ def _survivor(conn: sqlite3.Connection) -> sqlite3.Row:
 # ── loader shape ──────────────────────────────────────────────────────────────
 
 
-def test_load_family_merges_parses(tmp_path: Path) -> None:
-    path = tmp_path / "family_merges.toml"
+def test_load_period_family_merges_parses(tmp_path: Path) -> None:
+    path = tmp_path / "period_family_merges.toml"
     path.write_text(
-        '[[monthly_family]]\nregister = "scb/lisa"\n'
+        '[[period_family]]\nregister = "scb/lisa"\n'
         'family_stem = "lonfink"\nlabel = "Lön"\n',
         encoding="utf-8",
     )
-    families = load_family_merges(path)
+    families = load_period_family_merges(path)
     assert len(families) == 1
-    assert families[0] == MonthlyFamily("scb", "lisa", "lonfink", "Lön")
+    assert families[0] == PeriodFamily("scb", "lisa", "lonfink", "Lön")
 
 
-def test_load_family_merges_empty_when_no_file() -> None:
-    assert load_family_merges(None) == ()
+def test_load_period_family_merges_empty_when_no_file() -> None:
+    assert load_period_family_merges(None) == ()
 
 
 @pytest.mark.parametrize(
@@ -117,25 +122,25 @@ def test_load_family_merges_empty_when_no_file() -> None:
         'register = "scb/lisa"\nfamily_stem = "x"',  # missing label
     ],
 )
-def test_load_family_merges_rejects_malformed(tmp_path: Path, body: str) -> None:
-    path = tmp_path / "family_merges.toml"
-    path.write_text(f"[[monthly_family]]\n{body}\n", encoding="utf-8")
+def test_load_period_family_merges_rejects_malformed(tmp_path: Path, body: str) -> None:
+    path = tmp_path / "period_family_merges.toml"
+    path.write_text(f"[[period_family]]\n{body}\n", encoding="utf-8")
     with pytest.raises(RegMetaError) as exc:
-        load_family_merges(path)
+        load_period_family_merges(path)
     assert exc.value.exit_code == EXIT_CONFIG
-    assert exc.value.code == "family_merges_invalid"
+    assert exc.value.code == "period_family_merges_invalid"
 
 
-def test_load_family_merges_rejects_duplicate(tmp_path: Path) -> None:
-    path = tmp_path / "family_merges.toml"
+def test_load_period_family_merges_rejects_duplicate(tmp_path: Path) -> None:
+    path = tmp_path / "period_family_merges.toml"
     path.write_text(
-        '[[monthly_family]]\nregister = "scb/lisa"\nfamily_stem = "x"\nlabel = "A"\n'
-        '[[monthly_family]]\nregister = "scb/lisa"\nfamily_stem = "x"\nlabel = "B"\n',
+        '[[period_family]]\nregister = "scb/lisa"\nfamily_stem = "x"\nlabel = "A"\n'
+        '[[period_family]]\nregister = "scb/lisa"\nfamily_stem = "x"\nlabel = "B"\n',
         encoding="utf-8",
     )
     with pytest.raises(RegMetaError) as exc:
-        load_family_merges(path)
-    assert exc.value.code == "family_merges_invalid"
+        load_period_family_merges(path)
+    assert exc.value.code == "period_family_merges_invalid"
 
 
 # ── merge mechanics (end-to-end build) ────────────────────────────────────────
@@ -244,22 +249,22 @@ def test_validator_window_closure_passes(tmp_path: Path, monkeypatch) -> None:
 
 
 def test_materialize_dangling_family_fails_loud(tmp_path: Path) -> None:
-    """A curated stem that resolves to no coherent monthly family fails the build
+    """A curated stem that resolves to no coherent period family fails the build
     (the merge runs directly here against a built fixture DB)."""
-    from reg_meta_build.family_merges import materialize_family_merges
+    from reg_meta_build.period_family_merges import materialize_period_family_merges
 
     conn = build_with_rows(tmp_path, [], [])  # standard fixture, no month family
     conn.row_factory = sqlite3.Row
     try:
         with pytest.raises(RegMetaError) as exc:
-            materialize_family_merges(
+            materialize_period_family_merges(
                 conn,
-                (MonthlyFamily("scb", "testreg", "nosuchstem", "X"),),
+                (PeriodFamily("scb", "testreg", "nosuchstem", "X"),),
                 providers=frozenset({"scb"}),
                 fold_slug_hints={},
             )
         assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "family_merges_unresolved"
+        assert exc.value.code == "period_family_merges_unresolved"
     finally:
         conn.close()
 
@@ -302,21 +307,21 @@ def test_intra_year_value_set_divergence_fails_loud(tmp_path: Path) -> None:
     must LOUD-FAIL — keeping only the survivor's annual claim would silently drop
     the divergent sibling's value domain. Build WITHOUT the merge (curation nulled),
     then run materialize directly so the conflict surfaces."""
-    from reg_meta_build.family_merges import materialize_family_merges
+    from reg_meta_build.period_family_merges import materialize_period_family_merges
 
     ri, vm = _divergent_ri_vm()
     conn = build_with_rows(tmp_path, ri, vm)
     conn.row_factory = sqlite3.Row
     try:
         with pytest.raises(RegMetaError) as exc:
-            materialize_family_merges(
+            materialize_period_family_merges(
                 conn,
-                (MonthlyFamily("scb", "testreg", "lonfink", "Lön per månad"),),
+                (PeriodFamily("scb", "testreg", "lonfink", "Lön per månad"),),
                 providers=frozenset({"scb"}),
                 fold_slug_hints={},
             )
         assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "family_merges_value_set_conflict"
+        assert exc.value.code == "period_family_merges_value_set_conflict"
         assert "2018" in exc.value.message
     finally:
         conn.close()
@@ -325,15 +330,15 @@ def test_intra_year_value_set_divergence_fails_loud(tmp_path: Path) -> None:
 def test_shared_value_set_merge_succeeds(tmp_path: Path) -> None:
     """The agreement guard does NOT false-fire when all member columns share the
     value domain (the standard family) — the merge completes."""
-    from reg_meta_build.family_merges import materialize_family_merges
+    from reg_meta_build.period_family_merges import materialize_period_family_merges
 
     ri, vm = _family_ri_vm()
     conn = build_with_rows(tmp_path, ri, vm)
     conn.row_factory = sqlite3.Row
     try:
-        counts = materialize_family_merges(
+        counts = materialize_period_family_merges(
             conn,
-            (MonthlyFamily("scb", "testreg", "lonfink", "Lön per månad"),),
+            (PeriodFamily("scb", "testreg", "lonfink", "Lön per månad"),),
             providers=frozenset({"scb"}),
             fold_slug_hints={},
         )
