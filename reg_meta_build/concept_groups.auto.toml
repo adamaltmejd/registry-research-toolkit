@@ -20,8 +20,8 @@
 # regenerating against a normal built DB keeps every accept resolvable.
 #
 # thresholds: min-siblings=2 min-label-prefix=8 min-agreement=0.5
-# foldable families: 588
-# excluded batteries (weak label agreement): 388
+# foldable families: 602
+# excluded batteries (weak label agreement): 374
 # skipped (key collides with an existing group): 3
 
 # axis=ordinal agreement=1.00 members=48  ICD-kod för multipel dödsorsak
@@ -1405,6 +1405,301 @@ variable = "baldbob16"
 value = "16"
 label = "16"
 
+# axis=numeric agreement=1.00 members=13  Begravningsavgift 20
+[[variable_group]]
+register = "scb/fasit"
+key = "abegr"
+label = "Begravningsavgift 20"
+axis = "numeric"
+[[variable_group.members]]
+variable = "abegr07"
+value = "07"
+label = "7"
+[[variable_group.members]]
+variable = "abegr08"
+value = "08"
+label = "8"
+[[variable_group.members]]
+variable = "abegr09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "abegr10"
+value = "10"
+label = "10"
+[[variable_group.members]]
+variable = "abegr11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "abegr12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "abegr13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "abegr14"
+value = "14"
+label = "14"
+[[variable_group.members]]
+variable = "abegr15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "abegr16"
+value = "16"
+label = "16"
+[[variable_group.members]]
+variable = "abegr17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "abegr18"
+value = "18"
+label = "18"
+[[variable_group.members]]
+variable = "abegr19"
+value = "19"
+label = "19"
+
+# axis=numeric agreement=1.00 members=13  Kommunal- och landstingsskatt 20
+[[variable_group]]
+register = "scb/fasit"
+key = "aklsk"
+label = "Kommunal- och landstingsskatt 20"
+axis = "numeric"
+[[variable_group.members]]
+variable = "aklsk07"
+value = "07"
+label = "7"
+[[variable_group.members]]
+variable = "aklsk08"
+value = "08"
+label = "8"
+[[variable_group.members]]
+variable = "aklsk09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "aklsk10"
+value = "10"
+label = "10"
+[[variable_group.members]]
+variable = "aklsk11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "aklsk12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "aklsk13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "aklsk14"
+value = "14"
+label = "14"
+[[variable_group.members]]
+variable = "aklsk15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "aklsk16"
+value = "16"
+label = "16"
+[[variable_group.members]]
+variable = "aklsk17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "aklsk18"
+value = "18"
+label = "18"
+[[variable_group.members]]
+variable = "aklsk19"
+value = "19"
+label = "19"
+
+# axis=numeric agreement=1.00 members=13  Kommunalskatt 20
+[[variable_group]]
+register = "scb/fasit"
+key = "aksk"
+label = "Kommunalskatt 20"
+axis = "numeric"
+[[variable_group.members]]
+variable = "aksk07"
+value = "07"
+label = "7"
+[[variable_group.members]]
+variable = "aksk08"
+value = "08"
+label = "8"
+[[variable_group.members]]
+variable = "aksk09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "aksk10"
+value = "10"
+label = "10"
+[[variable_group.members]]
+variable = "aksk11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "aksk12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "aksk13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "aksk14"
+value = "14"
+label = "14"
+[[variable_group.members]]
+variable = "aksk15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "aksk16"
+value = "16"
+label = "16"
+[[variable_group.members]]
+variable = "aksk17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "aksk18"
+value = "18"
+label = "18"
+[[variable_group.members]]
+variable = "aksk19"
+value = "19"
+label = "19"
+
+# axis=numeric agreement=1.00 members=13  Kyrkoavgift 20
+[[variable_group]]
+register = "scb/fasit"
+key = "akyrk"
+label = "Kyrkoavgift 20"
+axis = "numeric"
+[[variable_group.members]]
+variable = "akyrk07"
+value = "07"
+label = "7"
+[[variable_group.members]]
+variable = "akyrk08"
+value = "08"
+label = "8"
+[[variable_group.members]]
+variable = "akyrk09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "akyrk10"
+value = "10"
+label = "10"
+[[variable_group.members]]
+variable = "akyrk11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "akyrk12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "akyrk13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "akyrk14"
+value = "14"
+label = "14"
+[[variable_group.members]]
+variable = "akyrk15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "akyrk16"
+value = "16"
+label = "16"
+[[variable_group.members]]
+variable = "akyrk17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "akyrk18"
+value = "18"
+label = "18"
+[[variable_group.members]]
+variable = "akyrk19"
+value = "19"
+label = "19"
+
+# axis=numeric agreement=1.00 members=13  Landstingsskatt 20
+[[variable_group]]
+register = "scb/fasit"
+key = "alsk"
+label = "Landstingsskatt 20"
+axis = "numeric"
+[[variable_group.members]]
+variable = "alsk07"
+value = "07"
+label = "7"
+[[variable_group.members]]
+variable = "alsk08"
+value = "08"
+label = "8"
+[[variable_group.members]]
+variable = "alsk09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "alsk10"
+value = "10"
+label = "10"
+[[variable_group.members]]
+variable = "alsk11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "alsk12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "alsk13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "alsk14"
+value = "14"
+label = "14"
+[[variable_group.members]]
+variable = "alsk15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "alsk16"
+value = "16"
+label = "16"
+[[variable_group.members]]
+variable = "alsk17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "alsk18"
+value = "18"
+label = "18"
+[[variable_group.members]]
+variable = "alsk19"
+value = "19"
+label = "19"
+
 # axis=ordinal agreement=1.00 members=12  Åtgärdskod
 [[variable_group]]
 register = "sos/mfr"
@@ -2184,6 +2479,123 @@ label = "8"
 variable = "bha0100a-9"
 value = "9"
 label = "9"
+
+# axis=ordinal agreement=1.00 members=8  Mätfrekvens
+[[variable_group]]
+register = "pliktverket/insark"
+key = "orh"
+label = "Mätfrekvens"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "orh1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "orh2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "orh3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "orh4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "orh5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "orh6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "orh7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "orh8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=1.00 members=8  Mätfrekvens
+[[variable_group]]
+register = "pliktverket/insark"
+key = "orv"
+label = "Mätfrekvens"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "orv1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "orv2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "orv3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "orv4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "orv5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "orv6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "orv7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "orv8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=1.00 members=8  Frånvaroskäl
+[[variable_group]]
+register = "scb/aku"
+key = "dfran2bes"
+label = "Frånvaroskäl"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "dfran2bes1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "dfran2bes2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "dfran2bes3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "dfran2bes4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "dfran2bes5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "dfran2bes6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "dfran2bes7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "dfran2bes8"
+value = "8"
+label = "8"
 
 # axis=ordinal agreement=1.00 members=8  Huvudsyssla, frånvaroorsak
 [[variable_group]]
@@ -3042,6 +3454,76 @@ variable = "bha0006-7"
 value = "7"
 label = "7"
 
+# axis=ordinal agreement=1.00 members=7  Tillsyn 1 barn
+[[variable_group]]
+register = "scb/ulf"
+key = "tillsyn-1-barn-"
+label = "Tillsyn 1 barn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "tillsyn-1-barn-7"
+value = "7"
+label = "7"
+
+# axis=numeric agreement=1.00 members=7  Studiedeltagande höstterminen
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "stud"
+label = "Studiedeltagande höstterminen"
+axis = "numeric"
+[[variable_group.members]]
+variable = "stud00"
+value = "00"
+label = "0"
+[[variable_group.members]]
+variable = "stud01"
+value = "01"
+label = "1"
+[[variable_group.members]]
+variable = "stud02"
+value = "02"
+label = "2"
+[[variable_group.members]]
+variable = "stud03"
+value = "03"
+label = "3"
+[[variable_group.members]]
+variable = "stud04"
+value = "04"
+label = "4"
+[[variable_group.members]]
+variable = "stud05"
+value = "05"
+label = "5"
+[[variable_group.members]]
+variable = "stud99"
+value = "99"
+label = "99"
+
 # axis=ordinal agreement=1.00 members=7  Yttre orsakskod
 [[variable_group]]
 register = "sos/par"
@@ -3198,6 +3680,37 @@ value = "5"
 label = "5"
 [[variable_group.members]]
 variable = "adressrad6"
+value = "6"
+label = "6"
+
+# axis=ordinal agreement=1.00 members=6  Folkmängd den 1 november år t-
+[[variable_group]]
+register = "scb/kommunalekonomisk-utjamning"
+key = "folkmangd-den-1-november-ar-t-"
+label = "Folkmängd den 1 november år t-"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "folkmangd-den-1-november-ar-t-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "folkmangd-den-1-november-ar-t-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "folkmangd-den-1-november-ar-t-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "folkmangd-den-1-november-ar-t-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "folkmangd-den-1-november-ar-t-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "folkmangd-den-1-november-ar-t-6"
 value = "6"
 label = "6"
 
@@ -3558,6 +4071,33 @@ value = "4"
 label = "4"
 [[variable_group.members]]
 variable = "bkfri5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=1.00 members=5  Månader kommunal fritids 10-12 år barn
+[[variable_group]]
+register = "scb/fasit"
+key = "bkfrif"
+label = "Månader kommunal fritids 10-12 år barn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "bkfrif1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "bkfrif2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "bkfrif3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "bkfrif4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "bkfrif5"
 value = "5"
 label = "5"
 
@@ -4236,6 +4776,141 @@ variable = "restid-tillsyn-barn-5"
 value = "5"
 label = "5"
 
+# axis=ordinal agreement=1.00 members=5  Tillsyn 1 skolbarn
+[[variable_group]]
+register = "scb/ulf"
+key = "tillsyn-1-skolbarn-"
+label = "Tillsyn 1 skolbarn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "tillsyn-1-skolbarn-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "tillsyn-1-skolbarn-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tillsyn-1-skolbarn-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tillsyn-1-skolbarn-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "tillsyn-1-skolbarn-5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=1.00 members=5  Tillsyn 2 barn
+[[variable_group]]
+register = "scb/ulf"
+key = "tillsyn-2-barn-"
+label = "Tillsyn 2 barn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "tillsyn-2-barn-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "tillsyn-2-barn-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tillsyn-2-barn-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tillsyn-2-barn-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "tillsyn-2-barn-5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=1.00 members=5  Tillsyn 2 skolbarn
+[[variable_group]]
+register = "scb/ulf"
+key = "tillsyn-2-skolbarn-"
+label = "Tillsyn 2 skolbarn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "tillsyn-2-skolbarn-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "tillsyn-2-skolbarn-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tillsyn-2-skolbarn-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tillsyn-2-skolbarn-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "tillsyn-2-skolbarn-5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=1.00 members=5  Tillsyn 3 barn
+[[variable_group]]
+register = "scb/ulf"
+key = "tillsyn-3-barn-"
+label = "Tillsyn 3 barn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "tillsyn-3-barn-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "tillsyn-3-barn-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tillsyn-3-barn-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tillsyn-3-barn-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "tillsyn-3-barn-5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=1.00 members=5  Tillsyn 3 skolbarn
+[[variable_group]]
+register = "scb/ulf"
+key = "tillsyn-3-skolbarn-"
+label = "Tillsyn 3 skolbarn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "tillsyn-3-skolbarn-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "tillsyn-3-skolbarn-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tillsyn-3-skolbarn-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tillsyn-3-skolbarn-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "tillsyn-3-skolbarn-5"
+value = "5"
+label = "5"
+
 # axis=vintage agreement=1.00 members=5  Aktivitet
 [[variable_group]]
 register = "scb/utbildningsanalyser"
@@ -4681,6 +5356,29 @@ variable = "avgfasthyr040"
 value = "40"
 label = "40"
 
+# axis=numeric agreement=1.00 members=4  Statlig fastighetsskatt för hyreshus, 0
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "skfasthyr"
+label = "Statlig fastighetsskatt för hyreshus, 0"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skfasthyr020"
+value = "20"
+label = "20"
+[[variable_group.members]]
+variable = "skfasthyr025"
+value = "25"
+label = "25"
+[[variable_group.members]]
+variable = "skfasthyr040"
+value = "40"
+label = "40"
+[[variable_group.members]]
+variable = "skfasthyr050"
+value = "50"
+label = "50"
+
 # axis=ordinal agreement=1.00 members=4  Fler uppdrag organisation
 [[variable_group]]
 register = "scb/ulf"
@@ -4750,6 +5448,144 @@ variable = "organisationsnr-uppdrag-4"
 value = "4"
 label = "4"
 
+# axis=numeric agreement=1.00 members=4  Skäl ej poliskontakt 1 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "skal-ej-poliskontakt-1-tr"
+label = "Skäl ej poliskontakt 1 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-1-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-1-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-1-tr0013"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-1-tr0014"
+value = "14"
+label = "14"
+
+# axis=numeric agreement=1.00 members=4  Skäl ej poliskontakt 2 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "skal-ej-poliskontakt-2-tr"
+label = "Skäl ej poliskontakt 2 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-2-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-2-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-2-tr0013"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-2-tr0014"
+value = "14"
+label = "14"
+
+# axis=numeric agreement=1.00 members=4  Skäl ej poliskontakt 3 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "skal-ej-poliskontakt-3-tr"
+label = "Skäl ej poliskontakt 3 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-3-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-3-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-3-tr0013"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-3-tr0014"
+value = "14"
+label = "14"
+
+# axis=numeric agreement=1.00 members=4  Skäl ej poliskontakt 4 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "skal-ej-poliskontakt-4-tr"
+label = "Skäl ej poliskontakt 4 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-4-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-4-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-4-tr0013"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-4-tr0014"
+value = "14"
+label = "14"
+
+# axis=numeric agreement=1.00 members=4  Skäl ej poliskontakt 5 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "skal-ej-poliskontakt-5-tr"
+label = "Skäl ej poliskontakt 5 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-5-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-5-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-5-tr0013"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-5-tr0014"
+value = "14"
+label = "14"
+
+# axis=numeric agreement=1.00 members=4  Skäl ej poliskontakt 6 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "skal-ej-poliskontakt-6-tr"
+label = "Skäl ej poliskontakt 6 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-6-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-6-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-6-tr0013"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "skal-ej-poliskontakt-6-tr0014"
+value = "14"
+label = "14"
+
 # axis=ordinal agreement=1.00 members=4  Studiestöd kurs
 [[variable_group]]
 register = "scb/ulf"
@@ -4772,6 +5608,29 @@ label = "3"
 variable = "studiestod-kurs-4"
 value = "4"
 label = "4"
+
+# axis=numeric agreement=1.00 members=4  Ämnesområde HT0
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "omrht"
+label = "Ämnesområde HT0"
+axis = "numeric"
+[[variable_group.members]]
+variable = "omrht03"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "omrht04"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "omrht05"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "omrht06"
+value = "6"
+label = "6"
 
 # axis=ordinal agreement=1.00 members=4  Diagnoskod
 [[variable_group]]
@@ -5176,6 +6035,44 @@ variable = "bfpf3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=1.00 members=3  Skatteunderlag enligt taxeringen år t-
+[[variable_group]]
+register = "scb/kommunalekonomisk-utjamning"
+key = "skattund-"
+label = "Skatteunderlag enligt taxeringen år t-"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skattund-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "skattund-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "skattund-4"
+value = "4"
+label = "4"
+
+# axis=numeric agreement=1.00 members=3  Underlag för fastighetsskatt med
+[[variable_group]]
+register = "scb/linda"
+key = "asma"
+label = "Underlag för fastighetsskatt med"
+axis = "numeric"
+[[variable_group.members]]
+variable = "asma15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "asma17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "asma075"
+value = "75"
+label = "75"
+
 # axis=ordinal agreement=1.00 members=3  Folkpension, efterlevandeförmån
 [[variable_group]]
 register = "scb/linda"
@@ -5328,6 +6225,25 @@ variable = "ulagforaldraforsavgper3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=1.00 members=3  Antal barn i hushållet under
+[[variable_group]]
+register = "scb/tidsanvandning"
+key = "bant"
+label = "Antal barn i hushållet under"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bant6"
+value = "06"
+label = "6"
+[[variable_group.members]]
+variable = "bant10"
+value = "10"
+label = "10"
+[[variable_group.members]]
+variable = "bant16"
+value = "16"
+label = "16"
+
 # axis=ordinal agreement=1.00 members=3  Annat hälsoproblem barn
 [[variable_group]]
 register = "scb/ulf"
@@ -5385,6 +6301,120 @@ variable = "fritidsgard-barn-3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=1.00 members=3  Händelse 1 sjukskriven TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "handelse-1-sjukskriven-tr"
+label = "Händelse 1 sjukskriven TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "handelse-1-sjukskriven-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "handelse-1-sjukskriven-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "handelse-1-sjukskriven-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Händelse 2 sjukskriven TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "handelse-2-sjukskriven-tr"
+label = "Händelse 2 sjukskriven TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "handelse-2-sjukskriven-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "handelse-2-sjukskriven-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "handelse-2-sjukskriven-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Händelse 3 sjukskriven TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "handelse-3-sjukskriven-tr"
+label = "Händelse 3 sjukskriven TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "handelse-3-sjukskriven-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "handelse-3-sjukskriven-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "handelse-3-sjukskriven-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Händelse 4 sjukskriven TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "handelse-4-sjukskriven-tr"
+label = "Händelse 4 sjukskriven TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "handelse-4-sjukskriven-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "handelse-4-sjukskriven-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "handelse-4-sjukskriven-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Händelse 5 sjukskriven TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "handelse-5-sjukskriven-tr"
+label = "Händelse 5 sjukskriven TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "handelse-5-sjukskriven-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "handelse-5-sjukskriven-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "handelse-5-sjukskriven-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Händelse 6 sjukskriven TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "handelse-6-sjukskriven-tr"
+label = "Händelse 6 sjukskriven TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "handelse-6-sjukskriven-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "handelse-6-sjukskriven-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "handelse-6-sjukskriven-tr0013"
+value = "13"
+label = "13"
+
 # axis=ordinal agreement=1.00 members=3  Idrott barn
 [[variable_group]]
 register = "scb/ulf"
@@ -5422,6 +6452,120 @@ label = "3"
 variable = "kontakt-andra-foraldern-barn-4"
 value = "4"
 label = "4"
+
+# axis=numeric agreement=1.00 members=3  Poliskontakt händelse 1 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "poliskontakt-handelse-1-tr"
+label = "Poliskontakt händelse 1 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-1-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-1-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-1-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Poliskontakt händelse 2 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "poliskontakt-handelse-2-tr"
+label = "Poliskontakt händelse 2 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-2-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-2-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-2-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Poliskontakt händelse 3 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "poliskontakt-handelse-3-tr"
+label = "Poliskontakt händelse 3 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-3-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-3-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-3-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Poliskontakt händelse 4 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "poliskontakt-handelse-4-tr"
+label = "Poliskontakt händelse 4 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-4-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-4-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-4-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Poliskontakt händelse 5 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "poliskontakt-handelse-5-tr"
+label = "Poliskontakt händelse 5 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-5-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-5-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-5-tr0013"
+value = "13"
+label = "13"
+
+# axis=numeric agreement=1.00 members=3  Poliskontakt händelse 6 TR001
+[[variable_group]]
+register = "scb/ulf"
+key = "poliskontakt-handelse-6-tr"
+label = "Poliskontakt händelse 6 TR001"
+axis = "numeric"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-6-tr0011"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-6-tr0012"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "poliskontakt-handelse-6-tr0013"
+value = "13"
+label = "13"
 
 # axis=ordinal agreement=1.00 members=3  Utbildning
 [[variable_group]]
@@ -5479,6 +6623,25 @@ label = "3"
 variable = "vardnad-barn-4"
 value = "4"
 label = "4"
+
+# axis=numeric agreement=1.00 members=3  Ämnesområde VT0
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "omrvt"
+label = "Ämnesområde VT0"
+axis = "numeric"
+[[variable_group.members]]
+variable = "omrvt04"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "omrvt05"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "omrvt06"
+value = "6"
+label = "6"
 
 # axis=ordinal agreement=1.00 members=3  Specialistutbildningskod
 [[variable_group]]
@@ -5874,6 +7037,51 @@ variable = "alkostp2"
 value = "2"
 label = "2"
 
+# axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt med
+[[variable_group]]
+register = "scb/fasit"
+key = "asma"
+label = "Underlag för fastighetsskatt med"
+axis = "numeric"
+[[variable_group.members]]
+variable = "asma1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "asma05"
+value = "5"
+label = "5"
+
+# axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk
+[[variable_group]]
+register = "scb/fasit"
+key = "avat"
+label = "Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk"
+axis = "numeric"
+[[variable_group.members]]
+variable = "avat17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "avat22"
+value = "22"
+label = "22"
+
+# axis=ordinal agreement=1.00 members=2  Antal barn
+[[variable_group]]
+register = "scb/fasit"
+key = "bbrnett"
+label = "Antal barn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "bbrnett1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "bbrnett2"
+value = "2"
+label = "2"
+
 # axis=numeric agreement=1.00 members=2  Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021
 [[variable_group]]
 register = "scb/fasit"
@@ -5963,6 +7171,21 @@ label = "2"
 variable = "taxeringsvarde-mark-och-byggnad-ar-t-3"
 value = "3"
 label = "3"
+
+# axis=ordinal agreement=1.00 members=2  Vid avyttring eller gåva innan utdelningstillfället punkt
+[[variable_group]]
+register = "scb/fasit"
+key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-"
+label = "Vid avyttring eller gåva innan utdelningstillfället punkt"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-2"
+value = "2"
+label = "2"
 
 # axis=ordinal agreement=1.00 members=2  Efterlevande Pensions Underlagsbelopp BP
 [[variable_group]]
@@ -6279,6 +7502,21 @@ variable = "bandfr2"
 value = "2"
 label = "2"
 
+# axis=ordinal agreement=1.00 members=2  Antal barn
+[[variable_group]]
+register = "scb/frida"
+key = "bbrnett"
+label = "Antal barn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "bbrnett1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "bbrnett2"
+value = "2"
+label = "2"
+
 # axis=numeric agreement=1.00 members=2  Kapavkast., intäkter (L
 [[variable_group]]
 register = "scb/frida"
@@ -6368,6 +7606,21 @@ label = "11"
 variable = "underskott-vid-punkt-30"
 value = "30"
 label = "30"
+
+# axis=ordinal agreement=1.00 members=2  Vid avyttring eller gåva innan utdelningstillfället punkt
+[[variable_group]]
+register = "scb/frida"
+key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-"
+label = "Vid avyttring eller gåva innan utdelningstillfället punkt"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-2"
+value = "2"
+label = "2"
 
 # axis=ordinal agreement=1.00 members=2  Efterlevande Pensions Underlagsbelopp BP
 [[variable_group]]
@@ -6474,6 +7727,36 @@ variable = "fysfys03"
 value = "3"
 label = "3"
 
+# axis=ordinal agreement=1.00 members=2  Betyg i Fysik 1b
+[[variable_group]]
+register = "scb/gymnasieskola-betyg"
+key = "fysfys01b"
+label = "Betyg i Fysik 1b"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "fysfys01b1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "fysfys01b2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=1.00 members=2  Betyg i Historia 1a
+[[variable_group]]
+register = "scb/gymnasieskola-betyg"
+key = "hishis01a"
+label = "Betyg i Historia 1a"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "hishis01a1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "hishis01a2"
+value = "2"
+label = "2"
+
 # axis=ordinal agreement=1.00 members=2  Betyg i Kemi
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
@@ -6504,6 +7787,21 @@ variable = "matmat05"
 value = "5"
 label = "5"
 
+# axis=ordinal agreement=1.00 members=2  Betyg i Naturkunskap 1a
+[[variable_group]]
+register = "scb/gymnasieskola-betyg"
+key = "naknak01a"
+label = "Betyg i Naturkunskap 1a"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "naknak01a1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "naknak01a2"
+value = "2"
+label = "2"
+
 # axis=ordinal agreement=1.00 members=2  Betyg i Religion
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
@@ -6533,6 +7831,21 @@ label = "2"
 variable = "samsam03"
 value = "3"
 label = "3"
+
+# axis=ordinal agreement=1.00 members=2  Betyg i Samhällskunskap 1a
+[[variable_group]]
+register = "scb/gymnasieskola-betyg"
+key = "samsam01a"
+label = "Betyg i Samhällskunskap 1a"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "samsam01a1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "samsam01a2"
+value = "2"
+label = "2"
 
 # axis=numeric agreement=1.00 members=2  Antal barn under
 [[variable_group]]
@@ -6654,6 +7967,21 @@ variable = "ninn-pf7"
 value = "7"
 label = "7"
 
+# axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för småhus
+[[variable_group]]
+register = "scb/iot"
+key = "ufasts"
+label = "Underlag för fastighetsskatt för småhus"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ufasts2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ufasts3"
+value = "3"
+label = "3"
+
 # axis=ordinal agreement=1.00 members=2  Kontaktperson
 [[variable_group]]
 register = "scb/isen"
@@ -6743,6 +8071,66 @@ label = "1"
 variable = "telefonnummer-2"
 value = "2"
 label = "2"
+
+# axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för småhus
+[[variable_group]]
+register = "scb/linda"
+key = "ufasts"
+label = "Underlag för fastighetsskatt för småhus"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ufasts2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ufasts3"
+value = "3"
+label = "3"
+
+# axis=numeric agreement=1.00 members=2  Summa annan inkomst, 20
+[[variable_group]]
+register = "scb/lisa"
+key = "anninkf"
+label = "Summa annan inkomst, 20"
+axis = "numeric"
+[[variable_group.members]]
+variable = "anninkf04"
+value = "04"
+label = "4"
+[[variable_group.members]]
+variable = "anninkf18"
+value = "18"
+label = "18"
+
+# axis=numeric agreement=1.00 members=2  Medborgarskapsland, grupperad EU(2
+[[variable_group]]
+register = "scb/lisa"
+key = "medbgreg"
+label = "Medborgarskapsland, grupperad EU(2"
+axis = "numeric"
+[[variable_group.members]]
+variable = "medbgreg2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "medbgreg4"
+value = "4"
+label = "4"
+
+# axis=numeric agreement=1.00 members=2  Hjälpvariabel_
+[[variable_group]]
+register = "scb/personalutbildningsstatistik"
+key = "help"
+label = "Hjälpvariabel_"
+axis = "numeric"
+[[variable_group.members]]
+variable = "help4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "help5"
+value = "5"
+label = "5"
 
 # axis=vintage agreement=1.00 members=2  Index
 [[variable_group]]
@@ -6909,6 +8297,21 @@ variable = "avgfastsma0375"
 value = "375"
 label = "375"
 
+# axis=numeric agreement=1.00 members=2  Statlig fastighetsskatt för småhus
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "skfastsma"
+label = "Statlig fastighetsskatt för småhus"
+axis = "numeric"
+[[variable_group.members]]
+variable = "skfastsma050"
+value = "050"
+label = "50"
+[[variable_group.members]]
+variable = "skfastsma100"
+value = "100"
+label = "100"
+
 # axis=numeric agreement=1.00 members=2  Underlag för fastighetsavgift för småhus, 0
 [[variable_group]]
 register = "scb/taxeringsutfallet"
@@ -6923,6 +8326,51 @@ label = "75"
 variable = "ulagfastavgsma0375"
 value = "375"
 label = "375"
+
+# axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för hyreshus, 0
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "ulagfasthyr"
+label = "Underlag för fastighetsskatt för hyreshus, 0"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ulagfasthyr025"
+value = "25"
+label = "25"
+[[variable_group.members]]
+variable = "ulagfasthyr050"
+value = "50"
+label = "50"
+
+# axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk, 2
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "ulagfastskvtn"
+label = "Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk, 2"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ulagfastskvtn220"
+value = "220"
+label = "220"
+[[variable_group.members]]
+variable = "ulagfastskvtn280"
+value = "280"
+label = "280"
+
+# axis=numeric agreement=1.00 members=2  Underlag för särskild löneskatt på vissa förvärvsinkomster
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "ulagslforvink"
+label = "Underlag för särskild löneskatt på vissa förvärvsinkomster"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ulagslforvink1616"
+value = "1616"
+label = "1616"
+[[variable_group.members]]
+variable = "ulagslforvink2426"
+value = "2426"
+label = "2426"
 
 # axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för hyreshus, 0
 [[variable_group]]
@@ -6984,6 +8432,51 @@ variable = "ha06-3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=1.00 members=2  Besvärens svårighetsgrad
+[[variable_group]]
+register = "scb/ulf"
+key = "ha064-"
+label = "Besvärens svårighetsgrad"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ha064-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ha064-3"
+value = "3"
+label = "3"
+
+# axis=numeric agreement=1.00 members=2  Yrke, nuvarande arbete (SSYK
+[[variable_group]]
+register = "scb/ulf"
+key = "smyrke"
+label = "Yrke, nuvarande arbete (SSYK"
+axis = "numeric"
+[[variable_group.members]]
+variable = "smyrke12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "smyrke96"
+value = "96"
+label = "96"
+
+# axis=numeric agreement=1.00 members=2  Yrke, nuvarande arbete (SSYK
+[[variable_group]]
+register = "scb/ulf"
+key = "syyrke"
+label = "Yrke, nuvarande arbete (SSYK"
+axis = "numeric"
+[[variable_group.members]]
+variable = "syyrke12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "syyrke96"
+value = "96"
+label = "96"
+
 # axis=numeric agreement=1.00 members=2  Trångbodd enligt norm
 [[variable_group]]
 register = "scb/ulf"
@@ -6998,6 +8491,21 @@ label = "2"
 variable = "trangbodd-enligt-norm-3"
 value = "3"
 label = "3"
+
+# axis=numeric agreement=1.00 members=2  Perioder av undervisning på distans under VT 202
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "distansvt"
+label = "Perioder av undervisning på distans under VT 202"
+axis = "numeric"
+[[variable_group.members]]
+variable = "distansvt20"
+value = "20"
+label = "20"
+[[variable_group.members]]
+variable = "distansvt21"
+value = "21"
+label = "21"
 
 # axis=numeric agreement=1.00 members=2  Lärares placering vid distansundervisning VT2
 [[variable_group]]
@@ -7089,96 +8597,32 @@ variable = "ane2"
 value = "2"
 label = "2"
 
-# axis=ordinal agreement=0.99 members=5  Månader kommunal fritids 10-12 år barn
+# axis=numeric agreement=0.98 members=5  Imputerat värde för avdelning
 [[variable_group]]
-register = "scb/fasit"
-key = "bkfrif"
-label = "Månader kommunal fritids 10-12 år barn"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "bkfrif1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "bkfrif2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "bkfrif3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "bkfrif4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "bkfrif5"
-value = "5"
-label = "5"
-
-# axis=ordinal agreement=0.98 members=2  Vid avyttring eller gåva innan utdelningstillfället punkt
-[[variable_group]]
-register = "scb/fasit"
-key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-"
-label = "Vid avyttring eller gåva innan utdelningstillfället punkt"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.98 members=2  Vid avyttring eller gåva innan utdelningstillfället punkt
-[[variable_group]]
-register = "scb/frida"
-key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-"
-label = "Vid avyttring eller gåva innan utdelningstillfället punkt"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-2"
-value = "2"
-label = "2"
-
-# axis=numeric agreement=0.98 members=2  Perioder av undervisning på distans under VT 202
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "distansvt"
-label = "Perioder av undervisning på distans under VT 202"
+register = "scb/infi"
+key = "impavd"
+label = "Imputerat värde för avdelning"
 axis = "numeric"
 [[variable_group.members]]
-variable = "distansvt20"
-value = "20"
-label = "20"
-[[variable_group.members]]
-variable = "distansvt21"
-value = "21"
-label = "21"
-
-# axis=numeric agreement=0.97 members=3  Skatteunderlag enligt taxeringen år t-
-[[variable_group]]
-register = "scb/kommunalekonomisk-utjamning"
-key = "skattund-"
-label = "Skatteunderlag enligt taxeringen år t-"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skattund-2"
-value = "2"
+variable = "impavd2"
+value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "skattund-3"
-value = "3"
+variable = "impavd3"
+value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "skattund-4"
-value = "4"
-label = "4"
+variable = "impavd11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "impavd12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "impavd13"
+value = "13"
+label = "13"
 
 # axis=ordinal agreement=0.97 members=10  Population
 [[variable_group]]
@@ -7227,386 +8671,35 @@ variable = "sel10"
 value = "10"
 label = "10"
 
-# axis=numeric agreement=0.97 members=3  Poliskontakt händelse 1 TR001
+# axis=numeric agreement=0.97 members=2  Taxeringsvärde mark och byggnad år t
 [[variable_group]]
-register = "scb/ulf"
-key = "poliskontakt-handelse-1-tr"
-label = "Poliskontakt händelse 1 TR001"
+register = "scb/fasit"
+key = "ftax"
+label = "Taxeringsvärde mark och byggnad år t"
 axis = "numeric"
 [[variable_group.members]]
-variable = "poliskontakt-handelse-1-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-1-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-1-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Poliskontakt händelse 2 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "poliskontakt-handelse-2-tr"
-label = "Poliskontakt händelse 2 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-2-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-2-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-2-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Poliskontakt händelse 3 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "poliskontakt-handelse-3-tr"
-label = "Poliskontakt händelse 3 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-3-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-3-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-3-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Poliskontakt händelse 4 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "poliskontakt-handelse-4-tr"
-label = "Poliskontakt händelse 4 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-4-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-4-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-4-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Poliskontakt händelse 5 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "poliskontakt-handelse-5-tr"
-label = "Poliskontakt händelse 5 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-5-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-5-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-5-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Poliskontakt händelse 6 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "poliskontakt-handelse-6-tr"
-label = "Poliskontakt händelse 6 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-6-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-6-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "poliskontakt-handelse-6-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=2  Underlag för fastighetsskatt för småhus, 1
-[[variable_group]]
-register = "scb/linda"
-key = "underlag-for-fastighetsskatt-for-smahus-1-"
-label = "Underlag för fastighetsskatt för småhus, 1"
-axis = "numeric"
-[[variable_group.members]]
-variable = "underlag-for-fastighetsskatt-for-smahus-1-0"
-value = "0"
-label = "0"
-[[variable_group.members]]
-variable = "underlag-for-fastighetsskatt-for-smahus-1-5"
+variable = "ftax5"
 value = "5"
 label = "5"
+[[variable_group.members]]
+variable = "ftax9"
+value = "9"
+label = "9"
 
-# axis=numeric agreement=0.97 members=4  Skäl ej poliskontakt 1 TR001
+# axis=numeric agreement=0.97 members=2  Underlag f särsk löneskatt på pens.kostn f egen pens.försäkringspremie
 [[variable_group]]
-register = "scb/ulf"
-key = "skal-ej-poliskontakt-1-tr"
-label = "Skäl ej poliskontakt 1 TR001"
+register = "scb/taxeringsutfallet"
+key = "ulagslpensegen"
+label = "Underlag f särsk löneskatt på pens.kostn f egen pens.försäkringspremie"
 axis = "numeric"
 [[variable_group.members]]
-variable = "skal-ej-poliskontakt-1-tr0011"
-value = "11"
-label = "11"
+variable = "ulagslpensegen0"
+value = "0000"
+label = "0"
 [[variable_group.members]]
-variable = "skal-ej-poliskontakt-1-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-1-tr0013"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-1-tr0014"
-value = "14"
-label = "14"
-
-# axis=numeric agreement=0.97 members=4  Skäl ej poliskontakt 2 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "skal-ej-poliskontakt-2-tr"
-label = "Skäl ej poliskontakt 2 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-2-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-2-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-2-tr0013"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-2-tr0014"
-value = "14"
-label = "14"
-
-# axis=numeric agreement=0.97 members=4  Skäl ej poliskontakt 3 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "skal-ej-poliskontakt-3-tr"
-label = "Skäl ej poliskontakt 3 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-3-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-3-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-3-tr0013"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-3-tr0014"
-value = "14"
-label = "14"
-
-# axis=numeric agreement=0.97 members=4  Skäl ej poliskontakt 4 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "skal-ej-poliskontakt-4-tr"
-label = "Skäl ej poliskontakt 4 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-4-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-4-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-4-tr0013"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-4-tr0014"
-value = "14"
-label = "14"
-
-# axis=numeric agreement=0.97 members=4  Skäl ej poliskontakt 5 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "skal-ej-poliskontakt-5-tr"
-label = "Skäl ej poliskontakt 5 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-5-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-5-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-5-tr0013"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-5-tr0014"
-value = "14"
-label = "14"
-
-# axis=numeric agreement=0.97 members=4  Skäl ej poliskontakt 6 TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "skal-ej-poliskontakt-6-tr"
-label = "Skäl ej poliskontakt 6 TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-6-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-6-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-6-tr0013"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "skal-ej-poliskontakt-6-tr0014"
-value = "14"
-label = "14"
-
-# axis=numeric agreement=0.97 members=3  Händelse 1 sjukskriven TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "handelse-1-sjukskriven-tr"
-label = "Händelse 1 sjukskriven TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "handelse-1-sjukskriven-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "handelse-1-sjukskriven-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "handelse-1-sjukskriven-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Händelse 2 sjukskriven TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "handelse-2-sjukskriven-tr"
-label = "Händelse 2 sjukskriven TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "handelse-2-sjukskriven-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "handelse-2-sjukskriven-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "handelse-2-sjukskriven-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Händelse 3 sjukskriven TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "handelse-3-sjukskriven-tr"
-label = "Händelse 3 sjukskriven TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "handelse-3-sjukskriven-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "handelse-3-sjukskriven-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "handelse-3-sjukskriven-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Händelse 4 sjukskriven TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "handelse-4-sjukskriven-tr"
-label = "Händelse 4 sjukskriven TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "handelse-4-sjukskriven-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "handelse-4-sjukskriven-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "handelse-4-sjukskriven-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Händelse 5 sjukskriven TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "handelse-5-sjukskriven-tr"
-label = "Händelse 5 sjukskriven TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "handelse-5-sjukskriven-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "handelse-5-sjukskriven-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "handelse-5-sjukskriven-tr0013"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.97 members=3  Händelse 6 sjukskriven TR001
-[[variable_group]]
-register = "scb/ulf"
-key = "handelse-6-sjukskriven-tr"
-label = "Händelse 6 sjukskriven TR001"
-axis = "numeric"
-[[variable_group.members]]
-variable = "handelse-6-sjukskriven-tr0011"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "handelse-6-sjukskriven-tr0012"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "handelse-6-sjukskriven-tr0013"
-value = "13"
-label = "13"
+variable = "ulagslpensegen2426"
+value = "2426"
+label = "2426"
 
 # axis=numeric agreement=0.97 members=2  Betyg i Italienska C-språk
 [[variable_group]]
@@ -7623,35 +8716,35 @@ variable = "it206"
 value = "206"
 label = "206"
 
-# axis=numeric agreement=0.96 members=2  Besvärens svårighetsgrad
+# axis=numeric agreement=0.97 members=2  Underlag för fastighetsskatt för småhus, 1
 [[variable_group]]
-register = "scb/ulf"
-key = "ha064-"
-label = "Besvärens svårighetsgrad"
+register = "scb/linda"
+key = "underlag-for-fastighetsskatt-for-smahus-1-"
+label = "Underlag för fastighetsskatt för småhus, 1"
 axis = "numeric"
 [[variable_group.members]]
-variable = "ha064-2"
-value = "2"
-label = "2"
+variable = "underlag-for-fastighetsskatt-for-smahus-1-0"
+value = "0"
+label = "0"
 [[variable_group.members]]
-variable = "ha064-3"
-value = "3"
-label = "3"
+variable = "underlag-for-fastighetsskatt-for-smahus-1-5"
+value = "5"
+label = "5"
 
-# axis=numeric agreement=0.96 members=2  Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk, 2
+# axis=numeric agreement=0.96 members=2  Taxeringsvärde byggnad år t
 [[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagfastskvtn"
-label = "Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk, 2"
+register = "scb/fasit"
+key = "ftaxb"
+label = "Taxeringsvärde byggnad år t"
 axis = "numeric"
 [[variable_group.members]]
-variable = "ulagfastskvtn220"
-value = "220"
-label = "220"
+variable = "ftaxb5"
+value = "5"
+label = "5"
 [[variable_group.members]]
-variable = "ulagfastskvtn280"
-value = "280"
-label = "280"
+variable = "ftaxb9"
+value = "9"
+label = "9"
 
 # axis=numeric agreement=0.96 members=3  Apgar vid
 [[variable_group]]
@@ -7671,6 +8764,21 @@ label = "5"
 variable = "apgar10"
 value = "10"
 label = "10"
+
+# axis=numeric agreement=0.96 members=2  Taxeringsvärde mark år t
+[[variable_group]]
+register = "scb/fasit"
+key = "ftaxm"
+label = "Taxeringsvärde mark år t"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ftaxm5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "ftaxm9"
+value = "9"
+label = "9"
 
 # axis=numeric agreement=0.96 members=2  Betyg i Ryska C-språk
 [[variable_group]]
@@ -7714,21 +8822,6 @@ variable = "sel8"
 value = "8"
 label = "8"
 
-# axis=numeric agreement=0.95 members=2  Taxeringsvärde mark och byggnad år t
-[[variable_group]]
-register = "scb/fasit"
-key = "ftax"
-label = "Taxeringsvärde mark och byggnad år t"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ftax5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "ftax9"
-value = "9"
-label = "9"
-
 # axis=ordinal agreement=0.95 members=2  Faxnummer
 [[variable_group]]
 register = "scb/livsmedelsforsaljning"
@@ -7743,232 +8836,6 @@ label = "1"
 variable = "fax2"
 value = "2"
 label = "2"
-
-# axis=numeric agreement=0.95 members=2  Underlag för fastighetsskatt för hyreshus, 0
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagfasthyr"
-label = "Underlag för fastighetsskatt för hyreshus, 0"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ulagfasthyr025"
-value = "25"
-label = "25"
-[[variable_group.members]]
-variable = "ulagfasthyr050"
-value = "50"
-label = "50"
-
-# axis=numeric agreement=0.94 members=2  Medborgarskapsland, grupperad EU(2
-[[variable_group]]
-register = "scb/lisa"
-key = "medbgreg"
-label = "Medborgarskapsland, grupperad EU(2"
-axis = "numeric"
-[[variable_group.members]]
-variable = "medbgreg2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "medbgreg4"
-value = "4"
-label = "4"
-
-# axis=numeric agreement=0.94 members=5  Imputerat värde för avdelning
-[[variable_group]]
-register = "scb/infi"
-key = "impavd"
-label = "Imputerat värde för avdelning"
-axis = "numeric"
-[[variable_group.members]]
-variable = "impavd2"
-value = "02"
-label = "2"
-[[variable_group.members]]
-variable = "impavd3"
-value = "03"
-label = "3"
-[[variable_group.members]]
-variable = "impavd11"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "impavd12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "impavd13"
-value = "13"
-label = "13"
-
-# axis=numeric agreement=0.94 members=13  Kommunal- och landstingsskatt 20
-[[variable_group]]
-register = "scb/fasit"
-key = "aklsk"
-label = "Kommunal- och landstingsskatt 20"
-axis = "numeric"
-[[variable_group.members]]
-variable = "aklsk07"
-value = "07"
-label = "7"
-[[variable_group.members]]
-variable = "aklsk08"
-value = "08"
-label = "8"
-[[variable_group.members]]
-variable = "aklsk09"
-value = "09"
-label = "9"
-[[variable_group.members]]
-variable = "aklsk10"
-value = "10"
-label = "10"
-[[variable_group.members]]
-variable = "aklsk11"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "aklsk12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "aklsk13"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "aklsk14"
-value = "14"
-label = "14"
-[[variable_group.members]]
-variable = "aklsk15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "aklsk16"
-value = "16"
-label = "16"
-[[variable_group.members]]
-variable = "aklsk17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "aklsk18"
-value = "18"
-label = "18"
-[[variable_group.members]]
-variable = "aklsk19"
-value = "19"
-label = "19"
-
-# axis=numeric agreement=0.94 members=4  Statlig fastighetsskatt för hyreshus, 0
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "skfasthyr"
-label = "Statlig fastighetsskatt för hyreshus, 0"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skfasthyr020"
-value = "20"
-label = "20"
-[[variable_group.members]]
-variable = "skfasthyr025"
-value = "25"
-label = "25"
-[[variable_group.members]]
-variable = "skfasthyr040"
-value = "40"
-label = "40"
-[[variable_group.members]]
-variable = "skfasthyr050"
-value = "50"
-label = "50"
-
-# axis=numeric agreement=0.94 members=2  Underlag f särsk löneskatt på pens.kostn f egen pens.försäkringspremie
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagslpensegen"
-label = "Underlag f särsk löneskatt på pens.kostn f egen pens.försäkringspremie"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ulagslpensegen0"
-value = "0000"
-label = "0"
-[[variable_group.members]]
-variable = "ulagslpensegen2426"
-value = "2426"
-label = "2426"
-
-# axis=numeric agreement=0.94 members=4  Ämnesområde HT0
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "omrht"
-label = "Ämnesområde HT0"
-axis = "numeric"
-[[variable_group.members]]
-variable = "omrht03"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "omrht04"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "omrht05"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "omrht06"
-value = "6"
-label = "6"
-
-# axis=numeric agreement=0.94 members=3  Ämnesområde VT0
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "omrvt"
-label = "Ämnesområde VT0"
-axis = "numeric"
-[[variable_group.members]]
-variable = "omrvt04"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "omrvt05"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "omrvt06"
-value = "6"
-label = "6"
-
-# axis=numeric agreement=0.93 members=2  Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk
-[[variable_group]]
-register = "scb/fasit"
-key = "avat"
-label = "Underlag för fastighetsskatt för elproduktionsenheter/vattenkraftverk"
-axis = "numeric"
-[[variable_group.members]]
-variable = "avat17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "avat22"
-value = "22"
-label = "22"
-
-# axis=numeric agreement=0.93 members=2  Hjälpvariabel_
-[[variable_group]]
-register = "scb/personalutbildningsstatistik"
-key = "help"
-label = "Hjälpvariabel_"
-axis = "numeric"
-[[variable_group.members]]
-variable = "help4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "help5"
-value = "5"
-label = "5"
 
 # axis=ordinal agreement=0.93 members=2  Gruppering av ålder och kön_Rval_
 [[variable_group]]
@@ -7985,50 +8852,88 @@ variable = "aldgkon2"
 value = "2"
 label = "2"
 
-# axis=numeric agreement=0.93 members=2  Taxeringsvärde byggnad år t
+# axis=numeric agreement=0.93 members=19  NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_SNI
 [[variable_group]]
-register = "scb/fasit"
-key = "ftaxb"
-label = "Taxeringsvärde byggnad år t"
+register = "scb/arlig-energistatistik"
+key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-"
+label = "NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_SNI"
 axis = "numeric"
 [[variable_group.members]]
-variable = "ftaxb5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "ftaxb9"
-value = "9"
-label = "9"
-
-# axis=numeric agreement=0.92 members=2  Taxeringsvärde mark år t
-[[variable_group]]
-register = "scb/fasit"
-key = "ftaxm"
-label = "Taxeringsvärde mark år t"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ftaxm5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "ftaxm9"
-value = "9"
-label = "9"
-
-# axis=ordinal agreement=0.92 members=2  Betyg i Samhällskunskap 1a
-[[variable_group]]
-register = "scb/gymnasieskola-betyg"
-key = "samsam01a"
-label = "Betyg i Samhällskunskap 1a"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "samsam01a1"
-value = "1"
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-01"
+value = "01"
 label = "1"
 [[variable_group.members]]
-variable = "samsam01a2"
-value = "2"
-label = "2"
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-05"
+value = "05"
+label = "5"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-35"
+value = "35"
+label = "35"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-36"
+value = "36"
+label = "36"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-41"
+value = "41"
+label = "41"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-45"
+value = "45"
+label = "45"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-46"
+value = "46"
+label = "46"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-49"
+value = "49"
+label = "49"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-53"
+value = "53"
+label = "53"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-55"
+value = "55"
+label = "55"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-64"
+value = "64"
+label = "64"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-68"
+value = "68"
+label = "68"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-69"
+value = "69"
+label = "69"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-72"
+value = "72"
+label = "72"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-75"
+value = "75"
+label = "75"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-84"
+value = "84"
+label = "84"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-90"
+value = "90"
+label = "90"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-94"
+value = "94"
+label = "94"
 
 # axis=ordinal agreement=0.92 members=12  Utbetalning finns för livsföring i övrigt, kategorin hälso- och sjukvård
 [[variable_group]]
@@ -8269,21 +9174,6 @@ variable = "hyresskuldind12"
 value = "12"
 label = "12"
 
-# axis=ordinal agreement=0.91 members=2  Betyg i Naturkunskap 1a
-[[variable_group]]
-register = "scb/gymnasieskola-betyg"
-key = "naknak01a"
-label = "Betyg i Naturkunskap 1a"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "naknak01a1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "naknak01a2"
-value = "2"
-label = "2"
-
 # axis=ordinal agreement=0.91 members=12  Månadsandel av årsinkomsten av arbete för hushållsföreståndare
 [[variable_group]]
 register = "scb/fasit"
@@ -8504,65 +9394,6 @@ variable = "elskuldind12"
 value = "12"
 label = "12"
 
-# axis=numeric agreement=0.91 members=13  Begravningsavgift 20
-[[variable_group]]
-register = "scb/fasit"
-key = "abegr"
-label = "Begravningsavgift 20"
-axis = "numeric"
-[[variable_group.members]]
-variable = "abegr07"
-value = "07"
-label = "7"
-[[variable_group.members]]
-variable = "abegr08"
-value = "08"
-label = "8"
-[[variable_group.members]]
-variable = "abegr09"
-value = "09"
-label = "9"
-[[variable_group.members]]
-variable = "abegr10"
-value = "10"
-label = "10"
-[[variable_group.members]]
-variable = "abegr11"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "abegr12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "abegr13"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "abegr14"
-value = "14"
-label = "14"
-[[variable_group.members]]
-variable = "abegr15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "abegr16"
-value = "16"
-label = "16"
-[[variable_group.members]]
-variable = "abegr17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "abegr18"
-value = "18"
-label = "18"
-[[variable_group.members]]
-variable = "abegr19"
-value = "19"
-label = "19"
-
 # axis=ordinal agreement=0.90 members=12  Månadsandel av årsinkomsten av ersättningar för studier
 [[variable_group]]
 register = "scb/fasit"
@@ -8617,36 +9448,6 @@ label = "11"
 variable = "bstudhm12"
 value = "12"
 label = "12"
-
-# axis=numeric agreement=0.90 members=2  Underlag för fastighetsskatt för småhus
-[[variable_group]]
-register = "scb/iot"
-key = "ufasts"
-label = "Underlag för fastighetsskatt för småhus"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ufasts2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "ufasts3"
-value = "3"
-label = "3"
-
-# axis=numeric agreement=0.90 members=2  Underlag för fastighetsskatt för småhus
-[[variable_group]]
-register = "scb/linda"
-key = "ufasts"
-label = "Underlag för fastighetsskatt för småhus"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ufasts2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "ufasts3"
-value = "3"
-label = "3"
 
 # axis=ordinal agreement=0.90 members=12  Belopp för livsföring i övrigt, kategorin, övrig skuld
 [[variable_group]]
@@ -8703,84 +9504,6 @@ variable = "ovrigskuldbelopp12"
 value = "12"
 label = "12"
 
-# axis=numeric agreement=0.90 members=13  Landstingsskatt 20
-[[variable_group]]
-register = "scb/fasit"
-key = "alsk"
-label = "Landstingsskatt 20"
-axis = "numeric"
-[[variable_group.members]]
-variable = "alsk07"
-value = "07"
-label = "7"
-[[variable_group.members]]
-variable = "alsk08"
-value = "08"
-label = "8"
-[[variable_group.members]]
-variable = "alsk09"
-value = "09"
-label = "9"
-[[variable_group.members]]
-variable = "alsk10"
-value = "10"
-label = "10"
-[[variable_group.members]]
-variable = "alsk11"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "alsk12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "alsk13"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "alsk14"
-value = "14"
-label = "14"
-[[variable_group.members]]
-variable = "alsk15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "alsk16"
-value = "16"
-label = "16"
-[[variable_group.members]]
-variable = "alsk17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "alsk18"
-value = "18"
-label = "18"
-[[variable_group.members]]
-variable = "alsk19"
-value = "19"
-label = "19"
-
-# axis=numeric agreement=0.90 members=3  NgasT6_Naturgas Nät_Investering Naturgas_Transmissionsnät
-[[variable_group]]
-register = "scb/arlig-energistatistik"
-key = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-"
-label = "NgasT6_Naturgas Nät_Investering Naturgas_Transmissionsnät"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-4"
-value = "4"
-label = "4"
-
 # axis=ordinal agreement=0.90 members=12  Belopp för livsföring i övrigt, kategorin hyresskuld
 [[variable_group]]
 register = "sos/ekb"
@@ -8836,6 +9559,25 @@ variable = "hyresskuldbelopp12"
 value = "12"
 label = "12"
 
+# axis=numeric agreement=0.90 members=3  NgasT6_Naturgas Nät_Investering Naturgas_Transmissionsnät
+[[variable_group]]
+register = "scb/arlig-energistatistik"
+key = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-"
+label = "NgasT6_Naturgas Nät_Investering Naturgas_Transmissionsnät"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-4"
+value = "4"
+label = "4"
+
 # axis=ordinal agreement=0.90 members=12  Belopp för livsföring i övrigt, kategorin, tandvård
 [[variable_group]]
 register = "sos/ekb"
@@ -8890,36 +9632,6 @@ label = "11"
 variable = "tandvbelopp12"
 value = "12"
 label = "12"
-
-# axis=numeric agreement=0.90 members=2  Underlag för särskild löneskatt på vissa förvärvsinkomster
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagslforvink"
-label = "Underlag för särskild löneskatt på vissa förvärvsinkomster"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ulagslforvink1616"
-value = "1616"
-label = "1616"
-[[variable_group.members]]
-variable = "ulagslforvink2426"
-value = "2426"
-label = "2426"
-
-# axis=ordinal agreement=0.89 members=2  Betyg i Historia 1a
-[[variable_group]]
-register = "scb/gymnasieskola-betyg"
-key = "hishis01a"
-label = "Betyg i Historia 1a"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "hishis01a1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "hishis01a2"
-value = "2"
-label = "2"
 
 # axis=ordinal agreement=0.89 members=12  Belopp för livsföring i övrigt, kategorin Elskuld
 [[variable_group]]
@@ -9108,65 +9820,6 @@ label = "11"
 variable = "sokins07-12"
 value = "12"
 label = "12"
-
-# axis=numeric agreement=0.89 members=13  Kommunalskatt 20
-[[variable_group]]
-register = "scb/fasit"
-key = "aksk"
-label = "Kommunalskatt 20"
-axis = "numeric"
-[[variable_group.members]]
-variable = "aksk07"
-value = "07"
-label = "7"
-[[variable_group.members]]
-variable = "aksk08"
-value = "08"
-label = "8"
-[[variable_group.members]]
-variable = "aksk09"
-value = "09"
-label = "9"
-[[variable_group.members]]
-variable = "aksk10"
-value = "10"
-label = "10"
-[[variable_group.members]]
-variable = "aksk11"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "aksk12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "aksk13"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "aksk14"
-value = "14"
-label = "14"
-[[variable_group.members]]
-variable = "aksk15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "aksk16"
-value = "16"
-label = "16"
-[[variable_group.members]]
-variable = "aksk17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "aksk18"
-value = "18"
-label = "18"
-[[variable_group.members]]
-variable = "aksk19"
-value = "19"
-label = "19"
 
 # axis=ordinal agreement=0.89 members=12  Den yngstes (om två sökande, annars tom) hinder
 [[variable_group]]
@@ -9415,40 +10068,32 @@ variable = "barbmm12"
 value = "12"
 label = "12"
 
-# axis=numeric agreement=0.88 members=7  Studiedeltagande höstterminen
+# axis=ordinal agreement=0.88 members=5  Arbetet överensstämmer inte med den utbildning som avslutats -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "stud"
-label = "Studiedeltagande höstterminen"
-axis = "numeric"
+key = "f36-"
+label = "Arbetet överensstämmer inte med den utbildning som avslutats -"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "stud00"
-value = "00"
-label = "0"
-[[variable_group.members]]
-variable = "stud01"
-value = "01"
+variable = "f36-01"
+value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "stud02"
-value = "02"
+variable = "f36-02"
+value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "stud03"
-value = "03"
+variable = "f36-03"
+value = "3"
 label = "3"
 [[variable_group.members]]
-variable = "stud04"
-value = "04"
+variable = "f36-04"
+value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "stud05"
-value = "05"
+variable = "f36-05"
+value = "5"
 label = "5"
-[[variable_group.members]]
-variable = "stud99"
-value = "99"
-label = "99"
 
 # axis=numeric agreement=0.88 members=3  NgasT6_Naturgas Nät_Investering Naturgas_Distributionsnät
 [[variable_group]]
@@ -9506,48 +10151,6 @@ label = "3"
 variable = "ngast6-naturgas-nat-investering-stadsgas-transmissionsnat-4"
 value = "4"
 label = "4"
-
-# axis=ordinal agreement=0.88 members=5  Arbetet överensstämmer inte med den utbildning som avslutats -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f36-"
-label = "Arbetet överensstämmer inte med den utbildning som avslutats -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f36-01"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f36-02"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f36-03"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f36-04"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f36-05"
-value = "5"
-label = "5"
-
-# axis=numeric agreement=0.88 members=2  Statlig fastighetsskatt för småhus
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "skfastsma"
-label = "Statlig fastighetsskatt för småhus"
-axis = "numeric"
-[[variable_group.members]]
-variable = "skfastsma050"
-value = "050"
-label = "50"
-[[variable_group.members]]
-variable = "skfastsma100"
-value = "100"
-label = "100"
 
 # axis=ordinal agreement=0.88 members=12  Antal månader i rad med ekonomiskt bistånd
 [[variable_group]]
@@ -9619,65 +10222,6 @@ variable = "hantering-av-larares-franvaro-under-pandemin-undervisning-3"
 value = "3"
 label = "3"
 
-# axis=numeric agreement=0.88 members=13  Kyrkoavgift 20
-[[variable_group]]
-register = "scb/fasit"
-key = "akyrk"
-label = "Kyrkoavgift 20"
-axis = "numeric"
-[[variable_group.members]]
-variable = "akyrk07"
-value = "07"
-label = "7"
-[[variable_group.members]]
-variable = "akyrk08"
-value = "08"
-label = "8"
-[[variable_group.members]]
-variable = "akyrk09"
-value = "09"
-label = "9"
-[[variable_group.members]]
-variable = "akyrk10"
-value = "10"
-label = "10"
-[[variable_group.members]]
-variable = "akyrk11"
-value = "11"
-label = "11"
-[[variable_group.members]]
-variable = "akyrk12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "akyrk13"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "akyrk14"
-value = "14"
-label = "14"
-[[variable_group.members]]
-variable = "akyrk15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "akyrk16"
-value = "16"
-label = "16"
-[[variable_group.members]]
-variable = "akyrk17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "akyrk18"
-value = "18"
-label = "18"
-[[variable_group.members]]
-variable = "akyrk19"
-value = "19"
-label = "19"
-
 # axis=ordinal agreement=0.88 members=4  Har känt sig orättvist behandlad på något/några arbeten i Sverige vad gäller
 [[variable_group]]
 register = "scb/hogutbildade-utrikes-fodda"
@@ -9700,104 +10244,6 @@ label = "3"
 variable = "f25-4"
 value = "4"
 label = "4"
-
-# axis=ordinal agreement=0.88 members=2  Betyg i Fysik 1b
-[[variable_group]]
-register = "scb/gymnasieskola-betyg"
-key = "fysfys01b"
-label = "Betyg i Fysik 1b"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "fysfys01b1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "fysfys01b2"
-value = "2"
-label = "2"
-
-# axis=numeric agreement=0.87 members=19  NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_SNI
-[[variable_group]]
-register = "scb/arlig-energistatistik"
-key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-"
-label = "NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_SNI"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-01"
-value = "01"
-label = "1"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-05"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-35"
-value = "35"
-label = "35"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-36"
-value = "36"
-label = "36"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-41"
-value = "41"
-label = "41"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-45"
-value = "45"
-label = "45"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-46"
-value = "46"
-label = "46"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-49"
-value = "49"
-label = "49"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-53"
-value = "53"
-label = "53"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-55"
-value = "55"
-label = "55"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-64"
-value = "64"
-label = "64"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-68"
-value = "68"
-label = "68"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-69"
-value = "69"
-label = "69"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-72"
-value = "72"
-label = "72"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-75"
-value = "75"
-label = "75"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-84"
-value = "84"
-label = "84"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-90"
-value = "90"
-label = "90"
-[[variable_group.members]]
-variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-94"
-value = "94"
-label = "94"
 
 # axis=ordinal agreement=0.87 members=12  Månadsandel av preliminär skatt för året
 [[variable_group]]
@@ -9924,6 +10370,36 @@ variable = "sokins06-12"
 value = "12"
 label = "12"
 
+# axis=numeric agreement=0.87 members=2  Andel/grad inkomstpensionstillägg född 193
+[[variable_group]]
+register = "scb/fasit"
+key = "bpipt"
+label = "Andel/grad inkomstpensionstillägg född 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bpipt37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bpipt38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.87 members=2  Andel/grad inkomstpensionstillägg född 193
+[[variable_group]]
+register = "scb/iot"
+key = "bpipt"
+label = "Andel/grad inkomstpensionstillägg född 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bpipt37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bpipt38"
+value = "38"
+label = "38"
+
 # axis=ordinal agreement=0.86 members=12  Månadsandel av årsinkomsten av arbete
 [[variable_group]]
 register = "scb/fasit"
@@ -9998,24 +10474,155 @@ variable = "minskning-av-expansionsfond-878"
 value = "878"
 label = "878"
 
-# axis=numeric agreement=0.86 members=3  Antal barn i hushållet under
+# axis=numeric agreement=0.86 members=2  Andel/grad av tilläggspension födda 193
 [[variable_group]]
-register = "scb/tidsanvandning"
-key = "bant"
-label = "Antal barn i hushållet under"
+register = "scb/fasit"
+key = "btilp"
+label = "Andel/grad av tilläggspension födda 193"
 axis = "numeric"
 [[variable_group.members]]
-variable = "bant6"
-value = "06"
-label = "6"
+variable = "btilp37"
+value = "37"
+label = "37"
 [[variable_group.members]]
-variable = "bant10"
-value = "10"
-label = "10"
+variable = "btilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av tilläggspension födda 193
+[[variable_group]]
+register = "scb/frida"
+key = "btilp"
+label = "Andel/grad av tilläggspension födda 193"
+axis = "numeric"
 [[variable_group.members]]
-variable = "bant16"
-value = "16"
-label = "16"
+variable = "btilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "btilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av tilläggspension födda 193
+[[variable_group]]
+register = "scb/hek"
+key = "btilp"
+label = "Andel/grad av tilläggspension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "btilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "btilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av tilläggspension födda 193
+[[variable_group]]
+register = "scb/iot"
+key = "btilp"
+label = "Andel/grad av tilläggspension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "btilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "btilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av tilläggspension födda 193
+[[variable_group]]
+register = "scb/linda"
+key = "btilp"
+label = "Andel/grad av tilläggspension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "btilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "btilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av garantipension födda 193
+[[variable_group]]
+register = "scb/fasit"
+key = "bgarp"
+label = "Andel/grad av garantipension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bgarp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av garantipension födda 193
+[[variable_group]]
+register = "scb/frida"
+key = "bgarp"
+label = "Andel/grad av garantipension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bgarp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av garantipension födda 193
+[[variable_group]]
+register = "scb/hek"
+key = "bgarp"
+label = "Andel/grad av garantipension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bgarp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av garantipension födda 193
+[[variable_group]]
+register = "scb/iot"
+key = "bgarp"
+label = "Andel/grad av garantipension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bgarp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.86 members=2  Andel/grad av garantipension födda 193
+[[variable_group]]
+register = "scb/linda"
+key = "bgarp"
+label = "Andel/grad av garantipension födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bgarp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "bgarp38"
+value = "38"
+label = "38"
 
 # axis=ordinal agreement=0.85 members=12  Försörjningstöd tillfälligt boende
 [[variable_group]]
@@ -10087,6 +10694,21 @@ variable = "tog-emot-bestallningar-via-webbplats-eller-app-fran-kunder-3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=0.85 members=2  Använt samarbetsytor för att dela dokument med elever VT 202
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f22cvt"
+label = "Använt samarbetsytor för att dela dokument med elever VT 202"
+axis = "numeric"
+[[variable_group.members]]
+variable = "f22cvt20"
+value = "20"
+label = "20"
+[[variable_group.members]]
+variable = "f22cvt21"
+value = "21"
+label = "21"
+
 # axis=numeric agreement=0.85 members=3  Specifikation av obligationslån emitterade i utlandet
 [[variable_group]]
 register = "scb/kts"
@@ -10105,6 +10727,21 @@ label = "3"
 variable = "specifikation-av-obligationslan-emitterade-i-utlandet-4"
 value = "4"
 label = "4"
+
+# axis=numeric agreement=0.85 members=2  Använt digitalt material som lärarna tar fram själva VT 202
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f22bvt"
+label = "Använt digitalt material som lärarna tar fram själva VT 202"
+axis = "numeric"
+[[variable_group.members]]
+variable = "f22bvt20"
+value = "20"
+label = "20"
+[[variable_group.members]]
+variable = "f22bvt21"
+value = "21"
+label = "21"
 
 # axis=numeric agreement=0.85 members=3  Specifikation av obligationslån emitterade i Sverige
 [[variable_group]]
@@ -10125,21 +10762,6 @@ variable = "specifikation-av-obligationslan-emitterade-i-sverige-4"
 value = "4"
 label = "4"
 
-# axis=numeric agreement=0.85 members=2  Använt samarbetsytor för att dela dokument med elever VT 202
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f22cvt"
-label = "Använt samarbetsytor för att dela dokument med elever VT 202"
-axis = "numeric"
-[[variable_group.members]]
-variable = "f22cvt20"
-value = "20"
-label = "20"
-[[variable_group.members]]
-variable = "f22cvt21"
-value = "21"
-label = "21"
-
 # axis=ordinal agreement=0.84 members=2  Företaget övervakar och kvantifierar effekten av de it-system eller it-lösningar som används för att minska
 [[variable_group]]
 register = "scb/it-anvandning"
@@ -10154,6 +10776,89 @@ label = "1"
 variable = "env-ictim2"
 value = "2"
 label = "2"
+
+# axis=numeric agreement=0.84 members=19  SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare
+[[variable_group]]
+register = "scb/arlig-energistatistik"
+key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-"
+label = "SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare"
+axis = "numeric"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-01"
+value = "01"
+label = "1"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-05"
+value = "05"
+label = "5"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-35"
+value = "35"
+label = "35"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-36"
+value = "36"
+label = "36"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-41"
+value = "41"
+label = "41"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-45"
+value = "45"
+label = "45"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-46"
+value = "46"
+label = "46"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-49"
+value = "49"
+label = "49"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-53"
+value = "53"
+label = "53"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-55"
+value = "55"
+label = "55"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-64"
+value = "64"
+label = "64"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-68"
+value = "68"
+label = "68"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-69"
+value = "69"
+label = "69"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-72"
+value = "72"
+label = "72"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-75"
+value = "75"
+label = "75"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-84"
+value = "84"
+label = "84"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-90"
+value = "90"
+label = "90"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-94"
+value = "94"
+label = "94"
 
 # axis=numeric agreement=0.84 members=3  NgasT8_Naturgas Nät_Apparater för övriga större förbrukare_
 [[variable_group]]
@@ -10174,21 +10879,6 @@ variable = "ngast8-naturgas-nat-apparater-for-ovriga-storre-forbrukare-4"
 value = "4"
 label = "4"
 
-# axis=numeric agreement=0.84 members=2  Använt digitalt material som lärarna tar fram själva VT 202
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f22bvt"
-label = "Använt digitalt material som lärarna tar fram själva VT 202"
-axis = "numeric"
-[[variable_group.members]]
-variable = "f22bvt20"
-value = "20"
-label = "20"
-[[variable_group.members]]
-variable = "f22bvt21"
-value = "21"
-label = "21"
-
 # axis=numeric agreement=0.84 members=2  Underlag för efterlevandepensionsavgift
 [[variable_group]]
 register = "scb/taxeringsutfallet"
@@ -10203,6 +10893,51 @@ label = "2"
 variable = "ulageftpensavg170"
 value = "170"
 label = "170"
+
+# axis=numeric agreement=0.83 members=2  Inkomstpensionstillägg född 193
+[[variable_group]]
+register = "scb/fasit"
+key = "pipt"
+label = "Inkomstpensionstillägg född 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "pipt37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "pipt38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.83 members=2  Inkomstpensionstillägg född 193
+[[variable_group]]
+register = "scb/iot"
+key = "pipt"
+label = "Inkomstpensionstillägg född 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "pipt37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "pipt38"
+value = "38"
+label = "38"
+
+# axis=ordinal agreement=0.83 members=2  NgasT2_Naturgas Handel_Använd energivara_Eldningsolja nr
+[[variable_group]]
+register = "scb/arlig-energistatistik"
+key = "ngast2-naturgas-handel-anvand-energivara-eldningsolja-nr-"
+label = "NgasT2_Naturgas Handel_Använd energivara_Eldningsolja nr"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "ngast2-naturgas-handel-anvand-energivara-eldningsolja-nr-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "ngast2-naturgas-handel-anvand-energivara-eldningsolja-nr-2"
+value = "2"
+label = "2"
 
 # axis=ordinal agreement=0.83 members=2  Taxeringsvärde hyreshus/lokaler
 [[variable_group]]
@@ -10394,6 +11129,37 @@ variable = "langfristig-placering-i-obligationer-och-andra-vardepapper-7"
 value = "7"
 label = "7"
 
+# axis=numeric agreement=0.81 members=6  Underlag för allmän löneavgift
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "ulagallmloneavg"
+label = "Underlag för allmän löneavgift"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ulagallmloneavg1"
+value = "001"
+label = "1"
+[[variable_group.members]]
+variable = "ulagallmloneavg2"
+value = "002"
+label = "2"
+[[variable_group.members]]
+variable = "ulagallmloneavg307"
+value = "307"
+label = "307"
+[[variable_group.members]]
+variable = "ulagallmloneavg313"
+value = "313"
+label = "313"
+[[variable_group.members]]
+variable = "ulagallmloneavg325"
+value = "325"
+label = "325"
+[[variable_group.members]]
+variable = "ulagallmloneavg440"
+value = "440"
+label = "440"
+
 # axis=numeric agreement=0.81 members=6  Kortfristiga placeringar i obligationer och andra värdepapper, utgivna av
 [[variable_group]]
 register = "scb/kts"
@@ -10562,6 +11328,44 @@ variable = "sokyngstavslut12"
 value = "12"
 label = "12"
 
+# axis=numeric agreement=0.81 members=2  SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus
+[[variable_group]]
+register = "scb/arlig-energistatistik"
+key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-"
+label = "SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus"
+axis = "numeric"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-3"
+value = "3"
+label = "3"
+
+# axis=numeric agreement=0.80 members=4  Underlag för arbetsmarknadsavgift
+[[variable_group]]
+register = "scb/taxeringsutfallet"
+key = "ulagarbmarknavg"
+label = "Underlag för arbetsmarknadsavgift"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ulagarbmarknavg1"
+value = "001"
+label = "1"
+[[variable_group.members]]
+variable = "ulagarbmarknavg2"
+value = "002"
+label = "2"
+[[variable_group.members]]
+variable = "ulagarbmarknavg116"
+value = "116"
+label = "116"
+[[variable_group.members]]
+variable = "ulagarbmarknavg191"
+value = "191"
+label = "191"
+
 # axis=ordinal agreement=0.80 members=12  Introduktionsersättning
 [[variable_group]]
 register = "sos/ekb"
@@ -10632,6 +11436,81 @@ variable = "foretaget-upplevde-sakerhetsincident-som-ledde-till-3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=0.80 members=2  Tilläggspension, födda 193
+[[variable_group]]
+register = "scb/fasit"
+key = "ptilp"
+label = "Tilläggspension, födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ptilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "ptilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.80 members=2  Tilläggspension, födda 193
+[[variable_group]]
+register = "scb/frida"
+key = "ptilp"
+label = "Tilläggspension, födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ptilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "ptilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.80 members=2  Tilläggspension, födda 193
+[[variable_group]]
+register = "scb/hek"
+key = "ptilp"
+label = "Tilläggspension, födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ptilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "ptilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.80 members=2  Tilläggspension, födda 193
+[[variable_group]]
+register = "scb/iot"
+key = "ptilp"
+label = "Tilläggspension, födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ptilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "ptilp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.80 members=2  Tilläggspension, födda 193
+[[variable_group]]
+register = "scb/linda"
+key = "ptilp"
+label = "Tilläggspension, födda 193"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ptilp37"
+value = "37"
+label = "37"
+[[variable_group.members]]
+variable = "ptilp38"
+value = "38"
+label = "38"
+
 # axis=ordinal agreement=0.80 members=12  Utbetalning finns för livsföring i övrigt, kategorin
 [[variable_group]]
 register = "sos/ekb"
@@ -10687,7 +11566,7 @@ variable = "annatind12"
 value = "12"
 label = "12"
 
-# axis=numeric agreement=0.80 members=2  Energi, elbyte under perioden 1966-89
+# axis=numeric agreement=0.79 members=2  Energi, elbyte under perioden 1966-89
 [[variable_group]]
 register = "scb/ftr"
 key = "eneelbytt"
@@ -10702,88 +11581,80 @@ variable = "eneelbytt91"
 value = "91"
 label = "91"
 
-# axis=numeric agreement=0.79 members=19  SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare
+# axis=numeric agreement=0.79 members=2  Garantipension, födda 193
 [[variable_group]]
-register = "scb/arlig-energistatistik"
-key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-"
-label = "SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare"
+register = "scb/fasit"
+key = "pgarp"
+label = "Garantipension, födda 193"
 axis = "numeric"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-01"
-value = "01"
-label = "1"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-05"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-35"
-value = "35"
-label = "35"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-36"
-value = "36"
-label = "36"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-37"
+variable = "pgarp37"
 value = "37"
 label = "37"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-41"
-value = "41"
-label = "41"
+variable = "pgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.79 members=2  Garantipension, födda 193
+[[variable_group]]
+register = "scb/frida"
+key = "pgarp"
+label = "Garantipension, födda 193"
+axis = "numeric"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-45"
-value = "45"
-label = "45"
+variable = "pgarp37"
+value = "37"
+label = "37"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-46"
-value = "46"
-label = "46"
+variable = "pgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.79 members=2  Garantipension, födda 193
+[[variable_group]]
+register = "scb/hek"
+key = "pgarp"
+label = "Garantipension, födda 193"
+axis = "numeric"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-49"
-value = "49"
-label = "49"
+variable = "pgarp37"
+value = "37"
+label = "37"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-53"
-value = "53"
-label = "53"
+variable = "pgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.79 members=2  Garantipension, födda 193
+[[variable_group]]
+register = "scb/iot"
+key = "pgarp"
+label = "Garantipension, födda 193"
+axis = "numeric"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-55"
-value = "55"
-label = "55"
+variable = "pgarp37"
+value = "37"
+label = "37"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-64"
-value = "64"
-label = "64"
+variable = "pgarp38"
+value = "38"
+label = "38"
+
+# axis=numeric agreement=0.79 members=2  Garantipension, födda 193
+[[variable_group]]
+register = "scb/linda"
+key = "pgarp"
+label = "Garantipension, födda 193"
+axis = "numeric"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-68"
-value = "68"
-label = "68"
+variable = "pgarp37"
+value = "37"
+label = "37"
 [[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-69"
-value = "69"
-label = "69"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-72"
-value = "72"
-label = "72"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-75"
-value = "75"
-label = "75"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-84"
-value = "84"
-label = "84"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-90"
-value = "90"
-label = "90"
-[[variable_group.members]]
-variable = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-94"
-value = "94"
-label = "94"
+variable = "pgarp38"
+value = "38"
+label = "38"
 
 # axis=ordinal agreement=0.79 members=2  Antal dagar med utvecklingsersättning
 [[variable_group]]
@@ -10885,28 +11756,65 @@ variable = "b4f2"
 value = "2"
 label = "2"
 
-# axis=numeric agreement=0.78 members=4  Underlag för arbetsmarknadsavgift
+# axis=ordinal agreement=0.77 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
 [[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagarbmarknavg"
-label = "Underlag för arbetsmarknadsavgift"
-axis = "numeric"
+register = "scb/fasit"
+key = "aelevp"
+label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "ulagarbmarknavg1"
-value = "001"
+variable = "aelevp1"
+value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "ulagarbmarknavg2"
-value = "002"
+variable = "aelevp2"
+value = "2"
 label = "2"
+
+# axis=ordinal agreement=0.77 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
+[[variable_group]]
+register = "scb/hek"
+key = "aelevp"
+label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "ulagarbmarknavg116"
-value = "116"
-label = "116"
+variable = "aelevp1"
+value = "1"
+label = "1"
 [[variable_group.members]]
-variable = "ulagarbmarknavg191"
-value = "191"
-label = "191"
+variable = "aelevp2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.77 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
+[[variable_group]]
+register = "scb/iot"
+key = "aelevp"
+label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aelevp1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aelevp2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.77 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
+[[variable_group]]
+register = "scb/linda"
+key = "aelevp"
+label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aelevp1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aelevp2"
+value = "2"
+label = "2"
 
 # axis=ordinal agreement=0.77 members=12  Avslutskod hushållet
 [[variable_group]]
@@ -10962,37 +11870,6 @@ label = "11"
 variable = "avsluthh12"
 value = "12"
 label = "12"
-
-# axis=numeric agreement=0.77 members=6  Underlag för allmän löneavgift
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagallmloneavg"
-label = "Underlag för allmän löneavgift"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ulagallmloneavg1"
-value = "001"
-label = "1"
-[[variable_group.members]]
-variable = "ulagallmloneavg2"
-value = "002"
-label = "2"
-[[variable_group.members]]
-variable = "ulagallmloneavg307"
-value = "307"
-label = "307"
-[[variable_group.members]]
-variable = "ulagallmloneavg313"
-value = "313"
-label = "313"
-[[variable_group.members]]
-variable = "ulagallmloneavg325"
-value = "325"
-label = "325"
-[[variable_group.members]]
-variable = "ulagallmloneavg440"
-value = "440"
-label = "440"
 
 # axis=ordinal agreement=0.77 members=3  Antalet sjukdagar för up som har besvär pga
 [[variable_group]]
@@ -11405,6 +12282,21 @@ variable = "sokins03-12"
 value = "12"
 label = "12"
 
+# axis=numeric agreement=0.76 members=2  Underlag för fastighetsskatt för tomt/
+[[variable_group]]
+register = "scb/fasit"
+key = "afsk"
+label = "Underlag för fastighetsskatt för tomt/"
+axis = "numeric"
+[[variable_group.members]]
+variable = "afsk1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "afsk04"
+value = "4"
+label = "4"
+
 # axis=numeric agreement=0.76 members=3  NgasT5_Naturgas Nät_Lägenheter med Naturgas_Flerbostadshus
 [[variable_group]]
 register = "scb/arlig-energistatistik"
@@ -11440,6 +12332,25 @@ value = "3"
 label = "3"
 [[variable_group.members]]
 variable = "ngast5-naturgas-nat-lagenheter-med-stadsgas-flerbostadshus-4"
+value = "4"
+label = "4"
+
+# axis=numeric agreement=0.76 members=3  NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus
+[[variable_group]]
+register = "scb/arlig-energistatistik"
+key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-"
+label = "NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-4"
 value = "4"
 label = "4"
 
@@ -11498,20 +12409,125 @@ variable = "fstodbelopp12"
 value = "12"
 label = "12"
 
-# axis=numeric agreement=0.75 members=2  Underlag för fastighetsskatt för tomt/
+# axis=ordinal agreement=0.75 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
 [[variable_group]]
 register = "scb/fasit"
-key = "afsk"
-label = "Underlag för fastighetsskatt för tomt/"
-axis = "numeric"
+key = "asjufa"
+label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "afsk1"
+variable = "asjufa1"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "afsk04"
-value = "4"
-label = "4"
+variable = "asjufa2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.75 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
+[[variable_group]]
+register = "scb/hek"
+key = "asjufa"
+label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "asjufa1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "asjufa2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.75 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
+[[variable_group]]
+register = "scb/iot"
+key = "asjufa"
+label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "asjufa1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "asjufa2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.75 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
+[[variable_group]]
+register = "scb/linda"
+key = "asjufa"
+label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "asjufa1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "asjufa2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.74 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
+[[variable_group]]
+register = "scb/fasit"
+key = "aarma"
+label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarma1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarma2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.74 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
+[[variable_group]]
+register = "scb/hek"
+key = "aarma"
+label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarma1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarma2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.74 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
+[[variable_group]]
+register = "scb/iot"
+key = "aarma"
+label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarma1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarma2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.74 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
+[[variable_group]]
+register = "scb/linda"
+key = "aarma"
+label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarma1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarma2"
+value = "2"
+label = "2"
 
 # axis=numeric agreement=0.74 members=2  Använt digitala läromedel VT 202
 [[variable_group]]
@@ -11558,6 +12574,21 @@ variable = "f22evt21"
 value = "21"
 label = "21"
 
+# axis=numeric agreement=0.74 members=2  Antal tjurar
+[[variable_group]]
+register = "scb/lbr"
+key = "tjur"
+label = "Antal tjurar"
+axis = "numeric"
+[[variable_group.members]]
+variable = "tjur2"
+value = "02"
+label = "2"
+[[variable_group.members]]
+variable = "tjur12"
+value = "12"
+label = "12"
+
 # axis=numeric agreement=0.74 members=5  Tillgångsderivat utfärdat av svenska motparter exkl. banker
 [[variable_group]]
 register = "scb/kts"
@@ -11585,35 +12616,140 @@ variable = "tillgangsderivat-utfardat-av-svenska-motparter-exkl-banker-6"
 value = "6"
 label = "6"
 
-# axis=numeric agreement=0.74 members=2  Andel/grad inkomstpensionstillägg född 193
+# axis=numeric agreement=0.74 members=2  Rutiner för att identifiera och minska miljöpåverkan genomförda
+[[variable_group]]
+register = "scb/innovation-foretag"
+key = "rutiner-for-att-identifiera-och-minska-miljopaverkan-"
+label = "Rutiner för att identifiera och minska miljöpåverkan genomförda"
+axis = "numeric"
+[[variable_group.members]]
+variable = "rutiner-for-att-identifiera-och-minska-miljopaverkan-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "rutiner-for-att-identifiera-och-minska-miljopaverkan-3"
+value = "3"
+label = "3"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av allmän löneavgift, födda
 [[variable_group]]
 register = "scb/fasit"
-key = "bpipt"
-label = "Andel/grad inkomstpensionstillägg född 193"
-axis = "numeric"
+key = "aalona"
+label = "Underlag för beräkning av allmän löneavgift, födda"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "bpipt37"
-value = "37"
-label = "37"
+variable = "aalona1"
+value = "1"
+label = "1"
 [[variable_group.members]]
-variable = "bpipt38"
-value = "38"
-label = "38"
+variable = "aalona2"
+value = "2"
+label = "2"
 
-# axis=numeric agreement=0.74 members=2  Andel/grad inkomstpensionstillägg född 193
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av arbetsskadeavgift, födda
+[[variable_group]]
+register = "scb/fasit"
+key = "aarbsk"
+label = "Underlag för beräkning av arbetsskadeavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarbsk1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarbsk2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av allmän löneavgift, födda
+[[variable_group]]
+register = "scb/hek"
+key = "aalona"
+label = "Underlag för beräkning av allmän löneavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aalona1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aalona2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av arbetsskadeavgift, födda
+[[variable_group]]
+register = "scb/hek"
+key = "aarbsk"
+label = "Underlag för beräkning av arbetsskadeavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarbsk1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarbsk2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av allmän löneavgift, födda
 [[variable_group]]
 register = "scb/iot"
-key = "bpipt"
-label = "Andel/grad inkomstpensionstillägg född 193"
-axis = "numeric"
+key = "aalona"
+label = "Underlag för beräkning av allmän löneavgift, födda"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "bpipt37"
-value = "37"
-label = "37"
+variable = "aalona1"
+value = "1"
+label = "1"
 [[variable_group.members]]
-variable = "bpipt38"
-value = "38"
-label = "38"
+variable = "aalona2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av arbetsskadeavgift, födda
+[[variable_group]]
+register = "scb/iot"
+key = "aarbsk"
+label = "Underlag för beräkning av arbetsskadeavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarbsk1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarbsk2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av allmän löneavgift, födda
+[[variable_group]]
+register = "scb/linda"
+key = "aalona"
+label = "Underlag för beräkning av allmän löneavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aalona1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aalona2"
+value = "2"
+label = "2"
+
+# axis=ordinal agreement=0.73 members=2  Underlag för beräkning av arbetsskadeavgift, födda
+[[variable_group]]
+register = "scb/linda"
+key = "aarbsk"
+label = "Underlag för beräkning av arbetsskadeavgift, födda"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "aarbsk1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "aarbsk2"
+value = "2"
+label = "2"
 
 # axis=numeric agreement=0.73 members=11  Specifikation av placeringar i kommunägda företag, bokfört värde
 [[variable_group]]
@@ -11878,80 +13014,20 @@ variable = "utgifter-for-egen-fou-efter-finansieringskalla-offentliga-3"
 value = "3"
 label = "3"
 
-# axis=numeric agreement=0.72 members=2  Andel/grad av tilläggspension födda 193
+# axis=ordinal agreement=0.72 members=2  Underlag för sjukförsäkringsavgift på inkomst
 [[variable_group]]
-register = "scb/fasit"
-key = "btilp"
-label = "Andel/grad av tilläggspension födda 193"
-axis = "numeric"
+register = "scb/taxeringsutfallet"
+key = "ulagsfavg"
+label = "Underlag för sjukförsäkringsavgift på inkomst"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "btilp37"
-value = "37"
-label = "37"
+variable = "ulagsfavg1"
+value = "1"
+label = "1"
 [[variable_group.members]]
-variable = "btilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av tilläggspension födda 193
-[[variable_group]]
-register = "scb/frida"
-key = "btilp"
-label = "Andel/grad av tilläggspension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "btilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "btilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av tilläggspension födda 193
-[[variable_group]]
-register = "scb/hek"
-key = "btilp"
-label = "Andel/grad av tilläggspension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "btilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "btilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av tilläggspension födda 193
-[[variable_group]]
-register = "scb/iot"
-key = "btilp"
-label = "Andel/grad av tilläggspension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "btilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "btilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av tilläggspension födda 193
-[[variable_group]]
-register = "scb/linda"
-key = "btilp"
-label = "Andel/grad av tilläggspension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "btilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "btilp38"
-value = "38"
-label = "38"
+variable = "ulagsfavg2"
+value = "2"
+label = "2"
 
 # axis=ordinal agreement=0.72 members=6  Negativt särbehandling -
 [[variable_group]]
@@ -11983,81 +13059,6 @@ label = "5"
 variable = "f29-6"
 value = "6"
 label = "6"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av garantipension födda 193
-[[variable_group]]
-register = "scb/fasit"
-key = "bgarp"
-label = "Andel/grad av garantipension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "bgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av garantipension födda 193
-[[variable_group]]
-register = "scb/frida"
-key = "bgarp"
-label = "Andel/grad av garantipension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "bgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av garantipension födda 193
-[[variable_group]]
-register = "scb/hek"
-key = "bgarp"
-label = "Andel/grad av garantipension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "bgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av garantipension födda 193
-[[variable_group]]
-register = "scb/iot"
-key = "bgarp"
-label = "Andel/grad av garantipension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "bgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.72 members=2  Andel/grad av garantipension födda 193
-[[variable_group]]
-register = "scb/linda"
-key = "bgarp"
-label = "Andel/grad av garantipension födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "bgarp38"
-value = "38"
-label = "38"
 
 # axis=numeric agreement=0.71 members=2  Annan kort- och långfristig upplåning (ej koncern), därav utlandet
 [[variable_group]]
@@ -12175,21 +13176,6 @@ label = "11"
 variable = "sokins02-12"
 value = "12"
 label = "12"
-
-# axis=ordinal agreement=0.71 members=2  Underlag för sjukförsäkringsavgift på inkomst
-[[variable_group]]
-register = "scb/taxeringsutfallet"
-key = "ulagsfavg"
-label = "Underlag för sjukförsäkringsavgift på inkomst"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "ulagsfavg1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "ulagsfavg2"
-value = "2"
-label = "2"
 
 # axis=numeric agreement=0.70 members=18  Rörelsekostnader för egen FoU efter finansieringskälla
 [[variable_group]]
@@ -12371,81 +13357,6 @@ variable = "ng5"
 value = "5"
 label = "5"
 
-# axis=numeric agreement=0.70 members=2  Antal tjurar
-[[variable_group]]
-register = "scb/lbr"
-key = "tjur"
-label = "Antal tjurar"
-axis = "numeric"
-[[variable_group.members]]
-variable = "tjur2"
-value = "02"
-label = "2"
-[[variable_group.members]]
-variable = "tjur12"
-value = "12"
-label = "12"
-
-# axis=ordinal agreement=0.70 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
-[[variable_group]]
-register = "scb/fasit"
-key = "aelevp"
-label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aelevp1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aelevp2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.70 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
-[[variable_group]]
-register = "scb/hek"
-key = "aelevp"
-label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aelevp1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aelevp2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.70 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
-[[variable_group]]
-register = "scb/iot"
-key = "aelevp"
-label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aelevp1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aelevp2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.70 members=2  Underlag för beräkning av efterlevandepensionsavgift, födda
-[[variable_group]]
-register = "scb/linda"
-key = "aelevp"
-label = "Underlag för beräkning av efterlevandepensionsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aelevp1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aelevp2"
-value = "2"
-label = "2"
-
 # axis=ordinal agreement=0.70 members=4  Ansökan till forskarutbildningen
 [[variable_group]]
 register = "scb/utlandska-doktorander"
@@ -12539,21 +13450,6 @@ variable = "f4-02"
 value = "2"
 label = "2"
 
-# axis=numeric agreement=0.69 members=2  Rutiner för att identifiera och minska miljöpåverkan genomförda
-[[variable_group]]
-register = "scb/innovation-foretag"
-key = "rutiner-for-att-identifiera-och-minska-miljopaverkan-"
-label = "Rutiner för att identifiera och minska miljöpåverkan genomförda"
-axis = "numeric"
-[[variable_group.members]]
-variable = "rutiner-for-att-identifiera-och-minska-miljopaverkan-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "rutiner-for-att-identifiera-och-minska-miljopaverkan-3"
-value = "3"
-label = "3"
-
 # axis=numeric agreement=0.69 members=4  Utgifter för egen FoU efter finansieringskälla
 [[variable_group]]
 register = "scb/fou"
@@ -12634,6 +13530,48 @@ variable = "grp1niv3"
 value = "3"
 label = "3"
 
+# axis=numeric agreement=0.69 members=5  Antal barn
+[[variable_group]]
+register = "scb/rpu"
+key = "bbrn"
+label = "Antal barn"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bbrn3"
+value = "003"
+label = "3"
+[[variable_group.members]]
+variable = "bbrn15"
+value = "015"
+label = "15"
+[[variable_group.members]]
+variable = "bbrn17"
+value = "017"
+label = "17"
+[[variable_group.members]]
+variable = "bbrn167"
+value = "167"
+label = "167"
+[[variable_group.members]]
+variable = "bbrn410"
+value = "410"
+label = "410"
+
+# axis=numeric agreement=0.69 members=2  Antal barn
+[[variable_group]]
+register = "scb/ekonomiskt-bistand"
+key = "barn"
+label = "Antal barn"
+axis = "numeric"
+[[variable_group.members]]
+variable = "barn15"
+value = "0015"
+label = "15"
+[[variable_group.members]]
+variable = "barn1617"
+value = "1617"
+label = "1617"
+
 # axis=numeric agreement=0.69 members=6  Specifikation av placeringar i svenska börsnoterade aktier
 [[variable_group]]
 register = "scb/kts"
@@ -12665,226 +13603,7 @@ variable = "specifikation-av-placeringar-i-svenska-borsnoterade-aktier-7"
 value = "7"
 label = "7"
 
-# axis=ordinal agreement=0.68 members=5  Näringsgren i huvudsyssla
-[[variable_group]]
-register = "scb/aku"
-key = "husni2002-"
-label = "Näringsgren i huvudsyssla"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "husni2002-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "husni2002-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "husni2002-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "husni2002-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "husni2002-5"
-value = "5"
-label = "5"
-
-# axis=ordinal agreement=0.68 members=5  Obligatoriskt samarbete genom
-[[variable_group]]
-register = "scb/distansutbildning"
-key = "f13-"
-label = "Obligatoriskt samarbete genom"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f13-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f13-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f13-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f13-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f13-5"
-value = "5"
-label = "5"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
-[[variable_group]]
-register = "scb/fasit"
-key = "asjufa"
-label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "asjufa1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "asjufa2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
-[[variable_group]]
-register = "scb/hek"
-key = "asjufa"
-label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "asjufa1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "asjufa2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
-[[variable_group]]
-register = "scb/iot"
-key = "asjufa"
-label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "asjufa1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "asjufa2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av sjukförsäkringsavgift, födda
-[[variable_group]]
-register = "scb/linda"
-key = "asjufa"
-label = "Underlag för beräkning av sjukförsäkringsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "asjufa1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "asjufa2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Boende - Hyra/avgift per månad
-[[variable_group]]
-register = "scb/hib"
-key = "hyraja"
-label = "Boende - Hyra/avgift per månad"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "hyraja0"
-value = "0"
-label = "0"
-[[variable_group.members]]
-variable = "hyraja1"
-value = "1"
-label = "1"
-
-# axis=numeric agreement=0.67 members=2  Inkomstpensionstillägg född 193
-[[variable_group]]
-register = "scb/fasit"
-key = "pipt"
-label = "Inkomstpensionstillägg född 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pipt37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pipt38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.67 members=2  Inkomstpensionstillägg född 193
-[[variable_group]]
-register = "scb/iot"
-key = "pipt"
-label = "Inkomstpensionstillägg född 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pipt37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pipt38"
-value = "38"
-label = "38"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
-[[variable_group]]
-register = "scb/fasit"
-key = "aarma"
-label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarma1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarma2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
-[[variable_group]]
-register = "scb/hek"
-key = "aarma"
-label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarma1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarma2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
-[[variable_group]]
-register = "scb/iot"
-key = "aarma"
-label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarma1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarma2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.67 members=2  Underlag för beräkning av arbetsmarknadsavgift, födda
-[[variable_group]]
-register = "scb/linda"
-key = "aarma"
-label = "Underlag för beräkning av arbetsmarknadsavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarma1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarma2"
-value = "2"
-label = "2"
-
-# axis=numeric agreement=0.67 members=31  Antal barn
+# axis=numeric agreement=0.68 members=31  Antal barn
 [[variable_group]]
 register = "sos/ekb"
 key = "antbarn"
@@ -13015,6 +13734,75 @@ variable = "antbarn1617"
 value = "1617"
 label = "1617"
 
+# axis=ordinal agreement=0.68 members=5  Näringsgren i huvudsyssla
+[[variable_group]]
+register = "scb/aku"
+key = "husni2002-"
+label = "Näringsgren i huvudsyssla"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "husni2002-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "husni2002-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "husni2002-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "husni2002-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "husni2002-5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=0.68 members=5  Obligatoriskt samarbete genom
+[[variable_group]]
+register = "scb/distansutbildning"
+key = "f13-"
+label = "Obligatoriskt samarbete genom"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "f13-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f13-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "f13-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f13-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f13-5"
+value = "5"
+label = "5"
+
+# axis=ordinal agreement=0.67 members=2  Boende - Hyra/avgift per månad
+[[variable_group]]
+register = "scb/hib"
+key = "hyraja"
+label = "Boende - Hyra/avgift per månad"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "hyraja0"
+value = "0"
+label = "0"
+[[variable_group.members]]
+variable = "hyraja1"
+value = "1"
+label = "1"
+
 # axis=ordinal agreement=0.67 members=3  Självskattad hälsa
 [[variable_group]]
 register = "scb/aku"
@@ -13033,96 +13821,6 @@ label = "2"
 variable = "gali3"
 value = "3"
 label = "3"
-
-# axis=numeric agreement=0.67 members=2  Tilläggspension, födda 193
-[[variable_group]]
-register = "scb/fasit"
-key = "ptilp"
-label = "Tilläggspension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ptilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "ptilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.67 members=2  Tilläggspension, födda 193
-[[variable_group]]
-register = "scb/frida"
-key = "ptilp"
-label = "Tilläggspension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ptilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "ptilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.67 members=2  Tilläggspension, födda 193
-[[variable_group]]
-register = "scb/hek"
-key = "ptilp"
-label = "Tilläggspension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ptilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "ptilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.67 members=2  Tilläggspension, födda 193
-[[variable_group]]
-register = "scb/iot"
-key = "ptilp"
-label = "Tilläggspension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ptilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "ptilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.67 members=2  Tilläggspension, födda 193
-[[variable_group]]
-register = "scb/linda"
-key = "ptilp"
-label = "Tilläggspension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ptilp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "ptilp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.67 members=2  Yrke, nuvarande arbete (SSYK
-[[variable_group]]
-register = "scb/ulf"
-key = "syyrke"
-label = "Yrke, nuvarande arbete (SSYK"
-axis = "numeric"
-[[variable_group.members]]
-variable = "syyrke12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "syyrke96"
-value = "96"
-label = "96"
 
 # axis=ordinal agreement=0.67 members=2  Talkunskaper
 [[variable_group]]
@@ -13228,201 +13926,6 @@ variable = "lakemedel-sjukvardsartiklar-och-medicinskt-material-darav-3"
 value = "3"
 label = "3"
 
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av allmän löneavgift, födda
-[[variable_group]]
-register = "scb/fasit"
-key = "aalona"
-label = "Underlag för beräkning av allmän löneavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aalona1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aalona2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av arbetsskadeavgift, födda
-[[variable_group]]
-register = "scb/fasit"
-key = "aarbsk"
-label = "Underlag för beräkning av arbetsskadeavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarbsk1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarbsk2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av allmän löneavgift, födda
-[[variable_group]]
-register = "scb/hek"
-key = "aalona"
-label = "Underlag för beräkning av allmän löneavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aalona1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aalona2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av arbetsskadeavgift, födda
-[[variable_group]]
-register = "scb/hek"
-key = "aarbsk"
-label = "Underlag för beräkning av arbetsskadeavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarbsk1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarbsk2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av allmän löneavgift, födda
-[[variable_group]]
-register = "scb/iot"
-key = "aalona"
-label = "Underlag för beräkning av allmän löneavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aalona1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aalona2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av arbetsskadeavgift, födda
-[[variable_group]]
-register = "scb/iot"
-key = "aarbsk"
-label = "Underlag för beräkning av arbetsskadeavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarbsk1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarbsk2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av allmän löneavgift, födda
-[[variable_group]]
-register = "scb/linda"
-key = "aalona"
-label = "Underlag för beräkning av allmän löneavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aalona1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aalona2"
-value = "2"
-label = "2"
-
-# axis=ordinal agreement=0.66 members=2  Underlag för beräkning av arbetsskadeavgift, födda
-[[variable_group]]
-register = "scb/linda"
-key = "aarbsk"
-label = "Underlag för beräkning av arbetsskadeavgift, födda"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "aarbsk1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "aarbsk2"
-value = "2"
-label = "2"
-
-# axis=numeric agreement=0.66 members=2  Garantipension, födda 193
-[[variable_group]]
-register = "scb/fasit"
-key = "pgarp"
-label = "Garantipension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.66 members=2  Garantipension, födda 193
-[[variable_group]]
-register = "scb/frida"
-key = "pgarp"
-label = "Garantipension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.66 members=2  Garantipension, födda 193
-[[variable_group]]
-register = "scb/hek"
-key = "pgarp"
-label = "Garantipension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.66 members=2  Garantipension, födda 193
-[[variable_group]]
-register = "scb/iot"
-key = "pgarp"
-label = "Garantipension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pgarp38"
-value = "38"
-label = "38"
-
-# axis=numeric agreement=0.66 members=2  Garantipension, födda 193
-[[variable_group]]
-register = "scb/linda"
-key = "pgarp"
-label = "Garantipension, födda 193"
-axis = "numeric"
-[[variable_group.members]]
-variable = "pgarp37"
-value = "37"
-label = "37"
-[[variable_group.members]]
-variable = "pgarp38"
-value = "38"
-label = "38"
-
 # axis=ordinal agreement=0.66 members=11  Brist på pengar - avstått
 [[variable_group]]
 register = "scb/hogskolestuderandes-levnadsvillkor"
@@ -13473,6 +13976,48 @@ label = "10"
 variable = "f26-11"
 value = "11"
 label = "11"
+
+# axis=numeric agreement=0.66 members=3  Underlag för fastighetsavgift
+[[variable_group]]
+register = "scb/fasit"
+key = "afa"
+label = "Underlag för fastighetsavgift"
+axis = "numeric"
+[[variable_group.members]]
+variable = "afa02"
+value = "002"
+label = "2"
+[[variable_group.members]]
+variable = "afa04"
+value = "004"
+label = "4"
+[[variable_group.members]]
+variable = "afa0375"
+value = "375"
+label = "375"
+
+# axis=numeric agreement=0.66 members=4  Återföring av uppskovsavdrag, t
+[[variable_group]]
+register = "scb/fasit"
+key = "kvruppat"
+label = "Återföring av uppskovsavdrag, t"
+axis = "numeric"
+[[variable_group.members]]
+variable = "kvruppat08"
+value = "08"
+label = "8"
+[[variable_group.members]]
+variable = "kvruppat09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "kvruppat11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "kvruppat12"
+value = "12"
+label = "12"
 
 # axis=ordinal agreement=0.65 members=5  Distansstudier -
 [[variable_group]]
@@ -13528,6 +14073,25 @@ variable = "bisni2002-5"
 value = "5"
 label = "5"
 
+# axis=numeric agreement=0.65 members=3  Antal barn
+[[variable_group]]
+register = "scb/tidsanvandning"
+key = "antalbarnunder"
+label = "Antal barn"
+axis = "numeric"
+[[variable_group.members]]
+variable = "antalbarnunder6"
+value = "06"
+label = "6"
+[[variable_group.members]]
+variable = "antalbarnunder18"
+value = "18"
+label = "18"
+[[variable_group.members]]
+variable = "antalbarnunder25"
+value = "25"
+label = "25"
+
 # axis=numeric agreement=0.64 members=2  Realisationsvinst
 [[variable_group]]
 register = "scb/iot"
@@ -13542,25 +14106,6 @@ label = "3"
 variable = "kvkufon4"
 value = "4"
 label = "4"
-
-# axis=numeric agreement=0.64 members=3  Underlag för fastighetsavgift
-[[variable_group]]
-register = "scb/fasit"
-key = "afa"
-label = "Underlag för fastighetsavgift"
-axis = "numeric"
-[[variable_group.members]]
-variable = "afa02"
-value = "002"
-label = "2"
-[[variable_group.members]]
-variable = "afa04"
-value = "004"
-label = "4"
-[[variable_group.members]]
-variable = "afa0375"
-value = "375"
-label = "375"
 
 # axis=ordinal agreement=0.64 members=12  Avslutskod
 [[variable_group]]
@@ -13632,6 +14177,40 @@ variable = "kfkufon4"
 value = "4"
 label = "4"
 
+# axis=numeric agreement=0.64 members=3  Antal timmar/mån
+[[variable_group]]
+register = "sos/lss"
+key = "tim"
+label = "Antal timmar/mån"
+axis = "numeric"
+[[variable_group.members]]
+variable = "tim2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "tim3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "tim5"
+value = "5"
+label = "5"
+
+# axis=numeric agreement=0.63 members=2  Underlag för fastighetsskatt med
+[[variable_group]]
+register = "scb/frida"
+key = "asma"
+label = "Underlag för fastighetsskatt med"
+axis = "numeric"
+[[variable_group.members]]
+variable = "asma0"
+value = "00"
+label = "0"
+[[variable_group.members]]
+variable = "asma15"
+value = "15"
+label = "15"
+
 # axis=ordinal agreement=0.63 members=6  Försörjning av universitets/högskolestudier -
 [[variable_group]]
 register = "scb/gyst"
@@ -13662,6 +14241,33 @@ label = "5"
 variable = "f22-06"
 value = "6"
 label = "6"
+
+# axis=numeric agreement=0.63 members=5  Underlag för fastighetsskatt med
+[[variable_group]]
+register = "scb/formogenhetsreg"
+key = "asma"
+label = "Underlag för fastighetsskatt med"
+axis = "numeric"
+[[variable_group.members]]
+variable = "asma0"
+value = "00"
+label = "0"
+[[variable_group.members]]
+variable = "asma1"
+value = "01"
+label = "1"
+[[variable_group.members]]
+variable = "asma05"
+value = "05"
+label = "5"
+[[variable_group.members]]
+variable = "asma15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "asma075"
+value = "75"
+label = "75"
 
 # axis=ordinal agreement=0.63 members=4  Kännedom om kraven för
 [[variable_group]]
@@ -13701,62 +14307,20 @@ variable = "gar-i-skola-barn-7"
 value = "7"
 label = "7"
 
-# axis=numeric agreement=0.62 members=2  Underlag för fastighetsskatt med
+# axis=numeric agreement=0.62 members=2  Antal kvigor
 [[variable_group]]
-register = "scb/fasit"
-key = "asma"
-label = "Underlag för fastighetsskatt med"
+register = "scb/lbr"
+key = "kvig"
+label = "Antal kvigor"
 axis = "numeric"
 [[variable_group.members]]
-variable = "asma1"
-value = "1"
-label = "1"
+variable = "kvig2"
+value = "02"
+label = "2"
 [[variable_group.members]]
-variable = "asma05"
-value = "5"
-label = "5"
-
-# axis=numeric agreement=0.62 members=2  Underlag för fastighetsskatt med
-[[variable_group]]
-register = "scb/frida"
-key = "asma"
-label = "Underlag för fastighetsskatt med"
-axis = "numeric"
-[[variable_group.members]]
-variable = "asma0"
-value = "00"
-label = "0"
-[[variable_group.members]]
-variable = "asma15"
-value = "15"
-label = "15"
-
-# axis=numeric agreement=0.62 members=5  Underlag för fastighetsskatt med
-[[variable_group]]
-register = "scb/formogenhetsreg"
-key = "asma"
-label = "Underlag för fastighetsskatt med"
-axis = "numeric"
-[[variable_group.members]]
-variable = "asma0"
-value = "00"
-label = "0"
-[[variable_group.members]]
-variable = "asma1"
-value = "01"
-label = "1"
-[[variable_group.members]]
-variable = "asma05"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "asma15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "asma075"
-value = "75"
-label = "75"
+variable = "kvig12"
+value = "12"
+label = "12"
 
 # axis=ordinal agreement=0.62 members=4  Diskriminering
 [[variable_group]]
@@ -13869,24 +14433,32 @@ variable = "f14-07"
 value = "7"
 label = "7"
 
-# axis=numeric agreement=0.61 members=3  Antal timmar/mån
+# axis=numeric agreement=0.61 members=5  Antal barn
 [[variable_group]]
-register = "sos/lss"
-key = "tim"
-label = "Antal timmar/mån"
+register = "scb/frida"
+key = "bbrn"
+label = "Antal barn"
 axis = "numeric"
 [[variable_group.members]]
-variable = "tim2"
-value = "2"
-label = "2"
+variable = "bbrn6"
+value = "006"
+label = "6"
 [[variable_group.members]]
-variable = "tim3"
-value = "3"
-label = "3"
+variable = "bbrn11"
+value = "011"
+label = "11"
 [[variable_group.members]]
-variable = "tim5"
-value = "5"
-label = "5"
+variable = "bbrn15"
+value = "015"
+label = "15"
+[[variable_group.members]]
+variable = "bbrn167"
+value = "167"
+label = "167"
+[[variable_group.members]]
+variable = "bbrn611"
+value = "611"
+label = "611"
 
 # axis=numeric agreement=0.61 members=5  Orsak till ointresse för högskolestudier -
 [[variable_group]]
@@ -14023,341 +14595,7 @@ variable = "insyngst07"
 value = "7"
 label = "7"
 
-# axis=ordinal agreement=0.61 members=4  Utbildningsbyte
-[[variable_group]]
-register = "scb/studieuppehall"
-key = "f23-"
-label = "Utbildningsbyte"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f23-01"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f23-02"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f23-03"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f23-04"
-value = "4"
-label = "4"
-
-# axis=numeric agreement=0.60 members=5  Antal barn
-[[variable_group]]
-register = "scb/rpu"
-key = "bbrn"
-label = "Antal barn"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bbrn3"
-value = "003"
-label = "3"
-[[variable_group.members]]
-variable = "bbrn15"
-value = "015"
-label = "15"
-[[variable_group.members]]
-variable = "bbrn17"
-value = "017"
-label = "17"
-[[variable_group.members]]
-variable = "bbrn167"
-value = "167"
-label = "167"
-[[variable_group.members]]
-variable = "bbrn410"
-value = "410"
-label = "410"
-
-# axis=numeric agreement=0.60 members=3  Underlag för fastighetsskatt med
-[[variable_group]]
-register = "scb/linda"
-key = "asma"
-label = "Underlag för fastighetsskatt med"
-axis = "numeric"
-[[variable_group.members]]
-variable = "asma15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "asma17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "asma075"
-value = "75"
-label = "75"
-
-# axis=ordinal agreement=0.60 members=6  Nöjdhet med lärplattformens
-[[variable_group]]
-register = "scb/distansutbildning"
-key = "f11-"
-label = "Nöjdhet med lärplattformens"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f11-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f11-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f11-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f11-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f11-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f11-6"
-value = "6"
-label = "6"
-
-# axis=ordinal agreement=0.60 members=8  Huvudsaklig verksamhet 2001 -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f15-1-"
-label = "Huvudsaklig verksamhet 2001 -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f15-1-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f15-1-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f15-1-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f15-1-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f15-1-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f15-1-6"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f15-1-7"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f15-1-8"
-value = "8"
-label = "8"
-
-# axis=ordinal agreement=0.60 members=8  Huvudsaklig verksamhet 2002 -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f15-2-"
-label = "Huvudsaklig verksamhet 2002 -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f15-2-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f15-2-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f15-2-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f15-2-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f15-2-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f15-2-6"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f15-2-7"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f15-2-8"
-value = "8"
-label = "8"
-
-# axis=ordinal agreement=0.60 members=8  Huvudsaklig verksamhet 2003 -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f15-3-"
-label = "Huvudsaklig verksamhet 2003 -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f15-3-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f15-3-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f15-3-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f15-3-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f15-3-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f15-3-6"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f15-3-7"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f15-3-8"
-value = "8"
-label = "8"
-
-# axis=ordinal agreement=0.60 members=8  Huvudsaklig verksamhet 2004 -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f15-4-"
-label = "Huvudsaklig verksamhet 2004 -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f15-4-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f15-4-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f15-4-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f15-4-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f15-4-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f15-4-6"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f15-4-7"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f15-4-8"
-value = "8"
-label = "8"
-
-# axis=ordinal agreement=0.60 members=8  Huvudsaklig verksamhet 2005 -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f15-5-"
-label = "Huvudsaklig verksamhet 2005 -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f15-5-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f15-5-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f15-5-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f15-5-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f15-5-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f15-5-6"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f15-5-7"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f15-5-8"
-value = "8"
-label = "8"
-
-# axis=ordinal agreement=0.60 members=8  Huvudsaklig verksamhet 2006 -
-[[variable_group]]
-register = "scb/utbildningsanalyser"
-key = "f15-6-"
-label = "Huvudsaklig verksamhet 2006 -"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "f15-6-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "f15-6-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "f15-6-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f15-6-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f15-6-5"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f15-6-6"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f15-6-7"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f15-6-8"
-value = "8"
-label = "8"
-
-# axis=numeric agreement=0.60 members=7  Underlag för fastighetsskatt med
+# axis=numeric agreement=0.61 members=7  Underlag för fastighetsskatt med
 [[variable_group]]
 register = "scb/formogenhetsreg"
 key = "ahy"
@@ -14392,37 +14630,30 @@ variable = "ahy065"
 value = "65"
 label = "65"
 
-# axis=numeric agreement=0.59 members=2  Antal barn
+# axis=ordinal agreement=0.61 members=4  Utbildningsbyte
 [[variable_group]]
-register = "scb/ekonomiskt-bistand"
-key = "barn"
-label = "Antal barn"
-axis = "numeric"
-[[variable_group.members]]
-variable = "barn15"
-value = "0015"
-label = "15"
-[[variable_group.members]]
-variable = "barn1617"
-value = "1617"
-label = "1617"
-
-# axis=ordinal agreement=0.59 members=2  Allergiska
-[[variable_group]]
-register = "scb/ulf"
-key = "allergiska-besvar-"
-label = "Allergiska"
+register = "scb/studieuppehall"
+key = "f23-"
+label = "Utbildningsbyte"
 axis = "ordinal"
 [[variable_group.members]]
-variable = "allergiska-besvar-1"
+variable = "f23-01"
 value = "1"
 label = "1"
 [[variable_group.members]]
-variable = "allergiska-besvar-2"
+variable = "f23-02"
 value = "2"
 label = "2"
+[[variable_group.members]]
+variable = "f23-03"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f23-04"
+value = "4"
+label = "4"
 
-# axis=numeric agreement=0.59 members=3  Underlag för fastighetsskatt med
+# axis=numeric agreement=0.60 members=3  Underlag för fastighetsskatt med
 [[variable_group]]
 register = "scb/frida"
 key = "ahy"
@@ -14441,20 +14672,78 @@ variable = "ahy12"
 value = "12"
 label = "12"
 
-# axis=numeric agreement=0.59 members=2  Antal kvigor
+# axis=ordinal agreement=0.60 members=6  Nöjdhet med lärplattformens
 [[variable_group]]
-register = "scb/lbr"
-key = "kvig"
-label = "Antal kvigor"
-axis = "numeric"
+register = "scb/distansutbildning"
+key = "f11-"
+label = "Nöjdhet med lärplattformens"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "kvig2"
-value = "02"
+variable = "f11-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f11-2"
+value = "2"
 label = "2"
 [[variable_group.members]]
-variable = "kvig12"
-value = "12"
-label = "12"
+variable = "f11-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f11-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f11-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f11-6"
+value = "6"
+label = "6"
+
+# axis=ordinal agreement=0.59 members=2  Allergiska
+[[variable_group]]
+register = "scb/ulf"
+key = "allergiska-besvar-"
+label = "Allergiska"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "allergiska-besvar-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "allergiska-besvar-2"
+value = "2"
+label = "2"
+
+# axis=numeric agreement=0.59 members=5  Underlag för fastighetsskatt
+[[variable_group]]
+register = "scb/hek"
+key = "asma"
+label = "Underlag för fastighetsskatt"
+axis = "numeric"
+[[variable_group.members]]
+variable = "asma0"
+value = "00"
+label = "0"
+[[variable_group.members]]
+variable = "asma1"
+value = "01"
+label = "1"
+[[variable_group.members]]
+variable = "asma05"
+value = "05"
+label = "5"
+[[variable_group.members]]
+variable = "asma15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "asma075"
+value = "75"
+label = "75"
 
 # axis=ordinal agreement=0.59 members=5  Samtal med någon vuxen -
 [[variable_group]]
@@ -14525,43 +14814,98 @@ variable = "kvot2"
 value = "2"
 label = "2"
 
-# axis=numeric agreement=0.59 members=3  NgasT7_Naturgas Nät_Ledningssystem Naturgas_
+# axis=numeric agreement=0.59 members=5  Underlag för fastighetsskatt
 [[variable_group]]
-register = "scb/arlig-energistatistik"
-key = "ngast7-naturgas-nat-ledningssystem-naturgas-"
-label = "NgasT7_Naturgas Nät_Ledningssystem Naturgas_"
+register = "scb/iot"
+key = "asma"
+label = "Underlag för fastighetsskatt"
 axis = "numeric"
 [[variable_group.members]]
-variable = "ngast7-naturgas-nat-ledningssystem-naturgas-2"
-value = "2"
-label = "2"
+variable = "asma1"
+value = "01"
+label = "1"
 [[variable_group.members]]
-variable = "ngast7-naturgas-nat-ledningssystem-naturgas-3"
-value = "3"
-label = "3"
+variable = "asma05"
+value = "05"
+label = "5"
 [[variable_group.members]]
-variable = "ngast7-naturgas-nat-ledningssystem-naturgas-4"
-value = "4"
-label = "4"
+variable = "asma15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "asma17"
+value = "17"
+label = "17"
+[[variable_group.members]]
+variable = "asma075"
+value = "75"
+label = "75"
 
-# axis=numeric agreement=0.59 members=3  NgasT7_Naturgas Nät_Ledningssystem Stadsgas_
+# axis=numeric agreement=0.59 members=4  Antal barn
 [[variable_group]]
-register = "scb/arlig-energistatistik"
-key = "ngast7-naturgas-nat-ledningssystem-stadsgas-"
-label = "NgasT7_Naturgas Nät_Ledningssystem Stadsgas_"
+register = "scb/fasit"
+key = "bbrn"
+label = "Antal barn"
 axis = "numeric"
 [[variable_group.members]]
-variable = "ngast7-naturgas-nat-ledningssystem-stadsgas-2"
-value = "2"
-label = "2"
+variable = "bbrn6"
+value = "006"
+label = "6"
 [[variable_group.members]]
-variable = "ngast7-naturgas-nat-ledningssystem-stadsgas-3"
-value = "3"
-label = "3"
+variable = "bbrn11"
+value = "011"
+label = "11"
 [[variable_group.members]]
-variable = "ngast7-naturgas-nat-ledningssystem-stadsgas-4"
-value = "4"
+variable = "bbrn15"
+value = "015"
+label = "15"
+[[variable_group.members]]
+variable = "bbrn611"
+value = "611"
+label = "611"
+
+# axis=numeric agreement=0.59 members=9  Underlag för fastighetsskatt
+[[variable_group]]
+register = "scb/iot"
+key = "ahy"
+label = "Underlag för fastighetsskatt"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ahy04"
+value = "04"
 label = "4"
+[[variable_group.members]]
+variable = "ahy05"
+value = "05"
+label = "5"
+[[variable_group.members]]
+variable = "ahy06"
+value = "06"
+label = "6"
+[[variable_group.members]]
+variable = "ahy12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "ahy13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "ahy15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "ahy025"
+value = "25"
+label = "25"
+[[variable_group.members]]
+variable = "ahy065"
+value = "65"
+label = "65"
+[[variable_group.members]]
+variable = "ahy075"
+value = "75"
+label = "75"
 
 # axis=ordinal agreement=0.58 members=3  Facklig tillhörighet
 [[variable_group]]
@@ -14605,66 +14949,97 @@ variable = "ty208"
 value = "208"
 label = "208"
 
-# axis=numeric agreement=0.58 members=5  Underlag för fastighetsskatt
+# axis=numeric agreement=0.58 members=3  NgasT7_Naturgas Nät_Ledningssystem Naturgas_
 [[variable_group]]
-register = "scb/hek"
-key = "asma"
+register = "scb/arlig-energistatistik"
+key = "ngast7-naturgas-nat-ledningssystem-naturgas-"
+label = "NgasT7_Naturgas Nät_Ledningssystem Naturgas_"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ngast7-naturgas-nat-ledningssystem-naturgas-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ngast7-naturgas-nat-ledningssystem-naturgas-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "ngast7-naturgas-nat-ledningssystem-naturgas-4"
+value = "4"
+label = "4"
+
+# axis=numeric agreement=0.58 members=3  NgasT7_Naturgas Nät_Ledningssystem Stadsgas_
+[[variable_group]]
+register = "scb/arlig-energistatistik"
+key = "ngast7-naturgas-nat-ledningssystem-stadsgas-"
+label = "NgasT7_Naturgas Nät_Ledningssystem Stadsgas_"
+axis = "numeric"
+[[variable_group.members]]
+variable = "ngast7-naturgas-nat-ledningssystem-stadsgas-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "ngast7-naturgas-nat-ledningssystem-stadsgas-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "ngast7-naturgas-nat-ledningssystem-stadsgas-4"
+value = "4"
+label = "4"
+
+# axis=numeric agreement=0.58 members=8  Underlag för fastighetsskatt
+[[variable_group]]
+register = "scb/linda"
+key = "ahy"
 label = "Underlag för fastighetsskatt"
 axis = "numeric"
 [[variable_group.members]]
-variable = "asma0"
-value = "00"
-label = "0"
-[[variable_group.members]]
-variable = "asma1"
-value = "01"
-label = "1"
-[[variable_group.members]]
-variable = "asma05"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "asma15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "asma075"
-value = "75"
-label = "75"
-
-# axis=numeric agreement=0.58 members=3  Antal barn
-[[variable_group]]
-register = "scb/tidsanvandning"
-key = "antalbarnunder"
-label = "Antal barn"
-axis = "numeric"
-[[variable_group.members]]
-variable = "antalbarnunder6"
-value = "06"
-label = "6"
-[[variable_group.members]]
-variable = "antalbarnunder18"
-value = "18"
-label = "18"
-[[variable_group.members]]
-variable = "antalbarnunder25"
-value = "25"
-label = "25"
-
-# axis=numeric agreement=0.57 members=2  Summa annan inkomst, 20
-[[variable_group]]
-register = "scb/lisa"
-key = "anninkf"
-label = "Summa annan inkomst, 20"
-axis = "numeric"
-[[variable_group.members]]
-variable = "anninkf04"
+variable = "ahy04"
 value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "anninkf18"
-value = "18"
-label = "18"
+variable = "ahy06"
+value = "06"
+label = "6"
+[[variable_group.members]]
+variable = "ahy12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "ahy13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "ahy15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "ahy025"
+value = "25"
+label = "25"
+[[variable_group.members]]
+variable = "ahy065"
+value = "65"
+label = "65"
+[[variable_group.members]]
+variable = "ahy075"
+value = "75"
+label = "75"
+
+# axis=numeric agreement=0.58 members=2  Återföring av uppskovsavdrag
+[[variable_group]]
+register = "scb/frida"
+key = "kvruppat"
+label = "Återföring av uppskovsavdrag"
+axis = "numeric"
+[[variable_group.members]]
+variable = "kvruppat15"
+value = "15"
+label = "15"
+[[variable_group.members]]
+variable = "kvruppat16"
+value = "16"
+label = "16"
 
 # axis=ordinal agreement=0.57 members=12  Distansundervisning -
 [[variable_group]]
@@ -14736,36 +15111,9 @@ variable = "poang2"
 value = "2"
 label = "2"
 
-# axis=numeric agreement=0.57 members=5  Underlag för fastighetsskatt
+# axis=numeric agreement=0.57 members=7  Underlag för fastighetsskatt
 [[variable_group]]
-register = "scb/iot"
-key = "asma"
-label = "Underlag för fastighetsskatt"
-axis = "numeric"
-[[variable_group.members]]
-variable = "asma1"
-value = "01"
-label = "1"
-[[variable_group.members]]
-variable = "asma05"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "asma15"
-value = "15"
-label = "15"
-[[variable_group.members]]
-variable = "asma17"
-value = "17"
-label = "17"
-[[variable_group.members]]
-variable = "asma075"
-value = "75"
-label = "75"
-
-# axis=numeric agreement=0.57 members=9  Underlag för fastighetsskatt
-[[variable_group]]
-register = "scb/iot"
+register = "scb/hek"
 key = "ahy"
 label = "Underlag för fastighetsskatt"
 axis = "numeric"
@@ -14790,10 +15138,6 @@ variable = "ahy13"
 value = "13"
 label = "13"
 [[variable_group.members]]
-variable = "ahy15"
-value = "15"
-label = "15"
-[[variable_group.members]]
 variable = "ahy025"
 value = "25"
 label = "25"
@@ -14801,10 +15145,6 @@ label = "25"
 variable = "ahy065"
 value = "65"
 label = "65"
-[[variable_group.members]]
-variable = "ahy075"
-value = "75"
-label = "75"
 
 # axis=numeric agreement=0.57 members=6  Orsak till att examen ej tagits ut -
 [[variable_group]]
@@ -14880,28 +15220,32 @@ variable = "delfranskal9"
 value = "9"
 label = "9"
 
-# axis=numeric agreement=0.57 members=4  Återföring av uppskovsavdrag, t
+# axis=numeric agreement=0.57 members=5  Antal barn
 [[variable_group]]
-register = "scb/fasit"
-key = "kvruppat"
-label = "Återföring av uppskovsavdrag, t"
+register = "scb/hek"
+key = "bbrn"
+label = "Antal barn"
 axis = "numeric"
 [[variable_group.members]]
-variable = "kvruppat08"
-value = "08"
-label = "8"
+variable = "bbrn3"
+value = "003"
+label = "3"
 [[variable_group.members]]
-variable = "kvruppat09"
-value = "09"
-label = "9"
+variable = "bbrn17"
+value = "017"
+label = "17"
 [[variable_group.members]]
-variable = "kvruppat11"
-value = "11"
-label = "11"
+variable = "bbrn18"
+value = "018"
+label = "18"
 [[variable_group.members]]
-variable = "kvruppat12"
-value = "12"
-label = "12"
+variable = "bbrn20"
+value = "020"
+label = "20"
+[[variable_group.members]]
+variable = "bbrn410"
+value = "410"
+label = "410"
 
 # axis=ordinal agreement=0.57 members=8  Arbetsmarknadspolitisk åtgärd -
 [[variable_group]]
@@ -14957,44 +15301,239 @@ variable = "f21-6"
 value = "6"
 label = "6"
 
-# axis=numeric agreement=0.56 members=8  Underlag för fastighetsskatt
+# axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2001 -
 [[variable_group]]
-register = "scb/linda"
-key = "ahy"
-label = "Underlag för fastighetsskatt"
-axis = "numeric"
+register = "scb/utbildningsanalyser"
+key = "f15-1-"
+label = "Huvudsaklig verksamhet 2001 -"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "ahy04"
-value = "04"
+variable = "f15-1-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f15-1-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "f15-1-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f15-1-4"
+value = "4"
 label = "4"
 [[variable_group.members]]
-variable = "ahy06"
-value = "06"
+variable = "f15-1-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f15-1-6"
+value = "6"
 label = "6"
 [[variable_group.members]]
-variable = "ahy12"
-value = "12"
-label = "12"
+variable = "f15-1-7"
+value = "7"
+label = "7"
 [[variable_group.members]]
-variable = "ahy13"
-value = "13"
-label = "13"
+variable = "f15-1-8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2002 -
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f15-2-"
+label = "Huvudsaklig verksamhet 2002 -"
+axis = "ordinal"
 [[variable_group.members]]
-variable = "ahy15"
-value = "15"
-label = "15"
+variable = "f15-2-1"
+value = "1"
+label = "1"
 [[variable_group.members]]
-variable = "ahy025"
-value = "25"
-label = "25"
+variable = "f15-2-2"
+value = "2"
+label = "2"
 [[variable_group.members]]
-variable = "ahy065"
-value = "65"
-label = "65"
+variable = "f15-2-3"
+value = "3"
+label = "3"
 [[variable_group.members]]
-variable = "ahy075"
-value = "75"
-label = "75"
+variable = "f15-2-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f15-2-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f15-2-6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "f15-2-7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "f15-2-8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2003 -
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f15-3-"
+label = "Huvudsaklig verksamhet 2003 -"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "f15-3-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f15-3-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "f15-3-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f15-3-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f15-3-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f15-3-6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "f15-3-7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "f15-3-8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2004 -
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f15-4-"
+label = "Huvudsaklig verksamhet 2004 -"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "f15-4-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f15-4-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "f15-4-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f15-4-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f15-4-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f15-4-6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "f15-4-7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "f15-4-8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2005 -
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f15-5-"
+label = "Huvudsaklig verksamhet 2005 -"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "f15-5-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f15-5-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "f15-5-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f15-5-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f15-5-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f15-5-6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "f15-5-7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "f15-5-8"
+value = "8"
+label = "8"
+
+# axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2006 -
+[[variable_group]]
+register = "scb/utbildningsanalyser"
+key = "f15-6-"
+label = "Huvudsaklig verksamhet 2006 -"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "f15-6-1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "f15-6-2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "f15-6-3"
+value = "3"
+label = "3"
+[[variable_group.members]]
+variable = "f15-6-4"
+value = "4"
+label = "4"
+[[variable_group.members]]
+variable = "f15-6-5"
+value = "5"
+label = "5"
+[[variable_group.members]]
+variable = "f15-6-6"
+value = "6"
+label = "6"
+[[variable_group.members]]
+variable = "f15-6-7"
+value = "7"
+label = "7"
+[[variable_group.members]]
+variable = "f15-6-8"
+value = "8"
+label = "8"
 
 # axis=ordinal agreement=0.56 members=28  Betyg
 [[variable_group]]
@@ -15134,41 +15673,6 @@ variable = "f12-03"
 value = "3"
 label = "3"
 
-# axis=numeric agreement=0.56 members=7  Underlag för fastighetsskatt
-[[variable_group]]
-register = "scb/hek"
-key = "ahy"
-label = "Underlag för fastighetsskatt"
-axis = "numeric"
-[[variable_group.members]]
-variable = "ahy04"
-value = "04"
-label = "4"
-[[variable_group.members]]
-variable = "ahy05"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "ahy06"
-value = "06"
-label = "6"
-[[variable_group.members]]
-variable = "ahy12"
-value = "12"
-label = "12"
-[[variable_group.members]]
-variable = "ahy13"
-value = "13"
-label = "13"
-[[variable_group.members]]
-variable = "ahy025"
-value = "25"
-label = "25"
-[[variable_group.members]]
-variable = "ahy065"
-value = "65"
-label = "65"
-
 # axis=numeric agreement=0.56 members=3  Avlönade timmar
 [[variable_group]]
 register = "scb/lcs"
@@ -15239,6 +15743,25 @@ variable = "f29-11"
 value = "11"
 label = "11"
 
+# axis=ordinal agreement=0.55 members=3  Eget domännamn
+[[variable_group]]
+register = "scb/it-anvandning"
+key = "datn1a"
+label = "Eget domännamn"
+axis = "ordinal"
+[[variable_group.members]]
+variable = "datn1a1"
+value = "1"
+label = "1"
+[[variable_group.members]]
+variable = "datn1a2"
+value = "2"
+label = "2"
+[[variable_group.members]]
+variable = "datn1a3"
+value = "3"
+label = "3"
+
 # axis=ordinal agreement=0.55 members=6  Tillräcklig kunskap -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
@@ -15269,6 +15792,44 @@ label = "5"
 variable = "kunskap6"
 value = "6"
 label = "6"
+
+# axis=numeric agreement=0.55 members=3  Studiemedel tilläggsbidrag
+[[variable_group]]
+register = "scb/fasit"
+key = "bibidt"
+label = "Studiemedel tilläggsbidrag"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bibidt50"
+value = "050"
+label = "50"
+[[variable_group.members]]
+variable = "bibidt100"
+value = "100"
+label = "100"
+[[variable_group.members]]
+variable = "bibidt750"
+value = "750"
+label = "750"
+
+# axis=numeric agreement=0.55 members=3  Studiemedel tilläggsbidrag
+[[variable_group]]
+register = "scb/frida"
+key = "bibidt"
+label = "Studiemedel tilläggsbidrag"
+axis = "numeric"
+[[variable_group.members]]
+variable = "bibidt50"
+value = "050"
+label = "50"
+[[variable_group.members]]
+variable = "bibidt100"
+value = "100"
+label = "100"
+[[variable_group.members]]
+variable = "bibidt750"
+value = "750"
+label = "750"
 
 # axis=ordinal agreement=0.55 members=8  Distansundervisning svårast
 [[variable_group]]
@@ -15309,43 +15870,20 @@ variable = "f33-08"
 value = "8"
 label = "8"
 
-# axis=numeric agreement=0.54 members=3  Studiemedel tilläggsbidrag
+# axis=numeric agreement=0.54 members=2  Underlag för fastighetsskatt med 1
 [[variable_group]]
-register = "scb/fasit"
-key = "bibidt"
-label = "Studiemedel tilläggsbidrag"
+register = "scb/formogenhetsreg"
+key = "asmau"
+label = "Underlag för fastighetsskatt med 1"
 axis = "numeric"
 [[variable_group.members]]
-variable = "bibidt50"
-value = "050"
-label = "50"
+variable = "asmau1"
+value = "01"
+label = "1"
 [[variable_group.members]]
-variable = "bibidt100"
-value = "100"
-label = "100"
-[[variable_group.members]]
-variable = "bibidt750"
-value = "750"
-label = "750"
-
-# axis=numeric agreement=0.54 members=3  Studiemedel tilläggsbidrag
-[[variable_group]]
-register = "scb/frida"
-key = "bibidt"
-label = "Studiemedel tilläggsbidrag"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bibidt50"
-value = "050"
-label = "50"
-[[variable_group.members]]
-variable = "bibidt100"
-value = "100"
-label = "100"
-[[variable_group.members]]
-variable = "bibidt750"
-value = "750"
-label = "750"
+variable = "asmau15"
+value = "15"
+label = "15"
 
 # axis=numeric agreement=0.54 members=2  Underlag för fastighetsskatt med 1
 [[variable_group]]
@@ -15362,148 +15900,60 @@ variable = "asmau17"
 value = "17"
 label = "17"
 
-# axis=numeric agreement=0.54 members=5  Antal barn
+# axis=numeric agreement=0.54 members=12  Utförande kommun
 [[variable_group]]
-register = "scb/frida"
-key = "bbrn"
-label = "Antal barn"
+register = "sos/lss"
+key = "uk"
+label = "Utförande kommun"
 axis = "numeric"
 [[variable_group.members]]
-variable = "bbrn6"
-value = "006"
-label = "6"
-[[variable_group.members]]
-variable = "bbrn11"
-value = "011"
-label = "11"
-[[variable_group.members]]
-variable = "bbrn15"
-value = "015"
-label = "15"
-[[variable_group.members]]
-variable = "bbrn167"
-value = "167"
-label = "167"
-[[variable_group.members]]
-variable = "bbrn611"
-value = "611"
-label = "611"
-
-# axis=numeric agreement=0.54 members=5  Antal barn
-[[variable_group]]
-register = "scb/hek"
-key = "bbrn"
-label = "Antal barn"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bbrn3"
-value = "003"
-label = "3"
-[[variable_group.members]]
-variable = "bbrn17"
-value = "017"
-label = "17"
-[[variable_group.members]]
-variable = "bbrn18"
-value = "018"
-label = "18"
-[[variable_group.members]]
-variable = "bbrn20"
-value = "020"
-label = "20"
-[[variable_group.members]]
-variable = "bbrn410"
-value = "410"
-label = "410"
-
-# axis=ordinal agreement=0.53 members=7  Tillsyn 1 barn
-[[variable_group]]
-register = "scb/ulf"
-key = "tillsyn-1-barn-"
-label = "Tillsyn 1 barn"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "tillsyn-1-barn-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "tillsyn-1-barn-2"
-value = "2"
+variable = "uk2"
+value = "02"
 label = "2"
 [[variable_group.members]]
-variable = "tillsyn-1-barn-3"
-value = "3"
+variable = "uk3"
+value = "03"
 label = "3"
 [[variable_group.members]]
-variable = "tillsyn-1-barn-4"
-value = "4"
+variable = "uk4"
+value = "04"
 label = "4"
 [[variable_group.members]]
-variable = "tillsyn-1-barn-5"
-value = "5"
+variable = "uk5"
+value = "05"
 label = "5"
 [[variable_group.members]]
-variable = "tillsyn-1-barn-6"
-value = "6"
+variable = "uk6"
+value = "06"
 label = "6"
 [[variable_group.members]]
-variable = "tillsyn-1-barn-7"
-value = "7"
+variable = "uk7"
+value = "07"
 label = "7"
-
-# axis=ordinal agreement=0.53 members=5  Tillsyn 2 barn
-[[variable_group]]
-register = "scb/ulf"
-key = "tillsyn-2-barn-"
-label = "Tillsyn 2 barn"
-axis = "ordinal"
 [[variable_group.members]]
-variable = "tillsyn-2-barn-1"
-value = "1"
-label = "1"
+variable = "uk9"
+value = "09"
+label = "9"
 [[variable_group.members]]
-variable = "tillsyn-2-barn-2"
-value = "2"
-label = "2"
+variable = "uk10"
+value = "10"
+label = "10"
 [[variable_group.members]]
-variable = "tillsyn-2-barn-3"
-value = "3"
-label = "3"
+variable = "uk81"
+value = "81"
+label = "81"
 [[variable_group.members]]
-variable = "tillsyn-2-barn-4"
-value = "4"
-label = "4"
+variable = "uk82"
+value = "82"
+label = "82"
 [[variable_group.members]]
-variable = "tillsyn-2-barn-5"
-value = "5"
-label = "5"
-
-# axis=ordinal agreement=0.53 members=5  Tillsyn 3 barn
-[[variable_group]]
-register = "scb/ulf"
-key = "tillsyn-3-barn-"
-label = "Tillsyn 3 barn"
-axis = "ordinal"
+variable = "uk91"
+value = "91"
+label = "91"
 [[variable_group.members]]
-variable = "tillsyn-3-barn-1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "tillsyn-3-barn-2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "tillsyn-3-barn-3"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "tillsyn-3-barn-4"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "tillsyn-3-barn-5"
-value = "5"
-label = "5"
+variable = "uk92"
+value = "92"
+label = "92"
 
 # axis=ordinal agreement=0.53 members=3  Bisyssla, kontrollfråga
 [[variable_group]]
@@ -15524,25 +15974,6 @@ variable = "kbi3"
 value = "3"
 label = "3"
 
-# axis=ordinal agreement=0.53 members=3  Eget domännamn
-[[variable_group]]
-register = "scb/it-anvandning"
-key = "datn1a"
-label = "Eget domännamn"
-axis = "ordinal"
-[[variable_group.members]]
-variable = "datn1a1"
-value = "1"
-label = "1"
-[[variable_group.members]]
-variable = "datn1a2"
-value = "2"
-label = "2"
-[[variable_group.members]]
-variable = "datn1a3"
-value = "3"
-label = "3"
-
 # axis=ordinal agreement=0.53 members=2  Antal kurser på g
 [[variable_group]]
 register = "scb/komvux-anpassad"
@@ -15557,29 +15988,6 @@ label = "1"
 variable = "antkurs2"
 value = "2"
 label = "2"
-
-# axis=numeric agreement=0.53 members=4  Antal barn
-[[variable_group]]
-register = "scb/fasit"
-key = "bbrn"
-label = "Antal barn"
-axis = "numeric"
-[[variable_group.members]]
-variable = "bbrn6"
-value = "006"
-label = "6"
-[[variable_group.members]]
-variable = "bbrn11"
-value = "011"
-label = "11"
-[[variable_group.members]]
-variable = "bbrn15"
-value = "015"
-label = "15"
-[[variable_group.members]]
-variable = "bbrn611"
-value = "611"
-label = "611"
 
 # axis=numeric agreement=0.52 members=3  Studiestartsstöd tilläggsbidrag
 [[variable_group]]
@@ -15687,20 +16095,36 @@ variable = "f25-6"
 value = "6"
 label = "6"
 
-# axis=numeric agreement=0.52 members=2  Återföring av uppskovsavdrag
+# axis=numeric agreement=0.52 members=6  Uppskovsavdrag, t
 [[variable_group]]
-register = "scb/frida"
-key = "kvruppat"
-label = "Återföring av uppskovsavdrag"
+register = "scb/fasit"
+key = "auppsk"
+label = "Uppskovsavdrag, t"
 axis = "numeric"
 [[variable_group.members]]
-variable = "kvruppat15"
-value = "15"
-label = "15"
+variable = "auppsk08"
+value = "08"
+label = "8"
 [[variable_group.members]]
-variable = "kvruppat16"
-value = "16"
-label = "16"
+variable = "auppsk09"
+value = "09"
+label = "9"
+[[variable_group.members]]
+variable = "auppsk11"
+value = "11"
+label = "11"
+[[variable_group.members]]
+variable = "auppsk12"
+value = "12"
+label = "12"
+[[variable_group.members]]
+variable = "auppsk13"
+value = "13"
+label = "13"
+[[variable_group.members]]
+variable = "auppsk14"
+value = "14"
+label = "14"
 
 # axis=ordinal agreement=0.52 members=12  Diagnoskod
 [[variable_group]]
@@ -15817,76 +16241,6 @@ label = "13"
 variable = "uppv14"
 value = "14"
 label = "14"
-
-# axis=numeric agreement=0.52 members=2  Underlag för fastighetsskatt med 1
-[[variable_group]]
-register = "scb/formogenhetsreg"
-key = "asmau"
-label = "Underlag för fastighetsskatt med 1"
-axis = "numeric"
-[[variable_group.members]]
-variable = "asmau1"
-value = "01"
-label = "1"
-[[variable_group.members]]
-variable = "asmau15"
-value = "15"
-label = "15"
-
-# axis=numeric agreement=0.52 members=12  Utförande kommun
-[[variable_group]]
-register = "sos/lss"
-key = "uk"
-label = "Utförande kommun"
-axis = "numeric"
-[[variable_group.members]]
-variable = "uk2"
-value = "02"
-label = "2"
-[[variable_group.members]]
-variable = "uk3"
-value = "03"
-label = "3"
-[[variable_group.members]]
-variable = "uk4"
-value = "04"
-label = "4"
-[[variable_group.members]]
-variable = "uk5"
-value = "05"
-label = "5"
-[[variable_group.members]]
-variable = "uk6"
-value = "06"
-label = "6"
-[[variable_group.members]]
-variable = "uk7"
-value = "07"
-label = "7"
-[[variable_group.members]]
-variable = "uk9"
-value = "09"
-label = "9"
-[[variable_group.members]]
-variable = "uk10"
-value = "10"
-label = "10"
-[[variable_group.members]]
-variable = "uk81"
-value = "81"
-label = "81"
-[[variable_group.members]]
-variable = "uk82"
-value = "82"
-label = "82"
-[[variable_group.members]]
-variable = "uk91"
-value = "91"
-label = "91"
-[[variable_group.members]]
-variable = "uk92"
-value = "92"
-label = "92"
 
 # axis=ordinal agreement=0.51 members=3  Andel utgifter för
 [[variable_group]]
