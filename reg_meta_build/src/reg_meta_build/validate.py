@@ -956,10 +956,22 @@ def _check_entity_key_vars_curated(
             result.info(
                 f"... and {len(failures) - 10} more un-pinned entity-key var(s)"
             )
-        result.info(
-            "run `reg-meta-build entity-key-pins --out-dir <dir>` and commit each "
-            "<provider>.toml block to fqid_slugs/<provider>.toml"
-        )
+        # The remediation scope differs by build: the global gate curates into the
+        # repo-root fqid_slugs/<provider>.toml; the flavored (steward) gate curates
+        # into the nested fqid_slugs/<steward>/<provider>.toml and MUST regenerate
+        # via `--flavored --slug-dir <steward dir>` (the global `--out-dir` path
+        # would emit the wrong, global-scoped pins).
+        if flavored:
+            result.info(
+                "run `reg-meta-build --db <flavored-db> entity-key-pins --flavored "
+                "--slug-dir <steward dir>` and fold each <provider>.toml block into "
+                "fqid_slugs/<steward>/<provider>.toml"
+            )
+        else:
+            result.info(
+                "run `reg-meta-build entity-key-pins --out-dir <dir>` and commit each "
+                "<provider>.toml block to fqid_slugs/<provider>.toml"
+            )
     else:
         result.ok(f"all {len(entity_key_vars):,} entity-key var(s) are curated")
 

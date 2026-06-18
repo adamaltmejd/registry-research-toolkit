@@ -498,6 +498,87 @@ class TestGenerator:
         assert exc.value.code == "slug_dir_not_a_directory"
         assert exc.value.exit_code == 2  # EXIT_USAGE
 
+    def test_cmd_flavored_slug_dir_is_global_root_is_usage_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """#559 Fix C: `--flavored --slug-dir <global root>` is a fast-fail usage
+        error. Pointing at the global fqid_slugs/ root (not a nested steward dir)
+        scopes the flavored generator to GLOBAL providers and emits zero steward
+        pins — so the handler refuses BEFORE opening the DB. The global root is
+        whatever `repo_slug_dir()` returns; stub it to a tmp dir we also pass as
+        --slug-dir so the equality check is deterministic and checkout-independent.
+        The dir even carries a `[register]` entry to prove the global-root compare
+        (Fix C) fires before the empty-scope scan (Fix B)."""
+        import argparse
+
+        from reg_meta_build import cli
+
+        global_root = tmp_path / "fqid_slugs"
+        global_root.mkdir()
+        # A real [register] entry: Fix B would pass on this dir, so reaching the
+        # global_slug_dir error proves Fix C is the gate that fires.
+        (global_root / "sos.toml").write_text(
+            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
+        )
+        monkeypatch.setattr(cli, "repo_slug_dir", lambda: global_root)
+
+        def _boom(_db):
+            raise AssertionError("open_db must not run when the guard fires")
+
+        monkeypatch.setattr(cli, "open_db", _boom)
+        args = argparse.Namespace(
+            db=None,
+            slug_dir=str(global_root),
+            out_dir=None,
+            output_toml=None,
+            force=False,
+            flavored=True,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            cli._cmd_entity_key_pins(args)
+        assert exc.value.code == "entity_key_pins_flavored_global_slug_dir"
+        assert exc.value.exit_code == 2  # EXIT_USAGE
+
+    def test_cmd_flavored_slug_dir_without_register_entries_is_usage_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """#559 Fix B: `--flavored --slug-dir <dir without [register] entries>` is a
+        fast-fail usage error. A dir carrying only a non-register provider TOML
+        (here a `[variable]`-only file) yields an EMPTY steward register scope, so
+        the flavored generator would emit zero pins. The handler refuses BEFORE
+        opening the DB. Stub `repo_slug_dir` to a DIFFERENT dir so the global-root
+        compare (Fix C) doesn't short-circuit — proving the empty-scope scan fires."""
+        import argparse
+
+        from reg_meta_build import cli
+
+        steward_dir = tmp_path / "steward"
+        steward_dir.mkdir()
+        # Only a [variable] entry — NO [register] entry, so the flavored scope is
+        # empty.
+        (steward_dir / "sos.toml").write_text(
+            '[variable."500.LOPNR"]\nslug = "sosvar"\n', encoding="utf-8"
+        )
+        # Distinct global root so Fix C's equality check is False.
+        monkeypatch.setattr(cli, "repo_slug_dir", lambda: tmp_path / "global")
+
+        def _boom(_db):
+            raise AssertionError("open_db must not run when the guard fires")
+
+        monkeypatch.setattr(cli, "open_db", _boom)
+        args = argparse.Namespace(
+            db=None,
+            slug_dir=str(steward_dir),
+            out_dir=None,
+            output_toml=None,
+            force=False,
+            flavored=True,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            cli._cmd_entity_key_pins(args)
+        assert exc.value.code == "entity_key_pins_flavored_empty_scope"
+        assert exc.value.exit_code == 2  # EXIT_USAGE
+
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB
         (sos) entity-key var IS emitted alongside the SCB one — the generator no

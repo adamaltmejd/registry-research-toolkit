@@ -831,6 +831,14 @@ class TestValidateModule:
         # The non-global steward var fails; the global SCB var is NOT enforced.
         assert any("source_id 500.LOPNR" in f for f in result.failures), result.failures
         assert not any("source_id 1.44" in f for f in result.failures), result.failures
+        # #559 Fix A: the flavored remediation points at `--flavored --slug-dir`
+        # and the nested steward fold location — NOT the global `--out-dir` /
+        # repo-root fqid_slugs/<provider>.toml path the global gate emits.
+        report = result.format_report()
+        assert "--flavored" in report, report
+        assert "--slug-dir <steward dir>" in report, report
+        assert "fqid_slugs/<steward>/<provider>.toml" in report, report
+        assert "--out-dir" not in report, report
 
     def test_flavored_gate_passes_when_steward_var_pinned(
         self, fixture_db: Path, tmp_path: Path

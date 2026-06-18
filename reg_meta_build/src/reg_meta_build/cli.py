@@ -55,6 +55,7 @@ from .fqid_slugs import (
     format_default_slug_hints,
     frozen_zones,
     infer_entity_key_pins,
+    iter_curated_provider_entries,
     iter_default_slug_candidates,
     load_freeze_states,
     precheck_slugs,
@@ -447,12 +448,13 @@ def _build_parser() -> argparse.ArgumentParser:
             "provider present in a build-db DB is emitted.\n\n"
             "--flavored (#559): generate STEWARD pins from a flavored (extend-db) DB.\n"
             "REQUIRES an explicit --slug-dir pointing at the steward dir\n"
-            "(fqid_slugs/<steward>/) — without it the resolver falls back to the\n"
-            "global fqid_slugs/ and emits no steward pins (a usage error). The\n"
-            "generator scopes to the STEWARD REGISTERS that dir curates and excludes\n"
-            "the global base's already-pinned entity-key vars. Steward-scoping is\n"
-            "required for correctness on a flavored DB, not just to avoid extra\n"
-            "emits.\n\n"
+            "(fqid_slugs/<steward>/) that curates the overlay's registers — NOT the\n"
+            "global fqid_slugs/ root, and not a dir without [register] entries. Each\n"
+            "would scope the generator to the wrong/empty register set and emit zero\n"
+            "steward pins (all usage errors). The generator scopes to the STEWARD\n"
+            "REGISTERS that dir curates and excludes the global base's already-pinned\n"
+            "entity-key vars. Steward-scoping is required for correctness on a\n"
+            "flavored DB, not just to avoid extra emits.\n\n"
             "Idempotent: variables already carrying a hand-curated `[variable]` slug\n"
             "(the existing #539 pins) are SKIPPED, so re-running after the pins are\n"
             "committed emits nothing. Reads a built DB; never mutates it. The\n"
@@ -514,11 +516,12 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Generate STEWARD pins from a flavored (extend-db) DB. REQUIRES an "
-            "explicit --slug-dir (the steward dir fqid_slugs/<steward>/) — scope to "
-            "the steward registers it curates and exclude the global base's "
-            "already-pinned entity-key vars. Without --slug-dir the resolver would "
-            "fall back to the global fqid_slugs/ and emit no steward pins, so it is "
-            "a usage error."
+            "explicit --slug-dir = the steward dir (fqid_slugs/<steward>/) that "
+            "curates the overlay's registers — NOT the global fqid_slugs/ root and "
+            "not a dir without [register] entries (each scopes to the wrong/empty "
+            "register set and emits zero pins, all usage errors). Scopes to the "
+            "steward registers it curates and excludes the global base's "
+            "already-pinned entity-key vars."
         ),
     )
 
@@ -1206,6 +1209,52 @@ def _cmd_entity_key_pins(
                 "(e.g. reg_meta_build/fqid_slugs/ or reg_meta_build/fqid_slugs/<steward>/)."
             ),
         )
+    # --flavored: the --slug-dir must be a STEWARD curation dir
+    # (fqid_slugs/<steward>/), not the global root and not a non-curation dir.
+    # Both wrong shapes silently scope the flavored generator to the wrong/empty
+    # register set and emit `count: 0` — the no-pin failure --flavored exists to
+    # prevent. The gate (validate._check_entity_key_vars_curated) does NOT mirror
+    # these guards: an empty steward scope is a VALID gate no-op (an overlay with
+    # no steward registers has nothing to curate), but for the GENERATOR it is a
+    # misconfig. Cheap path-compare (Fix C) first, then the entry scan (Fix B).
+    if args.flavored:
+        repo_root = repo_slug_dir()
+        # repo_slug_dir() is None outside a checkout; --slug-dir was given
+        # explicitly here, so a None root just means there's no global root to
+        # collide with — skip the equality check.
+        if repo_root is not None and slug_dir == repo_root.resolve():
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="entity_key_pins_flavored_global_slug_dir",
+                error_class="usage",
+                message=(
+                    "--flavored --slug-dir must be a steward dir "
+                    "(fqid_slugs/<steward>/), not the global root."
+                ),
+                remediation=(
+                    "Pass --slug-dir pointing at the nested steward dir "
+                    "(reg_meta_build/fqid_slugs/<steward>/), not the global "
+                    "fqid_slugs/ root."
+                ),
+            )
+        if not any(
+            e.kind == "register" for e in iter_curated_provider_entries(slug_dir)
+        ):
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="entity_key_pins_flavored_empty_scope",
+                error_class="usage",
+                message=(
+                    f"--flavored --slug-dir {slug_dir} has no [register] entries — "
+                    "it is not a steward curation dir (the flavored register scope "
+                    "would be empty, emitting zero pins)."
+                ),
+                remediation=(
+                    "Pass --slug-dir pointing at the steward dir that curates the "
+                    "overlay's registers (its <provider>.toml files carry the "
+                    "[register] slug entries)."
+                ),
+            )
     # Schema-checked open: the generator reads current-schema tables
     # (register_variant.panel_entity_key, variable.slug/provider_key), so a stale
     # DB should fail fast with the standard schema-mismatch error.
