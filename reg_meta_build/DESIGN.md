@@ -118,6 +118,9 @@ reg-meta-build build-docs ...
 reg-meta-build seed-slugs [--out-dir DIR] [--propose-panel] ...
 reg-meta-build precheck-slugs ...
 reg-meta-build parse-sos ...
+reg-meta-build same-as-candidates [--max-signal-fanout N] ...
+reg-meta-build entity-key-pins [-o TOML] [--slug-dir DIR]
+reg-meta-build concept-group-candidates [-o TOML] ...
 ```
 
 The matching `reg-meta maintain *` forms are removed. `reg-meta maintain update` /
@@ -1857,6 +1860,39 @@ variant's own register (`validate.py::_check_panel_refs_resolve`) or resolves bu
 `variable_state` rows in the variant itself (`_check_panel_refs_have_states`, #287 — a
 key pointing at a sibling fragment passes resolution yet renders an empty panel axis in
 the webapp; the `panel_time_key = "period"` sentinel is exempt from both).
+
+**Entity-key slug freeze (#546).** A `panel_entity_key` ref binds to `variable.slug`,
+but variable slugs for SCB registers CHURN every build (the default "churning" freeze
+zone re-derives each slug from the latest delivery column). A reslug — such as the #143
+slug-space drift that moved 31 SCB entity-key variable slugs (#539) — silently dangles
+the `panel_entity_key` ref; `_check_panel_refs_resolve` catches it, but only after a
+full \~20-min real build. The fix is a **mandatory curated `[variable]` pin** for every
+SCB panel entity-key variable (`fqid_slugs/scb.toml`): a pin at precedence 1 in
+`populate_variable_slugs` freezes the slug absolutely so it can't drift under the ref.
+
+`reg-meta-build entity-key-pins` generates the TOML block from a built DB. It reads the
+curated slug dir to skip already-pinned variables (idempotent), scopes to
+`MANDATORY_ENTITY_KEY_PROVIDERS` (SCB only; other providers' entity-key vars come from
+stable parsed/curated inputs and freeze per-provider at v1, #209), and emits nothing
+when all variables are already pinned. The 239 pins committed to `fqid_slugs/scb.toml`
+are net-new (the generator skips the already-curated #539/#528 pins); together with
+those existing pins they cover every SCB entity-key variable.
+
+The build-side gate (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY
+on the real build (`corpus=True`, i.e. a maintainer's `build-db` without
+`--no-validate`): any SCB entity-key variable without a curated `[variable]` pin is a
+hard build failure. Synthetic CI (`corpus=False`, `slug_dir=None`) skips the gate — the
+fixtures carry no curated slug dir. Flavored builds (steward overlay) also skip it — a
+flavor adds no SCB panel keys.
+
+**Chicken-and-egg:** when a new SCB register variant with a `panel_entity_key` is
+onboarded, the first gated `build-db` will fail the entity-key gate because the pin
+doesn't exist yet. Workflow:
+
+1. `reg-meta-build --db ... build-db --no-validate` to produce the DB without the gate.
+2. `reg-meta-build --db <built-db> entity-key-pins --output-toml /tmp/new_pins.toml`
+3. Fold the non-duplicate entries from `/tmp/new_pins.toml` into `fqid_slugs/scb.toml`.
+4. Commit the pins, then rebuild with validation (`build-db` without `--no-validate`).
 
 ## Concept-group derivation (#303)
 

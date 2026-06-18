@@ -8,11 +8,14 @@ databases via `reg-meta update`.
 ## Commands
 
 ```sh
-reg-meta-build build-db        # build reg_meta.db from SCB source CSVs
-reg-meta-build build-docs      # build reg_meta_docs.db from reg_meta_build/docs/
-reg-meta-build seed-slugs      # seed starter slug TOMLs (1c bootstrap)
-reg-meta-build precheck-slugs  # report any IDs missing a slug entry
-reg-meta-build parse-sos       # parse Socialstyrelsen register metadata xlsx
+reg-meta-build build-db          # build reg_meta.db from SCB source CSVs
+reg-meta-build build-docs        # build reg_meta_docs.db from reg_meta_build/docs/
+reg-meta-build seed-slugs        # seed starter slug TOMLs (1c bootstrap)
+reg-meta-build precheck-slugs    # report any IDs missing a slug entry
+reg-meta-build parse-sos         # parse Socialstyrelsen register metadata xlsx
+reg-meta-build same-as-candidates   # generate variable_same_as candidate pairs
+reg-meta-build entity-key-pins      # generate panel entity-key slug pins (SCB)
+reg-meta-build concept-group-candidates  # generate concept-group fold candidates
 ```
 
 See [DESIGN.md](DESIGN.md) for design rationale; remaining build work is tracked in
