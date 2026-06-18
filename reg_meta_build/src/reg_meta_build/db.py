@@ -3089,7 +3089,13 @@ def materialize(
             getattr(adapter, "classification_candidates", ())
         )
         fold_slug_hints.update(adapter.fold_slug_hints)
-        if adapter.provider == "scb":
+        # SCB-machine-build stats come only from the real `SCBAdapter`. We can't key
+        # on `provider == "scb"`: `CanonicalScbAdapter` (#444) is also a `scb`-provider
+        # adapter (and runs AFTER SCB, so it would clobber the real stats), and we
+        # can't key on `coalesce_stats` either — `SOSAdapter` has that too. The
+        # SCB-only marker is `projection_stats`. Same hasattr idiom as
+        # classification_candidates above.
+        if hasattr(adapter, "projection_stats"):
             state_stats = adapter.coalesce_stats
             projection_stats = {
                 "n_value_sets": adapter.projection_stats.n_value_sets,
@@ -3836,7 +3842,7 @@ def build_db(
             load_fold_overrides,
             repo_source_column_repairs_path,
         )
-        from .sources.curated import CuratedAdapter
+        from .sources.curated import CanonicalScbAdapter, CuratedAdapter
         from .sources.scb import SCBAdapter
         from .sources.sos import SOSAdapter
 
@@ -3872,6 +3878,21 @@ def build_db(
                     (
                         CuratedAdapter(prov_slug, classification_seed_path=seed_path),
                         input_dir / dirname,
+                    )
+                )
+        # Canonical-SCB curated content (#444): SCB registers SWECOV holds but that
+        # SCB's machine export lacks (Utrikeshandel med tjänster, …). Attributed to
+        # the `scb` provider with low-band ids, and it interns real value sets — so it
+        # MUST run after the SCB adapter (value_code AUTOINCREMENT high-water mark);
+        # appended last. Guarded on the committed source file so synthetic SCB-only
+        # builds (no scb_canonical/ dir) skip it.
+        if "scb" in providers:
+            canonical_dir = input_dir / "scb_canonical"
+            if (canonical_dir / CanonicalScbAdapter.SOURCE_FILE).is_file():
+                adapters.append(
+                    (
+                        CanonicalScbAdapter(conn, classification_seed_path=seed_path),
+                        canonical_dir,
                     )
                 )
 

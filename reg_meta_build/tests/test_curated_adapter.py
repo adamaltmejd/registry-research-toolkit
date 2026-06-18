@@ -661,3 +661,90 @@ def test_global_band_check_catches_low_band_fohm(fohm_db: Path) -> None:
     conn.close()
     result = validate_built_db(fohm_db, corpus=False)
     assert any("below the minted band" in f for f in result.failures), result.failures
+
+
+def test_canonical_scb_adapter_real_uht() -> None:
+    """The committed canonical-SCB content (#444, Utrikeshandel med tjänster)
+    emits under provider='scb' with LOW-band ids in the reserved sub-band
+    [2^61, 2^62), and interns its column value sets (landkoder/scbkoder)."""
+    from reg_meta_build.db import DDL
+    from reg_meta_build.id import mint_canonical_scb
+    from reg_meta_build.sources.curated import CanonicalScbAdapter
+
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    objs = list(CanonicalScbAdapter(conn).emit(_REAL_INPUT / "scb_canonical"))
+    regs = [o for o in objs if isinstance(o, IRRegister)]
+    states = [o for o in objs if isinstance(o, IRVariableState)]
+    assert regs and all(r.provider == "scb" for r in regs)
+    # Every grain id sits in the canonical sub-band [2^61, 2^62): low-band (passes
+    # the SCB band check `id < 2^62`), disjoint from the minted band `>= 2^62`.
+    ids = (
+        [r.register_id for r in regs]
+        + [o.variable_id for o in objs if isinstance(o, IRVariable)]
+        + [s.state_id for s in states]
+    )
+    assert all((1 << 61) <= i < _MINT_BIT for i in ids)
+    # Categorical columns are linked to interned value sets.
+    linked = {s.delivery_column_name: s.value_set_id for s in states if s.value_set_id}
+    assert "Scbkod" in linked and "Landkod" in linked
+    assert conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0] > 0
+    # The minted register id matches the committed fqid_slugs/scb.toml entry.
+    assert any(
+        r.register_id == mint_canonical_scb("scb", "utrikeshandel-tjanster")
+        for r in regs
+    )
+
+
+def test_value_set_rejected_on_thin_provider(tmp_path: Path) -> None:
+    """`value_set` is canonical-SCB-only; a thin-provider TOML that sets it must
+    fail-fast at load (not silently emit a code-less catalog)."""
+    toml = (
+        '[[register]]\nkey = "r"\nname = "R"\nvalid_from = "2020-01-01"\n'
+        '[[register.variable]]\nname = "V"\ncolumn = "c"\nvalue_set = "x"\n'
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fohm", toml, tmp_path)
+    assert exc.value.code == "curated_toml_invalid"
+    assert "does not support value sets" in exc.value.message
+
+
+_CANONICAL_ONE_VS = (
+    '[[register]]\nkey = "r"\nname = "R"\nvalid_from = "2020-01-01"\n'
+    '[[register.variable]]\nname = "V"\ncolumn = "Col"\nvalue_set = "codes"\n'
+)
+
+
+def _emit_canonical(toml_text: str, csv_text: str, tmp_path: Path) -> list:
+    from reg_meta_build.db import DDL
+    from reg_meta_build.sources.curated import CanonicalScbAdapter
+
+    src = tmp_path / "scb_canonical"
+    src.mkdir()
+    (src / "scb_canonical.toml").write_text(toml_text, encoding="utf-8")
+    (src / "codes.csv").write_text(csv_text, encoding="utf-8")
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    return list(CanonicalScbAdapter(conn).emit(src))
+
+
+@pytest.mark.parametrize(
+    ("csv_text", "fragment"),
+    [
+        ("", "code,label"),  # empty file → no header
+        ("code;label\n1;Ett\n", "code,label"),  # wrong delimiter → one column
+        ("kod,etikett\n1,Ett\n", "code,label"),  # wrong header names
+        ("code,label\n", "no code,label rows"),  # header only → empty value set
+        ("code,label\n1\n", "malformed row"),  # data row missing the label column
+    ],
+)
+def test_canonical_value_set_csv_fails_fast(
+    csv_text: str, fragment: str, tmp_path: Path
+) -> None:
+    """A committed value-set CSV that is empty, mis-delimited, mis-headed, or has a
+    malformed row must fail-fast — never silently drop codes from a categorical
+    column (which `_ensure_value_set([])` would turn into no value set at all)."""
+    with pytest.raises(RegMetaError) as exc:
+        _emit_canonical(_CANONICAL_ONE_VS, csv_text, tmp_path)
+    assert exc.value.code == "curated_value_set_invalid"
+    assert fragment in exc.value.message

@@ -47,6 +47,9 @@ reg_meta_build/input_data/*
 !reg_meta_build/input_data/Pliktverket/
 !reg_meta_build/input_data/Riksarkivet/
 !reg_meta_build/input_data/UMU/
+# Canonical-SCB curated content (#444) — committed TOML + value-set CSVs, not an
+# agency dir but the same tracked-committed-source rule.
+!reg_meta_build/input_data/scb_canonical/
 # Under classifications/ only the normalized CSVs (+ manifest.json) are tracked.
 # The raw SOS source workbooks the fetch script downloads are not — they
 # regenerate from scripts/fetch_sos_classifications.py.

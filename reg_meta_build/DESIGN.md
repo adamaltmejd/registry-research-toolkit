@@ -333,6 +333,32 @@ from `_PROVIDER_SEED`, so a new curated provider is covered the moment it is see
 and the flavored (`extend-db`) check additionally covers dynamically minted steward
 providers (see *Provenance / validation*).
 
+### Curated canonical-SCB content (#444)
+
+Some SCB registers SWECOV holds are **absent from SCB's machine export** — e.g.
+*Utrikeshandel med tjänster* (the services sibling of the goods register reg_meta
+already has), the AGI employer-declaration header. They are **canonical SCB content**
+(not steward-flavor), so the catalog must attribute them to the `scb` provider, not a
+separate provider and not the flavor. `CanonicalScbAdapter` (a `CuratedAdapter`
+subclass) does this from a committed `input_data/scb_canonical/scb_canonical.toml`:
+
+- **Low-band ids.** Curated ids normally mint into the high band `[2^62, 2^63)`, but an
+  `scb`-provider id MUST be `< 2^62` (the band check forbids a high-band scb id).
+  `mint_canonical_scb` (`id.py`) puts register/variant/variable/state ids in the
+  reserved sub-band `[2^61, 2^62)`: still low-band (passes the check) yet far above
+  every real source-derived SCB id (all `< 2^61`) and disjoint from the minted band.
+- **Real value sets.** Unlike thin providers (which defer code lists), a categorical
+  column carries `value_set = "<name>"` and the adapter interns `<name>.csv`
+  (`code,label`) into `value_code`/`value_set`/`value_set_member` content-addressed (the
+  same INSERT-OR-IGNORE pattern SCB/SOS use), then links the state's `value_set_id` — so
+  the codes are searchable and join into `code_variable_map`. It needs a DB connection
+  and runs **after** the SCB adapter (the `value_code` AUTOINCREMENT high-water mark).
+  UHT ships `scbkoder.csv` (BPM6 service types) + `landkoder.csv` (countries).
+
+Because it is a second `scb`-provider adapter, the materializer drains SCB-machine stats
+(`coalesce_stats`/`projection_stats`) by attribute presence (`projection_stats`,
+SCB-only) rather than `provider == "scb"`.
+
 ## IR + adapter architecture
 
 The build is structured around a provider-neutral **intermediate representation** (IR)

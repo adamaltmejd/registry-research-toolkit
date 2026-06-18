@@ -1,0 +1,105 @@
+# Curated CANONICAL-SCB catalog (#444) — SCB registers SWECOV holds that are
+# absent from SCB's machine export, modelled onto the `scb` provider. Read by
+# reg_meta_build.sources.curated.CanonicalScbAdapter (low-band ids; value sets
+# loaded from companion <name>.csv code lists).
+#
+# These are CANONICAL SCB content (not steward-flavor): the catalog attributes them
+# to `scb`, and they carry real value sets. The `column` tokens are the documented
+# SCB variable names; categorical columns reference a value set via `value_set`,
+# loaded from `<value_set>.csv` (columns `code,label`) in this directory.
+
+
+# ── Utrikeshandel med tjänster (UHT) ────────────────────────────────────────────
+# Source: SCB's UHT delivery documentation ("Information om mikrodata från UHT" /
+# "Bra att veta om UHT mikrodata") + KodBeskrivning_UHT_30JUN25.xlsx (the Scbtext /
+# Landtext code lists → scbkoder.csv / landkoder.csv). The survey: quarterly
+# company-reported foreign trade in services, BPM6-classified; available years
+# 2004–2024 (2003 excluded as unstable). A 2017 production-system change renamed
+# some variables but the content is unchanged. reg_meta already has utrikeshandel
+# med VAROR (scb/utrikeshandel); this is the missing TJÄNSTER sibling.
+#
+# DELIVERY-VINTAGE LAYOUTS (not a within-series year split): the export/import
+# value reaches an extract in one of two mutually-exclusive column layouts,
+# determined by the delivery vintage, NOT by year. The current delivery (per the
+# 30JUN25 sheet, "finns för samtliga årgångar 2004–2024") uses a single `Varde`
+# column plus a `Riktning` direction code (1=export, 5=import) for ALL years.
+# Older extracts (the 2004–2020 sheet) instead carry two columns `Intakt`/`Kostnad`.
+# An extract has ONE layout for its whole span — never both. We therefore window
+# the legacy `Intakt`/`Kostnad` to their documented vintage (≤2020) but leave
+# `Riktning`/`Varde` spanning all years (do NOT window them to post-2020 — that
+# would falsely hide them for 2004–2020, which the current delivery does provide).
+[[register]]
+key = "utrikeshandel-tjanster"
+name = "Utrikeshandel med tjänster"
+valid_from = "2004-01-01"  # first delivered year (2003 excluded)
+purpose = "Utrikeshandel med tjänster (UHT): företagens kvartalsvis rapporterade utrikes tjänstehandel, klassificerad enligt IMF:s betalningsbalansmanual BPM6. Belopp i tusentals kronor, fördelat på tjänsteslag (Scbkod) och motpartsland (Landkod). Levererade årgångar 2004–2024. Komplement till utrikeshandel med varor (scb/utrikeshandel)."
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "Peorgnr"
+definition = "Person- eller organisationsnummer för det rapporterande företaget (levereras pseudonymiserat som ScbID = Peorgnr + löpnummer)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Redovisningsår"
+column = "Ar"
+definition = "Redovisningsår (årgång)."
+data_type = "text"
+
+[[register.variable]]
+name = "Kvartal"
+column = "Kvartal"
+definition = "Redovisningskvartal (1–4)."
+data_type = "text"
+
+[[register.variable]]
+name = "Tjänsteslag (Scbkod)"
+column = "Scbkod"
+definition = "Tjänsteslag enligt SCB:s kodlista (BPM6), t.ex. 410 = datatjänster. Klartext i Scbtext."
+data_type = "text"
+value_set = "scbkoder"
+
+[[register.variable]]
+name = "Land (Landkod)"
+column = "Landkod"
+definition = "Motpartsland enligt SCB:s landkodlista. Klartext i Landtext. Obs: en del uppgifter är ej landfördelade (landfördelning blev obligatorisk 2013)."
+data_type = "text"
+value_set = "landkoder"
+
+# Riktning + Värde are the CURRENT delivery layout — present for samtliga årgångar
+# (all years 2004–) in today's extract, so they inherit the register valid_from
+# (2004) and stay open-ended. Do NOT add valid_from=2021: that would falsely hide
+# them for 2004–2020, which the current single-column layout does deliver. They are
+# a delivery-vintage alternative to Intäkt/Kostnad, not a later-year successor.
+[[register.variable]]
+name = "Riktning"
+column = "Riktning"
+definition = "Handelsriktning i den nuvarande leveranslayouten (en värdekolumn + riktningskod): 1 = export/intäkt, 5 = import/kostnad. Finns för samtliga årgångar; äldre uttag använder i stället de två kolumnerna Intäkt/Kostnad."
+data_type = "text"
+value_set = "riktning"
+
+[[register.variable]]
+name = "Värde"
+column = "Varde"
+definition = "Handelsvärde i tusentals kronor i den nuvarande leveranslayouten (export/import avgörs av Riktning). Finns för samtliga årgångar; motsvarar Intäkt+Kostnad i den äldre tvåkolumnslayouten."
+data_type = "decimal"
+
+# Intäkt + Kostnad are the LEGACY two-column layout, present only in older extracts
+# (documented through årgång 2020). The valid_to below is the vintage's documented
+# coverage, NOT a within-series cutoff — a given extract carries either this pair OR
+# Riktning/Värde, never both.
+[[register.variable]]
+name = "Intäkt (export)"
+column = "Intakt"
+definition = "Exportvärde i tusentals kronor i den ÄLDRE tvåkolumnslayouten (Intäkt/Kostnad). Förekommer i äldre uttag (dokumenterad t.o.m. årgång 2020); i nuvarande leverans ersatt av Värde med Riktning=1. Ett uttag har antingen Intäkt/Kostnad eller Riktning/Värde, inte båda."
+data_type = "decimal"
+valid_to = "2020-12-31"  # legacy two-column vintage; documented coverage ends 2020
+
+[[register.variable]]
+name = "Kostnad (import)"
+column = "Kostnad"
+definition = "Importvärde i tusentals kronor i den ÄLDRE tvåkolumnslayouten (Intäkt/Kostnad). Förekommer i äldre uttag (dokumenterad t.o.m. årgång 2020); i nuvarande leverans ersatt av Värde med Riktning=5. Ett uttag har antingen Intäkt/Kostnad eller Riktning/Värde, inte båda."
+data_type = "decimal"
+valid_to = "2020-12-31"  # legacy two-column vintage; documented coverage ends 2020

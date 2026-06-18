@@ -22,6 +22,21 @@ from __future__ import annotations
 from hashlib import blake2b
 
 _MINT_BIT = 1 << 62
+# Curated CANONICAL-SCB content (#444) — registers/variants/variables/states that
+# belong to the `scb` provider but are not in SCB's machine export (e.g.
+# Utrikeshandel med tjänster). They MUST stay in the SCB low band (`< 2^62`, the
+# band check forbids a high-band scb id), yet be disjoint from real source-derived
+# SCB ids. Setting bit 61 (and clearing bit 62) puts them in the reserved sub-band
+# ``[2^61, 2^62)``: still low-band, but far above every real SCB id (small
+# source integers, all ``< 2^61``). Disjoint from the minted band by construction.
+_CANONICAL_SCB_BIT = 1 << 61
+
+
+def _digest(*parts: str) -> int:
+    data = b"".join(
+        len(b).to_bytes(4, "big") + b for b in (p.encode("utf-8") for p in parts)
+    )
+    return int.from_bytes(blake2b(data, digest_size=8, person=b"regmeta-id").digest())
 
 
 def mint(*parts: str) -> int:
@@ -37,8 +52,19 @@ def mint(*parts: str) -> int:
     it as minted (disjoint from the SCB source-ID band ``[0, 2^62)``).
     Deterministic: identical ``parts`` always mint the same ID.
     """
-    data = b"".join(
-        len(b).to_bytes(4, "big") + b for b in (p.encode("utf-8") for p in parts)
-    )
-    digest = blake2b(data, digest_size=8, person=b"regmeta-id").digest()
-    return (int.from_bytes(digest, "big") & (_MINT_BIT - 1)) | _MINT_BIT
+    return (_digest(*parts) & (_MINT_BIT - 1)) | _MINT_BIT
+
+
+def mint_canonical_scb(*parts: str) -> int:
+    """Deterministically mint a CANONICAL-SCB id in the reserved sub-band
+    ``[2^61, 2^62)`` from ``parts`` (#444).
+
+    Same blake2b hashing as :func:`mint`, but the body is the low 61 bits and bit
+    61 (not bit 62) is set. The result is **low-band** (``< 2^62``), so it passes
+    the SCB-provider band check, while staying above every real source-derived SCB
+    id and disjoint from the minted band ``[2^62, 2^63)``. Use for registers /
+    variants / variables / states curated onto the `scb` provider but absent from
+    SCB's machine export. (value_set / value_code ids are unbanded — they keep
+    their content-addressed AUTOINCREMENT ids.)
+    """
+    return (_digest(*parts) & (_CANONICAL_SCB_BIT - 1)) | _CANONICAL_SCB_BIT

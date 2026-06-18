@@ -1,0 +1,90 @@
+code,label
+102,Inköp av varor för byggprojekt i utlandet
+104,Bearbetning av varor som ägs av andra
+105,Reparationer och underhåll av varor (exkl. datorer och byggnader)
+140,Godsfrakter på hav
+141,Godsfrakter med flyg
+142,Godsfrakter med tåg
+143,Godsfrakter på väg
+151,Vägfrakter med egna fordon/egen personal
+152,Vägfrakter med lejda fordon/lejd personal
+153,Godsfrakter med fartyg
+154,Godsfrakter med flyg
+155,Godsfrakter med tåg
+156,Godsfrakter på väg
+157,"Bruttointäkter/-kostnader av pooler, godstrafik"
+170,"Väg-, bro- och färjeavgifter"
+171,Flygplatsavgifter
+172,Hamn- och farledstjänster
+173,"Stödtjänster vid transport (hav, flyg, tåg eller väg)"
+174,"Övriga transporttjänster (inkl. lagrings-, speditions- och transiteringstjänster)"
+175,Reparation av transportmedel
+176,Godshantering
+180,Rymdtransporter
+181,Pipelinetransporter
+182,Överföring av elektricitet
+191,Persontransporter på inlandsvatten
+192,Godsfrakter på inlandsvatten
+193,Stödtjänster vid transport på inlandsvatten
+200,Persontransporter på hav
+201,Persontransporter med flyg
+203,Persontransporter med tåg
+204,Persontransporter på väg
+205,"Bruttointäkter/-kostnader av pooler, passagerartrafik"
+206,Persontransporter med båt
+207,Persontransporter med flyg
+208,Persontransporter med tåg
+209,Persontransporter på väg
+222,"Övriga reserelaterade tjänster (logi, konferenser m.m.)"
+233,Utbildningstjänster utförda i Sverige
+234,Utbildningstjänster utförda i Utlandet
+235,Sjukvårdstjänster utförda i Sverige
+236,Sjukvårdstjänster utförda i Utlandet
+302,Liv- och pensionsförsäkring
+303,Övrig sakförsäkring
+309,Fraktförsäkring
+310,Återförsäkring
+315,Liv- och pensionsförsäkring
+316,Fraktförsäkring
+317,Övrig direktförsäkring
+318,Återförsäkring
+321,Stödtjänster till försäkring
+331,Finansiella tjänster
+335,Pensionstjänster
+336,Tjänster relaterade till standardiserade garantier
+390,"Erhållna/erlagda tidshyror för fartyg, offshoreplattformar"
+400,"Operationell leasing (exkl. uthyrning/inhyrning av fartyg, offshoreplattformar)"
+401,Operationell leasing och uthyrning
+402,"Postbefordran, kurirtjänster"
+403,"Telekommunikation, överföring via tele-, datanät och satellit m.m."
+404,Operationell leasing (exkl. uthyrning/inhyrning av flygplan)
+405,Operationell leasing (exkl. uthyrning/inhyrning av tåg)
+406,Operationell leasing (exkl. uthyrning/inhyrning av fordon för transporter)
+407,Uthyrning / inhyrning av fordon (utan förare)
+408,Uthyrning / inhyrning av flygplan (utan besättning)
+409,Uthyrning / inhyrning av tåg (utan förare)
+410,Datatjänster
+411,Informationstjänster
+412,Bygg- och anläggningstjänster utförda i utlandet
+413,Byggnads- och installationstjänster utförda i Sverige
+424,Franchising och liknande rättigheter
+425,Avgifter för användning av immateriella rättigheter (exkl. nyttjanderättigheter för programvara och audiovisuellt material)
+426,Tillhandahållande av kundanpassad och icke-kundanpassad FoU
+427,Försäljning och köp av rättigheter med ursprung i FoU (exkl. rättigheter för programvara och audiovisuellt material)
+428,Övrig forskning och utveckling
+430,Juridiska tjänster
+432,"Redovisnings-, bokförings- och revisionstjänster"
+433,"Konsulttjänster avseende företags förvaltning, organisation och styrning samt PR-tjänster"
+440,Reklam- och marknadsföringstjänster
+443,Arkitekttjänster
+444,Ingenjörstjänster
+445,Vetenskapliga och andra tekniska tjänster
+450,Jord- och skogsbrukstjänster
+451,Gruvdrift- och oljeutvinningstjänster
+452,Avfallshantering och -rening
+460,Audiovisuella och konstnärliga tjänster
+461,Tjänster inom kultur och rekreation
+462,Övriga affärstjänster
+463,Andra tjänster mellan koncernföretag och huvudenhet/filial
+465,Övriga personliga tjänster
+473,Provisioner vid varu- och tjänsteförmedling
