@@ -2195,7 +2195,32 @@ def populate_variable_slugs(
     # Typo guard: every non-deprecated hand-curated [variable] override must have
     # matched a live variable above; an unmatched one is a stale/typo'd source
     # key that would silently no-op (the variable auto-slugs instead).
-    stale_overrides = sorted(curated_required - applied_curated)
+    #
+    # #563: a --providers-restricted build only populates SOME providers, so a
+    # curated [variable] override for an UN-built provider has no live variable to
+    # match — that's expected, not a typo. Gate the typo guard to the providers
+    # actually processed this run (set(provider_slugs)); the full default build
+    # still validates every provider. A genuine typo for a BUILT provider still fails.
+    # This is intentionally the LOOP set (providers actually slugged this run), not
+    # `_live_providers(conn)`: it stays aligned with `applied_curated` — only looped
+    # providers can have applied overrides. In an incremental/steward overlay the
+    # global providers are live but NOT re-slugged this run, so gating on all live
+    # providers would false-raise on their un-applied (but valid) overrides.
+    #
+    # #563 (Codex): the skip is for a KNOWN-but-not-built provider only. An override
+    # for an UNKNOWN provider stem (a misfiled TOML like `fkk.toml` for `fk.toml`)
+    # is a typo too and must still raise — `seed_providers` inserts all 8 providers
+    # unconditionally (and the steward path inserts its provider), so the `provider`
+    # table is the right "known" set in every build mode.
+    built_providers = set(provider_slugs)
+    known_providers = {r[0] for r in conn.execute("SELECT slug FROM provider")}
+    unmatched = curated_required - applied_curated
+    stale_overrides = sorted(
+        o for o in unmatched if o[0] in built_providers or o[0] not in known_providers
+    )
+    skipped_overrides = sorted(
+        o for o in unmatched if o[0] in known_providers and o[0] not in built_providers
+    )
     if stale_overrides:
         sample = ", ".join(f"{prov}/{sid}" for prov, sid in stale_overrides[:10])
         raise _err(
@@ -2204,7 +2229,16 @@ def populate_variable_slugs(
             f"reference a (register, var) with no live variable — likely a typo: "
             f"{sample}.",
             "Fix the source key, or mark the entry deprecated=true if the "
-            "variable is retired.",
+            "variable is retired (or a provider TOML misfiled under an unknown "
+            "provider slug).",
+        )
+
+    if skipped_overrides:
+        skipped_providers = sorted({o[0] for o in skipped_overrides})
+        _progress(
+            f"  {len(skipped_overrides)} [variable] override(s) for un-built "
+            f"provider(s) {', '.join(skipped_providers)} skipped "
+            f"(#563: not in this build's provider set)"
         )
 
     _progress(

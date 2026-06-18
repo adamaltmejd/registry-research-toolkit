@@ -1434,6 +1434,34 @@ class TestPopulateVariableSlugs:
         populate_variable_slugs(conn, d)
         assert self._stored_slug(conn, 44) == "kon-2"  # not the retired "kon"
 
+    def test_override_for_unbuilt_provider_is_skipped(self, tmp_path: Path) -> None:
+        # #563: a curated [variable] override for a provider NOT built this run (a
+        # --providers-restricted build: a thin provider's entity-key pin) has no live
+        # variable to match. It must be SKIPPED, not flagged stale — that provider was
+        # never built. The typo guard still fails for a BUILT provider
+        # (test_stale_curated_override_rejected).
+        conn = self._db(kol="Kon")  # only scb (register 1) is live
+        d = self._slug_dir(tmp_path)
+        (d / "fk.toml").write_text(
+            '[variable."99.personnummer"]\nslug = "personnummer"\n', encoding="utf-8"
+        )
+        populate_variable_slugs(conn, d)  # must NOT raise on the un-built fk override
+        assert self._stored_slug(conn, 44) == "kon"  # scb still slugs normally
+
+    def test_override_for_unknown_provider_still_fails(self, tmp_path: Path) -> None:
+        # #563 (Codex): a curated [variable] override under an UNKNOWN provider stem
+        # (a misfiled TOML — `fkk.toml` typo for `fk.toml`) is a real typo and must
+        # still raise, unlike a known-but-not-built provider (which is skipped).
+        conn = self._db(kol="Kon")  # seeds all 8 providers; only scb is live
+        d = self._slug_dir(tmp_path)
+        (d / "fkk.toml").write_text(  # `fkk` is not a seeded provider
+            '[variable."99.personnummer"]\nslug = "personnummer"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_variable_override_stale"
+        assert "fkk" in exc.value.message
+
     def test_curated_override_reusing_auto_slug_rejected(self, tmp_path: Path) -> None:
         # A curated override must not reuse a slug frozen for a DIFFERENT source
         # in auto.toml — it would duplicate a published FQID (or hit UNIQUE).

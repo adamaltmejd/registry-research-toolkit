@@ -1672,6 +1672,71 @@ class TestSameAsBuildIntegration:
             conn.close()
 
 
+class TestRestrictedBuildUnbuiltProviderOverride:
+    """#563: a --providers-restricted build only populates SOME providers, so a
+    thin provider's curated `[variable]` entity-key pin (added by #555) has no
+    live variable to match. The typo guard (`slug_variable_override_stale`) must
+    SKIP it — that provider was never built — instead of failing the build.
+    The synthetic seed (`write_scb_input`) only produces SCB, so an `fk.toml`
+    override exercises the un-built-provider case end-to-end.
+    """
+
+    @staticmethod
+    def _write_scb_slug_dir(slug_dir: Path) -> None:
+        """Register/variant slugs that make the synthetic SCB build succeed —
+        the same shape as `TestSameAsBuildIntegration._write_slug_dir`."""
+        (slug_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "testreg"\n'
+            '[register."2"]\nslug = "otherreg"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."2.20"]\nslug = "foretag"\n',
+            encoding="utf-8",
+        )
+        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
+
+    def test_restricted_build_skips_unbuilt_provider_override(
+        self, tmp_path: Path
+    ) -> None:
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        write_scb_input(input_dir)
+        self._write_scb_slug_dir(slug_dir)
+        # fk is seeded as a provider but the synthetic seed builds NO fk
+        # registers, so it's the un-built-provider case: this override has no
+        # live variable to match and must be skipped, not flagged stale.
+        (slug_dir / "fk.toml").write_text(
+            '[variable."99.personnummer"]\nslug = "personnummer"\n', encoding="utf-8"
+        )
+        # Must reach here without raising slug_variable_override_stale.
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            slug_dir=slug_dir,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            # The SCB build still populated variable slugs normally.
+            n = conn.execute(
+                "SELECT COUNT(*) FROM variable WHERE slug IS NOT NULL"
+            ).fetchone()[0]
+            assert n > 0
+            # fk is a seeded provider but the synthetic build produced NO fk
+            # variables, so the fk.toml override genuinely hit the un-built-provider
+            # skip path (not a vacuous pass where fk.toml simply wasn't loaded).
+            fk_vars = conn.execute(
+                "SELECT COUNT(*) FROM variable v "
+                "JOIN register r ON v.register_id = r.register_id "
+                "JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE p.slug = 'fk'"
+            ).fetchone()[0]
+            assert fk_vars == 0
+        finally:
+            conn.close()
+
+
 class TestOperationalDefinitionFold:
     """SCB ships `VariabelOperationell_definition` as a refinement
     over `Variabelbeskrivning`. The Model A schema drops the dedicated column
