@@ -36,6 +36,62 @@ class TestValidateModule:
         assert "[OK] value_code_fts present" in report
         assert "[value-code search]" in report
 
+    def test_classification_succession_section_renders(self, fixture_db: Path):
+        """#571: the classification-succession structural section runs on a fresh
+        synthetic build (corpus=False) so a regression can't drop it silently."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert "[classification succession]" in result.format_report()
+
+    @staticmethod
+    def _seed_classification(
+        conn: sqlite3.Connection, short_name: str, slug: str
+    ) -> None:
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+            (short_name, short_name, slug),
+        )
+
+    def test_classification_succession_self_loop_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#571: a self-loop succession edge (predecessor == successor) fails the
+        structural check."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        self._seed_classification(conn, "SSYK2012", "ssyk2012")
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('ssyk2012', 'ssyk2012', 2020, 'derived:vintage_chain')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("self-loop succession edge" in f for f in result.failures)
+
+    def test_classification_succession_dangling_slug_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#571: a succession edge pointing at an unknown classification slug
+        fails the structural resolution check."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        self._seed_classification(conn, "SSYK1996", "ssyk1996")
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('ssyk1996', 'no-such-slug-9999', 2020, 'derived:vintage_chain')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("unknown classification slug" in f for f in result.failures)
+
     def test_missing_value_code_fts_surfaces_failure(
         self, fixture_db: Path, tmp_path: Path
     ):

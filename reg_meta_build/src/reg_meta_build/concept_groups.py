@@ -22,11 +22,18 @@ never claims an already-grouped member):
 1. ``token`` — exact curated vocabularies only (NO regex name-patterns, per
    the standing curation rule): Swedish month slug tails (both the short and
    full forms SCB mixes, e.g. lisa's agi1lonfinkjan…agi1lonfinkdec) for
-   variables, and 4-digit vintage-year slug tails (lkf1980…, sni2007) for
-   classifications. Guarded — a slug merely ending in "maj" must not fold:
-   variables need >= ``_MIN_MONTH_SIBLINGS`` distinct months on one stem AND
-   label-prefix agreement; classifications need >= ``_MIN_VINTAGE_SIBLINGS``
-   vintages AND year-stripped-name agreement.
+   variables. Guarded — a slug merely ending in "maj" must not fold: variables
+   need >= ``_MIN_MONTH_SIBLINGS`` distinct months on one stem AND label-prefix
+   agreement.
+
+   Classification VINTAGE families are detected by the SAME slug-tail rule
+   (4-digit year + name-agreement guard) but are NOT folded into a concept group
+   (#571): editions of one classification (ssyk1996→ssyk2012, lkf1980…lkf2026)
+   are a temporal SUCCESSION, not a parallel facet-picker. They materialize as
+   adjacent-edition edges in ``classification_replaced_by`` instead — see
+   ``derive_classification_succession``. The ``concept_group_classification``
+   table and the ``kind='classification'`` machinery are RETAINED (empty of
+   derived rows) for the curated umbrella groups #516 adds later.
 2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), two
    opt-in entry kinds:
    - ``[[variable_group]]`` — a hand-authored family with an exact member list:
@@ -115,8 +122,8 @@ _MONTH_LABELS: dict[int, str] = {
 _MIN_MONTH_SIBLINGS = 3
 _MIN_LABEL_PREFIX = 5
 
-# Classification vintage families need only 2 members (the catalog is tiny and
-# curated — agarkat2000/2020, ssyk1996/2012 are genuine 2-vintage families)
+# Classification vintage chains need only 2 editions (the catalog is tiny and
+# curated — agarkat2000/2020, ssyk1996/2012 are genuine 2-vintage successions)
 # but the STRONGER name guard: every member's name must contain its vintage
 # year, and the year-stripped names must all be identical.
 _MIN_VINTAGE_SIBLINGS = 2
@@ -632,18 +639,32 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
     return n_groups
 
 
-def _derive_classification_vintage_groups(conn: sqlite3.Connection) -> int:
-    """Dimension 1 (classifications): fold 4-digit vintage-year slug tails
-    (lkf1980…lkf2026, sni2002/sni2007, agarkat2000/2020, …). Guard: every
-    member's name contains its vintage year AND the year-stripped names all
-    agree — that agreed name is the group label. Members carry the year as
-    their single facet."""
+def derive_classification_succession(conn: sqlite3.Connection) -> int:
+    """Classification EDITION succession (#571): detect 4-digit vintage-year slug
+    families (lkf1980…lkf2026, sni2002/sni2007, agarkat2000/2020, …) and emit a
+    temporal succession chain into `classification_replaced_by`, NOT a
+    presentation concept group — editions of one classification are a
+    succession, not a parallel facet-picker.
+
+    Detection is the same guarded slug-tail rule the old vintage-group fold used:
+    a 4-digit year tail on a non-digit-ending stem, >= `_MIN_VINTAGE_SIBLINGS`
+    editions per stem, every member's name contains its vintage year, and the
+    year-stripped names all agree. Past the guards, each stem's editions are
+    sorted by year and ADJACENT pairs become edges: for [y0<y1<…<yn], edges
+    (slug_y0→slug_y1), (slug_y1→slug_y2), …, with `effective_year` the
+    successor's year. Adjacent-chain (not predecessor→latest): succession is a
+    linear hand-off between consecutive vintages, so a query for "what replaced
+    ssyk1996?" must yield ssyk2012 directly, and walking the chain recovers the
+    full lineage — a star to the latest edition would lose the intermediate
+    hops.
+
+    Returns the edge count (e.g. lkf with 47 editions → 46 edges)."""
     rows = conn.execute(
-        "SELECT id, slug, name FROM classification WHERE slug IS NOT NULL ORDER BY slug"
+        "SELECT slug, name FROM classification WHERE slug IS NOT NULL ORDER BY slug"
     ).fetchall()
-    # stem → [(year, slug, classification_id, name)]
-    families: dict[str, list[tuple[int, str, int, str]]] = {}
-    for cls_id, slug, name in rows:
+    # stem → [(year, slug, name)]
+    families: dict[str, list[tuple[int, str, str]]] = {}
+    for slug, name in rows:
         tail = slug[-4:]
         if len(slug) < 5 or not tail.isdigit():
             continue
@@ -653,43 +674,33 @@ def _derive_classification_vintage_groups(conn: sqlite3.Connection) -> int:
         # vintage year.
         if year not in _VINTAGE_YEARS or stem[-1].isdigit():
             continue
-        families.setdefault(stem, []).append((year, slug, cls_id, name))
-    n_groups = 0
+        families.setdefault(stem, []).append((year, slug, name))
+    n_edges = 0
     for stem in sorted(families):
-        members = sorted(families[stem])
-        if len(members) < _MIN_VINTAGE_SIBLINGS:
+        editions = sorted(families[stem])
+        if len(editions) < _MIN_VINTAGE_SIBLINGS:
             continue
         stripped_names: set[str] = set()
         ok = True
-        for year, _slug, _cls_id, name in members:
+        for year, _slug, name in editions:
             if not name or str(year) not in name:
                 ok = False
                 break
             stripped_names.add(" ".join(name.replace(str(year), "", 1).split()))
-        if not ok or len(stripped_names) != 1:
+        if not ok or len(stripped_names) != 1 or not next(iter(stripped_names)):
             continue
-        label = next(iter(stripped_names))
-        if not label:
-            continue
-        group_id = _insert_group(
-            conn,
-            kind="classification",
-            register_id=None,
-            group_key=stem,
-            label=label,
-            source="token",
-        )
+        edges = [
+            (pred[1], succ[1], succ[0])
+            for pred, succ in zip(editions, editions[1:], strict=False)
+        ]
         conn.executemany(
-            "INSERT INTO concept_group_classification "
-            "(classification_id, group_id, facet_value, facet_label) "
-            "VALUES (?, ?, ?, ?)",
-            [
-                (cls_id, group_id, f"{year:04d}", str(year))
-                for year, _slug, cls_id, _name in members
-            ],
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES (?, ?, ?, 'derived:vintage_chain')",
+            edges,
         )
-        n_groups += 1
-    return n_groups
+        n_edges += len(edges)
+    return n_edges
 
 
 def _apply_curated_groups(
@@ -883,10 +894,15 @@ def materialize_concept_groups(
     `[[variable_group]]` families share the existing `_apply_curated_groups`
     path (accepted members are all `variable=` attachments — the candidate
     generator guarantees they're ungrouped + non-colliding). Unaccepted auto
-    families are NEVER materialized."""
+    families are NEVER materialized.
+
+    Classification VINTAGE families no longer fold here (#571) — their editions
+    materialize as succession edges via `derive_classification_succession`
+    (called separately in the build, beside the other `*_replaced_by` passes).
+    `concept_group_classification` stays in the schema (empty of derived rows)
+    for the curated umbrella groups #516 adds later."""
     _derive_edge_groups(conn)
     _derive_month_groups(conn, warn or (lambda _msg: None))
-    _derive_classification_vintage_groups(conn)
     auto_by_scope = {(g.provider, g.register, g.key): g for g in auto}
     accepted = tuple(
         resolve_accept(a, auto_by_scope) for a in accepts if a.provider in providers
@@ -904,7 +920,6 @@ def materialize_concept_groups(
     counts = {
         "edge_groups": by_bucket.get(("edge", "variable"), 0),
         "month_groups": by_bucket.get(("token", "variable"), 0),
-        "vintage_groups": by_bucket.get(("token", "classification"), 0),
         "curated_groups": by_bucket.get(("curated", "variable"), 0),
     }
     counts["grouped_variables"] = conn.execute(

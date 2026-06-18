@@ -38,6 +38,7 @@ from .classifications import (
     repo_seed_path,
 )
 from .concept_groups import (
+    derive_classification_succession,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
@@ -1129,6 +1130,31 @@ CREATE TABLE variable_replaced_by (
 -- predecessor-first PK can't serve.
 CREATE INDEX idx_variable_replaced_by_successor
     ON variable_replaced_by(successor_provider, successor_register, successor_variable);
+
+-- Classification EDITION succession (#571): a temporal chain over vintages of
+-- ONE classification (ssyk1996→ssyk2012, lkf1980…lkf2026, sun-niva2000→
+-- sun-niva2020). Auto-derived from the slug-tail vintage families by
+-- `concept_groups.derive_classification_succession` — adjacent-edition edges
+-- (y0→y1, y1→y2, …), NOT a presentation facet-picker (editions are a
+-- succession, not parallel facets; see #571). A classification slug is GLOBALLY
+-- unique, so the edge anchors on slug alone — no provider segment (unlike the
+-- entity `*_replaced_by` tables, whose slugs are register-/provider-scoped).
+-- DIRECTIONAL like the other `replaced_by` edges: WITHOUT ROWID with a
+-- predecessor-first PK, so the clustered prefix serves the forward "what
+-- replaced X?" lookup; the reverse "what did X replace?" is served by the
+-- successor index below. `effective_year` is the successor edition's year;
+-- `note` records provenance (`derived:vintage_chain`). (A later PR #516 adds
+-- CURATED umbrella classification groups — e.g. SUN — via the retained
+-- `concept_group_classification` table; this succession layer is orthogonal.)
+CREATE TABLE classification_replaced_by (
+    predecessor_slug TEXT NOT NULL,
+    successor_slug   TEXT NOT NULL,
+    effective_year   INTEGER,
+    note             TEXT,
+    PRIMARY KEY (predecessor_slug, successor_slug)
+) WITHOUT ROWID;
+CREATE INDEX idx_classification_replaced_by_successor
+    ON classification_replaced_by(successor_slug);
 
 -- Consumer-side binding lineage (STATE grain; see DESIGN.md → Consumer-side lineage (variable_state_lineage)). Materialized by
 -- `link_variable_state_lineage`. One edge per (consumer_state, source_state)
@@ -3310,18 +3336,25 @@ def materialize(
         row_counts["concept_groups"] = (
             cg_counts["edge_groups"]
             + cg_counts["month_groups"]
-            + cg_counts["vintage_groups"]
             + cg_counts["curated_groups"]
         )
         _progress(
             f"  {row_counts['concept_groups']:,} concept groups "
             f"({cg_counts['edge_groups']:,} edge / "
             f"{cg_counts['month_groups']:,} month / "
-            f"{cg_counts['vintage_groups']:,} vintage / "
             f"{cg_counts['curated_groups']:,} curated; "
             f"{cg_counts['grouped_variables']:,} variables + "
             f"{cg_counts['grouped_classifications']:,} classifications grouped)"
         )
+
+        # Classification EDITION succession (#571) — adjacent-vintage chain
+        # edges into `classification_replaced_by` (ssyk1996→ssyk2012,
+        # lkf1980…lkf2026, …), NOT a presentation group. Same slug-dependent
+        # block: it reads `classification.slug` (populated by populate_slugs
+        # above; every slug is NULL under --skip-slugs).
+        n_succession = derive_classification_succession(conn)
+        row_counts["classification_replaced_by"] = n_succession
+        _progress(f"  {n_succession:,} classification succession edges")
 
         # Delivery-list description backfill (#365 PR1a) — fill empty
         # variable.description from curated delivery-list prose. Runs after
