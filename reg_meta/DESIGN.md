@@ -450,7 +450,9 @@ that annual state READ-TIME into one `VariableState` per overlapping month windo
 `value_set_version_label` come from the annual claim, so a year's windows SHARE one
 `state_id` (one claim, N representations) — the per-window identity is the compound
 (`state_id`, `delivery_column_name`, `valid_from`). A variable with no window rows
-(every non-merged variable) maps 1:1, byte-identically.
+(every non-merged variable) maps 1:1, byte-identically. The merge is explicitly retained
+under #518/#523; the retention rationale and the #523↔#496 two-layer boundary are
+recorded in `reg_meta_build/DESIGN.md` → *Consumers: monthly column families*.
 
 **`Period`** — `int | str | dict`, the polymorphic period `resolve_at` accepts (mirrors
 `Source.period`): a bare year (`2018`), a period token

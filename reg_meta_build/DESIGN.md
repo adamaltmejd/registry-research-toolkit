@@ -1424,6 +1424,56 @@ concept group (#303) now references these merged variables as plain `variable =`
 non-overlap invariant and `_check_variable_alias_covers_state_columns` both still hold
 for the survivor (its annual state's single column is one of the 12 retained aliases).
 
+##### Decision (#518/#523): retain the merge
+
+Under epic #518 (R4), issue #523 evaluated the monthly `family_merges` mechanism as the
+strongest deletion/reversal candidate before the epic's completion gate. The decision is
+to **retain it** (the gate explicitly permits retention with a documented reason).
+
+**Why retain.**
+
+- **FQIDs carry no time dimension.** The merge keeps the month *out* of variable
+  identity: one FQID per family, month is read-time via `variable_alias_window` /
+  `resolve_at`. The reversal model makes the month columns leaf variables with
+  month-suffixed FQIDs (`lonfinkjan`…`lonfinkdec`) — time leaks back into identity, the
+  model we deliberately avoid. Keeping a single time-free FQID while still resolving a
+  given month needs exactly the read-time window expansion the merge already provides.
+- **Bounded, closed set.** #319 + #383 enumerated every monthly family against the real
+  corpus (8 families, all 12-month, all bounded-delivery-year, HSL confirmed absent) — a
+  closed special case, not a growing pattern that would justify a generic framework or
+  create ongoing maintenance burden.
+- **Small, isolated, well-tested footprint.** One build pass (`family_merges.py`), one
+  stable DDL table (`variable_alias_window`, no schema-version churn since
+  introduction), one read-side method (`_expand_state_windows`, 1:1 byte-identical
+  passthrough for non-merged variables).
+- **Reversal moves complexity, doesn't remove it.** The main practical argument for
+  reversal — that bundle/export/mock-data would get explicit leaf bindings instead of
+  hidden `resolve_at` expansion — is already true today: the kit forces
+  one-binding→one-column via `check_single_delivery_column`; the bundle consumes static
+  resolved columns with zero runtime `resolve_at`; mock-data doesn't touch monthly
+  families. Reversal would re-create month expansion for the programmatic
+  `resolve_at("YYYY-MM")` path or accept that regression.
+
+**#523 ↔ #496 boundary (concept-group fold layer).** The merge and #496 are
+complementary layers:
+
+- **Merge = data/identity layer** (12 columns → 1 variable, pre-slug): the FQID has no
+  month; `resolve_at` gets month windows from `variable_alias_window`. Runs before
+  `populate_variable_slugs`.
+- **#496 = presentation layer** (variables → browse groups, post-slug): cannot re-fold a
+  merged family because the survivor slug no longer ends in a month token, so
+  `_derive_month_groups` deliberately skips it. A monthly family needs no concept group
+  to fold its months — the merge already did.
+- The **only** monthly family in a concept group is AGI (`agilonfink`, `axis = "rank"`):
+  the month dimension lives inside each merged variable; the group folds the rank axis
+  only. #496's systematic rank-axis folding is the same presentation layer and owns
+  that. #496 must never re-fold merged monthly families — only a rank axis where one
+  exists.
+
+**Deferred to #496.** Physical relocation/rename of `family_merges.toml` alongside the
+consolidated curation/grouping layer is an organizational move and is deferred to #496.
+The file stays put for now.
+
 #### Measurement and verification plan
 
 The instrument is `scripts/measure_subannual_codings.py` (reuses `_edition_bounds` /
