@@ -34,7 +34,7 @@ never claims an already-grouped member):
    ``derive_classification_succession``. The ``concept_group_classification``
    table and the ``kind='classification'`` machinery are RETAINED (empty of
    derived rows) for the curated umbrella groups #516 adds later.
-2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), two
+2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), three
    opt-in entry kinds:
    - ``[[variable_group]]`` — a hand-authored family with an exact member list:
      absorbs token groups under an extra facet axis (the LISA agi{1,2,3} rank
@@ -45,7 +45,13 @@ never claims an already-grouped member):
      (``resolve_accept`` turns it into a ``CuratedGroup`` of ``variable=``
      attachments). An auto family folds ONLY when accepted; unaccepted ones
      never materialize.
-   Both kinds fail fast on unresolvable references (EXIT_CONFIG).
+   - ``[[classification_group]]`` (#516) — a curated ``kind='classification'``
+     umbrella over genuinely-DISTINCT classification dimensions (the SUN group
+     over niva/inriktning/grupp; NOT vintage editions, which are #571 succession
+     edges), single ``axis`` stored on ``concept_group.facet_axis``. Catalog-
+     scoped (classifications are global), materialized by
+     ``_apply_curated_classification_groups``.
+   All kinds fail fast on unresolvable references (EXIT_CONFIG).
 
 When the interval-native model (#271) lands its column→variable merges, the
 month groups graduate into real single variables and this layer shrinks to
@@ -184,6 +190,33 @@ class Accept:
     exclude: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class ClassificationGroupMember:
+    """One member of a curated CLASSIFICATION umbrella group: the `classification`
+    slug (catalog-global, e.g. `sun-niva2020`) and its `value`/`label` on the
+    group's single `axis` (the SUN group's `dimension` axis → 'niva'/'inriktning'/
+    'grupp')."""
+
+    classification: str
+    value: str
+    label: str
+
+
+@dataclass(frozen=True)
+class ClassificationGroup:
+    """One curated `[[classification_group]]` umbrella (#516): a single-axis fold
+    over genuinely-DISTINCT classification dimensions (NOT vintage editions —
+    those are #571 succession edges). `axis` is the one shared facet axis stored
+    on `concept_group.facet_axis`; every member sits on it. Catalog-scoped
+    (classifications are global), so unlike `CuratedGroup` it carries no
+    provider/register."""
+
+    key: str
+    label: str
+    axis: str
+    members: tuple[ClassificationGroupMember, ...]
+
+
 def repo_concept_groups_path() -> Path | None:
     """`reg_meta_build/concept_groups.toml` from a repo checkout, or None
     (wheel installs don't ship curation — it's a maintainer artifact like the
@@ -235,11 +268,12 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         code_base="concept_groups",
         file_name="concept_groups.toml",
         entry_fields="register / key / label / axis / members",
-        # `concept_groups.toml` carries a second entry kind — `[[accept]]` (folds
-        # an auto family by reference, parsed by `load_concept_group_accepts`) —
-        # so it's a legal sibling here, not an unknown-top-level typo. Harmless
-        # for `concept_groups.auto.toml`, which has no `[[accept]]` tables.
-        sibling_keys=frozenset({"accept"}),
+        # `concept_groups.toml` carries two other entry kinds — `[[accept]]`
+        # (folds an auto family by reference, `load_concept_group_accepts`) and
+        # `[[classification_group]]` (curated umbrella, `load_classification_groups`)
+        # — so both are legal siblings here, not unknown-top-level typos. Harmless
+        # for `concept_groups.auto.toml`, which carries neither.
+        sibling_keys=frozenset({"accept", "classification_group"}),
     )
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -351,7 +385,7 @@ def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
         code_base="concept_groups",
         file_name="concept_groups.toml",
         entry_fields="register / key (+ optional label / axis / exclude)",
-        sibling_keys=frozenset({"variable_group"}),
+        sibling_keys=frozenset({"variable_group", "classification_group"}),
     )
     out: list[Accept] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -450,6 +484,94 @@ def resolve_accept(
     )
 
 
+def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, ...]:
+    """Parse the curated `[[classification_group]]` umbrella tables (#516): a
+    single-axis fold over genuinely-distinct classification dimensions (the SUN
+    group over niva/inriktning/grupp). Empty when no file (synthetic builds,
+    wheel installs) or no `[[classification_group]]` tables.
+
+    Load-time validation (all EXIT_CONFIG, actionable): `key`/`label`/`axis`
+    non-empty strings; `members` a non-empty array of tables, each setting
+    non-empty `classification` (slug) / `value` / `label`; member slugs unique;
+    `key` unique; >= 2 members. Slug RESOLUTION (does the classification exist?)
+    happens at materialize time against the built DB."""
+    entries = load_curation_entries(
+        path,
+        entry_key="classification_group",
+        label="classification-group",
+        prefix="concept_groups",
+        code_base="concept_groups",
+        file_name="concept_groups.toml",
+        entry_fields="key / label / axis / members",
+        sibling_keys=frozenset({"variable_group", "accept"}),
+    )
+    out: list[ClassificationGroup] = []
+    seen_keys: set[str] = set()
+    for entry in entries:
+        key = _require_str(entry, "key", "[[classification_group]]")
+        label = _require_str(entry, "label", "[[classification_group]]")
+        axis = _require_str(entry, "axis", "[[classification_group]]")
+        if key in seen_keys:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups duplicate classification_group key {key!r}.",
+                "Classification-group keys must be unique.",
+            )
+        seen_keys.add(key)
+        raw_members = entry.get("members", [])
+        if not isinstance(raw_members, list) or not raw_members:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups classification_group {key!r} needs a non-empty "
+                "`[[classification_group.members]]` array.",
+                "List the umbrella's members as "
+                "`[[classification_group.members]]` tables.",
+            )
+        members: list[ClassificationGroupMember] = []
+        seen_slugs: set[str] = set()
+        for raw in raw_members:
+            if not isinstance(raw, dict):
+                raise curation_error(
+                    "concept_groups_invalid",
+                    f"concept_groups classification_group {key!r} member {raw!r} "
+                    "must be a table.",
+                    "Each member is a `[[classification_group.members]]` table.",
+                )
+            classification = _require_str(
+                raw, "classification", f"classification_group {key!r} member"
+            )
+            if classification in seen_slugs:
+                raise curation_error(
+                    "concept_groups_invalid",
+                    f"concept_groups classification_group {key!r} references "
+                    f"classification {classification!r} twice.",
+                    "List each member classification once.",
+                )
+            seen_slugs.add(classification)
+            members.append(
+                ClassificationGroupMember(
+                    classification=classification,
+                    value=_require_str(
+                        raw, "value", f"classification_group {key!r} member"
+                    ),
+                    label=_require_str(
+                        raw, "label", f"classification_group {key!r} member"
+                    ),
+                )
+            )
+        if len(members) < 2:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups classification_group {key!r} has {len(members)} "
+                "member(s); a group needs >= 2.",
+                "A single-member umbrella is not a group — add members or remove it.",
+            )
+        out.append(
+            ClassificationGroup(key=key, label=label, axis=axis, members=tuple(members))
+        )
+    return tuple(out)
+
+
 # ── derivation passes ───────────────────────────────────────────────────────
 
 
@@ -461,11 +583,13 @@ def _insert_group(
     group_key: str,
     label: str,
     source: str,
+    facet_axis: str | None = None,
 ) -> int:
     cur = conn.execute(
-        "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
-        "VALUES (?, ?, ?, ?, ?)",
-        (kind, register_id, group_key, label, source),
+        "INSERT INTO concept_group "
+        "(kind, register_id, group_key, label, source, facet_axis) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        (kind, register_id, group_key, label, source, facet_axis),
     )
     group_id = cur.lastrowid
     assert group_id is not None
@@ -868,12 +992,76 @@ def _apply_curated_groups(
     return n_groups
 
 
+def _apply_curated_classification_groups(
+    conn: sqlite3.Connection, groups: tuple[ClassificationGroup, ...]
+) -> int:
+    """Curated classification umbrella groups (#516): the `kind='classification'`
+    dual of `_apply_curated_groups`. Each group inserts a `concept_group` row
+    (register_id NULL — classifications are catalog-global; `facet_axis` = the
+    group's single axis), then resolves every member's `classification` slug
+    globally and wires it as a `concept_group_classification` row carrying the
+    member's facet `value`/`label`. Every dangling slug or already-grouped
+    classification fails the build (EXIT_CONFIG) — curation drift is fixed, not
+    silently dropped. Mirrors `_apply_curated_groups`' error style."""
+    n_groups = 0
+    for g in groups:
+        ctx = f"[[classification_group]] {g.key!r}"
+        group_id = _insert_group(
+            conn,
+            kind="classification",
+            register_id=None,
+            group_key=g.key,
+            label=g.label,
+            source="curated",
+            facet_axis=g.axis,
+        )
+        n_members = 0
+        for m in g.members:
+            row = conn.execute(
+                "SELECT id FROM classification WHERE slug = ?", (m.classification,)
+            ).fetchone()
+            if row is None:
+                raise curation_error(
+                    "concept_groups_unresolved",
+                    f"{ctx}: member classification {m.classification!r} does not "
+                    "resolve (no classification carries that slug).",
+                    "Fix the member's `classification` slug in "
+                    "reg_meta_build/concept_groups.toml.",
+                )
+            try:
+                conn.execute(
+                    "INSERT INTO concept_group_classification "
+                    "(classification_id, group_id, facet_value, facet_label) "
+                    "VALUES (?, ?, ?, ?)",
+                    (row[0], group_id, m.value, m.label),
+                )
+            except sqlite3.IntegrityError as exc:
+                raise curation_error(
+                    "concept_groups_unresolved",
+                    f"{ctx}: member classification {m.classification!r} already "
+                    "belongs to a concept group.",
+                    "A classification joins at most one group — remove the "
+                    "duplicate member in reg_meta_build/concept_groups.toml.",
+                ) from exc
+            n_members += 1
+        if n_members < 2:
+            raise curation_error(
+                "concept_groups_unresolved",
+                f"{ctx}: resolves to {n_members} member classification(s); a group "
+                "needs >= 2.",
+                "A single-member umbrella is not a group — add members or remove it.",
+            )
+        n_groups += 1
+    return n_groups
+
+
 def materialize_concept_groups(
     conn: sqlite3.Connection,
     curated: tuple[CuratedGroup, ...] = (),
     *,
     auto: tuple[CuratedGroup, ...] = (),
     accepts: tuple[Accept, ...] = (),
+    classification_groups: tuple[ClassificationGroup, ...] = (),
     providers: frozenset[str] = frozenset(),
     warn: Callable[[str], None] | None = None,
 ) -> dict[str, int]:
@@ -899,8 +1087,12 @@ def materialize_concept_groups(
     Classification VINTAGE families no longer fold here (#571) — their editions
     materialize as succession edges via `derive_classification_succession`
     (called separately in the build, beside the other `*_replaced_by` passes).
-    `concept_group_classification` stays in the schema (empty of derived rows)
-    for the curated umbrella groups #516 adds later."""
+    `concept_group_classification` stays in the schema (empty of DERIVED rows)
+    for the curated umbrella groups (#516): `classification_groups` is the
+    maintainer's `[[classification_group]]` TOML (the SUN umbrella over its
+    distinct dimensions), materialized via `_apply_curated_classification_groups`
+    after the variable curated pass. Classifications are catalog-GLOBAL, so these
+    are NOT provider-gated (unlike the variable curated/accept entries)."""
     _derive_edge_groups(conn)
     _derive_month_groups(conn, warn or (lambda _msg: None))
     auto_by_scope = {(g.provider, g.register, g.key): g for g in auto}
@@ -909,6 +1101,7 @@ def materialize_concept_groups(
     )
     custom = tuple(g for g in curated if g.provider in providers)
     _apply_curated_groups(conn, custom + accepted)
+    _apply_curated_classification_groups(conn, classification_groups)
     # Recount from the final table — a curated absorb DELETEs its token
     # groups, so per-pass return values would over-report the shipped state.
     by_bucket = {
@@ -921,6 +1114,9 @@ def materialize_concept_groups(
         "edge_groups": by_bucket.get(("edge", "variable"), 0),
         "month_groups": by_bucket.get(("token", "variable"), 0),
         "curated_groups": by_bucket.get(("curated", "variable"), 0),
+        "classification_curated_groups": by_bucket.get(
+            ("curated", "classification"), 0
+        ),
     }
     counts["grouped_variables"] = conn.execute(
         "SELECT COUNT(*) FROM concept_group_variable"

@@ -164,6 +164,38 @@ key = "gdiag"
 label = "Diagnoskod under graviditet"
 axis = "ordinal"
 
+# ── Curated classification umbrella groups (#516) ───────────────────────────
+# A [[classification_group]] folds genuinely-DISTINCT classification dimensions
+# under one browse umbrella with a single `axis` — NOT vintage editions (those
+# are #571 succession edges in classification_replaced_by). Members are exact
+# `classification = "<slug>"` references (the standing curation rule forbids
+# name patterns); each carries its `value`/`label` on the group's `axis`.
+# Catalog-scoped (classifications are global), resolved by slug at materialize
+# time — a dangling slug or an already-grouped classification FAILS the build.
+
+# SUN — Svensk utbildningsnomenklatur. Its three CURRENT (2020) editions are the
+# genuinely-distinct dimensions of one education classification (level /
+# orientation / grouping), so they fold under a single `dimension` axis. The
+# older sun1996 + 2000 editions are intentionally LEFT OUT — each is a temporal
+# succession of its dimension (a render/succession follow-up), not a parallel
+# dimension.
+[[classification_group]]
+key = "sun"
+label = "Svensk utbildningsnomenklatur (SUN)"
+axis = "dimension"
+[[classification_group.members]]
+classification = "sun-niva2020"
+value = "niva"
+label = "Utbildningsnivå"
+[[classification_group.members]]
+classification = "sun-inriktning2020"
+value = "inriktning"
+label = "Utbildningsinriktning"
+[[classification_group.members]]
+classification = "sun-grupp2020"
+value = "grupp"
+label = "Utbildningsgrupper"
+
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
 # största / tredje största förvärvskälla). #319 merged each rank's 12 month

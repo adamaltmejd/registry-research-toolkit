@@ -19,9 +19,12 @@ from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.concept_groups import (
     Accept,
+    ClassificationGroup,
+    ClassificationGroupMember,
     CuratedGroup,
     CuratedMember,
     derive_classification_succession,
+    load_classification_groups,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
@@ -440,6 +443,326 @@ class TestCuratedGroups:
         assert exc.value.code == "concept_groups_unresolved"
 
 
+def _sun_group(**overrides) -> ClassificationGroup:
+    """A SUN-like 3-dimension umbrella over single-axis distinct classifications."""
+    kwargs: dict = {
+        "key": "sun",
+        "label": "Svensk utbildningsnomenklatur (SUN)",
+        "axis": "dimension",
+        "members": (
+            ClassificationGroupMember("sun-niva2020", "niva", "Utbildningsnivå"),
+            ClassificationGroupMember(
+                "sun-inriktning2020", "inriktning", "Utbildningsinriktning"
+            ),
+            ClassificationGroupMember("sun-grupp2020", "grupp", "Utbildningsgrupper"),
+        ),
+    }
+    kwargs.update(overrides)
+    return ClassificationGroup(**kwargs)
+
+
+class TestClassificationGroups:
+    """#516: curated `kind='classification'` umbrella groups (the SUN umbrella),
+    materialized via `_apply_curated_classification_groups`."""
+
+    def _db(self) -> sqlite3.Connection:
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, "SUN2020-NIVA", "SUN 2020 — Nivå", "sun-niva2020")
+        _add_classification(
+            conn, "SUN2020-INR", "SUN 2020 — Inriktning", "sun-inriktning2020"
+        )
+        _add_classification(
+            conn, "SUN2020-GRUPP", "SUN 2020 — Grupper", "sun-grupp2020"
+        )
+        return conn
+
+    def test_resolves_to_one_dimension_group(self) -> None:
+        conn = self._db()
+        counts = materialize_concept_groups(
+            conn, classification_groups=(_sun_group(),), providers=_SCB
+        )
+        assert counts["classification_curated_groups"] == 1
+        assert counts["grouped_classifications"] == 3
+        group = _groups(conn)["sun"]
+        assert group["kind"] == "classification"
+        assert group["register_id"] is None
+        assert group["source"] == "curated"
+        # facet_value-ordered members carry the dimension facet.
+        assert group["cls_members"] == [
+            ("sun-grupp2020", "grupp", "Utbildningsgrupper"),
+            ("sun-inriktning2020", "inriktning", "Utbildningsinriktning"),
+            ("sun-niva2020", "niva", "Utbildningsnivå"),
+        ]
+        axis = conn.execute(
+            "SELECT facet_axis FROM concept_group WHERE group_key = 'sun'"
+        ).fetchone()[0]
+        assert axis == "dimension"
+
+    def test_not_provider_gated(self) -> None:
+        # Classifications are catalog-global — the umbrella materializes even when
+        # the build's active providers don't include scb (unlike variable groups).
+        conn = self._db()
+        counts = materialize_concept_groups(
+            conn,
+            classification_groups=(_sun_group(),),
+            providers=frozenset({"sos"}),
+        )
+        assert counts["classification_curated_groups"] == 1
+
+    def test_unknown_slug_fails_fast(self) -> None:
+        conn = self._db()
+        group = _sun_group(
+            members=(
+                ClassificationGroupMember("sun-niva2020", "niva", "Nivå"),
+                ClassificationGroupMember("sun-nope2020", "nope", "Saknas"),
+            )
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(
+                conn, classification_groups=(group,), providers=_SCB
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "concept_groups_unresolved"
+
+    def test_already_grouped_classification_fails(self) -> None:
+        conn = self._db()
+        group = _sun_group()
+        # First umbrella claims the three slugs; a second umbrella naming one of
+        # them must fail (a classification joins at most one group).
+        materialize_concept_groups(conn, classification_groups=(group,), providers=_SCB)
+        dup = ClassificationGroup(
+            key="sun2",
+            label="Dup",
+            axis="dimension",
+            members=(
+                ClassificationGroupMember("sun-niva2020", "niva", "Nivå"),
+                ClassificationGroupMember("sun-grupp2020", "grupp", "Grupp"),
+            ),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            _apply_dup(conn, dup)
+        assert exc.value.code == "concept_groups_unresolved"
+
+    def test_under_two_resolving_members_fails(self) -> None:
+        # Only one member resolves (the other slug is absent) → < 2 → fail. Use a
+        # DB carrying just one of the two referenced slugs.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, "SUN2020-NIVA", "SUN 2020 — Nivå", "sun-niva2020")
+        group = ClassificationGroup(
+            key="sun",
+            label="SUN",
+            axis="dimension",
+            members=(
+                ClassificationGroupMember("sun-niva2020", "niva", "Nivå"),
+                ClassificationGroupMember("sun-grupp2020", "grupp", "Grupp"),
+            ),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(
+                conn, classification_groups=(group,), providers=_SCB
+            )
+        assert exc.value.code == "concept_groups_unresolved"
+
+
+def _apply_dup(conn: sqlite3.Connection, group: ClassificationGroup) -> None:
+    """Apply ONE more classification umbrella against an already-materialized DB
+    (re-running the full `materialize_concept_groups` would re-derive edge/month
+    passes and re-insert the same groups). Calls the curated-classification pass
+    directly."""
+    from reg_meta_build.concept_groups import _apply_curated_classification_groups
+
+    _apply_curated_classification_groups(conn, (group,))
+
+
+class TestClassificationGroupLoader:
+    @staticmethod
+    def _load(tmp_path, text: str):
+        path = tmp_path / "concept_groups.toml"
+        path.write_text(text, encoding="utf-8")
+        return load_classification_groups(path)
+
+    def test_missing_file_is_empty(self, tmp_path) -> None:
+        assert load_classification_groups(None) == ()
+        assert load_classification_groups(tmp_path / "absent.toml") == ()
+
+    def test_parses_valid_umbrella(self, tmp_path) -> None:
+        groups = self._load(
+            tmp_path,
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "sun-niva2020"
+            value = "niva"
+            label = "Nivå"
+            [[classification_group.members]]
+            classification = "sun-grupp2020"
+            value = "grupp"
+            label = "Grupp"
+            """,
+        )
+        assert len(groups) == 1
+        assert groups[0].key == "sun"
+        assert groups[0].axis == "dimension"
+        assert [m.classification for m in groups[0].members] == [
+            "sun-niva2020",
+            "sun-grupp2020",
+        ]
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # missing axis
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            [[classification_group.members]]
+            classification = "b"
+            value = "2"
+            label = "y"
+            """,
+            # blank key
+            """
+            [[classification_group]]
+            key = ""
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            [[classification_group.members]]
+            classification = "b"
+            value = "2"
+            label = "y"
+            """,
+            # missing members array
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            """,
+            # only one member (< 2)
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            """,
+            # member missing value
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            label = "x"
+            [[classification_group.members]]
+            classification = "b"
+            value = "2"
+            label = "y"
+            """,
+            # duplicate member slug
+            """
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            [[classification_group.members]]
+            classification = "a"
+            value = "2"
+            label = "y"
+            """,
+        ],
+    )
+    def test_invalid_shapes_fail(self, tmp_path, text: str) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+
+    def test_duplicate_keys_fail(self, tmp_path) -> None:
+        text = """
+        [[classification_group]]
+        key = "sun"
+        label = "SUN"
+        axis = "dimension"
+        [[classification_group.members]]
+        classification = "a"
+        value = "1"
+        label = "x"
+        [[classification_group.members]]
+        classification = "b"
+        value = "2"
+        label = "y"
+        [[classification_group]]
+        key = "sun"
+        label = "SUN2"
+        axis = "dimension"
+        [[classification_group.members]]
+        classification = "c"
+        value = "1"
+        label = "x"
+        [[classification_group.members]]
+        classification = "d"
+        value = "2"
+        label = "y"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.code == "concept_groups_invalid"
+
+    def test_sibling_kinds_do_not_trip_top_level_guard(self, tmp_path) -> None:
+        # A `[[classification_group]]` coexisting with `[[variable_group]]` /
+        # `[[accept]]` parses cleanly — they're legal siblings, not typos.
+        groups = self._load(
+            tmp_path,
+            """
+            [[variable_group]]
+            register = "scb/lisa"
+            key = "fam"
+            label = "F"
+            axis = "a"
+            [[variable_group.members]]
+            variable = "vara"
+            value = "1"
+            label = "x"
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            [[classification_group.members]]
+            classification = "b"
+            value = "2"
+            label = "y"
+            """,
+        )
+        assert [g.key for g in groups] == ["sun"]
+
+
 class TestLoader:
     @staticmethod
     def _load(tmp_path, text: str):
@@ -561,9 +884,9 @@ class TestLoader:
         assert exc.value.code == "concept_groups_invalid"
 
     def test_accept_sibling_does_not_trip_top_level_guard(self, tmp_path) -> None:
-        # A `[[variable_group]]` and an `[[accept]]` coexist in one file: the
-        # variable_group parse must treat `[[accept]]` as a legal sibling, not an
-        # unknown-top-level typo. (Case (g).)
+        # A `[[variable_group]]`, an `[[accept]]`, and a `[[classification_group]]`
+        # coexist in one file: the variable_group parse must treat the latter two
+        # as legal siblings, not unknown-top-level typos. (Case (g).)
         groups = self._load(
             tmp_path,
             """
@@ -583,6 +906,18 @@ class TestLoader:
             [[accept]]
             register = "sos/dors"
             key = "morsak"
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            [[classification_group.members]]
+            classification = "b"
+            value = "2"
+            label = "y"
             """,
         )
         assert len(groups) == 1
@@ -797,7 +1132,8 @@ class TestAcceptLoader:
         assert accepts == (Accept("sos", "dors", "morsak", None, None, ()),)
 
     def test_variable_group_sibling_does_not_trip_guard(self, tmp_path) -> None:
-        # The accept loader must treat `[[variable_group]]` as a legal sibling.
+        # The accept loader must treat `[[variable_group]]` and
+        # `[[classification_group]]` as legal siblings.
         accepts = self._load(
             tmp_path,
             """
@@ -810,6 +1146,18 @@ class TestAcceptLoader:
             variable = "v"
             value = "1"
             label = "x"
+            [[classification_group]]
+            key = "sun"
+            label = "SUN"
+            axis = "dimension"
+            [[classification_group.members]]
+            classification = "a"
+            value = "1"
+            label = "x"
+            [[classification_group.members]]
+            classification = "b"
+            value = "2"
+            label = "y"
             [[accept]]
             register = "sos/dors"
             key = "morsak"

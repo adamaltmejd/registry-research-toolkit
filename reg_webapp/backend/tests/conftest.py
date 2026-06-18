@@ -418,8 +418,8 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     )
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (11, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token')"
+        "label, source, facet_axis) VALUES (11, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
     )
     src.executemany(
         "INSERT INTO concept_group_classification (classification_id, group_id, "

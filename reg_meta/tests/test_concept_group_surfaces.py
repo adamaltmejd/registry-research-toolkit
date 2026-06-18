@@ -88,8 +88,8 @@ def _seeded_conn() -> sqlite3.Connection:
     )
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (12, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token')"
+        "label, source, facet_axis) VALUES (12, 'classification', NULL, 'sun', "
+        "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
     )
     sun2020_id = conn.execute(
         "SELECT id FROM classification WHERE slug = 'sun2020'"
