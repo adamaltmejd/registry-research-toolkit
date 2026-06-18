@@ -736,13 +736,17 @@ class Catalog:
     def list_classification_groups(self) -> list[ConceptGroupSummary]:
         """Curated classification umbrella groups (see DESIGN.md → Concept
         groups), ordered by group key. `concept_group_classification` holds
-        only CURATED umbrella entries (e.g. a future SUN group spanning
-        sun-niva2000/sun-niva2020 — see #516). Derived classification VINTAGE
-        editions (lkf1980…lkf2026, ssyk1996→ssyk2012) are NOT here; they
+        only CURATED umbrella entries — e.g. `group:sun`, which groups the
+        three genuinely-distinct SUN dimensions (`sun-niva2020`,
+        `sun-inriktning2020`, `sun-grupp2020`) on a `dimension` axis (#516).
+        Derived classification VINTAGE editions (lkf1980…lkf2026,
+        ssyk1996→ssyk2012, sun-niva2000→sun-niva2020) are NOT here; they
         appear as succession edges in `classification_replaced_by` (#571).
-        Members carry the real `class/<slug>` FQIDs."""
+        Members carry the real `class/<slug>` FQIDs. The group's single facet
+        axis is read from `concept_group.facet_axis` — every member shares it."""
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
+            "g.facet_axis AS axis, "
             "c.slug AS cls_slug, c.name AS cls_name, m.facet_value, m.facet_label "
             "FROM concept_group g "
             "JOIN concept_group_classification m ON m.group_id = g.group_id "
@@ -750,17 +754,17 @@ class Catalog:
             "WHERE g.kind = 'classification' AND c.slug IS NOT NULL "
             "ORDER BY g.group_key, m.facet_value, c.slug"
         ).fetchall()
-        acc2: dict[int, tuple[str, str, str, list[ConceptGroupMember]]] = {}
+        acc2: dict[int, tuple[str, str, str, str, list[ConceptGroupMember]]] = {}
         for r in rows:
-            _, _, _, members = acc2.setdefault(
+            _, _, _, axis, members = acc2.setdefault(
                 r["group_id"],
-                (r["group_key"], r["group_label"], r["source"], []),
+                (r["group_key"], r["group_label"], r["source"], r["axis"], []),
             )
             members.append(
                 ConceptGroupMember(
                     fqid=Fqid.classification_fqid(r["cls_slug"]),
                     name=r["cls_name"],
-                    facets=(GroupFacet("vintage", r["facet_value"], r["facet_label"]),),
+                    facets=(GroupFacet(axis, r["facet_value"], r["facet_label"]),),
                 )
             )
         return [
@@ -768,10 +772,12 @@ class Catalog:
                 key=key,
                 label=label,
                 source=source,
-                axes=("vintage",),
+                axes=(axis,),
                 members=tuple(members),
             )
-            for key, label, source, members in sorted(acc2.values(), key=lambda g: g[0])
+            for key, label, source, axis, members in sorted(
+                acc2.values(), key=lambda g: g[0]
+            )
         ]
 
     def list_tags(self) -> list[TagSummary]:

@@ -21,6 +21,7 @@ import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import (
+    load_classification_groups,
     load_concept_group_accepts,
     load_concept_groups,
 )
@@ -81,6 +82,17 @@ def test_repo_concept_group_accepts_parses() -> None:
     accepts = load_concept_group_accepts(_ROOT / "concept_groups.toml")
     assert accepts
     assert all(a.provider and a.register and a.key for a in accepts)
+
+
+def test_repo_classification_groups_parses() -> None:
+    # Curated `[[classification_group]]` umbrellas (#516) live in the same
+    # `concept_groups.toml`. The SUN umbrella ships with the repo; slug RESOLUTION
+    # (the classifications exist) is maintainer-build territory — this gate is the
+    # load-time shape (non-empty axis/members, >= 2 members, unique keys/slugs).
+    groups = load_classification_groups(_ROOT / "concept_groups.toml")
+    assert groups
+    assert {g.key for g in groups} >= {"sun"}
+    assert all(g.axis and len(g.members) >= 2 for g in groups)
 
 
 def test_repo_delivery_enrichment_parses() -> None:

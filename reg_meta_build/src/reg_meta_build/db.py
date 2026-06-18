@@ -39,6 +39,7 @@ from .classifications import (
 )
 from .concept_groups import (
     derive_classification_succession,
+    load_classification_groups,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
@@ -957,6 +958,13 @@ CREATE TABLE concept_group (
     group_key   TEXT NOT NULL,
     label       TEXT NOT NULL,
     source      TEXT NOT NULL CHECK (source IN ('edge', 'token', 'curated')),
+    -- The single facet axis for a curated CLASSIFICATION group (e.g.
+    -- 'dimension' for the SUN umbrella — niva/inriktning/grupp). NULL for
+    -- variable groups, which carry per-member axes in
+    -- `concept_group_variable_facet` (a member can sit on several axes — the
+    -- month × rank matrix), and NULL for the retained-but-empty derived
+    -- classification machinery. #516.
+    facet_axis  TEXT,
     CHECK ((kind = 'variable') = (register_id IS NOT NULL))
 );
 CREATE UNIQUE INDEX idx_concept_group_key
@@ -3330,6 +3338,9 @@ def materialize(
             load_concept_groups(repo_concept_groups_path()),
             auto=load_concept_groups(repo_concept_groups_auto_path()),
             accepts=load_concept_group_accepts(repo_concept_groups_path()),
+            classification_groups=load_classification_groups(
+                repo_concept_groups_path()
+            ),
             providers=active_providers,
             warn=_progress,
         )
@@ -3337,12 +3348,14 @@ def materialize(
             cg_counts["edge_groups"]
             + cg_counts["month_groups"]
             + cg_counts["curated_groups"]
+            + cg_counts["classification_curated_groups"]
         )
         _progress(
             f"  {row_counts['concept_groups']:,} concept groups "
             f"({cg_counts['edge_groups']:,} edge / "
             f"{cg_counts['month_groups']:,} month / "
-            f"{cg_counts['curated_groups']:,} curated; "
+            f"{cg_counts['curated_groups']:,} curated / "
+            f"{cg_counts['classification_curated_groups']:,} curated classification; "
             f"{cg_counts['grouped_variables']:,} variables + "
             f"{cg_counts['grouped_classifications']:,} classifications grouped)"
         )

@@ -194,7 +194,15 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `concept_group_classification` table is retained, empty of derived rows, for
 #   the curated umbrella groups #516 adds later). A 5.4.0 DB lacks the table, so
 #   it's rejected via the minor gate.
-SCHEMA_VERSION = "5.5.0"
+# - 5.6.0 (#516): additive `concept_group.facet_axis` column — the single facet
+#   axis for a CURATED classification umbrella group (e.g. 'dimension' for the
+#   SUN group over its niva/inriktning/grupp dimensions). NULL for variable
+#   groups (which carry per-member axes in `concept_group_variable_facet`) and
+#   for the empty derived classification machinery. The read surface
+#   (`Catalog.list_classification_groups`) now reads this column for the group's
+#   axis instead of hardcoding 'vintage'. A 5.5.0 DB lacks the column, so it's
+#   rejected via the minor gate.
+SCHEMA_VERSION = "5.6.0"
 DB_FILENAME = "reg_meta.db"
 
 

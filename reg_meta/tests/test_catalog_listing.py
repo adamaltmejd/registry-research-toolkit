@@ -326,9 +326,9 @@ def _groups_catalog() -> Catalog:
     )
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES "
+        "label, source, facet_axis) VALUES "
         "(12, 'classification', NULL, 'sun', 'Svensk utbildningsnomenklatur', "
-        "'token')"
+        "'token', 'vintage')"
     )
     conn.executemany(
         "INSERT INTO concept_group_classification (classification_id, group_id, "
@@ -407,3 +407,35 @@ class TestListClassificationGroups:
 
     def test_empty_without_groups(self) -> None:
         assert _catalog().list_classification_groups() == []
+
+    def test_axis_honors_stored_facet_axis(self) -> None:
+        """#516: the read surface reads `concept_group.facet_axis` for the group's
+        axis — NOT the old hardcoded 'vintage'. Seed a curated SUN umbrella with a
+        'dimension' axis over distinct classification dimensions."""
+        conn = build_slugged_db()  # ships sun2020
+        for cid, short, slug in (
+            (60, "SUN2020-NIVA", "sun-niva2020"),
+            (61, "SUN2020-INR", "sun-inriktning2020"),
+        ):
+            conn.execute(
+                "INSERT INTO classification (id, short_name, name, slug) "
+                "VALUES (?, ?, 'SUN', ?)",
+                (cid, short, slug),
+            )
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) VALUES "
+            "(20, 'classification', NULL, 'sun', 'SUN', 'curated', 'dimension')"
+        )
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 20, ?, ?)",
+            [(60, "niva", "Nivå"), (61, "inriktning", "Inriktning")],
+        )
+        conn.commit()
+        (group,) = Catalog(conn).list_classification_groups()
+        assert group.axes == ("dimension",)
+        assert [f.axis for m in group.members for f in m.facets] == [
+            "dimension",
+            "dimension",
+        ]
