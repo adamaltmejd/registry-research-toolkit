@@ -694,3 +694,16 @@ def test_canonical_scb_adapter_real_uht() -> None:
         r.register_id == mint_canonical_scb("scb", "utrikeshandel-tjanster")
         for r in regs
     )
+
+
+def test_value_set_rejected_on_thin_provider(tmp_path: Path) -> None:
+    """`value_set` is canonical-SCB-only; a thin-provider TOML that sets it must
+    fail-fast at load (not silently emit a code-less catalog)."""
+    toml = (
+        '[[register]]\nkey = "r"\nname = "R"\nvalid_from = "2020-01-01"\n'
+        '[[register.variable]]\nname = "V"\ncolumn = "c"\nvalue_set = "x"\n'
+    )
+    with pytest.raises(RegMetaError) as exc:
+        _emit("fohm", toml, tmp_path)
+    assert exc.value.code == "curated_toml_invalid"
+    assert "does not support value sets" in exc.value.message

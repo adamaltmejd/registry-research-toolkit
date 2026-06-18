@@ -168,6 +168,10 @@ class CuratedAdapter:
         # high band; `CanonicalScbAdapter` overrides this with `mint_canonical_scb`
         # to keep its `scb`-provider ids in the low band (#444).
         self._mint = mint
+        # Value sets are a canonical-SCB-only feature (the base adapter has no conn
+        # to intern codes). `False` here makes a `value_set` key on a thin-provider
+        # TOML fail-fast at load rather than silently produce a code-less catalog.
+        self._supports_value_sets = False
         # The seed the build was invoked with (`build_db(seed_path=...)`), so
         # `classification` validation checks the SAME manifest
         # `populate_classifications` seeds; None → the in-repo default.
@@ -416,8 +420,22 @@ class CuratedAdapter:
             valid_to=valid_to,
             variants=variants,
             classification=self._opt_str(entry, "classification"),
-            value_set=self._opt_str(entry, "value_set"),
+            value_set=self._value_set_field(path, entry, name),
         )
+
+    def _value_set_field(self, path: Path, entry: dict, name: str) -> str | None:
+        """Parse the optional `value_set` key, rejecting it on adapters that can't
+        intern code lists (every thin provider) — otherwise the code list would be
+        silently dropped (the base `_value_set_id_for` returns None)."""
+        value_set = self._opt_str(entry, "value_set")
+        if value_set is not None and not self._supports_value_sets:
+            raise curation_error(
+                "curated_toml_invalid",
+                f"{path.name}: variable {name!r} sets `value_set` but provider "
+                f"{self.provider!r} does not support value sets.",
+                "Value sets are canonical-SCB-only (CanonicalScbAdapter).",
+            )
+        return value_set
 
     def _req_str(self, path: Path, entry: dict, field: str, ctx: str) -> str:
         value = entry.get(field)
@@ -622,6 +640,7 @@ class CanonicalScbAdapter(CuratedAdapter):
     ) -> None:
         super().__init__("scb", classification_seed_path=classification_seed_path)
         self._mint = mint_canonical_scb
+        self._supports_value_sets = True
         self._conn = conn
         self._source_dir: Path | None = None
         self._set_id_by_hash: dict[bytes, int] = {}

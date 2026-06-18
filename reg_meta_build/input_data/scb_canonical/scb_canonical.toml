@@ -62,6 +62,7 @@ name = "Riktning"
 column = "Riktning"
 definition = "Handelsriktning i den nyare leveransstrukturen: 1 = export/intäkt, 5 = import/kostnad."
 data_type = "text"
+value_set = "riktning"
 
 [[register.variable]]
 name = "Värde"
@@ -74,9 +75,11 @@ name = "Intäkt (export)"
 column = "Intakt"
 definition = "Exportvärde i tusentals kronor (äldre leveransstruktur, årgångar t.o.m. 2020 — motsvarar Riktning=1/Värde i den nyare strukturen)."
 data_type = "decimal"
+valid_to = "2020-12-31"  # older delivery structure, years t.o.m. 2020
 
 [[register.variable]]
 name = "Kostnad (import)"
 column = "Kostnad"
 definition = "Importvärde i tusentals kronor (äldre leveransstruktur, årgångar t.o.m. 2020 — motsvarar Riktning=5/Värde i den nyare strukturen)."
 data_type = "decimal"
+valid_to = "2020-12-31"  # older delivery structure, years t.o.m. 2020
