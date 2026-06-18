@@ -219,6 +219,7 @@ def validate_built_db(
         _check_variable_alias_window(conn, result, tables, corpus=corpus)
         _check_sos_stateless_variables(conn, result, tables)
         _check_concept_groups(conn, result, tables, corpus=corpus)
+        _check_classification_replaced_by(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -1376,13 +1377,20 @@ def _check_sos_stateless_variables(
 # month-group floor here: the #319/#383 family merge runs before the
 # concept-group month-fold and consumes every month-suffixed family, so the 8
 # monthly families are guarded at their true home — `_check_variable_alias_window`
-# (>= `_AW_MIN_MERGED_FAMILIES` survivors). The curated/lkf floors below stay
-# absolute: their candidate sets aren't recomputable without replaying the
-# vocabulary guards, and the families are small enumerable facts (lkf = 47
-# vintages / 1 curated family measured 2026-06-11). The `lkf` floor is keyed to
-# the literal stem on purpose — a stem rename fails this check loudly, forcing
-# the rename to update the gate.
-_CG_MIN_LKF_VINTAGES = 40
+# (>= `_AW_MIN_MERGED_FAMILIES` survivors). The curated floor below stays
+# absolute: its candidate set isn't recomputable without replaying the
+# vocabulary guards, and the family is a small enumerable fact (1 curated family
+# measured 2026-06-11). Classification VINTAGE families no longer fold into
+# concept groups (#571) — they materialize as succession edges, floored in
+# `_check_classification_replaced_by` (the lkf vintage chain ships the bulk of
+# those edges), so there is no longer a classification-vintage-group floor here.
+
+# Classification succession floor (#571, corpus only): the lkf vintage chain
+# (lkf1980…lkf2026, ~47 editions → ~46 adjacent edges) dominates the corpus
+# succession edges, so a real build that newly stopped deriving them (slug-tail
+# drift, name-guard regression) drops well below this floor. Synthetic builds
+# carry no vintage classifications, so the floor is corpus-gated.
+_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 
 
 def _check_concept_groups(
@@ -1480,17 +1488,89 @@ def _check_concept_groups(
         result.ok(f"{n_curated} curated group(s) (>= 1)")
     else:
         result.fail("no curated concept groups (concept_groups.toml not applied?)")
-    lkf = conn.execute(
-        "SELECT COUNT(*) FROM concept_group_classification c "
-        "JOIN concept_group g ON g.group_id = c.group_id "
-        "WHERE g.group_key = 'lkf'"
+    # Derived (`source='token'`) classification vintage families no longer fold
+    # here (#571) — they materialize as succession edges, asserted-empty
+    # (structural) above and floored in `_check_classification_replaced_by`. Only
+    # the TOKEN source is derived; CURATED umbrella classification groups (#516,
+    # e.g. a SUN group with `source='curated'`) are intentionally retained and
+    # must be allowed through. The corpus build carries zero token classification
+    # groups now.
+    n_token_cls = conn.execute(
+        "SELECT COUNT(*) FROM concept_group "
+        "WHERE kind = 'classification' AND source = 'token'"
     ).fetchone()[0]
-    if lkf >= _CG_MIN_LKF_VINTAGES:
-        result.ok(f"lkf vintage family has {lkf} members (>= {_CG_MIN_LKF_VINTAGES})")
+    if n_token_cls == 0:
+        result.ok(
+            "no derived (token) classification concept groups (#571 succession edges)"
+        )
     else:
         result.fail(
-            f"lkf vintage family has {lkf} members (< {_CG_MIN_LKF_VINTAGES}) — "
-            "classification vintage pass regression?"
+            f"{n_token_cls} derived (token) classification concept group(s) present "
+            "— the #571 vintage groups should have become succession edges "
+            "(curated umbrella classification groups are permitted)"
+        )
+
+
+def _check_classification_replaced_by(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#571 classification EDITION succession invariants.
+
+    Structural (always): the table exists, every edge is directional and
+    non-self (predecessor != successor) and slug-anchored to live classification
+    slugs.
+
+    Corpus (real build only): the lkf vintage chain dominates, so a real build
+    must carry >= `_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES` edges — a pass that
+    silently stops deriving (slug-tail drift, name-guard regression) fails the
+    gate. Synthetic builds carry no vintage classifications, so this floor is
+    corpus-gated."""
+    result.section("[classification succession]")
+    if "classification_replaced_by" not in tables:
+        result.fail("classification_replaced_by missing (schema 5.5.0 #571 table)")
+        return
+
+    self_loops = conn.execute(
+        "SELECT COUNT(*) FROM classification_replaced_by "
+        "WHERE predecessor_slug = successor_slug"
+    ).fetchone()[0]
+    if self_loops:
+        result.fail(f"{self_loops} self-loop succession edge(s)")
+    else:
+        result.ok("no self-loop succession edges")
+
+    dangling = conn.execute(
+        "SELECT COUNT(*) FROM classification_replaced_by e "
+        "WHERE NOT EXISTS (SELECT 1 FROM classification c WHERE c.slug = e.predecessor_slug) "
+        "   OR NOT EXISTS (SELECT 1 FROM classification c WHERE c.slug = e.successor_slug)"
+    ).fetchone()[0]
+    if dangling:
+        result.fail(
+            f"{dangling} succession edge(s) reference an unknown classification slug"
+        )
+    else:
+        result.ok("succession edges resolve to live classification slugs")
+
+    n_edges = conn.execute(
+        "SELECT COUNT(*) FROM classification_replaced_by"
+    ).fetchone()[0]
+    if not corpus:
+        result.info(f"{n_edges} classification succession edge(s)")
+        return
+    if n_edges >= _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES:
+        result.ok(
+            f"{n_edges} classification succession edge(s) "
+            f"(>= {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES})"
+        )
+    else:
+        result.fail(
+            f"{n_edges} classification succession edge(s) "
+            f"(< {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES}) — vintage-chain "
+            "derivation regression?"
         )
 
 

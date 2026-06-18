@@ -1,11 +1,14 @@
 """Tests for the derived concept-group layer (#303; `concept_groups.py`).
 
 Covers the three derivation dimensions against hand-curated slugged DBs
-(`_slugged_db`): edge components (dimension 0), month/vintage token folds with
-their guards (dimension 1), and curated families incl. token-group absorption
-and the fail-fast resolution errors (dimension 2). The accept-list (#496) —
-`[[accept]]` folds of the generated `concept_groups.auto.toml` by reference —
-is covered against synthetic auto families in `TestAcceptList` / `TestAcceptLoader`."""
+(`_slugged_db`): edge components (dimension 0), month token folds with their
+guards (dimension 1), and curated families incl. token-group absorption and the
+fail-fast resolution errors (dimension 2). The accept-list (#496) — `[[accept]]`
+folds of the generated `concept_groups.auto.toml` by reference — is covered
+against synthetic auto families in `TestAcceptList` / `TestAcceptLoader`.
+Classification EDITION vintages no longer fold into groups (#571); their
+adjacent-chain succession edges (`classification_replaced_by`) are covered in
+`TestClassificationSuccession`."""
 
 from __future__ import annotations
 
@@ -18,6 +21,7 @@ from reg_meta_build.concept_groups import (
     Accept,
     CuratedGroup,
     CuratedMember,
+    derive_classification_succession,
     load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
@@ -211,44 +215,84 @@ class TestMonthGroups:
         assert counts["month_groups"] == 0
 
 
-class TestClassificationVintageGroups:
-    def test_vintage_family_folds_with_year_facets(self) -> None:
+def _succession_edges(conn: sqlite3.Connection) -> list[tuple[str, str, int, str]]:
+    """All `classification_replaced_by` rows as
+    (predecessor_slug, successor_slug, effective_year, note), ordered."""
+    return [
+        (r["predecessor_slug"], r["successor_slug"], r["effective_year"], r["note"])
+        for r in conn.execute(
+            "SELECT predecessor_slug, successor_slug, effective_year, note "
+            "FROM classification_replaced_by "
+            "ORDER BY predecessor_slug, successor_slug"
+        )
+    ]
+
+
+class TestClassificationSuccession:
+    """#571: classification EDITION vintages materialize as adjacent-chain
+    succession edges in `classification_replaced_by`, NOT concept groups. The
+    detection guards (year tail, name agreement) are unchanged from the old
+    vintage-group fold; only the OUTPUT differs."""
+
+    def test_vintage_chain_emits_adjacent_edges(self) -> None:
         conn = build_slugged_db(classification=None)
+        # Out-of-slug-order insert proves edges sort by YEAR, not slug/insert.
+        _add_classification(conn, "LKF2020", "Län och kommuner 2020", "lkf2020")
         _add_classification(conn, "LKF1980", "Län och kommuner 1980", "lkf1980")
         _add_classification(conn, "LKF1998", "Län och kommuner 1998", "lkf1998")
-        _add_classification(conn, "LKF2020", "Län och kommuner 2020", "lkf2020")
         counts = materialize_concept_groups(conn)
-        assert counts["vintage_groups"] == 1
-        groups = _groups(conn)
-        assert groups["lkf"]["kind"] == "classification"
-        assert groups["lkf"]["register_id"] is None
-        assert groups["lkf"]["label"] == "Län och kommuner"
-        assert groups["lkf"]["cls_members"] == [
-            ("lkf1980", "1980", "1980"),
-            ("lkf1998", "1998", "1998"),
-            ("lkf2020", "2020", "2020"),
+        n_edges = derive_classification_succession(conn)
+        # Succession is NOT a concept group — nothing lands in the group tables.
+        assert "vintage_groups" not in counts
+        assert _groups(conn) == {}
+        # [1980<1998<2020] → two adjacent edges, effective_year = successor's.
+        assert n_edges == 2
+        assert _succession_edges(conn) == [
+            ("lkf1980", "lkf1998", 1998, "derived:vintage_chain"),
+            ("lkf1998", "lkf2020", 2020, "derived:vintage_chain"),
         ]
 
-    def test_year_mid_name_strips_to_agreed_label(self) -> None:
+    def test_two_edition_chain_single_edge(self) -> None:
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, "SSYK1996", "Yrken 1996", "ssyk1996")
+        _add_classification(conn, "SSYK2012", "Yrken 2012", "ssyk2012")
+        assert derive_classification_succession(conn) == 1
+        assert _succession_edges(conn) == [
+            ("ssyk1996", "ssyk2012", 2012, "derived:vintage_chain"),
+        ]
+
+    def test_year_mid_name_still_detected(self) -> None:
+        # The label-agreement guard strips the mid-name year; detection is by
+        # slug tail, so a year inside the name doesn't block the chain.
         conn = build_slugged_db(classification=None)
         _add_classification(conn, "SG2000", "SUN 2000 — Grupper", "sun-grupp2000")
         _add_classification(conn, "SG2020", "SUN 2020 — Grupper", "sun-grupp2020")
-        counts = materialize_concept_groups(conn)
-        assert counts["vintage_groups"] == 1
-        assert _groups(conn)["sun-grupp"]["label"] == "SUN — Grupper"
+        assert derive_classification_succession(conn) == 1
+        assert _succession_edges(conn) == [
+            ("sun-grupp2000", "sun-grupp2020", 2020, "derived:vintage_chain"),
+        ]
 
-    def test_singleton_or_non_year_tails_do_not_fold(self) -> None:
+    def test_singleton_or_non_year_tails_do_not_chain(self) -> None:
         conn = build_slugged_db(classification=None)
         _add_classification(conn, "ISCED2011", "ISCED 2011", "isced2011")  # singleton
         _add_classification(conn, "NG1", "Nivå grov", "niva-grovv1")  # non-year tail
         _add_classification(conn, "NG2", "Nivå old", "niva-oldv1")
-        assert materialize_concept_groups(conn)["vintage_groups"] == 0
+        assert derive_classification_succession(conn) == 0
+        assert _succession_edges(conn) == []
 
-    def test_name_missing_year_blocks_fold(self) -> None:
+    def test_name_missing_year_blocks_chain(self) -> None:
         conn = build_slugged_db(classification=None)
         _add_classification(conn, "X2000", "Standard X", "x2000")  # no "2000" in name
         _add_classification(conn, "X2020", "Standard X 2020", "x2020")
-        assert materialize_concept_groups(conn)["vintage_groups"] == 0
+        assert derive_classification_succession(conn) == 0
+
+    def test_name_disagreement_blocks_chain(self) -> None:
+        # Year-stripped names disagree ("Foo" vs "Bar") → not the same
+        # classification's editions, so no chain.
+        conn = build_slugged_db(classification=None)
+        _add_classification(conn, "Y2000", "Foo 2000", "y2000")
+        _add_classification(conn, "Y2020", "Bar 2020", "y2020")
+        assert derive_classification_succession(conn) == 0
 
 
 def _month_family_db() -> sqlite3.Connection:

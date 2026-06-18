@@ -1050,8 +1050,8 @@ def _classification_leaf(
     `_strip_internal_keys` depend on — can't drift between the two arms.
 
     `_classification_id` is the internal fold key (stripped before public): maps
-    the leaf to its vintage concept group so the fold can subsume it (symmetric
-    with variables' `_variable_id`). A NULL-slug classification isn't
+    the leaf to its curated umbrella concept group so the fold can subsume it
+    (symmetric with variables' `_variable_id`). A NULL-slug classification isn't
     FQID-addressable (`try_emit` → None), mirroring the catalog enumeration's
     slug filter."""
     return {
@@ -1237,8 +1237,10 @@ def get_concept_groups(conn: sqlite3.Connection, register: str) -> dict[str, Any
 
 
 def get_classification_concept_groups(conn: sqlite3.Connection) -> dict[str, Any]:
-    """Classification vintage groups (#325), catalog-scoped — e.g. the
-    lkf1980…lkf2026 family as one group with a 'vintage' facet per member."""
+    """Curated classification umbrella groups (#325), catalog-scoped. Returns
+    only CURATED umbrella entries (see #516 for the first planned content).
+    Derived vintage editions (lkf1980…lkf2026, ssyk1996→ssyk2012) surface via
+    `classification_replaced_by` succession edges (#571), not here."""
     catalog = Catalog(conn)
     return {
         "groups": [
@@ -1257,7 +1259,7 @@ def _search_group_labels(
 ) -> list[sqlite3.Row]:
     """Concept groups whose LABEL or key matches the query (#322): the family
     itself is findable even when no single leaf row matches (e.g. searching
-    "Län, kommuner och församlingar" finds the lkf vintage family).
+    "AGI löneinkomst" finds the monthly variable family).
 
     Scope rules: variable groups respect a `--register` scope and pass the
     'variable' type filter (they fold variable hits); classification groups
@@ -1336,10 +1338,11 @@ def _fold_concept_groups(
 
     Both member kinds fold symmetrically: variable leaves key on `_variable_id`
     (mapped via `concept_group_variable`), classification leaves on
-    `_classification_id` (via `concept_group_classification`). Without the
-    classification arm a label-matched vintage family would emit its group row
-    AND leave the matching classification leaves standing — the same entity
-    twice (#350 review)."""
+    `_classification_id` (via `concept_group_classification`). The
+    classification arm handles curated umbrella groups (#516); derived vintage
+    edition families are no longer in `concept_group_classification` (#571 moved
+    them to `classification_replaced_by` succession edges), so it produces no
+    hits until curated umbrella content ships."""
     membership = _member_group_index(conn, results)
 
     buckets: dict[int, list[dict[str, Any]]] = {}

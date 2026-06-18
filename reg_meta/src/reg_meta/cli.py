@@ -303,7 +303,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--classifications",
         action="store_true",
         help=(
-            "List classification vintage groups (catalog-wide) instead of a "
+            "List classification umbrella groups (catalog-wide) instead of a "
             "register's variable groups."
         ),
     )
@@ -2686,7 +2686,7 @@ get groups — Folded variable families (concept groups)
   "Show the member FQIDs and facets (month/rank/...) of each family"
     reg-meta --format json get groups LISA
 
-  "Which classification vintage families exist (lkf1980…lkf2026 etc.)?"
+  "Which curated classification umbrella groups exist?"
     reg-meta get groups --classifications
 
   Groups are presentation-only: members keep their own FQIDs and

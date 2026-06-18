@@ -627,12 +627,18 @@ keep `level = NULL` and use their own conventions.
 The catalog renders machine-stamped SCB column *families* as flat lists of
 near-identical rows (issue #303): month-suffixed variable families
 (`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
-(`sun2000inr`/`sun2020inr`), and classification vintage families (47 of 79
-classifications are `lkf1980`…`lkf2026`). The **concept-group layer** folds these for
-browse: `concept_group` + `concept_group_variable`(+`_facet`) +
-`concept_group_classification`, derived at build time
-(`reg_meta_build/concept_groups.py` documents the three derivation dimensions and their
-guards; see `reg_meta_build/DESIGN.md` → Concept-group derivation).
+(`sun2000inr`/`sun2020inr`). The **concept-group layer** folds these for browse:
+`concept_group` + `concept_group_variable`(+`_facet`) + `concept_group_classification`,
+derived at build time (`reg_meta_build/concept_groups.py` documents the derivation
+dimensions and their guards; see `reg_meta_build/DESIGN.md` → Concept-group derivation).
+
+**Classification vintage editions** (`lkf1980`…`lkf2026`, `ssyk1996`→`ssyk2012`,
+`sun-niva2000`→`sun-niva2020`) are **not** folded into concept groups (#571). Editions
+of one classification are a temporal succession, not a parallel browse facet. They
+materialize as adjacent-edition edges in `classification_replaced_by` (auto-derived from
+the same year-tail detection). `concept_group_classification` is retained for CURATED
+umbrella groups that a future PR (#516) will add (e.g. a SUN group spanning the
+nivå/inriktning/grupp sub-classifications).
 
 **Presentation only, identity untouched.** A group is *not* an FQID kind and never
 becomes a binding/order/stats key — members keep their leaf FQIDs, and a binding's
@@ -645,14 +651,16 @@ the month groups dissolve into real variables and the layer shrinks to edge/rank
 duty.
 
 **API**: `Catalog.list_concept_groups(provider, register)` (variable groups, register
-scope) and `Catalog.list_classification_groups()` (vintage groups, catalog scope) return
-`ConceptGroupSummary` — `key` (scope-unique derivation key, a UI anchor), `label`,
-`source` (`edge`/`token`/`curated`), `axes` (sorted facet axes; empty for edge groups),
-and members ordered by facet values then slug. Each `ConceptGroupMember` carries the
-leaf `Fqid`, display name, and `GroupFacet` assignments (`month`/`rank`/`vintage` —
-sortable `value`, display `label`). The webapp's register / classification-root
-responses embed these alongside the complete flat children list, and the SPA folds
-(`reg_webapp/DESIGN.md`).
+scope) and `Catalog.list_classification_groups()` (classification umbrella groups,
+catalog scope) return `ConceptGroupSummary` — `key` (scope-unique derivation key, a UI
+anchor), `label`, `source` (`edge`/`token`/`curated`), `axes` (sorted facet axes; empty
+for edge groups), and members ordered by facet values then slug. Each
+`ConceptGroupMember` carries the leaf `Fqid`, display name, and `GroupFacet` assignments
+(`month`/`rank`/`vintage` — sortable `value`, display `label`). The webapp's register /
+classification-root responses embed these alongside the complete flat children list, and
+the SPA folds (`reg_webapp/DESIGN.md`). `list_classification_groups()` returns an empty
+list until curated umbrella groups (#516) are committed — derived vintage editions live
+in `classification_replaced_by`, not here.
 
 **CLI/search surface (#322/#325)**: the same read surface backs three CLI shapes, all
 result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER` (and
@@ -661,8 +669,8 @@ every other command. `search` folds sibling hits: when ≥2 distinct member vari
 one group match, the leaf hits collapse into a single `type: "group"` result row
 (original hits under `matched`, the facet-ordered member list under `members`); a lone
 member hit stays a leaf annotated with `concept_group`/`concept_group_label`; and group
-LABELS themselves match (searching "Län, kommuner och församlingar" finds the lkf family
-even though no leaf row matches). `--no-fold` flattens. `get schema` carries
+LABELS themselves match (searching a family label finds its group row even though no
+single leaf row matches). `--no-fold` flattens. `get schema` carries
 `concept_group`(`_label`) per column so the fold is visible inline. Folding happens
 before pagination — a group row counts as one result.
 

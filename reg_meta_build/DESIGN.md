@@ -1952,14 +1952,21 @@ already-grouped member:
    `relation_kind`s (`code_vs_label_pair`, `import_bug_suspect`) do NOT group; neither
    do curated kinds from `curation/relations.toml` (`similar_concept`) — the curated
    vocabulary is disjoint from the foldable auto kind by construction.
+
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms
    (SCB mixes them within one family); guard = ≥3 distinct months on one stem AND a
    ≥5-char shared label prefix, so a slug coincidentally ending in `maj` never folds
-   (zero false folds measured). Classifications: 4-digit vintage-year slug tails
-   (`lkf1980`…, `sni2007`); guard = ≥2 vintages AND year-stripped-name agreement (the
-   agreed name is the label). The month facet value is the zero-padded number; the
-   vintage facet is the year.
+   (zero false folds measured). The month facet value is the zero-padded number.
+
+   Classification VINTAGE families are detected by the same 4-digit year slug-tail rule
+   (`lkf1980`…, `sni2007`; guard = ≥2 vintages AND year-stripped-name agreement) but are
+   NOT folded into concept groups (#571): editions of one classification are a temporal
+   succession, not a parallel browse facet. They materialize as adjacent-edition edges
+   in `classification_replaced_by` via `derive_classification_succession`. The
+   `concept_group_classification` table and `kind='classification'` machinery are
+   retained (empty of derived rows) for the curated umbrella groups #516 adds later.
+
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
    Two entry kinds, both **opt-in** (a family folds only when explicitly present):
@@ -1986,9 +1993,11 @@ already-grouped member:
 Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
 derived fresh every build (regenerate-not-migrate) and carry no identity. The structural
 validator (`validate.py::_check_concept_groups`) checks member-kind/register wiring and
-the ≥2-member floor always, plus per-source volume floors (edge/month/curated/lkf) on
+the ≥2-member floor always, plus per-source volume floors (edge/month/curated) on
 `corpus=True` builds so a derivation pass that silently stops matching fails the
-maintainer gate.
+maintainer gate. The former `lkf` classification volume floor is gone — vintage families
+are now succession edges, not groups, so their volume is checked separately by
+`_check_classification_replaced_by`.
 
 ## Delivery-list enrichment (#365)
 

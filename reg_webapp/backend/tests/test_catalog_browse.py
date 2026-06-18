@@ -171,8 +171,11 @@ def test_register_without_groups_has_empty_list(client):
 
 
 def test_classification_root_carries_vintage_groups(client):
-    """#303: the classification root carries the derived vintage groups; the
-    grouped classifications ALSO stay in `children`."""
+    """#303: the classification root carries `kind='classification'` concept
+    groups (here a seeded `sun` group — the conftest stands in for the curated
+    umbrella groups #516 adds; #571 removed the DERIVED vintage groups, but the
+    read surface and table are retained); the grouped classifications ALSO stay
+    in `children`."""
     body = client.get("/api/catalog/class").json()
     assert len(body["groups"]) == 1
     group = body["groups"][0]

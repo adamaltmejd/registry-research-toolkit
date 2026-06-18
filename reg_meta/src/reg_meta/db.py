@@ -184,7 +184,17 @@ from .errors import EXIT_CONFIG, RegMetaError
 #     read-time from this sibling table, consulted by `resolve_at`). EMPTY for
 #     non-merged variables. A 5.3.0 DB lacks it, so the resolver can't expand
 #     merged families.
-SCHEMA_VERSION = "5.4.0"
+# - 5.5.0 (#571): additive `classification_replaced_by` succession table — a
+#   temporal chain over editions of ONE classification (ssyk1996→ssyk2012,
+#   lkf1980…lkf2026), auto-derived as adjacent-edition edges from the vintage
+#   slug families that PREVIOUSLY folded into `kind='classification'` concept
+#   groups. Editions are a SUCCESSION, not a parallel facet-picker, so the
+#   detection's output switched from a concept group to a `replaced_by` edge;
+#   the derived classification concept groups are gone (the
+#   `concept_group_classification` table is retained, empty of derived rows, for
+#   the curated umbrella groups #516 adds later). A 5.4.0 DB lacks the table, so
+#   it's rejected via the minor gate.
+SCHEMA_VERSION = "5.5.0"
 DB_FILENAME = "reg_meta.db"
 
 
