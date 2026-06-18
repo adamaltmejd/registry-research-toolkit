@@ -120,6 +120,26 @@ register = "scb/flergenreg"
 key = "personnrf"
 axis = "ordinal"
 
+# Batch 3 (#496): a child's numbered procedure-code slots (mfr `bflop1..12`,
+# "Åtgärdskod N, barnet" — parallel to the accepted diagnosis families) and a fishing
+# enterprise's per-vessel identity numbers (`signal1..4`, "… Fartyg N"). Both verified
+# one concept per numbered slot. (The mother/pregnancy code families mfr `flop`/`mdiag`/
+# `gdiag` are clearly foldable too but absent from concept_groups.auto.toml — the
+# generator's label-agreement metric undercounts a slot number that sits mid-label,
+# e.g. "Åtgärdskod 12, den förlösta"; a number-invariant agreement metric would surface
+# them for a later batch.)
+[[accept]]
+register = "sos/mfr"
+key = "bflop"
+label = "Åtgärdskod, barnet"
+axis = "ordinal"
+
+[[accept]]
+register = "scb/energianvandning-fiske"
+key = "signal"
+label = "Fartygets identitetssnummer"
+axis = "ordinal"
+
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
 # största / tredje största förvärvskälla). #319 merged each rank's 12 month
