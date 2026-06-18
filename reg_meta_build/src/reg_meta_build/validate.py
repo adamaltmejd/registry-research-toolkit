@@ -131,7 +131,11 @@ class ValidationResult:
 
 
 def validate_built_db(
-    db_path: Path, *, corpus: bool = False, flavored: bool = False
+    db_path: Path,
+    *,
+    corpus: bool = False,
+    flavored: bool = False,
+    slug_dir: Path | None = None,
 ) -> ValidationResult:
     """Run the build invariants against ``db_path``.
 
@@ -162,6 +166,13 @@ def validate_built_db(
     stays unchanged — SCB-register grafts legitimately keep low-band sequential
     ids. ``flavored`` is independent of ``corpus``; a flavor build never sets
     ``corpus`` (it has no full SCB/SOS corpus to floor-check).
+
+    ``slug_dir`` (#546) is the resolved curation directory the build loaded; it
+    feeds the mandatory entity-key curation gate
+    (``_check_entity_key_vars_curated``), which fails if a panel entity-key
+    variable has no curated ``[variable]`` pin. ``None`` (the default, used by
+    synthetic CI and ``flavored`` overlays) SKIPS that gate — the synthetic
+    fixtures carry no curated slug dir, and a flavor adds no SCB panel keys.
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -185,6 +196,7 @@ def validate_built_db(
         _check_name_field_hygiene(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
+        _check_entity_key_vars_curated(conn, result, tables, slug_dir)
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
@@ -854,6 +866,95 @@ def _check_panel_refs_have_states(
             f"all {n_refs:,} panel ref(s) across {len(rows):,} variant(s) "
             "have states in their variant"
         )
+
+
+def _check_entity_key_vars_curated(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    slug_dir: Path | None,
+) -> None:
+    """#546: every panel entity-key variable must carry a curated ``[variable]``
+    slug pin so the slug its ``panel_entity_key`` ref binds to can't drift.
+
+    A variable's auto-slug CHURNS each build (the default freeze zone re-derives
+    it from the latest delivery column). A ``panel_entity_key`` ref binds to that
+    slug, so a reslug silently dangles the ref — caught only by
+    ``_check_panel_refs_resolve``, after a full real build. The pin (precedence 1
+    in ``populate_variable_slugs``) freezes the slug; this gate makes it
+    MANDATORY, so a newly-onboarded entity-key variable can't ship un-pinned.
+
+    Generate the missing pins with ``reg-meta-build entity-key-pins`` and commit
+    them to ``fqid_slugs/scb.toml``.
+
+    Scoped to the mandatory-curation providers
+    (``fqid_slugs.MANDATORY_ENTITY_KEY_PROVIDERS`` — SCB only today, #546): only
+    SCB's #143-derived slugs churn every build, so only SCB entity-key vars must
+    be pinned. Other providers' entity-key vars (fk/sos/… — ~61 of them, #209)
+    come from stable parsed/curated inputs and freeze per-provider at v1, so the
+    gate ignores them rather than failing the build on un-pinned non-SCB vars. The
+    same constant scopes the generator (``infer_entity_key_pins``), so gate and
+    generator enforce the identical set.
+
+    Scoped to the GLOBAL build: ``slug_dir is None`` (synthetic CI, direct
+    ``validate_built_db(corpus=False)`` calls, and the flavored overlay) SKIPS
+    the gate — there's no curated dir to read, and a flavor adds no SCB panel
+    keys. The enumeration is shared with the generator
+    (``fqid_slugs.iter_entity_key_variables``) so the two can't disagree on which
+    variables need a pin. Local imports dodge any build-time import cycle (the
+    pattern this module already uses for build-side helpers)."""
+    result.section("[panel: entity-key variables are curated]")
+    if slug_dir is None:
+        result.ok("entity-key curation gate skipped (no slug_dir)")
+        return
+    if not {"register_variant", "variable"}.issubset(tables):
+        result.ok("register_variant / variable absent — entity-key gate skipped")
+        return
+    # Local import: the gate is build-side only and `fqid_slugs` pulls in the
+    # slug-population machinery, so importing it lazily keeps `validate`'s module
+    # import light and avoids any cycle through the build graph.
+    from reg_meta_build.fqid_slugs import (
+        MANDATORY_ENTITY_KEY_PROVIDERS,
+        iter_entity_key_variables,
+        load_curated_variable_slugs,
+    )
+
+    curated = load_curated_variable_slugs(slug_dir)
+    # Scope to the mandatory-curation providers (the same constant the generator
+    # uses) so gate and generator enforce the identical set: only SCB's churning
+    # slugs need a pin; non-SCB entity-key vars are a per-provider v1 follow-up.
+    entity_key_vars = [
+        ek
+        for ek in iter_entity_key_variables(conn)
+        if ek.provider_slug in MANDATORY_ENTITY_KEY_PROVIDERS
+    ]
+    if not entity_key_vars:
+        result.ok(
+            "no mandatory-curation (SCB) variant carries an entity key "
+            "— nothing to curate"
+        )
+        return
+    failures: list[str] = []
+    for ek in entity_key_vars:
+        if (ek.provider_slug, ek.source_id) not in curated:
+            failures.append(
+                f"{ek.register_slug}/{ek.variable_slug} "
+                f"(source_id {ek.source_id}, panel_entity_key {ek.variable_slug!r}) "
+                "has no curated [variable] slug pin"
+            )
+    if failures:
+        for msg in failures[:10]:
+            result.fail(msg)
+        if len(failures) > 10:
+            result.info(
+                f"... and {len(failures) - 10} more un-pinned entity-key var(s)"
+            )
+        result.info(
+            "run `reg-meta-build entity-key-pins` and commit the output to "
+            "fqid_slugs/scb.toml"
+        )
+    else:
+        result.ok(f"all {len(entity_key_vars):,} entity-key var(s) are curated")
 
 
 def _check_minted_id_bands(
