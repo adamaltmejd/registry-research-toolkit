@@ -31,6 +31,60 @@
 # Grouping is presentation, not identity: a group is not FQID-addressable and
 # never affects bindings/orders/stats. A wrong family here is a cosmetic bug.
 
+# ── Accepted auto families ──────────────────────────────────────────────────
+# Batch 1 (#496): SOS multi-instance medical families — the Nth occurrence of ONE
+# concept (multiple causes of death, substances, diagnosis/procedure/occupation
+# codes), the LOVA repeated-event pattern (#374) folded by an `ordinal` facet.
+# Hand-picked from concept_groups.auto.toml against the real corpus: each is
+# unambiguously one concept repeated across numbered slots (NOT distinct
+# variables like course grades or classification variants). `axis` is pinned so a
+# catalog regeneration that re-infers it can't silently change the facet.
+[[accept]]
+register = "sos/dors"
+key = "morsak"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/dors"
+key = "substans"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/dors"
+key = "ro"
+label = "Position på intyget av dödsorsaken (per dödsorsak)"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/par"
+key = "opd"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/par"
+key = "ekod"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/par"
+key = "ane"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/mfr"
+key = "bdiag-bk"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/hsl"
+key = "yrkesbet"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/lmed"
+key = "spkod"
+axis = "ordinal"
+
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
 # största / tredje största förvärvskälla). #319 merged each rank's 12 month
