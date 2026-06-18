@@ -2318,7 +2318,7 @@
         "type": "object"
       },
       "VariantModel": {
-        "description": "One register variant (the `register_variant` sub-resource) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID \u2014 see reg_meta/DESIGN.md \u2192 Two-level variable model), so it\ncarries the variant `slug` (the browse coordinate) + display fields, not an\n`Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`\nfields: `panel_entity_key` is a bare variable-slug string or a list of slugs\n(composite); `panel_time_key` is \"period\" or a variable-slug;\n`panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data \u2192\nall three are None.",
+        "description": "One register variant (the `register_variant` sub-resource) \u2014 the\n`?variant=` browse axis. A variant is NOT FQID-addressable (the variant left\nthe binding FQID \u2014 see reg_meta/DESIGN.md \u2192 Two-level variable model), so it\ncarries the variant `slug` (the browse coordinate) + display fields, not an\n`Fqid`. Maps 1:1 to\n`reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`\nfields: `panel_entity_key` is a bare variable-slug string or a list of slugs\n(composite); `panel_time_key` is \"period\", a variable-slug, or a list of\nslugs (composite); `panel_time_grain` is 'delivery'/'row'. Most variants\ncarry no panel data \u2192 all three are None.",
         "properties": {
           "description": {
             "anyOf": [
@@ -2385,6 +2385,12 @@
             "anyOf": [
               {
                 "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
               },
               {
                 "type": "null"

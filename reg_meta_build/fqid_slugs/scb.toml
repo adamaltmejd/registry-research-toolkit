@@ -2335,13 +2335,14 @@ slug = "utrikeshandel-tjanster"
 [register_variant."3084667015646526536.4096212573084827577"]
 slug = "_default"
 display_group = "Utrikeshandel med tjänster"
-# Panel shape (#567): company-level quarterly panel. Entity = the reporting company
-# (peorgnr); time is row-level (Ar/Kvartal columns) so grain = "row" with year (ar) as
-# the primary time-key — the single panel_time_key can't also carry the quarter
-# (kvartal) sub-period. Bulk-delivered (årgångar 2004–2024 in one extract), so time is
-# row-derived, not delivery-aligned.
+# Panel shape (#567): company × year × quarter panel. Entity = the reporting company
+# (peorgnr); time is row-level (Ar/Kvartal columns) so grain = "row". The composite
+# panel_time_key now carries BOTH the year (ar) and the quarter (kvartal) — the quarter
+# no longer collapses, the two slugs together address one delivered quarter.
+# Bulk-delivered (årgångar 2004–2024 in one extract), so time is row-derived, not
+# delivery-aligned.
 panel_entity_key = "peorgnr"
-panel_time_key = "ar"
+panel_time_key = ["ar", "kvartal"]
 panel_time_grain = "row"
 
 # Arbetsgivardeklarationer, huvuduppgifter (AGI/Huvud) — canonical-SCB content on the

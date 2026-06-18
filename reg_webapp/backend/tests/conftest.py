@@ -144,6 +144,17 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
         "panel_time_grain = ? WHERE register_variant_id = 20",
         (json.dumps(["foretag", "arbetsstalle"]), "period", "delivery"),
     )
+    # #567: a sibling variant carrying a COMPOSITE panel_time_key (UHT's
+    # (year, quarter) coordinate → JSON array), so the variant endpoint also
+    # exercises composite time-key serialization.
+    add_variant(
+        src, register_variant_id=21, register_id=2, slug="quarterly", name="Qtr"
+    )
+    src.execute(
+        "UPDATE register_variant SET panel_entity_key = ?, panel_time_key = ?, "
+        "panel_time_grain = ? WHERE register_variant_id = 21",
+        ("peorgnr", json.dumps(["ar", "kvartal"]), "row"),
+    )
     add_version(src, regver_id=200, register_variant_id=20, name="2019")
     add_variable(src, register_id=2, var_id=77, name="Sysselsättning", slug="syss")
     add_state(
