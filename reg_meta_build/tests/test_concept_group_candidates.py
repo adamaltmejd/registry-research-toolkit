@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta_build.concept_group_candidates import (
+    _strip_slot_number,
     infer_concept_group_candidates,
     render_candidates_toml,
 )
@@ -78,13 +79,42 @@ class TestGenerator:
         assert [m.value for m in c.members] == ["1", "2", "3"]
         assert [m.label for m in c.members] == ["1", "2", "3"]
 
+    def test_mid_label_number_family_emitted(self) -> None:
+        # The slot number sits MID-label ("Kod 1, x" … "Kod 3, x"): under raw
+        # common-prefix scoring the prefix stops at "Kod " (the digit breaks it) and
+        # the family is wrongly excluded as a battery. Number-invariant scoring strips
+        # each member's own slot number first ("Kod , x"), so the family agrees ~1.0
+        # and EMITS. The display label still derives from the RAW names → "Kod" (the
+        # raw common prefix), NOT the stripped/garbled form.
+        conn = _base_db()
+        for i, suffix in enumerate([1, 2, 3]):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=900 + i,
+                name=f"Åtgärdskod {suffix}, den förlösta",
+                slug=f"flop{suffix}",
+            )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.excluded_batteries == 0
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "flop"
+        assert [m.suffix for m in c.members] == [1, 2, 3]
+        # Number-stripped names agree on all but the digit → very high agreement.
+        assert c.agreement > 0.9
+        # Display label is the RAW common prefix, not the stripped form.
+        assert c.group_label == "Åtgärdskod"
+
     def test_battery_excluded_and_counted(self) -> None:
-        # Same stem `f`, but unrelated short names → weak label agreement → battery,
+        # Same stem `f`, genuinely different label TEXT (not just the number) →
+        # number-stripping doesn't make them agree → weak agreement → battery,
         # excluded from candidates and counted.
         conn = _base_db()
-        add_variable(conn, register_id=1, var_id=200, name="Ålder", slug="f1")
-        add_variable(conn, register_id=1, var_id=201, name="Kön", slug="f2")
-        add_variable(conn, register_id=1, var_id=202, name="Civilstånd", slug="f3")
+        add_variable(conn, register_id=1, var_id=200, name="Apples", slug="f1")
+        add_variable(conn, register_id=1, var_id=201, name="Oranges", slug="f2")
+        add_variable(conn, register_id=1, var_id=202, name="Cars", slug="f3")
         conn.commit()
         result = infer_concept_group_candidates(conn)
         assert result.candidates == []
@@ -449,3 +479,32 @@ class TestGenerator:
         morsak = by_key["morsak"]
         assert all(m.variable is not None and m.group is None for m in morsak.members)
         assert [m.value for m in morsak.members] == ["1", "2", "3"]
+
+
+class TestStripSlotNumber:
+    def test_mid_label_number_removed_once(self) -> None:
+        # The slot number sitting mid-label is removed (first whole-number
+        # occurrence), so number-stripped names of a multi-instance family agree.
+        assert _strip_slot_number("Åtgärdskod 1, den förlösta", 1) == (
+            "Åtgärdskod , den förlösta"
+        )
+        assert _strip_slot_number("Åtgärdskod 12, den förlösta", 12) == (
+            "Åtgärdskod , den förlösta"
+        )
+
+    def test_substring_of_longer_number_not_clipped(self) -> None:
+        # Digit-boundary aware: a slot number that's a substring of a longer number
+        # in the label is NOT clipped (the "1" inside "ICD-10" / "10" survives).
+        assert _strip_slot_number("ICD-10 kod 1", 1) == "ICD-10 kod "
+        assert _strip_slot_number("Variabel 10", 1) == "Variabel 10"
+
+    def test_only_first_occurrence_removed(self) -> None:
+        # count=1: a second occurrence of the same number is left intact.
+        assert _strip_slot_number("Kod 1 av 1", 1) == "Kod  av 1"
+
+    def test_name_without_number_unchanged(self) -> None:
+        # When the slot number isn't present in the name (e.g. morsak1 named without
+        # a "1"), the name is returned unchanged.
+        assert _strip_slot_number("ICD-kod för multipel dödsorsak", 1) == (
+            "ICD-kod för multipel dödsorsak"
+        )
