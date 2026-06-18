@@ -1488,19 +1488,26 @@ def _check_concept_groups(
         result.ok(f"{n_curated} curated group(s) (>= 1)")
     else:
         result.fail("no curated concept groups (concept_groups.toml not applied?)")
-    # Classification vintage families no longer fold here (#571) — they
-    # materialize as succession edges, asserted-empty (structural) above and
-    # floored in `_check_classification_replaced_by`. The corpus build carries
-    # zero derived `kind='classification'` groups now.
-    n_derived_cls = conn.execute(
-        "SELECT COUNT(*) FROM concept_group WHERE kind = 'classification'"
+    # Derived (`source='token'`) classification vintage families no longer fold
+    # here (#571) — they materialize as succession edges, asserted-empty
+    # (structural) above and floored in `_check_classification_replaced_by`. Only
+    # the TOKEN source is derived; CURATED umbrella classification groups (#516,
+    # e.g. a SUN group with `source='curated'`) are intentionally retained and
+    # must be allowed through. The corpus build carries zero token classification
+    # groups now.
+    n_token_cls = conn.execute(
+        "SELECT COUNT(*) FROM concept_group "
+        "WHERE kind = 'classification' AND source = 'token'"
     ).fetchone()[0]
-    if n_derived_cls == 0:
-        result.ok("no derived classification concept groups (#571 succession edges)")
+    if n_token_cls == 0:
+        result.ok(
+            "no derived (token) classification concept groups (#571 succession edges)"
+        )
     else:
         result.fail(
-            f"{n_derived_cls} classification concept group(s) present — the #571 "
-            "vintage groups should have become succession edges"
+            f"{n_token_cls} derived (token) classification concept group(s) present "
+            "— the #571 vintage groups should have become succession edges "
+            "(curated umbrella classification groups are permitted)"
         )
 
 

@@ -1145,6 +1145,75 @@ class TestConceptGroupChecks:
         result = self._run(conn)
         assert any("parity" in f or "components" in f for f in result.failures)
 
+    @staticmethod
+    def _add_classification_group(conn, *, source: str):
+        """Seed a 2-member `kind='classification'` group with the given source.
+
+        Adds two `classification` rows (the umbrella's vintages) and wires both
+        as `concept_group_classification` members so the group clears the
+        >= 2-member floor — isolating the derived-empty (#571) check on `source`.
+        """
+        ids = []
+        for short, name, slug in (
+            ("SUN2000", "Svensk utbildningsnomenklatur 2000", "sun2000"),
+            ("SUN2020", "Svensk utbildningsnomenklatur 2020", "sun2020"),
+        ):
+            cur = conn.execute(
+                "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+                (short, name, slug),
+            )
+            ids.append(cur.lastrowid)
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (20, 'classification', NULL, 'sun', 'SUN', ?)",
+            (source,),
+        )
+        for vintage, cid in zip(("2000", "2020"), ids):
+            conn.execute(
+                "INSERT INTO concept_group_classification "
+                "(classification_id, group_id, facet_value, facet_label) "
+                "VALUES (?, 20, ?, ?)",
+                (cid, vintage, f"SUN {vintage}"),
+            )
+        conn.commit()
+
+    def test_curated_classification_group_passes_derived_empty_check(self):
+        # #516 umbrella: a CURATED classification group is retained and must not
+        # trip the #571 derived-empty assertion (corpus path).
+        conn = self._grouped_db()
+        self._add_classification_group(conn, source="curated")
+        result = self._run_corpus(conn)
+        assert not any(
+            "derived (token) classification concept group" in f for f in result.failures
+        ), result.failures
+        assert any(
+            "no derived (token) classification concept groups" in ln.text
+            for ln in result.lines
+            if ln.kind == "ok"
+        )
+
+    def test_token_classification_group_fails_derived_empty_check(self):
+        # A DERIVED (#571 token) classification group must still fail — those
+        # vintage families belong in the succession-edge table, not here.
+        conn = self._grouped_db()
+        self._add_classification_group(conn, source="token")
+        result = self._run_corpus(conn)
+        assert any(
+            "derived (token) classification concept group" in f for f in result.failures
+        ), result.failures
+
+    @staticmethod
+    def _run_corpus(conn):
+        from reg_meta_build.validate import ValidationResult, _check_concept_groups
+
+        result = ValidationResult()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        _check_concept_groups(conn, result, tables, corpus=True)
+        return result
+
 
 class TestTagChecks:
     """#311 `_check_tags` closure — exercised against NON-EMPTY tag tables (the
