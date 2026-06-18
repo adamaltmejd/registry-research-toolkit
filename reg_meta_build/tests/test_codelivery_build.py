@@ -400,20 +400,27 @@ class TestExtendsLater:
 
 
 class TestResidualClampReconciliation:
-    """Fast-path residual reconciliation (`_collapse_residual` pass 2), the
-    complement to the timeline cascade above: two states on ONE column carry the
-    SAME value set under the SAME label but drift in `data_length` across
-    overlapping year spans (so the only gkey difference is `data_length`). Same
-    value set → `_spans_overlap` is False → they never reach the timeline, so
-    pass 2 owns the emitted overlap: it DROPS a fully-subsumed span and CLAMPS a
-    crossing one — without losing the older span's non-overlap coverage."""
+    """Length-drift under a stable value set now folds at the GROUPING stage
+    (#526), not in `_collapse_residual` pass 2. Two spans on ONE column carrying
+    the SAME value set under the SAME label that previously differed ONLY in
+    `data_length` used to be two gkeys the collapse pass clamped/dropped into a
+    non-overlapping pair; the value set anchors the state now, so the type/length
+    slots are blanked in the gkey and every such delivery folds into ONE state
+    regardless of the length wobble. (Pass 2 still owns same-value-set overlaps
+    discriminated by GRAIN/component — #526 only removed the type/length trigger;
+    its clamp/drop logic stays live and reachable for those.)
+
+    These two cases now assert the FOLD outcome — the older and younger spans
+    collapse into a single state spanning their union, displaying the latest
+    era's length."""
 
     @staticmethod
     def _drift_rows(
         *, colname: str, var_id: int, years: range, regver_base: int, data_length: str
     ) -> tuple[list[str], list[str]]:
         # One cvid per year on `colname`, all SAME codes (CODING_A) + SAME version
-        # label, so the only gkey difference from the rival span is `data_length`.
+        # label; the only per-delivery difference is `data_length`. Post-#526 that
+        # is a non-splitting attribute under a stable value set → one folded state.
         ri: list[str] = []
         vm: list[str] = []
         for i, year in enumerate(years):
@@ -432,10 +439,13 @@ class TestResidualClampReconciliation:
             vm += vm_rows(cvid, "Coding", CODING_A)
         return ri, vm
 
-    def test_crossing_clamp_preserves_older_non_overlap(self, tmp_path: Path) -> None:
-        # Older span 2016-2020 (len 3); younger 2019-2022 (len 5) starts inside it
-        # and extends past → CROSSING. The older is clamped to 2018 (younger.min-1),
-        # so its non-overlap years 2016-2018 SURVIVE; the younger owns 2019-2022.
+    def test_length_drift_under_stable_value_set_folds_to_one(
+        self, tmp_path: Path
+    ) -> None:
+        # Older span 2016-2020 (len 3); younger 2019-2022 (len 5). Same value set,
+        # same label, same column — only `data_length` differs across eras. #526
+        # folds them into ONE state spanning the union 2016-2022; the displayed
+        # length is the LATEST era's (5, regver 1790+ > 1750+).
         ri_old, vm_old = self._drift_rows(
             colname="ClampCol",
             var_id=1750,
@@ -459,19 +469,16 @@ class TestResidualClampReconciliation:
             ).fetchall()
         finally:
             conn.close()
-        # Two non-overlapping states; the older keeps 2016-2018 (clamped, not dropped).
-        assert [(r[0][:4], r[1][:4]) for r in rows] == [
-            ("2016", "2018"),
-            ("2019", "2022"),
-        ]
-        assert [r[2] for r in rows] == ["3", "5"]  # both drifting lengths ship
-        assert rows[0][3] == rows[1][3]  # same value set throughout
-        assert rows[0][1] < rows[1][0]  # no overlap: older ends before younger starts
+        # One folded state covering the union of both spans.
+        assert len(rows) == 1
+        assert (rows[0][0][:4], rows[0][1][:4]) == ("2016", "2022")
+        assert rows[0][2] == "5"  # latest era's length is displayed
 
-    def test_nested_subsumed_span_dropped(self, tmp_path: Path) -> None:
-        # Younger span 2018-2020 (len 5) is fully inside older 2016-2022 (len 3) →
-        # SUBSUMED. The younger is redundant drift (the older already covers those
-        # years with the identical coding) → dropped; the older keeps its full span.
+    def test_nested_length_drift_folds_to_one(self, tmp_path: Path) -> None:
+        # Younger span 2018-2020 (len 5) sits inside older 2016-2022 (len 3). Same
+        # value set/label/column → #526 folds both into ONE state over the older's
+        # full span. Latest era here is the younger (regver 1860+ > 1760+), so the
+        # displayed length is 5.
         ri_old, vm_old = self._drift_rows(
             colname="DropCol",
             var_id=1760,
@@ -494,7 +501,7 @@ class TestResidualClampReconciliation:
             ).fetchall()
         finally:
             conn.close()
-        # Exactly one state survives: the wider older span, its data_length intact.
+        # One folded state over the union span; latest era's length displayed.
         assert len(rows) == 1
         assert (rows[0][0][:4], rows[0][1][:4]) == ("2016", "2022")
-        assert rows[0][2] == "3"
+        assert rows[0][2] == "5"

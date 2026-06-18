@@ -1078,6 +1078,10 @@
     "umu/5444831050852607094.5876203108261893022": "_default"
   },
   "variable": {
-    "scb/195.4027.ng1-2007": "naringsgren"
+    "scb/128.56": "person-organisationsnummer",
+    "scb/130.57": "personnummer",
+    "scb/195.4027.ng1-2007": "naringsgren",
+    "scb/2.57.personnr": "personnr",
+    "scb/357.4544": "eget-personnummer"
   }
 }

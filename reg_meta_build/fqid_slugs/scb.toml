@@ -79,6 +79,17 @@ panel_time_grain = "delivery"
 [register."2"]
 slug = "rtb"
 
+# #526 curation: var 57 "Personnummer" is a genuine #143 drifter (delivery column
+# renamed PersonNr→PNR). Its `personnr` slug was only stable because its name
+# "Personnummer" COLLIDED with a sibling whose drift was spurious case-wobble
+# (PersonNrSamh/PersonNrsamh) that #526's value-set fold correctly collapses —
+# the collision routed both to their earliest column. Without it the auto-slug
+# flips to the name basis `personnummer`, dangling every RTB variant's
+# `panel_entity_key = "personnr"`. Pin it (split-sibling key: earliest column
+# PersonNr → discriminator `personnr`).
+[variable."2.57.personnr"]
+slug = "personnr"
+
 [register_variant."2.53"]
 slug = "folkbokforda-personer"
 display_group = "Folkbokförda personer"
@@ -1665,6 +1676,14 @@ panel_time_grain = "delivery"
 [register."128"]
 slug = "lsum"
 
+# #526 curation: var 56's delivery column drifts only by CASE
+# (PeOrgNr/PeOrgnr/peorgnr/Peorgnr), so on main it was a #143 drifter slugged
+# from its name "Person-/organisationsnummer". #526's value-set fold collapses
+# the case wobble → non-drifter → it would slug from the column (`peorgnr`),
+# dangling `panel_entity_key = "person-organisationsnummer"`. Pin the name slug.
+[variable."128.56"]
+slug = "person-organisationsnummer"
+
 [register_variant."128.154"]
 slug = "anstallningar-nattbefolkning"
 display_group = "Anställningar - nattbefolkning"
@@ -1703,6 +1722,13 @@ panel_time_grain = "delivery"
 # Lönestrukturstatistik, kommuner (SLK)
 [register."130"]
 slug = "slk"
+
+# #526 curation: var 57's delivery column drifts only by CASE (PersonNr/personnr),
+# so on main it was a #143 drifter slugged from its name "Personnummer". #526's
+# value-set fold collapses the case wobble → non-drifter → it would slug from the
+# column (`personnr`), dangling `panel_entity_key = "personnummer"`. Pin the name.
+[variable."130.57"]
+slug = "personnummer"
 
 [register_variant."130.169"]
 slug = "_default"
@@ -4101,6 +4127,14 @@ panel_time_grain = "delivery"
 # Hushållens boendeutgifter (BUT)
 [register."357"]
 slug = "but"
+
+# #526 curation: var 4544's delivery column drifts only by CASE
+# (PERSONNR/PersonNr/personnr), so on main it was a #143 drifter slugged from its
+# name "Eget personnummer". #526's value-set fold collapses the case wobble →
+# non-drifter → it would slug from the column (`personnr`), dangling
+# `panel_entity_key = "eget-personnummer"`. Pin the name slug.
+[variable."357.4544"]
+slug = "eget-personnummer"
 
 [register_variant."357.1267"]
 slug = "hushall"

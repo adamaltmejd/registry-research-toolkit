@@ -329,7 +329,10 @@ as the source of truth for field shapes; a few that bite:
   invariant (validate.py).
 - `IRVariableState.data_type` is nullable to mirror the nullable
   `variable_state.data_type` column — SCB never writes NULL, but a provider that does
-  must be *representable*, not raise at emit.
+  must be *representable*, not raise at emit. It is also **low-trust** (SCB's
+  per-delivery `Datatyp`) and **non-splitting** for a value-set-bearing state — see the
+  *State-identity rule (#526)* under *Build-time triage (SCB)*; the displayed value is
+  the latest era's.
 - `IRValueSet.member_hash` is raw 32 bytes (not hex) — wire and storage encodings stay
   identical, no encode/decode at the boundary. The materializer writes it verbatim into
   `value_set.member_hash` (a BLOB with `CHECK length = 32`).
@@ -961,6 +964,28 @@ invariant, so the SCB adapter triages every such collision (`sources/scb.py`,
   to the year before the successor begins. Only fast-path
   `(variable_id, register_variant_id)` partitions are touched; distinct value sets and
   different-column overlaps (parallel co-deliveries) are left to the materializer.
+
+**State-identity rule (#526).** The VALUE SET anchors a valued variable's temporal-state
+identity; SCB's per-delivery `Datatyp` / `Datalängd` is low-trust passthrough (declared
+per delivery, sometimes self-contradicting — `kommuntyp` ships `varchar` ×3 / `nvarchar`
+/ `float` across its own editions), so it is a **non-splitting attribute** for a
+value-set-bearing column. The coalescer's group key therefore blanks the type/length
+slots when `value_set_id is not None`: every delivery of the same
+`(value_set, label, grain, component)` folds into ONE `variable_state` regardless of
+type/length wobble (\~29% of adjacent transitions differed only on the type string). The
+displayed `data_type` / `data_length` is the **latest era's** (highest `regver_id`,
+mirroring the `latest_alias` rule) — the surviving state shows the current delivery's
+shape, not an arbitrary earlier one. **Valueless** columns have no categorical anchor,
+so type+length stay the only shape signal and remain in the key — but `data_type` is run
+through `_canon_data_type` (ASCII-fold + lowercase + collapse whitespace; the text
+family `char`/`varchar`/`nchar`/`nvarchar` → one token) so a char↔varchar wobble folds
+while a genuine class flip (date→int) still splits on a real width change. A class flip
+under a stable value set (the SCB-error `float(53)`-on-categorical case) is **folded**
+and counted: `coalesce_stats.n_type_folds` (anchored groups that swallowed >1 distinct
+(type, length)) and `n_type_class_folds` (the subset spanning >1 `_data_type_class`),
+with a capped class-flip exemplar list on the private `_type_class_fold_sample` key and
+a `type-fold (#526)` build line. Downstream the SPA's `stateChangeHints` simply stops
+firing on type-only transitions post-fold.
 
 Fold vs split is decided **PER CLUSTER** (#223), not fold-all-or-split-all:
 `_cluster_contested` partitions a container's contested columns into stem- families

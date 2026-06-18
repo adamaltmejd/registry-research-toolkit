@@ -11,7 +11,9 @@ from _csv_fixtures import (
     PIPE,
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
+    UNIKA_ROWS,
     VARDEMANGDER_REAL_ROWS,
+    VARDEMANGDER_ROWS,
     _ri_row,
     _var_row,
     timeseries_row,
@@ -27,6 +29,7 @@ from reg_meta_build.db import (
     _value_set_hash,
     build_db,
 )
+from reg_meta_build.sources.scb import _canon_data_type
 
 # A single irrelevant Timeseries.csv row (handelse not in the succession set, so
 # it's ignored before resolution and emits NO event-derived edge). `write_csv`
@@ -81,6 +84,41 @@ class TestDecodeCP1252:
         for i, a in enumerate(chars):
             for j, b in enumerate(chars):
                 assert (decoded[i] == decoded[j]) == (canon[i] == canon[j]), (a, b)
+
+
+class TestCanonDataType:
+    """#526: `_canon_data_type` is the low-trust `data_type` grouping key —
+    ASCII-fold + lowercase + whitespace-collapse, the text family
+    (`char`/`varchar`/`nchar`/`nvarchar`) mapped to one `"text"` token so a
+    per-delivery char\u2194varchar wobble stops splitting a state, with embedded
+    `(n)` widths stripped. Numeric/date families are NOT folded into text \u2014 a
+    class flip there is real shape evidence on a valueless column."""
+
+    @pytest.mark.parametrize(
+        ("raw", "expected"),
+        [
+            # None / blank \u2192 empty key.
+            (None, ""),
+            ("", ""),
+            # Whole text family collapses to one token.
+            ("char", "text"),
+            ("varchar", "text"),
+            ("nchar", "text"),
+            ("nvarchar", "text"),
+            # Case-insensitive (ASCII-fold + lowercase).
+            ("NVARCHAR", "text"),
+            # Embedded length is stripped before the family lookup.
+            ("varchar(1)", "text"),
+            # Whitespace is trimmed/collapsed.
+            ("  varchar  ", "text"),
+            # Numeric / date families are NOT folded into the text token.
+            ("int", "int"),
+            ("float", "float"),
+            ("date", "date"),
+        ],
+    )
+    def test_canon(self, raw: str | None, expected: str):
+        assert _canon_data_type(raw) == expected
 
 
 class TestBuildDb:
@@ -2076,6 +2114,307 @@ class TestVariableStateMultiShape:
             # Strict non-overlap: row 0 ends strictly before row 1 starts.
             # Lexical comparison is chronological for full-date ISO strings.
             assert rows[0]["valid_to"] < rows[1]["valid_from"]
+        finally:
+            conn.close()
+
+
+class TestVariableStateTypeFold:
+    """#526: SCB's per-delivery `Datatyp`/`Datalängd` is low-trust passthrough;
+    the value set is the reliable categorical signal. The coalescer no longer
+    splits a state on type/length wobble when the VALUE SET is stable — a
+    char↔varchar flip, a length-only change, or an SCB-error class flip
+    (float(53)-on-categorical) all fold into ONE `variable_state`. Valueless
+    columns keep type+length as their only shape signal, but with the text
+    family (char/varchar/n…) canonicalized so a char↔varchar wobble still folds
+    while a genuine class flip (date→int) splits.
+    """
+
+    @staticmethod
+    def _build(
+        tmp_path: Path,
+        eras: list[tuple[str, int, int, str, str, list[tuple[str, str]] | None]],
+        *,
+        var_id: int = 920,
+        column: str = "FoldCol",
+        varname: str = "FoldVar",
+    ) -> Path:
+        """Build a DB with ONE fresh variable delivered across `eras`. Each era
+        is (year, regver_id, cvid, data_type, data_length, value_members) where
+        `value_members` is None for a valueless delivery, else a list of
+        (kod, label) pairs. Same members across eras ⇒ same `value_set_id`
+        (content-hash dedup), so those eras share a value set. Value codes use an
+        UNTRACKED ItemID (no VardemangderValidDates row) ⇒ always-valid ⇒ the
+        instance keeps a non-NULL value_set_id."""
+        ri_rows: list[str] = list(REGISTERINFORMATION_ROWS)
+        vardemangder_rows: list[str] = list(VARDEMANGDER_ROWS)
+        for year, regver_id, cvid, dt, dl, members in eras:
+            ri_rows.append(
+                _ri_row(
+                    "TESTREG",
+                    "Testregistret",
+                    "Testning",
+                    "Individer",
+                    "Individer",
+                    "Alla individer",
+                    "Nej",
+                    year,
+                    f"Version {year}",
+                    "",
+                    "Godkänd",
+                    f"{year}-01-01",
+                    f"{year}-12-31",
+                    "Hela befolkningen",
+                    "Alla personer",
+                    "",
+                    f"{year}-12-31",
+                    "Person",
+                    "Fysisk person",
+                    varname,
+                    "A variable exercising the #526 type-fold",
+                    "Type-fold fixture",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    column,
+                    dt,
+                    dl,
+                    str(cvid),
+                    "1",
+                    "10",
+                    str(regver_id),
+                    str(var_id),
+                )
+            )
+            if members is not None:
+                for kod, label in members:
+                    # Untracked ItemID "" ⇒ always-valid (no projection cutoff).
+                    vardemangder_rows.append(
+                        PIPE.join([varname, "1", kod, label, str(cvid), ""])
+                    )
+
+        # One bounded unika row spanning the full lifetime; the coalescer must
+        # NOT fan it out across folded eras.
+        years = [e[0] for e in eras]
+        unika_rows = list(UNIKA_ROWS) + [
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    varname,
+                    column,
+                    min(years),
+                    max(years),
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            )
+        ]
+
+        input_dir = tmp_path / "input"
+        write_scb_input(
+            input_dir,
+            registerinformation_rows=ri_rows,
+            vardemangder_rows=vardemangder_rows,
+            unika_rows=unika_rows,
+        )
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    @staticmethod
+    def _states(conn: sqlite3.Connection, var_id: int) -> list[sqlite3.Row]:
+        return conn.execute(
+            "SELECT data_type, data_length, value_set_id, valid_from, valid_to "
+            "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = ? "
+            "ORDER BY valid_from",
+            (str(var_id),),
+        ).fetchall()
+
+    @staticmethod
+    def _coalesce_stats(conn: sqlite3.Connection) -> dict:
+        row = conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'coalesce_stats'"
+        ).fetchone()
+        assert row is not None
+        return json.loads(row["value"])
+
+    _MAN_KVINNA = [("1", "Man"), ("2", "Kvinna")]
+
+    def test_value_set_anchored_char_varchar_folds(self, tmp_path: Path):
+        """The reported case: same variable, two editions, SAME value set,
+        data_type varchar→char at the SAME length ⇒ exactly ONE state."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "1", self._MAN_KVINNA),
+                ("2021", 921, 9301, "char", "1", self._MAN_KVINNA),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 1
+            assert states[0]["value_set_id"] is not None
+            # Folded lifetime spans both editions.
+            assert states[0]["valid_from"] == "2020-01-01"
+            assert states[0]["valid_to"] == "2021-12-31"
+        finally:
+            conn.close()
+
+    def test_value_set_anchored_length_only_folds(self, tmp_path: Path):
+        """Length-only change under a stable value set ⇒ ONE state."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "2", self._MAN_KVINNA),
+                ("2021", 921, 9301, "varchar", "8", self._MAN_KVINNA),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            assert len(self._states(conn, 920)) == 1
+        finally:
+            conn.close()
+
+    def test_value_set_anchored_class_flip_folds_and_counts(self, tmp_path: Path):
+        """An SCB-error class flip (varchar→float) under a stable value set ⇒
+        ONE state, and the manifest's `n_type_class_folds` counts it."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "1", self._MAN_KVINNA),
+                ("2021", 921, 9301, "float", "53", self._MAN_KVINNA),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            assert len(self._states(conn, 920)) == 1
+            stats = self._coalesce_stats(conn)
+            assert stats["n_type_folds"] >= 1
+            assert stats["n_type_class_folds"] >= 1
+        finally:
+            conn.close()
+
+    def test_valueless_class_change_still_splits(self, tmp_path: Path):
+        """A valueless variable with a genuine class change (char→int, no value
+        set) keeps its split: type is the only shape signal there ⇒ TWO states.
+        `n_type_class_folds` does NOT count valueless groups."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "char", "8", None),
+                ("2021", 921, 9301, "int", "0", None),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 2
+            assert all(s["value_set_id"] is None for s in states)
+            stats = self._coalesce_stats(conn)
+            assert stats["n_type_class_folds"] == 0
+        finally:
+            conn.close()
+
+    def test_valueless_char_varchar_same_length_folds(self, tmp_path: Path):
+        """Valueless char↔varchar at the same length folds to ONE state — the
+        text family canonicalizes even on the valueless path."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "char", "1", None),
+                ("2021", 921, 9301, "varchar", "1", None),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 1
+            assert states[0]["value_set_id"] is None
+        finally:
+            conn.close()
+
+    def test_latest_era_type_displayed(self, tmp_path: Path):
+        """The surviving merged state's displayed data_type is the LATEST
+        edition's delivery type (highest regver_id), not the first row's."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "1", self._MAN_KVINNA),
+                ("2021", 921, 9301, "char", "1", self._MAN_KVINNA),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 1
+            # regver_id 921 (char) is the latest era → char wins over varchar.
+            assert states[0]["data_type"] == "char"
+            assert states[0]["data_length"] == "1"
+        finally:
+            conn.close()
+
+    def test_distinct_value_sets_still_split(self, tmp_path: Path):
+        """Guard against over-merge: when the value set ALSO changes between
+        editions, `value_set_id` (gkey position 5) still discriminates even
+        though the type changed too. era-1 carries {Man, Kvinna} as varchar;
+        era-2 adds an 'Okänd' code as char \u2014 a DIFFERENT value set. The fold
+        only collapses type/length wobble WITHIN a stable value set, so these
+        two eras must stay TWO states with distinct, non-null value_set_ids."""
+        man_kvinna_okand = self._MAN_KVINNA + [("9", "Okänd")]
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2020", 920, 9300, "varchar", "1", self._MAN_KVINNA),
+                ("2021", 921, 9301, "char", "1", man_kvinna_okand),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 2
+            vsids = [s["value_set_id"] for s in states]
+            assert all(v is not None for v in vsids)
+            assert vsids[0] != vsids[1]
+        finally:
+            conn.close()
+
+    def test_same_regver_tie_picks_lex_smaller_type(self, tmp_path: Path):
+        """Tiebreak determinism: two cvids share the SAME `regver_id` (one
+        edition) on the same column + same value set but differ on `data_type`
+        (char vs varchar, same length). The merge yields exactly ONE state, and
+        the displayed `data_type` is the lexicographically smaller (type, length)
+        winner \u2014 'char' \u2014 so the result is independent of which row the
+        coalescer happened to visit first. `_build` appends the eras in order;
+        giving both entries the same `regver_id` (922) and year ('2022') puts two
+        cvids on one edition."""
+        db_path = self._build(
+            tmp_path,
+            eras=[
+                ("2022", 922, 9302, "varchar", "1", self._MAN_KVINNA),
+                ("2022", 922, 9303, "char", "1", self._MAN_KVINNA),
+            ],
+        )
+        conn = open_db(db_path)
+        try:
+            states = self._states(conn, 920)
+            assert len(states) == 1
+            # char < varchar lexically at the same length and same regver_id.
+            assert states[0]["data_type"] == "char"
+            assert states[0]["data_length"] == "1"
+            assert states[0]["value_set_id"] is not None
         finally:
             conn.close()
 

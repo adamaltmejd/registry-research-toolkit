@@ -179,7 +179,11 @@ two distinct facts are entangled there:
   `is_sensitive`, `is_identifier`, source attribution).
 - **`variable_state`** — the **per-delivery shape**, a child of `variable`. A variable
   has 1..N states; each carries a **variant coordinate** and a period range, plus the
-  data type, length, value set, and version label for that delivery.
+  data type, length, value set, and version label. The **value set anchors state
+  identity**: SCB's low-trust per-delivery `data_type`/`data_length` no longer split a
+  state when a value set is present (a state can span several deliveries whose only
+  difference was a type-string wobble; the displayed type is then the latest era's) —
+  see reg_meta_build/DESIGN.md § "State-identity rule (#526)".
 
 The SCB source delivery this collapses (the CVID grain, the input-file mapping) is
 documented in [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) § "Source
