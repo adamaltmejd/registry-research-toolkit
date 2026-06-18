@@ -1530,30 +1530,16 @@ def populate_variable_slugs(
         if freeze_state(states, provider_slug) != "churning" and auto_path.is_file():
             auto = _auto_variable_slugs(load_provider_toml(auto_path))
             auto_derivation.update(read_auto_derivations(auto_path))
-        # `kol`/`early_kol` read variable_state.delivery_column_name, the
-        # coalesced per-era column (not raw variable_alias) — stays correct
-        # after A2.7 drops variable_instance. "Latest" = highest valid_to,
-        # lexically smallest on ties (matches the coalescer tie-break).
-        # `early_kol` is the mirror (lowest valid_from) — the #139 split-sibling
-        # discriminator basis. variable_state is the right source for both:
-        # it carries the temporal columns (valid_from/valid_to) variable_alias
-        # lacks, and a #526 state fold (collapsing per-edition/case-variant
-        # columns onto the latest-era alias) doesn't corrupt the cross-variant
-        # earliest column `early_kol` resolves.
-        # `n_cols` is the #143 drift signal: a variable whose delivery column is
-        # NOT constant across its history (n_cols > 1) must NOT slug from its
-        # latest column (a version-specific name like `sun2020inr1` for a var
-        # that was SUN96→SUN2000→SUN2020). It reads variable_alias — the
-        # authoritative, FOLD-IMMUNE full column history (variable_alias ⊇ the
-        # state delivery columns; UNIVERSAL across SCB and SOS;
-        # delivery_column_name is NOT NULL by schema) — NOT variable_state.
-        # #526 folds variable states across low-trust data_type/data_length, so
-        # sourcing the drift count from variable_state would let a fold that
-        # collapses per-edition/case-variant columns mis-DROP the drift signal
-        # (n_cols 2→1), wrongly routing a drifter to its NAME basis instead of
-        # its earliest column. variable_alias keeps the full pre-fold column set,
-        # so the count is fold-immune. Ordered by register so the per-register
-        # uniqueness scope is one groupby pass.
+        # variable_state.delivery_column_name is the coalesced per-era column
+        # (not raw variable_alias) — stays correct after A2.7 drops
+        # variable_instance. "Latest" = highest valid_to, lexically smallest on
+        # ties (matches the coalescer tie-break). `early_kol` is the
+        # mirror (lowest valid_from) — the #139 split-sibling discriminator
+        # basis — and `n_cols` is the #143 drift signal: a variable whose
+        # delivery column is NOT constant across its states (n_cols > 1) must
+        # NOT slug from its latest column (a version-specific name like
+        # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Ordered by
+        # register so the per-register uniqueness scope is one groupby pass.
         # `incremental` (#365 PR2): process ONLY newly-inserted variables (NULL
         # slug). The global build's already-published slugs stay untouched — the
         # overlay's no-clobber guarantee. The filter is gated so the global
@@ -1570,8 +1556,9 @@ def populate_variable_slugs(
             " WHERE vs.variable_id = v.variable_id "
             " AND vs.delivery_column_name IS NOT NULL "
             " ORDER BY vs.valid_from ASC, vs.delivery_column_name ASC LIMIT 1) AS early_kol, "
-            "(SELECT COUNT(DISTINCT va.delivery_column_name) FROM variable_alias va "
-            " WHERE va.variable_id = v.variable_id) AS n_cols "
+            "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
+            " WHERE vs.variable_id = v.variable_id "
+            " AND vs.delivery_column_name IS NOT NULL) AS n_cols "
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -3212,12 +3199,7 @@ def _drifting_variables(
     earliest column — fallback step 3), so this is a pre-v1 curation-review aid,
     NOT a build gate: a curator scans it to pin a ``[variable]`` override where
     the auto-pick is still off. Drift = the same ``COUNT(DISTINCT) > 1`` signal
-    the slug derivation uses, so the two never disagree on what "drifts" — both
-    count distinct columns in ``variable_alias`` (the fold-immune full column
-    history), NOT ``variable_state`` (whose per-era column a #526 type-fold
-    collapses; see ``populate_variable_slugs``). The displayed column LIST below
-    still reads ``variable_state`` for its ``valid_from`` edition order — alias
-    has no temporal column — but the membership/drift decision is alias-sourced.
+    the slug derivation uses, so the two never disagree on what "drifts".
 
     Each row is ``(provider, register_id, provider_key, slug, name, columns)`` —
     the distinct columns in ``valid_from`` order, so the curator reads the
@@ -3227,8 +3209,8 @@ def _drifting_variables(
     a non-numeric SOS key, and the list is supposed to never gate the command.
     """
     _DRIFT = (
-        "(SELECT COUNT(DISTINCT va.delivery_column_name) FROM variable_alias va "
-        " WHERE va.variable_id = {v}) > 1"
+        "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
+        " WHERE vs.variable_id = {v} AND vs.delivery_column_name IS NOT NULL) > 1"
     )
     ident = conn.execute(
         "SELECT v.variable_id, p.slug, v.register_id, v.provider_key, v.slug, v.name "
