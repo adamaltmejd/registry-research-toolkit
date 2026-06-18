@@ -33,7 +33,7 @@ import statistics
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from .concept_groups import _common_prefix, _trim_label
+from .concept_groups import _VINTAGE_YEARS, _common_prefix, _trim_label
 
 if TYPE_CHECKING:
     import sqlite3
@@ -43,11 +43,6 @@ if TYPE_CHECKING:
 # `('sun-niva', 2000)`, `morsak1` → `('morsak', 1)`. `agi1lonfink` has no
 # trailing digit, so it doesn't match (correctly — the digit is internal).
 _SUFFIX_RE = re.compile(r"^(.*?)(\d+)$")
-
-# Proposed-axis vintage-year window (mirrors `concept_groups._VINTAGE_YEARS`):
-# a 4-digit suffix in this range on a non-digit-ending stem is evidence of a
-# vintage series rather than a bare ordinal.
-_VINTAGE_YEARS = range(1900, 2100)
 
 
 @dataclass(frozen=True)
@@ -68,10 +63,10 @@ class CandidateMember:
 class ConceptGroupCandidate:
     """One foldable column family: a `(register, stem)` group of >= `min_siblings`
     digit-suffixed variables that agreed on a common label prefix. `axis` is a
-    PROPOSED facet axis (evidence only — the maintainer overrides), `agreement` is
-    the label-prefix-to-mean-name-length ratio that ranked it, and `is_battery`
-    records that this family PASSED the agreement gate (batteries are excluded from
-    the candidate list, never emitted)."""
+    PROPOSED facet axis (evidence only — the maintainer overrides), and `agreement`
+    is the label-prefix-to-mean-name-length ratio that ranked it. Batteries (stems
+    shared by unrelated columns) fail the agreement gate and are excluded before any
+    candidate is constructed, so every instance here is foldable."""
 
     provider: str
     register: str
@@ -81,7 +76,6 @@ class ConceptGroupCandidate:
     axis: str
     agreement: float
     members: tuple[CandidateMember, ...]
-    is_battery: bool
 
 
 @dataclass(frozen=True)
@@ -216,20 +210,25 @@ def infer_concept_group_candidates(
         if any(n is None for n in names):
             continue
         present_names = [n for n in names if n is not None]
-        common_prefix = _common_prefix([n.casefold() for n in present_names])
+        # Case-insensitive prefix scores AGREEMENT only (so "Ålder"/"ålder" agree);
+        # it must NOT be sliced back onto an original name, since `casefold()` can
+        # change length (e.g. German ß → "ss").
+        ci_prefix = _common_prefix([n.casefold() for n in present_names])
         mean_len = statistics.mean(len(n) for n in present_names)
-        agreement = len(common_prefix) / mean_len if mean_len > 0 else 0.0
+        agreement = len(ci_prefix) / mean_len if mean_len > 0 else 0.0
 
         is_battery = not (
-            agreement >= min_agreement and len(common_prefix) >= min_label_prefix
+            agreement >= min_agreement and len(ci_prefix) >= min_label_prefix
         )
         if is_battery:
             excluded_batteries += 1
             continue
 
-        # `_common_prefix` over casefolded names loses the original casing; recover
-        # a display label by trimming the SAME-length prefix off an original name.
-        group_label = _trim_label(present_names[0][: len(common_prefix)])
+        # Display label comes from the ORIGINAL-case common prefix (preserves casing
+        # for presentation), falling back to the family stem when `_trim_label` strips
+        # the prefix to empty (e.g. an all-punctuation prefix at --min-label-prefix 0)
+        # — the loader rejects an empty `label` on round-trip.
+        group_label = _trim_label(_common_prefix(present_names)) or stem
 
         ordered = sorted(members, key=lambda m: (m[0], m[1].slug))
         suffixes = [suffix for suffix, _ in ordered]
@@ -256,7 +255,6 @@ def infer_concept_group_candidates(
                 axis=axis,
                 agreement=agreement,
                 members=candidate_members,
-                is_battery=False,
             )
         )
 

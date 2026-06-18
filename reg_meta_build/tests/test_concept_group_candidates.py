@@ -217,6 +217,23 @@ class TestGenerator:
         assert result.candidates[0].agreement >= result.candidates[1].agreement
         assert result.candidates[0].key == "morsak"
 
+    def test_group_label_preserves_original_case(self) -> None:
+        # Names share a mixed-case prefix — the display label must carry the ORIGINAL
+        # casing (derived from the original-case common prefix), not the casefolded
+        # form used to score agreement.
+        conn = _base_db()
+        add_variable(
+            conn, register_id=1, var_id=1200, name="Förvärvsinkomst total", slug="ink1"
+        )
+        add_variable(
+            conn, register_id=1, var_id=1201, name="Förvärvsinkomst netto", slug="ink2"
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert len(result.candidates) == 1
+        # Original-case shared prefix "Förvärvsinkomst " (trimmed), NOT "förvärvs…".
+        assert result.candidates[0].group_label == "Förvärvsinkomst"
+
     def test_render_roundtrips_through_loader(self, tmp_path: Path) -> None:
         conn = _base_db()
         add_register(conn, register_id=2, slug="par", name="PAR")
