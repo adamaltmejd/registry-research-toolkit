@@ -34,10 +34,11 @@ dbdiff):
     is foldable by the concept-group edge pass and is REJECTED here.
 
 The same-as candidate GENERATOR (`infer_same_as_candidates`, #508) stays in
-`variable_same_as.py`; it reads structured signals off a built DB and emits a
-review worklist whose schema is this loader's `[[edge]] type = "same_as"` input,
-so a confirmed candidate copies across verbatim. It imports `CuratedSameAs` /
-`load_relations` from here.
+`variable_same_as.py`; it reads structured signals off a built DB and RENDERS a
+review worklist as `[[edge]] type = "same_as"` TOML *text* — the exact shape this
+loader accepts — so a confirmed candidate copies across into
+`curation/relations.toml` verbatim. The boundary is text, not symbols: the
+generator imports nothing from here, and the round-trip is the TOML grammar.
 
 Like the other curation TOMLs (`concept_groups.toml`, `curation/scb/`) the file
 is a maintainer artifact — absent in wheel installs and synthetic test builds.
@@ -53,7 +54,13 @@ from typing import TYPE_CHECKING, Any
 
 from reg_meta.fqid import Fqid, FqidError, FqidKind, parse as parse_fqid
 
-from ._curation import curation_error, load_curation_entries, require_fqid
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_fqid,
+    resolve_register_id,
+    resolve_variable_id,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -540,18 +547,6 @@ def load_relations(path: Path | None) -> CuratedRelations:
 # ---------------------------------------------------------------------------
 
 
-def _register_exists(
-    conn: sqlite3.Connection, provider_slug: str, register_slug: str
-) -> bool:
-    row = conn.execute(
-        "SELECT 1 FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ?",
-        (provider_slug, register_slug),
-    ).fetchone()
-    return row is not None
-
-
 def _classification_slugs(conn: sqlite3.Connection) -> set[_ClassKey]:
     """Live `(provider, classification_slug)` pairs — the universe a curated
     classification same_as endpoint must resolve into. Classifications carry no
@@ -565,9 +560,11 @@ def _classification_slugs(conn: sqlite3.Connection) -> set[_ClassKey]:
 
 
 def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
-    """Reject directed cycles in the as-declared same_as graph (which is stored
-    both directions, so any genuine reciprocal IS a 2-cycle). A node is the FQID
-    key tuple. Pure + DB-free; mirrors `reject_replaced_by_cycles`."""
+    """Reject cycles in the as-declared same_as graph. `edges` holds ONE direction
+    per curated pair (the both-directions duplication happens only at DB insert,
+    NOT here) — so a node revisited during DFS means the curated edges genuinely
+    close a loop, not the harmless reciprocal of an A->B / B->A mirror pair. A node
+    is the FQID key tuple. Pure + DB-free; mirrors `reject_replaced_by_cycles`."""
     if not edges:
         return
     adj: dict[Any, list[Any]] = {}
@@ -601,9 +598,10 @@ def _reject_oversized_components(edges: list[tuple[Any, Any]], *, label: str) ->
     """Refuse any same_as edge that would merge two identity components into one
     larger than `_SAME_AS_MAX_COMPONENT` distinct FQIDs (#522). A union-find over
     the undirected edge set; a component above the cap is almost certainly a
-    curation error welding distinct concepts, not a real identity cluster. Edges
-    are stored both directions, so each undirected pair appears twice — the
-    union-find collapses that harmlessly."""
+    curation error welding distinct concepts, not a real identity cluster. `edges`
+    holds ONE direction per curated pair (the both-directions duplication happens
+    only at DB insert, NOT here); union-find is direction-agnostic, so a single
+    A--B edge suffices to merge the two endpoints' components."""
     parent: dict[Any, Any] = {}
 
     def find(x: Any) -> Any:
@@ -660,9 +658,9 @@ def materialize_same_as(
         if e.a_provider not in providers or e.b_provider not in providers:
             continue
         if e.grain is FqidKind.VARIABLE_BINDING:
-            if not _register_exists(conn, e.a_provider, e.a_register):
+            if resolve_register_id(conn, e.a_provider, e.a_register) is None:
                 raise _unknown_same_as_endpoint(e.a_fqid(), "a", "register")
-            if not _register_exists(conn, e.b_provider, e.b_register):
+            if resolve_register_id(conn, e.b_provider, e.b_register) is None:
                 raise _unknown_same_as_endpoint(e.b_fqid(), "b", "register")
             a_key: _VarKey = (e.a_provider, e.a_register, e.a_variable or "")
             b_key: _VarKey = (e.b_provider, e.b_register, e.b_variable or "")
@@ -678,14 +676,10 @@ def materialize_same_as(
                 raise _unknown_same_as_endpoint(e.b_fqid(), "b", "classification")
             class_edges.append((a_ck, b_ck))
 
-    _reject_same_as_cycles(list(var_edges), label="variable same_as")
-    _reject_same_as_cycles(list(class_edges), label="classification same_as")
-    _reject_oversized_components(
-        [(a, b) for a, b in var_edges], label="variable same_as"
-    )
-    _reject_oversized_components(
-        [(a, b) for a, b in class_edges], label="classification same_as"
-    )
+    _reject_same_as_cycles(var_edges, label="variable same_as")
+    _reject_same_as_cycles(class_edges, label="classification same_as")
+    _reject_oversized_components(var_edges, label="variable same_as")
+    _reject_oversized_components(class_edges, label="classification same_as")
 
     for a, b in var_edges:
         for src_t, tgt_t in ((a, b), (b, a)):
@@ -720,19 +714,6 @@ def _unknown_same_as_endpoint(fqid: str, side: str, grain: str) -> Exception:
 # ---------------------------------------------------------------------------
 
 
-def _resolve_variable_id(
-    conn: sqlite3.Connection, provider: str, register: str, variable: str
-) -> int | None:
-    row = conn.execute(
-        "SELECT v.variable_id FROM variable v "
-        "JOIN register r ON v.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
-        (provider, register, variable),
-    ).fetchone()
-    return row[0] if row is not None else None
-
-
 def materialize_related_to(
     conn: sqlite3.Connection,
     related_to: Iterable[CuratedRelatedTo],
@@ -752,14 +733,14 @@ def materialize_related_to(
             continue
         a_fqid = f"{e.a_provider}/{e.a_register}/{e.a_variable}"
         b_fqid = f"{e.b_provider}/{e.b_register}/{e.b_variable}"
-        if _resolve_variable_id(conn, e.a_provider, e.a_register, e.a_variable) is None:
+        if resolve_variable_id(conn, e.a_provider, e.a_register, e.a_variable) is None:
             raise curation_error(
                 "relations_related_to_unresolved",
                 f"relations related_to edge endpoint {a_fqid!r} does not resolve "
                 "to a variable.",
                 "Fix the `a` FQID in reg_meta_build/curation/relations.toml.",
             )
-        if _resolve_variable_id(conn, e.b_provider, e.b_register, e.b_variable) is None:
+        if resolve_variable_id(conn, e.b_provider, e.b_register, e.b_variable) is None:
             raise curation_error(
                 "relations_related_to_unresolved",
                 f"relations related_to edge endpoint {b_fqid!r} does not resolve "
