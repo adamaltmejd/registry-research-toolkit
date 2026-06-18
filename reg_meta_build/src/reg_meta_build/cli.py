@@ -54,10 +54,12 @@ from .fqid_slugs import (
     diff_snapshot,
     format_default_slug_hints,
     frozen_zones,
+    infer_entity_key_pins,
     iter_default_slug_candidates,
     load_freeze_states,
     precheck_slugs,
     read_snapshot,
+    render_entity_key_pins_toml,
     repo_slug_dir,
     seed_all,
     snapshot_payload,
@@ -428,6 +430,53 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    entity_key_pins_p = sub.add_parser(
+        "entity-key-pins",
+        help="Generate panel entity-key slug pins (mandatory curation, #546).",
+        description=(
+            "Emit a `[variable]` slug-pin block for every panel entity-key\n"
+            "variable on a BUILT DB. A `register_variant.panel_entity_key` ref binds\n"
+            "to a variable.slug, which CHURNS every build (the default freeze zone\n"
+            "re-derives it); a reslug then silently dangles the ref. A curated pin\n"
+            "(precedence 1 in slug population) freezes that slug. The build-side\n"
+            "curation gate makes the pin MANDATORY, so a new entity-key variable\n"
+            "can't ship un-pinned.\n\n"
+            "Idempotent: variables already carrying a hand-curated `[variable]` slug\n"
+            "(the existing #539 pins) are SKIPPED, so re-running after the pins are\n"
+            "committed emits nothing. Reads a built DB; never mutates it. The\n"
+            "emitted block is dbdiff-identical (each pin reproduces the slug the\n"
+            "variable already carries).\n\n"
+            "Curation flow: run with --output-toml, then fold the NON-duplicate\n"
+            "entries into reg_meta_build/fqid_slugs/scb.toml. (Chicken-and-egg: the\n"
+            "first gated build of a new entity-key var fails — generate via a\n"
+            "--no-validate build, commit the pins, then rebuild with validation.)\n\n"
+            "The curated slug dir (--slug-dir; default: the repo's fqid_slugs/) is\n"
+            "read to skip already-pinned variables.\n\n"
+            "Examples:\n"
+            "  reg-meta-build --db <built-db> entity-key-pins \\\n"
+            "    --output-toml /tmp/entity_key_pins.toml\n"
+            "  reg-meta-build --db <built-db> entity-key-pins  # counts only"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    entity_key_pins_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the pin TOML block to this path. Without it the JSON count "
+            "summary still prints; the TOML is included in the payload."
+        ),
+    )
+    entity_key_pins_p.add_argument(
+        "--slug-dir",
+        default=None,
+        help=(
+            "Directory of curated slug TOMLs to read for already-pinned variables "
+            "(default: reg_meta_build/fqid_slugs/ when run from a repo checkout)."
+        ),
+    )
+
     concept_group_p = sub.add_parser(
         "concept-group-candidates",
         help="Generate concept-group fold candidates (maintainer review worklist).",
@@ -515,17 +564,19 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
-def _build_validate_hook() -> Callable[[Path], None]:
+def _build_validate_hook(slug_dir: Path | None) -> Callable[[Path], None]:
     """Return a build_db pre_rename_hook that runs the post-build validator
     against the staging DB and raises on failure. Defined as a helper so the
     closure stays narrowly scoped.
 
     Runs with ``corpus=True``: build-db is the real maintainer build, so the
     provider-specific corpus-volume gates apply here (synthetic CI uses
-    ``corpus=False``)."""
+    ``corpus=False``). ``slug_dir`` is the SAME resolved curation dir the build
+    loaded, threaded through so the mandatory entity-key curation gate (#546) can
+    read the curated ``[variable]`` pins."""
 
     def hook(staging_db: Path) -> None:
-        validation = validate_built_db(staging_db, corpus=True)
+        validation = validate_built_db(staging_db, corpus=True, slug_dir=slug_dir)
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
         if validation.failures:
@@ -555,11 +606,19 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
     db_dir = Path(args.db) if args.db else default_db_dir()
-    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
+    # Resolve the curation dir ONCE and feed the SAME value to both `build_db`
+    # and the validate hook so the entity-key curation gate (#546) reads the
+    # exact `[variable]` pins the build loaded. `build_db` itself falls back to
+    # `repo_slug_dir()` when slug_dir is None (db.py: `slug_dir or
+    # repo_slug_dir()`); mirror that here so the gate isn't handed None on the
+    # default invocation (which would silently skip it).
+    slug_dir = (
+        Path(args.slug_dir).expanduser().resolve() if args.slug_dir else repo_slug_dir()
+    )
 
     providers = tuple(p.strip() for p in args.providers.split(",") if p.strip())
 
-    pre_rename_hook = None if args.no_validate else _build_validate_hook()
+    pre_rename_hook = None if args.no_validate else _build_validate_hook(slug_dir)
     result = build_db(
         input_dir=Path(args.input_dir),
         db_dir=db_dir,
@@ -1021,6 +1080,58 @@ def _cmd_same_as_candidates(
     ), 0
 
 
+def _cmd_entity_key_pins(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    # The curation dir to skip already-pinned variables. Mirrors the build's
+    # resolution (`--slug-dir` override, else the repo's fqid_slugs/). Missing
+    # (wheel install, no checkout) is a usage error here — the generator MUST
+    # read the curated pins to stay idempotent.
+    slug_dir = (
+        Path(args.slug_dir).expanduser().resolve() if args.slug_dir else repo_slug_dir()
+    )
+    if slug_dir is None:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="slug_dir_not_found",
+            error_class="usage",
+            message="No slug directory: not in a repo checkout and --slug-dir unset.",
+            remediation="Run from the repo (ships fqid_slugs/) or pass --slug-dir.",
+        )
+    # Schema-checked open: the generator reads current-schema tables
+    # (register_variant.panel_entity_key, variable.slug/provider_key), so a stale
+    # DB should fail fast with the standard schema-mismatch error.
+    conn = open_db(db)
+    try:
+        pins = infer_entity_key_pins(conn, slug_dir)
+    finally:
+        conn.close()
+    toml = render_entity_key_pins_toml(pins)
+
+    data: dict[str, Any] = {"count": len(pins), "slug_dir": str(slug_dir)}
+    if args.output_toml:
+        out_path = Path(args.output_toml).expanduser().resolve()
+        out_path.write_text(toml, encoding="utf-8")
+        data["output_toml"] = str(out_path)
+    else:
+        # No file target — carry the TOML in the payload so the pins aren't lost.
+        data["toml"] = toml
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="entity-key-pins",
+        args_payload={
+            "slug_dir": args.slug_dir,
+            "output_toml": args.output_toml,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 def _cmd_concept_group_candidates(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -1101,6 +1212,7 @@ COMMAND_DISPATCH: dict[
     "precheck-slugs": _cmd_precheck_slugs,
     "parse-sos": _cmd_parse_sos,
     "same-as-candidates": _cmd_same_as_candidates,
+    "entity-key-pins": _cmd_entity_key_pins,
     "concept-group-candidates": _cmd_concept_group_candidates,
 }
 
@@ -1139,6 +1251,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "same-as-candidates [-o TOML] [--max-tier N] [--min-value-set-codes N] "
         "[--max-signal-fanout N]",
         "Infer variable_same_as candidate pairs (maintainer review worklist).",
+    ),
+    (
+        "entity-key-pins [-o TOML] [--slug-dir DIR]",
+        "Generate panel entity-key slug pins (mandatory curation, #546).",
     ),
     (
         "concept-group-candidates [-o TOML] [--min-siblings N] "

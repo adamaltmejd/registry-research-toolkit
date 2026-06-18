@@ -643,6 +643,72 @@ class TestValidateModule:
             for f in result.failures
         ), result.failures
 
+    # ── entity-key curation gate (#546) ───────────────────────────────────────
+
+    @staticmethod
+    def _db_with_kon_entity_key(fixture_db: Path, dst: Path) -> Path:
+        """Copy the fixture DB and key variant 10's panel on `kon` (register 1's
+        variable, source_id `1.44`). Returns the DB path."""
+        dst.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(dst)
+        conn.execute(
+            "UPDATE register_variant SET panel_entity_key = 'kon' "
+            "WHERE register_variant_id = 10"
+        )
+        conn.commit()
+        conn.close()
+        return dst
+
+    @staticmethod
+    def _slug_dir(tmp_path: Path, scb_body: str) -> Path:
+        d = tmp_path / "egk_slugs"
+        d.mkdir()
+        (d / "scb.toml").write_text(scb_body, encoding="utf-8")
+        (d / "classifications.toml").write_text("", encoding="utf-8")
+        return d
+
+    def test_entity_key_gate_skipped_without_slug_dir(self, fixture_db: Path):
+        """`slug_dir=None` (synthetic CI / `validate_built_db(corpus=False)`'s
+        existing call sites) SKIPS the gate — even with an entity key present, no
+        false failure, but the section + skip line still emit."""
+        result = validate_built_db(fixture_db, slug_dir=None)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[panel: entity-key variables are curated]" in report
+        assert "entity-key curation gate skipped (no slug_dir)" in report
+
+    def test_entity_key_gate_no_keys_passes(self, fixture_db: Path, tmp_path: Path):
+        """A slug_dir is present but the fixture carries no entity key → the gate
+        emits an [OK] (nothing to curate), not a skip."""
+        slug_dir = self._slug_dir(tmp_path, "")
+        result = validate_built_db(fixture_db, slug_dir=slug_dir)
+        assert result.passed, result.failures
+        assert "no variant carries an entity key" in result.format_report()
+
+    def test_entity_key_gate_fails_when_unpinned(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """An entity-key variable with NO curated `[variable]` pin FAILS the gate,
+        with the source_id + a remediation pointing at `entity-key-pins`."""
+        db = self._db_with_kon_entity_key(fixture_db, tmp_path / "unpinned.db")
+        slug_dir = self._slug_dir(tmp_path, "")
+        result = validate_built_db(db, slug_dir=slug_dir)
+        assert not result.passed
+        assert any(
+            "source_id 1.44" in f and "no curated [variable] slug pin" in f
+            for f in result.failures
+        ), result.failures
+        assert "reg-meta-build entity-key-pins" in result.format_report()
+
+    def test_entity_key_gate_passes_when_pinned(self, fixture_db: Path, tmp_path: Path):
+        """The same DB passes once the entity-key variable carries a curated pin
+        binding its source_id (`1.44`) to its slug (`kon`)."""
+        db = self._db_with_kon_entity_key(fixture_db, tmp_path / "pinned.db")
+        slug_dir = self._slug_dir(tmp_path, '[variable."1.44"]\nslug = "kon"\n')
+        result = validate_built_db(db, slug_dir=slug_dir)
+        assert result.passed, result.failures
+        assert "all 1 entity-key var(s) are curated" in result.format_report()
+
 
 class TestBuildDbProvidersDefault:
     def test_cli_default_is_combined_global_build(self):
@@ -704,7 +770,11 @@ class TestBuildDbValidateFlag:
         sentinel.write_bytes(sentinel_bytes)
 
         def always_fail(
-            _db_path: Path, *, corpus: bool = False
+            _db_path: Path,
+            *,
+            corpus: bool = False,
+            flavored: bool = False,
+            slug_dir: Path | None = None,
         ) -> validate_mod.ValidationResult:
             r = validate_mod.ValidationResult()
             r.fail("synthetic invariant breach")
@@ -723,7 +793,7 @@ class TestBuildDbValidateFlag:
                 db_dir=db_dir,
                 skip_classifications=True,
                 skip_slugs=True,
-                pre_rename_hook=cli_mod._build_validate_hook(),
+                pre_rename_hook=cli_mod._build_validate_hook(None),
             )
         assert exc_info.value.code == "validation_failed"
         # The prior DB is untouched and the failed staging file is gone.

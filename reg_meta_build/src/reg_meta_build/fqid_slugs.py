@@ -1118,6 +1118,246 @@ def write_auto_toml(
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
+# ---------------------------------------------------------------------------
+# Panel entity-key slug pins (#546)
+# ---------------------------------------------------------------------------
+#
+# A `register_variant.panel_entity_key` is a curated slug ref (bare slug or a
+# json-array composite) that names the variable(s) keying the variant's panel.
+# It binds to `variable.slug`, but a variable's auto-slug CHURNS every build
+# (the default "churning" freeze zone re-derives it from the latest delivery
+# column). When a reslug moves the keyed variable's slug — as the #143
+# slug-space drift reslug did to 31 SCB entity-key vars (see the #539 block in
+# scb.toml) — the panel ref silently dangles (`_check_panel_refs_resolve`
+# catches it, but only after a 20-min real build). The fix is a CURATED
+# `[variable]` pin per entity-key var (precedence 1 in `populate_variable_slugs`
+# — pins are absolute), so the slug the panel ref depends on can't drift.
+#
+# This generator emits those pins from a built DB; the build-side gate
+# (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY so a NEW
+# entity-key var can't ship un-pinned. Both share `iter_entity_key_variables`
+# so they enumerate the exact same set.
+
+
+def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
+    """Decode a stored `panel_entity_key` to the tuple of slugs it references.
+
+    A json-array string → its elements (a composite key); any other non-NULL
+    string → a 1-tuple (a bare slug); NULL → empty. Mirrors
+    `reg_meta.catalog._decode_panel_entity_key` (and the `populate_slugs`
+    writer's `json.dumps` for the composite case) — decoded here rather than
+    imported to keep `fqid_slugs` free of a `reg_meta.catalog` dependency."""
+    if raw is None:
+        return ()
+    if raw.startswith("["):
+        return tuple(json.loads(raw))
+    return (raw,)
+
+
+@dataclass(frozen=True)
+class EntityKeyVariable:
+    """One panel entity-key variable resolved off a built DB: the keyed
+    `variable` (its register-scoped `slug` and build-derived `source_id`), the
+    register it lives in, and the `panel_entity_key` value that referenced it
+    (for a human-readable pin comment). `source_id` is the same key
+    `populate_variable_slugs` writes, so a `[variable."<source_id>"]` pin binds
+    exactly the variable enumerated here."""
+
+    provider_slug: str
+    register_id: int
+    register_slug: str
+    register_name: str
+    variable_id: int
+    variable_slug: str
+    source_id: str
+    entity_key: str
+
+
+def _variable_source_ids(conn: sqlite3.Connection, register_id: int) -> dict[int, str]:
+    """`{variable_id: source_id}` for every variable in ``register_id``.
+
+    Reuses the build's exact source-ID grammar: `<register_id>.<provider_key>`,
+    or `<register_id>.<provider_key>.<discriminator>` when the provider_key is a
+    SPLIT sibling (shared `provider_key`, disambiguated by `_split_sibling_disc`
+    — the same helper `populate_variable_slugs` uses, so the emitted key picks
+    the same sibling the auto-slug cache keyed). A provider_key containing '.'
+    is rejected (it would mis-parse as a phantom split discriminator), matching
+    the build's fail-fast."""
+    rows = conn.execute(
+        "SELECT variable_id, provider_key FROM variable WHERE register_id = ?",
+        (register_id,),
+    ).fetchall()
+    by_pk: dict[str, list[int]] = defaultdict(list)
+    for variable_id, pk in rows:
+        by_pk[str(pk)].append(variable_id)
+    out: dict[int, str] = {}
+    for pk, vids in by_pk.items():
+        if "." in pk:
+            raise _err(
+                "slug_toml_invalid",
+                f"variable provider_key {pk!r} (register {register_id}) contains "
+                "'.', which collides with the source-ID segment separator.",
+                "Rename the source column / provider_key so it has no dot.",
+            )
+        if len(vids) > 1:  # split siblings share one provider_key — discriminate
+            disc = _split_sibling_disc(conn, register_id, pk)
+            for variable_id in vids:
+                out[variable_id] = f"{register_id}.{pk}.{disc[variable_id]}"
+        else:
+            out[vids[0]] = f"{register_id}.{pk}"
+    return out
+
+
+def iter_entity_key_variables(
+    conn: sqlite3.Connection,
+) -> Iterator[EntityKeyVariable]:
+    """Yield every panel entity-key variable on a built DB.
+
+    Enumerates `register_variant` rows carrying a `panel_entity_key`, decodes
+    each (bare slug or composite json-array) the same way
+    `validate._check_panel_refs_resolve` does, and resolves each element to its
+    `variable` in the variant's OWN register (slug is only register-unique).
+    A ref that resolves to no variable is SKIPPED here (the resolution gate
+    `_check_panel_refs_resolve` is the one that fails on a dangle). Each resolved
+    variable is yielded ONCE per (variable, entity-key value); a variable keyed
+    by several variants is de-duplicated on `variable_id`.
+
+    Shared by the pin generator (`infer_entity_key_pins`) and the curation gate
+    (`validate._check_entity_key_vars_curated`) so the two can't disagree on
+    which variables need a pin."""
+    rows = conn.execute(
+        "SELECT rv.register_id, rv.panel_entity_key, "
+        "       r.slug AS register_slug, r.name AS register_name, "
+        "       p.slug AS provider_slug "
+        "FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE rv.panel_entity_key IS NOT NULL"
+    ).fetchall()
+    source_ids_by_register: dict[int, dict[int, str]] = {}
+    seen: set[int] = set()
+    for row in rows:
+        register_id = row["register_id"]
+        for slug in _decode_panel_entity_key_refs(row["panel_entity_key"]):
+            hit = conn.execute(
+                "SELECT variable_id FROM variable "
+                "WHERE register_id = ? AND slug = ? LIMIT 1",
+                (register_id, slug),
+            ).fetchone()
+            if hit is None:
+                continue  # dangling ref — the resolution gate owns this finding
+            variable_id = hit[0]
+            if variable_id in seen:
+                continue
+            seen.add(variable_id)
+            if register_id not in source_ids_by_register:
+                source_ids_by_register[register_id] = _variable_source_ids(
+                    conn, register_id
+                )
+            yield EntityKeyVariable(
+                provider_slug=row["provider_slug"],
+                register_id=register_id,
+                register_slug=row["register_slug"],
+                register_name=row["register_name"],
+                variable_id=variable_id,
+                variable_slug=slug,
+                source_id=source_ids_by_register[register_id][variable_id],
+                entity_key=slug,
+            )
+
+
+@dataclass(frozen=True)
+class EntityKeyPin:
+    """One emitted pin: a `[variable."<source_id>"]` slug override that freezes
+    the entity-key variable's slug. `register_slug` + `entity_key` annotate the
+    trailing `#` comment."""
+
+    provider_slug: str
+    source_id: str
+    slug: str
+    register_slug: str
+    entity_key: str
+
+
+def _source_id_sort_key(source_id: str) -> tuple[int, int, int, str]:
+    """Numeric-aware source-ID sort, matching `write_auto_toml`'s ordering so the
+    emitted block is stable and human-scannable."""
+    reg, _, var = source_id.partition(".")
+    if reg.isdigit() and var.isdigit():
+        return (0, int(reg), int(var), "")
+    return (1, 0, 0, source_id)
+
+
+def infer_entity_key_pins(
+    conn: sqlite3.Connection, slug_dir: Path
+) -> list[EntityKeyPin]:
+    """Pins for every panel entity-key variable NOT already curated in ``slug_dir``.
+
+    Reads a built DB; never mutates it. For each entity-key variable
+    (`iter_entity_key_variables`), emits a pin binding its build `source_id` to
+    its current `variable.slug` — UNLESS `(provider, source_id)` already has a
+    hand-curated `[variable]` slug (the generator is idempotent: re-running after
+    the pins are committed emits nothing, and the 35 existing #539 pins are never
+    duplicated). Sorted numeric-aware by source_id within provider, matching the
+    committed file's ordering."""
+    curated_entries = [
+        e
+        for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
+        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
+        and not path.name.endswith(AUTO_FILE_SUFFIX)
+        for e in load_provider_toml(path)
+    ]
+    curated = _curated_variable_slugs(curated_entries)
+    pins = [
+        EntityKeyPin(
+            provider_slug=ek.provider_slug,
+            source_id=ek.source_id,
+            slug=ek.variable_slug,
+            register_slug=ek.register_slug,
+            entity_key=ek.entity_key,
+        )
+        for ek in iter_entity_key_variables(conn)
+        if (ek.provider_slug, ek.source_id) not in curated
+    ]
+    pins.sort(key=lambda p: (p.provider_slug, _source_id_sort_key(p.source_id)))
+    return pins
+
+
+def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
+    """Render the entity-key pins as a self-contained `[variable]` block to append
+    to ``fqid_slugs/scb.toml`` — same style as the #539 block already there.
+
+    Built by hand (not `tomli_w`) so the trailing `# <reg>: panel_entity_key`
+    comments survive. `source_id` segments are integers / kebab discriminators
+    and slugs are kebab identifiers, so no TOML escaping is needed (the
+    `_toml_str` quoting still applies to the key for safety)."""
+    lines = [
+        "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).",
+        "#",
+        "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
+        "# (the default freeze zone re-derives it). These pins freeze the slug each",
+        "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
+        "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
+        "# MANDATORY — a new entity-key variable can't ship un-pinned.",
+        "#",
+        "# Regenerate after onboarding/repointing a panel: run",
+        "#   reg-meta-build --db <built-db> entity-key-pins \\",
+        "#     --output-toml /tmp/entity_key_pins.toml",
+        "# and fold the NON-duplicate entries in here. dbdiff-identical (slug values",
+        "# only — pins reproduce the slug the variable already carries).",
+        f"# {len(pins)} pin(s).",
+        "",
+    ]
+    for p in pins:
+        lines.append(
+            f"[variable.{_toml_str(p.source_id)}]  "
+            f"# {p.register_slug}: panel_entity_key = {p.entity_key!r}"
+        )
+        lines.append(f"slug = {_toml_str(p.slug)}")
+        lines.append("")
+    return "\n".join(lines) + "\n"
+
+
 # `[variable."<source_id>"]` header + the `# source:` derivation marker, read
 # back from a committed `<provider>.auto.toml`. tomllib drops the comment, so the
 # provenance round-trips through a small line scanner instead — the marker is the
@@ -2756,6 +2996,8 @@ __all__ = (
     "FREEZE_STATE_FILE",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
+    "EntityKeyPin",
+    "EntityKeyVariable",
     "EntityKind",
     "PrecheckResult",
     "SNAPSHOT_FILENAME",
@@ -2766,7 +3008,9 @@ __all__ = (
     "format_default_slug_hints",
     "freeze_state",
     "frozen_zones",
+    "infer_entity_key_pins",
     "iter_default_slug_candidates",
+    "iter_entity_key_variables",
     "load_classifications_toml",
     "load_freeze_states",
     "load_provider_toml",
@@ -2776,6 +3020,7 @@ __all__ = (
     "precheck_slugs",
     "read_auto_derivations",
     "read_snapshot",
+    "render_entity_key_pins_toml",
     "repo_slug_dir",
     "seed_all",
     "seed_classifications_toml",
