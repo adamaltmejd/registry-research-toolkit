@@ -3772,10 +3772,16 @@ def build_db(
                 exit_code=EXIT_CONFIG,
                 code=f"{prov_slug}_dir_not_found",
                 error_class="configuration",
-                message=f"{dirname} subdirectory not found: {input_dir / dirname}",
+                message=(
+                    f"{dirname} subdirectory not found: {input_dir / dirname} "
+                    f"(provider {prov_slug!r} is in the build set)."
+                ),
                 remediation=(
-                    f"The curated {prov_slug}.toml ships with the repo under "
-                    f"<input_dir>/{dirname}/; build from a checkout that has it."
+                    f"The curated {prov_slug}.toml is a small committed seed under "
+                    f"<input_dir>/{dirname}/. If --input-dir points at a separate seed "
+                    f"checkout, it likely predates this provider's onboarding — update "
+                    f"it (e.g. `git -C <seed-checkout> pull`). Otherwise drop "
+                    f"`--providers {prov_slug}` to skip it."
                 ),
             )
 
