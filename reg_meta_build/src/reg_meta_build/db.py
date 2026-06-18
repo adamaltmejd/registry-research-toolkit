@@ -127,6 +127,11 @@ _CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
     ("umu", "UMU"),
 )
 
+# Committed canonical-SCB seed (#444) — SCB registers SWECOV holds but SCB's
+# machine export lacks. Both the #556 stale-seed preflight and the adapter guard
+# resolve the seed from here so the two can't drift apart.
+_CANONICAL_SCB_DIRNAME = "scb_canonical"
+
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
 # disjoint cases observed; build-db classifies each row using these allowlists:
 #
@@ -3799,7 +3804,7 @@ def build_db(
             from .sources.curated import CanonicalScbAdapter
 
             canonical_seed = (
-                input_dir / "scb_canonical" / CanonicalScbAdapter.SOURCE_FILE
+                input_dir / _CANONICAL_SCB_DIRNAME / CanonicalScbAdapter.SOURCE_FILE
             )
             if not canonical_seed.is_file():
                 raise RegMetaError(
@@ -3929,7 +3934,7 @@ def build_db(
         # appended last. Guarded on the committed source file so synthetic SCB-only
         # builds (no scb_canonical/ dir) skip it.
         if "scb" in providers:
-            canonical_dir = input_dir / "scb_canonical"
+            canonical_dir = input_dir / _CANONICAL_SCB_DIRNAME
             if (canonical_dir / CanonicalScbAdapter.SOURCE_FILE).is_file():
                 adapters.append(
                     (
