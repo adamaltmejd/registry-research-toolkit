@@ -2201,6 +2201,11 @@ def populate_variable_slugs(
     # match — that's expected, not a typo. Gate the typo guard to the providers
     # actually processed this run (set(provider_slugs)); the full default build
     # still validates every provider. A genuine typo for a BUILT provider still fails.
+    # This is intentionally the LOOP set (providers actually slugged this run), not
+    # `_live_providers(conn)`: it stays aligned with `applied_curated` — only looped
+    # providers can have applied overrides. In an incremental/steward overlay the
+    # global providers are live but NOT re-slugged this run, so gating on all live
+    # providers would false-raise on their un-applied (but valid) overrides.
     built_providers = set(provider_slugs)
     unmatched = curated_required - applied_curated
     stale_overrides = sorted(o for o in unmatched if o[0] in built_providers)

@@ -1723,6 +1723,16 @@ class TestRestrictedBuildUnbuiltProviderOverride:
                 "SELECT COUNT(*) FROM variable WHERE slug IS NOT NULL"
             ).fetchone()[0]
             assert n > 0
+            # fk is a seeded provider but the synthetic build produced NO fk
+            # variables, so the fk.toml override genuinely hit the un-built-provider
+            # skip path (not a vacuous pass where fk.toml simply wasn't loaded).
+            fk_vars = conn.execute(
+                "SELECT COUNT(*) FROM variable v "
+                "JOIN register r ON v.register_id = r.register_id "
+                "JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE p.slug = 'fk'"
+            ).fetchone()[0]
+            assert fk_vars == 0
         finally:
             conn.close()
 
