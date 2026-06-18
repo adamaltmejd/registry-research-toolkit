@@ -1011,6 +1011,55 @@ class TestPrecheckSlugs:
         assert name == "Utbildningsinriktning"
         assert cols == ("SunInr", "sun2000inr1", "sun2020inr1")
 
+    def test_wobble_variable_absent_from_drifting_advisory(self, tmp_path: Path):
+        # #539: the advisory measures drift in the SAME slug-space the basis
+        # selection uses (both call `_register_slug_fn` →
+        # COUNT(DISTINCT variable_slug(...))). A pure case/diacritic wobble var
+        # (`Kön`→`Kon`, one distinct slug) must be ABSENT from the advisory, while
+        # a genuine drifter is still present with its RAW column variants. This
+        # locks the lockstep contract: if the advisory dropped the slug-fn
+        # registration it would count raw columns and wrongly flag the wobble var.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", "")
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()  # var 44, constant column "Kon" → not a drifter
+        wobble = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '90', 'Kommun')"
+        ).lastrowid
+        for yr, col in (("2000", "Kön"), ("2016", "Kon")):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, ?, ?, 'int', ?)",
+                (wobble, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        genuine = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '91', 'Utbildningsinriktning')"
+        ).lastrowid
+        for yr, col in (
+            ("2000", "SunInr"),
+            ("2016", "sun2000inr1"),
+            ("2020", "sun2020inr1"),
+        ):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, ?, ?, 'int', ?)",
+                (genuine, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        conn.commit()
+        populate_variable_slugs(conn, d)
+        result = precheck_slugs(conn, d)
+        by_pk = {row[2]: row for row in result.drifting_variables}
+        assert "90" not in by_pk  # slug-space wobble: one distinct slug → not drift
+        assert "91" in by_pk  # genuine rename still flagged
+        # The genuine drifter still lists its RAW column variants (slug-space gates,
+        # but the listing shows the actual SCB columns for the curator).
+        assert by_pk["91"][5] == ("SunInr", "sun2000inr1", "sun2020inr1")
+
     def test_drifting_advisory_tolerates_nonnumeric_provider_key(self, tmp_path: Path):
         # `variable.provider_key` is TEXT — SOS ships a merged variable name, not
         # a numeric var_id. The advisory must report it raw, not `int()` it (that
@@ -1657,6 +1706,70 @@ class TestPopulateVariableSlugs:
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
         assert self._slug_of_vid(conn, vid) == "syss"
+
+    def test_case_diacritic_wobble_is_not_drift(self, tmp_path: Path) -> None:
+        # #539: drift is counted in SLUG-space — COUNT(DISTINCT
+        # variable_slug(delivery_column_name)) — so a column that only wobbles in
+        # case/diacritics across editions (`Kön`→`Kon`, both fold to `kon`) is a
+        # SINGLE distinct slug → NOT a drifter. It must take the non-drift,
+        # latest-column basis (`kon`), NOT the name/earliest-column drift basis.
+        # The old raw-string count saw 2 columns → falsely drift; the new
+        # slug-space count sees 1 slug → no drift. Isolate via the default var 44
+        # carrying a non-`kon` column so `kon` is register-unique for the wobble
+        # var and the assertion is exact (no `-2` uniquify).
+        conn = self._db(kol="Alder", name="Ålder")
+        vid = self._add_drift_variable(conn, var_id=65, name="Kön", cols=["Kön", "Kon"])
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._slug_of_vid(conn, vid) == "kon"  # latest-column, not drift
+        assert self._stored_slug(conn, 44) == "alder"  # isolation holds
+
+    def test_mixed_wobble_and_rename_still_drifts(self, tmp_path: Path) -> None:
+        # #539: case/diacritic wobble is collapsed in slug-space, but a GENUINE
+        # rename mixed in still drifts. States `PersonNr`/`personnr`/`PNR` fold to
+        # the slug set {`personnr`, `pnr`} = 2 distinct → drifter. It must slug
+        # from the stable basis (the register-unique NAME among drifters here),
+        # NOT its latest delivery column (`pnr`). Isolate the default var 44 off
+        # `kon` so it can't perturb the drift var's basis selection.
+        conn = self._db(kol="Alder", name="Ålder")
+        vid = self._add_drift_variable(
+            conn,
+            var_id=66,
+            name="Personnummer",
+            cols=["PersonNr", "personnr", "PNR"],
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        # name basis (register-unique among drifters), not the latest column `pnr`.
+        assert self._slug_of_vid(conn, vid) == "personnummer"
+
+
+class TestRegisterSlugFn:
+    """#539: `_register_slug_fn` installs `derive_variable_slug` as the SQLite
+    `variable_slug(...)` function both drift sites use to count
+    COUNT(DISTINCT variable_slug(delivery_column_name)) — drift measured in
+    slug-space, not raw-column-string space."""
+
+    def test_register_slug_fn_idempotent_and_folds(self) -> None:
+        from reg_meta_build.fqid_slugs import _register_slug_fn
+
+        conn = sqlite3.connect(":memory:")
+        # Idempotent: registering twice on one connection must not raise.
+        _register_slug_fn(conn)
+        _register_slug_fn(conn)
+        # The SQL fn folds case/diacritics exactly like derive_variable_slug.
+        assert conn.execute("SELECT variable_slug('Kön')").fetchone()[0] == "kon"
+
+    def test_reserved_token_column_slugs_to_null(self) -> None:
+        # A reserved-slot token (`states`/`variants`) is not sluggable —
+        # derive_variable_slug returns None, so `variable_slug(...)` yields SQL
+        # NULL. COUNT(DISTINCT variable_slug(...)) therefore ignores such a column
+        # (NULLs don't count), keeping it out of the drift signal.
+        from reg_meta_build.fqid_slugs import _register_slug_fn
+
+        conn = sqlite3.connect(":memory:")
+        _register_slug_fn(conn)
+        assert conn.execute("SELECT variable_slug('states')").fetchone()[0] is None
 
 
 class TestAutoDerivationMarker:
