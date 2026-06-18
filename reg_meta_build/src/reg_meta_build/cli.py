@@ -38,6 +38,10 @@ from reg_meta.errors import (
     RegMetaError,
 )
 
+from .concept_group_candidates import (
+    infer_concept_group_candidates,
+    render_candidates_toml as render_concept_candidates_toml,
+)
 from .db import build_db
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import extend_db
@@ -416,6 +420,70 @@ def _build_parser() -> argparse.ArgumentParser:
             "Suppress pairs generated only by a signal spanning more than N "
             "registers (a hub); name-agreeing pairs are exempt. 0 disables. "
             "Default 12."
+        ),
+    )
+
+    concept_group_p = sub.add_parser(
+        "concept-group-candidates",
+        help="Generate concept-group fold candidates (maintainer review worklist).",
+        description=(
+            "Scan a BUILT DB for ungrouped digit-suffixed slug families\n"
+            "(sun-niva2000…, morsak1/2/3, the fasit yearly series) and emit a\n"
+            "ranked `[[variable_group]]` TOML fold worklist. NOTHING is\n"
+            "materialized — concept groups are presentation-only, so a maintainer\n"
+            "reviews each family and curates the confirmed ones into\n"
+            "reg_meta_build/concept_groups.toml (or a committed\n"
+            "concept_groups.auto.toml). Reads a built DB; never mutates it.\n\n"
+            "A family folds only past a label-agreement gate: its common\n"
+            "case-insensitive name prefix must be >= --min-label-prefix chars AND\n"
+            "the prefix-to-mean-name-length ratio >= --min-agreement. Families that\n"
+            "share a stem but not a meaning (BATTERIES, e.g. ULF's 2-char survey\n"
+            "items) fail the gate and are excluded; their count is reported, never\n"
+            "silently dropped.\n\n"
+            "The proposed `axis` (vintage / ordinal / numeric) and each member's\n"
+            "facet `label` are EVIDENCE — the maintainer refines them during\n"
+            "curation.\n\n"
+            "Examples:\n"
+            "  reg-meta-build concept-group-candidates --output-toml /tmp/cands.toml\n"
+            "  reg-meta-build concept-group-candidates --min-agreement 0.7\n"
+            "  reg-meta-build concept-group-candidates --min-siblings 3"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    concept_group_p.add_argument(
+        "-o",
+        "--output-toml",
+        default=None,
+        help=(
+            "Write the candidate TOML worklist to this path. Without it the JSON "
+            "counts summary still prints; the TOML is included in the payload."
+        ),
+    )
+    concept_group_p.add_argument(
+        "--min-siblings",
+        type=int,
+        default=2,
+        help=(
+            "A family needs at least this many distinct digit suffixes to fold. "
+            "Default 2."
+        ),
+    )
+    concept_group_p.add_argument(
+        "--min-label-prefix",
+        type=int,
+        default=8,
+        help=(
+            "Minimum common case-insensitive name-prefix length for a family to "
+            "fold (shorter = a battery). Default 8."
+        ),
+    )
+    concept_group_p.add_argument(
+        "--min-agreement",
+        type=float,
+        default=0.5,
+        help=(
+            "Minimum common-prefix / mean-name-length ratio for a family to fold "
+            "(lower = a battery). Default 0.5."
         ),
     )
 
@@ -937,6 +1005,63 @@ def _cmd_same_as_candidates(
     ), 0
 
 
+def _cmd_concept_group_candidates(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    # Schema-checked open: the generator reads current-schema tables
+    # (variable.slug, concept_group_variable), so a stale DB should fail fast with
+    # the standard actionable schema-mismatch error, not crash deep in a query.
+    conn = open_db(db)
+    try:
+        result = infer_concept_group_candidates(
+            conn,
+            min_siblings=args.min_siblings,
+            min_label_prefix=args.min_label_prefix,
+            min_agreement=args.min_agreement,
+        )
+    finally:
+        conn.close()
+
+    toml = render_concept_candidates_toml(
+        result,
+        min_siblings=args.min_siblings,
+        min_label_prefix=args.min_label_prefix,
+        min_agreement=args.min_agreement,
+    )
+
+    data: dict[str, Any] = {
+        "foldable": len(result.candidates),
+        "excluded_batteries": result.excluded_batteries,
+        "skipped_existing_key": result.skipped_existing_key,
+        "min_siblings": args.min_siblings,
+        "min_label_prefix": args.min_label_prefix,
+        "min_agreement": args.min_agreement,
+    }
+    if args.output_toml:
+        out_path = Path(args.output_toml).expanduser().resolve()
+        out_path.write_text(toml, encoding="utf-8")
+        data["output_toml"] = str(out_path)
+    else:
+        # No file target — carry the TOML in the payload so the worklist isn't lost.
+        data["toml"] = toml
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="concept-group-candidates",
+        args_payload={
+            "min_siblings": args.min_siblings,
+            "min_label_prefix": args.min_label_prefix,
+            "min_agreement": args.min_agreement,
+            "output_toml": args.output_toml,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 # ---------------------------------------------------------------------------
 # Dispatch
 # ---------------------------------------------------------------------------
@@ -952,6 +1077,7 @@ COMMAND_DISPATCH: dict[
     "precheck-slugs": _cmd_precheck_slugs,
     "parse-sos": _cmd_parse_sos,
     "same-as-candidates": _cmd_same_as_candidates,
+    "concept-group-candidates": _cmd_concept_group_candidates,
 }
 
 
@@ -989,6 +1115,11 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "same-as-candidates [-o TOML] [--max-tier N] [--min-value-set-codes N] "
         "[--max-signal-fanout N]",
         "Infer variable_same_as candidate pairs (maintainer review worklist).",
+    ),
+    (
+        "concept-group-candidates [-o TOML] [--min-siblings N] "
+        "[--min-label-prefix N] [--min-agreement F]",
+        "Infer concept-group fold candidates (maintainer review worklist).",
     ),
 ]
 
