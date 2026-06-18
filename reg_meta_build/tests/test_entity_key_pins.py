@@ -99,14 +99,15 @@ def _run_entity_key_pins_cli(
     out_dir: Path | None = None,
     output_toml: Path | None = None,
     force: bool = False,
+    flavored: bool = False,
 ) -> tuple[dict, int]:
     """Drive `cli._cmd_entity_key_pins` against an in-memory fixture DB.
 
     The handler opens its own DB via the schema-checked `open_db`; the synthetic
     `build_slugged_db` conns carry no manifest, so we stub `cli.open_db` to return
     the fixture conn. This exercises the handler's real `--out-dir` grouping,
-    per-provider file writing, and the `--out-dir`/`--output-toml` mutual-exclusion
-    guard — everything past the DB open."""
+    per-provider file writing, the `--out-dir`/`--output-toml` mutual-exclusion
+    guard, and the `flavored=args.flavored` wiring — everything past the DB open."""
     import argparse
 
     from reg_meta_build import cli
@@ -118,7 +119,7 @@ def _run_entity_key_pins_cli(
         out_dir=str(out_dir) if out_dir is not None else None,
         output_toml=str(output_toml) if output_toml is not None else None,
         force=force,
-        flavored=False,
+        flavored=flavored,
     )
     payload, code = cli._cmd_entity_key_pins(args)
     return payload["data"], code
@@ -404,6 +405,34 @@ class TestGenerator:
         # excludes scb, not the curated-skip.
         unscoped = infer_entity_key_pins(conn, steward_dir, flavored=False)
         assert {p.provider_slug for p in unscoped} == {"scb", "sos"}
+
+    def test_cmd_flavored_flag_binds_through_handler(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """#559: `cli._cmd_entity_key_pins` threads `args.flavored` into
+        `infer_entity_key_pins`. Driving the handler with `flavored=True` and a
+        steward-scoped slug dir (sos only) must scope the emitted pins/counts to the
+        steward provider alone — the global scb var is excluded entirely. Guards the
+        `flavored=args.flavored` wiring the direct-call test can't reach (the helper
+        hardcoded `flavored=False`)."""
+        # Fresh fixture: the handler closes its own conn.
+        conn = _db_with_entity_key("kon")  # scb 1.44/kon
+        _add_sos_entity_key(conn)  # sos 500.LOPNR/lopnr
+        # Steward dir scoped to sos: a register slug entry puts `sos` in scope
+        # without pinning the entity-key VARIABLE (so it's still emitted).
+        steward_dir = tmp_path / "steward"
+        steward_dir.mkdir()
+        (steward_dir / "sos.toml").write_text(
+            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
+        )
+
+        data, code = _run_entity_key_pins_cli(
+            monkeypatch, conn=conn, slug_dir=steward_dir, flavored=True
+        )
+        assert code == 0
+        # Steward-scoped: only the sos pin survives; scb is absent.
+        assert data["counts"] == {"sos": 1}
+        assert data["count"] == 1
 
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB

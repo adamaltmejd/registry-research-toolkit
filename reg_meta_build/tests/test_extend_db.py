@@ -1101,6 +1101,29 @@ class TestFailurePaths:
             )
         assert exc.value.exit_code == EXIT_CONFIG
 
+    def test_steward_slug_dir_is_file_fails(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        # `resolve_steward_slug_dir` rejects a `--slug-dir` that resolves to a
+        # FILE (not a directory) as a clean EXIT_CONFIG — the `not resolved.is_dir()`
+        # branch, distinct from the missing-register-entry path above.
+        slug_file = tmp_path / "not-a-dir.toml"
+        slug_file.write_text("", encoding="utf-8")
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        out = tmp_path / "out"
+        out.mkdir()
+        with pytest.raises(RegMetaError) as exc:
+            extend_db(
+                base_db=global_db,
+                inventory_path=inv_path,
+                db_dir=out,
+                steward=_STEWARD,
+                slug_dir=slug_file,
+            )
+        assert exc.value.code == "extend_slug_dir_not_found"
+        assert exc.value.exit_code == EXIT_CONFIG
+
 
 # ── flavored entity-key curation gate (#559) ─────────────────────────────────
 
@@ -1433,3 +1456,31 @@ class TestCli:
         assert data["variables"] == 2
         assert "db_path" in data
         assert data["db_path"] == str(out_dir / "reg_meta.db")
+
+    def test_cmd_extend_db_skip_slugs(self, tmp_path: Path, global_db: Path) -> None:
+        # #559: `skip_slugs=True` with `slug_dir=None` must drive
+        # `resolve_steward_slug_dir(skip_slugs=True) → None` through the CLI
+        # resolver (no slug dir needed, gate self-skips). `no_validate=True`
+        # keeps the run off the flavored hook. The overlay still inserts the
+        # steward graph (slugs left NULL).
+        import argparse
+
+        from reg_meta_build.cli import _cmd_extend_db
+
+        inv_path = tmp_path / "inv.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        out_dir = tmp_path / "out"
+        out_dir.mkdir()
+
+        args = argparse.Namespace(
+            db=str(out_dir),
+            base_db=str(global_db),
+            inventory=str(inv_path),
+            steward=_STEWARD,
+            slug_dir=None,
+            skip_slugs=True,
+            no_validate=True,
+        )
+        envelope, exit_code = _cmd_extend_db(args)
+        assert exit_code == 0
+        assert envelope["data"]["variables"] == 2
