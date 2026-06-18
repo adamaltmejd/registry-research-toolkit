@@ -1757,6 +1757,54 @@ class TestPopulateVariableSlugs:
         # name basis (register-unique among drifters), not the latest column `pnr`.
         assert self._slug_of_vid(conn, vid) == "personnummer"
 
+    def test_latest_sluggable_column_wins_over_nonsluggable_latest(
+        self, tmp_path: Path
+    ) -> None:
+        # #547: the `kol` basis is the latest *sluggable* column, not the raw
+        # latest one. A NON-drift variable (1 distinct slug in slug-space) whose
+        # latest era carries a reserved token (`states` → NULL) but whose earlier
+        # era carries a real column (`Yrke`) must slug from the earlier sluggable
+        # column (`yrke`), NOT fall through to the name basis.
+        #
+        # True OLD-vs-NEW regression lock: the NAME (`Sysselsattning` →
+        # `sysselsattning`) is chosen to DIFFER from the column slug (`yrke`) so
+        # the two bases produce DIFFERENT values. New latest-sluggable basis sees
+        # `Yrke` (skips `states`) → `yrke` (asserted). Old raw-latest basis saw
+        # `states` → NULL → name basis (name_freq==1) → `sysselsattning`, which
+        # would FAIL this assertion. `variable_slug("states")` is None, so
+        # slug-space n_cols == 1 → non-drift either way (`yrke` is register-unique
+        # since the default var 44 carries `Kon`).
+        conn = self._db(kol="Kon")
+        vid = self._add_drift_variable(
+            conn, var_id=65, name="Sysselsattning", cols=["Yrke", "states"]
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._slug_of_vid(conn, vid) == "yrke"  # earlier sluggable, not name
+
+    def test_all_nonsluggable_columns_fall_to_name_basis(self, tmp_path: Path) -> None:
+        # #547: boundary the latest-*sluggable*-`kol` filter newly reaches. When
+        # EVERY delivery column rejects to NULL (here both `states` and `variants`
+        # are reserved-slot tokens → `variable_slug(...)` is NULL), the filtered
+        # `kol` subquery (`AND variable_slug(vs.delivery_column_name) IS NOT NULL`)
+        # returns no row → `kol IS NULL`, and the slug-space `n_cols`
+        # (COUNT(DISTINCT variable_slug(...))) == 0 → non-drift. With no sluggable
+        # column to anchor on, the variable correctly falls to the NAME basis
+        # (Pass 3 `else` arm) → `sysselsattning`.
+        #
+        # NOTE: this is NOT an old-vs-new discriminating lock. Before the #547
+        # filter, `kol` was the raw latest column (`variants`), and
+        # derive_variable_slug("variants") is None → the column basis was None too
+        # → name basis under both regimes. This is a forward-lock on the new
+        # NULL-`kol`-subquery path, not a regression of prior behavior.
+        conn = self._db(kol="Kon")  # default var 44 → `kon`, name-slug register-unique
+        vid = self._add_drift_variable(
+            conn, var_id=66, name="Sysselsattning", cols=["states", "variants"]
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._slug_of_vid(conn, vid) == "sysselsattning"  # name basis
+
 
 class TestRegisterSlugFn:
     """#539: `_register_slug_fn` installs `derive_variable_slug` as the SQLite

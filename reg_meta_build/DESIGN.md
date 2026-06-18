@@ -1720,8 +1720,10 @@ scales. The chain, first match wins:
    regardless of which column is picked. Slug from the **name** when register-unique
    among drifters, else the **earliest** delivery column (also the split-sibling
    discriminator basis — siblings share a name, so the name collides and routes here).
-4. **kolumnnamn-derived** — register-unique latest column (the short, common case:
-   `kon`). "Latest" = highest `valid_to`, lexically smallest on ties.
+4. **kolumnnamn-derived** — register-unique latest **sluggable** column (the short,
+   common case: `kon`). Columns that reject to NULL (reserved tokens / period-shaped /
+   empty) are skipped (#547), so a non-drift variable doesn't lose a real earlier column
+   to a junk latest one. "Latest" = highest `valid_to`, lexically smallest on ties.
 5. **name-derived**, length-capped to 60 chars on a hyphen boundary (`_name_slug`) —
    when the kolumnnamn slug collides, is generic, or is absent.
 6. **`v<provider_key>`** last resort (`v881`), prefixed to satisfy the leading-letter

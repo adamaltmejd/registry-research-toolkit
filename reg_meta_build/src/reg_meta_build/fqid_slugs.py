@@ -1820,10 +1820,14 @@ def populate_variable_slugs(
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
-        # ties (matches the coalescer tie-break). `early_kol` is the
-        # mirror (lowest valid_from) — the #139 split-sibling discriminator
-        # basis — and `n_cols` is the #143 drift signal: a variable whose
-        # delivery column is NOT constant across its states (n_cols > 1) must
+        # ties (matches the coalescer tie-break). `kol` is the latest *sluggable*
+        # column (#547): it skips columns that reject to NULL (reserved tokens
+        # like `States`/`Variants`, period-shaped, empty), so a non-drift
+        # variable whose raw latest column is non-sluggable still slugs from a
+        # real earlier column instead of falling through to the name basis.
+        # `early_kol` is the mirror (lowest valid_from) — the #139 split-sibling
+        # discriminator basis — and `n_cols` is the #143 drift signal: a variable
+        # whose delivery column is NOT constant across its states (n_cols > 1) must
         # NOT slug from its latest column (a version-specific name like
         # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Drift is
         # counted in SLUG-space — COUNT(DISTINCT variable_slug(...)), the exact
@@ -1845,6 +1849,7 @@ def populate_variable_slugs(
             "(SELECT vs.delivery_column_name FROM variable_state vs "
             " WHERE vs.variable_id = v.variable_id "
             " AND vs.delivery_column_name IS NOT NULL "
+            " AND variable_slug(vs.delivery_column_name) IS NOT NULL "
             " ORDER BY vs.valid_to DESC, vs.delivery_column_name ASC LIMIT 1) AS kol, "
             "(SELECT vs.delivery_column_name FROM variable_state vs "
             " WHERE vs.variable_id = v.variable_id "
