@@ -636,9 +636,12 @@ dimensions and their guards; see `reg_meta_build/DESIGN.md` → Concept-group de
 `sun-niva2000`→`sun-niva2020`) are **not** folded into concept groups (#571). Editions
 of one classification are a temporal succession, not a parallel browse facet. They
 materialize as adjacent-edition edges in `classification_replaced_by` (auto-derived from
-the same year-tail detection). `concept_group_classification` is retained for CURATED
-umbrella groups that a future PR (#516) will add (e.g. a SUN group spanning the
-nivå/inriktning/grupp sub-classifications).
+the same year-tail detection). `concept_group_classification` holds CURATED umbrella
+groups: `group:sun` (#516) groups the three genuinely-distinct SUN dimensions
+(`sun-niva2020` Utbildningsnivå, `sun-inriktning2020` Utbildningsinriktning,
+`sun-grupp2020` Utbildningsgrupper) on a `dimension` facet axis. Prior editions
+(`sun1996`, 2000 editions) are not members — they are temporal predecessors of each
+dimension and appear in `classification_replaced_by` (#571).
 
 **Presentation only, identity untouched.** A group is *not* an FQID kind and never
 becomes a binding/order/stats key — members keep their leaf FQIDs, and a binding's
@@ -658,9 +661,9 @@ for edge groups), and members ordered by facet values then slug. Each
 `ConceptGroupMember` carries the leaf `Fqid`, display name, and `GroupFacet` assignments
 (`month`/`rank`/`vintage` — sortable `value`, display `label`). The webapp's register /
 classification-root responses embed these alongside the complete flat children list, and
-the SPA folds (`reg_webapp/DESIGN.md`). `list_classification_groups()` returns an empty
-list until curated umbrella groups (#516) are committed — derived vintage editions live
-in `classification_replaced_by`, not here.
+the SPA folds (`reg_webapp/DESIGN.md`). `list_classification_groups()` returns the
+curated umbrella groups: currently `group:sun` (the SUN dimensions, #516). Derived
+vintage editions live in `classification_replaced_by`, not here.
 
 **CLI/search surface (#322/#325)**: the same read surface backs three CLI shapes, all
 result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER` (and

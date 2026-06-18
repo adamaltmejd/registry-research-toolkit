@@ -733,13 +733,14 @@ class Catalog:
     def list_classification_groups(self) -> list[ConceptGroupSummary]:
         """Curated classification umbrella groups (see DESIGN.md → Concept
         groups), ordered by group key. `concept_group_classification` holds
-        only CURATED umbrella entries (e.g. a future SUN group spanning
-        sun-niva2000/sun-niva2020 — see #516). Derived classification VINTAGE
-        editions (lkf1980…lkf2026, ssyk1996→ssyk2012) are NOT here; they
+        only CURATED umbrella entries — e.g. `group:sun`, which groups the
+        three genuinely-distinct SUN dimensions (`sun-niva2020`,
+        `sun-inriktning2020`, `sun-grupp2020`) on a `dimension` axis (#516).
+        Derived classification VINTAGE editions (lkf1980…lkf2026,
+        ssyk1996→ssyk2012, sun-niva2000→sun-niva2020) are NOT here; they
         appear as succession edges in `classification_replaced_by` (#571).
         Members carry the real `class/<slug>` FQIDs. The group's single facet
-        axis is read from `concept_group.facet_axis` (#516; e.g. 'dimension' for
-        the SUN umbrella) — every member shares it."""
+        axis is read from `concept_group.facet_axis` — every member shares it."""
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
             "g.facet_axis AS axis, "

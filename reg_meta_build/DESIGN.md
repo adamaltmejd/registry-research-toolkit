@@ -1964,8 +1964,8 @@ already-grouped member:
    NOT folded into concept groups (#571): editions of one classification are a temporal
    succession, not a parallel browse facet. They materialize as adjacent-edition edges
    in `classification_replaced_by` via `derive_classification_succession`. The
-   `concept_group_classification` table and `kind='classification'` machinery are
-   retained (empty of derived rows) for the curated umbrella groups #516 adds later.
+   `concept_group_classification` table and `kind='classification'` machinery hold the
+   curated umbrella groups — `group:sun` being the first, added by #516 (see below).
 
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
@@ -1989,6 +1989,18 @@ already-grouped member:
      curation drift is fixed, not silently dropped. Both kinds are provider-gated like
      the classification seed, so a `--providers=sos` build skips scb families instead of
      failing.
+   - `[[classification_group]]` (#516) — a curated single-axis classification umbrella:
+     a `key`, `label`, `axis` (the single `facet_axis` every member shares), and a list
+     of `[[classification_group.members]]` entries, each with `classification` (a
+     classification slug), `value` (the facet value, e.g. `"niva"`), and `label` (the
+     facet display label). This is the `kind='classification'` dual of
+     `_apply_curated_groups` — it populates `concept_group_classification` rather than
+     `concept_group_variable`. The SUN group is the worked example: `group:sun` with
+     `axis = "dimension"`, members `sun-niva2020` (Utbildningsnivå),
+     `sun-inriktning2020` (Utbildningsinriktning), `sun-grupp2020` (Utbildningsgrupper).
+     Prior editions (`sun1996`, 2000 editions) are intentionally excluded — they are
+     temporal predecessors of each dimension and belong in `classification_replaced_by`
+     (#571), not in the umbrella group.
 
 Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
 derived fresh every build (regenerate-not-migrate) and carry no identity. The structural
