@@ -136,9 +136,11 @@ def _coverage_bounds(
 
 # Concept-group browse shapes (#303; see DESIGN.md → Concept groups): a derived
 # PRESENTATION-ONLY grouping of near-identical browse rows (split-sibling edge
-# components, month-suffixed families, classification vintages, curated facet
-# families). A group is NOT an FQID-addressable entity — members carry the real
-# leaf FQIDs; the group is a fold-and-pick affordance for browse surfaces.
+# components, month-suffixed families, curated facet families). A group is NOT an
+# FQID-addressable entity — members carry the real leaf FQIDs; the group is a
+# fold-and-pick affordance for browse surfaces. Classification VINTAGE editions
+# (lkf1980…lkf2026, ssyk1996→ssyk2012) are NOT folded here — they surface as
+# succession edges in `classification_replaced_by` (#571).
 @dataclass(frozen=True)
 class GroupFacet:
     """One facet assignment on a group member: `axis` names the dimension
@@ -729,11 +731,13 @@ class Catalog:
         return out
 
     def list_classification_groups(self) -> list[ConceptGroupSummary]:
-        """Derived classification vintage groups (#303; see DESIGN.md →
-        Concept groups), ordered by group key — e.g. the lkf1980…lkf2026
-        family as one group with a 'vintage' facet per member. Members carry
-        the real `class/<slug>` FQIDs (a binding's `value_set` keeps
-        referencing the exact vintage; the group only folds browse)."""
+        """Curated classification umbrella groups (see DESIGN.md → Concept
+        groups), ordered by group key. `concept_group_classification` holds
+        only CURATED umbrella entries (e.g. a future SUN group spanning
+        sun-niva2000/sun-niva2020 — see #516). Derived classification VINTAGE
+        editions (lkf1980…lkf2026, ssyk1996→ssyk2012) are NOT here; they
+        appear as succession edges in `classification_replaced_by` (#571).
+        Members carry the real `class/<slug>` FQIDs."""
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
             "c.slug AS cls_slug, c.name AS cls_name, m.facet_value, m.facet_label "
