@@ -683,7 +683,7 @@ class TestValidateModule:
         slug_dir = self._slug_dir(tmp_path, "")
         result = validate_built_db(fixture_db, slug_dir=slug_dir)
         assert result.passed, result.failures
-        assert "no variant carries an entity key" in result.format_report()
+        assert "nothing to curate" in result.format_report()
 
     def test_entity_key_gate_fails_when_unpinned(
         self, fixture_db: Path, tmp_path: Path
@@ -708,6 +708,80 @@ class TestValidateModule:
         result = validate_built_db(db, slug_dir=slug_dir)
         assert result.passed, result.failures
         assert "all 1 entity-key var(s) are curated" in result.format_report()
+
+    @staticmethod
+    def _add_sos_entity_key(conn: sqlite3.Connection) -> None:
+        """Inject a NON-SCB (sos, provider_id 2) register/variant/variable whose
+        panel keys on `sosvar` (un-pinned). The gate is run directly on the
+        connection here — a synthetic low-band non-SCB register would otherwise
+        trip the unrelated minted-id-band gate in full `validate_built_db`."""
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, slug, name) "
+            "VALUES (500, 2, 'dors', 'Dodsorsaker')"
+        )
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (500, CAST('LOPNR' AS TEXT), 'Lopnummer', 'sosvar')"
+        )
+        vid = cur.lastrowid
+        conn.execute(
+            "INSERT INTO register_variant "
+            "(register_variant_id, register_id, slug, name, panel_entity_key) "
+            "VALUES (5000, 500, 'grund', 'G', 'sosvar')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 5000, '0001-01-01', '9999-12-31', 'int', 'Lopnr')",
+            (vid,),
+        )
+        conn.commit()
+
+    def _run_gate(self, db: Path, slug_dir: Path):
+        """Run only `_check_entity_key_vars_curated` against `db` — isolates the
+        #546 scoping from the rest of the suite (notably the band gate)."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_entity_key_vars_curated,
+        )
+
+        conn = sqlite3.connect(db)
+        conn.row_factory = sqlite3.Row
+        try:
+            result = ValidationResult()
+            _check_entity_key_vars_curated(
+                conn, result, {"register_variant", "variable"}, slug_dir
+            )
+            return result
+        finally:
+            conn.close()
+
+    def test_entity_key_gate_ignores_non_scb(self, fixture_db: Path, tmp_path: Path):
+        """#546: a NON-SCB (sos) entity-key var does NOT trip the gate even though
+        it's un-pinned — the gate is scoped to MANDATORY_ENTITY_KEY_PROVIDERS (SCB
+        only today, #209). With no SCB key present the gate passes clean."""
+        db = tmp_path / "sos_only.db"
+        db.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(db)
+        self._add_sos_entity_key(conn)
+        conn.close()
+        slug_dir = self._slug_dir(tmp_path, "")  # nothing pinned
+        result = self._run_gate(db, slug_dir)
+        assert result.passed, result.failures
+        assert "nothing to curate" in result.format_report()
+
+    def test_entity_key_gate_scopes_to_scb_only(self, fixture_db: Path, tmp_path: Path):
+        """With BOTH an un-pinned SCB key (`1.44`/`kon`) and an un-pinned sos key
+        present, ONLY the SCB var fails the gate — the sos var is out of scope."""
+        db = self._db_with_kon_entity_key(fixture_db, tmp_path / "both.db")
+        conn = sqlite3.connect(db)
+        self._add_sos_entity_key(conn)
+        conn.close()
+        slug_dir = self._slug_dir(tmp_path, "")  # nothing pinned
+        result = self._run_gate(db, slug_dir)
+        assert not result.passed
+        assert all("source_id 1.44" in f for f in result.failures), result.failures
+        assert not any("sosvar" in f for f in result.failures), result.failures
 
 
 class TestBuildDbProvidersDefault:

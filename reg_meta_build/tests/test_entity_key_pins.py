@@ -14,9 +14,16 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
-from _slugged_db import add_state, add_variable, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_variable,
+    add_variant,
+    build_slugged_db,
+)
 
 from reg_meta_build.fqid_slugs import (
+    MANDATORY_ENTITY_KEY_PROVIDERS,
     _curated_variable_slugs,
     infer_entity_key_pins,
     iter_entity_key_variables,
@@ -50,6 +57,27 @@ def _db_with_entity_key(entity_key: str | list[str]) -> sqlite3.Connection:
     )
     conn.commit()
     return conn
+
+
+def _add_sos_entity_key(conn: sqlite3.Connection) -> None:
+    """Add a NON-SCB (sos, provider_id 2) register/variant/variable carrying a
+    `panel_entity_key`, so enumeration sees it but the SCB-scoped generator/gate
+    must NOT (#546: only SCB is under mandatory curation today)."""
+    add_register(conn, register_id=500, slug="dors", name="Dödsorsaker", provider_id=2)
+    add_variable(conn, register_id=500, var_id="LOPNR", name="Löpnummer", slug="lopnr")
+    add_variant(conn, register_variant_id=5000, register_id=500, slug="grund", name="G")
+    add_state(
+        conn,
+        register_id=500,
+        variable_slug="lopnr",
+        register_variant_id=5000,
+        delivery_column_name="Lopnr",
+    )
+    conn.execute(
+        "UPDATE register_variant SET panel_entity_key = 'lopnr' "
+        "WHERE register_variant_id = 5000"
+    )
+    conn.commit()
 
 
 def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
@@ -90,6 +118,16 @@ class TestEnumerate:
         conn = _db_with_entity_key(["kon", "ghost"])
         keyed = {ek.variable_slug for ek in iter_entity_key_variables(conn)}
         assert keyed == {"kon"}
+
+    def test_enumerates_all_providers_unscoped(self):
+        """The enumerator is PROVIDER-GENERAL — it yields a non-SCB (sos)
+        entity-key var too; the SCB scoping is applied by the callers, not here.
+        (Guards against re-narrowing `iter_entity_key_variables` itself, which
+        would break its reusability.)"""
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        providers = {ek.provider_slug for ek in iter_entity_key_variables(conn)}
+        assert providers == {"scb", "sos"}
 
 
 class TestGenerator:
@@ -135,3 +173,14 @@ class TestGenerator:
         conn = _db_with_entity_key(["ar", "kon"])
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         assert [p.source_id for p in pins] == ["1.44", "1.99"]
+
+    def test_non_scb_entity_key_not_emitted(self, tmp_path: Path):
+        """#546: only mandatory-curation providers (SCB today) get pins. A non-SCB
+        (sos) entity-key var is enumerated but NOT emitted, while the SCB one is —
+        so the gate never fails the build on un-pinned non-SCB vars (#209)."""
+        assert "scb" in MANDATORY_ENTITY_KEY_PROVIDERS
+        assert "sos" not in MANDATORY_ENTITY_KEY_PROVIDERS
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
+        assert [(p.provider_slug, p.source_id) for p in pins] == [("scb", "1.44")]

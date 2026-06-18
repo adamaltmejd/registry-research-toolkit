@@ -1136,7 +1136,15 @@ def write_auto_toml(
 # This generator emits those pins from a built DB; the build-side gate
 # (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY so a NEW
 # entity-key var can't ship un-pinned. Both share `iter_entity_key_variables`
-# so they enumerate the exact same set.
+# so they enumerate the exact same set, then scope it to
+# `MANDATORY_ENTITY_KEY_PROVIDERS` (below) at the call site.
+
+# Providers whose panel entity-key slug class is under mandatory curation
+# (#546). SCB only today: its #143-derived slugs churn every build and can
+# dangle panel_entity_key refs (the #539/#528 incidents). Other providers'
+# entity-key vars come from curated/parsed inputs with stable columns; freeze
+# them per-provider at v1 (#209) by adding to this set.
+MANDATORY_ENTITY_KEY_PROVIDERS = frozenset({"scb"})
 
 
 def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
@@ -1224,7 +1232,10 @@ def iter_entity_key_variables(
 
     Shared by the pin generator (`infer_entity_key_pins`) and the curation gate
     (`validate._check_entity_key_vars_curated`) so the two can't disagree on
-    which variables need a pin."""
+    which variables need a pin. PROVIDER-GENERAL by design: it yields every
+    provider's entity-key vars; both callers scope to
+    `MANDATORY_ENTITY_KEY_PROVIDERS` (SCB only, #546) at the call site, so the
+    constant is the single knob and this enumerator stays reusable."""
     rows = conn.execute(
         "SELECT rv.register_id, rv.panel_entity_key, "
         "       r.slug AS register_slug, r.name AS register_name, "
@@ -1291,15 +1302,20 @@ def _source_id_sort_key(source_id: str) -> tuple[int, int, int, str]:
 def infer_entity_key_pins(
     conn: sqlite3.Connection, slug_dir: Path
 ) -> list[EntityKeyPin]:
-    """Pins for every panel entity-key variable NOT already curated in ``slug_dir``.
+    """Pins for every mandatory-curation entity-key variable NOT already curated.
 
     Reads a built DB; never mutates it. For each entity-key variable
-    (`iter_entity_key_variables`), emits a pin binding its build `source_id` to
-    its current `variable.slug` — UNLESS `(provider, source_id)` already has a
-    hand-curated `[variable]` slug (the generator is idempotent: re-running after
-    the pins are committed emits nothing, and the 35 existing #539 pins are never
-    duplicated). Sorted numeric-aware by source_id within provider, matching the
-    committed file's ordering."""
+    (`iter_entity_key_variables`) whose provider is under mandatory curation
+    (`MANDATORY_ENTITY_KEY_PROVIDERS` — SCB only today), emits a pin binding its
+    build `source_id` to its current `variable.slug` — UNLESS `(provider,
+    source_id)` already has a hand-curated `[variable]` slug (the generator is
+    idempotent: re-running after the pins are committed emits nothing, and the 35
+    existing #539 pins are never duplicated). Other providers' entity-key vars are
+    skipped here (their slugs come from stable parsed/curated inputs; they freeze
+    per-provider at v1, #209) — `iter_entity_key_variables` stays provider-general
+    and reusable, with the scoping applied only at this call site so the constant
+    is the one knob. Sorted numeric-aware by source_id within provider, matching
+    the committed file's ordering."""
     curated_entries = [
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
@@ -1317,15 +1333,17 @@ def infer_entity_key_pins(
             entity_key=ek.entity_key,
         )
         for ek in iter_entity_key_variables(conn)
-        if (ek.provider_slug, ek.source_id) not in curated
+        if ek.provider_slug in MANDATORY_ENTITY_KEY_PROVIDERS
+        and (ek.provider_slug, ek.source_id) not in curated
     ]
     pins.sort(key=lambda p: (p.provider_slug, _source_id_sort_key(p.source_id)))
     return pins
 
 
 def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
-    """Render the entity-key pins as a self-contained `[variable]` block to append
-    to ``fqid_slugs/scb.toml`` — same style as the #539 block already there.
+    """Render the (SCB-scoped, #546) entity-key pins as a self-contained
+    `[variable]` block to append to ``fqid_slugs/scb.toml`` — same style as the
+    #539 block already there.
 
     Built by hand (not `tomli_w`) so the trailing `# <reg>: panel_entity_key`
     comments survive. `source_id` segments are integers / kebab discriminators
@@ -2994,6 +3012,7 @@ __all__ = (
     "CLASSIFICATIONS_ZONE",
     "ENTITY_KINDS",
     "FREEZE_STATE_FILE",
+    "MANDATORY_ENTITY_KEY_PROVIDERS",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
     "EntityKeyPin",

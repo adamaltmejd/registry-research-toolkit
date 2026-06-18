@@ -432,15 +432,20 @@ def _build_parser() -> argparse.ArgumentParser:
 
     entity_key_pins_p = sub.add_parser(
         "entity-key-pins",
-        help="Generate panel entity-key slug pins (mandatory curation, #546).",
+        help="Generate panel entity-key slug pins (mandatory curation, SCB, #546).",
         description=(
-            "Emit a `[variable]` slug-pin block for every panel entity-key\n"
+            "Emit a `[variable]` slug-pin block for every SCB panel entity-key\n"
             "variable on a BUILT DB. A `register_variant.panel_entity_key` ref binds\n"
             "to a variable.slug, which CHURNS every build (the default freeze zone\n"
             "re-derives it); a reslug then silently dangles the ref. A curated pin\n"
             "(precedence 1 in slug population) freezes that slug. The build-side\n"
             "curation gate makes the pin MANDATORY, so a new entity-key variable\n"
             "can't ship un-pinned.\n\n"
+            "Scoped to the mandatory-curation provider set (MANDATORY_ENTITY_KEY_\n"
+            "PROVIDERS — SCB only today): only SCB's #143-derived slugs churn every\n"
+            "build, so only SCB entity-key vars are emitted. Other providers'\n"
+            "entity-key vars come from stable parsed/curated inputs and freeze\n"
+            "per-provider at v1 (#209), so they're skipped here.\n\n"
             "Idempotent: variables already carrying a hand-curated `[variable]` slug\n"
             "(the existing #539 pins) are SKIPPED, so re-running after the pins are\n"
             "committed emits nothing. Reads a built DB; never mutates it. The\n"

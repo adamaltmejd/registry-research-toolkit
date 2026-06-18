@@ -887,6 +887,15 @@ def _check_entity_key_vars_curated(
     Generate the missing pins with ``reg-meta-build entity-key-pins`` and commit
     them to ``fqid_slugs/scb.toml``.
 
+    Scoped to the mandatory-curation providers
+    (``fqid_slugs.MANDATORY_ENTITY_KEY_PROVIDERS`` — SCB only today, #546): only
+    SCB's #143-derived slugs churn every build, so only SCB entity-key vars must
+    be pinned. Other providers' entity-key vars (fk/sos/… — ~61 of them, #209)
+    come from stable parsed/curated inputs and freeze per-provider at v1, so the
+    gate ignores them rather than failing the build on un-pinned non-SCB vars. The
+    same constant scopes the generator (``infer_entity_key_pins``), so gate and
+    generator enforce the identical set.
+
     Scoped to the GLOBAL build: ``slug_dir is None`` (synthetic CI, direct
     ``validate_built_db(corpus=False)`` calls, and the flavored overlay) SKIPS
     the gate — there's no curated dir to read, and a flavor adds no SCB panel
@@ -907,6 +916,7 @@ def _check_entity_key_vars_curated(
     from reg_meta_build.fqid_slugs import (
         _RESERVED_NON_PROVIDER_TOMLS,
         AUTO_FILE_SUFFIX,
+        MANDATORY_ENTITY_KEY_PROVIDERS,
         PROVIDER_FILE_SUFFIX,
         _curated_variable_slugs,
         iter_entity_key_variables,
@@ -921,9 +931,19 @@ def _check_entity_key_vars_curated(
         for e in load_provider_toml(path)
     ]
     curated = _curated_variable_slugs(curated_entries)
-    entity_key_vars = list(iter_entity_key_variables(conn))
+    # Scope to the mandatory-curation providers (the same constant the generator
+    # uses) so gate and generator enforce the identical set: only SCB's churning
+    # slugs need a pin; non-SCB entity-key vars are a per-provider v1 follow-up.
+    entity_key_vars = [
+        ek
+        for ek in iter_entity_key_variables(conn)
+        if ek.provider_slug in MANDATORY_ENTITY_KEY_PROVIDERS
+    ]
     if not entity_key_vars:
-        result.ok("no variant carries an entity key — nothing to curate")
+        result.ok(
+            "no mandatory-curation (SCB) variant carries an entity key "
+            "— nothing to curate"
+        )
         return
     failures: list[str] = []
     for ek in entity_key_vars:
