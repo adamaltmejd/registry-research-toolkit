@@ -162,7 +162,7 @@ class TestEnumerate:
             "1.44",
             "kon",
         )
-        assert ek.register_slug == "lisa" and ek.entity_key == "kon"
+        assert ek.register_slug == "lisa"
 
     def test_composite_key_resolves_every_element(self):
         """A composite (json-array) key resolves element-wise; each element that

@@ -1044,6 +1044,30 @@ def _curated_variable_slugs(
     return out
 
 
+def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
+    """Every `SlugEntry` from the hand-curated ``<provider>.toml`` files in
+    ``slug_dir`` — the reserved non-provider TOMLs and the generated
+    ``*.auto.toml`` files are excluded. The single source of the curated-file
+    glob shared by `populate_variable_slugs`, `load_curated_variable_slugs`, and
+    (via the latter) the entity-key generator + gate."""
+    return [
+        e
+        for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
+        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
+        and not path.name.endswith(AUTO_FILE_SUFFIX)
+        for e in load_provider_toml(path)
+    ]
+
+
+def load_curated_variable_slugs(slug_dir: Path) -> dict[tuple[str, str], str]:
+    """Hand-curated `[variable]` slug overrides under ``slug_dir``, keyed
+    (provider, source_id). The glob+load+`_curated_variable_slugs` pipeline
+    shared by the entity-key pin generator (`infer_entity_key_pins`) and the
+    curation gate (`validate._check_entity_key_vars_curated`) so the two read the
+    identical curated set."""
+    return _curated_variable_slugs(iter_curated_provider_entries(slug_dir))
+
+
 def _auto_variable_slugs(auto_entries: list[SlugEntry]) -> dict[str, str]:
     """Auto-derived slugs from one ``<provider>.auto.toml``, keyed by source_id.
 
@@ -1151,25 +1175,31 @@ def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
     """Decode a stored `panel_entity_key` to the tuple of slugs it references.
 
     A json-array string → its elements (a composite key); any other non-NULL
-    string → a 1-tuple (a bare slug); NULL → empty. Mirrors
-    `reg_meta.catalog._decode_panel_entity_key` (and the `populate_slugs`
-    writer's `json.dumps` for the composite case) — decoded here rather than
-    imported to keep `fqid_slugs` free of a `reg_meta.catalog` dependency."""
-    if raw is None:
+    string → a 1-tuple (a bare slug); NULL → empty. Reuses the catalog's
+    `_decode_panel_entity_key` (the same decoder `validate._check_panel_refs_
+    resolve` runs) and normalizes its `None | str | tuple` result to a tuple, so
+    the resolution gate and this enumeration can't disagree on the wire format.
+    Local import: keeps `fqid_slugs`'s module import light and dodges any cycle
+    through the build graph."""
+    from reg_meta.catalog import _decode_panel_entity_key
+
+    decoded = _decode_panel_entity_key(raw)
+    if decoded is None:
         return ()
-    if raw.startswith("["):
-        return tuple(json.loads(raw))
-    return (raw,)
+    if isinstance(decoded, str):
+        return (decoded,)
+    return decoded
 
 
 @dataclass(frozen=True)
 class EntityKeyVariable:
     """One panel entity-key variable resolved off a built DB: the keyed
-    `variable` (its register-scoped `slug` and build-derived `source_id`), the
-    register it lives in, and the `panel_entity_key` value that referenced it
-    (for a human-readable pin comment). `source_id` is the same key
-    `populate_variable_slugs` writes, so a `[variable."<source_id>"]` pin binds
-    exactly the variable enumerated here."""
+    `variable` (its register-scoped `slug` and build-derived `source_id`) and the
+    register it lives in. `variable_slug` doubles as the `panel_entity_key`
+    element that referenced it (each ref resolves the variable by `WHERE slug =
+    ?`, so the ref element IS the variable slug) — it annotates the pin comment.
+    `source_id` is the same key `populate_variable_slugs` writes, so a
+    `[variable."<source_id>"]` pin binds exactly the variable enumerated here."""
 
     provider_slug: str
     register_id: int
@@ -1178,19 +1208,24 @@ class EntityKeyVariable:
     variable_id: int
     variable_slug: str
     source_id: str
-    entity_key: str
 
 
 def _variable_source_ids(conn: sqlite3.Connection, register_id: int) -> dict[int, str]:
     """`{variable_id: source_id}` for every variable in ``register_id``.
 
-    Reuses the build's exact source-ID grammar: `<register_id>.<provider_key>`,
-    or `<register_id>.<provider_key>.<discriminator>` when the provider_key is a
+    Reuses the build's source-ID grammar: `<register_id>.<provider_key>`, or
+    `<register_id>.<provider_key>.<discriminator>` when the provider_key is a
     SPLIT sibling (shared `provider_key`, disambiguated by `_split_sibling_disc`
-    — the same helper `populate_variable_slugs` uses, so the emitted key picks
-    the same sibling the auto-slug cache keyed). A provider_key containing '.'
-    is rejected (it would mis-parse as a phantom split discriminator), matching
-    the build's fail-fast."""
+    — the same helper `populate_variable_slugs` uses). A provider_key containing
+    '.' is rejected (it would mis-parse as a phantom split discriminator),
+    matching the build's fail-fast.
+
+    Scope: this matches `populate_variable_slugs`'s keys only on the GLOBAL
+    (non-incremental) build — the one path `entity-key-pins` and the curation
+    gate run on. The build computes `split_pk` over its (possibly
+    incremental-filtered) `variables` set, whereas this counts ALL variables in
+    the register, so the split discriminators can diverge on an
+    incremental/extend-db DB; do NOT reuse this against a flavored DB."""
     rows = conn.execute(
         "SELECT variable_id, provider_key FROM variable WHERE register_id = ?",
         (register_id,),
@@ -1273,21 +1308,21 @@ def iter_entity_key_variables(
                 variable_id=variable_id,
                 variable_slug=slug,
                 source_id=source_ids_by_register[register_id][variable_id],
-                entity_key=slug,
             )
 
 
 @dataclass(frozen=True)
 class EntityKeyPin:
     """One emitted pin: a `[variable."<source_id>"]` slug override that freezes
-    the entity-key variable's slug. `register_slug` + `entity_key` annotate the
-    trailing `#` comment."""
+    the entity-key variable's slug. `register_slug` + `variable_slug` annotate
+    the trailing `#` comment (the `panel_entity_key` element IS the variable
+    slug)."""
 
     provider_slug: str
     source_id: str
     slug: str
     register_slug: str
-    entity_key: str
+    variable_slug: str
 
 
 def _source_id_sort_key(source_id: str) -> tuple[int, int, int, str]:
@@ -1316,21 +1351,14 @@ def infer_entity_key_pins(
     and reusable, with the scoping applied only at this call site so the constant
     is the one knob. Sorted numeric-aware by source_id within provider, matching
     the committed file's ordering."""
-    curated_entries = [
-        e
-        for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
-        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
-        and not path.name.endswith(AUTO_FILE_SUFFIX)
-        for e in load_provider_toml(path)
-    ]
-    curated = _curated_variable_slugs(curated_entries)
+    curated = load_curated_variable_slugs(slug_dir)
     pins = [
         EntityKeyPin(
             provider_slug=ek.provider_slug,
             source_id=ek.source_id,
             slug=ek.variable_slug,
             register_slug=ek.register_slug,
-            entity_key=ek.entity_key,
+            variable_slug=ek.variable_slug,
         )
         for ek in iter_entity_key_variables(conn)
         if ek.provider_slug in MANDATORY_ENTITY_KEY_PROVIDERS
@@ -1369,7 +1397,7 @@ def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
     for p in pins:
         lines.append(
             f"[variable.{_toml_str(p.source_id)}]  "
-            f"# {p.register_slug}: panel_entity_key = {p.entity_key!r}"
+            f"# {p.register_slug}: panel_entity_key = {p.variable_slug!r}"
         )
         lines.append(f"slug = {_toml_str(p.slug)}")
         lines.append("")
@@ -1658,13 +1686,7 @@ def populate_variable_slugs(
     drift_new = 0
 
     # Curated overrides come from the hand-curated <provider>.toml only.
-    curated_entries = [
-        e
-        for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
-        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
-        and not path.name.endswith(AUTO_FILE_SUFFIX)
-        for e in load_provider_toml(path)
-    ]
+    curated_entries = iter_curated_provider_entries(slug_dir)
     curated = _curated_variable_slugs(curated_entries)
     # A hand-curated [variable] slug override must match a live variable — a
     # non-deprecated override for a missing (register, var) is a typo that would
@@ -3028,9 +3050,11 @@ __all__ = (
     "freeze_state",
     "frozen_zones",
     "infer_entity_key_pins",
+    "iter_curated_provider_entries",
     "iter_default_slug_candidates",
     "iter_entity_key_variables",
     "load_classifications_toml",
+    "load_curated_variable_slugs",
     "load_freeze_states",
     "load_provider_toml",
     "load_slug_dir",

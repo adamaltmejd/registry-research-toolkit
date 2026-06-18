@@ -914,23 +914,12 @@ def _check_entity_key_vars_curated(
     # slug-population machinery, so importing it lazily keeps `validate`'s module
     # import light and avoids any cycle through the build graph.
     from reg_meta_build.fqid_slugs import (
-        _RESERVED_NON_PROVIDER_TOMLS,
-        AUTO_FILE_SUFFIX,
         MANDATORY_ENTITY_KEY_PROVIDERS,
-        PROVIDER_FILE_SUFFIX,
-        _curated_variable_slugs,
         iter_entity_key_variables,
-        load_provider_toml,
+        load_curated_variable_slugs,
     )
 
-    curated_entries = [
-        e
-        for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
-        if path.name not in _RESERVED_NON_PROVIDER_TOMLS
-        and not path.name.endswith(AUTO_FILE_SUFFIX)
-        for e in load_provider_toml(path)
-    ]
-    curated = _curated_variable_slugs(curated_entries)
+    curated = load_curated_variable_slugs(slug_dir)
     # Scope to the mandatory-curation providers (the same constant the generator
     # uses) so gate and generator enforce the identical set: only SCB's churning
     # slugs need a pin; non-SCB entity-key vars are a per-provider v1 follow-up.
@@ -950,7 +939,7 @@ def _check_entity_key_vars_curated(
         if (ek.provider_slug, ek.source_id) not in curated:
             failures.append(
                 f"{ek.register_slug}/{ek.variable_slug} "
-                f"(source_id {ek.source_id}, panel_entity_key {ek.entity_key!r}) "
+                f"(source_id {ek.source_id}, panel_entity_key {ek.variable_slug!r}) "
                 "has no curated [variable] slug pin"
             )
     if failures:
