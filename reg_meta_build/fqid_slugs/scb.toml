@@ -5099,3 +5099,737 @@ slug = "person-organisationsnummer"
 
 [variable."55.2736.sektorkod"]  # yrkesreg: classification_links = "sektorkod-2"
 slug = "sektorkod-2"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned.
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins \
+#     --output-toml /tmp/entity_key_pins.toml
+# and fold the NON-duplicate entries in here. dbdiff-identical (slug values
+# only — pins reproduce the slug the variable already carries).
+# 239 pin(s).
+
+[variable."1.29"]  # fdb: panel_entity_key = 'fenr'
+slug = "fenr"
+
+[variable."1.48"]  # fdb: panel_entity_key = 'lvenr'
+slug = "lvenr"
+
+[variable."1.56"]  # fdb: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."1.1454"]  # fdb: panel_entity_key = 'venr'
+slug = "venr"
+
+[variable."2.372"]  # rtb: panel_entity_key = 'familjeidentitet-rtb-familj'
+slug = "familjeidentitet-rtb-familj"
+
+[variable."7.26"]  # ftr: panel_entity_key = 'fastbet'
+slug = "fastbet"
+
+[variable."7.56"]  # ftr: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."7.449"]  # ftr: panel_entity_key = 'idtaxenhet'
+slug = "idtaxenhet"
+
+[variable."8.16564"]  # fordonsreg: panel_entity_key = 'chassi'
+slug = "chassi"
+
+[variable."10.46"]  # lbr: panel_entity_key = 'lantbruk-foretags-id'
+slug = "lantbruk-foretags-id"
+
+[variable."10.56"]  # lbr: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."10.1839"]  # lbr: panel_entity_key = 'orgnr'
+slug = "orgnr"
+
+[variable."13.56"]  # moms: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."22.57"]  # ekonomiskt-bistand: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."24.57"]  # ureg: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."25.56"]  # iot: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."25.57"]  # iot: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."26.57"]  # rams: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."29.57"]  # linda: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."32.57"]  # fob: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."32.7786"]  # fob: panel_entity_key = 'lghnr'
+slug = "lghnr"
+
+[variable."32.42375"]  # fob: panel_entity_key = 'famfpersonnr'
+slug = "famfpersonnr"
+
+[variable."50.57"]  # slp: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."51.57"]  # slr: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."55.57"]  # yrkesreg: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."60.57"]  # kls: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."70.19653"]  # gdb: panel_entity_key = 'riksnyckel'
+slug = "riksnyckel"
+
+[variable."71.26"]  # fastighetspriser: panel_entity_key = 'fastbet'
+slug = "fastbet"
+
+[variable."71.56"]  # fastighetspriser: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."72.26"]  # ombyggnad-och-rivning: panel_entity_key = 'fastighetsbeteckning'
+slug = "fastighetsbeteckning"
+
+[variable."73.17413"]  # priser-nyproducerade-bostader: panel_entity_key = 'husbeteckning'
+slug = "husbeteckning"
+
+[variable."74.145"]  # energi-smahus: panel_entity_key = 'scbid'
+slug = "scbid"
+
+[variable."75.26"]  # energi-flerbostad: panel_entity_key = 'fastbet'
+slug = "fastbet"
+
+[variable."86.3268"]  # hut: panel_entity_key = 'ordningsnummer-inom-kosthushallet'
+slug = "ordningsnummer-inom-kosthushallet"
+
+[variable."86.3273"]  # hut: panel_entity_key = 'lopnummer-kosthushall'
+slug = "lopnummer-kosthushall"
+
+[variable."86.4544"]  # hut: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."86.5708"]  # hut: panel_entity_key = 'kundnr'
+slug = "kundnr"
+
+[variable."86.30360"]  # hut: panel_entity_key = 'bubnrh'
+slug = "bubnrh"
+
+[variable."89.1839"]  # klk: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."91.56"]  # klp: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."97.4544"]  # hek: panel_entity_key = 'bpnr'
+slug = "bpnr"
+
+[variable."102.57"]  # gymnasieskola-betyg: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."105.57"]  # folkhogskolan: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."108.7020"]  # gyst: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."110.57"]  # hogutbildade-utrikes-fodda: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."111.2179"]  # intradet-pa-arbetsmarknaden: panel_entity_key = 'lopnummer'
+slug = "lopnummer"
+
+[variable."114.56"]  # offentligt-agda-foretag: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."115.36"]  # kommunalskatter: panel_entity_key = 'kommun'
+slug = "kommun"
+
+[variable."115.56"]  # kommunalskatter: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."121.1839"]  # frida: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."121.4544"]  # frida: panel_entity_key = 'eget-personnummer'
+slug = "eget-personnummer"
+
+[variable."122.57"]  # aku: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."123.57"]  # arbetsmiljoundersokningen: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."124.57"]  # arbetsorsakade-besvar: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."125.25103"]  # funktionsnedsattning-arbetsmarknad: panel_entity_key = 'uenr'
+slug = "uenr"
+
+[variable."127.14"]  # kv: panel_entity_key = 'cfar-nummer'
+slug = "cfar-nummer"
+
+[variable."128.14"]  # lsum: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."131.56"]  # ireg: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."131.3578"]  # ireg: panel_entity_key = 'organisationsnummer-12-siffror'
+slug = "organisationsnummer-12-siffror"
+
+[variable."133.14"]  # rego: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."134.14"]  # ks: panel_entity_key = 'cfar-nummer'
+slug = "cfar-nummer"
+
+[variable."139.1839"]  # branslestatistik: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."139.16315"]  # branslestatistik: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."140.26"]  # energi-lokaler: panel_entity_key = 'fastighetsbeteckning'
+slug = "fastighetsbeteckning"
+
+[variable."141.14"]  # mabra: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."142.14"]  # manel: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."143.1970"]  # oha: panel_entity_key = 'foretagsidentifikation'
+slug = "foretagsidentifikation"
+
+[variable."143.7860"]  # oha: panel_entity_key = 'taxeringsid'
+slug = "taxeringsid"
+
+[variable."145.20010"]  # hostsadda-arealer: panel_entity_key = 'addid'
+slug = "addid"
+
+[variable."147.56"]  # godselmedelsanvandning: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."149.2222"]  # forsaljning-mineralgodsel: panel_entity_key = 'leverantorsnummer'
+slug = "leverantorsnummer"
+
+[variable."151.14"]  # inkvarteringsstatistik: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."155.56"]  # trafo: panel_entity_key = 'persnr'
+slug = "persnr"
+
+[variable."156.145"]  # industrins-miljoskyddskostnader: panel_entity_key = 'identitet'
+slug = "identitet"
+
+[variable."161.2312"]  # hamn: panel_entity_key = 'imo'
+slug = "imo"
+
+[variable."162.1839"]  # lastbilstrafik: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."164.16388"]  # psu: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."165.1839"]  # bast: panel_entity_key = 'orgnr'
+slug = "orgnr"
+
+[variable."166.56"]  # hku: panel_entity_key = 'orgnr'
+slug = "orgnr"
+
+[variable."167.56"]  # konkurser: panel_entity_key = 'opnr'
+slug = "opnr"
+
+[variable."168.48"]  # fek: panel_entity_key = 'lokal-verksamhetsenhetsnummer'
+slug = "lokal-verksamhetsenhetsnummer"
+
+[variable."168.56"]  # fek: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."168.4810"]  # fek: panel_entity_key = 'velopnr'
+slug = "velopnr"
+
+[variable."179.56"]  # laps: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."182.56"]  # fou: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."182.57"]  # fou: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."182.1839"]  # fou: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."182.3578"]  # fou: panel_entity_key = 'organisationsnummer-12-siffror'
+slug = "organisationsnummer-12-siffror"
+
+[variable."183.56"]  # investeringsenkaten: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."183.1839"]  # investeringsenkaten: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."186.57"]  # slh: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."187.1454"]  # konjunkturstatistik-industri: panel_entity_key = 'verksamhetsenhetens-identitetsnummer'
+slug = "verksamhetsenhetens-identitetsnummer"
+
+[variable."189.57"]  # grundskola-ak9: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."190.57"]  # grundskola-prov-ak9: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."192.104"]  # svenska-utlandsskolor: panel_entity_key = 'skola'
+slug = "skola"
+
+[variable."193.57"]  # grundskola-elever: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."194.30366"]  # skolvasendet-kostnader: panel_entity_key = 'skolenhetskod'
+slug = "skolenhetskod"
+
+[variable."195.57"]  # ksju: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."196.57"]  # energianvandning-fiske: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."197.26"]  # iku: panel_entity_key = 'fastbet'
+slug = "fastbet"
+
+[variable."199.35378"]  # hib: panel_entity_key = 'lghbet'
+slug = "lghbet"
+
+[variable."200.1839"]  # arlig-energistatistik: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."200.3577"]  # arlig-energistatistik: panel_entity_key = 'organisationsnummer-10-siffror'
+slug = "organisationsnummer-10-siffror"
+
+[variable."200.16728"]  # arlig-energistatistik: panel_entity_key = 'foretagets-id-nummer'
+slug = "foretagets-id-nummer"
+
+[variable."203.56"]  # energianvandning-bygg: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."208.7550"]  # skord-spannmal: panel_entity_key = 'ftgid'
+slug = "ftgid"
+
+[variable."211.56"]  # skord-slattervall: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."215.1839"]  # vattenbruk: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."223.14"]  # industrins-vattenanvandning: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."227.56"]  # infi: panel_entity_key = 'peorgnrhe'
+slug = "peorgnrhe"
+
+[variable."228.57"]  # formogenhetsreg: panel_entity_key = 'bpnr'
+slug = "bpnr"
+
+[variable."228.4855"]  # formogenhetsreg: panel_entity_key = 'bidnrh'
+slug = "bidnrh"
+
+[variable."229.3751"]  # personalutbildningsstatistik: panel_entity_key = 'lopnummer'
+slug = "lopnummer"
+
+[variable."231.57"]  # anpassad-grundskola: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."233.57"]  # gymnasieskola-elever: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."234.14"]  # lcs: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."235.56"]  # vaxtskyddsmedel: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."237.57"]  # ulf: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."237.22856"]  # ulf: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."239.57"]  # allmanna-val-nominerade: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."240.57"]  # ep-val-resultat: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."241.57"]  # folkomrostningar-valdeltagande: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."242.57"]  # allmanna-val-valdeltagande: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."243.57"]  # allmanna-val-valresultat: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."244.57"]  # folkomrostningar-valresultat: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."245.57"]  # ep-val-deltagande: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."246.17328"]  # ses: panel_entity_key = 'individnyckel'
+slug = "individnyckel"
+
+[variable."247.4600"]  # hogskolestuderandes-levnadsvillkor: panel_entity_key = 'uenr'
+slug = "uenr"
+
+[variable."248.57"]  # komvux-sfi: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."250.57"]  # komvux-anpassad: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."251.57"]  # cfl: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."252.7550"]  # skord-potatis: panel_entity_key = 'ftgid'
+slug = "ftgid"
+
+[variable."257.1839"]  # innovation-foretag: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."258.56"]  # it-anvandning: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."258.57"]  # it-anvandning: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."259.3578"]  # foretagens-utgifter-it: panel_entity_key = 'organisationsnummer-12-siffror'
+slug = "organisationsnummer-12-siffror"
+
+[variable."264.56"]  # sru: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."264.57"]  # sru: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."269.57"]  # bonus-oregelbundna: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."270.57"]  # fortroendevalda: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."282.29828"]  # bostadsbestand: panel_entity_key = 'rnplgh-ridlgh'
+slug = "rnplgh-ridlgh"
+
+[variable."283.16423"]  # elpriser-elavtal: panel_entity_key = 'orgnr'
+slug = "orgnr"
+
+[variable."284.1839"]  # natpriser-naturgas: panel_entity_key = 'orgnr'
+slug = "orgnr"
+
+[variable."286.57"]  # ep-val-nominerade: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."296.56"]  # prisindex: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."296.7550"]  # prisindex: panel_entity_key = 'fo-id'
+slug = "fo-id"
+
+[variable."301.4544"]  # aes: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."304.57"]  # fritidshem: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."305.57"]  # grundskola-prov-ak3: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."307.57"]  # forskola: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."312.56"]  # tjansteforetagens-forbrukning: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."320.57"]  # grundskola-prov-ak6: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."322.57"]  # distansutbildning: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."323.28747"]  # svdb: panel_entity_key = 'isincode'
+slug = "isincode"
+
+[variable."330.56"]  # aktieagarstatistik: panel_entity_key = 'agarorgnr'
+slug = "agarorgnr"
+
+[variable."333.57"]  # breg: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."333.30353"]  # breg: panel_entity_key = 'famid-barnreg'
+slug = "famid-barnreg"
+
+[variable."336.57"]  # utlandska-doktorander: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."339.29828"]  # lagenhetsreg: panel_entity_key = 'rnplgh-ridlgh'
+slug = "rnplgh-ridlgh"
+
+[variable."340.57"]  # grundskola-betyg-ak6: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."342.57"]  # gymnasieskola-prov: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."344.57"]  # specialskola: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."346.57"]  # hushallens-boende: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."348.57"]  # hbr: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."349.57"]  # flergenreg: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."349.39445"]  # flergenreg: panel_entity_key = 'personnummer-avliden-person'
+slug = "personnummer-avliden-person"
+
+[variable."349.39481"]  # flergenreg: panel_entity_key = 'personnummer-barn'
+slug = "personnummer-barn"
+
+[variable."351.57"]  # piaac: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."352.7020"]  # gymnasial-yrkesutbildning: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."353.57"]  # anpassad-gymnasieskola: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."356.57"]  # grundskola-prov-ak5: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."357.30360"]  # but: panel_entity_key = 'bubnrh'
+slug = "bubnrh"
+
+[variable."359.23923"]  # solel: panel_entity_key = 'knr'
+slug = "knr"
+
+[variable."361.56"]  # nystartade-foretag-kvartal: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."366.57"]  # utbildningsanalyser: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."366.104"]  # utbildningsanalyser: panel_entity_key = 'skolkod'
+slug = "skolkod"
+
+[variable."366.4544"]  # utbildningsanalyser: panel_entity_key = 'eget-personnummer'
+slug = "eget-personnummer"
+
+[variable."366.45133"]  # utbildningsanalyser: panel_entity_key = 'skolenhetskod'
+slug = "skolenhetskod"
+
+[variable."367.57"]  # tidsanvandning: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."368.57"]  # kommunernas-aktivitetsansvar: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."369.1839"]  # internationella-foretag: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."371.4600"]  # fasit: panel_entity_key = 'bidnr'
+slug = "bidnr"
+
+[variable."371.30360"]  # fasit: panel_entity_key = 'bidnrhb'
+slug = "bidnrhb"
+
+[variable."371.37435"]  # fasit: panel_entity_key = 'familjehushallsidentitet'
+slug = "familjehushallsidentitet"
+
+[variable."372.14"]  # foretagsreg: panel_entity_key = 'cfar-nummer'
+slug = "cfar-nummer"
+
+[variable."372.56"]  # foretagsreg: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."374.4600"]  # cvts: panel_entity_key = 'enterpr'
+slug = "enterpr"
+
+[variable."375.14"]  # foretagsstatistik: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."375.38071"]  # foretagsstatistik: panel_entity_key = 'velopnr'
+slug = "velopnr"
+
+[variable."376.57"]  # esf: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."377.57"]  # yrkeshogskolan: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."378.57"]  # forskoleklass: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."379.57"]  # annan-pedagogisk-verksamhet: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."382.3578"]  # pin: panel_entity_key = 'organisationsnummer-12-siffror'
+slug = "organisationsnummer-12-siffror"
+
+[variable."383.14"]  # utforarreg: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."387.49985"]  # krita: panel_entity_key = 'institutioncode'
+slug = "institutioncode"
+
+[variable."389.57"]  # kkv: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."390.57"]  # fritidsfiske: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."391.57"]  # ssv: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."392.22865"]  # agi: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."393.4600"]  # transport-energianvandning: panel_entity_key = 'scbid'
+slug = "scbid"
+
+[variable."395.57"]  # kapitalvinster: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."396.57"]  # registerdata-integration: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."397.57"]  # stuv: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."400.57"]  # statund: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."404.14"]  # bas: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."404.57"]  # bas: panel_entity_key = 'personnummer'
+slug = "personnummer"
+
+[variable."404.47187"]  # bas: panel_entity_key = 'person-samordningsnummer'
+slug = "person-samordningsnummer"
+
+[variable."405.31177"]  # barn-ulf: panel_entity_key = 'barnid'
+slug = "barnid"
+
+[variable."405.47167"]  # barn-ulf: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."407.14"]  # innovation-offentlig: panel_entity_key = 'cfar-nummer'
+slug = "cfar-nummer"
+
+[variable."407.56"]  # innovation-offentlig: panel_entity_key = 'scbid'
+slug = "scbid"
+
+[variable."408.57"]  # anst: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."408.47187"]  # anst: panel_entity_key = 'anstpersonnr'
+slug = "anstpersonnr"
+
+[variable."409.22865"]  # civila-samhallet: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."410.56"]  # esk: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."410.1839"]  # esk: panel_entity_key = 'organisationsnummer'
+slug = "organisationsnummer"
+
+[variable."411.14"]  # lor: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."414.4544"]  # sjalvforsorjning: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."121.56.borgnr"]  # frida: panel_entity_key = 'person-organisationsnummer'
+slug = "person-organisationsnummer"
+
+[variable."121.56.bpnr"]  # frida: panel_entity_key = 'person-organisationsnummer-2'
+slug = "person-organisationsnummer-2"
+
+[variable."2.29828.rnplgh-ridlgh"]  # rtb: panel_entity_key = 'rnplgh-ridlgh'
+slug = "rnplgh-ridlgh"
+
+[variable."25.30360.bhidhb"]  # iot: panel_entity_key = 'bhidhb'
+slug = "bhidhb"
+
+[variable."26.14.cfarnr"]  # rams: panel_entity_key = 'cfar-nummer'
+slug = "cfar-nummer"
+
+[variable."26.14.cfarnr1"]  # rams: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."26.56.peorgnr2"]  # rams: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."273.57.personnr"]  # stativ: panel_entity_key = 'personnr'
+slug = "personnr"
+
+[variable."276.135.afnr"]  # fastighetsreg: panel_entity_key = 'afnr'
+slug = "afnr"
+
+[variable."276.135.fnr"]  # fastighetsreg: panel_entity_key = 'fnr'
+slug = "fnr"
+
+[variable."276.135.pfnr"]  # fastighetsreg: panel_entity_key = 'pfnr'
+slug = "pfnr"
+
+[variable."276.24177.ridadrpl"]  # fastighetsreg: panel_entity_key = 'ridadrpl'
+slug = "ridadrpl"
+
+[variable."276.29378.uuidregbyg"]  # fastighetsreg: panel_entity_key = 'uuidregbyg'
+slug = "uuidregbyg"
+
+[variable."34.14.cfarnr"]  # lisa: panel_entity_key = 'cfarnr'
+slug = "cfarnr"
+
+[variable."34.56.peorgnr"]  # lisa: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."355.1839.peorgnr"]  # tradbransle-torv: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."408.56.peorgnr"]  # anst: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."47.1346.fspersonnr"]  # hreg: panel_entity_key = 'fspersonnr'
+slug = "fspersonnr"
+
+[variable."47.1346.personnr"]  # hreg: panel_entity_key = 'personnummer-motsvarande'
+slug = "personnummer-motsvarande"
+
+[variable."70.29378.uuid-adr"]  # gdb: panel_entity_key = 'uuid-adr'
+slug = "uuid-adr"
+
