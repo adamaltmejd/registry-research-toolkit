@@ -103,3 +103,141 @@ column = "Kostnad"
 definition = "Importvärde i tusentals kronor i den ÄLDRE tvåkolumnslayouten (Intäkt/Kostnad). Förekommer i äldre uttag (dokumenterad t.o.m. årgång 2020); i nuvarande leverans ersatt av Värde med Riktning=5. Ett uttag har antingen Intäkt/Kostnad eller Riktning/Värde, inte båda."
 data_type = "decimal"
 valid_to = "2020-12-31"  # legacy two-column vintage; documented coverage ends 2020
+
+
+# ── Arbetsgivardeklarationer, huvuduppgifter (AGI/Huvud) ─────────────────────────
+# Source: SCB's AGI delivery (the AGIHuvud* monthly tables) + the AGI master-list
+# column descriptions. The EMPLOYER-level header of the arbetsgivardeklaration: one
+# row per employer (PeOrgNr) per reporting month, carrying the declaration totals and
+# their underlag (basis amounts). reg_meta already has the INDIVIDUAL level
+# (scb/agi/individuppgifter-agi); this is the missing employer-level (huvud) sibling.
+# Monthly tables 2019-01 onward; the two REDERI_REGRESS columns appear from 2020-01.
+[[register]]
+key = "agi-huvud"
+name = "Arbetsgivardeklarationer, huvuduppgifter (AGI)"
+valid_from = "2019-01-01"  # first delivered month (AGIHuvud201901)
+purpose = "Arbetsgivardeklaration på arbetsgivarnivå (AGI Huvud): en rad per arbetsgivare (PeOrgNr) och redovisningsperiod (månad), med deklarationens summor (skatteavdrag, arbetsgivaravgifter, SLF) och deras underlag samt avdrag (FoU, regionalt stöd, rederi). Komplement till individnivån (scb/agi/individuppgifter-agi). Levererad fr.o.m. 2019-01."
+
+[[register.variable]]
+name = "Person-/organisationsnummer (arbetsgivare)"
+column = "PeOrgNr"
+definition = "Arbetsgivare och andra utbetalare; levereras pseudonymiserat (löpnumrerat)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Redovisningsperiod"
+column = "PERIOD"
+definition = "Redovisningsperiod (månad) för arbetsgivardeklarationen."
+data_type = "text"
+
+[[register.variable]]
+name = "Ej fast driftställe i Sverige"
+column = "EJ_FAST_DRIFTSTALLE_I_SV"
+definition = "Markering för att arbetsgivaren saknar fast driftställe i Sverige."
+data_type = "text"
+
+[[register.variable]]
+name = "Stöd av mindre betydelse (de minimis)"
+column = "DE_MINIMIS_STOD"
+definition = "Alla stöd av mindre betydelse som företaget har mottagit i år och de två föregående beskattningsåren (anges även om inget mottagits)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Summa skatteavdrag"
+column = "SUMMA_SKATTEAVDR"
+definition = "Summa skatteavdrag."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Summa arbetsgivaravgifter och SLF"
+column = "SUMMA_ARB_AVG_SLF"
+definition = "Summa arbetsgivaravgifter och särskild löneskatt (SLF)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Total sjuklönekostnad"
+column = "TOTAL_SJUKLONEKOSTNAD"
+definition = "Sjuklönekostnad inklusive arbetsgivaravgifter."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Skatteavdrag pensionsförsäkring"
+column = "SKATTEAVDR_PENS_FORS"
+definition = "Skatteavdrag pensionsförsäkring."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag skatteavdrag pensionsförsäkring"
+column = "ULAG_SKATTEAVDR_PENS_FORS"
+definition = "Underlag för skatteavdrag pensionsförsäkring."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Skatteavdrag ränta och utdelning"
+column = "SKATTEAVDR_RANTA_UTD"
+definition = "Skatteavdrag ränta och utdelning."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag skatteavdrag ränta och utdelning"
+column = "ULAG_SKATTEAVDR_RANTA_UTD"
+definition = "Underlag för skatteavdrag ränta och utdelning."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag arbetsgivaravgift"
+column = "ULAG_ARB_AVG_SOC_AVT"
+definition = "Underlag för arbetsgivaravgift."
+data_type = "decimal"
+
+[[register.variable]]
+name = "SLF, vinstandel"
+column = "SLF_VINSTANDEL_FK486"
+definition = "Särskild löneskatt (SLF) på vinstandel."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag SLF, vinstandel"
+column = "ULAG_SLF_VINSTANDEL"
+definition = "Underlag för särskild löneskatt på vinstandel."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avdrag forskning och utveckling"
+column = "AVDRAG_FO_U"
+definition = "Avdrag forskning och utveckling."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag avdrag forskning och utveckling"
+column = "ULAG_FO_U"
+definition = "Underlag för avdrag forskning och utveckling."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avdrag regionalt stöd"
+column = "AVDRAG_REGIONALT_STOD"
+definition = "Avdrag regionalt stöd."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Underlag avdrag regionalt stöd"
+column = "ULAG_REGIONALT_STOD"
+definition = "Underlag för avdrag regionalt stöd."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Avdrag rederier (regress)"
+column = "AVDRAG_REDERI_REGRESS"
+definition = "Avdrag för rederier p.g.a. regress vid arbetsgivarinträde."
+data_type = "decimal"
+valid_from = "2020-01-01"  # column added from delivery 2020-01
+
+[[register.variable]]
+name = "Underlag avdrag rederier (regress)"
+column = "ULAG_REDERI_REGRESS"
+definition = "Underlag för avdrag för rederier p.g.a. regress vid arbetsgivarinträde."
+data_type = "decimal"
+valid_from = "2020-01-01"  # column added from delivery 2020-01

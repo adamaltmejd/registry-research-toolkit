@@ -2336,6 +2336,16 @@ slug = "utrikeshandel-tjanster"
 slug = "_default"
 display_group = "Utrikeshandel med tjänster"
 
+# Arbetsgivardeklarationer, huvuduppgifter (AGI/Huvud) — canonical-SCB content on the
+# `scb` provider with a low-band mint_canonical_scb id (the employer-level header
+# sibling of the individual-level register 392; absent from SCB's machine export).
+[register."4171412747617845054"]
+slug = "agi-huvud"
+
+[register_variant."4171412747617845054.2499618086066057846"]
+slug = "_default"
+display_group = "Arbetsgivardeklarationer, huvuduppgifter (AGI)"
+
 # Grundskolan: åk 9
 [register."189"]
 slug = "grundskola-ak9"
