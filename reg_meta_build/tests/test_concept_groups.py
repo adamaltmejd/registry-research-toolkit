@@ -3,7 +3,9 @@
 Covers the three derivation dimensions against hand-curated slugged DBs
 (`_slugged_db`): edge components (dimension 0), month/vintage token folds with
 their guards (dimension 1), and curated families incl. token-group absorption
-and the fail-fast resolution errors (dimension 2)."""
+and the fail-fast resolution errors (dimension 2). The accept-list (#496) —
+`[[accept]]` folds of the generated `concept_groups.auto.toml` by reference —
+is covered against synthetic auto families in `TestAcceptList` / `TestAcceptLoader`."""
 
 from __future__ import annotations
 
@@ -13,8 +15,10 @@ import pytest
 from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.concept_groups import (
+    Accept,
     CuratedGroup,
     CuratedMember,
+    load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
 )
@@ -507,6 +511,305 @@ class TestLoader:
         group = "h"
         value = "1"
         label = "x"
+        """
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.code == "concept_groups_invalid"
+
+    def test_accept_sibling_does_not_trip_top_level_guard(self, tmp_path) -> None:
+        # A `[[variable_group]]` and an `[[accept]]` coexist in one file: the
+        # variable_group parse must treat `[[accept]]` as a legal sibling, not an
+        # unknown-top-level typo. (Case (g).)
+        groups = self._load(
+            tmp_path,
+            """
+            [[variable_group]]
+            register = "scb/lisa"
+            key = "fam"
+            label = "F"
+            axis = "a"
+            [[variable_group.members]]
+            variable = "vara"
+            value = "1"
+            label = "x"
+            [[variable_group.members]]
+            variable = "varb"
+            value = "2"
+            label = "y"
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            """,
+        )
+        assert len(groups) == 1
+        assert groups[0].key == "fam"
+
+
+def _auto_family(
+    members: tuple[CuratedMember, ...],
+    *,
+    provider: str = "scb",
+    register: str = "lisa",
+    key: str = "morsak",
+    label: str = "Mor",
+    axis: str = "ordinal",
+) -> CuratedGroup:
+    """A synthetic `concept_groups.auto.toml` family (an accept's referent). Its
+    members are `variable=` attachments, matching what the candidate generator
+    emits and `load_concept_groups` parses for the auto file."""
+    return CuratedGroup(
+        provider=provider,
+        register=register,
+        key=key,
+        label=label,
+        axis=axis,
+        members=members,
+    )
+
+
+def _morsak_db() -> sqlite3.Connection:
+    """scb/lisa with three ungrouped `morsak{1,2,3}` variables (a digit-suffixed
+    family the generator would propose as an `ordinal` candidate)."""
+    conn = build_slugged_db(classification=None)
+    for i in (1, 2, 3):
+        add_variable(
+            conn,
+            register_id=1,
+            var_id=800 + i,
+            name=f"Dödsorsak {i}",
+            slug=f"morsak{i}",
+        )
+    return conn
+
+
+def _morsak_members() -> tuple[CuratedMember, ...]:
+    return tuple(
+        CuratedMember(group=None, variable=f"morsak{i}", value=str(i), label=str(i))
+        for i in (1, 2, 3)
+    )
+
+
+class TestAcceptList:
+    def test_accept_folds_auto_family(self) -> None:
+        # (a) an accept referencing a synthetic auto family folds it with the
+        # auto family's members + axis.
+        conn = _morsak_db()
+        auto = (_auto_family(_morsak_members()),)
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ()),)
+        counts = materialize_concept_groups(
+            conn, auto=auto, accepts=accepts, providers=_SCB
+        )
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert groups["morsak"]["source"] == "curated"
+        assert groups["morsak"]["label"] == "Mor"  # the auto family's label
+        assert groups["morsak"]["members"] == ["morsak1", "morsak2", "morsak3"]
+        assert _facets(conn, "morsak2") == [("ordinal", "2", "2")]
+
+    def test_accept_label_and_axis_overrides_apply(self) -> None:
+        # (b) accept label/axis overrides apply.
+        conn = _morsak_db()
+        auto = (_auto_family(_morsak_members()),)
+        accepts = (Accept("scb", "lisa", "morsak", "Multipel dödsorsak", "rank", ()),)
+        materialize_concept_groups(conn, auto=auto, accepts=accepts, providers=_SCB)
+        groups = _groups(conn)
+        assert groups["morsak"]["label"] == "Multipel dödsorsak"
+        assert _facets(conn, "morsak1") == [("rank", "1", "1")]
+
+    def test_accept_exclude_drops_member(self) -> None:
+        # (c) accept exclude drops a member.
+        conn = _morsak_db()
+        auto = (_auto_family(_morsak_members()),)
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ("morsak3",)),)
+        materialize_concept_groups(conn, auto=auto, accepts=accepts, providers=_SCB)
+        groups = _groups(conn)
+        assert groups["morsak"]["members"] == ["morsak1", "morsak2"]
+        # The excluded member never joins the group, so it carries no facet.
+        assert _facets(conn, "morsak3") == []
+
+    def test_accept_of_missing_auto_family_fails(self) -> None:
+        # (d) accept of a non-existent auto family fails (drift, EXIT_CONFIG).
+        conn = _morsak_db()
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ()),)
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, auto=(), accepts=accepts, providers=_SCB)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "concept_groups_unresolved"
+
+    def test_accept_stale_exclude_fails(self) -> None:
+        # (e) stale exclude (slug not a member) fails.
+        conn = _morsak_db()
+        auto = (_auto_family(_morsak_members()),)
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ("morsak9",)),)
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, auto=auto, accepts=accepts, providers=_SCB)
+        assert exc.value.code == "concept_groups_unresolved"
+
+    def test_exclude_below_two_members_fails(self) -> None:
+        # exclude that leaves < 2 members is rejected — a group needs >= 2.
+        conn = _morsak_db()
+        auto = (_auto_family(_morsak_members()),)
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ("morsak2", "morsak3")),)
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, auto=auto, accepts=accepts, providers=_SCB)
+        assert exc.value.code == "concept_groups_unresolved"
+
+    def test_empty_accepts_with_custom_group_only_materializes_custom(self) -> None:
+        # (f) empty accepts + a custom `[[variable_group]]` → only the custom
+        # family materializes; the auto family is present but unaccepted, so no
+        # auto group appears.
+        conn = _morsak_db()
+        add_variable(conn, register_id=1, var_id=900, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=901, name="B", slug="varb")
+        custom = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axis="part",
+            members=(
+                CuratedMember(group=None, variable="vara", value="1", label="A"),
+                CuratedMember(group=None, variable="varb", value="2", label="B"),
+            ),
+        )
+        auto = (_auto_family(_morsak_members()),)
+        counts = materialize_concept_groups(
+            conn, (custom,), auto=auto, accepts=(), providers=_SCB
+        )
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"fam"}  # the unaccepted morsak family did NOT fold
+        assert groups["fam"]["members"] == ["vara", "varb"]
+
+    def test_inactive_provider_accept_is_skipped(self) -> None:
+        # An accept for a provider not in this build is gated out, not resolved
+        # (so a `--providers=sos` build doesn't fail on an absent scb auto family).
+        conn = _morsak_db()
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ()),)
+        counts = materialize_concept_groups(
+            conn, auto=(), accepts=accepts, providers=frozenset({"sos"})
+        )
+        assert counts["curated_groups"] == 0
+
+
+class TestAcceptLoader:
+    @staticmethod
+    def _load(tmp_path, text: str):
+        path = tmp_path / "concept_groups.toml"
+        path.write_text(text, encoding="utf-8")
+        return load_concept_group_accepts(path)
+
+    def test_missing_file_is_empty(self, tmp_path) -> None:
+        assert load_concept_group_accepts(None) == ()
+        assert load_concept_group_accepts(tmp_path / "absent.toml") == ()
+
+    def test_parses_accept_with_overrides_and_exclude(self, tmp_path) -> None:
+        accepts = self._load(
+            tmp_path,
+            """
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            label = "Multipel dödsorsak"
+            axis = "rank"
+            exclude = ["morsak9"]
+            """,
+        )
+        assert accepts == (
+            Accept("sos", "dors", "morsak", "Multipel dödsorsak", "rank", ("morsak9",)),
+        )
+
+    def test_parses_minimal_accept(self, tmp_path) -> None:
+        accepts = self._load(
+            tmp_path,
+            """
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            """,
+        )
+        assert accepts == (Accept("sos", "dors", "morsak", None, None, ()),)
+
+    def test_variable_group_sibling_does_not_trip_guard(self, tmp_path) -> None:
+        # The accept loader must treat `[[variable_group]]` as a legal sibling.
+        accepts = self._load(
+            tmp_path,
+            """
+            [[variable_group]]
+            register = "scb/lisa"
+            key = "fam"
+            label = "F"
+            axis = "a"
+            [[variable_group.members]]
+            variable = "v"
+            value = "1"
+            label = "x"
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            """,
+        )
+        assert accepts == (Accept("sos", "dors", "morsak", None, None, ()),)
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # 1-segment register
+            """
+            [[accept]]
+            register = "dors"
+            key = "morsak"
+            """,
+            # 3-segment register (too many)
+            """
+            [[accept]]
+            register = "sos/dors/morsak"
+            key = "morsak"
+            """,
+            # empty key
+            """
+            [[accept]]
+            register = "sos/dors"
+            key = ""
+            """,
+            # blank label (present but empty — drift, not a fallback)
+            """
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            label = "  "
+            """,
+            # exclude with a non-string member
+            """
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            exclude = ["ok", 7]
+            """,
+            # exclude not a list
+            """
+            [[accept]]
+            register = "sos/dors"
+            key = "morsak"
+            exclude = "morsak9"
+            """,
+        ],
+    )
+    def test_invalid_accept_shapes_fail(self, tmp_path, text: str) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            self._load(tmp_path, text)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "concept_groups_invalid"
+
+    def test_duplicate_accept_fails(self, tmp_path) -> None:
+        text = """
+        [[accept]]
+        register = "sos/dors"
+        key = "morsak"
+        [[accept]]
+        register = "sos/dors"
+        key = "morsak"
+        axis = "rank"
         """
         with pytest.raises(RegMetaError) as exc:
             self._load(tmp_path, text)

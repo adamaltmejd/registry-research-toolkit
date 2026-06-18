@@ -1,10 +1,32 @@
 # Curated concept-group families (#303) — dimension 2 of the derived
-# presentation-only concept-group layer (see concept_groups.py). Exact member
-# lists only, NO name patterns: a member either absorbs a derived token group
-# (`group = "<stem>"` — its variables keep their month facets and gain this
-# family's facet) or attaches a single variable (`variable = "<slug>"`).
-# References resolve against the built DB at materialize time; a dangling
-# reference FAILS the build (EXIT_CONFIG) — fix the entry, don't ignore it.
+# presentation-only concept-group layer (see concept_groups.py). Two entry
+# kinds, both folded only when present (opt-in):
+#
+# 1. [[variable_group]] — a hand-authored family with an exact member list, NO
+#    name patterns: a member either absorbs a derived token group
+#    (`group = "<stem>"` — its variables keep their month facets and gain this
+#    family's facet) or attaches a single variable (`variable = "<slug>"`).
+#
+# 2. [[accept]] (#496) — fold a candidate family from the generated, committed
+#    concept_groups.auto.toml BY REFERENCE. The `concept-group-candidates`
+#    command emits that machine-owned catalog; an auto family folds ONLY when an
+#    accept here names it. Schema:
+#      register = "<provider>/<register>"  # 2-segment FQID; locates the family
+#      key      = "<stem>"                 # the auto family's `key`
+#      label    = "<override>"             # optional; defaults to the auto label
+#      axis     = "<override>"             # optional; defaults to the auto axis
+#      exclude  = ["<slug>", …]            # optional; drop these member slugs
+#    >= 2 members must remain after `exclude`. Worked example (do NOT enable
+#    until the family is reviewed — kept here as documentation only):
+#      # [[accept]]
+#      # register = "sos/dors"
+#      # key      = "morsak"
+#      # axis     = "ordinal"
+#
+# Both kinds resolve against the built DB at materialize time; a dangling
+# reference (or an accept of a family absent from concept_groups.auto.toml, or
+# a stale `exclude`) FAILS the build (EXIT_CONFIG) — fix the entry, don't
+# ignore it.
 #
 # Grouping is presentation, not identity: a group is not FQID-addressable and
 # never affects bindings/orders/stats. A wrong family here is a cosmetic bug.

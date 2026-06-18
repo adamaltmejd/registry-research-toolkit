@@ -38,8 +38,10 @@ from .classifications import (
     repo_seed_path,
 )
 from .concept_groups import (
+    load_concept_group_accepts,
     load_concept_groups,
     materialize_concept_groups,
+    repo_concept_groups_auto_path,
     repo_concept_groups_path,
 )
 from .delivery_enrichment import (
@@ -3282,9 +3284,14 @@ def materialize(
         # populate_slugs (classification rows + slugs, both above). Skipped
         # with the rest of the slug-dependent passes under --skip-slugs (every
         # slug is NULL then — month stems and edge endpoints don't exist).
+        # Dimension 2 is opt-in over the generated auto catalog (#496): custom
+        # `[[variable_group]]` families fold unconditionally; an auto family folds
+        # only when an `[[accept]]` in concept_groups.toml references it.
         cg_counts = materialize_concept_groups(
             conn,
             load_concept_groups(repo_concept_groups_path()),
+            auto=load_concept_groups(repo_concept_groups_auto_path()),
+            accepts=load_concept_group_accepts(repo_concept_groups_path()),
             providers=active_providers,
             warn=_progress,
         )
