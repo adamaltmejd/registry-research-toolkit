@@ -911,6 +911,11 @@ class TestBuildDbErrors:
                 skip_classifications=True,
             )
         assert exc_info.value.code == "fohm_dir_not_found"
+        # The remediation is checkout-staleness-aware: a thin provider's seed is a
+        # small committed TOML, so a "not found" here usually means a stale seed
+        # checkout (the --input-dir lags the provider's onboarding), not a real gap.
+        assert "pull" in exc_info.value.remediation
+        assert "--providers fohm" in exc_info.value.remediation
 
     def test_missing_backbone(self, tmp_path: Path):
         scb_dir = tmp_path / "SCB"
