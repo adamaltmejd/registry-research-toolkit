@@ -2195,7 +2195,16 @@ def populate_variable_slugs(
     # Typo guard: every non-deprecated hand-curated [variable] override must have
     # matched a live variable above; an unmatched one is a stale/typo'd source
     # key that would silently no-op (the variable auto-slugs instead).
-    stale_overrides = sorted(curated_required - applied_curated)
+    #
+    # #563: a --providers-restricted build only populates SOME providers, so a
+    # curated [variable] override for an UN-built provider has no live variable to
+    # match — that's expected, not a typo. Gate the typo guard to the providers
+    # actually processed this run (set(provider_slugs)); the full default build
+    # still validates every provider. A genuine typo for a BUILT provider still fails.
+    built_providers = set(provider_slugs)
+    unmatched = curated_required - applied_curated
+    stale_overrides = sorted(o for o in unmatched if o[0] in built_providers)
+    skipped_overrides = sorted(o for o in unmatched if o[0] not in built_providers)
     if stale_overrides:
         sample = ", ".join(f"{prov}/{sid}" for prov, sid in stale_overrides[:10])
         raise _err(
@@ -2205,6 +2214,14 @@ def populate_variable_slugs(
             f"{sample}.",
             "Fix the source key, or mark the entry deprecated=true if the "
             "variable is retired.",
+        )
+
+    if skipped_overrides:
+        skipped_providers = sorted({o[0] for o in skipped_overrides})
+        _progress(
+            f"  {len(skipped_overrides)} [variable] override(s) for un-built "
+            f"provider(s) {', '.join(skipped_providers)} skipped "
+            f"(#563: not in this build's provider set)"
         )
 
     _progress(
