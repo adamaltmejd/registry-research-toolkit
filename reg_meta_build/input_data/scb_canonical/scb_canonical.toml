@@ -17,6 +17,17 @@
 # 2004–2024 (2003 excluded as unstable). A 2017 production-system change renamed
 # some variables but the content is unchanged. reg_meta already has utrikeshandel
 # med VAROR (scb/utrikeshandel); this is the missing TJÄNSTER sibling.
+#
+# DELIVERY-VINTAGE LAYOUTS (not a within-series year split): the export/import
+# value reaches an extract in one of two mutually-exclusive column layouts,
+# determined by the delivery vintage, NOT by year. The current delivery (per the
+# 30JUN25 sheet, "finns för samtliga årgångar 2004–2024") uses a single `Varde`
+# column plus a `Riktning` direction code (1=export, 5=import) for ALL years.
+# Older extracts (the 2004–2020 sheet) instead carry two columns `Intakt`/`Kostnad`.
+# An extract has ONE layout for its whole span — never both. We therefore window
+# the legacy `Intakt`/`Kostnad` to their documented vintage (≤2020) but leave
+# `Riktning`/`Varde` spanning all years (do NOT window them to post-2020 — that
+# would falsely hide them for 2004–2020, which the current delivery does provide).
 [[register]]
 key = "utrikeshandel-tjanster"
 name = "Utrikeshandel med tjänster"
@@ -57,29 +68,38 @@ definition = "Motpartsland enligt SCB:s landkodlista. Klartext i Landtext. Obs: 
 data_type = "text"
 value_set = "landkoder"
 
+# Riktning + Värde are the CURRENT delivery layout — present for samtliga årgångar
+# (all years 2004–) in today's extract, so they inherit the register valid_from
+# (2004) and stay open-ended. Do NOT add valid_from=2021: that would falsely hide
+# them for 2004–2020, which the current single-column layout does deliver. They are
+# a delivery-vintage alternative to Intäkt/Kostnad, not a later-year successor.
 [[register.variable]]
 name = "Riktning"
 column = "Riktning"
-definition = "Handelsriktning i den nyare leveransstrukturen: 1 = export/intäkt, 5 = import/kostnad."
+definition = "Handelsriktning i den nuvarande leveranslayouten (en värdekolumn + riktningskod): 1 = export/intäkt, 5 = import/kostnad. Finns för samtliga årgångar; äldre uttag använder i stället de två kolumnerna Intäkt/Kostnad."
 data_type = "text"
 value_set = "riktning"
 
 [[register.variable]]
 name = "Värde"
 column = "Varde"
-definition = "Handelsvärde i tusentals kronor (nyare leveransstruktur; kombineras med Riktning för export/import)."
+definition = "Handelsvärde i tusentals kronor i den nuvarande leveranslayouten (export/import avgörs av Riktning). Finns för samtliga årgångar; motsvarar Intäkt+Kostnad i den äldre tvåkolumnslayouten."
 data_type = "decimal"
 
+# Intäkt + Kostnad are the LEGACY two-column layout, present only in older extracts
+# (documented through årgång 2020). The valid_to below is the vintage's documented
+# coverage, NOT a within-series cutoff — a given extract carries either this pair OR
+# Riktning/Värde, never both.
 [[register.variable]]
 name = "Intäkt (export)"
 column = "Intakt"
-definition = "Exportvärde i tusentals kronor (äldre leveransstruktur, årgångar t.o.m. 2020 — motsvarar Riktning=1/Värde i den nyare strukturen)."
+definition = "Exportvärde i tusentals kronor i den ÄLDRE tvåkolumnslayouten (Intäkt/Kostnad). Förekommer i äldre uttag (dokumenterad t.o.m. årgång 2020); i nuvarande leverans ersatt av Värde med Riktning=1. Ett uttag har antingen Intäkt/Kostnad eller Riktning/Värde, inte båda."
 data_type = "decimal"
-valid_to = "2020-12-31"  # older delivery structure, years t.o.m. 2020
+valid_to = "2020-12-31"  # legacy two-column vintage; documented coverage ends 2020
 
 [[register.variable]]
 name = "Kostnad (import)"
 column = "Kostnad"
-definition = "Importvärde i tusentals kronor (äldre leveransstruktur, årgångar t.o.m. 2020 — motsvarar Riktning=5/Värde i den nyare strukturen)."
+definition = "Importvärde i tusentals kronor i den ÄLDRE tvåkolumnslayouten (Intäkt/Kostnad). Förekommer i äldre uttag (dokumenterad t.o.m. årgång 2020); i nuvarande leverans ersatt av Värde med Riktning=5. Ett uttag har antingen Intäkt/Kostnad eller Riktning/Värde, inte båda."
 data_type = "decimal"
-valid_to = "2020-12-31"  # older delivery structure, years t.o.m. 2020
+valid_to = "2020-12-31"  # legacy two-column vintage; documented coverage ends 2020
