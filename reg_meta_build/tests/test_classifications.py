@@ -564,6 +564,7 @@ class TestPopulateClassifications:
                 input_dir=input_dir,
                 db_dir=db_dir,
                 seed_path=seed,
+                skip_slugs=True,
             )
         assert ei.value.code == "classification_csv_not_found"
 
@@ -585,6 +586,7 @@ class TestPopulateClassifications:
                 input_dir=input_dir,
                 db_dir=db_dir,
                 seed_path=seed,
+                skip_slugs=True,
             )
         assert ei.value.code == "classification_csv_dir_missing"
 
@@ -782,8 +784,11 @@ class TestPopulateClassifications:
         input_dir = _make_input_dir(tmp_path)
         db_dir = tmp_path / "db"
         db_dir.mkdir()
+        # skip_slugs: a seed test, not a slug test; without it the #556
+        # canonical-seed preflight fires first (repo scb.toml + scb_canonical-less
+        # tmp input).
         with pytest.raises(RegMetaError) as ei:
-            build_db(input_dir=input_dir, db_dir=db_dir)
+            build_db(input_dir=input_dir, db_dir=db_dir, skip_slugs=True)
         assert ei.value.code == "classification_seed_not_found"
 
 

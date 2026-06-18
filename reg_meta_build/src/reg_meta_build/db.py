@@ -54,6 +54,7 @@ from .fqid_slugs import (
     populate_slugs,
     populate_variable_slugs,
     repo_slug_dir,
+    slug_dir_curates_canonical_scb,
 )
 from .ir import (
     IRDeliveryProvenance,
@@ -125,6 +126,11 @@ _CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
     ("riksarkivet", "Riksarkivet"),
     ("umu", "UMU"),
 )
+
+# Committed canonical-SCB seed (#444) — SCB registers SWECOV holds but SCB's
+# machine export lacks. Both the #556 stale-seed preflight and the adapter guard
+# resolve the seed from here so the two can't drift apart.
+_CANONICAL_SCB_DIRNAME = "scb_canonical"
 
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
 # disjoint cases observed; build-db classifies each row using these allowlists:
@@ -3785,6 +3791,41 @@ def build_db(
                 ),
             )
 
+    # Stale-seed preflight (#556): the conditional CanonicalScbAdapter guard below
+    # (~3900) SILENTLY skips when scb_canonical/ is absent — correct for genuinely
+    # canonical-free synthetic builds. But when the curated scb.toml pins canonical-
+    # band register slugs (#444), a missing seed means those registers never mint
+    # and populate_slugs later raises a MISLEADING slug_unknown_source_id "mark
+    # deprecated". A missing committed seed almost always means a stale --input-dir
+    # checkout, so fail fast here with the staleness hint instead.
+    if "scb" in providers and not skip_slugs:
+        slug_root = slug_dir or repo_slug_dir()
+        if slug_root is not None and slug_dir_curates_canonical_scb(slug_root):
+            from .sources.curated import CanonicalScbAdapter
+
+            canonical_seed = (
+                input_dir / _CANONICAL_SCB_DIRNAME / CanonicalScbAdapter.SOURCE_FILE
+            )
+            if not canonical_seed.is_file():
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="scb_canonical_seed_missing",
+                    error_class="configuration",
+                    message=(
+                        f"Canonical-SCB seed not found: {canonical_seed}. The curated "
+                        f"scb.toml pins canonical-SCB register slugs (#444) this build "
+                        f"must mint from it."
+                    ),
+                    remediation=(
+                        "input_data/scb_canonical/ is a small committed seed (#444); if "
+                        "--input-dir points at a separate seed checkout it likely "
+                        "predates that content — update it (e.g. "
+                        "`git -C <seed-checkout> pull`). The misleading downstream "
+                        "`slug_unknown_source_id` 'mark deprecated' you'd otherwise hit "
+                        "is this stale seed, not a bad slug entry."
+                    ),
+                )
+
     db_dir.mkdir(parents=True, exist_ok=True)
     final_path = db_dir / DB_FILENAME
     tmp_path = final_path.with_suffix(".db.tmp")
@@ -3893,7 +3934,7 @@ def build_db(
         # appended last. Guarded on the committed source file so synthetic SCB-only
         # builds (no scb_canonical/ dir) skip it.
         if "scb" in providers:
-            canonical_dir = input_dir / "scb_canonical"
+            canonical_dir = input_dir / _CANONICAL_SCB_DIRNAME
             if (canonical_dir / CanonicalScbAdapter.SOURCE_FILE).is_file():
                 adapters.append(
                     (

@@ -68,3 +68,8 @@ def mint_canonical_scb(*parts: str) -> int:
     their content-addressed AUTOINCREMENT ids.)
     """
     return (_digest(*parts) & (_CANONICAL_SCB_BIT - 1)) | _CANONICAL_SCB_BIT
+
+
+def is_canonical_scb(value: int) -> bool:
+    """True iff ``value`` is in the reserved CANONICAL-SCB sub-band ``[2^61, 2^62)`` (#444)."""
+    return _CANONICAL_SCB_BIT <= value < _MINT_BIT
