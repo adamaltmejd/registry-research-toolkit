@@ -1188,6 +1188,24 @@ def _cmd_entity_key_pins(
             message="No slug directory: not in a repo checkout and --slug-dir unset.",
             remediation="Run from the repo (ships fqid_slugs/) or pass --slug-dir.",
         )
+    # An explicit --slug-dir that doesn't resolve to a directory (a typo, or a
+    # file path) globs zero curated entries — in --flavored mode that silently
+    # yields an empty register scope and `count: 0` (the no-pin failure
+    # --flavored guards against), and in the default mode it treats nothing as
+    # already-pinned. Fail fast rather than reading an unreadable dir as empty.
+    # (repo_slug_dir() only ever returns an existing dir or None, already handled
+    # above, so this fires only for a bad explicit --slug-dir.)
+    if not slug_dir.is_dir():
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="slug_dir_not_a_directory",
+            error_class="usage",
+            message=f"--slug-dir is not a directory: {slug_dir}",
+            remediation=(
+                "Pass --slug-dir pointing at an existing curated slug dir "
+                "(e.g. reg_meta_build/fqid_slugs/ or reg_meta_build/fqid_slugs/<steward>/)."
+            ),
+        )
     # Schema-checked open: the generator reads current-schema tables
     # (register_variant.panel_entity_key, variable.slug/provider_key), so a stale
     # DB should fail fast with the standard schema-mismatch error.

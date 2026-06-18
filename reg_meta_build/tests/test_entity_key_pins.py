@@ -467,6 +467,37 @@ class TestGenerator:
         assert exc.value.code == "entity_key_pins_flavored_needs_slug_dir"
         assert exc.value.exit_code == 2  # EXIT_USAGE
 
+    def test_cmd_explicit_bad_slug_dir_is_usage_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """An explicit `--slug-dir` that isn't a directory (typo / file path)
+        globs zero curated entries — in `--flavored` mode that silently yields an
+        empty register scope and `count: 0`. The handler fails fast BEFORE opening
+        the DB rather than reading an unreadable dir as empty."""
+        import argparse
+
+        from reg_meta_build import cli
+
+        # Sentinel conn: the guard must fire before any DB open, so a stub that
+        # raises proves open_db is never reached.
+        def _boom(_db):
+            raise AssertionError("open_db must not run when the guard fires")
+
+        monkeypatch.setattr(cli, "open_db", _boom)
+        missing = tmp_path / "does-not-exist"
+        args = argparse.Namespace(
+            db=None,
+            slug_dir=str(missing),
+            out_dir=None,
+            output_toml=None,
+            force=False,
+            flavored=True,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            cli._cmd_entity_key_pins(args)
+        assert exc.value.code == "slug_dir_not_a_directory"
+        assert exc.value.exit_code == 2  # EXIT_USAGE
+
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB
         (sos) entity-key var IS emitted alongside the SCB one — the generator no
