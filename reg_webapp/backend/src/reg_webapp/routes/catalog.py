@@ -486,8 +486,9 @@ def _classification_root_response(
                 name=row["name"],
             )
         )
-    # #303 vintage groups (e.g. lkf1980…lkf2026 as one row). Grouped
-    # classifications ALSO stay in `children`; the SPA folds them.
+    # Curated classification umbrella groups (e.g. group:sun over its dimensions;
+    # #516). Grouped classifications ALSO stay in `children`; the SPA folds them.
+    # Vintage editions are succession edges now (#571), not groups.
     groups = [
         _concept_group_model(g) for g in Catalog(conn).list_classification_groups()
     ]
