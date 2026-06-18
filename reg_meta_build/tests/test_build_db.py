@@ -960,6 +960,16 @@ class TestBuildDbErrors:
         )
         assert slug_dir_curates_canonical_scb(plain_dir) is False
 
+        # A deprecated-only canonical entry imposes no live-row requirement
+        # (populate_slugs tolerates its missing row), so it must NOT trip the preflight.
+        dep_dir = tmp_path / "dep_slugs"
+        dep_dir.mkdir()
+        (dep_dir / "scb.toml").write_text(
+            '[register."2305843009213693952"]\nslug = "test-canonical"\ndeprecated = true\n',
+            encoding="utf-8",
+        )
+        assert slug_dir_curates_canonical_scb(dep_dir) is False
+
     def test_missing_backbone(self, tmp_path: Path):
         scb_dir = tmp_path / "SCB"
         scb_dir.mkdir()

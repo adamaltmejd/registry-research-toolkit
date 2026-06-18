@@ -132,7 +132,7 @@ def repo_slug_dir() -> Path | None:
 
 
 def slug_dir_curates_canonical_scb(slug_dir: Path) -> bool:
-    """True iff the curated ``scb.toml`` in ``slug_dir`` pins any canonical-SCB id.
+    """True iff ``scb.toml`` pins a canonical-SCB id that REQUIRES the seed.
 
     The build's stale-seed preflight (#556) calls this: a curated canonical-band
     register id (`[2^61, 2^62)`, #444) means the build MUST mint that register
@@ -142,11 +142,21 @@ def slug_dir_curates_canonical_scb(slug_dir: Path) -> bool:
     ``scb.auto.toml``. Checks each entry's register-id component — the first
     dotted segment of its key — which uniformly covers register / variant /
     variable canonical entries.
+
+    Counts only entries that actually impose a live-row requirement —
+    non-deprecated, slug-present canonical-band entries — mirroring what
+    ``populate_slugs`` tolerates: it SKIPS ``slug is None`` entries (never
+    slugged) and ``continue``s on a deprecated entry whose row is missing
+    (grow-only deprecated slug history). Neither needs the canonical content, so
+    treating them as a requirement would false-positive the preflight and block
+    a legitimate canonical-free synthetic/custom build.
     """
     scb_toml = slug_dir / f"scb{PROVIDER_FILE_SUFFIX}"
     if not scb_toml.is_file():
         return False
     for entry in load_provider_toml(scb_toml):
+        if entry.deprecated or entry.slug is None:
+            continue
         reg_id = _parse_canonical_int(entry.source_id.partition(".")[0])
         if reg_id is not None and is_canonical_scb(reg_id):
             return True
