@@ -1757,6 +1757,31 @@ class TestPopulateVariableSlugs:
         # name basis (register-unique among drifters), not the latest column `pnr`.
         assert self._slug_of_vid(conn, vid) == "personnummer"
 
+    def test_latest_sluggable_column_wins_over_nonsluggable_latest(
+        self, tmp_path: Path
+    ) -> None:
+        # #547: the `kol` basis is the latest *sluggable* column, not the raw
+        # latest one. A NON-drift variable (1 distinct slug in slug-space) whose
+        # latest era carries a reserved token (`states` → NULL) but whose earlier
+        # era carries a real column (`Yrke`) must slug from the earlier sluggable
+        # column (`yrke`), NOT fall through to the name basis.
+        #
+        # True OLD-vs-NEW regression lock: the NAME (`Sysselsattning` →
+        # `sysselsattning`) is chosen to DIFFER from the column slug (`yrke`) so
+        # the two bases produce DIFFERENT values. New latest-sluggable basis sees
+        # `Yrke` (skips `states`) → `yrke` (asserted). Old raw-latest basis saw
+        # `states` → NULL → name basis (name_freq==1) → `sysselsattning`, which
+        # would FAIL this assertion. `variable_slug("states")` is None, so
+        # slug-space n_cols == 1 → non-drift either way (`yrke` is register-unique
+        # since the default var 44 carries `Kon`).
+        conn = self._db(kol="Kon")
+        vid = self._add_drift_variable(
+            conn, var_id=65, name="Sysselsattning", cols=["Yrke", "states"]
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._slug_of_vid(conn, vid) == "yrke"  # earlier sluggable, not name
+
 
 class TestRegisterSlugFn:
     """#539: `_register_slug_fn` installs `derive_variable_slug` as the SQLite
