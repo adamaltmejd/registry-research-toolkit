@@ -3205,7 +3205,14 @@ def materialize(
             fold_slug_hints=fold_slug_hints,
             progress=_progress,
         )
-        row_counts["period_family_merges"] = fm_counts["families"]
+        # Manifest row-count key deliberately kept as the pre-rename
+        # `monthly_family_merges` (the surface is now `period_family_merges`): the
+        # whole `row_counts` dict is serialized into the dbdiff-compared
+        # `import_manifest`, so renaming this label would break the byte-identity of
+        # an otherwise pure relocation (#518/#523) and owe a release for no content
+        # change. It's an internal metric label with no runtime consumer; rename it
+        # in a future build that already owes a manifest delta.
+        row_counts["monthly_family_merges"] = fm_counts["families"]
         row_counts["variable_alias_windows"] = fm_counts["windows"]
 
         # Variable grafts (#365 PR1d) — mint catalog variables reg_meta lacks but
