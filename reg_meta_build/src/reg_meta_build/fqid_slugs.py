@@ -1270,6 +1270,18 @@ def _is_name_fallback_derivation(kind: str) -> bool:
     return kind in _NAME_FALLBACK_DERIVATIONS
 
 
+def _register_slug_fn(conn: sqlite3.Connection) -> None:
+    """Register `derive_variable_slug` as a deterministic SQLite function so the
+    #143 drift count can be measured in SLUG-space, not raw-column-string space:
+    two delivery columns that slugify the same (case/punctuation/diacritic noise
+    like `PersonNr`/`personnr`) are NOT drift, because the slug would be identical
+    regardless of which one is picked. Used by both drift sites (the slug-basis
+    selection in `populate_variable_slugs` and the `_drifting_variables` advisory)
+    so they measure drift in the same space the slug is actually derived in.
+    Idempotent — safe to call once per build/validate connection."""
+    conn.create_function("variable_slug", 1, derive_variable_slug, deterministic=True)
+
+
 def _split_sibling_disc(
     conn: sqlite3.Connection, register_id: int, provider_key: str | int
 ) -> dict[int, str]:
@@ -1379,6 +1391,7 @@ def populate_variable_slugs(
     """
     from .db import _progress
 
+    _register_slug_fn(conn)
     counts = {"curated": 0, "auto_existing": 0, "auto_new": 0}
     # First-sight variables whose delivery column drifts (#143) — slugged
     # from a stable basis (name / earliest column) rather than the latest
@@ -1462,7 +1475,11 @@ def populate_variable_slugs(
         # basis — and `n_cols` is the #143 drift signal: a variable whose
         # delivery column is NOT constant across its states (n_cols > 1) must
         # NOT slug from its latest column (a version-specific name like
-        # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Ordered by
+        # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Drift is
+        # counted in SLUG-space — COUNT(DISTINCT variable_slug(...)), the exact
+        # space the basis selection consumes — so pure case/punctuation/diacritic
+        # column noise (`PersonNr`/`personnr`, `Kön`/`Kon`) that slugifies
+        # identically does NOT read as a rename. Ordered by
         # register so the per-register uniqueness scope is one groupby pass.
         # `incremental` (#365 PR2): process ONLY newly-inserted variables (NULL
         # slug). The global build's already-published slugs stay untouched — the
@@ -1480,7 +1497,7 @@ def populate_variable_slugs(
             " WHERE vs.variable_id = v.variable_id "
             " AND vs.delivery_column_name IS NOT NULL "
             " ORDER BY vs.valid_from ASC, vs.delivery_column_name ASC LIMIT 1) AS early_kol, "
-            "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
+            "(SELECT COUNT(DISTINCT variable_slug(vs.delivery_column_name)) FROM variable_state vs "
             " WHERE vs.variable_id = v.variable_id "
             " AND vs.delivery_column_name IS NOT NULL) AS n_cols "
             "FROM variable v "
@@ -2442,8 +2459,10 @@ def _drifting_variables(
     ``populate_variable_slugs`` already slugs these from a stable basis (name /
     earliest column — fallback step 3), so this is a pre-v1 curation-review aid,
     NOT a build gate: a curator scans it to pin a ``[variable]`` override where
-    the auto-pick is still off. Drift = the same ``COUNT(DISTINCT) > 1`` signal
-    the slug derivation uses, so the two never disagree on what "drifts".
+    the auto-pick is still off. Drift is measured in SLUG-space — the same
+    ``COUNT(DISTINCT variable_slug(...)) > 1`` signal the slug derivation uses, in
+    lockstep with the slug-basis selection — so the two never disagree on what
+    "drifts" and pure case/punctuation/diacritic column noise is not flagged.
 
     Each row is ``(provider, register_id, provider_key, slug, name, columns)`` —
     the distinct columns in ``valid_from`` order, so the curator reads the
@@ -2452,8 +2471,10 @@ def _drifting_variables(
     a merged variable name) — coercing it to ``int`` would crash this advisory on
     a non-numeric SOS key, and the list is supposed to never gate the command.
     """
+    _register_slug_fn(conn)
     _DRIFT = (
-        "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
+        "(SELECT COUNT(DISTINCT variable_slug(vs.delivery_column_name)) "
+        " FROM variable_state vs "
         " WHERE vs.variable_id = {v} AND vs.delivery_column_name IS NOT NULL) > 1"
     )
     ident = conn.execute(
@@ -2466,6 +2487,9 @@ def _drifting_variables(
     ).fetchall()
     # Distinct columns per drifting variable, earliest-edition first. Same drift
     # predicate, so only drifters are scanned (no N+1, no id `IN (...)` list).
+    # The predicate gates in slug-space, but the listing GROUPs/shows RAW columns
+    # on purpose — the curator wants to see the actual distinct SCB column
+    # variants behind the drift, not their collapsed slugs.
     cols_by_vid: dict[int, list[str]] = defaultdict(list)
     for vid, col in conn.execute(
         "SELECT vs.variable_id, vs.delivery_column_name "
