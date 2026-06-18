@@ -1862,13 +1862,26 @@ already-grouped member:
    vintage facet is the year.
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
-   `[[variable_group]]` families with exact member lists: a `group = "<stem>"` member
-   absorbs a derived token group (its variables keep their month facets and gain the
-   family's facet — the LISA `agi{1,2,3}` rank axis yields one month × rank matrix); a
-   `variable = "<slug>"` member attaches one ungrouped variable. Dangling references
-   FAIL the build (EXIT_CONFIG) — curation drift is fixed, not silently dropped.
-   Families are provider-gated like the classification seed, so a `--providers=sos`
-   build skips scb families instead of failing.
+   Two entry kinds, both **opt-in** (a family folds only when explicitly present):
+   - `[[variable_group]]` — a hand-authored family with an exact member list: a
+     `group = "<stem>"` member absorbs a derived token group (its variables keep their
+     month facets and gain the family's facet — the LISA `agi{1,2,3}` rank axis yields
+     one month × rank matrix); a `variable = "<slug>"` member attaches one ungrouped
+     variable.
+   - `[[accept]]` (#496) — fold a candidate family from the committed, **generated**
+     `reg_meta_build/concept_groups.auto.toml` BY REFERENCE (`register` + `key`,
+     optional `label`/`axis` overrides and an `exclude` member-slug list).
+     `concept_groups.auto.toml` is the **machine-owned** ranked catalog the
+     `concept-group-candidates` generator (#496 PR1) emits over a built DB — committed
+     but never hand-edited; an auto family folds ONLY when an accept names it (an
+     unaccepted candidate stays unfolded). Accepted families resolve through the same
+     `[[variable_group]]` apply path (their members are all ungrouped `variable=`
+     attachments the generator guaranteed non-colliding). Dangling references — a
+     missing register/variable, an accept of a family absent from
+     `concept_groups.auto.toml`, or a stale `exclude` — FAIL the build (EXIT_CONFIG);
+     curation drift is fixed, not silently dropped. Both kinds are provider-gated like
+     the classification seed, so a `--providers=sos` build skips scb families instead of
+     failing.
 
 Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
 derived fresh every build (regenerate-not-migrate) and carry no identity. The structural

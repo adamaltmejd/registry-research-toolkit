@@ -1,17 +1,32 @@
-"""Concept-group fold-candidate generator (#496, PR1).
+"""Concept-group fold-candidate generator (#496).
 
 The `concept_groups` derivation (#303) folds machine-stamped SCB column families
 into PRESENTATION-ONLY browse rows, but its automatic layer is patchy: the `edge`
 pass only fires on A2.2 sibling edges, and the `token` pass only recognises the
 exact curated month/vintage vocabularies. Everything else (digit-suffixed families
 like `sun-niva2000…`, `morsak1/2/3`, the `fasit` yearly series) sits unfolded
-unless a maintainer hand-lists it in `concept_groups.toml`.
+unless a maintainer opts it in via `concept_groups.toml`.
 
-This module is the GENERATOR half of the curate-then-materialize split that
+This module is the GENERATOR half of the generate-then-accept split that
 `variable_same_as` (#417) established: it scans a BUILT DB for ungrouped
-digit-suffixed slug families, scores each for label agreement, and emits a ranked
-`[[variable_group]]` TOML worklist a maintainer reviews into a future committed
-`concept_groups.auto.toml`. It materializes NOTHING and never mutates the DB.
+digit-suffixed slug families, scores each for label agreement, and emits the
+committed, machine-owned `concept_groups.auto.toml` — the ranked candidate
+catalog. It materializes NOTHING and never mutates the DB; it only writes the
+auto file (the maintainer never hand-edits that file).
+
+Candidates fold OPT-IN: a family in `concept_groups.auto.toml` folds only when an
+`[[accept]]` entry in `concept_groups.toml` references it by `(register, key)`
+(see `concept_groups.load_concept_group_accepts` / `resolve_accept`) — there is no
+copy-across; the accept is a thin by-reference pointer (with optional
+`label`/`axis`/`exclude` overrides).
+
+Regeneration is IDEMPOTENT: an accepted family is materialized as a `curated`
+concept group during the build, which would otherwise drop it from the next scan
+(grouped members, self-colliding key). So the generator READS the accept-list
+(`concept_groups.toml`) and treats accepted families as still-candidate-eligible —
+they re-emit into the catalog instead of vanishing, keeping the accepts resolvable.
+A custom `[[variable_group]]` family and the edge/token/vintage passes are NOT
+candidates and stay excluded.
 
 Concept groups are cosmetic (a wrong group is a curation bug, not the identity
 corruption that `same_as` risks), so the gate is lighter than same_as's tiers —
@@ -20,13 +35,13 @@ e.g. ULF's 2-char `f1/f2/f3` survey items). The generator splits foldable famili
 from batteries on label agreement and reports the excluded-battery count so the
 cutoff is never a silent truncation (CLAUDE.md).
 
-The output schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
-is exactly `concept_groups.load_concept_groups`' input schema, so a confirmed
-candidate copies across verbatim — which is why the generator also SKIPS a family
-whose `(register, stem)` already names an edge/token group (it would collide on the
-`idx_concept_group_key` unique index at the next build) and reports that count too.
-Like the other curation TOMLs the worklist is a maintainer artifact — the generator
-never writes the curated file.
+The candidate schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
+is exactly `concept_groups.load_concept_groups`' input schema. The generator also
+SKIPS a family whose `(register, stem)` already names an edge/token group: an
+`[[accept]]` resolves against a FRESH build at materialize time, so accepting such
+a candidate would collide on the `idx_concept_group_key` unique index. The family is
+dropped from the catalog so the catalog stays accept-safe, and the dropped count is
+reported (never a silent truncation).
 """
 
 from __future__ import annotations
@@ -109,20 +124,46 @@ class _RawVar:
     name: str | None
 
 
-def _load_ungrouped_variables(conn: sqlite3.Connection) -> list[_RawVar]:
-    """Every slugged variable NOT already in a concept group. On a real built DB
-    this excludes edge/month/curated members (the digit families those passes
-    already folded); on a synthetic DB with no groups every slugged variable is
-    ungrouped."""
+def _load_ungrouped_variables(
+    conn: sqlite3.Connection,
+    accepted_scopes: frozenset[tuple[str, str, str]],
+) -> list[_RawVar]:
+    """Every slugged variable NOT already in a concept group, EXCEPT variables
+    grouped only by an accepted auto family. On a real built DB the plain exclusion
+    drops edge/month/curated members (the digit families those passes already
+    folded); on a synthetic DB with no groups every slugged variable is ungrouped.
+
+    Accept-awareness (idempotent regeneration): an `[[accept]]` materializes its
+    auto family as a `curated` concept group at build time, which would otherwise
+    drop that family from the next regeneration (its members are now grouped). So a
+    variable whose ONLY group is an accepted family — `(provider, register,
+    group_key)` in `accepted_scopes` — stays candidate-eligible. Variables in a
+    NON-accepted group (custom `[[variable_group]]`, edge/token/vintage) remain
+    excluded. With an empty `accepted_scopes` this is byte-identical to the plain
+    `NOT EXISTS` exclusion."""
+    # Two-step exclusion: collect the grouped-but-NOT-accepted variable_ids, then
+    # exclude only those — re-including variables grouped solely by an accepted
+    # family. (A variable belongs to at most one group, so its scope is unambiguous.)
+    grouped_excluded = {
+        row["variable_id"]
+        for row in conn.execute(
+            "SELECT m.variable_id, p.slug AS provider_slug, "
+            "r.slug AS register_slug, g.group_key "
+            "FROM concept_group_variable m "
+            "JOIN concept_group g ON m.group_id = g.group_id "
+            "JOIN register r ON g.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id"
+        )
+        if (row["provider_slug"], row["register_slug"], row["group_key"])
+        not in accepted_scopes
+    }
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, p.slug AS provider_slug, "
         "r.slug AS register_slug, v.slug AS variable_slug, v.name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND p.slug IS NOT NULL "
-        "AND NOT EXISTS (SELECT 1 FROM concept_group_variable m "
-        "                WHERE m.variable_id = v.variable_id)"
+        "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND p.slug IS NOT NULL"
     ).fetchall()
     return [
         _RawVar(
@@ -134,19 +175,36 @@ def _load_ungrouped_variables(conn: sqlite3.Connection) -> list[_RawVar]:
             name=row["name"],
         )
         for row in rows
+        if row["variable_id"] not in grouped_excluded
     ]
 
 
-def _load_existing_group_keys(conn: sqlite3.Connection) -> set[tuple[int, str]]:
+def _load_existing_group_keys(
+    conn: sqlite3.Connection,
+    accepted_scopes: frozenset[tuple[str, str, str]],
+) -> set[tuple[int, str]]:
     """Every `(register_id, group_key)` already claimed by a variable concept group
-    (edge/token/curated). A candidate keyed on the same `(register_id, stem)` would
-    collide on the `idx_concept_group_key` unique index when curated verbatim, so
-    `infer_concept_group_candidates` skips it (mirrors `_derive_month_groups`)."""
+    (edge/token/curated), EXCLUDING accepted auto families. A candidate keyed on the
+    same `(register_id, stem)` would collide on the `idx_concept_group_key` unique
+    index when curated verbatim, so `infer_concept_group_candidates` skips it (mirrors
+    `_derive_month_groups`).
+
+    An accepted family's own `(provider, register, group_key)` is dropped from the
+    set (it's in `accepted_scopes`): without this the materialized accept would look
+    like a self-collision and the generator would skip re-emitting the very family
+    the accept references — breaking idempotent regeneration. With an empty
+    `accepted_scopes` this returns every variable group, byte-identical to before."""
     return {
         (row["register_id"], row["group_key"])
         for row in conn.execute(
-            "SELECT register_id, group_key FROM concept_group WHERE kind = 'variable'"
+            "SELECT g.register_id, g.group_key, p.slug AS provider_slug, "
+            "r.slug AS register_slug FROM concept_group g "
+            "JOIN register r ON g.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE g.kind = 'variable'"
         )
+        if (row["provider_slug"], row["register_slug"], row["group_key"])
+        not in accepted_scopes
     }
 
 
@@ -191,6 +249,7 @@ def infer_concept_group_candidates(
     min_siblings: int = 2,
     min_label_prefix: int = 8,
     min_agreement: float = 0.5,
+    accepted_scopes: frozenset[tuple[str, str, str]] = frozenset(),
 ) -> CandidateResult:
     """Infer fold candidates from digit-suffixed slug families on a BUILT DB.
 
@@ -212,11 +271,23 @@ def infer_concept_group_candidates(
     gates — so a colliding family is counted once, as a key-collision skip rather
     than a battery.
 
+    PRESERVES accepted families (idempotent regeneration): `accepted_scopes` is the
+    set of `(provider, register, key)` of the auto families currently `[[accept]]`-ed
+    in `concept_groups.toml`. Each such family is MATERIALIZED as a `curated` concept
+    group at build time — its members are grouped and its `(register, key)` names a
+    group — so a naive regeneration against a normal built DB would DROP every
+    accepted family (excluded as grouped, skipped as a self-collision) and the next
+    build's `resolve_accept` would fail on the now-missing candidate. Passing the
+    accepted scopes re-includes those members and exempts their own key from the
+    collision guard, so accepted families re-emit and the catalog is STABLE under
+    regeneration. With an empty `accepted_scopes` (no accepts) behavior is
+    byte-identical to a plain scan.
+
     NEVER mutates the DB — this is a read-only worklist generator; only the curated
     file's confirmed entries ever load. Foldable candidates are ranked
     deterministically by (-agreement, -member_count, register_fqid, key)."""
-    variables = _load_ungrouped_variables(conn)
-    existing_keys = _load_existing_group_keys(conn)
+    variables = _load_ungrouped_variables(conn, accepted_scopes)
+    existing_keys = _load_existing_group_keys(conn, accepted_scopes)
 
     # (register_id, stem) → [_RawVar]. Suffix-less slugs and bare-number slugs
     # (empty stem) drop out — they can't be a family member.
@@ -315,12 +386,13 @@ def render_candidates_toml(
     min_label_prefix: int,
     min_agreement: float,
 ) -> str:
-    """Render the fold worklist as a `[[variable_group]]` TOML string a maintainer
-    curates from. Built by hand (not `tomli_w`) so the per-candidate
+    """Render the committed, machine-owned `concept_groups.auto.toml` candidate
+    catalog as a `[[variable_group]]` TOML string a maintainer folds from by
+    `[[accept]]` reference. Built by hand (not `tomli_w`) so the per-candidate
     `# axis=… agreement=… members=…` provenance comments survive — `tomli_w` drops
-    comments. The header records the active thresholds, the foldable count, the
-    `excluded_batteries` count, and the `skipped_existing_key` count (so neither
-    cutoff is ever silent).
+    comments. The header records the executable regenerate command, the active
+    thresholds, the foldable count, the `excluded_batteries` count, and the
+    `skipped_existing_key` count (so neither cutoff is ever silent).
 
     The output MUST re-parse cleanly through `concept_groups.load_concept_groups`:
     `register` is a 2-segment FQID, each member sets exactly `variable` +
@@ -334,11 +406,24 @@ def render_candidates_toml(
         "# GENERATED concept-group fold candidates — "
         "reg-meta-build concept-group-candidates.",
         "#",
-        "# These are INFERRED foldable column families, NOT yet folded. Concept",
-        "# groups are presentation-only, so review each family and curate the",
-        "# confirmed ones into reg_meta_build/concept_groups.toml (or a committed",
-        "# concept_groups.auto.toml). Refine each member's facet `label` (the bare",
-        "# suffix is a placeholder) and the proposed `axis` during curation.",
+        "# THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/concept_groups.auto.toml,",
+        "# the committed candidate catalog. Regenerate it with:",
+        "#   reg-meta-build --db <built-db-dir> concept-group-candidates \\",
+        "#     --output-toml reg_meta_build/concept_groups.auto.toml",
+        "# (`--db` points at a built reg_meta DB to scan; `--output-toml` targets",
+        "# this committed file). NEVER hand-edit it (edits are overwritten).",
+        "#",
+        "# These are INFERRED foldable column families, NOT folded by default.",
+        "# Folding is OPT-IN: to fold a family, add an `[[accept]]` entry in",
+        "# reg_meta_build/concept_groups.toml referencing its `register` + `key`",
+        '# (optional `label` / `axis` overrides, optional `exclude = ["<slug>", …]`).',
+        "# An unaccepted family stays unfolded. Concept groups are presentation-only,",
+        "# so review each family before accepting it.",
+        "#",
+        "# Regeneration is IDEMPOTENT: the generator reads concept_groups.toml's",
+        "# accept-list and PRESERVES already-accepted families here (an accept",
+        "# materializes its family as a group, which a naive rescan would drop), so",
+        "# regenerating against a normal built DB keeps every accept resolvable.",
         "#",
         f"# thresholds: min-siblings={min_siblings} "
         f"min-label-prefix={min_label_prefix} min-agreement={min_agreement}",

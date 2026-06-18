@@ -42,6 +42,10 @@ from .concept_group_candidates import (
     infer_concept_group_candidates,
     render_candidates_toml as render_concept_candidates_toml,
 )
+from .concept_groups import (
+    load_concept_group_accepts,
+    repo_concept_groups_path,
+)
 from .db import build_db
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import extend_db
@@ -428,13 +432,18 @@ def _build_parser() -> argparse.ArgumentParser:
         "concept-group-candidates",
         help="Generate concept-group fold candidates (maintainer review worklist).",
         description=(
-            "Scan a BUILT DB for ungrouped digit-suffixed slug families\n"
-            "(sun-niva2000…, morsak1/2/3, the fasit yearly series) and emit a\n"
-            "ranked `[[variable_group]]` TOML fold worklist. NOTHING is\n"
-            "materialized — concept groups are presentation-only, so a maintainer\n"
-            "reviews each family and curates the confirmed ones into\n"
-            "reg_meta_build/concept_groups.toml (or a committed\n"
-            "concept_groups.auto.toml). Reads a built DB; never mutates it.\n\n"
+            "Scan a BUILT DB (the `--db` global) for ungrouped digit-suffixed slug\n"
+            "families (sun-niva2000…, morsak1/2/3, the fasit yearly series) and\n"
+            "regenerate the committed, machine-owned candidate catalog\n"
+            "reg_meta_build/concept_groups.auto.toml. NOTHING is materialized;\n"
+            "concept groups are presentation-only and folding is OPT-IN: a maintainer\n"
+            "reviews each family and folds the confirmed ones by adding an\n"
+            "`[[accept]]` (register + key) in reg_meta_build/concept_groups.toml.\n"
+            "Reads a built DB; never mutates it, and never hand-edit the generated\n"
+            "output.\n\n"
+            "Without --output-toml the catalog is NOT written — only the JSON counts\n"
+            "summary prints (the TOML is in the payload). To regenerate the committed\n"
+            "file, point --output-toml at it (see the Examples).\n\n"
             "A family folds only past a label-agreement gate: its common\n"
             "case-insensitive name prefix must be >= --min-label-prefix chars AND\n"
             "the prefix-to-mean-name-length ratio >= --min-agreement. Families that\n"
@@ -442,12 +451,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "items) fail the gate and are excluded; their count is reported, never\n"
             "silently dropped.\n\n"
             "The proposed `axis` (vintage / ordinal / numeric) and each member's\n"
-            "facet `label` are EVIDENCE — the maintainer refines them during\n"
-            "curation.\n\n"
+            "facet `label` are EVIDENCE — the maintainer overrides them in the\n"
+            "`[[accept]]` entry.\n\n"
             "Examples:\n"
-            "  reg-meta-build concept-group-candidates --output-toml /tmp/cands.toml\n"
-            "  reg-meta-build concept-group-candidates --min-agreement 0.7\n"
-            "  reg-meta-build concept-group-candidates --min-siblings 3"
+            "  # Regenerate the committed catalog (the canonical invocation):\n"
+            "  reg-meta-build --db <built-db-dir> concept-group-candidates \\\n"
+            "    --output-toml reg_meta_build/concept_groups.auto.toml\n"
+            "  # Preview counts only (writes nothing):\n"
+            "  reg-meta-build --db <built-db-dir> concept-group-candidates\n"
+            "  reg-meta-build --db <built-db-dir> concept-group-candidates "
+            "--min-agreement 0.7"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -456,8 +469,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--output-toml",
         default=None,
         help=(
-            "Write the candidate TOML worklist to this path. Without it the JSON "
-            "counts summary still prints; the TOML is included in the payload."
+            "Write the candidate catalog TOML to this path — point it at "
+            "reg_meta_build/concept_groups.auto.toml to regenerate the committed "
+            "file. Without it the JSON counts summary still prints; the TOML is "
+            "included in the payload."
         ),
     )
     concept_group_p.add_argument(
@@ -1015,12 +1030,20 @@ def _cmd_concept_group_candidates(
     # (variable.slug, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error, not crash deep in a query.
     conn = open_db(db)
+    # Accept-aware regeneration: an `[[accept]]`-ed auto family is materialized as a
+    # `curated` group at build time, which a naive rescan would drop. Feed the
+    # currently-accepted scopes so those families re-emit (idempotent catalog).
+    # `repo_concept_groups_path()` is None outside a checkout → no accepts → empty
+    # scopes (the empty path is byte-identical to the unaware scan).
+    accepts = load_concept_group_accepts(repo_concept_groups_path())
+    accepted_scopes = frozenset((a.provider, a.register, a.key) for a in accepts)
     try:
         result = infer_concept_group_candidates(
             conn,
             min_siblings=args.min_siblings,
             min_label_prefix=args.min_label_prefix,
             min_agreement=args.min_agreement,
+            accepted_scopes=accepted_scopes,
         )
     finally:
         conn.close()

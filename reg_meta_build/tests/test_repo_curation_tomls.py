@@ -20,7 +20,10 @@ from pathlib import Path
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.codelivery import load_codelivery
-from reg_meta_build.concept_groups import load_concept_groups
+from reg_meta_build.concept_groups import (
+    load_concept_group_accepts,
+    load_concept_groups,
+)
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.period_family_merges import load_period_family_merges
@@ -55,6 +58,26 @@ def test_repo_concept_groups_parses() -> None:
     # Build-time resolution (register/group/variable exist) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.
     assert all(len(g.members) >= 2 for g in groups)
+
+
+def test_repo_concept_groups_auto_parses() -> None:
+    # `concept_groups.auto.toml` (#496) is the GENERATED, build-critical candidate
+    # catalog — an `[[accept]]` resolves against it at materialize time, so a
+    # parse-incompatible regeneration would break a real build. This catches that
+    # without a full build-db. Direct path (not `repo_concept_groups_auto_path`)
+    # matches the other repo-TOML tests; the loader re-validates the shape.
+    groups = load_concept_groups(_ROOT / "concept_groups.auto.toml")
+    assert groups  # the generator emits >0 foldable families
+    assert all(len(g.members) >= 2 for g in groups)
+
+
+def test_repo_concept_group_accepts_parses() -> None:
+    # The `[[accept]]` opt-in list lives in `concept_groups.toml` (the same file
+    # as `[[variable_group]]`). Its load-time shape is build-critical too; resolution
+    # against the auto catalog is maintainer-build territory. 0 accepts today (the
+    # repo ships the catalog but folds nothing yet) — the gate is that it PARSES.
+    accepts = load_concept_group_accepts(_ROOT / "concept_groups.toml")
+    assert len(accepts) == 0
 
 
 def test_repo_delivery_enrichment_parses() -> None:

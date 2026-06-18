@@ -267,6 +267,93 @@ class TestGenerator:
         groups = load_concept_groups(path)
         assert {g.key for g in groups} == {"diag"}
 
+    def test_accepted_family_reemitted_when_scope_passed(self) -> None:
+        # Idempotent regeneration: simulate an `[[accept]]`-ed auto family by
+        # materializing it as a `curated` concept group keyed on its own stem
+        # ('morsak') and claiming all three members. This reproduces a normal built
+        # DB AFTER the accept landed: every member is grouped AND the (register, key)
+        # names a group, so a naive rescan would drop the family twice over.
+        #
+        # WITHOUT accepted_scopes the family is excluded (grouped members) — the bug.
+        # WITH the family's (provider, register, key) in accepted_scopes it re-emits
+        # as a candidate (members re-included, own key exempt from the collision
+        # guard), so the accept stays resolvable on the next build.
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="morsak",
+            suffixes=[1, 2, 3],
+            name="ICD-kod underliggande dödsorsak",
+            var_id_base=1600,
+        )
+        cur = conn.execute(
+            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+            "VALUES ('variable', 1, 'morsak', 'ICD-kod', 'curated')"
+        )
+        group_id = cur.lastrowid
+        for slug in ("morsak1", "morsak2", "morsak3"):
+            vid = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+                (slug,),
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (vid, group_id),
+            )
+        conn.commit()
+
+        # Default (empty accepted_scopes): the materialized accept hides the family.
+        bare = infer_concept_group_candidates(conn)
+        assert bare.candidates == []
+        assert bare.skipped_existing_key == 0  # no ungrouped members → no family seen
+
+        # Accept-aware: the family re-emits, key-collision guard exempts its own key.
+        scope = frozenset({("scb", "lisa", "morsak")})
+        aware = infer_concept_group_candidates(conn, accepted_scopes=scope)
+        assert [c.key for c in aware.candidates] == ["morsak"]
+        assert aware.skipped_existing_key == 0
+        assert aware.excluded_batteries == 0
+        c = aware.candidates[0]
+        assert c.register_fqid == "scb/lisa"
+        assert [m.suffix for m in c.members] == [1, 2, 3]
+
+    def test_non_accepted_group_stays_excluded_with_scopes(self) -> None:
+        # A custom `[[variable_group]]` / edge group is NOT a candidate even when
+        # OTHER scopes are accepted: only the named scope is re-included. The 'custom'
+        # group's members stay grouped, so its family is never emitted.
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="custom",
+            suffixes=[1, 2],
+            name="Hand authored family namn",
+            var_id_base=1700,
+        )
+        cur = conn.execute(
+            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+            "VALUES ('variable', 1, 'custom', 'Custom', 'curated')"
+        )
+        group_id = cur.lastrowid
+        for slug in ("custom1", "custom2"):
+            vid = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+                (slug,),
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (vid, group_id),
+            )
+        conn.commit()
+
+        # Accept a DIFFERENT, non-existent scope — the custom family stays excluded.
+        scope = frozenset({("scb", "lisa", "morsak")})
+        result = infer_concept_group_candidates(conn, accepted_scopes=scope)
+        assert result.candidates == []
+
     def test_null_name_family_skipped(self) -> None:
         # A family with a NULL member name has no labels to agree on → conservative
         # skip (neither foldable nor counted as a battery).

@@ -27,10 +27,18 @@ never claims an already-grouped member):
    variables need >= ``_MIN_MONTH_SIBLINGS`` distinct months on one stem AND
    label-prefix agreement; classifications need >= ``_MIN_VINTAGE_SIBLINGS``
    vintages AND year-stripped-name agreement.
-2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``):
-   exact member lists that absorb token groups under an extra facet axis (the
-   LISA agi{1,2,3} rank facet → one month × rank matrix) or attach single
-   variables. Fails fast on unresolvable references (EXIT_CONFIG).
+2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), two
+   opt-in entry kinds:
+   - ``[[variable_group]]`` — a hand-authored family with an exact member list:
+     absorbs token groups under an extra facet axis (the LISA agi{1,2,3} rank
+     facet → one month × rank matrix) or attaches single variables.
+   - ``[[accept]]`` (#496) — folds a candidate family from the generated,
+     machine-owned ``concept_groups.auto.toml`` BY REFERENCE, located by
+     ``(register, key)``, with optional ``label``/``axis``/``exclude`` overrides
+     (``resolve_accept`` turns it into a ``CuratedGroup`` of ``variable=``
+     attachments). An auto family folds ONLY when accepted; unaccepted ones
+     never materialize.
+   Both kinds fail fast on unresolvable references (EXIT_CONFIG).
 
 When the interval-native model (#271) lands its column→variable merges, the
 month groups graduate into real single variables and this layer shrinks to
@@ -43,7 +51,7 @@ import functools
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -135,7 +143,13 @@ class CuratedMember:
 
 @dataclass(frozen=True)
 class CuratedGroup:
-    """One `[[variable_group]]` family from `concept_groups.toml`."""
+    """One curated family the materializer applies. `origin` records how it was
+    authored so `_apply_curated_groups` can tailor its EXIT_CONFIG remediations:
+    a hand-authored `[[variable_group]]` (the default) points the maintainer at
+    `concept_groups.toml`; an `[[accept]]`-resolved family (`resolve_accept` sets
+    `origin="accept"`) points at the `[[accept]]` / `concept_groups.auto.toml`
+    instead, since its key/register/members come from the generated catalog, not
+    a hand-picked curated key."""
 
     provider: str
     register: str
@@ -143,6 +157,24 @@ class CuratedGroup:
     label: str
     axis: str
     members: tuple[CuratedMember, ...]
+    origin: Literal["variable_group", "accept"] = "variable_group"
+
+
+@dataclass(frozen=True)
+class Accept:
+    """One `[[accept]]` entry from `concept_groups.toml` (#496): an OPT-IN to
+    fold an auto family from `concept_groups.auto.toml` BY REFERENCE. The
+    `(provider, register, key)` locates the auto family; `label`/`axis` override
+    the auto family's when set; `exclude` drops member slugs (a stem that picked
+    up an unrelated column). Resolved to a `CuratedGroup` at materialize time
+    (`resolve_accept`) against the loaded auto families."""
+
+    provider: str
+    register: str
+    key: str
+    label: str | None
+    axis: str | None
+    exclude: tuple[str, ...]
 
 
 def repo_concept_groups_path() -> Path | None:
@@ -152,6 +184,19 @@ def repo_concept_groups_path() -> Path | None:
     is glob-loaded as provider-slug TOMLs; a file there would break the
     build)."""
     candidate = Path(__file__).resolve().parent.parent.parent / "concept_groups.toml"
+    return candidate if candidate.is_file() else None
+
+
+def repo_concept_groups_auto_path() -> Path | None:
+    """`reg_meta_build/concept_groups.auto.toml` from a repo checkout, or None.
+    The GENERATED, machine-owned catalog of fold candidates the
+    `concept-group-candidates` command emits (#496); committed but never
+    hand-edited. A `[[accept]]` in `concept_groups.toml` folds a family from
+    here BY REFERENCE. Sibling of `repo_concept_groups_path()` at the package
+    root; None on wheel installs (curation artifacts aren't shipped)."""
+    candidate = (
+        Path(__file__).resolve().parent.parent.parent / "concept_groups.auto.toml"
+    )
     return candidate if candidate.is_file() else None
 
 
@@ -183,6 +228,11 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
         code_base="concept_groups",
         file_name="concept_groups.toml",
         entry_fields="register / key / label / axis / members",
+        # `concept_groups.toml` carries a second entry kind — `[[accept]]` (folds
+        # an auto family by reference, parsed by `load_concept_group_accepts`) —
+        # so it's a legal sibling here, not an unknown-top-level typo. Harmless
+        # for `concept_groups.auto.toml`, which has no `[[accept]]` tables.
+        sibling_keys=frozenset({"accept"}),
     )
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
@@ -263,6 +313,134 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
             )
         )
     return tuple(out)
+
+
+def _require_opt_str(entry: dict, field: str, context: str) -> str | None:
+    """Optional non-empty string: None when absent, else `require_str`'s
+    stripped value (a present-but-blank `label`/`axis` is curation drift, not a
+    silent fallback to the auto family's value)."""
+    if entry.get(field) is None:
+        return None
+    return _require_str(entry, field, context)
+
+
+def load_concept_group_accepts(path: Path | None) -> tuple[Accept, ...]:
+    """Parse the `[[accept]]` entries from `concept_groups.toml` (#496): the
+    opt-in accept-list that folds auto families from `concept_groups.auto.toml`
+    by reference. Empty when no file (synthetic builds, wheel installs) or no
+    `[[accept]]` tables.
+
+    Load-time validation (all EXIT_CONFIG, actionable): `register` is a
+    2-segment `provider/register` FQID; `key` non-empty; `label`/`axis` optional
+    but non-empty strings if present; `exclude` optional list of non-empty
+    strings; `(provider, register, key)` unique (a duplicate accept is drift).
+    Resolution against the auto families (does the family exist?) happens at
+    materialize time (`resolve_accept`)."""
+    entries = load_curation_entries(
+        path,
+        entry_key="accept",
+        label="concept-group",
+        prefix="concept_groups",
+        code_base="concept_groups",
+        file_name="concept_groups.toml",
+        entry_fields="register / key (+ optional label / axis / exclude)",
+        sibling_keys=frozenset({"variable_group"}),
+    )
+    out: list[Accept] = []
+    seen_keys: set[tuple[str, str, str]] = set()
+    for entry in entries:
+        register_fqid = _require_str(entry, "register", "[[accept]]")
+        parts = register_fqid.split("/")
+        if len(parts) != 2 or not all(parts):
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups accept register {register_fqid!r} must be a "
+                "2-segment `provider/register` FQID.",
+                'Give `register = "scb/lisa"`-style 2-segment FQIDs.',
+            )
+        key = _require_str(entry, "key", "[[accept]]")
+        scope_key = (parts[0], parts[1], key)
+        if scope_key in seen_keys:
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups duplicate accept key {key!r} under {register_fqid}.",
+                "Accept each auto family once per register.",
+            )
+        seen_keys.add(scope_key)
+        label = _require_opt_str(entry, "label", f"accept {key!r}")
+        axis = _require_opt_str(entry, "axis", f"accept {key!r}")
+        raw_exclude = entry.get("exclude", [])
+        if not isinstance(raw_exclude, list) or not all(
+            isinstance(e, str) and e.strip() for e in raw_exclude
+        ):
+            raise curation_error(
+                "concept_groups_invalid",
+                f"concept_groups accept {key!r} `exclude` must be a list of "
+                f"non-empty strings, got {raw_exclude!r}.",
+                'Give `exclude = ["<slug>", …]` or omit it.',
+            )
+        out.append(
+            Accept(
+                provider=parts[0],
+                register=parts[1],
+                key=key,
+                label=label,
+                axis=axis,
+                exclude=tuple(e.strip() for e in raw_exclude),
+            )
+        )
+    return tuple(out)
+
+
+def resolve_accept(
+    accept: Accept, auto_by_scope: dict[tuple[str, str, str], CuratedGroup]
+) -> CuratedGroup:
+    """Resolve an `[[accept]]` against the loaded auto families → a
+    `CuratedGroup` the curated-apply pass materializes. The auto family must
+    exist; `label`/`axis` fall through to the auto family's when the accept
+    leaves them unset; `exclude` drops members (every excluded slug must be a
+    real member, else it's a stale exclude); >= 2 members must remain. Every
+    failure is EXIT_CONFIG with actionable remediation — accept-list drift is
+    fixed, not silently dropped."""
+    scope = (accept.provider, accept.register, accept.key)
+    auto = auto_by_scope.get(scope)
+    if auto is None:
+        raise curation_error(
+            "concept_groups_unresolved",
+            f"concept_groups accept {accept.key!r} ({accept.provider}/"
+            f"{accept.register}) references an auto family not in "
+            "concept_groups.auto.toml.",
+            "Regenerate concept_groups.auto.toml with `reg-meta-build "
+            "concept-group-candidates`, or fix the accept's register/key.",
+        )
+    if accept.exclude:
+        member_slugs = {m.variable for m in auto.members}
+        stale = [slug for slug in accept.exclude if slug not in member_slugs]
+        if stale:
+            raise curation_error(
+                "concept_groups_unresolved",
+                f"concept_groups accept {accept.key!r} excludes slug(s) {stale} "
+                "that are not members of the auto family.",
+                "Drop the stale `exclude` slug(s) or regenerate "
+                "concept_groups.auto.toml.",
+            )
+    members = tuple(m for m in auto.members if m.variable not in accept.exclude)
+    if len(members) < 2:
+        raise curation_error(
+            "concept_groups_unresolved",
+            f"concept_groups accept {accept.key!r} resolves to {len(members)} "
+            "member(s) after `exclude`; a group needs >= 2.",
+            "Exclude fewer members, or remove the accept entirely.",
+        )
+    return CuratedGroup(
+        provider=auto.provider,
+        register=auto.register,
+        key=auto.key,
+        label=accept.label or auto.label,
+        axis=accept.axis or auto.axis,
+        members=members,
+        origin="accept",
+    )
 
 
 # ── derivation passes ───────────────────────────────────────────────────────
@@ -517,14 +695,29 @@ def _derive_classification_vintage_groups(conn: sqlite3.Connection) -> int:
 def _apply_curated_groups(
     conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
 ) -> int:
-    """Dimension 2: curated families. A `group` member absorbs a derived token
+    """Dimension 2: curated families (`[[variable_group]]`) and `[[accept]]`-resolved
+    auto families (`origin="accept"`). A `group` member absorbs a derived token
     group (its variables move over, keeping their month facets, and gain the
     family facet; the absorbed group row is deleted); a `variable` member
     attaches one ungrouped variable. Every dangling reference fails the build
-    (EXIT_CONFIG) — curation drift must be fixed, not silently dropped."""
+    (EXIT_CONFIG) — curation drift must be fixed, not silently dropped.
+
+    Remediations branch on `g.origin`: a hand-authored family points the
+    maintainer at `concept_groups.toml`; an accepted one points at the `[[accept]]`
+    / generated `concept_groups.auto.toml`, since its key/register/members come
+    from the catalog (the maintainer can't hand-pick a different key)."""
+    regen = (
+        "reg-meta-build --db <built-db-dir> concept-group-candidates "
+        "--output-toml reg_meta_build/concept_groups.auto.toml"
+    )
     n_groups = 0
     for g in groups:
-        ctx = f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
+        is_accept = g.origin == "accept"
+        ctx = (
+            f"[[accept]] {g.key!r} ({g.provider}/{g.register})"
+            if is_accept
+            else f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
+        )
         reg = conn.execute(
             "SELECT r.register_id FROM register r "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -535,7 +728,10 @@ def _apply_curated_groups(
             raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: register does not resolve.",
-                "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
+                f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
+                "`[[accept]]` in reg_meta_build/concept_groups.toml."
+                if is_accept
+                else "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
             )
         register_id = reg[0]
         try:
@@ -550,8 +746,15 @@ def _apply_curated_groups(
         except sqlite3.IntegrityError as exc:
             raise curation_error(
                 "concept_groups_unresolved",
-                f"{ctx}: key collides with a derived group in the same register.",
-                "Pick a curated `key` that no edge/token group already uses.",
+                f"{ctx}: key collides with a derived group in the same register."
+                if not is_accept
+                else f"{ctx}: the auto family {g.provider}/{g.register}/{g.key!r} "
+                "collides with an edge/token group claimed since "
+                "concept_groups.auto.toml was generated.",
+                f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
+                "`[[accept]]`."
+                if is_accept
+                else "Pick a curated `key` that no edge/token group already uses.",
             ) from exc
         n_members = 0
         for m in g.members:
@@ -611,7 +814,10 @@ def _apply_curated_groups(
                         "concept_groups_unresolved",
                         f"{ctx}: member variable {m.variable!r} does not resolve "
                         "in that register.",
-                        "Fix the member's `variable` slug in "
+                        f"Regenerate concept_groups.auto.toml (`{regen}`) or drop "
+                        "the `[[accept]]`."
+                        if is_accept
+                        else "Fix the member's `variable` slug in "
                         "reg_meta_build/concept_groups.toml.",
                     )
                 try:
@@ -624,8 +830,15 @@ def _apply_curated_groups(
                     raise curation_error(
                         "concept_groups_unresolved",
                         f"{ctx}: member variable {m.variable!r} already belongs "
-                        "to an edge/token group — absorb that group instead.",
-                        'Reference the derived group via `group = "<stem>"`.',
+                        "to an edge/token group — absorb that group instead."
+                        if not is_accept
+                        else f"{ctx}: member variable {m.variable!r} was claimed by "
+                        "an edge/token group since concept_groups.auto.toml was "
+                        "generated.",
+                        f"Regenerate concept_groups.auto.toml (`{regen}`) or "
+                        "`exclude` this member in the `[[accept]]`."
+                        if is_accept
+                        else 'Reference the derived group via `group = "<stem>"`.',
                     ) from exc
                 conn.execute(
                     "INSERT INTO concept_group_variable_facet "
@@ -648,6 +861,8 @@ def materialize_concept_groups(
     conn: sqlite3.Connection,
     curated: tuple[CuratedGroup, ...] = (),
     *,
+    auto: tuple[CuratedGroup, ...] = (),
+    accepts: tuple[Accept, ...] = (),
     providers: frozenset[str] = frozenset(),
     warn: Callable[[str], None] | None = None,
 ) -> dict[str, int]:
@@ -655,13 +870,29 @@ def materialize_concept_groups(
     `populate_variable_slugs` + `_materialize_variable_related_to` (the edge
     pass resolves slug-anchored edges) and after `populate_slugs` /
     `populate_classifications` (classification slugs + rows). `providers`
-    gates curated entries to the providers in this build (mirrors
+    gates curated/accept entries to the providers in this build (mirrors
     `populate_classifications`' provider gate, so a `--providers=sos` build
-    doesn't fail on an scb family)."""
+    doesn't fail on an scb family).
+
+    Dimension 2 (#496) is OPT-IN over the generated `concept_groups.auto.toml`:
+    `auto` is the machine-owned candidate catalog (`load_concept_groups` of the
+    auto file), but an auto family folds ONLY when an `[[accept]]` in
+    `concept_groups.toml` references it (`accepts`). Each gated accept resolves
+    against `auto` to a `CuratedGroup` (label/axis overrides + `exclude`
+    applied), then the resolved-accepted families and the custom
+    `[[variable_group]]` families share the existing `_apply_curated_groups`
+    path (accepted members are all `variable=` attachments — the candidate
+    generator guarantees they're ungrouped + non-colliding). Unaccepted auto
+    families are NEVER materialized."""
     _derive_edge_groups(conn)
     _derive_month_groups(conn, warn or (lambda _msg: None))
     _derive_classification_vintage_groups(conn)
-    _apply_curated_groups(conn, tuple(g for g in curated if g.provider in providers))
+    auto_by_scope = {(g.provider, g.register, g.key): g for g in auto}
+    accepted = tuple(
+        resolve_accept(a, auto_by_scope) for a in accepts if a.provider in providers
+    )
+    custom = tuple(g for g in curated if g.provider in providers)
+    _apply_curated_groups(conn, custom + accepted)
     # Recount from the final table — a curated absorb DELETEs its token
     # groups, so per-pass return values would over-report the shipped state.
     by_bucket = {
