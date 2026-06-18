@@ -627,6 +627,56 @@ def _assert_steward_rows_slugged(conn: sqlite3.Connection) -> None:
 # ---------------------------------------------------------------------------
 
 
+def resolve_steward_slug_dir(
+    slug_dir: Path | None, steward: str, *, skip_slugs: bool
+) -> Path | None:
+    """Resolve the steward slug dir, or ``None`` when ``skip_slugs``.
+
+    Shared by ``extend_db()`` and the CLI so the flavored validate hook reads the
+    SAME dir the overlay populated. When ``skip_slugs`` is set, slug population is
+    off entirely, so there is no dir to resolve (``None``). Otherwise resolves an
+    explicit ``slug_dir`` (expanduser/resolve) or the repo's
+    ``fqid_slugs/<steward>/``, raising the same ``RegMetaError``s the inline
+    resolution did: ``extend_slug_dir_not_found`` when there's no repo checkout
+    and no ``--slug-dir``, and again when the resolved path is not a directory."""
+    if skip_slugs:
+        return None
+    if slug_dir is not None:
+        resolved = slug_dir.expanduser().resolve()
+    else:
+        # Lazy import — the module already lazy-imports `fqid_slugs` inside
+        # `extend_db` to dodge the import cycle.
+        from .fqid_slugs import repo_slug_dir
+
+        global_dir = repo_slug_dir()
+        if global_dir is None:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="extend_slug_dir_not_found",
+                error_class="configuration",
+                message=(
+                    "No --slug-dir given and no repo checkout found for the "
+                    f"steward slug dir (fqid_slugs/{steward}/)."
+                ),
+                remediation=(
+                    "Pass --slug-dir, run from a repo checkout, or use --skip-slugs."
+                ),
+            )
+        resolved = global_dir / steward
+    if not resolved.is_dir():
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_slug_dir_not_found",
+            error_class="configuration",
+            message=f"Steward slug dir not found: {resolved}",
+            remediation=(
+                f"Create fqid_slugs/{steward}/ (defaults to churning) or "
+                "pass --skip-slugs."
+            ),
+        )
+    return resolved
+
+
 def extend_db(
     base_db: Path,
     inventory_path: Path,
@@ -659,7 +709,7 @@ def extend_db(
         _unlink_wal_sidecars,
         rotate_db_to_prev,
     )
-    from .fqid_slugs import populate_slugs, populate_variable_slugs, repo_slug_dir
+    from .fqid_slugs import populate_slugs, populate_variable_slugs
 
     base_db = base_db.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
@@ -699,39 +749,11 @@ def extend_db(
         )
 
     # Resolve the steward slug dir up front (before any file work) so a missing
-    # dir fails fast rather than after the copy.
-    steward_slug_dir: Path | None = None
-    if not skip_slugs:
-        if slug_dir is not None:
-            steward_slug_dir = slug_dir.expanduser().resolve()
-        else:
-            global_dir = repo_slug_dir()
-            if global_dir is None:
-                raise RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="extend_slug_dir_not_found",
-                    error_class="configuration",
-                    message=(
-                        "No --slug-dir given and no repo checkout found for the "
-                        f"steward slug dir (fqid_slugs/{steward}/)."
-                    ),
-                    remediation=(
-                        "Pass --slug-dir, run from a repo checkout, or "
-                        "use --skip-slugs."
-                    ),
-                )
-            steward_slug_dir = global_dir / steward
-        if not steward_slug_dir.is_dir():
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="extend_slug_dir_not_found",
-                error_class="configuration",
-                message=f"Steward slug dir not found: {steward_slug_dir}",
-                remediation=(
-                    f"Create fqid_slugs/{steward}/ (defaults to churning) or "
-                    "pass --skip-slugs."
-                ),
-            )
+    # dir fails fast rather than after the copy. Idempotent — the CLI resolves the
+    # same dir and feeds it to both this call and the flavored validate hook.
+    steward_slug_dir = resolve_steward_slug_dir(
+        slug_dir, steward, skip_slugs=skip_slugs
+    )
 
     db_dir.mkdir(parents=True, exist_ok=True)
     final_path = db_dir / DB_FILENAME
