@@ -164,11 +164,13 @@ green. Pipeline-specific operational notes the gate doesn't carry:
     --input-dir <main-checkout>/reg_meta_build/input_data --providers scb,sos
   ```
 
-  Then clean up — the build writes untracked `*.auto.toml`, and the scratch DB is yours
-  to remove:
+  Then clean up — the build writes **gitignored** `*.auto.toml` into the slug dir, and
+  the scratch DB is yours to remove. The slug files are ignored, so plain `git clean -f`
+  SKIPS them — you need `-X` (clean ignored) or they survive and the next commit's
+  pre-commit `test_slug_snapshot` fails with thousands of phantom added slugs:
 
   ```sh
-  git clean -f reg_meta_build/fqid_slugs/
+  git clean -fdX reg_meta_build/fqid_slugs/
   rm -rf /tmp/regmeta-<slug>
   ```
 
