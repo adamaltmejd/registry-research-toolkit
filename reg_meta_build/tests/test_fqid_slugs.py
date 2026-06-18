@@ -24,18 +24,15 @@ from reg_meta_build.fqid_slugs import (
     frozen_zones,
     iter_default_slug_candidates,
     load_classifications_toml,
-    load_curated_replaced_by,
     load_freeze_states,
     load_provider_toml,
     load_slug_dir,
-    materialize_same_as_edges,
     populate_slugs,
     populate_variable_slugs,
     precheck_slugs,
     propose_panel_entity_key,
     read_auto_derivations,
     read_snapshot,
-    reject_replaced_by_cycles,
     seed_all,
     seed_classifications_toml,
     seed_provider_toml,
@@ -1981,25 +1978,24 @@ class TestAutoDerivationMarker:
 
     def test_worklist_keeps_metadata_only_override(self, tmp_path: Path) -> None:
         # A [variable] entry WITHOUT a string slug leaves the auto slug unchanged,
-        # so it stays backlog regardless of other metadata: same_as (a cross-rename
-        # edge) and deprecated (still slugged so old references resolve) both keep
-        # their variable in the list. Only a string `slug` override drops it
-        # (Codex: don't treat every [variable] row as a slug fix).
+        # so it stays backlog regardless of other metadata: a `replaced_by`
+        # within-file rename pointer and `deprecated` (still slugged so old
+        # references resolve) both keep their variable in the list. Only a string
+        # `slug` override drops it (Codex: don't treat every [variable] row as a
+        # slug fix).
         conn = build_slugged_db(variable=None)
         self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
         self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
         (d / "scb.toml").write_text(
-            '[variable."1.20"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "inkomst" }]\n'
+            '[variable."1.20"]\nreplaced_by = "1.21"\n'
             '[variable."1.21"]\ndeprecated = true\n',
             encoding="utf-8",
         )
         populate_variable_slugs(conn, d)
         worklist = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
-        assert "1.20" in worklist  # same_as only → slug unfixed → stays
+        assert "1.20" in worklist  # replaced_by only → slug unfixed → stays
         assert "1.21" in worklist  # deprecated-only → slug still ships → stays
 
     def test_dotted_provider_key_fails_fast(self, tmp_path: Path) -> None:
@@ -2378,56 +2374,46 @@ class TestPrecheckCli:
         )
 
 
-class TestSameAs:
-    """`same_as` parser shape and kind constraints. Edge materialization
-    is covered separately under `TestMaterializeSameAsEdges`."""
+class TestGraphSemanticsRejectedInSlugToml:
+    """#522: graph semantics (same_as / replaced_by succession) are NOT a slug
+    surface anymore — they moved to `curation/relations.toml`. An inline `same_as`
+    field or a top-level `[[replaced_by]]` array in a slug TOML must now fail as an
+    unknown key, not silently no-op."""
 
-    def test_accepts_valid_inline_tables(self, tmp_path: Path):
+    def test_inline_same_as_rejected_as_unknown_field(self, tmp_path: Path):
         path = _write(
             tmp_path / "scb.toml",
-            '[variable."34.137"]\n'
-            'slug = "civilstand"\n'
+            '[variable."34.137"]\nslug = "civilstand"\n'
             'same_as = [{ provider = "scb", register = "lisa", '
             'variable_slug = "civilstand-legacy" }]\n',
-        )
-        entries = load_provider_toml(path)
-        assert entries[0].same_as == (
-            {
-                "provider": "scb",
-                "register": "lisa",
-                "variable_slug": "civilstand-legacy",
-            },
-        )
-
-    def test_rejected_on_register(self, tmp_path: Path):
-        # same_as is only valid on variable / classification.
-        path = _write(
-            tmp_path / "scb.toml",
-            '[register."34"]\nslug = "lisa"\n'
-            'same_as = [{ provider = "scb", register = "rtb" }]\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
         assert "same_as" in exc.value.message
 
-    def test_empty_value_rejected(self, tmp_path: Path):
+    def test_inline_same_as_on_classification_rejected(self, tmp_path: Path):
         path = _write(
-            tmp_path / "scb.toml",
-            '[variable."34.4"]\nslug = "kon"\nsame_as = [{ provider = "" }]\n',
+            tmp_path / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun2020"\n'
+            'same_as = [{ provider = "scb", classification_slug = "sun2000" }]\n',
         )
         with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
+            load_classifications_toml(path)
         assert exc.value.code == "slug_toml_invalid"
+        assert "same_as" in exc.value.message
 
-    def test_non_array_rejected(self, tmp_path: Path):
+    def test_toplevel_replaced_by_array_rejected(self, tmp_path: Path):
+        # The succession `[[replaced_by]]` array (note: the per-entry scalar
+        # `replaced_by` rename pointer survives — a different relation).
         path = _write(
             tmp_path / "scb.toml",
-            '[variable."34.4"]\nslug = "kon"\nsame_as = "not a list"\n',
+            '[[replaced_by]]\nfrom = "scb/lisa/old"\nto = "scb/lisa/new"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
+        assert "replaced_by" in exc.value.message
 
 
 class TestCanonicalIntegerKeys:
@@ -2574,32 +2560,6 @@ class TestUnknownTopLevelTables:
             load_classifications_toml(path)
         assert exc.value.code == "slug_toml_invalid"
         assert "classifications" in exc.value.message
-
-
-class TestSameAsKeyValidation:
-    """`same_as` inline-table keys must come from a known set. A typo like
-    `classifcation_slug` shouldn't silently round-trip as forward-compat
-    metadata."""
-
-    def test_variable_unknown_key_rejected(self, tmp_path: Path):
-        path = _write(
-            tmp_path / "scb.toml",
-            '[variable."34.4"]\nslug = "kon"\n'
-            'same_as = [{ provider = "scb", typo_key = "x" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_provider_toml(path)
-        assert "typo_key" in exc.value.message
-
-    def test_classification_unknown_key_rejected(self, tmp_path: Path):
-        path = _write(
-            tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun2020"\n'
-            'same_as = [{ provider = "scb", classifcation_slug = "sun-v1" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_classifications_toml(path)
-        assert "classifcation_slug" in exc.value.message
 
 
 # A2.6.1: TestClassificationVersionMismatch (the slug-TOML-vs-DB version
@@ -3423,513 +3383,3 @@ def _ns(**kw):
     # (which don't pass it) keep their byte-identical, panel-free output.
     kw.setdefault("propose_panel", False)
     return argparse.Namespace(**kw)
-
-
-# ---------------------------------------------------------------------------
-# same_as edge materialization
-# ---------------------------------------------------------------------------
-
-
-class TestMaterializeSameAsEdges:
-    """Build-time `same_as` edge materialization."""
-
-    @staticmethod
-    def _slug_dir_with_same_as(tmp_path: Path, body: str) -> Path:
-        """Write a scb.toml under tmp_path; classifications.toml gets an empty
-        stub since load_slug_dir scans the whole directory."""
-
-        (tmp_path / "scb.toml").write_text(body, encoding="utf-8")
-        (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
-        return tmp_path
-
-    @staticmethod
-    def _db_with_two_variables() -> sqlite3.Connection:
-        # Build a DB with two register/variable pairs under LISA so we can
-        # exercise variable_same_as without involving cross-register links.
-        conn = build_slugged_db()
-        # Add a second variable under the same register. `materialize_same_as_edges`
-        # anchors on the stored `variable.slug`, so var 88 (a source in the
-        # reciprocal-cycle test) only needs its slug set — no instance/alias/state
-        # rows are read by the same_as materializer.
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, '88', 'Civilstånd', 'civilstand')"
-        )
-        conn.commit()
-        return conn
-
-    def test_inserts_both_directions(self, tmp_path: Path) -> None:
-        conn = self._db_with_two_variables()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "civilstand" }]\n',
-        )
-        counts = materialize_same_as_edges(conn, slug_dir)
-        assert counts == {"variable": 1, "variable_curated": 0, "classification": 0}
-        rows = conn.execute(
-            "SELECT a_variable, b_variable FROM variable_same_as ORDER BY a_variable"
-        ).fetchall()
-        # One TOML edge → two DB rows (A→B + B→A).
-        assert [(r[0], r[1]) for r in rows] == [
-            ("civilstand", "kon"),
-            ("kon", "civilstand"),
-        ]
-
-    def test_self_loop_rejected(self, tmp_path: Path) -> None:
-        conn = self._db_with_two_variables()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "kon" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_self_loop"
-
-    def test_reciprocal_pair_is_a_cycle(self, tmp_path: Path) -> None:
-        conn = self._db_with_two_variables()
-        # Both sides declare same_as → directed 2-cycle (kon → civilstand
-        # → kon). The build stores both directions automatically; the
-        # maintainer should only declare from one side.
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "civilstand" }]\n'
-            '[variable."1.88"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "kon" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_cycle"
-
-    def test_unknown_target_register_rejected(self, tmp_path: Path) -> None:
-        conn = build_slugged_db()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "nonexistent", '
-            'variable_slug = "kon" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_unknown_register"
-
-    def test_register_variant_key_rejected(self, tmp_path: Path) -> None:
-        # A2.1.5: variable same_as is variable-grain — the `register_variant`
-        # narrowing key was dropped, so it's now an unknown key rejected
-        # at TOML load.
-        conn = build_slugged_db()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'register_variant = "individer-15plus", '
-            'variable_slug = "kon" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_toml_invalid"
-
-    def test_source_without_stored_slug_rejected(self, tmp_path: Path) -> None:
-        # A2.1.5: same_as anchors on the stored `variable.slug`. If the source
-        # variable has no stored slug (underivable / absent at build),
-        # materialization must refuse with an actionable error rather than
-        # silently emitting an unanchorable edge. (The old derive-from-aliases
-        # ambiguity path is gone — the stored slug is single by construction.)
-        conn = self._db_with_two_variables()
-        # Drop the source variable's stored slug to simulate the no-slug case.
-        conn.execute("UPDATE variable SET slug = NULL WHERE provider_key = '44'")
-        conn.commit()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "civilstand" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_unresolved_source"
-
-    def test_ambiguous_split_source_rejected(self, tmp_path: Path) -> None:
-        # A2.2 forward guard: when a triage split leaves two variables sharing
-        # (register_id, provider_key), a same_as anchored on the bare source key
-        # is ambiguous — it would attach to an arbitrary sibling — so reject it
-        # rather than pick one with LIMIT 1.
-        conn = build_slugged_db()  # var 44, provider_key '44', slug 'kon'
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, '44', 'Kön 5-pos', 'kon-5pos')"
-        )
-        conn.commit()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'variable_slug = "civilstand" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_ambiguous_source"
-
-    def test_classification_edge_inserted(self, tmp_path: Path) -> None:
-        conn = build_slugged_db()  # fixture seeds SUN2020 with slug 'sun2020'
-        # Insert a second classification so the target slot resolves. A2.6.1:
-        # the slug bakes in the vintage and is globally UNIQUE.
-        conn.execute(
-            "INSERT INTO classification (short_name, name, slug, publisher) "
-            "VALUES ('SUN_OLD', 'Legacy SUN', 'sun1996', 'SCB')"
-        )
-        # Tag the seed classification's publisher too so the source resolves
-        # to a stable provider key (default in the fixture is NULL).
-        conn.execute(
-            "UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun2020'"
-        )
-        conn.commit()
-        slug_dir = tmp_path
-        (slug_dir / "scb.toml").write_text("", encoding="utf-8")
-        (slug_dir / "classifications.toml").write_text(
-            '[classification."SUN2020"]\n'
-            'slug = "sun2020"\n'
-            'same_as = [{ provider = "scb", classification_slug = "sun1996" }]\n',
-            encoding="utf-8",
-        )
-        counts = materialize_same_as_edges(conn, slug_dir)
-        assert counts == {"variable": 0, "variable_curated": 0, "classification": 1}
-        rows = conn.execute(
-            "SELECT a_classification_slug, b_classification_slug "
-            "FROM classification_same_as ORDER BY a_classification_slug"
-        ).fetchall()
-        assert [(r[0], r[1]) for r in rows] == [
-            ("sun1996", "sun2020"),
-            ("sun2020", "sun1996"),
-        ]
-
-    # A2.6.1: test_classification_ambiguous_target_rejected is gone — a slug
-    # naming "multiple versions" is structurally impossible now (slug UNIQUE),
-    # and the `slug_same_as_ambiguous_classification` check was removed. Two
-    # rows sharing a slug would fail the UNIQUE constraint at insert anyway.
-
-    def test_multiple_targets_share_source(self, tmp_path: Path) -> None:
-        # A single [variable] entry with two same_as targets produces two
-        # edges sharing the same source endpoint. Both directions stored
-        # for each → 4 DB rows total.
-        conn = self._db_with_two_variables()
-        # Add a third variable (slug 'fodar') as a distinct second same_as
-        # target. `materialize_same_as_edges` anchors on `variable.slug` only.
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, '99', 'Födelseår', 'fodar')"
-        )
-        conn.commit()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            "same_as = [\n"
-            '  { provider = "scb", register = "lisa", variable_slug = "civilstand" },\n'
-            '  { provider = "scb", register = "lisa", variable_slug = "fodar" },\n'
-            "]\n",
-        )
-        counts = materialize_same_as_edges(conn, slug_dir)
-        assert counts == {"variable": 2, "variable_curated": 0, "classification": 0}
-        rows = conn.execute(
-            "SELECT a_variable, b_variable FROM variable_same_as "
-            "ORDER BY a_variable, b_variable"
-        ).fetchall()
-        # 2 TOML edges × 2 directions = 4 rows.
-        assert [(r[0], r[1]) for r in rows] == [
-            ("civilstand", "kon"),
-            ("fodar", "kon"),
-            ("kon", "civilstand"),
-            ("kon", "fodar"),
-        ]
-
-    def test_classification_self_loop_rejected(self, tmp_path: Path) -> None:
-        # Classification entry refers to itself — the shared cycle detector
-        # must catch it under the classification label.
-        conn = build_slugged_db()  # slug 'sun2020'
-        conn.execute(
-            "UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun2020'"
-        )
-        conn.commit()
-        slug_dir = tmp_path
-        (slug_dir / "scb.toml").write_text("", encoding="utf-8")
-        (slug_dir / "classifications.toml").write_text(
-            '[classification."SUN2020"]\n'
-            'slug = "sun2020"\n'
-            'same_as = [{ provider = "scb", classification_slug = "sun2020" }]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_self_loop"
-
-    def test_period_key_rejected(self, tmp_path: Path) -> None:
-        # The `period` same_as narrowing key was dropped — it's
-        # now an unknown key rejected at TOML load. (Previously a period-only
-        # narrowing raised slug_same_as_period_without_variant; that whole
-        # narrowing concept is gone at variable grain.)
-        conn = self._db_with_two_variables()
-        slug_dir = self._slug_dir_with_same_as(
-            tmp_path,
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "lisa", '
-            'period = "2018", variable_slug = "civilstand" }]\n',
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_toml_invalid"
-
-
-class TestLoadCuratedReplacedBy:
-    """DB-free load + shape validation of the #440 `[[replaced_by]]` section.
-
-    Existence checks (successor-resolves / dead-predecessor-allowed) and the
-    materialization/dedup live in `TestReplacedByEdges` (test_build_db.py) — they
-    need a built DB. These cover the loader's grammar/grain/field rules.
-    """
-
-    def test_parses_register_and_variable_grains(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            "[[replaced_by]]\n"
-            'predecessor = "scb/oldreg"\n'
-            'successor = "scb/newreg"\n'
-            "\n[[replaced_by]]\n"
-            'predecessor = "sos/par/diagnos"\n'
-            'successor = "scb/lisa/icd"\n'
-            'note = "moved to SCB"\n'
-            "effective_year = 2015\n",
-            encoding="utf-8",
-        )
-        edges = load_curated_replaced_by(tmp_path)
-        assert len(edges) == 2
-        reg, var = edges
-        assert str(reg.predecessor) == "scb/oldreg"
-        assert str(reg.successor) == "scb/newreg"
-        assert reg.note is None
-        assert reg.effective_year is None
-        assert str(var.predecessor) == "sos/par/diagnos"
-        assert str(var.successor) == "scb/lisa/icd"
-        assert var.note == "moved to SCB"
-        assert var.effective_year == 2015
-
-    def test_classifications_toml_skipped(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            '[[replaced_by]]\npredecessor = "scb/a"\nsuccessor = "scb/b"\n',
-            encoding="utf-8",
-        )
-        (tmp_path / "classifications.toml").write_text(
-            '[classification."SUN2020"]\nslug = "sun2020"\n', encoding="utf-8"
-        )
-        edges = load_curated_replaced_by(tmp_path)
-        assert len(edges) == 1
-
-    def test_empty_dir_yields_no_edges(self, tmp_path: Path) -> None:
-        assert load_curated_replaced_by(tmp_path) == []
-
-    def test_section_passes_top_level_typo_guard(self, tmp_path: Path) -> None:
-        """`[[replaced_by]]` is a legal top-level table — `load_provider_toml`'s
-        strict unknown-top-level check must accept it (not flag it as a typo)."""
-        (tmp_path / "scb.toml").write_text(
-            '[register."1"]\nslug = "oldreg"\n'
-            "[[replaced_by]]\n"
-            'predecessor = "scb/oldreg"\n'
-            'successor = "scb/newreg"\n',
-            encoding="utf-8",
-        )
-        # No raise: the section coexists with SlugEntry rows.
-        entries = load_provider_toml(tmp_path / "scb.toml")
-        assert any(e.source_id == "1" for e in entries)
-
-    def test_self_loop_rejected(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            '[[replaced_by]]\npredecessor = "scb/reg"\nsuccessor = "scb/reg"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_bad_fqid_shape_rejected(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            '[[replaced_by]]\npredecessor = "a/b/c/d"\nsuccessor = "scb/reg"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_provider_grain_rejected(self, tmp_path: Path) -> None:
-        """A 1-segment provider FQID is not a register/variable grain."""
-        (tmp_path / "scb.toml").write_text(
-            '[[replaced_by]]\npredecessor = "scb"\nsuccessor = "sos"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_classification_grain_rejected(self, tmp_path: Path) -> None:
-        """A `class/<slug>` FQID is not a succession grain."""
-        (tmp_path / "scb.toml").write_text(
-            "[[replaced_by]]\n"
-            'predecessor = "class/sun96"\n'
-            'successor = "class/sun2020"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_mixed_grain_rejected(self, tmp_path: Path) -> None:
-        """Register predecessor + variable successor → grain mismatch."""
-        (tmp_path / "scb.toml").write_text(
-            "[[replaced_by]]\n"
-            'predecessor = "scb/oldreg"\n'
-            'successor = "scb/newreg/var"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_missing_predecessor_rejected(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            '[[replaced_by]]\nsuccessor = "scb/newreg"\n', encoding="utf-8"
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_unknown_key_rejected(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            "[[replaced_by]]\n"
-            'predecessor = "scb/a"\n'
-            'successor = "scb/b"\n'
-            'reason = "typo for note"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_non_array_section_rejected(self, tmp_path: Path) -> None:
-        """`[replaced_by]` (a single table) instead of `[[replaced_by]]` (array)
-        is a malformed section, not a silent no-op."""
-        (tmp_path / "scb.toml").write_text(
-            '[replaced_by]\npredecessor = "scb/a"\nsuccessor = "scb/b"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_non_int_effective_year_rejected(self, tmp_path: Path) -> None:
-        (tmp_path / "scb.toml").write_text(
-            "[[replaced_by]]\n"
-            'predecessor = "scb/a"\n'
-            'successor = "scb/b"\n'
-            'effective_year = "2015"\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_bool_effective_year_rejected(self, tmp_path: Path) -> None:
-        """`isinstance(True, int)` is True in Python — a bare bool must not slip
-        through as the year 1."""
-        (tmp_path / "scb.toml").write_text(
-            "[[replaced_by]]\n"
-            'predecessor = "scb/a"\n'
-            'successor = "scb/b"\n'
-            "effective_year = true\n",
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            load_curated_replaced_by(tmp_path)
-        assert exc.value.code == "replaced_by_invalid"
-
-    def test_empty_array_is_noop(self, tmp_path: Path) -> None:
-        """`replaced_by = []` present-but-empty is a no-op — `data.get` returns
-        the empty list, the per-row loop runs zero times, no error. Distinct from
-        the key-absent path (`test_empty_dir_yields_no_edges`), which returns
-        before the `isinstance(..., list)` check."""
-        (tmp_path / "scb.toml").write_text("replaced_by = []\n", encoding="utf-8")
-        assert load_curated_replaced_by(tmp_path) == []
-
-    def test_multi_provider_filename_sorted_order(self, tmp_path: Path) -> None:
-        """Edges from several provider TOMLs are returned in deterministic
-        filename order — guards the `sorted(slug_dir.glob(...))` iteration.
-        `aaa.toml` (scb/a→scb/b) precedes `zzz.toml` (scb/c→scb/d)."""
-        (tmp_path / "aaa.toml").write_text(
-            '[[replaced_by]]\npredecessor = "scb/a"\nsuccessor = "scb/b"\n',
-            encoding="utf-8",
-        )
-        (tmp_path / "zzz.toml").write_text(
-            '[[replaced_by]]\npredecessor = "scb/c"\nsuccessor = "scb/d"\n',
-            encoding="utf-8",
-        )
-        edges = load_curated_replaced_by(tmp_path)
-        assert len(edges) == 2
-        assert [(str(e.predecessor), str(e.successor)) for e in edges] == [
-            ("scb/a", "scb/b"),
-            ("scb/c", "scb/d"),
-        ]
-
-
-class TestRejectReplacedByCycles:
-    """Direct unit tests of the generalized `reject_replaced_by_cycles` helper.
-
-    The cycle check no longer fires at TOML load (the loader sees only the
-    curated edges, but a curated edge can close a cycle with an event-derived
-    one materialized in the same build — see `_materialize_curated_replaced_by_edges`).
-    The helper is now pure and operates on `(predecessor_node, successor_node)`
-    pairs over any hashable node (the build passes FQID slug tuples), so it's
-    tested in isolation here; the combined-graph build behavior lives in
-    `TestReplacedByEdges` (test_build_db.py).
-    """
-
-    def test_empty_is_noop(self) -> None:
-        reject_replaced_by_cycles([])  # no raise
-
-    def test_acyclic_chain_passes(self) -> None:
-        """A→B→C is a valid succession chain — no cycle."""
-        reject_replaced_by_cycles(
-            [(("scb", "a"), ("scb", "b")), (("scb", "b"), ("scb", "c"))]
-        )  # no raise
-
-    def test_two_cycle_rejected(self) -> None:
-        """A→B + B→A has no terminal successor — rejected as a cycle."""
-        with pytest.raises(RegMetaError) as exc:
-            reject_replaced_by_cycles(
-                [(("scb", "a"), ("scb", "b")), (("scb", "b"), ("scb", "a"))]
-            )
-        assert exc.value.code == "replaced_by_cycle"
-
-    def test_three_cycle_rejected(self) -> None:
-        """A→B→C→A is a length-3 cycle — also rejected."""
-        with pytest.raises(RegMetaError) as exc:
-            reject_replaced_by_cycles(
-                [
-                    (("scb", "a"), ("scb", "b")),
-                    (("scb", "b"), ("scb", "c")),
-                    (("scb", "c"), ("scb", "a")),
-                ]
-            )
-        assert exc.value.code == "replaced_by_cycle"
-
-    def test_combined_source_cycle_rejected(self) -> None:
-        """The real point of moving the check: an event-derived edge A→B plus a
-        curated edge B→A close a cycle the curated-only view can't see. Both
-        sides arrive as plain `(node, node)` pairs in one combined list — the
-        helper is source-agnostic. Variable-grain (3-tuple) nodes here."""
-        event_edge = (("scb", "lisa", "a"), ("scb", "lisa", "b"))
-        curated_edge = (("scb", "lisa", "b"), ("scb", "lisa", "a"))
-        with pytest.raises(RegMetaError) as exc:
-            reject_replaced_by_cycles([event_edge, curated_edge])
-        assert exc.value.code == "replaced_by_cycle"

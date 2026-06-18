@@ -2654,56 +2654,6 @@ class TestSplitSiblingSlugCache:
         assert len(set(second.values())) == 2
 
 
-class TestSplitSiblingSameAsAnchor:
-    """Codex P2 #139: a curated 3-part `[variable."<reg>.<var>.<disc>"]` key
-    resolves to the SPECIFIC split sibling for same_as anchoring. The disc is
-    the same `_split_sibling_disc` the auto-slug cache uses, so curator and cache
-    agree on which sibling a key names."""
-
-    def test_three_part_key_resolves_specific_sibling(self, tmp_path: Path) -> None:
-        from reg_meta.errors import RegMetaError
-
-        from reg_meta_build.fqid_slugs import (
-            SlugEntry,
-            _split_sibling_disc,
-            _variable_source_slug,
-        )
-
-        ri = list(REGISTERINFORMATION_ROWS) + [
-            _var_row(colname="Hemkommun", cvid=9300, var_id=920),
-            _var_row(colname="Skolkommun", cvid=9301, var_id=920),
-        ]
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir, registerinformation_rows=ri)
-        db_dir = tmp_path / "db"
-        build_db(
-            input_dir=input_dir,
-            db_dir=db_dir,
-            skip_classifications=True,
-            skip_slugs=True,
-        )
-        conn = sqlite3.connect(db_dir / "reg_meta.db")
-
-        disc = _split_sibling_disc(conn, 1, 920)
-        assert len(set(disc.values())) == 2, "siblings need distinct discriminators"
-        # Give each sibling a known slug, then resolve it via its 3-part key.
-        for vid, d in disc.items():
-            conn.execute(
-                "UPDATE variable SET slug = ? WHERE variable_id = ?", (f"v-{d}", vid)
-            )
-        conn.commit()
-        for d in disc.values():
-            entry = SlugEntry(
-                kind="variable", source_id=f"1.920.{d}", slug=None, provider="scb"
-            )
-            assert _variable_source_slug(conn, 1, 920, entry) == f"v-{d}"
-        # A bare 2-part key on a split var_id stays ambiguous → rejected.
-        bare = SlugEntry(kind="variable", source_id="1.920", slug=None, provider="scb")
-        with pytest.raises(RegMetaError):
-            _variable_source_slug(conn, 1, 920, bare)
-        conn.close()
-
-
 class TestVariableRelatedToEdges:
     """Maintainer: the `variable_related_to` materializer (both-direction
     (N choose 2) edges, FQID endpoints, `note='auto:triage'`, skip-on-missing-slug)

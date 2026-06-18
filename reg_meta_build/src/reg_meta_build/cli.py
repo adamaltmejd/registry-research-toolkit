@@ -364,10 +364,11 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Infer cross-register `same_as` identity candidates from a BUILT DB\n"
             "(shared classification, shared value set, name agreement) and emit a\n"
-            "tiered `[[same_as]]` TOML review worklist. NOTHING is materialized —\n"
-            "same_as is resolver-load-bearing, so a maintainer reviews each pair and\n"
-            "copies ONLY confirmed identities into reg_meta_build/variable_same_as.toml.\n"
-            "Reads a built DB; never mutates it.\n\n"
+            'tiered `[[edge]] type = "same_as"` TOML review worklist. NOTHING is\n'
+            "materialized — same_as is resolver-load-bearing, so a maintainer reviews\n"
+            "each pair and copies ONLY confirmed identities into\n"
+            "reg_meta_build/curation/relations.toml. Reads a built DB; never mutates\n"
+            "it.\n\n"
             "Tiers (strongest first): 1 = classification + value set + name; 2 =\n"
             "classification + name; 3 = classification + value set; 4 = a shared\n"
             "classification-NULL value set with >= --min-value-set-codes codes.\n"

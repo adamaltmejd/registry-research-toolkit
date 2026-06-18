@@ -1,0 +1,666 @@
+"""Tests for the unified curated relation surface (#522; `relations.py`).
+
+The single typed `[[edge]]` surface consolidates the former `same_as` /
+`replaced_by` / `related_to` loaders. Layers:
+  - `TestLoaderDispatch` — the `type` discriminator: unknown/missing type, and
+    a field legal for one type rejected as foreign on another (a mis-typed edge).
+  - `TestSameAsLoad` / `TestSameAsMaterialize` — same_as parse + materialize
+    (both directions, unknown-endpoint fail-fast, provider gate, cycle rejection,
+    the component-size guard, classification grain).
+  - `TestRelatedToLoad` / `TestRelatedToMaterialize` — related_to (migrated from
+    the old `variable_related_to` tests).
+  - `TestReplacedByLoad` — replaced_by parse (grain, self-loop, effective_year).
+  - `TestMovedEdges` — the three real edges moved into the file load through the
+    repo `relations.toml`.
+
+Fully synthetic (CLAUDE.md): builds its own TOMLs/DBs (tmp_path) and (except
+`TestMovedEdges`) never reads the shipped `curation/relations.toml`."""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+import pytest
+from _slugged_db import add_register, add_variable, build_slugged_db
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.fqid import FqidKind
+from reg_meta_build.concept_groups import materialize_concept_groups
+from reg_meta_build.relations import (
+    _SAME_AS_MAX_COMPONENT,
+    CURATED_RELATION_KINDS,
+    CuratedRelatedTo,
+    CuratedSameAs,
+    load_relations,
+    materialize_related_to,
+    materialize_same_as,
+)
+
+if TYPE_CHECKING:
+    import sqlite3
+
+_SCB = frozenset({"scb"})
+_AUTO_KIND = "same_definition_different_column"
+# reg_meta_build/ package root (tests/ sits beside the curation/ dir).
+_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _load(tmp_path: Path, text: str):  # noqa: ANN202 - returns CuratedRelations
+    path = tmp_path / "relations.toml"
+    path.write_text(text, encoding="utf-8")
+    return load_relations(path)
+
+
+# ---------------------------------------------------------------------------
+# Dispatch: the `type` discriminator + per-type foreign-field rejection
+# ---------------------------------------------------------------------------
+
+
+class TestLoaderDispatch:
+    def test_missing_file_is_empty(self, tmp_path: Path) -> None:
+        rel = load_relations(None)
+        assert rel.same_as == () and rel.replaced_by == () and rel.related_to == ()
+        assert load_relations(tmp_path / "absent.toml").same_as == ()
+
+    def test_present_but_empty_file_is_empty(self, tmp_path: Path) -> None:
+        rel = _load(tmp_path, "# no edges yet\n")
+        assert rel.same_as == () and rel.replaced_by == () and rel.related_to == ()
+
+    def test_missing_type_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(tmp_path, '[[edge]]\na = "scb/lisa/x"\nb = "scb/rams/y"\n')
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+
+    def test_unknown_type_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "is_a"\na = "scb/lisa/x"\nb = "scb/rams/y"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+        # The legal types are listed so a typo is self-correcting.
+        for legal in ("same_as", "replaced_by", "related_to"):
+            assert legal in exc.value.remediation
+
+    def test_misspelled_toplevel_key_rejected(self, tmp_path: Path) -> None:
+        # `[[edges]]` (typo) would silently disable ALL curation → loud error.
+        with pytest.raises(RegMetaError) as exc:
+            _load(tmp_path, '[[edges]]\ntype = "same_as"\na = "scb/lisa/x"\n')
+        assert exc.value.code == "relations_invalid"
+        assert "edges" in exc.value.message
+
+    def test_foreign_field_effective_year_on_same_as_rejected(
+        self, tmp_path: Path
+    ) -> None:
+        # `effective_year` belongs to replaced_by; on a same_as edge it's the tell
+        # of a mis-typed edge (right field, wrong type) → reject at load.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                "effective_year = 2019\n",
+            )
+        assert exc.value.code == "relations_invalid"
+        assert "effective_year" in exc.value.message
+
+    def test_foreign_field_relation_kind_on_same_as_rejected(
+        self, tmp_path: Path
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                'relation_kind = "similar_concept"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+        assert "relation_kind" in exc.value.message
+
+    def test_foreign_field_a_on_replaced_by_rejected(self, tmp_path: Path) -> None:
+        # `a`/`b` belong to same_as/related_to; replaced_by uses `from`/`to`.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/y"\na = "scb/lisa/x"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_foreign_field_effective_year_on_related_to_rejected(
+        self, tmp_path: Path
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                'relation_kind = "similar_concept"\neffective_year = 2019\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+
+# ---------------------------------------------------------------------------
+# same_as — load
+# ---------------------------------------------------------------------------
+
+
+class TestSameAsLoad:
+    def test_parses_variable_grain_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "same_as"\na = "scb/lisa/inkomst"\n'
+            'b = "scb/rams/inkomst"\nnote = "candidate:tier1"\n',
+        )
+        assert len(rel.same_as) == 1
+        e = rel.same_as[0]
+        assert e.grain is FqidKind.VARIABLE_BINDING
+        assert (e.a_provider, e.a_register, e.a_variable) == ("scb", "lisa", "inkomst")
+        assert (e.b_provider, e.b_register, e.b_variable) == ("scb", "rams", "inkomst")
+        assert e.note == "candidate:tier1"
+
+    def test_parses_classification_grain_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "same_as"\na = "scb/sun2000"\nb = "scb/sun2020"\n',
+        )
+        assert len(rel.same_as) == 1
+        e = rel.same_as[0]
+        assert e.grain is FqidKind.CLASSIFICATION
+        assert (e.a_provider, e.a_register, e.a_variable) == ("scb", "sun2000", None)
+
+    def test_mismatched_grain_rejected(self, tmp_path: Path) -> None:
+        # variable (3-seg) vs classification (2-seg) → not the same grain.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/sun2020"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_note_is_optional(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/rams/y"\n',
+        )
+        assert rel.same_as[0].note is None
+
+    @pytest.mark.parametrize("fqid", ["scb", "scb/lisa/x/y", "scb//x", ""])
+    def test_bad_fqid_arity_rejected(self, tmp_path: Path, fqid: str) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                f'[[edge]]\ntype = "same_as"\na = "{fqid}"\nb = "scb/rams/y"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_self_edge_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/lisa/x"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_duplicate_unordered_pair_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/rams/y"\n\n'
+                '[[edge]]\ntype = "same_as"\na = "scb/rams/y"\nb = "scb/lisa/x"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_empty_note_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "same_as"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                'note = ""\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+
+# ---------------------------------------------------------------------------
+# same_as — materialize
+# ---------------------------------------------------------------------------
+
+
+def _cross_register_db() -> sqlite3.Connection:
+    """scb/lisa/<v1> + scb/rams/<v2>, both resolvable, no edges yet."""
+    conn = build_slugged_db(classification=None)  # scb/lisa with `kon`
+    add_register(conn, register_id=2, slug="rams", name="RAMS")
+    add_variable(conn, register_id=1, var_id=900, name="Inkomst", slug="inkomst")
+    add_variable(conn, register_id=2, var_id=901, name="Inkomst", slug="rinkomst")
+    conn.commit()
+    return conn
+
+
+def _same_as_edge(
+    a: str = "scb/lisa/inkomst",
+    b: str = "scb/rams/rinkomst",
+    *,
+    note: str | None = "candidate:tier1",
+) -> CuratedSameAs:
+    pa, pb = a.split("/"), b.split("/")
+    return CuratedSameAs(
+        grain=FqidKind.VARIABLE_BINDING,
+        a_provider=pa[0],
+        a_register=pa[1],
+        a_variable=pa[2],
+        b_provider=pb[0],
+        b_register=pb[1],
+        b_variable=pb[2],
+        note=note,
+    )
+
+
+def _same_as_rows(conn: sqlite3.Connection) -> list[tuple]:
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT a_provider, a_register, a_variable, b_provider, b_register, "
+            "b_variable FROM variable_same_as ORDER BY a_register, b_register"
+        )
+    ]
+
+
+class TestSameAsMaterialize:
+    def test_cross_register_edge_writes_both_directions(self) -> None:
+        conn = _cross_register_db()
+        counts = materialize_same_as(conn, (_same_as_edge(),), providers=_SCB)
+        assert counts == {"variable": 1, "classification": 0}
+        assert _same_as_rows(conn) == [
+            ("scb", "lisa", "inkomst", "scb", "rams", "rinkomst"),
+            ("scb", "rams", "rinkomst", "scb", "lisa", "inkomst"),
+        ]
+
+    def test_unknown_register_fails_fast(self) -> None:
+        conn = _cross_register_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as(
+                conn, (_same_as_edge(b="scb/nonexistent/x"),), providers=_SCB
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_same_as_unknown_endpoint"
+        assert "nonexistent" in exc.value.message
+        assert _same_as_rows(conn) == []  # nothing written
+
+    def test_unknown_a_register_fails_fast(self) -> None:
+        conn = _cross_register_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as(conn, (_same_as_edge(a="scb/nope/x"),), providers=_SCB)
+        assert exc.value.code == "relations_same_as_unknown_endpoint"
+        assert "nope" in exc.value.message
+
+    def test_variable_slug_not_validated(self) -> None:
+        # same_as is slug-anchored — a not-yet-present variable slug survives.
+        conn = _cross_register_db()
+        counts = materialize_same_as(
+            conn, (_same_as_edge(b="scb/rams/renamed-tomorrow"),), providers=_SCB
+        )
+        assert counts["variable"] == 1
+        assert ("scb", "rams", "renamed-tomorrow") in {
+            (r[3], r[4], r[5]) for r in _same_as_rows(conn)
+        }
+
+    def test_out_of_build_provider_is_skipped(self) -> None:
+        conn = _cross_register_db()
+        counts = materialize_same_as(
+            conn, (_same_as_edge(),), providers=frozenset({"sos"})
+        )
+        assert counts["variable"] == 0
+        assert _same_as_rows(conn) == []
+
+    def test_reciprocal_edges_rejected_as_cycle(self) -> None:
+        # Two curated edges for the same unordered pair, opposite directions, form
+        # a 2-cycle in the as-declared graph → rejected before any INSERT.
+        conn = _cross_register_db()
+        edges = (
+            _same_as_edge(a="scb/lisa/inkomst", b="scb/rams/rinkomst"),
+            _same_as_edge(a="scb/rams/rinkomst", b="scb/lisa/inkomst"),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as(conn, edges, providers=_SCB)
+        assert exc.value.code == "relations_same_as_cycle"
+        assert _same_as_rows(conn) == []
+
+    def test_classification_grain_edge_writes(self) -> None:
+        # Default fixture seeds the SUN2020 classification (publisher → scb). Add
+        # a second so the edge has two resolvable endpoints.
+        conn = build_slugged_db()  # ships SUN2020 / slug "sun2020"
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SUN2000', 'SUN 2000', 'sun2000')"
+        )
+        conn.commit()
+        edge = CuratedSameAs(
+            grain=FqidKind.CLASSIFICATION,
+            a_provider="scb",
+            a_register="sun2000",
+            a_variable=None,
+            b_provider="scb",
+            b_register="sun2020",
+            b_variable=None,
+            note=None,
+        )
+        counts = materialize_same_as(conn, (edge,), providers=_SCB)
+        assert counts == {"variable": 0, "classification": 1}
+        rows = conn.execute(
+            "SELECT a_provider, a_classification_slug, b_provider, "
+            "b_classification_slug FROM classification_same_as "
+            "ORDER BY a_classification_slug"
+        ).fetchall()
+        assert {tuple(r) for r in rows} == {
+            ("scb", "sun2000", "scb", "sun2020"),
+            ("scb", "sun2020", "scb", "sun2000"),
+        }
+
+    def test_component_size_guard_refuses_runaway_cluster(self) -> None:
+        # A chain a0-a1-a2-…-aN that would merge into one identity component
+        # larger than the cap is refused before any INSERT (#522). Build a register
+        # with cap+1 variables and a chain of cap same_as edges linking them.
+        conn = build_slugged_db(classification=None)
+        add_register(conn, register_id=2, slug="rams", name="RAMS")
+        n = _SAME_AS_MAX_COMPONENT + 1
+
+        # Cross-register chain: even nodes in lisa, odd nodes in rams (so each
+        # edge is cross-register, the only kind same_as allows), all slug-anchored.
+        def fqid(i: int) -> str:
+            return f"scb/lisa/v{i}" if i % 2 == 0 else f"scb/rams/v{i}"
+
+        edges = tuple(_same_as_edge(a=fqid(i), b=fqid(i + 1)) for i in range(n - 1))
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as(conn, edges, providers=_SCB)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_same_as_component_too_large"
+        assert _same_as_rows(conn) == []  # nothing written
+
+
+# ---------------------------------------------------------------------------
+# related_to — load (migrated from test_variable_related_to.py)
+# ---------------------------------------------------------------------------
+
+
+def test_auto_kind_is_not_a_curated_kind() -> None:
+    """Vocabulary distinctness: the foldable auto:triage kind must never be a
+    curated kind (a curated 'see also' must never fold)."""
+    assert _AUTO_KIND not in CURATED_RELATION_KINDS
+    assert "similar_concept" in CURATED_RELATION_KINDS
+
+
+class TestRelatedToLoad:
+    def test_parses_valid_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "related_to"\na = "scb/lisa/inkomst"\n'
+            'b = "scb/rams/inkomst"\nrelation_kind = "similar_concept"\n'
+            'note = "curated:cross_register"\n',
+        )
+        assert len(rel.related_to) == 1
+        e = rel.related_to[0]
+        assert (e.a_provider, e.a_register, e.a_variable) == ("scb", "lisa", "inkomst")
+        assert (e.b_provider, e.b_register, e.b_variable) == ("scb", "rams", "inkomst")
+        assert e.relation_kind == "similar_concept"
+        assert e.note == "curated:cross_register"
+
+    def test_note_is_optional(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+            'relation_kind = "similar_concept"\n',
+        )
+        assert rel.related_to[0].note is None
+
+    def test_missing_relation_kind_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/rams/y"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_unknown_relation_kind_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                'relation_kind = "made_up_kind"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_auto_foldable_kind_rejected(self, tmp_path: Path) -> None:
+        # The explicit distinctness guard: the auto:triage kind is foldable, so a
+        # curated edge naming it is rejected at load (proves curated ⊥ auto).
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                f'relation_kind = "{_AUTO_KIND}"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_self_edge_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/lisa/x"\n'
+                'relation_kind = "similar_concept"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_duplicate_unordered_pair_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "related_to"\na = "scb/lisa/x"\nb = "scb/rams/y"\n'
+                'relation_kind = "similar_concept"\n\n'
+                '[[edge]]\ntype = "related_to"\na = "scb/rams/y"\nb = "scb/lisa/x"\n'
+                'relation_kind = "similar_concept"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+
+# ---------------------------------------------------------------------------
+# related_to — materialize
+# ---------------------------------------------------------------------------
+
+
+def _related_edge(
+    a: str = "scb/lisa/inkomst",
+    b: str = "scb/rams/rinkomst",
+    *,
+    relation_kind: str = "similar_concept",
+    note: str | None = "curated:cross_register",
+) -> CuratedRelatedTo:
+    pa, pb = a.split("/"), b.split("/")
+    return CuratedRelatedTo(
+        a_provider=pa[0],
+        a_register=pa[1],
+        a_variable=pa[2],
+        b_provider=pb[0],
+        b_register=pb[1],
+        b_variable=pb[2],
+        relation_kind=relation_kind,
+        note=note,
+    )
+
+
+def _related_rows(conn: sqlite3.Connection) -> list[tuple]:
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT a_provider, a_register, a_variable, b_provider, b_register, "
+            "b_variable, relation_kind, note FROM variable_related_to "
+            "ORDER BY a_register, b_register"
+        )
+    ]
+
+
+class TestRelatedToMaterialize:
+    def test_cross_register_edge_writes_both_directions(self) -> None:
+        conn = _cross_register_db()
+        n = materialize_related_to(conn, (_related_edge(),), providers=_SCB)
+        assert n == 2
+        assert _related_rows(conn) == [
+            (
+                "scb",
+                "lisa",
+                "inkomst",
+                "scb",
+                "rams",
+                "rinkomst",
+                "similar_concept",
+                "curated:cross_register",
+            ),
+            (
+                "scb",
+                "rams",
+                "rinkomst",
+                "scb",
+                "lisa",
+                "inkomst",
+                "similar_concept",
+                "curated:cross_register",
+            ),
+        ]
+
+    def test_default_note_when_absent(self) -> None:
+        conn = _cross_register_db()
+        materialize_related_to(conn, (_related_edge(note=None),), providers=_SCB)
+        assert {r[7] for r in _related_rows(conn)} == {"curated"}
+
+    def test_dangling_endpoint_fails_fast(self) -> None:
+        conn = _cross_register_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_related_to(
+                conn, (_related_edge(b="scb/rams/does-not-exist"),), providers=_SCB
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_related_to_unresolved"
+        assert "does-not-exist" in exc.value.message
+        assert _related_rows(conn) == []
+
+    def test_dangling_a_endpoint_fails_fast(self) -> None:
+        conn = _cross_register_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_related_to(
+                conn, (_related_edge(a="scb/lisa/does-not-exist"),), providers=_SCB
+            )
+        assert exc.value.code == "relations_related_to_unresolved"
+        assert _related_rows(conn) == []
+
+    def test_inactive_provider_edge_is_skipped(self) -> None:
+        conn = _cross_register_db()
+        n = materialize_related_to(
+            conn, (_related_edge(),), providers=frozenset({"sos"})
+        )
+        assert n == 0
+        assert _related_rows(conn) == []
+
+    def test_collision_with_existing_edge_fails_loud(self) -> None:
+        conn = _cross_register_db()
+        conn.execute(
+            "INSERT INTO variable_related_to (a_provider, a_register, a_variable, "
+            "b_provider, b_register, b_variable, relation_kind, note) VALUES "
+            "('scb', 'lisa', 'inkomst', 'scb', 'rams', 'rinkomst', "
+            "'same_definition_different_column', 'auto:triage')"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_related_to(conn, (_related_edge(),), providers=_SCB)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_related_to_collision"
+
+    def test_curated_edge_is_not_folded_by_concept_groups(self) -> None:
+        conn = _cross_register_db()
+        materialize_related_to(conn, (_related_edge(),), providers=_SCB)
+        counts = materialize_concept_groups(conn, (), providers=_SCB)
+        assert counts["edge_groups"] == 0
+        assert counts["grouped_variables"] == 0
+
+
+# ---------------------------------------------------------------------------
+# replaced_by — load (DB-free shape validation)
+# ---------------------------------------------------------------------------
+
+
+class TestReplacedByLoad:
+    def test_parses_variable_grain_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/old"\n'
+            'to = "scb/lisa/new"\neffective_year = 2019\nnote = "recut"\n',
+        )
+        assert len(rel.replaced_by) == 1
+        e = rel.replaced_by[0]
+        assert str(e.predecessor) == "scb/lisa/old"
+        assert str(e.successor) == "scb/lisa/new"
+        assert e.effective_year == 2019
+        assert e.note == "recut"
+
+    def test_parses_register_grain_edge(self, tmp_path: Path) -> None:
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "sos/old"\nto = "scb/new"\n',
+        )
+        e = rel.replaced_by[0]
+        assert e.predecessor.kind is FqidKind.REGISTER
+        assert e.effective_year is None and e.note is None
+
+    def test_mismatched_grain_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa"\n'
+                'to = "scb/lisa/new"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_self_loop_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/x"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_bool_effective_year_rejected(self, tmp_path: Path) -> None:
+        # `isinstance(True, int)` is True — a bare bool must not pass as a year.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/x"\n'
+                'to = "scb/lisa/y"\neffective_year = true\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_variant_grain_rejected(self, tmp_path: Path) -> None:
+        # The variant grain (4-segment) is out of scope for succession.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "scb/lisa/v/2020"\n'
+                'to = "scb/lisa/v/2021"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+
+# ---------------------------------------------------------------------------
+# The three real edges moved into the repo file
+# ---------------------------------------------------------------------------
+
+
+class TestMovedEdges:
+    def test_repo_file_carries_the_moved_edges(self) -> None:
+        rel = load_relations(_ROOT / "curation" / "relations.toml")
+        # 11 replaced_by (the #375 LISA succession chain) + 3 related_to (#403).
+        assert len(rel.replaced_by) == 11
+        assert len(rel.related_to) == 3
+        assert rel.same_as == ()  # ships empty
+        # Spot-check one moved edge of each type.
+        assert ("scb/lisa/anninkf", "scb/lisa/anninkf04") in {
+            (str(e.predecessor), str(e.successor)) for e in rel.replaced_by
+        }
+        assert ("scb", "ekonomiskt-bistand", "belopp") in {
+            (e.a_provider, e.a_register, e.a_variable) for e in rel.related_to
+        }

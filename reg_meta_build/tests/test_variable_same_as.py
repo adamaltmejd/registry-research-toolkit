@@ -1,28 +1,21 @@
-"""Tests for the curated identity loader + candidate generator (#417;
-`variable_same_as.py`).
+"""Tests for the same_as candidate generator (#417; `variable_same_as.py`).
 
-Three layers, mirroring `test_variable_related_to.py`:
-  - `TestLoader` — the curated loader's good parse + every load-time failure
-    mode (FQID arity, self-edge, duplicate unordered pair, note shape). No
-    relation_kind: same_as has no kind vocabulary.
-  - `TestMaterialize` — DB-backed (`_slugged_db`): a curated cross-register edge
-    materializes BOTH directions; an unknown provider/register fails fast; an
-    out-of-build provider is skipped; a curated edge that closes a cycle with an
-    inline edge is rejected by the SHARED `_reject_same_as_cycles`.
-  - `TestGenerator` — `infer_same_as_candidates` over a synthetic DB: a Tier-1
-    pair (shared classification + value set + name), a Tier-4 pair (shared
-    >=15-code classification-NULL value set), a within-register pair is NOT
-    emitted, an already-edged pair is excluded, and `render_candidates_toml`
-    re-parses via `load_same_as`.
+The curated same_as loader/materializer moved to `relations.py` (#522) and is
+tested in `test_relations.py`; only the generator stays here. `TestGenerator`
+exercises `infer_same_as_candidates` over a synthetic DB: a Tier-1 pair (shared
+classification + value set + name), a Tier-4 pair (shared >=15-code
+classification-NULL value set), a within-register pair is NOT emitted, an
+already-edged pair is excluded, hub-suppression, and `render_candidates_toml`
+re-parsing through the relations loader (the generator's `[[edge]]
+type = "same_as"` output is exactly the curated surface's input).
 
-Fully synthetic (CLAUDE.md): builds its own TOMLs/DBs (tmp_path) and never reads
-the shipped `variable_same_as.toml`."""
+Fully synthetic (CLAUDE.md): builds its own DBs (tmp_path) and never reads the
+shipped curation TOMLs."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import pytest
 from _slugged_db import (
     add_register,
     add_state,
@@ -30,307 +23,15 @@ from _slugged_db import (
     add_variable,
     build_slugged_db,
 )
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.relations import load_relations
 from reg_meta_build.variable_same_as import (
-    CuratedSameAs,
     infer_same_as_candidates,
-    load_same_as,
     render_candidates_toml,
 )
-
-from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
 if TYPE_CHECKING:
     import sqlite3
     from pathlib import Path
-
-_SCB = frozenset({"scb"})
-
-
-class TestLoader:
-    @staticmethod
-    def _load(tmp_path: Path, text: str) -> tuple[CuratedSameAs, ...]:
-        path = tmp_path / "variable_same_as.toml"
-        path.write_text(text, encoding="utf-8")
-        return load_same_as(path)
-
-    def test_missing_file_is_empty(self, tmp_path: Path) -> None:
-        assert load_same_as(None) == ()
-        assert load_same_as(tmp_path / "absent.toml") == ()
-
-    def test_present_but_empty_file_is_empty(self, tmp_path: Path) -> None:
-        assert self._load(tmp_path, "# no edges yet\n") == ()
-
-    def test_parses_valid_edge(self, tmp_path: Path) -> None:
-        edges = self._load(
-            tmp_path,
-            """
-            [[same_as]]
-            a = "scb/lisa/inkomst"
-            b = "scb/rams/inkomst"
-            note = "candidate:tier1"
-            """,
-        )
-        assert len(edges) == 1
-        e = edges[0]
-        assert (e.a_provider, e.a_register, e.a_variable) == ("scb", "lisa", "inkomst")
-        assert (e.b_provider, e.b_register, e.b_variable) == ("scb", "rams", "inkomst")
-        assert e.note == "candidate:tier1"
-
-    def test_note_is_optional(self, tmp_path: Path) -> None:
-        edges = self._load(
-            tmp_path,
-            '[[same_as]]\na = "scb/lisa/x"\nb = "scb/rams/y"\n',
-        )
-        assert edges[0].note is None
-
-    def test_malformed_toml_is_config_error(self, tmp_path: Path) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(tmp_path, "[[same_as]]\na = = 1\n")
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_toml_unreadable"
-
-    def test_misspelled_toplevel_key_rejected(self, tmp_path: Path) -> None:
-        # `[[same_ases]]` (typo) would silently disable curation → loud error.
-        with pytest.raises(RegMetaError) as exc:
-            self._load(
-                tmp_path,
-                '[[same_ases]]\na = "scb/lisa/x"\nb = "scb/rams/y"\n',
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_invalid"
-        assert "same_ases" in exc.value.message
-
-    def test_scalar_same_as_rejected(self, tmp_path: Path) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(tmp_path, "same_as = 5\n")
-        assert exc.value.code == "variable_same_as_invalid"
-
-    @pytest.mark.parametrize(
-        "fqid",
-        [
-            "scb",  # 1-segment
-            "scb/lisa",  # 2-segment
-            "scb/lisa/x/y",  # 4-segment
-            "scb//x",  # empty middle segment
-            "",  # empty
-        ],
-    )
-    def test_bad_fqid_arity_rejected(self, tmp_path: Path, fqid: str) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(
-                tmp_path,
-                f'[[same_as]]\na = "{fqid}"\nb = "scb/rams/y"\n',
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_invalid"
-
-    def test_self_edge_rejected(self, tmp_path: Path) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(
-                tmp_path,
-                '[[same_as]]\na = "scb/lisa/x"\nb = "scb/lisa/x"\n',
-            )
-        assert exc.value.code == "variable_same_as_invalid"
-
-    def test_duplicate_unordered_pair_rejected(self, tmp_path: Path) -> None:
-        # The same pair in REVERSED a/b order is still a duplicate (symmetric).
-        with pytest.raises(RegMetaError) as exc:
-            self._load(
-                tmp_path,
-                '[[same_as]]\na = "scb/lisa/x"\nb = "scb/rams/y"\n\n'
-                '[[same_as]]\na = "scb/rams/y"\nb = "scb/lisa/x"\n',
-            )
-        assert exc.value.code == "variable_same_as_invalid"
-
-    def test_empty_note_rejected(self, tmp_path: Path) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            self._load(
-                tmp_path,
-                '[[same_as]]\na = "scb/lisa/x"\nb = "scb/rams/y"\nnote = ""\n',
-            )
-        assert exc.value.code == "variable_same_as_invalid"
-
-
-# ---------------------------------------------------------------------------
-# Materialize (curated edges merged into materialize_same_as_edges)
-# ---------------------------------------------------------------------------
-
-
-def _slug_dir(tmp_path: Path) -> Path:
-    """An empty-but-scannable slug dir (no inline same_as) so the curated path is
-    the only edge source. `load_slug_dir` scans the whole directory."""
-    (tmp_path / "scb.toml").write_text("", encoding="utf-8")
-    (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
-    return tmp_path
-
-
-def _cross_register_db() -> sqlite3.Connection:
-    """scb/lisa/<v1> + scb/rams/<v2>, both resolvable, no edges yet."""
-    conn = build_slugged_db(classification=None)  # scb/lisa with `kon`
-    add_register(conn, register_id=2, slug="rams", name="RAMS")
-    add_variable(conn, register_id=1, var_id=900, name="Inkomst", slug="inkomst")
-    add_variable(conn, register_id=2, var_id=901, name="Inkomst", slug="rinkomst")
-    conn.commit()
-    return conn
-
-
-def _edge(
-    a: str = "scb/lisa/inkomst",
-    b: str = "scb/rams/rinkomst",
-    *,
-    note: str | None = "candidate:tier1",
-) -> CuratedSameAs:
-    pa = a.split("/")
-    pb = b.split("/")
-    return CuratedSameAs(
-        a_provider=pa[0],
-        a_register=pa[1],
-        a_variable=pa[2],
-        b_provider=pb[0],
-        b_register=pb[1],
-        b_variable=pb[2],
-        note=note,
-    )
-
-
-def _same_as_rows(conn: sqlite3.Connection) -> list[tuple]:
-    return [
-        tuple(r)
-        for r in conn.execute(
-            "SELECT a_provider, a_register, a_variable, b_provider, b_register, "
-            "b_variable FROM variable_same_as ORDER BY a_register, b_register"
-        )
-    ]
-
-
-class TestMaterialize:
-    def test_curated_cross_register_edge_writes_both_directions(
-        self, tmp_path: Path
-    ) -> None:
-        conn = _cross_register_db()
-        counts = materialize_same_as_edges(
-            conn, _slug_dir(tmp_path), curated_same_as=(_edge(),), providers=_SCB
-        )
-        # One curated edge, no inline edges; both directions land.
-        assert counts == {"variable": 1, "variable_curated": 1, "classification": 0}
-        assert _same_as_rows(conn) == [
-            ("scb", "lisa", "inkomst", "scb", "rams", "rinkomst"),
-            ("scb", "rams", "rinkomst", "scb", "lisa", "inkomst"),
-        ]
-
-    def test_unknown_register_fails_fast(self, tmp_path: Path) -> None:
-        conn = _cross_register_db()
-        edge = _edge(b="scb/nonexistent/x")
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(
-                conn, _slug_dir(tmp_path), curated_same_as=(edge,), providers=_SCB
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_unknown_register"
-        assert "nonexistent" in exc.value.message
-        assert _same_as_rows(conn) == []  # nothing written
-
-    def test_unknown_a_register_fails_fast(self, tmp_path: Path) -> None:
-        # Symmetric to the b case — guards against dropping the `a` check.
-        conn = _cross_register_db()
-        edge = _edge(a="scb/nope/x")
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(
-                conn, _slug_dir(tmp_path), curated_same_as=(edge,), providers=_SCB
-            )
-        assert exc.value.code == "variable_same_as_unknown_register"
-        assert "nope" in exc.value.message
-
-    def test_variable_slug_not_validated(self, tmp_path: Path) -> None:
-        # same_as is slug-anchored — a not-yet-present variable slug survives
-        # (the link follows renames). Provider+register exist, so it writes.
-        conn = _cross_register_db()
-        edge = _edge(b="scb/rams/renamed-tomorrow")
-        counts = materialize_same_as_edges(
-            conn, _slug_dir(tmp_path), curated_same_as=(edge,), providers=_SCB
-        )
-        assert counts["variable_curated"] == 1
-        assert ("scb", "rams", "renamed-tomorrow") in {
-            (r[3], r[4], r[5]) for r in _same_as_rows(conn)
-        }
-
-    def test_out_of_build_provider_is_skipped(self, tmp_path: Path) -> None:
-        conn = _cross_register_db()
-        # scb endpoints, but this build only carries sos → skip, don't fail.
-        counts = materialize_same_as_edges(
-            conn,
-            _slug_dir(tmp_path),
-            curated_same_as=(_edge(),),
-            providers=frozenset({"sos"}),
-        )
-        assert counts["variable_curated"] == 0
-        assert _same_as_rows(conn) == []
-
-    def test_curated_reverse_of_inline_rejected_as_duplicate(
-        self, tmp_path: Path
-    ) -> None:
-        # Inline edge inkomst → rinkomst; curated edge rinkomst → inkomst is the
-        # SAME unordered pair (same_as is symmetric). The duplicate check runs
-        # before the cycle check and uses an unordered frozenset, so a reciprocal
-        # curated-vs-inline gets the clearer `variable_same_as_duplicate` message
-        # rather than relying on the cycle check.
-        conn = _cross_register_db()
-        (tmp_path / "scb.toml").write_text(
-            '[variable."1.900"]\n'
-            'same_as = [{ provider = "scb", register = "rams", '
-            'variable_slug = "rinkomst" }]\n',
-            encoding="utf-8",
-        )
-        (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
-        # Curated edge in the reverse direction = same unordered pair.
-        curated = (_edge(a="scb/rams/rinkomst", b="scb/lisa/inkomst"),)
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(
-                conn, tmp_path, curated_same_as=curated, providers=_SCB
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_duplicate"
-
-    def test_curated_duplicate_of_inline_same_direction_rejected(
-        self, tmp_path: Path
-    ) -> None:
-        # Inline edge inkomst → rinkomst; curated edge in the SAME direction is an
-        # exact duplicate. The plain INSERT would raise a raw sqlite3.IntegrityError
-        # (→ EXIT_INTERNAL "report to maintainers"); the duplicate check turns it
-        # into an actionable EXIT_CONFIG curation error instead.
-        conn = _cross_register_db()
-        (tmp_path / "scb.toml").write_text(
-            '[variable."1.900"]\n'
-            'same_as = [{ provider = "scb", register = "rams", '
-            'variable_slug = "rinkomst" }]\n',
-            encoding="utf-8",
-        )
-        (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
-        curated = (_edge(a="scb/lisa/inkomst", b="scb/rams/rinkomst"),)
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(
-                conn, tmp_path, curated_same_as=curated, providers=_SCB
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_duplicate"
-        assert "lisa/inkomst" in exc.value.message
-
-    def test_two_curated_entries_for_same_pair_rejected(self, tmp_path: Path) -> None:
-        # load_same_as dedups within the curated FILE; this guards the in-call
-        # accumulation directly (two CuratedSameAs for the same unordered pair,
-        # second in reverse order) — caught before the plain INSERT collides.
-        conn = _cross_register_db()
-        curated = (
-            _edge(a="scb/lisa/inkomst", b="scb/rams/rinkomst"),
-            _edge(a="scb/rams/rinkomst", b="scb/lisa/inkomst"),
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(
-                conn, _slug_dir(tmp_path), curated_same_as=curated, providers=_SCB
-            )
-        assert exc.value.exit_code == EXIT_CONFIG
-        assert exc.value.code == "variable_same_as_duplicate"
 
 
 # ---------------------------------------------------------------------------
@@ -560,6 +261,9 @@ class TestGenerator:
         assert result.hub_suppressed == 0
 
     def test_render_roundtrips_through_loader(self, tmp_path: Path) -> None:
+        # The generator emits the `[[edge]] type = "same_as"` shape — exactly the
+        # curated relations loader's input — so a confirmed candidate copies into
+        # relations.toml verbatim. Round-trip through `load_relations`.
         conn = _generator_db()
         result = infer_same_as_candidates(conn)
         cands = result.candidates
@@ -575,17 +279,9 @@ class TestGenerator:
 
         path = tmp_path / "candidates.toml"
         path.write_text(toml, encoding="utf-8")
-        reparsed = load_same_as(path)
+        reparsed = load_relations(path).same_as
         # Every emitted candidate re-parses as a curated entry, same unordered set.
         emitted = {frozenset({c.a_fqid, c.b_fqid}) for c in cands}
-        roundtripped = {
-            frozenset(
-                {
-                    f"{e.a_provider}/{e.a_register}/{e.a_variable}",
-                    f"{e.b_provider}/{e.b_register}/{e.b_variable}",
-                }
-            )
-            for e in reparsed
-        }
+        roundtripped = {frozenset({e.a_fqid(), e.b_fqid()}) for e in reparsed}
         assert emitted == roundtripped
         assert len(reparsed) == len(cands)

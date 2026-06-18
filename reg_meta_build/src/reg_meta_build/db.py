@@ -25,7 +25,6 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import Fqid, FqidKind
 from reg_meta.queries import extract_year
 
 from .classification_links import (
@@ -54,12 +53,9 @@ from .family_merges import (
     repo_family_merges_path,
 )
 from .fqid_slugs import (
-    load_curated_replaced_by,
     load_lineage_config,
-    materialize_same_as_edges,
     populate_slugs,
     populate_variable_slugs,
-    reject_replaced_by_cycles,
     repo_slug_dir,
 )
 from .ir import (
@@ -72,24 +68,24 @@ from .ir import (
     IRVariant,
     IRWarning,
 )
+from .relations import (
+    load_relations,
+    materialize_curated_replaced_by,
+    materialize_related_to,
+    materialize_same_as,
+    repo_relations_path,
+)
 from .tags import (
     load_tags,
     materialize_tags,
     repo_tags_path,
 )
-from .variable_related_to import (
-    load_related_to,
-    materialize_curated_related_to,
-    repo_variable_related_to_path,
-)
-from .variable_same_as import (
-    load_same_as,
-    repo_variable_same_as_path,
-)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
     from pathlib import Path
+
+    from .relations import CuratedReplacedBy
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
 # from `register.provider_id`. Add new providers by appending — never renumber.
@@ -1048,9 +1044,10 @@ CREATE INDEX idx_tag_member_by_register
 
 -- Directional succession edges. Auto-derived from SCB
 -- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
--- `_materialize_replaced_by_edges`, PLUS curated `[[replaced_by]]` slug-TOML rows
--- by `_materialize_curated_replaced_by_edges` (#440 — the register/variable
--- grains only). Three sibling tables, one per entity grain
+-- `_materialize_replaced_by_edges`, PLUS curated `type = "replaced_by"` edges
+-- from `curation/relations.toml` by `relations.materialize_curated_replaced_by`
+-- (#440/#522 — the register/variable grains only). Three sibling tables, one per
+-- entity grain
 -- (register / variant / variable). Slug-anchored so an edge survives rebuilds
 -- even if the underlying provider IDs shift. `note` distinguishes the source:
 -- `'auto:timeseries_event'` (auto-derived) vs `'curated:slug_toml'` (the
@@ -1555,10 +1552,11 @@ _REPLACED_BY_STAT_KEYS = (
     # `Ersatt av` rows duplicating an already-emitted edge (repeated source
     # rows), kept distinct from the inverse-collapse count.
     "n_skipped_duplicate",
-    # #440 curated-TOML pass. `n_curated_register_replaced_by` /
-    # `n_curated_variable_replaced_by` count edges INSERTED from `[[replaced_by]]`
-    # rows (a subset of `n_*_replaced_by` above — the curated rows roll into the
-    # same totals). `n_curated_skipped_duplicate` counts curated rows that
+    # #440/#522 curated-TOML pass. `n_curated_register_replaced_by` /
+    # `n_curated_variable_replaced_by` count edges INSERTED from
+    # `curation/relations.toml` `type = "replaced_by"` edges (a subset of
+    # `n_*_replaced_by` above — the curated rows roll into the same totals).
+    # `n_curated_skipped_duplicate` counts curated rows that
     # collapse onto an already-seen edge (event-derived or another curated row),
     # via the SHARED seen-PK sets.
     "n_curated_register_replaced_by",
@@ -1579,7 +1577,10 @@ def _empty_replaced_by_stats() -> dict[str, int]:
 
 
 def _materialize_replaced_by_edges(
-    conn: sqlite3.Connection, slug_dir: Path, *, providers: frozenset[str]
+    conn: sqlite3.Connection,
+    curated_replaced_by: tuple[CuratedReplacedBy, ...],
+    *,
+    providers: frozenset[str],
 ) -> dict[str, int]:
     """Materialize succession edges from `timeseries_event`.
 
@@ -1642,12 +1643,14 @@ def _materialize_replaced_by_edges(
 
     Returns a stats dict for the manifest.
 
-    #440: after this event-derived pass, `_materialize_curated_replaced_by_edges`
-    runs the curated `[[replaced_by]]` TOML pass over `slug_dir`, SHARING the
-    `seen_*` PK sets below so a curated edge dedups against an event-derived one
-    (and vice versa). The curated path carries the cross-provider (SOS→SCB) and
-    dead-predecessor edges `timeseries_event` cannot express; its counts roll
-    into the returned stats. See that helper for the curated-side rules.
+    #440/#522: after this event-derived pass,
+    `relations.materialize_curated_replaced_by` runs the curated
+    `type = "replaced_by"` edges (`curated_replaced_by`, from
+    `curation/relations.toml`), SHARING the `seen_*` PK sets below so a curated
+    edge dedups against an event-derived one (and vice versa). The curated path
+    carries the cross-provider (SOS→SCB) and dead-predecessor edges
+    `timeseries_event` cannot express; its counts roll into the returned stats.
+    See that helper for the curated-side rules.
     """
     _progress("Materializing replaced_by edges from timeseries_event...")
 
@@ -1966,12 +1969,19 @@ def _materialize_replaced_by_edges(
         f"{n_skipped_unresolved:,} unresolved)"
     )
 
-    # #440 curated pass — runs RIGHT AFTER the event-derived pass, sharing the
-    # `seen_*` PK sets above so curated edges dedup against event-derived ones.
-    # (Curated rows are register/variable grain only — no variant — so the
-    # variant seen-set is not passed.)
-    curated = _materialize_curated_replaced_by_edges(
-        conn, slug_dir, seen_register, seen_variable, providers=providers
+    # #440/#522 curated pass — runs RIGHT AFTER the event-derived pass, sharing
+    # the `seen_*` PK sets above so curated edges dedup against event-derived
+    # ones. (Curated rows are register/variable grain only — no variant — so the
+    # variant seen-set is not passed.) The curated `replaced_by` edges now come
+    # from `curation/relations.toml` (the typed `[[edge]]` surface), loaded once
+    # in `build_db` and threaded in.
+    curated = materialize_curated_replaced_by(
+        conn,
+        curated_replaced_by,
+        seen_register,
+        seen_variable,
+        providers=providers,
+        progress=_progress,
     )
 
     # Keys (and their meaning) live on `_REPLACED_BY_STAT_KEYS`; fill the zeroed
@@ -1994,234 +2004,6 @@ def _materialize_replaced_by_edges(
         n_curated_skipped_inactive_provider=curated["skipped_inactive_provider"],
     )
     return stats
-
-
-def _slugged_register_fqids(conn: sqlite3.Connection) -> set[tuple[str, str]]:
-    """Live, slugged `(provider, register)` slug pairs — the resolvable
-    register-grain universe a curated successor must land in."""
-    return {
-        (p_slug, r_slug)
-        for r_slug, p_slug in conn.execute(
-            "SELECT r.slug, p.slug FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE r.slug IS NOT NULL"
-        )
-    }
-
-
-def _slugged_variable_fqids(
-    conn: sqlite3.Connection,
-) -> set[tuple[str, str, str]]:
-    """Live, slugged `(provider, register, variable)` slug triples — the
-    resolvable variable-grain universe a curated successor must land in. Reads
-    the STORED `variable.slug` (the column the resolver matches on), same as the
-    event-derived variable pass."""
-    return {
-        (p_slug, r_slug, v_slug)
-        for v_slug, r_slug, p_slug in conn.execute(
-            "SELECT v.slug, r.slug, p.slug FROM variable v "
-            "JOIN register r ON v.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL"
-        )
-    }
-
-
-def _unresolved_curated_successor(successor: Fqid, grain_noun: str) -> RegMetaError:
-    """The fail-fast error when a curated [[replaced_by]] successor names no live,
-    slugged entity in this build (#440 — a curated successor must resolve, unlike
-    the event-derived path's best-effort skip)."""
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code="replaced_by_unresolved_successor",
-        error_class="configuration",
-        message=(
-            f"Curated [[replaced_by]] successor {str(successor)!r} does not "
-            f"resolve to a live, slugged {grain_noun} in this build."
-        ),
-        remediation=(
-            f"A curated successor must exist; fix the FQID or add the {grain_noun} slug."
-        ),
-    )
-
-
-def _materialize_curated_replaced_by_edges(
-    conn: sqlite3.Connection,
-    slug_dir: Path,
-    seen_register: set[tuple[str, str, str, str]],
-    seen_variable: set[tuple[str, str, str, str, str, str]],
-    *,
-    providers: frozenset[str],
-) -> dict[str, int]:
-    """Materialize curated `[[replaced_by]]` succession edges from the slug TOMLs.
-
-    Runs right after the event-derived pass (`_materialize_replaced_by_edges`),
-    sharing its `seen_register` / `seen_variable` PK sets so a curated edge
-    dedups against an event-derived one (and against another curated row). The
-    rows are parsed/shape-validated DB-free by `load_curated_replaced_by`; this
-    pass does the DB-aware existence checks, the COMBINED-graph cycle check, and
-    the INSERTs.
-
-    Acyclicity (Codex P2): the load-time check sees only the curated edges, so it
-    can't catch a curated edge that closes a cycle WITH an event-derived edge
-    (event A->B + curated B->A). This pass reconstructs the event edges from the
-    shared `seen_*` PK tuples and runs `reject_replaced_by_cycles` on the combined
-    per-grain graph (event ∪ curated-to-insert) BEFORE any INSERT, so a cycle
-    aborts the build with no partial rows.
-
-    Resolution rules (#440 — these are the whole point of the curated path):
-      - The SUCCESSOR must resolve to a live, slugged DB entity (a register or
-        variable slug present in the build). A non-resolving successor is a
-        CURATION ERROR → fail fast (EXIT_CONFIG), unlike the event-derived path's
-        best-effort skip (`timeseries_event` is noisy historical data; a curated
-        TOML row is a hand-authored assertion). EXCEPTION: a successor whose
-        PROVIDER isn't in this (partial) build is SKIPPED, not failed — a
-        `--providers=sos` build genuinely lacks the scb tables, so it can't (and
-        shouldn't) resolve an scb successor. `providers` gates this, mirroring the
-        other curated passes (classifications / grafts / related_to).
-      - The PREDECESSOR MAY be dead (no live row) — it's inserted VERBATIM
-        (slug-anchored). A curated edge exists precisely to record a succession
-        OFF a retired / renamed / cross-provider FQID that `timeseries_event`
-        can't carry. The predecessor's provider is NEVER gated (it may legitimately
-        be a dead / cross-provider FQID absent from any build).
-
-    `note = 'curated:slug_toml'` marks the provenance (distinct from the auto
-    path's `'auto:timeseries_event'`); the row's own `note` (the human transition
-    reason) lands in `beskrivning`, mirroring the auto path. Returns
-    `{"register": n, "variable": n, "skipped_duplicate": n,
-    "skipped_inactive_provider": n}`.
-    """
-    edges = load_curated_replaced_by(slug_dir)
-    if not edges:
-        return {
-            "register": 0,
-            "variable": 0,
-            "skipped_duplicate": 0,
-            "skipped_inactive_provider": 0,
-        }
-
-    _progress("Materializing curated replaced_by edges from slug TOMLs...")
-    live_registers = _slugged_register_fqids(conn)
-    live_variables = _slugged_variable_fqids(conn)
-
-    # Combined-graph cycle check (Codex P2): the event-derived edges already in
-    # `seen_*` plus the curated edges this pass will insert must be acyclic
-    # PER GRAIN. The load-time check (`load_curated_replaced_by`) sees only the
-    # curated edges, so it can't catch event A->B + curated B->A. Reconstruct the
-    # event edges from the shared seen-set PK tuples snapshotted at pass entry:
-    #   register PK (pp, pr, sp, sr)        -> (pp, pr) -> (sp, sr)
-    #   variable PK (pp, pr, pv, sp, sr, sv) -> (pp, pr, pv) -> (sp, sr, sv)
-    # The check runs BEFORE any INSERT, so a cycle aborts the build cleanly with
-    # no partial rows; only the curated edges that WILL be inserted (post
-    # provider-gate / successor-resolution / dedup) join the curated side.
-    register_cycle_edges: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
-        (pk[:2], pk[2:]) for pk in seen_register
-    ]
-    variable_cycle_edges: list[tuple[tuple[str, ...], tuple[str, ...]]] = [
-        (pk[:3], pk[3:]) for pk in seen_variable
-    ]
-
-    n_skipped_duplicate = 0
-    n_skipped_inactive_provider = 0
-    # Defer INSERTs until after the cycle check. Each pending row is its full
-    # parameter tuple, already in the seen-set so intra-pass curated dups collapse.
-    pending_register: list[tuple] = []
-    pending_variable: list[tuple] = []
-
-    for edge in edges:
-        pred = edge.predecessor
-        succ = edge.successor
-        # Provider gate on the SUCCESSOR only: a partial build that excludes the
-        # successor's provider can't resolve it, so skip the edge instead of
-        # failing. (The predecessor may be a dead / cross-provider FQID by design,
-        # so it's never gated.) A gated / dedup-skipped edge never enters the
-        # cycle graph — only edges that actually insert do.
-        assert succ.provider is not None
-        if succ.provider not in providers:
-            n_skipped_inactive_provider += 1
-            continue
-        if succ.kind is FqidKind.REGISTER:
-            assert succ.provider is not None and succ.register is not None
-            assert pred.provider is not None and pred.register is not None
-            succ_key = (succ.provider, succ.register)
-            if succ_key not in live_registers:
-                raise _unresolved_curated_successor(succ, "register")
-            # The predecessor MAY be dead — insert it verbatim (slug-anchored).
-            pk = (pred.provider, pred.register, succ.provider, succ.register)
-            if pk in seen_register:
-                n_skipped_duplicate += 1
-                continue
-            seen_register.add(pk)
-            register_cycle_edges.append(((pred.provider, pred.register), succ_key))
-            pending_register.append(
-                (*pk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
-            )
-        else:  # FqidKind.VARIABLE_BINDING (the loader admits only these two grains)
-            assert (
-                succ.provider is not None
-                and succ.register is not None
-                and succ.variable is not None
-            )
-            assert (
-                pred.provider is not None
-                and pred.register is not None
-                and pred.variable is not None
-            )
-            succ_key = (succ.provider, succ.register, succ.variable)
-            if succ_key not in live_variables:
-                raise _unresolved_curated_successor(succ, "variable")
-            pk = (
-                pred.provider,
-                pred.register,
-                pred.variable,
-                succ.provider,
-                succ.register,
-                succ.variable,
-            )
-            if pk in seen_variable:
-                n_skipped_duplicate += 1
-                continue
-            seen_variable.add(pk)
-            variable_cycle_edges.append(
-                ((pred.provider, pred.register, pred.variable), succ_key)
-            )
-            pending_variable.append(
-                (*pk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
-            )
-
-    # Reject any cycle in the COMBINED graph before writing a single row.
-    reject_replaced_by_cycles(register_cycle_edges)
-    reject_replaced_by_cycles(variable_cycle_edges)
-
-    conn.executemany(
-        "INSERT INTO register_replaced_by ("
-        "predecessor_provider, predecessor_register, "
-        "successor_provider, successor_register, "
-        "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        pending_register,
-    )
-    conn.executemany(
-        "INSERT INTO variable_replaced_by ("
-        "predecessor_provider, predecessor_register, predecessor_variable, "
-        "successor_provider, successor_register, successor_variable, "
-        "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        pending_variable,
-    )
-    n_register = len(pending_register)
-    n_variable = len(pending_variable)
-
-    _progress(
-        f"  {n_register:,} register / {n_variable:,} variable curated "
-        f"replaced_by edges ({n_skipped_duplicate:,} dedup-collapsed, "
-        f"{n_skipped_inactive_provider:,} skipped — successor provider "
-        f"not in this build)"
-    )
-    return {
-        "register": n_register,
-        "variable": n_variable,
-        "skipped_duplicate": n_skipped_duplicate,
-        "skipped_inactive_provider": n_skipped_inactive_provider,
-    }
 
 
 def _materialize_variable_related_to(
@@ -2571,7 +2353,7 @@ def _variable_set_via_same_as(
     is empty, fixed here per the A2.4 review. The COMMON case is no `same_as`
     edge at all → the result is just `{variable_slug}` (the identity match).
 
-    Edges are stored both directions (per `materialize_same_as_edges`), so a
+    Edges are stored both directions (per `relations.materialize_same_as`), so a
     single forward adjacency query per node suffices. A `visited` set makes the
     walk cycle-safe — required, not merely defensive: both-directions storage
     makes every A↔B equivalence a 2-cycle in the materialized table by design.
@@ -3338,6 +3120,13 @@ def materialize(
     # not errors (a `--providers=sos` build must not fail on an scb entry).
     active_providers = frozenset(a.provider for a, _ in adapters)
 
+    # Curated pairwise relations (#522): one typed `[[edge]]` surface loaded
+    # ONCE here, then materialized into its three table groups — `related_to`
+    # below (after variable slugs), `same_as` / `replaced_by` further down (after
+    # all slugs). Empty when the file is absent (synthetic builds, wheel
+    # installs).
+    relations = load_relations(repo_relations_path())
+
     # Classifications — maintainer-curated normalized code systems.
     # Provider-skipped classifications (seed entries whose `provider` is set but
     # absent from this build) are threaded into populate_slugs so their slug
@@ -3445,10 +3234,11 @@ def materialize(
         # Stored `variable.slug`. Runs after populate_slugs
         # (register/variant slugs feed collision messages) and after
         # _coalesce_variable_states (reads variable_state.delivery_column_name),
-        # but before materialize_same_as_edges (which reads the stored slug
-        # via _variable_source_slug). Curated `[variable]` overrides in
-        # scb.toml win; the rest auto-derive into scb.auto.toml. `fold_slugs`
-        # is the adapter's R8 build-only side channel (NOT an IR object).
+        # but before the curated relation passes (related_to / replaced_by
+        # resolve endpoints off the stored `variable.slug`). Curated `[variable]`
+        # overrides in scb.toml win; the rest auto-derive into scb.auto.toml.
+        # `fold_slugs` is the adapter's R8 build-only side channel (NOT an IR
+        # object).
         var_slug_counts = populate_variable_slugs(
             conn, slug_root, fold_slugs=fold_slug_hints
         )
@@ -3464,14 +3254,15 @@ def materialize(
         row_counts["variable_related_to"] = n_related
         _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
 
-        # Curated cross-register "see also" edges (#353). Runs right after the
-        # auto:triage pass (both write `variable_related_to`, on disjoint
-        # relation-kind vocabularies) so it shares the --skip-slugs guard; the
-        # curated kinds are NON-foldable, so the concept-group edge pass below
-        # ignores them. `providers` gates each edge to this build's providers.
-        n_curated_related = materialize_curated_related_to(
+        # Curated cross-register "see also" edges (#353, now from the typed
+        # `relations.toml`). Runs right after the auto:triage pass (both write
+        # `variable_related_to`, on disjoint relation-kind vocabularies) so it
+        # shares the --skip-slugs guard; the curated kinds are NON-foldable, so
+        # the concept-group edge pass below ignores them. `providers` gates each
+        # edge to this build's providers.
+        n_curated_related = materialize_related_to(
             conn,
-            load_related_to(repo_variable_related_to_path()),
+            relations.related_to,
             providers=active_providers,
         )
         row_counts["variable_related_to_curated"] = n_curated_related
@@ -3543,25 +3334,35 @@ def materialize(
         row_counts["tags"] = tag_counts["tags"]
         row_counts["tag_members"] = tag_counts["members"]
 
-    # same_as edges. Runs *after* populate_slugs so register /
-    # variant / version slug columns are populated — the materializer
-    # validates target slugs against them. Skip-slugs takes the
-    # honest-failure stance shared by the slug-keyed linkers below
-    # (replaced_by + lineage): skip cleanly rather than emit zero edges
-    # silently from NULL slug columns.
+    # same_as edges (curated `relations.toml`). Runs *after* populate_slugs so
+    # register / classification slug columns are populated — the materializer
+    # validates endpoints against them. Skip-slugs takes the honest-failure
+    # stance shared by the slug-keyed linkers below (replaced_by + lineage): skip
+    # cleanly rather than emit zero edges silently from NULL slug columns.
     if skip_slugs:
         _progress("Skipping same_as edges (skip_slugs=True)")
     else:
-        sa_counts = materialize_same_as_edges(
+        sa_counts = materialize_same_as(
             conn,
-            slug_root,
-            curated_same_as=load_same_as(repo_variable_same_as_path()),
+            relations.same_as,
             providers=active_providers,
         )
+        # #522: same_as curated counts now reach the manifest (previously
+        # missing) — both grains, mirroring the related_to / replaced_by curated
+        # keys. Emitted ONLY when non-zero: the curated same_as file ships EMPTY
+        # today, and an always-present `…: 0` pair would change the manifest
+        # `row_counts` JSON blob vs the released DB, tripping the dbdiff
+        # byte-identity gate for a count that carries no information. The keys
+        # appear (and dbdiff legitimately moves) the first build a same_as edge
+        # lands — exactly when the count becomes informative.
+        if sa_counts["variable"]:
+            row_counts["variable_same_as_curated"] = sa_counts["variable"]
+        if sa_counts["classification"]:
+            row_counts["classification_same_as_curated"] = sa_counts["classification"]
         _progress(
-            f"  {sa_counts['variable']:,} variable same_as edges "
-            f"({sa_counts['variable_curated']:,} curated), "
-            f"{sa_counts['classification']:,} classification same_as edges"
+            f"  {sa_counts['variable']:,} variable same_as edges, "
+            f"{sa_counts['classification']:,} classification same_as edges "
+            "(curated)"
         )
 
     # replaced_by edges. Runs *after* populate_variable_slugs
@@ -3569,13 +3370,14 @@ def materialize(
     # variable grain reads `variable.slug`. Under `--skip-slugs` those
     # columns are NULL, so the materializer would emit zero edges silently;
     # mirror the same_as honest-failure stance and skip cleanly with zeroed
-    # stats instead.
+    # stats instead. The curated `replaced_by` edges (`relations.replaced_by`)
+    # are threaded in to share the event pass's seen-PK dedup + cycle check.
     if skip_slugs:
         _progress("Skipping replaced_by edges (skip_slugs=True)")
         replaced_by_stats: dict[str, int] = _empty_replaced_by_stats()
     else:
         replaced_by_stats = _materialize_replaced_by_edges(
-            conn, slug_root, providers=active_providers
+            conn, relations.replaced_by, providers=active_providers
         )
 
     # Lineage edges. Runs *after* populate_variable_slugs so
@@ -3595,7 +3397,7 @@ def materialize(
     else:
         # State-pair interval-overlap lineage. Ordering: after
         # populate_variable_slugs (reads variable.slug on both sides),
-        # materialize_same_as_edges (the BFS reads variable_same_as), and
+        # materialize_same_as (the BFS reads variable_same_as), and
         # _coalesce_variable_states (reads the finished variable_state rows
         # it joins) — so it must be among the last passes. Shares the
         # skip_slugs guard: every slug is NULL under --skip-slugs, so the
