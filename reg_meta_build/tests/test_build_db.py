@@ -31,6 +31,8 @@ from reg_meta_build.db import (
 )
 from reg_meta_build.sources.scb import _canon_data_type
 
+from reg_meta_build.fqid_slugs import slug_dir_curates_canonical_scb
+
 # A single irrelevant Timeseries.csv row (handelse not in the succession set, so
 # it's ignored before resolution and emits NO event-derived edge). `write_csv`
 # can't take an empty row list (it appends a stray blank line the strict CSV
@@ -917,6 +919,47 @@ class TestBuildDbErrors:
         assert "pull" in exc_info.value.remediation
         assert "--providers fohm" in exc_info.value.remediation
 
+    def test_missing_canonical_seed(self, tmp_path: Path):
+        # #556: an scb build whose curated scb.toml pins a canonical-SCB register
+        # slug (#444) but whose --input-dir lacks scb_canonical/ fails the stale-seed
+        # preflight, NOT the misleading downstream slug_unknown_source_id.
+        input_dir = tmp_path / "input"
+        scb_dir = input_dir / "SCB"
+        scb_dir.mkdir(parents=True)
+        write_csv(
+            scb_dir / "Registerinformation.csv",
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS[:1],
+        )
+        # Synthetic slug_dir whose scb.toml pins a canonical-band register
+        # (2^61 = 2305843009213693952, passes is_canonical_scb), and no scb_canonical/.
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        (slug_dir / "scb.toml").write_text(
+            '[register."2305843009213693952"]\nslug = "test-canonical"\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc_info:
+            build_db(
+                providers=("scb",),
+                input_dir=input_dir,
+                db_dir=tmp_path / "db",
+                slug_dir=slug_dir,
+                skip_classifications=True,
+            )
+        assert exc_info.value.code == "scb_canonical_seed_missing"
+        assert "pull" in exc_info.value.remediation
+        assert "scb_canonical" in exc_info.value.remediation
+
+        # Negative case: a non-canonical-only scb.toml does NOT trip the preflight,
+        # so canonical-free synthetic builds keep working.
+        plain_dir = tmp_path / "plain_slugs"
+        plain_dir.mkdir()
+        (plain_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "plain-register"\n', encoding="utf-8"
+        )
+        assert slug_dir_curates_canonical_scb(plain_dir) is False
+
     def test_missing_backbone(self, tmp_path: Path):
         scb_dir = tmp_path / "SCB"
         scb_dir.mkdir()
@@ -928,16 +971,20 @@ class TestBuildDbErrors:
         scb_dir = tmp_path / "SCB"
         scb_dir.mkdir()
         (scb_dir / "Registerinformation.csv").write_bytes(b"")
+        # skip_slugs: this is a CSV-shape test (fails mid-materialization, never
+        # reaches slug population); without it the #556 canonical-seed preflight
+        # would fire first against the repo scb.toml + this slug_dir-less tmp_path.
         with pytest.raises(RegMetaError) as exc_info:
-            build_db(input_dir=tmp_path, db_dir=tmp_path)
+            build_db(input_dir=tmp_path, db_dir=tmp_path, skip_slugs=True)
         assert exc_info.value.code == "csv_empty"
 
     def test_bad_header(self, tmp_path: Path):
         scb_dir = tmp_path / "SCB"
         scb_dir.mkdir()
         (scb_dir / "Registerinformation.csv").write_bytes(b"Wrong|Header\r\n")
+        # skip_slugs: CSV-shape test, see test_empty_csv (#556 preflight else fires).
         with pytest.raises(RegMetaError) as exc_info:
-            build_db(input_dir=tmp_path, db_dir=tmp_path)
+            build_db(input_dir=tmp_path, db_dir=tmp_path, skip_slugs=True)
         assert exc_info.value.code == "csv_bad_header"
 
     def test_db_not_found(self, tmp_path: Path):
