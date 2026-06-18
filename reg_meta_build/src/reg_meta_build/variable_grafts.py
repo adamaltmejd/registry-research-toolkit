@@ -30,11 +30,17 @@ Guards / discipline:
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error, fold_column, load_curation_entries
+from ._curation import (
+    curation_error,
+    fold_column,
+    load_curation_entries,
+    require_str,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -68,16 +74,12 @@ def repo_variable_grafts_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_str(entry: dict, field: str) -> str:
-    value = entry.get(field)
-    if not isinstance(value, str) or not value.strip():
-        raise curation_error(
-            "variable_grafts_invalid",
-            f"variable_grafts [[graft]] needs `{field}` as a non-empty string, "
-            f"got {value!r}.",
-            f'Give `{field} = "<value>"` in reg_meta_build/variable_grafts.toml.',
-        )
-    return value.strip()
+_require_str = functools.partial(
+    require_str,
+    code="variable_grafts_invalid",
+    prefix="variable_grafts",
+    file_name="variable_grafts.toml",
+)
 
 
 def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
@@ -97,7 +99,7 @@ def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
     out: list[CuratedGraft] = []
     seen: set[tuple[str, str, str, str]] = set()
     for entry in entries:
-        register_fqid = _require_str(entry, "register")
+        register_fqid = _require_str(entry, "register", "[[graft]]")
         parts = register_fqid.split("/")
         if len(parts) != 2 or not all(parts):
             raise curation_error(
@@ -106,9 +108,9 @@ def load_variable_grafts(path: Path | None) -> tuple[CuratedGraft, ...]:
                 "`provider/register` FQID.",
                 'Give `register = "scb/agi"`-style 2-segment FQIDs.',
             )
-        variant = _require_str(entry, "variant")
-        column = _require_str(entry, "column")
-        description = _require_str(entry, "description")
+        variant = _require_str(entry, "variant", "[[graft]]")
+        column = _require_str(entry, "column", "[[graft]]")
+        description = _require_str(entry, "description", "[[graft]]")
         data_type = entry.get("data_type", "")
         if not isinstance(data_type, str):
             raise curation_error(

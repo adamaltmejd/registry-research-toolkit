@@ -25,12 +25,19 @@ the other curation surfaces — curation drift must be fixed, not silently dropp
 
 from __future__ import annotations
 
+import functools
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error, load_curation_entries
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_str,
+    resolve_register_id,
+    resolve_variable_id,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -74,15 +81,12 @@ def repo_tags_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_str(entry: dict, field: str, context: str) -> str:
-    value = entry.get(field)
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "tags_invalid",
-            f"tags {context} needs `{field}` as a non-empty string, got {value!r}.",
-            f'Give `{field} = "<value>"` in reg_meta_build/tags.toml.',
-        )
-    return value
+_require_str = functools.partial(
+    require_str,
+    code="tags_invalid",
+    prefix="tags",
+    file_name="tags.toml",
+)
 
 
 def _optional_str(entry: dict, field: str, context: str) -> str | None:
@@ -235,43 +239,6 @@ def _parse_member(
     )
 
 
-def _resolve_register_id(
-    conn: sqlite3.Connection, provider: str, register: str, ctx: str
-) -> int:
-    row = conn.execute(
-        "SELECT r.register_id FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ?",
-        (provider, register),
-    ).fetchone()
-    if row is None:
-        raise curation_error(
-            "tags_unresolved",
-            f"{ctx}: register {provider}/{register!r} does not resolve.",
-            "Fix the member FQID in reg_meta_build/tags.toml.",
-        )
-    return row[0]
-
-
-def _resolve_variable_id(
-    conn: sqlite3.Connection, provider: str, register: str, variable: str, ctx: str
-) -> int:
-    row = conn.execute(
-        "SELECT v.variable_id FROM variable v "
-        "JOIN register r ON v.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
-        (provider, register, variable),
-    ).fetchone()
-    if row is None:
-        raise curation_error(
-            "tags_unresolved",
-            f"{ctx}: variable {provider}/{register}/{variable!r} does not resolve.",
-            "Fix the member FQID in reg_meta_build/tags.toml.",
-        )
-    return row[0]
-
-
 def materialize_tags(
     conn: sqlite3.Connection,
     tags: tuple[CuratedTag, ...],
@@ -307,11 +274,25 @@ def materialize_tags(
         for m in active:
             if m.variable is not None:
                 register_id: int | None = None
-                variable_id: int | None = _resolve_variable_id(
-                    conn, m.provider, m.register, m.variable, mctx
+                variable_id: int | None = resolve_variable_id(
+                    conn, m.provider, m.register, m.variable
                 )
+                if variable_id is None:
+                    raise curation_error(
+                        "tags_unresolved",
+                        f"{mctx}: variable {m.provider}/{m.register}/{m.variable!r} "
+                        "does not resolve.",
+                        "Fix the member FQID in reg_meta_build/tags.toml.",
+                    )
             else:
-                register_id = _resolve_register_id(conn, m.provider, m.register, mctx)
+                register_id = resolve_register_id(conn, m.provider, m.register)
+                if register_id is None:
+                    raise curation_error(
+                        "tags_unresolved",
+                        f"{mctx}: register {m.provider}/{m.register!r} does not "
+                        "resolve.",
+                        "Fix the member FQID in reg_meta_build/tags.toml.",
+                    )
                 variable_id = None
             try:
                 conn.execute(

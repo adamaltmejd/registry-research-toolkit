@@ -263,6 +263,23 @@ follow-up — no codes minted). Pliktverket is a **closed** register (1997–201
 conscription deactivated 2010): it sets a register-level `valid_to` — a primitive the
 curated adapter materializes onto every variable state (a per-variable `valid_to` still
 overrides it), so the catalog reports the data as ending 2010 rather than open-ended.
+**Riksarkivet** (#443) is the fifth — the historical conscription/mönstring
+`inskrivning` register held at Krigsarkivet that predates Pliktverket's digital era (one
+register, 104 fields from Krigsarkivet's own codebook). It mirrors Pliktverket but
+older: data types are undocumented in the source → all `text`; the six historical
+`sjn1`–`sjn6` sjukdomsnummer predate ICD-10-SE so they stay **unlinked**; the coverage
+window (`valid_from=1969`/`valid_to=1996`) is sourced from the variable content (the
+standardized inskrivningsprov regime) and the Pliktverket 1997 takeover, flagged in the
+TOML for maintainer confirmation. (Note Skatteverket's COVID-support delivery and
+Tillväxtverket's korttidsarbete both went to the **swecov flavor**, not here — bespoke
+steward extracts, not standing registers.) **Umeå universitet** (`umu`, #443) is the
+sixth — the högskoleprovet (SweSAT) provresultat database (one register
+`hogskoleprovet`, 21 fields sourced from UMU's public SweSAT variable documentation):
+the subtest scores (verbal ORD/LÄS/MEK/ELF, quantitative XYZ/KVA/NOG/DTK), section and
+total normed results, and provtillfälle/lärosäte. Coverage runs from the 1977 test start
+(open-ended); a few variables carry a documented later introduction via per-variable
+`valid_from` (KVA + the verbal/quantitative section scores from 2011, ELF from 1992) and
+the discontinued `AO` subtest a per-variable `valid_to` of 1995.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
@@ -997,10 +1014,10 @@ case-/diacritic-only header twins delivered under *separate* cvids
 columns. Without the fold, a split-container var sharded each casing into its own
 sibling fragment (\~543 fragments across the corpus). Raw casing still surfaces where it
 should: `delivery_column_name` is the latest-era alias verbatim, and the unika lookups
-stay raw. Consequently every curated column key (`fold_overrides.toml`,
-`codelivery.toml`, `column_merges.toml`) is case-folded at load by the shared
-`_curation.fold_column` — TOML casing is cosmetic, and the single shared definition
-keeps loader keys and coalescer components from drifting.
+stay raw. Consequently every curated column key (`source_column_repairs.toml`
+(`[[column_merge]]` + `[[fold_override]]`), `codelivery.toml`) is case-folded at load by
+the shared `_curation.fold_column` — TOML casing is cosmetic, and the single shared
+definition keeps loader keys and coalescer components from drifting.
 
 **Co-delivery guard on the fold.** The fold targets era-rename twins that never
 co-occur. When two distinct spellings of one folded header share an edition of a variant
@@ -1015,8 +1032,9 @@ contested side, and the codelivery pin lookups fold `gkey[8]` (a folded pin key 
 pins ALL spellings of the header, by design). A curated column-merge outranks the guard
 — maintainer fiat can force a co-delivered pair onto one node.
 
-**Curated column-merge** (#196; `column_merges.toml`, loaded by `column_merges.py`) —
-the curated counterpart of the auto case-fold, for era-RENAME twins (`PNR` ≡ `PersonNr`)
+**Curated column-merge** (#196; `[[column_merge]]` section of
+`curation/scb/source_column_repairs.toml`, loaded by `source_column_repairs.py`) — the
+curated counterpart of the auto case-fold, for era-RENAME twins (`PNR` ≡ `PersonNr`)
 that share no case identity. The two headers never co-occur in one edition, so rule-2
 sees two components; once the var_id is a split container (other columns DO co-deliver),
 each component becomes its own sibling variable and one identity's history shards across
@@ -1041,43 +1059,45 @@ Two notes on the triage signals:
   SSYK-primary/SSYK-secondary), so it was dropped. When a register genuinely delivers
   ONE concept under DISJOINT-stem columns (näringsgren as
   `Ksjusni`/`NG1`/`bransch`/`sni2`), the stem rule can't see it; a **curated
-  fold-override** (`fold_overrides.toml`, loaded by `fold_overrides.py`) forces those
-  columns to one cluster via the `_cluster_contested(forced_same=…)` seam (#261). An
-  entry is keyed `(register_id, var_id)` — the same SCB ids the triage carries, so a
-  fold group spanning multiple variables is unrepresentable by construction. It is the
-  curation twin of `codelivery.toml` (which resolves two codings on ONE column), and
-  like it a maintainer artifact absent from wheel/synthetic builds (empty map ⇒
-  byte-identical to the stem-only partition). It is **not a silent no-op**: a named
-  column that isn't contested for the var, or an override whose register is built but
-  whose var is not a contested split container, FAILS the build (`EXIT_CONFIG`); an
-  override for a register absent from the build is inert (the partial-/synthetic-build
-  escape, like a codelivery pin for an absent register).
+  fold-override** (`[[fold_override]]` section of
+  `curation/scb/source_column_repairs.toml`, loaded by `source_column_repairs.py`)
+  forces those columns to one cluster via the `_cluster_contested(forced_same=…)` seam
+  (#261). An entry is keyed `(register_id, var_id)` — the same SCB ids the triage
+  carries, so a fold group spanning multiple variables is unrepresentable by
+  construction. It is the curation twin of `codelivery.toml` (which resolves two codings
+  on ONE column), and like it a maintainer artifact absent from wheel/synthetic builds
+  (empty map ⇒ byte-identical to the stem-only partition). It is **not a silent no-op**:
+  a named column that isn't contested for the var, or an override whose register is
+  built but whose var is not a contested split container, FAILS the build
+  (`EXIT_CONFIG`); an override for a register absent from the build is inert (the
+  partial-/synthetic-build escape, like a codelivery pin for an absent register).
 
-  **Format** — each `[[fold]]` entry is one fold group for one
-  `(register_id,   var_id)`; a var needing two independent groups gets two `[[fold]]`
-  entries with the same key:
+  **Format** — each `[[fold_override]]` entry is one fold group for one
+  `(register_id, var_id)`; a var needing two independent groups gets two
+  `[[fold_override]]` entries with the same key:
 
   ```toml
-  [[fold]]
+  [[fold_override]]
   register_id = 195
   var_id = 4027
   columns = ["bgr98", "bransch", "ksjusni"]
   ```
 
-  Only `[[fold]]` is a legal top-level table; `register_id` / `var_id` must be canonical
-  integers (no leading zeros); `columns` requires ≥ 2 non-empty strings with no repeats
-  within or across groups for the same key. All violations are `EXIT_CONFIG`. A listed
-  column names a contested **component** — the case-folded lex-min member of its rule-2
-  connectivity component (#196), which is the form the triage carries; the
-  `fold_override_unknown_column` error lists the var's current contested roots when an
-  entry goes stale.
+  Only `[[column_merge]]` and `[[fold_override]]` are legal top-level tables in
+  `source_column_repairs.toml`; `register_id` / `var_id` must be canonical integers (no
+  leading zeros); `columns` requires ≥ 2 non-empty strings with no repeats within or
+  across groups for the same key, and no column may fold to `""`. All violations are
+  `EXIT_CONFIG`. A listed column names a contested **component** — the case-folded
+  lex-min member of its rule-2 connectivity component (#196), which is the form the
+  triage carries; the `fold_override_unknown_column` error lists the var's current
+  contested roots when an entry goes stale.
 
-  **Pre-v1 churn** — the curation content in `fold_overrides.toml` churns freely pre-v1;
-  no freeze or immutability is in effect for this surface yet. Arming snapshot-style
-  immutability (analogous to the `fqid_slugs/` per-provider freeze model, #470) is
-  tracked as #209 and explicitly out of scope here. `fold_overrides.toml` is a separate
-  package-root file like `codelivery.toml` — it is not under the `fqid_slugs/` snapshot
-  machinery.
+  **Pre-v1 churn** — the curation content in `source_column_repairs.toml` churns freely
+  pre-v1; no freeze or immutability is in effect for this surface yet. Arming
+  snapshot-style immutability (analogous to the `fqid_slugs/` per-provider freeze model,
+  #470) is tracked as #209 and explicitly out of scope here.
+  `curation/scb/source_column_repairs.toml` sits under the `curation/` directory — it is
+  not under the `fqid_slugs/` snapshot machinery.
 
 - **Split `relation_kind` is decided PER CO-DELIVERED PAIR** (`_apply_split`), from the
   pair's two delivery columns, most specific first: `code_vs_label_pair` (name-based — a
@@ -1389,11 +1409,11 @@ subset deliberately excludes month-named editions). #319 adds the **adapter-leve
 curated family merge** (`family_merges.py`, driven by package-root
 `family_merges.toml`): 12 columns → ONE variable, each column carrying a per-month alias
 window (`variable_alias_window`) derived from its name's month suffix × delivered years
-(`YYYY-MM`). `column_merges.toml` is **not** the vehicle — it asserts era-renames that
-never co-occur, the opposite of 12 deliberately-parallel columns. The AGI variant's
-`cadence = month` (*Cadence policy* above) is orthogonal: cadence scopes *edition*
-conflation on the AGI register, while these monthly *columns* ride annual LISA editions
-and get their windows from the merge.
+(`YYYY-MM`). The `[[column_merge]]` section of `source_column_repairs.toml` is **not**
+the vehicle — it asserts era-renames that never co-occur, the opposite of 12
+deliberately-parallel columns. The AGI variant's `cadence = month` (*Cadence policy*
+above) is orthogonal: cadence scopes *edition* conflation on the AGI register, while
+these monthly *columns* ride annual LISA editions and get their windows from the merge.
 
 **Mechanics.** `materialize_family_merges` runs POST-triage (so `variable_state` /
 `variable_alias` exist) but BEFORE `populate_variable_slugs`. Members are identified by

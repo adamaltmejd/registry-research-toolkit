@@ -741,7 +741,7 @@ class TestLoadCodelivery:
     def test_non_canonical_id_rejected(
         self, tmp_path: Path, ids: str, why: str
     ) -> None:
-        # Parity with fold_overrides: ids must be canonical ints (shared
+        # Parity with source_column_repairs: ids must be canonical ints (shared
         # `canonical_int`). `int(...)` would coerce each of these to an inert
         # never-matching pin (`why`) instead of a load-time error.
         from reg_meta.errors import EXIT_CONFIG, RegMetaError
@@ -774,7 +774,7 @@ class TestLoadCodelivery:
         # A missing register_id/var_id must still be rejected: the old
         # `int(entry["register_id"])` raised KeyError; the new `entry.get(...)` +
         # canonical_int path must keep the same EXIT_CONFIG rejection (mirrors
-        # fold_overrides' test_missing_id_rejected), not fall through to a raw
+        # source_column_repairs' missing-id rejection), not fall through to a raw
         # crash if the `reg is None or var is None` guard ever regresses.
         from reg_meta.errors import RegMetaError
         from reg_meta_build.codelivery import load_codelivery

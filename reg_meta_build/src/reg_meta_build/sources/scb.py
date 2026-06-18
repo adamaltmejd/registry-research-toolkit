@@ -85,8 +85,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from reg_meta_build.codelivery import CodeliveryMap
-    from reg_meta_build.column_merges import ColumnMergeMap
-    from reg_meta_build.fold_overrides import FoldOverrideMap
+    from reg_meta_build.source_column_repairs import ColumnMergeMap, FoldOverrideMap
     from reg_meta_build.sources import IRObject
 
 
@@ -1290,7 +1289,8 @@ def _triage_groups(
                     remediation=(
                         "Only contested (same-edition co-delivered) columns can "
                         "be folded. Fix the column name(s) in "
-                        "reg_meta_build/fold_overrides.toml or drop the entry."
+                        "reg_meta_build/curation/scb/source_column_repairs.toml "
+                        "or drop the entry."
                     ),
                 )
             consumed.add((register_id, var_id))
@@ -1384,7 +1384,8 @@ def _triage_groups(
                 f"to fold."
             ),
             remediation=(
-                "Remove the stale entry from reg_meta_build/fold_overrides.toml, "
+                "Remove the stale entry from "
+                "reg_meta_build/curation/scb/source_column_repairs.toml, "
                 "or correct its register_id / var_id / columns."
             ),
         )
@@ -2475,7 +2476,8 @@ def _coalesce_variable_states(
     #     invariant would have to drop one. Those keep their raw node-cols; the
     #     triage still folds them into one variable (identical folded stems)
     #     with label-discriminated states — the pre-#196 handling.
-    #   - CURATED COLUMN-MERGE (#196, `column_merges.toml`): a maintainer-
+    #   - CURATED COLUMN-MERGE (#196, `curation/scb/source_column_repairs.toml`
+    #     `[[column_merge]]`): a maintainer-
     #     asserted era-rename twin set (`PNR` ≡ `PersonNr`) normalizes to one
     #     node-col (the lex-min folded member) by fiat. The triage's
     #     fold-override surface cannot express this — it acts on CONTESTED
@@ -2919,7 +2921,8 @@ def _coalesce_variable_states(
                     f"(observed, case-folded: {sorted(observed)})."
                 ),
                 remediation=(
-                    "Fix the column name(s) in reg_meta_build/column_merges.toml "
+                    "Fix the column name(s) in "
+                    "reg_meta_build/curation/scb/source_column_repairs.toml "
                     "or drop the entry. Columns are matched case-folded "
                     "(lowercase, diacritics stripped)."
                 ),

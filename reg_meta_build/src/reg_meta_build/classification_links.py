@@ -19,11 +19,17 @@ curation itself is a deferred follow-up; the loader handles zero entries cleanly
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error, load_curation_entries
+from ._curation import (
+    curation_error,
+    load_curation_entries,
+    require_fqid,
+    resolve_variable_id,
+)
 
 if TYPE_CHECKING:
     import sqlite3
@@ -54,27 +60,14 @@ def repo_classification_links_path() -> Path | None:
     return candidate if candidate.is_file() else None
 
 
-def _require_fqid(entry: dict) -> tuple[str, str, str]:
-    """Parse the `variable` field as a `provider/register/variable` 3-segment FQID
-    (mirrors `variable_related_to._require_fqid`)."""
-    value = entry.get("variable")
-    if not isinstance(value, str) or not value:
-        raise curation_error(
-            "classification_links_invalid",
-            f"classification_links [[link]] needs `variable` as a non-empty "
-            f"string, got {value!r}.",
-            'Give `variable = "scb/ulf/<variable>"`-style 3-segment FQIDs in '
-            "reg_meta_build/classification_links.toml.",
-        )
-    parts = value.split("/")
-    if len(parts) != 3 or not all(parts):
-        raise curation_error(
-            "classification_links_invalid",
-            f"classification_links `variable` {value!r} must be a 3-segment "
-            "`provider/register/variable` FQID.",
-            'Give `variable = "scb/ulf/<variable>"`-style 3-segment FQIDs.',
-        )
-    return (parts[0], parts[1], parts[2])
+_require_fqid = functools.partial(
+    require_fqid,
+    code="classification_links_invalid",
+    prefix="classification_links",
+    entry_table="[[link]]",
+    file_name="classification_links.toml",
+    example="scb/ulf/<variable>",
+)
 
 
 def load_classification_links(
@@ -104,7 +97,7 @@ def load_classification_links(
     # state keys), not something to silently dedup.
     seen: set[tuple[str, str, str]] = set()
     for entry in entries:
-        fqid = _require_fqid(entry)
+        fqid = _require_fqid(entry, "variable")
         classification = entry.get("classification")
         if not isinstance(classification, str) or not classification:
             raise curation_error(
@@ -141,21 +134,6 @@ def load_classification_links(
     return tuple(out)
 
 
-def _resolve_variable_id(
-    conn: sqlite3.Connection, provider: str, register: str, variable: str
-) -> int | None:
-    """`provider/register/variable` FQID → `variable_id`, or None if it doesn't
-    resolve (mirrors `variable_related_to._resolve_variable`, returning the id)."""
-    row = conn.execute(
-        "SELECT v.variable_id FROM variable v "
-        "JOIN register r ON v.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
-        (provider, register, variable),
-    ).fetchone()
-    return row[0] if row is not None else None
-
-
 def materialize_classification_links(
     conn: sqlite3.Connection,
     entries: tuple[CuratedClassificationLink, ...],
@@ -181,7 +159,7 @@ def materialize_classification_links(
         if e.provider not in providers:
             continue
         fqid = f"{e.provider}/{e.register}/{e.variable}"
-        variable_id = _resolve_variable_id(conn, e.provider, e.register, e.variable)
+        variable_id = resolve_variable_id(conn, e.provider, e.register, e.variable)
         if variable_id is None:
             raise curation_error(
                 "classification_links_unresolved",

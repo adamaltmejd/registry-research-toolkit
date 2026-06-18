@@ -20,12 +20,14 @@ from pathlib import Path
 import pytest
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.codelivery import load_codelivery
-from reg_meta_build.column_merges import load_column_merges
 from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.family_merges import load_family_merges
-from reg_meta_build.fold_overrides import load_fold_overrides
+from reg_meta_build.source_column_repairs import (
+    load_column_merges,
+    load_fold_overrides,
+)
 from reg_meta_build.variable_grafts import load_variable_grafts
 from reg_meta_build.variable_related_to import load_related_to
 from reg_meta_build.variable_same_as import load_same_as
@@ -39,11 +41,13 @@ def test_repo_codelivery_parses() -> None:
 
 
 def test_repo_fold_overrides_parses() -> None:
-    assert load_fold_overrides(_ROOT / "fold_overrides.toml")
+    assert load_fold_overrides(
+        _ROOT / "curation" / "scb" / "source_column_repairs.toml"
+    )
 
 
 def test_repo_column_merges_parses() -> None:
-    assert load_column_merges(_ROOT / "column_merges.toml")
+    assert load_column_merges(_ROOT / "curation" / "scb" / "source_column_repairs.toml")
 
 
 def test_repo_concept_groups_parses() -> None:

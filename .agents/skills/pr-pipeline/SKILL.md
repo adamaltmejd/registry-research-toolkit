@@ -16,14 +16,17 @@ Turn an issue, a lane, or a feature request into one or more tightly scoped PRs.
 
 Agent-surface notes:
 
-- The lead agent implements directly by default.
-- Use subagents only when the user explicitly asked for delegation/parallel agent work
-  and the current environment allows it.
-- Use the built-in review capability for the independent review pass when available. In
-  the Codex app/CLI this means `/review`; on GitHub PRs, use the configured PR review
-  flow and the bot-review window described by the repository guidance. Use
-  `registry-code-review` only as an explicit fallback checklist when built-in review is
-  unavailable or the user asks for it.
+- The lead agent implements directly by default, except for review: launch the review
+  pass in a fresh subagent when the current environment allows it, so findings are
+  independent of the authoring session. The review subagent reports findings back to the
+  lead agent; the lead agent fixes or dismisses them.
+- For review, prefer a callable built-in review capability when one is exposed.
+  Slash-command reviews may be available to the top-level user/session without being
+  invokable from inside this skill workflow. When no callable built-in review is
+  exposed, run `registry-code-review` as the repo-scoped callable review workflow in a
+  fresh subagent. If the review can only run in the authoring session, treat it as a
+  diagnostic checklist, not as independent review evidence. The GitHub bot-review window
+  described by the repository guidance still applies.
 - Do not merge unless the user explicitly asked for merge/full pipeline or confirms at
   the merge gate. Otherwise finish by marking the PR ready and reporting the gate state.
 
@@ -91,10 +94,18 @@ Run focused verification as the work evolves:
 2. Commit and push the implementation before any GitHub-based PR review or bot-review
    window. The early draft PR may contain only the empty claim commit; do not count a
    review of that stale diff as the independent review for the actual patch. If running
-   the built-in review locally before push, target the current local diff explicitly.
-3. Run the built-in review capability on the actual implementation diff. Fix or
-   explicitly dismiss every material finding with a reason. If built-in review is
-   unavailable, run `registry-code-review` as a fallback checklist.
+   a callable built-in review locally before push, target the current local diff
+   explicitly.
+3. Run review on the actual implementation diff. Launch a fresh review subagent when
+   available, and pass only the PR number or branch/range plus necessary issue context,
+   not the author's intended fixes or conclusions. Prefer a callable built-in review
+   capability; do not try to invoke slash commands that are only exposed to the
+   top-level session. If no built-in review is callable from this workflow, have the
+   subagent run `registry-code-review` on the PR number or branch/range. If subagents
+   are unavailable, run `registry-code-review` in-session only as a diagnostic
+   checklist, state that it does not satisfy the independent review gate, and stop
+   before ready/merge until an external or subagent review signal is available. Fix or
+   explicitly dismiss every material finding with a reason.
 4. Re-review substantial fixes until the review converges.
 5. Update authored docs only where the diff made them stale: package `DESIGN.md`,
    README/CLI examples, docstrings, `ARCHITECTURE.md`, repository guidance files,

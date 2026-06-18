@@ -42,8 +42,10 @@ class TestListProviders:
             "fohm",
             "lakemedelsverket",
             "pliktverket",
+            "riksarkivet",
             "scb",
             "sos",
+            "umu",
         ]
         assert all(isinstance(p, ProviderSummary) for p in providers)
 

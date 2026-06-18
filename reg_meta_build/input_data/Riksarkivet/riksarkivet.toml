@@ -1,0 +1,723 @@
+# Curated thin-provider catalog — Riksarkivet (the Swedish National Archives,
+# Krigsarkivet), #443. Read by reg_meta_build.sources.curated.CuratedAdapter.
+#
+# Source: Krigsarkivet's own field documentation `krigsarkivet_variabler.xlsx`
+# — the historical conscription/mönstring (inskrivnings) record that predates
+# Pliktverket's 1997-2010 digital era ([[pliktverket]] is the modern half). One
+# register `inskrivning` (SWECOV delivery table RA_Insark). Confidential
+# restricted-access individdata (released via SCB MONA); only the METADATA below
+# is public. `column` tokens are SOURCE-EXACT 4-letter codes (penr, sjn1, pprf,
+# …); variable slugs stay AUTO. Data types are UNDOCUMENTED in the source (codes
+# and measurements alike) → all `text` (honest, avoids false numeric/precision
+# claims). The six sjukdomsnummer (sjn1–6) are HISTORICAL disease codes from the
+# pre-ICD-10-SE era → left UNLINKED (the modern ICD-10-SE classification would
+# misdate them). Conscription medical/psychological exam fields are flagged
+# is_sensitive.
+#
+# FLAG/GAP — coverage window: the source carries no year range. valid_from=1969
+# is sourced from the variable content (standardized inskrivningsprov regime:
+# I-prov, standardpoäng, psychological profile — the 1969 conscription reform);
+# valid_to=1996 from the Pliktverket digital takeover in 1997. Maintainer to
+# confirm the real archival span.
+
+
+[[register]]
+key = "inskrivning"
+name = "Inskrivningsregister (mönstring)"
+valid_from = "1969-01-01"  # FLAG: standardized inskrivningsprov regime (1969 reform)
+valid_to = "1996-12-31"  # FLAG: Pliktverket takes over the digital register 1997
+purpose = "Historiskt inskrivnings-/mönstringsregister (Krigsarkivet): resultat från värnpliktsmönstringen — bosättning, sjukdomsnummer, psykologisk och medicinsk kapacitetsprofil, fysiska och medicinska mått (syn, hörsel, längd, vikt, blodtryck, kondition), inskrivningsprov samt placering och förbandsönskemål. Föregångare till Pliktverkets register 1997–2010."
+
+[[register.variable]]
+name = "Personnummer"
+column = "PENR"
+definition = "Personnummer"
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Bosättningskod, län, kommun, församling"
+column = "BSAT"
+definition = "Bosättningskod, län, kommun, församling"
+data_type = "text"
+
+[[register.variable]]
+name = "Typhinder för inskrivning"
+column = "TYPI"
+definition = "Typhinder för inskrivning"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Prövande värnpliktskontor"
+column = "PRVK"
+definition = "Prövande värnpliktskontor"
+data_type = "text"
+
+[[register.variable]]
+name = "Tillhörande värnpliktskontor"
+column = "VKNR"
+definition = "Tillhörande värnpliktskontor"
+data_type = "text"
+
+[[register.variable]]
+name = "Inställelsedatum samt omgång"
+column = "INST"
+definition = "Inställelsedatum samt omgång"
+data_type = "text"
+
+[[register.variable]]
+name = "Första sjukdomsnummer"
+column = "SJN1"
+definition = "Första sjukdomsnummer"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Andra sjukdomsnummer"
+column = "SJN2"
+definition = "Andra sjukdomsnummer"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Tredje sjukdomsnummer"
+column = "SJN3"
+definition = "Tredje sjukdomsnummer"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Fjärde sjukdomsnummer"
+column = "SJN4"
+definition = "Fjärde sjukdomsnummer"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Femte sjukdomsnummer"
+column = "SJN5"
+definition = "Femte sjukdomsnummer"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Sjätte sjukdomsnummer"
+column = "SJN6"
+definition = "Sjätte sjukdomsnummer"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Psykologisk profil"
+column = "PPRF"
+definition = "Psykologisk profil"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Medicinsk kapacitetsprofil"
+column = "KPRF"
+definition = "Medicinsk kapacitetsprofil"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Hälsogrupp"
+column = "HLSG"
+definition = "Hälsogrupp"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Hälsoprofil"
+column = "HALS"
+definition = "Hälsoprofil"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skolutbildning"
+column = "SKO1"
+definition = "Skolutbildning"
+data_type = "text"
+
+[[register.variable]]
+name = "Skolutbildning"
+column = "SKO2"
+definition = "Skolutbildning"
+data_type = "text"
+
+[[register.variable]]
+name = "Yrkesutbildning"
+column = "YRK1"
+definition = "Yrkesutbildning"
+data_type = "text"
+
+[[register.variable]]
+name = "Yrkesutbildning"
+column = "YRK2"
+definition = "Yrkesutbildning"
+data_type = "text"
+
+[[register.variable]]
+name = "Körkort"
+column = "FAR1"
+definition = "Körkort"
+data_type = "text"
+
+[[register.variable]]
+name = "Förarbevis"
+column = "FAR2"
+definition = "Förarbevis"
+data_type = "text"
+
+[[register.variable]]
+name = "Certifikat"
+column = "FAR3"
+definition = "Certifikat"
+data_type = "text"
+
+[[register.variable]]
+name = "Språk"
+column = "FAR4"
+definition = "Språk"
+data_type = "text"
+
+[[register.variable]]
+name = "Militär färdighet"
+column = "FAR5"
+definition = "Militär färdighet"
+data_type = "text"
+
+[[register.variable]]
+name = "Första typhinder"
+column = "TYP1"
+definition = "Första typhinder"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Tredje typhinder"
+column = "TYP3"
+definition = "Tredje typhinder"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Femte typhuinder"
+column = "TYP5"
+definition = "Femte typhuinder"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Sjätte typhinder"
+column = "TYP6"
+definition = "Sjätte typhinder"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Uprotein"
+column = "UPRO"
+definition = "Uprotein"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Uglukos"
+column = "UGLU"
+definition = "Uglukos"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Blod erytrocyter volym"
+column = "BEVF"
+definition = "Blod erytrocyter volym"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Venblod sänkningsreaktion"
+column = "VBSR"
+definition = "Venblod sänkningsreaktion"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syn okorrigerat höger öga"
+column = "SYOH"
+definition = "Syn okorrigerat höger öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syn okorrigerat vänster öga"
+column = "SYOV"
+definition = "Syn okorrigerat vänster öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syn korrigerat höger öga"
+column = "SYKH"
+definition = "Syn korrigerat höger öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syn korrigerat vänster öga"
+column = "SYKV"
+definition = "Syn korrigerat vänster öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Glas höger öga"
+column = "GLSH"
+definition = "Glas höger öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Glas vänster öga"
+column = "GLSV"
+definition = "Glas vänster öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Refraktion höger öga"
+column = "REFH"
+definition = "Refraktion höger öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Refraktion vänster öga"
+column = "REFV"
+definition = "Refraktion vänster öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Cylinder höger öga"
+column = "CYLH"
+definition = "Cylinder höger öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Cylinder vänster öga"
+column = "CYLV"
+definition = "Cylinder vänster öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Astigmatisk höger öga"
+column = "ASTH"
+definition = "Astigmatisk höger öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Astigmatisk vänster öga"
+column = "ASTV"
+definition = "Astigmatisk vänster öga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Färgsinne, tavelundersökning"
+column = "TAVL"  # codebook renders "TAVl" (lowercase-l artifact); normalized to the canonical uppercase 4-char form (codebook-only field, not in the RA_Insark delivery)
+definition = "Färgsinne, tavelundersökning"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Färgsinne, anomaloskop"
+column = "ANOM"
+definition = "Färgsinne, anomaloskop"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Mörkerseende"
+column = "MORK"
+definition = "Mörkerseende"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Hörsel höger öra"
+column = "ORAH"
+definition = "Hörsel höger öra"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Hörsel vänster öra"
+column = "ORAV"
+definition = "Hörsel vänster öra"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Längd i cm"
+column = "LNGD"
+definition = "Längd i cm"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vikt i kg"
+column = "MASS"
+definition = "Vikt i kg"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Handgrepp"
+column = "HGRP"
+definition = "Handgrepp"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Knästräckning"
+column = "KNST"
+definition = "Knästräckning"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Armböjning"
+column = "ABOJ"
+definition = "Armböjning"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skattning av muskelkraft"
+column = "SKAT"
+definition = "Skattning av muskelkraft"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Muskelfaktor"
+column = "MFAK"
+definition = "Muskelfaktor"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Arbetsekg"
+column = "AEKG"
+definition = "Arbetsekg"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Viloekg"
+column = "VEKG"
+definition = "Viloekg"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Vilopuls"
+column = "VPUL"  # codebook renders "VPUl" (lowercase-l artifact); normalized to uppercase (codebook-only field, not in the RA_Insark delivery)
+definition = "Vilopuls"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Viloblodtryck, systoliskt"
+column = "SYST"
+definition = "Viloblodtryck, systoliskt"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Viloblodtryck, diastoliskt"
+column = "DIAS"
+definition = "Viloblodtryck, diastoliskt"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skytt"
+column = "SKYT"
+definition = "Skytt"
+data_type = "text"
+
+[[register.variable]]
+name = "Typ av arbetsprov"
+column = "APRV"
+definition = "Typ av arbetsprov"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Slutpuls"
+column = "SPUL"
+definition = "Slutpuls"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Fysiskt arbetsförmåga"
+column = "WMAX"
+definition = "Fysiskt arbetsförmåga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Syreupptagningsförmåga"
+column = "SYRE"
+definition = "Syreupptagningsförmåga"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+# DEVIATION: the krigsarkivet codebook labels APUL "Maximal syreupptagningsförmåga",
+# but that duplicates SYRE (Syreupptagningsförmåga) and the token parallels the pulse
+# family vpul (vilopuls) / spul (slutpuls) — apul = arbetspuls. Pliktverket's codebook
+# independently labels APUL "Arbetspuls". Corrected here; column stays source-exact.
+name = "Arbetspuls"
+column = "APUL"
+definition = "Arbetspuls (krigsarkivet-kodboken anger felaktigt \"Maximal syreupptagningsförmåga\", en dubblett av SYRE)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Multipel värdering"
+column = "MULT"
+definition = "Multipel värdering"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Sammanfattningssiffra"
+column = "SAMF"
+definition = "Sammanfattningssiffra"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Läkarkod"
+column = "LKOD"
+definition = "Läkarkod"
+data_type = "text"
+
+[[register.variable]]
+name = "Råpoäng inskrivningsprov"
+column = "RPGI"
+definition = "Råpoäng inskrivningsprov"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Standardpoäng"
+column = "STPI"
+definition = "Standardpoäng"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "I-provbedömning"
+column = "IPRV"
+definition = "I-provbedömning"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Råpoäng PT-prov"
+column = "RPGT"
+definition = "Råpoäng PT-prov"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Standardpoäng PT-prov"
+column = "STPT"
+definition = "Standardpoäng PT-prov"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skattning SAFHE"
+column = "SAFH"
+definition = "Skattning SAFHE"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Skattning SIPE"
+column = "SIPE"
+definition = "Skattning SIPE"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Utebliven PF-skattning"
+column = "UTPF"
+definition = "Utebliven PF-skattning"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Psykologkod"
+column = "EKOD"
+definition = "Psykologkod"
+data_type = "text"
+
+[[register.variable]]
+name = "Första önskemål om år för GU början"
+column = "OGU1"
+definition = "Första önskemål om år för GU början"
+data_type = "text"
+
+[[register.variable]]
+name = "Andra önskemål om år för GU början"
+column = "OGU2"
+definition = "Andra önskemål om år för GU början"
+data_type = "text"
+
+[[register.variable]]
+name = "Telegrafiprov"
+column = "GTGF"
+definition = "Telegrafiprov"
+data_type = "text"
+
+[[register.variable]]
+name = "Intresseanmälan"
+column = "IMOT"
+definition = "Intresseanmälan"
+data_type = "text"
+
+[[register.variable]]
+name = "Förstahandsönskemål om förband"
+column = "FBD1"
+definition = "Förstahandsönskemål om förband"
+data_type = "text"
+
+[[register.variable]]
+name = "Andrahandsönskemål om förband"
+column = "FBD2"
+definition = "Andrahandsönskemål om förband"
+data_type = "text"
+
+[[register.variable]]
+name = "Tredjehandsönskemål om förband"
+column = "FBD3"
+definition = "Tredjehandsönskemål om förband"
+data_type = "text"
+
+[[register.variable]]
+name = "Nära hem"
+column = "NHEM"
+definition = "Nära hem"
+data_type = "text"
+
+[[register.variable]]
+name = "Särskild ansökan"
+column = "SANS"
+definition = "Särskild ansökan"
+data_type = "text"
+
+[[register.variable]]
+name = "Läs- och skrivssvårigheter"
+column = "LASV"
+definition = "Läs- och skrivssvårigheter"
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Truppregistreringsmyndighet"
+column = "TREG"
+definition = "Truppregistreringsmyndighet"
+data_type = "text"
+
+[[register.variable]]
+name = "Försvarsgren"
+column = "FSGR"
+definition = "Försvarsgren"
+data_type = "text"
+
+[[register.variable]]
+name = "Personalkategori"
+column = "PKAT"
+definition = "Personalkategori"
+data_type = "text"
+
+[[register.variable]]
+name = "Planerat inryckningsår 1"
+column = "PLA1"
+definition = "Planerat inryckningsår 1"
+data_type = "text"
+
+[[register.variable]]
+name = "Grundutbildningsmyndighet 1"
+column = "GUI1"
+definition = "Grundutbildningsmyndighet 1"
+data_type = "text"
+
+[[register.variable]]
+name = "Befattning 1"
+column = "BEF1"
+definition = "Befattning 1"
+data_type = "text"
+
+[[register.variable]]
+name = "Planerat inryckningsår 2"
+column = "PLA2"
+definition = "Planerat inryckningsår 2"
+data_type = "text"
+
+[[register.variable]]
+name = "Grundutbildningsmyndighet 2"
+column = "GUI2"
+definition = "Grundutbildningsmyndighet 2"
+data_type = "text"
+
+[[register.variable]]
+name = "Befattning 2"
+column = "BEF2"
+definition = "Befattning 2"
+data_type = "text"
+
+[[register.variable]]
+name = "Truppregistreringsmyndighet 2"
+column = "TRE2"
+definition = "Truppregistreringsmyndighet 2"
+data_type = "text"
+
+[[register.variable]]
+name = "Simkunnighet"
+column = "ESIM"
+definition = "Simkunnighet"
+data_type = "text"
+
+[[register.variable]]
+name = "År för inskrivning"
+column = "BARI"
+definition = "År för inskrivning"
+data_type = "text"
+
+[[register.variable]]
+name = "Kravunderskridande"
+column = "KRUN"
+definition = "Kravunderskridande"
+data_type = "text"
+
+[[register.variable]]
+name = "Mönstringsförrättarkod"
+column = "MFKD"
+definition = "Mönstringsförrättarkod"
+data_type = "text"
