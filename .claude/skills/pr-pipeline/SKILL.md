@@ -161,8 +161,15 @@ green. Pipeline-specific operational notes the gate doesn't carry:
 
   ```sh
   reg-meta-build --db /tmp/regmeta-<slug> build-db \
-    --input-dir <main-checkout>/reg_meta_build/input_data --providers scb,sos
+    --input-dir <main-checkout>/reg_meta_build/input_data
   ```
+
+  **Do NOT pin `--providers scb,sos`** for the gate build — every global thin provider
+  now ships mandatory entity-key `[variable]` pins (#554), and a curated pin for a
+  non-built provider hard-fails `slug_variable_override_stale`, so a restricted build
+  orphans them. Omit the flag to build the default global set (`input_data/` must then
+  carry every global provider's seed dir). (#563 tracks gating the staleness check to
+  built providers, which would restore provider-scoped validation builds.)
 
   Then clean up — the build writes **gitignored** `*.auto.toml` into the slug dir, and
   the scratch DB is yours to remove. The slug files are ignored, so plain `git clean -f`
