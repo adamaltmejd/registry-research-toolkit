@@ -63,6 +63,7 @@ from .fqid_slugs import (
     repo_slug_dir,
     seed_all,
     snapshot_payload,
+    write_entity_key_pins,
     write_snapshot,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
@@ -432,32 +433,39 @@ def _build_parser() -> argparse.ArgumentParser:
 
     entity_key_pins_p = sub.add_parser(
         "entity-key-pins",
-        help="Generate panel entity-key slug pins (mandatory curation, SCB, #546).",
+        help="Generate panel entity-key slug pins (mandatory curation, #546).",
         description=(
-            "Emit a `[variable]` slug-pin block for every SCB panel entity-key\n"
-            "variable on a BUILT DB. A `register_variant.panel_entity_key` ref binds\n"
-            "to a variable.slug, which CHURNS every build (the default freeze zone\n"
-            "re-derives it); a reslug then silently dangles the ref. A curated pin\n"
-            "(precedence 1 in slug population) freezes that slug. The build-side\n"
-            "curation gate makes the pin MANDATORY, so a new entity-key variable\n"
-            "can't ship un-pinned.\n\n"
-            "Scoped to the mandatory-curation provider set (MANDATORY_ENTITY_KEY_\n"
-            "PROVIDERS — SCB only today): only SCB's #143-derived slugs churn every\n"
-            "build, so only SCB entity-key vars are emitted. Other providers'\n"
-            "entity-key vars come from stable parsed/curated inputs and freeze\n"
-            "per-provider at v1 (#209), so they're skipped here.\n\n"
+            "Emit `[variable]` slug pins for every panel entity-key variable on a\n"
+            "BUILT DB, across ALL global providers (#554). A\n"
+            "`register_variant.panel_entity_key` ref binds to a variable.slug, which\n"
+            "CHURNS every build (the default freeze zone re-derives it); a reslug then\n"
+            "silently dangles the ref. A curated pin (precedence 1 in slug population)\n"
+            "freezes that slug. The build-side curation gate makes the pin MANDATORY,\n"
+            "so a new entity-key variable can't ship un-pinned.\n\n"
+            "Scope = ALL global providers (#554): any provider's entity-key slug can\n"
+            "churn and dangle a panel ref, so every provider present in a build-db DB\n"
+            "is emitted. Steward/swecov providers appear only in extend-db (whose\n"
+            "flavored validate passes no slug_dir → the gate self-skips), so they're\n"
+            "never reached.\n\n"
             "Idempotent: variables already carrying a hand-curated `[variable]` slug\n"
             "(the existing #539 pins) are SKIPPED, so re-running after the pins are\n"
             "committed emits nothing. Reads a built DB; never mutates it. The\n"
             "emitted block is dbdiff-identical (each pin reproduces the slug the\n"
             "variable already carries).\n\n"
-            "Curation flow: run with --output-toml, then fold the NON-duplicate\n"
-            "entries into reg_meta_build/fqid_slugs/scb.toml. (Chicken-and-egg: the\n"
-            "first gated build of a new entity-key var fails — generate via a\n"
-            "--no-validate build, commit the pins, then rebuild with validation.)\n\n"
+            "Output: --out-dir writes one DIR/<provider>.toml per provider (the\n"
+            "curation shape — fold each into fqid_slugs/<provider>.toml); --output-toml\n"
+            "writes ALL providers' pins to a single file (for inspection). The two are\n"
+            "mutually exclusive. With neither, the JSON payload carries the combined\n"
+            "TOML and per-provider counts.\n\n"
+            "Curation flow: run with --out-dir, then fold each NON-duplicate\n"
+            "<provider>.toml block into reg_meta_build/fqid_slugs/<provider>.toml.\n"
+            "(Chicken-and-egg: the first gated build of a new entity-key var fails —\n"
+            "generate via a --no-validate build, commit the pins, then rebuild with\n"
+            "validation.)\n\n"
             "The curated slug dir (--slug-dir; default: the repo's fqid_slugs/) is\n"
             "read to skip already-pinned variables.\n\n"
             "Examples:\n"
+            "  reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/\n"
             "  reg-meta-build --db <built-db> entity-key-pins \\\n"
             "    --output-toml /tmp/entity_key_pins.toml\n"
             "  reg-meta-build --db <built-db> entity-key-pins  # counts only"
@@ -465,13 +473,27 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     entity_key_pins_p.add_argument(
+        "--out-dir",
+        default=None,
+        help=(
+            "Write one <provider>.toml pin block per provider into this directory "
+            "(the curation shape). Mutually exclusive with --output-toml."
+        ),
+    )
+    entity_key_pins_p.add_argument(
         "-o",
         "--output-toml",
         default=None,
         help=(
-            "Write the pin TOML block to this path. Without it the JSON count "
-            "summary still prints; the TOML is included in the payload."
+            "Write the combined (all-providers) pin TOML block to this single path "
+            "(for inspection). Mutually exclusive with --out-dir. Without either the "
+            "JSON count summary still prints; the TOML is included in the payload."
         ),
+    )
+    entity_key_pins_p.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite existing *.toml in --out-dir",
     )
     entity_key_pins_p.add_argument(
         "--slug-dir",
@@ -1090,6 +1112,20 @@ def _cmd_entity_key_pins(
 ) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
+    # --out-dir (per-provider files, the curation shape) and --output-toml
+    # (single combined inspection file) are two output targets for the same
+    # pins; picking both is a usage error rather than a silent precedence.
+    if args.out_dir and args.output_toml:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="entity_key_pins_output_conflict",
+            error_class="usage",
+            message="--out-dir and --output-toml are mutually exclusive.",
+            remediation=(
+                "Pass --out-dir for per-provider files, or --output-toml for a "
+                "single combined file — not both."
+            ),
+        )
     # The curation dir to skip already-pinned variables. Mirrors the build's
     # resolution (`--slug-dir` override, else the repo's fqid_slugs/). Missing
     # (wheel install, no checkout) is a usage error here — the generator MUST
@@ -1113,23 +1149,42 @@ def _cmd_entity_key_pins(
         pins = infer_entity_key_pins(conn, slug_dir)
     finally:
         conn.close()
-    toml = render_entity_key_pins_toml(pins)
 
-    data: dict[str, Any] = {"count": len(pins), "slug_dir": str(slug_dir)}
-    if args.output_toml:
+    # Per-provider pin counts are part of the JSON summary for ALL modes (the
+    # help advertises "counts" for --out-dir, --output-toml, and no-target), so
+    # compute them once before branching on the output target.
+    counts: dict[str, int] = {}
+    for pin in pins:
+        counts[pin.provider_slug] = counts.get(pin.provider_slug, 0) + 1
+
+    data: dict[str, Any] = {
+        "count": len(pins),
+        "counts": counts,
+        "slug_dir": str(slug_dir),
+    }
+    if args.out_dir:
+        out_dir = Path(args.out_dir).expanduser().resolve()
+        written = write_entity_key_pins(pins, out_dir, force=args.force)
+        data["out_dir"] = str(out_dir)
+        data["files"] = written
+    elif args.output_toml:
+        # Single combined file, all providers — for inspection only.
         out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(toml, encoding="utf-8")
+        out_path.write_text(render_entity_key_pins_toml(pins), encoding="utf-8")
         data["output_toml"] = str(out_path)
     else:
-        # No file target — carry the TOML in the payload so the pins aren't lost.
-        data["toml"] = toml
+        # No file target — carry the combined TOML in the payload so the pins
+        # aren't lost.
+        data["toml"] = render_entity_key_pins_toml(pins)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
         command="entity-key-pins",
         args_payload={
             "slug_dir": args.slug_dir,
+            "out_dir": args.out_dir,
             "output_toml": args.output_toml,
+            "force": args.force,
         },
         db_info=None,
         data=data,
@@ -1258,8 +1313,9 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Infer variable_same_as candidate pairs (maintainer review worklist).",
     ),
     (
-        "entity-key-pins [-o TOML] [--slug-dir DIR]",
-        "Generate panel entity-key slug pins (mandatory curation, #546).",
+        "entity-key-pins [--out-dir DIR | -o TOML] [--slug-dir DIR]",
+        "Generate panel entity-key slug pins, all global providers "
+        "(mandatory curation, #546).",
     ),
     (
         "concept-group-candidates [-o TOML] [--min-siblings N] "

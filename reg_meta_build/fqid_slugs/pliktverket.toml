@@ -40,3 +40,30 @@ display_group = "Diagnoser"
 panel_entity_key = "penr"
 panel_time_key = "diagdat"
 panel_time_grain = "row"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546, #554).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL
+# global providers (#554).
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/
+# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml
+# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —
+# pins reproduce the slug the variable already carries).
+# 3 pin(s).
+
+[variable."6636188647364956026.penr"]  # diagnos: panel_entity_key = 'penr'
+slug = "penr"
+
+[variable."7137015638745956087.penr"]  # insark: panel_entity_key = 'penr'
+slug = "penr"
+
+[variable."8006336455308083750.penr"]  # insiprov: panel_entity_key = 'penr'
+slug = "penr"
+

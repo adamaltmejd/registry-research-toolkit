@@ -18,3 +18,24 @@ display_group = "Högskoleprovet (provresultat)"
 panel_entity_key = "personnummer"
 panel_time_key = "tillfalle"
 panel_time_grain = "row"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546, #554).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL
+# global providers (#554).
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/
+# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml
+# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —
+# pins reproduce the slug the variable already carries).
+# 1 pin(s).
+
+[variable."5444831050852607094.Personnummer"]  # hogskoleprovet: panel_entity_key = 'personnummer'
+slug = "personnummer"
+

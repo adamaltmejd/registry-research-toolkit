@@ -322,3 +322,66 @@ display_group = "THR_TANDHALSA_LANDSTING"
 panel_entity_key = "pnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
+
+
+# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546, #554).
+#
+# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
+# (the default freeze zone re-derives it). These pins freeze the slug each
+# entity-key ref depends on so a reslug can't dangle the ref. The build-side
+# curation gate (validate._check_entity_key_vars_curated) makes the pin
+# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL
+# global providers (#554).
+#
+# Regenerate after onboarding/repointing a panel: run
+#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/
+# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml
+# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —
+# pins reproduce the slug the variable already carries).
+# 15 pin(s).
+
+[variable."5028920659479690770.PNR"]  # lss: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."5352018376318353790.PNR"]  # ekb: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."5369119272181688462.PNR"]  # dors: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."5891427617861710725.PNR"]  # par: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."6052270801387609014.BPNR"]  # mfr: panel_entity_key = 'bpnr'
+slug = "bpnr"
+
+[variable."6052270801387609014.MPNR"]  # mfr: panel_entity_key = 'mpnr'
+slug = "mpnr"
+
+[variable."6293204766641962219.PNR"]  # lvm: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."6512206290021964828.PNR"]  # hsl: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."7119586976865944958.PNR"]  # can: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."7119586976865944958.PSEUDO"]  # can: panel_entity_key = 'pseudo'
+slug = "pseudo"
+
+[variable."7550156225339591583.PNR"]  # bu: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."7661979173609203267.PNR"]  # lmed: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."7847722537922273761.LOPNR"]  # lova: panel_entity_key = 'lopnr'
+slug = "lopnr"
+
+[variable."8948214044434034899.PNR"]  # thr: panel_entity_key = 'pnr'
+slug = "pnr"
+
+[variable."9047831179457584381.PNR"]  # sol: panel_entity_key = 'pnr'
+slug = "pnr"
+

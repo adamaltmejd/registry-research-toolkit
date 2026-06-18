@@ -874,8 +874,9 @@ def _check_entity_key_vars_curated(
     tables: set[str],
     slug_dir: Path | None,
 ) -> None:
-    """#546: every panel entity-key variable must carry a curated ``[variable]``
-    slug pin so the slug its ``panel_entity_key`` ref binds to can't drift.
+    """#546/#554: every panel entity-key variable must carry a curated
+    ``[variable]`` slug pin so the slug its ``panel_entity_key`` ref binds to
+    can't drift.
 
     A variable's auto-slug CHURNS each build (the default freeze zone re-derives
     it from the latest delivery column). A ``panel_entity_key`` ref binds to that
@@ -884,25 +885,23 @@ def _check_entity_key_vars_curated(
     in ``populate_variable_slugs``) freezes the slug; this gate makes it
     MANDATORY, so a newly-onboarded entity-key variable can't ship un-pinned.
 
-    Generate the missing pins with ``reg-meta-build entity-key-pins`` and commit
-    them to ``fqid_slugs/scb.toml``.
+    Generate the missing pins with ``reg-meta-build entity-key-pins --out-dir``
+    and commit each ``<provider>.toml`` block into ``fqid_slugs/<provider>.toml``.
 
-    Scoped to the mandatory-curation providers
-    (``fqid_slugs.MANDATORY_ENTITY_KEY_PROVIDERS`` — SCB only today, #546): only
-    SCB's #143-derived slugs churn every build, so only SCB entity-key vars must
-    be pinned. Other providers' entity-key vars (fk/sos/… — ~61 of them, #209)
-    come from stable parsed/curated inputs and freeze per-provider at v1, so the
-    gate ignores them rather than failing the build on un-pinned non-SCB vars. The
-    same constant scopes the generator (``infer_entity_key_pins``), so gate and
-    generator enforce the identical set.
+    Scope = ALL global providers (#554): every provider's entity-key slug can
+    churn and dangle a panel ref, so every provider present in the build-db DB is
+    enforced — no provider filter (the set is whatever the DB holds, so onboarding
+    a provider can't silently drop it). The enumeration is shared with the
+    generator
+    (``fqid_slugs.iter_entity_key_variables``) so the two can't disagree on which
+    variables need a pin.
 
     Scoped to the GLOBAL build: ``slug_dir is None`` (synthetic CI, direct
-    ``validate_built_db(corpus=False)`` calls, and the flavored overlay) SKIPS
-    the gate — there's no curated dir to read, and a flavor adds no SCB panel
-    keys. The enumeration is shared with the generator
-    (``fqid_slugs.iter_entity_key_variables``) so the two can't disagree on which
-    variables need a pin. Local imports dodge any build-time import cycle (the
-    pattern this module already uses for build-side helpers)."""
+    ``validate_built_db(corpus=False)`` calls, and the flavored extend-db
+    overlay) SKIPS the gate — there's no curated dir to read, and a flavor adds
+    no global panel keys (steward/swecov providers appear only in extend-db, so
+    no steward enforcement leaks in). Local imports dodge any build-time import
+    cycle (the pattern this module already uses for build-side helpers)."""
     result.section("[panel: entity-key variables are curated]")
     if slug_dir is None:
         result.ok("entity-key curation gate skipped (no slug_dir)")
@@ -914,25 +913,16 @@ def _check_entity_key_vars_curated(
     # slug-population machinery, so importing it lazily keeps `validate`'s module
     # import light and avoids any cycle through the build graph.
     from reg_meta_build.fqid_slugs import (
-        MANDATORY_ENTITY_KEY_PROVIDERS,
         iter_entity_key_variables,
         load_curated_variable_slugs,
     )
 
     curated = load_curated_variable_slugs(slug_dir)
-    # Scope to the mandatory-curation providers (the same constant the generator
-    # uses) so gate and generator enforce the identical set: only SCB's churning
-    # slugs need a pin; non-SCB entity-key vars are a per-provider v1 follow-up.
-    entity_key_vars = [
-        ek
-        for ek in iter_entity_key_variables(conn)
-        if ek.provider_slug in MANDATORY_ENTITY_KEY_PROVIDERS
-    ]
+    # #554: enforce ALL global providers (no provider filter) — gate and
+    # generator (`infer_entity_key_pins`) enumerate the identical set.
+    entity_key_vars = list(iter_entity_key_variables(conn))
     if not entity_key_vars:
-        result.ok(
-            "no mandatory-curation (SCB) variant carries an entity key "
-            "— nothing to curate"
-        )
+        result.ok("no variant carries an entity key — nothing to curate")
         return
     failures: list[str] = []
     for ek in entity_key_vars:
@@ -950,8 +940,8 @@ def _check_entity_key_vars_curated(
                 f"... and {len(failures) - 10} more un-pinned entity-key var(s)"
             )
         result.info(
-            "run `reg-meta-build entity-key-pins` and commit the output to "
-            "fqid_slugs/scb.toml"
+            "run `reg-meta-build entity-key-pins --out-dir <dir>` and commit each "
+            "<provider>.toml block to fqid_slugs/<provider>.toml"
         )
     else:
         result.ok(f"all {len(entity_key_vars):,} entity-key var(s) are curated")
