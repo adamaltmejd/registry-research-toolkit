@@ -25,7 +25,6 @@ from _slugged_db import (
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
-    MANDATORY_ENTITY_KEY_PROVIDERS,
     _curated_variable_slugs,
     infer_entity_key_pins,
     iter_entity_key_variables,
@@ -64,8 +63,8 @@ def _db_with_entity_key(entity_key: str | list[str]) -> sqlite3.Connection:
 
 def _add_sos_entity_key(conn: sqlite3.Connection) -> None:
     """Add a NON-SCB (sos, provider_id 2) register/variant/variable carrying a
-    `panel_entity_key`, so enumeration sees it but the SCB-scoped generator/gate
-    must NOT (#546: only SCB is under mandatory curation today)."""
+    `panel_entity_key` (`lopnr`, source_id `500.LOPNR`), so the all-providers
+    generator/gate (#554) emit/enforce it alongside the SCB one."""
     add_register(conn, register_id=500, slug="dors", name="Dödsorsaker", provider_id=2)
     add_variable(conn, register_id=500, var_id="LOPNR", name="Löpnummer", slug="lopnr")
     add_variant(conn, register_variant_id=5000, register_id=500, slug="grund", name="G")
@@ -88,6 +87,36 @@ def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
     d.mkdir()
     (d / "scb.toml").write_text(scb_body, encoding="utf-8")
     return d
+
+
+def _run_entity_key_pins_cli(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    conn: sqlite3.Connection,
+    slug_dir: Path,
+    out_dir: Path | None = None,
+    output_toml: Path | None = None,
+) -> tuple[dict, int]:
+    """Drive `cli._cmd_entity_key_pins` against an in-memory fixture DB.
+
+    The handler opens its own DB via the schema-checked `open_db`; the synthetic
+    `build_slugged_db` conns carry no manifest, so we stub `cli.open_db` to return
+    the fixture conn. This exercises the handler's real `--out-dir` grouping,
+    per-provider file writing, and the `--out-dir`/`--output-toml` mutual-exclusion
+    guard — everything past the DB open."""
+    import argparse
+
+    from reg_meta_build import cli
+
+    monkeypatch.setattr(cli, "open_db", lambda _db: conn)
+    args = argparse.Namespace(
+        db=None,
+        slug_dir=str(slug_dir),
+        out_dir=str(out_dir) if out_dir is not None else None,
+        output_toml=str(output_toml) if output_toml is not None else None,
+    )
+    payload, code = cli._cmd_entity_key_pins(args)
+    return payload["data"], code
 
 
 def _db_with_split_sibling_entity_key(
@@ -183,9 +212,9 @@ class TestEnumerate:
 
     def test_enumerates_all_providers_unscoped(self):
         """The enumerator is PROVIDER-GENERAL — it yields a non-SCB (sos)
-        entity-key var too; the SCB scoping is applied by the callers, not here.
-        (Guards against re-narrowing `iter_entity_key_variables` itself, which
-        would break its reusability.)"""
+        entity-key var too. Since #554 both callers cover all global providers,
+        so no provider filter is applied anywhere; this guards against
+        re-narrowing `iter_entity_key_variables` itself."""
         conn = _db_with_entity_key("kon")
         _add_sos_entity_key(conn)
         providers = {ek.provider_slug for ek in iter_entity_key_variables(conn)}
@@ -329,13 +358,62 @@ class TestGenerator:
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         assert [p.source_id for p in pins] == ["1.44", "1.99"]
 
-    def test_non_scb_entity_key_not_emitted(self, tmp_path: Path):
-        """#546: only mandatory-curation providers (SCB today) get pins. A non-SCB
-        (sos) entity-key var is enumerated but NOT emitted, while the SCB one is —
-        so the gate never fails the build on un-pinned non-SCB vars (#209)."""
-        assert "scb" in MANDATORY_ENTITY_KEY_PROVIDERS
-        assert "sos" not in MANDATORY_ENTITY_KEY_PROVIDERS
+    def test_non_scb_entity_key_emitted(self, tmp_path: Path):
+        """#554: ALL global providers are under mandatory curation, so a non-SCB
+        (sos) entity-key var IS emitted alongside the SCB one — the generator no
+        longer filters by provider."""
         conn = _db_with_entity_key("kon")
         _add_sos_entity_key(conn)
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
-        assert [(p.provider_slug, p.source_id) for p in pins] == [("scb", "1.44")]
+        assert sorted((p.provider_slug, p.source_id) for p in pins) == [
+            ("scb", "1.44"),
+            ("sos", "500.LOPNR"),
+        ]
+
+    def test_multi_provider_pins_and_out_dir(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """#554: entity-key vars in two providers → pins for both, grouped per
+        provider; the CLI `--out-dir` handler writes one correct `<provider>.toml`
+        per provider, each re-parsing to that provider's pin."""
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        slug_dir = _slug_dir(tmp_path)
+        # sos.toml must exist for the curated-glob load (load_provider_toml reads
+        # every <provider>.toml); an empty one keeps both providers un-pinned.
+        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
+
+        pins = infer_entity_key_pins(conn, slug_dir)
+        assert {p.provider_slug for p in pins} == {"scb", "sos"}
+
+        out_dir = tmp_path / "pins"
+        data, code = _run_entity_key_pins_cli(
+            monkeypatch,
+            conn=conn,
+            slug_dir=slug_dir,
+            out_dir=out_dir,
+        )
+        assert code == 0
+        assert data["counts"] == {"scb": 1, "sos": 1}
+        assert set(data["files"]) == {"scb", "sos"}
+        # Each file re-parses to exactly its own provider's pin.
+        scb_curated = _curated_variable_slugs(load_provider_toml(out_dir / "scb.toml"))
+        sos_curated = _curated_variable_slugs(load_provider_toml(out_dir / "sos.toml"))
+        assert scb_curated == {("scb", "1.44"): "kon"}
+        assert sos_curated == {("sos", "500.LOPNR"): "lopnr"}
+
+    def test_out_dir_and_output_toml_mutually_exclusive(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """`--out-dir` and `--output-toml` together is a fast-fail usage error,
+        not a silent precedence pick."""
+        conn = _db_with_entity_key("kon")
+        with pytest.raises(RegMetaError) as exc:
+            _run_entity_key_pins_cli(
+                monkeypatch,
+                conn=conn,
+                slug_dir=_slug_dir(tmp_path),
+                out_dir=tmp_path / "pins",
+                output_toml=tmp_path / "combined.toml",
+            )
+        assert exc.value.code == "entity_key_pins_output_conflict"

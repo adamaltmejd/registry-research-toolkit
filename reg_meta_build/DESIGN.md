@@ -1861,37 +1861,48 @@ variant's own register (`validate.py::_check_panel_refs_resolve`) or resolves bu
 key pointing at a sibling fragment passes resolution yet renders an empty panel axis in
 the webapp; the `panel_time_key = "period"` sentinel is exempt from both).
 
-**Entity-key slug freeze (#546).** A `panel_entity_key` ref binds to `variable.slug`,
-but variable slugs for SCB registers CHURN every build (the default "churning" freeze
+**Entity-key slug freeze (#546, #554).** A `panel_entity_key` ref binds to
+`variable.slug`, but variable slugs CHURN every build (the default "churning" freeze
 zone re-derives each slug from the latest delivery column). A reslug — such as the #143
 slug-space drift that moved 31 SCB entity-key variable slugs (#539) — silently dangles
 the `panel_entity_key` ref; `_check_panel_refs_resolve` catches it, but only after a
 full \~20-min real build. The fix is a **mandatory curated `[variable]` pin** for every
-SCB panel entity-key variable (`fqid_slugs/scb.toml`): a pin at precedence 1 in
+panel entity-key variable (`fqid_slugs/<provider>.toml`): a pin at precedence 1 in
 `populate_variable_slugs` freezes the slug absolutely so it can't drift under the ref.
 
-`reg-meta-build entity-key-pins` generates the TOML block from a built DB. It reads the
-curated slug dir to skip already-pinned variables (idempotent), scopes to
-`MANDATORY_ENTITY_KEY_PROVIDERS` (SCB only; other providers' entity-key vars come from
-stable parsed/curated inputs and freeze per-provider at v1, #209), and emits nothing
-when all variables are already pinned. The 239 pins committed to `fqid_slugs/scb.toml`
-are net-new (the generator skips the already-curated #539/#528 pins); together with
-those existing pins they cover every SCB entity-key variable.
+Scope = **all global providers** (#554). Although the #539 incident was SCB-specific,
+any provider's entity-key slug can churn and dangle a panel ref, so every provider
+present in a `build-db` DB (scb, sos, fk, fohm, umu, pliktverket, riksarkivet,
+lakemedelsverket) is under mandatory curation — there is no provider allow-list.
+Steward/swecov providers appear only in `extend-db` (whose flavored validate passes
+`slug_dir=None`, so the gate self-skips), so they are never enforced.
+
+`reg-meta-build entity-key-pins` generates the TOML from a built DB. It reads the
+curated slug dir to skip already-pinned variables (idempotent), enumerates every
+provider's entity-key variables (no provider filter), and emits nothing when all are
+already pinned. `--out-dir DIR` writes one `DIR/<provider>.toml` block per provider (the
+curation shape — fold each into `fqid_slugs/<provider>.toml`); `--output-toml FILE`
+writes all providers' pins to a single inspection file; the two are mutually exclusive.
+The emitted pins are dbdiff-identical (each reproduces the slug the variable already
+carries).
 
 The build-side gate (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY
 on the real build (`corpus=True`, i.e. a maintainer's `build-db` without
-`--no-validate`): any SCB entity-key variable without a curated `[variable]` pin is a
-hard build failure. Synthetic CI (`corpus=False`, `slug_dir=None`) skips the gate — the
-fixtures carry no curated slug dir. Flavored builds (steward overlay) also skip it — a
-flavor adds no SCB panel keys.
+`--no-validate`): any entity-key variable (any global provider) without a curated
+`[variable]` pin is a hard build failure. The gate and generator share
+`iter_entity_key_variables`, so they enforce the identical set. Synthetic CI
+(`corpus=False`, `slug_dir=None`) skips the gate — the fixtures carry no curated slug
+dir. Flavored builds (steward overlay, `slug_dir=None`) also skip it — a flavor adds no
+global panel keys.
 
-**Chicken-and-egg:** when a new SCB register variant with a `panel_entity_key` is
-onboarded, the first gated `build-db` will fail the entity-key gate because the pin
-doesn't exist yet. Workflow:
+**Chicken-and-egg:** when a new register variant with a `panel_entity_key` is onboarded,
+the first gated `build-db` will fail the entity-key gate because the pin doesn't exist
+yet. Workflow:
 
 1. `reg-meta-build --db ... build-db --no-validate` to produce the DB without the gate.
-2. `reg-meta-build --db <built-db> entity-key-pins --output-toml /tmp/new_pins.toml`
-3. Fold the non-duplicate entries from `/tmp/new_pins.toml` into `fqid_slugs/scb.toml`.
+2. `reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/new_pins/`
+3. Fold the non-duplicate entries from each `/tmp/new_pins/<provider>.toml` into
+   `fqid_slugs/<provider>.toml`.
 4. Commit the pins, then rebuild with validation (`build-db` without `--no-validate`).
 
 ## Concept-group derivation (#303)

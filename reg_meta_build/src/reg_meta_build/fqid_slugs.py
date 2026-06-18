@@ -1160,15 +1160,16 @@ def write_auto_toml(
 # This generator emits those pins from a built DB; the build-side gate
 # (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY so a NEW
 # entity-key var can't ship un-pinned. Both share `iter_entity_key_variables`
-# so they enumerate the exact same set, then scope it to
-# `MANDATORY_ENTITY_KEY_PROVIDERS` (below) at the call site.
-
-# Providers whose panel entity-key slug class is under mandatory curation
-# (#546). SCB only today: its #143-derived slugs churn every build and can
-# dangle panel_entity_key refs (the #539/#528 incidents). Other providers'
-# entity-key vars come from curated/parsed inputs with stable columns; freeze
-# them per-provider at v1 (#209) by adding to this set.
-MANDATORY_ENTITY_KEY_PROVIDERS = frozenset({"scb"})
+# so they enumerate the exact same set.
+#
+# Scope = ALL global providers (#554). Every provider present in a `build-db` DB
+# (scb, sos, fk, fohm, umu, pliktverket, riksarkivet, lakemedelsverket) is under
+# mandatory curation: any provider's entity-key vars can dangle a panel ref as
+# its slug churns. No provider filter is applied — the enumerator yields every
+# provider, and the GLOBAL-build-only scope is encoded by the gate's
+# `slug_dir is None` skip: synthetic CI and the flavored extend-db overlay pass
+# `slug_dir=None`, so steward/swecov providers (which only appear in extend-db)
+# never reach this gate.
 
 
 def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
@@ -1268,9 +1269,10 @@ def iter_entity_key_variables(
     Shared by the pin generator (`infer_entity_key_pins`) and the curation gate
     (`validate._check_entity_key_vars_curated`) so the two can't disagree on
     which variables need a pin. PROVIDER-GENERAL by design: it yields every
-    provider's entity-key vars; both callers scope to
-    `MANDATORY_ENTITY_KEY_PROVIDERS` (SCB only, #546) at the call site, so the
-    constant is the single knob and this enumerator stays reusable."""
+    provider's entity-key vars, and (#554) ALL global providers are under
+    mandatory curation, so neither caller filters by provider — the GLOBAL-build
+    scope is encoded by the gate's `slug_dir is None` skip (synthetic CI +
+    flavored extend-db pass None), not a provider allow-list."""
     rows = conn.execute(
         "SELECT rv.register_id, rv.panel_entity_key, "
         "       r.slug AS register_slug, r.name AS register_name, "
@@ -1337,20 +1339,19 @@ def _source_id_sort_key(source_id: str) -> tuple[int, int, int, str]:
 def infer_entity_key_pins(
     conn: sqlite3.Connection, slug_dir: Path
 ) -> list[EntityKeyPin]:
-    """Pins for every mandatory-curation entity-key variable NOT already curated.
+    """Pins for every entity-key variable NOT already curated, all providers.
 
     Reads a built DB; never mutates it. For each entity-key variable
-    (`iter_entity_key_variables`) whose provider is under mandatory curation
-    (`MANDATORY_ENTITY_KEY_PROVIDERS` — SCB only today), emits a pin binding its
-    build `source_id` to its current `variable.slug` — UNLESS `(provider,
-    source_id)` already has a hand-curated `[variable]` slug (the generator is
-    idempotent: re-running after the pins are committed emits nothing, and the 35
-    existing #539 pins are never duplicated). Other providers' entity-key vars are
-    skipped here (their slugs come from stable parsed/curated inputs; they freeze
-    per-provider at v1, #209) — `iter_entity_key_variables` stays provider-general
-    and reusable, with the scoping applied only at this call site so the constant
-    is the one knob. Sorted numeric-aware by source_id within provider, matching
-    the committed file's ordering."""
+    (`iter_entity_key_variables`) across ALL global providers (#554), emits a pin
+    binding its build `source_id` to its current `variable.slug` — UNLESS
+    `(provider, source_id)` already has a hand-curated `[variable]` slug (the
+    generator is idempotent: re-running after the pins are committed emits
+    nothing, and the existing #539 pins are never duplicated). No provider filter:
+    a panel ref dangles whenever its keyed variable's slug churns, regardless of
+    provider, so every global provider is pinned (steward/swecov providers only
+    appear in extend-db, whose flavored validate passes `slug_dir=None` → the gate
+    self-skips, so they never reach here). Sorted numeric-aware by source_id
+    within provider, matching the committed files' ordering."""
     curated = load_curated_variable_slugs(slug_dir)
     pins = [
         EntityKeyPin(
@@ -1361,36 +1362,40 @@ def infer_entity_key_pins(
             variable_slug=ek.variable_slug,
         )
         for ek in iter_entity_key_variables(conn)
-        if ek.provider_slug in MANDATORY_ENTITY_KEY_PROVIDERS
-        and (ek.provider_slug, ek.source_id) not in curated
+        if (ek.provider_slug, ek.source_id) not in curated
     ]
     pins.sort(key=lambda p: (p.provider_slug, _source_id_sort_key(p.source_id)))
     return pins
 
 
 def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
-    """Render the (SCB-scoped, #546) entity-key pins as a self-contained
-    `[variable]` block to append to ``fqid_slugs/scb.toml`` — same style as the
-    #539 block already there.
+    """Render entity-key pins (#546/#554) as a self-contained `[variable]` block
+    to append to a provider's ``fqid_slugs/<provider>.toml`` — same style as the
+    #539 block already in ``scb.toml``.
 
-    Built by hand (not `tomli_w`) so the trailing `# <reg>: panel_entity_key`
-    comments survive. `source_id` segments are integers / kebab discriminators
-    and slugs are kebab identifiers, so no TOML escaping is needed (the
-    `_toml_str` quoting still applies to the key for safety)."""
+    The caller groups pins per provider (the `--out-dir` path writes one
+    `<provider>.toml` block per provider; `--output-toml` writes all providers'
+    pins in one inspection file). Built by hand (not `tomli_w`) so the trailing
+    `# <reg>: panel_entity_key` comments survive. `source_id` segments are
+    integers / kebab discriminators and slugs are kebab identifiers, so no TOML
+    escaping is needed (the `_toml_str` quoting still applies to the key for
+    safety)."""
     lines = [
-        "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).",
+        "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins "
+        "(#546, #554).",
         "#",
         "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
         "# (the default freeze zone re-derives it). These pins freeze the slug each",
         "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
         "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
-        "# MANDATORY — a new entity-key variable can't ship un-pinned.",
+        "# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL",
+        "# global providers (#554).",
         "#",
         "# Regenerate after onboarding/repointing a panel: run",
-        "#   reg-meta-build --db <built-db> entity-key-pins \\",
-        "#     --output-toml /tmp/entity_key_pins.toml",
-        "# and fold the NON-duplicate entries in here. dbdiff-identical (slug values",
-        "# only — pins reproduce the slug the variable already carries).",
+        "#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/",
+        "# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml",
+        "# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —",
+        "# pins reproduce the slug the variable already carries).",
         f"# {len(pins)} pin(s).",
         "",
     ]
@@ -3034,7 +3039,6 @@ __all__ = (
     "CLASSIFICATIONS_ZONE",
     "ENTITY_KINDS",
     "FREEZE_STATE_FILE",
-    "MANDATORY_ENTITY_KEY_PROVIDERS",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
     "EntityKeyPin",
