@@ -25,6 +25,8 @@ Current providers:
 - `riksarkivet` — Riksarkivet / Krigsarkivet (historical conscription/mönstring
   inskrivningsregister predating Pliktverket); thin curated provider read from
   `input_data/Riksarkivet/riksarkivet.toml` via `CuratedAdapter`.
+- `umu` — Umeå universitet (högskoleprovet / SweSAT provresultat database); thin
+  curated provider read from `input_data/UMU/umu.toml` via `CuratedAdapter`.
 
 The post-refactor contract every adapter must implement is the `IRAdapter`
 protocol below. Native-format providers get their own module (`scb.py`,

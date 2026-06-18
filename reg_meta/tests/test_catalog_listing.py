@@ -45,6 +45,7 @@ class TestListProviders:
             "riksarkivet",
             "scb",
             "sos",
+            "umu",
         ]
         assert all(isinstance(p, ProviderSummary) for p in providers)
 

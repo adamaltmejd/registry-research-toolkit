@@ -270,8 +270,16 @@ older: data types are undocumented in the source → all `text`; the six histori
 `sjn1`–`sjn6` sjukdomsnummer predate ICD-10-SE so they stay **unlinked**; the coverage
 window (`valid_from=1969`/`valid_to=1996`) is sourced from the variable content (the
 standardized inskrivningsprov regime) and the Pliktverket 1997 takeover, flagged in the
-TOML for maintainer confirmation. (Note Skatteverket's COVID-support delivery went to
-the **swecov flavor**, not here — a bespoke steward extract, not a standing register.)
+TOML for maintainer confirmation. (Note Skatteverket's COVID-support delivery and
+Tillväxtverket's korttidsarbete both went to the **swecov flavor**, not here — bespoke
+steward extracts, not standing registers.) **Umeå universitet** (`umu`, #443) is the
+sixth — the högskoleprovet (SweSAT) provresultat database (one register
+`hogskoleprovet`, 21 fields sourced from UMU's public SweSAT variable documentation):
+the subtest scores (verbal ORD/LÄS/MEK/ELF, quantitative XYZ/KVA/NOG/DTK), section and
+total normed results, and provtillfälle/lärosäte. Coverage runs from the 1977 test start
+(open-ended); a few variables carry a documented later introduction via per-variable
+`valid_from` (KVA + the verbal/quantitative section scores from 2011, ELF from 1992) and
+the discontinued `AO` subtest a per-variable `valid_to` of 1995.
 
 The minted-id band invariant generalizes accordingly: the GLOBAL build's band check
 (`validate.py`) enforces the high band for every **seeded** non-SCB provider (derived
