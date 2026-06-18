@@ -131,11 +131,13 @@ For merge, satisfy the repo gate:
 - stale-head check before and after merge.
 
 Run the real `build-db` last and once for build-affecting work, using the main
-checkout's untracked seed if working from a worktree. Do **not** pass `--providers` —
-build the full global set. A restricted build (e.g. `--providers scb,sos`) orphans the
-global thin providers' mandatory entity-key pins (#554) and hard-fails
-`slug_variable_override_stale` (#563 tracks restoring provider-scoped builds). If the PR
-changes any tracked `reg_meta_build/input_data/**` file (provider `*.toml`,
+checkout's untracked seed if working from a worktree. Narrowing with `--providers` is
+fine for a scoped dbdiff (e.g. `--providers scb,sos` for an SCB/SOS-only change is
+faster than the full global build) — #563 gates the curated-override staleness check to
+the built providers, so a thin provider's entity-key pins (#554) no longer crash a
+restricted build. Pick the providers your PR affects, or omit `--providers` for the full
+global set (release asset / cross-provider PRs). If the PR changes any tracked
+`reg_meta_build/input_data/**` file (provider `*.toml`,
 `classifications/`/`scb_canonical/` CSV, or an add/delete/rename), the absolute
 `--input-dir` below reads the main checkout's copy, so the gate validates main's data
 not yours and can miss a DB-content regression. Point `--input-dir` at an overlay root

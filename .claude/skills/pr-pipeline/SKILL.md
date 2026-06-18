@@ -164,12 +164,13 @@ green. Pipeline-specific operational notes the gate doesn't carry:
     --input-dir <main-checkout>/reg_meta_build/input_data
   ```
 
-  **Do NOT pin `--providers scb,sos`** for the gate build — every global thin provider
-  now ships mandatory entity-key `[variable]` pins (#554), and a curated pin for a
-  non-built provider hard-fails `slug_variable_override_stale`, so a restricted build
-  orphans them. Omit the flag to build the default global set (`input_data/` must then
-  carry every global provider's seed dir). (#563 tracks gating the staleness check to
-  built providers, which would restore provider-scoped validation builds.)
+  **Narrowing with `--providers` is fine for a scoped dbdiff** — e.g.
+  `--providers   scb,sos` for an SCB/SOS-only change is faster than the full global
+  build. #563 gates the curated-override staleness check to the providers actually
+  built, so a thin provider's mandatory entity-key `[variable]` pins (#554) no longer
+  crash a restricted build. Pick the providers your PR actually affects; build the
+  **full** default set (omit `--providers`) for the release asset or a cross-provider
+  change (`input_data/` must then carry every global provider's seed dir).
 
   If the PR changes **any tracked** `reg_meta_build/input_data/**` file (a provider's
   `*.toml`, a `classifications/` or `scb_canonical/` CSV, an add / delete / rename), the
