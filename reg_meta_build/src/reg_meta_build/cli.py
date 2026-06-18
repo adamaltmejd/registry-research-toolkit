@@ -428,15 +428,18 @@ def _build_parser() -> argparse.ArgumentParser:
         "concept-group-candidates",
         help="Generate concept-group fold candidates (maintainer review worklist).",
         description=(
-            "Scan a BUILT DB for ungrouped digit-suffixed slug families\n"
-            "(sun-niva2000…, morsak1/2/3, the fasit yearly series) and emit a\n"
-            "ranked `[[variable_group]]` TOML fold worklist — the committed,\n"
-            "machine-owned reg_meta_build/concept_groups.auto.toml. NOTHING is\n"
-            "materialized; concept groups are presentation-only and folding is\n"
-            "OPT-IN: a maintainer reviews each family and folds the confirmed ones\n"
-            "by adding an `[[accept]]` (register + key) in\n"
-            "reg_meta_build/concept_groups.toml. Reads a built DB; never mutates\n"
-            "it, and never hand-edit the generated output.\n\n"
+            "Scan a BUILT DB (the `--db` global) for ungrouped digit-suffixed slug\n"
+            "families (sun-niva2000…, morsak1/2/3, the fasit yearly series) and\n"
+            "regenerate the committed, machine-owned candidate catalog\n"
+            "reg_meta_build/concept_groups.auto.toml. NOTHING is materialized;\n"
+            "concept groups are presentation-only and folding is OPT-IN: a maintainer\n"
+            "reviews each family and folds the confirmed ones by adding an\n"
+            "`[[accept]]` (register + key) in reg_meta_build/concept_groups.toml.\n"
+            "Reads a built DB; never mutates it, and never hand-edit the generated\n"
+            "output.\n\n"
+            "Without --output-toml the catalog is NOT written — only the JSON counts\n"
+            "summary prints (the TOML is in the payload). To regenerate the committed\n"
+            "file, point --output-toml at it (see the Examples).\n\n"
             "A family folds only past a label-agreement gate: its common\n"
             "case-insensitive name prefix must be >= --min-label-prefix chars AND\n"
             "the prefix-to-mean-name-length ratio >= --min-agreement. Families that\n"
@@ -447,9 +450,13 @@ def _build_parser() -> argparse.ArgumentParser:
             "facet `label` are EVIDENCE — the maintainer overrides them in the\n"
             "`[[accept]]` entry.\n\n"
             "Examples:\n"
-            "  reg-meta-build concept-group-candidates --output-toml /tmp/cands.toml\n"
-            "  reg-meta-build concept-group-candidates --min-agreement 0.7\n"
-            "  reg-meta-build concept-group-candidates --min-siblings 3"
+            "  # Regenerate the committed catalog (the canonical invocation):\n"
+            "  reg-meta-build --db <built-db-dir> concept-group-candidates \\\n"
+            "    --output-toml reg_meta_build/concept_groups.auto.toml\n"
+            "  # Preview counts only (writes nothing):\n"
+            "  reg-meta-build --db <built-db-dir> concept-group-candidates\n"
+            "  reg-meta-build --db <built-db-dir> concept-group-candidates "
+            "--min-agreement 0.7"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -458,8 +465,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--output-toml",
         default=None,
         help=(
-            "Write the candidate TOML worklist to this path. Without it the JSON "
-            "counts summary still prints; the TOML is included in the payload."
+            "Write the candidate catalog TOML to this path — point it at "
+            "reg_meta_build/concept_groups.auto.toml to regenerate the committed "
+            "file. Without it the JSON counts summary still prints; the TOML is "
+            "included in the payload."
         ),
     )
     concept_group_p.add_argument(

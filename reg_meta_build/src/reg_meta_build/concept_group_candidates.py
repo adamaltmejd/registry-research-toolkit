@@ -1,17 +1,24 @@
-"""Concept-group fold-candidate generator (#496, PR1).
+"""Concept-group fold-candidate generator (#496).
 
 The `concept_groups` derivation (#303) folds machine-stamped SCB column families
 into PRESENTATION-ONLY browse rows, but its automatic layer is patchy: the `edge`
 pass only fires on A2.2 sibling edges, and the `token` pass only recognises the
 exact curated month/vintage vocabularies. Everything else (digit-suffixed families
 like `sun-niva2000…`, `morsak1/2/3`, the `fasit` yearly series) sits unfolded
-unless a maintainer hand-lists it in `concept_groups.toml`.
+unless a maintainer opts it in via `concept_groups.toml`.
 
-This module is the GENERATOR half of the curate-then-materialize split that
+This module is the GENERATOR half of the generate-then-accept split that
 `variable_same_as` (#417) established: it scans a BUILT DB for ungrouped
-digit-suffixed slug families, scores each for label agreement, and emits a ranked
-`[[variable_group]]` TOML worklist a maintainer reviews into a future committed
-`concept_groups.auto.toml`. It materializes NOTHING and never mutates the DB.
+digit-suffixed slug families, scores each for label agreement, and emits the
+committed, machine-owned `concept_groups.auto.toml` — the ranked candidate
+catalog. It materializes NOTHING and never mutates the DB; it only writes the
+auto file (the maintainer never hand-edits that file).
+
+Candidates fold OPT-IN: a family in `concept_groups.auto.toml` folds only when an
+`[[accept]]` entry in `concept_groups.toml` references it by `(register, key)`
+(see `concept_groups.load_concept_group_accepts` / `resolve_accept`) — there is no
+copy-across; the accept is a thin by-reference pointer (with optional
+`label`/`axis`/`exclude` overrides).
 
 Concept groups are cosmetic (a wrong group is a curation bug, not the identity
 corruption that `same_as` risks), so the gate is lighter than same_as's tiers —
@@ -20,13 +27,13 @@ e.g. ULF's 2-char `f1/f2/f3` survey items). The generator splits foldable famili
 from batteries on label agreement and reports the excluded-battery count so the
 cutoff is never a silent truncation (CLAUDE.md).
 
-The output schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
-is exactly `concept_groups.load_concept_groups`' input schema, so a confirmed
-candidate copies across verbatim — which is why the generator also SKIPS a family
-whose `(register, stem)` already names an edge/token group (it would collide on the
-`idx_concept_group_key` unique index at the next build) and reports that count too.
-Like the other curation TOMLs the worklist is a maintainer artifact — the generator
-never writes the curated file.
+The candidate schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
+is exactly `concept_groups.load_concept_groups`' input schema. The generator also
+SKIPS a family whose `(register, stem)` already names an edge/token group: an
+`[[accept]]` resolves against a FRESH build at materialize time, so accepting such
+a candidate would collide on the `idx_concept_group_key` unique index. The family is
+dropped from the catalog so the catalog stays accept-safe, and the dropped count is
+reported (never a silent truncation).
 """
 
 from __future__ import annotations
@@ -315,12 +322,13 @@ def render_candidates_toml(
     min_label_prefix: int,
     min_agreement: float,
 ) -> str:
-    """Render the fold worklist as a `[[variable_group]]` TOML string a maintainer
-    curates from. Built by hand (not `tomli_w`) so the per-candidate
+    """Render the committed, machine-owned `concept_groups.auto.toml` candidate
+    catalog as a `[[variable_group]]` TOML string a maintainer folds from by
+    `[[accept]]` reference. Built by hand (not `tomli_w`) so the per-candidate
     `# axis=… agreement=… members=…` provenance comments survive — `tomli_w` drops
-    comments. The header records the active thresholds, the foldable count, the
-    `excluded_batteries` count, and the `skipped_existing_key` count (so neither
-    cutoff is ever silent).
+    comments. The header records the executable regenerate command, the active
+    thresholds, the foldable count, the `excluded_batteries` count, and the
+    `skipped_existing_key` count (so neither cutoff is ever silent).
 
     The output MUST re-parse cleanly through `concept_groups.load_concept_groups`:
     `register` is a 2-segment FQID, each member sets exactly `variable` +
@@ -335,8 +343,11 @@ def render_candidates_toml(
         "reg-meta-build concept-group-candidates.",
         "#",
         "# THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/concept_groups.auto.toml,",
-        "# the committed candidate catalog. Regenerate it with `reg-meta-build",
-        "# concept-group-candidates` — NEVER hand-edit it (edits are overwritten).",
+        "# the committed candidate catalog. Regenerate it with:",
+        "#   reg-meta-build --db <built-db-dir> concept-group-candidates \\",
+        "#     --output-toml reg_meta_build/concept_groups.auto.toml",
+        "# (`--db` points at a built reg_meta DB to scan; `--output-toml` targets",
+        "# this committed file). NEVER hand-edit it (edits are overwritten).",
         "#",
         "# These are INFERRED foldable column families, NOT folded by default.",
         "# Folding is OPT-IN: to fold a family, add an `[[accept]]` entry in",

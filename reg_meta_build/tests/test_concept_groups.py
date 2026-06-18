@@ -691,6 +691,28 @@ class TestAcceptList:
         )
         assert counts["curated_groups"] == 0
 
+    def test_accept_member_claimed_since_generation_fails_with_accept_message(
+        self,
+    ) -> None:
+        # The auto family was generated against an earlier build; here its member
+        # `morsak1` is claimed by an edge group BEFORE the accept resolves (the
+        # real footgun: the auto.toml folds against a LATER build whose edge/token
+        # pass newly claimed a member). The error must point at the `[[accept]]` /
+        # auto.toml, NOT at "pick a curated key".
+        conn = _morsak_db()
+        add_variable(conn, register_id=1, var_id=850, name="Dödsorsak 1", slug="dxsib")
+        _add_edge(conn, "lisa", "morsak1", "dxsib")  # edge pass claims morsak1
+        auto = (_auto_family(_morsak_members()),)
+        accepts = (Accept("scb", "lisa", "morsak", None, None, ()),)
+        with pytest.raises(RegMetaError) as exc:
+            materialize_concept_groups(conn, auto=auto, accepts=accepts, providers=_SCB)
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "concept_groups_unresolved"
+        assert "[[accept]]" in exc.value.message
+        assert "concept_groups.auto.toml" in exc.value.remediation
+        # The hand-authored remediation must NOT leak into the accept path.
+        assert "pick a curated key" not in exc.value.remediation.lower()
+
 
 class TestAcceptLoader:
     @staticmethod

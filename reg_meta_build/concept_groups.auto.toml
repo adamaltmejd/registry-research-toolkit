@@ -1,8 +1,11 @@
 # GENERATED concept-group fold candidates — reg-meta-build concept-group-candidates.
 #
 # THIS FILE IS MACHINE-OWNED. It IS reg_meta_build/concept_groups.auto.toml,
-# the committed candidate catalog. Regenerate it with `reg-meta-build
-# concept-group-candidates` — NEVER hand-edit it (edits are overwritten).
+# the committed candidate catalog. Regenerate it with:
+#   reg-meta-build --db <built-db-dir> concept-group-candidates \
+#     --output-toml reg_meta_build/concept_groups.auto.toml
+# (`--db` points at a built reg_meta DB to scan; `--output-toml` targets
+# this committed file). NEVER hand-edit it (edits are overwritten).
 #
 # These are INFERRED foldable column families, NOT folded by default.
 # Folding is OPT-IN: to fold a family, add an `[[accept]]` entry in

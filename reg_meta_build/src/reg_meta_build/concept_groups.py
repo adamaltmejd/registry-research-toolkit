@@ -27,10 +27,18 @@ never claims an already-grouped member):
    variables need >= ``_MIN_MONTH_SIBLINGS`` distinct months on one stem AND
    label-prefix agreement; classifications need >= ``_MIN_VINTAGE_SIBLINGS``
    vintages AND year-stripped-name agreement.
-2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``):
-   exact member lists that absorb token groups under an extra facet axis (the
-   LISA agi{1,2,3} rank facet → one month × rank matrix) or attach single
-   variables. Fails fast on unresolvable references (EXIT_CONFIG).
+2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), two
+   opt-in entry kinds:
+   - ``[[variable_group]]`` — a hand-authored family with an exact member list:
+     absorbs token groups under an extra facet axis (the LISA agi{1,2,3} rank
+     facet → one month × rank matrix) or attaches single variables.
+   - ``[[accept]]`` (#496) — folds a candidate family from the generated,
+     machine-owned ``concept_groups.auto.toml`` BY REFERENCE, located by
+     ``(register, key)``, with optional ``label``/``axis``/``exclude`` overrides
+     (``resolve_accept`` turns it into a ``CuratedGroup`` of ``variable=``
+     attachments). An auto family folds ONLY when accepted; unaccepted ones
+     never materialize.
+   Both kinds fail fast on unresolvable references (EXIT_CONFIG).
 
 When the interval-native model (#271) lands its column→variable merges, the
 month groups graduate into real single variables and this layer shrinks to
@@ -43,7 +51,7 @@ import functools
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -135,7 +143,13 @@ class CuratedMember:
 
 @dataclass(frozen=True)
 class CuratedGroup:
-    """One `[[variable_group]]` family from `concept_groups.toml`."""
+    """One curated family the materializer applies. `origin` records how it was
+    authored so `_apply_curated_groups` can tailor its EXIT_CONFIG remediations:
+    a hand-authored `[[variable_group]]` (the default) points the maintainer at
+    `concept_groups.toml`; an `[[accept]]`-resolved family (`resolve_accept` sets
+    `origin="accept"`) points at the `[[accept]]` / `concept_groups.auto.toml`
+    instead, since its key/register/members come from the generated catalog, not
+    a hand-picked curated key."""
 
     provider: str
     register: str
@@ -143,6 +157,7 @@ class CuratedGroup:
     label: str
     axis: str
     members: tuple[CuratedMember, ...]
+    origin: Literal["variable_group", "accept"] = "variable_group"
 
 
 @dataclass(frozen=True)
@@ -424,6 +439,7 @@ def resolve_accept(
         label=accept.label or auto.label,
         axis=accept.axis or auto.axis,
         members=members,
+        origin="accept",
     )
 
 
@@ -679,14 +695,29 @@ def _derive_classification_vintage_groups(conn: sqlite3.Connection) -> int:
 def _apply_curated_groups(
     conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
 ) -> int:
-    """Dimension 2: curated families. A `group` member absorbs a derived token
+    """Dimension 2: curated families (`[[variable_group]]`) and `[[accept]]`-resolved
+    auto families (`origin="accept"`). A `group` member absorbs a derived token
     group (its variables move over, keeping their month facets, and gain the
     family facet; the absorbed group row is deleted); a `variable` member
     attaches one ungrouped variable. Every dangling reference fails the build
-    (EXIT_CONFIG) — curation drift must be fixed, not silently dropped."""
+    (EXIT_CONFIG) — curation drift must be fixed, not silently dropped.
+
+    Remediations branch on `g.origin`: a hand-authored family points the
+    maintainer at `concept_groups.toml`; an accepted one points at the `[[accept]]`
+    / generated `concept_groups.auto.toml`, since its key/register/members come
+    from the catalog (the maintainer can't hand-pick a different key)."""
+    regen = (
+        "reg-meta-build --db <built-db-dir> concept-group-candidates "
+        "--output-toml reg_meta_build/concept_groups.auto.toml"
+    )
     n_groups = 0
     for g in groups:
-        ctx = f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
+        is_accept = g.origin == "accept"
+        ctx = (
+            f"[[accept]] {g.key!r} ({g.provider}/{g.register})"
+            if is_accept
+            else f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
+        )
         reg = conn.execute(
             "SELECT r.register_id FROM register r "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -697,7 +728,10 @@ def _apply_curated_groups(
             raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: register does not resolve.",
-                "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
+                f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
+                "`[[accept]]` in reg_meta_build/concept_groups.toml."
+                if is_accept
+                else "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
             )
         register_id = reg[0]
         try:
@@ -712,8 +746,15 @@ def _apply_curated_groups(
         except sqlite3.IntegrityError as exc:
             raise curation_error(
                 "concept_groups_unresolved",
-                f"{ctx}: key collides with a derived group in the same register.",
-                "Pick a curated `key` that no edge/token group already uses.",
+                f"{ctx}: key collides with a derived group in the same register."
+                if not is_accept
+                else f"{ctx}: the auto family {g.provider}/{g.register}/{g.key!r} "
+                "collides with an edge/token group claimed since "
+                "concept_groups.auto.toml was generated.",
+                f"Regenerate concept_groups.auto.toml (`{regen}`) or drop the "
+                "`[[accept]]`."
+                if is_accept
+                else "Pick a curated `key` that no edge/token group already uses.",
             ) from exc
         n_members = 0
         for m in g.members:
@@ -773,7 +814,10 @@ def _apply_curated_groups(
                         "concept_groups_unresolved",
                         f"{ctx}: member variable {m.variable!r} does not resolve "
                         "in that register.",
-                        "Fix the member's `variable` slug in "
+                        f"Regenerate concept_groups.auto.toml (`{regen}`) or drop "
+                        "the `[[accept]]`."
+                        if is_accept
+                        else "Fix the member's `variable` slug in "
                         "reg_meta_build/concept_groups.toml.",
                     )
                 try:
@@ -786,8 +830,15 @@ def _apply_curated_groups(
                     raise curation_error(
                         "concept_groups_unresolved",
                         f"{ctx}: member variable {m.variable!r} already belongs "
-                        "to an edge/token group — absorb that group instead.",
-                        'Reference the derived group via `group = "<stem>"`.',
+                        "to an edge/token group — absorb that group instead."
+                        if not is_accept
+                        else f"{ctx}: member variable {m.variable!r} was claimed by "
+                        "an edge/token group since concept_groups.auto.toml was "
+                        "generated.",
+                        f"Regenerate concept_groups.auto.toml (`{regen}`) or "
+                        "`exclude` this member in the `[[accept]]`."
+                        if is_accept
+                        else 'Reference the derived group via `group = "<stem>"`.',
                     ) from exc
                 conn.execute(
                     "INSERT INTO concept_group_variable_facet "
