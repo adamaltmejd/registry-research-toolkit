@@ -1434,9 +1434,10 @@ to **retain it** (the gate explicitly permits retention with a documented reason
 
 - **FQIDs carry no time dimension.** The merge keeps the month *out* of variable
   identity: one FQID per family, month is read-time via `variable_alias_window` /
-  `resolve_at`. Reversal would force either (a) month-suffixed FQIDs (time leaks into
-  identity) or (b) silent `resolve_at` expansion with no identity change — the same
-  model under a different name.
+  `resolve_at`. The reversal model makes the month columns leaf variables with
+  month-suffixed FQIDs (`lonfinkjan`…`lonfinkdec`) — time leaks back into identity, the
+  model we deliberately avoid. Keeping a single time-free FQID while still resolving a
+  given month needs exactly the read-time window expansion the merge already provides.
 - **Bounded, closed set.** #319 + #383 enumerated every monthly family against the real
   corpus (8 families, all 12-month, all bounded-delivery-year, HSL confirmed absent) — a
   closed special case, not a growing pattern that would justify a generic framework or
