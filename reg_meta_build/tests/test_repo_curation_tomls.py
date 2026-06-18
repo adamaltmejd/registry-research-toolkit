@@ -23,7 +23,7 @@ from reg_meta_build.codelivery import load_codelivery
 from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
-from reg_meta_build.family_merges import load_family_merges
+from reg_meta_build.period_family_merges import load_period_family_merges
 from reg_meta_build.relations import load_relations
 from reg_meta_build.source_column_repairs import (
     load_column_merges,
@@ -68,8 +68,10 @@ def test_repo_delivery_enrichment_parses() -> None:
     assert all(a.provider and a.register and a.delivery_column for a in enr.aliases)
 
 
-def test_repo_family_merges_parses() -> None:
-    families = load_family_merges(_ROOT / "family_merges.toml")
+def test_repo_period_family_merges_parses() -> None:
+    families = load_period_family_merges(
+        _ROOT / "curation" / "period_family_merges.toml"
+    )
     assert families  # the #319 LISA monthly families ship with the repo
     # Member RESOLUTION (12 month columns exist for the stem) is maintainer-build
     # territory (the materializer fails fast); load-time shape is this gate.

@@ -61,6 +61,52 @@ and helpers both packages agree on — lives in `reg_meta`.
   | `sources/` (per-provider IR adapters: scb, sos)                                                  | `reg_meta_build` |
   | `fqid.py`, `catalog.py`, `queries.py`, `doc_queries.py`, `errors.py`, `update.py`, `download.py` | `reg_meta`       |
 
+## Curation surface taxonomy
+
+The build assembles the catalog from two kinds of inputs: machine-delivered source data
+(SCB CSVs, SOS workbooks, thin-provider TOMLs) and a set of maintainer-curated overlay
+files that repair, extend, and annotate what the source delivers. The curated files fall
+into seven families:
+
+  | Family                   | Files                                                                                                                                                                                                                              | Role                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+  | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | **identifier**           | `fqid_slugs/<provider>.toml`, `fqid_slugs/<provider>.auto.toml`, `fqid_slugs/freeze.toml`, `fqid_slugs/classifications.toml` (loaded by `load_classifications_toml` in `fqid_slugs.py`); steward shards in `fqid_slugs/<steward>/` | Canonical register/variant/classification/variable slugs; panel-shape metadata on variants; per-provider freeze state. `fqid_slugs/classifications.toml` is the provider-independent classification slug surface (loaded separately from provider TOMLs). `[lineage_defaults]` / `[lineage.*]` blocks in the same TOMLs pin source-variant choices for `variable_state_lineage`.                                                             |
+  | **relation**             | `curation/relations.toml` (loaded by `relations.py`)                                                                                                                                                                               | All curated pairwise graph facts: `same_as` identity edges, `replaced_by` succession edges, `related_to` see-also edges. One typed `[[edge]]` array; `type` selects the DB target and validation rules.                                                                                                                                                                                                                                      |
+  | **set**                  | `concept_groups.toml` (loaded by `concept_groups.py`), `tags.toml` (loaded by `tags.py`)                                                                                                                                           | Presentation-only grouping and discovery layers. Concept groups fold structurally related variables for browse; tags supply thematic cross-register discovery. Both are regenerated fresh each build (no identity or immutability machinery).                                                                                                                                                                                                |
+  | **source/gap-fill**      | `input_data/<Provider>/<provider>.toml` (thin curated providers), `delivery_enrichment.toml` (loaded by `delivery_enrichment.py`), `variable_grafts.toml` (loaded by `variable_grafts.py`)                                         | Source delivery (thin providers whose public docs are hand-transcribed) and gap-fill overlays on the global SCB/SOS catalog (descriptions backfilled from steward delivery lists; variables present in steward docs but absent from machine metadata).                                                                                                                                                                                       |
+  | **value/coding**         | `classifications.toml` + CSV seeds in `input_data/classifications/` (loaded by `classifications.py`), `classification_links.toml` (loaded by `classification_links.py`), `codelivery.toml` (loaded by `codelivery.py`)             | Canonical code systems and their codes; curated variable→classification assignment overrides for the residue the auto-detector leaves unlinked; curated co-delivery resolution pins for SCB columns that carry multiple codings in the same period.                                                                                                                                                                                          |
+  | **SCB pre-state repair** | `curation/scb/source_column_repairs.toml` (loaded by `source_column_repairs.py`)                                                                                                                                                   | Pre-state SCB structural repair: `[[column_merge]]` unifies era-rename column pairs that never co-occur before union-find connectivity runs; `[[fold_override]]` forces disjoint-stem columns that are genuinely one concept into one fold cluster before states are final.                                                                                                                                                                  |
+  | **period family merge**  | `curation/period_family_merges.toml` (loaded by `period_family_merges.py`)                                                                                                                                                         | Identity-mutating post-triage pass: merges N period-named physical columns (today the 12 months, e.g. `lonfinkjan`…`lonfinkdec`) into ONE variable with per-period alias windows. Runs after triage (`variable_state` exists) but before slug population. 8 entries covering 8 bounded monthly families (4 LISA + 4 non-LISA). Retained per #523 under epic #518 R4; see the "Decision (#518/#523): retain the merge" section for rationale. |
+
+**Boundary rules (anti-patterns):**
+
+- **Source-column repair is not `same_as`.** `[[column_merge]]` and `[[fold_override]]`
+  act BEFORE variables and states exist; `same_as` acts AFTER. Using `same_as` to fix an
+  era-rename split would first build the wrong variables, slugs, aliases, and state
+  history, then collapse them. These entries belong in
+  `curation/scb/source_column_repairs.toml`, never in `input_data/SCB/` source data and
+  never as a post-build relation.
+- **Classification links are typed, not generic state overrides.**
+  `classification_links.toml` targets the `classification_candidate` pipeline and then
+  `variable_state.classification_id`. It is NOT a generic
+  `variable_state_overrides.toml` that can mutate arbitrary state fields; a future
+  simplification must keep the operation typed as a classification assignment with its
+  own validation and precedence.
+- **Coding overrides stay in the value/coding family, not in sets or tags.** Do not fold
+  code-system assignment facts (`classification_links.toml`, `codelivery.toml`) into
+  `concept_groups.toml` or `tags.toml`; they have different semantics, validation, and
+  build-pass ordering.
+- **Event-derived and curated `replaced_by` are distinct inputs.** The
+  `timeseries_event`-derived path is a source fact with best-effort noise skips; curated
+  `replaced_by` edges in `curation/relations.toml` are human-authored FQID-level
+  succession. They share DB insertion, cycle checks, and traversal helpers, but their
+  authoring surfaces must not merge.
+- **Graph semantics live in `curation/relations.toml`, not slug TOMLs.** A slug TOML
+  that contains an inline `same_as` field or a top-level `[[replaced_by]]` array now
+  fails as an unknown-key error. The only surviving per-entry edge field in a slug TOML
+  is the within-file `replaced_by` key-string typo-correction pointer (not a succession
+  edge).
+
 ## CLI shape
 
 Top-level commands (no `maintain` subgroup; that group is dissolved):
@@ -1407,24 +1453,25 @@ lisa/ekonomiskt-bistand/rams/bas — 12 month-named delivery columns per concept
 editions, so the interval resolver does *not* by itself give them monthly windows
 (`_edition_bounds` reads the edition name, not column names — and the curated narrowing
 subset deliberately excludes month-named editions). #319 adds the **adapter-level
-curated family merge** (`family_merges.py`, driven by package-root
-`family_merges.toml`): 12 columns → ONE variable, each column carrying a per-month alias
-window (`variable_alias_window`) derived from its name's month suffix × delivered years
-(`YYYY-MM`). The `[[column_merge]]` section of `source_column_repairs.toml` is **not**
-the vehicle — it asserts era-renames that never co-occur, the opposite of 12
-deliberately-parallel columns. The AGI variant's `cadence = month` (*Cadence policy*
-above) is orthogonal: cadence scopes *edition* conflation on the AGI register, while
-these monthly *columns* ride annual LISA editions and get their windows from the merge.
+curated family merge** (`period_family_merges.py`, driven by
+`curation/period_family_merges.toml`): 12 columns → ONE variable, each column carrying a
+per-month alias window (`variable_alias_window`) derived from its name's month suffix ×
+delivered years (`YYYY-MM`). The `[[column_merge]]` section of
+`source_column_repairs.toml` is **not** the vehicle — it asserts era-renames that never
+co-occur, the opposite of 12 deliberately-parallel columns. The AGI variant's
+`cadence = month` (*Cadence policy* above) is orthogonal: cadence scopes *edition*
+conflation on the AGI register, while these monthly *columns* ride annual LISA editions
+and get their windows from the merge.
 
-**Mechanics.** `materialize_family_merges` runs POST-triage (so `variable_state` /
-`variable_alias` exist) but BEFORE `populate_variable_slugs`. Members are identified by
-`delivery_column_name` (slugs don't exist yet) — a column whose `derive_variable_slug`
-ends in a month token with stem == the curated `family_stem`. The merge: picks the
-lex-min member `variable_id` as the SURVIVOR; sets its name to the family label and
-registers `fold_slug_hints[survivor] = family_stem` so it slugs as the stem; emits one
-`variable_alias_window` row per (column, delivered year) — **ongoing states**
-(`valid_to = 9999`) are clamped to the opening year only, so an ongoing monthly family
-gets windows for its first year but not beyond (a known limitation; all 8 shipped
+**Mechanics.** `materialize_period_family_merges` runs POST-triage (so `variable_state`
+/ `variable_alias` exist) but BEFORE `populate_variable_slugs`. Members are identified
+by `delivery_column_name` (slugs don't exist yet) — a column whose
+`derive_variable_slug` ends in a month token with stem == the curated `family_stem`. The
+merge: picks the lex-min member `variable_id` as the SURVIVOR; sets its name to the
+family label and registers `fold_slug_hints[survivor] = family_stem` so it slugs as the
+stem; emits one `variable_alias_window` row per (column, delivered year) — **ongoing
+states** (`valid_to = 9999`) are clamped to the opening year only, so an ongoing monthly
+family gets windows for its first year but not beyond (a known limitation; all 8 shipped
 families are bounded and are unaffected); re-points the members' `variable_alias` (so
 `get_datacolumns` still returns all 12) AND the SCB cvid-scratch
 `variable_instance.variable_id` (the `code_variable_map` top-up reads it — leaving the
@@ -1434,7 +1481,7 @@ year — **the merged variable is NOT sub-annual** (the per-month dimension is a
 representation/alias concern, not a coding boundary; DESIGN's *Cadence policy*). A stem
 that resolves to no coherent monthly family (< 3 distinct months) or a non-parallel
 member (a column delivering a year the annual claim doesn't) FAILS the build
-(`family_merges_unresolved`, EXIT_CONFIG). Scope shipped (#319): 4 LISA stems
+(`period_family_merges_unresolved`, EXIT_CONFIG). Scope shipped (#319): 4 LISA stems
 (`lonfink`, `agi{1,2,3}lonfink`). Extended (#383): 4 non-LISA bounded families —
 `scb/bas` / `jobbink` (2020–2024), `scb/ekonomiskt-bistand` / `ibel` + `sbel` (2006),
 `scb/rams` / `lonfink` (2019–2021). HSL was checked against the real corpus and carries
@@ -1452,9 +1499,10 @@ for the survivor (its annual state's single column is one of the 12 retained ali
 
 ##### Decision (#518/#523): retain the merge
 
-Under epic #518 (R4), issue #523 evaluated the monthly `family_merges` mechanism as the
-strongest deletion/reversal candidate before the epic's completion gate. The decision is
-to **retain it** (the gate explicitly permits retention with a documented reason).
+Under epic #518 (R4), issue #523 evaluated the monthly `period_family_merges` mechanism
+as the strongest deletion/reversal candidate before the epic's completion gate. The
+decision is to **retain it** (the gate explicitly permits retention with a documented
+reason).
 
 **Why retain.**
 
@@ -1468,10 +1516,10 @@ to **retain it** (the gate explicitly permits retention with a documented reason
   corpus (8 families, all 12-month, all bounded-delivery-year, HSL confirmed absent) — a
   closed special case, not a growing pattern that would justify a generic framework or
   create ongoing maintenance burden.
-- **Small, isolated, well-tested footprint.** One build pass (`family_merges.py`), one
-  stable DDL table (`variable_alias_window`, no schema-version churn since
-  introduction), one read-side method (`_expand_state_windows`, 1:1 byte-identical
-  passthrough for non-merged variables).
+- **Small, isolated, well-tested footprint.** One build pass
+  (`period_family_merges.py`), one stable DDL table (`variable_alias_window`, no
+  schema-version churn since introduction), one read-side method
+  (`_expand_state_windows`, 1:1 byte-identical passthrough for non-merged variables).
 - **Reversal moves complexity, doesn't remove it.** The main practical argument for
   reversal — that bundle/export/mock-data would get explicit leaf bindings instead of
   hidden `resolve_at` expansion — is already true today: the kit forces
@@ -1496,9 +1544,12 @@ complementary layers:
   that. #496 must never re-fold merged monthly families — only a rank axis where one
   exists.
 
-**Deferred to #496.** Physical relocation/rename of `family_merges.toml` alongside the
-consolidated curation/grouping layer is an organizational move and is deferred to #496.
-The file stays put for now.
+**Relocation/rename (DONE).** The surface was physically relocated and renamed to
+`reg_meta_build/curation/period_family_merges.toml` (loader `period_family_merges.py`,
+`[[period_family]]` sections, `PeriodFamily` / `load_period_family_merges` /
+`materialize_period_family_merges`) — a behavior-preserving organizational move
+(real-seed build dbdiff-identical), framing the surface as period-general (today the
+data is monthly). The earlier deferral to #496 is closed.
 
 #### Measurement and verification plan
 
@@ -1543,6 +1594,68 @@ Every implementation PR gates on:
    pair (one winner, unchanged), overlapping sub-annual windows (mid-year handoff),
    VT/HT open-top selection, school-year/season/month editions (still full-year),
    quarter claims.
+
+## Co-delivery resolution curation (`codelivery.toml`)
+
+`codelivery.toml` (package root, like `concept_groups.toml` — NOT under `fqid_slugs/`)
+is an **SCB-only** curated overlay that tells the co-delivery resolver how to handle
+delivery columns that carry **multiple distinct codings in the same period**: 19 rules
+today. It is the `value/coding` family counterpart to `source_column_repairs.toml` — but
+where `[[column_merge]]` / `[[fold_override]]` act on column IDENTITY before states
+exist, `codelivery.toml` acts on VALUE-SET SELECTION for a column that is already a
+single identity with competing codings.
+
+Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` — resolved one
+of two ways: `keep = "<emitted label>"` pins one value-set version label (matched
+against the emitted label in `variable_state`, not the raw source label — a
+fold/collapse can relabel); `keep_rule = "latest_year"` picks, per contested year, the
+coding whose label embeds the latest 4-digit year (for recurring per-year vintage
+columns like SFI `Skolkod` where a single `keep` label can't span every year). The
+column key is stored case-folded via `_curation.fold_column` so that a curated column
+name and the coalescer component key agree even if SCB changes the header casing in a
+later export.
+
+Curation is **step 8 of 11** in the within-column cascade (`_resolve_column_year`) — a
+manual tie-breaker reached only after the seven deterministic steps fail to produce a
+single winner: authority → recency → current/historical-grain → value-set fold →
+supersession (latest-introduced wins the transition year) → same-label drift (keep
+largest) → label freshness (final > preliminary, calendar > academic, latest dated
+snapshot, HT > VT). Steps 9–11 (extends-later, cosmetic, genuine) run if curation also
+leaves a tie. Curation is deliberately low in the cascade: the deterministic steps
+handle all the recurring families (preliminär/final, sub-annual HT/VT, dated snapshots,
+SNI vintage transitions), and only genuinely one-off re-codings the deterministic steps
+cannot distinguish reach step 8.
+
+**Scope.** SCB-only: loaded only on the SCB adapter path, silently a no-op for an absent
+register (partial- and synthetic-build escape). It is NOT a generic variable-state-field
+override and NOT a cross-provider relation surface.
+
+**Cardinality and validation.** The file is a maintainer artifact — absent from wheel
+installs and synthetic builds (empty ⇒ no pins). A pin for a register present in the
+build but whose column is **never contested** (the conflict is resolved by an earlier
+deterministic step, or the column simply never has competing codings) lingers
+**undetected** — the shipped DB is still valid, since the cascade already resolved the
+column correctly; there is no stale-pin build failure for this case. The build only
+fails (`EXIT_CONFIG`, `coalesce_unresolved_codelivery`) when a column **still resolves
+to >1 value set after the entire cascade** — a genuinely ambiguous same-column
+co-delivery the pin failed to resolve. A pin for a register absent from the build is
+inert (the partial-build escape). This differs from `source_column_repairs.toml`: its
+`fold_override_unused` check DOES fail the build on a stale present-register entry (an
+unconsumed fold-override for a live register fails `EXIT_CONFIG`), so the two files in
+the twin pair do not share the same stale-pin behavior.
+
+**Relationship to `source_column_repairs.toml`.** These two files are the curation twin
+pair for SCB column-level repair:
+
+- `[[column_merge]]` — era-rename identity unification (upstream of triage; one column
+  from two)
+- `[[fold_override]]` — contested-column fold forcing (inside triage; one variable from
+  co-delivering columns)
+- `codelivery.toml` — same-column multi-coding resolution (inside co-delivery
+  resolution; one winner from competing value sets)
+
+No entry belongs in more than one of these three files; their repair phases are
+disjoint.
 
 ## Slug curation
 

@@ -5,7 +5,7 @@ The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `require_fqid`, `resolve_variable_id`, `resolve_register_id`,
 `load_column_groups`) serve the `[[entry]]` curation-TOML loaders —
 `codelivery.py`, `source_column_repairs.py`, `concept_groups.py`, `tags.py`,
-`family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
+`period_family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
 `classification_links.py`, and `relations.py` (the single typed `[[edge]]`
 surface for the curated pairwise relations — same_as / replaced_by / related_to,
 #522). Each loader threads its own `code` / `prefix` / `file_name` through

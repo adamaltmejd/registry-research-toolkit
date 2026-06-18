@@ -1,16 +1,18 @@
-# Curated monthly column-family merges (#319) — see family_merges.py.
+# Curated period column-family merges (#319) — at curation/period_family_merges.toml;
+# see period_family_merges.py.
 #
-# Each [[monthly_family]] folds the 12 month-named delivery columns under a
-# `family_stem` into ONE variable (slug = family_stem), keeping an ANNUAL
-# variable_state per delivery year. Each month column's validity window lands in
-# `variable_alias_window` so resolve_at("YYYY-MM") picks that month's column. The
-# merge runs BEFORE variable slugs (members are matched by delivery_column_name,
-# folded to slug form, ending in a month token); a stem that resolves to no
-# coherent monthly family FAILS the build (EXIT_CONFIG).
+# Each [[period_family]] folds the period-named delivery columns under a
+# `family_stem` (today the 12 month-named columns) into ONE variable
+# (slug = family_stem), keeping an ANNUAL variable_state per delivery year. Each
+# column's validity window lands in `variable_alias_window` so
+# resolve_at("YYYY-MM") picks that period's column. The merge runs BEFORE variable
+# slugs (members are matched by delivery_column_name, folded to slug form, ending
+# in a period token); a stem that resolves to no coherent period family FAILS the
+# build (EXIT_CONFIG).
 #
 # NOT the [[column_merge]] surface (curation/scb/source_column_repairs.toml):
-# that asserts era-RENAMES that never co-occur — the opposite of 12
-# deliberately-parallel month columns.
+# that asserts era-RENAMES that never co-occur — the opposite of deliberately-
+# parallel period columns.
 #
 # Scope (#383, follow-up to #319): the 4 LISA families plus the 4 non-LISA
 # monthly families the corpus actually carries (scb bas/jobbink,
@@ -19,42 +21,42 @@
 # HSL was checked and carries no ≥3-month family (no SOS register surfaces a
 # monthly family), so it is intentionally absent.
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/lisa"
 family_stem = "lonfink"
 label = "Löne- eller företagarinkomst per månad"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/lisa"
 family_stem = "agi1lonfink"
 label = "Löne- eller företagarinkomst per månad (största förvärvskällan)"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/lisa"
 family_stem = "agi2lonfink"
 label = "Löne- eller företagarinkomst per månad (näst största förvärvskällan)"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/lisa"
 family_stem = "agi3lonfink"
 label = "Löne- eller företagarinkomst per månad (tredje största förvärvskällan)"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/bas"
 family_stem = "jobbink"
 label = "Löne- eller företagarinkomst per månad"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/ekonomiskt-bistand"
 family_stem = "ibel"
 label = "Introduktionsersättning per månad"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/ekonomiskt-bistand"
 family_stem = "sbel"
 label = "Socialbidrag per månad"
 
-[[monthly_family]]
+[[period_family]]
 register = "scb/rams"
 family_stem = "lonfink"
 label = "Löne- eller företagarinkomst per månad"

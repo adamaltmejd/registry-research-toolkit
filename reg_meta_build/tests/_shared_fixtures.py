@@ -31,7 +31,7 @@ def _no_repo_curation() -> Iterator[None]:
     import reg_meta_build.concept_groups as _cg
     import reg_meta_build.db as _db
     import reg_meta_build.delivery_enrichment as _de
-    import reg_meta_build.family_merges as _fm
+    import reg_meta_build.period_family_merges as _fm
     import reg_meta_build.relations as _rel
     import reg_meta_build.source_column_repairs as _scr
     import reg_meta_build.tags as _tg
@@ -56,11 +56,11 @@ def _no_repo_curation() -> Iterator[None]:
     # imported the symbol directly — patch it there too.
     mp.setattr(_tg, "repo_tags_path", lambda: None)
     mp.setattr(_db, "repo_tags_path", lambda: None)
-    # family_merges.toml (#319) merges real LISA month columns; the materializer
-    # fails LOUD if a curated stem doesn't resolve, so a synthetic build must see
-    # an empty file. db.py imported the symbol directly — patch it there too.
-    mp.setattr(_fm, "repo_family_merges_path", lambda: None)
-    mp.setattr(_db, "repo_family_merges_path", lambda: None)
+    # curation/period_family_merges.toml (#319) merges real LISA month columns; the
+    # materializer fails LOUD if a curated stem doesn't resolve, so a synthetic build
+    # must see an empty file. db.py imported the symbol directly — patch it there too.
+    mp.setattr(_fm, "repo_period_family_merges_path", lambda: None)
+    mp.setattr(_db, "repo_period_family_merges_path", lambda: None)
     # relations.toml (#522) is the typed `[[edge]]` surface for the curated
     # pairwise relations (same_as / replaced_by / related_to). It carries real
     # scb/sos slugs (the moved #375 succession + #403 see-also edges); every
