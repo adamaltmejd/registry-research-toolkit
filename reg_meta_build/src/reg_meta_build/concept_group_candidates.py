@@ -22,8 +22,11 @@ cutoff is never a silent truncation (CLAUDE.md).
 
 The output schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
 is exactly `concept_groups.load_concept_groups`' input schema, so a confirmed
-candidate copies across verbatim. Like the other curation TOMLs the worklist is a
-maintainer artifact — the generator never writes the curated file.
+candidate copies across verbatim — which is why the generator also SKIPS a family
+whose `(register, stem)` already names an edge/token group (it would collide on the
+`idx_concept_group_key` unique index at the next build) and reports that count too.
+Like the other curation TOMLs the worklist is a maintainer artifact — the generator
+never writes the curated file.
 """
 
 from __future__ import annotations
@@ -34,6 +37,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from .concept_groups import _VINTAGE_YEARS, _common_prefix, _trim_label
+from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
     import sqlite3
@@ -80,13 +84,17 @@ class ConceptGroupCandidate:
 
 @dataclass(frozen=True)
 class CandidateResult:
-    """The generator's output: the foldable `candidates` (ranked) plus
-    `excluded_batteries` — the count of `(register, stem)` families rejected for
-    weak label agreement (the ULF/FRIDA over-fold magnet). Surfaced so the cutoff
-    is never a SILENT truncation (CLAUDE.md)."""
+    """The generator's output: the foldable `candidates` (ranked) plus the two
+    drop counts surfaced so a cutoff is never a SILENT truncation (CLAUDE.md):
+    `excluded_batteries` — `(register, stem)` families rejected for weak label
+    agreement (the ULF/FRIDA over-fold magnet) — and `skipped_existing_key` —
+    families whose `(register, stem)` already names an edge/token concept group, so
+    emitting them verbatim would collide on `idx_concept_group_key` at the next
+    build (mirrors `_derive_month_groups`' existing-key guard)."""
 
     candidates: list[ConceptGroupCandidate]
     excluded_batteries: int
+    skipped_existing_key: int
 
 
 @dataclass(frozen=True)
@@ -127,6 +135,19 @@ def _load_ungrouped_variables(conn: sqlite3.Connection) -> list[_RawVar]:
         )
         for row in rows
     ]
+
+
+def _load_existing_group_keys(conn: sqlite3.Connection) -> set[tuple[int, str]]:
+    """Every `(register_id, group_key)` already claimed by a variable concept group
+    (edge/token/curated). A candidate keyed on the same `(register_id, stem)` would
+    collide on the `idx_concept_group_key` unique index when curated verbatim, so
+    `infer_concept_group_candidates` skips it (mirrors `_derive_month_groups`)."""
+    return {
+        (row["register_id"], row["group_key"])
+        for row in conn.execute(
+            "SELECT register_id, group_key FROM concept_group WHERE kind = 'variable'"
+        )
+    }
 
 
 def _split_stem_suffix(slug: str) -> tuple[str, int] | None:
@@ -183,10 +204,19 @@ def infer_concept_group_candidates(
     no labels to agree on and is treated conservatively as a non-fold (like
     `_derive_month_groups`' NULL-name skip).
 
+    A family whose `(register_id, stem)` already names an edge/token concept group
+    is SKIPPED (counted into `skipped_existing_key`): emitting it verbatim would
+    collide on `idx_concept_group_key` at the next build's `_apply_curated_groups`,
+    so it isn't actually verbatim-curatable (mirrors `_derive_month_groups`'
+    existing-key guard). The collision check runs FIRST — before the battery/NULL
+    gates — so a colliding family is counted once, as a key-collision skip rather
+    than a battery.
+
     NEVER mutates the DB — this is a read-only worklist generator; only the curated
     file's confirmed entries ever load. Foldable candidates are ranked
     deterministically by (-agreement, -member_count, register_fqid, key)."""
     variables = _load_ungrouped_variables(conn)
+    existing_keys = _load_existing_group_keys(conn)
 
     # (register_id, stem) → [_RawVar]. Suffix-less slugs and bare-number slugs
     # (empty stem) drop out — they can't be a family member.
@@ -200,8 +230,18 @@ def infer_concept_group_candidates(
 
     candidates: list[ConceptGroupCandidate] = []
     excluded_batteries = 0
-    for (_register_id, stem), members in families.items():
+    skipped_existing_key = 0
+    for (register_id, stem), members in families.items():
         if len({suffix for suffix, _ in members}) < min_siblings:
+            continue
+
+        # Key-collision FIRST: a family keyed on a `(register_id, stem)` already
+        # claimed by an edge/token group can't be curated verbatim (it would fail
+        # `_apply_curated_groups` on `idx_concept_group_key`). Count it once as a
+        # collision skip — ahead of the battery gate — rather than letting a
+        # colliding battery double-count.
+        if (register_id, stem) in existing_keys:
+            skipped_existing_key += 1
             continue
 
         names = [var.name for _, var in members]
@@ -261,7 +301,11 @@ def infer_concept_group_candidates(
     candidates.sort(
         key=lambda c: (-c.agreement, -len(c.members), c.register_fqid, c.key)
     )
-    return CandidateResult(candidates=candidates, excluded_batteries=excluded_batteries)
+    return CandidateResult(
+        candidates=candidates,
+        excluded_batteries=excluded_batteries,
+        skipped_existing_key=skipped_existing_key,
+    )
 
 
 def render_candidates_toml(
@@ -274,13 +318,17 @@ def render_candidates_toml(
     """Render the fold worklist as a `[[variable_group]]` TOML string a maintainer
     curates from. Built by hand (not `tomli_w`) so the per-candidate
     `# axis=… agreement=… members=…` provenance comments survive — `tomli_w` drops
-    comments. The header records the active thresholds, the foldable count, and the
-    `excluded_batteries` count (so the battery cutoff is never silent).
+    comments. The header records the active thresholds, the foldable count, the
+    `excluded_batteries` count, and the `skipped_existing_key` count (so neither
+    cutoff is ever silent).
 
     The output MUST re-parse cleanly through `concept_groups.load_concept_groups`:
     `register` is a 2-segment FQID, each member sets exactly `variable` +
-    `value`/`label`. String values are quoted/escaped (labels carry Swedish text
-    and may contain quotes/backslashes); slugs are bare identifiers."""
+    `value`/`label`. Every string value is emitted through the shared `_toml_str`
+    (full escape set incl. control chars, returns the quotes) so a label or name
+    carrying Swedish text, quotes, backslashes, or a stray newline can't break the
+    round-trip; the provenance comment runs the label through `_toml_comment` so an
+    embedded newline can't terminate the `#` line and let the tail parse as TOML."""
     candidates = result.candidates
     lines = [
         "# GENERATED concept-group fold candidates — "
@@ -296,29 +344,24 @@ def render_candidates_toml(
         f"min-label-prefix={min_label_prefix} min-agreement={min_agreement}",
         f"# foldable families: {len(candidates)}",
         f"# excluded batteries (weak label agreement): {result.excluded_batteries}",
+        "# skipped (key collides with an existing group): "
+        f"{result.skipped_existing_key}",
         "",
     ]
     for c in candidates:
         lines.append(
             f"# axis={c.axis} agreement={c.agreement:.2f} "
-            f"members={len(c.members)}  {c.group_label}"
+            f"members={len(c.members)}  {_toml_comment(c.group_label)}"
         )
         lines.append("[[variable_group]]")
-        lines.append(f'register = "{c.register_fqid}"')
-        lines.append(f'key = "{_toml_str(c.key)}"')
-        lines.append(f'label = "{_toml_str(c.group_label)}"')
-        lines.append(f'axis = "{c.axis}"')
+        lines.append(f"register = {_toml_str(c.register_fqid)}")
+        lines.append(f"key = {_toml_str(c.key)}")
+        lines.append(f"label = {_toml_str(c.group_label)}")
+        lines.append(f"axis = {_toml_str(c.axis)}")
         for m in c.members:
             lines.append("[[variable_group.members]]")
-            lines.append(f'variable = "{m.slug}"')
-            lines.append(f'value = "{m.value}"')
-            lines.append(f'label = "{_toml_str(m.label)}"')
+            lines.append(f"variable = {_toml_str(m.slug)}")
+            lines.append(f"value = {_toml_str(m.value)}")
+            lines.append(f"label = {_toml_str(m.label)}")
         lines.append("")
     return "\n".join(lines) + "\n"
-
-
-def _toml_str(value: str) -> str:
-    """Escape a string for a TOML basic (double-quoted) string body. Group labels
-    carry provider-native Swedish text that can contain `"` or `\\`; without
-    escaping the worklist would fail to re-parse (the round-trip gate)."""
-    return value.replace("\\", "\\\\").replace('"', '\\"')

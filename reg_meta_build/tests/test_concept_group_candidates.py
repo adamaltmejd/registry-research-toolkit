@@ -146,7 +146,9 @@ class TestGenerator:
 
     def test_already_grouped_variable_excluded(self) -> None:
         # A variable already in a concept_group_variable row is NOT a candidate —
-        # the edge/month/curated passes already claimed it.
+        # the edge/month/curated passes already claimed it. The claiming group is
+        # keyed OFF the family stem ('claimed', not 'morsak') so this exercises only
+        # member-exclusion, not the key-collision skip (covered separately).
         conn = _base_db()
         _add_family(
             conn,
@@ -156,10 +158,10 @@ class TestGenerator:
             name="ICD-kod underliggande dödsorsak",
             var_id_base=600,
         )
-        # Materialize a stub group and claim morsak1 as a member.
+        # Materialize a stub group (non-colliding key) and claim morsak1 as a member.
         cur = conn.execute(
             "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
-            "VALUES ('variable', 1, 'morsak', 'x', 'edge')"
+            "VALUES ('variable', 1, 'claimed', 'x', 'edge')"
         )
         group_id = cur.lastrowid
         claimed = conn.execute(
@@ -176,6 +178,94 @@ class TestGenerator:
         assert len(result.candidates) == 1
         c = result.candidates[0]
         assert [m.suffix for m in c.members] == [2, 3]
+
+    def test_existing_group_key_collision_skipped(self) -> None:
+        # An edge/token group already owns group_key 'morsak' in register 1. A
+        # foldable family keyed on the SAME (register, stem) would collide on
+        # idx_concept_group_key if curated verbatim, so it is NOT emitted and is
+        # counted into skipped_existing_key (mirrors _derive_month_groups' guard).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="morsak",
+            suffixes=[1, 2, 3],
+            name="ICD-kod underliggande dödsorsak",
+            var_id_base=1300,
+        )
+        # An existing group on the colliding key, with an unrelated member (a
+        # different register's variable so it doesn't suppress the family itself).
+        add_register(conn, register_id=2, slug="par", name="PAR")
+        add_variable(conn, register_id=2, var_id=1399, name="Annan", slug="annan1")
+        cur = conn.execute(
+            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+            "VALUES ('variable', 1, 'morsak', 'x', 'edge')"
+        )
+        group_id = cur.lastrowid
+        other = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 2 AND slug = 'annan1'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, ?)",
+            (other, group_id),
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        # morsak1/2/3 are all ungrouped (the existing group's member is in par), but
+        # the key collides → skipped, not emitted, not counted as a battery.
+        assert result.skipped_existing_key == 1
+        assert [c.key for c in result.candidates] == []
+        assert result.excluded_batteries == 0
+
+    def test_existing_key_collision_counted_once_not_as_battery(self) -> None:
+        # A colliding family whose names would ALSO fail the battery gate is counted
+        # once — as a key-collision skip (the check runs first), not a battery.
+        conn = _base_db()
+        add_variable(conn, register_id=1, var_id=1400, name="Ålder", slug="f1")
+        add_variable(conn, register_id=1, var_id=1401, name="Kön", slug="f2")
+        add_variable(conn, register_id=1, var_id=1402, name="Civilstånd", slug="f3")
+        conn.execute(
+            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+            "VALUES ('variable', 1, 'f', 'x', 'edge')"
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.skipped_existing_key == 1
+        assert result.excluded_batteries == 0
+        assert result.candidates == []
+
+    def test_render_escapes_control_chars_and_roundtrips(self, tmp_path: Path) -> None:
+        # A family name carrying an embedded newline (and quotes/backslash) must not
+        # break the generated `label = "..."` line or the provenance comment: the
+        # shared _toml_str escapes control chars and _toml_comment collapses newlines,
+        # so the worklist still re-parses through load_concept_groups.
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="diag",
+            suffixes=[1, 2],
+            name='Diagnos\n"kod"\\rad',  # newline + quotes + backslash
+            var_id_base=1500,
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert len(result.candidates) == 1
+        toml = render_candidates_toml(
+            result, min_siblings=2, min_label_prefix=8, min_agreement=0.5
+        )
+        # The newline in the label must have been collapsed into the single
+        # provenance comment line, not split it into a second (would-be-TOML) line:
+        # exactly one `# axis=` line, and the fragment after it ("kod"...) must NOT
+        # have leaked onto its own bare line.
+        comment_lines = [ln for ln in toml.splitlines() if ln.startswith("# axis=")]
+        assert len(comment_lines) == 1
+        assert not any(ln.startswith('"kod"') for ln in toml.splitlines())
+
+        path = tmp_path / "candidates.toml"
+        path.write_text(toml, encoding="utf-8")
+        groups = load_concept_groups(path)
+        assert {g.key for g in groups} == {"diag"}
 
     def test_null_name_family_skipped(self) -> None:
         # A family with a NULL member name has no labels to agree on → conservative

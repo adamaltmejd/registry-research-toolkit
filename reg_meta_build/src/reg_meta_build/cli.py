@@ -1034,6 +1034,7 @@ def _cmd_concept_group_candidates(
     data: dict[str, Any] = {
         "foldable": len(result.candidates),
         "excluded_batteries": result.excluded_batteries,
+        "skipped_existing_key": result.skipped_existing_key,
         "min_siblings": args.min_siblings,
         "min_label_prefix": args.min_label_prefix,
         "min_agreement": args.min_agreement,
