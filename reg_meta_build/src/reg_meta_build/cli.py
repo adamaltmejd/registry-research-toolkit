@@ -42,6 +42,10 @@ from .concept_group_candidates import (
     infer_concept_group_candidates,
     render_candidates_toml as render_concept_candidates_toml,
 )
+from .concept_groups import (
+    load_concept_group_accepts,
+    repo_concept_groups_path,
+)
 from .db import build_db
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import extend_db
@@ -1026,12 +1030,20 @@ def _cmd_concept_group_candidates(
     # (variable.slug, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error, not crash deep in a query.
     conn = open_db(db)
+    # Accept-aware regeneration: an `[[accept]]`-ed auto family is materialized as a
+    # `curated` group at build time, which a naive rescan would drop. Feed the
+    # currently-accepted scopes so those families re-emit (idempotent catalog).
+    # `repo_concept_groups_path()` is None outside a checkout → no accepts → empty
+    # scopes (the empty path is byte-identical to the unaware scan).
+    accepts = load_concept_group_accepts(repo_concept_groups_path())
+    accepted_scopes = frozenset((a.provider, a.register, a.key) for a in accepts)
     try:
         result = infer_concept_group_candidates(
             conn,
             min_siblings=args.min_siblings,
             min_label_prefix=args.min_label_prefix,
             min_agreement=args.min_agreement,
+            accepted_scopes=accepted_scopes,
         )
     finally:
         conn.close()

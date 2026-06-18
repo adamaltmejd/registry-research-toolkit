@@ -14,6 +14,11 @@
 # An unaccepted family stays unfolded. Concept groups are presentation-only,
 # so review each family before accepting it.
 #
+# Regeneration is IDEMPOTENT: the generator reads concept_groups.toml's
+# accept-list and PRESERVES already-accepted families here (an accept
+# materializes its family as a group, which a naive rescan would drop), so
+# regenerating against a normal built DB keeps every accept resolvable.
+#
 # thresholds: min-siblings=2 min-label-prefix=8 min-agreement=0.5
 # foldable families: 559
 # excluded batteries (weak label agreement): 391
