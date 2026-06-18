@@ -1682,12 +1682,15 @@ scales. The chain, first match wins:
    to prettify any auto pick.
 2. **Existing auto** slug in `<provider>.auto.toml` — kept verbatim, so a
    kolumnnamn/name change can't rot a published slug.
-3. **Drift-stable basis** — when `delivery_column_name` is *not* constant across the
-   variable's states (the column was renamed across editions), the latest column is a
-   misleading version-coupled basis (`sun2020inr1` for a var that was
-   SUN96→SUN2000→SUN2020). Slug from the **name** when register-unique among drifters,
-   else the **earliest** delivery column (also the split-sibling discriminator basis —
-   siblings share a name, so the name collides and routes here).
+3. **Drift-stable basis** — when the delivery column's **slug** is not constant across
+   the variable's states (i.e. `COUNT(DISTINCT variable_slug(delivery_column_name)) > 1`
+   over the variable's non-NULL states), the latest column is a misleading
+   version-coupled basis (`sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Pure
+   case/diacritic/punctuation column noise — `PersonNr`/`personnr`, `Kön`/`Kon` — does
+   NOT trigger drift because `derive_variable_slug` collapses it to the same slug
+   regardless of which column is picked. Slug from the **name** when register-unique
+   among drifters, else the **earliest** delivery column (also the split-sibling
+   discriminator basis — siblings share a name, so the name collides and routes here).
 4. **kolumnnamn-derived** — register-unique latest column (the short, common case:
    `kon`). "Latest" = highest `valid_to`, lexically smallest on ties.
 5. **name-derived**, length-capped to 60 chars on a hyphen boundary (`_name_slug`) —
