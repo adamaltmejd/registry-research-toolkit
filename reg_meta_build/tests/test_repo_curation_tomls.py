@@ -74,10 +74,13 @@ def test_repo_concept_groups_auto_parses() -> None:
 def test_repo_concept_group_accepts_parses() -> None:
     # The `[[accept]]` opt-in list lives in `concept_groups.toml` (the same file
     # as `[[variable_group]]`). Its load-time shape is build-critical too; resolution
-    # against the auto catalog is maintainer-build territory. 0 accepts today (the
-    # repo ships the catalog but folds nothing yet) — the gate is that it PARSES.
+    # against the auto catalog is maintainer-build territory. The gate is that it
+    # PARSES with a valid load-time shape; the count grows as curation batches land
+    # (the #496 batch-1 SOS families ship now), so assert presence + shape, not an
+    # exact count.
     accepts = load_concept_group_accepts(_ROOT / "concept_groups.toml")
-    assert len(accepts) == 0
+    assert accepts
+    assert all(a.provider and a.register and a.key for a in accepts)
 
 
 def test_repo_delivery_enrichment_parses() -> None:
