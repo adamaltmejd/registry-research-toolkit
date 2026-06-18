@@ -2206,10 +2206,21 @@ def populate_variable_slugs(
     # providers can have applied overrides. In an incremental/steward overlay the
     # global providers are live but NOT re-slugged this run, so gating on all live
     # providers would false-raise on their un-applied (but valid) overrides.
+    #
+    # #563 (Codex): the skip is for a KNOWN-but-not-built provider only. An override
+    # for an UNKNOWN provider stem (a misfiled TOML like `fkk.toml` for `fk.toml`)
+    # is a typo too and must still raise — `seed_providers` inserts all 8 providers
+    # unconditionally (and the steward path inserts its provider), so the `provider`
+    # table is the right "known" set in every build mode.
     built_providers = set(provider_slugs)
+    known_providers = {r[0] for r in conn.execute("SELECT slug FROM provider")}
     unmatched = curated_required - applied_curated
-    stale_overrides = sorted(o for o in unmatched if o[0] in built_providers)
-    skipped_overrides = sorted(o for o in unmatched if o[0] not in built_providers)
+    stale_overrides = sorted(
+        o for o in unmatched if o[0] in built_providers or o[0] not in known_providers
+    )
+    skipped_overrides = sorted(
+        o for o in unmatched if o[0] in known_providers and o[0] not in built_providers
+    )
     if stale_overrides:
         sample = ", ".join(f"{prov}/{sid}" for prov, sid in stale_overrides[:10])
         raise _err(
@@ -2218,7 +2229,8 @@ def populate_variable_slugs(
             f"reference a (register, var) with no live variable — likely a typo: "
             f"{sample}.",
             "Fix the source key, or mark the entry deprecated=true if the "
-            "variable is retired.",
+            "variable is retired (or a provider TOML misfiled under an unknown "
+            "provider slug).",
         )
 
     if skipped_overrides:
