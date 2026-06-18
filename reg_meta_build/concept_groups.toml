@@ -140,6 +140,30 @@ key = "signal"
 label = "Fartygets identitetssnummer"
 axis = "ordinal"
 
+# Batch 4 (#496): the MOTHER + PREGNANCY diagnosis/procedure-code families in mfr,
+# parallel to the accepted child families (bdiag/bdiag-bk/bflop). These surfaced
+# once the generator's agreement metric became number-invariant (#561) — their
+# slot number sits mid-label ("Diagnoskod N, den förlösta"), so the old metric
+# mis-scored them as batteries. (mfr `apgar` 1/5/10 min is a TIMEPOINT fold, a
+# different facet — left for a later, separate consideration.)
+[[accept]]
+register = "sos/mfr"
+key = "flop"
+label = "Åtgärdskod, den förlösta"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/mfr"
+key = "mdiag"
+label = "Diagnoskod, den förlösta"
+axis = "ordinal"
+
+[[accept]]
+register = "sos/mfr"
+key = "gdiag"
+label = "Diagnoskod under graviditet"
+axis = "ordinal"
+
 # LISA's AGI monthly-income family: one concept ("Löne- eller
 # företagarinkomst i {månad}") × a rank axis (agi1/agi2/agi3 = största / näst
 # största / tredje största förvärvskälla). #319 merged each rank's 12 month
