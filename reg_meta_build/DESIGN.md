@@ -1878,17 +1878,21 @@ in a `build-db` DB (scb, sos, fk, fohm, umu, pliktverket, riksarkivet, lakemedel
 is under mandatory curation — there is no provider allow-list.
 
 **Flavored (extend-db) scope** (#559). `extend-db` now also enforces the gate, scoped to
-the steward providers the steward slug dir covers. The CLI resolves the steward
+the steward REGISTERS the steward slug dir curates. The CLI resolves the steward
 `slug_dir` once (via `resolve_steward_slug_dir`) and threads it into both `extend_db`
 and the flavored validate hook, so the overlay and its gate read the same dir. The gate
-derives the steward provider set from the curated files in that dir and calls
-`iter_entity_key_variables(conn, providers=<steward set>)` — global providers are
-excluded. The provider filter is applied at the TOP of the row loop, before
+derives the steward register-id set from the dir's `[register]` entries and calls
+`iter_entity_key_variables(conn, register_ids=<steward register ids>)` — the global
+base's registers are excluded. Scoping by register (not provider) is deliberate:
+`extend_db` lets a steward overlay reuse an existing provider slug that ALSO has global
+base registers, so a provider-slug scope would re-pull that provider's global registers
+too. The register filter is applied at the TOP of the row loop, before
 `_variable_source_ids` runs for a register. This ordering is required for correctness,
 not just to avoid false failures: `_variable_source_ids` is unsafe on a flavored DB for
 global registers (split-sibling discriminators can diverge from the incremental slug
-path), so a global row must never reach it. Steward-scoping skips those rows before that
-helper can be called.
+path), so a global register's row must never reach it; steward-overlay registers are
+all-new variables, so the helper is safe on them. Steward-scoping skips the global rows
+before that helper can be called.
 
 This is a forward-looking guard: no committed `fqid_slugs/swecov/` TOML declares a
 `panel_entity_key` yet, so the gate passes immediately with zero steward pins today and
@@ -1897,22 +1901,23 @@ the extend-db output is unchanged.
 `reg-meta-build entity-key-pins` generates the TOML from a built DB. Default (global
 build) reads the curated slug dir, enumerates every provider's entity-key variables (no
 provider filter), and emits nothing when all are already pinned. `--flavored` generates
-steward pins instead: point `--slug-dir` at `fqid_slugs/<steward>/`; the generator
-scopes to the providers that dir covers and excludes the global base's already-pinned
-variables. `--out-dir DIR` writes one `DIR/<provider>.toml` block per provider (the
-curation shape — fold each into `fqid_slugs/<provider>.toml`); `--output-toml FILE`
-writes all providers' pins to a single inspection file; the two are mutually exclusive.
-The emitted pins are dbdiff-identical (each reproduces the slug the variable already
-carries).
+steward pins instead: it REQUIRES an explicit `--slug-dir` pointing at
+`fqid_slugs/<steward>/` (without it the resolver falls back to the global `fqid_slugs/`
+and emits no steward pins — a usage error); the generator scopes to the steward
+registers that dir curates and excludes the global base's already-pinned variables.
+`--out-dir DIR` writes one `DIR/<provider>.toml` block per provider (the curation shape
+— fold each into `fqid_slugs/<provider>.toml`); `--output-toml FILE` writes all
+providers' pins to a single inspection file; the two are mutually exclusive. The emitted
+pins are dbdiff-identical (each reproduces the slug the variable already carries).
 
 The build-side gate (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY
 on the real build (`corpus=True`, i.e. a maintainer's `build-db` without
 `--no-validate`): any entity-key variable (any global provider) without a curated
 `[variable]` pin is a hard build failure. The gate and generator share
 `iter_entity_key_variables` (and derive both the curated slug map and the optional
-steward provider scope via `_entity_key_curation_basis`), so they enforce the identical
-set. Synthetic CI (`corpus=False`, `slug_dir=None`) skips the gate — the fixtures carry
-no curated slug dir.
+steward register-id scope via `_entity_key_curation_basis`), so they enforce the
+identical set. Synthetic CI (`corpus=False`, `slug_dir=None`) skips the gate — the
+fixtures carry no curated slug dir.
 
 **Chicken-and-egg:** when a new register variant with a `panel_entity_key` is onboarded,
 the first gated `build-db` will fail the entity-key gate because the pin doesn't exist
@@ -2214,8 +2219,9 @@ consumes and the per-provider slug TOMLs.
   tightened minted-id band check (every non-SCB provider must be high-band). As of #559
   the entity-key curation gate also runs on the flavored path: the CLI threads the
   resolved steward `slug_dir` into this call so `_check_entity_key_vars_curated`
-  enforces steward providers (scoped via `_entity_key_curation_basis`). Independent of
-  `corpus`; a flavor build never sets `corpus=True`.
+  enforces the steward registers that dir curates (scoped by register id via
+  `_entity_key_curation_basis`). Independent of `corpus`; a flavor build never sets
+  `corpus=True`.
 - **`_populate_fts(include_value_code=False)`** — skips the `value_code_fts` INSERT. The
   full build keeps `include_value_code=True` (the default), so its call is unchanged.
 

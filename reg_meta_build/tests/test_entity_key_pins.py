@@ -226,18 +226,19 @@ class TestEnumerate:
         providers = {ek.provider_slug for ek in iter_entity_key_variables(conn)}
         assert providers == {"scb", "sos"}
 
-    def test_providers_scope_yields_only_named(self):
-        """#559: passing `providers={...}` filters to those provider slugs only —
-        a flavored caller scopes to its steward providers so the global base's
-        entity-key vars (whose `_variable_source_ids` is flavored-unsafe) are
-        skipped before that helper runs."""
+    def test_register_ids_scope_yields_only_named(self):
+        """#559: passing `register_ids={...}` filters to those register ids only —
+        a flavored caller scopes to its steward registers so the global base's
+        entity-key vars (whose `_variable_source_ids` is flavored-unsafe, and which
+        may share a provider slug with a steward overlay) are skipped before that
+        helper runs."""
         conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)
-        scoped = list(iter_entity_key_variables(conn, providers={"sos"}))
+        _add_sos_entity_key(conn)  # sos register 500
+        scoped = list(iter_entity_key_variables(conn, register_ids={500}))
         assert {ek.provider_slug for ek in scoped} == {"sos"}
         assert {ek.source_id for ek in scoped} == {"500.LOPNR"}
-        # The empty scope yields nothing (no provider matches).
-        assert list(iter_entity_key_variables(conn, providers=set())) == []
+        # The empty scope yields nothing (no register matches).
+        assert list(iter_entity_key_variables(conn, register_ids=set())) == []
 
     def test_yields_three_part_source_id_for_split_sibling(self):
         """A split-sibling entity-key var carries a 3-part `<reg>.<pk>.<disc>`
@@ -377,22 +378,22 @@ class TestGenerator:
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         assert [p.source_id for p in pins] == ["1.44", "1.99"]
 
-    def test_flavored_scopes_to_steward_dir_providers(self, tmp_path: Path):
+    def test_flavored_scopes_to_steward_dir_registers(self, tmp_path: Path):
         """#559: `infer_entity_key_pins(conn, steward_dir, flavored=True)` scopes to
-        the providers the steward dir covers. With a DB carrying BOTH a global (scb)
-        and a non-global (sos) entity-key var and a steward dir covering ONLY the
-        non-global provider, the emitted pins are for that provider alone — the scb
-        var (the global base's, whose `_variable_source_ids` is flavored-unsafe) is
-        excluded entirely."""
-        conn = _db_with_entity_key("kon")  # scb 1.44/kon
-        _add_sos_entity_key(conn)  # sos 500.LOPNR/lopnr
+        the steward REGISTERS the dir curates. With a DB carrying BOTH a global (scb)
+        and a steward (sos register 500) entity-key var and a steward dir curating
+        ONLY the steward register, the emitted pins are for that register alone — the
+        scb var (the global base's, whose `_variable_source_ids` is flavored-unsafe)
+        is excluded entirely."""
+        conn = _db_with_entity_key("kon")  # scb register 1, 1.44/kon
+        _add_sos_entity_key(conn)  # sos register 500, 500.LOPNR/lopnr
         steward_dir = tmp_path / "steward"
         steward_dir.mkdir()
-        # Provider scope is derived from the curated ENTRIES' provider (the file
-        # stem): a register slug entry in sos.toml puts `sos` in scope without
-        # pinning the entity-key VARIABLE, so the gate/generator still emit it.
-        # (Mirrors the real steward dir, which always carries register/variant
-        # slug entries — a truly empty TOML would yield no provider in scope.)
+        # Register scope is derived from the curated `[register]` ENTRIES' source
+        # ids: a register slug entry for 500 in sos.toml puts register 500 in scope
+        # without pinning the entity-key VARIABLE, so the gate/generator still emit
+        # it. (Mirrors the real steward dir, which always carries register/variant
+        # slug entries — a TOML with no `[register]` entries yields no scope.)
         (steward_dir / "sos.toml").write_text(
             '[register."500"]\nslug = "dors"\n', encoding="utf-8"
         )
@@ -416,10 +417,11 @@ class TestGenerator:
         `flavored=args.flavored` wiring the direct-call test can't reach (the helper
         hardcoded `flavored=False`)."""
         # Fresh fixture: the handler closes its own conn.
-        conn = _db_with_entity_key("kon")  # scb 1.44/kon
-        _add_sos_entity_key(conn)  # sos 500.LOPNR/lopnr
-        # Steward dir scoped to sos: a register slug entry puts `sos` in scope
-        # without pinning the entity-key VARIABLE (so it's still emitted).
+        conn = _db_with_entity_key("kon")  # scb register 1, 1.44/kon
+        _add_sos_entity_key(conn)  # sos register 500, 500.LOPNR/lopnr
+        # Steward dir scoped to register 500: a `[register]` slug entry puts that
+        # register in scope without pinning the entity-key VARIABLE (so it's still
+        # emitted).
         steward_dir = tmp_path / "steward"
         steward_dir.mkdir()
         (steward_dir / "sos.toml").write_text(
@@ -433,6 +435,37 @@ class TestGenerator:
         # Steward-scoped: only the sos pin survives; scb is absent.
         assert data["counts"] == {"sos": 1}
         assert data["count"] == 1
+
+    def test_cmd_flavored_without_slug_dir_is_usage_error(
+        self, monkeypatch: pytest.MonkeyPatch
+    ):
+        """#559: `--flavored` with no `--slug-dir` is a fast-fail usage error.
+        Without an explicit steward dir the resolver would fall back to the global
+        repo fqid_slugs/, silently scoping the flavored generator to GLOBAL
+        registers and emitting zero/wrong steward pins — so the handler refuses
+        BEFORE opening the DB."""
+        import argparse
+
+        from reg_meta_build import cli
+
+        # Sentinel conn: the guard must fire before any DB open, so a stub that
+        # raises proves open_db is never reached.
+        def _boom(_db):
+            raise AssertionError("open_db must not run when the guard fires")
+
+        monkeypatch.setattr(cli, "open_db", _boom)
+        args = argparse.Namespace(
+            db=None,
+            slug_dir=None,
+            out_dir=None,
+            output_toml=None,
+            force=False,
+            flavored=True,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            cli._cmd_entity_key_pins(args)
+        assert exc.value.code == "entity_key_pins_flavored_needs_slug_dir"
+        assert exc.value.exit_code == 2  # EXIT_USAGE
 
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB

@@ -446,10 +446,13 @@ def _build_parser() -> argparse.ArgumentParser:
             "provider's entity-key slug can churn and dangle a panel ref, so every\n"
             "provider present in a build-db DB is emitted.\n\n"
             "--flavored (#559): generate STEWARD pins from a flavored (extend-db) DB.\n"
-            "Point --slug-dir at the steward dir (fqid_slugs/<steward>/); the\n"
-            "generator scopes to the providers that dir covers and excludes the global\n"
-            "base's already-pinned entity-key vars. Steward-scoping is required for\n"
-            "correctness on a flavored DB, not just to avoid extra emits.\n\n"
+            "REQUIRES an explicit --slug-dir pointing at the steward dir\n"
+            "(fqid_slugs/<steward>/) — without it the resolver falls back to the\n"
+            "global fqid_slugs/ and emits no steward pins (a usage error). The\n"
+            "generator scopes to the STEWARD REGISTERS that dir curates and excludes\n"
+            "the global base's already-pinned entity-key vars. Steward-scoping is\n"
+            "required for correctness on a flavored DB, not just to avoid extra\n"
+            "emits.\n\n"
             "Idempotent: variables already carrying a hand-curated `[variable]` slug\n"
             "(the existing #539 pins) are SKIPPED, so re-running after the pins are\n"
             "committed emits nothing. Reads a built DB; never mutates it. The\n"
@@ -510,10 +513,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--flavored",
         action="store_true",
         help=(
-            "Generate STEWARD pins from a flavored (extend-db) DB — scope to the "
-            "providers covered by --slug-dir (point it at the steward dir "
-            "fqid_slugs/<steward>/) and exclude the global base's already-pinned "
-            "entity-key vars."
+            "Generate STEWARD pins from a flavored (extend-db) DB. REQUIRES an "
+            "explicit --slug-dir (the steward dir fqid_slugs/<steward>/) — scope to "
+            "the steward registers it curates and exclude the global base's "
+            "already-pinned entity-key vars. Without --slug-dir the resolver would "
+            "fall back to the global fqid_slugs/ and emit no steward pins, so it is "
+            "a usage error."
         ),
     )
 
@@ -1155,6 +1160,23 @@ def _cmd_entity_key_pins(
     # resolution (`--slug-dir` override, else the repo's fqid_slugs/). Missing
     # (wheel install, no checkout) is a usage error here — the generator MUST
     # read the curated pins to stay idempotent.
+    # --flavored MUST get an explicit --slug-dir: without it the resolver falls
+    # back to the global repo fqid_slugs/, scoping the flavored generator to
+    # GLOBAL providers — it then emits zero/wrong steward pins (an unfixable
+    # validation failure). Guard before the repo_slug_dir() fallback so a
+    # flavored run can't silently degrade to the global dir.
+    if args.flavored and not args.slug_dir:
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="entity_key_pins_flavored_needs_slug_dir",
+            error_class="usage",
+            message="--flavored requires an explicit --slug-dir (the steward dir).",
+            remediation=(
+                "Pass --slug-dir <steward dir, e.g. "
+                "reg_meta_build/fqid_slugs/<steward>/>. Without it the generator "
+                "falls back to the global fqid_slugs/ and emits no steward pins."
+            ),
+        )
     slug_dir = (
         Path(args.slug_dir).expanduser().resolve() if args.slug_dir else repo_slug_dir()
     )

@@ -902,11 +902,14 @@ def _check_entity_key_vars_curated(
     whatever the DB holds, so onboarding a provider can't silently drop it).
 
     FLAVORED extend-db (``flavored=True``, #559): the steward overlay threads its
-    own ``slug_dir`` here, and the gate scopes to the STEWARD providers that dir
-    covers. The global base's entity-key vars are NOT re-enforced — they were
-    validated at global-build time and live in the global slug dir, not the
-    steward one; and ``iter_entity_key_variables``'s ``_variable_source_ids`` is
-    unsafe on a flavored DB for GLOBAL registers, so the provider filter skips
+    own ``slug_dir`` here, and the gate scopes to the STEWARD REGISTERS that dir
+    curates (its ``[register]`` entries). The global base's entity-key vars are
+    NOT re-enforced — they were validated at global-build time and live in the
+    global slug dir, not the steward one. Scoping by register (not provider)
+    matters because ``extend_db`` lets a steward overlay reuse a provider slug
+    that ALSO has global base registers; a provider-slug scope would re-pull those
+    global registers, and ``iter_entity_key_variables``'s ``_variable_source_ids``
+    is unsafe on a flavored DB for GLOBAL registers, so the register filter skips
     them. The enumeration is shared with the generator
     (``fqid_slugs.iter_entity_key_variables`` / ``infer_entity_key_pins``) so gate
     and generator can't disagree on which variables need a pin.
@@ -931,10 +934,10 @@ def _check_entity_key_vars_curated(
     )
 
     # Glob the curated dir once: the curated slug map and (flavored) the steward
-    # provider scope both come from the same entry list. Shared with the generator
+    # register scope both come from the same entry list. Shared with the generator
     # so gate and generator read the identical basis.
     curated, scope = _entity_key_curation_basis(slug_dir, flavored=flavored)
-    entity_key_vars = list(iter_entity_key_variables(conn, providers=scope))
+    entity_key_vars = list(iter_entity_key_variables(conn, register_ids=scope))
     if not entity_key_vars:
         result.ok("no variant carries an entity key — nothing to curate")
         return

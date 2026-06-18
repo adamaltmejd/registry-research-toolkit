@@ -849,6 +849,62 @@ class TestValidateModule:
         assert result.passed, result.failures
         assert "all 1 entity-key var(s) are curated" in result.format_report()
 
+    @staticmethod
+    def _add_sos_global_base_entity_key(conn: sqlite3.Connection) -> None:
+        """Add a SECOND register (501) under the SAME provider (sos, provider_id 2)
+        carrying an un-pinned entity-key var (source_id `501.GLOBALK`). It stands in
+        for a GLOBAL BASE register that shares a provider slug with a steward overlay
+        — the case Fix 2 guards: a provider-slug scope would wrongly re-pull it."""
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, slug, name) "
+            "VALUES (501, 2, 'global-base', 'GlobalBase')"
+        )
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (501, CAST('GLOBALK' AS TEXT), 'GlobalKey', 'globalk')"
+        )
+        vid = cur.lastrowid
+        conn.execute(
+            "INSERT INTO register_variant "
+            "(register_variant_id, register_id, slug, name, panel_entity_key) "
+            "VALUES (5010, 501, 'base', 'B', 'globalk')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 5010, '0001-01-01', '9999-12-31', 'int', 'Globalk')",
+            (vid,),
+        )
+        conn.commit()
+
+    def test_flavored_gate_excludes_same_provider_global_register(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#559 Fix 2: the flavored gate scopes by STEWARD REGISTER, not provider.
+
+        One provider (sos) carries BOTH a steward-overlay register (500, the steward
+        dir curates it) AND a global-base register (501, the steward dir does NOT).
+        The steward dir's `[register]` entry names only 500. The gate must enforce
+        ONLY 500's entity-key var; 501's (same provider) is excluded entirely — no
+        failure for it, and (per `iter_entity_key_variables`) its row is skipped
+        before the flavored-unsafe `_variable_source_ids` ever runs."""
+        db = tmp_path / "same_provider.db"
+        db.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(db)
+        self._add_sos_entity_key(conn)  # steward register 500 (500.LOPNR), un-pinned
+        self._add_sos_global_base_entity_key(conn)  # global register 501, un-pinned
+        conn.close()
+        # Steward dir curates ONLY register 500; provider scope would also grab 501.
+        steward_dir = self._steward_slug_dir(tmp_path, "")
+        result = self._run_gate(db, steward_dir, flavored=True)
+        assert not result.passed
+        # The steward register's var fails (un-pinned, in scope) …
+        assert any("source_id 500.LOPNR" in f for f in result.failures), result.failures
+        # … but the same-provider GLOBAL register's var is NOT enforced at all.
+        assert not any("source_id 501.GLOBALK" in f for f in result.failures), (
+            result.failures
+        )
+
 
 class TestBuildDbProvidersDefault:
     def test_cli_default_is_combined_global_build(self):
