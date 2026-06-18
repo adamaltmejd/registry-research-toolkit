@@ -12,6 +12,7 @@ slug dir under tmp_path; never reads the shipped fqid_slugs TOMLs."""
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -37,7 +38,6 @@ from reg_meta_build.fqid_slugs import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from pathlib import Path
 
 
 def _db_with_entity_key(entity_key: str | list[str]) -> sqlite3.Connection:
@@ -378,6 +378,58 @@ class TestGenerator:
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         assert [p.source_id for p in pins] == ["1.44", "1.99"]
 
+    def test_flavored_header_points_at_steward_dir(self, tmp_path: Path):
+        """#559 Fix 1: `render_entity_key_pins_toml(pins, flavored=True)` rewrites
+        the comment HEADER to the steward flow — the `--flavored --slug-dir`
+        regenerate command and the `fqid_slugs/<steward>/` fold target — and drops
+        the GLOBAL `--out-dir`-to-`fqid_slugs/<provider>.toml` instruction so a
+        steward curator isn't pointed at the wrong location. The pin LINES are
+        unchanged (they still bind the same source ids)."""
+        conn = _db_with_entity_key("kon")
+        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
+        toml = render_entity_key_pins_toml(pins, flavored=True)
+        assert "--flavored" in toml
+        assert "--slug-dir" in toml
+        assert "fqid_slugs/<steward>/" in toml
+        # The GLOBAL regenerate instruction must NOT survive into the steward
+        # header (it points the curator at the wrong place).
+        assert "--out-dir /tmp/pins/" not in toml
+        assert "into fqid_slugs/<provider>.toml" not in toml
+        # The pin line itself is identical regardless of header flavor.
+        assert '[variable."1.44"]' in toml
+        assert 'slug = "kon"' in toml
+
+    def test_global_header_unchanged_byte_for_byte(self, tmp_path: Path):
+        """#559 Fix 1: `flavored=False` (default) output is BYTE-IDENTICAL to the
+        committed global pin blocks — the steward header swap must not churn them.
+        Asserts both that the explicit default matches the no-arg call and that the
+        original global header text is still present."""
+        conn = _db_with_entity_key("kon")
+        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
+        default = render_entity_key_pins_toml(pins)
+        assert render_entity_key_pins_toml(pins, flavored=False) == default
+        # The original GLOBAL header markers are intact.
+        assert "(#546, #554)" in default
+        assert "Scope: ALL" in default
+        assert "--out-dir /tmp/pins/" in default
+        assert "into fqid_slugs/<provider>.toml" in default
+        # ...and the steward-only markers are absent from the global header.
+        assert "--flavored" not in default
+        assert "fqid_slugs/<steward>/" not in default
+
+    def test_write_flavored_writes_steward_header(self, tmp_path: Path):
+        """#559 Fix 1: `write_entity_key_pins(..., flavored=True)` threads the flag
+        into the per-provider render, so the written `<provider>.toml` carries the
+        steward header."""
+        conn = _db_with_entity_key("kon")
+        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
+        out_dir = tmp_path / "out"
+        written = write_entity_key_pins(pins, out_dir, flavored=True)
+        body = Path(written["scb"]).read_text(encoding="utf-8")
+        assert "--flavored" in body
+        assert "fqid_slugs/<steward>/" in body
+        assert "--out-dir /tmp/pins/" not in body
+
     def test_flavored_scopes_to_steward_dir_registers(self, tmp_path: Path):
         """#559: `infer_entity_key_pins(conn, steward_dir, flavored=True)` scopes to
         the steward REGISTERS the dir curates. With a DB carrying BOTH a global (scb)
@@ -521,6 +573,55 @@ class TestGenerator:
             '[register."500"]\nslug = "dors"\n', encoding="utf-8"
         )
         monkeypatch.setattr(cli, "repo_slug_dir", lambda: global_root)
+
+        def _boom(_db):
+            raise AssertionError("open_db must not run when the guard fires")
+
+        monkeypatch.setattr(cli, "open_db", _boom)
+        args = argparse.Namespace(
+            db=None,
+            slug_dir=str(global_root),
+            out_dir=None,
+            output_toml=None,
+            force=False,
+            flavored=True,
+        )
+        with pytest.raises(RegMetaError) as exc:
+            cli._cmd_entity_key_pins(args)
+        assert exc.value.code == "entity_key_pins_flavored_global_slug_dir"
+        assert exc.value.exit_code == 2  # EXIT_USAGE
+
+    def test_cmd_flavored_slug_dir_global_root_by_classifications_marker(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """#559 Fix 2: a global-root --slug-dir is rejected by its CONTENTS, not
+        just path-equality. From an installed package `repo_slug_dir()` is None (the
+        path-equality check can't fire) yet an explicit global fqid_slugs/ root —
+        which carries classifications.toml AND [register] entries — would fall
+        through to GLOBAL register scope and silently emit `count: 0`. The
+        classifications.toml marker (it lives ONLY at the global root, never in a
+        steward dir) makes the handler refuse BEFORE opening the DB with the SAME
+        `entity_key_pins_flavored_global_slug_dir` usage error. The dir also carries
+        a `[register]` entry so reaching that error proves the content marker (not
+        the empty-scope guard) is what fires."""
+        import argparse
+
+        from reg_meta_build import cli
+
+        global_root = tmp_path / "fqid_slugs"
+        global_root.mkdir()
+        # The global-root content markers: a provider TOML with a [register] entry
+        # (so the empty-scope guard would PASS) AND classifications.toml (the marker
+        # only the global root carries).
+        (global_root / "sos.toml").write_text(
+            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
+        )
+        (global_root / "classifications.toml").write_text(
+            '[classification."icd10se"]\nslug = "icd10se"\n', encoding="utf-8"
+        )
+        # Installed-package case: repo_slug_dir() is None, so path-equality can't
+        # catch this — only the content marker can.
+        monkeypatch.setattr(cli, "repo_slug_dir", lambda: None)
 
         def _boom(_db):
             raise AssertionError("open_db must not run when the guard fires")

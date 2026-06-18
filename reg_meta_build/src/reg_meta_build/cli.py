@@ -50,6 +50,7 @@ from .db import build_db
 from .doc_db import build_doc_db, repo_docs_dir
 from .extend_db import extend_db, resolve_steward_slug_dir
 from .fqid_slugs import (
+    CLASSIFICATIONS_FILE,
     SNAPSHOT_FILENAME,
     diff_snapshot,
     format_default_slug_hints,
@@ -449,9 +450,12 @@ def _build_parser() -> argparse.ArgumentParser:
             "--flavored (#559): generate STEWARD pins from a flavored (extend-db) DB.\n"
             "REQUIRES an explicit --slug-dir pointing at the steward dir\n"
             "(fqid_slugs/<steward>/) that curates the overlay's registers — NOT the\n"
-            "global fqid_slugs/ root, and not a dir without [register] entries. Each\n"
-            "would scope the generator to the wrong/empty register set and emit zero\n"
-            "steward pins (all usage errors). The generator scopes to the STEWARD\n"
+            "global fqid_slugs/ root (rejected when --slug-dir equals the repo's\n"
+            "fqid_slugs/ OR carries classifications.toml, the global-root marker that\n"
+            "also catches an installed-package / cross-checkout root), and not a dir\n"
+            "without [register] entries. Each would scope the generator to the\n"
+            "wrong/empty register set and emit zero steward pins (all usage errors).\n"
+            "The generator scopes to the STEWARD\n"
             "REGISTERS that dir curates and excludes the global base's already-pinned\n"
             "entity-key vars. Steward-scoping is required for correctness on a\n"
             "flavored DB, not just to avoid extra emits.\n\n"
@@ -517,11 +521,13 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Generate STEWARD pins from a flavored (extend-db) DB. REQUIRES an "
             "explicit --slug-dir = the steward dir (fqid_slugs/<steward>/) that "
-            "curates the overlay's registers — NOT the global fqid_slugs/ root and "
-            "not a dir without [register] entries (each scopes to the wrong/empty "
-            "register set and emits zero pins, all usage errors). Scopes to the "
-            "steward registers it curates and excludes the global base's "
-            "already-pinned entity-key vars."
+            "curates the overlay's registers — NOT the global fqid_slugs/ root "
+            "(rejected by path-equality with the repo's fqid_slugs/ OR by the "
+            "classifications.toml global-root marker, which also catches an "
+            "installed-package / cross-checkout root) and not a dir without "
+            "[register] entries (each scopes to the wrong/empty register set and "
+            "emits zero pins, all usage errors). Scopes to the steward registers it "
+            "curates and excludes the global base's already-pinned entity-key vars."
         ),
     )
 
@@ -1216,20 +1222,35 @@ def _cmd_entity_key_pins(
     # prevent. The gate (validate._check_entity_key_vars_curated) does NOT mirror
     # these guards: an empty steward scope is a VALID gate no-op (an overlay with
     # no steward registers has nothing to curate), but for the GENERATOR it is a
-    # misconfig. Cheap path-compare (Fix C) first, then the entry scan (Fix B).
+    # misconfig. Cheap path-compare (Fix C) first, then the classifications.toml
+    # content marker (covers the installed-package / cross-checkout global root
+    # that path-equality misses), then the [register] entry scan (Fix B).
     if args.flavored:
         repo_root = repo_slug_dir()
         # repo_slug_dir() is None outside a checkout; --slug-dir was given
         # explicitly here, so a None root just means there's no global root to
         # collide with — skip the equality check.
-        if repo_root is not None and slug_dir == repo_root.resolve():
+        # The content marker (classifications.toml) is what catches the cases
+        # path-equality MISSES: an installed-package run (repo_slug_dir() is
+        # None, so the equality check can't fire) or --slug-dir pointing at a
+        # DIFFERENT checkout's global root (not equal to this checkout's
+        # repo_root). That provider-independent classifications.toml lives ONLY
+        # at the global slug-dir root — steward dirs never carry it — so its
+        # presence positively identifies the global root, which also has
+        # [register] entries and so slips past the empty-scope guard below.
+        is_global_root = (
+            repo_root is not None and slug_dir == repo_root.resolve()
+        ) or (slug_dir / CLASSIFICATIONS_FILE).exists()
+        if is_global_root:
             raise RegMetaError(
                 exit_code=EXIT_USAGE,
                 code="entity_key_pins_flavored_global_slug_dir",
                 error_class="usage",
                 message=(
                     "--flavored --slug-dir must be a steward dir "
-                    "(fqid_slugs/<steward>/), not the global root."
+                    "(fqid_slugs/<steward>/), not the global root (it equals the "
+                    "repo's fqid_slugs/ or carries classifications.toml, the "
+                    "global-root marker)."
                 ),
                 remediation=(
                     "Pass --slug-dir pointing at the nested steward dir "
@@ -1278,18 +1299,22 @@ def _cmd_entity_key_pins(
     }
     if args.out_dir:
         out_dir = Path(args.out_dir).expanduser().resolve()
-        written = write_entity_key_pins(pins, out_dir, force=args.force)
+        written = write_entity_key_pins(
+            pins, out_dir, flavored=args.flavored, force=args.force
+        )
         data["out_dir"] = str(out_dir)
         data["files"] = written
     elif args.output_toml:
         # Single combined file, all providers — for inspection only.
         out_path = Path(args.output_toml).expanduser().resolve()
-        out_path.write_text(render_entity_key_pins_toml(pins), encoding="utf-8")
+        out_path.write_text(
+            render_entity_key_pins_toml(pins, flavored=args.flavored), encoding="utf-8"
+        )
         data["output_toml"] = str(out_path)
     else:
         # No file target — carry the combined TOML in the payload so the pins
         # aren't lost.
-        data["toml"] = render_entity_key_pins_toml(pins)
+        data["toml"] = render_entity_key_pins_toml(pins, flavored=args.flavored)
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(

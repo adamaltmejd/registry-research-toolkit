@@ -1457,7 +1457,9 @@ def infer_entity_key_pins(
     return pins
 
 
-def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
+def render_entity_key_pins_toml(
+    pins: list[EntityKeyPin], *, flavored: bool = False
+) -> str:
     """Render entity-key pins (#546/#554) as a self-contained `[variable]` block
     to append to a provider's ``fqid_slugs/<provider>.toml`` — same style as the
     #539 block already in ``scb.toml``.
@@ -1468,26 +1470,58 @@ def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
     `# <reg>: panel_entity_key` comments survive. `source_id` segments are
     integers / kebab discriminators and slugs are kebab identifiers, so no TOML
     escaping is needed (the `_toml_str` quoting still applies to the key for
-    safety)."""
-    lines = [
-        "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins "
-        "(#546, #554).",
-        "#",
-        "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
-        "# (the default freeze zone re-derives it). These pins freeze the slug each",
-        "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
-        "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
-        "# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL",
-        "# global providers (#554).",
-        "#",
-        "# Regenerate after onboarding/repointing a panel: run",
-        "#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/",
-        "# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml",
-        "# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —",
-        "# pins reproduce the slug the variable already carries).",
-        f"# {len(pins)} pin(s).",
-        "",
-    ]
+    safety).
+
+    ``flavored`` (#559) only swaps the comment HEADER's scope + regenerate
+    instructions so the curator is pointed at the steward slug dir
+    (``fqid_slugs/<steward>/<provider>.toml``) and the ``--flavored`` regenerate
+    command, instead of the GLOBAL flow. The pin LINES are identical either way —
+    ``flavored=False`` output stays BYTE-IDENTICAL to today's so the committed
+    global pin blocks never churn."""
+    if flavored:
+        header = [
+            "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins "
+            "--flavored (#559).",
+            "#",
+            "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
+            "# (the default freeze zone re-derives it). These pins freeze the slug each",
+            "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
+            "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
+            "# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: the",
+            "# STEWARD-overlay registers this slug dir curates (#559) — the global base's",
+            "# entity-key vars are pinned at global-build time in the global slug dir.",
+            "#",
+            "# Regenerate after onboarding/repointing a panel: run",
+            "#   reg-meta-build --db <flavored-db> entity-key-pins --flavored "
+            "--slug-dir <steward dir>",
+            "# and fold the NON-duplicate entries into "
+            "fqid_slugs/<steward>/<provider>.toml.",
+            "# dbdiff-identical (slug values only — pins reproduce the slug the",
+            "# variable already carries).",
+            f"# {len(pins)} pin(s).",
+            "",
+        ]
+    else:
+        header = [
+            "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins "
+            "(#546, #554).",
+            "#",
+            "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
+            "# (the default freeze zone re-derives it). These pins freeze the slug each",
+            "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
+            "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
+            "# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL",
+            "# global providers (#554).",
+            "#",
+            "# Regenerate after onboarding/repointing a panel: run",
+            "#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/",
+            "# and fold the NON-duplicate entries from each /tmp/pins/<provider>.toml",
+            "# into fqid_slugs/<provider>.toml. dbdiff-identical (slug values only —",
+            "# pins reproduce the slug the variable already carries).",
+            f"# {len(pins)} pin(s).",
+            "",
+        ]
+    lines = list(header)
     for p in pins:
         lines.append(
             f"[variable.{_toml_str(p.source_id)}]  "
@@ -1499,7 +1533,11 @@ def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
 
 
 def write_entity_key_pins(
-    pins: list[EntityKeyPin], out_dir: Path, *, force: bool = False
+    pins: list[EntityKeyPin],
+    out_dir: Path,
+    *,
+    flavored: bool = False,
+    force: bool = False,
 ) -> dict[str, str]:
     """Write one ``<out-dir>/<provider>.toml`` pin block per provider, returning
     ``{provider: written_path}``.
@@ -1508,7 +1546,12 @@ def write_entity_key_pins(
     rely on `pins` being provider-sorted). Mirrors `seed-slugs`'s overwrite guard:
     if `out_dir` already holds any `*.toml` and `force` is False, refuses
     (``EXIT_CONFIG``) rather than clobbering — pointing `--out-dir` at the curated
-    `fqid_slugs/` is the footgun this guards."""
+    `fqid_slugs/` is the footgun this guards.
+
+    ``flavored`` (#559) is threaded into the per-provider
+    `render_entity_key_pins_toml` so each written block carries the steward-flow
+    header (steward dir + ``--flavored`` regenerate command) when generating
+    flavored pins."""
     if out_dir.exists() and any(out_dir.glob("*.toml")) and not force:
         raise _err(
             "entity_key_pins_would_overwrite",
@@ -1523,7 +1566,9 @@ def write_entity_key_pins(
     written: dict[str, str] = {}
     for provider, group in by_provider.items():
         path = out_dir / f"{provider}.toml"
-        path.write_text(render_entity_key_pins_toml(group), encoding="utf-8")
+        path.write_text(
+            render_entity_key_pins_toml(group, flavored=flavored), encoding="utf-8"
+        )
         written[provider] = str(path)
     return written
 
