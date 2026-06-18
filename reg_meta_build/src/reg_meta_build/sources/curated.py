@@ -659,13 +659,30 @@ class CanonicalScbAdapter(CuratedAdapter):
                 f"Author {name}.csv (header `code,label`) under {self._source_dir}.",
             )
         pairs: list[tuple[str, str]] = []
-        with csv_path.open(newline="", encoding="utf-8") as fh:
+        # utf-8-sig strips an Excel BOM so the first code never becomes "﻿…".
+        label_of: dict[str, str] = {}
+        with csv_path.open(newline="", encoding="utf-8-sig") as fh:
             reader = csv.reader(fh)
             next(reader, None)  # header
             for row in reader:
                 if len(row) < 2 or not row[0].strip():
                     continue
-                pairs.append((row[0].strip(), row[1].strip()))
+                code, label = row[0].strip(), row[1].strip()
+                # Dedup + reject a code that maps to two labels, mirroring the SOS
+                # value-set contract (a code is a single key into one label): a
+                # duplicate would inflate the member_hash and break content-sharing
+                # with an identical SCB/SOS set, and a conflicting label is a data bug.
+                if code in label_of:
+                    if label_of[code] != label:
+                        raise curation_error(
+                            "curated_value_set_invalid",
+                            f"{csv_path.name}: code {code!r} maps to two labels "
+                            f"({label_of[code]!r} vs {label!r}).",
+                            "Each code must map to exactly one label.",
+                        )
+                    continue
+                label_of[code] = label
+                pairs.append((code, label))
         self.source_checksums[csv_path.name] = _file_sha256(csv_path)
         self._codes_cache[name] = pairs
         return pairs
