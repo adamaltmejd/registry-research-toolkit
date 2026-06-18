@@ -1479,7 +1479,10 @@ def populate_variable_slugs(
         # counted in SLUG-space — COUNT(DISTINCT variable_slug(...)), the exact
         # space the basis selection consumes — so pure case/punctuation/diacritic
         # column noise (`PersonNr`/`personnr`, `Kön`/`Kon`) that slugifies
-        # identically does NOT read as a rename. Ordered by
+        # identically does NOT read as a rename. Columns that don't slugify
+        # (reserved tokens like `States`/`Variants`, period-shaped, or empty)
+        # yield NULL, which COUNT(DISTINCT) ignores — so a real column paired with
+        # a non-sluggable one counts as 1 and does NOT read as drift. Ordered by
         # register so the per-register uniqueness scope is one groupby pass.
         # `incremental` (#365 PR2): process ONLY newly-inserted variables (NULL
         # slug). The global build's already-published slugs stay untouched — the
@@ -2463,6 +2466,8 @@ def _drifting_variables(
     ``COUNT(DISTINCT variable_slug(...)) > 1`` signal the slug derivation uses, in
     lockstep with the slug-basis selection — so the two never disagree on what
     "drifts" and pure case/punctuation/diacritic column noise is not flagged.
+    Columns that don't slugify (reserved tokens, period-shaped, or empty) yield
+    NULL, which ``COUNT(DISTINCT)`` excludes from the count.
 
     Each row is ``(provider, register_id, provider_key, slug, name, columns)`` —
     the distinct columns in ``valid_from`` order, so the curator reads the

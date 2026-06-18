@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _slugged_db import add_state, add_variable, build_slugged_db
 from reg_meta.errors import RegMetaError
+from reg_meta.fqid import derive_variable_slug
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,
@@ -1713,24 +1714,37 @@ class TestPopulateVariableSlugs:
         # case/diacritics across editions (`Kön`→`Kon`, both fold to `kon`) is a
         # SINGLE distinct slug → NOT a drifter. It must take the non-drift,
         # latest-column basis (`kon`), NOT the name/earliest-column drift basis.
-        # The old raw-string count saw 2 columns → falsely drift; the new
-        # slug-space count sees 1 slug → no drift. Isolate via the default var 44
-        # carrying a non-`kon` column so `kon` is register-unique for the wobble
-        # var and the assertion is exact (no `-2` uniquify).
+        #
+        # This is a true OLD-vs-NEW regression lock: the NAME slug
+        # (`Könstillhörighet`→`konstillhorighet`) is chosen to DIFFER from the
+        # column slug (`kon`) precisely so the drift-name basis and the
+        # latest-column basis produce DIFFERENT values. New slug-space count sees
+        # 1 distinct slug → non-drift → latest-column → `kon` (asserted). Old
+        # raw-string count saw 2 columns → falsely drift → name basis
+        # (name_freq==1) → `konstillhorighet`, which would FAIL this assertion.
+        # Isolate via the default var 44 carrying a non-`kon` column so `kon` is
+        # register-unique for the wobble var and the assertion is exact (no `-2`).
         conn = self._db(kol="Alder", name="Ålder")
-        vid = self._add_drift_variable(conn, var_id=65, name="Kön", cols=["Kön", "Kon"])
+        vid = self._add_drift_variable(
+            conn, var_id=65, name="Könstillhörighet", cols=["Kön", "Kon"]
+        )
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
         assert self._slug_of_vid(conn, vid) == "kon"  # latest-column, not drift
         assert self._stored_slug(conn, 44) == "alder"  # isolation holds
 
     def test_mixed_wobble_and_rename_still_drifts(self, tmp_path: Path) -> None:
-        # #539: case/diacritic wobble is collapsed in slug-space, but a GENUINE
-        # rename mixed in still drifts. States `PersonNr`/`personnr`/`PNR` fold to
-        # the slug set {`personnr`, `pnr`} = 2 distinct → drifter. It must slug
-        # from the stable basis (the register-unique NAME among drifters here),
-        # NOT its latest delivery column (`pnr`). Isolate the default var 44 off
-        # `kon` so it can't perturb the drift var's basis selection.
+        # #539: a partial-wobble set with ≥2 distinct slugs still drifts. The
+        # case/diacritic pair `PersonNr`/`personnr` collapses in slug-space, but
+        # `PNR` does NOT — so the distinct slug set is exactly {`personnr`, `pnr`}
+        # (size 2 > 1 → drifter). This test can't discriminate old-vs-new via the
+        # final slug (it drifts to `personnummer` under both regimes), so it locks
+        # the slug-space PREMISE directly: the assert below documents that the
+        # count is 2, not 3 (the `PersonNr`/`personnr` collapse) and not 1.
+        assert {derive_variable_slug(c) for c in ["PersonNr", "personnr", "PNR"]} == {
+            "personnr",
+            "pnr",
+        }
         conn = self._db(kol="Alder", name="Ålder")
         vid = self._add_drift_variable(
             conn,
