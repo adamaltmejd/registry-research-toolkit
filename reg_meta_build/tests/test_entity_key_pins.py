@@ -406,6 +406,39 @@ class TestGenerator:
         assert scb_curated == {("scb", "1.44"): "kon"}
         assert sos_curated == {("sos", "500.LOPNR"): "lopnr"}
 
+    def test_counts_present_in_no_target_and_output_toml_modes(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Per-provider `counts` is part of the JSON summary for ALL modes, not
+        just `--out-dir` (the help advertises it everywhere — "counts only" /
+        "JSON count summary still prints"). Covers the no-target and
+        `--output-toml` branches the `--out-dir` test doesn't, guarding the
+        regression that moved `counts` inside the `--out-dir` branch."""
+        slug_dir = _slug_dir(tmp_path)
+        (slug_dir / "sos.toml").write_text("", encoding="utf-8")
+
+        # No-target: counts present alongside the carried TOML, no file fields.
+        # The handler closes its conn, so build a fresh fixture per CLI run.
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        data, code = _run_entity_key_pins_cli(monkeypatch, conn=conn, slug_dir=slug_dir)
+        assert code == 0
+        assert data["count"] == 2
+        assert data["counts"] == {"scb": 1, "sos": 1}
+        assert "toml" in data
+        assert "out_dir" not in data and "files" not in data
+
+        # --output-toml: counts still present alongside the written path.
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        out_toml = tmp_path / "combined.toml"
+        data, code = _run_entity_key_pins_cli(
+            monkeypatch, conn=conn, slug_dir=slug_dir, output_toml=out_toml
+        )
+        assert code == 0
+        assert data["counts"] == {"scb": 1, "sos": 1}
+        assert data["output_toml"] == str(out_toml.resolve())
+
     def test_write_groups_per_provider_regardless_of_order(self, tmp_path: Path):
         """`write_entity_key_pins` groups by provider via dict accumulation, so a
         non-provider-sorted input still lands every provider's pins in its own

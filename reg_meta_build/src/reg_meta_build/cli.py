@@ -1150,19 +1150,21 @@ def _cmd_entity_key_pins(
     finally:
         conn.close()
 
+    # Per-provider pin counts are part of the JSON summary for ALL modes (the
+    # help advertises "counts" for --out-dir, --output-toml, and no-target), so
+    # compute them once before branching on the output target.
+    counts: dict[str, int] = {}
+    for pin in pins:
+        counts[pin.provider_slug] = counts.get(pin.provider_slug, 0) + 1
+
     data: dict[str, Any] = {
         "count": len(pins),
+        "counts": counts,
         "slug_dir": str(slug_dir),
     }
     if args.out_dir:
         out_dir = Path(args.out_dir).expanduser().resolve()
         written = write_entity_key_pins(pins, out_dir, force=args.force)
-        # write_entity_key_pins returns one path per provider; the per-provider
-        # pin counts come from the pins themselves.
-        counts: dict[str, int] = {}
-        for pin in pins:
-            counts[pin.provider_slug] = counts.get(pin.provider_slug, 0) + 1
-        data["counts"] = counts
         data["out_dir"] = str(out_dir)
         data["files"] = written
     elif args.output_toml:
