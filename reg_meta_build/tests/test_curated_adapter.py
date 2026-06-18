@@ -707,3 +707,44 @@ def test_value_set_rejected_on_thin_provider(tmp_path: Path) -> None:
         _emit("fohm", toml, tmp_path)
     assert exc.value.code == "curated_toml_invalid"
     assert "does not support value sets" in exc.value.message
+
+
+_CANONICAL_ONE_VS = (
+    '[[register]]\nkey = "r"\nname = "R"\nvalid_from = "2020-01-01"\n'
+    '[[register.variable]]\nname = "V"\ncolumn = "Col"\nvalue_set = "codes"\n'
+)
+
+
+def _emit_canonical(toml_text: str, csv_text: str, tmp_path: Path) -> list:
+    from reg_meta_build.db import DDL
+    from reg_meta_build.sources.curated import CanonicalScbAdapter
+
+    src = tmp_path / "scb_canonical"
+    src.mkdir()
+    (src / "scb_canonical.toml").write_text(toml_text, encoding="utf-8")
+    (src / "codes.csv").write_text(csv_text, encoding="utf-8")
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    return list(CanonicalScbAdapter(conn).emit(src))
+
+
+@pytest.mark.parametrize(
+    ("csv_text", "fragment"),
+    [
+        ("", "code,label"),  # empty file → no header
+        ("code;label\n1;Ett\n", "code,label"),  # wrong delimiter → one column
+        ("kod,etikett\n1,Ett\n", "code,label"),  # wrong header names
+        ("code,label\n", "no code,label rows"),  # header only → empty value set
+        ("code,label\n1\n", "malformed row"),  # data row missing the label column
+    ],
+)
+def test_canonical_value_set_csv_fails_fast(
+    csv_text: str, fragment: str, tmp_path: Path
+) -> None:
+    """A committed value-set CSV that is empty, mis-delimited, mis-headed, or has a
+    malformed row must fail-fast — never silently drop codes from a categorical
+    column (which `_ensure_value_set([])` would turn into no value set at all)."""
+    with pytest.raises(RegMetaError) as exc:
+        _emit_canonical(_CANONICAL_ONE_VS, csv_text, tmp_path)
+    assert exc.value.code == "curated_value_set_invalid"
+    assert fragment in exc.value.message

@@ -682,10 +682,30 @@ class CanonicalScbAdapter(CuratedAdapter):
         label_of: dict[str, str] = {}
         with csv_path.open(newline="", encoding="utf-8-sig") as fh:
             reader = csv.reader(fh)
-            next(reader, None)  # header
-            for row in reader:
+            header = next(reader, None)
+            # Committed curation input → fail fast, not silently. A wrong delimiter
+            # (`code;label` → one column) or a missing header would otherwise let
+            # every row drop and yield an empty (= no) value set on a column that
+            # must be categorical. Require the exact `code,label` header.
+            if header is None or [c.strip().lower() for c in header[:2]] != [
+                "code",
+                "label",
+            ]:
+                raise curation_error(
+                    "curated_value_set_invalid",
+                    f"{csv_path.name}: expected a `code,label` header, got {header!r}.",
+                    "Author the file comma-separated with a `code,label` first row.",
+                )
+            for lineno, row in enumerate(reader, start=2):
+                if not any(cell.strip() for cell in row):
+                    continue  # tolerate blank lines (e.g. a trailing newline)
                 if len(row) < 2 or not row[0].strip():
-                    continue
+                    raise curation_error(
+                        "curated_value_set_invalid",
+                        f"{csv_path.name}:{lineno}: malformed row {row!r} "
+                        "(need a non-empty `code,label` pair).",
+                        "Each non-blank row must be a comma-separated code,label pair.",
+                    )
                 code, label = row[0].strip(), row[1].strip()
                 # Dedup + reject a code that maps to two labels, mirroring the SOS
                 # value-set contract (a code is a single key into one label): a
@@ -702,6 +722,12 @@ class CanonicalScbAdapter(CuratedAdapter):
                     continue
                 label_of[code] = label
                 pairs.append((code, label))
+        if not pairs:
+            raise curation_error(
+                "curated_value_set_invalid",
+                f"{csv_path.name}: no code,label rows found.",
+                "A value-set CSV must list at least one code.",
+            )
         self.source_checksums[csv_path.name] = _file_sha256(csv_path)
         self._codes_cache[name] = pairs
         return pairs
