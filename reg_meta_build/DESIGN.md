@@ -356,7 +356,10 @@ subclass) does this from a committed `input_data/scb_canonical/scb_canonical.tom
   same INSERT-OR-IGNORE pattern SCB/SOS use), then links the state's `value_set_id` — so
   the codes are searchable and join into `code_variable_map`. It needs a DB connection
   and runs **after** the SCB adapter (the `value_code` AUTOINCREMENT high-water mark).
-  UHT ships `scbkoder.csv` (BPM6 service types) + `landkoder.csv` (countries).
+  UHT ships `scbkoder.csv` (BPM6 service types) + `landkoder.csv` (countries). Value
+  sets are optional: a register of pure amounts/ids carries none — the AGI
+  employer-declaration header (`agi-huvud`) is value-set-free (monetary totals + their
+  underlag).
 
 Because it is a second `scb`-provider adapter, the materializer drains SCB-machine stats
 (`coalesce_stats`/`projection_stats`) by attribute presence (`projection_stats`,
