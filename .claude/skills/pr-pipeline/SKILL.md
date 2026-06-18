@@ -172,11 +172,13 @@ green. Pipeline-specific operational notes the gate doesn't carry:
   built providers, which would restore provider-scoped validation builds.)
 
   If the PR changes **any tracked** `reg_meta_build/input_data/**` file (a provider's
-  `*.toml`, a `classifications/` or `scb_canonical/` CSV, etc.), the absolute
-  `--input-dir` above reads the *main* checkout's copy — your change won't be built, so
-  the gate can miss a DB-content regression. Overlay the PR-HEAD tracked files onto the
-  main seed (symlink-merge: `ln -s <main>/input_data/* /tmp/in/`, then replace the
-  changed entries with the worktree's) and point `--input-dir /tmp/in` instead.
+  `*.toml`, a `classifications/` or `scb_canonical/` CSV, an add / delete / rename), the
+  absolute `--input-dir` above reads the *main* checkout's copy, so the gate validates
+  main's data, not yours, and can miss a DB-content regression. Point `--input-dir` at
+  an overlay root that presents the PR-HEAD tracked `input_data` on top of the main
+  checkout's untracked seed: **copy** the worktree's changed tracked files in (never
+  write back *through* a symlink into the main checkout) and mirror any deletion/rename,
+  so the build sees exactly your PR's tree.
 
   Then clean up — the build writes **gitignored** `*.auto.toml` into the slug dir, and
   the scratch DB is yours to remove. The slug files are ignored, so plain `git clean -f`

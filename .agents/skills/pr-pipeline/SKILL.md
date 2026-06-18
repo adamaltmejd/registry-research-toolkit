@@ -135,11 +135,13 @@ checkout's untracked seed if working from a worktree. Do **not** pass `--provide
 build the full global set. A restricted build (e.g. `--providers scb,sos`) orphans the
 global thin providers' mandatory entity-key pins (#554) and hard-fails
 `slug_variable_override_stale` (#563 tracks restoring provider-scoped builds). If the PR
-changes any tracked `reg_meta_build/input_data/**` file (a provider's `*.toml`, a
-`classifications/` or `scb_canonical/` CSV, etc.), the absolute `--input-dir` below
-reads the main checkout's copy, so your change isn't built and the gate can miss a
-DB-content regression — overlay the PR-HEAD tracked files onto the main seed
-(symlink-merge) and point `--input-dir` there:
+changes any tracked `reg_meta_build/input_data/**` file (provider `*.toml`,
+`classifications/`/`scb_canonical/` CSV, or an add/delete/rename), the absolute
+`--input-dir` below reads the main checkout's copy, so the gate validates main's data
+not yours and can miss a DB-content regression. Point `--input-dir` at an overlay root
+that presents the PR-HEAD tracked `input_data` over the main checkout's untracked seed —
+copy the changed tracked files in (never write back through a symlink into the main
+checkout) and mirror deletions/renames:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-<slug>.XXXXXX")"
