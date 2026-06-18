@@ -287,7 +287,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "their own FQIDs and metadata.\n\n"
             "Examples:\n"
             "  reg-meta get groups LISA\n"
-            "  reg-meta get groups --classifications   # vintage families (lkf1980..)\n"
+            "  reg-meta get groups --classifications   # curated umbrella groups (e.g. SUN)\n"
             "  reg-meta --format json get groups LISA  # member FQIDs + facets"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
