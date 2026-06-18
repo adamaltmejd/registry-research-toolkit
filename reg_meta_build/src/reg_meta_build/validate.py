@@ -926,16 +926,14 @@ def _check_entity_key_vars_curated(
     # slug-population machinery, so importing it lazily keeps `validate`'s module
     # import light and avoids any cycle through the build graph.
     from reg_meta_build.fqid_slugs import (
-        _curated_variable_slugs,
-        iter_curated_provider_entries,
+        _entity_key_curation_basis,
         iter_entity_key_variables,
     )
 
     # Glob the curated dir once: the curated slug map and (flavored) the steward
-    # provider scope both come from the same entry list.
-    curated_entries = iter_curated_provider_entries(slug_dir)
-    curated = _curated_variable_slugs(curated_entries)
-    scope = {e.provider for e in curated_entries if e.provider} if flavored else None
+    # provider scope both come from the same entry list. Shared with the generator
+    # so gate and generator read the identical basis.
+    curated, scope = _entity_key_curation_basis(slug_dir, flavored=flavored)
     entity_key_vars = list(iter_entity_key_variables(conn, providers=scope))
     if not entity_key_vars:
         result.ok("no variant carries an entity key — nothing to curate")

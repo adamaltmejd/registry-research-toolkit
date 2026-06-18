@@ -1082,8 +1082,8 @@ def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
     """Every `SlugEntry` from the hand-curated ``<provider>.toml`` files in
     ``slug_dir`` — the reserved non-provider TOMLs and the generated
     ``*.auto.toml`` files are excluded. The single source of the curated-file
-    glob shared by `populate_variable_slugs`, `load_curated_variable_slugs`, and
-    (via the latter) the entity-key generator + gate."""
+    glob shared by `populate_variable_slugs` and `_entity_key_curation_basis`
+    (which backs the entity-key generator + gate)."""
     return [
         e
         for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
@@ -1093,13 +1093,25 @@ def iter_curated_provider_entries(slug_dir: Path) -> list[SlugEntry]:
     ]
 
 
-def load_curated_variable_slugs(slug_dir: Path) -> dict[tuple[str, str], str]:
-    """Hand-curated `[variable]` slug overrides under ``slug_dir``, keyed
-    (provider, source_id). The glob+load+`_curated_variable_slugs` pipeline
-    shared by the entity-key pin generator (`infer_entity_key_pins`) and the
-    curation gate (`validate._check_entity_key_vars_curated`) so the two read the
-    identical curated set."""
-    return _curated_variable_slugs(iter_curated_provider_entries(slug_dir))
+def _entity_key_curation_basis(
+    slug_dir: Path, *, flavored: bool
+) -> tuple[dict[tuple[str, str], str], set[str] | None]:
+    """The (curated `[variable]` slug map, flavored steward-provider scope) the
+    entity-key gate and generator BOTH read, from a single glob of ``slug_dir``.
+
+    Returns ``(curated, scope)`` where ``curated`` is the
+    ``{(provider, source_id): slug}`` map and ``scope`` is the provider filter
+    handed to `iter_entity_key_variables`. ``scope`` is None unless ``flavored``
+    (global build = all providers under mandatory curation); when flavored it is
+    the set of providers the steward ``slug_dir`` covers (#559), so the global
+    base's already-pinned entity-key vars are excluded. Shared so the gate
+    (`validate._check_entity_key_vars_curated`) and generator
+    (`infer_entity_key_pins`) enumerate the identical basis — the same
+    can't-disagree contract `iter_entity_key_variables` already enforces."""
+    entries = iter_curated_provider_entries(slug_dir)
+    curated = _curated_variable_slugs(entries)
+    scope = {e.provider for e in entries if e.provider} if flavored else None
+    return curated, scope
 
 
 def _auto_variable_slugs(auto_entries: list[SlugEntry]) -> dict[str, str]:
@@ -1413,9 +1425,7 @@ def infer_entity_key_pins(
     of providers present in the steward curation files, so the global base's
     already-pinned entity-key vars are excluded (and `iter_entity_key_variables`'s
     flavored-unsafe `_variable_source_ids` never runs on a global register)."""
-    curated_entries = iter_curated_provider_entries(slug_dir)
-    curated = _curated_variable_slugs(curated_entries)
-    scope = {e.provider for e in curated_entries if e.provider} if flavored else None
+    curated, scope = _entity_key_curation_basis(slug_dir, flavored=flavored)
     pins = [
         EntityKeyPin(
             provider_slug=ek.provider_slug,
@@ -3156,7 +3166,6 @@ __all__ = (
     "iter_default_slug_candidates",
     "iter_entity_key_variables",
     "load_classifications_toml",
-    "load_curated_variable_slugs",
     "load_freeze_states",
     "load_provider_toml",
     "load_slug_dir",
