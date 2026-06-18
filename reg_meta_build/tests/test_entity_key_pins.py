@@ -25,12 +25,14 @@ from _slugged_db import (
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
+    EntityKeyPin,
     _curated_variable_slugs,
     infer_entity_key_pins,
     iter_entity_key_variables,
     load_provider_toml,
     populate_variable_slugs,
     render_entity_key_pins_toml,
+    write_entity_key_pins,
 )
 
 if TYPE_CHECKING:
@@ -96,6 +98,7 @@ def _run_entity_key_pins_cli(
     slug_dir: Path,
     out_dir: Path | None = None,
     output_toml: Path | None = None,
+    force: bool = False,
 ) -> tuple[dict, int]:
     """Drive `cli._cmd_entity_key_pins` against an in-memory fixture DB.
 
@@ -114,6 +117,7 @@ def _run_entity_key_pins_cli(
         slug_dir=str(slug_dir),
         out_dir=str(out_dir) if out_dir is not None else None,
         output_toml=str(output_toml) if output_toml is not None else None,
+        force=force,
     )
     payload, code = cli._cmd_entity_key_pins(args)
     return payload["data"], code
@@ -401,6 +405,66 @@ class TestGenerator:
         sos_curated = _curated_variable_slugs(load_provider_toml(out_dir / "sos.toml"))
         assert scb_curated == {("scb", "1.44"): "kon"}
         assert sos_curated == {("sos", "500.LOPNR"): "lopnr"}
+
+    def test_write_groups_per_provider_regardless_of_order(self, tmp_path: Path):
+        """`write_entity_key_pins` groups by provider via dict accumulation, so a
+        non-provider-sorted input still lands every provider's pins in its own
+        file (guards against the dropped `itertools.groupby` sorted-input
+        assumption)."""
+        pins = [
+            EntityKeyPin(
+                provider_slug="scb",
+                source_id="1.44",
+                slug="kon",
+                register_slug="lisa",
+                variable_slug="kon",
+            ),
+            EntityKeyPin(
+                provider_slug="sos",
+                source_id="500.LOPNR",
+                slug="lopnr",
+                register_slug="dors",
+                variable_slug="lopnr",
+            ),
+            # Interleaved: scb again AFTER sos — groupby would split this run.
+            EntityKeyPin(
+                source_id="1.99",
+                provider_slug="scb",
+                slug="ar",
+                register_slug="lisa",
+                variable_slug="ar",
+            ),
+        ]
+        out_dir = tmp_path / "pins"
+        written = write_entity_key_pins(pins, out_dir)
+        assert set(written) == {"scb", "sos"}
+        scb_curated = _curated_variable_slugs(load_provider_toml(out_dir / "scb.toml"))
+        sos_curated = _curated_variable_slugs(load_provider_toml(out_dir / "sos.toml"))
+        assert scb_curated == {("scb", "1.44"): "kon", ("scb", "1.99"): "ar"}
+        assert sos_curated == {("sos", "500.LOPNR"): "lopnr"}
+
+    def test_overwrite_guard_refuses_without_force(self, tmp_path: Path):
+        """A non-empty `out_dir` (any `*.toml`) refuses without `force`, then
+        succeeds with `force=True` — mirrors `seed-slugs`, so pointing `--out-dir`
+        at the curated `fqid_slugs/` can't clobber it."""
+        pin = EntityKeyPin(
+            provider_slug="scb",
+            source_id="1.44",
+            slug="kon",
+            register_slug="lisa",
+            variable_slug="kon",
+        )
+        out_dir = tmp_path / "pins"
+        out_dir.mkdir()
+        (out_dir / "scb.toml").write_text("# pre-existing\n", encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            write_entity_key_pins([pin], out_dir)
+        assert exc.value.code == "entity_key_pins_would_overwrite"
+
+        written = write_entity_key_pins([pin], out_dir, force=True)
+        assert set(written) == {"scb"}
+        curated = _curated_variable_slugs(load_provider_toml(out_dir / "scb.toml"))
+        assert curated == {("scb", "1.44"): "kon"}
 
     def test_out_dir_and_output_toml_mutually_exclusive(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

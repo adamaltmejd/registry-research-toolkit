@@ -1162,9 +1162,10 @@ def write_auto_toml(
 # entity-key var can't ship un-pinned. Both share `iter_entity_key_variables`
 # so they enumerate the exact same set.
 #
-# Scope = ALL global providers (#554). Every provider present in a `build-db` DB
-# (scb, sos, fk, fohm, umu, pliktverket, riksarkivet, lakemedelsverket) is under
-# mandatory curation: any provider's entity-key vars can dangle a panel ref as
+# Scope = ALL global providers (#554). Every provider present in the build-db DB
+# is under mandatory curation (no provider filter — the set is whatever the DB
+# holds, so onboarding a provider can't silently drop it): any provider's
+# entity-key vars can dangle a panel ref as
 # its slug churns. No provider filter is applied — the enumerator yields every
 # provider, and the GLOBAL-build-only scope is encoded by the gate's
 # `slug_dir is None` skip: synthetic CI and the flavored extend-db overlay pass
@@ -1407,6 +1408,36 @@ def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
         lines.append(f"slug = {_toml_str(p.slug)}")
         lines.append("")
     return "\n".join(lines) + "\n"
+
+
+def write_entity_key_pins(
+    pins: list[EntityKeyPin], out_dir: Path, *, force: bool = False
+) -> dict[str, str]:
+    """Write one ``<out-dir>/<provider>.toml`` pin block per provider, returning
+    ``{provider: written_path}``.
+
+    Groups by `provider_slug` via dict accumulation (order-independent — does NOT
+    rely on `pins` being provider-sorted). Mirrors `seed-slugs`'s overwrite guard:
+    if `out_dir` already holds any `*.toml` and `force` is False, refuses
+    (``EXIT_CONFIG``) rather than clobbering — pointing `--out-dir` at the curated
+    `fqid_slugs/` is the footgun this guards."""
+    if out_dir.exists() and any(out_dir.glob("*.toml")) and not force:
+        raise _err(
+            "entity_key_pins_would_overwrite",
+            f"{out_dir} already contains TOMLs; refusing to overwrite.",
+            "Pass --force to overwrite, or point --out-dir at an empty "
+            "directory for hand-review.",
+        )
+    by_provider: dict[str, list[EntityKeyPin]] = defaultdict(list)
+    for pin in pins:
+        by_provider[pin.provider_slug].append(pin)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    written: dict[str, str] = {}
+    for provider, group in by_provider.items():
+        path = out_dir / f"{provider}.toml"
+        path.write_text(render_entity_key_pins_toml(group), encoding="utf-8")
+        written[provider] = str(path)
+    return written
 
 
 # `[variable."<source_id>"]` header + the `# source:` derivation marker, read
@@ -3074,5 +3105,6 @@ __all__ = (
     "seed_provider_toml",
     "snapshot_payload",
     "write_auto_toml",
+    "write_entity_key_pins",
     "write_snapshot",
 )

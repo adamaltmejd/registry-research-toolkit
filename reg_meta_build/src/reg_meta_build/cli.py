@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
-import itertools
 import os
 import sys
 import time
@@ -64,6 +63,7 @@ from .fqid_slugs import (
     repo_slug_dir,
     seed_all,
     snapshot_payload,
+    write_entity_key_pins,
     write_snapshot,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
@@ -489,6 +489,11 @@ def _build_parser() -> argparse.ArgumentParser:
             "(for inspection). Mutually exclusive with --out-dir. Without either the "
             "JSON count summary still prints; the TOML is included in the payload."
         ),
+    )
+    entity_key_pins_p.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite existing *.toml in --out-dir",
     )
     entity_key_pins_p.add_argument(
         "--slug-dir",
@@ -1145,27 +1150,19 @@ def _cmd_entity_key_pins(
     finally:
         conn.close()
 
-    # Pins are sorted (provider_slug, source_id), so groupby yields one
-    # contiguous run per provider — the unit each `<provider>.toml` block holds.
-    by_provider = {
-        provider: list(group)
-        for provider, group in itertools.groupby(pins, key=lambda p: p.provider_slug)
-    }
-    counts = {provider: len(group) for provider, group in by_provider.items()}
-
     data: dict[str, Any] = {
         "count": len(pins),
-        "counts": counts,
         "slug_dir": str(slug_dir),
     }
     if args.out_dir:
         out_dir = Path(args.out_dir).expanduser().resolve()
-        out_dir.mkdir(parents=True, exist_ok=True)
-        written: dict[str, str] = {}
-        for provider, group in by_provider.items():
-            path = out_dir / f"{provider}.toml"
-            path.write_text(render_entity_key_pins_toml(group), encoding="utf-8")
-            written[provider] = str(path)
+        written = write_entity_key_pins(pins, out_dir, force=args.force)
+        # write_entity_key_pins returns one path per provider; the per-provider
+        # pin counts come from the pins themselves.
+        counts: dict[str, int] = {}
+        for pin in pins:
+            counts[pin.provider_slug] = counts.get(pin.provider_slug, 0) + 1
+        data["counts"] = counts
         data["out_dir"] = str(out_dir)
         data["files"] = written
     elif args.output_toml:
@@ -1185,6 +1182,7 @@ def _cmd_entity_key_pins(
             "slug_dir": args.slug_dir,
             "out_dir": args.out_dir,
             "output_toml": args.output_toml,
+            "force": args.force,
         },
         db_info=None,
         data=data,

@@ -889,9 +889,10 @@ def _check_entity_key_vars_curated(
     and commit each ``<provider>.toml`` block into ``fqid_slugs/<provider>.toml``.
 
     Scope = ALL global providers (#554): every provider's entity-key slug can
-    churn and dangle a panel ref, so each global provider (scb, sos, fk, fohm,
-    umu, pliktverket, riksarkivet, lakemedelsverket) is enforced — no provider
-    filter. The enumeration is shared with the generator
+    churn and dangle a panel ref, so every provider present in the build-db DB is
+    enforced — no provider filter (the set is whatever the DB holds, so onboarding
+    a provider can't silently drop it). The enumeration is shared with the
+    generator
     (``fqid_slugs.iter_entity_key_variables``) so the two can't disagree on which
     variables need a pin.
 
