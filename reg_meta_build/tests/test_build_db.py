@@ -1419,9 +1419,10 @@ class TestYearProjection:
 
 class TestSameAsBuildIntegration:
     """End-to-end coverage that `build_db` correctly wires up
-    `materialize_same_as_edges`: tables created, populated when the
-    slug TOML carries `same_as`, skipped under `--skip-slugs`, and the
-    resolver can traverse against the resulting DB."""
+    `relations.materialize_same_as` from the curated `relations.toml`: tables
+    created, populated when the file carries a `type = "same_as"` edge, skipped
+    under `--skip-slugs`, and the resolver can traverse against the resulting DB.
+    """
 
     def test_tables_present_in_fixture_db(self, db_conn: sqlite3.Connection) -> None:
         # Fixture has no same_as entries; the tables should still exist
@@ -1442,25 +1443,51 @@ class TestSameAsBuildIntegration:
         ).fetchone()[0]
         assert (var_count, cls_count) == (0, 0)
 
+    def test_empty_same_as_emits_no_manifest_keys(
+        self, db_conn: sqlite3.Connection
+    ) -> None:
+        # #522 byte-identity: the `*_same_as_curated` manifest keys are emitted
+        # ONLY when non-zero. With the curated same_as file empty (the fixture),
+        # they must be ABSENT from `row_counts` — an always-present `…: 0` pair
+        # would change the manifest blob vs the released DB and trip dbdiff.
+        row = db_conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'row_counts'"
+        ).fetchone()
+        row_counts = json.loads(row[0])
+        assert "variable_same_as_curated" not in row_counts
+        assert "classification_same_as_curated" not in row_counts
+
     @staticmethod
-    def _write_slug_dir_with_same_as(slug_dir: Path) -> None:
-        """Slug TOML mirroring the shared fixture's two registers, plus a
-        same_as edge from TESTREG's `kon` (var_id 44, real) to a phantom
-        slug `legacy-kon`. Querying the phantom under TESTREG misses
-        directly and forces a BFS hop onto the real `kon` row."""
+    def _write_slug_dir(slug_dir: Path) -> None:
+        """Slug TOML mirroring the shared fixture's two registers."""
         (slug_dir / "scb.toml").write_text(
             '[register."1"]\nslug = "testreg"\n'
             '[register."2"]\nslug = "otherreg"\n'
             '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."2.20"]\nslug = "foretag"\n'
-            '[variable."1.44"]\n'
-            'same_as = [{ provider = "scb", register = "testreg", '
-            'variable_slug = "legacy-kon" }]\n',
+            '[register_variant."2.20"]\nslug = "foretag"\n',
             encoding="utf-8",
         )
         (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
 
-    def test_end_to_end_resolves_via_same_as(self, tmp_path: Path) -> None:
+    @staticmethod
+    def _write_relations(tmp_path: Path) -> Path:
+        """A curated `relations.toml` with one `type = "same_as"` edge from
+        TESTREG's real `kon` to a phantom slug `legacy-kon` (same_as is
+        slug-anchored — only provider+register must exist). Querying the phantom
+        under TESTREG misses directly and forces a BFS hop onto the real `kon`
+        row."""
+        path = tmp_path / "relations.toml"
+        path.write_text(
+            '[[edge]]\ntype = "same_as"\n'
+            'a = "scb/testreg/kon"\nb = "scb/testreg/legacy-kon"\n',
+            encoding="utf-8",
+        )
+        return path
+
+    def test_end_to_end_resolves_via_same_as(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        import reg_meta_build.db as _db
         from reg_meta.catalog import Catalog, ResolvedVariable
 
         input_dir = tmp_path / "input"
@@ -1468,7 +1495,11 @@ class TestSameAsBuildIntegration:
         slug_dir = tmp_path / "slugs"
         slug_dir.mkdir()
         write_scb_input(input_dir)
-        self._write_slug_dir_with_same_as(slug_dir)
+        self._write_slug_dir(slug_dir)
+        rel_path = self._write_relations(tmp_path)
+        # The shared fixture stubs `repo_relations_path` to None; point it at the
+        # test's curated edge so the same_as pass materializes it.
+        monkeypatch.setattr(_db, "repo_relations_path", lambda: rel_path)
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -1488,7 +1519,7 @@ class TestSameAsBuildIntegration:
             ]
             # Querying the phantom slug misses directly → BFS traverses to
             # the real `kon` row. via_same_as carries the traversal path,
-            # confirming the build wired materialize_same_as_edges into
+            # confirming the build wired materialize_same_as into
             # the resolver's data plane end-to-end.
             r = Catalog(conn).resolve("scb/testreg/legacy-kon")
             assert isinstance(r, ResolvedVariable)
@@ -1503,18 +1534,24 @@ class TestSameAsBuildIntegration:
         finally:
             conn.close()
 
-    def test_skip_slugs_skips_same_as_materialization(self, tmp_path: Path) -> None:
-        # Build with skip_slugs=True and a same_as TOML present. The
+    def test_skip_slugs_skips_same_as_materialization(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # Build with skip_slugs=True and a same_as edge present. The
         # materializer would hard-error on missing register slugs, so
         # build_db's `if skip_slugs` branch must skip it entirely. We
         # verify by building successfully and confirming both edge tables
         # stayed empty.
+        import reg_meta_build.db as _db
+
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         slug_dir = tmp_path / "slugs"
         slug_dir.mkdir()
         write_scb_input(input_dir)
-        self._write_slug_dir_with_same_as(slug_dir)
+        self._write_slug_dir(slug_dir)
+        rel_path = self._write_relations(tmp_path)
+        monkeypatch.setattr(_db, "repo_relations_path", lambda: rel_path)
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -2242,18 +2279,14 @@ class TestReplacedByEdges:
     """
 
     @staticmethod
-    def _write_slugs(slug_dir: Path, scb_extra: str = "") -> None:
+    def _write_slugs(slug_dir: Path) -> None:
         """Minimal slug TOML for the two fixture registers + variants. Variable
-        slugs auto-derive via `populate_variable_slugs` into scb.auto.toml.
-
-        ``scb_extra`` is appended verbatim to ``scb.toml`` — used by the #440
-        curated-`[[replaced_by]]` tests to inject succession rows.
-        """
+        slugs auto-derive via `populate_variable_slugs` into scb.auto.toml."""
         (slug_dir / "scb.toml").write_text(
             '[register."1"]\nslug = "testreg"\n'
             '[register."2"]\nslug = "otherreg"\n'
             '[register_variant."1.10"]\nslug = "individer"\n'
-            '[register_variant."2.20"]\nslug = "foretag"\n' + scb_extra,
+            '[register_variant."2.20"]\nslug = "foretag"\n',
             encoding="utf-8",
         )
         (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
@@ -2264,14 +2297,20 @@ class TestReplacedByEdges:
         tmp_path: Path,
         timeseries_rows: list[str],
         registerinformation_rows: list[str] | None = None,
-        scb_extra: str = "",
+        relations_extra: str = "",
+        monkeypatch: pytest.MonkeyPatch | None = None,
     ) -> Path:
         """Build a DB with custom Timeseries.csv rows. Returns the DB path.
 
         ``registerinformation_rows=None`` uses the standard fixture; pass a
         custom list (e.g. to inject a triage split) to vary the variables.
-        ``scb_extra`` is appended to ``scb.toml`` (e.g. `[[replaced_by]]` rows).
+        ``relations_extra`` is written to a ``relations.toml`` whose
+        ``repo_relations_path`` is patched in (e.g. `[[edge]] type="replaced_by"`
+        succession rows for the #440/#522 curated tests); requires
+        ``monkeypatch``.
         """
+        import reg_meta_build.db as _db
+
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         slug_dir = tmp_path / "slugs"
@@ -2281,7 +2320,12 @@ class TestReplacedByEdges:
             registerinformation_rows=registerinformation_rows,
             timeseries_rows=timeseries_rows,
         )
-        cls._write_slugs(slug_dir, scb_extra=scb_extra)
+        cls._write_slugs(slug_dir)
+        if relations_extra:
+            assert monkeypatch is not None, "relations_extra requires monkeypatch"
+            rel_path = tmp_path / "relations.toml"
+            rel_path.write_text(relations_extra, encoding="utf-8")
+            monkeypatch.setattr(_db, "repo_relations_path", lambda: rel_path)
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
@@ -2956,19 +3000,26 @@ class TestReplacedByEdges:
     # the event-derived edges, into the SAME tables, sharing the dedup seen-set.
     # ------------------------------------------------------------------
 
-    def test_curated_variable_edge_live_predecessor(self, tmp_path: Path) -> None:
+    def test_curated_variable_edge_live_predecessor(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """A within-provider curated variable edge whose predecessor is LIVE
         (both ends resolve) → one `variable_replaced_by` row with the curated
         provenance marker in `note` and the row's transition reason in
         `beskrivning`. testcol (reg1) → uniqcol (reg2)."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/uniqcol"\n'
             'note = "renamed in 2012"\n'
             "effective_year = 2012\n"
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute(
@@ -2995,15 +3046,22 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_curated_register_edge(self, tmp_path: Path) -> None:
+    def test_curated_register_edge(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """A curated register-grain edge → one `register_replaced_by` row, grain
         inferred from the 2-segment FQID."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg"\n'
-            'successor = "scb/otherreg"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg"\n'
+            'to = "scb/otherreg"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute(
@@ -3016,16 +3074,23 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_curated_edge_dead_predecessor_still_inserted(self, tmp_path: Path) -> None:
+    def test_curated_edge_dead_predecessor_still_inserted(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """The whole point of #440: a curated edge whose PREDECESSOR has no live
         row is still inserted verbatim (slug-anchored). The successor (uniqcol)
         resolves; the predecessor names a register/variable not in the build."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/retired-reg/retired-var"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/retired-reg/retired-var"\n'
+            'to = "scb/otherreg/uniqcol"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute(
@@ -3042,18 +3107,25 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_curated_cross_provider_edge(self, tmp_path: Path) -> None:
+    def test_curated_cross_provider_edge(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """A cross-provider curated edge (predecessor under a DIFFERENT provider
         than the live successor) → inserted at the correct grain. The predecessor
         provider `sos` doesn't exist in this SCB-only build (dead predecessor);
         cross-provider succession is exactly what `timeseries_event` cannot
         carry."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "sos/par/diagnos"\n'
-            'successor = "scb/testreg/testcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "sos/par/diagnos"\n'
+            'to = "scb/testreg/testcol"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute(
@@ -3073,7 +3145,9 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_curated_unresolved_successor_fails_fast(self, tmp_path: Path) -> None:
+    def test_curated_unresolved_successor_fails_fast(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """A curated successor that does NOT resolve to a live slugged entity is
         a curation error → EXIT_CONFIG (unlike the best-effort event path).
 
@@ -3081,15 +3155,22 @@ class TestReplacedByEdges:
         missing; that's the real curation error the inactive-provider skip below
         must NOT swallow."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/ghost-var"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/ghost-var"\n'
         )
         with pytest.raises(RegMetaError) as exc:
-            self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+            self._build(
+                tmp_path,
+                timeseries_rows=_NO_EVENT_ROWS,
+                relations_extra=extra,
+                monkeypatch=monkeypatch,
+            )
         assert exc.value.code == "replaced_by_unresolved_successor"
 
-    def test_curated_inactive_provider_successor_skipped(self, tmp_path: Path) -> None:
+    def test_curated_inactive_provider_successor_skipped(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """A curated edge whose SUCCESSOR's provider isn't in this (scb-only)
         build is SKIPPED, not failed — a partial build genuinely lacks the sos
         tables, so it can't resolve an sos successor. The build completes (and
@@ -3098,11 +3179,16 @@ class TestReplacedByEdges:
         Without the provider gate this raised `replaced_by_unresolved_successor`
         and crashed the partial build (the Codex P2 this test pins)."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "sos/par/diagnos"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "sos/par/diagnos"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             assert (
@@ -3116,17 +3202,22 @@ class TestReplacedByEdges:
             conn.close()
 
     def test_curated_active_provider_successor_materializes(
-        self, tmp_path: Path
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """The flip side of the inactive-provider skip: an edge whose successor's
         provider IS active (scb, in this scb-only build) still materializes —
         the gate doesn't over-skip."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/uniqcol"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             assert (
@@ -3139,19 +3230,26 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_curated_edge_dedups_against_event_derived(self, tmp_path: Path) -> None:
+    def test_curated_edge_dedups_against_event_derived(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """A curated edge duplicating an event-derived edge collapses (no double
         row, counted as a curated skip). The event pass emits testcol→uniqcol
         first; the curated row over the SAME slug-PK is deduped via the shared
         seen-set."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/uniqcol"\n'
         )
         # var_id 100 → 300 is testcol → uniqcol (same edge the curated row names).
         rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
-        db_path = self._build(tmp_path, timeseries_rows=rows, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=rows,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute("SELECT note FROM variable_replaced_by").fetchall()
@@ -3165,20 +3263,27 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
-    def test_curated_edge_dedups_against_curated(self, tmp_path: Path) -> None:
+    def test_curated_edge_dedups_against_curated(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """Two curated `[[replaced_by]]` rows naming the SAME predecessor/
         successor collapse to one `variable_replaced_by` row via the shared
         seen-set. Without that seen-set update on the curated branch the second
         INSERT would hit the slug-PK constraint and crash the build."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/uniqcol"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             assert (
@@ -3192,7 +3297,7 @@ class TestReplacedByEdges:
             conn.close()
 
     def test_curated_register_edge_dead_predecessor_inserted(
-        self, tmp_path: Path
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """Register-grain twin of `test_curated_edge_dead_predecessor_still_inserted`:
         a 2-segment edge whose PREDECESSOR register is not live (successor is) is
@@ -3201,11 +3306,16 @@ class TestReplacedByEdges:
         and `note` carries the curated provenance marker (the register branch is
         a separate INSERT from the variable branch the variable-grain test locks)."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/retired-reg"\n'
-            'successor = "scb/otherreg"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/retired-reg"\n'
+            'to = "scb/otherreg"\n'
         )
-        db_path = self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=_NO_EVENT_ROWS,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute(
@@ -3228,7 +3338,7 @@ class TestReplacedByEdges:
             conn.close()
 
     def test_curated_edge_closing_cycle_with_event_edge_fails(
-        self, tmp_path: Path
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """The combined-graph cycle check (Codex P2): an event-derived edge A→B
         plus a curated edge B→A close a cycle that NEITHER source sees alone. The
@@ -3237,46 +3347,63 @@ class TestReplacedByEdges:
         the cycle check, not the unresolved-successor guard. The build fails fast
         with `replaced_by_cycle` and no partial rows survive."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/otherreg/uniqcol"\n'
-            'successor = "scb/testreg/testcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/otherreg/uniqcol"\n'
+            'to = "scb/testreg/testcol"\n'
         )
         rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
         with pytest.raises(RegMetaError) as exc:
-            self._build(tmp_path, timeseries_rows=rows, scb_extra=extra)
+            self._build(
+                tmp_path,
+                timeseries_rows=rows,
+                relations_extra=extra,
+                monkeypatch=monkeypatch,
+            )
         assert exc.value.code == "replaced_by_cycle"
 
     def test_curated_only_two_cycle_fails_via_materializer(
-        self, tmp_path: Path
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """A curated-only 2-cycle (no event edge) still fails — the materializer
         runs the cycle check over the curated-to-insert edges too, since the
         load-time helper no longer fires. testcol→uniqcol + uniqcol→testcol both
         resolve, so only the cycle check catches them."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/testreg/testcol"\n'
-            'successor = "scb/otherreg/uniqcol"\n'
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/otherreg/uniqcol"\n'
-            'successor = "scb/testreg/testcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/testreg/testcol"\n'
+            'to = "scb/otherreg/uniqcol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/otherreg/uniqcol"\n'
+            'to = "scb/testreg/testcol"\n'
         )
         with pytest.raises(RegMetaError) as exc:
-            self._build(tmp_path, timeseries_rows=_NO_EVENT_ROWS, scb_extra=extra)
+            self._build(
+                tmp_path,
+                timeseries_rows=_NO_EVENT_ROWS,
+                relations_extra=extra,
+                monkeypatch=monkeypatch,
+            )
         assert exc.value.code == "replaced_by_cycle"
 
-    def test_curated_edge_not_closing_cycle_materializes(self, tmp_path: Path) -> None:
+    def test_curated_edge_not_closing_cycle_materializes(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """The cycle check doesn't over-reject: an event-derived edge A→B plus a
         curated edge B→C (extending the chain, not closing a loop) both land. The
         event pass emits testcol→uniqcol; the curated row uniqcol→parencol adds a
         forward edge, so two distinct `variable_replaced_by` rows result."""
         extra = (
-            "\n[[replaced_by]]\n"
-            'predecessor = "scb/otherreg/uniqcol"\n'
-            'successor = "scb/otherreg/parencol"\n'
+            '\n[[edge]]\ntype = "replaced_by"\n'
+            'from = "scb/otherreg/uniqcol"\n'
+            'to = "scb/otherreg/parencol"\n'
         )
         rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
-        db_path = self._build(tmp_path, timeseries_rows=rows, scb_extra=extra)
+        db_path = self._build(
+            tmp_path,
+            timeseries_rows=rows,
+            relations_extra=extra,
+            monkeypatch=monkeypatch,
+        )
         conn = open_db(db_path)
         try:
             edges = conn.execute(

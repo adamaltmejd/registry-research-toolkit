@@ -900,15 +900,16 @@ or re-pointed — linkage is additive.
 
 ### Curated classification links (`classification_links.toml`, #416 tail)
 
-`reg_meta_build/classification_links.toml` (package root, like
-`variable_related_to.toml` — NOT under `fqid_slugs/`) lets a maintainer override or
-supplement the auto-detector for the residue the detector deliberately leaves unlinked:
-the family-ambiguous short numeric sets where SNI/SSYK/SUN coincide below \~15 codes.
+`reg_meta_build/classification_links.toml` (package root, NOT under `fqid_slugs/`) lets
+a maintainer override or supplement the auto-detector for the residue the detector
+deliberately leaves unlinked: the family-ambiguous short numeric sets where SNI/SSYK/SUN
+coincide below \~15 codes.
 
 Each `[[link]]` entry maps a `variable` (3-segment `provider/register/variable` FQID) to
 a `classification` (`short_name`). An optional `note` records provenance. Resolution
 (variable and classification both exist in the built DB) happens at materialize time,
-not at load — the same load/resolve split as `variable_related_to` / `concept_groups`.
+not at load — the same load/resolve split as `concept_groups` /
+`curation/relations.toml`.
 
 **Precedence mechanism.** `materialize_classification_links` runs BEFORE the
 auto-detector. For each of the variable's `(variable_id, value_set_id)` state keys it
@@ -1568,56 +1569,96 @@ discriminator slug — so the build replays the right slug onto each sibling acr
 rebuilds instead of the last one overwriting the shared entry. Unsplit keys (\~96%) stay
 2-part.
 
-**Edge fields (slug-anchored inline tables on `[variable]` rows).** The curatable edge
-field is `same_as` — symmetric cross-register / cross-provider variable equivalence,
-keyed `{ provider, register, variable_slug }` (note: `variable_slug`, not `variable`),
-materialized into `variable_same_as` edges that `Catalog.resolve` follows transitively
-(build rejects cycles). `replaced_by` is a **single in-file key string** (a
-typo-correction pointer to another row's TOML key in the same file), validated for shape
-and cycle-freedom — *not* a cross-provider tuple. `related_to` is **not a curatable
-inline field** in provider TOMLs — inline-declared edges are identity relationships the
-resolver BFS-follows and that lineage materializes from, the wrong vehicle for a weak
-"see also." Cross-register "see also" edges instead live in a standalone
-`reg_meta_build/variable_related_to.toml` (`#353`), loaded by `variable_related_to.py`
-and materialized right after the auto:triage pass into the same `variable_related_to`
-table on a **disjoint** curated relation-kind vocabulary (`CURATED_RELATION_KINDS` —
-currently `similar_concept`). The auto:triage kind `same_definition_different_column` is
-foldable (the concept-group edge pass uses it for browse grouping); the curated kinds
-deliberately are not, so a cross-register "see also" can never trigger browse-level
-folding. Like the other curation TOMLs it is a maintainer artifact — absent in wheel
-installs and synthetic test builds (empty file → zero rows written); an edge whose
-`a_provider` or `b_provider` isn't in the current build is skipped rather than failed.
-The first curated edges landed in #403 — three cross-register see-also pairs
-(auto-emitted split edges are unaffected and flow as before).
+**Edge field on `[variable]` rows.** The one surviving curatable edge field is
+`replaced_by` — a **single in-file key string** (a typo-correction pointer to another
+row's TOML key in the same file), validated for shape and cycle-freedom — *not* a
+cross-provider tuple. Graph semantics (`same_as`, succession `replaced_by`,
+`related_to`) are **not** a slug surface: they live in `curation/relations.toml` (#522).
+A slug TOML that contains an inline `same_as` field or a top-level `[[replaced_by]]`
+array now fails as an unknown-key error at load.
 
-Curated variable → classification overrides live in a parallel standalone
-`reg_meta_build/classification_links.toml` (#416), loaded by `classification_links.py`
-(same load/resolve split as `variable_related_to`). See *Classification seed → Curated
-classification links* above for the full contract. Like `variable_related_to.toml` it is
-a maintainer artifact absent in wheel installs and synthetic builds, and it ships empty
-today.
+**Curated pairwise-relation surface (`curation/relations.toml`, #522).** All curated
+pairwise graph facts — same-identity links, succession edges, and weak see-also
+discovery links — live in ONE file as a single typed `[[edge]]` array loaded and
+materialized by `relations.py`. This consolidates what used to be four separate surfaces
+(`variable_same_as.toml`, `variable_related_to.toml`, inline slug-TOML `same_as` fields,
+top-level slug-TOML `[[replaced_by]]`). The `type` discriminator selects the relation
+kind; each type accepts ONLY its own fields (a foreign field fails the build with
+`EXIT_CONFIG` — type-dispatch catches misspellings that would otherwise silently no-op):
 
-**Curated identity edges (`variable_same_as.toml`, #417).** Cross-register variable
-identity — two FQIDs that name the SAME concept definition — live in a standalone
-`reg_meta_build/variable_same_as.toml` (package root, like `classification_links.toml` —
-NOT under `fqid_slugs/`), loaded by `variable_same_as.py::load_same_as`. Each
-`[[same_as]]` entry declares a symmetric FQID pair (`a` / `b`, each a 3-segment
-`provider/register/variable` string) with an optional `note`. Unlike
-`variable_related_to` (a weak "see also"), `same_as` is **resolver-load-bearing**:
-`Catalog.resolve` follows it transitively and the build cycle-checks the full graph. A
-wrong edge corrupts resolution, so **nothing auto-materializes** — only confirmed
-curated entries load into a build. The file ships empty; the loader handles zero entries
-cleanly. Like the other curation TOMLs it is a maintainer artifact absent in wheel
-installs and synthetic builds; a provider not in the current build is provider-gated
-(skipped). The load/resolve split mirrors `variable_related_to` / `concept_groups`:
-shape validation at load, endpoint resolution against the built DB at materialize time.
+```toml
+[[edge]]
+type = "same_as"        # symmetric; a/b same grain (3-seg variable OR 2-seg classification)
+a = "scb/lisa/csfvi"
+b = "scb/rams/arbink"
+
+[[edge]]
+type = "replaced_by"    # directional; from/to same grain (2-seg register OR 3-seg variable)
+from = "scb/lisa/anninkf"
+to   = "scb/lisa/anninkf04"
+effective_year = 2004
+
+[[edge]]
+type = "related_to"     # weak; a/b 3-seg variables; curated kind that cannot fold
+a = "scb/ekonomiskt-bistand/belopp"
+b = "sos/ekb/ekbbelopp"
+relation_kind = "similar_concept"
+```
+
+Like every other curation TOML the file is a maintainer artifact — absent in wheel
+installs and synthetic test builds; missing ⇒ zero edges. Each type is provider-gated
+(an edge whose provider isn't in the current build is skipped, not failed) and
+load/resolve-split (shape validation at load, endpoint resolution against the built DB
+at materialize time).
+
+The three relation kinds remain genuinely distinct; only the authoring surface
+consolidated:
+
+- **`same_as`** — symmetric, transitive identity ("one concept, two FQIDs").
+  **Resolver-load-bearing**: `Catalog.resolve` follows it transitively; the build
+  cycle-checks the full graph; a wrong edge corrupts resolution. Variable grain (3-seg)
+  OR classification grain (2-seg `class/<slug>`), never mixed across grains. Lands in
+  `variable_same_as` / `classification_same_as` (both directions). A **component-size
+  guard** (`_SAME_AS_MAX_COMPONENT = 32`) rejects any edge whose merged identity
+  component would exceed 32 distinct FQIDs — a cluster that large almost certainly
+  indicates a curation error, not a real concept. Manifest counts
+  (`variable_same_as_curated` / `classification_same_as_curated`) are emitted when
+  non-zero.
+
+- **`replaced_by`** — directional succession (predecessor superseded by successor). NOT
+  identity. Register grain (2-seg) OR variable grain (3-seg); both ends must be the same
+  grain. Resolution is asymmetric: the **successor MUST resolve** to a live, slugged DB
+  entity (`EXIT_CONFIG` on failure), while the **predecessor MAY be dead** (a retired /
+  renamed / cross-provider FQID inserted verbatim). This carries the two moves that the
+  `timeseries_event`-derived path cannot express: **cross-provider** succession (e.g.
+  SOS→SCB) and **dead-predecessor** edges. Curated edges dedup against event-derived
+  ones via the shared `seen_*` PK sets, so a curated row duplicating an event edge
+  collapses (counted as a curated skip). Combined acyclicity is checked over both event
+  and curated edges before any INSERT. Provenance is `note = 'curated:slug_toml'`
+  (distinct from `'auto:timeseries_event'`). This is a **DIFFERENT relation** from the
+  per-entry `replaced_by` key-string field in slug TOMLs — that field is a *within-file
+  slug-typo rename pointer* (one TOML key → another in the same file, validated for
+  cycle-freedom); a `replaced_by` edge is a *succession edge* between two full FQIDs. It
+  is also distinct from `variable_state_lineage` (consumer↔source binding overlap; see
+  below).
+
+- **`related_to`** — weak "see also" discovery link between distinct variable concepts.
+  Variables only (3-seg FQIDs). The curated relation-kind vocabulary
+  (`CURATED_RELATION_KINDS`, currently `similar_concept`) is **disjoint** from the
+  auto:triage kind `same_definition_different_column` — the foldable triage kind is
+  rejected here, so a curated cross-register "see also" can never trigger browse-level
+  folding. Lands in `variable_related_to` alongside the auto:triage split-sibling edges.
+
+Curated variable → classification overrides live in the parallel standalone
+`reg_meta_build/classification_links.toml` (#416), loaded by `classification_links.py`.
+See *Classification seed → Curated classification links* above for the full contract.
 
 *Candidate generator.* `reg-meta-build same-as-candidates` (`infer_same_as_candidates`
-in `variable_same_as.py`) reads a BUILT DB and emits a tiered review worklist as a
-`[[same_as]]` TOML — the same schema the curated loader accepts, so a confirmed
-candidate copies across verbatim (drop or replace the `note = "candidate:tierN"`
-marker). The generator is **read-only**; it never writes the curated file. Candidates
-are ranked by tier (1 = strongest):
+in `variable_same_as.py`) reads a BUILT DB and emits a tiered review worklist as
+`[[edge]] type = "same_as"` TOML text — the exact shape this loader accepts, so a
+confirmed candidate copies across verbatim into `curation/relations.toml` (drop or
+replace the `note = "candidate:tierN"` marker). The generator is **read-only**; it never
+writes the curated file. Candidates are ranked by tier (1 = strongest):
 
 - **Tier 1** — shared classification + shared value set + name agreement.
 - **Tier 2** — shared classification + name agreement (value sets may differ).
@@ -1628,8 +1669,7 @@ are ranked by tier (1 = strongest):
 
 A shared value set corroborates at any tier only when its code count ≥
 `--min-value-set-codes` (default 15); a 2-code hub like Ja/Nej is not evidence. Pairs
-already present in `variable_same_as` are excluded. Only cross-register pairs are
-emitted — two variables in one register cannot be identity candidates.
+already in `variable_same_as` are excluded. Only cross-register pairs are emitted.
 
 **Hub suppression.** A signal (classification or value set) spanning more than
 `--max-signal-fanout` distinct registers (default 12) is a hub; its O(N²) cross-register
@@ -1638,37 +1678,6 @@ name-corroborated tier-1/2 pairs (measured: a bare cap would drop \~17,720 of th
 kommun/län/näringsgren/utbildningsnivå). The suppressed count is always reported in the
 output header — no silent truncation. Pass `--max-signal-fanout 0` to disable the cap
 and include all hub-clique pairs.
-
-**Curated succession edges (`[[replaced_by]]`, #440).** A **top-level `[[replaced_by]]`
-array-of-tables** in a provider TOML (alongside `lineage` / `lineage_defaults`, parsed
-by `load_curated_replaced_by` — DB-free, mirroring `load_lineage_config`) materializes
-hand-authored succession edges into the same `register_replaced_by` /
-`variable_replaced_by` tables the `timeseries_event` pass writes, **alongside** the
-auto-derived edges. Each row is `predecessor` + `successor` (both **full FQID
-strings**), optional `note` (the human transition reason) and `effective_year`. Grain is
-inferred from FQID part-count — 2 segments (`provider/register`) → register grain, 3
-(`provider/register/variable`) → variable grain — and both ends must be the same grain
-(the variant grain is out of scope; a variant is a delivery coordinate, not a curation
-surface). Resolution is asymmetric and is the whole point of the curated path over the
-event-derived one: the **successor MUST resolve** to a live, slugged DB entity (a
-non-resolving successor is a curation error → `EXIT_CONFIG`, fail-fast, unlike the
-event-path's best-effort skip of noisy historical `timeseries_event` data), while the
-**predecessor MAY be dead** — a retired / renamed / cross-provider FQID with no live
-row, inserted verbatim (slug-anchored). This carries the two moves `timeseries_event`
-cannot express: **cross-provider** succession (e.g. SOS→SCB) and a **dead-predecessor**
-edge (the first real consumer is the LISA definition-era successions, which have no
-`timeseries_event` source at all). Curated edges dedup against event-derived ones (and
-each other) via the SHARED `seen_*` PK sets in the materializer, so a curated row
-duplicating an event edge collapses (counted as a curated skip). Provenance is
-`note = 'curated:slug_toml'` in the edge's `note` column (distinct from the auto path's
-`'auto:timeseries_event'`), with the row's own `note` carried into `beskrivning` —
-exactly mirroring the auto path so a consumer can tell curated from auto-derived. This
-is a **DIFFERENT relation** from the per-entry `replaced_by` key-string field above:
-that field is a *within-file slug-typo rename pointer* (one TOML key → another in the
-same file, same provider, validated for cycle-freedom); a `[[replaced_by]]` row is a
-*succession edge* between two full FQIDs that may be cross-provider and
-dead-predecessor. It is also distinct from `variable_state_lineage` (consumer↔source
-binding overlap, a different graph; see below).
 
 **Panel-shape bootstrap.** `register_variant` rows also carry `panel_entity_key` /
 `panel_time_key` / `panel_time_grain` (a variable-slug reference or the `"period"`
@@ -1686,11 +1695,12 @@ the webapp; the `panel_time_key = "period"` sentinel is exempt from both).
 
 `concept_groups.py` materializes the presentation-only concept-group layer (see
 `reg_meta/DESIGN.md` → Concept groups) as the last slug-gated post-pass — after
-`populate_variable_slugs` + `_materialize_variable_related_to` (the edge pass resolves
-slug-anchored edges) and `populate_classifications` + `populate_slugs` (classification
-rows + slugs). Skipped under `--skip-slugs` like the other slug-keyed linkers. Three
-dimension sources, in priority order; a member belongs to at most one group, and a later
-pass never claims an already-grouped member:
+`populate_variable_slugs` + the `relations.py` edge pass (which resolves slug-anchored
+`variable_related_to` and `variable_same_as` edges from `curation/relations.toml`) and
+`populate_classifications` + `populate_slugs` (classification rows + slugs). Skipped
+under `--skip-slugs` like the other slug-keyed linkers. Three dimension sources, in
+priority order; a member belongs to at most one group, and a later pass never claims an
+already-grouped member:
 
 0. **`edge`** — connected components of within-register
    `same_definition_different_column` sibling edges. Zero inference: the A2.2 split
@@ -1699,7 +1709,7 @@ pass never claims an already-grouped member:
    2026-06-11: 2,193 components / 8,151 variables (16% of the catalog), 2,191 sharing a
    single name (the group label; key = min member slug). Other auto:triage
    `relation_kind`s (`code_vs_label_pair`, `import_bug_suspect`) do NOT group; neither
-   do curated kinds from `variable_related_to.toml` (`similar_concept`) — the curated
+   do curated kinds from `curation/relations.toml` (`similar_concept`) — the curated
    vocabulary is disjoint from the foldable auto kind by construction.
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms

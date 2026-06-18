@@ -7,8 +7,11 @@ writes the slug columns during build, and ships the seed/precheck/snapshot
 machinery the CLI exposes.
 
 Variables auto-slug from the latest kolumnnamn at build time. Explicit
-``[variable]`` TOML rows are exceptions — overrides, deprecations, or
-``same_as`` curation.
+``[variable]`` TOML rows are exceptions — overrides or deprecations. Graph
+semantics (``same_as`` / ``replaced_by`` succession / ``related_to``) are NOT a
+slug surface; they live in ``curation/relations.toml`` (#522, see
+``relations.py``). The per-entry ``replaced_by`` field that survives here is the
+WITHIN-FILE slug-typo rename pointer, a different relation from succession.
 """
 
 from __future__ import annotations
@@ -18,26 +21,21 @@ import re
 import tomllib
 import unicodedata
 from collections import Counter, defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
-    Fqid,
-    FqidError,
     FqidKind,
     derive_variable_slug,
-    parse as parse_fqid,
     validate_slug,
 )
 
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Callable, Iterator, Mapping
-
-    from .variable_same_as import CuratedSameAs
 
 # A2.6: `register_version` is gone — the FQID grammar has no version segment;
 # version slugs are no longer curated or persisted, and the build-time
@@ -63,14 +61,15 @@ AUTO_FILE_SUFFIX = ".auto.toml"
 CLASSIFICATIONS_FILE = "classifications.toml"
 SNAPSHOT_FILENAME = ".snapshot.json"
 
-_KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classification"})
-
 # Top-level keys accepted in a provider TOML; anything else is a typo
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
-# silently no-op. `lineage_defaults` / `lineage` / `replaced_by` are NOT
-# SlugEntry rows — `load_lineage_config` / `load_curated_replaced_by` parse them
-# separately — but they're legal top-level tables, so the strict typo check must
-# accept them.
+# silently no-op. `lineage_defaults` / `lineage` are NOT SlugEntry rows —
+# `load_lineage_config` parses them separately — but they're legal top-level
+# tables, so the strict typo check must accept them. Graph semantics
+# (`same_as` / `replaced_by` succession / `related_to`) are NOT a slug surface
+# anymore (#522) — they live in `curation/relations.toml`, so a top-level
+# `[[replaced_by]]` or an inline `same_as` field in a slug TOML now fails as an
+# unknown key.
 _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
     {
         "register",
@@ -78,27 +77,9 @@ _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
         "variable",
         "lineage_defaults",
         "lineage",
-        "replaced_by",
     }
 )
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
-
-# Allowed keys for inline `same_as` tables.
-# A2.1.5: variable same_as is variable-grain — no `register_variant`/`period`
-# narrowing keys (the variant/period slots were dropped). One edge covers
-# every variant/period that delivers either variable.
-_SAME_AS_KEYS_VARIABLE: frozenset[str] = frozenset(
-    {"provider", "register", "variable_slug"}
-)
-_SAME_AS_KEYS_CLASSIFICATION: frozenset[str] = frozenset(
-    {"provider", "classification_slug"}
-)
-_SAME_AS_REQUIRED_VARIABLE: frozenset[str] = frozenset(
-    {"provider", "register", "variable_slug"}
-)
-_SAME_AS_REQUIRED_CLASSIFICATION: frozenset[str] = frozenset(
-    {"provider", "classification_slug"}
-)
 
 
 @dataclass(frozen=True)
@@ -132,13 +113,9 @@ class SlugEntry:
     # file/provider). Validated for shape and cycle-freedom but not yet applied
     # to the DB; the resolver-side typo-correction lands with consumer-side
     # binding materialization in step 1e. NOT succession — the cross-provider /
-    # dead-predecessor succession surface is the top-level `[[replaced_by]]`
-    # array-of-tables (`load_curated_replaced_by`, #440), a different relation.
+    # dead-predecessor succession surface is `curation/relations.toml`'s
+    # `type = "replaced_by"` edges (#522, `relations.py`), a different relation.
     replaced_by: str | None = None
-    # Cross-rename equivalence; materialized into `variable_same_as` /
-    # `classification_same_as` edge tables by `materialize_same_as_edges`.
-    # `Catalog.resolve` follows the edges transitively when direct lookup misses.
-    same_as: tuple[dict[str, str], ...] = field(default_factory=tuple)
 
 
 def repo_slug_dir() -> Path | None:
@@ -223,6 +200,9 @@ def _live_providers(conn: sqlite3.Connection) -> list[str]:
 
 
 def _allowed_fields(kind: EntityKind) -> frozenset[str]:
+    # `same_as` is NOT a slug field anymore (#522) — graph semantics live in
+    # `curation/relations.toml`, so an inline `same_as` here now fails as an
+    # unknown field, the same as a top-level `[[replaced_by]]` in a slug TOML.
     base = {"slug", "deprecated", "replaced_by"}
     if kind == "register_variant":
         return frozenset(
@@ -234,62 +214,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
                 "panel_time_grain",
             }
         )
-    if kind == "classification":
-        return frozenset(base | {"same_as"})
-    if kind == "variable":
-        return frozenset(base | {"same_as"})
     return frozenset(base)
-
-
-def _validate_same_as(
-    kind: EntityKind, source_id: str, raw: Any
-) -> tuple[dict[str, str], ...]:
-    if raw is None:
-        return ()
-    if kind not in _KINDS_WITH_SAME_AS:
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `same_as` only allowed on variable / classification.",
-            "Remove the field or move the entry to the correct kind.",
-        )
-    if not isinstance(raw, list) or not all(isinstance(r, dict) for r in raw):
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `same_as` must be an array of inline tables.",
-            'Use TOML syntax: same_as = [{ provider = "scb", ... }].',
-        )
-    allowed_keys = (
-        _SAME_AS_KEYS_VARIABLE if kind == "variable" else _SAME_AS_KEYS_CLASSIFICATION
-    )
-    required_keys = (
-        _SAME_AS_REQUIRED_VARIABLE
-        if kind == "variable"
-        else _SAME_AS_REQUIRED_CLASSIFICATION
-    )
-    for ref in raw:
-        unknown_keys = set(ref) - allowed_keys
-        if unknown_keys:
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `same_as` has unknown key(s): "
-                f"{sorted(unknown_keys)}.",
-                f"Allowed keys for {kind}: {sorted(allowed_keys)}.",
-            )
-        missing_keys = required_keys - ref.keys()
-        if missing_keys:
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `same_as` missing required key(s): "
-                f"{sorted(missing_keys)}.",
-                f"Required for {kind}: {sorted(required_keys)}.",
-            )
-        if not all(isinstance(v, str) and v for v in ref.values()):
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `same_as` entries must be non-empty strings.",
-                "Each link names provider + slugs as quoted strings.",
-            )
-    return tuple(dict(ref) for ref in raw)
 
 
 def _validate_entry_slug(
@@ -414,7 +339,6 @@ def _validate_entry(
         panel_time_grain=panel_time_grain,
         deprecated=deprecated_raw,
         replaced_by=replaced_by,
-        same_as=_validate_same_as(kind, source_id, entry.get("same_as")),
     )
 
 
@@ -1850,430 +1774,6 @@ def _assert_no_unslugged(
 
 
 # ---------------------------------------------------------------------------
-# same_as edge materialization
-# ---------------------------------------------------------------------------
-
-
-# A2.1.5: variable same_as keys are variable-grain 3-tuples
-# (provider, register, variable). The variant/period slots were dropped.
-# Classification keys are 2-tuples (provider, classification_slug).
-_VarKey = tuple[str, str, str]
-_ClassKey = tuple[str, str]
-
-
-def _variable_source_slug(
-    conn: sqlite3.Connection, register_id: int, var_id: str, entry: SlugEntry
-) -> str:
-    """Read the stored variable slug for a `[variable]` TOML entry's source.
-
-    The TOML key identifies the variable whose `variable.slug` anchors the
-    `a_variable` side of the same_as edge. `populate_variable_slugs` runs before
-    `materialize_same_as_edges`, so the slug column is populated here.
-
-    A bare `<register_id>.<var_id>` key is 1:1 with a variable unless A2.2 triage
-    split that `var_id` into siblings — then it is **ambiguous** and rejected.
-    A curator anchors a specific sibling with the 3-part
-    `<register_id>.<var_id>.<discriminator>` key (the same discriminator the
-    auto-slug cache uses, via `_split_sibling_disc`); we resolve it to the one
-    matching sibling. The "no slug" error covers the genuine curation case
-    (variable absent / underivable at build).
-    """
-    rows = conn.execute(
-        "SELECT variable_id, slug FROM variable "
-        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
-        "AND slug IS NOT NULL",
-        (register_id, var_id),
-    ).fetchall()
-    if not rows:
-        raise _err(
-            "slug_same_as_unresolved_source",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} has no "
-            f"stored slug on `variable`, so its variable_slug can't be "
-            f"anchored for `same_as` materialization.",
-            "Check that the (register_id, var_id) appears in the build (it may "
-            "fold to an underivable slug — curate "
-            f'`[variable."{entry.source_id}"]` in {entry.provider}.toml); mark '
-            "the entry deprecated=true if the variable is retired.",
-        )
-    parts = entry.source_id.split(".")
-    disc_key = parts[2] if len(parts) == 3 else None
-    if disc_key is not None:
-        sib_disc = _split_sibling_disc(conn, register_id, var_id)
-        matches = [slug for vid, slug in rows if sib_disc.get(vid) == disc_key]
-        if len(matches) == 1:
-            return matches[0]
-        raise _err(
-            "slug_same_as_unresolved_source",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} split-sibling "
-            f"discriminator {disc_key!r} matches {len(matches)} of {len(rows)} "
-            f"siblings under (register_id, provider_key).",
-            "Use the exact sibling discriminator (the earliest "
-            "delivery-column slug); `reg-meta-build precheck-slugs` lists them.",
-        )
-    if len(rows) > 1:
-        raise _err(
-            "slug_same_as_ambiguous_source",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} maps to "
-            f"{len(rows)} variables sharing (register_id, provider_key) "
-            f"(slugs {sorted(r[1] for r in rows)!r}) — an A2.2 triage split. A "
-            f"same_as anchored on the bare source key is ambiguous; the edge "
-            f"would attach to an arbitrary sibling.",
-            "Anchor the same_as on the specific sibling via the 3-part "
-            '`[variable."<reg>.<var>.<discriminator>"]` key.',
-        )
-    return rows[0][1]
-
-
-def _validate_variable_target(
-    conn: sqlite3.Connection, entry: SlugEntry, ref: dict[str, str]
-) -> _VarKey:
-    """Validate a same_as target's provider + register exist (variable grain).
-
-    `variable_slug` itself is **not** validated against the DB — that's the
-    point of slug-anchored linking: the link survives forward-of-data renames.
-    Provider and register slugs are checked because if those are typos the link
-    is permanently dead. A2.1.5: the edge is variable-grain — there are no
-    `register_variant`/`period` narrowing slots, so the only DB check is
-    provider+register existence. Key shape is enforced upstream by
-    `_validate_same_as` (which now rejects variant/period keys) at TOML load.
-    """
-    provider_slug = ref["provider"]
-    register_slug = ref["register"]
-    variable_slug = ref["variable_slug"]
-
-    # Provider + register existence: hard error per design call (matches the
-    # rest of slug validation).
-    row = conn.execute(
-        "SELECT r.register_id FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ?",
-        (provider_slug, register_slug),
-    ).fetchone()
-    if row is None:
-        raise _err(
-            "slug_same_as_unknown_register",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
-            f"target {provider_slug!r}/{register_slug!r} does not exist in "
-            f"this build.",
-            "Fix the slug typo, or mark the originating entry deprecated=true "
-            "if the target register is retired.",
-        )
-    return (provider_slug, register_slug, variable_slug)
-
-
-def _validate_classification_target(
-    entry: SlugEntry,
-    ref: dict[str, str],
-    by_slug: dict[tuple[str, str], str],
-) -> _ClassKey:
-    """Validate a classification same_as target — provider + classification_slug.
-
-    A2.6.1: the slug bakes in the vintage and is globally UNIQUE, so a
-    `(provider, slug)` key maps to exactly one row — the former multi-version
-    ambiguity check is structurally impossible and gone. This is now a pure
-    presence check. Cross-version drift still belongs in `supersedes` /
-    `replaced_by`, not same_as. Key shape is enforced upstream by
-    `_validate_same_as`.
-    """
-    provider_slug = ref["provider"]
-    classification_slug = ref["classification_slug"]
-    if (provider_slug, classification_slug) not in by_slug:
-        raise _err(
-            "slug_same_as_unknown_classification",
-            f"classifications.toml: classification.{entry.source_id!r} "
-            f"same_as target {provider_slug}/{classification_slug!r} does "
-            f"not exist in this build.",
-            "Fix the slug typo, or mark the originating entry "
-            "deprecated=true if the target classification is retired.",
-        )
-    return (provider_slug, classification_slug)
-
-
-def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
-    """Reject directed cycles in the as-declared same_as graph.
-
-    Even though same_as forms an equivalence (we store both directions in
-    the DB at insert time), the **TOML-level** directed graph must be
-    acyclic — that catches self-loops (`A → A`) and reciprocal-declaration
-    typos (`A → B` + `B → A`) which are redundant and let a maintainer
-    miss-edit one side.
-    """
-    if not edges:
-        return
-    adj: dict[Any, list[Any]] = {}
-    for a, b in edges:
-        if a == b:
-            raise _err(
-                "slug_same_as_self_loop",
-                f"{label}: same_as entry references itself ({a!r}).",
-                "Remove the self-reference.",
-            )
-        adj.setdefault(a, []).append(b)
-        adj.setdefault(b, [])
-
-    # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
-    color: dict[Any, int] = dict.fromkeys(adj, 0)
-    parent: dict[Any, Any] = {}
-
-    def visit(node: Any) -> None:
-        color[node] = 1
-        for nxt in adj[node]:
-            if color[nxt] == 1:
-                # Reconstruct the cycle for a useful error.
-                cycle = [nxt, node]
-                cur = node
-                while parent.get(cur) is not None and parent[cur] != nxt:
-                    cur = parent[cur]
-                    cycle.append(cur)
-                cycle.append(nxt)
-                raise _err(
-                    "slug_same_as_cycle",
-                    f"{label}: same_as forms a cycle: "
-                    f"{' -> '.join(repr(n) for n in reversed(cycle))}.",
-                    "Declare each equivalence from one side only; the "
-                    "build stores the reverse edge automatically.",
-                )
-            if color[nxt] == 0:
-                parent[nxt] = node
-                visit(nxt)
-        color[node] = 2
-
-    for start in list(adj):
-        if color[start] == 0:
-            visit(start)
-
-
-def _register_exists(
-    conn: sqlite3.Connection, provider_slug: str, register_slug: str
-) -> bool:
-    """True iff `provider_slug/register_slug` resolves to a real register (the
-    same provider+register existence check `_validate_variable_target` uses)."""
-    row = conn.execute(
-        "SELECT 1 FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND r.slug = ?",
-        (provider_slug, register_slug),
-    ).fetchone()
-    return row is not None
-
-
-def _merge_curated_same_as_edges(
-    conn: sqlite3.Connection,
-    var_edges: list[tuple[_VarKey, _VarKey]],
-    curated_same_as: tuple[CuratedSameAs, ...],
-    providers: frozenset[str],
-) -> int:
-    """Merge curated `variable_same_as.toml` edges into `var_edges` (the shared
-    list the cycle check + insert below span). Mirrors how replaced_by merges
-    event+curated edges before its cycle check, so a curated edge that closes a
-    cycle with an inline edge is caught by the SAME `_reject_same_as_cycles`.
-
-    The curated `a`/`b` are slug-anchored `(provider, register, variable_slug)`
-    `_VarKey` triples — appended DIRECTLY (no slug resolution; same_as survives
-    renames, consistent with the inline path). Each edge is:
-      - provider-GATED — if either provider isn't built, SKIP (a partial
-        `--providers` build genuinely can't represent the endpoint; deferral, not
-        drift), mirroring `materialize_curated_related_to`.
-      - provider+register existence-validated for BOTH sides (the variable slug
-        is NOT checked — slug-anchored). An unknown provider/register IS drift →
-        fail fast (EXIT_CONFIG).
-
-    A curated edge whose UNORDERED variable pair is already declared — either by
-    an inline `SlugEntry.same_as` edge already in `var_edges`, or by an earlier
-    curated edge merged in THIS call — is maintainer drift, not an internal
-    invariant break. Caught here as EXIT_CONFIG (`variable_same_as_duplicate`)
-    rather than slipping past the cycle check (which only rejects
-    cycles/reciprocals/self-loops, not an exact same-direction duplicate) into a
-    raw `sqlite3.IntegrityError` on the plain INSERT — that maps to EXIT_INTERNAL
-    "report to maintainers", the wrong failure mode for curation drift. The
-    unordered frozenset also catches a curated `b→a` against an inline `a→b` with
-    this clearer message instead of leaning on the cycle check.
-
-    Returns the count of curated edges merged (one per pair; both directions are
-    written by the shared insert below)."""
-    # Unordered variable pairs already declared (inline edges built before this
-    # call), extended as curated edges merge so a curated-vs-curated duplicate is
-    # caught too. load_same_as already dedups within the curated file, so this
-    # covers curated-vs-inline (and the belt-and-braces curated-vs-curated case).
-    seen_pairs: set[frozenset[_VarKey]] = {frozenset(pair) for pair in var_edges}
-    n_merged = 0
-    for e in curated_same_as:
-        if e.a_provider not in providers or e.b_provider not in providers:
-            continue
-        a_fqid = f"{e.a_provider}/{e.a_register}/{e.a_variable}"
-        b_fqid = f"{e.b_provider}/{e.b_register}/{e.b_variable}"
-        if not _register_exists(conn, e.a_provider, e.a_register):
-            raise _err(
-                "variable_same_as_unknown_register",
-                f"variable_same_as.toml: same_as edge endpoint {a_fqid!r} names "
-                f"provider/register {e.a_provider}/{e.a_register} which does not "
-                "exist in this build.",
-                "Fix the `a` FQID in reg_meta_build/variable_same_as.toml.",
-            )
-        if not _register_exists(conn, e.b_provider, e.b_register):
-            raise _err(
-                "variable_same_as_unknown_register",
-                f"variable_same_as.toml: same_as edge endpoint {b_fqid!r} names "
-                f"provider/register {e.b_provider}/{e.b_register} which does not "
-                "exist in this build.",
-                "Fix the `b` FQID in reg_meta_build/variable_same_as.toml.",
-            )
-        a_key: _VarKey = (e.a_provider, e.a_register, e.a_variable)
-        b_key: _VarKey = (e.b_provider, e.b_register, e.b_variable)
-        pair = frozenset({a_key, b_key})
-        if pair in seen_pairs:
-            raise _err(
-                "variable_same_as_duplicate",
-                f"variable_same_as.toml: same_as edge {{{a_fqid}, {b_fqid}}} is "
-                "already declared.",
-                "Remove the duplicate — the pair is already declared (inline slug "
-                "`same_as` or another `[[same_as]]` entry); same_as is symmetric "
-                "so a→b and b→a are the same edge.",
-            )
-        seen_pairs.add(pair)
-        var_edges.append((a_key, b_key))
-        n_merged += 1
-    return n_merged
-
-
-def materialize_same_as_edges(
-    conn: sqlite3.Connection,
-    slug_dir: Path,
-    *,
-    curated_same_as: tuple[CuratedSameAs, ...] = (),
-    providers: frozenset[str] = frozenset(),
-) -> dict[str, int]:
-    """Translate `SlugEntry.same_as` references into edge rows.
-
-    Variables and classifications each get their own edge table. Each TOML
-    edge becomes two rows (A→B and B→A) so the resolver can BFS in one
-    direction without a UNION lookup. Cycles in the as-declared directed
-    graph are rejected.
-
-    Runs after `populate_slugs` — register/variant/version slugs must be
-    written before we can validate same_as targets against them.
-
-    `curated_same_as` (from `variable_same_as.toml`, #417) is merged into the
-    variable edge set BEFORE the cycle check + insert, so the shared cycle check
-    spans inline + curated edges. `providers` gates each curated edge to this
-    build's providers (a partial `--providers` build skips out-of-build
-    endpoints rather than failing). See `_merge_curated_same_as_edges`.
-    """
-    entries = load_slug_dir(slug_dir)
-
-    # Pre-index classification (provider, slug) presence so we can validate
-    # same_as targets without a row-per-target query. A2.6.1: the slug is
-    # globally UNIQUE (vintage baked in), so each key maps to exactly one row —
-    # the value is just the short_name for diagnostics.
-    class_by_slug: dict[tuple[str, str], str] = {}
-    # Classifications carry no provider in classifications.toml; they belong
-    # to the SCB-wide registry. Treat the publisher field as the provider.
-    cls_rows = conn.execute(
-        "SELECT short_name, slug, publisher FROM classification WHERE slug IS NOT NULL"
-    ).fetchall()
-    for row in cls_rows:
-        publisher_slug = (row[2] or "scb").lower()
-        class_by_slug[(publisher_slug, row[1])] = row[0]
-
-    var_edges: list[tuple[_VarKey, _VarKey]] = []
-    class_edges: list[tuple[_ClassKey, _ClassKey]] = []
-
-    for entry in entries:
-        if not entry.same_as:
-            continue
-        if entry.deprecated:
-            # The whole point of deprecated is "slug retained, no new links" —
-            # don't materialize from a retired side. Resolver still walks
-            # through if the *other* side points back via its own same_as.
-            continue
-
-        if entry.kind == "variable":
-            if entry.provider is None:
-                raise _err(
-                    "slug_same_as_internal",
-                    f"variable.{entry.source_id!r}: missing provider context "
-                    f"(SlugEntry.provider is None).",
-                    "Report this as a bug — provider should be set by the TOML loader.",
-                )
-            # `_parse_variable_id` accepts the optional split-sibling 3rd
-            # segment; `_variable_source_slug` resolves it to the sibling.
-            register_id, var_id = _parse_variable_id(entry.source_id)
-            row = conn.execute(
-                "SELECT r.slug FROM register r "
-                "JOIN provider p ON r.provider_id = p.provider_id "
-                "WHERE p.slug = ? AND r.register_id = ?",
-                (entry.provider, register_id),
-            ).fetchone()
-            if row is None or row[0] is None:
-                raise _err(
-                    "slug_same_as_unresolved_source",
-                    f"{entry.provider}.toml: variable.{entry.source_id!r} "
-                    f"source register has no slug; cannot anchor same_as.",
-                    "Ensure the register has a slug entry (populate_slugs "
-                    "should have written it).",
-                )
-            src_variable_slug = _variable_source_slug(conn, register_id, var_id, entry)
-            src: _VarKey = (entry.provider, row[0], src_variable_slug)
-            for ref in entry.same_as:
-                tgt = _validate_variable_target(conn, entry, ref)
-                var_edges.append((src, tgt))
-
-        elif entry.kind == "classification":
-            row = conn.execute(
-                "SELECT slug, publisher FROM classification WHERE short_name = ?",
-                (entry.source_id,),
-            ).fetchone()
-            if row is None or row[0] is None:
-                raise _err(
-                    "slug_same_as_unresolved_source",
-                    f"classifications.toml: classification.{entry.source_id!r} "
-                    f"has no DB slug; cannot anchor same_as.",
-                    "Ensure populate_slugs wrote the slug column first.",
-                )
-            src_provider = (row[1] or "scb").lower()
-            src_key: _ClassKey = (src_provider, row[0])
-            for ref in entry.same_as:
-                tgt_key = _validate_classification_target(entry, ref, class_by_slug)
-                class_edges.append((src_key, tgt_key))
-
-    # Merge curated edges into the variable edge set BEFORE the cycle check so a
-    # curated edge that closes a cycle with an inline edge is rejected too.
-    n_curated = _merge_curated_same_as_edges(
-        conn, var_edges, curated_same_as, providers
-    )
-
-    _reject_same_as_cycles(list(var_edges), label="variable same_as")
-    _reject_same_as_cycles(list(class_edges), label="classification same_as")
-
-    # Insert both directions. Plain INSERT — cycle detection above already
-    # rejects reciprocal declarations, so any PK collision here is a build
-    # invariant violation that we want to surface, not silence.
-    for a, b in var_edges:
-        for src_t, tgt_t in ((a, b), (b, a)):
-            conn.execute(
-                "INSERT INTO variable_same_as ("
-                "a_provider, a_register, a_variable, "
-                "b_provider, b_register, b_variable) "
-                "VALUES (?, ?, ?, ?, ?, ?)",
-                (*src_t, *tgt_t),
-            )
-    for a_k, b_k in class_edges:
-        for src_c, tgt_c in ((a_k, b_k), (b_k, a_k)):
-            conn.execute(
-                "INSERT INTO classification_same_as ("
-                "a_provider, a_classification_slug, "
-                "b_provider, b_classification_slug) VALUES (?, ?, ?, ?)",
-                (*src_c, *tgt_c),
-            )
-
-    return {
-        "variable": len(var_edges),
-        "variable_curated": n_curated,
-        "classification": len(class_edges),
-    }
-
-
-# ---------------------------------------------------------------------------
 # Consumer-side binding lineage config (TOML-only, no SQL table; see DESIGN.md → Consumer-side lineage (variable_state_lineage))
 # ---------------------------------------------------------------------------
 
@@ -2403,262 +1903,6 @@ def load_lineage_config(slug_dir: Path) -> LineageConfig:
             overrides[override_key] = (source_register, source_variant)
 
     return LineageConfig(defaults=defaults, overrides=overrides)
-
-
-# ---------------------------------------------------------------------------
-# Curated succession edges (#440): inline `[[replaced_by]]` rows in a provider
-# TOML, materialized into `register_replaced_by` / `variable_replaced_by`
-# ALONGSIDE the `timeseries_event`-derived edges (`_materialize_replaced_by_edges`
-# in db.py). This is a DIFFERENT relation from the per-entry `SlugEntry.replaced_by`
-# field: that field is a WITHIN-FILE slug-typo rename pointer (one TOML key →
-# another, same provider, validated by `_resolve_replaced_by`, reserved for "step
-# 1e"); a `[[replaced_by]]` row is a SUCCESSION edge between two full FQIDs that
-# may be CROSS-PROVIDER (e.g. SOS→SCB) and whose PREDECESSOR need not resolve to a
-# live row (retired/renamed). The whole point of the curated path vs the
-# event-derived one: SCB's `timeseries_event` can carry neither a cross-provider
-# move nor a dead-predecessor edge (the LISA definition-era successions, the first
-# real consumer, have no `timeseries_event` source at all).
-# ---------------------------------------------------------------------------
-
-
-@dataclass(frozen=True)
-class CuratedReplacedByEdge:
-    """One `[[replaced_by]]` succession row, parsed FQID-shaped but DB-unverified.
-
-    `predecessor` / `successor` are parsed `Fqid`s of the SAME grain — both
-    register (`provider/register`, 2 segs) or both variable
-    (`provider/register/variable`, 3 segs). Grain is `fqid.kind`
-    (`FqidKind.REGISTER` / `FqidKind.VARIABLE_BINDING`); the variant grain is out
-    of #440 scope and rejected at load. `note` / `effective_year` are optional
-    provenance (the human transition reason and the year it took effect).
-
-    Existence (the successor must resolve to a live, slugged DB entity; the
-    predecessor MAY be dead) is checked downstream by
-    `_materialize_curated_replaced_by_edges` against the built DB — this loader
-    stays DB-free so it's testable in isolation (mirrors `load_lineage_config`).
-    """
-
-    predecessor: Fqid
-    successor: Fqid
-    note: str | None
-    effective_year: int | None
-
-
-_REPLACED_BY_ROW_KEYS: frozenset[str] = frozenset(
-    {"predecessor", "successor", "note", "effective_year"}
-)
-_REPLACED_BY_REQUIRED_KEYS: frozenset[str] = frozenset({"predecessor", "successor"})
-# Curated succession is register- or variable-grain only. The variant grain
-# (`variant_replaced_by`) is deliberately out of #440 scope: a variant is a
-# delivery coordinate, not a curation surface for cross-provider succession.
-_REPLACED_BY_GRAINS: frozenset[FqidKind] = frozenset(
-    {FqidKind.REGISTER, FqidKind.VARIABLE_BINDING}
-)
-
-
-def _parse_replaced_by_fqid(path_name: str, field: str, raw: Any) -> Fqid:
-    """Parse one endpoint FQID string against the FQID grammar (the same
-    `reg_meta.fqid.parse` the resolver uses), restricted to the register /
-    variable grains. A bad shape, a provider/classification/variant-grain FQID,
-    or a non-string fails loud (EXIT_CONFIG)."""
-    if not isinstance(raw, str) or not raw:
-        raise _err(
-            "replaced_by_invalid",
-            f"{path_name}: [[replaced_by]] `{field}` must be a non-empty FQID "
-            f"string, got {raw!r}.",
-            'Quote a register or variable FQID, e.g. "scb/lisa" or "scb/lisa/kon".',
-        )
-    try:
-        fqid = parse_fqid(raw)
-    except FqidError as exc:
-        raise _err(
-            "replaced_by_invalid",
-            f"{path_name}: [[replaced_by]] `{field}` {raw!r} is not a valid "
-            f"FQID: {exc}.",
-            "Use a register (provider/register) or variable "
-            "(provider/register/variable) FQID.",
-        ) from exc
-    if fqid.kind not in _REPLACED_BY_GRAINS:
-        raise _err(
-            "replaced_by_invalid",
-            f"{path_name}: [[replaced_by]] `{field}` {raw!r} is a "
-            f"{fqid.kind.value}-grain FQID; only register and variable grains are "
-            f"supported.",
-            "Use a 2-segment register or 3-segment variable FQID (the variant "
-            "grain is out of scope).",
-        )
-    return fqid
-
-
-def load_curated_replaced_by(slug_dir: Path) -> list[CuratedReplacedByEdge]:
-    """Parse `[[replaced_by]]` array-of-tables from every provider TOML under
-    ``slug_dir`` (excluding ``classifications.toml``), in deterministic
-    filename order.
-
-    Load-time validation (all EXIT_CONFIG, actionable — the DB-free half):
-      - `replaced_by` is an array of tables; each row is a table.
-      - `predecessor` / `successor` are present, non-empty FQID strings parsing
-        to a register- or variable-grain FQID (`_parse_replaced_by_fqid`).
-      - Both endpoints are the SAME grain (no register→variable mix).
-      - No self-loop (`predecessor == successor`).
-      - `note` is an optional string; `effective_year` an optional int.
-      - No unknown keys.
-
-    Existence checks (successor must resolve to a live slugged DB entity;
-    predecessor may be dead) are deferred to the DB-aware materializer — keeping
-    this loader DB-free mirrors `load_lineage_config`. The directed-cycle check
-    (length>=2 cycles, e.g. A→B + B→A) is ALSO deferred there: a curated edge can
-    close a cycle with an event-derived edge this loader can't see, so it must
-    run on the combined graph (`reject_replaced_by_cycles` in the materializer).
-    """
-    edges: list[CuratedReplacedByEdge] = []
-    for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
-        if path.name in _RESERVED_NON_PROVIDER_TOMLS:
-            continue
-        data = _parse_toml(path)
-        raw_rows = data.get("replaced_by")
-        if raw_rows is None:
-            continue
-        if not isinstance(raw_rows, list):
-            raise _err(
-                "replaced_by_invalid",
-                f"{path.name}: `replaced_by` must be an array of tables.",
-                "Use [[replaced_by]] rows, each with predecessor / successor.",
-            )
-        for raw in raw_rows:
-            if not isinstance(raw, dict):
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: each `replaced_by` entry must be a table.",
-                    "Use the [[replaced_by]] array-of-tables form.",
-                )
-            unknown = set(raw) - _REPLACED_BY_ROW_KEYS
-            if unknown:
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: [[replaced_by]] has unknown key(s): "
-                    f"{sorted(unknown)}.",
-                    f"Allowed keys: {sorted(_REPLACED_BY_ROW_KEYS)}.",
-                )
-            missing = _REPLACED_BY_REQUIRED_KEYS - raw.keys()
-            if missing:
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: [[replaced_by]] missing required key(s): "
-                    f"{sorted(missing)}.",
-                    f"Required: {sorted(_REPLACED_BY_REQUIRED_KEYS)}.",
-                )
-            predecessor = _parse_replaced_by_fqid(
-                path.name, "predecessor", raw["predecessor"]
-            )
-            successor = _parse_replaced_by_fqid(
-                path.name, "successor", raw["successor"]
-            )
-            if predecessor.kind is not successor.kind:
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: [[replaced_by]] predecessor "
-                    f"{str(predecessor)!r} ({predecessor.kind.value}) and successor "
-                    f"{str(successor)!r} ({successor.kind.value}) are different "
-                    f"grains.",
-                    "Both endpoints must be the same grain (register→register or "
-                    "variable→variable).",
-                )
-            if str(predecessor) == str(successor):
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: [[replaced_by]] self-loop on {str(predecessor)!r}.",
-                    "An entity cannot replace itself; remove the row.",
-                )
-            note = raw.get("note")
-            if note is not None and (not isinstance(note, str) or not note):
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: [[replaced_by]] `note` must be a non-empty "
-                    f"string when present.",
-                    "Quote a short transition reason, or drop the key.",
-                )
-            effective_year = raw.get("effective_year")
-            # `isinstance(True, int)` is True in Python — reject a bare bool so a
-            # `effective_year = true` typo can't masquerade as the year 1.
-            if effective_year is not None and (
-                isinstance(effective_year, bool) or not isinstance(effective_year, int)
-            ):
-                raise _err(
-                    "replaced_by_invalid",
-                    f"{path.name}: [[replaced_by]] `effective_year` must be an "
-                    f"integer when present, got {type(effective_year).__name__}.",
-                    "Use a bare integer year, e.g. effective_year = 2012.",
-                )
-            edges.append(
-                CuratedReplacedByEdge(
-                    predecessor=predecessor,
-                    successor=successor,
-                    note=note,
-                    effective_year=effective_year,
-                )
-            )
-    # NB: cycle rejection does NOT run here. The load-time graph sees only the
-    # curated edges, but a curated edge can close a cycle WITH an event-derived
-    # edge materialized in the same build (e.g. event A->B + curated B->A). That
-    # combined-graph check lives in `_materialize_curated_replaced_by_edges`,
-    # which holds the event edges too. Self-loops are still caught per-row above.
-    return edges
-
-
-def reject_replaced_by_cycles(edges: list[tuple[Any, Any]]) -> None:
-    """Reject directed cycles in a `[[replaced_by]]` succession graph.
-
-    ``edges`` is a list of ``(predecessor_node, successor_node)`` pairs; a node
-    is any hashable key (the build passes the FQID slug tuple — register node
-    ``(provider, register)``, variable node ``(provider, register, variable)``).
-    A cyclic succession graph has no terminal successor, so the webapp's
-    successors()/predecessors() walks would contradict each other.
-
-    Pure and DB-free so it's testable in isolation. The build runs it on the
-    COMBINED per-grain graph (event-derived edges ∪ curated edges to insert) —
-    a curated edge can close a cycle with an event-derived one, which a
-    curated-only view can't see. Self-loops are rejected per-row at load
-    (`load_curated_replaced_by`); this catches length>=2 cycles a per-row check
-    can't see. Mirrors `_reject_same_as_cycles`.
-    """
-    if not edges:
-        return
-    adj: dict[Any, list[Any]] = {}
-    for a, b in edges:
-        adj.setdefault(a, []).append(b)
-        adj.setdefault(b, [])
-
-    # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
-    color: dict[Any, int] = dict.fromkeys(adj, 0)
-    parent: dict[Any, Any] = {}
-
-    def visit(node: Any) -> None:
-        color[node] = 1
-        for nxt in adj[node]:
-            if color[nxt] == 1:
-                # Reconstruct the cycle for a useful error.
-                cycle = [nxt, node]
-                cur = node
-                while parent.get(cur) is not None and parent[cur] != nxt:
-                    cur = parent[cur]
-                    cycle.append(cur)
-                cycle.append(nxt)
-                raise _err(
-                    "replaced_by_cycle",
-                    "[[replaced_by]] forms a succession cycle: "
-                    f"{' -> '.join(repr(n) for n in reversed(cycle))}.",
-                    "A succession chain must be acyclic (it needs a terminal "
-                    "successor); remove the edge that closes the loop.",
-                )
-            if color[nxt] == 0:
-                parent[nxt] = node
-                visit(nxt)
-        color[node] = 2
-
-    for start in list(adj):
-        if color[start] == 0:
-            visit(start)
 
 
 # ---------------------------------------------------------------------------

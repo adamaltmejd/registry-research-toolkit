@@ -3,13 +3,14 @@
 The scaffold (`load_curation_entries`, `curation_error`, `canonical_int`,
 `fold_column`) plus the per-entry leaf helpers below (`require_str`,
 `require_fqid`, `resolve_variable_id`, `resolve_register_id`,
-`load_column_groups`) serve all 10 `[[entry]]` curation-TOML loaders —
+`load_column_groups`) serve the `[[entry]]` curation-TOML loaders —
 `codelivery.py`, `source_column_repairs.py`, `concept_groups.py`, `tags.py`,
 `family_merges.py`, `delivery_enrichment.py`, `variable_grafts.py`,
-`variable_related_to.py`, `variable_same_as.py`, `classification_links.py`. Each
-loader threads its own `code` / `prefix` / `file_name` through (typically via a
-module-level `functools.partial`) so its established error codes (and
-near-identical messages) are preserved.
+`classification_links.py`, and `relations.py` (the single typed `[[edge]]`
+surface for the curated pairwise relations — same_as / replaced_by / related_to,
+#522). Each loader threads its own `code` / `prefix` / `file_name` through
+(typically via a module-level `functools.partial`) so its established error
+codes (and near-identical messages) are preserved.
 The exceptions are `classifications.py` / `fqid_slugs.py` / `extend_db.py`, whose
 data shapes differ enough that they don't share this scaffold.
 

@@ -1,149 +1,32 @@
-"""Curated identity (`same_as`) edges + a candidate-inference generator (#417).
+"""same_as candidate-inference generator (#417).
 
-`variable_same_as` asserts that two variables are the SAME definition — one
-concept, two FQIDs. Unlike `variable_related_to` (a weak "see also"), a same_as
-edge is **resolver-load-bearing**: `Catalog.resolve` follows it transitively, and
-the build cycle-checks the as-declared graph. A wrong edge therefore corrupts
-resolution, so this surface is split into two halves with a human gate between:
+A same_as edge asserts that two variables are the SAME definition — one concept,
+two FQIDs — and is **resolver-load-bearing**: `Catalog.resolve` follows it
+transitively, and the build cycle-checks the as-declared graph. A wrong edge
+corrupts resolution, so the surface has a human gate between inference and load:
 
-  - The CURATED loader (`load_same_as` + `materialize_curated_same_as_edges`,
-    merged into `materialize_same_as_edges` in `fqid_slugs.py`). Like
-    `variable_related_to.toml` / `classification_links.toml` the file ships
-    EMPTY — only confirmed identity ever loads into a build. NOTHING
+  - The CURATED loader/materializer lives in `relations.py` (#522), parsing the
+    `type = "same_as"` edges from `curation/relations.toml`. The file ships
+    EMPTY — only confirmed identity ever loads into a build; NOTHING
     auto-materializes.
-  - The GENERATOR (`infer_same_as_candidates` + `render_candidates_toml`, driven
-    by `reg-meta-build same-as-candidates`). It reads structured signals off a
-    BUILT DB — shared classification, shared value set, name agreement — and
-    emits a tiered review worklist a maintainer curates into the curated file by
-    hand. The generator never writes the curated file and never touches the DB.
+  - The GENERATOR below (`infer_same_as_candidates` + `render_candidates_toml`,
+    driven by `reg-meta-build same-as-candidates`). It reads structured signals
+    off a BUILT DB — shared classification, shared value set, name agreement —
+    and emits a tiered review worklist a maintainer curates by hand. It never
+    writes the curated file and never touches the DB.
 
-The generator's output schema (a `[[same_as]]` TOML with `a`/`b`/`note`) is
-exactly the curated loader's input schema, so a confirmed candidate is copied
-across verbatim. They are co-located here for that reason.
-
-Like the other curation TOMLs (`variable_related_to.toml`, `concept_groups.toml`)
-the curated file is a maintainer artifact — absent in wheel installs and
-synthetic test builds.
+The generator's output schema (`[[edge]] type = "same_as"` with `a`/`b`/`note`)
+is exactly the curated loader's input schema, so a confirmed candidate copies
+into `curation/relations.toml` verbatim.
 """
 
 from __future__ import annotations
 
-import functools
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
-
-from ._curation import curation_error, load_curation_entries, require_fqid
 
 if TYPE_CHECKING:
     import sqlite3
-
-
-@dataclass(frozen=True)
-class CuratedSameAs:
-    """One `[[same_as]]` identity edge from `variable_same_as.toml`: an unordered
-    pair of variable FQIDs (`a_*` / `b_*`, each a 3-segment
-    provider/register/variable), plus an optional `note`. Unlike
-    `CuratedRelatedTo` there is NO `relation_kind` — same_as has no kind
-    vocabulary; identity is identity. Endpoint resolution (provider+register
-    exist) happens at materialize time against the built DB, not at load; the
-    variable slug is NOT validated — same_as is slug-anchored and survives
-    renames, consistent with the inline `same_as` path."""
-
-    a_provider: str
-    a_register: str
-    a_variable: str
-    b_provider: str
-    b_register: str
-    b_variable: str
-    note: str | None
-
-
-def repo_variable_same_as_path() -> Path | None:
-    """`reg_meta_build/variable_same_as.toml` from a repo checkout, or None
-    (wheel installs don't ship curation — it's a maintainer artifact like the
-    slug TOMLs). Sits at the package root, NOT under `fqid_slugs/` (that dir is
-    glob-loaded as provider-slug TOMLs; a file there would break the build)."""
-    candidate = Path(__file__).resolve().parent.parent.parent / "variable_same_as.toml"
-    return candidate if candidate.is_file() else None
-
-
-_require_fqid = functools.partial(
-    require_fqid,
-    code="variable_same_as_invalid",
-    prefix="variable_same_as",
-    entry_table="[[same_as]]",
-    file_name="variable_same_as.toml",
-)
-
-
-def load_same_as(path: Path | None) -> tuple[CuratedSameAs, ...]:
-    """Parse the curated identity TOML. Empty when no file (synthetic test
-    builds, wheel installs) or no entries.
-
-    Load-time validation (all EXIT_CONFIG, actionable): only `[[same_as]]`
-    top-level; `a`/`b` are 3-segment `provider/register/variable` FQID strings;
-    no self-edge (a == b); no duplicate UNORDERED FQID pair within the file;
-    `note` optional but non-empty if present. There is NO relation_kind check —
-    same_as carries no kind.
-
-    Endpoint RESOLUTION (both providers/registers exist in the built DB) and the
-    SHARED inline+curated cycle check happen at materialize time, not here — the
-    same load/resolve split as `variable_related_to` / `concept_groups`."""
-    entries = load_curation_entries(
-        path,
-        entry_key="same_as",
-        label="variable-same-as",
-        prefix="variable_same_as",
-        code_base="variable_same_as",
-        file_name="variable_same_as.toml",
-        entry_fields="a / b",
-    )
-    out: list[CuratedSameAs] = []
-    # Unordered FQID pairs already seen — frozenset of the two 3-tuples, so the
-    # same pair in either a/b order collides. A duplicate is curation drift.
-    seen_pairs: set[frozenset[tuple[str, str, str]]] = set()
-    for entry in entries:
-        a = _require_fqid(entry, "a")
-        b = _require_fqid(entry, "b")
-        if a == b:
-            raise curation_error(
-                "variable_same_as_invalid",
-                f"variable_same_as entry relates {'/'.join(a)} to itself.",
-                "A same_as edge connects two DISTINCT variable FQIDs; remove the "
-                "self-edge.",
-            )
-        pair = frozenset({a, b})
-        if pair in seen_pairs:
-            raise curation_error(
-                "variable_same_as_invalid",
-                f"variable_same_as has a duplicate unordered pair "
-                f"{{{'/'.join(a)}, {'/'.join(b)}}}.",
-                "List each variable pair once (the edge is symmetric — a→b and "
-                "b→a are the same pair).",
-            )
-        seen_pairs.add(pair)
-        note = entry.get("note")
-        if note is not None and (not isinstance(note, str) or not note):
-            raise curation_error(
-                "variable_same_as_invalid",
-                f"variable_same_as entry {entry!r} `note` must be a non-empty "
-                f"string when present, got {note!r}.",
-                "Drop `note` or give it a non-empty value like "
-                '`note = "candidate:tier1"`.',
-            )
-        out.append(
-            CuratedSameAs(
-                a_provider=a[0],
-                a_register=a[1],
-                a_variable=a[2],
-                b_provider=b[0],
-                b_register=b[1],
-                b_variable=b[2],
-                note=note,
-            )
-        )
-    return tuple(out)
 
 
 # ---------------------------------------------------------------------------
@@ -535,17 +418,19 @@ def render_candidates_toml(
     max_signal_fanout: int | None,
     hub_suppressed: int,
 ) -> str:
-    """Render the candidate worklist as a `[[same_as]]` TOML string a maintainer
-    curates from. Built by hand (not `tomli_w`) so the per-candidate `# tier N —
-    <evidence>` comments survive — `tomli_w` drops comments. FQID slugs are bare
-    identifiers (no escaping needed); `note` is simple ASCII.
+    """Render the candidate worklist as a `[[edge]] type = "same_as"` TOML string
+    a maintainer curates from — the exact shape `curation/relations.toml` accepts,
+    so a confirmed candidate copies across verbatim. Built by hand (not `tomli_w`)
+    so the per-candidate `# tier N — <evidence>` comments survive — `tomli_w` drops
+    comments. FQID slugs are bare identifiers (no escaping needed); `note` is
+    simple ASCII.
 
     The header records the active `max_signal_fanout` and the `hub_suppressed`
     count (so the cap is never a silent truncation), then the per-tier counts.
     Entries are sorted (tier asc, a_fqid, b_fqid). Each `note = "candidate:tierN"`
     marks provenance; a maintainer copies CONFIRMED entries into
-    `variable_same_as.toml` (dropping the candidate note or replacing it with a
-    rationale)."""
+    `reg_meta_build/curation/relations.toml` (dropping the candidate note or
+    replacing it with a rationale)."""
     total = len(candidates)
     fanout_desc = (
         "disabled (hub-clique pairs included)"
@@ -559,8 +444,8 @@ def render_candidates_toml(
         "# resolver-load-bearing (Catalog.resolve follows it transitively), so a",
         "# wrong edge corrupts resolution. NOTHING here loads into a build — review",
         "# each pair and copy ONLY confirmed identities into",
-        "# reg_meta_build/variable_same_as.toml (drop the candidate note or replace",
-        "# it with a rationale).",
+        "# reg_meta_build/curation/relations.toml (drop the candidate note or",
+        "# replace it with a rationale).",
         "#",
         f"# hub fanout cap: {fanout_desc}",
         f"# hub-suppressed pairs (cap removed, names disagreed): {hub_suppressed}",
@@ -574,7 +459,8 @@ def render_candidates_toml(
 
     for c in candidates:
         lines.append(f"# tier {c.tier} — {c.evidence}")
-        lines.append("[[same_as]]")
+        lines.append("[[edge]]")
+        lines.append('type = "same_as"')
         lines.append(f'a = "{c.a_fqid}"')
         lines.append(f'b = "{c.b_fqid}"')
         lines.append(f'note = "candidate:tier{c.tier}"')

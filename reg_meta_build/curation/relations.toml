@@ -1,0 +1,167 @@
+# Curated pairwise relation facts (#522) — see reg_meta_build/relations.py.
+#
+# ONE typed surface for the curated assertions about a pair of catalog entities.
+# Each fact is one `[[edge]]` table discriminated by `type`. Order by SUBJECT;
+# group related edges of different types under one comment.
+#
+# Three relation kinds:
+#
+#   type = "same_as"      — symmetric/transitive IDENTITY ("one concept, two
+#                           FQIDs"). RESOLVER-LOAD-BEARING: Catalog.resolve follows
+#                           it transitively and the build cycle-checks the graph,
+#                           so a WRONG edge corrupts resolution. `a` / `b` are
+#                           FQIDs of the SAME grain — both 3-segment variable OR
+#                           both 2-segment classification (provider/slug). The
+#                           build writes BOTH directions; there is NO relation_kind
+#                           (identity is identity). The variable/classification
+#                           slug is NOT validated (slug-anchored, survives
+#                           renames); provider+register (or provider+class slug)
+#                           must exist. Only CONFIRMED identity belongs here.
+#                           Generate a review worklist with
+#                           `reg-meta-build same-as-candidates`.
+#
+#   type = "replaced_by"  — directional SUCCESSION (`from` superseded by `to`).
+#                           NOT identity: the definitions differ across eras.
+#                           `from` / `to` are FQIDs of the SAME grain (register or
+#                           variable — not variant). The successor must resolve to
+#                           a live, slugged entity; the PREDECESSOR may be dead
+#                           (retired / renamed / cross-provider). Optional
+#                           `effective_year` (int) and `note` (transition reason).
+#
+#   type = "related_to"   — weak "see also" DISCOVERY link between DISTINCT
+#                           concepts (NOT identity). `a` / `b` are 3-segment
+#                           variable FQIDs; `relation_kind` is a curated kind
+#                           (CURATED_RELATION_KINDS, currently `similar_concept`);
+#                           the foldable auto kind is rejected. Optional `note`.
+#
+# References resolve against the built DB at materialize time; a dangling FQID
+# FAILS the build (EXIT_CONFIG). An edge whose provider isn't in the build is
+# SKIPPED (a partial --providers build can't represent it).
+
+# ── LISA "Summa annan inkomst" definition-era succession (#375) ──
+#    SCB minted a new VarId each time the definition was recut, so one measure
+#    fragments across three variables with sequential validity:
+#      anninkf   (VarId 41660) 1990–2004  "Summa annan inkomst"
+#      anninkf04 (VarId 37046) 2004–2017  "…, 2004 års definition"
+#      anninkf18 (VarId 40264) 2018–2023  "…, 2018 års definition"
+#    Modeled as a replaced_by succession, NOT same_as: the definitions genuinely
+#    differ across eras, so the variables are superseded, not interchangeable
+#    (see #375). All three predecessors are live, so the 404→301 redirect stays
+#    dormant; the edges drive the cross-era "same view" grouping.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/anninkf"
+to = "scb/lisa/anninkf04"
+effective_year = 2004
+note = "Summa annan inkomst recut to the 2004 års definition"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/anninkf04"
+to = "scb/lisa/anninkf18"
+effective_year = 2018
+note = "Summa annan inkomst recut to the 2018 års definition"
+
+# ── LISA näringsgren: kontrolluppgift → arbetsgivardeklaration source switch (#375) ──
+#    In 2019 SCB switched the income-source näringsgren (rank 1/2/3 förvärvskälla)
+#    from kontrolluppgift (KU, ≤2018) to arbetsgivardeklaration på individnivå
+#    (AGI, 2019+) — same definition + SNI 2007 value sets, clean disjoint handoff.
+#    A replaced_by succession per rank × granularity (detalj / grov / utökad).
+#    NOT modeled here: the parallel axes (granularity g/u/b, the individ/arbetsställe/
+#    företag panels, the rank definitions, the overlapping SNI vintages) — those are
+#    dimensional grouping for a concept-group follow-up, not succession edges.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku1astsni"
+to = "scb/lisa/agi1astsni2007"
+effective_year = 2019
+note = "Näringsgren (rank 1) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku1astsni2007g"
+to = "scb/lisa/agi1astsni2007g"
+effective_year = 2019
+note = "Näringsgren (rank 1, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku1astsni2007u"
+to = "scb/lisa/agi1astsni2007u"
+effective_year = 2019
+note = "Näringsgren (rank 1, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku2astsni"
+to = "scb/lisa/agi2astsni2007"
+effective_year = 2019
+note = "Näringsgren (rank 2) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku2astsni2007g"
+to = "scb/lisa/agi2astsni2007g"
+effective_year = 2019
+note = "Näringsgren (rank 2, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku2astsni2007u"
+to = "scb/lisa/agi2astsni2007u"
+effective_year = 2019
+note = "Näringsgren (rank 2, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku3astsni"
+to = "scb/lisa/agi3astsni2007"
+effective_year = 2019
+note = "Näringsgren (rank 3) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku3astsni2007g"
+to = "scb/lisa/agi3astsni2007g"
+effective_year = 2019
+note = "Näringsgren (rank 3, grov nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/ku3astsni2007u"
+to = "scb/lisa/agi3astsni2007u"
+effective_year = 2019
+note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
+
+# ── Curated "see also" edges (#403) ──
+# Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an
+# identity (identity is a `type = "same_as"` edge). Slugs verified against a real
+# scb,sos build.
+
+# Cross-provider economic-assistance counterparts: SCB's ekonomiskt-bistånd
+# register vs Socialstyrelsen's authority register (`ekb`). Same real-world
+# concept, two providers' distinct data products.
+[[edge]]
+type = "related_to"
+a = "scb/ekonomiskt-bistand/belopp"   # Utbetalt belopp till hushållet
+b = "sos/ekb/ekbbelopp"               # Ekonomiskt bistånd
+relation_kind = "similar_concept"
+note = "curated:cross_register"
+
+[[edge]]
+type = "related_to"
+a = "scb/ekonomiskt-bistand/antmanad" # Månader med bistånd
+b = "sos/ekb/ekbantmanad"             # Månader med ekonomiskt bistånd
+relation_kind = "similar_concept"
+note = "curated:cross_register"
+
+# Cross-register earned-income siblings within SCB: LISA's tax-aggregate earned
+# income vs RAMS's labour-income measure — related but DIFFERENT definitions
+# (förvärvsinkomst is broader than RAMS arbetsinkomst), so a weak see-also, not
+# a fold.
+[[edge]]
+type = "related_to"
+a = "scb/lisa/csfvi"                  # Sammanräknad förvärvsinkomst
+b = "scb/rams/arbink"                 # Arbetsinkomst i RAMS
+relation_kind = "similar_concept"
+note = "curated:cross_register"

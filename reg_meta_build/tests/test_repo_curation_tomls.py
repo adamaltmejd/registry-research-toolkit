@@ -24,13 +24,12 @@ from reg_meta_build.concept_groups import load_concept_groups
 from reg_meta_build.delivery_enrichment import load_delivery_enrichment
 from reg_meta_build.doc_db import _require_doc_source_str, load_doc_sources
 from reg_meta_build.family_merges import load_family_merges
+from reg_meta_build.relations import load_relations
 from reg_meta_build.source_column_repairs import (
     load_column_merges,
     load_fold_overrides,
 )
 from reg_meta_build.variable_grafts import load_variable_grafts
-from reg_meta_build.variable_related_to import load_related_to
-from reg_meta_build.variable_same_as import load_same_as
 
 # reg_meta_build/ package root (tests/ sits beside the TOMLs).
 _ROOT = Path(__file__).resolve().parent.parent
@@ -79,13 +78,17 @@ def test_repo_family_merges_parses() -> None:
     )
 
 
-def test_repo_variable_related_to_parses() -> None:
-    # The first curated "see also" edges landed (#403) — the regression lock
-    # flips from an EMPTY assertion to truthiness + shape, like the other repo
-    # curation gates above. Endpoint RESOLUTION (both FQIDs exist) is
-    # maintainer-build territory (the materializer fails fast on a dangling FQID).
-    edges = load_related_to(_ROOT / "variable_related_to.toml")
-    assert edges
+def test_repo_relations_parses() -> None:
+    # The single typed `[[edge]]` surface (#522). It ships with the #375
+    # succession edges (`type = "replaced_by"`) + the #403 see-also edges
+    # (`type = "related_to"`); same_as ships EMPTY (resolver-load-bearing
+    # identity; only confirmed edges ever land). The gate is load-time shape — a
+    # malformed entry would otherwise surface only on a real build. Endpoint
+    # RESOLUTION is maintainer-build territory (the materializers fail fast).
+    relations = load_relations(_ROOT / "curation" / "relations.toml")
+    assert not relations.same_as  # empty today
+    assert len(relations.replaced_by) == 11  # the moved #375 succession edges
+    assert len(relations.related_to) == 3  # the moved #403 see-also edges
     assert all(
         e.a_provider
         and e.a_register
@@ -94,16 +97,9 @@ def test_repo_variable_related_to_parses() -> None:
         and e.b_register
         and e.b_variable
         and e.relation_kind
-        for e in edges
+        for e in relations.related_to
     )
-
-
-def test_repo_variable_same_as_parses() -> None:
-    # `variable_same_as.toml` (#417) ships EMPTY (resolver-load-bearing identity;
-    # only confirmed edges ever land). The gate is that the header-only file
-    # PARSES cleanly — a malformed entry would otherwise surface only on a real
-    # build. Empty is correct, so assert it parses to the empty tuple (no error).
-    assert load_same_as(_ROOT / "variable_same_as.toml") == ()
+    assert all(str(e.predecessor) and str(e.successor) for e in relations.replaced_by)
 
 
 def test_repo_variable_grafts_parses() -> None:

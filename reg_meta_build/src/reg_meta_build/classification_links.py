@@ -8,7 +8,7 @@ deliberately leaves for a human. This is the curated override for that tail: a
 maintainer names `variable → classification` directly, and it takes precedence
 over every auto/feed candidate.
 
-Like the other curation TOMLs (`variable_related_to.toml`, `concept_groups.toml`)
+Like the other curation TOMLs (`curation/relations.toml`, `concept_groups.toml`)
 it is a maintainer artifact — absent in wheel installs and synthetic test builds —
 and uses the same load/resolve split: structure + vocabulary are checked at load,
 FQID / short_name existence at materialize time against the built DB.
