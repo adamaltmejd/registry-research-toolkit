@@ -661,3 +661,36 @@ def test_global_band_check_catches_low_band_fohm(fohm_db: Path) -> None:
     conn.close()
     result = validate_built_db(fohm_db, corpus=False)
     assert any("below the minted band" in f for f in result.failures), result.failures
+
+
+def test_canonical_scb_adapter_real_uht() -> None:
+    """The committed canonical-SCB content (#444, Utrikeshandel med tjänster)
+    emits under provider='scb' with LOW-band ids in the reserved sub-band
+    [2^61, 2^62), and interns its column value sets (landkoder/scbkoder)."""
+    from reg_meta_build.db import DDL
+    from reg_meta_build.id import mint_canonical_scb
+    from reg_meta_build.sources.curated import CanonicalScbAdapter
+
+    conn = sqlite3.connect(":memory:")
+    conn.executescript(DDL)
+    objs = list(CanonicalScbAdapter(conn).emit(_REAL_INPUT / "scb_canonical"))
+    regs = [o for o in objs if isinstance(o, IRRegister)]
+    states = [o for o in objs if isinstance(o, IRVariableState)]
+    assert regs and all(r.provider == "scb" for r in regs)
+    # Every grain id sits in the canonical sub-band [2^61, 2^62): low-band (passes
+    # the SCB band check `id < 2^62`), disjoint from the minted band `>= 2^62`.
+    ids = (
+        [r.register_id for r in regs]
+        + [o.variable_id for o in objs if isinstance(o, IRVariable)]
+        + [s.state_id for s in states]
+    )
+    assert all((1 << 61) <= i < _MINT_BIT for i in ids)
+    # Categorical columns are linked to interned value sets.
+    linked = {s.delivery_column_name: s.value_set_id for s in states if s.value_set_id}
+    assert "Scbkod" in linked and "Landkod" in linked
+    assert conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0] > 0
+    # The minted register id matches the committed fqid_slugs/scb.toml entry.
+    assert any(
+        r.register_id == mint_canonical_scb("scb", "utrikeshandel-tjanster")
+        for r in regs
+    )

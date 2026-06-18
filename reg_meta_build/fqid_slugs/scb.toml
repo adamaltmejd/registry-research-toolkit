@@ -2326,6 +2326,16 @@ display_group = "Volymutveckling i fasta priser"
 slug = "landfordelad-extrastat"
 display_group = "Varu- och landfördelad i löpande priser, Extrastat"
 
+# Utrikeshandel med tjänster — canonical-SCB content (#444), curated onto the scb
+# provider with a low-band mint_canonical_scb id (the tjänster sibling of the goods
+# register 188; absent from SCB's machine export).
+[register."3084667015646526536"]
+slug = "utrikeshandel-tjanster"
+
+[register_variant."3084667015646526536.4096212573084827577"]
+slug = "_default"
+display_group = "Utrikeshandel med tjänster"
+
 # Grundskolan: åk 9
 [register."189"]
 slug = "grundskola-ak9"

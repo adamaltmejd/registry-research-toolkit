@@ -12,10 +12,11 @@ from __future__ import annotations
 
 import random
 
-from reg_meta_build.id import mint
+from reg_meta_build.id import mint, mint_canonical_scb
 
 _LOW = 1 << 62
 _HIGH = 1 << 63
+_CANON_LOW = 1 << 61  # canonical-SCB sub-band [2^61, 2^62)
 
 
 def test_minted_ids_land_in_band() -> None:
@@ -73,6 +74,32 @@ def test_sos_mint_grammar_tuples_pinned() -> None:
         assert _LOW <= v < _HIGH
     # The synthesized-variant token is the literal "_default".
     assert mint("sos", "lss", "_default") != mint("sos", "lss")
+
+
+def test_canonical_scb_ids_land_in_reserved_sub_band() -> None:
+    """Canonical-SCB ids (#444) land in [2^61, 2^62): LOW-band (so they pass the
+    SCB-provider band check `id < 2^62`) yet above every real source-derived SCB
+    id and disjoint from the minted band [2^62, 2^63)."""
+    rng = random.Random(20260618)
+    for _ in range(10_000):
+        parts = [
+            "".join(rng.choices("abcdefghijklmnop0123456789-", k=rng.randint(1, 24)))
+            for _ in range(rng.randint(1, 4))
+        ]
+        c = mint_canonical_scb(*parts)
+        assert _CANON_LOW <= c < _LOW, f"{parts!r} → {c} out of the sub-band"
+        assert c < _LOW, "must be low-band (< 2^62) to pass the SCB band check"
+        assert not (_LOW <= c < _HIGH), "must be disjoint from the minted band"
+
+
+def test_canonical_scb_disjoint_from_mint_and_deterministic() -> None:
+    """Same parts → same canonical-SCB id, and never equal to the high-band
+    `mint` of the same parts."""
+    assert mint_canonical_scb("scb", "utrikeshandel-tjanster") == mint_canonical_scb(
+        "scb", "utrikeshandel-tjanster"
+    )
+    assert mint_canonical_scb("scb", "x") != mint("scb", "x")
+    assert mint_canonical_scb("scb", "a") != mint_canonical_scb("scb", "a", "_default")
 
 
 def test_mint_encoding_is_unambiguous() -> None:

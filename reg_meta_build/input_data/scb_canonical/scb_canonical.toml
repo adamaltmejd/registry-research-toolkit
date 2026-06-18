@@ -1,0 +1,82 @@
+# Curated CANONICAL-SCB catalog (#444) — SCB registers SWECOV holds that are
+# absent from SCB's machine export, modelled onto the `scb` provider. Read by
+# reg_meta_build.sources.curated.CanonicalScbAdapter (low-band ids; value sets
+# loaded from companion <name>.csv code lists).
+#
+# These are CANONICAL SCB content (not steward-flavor): the catalog attributes them
+# to `scb`, and they carry real value sets. The `column` tokens are the documented
+# SCB variable names; categorical columns reference a value set via `value_set`,
+# loaded from `<value_set>.csv` (columns `code,label`) in this directory.
+
+
+# ── Utrikeshandel med tjänster (UHT) ────────────────────────────────────────────
+# Source: SCB's UHT delivery documentation ("Information om mikrodata från UHT" /
+# "Bra att veta om UHT mikrodata") + KodBeskrivning_UHT_30JUN25.xlsx (the Scbtext /
+# Landtext code lists → scbkoder.csv / landkoder.csv). The survey: quarterly
+# company-reported foreign trade in services, BPM6-classified; available years
+# 2004–2024 (2003 excluded as unstable). A 2017 production-system change renamed
+# some variables but the content is unchanged. reg_meta already has utrikeshandel
+# med VAROR (scb/utrikeshandel); this is the missing TJÄNSTER sibling.
+[[register]]
+key = "utrikeshandel-tjanster"
+name = "Utrikeshandel med tjänster"
+valid_from = "2004-01-01"  # first delivered year (2003 excluded)
+purpose = "Utrikeshandel med tjänster (UHT): företagens kvartalsvis rapporterade utrikes tjänstehandel, klassificerad enligt IMF:s betalningsbalansmanual BPM6. Belopp i tusentals kronor, fördelat på tjänsteslag (Scbkod) och motpartsland (Landkod). Levererade årgångar 2004–2024. Komplement till utrikeshandel med varor (scb/utrikeshandel)."
+
+[[register.variable]]
+name = "Person-/organisationsnummer"
+column = "Peorgnr"
+definition = "Person- eller organisationsnummer för det rapporterande företaget (levereras pseudonymiserat som ScbID = Peorgnr + löpnummer)."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
+[[register.variable]]
+name = "Redovisningsår"
+column = "Ar"
+definition = "Redovisningsår (årgång)."
+data_type = "text"
+
+[[register.variable]]
+name = "Kvartal"
+column = "Kvartal"
+definition = "Redovisningskvartal (1–4)."
+data_type = "text"
+
+[[register.variable]]
+name = "Tjänsteslag (Scbkod)"
+column = "Scbkod"
+definition = "Tjänsteslag enligt SCB:s kodlista (BPM6), t.ex. 410 = datatjänster. Klartext i Scbtext."
+data_type = "text"
+value_set = "scbkoder"
+
+[[register.variable]]
+name = "Land (Landkod)"
+column = "Landkod"
+definition = "Motpartsland enligt SCB:s landkodlista. Klartext i Landtext. Obs: en del uppgifter är ej landfördelade (landfördelning blev obligatorisk 2013)."
+data_type = "text"
+value_set = "landkoder"
+
+[[register.variable]]
+name = "Riktning"
+column = "Riktning"
+definition = "Handelsriktning i den nyare leveransstrukturen: 1 = export/intäkt, 5 = import/kostnad."
+data_type = "text"
+
+[[register.variable]]
+name = "Värde"
+column = "Varde"
+definition = "Handelsvärde i tusentals kronor (nyare leveransstruktur; kombineras med Riktning för export/import)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Intäkt (export)"
+column = "Intakt"
+definition = "Exportvärde i tusentals kronor (äldre leveransstruktur, årgångar t.o.m. 2020 — motsvarar Riktning=1/Värde i den nyare strukturen)."
+data_type = "decimal"
+
+[[register.variable]]
+name = "Kostnad (import)"
+column = "Kostnad"
+definition = "Importvärde i tusentals kronor (äldre leveransstruktur, årgångar t.o.m. 2020 — motsvarar Riktning=5/Värde i den nyare strukturen)."
+data_type = "decimal"

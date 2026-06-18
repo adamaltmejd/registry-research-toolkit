@@ -58,6 +58,7 @@ gets a synthesized `_default` variant, the single-table case):
 
 from __future__ import annotations
 
+import csv
 import re
 import tomllib
 from dataclasses import dataclass
@@ -66,8 +67,8 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import curation_error
 from reg_meta_build.classifications import declared_short_names
-from reg_meta_build.db import _file_sha256
-from reg_meta_build.id import mint
+from reg_meta_build.db import _file_sha256, _value_set_hash
+from reg_meta_build.id import mint, mint_canonical_scb
 from reg_meta_build.ir import (
     IRRegister,
     IRVariable,
@@ -77,6 +78,7 @@ from reg_meta_build.ir import (
 )
 
 if TYPE_CHECKING:
+    import sqlite3
     from collections.abc import Iterator
     from pathlib import Path
 
@@ -110,6 +112,7 @@ _VARIABLE_KEYS = frozenset(
         "valid_to",
         "variants",
         "classification",
+        "value_set",
     }
 )
 
@@ -128,6 +131,7 @@ class _CuratedVariable:
     valid_to: str | None  # None → open-ended (materializer writes the sentinel)
     variants: tuple[str, ...] | None  # None → delivered in every variant
     classification: str | None  # None → unlinked; else an existing catalog short_name
+    value_set: str | None  # None → no value set; else a code-list name (canonical-scb)
 
 
 @dataclass(frozen=True)
@@ -160,6 +164,10 @@ class CuratedAdapter:
         self, provider: str, *, classification_seed_path: Path | None = None
     ) -> None:
         self.provider = provider
+        # The id-minting function. The base thin-provider adapter mints into the
+        # high band; `CanonicalScbAdapter` overrides this with `mint_canonical_scb`
+        # to keep its `scb`-provider ids in the low band (#444).
+        self._mint = mint
         # The seed the build was invoked with (`build_db(seed_path=...)`), so
         # `classification` validation checks the SAME manifest
         # `populate_classifications` seeds; None → the in-repo default.
@@ -408,6 +416,7 @@ class CuratedAdapter:
             valid_to=valid_to,
             variants=variants,
             classification=self._opt_str(entry, "classification"),
+            value_set=self._opt_str(entry, "value_set"),
         )
 
     def _req_str(self, path: Path, entry: dict, field: str, ctx: str) -> str:
@@ -480,7 +489,7 @@ class CuratedAdapter:
     # -- emit ----------------------------------------------------------------
 
     def _emit_register(self, reg: _CuratedRegister) -> Iterator[IRObject]:
-        register_id = mint(self.provider, reg.key)
+        register_id = self._mint(self.provider, reg.key)
         self.row_counts[f"{self.provider}:{reg.key}"] = len(reg.variables)
         yield IRRegister(
             register_id=register_id,
@@ -493,7 +502,7 @@ class CuratedAdapter:
 
         variant_ids: dict[str, int] = {}
         for variant in reg.variants:
-            variant_id = mint(self.provider, reg.key, variant.key)
+            variant_id = self._mint(self.provider, reg.key, variant.key)
             variant_ids[variant.key] = variant_id
             yield IRVariant(
                 register_variant_id=variant_id,
@@ -510,6 +519,14 @@ class CuratedAdapter:
                 reg, register_id, variant_ids, all_variant_keys, var
             )
 
+    def _value_set_id_for(
+        self, reg: _CuratedRegister, var: _CuratedVariable
+    ) -> int | None:
+        """The shared `value_set_id` a variable's states reference. The base
+        thin-provider adapter emits no value sets, so always None. Overridden by
+        `CanonicalScbAdapter` to intern a column's code list (#444)."""
+        return None
+
     def _emit_variable(
         self,
         reg: _CuratedRegister,
@@ -518,15 +535,17 @@ class CuratedAdapter:
         all_variant_keys: tuple[str, ...],
         var: _CuratedVariable,
     ) -> Iterator[IRObject]:
-        variable_id = mint(self.provider, reg.key, var.column)
+        variable_id = self._mint(self.provider, reg.key, var.column)
+        # Per-variable value set: None for the base thin-provider adapter (it emits
+        # no value sets); `CanonicalScbAdapter` interns a code list and returns its
+        # shared value_set_id. Every state of this variable shares it.
+        value_set_id = self._value_set_id_for(reg, var)
         if var.classification is not None:
             # ONE candidate per variable (not per state): the candidate keys on
-            # variable_id, and all this variable's states share value_set_id=None
-            # (curated providers emit no value sets). The link is by the catalog
-            # classification's `short_name`, resolved provider-blind at feed time
-            # (db._feed_classification_candidates) — no codes minted here.
+            # variable_id. The link is by the catalog classification's `short_name`,
+            # resolved provider-blind at feed time (db._feed_classification_candidates).
             self.classification_candidates.append(
-                (variable_id, None, var.classification)
+                (variable_id, value_set_id, var.classification)
             )
         yield IRVariable(
             variable_id=variable_id,
@@ -552,7 +571,7 @@ class CuratedAdapter:
         for vk in target_keys:
             variant_id = variant_ids[vk]
             yield IRVariableState(
-                state_id=mint(self.provider, reg.key, var.column, vk),
+                state_id=self._mint(self.provider, reg.key, var.column, vk),
                 variable_id=variable_id,
                 register_variant_id=variant_id,
                 valid_from=valid_from,
@@ -560,7 +579,7 @@ class CuratedAdapter:
                 data_type=var.data_type,
                 data_length=None,
                 delivery_column_name=var.column,
-                value_set_id=None,
+                value_set_id=value_set_id,
                 value_set_version_label=None,
             )
             yield IRVariableAlias(
@@ -568,3 +587,122 @@ class CuratedAdapter:
                 register_variant_id=variant_id,
                 delivery_column_name=var.column,
             )
+
+
+class CanonicalScbAdapter(CuratedAdapter):
+    """Emit IR for CANONICAL-SCB content curated onto the `scb` provider (#444).
+
+    SCB registers SWECOV holds but that are absent from SCB's machine export
+    (Utrikeshandel med tjänster; the AGI employer-declaration header). It reuses
+    `CuratedAdapter`'s TOML parsing but differs in two ways:
+
+    - **Low-band ids.** `mint_canonical_scb` puts register/variant/variable/state
+      ids in the reserved sub-band ``[2^61, 2^62)`` so they pass the SCB-provider
+      band check (SCB ids must be ``< 2^62``) yet stay disjoint from real
+      source-derived SCB ids. The provider is ``"scb"`` → the materializer attributes
+      the rows to provider_id 1 (no new provider seed).
+    - **Real value sets.** A categorical column carries ``value_set = "<name>"``; the
+      adapter loads ``<name>.csv`` (``code,label``) and interns it into
+      ``value_code`` / ``value_set`` / ``value_set_member`` content-addressed (the
+      same INSERT-OR-IGNORE pattern SCB/SOS use), then links the state's
+      ``value_set_id``. This needs a DB connection and MUST run AFTER the SCB adapter
+      so the AUTOINCREMENT ``value_code`` ids pick up after SCB's high-water mark.
+
+    The committed input is `input_data/scb_canonical/scb_canonical.toml` plus the
+    `<name>.csv` code lists.
+    """
+
+    SOURCE_FILE = "scb_canonical.toml"
+
+    def __init__(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        classification_seed_path: Path | None = None,
+    ) -> None:
+        super().__init__("scb", classification_seed_path=classification_seed_path)
+        self._mint = mint_canonical_scb
+        self._conn = conn
+        self._source_dir: Path | None = None
+        self._set_id_by_hash: dict[bytes, int] = {}
+        self._codes_cache: dict[str, list[tuple[str, str]]] = {}
+
+    def emit(self, source_dir: Path) -> Iterator[IRObject]:
+        self._source_dir = source_dir
+        toml_path = source_dir / self.SOURCE_FILE
+        if not toml_path.is_file():
+            raise curation_error(
+                "curated_toml_not_found",
+                f"Canonical-SCB file not found: {toml_path}",
+                f"Author {self.SOURCE_FILE} under {source_dir}.",
+            )
+        self.source_checksums[toml_path.name] = _file_sha256(toml_path)
+        for reg in self._load(toml_path):
+            yield from self._emit_register(reg)
+
+    def _value_set_id_for(
+        self, reg: _CuratedRegister, var: _CuratedVariable
+    ) -> int | None:
+        if var.value_set is None:
+            return None
+        return self._ensure_value_set(self._load_codes(var.value_set))
+
+    def _load_codes(self, name: str) -> list[tuple[str, str]]:
+        if name in self._codes_cache:
+            return self._codes_cache[name]
+        assert self._source_dir is not None
+        csv_path = self._source_dir / f"{name}.csv"
+        if not csv_path.is_file():
+            raise curation_error(
+                "curated_value_set_missing",
+                f"Value-set code list not found: {csv_path}",
+                f"Author {name}.csv (header `code,label`) under {self._source_dir}.",
+            )
+        pairs: list[tuple[str, str]] = []
+        with csv_path.open(newline="", encoding="utf-8") as fh:
+            reader = csv.reader(fh)
+            next(reader, None)  # header
+            for row in reader:
+                if len(row) < 2 or not row[0].strip():
+                    continue
+                pairs.append((row[0].strip(), row[1].strip()))
+        self.source_checksums[csv_path.name] = _file_sha256(csv_path)
+        self._codes_cache[name] = pairs
+        return pairs
+
+    def _ensure_value_set(self, codes: list[tuple[str, str]]) -> int | None:
+        """Content-addressed value-set write (mirrors sos._ensure_value_set):
+        `value_code` dedups on (code, label), `value_set` on member_hash; both keep
+        AUTOINCREMENT ids, provider-shared and unbanded. Returns the shared
+        value_set_id, or None for an empty list."""
+        if not codes:
+            return None
+        conn = self._conn
+        member_hash = _value_set_hash(codes)
+        cached = self._set_id_by_hash.get(member_hash)
+        if cached is not None:
+            return cached
+        code_id_of: dict[tuple[str, str], int] = {}
+        for code, label in codes:
+            conn.execute(
+                "INSERT OR IGNORE INTO value_code (code, label) VALUES (?, ?)",
+                (code, label),
+            )
+            code_id_of[(code, label)] = conn.execute(
+                "SELECT code_id FROM value_code WHERE code = ? AND label = ?",
+                (code, label),
+            ).fetchone()[0]
+        conn.execute(
+            "INSERT OR IGNORE INTO value_set (member_hash) VALUES (?)", (member_hash,)
+        )
+        set_id = conn.execute(
+            "SELECT value_set_id FROM value_set WHERE member_hash = ?", (member_hash,)
+        ).fetchone()[0]
+        for code, label in codes:
+            conn.execute(
+                "INSERT OR IGNORE INTO value_set_member (value_set_id, code_id) "
+                "VALUES (?, ?)",
+                (set_id, code_id_of[(code, label)]),
+            )
+        self._set_id_by_hash[member_hash] = set_id
+        return set_id
