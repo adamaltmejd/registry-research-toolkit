@@ -18,9 +18,11 @@
 #
 # Coverage: the SweSAT database runs from spring 1977 (provtillfälle YYYYA/YYYYB) and
 # is ongoing → register valid_from = 1977, open-ended. Per-variable validity captures
-# documented lifecycles: the 2011 restructure introduced MEK, KVA, XYZ and the
-# verbal/quantitative SECTION scores; ELF replaced the original study-technique
-# subtest STUF in 1992 (STUF ran 1977–1991); the general-knowledge subtest AO was
+# documented lifecycles: the autumn-2011 (HT2011) restructure introduced MEK, KVA,
+# XYZ and the verbal/quantitative SECTION scores (valid_from = 2011-07-01, so the
+# catalog does not advertise them for the spring VT2011 sitting); ELF replaced the
+# original study-technique subtest STUF in 1992 (STUF ran 1977–1991); the
+# general-knowledge subtest AO was
 # discontinued after 1995; provort was recorded as Län t.o.m. 1983 and as a specific
 # Lärosäte fr.o.m. 1984. FLAG: DTK and NOG introduction dates are not precisely
 # modelled — they inherit the 1977 register start.
@@ -83,7 +85,7 @@ name = "Meningskomplettering (MEK)"
 column = "MEK"
 definition = "Delprov MEK — meningskomplettering (verbal del). Råpoäng."
 data_type = "integer"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Engelsk läsförståelse (ELF)"
@@ -97,14 +99,14 @@ name = "Matematisk problemlösning (XYZ)"
 column = "XYZ"
 definition = "Delprov XYZ — matematisk problemlösning (kvantitativ del). Råpoäng."
 data_type = "integer"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Kvantitativa jämförelser (KVA)"
 column = "KVA"
 definition = "Delprov KVA — kvantitativa jämförelser (kvantitativ del). Råpoäng."
 data_type = "integer"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Kvantitativa resonemang (NOG)"
@@ -137,28 +139,28 @@ name = "Verbal delsumma (Verb)"
 column = "Verb"
 definition = "Verbal delprovssumma (summerade verbala råpoäng)."
 data_type = "integer"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Kvantitativ delsumma (Kvant)"
 column = "Kvant"
 definition = "Kvantitativ delprovssumma (summerade kvantitativa råpoäng)."
 data_type = "integer"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Verbalt normerat resultat (VeNorm)"
 column = "VeNorm"
 definition = "Verbalt normerat resultat (0,00–2,00)."
 data_type = "decimal"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Kvantitativt normerat resultat (KvNorm)"
 column = "KvNorm"
 definition = "Kvantitativt normerat resultat (0,00–2,00)."
 data_type = "decimal"
-valid_from = "2011-01-01"
+valid_from = "2011-07-01"
 
 [[register.variable]]
 name = "Normerat resultat (Norm)"
