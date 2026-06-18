@@ -1599,11 +1599,26 @@ where `[[column_merge]]` / `[[fold_override]]` act on column IDENTITY before sta
 exist, `codelivery.toml` acts on VALUE-SET SELECTION for a column that is already a
 single identity with competing codings.
 
-Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` → `keep_label`
-or a `latest_year` rule — that the co-delivery cascade (`_resolve_column_year`) uses as
-its highest-priority step (above authority / recency / historical-grain). The column key
-is stored case-folded via `_curation.fold_column` so that a curated column name and the
-coalescer component key agree even if SCB changes the header casing in a later export.
+Each entry is a **source-id-keyed pin** — `(register_id, var_id, column)` — resolved one
+of two ways: `keep = "<emitted label>"` pins one value-set version label (matched
+against the emitted label in `variable_state`, not the raw source label — a
+fold/collapse can relabel); `keep_rule = "latest_year"` picks, per contested year, the
+coding whose label embeds the latest 4-digit year (for recurring per-year vintage
+columns like SFI `Skolkod` where a single `keep` label can't span every year). The
+column key is stored case-folded via `_curation.fold_column` so that a curated column
+name and the coalescer component key agree even if SCB changes the header casing in a
+later export.
+
+Curation is **step 8 of 11** in the within-column cascade (`_resolve_column_year`) — a
+manual tie-breaker reached only after the seven deterministic steps fail to produce a
+single winner: authority → recency → current/historical-grain → value-set fold →
+supersession (latest-introduced wins the transition year) → same-label drift (keep
+largest) → label freshness (final > preliminary, calendar > academic, latest dated
+snapshot, HT > VT). Steps 9–11 (extends-later, cosmetic, genuine) run if curation also
+leaves a tie. Curation is deliberately low in the cascade: the deterministic steps
+handle all the recurring families (preliminär/final, sub-annual HT/VT, dated snapshots,
+SNI vintage transitions), and only genuinely one-off re-codings the deterministic steps
+cannot distinguish reach step 8.
 
 **Scope.** SCB-only: loaded only on the SCB adapter path, silently a no-op for an absent
 register (partial- and synthetic-build escape). It is NOT a generic variable-state-field
@@ -1611,10 +1626,17 @@ override and NOT a cross-provider relation surface.
 
 **Cardinality and validation.** The file is a maintainer artifact — absent from wheel
 installs and synthetic builds (empty ⇒ no pins). A pin for a register present in the
-build but whose column is never contested in any edition FAILS the build (`EXIT_CONFIG`)
-after the co-delivery pass runs, so stale pins surface early. A pin for a register
-absent from the build is inert (the partial-build escape, shared with
-`source_column_repairs.toml`).
+build but whose column is **never contested** (the conflict is resolved by an earlier
+deterministic step, or the column simply never has competing codings) lingers
+**undetected** — the shipped DB is still valid, since the cascade already resolved the
+column correctly; there is no stale-pin build failure for this case. The build only
+fails (`EXIT_CONFIG`, `coalesce_unresolved_codelivery`) when a column **still resolves
+to >1 value set after the entire cascade** — a genuinely ambiguous same-column
+co-delivery the pin failed to resolve. A pin for a register absent from the build is
+inert (the partial-build escape). This differs from `source_column_repairs.toml`: its
+`fold_override_unused` check DOES fail the build on a stale present-register entry (an
+unconsumed fold-override for a live register fails `EXIT_CONFIG`), so the two files in
+the twin pair do not share the same stale-pin behavior.
 
 **Relationship to `source_column_repairs.toml`.** These two files are the curation twin
 pair for SCB column-level repair:
