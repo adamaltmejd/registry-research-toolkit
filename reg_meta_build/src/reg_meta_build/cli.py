@@ -48,7 +48,7 @@ from .concept_groups import (
 )
 from .db import build_db
 from .doc_db import build_doc_db, repo_docs_dir
-from .extend_db import extend_db
+from .extend_db import extend_db, resolve_steward_slug_dir
 from .fqid_slugs import (
     SNAPSHOT_FILENAME,
     diff_snapshot,
@@ -442,11 +442,14 @@ def _build_parser() -> argparse.ArgumentParser:
             "silently dangles the ref. A curated pin (precedence 1 in slug population)\n"
             "freezes that slug. The build-side curation gate makes the pin MANDATORY,\n"
             "so a new entity-key variable can't ship un-pinned.\n\n"
-            "Scope = ALL global providers (#554): any provider's entity-key slug can\n"
-            "churn and dangle a panel ref, so every provider present in a build-db DB\n"
-            "is emitted. Steward/swecov providers appear only in extend-db (whose\n"
-            "flavored validate passes no slug_dir → the gate self-skips), so they're\n"
-            "never reached.\n\n"
+            "Scope (default, GLOBAL build) = ALL global providers (#554): any\n"
+            "provider's entity-key slug can churn and dangle a panel ref, so every\n"
+            "provider present in a build-db DB is emitted.\n\n"
+            "--flavored (#559): generate STEWARD pins from a flavored (extend-db) DB.\n"
+            "Point --slug-dir at the steward dir (fqid_slugs/<steward>/); the\n"
+            "generator scopes to the providers that dir covers and excludes the global\n"
+            "base's already-pinned entity-key vars. Steward-scoping is required for\n"
+            "correctness on a flavored DB, not just to avoid extra emits.\n\n"
             "Idempotent: variables already carrying a hand-curated `[variable]` slug\n"
             "(the existing #539 pins) are SKIPPED, so re-running after the pins are\n"
             "committed emits nothing. Reads a built DB; never mutates it. The\n"
@@ -501,6 +504,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Directory of curated slug TOMLs to read for already-pinned variables "
             "(default: reg_meta_build/fqid_slugs/ when run from a repo checkout)."
+        ),
+    )
+    entity_key_pins_p.add_argument(
+        "--flavored",
+        action="store_true",
+        help=(
+            "Generate STEWARD pins from a flavored (extend-db) DB — scope to the "
+            "providers covered by --slug-dir (point it at the steward dir "
+            "fqid_slugs/<steward>/) and exclude the global base's already-pinned "
+            "entity-key vars."
         ),
     )
 
@@ -672,15 +685,20 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
-def _flavored_validate_hook() -> Callable[[Path], None]:
+def _flavored_validate_hook(slug_dir: Path | None) -> Callable[[Path], None]:
     """Return an extend_db pre_rename_hook running the FLAVORED validator against
     the staging DB. Same fail-on-failures shape as ``_build_validate_hook``, but
     ``flavored=True`` (the tightened non-SCB minted-id band check) and
     ``corpus=False`` (a flavor adds a steward tail, not the SCB/SOS bulk, so the
-    real-corpus volume floors don't apply)."""
+    real-corpus volume floors don't apply).
+
+    Threads the resolved STEWARD ``slug_dir`` (the dir the overlay populated) into
+    the validator so the entity-key curation gate (#559) runs on the overlay,
+    scoped to the steward providers that dir covers. ``None`` (``--skip-slugs``)
+    self-skips the gate."""
 
     def hook(staging_db: Path) -> None:
-        validation = validate_built_db(staging_db, flavored=True)
+        validation = validate_built_db(staging_db, flavored=True, slug_dir=slug_dir)
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
         if validation.failures:
@@ -707,9 +725,16 @@ def _flavored_validate_hook() -> Callable[[Path], None]:
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else default_db_dir()
-    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
-
-    pre_rename_hook = None if args.no_validate else _flavored_validate_hook()
+    # Resolve the steward slug dir ONCE and feed the SAME value to both the
+    # flavored validate hook (so its entity-key gate reads the dir the overlay
+    # populated) and `extend_db` (which re-resolves idempotently). Mirrors
+    # `_cmd_build_db`'s resolve-once pattern.
+    slug_dir = resolve_steward_slug_dir(
+        Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None,
+        args.steward,
+        skip_slugs=args.skip_slugs,
+    )
+    pre_rename_hook = None if args.no_validate else _flavored_validate_hook(slug_dir)
     result = extend_db(
         base_db=Path(args.base_db),
         inventory_path=Path(args.inventory),
@@ -1146,7 +1171,7 @@ def _cmd_entity_key_pins(
     # DB should fail fast with the standard schema-mismatch error.
     conn = open_db(db)
     try:
-        pins = infer_entity_key_pins(conn, slug_dir)
+        pins = infer_entity_key_pins(conn, slug_dir, flavored=args.flavored)
     finally:
         conn.close()
 
@@ -1185,6 +1210,7 @@ def _cmd_entity_key_pins(
             "out_dir": args.out_dir,
             "output_toml": args.output_toml,
             "force": args.force,
+            "flavored": args.flavored,
         },
         db_info=None,
         data=data,

@@ -1196,15 +1196,22 @@ def write_auto_toml(
 # entity-key var can't ship un-pinned. Both share `iter_entity_key_variables`
 # so they enumerate the exact same set.
 #
-# Scope = ALL global providers (#554). Every provider present in the build-db DB
-# is under mandatory curation (no provider filter — the set is whatever the DB
-# holds, so onboarding a provider can't silently drop it): any provider's
-# entity-key vars can dangle a panel ref as
-# its slug churns. No provider filter is applied — the enumerator yields every
-# provider, and the GLOBAL-build-only scope is encoded by the gate's
-# `slug_dir is None` skip: synthetic CI and the flavored extend-db overlay pass
-# `slug_dir=None`, so steward/swecov providers (which only appear in extend-db)
-# never reach this gate.
+# GLOBAL-build scope = ALL global providers (#554). On the global build-db path
+# every provider present in the DB is under mandatory curation (no provider
+# filter — the set is whatever the DB holds, so onboarding a provider can't
+# silently drop it): any provider's entity-key vars can dangle a panel ref as its
+# slug churns.
+#
+# FLAVORED (extend-db) scope = the STEWARD providers only (#559). The flavored
+# DB = released global base + steward overlay, so it carries BOTH global and
+# steward entity-key vars; the global ones are already enforced at global-build
+# time and live in the global slug dir, not the steward dir. The flavored
+# caller passes `providers={steward providers covered by the steward slug_dir}`
+# so the gate/generator enforce/emit ONLY the steward set. Steward-scoping is
+# REQUIRED for correctness, not just to dodge false failures:
+# `_variable_source_ids` is unsafe on a flavored DB for GLOBAL registers
+# (split-sibling discriminators can diverge from the incremental slug path), so
+# the provider filter must skip a non-steward row BEFORE that helper runs.
 
 
 def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
@@ -1289,6 +1296,8 @@ def _variable_source_ids(conn: sqlite3.Connection, register_id: int) -> dict[int
 
 def iter_entity_key_variables(
     conn: sqlite3.Connection,
+    *,
+    providers: set[str] | None = None,
 ) -> Iterator[EntityKeyVariable]:
     """Yield every panel entity-key variable on a built DB.
 
@@ -1303,11 +1312,20 @@ def iter_entity_key_variables(
 
     Shared by the pin generator (`infer_entity_key_pins`) and the curation gate
     (`validate._check_entity_key_vars_curated`) so the two can't disagree on
-    which variables need a pin. PROVIDER-GENERAL by design: it yields every
-    provider's entity-key vars, and (#554) ALL global providers are under
-    mandatory curation, so neither caller filters by provider — the GLOBAL-build
-    scope is encoded by the gate's `slug_dir is None` skip (synthetic CI +
-    flavored extend-db pass None), not a provider allow-list."""
+    which variables need a pin. Default (``providers=None``) is PROVIDER-GENERAL:
+    it yields every provider's entity-key vars, the unscoped behavior the GLOBAL
+    build/generator + gate use (#554, all global providers under mandatory
+    curation).
+
+    ``providers`` (a set of provider slugs) feeds the FLAVORED (steward-scoped)
+    gate/generator (#559): a flavored DB carries the global base PLUS a steward
+    overlay, but only the steward providers belong to the steward slug dir, so
+    the flavored caller passes the steward scope to enforce/emit ONLY those. The
+    filter is applied at the TOP of the row loop — a non-matching provider's row
+    is skipped BEFORE `_variable_source_ids` runs for its register, which MATTERS
+    for correctness: `_variable_source_ids` is documented unsafe on a flavored DB
+    for GLOBAL registers (split-sibling discriminators can diverge from the
+    incremental slug path), so a global row must never reach it."""
     rows = conn.execute(
         "SELECT rv.register_id, rv.panel_entity_key, "
         "       r.slug AS register_slug, r.name AS register_name, "
@@ -1320,6 +1338,8 @@ def iter_entity_key_variables(
     source_ids_by_register: dict[int, dict[int, str]] = {}
     seen: set[int] = set()
     for row in rows:
+        if providers is not None and row["provider_slug"] not in providers:
+            continue  # flavored scope: skip non-steward rows before _variable_source_ids
         register_id = row["register_id"]
         for slug in _decode_panel_entity_key_refs(row["panel_entity_key"]):
             hit = conn.execute(
@@ -1372,22 +1392,30 @@ def _source_id_sort_key(source_id: str) -> tuple[int, int, int, str]:
 
 
 def infer_entity_key_pins(
-    conn: sqlite3.Connection, slug_dir: Path
+    conn: sqlite3.Connection, slug_dir: Path, *, flavored: bool = False
 ) -> list[EntityKeyPin]:
-    """Pins for every entity-key variable NOT already curated, all providers.
+    """Pins for every entity-key variable NOT already curated.
 
     Reads a built DB; never mutates it. For each entity-key variable
-    (`iter_entity_key_variables`) across ALL global providers (#554), emits a pin
-    binding its build `source_id` to its current `variable.slug` — UNLESS
-    `(provider, source_id)` already has a hand-curated `[variable]` slug (the
-    generator is idempotent: re-running after the pins are committed emits
-    nothing, and the existing #539 pins are never duplicated). No provider filter:
+    (`iter_entity_key_variables`), emits a pin binding its build `source_id` to
+    its current `variable.slug` — UNLESS `(provider, source_id)` already has a
+    hand-curated `[variable]` slug (the generator is idempotent: re-running after
+    the pins are committed emits nothing, and the existing #539 pins are never
+    duplicated). Sorted numeric-aware by source_id within provider, matching the
+    committed files' ordering.
+
+    Default (``flavored=False``, GLOBAL build) covers ALL global providers (#554):
     a panel ref dangles whenever its keyed variable's slug churns, regardless of
-    provider, so every global provider is pinned (steward/swecov providers only
-    appear in extend-db, whose flavored validate passes `slug_dir=None` → the gate
-    self-skips, so they never reach here). Sorted numeric-aware by source_id
-    within provider, matching the committed files' ordering."""
-    curated = load_curated_variable_slugs(slug_dir)
+    provider, so every global provider is pinned.
+
+    ``flavored=True`` (#559) reads the STEWARD ``slug_dir`` and scopes to the
+    providers it covers — emitting steward pins only. The steward scope is the set
+    of providers present in the steward curation files, so the global base's
+    already-pinned entity-key vars are excluded (and `iter_entity_key_variables`'s
+    flavored-unsafe `_variable_source_ids` never runs on a global register)."""
+    curated_entries = iter_curated_provider_entries(slug_dir)
+    curated = _curated_variable_slugs(curated_entries)
+    scope = {e.provider for e in curated_entries if e.provider} if flavored else None
     pins = [
         EntityKeyPin(
             provider_slug=ek.provider_slug,
@@ -1396,7 +1424,7 @@ def infer_entity_key_pins(
             register_slug=ek.register_slug,
             variable_slug=ek.variable_slug,
         )
-        for ek in iter_entity_key_variables(conn)
+        for ek in iter_entity_key_variables(conn, providers=scope)
         if (ek.provider_slug, ek.source_id) not in curated
     ]
     pins.sort(key=lambda p: (p.provider_slug, _source_id_sort_key(p.source_id)))

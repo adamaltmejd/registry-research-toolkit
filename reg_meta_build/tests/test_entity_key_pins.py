@@ -118,6 +118,7 @@ def _run_entity_key_pins_cli(
         out_dir=str(out_dir) if out_dir is not None else None,
         output_toml=str(output_toml) if output_toml is not None else None,
         force=force,
+        flavored=False,
     )
     payload, code = cli._cmd_entity_key_pins(args)
     return payload["data"], code
@@ -223,6 +224,19 @@ class TestEnumerate:
         _add_sos_entity_key(conn)
         providers = {ek.provider_slug for ek in iter_entity_key_variables(conn)}
         assert providers == {"scb", "sos"}
+
+    def test_providers_scope_yields_only_named(self):
+        """#559: passing `providers={...}` filters to those provider slugs only —
+        a flavored caller scopes to its steward providers so the global base's
+        entity-key vars (whose `_variable_source_ids` is flavored-unsafe) are
+        skipped before that helper runs."""
+        conn = _db_with_entity_key("kon")
+        _add_sos_entity_key(conn)
+        scoped = list(iter_entity_key_variables(conn, providers={"sos"}))
+        assert {ek.provider_slug for ek in scoped} == {"sos"}
+        assert {ek.source_id for ek in scoped} == {"500.LOPNR"}
+        # The empty scope yields nothing (no provider matches).
+        assert list(iter_entity_key_variables(conn, providers=set())) == []
 
     def test_yields_three_part_source_id_for_split_sibling(self):
         """A split-sibling entity-key var carries a 3-part `<reg>.<pk>.<disc>`
@@ -361,6 +375,35 @@ class TestGenerator:
         conn = _db_with_entity_key(["ar", "kon"])
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         assert [p.source_id for p in pins] == ["1.44", "1.99"]
+
+    def test_flavored_scopes_to_steward_dir_providers(self, tmp_path: Path):
+        """#559: `infer_entity_key_pins(conn, steward_dir, flavored=True)` scopes to
+        the providers the steward dir covers. With a DB carrying BOTH a global (scb)
+        and a non-global (sos) entity-key var and a steward dir covering ONLY the
+        non-global provider, the emitted pins are for that provider alone — the scb
+        var (the global base's, whose `_variable_source_ids` is flavored-unsafe) is
+        excluded entirely."""
+        conn = _db_with_entity_key("kon")  # scb 1.44/kon
+        _add_sos_entity_key(conn)  # sos 500.LOPNR/lopnr
+        steward_dir = tmp_path / "steward"
+        steward_dir.mkdir()
+        # Provider scope is derived from the curated ENTRIES' provider (the file
+        # stem): a register slug entry in sos.toml puts `sos` in scope without
+        # pinning the entity-key VARIABLE, so the gate/generator still emit it.
+        # (Mirrors the real steward dir, which always carries register/variant
+        # slug entries — a truly empty TOML would yield no provider in scope.)
+        (steward_dir / "sos.toml").write_text(
+            '[register."500"]\nslug = "dors"\n', encoding="utf-8"
+        )
+
+        pins = infer_entity_key_pins(conn, steward_dir, flavored=True)
+        assert [(p.provider_slug, p.source_id) for p in pins] == [("sos", "500.LOPNR")]
+
+        # Default (flavored=False) over the same dir is unscoped — it would try to
+        # pin the scb var too (no sos curation present), proving the scope is what
+        # excludes scb, not the curated-skip.
+        unscoped = infer_entity_key_pins(conn, steward_dir, flavored=False)
+        assert {p.provider_slug for p in unscoped} == {"scb", "sos"}
 
     def test_non_scb_entity_key_emitted(self, tmp_path: Path):
         """#554: ALL global providers are under mandatory curation, so a non-SCB

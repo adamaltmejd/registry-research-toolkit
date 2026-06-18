@@ -1102,6 +1102,188 @@ class TestFailurePaths:
         assert exc.value.exit_code == EXIT_CONFIG
 
 
+# ── flavored entity-key curation gate (#559) ─────────────────────────────────
+
+
+def _write_steward_slug_dir_with_panel(slug_dir: Path, entity_key_slug: str) -> None:
+    """`_write_steward_slug_dir` + a `panel_entity_key` on the variant pointing at
+    `entity_key_slug` (the belopp var's resolved slug). The variant entry sets the
+    panel key so the overlaid DB carries a STEWARD entity-key variable the flavored
+    gate must enforce."""
+    ids = _steward_register_ids()
+    (slug_dir / ".snapshot.json").write_text("{}\n", encoding="utf-8")
+    (slug_dir / f"{_BANK}.toml").write_text(
+        f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
+        f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
+        'slug = "transaktioner-default"\n'
+        f'panel_entity_key = "{entity_key_slug}"\n',
+        encoding="utf-8",
+    )
+
+
+class TestFlavoredEntityKeyGate:
+    """#559: the flavored extend-db validate path runs the entity-key curation
+    gate scoped to the steward providers, end-to-end through the real
+    `extend_db` + `validate_built_db(flavored=True, slug_dir=...)`."""
+
+    def _build_flavored_with_panel(self, tmp_path: Path, global_db: Path) -> Path:
+        """Overlay the base inventory with the steward variant keyed on the belopp
+        var (validate OFF, so an un-pinned key still builds), returning the out DB.
+        The belopp slug is read back from the built DB (not assumed) so the panel
+        ref actually resolves."""
+        ids = _steward_register_ids()
+        # First pass: plain slug dir (no panel key) so the build succeeds and we can
+        # read belopp's auto-derived slug + confirm its source_id key.
+        belopp_slug = self._resolve_belopp_slug(tmp_path, global_db, ids)
+        # Second pass: author the panel key pointing at the CONFIRMED belopp slug.
+        inv_path = tmp_path / "panel-inventory.json"
+        inv_path.write_text(json.dumps(_base_inventory()), encoding="utf-8")
+        slug_dir = tmp_path / "panel-sslug"
+        slug_dir.mkdir()
+        _write_steward_slug_dir_with_panel(slug_dir, belopp_slug)
+        out_dir = tmp_path / "panel-out"
+        out_dir.mkdir()
+        extend_db(
+            base_db=global_db,
+            inventory_path=inv_path,
+            db_dir=out_dir,
+            steward=_STEWARD,
+            slug_dir=slug_dir,
+            pre_rename_hook=None,  # validate OFF: un-pinned key still builds
+        )
+        return out_dir / "reg_meta.db"
+
+    @staticmethod
+    def _resolve_belopp_slug(tmp_path: Path, global_db: Path, ids: dict) -> str:
+        """Build once with the plain steward dir, then READ belopp's resolved slug
+        and assert its source_id is `<register_id>.belopp`."""
+        _, out = _run_extend(tmp_path, global_db, _base_inventory(), out_name="probe")
+        conn = sqlite3.connect(out)
+        slug = conn.execute(
+            "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
+            (ids["register"], "belopp"),
+        ).fetchone()[0]
+        conn.close()
+        assert slug, "belopp must auto-slug on the overlay"
+        return slug
+
+    def test_flavored_gate_fails_unpinned_steward_entity_key(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """The overlaid DB carries a steward entity-key var (belopp) with NO
+        `[variable]` pin → the flavored gate FAILS, naming the steward var's
+        source_id (`<register_id>.belopp`) and "no curated [variable] slug pin"."""
+        ids = _steward_register_ids()
+        out = self._build_flavored_with_panel(tmp_path, global_db)
+        # The steward dir as built has the panel key but no [variable] pin.
+        steward_dir = tmp_path / "panel-sslug"
+        result = validate_built_db(out, flavored=True, slug_dir=steward_dir)
+        assert not result.passed
+        src = f"{ids['register']}.belopp"
+        assert any(
+            f"source_id {src}" in f and "no curated [variable] slug pin" in f
+            for f in result.failures
+        ), result.failures
+
+    def test_flavored_gate_passes_when_steward_entity_key_pinned(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """Adding the `[variable."<register_id>.belopp"]` pin (slug = belopp's
+        resolved slug) clears the flavored gate."""
+        ids = _steward_register_ids()
+        out = self._build_flavored_with_panel(tmp_path, global_db)
+        belopp_slug = (
+            sqlite3.connect(out)
+            .execute(
+                "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
+                (ids["register"], "belopp"),
+            )
+            .fetchone()[0]
+        )
+        # Append the [variable] pin to the steward dir's <bank>.toml.
+        steward_dir = tmp_path / "panel-sslug"
+        bank_toml = steward_dir / f"{_BANK}.toml"
+        bank_toml.write_text(
+            bank_toml.read_text(encoding="utf-8")
+            + f'\n[variable."{ids["register"]}.belopp"]\nslug = "{belopp_slug}"\n',
+            encoding="utf-8",
+        )
+        result = validate_built_db(out, flavored=True, slug_dir=steward_dir)
+        assert result.passed, result.failures
+        assert "entity-key var(s) are curated" in result.format_report()
+
+    def test_flavored_gate_does_not_enforce_global_scb_entity_key(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """The steward-scoped gate ignores the global base's SCB entity-key vars:
+        inject an un-pinned SCB `panel_entity_key` into the overlaid DB and confirm
+        the flavored gate (steward dir, which has the belopp pin) still passes — no
+        scb failure, even though the steward dir has no scb pin."""
+        ids = _steward_register_ids()
+        out = self._build_flavored_with_panel(tmp_path, global_db)
+        belopp_slug = (
+            sqlite3.connect(out)
+            .execute(
+                "SELECT slug FROM variable WHERE register_id = ? AND provider_key = ?",
+                (ids["register"], "belopp"),
+            )
+            .fetchone()[0]
+        )
+        # Pin the steward var so the steward scope is clean, then add an UN-PINNED
+        # SCB panel key on a global SCB variant (the global base's concern, not the
+        # steward's). A global SCB variable + its variant from the synthetic base:
+        conn = sqlite3.connect(out)
+        scb_row = conn.execute(
+            "SELECT vs.register_variant_id, v.slug FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "JOIN register r ON r.register_id = v.register_id "
+            "WHERE r.provider_id = 1 AND v.slug IS NOT NULL LIMIT 1"
+        ).fetchone()
+        assert scb_row is not None, "synthetic base must carry an SCB variable"
+        scb_variant_id, scb_slug = scb_row
+        conn.execute(
+            "UPDATE register_variant SET panel_entity_key = ? "
+            "WHERE register_variant_id = ?",
+            (scb_slug, scb_variant_id),
+        )
+        conn.commit()
+        conn.close()
+        # Steward dir with the belopp pin (steward scope clean) but NO scb pin.
+        steward_dir = tmp_path / "panel-sslug"
+        bank_toml = steward_dir / f"{_BANK}.toml"
+        bank_toml.write_text(
+            bank_toml.read_text(encoding="utf-8")
+            + f'\n[variable."{ids["register"]}.belopp"]\nslug = "{belopp_slug}"\n',
+            encoding="utf-8",
+        )
+        result = validate_built_db(out, flavored=True, slug_dir=steward_dir)
+        # The un-pinned SCB key is OUT of the steward scope — the entity-key gate
+        # must not fail on it (any scb failure means the scope leaked).
+        scb_failures = [
+            f
+            for f in result.failures
+            if "no curated [variable] slug pin" in f and "belopp" not in f
+        ]
+        assert not scb_failures, scb_failures
+
+    def test_flavored_validate_hook_threads_slug_dir(
+        self, tmp_path: Path, global_db: Path
+    ) -> None:
+        """`cli._flavored_validate_hook(steward_dir)` threads the slug_dir into the
+        flavored validator, so the entity-key gate runs on the overlay and FAILS on
+        the un-pinned steward key — proving the hook passes slug_dir through (not a
+        bare `validate_built_db(flavored=True)` that would self-skip the gate)."""
+        from reg_meta_build import cli
+
+        out = self._build_flavored_with_panel(tmp_path, global_db)
+        steward_dir = tmp_path / "panel-sslug"  # panel key, no [variable] pin
+        hook = cli._flavored_validate_hook(steward_dir)
+        with pytest.raises(RegMetaError) as exc:
+            hook(out)
+        assert exc.value.code == "validation_failed"
+        assert "no curated [variable] slug pin" in exc.value.message
+
+
 # ── provider idempotency (_insert_providers) ─────────────────────────────────
 
 
