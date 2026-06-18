@@ -197,12 +197,20 @@ Build and upload fresh if **any** condition is true:
 
 Otherwise copy the prior release's asset forward (8c) and skip the rest of 8a.
 
-As of A4.5 the shipped DB is the **combined SCB+SOS** build, so `input_data/` **must**
-contain the `Socialstyrelsen/` workbooks as well as `SCB/` — the build hard-fails
-`sos_dir_not_found` (exit 10, `EXIT_CONFIG`) without them. `--providers scb,sos` is the
-default now but is passed explicitly here so the release asset stays combined regardless
-of future default changes. (To rebuild the legacy SCB-only asset, use
-`--providers scb`.)
+The shipped DB is the full **global catalog** — every global provider, built with
+build-db's **default** `--providers` set (currently
+`scb,sos,fohm,fk,lakemedelsverket,pliktverket,riksarkivet,umu`, one per
+`fqid_slugs/*.toml`). **Do NOT pin `--providers scb,sos`** — that drops the global thin
+providers (FK, FOHM, Umeå, Riksarkivet, Pliktverket, Läkemedelsverket) and ships an
+incomplete catalog (it is what shipped before v0.16.0). Omit the flag so newly onboarded
+global providers are picked up automatically. `input_data/` **must** contain every
+global provider's seed dir (`SCB/`, `Socialstyrelsen/`, `Folkhalsomyndigheten/`,
+`Forsakringskassan/`, `Lakemedelsverket/`, `Pliktverket/`, `Riksarkivet/`, `UMU/`); a
+missing dir hard-fails the checkout-staleness preflight (#550/#556, exit 10,
+`EXIT_CONFIG`), and a curated `[variable]` pin for a non-built provider hard-fails
+`slug_variable_override_stale`. Flavor/steward providers (`fqid_slugs/swecov/*`, e.g.
+AMS/IAF/Skatteverket) are an extend-db overlay, **not** part of this build. (To rebuild
+the legacy SCB-only asset, use `--providers scb`.)
 
 Checkpoint the WAL into the base file and switch the journal mode to `DELETE` before
 compressing, so the shipped asset is a self-contained single file (no `-wal`/`-shm`
@@ -212,8 +220,7 @@ it directly, regardless of consumer code version. Run via `uv run python -c` (no
 CLI is assumed to exist on the release host).
 
 ```bash
-uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/ \
-  --providers scb,sos
+uv run reg-meta-build build-db --input-dir reg_meta_build/input_data/
 uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" \
   ~/.local/share/reg_meta/reg_meta.db
 zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
