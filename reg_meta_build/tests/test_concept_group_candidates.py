@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta_build.concept_group_candidates import (
-    _strip_slot_number,
+    _strip_digits,
     infer_concept_group_candidates,
     render_candidates_toml,
 )
@@ -106,6 +106,34 @@ class TestGenerator:
         assert c.agreement > 0.9
         # Display label is the RAW common prefix, not the stripped form.
         assert c.group_label == "Åtgärdskod"
+
+    def test_fixed_qualifier_family_emitted(self) -> None:
+        # The shared label carries a FIXED number ("Tillsyn 1 skolbarn …") that equals
+        # one member's slot suffix. Under per-suffix stripping only the suffix-1 member
+        # lost the constant ("Tillsyn  skolbarn …") while the others kept "Tillsyn 1 …",
+        # breaking the common prefix → the family was dropped as a battery. Stripping
+        # ALL digit runs uniformly normalizes every member to "Tillsyn  skolbarn ", so
+        # the family agrees ~1.0 and EMITS. The display label is still the RAW common
+        # prefix ("Tillsyn 1 skolbarn", trimmed).
+        conn = _base_db()
+        for i, suffix in enumerate([1, 2, 3]):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=950 + i,
+                name=f"Tillsyn 1 skolbarn {suffix}",
+                slug=f"tillsyn-1-skolbarn-{suffix}",
+            )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.excluded_batteries == 0
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "tillsyn-1-skolbarn-"
+        assert [m.suffix for m in c.members] == [1, 2, 3]
+        assert c.agreement > 0.9
+        # Display label is the RAW common prefix, keeping the fixed "1".
+        assert c.group_label == "Tillsyn 1 skolbarn"
 
     def test_battery_excluded_and_counted(self) -> None:
         # Same stem `f`, genuinely different label TEXT (not just the number) →
@@ -481,30 +509,19 @@ class TestGenerator:
         assert [m.value for m in morsak.members] == ["1", "2", "3"]
 
 
-class TestStripSlotNumber:
-    def test_mid_label_number_removed_once(self) -> None:
-        # The slot number sitting mid-label is removed (first whole-number
-        # occurrence), so number-stripped names of a multi-instance family agree.
-        assert _strip_slot_number("Åtgärdskod 1, den förlösta", 1) == (
+class TestStripDigits:
+    def test_all_digit_runs_removed(self) -> None:
+        # Every maximal digit run is removed (mid-label slot number and any other
+        # numeral), so number-invariant names of a multi-instance family agree.
+        assert _strip_digits("Åtgärdskod 12, den förlösta") == (
             "Åtgärdskod , den förlösta"
         )
-        assert _strip_slot_number("Åtgärdskod 12, den förlösta", 12) == (
-            "Åtgärdskod , den förlösta"
-        )
+        # A fixed numeric qualifier AND the varying slot number both go in one pass —
+        # the constant "1" can't survive on the member whose slot equals it.
+        assert _strip_digits("Tillsyn 1 skolbarn 5") == "Tillsyn  skolbarn "
 
-    def test_substring_of_longer_number_not_clipped(self) -> None:
-        # Digit-boundary aware: a slot number that's a substring of a longer number
-        # in the label is NOT clipped (the "1" inside "ICD-10" / "10" survives).
-        assert _strip_slot_number("ICD-10 kod 1", 1) == "ICD-10 kod "
-        assert _strip_slot_number("Variabel 10", 1) == "Variabel 10"
-
-    def test_only_first_occurrence_removed(self) -> None:
-        # count=1: a second occurrence of the same number is left intact.
-        assert _strip_slot_number("Kod 1 av 1", 1) == "Kod  av 1"
-
-    def test_name_without_number_unchanged(self) -> None:
-        # When the slot number isn't present in the name (e.g. morsak1 named without
-        # a "1"), the name is returned unchanged.
-        assert _strip_slot_number("ICD-kod för multipel dödsorsak", 1) == (
+    def test_name_without_digits_unchanged(self) -> None:
+        # A name carrying no digits is returned unchanged.
+        assert _strip_digits("ICD-kod för multipel dödsorsak") == (
             "ICD-kod för multipel dödsorsak"
         )

@@ -64,16 +64,18 @@ if TYPE_CHECKING:
 _SUFFIX_RE = re.compile(r"^(.*?)(\d+)$")
 
 
-def _strip_slot_number(name: str, suffix: int) -> str:
-    """Remove the FIRST whole-number occurrence of this member's slot number from
-    its name, so a slot number sitting MID-label (`Åtgärdskod 1, den förlösta`)
-    doesn't truncate the family's common label prefix at the digit. Digit-boundary
-    aware (`(?<!\\d)…(?!\\d)`): the "1" inside "10"/"ICD-10" is left alone, so a
-    slot number that's a substring of a longer number can't be clipped. When the
-    number isn't present in the name (e.g. `morsak1` named "ICD-kod för multipel
-    dödsorsak"), the name is returned unchanged. Used ONLY to score agreement — the
-    DISPLAY label still derives from the raw names."""
-    return re.sub(rf"(?<!\d){re.escape(str(suffix))}(?!\d)", "", name, count=1)
+def _strip_digits(name: str) -> str:
+    """Normalize a label for AGREEMENT scoring by removing every maximal digit run,
+    so a number sitting MID-label (`Åtgärdskod 1, den förlösta`) doesn't truncate the
+    family's common label prefix at the digit. Stripping ALL digit runs uniformly —
+    not just the member's own slot number — removes a FIXED numeric qualifier shared
+    by the whole family (`Tillsyn 1 skolbarn …`, where "1" is a constant, not the
+    slot) identically across every member, so the common prefix survives instead of
+    breaking on the one member whose slot number equals that constant. Handles
+    mid-label slot numbers, fixed qualifiers, and zero-padded numerals in one pass.
+    Used ONLY to score agreement — the DISPLAY label still derives from the raw
+    names."""
+    return re.sub(r"\d+", "", name)
 
 
 @dataclass(frozen=True)
@@ -96,8 +98,9 @@ class ConceptGroupCandidate:
     digit-suffixed variables that agreed on a common label prefix. `axis` is a
     PROPOSED facet axis (evidence only — the maintainer overrides), and `agreement`
     is the label-prefix-to-mean-name-length ratio that ranked it — scored on each
-    member's name with ITS OWN slot number removed, so a number sitting mid-label
-    no longer truncates the prefix (see `_strip_slot_number`). Batteries (stems
+    member's name with ALL digit runs removed, so a number sitting mid-label (or a
+    fixed numeric qualifier shared by the family) no longer truncates the prefix (see
+    `_strip_digits`). Batteries (stems
     shared by unrelated columns) fail the agreement gate and are excluded before any
     candidate is constructed, so every instance here is foldable."""
 
@@ -270,10 +273,12 @@ def infer_concept_group_candidates(
     Ungrouped slugged variables are split into `(register_id, stem)` families by
     stripping a trailing digit run; a family with >= `min_siblings` DISTINCT
     suffixes is scored on its members' label agreement. Agreement is NUMBER-INVARIANT:
-    each member's name is scored with its OWN slot number removed
-    (`_strip_slot_number`), so a slot number sitting mid-label (`Åtgärdskod 1, den
-    förlösta` … `Åtgärdskod 12, …`) no longer truncates the common prefix at the
-    digit and a genuine multi-instance family scores ~1.0. A family is FOLDABLE when
+    each member's name is scored with ALL digit runs removed (`_strip_digits`), so a
+    slot number sitting mid-label (`Åtgärdskod 1, den förlösta` … `Åtgärdskod 12, …`)
+    — and a FIXED numeric qualifier shared by the whole family (`Tillsyn 1 skolbarn …`,
+    where the "1" is a constant, not the slot) — no longer truncates the common prefix
+    at the digit, and a genuine multi-instance family scores ~1.0. A family is FOLDABLE
+    when
     its common case-insensitive (number-stripped) name prefix is >= `min_label_prefix`
     chars AND the prefix-to-mean-name-length ratio (`agreement`) is >= `min_agreement`;
     otherwise it's a BATTERY (a stem shared by unrelated columns, whose label TEXT
@@ -341,16 +346,15 @@ def infer_concept_group_candidates(
         if any(n is None for n in names):
             continue
         present_names = [n for n in names if n is not None]
-        # Score agreement on each member's name with its OWN slot number stripped,
-        # so a number sitting mid-label (`Åtgärdskod 1, …` … `Åtgärdskod 12, …`)
+        # Score agreement on each member's name with ALL digit runs stripped, so a
+        # number sitting mid-label (`Åtgärdskod 1, …` … `Åtgärdskod 12, …`) — and a
+        # fixed numeric qualifier shared by the family (`Tillsyn 1 skolbarn …`) —
         # doesn't truncate the common prefix at the digit (a genuine multi-instance
-        # family then scores ~1.0). The DISPLAY label below still derives from the
-        # RAW names, so labels are unchanged.
-        stripped = [
-            _strip_slot_number(var.name, suffix)
-            for suffix, var in members
-            if var.name is not None
-        ]
+        # family then scores ~1.0). Stripping every digit run uniformly (not just each
+        # member's own slot number) keeps the common prefix intact even when the shared
+        # constant equals one member's suffix. The DISPLAY label below still derives
+        # from the RAW names, so labels are unchanged.
+        stripped = [_strip_digits(n) for n in present_names]
         # Case-insensitive prefix scores AGREEMENT only (so "Ålder"/"ålder" agree);
         # it must NOT be sliced back onto an original name, since `casefold()` can
         # change length (e.g. German ß → "ss").
