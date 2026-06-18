@@ -220,9 +220,9 @@ def _tag_membership(row: sqlite3.Row) -> TagMembership:
 # carries the variant `slug` (the `?variant=` browse coordinate) + display fields,
 # not an `Fqid`. A4.4c adds the panel-shape columns (read-only; see reg_webapp/DESIGN.md → Catalog router structure): a
 # `panel_entity_key` that is a bare variable-slug str or a tuple of slugs
-# (composite), the `panel_time_key` ("period" or a variable-slug), and the
-# `panel_time_grain` ('delivery'/'row'). Most variants carry no panel data → all
-# three are None.
+# (composite), the `panel_time_key` ("period", a variable-slug, or a tuple of
+# slugs (composite)), and the `panel_time_grain` ('delivery'/'row'). Most
+# variants carry no panel data → all three are None.
 @dataclass(frozen=True)
 class VariantSummary:
     slug: str
@@ -230,14 +230,15 @@ class VariantSummary:
     description: str | None
     display_group: str | None
     panel_entity_key: str | tuple[str, ...] | None
-    panel_time_key: str | None
+    panel_time_key: str | tuple[str, ...] | None
     panel_time_grain: str | None
 
 
 def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
-    """Decode the stored `panel_entity_key` (A4.4c): a JSON-array string →
-    tuple (composite key), any other string → itself (simple bare slug), NULL →
-    None. Mirrors the `populate_slugs` writer (json.dumps for the tuple case)."""
+    """Decode a stored panel key (A4.4c): a JSON-array string → tuple
+    (composite key), any other string → itself (simple bare slug / "period"),
+    NULL → None. Mirrors the `populate_slugs` writer (json.dumps for the tuple
+    case). Generic — reused for both `panel_entity_key` and `panel_time_key`."""
     if raw is None:
         return None
     if raw.startswith("["):
@@ -660,7 +661,9 @@ class Catalog:
                 description=r["description"],
                 display_group=r["display_group"],
                 panel_entity_key=_decode_panel_entity_key(r["panel_entity_key"]),
-                panel_time_key=r["panel_time_key"],
+                # `_decode_panel_entity_key` is the generic stored-key decoder —
+                # reused for the (now-composite-capable) time key too.
+                panel_time_key=_decode_panel_entity_key(r["panel_time_key"]),
                 panel_time_grain=r["panel_time_grain"],
             )
             for r in rows

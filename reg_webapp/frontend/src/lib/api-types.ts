@@ -1553,9 +1553,9 @@ export interface components {
          *     `Fqid`. Maps 1:1 to
          *     `reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`
          *     fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
-         *     (composite); `panel_time_key` is "period" or a variable-slug;
-         *     `panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data →
-         *     all three are None.
+         *     (composite); `panel_time_key` is "period", a variable-slug, or a list of
+         *     slugs (composite); `panel_time_grain` is 'delivery'/'row'. Most variants
+         *     carry no panel data → all three are None.
          */
         VariantModel: {
             /** Description */
@@ -1569,7 +1569,7 @@ export interface components {
             /** Panel Time Grain */
             panel_time_grain?: string | null;
             /** Panel Time Key */
-            panel_time_key?: string | null;
+            panel_time_key?: string | string[] | null;
             /** Slug */
             slug: string;
         };

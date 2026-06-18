@@ -162,7 +162,8 @@ def _variants_catalog() -> Catalog:
     conn = build_slugged_db()  # scb/lisa + its default variant
     add_register(conn, register_id=2, slug="rams", name="RAMS")
     # `standard` carries A4.4c panel data (composite entity key, stored JSON);
-    # `extended` leaves the panel columns NULL.
+    # `extended` leaves the panel columns NULL. `quarterly` carries a composite
+    # `panel_time_key` (#567 — UHT's (year, quarter) coordinate, stored JSON).
     conn.executemany(
         "INSERT INTO register_variant "
         "(register_variant_id, register_id, slug, name, description, display_group, "
@@ -182,6 +183,17 @@ def _variants_catalog() -> Catalog:
             ),
             (22, 2, "extended", "Extended", None, None, None, None, None),
             (23, 2, None, "Unslugged", None, None, None, None, None),
+            (
+                24,
+                2,
+                "quarterly",
+                "Quarterly",
+                None,
+                None,
+                "peorgnr",
+                json.dumps(["ar", "kvartal"]),
+                "row",
+            ),
         ],
     )
     conn.commit()
@@ -191,7 +203,7 @@ def _variants_catalog() -> Catalog:
 class TestListVariants:
     def test_lists_register_variants_slug_ordered(self) -> None:
         variants = _variants_catalog().list_variants("scb", "rams")
-        assert [v.slug for v in variants] == ["extended", "standard"]
+        assert [v.slug for v in variants] == ["extended", "quarterly", "standard"]
         assert all(isinstance(v, VariantSummary) for v in variants)
 
     def test_carries_name_description_display_group(self) -> None:
@@ -235,9 +247,21 @@ class TestListVariants:
         assert std.panel_time_key == "period"
         assert std.panel_time_grain == "delivery"
 
+    def test_panel_composite_time_key_decoded_to_tuple(self) -> None:
+        # #567: `quarterly`'s JSON-array time key decodes to a tuple on read,
+        # mirroring the composite entity key.
+        q = next(
+            v
+            for v in _variants_catalog().list_variants("scb", "rams")
+            if v.slug == "quarterly"
+        )
+        assert q.panel_entity_key == "peorgnr"
+        assert q.panel_time_key == ("ar", "kvartal")
+        assert q.panel_time_grain == "row"
+
     def test_excludes_null_slug_variants(self) -> None:
-        # rams has 3 register_variants but only 2 are slugged/browse-addressable.
-        assert len(_variants_catalog().list_variants("scb", "rams")) == 2
+        # rams has 4 register_variants but only 3 are slugged/browse-addressable.
+        assert len(_variants_catalog().list_variants("scb", "rams")) == 3
 
     def test_unknown_register_is_empty(self) -> None:
         assert _variants_catalog().list_variants("scb", "nope") == []

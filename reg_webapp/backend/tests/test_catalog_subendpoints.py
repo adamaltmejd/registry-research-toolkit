@@ -197,6 +197,17 @@ def test_variants_endpoint_serializes_panel_fields(client):
     assert default["panel_time_grain"] is None
 
 
+def test_variants_endpoint_serializes_composite_time_key(client):
+    # #567: the `quarterly` variant on rams carries a composite panel_time_key
+    # (UHT's (year, quarter)); it serializes as a JSON list, mirroring the
+    # composite entity key.
+    variants = client.get("/api/catalog/scb/rams/variants").json()["variants"]
+    qtr = next(v for v in variants if v["slug"] == "quarterly")
+    assert qtr["panel_entity_key"] == "peorgnr"
+    assert qtr["panel_time_key"] == ["ar", "kvartal"]
+    assert qtr["panel_time_grain"] == "row"
+
+
 def test_variants_unknown_register_404(client):
     # A typo'd register is a 404, NOT a 200 with an empty list (the resolve guards
     # it before list_variants, so an absent register isn't silently empty).

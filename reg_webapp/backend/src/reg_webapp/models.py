@@ -430,16 +430,16 @@ class VariantModel(BaseModel):
     `Fqid`. Maps 1:1 to
     `reg_meta.catalog.VariantSummary`. A4.4c adds the read-only `panel_*`
     fields: `panel_entity_key` is a bare variable-slug string or a list of slugs
-    (composite); `panel_time_key` is "period" or a variable-slug;
-    `panel_time_grain` is 'delivery'/'row'. Most variants carry no panel data →
-    all three are None."""
+    (composite); `panel_time_key` is "period", a variable-slug, or a list of
+    slugs (composite); `panel_time_grain` is 'delivery'/'row'. Most variants
+    carry no panel data → all three are None."""
 
     slug: str
     name: str | None = None
     description: str | None = None
     display_group: str | None = None
     panel_entity_key: str | list[str] | None = None
-    panel_time_key: str | None = None
+    panel_time_key: str | list[str] | None = None
     panel_time_grain: str | None = None
 
 

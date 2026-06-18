@@ -2335,6 +2335,15 @@ slug = "utrikeshandel-tjanster"
 [register_variant."3084667015646526536.4096212573084827577"]
 slug = "_default"
 display_group = "Utrikeshandel med tjänster"
+# Panel shape (#567): company × year × quarter panel. Entity = the reporting company
+# (peorgnr); time is row-level (Ar/Kvartal columns) so grain = "row". The composite
+# panel_time_key now carries BOTH the year (ar) and the quarter (kvartal) — the quarter
+# no longer collapses, the two slugs together address one delivered quarter.
+# Bulk-delivered (årgångar 2004–2024 in one extract), so time is row-derived, not
+# delivery-aligned.
+panel_entity_key = "peorgnr"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
 
 # Arbetsgivardeklarationer, huvuduppgifter (AGI/Huvud) — canonical-SCB content on the
 # `scb` provider with a low-band mint_canonical_scb id (the employer-level header
@@ -2345,6 +2354,14 @@ slug = "agi-huvud"
 [register_variant."4171412747617845054.2499618086066057846"]
 slug = "_default"
 display_group = "Arbetsgivardeklarationer, huvuduppgifter (AGI)"
+# Panel shape (#567): employer-level monthly panel, mirroring the individual-level
+# sibling register 392 (agi). Entity = employer (peorgnr); delivered per reporting month
+# (AGIHuvud201901…) so time is delivery-aligned → the "period" sentinel with grain =
+# "delivery" (the in-row PERIOD column slugs to "period", which is ALWAYS the time
+# sentinel, never a row-column ref).
+panel_entity_key = "peorgnr"
+panel_time_key = "period"
+panel_time_grain = "delivery"
 
 # Grundskolan: åk 9
 [register."189"]
@@ -5842,4 +5859,10 @@ slug = "personnummer-motsvarande"
 
 [variable."70.29378.uuid-adr"]  # gdb: panel_entity_key = 'uuid-adr'
 slug = "uuid-adr"
+
+[variable."3084667015646526536.Peorgnr"]  # utrikeshandel-tjanster: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
+
+[variable."4171412747617845054.PeOrgNr"]  # agi-huvud: panel_entity_key = 'peorgnr'
+slug = "peorgnr"
 

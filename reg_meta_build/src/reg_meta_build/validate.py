@@ -776,9 +776,11 @@ def _check_panel_refs_resolve(
             refs.extend(("panel_entity_key", s) for s in entity)
         elif entity is not None:
             refs.append(("panel_entity_key", entity))
-        time_key = r["panel_time_key"]
-        if time_key is not None and time_key != "period":
-            refs.append(("panel_time_key", time_key))
+        time = _decode_panel_entity_key(r["panel_time_key"])
+        if isinstance(time, tuple):
+            refs.extend(("panel_time_key", s) for s in time)
+        elif time is not None and time != "period":
+            refs.append(("panel_time_key", time))
         for field_name, slug in refs:
             n_refs += 1
             hit = conn.execute(
@@ -817,9 +819,9 @@ def _check_panel_refs_have_states(
     that actually ships in that variant's delivery.
 
     Same reference decoding as the resolution check: composite
-    ``panel_entity_key`` JSON arrays check element-wise; the literal
-    ``panel_time_key = "period"`` sentinel (delivery-aligned time, not a
-    variable) is exempt. A ref that doesn't resolve at all is the resolution
+    ``panel_entity_key`` / ``panel_time_key`` JSON arrays check element-wise;
+    the literal ``panel_time_key = "period"`` sentinel (delivery-aligned time,
+    not a variable) is exempt. A ref that doesn't resolve at all is the resolution
     check's finding, not double-reported here (the NOT EXISTS would also fire,
     but resolution failures fail the build first anyway).
     """
@@ -845,9 +847,11 @@ def _check_panel_refs_have_states(
             refs.extend(("panel_entity_key", s) for s in entity)
         elif entity is not None:
             refs.append(("panel_entity_key", entity))
-        time_key = r["panel_time_key"]
-        if time_key is not None and time_key != "period":
-            refs.append(("panel_time_key", time_key))
+        time = _decode_panel_entity_key(r["panel_time_key"])
+        if isinstance(time, tuple):
+            refs.extend(("panel_time_key", s) for s in time)
+        elif time is not None and time != "period":
+            refs.append(("panel_time_key", time))
         for field_name, slug in refs:
             n_refs += 1
             hit = conn.execute(

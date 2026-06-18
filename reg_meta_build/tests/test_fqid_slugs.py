@@ -173,6 +173,35 @@ class TestProviderToml:
         assert entries[0].panel_time_key == "manad"
         assert entries[0].panel_time_grain == "row"
 
+    def test_variant_with_panel_composite_time_key(self, tmp_path: Path):
+        # #567: list panel_time_key → stored as a tuple on the entry (mirrors the
+        # composite entity key). UHT's (year, quarter) time coordinate.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\n'
+            'slug = "utrikeshandel-tjanster"\n'
+            'panel_entity_key = "peorgnr"\n'
+            'panel_time_key = ["ar", "kvartal"]\n'
+            'panel_time_grain = "row"\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].panel_entity_key == "peorgnr"
+        assert entries[0].panel_time_key == ("ar", "kvartal")
+        assert entries[0].panel_time_grain == "row"
+
+    def test_variant_composite_time_key_rejects_period_element(self, tmp_path: Path):
+        # #567: "period" is the single-only delivery-aligned sentinel — it may not
+        # appear INSIDE a composite list.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.153"]\nslug = "x"\n'
+            'panel_time_key = ["ar", "period"]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "period" in exc.value.message
+
     def test_variant_invalid_panel_time_grain_rejected(self, tmp_path: Path):
         path = _write(
             tmp_path / "scb.toml",
@@ -644,6 +673,34 @@ class TestPopulateSlugs:
             "period",
             "delivery",
         )
+
+    def test_populates_composite_time_key(self, tmp_path: Path):
+        # #567: a composite panel_time_key is JSON-encoded into the TEXT column
+        # exactly like the composite entity key.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "utrikeshandel-tjanster"\n'
+            '[register_variant."1.10"]\n'
+            'slug = "_default"\n'
+            'panel_entity_key = "peorgnr"\n'
+            'panel_time_key = ["ar", "kvartal"]\n'
+            'panel_time_grain = "row"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
+        )
+        conn = self._make_db()
+        populate_slugs(conn, d, strict=True)
+        row = conn.execute(
+            "SELECT panel_entity_key, panel_time_key, panel_time_grain "
+            "FROM register_variant WHERE register_variant_id = 10"
+        ).fetchone()
+        assert row["panel_entity_key"] == "peorgnr"
+        assert json.loads(row["panel_time_key"]) == ["ar", "kvartal"]
+        assert row["panel_time_grain"] == "row"
 
     def test_panel_columns_null_by_default(self, tmp_path: Path):
         # A variant entry without panel fields leaves the columns NULL.

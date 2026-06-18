@@ -66,7 +66,7 @@ class IRVariant(_IRBase):
     synthesized: bool = False
     # Natural panel structure for this variant (panel_template; see DESIGN.md → Slug curation):
     panel_entity_key: str | tuple[str, ...] | None = None  # variable slug(s)
-    panel_time_key: str | None = None  # "period" sentinel OR variable slug
+    panel_time_key: str | tuple[str, ...] | None = None  # "period" OR slug(s)
     panel_time_grain: Literal["delivery", "row"] | None = None
 
 

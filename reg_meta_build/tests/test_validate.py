@@ -619,6 +619,48 @@ class TestValidateModule:
             result.failures
         )
 
+    def test_panel_time_key_composite_resolves(self, fixture_db: Path, tmp_path: Path):
+        """#567: a composite `panel_time_key` is a json-array string; it resolves
+        element-wise like the composite entity key. Both `kon` and `testcol` exist
+        under register 1, so the array fully resolves."""
+        ok_db = tmp_path / "ok.db"
+        ok_db.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(ok_db)
+        conn.execute(
+            "UPDATE register_variant SET panel_time_key = ? "
+            "WHERE register_variant_id = 10",
+            (json.dumps(["kon", "testcol"]),),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(ok_db)
+        assert result.passed, result.failures
+
+    def test_panel_time_key_composite_element_miss_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#567: a composite `panel_time_key` fails on ANY dangling element while
+        leaving the resolving one alone (mirrors the composite entity-key check)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.execute(
+            "UPDATE register_variant SET panel_time_key = ? "
+            "WHERE register_variant_id = 10",
+            (json.dumps(["kon", "ghost"]),),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "panel_time_key 'ghost' resolves to no variable.slug" in f
+            for f in result.failures
+        ), result.failures
+        assert not any(
+            "panel_time_key 'kon' resolves to no" in f for f in result.failures
+        ), result.failures
+
     def test_panel_ref_resolves_but_stateless_in_variant_fails(
         self, fixture_db: Path, tmp_path: Path
     ):

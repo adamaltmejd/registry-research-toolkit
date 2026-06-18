@@ -1855,8 +1855,12 @@ output header — no silent truncation. Pass `--max-signal-fanout 0` to disable 
 and include all hub-clique pairs.
 
 **Panel-shape bootstrap.** `register_variant` rows also carry `panel_entity_key` /
-`panel_time_key` / `panel_time_grain` (a variable-slug reference or the `"period"`
-sentinel). `seed-slugs` proposes defaults from SCB `Tabelldefinitioner.sql` PK
+`panel_time_key` / `panel_time_grain`. Both keys may be a single variable-slug reference
+OR a **composite** (a TOML list of slugs, persisted as a JSON array) — e.g.
+`utrikeshandel-tjanster` (UHT) is a quarterly company panel whose time coordinate is
+`["ar", "kvartal"]`. `panel_time_key` additionally accepts the `"period"`
+delivery-aligned sentinel, which is **single-only** (it may not appear inside a
+composite list). `seed-slugs` proposes defaults from SCB `Tabelldefinitioner.sql` PK
 declarations and `Identifierare.csv` (SOS: `is_join_variable` annotations); a curator
 confirms. These are grammar-checked at load so a typo fails loudly at build, not as a
 runtime JSON-decode crash when the webapp serves the variant. The structural validator

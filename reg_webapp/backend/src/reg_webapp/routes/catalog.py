@@ -286,18 +286,21 @@ def _lineage_warning_model(warning) -> LineageWarningModel:
 
 
 def _variant_model(variant: VariantSummary) -> VariantModel:
-    # A4.4c: VariantSummary.panel_entity_key is str | tuple | None; the wire
-    # model uses a JSON list for the composite case.
+    # A4.4c: VariantSummary.panel_entity_key / panel_time_key are
+    # str | tuple | None; the wire model uses a JSON list for the composite case.
     entity_key = variant.panel_entity_key
     if isinstance(entity_key, tuple):
         entity_key = list(entity_key)
+    time_key = variant.panel_time_key
+    if isinstance(time_key, tuple):
+        time_key = list(time_key)
     return VariantModel(
         slug=variant.slug,
         name=variant.name,
         description=variant.description,
         display_group=variant.display_group,
         panel_entity_key=entity_key,
-        panel_time_key=variant.panel_time_key,
+        panel_time_key=time_key,
         panel_time_grain=variant.panel_time_grain,
     )
 
