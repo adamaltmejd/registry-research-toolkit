@@ -1346,6 +1346,7 @@ class TestEdgeAccessors:
         # spl-c's backward walk reaches spl-a; spl-a's det-first successor is spl-b,
         # so the forward walk goes spl-a→spl-b — spl-c is reached only as is_self.
         chain_c = Catalog(conn).classification_chain("class/spl-c")
+        assert [e.slug for e in chain_c] == ["spl-a", "spl-c"]
         assert next(e for e in chain_c if e.is_self).slug == "spl-c"
 
     def test_variable_chain_undated_edge_orders_by_traversal(self) -> None:
@@ -1417,8 +1418,45 @@ class TestEdgeAccessors:
         )
         chain_kon = Catalog(conn).variable_chain(_KON)
         assert [e.variable for e in chain_kon] == ["kon", "aaa"]
+        # bbb's backward walk reaches kon; kon's det-first successor is aaa, so the
+        # forward walk goes kon→aaa — bbb is reached only as is_self. Its own path is
+        # [kon, bbb] (backward to kon, no forward edge off bbb).
         chain_bbb = Catalog(conn).variable_chain("scb/lisa/bbb")
+        assert [e.variable for e in chain_bbb] == ["kon", "bbb"]
         assert next(e for e in chain_bbb if e.is_self).variable == "bbb"
+
+    def test_variable_chain_includes_dead_renamed_predecessor(self) -> None:
+        # #582 / #355 / #411: a variable legitimately tolerates a DEAD/renamed
+        # predecessor — a `variable_replaced_by` edge `dead-old → kon` where the
+        # predecessor `dead-old` has NO live `variable` row (no validator forbids it,
+        # UNLIKE classifications). Querying the LIVE current edition (`kon`) anchors
+        # the walk there, then the backward walk steps onto the dead predecessor. It
+        # renders in the chain with a syntactically-valid binding fqid (so a citation
+        # 301-redirects to the current edition) but `name` None (no live row to read).
+        conn = build_slugged_db()  # seeds the live scb/lisa/kon
+        # NOTE: dead-old is intentionally NOT add_variable'd — the edge alone exists.
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "dead-old"),
+            successor=("scb", "lisa", "kon"),
+            effective_year=2015,
+            reason="2015 omdöpt",
+        )
+        chain = Catalog(conn).variable_chain(_KON)
+        assert [e.variable for e in chain] == ["dead-old", "kon"]
+        dead, current = chain
+        # Dead predecessor: valid (redirecting) binding fqid, but no name (dead row).
+        assert str(dead.fqid) == "scb/lisa/dead-old"
+        assert dead.name is None
+        assert dead.is_self is False
+        assert dead.is_current is False
+        assert dead.effective_year == 2015  # carried from its OUTBOUND edge
+        assert dead.reason == "2015 omdöpt"
+        # The queried live edition is both is_self and is_current (terminal).
+        assert current.variable == "kon"
+        assert current.name == "Kön"
+        assert current.is_self is True
+        assert current.is_current is True
 
     def test_same_as_on_resolved_variable(self) -> None:
         conn = build_slugged_db()
