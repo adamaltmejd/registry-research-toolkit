@@ -8,7 +8,6 @@ import {
   getBindingPredecessors,
   getCatalogNode,
   getClassificationPredecessors,
-  getClassificationSuccessors,
   getDoc,
   getDocsForVariable,
   isCatalogNode,
@@ -174,32 +173,19 @@ describe("binding sub-endpoint helpers", () => {
   });
 });
 
-describe("classification succession sub-endpoint helpers (#571)", () => {
-  // Each GETs `/catalog/{encodeFqid}/{suffix}` on a 2-seg classification FQID.
-  const cases: [(fqidPath: string) => Promise<unknown>, string, string][] = [
-    [
-      getClassificationPredecessors,
-      "classification_predecessors",
-      "/api/catalog/class/sun2020/classification_predecessors",
-    ],
-    [
-      getClassificationSuccessors,
-      "classification_successors",
-      "/api/catalog/class/sun2020/classification_successors",
-    ],
-  ];
-
-  for (const [fn, name, expected] of cases) {
-    it(`GETs the ${name} sub-endpoint URL`, async () => {
-      let seen = "";
-      stubFetch(async (url) => {
-        seen = url;
-        return { ok: true, status: 200, json: async () => ({}) };
-      });
-      await fn("class/sun2020");
-      expect(seen).toBe(expected);
+describe("classification succession sub-endpoint helper (#571)", () => {
+  // GETs `/catalog/{encodeFqid}/classification_predecessors` on a 2-seg
+  // classification FQID. (Only predecessors is fetched — the outbound arm rides
+  // on the embedded `replaced_by`, so there's no successors helper.)
+  it("GETs the classification_predecessors sub-endpoint URL", async () => {
+    let seen = "";
+    stubFetch(async (url) => {
+      seen = url;
+      return { ok: true, status: 200, json: async () => ({}) };
     });
-  }
+    await getClassificationPredecessors("class/sun2020");
+    expect(seen).toBe("/api/catalog/class/sun2020/classification_predecessors");
+  });
 });
 
 describe("validateProject", () => {

@@ -245,8 +245,6 @@ export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 export type ClassificationRefModel = Schemas["ClassificationRefModel"];
 export type ClassificationPredecessorsResponse =
   Schemas["ClassificationPredecessorsResponse"];
-export type ClassificationSuccessorsResponse =
-  Schemas["ClassificationSuccessorsResponse"];
 /** The resolved classification leaf the catch-all returns — carries its embedded
  * outbound succession (`replaced_by`, the editions that replaced it). */
 export type ClassificationNodeData = Schemas["ClassificationNode"];
@@ -339,28 +337,21 @@ export function getBindingDimensions(
   );
 }
 
-// ── Classification succession sub-endpoints (#571) ───────────────────────────
+// ── Classification succession sub-endpoint (#571) ────────────────────────────
 // A classification leaf EMBEDS its outbound `replaced_by` (the editions that
 // replaced it, toward the current edition), so the panel fetches only the INBOUND
 // side — `/classification_predecessors` (the editions THIS edition replaced) — to
-// compose the full edition chain. The successors endpoint exists server-side for
-// symmetry but isn't fetched by the SPA (the embedded `replaced_by` already has
-// the outbound arm); a helper is exported anyway for completeness, mirroring the
-// binding pair.
+// compose the full edition chain. Only predecessors is fetched: the outbound arm
+// rides on the embedded `replaced_by`, so no successors helper exists — mirroring
+// the binding leaf, which likewise embeds its `replaced_by` and fetches only
+// `/predecessors`. (The `/classification_successors` route exists server-side for
+// symmetry, unfetched by the SPA.)
 
 export function getClassificationPredecessors(
   fqidPath: string,
 ): Promise<ClassificationPredecessorsResponse> {
   return apiGet<ClassificationPredecessorsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/classification_predecessors`,
-  );
-}
-
-export function getClassificationSuccessors(
-  fqidPath: string,
-): Promise<ClassificationSuccessorsResponse> {
-  return apiGet<ClassificationSuccessorsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/classification_successors`,
   );
 }
 

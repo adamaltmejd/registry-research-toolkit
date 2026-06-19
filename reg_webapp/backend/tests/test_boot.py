@@ -52,8 +52,9 @@ _ROUTES_BEFORE_CATCH_ALL = [
 
 
 def test_catalog_catch_all_route_present_and_last():
-    # A5.1b-ii OWNS the bare `{fqid:path}` catch-all; A5.2a-ii adds 6 suffixed
-    # `{fqid:path}/...` routes plus the `/variants` sub-resource. Assert the bare
+    # A5.1b-ii OWNS the bare `{fqid:path}` catch-all; ahead of it sit the suffixed
+    # `{fqid:path}/...` routes plus the `/variants` sub-resource (the current set is
+    # `_ROUTES_BEFORE_CATCH_ALL`). Assert the bare
     # catch-all exists and is declared LAST among /api/catalog* routes (the
     # router-ordering seam — Starlette matches in declaration order, so the
     # suffixed routes must precede the greedy catch-all).
