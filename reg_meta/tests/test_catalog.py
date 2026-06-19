@@ -24,6 +24,7 @@ from reg_meta.catalog import (
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
+    VariableEdition,
 )
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import Fqid, FqidError
@@ -1158,6 +1159,120 @@ class TestEdgeAccessors:
         conn.commit()
         chain = Catalog(conn).classification_chain("class/sun-alias")
         assert [e.slug for e in chain] == ["sun2020"]
+        assert chain[0].is_self is True
+        assert chain[0].is_current is True
+
+    @staticmethod
+    def _seed_var_replaced_by(
+        conn: sqlite3.Connection,
+        *,
+        predecessor: tuple[str, str, str],
+        successor: tuple[str, str, str],
+        effective_year: int | None = None,
+        reason: str | None = None,
+    ) -> None:
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note, beskrivning) "
+            "VALUES (?,?,?,?,?,?,?,?,?)",
+            (*predecessor, *successor, effective_year, "auto:timeseries_event", reason),
+        )
+        conn.commit()
+
+    def test_variable_chain_multi_hop_ordered_oldest_first(self) -> None:
+        # kon → anninkf04 → anninkf18 (the live terminal). All three are seeded as
+        # LIVE `variable` rows here, so each edition hydrates a name + non-None fqid
+        # (the dead-predecessor case — tolerated by design, #355/#411, since unlike
+        # classifications no validator forbids it — is covered by the webapp fixture).
+        # The chain returns ALL three, oldest first, the terminal last, with
+        # is_self/is_current on the queried/terminal edition, and every edition carries
+        # its edge's reason.
+        conn = build_slugged_db()  # seeds the live scb/lisa/kon
+        add_variable(
+            conn, register_id=1, var_id=200, name="Annan inkomst 2004", slug="anninkf04"
+        )
+        add_variable(
+            conn, register_id=1, var_id=201, name="Annan inkomst 2018", slug="anninkf18"
+        )
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "anninkf04"),
+            effective_year=2004,
+            reason="2004 omdefinierad",
+        )
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "anninkf04"),
+            successor=("scb", "lisa", "anninkf18"),
+            effective_year=2018,
+            reason="2018 ny variabel",
+        )
+        # Query an intermediate edition — the chain still spans the whole succession
+        # and marks the queried variable as is_self.
+        chain = Catalog(conn).variable_chain("scb/lisa/anninkf04")
+        assert all(isinstance(e, VariableEdition) for e in chain)
+        assert [e.variable for e in chain] == ["kon", "anninkf04", "anninkf18"]
+        assert [e.effective_year for e in chain] == [2004, 2018, None]
+        # reason carried from the edge's beskrivning (terminal is no edge's successor).
+        assert [e.reason for e in chain] == [
+            "2004 omdefinierad",
+            "2018 ny variabel",
+            None,
+        ]
+        assert [e.name for e in chain] == [
+            "Kön",
+            "Annan inkomst 2004",
+            "Annan inkomst 2018",
+        ]
+        # Every edition is a live row → non-None fqid (no dead-edition shape).
+        assert all(e.fqid is not None for e in chain)
+        assert [str(e.fqid) for e in chain] == [
+            "scb/lisa/kon",
+            "scb/lisa/anninkf04",
+            "scb/lisa/anninkf18",
+        ]
+        self_edition = next(e for e in chain if e.is_self)
+        assert self_edition.variable == "anninkf04"
+        current = next(e for e in chain if e.is_current)
+        assert current.variable == "anninkf18"
+        assert sum(e.is_current for e in chain) == 1
+        assert sum(e.is_self for e in chain) == 1
+
+    def test_variable_chain_standalone_returns_single_self_current(self) -> None:
+        # kon has no succession edges → a one-edition chain, both is_self and
+        # is_current True, no reason/effective_year.
+        conn = build_slugged_db()
+        chain = Catalog(conn).variable_chain(_KON)
+        assert len(chain) == 1
+        assert chain[0].variable == "kon"
+        assert chain[0].is_self is True
+        assert chain[0].is_current is True
+        assert chain[0].effective_year is None
+        assert chain[0].reason is None
+
+    def test_variable_chain_resolves_same_as_alias_to_canonical(self) -> None:
+        # The queried binding `scb/rtb/kon` has NO live `variable` row of its own;
+        # a curated `variable_same_as` edge points it at the live canonical
+        # scb/lisa/kon. `_resolve_edge_triple` follows the edge (the direct lookup
+        # misses), so the chain anchors on the canonical triple: is_self lands on
+        # scb/lisa/kon (the resolved live variable), not the alias.
+        conn = build_slugged_db()  # seeds the live scb/lisa/kon
+        for src, tgt in (
+            (("scb", "rtb", "kon"), ("scb", "lisa", "kon")),
+            (("scb", "lisa", "kon"), ("scb", "rtb", "kon")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+        chain = Catalog(conn).variable_chain("scb/rtb/kon")
+        # Resolves to the canonical scb/lisa/kon (the same_as target).
+        assert [(e.register, e.variable) for e in chain] == [("lisa", "kon")]
         assert chain[0].is_self is True
         assert chain[0].is_current is True
 

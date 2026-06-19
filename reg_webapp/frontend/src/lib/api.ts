@@ -218,6 +218,14 @@ export type BindingChild = Schemas["BindingChild"];
 export type BindingNodeData = Schemas["BindingNode"];
 export type VariableStateModel = Schemas["VariableStateModel"];
 export type VariableRefModel = Schemas["VariableRefModel"];
+/** One edition in a variable's embedded FULL succession timeline (#582) — the
+ * variable-grain dual of `ClassificationChainEdition`. The chain arrives
+ * oldest-first, terminal last, with `is_self`/`is_current` flags and per-edition
+ * `reason`/`effective_year`. A chain edition CAN be a dead/renamed predecessor
+ * (#355/#411): a valid `fqid` (301-redirects to the current edition) but a null
+ * `name` (no live row). `fqid` is null only on a malformed triple. The browse
+ * panel renders the whole chain synchronously from these. */
+export type VariableEditionModel = Schemas["VariableEditionModel"];
 export type RelatedRefModel = Schemas["RelatedRefModel"];
 export type LineageEdgeModel = Schemas["LineageEdgeModel"];
 export type LineageWarningModel = Schemas["LineageWarningModel"];
@@ -234,7 +242,6 @@ export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
 // SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
 // from a browsable node by `isCatalogNode` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
-export type PredecessorsResponse = Schemas["PredecessorsResponse"];
 export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
@@ -303,20 +310,12 @@ export function getRegisterVariants(
 }
 
 // ── Binding sub-endpoints ───────────────────────────────────────────────────
-// The leaf already EMBEDS states / same_as / replaced_by (outbound) /
-// related_to / lineage, so A5.3b fetches only the two it does NOT embed:
-// `/predecessors` (inbound succession) and `/lineage_warnings`. Each GETs
-// `/catalog/{encodeFqid}/{suffix}`; the suffix is greedy-matched ABOVE the
-// catch-all server-side. (The other four suffixed endpoints exist server-side
-// but aren't fetched by the SPA — A5.3c adds helpers if/when it needs them.)
-
-export function getBindingPredecessors(
-  fqidPath: string,
-): Promise<PredecessorsResponse> {
-  return apiGet<PredecessorsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/predecessors`,
-  );
-}
+// The leaf now EMBEDS states / same_as / succession_chain (the FULL chain, #582) /
+// related_to / lineage, so the SPA fetches only the one it does NOT embed:
+// `/lineage_warnings`. It GETs `/catalog/{encodeFqid}/lineage_warnings`; the suffix
+// is greedy-matched ABOVE the catch-all server-side. (The `/predecessors` route
+// still exists server-side — the #411 inbound-succession surface — but the SPA no
+// longer fetches it: the embedded `succession_chain` already carries predecessors.)
 
 export function getBindingLineageWarnings(
   fqidPath: string,

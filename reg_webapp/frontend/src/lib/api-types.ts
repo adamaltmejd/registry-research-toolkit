@@ -501,8 +501,9 @@ export interface components {
          * BindingNode
          * @description A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
          *     longitudinal record embedded from one `Catalog.resolve` call: shared
-         *     metadata, every state (each tagged with its variant), and the variable-grain
-         *     `same_as` / `replaced_by` / `related_to` / `lineage` edges.
+         *     metadata, every state (each tagged with its variant), the variable-grain
+         *     `same_as` / `related_to` / `lineage` edges, and the full variable
+         *     `succession_chain` (#582).
          *
          *     `lineage_warnings` are intentionally OMITTED — `ResolvedVariable` doesn't
          *     carry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node
@@ -537,8 +538,6 @@ export interface components {
             register_id: number;
             /** Related To */
             related_to: components["schemas"]["RelatedRefModel"][];
-            /** Replaced By */
-            replaced_by: components["schemas"]["VariableRefModel"][];
             /** Same As */
             same_as: components["schemas"]["VariableRefModel"][];
             /** Source Register Id */
@@ -547,6 +546,8 @@ export interface components {
             source_register_text: string | null;
             /** States */
             states: components["schemas"]["VariableStateModel"][];
+            /** Succession Chain */
+            succession_chain?: components["schemas"]["VariableEditionModel"][];
             /** Variable Id */
             variable_id: number;
             /** Via Same As */
@@ -585,8 +586,9 @@ export interface components {
          *     live (it fails on any `classification_replaced_by` edge whose endpoint has no
          *     live row), so `fqid` is None only when the slug is malformed/unresolvable (the
          *     SPA renders such an edition as plain text, not a link). `effective_year` is the
-         *     year on the succession edge that names this edition as the successor (None for
-         *     the terminal). `is_current` flags the terminal (current) edition; `is_self`
+         *     year on the succession edge that names this edition as the predecessor — i.e. the
+         *     year it was superseded by its successor (None for the terminal, which has no
+         *     outbound edge). `is_current` flags the terminal (current) edition; `is_self`
          *     flags the edition the caller queried (resolved to its canonical live slug when
          *     the query was a `same_as` alias). A dedicated model (NOT the search
          *     `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
@@ -595,7 +597,7 @@ export interface components {
         ClassificationChainEdition: {
             /**
              * Effective Year
-             * @description The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.
+             * @description The year on the succession edge naming this edition as the predecessor — i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.
              */
             effective_year: number | null;
             /**
@@ -636,7 +638,7 @@ export interface components {
         ClassificationEditionModel: {
             /**
              * Effective Year
-             * @description The edition's effective year; None for the terminal (head) edition, which carries no successor-side year.
+             * @description The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.
              */
             effective_year?: number | null;
             /**
@@ -1570,6 +1572,81 @@ export interface components {
              * @default 0
              */
             state_count: number;
+        };
+        /**
+         * VariableEditionModel
+         * @description One edition in a variable's FULL succession timeline (#582), as embedded on
+         *     `BindingNode.succession_chain`. The variable-grain dual of
+         *     `ClassificationChainEdition`: the browse panel renders the whole chain (oldest
+         *     first, terminal last) synchronously from these — no per-neighbor fetch.
+         *
+         *     The `(provider, register, variable)` triple is the load-bearing identity. A chain
+         *     edition may be a DEAD/renamed predecessor with no live `variable` row — the
+         *     #355/#411 renamed-slug model: variable succession tolerates dead predecessor
+         *     editions by design, and (UNLIKE `ClassificationChainEdition`) no
+         *     `variable_replaced_by` validator forbids it. Such an edition still carries its
+         *     (syntactically-valid) binding `fqid` so a citation 301-redirects to the current
+         *     edition, but its `name` is None (no live row to read); the SPA can render it as a
+         *     dimmed/non-resolving node. `fqid` is None only when the triple is
+         *     malformed/unresolvable (rendered as plain text, not a link). `effective_year` is
+         *     the year on the succession edge that names this edition as the predecessor — i.e.
+         *     the year it was superseded by its successor (None for the terminal, which has no
+         *     outbound edge). `reason` carries that edge's `beskrivning` (the human transition
+         *     reason — UNLIKE `ClassificationChainEdition`, whose succession table has no reason
+         *     column). `is_current` flags the terminal (current) edition; `is_self` flags the
+         *     edition the caller queried (resolved to its canonical live triple when the query
+         *     was a `same_as` alias).
+         *
+         *     The `register` field uses the `register_name` Python attribute aliased to
+         *     `register` to avoid the `BaseModel.register` method shadow (see
+         *     `VariableRefModel`).
+         */
+        VariableEditionModel: {
+            /**
+             * Effective Year
+             * @description The year on the succession edge naming this edition as the predecessor — i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.
+             */
+            effective_year: number | null;
+            /**
+             * Fqid
+             * @description The edition's 3-seg binding FQID. A dead/renamed predecessor (no live variable row — tolerated by design, #355/#411) still carries a valid fqid that 301-redirects to the current edition; this is None only when the triple is malformed/unresolvable (rendered as plain text, not a link).
+             */
+            fqid: string | null;
+            /**
+             * Is Current
+             * @description True for the terminal (current) edition — no outbound successor.
+             */
+            is_current: boolean;
+            /**
+             * Is Self
+             * @description True for the edition the caller queried (resolved to its canonical live triple when the query was a same_as alias).
+             */
+            is_self: boolean;
+            /**
+             * Name
+             * @description The edition's display name; None for a dead/renamed predecessor with no live variable row (tolerated by design, #355/#411).
+             */
+            name: string | null;
+            /**
+             * Provider
+             * @description The edition's provider slug.
+             */
+            provider: string;
+            /**
+             * Reason
+             * @description The transition reason (the succession edge's `beskrivning`); None for the terminal (no outbound edge).
+             */
+            reason: string | null;
+            /**
+             * Register
+             * @description The edition's register slug.
+             */
+            register: string;
+            /**
+             * Variable
+             * @description The edition's variable slug.
+             */
+            variable: string;
         };
         /**
          * VariableRefModel

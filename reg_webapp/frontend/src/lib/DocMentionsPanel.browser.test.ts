@@ -23,7 +23,7 @@ function node(over: Partial<BindingNodeData> = {}): BindingNodeData {
     kind: "binding",
     fqid: "scb/lisa/kon",
     name: "Kön",
-    replaced_by: [],
+    succession_chain: [],
     related_to: [],
     lineage: [],
     same_as: [],

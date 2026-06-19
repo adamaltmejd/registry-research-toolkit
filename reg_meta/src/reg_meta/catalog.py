@@ -360,8 +360,9 @@ class ClassificationEdition:
     a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
     `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
     from the live row. `effective_year` is the year on the
-    `classification_replaced_by` edge that names this edition as `successor_slug`
-    (None for the terminal, which is no edge's successor). `is_current` marks the
+    `classification_replaced_by` edge that names this edition as `predecessor_slug`
+    — i.e. the year this edition was superseded by its successor (None for the
+    terminal, which has no outbound edge). `is_current` marks the
     terminal (head) edition — the one with no outbound successor; `is_self` marks
     the edition the caller queried (resolved to its canonical live slug when the
     query was a `same_as` alias)."""
@@ -370,6 +371,51 @@ class ClassificationEdition:
     fqid: Fqid | None
     name: str | None
     effective_year: int | None
+    is_current: bool
+    is_self: bool
+
+
+@dataclass(frozen=True)
+class VariableEdition:
+    """One edition in a variable succession chain (#582), as returned by
+    `Catalog.variable_chain`. The variable-grain dual of `ClassificationEdition`:
+    unlike `VariableRef` (a single edge endpoint), this is a fully-hydrated node in
+    the WHOLE chain — the webapp browse panel renders the complete variable timeline
+    from a list of these.
+
+    The `(provider, register, variable)` triple is the load-bearing identity (the
+    binding FQID is exactly that triple now that variant/period left the grammar; see
+    DESIGN.md → FQID grammar). A chain edition may be a DEAD/renamed predecessor with
+    no live `variable` row — that is the #355/#411 renamed-slug model (catalog.py
+    `VariableRef` / `resolve_terminal_successor`): succession tolerates dead
+    predecessor editions by design. There is NO `variable_replaced_by` validator
+    forbidding it (UNLIKE `ClassificationEdition`, where the classification validator
+    — `validate.py`, the `classification_replaced_by` check — DOES fail the build on a
+    dead endpoint). A dead edition still carries its (syntactically-valid) binding
+    `fqid`, so a citation 301-redirects to the current edition (`_ref_fqid`); its
+    `name` is None (no live row to read). `fqid` is None only on a *malformed* triple
+    (a lower-level slug-grammar concern; `_ref_fqid` mirrors `VariableRef.fqid`'s
+    nullability). On the corpus today all 12 succession edges are live, but the model
+    permits a dead predecessor.
+
+    `effective_year` is the year on the `variable_replaced_by` edge that names this
+    edition as the predecessor — i.e. the year this edition was superseded by its
+    successor (None for the terminal, which has no outbound edge). `reason` carries
+    that edge's `beskrivning` (the human transition reason) —
+    UNLIKE `ClassificationEdition`, which has no reason column on its succession
+    table (its edges carry `note` provenance instead); the variable grain mirrors
+    how `VariableRef` carries `reason`. `is_current` marks the terminal (head)
+    edition — the one with no outbound successor; `is_self` marks the edition the
+    caller queried (resolved to its canonical live triple when the query was a
+    `same_as` alias)."""
+
+    fqid: Fqid | None
+    provider: str
+    register: str
+    variable: str
+    name: str | None
+    effective_year: int | None
+    reason: str | None
     is_current: bool
     is_self: bool
 
@@ -1596,6 +1642,147 @@ class Catalog:
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._related_edges(provider, register, variable))
 
+    def variable_chain(self, fqid: str | Fqid) -> list[VariableEdition]:
+        """The FULL succession timeline of a variable's chain (#582), oldest first,
+        terminal (current) last — the variable-grain dual of `classification_chain`.
+        The webapp browse panel renders "this variable has N editions" from it,
+        instead of only the immediate `replaced_by` neighbor.
+
+        Like `classification_chain`, two things the immediate-neighbor accessors
+        (`predecessors`/`successors`) don't do:
+
+          - same_as canonicalization: `_resolve_edge_triple` resolves the queried
+            binding FQID to the canonical (provider, register, variable) the edge
+            tables key on, following `variable_same_as` and variable identity (and
+            raising not-found on a dead slug — for a chain we want the canonical LIVE
+            binding). The `is_self` edition is this canonical triple.
+          - full walk: from the canonical triple we find the terminal (the chain end
+            with no outbound successor) via `_first_successor_triple` + `_walk_terminal`,
+            then collect ALL predecessors transitively from the terminal, assembling
+            every edition in the chain.
+
+        Variable chains are LINEAR on the corpus (0 splits/merges, verified at #582),
+        so the forward-to-terminal + backward-collect walk is well-defined here as it
+        is for classifications.
+
+        A chain edition may be a DEAD/renamed predecessor with no live `variable` row
+        — the #355/#411 renamed-slug model: succession tolerates dead predecessor
+        editions by design, and there is NO `variable_replaced_by` validator forbidding
+        it (UNLIKE `classification_chain`, where the `classification_replaced_by`
+        validator DOES fail the build on a dead endpoint). The walk therefore does NOT
+        require each edition to be live: a dead predecessor carries its
+        (syntactically-valid) binding `fqid` so a citation 301-redirects to the current
+        edition (`_ref_fqid`), with `name` None (no live row to read). `fqid` falls to
+        None only on a malformed triple. On the corpus today all 12 edges are live, but
+        the model permits a dead predecessor.
+
+        A variable with no succession edges returns a single edition (`is_current`
+        and `is_self` both True)."""
+        provider, register, variable, _ = self._resolve_edge_triple(fqid)
+        canonical = (provider, register, variable)
+        # Terminal = the chain head. `_walk_terminal` returns None when the start has
+        # no outbound edge (it IS the terminal), so fall back to canonical.
+        walked = self._walk_terminal(canonical, self._first_successor_triple)
+        terminal = walked if walked is not None else canonical
+        edge_by_triple = self._variable_chain_edges(terminal)
+        name_by_triple = self._variable_chain_names(edge_by_triple.keys())
+        editions = [
+            VariableEdition(
+                fqid=self._ref_fqid(*triple),
+                provider=triple[0],
+                register=triple[1],
+                variable=triple[2],
+                name=name_by_triple.get(triple),
+                effective_year=year,
+                reason=reason,
+                is_current=(triple == terminal),
+                is_self=(triple == canonical),
+            )
+            for triple, (year, reason) in edge_by_triple.items()
+        ]
+        # Oldest first; the terminal (current) sorts LAST regardless of year (it has
+        # no outbound edge, so it carries no year). Undated predecessors sort after
+        # dated ones but before the terminal; the triple is the stable tiebreak.
+        editions.sort(
+            key=lambda e: (
+                e.is_current,
+                e.effective_year is None,
+                e.effective_year or 0,
+                (e.provider, e.register, e.variable),
+            )
+        )
+        return editions
+
+    def _variable_chain_edges(
+        self, terminal: tuple[str, str, str]
+    ) -> dict[tuple[str, str, str], tuple[int | None, str | None]]:
+        """Every edition triple in the chain ending at `terminal` → its
+        `(effective_year, beskrivning)` from the `variable_replaced_by` edge that
+        names it as the predecessor — i.e. the year this edition was superseded by
+        its successor. The terminal has no outbound edge (is no edge's predecessor),
+        so it gets `(None, None)`. Predecessor-BFS up the successor side from the
+        terminal (via `idx_variable_replaced_by_successor`), with a `seen` cycle
+        guard — the variable-grain dual of `_classification_chain_years`."""
+        edge_by_triple: dict[tuple[str, str, str], tuple[int | None, str | None]] = {
+            terminal: (None, None)
+        }
+        seen = {terminal}
+        frontier = [terminal]
+        while frontier:
+            placeholders = ",".join("(?, ?, ?)" for _ in frontier)
+            params = [seg for triple in frontier for seg in triple]
+            rows = self._conn.execute(
+                "SELECT predecessor_provider, predecessor_register, "
+                "predecessor_variable, effective_year, beskrivning "
+                "FROM variable_replaced_by "
+                "WHERE (successor_provider, successor_register, successor_variable) "
+                f"IN ({placeholders})",
+                params,
+            ).fetchall()
+            nxt: list[tuple[str, str, str]] = []
+            for row in rows:
+                pred = (
+                    row["predecessor_provider"],
+                    row["predecessor_register"],
+                    row["predecessor_variable"],
+                )
+                if pred in seen:
+                    continue
+                seen.add(pred)
+                edge_by_triple[pred] = (row["effective_year"], row["beskrivning"])
+                nxt.append(pred)
+            frontier = nxt
+        return edge_by_triple
+
+    def _variable_chain_names(
+        self, triples: Iterable[tuple[str, str, str]]
+    ) -> dict[tuple[str, str, str], str | None]:
+        """Map each chain triple to its live `variable.name`. A DEAD/renamed
+        predecessor (no live `variable` row — the #355/#411 model tolerated by
+        `variable_chain`; UNLIKE classifications, no validator forbids it) is simply
+        absent from the map, so the caller's `name_by_triple.get(triple)` yields None
+        for it — exactly the dead-edition behavior. A present-but-NULL name is a live
+        row with no name and stays in the map. The variable-grain dual of
+        `_classification_chain_names`, joining provider/register slugs to key on the
+        (provider, register, variable) triple."""
+        triple_list = list(triples)
+        if not triple_list:
+            return {}
+        placeholders = ",".join("(?, ?, ?)" for _ in triple_list)
+        params = [seg for triple in triple_list for seg in triple]
+        return {
+            (row["provider_slug"], row["register_slug"], row["slug"]): row["name"]
+            for row in self._conn.execute(
+                "SELECT p.slug AS provider_slug, r.slug AS register_slug, "
+                "v.slug, v.name FROM variable v "
+                "JOIN register r ON v.register_id = r.register_id "
+                "JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE (p.slug, r.slug, v.slug) "
+                f"IN ({placeholders})",
+                params,
+            ).fetchall()
+        }
+
     def classification_successors(self, fqid: str | Fqid) -> list[ClassificationRef]:
         """The editions that replaced this classification edition (outbound
         succession, #571). Keyed on the literal slug — succession tolerates a DEAD
@@ -1664,9 +1851,9 @@ class Catalog:
             )
             for slug, year in year_by_slug.items()
         ]
-        # Oldest first; the terminal (current) sorts LAST regardless of year (it
-        # carries no successor-side year). Undated predecessors sort after dated
-        # ones but before the terminal; slug is the stable tiebreak.
+        # Oldest first; the terminal (current) sorts LAST regardless of year (it has
+        # no outbound edge, so it carries no year). Undated predecessors sort after
+        # dated ones but before the terminal; slug is the stable tiebreak.
         editions.sort(
             key=lambda e: (
                 e.is_current,
@@ -1696,9 +1883,10 @@ class Catalog:
     def _classification_chain_years(self, terminal_slug: str) -> dict[str, int | None]:
         """Every edition slug in the chain ending at `terminal_slug` → its
         `effective_year` (the year on the `classification_replaced_by` edge that
-        names it as `successor_slug`). The terminal is no edge's successor, so it
-        gets None. Predecessor-BFS up the successor side from the terminal, with a
-        `seen` cycle guard."""
+        names it as `predecessor_slug` — i.e. the year this edition was superseded by
+        its successor). The terminal has no outbound edge (is no edge's predecessor),
+        so it gets None. Predecessor-BFS up the successor side from the terminal, with
+        a `seen` cycle guard."""
         year_by_slug: dict[str, int | None] = {terminal_slug: None}
         seen = {terminal_slug}
         frontier = [terminal_slug]
