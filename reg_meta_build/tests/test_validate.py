@@ -43,6 +43,14 @@ class TestValidateModule:
         assert result.passed, result.failures
         assert "[classification succession]" in result.format_report()
 
+    def test_variable_vintage_lift_section_renders(self, fixture_db: Path):
+        """#584: the variable vintage-lift structural section runs on a fresh
+        synthetic build (corpus=False) — the synthetic corpus carries no vintage
+        classifications, so the section reports 0 edges (info) and passes."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert "[variable vintage lift]" in result.format_report()
+
     @staticmethod
     def _seed_classification(
         conn: sqlite3.Connection, short_name: str, slug: str

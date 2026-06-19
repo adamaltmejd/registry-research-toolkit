@@ -90,6 +90,12 @@ _CURATED_RELATED_NOTE_DEFAULT = "curated"
 # transition reason) lands in `beskrivning`; this fixed marker lands in `note`.
 _REPLACED_BY_NOTE_CURATED = "curated:slug_toml"
 
+# Provenance marker for the #584 derived variable vintage-succession edges:
+# variable A → B lifted from a `classification_replaced_by` edition edge through
+# the value-set bindings. Distinct from `auto:timeseries_event` (event-derived) /
+# `curated:slug_toml` (hand-curated) so a consumer can tell the lift apart.
+_REPLACED_BY_NOTE_VINTAGE_LIFT = "derived:classification_vintage_lift"
+
 # same_as component-size guard (#522). A same_as edge MERGES two identity
 # components into one; a single mistaken curated edge can therefore silently weld
 # two large, genuinely-distinct concept clusters into one resolver blob. Refuse
@@ -1027,3 +1033,150 @@ def materialize_curated_replaced_by(
         "skipped_duplicate": n_skipped_duplicate,
         "skipped_inactive_provider": n_skipped_inactive_provider,
     }
+
+
+# ---------------------------------------------------------------------------
+# Derivation — variable vintage succession (#584, lifts classification editions)
+# ---------------------------------------------------------------------------
+
+
+def derive_variable_vintage_succession(
+    conn: sqlite3.Connection, *, progress: Any | None = None
+) -> int:
+    """Lift `classification_replaced_by` EDITION succession (#571) to the variable
+    grain through value-set bindings (#584, clean tier).
+
+    Two variables A, B in the SAME register whose value-set classifications C_A,
+    C_B are ADJACENT in a `classification_replaced_by` chain — and that are
+    otherwise the same series (same `variable.name`) — mint
+    `variable_replaced_by` (A → B) with `effective_year` from the classification
+    edge and `note = 'derived:classification_vintage_lift'`. Adjacent-chain (the
+    edge's predecessor→successor verbatim, NOT predecessor→latest), mirroring
+    `concept_groups.derive_classification_succession`.
+
+    Family key = `(register_id, variable.name)`. Only the **clean tier** fires:
+    a family where the chained editions map UNAMBIGUOUSLY 1:1 to variables — a
+    bijection edition↔variable. Two guards drop everything else:
+
+      - **Entangled** (out of scope, #488 et al.): an edition bound by >1
+        variable in the family (näringsgren / parental utbildningsnivå /
+        fordonsreg / fek / rams Näringsgren cross-products). A same-name key
+        alone would cross-link parallel variants, so the whole family is skipped.
+      - **Interval-native** (#271, no lift owed): a single variable spanning >1
+        chained edition across its own states. That variable already carries the
+        lineage in ONE `variable_id`; the family is skipped (the variable appears
+        under >1 edition, breaking the bijection).
+
+    Level separation is free: each level binds its own classification lineage
+    (`sni2007-grov` ≠ `sni2007-utokad`), so the lift over distinct slugs never
+    crosses grov into utokad — no special level handling.
+
+    Dedup: an edge already in `variable_replaced_by` (curated #375/#440 or auto
+    `timeseries_event`) WINS — `INSERT OR IGNORE` against the PK leaves it
+    untouched. The pass runs AFTER `_materialize_replaced_by_edges`, so those
+    rows already exist and `variable.slug` is populated. Caller guards under
+    `skip_slugs` (every slug is NULL there). Returns the count of edges minted."""
+    # Classification edition edges: predecessor_slug → (successor_slug, year).
+    edition_edges = conn.execute(
+        "SELECT predecessor_slug, successor_slug, effective_year "
+        "FROM classification_replaced_by"
+    ).fetchall()
+    if not edition_edges:
+        if progress is not None:
+            progress("  0 variable vintage-lift edges (no classification chains)")
+        return 0
+
+    # Slugs that participate in any edition chain — restrict the family edition
+    # map to these so a variable's unrelated classifications don't break the
+    # bijection (only chained editions matter for the lift).
+    chain_slugs: set[str] = set()
+    for pred, succ, _year in edition_edges:
+        chain_slugs.add(pred)
+        chain_slugs.add(succ)
+
+    # Per (register_id, variable.name) family: edition_slug → {variable_id}, and
+    # variable_id → {edition_slug}. Built from the live state→classification
+    # bindings, restricted to chained editions.
+    family_edition_vars: dict[tuple[int, str], dict[str, set[int]]] = {}
+    family_var_editions: dict[tuple[int, str], dict[int, set[str]]] = {}
+    rows = conn.execute(
+        "SELECT DISTINCT v.register_id, v.name, vs.variable_id, c.slug "
+        "FROM variable_state vs "
+        "JOIN variable v ON v.variable_id = vs.variable_id "
+        "JOIN classification c ON c.id = vs.classification_id "
+        "WHERE vs.classification_id IS NOT NULL "
+        "  AND c.slug IS NOT NULL "
+        "  AND v.name IS NOT NULL "
+        "  AND v.slug IS NOT NULL"
+    ).fetchall()
+    for register_id, name, variable_id, slug in rows:
+        if slug not in chain_slugs:
+            continue
+        key = (register_id, name)
+        family_edition_vars.setdefault(key, {}).setdefault(slug, set()).add(variable_id)
+        family_var_editions.setdefault(key, {}).setdefault(variable_id, set()).add(slug)
+
+    # Resolve a variable_id to its FQID slug tuple (provider, register, variable)
+    # for the edge endpoints. The lift only links live, slugged variables.
+    fqid_of: dict[int, tuple[str, str, str]] = {
+        r[0]: (r[1], r[2], r[3])
+        for r in conn.execute(
+            "SELECT v.variable_id, p.slug, r.slug, v.slug "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND p.slug IS NOT NULL"
+        )
+    }
+
+    pending: list[tuple[str, str, str, str, str, str, int | None]] = []
+    for key in sorted(family_edition_vars):
+        edition_vars = family_edition_vars[key]
+        var_editions = family_var_editions[key]
+        # Bijection guard: every chained edition the family touches must bind
+        # exactly ONE variable (else entangled cross-product), and every variable
+        # must bind exactly ONE chained edition (else interval-native / spans
+        # editions in one variable_id). A family failing either is skipped whole.
+        if any(len(vids) != 1 for vids in edition_vars.values()):
+            continue  # entangled: an edition bound by >1 variable
+        if any(len(slugs) != 1 for slugs in var_editions.values()):
+            continue  # interval-native / multi-edition variable
+        # Clean bijection. Walk each classification edge whose BOTH endpoints are
+        # bound in this family and mint the adjacent variable edge.
+        for pred_slug, succ_slug, year in edition_edges:
+            if pred_slug not in edition_vars or succ_slug not in edition_vars:
+                continue
+            pred_vid = next(iter(edition_vars[pred_slug]))
+            succ_vid = next(iter(edition_vars[succ_slug]))
+            pred_fqid = fqid_of.get(pred_vid)
+            succ_fqid = fqid_of.get(succ_vid)
+            if pred_fqid is None or succ_fqid is None:
+                continue
+            if pred_fqid == succ_fqid:
+                continue  # same variable both ends — no self-edge
+            pending.append((*pred_fqid, *succ_fqid, year))
+
+    # INSERT OR IGNORE: a curated (#375/#440) or auto (timeseries_event) edge on
+    # the same PK already present WINS — the derived row is silently dropped, never
+    # clobbering richer provenance. `executemany` skips on PK collision per row.
+    conn.executemany(
+        "INSERT OR IGNORE INTO variable_replaced_by ("
+        "predecessor_provider, predecessor_register, predecessor_variable, "
+        "successor_provider, successor_register, successor_variable, "
+        "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, "
+        f"'{_REPLACED_BY_NOTE_VINTAGE_LIFT}')",
+        pending,
+    )
+    # Count the note-stamped rows so the return is authoritative regardless of
+    # how many `INSERT OR IGNORE` rows collided with a pre-existing edge.
+    n_minted = conn.execute(
+        "SELECT COUNT(*) FROM variable_replaced_by WHERE note = ?",
+        (_REPLACED_BY_NOTE_VINTAGE_LIFT,),
+    ).fetchone()[0]
+    if progress is not None:
+        n_dropped = len(pending) - n_minted
+        progress(
+            f"  {n_minted:,} variable vintage-lift edges "
+            f"({n_dropped:,} dedup-collapsed onto curated/auto edges)"
+        )
+    return n_minted

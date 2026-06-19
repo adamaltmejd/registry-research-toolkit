@@ -22,7 +22,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_register, add_variable, build_slugged_db
+from _slugged_db import (
+    add_register,
+    add_state,
+    add_variable,
+    add_variant,
+    build_slugged_db,
+)
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import FqidKind
 from reg_meta_build.concept_groups import materialize_concept_groups
@@ -31,6 +37,7 @@ from reg_meta_build.relations import (
     CURATED_RELATION_KINDS,
     CuratedRelatedTo,
     CuratedSameAs,
+    derive_variable_vintage_succession,
     load_relations,
     materialize_related_to,
     materialize_same_as,
@@ -664,3 +671,288 @@ class TestMovedEdges:
         assert ("scb", "ekonomiskt-bistand", "belopp") in {
             (e.a_provider, e.a_register, e.a_variable) for e in rel.related_to
         }
+
+
+# ---------------------------------------------------------------------------
+# Variable vintage succession (#584) — lift classification editions to variables
+# ---------------------------------------------------------------------------
+
+
+def _add_classification(conn: sqlite3.Connection, short: str, slug: str) -> int:
+    """Insert a classification and return its `id`."""
+    cur = conn.execute(
+        "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+        (short, short, slug),
+    )
+    return cur.lastrowid
+
+
+def _cid(conn: sqlite3.Connection, slug: str) -> int:
+    """The `classification.id` for a slug (sqlite3.Connection can't carry test
+    attrs, so resolve on demand)."""
+    return conn.execute(
+        "SELECT id FROM classification WHERE slug = ?", (slug,)
+    ).fetchone()[0]
+
+
+def _add_edition_edge(
+    conn: sqlite3.Connection, pred: str, succ: str, year: int
+) -> None:
+    """Insert one `classification_replaced_by` edition edge (the #571 chain the
+    lift consumes)."""
+    conn.execute(
+        "INSERT INTO classification_replaced_by "
+        "(predecessor_slug, successor_slug, effective_year, note) "
+        "VALUES (?, ?, ?, 'derived:vintage_chain')",
+        (pred, succ, year),
+    )
+
+
+def _lift_rows(conn: sqlite3.Connection) -> list[tuple]:
+    """Derived vintage-lift edges, ordered, as (pred_var, succ_var, year)."""
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT predecessor_variable, successor_variable, effective_year "
+            "FROM variable_replaced_by "
+            "WHERE note = 'derived:classification_vintage_lift' "
+            "ORDER BY predecessor_variable, successor_variable"
+        )
+    ]
+
+
+def _vintage_db() -> sqlite3.Connection:
+    """scb/lisa with a single variant + two chained classification editions
+    (sni2002 → sni2007, effective 2007). No variables/states yet — each test
+    seeds its own family shape. `classification=None` so the only classifications
+    are the two editions (the default fixture's SUN2020 would just be inert, but
+    keeping the table minimal makes the chain explicit)."""
+    conn = build_slugged_db(
+        register=None, variant=None, version=None, variable=None, classification=None
+    )
+    add_register(conn, register_id=1, slug="lisa", name="LISA")
+    add_variant(
+        conn, register_variant_id=10, register_id=1, slug="ind", name="Individer"
+    )
+    _add_classification(conn, "SNI2002", "sni2002")
+    _add_classification(conn, "SNI2007", "sni2007")
+    _add_edition_edge(conn, "sni2002", "sni2007", 2007)
+    conn.commit()
+    return conn
+
+
+class TestVariableVintageSuccession:
+    def test_clean_pair_mints_one_edge(self) -> None:
+        # Two DISTINCT variables, same name, one per edition → a bijection.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Näringsgren", slug="sni-2002")
+        add_variable(conn, register_id=1, var_id=2, name="Näringsgren", slug="sni-2007")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2002",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2007",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 1
+        assert _lift_rows(conn) == [("sni-2002", "sni-2007", 2007)]
+
+    def test_three_edition_chain_mints_adjacent_edges(self) -> None:
+        # Adjacent-chain (NOT predecessor→latest): a 3-edition family → 2 edges.
+        conn = _vintage_db()
+        _add_classification(conn, "SNI2012", "sni2012")
+        _add_edition_edge(conn, "sni2007", "sni2012", 2012)
+        for vid, slug, cls in (
+            (1, "sni-2002", "sni2002"),
+            (2, "sni-2007", "sni2007"),
+            (3, "sni-2012", "sni2012"),
+        ):
+            cid = _cid(conn, cls)
+            add_variable(conn, register_id=1, var_id=vid, name="Näringsgren", slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                classification_id=cid,
+            )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 2
+        # Adjacent hops only — no 2002→2012 star edge.
+        assert _lift_rows(conn) == [
+            ("sni-2002", "sni-2007", 2007),
+            ("sni-2007", "sni-2012", 2012),
+        ]
+
+    def test_entangled_family_mints_nothing(self) -> None:
+        # Two variables BOTH bind sni2002 (and two more bind sni2007): an edition
+        # bound by >1 variable in the family → entangled cross-product, skipped
+        # whole. A same-name key alone would cross-link the parallel variants.
+        conn = _vintage_db()
+        for vid, slug, cls in (
+            (1, "fars-sni-2002", "sni2002"),
+            (2, "mors-sni-2002", "sni2002"),
+            (3, "fars-sni-2007", "sni2007"),
+            (4, "mors-sni-2007", "sni2007"),
+        ):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=vid,
+                name="Föräldrars näringsgren",
+                slug=slug,
+            )
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                classification_id=_cid(conn, cls),
+            )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
+    def test_interval_native_variable_mints_nothing(self) -> None:
+        # ONE variable spanning BOTH editions across its own two states (the #271
+        # interval-native case) already carries the lineage in one variable_id →
+        # no lift. The variable appears under >1 edition, breaking the bijection.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Näringsgren", slug="sni")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni",
+            register_variant_id=10,
+            valid_from="2002-01-01",
+            valid_to="2006-12-31",
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni",
+            register_variant_id=10,
+            valid_from="2007-01-01",
+            valid_to="9999-12-31",
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
+    def test_existing_curated_edge_wins_no_duplicate(self) -> None:
+        # A pre-existing edge on the same PK (curated #375/#440 or auto
+        # timeseries_event) WINS — the lift's INSERT OR IGNORE leaves it untouched
+        # and mints no derived duplicate. Same clean family as the first test.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Näringsgren", slug="sni-2002")
+        add_variable(conn, register_id=1, var_id=2, name="Näringsgren", slug="sni-2007")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2002",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2007",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        # Pre-seed the SAME PK with a curated row (richer provenance).
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note, beskrivning) "
+            "VALUES ('scb','lisa','sni-2002','scb','lisa','sni-2007', "
+            "2007, 'curated:slug_toml', 'hand reason')"
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0  # the derived row collapsed onto the curated PK
+        # Exactly ONE row on that PK, and it kept the curated note + beskrivning.
+        rows = conn.execute(
+            "SELECT note, beskrivning FROM variable_replaced_by "
+            "WHERE predecessor_variable = 'sni-2002' "
+            "AND successor_variable = 'sni-2007'"
+        ).fetchall()
+        assert len(rows) == 1
+        assert rows[0][0] == "curated:slug_toml"
+        assert rows[0][1] == "hand reason"
+
+    def test_distinct_levels_do_not_cross_link(self) -> None:
+        # Two LEVELS of the same series each bind their own classification lineage
+        # (sni2007-grov ≠ sni2007-utokad). The lift over distinct slugs isolates
+        # each level's chain — grov never links into utokad — with NO special
+        # level handling. Two clean families → two independent edges.
+        conn = _vintage_db()  # has sni2002→sni2007 (treat as the "grov" lineage)
+        cid_ug_2002 = _add_classification(conn, "SNI2002-UTOKAD", "sni2002-utokad")
+        cid_ug_2007 = _add_classification(conn, "SNI2007-UTOKAD", "sni2007-utokad")
+        _add_edition_edge(conn, "sni2002-utokad", "sni2007-utokad", 2007)
+        # grov family
+        add_variable(
+            conn, register_id=1, var_id=1, name="Näringsgren", slug="sni-grov-2002"
+        )
+        add_variable(
+            conn, register_id=1, var_id=2, name="Näringsgren", slug="sni-grov-2007"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-grov-2002",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-grov-2007",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        # utokad family — DIFFERENT name so it's a distinct family key (a real
+        # level split carries a distinct name/slug; the slug-chain isolation here
+        # is what the test asserts: utokad rides its own classification slugs).
+        add_variable(
+            conn, register_id=1, var_id=3, name="Näringsgren utökad", slug="sni-ut-2002"
+        )
+        add_variable(
+            conn, register_id=1, var_id=4, name="Näringsgren utökad", slug="sni-ut-2007"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-ut-2002",
+            register_variant_id=10,
+            classification_id=cid_ug_2002,
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-ut-2007",
+            register_variant_id=10,
+            classification_id=cid_ug_2007,
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 2
+        assert _lift_rows(conn) == [
+            ("sni-grov-2002", "sni-grov-2007", 2007),
+            ("sni-ut-2002", "sni-ut-2007", 2007),
+        ]

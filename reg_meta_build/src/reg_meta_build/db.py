@@ -74,6 +74,7 @@ from .period_family_merges import (
     repo_period_family_merges_path,
 )
 from .relations import (
+    derive_variable_vintage_succession,
     load_relations,
     materialize_curated_replaced_by,
     materialize_related_to,
@@ -3451,6 +3452,22 @@ def materialize(
     else:
         replaced_by_stats = _materialize_replaced_by_edges(
             conn, relations.replaced_by, providers=active_providers
+        )
+        # Variable vintage succession (#584) — lift `classification_replaced_by`
+        # edition edges (#571) to the variable grain through value-set bindings,
+        # clean tier only (a same-name family that maps 1:1 to editions). Runs
+        # AFTER `_materialize_replaced_by_edges` for two reasons: it reads
+        # `variable.slug` for the edge endpoints, and it dedups against the
+        # curated (#375/#440) + auto (timeseries_event) rows that pass just
+        # inserted — those WIN on a PK collision (INSERT OR IGNORE). Its count
+        # gets its OWN `row_counts` key rather than folding into the
+        # `_REPLACED_BY_STAT_KEYS` set (pinned by test_replaced_by_stats_in_manifest)
+        # — these rows ARE in `variable_replaced_by` but on a distinct
+        # `derived:classification_vintage_lift` provenance, mirroring how the
+        # classification succession pass carries its own `classification_replaced_by`
+        # key. Same slug-dependent block (every slug is NULL under --skip-slugs).
+        row_counts["variable_replaced_by_vintage_lift"] = (
+            derive_variable_vintage_succession(conn, progress=_progress)
         )
 
     # Lineage edges. Runs *after* populate_variable_slugs so
