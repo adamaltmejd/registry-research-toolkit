@@ -1398,15 +1398,16 @@ def _check_sos_stateless_variables(
 # carry no vintage classifications, so the floor is corpus-gated.
 _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 
-# Variable vintage-lift floor (#584, corpus only): the clean tier lifts ~53
-# same-name families (one variable per edition) from `classification_replaced_by`
-# editions to the variable grain. Each clean family of N chained editions yields
-# N-1 adjacent edges, so the corpus carries at least ~53 derived edges. A floor
-# well under the measured count catches a regression that silently stops lifting
-# (classification-binding backfill drift, bijection-guard inversion) without
-# false-failing on legitimate corpus churn (the entangled tier moving in/out).
-# Synthetic builds carry no vintage classifications, so the floor is corpus-gated.
-_MIN_VARIABLE_VINTAGE_LIFT_EDGES = 30
+# Variable vintage-lift floor (#584, corpus only): the clean tier lifts same-name
+# families (one variable per edition) from `classification_replaced_by` editions to
+# the variable grain, ~32 derived edges on the current corpus (the issue estimated
+# ~53; the conservative bijection — gaps and edition-spanning variables excluded —
+# lands lower). A floor well under the measured count catches a regression that
+# silently stops lifting (classification-binding backfill drift, bijection-guard
+# inversion) without false-failing on legitimate corpus churn (the entangled tier
+# moving in/out). Synthetic builds carry no vintage classifications, so the floor is
+# corpus-gated.
+_MIN_VARIABLE_VINTAGE_LIFT_EDGES = 25
 
 
 def _check_concept_groups(
