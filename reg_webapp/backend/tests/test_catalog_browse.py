@@ -127,20 +127,20 @@ def test_binding_leaf_embeds_full_record(client):
 
 
 def test_binding_leaf_embeds_full_succession_chain(client):
-    # #582: the binding leaf embeds the FULL variable succession timeline (oldest
-    # first, terminal last) so the browse panel renders every edition synchronously,
-    # superseding the immediate `replaced_by` embed. The fixture wires
-    # kon (2019, "kon→syss") → rams/syss (the live terminal), plus the redirect-test
-    # dead predecessors renamed-head → renamed-mid → syss. The chain spans all four,
-    # anchored on the queried kon (is_self) and ending at the terminal syss
-    # (is_current).
+    # #582/#588: the binding leaf embeds the FULL variable succession timeline
+    # (oldest first, terminal last) for the QUERIED node's own path, superseding the
+    # immediate `replaced_by` embed. The fixture wires kon (2019, "kon→syss") →
+    # rams/syss (the live terminal), and SEPARATELY the redirect-test dead
+    # predecessors renamed-head → renamed-mid → syss. syss is therefore a MERGE
+    # (two inbound branches). #588 anchors the chain on the QUERIED node's path, so
+    # querying kon returns ONLY kon's branch [kon, syss] — the renamed-* branch is a
+    # different inbound path and is NOT polluted in (the pre-#588 collect-all-from-
+    # terminal walk wrongly rendered all four).
     resp = client.get("/api/catalog/scb/lisa/kon")
     assert resp.status_code == 200
     chain = resp.json()["succession_chain"]
     assert [(e["register"], e["variable"]) for e in chain] == [
         ("lisa", "kon"),
-        ("lisa", "renamed-head"),
-        ("lisa", "renamed-mid"),
         ("rams", "syss"),
     ]
     by_var = {e["variable"]: e for e in chain}
@@ -160,13 +160,10 @@ def test_binding_leaf_embeds_full_succession_chain(client):
     assert by_var["syss"]["name"] == "Sysselsättning"
     assert sum(e["is_self"] for e in chain) == 1
     assert sum(e["is_current"] for e in chain) == 1
-    # Dead/renamed predecessors are tolerated by design (#355/#411 — unlike
-    # classifications, NO variable_replaced_by validator forbids them): each carries a
-    # syntactically-valid binding fqid (so a citation 301-redirects to the current
-    # edition) but name=None (no live `variable` row to read).
-    for dead in ("renamed-head", "renamed-mid"):
-        assert by_var[dead]["fqid"] == f"scb/lisa/{dead}"
-        assert by_var[dead]["name"] is None
+    # The sibling merge branch (renamed-head/renamed-mid) is on a DIFFERENT inbound
+    # path to syss, so querying kon never reaches it (#588 — anchored on kon's path).
+    assert "renamed-head" not in by_var
+    assert "renamed-mid" not in by_var
 
 
 def test_binding_leaf_omits_lineage_warnings(client):

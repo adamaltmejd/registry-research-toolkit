@@ -1648,22 +1648,28 @@ class Catalog:
         The webapp browse panel renders "this variable has N editions" from it,
         instead of only the immediate `replaced_by` neighbor.
 
-        Like `classification_chain`, two things the immediate-neighbor accessors
-        (`predecessors`/`successors`) don't do:
+        Ordered by TRAVERSAL, anchored on the QUERIED binding (#588), exactly like
+        `classification_chain`: from the canonical triple we step the
+        deterministic-first successor edge `[0]` forward to the terminal and the
+        deterministic-first predecessor edge `[0]` backward to the root (both off the
+        already-ORDER-BY'd `_successor_edges` / `_predecessor_edges`). The chain is
+        `reversed(backward)` + canonical + forward, so the ORDER is the walk and the
+        `effective_year` is DISPLAY-only (a NULL/undated edge no longer inverts it).
+        Anchoring on the queried path means a merge sibling on a DIFFERENT inbound
+        branch is never reached — only this binding's own path. The deterministic-
+        first pick at a split/merge mirrors `resolve_terminal_successor`.
+
+        Two things the immediate-neighbor accessors (`predecessors`/`successors`)
+        don't do:
 
           - same_as canonicalization: `_resolve_edge_triple` resolves the queried
             binding FQID to the canonical (provider, register, variable) the edge
             tables key on, following `variable_same_as` and variable identity (and
             raising not-found on a dead slug — for a chain we want the canonical LIVE
             binding). The `is_self` edition is this canonical triple.
-          - full walk: from the canonical triple we find the terminal (the chain end
-            with no outbound successor) via `_first_successor_triple` + `_walk_terminal`,
-            then collect ALL predecessors transitively from the terminal, assembling
-            every edition in the chain.
-
-        Variable chains are LINEAR on the corpus (0 splits/merges, verified at #582),
-        so the forward-to-terminal + backward-collect walk is well-defined here as it
-        is for classifications.
+          - full walk: forward to the terminal (the chain end with no outbound
+            successor) and backward to the root, assembling every edition on the
+            queried node's path.
 
         A chain edition may be a DEAD/renamed predecessor with no live `variable` row
         — the #355/#411 renamed-slug model: succession tolerates dead predecessor
@@ -1676,17 +1682,58 @@ class Catalog:
         None only on a malformed triple. On the corpus today all 12 edges are live, but
         the model permits a dead predecessor.
 
+        `effective_year`/`reason` per edition come from the OUTBOUND edge by which that
+        edition was superseded (the terminal, with no outbound edge, gets None/None).
+
         A variable with no succession edges returns a single edition (`is_current`
         and `is_self` both True)."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         canonical = (provider, register, variable)
-        # Terminal = the chain head. `_walk_terminal` returns None when the start has
-        # no outbound edge (it IS the terminal), so fall back to canonical.
-        walked = self._walk_terminal(canonical, self._first_successor_triple)
-        terminal = walked if walked is not None else canonical
-        edge_by_triple = self._variable_chain_edges(terminal)
-        name_by_triple = self._variable_chain_names(edge_by_triple.keys())
-        editions = [
+        seen = {canonical}
+
+        # Forward: canonical → terminal, stepping the deterministic-first successor
+        # edge `[0]`. In step `cur → nxt`, the edge's `effective_year`/`reason` is
+        # `cur`'s superseded year/reason, so it's attached to the node we step FROM.
+        # The terminal (no outbound edge) keeps (None, None).
+        Edge = tuple[str, str, str]
+        forward: list[tuple[Edge, int | None, str | None]] = []
+        cur = canonical
+        canonical_year: int | None = None
+        canonical_reason: str | None = None
+        succ = self._successor_edges(*cur)
+        while succ and (nxt := self._ref_triple(succ[0])) not in seen:
+            edge = succ[0]
+            if forward:
+                forward[-1] = (forward[-1][0], edge.effective_year, edge.reason)
+            else:
+                canonical_year, canonical_reason = edge.effective_year, edge.reason
+            seen.add(nxt)
+            forward.append((nxt, None, None))
+            cur = nxt
+            succ = self._successor_edges(*cur)
+
+        # Backward: canonical → root, stepping the deterministic-first predecessor
+        # edge `[0]`. The edge prv→cur is `prv`'s OUTBOUND edge, so its
+        # `effective_year`/`reason` is prv's superseded year/reason.
+        backward: list[tuple[Edge, int | None, str | None]] = []
+        cur = canonical
+        pred = self._predecessor_edges(*cur)
+        while pred and (prv := self._ref_triple(pred[0])) not in seen:
+            edge = pred[0]
+            seen.add(prv)
+            backward.append((prv, edge.effective_year, edge.reason))
+            cur = prv
+            pred = self._predecessor_edges(*cur)
+
+        # Chain oldest→current = reversed(backward) + canonical + forward.
+        ordered: list[tuple[Edge, int | None, str | None]] = [
+            *reversed(backward),
+            (canonical, canonical_year, canonical_reason),
+            *forward,
+        ]
+        terminal = ordered[-1][0]
+        name_by_triple = self._variable_chain_names(t for t, _, _ in ordered)
+        return [
             VariableEdition(
                 fqid=self._ref_fqid(*triple),
                 provider=triple[0],
@@ -1698,61 +1745,15 @@ class Catalog:
                 is_current=(triple == terminal),
                 is_self=(triple == canonical),
             )
-            for triple, (year, reason) in edge_by_triple.items()
+            for triple, year, reason in ordered
         ]
-        # Oldest first; the terminal (current) sorts LAST regardless of year (it has
-        # no outbound edge, so it carries no year). Undated predecessors sort after
-        # dated ones but before the terminal; the triple is the stable tiebreak.
-        editions.sort(
-            key=lambda e: (
-                e.is_current,
-                e.effective_year is None,
-                e.effective_year or 0,
-                (e.provider, e.register, e.variable),
-            )
-        )
-        return editions
 
-    def _variable_chain_edges(
-        self, terminal: tuple[str, str, str]
-    ) -> dict[tuple[str, str, str], tuple[int | None, str | None]]:
-        """Every edition triple in the chain ending at `terminal` → its
-        `(effective_year, beskrivning)` from the `variable_replaced_by` edge that
-        names it as the predecessor — i.e. the year this edition was superseded by
-        its successor. The terminal has no outbound edge (is no edge's predecessor),
-        so it gets `(None, None)`. Predecessor-BFS up the successor side from the
-        terminal (via `idx_variable_replaced_by_successor`), with a `seen` cycle
-        guard — the variable-grain dual of `_classification_chain_years`."""
-        edge_by_triple: dict[tuple[str, str, str], tuple[int | None, str | None]] = {
-            terminal: (None, None)
-        }
-        seen = {terminal}
-        frontier = [terminal]
-        while frontier:
-            placeholders = ",".join("(?, ?, ?)" for _ in frontier)
-            params = [seg for triple in frontier for seg in triple]
-            rows = self._conn.execute(
-                "SELECT predecessor_provider, predecessor_register, "
-                "predecessor_variable, effective_year, beskrivning "
-                "FROM variable_replaced_by "
-                "WHERE (successor_provider, successor_register, successor_variable) "
-                f"IN ({placeholders})",
-                params,
-            ).fetchall()
-            nxt: list[tuple[str, str, str]] = []
-            for row in rows:
-                pred = (
-                    row["predecessor_provider"],
-                    row["predecessor_register"],
-                    row["predecessor_variable"],
-                )
-                if pred in seen:
-                    continue
-                seen.add(pred)
-                edge_by_triple[pred] = (row["effective_year"], row["beskrivning"])
-                nxt.append(pred)
-            frontier = nxt
-        return edge_by_triple
+    @staticmethod
+    def _ref_triple(ref: VariableRef) -> tuple[str, str, str]:
+        """The load-bearing (provider, register, variable) triple of a
+        `VariableRef` edge endpoint — the key the `variable_replaced_by` walk steps
+        on (the `fqid` is best-effort, but the triple is always present)."""
+        return (ref.provider, ref.register, ref.variable)
 
     def _variable_chain_names(
         self, triples: Iterable[tuple[str, str, str]]
@@ -1806,7 +1807,19 @@ class Catalog:
         renders to show "this classification has N editions" instead of only the
         immediate neighbor.
 
-        Three things the immediate-neighbor accessors don't do:
+        Ordered by TRAVERSAL, anchored on the QUERIED edition (#588): from the
+        canonical slug we walk forward to the terminal via the deterministic-first
+        successor and backward to the root via the deterministic-first predecessor
+        (the `[0]` of the already-ORDER-BY'd `_classification_successor_edges` /
+        `_classification_predecessor_edges`). The chain is `reversed(backward)` +
+        canonical + forward, so the ORDER is the walk — the `effective_year` is a
+        DISPLAY field, never the sort key (a NULL/undated edge no longer inverts the
+        order). Anchoring on the queried path also means a merge sibling on a
+        DIFFERENT inbound branch (`A→C`, `B→C`: querying `A` never reaches `B`) is
+        not included — only this edition's own path. The deterministic-first pick at
+        a split/merge mirrors `resolve_terminal_successor`.
+
+        Two things the immediate-neighbor accessors don't do:
 
           - same_as canonicalization: the queried slug may be a curated
             `classification_same_as` alias (see DESIGN.md → Classifications). We
@@ -1814,9 +1827,9 @@ class Catalog:
             `is_self`) is anchored on the canonical edition, not the alias. A slug
             that resolves to no live row falls back to itself — succession tolerates
             dead slugs.
-          - full walk: from the canonical slug we find the terminal (the chain end
-            with no outbound successor), then collect ALL predecessors transitively
-            from the terminal, assembling every edition in the chain.
+          - full walk: forward to the terminal (the chain end with no outbound
+            successor) and backward to the root, assembling every edition on the
+            queried node's path.
 
         Every chain endpoint is a live `classification` row — `reg_meta_build`'s
         validator (`validate.py`, the `classification_replaced_by` check) fails the
@@ -1825,22 +1838,59 @@ class Catalog:
         `fqid`/`name`.
 
         A standalone classification with no succession edges returns a single
-        edition (`is_current` and `is_self` both True). The predecessor walk lives
-        here rather than reusing `queries._classification_editions` because
-        `queries` imports `catalog` (catalog is the lower layer — importing back
-        would be circular); the terminal walk reuses
-        `_first_classification_successor_slug` + `_walk_terminal`."""
+        edition (`is_current` and `is_self` both True). The walk lives here rather
+        than reusing `queries._classification_editions` because `queries` imports
+        `catalog` (catalog is the lower layer — importing back would be circular).
+
+        `effective_year` per edition is the year on the OUTBOUND edge by which that
+        edition was superseded by its successor on the path (the terminal, with no
+        outbound edge, gets None) — read off the deterministic-first edge `[0]`."""
         queried = self._parse_classification(fqid)
         canonical = self._canonical_classification_slug(queried)
-        # Terminal = the chain head. `_walk_terminal` returns None when the start
-        # has no outbound edge (it IS the terminal), so fall back to canonical.
-        walked = self._walk_terminal(
-            (canonical,), self._first_classification_successor_slug
-        )
-        terminal = walked[0] if walked is not None else canonical
-        year_by_slug = self._classification_chain_years(terminal)
-        name_by_slug = self._classification_chain_names(year_by_slug.keys())
-        editions = [
+        seen = {canonical}
+
+        # Forward: canonical → terminal, stepping the deterministic-first successor
+        # edge `[0]`. In step `cur → nxt`, the edge's `effective_year` is `cur`'s
+        # superseded year, so it's attached to the node we step FROM. The terminal
+        # (no outbound edge) keeps None.
+        forward: list[tuple[str, int | None]] = []
+        cur = canonical
+        canonical_year: int | None = None
+        succ = self._classification_successor_edges(cur)
+        while succ and succ[0].slug not in seen:
+            edge = succ[0]
+            # Attach this edge's year to the node we're leaving (`cur`).
+            if forward:
+                forward[-1] = (forward[-1][0], edge.effective_year)
+            else:
+                canonical_year = edge.effective_year
+            seen.add(edge.slug)
+            forward.append((edge.slug, None))
+            cur = edge.slug
+            succ = self._classification_successor_edges(cur)
+
+        # Backward: canonical → root, stepping the deterministic-first predecessor
+        # edge `[0]`. The edge prv→cur is `prv`'s OUTBOUND edge, so its
+        # `effective_year` is prv's superseded year.
+        backward: list[tuple[str, int | None]] = []
+        cur = canonical
+        pred = self._classification_predecessor_edges(cur)
+        while pred and pred[0].slug not in seen:
+            edge = pred[0]
+            seen.add(edge.slug)
+            backward.append((edge.slug, edge.effective_year))
+            cur = edge.slug
+            pred = self._classification_predecessor_edges(cur)
+
+        # Chain oldest→current = reversed(backward) + canonical + forward.
+        ordered: list[tuple[str, int | None]] = [
+            *reversed(backward),
+            (canonical, canonical_year),
+            *forward,
+        ]
+        terminal = ordered[-1][0]
+        name_by_slug = self._classification_chain_names(s for s, _ in ordered)
+        return [
             ClassificationEdition(
                 slug=slug,
                 fqid=self._class_ref_fqid(slug),
@@ -1849,20 +1899,8 @@ class Catalog:
                 is_current=(slug == terminal),
                 is_self=(slug == canonical),
             )
-            for slug, year in year_by_slug.items()
+            for slug, year in ordered
         ]
-        # Oldest first; the terminal (current) sorts LAST regardless of year (it has
-        # no outbound edge, so it carries no year). Undated predecessors sort after
-        # dated ones but before the terminal; slug is the stable tiebreak.
-        editions.sort(
-            key=lambda e: (
-                e.is_current,
-                e.effective_year is None,
-                e.effective_year or 0,
-                e.slug,
-            )
-        )
-        return editions
 
     def _canonical_classification_slug(self, slug: str) -> str:
         """Resolve a (possibly `same_as`-aliased) classification slug to the
@@ -1879,35 +1917,6 @@ class Catalog:
             (resolved.classification_id,),
         ).fetchone()
         return row["slug"] if row and row["slug"] is not None else slug
-
-    def _classification_chain_years(self, terminal_slug: str) -> dict[str, int | None]:
-        """Every edition slug in the chain ending at `terminal_slug` → its
-        `effective_year` (the year on the `classification_replaced_by` edge that
-        names it as `predecessor_slug` — i.e. the year this edition was superseded by
-        its successor). The terminal has no outbound edge (is no edge's predecessor),
-        so it gets None. Predecessor-BFS up the successor side from the terminal, with
-        a `seen` cycle guard."""
-        year_by_slug: dict[str, int | None] = {terminal_slug: None}
-        seen = {terminal_slug}
-        frontier = [terminal_slug]
-        while frontier:
-            placeholders = ",".join("?" * len(frontier))
-            rows = self._conn.execute(
-                "SELECT predecessor_slug, effective_year "
-                "FROM classification_replaced_by "
-                f"WHERE successor_slug IN ({placeholders})",
-                frontier,
-            ).fetchall()
-            nxt: list[str] = []
-            for row in rows:
-                pred = row["predecessor_slug"]
-                if pred in seen:
-                    continue
-                seen.add(pred)
-                year_by_slug[pred] = row["effective_year"]
-                nxt.append(pred)
-            frontier = nxt
-        return year_by_slug
 
     def _classification_chain_names(
         self, slugs: Iterable[str]

@@ -1276,6 +1276,150 @@ class TestEdgeAccessors:
         assert chain[0].is_self is True
         assert chain[0].is_current is True
 
+    # ── #588: order-by-traversal, robust to undated edges + merges/splits ──
+
+    def test_classification_chain_undated_edge_orders_by_traversal(self) -> None:
+        # The a→b edge is UNDATED (NULL effective_year), b→c dated 2018. The old
+        # sort-by-effective_year inverted on the undated edge (a's None sank below
+        # b's 2018); the #588 order-by-traversal walk keeps [a, b, c].
+        conn = build_slugged_db()  # seeds the live sun2020
+        self._seed_classification(conn, slug="cls-a", short_name="CA", name="C A")
+        self._seed_classification(conn, slug="cls-b", short_name="CB", name="C B")
+        self._seed_classification(conn, slug="cls-c", short_name="CC", name="C C")
+        self._seed_classification_replaced_by(
+            conn, predecessor="cls-a", successor="cls-b", effective_year=None
+        )
+        self._seed_classification_replaced_by(
+            conn, predecessor="cls-b", successor="cls-c", effective_year=2018
+        )
+        chain = Catalog(conn).classification_chain("class/cls-a")
+        assert [e.slug for e in chain] == ["cls-a", "cls-b", "cls-c"]
+        # effective_year is display-only now: cls-a undated, cls-b 2018, terminal None.
+        assert [e.effective_year for e in chain] == [None, 2018, None]
+        assert chain[0].is_self is True
+        assert chain[-1].is_current is True
+
+    def test_classification_chain_merge_excludes_sibling_branch(self) -> None:
+        # mrg-a→mrg-c and mrg-b→mrg-c: mrg-c is a merge. Querying mrg-a returns its
+        # OWN path [mrg-a, mrg-c], NOT the sibling mrg-b (a different inbound branch);
+        # querying mrg-b returns [mrg-b, mrg-c]. The old collect-all-from-terminal
+        # walk wrongly rendered mrg-b when browsing mrg-a.
+        conn = build_slugged_db()
+        for slug in ("mrg-a", "mrg-b", "mrg-c"):
+            self._seed_classification(
+                conn, slug=slug, short_name=slug.upper(), name=slug
+            )
+        self._seed_classification_replaced_by(
+            conn, predecessor="mrg-a", successor="mrg-c", effective_year=2010
+        )
+        self._seed_classification_replaced_by(
+            conn, predecessor="mrg-b", successor="mrg-c", effective_year=2010
+        )
+        chain_a = Catalog(conn).classification_chain("class/mrg-a")
+        assert [e.slug for e in chain_a] == ["mrg-a", "mrg-c"]
+        chain_b = Catalog(conn).classification_chain("class/mrg-b")
+        assert [e.slug for e in chain_b] == ["mrg-b", "mrg-c"]
+
+    def test_classification_chain_split_follows_deterministic_first(self) -> None:
+        # spl-a→spl-b and spl-a→spl-c: spl-a is a split. chain(spl-a) follows the
+        # deterministic-first successor ([0] of the ORDER BY successor_slug edges =
+        # lexicographic-first, spl-b < spl-c), so [spl-a, spl-b]. Each branch tip
+        # resolves its own walk.
+        conn = build_slugged_db()
+        for slug in ("spl-a", "spl-b", "spl-c"):
+            self._seed_classification(
+                conn, slug=slug, short_name=slug.upper(), name=slug
+            )
+        self._seed_classification_replaced_by(
+            conn, predecessor="spl-a", successor="spl-b", effective_year=2012
+        )
+        self._seed_classification_replaced_by(
+            conn, predecessor="spl-a", successor="spl-c", effective_year=2012
+        )
+        chain_a = Catalog(conn).classification_chain("class/spl-a")
+        assert [e.slug for e in chain_a] == ["spl-a", "spl-b"]
+        # Querying spl-b walks back to spl-a then forward via the det-first successor
+        # (spl-b), so its path is [spl-a, spl-b] with is_self on spl-b.
+        chain_b = Catalog(conn).classification_chain("class/spl-b")
+        assert [e.slug for e in chain_b] == ["spl-a", "spl-b"]
+        assert next(e for e in chain_b if e.is_self).slug == "spl-b"
+        # spl-c's backward walk reaches spl-a; spl-a's det-first successor is spl-b,
+        # so the forward walk goes spl-a→spl-b — spl-c is reached only as is_self.
+        chain_c = Catalog(conn).classification_chain("class/spl-c")
+        assert next(e for e in chain_c if e.is_self).slug == "spl-c"
+
+    def test_variable_chain_undated_edge_orders_by_traversal(self) -> None:
+        # kon → uA (UNDATED) → uB (2018). Order-by-traversal keeps [kon, uA, uB]
+        # despite kon's outbound edge being undated (the old year-sort inverted it).
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=300, name="U A", slug="uA")
+        add_variable(conn, register_id=1, var_id=301, name="U B", slug="uB")
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "uA"),
+            effective_year=None,
+        )
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "uA"),
+            successor=("scb", "lisa", "uB"),
+            effective_year=2018,
+        )
+        chain = Catalog(conn).variable_chain("scb/lisa/kon")
+        assert [e.variable for e in chain] == ["kon", "uA", "uB"]
+        assert [e.effective_year for e in chain] == [None, 2018, None]
+        assert chain[0].is_self is True
+        assert chain[-1].is_current is True
+
+    def test_variable_chain_merge_excludes_sibling_branch(self) -> None:
+        # kon → syss and other → syss: syss is a merge. chain(kon) returns its OWN
+        # path [kon, syss], NOT the sibling `other`; chain(other) returns
+        # [other, syss]. The pre-#588 collect-all walk wrongly rendered `other`.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=400, name="Syss", slug="syss")
+        add_variable(conn, register_id=1, var_id=401, name="Other", slug="other")
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "syss"),
+            effective_year=2019,
+        )
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "other"),
+            successor=("scb", "lisa", "syss"),
+            effective_year=2019,
+        )
+        chain_kon = Catalog(conn).variable_chain(_KON)
+        assert [e.variable for e in chain_kon] == ["kon", "syss"]
+        chain_other = Catalog(conn).variable_chain("scb/lisa/other")
+        assert [e.variable for e in chain_other] == ["other", "syss"]
+
+    def test_variable_chain_split_follows_deterministic_first(self) -> None:
+        # kon → aaa and kon → bbb: kon is a split. chain(kon) follows the
+        # deterministic-first successor ([0] of ORDER BY successor triple, aaa < bbb),
+        # so [kon, aaa]. Each branch tip resolves its own walk.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=500, name="AAA", slug="aaa")
+        add_variable(conn, register_id=1, var_id=501, name="BBB", slug="bbb")
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "aaa"),
+            effective_year=2020,
+        )
+        self._seed_var_replaced_by(
+            conn,
+            predecessor=("scb", "lisa", "kon"),
+            successor=("scb", "lisa", "bbb"),
+            effective_year=2020,
+        )
+        chain_kon = Catalog(conn).variable_chain(_KON)
+        assert [e.variable for e in chain_kon] == ["kon", "aaa"]
+        chain_bbb = Catalog(conn).variable_chain("scb/lisa/bbb")
+        assert next(e for e in chain_bbb if e.is_self).variable == "bbb"
+
     def test_same_as_on_resolved_variable(self) -> None:
         conn = build_slugged_db()
         for src, tgt in (

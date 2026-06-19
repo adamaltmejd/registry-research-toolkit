@@ -701,13 +701,17 @@ single leaf row matches). `--no-fold` flattens. `get schema` carries
 concept-group fold, `_fold_classification_succession` collapses classification edition
 hits that share a `classification_replaced_by` chain into one
 `type: "classification_succession"` result row — the terminal (current) edition's
-identity, plus the full `editions` list (terminal-first, then descending
-`effective_year`) and the original leaf hits under `matched`. A lone edition hit
-(whether terminal or an old vintage) stays a leaf; an old-vintage lone hit is annotated
-with `terminal_fqid` so the webapp can link "current". This fold runs **before** the
-concept-group fold so collapsed terminals can then fold into a curated umbrella group
-(e.g. `group:sun`, #516) cleanly — the succession row keeps the terminal's
-`_classification_id` so the umbrella pass treats it as that classification.
+identity, plus the full `editions` list (terminal-first by BFS depth — date-independent,
+so robust to undated `effective_year` edges; #588) and the original leaf hits under
+`matched`. This fold is terminal-centric (it collapses a whole family onto its terminal,
+with no queried node), so collect-all-ancestors is correct here — unlike
+`Catalog.classification_chain` / `variable_chain`, which anchor on the QUERIED node's
+path (also #588) so a merge sibling on a different inbound branch is excluded. A lone
+edition hit (whether terminal or an old vintage) stays a leaf; an old-vintage lone hit
+is annotated with `terminal_fqid` so the webapp can link "current". This fold runs
+**before** the concept-group fold so collapsed terminals can then fold into a curated
+umbrella group (e.g. `group:sun`, #516) cleanly — the succession row keeps the
+terminal's `_classification_id` so the umbrella pass treats it as that classification.
 `_strip_internal_keys` recurses into `matched` at both depths to drop the fold-internal
 `_classification_id` before results go public. All folds happen before pagination — a
 succession row and a group row each count as one result.
