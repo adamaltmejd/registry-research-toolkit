@@ -226,6 +226,46 @@ class TestEdgeGroups:
         assert groups["sun2000"]["members"] == ["sun2000", "sun2020"]
         assert groups["fam"]["members"] == ["other", "sunx"]
 
+    def test_curated_bridge_member_disconnects_survivors(self) -> None:
+        # BRIDGE case (#591, unblocks #488): the component is two cliques joined
+        # at a single vertex `varx` (a—x and x—b, NO direct a—b). When the curated
+        # group claims `varx`, removing it disconnects vara from varb — no
+        # surviving same_def path folds them. The fix skips edges touching an
+        # excluded endpoint BEFORE the union, so vara and varb land in separate
+        # (singleton) components and NO edge group containing both is minted. The
+        # old subtract-after-union logic unioned the full a—x—b chain first, then
+        # subtracted x, leaving a spurious {vara, varb} edge group — so this test
+        # FAILS on the old logic and PASSES on the fix.
+        conn = build_slugged_db(classification=None)
+        add_variable(conn, register_id=1, var_id=98, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=98, name="X", slug="varx")
+        add_variable(conn, register_id=1, var_id=98, name="B", slug="varb")
+        add_variable(conn, register_id=1, var_id=99, name="Other", slug="other")
+        siblings = _siblings(conn, ("vara", "varx"), ("varx", "varb"))
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axis="part",
+            members=(
+                CuratedMember(variable="varx", value="1", label="x"),
+                CuratedMember(variable="other", value="2", label="o"),
+            ),
+        )
+        counts = materialize_concept_groups(
+            conn, (curated,), edge_siblings=siblings, providers=_SCB
+        )
+        # Both surviving endpoints are now singleton components → no edge group.
+        assert counts["edge_groups"] == 0
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"fam"}
+        # Defensive: no minted edge group folds vara and varb together.
+        for g in groups.values():
+            if g["source"] == "edge":
+                assert not ({"vara", "varb"} <= set(g["members"]))
+
 
 class TestMonthGroups:
     @staticmethod

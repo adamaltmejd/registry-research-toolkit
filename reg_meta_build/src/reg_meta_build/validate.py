@@ -1394,13 +1394,14 @@ def _check_sos_stateless_variables(
 # classification-vintage-group floor here.
 
 # Edge-group volume floor (#591, corpus only): the within-register
-# split-sibling components dominate the variable concept groups (~2,191 on the
-# current corpus). A floor well under that count catches a derivation collapse —
-# an empty `edge_siblings`, a slug regression that drops every endpoint — without
-# tripping on the curated-precedence exclusions (#488 will re-home a handful of
-# components, never thousands) or routine corpus churn. Synthetic builds carry
-# few/no sibling edges, so the floor is corpus-gated.
-_CG_MIN_EDGE_GROUPS = 1500
+# split-sibling components dominate the variable concept groups — a real-corpus
+# build measured 2,191 edge groups (CONFIRMED 2026-06-19 on the current corpus).
+# The floor sits at ~82% of that count: low enough to catch a derivation collapse
+# — an empty `edge_siblings`, a slug regression that drops every endpoint — and
+# high enough to leave headroom for the curated-precedence exclusions (#488 will
+# re-home a handful of components, never thousands) and routine corpus churn.
+# Synthetic builds carry few/no sibling edges, so the floor is corpus-gated.
+_CG_MIN_EDGE_GROUPS = 1800
 
 # Classification succession floor (#571, corpus only): the lkf vintage chain
 # (lkf1980…lkf2026, ~47 editions → ~46 adjacent edges) dominates the corpus

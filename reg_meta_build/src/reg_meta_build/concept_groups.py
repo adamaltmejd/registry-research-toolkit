@@ -606,11 +606,17 @@ def _derive_edge_groups(
     not mint an unrepresentable group).
 
     Curated precedence (#591, unblocks #488): `exclude_variable_ids` are the
-    variable_ids the curated/accept pass has already claimed. Each component
-    subtracts them, and only a component with >= 2 SURVIVORS mints a group
-    (key/label/register computed from the survivors). A component reduced below 2
-    by exclusion mints nothing — the curated `[[variable_group]]` claims those
-    FQIDs instead."""
+    variable_ids the curated/accept pass has already claimed. An edge touching an
+    excluded endpoint doesn't connect survivors — it is skipped BEFORE the union,
+    so excluded vids never enter the DisjointSet. A component is therefore a
+    connected component of the same_def edges among NON-excluded variables, and
+    only one with >= 2 members mints a group (key/label/register computed from the
+    members). A component with < 2 members mints nothing — the curated
+    `[[variable_group]]` claims those FQIDs instead. Skipping excluded endpoints
+    pre-union (rather than subtracting post-union) is what keeps a BRIDGE
+    exclusion correct: if a claimed member is the only vertex joining two cliques,
+    the survivors on either side stay disconnected (no surviving same_def path
+    folds them)."""
     # Full slugged-variable scan rather than an IN(...) over the involved ids —
     # bounded (~50k rows on the real corpus) and immune to SQLite's host-
     # parameter cap. Only slugged variables ever participated (the old table
@@ -626,6 +632,11 @@ def _derive_edge_groups(
     for a, b in edge_siblings:
         if a not in meta or b not in meta or meta[a][0] != meta[b][0]:
             continue
+        # Skip edges touching a curated/accepted endpoint BEFORE union: an
+        # excluded vid never enters the DisjointSet, so a bridge member's removal
+        # genuinely disconnects the survivors on either side (no folded {a, b}).
+        if a in exclude_variable_ids or b in exclude_variable_ids:
+            continue
         ds.add(a)
         ds.add(b)
         ds.union(a, b)
@@ -636,14 +647,13 @@ def _derive_edge_groups(
     # Deterministic order: by (register_id, min member slug). Key = min member
     # slug (components are disjoint, so it's scope-unique); label = the
     # min-slug member's name (the shared name on 2,191/2,193 real components),
-    # falling back to the key itself. Members are the SURVIVORS after the curated
-    # precedence subtraction; a component left with < 2 mints no group.
+    # falling back to the key itself. Excluded vids never entered the DisjointSet,
+    # so every component member is already a survivor; the < 2 guard stays
+    # defensive — a component should always be >= 2, but a degenerate one mints
+    # nothing.
     prepared = []
     for member_ids in components.values():
-        members = sorted(
-            (v for v in member_ids if v not in exclude_variable_ids),
-            key=lambda v: meta[v][1],
-        )
+        members = sorted(member_ids, key=lambda v: meta[v][1])
         if len(members) < 2:
             continue
         register_id = meta[members[0]][0]
