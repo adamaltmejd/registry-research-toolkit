@@ -58,11 +58,13 @@ class TestValidateModule:
         classification-succession, variable-vintage-lift) must SKIP (report info,
         not FAIL) when SCB isn't in the build — `build-db` always validates
         `corpus=True` regardless of `--providers`, so a non-SCB subset must not
-        false-fail. Simulate "SCB not built" by renaming the SCB provider slug so
+        false-fail. Simulate "SCB not built" by deleting the SCB register rows
+        (a real non-SCB `--providers` build has no SCB registers) so
         `_scb_in_build` returns False, then call each check directly with
         corpus=True and assert (a) the skip text renders and (b) the gated floor's
         FAIL substring is absent. Mirrors #563's gate-to-built-providers
         precedent."""
+        from reg_meta_build.db import PROVIDER_ID_SCB
         from reg_meta_build.validate import (
             ValidationResult,
             _check_classification_replaced_by,
@@ -75,9 +77,9 @@ class TestValidateModule:
         broken.write_bytes(fixture_db.read_bytes())
         conn = sqlite3.connect(broken)
         conn.row_factory = sqlite3.Row
-        # Precondition: the un-renamed fixture IS an SCB build.
+        # Precondition: the fixture IS an SCB build.
         assert _scb_in_build(conn)
-        conn.execute("UPDATE provider SET slug = 'notscb' WHERE slug = 'scb'")
+        conn.execute("DELETE FROM register WHERE provider_id = ?", (PROVIDER_ID_SCB,))
         conn.commit()
         assert not _scb_in_build(conn)
         tables = {

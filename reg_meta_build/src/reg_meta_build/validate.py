@@ -1445,9 +1445,8 @@ def _scb_in_build(conn: sqlite3.Connection) -> bool:
     """
     return (
         conn.execute(
-            "SELECT 1 FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = 'scb' LIMIT 1"
+            "SELECT 1 FROM register WHERE provider_id = ? LIMIT 1",
+            (PROVIDER_ID_SCB,),
         ).fetchone()
         is not None
     )
