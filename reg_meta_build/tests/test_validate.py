@@ -54,10 +54,10 @@ class TestValidateModule:
     def test_corpus_volume_floors_skip_when_scb_absent(
         self, fixture_db: Path, tmp_path: Path
     ):
-        """#595: the three SCB-sourced corpus volume floors (edge-group,
-        classification-succession, variable-vintage-lift) must SKIP (report info,
-        not FAIL) when SCB isn't in the build — `build-db` always validates
-        `corpus=True` regardless of `--providers`, so a non-SCB subset must not
+        """#595: the four SCB-sourced corpus volume floors (edge-group,
+        classification-succession, variable-vintage-lift, merged-monthly-family) must
+        SKIP (report info, not FAIL) when SCB isn't in the build — `build-db` always
+        validates `corpus=True` regardless of `--providers`, so a non-SCB subset must not
         false-fail. Simulate "SCB not built" by deleting the SCB register rows
         (a real non-SCB `--providers` build has no SCB registers) so
         `_scb_in_build` returns False, then call each check directly with
@@ -69,6 +69,7 @@ class TestValidateModule:
             ValidationResult,
             _check_classification_replaced_by,
             _check_concept_groups,
+            _check_variable_alias_window,
             _check_variable_replaced_by_vintage_lift,
             _scb_in_build,
         )
@@ -102,6 +103,7 @@ class TestValidateModule:
                 _check_variable_replaced_by_vintage_lift,
                 "vintage-lift derivation regression",
             ),
+            (_check_variable_alias_window, "family-merge regression"),
         )
         for check, gated_floor_fail in cases:
             result = ValidationResult()
@@ -175,6 +177,27 @@ class TestValidateModule:
         assert any(
             "vintage-lift derivation regression" in f for f in result.failures
         ), result.failures
+
+    def test_monthly_family_floor_fires_when_scb_present(self, fixture_db: Path):
+        """#595: with SCB built but no merged monthly families (synthetic builds
+        carry no `period_family_merges.toml`, so 0 windows < floor of 8), the
+        merged-monthly-family floor must FAIL — the gate preserves the floor."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_variable_alias_window,
+        )
+
+        conn = sqlite3.connect(fixture_db)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_variable_alias_window(conn, result, tables, corpus=True)
+        conn.close()
+        assert any("family-merge regression" in f for f in result.failures), (
+            result.failures
+        )
 
     @staticmethod
     def _seed_classification(

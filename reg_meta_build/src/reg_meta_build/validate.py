@@ -1202,7 +1202,10 @@ def _check_tags(
 
 
 # The 4 LISA + 4 non-LISA monthly families merged today (#319/#383); absolute
-# floor like the lkf one — adding/removing a family forces a gate update.
+# floor like the lkf one — adding/removing a family forces a gate update. Corpus-only,
+# and additionally gated on SCB being in the build (#595): the merged families are all
+# SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
+# `--providers` subset carries no families and would false-fail.
 _AW_MIN_MERGED_FAMILIES = 8
 
 
@@ -1225,7 +1228,9 @@ def _check_variable_alias_window(
     real maintainer build merges the 8 monthly families (#319/#383), so this is
     also the regression floor for family-merge (>= `_AW_MIN_MERGED_FAMILIES`
     survivors) now that the month-token-group floor in `_check_concept_groups`
-    is gone — the merge consumes every month-suffixed family pre-fold."""
+    is gone — the merge consumes every month-suffixed family pre-fold. The floor is
+    additionally gated on SCB being in the build (#595) — the merged families are all
+    SCB-sourced, so a non-SCB `--providers` subset SKIPS rather than false-fails."""
     result.section("[monthly-family windows]")
     if "variable_alias_window" not in tables:
         result.ok("variable_alias_window absent — window check skipped")
@@ -1269,7 +1274,15 @@ def _check_variable_alias_window(
         n_families = conn.execute(
             "SELECT COUNT(DISTINCT variable_id) FROM variable_alias_window"
         ).fetchone()[0]
-        if n_families >= _AW_MIN_MERGED_FAMILIES:
+        # Gated on SCB presence (#595): the merged monthly families are all
+        # SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
+        # `--providers` subset SKIPS rather than false-fails this floor.
+        if not _scb_in_build(conn):
+            result.info(
+                f"{n_families} merged monthly families — SCB not in this build, "
+                f"floor (>= {_AW_MIN_MERGED_FAMILIES}) skipped (#595)"
+            )
+        elif n_families >= _AW_MIN_MERGED_FAMILIES:
             result.ok(
                 f"{n_families} merged monthly families (>= {_AW_MIN_MERGED_FAMILIES})"
             )

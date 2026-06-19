@@ -2042,11 +2042,13 @@ the ≥2-member floor always, plus per-source volume floors (edge/month/curated)
 maintainer gate. The former `lkf` classification volume floor is gone — vintage families
 are now succession edges, not groups, so their volume is checked separately by
 `_check_classification_replaced_by`. The SCB-sourced corpus volume floors — the
-edge-group floor here, and the succession floor in `_check_classification_replaced_by`
-and the vintage-lift floor in `_check_variable_replaced_by_vintage_lift` — are
-additionally gated on SCB being in the build (#595), mirroring the #563 precedent: a
-non-SCB `--providers` real build skips rather than false-fails them. The month and
-curated floors are not SCB-gated.
+edge-group floor here, the succession floor in `_check_classification_replaced_by`, the
+vintage-lift floor in `_check_variable_replaced_by_vintage_lift`, and the
+merged-monthly-families floor in `_check_variable_alias_window` (whose
+`period_family_merges.toml` is entirely `scb/...`) — are additionally gated on SCB being
+in the build (#595), mirroring the #563 precedent: a non-SCB `--providers` real build
+skips rather than false-fails them. The curated `n_curated >= 1` floor is intentionally
+not SCB-gated: curated groups span scb and sos, so it is not SCB-exclusive.
 
 ## Delivery-list enrichment (#365)
 
