@@ -47,6 +47,10 @@ if TYPE_CHECKING:
     import sqlite3
 
 _SCB = frozenset({"scb"})
+# The auto:triage split-sibling kind. No longer persisted to `variable_related_to`
+# (#591) — it feeds the concept-group edge fold directly — but a curated
+# `related_to` naming it is still rejected by the allowlist (it's not a curated
+# kind), and a pre-existing table row with this kind still collides a curated add.
 _AUTO_KIND = "same_definition_different_column"
 # reg_meta_build/ package root (tests/ sits beside the curation/ dir).
 _ROOT = Path(__file__).resolve().parent.parent
@@ -388,10 +392,10 @@ class TestSameAsMaterialize:
 # ---------------------------------------------------------------------------
 
 
-def test_auto_kind_is_not_a_curated_kind() -> None:
-    """Vocabulary distinctness: the foldable auto:triage kind must never be a
-    curated kind (a curated 'see also' must never fold)."""
-    assert _AUTO_KIND not in CURATED_RELATION_KINDS
+def test_curated_relation_kind_allowlist() -> None:
+    """The curated `related_to` allowlist carries `similar_concept` (the gate that
+    rejects a non-curated kind — including the bulk auto:triage split kind, which
+    the concept-group fold owns and a curated see-also must never be)."""
     assert "similar_concept" in CURATED_RELATION_KINDS
 
 

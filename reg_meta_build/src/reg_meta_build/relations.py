@@ -27,11 +27,14 @@ dbdiff):
     event pass's seen-PK sets so a curated edge dedups against an event one and
     the combined per-grain graph is cycle-checked.
   - `related_to` — weak "see also" DISCOVERY link between distinct concepts. Lands
-    in `variable_related_to` (the same table the A2.2 triage feeds with
-    `auto:triage` split-sibling edges) but on a DISJOINT relation-kind vocabulary
-    (`CURATED_RELATION_KINDS`) so a curated weak link can never be mistaken for —
-    or folded as — a split sibling. The auto kind `same_definition_different_column`
-    is foldable by the concept-group edge pass and is REJECTED here.
+    in `variable_related_to` (the same table the A2.2 triage feeds with the
+    NON-FOLDABLE `auto:triage` split kinds — `code_vs_label_pair`,
+    `import_bug_suspect`) but on a DISJOINT relation-kind vocabulary
+    (`CURATED_RELATION_KINDS`) so a curated weak link can never be mistaken for a
+    split sibling. The bulk `same_definition_different_column` siblings are NOT in
+    this table at all (#591) — they feed the concept-group edge fold directly from
+    the in-build sibling sets — so a curated kind matching them is rejected by the
+    allowlist on principle.
 
 The same-as candidate GENERATOR (`infer_same_as_candidates`, #508) stays in
 `variable_same_as.py`; it reads structured signals off a built DB and RENDERS a
@@ -72,14 +75,11 @@ if TYPE_CHECKING:
 _EDGE_TYPES: frozenset[str] = frozenset({"same_as", "replaced_by", "related_to"})
 
 # Curated `related_to` relation-kind vocabulary. Grows with curation needs (add
-# the kind here + document its meaning). MUST stay disjoint from the auto:triage
-# kind `same_definition_different_column` — that kind is foldable by the
-# concept-group edge pass, and a curated "see also" must never fold.
+# the kind here + document its meaning). The allowlist is the gate: a curated
+# `related_to` must name one of these kinds, so a typo or the bulk auto:triage
+# split kind is rejected (the concept-group edge fold owns the bulk siblings, and
+# a curated "see also" must never be one).
 CURATED_RELATION_KINDS: frozenset[str] = frozenset({"similar_concept"})
-
-# The auto:triage kind the concept-group edge pass folds on. Listed here only to
-# assert (load-time + in tests) that no curated kind aliases it.
-_AUTO_FOLDABLE_KIND = "same_definition_different_column"
 
 # Default `note` for a curated related_to edge that doesn't set one — provenance
 # marker distinguishing these rows from the auto:triage edges in the same table.
@@ -429,8 +429,9 @@ def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
 
 def _load_related_to(entry: dict) -> CuratedRelatedTo:
     """Validate one `type = "related_to"` edge. `a` / `b` are 3-seg variable
-    FQIDs; `relation_kind` is in `CURATED_RELATION_KINDS` (the auto foldable kind
-    is rejected so a weak link can never fold). No self-edge."""
+    FQIDs; `relation_kind` is in `CURATED_RELATION_KINDS` (a non-curated kind is
+    rejected — the bulk split siblings are the concept-group fold's, never a
+    curated see-also). No self-edge."""
     _reject_foreign_fields(entry, "related_to", _RELATED_TO_FIELDS)
     a = _require_fqid_variable(entry, "a")
     b = _require_fqid_variable(entry, "b")
@@ -453,8 +454,8 @@ def _load_related_to(entry: dict) -> CuratedRelatedTo:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='related_to' relation_kind {kind!r} is not "
-            f"a curated kind {sorted(CURATED_RELATION_KINDS)} (the auto:triage "
-            f"kind {_AUTO_FOLDABLE_KIND!r} is foldable and is rejected here).",
+            f"a curated kind {sorted(CURATED_RELATION_KINDS)} (the bulk auto:triage "
+            "split kinds are owned by the concept-group fold, never curated here).",
             "Use a curated relation_kind, or add the new kind to "
             "CURATED_RELATION_KINDS in reg_meta_build/relations.py.",
         )

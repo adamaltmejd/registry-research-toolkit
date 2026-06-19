@@ -1169,19 +1169,14 @@ class TestConceptGroupChecks:
 
     @staticmethod
     def _grouped_db():
+        # #591: the edge fold no longer round-trips `variable_related_to`, so the
+        # check recomputes nothing from sibling rows — a hand-built `edge` group
+        # row is the whole fixture (no companion edges needed).
         from _slugged_db import add_variable, build_slugged_db
 
         conn = build_slugged_db(classification=None)  # scb/lisa (register 1)
         add_variable(conn, register_id=1, var_id=901, name="A", slug="vara")
         add_variable(conn, register_id=1, var_id=901, name="A", slug="varb")
-        for a, b in (("vara", "varb"), ("varb", "vara")):
-            conn.execute(
-                "INSERT INTO variable_related_to (a_provider, a_register, "
-                "a_variable, b_provider, b_register, b_variable, relation_kind, "
-                "note) VALUES ('scb', 'lisa', ?, 'scb', 'lisa', ?, "
-                "'same_definition_different_column', 'auto:triage')",
-                (a, b),
-            )
         conn.execute(
             "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
             "label, source) VALUES (10, 'variable', 1, 'vara', 'A', 'edge')"
@@ -1208,7 +1203,6 @@ class TestConceptGroupChecks:
     def test_passes_on_coherent_groups(self):
         result = self._run(self._grouped_db())
         assert result.passed, result.failures
-        assert any("parity" in ln.text for ln in result.lines if ln.kind == "ok")
 
     def test_undersized_group_fails(self):
         conn = self._grouped_db()
@@ -1234,14 +1228,27 @@ class TestConceptGroupChecks:
         result = self._run(conn)
         assert any("wrong-kind group" in f for f in result.failures)
 
-    def test_lost_edge_component_breaks_parity(self):
-        conn = self._grouped_db()
-        # Simulate the edge pass losing the component: drop the group while the
-        # sibling edges remain.
-        conn.execute("DELETE FROM concept_group_variable")
-        conn.execute("DELETE FROM concept_group")
-        result = self._run(conn)
-        assert any("parity" in f or "components" in f for f in result.failures)
+    def test_edge_group_floor_fails_below_threshold(self):
+        # #591 corpus floor: a real build whose edge fold collapsed (here only the
+        # single fixture group, well under `_CG_MIN_EDGE_GROUPS`) fails the gate.
+        result = self._run_corpus(self._grouped_db())
+        assert any(
+            "edge group" in f and "derivation collapse" in f for f in result.failures
+        ), result.failures
+
+    def test_edge_group_floor_passes_at_threshold(self, monkeypatch):
+        # With the floor lowered to the fixture's single edge group, the corpus
+        # edge check reports OK (proves the floor is wired to the `source='edge'`
+        # count, not always-failing).
+        import reg_meta_build.validate as validate_mod
+
+        monkeypatch.setattr(validate_mod, "_CG_MIN_EDGE_GROUPS", 1)
+        result = self._run_corpus(self._grouped_db())
+        assert any(
+            "edge group" in ln.text and ">=" in ln.text
+            for ln in result.lines
+            if ln.kind == "ok"
+        ), [ln.text for ln in result.lines]
 
     # #585 inline-facet NULLability invariant. `_grouped_db` seeds an EDGE group
     # (group 10, facet_axis NULL) whose members carry NULL facet_value/label — the
