@@ -203,15 +203,17 @@ def test_classification_leaf_resolves(client):
 def test_classification_leaf_embeds_full_edition_chain(client):
     # #571: the classification leaf embeds the FULL succession timeline (oldest
     # first, terminal last) so the browse panel renders every edition synchronously.
-    # The fixture seeds sun1996 (DEAD, edge-only) → sun2000 → sun2020 (live terminal).
+    # The fixture seeds sun1996 → sun2000 → sun2020 (live terminal) — all LIVE rows,
+    # matching the build validator's invariant (succession edges resolve to live
+    # classification slugs; validate.py, the classification_replaced_by check).
     resp = client.get("/api/catalog/class/sun2020")
     assert resp.status_code == 200
     chain = resp.json()["edition_chain"]
     assert [e["slug"] for e in chain] == ["sun1996", "sun2000", "sun2020"]
     by_slug = {e["slug"]: e for e in chain}
-    # Dead edition: no live row → fqid/name None, rendered as plain text.
-    assert by_slug["sun1996"]["fqid"] is None
-    assert by_slug["sun1996"]["name"] is None
+    # Every edition is a live row → each carries a fqid (no dead-edition shape).
+    assert all(e["fqid"] == f"class/{e['slug']}" for e in chain)
+    assert by_slug["sun1996"]["name"] == "Svensk utbildningsnomenklatur"
     assert by_slug["sun1996"]["effective_year"] == 2000
     # Live terminal == the queried edition: is_current AND is_self.
     assert by_slug["sun2020"]["fqid"] == "class/sun2020"

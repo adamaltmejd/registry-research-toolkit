@@ -10,7 +10,7 @@ import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 
 // `fqid`/`name` default OFF the slug so editions in one chain are internally
 // consistent (distinct slugs → distinct fqids → distinct `#each` keys); override
-// `fqid: null` for a dead edition.
+// `fqid: null` to exercise the component's null-guard (missing/unresolvable fqid).
 function edition(
   over: Partial<ClassificationChainEdition> & { slug: string },
 ): ClassificationChainEdition {
@@ -105,11 +105,14 @@ describe("ClassificationLineagePanels — embedded edition chain (#571)", () => 
     expect(document.querySelectorAll(".chain-node.marked")).toHaveLength(1);
   });
 
-  it("renders a dead edition (null fqid) as plain text, not a link", async () => {
+  it("renders an edition with a missing/unresolvable fqid (null) as plain text, not a link", async () => {
+    // The build validator guarantees succession editions are live rows, so this
+    // null-fqid shape won't occur in a validated DB — it exercises the component's
+    // generic null-guard on the optional wire field.
     await render(ClassificationLineagePanels, {
       node: node([
         edition({
-          slug: "sun-dead",
+          slug: "sun-nolink",
           fqid: null,
           name: null,
           effective_year: 1990,
@@ -125,10 +128,10 @@ describe("ClassificationLineagePanels — embedded edition chain (#571)", () => 
       ]),
     });
 
-    // The dead edition's slug shows (it has no name) but is NOT a link.
-    await expect.element(page.getByText("sun-dead")).toBeVisible();
+    // The edition's slug shows (it has no name) but is NOT a link.
+    await expect.element(page.getByText("sun-nolink")).toBeVisible();
     await expect
-      .element(page.getByRole("link", { name: "sun-dead" }))
+      .element(page.getByRole("link", { name: "sun-nolink" }))
       .not.toBeInTheDocument();
   });
 

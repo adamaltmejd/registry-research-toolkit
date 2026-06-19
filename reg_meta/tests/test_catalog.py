@@ -1079,44 +1079,55 @@ class TestEdgeAccessors:
             Catalog(conn).classification_predecessors("scb")
         assert exc.value.code == "not_a_classification_fqid"
 
+    @staticmethod
+    def _seed_classification(
+        conn: sqlite3.Connection, *, slug: str, short_name: str, name: str
+    ) -> None:
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+            (short_name, name, slug),
+        )
+        conn.commit()
+
     def test_classification_chain_multi_hop_ordered_oldest_first(self) -> None:
-        # sun1996 → sun2000 → sun2020 (the live terminal). Predecessor editions
-        # are dead (edge-only); the chain returns ALL three, oldest first, the
-        # terminal last, with is_self/is_current on the queried/terminal edition.
+        # sun1996 → sun2000 → sun2020 (the live terminal). All three editions are
+        # LIVE `classification` rows — the validator forbids succession edges to
+        # dead slugs (validate.py, the classification_replaced_by check), so every
+        # chain endpoint resolves. The chain returns ALL three, oldest first, the
+        # terminal last, with is_self/is_current on the queried/terminal edition,
+        # and every edition carries a non-None fqid.
         conn = build_slugged_db()  # seeds the live sun2020
+        self._seed_classification(
+            conn, slug="sun1996", short_name="SUN1996", name="SUN 1996"
+        )
+        self._seed_classification(
+            conn, slug="sun2000", short_name="SUN2000", name="SUN 2000"
+        )
         self._seed_classification_replaced_by(
             conn, predecessor="sun1996", successor="sun2000", effective_year=2000
         )
         self._seed_classification_replaced_by(
             conn, predecessor="sun2000", successor="sun2020", effective_year=2020
         )
-        # Query an intermediate (dead) edition — the chain still spans the whole
+        # Query an intermediate edition — the chain still spans the whole
         # succession and marks the queried slug as is_self.
         chain = Catalog(conn).classification_chain("class/sun2000")
         assert [e.slug for e in chain] == ["sun1996", "sun2000", "sun2020"]
         assert [e.effective_year for e in chain] == [2000, 2020, None]
         assert all(isinstance(e, ClassificationEdition) for e in chain)
+        # Every edition is a live row → non-None fqid (no dead-edition shape).
+        assert all(e.fqid is not None for e in chain)
+        assert [str(e.fqid) for e in chain] == [
+            "class/sun1996",
+            "class/sun2000",
+            "class/sun2020",
+        ]
         self_edition = next(e for e in chain if e.is_self)
         assert self_edition.slug == "sun2000"
         current = next(e for e in chain if e.is_current)
         assert current.slug == "sun2020"
         assert sum(e.is_current for e in chain) == 1
         assert sum(e.is_self for e in chain) == 1
-
-    def test_classification_chain_dead_edition_has_no_fqid(self) -> None:
-        # sun1996 is an edge slug with no `classification` row — a dead edition:
-        # fqid/name None (rendered as plain text), but still in the chain. The
-        # live terminal sun2020 keeps its fqid/name.
-        conn = build_slugged_db()
-        self._seed_classification_replaced_by(
-            conn, predecessor="sun1996", successor="sun2020", effective_year=2020
-        )
-        chain = Catalog(conn).classification_chain("class/sun2020")
-        by_slug = {e.slug: e for e in chain}
-        assert by_slug["sun1996"].fqid is None
-        assert by_slug["sun1996"].name is None
-        assert str(by_slug["sun2020"].fqid) == "class/sun2020"
-        assert by_slug["sun2020"].name == "Svensk utbildningsnomenklatur"
 
     def test_classification_chain_standalone_returns_single_self_current(self) -> None:
         # sun2020 has no succession edges → a one-edition chain, both is_self and

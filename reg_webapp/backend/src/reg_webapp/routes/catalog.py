@@ -339,8 +339,10 @@ def _binding_node(resolved: ResolvedVariable) -> BindingNode:
 
 def _classification_chain_edition(edition) -> ClassificationChainEdition:
     """Map a `reg_meta.ClassificationEdition` (#571) 1:1 onto the wire model — one
-    node of the full succession timeline. `fqid` is None for a dead edition (an
-    edge slug with no live row), which the SPA renders as plain text, not a link."""
+    node of the full succession timeline. Every chain edition is a live
+    `classification` row (the build validator guarantees succession editions are
+    live), so `fqid` is None only when the slug is malformed/unresolvable, which the
+    SPA renders as plain text, not a link."""
     return ClassificationChainEdition(
         slug=edition.slug,
         fqid=str(edition.fqid) if edition.fqid is not None else None,
@@ -356,8 +358,10 @@ def _classification_node(
 ) -> ClassificationNode:
     """Map a resolved classification onto its leaf node, embedding the FULL
     succession edition chain (#571) so the browse panel renders the whole timeline
-    synchronously — no per-neighbor fetch. The chain resolves `same_as` and marks
-    dead editions server-side (`Catalog.classification_chain`)."""
+    synchronously — no per-neighbor fetch. The chain resolves `same_as`
+    server-side (`Catalog.classification_chain`); every edition is a live
+    `classification` row (the build validator guarantees succession editions are
+    live)."""
     return ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,

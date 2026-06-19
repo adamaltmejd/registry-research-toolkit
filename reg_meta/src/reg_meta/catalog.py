@@ -353,14 +353,18 @@ class ClassificationEdition:
     browse panel renders the complete edition timeline from a list of these.
 
     `slug` is the load-bearing identity (succession references the exact edition
-    slug). `fqid`/`name` are None for a DEAD edition — a slug that appears in
-    `classification_replaced_by` but has no live `classification` row (a renamed
-    or retired vintage); the webapp renders a dead edition as plain text, not a
-    link. `effective_year` is the year on the `classification_replaced_by` edge
-    that names this edition as `successor_slug` (None for the terminal, which is
-    no edge's successor). `is_current` marks the terminal (head) edition — the one
-    with no outbound successor; `is_self` marks the edition the caller queried
-    (resolved to its canonical live slug when the query was a `same_as` alias)."""
+    slug). Every chain edition is a LIVE `classification` row —
+    `reg_meta_build`'s validator (`validate.py`, the `classification_replaced_by`
+    check) fails the build if any succession edge references a slug with no live
+    row, so a "dead edition" can't exist in a validated DB. `fqid` is None only on
+    a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
+    `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
+    from the live row. `effective_year` is the year on the
+    `classification_replaced_by` edge that names this edition as `successor_slug`
+    (None for the terminal, which is no edge's successor). `is_current` marks the
+    terminal (head) edition — the one with no outbound successor; `is_self` marks
+    the edition the caller queried (resolved to its canonical live slug when the
+    query was a `same_as` alias)."""
 
     slug: str
     fqid: Fqid | None
@@ -1626,9 +1630,12 @@ class Catalog:
           - full walk: from the canonical slug we find the terminal (the chain end
             with no outbound successor), then collect ALL predecessors transitively
             from the terminal, assembling every edition in the chain.
-          - dead-edition marking: a slug that has a `classification_replaced_by`
-            edge but no live `classification` row is a DEAD edition — `fqid`/`name`
-            None, rendered as plain text.
+
+        Every chain endpoint is a live `classification` row — `reg_meta_build`'s
+        validator (`validate.py`, the `classification_replaced_by` check) fails the
+        build if any succession edge references a slug with no live row — so the
+        walk does NOT special-case dead editions; each edition carries its live
+        `fqid`/`name`.
 
         A standalone classification with no succession edges returns a single
         edition (`is_current` and `is_self` both True). The predecessor walk lives
@@ -1649,7 +1656,7 @@ class Catalog:
         editions = [
             ClassificationEdition(
                 slug=slug,
-                fqid=(self._class_ref_fqid(slug) if slug in name_by_slug else None),
+                fqid=self._class_ref_fqid(slug),
                 name=name_by_slug.get(slug),
                 effective_year=year,
                 is_current=(slug == terminal),
@@ -1717,10 +1724,10 @@ class Catalog:
     def _classification_chain_names(
         self, slugs: Iterable[str]
     ) -> dict[str, str | None]:
-        """Map each chain slug to its live `classification.name`. A slug ABSENT
-        from the result is a DEAD edition (an edge slug with no live row) — the
-        caller reads "absent" as dead, so a present-but-NULL name stays in the
-        map."""
+        """Map each chain slug to its live `classification.name`. Every chain slug
+        is a live row (the validator forbids succession edges to dead slugs; see
+        `classification_chain`), so the map covers every slug; a present-but-NULL
+        name is a live row with no name and stays in the map."""
         slug_list = list(slugs)
         if not slug_list:
             return {}

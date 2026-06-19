@@ -233,7 +233,7 @@
         "type": "object"
       },
       "ClassificationChainEdition": {
-        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. `fqid`/`name` are None for a DEAD edition\n\u2014 an edge slug with no live `classification` row (a renamed/retired vintage),\nwhich the SPA renders as plain text, not a link. `effective_year` is the year\non the succession edge that names this edition as the successor (None for the\nterminal). `is_current` flags the terminal (current) edition; `is_self` flags\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
+        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the successor (None for\nthe terminal). `is_current` flags the terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -256,7 +256,7 @@
                 "type": "null"
               }
             ],
-            "description": "The edition's 2-seg classification FQID, or None for a dead edition with no live row (rendered as plain text, not a link).",
+            "description": "The edition's 2-seg classification FQID, or None only when the slug is malformed/unresolvable (the build validator guarantees succession editions are live classification rows; rendered as plain text, not a link).",
             "title": "Fqid"
           },
           "is_current": {
@@ -278,7 +278,7 @@
                 "type": "null"
               }
             ],
-            "description": "The edition's display name, None for a dead edition.",
+            "description": "The edition's display name (every chain edition is a live row).",
             "title": "Name"
           },
           "slug": {
@@ -299,7 +299,7 @@
         "type": "object"
       },
       "ClassificationEditionModel": {
-        "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. `fqid` is None for a dead edition with no live row.",
+        "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. Every edition is a live `classification` row (the build\nvalidator guarantees succession editions are live), so `fqid` is None only when\nthe slug is malformed/unresolvable.",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -322,7 +322,7 @@
                 "type": "null"
               }
             ],
-            "description": "The edition's 2-seg classification FQID, None for a dead edition.",
+            "description": "The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).",
             "title": "Fqid"
           },
           "name": {
@@ -601,7 +601,7 @@
                 "type": "null"
               }
             ],
-            "description": "The terminal (current) edition's classification FQID \u2014 the navigable target. None for a dead chain end with no live row.",
+            "description": "The terminal (current) edition's classification FQID \u2014 the navigable target. None only when the slug is malformed/unresolvable (the terminal is always a live classification row).",
             "title": "Fqid"
           },
           "matched_count": {

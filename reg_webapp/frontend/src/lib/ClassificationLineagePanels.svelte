@@ -7,8 +7,10 @@ import { catalogHref } from "./catalog";
 // the FULL edition chain (`edition_chain`, oldest first → terminal/current last),
 // so the panel renders it SYNCHRONOUSLY — no per-neighbour fetch. Each edition
 // carries `is_self` (the edition being viewed) and `is_current` (the terminal /
-// latest edition); a DEAD edition (`fqid === null`, a renamed/retired vintage with
-// no live row) renders as plain text rather than a link.
+// latest edition). Every chain edition is a live classification row (the build
+// validator guarantees succession editions are live), so `fqid` is null only when
+// the slug is missing/unresolvable; such an edition renders as plain text rather
+// than a link (a generic, type-justified null-guard on the optional wire field).
 //
 // This is a SEPARATE component from the variable LineagePanels (not a conditional
 // arm): a classification edition is a single `slug` linking to `class/<slug>` (NOT
@@ -56,9 +58,10 @@ const currentEdition = $derived(
 </script>
 
 <!-- One chain node on the vertical rail: a link to the edition's `class/<slug>` (or
-     the bare slug when the edition is dead / has no live row), showing its name +
-     effective year. `marked` fills the marker + bolds the name for an anchor edition
-     (the viewed and/or current edition). -->
+     plain text when `fqid` is missing/unresolvable — succession editions are live
+     rows, so this is a generic null-guard), showing its name + effective year.
+     `marked` fills the marker + bolds the name for an anchor edition (the viewed
+     and/or current edition). -->
 {#snippet chainNode(edition: ClassificationChainEdition, marked: boolean)}
   <li class="chain-node" class:marked aria-current={edition.is_self ? "true" : undefined}>
     <span class="marker" aria-hidden="true">{marked ? "●" : "○"}</span>
@@ -66,7 +69,7 @@ const currentEdition = $derived(
       {#if edition.fqid}
         <a href={catalogHref(edition.fqid)}>{edition.name ?? edition.slug}</a>
       {:else}
-        <span class="dead-edition">{edition.name ?? edition.slug}</span>
+        <span class="no-link-edition">{edition.name ?? edition.slug}</span>
       {/if}
       {#if edition.effective_year != null}
         <span class="muted year">({edition.effective_year})</span>
@@ -187,7 +190,7 @@ const currentEdition = $derived(
     font-size: 0.85em;
   }
   .chain-node.marked .chain-ref a,
-  .chain-node.marked .dead-edition {
+  .chain-node.marked .no-link-edition {
     font-weight: 600;
   }
   .chain-ref {
@@ -196,7 +199,7 @@ const currentEdition = $derived(
     align-items: baseline;
     gap: 0.6rem;
   }
-  .dead-edition {
+  .no-link-edition {
     color: var(--muted);
   }
   /* The collapsible edition runs — sit on the same rail. */

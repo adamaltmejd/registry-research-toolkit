@@ -240,8 +240,10 @@ export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
 /** One edition in a classification's embedded succession timeline (#571) — the
  * chain arrives oldest-first, terminal last, with `is_self`/`is_current` flags.
- * A dead edition (no live row) carries a null `fqid`/`name` and renders as plain
- * text. The browse panel renders the whole chain synchronously from these. */
+ * Every edition is a live classification row (the build validator guarantees
+ * succession editions are live), so `fqid` is null only when the slug is
+ * missing/unresolvable, in which case it renders as plain text. The browse panel
+ * renders the whole chain synchronously from these. */
 export type ClassificationChainEdition = Schemas["ClassificationChainEdition"];
 /** The resolved classification leaf the catch-all returns — carries its embedded
  * FULL succession chain (`edition_chain`, oldest first / terminal last). */

@@ -139,8 +139,10 @@ classification leaf node carries the **full edition chain** inline as `edition_c
 timeline synchronously — no per-neighbor fetch. The server-side walk resolves a
 `classification_same_as` alias to its canonical edition, walks the WHOLE chain (terminal +
 all transitive predecessors), orders it oldest→newest (terminal/current last), and marks
-each edition `is_current`/`is_self` plus dead editions (an edge slug with no live
-`classification` row → `fqid`/`name` None, rendered as plain text). The earlier
+each edition `is_current`/`is_self`. Every edition is a live `classification` row — the
+build validator guarantees succession editions are live (it fails on any
+`classification_replaced_by` edge whose endpoint has no live row), so `fqid` is None
+only on a malformed/unresolvable slug (rendered as plain text, not a link). The earlier
 immediate-neighbor routes (`/classification_predecessors`, `/classification_successors`)
 were retired — the embedded full chain subsumes them. (reg_meta's
 `Catalog.classification_successors`/`classification_predecessors` accessors remain as

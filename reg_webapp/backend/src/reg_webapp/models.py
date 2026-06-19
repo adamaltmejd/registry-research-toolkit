@@ -158,23 +158,26 @@ class ClassificationChainEdition(BaseModel):
     whole chain (oldest first, terminal last) synchronously from these — no
     per-neighbor fetch.
 
-    `slug` is the load-bearing identity. `fqid`/`name` are None for a DEAD edition
-    — an edge slug with no live `classification` row (a renamed/retired vintage),
-    which the SPA renders as plain text, not a link. `effective_year` is the year
-    on the succession edge that names this edition as the successor (None for the
-    terminal). `is_current` flags the terminal (current) edition; `is_self` flags
-    the edition the caller queried (resolved to its canonical live slug when the
-    query was a `same_as` alias). A dedicated model (NOT the search
+    `slug` is the load-bearing identity. Every chain edition is a LIVE
+    `classification` row — the build validator guarantees succession editions are
+    live (it fails on any `classification_replaced_by` edge whose endpoint has no
+    live row), so `fqid` is None only when the slug is malformed/unresolvable (the
+    SPA renders such an edition as plain text, not a link). `effective_year` is the
+    year on the succession edge that names this edition as the successor (None for
+    the terminal). `is_current` flags the terminal (current) edition; `is_self`
+    flags the edition the caller queried (resolved to its canonical live slug when
+    the query was a `same_as` alias). A dedicated model (NOT the search
     `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
     edition a clean 4-field shape."""
 
     slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
     fqid: str | None = Field(
-        description="The edition's 2-seg classification FQID, or None for a dead "
-        "edition with no live row (rendered as plain text, not a link)."
+        description="The edition's 2-seg classification FQID, or None only when the "
+        "slug is malformed/unresolvable (the build validator guarantees succession "
+        "editions are live classification rows; rendered as plain text, not a link)."
     )
     name: str | None = Field(
-        description="The edition's display name, None for a dead edition."
+        description="The edition's display name (every chain edition is a live row)."
     )
     effective_year: int | None = Field(
         description="The year on the succession edge naming this edition as the "
@@ -669,12 +672,15 @@ class ClassificationEditionModel(BaseModel):
     """One edition of a folded classification succession chain (#571): a vintage
     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
     `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
-    `effective_year`. `fqid` is None for a dead edition with no live row."""
+    `effective_year`. Every edition is a live `classification` row (the build
+    validator guarantees succession editions are live), so `fqid` is None only when
+    the slug is malformed/unresolvable."""
 
     slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
     fqid: str | None = Field(
         default=None,
-        description="The edition's 2-seg classification FQID, None for a dead edition.",
+        description="The edition's 2-seg classification FQID, None only when the "
+        "slug is malformed/unresolvable (succession editions are live rows).",
     )
     name: str | None = Field(
         default=None, description="The edition's display name, None when un-hydrated."
@@ -698,7 +704,8 @@ class ClassificationSuccessionSearchResult(BaseModel):
     type: Literal["classification_succession"] = "classification_succession"
     fqid: str | None = Field(
         description="The terminal (current) edition's classification FQID — the "
-        "navigable target. None for a dead chain end with no live row."
+        "navigable target. None only when the slug is malformed/unresolvable (the "
+        "terminal is always a live classification row)."
     )
     short_name: str | None = Field(
         default=None, description="The terminal edition's short name (e.g. 'SUN')."
