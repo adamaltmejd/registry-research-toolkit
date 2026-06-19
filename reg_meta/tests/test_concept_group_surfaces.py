@@ -104,10 +104,44 @@ def _seeded_conn() -> sqlite3.Connection:
 
 
 def _assert_no_internal_keys(results: list[dict]) -> None:
+    # Recurses: `matched` can nest two deep (a classification_succession row under
+    # a group row's `matched`), so a shallow check would miss the leak (#571).
     for r in results:
         assert "_variable_id" not in r
-        for m in r.get("matched", []):
-            assert "_variable_id" not in m
+        assert "_classification_id" not in r
+        _assert_no_internal_keys(r.get("matched", []))
+
+
+def _rebuild_fts(conn: sqlite3.Connection) -> None:
+    """Repopulate the external-content FTS5 indexes from their content tables
+    (mirrors test_search_classifications) so the classification-leaf search arm
+    (`_search_classifications`) returns hits on this in-memory fixture."""
+    for index in ("register_fts", "variable_fts", "classification_fts"):
+        conn.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
+
+
+def _add_classification(
+    conn: sqlite3.Connection, *, cid: int, short_name: str, name: str, slug: str
+) -> None:
+    conn.execute(
+        "INSERT INTO classification (id, short_name, name, slug) VALUES (?, ?, ?, ?)",
+        (cid, short_name, name, slug),
+    )
+
+
+def _add_succession_edge(
+    conn: sqlite3.Connection,
+    *,
+    predecessor: str,
+    successor: str,
+    effective_year: int | None = None,
+) -> None:
+    conn.execute(
+        "INSERT INTO classification_replaced_by "
+        "(predecessor_slug, successor_slug, effective_year, note) "
+        "VALUES (?, ?, ?, 'derived:vintage_chain')",
+        (predecessor, successor, effective_year),
+    )
 
 
 class TestSearchFolding:
@@ -257,6 +291,156 @@ class TestSearchFolding:
         kept = search(conn, "per månad", years="2020")["results"]
         assert [r["type"] for r in kept] == ["group"]
         assert kept[0]["label_matched"] is True
+
+
+class TestClassificationSuccessionFold:
+    """#571: classification EDITION chains (`classification_replaced_by`) collapse
+    to ONE row for the terminal (current) edition in search, carrying the
+    non-terminal editions as `editions` history. Runs BEFORE the concept-group
+    fold so collapsed terminals then fold into a curated umbrella group (#516)."""
+
+    @staticmethod
+    def _chain_conn() -> sqlite3.Connection:
+        """ssyk1996 → ssyk2001 → ssyk2012, all sharing the FTS-searchable name
+        'Standard för svensk yrkesklassificering' so one query hits all three
+        editions. No umbrella group — isolates the succession fold."""
+        conn = build_slugged_db()
+        name = "Standard för svensk yrkesklassificering"
+        for cid, slug in ((70, "ssyk1996"), (71, "ssyk2001"), (72, "ssyk2012")):
+            _add_classification(
+                conn, cid=cid, short_name=slug.upper(), name=name, slug=slug
+            )
+        _add_succession_edge(
+            conn, predecessor="ssyk1996", successor="ssyk2001", effective_year=2001
+        )
+        _add_succession_edge(
+            conn, predecessor="ssyk2001", successor="ssyk2012", effective_year=2012
+        )
+        conn.commit()
+        _rebuild_fts(conn)
+        return conn
+
+    def test_chain_collapses_to_terminal_row(self) -> None:
+        conn = self._chain_conn()
+        results = search(conn, "yrkesklassificering", field="description")["results"]
+        succ = [r for r in results if r["type"] == "classification_succession"]
+        assert len(succ) == 1
+        (row,) = succ
+        # The collapsed row IS the terminal (current) edition.
+        assert row["fqid"] == "class/ssyk2012"
+        assert row["short_name"] == "SSYK2012"
+        # All three editions ride under `editions`, terminal-first then descending
+        # effective_year.
+        assert [e["slug"] for e in row["editions"]] == [
+            "ssyk2012",
+            "ssyk2001",
+            "ssyk1996",
+        ]
+        assert [e["effective_year"] for e in row["editions"]] == [None, 2012, 2001]
+        # The original leaf hits ride under `matched`; no separate edition leaves.
+        assert {m["fqid"] for m in row["matched"]} == {
+            "class/ssyk1996",
+            "class/ssyk2001",
+            "class/ssyk2012",
+        }
+        assert not [r for r in results if r["type"] == "classification"]
+        _assert_no_internal_keys(results)
+
+    def test_chain_counts_one_result_for_pagination(self) -> None:
+        conn = self._chain_conn()
+        data = search(conn, "yrkesklassificering", field="description")
+        assert data["total_count"] == 1
+
+    def test_lone_terminal_hit_stays_leaf(self) -> None:
+        # Only the TERMINAL edition matches (rename the predecessors out of the
+        # FTS name) → a lone terminal hit is an ordinary leaf, not a succession
+        # row (no predecessor present to collapse).
+        conn = build_slugged_db()
+        _add_classification(
+            conn, cid=72, short_name="SSYK2012", name="Yrken aktuell", slug="ssyk2012"
+        )
+        _add_classification(
+            conn, cid=71, short_name="SSYK2001", name="Andra namn helt", slug="ssyk2001"
+        )
+        _add_succession_edge(conn, predecessor="ssyk2001", successor="ssyk2012")
+        conn.commit()
+        _rebuild_fts(conn)
+        results = search(conn, "aktuell", field="description")["results"]
+        assert [r["type"] for r in results] == ["classification"]
+        assert results[0]["fqid"] == "class/ssyk2012"
+        # No succession row, and the terminal itself carries no terminal_fqid (it
+        # IS the terminal).
+        assert "terminal_fqid" not in results[0]
+
+    def test_lone_old_edition_hit_annotated_with_terminal(self) -> None:
+        # Only an OLD (non-terminal) edition matches → stays a leaf, annotated
+        # with its terminal so the webapp can link "current".
+        conn = build_slugged_db()
+        _add_classification(
+            conn, cid=72, short_name="SSYK2012", name="Annat helt namn", slug="ssyk2012"
+        )
+        _add_classification(
+            conn,
+            cid=71,
+            short_name="SSYK2001",
+            name="Gammal yrkesstandard",
+            slug="ssyk2001",
+        )
+        _add_succession_edge(conn, predecessor="ssyk2001", successor="ssyk2012")
+        conn.commit()
+        _rebuild_fts(conn)
+        results = search(conn, "gammal", field="description")["results"]
+        assert [r["type"] for r in results] == ["classification"]
+        assert results[0]["fqid"] == "class/ssyk2001"
+        assert results[0]["terminal_fqid"] == "class/ssyk2012"
+
+    def test_collapsed_terminal_then_folds_into_umbrella_group(self) -> None:
+        """The interaction: editions collapse to their terminal FIRST, then the
+        terminal editions fold into a curated SUN-style umbrella group (#516)."""
+        conn = build_slugged_db()  # ships sun2020 (terminal)
+        name = "Svensk utbildningsnomenklatur"
+        # Two succession chains feeding two terminal editions that are BOTH members
+        # of the curated umbrella 'group:sun': sun1996→sun2000 and sunOld→sun2020.
+        _add_classification(
+            conn, cid=80, short_name="SUN1996", name=name, slug="sun1996"
+        )
+        _add_classification(
+            conn, cid=81, short_name="SUN2000", name=name, slug="sun2000"
+        )
+        _add_classification(
+            conn, cid=82, short_name="SUNOLD", name=name, slug="sun-old"
+        )
+        _add_succession_edge(
+            conn, predecessor="sun1996", successor="sun2000", effective_year=2000
+        )
+        _add_succession_edge(
+            conn, predecessor="sun-old", successor="sun2020", effective_year=2020
+        )
+        # Curated umbrella over the two TERMINAL editions (sun2000 + sun2020).
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) VALUES (90, 'classification', NULL, 'sun', "
+            "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
+        )
+        sun2020_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun2020'"
+        ).fetchone()[0]
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 90, ?, ?)",
+            [(81, "2000", "2000"), (sun2020_id, "2020", "2020")],
+        )
+        conn.commit()
+        _rebuild_fts(conn)
+        results = search(conn, "utbildningsnomenklatur", field="description")["results"]
+        # The two collapsed terminals (sun2000, sun2020) then fold into ONE
+        # umbrella group row — no stray succession or leaf rows survive.
+        groups = [r for r in results if r["type"] == "group"]
+        assert len(groups) == 1
+        assert groups[0]["group_key"] == "sun"
+        assert not [r for r in results if r["type"] == "classification_succession"]
+        assert not [r for r in results if r["type"] == "classification"]
+        _assert_no_internal_keys(results)
 
 
 class TestGetConceptGroups:
