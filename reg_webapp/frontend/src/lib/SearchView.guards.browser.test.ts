@@ -124,6 +124,79 @@ describe("SearchView — request cancellation (supersede)", () => {
   });
 });
 
+describe("SearchView — classification_succession routing (#571)", () => {
+  it("routes a mixed classifications group (leaf + succession) through the real guards", async () => {
+    // Exercise the REAL search/apiGet path (this suite stubs window.fetch, no
+    // ./api mock) so the `isClassificationSuccession` guard actually runs over the
+    // mixed classifications union: a plain leaf hit AND a folded succession row.
+    // Both must render their own shape (leaf link + succession disclosure), with
+    // no each_key_duplicate crash.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            kind: "search",
+            query: "sun",
+            groups: [
+              {
+                group: "classifications",
+                total_count: 2,
+                results: [
+                  {
+                    type: "classification",
+                    fqid: "class/lkf2020",
+                    short_name: "LKF",
+                    name: "Län/kommun/församling",
+                  },
+                  {
+                    type: "classification_succession",
+                    fqid: "class/sun2020",
+                    short_name: "SUN",
+                    name: "SUN 2020",
+                    matched_count: 2,
+                    editions: [
+                      {
+                        slug: "sun2020",
+                        fqid: "class/sun2020",
+                        name: "SUN 2020",
+                        effective_year: 2020,
+                      },
+                      {
+                        slug: "sun1996",
+                        fqid: "class/sun1996",
+                        name: "SUN 1996",
+                        effective_year: 1996,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          }),
+        }),
+      ),
+    );
+
+    setQuery("sun");
+    await render(SearchView);
+
+    // The plain leaf renders as a direct link…
+    await expect
+      .element(page.getByRole("link", { name: /LKF/ }))
+      .toHaveAttribute("href", "/catalog/class/lkf2020");
+    // …and the succession row renders its folded editions hint (the guard routed
+    // it to the succession snippet, not the leaf snippet).
+    await expect
+      .element(page.getByText("matched 2 of 2 editions"))
+      .toBeVisible();
+    // No render crash — the search did not wedge on "Searching…".
+    await expect.element(page.getByText("Searching…")).not.toBeInTheDocument();
+  });
+});
+
 describe("SearchView — min query length", () => {
   beforeEach(() => {
     // Any fetch here would be a bug — a 1-char query must NOT hit the network.

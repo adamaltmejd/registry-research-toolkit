@@ -238,6 +238,17 @@ export type PredecessorsResponse = Schemas["PredecessorsResponse"];
 export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
+/** One edition in a classification's embedded succession timeline (#571) — the
+ * chain arrives oldest-first, terminal last, with `is_self`/`is_current` flags.
+ * Every edition is a live classification row (the build validator guarantees
+ * succession editions are live), so `fqid` is null only when the slug is
+ * missing/unresolvable, in which case it renders as plain text. The browse panel
+ * renders the whole chain synchronously from these. */
+export type ClassificationChainEdition = Schemas["ClassificationChainEdition"];
+/** The resolved classification leaf the catch-all returns — carries its embedded
+ * FULL succession chain (`edition_chain`, oldest first / terminal last). */
+export type ClassificationNodeData = Schemas["ClassificationNode"];
+
 /** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
  * the catch-all's other payloads (a `?period` `StatesResponse`, or a SUB-ENDPOINT
  * `VariantsResponse`/… on a `.../states` path) do NOT. Positive `"kind" in x`
@@ -384,6 +395,13 @@ export type CodeSearchGroup = Schemas["CodeSearchGroup"];
 export type RegisterSearchResult = Schemas["RegisterSearchResult"];
 export type VariableSearchResult = Schemas["VariableSearchResult"];
 export type ClassificationSearchResult = Schemas["ClassificationSearchResult"];
+/** A folded classification-succession row (#571): a query hit ≥2 editions of one
+ * chain, collapsed onto the TERMINAL (current) edition. `editions` is the full
+ * chain (terminal-first, descending year); the terminal `fqid` is the navigable
+ * target (NOT a concept group). */
+export type ClassificationSuccessionSearchResult =
+  Schemas["ClassificationSuccessionSearchResult"];
+export type ClassificationEditionModel = Schemas["ClassificationEditionModel"];
 export type ConceptGroupSearchResult = Schemas["ConceptGroupSearchResult"];
 export type CodeSearchResult = Schemas["CodeSearchResult"];
 export type CodeOwnerVariable = Schemas["CodeOwnerVariable"];

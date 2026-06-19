@@ -29,13 +29,15 @@ def test_startup_rejects_incompatible_schema(mismatched_db):
 
 _CATCH_ALL = "/api/catalog/{fqid:path}"
 
-# Router ordering (A5.2a-ii, see DESIGN.md → Catalog router structure): the 8
+# Router ordering (A5.2a-ii, see DESIGN.md → Catalog router structure): the
 # suffixed / sub-resource routes that MUST be declared
 # BEFORE the `{fqid:path}` catch-all — Starlette matches in declaration order and
 # the `{fqid:path}` converter greedy-consumes any suffix into `fqid`, so any of
-# these declared after the catch-all would never fire. Seven are `{fqid:path}/...`
-# binding suffixes; the eighth is the fixed-shape `/{provider}/{register}/
-# variants` register sub-resource.
+# these declared after the catch-all would never fire. All but the last are
+# `{fqid:path}/...` binding suffixes; the final one is the fixed-shape
+# `/{provider}/{register}/variants` register sub-resource. (#571's classification
+# succession is no longer a sub-resource — the full edition chain is embedded on
+# the classification node as `edition_chain`.)
 _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
     "/api/catalog/{fqid:path}/states",
@@ -49,8 +51,9 @@ _ROUTES_BEFORE_CATCH_ALL = [
 
 
 def test_catalog_catch_all_route_present_and_last():
-    # A5.1b-ii OWNS the bare `{fqid:path}` catch-all; A5.2a-ii adds 6 suffixed
-    # `{fqid:path}/...` routes plus the `/variants` sub-resource. Assert the bare
+    # A5.1b-ii OWNS the bare `{fqid:path}` catch-all; ahead of it sit the suffixed
+    # `{fqid:path}/...` routes plus the `/variants` sub-resource (the current set is
+    # `_ROUTES_BEFORE_CATCH_ALL`). Assert the bare
     # catch-all exists and is declared LAST among /api/catalog* routes (the
     # router-ordering seam — Starlette matches in declaration order, so the
     # suffixed routes must precede the greedy catch-all).

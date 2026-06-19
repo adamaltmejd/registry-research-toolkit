@@ -176,6 +176,22 @@ def test_classification_leaf_hit(client):
     # A lone member keeps its family hint (symmetric with variable leaves).
     assert hit["concept_group"] == "sun"
     assert hit["concept_group_label"]
+    # The terminal edition itself carries no `terminal_fqid` (it IS current).
+    assert hit["terminal_fqid"] is None
+
+
+def test_lone_old_edition_leaf_carries_terminal_fqid(client):
+    # `SUN1996` matches only the sun1996 short_name — a lone, NON-terminal edition
+    # of the sun1996 → sun2000 → sun2020 succession chain (#571), and one NOT in any
+    # concept group, so it stays a leaf rather than folding. The reg_meta fold
+    # annotates it with the terminal edition's fqid; the route must surface it on
+    # `ClassificationSearchResult` so the SPA can link "current edition".
+    g = _group(
+        client.get("/api/search", params={"q": "SUN1996"}).json(), "classifications"
+    )
+    leaves = [r for r in g["results"] if r["type"] == "classification"]
+    hit = next(r for r in leaves if r["fqid"] == "class/sun1996")
+    assert hit["terminal_fqid"] == "class/sun2020"
 
 
 # ── codes group (#352) ───────────────────────────────────────────────────────

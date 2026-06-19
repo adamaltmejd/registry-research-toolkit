@@ -17,6 +17,7 @@ from _slugged_db import (
 )
 from reg_meta.catalog import (
     Catalog,
+    ClassificationEdition,
     ClassificationRef,
     RelatedRef,
     ResolvedClassification,
@@ -1077,6 +1078,88 @@ class TestEdgeAccessors:
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).classification_predecessors("scb")
         assert exc.value.code == "not_a_classification_fqid"
+
+    @staticmethod
+    def _seed_classification(
+        conn: sqlite3.Connection, *, slug: str, short_name: str, name: str
+    ) -> None:
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+            (short_name, name, slug),
+        )
+        conn.commit()
+
+    def test_classification_chain_multi_hop_ordered_oldest_first(self) -> None:
+        # sun1996 → sun2000 → sun2020 (the live terminal). All three editions are
+        # LIVE `classification` rows — the validator forbids succession edges to
+        # dead slugs (validate.py, the classification_replaced_by check), so every
+        # chain endpoint resolves. The chain returns ALL three, oldest first, the
+        # terminal last, with is_self/is_current on the queried/terminal edition,
+        # and every edition carries a non-None fqid.
+        conn = build_slugged_db()  # seeds the live sun2020
+        self._seed_classification(
+            conn, slug="sun1996", short_name="SUN1996", name="SUN 1996"
+        )
+        self._seed_classification(
+            conn, slug="sun2000", short_name="SUN2000", name="SUN 2000"
+        )
+        self._seed_classification_replaced_by(
+            conn, predecessor="sun1996", successor="sun2000", effective_year=2000
+        )
+        self._seed_classification_replaced_by(
+            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
+        )
+        # Query an intermediate edition — the chain still spans the whole
+        # succession and marks the queried slug as is_self.
+        chain = Catalog(conn).classification_chain("class/sun2000")
+        assert [e.slug for e in chain] == ["sun1996", "sun2000", "sun2020"]
+        assert [e.effective_year for e in chain] == [2000, 2020, None]
+        assert all(isinstance(e, ClassificationEdition) for e in chain)
+        # Every edition is a live row → non-None fqid (no dead-edition shape).
+        assert all(e.fqid is not None for e in chain)
+        assert [str(e.fqid) for e in chain] == [
+            "class/sun1996",
+            "class/sun2000",
+            "class/sun2020",
+        ]
+        self_edition = next(e for e in chain if e.is_self)
+        assert self_edition.slug == "sun2000"
+        current = next(e for e in chain if e.is_current)
+        assert current.slug == "sun2020"
+        assert sum(e.is_current for e in chain) == 1
+        assert sum(e.is_self for e in chain) == 1
+
+    def test_classification_chain_standalone_returns_single_self_current(self) -> None:
+        # sun2020 has no succession edges → a one-edition chain, both is_self and
+        # is_current True.
+        conn = build_slugged_db()
+        chain = Catalog(conn).classification_chain("class/sun2020")
+        assert len(chain) == 1
+        assert chain[0].slug == "sun2020"
+        assert chain[0].is_self is True
+        assert chain[0].is_current is True
+        assert chain[0].effective_year is None
+
+    def test_classification_chain_resolves_same_as_alias_to_canonical(self) -> None:
+        # The queried slug is a curated same_as ALIAS for the live sun2020 (no row
+        # of its own). The chain anchors on the canonical edition: is_self lands on
+        # sun2020 (the resolved live slug), not the alias.
+        conn = build_slugged_db()
+        for src, tgt in (
+            (("scb", "sun-alias"), ("scb", "sun2020")),
+            (("scb", "sun2020"), ("scb", "sun-alias")),
+        ):
+            conn.execute(
+                "INSERT INTO classification_same_as ("
+                "a_provider, a_classification_slug, "
+                "b_provider, b_classification_slug) VALUES (?, ?, ?, ?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+        chain = Catalog(conn).classification_chain("class/sun-alias")
+        assert [e.slug for e in chain] == ["sun2020"]
+        assert chain[0].is_self is True
+        assert chain[0].is_current is True
 
     def test_same_as_on_resolved_variable(self) -> None:
         conn = build_slugged_db()

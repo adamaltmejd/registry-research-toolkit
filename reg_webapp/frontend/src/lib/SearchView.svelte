@@ -1,6 +1,7 @@
 <script lang="ts">
 import type {
   ClassificationSearchResult,
+  ClassificationSuccessionSearchResult,
   CodeSearchResult,
   ConceptGroupSearchResult,
   DocResult,
@@ -139,6 +140,14 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
   return r.type === "group";
 }
 
+// A folded classification-succession row (#571) in the classifications group — a
+// query hit ≥2 editions of one chain, collapsed onto the terminal edition.
+function isClassificationSuccession(r: {
+  type: string;
+}): r is ClassificationSuccessionSearchResult {
+  return r.type === "classification_succession";
+}
+
 // The codes group, bucketed by code system (#393 item 3). STABLE group-by on
 // `code_system`, preserving FIRST-APPEARANCE order — so the item-2 ranking (which
 // already floats classification-backed/curated codes to the front) decides which
@@ -251,6 +260,8 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
                 <li>
                   {#if isConceptGroup(result)}
                     {@render conceptGroup(result)}
+                  {:else if isClassificationSuccession(result)}
+                    {@render classificationSuccession(result)}
                   {:else}
                     {@render classificationLeaf(result as ClassificationSearchResult)}
                   {/if}
@@ -343,6 +354,14 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   {#if result.name && result.name !== result.short_name}
     <span class="hit-detail muted">{result.name}</span>
   {/if}
+  <!-- A lone non-current edition hit (#571): link to the current/terminal edition
+       so the user can jump forward. Only present when this is an old edition the
+       query matched alone (absent for current/non-edition classifications). -->
+  {#if result.terminal_fqid}
+    <a class="terminal-link" href={catalogHref(result.terminal_fqid)}>
+      → current edition
+    </a>
+  {/if}
 {/snippet}
 
 <!-- A folded concept-group family (#322): the group itself is NOT FQID-addressable,
@@ -366,6 +385,47 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
             <span class="label">{member.name ?? member.fqid}</span>
             <code class="hit-fqid">{member.fqid}</code>
           </a>
+        </li>
+      {/each}
+    </ul>
+  </details>
+{/snippet}
+
+<!-- A folded classification-succession row (#571): unlike a concept group, the
+     terminal (current) edition IS navigable — so its `fqid` link is the always-
+     visible header. A <details> discloses the full edition chain (terminal-first,
+     descending year); each edition with a live `fqid` is itself a link. The
+     family hint reads "matched M of N editions". -->
+{#snippet classificationSuccession(result: ClassificationSuccessionSearchResult)}
+  {@const editions = result.editions ?? []}
+  <details class="concept-group">
+    <summary>
+      {#if result.fqid}
+        <a href={catalogHref(result.fqid)}>
+          <span class="label">{result.short_name ?? result.name ?? result.fqid}</span>
+          <code class="hit-fqid">{result.fqid}</code>
+        </a>
+      {:else}
+        <span class="label">{result.short_name ?? result.name ?? "—"}</span>
+      {/if}
+      <span class="count">
+        matched {result.matched_count} of {editions.length} editions
+      </span>
+    </summary>
+    <ul class="members">
+      {#each editions as edition, i (i)}
+        <li>
+          {#if edition.fqid}
+            <a href={catalogHref(edition.fqid)}>
+              <span class="label">{edition.name ?? edition.slug}</span>
+              <code class="hit-fqid">{edition.fqid}</code>
+            </a>
+          {:else}
+            <span class="label">{edition.name ?? edition.slug}</span>
+          {/if}
+          {#if edition.effective_year != null}
+            <span class="hit-context muted">{edition.effective_year}</span>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -523,6 +583,9 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     font-size: 0.85em;
   }
   .hit-context {
+    font-size: 0.85em;
+  }
+  .terminal-link {
     font-size: 0.85em;
   }
   .hit-detail {

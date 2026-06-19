@@ -23,8 +23,11 @@ from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 from reg_webapp import golden
 from reg_webapp.conn import catalog_conn
 from reg_webapp.models import (
+    ClassificationEditionModel,
     ClassificationSearchGroup,
+    ClassificationSearchItem,
     ClassificationSearchResult,
+    ClassificationSuccessionSearchResult,
     CodeOwnerClassification,
     CodeOwnerVariable,
     CodeSearchGroup,
@@ -144,7 +147,51 @@ def _classification_result(r: dict) -> ClassificationSearchResult:
         # non-folded vintage member stays discoverable.
         concept_group=r.get("concept_group"),
         concept_group_label=r.get("concept_group_label"),
+        # A lone non-terminal edition hit (#571) carries the current edition's
+        # fqid so the SPA can offer a "go to current edition" link; absent/None
+        # for a current edition or a non-edition classification.
+        terminal_fqid=r.get("terminal_fqid"),
     )
+
+
+def _classification_succession_result(
+    r: dict,
+) -> ClassificationSuccessionSearchResult:
+    """Map a reg_meta `type: "classification_succession"` fold row (#571) onto the
+    wire model: the terminal edition's identity (`fqid`/`short_name`/`name` from
+    `classification_name`) + the full `editions` chain + `matched_count` (how many
+    editions the query hit, from the raw `matched` leaf-hit list)."""
+    return ClassificationSuccessionSearchResult(
+        fqid=r.get("fqid"),
+        short_name=r.get("short_name"),
+        name=r.get("classification_name"),
+        editions=[
+            ClassificationEditionModel(
+                slug=e["slug"],
+                fqid=e.get("fqid"),
+                name=e.get("name"),
+                effective_year=e.get("effective_year"),
+            )
+            for e in r.get("editions", [])
+        ],
+        matched_count=len(r.get("matched") or []),
+    )
+
+
+def _classification_search_item(r: dict) -> ClassificationSearchItem:
+    """Dispatch one classifications-arm row to its wire model: an umbrella
+    concept-group fold (`type: "group"`, #516) → `_group_result`; an edition
+    succession fold (`type: "classification_succession"`, #571) →
+    `_classification_succession_result`; otherwise a leaf classification hit (which
+    may carry a `terminal_fqid` for a lone old-edition row — surfaced on
+    `ClassificationSearchResult` so the SPA can link to the current edition) →
+    `_classification_result`."""
+    row_type = r.get("type")
+    if row_type == "group":
+        return _group_result(r)
+    if row_type == "classification_succession":
+        return _classification_succession_result(r)
+    return _classification_result(r)
 
 
 def _code_result(r: dict) -> CodeSearchResult:
@@ -301,10 +348,7 @@ def get_search(
                     total_count=cls["total_count"]
                     + (len(cls_results) - len(cls["results"])),
                     results=[
-                        _group_result(r)
-                        if r["type"] == "group"
-                        else _classification_result(r)
-                        for r in cls_results[:limit]
+                        _classification_search_item(r) for r in cls_results[:limit]
                     ],
                 )
             )

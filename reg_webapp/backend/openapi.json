@@ -232,9 +232,133 @@
         "title": "CatalogDriftWarning",
         "type": "object"
       },
+      "ClassificationChainEdition": {
+        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the successor (None for\nthe terminal). `is_current` flags the terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.",
+            "title": "Effective Year"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's 2-seg classification FQID, or None only when the slug is malformed/unresolvable (the build validator guarantees succession editions are live classification rows; rendered as plain text, not a link).",
+            "title": "Fqid"
+          },
+          "is_current": {
+            "description": "True for the terminal (current) edition \u2014 no outbound successor.",
+            "title": "Is Current",
+            "type": "boolean"
+          },
+          "is_self": {
+            "description": "True for the edition the caller queried (resolved to its canonical live slug when the query was a same_as alias).",
+            "title": "Is Self",
+            "type": "boolean"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's display name (every chain edition is a live row).",
+            "title": "Name"
+          },
+          "slug": {
+            "description": "The edition's literal slug (e.g. 'sun2000').",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "fqid",
+          "name",
+          "effective_year",
+          "is_current",
+          "is_self"
+        ],
+        "title": "ClassificationChainEdition",
+        "type": "object"
+      },
+      "ClassificationEditionModel": {
+        "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. Every edition is a live `classification` row (the build\nvalidator guarantees succession editions are live), so `fqid` is None only when\nthe slug is malformed/unresolvable.",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's effective year; None for the terminal (head) edition, which carries no successor-side year.",
+            "title": "Effective Year"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).",
+            "title": "Fqid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's display name, None when un-hydrated.",
+            "title": "Name"
+          },
+          "slug": {
+            "description": "The edition's literal slug (e.g. 'sun2000').",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "title": "ClassificationEditionModel",
+        "type": "object"
+      },
       "ClassificationNode": {
         "description": "A classification leaf (`class/<slug>`, 2 seg).",
         "properties": {
+          "edition_chain": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationChainEdition"
+            },
+            "title": "Edition Chain",
+            "type": "array"
+          },
           "fqid": {
             "title": "Fqid",
             "type": "string"
@@ -341,7 +465,7 @@
         "type": "object"
       },
       "ClassificationSearchGroup": {
-        "description": "The `classifications` result group (leaf hits \u29fa folded vintage groups).",
+        "description": "The `classifications` result group: leaf hits \u29fa folded classification\nsuccession rows (#571, edition chains) \u29fa folded umbrella concept-group rows\n(#516, e.g. `group:sun`).",
         "properties": {
           "group": {
             "const": "classifications",
@@ -354,6 +478,7 @@
               "discriminator": {
                 "mapping": {
                   "classification": "#/components/schemas/ClassificationSearchResult",
+                  "classification_succession": "#/components/schemas/ClassificationSuccessionSearchResult",
                   "group": "#/components/schemas/ConceptGroupSearchResult"
                 },
                 "propertyName": "type"
@@ -361,6 +486,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/ClassificationSearchResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationSuccessionSearchResult"
                 },
                 {
                   "$ref": "#/components/schemas/ConceptGroupSearchResult"
@@ -440,6 +568,18 @@
             ],
             "title": "Short Name"
           },
+          "terminal_fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When this is a non-current edition that the query hit alone, the fqid of the current/terminal edition in its succession chain (#571) \u2014 lets the UI link to the current edition; None for a current edition or a non-edition classification.",
+            "title": "Terminal Fqid"
+          },
           "type": {
             "const": "classification",
             "default": "classification",
@@ -451,6 +591,72 @@
           "fqid"
         ],
         "title": "ClassificationSearchResult",
+        "type": "object"
+      },
+      "ClassificationSuccessionSearchResult": {
+        "description": "A folded classification-succession row (#571): a query hit \u22652 distinct\neditions of one classification chain (the vintages, e.g. SUN 1996/2000), so they\ncollapse to a single result keyed on the TERMINAL (current) edition. `editions`\nis the full chain (terminal-first, descending year) so the SPA can render \"this\nclassification has editions \u2026\"; `matched_count` is how many editions the query\nactually hit. A succession row is NOT itself a concept group \u2014 the terminal\n`fqid` is the navigable target.",
+        "properties": {
+          "editions": {
+            "description": "The full edition chain, terminal-first then descending year.",
+            "items": {
+              "$ref": "#/components/schemas/ClassificationEditionModel"
+            },
+            "title": "Editions",
+            "type": "array"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The terminal (current) edition's classification FQID \u2014 the navigable target. None only when the slug is malformed/unresolvable (the terminal is always a live classification row).",
+            "title": "Fqid"
+          },
+          "matched_count": {
+            "default": 0,
+            "description": "How many editions in the chain the query hit.",
+            "title": "Matched Count",
+            "type": "integer"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The terminal edition's display name.",
+            "title": "Name"
+          },
+          "short_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The terminal edition's short name (e.g. 'SUN').",
+            "title": "Short Name"
+          },
+          "type": {
+            "const": "classification_succession",
+            "default": "classification_succession",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid"
+        ],
+        "title": "ClassificationSuccessionSearchResult",
         "type": "object"
       },
       "CodeOwnerClassification": {

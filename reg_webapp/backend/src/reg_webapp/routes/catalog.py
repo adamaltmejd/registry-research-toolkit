@@ -75,6 +75,7 @@ from reg_webapp.models import (
     BindingChild,
     BindingNode,
     CatalogNode,
+    ClassificationChainEdition,
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
@@ -336,7 +337,31 @@ def _binding_node(resolved: ResolvedVariable) -> BindingNode:
     )
 
 
-def _classification_node(resolved: ResolvedClassification) -> ClassificationNode:
+def _classification_chain_edition(edition) -> ClassificationChainEdition:
+    """Map a `reg_meta.ClassificationEdition` (#571) 1:1 onto the wire model — one
+    node of the full succession timeline. Every chain edition is a live
+    `classification` row (the build validator guarantees succession editions are
+    live), so `fqid` is None only when the slug is malformed/unresolvable, which the
+    SPA renders as plain text, not a link."""
+    return ClassificationChainEdition(
+        slug=edition.slug,
+        fqid=str(edition.fqid) if edition.fqid is not None else None,
+        name=edition.name,
+        effective_year=edition.effective_year,
+        is_current=edition.is_current,
+        is_self=edition.is_self,
+    )
+
+
+def _classification_node(
+    catalog: Catalog, resolved: ResolvedClassification
+) -> ClassificationNode:
+    """Map a resolved classification onto its leaf node, embedding the FULL
+    succession edition chain (#571) so the browse panel renders the whole timeline
+    synchronously — no per-neighbor fetch. The chain resolves `same_as`
+    server-side (`Catalog.classification_chain`); every edition is a live
+    `classification` row (the build validator guarantees succession editions are
+    live)."""
     return ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,
@@ -346,6 +371,10 @@ def _classification_node(resolved: ResolvedClassification) -> ClassificationNode
             if resolved.via_same_as is not None
             else None
         ),
+        edition_chain=[
+            _classification_chain_edition(e)
+            for e in catalog.classification_chain(resolved.fqid)
+        ],
     )
 
 
@@ -521,7 +550,7 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
     if isinstance(resolved, ResolvedVariable):
         return _binding_node(resolved)
     if isinstance(resolved, ResolvedClassification):
-        return _classification_node(resolved)
+        return _classification_node(catalog, resolved)
     # Unreachable: resolve() returns only the four ResolvedEntity arms.
     raise HTTPException(
         status_code=500, detail="unknown catalog entity"

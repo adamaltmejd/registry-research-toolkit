@@ -2,6 +2,7 @@
 import { getCatalogNode, isCatalogNode } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
+import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
   bindingChildren,
@@ -200,6 +201,10 @@ $effect(() => {
         <dt>Short name</dt>
         <dd>{node.short_name}</dd>
       </dl>
+      <!-- #571: the embedded edition succession chain (oldest → current). The
+           component omits itself for a standalone classification with no
+           succession. -->
+      <ClassificationLineagePanels {node} />
     {/if}
   </article>
 {:else if notBrowsable}

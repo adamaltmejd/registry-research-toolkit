@@ -152,6 +152,46 @@ class RegisterNode(BaseModel):
     coverage: RegisterCoverageModel | None = None
 
 
+class ClassificationChainEdition(BaseModel):
+    """One edition in a classification's FULL succession timeline (#571), as
+    embedded on `ClassificationNode.edition_chain`. The browse panel renders the
+    whole chain (oldest first, terminal last) synchronously from these — no
+    per-neighbor fetch.
+
+    `slug` is the load-bearing identity. Every chain edition is a LIVE
+    `classification` row — the build validator guarantees succession editions are
+    live (it fails on any `classification_replaced_by` edge whose endpoint has no
+    live row), so `fqid` is None only when the slug is malformed/unresolvable (the
+    SPA renders such an edition as plain text, not a link). `effective_year` is the
+    year on the succession edge that names this edition as the successor (None for
+    the terminal). `is_current` flags the terminal (current) edition; `is_self`
+    flags the edition the caller queried (resolved to its canonical live slug when
+    the query was a `same_as` alias). A dedicated model (NOT the search
+    `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
+    edition a clean 4-field shape."""
+
+    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
+    fqid: str | None = Field(
+        description="The edition's 2-seg classification FQID, or None only when the "
+        "slug is malformed/unresolvable (the build validator guarantees succession "
+        "editions are live classification rows; rendered as plain text, not a link)."
+    )
+    name: str | None = Field(
+        description="The edition's display name (every chain edition is a live row)."
+    )
+    effective_year: int | None = Field(
+        description="The year on the succession edge naming this edition as the "
+        "successor; None for the terminal (head) edition."
+    )
+    is_current: bool = Field(
+        description="True for the terminal (current) edition — no outbound successor."
+    )
+    is_self: bool = Field(
+        description="True for the edition the caller queried (resolved to its "
+        "canonical live slug when the query was a same_as alias)."
+    )
+
+
 class ClassificationNode(BaseModel):
     """A classification leaf (`class/<slug>`, 2 seg)."""
 
@@ -163,6 +203,12 @@ class ClassificationNode(BaseModel):
     # `classification_same_as` edge rather than directly (see reg_meta/DESIGN.md →
     # Classifications); the hop path as FQIDs.
     via_same_as: list[str] | None = None
+    # #571: the FULL classification succession timeline (every edition in the
+    # chain, oldest first, terminal last), resolved server-side and embedded so the
+    # SPA renders the whole edition chain synchronously — superseding the immediate
+    # neighbor fetch. A standalone classification carries a single self+current
+    # edition.
+    edition_chain: list[ClassificationChainEdition] = Field(default_factory=list)
 
 
 class BindingChild(BaseModel):
@@ -620,6 +666,67 @@ class ClassificationSearchResult(BaseModel):
     name: str | None = None
     concept_group: str | None = None
     concept_group_label: str | None = None
+    terminal_fqid: str | None = Field(
+        default=None,
+        description="When this is a non-current edition that the query hit alone, "
+        "the fqid of the current/terminal edition in its succession chain (#571) — "
+        "lets the UI link to the current edition; None for a current edition or a "
+        "non-edition classification.",
+    )
+
+
+class ClassificationEditionModel(BaseModel):
+    """One edition of a folded classification succession chain (#571): a vintage
+    of the same classification (e.g. `sun1996`, `sun2000`). Carried by
+    `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
+    `effective_year`. Every edition is a live `classification` row (the build
+    validator guarantees succession editions are live), so `fqid` is None only when
+    the slug is malformed/unresolvable."""
+
+    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
+    fqid: str | None = Field(
+        default=None,
+        description="The edition's 2-seg classification FQID, None only when the "
+        "slug is malformed/unresolvable (succession editions are live rows).",
+    )
+    name: str | None = Field(
+        default=None, description="The edition's display name, None when un-hydrated."
+    )
+    effective_year: int | None = Field(
+        default=None,
+        description="The edition's effective year; None for the terminal (head) "
+        "edition, which carries no successor-side year.",
+    )
+
+
+class ClassificationSuccessionSearchResult(BaseModel):
+    """A folded classification-succession row (#571): a query hit ≥2 distinct
+    editions of one classification chain (the vintages, e.g. SUN 1996/2000), so they
+    collapse to a single result keyed on the TERMINAL (current) edition. `editions`
+    is the full chain (terminal-first, descending year) so the SPA can render "this
+    classification has editions …"; `matched_count` is how many editions the query
+    actually hit. A succession row is NOT itself a concept group — the terminal
+    `fqid` is the navigable target."""
+
+    type: Literal["classification_succession"] = "classification_succession"
+    fqid: str | None = Field(
+        description="The terminal (current) edition's classification FQID — the "
+        "navigable target. None only when the slug is malformed/unresolvable (the "
+        "terminal is always a live classification row)."
+    )
+    short_name: str | None = Field(
+        default=None, description="The terminal edition's short name (e.g. 'SUN')."
+    )
+    name: str | None = Field(
+        default=None, description="The terminal edition's display name."
+    )
+    editions: list[ClassificationEditionModel] = Field(
+        default_factory=list,
+        description="The full edition chain, terminal-first then descending year.",
+    )
+    matched_count: int = Field(
+        default=0, description="How many editions in the chain the query hit."
+    )
 
 
 class ConceptGroupSearchResult(BaseModel):
@@ -652,7 +759,10 @@ VariableSearchItem = Annotated[
     VariableSearchResult | ConceptGroupSearchResult, Field(discriminator="type")
 ]
 ClassificationSearchItem = Annotated[
-    ClassificationSearchResult | ConceptGroupSearchResult, Field(discriminator="type")
+    ClassificationSearchResult
+    | ClassificationSuccessionSearchResult
+    | ConceptGroupSearchResult,
+    Field(discriminator="type"),
 ]
 
 
@@ -675,7 +785,9 @@ class VariableSearchGroup(BaseModel):
 
 
 class ClassificationSearchGroup(BaseModel):
-    """The `classifications` result group (leaf hits ⧺ folded vintage groups)."""
+    """The `classifications` result group: leaf hits ⧺ folded classification
+    succession rows (#571, edition chains) ⧺ folded umbrella concept-group rows
+    (#516, e.g. `group:sun`)."""
 
     group: Literal["classifications"] = "classifications"
     total_count: int

@@ -574,10 +574,94 @@ export interface components {
             path: string;
         };
         /**
+         * ClassificationChainEdition
+         * @description One edition in a classification's FULL succession timeline (#571), as
+         *     embedded on `ClassificationNode.edition_chain`. The browse panel renders the
+         *     whole chain (oldest first, terminal last) synchronously from these — no
+         *     per-neighbor fetch.
+         *
+         *     `slug` is the load-bearing identity. Every chain edition is a LIVE
+         *     `classification` row — the build validator guarantees succession editions are
+         *     live (it fails on any `classification_replaced_by` edge whose endpoint has no
+         *     live row), so `fqid` is None only when the slug is malformed/unresolvable (the
+         *     SPA renders such an edition as plain text, not a link). `effective_year` is the
+         *     year on the succession edge that names this edition as the successor (None for
+         *     the terminal). `is_current` flags the terminal (current) edition; `is_self`
+         *     flags the edition the caller queried (resolved to its canonical live slug when
+         *     the query was a `same_as` alias). A dedicated model (NOT the search
+         *     `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
+         *     edition a clean 4-field shape.
+         */
+        ClassificationChainEdition: {
+            /**
+             * Effective Year
+             * @description The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.
+             */
+            effective_year: number | null;
+            /**
+             * Fqid
+             * @description The edition's 2-seg classification FQID, or None only when the slug is malformed/unresolvable (the build validator guarantees succession editions are live classification rows; rendered as plain text, not a link).
+             */
+            fqid: string | null;
+            /**
+             * Is Current
+             * @description True for the terminal (current) edition — no outbound successor.
+             */
+            is_current: boolean;
+            /**
+             * Is Self
+             * @description True for the edition the caller queried (resolved to its canonical live slug when the query was a same_as alias).
+             */
+            is_self: boolean;
+            /**
+             * Name
+             * @description The edition's display name (every chain edition is a live row).
+             */
+            name: string | null;
+            /**
+             * Slug
+             * @description The edition's literal slug (e.g. 'sun2000').
+             */
+            slug: string;
+        };
+        /**
+         * ClassificationEditionModel
+         * @description One edition of a folded classification succession chain (#571): a vintage
+         *     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
+         *     `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
+         *     `effective_year`. Every edition is a live `classification` row (the build
+         *     validator guarantees succession editions are live), so `fqid` is None only when
+         *     the slug is malformed/unresolvable.
+         */
+        ClassificationEditionModel: {
+            /**
+             * Effective Year
+             * @description The edition's effective year; None for the terminal (head) edition, which carries no successor-side year.
+             */
+            effective_year?: number | null;
+            /**
+             * Fqid
+             * @description The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).
+             */
+            fqid?: string | null;
+            /**
+             * Name
+             * @description The edition's display name, None when un-hydrated.
+             */
+            name?: string | null;
+            /**
+             * Slug
+             * @description The edition's literal slug (e.g. 'sun2000').
+             */
+            slug: string;
+        };
+        /**
          * ClassificationNode
          * @description A classification leaf (`class/<slug>`, 2 seg).
          */
         ClassificationNode: {
+            /** Edition Chain */
+            edition_chain?: components["schemas"]["ClassificationChainEdition"][];
             /** Fqid */
             fqid: string;
             /**
@@ -649,7 +733,9 @@ export interface components {
         };
         /**
          * ClassificationSearchGroup
-         * @description The `classifications` result group (leaf hits ⧺ folded vintage groups).
+         * @description The `classifications` result group: leaf hits ⧺ folded classification
+         *     succession rows (#571, edition chains) ⧺ folded umbrella concept-group rows
+         *     (#516, e.g. `group:sun`).
          */
         ClassificationSearchGroup: {
             /**
@@ -658,7 +744,7 @@ export interface components {
              */
             group: "classifications";
             /** Results */
-            results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
+            results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
             /** Total Count */
             total_count: number;
         };
@@ -683,10 +769,58 @@ export interface components {
             /** Short Name */
             short_name?: string | null;
             /**
+             * Terminal Fqid
+             * @description When this is a non-current edition that the query hit alone, the fqid of the current/terminal edition in its succession chain (#571) — lets the UI link to the current edition; None for a current edition or a non-edition classification.
+             */
+            terminal_fqid?: string | null;
+            /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             type: "classification";
+        };
+        /**
+         * ClassificationSuccessionSearchResult
+         * @description A folded classification-succession row (#571): a query hit ≥2 distinct
+         *     editions of one classification chain (the vintages, e.g. SUN 1996/2000), so they
+         *     collapse to a single result keyed on the TERMINAL (current) edition. `editions`
+         *     is the full chain (terminal-first, descending year) so the SPA can render "this
+         *     classification has editions …"; `matched_count` is how many editions the query
+         *     actually hit. A succession row is NOT itself a concept group — the terminal
+         *     `fqid` is the navigable target.
+         */
+        ClassificationSuccessionSearchResult: {
+            /**
+             * Editions
+             * @description The full edition chain, terminal-first then descending year.
+             */
+            editions?: components["schemas"]["ClassificationEditionModel"][];
+            /**
+             * Fqid
+             * @description The terminal (current) edition's classification FQID — the navigable target. None only when the slug is malformed/unresolvable (the terminal is always a live classification row).
+             */
+            fqid: string | null;
+            /**
+             * Matched Count
+             * @description How many editions in the chain the query hit.
+             * @default 0
+             */
+            matched_count: number;
+            /**
+             * Name
+             * @description The terminal edition's display name.
+             */
+            name?: string | null;
+            /**
+             * Short Name
+             * @description The terminal edition's short name (e.g. 'SUN').
+             */
+            short_name?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "classification_succession";
         };
         /**
          * CodeOwnerClassification
