@@ -1243,6 +1243,44 @@ class TestConceptGroupChecks:
         result = self._run(conn)
         assert any("parity" in f or "components" in f for f in result.failures)
 
+    # #585 inline-facet NULLability invariant. `_grouped_db` seeds an EDGE group
+    # (group 10, facet_axis NULL) whose members carry NULL facet_value/label — the
+    # valid edge shape. Each test corrupts that shape one way and asserts the gate
+    # bites with the facet/axis NULLability message.
+
+    def test_edge_member_with_facet_value_fails(self):
+        # An edge group's member (group facet_axis NULL) must NOT carry facets;
+        # stamping a non-NULL value/label on it violates the invariant.
+        conn = self._grouped_db()
+        conn.execute(
+            "UPDATE concept_group_variable "
+            "SET facet_value = '1', facet_label = 'källa 1' WHERE group_id = 10"
+        )
+        result = self._run(conn)
+        assert any("NULLability" in f for f in result.failures), result.failures
+
+    def test_axed_member_with_null_facet_value_fails(self):
+        # A token/curated group (facet_axis non-NULL) requires non-NULL member
+        # facets; promoting group 10 to a 'rank' axis while leaving its members'
+        # facets NULL violates the invariant.
+        conn = self._grouped_db()
+        conn.execute("UPDATE concept_group SET facet_axis = 'rank' WHERE group_id = 10")
+        result = self._run(conn)
+        assert any("NULLability" in f for f in result.failures), result.failures
+
+    def test_half_set_member_fails(self):
+        # facet_value and facet_label must be set together; a member with one set
+        # and the other NULL is a half-set violation. Promote the group to a
+        # non-NULL axis so ONLY the value-xor-label clause can fire.
+        conn = self._grouped_db()
+        conn.execute("UPDATE concept_group SET facet_axis = 'rank' WHERE group_id = 10")
+        conn.execute(
+            "UPDATE concept_group_variable "
+            "SET facet_value = '1', facet_label = NULL WHERE group_id = 10"
+        )
+        result = self._run(conn)
+        assert any("NULLability" in f for f in result.failures), result.failures
+
     @staticmethod
     def _add_classification_group(conn, *, source: str):
         """Seed a 2-member `kind='classification'` group with the given source.

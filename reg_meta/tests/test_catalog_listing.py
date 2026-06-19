@@ -300,12 +300,16 @@ def _groups_catalog() -> Catalog:
             "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
             (vid, rank, f"källa {rank}"),
         )
-    # Edge group (no facets): two split siblings.
+    # Edge group (no facets): two split siblings. Inserted in REVERSE slug order
+    # (sun2020 before sun2000) so `test_edge_members_carry_no_facets`'s slug-order
+    # assertion genuinely depends on the `v.slug` tiebreak in
+    # `list_concept_groups`' ORDER BY — dropping it would surface insertion order
+    # and fail the test, locking the ordering contract.
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
         "label, source) VALUES (11, 'variable', 1, 'sun2000', 'Utbildning', 'edge')"
     )
-    for i, slug in enumerate(["sun2000", "sun2020"]):
+    for i, slug in enumerate(["sun2020", "sun2000"]):
         add_variable(conn, register_id=1, var_id=810 + i, name="Utbildning", slug=slug)
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
