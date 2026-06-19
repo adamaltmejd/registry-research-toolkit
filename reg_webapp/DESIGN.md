@@ -148,15 +148,16 @@ the list form (keeps the list grammar out of the separately-released reg_meta, m
 normally). An absent `?period` still returns the FULL embedded leaf.
 
 **301 redirect for renamed/dead slugs (#355 PART 2; register grain added in #412;
-`?period` and sub-endpoints added in #411).** When a request for a dead/renamed slug
-yields a genuine `fqid_not_found` 404, the route calls
+`?period` and sub-endpoints added in #411; classification grain added in #571).** When a
+request for a dead/renamed slug yields a genuine `fqid_not_found` 404, the route calls
 `Catalog.resolve_terminal_successor` before surfacing the 404. That method dispatches on
 FQID kind — binding FQIDs walk `variable_replaced_by`, register FQIDs walk
-`register_replaced_by` — so this single branch handles both grains with no
-kind-branching in the route. If the FQID has a successor chain, the handler returns an
-HTTP 301 to the canonical `/api/catalog/<path>` of the terminal successor (each path
-segment percent-encoded via `urllib.parse.quote`). A truly-unknown slug — no successor
-edge, or a PROVIDER/CLASSIFICATION FQID — re-raises the original 404 unchanged.
+`register_replaced_by`, classification FQIDs walk `classification_replaced_by` — so this
+single branch handles all grains with no kind-branching in the route. If the FQID has a
+successor chain, the handler returns an HTTP 301 to the canonical `/api/catalog/<path>`
+of the terminal successor (each path segment percent-encoded via `urllib.parse.quote`).
+A truly-unknown slug — no successor edge, or a PROVIDER FQID — re-raises the original
+404 unchanged.
 
 The redirect covers all entry points into a dead binding slug (#411): the no-period
 catch-all node path, the `?period` branch (query string preserved, so `?period=2019` /

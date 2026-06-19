@@ -406,27 +406,35 @@ fields are tuples for frozen-dataclass immutability/hashability.
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`
 uniformly. The longitudinal `resolve(fqid).replaced_by` attribute carries the
 **outbound** edges (successors) — "X was replaced by Y" is the natural directional read;
-inbound traversal is the explicit `predecessors(fqid)` call.
+inbound traversal is the explicit `predecessors(fqid)` call. The classification-grain
+duals `classification_successors(fqid)` / `classification_predecessors(fqid)` (#571)
+follow the same split, but key on the **literal edition slug** (not
+`_resolve_edge_triple` live-row resolution) — tolerating dead predecessor editions is
+the whole point of succession, since a renamed/retired slug no longer has a
+`classification` row. `ResolvedClassification.replaced_by` carries the outbound edges on
+resolve (dual of `ResolvedVariable.replaced_by`).
 
 **`resolve_terminal_successor(fqid)` — citation-stable renamed-slug redirect (#355 PART
-2; register grain added in #412).** Dispatches on FQID kind and walks the appropriate
-succession table to the TERMINAL chain end (the node with no further outbound edge),
-returning that terminal as an `Fqid` of the **same kind**, or `None` when the start has
-no outbound edge at all (genuinely unknown). Kind dispatch: VARIABLE_BINDING walks
-`variable_replaced_by` on the stored (provider, register, variable) triple; REGISTER
-walks `register_replaced_by` on the stored (provider, register) pair;
-PROVIDER/CLASSIFICATION have no succession table and return `None` immediately. The
-start FQID **does NOT need to resolve to a live row** — that is the key distinction from
+2; register grain added in #412; classification grain added in #571).** Dispatches on
+FQID kind and walks the appropriate succession table to the TERMINAL chain end (the node
+with no further outbound edge), returning that terminal as an `Fqid` of the **same
+kind**, or `None` when the start has no outbound edge at all (genuinely unknown). Kind
+dispatch: VARIABLE_BINDING walks `variable_replaced_by` on the stored (provider,
+register, variable) triple; REGISTER walks `register_replaced_by` on the stored
+(provider, register) pair; CLASSIFICATION walks `classification_replaced_by` on the
+stored edition slug (a 1-tuple, so an old vintage edition can redirect to the current
+one); PROVIDER has no succession table and returns `None` immediately. The start FQID
+**does NOT need to resolve to a live row** — that is the key distinction from
 `successors`: `successors` requires the FQID to resolve (it calls `_resolve_edge_triple`
 which raises `fqid_not_found` on a dead slug), whereas `resolve_terminal_successor`
 walks purely on the stored string tuple, so it can follow a renamed slug whose
-`variable` / `register` row is gone. Always resolves to the ABSOLUTE chain end (never
-hop-by-hop): a 301 redirect can be cached, so returning an intermediate would leave a
-cached redirect pointing at a now-dead slug after a double rename (A→B then B→C). Split
-pick: when a predecessor has multiple successors, takes the lexicographically first per
-`ORDER BY successor_... LIMIT 1` (same rule for both grains). Cycle guard: a `seen` set
-terminates a malformed loop (A→B→A) without hanging. PROVIDER/CLASSIFICATION FQIDs
-return `None` immediately — those grains have no succession table.
+`variable` / `register` / `classification` row is gone. Always resolves to the ABSOLUTE
+chain end (never hop-by-hop): a 301 redirect can be cached, so returning an intermediate
+would leave a cached redirect pointing at a now-dead slug after a double rename (A→B
+then B→C). Split pick: when a predecessor has multiple successors, takes the
+lexicographically first per `ORDER BY successor_... LIMIT 1` (same rule for all grains).
+Cycle guard: a `seen` set terminates a malformed loop (A→B→A) without hanging. Only
+PROVIDER FQIDs return `None` immediately — that grain has no succession table.
 
 **`dimensions(fqid)` — concept-group memberships for a binding (#489).** Returns the
 register's `ConceptGroupSummary` groups (the variant facet groups — level / population /
@@ -522,6 +530,19 @@ the `(provider, register, variable)` triple, which **is** the binding FQID; buil
 `timeseries_event.beskrivning` transition reason) + `effective_year` (the
 AktuellVariabel-grain successor edition year; None on `same_as` refs and on bare-grain
 succession with no edition).
+
+**`ClassificationRef`** — a classification-grain succession edge endpoint (#571),
+carried by `classification_successors` / `classification_predecessors` /
+`ResolvedClassification.replaced_by`. The classification FQID is 2-segment
+(`class/<slug>`), so the edge endpoint is a single slug — no provider/register triple.
+Fields: `fqid` (best-effort `class/<slug>`, built via `_class_ref_fqid`; None only on a
+malformed slug), the load-bearing `slug`, `effective_year` (the succession year, or
+None), and `note` (build provenance, e.g. `derived:vintage_chain`). There is no
+`reason`/`beskrivning` column on `classification_replaced_by` (that column exists only
+on the variable-grain `timeseries_event`), so `ClassificationRef` carries `note` where
+`VariableRef` carries `reason`. Succession references the **exact edition slug** as
+identity; `fqid` is best-effort to surface malformed slugs gracefully rather than
+raising.
 
 **`RelatedRef`** — a `variable_related_to` sibling (a triage split; see
 reg_meta_build/DESIGN.md → Build-time triage (SCB)). Same `fqid` (3-seg) +
@@ -674,8 +695,22 @@ one group match, the leaf hits collapse into a single `type: "group"` result row
 member hit stays a leaf annotated with `concept_group`/`concept_group_label`; and group
 LABELS themselves match (searching a family label finds its group row even though no
 single leaf row matches). `--no-fold` flattens. `get schema` carries
-`concept_group`(`_label`) per column so the fold is visible inline. Folding happens
-before pagination — a group row counts as one result.
+`concept_group`(`_label`) per column so the fold is visible inline.
+
+**Classification edition chains fold in search separately (#571).** Before the
+concept-group fold, `_fold_classification_succession` collapses classification edition
+hits that share a `classification_replaced_by` chain into one
+`type: "classification_succession"` result row — the terminal (current) edition's
+identity, plus the full `editions` list (terminal-first, then descending
+`effective_year`) and the original leaf hits under `matched`. A lone edition hit
+(whether terminal or an old vintage) stays a leaf; an old-vintage lone hit is annotated
+with `terminal_fqid` so the webapp can link "current". This fold runs **before** the
+concept-group fold so collapsed terminals can then fold into a curated umbrella group
+(e.g. `group:sun`, #516) cleanly — the succession row keeps the terminal's
+`_classification_id` so the umbrella pass treats it as that classification.
+`_strip_internal_keys` recurses into `matched` at both depths to drop the fold-internal
+`_classification_id` before results go public. All folds happen before pagination — a
+succession row and a group row each count as one result.
 
 ## Thematic tags (discovery overlay, #311)
 
