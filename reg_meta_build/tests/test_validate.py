@@ -51,6 +51,129 @@ class TestValidateModule:
         assert result.passed, result.failures
         assert "[variable vintage lift]" in result.format_report()
 
+    def test_corpus_volume_floors_skip_when_scb_absent(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#595: the three SCB-sourced corpus volume floors (edge-group,
+        classification-succession, variable-vintage-lift) must SKIP (report info,
+        not FAIL) when SCB isn't in the build — `build-db` always validates
+        `corpus=True` regardless of `--providers`, so a non-SCB subset must not
+        false-fail. Simulate "SCB not built" by renaming the SCB provider slug so
+        `_scb_in_build` returns False, then call each check directly with
+        corpus=True and assert (a) the skip text renders and (b) the gated floor's
+        FAIL substring is absent. Mirrors #563's gate-to-built-providers
+        precedent."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_classification_replaced_by,
+            _check_concept_groups,
+            _check_variable_replaced_by_vintage_lift,
+            _scb_in_build,
+        )
+
+        broken = tmp_path / "noscb.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.row_factory = sqlite3.Row
+        # Precondition: the un-renamed fixture IS an SCB build.
+        assert _scb_in_build(conn)
+        conn.execute("UPDATE provider SET slug = 'notscb' WHERE slug = 'scb'")
+        conn.commit()
+        assert not _scb_in_build(conn)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+
+        # Each tuple: the check, and the gated floor's FAIL substring that must be
+        # ABSENT when SCB is gated out. `_check_concept_groups` is asserted on the
+        # specific edge-floor substring (not blanket `passed`) because its corpus
+        # call also fails the unrelated curated floor, which the #595 gate leaves
+        # running.
+        cases = (
+            (_check_concept_groups, "edge derivation collapse"),
+            (
+                _check_classification_replaced_by,
+                "vintage-chain derivation regression",
+            ),
+            (
+                _check_variable_replaced_by_vintage_lift,
+                "vintage-lift derivation regression",
+            ),
+        )
+        for check, gated_floor_fail in cases:
+            result = ValidationResult()
+            check(conn, result, tables, corpus=True)
+            report = result.format_report()
+            assert "SCB not in this build" in report, (check.__name__, report)
+            assert not any(gated_floor_fail in f for f in result.failures), (
+                check.__name__,
+                result.failures,
+            )
+        conn.close()
+
+    def test_edge_group_floor_fires_when_scb_present(self, fixture_db: Path):
+        """#595: the gate must NOT neuter the floor when SCB IS built. The
+        synthetic fixture is an SCB build but carries no split-sibling edge groups
+        (well below 1,800), so `_check_concept_groups` with corpus=True must emit
+        the edge-derivation-collapse FAIL — assert on that SPECIFIC substring (the
+        corpus call also fails the curated floor, so blanket `passed` is wrong)."""
+        from reg_meta_build.validate import ValidationResult, _check_concept_groups
+
+        conn = sqlite3.connect(fixture_db)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_concept_groups(conn, result, tables, corpus=True)
+        conn.close()
+        assert any("edge derivation collapse" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_classification_succession_floor_fires_when_scb_present(
+        self, fixture_db: Path
+    ):
+        """#595: with SCB built but no vintage classifications (synthetic), the
+        classification-succession floor must FAIL — the gate preserves the floor."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_classification_replaced_by,
+        )
+
+        conn = sqlite3.connect(fixture_db)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_classification_replaced_by(conn, result, tables, corpus=True)
+        conn.close()
+        assert any(
+            "vintage-chain derivation regression" in f for f in result.failures
+        ), result.failures
+
+    def test_variable_vintage_lift_floor_fires_when_scb_present(self, fixture_db: Path):
+        """#595: with SCB built but no vintage classifications (synthetic), the
+        variable-vintage-lift floor must FAIL — the gate preserves the floor."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_variable_replaced_by_vintage_lift,
+        )
+
+        conn = sqlite3.connect(fixture_db)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=True)
+        conn.close()
+        assert any(
+            "vintage-lift derivation regression" in f for f in result.failures
+        ), result.failures
+
     @staticmethod
     def _seed_classification(
         conn: sqlite3.Connection, short_name: str, slug: str
