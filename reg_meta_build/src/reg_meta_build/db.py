@@ -38,6 +38,7 @@ from .classifications import (
     repo_seed_path,
 )
 from .concept_groups import (
+    EDGE_RELATION_KIND,
     derive_classification_succession,
     load_classification_groups,
     load_concept_group_accepts,
@@ -903,17 +904,22 @@ CREATE TABLE classification_same_as (
     )
 ) WITHOUT ROWID;
 
--- Sibling edges (variable grain). A2.2 triage emits these between
--- the distinct `variable` rows a *split* produced (disjoint columns lumped
--- under one source `var_id`): one variable per column, linked here so a
--- consumer can discover "these are the same definition delivered as different
--- columns." Folds do NOT appear here — they stay one variable. Stored
--- in BOTH directions (like `variable_same_as`) so the a-side PK prefix serves
--- `Catalog.related(x)` without a second b-side scan; the (N choose 2) sibling
--- pairs each yield two rows. `relation_kind` reflects the split reason
--- (`same_definition_different_column` for SCB disjoint-column splits); `note`
--- carries provenance (`auto:triage` for build-emitted edges, vs. a curated
--- TOML override).
+-- Meaningful "see also" links (variable grain). Carries TWO kinds of row:
+--   * A2.2 triage `auto:triage` edges between the distinct `variable` rows a
+--     *split* produced (disjoint columns lumped under one source `var_id`), but
+--     ONLY the NON-FOLDABLE split reasons — `code_vs_label_pair` (a code/label
+--     column pair) and `import_bug_suspect`. The bulk MECHANICAL
+--     `same_definition_different_column` siblings are NOT stored here (#591):
+--     they only ever fed the concept-group edge fold, which now reads the
+--     in-build sibling sets directly (`edge_siblings`), so persisting ~134k
+--     rows the read side never surfaced as anything but the concept group was
+--     dead weight.
+--   * curated `[[edge]] type = "related_to"` see-also links (a DISJOINT,
+--     non-foldable `relation_kind` vocabulary; `note` distinguishes them).
+-- Stored in BOTH directions (like `variable_same_as`) so the a-side PK prefix
+-- serves `Catalog.related(x)` without a second b-side scan; each pair yields two
+-- rows. `relation_kind` reflects the split/curation reason; `note` carries
+-- provenance (`auto:triage` for build-emitted edges, vs. a curated marker).
 CREATE TABLE variable_related_to (
     a_provider     TEXT NOT NULL,
     a_register     TEXT NOT NULL,
@@ -936,8 +942,11 @@ CREATE TABLE variable_related_to (
 -- corruption that killed identity-level folding (#223 part 2). Three
 -- derivation sources, in priority order (see `concept_groups.py`):
 --   'edge'    — connected components of within-register
---               `same_definition_different_column` sibling edges (ground truth
---               minted by the A2.2 split machinery; zero inference).
+--               `same_definition_different_column` split siblings (ground truth
+--               minted by the A2.2 split machinery; zero inference). Fed by the
+--               in-build sibling sets, NOT a `variable_related_to` round-trip
+--               (#591); a curated `[[variable_group]]` claiming a member excludes
+--               it from the component (curated precedence).
 --   'token'   — exact curated vocabularies only (no regex name-patterns):
 --               Swedish month slug tails for variables; 4-digit vintage-year
 --               slug tails for classifications (lkf1980…, sni2007).
@@ -2054,7 +2063,7 @@ def _materialize_replaced_by_edges(
 def _materialize_variable_related_to(
     conn: sqlite3.Connection, edges: list[tuple[int, int, str]]
 ) -> int:
-    """Insert split-sibling edges (both directions) into
+    """Insert the NON-FOLDABLE split-sibling edges (both directions) into
     `variable_related_to`. Runs after `populate_variable_slugs` so each
     `variable_id` resolves to its (provider, register, variable) slug FQID.
     Returns the row count inserted.
@@ -2062,7 +2071,14 @@ def _materialize_variable_related_to(
     A4.1: the SCB adapter emits these as `IRRelatedToEdge` (variable-grain) and
     hands the build-only `(variable_id, variable_id, kind)` list to the
     materializer via `adapter.related_edges`; this materializer post-pass
-    resolves variable_id → slug at write time (after slugs exist)."""
+    resolves variable_id → slug at write time (after slugs exist).
+
+    #591: the foldable `same_def` kind (`EDGE_RELATION_KIND`) is NO LONGER
+    persisted — it fed only the concept-group edge pass, which now reads the
+    in-build sibling sets directly (`edge_siblings`). Only the meaningful
+    non-foldable kinds (`code_vs_label_pair`, `import_bug_suspect`) land here, so
+    the table is the meaningful-links surface (code/label pairs, import-bug hints,
+    plus the curated see-also rows the related_to pass adds)."""
     if not edges:
         return 0
     fqid_of = {
@@ -2076,6 +2092,8 @@ def _materialize_variable_related_to(
     }
     rows: list[tuple] = []
     for a, b, kind in edges:
+        if kind == EDGE_RELATION_KIND:
+            continue  # foldable — fed to the concept-group pass, not persisted
         fa, fb = fqid_of.get(a), fqid_of.get(b)
         # A sibling whose slug never populated (skip_slugs build) can't form an
         # FQID-keyed edge; skip rather than insert a NULL endpoint.
@@ -3306,9 +3324,12 @@ def materialize(
             var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
         )
 
-        # Split-sibling edges. Runs after variable slugs so each
-        # sibling variable_id resolves to its FQID slug; the triage emitted
-        # the (variable_id, variable_id, kind) pairs during coalescing.
+        # Non-foldable split-sibling edges. Runs after variable slugs so each
+        # sibling variable_id resolves to its FQID slug; the triage emitted the
+        # (variable_id, variable_id, kind) pairs during coalescing. #591: the
+        # foldable `same_def` kind is NOT persisted here — it feeds the concept-
+        # group edge pass below via `edge_siblings`; only code/label-pair and
+        # import-bug-suspect edges land in the table.
         n_related = _materialize_variable_related_to(conn, related_edges)
         row_counts["variable_related_to"] = n_related
         _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
@@ -3328,14 +3349,22 @@ def materialize(
         _progress(f"  {n_curated_related:,} curated variable_related_to edges")
 
         # Derived concept groups (#303) — presentation-only browse folding.
-        # Ordering: after variable slugs + related_to edges (the edge pass
-        # resolves slug-anchored edges) and after populate_classifications +
+        # Ordering: after variable slugs (the edge pass resolves the in-build
+        # sibling variable_ids to slugs) and after populate_classifications +
         # populate_slugs (classification rows + slugs, both above). Skipped
         # with the rest of the slug-dependent passes under --skip-slugs (every
         # slug is NULL then — month stems and edge endpoints don't exist).
-        # Dimension 2 is opt-in over the generated auto catalog (#496): custom
-        # `[[variable_group]]` families fold unconditionally; an auto family folds
-        # only when an `[[accept]]` in concept_groups.toml references it.
+        # Dimension 0 folds the in-build `same_def` split-sibling subset
+        # (`edge_siblings`) — #591: those pairs are no longer persisted to
+        # `variable_related_to`, so the fold reads them straight off the triage's
+        # list. Dimension 2 is opt-in over the generated auto catalog (#496):
+        # custom `[[variable_group]]` families fold unconditionally (and take
+        # PRECEDENCE over the edge fold — a claimed FQID is excluded from its
+        # edge component); an auto family folds only when an `[[accept]]` in
+        # concept_groups.toml references it.
+        edge_siblings = [
+            (a, b) for a, b, kind in related_edges if kind == EDGE_RELATION_KIND
+        ]
         cg_counts = materialize_concept_groups(
             conn,
             load_concept_groups(repo_concept_groups_path()),
@@ -3344,6 +3373,7 @@ def materialize(
             classification_groups=load_classification_groups(
                 repo_concept_groups_path()
             ),
+            edge_siblings=edge_siblings,
             providers=active_providers,
             warn=_progress,
         )

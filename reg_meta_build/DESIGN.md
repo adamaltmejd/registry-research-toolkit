@@ -1829,7 +1829,11 @@ consolidated:
   (`CURATED_RELATION_KINDS`, currently `similar_concept`) is **disjoint** from the
   auto:triage kind `same_definition_different_column` — the foldable triage kind is
   rejected here, so a curated cross-register "see also" can never trigger browse-level
-  folding. Lands in `variable_related_to` alongside the auto:triage split-sibling edges.
+  folding. `variable_related_to` carries the non-foldable auto kinds
+  (`code_vs_label_pair`, `import_bug_suspect`) and curated kinds only; the bulk
+  mechanical `same_definition_different_column` split siblings are NOT persisted here
+  (#591) — they feed the concept-group edge fold directly from the in-build sibling sets
+  (`edge_siblings`).
 
 Curated variable → classification overrides live in the parallel standalone
 `reg_meta_build/classification_links.toml` (#416), loaded by `classification_links.py`.
@@ -1955,14 +1959,24 @@ priority order; a member belongs to at most one group, and a later pass never cl
 already-grouped member:
 
 0. **`edge`** — connected components of within-register
-   `same_definition_different_column` sibling edges. Zero inference: the A2.2 split
-   machinery minted these edges between the delivery columns of ONE SCB variable
+   `same_definition_different_column` split-sibling pairs. Zero inference: the A2.2
+   split machinery minted these between the delivery columns of ONE SCB variable
    definition, so folding them back into one browse row cannot over-fold. Measured
    2026-06-11: 2,193 components / 8,151 variables (16% of the catalog), 2,191 sharing a
-   single name (the group label; key = min member slug). Other auto:triage
-   `relation_kind`s (`code_vs_label_pair`, `import_bug_suspect`) do NOT group; neither
-   do curated kinds from `curation/relations.toml` (`similar_concept`) — the curated
-   vocabulary is disjoint from the foldable auto kind by construction.
+   single name (the group label; key = min member slug). The pairs are read from the
+   IN-BUILD sibling sets (`edge_siblings`, `(variable_id, variable_id)` pairs the triage
+   minted) — NOT from a `variable_related_to` round-trip; the foldable edges are not
+   persisted to that table (#591). **Curated precedence** (#591): any FQID claimed by a
+   curated `[[variable_group]]` or `[[accept]]` is subtracted from the edge components
+   before they mint groups; a component reduced below 2 survivors mints no group (the
+   curated entry claims those FQIDs instead). Other auto:triage `relation_kind`s
+   (`code_vs_label_pair`, `import_bug_suspect`) do NOT group; neither do curated kinds
+   from `curation/relations.toml` (`similar_concept`) — the curated vocabulary is
+   disjoint from the foldable auto kind by construction. The former exact-parity check
+   (`_check_edge_group_parity`, which recomputed components from persisted rows) is
+   replaced by a corpus-only volume floor `_CG_MIN_EDGE_GROUPS` (#591): there are no
+   persisted rows to recompute against, so a volume floor catches a derivation collapse
+   (slug drift, empty `edge_siblings`) without recomputation.
 
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms

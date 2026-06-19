@@ -511,10 +511,13 @@ the binding FQID. Two edge tables partition the relationship space:
   variable, many variant states), so the old `(N choose 2)` auto-derive from matching
   `var_id` is gone; `same_as` carries only the genuinely-curated cross-register set.
   `resolve()` traverses it transitively, recording the path in `via_same_as`.
-- **`related_to`** — symmetric **split siblings**: distinct variables that triage split
-  from one source key (`kommun-hem` ↔ `kommun-skol`, `land-id` ↔ `land-namn`). Related
-  in concept but **not substitutable** — parallel columns a researcher orders
-  separately.
+- **`related_to`** — **meaningful non-foldable links**: the non-foldable auto-derived
+  split reasons (`code_vs_label_pair`, `import_bug_suspect`) and curated see-also kinds
+  (`similar_concept`). The bulk mechanical `same_definition_different_column` split
+  siblings are NOT here — they feed the concept-group edge fold directly from the
+  in-build sibling sets (`edge_siblings`) and are not persisted to this table (#591).
+  See reg_meta_build/DESIGN.md → Build-time triage (SCB) for the full split-kind
+  taxonomy.
 
 Same-concept grain/vintage/coding appears in **neither** — it *folds* into one variable,
 so there is no edge (the fold/split distinction and auto-emit mechanics are in
@@ -544,12 +547,12 @@ on the variable-grain `timeseries_event`), so `ClassificationRef` carries `note`
 identity; `fqid` is best-effort to surface malformed slugs gracefully rather than
 raising.
 
-**`RelatedRef`** — a `variable_related_to` sibling (a triage split; see
-reg_meta_build/DESIGN.md → Build-time triage (SCB)). Same `fqid` (3-seg) +
-`provider`/`register`/`variable` triple as `VariableRef`, plus `relation_kind` (the
-auto-derived split reason — `code_vs_label_pair`, `import_bug_suspect`, or the generic
-`same_definition_different_column`; see reg_meta_build/DESIGN.md → Build-time triage
-(SCB) for the full taxonomy).
+**`RelatedRef`** — a `variable_related_to` see-also link (see reg_meta_build/DESIGN.md →
+Build-time triage (SCB)). Same `fqid` (3-seg) + `provider`/`register`/`variable` triple
+as `VariableRef`, plus `relation_kind` (the non-foldable split reason —
+`code_vs_label_pair`, `import_bug_suspect` — or a curated kind; the bulk mechanical
+`same_definition_different_column` split siblings are the concept group, not a
+`RelatedRef` (#591)).
 
 **`LineageEdge`** — one `variable_state_lineage` row (see reg_meta_build/DESIGN.md →
 Consumer-side lineage (variable_state_lineage); state grain): `consumer_state_id`,
@@ -931,18 +934,18 @@ live in the `reg_meta_build/db.py` DDL; this captures the cross-provider term me
 and the column-rename pass that turned SCB's Swedish source columns into universal
 English.
 
-  | Term                    | Meaning                                                                                                                                                                                                                          |
-  | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | variable                | The addressable variable — provider's "define once" identity, the FQID target. Synthetic `variable_id` PK; identity `(provider, register, slug)`. Has 1..N states across variants and time.                                      |
-  | variant (coordinate)    | A `register_variant` row (SCB `registervariant`, SOS `deldatamängd`): a delivery coordinate, not an identity level. Carried on `variable_state` and on `project_data` Sources. Browsed under its register; **not an FQID kind**. |
-  | variable state          | A `variable_state` row: per-delivery shape, carrying a variant coordinate, validity range, type/length/value-set/version-label. The canonical unit of resolution at a `(variant, period)`.                                       |
-  | binding                 | A 3-segment FQID referencing a variable. Resolves to a `ResolvedVariable` (all states) or `list[VariableState]` (with period context).                                                                                           |
-  | variable slug           | `variable.slug`: the register-unique, immutable FQID leaf. Triage splits get distinct slugs; grain/vintage folds keep one slug.                                                                                                  |
-  | same_as                 | Symmetric cross-register / cross-provider equivalence between variables. Variable grain; curated only, no auto-derive.                                                                                                           |
-  | related_to              | Symmetric split-sibling edge (distinct variables from one source key). Variable grain.                                                                                                                                           |
-  | classification          | A named versioned vocabulary (SUN2020, ICD10). Provider-independent; addressed via `class/<slug>` (vintage in slug).                                                                                                             |
-  | value_set               | A code list on a `variable_state`. Content-addressed (`member_hash`) for dedup; optional FK to `classification`. Never exposed via FQID.                                                                                         |
-  | value_set_version_label | On `variable_state`: the discriminator that lets multiple value-set versions co-exist as overlapping states (folded crosswalk vintages / LKF multi-vintage). `NOT NULL DEFAULT ''`.                                              |
+  | Term                    | Meaning                                                                                                                                                                                                                                                                         |
+  | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | variable                | The addressable variable — provider's "define once" identity, the FQID target. Synthetic `variable_id` PK; identity `(provider, register, slug)`. Has 1..N states across variants and time.                                                                                     |
+  | variant (coordinate)    | A `register_variant` row (SCB `registervariant`, SOS `deldatamängd`): a delivery coordinate, not an identity level. Carried on `variable_state` and on `project_data` Sources. Browsed under its register; **not an FQID kind**.                                                |
+  | variable state          | A `variable_state` row: per-delivery shape, carrying a variant coordinate, validity range, type/length/value-set/version-label. The canonical unit of resolution at a `(variant, period)`.                                                                                      |
+  | binding                 | A 3-segment FQID referencing a variable. Resolves to a `ResolvedVariable` (all states) or `list[VariableState]` (with period context).                                                                                                                                          |
+  | variable slug           | `variable.slug`: the register-unique, immutable FQID leaf. Triage splits get distinct slugs; grain/vintage folds keep one slug.                                                                                                                                                 |
+  | same_as                 | Symmetric cross-register / cross-provider equivalence between variables. Variable grain; curated only, no auto-derive.                                                                                                                                                          |
+  | related_to              | Symmetric "see also" link. Carries non-foldable auto split kinds (`code_vs_label_pair`, `import_bug_suspect`) and curated kinds. The bulk `same_definition_different_column` split siblings fold into concept groups instead and are NOT persisted here (#591). Variable grain. |
+  | classification          | A named versioned vocabulary (SUN2020, ICD10). Provider-independent; addressed via `class/<slug>` (vintage in slug).                                                                                                                                                            |
+  | value_set               | A code list on a `variable_state`. Content-addressed (`member_hash`) for dedup; optional FK to `classification`. Never exposed via FQID.                                                                                                                                        |
+  | value_set_version_label | On `variable_state`: the discriminator that lets multiple value-set versions co-exist as overlapping states (folded crosswalk vintages / LKF multi-vintage). `NOT NULL DEFAULT ''`.                                                                                             |
 
 **Universal English ↔ SCB Swedish.** Column names are universal English; column
 **values** stay provider-native verbatim. The validator emits errors against strings;

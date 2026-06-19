@@ -2699,13 +2699,14 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
     tmp_path: Path,
 ) -> None:
     # The skip-slugs combined test above pins the edge-count CONTRACT but can't
-    # exercise the slug-keyed derivation (both edge tables are empty without
-    # slugs). This runs the build WITH slugs so `variable_related_to` actually
-    # materializes, then asserts SOS's split-sibling edges stay SOS-internal —
+    # exercise the slug-keyed derivation (the fold is empty without slugs). This
+    # runs the build WITH slugs so the PAR ATC split materializes its concept-
+    # group EDGE fold (#591 — the foldable `same_def` siblings no longer land in
+    # `variable_related_to`), then asserts SOS's split siblings stay SOS-internal —
     # the LIVE guard for the P3#1 leaked-loop-var regression that crossed SOS
-    # related-to edges onto SCB. populate_slugs(strict=True) demands a slug for
-    # every register/variant, so we curate them from a throwaway no-slug "probe"
-    # build (ids are deterministic, so the probe and the real build share them).
+    # edges onto SCB. populate_slugs(strict=True) demands a slug for every
+    # register/variant, so we curate them from a throwaway no-slug "probe" build
+    # (ids are deterministic, so the probe and the real build share them).
     from _sos_fixtures import (
         DEFAULT_REGISTERS,
         PAR_SPLIT_REGISTER,
@@ -2752,26 +2753,33 @@ def test_synthetic_combined_build_with_slugs_related_to_stays_sos_internal(
             == 0
         )
 
-        # The PAR ATC split materialized its related-to edge (stored both
-        # directions), and EVERY related-to edge is SOS-internal — none leaked
-        # to SCB.
+        # #591: the PAR ATC `same_def` split no longer persists to
+        # `variable_related_to` (that table now carries only non-foldable /
+        # curated links — none in this build) — it folds into a concept-group
+        # EDGE group instead. So the table is empty here.
         n_related = conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[
             0
         ]
-        assert n_related == 2, f"expected the PAR split edge (2 rows), got {n_related}"
-        assert (
-            conn.execute(
-                "SELECT COUNT(*) FROM variable_related_to "
-                "WHERE a_provider='sos' AND b_provider='sos'"
-            ).fetchone()[0]
-            == n_related
+        assert n_related == 0, f"expected an empty related-to table, got {n_related}"
+
+        # The split's regression guard moves to the edge concept group: the PAR
+        # ATC siblings folded into ONE `source='edge'` group, and EVERY variable
+        # in any edge group is SOS-internal — none leaked to SCB (the P3#1
+        # leaked-loop-var regression that crossed SOS edges onto SCB).
+        n_edge_groups = conn.execute(
+            "SELECT COUNT(*) FROM concept_group WHERE source = 'edge'"
+        ).fetchone()[0]
+        assert n_edge_groups == 1, (
+            f"expected the PAR ATC split to fold into 1 edge group, got {n_edge_groups}"
         )
-        assert (
-            conn.execute(
-                "SELECT COUNT(*) FROM variable_related_to WHERE a_provider != b_provider"
-            ).fetchone()[0]
-            == 0
-        )
+        non_sos_edge_members = conn.execute(
+            "SELECT COUNT(*) FROM concept_group_variable m "
+            "JOIN concept_group g ON g.group_id = m.group_id "
+            "JOIN variable v ON v.variable_id = m.variable_id "
+            "JOIN register r ON r.register_id = v.register_id "
+            "WHERE g.source = 'edge' AND r.provider_id != 2"
+        ).fetchone()[0]
+        assert non_sos_edge_members == 0, "an edge group member leaked off SOS"
 
         # same_as is curated-only (none here), and never crosses providers.
         assert (

@@ -291,7 +291,7 @@ describe("LineagePanels — empty-section collapse (D1.2)", () => {
             register: "aes",
             variable: "birthmother",
             fqid: "scb/aes/birthmother",
-            relation_kind: "same_definition_different_column",
+            relation_kind: "code_vs_label_pair",
           },
         ] as unknown as BindingNodeData["related_to"],
       }),

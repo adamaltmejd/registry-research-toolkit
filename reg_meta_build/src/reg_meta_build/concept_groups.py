@@ -13,12 +13,19 @@ belongs to AT MOST ONE group — enforced by the member-table PKs; a later pass
 never claims an already-grouped member):
 
 0. ``edge`` — connected components of within-register
-   ``same_definition_different_column`` sibling edges. Ground truth: the A2.2
-   split machinery minted these edges between the delivery columns of ONE SCB
+   ``same_definition_different_column`` split-sibling pairs. Ground truth: the
+   A2.2 split machinery minted these between the delivery columns of ONE SCB
    variable definition, so folding them back into one browse row is
    zero-inference (e.g. ureg's sun2000inr/sun2020inr coding succession; on the
    real corpus ~2,200 components covering ~8,200 variables, 2,191/2,193
-   sharing a single name).
+   sharing a single name). The pairs are read from the IN-BUILD sibling sets the
+   triage minted (``edge_siblings``), NOT from the ``variable_related_to`` table
+   — the foldable ``same_def`` edges are no longer persisted there (#591; the
+   table now carries only the meaningful curated/non-foldable links). A later
+   ``curated`` ``[[variable_group]]`` takes PRECEDENCE: any FQID it claims is
+   subtracted from the edge components before they mint groups (so #488's
+   per-population curation can re-home a näringsgren variable the edge fold would
+   otherwise grab), and a component reduced below 2 survivors mints no group.
 1. ``token`` — exact curated vocabularies only (NO regex name-patterns, per
    the standing curation rule): Swedish month slug tails (both the short and
    full forms SCB mixes, e.g. lisa's agi1lonfinkjan…agi1lonfinkdec) for
@@ -67,7 +74,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
 
 from ._components import DisjointSet
 from ._curation import curation_error, load_curation_entries, require_str
@@ -135,7 +142,9 @@ _MIN_LABEL_PREFIX = 5
 _MIN_VINTAGE_SIBLINGS = 2
 _VINTAGE_YEARS = range(1900, 2100)
 
-_EDGE_RELATION_KIND = "same_definition_different_column"
+# The foldable split-sibling kind (#591). Public so db.py can skip persisting it
+# to `variable_related_to` and key the in-build `edge_siblings` subset off it.
+EDGE_RELATION_KIND = "same_definition_different_column"
 
 
 # ── curated TOML ────────────────────────────────────────────────────────────
@@ -580,42 +589,38 @@ def _insert_group(
     return group_id
 
 
-def _derive_edge_groups(conn: sqlite3.Connection) -> int:
+def _derive_edge_groups(
+    conn: sqlite3.Connection,
+    edge_siblings: Iterable[tuple[int, int]],
+    exclude_variable_ids: set[int],
+) -> int:
     """Dimension 0: one group per connected component of within-register
-    `same_definition_different_column` edges. The edges are slug-anchored and
-    stored both directions; resolve both endpoints back to variable_ids and
-    union-find the components. Cross-register edges of this kind don't occur
-    (the A2.2 split is register-local), but the WHERE guard keeps a future
-    curated cross-register edge from minting an unrepresentable group."""
-    rows = conn.execute(
-        "SELECT va.variable_id AS a_id, vb.variable_id AS b_id "
-        "FROM variable_related_to e "
-        "JOIN provider pa ON pa.slug = e.a_provider "
-        "JOIN register ra ON ra.provider_id = pa.provider_id "
-        "  AND ra.slug = e.a_register "
-        "JOIN variable va ON va.register_id = ra.register_id "
-        "  AND va.slug = e.a_variable "
-        "JOIN provider pb ON pb.slug = e.b_provider "
-        "JOIN register rb ON rb.provider_id = pb.provider_id "
-        "  AND rb.slug = e.b_register "
-        "JOIN variable vb ON vb.register_id = rb.register_id "
-        "  AND vb.slug = e.b_variable "
-        "WHERE e.relation_kind = ? AND va.register_id = vb.register_id",
-        (_EDGE_RELATION_KIND,),
-    ).fetchall()
-    if not rows:
-        return 0
+    split-sibling pairs. `edge_siblings` is the IN-BUILD `same_def` subset the
+    triage minted (`(variable_id, variable_id)` pairs) — NOT a table round-trip;
+    the foldable edges are no longer persisted to `variable_related_to` (#591).
 
-    ds: DisjointSet[int] = DisjointSet()
-    for r in rows:
-        a, b = r[0], r[1]
-        ds.add(a)
-        ds.add(b)
-        ds.union(a, b)
+    Only a pair whose BOTH endpoints are slugged (`meta`) AND share a register is
+    unioned — mirroring the old table query's `WHERE slug IS NOT NULL` join and
+    `va.register_id = vb.register_id` guard (cross-register pairs don't fold; the
+    A2.2 split is register-local, but a future curated cross-register edge must
+    not mint an unrepresentable group).
 
-    # Full slugged-variable scan rather than an IN(...) over the ~8k involved
-    # ids — bounded (~50k rows on the real corpus) and immune to SQLite's
-    # host-parameter cap.
+    Curated precedence (#591, unblocks #488): `exclude_variable_ids` are the
+    variable_ids the curated/accept pass has already claimed. An edge touching an
+    excluded endpoint doesn't connect survivors — it is skipped BEFORE the union,
+    so excluded vids never enter the DisjointSet. A component is therefore a
+    connected component of the same_def edges among NON-excluded variables, and
+    only one with >= 2 members mints a group (key/label/register computed from the
+    members). A component with < 2 members mints nothing — the curated
+    `[[variable_group]]` claims those FQIDs instead. Skipping excluded endpoints
+    pre-union (rather than subtracting post-union) is what keeps a BRIDGE
+    exclusion correct: if a claimed member is the only vertex joining two cliques,
+    the survivors on either side stay disconnected (no surviving same_def path
+    folds them)."""
+    # Full slugged-variable scan rather than an IN(...) over the involved ids —
+    # bounded (~50k rows on the real corpus) and immune to SQLite's host-
+    # parameter cap. Only slugged variables ever participated (the old table
+    # query joined on populated slugs), so an unslugged endpoint drops out.
     meta = {
         r[0]: (r[1], r[2], r[3])
         for r in conn.execute(
@@ -623,15 +628,34 @@ def _derive_edge_groups(conn: sqlite3.Connection) -> int:
             "WHERE slug IS NOT NULL"
         )
     }
+    ds: DisjointSet[int] = DisjointSet()
+    for a, b in edge_siblings:
+        if a not in meta or b not in meta or meta[a][0] != meta[b][0]:
+            continue
+        # Skip edges touching a curated/accepted endpoint BEFORE union: an
+        # excluded vid never enters the DisjointSet, so a bridge member's removal
+        # genuinely disconnects the survivors on either side (no folded {a, b}).
+        if a in exclude_variable_ids or b in exclude_variable_ids:
+            continue
+        ds.add(a)
+        ds.add(b)
+        ds.union(a, b)
     components = ds.components()
+    if not components:
+        return 0
 
     # Deterministic order: by (register_id, min member slug). Key = min member
     # slug (components are disjoint, so it's scope-unique); label = the
     # min-slug member's name (the shared name on 2,191/2,193 real components),
-    # falling back to the key itself.
+    # falling back to the key itself. Excluded vids never entered the DisjointSet,
+    # so every component member is already a survivor; the < 2 guard stays
+    # defensive — a component should always be >= 2, but a degenerate one mints
+    # nothing.
     prepared = []
     for member_ids in components.values():
         members = sorted(member_ids, key=lambda v: meta[v][1])
+        if len(members) < 2:
+            continue
         register_id = meta[members[0]][0]
         key = meta[members[0]][1]
         label = meta[members[0]][2] or key
@@ -989,6 +1013,34 @@ def _apply_curated_classification_groups(
     return n_groups
 
 
+def _resolve_curated_member_ids(
+    conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
+) -> set[int]:
+    """The variable_ids the curated/accept variable groups will claim — the edge
+    pass's `exclude_variable_ids` (#591 curated precedence). LENIENT: a member
+    whose register or variable slug doesn't resolve is skipped here (it carries no
+    edge FQID to exclude); the strict EXIT_CONFIG on a dangling reference still
+    fires in `_apply_curated_groups`, the authoritative pass."""
+    out: set[int] = set()
+    for g in groups:
+        reg = conn.execute(
+            "SELECT r.register_id FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ?",
+            (g.provider, g.register),
+        ).fetchone()
+        if reg is None:
+            continue
+        for m in g.members:
+            var = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
+                (reg[0], m.variable),
+            ).fetchone()
+            if var is not None:
+                out.add(var[0])
+    return out
+
+
 def materialize_concept_groups(
     conn: sqlite3.Connection,
     curated: tuple[CuratedGroup, ...] = (),
@@ -996,16 +1048,27 @@ def materialize_concept_groups(
     auto: tuple[CuratedGroup, ...] = (),
     accepts: tuple[Accept, ...] = (),
     classification_groups: tuple[ClassificationGroup, ...] = (),
+    edge_siblings: Iterable[tuple[int, int]] = (),
     providers: frozenset[str] = frozenset(),
     warn: Callable[[str], None] | None = None,
 ) -> dict[str, int]:
     """Derive the concept-group tables (#303). Ordering contract: runs after
-    `populate_variable_slugs` + `_materialize_variable_related_to` (the edge
-    pass resolves slug-anchored edges) and after `populate_slugs` /
-    `populate_classifications` (classification slugs + rows). `providers`
-    gates curated/accept entries to the providers in this build (mirrors
-    `populate_classifications`' provider gate, so a `--providers=sos` build
-    doesn't fail on an scb family).
+    `populate_variable_slugs` (the edge pass resolves slug-anchored siblings) and
+    after `populate_slugs` / `populate_classifications` (classification slugs +
+    rows). `providers` gates curated/accept entries to the providers in this build
+    (mirrors `populate_classifications`' provider gate, so a `--providers=sos`
+    build doesn't fail on an scb family).
+
+    Dimension 0 (`edge`) folds the IN-BUILD `same_def` split-sibling pairs
+    (`edge_siblings`, `(variable_id, variable_id)`), NOT a `variable_related_to`
+    round-trip — those foldable edges are no longer persisted (#591). The CURATED
+    pass takes PRECEDENCE over the edge fold (unblocks #488): `custom` + `accepted`
+    are resolved FIRST, the variable_ids their members claim become
+    `exclude_variable_ids`, and `_derive_edge_groups` subtracts them from every
+    component before minting (a component left with < 2 survivors mints no edge
+    group). The strict dangling-reference check stays in `_apply_curated_groups`;
+    the exclusion resolution here is lenient (an unresolvable member just carries
+    no FQID to exclude).
 
     Dimension 2 (#496) is OPT-IN over the generated `concept_groups.auto.toml`:
     `auto` is the machine-owned candidate catalog (`load_concept_groups` of the
@@ -1027,13 +1090,16 @@ def materialize_concept_groups(
     distinct dimensions), materialized via `_apply_curated_classification_groups`
     after the variable curated pass. Classifications are catalog-GLOBAL, so these
     are NOT provider-gated (unlike the variable curated/accept entries)."""
-    _derive_edge_groups(conn)
-    _derive_month_groups(conn, warn or (lambda _msg: None))
     auto_by_scope = {(g.provider, g.register, g.key): g for g in auto}
     accepted = tuple(
         resolve_accept(a, auto_by_scope) for a in accepts if a.provider in providers
     )
     custom = tuple(g for g in curated if g.provider in providers)
+    # Curated precedence (#591): resolve the curated/accept members BEFORE the
+    # edge fold so any FQID they claim is excluded from the edge components.
+    exclude_variable_ids = _resolve_curated_member_ids(conn, custom + accepted)
+    _derive_edge_groups(conn, edge_siblings, exclude_variable_ids)
+    _derive_month_groups(conn, warn or (lambda _msg: None))
     _apply_curated_groups(conn, custom + accepted)
     _apply_curated_classification_groups(conn, classification_groups)
     # Count the authoritative shipped rows from the final table after all

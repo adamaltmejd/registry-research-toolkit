@@ -86,7 +86,7 @@ def test_related_endpoint(client):
     body = resp.json()
     assert body["binding"] == _KON
     rel = next(r for r in body["related"] if r["fqid"] == _SYSS)
-    assert rel["relation_kind"] == "same_definition_different_column"
+    assert rel["relation_kind"] == "code_vs_label_pair"
 
 
 def test_lineage_endpoint(client):

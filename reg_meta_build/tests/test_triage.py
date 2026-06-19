@@ -2657,7 +2657,10 @@ class TestSplitSiblingSlugCache:
 class TestVariableRelatedToEdges:
     """Maintainer: the `variable_related_to` materializer (both-direction
     (N choose 2) edges, FQID endpoints, `note='auto:triage'`, skip-on-missing-slug)
-    is no-op'd under skip_slugs, so cover it directly."""
+    is no-op'd under skip_slugs, so cover it directly. #591: only the NON-FOLDABLE
+    split kinds (`code_vs_label_pair`, `import_bug_suspect`) persist here — the
+    foldable `same_definition_different_column` siblings are skipped (they feed the
+    concept-group edge fold instead), covered by `test_same_def_kind_is_skipped`."""
 
     @staticmethod
     def _split_db(tmp_path: Path) -> sqlite3.Connection:
@@ -2700,9 +2703,7 @@ class TestVariableRelatedToEdges:
         )
         conn.commit()
 
-        n = _materialize_variable_related_to(
-            conn, [(a, b, "same_definition_different_column")]
-        )
+        n = _materialize_variable_related_to(conn, [(a, b, "code_vs_label_pair")])
         assert n == 2  # (N choose 2) × both directions
         rows = conn.execute(
             "SELECT a_provider, a_register, a_variable, b_provider, b_register, "
@@ -2715,8 +2716,36 @@ class TestVariableRelatedToEdges:
         for r in rows:
             assert (r["a_provider"], r["a_register"]) == (prov, "testreg")
             assert (r["b_provider"], r["b_register"]) == (prov, "testreg")
-            assert r["relation_kind"] == "same_definition_different_column"
+            assert r["relation_kind"] == "code_vs_label_pair"
             assert r["note"] == "auto:triage"
+        conn.close()
+
+    def test_same_def_kind_is_skipped(self, tmp_path: Path) -> None:
+        # #591: the foldable `same_definition_different_column` kind is NOT
+        # persisted (it feeds the concept-group edge fold via `edge_siblings`),
+        # so the materializer drops it even with both endpoints slugged.
+        from reg_meta_build.db import _materialize_variable_related_to
+
+        conn = self._split_db(tmp_path)
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 "
+            "AND provider_key = '920' ORDER BY variable_id"
+        ).fetchall()
+        a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
+        conn.execute(
+            "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
+        )
+        conn.execute(
+            "UPDATE variable SET slug = 'kommun-skol' WHERE variable_id = ?", (b,)
+        )
+        conn.commit()
+        n = _materialize_variable_related_to(
+            conn, [(a, b, "same_definition_different_column")]
+        )
+        assert n == 0
+        assert (
+            conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[0] == 0
+        )
         conn.close()
 
     def test_edge_skipped_when_a_slug_is_missing(self, tmp_path: Path) -> None:
@@ -2729,14 +2758,13 @@ class TestVariableRelatedToEdges:
         ).fetchall()
         a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
         # Only one sibling gets a slug; the edge has a NULL endpoint → skipped,
-        # not inserted with a NULL (which would corrupt the FQID).
+        # not inserted with a NULL (which would corrupt the FQID). A PERSISTABLE
+        # kind so the skip is the missing-slug path, not the #591 same_def drop.
         conn.execute(
             "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
         )
         conn.commit()
-        n = _materialize_variable_related_to(
-            conn, [(a, b, "same_definition_different_column")]
-        )
+        n = _materialize_variable_related_to(conn, [(a, b, "code_vs_label_pair")])
         assert n == 0
         assert (
             conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[0] == 0

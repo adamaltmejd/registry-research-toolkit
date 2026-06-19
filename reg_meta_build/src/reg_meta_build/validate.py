@@ -56,7 +56,6 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.catalog import _decode_panel_entity_key
 from reg_meta.db import open_db
 
-from reg_meta_build._components import DisjointSet
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
@@ -1376,20 +1375,33 @@ def _check_sos_stateless_variables(
 
 
 # Real-corpus floors for the derived concept-group layer (#303). The EDGE
-# dimension needs no floor — `_check_concept_groups` recomputes the
-# within-register `same_definition_different_column` components and requires
-# EXACT count parity with the edge groups (structural, corpus-independent, and
-# drift-proof: 2,193 == 2,193 today, N == N forever). There is NO token
-# month-group floor here: the #319/#383 family merge runs before the
-# concept-group month-fold and consumes every month-suffixed family, so the 8
-# monthly families are guarded at their true home — `_check_variable_alias_window`
-# (>= `_AW_MIN_MERGED_FAMILIES` survivors). The curated floor below stays
-# absolute: its candidate set isn't recomputable without replaying the
-# vocabulary guards, and the family is a small enumerable fact (1 curated family
-# measured 2026-06-11). Classification VINTAGE families no longer fold into
-# concept groups (#571) — they materialize as succession edges, floored in
-# `_check_classification_replaced_by` (the lkf vintage chain ships the bulk of
-# those edges), so there is no longer a classification-vintage-group floor here.
+# dimension carries a corpus VOLUME floor (`_CG_MIN_EDGE_GROUPS` below): the old
+# exact-parity check recomputed the components from the persisted
+# `same_definition_different_column` rows, but #591 retired those rows (the fold
+# now reads the in-build sibling sets), so there is nothing to recompute against
+# — a volume floor replaces it, catching a derivation collapse (slug drift, an
+# empty `edge_siblings`) without false-failing on legitimate corpus churn or the
+# new curated-precedence exclusions. There is NO token month-group floor here:
+# the #319/#383 family merge runs before the concept-group month-fold and
+# consumes every month-suffixed family, so the 8 monthly families are guarded at
+# their true home — `_check_variable_alias_window` (>= `_AW_MIN_MERGED_FAMILIES`
+# survivors). The curated floor below stays absolute: its candidate set isn't
+# recomputable without replaying the vocabulary guards, and the family is a small
+# enumerable fact (1 curated family measured 2026-06-11). Classification VINTAGE
+# families no longer fold into concept groups (#571) — they materialize as
+# succession edges, floored in `_check_classification_replaced_by` (the lkf
+# vintage chain ships the bulk of those edges), so there is no longer a
+# classification-vintage-group floor here.
+
+# Edge-group volume floor (#591, corpus only): the within-register
+# split-sibling components dominate the variable concept groups — a real-corpus
+# build measured 2,191 edge groups (CONFIRMED 2026-06-19 on the current corpus).
+# The floor sits at ~82% of that count: low enough to catch a derivation collapse
+# — an empty `edge_siblings`, a slug regression that drops every endpoint — and
+# high enough to leave headroom for the curated-precedence exclusions (#488 will
+# re-home a handful of components, never thousands) and routine corpus churn.
+# Synthetic builds carry few/no sibling edges, so the floor is corpus-gated.
+_CG_MIN_EDGE_GROUPS = 1800
 
 # Classification succession floor (#571, corpus only): the lkf vintage chain
 # (lkf1980…lkf2026, ~47 editions → ~46 adjacent edges) dominates the corpus
@@ -1482,8 +1494,6 @@ def _check_concept_groups(
     else:
         result.ok("variable members stay in their group's register")
 
-    _check_edge_group_parity(conn, result)
-
     # #585 inline-facet invariant: a variable member's facet_value/facet_label
     # are non-NULL iff its group has a non-NULL facet_axis (token/curated), and
     # NULL for edge groups (facet_axis NULL). A member half-set (one of
@@ -1513,8 +1523,19 @@ def _check_concept_groups(
             "SELECT source, kind, COUNT(*) FROM concept_group GROUP BY source, kind"
         )
     }
+    n_edge = by_source.get(("edge", "variable"), 0)
     n_month = by_source.get(("token", "variable"), 0)
     n_curated = by_source.get(("curated", "variable"), 0)
+    # Edge-group volume floor (#591): replaces the retired exact-parity check —
+    # the foldable sibling rows are no longer persisted, so there's nothing to
+    # recompute; a volume floor catches a derivation collapse instead.
+    if n_edge >= _CG_MIN_EDGE_GROUPS:
+        result.ok(f"{n_edge:,} edge group(s) (>= {_CG_MIN_EDGE_GROUPS:,})")
+    else:
+        result.fail(
+            f"{n_edge:,} edge group(s) (< {_CG_MIN_EDGE_GROUPS:,}) — edge "
+            "derivation collapse (empty sibling sets / slug regression)?"
+        )
     # No month-token-group floor: the #319/#383 family merge runs BEFORE the
     # concept-group month-fold and consumes every month-suffixed family in the
     # corpus, so `source='token'` month groups are 0 by design (a non-zero count
@@ -1695,53 +1716,6 @@ def _check_variable_replaced_by_vintage_lift(
             f"{n_edges} variable vintage-lift edge(s) "
             f"(< {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) — vintage-lift derivation "
             "regression?"
-        )
-
-
-def _check_edge_group_parity(
-    conn: sqlite3.Connection, result: ValidationResult
-) -> None:
-    """#303 structural parity: the number of `source='edge'` concept groups
-    must EQUAL the number of within-register connected components of
-    `same_definition_different_column` edges — recomputed here independently of
-    the build pass. Corpus-independent (0 == 0 on a synthetic build with no
-    sibling edges) and drift-proof (no frozen floor): a derivation pass that
-    silently stops folding components, or folds across registers, breaks
-    parity and fails the gate."""
-    rows = conn.execute(
-        "SELECT va.variable_id, vb.variable_id "
-        "FROM variable_related_to e "
-        "JOIN provider pa ON pa.slug = e.a_provider "
-        "JOIN register ra ON ra.provider_id = pa.provider_id "
-        "  AND ra.slug = e.a_register "
-        "JOIN variable va ON va.register_id = ra.register_id "
-        "  AND va.slug = e.a_variable "
-        "JOIN provider pb ON pb.slug = e.b_provider "
-        "JOIN register rb ON rb.provider_id = pb.provider_id "
-        "  AND rb.slug = e.b_register "
-        "JOIN variable vb ON vb.register_id = rb.register_id "
-        "  AND vb.slug = e.b_variable "
-        "WHERE e.relation_kind = 'same_definition_different_column' "
-        "  AND va.register_id = vb.register_id"
-    ).fetchall()
-    ds: DisjointSet[int] = DisjointSet()
-    for a, b in rows:
-        ds.add(a)
-        ds.add(b)
-        ds.union(a, b)
-    n_components = len(ds.components())
-    n_edge_groups = conn.execute(
-        "SELECT COUNT(*) FROM concept_group WHERE source = 'edge'"
-    ).fetchone()[0]
-    if n_components == n_edge_groups:
-        result.ok(
-            f"{n_edge_groups:,} edge groups == {n_components:,} sibling-edge "
-            "components (parity)"
-        )
-    else:
-        result.fail(
-            f"{n_edge_groups:,} edge groups != {n_components:,} sibling-edge "
-            "components — edge derivation lost or invented groups"
         )
 
 

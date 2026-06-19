@@ -1,9 +1,11 @@
 """Tests for the derived concept-group layer (#303; `concept_groups.py`).
 
 Covers the three derivation dimensions against hand-curated slugged DBs
-(`_slugged_db`): edge components (dimension 0), month token folds with their
-guards (dimension 1), and curated single-variable families with their single
-inline facet axis and the fail-fast resolution errors (dimension 2). The
+(`_slugged_db`): edge components from the in-build sibling sets (`edge_siblings`,
+dimension 0; #591 — not a `variable_related_to` round-trip), with curated
+precedence excluding a claimed member; month token folds with their guards
+(dimension 1); and curated single-variable families with their single inline
+facet axis and the fail-fast resolution errors (dimension 2). The
 accept-list (#496) — `[[accept]]` folds of the generated
 `concept_groups.auto.toml` by reference — is covered
 against synthetic auto families in `TestAcceptList` / `TestAcceptLoader`.
@@ -37,27 +39,21 @@ if TYPE_CHECKING:
 _SCB = frozenset({"scb"})
 
 
-def _add_edge(
-    conn: sqlite3.Connection,
-    register: str,
-    a: str,
-    b: str,
-    *,
-    kind: str = "same_definition_different_column",
-    b_register: str | None = None,
-) -> None:
-    """Insert a sibling edge both directions (mirrors the build's writer)."""
-    reg_b = b_register or register
-    for (ra, va), (rb, vb) in (
-        ((register, a), (reg_b, b)),
-        ((reg_b, b), (register, a)),
-    ):
-        conn.execute(
-            "INSERT INTO variable_related_to (a_provider, a_register, a_variable, "
-            "b_provider, b_register, b_variable, relation_kind, note) "
-            "VALUES ('scb', ?, ?, 'scb', ?, ?, ?, 'auto:triage')",
-            (ra, va, rb, vb, kind),
-        )
+def _vid(conn: sqlite3.Connection, slug: str) -> int:
+    """The `variable_id` PK of the variable with this slug (register-unique in
+    these fixtures). The edge fold now consumes `edge_siblings` as variable_id
+    pairs (#591), so tests resolve the added variables' real PKs."""
+    return conn.execute(
+        "SELECT variable_id FROM variable WHERE slug = ?", (slug,)
+    ).fetchone()[0]
+
+
+def _siblings(
+    conn: sqlite3.Connection, *pairs: tuple[str, str]
+) -> list[tuple[int, int]]:
+    """Build an `edge_siblings` list (variable_id pairs) from slug pairs — the
+    in-build `same_def` subset the triage hands the concept-group fold (#591)."""
+    return [(_vid(conn, a), _vid(conn, b)) for a, b in pairs]
 
 
 def _add_classification(
@@ -122,15 +118,19 @@ def _facets(conn: sqlite3.Connection, slug: str) -> list[tuple[str, str, str]]:
 
 
 class TestEdgeGroups:
+    """#591: edge groups fold the IN-BUILD `same_def` split-sibling subset passed
+    as `edge_siblings` (variable_id pairs), NOT rows read back from
+    `variable_related_to` — those foldable edges are no longer persisted."""
+
     def test_component_folds_into_one_group(self) -> None:
         conn = build_slugged_db(classification=None)  # scb/lisa with `kon`
         add_variable(conn, register_id=1, var_id=90, name="Utbildning", slug="sun2000")
         add_variable(conn, register_id=1, var_id=90, name="Utbildning", slug="sun2020")
         add_variable(conn, register_id=1, var_id=90, name="Utbildning", slug="sunx")
-        _add_edge(conn, "lisa", "sun2000", "sun2020")
-        _add_edge(conn, "lisa", "sun2020", "sunx")  # transitive component
+        # Transitive component: sun2000—sun2020—sunx.
+        siblings = _siblings(conn, ("sun2000", "sun2020"), ("sun2020", "sunx"))
 
-        counts = materialize_concept_groups(conn)
+        counts = materialize_concept_groups(conn, edge_siblings=siblings)
         assert counts["edge_groups"] == 1
         groups = _groups(conn)
         assert groups["sun2000"] == {
@@ -145,20 +145,126 @@ class TestEdgeGroups:
         # Edge members carry no facets — the member list is the presentation.
         assert _facets(conn, "sun2000") == []
 
-    def test_other_relation_kinds_do_not_group(self) -> None:
+    def test_non_same_def_pair_is_simply_absent(self) -> None:
+        # A non-foldable split kind (code_vs_label_pair / import_bug_suspect) is
+        # never in `edge_siblings` — the build filters by EDGE_RELATION_KIND — so
+        # passing no siblings mints no edge group.
         conn = build_slugged_db(classification=None)
         add_variable(conn, register_id=1, var_id=91, name="A", slug="vara")
         add_variable(conn, register_id=1, var_id=91, name="A", slug="varb")
-        _add_edge(conn, "lisa", "vara", "varb", kind="import_bug_suspect")
-        assert materialize_concept_groups(conn)["edge_groups"] == 0
+        assert materialize_concept_groups(conn, edge_siblings=[])["edge_groups"] == 0
 
-    def test_cross_register_edges_do_not_group(self) -> None:
+    def test_cross_register_pair_does_not_group(self) -> None:
+        # A cross-register sibling pair must not fold even if passed (the WHERE
+        # guard mirrors the A2.2 register-local split).
         conn = build_slugged_db(classification=None)
         add_register(conn, register_id=2, slug="rams", name="RAMS")
         add_variable(conn, register_id=1, var_id=92, name="A", slug="vara")
         add_variable(conn, register_id=2, var_id=93, name="A", slug="varb")
-        _add_edge(conn, "lisa", "vara", "varb", b_register="rams")
-        assert materialize_concept_groups(conn)["edge_groups"] == 0
+        siblings = _siblings(conn, ("vara", "varb"))
+        assert (
+            materialize_concept_groups(conn, edge_siblings=siblings)["edge_groups"] == 0
+        )
+
+    def test_curated_member_excluded_from_edge_fold(self) -> None:
+        # Curated precedence (#591, unblocks #488): a curated `[[variable_group]]`
+        # naming a variable that's also in an edge component excludes it from the
+        # edge fold. Here the component is {vara, varb}; the curated group claims
+        # vara (+ an unrelated varc), so the edge component drops to 1 survivor
+        # (varb) → no edge group, and the curated group claims vara.
+        conn = build_slugged_db(classification=None)
+        add_variable(conn, register_id=1, var_id=94, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=94, name="A", slug="varb")
+        add_variable(conn, register_id=1, var_id=95, name="C", slug="varc")
+        siblings = _siblings(conn, ("vara", "varb"))
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axis="part",
+            members=(
+                CuratedMember(variable="vara", value="1", label="A"),
+                CuratedMember(variable="varc", value="2", label="C"),
+            ),
+        )
+        counts = materialize_concept_groups(
+            conn, (curated,), edge_siblings=siblings, providers=_SCB
+        )
+        assert counts["edge_groups"] == 0  # component below 2 survivors
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"fam"}
+        assert groups["fam"]["members"] == ["vara", "varc"]
+
+    def test_curated_member_excluded_but_component_survives(self) -> None:
+        # Excluding one member of a 3-way component leaves 2 survivors → the edge
+        # group still mints (without the curated-claimed member).
+        conn = build_slugged_db(classification=None)
+        for slug in ("sun2000", "sun2020", "sunx"):
+            add_variable(conn, register_id=1, var_id=96, name="U", slug=slug)
+        add_variable(conn, register_id=1, var_id=97, name="Other", slug="other")
+        siblings = _siblings(conn, ("sun2000", "sun2020"), ("sun2020", "sunx"))
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axis="part",
+            members=(
+                CuratedMember(variable="sunx", value="1", label="x"),
+                CuratedMember(variable="other", value="2", label="o"),
+            ),
+        )
+        counts = materialize_concept_groups(
+            conn, (curated,), edge_siblings=siblings, providers=_SCB
+        )
+        assert counts["edge_groups"] == 1
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        # sunx went to the curated group; the edge group keeps the other two.
+        assert groups["sun2000"]["members"] == ["sun2000", "sun2020"]
+        assert groups["fam"]["members"] == ["other", "sunx"]
+
+    def test_curated_bridge_member_disconnects_survivors(self) -> None:
+        # BRIDGE case (#591, unblocks #488): the component is two cliques joined
+        # at a single vertex `varx` (a—x and x—b, NO direct a—b). When the curated
+        # group claims `varx`, removing it disconnects vara from varb — no
+        # surviving same_def path folds them. The fix skips edges touching an
+        # excluded endpoint BEFORE the union, so vara and varb land in separate
+        # (singleton) components and NO edge group containing both is minted. The
+        # old subtract-after-union logic unioned the full a—x—b chain first, then
+        # subtracted x, leaving a spurious {vara, varb} edge group — so this test
+        # FAILS on the old logic and PASSES on the fix.
+        conn = build_slugged_db(classification=None)
+        add_variable(conn, register_id=1, var_id=98, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=98, name="X", slug="varx")
+        add_variable(conn, register_id=1, var_id=98, name="B", slug="varb")
+        add_variable(conn, register_id=1, var_id=99, name="Other", slug="other")
+        siblings = _siblings(conn, ("vara", "varx"), ("varx", "varb"))
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="fam",
+            label="Familj",
+            axis="part",
+            members=(
+                CuratedMember(variable="varx", value="1", label="x"),
+                CuratedMember(variable="other", value="2", label="o"),
+            ),
+        )
+        counts = materialize_concept_groups(
+            conn, (curated,), edge_siblings=siblings, providers=_SCB
+        )
+        # Both surviving endpoints are now singleton components → no edge group.
+        assert counts["edge_groups"] == 0
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert set(groups) == {"fam"}
+        # Defensive: no minted edge group folds vara and varb together.
+        for g in groups.values():
+            if g["source"] == "edge":
+                assert not ({"vara", "varb"} <= set(g["members"]))
 
 
 class TestMonthGroups:
@@ -220,8 +326,8 @@ class TestMonthGroups:
         self._family(conn, "ink", ["jan", "feb", "mars"])
         # Tie one member into an edge component first (priority: edge wins).
         add_variable(conn, register_id=1, var_id=520, name="Annan", slug="annan")
-        _add_edge(conn, "lisa", "inkjan", "annan")
-        counts = materialize_concept_groups(conn)
+        siblings = _siblings(conn, ("inkjan", "annan"))
+        counts = materialize_concept_groups(conn, edge_siblings=siblings)
         assert counts["edge_groups"] == 1
         # inkjan is gone from the candidate pool → only 2 months left → no fold.
         assert counts["month_groups"] == 0
@@ -405,15 +511,25 @@ class TestCuratedGroups:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "concept_groups_unresolved"
 
-    def test_already_grouped_variable_member_fails(self) -> None:
+    def test_member_already_in_month_group_fails(self) -> None:
+        # A curated member already claimed by the TOKEN (month) pass still fails
+        # loud (curated precedence (#591) excludes a member only from the EDGE
+        # fold, not the month fold — the month pass runs before curated and
+        # claims ungrouped month-suffixed variables first). `inkjan/inkfeb/inkmars`
+        # fold into a month group; naming `inkjan` in a curated family collides.
         conn = build_slugged_db(classification=None)
-        add_variable(conn, register_id=1, var_id=710, name="A", slug="vara")
-        add_variable(conn, register_id=1, var_id=711, name="A", slug="varb")
-        add_variable(conn, register_id=1, var_id=712, name="C", slug="varc")
-        _add_edge(conn, "lisa", "vara", "varb")  # edge pass claims vara/varb
+        for i, tok in enumerate(["jan", "feb", "mars"]):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=710 + i,
+                name=f"Inkomst i {tok}, totalt",
+                slug=f"ink{tok}",
+            )
+        add_variable(conn, register_id=1, var_id=713, name="C", slug="varc")
         curated = _curated(
             (
-                CuratedMember(variable="vara", value="1", label="A"),
+                CuratedMember(variable="inkjan", value="1", label="A"),
                 CuratedMember(variable="varc", value="2", label="C"),
             ),
             key="fam",
@@ -1077,15 +1193,35 @@ class TestAcceptList:
         self,
     ) -> None:
         # The auto family was generated against an earlier build; here its member
-        # `morsak1` is claimed by an edge group BEFORE the accept resolves (the
-        # real footgun: the auto.toml folds against a LATER build whose edge/token
-        # pass newly claimed a member). The error must point at the `[[accept]]` /
-        # auto.toml, NOT at "pick a curated key".
-        conn = _morsak_db()
-        add_variable(conn, register_id=1, var_id=850, name="Dödsorsak 1", slug="dxsib")
-        _add_edge(conn, "lisa", "morsak1", "dxsib")  # edge pass claims morsak1
-        auto = (_auto_family(_morsak_members()),)
-        accepts = (Accept("scb", "lisa", "morsak", None, None, ()),)
+        # is claimed by the TOKEN (month) pass BEFORE the accept resolves (the
+        # real footgun: the auto.toml folds against a LATER build whose token pass
+        # newly claimed a member). The month pass runs before curated/accept and
+        # is NOT subject to curated precedence (#591 excludes only from the EDGE
+        # fold), so the collision still fires. The error must point at the
+        # `[[accept]]` / auto.toml, NOT at "pick a curated key".
+        conn = build_slugged_db(classification=None)
+        for i, tok in enumerate(["jan", "feb", "mars"]):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=860 + i,
+                name=f"Inkomst i {tok}, totalt",
+                slug=f"ink{tok}",
+            )
+        add_variable(conn, register_id=1, var_id=863, name="Extra", slug="inkextra")
+        # The auto family names `inkjan` (claimed by the month fold) + a sibling.
+        # Its key `alt` doesn't collide with the month stem `ink`, so the group
+        # row inserts and the failure is on the MEMBER `inkjan` (already grouped).
+        auto = (
+            _auto_family(
+                (
+                    CuratedMember(variable="inkjan", value="1", label="jan"),
+                    CuratedMember(variable="inkextra", value="2", label="extra"),
+                ),
+                key="alt",
+            ),
+        )
+        accepts = (Accept("scb", "lisa", "alt", None, None, ()),)
         with pytest.raises(RegMetaError) as exc:
             materialize_concept_groups(conn, auto=auto, accepts=accepts, providers=_SCB)
         assert exc.value.exit_code == EXIT_CONFIG

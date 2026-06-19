@@ -424,11 +424,14 @@ class VariableEdition:
 
 @dataclass(frozen=True)
 class RelatedRef:
-    """A variable-grain sibling edge (split; see reg_meta_build/DESIGN.md → Build-time triage (SCB)): `variable_related_to`. Same
-    3-part identity as `VariableRef` plus the `relation_kind` (auto-derived split
-    reason: `code_vs_label_pair`, `import_bug_suspect`, or the generic
-    `same_definition_different_column`; full taxonomy in reg_meta_build/DESIGN.md).
-    `fqid` is the sibling's 3-segment binding FQID (A2.6)."""
+    """A variable-grain "see also" link from `variable_related_to`. Same 3-part
+    identity as `VariableRef` plus the `relation_kind`. The table carries the
+    MEANINGFUL links: the non-foldable auto-derived split reasons
+    (`code_vs_label_pair`, `import_bug_suspect`) and curated see-also kinds. The
+    bulk mechanical `same_definition_different_column` split siblings are NOT here
+    — they're the concept group (presentation fold), not a related edge (#591;
+    full taxonomy in reg_meta_build/DESIGN.md). `fqid` is the sibling's 3-segment
+    binding FQID (A2.6)."""
 
     fqid: Fqid | None
     provider: str
@@ -1496,8 +1499,11 @@ class Catalog:
     def _related_edges(
         self, provider: str, register: str, variable: str
     ) -> tuple[RelatedRef, ...]:
-        """`variable_related_to` siblings (a-side keyed; stored both directions,
-        see reg_meta_build/DESIGN.md → Build-time triage (SCB)). Carries `relation_kind`."""
+        """`variable_related_to` see-also links (a-side keyed; stored both
+        directions, see reg_meta_build/DESIGN.md → Build-time triage (SCB)). Carries
+        `relation_kind`. The meaningful links only — code/label pairs, import-bug
+        hints, curated see-also; the bulk mechanical split siblings are the
+        concept group, not here (#591)."""
         rows = self._conn.execute(
             "SELECT b_provider, b_register, b_variable, relation_kind "
             "FROM variable_related_to "
@@ -1638,7 +1644,7 @@ class Catalog:
         return list(self._successor_edges(provider, register, variable))
 
     def related(self, fqid: str | Fqid) -> list[RelatedRef]:
-        """see DESIGN.md → Catalog API surface: split-sibling variables (variable grain; see reg_meta_build/DESIGN.md → Build-time triage (SCB))."""
+        """see DESIGN.md → Catalog API surface: "see also" links (variable grain; the meaningful code/label-pair, import-bug, and curated see-also edges — NOT the bulk mechanical split siblings, which are the concept group; #591; see reg_meta_build/DESIGN.md → Build-time triage (SCB))."""
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._related_edges(provider, register, variable))
 
