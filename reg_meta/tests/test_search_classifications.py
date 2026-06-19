@@ -535,6 +535,33 @@ def test_cli_display_row_projects_classification() -> None:
     assert row["variable_name"] == "Svensk utbildningsnomenklatur"
 
 
+def test_cli_display_row_projects_classification_succession() -> None:
+    # A `classification_succession` row (#571) collapses an edition chain; it
+    # shares the classification identity columns but adds an `editions` list.
+    # The CLI projector fills the generic columns (mirroring classification) and
+    # appends a folded-family hint so a `--type all` table reads clearly.
+    from reg_meta.cli import _search_display_row
+
+    row = _search_display_row(
+        {
+            "type": "classification_succession",
+            "fqid": "class/ssyk2012",
+            "short_name": "SSYK2012",
+            "classification_name": "Standard för svensk yrkesklassificering",
+            "editions": [
+                {"slug": "ssyk2012", "name": "SSYK 2012", "effective_year": None},
+                {"slug": "ssyk96", "name": "SSYK 96", "effective_year": 1996},
+            ],
+            "matched": [],
+            "fts_rank": -1.0,
+        }
+    )
+    assert row["register_name"] == "SSYK2012"
+    assert (
+        row["variable_name"] == "Standard för svensk yrkesklassificering (2 editions)"
+    )
+
+
 def test_empty_description_query_folds_nothing(
     db_with_cls_group: sqlite3.Connection,
 ) -> None:

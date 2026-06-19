@@ -1494,7 +1494,13 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
     none of which are in the mixed-type fallback columns — so in a `--type all`
     table they'd render blank. Project their identity onto the generic columns
     (mirroring the group-row treatment) so they read sensibly there too; the
-    pure-classification column set selects the native keys directly."""
+    pure-classification column set selects the native keys directly.
+
+    `classification_succession` rows (#571) collapse an edition chain and carry
+    the same `short_name`/`classification_name`/`fqid` plus an `editions` list —
+    share the classification projection, and append a folded-family hint to
+    `variable_name` (mirroring the group row's "(N/M members matched)" idiom) so
+    the collapse reads clearly in a mixed table."""
     if r.get("type") == "code":
         # Code/value hits (#352) carry their owning variables/classifications as
         # nested lists the table renderer can't show — flatten to a representative
@@ -1508,11 +1514,20 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
         )
         return r
     if r.get("type") != "group":
-        if r.get("type") == "classification" or r.get("concept_group"):
+        is_classification = r.get("type") in (
+            "classification",
+            "classification_succession",
+        )
+        if is_classification or r.get("concept_group"):
             r = dict(r)
-        if r.get("type") == "classification":
+        if is_classification:
             r.setdefault("register_name", r.get("short_name", ""))
             r.setdefault("variable_name", r.get("classification_name", ""))
+        if r.get("type") == "classification_succession":
+            editions = len(r.get("editions") or [])
+            r["variable_name"] = (
+                f"{r.get('classification_name', '')} ({editions} editions)"
+            )
         if r.get("concept_group"):
             r["group"] = r["concept_group"]
         return r
