@@ -171,9 +171,11 @@ class ConceptGroupMember:
 class ConceptGroupSummary:
     """One derived concept group. `key` is the scope-unique derivation key
     (slug stem / min member slug / curated key) — a stable anchor for UI
-    state, not an FQID. `axes` are the sorted distinct facet axes the members
-    carry (empty for edge groups); members are ordered by their facet values
-    along `axes`, then slug."""
+    state, not an FQID. `axes` holds the group's single facet axis (a 0-or-1
+    element tuple: empty for edge groups, one axis for token/curated groups);
+    members are ordered by their facet value along that axis, then slug. The
+    tuple shape is retained for the response contract — the DB is single-axis
+    (#585)."""
 
     key: str
     label: str
@@ -778,61 +780,59 @@ class Catalog:
         carry the real binding FQIDs; browse surfaces collapse member rows
         under the group and expand to a facet picker. Empty when the
         (provider, register) pair names no register OR it has no groups."""
+        # Single facet axis on the group (`facet_axis`); the member's value/label
+        # inline on `concept_group_variable` (#585). NULL axis = edge group →
+        # facet-less members. Mirrors `list_classification_groups`. The external
+        # shape is unchanged: `axes` is the group's 0-or-1-element axis tuple and
+        # each member carries a 0-or-1-element `facets` tuple.
         rows = self._conn.execute(
             "SELECT g.group_id, g.group_key, g.label AS group_label, g.source, "
+            "g.facet_axis AS axis, "
             "v.slug AS variable_slug, v.name AS variable_name, "
-            "f.axis, f.value, f.label AS facet_label "
+            "m.facet_value, m.facet_label "
             "FROM concept_group g "
             "JOIN register r ON g.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "JOIN concept_group_variable m ON m.group_id = g.group_id "
             "JOIN variable v ON v.variable_id = m.variable_id "
-            "LEFT JOIN concept_group_variable_facet f "
-            "  ON f.variable_id = m.variable_id "
             "WHERE p.slug = ? AND r.slug = ? AND g.kind = 'variable' "
             "  AND v.slug IS NOT NULL "
-            "ORDER BY g.group_key, v.slug, f.axis",
+            "ORDER BY g.group_key, m.facet_value, v.slug",
             (provider_slug, register_slug),
         ).fetchall()
-        # group_id → (key, label, source, {slug: (name, [facet, ...])})
-        acc: dict[int, tuple[str, str, str, dict[str, tuple[str | None, list]]]] = {}
+        # group_id → (key, label, source, axis, [member, ...])
+        acc: dict[int, tuple[str, str, str, str | None, list[ConceptGroupMember]]] = {}
         for r in rows:
-            _, _, _, members = acc.setdefault(
+            _, _, _, axis, members = acc.setdefault(
                 r["group_id"],
-                (r["group_key"], r["group_label"], r["source"], {}),
+                (r["group_key"], r["group_label"], r["source"], r["axis"], []),
             )
-            _, facets = members.setdefault(r["variable_slug"], (r["variable_name"], []))
-            if r["axis"] is not None:
-                facets.append(GroupFacet(r["axis"], r["value"], r["facet_label"]))
-        out: list[ConceptGroupSummary] = []
-        for key, label, source, members in acc.values():
-            axes = tuple(sorted({f.axis for _, (_, fs) in members.items() for f in fs}))
-
-            def member_sort(item: tuple[str, tuple[str | None, list]]) -> tuple:
-                slug, (_, facets) = item
-                by_axis = {f.axis: f.value for f in facets}
-                return (*(by_axis.get(a, "") for a in axes), slug)  # noqa: B023
-
-            out.append(
-                ConceptGroupSummary(
-                    key=key,
-                    label=label,
-                    source=source,
-                    axes=axes,
-                    members=tuple(
-                        ConceptGroupMember(
-                            fqid=Fqid.binding_fqid(provider_slug, register_slug, slug),
-                            name=name,
-                            facets=tuple(facets),
-                        )
-                        for slug, (name, facets) in sorted(
-                            members.items(), key=member_sort
-                        )
+            facets = (
+                (GroupFacet(axis, r["facet_value"], r["facet_label"]),)
+                if axis is not None
+                else ()
+            )
+            members.append(
+                ConceptGroupMember(
+                    fqid=Fqid.binding_fqid(
+                        provider_slug, register_slug, r["variable_slug"]
                     ),
+                    name=r["variable_name"],
+                    facets=facets,
                 )
             )
-        out.sort(key=lambda g: g.key)
-        return out
+        return [
+            ConceptGroupSummary(
+                key=key,
+                label=label,
+                source=source,
+                axes=(axis,) if axis is not None else (),
+                members=tuple(members),
+            )
+            for key, label, source, axis, members in sorted(
+                acc.values(), key=lambda g: g[0]
+            )
+        ]
 
     def list_classification_groups(self) -> list[ConceptGroupSummary]:
         """Curated classification umbrella groups (see DESIGN.md → Concept

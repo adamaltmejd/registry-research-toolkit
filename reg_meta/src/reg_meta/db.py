@@ -196,13 +196,25 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   it's rejected via the minor gate.
 # - 5.6.0 (#516): additive `concept_group.facet_axis` column — the single facet
 #   axis for a CURATED classification umbrella group (e.g. 'dimension' for the
-#   SUN group over its niva/inriktning/grupp dimensions). NULL for variable
-#   groups (which carry per-member axes in `concept_group_variable_facet`) and
-#   for the empty derived classification machinery. The read surface
+#   SUN group over its niva/inriktning/grupp dimensions). NULL for the empty
+#   derived classification machinery. The read surface
 #   (`Catalog.list_classification_groups`) now reads this column for the group's
 #   axis instead of hardcoding 'vintage'. A 5.5.0 DB lacks the column, so it's
-#   rejected via the minor gate.
-SCHEMA_VERSION = "5.6.0"
+#   rejected via the minor gate. (5.6.0 stored variable-group facets in a
+#   separate `concept_group_variable_facet` table keyed `(variable_id, axis)`;
+#   5.7.0 below moved them inline and dropped that table — variable groups now
+#   also use `facet_axis`.)
+# - 5.7.0 (#585): variable-group facets moved INLINE onto
+#   `concept_group_variable` (`facet_value` / `facet_label`, both nullable), with
+#   the group's single axis on `concept_group.facet_axis` (mirroring
+#   `concept_group_classification`). The `concept_group_variable_facet` table is
+#   DROPPED. The multi-axis capability it carried (a member on several axes — the
+#   month × rank matrix) was dead on the real corpus (only single-axis groups
+#   exist), so single-axis is now enforced by schema shape, not convention — the
+#   DB cannot represent multi-axis. Regenerate-not-migrate; a 5.6.0 DB still has
+#   the dropped table and lacks the inline columns, so it's rejected via the
+#   minor gate.
+SCHEMA_VERSION = "5.7.0"
 DB_FILENAME = "reg_meta.db"
 
 

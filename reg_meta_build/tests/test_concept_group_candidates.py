@@ -502,10 +502,10 @@ class TestGenerator:
         parsed = {(f"{g.provider}/{g.register}", g.key) for g in groups}
         assert emitted == parsed
         assert len(groups) == len(result.candidates)
-        # Members carry the variable-leaf reference (not a group ref) + facet.
+        # Members carry the variable-leaf reference + facet.
         by_key = {g.key: g for g in groups}
         morsak = by_key["morsak"]
-        assert all(m.variable is not None and m.group is None for m in morsak.members)
+        assert all(m.variable is not None for m in morsak.members)
         assert [m.value for m in morsak.members] == ["1", "2", "3"]
 
 

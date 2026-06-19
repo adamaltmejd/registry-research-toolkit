@@ -37,8 +37,8 @@ never claims an already-grouped member):
 2. ``curated`` — maintainer TOML (``reg_meta_build/concept_groups.toml``), three
    opt-in entry kinds:
    - ``[[variable_group]]`` — a hand-authored family with an exact member list:
-     absorbs token groups under an extra facet axis (the LISA agi{1,2,3} rank
-     facet → one month × rank matrix) or attaches single variables.
+     attaches single variables under the family's single facet ``axis`` (e.g.
+     the LISA agi{1,2,3} rank facet, or the LOVA invdatum/invland ordinal facet).
    - ``[[accept]]`` (#496) — folds a candidate family from the generated,
      machine-owned ``concept_groups.auto.toml`` BY REFERENCE, located by
      ``(register, key)``, with optional ``label``/``axis``/``exclude`` overrides
@@ -143,13 +143,10 @@ _EDGE_RELATION_KIND = "same_definition_different_column"
 
 @dataclass(frozen=True)
 class CuratedMember:
-    """One member of a curated family: EITHER a derived token group to absorb
-    (`group` = its stem key; absorbed variables keep their month facets and
-    gain the family's facet) OR a single variable slug. `value`/`label` are
-    this member's facet on the family's `axis`."""
+    """One member of a curated family: a single variable slug. `value`/`label`
+    are this member's facet on the family's single `axis`."""
 
-    group: str | None
-    variable: str | None
+    variable: str
     value: str
     label: str
 
@@ -255,9 +252,9 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     Load-time validation (all EXIT_CONFIG, actionable): only
     `[[variable_group]]` top-level; `register` is a 2-segment
     `provider/register` FQID string; `key`/`label`/`axis` non-empty strings;
-    each member sets exactly one of `group`/`variable` plus `value`/`label`;
-    keys are unique. Reference RESOLUTION (register/group/variable exist)
-    happens at materialize time against the built DB, not here."""
+    each member sets `variable` plus `value`/`label`; keys are unique.
+    Reference RESOLUTION (register/variable exist) happens at materialize time
+    against the built DB, not here."""
     # Shared scaffold (parse + top-level typo guard + array-of-tables +
     # per-entry table check) — see `_curation.load_curation_entries`.
     entries = load_curation_entries(
@@ -307,7 +304,7 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                 "List the family's members as `[[variable_group.members]]` tables.",
             )
         members: list[CuratedMember] = []
-        seen_refs: set[tuple[str, str]] = set()
+        seen_refs: set[str] = set()
         for raw in raw_members:
             if not isinstance(raw, dict):
                 raise curation_error(
@@ -315,30 +312,17 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                     f"concept_groups group {key!r} member {raw!r} must be a table.",
                     "Each member is a `[[variable_group.members]]` table.",
                 )
-            group_ref = raw.get("group")
-            variable_ref = raw.get("variable")
-            if (group_ref is None) == (variable_ref is None):
+            ref = _require_str(raw, "variable", f"group {key!r} member")
+            if ref in seen_refs:
                 raise curation_error(
                     "concept_groups_invalid",
-                    f"concept_groups group {key!r} member {raw!r} must set exactly "
-                    "one of `group` / `variable`.",
-                    'Reference a derived token group (`group = "<stem>"`) or a '
-                    'single variable (`variable = "<slug>"`), not both/neither.',
+                    f"concept_groups group {key!r} references variable {ref!r} twice.",
+                    "List each member variable once.",
                 )
-            ref_field = "group" if group_ref is not None else "variable"
-            ref = _require_str(raw, ref_field, f"group {key!r} member")
-            if (ref_field, ref) in seen_refs:
-                raise curation_error(
-                    "concept_groups_invalid",
-                    f"concept_groups group {key!r} references {ref_field} {ref!r} "
-                    "twice.",
-                    "List each member reference once.",
-                )
-            seen_refs.add((ref_field, ref))
+            seen_refs.add(ref)
             members.append(
                 CuratedMember(
-                    group=ref if ref_field == "group" else None,
-                    variable=ref if ref_field == "variable" else None,
+                    variable=ref,
                     value=_require_str(raw, "value", f"group {key!r} member"),
                     label=_require_str(raw, "label", f"group {key!r} member"),
                 )
@@ -690,8 +674,10 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
     """Dimension 1 (variables): fold month-suffixed slug families. Candidates
     are ungrouped slugged variables whose slug ends in a month token; a
     (register, stem) family folds only past BOTH guards (>= 3 distinct months
-    AND a usable shared label prefix). Members get a `month` facet. A family
-    dropped on a group-key collision is reported via `warn` (never silent)."""
+    AND a usable shared label prefix). The group's `facet_axis` is `'month'`;
+    each member carries its zero-padded month `facet_value`/`facet_label` inline.
+    A family dropped on a group-key collision is reported via `warn` (never
+    silent)."""
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, v.slug, v.name FROM variable v "
         "WHERE v.slug IS NOT NULL AND NOT EXISTS "
@@ -745,17 +731,14 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
             group_key=stem,
             label=label,
             source="token",
+            facet_axis="month",
         )
         ordered = sorted(members)
         conn.executemany(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, ?)",
-            [(vid, group_id) for _, _, vid, _ in ordered],
-        )
-        conn.executemany(
-            "INSERT INTO concept_group_variable_facet (variable_id, axis, value, "
-            "label) VALUES (?, 'month', ?, ?)",
+            "INSERT INTO concept_group_variable "
+            "(variable_id, group_id, facet_value, facet_label) VALUES (?, ?, ?, ?)",
             [
-                (vid, f"{month:02d}", _MONTH_LABELS[month])
+                (vid, group_id, f"{month:02d}", _MONTH_LABELS[month])
                 for month, _, vid, _ in ordered
             ],
         )
@@ -831,10 +814,10 @@ def _apply_curated_groups(
     conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
 ) -> int:
     """Dimension 2: curated families (`[[variable_group]]`) and `[[accept]]`-resolved
-    auto families (`origin="accept"`). A `group` member absorbs a derived token
-    group (its variables move over, keeping their month facets, and gain the
-    family facet; the absorbed group row is deleted); a `variable` member
-    attaches one ungrouped variable. Every dangling reference fails the build
+    auto families (`origin="accept"`). Each `variable` member attaches one
+    ungrouped variable under the family's single `axis` (stored on
+    `concept_group.facet_axis`), carrying its `value`/`label` inline on
+    `concept_group_variable`. Every dangling reference fails the build
     (EXIT_CONFIG) — curation drift must be fixed, not silently dropped.
 
     Remediations branch on `g.origin`: a hand-authored family points the
@@ -877,6 +860,7 @@ def _apply_curated_groups(
                 group_key=g.key,
                 label=g.label,
                 source="curated",
+                facet_axis=g.axis,
             )
         except sqlite3.IntegrityError as exc:
             raise curation_error(
@@ -893,94 +877,44 @@ def _apply_curated_groups(
             ) from exc
         n_members = 0
         for m in g.members:
-            if m.group is not None:
-                row = conn.execute(
-                    "SELECT group_id FROM concept_group WHERE kind = 'variable' "
-                    "AND register_id = ? AND group_key = ? AND source = 'token'",
-                    (register_id, m.group),
-                ).fetchone()
-                if row is None:
-                    raise curation_error(
-                        "concept_groups_unresolved",
-                        f"{ctx}: member references derived token group "
-                        f"{m.group!r}, which this build did not derive (slug "
-                        "rename, or the family no longer passes the fold guards).",
-                        "Update the member's `group` stem in "
-                        "reg_meta_build/concept_groups.toml.",
-                    )
-                absorbed_id = row[0]
-                member_ids = [
-                    r[0]
-                    for r in conn.execute(
-                        "SELECT variable_id FROM concept_group_variable "
-                        "WHERE group_id = ? ORDER BY variable_id",
-                        (absorbed_id,),
-                    )
-                ]
-                conn.execute(
-                    "UPDATE concept_group_variable SET group_id = ? WHERE group_id = ?",
-                    (group_id, absorbed_id),
+            var = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
+                (register_id, m.variable),
+            ).fetchone()
+            if var is None:
+                raise curation_error(
+                    "concept_groups_unresolved",
+                    f"{ctx}: member variable {m.variable!r} does not resolve "
+                    "in that register.",
+                    f"Regenerate concept_groups.auto.toml (`{regen}`) or drop "
+                    "the `[[accept]]`."
+                    if is_accept
+                    else "Fix the member's `variable` slug in "
+                    "reg_meta_build/concept_groups.toml.",
                 )
+            try:
                 conn.execute(
-                    "DELETE FROM concept_group WHERE group_id = ?", (absorbed_id,)
+                    "INSERT INTO concept_group_variable "
+                    "(variable_id, group_id, facet_value, facet_label) "
+                    "VALUES (?, ?, ?, ?)",
+                    (var[0], group_id, m.value, m.label),
                 )
-                try:
-                    conn.executemany(
-                        "INSERT INTO concept_group_variable_facet "
-                        "(variable_id, axis, value, label) VALUES (?, ?, ?, ?)",
-                        [(vid, g.axis, m.value, m.label) for vid in member_ids],
-                    )
-                except sqlite3.IntegrityError as exc:
-                    raise curation_error(
-                        "concept_groups_unresolved",
-                        f"{ctx}: axis {g.axis!r} collides with a facet the "
-                        f"absorbed group {m.group!r} already assigned.",
-                        "Pick a distinct `axis` for the curated family.",
-                    ) from exc
-                n_members += len(member_ids)
-            else:
-                var = conn.execute(
-                    "SELECT variable_id FROM variable "
-                    "WHERE register_id = ? AND slug = ?",
-                    (register_id, m.variable),
-                ).fetchone()
-                if var is None:
-                    raise curation_error(
-                        "concept_groups_unresolved",
-                        f"{ctx}: member variable {m.variable!r} does not resolve "
-                        "in that register.",
-                        f"Regenerate concept_groups.auto.toml (`{regen}`) or drop "
-                        "the `[[accept]]`."
-                        if is_accept
-                        else "Fix the member's `variable` slug in "
-                        "reg_meta_build/concept_groups.toml.",
-                    )
-                try:
-                    conn.execute(
-                        "INSERT INTO concept_group_variable (variable_id, group_id) "
-                        "VALUES (?, ?)",
-                        (var[0], group_id),
-                    )
-                except sqlite3.IntegrityError as exc:
-                    raise curation_error(
-                        "concept_groups_unresolved",
-                        f"{ctx}: member variable {m.variable!r} already belongs "
-                        "to an edge/token group — absorb that group instead."
-                        if not is_accept
-                        else f"{ctx}: member variable {m.variable!r} was claimed by "
-                        "an edge/token group since concept_groups.auto.toml was "
-                        "generated.",
-                        f"Regenerate concept_groups.auto.toml (`{regen}`) or "
-                        "`exclude` this member in the `[[accept]]`."
-                        if is_accept
-                        else 'Reference the derived group via `group = "<stem>"`.',
-                    ) from exc
-                conn.execute(
-                    "INSERT INTO concept_group_variable_facet "
-                    "(variable_id, axis, value, label) VALUES (?, ?, ?, ?)",
-                    (var[0], g.axis, m.value, m.label),
-                )
-                n_members += 1
+            except sqlite3.IntegrityError as exc:
+                raise curation_error(
+                    "concept_groups_unresolved",
+                    f"{ctx}: member variable {m.variable!r} already belongs "
+                    "to an edge/token group."
+                    if not is_accept
+                    else f"{ctx}: member variable {m.variable!r} was claimed by "
+                    "an edge/token group since concept_groups.auto.toml was "
+                    "generated.",
+                    f"Regenerate concept_groups.auto.toml (`{regen}`) or "
+                    "`exclude` this member in the `[[accept]]`."
+                    if is_accept
+                    else "`exclude` the conflicting member or pick a different "
+                    "variable in reg_meta_build/concept_groups.toml.",
+                ) from exc
+            n_members += 1
         if n_members < 2:
             raise curation_error(
                 "concept_groups_unresolved",
