@@ -271,21 +271,21 @@ class TestListVariants:
 
 
 def _groups_catalog() -> Catalog:
-    """scb/lisa with a curated month×rank matrix group, an edge group, and a
+    """scb/lisa with a curated single-axis (rank) group, an edge group, and a
     classification vintage group — seeded directly (the derivation passes are
     reg_meta_build territory; this exercises the READ surface)."""
     conn = build_slugged_db()  # scb/lisa + variable `kon`; classification sun2020
-    # Curated matrix group: 2 ranks × 2 months.
+    # Curated single-axis (rank) group: 3 members on one axis.
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (10, 'variable', 1, 'agiink', 'Inkomst', 'curated')"
+        "label, source, facet_axis) "
+        "VALUES (10, 'variable', 1, 'agiink', 'Inkomst', 'curated', 'rank')"
     )
-    for i, (slug, month, month_label, rank) in enumerate(
+    for i, (slug, rank) in enumerate(
         [
-            ("agi1inkjan", "01", "januari", "1"),
-            ("agi1inkfeb", "02", "februari", "1"),
-            ("agi2inkjan", "01", "januari", "2"),
-            ("agi2inkfeb", "02", "februari", "2"),
+            ("agiink1", "1"),
+            ("agiink2", "2"),
+            ("agiink3", "3"),
         ]
     ):
         add_variable(
@@ -296,20 +296,20 @@ def _groups_catalog() -> Catalog:
             (slug,),
         ).fetchone()[0]
         conn.execute(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, 10)",
-            (vid,),
+            "INSERT INTO concept_group_variable "
+            "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
+            (vid, rank, f"källa {rank}"),
         )
-        conn.executemany(
-            "INSERT INTO concept_group_variable_facet (variable_id, axis, value, "
-            "label) VALUES (?, ?, ?, ?)",
-            [(vid, "month", month, month_label), (vid, "rank", rank, f"källa {rank}")],
-        )
-    # Edge group (no facets): two split siblings.
+    # Edge group (no facets): two split siblings. Inserted in REVERSE slug order
+    # (sun2020 before sun2000) so `test_edge_members_carry_no_facets`'s slug-order
+    # assertion genuinely depends on the `v.slug` tiebreak in
+    # `list_concept_groups`' ORDER BY — dropping it would surface insertion order
+    # and fail the test, locking the ordering contract.
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
         "label, source) VALUES (11, 'variable', 1, 'sun2000', 'Utbildning', 'edge')"
     )
-    for i, slug in enumerate(["sun2000", "sun2020"]):
+    for i, slug in enumerate(["sun2020", "sun2000"]):
         add_variable(conn, register_id=1, var_id=810 + i, name="Utbildning", slug=slug)
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
@@ -352,25 +352,25 @@ class TestListConceptGroups:
     def test_groups_ordered_by_key_with_axes(self) -> None:
         groups = _groups_catalog().list_concept_groups("scb", "lisa")
         assert [g.key for g in groups] == ["agiink", "sun2000"]
-        matrix, edge = groups
-        assert matrix.source == "curated"
-        assert matrix.axes == ("month", "rank")
+        ranked, edge = groups
+        assert ranked.source == "curated"
+        # Single-axis group: the `axes` tuple holds exactly the one axis (#585).
+        assert ranked.axes == ("rank",)
         assert edge.source == "edge"
         assert edge.axes == ()
         assert edge.label == "Utbildning"
 
     def test_members_ordered_by_facet_values_then_slug(self) -> None:
-        matrix = _groups_catalog().list_concept_groups("scb", "lisa")[0]
-        # axes = (month, rank): jan/rank1, jan/rank2, feb/rank1, feb/rank2.
-        assert [str(m.fqid) for m in matrix.members] == [
-            "scb/lisa/agi1inkjan",
-            "scb/lisa/agi2inkjan",
-            "scb/lisa/agi1inkfeb",
-            "scb/lisa/agi2inkfeb",
+        ranked = _groups_catalog().list_concept_groups("scb", "lisa")[0]
+        # Ordered by the single facet value, then slug.
+        assert [str(m.fqid) for m in ranked.members] == [
+            "scb/lisa/agiink1",
+            "scb/lisa/agiink2",
+            "scb/lisa/agiink3",
         ]
-        first = matrix.members[0]
+        first = ranked.members[0]
+        # Each member carries exactly one inline facet on the group's axis.
         assert [(f.axis, f.value, f.label) for f in first.facets] == [
-            ("month", "01", "januari"),
             ("rank", "1", "källa 1"),
         ]
 

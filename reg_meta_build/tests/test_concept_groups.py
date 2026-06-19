@@ -2,9 +2,10 @@
 
 Covers the three derivation dimensions against hand-curated slugged DBs
 (`_slugged_db`): edge components (dimension 0), month token folds with their
-guards (dimension 1), and curated families incl. token-group absorption and the
-fail-fast resolution errors (dimension 2). The accept-list (#496) — `[[accept]]`
-folds of the generated `concept_groups.auto.toml` by reference — is covered
+guards (dimension 1), and curated single-variable families with their single
+inline facet axis and the fail-fast resolution errors (dimension 2). The
+accept-list (#496) — `[[accept]]` folds of the generated
+`concept_groups.auto.toml` by reference — is covered
 against synthetic auto families in `TestAcceptList` / `TestAcceptLoader`.
 Classification EDITION vintages no longer fold into groups (#571); their
 adjacent-chain succession edges (`classification_replaced_by`) are covered in
@@ -95,6 +96,7 @@ def _groups(conn: sqlite3.Connection) -> dict[str, dict]:
             "register_id": g["register_id"],
             "label": g["label"],
             "source": g["source"],
+            "facet_axis": g["facet_axis"],
             "members": members,
             "cls_members": cls_members,
         }
@@ -102,12 +104,18 @@ def _groups(conn: sqlite3.Connection) -> dict[str, dict]:
 
 
 def _facets(conn: sqlite3.Connection, slug: str) -> list[tuple[str, str, str]]:
+    """The member's inline single facet as (axis, value, label) — (#585) the
+    axis lives on `concept_group`, the value/label inline on
+    `concept_group_variable`. Empty when the member carries no facet (edge
+    group: NULL facet_value)."""
     return [
-        (r["axis"], r["value"], r["label"])
+        (r["facet_axis"], r["facet_value"], r["facet_label"])
         for r in conn.execute(
-            "SELECT f.axis, f.value, f.label FROM concept_group_variable_facet f "
-            "JOIN variable v ON v.variable_id = f.variable_id "
-            "WHERE v.slug = ? ORDER BY f.axis",
+            "SELECT g.facet_axis, m.facet_value, m.facet_label "
+            "FROM concept_group_variable m "
+            "JOIN variable v ON v.variable_id = m.variable_id "
+            "JOIN concept_group g ON g.group_id = m.group_id "
+            "WHERE v.slug = ? AND m.facet_value IS NOT NULL",
             (slug,),
         )
     ]
@@ -130,6 +138,7 @@ class TestEdgeGroups:
             "register_id": 1,
             "label": "Utbildning",  # the shared name
             "source": "edge",
+            "facet_axis": None,  # edge groups have no axis
             "members": ["sun2000", "sun2020", "sunx"],
             "cls_members": [],
         }
@@ -327,53 +336,35 @@ def _curated(members: tuple[CuratedMember, ...], **overrides) -> CuratedGroup:
 
 
 class TestCuratedGroups:
-    def test_absorbs_token_groups_into_facet_matrix(self) -> None:
-        conn = _month_family_db()
-        curated = _curated(
-            (
-                CuratedMember(
-                    group="agi1ink", variable=None, value="1", label="största"
-                ),
-                CuratedMember(group="agi2ink", variable=None, value="2", label="näst"),
-            )
-        )
-        counts = materialize_concept_groups(conn, (curated,), providers=_SCB)
-        assert counts["curated_groups"] == 1
-        assert counts["month_groups"] == 0  # both token groups absorbed
-        groups = _groups(conn)
-        assert groups["agiink"]["source"] == "curated"
-        assert len(groups["agiink"]["members"]) == 6
-        # Absorbed members keep the month facet and gain the rank facet.
-        assert _facets(conn, "agi1inkjan") == [
-            ("month", "01", "januari"),
-            ("rank", "1", "största"),
-        ]
-        assert _facets(conn, "agi2inkmars") == [
-            ("month", "03", "mars"),
-            ("rank", "2", "näst"),
-        ]
-
-    def test_single_variable_members_attach(self) -> None:
+    def test_single_variable_members_attach_with_inline_facet(self) -> None:
         conn = build_slugged_db(classification=None)
         add_variable(conn, register_id=1, var_id=700, name="A", slug="vara")
         add_variable(conn, register_id=1, var_id=701, name="B", slug="varb")
         curated = _curated(
             (
-                CuratedMember(group=None, variable="vara", value="1", label="A"),
-                CuratedMember(group=None, variable="varb", value="2", label="B"),
-            ),
-            key="fam",
-            axis="part",
+                CuratedMember(variable="vara", value="1", label="största"),
+                CuratedMember(variable="varb", value="2", label="näst"),
+            )
         )
         counts = materialize_concept_groups(conn, (curated,), providers=_SCB)
         assert counts["curated_groups"] == 1
-        assert _groups(conn)["fam"]["members"] == ["vara", "varb"]
-        assert _facets(conn, "vara") == [("part", "1", "A")]
+        group = _groups(conn)["agiink"]
+        assert group["source"] == "curated"
+        assert group["members"] == ["vara", "varb"]
+        # The group carries its single axis; each member its inline facet.
+        assert group["facet_axis"] == "rank"
+        assert _facets(conn, "vara") == [("rank", "1", "största")]
+        assert _facets(conn, "varb") == [("rank", "2", "näst")]
 
     def test_inactive_provider_is_skipped(self) -> None:
         conn = _month_family_db()
+        add_variable(conn, register_id=1, var_id=730, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=731, name="B", slug="varb")
         curated = _curated(
-            (CuratedMember(group="agi1ink", variable=None, value="1", label="x"),),
+            (
+                CuratedMember(variable="vara", value="1", label="x"),
+                CuratedMember(variable="varb", value="2", label="y"),
+            ),
         )
         counts = materialize_concept_groups(
             conn, (curated,), providers=frozenset({"sos"})
@@ -384,22 +375,20 @@ class TestCuratedGroups:
     @pytest.mark.parametrize(
         ("members", "register"),
         [
-            # dangling token-group reference
-            (
-                (CuratedMember(group="nope", variable=None, value="1", label="x"),),
-                "lisa",
-            ),
             # dangling variable reference
             (
                 (
-                    CuratedMember(group=None, variable="nope", value="1", label="x"),
-                    CuratedMember(group=None, variable="nope2", value="2", label="y"),
+                    CuratedMember(variable="nope", value="1", label="x"),
+                    CuratedMember(variable="nope2", value="2", label="y"),
                 ),
                 "lisa",
             ),
             # dangling register
             (
-                (CuratedMember(group="agi1ink", variable=None, value="1", label="x"),),
+                (
+                    CuratedMember(variable="vara", value="1", label="x"),
+                    CuratedMember(variable="varb", value="2", label="y"),
+                ),
                 "no",
             ),
         ],
@@ -408,6 +397,8 @@ class TestCuratedGroups:
         self, members: tuple[CuratedMember, ...], register: str
     ) -> None:
         conn = _month_family_db()
+        add_variable(conn, register_id=1, var_id=740, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=741, name="B", slug="varb")
         curated = _curated(members, register=register)
         with pytest.raises(RegMetaError) as exc:
             materialize_concept_groups(conn, (curated,), providers=_SCB)
@@ -422,8 +413,8 @@ class TestCuratedGroups:
         _add_edge(conn, "lisa", "vara", "varb")  # edge pass claims vara/varb
         curated = _curated(
             (
-                CuratedMember(group=None, variable="vara", value="1", label="A"),
-                CuratedMember(group=None, variable="varc", value="2", label="C"),
+                CuratedMember(variable="vara", value="1", label="A"),
+                CuratedMember(variable="varc", value="2", label="C"),
             ),
             key="fam",
         )
@@ -435,12 +426,26 @@ class TestCuratedGroups:
         conn = build_slugged_db(classification=None)
         add_variable(conn, register_id=1, var_id=720, name="A", slug="vara")
         curated = _curated(
-            (CuratedMember(group=None, variable="vara", value="1", label="A"),),
+            (CuratedMember(variable="vara", value="1", label="A"),),
             key="fam",
         )
         with pytest.raises(RegMetaError) as exc:
             materialize_concept_groups(conn, (curated,), providers=_SCB)
         assert exc.value.code == "concept_groups_unresolved"
+
+    def test_db_cannot_represent_multi_axis(self) -> None:
+        """#585: the multi-axis machinery is gone — `concept_group_variable_facet`
+        no longer exists, so a member can carry at most ONE facet (inline on
+        `concept_group_variable`). Single-axis is enforced by schema shape."""
+        conn = build_slugged_db(classification=None)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+        }
+        assert "concept_group_variable_facet" not in tables
+        # The variable member table carries exactly the single inline facet pair.
+        cols = {r[1] for r in conn.execute("PRAGMA table_info(concept_group_variable)")}
+        assert {"facet_value", "facet_label"} <= cols
 
 
 def _sun_group(**overrides) -> ClassificationGroup:
@@ -784,7 +789,7 @@ class TestLoader:
             label = "Familj"
             axis = "rank"
             [[variable_group.members]]
-            group = "agi1ink"
+            variable = "agi1ink"
             value = "1"
             label = "största"
             [[variable_group.members]]
@@ -795,14 +800,14 @@ class TestLoader:
         )
         assert len(groups) == 1
         assert groups[0].provider == "scb"
-        assert groups[0].members[0].group == "agi1ink"
+        assert groups[0].members[0].variable == "agi1ink"
         assert groups[0].members[1].variable == "extra"
 
     @pytest.mark.parametrize(
         "text",
         [
             "[[variable_groups]]\n",  # misspelled top-level table
-            # both group and variable on one member
+            # member missing the required `variable`
             """
             [[variable_group]]
             register = "scb/lisa"
@@ -810,8 +815,6 @@ class TestLoader:
             label = "F"
             axis = "a"
             [[variable_group.members]]
-            group = "g"
-            variable = "v"
             value = "1"
             label = "x"
             """,
@@ -823,7 +826,7 @@ class TestLoader:
             label = "F"
             axis = "a"
             [[variable_group.members]]
-            group = "g"
+            variable = "g"
             value = "1"
             label = "x"
             """,
@@ -843,11 +846,11 @@ class TestLoader:
             label = "F"
             axis = "a"
             [[variable_group.members]]
-            group = "g"
+            variable = "g"
             value = "1"
             label = "x"
             [[variable_group.members]]
-            group = "g"
+            variable = "g"
             value = "2"
             label = "y"
             """,
@@ -866,7 +869,7 @@ class TestLoader:
         label = "F"
         axis = "a"
         [[variable_group.members]]
-        group = "g"
+        variable = "g"
         value = "1"
         label = "x"
         [[variable_group]]
@@ -875,7 +878,7 @@ class TestLoader:
         label = "F2"
         axis = "b"
         [[variable_group.members]]
-        group = "h"
+        variable = "h"
         value = "1"
         label = "x"
         """
@@ -963,7 +966,7 @@ def _morsak_db() -> sqlite3.Connection:
 
 def _morsak_members() -> tuple[CuratedMember, ...]:
     return tuple(
-        CuratedMember(group=None, variable=f"morsak{i}", value=str(i), label=str(i))
+        CuratedMember(variable=f"morsak{i}", value=str(i), label=str(i))
         for i in (1, 2, 3)
     )
 
@@ -1047,8 +1050,8 @@ class TestAcceptList:
             label="Familj",
             axis="part",
             members=(
-                CuratedMember(group=None, variable="vara", value="1", label="A"),
-                CuratedMember(group=None, variable="varb", value="2", label="B"),
+                CuratedMember(variable="vara", value="1", label="A"),
+                CuratedMember(variable="varb", value="2", label="B"),
             ),
         )
         auto = (_auto_family(_morsak_members()),)

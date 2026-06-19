@@ -404,7 +404,8 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     - a classification vintage group `sun` over sun2000 (added) + sun2020."""
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (10, 'variable', 2, 'ink', 'Inkomst', 'token')"
+        "label, source, facet_axis) "
+        "VALUES (10, 'variable', 2, 'ink', 'Inkomst', 'token', 'month')"
     )
     for i, (slug, month, month_label) in enumerate(
         [("inkjan", "01", "januari"), ("inkfeb", "02", "februari")]
@@ -415,12 +416,8 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
             (slug,),
         ).fetchone()[0]
         src.execute(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, 10)",
-            (vid,),
-        )
-        src.execute(
-            "INSERT INTO concept_group_variable_facet (variable_id, axis, value, "
-            "label) VALUES (?, 'month', ?, ?)",
+            "INSERT INTO concept_group_variable "
+            "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
             (vid, month, month_label),
         )
     src.execute(

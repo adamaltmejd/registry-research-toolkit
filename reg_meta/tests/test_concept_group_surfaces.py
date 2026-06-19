@@ -47,8 +47,8 @@ def _seeded_conn() -> sqlite3.Connection:
     conn = build_slugged_db()
     conn.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (10, 'variable', 1, 'agiink', "
-        "'Lönesumma per månad', 'curated')"
+        "label, source, facet_axis) VALUES (10, 'variable', 1, 'agiink', "
+        "'Lönesumma per månad', 'curated', 'month')"
     )
     for i, (slug, month, month_label) in enumerate(_MONTH_MEMBERS):
         add_variable(
@@ -63,12 +63,8 @@ def _seeded_conn() -> sqlite3.Connection:
             (slug,),
         ).fetchone()[0]
         conn.execute(
-            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, 10)",
-            (vid,),
-        )
-        conn.execute(
-            "INSERT INTO concept_group_variable_facet (variable_id, axis, value, "
-            "label) VALUES (?, 'month', ?, ?)",
+            "INSERT INTO concept_group_variable "
+            "(variable_id, group_id, facet_value, facet_label) VALUES (?, 10, ?, ?)",
             (vid, month, month_label),
         )
     # One member delivers under variant 10 so `get schema` has a grouped column.

@@ -1424,8 +1424,8 @@ def _check_concept_groups(
     members point at `kind='variable'` groups in the SAME register;
     classification members at `kind='classification'` groups) and every group
     has >= 2 members — a 1-member group is a derivation bug (the passes only
-    mint groups from >= 2 candidates; a curated absorb that emptied a group
-    would surface here).
+    mint groups from >= 2 candidates; a curated family authored with a single
+    member, or an `exclude` that drops a family below two, would surface here).
 
     Corpus (real build only): volume floors per derivation source, so a pass
     that silently stops matching (slug-vocabulary drift, edge-kind rename)
@@ -1434,7 +1434,6 @@ def _check_concept_groups(
     required = {
         "concept_group",
         "concept_group_variable",
-        "concept_group_variable_facet",
         "concept_group_classification",
     }
     missing_tables = required - tables
@@ -1484,6 +1483,27 @@ def _check_concept_groups(
         result.ok("variable members stay in their group's register")
 
     _check_edge_group_parity(conn, result)
+
+    # #585 inline-facet invariant: a variable member's facet_value/facet_label
+    # are non-NULL iff its group has a non-NULL facet_axis (token/curated), and
+    # NULL for edge groups (facet_axis NULL). A member half-set (one of
+    # value/label NULL) or set against a NULL-axis group (or vice versa) is a
+    # materializer bug — single-axis is schema-shaped now, but the NULLability
+    # contract still needs asserting.
+    facet_mismatch = conn.execute(
+        "SELECT COUNT(*) FROM concept_group_variable m "
+        "JOIN concept_group g ON g.group_id = m.group_id "
+        "WHERE (g.facet_axis IS NULL) != "
+        "      (m.facet_value IS NULL AND m.facet_label IS NULL) "
+        "   OR (m.facet_value IS NULL) != (m.facet_label IS NULL)"
+    ).fetchone()[0]
+    if facet_mismatch:
+        result.fail(
+            f"{facet_mismatch} variable member(s) violate the facet/axis "
+            "NULLability invariant (#585)"
+        )
+    else:
+        result.ok("variable member facets agree with their group's facet_axis")
 
     if not corpus:
         return
