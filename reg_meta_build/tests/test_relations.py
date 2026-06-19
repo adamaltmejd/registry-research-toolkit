@@ -696,10 +696,11 @@ def _cid(conn: sqlite3.Connection, slug: str) -> int:
 
 
 def _add_edition_edge(
-    conn: sqlite3.Connection, pred: str, succ: str, year: int
+    conn: sqlite3.Connection, pred: str, succ: str, year: int | None
 ) -> None:
     """Insert one `classification_replaced_by` edition edge (the #571 chain the
-    lift consumes)."""
+    lift consumes). `year=None` inserts a NULL `effective_year` (a curated/auto
+    edition edge may carry no year — the lift passes it through verbatim)."""
     conn.execute(
         "INSERT INTO classification_replaced_by "
         "(predecessor_slug, successor_slug, effective_year, note) "
@@ -956,3 +957,107 @@ class TestVariableVintageSuccession:
             ("sni-grov-2002", "sni-grov-2007", 2007),
             ("sni-ut-2002", "sni-ut-2007", 2007),
         ]
+
+    def test_same_name_levels_isolate_by_slug_chain(self) -> None:
+        # The STRONG isolation case: two levels share the IDENTICAL family key
+        # (register=1, name="Näringsgren"), differing ONLY by classification slug
+        # — grov rides sni2002/sni2007, utokad rides sni2002-utokad/sni2007-utokad.
+        # Each edition still binds exactly ONE variable, so the bijection spans all
+        # FOUR editions cleanly and the slug-chain isolation mints grov→grov and
+        # utokad→utokad with NO grov↔utokad cross-link, even with no name signal.
+        conn = _vintage_db()  # has sni2002→sni2007 (the "grov" lineage)
+        cid_ug_2002 = _add_classification(conn, "SNI2002-UTOKAD", "sni2002-utokad")
+        cid_ug_2007 = _add_classification(conn, "SNI2007-UTOKAD", "sni2007-utokad")
+        _add_edition_edge(conn, "sni2002-utokad", "sni2007-utokad", 2007)
+        for vid, slug, cid in (
+            (1, "sni-grov-2002", _cid(conn, "sni2002")),
+            (2, "sni-grov-2007", _cid(conn, "sni2007")),
+            (3, "sni-ut-2002", cid_ug_2002),
+            (4, "sni-ut-2007", cid_ug_2007),
+        ):
+            add_variable(conn, register_id=1, var_id=vid, name="Näringsgren", slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                classification_id=cid,
+            )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 2
+        assert _lift_rows(conn) == [
+            ("sni-grov-2002", "sni-grov-2007", 2007),
+            ("sni-ut-2002", "sni-ut-2007", 2007),
+        ]
+
+    def test_gapped_chain_mints_nothing_across_gap(self) -> None:
+        # Documents the no-transitive-link guarantee: a 3-edition chain
+        # sni2002→sni2007→sni2012 with variables seeded ONLY for the two ENDS
+        # (no variable binds the intermediate sni2007). Each adjacent edge needs
+        # BOTH endpoints bound, so the missing middle breaks both hops and no
+        # transitive sni2002→sni2012 edge is invented across the gap.
+        conn = _vintage_db()
+        _add_classification(conn, "SNI2012", "sni2012")
+        _add_edition_edge(conn, "sni2007", "sni2012", 2012)
+        for vid, slug, cls in (
+            (1, "sni-2002", "sni2002"),
+            (3, "sni-2012", "sni2012"),
+        ):
+            add_variable(conn, register_id=1, var_id=vid, name="Näringsgren", slug=slug)
+            add_state(
+                conn,
+                register_id=1,
+                variable_slug=slug,
+                register_variant_id=10,
+                classification_id=_cid(conn, cls),
+            )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 0
+        assert _lift_rows(conn) == []
+
+    def test_null_effective_year_passes_through(self) -> None:
+        # NULL pass-through is intended: a curated/auto edition edge may carry no
+        # year, and the lift writes the edge's `effective_year` verbatim — so a
+        # NULL-year edition mints a NULL-year variable edge (not a dropped one).
+        conn = build_slugged_db(
+            register=None,
+            variant=None,
+            version=None,
+            variable=None,
+            classification=None,
+        )
+        add_register(conn, register_id=1, slug="lisa", name="LISA")
+        add_variant(
+            conn, register_variant_id=10, register_id=1, slug="ind", name="Individer"
+        )
+        _add_classification(conn, "SNI2002", "sni2002")
+        _add_classification(conn, "SNI2007", "sni2007")
+        _add_edition_edge(conn, "sni2002", "sni2007", None)  # NULL effective_year
+        add_variable(conn, register_id=1, var_id=1, name="Näringsgren", slug="sni-2002")
+        add_variable(conn, register_id=1, var_id=2, name="Näringsgren", slug="sni-2007")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2002",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2007",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        conn.commit()
+        n = derive_variable_vintage_succession(conn)
+        assert n == 1
+        row = conn.execute(
+            "SELECT predecessor_variable, successor_variable, effective_year "
+            "FROM variable_replaced_by "
+            "WHERE note = 'derived:classification_vintage_lift'"
+        ).fetchone()
+        assert (row[0], row[1]) == ("sni-2002", "sni-2007")
+        assert row[2] is None
