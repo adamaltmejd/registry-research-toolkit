@@ -1976,7 +1976,10 @@ already-grouped member:
    (`_check_edge_group_parity`, which recomputed components from persisted rows) is
    replaced by a corpus-only volume floor `_CG_MIN_EDGE_GROUPS` (#591): there are no
    persisted rows to recompute against, so a volume floor catches a derivation collapse
-   (slug drift, empty `edge_siblings`) without recomputation.
+   (slug drift, empty `edge_siblings`) without recomputation. The floor is additionally
+   gated on SCB being in the build (#595): a `--providers sos` real build skips it
+   (info-level) rather than false-failing, since the edge groups are entirely
+   SCB-sourced.
 
 1. **`token`** — exact curated vocabularies only (NO regex name-patterns, the standing
    curation rule). Variables: the Swedish month slug tails, both short and full forms
@@ -2038,7 +2041,14 @@ the ≥2-member floor always, plus per-source volume floors (edge/month/curated)
 `corpus=True` builds so a derivation pass that silently stops matching fails the
 maintainer gate. The former `lkf` classification volume floor is gone — vintage families
 are now succession edges, not groups, so their volume is checked separately by
-`_check_classification_replaced_by`.
+`_check_classification_replaced_by`. The SCB-sourced corpus volume floors — the
+edge-group floor here, the succession floor in `_check_classification_replaced_by`, the
+vintage-lift floor in `_check_variable_replaced_by_vintage_lift`, and the
+merged-monthly-families floor in `_check_variable_alias_window` (whose
+`period_family_merges.toml` is entirely `scb/...`) — are additionally gated on SCB being
+in the build (#595), mirroring the #563 precedent: a non-SCB `--providers` real build
+skips rather than false-fails them. The curated `n_curated >= 1` floor is intentionally
+not SCB-gated: curated groups span scb and sos, so it is not SCB-exclusive.
 
 ## Delivery-list enrichment (#365)
 

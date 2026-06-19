@@ -1202,7 +1202,10 @@ def _check_tags(
 
 
 # The 4 LISA + 4 non-LISA monthly families merged today (#319/#383); absolute
-# floor like the lkf one — adding/removing a family forces a gate update.
+# floor like the lkf one — adding/removing a family forces a gate update. Corpus-only,
+# and additionally gated on SCB being in the build (#595): the merged families are all
+# SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
+# `--providers` subset carries no families and would false-fail.
 _AW_MIN_MERGED_FAMILIES = 8
 
 
@@ -1225,7 +1228,9 @@ def _check_variable_alias_window(
     real maintainer build merges the 8 monthly families (#319/#383), so this is
     also the regression floor for family-merge (>= `_AW_MIN_MERGED_FAMILIES`
     survivors) now that the month-token-group floor in `_check_concept_groups`
-    is gone — the merge consumes every month-suffixed family pre-fold."""
+    is gone — the merge consumes every month-suffixed family pre-fold. The floor is
+    additionally gated on SCB being in the build (#595) — the merged families are all
+    SCB-sourced, so a non-SCB `--providers` subset SKIPS rather than false-fails."""
     result.section("[monthly-family windows]")
     if "variable_alias_window" not in tables:
         result.ok("variable_alias_window absent — window check skipped")
@@ -1269,7 +1274,15 @@ def _check_variable_alias_window(
         n_families = conn.execute(
             "SELECT COUNT(DISTINCT variable_id) FROM variable_alias_window"
         ).fetchone()[0]
-        if n_families >= _AW_MIN_MERGED_FAMILIES:
+        # Gated on SCB presence (#595): the merged monthly families are all
+        # SCB-sourced (period_family_merges.toml is entirely scb/...), so a non-SCB
+        # `--providers` subset SKIPS rather than false-fails this floor.
+        if not _scb_in_build(conn):
+            result.info(
+                f"{n_families} merged monthly families — SCB not in this build, "
+                f"floor (>= {_AW_MIN_MERGED_FAMILIES}) skipped (#595)"
+            )
+        elif n_families >= _AW_MIN_MERGED_FAMILIES:
             result.ok(
                 f"{n_families} merged monthly families (>= {_AW_MIN_MERGED_FAMILIES})"
             )
@@ -1400,14 +1413,18 @@ def _check_sos_stateless_variables(
 # — an empty `edge_siblings`, a slug regression that drops every endpoint — and
 # high enough to leave headroom for the curated-precedence exclusions (#488 will
 # re-home a handful of components, never thousands) and routine corpus churn.
-# Synthetic builds carry few/no sibling edges, so the floor is corpus-gated.
+# Synthetic builds carry few/no sibling edges, so the floor is corpus-gated; it is
+# additionally gated on SCB being in the build (#595) — a non-SCB `--providers`
+# subset carries no split siblings and would false-fail.
 _CG_MIN_EDGE_GROUPS = 1800
 
 # Classification succession floor (#571, corpus only): the lkf vintage chain
 # (lkf1980…lkf2026, ~47 editions → ~46 adjacent edges) dominates the corpus
 # succession edges, so a real build that newly stopped deriving them (slug-tail
 # drift, name-guard regression) drops well below this floor. Synthetic builds
-# carry no vintage classifications, so the floor is corpus-gated.
+# carry no vintage classifications, so the floor is corpus-gated; it is additionally
+# gated on SCB being in the build (#595) — a non-SCB `--providers` subset carries no
+# lkf chain and would false-fail.
 _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 
 # Variable vintage-lift floor (#584, corpus only): the clean tier lifts same-name
@@ -1418,8 +1435,34 @@ _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 # silently stops lifting (classification-binding backfill drift, bijection-guard
 # inversion) without false-failing on legitimate corpus churn (the entangled tier
 # moving in/out). Synthetic builds carry no vintage classifications, so the floor is
-# corpus-gated.
+# corpus-gated; it is additionally gated on SCB being in the build (#595) — a non-SCB
+# `--providers` subset carries no SCB-derived lifts and would false-fail.
 _MIN_VARIABLE_VINTAGE_LIFT_EDGES = 25
+
+
+def _scb_in_build(conn: sqlite3.Connection) -> bool:
+    """True iff the SCB provider has built register rows in this DB.
+
+    The corpus volume floors below all source their bulk from SCB (within-register
+    split siblings, the lkf vintage chain, SCB classification-derived vintage lifts),
+    so a `--providers` subset that excludes SCB legitimately carries only a handful
+    of those rows. `build-db` always validates `corpus=True` regardless of
+    `--providers`, so the floors must SKIP (not false-fail) when SCB wasn't built
+    (#595, mirroring #563's gate-to-built-providers precedent).
+
+    Gate on REGISTER rows, not the `provider` row: `seed_providers` inserts the SCB
+    provider row regardless of `--providers`, so provider-row presence is not enough;
+    SCB registers exist only when the SCB adapter actually ran. The check is
+    independent of the floored counts, so a real derivation collapse on a full SCB
+    build still fails the floor.
+    """
+    return (
+        conn.execute(
+            "SELECT 1 FROM register WHERE provider_id = ? LIMIT 1",
+            (PROVIDER_ID_SCB,),
+        ).fetchone()
+        is not None
+    )
 
 
 def _check_concept_groups(
@@ -1528,8 +1571,15 @@ def _check_concept_groups(
     n_curated = by_source.get(("curated", "variable"), 0)
     # Edge-group volume floor (#591): replaces the retired exact-parity check —
     # the foldable sibling rows are no longer persisted, so there's nothing to
-    # recompute; a volume floor catches a derivation collapse instead.
-    if n_edge >= _CG_MIN_EDGE_GROUPS:
+    # recompute; a volume floor catches a derivation collapse instead. Gated on
+    # SCB presence (#595): the split-sibling bulk is SCB-sourced, so a non-SCB
+    # `--providers` subset SKIPS rather than false-fails this floor.
+    if not _scb_in_build(conn):
+        result.info(
+            f"{n_edge:,} edge group(s) — SCB not in this build, floor "
+            f"(>= {_CG_MIN_EDGE_GROUPS:,}) skipped (#595)"
+        )
+    elif n_edge >= _CG_MIN_EDGE_GROUPS:
         result.ok(f"{n_edge:,} edge group(s) (>= {_CG_MIN_EDGE_GROUPS:,})")
     else:
         result.fail(
@@ -1619,7 +1669,14 @@ def _check_classification_replaced_by(
     if not corpus:
         result.info(f"{n_edges} classification succession edge(s)")
         return
-    if n_edges >= _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES:
+    # Gated on SCB presence (#595): the lkf vintage chain is SCB-sourced, so a
+    # non-SCB `--providers` subset SKIPS rather than false-fails this floor.
+    if not _scb_in_build(conn):
+        result.info(
+            f"{n_edges} classification succession edge(s) — SCB not in this build, "
+            f"floor (>= {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES}) skipped (#595)"
+        )
+    elif n_edges >= _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES:
         result.ok(
             f"{n_edges} classification succession edge(s) "
             f"(>= {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES})"
@@ -1706,7 +1763,15 @@ def _check_variable_replaced_by_vintage_lift(
     if not corpus:
         result.info(f"{n_edges} variable vintage-lift edge(s)")
         return
-    if n_edges >= _MIN_VARIABLE_VINTAGE_LIFT_EDGES:
+    # Gated on SCB presence (#595): the SCB classification-derived lifts are
+    # SCB-sourced, so a non-SCB `--providers` subset SKIPS rather than
+    # false-fails this floor.
+    if not _scb_in_build(conn):
+        result.info(
+            f"{n_edges} variable vintage-lift edge(s) — SCB not in this build, "
+            f"floor (>= {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) skipped (#595)"
+        )
+    elif n_edges >= _MIN_VARIABLE_VINTAGE_LIFT_EDGES:
         result.ok(
             f"{n_edges} variable vintage-lift edge(s) "
             f"(>= {_MIN_VARIABLE_VINTAGE_LIFT_EDGES})"
