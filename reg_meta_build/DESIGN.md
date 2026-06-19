@@ -96,11 +96,18 @@ into seven families:
   code-system assignment facts (`classification_links.toml`, `codelivery.toml`) into
   `concept_groups.toml` or `tags.toml`; they have different semantics, validation, and
   build-pass ordering.
-- **Event-derived and curated `replaced_by` are distinct inputs.** The
-  `timeseries_event`-derived path is a source fact with best-effort noise skips; curated
-  `replaced_by` edges in `curation/relations.toml` are human-authored FQID-level
-  succession. They share DB insertion, cycle checks, and traversal helpers, but their
-  authoring surfaces must not merge.
+- **`variable_replaced_by` has three provenance sources, each distinct.** The
+  `timeseries_event`-derived path (`note = 'auto:timeseries_event'`) is a source fact
+  with best-effort noise skips; curated edges in `curation/relations.toml`
+  (`note = 'curated:slug_toml'`) are human-authored FQID-level succession; and the
+  classification-vintage lift (`note = 'derived:classification_vintage_lift'`, #584)
+  derives edges by lifting `classification_replaced_by` edition chains to the variable
+  grain through value-set bindings (clean tier only — same-name families that map 1:1 to
+  editions). The lift runs AFTER the other two passes and re-runs
+  `reject_replaced_by_cycles` over the full combined graph, because a pre-existing
+  reversed edge plus a newly inserted lift edge can close a cycle the earlier checks
+  could not see. All three share traversal helpers; their authoring surfaces must not
+  merge.
 - **Graph semantics live in `curation/relations.toml`, not slug TOMLs.** A slug TOML
   that contains an inline `same_as` field or a top-level `[[replaced_by]]` array now
   fails as an unknown-key error. The only surviving per-entry edge field in a slug TOML
@@ -1969,7 +1976,11 @@ already-grouped member:
    succession, not a parallel browse facet. They materialize as adjacent-edition edges
    in `classification_replaced_by` via `derive_classification_succession`. The
    `concept_group_classification` table and `kind='classification'` machinery hold the
-   curated umbrella groups — `group:sun` being the first, added by #516 (see below).
+   curated umbrella groups — `group:sun` being the first, added by #516 (see below). The
+   variable-grain counterpart is derived by `derive_variable_vintage_succession` (#584):
+   it lifts those `classification_replaced_by` edition edges through value-set bindings
+   to mint `variable_replaced_by` edges (clean tier — families where the chained
+   editions map 1:1 to same-name variables in the same register).
 
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
