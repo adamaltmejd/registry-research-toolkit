@@ -1,5 +1,6 @@
 from .catalog import (
     Catalog,
+    ClassificationRef,
     LineageEdge,
     LineageWarning,
     Period,
@@ -41,6 +42,7 @@ from .queries import (
 
 __all__ = [
     "Catalog",
+    "ClassificationRef",
     "compare",
     "db_path_from_args",
     "default_db_dir",
