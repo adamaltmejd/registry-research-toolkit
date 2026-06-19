@@ -1985,11 +1985,11 @@ already-grouped member:
 2. **`curated`** — `reg_meta_build/concept_groups.toml` (package root, like
    `codelivery.toml` — NOT under `fqid_slugs/`, which is glob-loaded as provider TOMLs).
    Two entry kinds, both **opt-in** (a family folds only when explicitly present):
-   - `[[variable_group]]` — a hand-authored family with an exact member list: a
-     `group = "<stem>"` member absorbs a derived token group (its variables keep their
-     month facets and gain the family's facet — the LISA `agi{1,2,3}` rank axis yields
-     one month × rank matrix); a `variable = "<slug>"` member attaches one ungrouped
-     variable.
+   - `[[variable_group]]` — a hand-authored family with an exact member list: each
+     `variable = "<slug>"` member attaches one ungrouped variable, carrying its
+     `value`/`label` on the family's single `axis` (e.g. the LISA `agi{1,2,3}` rank
+     facet). Concept groups are single-axis (#585) — the member's facet lives inline on
+     `concept_group_variable`, mirroring `concept_group_classification`.
    - `[[accept]]` (#496) — fold a candidate family from the committed, **generated**
      `reg_meta_build/concept_groups.auto.toml` BY REFERENCE (`register` + `key`,
      optional `label`/`axis` overrides and an `exclude` member-slug list).
