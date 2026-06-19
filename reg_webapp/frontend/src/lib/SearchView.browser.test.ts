@@ -479,6 +479,77 @@ describe("SearchView — typed result groups (#379)", () => {
       .not.toBeInTheDocument();
   });
 
+  it("renders a 'current edition' link on a lone old-edition classification leaf (#571)", async () => {
+    // A lone non-terminal edition hit (the chain didn't fold — only one edition
+    // matched): the leaf carries `terminal_fqid`, so the snippet renders a compact
+    // link to the current/terminal edition so the user can jump forward.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun1996",
+      groups: [
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification",
+              fqid: "class/sun1996",
+              short_name: "SUN1996",
+              name: "Svensk utbildningsnomenklatur",
+              terminal_fqid: "class/sun2020",
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun1996");
+    await render(SearchView);
+
+    // The leaf itself links to its own (old) edition…
+    await expect
+      .element(page.getByRole("link", { name: /SUN1996/ }))
+      .toHaveAttribute("href", "/catalog/class/sun1996");
+    // …and the current-edition affordance links to the terminal edition.
+    await expect
+      .element(page.getByRole("link", { name: /current edition/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+  });
+
+  it("omits the 'current edition' link on a classification leaf with no terminal_fqid (#571)", async () => {
+    // A current edition (or a non-edition classification) carries no terminal_fqid,
+    // so the forward-link affordance must NOT render.
+    vi.mocked(search).mockResolvedValue({
+      kind: "search",
+      query: "sun2020",
+      groups: [
+        {
+          group: "classifications",
+          total_count: 1,
+          results: [
+            {
+              type: "classification",
+              fqid: "class/sun2020",
+              short_name: "SUN2020",
+              name: "Svensk utbildningsnomenklatur",
+              terminal_fqid: null,
+            },
+          ],
+        },
+      ],
+    } as unknown as SearchResponse);
+    setQuery("sun2020");
+    await render(SearchView);
+
+    // The leaf renders…
+    await expect
+      .element(page.getByRole("link", { name: /SUN2020/ }))
+      .toHaveAttribute("href", "/catalog/class/sun2020");
+    // …but no current-edition affordance.
+    await expect
+      .element(page.getByText(/current edition/))
+      .not.toBeInTheDocument();
+  });
+
   it("renders two folded concept groups sharing a group_key across registers (no each_key_duplicate crash)", async () => {
     // The `inkomst` production crash (#379 omnibox-dup-key): the variables group
     // returns TWO type:"group" results with the SAME group_key ("tfoab") from

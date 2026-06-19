@@ -666,6 +666,13 @@ class ClassificationSearchResult(BaseModel):
     name: str | None = None
     concept_group: str | None = None
     concept_group_label: str | None = None
+    terminal_fqid: str | None = Field(
+        default=None,
+        description="When this is a non-current edition that the query hit alone, "
+        "the fqid of the current/terminal edition in its succession chain (#571) — "
+        "lets the UI link to the current edition; None for a current edition or a "
+        "non-edition classification.",
+    )
 
 
 class ClassificationEditionModel(BaseModel):

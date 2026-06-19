@@ -354,6 +354,14 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
   {#if result.name && result.name !== result.short_name}
     <span class="hit-detail muted">{result.name}</span>
   {/if}
+  <!-- A lone non-current edition hit (#571): link to the current/terminal edition
+       so the user can jump forward. Only present when this is an old edition the
+       query matched alone (absent for current/non-edition classifications). -->
+  {#if result.terminal_fqid}
+    <a class="terminal-link" href={catalogHref(result.terminal_fqid)}>
+      → current edition
+    </a>
+  {/if}
 {/snippet}
 
 <!-- A folded concept-group family (#322): the group itself is NOT FQID-addressable,
@@ -575,6 +583,9 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
     font-size: 0.85em;
   }
   .hit-context {
+    font-size: 0.85em;
+  }
+  .terminal-link {
     font-size: 0.85em;
   }
   .hit-detail {

@@ -769,6 +769,11 @@ export interface components {
             /** Short Name */
             short_name?: string | null;
             /**
+             * Terminal Fqid
+             * @description When this is a non-current edition that the query hit alone, the fqid of the current/terminal edition in its succession chain (#571) — lets the UI link to the current edition; None for a current edition or a non-edition classification.
+             */
+            terminal_fqid?: string | null;
+            /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */

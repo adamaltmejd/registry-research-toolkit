@@ -147,6 +147,10 @@ def _classification_result(r: dict) -> ClassificationSearchResult:
         # non-folded vintage member stays discoverable.
         concept_group=r.get("concept_group"),
         concept_group_label=r.get("concept_group_label"),
+        # A lone non-terminal edition hit (#571) carries the current edition's
+        # fqid so the SPA can offer a "go to current edition" link; absent/None
+        # for a current edition or a non-edition classification.
+        terminal_fqid=r.get("terminal_fqid"),
     )
 
 
@@ -179,8 +183,9 @@ def _classification_search_item(r: dict) -> ClassificationSearchItem:
     concept-group fold (`type: "group"`, #516) → `_group_result`; an edition
     succession fold (`type: "classification_succession"`, #571) →
     `_classification_succession_result`; otherwise a leaf classification hit (which
-    may carry a `terminal_fqid` for a lone old-edition row — a SPA-render nicety the
-    frontend pass surfaces, not modeled here yet) → `_classification_result`."""
+    may carry a `terminal_fqid` for a lone old-edition row — surfaced on
+    `ClassificationSearchResult` so the SPA can link to the current edition) →
+    `_classification_result`."""
     row_type = r.get("type")
     if row_type == "group":
         return _group_result(r)
