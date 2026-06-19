@@ -1095,9 +1095,9 @@ period resolution because the researcher side's resolved columns are what
 period, unknown pinned representation, ambiguous multi-column binding — the binding
 already carries its own error and only the FQID-level arm runs). The `global` deployment
 (index `None`) never emits either code. Admission keying stays variant-agnostic and on
-the literal binding FQID: a curated same_as sibling (e.g. `kon→syss`,
-`same_definition_different_column`) names a *different* physical column, so warning on
-it is correct under holdings semantics, not a keying artifact.
+the literal binding FQID: a curated same_as sibling (e.g. `kon→syss`) names a
+*different* physical column, so warning on it is correct under holdings semantics, not a
+keying artifact.
 
 ## Cost protection (`limits.py`)
 

@@ -346,7 +346,7 @@ def _seed_kon_edges(src: sqlite3.Connection) -> None:
         "INSERT INTO variable_related_to "
         "(a_provider, a_register, a_variable, b_provider, b_register, b_variable, "
         "relation_kind) "
-        "VALUES ('scb','lisa','kon','scb','rams','syss','same_definition_different_column')"
+        "VALUES ('scb','lisa','kon','scb','rams','syss','code_vs_label_pair')"
     )
     src.execute(
         "INSERT INTO variable_state_lineage "
