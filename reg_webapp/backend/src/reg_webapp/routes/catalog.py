@@ -101,6 +101,7 @@ from reg_webapp.models import (
     SuccessorsResponse,
     ValueSetMember,
     VariableCoverageModel,
+    VariableEditionModel,
     VariableRefModel,
     VariableStateModel,
     VariantModel,
@@ -306,12 +307,39 @@ def _variant_model(variant: VariantSummary) -> VariantModel:
     )
 
 
-def _binding_node(resolved: ResolvedVariable) -> BindingNode:
+def _variable_chain_edition(edition) -> VariableEditionModel:
+    """Map a `reg_meta.VariableEdition` (#582) 1:1 onto the wire model — one node of
+    the full variable succession timeline. Every chain edition is a live `variable`
+    row (the build validator guarantees succession editions are live), so `fqid` is
+    None only when the triple is malformed/unresolvable, which the SPA renders as
+    plain text, not a link. Constructs via the alias `register=` (the canonical init
+    param; the Python attr is `register_name`, avoiding the BaseModel.register
+    shadow — see `_var_ref_model`)."""
+    return VariableEditionModel(
+        fqid=str(edition.fqid) if edition.fqid is not None else None,
+        provider=edition.provider,
+        register=edition.register,
+        variable=edition.variable,
+        name=edition.name,
+        effective_year=edition.effective_year,
+        reason=edition.reason,
+        is_current=edition.is_current,
+        is_self=edition.is_self,
+    )
+
+
+def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
     """Map a `ResolvedVariable` to the embedded-record leaf. Embeds the
     full wire-relevant record; the internal `provider_key` (SCB build-time join
     key, redundant with the FQID) is intentionally not exposed, and
     `lineage_warnings` are NOT on `ResolvedVariable` so they're omitted (A5.2
-    `/lineage_warnings`)."""
+    `/lineage_warnings`).
+
+    The FULL variable succession chain (#582) is embedded as `succession_chain` —
+    resolved server-side (`Catalog.variable_chain`, same_as-canonicalized + walked
+    terminal→predecessors) so the SPA renders the whole timeline synchronously,
+    superseding the immediate-neighbor `replaced_by` embed. The `/predecessors` /
+    `/successors` sub-resources are unaffected — they back the #411 redirect rails."""
     return BindingNode(
         fqid=str(resolved.fqid),
         variable_id=resolved.variable_id,
@@ -326,7 +354,9 @@ def _binding_node(resolved: ResolvedVariable) -> BindingNode:
         source_register_text=resolved.source_register_text,
         states=[_state_model(s) for s in resolved.states],
         same_as=[_var_ref_model(r) for r in resolved.same_as],
-        replaced_by=[_var_ref_model(r) for r in resolved.replaced_by],
+        succession_chain=[
+            _variable_chain_edition(e) for e in catalog.variable_chain(resolved.fqid)
+        ],
         related_to=[_related_ref_model(r) for r in resolved.related_to],
         lineage=[_lineage_edge_model(e) for e in resolved.lineage],
         via_same_as=(
@@ -548,7 +578,7 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
     if isinstance(resolved, ResolvedRegister):
         return _register_response(catalog, resolved)
     if isinstance(resolved, ResolvedVariable):
-        return _binding_node(resolved)
+        return _binding_node(catalog, resolved)
     if isinstance(resolved, ResolvedClassification):
         return _classification_node(catalog, resolved)
     # Unreachable: resolve() returns only the four ResolvedEntity arms.

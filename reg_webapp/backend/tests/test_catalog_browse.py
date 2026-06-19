@@ -119,9 +119,54 @@ def test_binding_leaf_embeds_full_record(client):
     ]
     # The same_as edge (kon → rams/syss) is embedded, fqid serialized as a string.
     assert any(ref["fqid"] == "scb/rams/syss" for ref in body["same_as"])
-    # Edge collections are present (possibly empty) — the leaf carries all four.
-    for field in ("replaced_by", "related_to", "lineage"):
+    # Edge collections are present (possibly empty); #582 replaced the immediate
+    # `replaced_by` embed with the full `succession_chain` (asserted in detail in
+    # test_binding_leaf_embeds_full_succession_chain).
+    for field in ("succession_chain", "related_to", "lineage"):
         assert field in body
+
+
+def test_binding_leaf_embeds_full_succession_chain(client):
+    # #582: the binding leaf embeds the FULL variable succession timeline (oldest
+    # first, terminal last) so the browse panel renders every edition synchronously,
+    # superseding the immediate `replaced_by` embed. The fixture wires
+    # kon (2019, "kon→syss") → rams/syss (the live terminal), plus the redirect-test
+    # dead predecessors renamed-head → renamed-mid → syss. The chain spans all four,
+    # anchored on the queried kon (is_self) and ending at the terminal syss
+    # (is_current).
+    resp = client.get("/api/catalog/scb/lisa/kon")
+    assert resp.status_code == 200
+    chain = resp.json()["succession_chain"]
+    assert [(e["register"], e["variable"]) for e in chain] == [
+        ("lisa", "kon"),
+        ("lisa", "renamed-head"),
+        ("lisa", "renamed-mid"),
+        ("rams", "syss"),
+    ]
+    by_var = {e["variable"]: e for e in chain}
+    # The queried edition: is_self, dated, carries its edge's reason (beskrivning).
+    assert by_var["kon"]["is_self"] is True
+    assert by_var["kon"]["is_current"] is False
+    assert by_var["kon"]["effective_year"] == 2019
+    assert by_var["kon"]["reason"] == "kon→syss"
+    assert by_var["kon"]["fqid"] == "scb/lisa/kon"
+    assert by_var["kon"]["name"] == "Kön"
+    # The terminal (live) edition: is_current, no successor-side year/reason.
+    assert by_var["syss"]["is_current"] is True
+    assert by_var["syss"]["is_self"] is False
+    assert by_var["syss"]["effective_year"] is None
+    assert by_var["syss"]["reason"] is None
+    assert by_var["syss"]["fqid"] == "scb/rams/syss"
+    assert by_var["syss"]["name"] == "Sysselsättning"
+    assert sum(e["is_self"] for e in chain) == 1
+    assert sum(e["is_current"] for e in chain) == 1
+    # Dead/renamed predecessors are tolerated by design (#355/#411 — unlike
+    # classifications, NO variable_replaced_by validator forbids them): each carries a
+    # syntactically-valid binding fqid (so a citation 301-redirects to the current
+    # edition) but name=None (no live `variable` row to read).
+    for dead in ("renamed-head", "renamed-mid"):
+        assert by_var[dead]["fqid"] == f"scb/lisa/{dead}"
+        assert by_var[dead]["name"] is None
 
 
 def test_binding_leaf_omits_lineage_warnings(client):

@@ -10,6 +10,7 @@ from .catalog import (
     ResolvedProvider,
     ResolvedRegister,
     ResolvedVariable,
+    VariableEdition,
     VariableRef,
     VariableState,
 )
@@ -79,6 +80,7 @@ __all__ = [
     "ResolvedRegister",
     "ResolvedVariable",
     "search",
+    "VariableEdition",
     "VariableRef",
     "VariableState",
 ]

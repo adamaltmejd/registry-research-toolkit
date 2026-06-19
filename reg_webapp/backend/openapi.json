@@ -43,7 +43,7 @@
         "type": "object"
       },
       "BindingNode": {
-        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call: shared\nmetadata, every state (each tagged with its variant), and the variable-grain\n`same_as` / `replaced_by` / `related_to` / `lineage` edges.\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
+        "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call: shared\nmetadata, every state (each tagged with its variant), the variable-grain\n`same_as` / `related_to` / `lineage` edges, and the full variable\n`succession_chain` (#582).\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
         "properties": {
           "definition": {
             "anyOf": [
@@ -125,13 +125,6 @@
             "title": "Related To",
             "type": "array"
           },
-          "replaced_by": {
-            "items": {
-              "$ref": "#/components/schemas/VariableRefModel"
-            },
-            "title": "Replaced By",
-            "type": "array"
-          },
           "same_as": {
             "items": {
               "$ref": "#/components/schemas/VariableRefModel"
@@ -168,6 +161,13 @@
             "title": "States",
             "type": "array"
           },
+          "succession_chain": {
+            "items": {
+              "$ref": "#/components/schemas/VariableEditionModel"
+            },
+            "title": "Succession Chain",
+            "type": "array"
+          },
           "variable_id": {
             "title": "Variable Id",
             "type": "integer"
@@ -201,7 +201,6 @@
           "source_register_text",
           "states",
           "same_as",
-          "replaced_by",
           "related_to",
           "lineage"
         ],
@@ -2209,6 +2208,97 @@
           }
         },
         "title": "VariableCoverageModel",
+        "type": "object"
+      },
+      "VariableEditionModel": {
+        "description": "One edition in a variable's FULL succession timeline (#582), as embedded on\n`BindingNode.succession_chain`. The variable-grain dual of\n`ClassificationChainEdition`: the browse panel renders the whole chain (oldest\nfirst, terminal last) synchronously from these \u2014 no per-neighbor fetch.\n\nThe `(provider, register, variable)` triple is the load-bearing identity. A chain\nedition may be a DEAD/renamed predecessor with no live `variable` row \u2014 the\n#355/#411 renamed-slug model: variable succession tolerates dead predecessor\neditions by design, and (UNLIKE `ClassificationChainEdition`) no\n`variable_replaced_by` validator forbids it. Such an edition still carries its\n(syntactically-valid) binding `fqid` so a citation 301-redirects to the current\nedition, but its `name` is None (no live row to read); the SPA can render it as a\ndimmed/non-resolving node. `fqid` is None only when the triple is\nmalformed/unresolvable (rendered as plain text, not a link). `effective_year` is\nthe year on the succession edge that names this edition as the successor (None for\nthe terminal). `reason` carries that edge's `beskrivning` (the human transition\nreason \u2014 UNLIKE `ClassificationChainEdition`, whose succession table has no reason\ncolumn). `is_current` flags the terminal (current) edition; `is_self` flags the\nedition the caller queried (resolved to its canonical live triple when the query\nwas a `same_as` alias).\n\nThe `register` field uses the `register_name` Python attribute aliased to\n`register` to avoid the `BaseModel.register` method shadow (see\n`VariableRefModel`).",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.",
+            "title": "Effective Year"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's 3-seg binding FQID. A dead/renamed predecessor (no live variable row \u2014 tolerated by design, #355/#411) still carries a valid fqid that 301-redirects to the current edition; this is None only when the triple is malformed/unresolvable (rendered as plain text, not a link).",
+            "title": "Fqid"
+          },
+          "is_current": {
+            "description": "True for the terminal (current) edition \u2014 no outbound successor.",
+            "title": "Is Current",
+            "type": "boolean"
+          },
+          "is_self": {
+            "description": "True for the edition the caller queried (resolved to its canonical live triple when the query was a same_as alias).",
+            "title": "Is Self",
+            "type": "boolean"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's display name; None for a dead/renamed predecessor with no live variable row (tolerated by design, #355/#411).",
+            "title": "Name"
+          },
+          "provider": {
+            "description": "The edition's provider slug.",
+            "title": "Provider",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The transition reason (the succession edge's `beskrivning`); None for the terminal (no inbound edge).",
+            "title": "Reason"
+          },
+          "register": {
+            "description": "The edition's register slug.",
+            "title": "Register",
+            "type": "string"
+          },
+          "variable": {
+            "description": "The edition's variable slug.",
+            "title": "Variable",
+            "type": "string"
+          }
+        },
+        "required": [
+          "fqid",
+          "provider",
+          "register",
+          "variable",
+          "name",
+          "effective_year",
+          "reason",
+          "is_current",
+          "is_self"
+        ],
+        "title": "VariableEditionModel",
         "type": "object"
       },
       "VariableRefModel": {
