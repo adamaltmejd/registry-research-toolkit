@@ -64,6 +64,7 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT
+from reg_meta_build.relations import _REPLACED_BY_NOTE_VINTAGE_LIFT
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
 # mints into the high band). The global build's minted-id band check enforces
@@ -220,6 +221,7 @@ def validate_built_db(
         _check_sos_stateless_variables(conn, result, tables)
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_classification_replaced_by(conn, result, tables, corpus=corpus)
+        _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -1396,6 +1398,17 @@ def _check_sos_stateless_variables(
 # carry no vintage classifications, so the floor is corpus-gated.
 _CG_MIN_CLASSIFICATION_SUCCESSION_EDGES = 40
 
+# Variable vintage-lift floor (#584, corpus only): the clean tier lifts same-name
+# families (one variable per edition) from `classification_replaced_by` editions to
+# the variable grain, ~32 derived edges on the current corpus (the issue estimated
+# ~53; the conservative bijection — gaps and edition-spanning variables excluded —
+# lands lower). A floor well under the measured count catches a regression that
+# silently stops lifting (classification-binding backfill drift, bijection-guard
+# inversion) without false-failing on legitimate corpus churn (the entangled tier
+# moving in/out). Synthetic builds carry no vintage classifications, so the floor is
+# corpus-gated.
+_MIN_VARIABLE_VINTAGE_LIFT_EDGES = 25
+
 
 def _check_concept_groups(
     conn: sqlite3.Connection,
@@ -1575,6 +1588,93 @@ def _check_classification_replaced_by(
             f"{n_edges} classification succession edge(s) "
             f"(< {_CG_MIN_CLASSIFICATION_SUCCESSION_EDGES}) — vintage-chain "
             "derivation regression?"
+        )
+
+
+def _check_variable_replaced_by_vintage_lift(
+    conn: sqlite3.Connection,
+    result: ValidationResult,
+    tables: set[str],
+    *,
+    corpus: bool,
+) -> None:
+    """#584 derived variable vintage-succession invariants — the clean-tier lift
+    of `classification_replaced_by` editions to the variable grain (rows in
+    `variable_replaced_by` with `note = 'derived:classification_vintage_lift'`).
+
+    Structural (always): every derived edge is directional and non-self
+    (predecessor != successor) and both endpoints resolve to live, slugged
+    variables (a derived edge MUST point at real variables — unlike a curated
+    succession whose predecessor may be dead).
+
+    Corpus (real build only): the clean tier carries >=
+    `_MIN_VARIABLE_VINTAGE_LIFT_EDGES` derived edges, so a pass that silently
+    stops lifting (classification-binding backfill drift, bijection-guard
+    regression) fails the gate. Synthetic builds carry no vintage classifications,
+    so this floor is corpus-gated."""
+    result.section("[variable vintage lift]")
+    if "variable_replaced_by" not in tables:
+        result.fail("variable_replaced_by missing")
+        return
+
+    note = _REPLACED_BY_NOTE_VINTAGE_LIFT
+    self_loops = conn.execute(
+        "SELECT COUNT(*) FROM variable_replaced_by "
+        "WHERE note = ? "
+        "  AND predecessor_provider = successor_provider "
+        "  AND predecessor_register = successor_register "
+        "  AND predecessor_variable = successor_variable",
+        (note,),
+    ).fetchone()[0]
+    if self_loops:
+        result.fail(f"{self_loops} self-loop vintage-lift edge(s)")
+    else:
+        result.ok("no self-loop vintage-lift edges")
+
+    # Both endpoints must resolve to a live, slugged variable (FQID grain).
+    dangling = conn.execute(
+        "SELECT COUNT(*) FROM variable_replaced_by e "
+        "WHERE e.note = ? AND ("
+        "  NOT EXISTS ("
+        "    SELECT 1 FROM variable v "
+        "    JOIN register r ON v.register_id = r.register_id "
+        "    JOIN provider p ON r.provider_id = p.provider_id "
+        "    WHERE p.slug = e.predecessor_provider "
+        "      AND r.slug = e.predecessor_register "
+        "      AND v.slug = e.predecessor_variable"
+        "  ) OR NOT EXISTS ("
+        "    SELECT 1 FROM variable v "
+        "    JOIN register r ON v.register_id = r.register_id "
+        "    JOIN provider p ON r.provider_id = p.provider_id "
+        "    WHERE p.slug = e.successor_provider "
+        "      AND r.slug = e.successor_register "
+        "      AND v.slug = e.successor_variable"
+        "  ))",
+        (note,),
+    ).fetchone()[0]
+    if dangling:
+        result.fail(
+            f"{dangling} vintage-lift edge(s) reference an unknown variable slug"
+        )
+    else:
+        result.ok("vintage-lift edges resolve to live variable slugs")
+
+    n_edges = conn.execute(
+        "SELECT COUNT(*) FROM variable_replaced_by WHERE note = ?", (note,)
+    ).fetchone()[0]
+    if not corpus:
+        result.info(f"{n_edges} variable vintage-lift edge(s)")
+        return
+    if n_edges >= _MIN_VARIABLE_VINTAGE_LIFT_EDGES:
+        result.ok(
+            f"{n_edges} variable vintage-lift edge(s) "
+            f"(>= {_MIN_VARIABLE_VINTAGE_LIFT_EDGES})"
+        )
+    else:
+        result.fail(
+            f"{n_edges} variable vintage-lift edge(s) "
+            f"(< {_MIN_VARIABLE_VINTAGE_LIFT_EDGES}) — vintage-lift derivation "
+            "regression?"
         )
 
 

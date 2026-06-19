@@ -43,6 +43,14 @@ class TestValidateModule:
         assert result.passed, result.failures
         assert "[classification succession]" in result.format_report()
 
+    def test_variable_vintage_lift_section_renders(self, fixture_db: Path):
+        """#584: the variable vintage-lift structural section runs on a fresh
+        synthetic build (corpus=False) — the synthetic corpus carries no vintage
+        classifications, so the section reports 0 edges (info) and passes."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        assert "[variable vintage lift]" in result.format_report()
+
     @staticmethod
     def _seed_classification(
         conn: sqlite3.Connection, short_name: str, slug: str
@@ -91,6 +99,54 @@ class TestValidateModule:
         result = validate_built_db(broken)
         assert not result.passed
         assert any("unknown classification slug" in f for f in result.failures)
+
+    def test_variable_vintage_lift_self_loop_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#584: a derived vintage-lift edge whose predecessor FQID == successor
+        FQID (a self-loop) fails the structural check. Both endpoints point at the
+        SAME live, slugged variable so only the self-loop invariant trips."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # scb/testreg/kon is a real slugged variable in the fixture build.
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note) "
+            "VALUES ('scb', 'testreg', 'kon', 'scb', 'testreg', 'kon', "
+            "2012, 'derived:classification_vintage_lift')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("self-loop vintage-lift edge" in f for f in result.failures)
+
+    def test_variable_vintage_lift_dangling_slug_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#584: a derived vintage-lift edge pointing at a non-existent variable
+        slug fails the structural resolution check (a derived edge MUST point at
+        live, slugged variables — unlike a curated succession)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # Real predecessor (scb/testreg/kon), bogus successor variable slug.
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note) "
+            "VALUES ('scb', 'testreg', 'kon', 'scb', 'testreg', "
+            "'no-such-var-9999', 2012, 'derived:classification_vintage_lift')"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("unknown variable slug" in f for f in result.failures)
 
     def test_missing_value_code_fts_surfaces_failure(
         self, fixture_db: Path, tmp_path: Path

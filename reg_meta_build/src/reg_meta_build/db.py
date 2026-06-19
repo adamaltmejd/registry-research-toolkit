@@ -74,6 +74,7 @@ from .period_family_merges import (
     repo_period_family_merges_path,
 )
 from .relations import (
+    derive_variable_vintage_succession,
     load_relations,
     materialize_curated_replaced_by,
     materialize_related_to,
@@ -3636,6 +3637,40 @@ def materialize(
     # `classification_id` from the provider-blind `classification_candidate` table
     # (fed just above). It UPDATEs the IR-inserted `variable_state` rows unchanged.
     _backfill_state_classifications(conn)
+
+    # Variable vintage succession (#584) — lift `classification_replaced_by`
+    # edition edges (#571) to the variable grain through value-set bindings,
+    # clean tier only (a same-name family that maps 1:1 to editions). Its join
+    # filters `variable_state.classification_id IS NOT NULL`, so it MUST run
+    # after `_backfill_state_classifications` (just above), which tags that
+    # column — running it earlier (e.g. beside `_materialize_replaced_by_edges`)
+    # silently returns zero rows on the real corpus and trips the corpus-gated
+    # floor `_MIN_VARIABLE_VINTAGE_LIFT_EDGES`. The other three predecessors are
+    # all earlier in this function: `populate_variable_slugs` (edge endpoints
+    # read `variable.slug`), `derive_classification_succession` (reads
+    # `classification_replaced_by`), and `_materialize_replaced_by_edges`
+    # (dedups against the curated #375/#440 + auto timeseries_event rows it just
+    # inserted — those WIN on a PK collision via INSERT OR IGNORE). It reads
+    # `variable_state` / `classification` / `classification_replaced_by` /
+    # `variable_replaced_by`, none dropped below. Its count gets its OWN
+    # `row_counts` key rather than folding into `_REPLACED_BY_STAT_KEYS` (pinned
+    # by test_replaced_by_stats_in_manifest) — these rows ARE in
+    # `variable_replaced_by` but on a distinct
+    # `derived:classification_vintage_lift` provenance. Guarded by `skip_slugs`
+    # like the other slug-keyed linkers: under --skip-slugs `variable.slug` is
+    # NULL and `classification_replaced_by` is empty, so it no-ops anyway, but
+    # the explicit guard matches convention.
+    #
+    # NOTE: the corpus-gated floor `_MIN_VARIABLE_VINTAGE_LIFT_EDGES` is the
+    # regression guard for this ordering — synthetic (corpus=False) builds don't
+    # exercise the floor, so the unit tests in test_relations.py (which bypass
+    # `materialize`) can't catch a re-introduced ordering bug.
+    if skip_slugs:
+        _progress("Skipping variable vintage succession lift (skip_slugs=True)")
+    else:
+        row_counts["variable_replaced_by_vintage_lift"] = (
+            derive_variable_vintage_succession(conn, progress=_progress)
+        )
 
     # A2.7 / A4.4e: drop `variable_instance` + its cvid-grained alias staging +
     # the provider-blind `classification_candidate` before ship. Every build-time
