@@ -5,7 +5,6 @@ import {
   type BindingNodeData,
   docSearch,
   getBindingLineageWarnings,
-  getBindingPredecessors,
   getCatalogNode,
   getDoc,
   getDocsForVariable,
@@ -135,13 +134,9 @@ describe("getCatalogNode", () => {
 });
 
 describe("binding sub-endpoint helpers", () => {
-  // Each GETs `/catalog/{encodeFqid}/{suffix}` with no query.
+  // The SPA now fetches only `/lineage_warnings` (succession rides the embedded
+  // `succession_chain`, #582). GETs `/catalog/{encodeFqid}/lineage_warnings`.
   const cases: [(fqidPath: string) => Promise<unknown>, string, string][] = [
-    [
-      getBindingPredecessors,
-      "predecessors",
-      "/api/catalog/scb/lisa/kon/predecessors",
-    ],
     [
       getBindingLineageWarnings,
       "lineage_warnings",
@@ -167,8 +162,8 @@ describe("binding sub-endpoint helpers", () => {
       seen = url;
       return { ok: true, status: 200, json: async () => ({}) };
     });
-    await getBindingPredecessors("scb/lisa/kön");
-    expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n/predecessors");
+    await getBindingLineageWarnings("scb/lisa/kön");
+    expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n/lineage_warnings");
   });
 });
 
