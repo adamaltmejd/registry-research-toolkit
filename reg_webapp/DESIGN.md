@@ -120,16 +120,23 @@ grammar (see reg_meta/DESIGN.md → FQID grammar) at build time, so a variable s
 `states` can't shadow a sub-endpoint. The validate→parse→Catalog-dispatch→Pydantic-map
 flow is factored into reusable helpers.
 
-The suffixed surface is seven **binding-suffix routes** (`/states`, `/predecessors`,
-`/successors`, `/related`, `/lineage`, `/lineage_warnings`, `/dimensions`), each mapping
-1:1 to a `Catalog` accessor and returning a thin `{binding, <list>}` envelope so the SPA
-codegen sees one response type per endpoint; plus one **register sub-resource**
-`/{provider}/{register}/variants` (a FIXED 3-seg shape with a literal `variants` tail —
-explicit `{provider}`/`{register}` segments, NOT an `{fqid:path}` suffix). The suffixed
-routes are binding-only: a non-binding FQID raises reg_meta's `not_a_binding_fqid`
-(EXIT_USAGE) → **422** (a usage error, not a 500); an absent binding → 404. A register
-node's children include a `variants` reference (`VariantsRef`) so the variant browser
-has a stable slot in the discriminated union without the variant being an FQID.
+The suffixed surface has two families declared above the catch-all. First, seven
+**binding-suffix routes** (`/states`, `/predecessors`, `/successors`, `/related`,
+`/lineage`, `/lineage_warnings`, `/dimensions`), each mapping 1:1 to a `Catalog`
+accessor and returning a thin `{binding, <list>}` envelope so the SPA codegen sees one
+response type per endpoint. Second, two **classification-suffix routes** (#571/#578):
+`/classification_predecessors` and `/classification_successors`, which return the
+inbound/outbound succession edges for a classification edition
+(`{classification, <list>}` envelope, analogous to the binding-suffix shape). Plus one
+**register sub-resource** `/{provider}/{register}/variants` (a FIXED 3-seg shape with a
+literal `variants` tail — explicit `{provider}`/`{register}` segments, NOT an
+`{fqid:path}` suffix). The binding-suffix routes are binding-only: a non-binding FQID
+raises reg_meta's `not_a_binding_fqid` (EXIT_USAGE) → **422** (a usage error, not a
+500); an absent binding → 404. The classification-suffix routes require a classification
+FQID: a non-classification or malformed FQID raises `not_a_classification_fqid`
+(EXIT_USAGE) → **422**. A register node's children include a `variants` reference
+(`VariantsRef`) so the variant browser has a stable slot in the discriminated union
+without the variant being an FQID.
 
 **The `?period` query** on the catch-all. On a binding leaf, `?period=...` returns
 `{binding, states: [...]}` — the `resolve_at` subset, **uniform with `/states`** (so
@@ -161,7 +168,7 @@ A truly-unknown slug — no successor edge, or a PROVIDER FQID — re-raises the
 
 The redirect covers all entry points into a dead binding slug (#411): the no-period
 catch-all node path, the `?period` branch (query string preserved, so `?period=2019` /
-`?variant` ride to the terminal), and all seven suffixed sub-endpoints (`/states`,
+`?variant` ride to the terminal), and all seven binding-suffix sub-endpoints (`/states`,
 `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings`,
 `/dimensions`), which redirect to the **same suffix** on the terminal (e.g. a dead slug
 `/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper implements
@@ -172,6 +179,15 @@ inverted `?period` range) and a build-invariant 500 are never turned into redire
 301 is permanent and cache-eligible; the terminal resolution guarantees the redirect
 target stays stable under double renames (see
 `reg_meta/DESIGN.md → resolve_terminal_successor`).
+
+The two **classification-suffix routes** (`/classification_predecessors`,
+`/classification_successors`) are **exempt from the 301-redirect policy**: the reg_meta
+accessors key on the literal edition slug and tolerate dead/retired editions (a renamed
+classification slug still carries its succession edges in the DB), so there is never a
+`fqid_not_found` to redirect. The only error path is a non-classification or malformed
+FQID (→ 422). This is distinct from the catch-all node path and the `?period` branch,
+both of which DO redirect a dead classification slug (via `resolve_terminal_successor`'s
+`classification_replaced_by` walk, added in #571).
 
 **Concept groups (#303).** The register and classification-root responses carry a
 `groups` list (`ConceptGroupModel`, mapped 1:1 from reg_meta's `ConceptGroupSummary` —
@@ -264,12 +280,17 @@ is never fetched.
 `{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
 (`group` literal) carrying its own `total_count` + typed `results`. Today: `registers`,
 `variables` (leaf hits ⧺ folded concept groups), `classifications` (leaf hits ⧺ folded
-vintage groups), and `codes` (#352 — value-label hits annotated with their owning
-variables/classifications). **Docs (#354) join as a NEW arm of the `SearchGroup` union +
-new result models — existing groups are never reshaped.** The SPA must tolerate an
-unknown `group` value (skip it) so a new group can ship before the SPA renders it (the
-same payload-skew tolerance the `?period` additive fields rely on). Each result carries
-its navigable `fqid`; results within a group are pre-sorted by FTS rank.
+classification-succession rows (`type: "classification_succession"`, #571 — a query that
+hits ≥2 editions of the same chain collapses to one
+`ClassificationSuccessionSearchResult` keyed on the terminal edition, carrying the full
+`editions` chain and `matched_count`) ⧺ folded umbrella concept-group rows
+(`type: "group"`, #516 — e.g. `group:sun`)), and `codes` (#352 — value-label hits
+annotated with their owning variables/classifications). **Docs (#354) join as a NEW arm
+of the `SearchGroup` union + new result models — existing groups are never reshaped.**
+The SPA must tolerate an unknown `group` value (skip it) so a new group can ship before
+the SPA renders it (the same payload-skew tolerance the `?period` additive fields rely
+on). Each result carries its navigable `fqid`; results within a group are pre-sorted by
+FTS rank.
 
 - **One reg_meta call per group**: register/variable/classification via the FTS
   `field="description"` path; **codes (#352) via the `field="value", type="value"`
@@ -417,14 +438,15 @@ QUERY PLAN reports `USING COVERING INDEX`).
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
 Every read endpoint (`/api/context`, the `/api/catalog` root + catch-all, the 7
-sub-endpoints) carries `ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and
-a per-route `Cache-Control` (`cache_control_for`) in three tiers: `/api/context`
-revalidates always (see below); fold-bearing reads (`/api/catalog/*` and `/api/search`)
-keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library reads
-(`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
-`If-None-Match` yields a **304** with no body. The pure logic lives in `etag.py`
-(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
-(`ETagMiddleware`) wires it DRY onto every GET read response.
+binding-suffix sub-endpoints, the 2 classification-suffix sub-endpoints) carries
+`ETag: "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` and a per-route
+`Cache-Control` (`cache_control_for`) in three tiers: `/api/context` revalidates always
+(see below); fold-bearing reads (`/api/catalog/*` and `/api/search`) keep
+`public, max-age=60, must-revalidate`; rebuild-stable doc-library reads (`/api/docs/*`)
+keep `public, max-age=86400, must-revalidate`. A matching `If-None-Match` yields a
+**304** with no body. The pure logic lives in `etag.py` (`compute_etag` + `etag_matches` +
+`cache_control_for`); an ASGI middleware (`ETagMiddleware`) wires it DRY onto every GET
+read response.
 
 - **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
   package release), NOT the DB `schema_version` manifest. `steward_id` is
@@ -1099,27 +1121,29 @@ The committed `backend/openapi.json` is the canonical contract; this table is th
 orientation map. All endpoints are under `/api/`; read GETs are edge-cacheable, write
 POSTs are not. Catalog browse paths use FQID segments directly.
 
-  | Method | Path                                          | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-  | ------ | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                                                                                          |
-  | GET    | `/api/catalog`                                | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                           |
-  | GET    | `/api/search`                                 | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible (docs join as a new group). `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                                                                                                                                                                                                                      |
-  | GET    | `/api/docs/search`                            | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                    |
-  | GET    | `/api/docs/doc/{identifier}`                  | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                               |
-  | GET    | `/api/docs/for-variable`                      | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                   |
-  | GET    | `/api/catalog/{fqid}`                         | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding or register slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412); `?period` branch and sub-endpoints also redirect (#411). |
-  | GET    | `/api/catalog/{provider}/{register}/variants` | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/catalog/{fqid}/states`                  | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}/predecessors`            | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                        |
-  | GET    | `/api/catalog/{fqid}/successors`              | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                         |
-  | GET    | `/api/catalog/{fqid}/related`                 | `variable_related_to` edges (sibling-grain variables). Dead/renamed binding 301s to `/related` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                            |
-  | GET    | `/api/catalog/{fqid}/lineage`                 | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}/lineage_warnings`        | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                |
-  | GET    | `/api/catalog/{fqid}/dimensions`              | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                              |
-  | POST   | `/api/project/validate`                       | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                |
-  | POST   | `/api/project/order`                          | Default order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-  | POST   | `/api/bundle`                                 | Build the MONA `.py` bundle from a spec.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-  | POST   | `/api/kit`                                    | Build the downloadable generation kit (`application/zip`: `project_data.json` w/ materialized display names + `project_data.codes.json` + README) from a validated spec; gates on errors (incl. kit-only `panel_inheritance_unresolvable`).                                                                                                                                                                                                                                 |
+  | Method | Path                                              | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+  | ------ | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | GET    | `/api/context`                                    | Deployment identity, branding, build info, catalog-drift warnings.                                                                                                                                                                                                                                                                                                                                                                                                          |
+  | GET    | `/api/catalog`                                    | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                           |
+  | GET    | `/api/search`                                     | Global FTS search → typed result groups (`registers` / `variables` (folded) / `classifications` / `codes` (#352)); extensible (docs join as a new group). `?q=` required, `?limit=` per-group cap, `?type=` scopes to one group (`all` default; #393).                                                                                                                                                                                                                      |
+  | GET    | `/api/docs/search`                                | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                    |
+  | GET    | `/api/docs/doc/{identifier}`                      | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                               |
+  | GET    | `/api/docs/for-variable`                          | "Mentioned in documentation" hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                   |
+  | GET    | `/api/catalog/{fqid}`                             | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding or register slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412); `?period` branch and sub-endpoints also redirect (#411). |
+  | GET    | `/api/catalog/{provider}/{register}/variants`     | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+  | GET    | `/api/catalog/{fqid}/states`                      | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                  |
+  | GET    | `/api/catalog/{fqid}/predecessors`                | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                        |
+  | GET    | `/api/catalog/{fqid}/successors`                  | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                         |
+  | GET    | `/api/catalog/{fqid}/related`                     | `variable_related_to` edges (sibling-grain variables). Dead/renamed binding 301s to `/related` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                            |
+  | GET    | `/api/catalog/{fqid}/lineage`                     | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                  |
+  | GET    | `/api/catalog/{fqid}/lineage_warnings`            | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                |
+  | GET    | `/api/catalog/{fqid}/dimensions`                  | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                              |
+  | GET    | `/api/catalog/{fqid}/classification_predecessors` | Inbound classification-succession edges — editions this classification edition replaced (#571). Classification FQID only (non-classification → 422). Dead editions are NOT 404: the accessor tolerates retired slugs; no 301 redirect is issued.                                                                                                                                                                                                                            |
+  | GET    | `/api/catalog/{fqid}/classification_successors`   | Outbound classification-succession edges — editions that replaced this classification edition (#571). Classification FQID only (non-classification → 422). Same no-redirect policy as `/classification_predecessors`.                                                                                                                                                                                                                                                       |
+  | POST   | `/api/project/validate`                           | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                |
+  | POST   | `/api/project/order`                              | Default order-export CSV download.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+  | POST   | `/api/bundle`                                     | Build the MONA `.py` bundle from a spec.                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+  | POST   | `/api/kit`                                        | Build the downloadable generation kit (`application/zip`: `project_data.json` w/ materialized display names + `project_data.codes.json` + README) from a validated spec; gates on errors (incl. kit-only `panel_inheritance_unresolvable`).                                                                                                                                                                                                                                 |
 
 **Order-export CSV columns** (the v1 default; fixed order is the contract):
 `provider,register,variant,variable,representation,period,display_name` — one row per
