@@ -360,8 +360,9 @@ class ClassificationEdition:
     a *malformed* slug (a lower-level slug-grammar concern, also build-prevented;
     `_class_ref_fqid` mirrors `ClassificationRef.fqid`'s nullability); `name` comes
     from the live row. `effective_year` is the year on the
-    `classification_replaced_by` edge that names this edition as `successor_slug`
-    (None for the terminal, which is no edge's successor). `is_current` marks the
+    `classification_replaced_by` edge that names this edition as `predecessor_slug`
+    — i.e. the year this edition was superseded by its successor (None for the
+    terminal, which has no outbound edge). `is_current` marks the
     terminal (head) edition — the one with no outbound successor; `is_self` marks
     the edition the caller queried (resolved to its canonical live slug when the
     query was a `same_as` alias)."""
@@ -398,8 +399,9 @@ class VariableEdition:
     permits a dead predecessor.
 
     `effective_year` is the year on the `variable_replaced_by` edge that names this
-    edition as the successor (None for the terminal, which is no edge's successor).
-    `reason` carries that edge's `beskrivning` (the human transition reason) —
+    edition as the predecessor — i.e. the year this edition was superseded by its
+    successor (None for the terminal, which has no outbound edge). `reason` carries
+    that edge's `beskrivning` (the human transition reason) —
     UNLIKE `ClassificationEdition`, which has no reason column on its succession
     table (its edges carry `note` provenance instead); the variable grain mirrors
     how `VariableRef` carries `reason`. `is_current` marks the terminal (head)
@@ -1698,9 +1700,9 @@ class Catalog:
             )
             for triple, (year, reason) in edge_by_triple.items()
         ]
-        # Oldest first; the terminal (current) sorts LAST regardless of year (it
-        # carries no successor-side year). Undated predecessors sort after dated ones
-        # but before the terminal; the triple is the stable tiebreak.
+        # Oldest first; the terminal (current) sorts LAST regardless of year (it has
+        # no outbound edge, so it carries no year). Undated predecessors sort after
+        # dated ones but before the terminal; the triple is the stable tiebreak.
         editions.sort(
             key=lambda e: (
                 e.is_current,
@@ -1716,10 +1718,11 @@ class Catalog:
     ) -> dict[tuple[str, str, str], tuple[int | None, str | None]]:
         """Every edition triple in the chain ending at `terminal` → its
         `(effective_year, beskrivning)` from the `variable_replaced_by` edge that
-        names it as the successor. The terminal is no edge's successor, so it gets
-        `(None, None)`. Predecessor-BFS up the successor side from the terminal (via
-        `idx_variable_replaced_by_successor`), with a `seen` cycle guard — the
-        variable-grain dual of `_classification_chain_years`."""
+        names it as the predecessor — i.e. the year this edition was superseded by
+        its successor. The terminal has no outbound edge (is no edge's predecessor),
+        so it gets `(None, None)`. Predecessor-BFS up the successor side from the
+        terminal (via `idx_variable_replaced_by_successor`), with a `seen` cycle
+        guard — the variable-grain dual of `_classification_chain_years`."""
         edge_by_triple: dict[tuple[str, str, str], tuple[int | None, str | None]] = {
             terminal: (None, None)
         }
@@ -1848,9 +1851,9 @@ class Catalog:
             )
             for slug, year in year_by_slug.items()
         ]
-        # Oldest first; the terminal (current) sorts LAST regardless of year (it
-        # carries no successor-side year). Undated predecessors sort after dated
-        # ones but before the terminal; slug is the stable tiebreak.
+        # Oldest first; the terminal (current) sorts LAST regardless of year (it has
+        # no outbound edge, so it carries no year). Undated predecessors sort after
+        # dated ones but before the terminal; slug is the stable tiebreak.
         editions.sort(
             key=lambda e: (
                 e.is_current,
@@ -1880,9 +1883,10 @@ class Catalog:
     def _classification_chain_years(self, terminal_slug: str) -> dict[str, int | None]:
         """Every edition slug in the chain ending at `terminal_slug` → its
         `effective_year` (the year on the `classification_replaced_by` edge that
-        names it as `successor_slug`). The terminal is no edge's successor, so it
-        gets None. Predecessor-BFS up the successor side from the terminal, with a
-        `seen` cycle guard."""
+        names it as `predecessor_slug` — i.e. the year this edition was superseded by
+        its successor). The terminal has no outbound edge (is no edge's predecessor),
+        so it gets None. Predecessor-BFS up the successor side from the terminal, with
+        a `seen` cycle guard."""
         year_by_slug: dict[str, int | None] = {terminal_slug: None}
         seen = {terminal_slug}
         frontier = [terminal_slug]

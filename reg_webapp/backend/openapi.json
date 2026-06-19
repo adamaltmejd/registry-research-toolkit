@@ -232,7 +232,7 @@
         "type": "object"
       },
       "ClassificationChainEdition": {
-        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the successor (None for\nthe terminal). `is_current` flags the terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
+        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the predecessor \u2014 i.e. the\nyear it was superseded by its successor (None for the terminal, which has no\noutbound edge). `is_current` flags the terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -243,7 +243,7 @@
                 "type": "null"
               }
             ],
-            "description": "The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.",
+            "description": "The year on the succession edge naming this edition as the predecessor \u2014 i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.",
             "title": "Effective Year"
           },
           "fqid": {
@@ -309,7 +309,7 @@
                 "type": "null"
               }
             ],
-            "description": "The edition's effective year; None for the terminal (head) edition, which carries no successor-side year.",
+            "description": "The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.",
             "title": "Effective Year"
           },
           "fqid": {
@@ -2211,7 +2211,7 @@
         "type": "object"
       },
       "VariableEditionModel": {
-        "description": "One edition in a variable's FULL succession timeline (#582), as embedded on\n`BindingNode.succession_chain`. The variable-grain dual of\n`ClassificationChainEdition`: the browse panel renders the whole chain (oldest\nfirst, terminal last) synchronously from these \u2014 no per-neighbor fetch.\n\nThe `(provider, register, variable)` triple is the load-bearing identity. A chain\nedition may be a DEAD/renamed predecessor with no live `variable` row \u2014 the\n#355/#411 renamed-slug model: variable succession tolerates dead predecessor\neditions by design, and (UNLIKE `ClassificationChainEdition`) no\n`variable_replaced_by` validator forbids it. Such an edition still carries its\n(syntactically-valid) binding `fqid` so a citation 301-redirects to the current\nedition, but its `name` is None (no live row to read); the SPA can render it as a\ndimmed/non-resolving node. `fqid` is None only when the triple is\nmalformed/unresolvable (rendered as plain text, not a link). `effective_year` is\nthe year on the succession edge that names this edition as the successor (None for\nthe terminal). `reason` carries that edge's `beskrivning` (the human transition\nreason \u2014 UNLIKE `ClassificationChainEdition`, whose succession table has no reason\ncolumn). `is_current` flags the terminal (current) edition; `is_self` flags the\nedition the caller queried (resolved to its canonical live triple when the query\nwas a `same_as` alias).\n\nThe `register` field uses the `register_name` Python attribute aliased to\n`register` to avoid the `BaseModel.register` method shadow (see\n`VariableRefModel`).",
+        "description": "One edition in a variable's FULL succession timeline (#582), as embedded on\n`BindingNode.succession_chain`. The variable-grain dual of\n`ClassificationChainEdition`: the browse panel renders the whole chain (oldest\nfirst, terminal last) synchronously from these \u2014 no per-neighbor fetch.\n\nThe `(provider, register, variable)` triple is the load-bearing identity. A chain\nedition may be a DEAD/renamed predecessor with no live `variable` row \u2014 the\n#355/#411 renamed-slug model: variable succession tolerates dead predecessor\neditions by design, and (UNLIKE `ClassificationChainEdition`) no\n`variable_replaced_by` validator forbids it. Such an edition still carries its\n(syntactically-valid) binding `fqid` so a citation 301-redirects to the current\nedition, but its `name` is None (no live row to read); the SPA can render it as a\ndimmed/non-resolving node. `fqid` is None only when the triple is\nmalformed/unresolvable (rendered as plain text, not a link). `effective_year` is\nthe year on the succession edge that names this edition as the predecessor \u2014 i.e.\nthe year it was superseded by its successor (None for the terminal, which has no\noutbound edge). `reason` carries that edge's `beskrivning` (the human transition\nreason \u2014 UNLIKE `ClassificationChainEdition`, whose succession table has no reason\ncolumn). `is_current` flags the terminal (current) edition; `is_self` flags the\nedition the caller queried (resolved to its canonical live triple when the query\nwas a `same_as` alias).\n\nThe `register` field uses the `register_name` Python attribute aliased to\n`register` to avoid the `BaseModel.register` method shadow (see\n`VariableRefModel`).",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -2222,7 +2222,7 @@
                 "type": "null"
               }
             ],
-            "description": "The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.",
+            "description": "The year on the succession edge naming this edition as the predecessor \u2014 i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.",
             "title": "Effective Year"
           },
           "fqid": {
@@ -2273,7 +2273,7 @@
                 "type": "null"
               }
             ],
-            "description": "The transition reason (the succession edge's `beskrivning`); None for the terminal (no inbound edge).",
+            "description": "The transition reason (the succession edge's `beskrivning`); None for the terminal (no outbound edge).",
             "title": "Reason"
           },
           "register": {

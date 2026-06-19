@@ -242,7 +242,6 @@ export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
 // SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
 // from a browsable node by `isCatalogNode` at the fetch boundary.
 export type StatesResponse = Schemas["StatesResponse"];
-export type PredecessorsResponse = Schemas["PredecessorsResponse"];
 export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 

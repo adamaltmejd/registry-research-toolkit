@@ -586,8 +586,9 @@ export interface components {
          *     live (it fails on any `classification_replaced_by` edge whose endpoint has no
          *     live row), so `fqid` is None only when the slug is malformed/unresolvable (the
          *     SPA renders such an edition as plain text, not a link). `effective_year` is the
-         *     year on the succession edge that names this edition as the successor (None for
-         *     the terminal). `is_current` flags the terminal (current) edition; `is_self`
+         *     year on the succession edge that names this edition as the predecessor — i.e. the
+         *     year it was superseded by its successor (None for the terminal, which has no
+         *     outbound edge). `is_current` flags the terminal (current) edition; `is_self`
          *     flags the edition the caller queried (resolved to its canonical live slug when
          *     the query was a `same_as` alias). A dedicated model (NOT the search
          *     `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
@@ -596,7 +597,7 @@ export interface components {
         ClassificationChainEdition: {
             /**
              * Effective Year
-             * @description The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.
+             * @description The year on the succession edge naming this edition as the predecessor — i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.
              */
             effective_year: number | null;
             /**
@@ -637,7 +638,7 @@ export interface components {
         ClassificationEditionModel: {
             /**
              * Effective Year
-             * @description The edition's effective year; None for the terminal (head) edition, which carries no successor-side year.
+             * @description The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.
              */
             effective_year?: number | null;
             /**
@@ -1588,8 +1589,9 @@ export interface components {
          *     edition, but its `name` is None (no live row to read); the SPA can render it as a
          *     dimmed/non-resolving node. `fqid` is None only when the triple is
          *     malformed/unresolvable (rendered as plain text, not a link). `effective_year` is
-         *     the year on the succession edge that names this edition as the successor (None for
-         *     the terminal). `reason` carries that edge's `beskrivning` (the human transition
+         *     the year on the succession edge that names this edition as the predecessor — i.e.
+         *     the year it was superseded by its successor (None for the terminal, which has no
+         *     outbound edge). `reason` carries that edge's `beskrivning` (the human transition
          *     reason — UNLIKE `ClassificationChainEdition`, whose succession table has no reason
          *     column). `is_current` flags the terminal (current) edition; `is_self` flags the
          *     edition the caller queried (resolved to its canonical live triple when the query
@@ -1602,7 +1604,7 @@ export interface components {
         VariableEditionModel: {
             /**
              * Effective Year
-             * @description The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.
+             * @description The year on the succession edge naming this edition as the predecessor — i.e. the year it was superseded by its successor; None for the terminal (head) edition, which has no outbound edge.
              */
             effective_year: number | null;
             /**
@@ -1632,7 +1634,7 @@ export interface components {
             provider: string;
             /**
              * Reason
-             * @description The transition reason (the succession edge's `beskrivning`); None for the terminal (no inbound edge).
+             * @description The transition reason (the succession edge's `beskrivning`); None for the terminal (no outbound edge).
              */
             reason: string | null;
             /**
