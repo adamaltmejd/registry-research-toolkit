@@ -152,6 +152,34 @@ class RegisterNode(BaseModel):
     coverage: RegisterCoverageModel | None = None
 
 
+class ClassificationRefModel(BaseModel):
+    """A classification-grain succession edge endpoint (#571) — the
+    classification analogue of `VariableRefModel`. A classification FQID is
+    2-segment (`class/<slug>`), so the edge endpoint is a single edition slug, NOT
+    a provider/register/variable triple (so no `provider`/`register`/`reason`
+    fields). `slug` is the load-bearing identity (succession references the EXACT
+    edition slug); `fqid` is None on a malformed slug — succession tolerates dead
+    predecessor editions by design. `note` carries build provenance (e.g.
+    `derived:vintage_chain`) rather than a human transition reason."""
+
+    fqid: str | None = Field(
+        description="The neighbor edition's 2-seg classification FQID, or None for "
+        "a dead/malformed edition slug."
+    )
+    slug: str = Field(
+        description="The neighbor edition's literal slug (the "
+        "load-bearing succession identity)."
+    )
+    effective_year: int | None = Field(
+        default=None,
+        description="The successor edition's effective year, None when unknown.",
+    )
+    note: str | None = Field(
+        default=None,
+        description="Build provenance for the edge (e.g. 'derived:vintage_chain').",
+    )
+
+
 class ClassificationNode(BaseModel):
     """A classification leaf (`class/<slug>`, 2 seg)."""
 
@@ -163,6 +191,10 @@ class ClassificationNode(BaseModel):
     # `classification_same_as` edge rather than directly (see reg_meta/DESIGN.md →
     # Classifications); the hop path as FQIDs.
     via_same_as: list[str] | None = None
+    # #571: outbound classification succession (editions that replaced this one);
+    # mirrors `ResolvedVariable.replaced_by` on the binding leaf. Empty for a
+    # terminal/current edition with no successor.
+    replaced_by: list[ClassificationRefModel] = Field(default_factory=list)
 
 
 class BindingChild(BaseModel):
@@ -467,6 +499,25 @@ class SuccessorsResponse(BaseModel):
     successors: list[VariableRefModel]
 
 
+class ClassificationPredecessorsResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/classification_predecessors` (#571) — inbound
+    classification succession (the editions this edition replaced). `classification`
+    echoes the queried 2-seg classification FQID (mirrors the variable routes'
+    `binding` echo)."""
+
+    classification: str
+    predecessors: list[ClassificationRefModel]
+
+
+class ClassificationSuccessorsResponse(BaseModel):
+    """`GET /api/catalog/{fqid}/classification_successors` (#571) — outbound
+    classification succession (the editions that replaced this edition).
+    `classification` echoes the queried 2-seg classification FQID."""
+
+    classification: str
+    successors: list[ClassificationRefModel]
+
+
 class DimensionsResponse(BaseModel):
     """`GET /api/catalog/{fqid}/dimensions` (#489) — the concept-group
     dimension memberships containing this binding's variable (the
@@ -622,6 +673,56 @@ class ClassificationSearchResult(BaseModel):
     concept_group_label: str | None = None
 
 
+class ClassificationEditionModel(BaseModel):
+    """One edition of a folded classification succession chain (#571): a vintage
+    of the same classification (e.g. `sun1996`, `sun2000`). Carried by
+    `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
+    `effective_year`. `fqid` is None for a dead edition with no live row."""
+
+    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
+    fqid: str | None = Field(
+        default=None,
+        description="The edition's 2-seg classification FQID, None for a dead edition.",
+    )
+    name: str | None = Field(
+        default=None, description="The edition's display name, None when un-hydrated."
+    )
+    effective_year: int | None = Field(
+        default=None,
+        description="The edition's effective year; None for the terminal (head) "
+        "edition, which carries no successor-side year.",
+    )
+
+
+class ClassificationSuccessionSearchResult(BaseModel):
+    """A folded classification-succession row (#571): a query hit ≥2 distinct
+    editions of one classification chain (the vintages, e.g. SUN 1996/2000), so they
+    collapse to a single result keyed on the TERMINAL (current) edition. `editions`
+    is the full chain (terminal-first, descending year) so the SPA can render "this
+    classification has editions …"; `matched_count` is how many editions the query
+    actually hit. A succession row is NOT itself a concept group — the terminal
+    `fqid` is the navigable target."""
+
+    type: Literal["classification_succession"] = "classification_succession"
+    fqid: str | None = Field(
+        description="The terminal (current) edition's classification FQID — the "
+        "navigable target. None for a dead chain end with no live row."
+    )
+    short_name: str | None = Field(
+        default=None, description="The terminal edition's short name (e.g. 'SUN')."
+    )
+    name: str | None = Field(
+        default=None, description="The terminal edition's display name."
+    )
+    editions: list[ClassificationEditionModel] = Field(
+        default_factory=list,
+        description="The full edition chain, terminal-first then descending year.",
+    )
+    matched_count: int = Field(
+        default=0, description="How many editions in the chain the query hit."
+    )
+
+
 class ConceptGroupSearchResult(BaseModel):
     """A folded concept-group row (#322): ≥2 sibling members matched OR the
     group's own label matched, so the family collapses to one result. `kind` is
@@ -652,7 +753,10 @@ VariableSearchItem = Annotated[
     VariableSearchResult | ConceptGroupSearchResult, Field(discriminator="type")
 ]
 ClassificationSearchItem = Annotated[
-    ClassificationSearchResult | ConceptGroupSearchResult, Field(discriminator="type")
+    ClassificationSearchResult
+    | ClassificationSuccessionSearchResult
+    | ConceptGroupSearchResult,
+    Field(discriminator="type"),
 ]
 
 
@@ -675,7 +779,9 @@ class VariableSearchGroup(BaseModel):
 
 
 class ClassificationSearchGroup(BaseModel):
-    """The `classifications` result group (leaf hits ⧺ folded vintage groups)."""
+    """The `classifications` result group: leaf hits ⧺ folded classification
+    succession rows (#571, edition chains) ⧺ folded umbrella concept-group rows
+    (#516, e.g. `group:sun`)."""
 
     group: Literal["classifications"] = "classifications"
     total_count: int

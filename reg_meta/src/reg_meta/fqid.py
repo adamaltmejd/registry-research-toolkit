@@ -59,13 +59,16 @@ DEFAULT_VARIANT_SLUG = "_default"
 # `reg_webapp/backend/src/reg_webapp/routes/catalog.py` (pinned in
 # `reg_webapp/backend/tests/test_boot.py` as `_ROUTES_BEFORE_CATCH_ALL`).
 #
-# The 7 binding-suffix routes `/catalog/{fqid:path}/<suffix>` greedy-match ANY
+# The binding-suffix routes `/catalog/{fqid:path}/<suffix>` greedy-match ANY
 # fqid path, so `<suffix>` shadows a 3-seg variable leaf (`scb/lisa/states`), a
 # 2-seg register (`scb/states`), AND a classification (`class/states`) — reserved
-# in all three slots. (`lineage_warnings` carries an underscore, so the slug
-# grammar already rejects it before this check runs; it's listed anyway to keep
-# the set a faithful mirror of the route list and to stay correct if the grammar
-# ever loosened.) `dimensions` (#489) is the concept-group membership sub-resource.
+# in all three slots. (`lineage_warnings` and the `classification_*` succession
+# suffixes carry underscores, so the slug grammar already rejects them before this
+# check runs; they're listed anyway to keep the set a faithful mirror of the route
+# list and to stay correct if the grammar ever loosened.) `dimensions` (#489) is
+# the concept-group membership sub-resource; `classification_predecessors` /
+# `classification_successors` (#571) are the classification-grain succession
+# sub-resources.
 RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
     {
         "states",
@@ -75,6 +78,8 @@ RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
         "lineage",
         "lineage_warnings",
         "dimensions",
+        "classification_predecessors",
+        "classification_successors",
     }
 )
 # The literal `/catalog/{provider}/{register}/variants` register sub-resource

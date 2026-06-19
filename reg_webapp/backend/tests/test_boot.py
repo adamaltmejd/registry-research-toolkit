@@ -29,18 +29,21 @@ def test_startup_rejects_incompatible_schema(mismatched_db):
 
 _CATCH_ALL = "/api/catalog/{fqid:path}"
 
-# Router ordering (A5.2a-ii, see DESIGN.md → Catalog router structure): the 8
+# Router ordering (A5.2a-ii, see DESIGN.md → Catalog router structure): the
 # suffixed / sub-resource routes that MUST be declared
 # BEFORE the `{fqid:path}` catch-all — Starlette matches in declaration order and
 # the `{fqid:path}` converter greedy-consumes any suffix into `fqid`, so any of
-# these declared after the catch-all would never fire. Seven are `{fqid:path}/...`
-# binding suffixes; the eighth is the fixed-shape `/{provider}/{register}/
-# variants` register sub-resource.
+# these declared after the catch-all would never fire. All but the last are
+# `{fqid:path}/...` binding suffixes (incl. the #571 classification-succession
+# pair); the final one is the fixed-shape `/{provider}/{register}/variants`
+# register sub-resource.
 _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",
     "/api/catalog/{fqid:path}/successors",
+    "/api/catalog/{fqid:path}/classification_predecessors",
+    "/api/catalog/{fqid:path}/classification_successors",
     "/api/catalog/{fqid:path}/dimensions",
     "/api/catalog/{fqid:path}/related",
     "/api/catalog/{fqid:path}/lineage",
