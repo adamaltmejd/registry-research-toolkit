@@ -137,31 +137,38 @@ classification leaf node carries the **full edition chain** inline as `edition_c
 (`list[ClassificationChainEdition]`, mapped 1:1 from reg_meta's
 `Catalog.classification_chain`), so the browse panel renders the entire succession
 timeline synchronously — no per-neighbor fetch. The server-side walk resolves a
-`classification_same_as` alias to its canonical edition, walks the WHOLE chain (terminal +
-all transitive predecessors), orders it oldest→newest (terminal/current last), and marks
-each edition `is_current`/`is_self`. Every edition is a live `classification` row — the
-build validator guarantees succession editions are live (it fails on any
-`classification_replaced_by` edge whose endpoint has no live row), so `fqid` is None
-only on a malformed/unresolvable slug (rendered as plain text, not a link). The earlier
-immediate-neighbor routes (`/classification_predecessors`, `/classification_successors`)
-were retired — the embedded full chain subsumes them. (reg_meta's
-`Catalog.classification_successors`/`classification_predecessors` accessors remain as
-public API and back the chain walk.)
+`classification_same_as` alias to its canonical edition, then walks the QUERIED
+edition's own path — forward to the terminal via the deterministic-first successor and
+backward to the root via the deterministic-first predecessor — ordering it oldest→newest
+BY TRAVERSAL (terminal/current last; the `effective_year` is display-only, so an
+undated/NULL edge no longer inverts the order), and marks each edition
+`is_current`/`is_self`. Anchoring on the queried path means a merge sibling on a
+DIFFERENT inbound branch is never included (#588). Every edition is a live
+`classification` row — the build validator guarantees succession editions are live (it
+fails on any `classification_replaced_by` edge whose endpoint has no live row), so
+`fqid` is None only on a malformed/unresolvable slug (rendered as plain text, not a
+link). The earlier immediate-neighbor routes (`/classification_predecessors`,
+`/classification_successors`) were retired — the embedded full chain subsumes them.
+(reg_meta's `Catalog.classification_successors`/`classification_predecessors` accessors
+remain as public API and back the chain walk.)
 
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
 variable succession chain** inline as `succession_chain` (`list[VariableEditionModel]`,
 mapped 1:1 from reg_meta's `Catalog.variable_chain`) — the variable-grain dual of the
 classification `edition_chain`. The server-side walk same_as-canonicalizes the queried
-binding, walks the WHOLE chain (terminal + all transitive predecessors over
-`variable_replaced_by`), orders it oldest→newest (terminal/current last), and marks each
-edition `is_current`/`is_self`. Each edition also carries the transition `reason` (the
-edge's `beskrivning`) — unlike the classification grain, whose succession table has no
-reason column. UNLIKE classifications, a chain edition may be a **dead/renamed
-predecessor** with no live `variable` row — the #355/#411 renamed-slug model: variable
-succession tolerates dead predecessors by design, and there is NO `variable_replaced_by`
-validator forbidding it (the classification grain DOES have such a validator). A dead
-edition still carries a syntactically-valid binding `fqid` so a citation 301-redirects
-to the current edition, but its `name` is None (no live row); `fqid` is None only on a
+binding, then walks the QUERIED binding's own path over `variable_replaced_by` (forward
+to the terminal via the deterministic-first successor, backward to the root via the
+deterministic-first predecessor), ordering it oldest→newest BY TRAVERSAL
+(terminal/current last; `effective_year` is display-only, robust to undated edges), and
+marks each edition `is_current`/`is_self`; a merge sibling on a different inbound branch
+is not included (#588). Each edition also carries the transition `reason` (the edge's
+`beskrivning`) — unlike the classification grain, whose succession table has no reason
+column. UNLIKE classifications, a chain edition may be a **dead/renamed predecessor**
+with no live `variable` row — the #355/#411 renamed-slug model: variable succession
+tolerates dead predecessors by design, and there is NO `variable_replaced_by` validator
+forbidding it (the classification grain DOES have such a validator). A dead edition
+still carries a syntactically-valid binding `fqid` so a citation 301-redirects to the
+current edition, but its `name` is None (no live row); `fqid` is None only on a
 malformed/unresolvable triple. On the corpus today all 12 edges are live, but the model
 permits a dead predecessor. Also unlike classifications, embedding the chain does
 **NOT** retire the immediate-neighbor routes: the `/predecessors` / `/successors`

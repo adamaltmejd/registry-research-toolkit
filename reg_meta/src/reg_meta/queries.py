@@ -1441,9 +1441,10 @@ def _classification_succession_row(
 ) -> dict[str, Any]:
     """One `type: "classification_succession"` row for a collapsed edition chain
     (#571): the terminal (current) edition's identity + the full edition list
-    (terminal-first, then descending `effective_year`) + the leaf hits it folded
-    (`matched`). Keeps the terminal's `_classification_id` so the downstream
-    umbrella fold (`_fold_concept_groups`, #516) can subsume it into `group:sun`.
+    (terminal-first by BFS depth — see `_classification_editions`) + the leaf hits
+    it folded (`matched`). Keeps the terminal's `_classification_id` so the
+    downstream umbrella fold (`_fold_concept_groups`, #516) can subsume it into
+    `group:sun`.
     `fts_rank` is the best (lowest) matched-hit rank so it sorts where its hits
     would have."""
     terminal = conn.execute(
@@ -1470,17 +1471,31 @@ def _classification_editions(
     conn: sqlite3.Connection, terminal_slug: str
 ) -> list[dict[str, Any]]:
     """The full edition list of a succession chain ending at `terminal_slug`,
-    terminal-first then descending `effective_year` (#571). Walks the predecessor
-    side of `classification_replaced_by` transitively from the terminal, hydrating
-    each edition's `name`/`effective_year` (None when the edition has no live
-    `classification` row — a dead predecessor)."""
+    ordered terminal-first by BFS DEPTH from the terminal (#571/#588). Walks the
+    predecessor side of `classification_replaced_by` transitively from the terminal,
+    hydrating each edition's `name`/`effective_year` (None when the edition has no
+    live `classification` row — a dead predecessor).
+
+    This is the TERMINAL-CENTRIC fold (no queried node — it collapses a whole family
+    onto its terminal), so collect-all-ancestors is correct here, unlike
+    `Catalog.classification_chain` which anchors on the queried path. Only the
+    ORDERING differs: ordering by BFS depth (terminal = depth 0, its predecessors
+    depth 1, …) is robust to undated/NULL `effective_year` edges (the old
+    descending-`effective_year` sort inverted on them), and is behavior-preserving
+    for the linear+dated corpus (depth-ascending == terminal-first-newest-to-oldest).
+    `effective_year` stays as a display field on each edition, no longer the sort
+    key."""
     # The terminal carries no `effective_year` of its own (it's the head, not a
     # successor in any edge); predecessors carry the year on the edge that names
-    # them as `successor_slug`.
+    # them as `successor_slug`. `depth_by_slug` records each slug's BFS level from
+    # the terminal — the order key (the walk order, not the date).
     year_by_slug: dict[str, int | None] = {terminal_slug: None}
+    depth_by_slug: dict[str, int] = {terminal_slug: 0}
     seen = {terminal_slug}
     frontier = [terminal_slug]
+    depth = 0
     while frontier:
+        depth += 1
         nxt: list[str] = []
         placeholders = ",".join("?" * len(frontier))
         rows = conn.execute(
@@ -1494,6 +1509,7 @@ def _classification_editions(
                 continue
             seen.add(pred)
             year_by_slug[pred] = row["effective_year"]
+            depth_by_slug[pred] = depth
             nxt.append(pred)
         frontier = nxt
 
@@ -1515,15 +1531,9 @@ def _classification_editions(
         }
         for slug, year in year_by_slug.items()
     ]
-    # Terminal first; then predecessors by descending effective_year (None last),
-    # slug as a stable tiebreak.
-    editions.sort(
-        key=lambda e: (
-            e["slug"] != terminal_slug,
-            -(e["effective_year"] or 0),
-            e["slug"],
-        )
-    )
+    # Terminal-first by BFS depth (depth 0 = terminal); slug a stable tiebreak among
+    # same-depth predecessors. Date-independent → robust to undated edges.
+    editions.sort(key=lambda e: (depth_by_slug[e["slug"]], e["slug"]))
     return editions
 
 
