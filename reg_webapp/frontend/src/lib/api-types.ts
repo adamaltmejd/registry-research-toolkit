@@ -86,6 +86,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/{fqid}/classification_predecessors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Classification Predecessors
+         * @description Editions this classification edition replaced (inbound succession, #571).
+         *     A non-classification FQID is a 422 (`not_a_classification_fqid`); a dead/retired
+         *     edition is NOT a 404 — the accessor tolerates it and returns its edges.
+         */
+        get: operations["get_classification_predecessors_api_catalog__fqid__classification_predecessors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{fqid}/classification_successors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Classification Successors
+         * @description Editions that replaced this classification edition (outbound succession,
+         *     #571). A non-classification FQID is a 422; a dead/retired edition is NOT a 404
+         *     — the accessor tolerates it and returns its edges.
+         */
+        get: operations["get_classification_successors_api_catalog__fqid__classification_successors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/{fqid}/dimensions": {
         parameters: {
             query?: never;
@@ -574,6 +618,35 @@ export interface components {
             path: string;
         };
         /**
+         * ClassificationEditionModel
+         * @description One edition of a folded classification succession chain (#571): a vintage
+         *     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
+         *     `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
+         *     `effective_year`. `fqid` is None for a dead edition with no live row.
+         */
+        ClassificationEditionModel: {
+            /**
+             * Effective Year
+             * @description The edition's effective year; None for the terminal (head) edition, which carries no successor-side year.
+             */
+            effective_year?: number | null;
+            /**
+             * Fqid
+             * @description The edition's 2-seg classification FQID, None for a dead edition.
+             */
+            fqid?: string | null;
+            /**
+             * Name
+             * @description The edition's display name, None when un-hydrated.
+             */
+            name?: string | null;
+            /**
+             * Slug
+             * @description The edition's literal slug (e.g. 'sun2000').
+             */
+            slug: string;
+        };
+        /**
          * ClassificationNode
          * @description A classification leaf (`class/<slug>`, 2 seg).
          */
@@ -587,10 +660,58 @@ export interface components {
             kind: "classification";
             /** Name */
             name: string;
+            /** Replaced By */
+            replaced_by?: components["schemas"]["ClassificationRefModel"][];
             /** Short Name */
             short_name: string;
             /** Via Same As */
             via_same_as?: string[] | null;
+        };
+        /**
+         * ClassificationPredecessorsResponse
+         * @description `GET /api/catalog/{fqid}/classification_predecessors` (#571) — inbound
+         *     classification succession (the editions this edition replaced). `classification`
+         *     echoes the queried 2-seg classification FQID (mirrors the variable routes'
+         *     `binding` echo).
+         */
+        ClassificationPredecessorsResponse: {
+            /** Classification */
+            classification: string;
+            /** Predecessors */
+            predecessors: components["schemas"]["ClassificationRefModel"][];
+        };
+        /**
+         * ClassificationRefModel
+         * @description A classification-grain succession edge endpoint (#571) — the
+         *     classification analogue of `VariableRefModel`. A classification FQID is
+         *     2-segment (`class/<slug>`), so the edge endpoint is a single edition slug, NOT
+         *     a provider/register/variable triple (so no `provider`/`register`/`reason`
+         *     fields). `slug` is the load-bearing identity (succession references the EXACT
+         *     edition slug); `fqid` is None on a malformed slug — succession tolerates dead
+         *     predecessor editions by design. `note` carries build provenance (e.g.
+         *     `derived:vintage_chain`) rather than a human transition reason.
+         */
+        ClassificationRefModel: {
+            /**
+             * Effective Year
+             * @description The successor edition's effective year, None when unknown.
+             */
+            effective_year?: number | null;
+            /**
+             * Fqid
+             * @description The neighbor edition's 2-seg classification FQID, or None for a dead/malformed edition slug.
+             */
+            fqid: string | null;
+            /**
+             * Note
+             * @description Build provenance for the edge (e.g. 'derived:vintage_chain').
+             */
+            note?: string | null;
+            /**
+             * Slug
+             * @description The neighbor edition's literal slug (the load-bearing succession identity).
+             */
+            slug: string;
         };
         /**
          * ClassificationRootNode
@@ -649,7 +770,9 @@ export interface components {
         };
         /**
          * ClassificationSearchGroup
-         * @description The `classifications` result group (leaf hits ⧺ folded vintage groups).
+         * @description The `classifications` result group: leaf hits ⧺ folded classification
+         *     succession rows (#571, edition chains) ⧺ folded umbrella concept-group rows
+         *     (#516, e.g. `group:sun`).
          */
         ClassificationSearchGroup: {
             /**
@@ -658,7 +781,7 @@ export interface components {
              */
             group: "classifications";
             /** Results */
-            results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
+            results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
             /** Total Count */
             total_count: number;
         };
@@ -687,6 +810,61 @@ export interface components {
              * @enum {string}
              */
             type: "classification";
+        };
+        /**
+         * ClassificationSuccessionSearchResult
+         * @description A folded classification-succession row (#571): a query hit ≥2 distinct
+         *     editions of one classification chain (the vintages, e.g. SUN 1996/2000), so they
+         *     collapse to a single result keyed on the TERMINAL (current) edition. `editions`
+         *     is the full chain (terminal-first, descending year) so the SPA can render "this
+         *     classification has editions …"; `matched_count` is how many editions the query
+         *     actually hit. A succession row is NOT itself a concept group — the terminal
+         *     `fqid` is the navigable target.
+         */
+        ClassificationSuccessionSearchResult: {
+            /**
+             * Editions
+             * @description The full edition chain, terminal-first then descending year.
+             */
+            editions?: components["schemas"]["ClassificationEditionModel"][];
+            /**
+             * Fqid
+             * @description The terminal (current) edition's classification FQID — the navigable target. None for a dead chain end with no live row.
+             */
+            fqid: string | null;
+            /**
+             * Matched Count
+             * @description How many editions in the chain the query hit.
+             * @default 0
+             */
+            matched_count: number;
+            /**
+             * Name
+             * @description The terminal edition's display name.
+             */
+            name?: string | null;
+            /**
+             * Short Name
+             * @description The terminal edition's short name (e.g. 'SUN').
+             */
+            short_name?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "classification_succession";
+        };
+        /**
+         * ClassificationSuccessorsResponse
+         * @description `GET /api/catalog/{fqid}/classification_successors` (#571) — outbound
+         *     classification succession (the editions that replaced this edition).
+         *     `classification` echoes the queried 2-seg classification FQID.
+         */
+        ClassificationSuccessorsResponse: {
+            /** Classification */
+            classification: string;
+            /** Successors */
+            successors: components["schemas"]["ClassificationRefModel"][];
         };
         /**
          * CodeOwnerClassification
@@ -1699,6 +1877,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"]) | components["schemas"]["StatesResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_classification_predecessors_api_catalog__fqid__classification_predecessors_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fqid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassificationPredecessorsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_classification_successors_api_catalog__fqid__classification_successors_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fqid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassificationSuccessorsResponse"];
                 };
             };
             /** @description Validation Error */

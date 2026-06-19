@@ -238,6 +238,19 @@ export type PredecessorsResponse = Schemas["PredecessorsResponse"];
 export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
+/** A classification-grain succession edge endpoint (#571) — the classification
+ * analogue of `VariableRefModel`. A classification FQID is 2-seg
+ * (`class/<slug>`), so the endpoint is a single edition `slug` (the load-bearing
+ * identity); `fqid` is null for a dead/malformed edition the chain tolerates. */
+export type ClassificationRefModel = Schemas["ClassificationRefModel"];
+export type ClassificationPredecessorsResponse =
+  Schemas["ClassificationPredecessorsResponse"];
+export type ClassificationSuccessorsResponse =
+  Schemas["ClassificationSuccessorsResponse"];
+/** The resolved classification leaf the catch-all returns — carries its embedded
+ * outbound succession (`replaced_by`, the editions that replaced it). */
+export type ClassificationNodeData = Schemas["ClassificationNode"];
+
 /** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
  * the catch-all's other payloads (a `?period` `StatesResponse`, or a SUB-ENDPOINT
  * `VariantsResponse`/… on a `.../states` path) do NOT. Positive `"kind" in x`
@@ -326,6 +339,31 @@ export function getBindingDimensions(
   );
 }
 
+// ── Classification succession sub-endpoints (#571) ───────────────────────────
+// A classification leaf EMBEDS its outbound `replaced_by` (the editions that
+// replaced it, toward the current edition), so the panel fetches only the INBOUND
+// side — `/classification_predecessors` (the editions THIS edition replaced) — to
+// compose the full edition chain. The successors endpoint exists server-side for
+// symmetry but isn't fetched by the SPA (the embedded `replaced_by` already has
+// the outbound arm); a helper is exported anyway for completeness, mirroring the
+// binding pair.
+
+export function getClassificationPredecessors(
+  fqidPath: string,
+): Promise<ClassificationPredecessorsResponse> {
+  return apiGet<ClassificationPredecessorsResponse>(
+    `/catalog/${encodeFqid(fqidPath)}/classification_predecessors`,
+  );
+}
+
+export function getClassificationSuccessors(
+  fqidPath: string,
+): Promise<ClassificationSuccessorsResponse> {
+  return apiGet<ClassificationSuccessorsResponse>(
+    `/catalog/${encodeFqid(fqidPath)}/classification_successors`,
+  );
+}
+
 // ── Project write surface (A5.2b-ii) ────────────────────────────────────────
 // The three POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
 // Project-write surface (routes/project.py + routes/bundle.py)). Each takes the WHOLE
@@ -384,6 +422,13 @@ export type CodeSearchGroup = Schemas["CodeSearchGroup"];
 export type RegisterSearchResult = Schemas["RegisterSearchResult"];
 export type VariableSearchResult = Schemas["VariableSearchResult"];
 export type ClassificationSearchResult = Schemas["ClassificationSearchResult"];
+/** A folded classification-succession row (#571): a query hit ≥2 editions of one
+ * chain, collapsed onto the TERMINAL (current) edition. `editions` is the full
+ * chain (terminal-first, descending year); the terminal `fqid` is the navigable
+ * target (NOT a concept group). */
+export type ClassificationSuccessionSearchResult =
+  Schemas["ClassificationSuccessionSearchResult"];
+export type ClassificationEditionModel = Schemas["ClassificationEditionModel"];
 export type ConceptGroupSearchResult = Schemas["ConceptGroupSearchResult"];
 export type CodeSearchResult = Schemas["CodeSearchResult"];
 export type CodeOwnerVariable = Schemas["CodeOwnerVariable"];

@@ -7,6 +7,8 @@ import {
   getBindingLineageWarnings,
   getBindingPredecessors,
   getCatalogNode,
+  getClassificationPredecessors,
+  getClassificationSuccessors,
   getDoc,
   getDocsForVariable,
   isCatalogNode,
@@ -170,6 +172,34 @@ describe("binding sub-endpoint helpers", () => {
     await getBindingPredecessors("scb/lisa/kön");
     expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n/predecessors");
   });
+});
+
+describe("classification succession sub-endpoint helpers (#571)", () => {
+  // Each GETs `/catalog/{encodeFqid}/{suffix}` on a 2-seg classification FQID.
+  const cases: [(fqidPath: string) => Promise<unknown>, string, string][] = [
+    [
+      getClassificationPredecessors,
+      "classification_predecessors",
+      "/api/catalog/class/sun2020/classification_predecessors",
+    ],
+    [
+      getClassificationSuccessors,
+      "classification_successors",
+      "/api/catalog/class/sun2020/classification_successors",
+    ],
+  ];
+
+  for (const [fn, name, expected] of cases) {
+    it(`GETs the ${name} sub-endpoint URL`, async () => {
+      let seen = "";
+      stubFetch(async (url) => {
+        seen = url;
+        return { ok: true, status: 200, json: async () => ({}) };
+      });
+      await fn("class/sun2020");
+      expect(seen).toBe(expected);
+    });
+  }
 });
 
 describe("validateProject", () => {
