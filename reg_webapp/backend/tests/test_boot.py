@@ -34,16 +34,15 @@ _CATCH_ALL = "/api/catalog/{fqid:path}"
 # BEFORE the `{fqid:path}` catch-all — Starlette matches in declaration order and
 # the `{fqid:path}` converter greedy-consumes any suffix into `fqid`, so any of
 # these declared after the catch-all would never fire. All but the last are
-# `{fqid:path}/...` binding suffixes (incl. the #571 classification-succession
-# pair); the final one is the fixed-shape `/{provider}/{register}/variants`
-# register sub-resource.
+# `{fqid:path}/...` binding suffixes; the final one is the fixed-shape
+# `/{provider}/{register}/variants` register sub-resource. (#571's classification
+# succession is no longer a sub-resource — the full edition chain is embedded on
+# the classification node as `edition_chain`.)
 _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",
     "/api/catalog/{fqid:path}/successors",
-    "/api/catalog/{fqid:path}/classification_predecessors",
-    "/api/catalog/{fqid:path}/classification_successors",
     "/api/catalog/{fqid:path}/dimensions",
     "/api/catalog/{fqid:path}/related",
     "/api/catalog/{fqid:path}/lineage",

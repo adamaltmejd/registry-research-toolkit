@@ -232,6 +232,72 @@
         "title": "CatalogDriftWarning",
         "type": "object"
       },
+      "ClassificationChainEdition": {
+        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. `fqid`/`name` are None for a DEAD edition\n\u2014 an edge slug with no live `classification` row (a renamed/retired vintage),\nwhich the SPA renders as plain text, not a link. `effective_year` is the year\non the succession edge that names this edition as the successor (None for the\nterminal). `is_current` flags the terminal (current) edition; `is_self` flags\nthe edition the caller queried (resolved to its canonical live slug when the\nquery was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
+        "properties": {
+          "effective_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The year on the succession edge naming this edition as the successor; None for the terminal (head) edition.",
+            "title": "Effective Year"
+          },
+          "fqid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's 2-seg classification FQID, or None for a dead edition with no live row (rendered as plain text, not a link).",
+            "title": "Fqid"
+          },
+          "is_current": {
+            "description": "True for the terminal (current) edition \u2014 no outbound successor.",
+            "title": "Is Current",
+            "type": "boolean"
+          },
+          "is_self": {
+            "description": "True for the edition the caller queried (resolved to its canonical live slug when the query was a same_as alias).",
+            "title": "Is Self",
+            "type": "boolean"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The edition's display name, None for a dead edition.",
+            "title": "Name"
+          },
+          "slug": {
+            "description": "The edition's literal slug (e.g. 'sun2000').",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "fqid",
+          "name",
+          "effective_year",
+          "is_current",
+          "is_self"
+        ],
+        "title": "ClassificationChainEdition",
+        "type": "object"
+      },
       "ClassificationEditionModel": {
         "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. `fqid` is None for a dead edition with no live row.",
         "properties": {
@@ -286,6 +352,13 @@
       "ClassificationNode": {
         "description": "A classification leaf (`class/<slug>`, 2 seg).",
         "properties": {
+          "edition_chain": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationChainEdition"
+            },
+            "title": "Edition Chain",
+            "type": "array"
+          },
           "fqid": {
             "title": "Fqid",
             "type": "string"
@@ -299,13 +372,6 @@
           "name": {
             "title": "Name",
             "type": "string"
-          },
-          "replaced_by": {
-            "items": {
-              "$ref": "#/components/schemas/ClassificationRefModel"
-            },
-            "title": "Replaced By",
-            "type": "array"
           },
           "short_name": {
             "title": "Short Name",
@@ -332,80 +398,6 @@
           "name"
         ],
         "title": "ClassificationNode",
-        "type": "object"
-      },
-      "ClassificationPredecessorsResponse": {
-        "description": "`GET /api/catalog/{fqid}/classification_predecessors` (#571) \u2014 inbound\nclassification succession (the editions this edition replaced). `classification`\nechoes the queried 2-seg classification FQID (mirrors the variable routes'\n`binding` echo).",
-        "properties": {
-          "classification": {
-            "title": "Classification",
-            "type": "string"
-          },
-          "predecessors": {
-            "items": {
-              "$ref": "#/components/schemas/ClassificationRefModel"
-            },
-            "title": "Predecessors",
-            "type": "array"
-          }
-        },
-        "required": [
-          "classification",
-          "predecessors"
-        ],
-        "title": "ClassificationPredecessorsResponse",
-        "type": "object"
-      },
-      "ClassificationRefModel": {
-        "description": "A classification-grain succession edge endpoint (#571) \u2014 the\nclassification analogue of `VariableRefModel`. A classification FQID is\n2-segment (`class/<slug>`), so the edge endpoint is a single edition slug, NOT\na provider/register/variable triple (so no `provider`/`register`/`reason`\nfields). `slug` is the load-bearing identity (succession references the EXACT\nedition slug); `fqid` is None on a malformed slug \u2014 succession tolerates dead\npredecessor editions by design. `note` carries build provenance (e.g.\n`derived:vintage_chain`) rather than a human transition reason.",
-        "properties": {
-          "effective_year": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The successor edition's effective year, None when unknown.",
-            "title": "Effective Year"
-          },
-          "fqid": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "The neighbor edition's 2-seg classification FQID, or None for a dead/malformed edition slug.",
-            "title": "Fqid"
-          },
-          "note": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Build provenance for the edge (e.g. 'derived:vintage_chain').",
-            "title": "Note"
-          },
-          "slug": {
-            "description": "The neighbor edition's literal slug (the load-bearing succession identity).",
-            "title": "Slug",
-            "type": "string"
-          }
-        },
-        "required": [
-          "fqid",
-          "slug"
-        ],
-        "title": "ClassificationRefModel",
         "type": "object"
       },
       "ClassificationRootNode": {
@@ -653,28 +645,6 @@
           "fqid"
         ],
         "title": "ClassificationSuccessionSearchResult",
-        "type": "object"
-      },
-      "ClassificationSuccessorsResponse": {
-        "description": "`GET /api/catalog/{fqid}/classification_successors` (#571) \u2014 outbound\nclassification succession (the editions that replaced this edition).\n`classification` echoes the queried 2-seg classification FQID.",
-        "properties": {
-          "classification": {
-            "title": "Classification",
-            "type": "string"
-          },
-          "successors": {
-            "items": {
-              "$ref": "#/components/schemas/ClassificationRefModel"
-            },
-            "title": "Successors",
-            "type": "array"
-          }
-        },
-        "required": [
-          "classification",
-          "successors"
-        ],
-        "title": "ClassificationSuccessorsResponse",
         "type": "object"
       },
       "CodeOwnerClassification": {
@@ -2869,86 +2839,6 @@
           }
         },
         "summary": "Get Catalog Node"
-      }
-    },
-    "/api/catalog/{fqid}/classification_predecessors": {
-      "get": {
-        "description": "Editions this classification edition replaced (inbound succession, #571).\nA non-classification FQID is a 422 (`not_a_classification_fqid`); a dead/retired\nedition is NOT a 404 \u2014 the accessor tolerates it and returns its edges.",
-        "operationId": "get_classification_predecessors_api_catalog__fqid__classification_predecessors_get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "fqid",
-            "required": true,
-            "schema": {
-              "title": "Fqid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClassificationPredecessorsResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Classification Predecessors"
-      }
-    },
-    "/api/catalog/{fqid}/classification_successors": {
-      "get": {
-        "description": "Editions that replaced this classification edition (outbound succession,\n#571). A non-classification FQID is a 422; a dead/retired edition is NOT a 404\n\u2014 the accessor tolerates it and returns its edges.",
-        "operationId": "get_classification_successors_api_catalog__fqid__classification_successors_get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "fqid",
-            "required": true,
-            "schema": {
-              "title": "Fqid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClassificationSuccessorsResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Classification Successors"
       }
     },
     "/api/catalog/{fqid}/dimensions": {

@@ -75,12 +75,10 @@ from reg_webapp.models import (
     BindingChild,
     BindingNode,
     CatalogNode,
+    ClassificationChainEdition,
     ClassificationNode,
-    ClassificationPredecessorsResponse,
-    ClassificationRefModel,
     ClassificationRootNode,
     ClassificationRootResponse,
-    ClassificationSuccessorsResponse,
     ConceptGroupMemberModel,
     ConceptGroupModel,
     DimensionsResponse,
@@ -339,19 +337,27 @@ def _binding_node(resolved: ResolvedVariable) -> BindingNode:
     )
 
 
-def _classification_ref_model(ref) -> ClassificationRefModel:
-    """Map a `reg_meta.ClassificationRef` (#571) 1:1 onto the wire model — the
-    classification analogue of `_var_ref_model`. `fqid` is best-effort (None on a
-    dead/malformed edition slug); `slug` is the load-bearing identity."""
-    return ClassificationRefModel(
-        fqid=str(ref.fqid) if ref.fqid is not None else None,
-        slug=ref.slug,
-        effective_year=ref.effective_year,
-        note=ref.note,
+def _classification_chain_edition(edition) -> ClassificationChainEdition:
+    """Map a `reg_meta.ClassificationEdition` (#571) 1:1 onto the wire model — one
+    node of the full succession timeline. `fqid` is None for a dead edition (an
+    edge slug with no live row), which the SPA renders as plain text, not a link."""
+    return ClassificationChainEdition(
+        slug=edition.slug,
+        fqid=str(edition.fqid) if edition.fqid is not None else None,
+        name=edition.name,
+        effective_year=edition.effective_year,
+        is_current=edition.is_current,
+        is_self=edition.is_self,
     )
 
 
-def _classification_node(resolved: ResolvedClassification) -> ClassificationNode:
+def _classification_node(
+    catalog: Catalog, resolved: ResolvedClassification
+) -> ClassificationNode:
+    """Map a resolved classification onto its leaf node, embedding the FULL
+    succession edition chain (#571) so the browse panel renders the whole timeline
+    synchronously — no per-neighbor fetch. The chain resolves `same_as` and marks
+    dead editions server-side (`Catalog.classification_chain`)."""
     return ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,
@@ -361,7 +367,10 @@ def _classification_node(resolved: ResolvedClassification) -> ClassificationNode
             if resolved.via_same_as is not None
             else None
         ),
-        replaced_by=[_classification_ref_model(r) for r in resolved.replaced_by],
+        edition_chain=[
+            _classification_chain_edition(e)
+            for e in catalog.classification_chain(resolved.fqid)
+        ],
     )
 
 
@@ -537,7 +546,7 @@ def _resolve_to_node(catalog: Catalog, fqid: Fqid) -> CatalogNode:
     if isinstance(resolved, ResolvedVariable):
         return _binding_node(resolved)
     if isinstance(resolved, ResolvedClassification):
-        return _classification_node(resolved)
+        return _classification_node(catalog, resolved)
     # Unreachable: resolve() returns only the four ResolvedEntity arms.
     raise HTTPException(
         status_code=500, detail="unknown catalog entity"
@@ -600,19 +609,6 @@ def _parsed_binding(validated: ValidatedFqidPath) -> Fqid:
     sub-endpoints, which only accept binding FQIDs (reg_meta's `_parse_binding`
     raises the 422-mapped `not_a_binding_fqid` for a non-binding kind). The path is
     a bare FQID — the `@version` pin is retired, so there is none to reject here."""
-    try:
-        return parse(validated.fqid)
-    except FqidError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
-
-
-def _parsed_classification(validated: ValidatedFqidPath) -> Fqid:
-    """Parse a validated path into an Fqid for the classification-succession
-    sub-endpoints (#571). DB-free — a grammar/arity FqidError maps to 422 before any
-    connection opens. The kind-check (non-classification → 422) is the accessor's
-    job: reg_meta's `_parse_classification` raises the 422-mapped
-    `not_a_classification_fqid`, so a structurally-valid non-classification FQID (a
-    register/binding) flows through here and 422s at the accessor, not here."""
     try:
         return parse(validated.fqid)
     except FqidError as exc:
@@ -746,62 +742,6 @@ def get_binding_successors(
             return _redirect_or_4xx(catalog, parsed, exc, request, suffix="/successors")
     return SuccessorsResponse(
         binding=str(parsed), successors=[_var_ref_model(r) for r in refs]
-    )
-
-
-# ── Classification succession sub-endpoints (#571) — ALSO above the catch-all.
-# UNLIKE the variable succession routes these do NOT 301-redirect a dead slug: the
-# reg_meta accessors key on the LITERAL edition slug and TOLERATE a dead/retired
-# edition (a renamed slug still carries its edges), so there is no `fqid_not_found`
-# to redirect — only a genuinely non-classification / malformed FQID is a 4xx
-# (`not_a_classification_fqid` → EXIT_USAGE → 422, mapped by `_http_4xx_from_regmeta`).
-@router.get(
-    "/catalog/{fqid:path}/classification_predecessors",
-    response_model=ClassificationPredecessorsResponse,
-)
-def get_classification_predecessors(
-    request: Request,
-    validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> ClassificationPredecessorsResponse:
-    """Editions this classification edition replaced (inbound succession, #571).
-    A non-classification FQID is a 422 (`not_a_classification_fqid`); a dead/retired
-    edition is NOT a 404 — the accessor tolerates it and returns its edges."""
-    parsed = _parsed_classification(validated)
-    with _catalog_conn(request) as conn:
-        catalog = Catalog(conn)
-        try:
-            refs = catalog.classification_predecessors(parsed)
-        except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)  # raises 422 / 404 / re-raises 500
-            raise  # unreachable — _http_4xx_from_regmeta always raises
-    return ClassificationPredecessorsResponse(
-        classification=str(parsed),
-        predecessors=[_classification_ref_model(r) for r in refs],
-    )
-
-
-@router.get(
-    "/catalog/{fqid:path}/classification_successors",
-    response_model=ClassificationSuccessorsResponse,
-)
-def get_classification_successors(
-    request: Request,
-    validated: ValidatedFqidPath = Depends(_validated_fqid),
-) -> ClassificationSuccessorsResponse:
-    """Editions that replaced this classification edition (outbound succession,
-    #571). A non-classification FQID is a 422; a dead/retired edition is NOT a 404
-    — the accessor tolerates it and returns its edges."""
-    parsed = _parsed_classification(validated)
-    with _catalog_conn(request) as conn:
-        catalog = Catalog(conn)
-        try:
-            refs = catalog.classification_successors(parsed)
-        except RegMetaError as exc:
-            _http_4xx_from_regmeta(exc)  # raises 422 / 404 / re-raises 500
-            raise  # unreachable — _http_4xx_from_regmeta always raises
-    return ClassificationSuccessorsResponse(
-        classification=str(parsed),
-        successors=[_classification_ref_model(r) for r in refs],
     )
 
 

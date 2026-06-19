@@ -200,6 +200,28 @@ def test_classification_leaf_resolves(client):
     assert body["short_name"] == "SUN2020"
 
 
+def test_classification_leaf_embeds_full_edition_chain(client):
+    # #571: the classification leaf embeds the FULL succession timeline (oldest
+    # first, terminal last) so the browse panel renders every edition synchronously.
+    # The fixture seeds sun1996 (DEAD, edge-only) → sun2000 → sun2020 (live terminal).
+    resp = client.get("/api/catalog/class/sun2020")
+    assert resp.status_code == 200
+    chain = resp.json()["edition_chain"]
+    assert [e["slug"] for e in chain] == ["sun1996", "sun2000", "sun2020"]
+    by_slug = {e["slug"]: e for e in chain}
+    # Dead edition: no live row → fqid/name None, rendered as plain text.
+    assert by_slug["sun1996"]["fqid"] is None
+    assert by_slug["sun1996"]["name"] is None
+    assert by_slug["sun1996"]["effective_year"] == 2000
+    # Live terminal == the queried edition: is_current AND is_self.
+    assert by_slug["sun2020"]["fqid"] == "class/sun2020"
+    assert by_slug["sun2020"]["is_current"] is True
+    assert by_slug["sun2020"]["is_self"] is True
+    assert by_slug["sun2020"]["effective_year"] is None
+    assert by_slug["sun2000"]["is_current"] is False
+    assert by_slug["sun2000"]["is_self"] is False
+
+
 def test_missing_provider_returns_404(client):
     resp = client.get("/api/catalog/nope")
     assert resp.status_code == 404

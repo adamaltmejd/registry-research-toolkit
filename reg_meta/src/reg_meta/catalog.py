@@ -31,7 +31,7 @@ from .fqid import (
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable
+    from collections.abc import Callable, Iterable
     from pathlib import Path
 
 # Succession-chain tuple grain (variable triple, register pair, or classification
@@ -343,6 +343,31 @@ class ClassificationRef:
     slug: str
     effective_year: int | None = None
     note: str | None = None
+
+
+@dataclass(frozen=True)
+class ClassificationEdition:
+    """One edition in a classification succession chain (#571), as returned by
+    `Catalog.classification_chain`. Unlike `ClassificationRef` (a single edge
+    endpoint), this is a fully-hydrated node in the WHOLE chain — the webapp
+    browse panel renders the complete edition timeline from a list of these.
+
+    `slug` is the load-bearing identity (succession references the exact edition
+    slug). `fqid`/`name` are None for a DEAD edition — a slug that appears in
+    `classification_replaced_by` but has no live `classification` row (a renamed
+    or retired vintage); the webapp renders a dead edition as plain text, not a
+    link. `effective_year` is the year on the `classification_replaced_by` edge
+    that names this edition as `successor_slug` (None for the terminal, which is
+    no edge's successor). `is_current` marks the terminal (head) edition — the one
+    with no outbound successor; `is_self` marks the edition the caller queried
+    (resolved to its canonical live slug when the query was a `same_as` alias)."""
+
+    slug: str
+    fqid: Fqid | None
+    name: str | None
+    effective_year: int | None
+    is_current: bool
+    is_self: bool
 
 
 @dataclass(frozen=True)
@@ -1583,6 +1608,130 @@ class Catalog:
         return list(
             self._classification_predecessor_edges(self._parse_classification(fqid))
         )
+
+    def classification_chain(self, fqid: str | Fqid) -> list[ClassificationEdition]:
+        """The FULL edition timeline of a classification's succession chain (#571),
+        oldest first, terminal (current) last — what the webapp browse panel
+        renders to show "this classification has N editions" instead of only the
+        immediate neighbor.
+
+        Three things the immediate-neighbor accessors don't do:
+
+          - same_as canonicalization: the queried slug may be a curated
+            `classification_same_as` alias (see DESIGN.md → Classifications). We
+            resolve it to the canonical LIVE edition's real slug, so the chain (and
+            `is_self`) is anchored on the canonical edition, not the alias. A slug
+            that resolves to no live row falls back to itself — succession tolerates
+            dead slugs.
+          - full walk: from the canonical slug we find the terminal (the chain end
+            with no outbound successor), then collect ALL predecessors transitively
+            from the terminal, assembling every edition in the chain.
+          - dead-edition marking: a slug that has a `classification_replaced_by`
+            edge but no live `classification` row is a DEAD edition — `fqid`/`name`
+            None, rendered as plain text.
+
+        A standalone classification with no succession edges returns a single
+        edition (`is_current` and `is_self` both True). The predecessor walk lives
+        here rather than reusing `queries._classification_editions` because
+        `queries` imports `catalog` (catalog is the lower layer — importing back
+        would be circular); the terminal walk reuses
+        `_first_classification_successor_slug` + `_walk_terminal`."""
+        queried = self._parse_classification(fqid)
+        canonical = self._canonical_classification_slug(queried)
+        # Terminal = the chain head. `_walk_terminal` returns None when the start
+        # has no outbound edge (it IS the terminal), so fall back to canonical.
+        walked = self._walk_terminal(
+            (canonical,), self._first_classification_successor_slug
+        )
+        terminal = walked[0] if walked is not None else canonical
+        year_by_slug = self._classification_chain_years(terminal)
+        name_by_slug = self._classification_chain_names(year_by_slug.keys())
+        editions = [
+            ClassificationEdition(
+                slug=slug,
+                fqid=(self._class_ref_fqid(slug) if slug in name_by_slug else None),
+                name=name_by_slug.get(slug),
+                effective_year=year,
+                is_current=(slug == terminal),
+                is_self=(slug == canonical),
+            )
+            for slug, year in year_by_slug.items()
+        ]
+        # Oldest first; the terminal (current) sorts LAST regardless of year (it
+        # carries no successor-side year). Undated predecessors sort after dated
+        # ones but before the terminal; slug is the stable tiebreak.
+        editions.sort(
+            key=lambda e: (
+                e.is_current,
+                e.effective_year is None,
+                e.effective_year or 0,
+                e.slug,
+            )
+        )
+        return editions
+
+    def _canonical_classification_slug(self, slug: str) -> str:
+        """Resolve a (possibly `same_as`-aliased) classification slug to the
+        canonical LIVE edition's real slug. `_resolve_classification` follows the
+        same_as graph to a live `classification` row whose id we re-read the slug
+        from; an unresolvable slug falls back to itself (succession tolerates dead
+        slugs)."""
+        try:
+            resolved = self._resolve_classification(Fqid.classification_fqid(slug))
+        except RegMetaError:
+            return slug
+        row = self._conn.execute(
+            "SELECT slug FROM classification WHERE id = ?",
+            (resolved.classification_id,),
+        ).fetchone()
+        return row["slug"] if row and row["slug"] is not None else slug
+
+    def _classification_chain_years(self, terminal_slug: str) -> dict[str, int | None]:
+        """Every edition slug in the chain ending at `terminal_slug` → its
+        `effective_year` (the year on the `classification_replaced_by` edge that
+        names it as `successor_slug`). The terminal is no edge's successor, so it
+        gets None. Predecessor-BFS up the successor side from the terminal, with a
+        `seen` cycle guard."""
+        year_by_slug: dict[str, int | None] = {terminal_slug: None}
+        seen = {terminal_slug}
+        frontier = [terminal_slug]
+        while frontier:
+            placeholders = ",".join("?" * len(frontier))
+            rows = self._conn.execute(
+                "SELECT predecessor_slug, effective_year "
+                "FROM classification_replaced_by "
+                f"WHERE successor_slug IN ({placeholders})",
+                frontier,
+            ).fetchall()
+            nxt: list[str] = []
+            for row in rows:
+                pred = row["predecessor_slug"]
+                if pred in seen:
+                    continue
+                seen.add(pred)
+                year_by_slug[pred] = row["effective_year"]
+                nxt.append(pred)
+            frontier = nxt
+        return year_by_slug
+
+    def _classification_chain_names(
+        self, slugs: Iterable[str]
+    ) -> dict[str, str | None]:
+        """Map each chain slug to its live `classification.name`. A slug ABSENT
+        from the result is a DEAD edition (an edge slug with no live row) — the
+        caller reads "absent" as dead, so a present-but-NULL name stays in the
+        map."""
+        slug_list = list(slugs)
+        if not slug_list:
+            return {}
+        placeholders = ",".join("?" * len(slug_list))
+        return {
+            row["slug"]: row["name"]
+            for row in self._conn.execute(
+                f"SELECT slug, name FROM classification WHERE slug IN ({placeholders})",
+                slug_list,
+            ).fetchall()
+        }
 
     def dimensions(self, fqid: str | Fqid) -> list[ConceptGroupSummary]:
         """see DESIGN.md → Catalog API surface: the concept-group dimension

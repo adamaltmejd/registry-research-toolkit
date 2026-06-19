@@ -446,6 +446,21 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
             ),
         ],
     )
+    # #571: a classification SUCCESSION chain sun1996 → sun2000 → sun2020 (distinct
+    # from the vintage concept-group above — that's a presentation fold, this is the
+    # edition timeline the leaf node embeds as `edition_chain`). sun1996 is a DEAD
+    # predecessor (edge-only, no live `classification` row); sun2000/sun2020 are
+    # live (sun2020 is the terminal). Exercises the full-chain walk + dead-edition
+    # marking through the real `/api/catalog/class/sun2020` route.
+    src.executemany(
+        "INSERT INTO classification_replaced_by "
+        "(predecessor_slug, successor_slug, effective_year, note) "
+        "VALUES (?, ?, ?, 'derived:test')",
+        [
+            ("sun1996", "sun2000", 2000),
+            ("sun2000", "sun2020", 2020),
+        ],
+    )
 
 
 def _seed_same_as_alias_to_grouped(src: sqlite3.Connection) -> None:

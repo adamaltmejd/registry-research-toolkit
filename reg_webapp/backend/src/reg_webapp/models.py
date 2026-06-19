@@ -152,31 +152,40 @@ class RegisterNode(BaseModel):
     coverage: RegisterCoverageModel | None = None
 
 
-class ClassificationRefModel(BaseModel):
-    """A classification-grain succession edge endpoint (#571) — the
-    classification analogue of `VariableRefModel`. A classification FQID is
-    2-segment (`class/<slug>`), so the edge endpoint is a single edition slug, NOT
-    a provider/register/variable triple (so no `provider`/`register`/`reason`
-    fields). `slug` is the load-bearing identity (succession references the EXACT
-    edition slug); `fqid` is None on a malformed slug — succession tolerates dead
-    predecessor editions by design. `note` carries build provenance (e.g.
-    `derived:vintage_chain`) rather than a human transition reason."""
+class ClassificationChainEdition(BaseModel):
+    """One edition in a classification's FULL succession timeline (#571), as
+    embedded on `ClassificationNode.edition_chain`. The browse panel renders the
+    whole chain (oldest first, terminal last) synchronously from these — no
+    per-neighbor fetch.
 
+    `slug` is the load-bearing identity. `fqid`/`name` are None for a DEAD edition
+    — an edge slug with no live `classification` row (a renamed/retired vintage),
+    which the SPA renders as plain text, not a link. `effective_year` is the year
+    on the succession edge that names this edition as the successor (None for the
+    terminal). `is_current` flags the terminal (current) edition; `is_self` flags
+    the edition the caller queried (resolved to its canonical live slug when the
+    query was a `same_as` alias). A dedicated model (NOT the search
+    `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
+    edition a clean 4-field shape."""
+
+    slug: str = Field(description="The edition's literal slug (e.g. 'sun2000').")
     fqid: str | None = Field(
-        description="The neighbor edition's 2-seg classification FQID, or None for "
-        "a dead/malformed edition slug."
+        description="The edition's 2-seg classification FQID, or None for a dead "
+        "edition with no live row (rendered as plain text, not a link)."
     )
-    slug: str = Field(
-        description="The neighbor edition's literal slug (the "
-        "load-bearing succession identity)."
+    name: str | None = Field(
+        description="The edition's display name, None for a dead edition."
     )
     effective_year: int | None = Field(
-        default=None,
-        description="The successor edition's effective year, None when unknown.",
+        description="The year on the succession edge naming this edition as the "
+        "successor; None for the terminal (head) edition."
     )
-    note: str | None = Field(
-        default=None,
-        description="Build provenance for the edge (e.g. 'derived:vintage_chain').",
+    is_current: bool = Field(
+        description="True for the terminal (current) edition — no outbound successor."
+    )
+    is_self: bool = Field(
+        description="True for the edition the caller queried (resolved to its "
+        "canonical live slug when the query was a same_as alias)."
     )
 
 
@@ -191,10 +200,12 @@ class ClassificationNode(BaseModel):
     # `classification_same_as` edge rather than directly (see reg_meta/DESIGN.md →
     # Classifications); the hop path as FQIDs.
     via_same_as: list[str] | None = None
-    # #571: outbound classification succession (editions that replaced this one);
-    # mirrors `ResolvedVariable.replaced_by` on the binding leaf. Empty for a
-    # terminal/current edition with no successor.
-    replaced_by: list[ClassificationRefModel] = Field(default_factory=list)
+    # #571: the FULL classification succession timeline (every edition in the
+    # chain, oldest first, terminal last), resolved server-side and embedded so the
+    # SPA renders the whole edition chain synchronously — superseding the immediate
+    # neighbor fetch. A standalone classification carries a single self+current
+    # edition.
+    edition_chain: list[ClassificationChainEdition] = Field(default_factory=list)
 
 
 class BindingChild(BaseModel):
@@ -497,25 +508,6 @@ class SuccessorsResponse(BaseModel):
 
     binding: str
     successors: list[VariableRefModel]
-
-
-class ClassificationPredecessorsResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/classification_predecessors` (#571) — inbound
-    classification succession (the editions this edition replaced). `classification`
-    echoes the queried 2-seg classification FQID (mirrors the variable routes'
-    `binding` echo)."""
-
-    classification: str
-    predecessors: list[ClassificationRefModel]
-
-
-class ClassificationSuccessorsResponse(BaseModel):
-    """`GET /api/catalog/{fqid}/classification_successors` (#571) — outbound
-    classification succession (the editions that replaced this edition).
-    `classification` echoes the queried 2-seg classification FQID."""
-
-    classification: str
-    successors: list[ClassificationRefModel]
 
 
 class DimensionsResponse(BaseModel):
