@@ -7,7 +7,6 @@ import {
   getBindingLineageWarnings,
   getBindingPredecessors,
   getCatalogNode,
-  getClassificationPredecessors,
   getDoc,
   getDocsForVariable,
   isCatalogNode,
@@ -170,21 +169,6 @@ describe("binding sub-endpoint helpers", () => {
     });
     await getBindingPredecessors("scb/lisa/kön");
     expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n/predecessors");
-  });
-});
-
-describe("classification succession sub-endpoint helper (#571)", () => {
-  // GETs `/catalog/{encodeFqid}/classification_predecessors` on a 2-seg
-  // classification FQID. (Only predecessors is fetched — the outbound arm rides
-  // on the embedded `replaced_by`, so there's no successors helper.)
-  it("GETs the classification_predecessors sub-endpoint URL", async () => {
-    let seen = "";
-    stubFetch(async (url) => {
-      seen = url;
-      return { ok: true, status: 200, json: async () => ({}) };
-    });
-    await getClassificationPredecessors("class/sun2020");
-    expect(seen).toBe("/api/catalog/class/sun2020/classification_predecessors");
   });
 });
 

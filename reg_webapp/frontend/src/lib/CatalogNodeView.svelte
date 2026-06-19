@@ -201,10 +201,10 @@ $effect(() => {
         <dt>Short name</dt>
         <dd>{node.short_name}</dd>
       </dl>
-      <!-- #571: the edition succession chain (predecessors → this edition →
-           successors). The component omits itself for a standalone classification
-           with no succession. -->
-      <ClassificationLineagePanels {fqidPath} {node} />
+      <!-- #571: the embedded edition succession chain (oldest → current). The
+           component omits itself for a standalone classification with no
+           succession. -->
+      <ClassificationLineagePanels {node} />
     {/if}
   </article>
 {:else if notBrowsable}

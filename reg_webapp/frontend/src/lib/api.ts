@@ -238,15 +238,13 @@ export type PredecessorsResponse = Schemas["PredecessorsResponse"];
 export type DimensionsResponse = Schemas["DimensionsResponse"];
 export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
 
-/** A classification-grain succession edge endpoint (#571) — the classification
- * analogue of `VariableRefModel`. A classification FQID is 2-seg
- * (`class/<slug>`), so the endpoint is a single edition `slug` (the load-bearing
- * identity); `fqid` is null for a dead/malformed edition the chain tolerates. */
-export type ClassificationRefModel = Schemas["ClassificationRefModel"];
-export type ClassificationPredecessorsResponse =
-  Schemas["ClassificationPredecessorsResponse"];
+/** One edition in a classification's embedded succession timeline (#571) — the
+ * chain arrives oldest-first, terminal last, with `is_self`/`is_current` flags.
+ * A dead edition (no live row) carries a null `fqid`/`name` and renders as plain
+ * text. The browse panel renders the whole chain synchronously from these. */
+export type ClassificationChainEdition = Schemas["ClassificationChainEdition"];
 /** The resolved classification leaf the catch-all returns — carries its embedded
- * outbound succession (`replaced_by`, the editions that replaced it). */
+ * FULL succession chain (`edition_chain`, oldest first / terminal last). */
 export type ClassificationNodeData = Schemas["ClassificationNode"];
 
 /** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
@@ -334,24 +332,6 @@ export function getBindingDimensions(
 ): Promise<DimensionsResponse> {
   return apiGet<DimensionsResponse>(
     `/catalog/${encodeFqid(fqidPath)}/dimensions`,
-  );
-}
-
-// ── Classification succession sub-endpoint (#571) ────────────────────────────
-// A classification leaf EMBEDS its outbound `replaced_by` (the editions that
-// replaced it, toward the current edition), so the panel fetches only the INBOUND
-// side — `/classification_predecessors` (the editions THIS edition replaced) — to
-// compose the full edition chain. Only predecessors is fetched: the outbound arm
-// rides on the embedded `replaced_by`, so no successors helper exists — mirroring
-// the binding leaf, which likewise embeds its `replaced_by` and fetches only
-// `/predecessors`. (The `/classification_successors` route exists server-side for
-// symmetry, unfetched by the SPA.)
-
-export function getClassificationPredecessors(
-  fqidPath: string,
-): Promise<ClassificationPredecessorsResponse> {
-  return apiGet<ClassificationPredecessorsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/classification_predecessors`,
   );
 }
 
