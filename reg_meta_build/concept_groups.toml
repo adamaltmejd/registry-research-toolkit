@@ -3,9 +3,9 @@
 # kinds, both folded only when present (opt-in):
 #
 # 1. [[variable_group]] — a hand-authored family with an exact member list, NO
-#    name patterns: a member either absorbs a derived token group
-#    (`group = "<stem>"` — its variables keep their month facets and gain this
-#    family's facet) or attaches a single variable (`variable = "<slug>"`).
+#    name patterns: each member attaches a single variable
+#    (`variable = "<slug>"`) carrying its `value`/`label` on the family's single
+#    `axis`.
 #
 # 2. [[accept]] (#496) — fold a candidate family from the generated, committed
 #    concept_groups.auto.toml BY REFERENCE. The `concept-group-candidates`

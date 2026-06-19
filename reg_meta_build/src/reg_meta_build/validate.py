@@ -1424,8 +1424,8 @@ def _check_concept_groups(
     members point at `kind='variable'` groups in the SAME register;
     classification members at `kind='classification'` groups) and every group
     has >= 2 members — a 1-member group is a derivation bug (the passes only
-    mint groups from >= 2 candidates; a curated absorb that emptied a group
-    would surface here).
+    mint groups from >= 2 candidates; a curated family authored with a single
+    member, or an `exclude` that drops a family below two, would surface here).
 
     Corpus (real build only): volume floors per derivation source, so a pass
     that silently stops matching (slug-vocabulary drift, edge-kind rename)

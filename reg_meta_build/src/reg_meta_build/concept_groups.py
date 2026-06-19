@@ -1036,8 +1036,9 @@ def materialize_concept_groups(
     custom = tuple(g for g in curated if g.provider in providers)
     _apply_curated_groups(conn, custom + accepted)
     _apply_curated_classification_groups(conn, classification_groups)
-    # Recount from the final table — a curated absorb DELETEs its token
-    # groups, so per-pass return values would over-report the shipped state.
+    # Count the authoritative shipped rows from the final table after all
+    # passes, rather than threading per-pass tallies (the curated passes return
+    # none) — one query over the materialized state is the single source of truth.
     by_bucket = {
         (r[0], r[1]): r[2]
         for r in conn.execute(
