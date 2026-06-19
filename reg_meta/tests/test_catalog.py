@@ -17,6 +17,7 @@ from _slugged_db import (
 )
 from reg_meta.catalog import (
     Catalog,
+    ClassificationRef,
     RelatedRef,
     ResolvedClassification,
     ResolvedProvider,
@@ -990,6 +991,93 @@ class TestEdgeAccessors:
         assert succ.reason == "2001 byttes SUN96 till SUN2000"
         assert succ.effective_year == 2001
 
+    @staticmethod
+    def _seed_classification_replaced_by(
+        conn: sqlite3.Connection,
+        *,
+        predecessor: str,
+        successor: str,
+        effective_year: int | None = None,
+        note: str | None = "derived:vintage_chain",
+    ) -> None:
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES (?,?,?,?)",
+            (predecessor, successor, effective_year, note),
+        )
+        conn.commit()
+
+    def test_classification_successors(self) -> None:
+        # sun2000 (predecessor) → sun2020 (successor); sun2020 is the live default
+        # classification from build_slugged_db.
+        conn = build_slugged_db()
+        self._seed_classification_replaced_by(
+            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
+        )
+        succ = Catalog(conn).classification_successors("class/sun2000")
+        assert len(succ) == 1
+        assert isinstance(succ[0], ClassificationRef)
+        assert succ[0].slug == "sun2020"
+        assert str(succ[0].fqid) == "class/sun2020"
+        assert succ[0].effective_year == 2020
+        assert succ[0].note == "derived:vintage_chain"
+        # (ResolvedClassification.replaced_by coverage is below — it keys on the
+        # resolved edition's OWN slug, so it needs a live row to resolve.)
+
+    def test_classification_predecessors_uses_successor_index(self) -> None:
+        # Query the SUCCESSOR side: sun2020 was preceded by sun2000. Proves the
+        # successor-keyed reverse lookup (idx_classification_replaced_by_successor).
+        conn = build_slugged_db()
+        self._seed_classification_replaced_by(
+            conn, predecessor="sun2000", successor="sun2020", effective_year=2020
+        )
+        pred = Catalog(conn).classification_predecessors("class/sun2020")
+        assert [p.slug for p in pred] == ["sun2000"]
+        assert pred[0].effective_year == 2020
+
+    def test_classification_succession_on_resolved_classification(self) -> None:
+        # ResolvedClassification.replaced_by carries OUTBOUND edges keyed on the
+        # resolved edition's own slug. sun2020 → sun-future (a hypothetical
+        # successor edition).
+        conn = build_slugged_db()
+        self._seed_classification_replaced_by(
+            conn, predecessor="sun2020", successor="sun-future", effective_year=2030
+        )
+        r = Catalog(conn).resolve("class/sun2020")
+        assert isinstance(r, ResolvedClassification)
+        assert [e.slug for e in r.replaced_by] == ["sun-future"]
+        assert r.replaced_by[0].effective_year == 2030
+
+    def test_classification_terminal_edition_has_no_replaced_by(self) -> None:
+        # sun2020 with no outbound edge is a terminal (current) edition.
+        conn = build_slugged_db()
+        r = Catalog(conn).resolve("class/sun2020")
+        assert isinstance(r, ResolvedClassification)
+        assert r.replaced_by == ()
+
+    def test_classification_edges_tolerate_dead_predecessor(self) -> None:
+        # Succession edges reference the literal slug — a DEAD predecessor edition
+        # (no `classification` row) still has edges. classification_successors must
+        # NOT require the slug to resolve to a live row.
+        conn = build_slugged_db()
+        self._seed_classification_replaced_by(
+            conn, predecessor="ssyk1996", successor="ssyk2012"
+        )
+        succ = Catalog(conn).classification_successors("class/ssyk1996")
+        assert [s.slug for s in succ] == ["ssyk2012"]
+        # No outbound edge for a slug not in the table → empty list, no raise.
+        assert Catalog(conn).classification_successors("class/lkf2026") == []
+
+    def test_classification_accessors_reject_non_classification_fqid(self) -> None:
+        conn = build_slugged_db()
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).classification_successors("scb/lisa/kon")
+        assert exc.value.code == "not_a_classification_fqid"
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).classification_predecessors("scb")
+        assert exc.value.code == "not_a_classification_fqid"
+
     def test_same_as_on_resolved_variable(self) -> None:
         conn = build_slugged_db()
         for src, tgt in (
@@ -1231,12 +1319,13 @@ class TestDimensions:
 
 
 class TestResolveTerminalSuccessor:
-    """#355 PART 2 / #412: walk a succession chain from a (possibly dead/renamed)
-    FQID to its terminal successor — the chain end with no outbound edge. The walk
-    dispatches on FQID kind: bindings walk `variable_replaced_by` (raw string
-    triples), registers walk `register_replaced_by` (raw string pairs). A DEAD
-    predecessor needs no live row (the whole point — its row is gone after the
-    rename)."""
+    """#355 PART 2 / #412 / #571: walk a succession chain from a (possibly
+    dead/renamed) FQID to its terminal successor — the chain end with no outbound
+    edge. The walk dispatches on FQID kind: bindings walk `variable_replaced_by`
+    (raw string triples), registers walk `register_replaced_by` (raw string
+    pairs), classifications walk `classification_replaced_by` (raw edition slugs).
+    A DEAD predecessor needs no live row (the whole point — its row is gone after
+    the rename)."""
 
     @staticmethod
     def _add_edge(
@@ -1284,11 +1373,12 @@ class TestResolveTerminalSuccessor:
         assert Catalog(conn).resolve_terminal_successor(_KON) is None
 
     def test_unsupported_kinds_return_none(self) -> None:
-        # Provider and classification grains have NO succession table, so a rename
-        # there has nowhere to redirect → None (no SQL). A register with no
-        # outbound `register_replaced_by` edge is also None — genuinely unknown,
-        # same as the no-edge binding case (#412 made register grain in scope, so
-        # this is now "no edge", not "out of scope").
+        # PROVIDER has NO succession table, so a rename there has nowhere to
+        # redirect → None (no SQL). Register and classification grains ARE in
+        # scope (#412 / #571): a register/classification with no outbound edge is
+        # None too — genuinely unknown, same as the no-edge binding case ("no
+        # edge", not "out of scope"). sun2020 is the live, edge-free classification
+        # from build_slugged_db.
         conn = build_slugged_db()
         cat = Catalog(conn)
         assert cat.resolve_terminal_successor("scb") is None
@@ -1361,3 +1451,52 @@ class TestResolveTerminalSuccessor:
         assert terminal is not None
         # "aaa-reg" < "zzz-reg" → the lower-sorted successor wins.
         assert str(terminal) == "scb/aaa-reg"
+
+    # #571: classification-edition renames now redirect too. These mirror the
+    # binding/register tests on `classification_replaced_by` (raw edition slugs);
+    # dead predecessor editions need no `classification` row.
+
+    @staticmethod
+    def _add_class_edge(
+        conn: sqlite3.Connection, predecessor: str, successor: str
+    ) -> None:
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, note) VALUES (?,?,'derived:test')",
+            (predecessor, successor),
+        )
+        conn.commit()
+
+    def test_classification_multi_hop_chain_returns_terminal(self) -> None:
+        # ssyk1996 → ssyk2001 → ssyk2012. Predecessor editions are dead (no
+        # `classification` rows, only edges); ssyk2012 is the terminal.
+        conn = build_slugged_db()
+        self._add_class_edge(conn, "ssyk1996", "ssyk2001")
+        self._add_class_edge(conn, "ssyk2001", "ssyk2012")
+        terminal = Catalog(conn).resolve_terminal_successor("class/ssyk1996")
+        assert terminal is not None
+        assert str(terminal) == "class/ssyk2012"
+
+    def test_classification_no_outbound_edge_returns_none(self) -> None:
+        # sun2020 is the live, edge-free classification → genuinely unknown.
+        conn = build_slugged_db()
+        assert Catalog(conn).resolve_terminal_successor("class/sun2020") is None
+
+    def test_classification_cycle_guard_terminates(self) -> None:
+        # Malformed double-rename loop A→B→A: terminate and land on B.
+        conn = build_slugged_db()
+        self._add_class_edge(conn, "loop-cls-a", "loop-cls-b")
+        self._add_class_edge(conn, "loop-cls-b", "loop-cls-a")
+        terminal = Catalog(conn).resolve_terminal_successor("class/loop-cls-a")
+        assert terminal is not None
+        assert str(terminal) == "class/loop-cls-b"
+
+    def test_classification_split_pick_is_lexicographically_first(self) -> None:
+        # A predecessor edition with TWO successors takes the lexicographically
+        # first (ORDER BY successor_slug LIMIT 1); both are dead terminal leaves.
+        conn = build_slugged_db()
+        self._add_class_edge(conn, "split-cls", "zzz-cls")
+        self._add_class_edge(conn, "split-cls", "aaa-cls")
+        terminal = Catalog(conn).resolve_terminal_successor("class/split-cls")
+        assert terminal is not None
+        assert str(terminal) == "class/aaa-cls"

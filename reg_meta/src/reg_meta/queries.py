@@ -501,6 +501,11 @@ def search(
             if field in ("varname", "description", "all") and fts_query is not None
             else []
         )
+        # Collapse classification EDITION chains FIRST (#571): editions aren't
+        # concept_group members, so they need a separate fold. Once collapsed to
+        # their terminal, the curated SUN-style umbrella group (#516) then folds
+        # the terminals into `group:sun` cleanly below.
+        all_results = _fold_classification_succession(conn, all_results)
         all_results = _fold_concept_groups(conn, all_results, label_hits)
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
@@ -1322,6 +1327,206 @@ def _group_member_state_in_years(
     )
 
 
+def _terminal_classification_slug(conn: sqlite3.Connection, slug: str) -> str:
+    """Walk `classification_replaced_by` (#571) from a classification edition slug
+    to its TERMINAL (current) successor — the chain end with no outbound edge —
+    and return that slug. Returns the input unchanged when it's already terminal.
+
+    One SQL-walk with a `seen` cycle guard (mirrors `Catalog._walk_terminal`); a
+    split predecessor takes the lexicographically-first successor (ORDER BY +
+    LIMIT 1) so the fold is deterministic."""
+    seen = {slug}
+    current = slug
+    while True:
+        row = conn.execute(
+            "SELECT successor_slug FROM classification_replaced_by "
+            "WHERE predecessor_slug = ? ORDER BY successor_slug LIMIT 1",
+            (current,),
+        ).fetchone()
+        if row is None or row["successor_slug"] in seen:
+            break
+        current = row["successor_slug"]
+        seen.add(current)
+    return current
+
+
+def _fold_classification_succession(
+    conn: sqlite3.Connection, results: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Collapse classification EDITION hits sharing a succession chain (#571) into
+    one row for the chain's TERMINAL (current) edition, carrying the non-terminal
+    editions as history.
+
+    Succession editions are NOT `concept_group_classification` members (#571 moved
+    them to `classification_replaced_by`), so they need a SEPARATE fold from
+    `_fold_concept_groups`. This runs BEFORE it: once editions collapse to their
+    terminal, the curated SUN-style umbrella group (#516) folds the terminal
+    editions into `group:sun` cleanly (the emitted row keeps the terminal's
+    `_classification_id`, so the umbrella pass treats it as that classification).
+
+    A chain with ≥2 DISTINCT editions present in the results collapses to a single
+    `type: "classification_succession"` row. A LONE edition hit (whether terminal
+    or an old vintage) is NOT a chain-in-the-results signal, so it stays a leaf —
+    mirroring `_fold_concept_groups`' lone-member convention; an old-vintage leaf
+    is annotated with its `terminal_fqid` so the webapp can still link "current".
+    Result-shaping only; folds before pagination, so a chain counts as one
+    result."""
+    # Map each classification leaf's id → its slug (the succession table keys on
+    # slug). Leaves carry only `_classification_id`; recover the slug in one query.
+    cids = {
+        r["_classification_id"]
+        for r in results
+        if r.get("type") == "classification" and r.get("_classification_id") is not None
+    }
+    if not cids:
+        return results
+    placeholders = ",".join("?" * len(cids))
+    slug_by_id = {
+        row["id"]: row["slug"]
+        for row in conn.execute(
+            f"SELECT id, slug FROM classification WHERE id IN ({placeholders})",
+            list(cids),
+        ).fetchall()
+        if row["slug"] is not None
+    }
+
+    # Group classification leaf hits by their chain's terminal slug.
+    buckets: dict[str, list[dict[str, Any]]] = {}
+    terminal_by_hit: dict[int, str] = {}  # id(row) → terminal slug
+    for r in results:
+        if r.get("type") != "classification":
+            continue
+        cid = r.get("_classification_id")
+        slug = slug_by_id.get(cid) if cid is not None else None
+        if slug is None:
+            continue  # NULL-slug classification isn't a succession participant
+        terminal = _terminal_classification_slug(conn, slug)
+        buckets.setdefault(terminal, []).append(r)
+        terminal_by_hit[id(r)] = terminal
+
+    # A chain collapses only when ≥2 DISTINCT editions are present — a single
+    # edition hit (terminal or old vintage) isn't a chain-in-results signal and
+    # stays a leaf (mirrors `_fold_concept_groups`' lone-member rule).
+    collapse: set[str] = set()
+    for terminal, hits in buckets.items():
+        distinct = {slug_by_id[h["_classification_id"]] for h in hits}
+        if len(distinct) >= 2:
+            collapse.add(terminal)
+
+    out: list[dict[str, Any]] = []
+    emitted: set[str] = set()
+    for r in results:
+        if r.get("type") != "classification":
+            out.append(r)
+            continue
+        terminal = terminal_by_hit.get(id(r))
+        if terminal is None or terminal not in collapse:
+            # Lone edition (or a NULL-slug leaf): stays a leaf, annotated with its
+            # terminal so the webapp can link "current" from an old vintage hit.
+            if terminal is not None and terminal != slug_by_id.get(
+                r.get("_classification_id")
+            ):
+                r["terminal_fqid"] = try_emit(Fqid.classification_fqid, terminal)
+            out.append(r)
+        elif terminal not in emitted:
+            emitted.add(terminal)
+            out.append(
+                _classification_succession_row(conn, terminal, buckets[terminal])
+            )
+    return out
+
+
+def _classification_succession_row(
+    conn: sqlite3.Connection, terminal_slug: str, matched: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """One `type: "classification_succession"` row for a collapsed edition chain
+    (#571): the terminal (current) edition's identity + the full edition list
+    (terminal-first, then descending `effective_year`) + the leaf hits it folded
+    (`matched`). Keeps the terminal's `_classification_id` so the downstream
+    umbrella fold (`_fold_concept_groups`, #516) can subsume it into `group:sun`.
+    `fts_rank` is the best (lowest) matched-hit rank so it sorts where its hits
+    would have."""
+    terminal = conn.execute(
+        "SELECT id, slug, short_name, name FROM classification WHERE slug = ?",
+        (terminal_slug,),
+    ).fetchone()
+    editions = _classification_editions(conn, terminal_slug)
+    # `_classification_id` lets the umbrella pass treat this as the terminal
+    # classification; None when the terminal itself has no live row (a dead chain
+    # end), which simply means no umbrella fold can pick it up.
+    return {
+        "type": "classification_succession",
+        "fqid": try_emit(Fqid.classification_fqid, terminal_slug),
+        "short_name": terminal["short_name"] if terminal else None,
+        "classification_name": terminal["name"] if terminal else None,
+        "editions": editions,
+        "matched": matched,
+        "fts_rank": min((h.get("fts_rank", 0) for h in matched), default=0),
+        "_classification_id": terminal["id"] if terminal else None,
+    }
+
+
+def _classification_editions(
+    conn: sqlite3.Connection, terminal_slug: str
+) -> list[dict[str, Any]]:
+    """The full edition list of a succession chain ending at `terminal_slug`,
+    terminal-first then descending `effective_year` (#571). Walks the predecessor
+    side of `classification_replaced_by` transitively from the terminal, hydrating
+    each edition's `name`/`effective_year` (None when the edition has no live
+    `classification` row — a dead predecessor)."""
+    # The terminal carries no `effective_year` of its own (it's the head, not a
+    # successor in any edge); predecessors carry the year on the edge that names
+    # them as `successor_slug`.
+    year_by_slug: dict[str, int | None] = {terminal_slug: None}
+    seen = {terminal_slug}
+    frontier = [terminal_slug]
+    while frontier:
+        nxt: list[str] = []
+        placeholders = ",".join("?" * len(frontier))
+        rows = conn.execute(
+            "SELECT predecessor_slug, effective_year FROM classification_replaced_by "
+            f"WHERE successor_slug IN ({placeholders})",
+            frontier,
+        ).fetchall()
+        for row in rows:
+            pred = row["predecessor_slug"]
+            if pred in seen:
+                continue
+            seen.add(pred)
+            year_by_slug[pred] = row["effective_year"]
+            nxt.append(pred)
+        frontier = nxt
+
+    name_by_slug = {
+        row["slug"]: row["name"]
+        for row in conn.execute(
+            "SELECT slug, name FROM classification WHERE slug IN ("
+            + ",".join("?" * len(year_by_slug))
+            + ")",
+            list(year_by_slug),
+        ).fetchall()
+    }
+    editions = [
+        {
+            "slug": slug,
+            "fqid": try_emit(Fqid.classification_fqid, slug),
+            "name": name_by_slug.get(slug),
+            "effective_year": year,
+        }
+        for slug, year in year_by_slug.items()
+    ]
+    # Terminal first; then predecessors by descending effective_year (None last),
+    # slug as a stable tiebreak.
+    editions.sort(
+        key=lambda e: (
+            e["slug"] != terminal_slug,
+            -(e["effective_year"] or 0),
+            e["slug"],
+        )
+    )
+    return editions
+
+
 def _fold_concept_groups(
     conn: sqlite3.Connection,
     results: list[dict[str, Any]],
@@ -1526,14 +1731,16 @@ _INTERNAL_KEYS = ("_variable_id", "_classification_id", "_code_id")
 
 def _strip_internal_keys(results: list[dict[str, Any]]) -> None:
     """Drop the fold-internal member keys (`_variable_id` / `_classification_id`)
-    from leaf rows and from the leaf hits nested under a group row's `matched`
-    before results go public."""
+    from leaf rows and from the hits nested under any `matched` before results go
+    public. Recurses, because `matched` can nest two deep: the succession fold
+    (#571) emits a `classification_succession` row carrying its own `matched`,
+    which the umbrella fold (#516) can then re-nest under a group row's `matched`."""
     for r in results:
         for key in _INTERNAL_KEYS:
             r.pop(key, None)
-        for m in r.get("matched", ()):
-            for key in _INTERNAL_KEYS:
-                m.pop(key, None)
+        matched = r.get("matched")
+        if matched:
+            _strip_internal_keys(matched)
 
 
 # ---------------------------------------------------------------------------

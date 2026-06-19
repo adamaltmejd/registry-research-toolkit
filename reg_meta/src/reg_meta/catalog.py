@@ -34,9 +34,10 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
-# Succession-chain tuple grain (variable triple or register pair); shared so
-# `_walk_terminal` preserves arity across grains (see `resolve_terminal_successor`).
-_SuccTuple = TypeVar("_SuccTuple", tuple[str, str, str], tuple[str, str])
+# Succession-chain tuple grain (variable triple, register pair, or classification
+# 1-tuple); shared so `_walk_terminal` preserves arity across grains (see
+# `resolve_terminal_successor`).
+_SuccTuple = TypeVar("_SuccTuple", tuple[str, str, str], tuple[str, str], tuple[str])
 
 
 @dataclass(frozen=True)
@@ -63,6 +64,10 @@ class ResolvedClassification:
     classification_id: int
     short_name: str
     name: str
+    # OUTBOUND succession (#571): the editions that replaced this one
+    # (`classification_replaced_by`, keyed on this edition's slug). Empty for a
+    # terminal (current) edition.
+    replaced_by: tuple[ClassificationRef, ...] = ()
     via_same_as: tuple[Fqid, ...] | None = None
 
 
@@ -317,6 +322,27 @@ class VariableRef:
     # edition → no year; documented asymmetry, reg_meta_build/db.py).
     reason: str | None = None
     effective_year: int | None = None
+
+
+@dataclass(frozen=True)
+class ClassificationRef:
+    """A classification-grain succession edge endpoint (#571): one
+    `classification_replaced_by` neighbor of a classification edition. Carried by
+    `classification_predecessors`/`classification_successors` and
+    `ResolvedClassification.replaced_by`.
+
+    The classification FQID is 2-segment (`class/<slug>`), so the edge endpoint is
+    a single slug — no provider/register triple (unlike `VariableRef`). There is
+    no `reason`/`beskrivning` column on `classification_replaced_by`: `note`
+    carries the build provenance instead (e.g. `derived:vintage_chain`).
+    Succession references the EXACT edition slug, so `slug` is the load-bearing
+    identity; `fqid` is best-effort (None on a malformed slug, mirroring
+    `_ref_fqid`) — succession tolerates dead predecessor editions by design."""
+
+    fqid: Fqid | None
+    slug: str
+    effective_year: int | None = None
+    note: str | None = None
 
 
 @dataclass(frozen=True)
@@ -1340,6 +1366,58 @@ class Catalog:
             for r in rows
         )
 
+    @staticmethod
+    def _class_ref_fqid(slug: str) -> Fqid | None:
+        """Best-effort 2-segment classification FQID for a succession endpoint
+        (#571). The stored slug IS the identity; a malformed slug surfaces as None
+        rather than raising (mirrors `_ref_fqid` for the variable grain)."""
+        try:
+            return Fqid.classification_fqid(slug)
+        except FqidError:
+            return None
+
+    def _classification_successor_edges(
+        self, slug: str
+    ) -> tuple[ClassificationRef, ...]:
+        """OUTBOUND classification succession (`classification_replaced_by`,
+        predecessor side = this edition). Keyed on the LITERAL slug — succession
+        references the exact edition, so this does NOT same_as-canonicalize."""
+        rows = self._conn.execute(
+            "SELECT successor_slug, effective_year, note FROM classification_replaced_by "
+            "WHERE predecessor_slug = ? ORDER BY successor_slug",
+            (slug,),
+        ).fetchall()
+        return tuple(
+            ClassificationRef(
+                fqid=self._class_ref_fqid(r["successor_slug"]),
+                slug=r["successor_slug"],
+                effective_year=r["effective_year"],
+                note=r["note"],
+            )
+            for r in rows
+        )
+
+    def _classification_predecessor_edges(
+        self, slug: str
+    ) -> tuple[ClassificationRef, ...]:
+        """INBOUND classification succession (`classification_replaced_by`,
+        successor side = this edition). Uses the successor-side index. Keyed on the
+        LITERAL slug (no same_as canonicalization — succession is per-edition)."""
+        rows = self._conn.execute(
+            "SELECT predecessor_slug, effective_year, note FROM classification_replaced_by "
+            "WHERE successor_slug = ? ORDER BY predecessor_slug",
+            (slug,),
+        ).fetchall()
+        return tuple(
+            ClassificationRef(
+                fqid=self._class_ref_fqid(r["predecessor_slug"]),
+                slug=r["predecessor_slug"],
+                effective_year=r["effective_year"],
+                note=r["note"],
+            )
+            for r in rows
+        )
+
     def _related_edges(
         self, provider: str, register: str, variable: str
     ) -> tuple[RelatedRef, ...]:
@@ -1489,6 +1567,23 @@ class Catalog:
         provider, register, variable, _ = self._resolve_edge_triple(fqid)
         return list(self._related_edges(provider, register, variable))
 
+    def classification_successors(self, fqid: str | Fqid) -> list[ClassificationRef]:
+        """The editions that replaced this classification edition (outbound
+        succession, #571). Keyed on the literal slug — succession tolerates a DEAD
+        predecessor edition (a renamed/retired slug still carries edges), so unlike
+        `successors` this does NOT require the slug to resolve to a live row."""
+        return list(
+            self._classification_successor_edges(self._parse_classification(fqid))
+        )
+
+    def classification_predecessors(self, fqid: str | Fqid) -> list[ClassificationRef]:
+        """The editions this classification edition replaced (inbound succession,
+        #571). Keyed on the literal slug; tolerates a dead edition like
+        `classification_successors`."""
+        return list(
+            self._classification_predecessor_edges(self._parse_classification(fqid))
+        )
+
     def dimensions(self, fqid: str | Fqid) -> list[ConceptGroupSummary]:
         """see DESIGN.md → Catalog API surface: the concept-group dimension
         memberships (the variant facet groups — level / population / rank / …)
@@ -1518,21 +1613,25 @@ class Catalog:
         that terminal as an `Fqid` of the same kind, or None when the start has no
         outbound succession at all (genuinely unknown — the caller should 404).
         Used by the webapp to 301-redirect a citation of a renamed slug to where it
-        lives now (#355 PART 2; register grain added in #412).
+        lives now (#355 PART 2; register grain added in #412, classification in
+        #571).
 
         Dispatches on FQID kind:
           - VARIABLE_BINDING → walks `variable_replaced_by` on the stored
             (provider, register, variable) triple, returns a binding `Fqid`.
           - REGISTER → walks `register_replaced_by` on the stored
             (provider, register) pair, returns a register `Fqid`.
-          - PROVIDER / CLASSIFICATION → None: there is no succession table for
-            those grains, so a rename there has nowhere to redirect.
+          - CLASSIFICATION → walks `classification_replaced_by` on the stored
+            edition slug, returns a classification `Fqid` (e.g. an old vintage
+            edition redirects to the current one).
+          - PROVIDER → None: there is no succession table for providers, so a
+            rename there has nowhere to redirect.
 
         Unlike `successors` / `_resolve_edge_triple`, this does NOT require the
         FQID to resolve to a live row — that is the whole point: a renamed slug
-        404s (its `variable` / `register` row is gone), and we walk purely on the
-        stored string tuple in the succession table to find where the citation
-        should redirect.
+        404s (its `variable` / `register` / `classification` row is gone), and we
+        walk purely on the stored string tuple in the succession table to find
+        where the citation should redirect.
 
         Always walks to the ABSOLUTE chain end, never hop-by-hop: a webapp 301 can
         be cached, and double-rename churn (A→B then B→C) would leave a cached
@@ -1557,8 +1656,17 @@ class Catalog:
             pair = (parsed.provider, parsed.register)
             terminal = self._walk_terminal(pair, self._first_register_successor_pair)
             return None if terminal is None else Fqid.register_fqid(*terminal)
-        # PROVIDER / CLASSIFICATION grains have no succession table — a rename
-        # there has nowhere to redirect. Bail before any SQL.
+        if parsed.kind is FqidKind.CLASSIFICATION:
+            assert parsed.classification
+            # 1-tuple start: `_first_classification_successor_slug(*current)`
+            # unpacks `(slug,)` to the single slug arg.
+            cstart = (parsed.classification,)
+            terminal = self._walk_terminal(
+                cstart, self._first_classification_successor_slug
+            )
+            return None if terminal is None else Fqid.classification_fqid(*terminal)
+        # PROVIDER grain has no succession table — a rename there has nowhere to
+        # redirect. Bail before any SQL.
         return None
 
     @staticmethod
@@ -1631,6 +1739,23 @@ class Catalog:
             return None
         return (row["successor_provider"], row["successor_register"])
 
+    def _first_classification_successor_slug(self, slug: str) -> tuple[str] | None:
+        """The deterministically-first outbound `classification_replaced_by`
+        successor slug for a predecessor edition, or None when there is none.
+        Classification-grain analogue of `_first_successor_triple` (#571):
+        predecessor-keyed, ORDER BY + LIMIT 1 makes the split pick (see
+        `resolve_terminal_successor`) deterministic in SQL. Returns a 1-tuple so
+        `_walk_terminal` preserves arity across grains; reads only the successor
+        slug — the walk needs no effective_year/note."""
+        row = self._conn.execute(
+            "SELECT successor_slug FROM classification_replaced_by "
+            "WHERE predecessor_slug = ? ORDER BY successor_slug LIMIT 1",
+            (slug,),
+        ).fetchone()
+        if row is None:
+            return None
+        return (row["successor_slug"],)
+
     def _resolve_edge_triple(self, fqid: str | Fqid) -> tuple[str, str, str, int]:
         """Resolve a binding FQID to the canonical (provider, register, variable,
         variable_id) the edge tables key on. Raises `_not_found` when the binding
@@ -1666,6 +1791,26 @@ class Catalog:
             )
         return parsed
 
+    @staticmethod
+    def _parse_classification(fqid: str | Fqid) -> str:
+        """Parse a classification FQID and return its literal slug. The
+        classification succession accessors only accept classification FQIDs; a
+        non-classification kind is a usage error (mirrors `_parse_binding`)."""
+        parsed = parse(fqid) if isinstance(fqid, str) else parse(str(fqid))
+        if parsed.kind is not FqidKind.CLASSIFICATION:
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="not_a_classification_fqid",
+                error_class="query",
+                message=(
+                    f"expected a classification FQID, got "
+                    f"kind={parsed.kind.value}: {parsed!s}"
+                ),
+                remediation="Pass a 2-segment classification FQID (class/<slug>).",
+            )
+        assert parsed.classification
+        return parsed.classification
+
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
         direct = self._resolve_classification_direct(fqid)
         if direct is not None:
@@ -1682,17 +1827,23 @@ class Catalog:
         # single-bind slug lookup hits at most one row. The old (slug, version)
         # two-bind and the publisher-disambiguation branch are gone — there is
         # no cross-publisher (slug, version) collision to narrow.
+        assert fqid.classification
         row = self._conn.execute(
             "SELECT id, short_name, name FROM classification WHERE slug = ?",
             (fqid.classification,),
         ).fetchone()
         if not row:
             return None
+        # Outbound succession edges (#571) key on the resolved row's OWN slug
+        # (`fqid.classification` == the row's slug on a direct hit). The same_as
+        # path `replace(hit, fqid=fqid, …)`s off this direct hit, so it inherits
+        # the resolved edition's edges (only `fqid`/`via_same_as` are overridden).
         return ResolvedClassification(
             fqid=fqid,
             classification_id=row["id"],
             short_name=row["short_name"],
             name=row["name"],
+            replaced_by=self._classification_successor_edges(fqid.classification),
         )
 
     def _class_same_as_source_keys(self) -> frozenset[tuple[str, str]]:
