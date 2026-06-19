@@ -1167,6 +1167,26 @@ def derive_variable_vintage_succession(
         f"'{_REPLACED_BY_NOTE_VINTAGE_LIFT}')",
         pending,
     )
+    # The lift is the ONLY `variable_replaced_by` writer that inserts AFTER the
+    # curated/auto passes have run, so it's the one writer that must re-check the
+    # COMBINED graph for cycles: a pre-existing reversed edge `B -> A` (curated,
+    # auto, or contradictory source) plus a lift's chain-direction `A -> B` closes
+    # a cycle that the earlier passes couldn't see (the lift edge didn't exist
+    # yet). Read back the full graph and reuse `reject_replaced_by_cycles` so any
+    # cycle the lift closed — with any auto/curated edge, possibly multi-hop —
+    # fails the build loudly rather than shipping a graph with no terminal
+    # successor (which breaks the webapp's terminal-successor walk). The node key
+    # is the variable FQID slug tuple, matching the existing combined check.
+    full_graph = [
+        ((row[0], row[1], row[2]), (row[3], row[4], row[5]))
+        for row in conn.execute(
+            "SELECT predecessor_provider, predecessor_register, "
+            "predecessor_variable, successor_provider, successor_register, "
+            "successor_variable FROM variable_replaced_by"
+        )
+    ]
+    reject_replaced_by_cycles(full_graph)
+
     # Count the note-stamped rows so the return is authoritative regardless of
     # how many `INSERT OR IGNORE` rows collided with a pre-existing edge.
     n_minted = conn.execute(

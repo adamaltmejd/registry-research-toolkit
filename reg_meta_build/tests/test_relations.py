@@ -897,6 +897,44 @@ class TestVariableVintageSuccession:
         assert rows[0][0] == "curated:slug_toml"
         assert rows[0][1] == "hand reason"
 
+    def test_reversed_pre_existing_edge_closes_cycle_raises(self) -> None:
+        # The lift is the one writer that inserts AFTER curated/auto, so it must
+        # re-check the COMBINED graph: a pre-existing REVERSED edge sni-2007 ->
+        # sni-2002 plus the lift's chain-direction sni-2002 -> sni-2007 closes a
+        # 2-cycle. The earlier passes couldn't see it (the lift edge didn't exist
+        # yet), so the lift's own post-insert full-graph cycle check must fail the
+        # build loudly. Same clean family as the first test.
+        conn = _vintage_db()
+        add_variable(conn, register_id=1, var_id=1, name="Näringsgren", slug="sni-2002")
+        add_variable(conn, register_id=1, var_id=2, name="Näringsgren", slug="sni-2007")
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2002",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2002"),
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="sni-2007",
+            register_variant_id=10,
+            classification_id=_cid(conn, "sni2007"),
+        )
+        # Pre-seed the REVERSED edge (successor -> predecessor of the lift edge).
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note) "
+            "VALUES ('scb','lisa','sni-2007','scb','lisa','sni-2002', "
+            "2002, 'curated:slug_toml')"
+        )
+        conn.commit()
+        with pytest.raises(RegMetaError) as exc:
+            derive_variable_vintage_succession(conn)
+        assert exc.value.exit_code == EXIT_CONFIG
+
     def test_distinct_levels_do_not_cross_link(self) -> None:
         # Two LEVELS of the same series each bind their own classification lineage
         # (sni2007-grov ≠ sni2007-utokad). The lift over distinct slugs isolates

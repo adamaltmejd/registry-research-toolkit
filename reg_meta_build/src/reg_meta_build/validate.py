@@ -64,6 +64,7 @@ from reg_meta_build.db import (
     PROVIDER_ID_SOS,
 )
 from reg_meta_build.id import _MINT_BIT
+from reg_meta_build.relations import _REPLACED_BY_NOTE_VINTAGE_LIFT
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
 # mints into the high band). The global build's minted-id band check enforces
@@ -1615,7 +1616,7 @@ def _check_variable_replaced_by_vintage_lift(
         result.fail("variable_replaced_by missing")
         return
 
-    note = "derived:classification_vintage_lift"
+    note = _REPLACED_BY_NOTE_VINTAGE_LIFT
     self_loops = conn.execute(
         "SELECT COUNT(*) FROM variable_replaced_by "
         "WHERE note = ? "
