@@ -560,6 +560,69 @@ def test_cli_display_row_projects_classification_succession() -> None:
     assert (
         row["variable_name"] == "Standard för svensk yrkesklassificering (2 editions)"
     )
+    # Scalar count for the classification column set; must NOT clobber the raw
+    # `editions` list (which feeds --format json).
+    assert row["n_editions"] == 2
+    assert isinstance(row["editions"], list) and len(row["editions"]) == 2
+
+
+def _succession_row() -> dict[str, object]:
+    return {
+        "type": "classification_succession",
+        "fqid": "class/ssyk2012",
+        "short_name": "SSYK2012",
+        "classification_name": "Standard för svensk yrkesklassificering",
+        "editions": [
+            {"slug": "ssyk2012", "name": "SSYK 2012", "effective_year": None},
+            {"slug": "ssyk96", "name": "SSYK 96", "effective_year": 1996},
+        ],
+        "matched": [],
+        "fts_rank": -1.0,
+    }
+
+
+def _classification_row() -> dict[str, object]:
+    return {
+        "type": "classification",
+        "fqid": "class/sun2020",
+        "short_name": "SUN2020",
+        "classification_name": "Svensk utbildningsnomenklatur",
+        "fts_rank": -1.0,
+    }
+
+
+def test_write_payload_succession_table_shows_fqid(tmp_path: Path) -> None:
+    # Codex P3: a pure-succession result set (types == {"classification_
+    # succession"}) must use the classification-native columns so the navigable
+    # `fqid` is visible — not the generic columns, which have no fqid.
+    from reg_meta.cli import _write_payload
+
+    payload = {"data": {"results": [_succession_row()], "total_count": 1}}
+    out = tmp_path / "out.txt"
+    _write_payload(("search", None), payload, str(out), fmt="list")
+    text = out.read_text(encoding="utf-8")
+    assert "class/ssyk2012" in text  # fqid surfaced
+    assert "n_editions" in text and "2" in text  # fold count surfaced
+
+
+def test_write_payload_mixed_classification_succession_shows_fqid(
+    tmp_path: Path,
+) -> None:
+    # A mixed classification + succession set (types <= {classification,
+    # classification_succession}) also uses the classification columns.
+    from reg_meta.cli import _write_payload
+
+    payload = {
+        "data": {
+            "results": [_classification_row(), _succession_row()],
+            "total_count": 2,
+        }
+    }
+    out = tmp_path / "out.txt"
+    _write_payload(("search", None), payload, str(out), fmt="list")
+    text = out.read_text(encoding="utf-8")
+    assert "class/sun2020" in text and "class/ssyk2012" in text  # both fqids
+    assert "n_editions" in text
 
 
 def test_empty_description_query_folds_nothing(

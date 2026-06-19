@@ -1500,7 +1500,9 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
     the same `short_name`/`classification_name`/`fqid` plus an `editions` list —
     share the classification projection, and append a folded-family hint to
     `variable_name` (mirroring the group row's "(N/M members matched)" idiom) so
-    the collapse reads clearly in a mixed table."""
+    the collapse reads clearly in a mixed table. A scalar `n_editions` count is
+    also stamped (distinct from the raw `editions` list, which feeds --format
+    json) for the classification column set's trailing `n_editions` column."""
     if r.get("type") == "code":
         # Code/value hits (#352) carry their owning variables/classifications as
         # nested lists the table renderer can't show — flatten to a representative
@@ -1528,6 +1530,10 @@ def _search_display_row(r: dict[str, Any]) -> dict[str, Any]:
             r["variable_name"] = (
                 f"{r.get('classification_name', '')} ({editions} editions)"
             )
+            # Distinct from the raw `editions` list key (which feeds --format
+            # json): a scalar count for the classification column set's trailing
+            # `n_editions` column.
+            r["n_editions"] = editions
         if r.get("concept_group"):
             r["group"] = r["concept_group"]
         return r
@@ -1589,7 +1595,10 @@ def _write_payload(
             cols = ["variable_name", "register_id", "register_name", "var_id"]
         elif types == {"doc"}:
             cols = ["variable_name", "display_name"]
-        elif types == {"classification"}:
+        elif types and types <= {"classification", "classification_succession"}:
+            # Pure classification, pure succession-fold (#571), or a mix — all
+            # carry the classification-native columns; `fqid` is the navigable
+            # current-edition target a succession row exists to surface.
             cols = ["short_name", "classification_name", "fqid"]
         elif types == {"group"}:
             # Pure group fold (#322) — e.g. every hit was one month family.
@@ -1607,6 +1616,11 @@ def _write_payload(
         # it as a trailing column only when at least one row has it.
         if types != {"group"} and any(r.get("group") for r in results):
             cols.append("group")
+        # Succession folds (#571) carry an edition count; the classification
+        # column set drops `variable_name` (where the "(N editions)" hint lives),
+        # so surface the count as a trailing column when any row is a fold.
+        if any(r.get("type") == "classification_succession" for r in results):
+            cols.append("n_editions")
         write_formatted(
             results, cols, output_path, fmt=fmt, fmt_explicit=fmt_explicit, hints=hints
         )
