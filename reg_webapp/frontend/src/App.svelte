@@ -10,6 +10,8 @@ import { projectStore } from "./lib/project_store.svelte";
 import { link, router } from "./lib/router.svelte";
 import SearchOmnibox from "./lib/SearchOmnibox.svelte";
 import SearchView from "./lib/SearchView.svelte";
+import { windowStore } from "./lib/window.svelte";
+import YearWindowSlider from "./lib/YearWindowSlider.svelte";
 
 // The shell: a header with steward branding (GET /api/context) + a catalog-drift
 // banner when present, and a routed main area. Internal <a> clicks are
@@ -56,6 +58,18 @@ const steward = $derived(context?.steward.id ?? "");
 // reg_meta DB was built. `import_date` is a UTC timestamp string
 // (e.g. "2026-06-12T08:30:00Z"); show just the leading YYYY-MM-DD (split on "T").
 const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
+
+// The header window slider's bounds (#611 → Period model). The floor is FIXED —
+// a sensible earliest register year (Swedish registers start in the 1960s) — and
+// the ceiling is the catalog vintage year (the `import_date` year, current year
+// as fallback). `/api/context` exposes no catalog-wide variable year range, and
+// adding one would need a new reg_meta aggregate accessor + backend field +
+// openapi/types regen — heavier than this PR warrants; a catalog-derived
+// refinement can be a later follow-up (#614 report).
+const WINDOW_FLOOR_YEAR = 1960;
+const windowMaxYear = $derived(
+  Number(context?.reg_meta.import_date.slice(0, 4)) || new Date().getFullYear(),
+);
 </script>
 
 <!-- Click interception is delegated from the root container via the `link`
@@ -81,6 +95,16 @@ const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
         {#if projectStore.dirty}<span class="nav-dirty" title="Unsaved changes">●</span>{/if}
       </a>
     </nav>
+    <!-- The global project-window control (#611 → Period model): sets the window
+         runtime layer, which hydrates from the active project (→ dirty → autosave)
+         or falls back to localStorage when browsing without a project. The subject
+         page's period picker will default to this window (#615). -->
+    <YearWindowSlider
+      min={WINDOW_FLOOR_YEAR}
+      max={windowMaxYear}
+      window={windowStore.value}
+      onchange={(next) => windowStore.set(next)}
+    />
     <!-- Full-width search row: the header wraps, so the omnibox sits on its own
          line below brand/nav and stretches across (#379). Inside the use:link
          div, so result-page links it routes to are interceptable. -->
