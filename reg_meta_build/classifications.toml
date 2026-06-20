@@ -25,27 +25,29 @@
 #   - Every `valid_codes_file` must resolve to an existing CSV whose first two
 #     columns are `vardekod,vardebenamning` or `code,label`, with >= 1 row
 #
-# `vardemangdsversion` is OPTIONAL. When listed, every string must match >= 1
-# variable instance (drift gate) on a full build (all providers). On a
-# provider-restricted build (`--providers` subset), a classification where ALL
-# strings match zero instances is demoted to a progress note rather than a hard
-# error — the classification's label-source provider simply isn't in that build;
-# a mixed classification (>=1 matched, >=1 unmatched) still hard-errors on any
-# build (#597). Entries WITHOUT `vardemangdsversion` (provider-seeded canonical
-# code systems such as the Socialstyrelsen classifications below) tag no
-# instances — they seed only the canonical codes from `valid_codes_file`, so
-# they are exempt from the instance-match and >= 1-instance gates but still
-# need >= 1 canonical code.
+# `provider` declares the label-source — which provider's
+# `variable_instance.value_set_version_label` strings carry the classification.
+# Untagged entries are implicitly SCB-sourced. Classifications are shared standards:
+# e.g. `ICD-10-SE`/`ATC` are tagged `provider="sos"` but referenced via curated
+# `classification=` links by FOHM, FK, Läkemedelsverket, and Pliktverket. A
+# provider-tagged entry is seeded when its tag-provider is built OR a built provider
+# references it via a curated link; it is skipped only when neither holds. Untagged
+# entries are always seeded (#597).
+#
+# `vardemangdsversion` is OPTIONAL. When listed, drift checking is per-classification
+# on label-source: an unmatched string is a hard error when the classification's
+# label-source provider is built (or the classification is mixed: >=1 matched,
+# >=1 unmatched). It is demoted to a progress note only when the label-source provider
+# is not built AND the whole classification is absent (zero strings matched).
+# Concretely: `--providers scb` stays strict for untagged SCB classifications.
+# Entries WITHOUT `vardemangdsversion` tag no instances — they seed only canonical
+# codes from `valid_codes_file` and are exempt from the instance-match gate but
+# still need >= 1 canonical code.
 #
 # To enumerate candidates from the live data:
 #   SELECT vardemangdsversion, COUNT(*) FROM variable_instance
 #   WHERE vardemangdsversion IS NOT NULL AND vardemangdsversion != ''
 #   GROUP BY vardemangdsversion ORDER BY 2 DESC;
-#
-# Scope of this seed: well-known SCB classifications, plus the Socialstyrelsen
-# (SOS) code systems (ICD, KVÅ, ATC, ...) at the end of the file. SOS entries
-# carry `provider = "sos"` and are gated by the build's active provider set —
-# an SCB-only build (`--providers=scb`) skips them entirely.
 
 # ---------------------------------------------------------------------------
 # Education — Svensk utbildningsnomenklatur (SUN)
