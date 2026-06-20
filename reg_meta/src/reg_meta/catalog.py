@@ -185,6 +185,22 @@ class ConceptGroupSummary:
 
 
 @dataclass(frozen=True)
+class BindingGroupRef:
+    """The concept group a binding belongs to, as the group's addressable
+    `(provider, register, key)` (#616). Carried by `ResolvedVariable.group` so a
+    member URL renders group-aware without a second fetch. Membership is
+    register-scoped and 1:1 (the `concept_group_variable.variable_id` PK enforces
+    at most one home group per variable), so this is a singular ref — the full
+    member list lives behind `Catalog.concept_group(provider, register, key)`.
+    `key` is `ConceptGroupSummary.key` (the scope-unique derivation key), not an
+    FQID segment."""
+
+    provider: str
+    register: str
+    key: str
+
+
+@dataclass(frozen=True)
 class TagSummary:
     """One curated thematic tag (#311) in the global vocabulary. `slug` is the
     globally-unique tag id; `member_count` / `starred_count` are this tag's total
@@ -516,6 +532,12 @@ class ResolvedVariable:
     ]  # OUTBOUND successors (see DESIGN.md → Catalog API surface)
     related_to: tuple[RelatedRef, ...]  # variable_related_to (split siblings)
     lineage: tuple[LineageEdge, ...]  # variable_state_lineage (consumer-side)
+    # The binding's owning concept group as `(provider, register, key)` when it is
+    # a group member, else None (#616). Lets a member page render group-aware
+    # without a second fetch. Membership is 1:1 (DB PK), so this is singular; the
+    # member list lives behind `concept_group()`. Keyed on the RESOLVED variable's
+    # triple (like the edges), so a same_as alias reports its target's group.
+    group: BindingGroupRef | None = None
     # Traversal path (3-segment binding FQIDs) when resolved via `same_as`; None
     # on a direct hit.
     via_same_as: tuple[Fqid, ...] | None = None
@@ -859,6 +881,24 @@ class Catalog:
             )
         ]
 
+    def concept_group(
+        self, provider_slug: str, register_slug: str, key: str
+    ) -> ConceptGroupSummary | None:
+        """The one derived concept group addressed by `(provider, register, key)`
+        (#616) — the group's scope-unique derivation key (`ConceptGroupSummary.key`,
+        unique per `(provider, register)` and present for all sources). A group's
+        default selection is "all members", which a member FQID can't express, so a
+        group needs its own address; this is the by-key accessor for it.
+
+        None when no group with that key exists for the pair (and when the pair
+        names no register) — mirroring `list_concept_groups`' tolerance of an
+        unknown pair (`[]`). Filters the register's group list (a handful of groups
+        per register; reuses the member-hydration SQL)."""
+        for g in self.list_concept_groups(provider_slug, register_slug):
+            if g.key == key:
+                return g
+        return None
+
     def list_classification_groups(self) -> list[ConceptGroupSummary]:
         """Curated classification umbrella groups (see DESIGN.md → Concept
         groups), ordered by group key. `concept_group_classification` holds
@@ -1096,6 +1136,9 @@ class Catalog:
         meta = self._lookup_variable_meta(var["variable_id"])
         triple = (meta["provider_slug"], meta["register_slug"], meta["slug"])
         edges = self._edges_for_variable(*triple, var["variable_id"])
+        group = self._group_ref_for_variable(
+            var["variable_id"], meta["provider_slug"], meta["register_slug"]
+        )
         return ResolvedVariable(
             fqid=fqid,
             variable_id=var["variable_id"],
@@ -1114,8 +1157,27 @@ class Catalog:
             replaced_by=edges["replaced_by"],
             related_to=edges["related_to"],
             lineage=edges["lineage"],
+            group=group,
             via_same_as=via_same_as,
         )
+
+    def _group_ref_for_variable(
+        self, variable_id: int, provider_slug: str, register_slug: str
+    ) -> BindingGroupRef | None:
+        """The binding's owning concept group as a `(provider, register, key)`
+        ref, or None when it is not a group member (#616). `kind='variable'`
+        membership is 1:1 (the `concept_group_variable.variable_id` PK), so this
+        is at most one row — the singular `ResolvedVariable.group`. The full
+        member list lives behind `concept_group()`."""
+        row = self._conn.execute(
+            "SELECT g.group_key FROM concept_group_variable m "
+            "JOIN concept_group g ON g.group_id = m.group_id "
+            "WHERE m.variable_id = ? AND g.kind = 'variable'",
+            (variable_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        return BindingGroupRef(provider_slug, register_slug, row["group_key"])
 
     # ── A2.5 state-anchored resolution helpers ─────────────────────────────
 

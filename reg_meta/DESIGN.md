@@ -480,8 +480,9 @@ traversal), `variable_id`, `register_id`, `provider_key`, the shared metadata (`
 `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`,
 `source_register_id`, `source_register_text`), `states` (tuple of `VariableState`,
 chronological ascending), the variable-grain edges `same_as` / `replaced_by` (OUTBOUND
-successors) / `related_to` / `lineage`, and `via_same_as` (the traversal path when
-resolved via a `same_as` edge, else None).
+successors) / `related_to` / `lineage`, `via_same_as` (the traversal path when resolved
+via a `same_as` edge, else None), and `group` (the binding's owning concept group as a
+`BindingGroupRef` `(provider, register, key)`, None when ungrouped; #616).
 
 **`VariableState`** — one `variable_state` row tagged with its variant. Fields:
 `state_id`, `variant` (the `register_variant.slug`), `register_variant_id`, `valid_from`
@@ -711,6 +712,12 @@ classification-root responses embed these alongside the complete flat children l
 the SPA folds (`reg_webapp/DESIGN.md`). `list_classification_groups()` returns the
 curated umbrella groups: currently `group:sun` (the SUN dimensions, #516). Derived
 vintage editions live in `classification_replaced_by`, not here.
+`Catalog.concept_group(provider, register, key) -> ConceptGroupSummary | None` fetches a
+single group by its scope-unique key (#616); returns None for an unknown key or unknown
+pair (mirrors `list_concept_groups` tolerance). A group needs its own accessor because
+its default selection is all members — a member FQID cannot express that. Member
+bindings carry `ResolvedVariable.group` (`BindingGroupRef` `(provider, register, key)`,
+None when ungrouped) so a member page can render group-aware without a second fetch.
 
 **CLI/search surface (#322/#325)**: the same read surface backs three CLI shapes, all
 result-shaping over the 5.3.0 tables (`reg_meta.queries`). `get groups REGISTER` (and
