@@ -26,11 +26,16 @@
 #     columns are `vardekod,vardebenamning` or `code,label`, with >= 1 row
 #
 # `vardemangdsversion` is OPTIONAL. When listed, every string must match >= 1
-# variable instance (drift gate) and the classification must resolve to >= 1
-# instance. Entries WITHOUT it (provider-seeded canonical code systems such as
-# the Socialstyrelsen classifications below) tag no instances — they seed only
-# the canonical codes from `valid_codes_file`, so they are exempt from the
-# instance-match and >= 1-instance gates but still need >= 1 canonical code.
+# variable instance (drift gate) on a full build (all providers). On a
+# provider-restricted build (`--providers` subset), a classification where ALL
+# strings match zero instances is demoted to a progress note rather than a hard
+# error — the classification's label-source provider simply isn't in that build;
+# a mixed classification (>=1 matched, >=1 unmatched) still hard-errors on any
+# build (#597). Entries WITHOUT `vardemangdsversion` (provider-seeded canonical
+# code systems such as the Socialstyrelsen classifications below) tag no
+# instances — they seed only the canonical codes from `valid_codes_file`, so
+# they are exempt from the instance-match and >= 1-instance gates but still
+# need >= 1 canonical code.
 #
 # To enumerate candidates from the live data:
 #   SELECT vardemangdsversion, COUNT(*) FROM variable_instance

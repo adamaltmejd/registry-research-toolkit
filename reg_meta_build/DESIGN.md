@@ -859,7 +859,11 @@ build runs with a restricted provider set (e.g. `--providers=scb`), every entry 
 `provider` is not in that set is skipped entirely — no codes seeded, no `classification`
 row inserted. This is a build-time filter only: no `provider` column exists in the
 shipped DB; the catalog remains provider-blind. An entry without a `provider` field is
-always processed.
+always processed. Most shared classification standards (SUN, SSYK, SNI, LKF, etc.) carry
+no `provider` tag deliberately — they are cross-provider standards whose instances may
+originate from any provider. These entries are always seeded (CSV codes always loaded)
+but receive the partial-build drift leniency described below when a `--providers` subset
+is active (#597).
 
 **`vardemangdsversion`-free seeds.** A classification may omit `vardemangdsversion`
 entirely. Without it, no variable instance is tagged and the classification row carries
@@ -871,7 +875,12 @@ in PR2 via the `external_classification` resolver.
 Build-time invariants (violations fail `reg-meta-build build-db` loudly, exit 10):
 
 - Every seed `vardemangdsversion` string must match at least one instance (entries
-  without `vardemangdsversion` are exempt from this check).
+  without `vardemangdsversion` are exempt). This is the **full-build** invariant. On a
+  provider-restricted build (`--providers` is a strict subset), a classification where
+  **all** strings match zero instances is demoted to a progress note — the
+  classification's label-source provider simply isn't in this build, so absence is
+  expected, not drift. A **mixed** classification (≥1 string matched, ≥1 unmatched)
+  still hard-errors on any build, including restricted ones (#597).
 - Every classification with at least one tagged instance must resolve to at least one
   value code.
 - A given `vardemangdsversion` string may belong to at most one classification.
