@@ -1506,7 +1506,6 @@ class TestLinkValueSetClassifications:
         assert counts["vintage_value_sets_linked"] == 0
         assert counts["multi_family_after"] == 1
         assert g.candidates() == []
-        assert g.candidates() == []
 
     def test_no_overlap_no_link(self) -> None:
         """Candidates all on one chain, but the state period overlaps NO candidate

@@ -1669,12 +1669,11 @@ def _check_classification_replaced_by(
     # predecessor_slug/successor_slug match the classification pair; (2) every
     # classification that IS a successor of an edge whose predecessor RESOLVES to a
     # live classification must carry a non-NULL supersedes_id. A mismatch means the
-    # derive pass drifted or was skipped. A successor whose ONLY predecessor edges
-    # are dead (cross-provider / retired predecessor that has no live
-    # `classification` row — allowed verbatim by the curated `relations.toml` arm)
-    # legitimately keeps `supersedes_id` NULL: `derive_supersedes_from_edges` joins
-    # `p.slug = e.predecessor_slug`, so a dead predecessor yields no id — hence the
-    # `JOIN classification p` inside the EXISTS below.
+    # derive pass drifted or was skipped. Defensive: require the pointer only when a
+    # predecessor resolves to a live classification. Classification edges are all-live
+    # (the materializer rejects dead predecessors), so in practice every successor edge
+    # yields a non-NULL supersedes_id; the live-predecessor join (`JOIN classification p`
+    # inside the EXISTS below) keeps the check robust regardless.
     orphan_ptr = conn.execute(
         """
         SELECT COUNT(*) FROM classification c

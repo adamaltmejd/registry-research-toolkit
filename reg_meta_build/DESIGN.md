@@ -1820,14 +1820,17 @@ consolidated:
   `timeseries_event`-derived path cannot express: **cross-provider** succession (e.g.
   SOS→SCB) and **dead-predecessor** edges. Curated edges dedup against event-derived
   ones via the shared `seen_*` PK sets, so a curated row duplicating an event edge
-  collapses (counted as a curated skip). Combined acyclicity is checked over both event
-  and curated edges before any INSERT. Provenance is `note = 'curated:slug_toml'`
-  (distinct from `'auto:timeseries_event'`). This is a **DIFFERENT relation** from the
-  per-entry `replaced_by` key-string field in slug TOMLs — that field is a *within-file
-  slug-typo rename pointer* (one TOML key → another in the same file, validated for
-  cycle-freedom); a `replaced_by` edge is a *succession edge* between two full FQIDs. It
-  is also distinct from `variable_state_lineage` (consumer↔source binding overlap; see
-  below).
+  collapses (counted as a curated skip). The **classification** grain is the exception
+  to the dead-predecessor allowance: both endpoints must be live (classification
+  succession is all-live — the reg_meta read side `classification_chain` depends on it),
+  so a curated `class/<slug>` edge with a dead predecessor fails the build. Combined
+  acyclicity is checked over both event and curated edges before any INSERT. Provenance
+  is `note = 'curated:slug_toml'` (distinct from `'auto:timeseries_event'`). This is a
+  **DIFFERENT relation** from the per-entry `replaced_by` key-string field in slug TOMLs
+  — that field is a *within-file slug-typo rename pointer* (one TOML key → another in
+  the same file, validated for cycle-freedom); a `replaced_by` edge is a *succession
+  edge* between two full FQIDs. It is also distinct from `variable_state_lineage`
+  (consumer↔source binding overlap; see below).
 
 - **`related_to`** — weak "see also" discovery link between distinct variable concepts.
   Variables only (3-seg FQIDs). The curated relation-kind vocabulary
