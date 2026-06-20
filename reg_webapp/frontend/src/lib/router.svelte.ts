@@ -21,6 +21,12 @@
 export type Route =
   | { name: "root" }
   | { name: "catalog-node"; fqidPath: string }
+  // `group` is the concept-group SUBJECT page (#617):
+  // `/catalog/group/<provider>/<register>/<key>`. Distinct from `catalog-node`
+  // (an FQID path) — a group is NOT FQID-addressable; it has its own fixed-shape
+  // route. `member` is the optional `?member=` focus hint (read off the query,
+  // like `?period`, NOT the path — so refining it doesn't remount the view).
+  | { name: "group"; provider: string; register: string; key: string }
   | { name: "project" }
   | { name: "search" }
   // `doc` is the minimal documentation viewer (#394); `identifier` is the doc
@@ -77,7 +83,22 @@ export function parseRoute(pathname: string): Route {
     if (segments.includes(null) || segments.includes("")) {
       return { name: "not-found", path };
     }
-    return { name: "catalog-node", fqidPath: (segments as string[]).join("/") };
+    const segs = segments as string[];
+    // The concept-group SUBJECT route (#617):
+    // `/catalog/group/<provider>/<register>/<key>` (4 segs, `group` prefix). It
+    // mirrors the backend's fixed-shape route, distinct from an FQID path — a
+    // group isn't FQID-addressable. Anything `group/...` of a different arity is
+    // NOT a group route and falls through to `catalog-node` (a bogus FQID that
+    // 404s server-side), matching the backend (the fixed 4-seg route only).
+    if (segs.length === 4 && segs[0] === "group") {
+      return {
+        name: "group",
+        provider: segs[1],
+        register: segs[2],
+        key: segs[3],
+      };
+    }
+    return { name: "catalog-node", fqidPath: segs.join("/") };
   }
   return { name: "not-found", path };
 }

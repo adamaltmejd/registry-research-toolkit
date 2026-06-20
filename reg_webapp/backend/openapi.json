@@ -42,6 +42,30 @@
         "title": "BindingChild",
         "type": "object"
       },
+      "BindingGroupRefModel": {
+        "description": "The concept group a binding belongs to, as the group's addressable\n`(provider, register, key)` (#616). Carried by `BindingNode.group` so a\nmember page knows its home group and can link to the group subject\n(`/catalog/group/<provider>/<register>/<key>`) without a second fetch.\nMembership is register-scoped and 1:1, so this is a singular ref \u2014 the full\nmember list lives behind the group route. `key` is `ConceptGroupModel.key`\n(the scope-unique derivation key), NOT an FQID segment. Maps reg_meta's\n`BindingGroupRef` 1:1.\n\nThe Python attr is `register_name` (alias `register`) to avoid the\n`BaseModel.register` method shadow \u2014 same pattern as `VariableRefModel`; the\nwire/JSON key stays `register`, and the mapper constructs with `register=`.",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "register": {
+            "title": "Register",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "register",
+          "key"
+        ],
+        "title": "BindingGroupRefModel",
+        "type": "object"
+      },
       "BindingNode": {
         "description": "A binding LEAF (3-seg FQID) \u2014 the addressable variable plus its FULL\nlongitudinal record embedded from one `Catalog.resolve` call: shared\nmetadata, every state (each tagged with its variant), the variable-grain\n`same_as` / `related_to` / `lineage` edges, and the full variable\n`succession_chain` (#582).\n\n`lineage_warnings` are intentionally OMITTED \u2014 `ResolvedVariable` doesn't\ncarry them; they arrive via A5.2's `/lineage_warnings` endpoint. This full-node\nshape is the binding leaf with NO narrowing query: a `?period` resolves via\n`resolve_at` (\u2192 `StatesResponse`) instead, and a narrowing modifier (`?variant`\n/ `?value_set_version`) WITHOUT `?period` is a 422 \u2014 it is inert without a\nperiod, so it errors rather than silently embedding full history.",
         "properties": {
@@ -70,6 +94,16 @@
           "fqid": {
             "title": "Fqid",
             "type": "string"
+          },
+          "group": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BindingGroupRefModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "is_identifier": {
             "title": "Is Identifier",
@@ -971,6 +1005,122 @@
           "members"
         ],
         "title": "ConceptGroupModel",
+        "type": "object"
+      },
+      "ConceptGroupNode": {
+        "description": "The concept group as a browsable subject (#617): the group identity\n(provider/register/key + label/source/axes) and its members WITH per-member\ncoverage. Returned by `/catalog/group/{provider}/{register}/{key}` \u2014 a\nfixed-shape route, NOT an FQID kind (a group is not FQID-addressable; its\nmembers carry the real leaf FQIDs).\n\n`member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to\nhighlight), or None when absent / unrecognized \u2014 the page stays first-class\neither way (a bad hint is ignored, not a 404).",
+        "properties": {
+          "axes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Axes",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "const": "concept-group",
+            "default": "concept-group",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Member"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupNodeMember"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "register": {
+            "description": "The group's register slug. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see VariableRefModel); the wire key is `register` via the alias.",
+            "title": "Register",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "edge",
+              "token",
+              "curated"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "register",
+          "key",
+          "label",
+          "source",
+          "axes",
+          "members"
+        ],
+        "title": "ConceptGroupNode",
+        "type": "object"
+      },
+      "ConceptGroupNodeMember": {
+        "description": "A concept-group member on the group SUBJECT node \u2014 the browse\n`ConceptGroupMemberModel` (fqid + name + facets) PLUS the per-member\nstudy-window `coverage` (#351; reusing `VariableCoverageModel`, zipped on by\nthe group route from `register_variable_coverage`). `coverage` is None for a\nmember with no coverage row (a stateless variable, or a member whose leaf\nslug didn't match the register's coverage map \u2014 defensive).",
+        "properties": {
+          "coverage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VariableCoverageModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "facets": {
+            "items": {
+              "$ref": "#/components/schemas/GroupFacetModel"
+            },
+            "title": "Facets",
+            "type": "array"
+          },
+          "fqid": {
+            "title": "Fqid",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "fqid",
+          "facets"
+        ],
+        "title": "ConceptGroupNodeMember",
         "type": "object"
       },
       "ConceptGroupSearchResult": {
@@ -2882,6 +3032,80 @@
         "summary": "Get Catalog Root"
       }
     },
+    "/api/catalog/group/{provider}/{register}/{key}": {
+      "get": {
+        "description": "The concept group addressed by `(provider, register, key)` (#617) \u2014 a\nbrowsable subject (all members selected). 404 when no group with that key\nexists for the (provider, register) pair, OR the pair names no register\n(`Catalog.concept_group` returns None for both). `?member=<slug>` is an\noptional FOCUS hint (a member leaf slug to highlight): validated as a slug\nbefore any connection opens, then echoed on the node only when it actually\nnames a member of this group \u2014 an unrecognized hint is IGNORED (the group page\nstays first-class), not a 404.\n\nValidate `provider`/`register` as a register FQID BEFORE opening a connection\n(mirrors `get_register_variants`): `Fqid.register_fqid` runs reg_meta's\nauthoritative `validate_slug` on both, rejecting `class`/`_default`/traversal/\nperiod-shaped tokens (FqidError \u2192 422, zero SQL). `key` is the group's\nderivation key, not a slug, so it is NOT slug-validated here \u2014 an unknown key\nis a clean 404 from `concept_group`.",
+        "operationId": "get_concept_group_api_catalog_group__provider___register___key__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "register",
+            "required": true,
+            "schema": {
+              "title": "Register",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "member",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Member"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConceptGroupNode"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Concept Group"
+      }
+    },
     "/api/catalog/{fqid}": {
       "get": {
         "description": "Resolve any catalog node by FQID path; on a binding leaf, an optional\n`?period` (with `?variant` / `?value_set_version`) narrows to the resolve_at\nstate subset.\n\nThe guards (`_validated_fqid` for the path, `_validated_period` /\n`_validated_variant` for the queries) run as dependencies, BEFORE this body \u2014\nso a malformed path OR a malformed period/variant returns 422 **before** any\nconnection opens (zero SQL, zero opens). `parse` is DB-free and runs before\nthe open too. The classification-root literal `class` (1 seg) is special-cased\nbefore `parse`.\n\n`?period` semantics: present + binding leaf \u2192 `{states: [...]}` (the\nresolve_at subset, narrowed by `?variant` / `?value_set_version`; the #307\ncomma list form resolves per segment, unioned + deduped by state_id). present +\nnon-binding kind \u2192 IGNORED (resolve normally). absent on a binding leaf \u2192 the\nfull node (full history) UNLESS a narrowing modifier (`?variant` /\n`?value_set_version`) is set: those are inert without `?period`, so they 422\n(\"requires ?period\") rather than silently no-op. absent on a non-binding kind \u2192\nthe full node. `?value_set_version` is a read-only browse-narrowing label\nfilter \u2014 there is no FQID `@version` pin (retired). The connection is opened and\nused within this sync body (one thread \u2014 see `_catalog_conn`).",
@@ -2957,6 +3181,7 @@
                           "binding": "#/components/schemas/BindingNode",
                           "classification": "#/components/schemas/ClassificationNode",
                           "classification-root": "#/components/schemas/ClassificationRootResponse",
+                          "concept-group": "#/components/schemas/ConceptGroupNode",
                           "provider": "#/components/schemas/ProviderResponse",
                           "register": "#/components/schemas/RegisterResponse"
                         },
@@ -2977,6 +3202,9 @@
                         },
                         {
                           "$ref": "#/components/schemas/ClassificationNode"
+                        },
+                        {
+                          "$ref": "#/components/schemas/ConceptGroupNode"
                         }
                       ]
                     },

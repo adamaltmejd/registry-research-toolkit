@@ -165,10 +165,14 @@ export function memberAt(
 
 /** A node's display label — its `name` when present, else its FQID (providers
  * and registers carry an optional `name`; classifications carry a required
- * `name`; the classification-root carries a default `name`). */
+ * `name`; the classification-root carries a default `name`; a concept-group node
+ * (#617) carries a `label`, not a `name`/`fqid`). */
 export function nodeLabel(node: CatalogNode): string {
   if (node.kind === "classification-root" || node.kind === "classification") {
     return node.name;
+  }
+  if (node.kind === "concept-group") {
+    return node.label;
   }
   return node.name ?? node.fqid;
 }

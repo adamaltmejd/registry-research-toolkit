@@ -11,6 +11,7 @@ from __future__ import annotations
 import pytest
 from reg_meta.fqid import (
     DEFAULT_VARIANT_SLUG,
+    RESERVED_GROUP_SLUG,
     RESERVED_HTTP_SUFFIX_SLUGS,
     RESERVED_VARIANTS_SLUG,
     Fqid,
@@ -212,6 +213,51 @@ class TestReservedHttpSuffixSlugs:
         # path now that the deriver delegates to validate_slug (the explicit
         # RESERVED_SLUGS check is gone).
         assert derive_variable_slug(name) is None
+
+
+# ---------------------------------------------------------------------------
+# Reserved PROVIDER-slot slug (#617, see DESIGN.md → FQID grammar): `group` would
+# shadow the `/catalog/group/{provider}/{register}/{key}` concept-group subject
+# route — the FIRST token reserved in the provider slot (a literal `group` prefix
+# put `{provider}` at a non-leading position, so the provider slot CAN now collide).
+# Reserved in the provider slot ONLY; a register / variable / classification named
+# `group` is unaffected.
+# ---------------------------------------------------------------------------
+
+
+class TestReservedGroupSlug:
+    def test_provider_slot_rejects_group(self) -> None:
+        with pytest.raises(FqidError, match="reserved"):
+            validate_slug(RESERVED_GROUP_SLUG, FqidKind.PROVIDER)
+
+    def test_provider_fqid_rejects_group(self) -> None:
+        # The construction path runs validate_slug on the provider segment.
+        with pytest.raises(FqidError, match="reserved"):
+            Fqid.provider_fqid(RESERVED_GROUP_SLUG)
+        with pytest.raises(FqidError, match="reserved"):
+            parse(RESERVED_GROUP_SLUG)  # 1-seg provider FQID
+
+    def test_group_accepted_in_other_slots(self) -> None:
+        # `group` only lands at the provider position in the subject route, so a
+        # register / variable / classification slug `group` is a clean path.
+        validate_slug(RESERVED_GROUP_SLUG, FqidKind.REGISTER)
+        validate_slug(RESERVED_GROUP_SLUG, "variable")
+        validate_slug(RESERVED_GROUP_SLUG, FqidKind.CLASSIFICATION)
+
+    def test_group_parses_in_register_and_variable_leaf(self) -> None:
+        # `scb/group` (register) and `scb/lisa/group` (variable leaf) are clean
+        # FQIDs — only the PROVIDER (leading) position carries the reservation.
+        assert parse("scb/group").kind is FqidKind.REGISTER
+        assert parse("scb/lisa/group").kind is FqidKind.VARIABLE_BINDING
+        assert parse("class/group").kind is FqidKind.CLASSIFICATION
+
+    def test_group_rejected_as_provider_in_multiseg(self) -> None:
+        # A 2-/3-seg FQID whose PROVIDER segment is `group` is rejected (the
+        # provider-slot reservation fires on the leading segment).
+        with pytest.raises(FqidError, match="reserved"):
+            parse("group/lisa")
+        with pytest.raises(FqidError, match="reserved"):
+            parse("group/lisa/kon")
 
 
 # ---------------------------------------------------------------------------

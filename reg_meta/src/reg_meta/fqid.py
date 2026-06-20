@@ -83,10 +83,21 @@ RESERVED_HTTP_SUFFIX_SLUGS: frozenset[str] = frozenset(
 # The literal `/catalog/{provider}/{register}/variants` register sub-resource
 # shadows ONLY a 3-seg variable leaf (`scb/lisa/variants`); a 2-seg register
 # (`scb/variants`) is a clean register path. So `variants` is reserved in the
-# VARIABLE slot only. (The provider slot is always a leading segment and the
-# register_variant slug rides a `?variant=` query value, never a path segment —
-# neither can collide, so neither is reserved.)
+# VARIABLE slot only. (The register_variant slug rides a `?variant=` query value,
+# never a path segment, so it carries no reservation either.)
 RESERVED_VARIANTS_SLUG = "variants"
+
+# The literal `/catalog/group/{provider}/{register}/{key}` concept-group SUBJECT
+# route (#617) puts `group` at a NON-leading position: `{provider}` is its second
+# segment, not the first. A provider named `group` would mint a binding-suffix URL
+# `/catalog/group/<register>/<variable>/states` (5 segments) that this earlier-declared
+# 5-seg group route captures (provider=<register>, register=<variable>, key=`states`)
+# → a wrong 404 instead of the binding's `/states`. So `group` is reserved in the
+# PROVIDER slot — the FIRST token to carry a reservation in the provider slot,
+# correcting the prior assumption that the provider slot (always a leading segment)
+# could never be a colliding URL position. No provider is named `group` today, so this
+# breaks no data; it's a forward-looking guard + correctness fix.
+RESERVED_GROUP_SLUG = "group"
 
 # The FQID-grammar prose (see DESIGN.md → FQID grammar) pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
 # only"; the form below enforces both in one expression. Anchored with `\Z`, NOT
@@ -331,9 +342,10 @@ def validate_slug(
     # Reserved HTTP-suffix slugs (see DESIGN.md → FQID grammar): a grammar-valid slug equal to one of these
     # would shadow a live reg_webapp catalog sub-resource route (see
     # `RESERVED_HTTP_SUFFIX_SLUGS`). Keyed on the slot — a token only collides in
-    # the slot(s) whose canonical URL position the route can occupy. The provider
-    # and register_variant slots carry no reservation (a provider is always a
-    # leading segment; a register_variant rides a `?variant=` query value).
+    # the slot(s) whose canonical URL position the route can occupy. The
+    # register_variant slot carries no reservation (it rides a `?variant=` query
+    # value, never a path segment); the provider slot carries the SINGLE
+    # `RESERVED_GROUP_SLUG` reservation below, but no HTTP-suffix reservation.
     if slot_name in ("variable", "register", "classification") and (
         value in RESERVED_HTTP_SUFFIX_SLUGS
     ):
@@ -347,6 +359,18 @@ def validate_slug(
             f"slug in {slot_name} is reserved: {value!r} (it would shadow the "
             f"`/catalog/{{provider}}/{{register}}/variants` register sub-resource — "
             f"see reg_webapp routes/catalog.py)"
+        )
+    # `group` is reserved in the PROVIDER slot ONLY: the 5-seg group SUBJECT route
+    # `/catalog/group/{provider}/{register}/{key}` (#617) is declared above the
+    # binding-suffix routes, so a provider named `group` would have its binding's
+    # suffix URL (`/catalog/group/<register>/<variable>/states`, also 5 segments)
+    # captured by the group route → wrong 404. A register/variable/classification
+    # named `group` is fine — only the provider position lands at that literal.
+    if slot_name == FqidKind.PROVIDER.value and value == RESERVED_GROUP_SLUG:
+        raise FqidError(
+            f"slug in {slot_name} is reserved: {value!r} (it would shadow the "
+            f"`/catalog/group/{{provider}}/{{register}}/{{key}}` concept-group "
+            f"subject route — see reg_webapp routes/catalog.py)"
         )
 
 

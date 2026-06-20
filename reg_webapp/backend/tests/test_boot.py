@@ -16,7 +16,11 @@ import pytest
 from fastapi.routing import APIRoute
 from fastapi.testclient import TestClient
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import RESERVED_HTTP_SUFFIX_SLUGS, RESERVED_VARIANTS_SLUG
+from reg_meta.fqid import (
+    RESERVED_GROUP_SLUG,
+    RESERVED_HTTP_SUFFIX_SLUGS,
+    RESERVED_VARIANTS_SLUG,
+)
 from reg_webapp.app import create_app
 
 
@@ -40,6 +44,9 @@ _CATCH_ALL = "/api/catalog/{fqid:path}"
 # the classification node as `edition_chain`.)
 _ROUTES_BEFORE_CATCH_ALL = [
     "/api/catalog/{provider}/{register}/variants",
+    # #617: the concept-group SUBJECT route — a fixed-shape 4-seg route with a
+    # `group` literal PREFIX, declared above the greedy catch-all.
+    "/api/catalog/group/{provider}/{register}/{key}",
     "/api/catalog/{fqid:path}/states",
     "/api/catalog/{fqid:path}/predecessors",
     "/api/catalog/{fqid:path}/successors",
@@ -120,16 +127,46 @@ def test_reserved_slug_set_mirrors_catalog_routes():
     )
     # The literal `/{provider}/{register}/variants` register sub-resource (a
     # fixed-shape route with no `{fqid:path}`, distinct from the `/api/catalog`
-    # root) → its last-segment tail must equal RESERVED_VARIANTS_SLUG.
+    # root) → its last-segment tail must equal RESERVED_VARIANTS_SLUG. Only routes
+    # ending in a LITERAL tail are reservation-relevant; the `/catalog/group/...`
+    # subject route (#617) ends in the PARAMETER `{key}`, so it is NOT a tail
+    # reservation — its reservation rides the `group` PREFIX (checked below).
+    # Exclude parameterized tails so only literal sub-resource tails are checked.
     variants_tails = {
-        path.rsplit("/", 1)[1]
+        tail
         for path in catalog_routes
         if "{fqid:path}" not in path and path != "/api/catalog"
+        for tail in [path.rsplit("/", 1)[1]]
+        if "{" not in tail
     }
     assert variants_tails == {RESERVED_VARIANTS_SLUG}, (
         "RESERVED_VARIANTS_SLUG drifted from the `/variants` register sub-resource "
         f"route: live routes have {sorted(variants_tails)}, reserved value is "
         f"{RESERVED_VARIANTS_SLUG!r}. Update reg_meta.fqid or routes/catalog.py."
+    )
+    # The `/catalog/group/{provider}/{register}/{key}` subject route (#617) puts a
+    # LITERAL token at the position the `{provider}` segment then follows, so unlike
+    # `variants` (a tail) its reservation is on the PROVIDER SLOT — a provider named
+    # `group` would have its binding-suffix URL captured by this earlier-declared
+    # 5-seg route. Derive the literal prefix tokens that sit right BEFORE a
+    # `{provider}` segment (the `/api/catalog` shape is `.../<literal>/{provider}/...`)
+    # and pin the set to {RESERVED_GROUP_SLUG} so a new prefixed subject route added
+    # without its provider-slot reservation fails loudly here.
+    provider_prefixes = {
+        segs[i - 1]
+        for path in catalog_routes
+        for segs in [path.split("/")]
+        for i, seg in enumerate(segs)
+        if seg == "{provider}" and i > 0 and "{" not in segs[i - 1]
+    }
+    # `/catalog/{provider}/...` routes have `catalog` immediately before `{provider}`
+    # (the shared route prefix, not a reservable token); drop it so only genuine
+    # subject-route prefixes remain.
+    provider_prefixes.discard("catalog")
+    assert provider_prefixes == {RESERVED_GROUP_SLUG}, (
+        "RESERVED_GROUP_SLUG drifted from the `/catalog/group/...` subject route: "
+        f"live provider-slot prefixes are {sorted(provider_prefixes)}, reserved value "
+        f"is {RESERVED_GROUP_SLUG!r}. Update reg_meta.fqid or routes/catalog.py."
     )
 
 

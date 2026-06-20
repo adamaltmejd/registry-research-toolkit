@@ -314,6 +314,25 @@ class ConceptGroupModel(BaseModel):
     members: list[ConceptGroupMemberModel]
 
 
+class BindingGroupRefModel(BaseModel):
+    """The concept group a binding belongs to, as the group's addressable
+    `(provider, register, key)` (#616). Carried by `BindingNode.group` so a
+    member page knows its home group and can link to the group subject
+    (`/catalog/group/<provider>/<register>/<key>`) without a second fetch.
+    Membership is register-scoped and 1:1, so this is a singular ref — the full
+    member list lives behind the group route. `key` is `ConceptGroupModel.key`
+    (the scope-unique derivation key), NOT an FQID segment. Maps reg_meta's
+    `BindingGroupRef` 1:1.
+
+    The Python attr is `register_name` (alias `register`) to avoid the
+    `BaseModel.register` method shadow — same pattern as `VariableRefModel`; the
+    wire/JSON key stays `register`, and the mapper constructs with `register=`."""
+
+    provider: str
+    register_name: str = Field(alias="register")
+    key: str
+
+
 # ── Binding-leaf embedded longitudinal record ──────────────────────────────
 # The binding LEAF (3-seg) embeds the variable's FULL record from one
 # `Catalog.resolve` call: every state + variable-grain edges. These
@@ -503,6 +522,13 @@ class BindingNode(BaseModel):
     succession_chain: list[VariableEditionModel] = Field(default_factory=list)
     related_to: list[RelatedRefModel]
     lineage: list[LineageEdgeModel]
+    # #616/#617: the binding's owning concept group as its addressable
+    # `(provider, register, key)` when it is a group member, else None. Lets a
+    # member page render group-aware (a link to the group subject) without a
+    # second fetch. Membership is 1:1 (DB PK), so this is singular; the member
+    # list lives behind the group route. Defaulted (additive) per the #317 rule —
+    # the SPA must tolerate one edge-cache generation of payloads missing it.
+    group: BindingGroupRefModel | None = None
     via_same_as: list[str] | None = None
 
 
@@ -545,16 +571,68 @@ class RootResponse(BaseModel):
     children: list[ProviderNode | ClassificationRootNode]
 
 
+# ── Concept-group SUBJECT node (#616/#617) ──────────────────────────────────
+# A concept group addressed by `/catalog/group/<provider>/<register>/<key>` — a
+# browsable subject in its own right (a group's default selection is "all
+# members", which a single member FQID can't express, so it needs its own
+# address). DISTINCT from the presentation-only `ConceptGroupModel` folded into a
+# register/classification listing: this is the resolved group as a first-class
+# node, carrying per-member coverage so the page renders without a second fetch.
+
+
+class ConceptGroupNodeMember(ConceptGroupMemberModel):
+    """A concept-group member on the group SUBJECT node — the browse
+    `ConceptGroupMemberModel` (fqid + name + facets) PLUS the per-member
+    study-window `coverage` (#351; reusing `VariableCoverageModel`, zipped on by
+    the group route from `register_variable_coverage`). `coverage` is None for a
+    member with no coverage row (a stateless variable, or a member whose leaf
+    slug didn't match the register's coverage map — defensive)."""
+
+    coverage: VariableCoverageModel | None = None
+
+
+class ConceptGroupNode(BaseModel):
+    """The concept group as a browsable subject (#617): the group identity
+    (provider/register/key + label/source/axes) and its members WITH per-member
+    coverage. Returned by `/catalog/group/{provider}/{register}/{key}` — a
+    fixed-shape route, NOT an FQID kind (a group is not FQID-addressable; its
+    members carry the real leaf FQIDs).
+
+    `member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to
+    highlight), or None when absent / unrecognized — the page stays first-class
+    either way (a bad hint is ignored, not a 404)."""
+
+    kind: Literal["concept-group"] = "concept-group"
+    provider: str
+    register_name: str = Field(
+        alias="register",
+        description="The group's register slug. The Python attr is `register_name` "
+        "to avoid the BaseModel.register method shadow (see VariableRefModel); the "
+        "wire key is `register` via the alias.",
+    )
+    key: str
+    label: str
+    source: Literal["edge", "token", "curated"]
+    axes: list[str]
+    members: list[ConceptGroupNodeMember]
+    # The validated `?member=` focus hint (a member's leaf slug), echoed so the SPA
+    # highlights it; None when absent or not a member of this group.
+    member: str | None = None
+
+
 # The catch-all `/api/catalog/{fqid:path}` returns one of these, discriminated
 # by `kind` so the codegen'd TS is a tagged union (A5.3). A binding leaf is a
 # `BindingNode` (full record embedded); a classification leaf a
-# `ClassificationNode`.
+# `ClassificationNode`. `ConceptGroupNode` is the group SUBJECT (#617), returned
+# by the fixed-shape `/catalog/group/...` route — folded into the union so the SPA
+# renders it through the same `kind`-switch as the other browse nodes.
 CatalogNode = Annotated[
     ProviderResponse
     | RegisterResponse
     | BindingNode
     | ClassificationRootResponse
-    | ClassificationNode,
+    | ClassificationNode
+    | ConceptGroupNode,
     Field(discriminator="kind"),
 ]
 
