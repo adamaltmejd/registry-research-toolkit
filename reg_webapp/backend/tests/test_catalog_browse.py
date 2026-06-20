@@ -212,6 +212,110 @@ def test_register_without_groups_has_empty_list(client):
     assert body["groups"] == []
 
 
+# ── Concept-group SUBJECT route (#617) ──────────────────────────────────────
+# `/catalog/group/<provider>/<register>/<key>` exposes a group as a browsable
+# subject. The fixture seeds a token month group `ink` on scb/rams (members
+# inkjan/inkfeb) — see conftest `_seed_concept_groups`.
+
+
+def test_group_route_returns_concept_group_node(client):
+    """#617: the group route resolves a real group by key to a ConceptGroupNode —
+    NOT a catch-all FQID parse. The `kind` is `concept-group`; identity +
+    members + facets are carried."""
+    resp = client.get("/api/catalog/group/scb/rams/ink")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["kind"] == "concept-group"
+    assert body["provider"] == "scb"
+    # The wire key is `register` (the BaseModel.register-shadow alias), not
+    # `register_name`.
+    assert body["register"] == "rams"
+    assert body["key"] == "ink"
+    assert body["source"] == "token"
+    assert body["axes"] == ["month"]
+    assert [m["fqid"] for m in body["members"]] == [
+        "scb/rams/inkjan",
+        "scb/rams/inkfeb",
+    ]
+    assert body["members"][0]["facets"] == [
+        {"axis": "month", "value": "01", "label": "januari"}
+    ]
+    # No focus hint requested → `member` is null.
+    assert body["member"] is None
+
+
+def test_group_route_carries_per_member_coverage(client):
+    """#617: each member carries its per-variable study-window `coverage` (#351),
+    zipped on from `register_variable_coverage` — present as a key on every member
+    (None for a stateless member; the fixture's inkjan/inkfeb have no states, so
+    coverage is None — the FIELD must still be present per the additive shape)."""
+    body = client.get("/api/catalog/group/scb/rams/ink").json()
+    for member in body["members"]:
+        assert "coverage" in member
+
+
+def test_group_route_unknown_key_404(client):
+    resp = client.get("/api/catalog/group/scb/rams/nosuchkey")
+    assert resp.status_code == 404
+
+
+def test_group_route_unknown_register_404(client):
+    # `concept_group` returns None for a pair that names no register, too.
+    resp = client.get("/api/catalog/group/scb/nope/ink")
+    assert resp.status_code == 404
+
+
+def test_group_route_member_focus_hint_echoed(client):
+    """#617: a `?member=<slug>` that names a real member is echoed on the node so
+    the SPA can highlight it."""
+    body = client.get("/api/catalog/group/scb/rams/ink?member=inkjan").json()
+    assert body["member"] == "inkjan"
+
+
+def test_group_route_unknown_member_hint_ignored(client):
+    """#617: a `?member=` that is NOT a member of this group is IGNORED (None), not
+    a 404 — the group page stays first-class (a bad focus hint mustn't break it)."""
+    resp = client.get("/api/catalog/group/scb/rams/ink?member=notamember")
+    assert resp.status_code == 200
+    assert resp.json()["member"] is None
+
+
+def test_group_route_matched_before_catch_all(client):
+    """#617 (the load-bearing route-ordering guard): a `/catalog/group/p/r/key`
+    path must be matched by the FIXED group route, NOT greedy-consumed by the
+    `{fqid:path}` catch-all and mis-parsed as an FQID. If the catch-all won, this
+    4-seg path would 422 at the FQID arity guard (or 404 as a bogus FQID) — the
+    `concept-group` kind proves the fixed route fired first."""
+    body = client.get("/api/catalog/group/scb/rams/ink").json()
+    assert body["kind"] == "concept-group"
+
+
+def test_grouped_binding_leaf_carries_group_ref(client):
+    """#616/#617: a grouped binding's leaf carries its owning group as a
+    `(provider, register, key)` ref, so a member page knows its home group without
+    a second fetch. inkjan is a member of the `ink` group on scb/rams."""
+    body = client.get("/api/catalog/scb/rams/inkjan").json()
+    assert body["kind"] == "binding"
+    assert body["group"] == {"provider": "scb", "register": "rams", "key": "ink"}
+
+
+def test_ungrouped_binding_leaf_group_ref_is_none(client):
+    """#616/#617: an ungrouped binding's leaf carries `group: None`. kon is not a
+    concept-group member."""
+    body = client.get("/api/catalog/scb/lisa/kon").json()
+    assert body["group"] is None
+
+
+def test_same_as_alias_binding_leaf_reports_target_group(client):
+    """#616/#617: a same_as alias's leaf reports its TARGET's group, since the
+    ref is keyed on the RESOLVED variable's triple. `scb/lisa/inkjan-alias` is a
+    phantom slug resolving via same_as to the grouped `scb/rams/inkjan`, so its
+    leaf carries inkjan's `ink` group on scb/rams (not the alias's own register)."""
+    body = client.get("/api/catalog/scb/lisa/inkjan-alias").json()
+    assert body["kind"] == "binding"
+    assert body["group"] == {"provider": "scb", "register": "rams", "key": "ink"}
+
+
 def test_classification_root_drops_superseded_and_folds_dimension_group(client):
     """#608: the classification root surfaces only TERMINAL editions as children
     (a row whose `superseded_by` is truthy — a successor exists — is dropped) and

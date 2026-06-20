@@ -54,6 +54,27 @@ describe("parseRoute", () => {
     });
   });
 
+  it("parses the concept-group SUBJECT route (#617)", () => {
+    // `/catalog/group/<provider>/<register>/<key>` (4 segs, `group` prefix) is the
+    // group subject — NOT an FQID path. Distinct route name + parsed triple.
+    expect(parseRoute("/catalog/group/scb/rams/ink")).toEqual({
+      name: "group",
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+  });
+
+  it("does NOT treat a non-4-seg group path as the group route (#617)", () => {
+    // A bare `group/<p>/<r>` (3 segs) is NOT the fixed group route — it falls
+    // through to `catalog-node` (a bogus FQID that 404s server-side), mirroring
+    // the backend's fixed 4-seg route.
+    expect(parseRoute("/catalog/group/scb/rams")).toEqual({
+      name: "catalog-node",
+      fqidPath: "group/scb/rams",
+    });
+  });
+
   it("parses the /project authoring route (A5.3c)", () => {
     expect(parseRoute("/project")).toEqual({ name: "project" });
     expect(parseRoute("/project/")).toEqual({ name: "project" }); // trailing slash
@@ -170,6 +191,14 @@ describe("onNavClick", () => {
 
   it("intercepts an SPA route under /catalog", () => {
     expect(clickAnchor("/catalog/scb/lisa/kon").defaultPrevented).toBe(true);
+  });
+
+  it("intercepts the concept-group SUBJECT route (#617)", () => {
+    // A member page's "in group" link goes to `/catalog/group/<p>/<r>/<key>`; now
+    // that the route parses to `group` (not not-found), onNavClick intercepts it.
+    expect(clickAnchor("/catalog/group/scb/rams/ink").defaultPrevented).toBe(
+      true,
+    );
   });
 
   it("intercepts the /project authoring route (A5.3c)", () => {

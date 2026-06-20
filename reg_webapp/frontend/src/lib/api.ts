@@ -200,13 +200,16 @@ export type RootResponse = Schemas["RootResponse"];
 export type VariantsResponse = Schemas["VariantsResponse"];
 
 /** The discriminated browse union the catch-all returns WITHOUT `?period`
- * (A5.3a). Each arm carries a `kind` literal. */
+ * (A5.3a). Each arm carries a `kind` literal. `ConceptGroupNode` (#617) is the
+ * group SUBJECT returned by the FIXED `/catalog/group/...` route (not the
+ * catch-all) — it's in the union so the same `kind`-switch renders it. */
 export type CatalogNode =
   | Schemas["ProviderResponse"]
   | Schemas["RegisterResponse"]
   | Schemas["BindingNode"]
   | Schemas["ClassificationRootResponse"]
-  | Schemas["ClassificationNode"];
+  | Schemas["ClassificationNode"]
+  | Schemas["ConceptGroupNode"];
 
 /** A binding child under a register node — a thin (fqid, name) entry, NOT the
  * embedded longitudinal record (that lives on the binding LEAF, `BindingNode`). */
@@ -236,6 +239,20 @@ export type LineageWarningModel = Schemas["LineageWarningModel"];
  * member rows under the group and expands to a facet picker. */
 export type ConceptGroup = Schemas["ConceptGroupModel"];
 export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
+
+/** The concept group as a browsable SUBJECT (#617), returned by the fixed
+ * `/catalog/group/<provider>/<register>/<key>` route — group identity +
+ * members WITH per-member coverage + the echoed `?member=` focus hint. A
+ * `kind: "concept-group"` arm of `CatalogNode`. Distinct from the
+ * presentation-only `ConceptGroup` folded into a register listing. */
+export type ConceptGroupNodeData = Schemas["ConceptGroupNode"];
+/** A member on the group SUBJECT node — the browse member plus its per-variable
+ * study-window `coverage` (null for a stateless member). */
+export type ConceptGroupNodeMember = Schemas["ConceptGroupNodeMember"];
+/** The concept group a binding belongs to (#616), as `(provider, register,
+ * key)` — carried on `BindingNode.group` (null when ungrouped) so a member page
+ * links to its group subject without a second fetch. */
+export type BindingGroupRef = Schemas["BindingGroupRefModel"];
 
 // The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
 // binding leaf is queried with `?period` (the resolve_at subset), and a
@@ -313,6 +330,23 @@ export function getRegisterVariants(
   register: string,
 ): Promise<VariantsResponse> {
   return apiGet<VariantsResponse>(`/catalog/${encodeFqid(register)}/variants`);
+}
+
+/** Resolve a concept group SUBJECT by `(provider, register, key)` (#617) — the
+ * group with all members + per-member coverage. Each path segment is
+ * percent-encoded (the server re-validates provider/register as slugs; the key
+ * is a derivation key). `member` is the optional focus hint (a member leaf slug
+ * to highlight), echoed back on the node only when it names a real member. A
+ * 404 (unknown key / register) surfaces as an `ApiError`. */
+export function getConceptGroup(
+  provider: string,
+  register: string,
+  key: string,
+  member?: string,
+): Promise<ConceptGroupNodeData> {
+  const path = `/catalog/group/${encodeFqid(`${provider}/${register}/${key}`)}`;
+  const query = member ? `?member=${encodeURIComponent(member)}` : "";
+  return apiGet<ConceptGroupNodeData>(`${path}${query}`);
 }
 
 // ── Binding sub-endpoints ───────────────────────────────────────────────────

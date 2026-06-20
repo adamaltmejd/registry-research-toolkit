@@ -355,9 +355,18 @@ reservation:
   classification. All three slots are therefore reserved.
 - `RESERVED_VARIANTS_SLUG` — `"variants"`. The `/catalog/{provider}/{register}/variants`
   register sub-resource shadows only a 3-segment variable leaf, so `variants` is
-  reserved in the **variable slot only**. The provider slot (always a leading segment)
-  and the register_variant slot (a `?variant=` query value, never a path segment) carry
-  no reservation.
+  reserved in the **variable slot only**. The register_variant slot (a `?variant=` query
+  value, never a path segment) carries no reservation.
+- `RESERVED_GROUP_SLUG` — `"group"`. The `/catalog/group/{provider}/{register}/{key}`
+  concept-group **subject** route (#617) is the first route to place a literal token in
+  a **non-leading** position where `{provider}` then follows, so it is reserved in the
+  **provider slot only**. A provider named `group` would let a binding-suffix URL
+  `/catalog/group/<register>/<variable>/states` (5 segments) be captured by that
+  earlier-declared 5-segment group route → a wrong 404. This corrects the earlier
+  assumption that the provider slot (always a leading segment) could never be a
+  colliding URL position; it can, once a route prefixes it. A register / variable /
+  classification named `group` is still fine — only the provider position lands at that
+  literal.
 
 `validate_slug` enforces both; `derive_variable_slug` delegates to it, so a column
 literally named e.g. "States" or "Variants" degrades to `None` (triggering the

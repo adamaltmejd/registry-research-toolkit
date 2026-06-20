@@ -3,6 +3,7 @@ import { onMount } from "svelte";
 import { type Context, errMessage, getContext } from "./lib/api";
 import CatalogNodeView from "./lib/CatalogNodeView.svelte";
 import CatalogRoot from "./lib/CatalogRoot.svelte";
+import ConceptGroupView from "./lib/ConceptGroupView.svelte";
 import DocView from "./lib/DocView.svelte";
 import ProjectEditor from "./lib/ProjectEditor.svelte";
 import { projectStore } from "./lib/project_store.svelte";
@@ -112,6 +113,17 @@ const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
     {:else if route.name === "catalog-node"}
       {#key route.fqidPath}
         <CatalogNodeView fqidPath={route.fqidPath} {regMetaVersion} {steward} />
+      {/key}
+    {:else if route.name === "group"}
+      <!-- #617: the concept-group SUBJECT page. Keyed on the (provider, register,
+           key) triple so navigating between groups remounts; the `?member=` focus
+           hint is read off the query INSIDE the view (no remount on refine). -->
+      {#key `${route.provider}/${route.register}/${route.key}`}
+        <ConceptGroupView
+          provider={route.provider}
+          register={route.register}
+          key={route.key}
+        />
       {/key}
     {:else if route.name === "project"}
       <ProjectEditor {regMetaVersion} {steward} />

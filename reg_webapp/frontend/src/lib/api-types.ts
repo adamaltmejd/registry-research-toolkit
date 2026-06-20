@@ -46,6 +46,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/catalog/group/{provider}/{register}/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Concept Group
+         * @description The concept group addressed by `(provider, register, key)` (#617) — a
+         *     browsable subject (all members selected). 404 when no group with that key
+         *     exists for the (provider, register) pair, OR the pair names no register
+         *     (`Catalog.concept_group` returns None for both). `?member=<slug>` is an
+         *     optional FOCUS hint (a member leaf slug to highlight): validated as a slug
+         *     before any connection opens, then echoed on the node only when it actually
+         *     names a member of this group — an unrecognized hint is IGNORED (the group page
+         *     stays first-class), not a 404.
+         *
+         *     Validate `provider`/`register` as a register FQID BEFORE opening a connection
+         *     (mirrors `get_register_variants`): `Fqid.register_fqid` runs reg_meta's
+         *     authoritative `validate_slug` on both, rejecting `class`/`_default`/traversal/
+         *     period-shaped tokens (FqidError → 422, zero SQL). `key` is the group's
+         *     derivation key, not a slug, so it is NOT slug-validated here — an unknown key
+         *     is a clean 404 from `concept_group`.
+         */
+        get: operations["get_concept_group_api_catalog_group__provider___register___key__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/catalog/{fqid}": {
         parameters: {
             query?: never;
@@ -498,6 +532,29 @@ export interface components {
             name?: string | null;
         };
         /**
+         * BindingGroupRefModel
+         * @description The concept group a binding belongs to, as the group's addressable
+         *     `(provider, register, key)` (#616). Carried by `BindingNode.group` so a
+         *     member page knows its home group and can link to the group subject
+         *     (`/catalog/group/<provider>/<register>/<key>`) without a second fetch.
+         *     Membership is register-scoped and 1:1, so this is a singular ref — the full
+         *     member list lives behind the group route. `key` is `ConceptGroupModel.key`
+         *     (the scope-unique derivation key), NOT an FQID segment. Maps reg_meta's
+         *     `BindingGroupRef` 1:1.
+         *
+         *     The Python attr is `register_name` (alias `register`) to avoid the
+         *     `BaseModel.register` method shadow — same pattern as `VariableRefModel`; the
+         *     wire/JSON key stays `register`, and the mapper constructs with `register=`.
+         */
+        BindingGroupRefModel: {
+            /** Key */
+            key: string;
+            /** Provider */
+            provider: string;
+            /** Register */
+            register: string;
+        };
+        /**
          * BindingNode
          * @description A binding LEAF (3-seg FQID) — the addressable variable plus its FULL
          *     longitudinal record embedded from one `Catalog.resolve` call: shared
@@ -519,6 +576,7 @@ export interface components {
             description: string | null;
             /** Fqid */
             fqid: string;
+            group?: components["schemas"]["BindingGroupRefModel"] | null;
             /** Is Identifier */
             is_identifier: boolean;
             /** Is Sensitive */
@@ -986,6 +1044,65 @@ export interface components {
              * @enum {string}
              */
             source: "edge" | "token" | "curated";
+        };
+        /**
+         * ConceptGroupNode
+         * @description The concept group as a browsable subject (#617): the group identity
+         *     (provider/register/key + label/source/axes) and its members WITH per-member
+         *     coverage. Returned by `/catalog/group/{provider}/{register}/{key}` — a
+         *     fixed-shape route, NOT an FQID kind (a group is not FQID-addressable; its
+         *     members carry the real leaf FQIDs).
+         *
+         *     `member` echoes a validated `?member=<slug>` focus hint (a member leaf slug to
+         *     highlight), or None when absent / unrecognized — the page stays first-class
+         *     either way (a bad hint is ignored, not a 404).
+         */
+        ConceptGroupNode: {
+            /** Axes */
+            axes: string[];
+            /** Key */
+            key: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "concept-group";
+            /** Label */
+            label: string;
+            /** Member */
+            member?: string | null;
+            /** Members */
+            members: components["schemas"]["ConceptGroupNodeMember"][];
+            /** Provider */
+            provider: string;
+            /**
+             * Register
+             * @description The group's register slug. The Python attr is `register_name` to avoid the BaseModel.register method shadow (see VariableRefModel); the wire key is `register` via the alias.
+             */
+            register: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "edge" | "token" | "curated";
+        };
+        /**
+         * ConceptGroupNodeMember
+         * @description A concept-group member on the group SUBJECT node — the browse
+         *     `ConceptGroupMemberModel` (fqid + name + facets) PLUS the per-member
+         *     study-window `coverage` (#351; reusing `VariableCoverageModel`, zipped on by
+         *     the group route from `register_variable_coverage`). `coverage` is None for a
+         *     member with no coverage row (a stateless variable, or a member whose leaf
+         *     slug didn't match the register's coverage map — defensive).
+         */
+        ConceptGroupNodeMember: {
+            coverage?: components["schemas"]["VariableCoverageModel"] | null;
+            /** Facets */
+            facets: components["schemas"]["GroupFacetModel"][];
+            /** Fqid */
+            fqid: string;
+            /** Name */
+            name?: string | null;
         };
         /**
          * ConceptGroupSearchResult
@@ -1931,6 +2048,41 @@ export interface operations {
             };
         };
     };
+    get_concept_group_api_catalog_group__provider___register___key__get: {
+        parameters: {
+            query?: {
+                member?: string | null;
+            };
+            header?: never;
+            path: {
+                provider: string;
+                register: string;
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConceptGroupNode"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_catalog_node_api_catalog__fqid__get: {
         parameters: {
             query?: {
@@ -1952,7 +2104,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"]) | components["schemas"]["StatesResponse"];
+                    "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"] | components["schemas"]["ConceptGroupNode"]) | components["schemas"]["StatesResponse"];
                 };
             };
             /** @description Validation Error */

@@ -62,6 +62,7 @@ from reg_meta.fqid import (
     FqidKind,
     parse,
     period_token_for_bounds,
+    validate_slug,
 )
 from reg_meta.queries import list_classifications
 
@@ -73,6 +74,7 @@ from reg_webapp.catalog_fqid import (
 from reg_webapp.conn import catalog_conn as _catalog_conn
 from reg_webapp.models import (
     BindingChild,
+    BindingGroupRefModel,
     BindingNode,
     CatalogNode,
     ClassificationChainEdition,
@@ -82,6 +84,8 @@ from reg_webapp.models import (
     ClassificationRootResponse,
     ConceptGroupMemberModel,
     ConceptGroupModel,
+    ConceptGroupNode,
+    ConceptGroupNodeMember,
     DimensionsResponse,
     GroupFacetModel,
     LineageEdgeModel,
@@ -188,6 +192,21 @@ def _validated_value_set_version(value_set_version: str | None = None) -> str | 
         return parse_value_set_version(value_set_version)
     except ValueSetVersionParamError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+def _validated_member(member: str | None = None) -> str | None:
+    """``?member`` (the concept-group #617 focus hint) allow-list as a pre-open
+    dependency. The value is a member's leaf SLUG, so it is validated by
+    delegating to reg_meta's authoritative `validate_slug` (the same grammar the
+    path guard uses) — a malformed value 422s BEFORE any connection opens (zero
+    SQL, zero opens). ``None`` (no query) means "no focus hint"."""
+    if member is None:
+        return None
+    try:
+        validate_slug(member, "variable")
+    except FqidError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return member
 
 
 # reg_meta's genuine "this FQID resolves to no row" code. The OTHER
@@ -329,6 +348,19 @@ def _variable_chain_edition(edition) -> VariableEditionModel:
     )
 
 
+def _binding_group_ref_model(ref) -> BindingGroupRefModel | None:
+    """Map a reg_meta `BindingGroupRef` (#616) 1:1 onto the wire model — the
+    binding's owning group as `(provider, register, key)`. None when the binding
+    is ungrouped (`ResolvedVariable.group` is None). Constructs via the alias
+    `register=` (the canonical init param; the Python attr is `register_name`,
+    avoiding the BaseModel.register shadow — see `_var_ref_model`)."""
+    if ref is None:
+        return None
+    return BindingGroupRefModel(
+        provider=ref.provider, register=ref.register, key=ref.key
+    )
+
+
 def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
     """Map a `ResolvedVariable` to the embedded-record leaf. Embeds the
     full wire-relevant record; the internal `provider_key` (SCB build-time join
@@ -360,6 +392,11 @@ def _binding_node(catalog: Catalog, resolved: ResolvedVariable) -> BindingNode:
         ],
         related_to=[_related_ref_model(r) for r in resolved.related_to],
         lineage=[_lineage_edge_model(e) for e in resolved.lineage],
+        # #616/#617: the binding's owning group as `(provider, register, key)` so a
+        # member page links to the group subject without a second fetch; None when
+        # ungrouped. Keyed on the RESOLVED variable's triple, so a same_as alias
+        # reports its target's group (reg_meta sets it on `ResolvedVariable.group`).
+        group=_binding_group_ref_model(resolved.group),
         via_same_as=(
             [str(f) for f in resolved.via_same_as]
             if resolved.via_same_as is not None
@@ -455,6 +492,52 @@ def _concept_group_model(group) -> ConceptGroupModel:
             )
             for m in group.members
         ],
+    )
+
+
+def _concept_group_node(
+    catalog: Catalog,
+    provider_slug: str,
+    register_slug: str,
+    group,
+    member_hint: str | None,
+) -> ConceptGroupNode:
+    """Map a reg_meta `ConceptGroupSummary` (#303) onto the group SUBJECT node
+    (#617), zipping per-member study-window `coverage` (#351) onto each member.
+
+    Coverage reuses the SAME `register_variable_coverage` map the register
+    listing uses (keyed by variable SLUG — the binding-FQID leaf segment), so no
+    new reg_meta accessor is needed: a member's coverage is its leaf-slug lookup
+    in that map (None for a stateless member or a leaf that isn't in the map —
+    defensive). `member_hint` is the validated `?member=` focus slug, echoed for
+    the SPA to highlight (None when absent/unrecognized — a bad hint is ignored,
+    keeping the group page first-class)."""
+    coverage = catalog.register_variable_coverage(provider_slug, register_slug)
+    members: list[ConceptGroupNodeMember] = []
+    for m in group.members:
+        # The member FQID's leaf segment IS its variable slug — the key
+        # `register_variable_coverage` returns (mirrors `_register_response`).
+        leaf_slug = str(m.fqid).rsplit("/", 1)[-1]
+        members.append(
+            ConceptGroupNodeMember(
+                fqid=str(m.fqid),
+                name=m.name,
+                facets=[
+                    GroupFacetModel(axis=f.axis, value=f.value, label=f.label)
+                    for f in m.facets
+                ],
+                coverage=_variable_coverage_model(coverage.get(leaf_slug)),
+            )
+        )
+    return ConceptGroupNode(
+        provider=provider_slug,
+        register=register_slug,
+        key=group.key,
+        label=group.label,
+        source=group.source,
+        axes=list(group.axes),
+        members=members,
+        member=member_hint,
     )
 
 
@@ -751,6 +834,69 @@ def get_register_variants(
         register=register_fqid,
         variants=[_variant_model(v) for v in variants],
     )
+
+
+# The concept-group SUBJECT route (#617). A FIXED 4-seg shape with a literal
+# `group` PREFIX — NOT an `{fqid:path}` suffix — so it's declared with explicit
+# `{provider}`/`{register}`/`{key}` segments, ABOVE the catch-all (Starlette
+# matches in declaration order; the greedy `{fqid:path}` would otherwise consume
+# it). The `group` literal IS reserved in the PROVIDER slot of the slug grammar
+# (`RESERVED_GROUP_SLUG`, see reg_meta/DESIGN.md → FQID grammar): with `group` as a
+# non-leading path segment here, a provider literally named `group` would mint a
+# binding-suffix URL `/catalog/group/<register>/<variable>/states` (5 segments) that
+# THIS earlier-declared 5-seg route captures (provider=<register>, register=<variable>,
+# key=`states`) → a wrong 404 instead of the binding's `/states`. Reserving `group` in
+# the provider slot makes that collision unconstructable. The `provider`/`register`
+# segments are validated as a register FQID before any connection opens (mirrors
+# `get_register_variants`); `key` is the group's scope-unique derivation key (NOT
+# a slug — it's a curated/token/edge derivation key), so it is NOT slug-validated,
+# only resolved (a non-existent key is a clean 404).
+@router.get(
+    "/catalog/group/{provider}/{register}/{key}", response_model=ConceptGroupNode
+)
+def get_concept_group(
+    request: Request,
+    provider: str,
+    register: str,
+    key: str,
+    member: str | None = Depends(_validated_member),
+) -> ConceptGroupNode:
+    """The concept group addressed by `(provider, register, key)` (#617) — a
+    browsable subject (all members selected). 404 when no group with that key
+    exists for the (provider, register) pair, OR the pair names no register
+    (`Catalog.concept_group` returns None for both). `?member=<slug>` is an
+    optional FOCUS hint (a member leaf slug to highlight): validated as a slug
+    before any connection opens, then echoed on the node only when it actually
+    names a member of this group — an unrecognized hint is IGNORED (the group page
+    stays first-class), not a 404.
+
+    Validate `provider`/`register` as a register FQID BEFORE opening a connection
+    (mirrors `get_register_variants`): `Fqid.register_fqid` runs reg_meta's
+    authoritative `validate_slug` on both, rejecting `class`/`_default`/traversal/
+    period-shaped tokens (FqidError → 422, zero SQL). `key` is the group's
+    derivation key, not a slug, so it is NOT slug-validated here — an unknown key
+    is a clean 404 from `concept_group`."""
+    try:
+        Fqid.register_fqid(provider, register)
+    except FqidError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    with _catalog_conn(request) as conn:
+        catalog = Catalog(conn)
+        group = catalog.concept_group(provider, register, key)
+        if group is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"no concept group {key!r} in {provider}/{register}",
+            )
+        # The `?member` hint is admitted onto the node only when it names a real
+        # member (matched on the member FQID's leaf slug); else ignored (None).
+        member_hint = (
+            member
+            if member is not None
+            and any(str(m.fqid).rsplit("/", 1)[-1] == member for m in group.members)
+            else None
+        )
+        return _concept_group_node(catalog, provider, register, group, member_hint)
 
 
 # ── The 6 binding-suffix sub-endpoints (see DESIGN.md → Catalog router
