@@ -94,7 +94,7 @@ from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import FqidError, period_token_to_bounds
+from reg_meta.fqid import FqidError, FqidKind, period_token_to_bounds, validate_slug
 
 from .id import mint
 
@@ -323,6 +323,7 @@ def load_inventory(path: Path) -> Inventory:
     )
 
     _reject_duplicate_provider_slugs(providers)
+    _validate_provider_slugs(providers)
     _reject_duplicate_register_keys(registers)
 
     return Inventory(
@@ -433,6 +434,29 @@ def _reject_duplicate_provider_slugs(providers: tuple[InvProvider, ...]) -> None
                 "Each provider slug must appear once.",
             )
         seen.add(p.slug)
+
+
+def _validate_provider_slugs(providers: tuple[InvProvider, ...]) -> None:
+    """Reject any overlay provider slug that fails reg_meta's authoritative slug
+    rules for the PROVIDER slot. Unlike the steward register/variant slugs (which
+    pass through `populate_slugs` → `validate_slug` when loaded from the steward
+    TOML) and the variable slugs (auto-derived grammar-safe by `derive_variable_
+    slug`), an inventory provider slug is INSERTed RAW by `_insert_providers` with
+    no slug-grammar gate — so an overlay declaring e.g. a provider named `group`
+    (reserved in the provider slot since #617: it would shadow the
+    `/catalog/group/{provider}/{register}/{key}` route) or any grammar-invalid
+    slug would re-open the route collision the reservation closes. Validate here
+    at the LOAD boundary so the defect fails fast as a clean EXIT_CONFIG, far from
+    the eventual URL-routing collision (Codex P2 on #622)."""
+    for p in providers:
+        try:
+            validate_slug(p.slug, FqidKind.PROVIDER)
+        except FqidError as exc:
+            raise _cfg_error(
+                f"extend-db inventory provider slug {p.slug!r} is not a valid "
+                f"provider slug: {exc}",
+                "Rename the provider to a valid, non-reserved slug.",
+            ) from exc
 
 
 def _reject_duplicate_register_keys(registers: tuple[InvRegister, ...]) -> None:

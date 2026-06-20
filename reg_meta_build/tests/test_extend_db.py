@@ -873,6 +873,15 @@ class TestLoader:
                     {"slug": "p", "name": "P2"},
                 ]
             ),
+            # Provider slug `group` is reserved in the PROVIDER slot (#617): a
+            # provider named `group` would shadow the
+            # `/catalog/group/{provider}/{register}/{key}` route. The overlay
+            # load boundary must reject it (Codex P2 on #622) — the raw
+            # `_insert_providers` INSERT has no grammar gate of its own.
+            lambda d: d.update(providers=[{"slug": "group", "name": "Group"}]),
+            # Grammar-invalid provider slug (uppercase / underscore) — caught by
+            # the same provider-slot validate_slug call.
+            lambda d: d.update(providers=[{"slug": "Bad_Slug", "name": "Bad"}]),
             # Duplicate (provider, register key).
             lambda d: d.update(
                 registers=[
@@ -926,6 +935,43 @@ class TestLoader:
                 skip_slugs=True,
             )
         assert exc.value.exit_code == EXIT_CONFIG
+
+
+class TestProviderSlugValidation:
+    """The overlay provider slug is INSERTed raw by `_insert_providers` with no
+    grammar gate of its own, so `load_inventory` validates it against reg_meta's
+    authoritative PROVIDER-slot rules (grammar + reservations incl. `group`,
+    #617). Codex P2 on #622."""
+
+    def test_reserved_group_provider_slug_rejected_with_actionable_message(
+        self, tmp_path: Path
+    ) -> None:
+        inv = {
+            "steward": "swecov",
+            "source_label": "x",
+            "providers": [{"slug": "group", "name": "Group"}],
+        }
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        with pytest.raises(RegMetaError) as exc:
+            load_inventory(path)
+        assert exc.value.exit_code == EXIT_CONFIG
+        # The message names the offending slug and the reason (the underlying
+        # FqidError text mentions the reserved group subject route).
+        assert "group" in exc.value.message
+        assert "reserved" in exc.value.message
+
+    def test_valid_provider_slug_accepted(self, tmp_path: Path) -> None:
+        # The validation must not reject a real, valid overlay provider slug.
+        inv = {
+            "steward": "swecov",
+            "source_label": "x",
+            "providers": [{"slug": "swedbank", "name": "Swedbank AB"}],
+        }
+        path = tmp_path / "inv.json"
+        path.write_text(json.dumps(inv), encoding="utf-8")
+        parsed = load_inventory(path)
+        assert parsed.providers[0].slug == "swedbank"
 
 
 # ── failure / edge paths ─────────────────────────────────────────────────────
