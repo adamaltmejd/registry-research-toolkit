@@ -85,11 +85,11 @@ Run the PRs themselves **strictly serially** — one merged before the next star
      edits docs directly, or touches no documented surface, has no drift).
    - **visual verification** — NOT a role you may skip when the PR changes rendered
      output (`reg_webapp/frontend/**`, or any view the SPA renders). It's woven through
-     the pipeline, not a one-shot subagent: the implementer renders + screenshots its
-     change in Step A, you run a design pass in Step C, and merge needs rendered proof
-     in Step E. Headless `bun` checks never render a pixel, so they do NOT satisfy it.
-     This is the UI analog of the `build-db` real-data gate (CLAUDE.md "PR merge gate" →
-     Visual verification).
+     the pipeline, not a one-shot subagent: the implementer eyeballs its change in Step
+     A, you run a design pass in Step C, and you own the authoritative rendered proof (a
+     single render on the assembled tree) at merge in Step E. Headless `bun` checks
+     never render a pixel, so they do NOT satisfy it. This is the UI analog of the
+     `build-db` real-data gate (CLAUDE.md "PR merge gate" → Visual verification).
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
