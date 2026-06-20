@@ -314,9 +314,10 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   verification workflow — check `preview_console_logs` for errors, `preview_snapshot`
   the changed views, exercise changed interactions (`preview_click` / `preview_fill`),
   and `preview_resize` for responsive / dark mode. Attach a `preview_screenshot` as the
-  proof, the same way a build PR attaches its `build-db`. Use `/web-design-reviewer` for
-  a design-quality pass against the running app (and `/frontend-design` when authoring
-  new UI).
+  proof, the same way a build PR attaches its `build-db`. The proof itself needs only
+  `run-reg-webapp` / `preview_*` (always available); if the `/web-design-reviewer` skill
+  is installed, also use it for a structured design-quality pass against the running app
+  (and `/frontend-design` when authoring new UI).
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip; after merging, confirm the PR's changes are actually present on main — the
   GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing

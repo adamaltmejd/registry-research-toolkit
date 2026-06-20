@@ -158,10 +158,13 @@ valve: if it won't settle after a few rounds or keeps re-raising the same point,
 and surface it via `AskUserQuestion` — never loop forever.
 
 **Frontend addendum.** For a PR that changes rendered output, run a **visual review**
-pass alongside `/code-review`, against the running app: `/web-design-reviewer` (and
-`/frontend-design` when the PR *authors* new UI). Route its findings the same way you
-route `/code-review`'s. A text-diff review can't catch a broken layout, overflow, or
-contrast regression — only looking at the rendered page can.
+pass alongside `/code-review`, against the running app — a text-diff review can't catch
+a broken layout, overflow, or contrast regression. The mandatory part is *looking*:
+render the assembled tree (`/run-reg-webapp` + `preview_*`, always available) and
+inspect the changed views. If the `/web-design-reviewer` skill is installed, use it for
+a structured design-quality pass (and `/frontend-design` when the PR *authors* new UI);
+if not, drive the manual run-reg-webapp visual workflow yourself — the gate is the
+looking, not the plugin. Route any findings the same way you route `/code-review`'s.
 
 **D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
