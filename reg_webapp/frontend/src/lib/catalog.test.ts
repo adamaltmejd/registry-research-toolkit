@@ -6,6 +6,7 @@ import {
   breadcrumbs,
   buildAddPlan,
   catalogHref,
+  coverageFromStates,
   deriveType,
   foldText,
   formatDataType,
@@ -1226,5 +1227,95 @@ describe("grainsFromStates (#308 grain pre-narrowing)", () => {
         state({ state_id: 1, period_token: "1992-01-01..2009-12-31" }),
       ]),
     ).toEqual(["year"]);
+  });
+});
+
+describe("coverageFromStates (#615 availability span)", () => {
+  it("spans min(valid_from) to max(valid_to) as year ints", () => {
+    expect(
+      coverageFromStates([
+        state({
+          state_id: 1,
+          valid_from: "2000-01-01",
+          valid_to: "2008-12-31",
+        }),
+        state({
+          state_id: 2,
+          valid_from: "1995-01-01",
+          valid_to: "2010-06-30",
+        }),
+      ]),
+    ).toEqual({ from: 1995, to: 2010 });
+  });
+
+  it("the open-ended sentinel leaves the END unbounded (null), start preserved", () => {
+    // `9999-12-31` = "still delivered" → `to: null`; the picker projects the open
+    // end to the slider's vintage ceiling, never a literal 9999 track.
+    expect(
+      coverageFromStates([
+        state({
+          state_id: 1,
+          valid_from: "2005-01-01",
+          valid_to: "9999-12-31",
+        }),
+      ]),
+    ).toEqual({ from: 2005, to: null });
+  });
+
+  it("the yearless floor (0001) leaves the START unbounded but PRESERVES a finite end", () => {
+    // The round-1 regression: `0001-01-01..2008-12-31` (unknown start, KNOWN end)
+    // must keep `to: 2008` (only the start is unbounded), NOT collapse the whole
+    // span to null — else a 2010–2015 selection loses its "Not delivered after
+    // 2008" warning (Codex P2 round 2, Fix A).
+    expect(
+      coverageFromStates([
+        state({
+          state_id: 1,
+          valid_from: "0001-01-01",
+          valid_to: "2008-12-31",
+        }),
+      ]),
+    ).toEqual({ from: null, to: 2008 });
+  });
+
+  it("null on an empty / bound-less state set", () => {
+    expect(coverageFromStates([])).toBeNull();
+    expect(
+      coverageFromStates([
+        state({ state_id: 1, valid_from: "", valid_to: "" }),
+      ]),
+    ).toBeNull();
+  });
+
+  it("a wholly-sentinel state (0001..9999) is unbounded on BOTH sides → null", () => {
+    // Both bounds are sentinels, so coverage is fully unknown — no finite side to
+    // draw or gap against (NOT { from: 1, … }, which would let the slider emit
+    // out-of-grammar wires like `1..2026`).
+    expect(
+      coverageFromStates([
+        state({
+          state_id: 1,
+          valid_from: "0001-01-01",
+          valid_to: "9999-12-31",
+        }),
+      ]),
+    ).toBeNull();
+  });
+
+  it("a 0001-floor state alongside a real-year state → finite start from the real year", () => {
+    expect(
+      coverageFromStates([
+        state({
+          state_id: 1,
+          valid_from: "0001-01-01",
+          valid_to: "2008-12-31",
+        }),
+        state({
+          state_id: 2,
+          valid_from: "2002-01-01",
+          valid_to: "2010-12-31",
+        }),
+      ]),
+    ).toEqual({ from: 2002, to: 2010 });
   });
 });

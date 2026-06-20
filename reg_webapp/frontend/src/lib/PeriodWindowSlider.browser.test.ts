@@ -1,0 +1,194 @@
+import { describe, expect, it, vi } from "vitest";
+import { render } from "vitest-browser-svelte";
+import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
+import type { Coverage } from "./period";
+import type { StudyWindow } from "./project_data";
+
+// The #615 availability-aware local period slider (the subject page's default
+// period control). Self-contained: bounds + selection + window + coverage in,
+// `onchange`/`onreset` out. The PeriodPicker owns the wire seam; this verifies
+// the control's own behavior (two thumbs, coverage readout, the two deviation
+// states).
+describe("PeriodWindowSlider", () => {
+  const base = {
+    min: 1990,
+    max: 2020,
+    coverage: { from: 1995, to: 2015 } as Coverage,
+    // The default: the shown span IS the active selection (year-grain), not a
+    // sub-annual projection — the sub-annual-cue tests override this.
+    subAnnualPeriod: null as string | null,
+  };
+
+  it("seeds two thumbs + the readout from the selection, shows the coverage span", async () => {
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2000, to: 2010 },
+      window: { from: 2000, to: 2010 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "From year" }))
+      .toHaveValue("2000");
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveValue("2010");
+    await expect.element(screen.getByText("2000–2010")).toBeVisible();
+    await expect.element(screen.getByText("data 1995–2015")).toBeVisible();
+  });
+
+  it("moving the From thumb emits the new window (never crossing To)", async () => {
+    const onchange = vi.fn<(next: StudyWindow) => void>();
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2000, to: 2010 },
+      window: { from: 2000, to: 2010 },
+      onchange,
+      onreset: vi.fn(),
+    });
+    await screen.getByRole("slider", { name: "From year" }).fill("2005");
+    expect(onchange).toHaveBeenLastCalledWith({ from: 2005, to: 2010 });
+  });
+
+  it("user deviation: selection ≠ window shows the hint; reset fires onreset", async () => {
+    const onreset = vi.fn<() => void>();
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2002, to: 2008 },
+      window: { from: 2000, to: 2010 },
+      onchange: vi.fn(),
+      onreset,
+    });
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .toBeVisible();
+    await screen
+      .getByRole("button", { name: "reset to project window" })
+      .click();
+    expect(onreset).toHaveBeenCalledOnce();
+  });
+
+  it("no user-deviation hint when the selection matches the window", async () => {
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2000, to: 2010 },
+      window: { from: 2000, to: 2010 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .not.toBeInTheDocument();
+  });
+
+  it("availability deviation: a selection beyond coverage shows the not-delivered note", async () => {
+    // coverage 1995–2015; select 2000–2020 → 2016–2020 not delivered.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2000, to: 2020 },
+      window: { from: 2000, to: 2020 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered after 2015/))
+      .toBeVisible();
+  });
+
+  it("unbounded-start coverage (from: null) STILL fires the finite-end gap (Fix A)", async () => {
+    // coverage {null..2008}: unknown start, KNOWN end. A 2010–2015 selection is
+    // entirely after the finite end → "Not delivered after 2008" must fire (the
+    // round-1 regression dropped the whole span to null and suppressed it). The
+    // open start reads as an ellipsis, never year 1.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      coverage: { from: null, to: 2008 },
+      selection: { from: 2010, to: 2015 },
+      window: { from: 2010, to: 2015 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered after 2008/))
+      .toBeVisible();
+    await expect.element(screen.getByText("data …–2008")).toBeVisible();
+  });
+
+  it("unbounded-end coverage (to: null) fires no 'after' gap (still delivered)", async () => {
+    // coverage {1990..null}: a 2000–2030 selection sits entirely inside the open
+    // end → no "Not delivered after" note; the end reads as an ellipsis.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      min: 1985,
+      max: 2030,
+      coverage: { from: 1990, to: null },
+      selection: { from: 2000, to: 2030 },
+      window: { from: 2000, to: 2030 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    await expect.element(screen.getByText("data 1990–…")).toBeVisible();
+  });
+
+  it("no coverage → no availability note and no coverage readout", async () => {
+    const screen = await render(PeriodWindowSlider, {
+      min: 1990,
+      max: 2020,
+      coverage: null,
+      subAnnualPeriod: null,
+      selection: { from: 2000, to: 2010 },
+      window: { from: 2000, to: 2010 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    await expect.element(screen.getByText(/^data /)).not.toBeInTheDocument();
+  });
+
+  it("sub-annual ?period: the shown span is the window projection → show the cue, suppress the misleading no-deviation reading", async () => {
+    // selection === window (the projected fallback) would normally read as "no
+    // deviation"; but the active value is sub-annual, so the slider must say so
+    // rather than imply the window is the active selection.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2000, to: 2010 },
+      window: { from: 2000, to: 2010 },
+      subAnnualPeriod: "HT2020",
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect.element(screen.getByText(/Active period/)).toBeVisible();
+    await expect
+      .element(screen.getByText("HT2020", { exact: true }))
+      .toBeVisible();
+    // No user-deviation hint (it would be a window-vs-window artefact here).
+    await expect
+      .element(screen.getByText(/Deviates from project window/))
+      .not.toBeInTheDocument();
+  });
+
+  it("sub-annual ?period: availability gaps are suppressed (the projection isn't the real selection)", async () => {
+    // selection 2000–2020 vs coverage 1995–2015 WOULD gap 2016–2020 — but the
+    // shown span is the window PROJECTION, not the real (sub-annual) value, so the
+    // gap is meaningless: no "Not delivered" note, no hatched gap cells. The
+    // sub-annual cue already points at the real value in More options (Codex P2).
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      selection: { from: 2000, to: 2020 },
+      window: { from: 2000, to: 2020 },
+      subAnnualPeriod: "HT2020",
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect.element(screen.getByText(/Active period/)).toBeVisible();
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
+  });
+});

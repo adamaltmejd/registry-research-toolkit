@@ -16,6 +16,7 @@ import {
   type VariableStateModel,
 } from "./api";
 import {
+  type Coverage,
   grainOfToken,
   PERIOD_GRAINS,
   type PeriodGrain,
@@ -588,6 +589,14 @@ export type AddPlan =
  * default) — never shown to the user (#309). */
 export const OPEN_ENDED_VALID_TO = "9999-12-31";
 
+/** The yearless-fallback `variable_state.valid_from` sentinel — the floor
+ * reg_meta_build writes when a state's start year is unknown (`_VALID_FROM_UNKNOWN`
+ * in `reg_meta_build/db.py`; the `0001` twin of the `9999` ceiling, per
+ * `reg_meta.queries`). Like the ceiling it must NOT read as a literal year:
+ * coverage `from` is unbounded/unknown for it, never year 1 (which would let the
+ * slider emit out-of-grammar wires like `1..2026`). */
+export const YEARLESS_VALID_FROM = "0001-01-01";
+
 /** Group state rows by their variant slug, preserving input order — shared by
  * the add planner (#306) and the change-hint differ (#309). */
 function statesByVariant(
@@ -681,6 +690,64 @@ export function grainsFromStates(states: VariableStateModel[]): PeriodGrain[] {
     }
   }
   return PERIOD_GRAINS.filter((g) => found.has(g));
+}
+
+/** The subject's data-availability span as a year-grain `Coverage` (#615),
+ * derived from the EMBEDDED states: `from` = year of the earliest finite
+ * `valid_from`, `to` = year of the latest finite `valid_to`. The two sides are
+ * INDEPENDENT — each sentinel only unbounds ITS OWN side, never the whole span:
+ *  - the open-ended sentinel (`9999-12-31`) means "still delivered" → an
+ *    unbounded END (`to: null`), so the track never balloons past the slider
+ *    (the picker treats null-to as "reaches the present");
+ *  - the yearless-fallback floor (`0001-01-01`) means "start unknown" → an
+ *    unbounded START (`from: null`), never year 1 (which would let the slider
+ *    emit out-of-grammar wires like `1..2026`).
+ * A `0001..2008` state therefore yields `{from: null, to: 2008}` — the finite
+ * END is PRESERVED so a selection past it still flags "Not delivered after
+ * 2008" (the round-1 regression: dropping the WHOLE span to null suppressed
+ * that gap). Returns null only when BOTH bounds are unknown (a cold/empty node,
+ * or one whose only bounds are both sentinels) — the picker then has no
+ * availability track to draw and softens the deviation hint.
+ *
+ * This is the `coverage_from`/`coverage_to` of #611's Period model computed
+ * client-side from already-embedded data (no backend field): the leaf node
+ * never carries the per-register `RegisterCoverageModel`, and the spec is
+ * explicit that leaf coverage is derived from the states. */
+export function coverageFromStates(
+  states: VariableStateModel[],
+): Coverage | null {
+  let from: number | null = null;
+  let to: number | null = null;
+  for (const s of states) {
+    // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
+    // — skip it so it never floors `from`; the side stays unbounded (null).
+    const fromYear =
+      s.valid_from === YEARLESS_VALID_FROM ? null : yearOf(s.valid_from);
+    if (fromYear !== null && (from === null || fromYear < from)) {
+      from = fromYear;
+    }
+    // The open-ended sentinel is "still delivered" → the END stays unbounded
+    // (null), the picker projects it to the vintage ceiling for the track.
+    const toYear =
+      s.valid_to === OPEN_ENDED_VALID_TO ? null : yearOf(s.valid_to);
+    if (toYear !== null && (to === null || toYear > to)) {
+      to = toYear;
+    }
+  }
+  // BOTH bounds unknown (e.g. a wholly open-ended-on-both-sides state) → no
+  // coverage track to draw, like an empty/bound-less set. A single finite side
+  // is enough to draw + gap against.
+  if (from === null && to === null) {
+    return null;
+  }
+  return { from, to };
+}
+
+/** The 4-digit year of an ISO `YYYY-MM-DD` bound as an int, or null when it
+ * isn't a leading-4-digit string (a blank/edge bound on a stale payload). */
+function yearOf(iso: string): number | null {
+  const m = /^(\d{4})/.exec(iso ?? "");
+  return m ? Number.parseInt(m[1], 10) : null;
 }
 
 /** Per-state stable key — NOT `state_id` alone. A merged monthly-family

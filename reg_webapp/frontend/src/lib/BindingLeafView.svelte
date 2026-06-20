@@ -10,6 +10,7 @@ import { asyncResource } from "./async.svelte";
 import {
   type AddSegment,
   buildAddPlan,
+  coverageFromStates,
   formatWindow,
   grainsFromStates,
   registerPrefixOf,
@@ -24,6 +25,7 @@ import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
+import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
 // states view, and the lineage panels. The FULL record (metadata + embedded
@@ -127,6 +129,12 @@ const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 // #308: the grains this variable's FULL state history exhibits (year always;
 // finer from the #321 tokens) — pre-narrows the period picker's grain select.
 const grains = $derived(grainsFromStates(node.states));
+
+// #615: the subject's data-availability span (year-grain), derived from the
+// EMBEDDED full state history — the picker's slider draws it as the live track
+// and greys the not-delivered span. Computed client-side from already-present
+// data (no backend coverage field on the leaf node).
+const coverage = $derived(coverageFromStates(node.states));
 
 // ── #306 one-click add: plan → (genuine prompts only) → commit ──────────────
 // The page-level "Add to project" runs `buildAddPlan` over the VISIBLE states
@@ -287,9 +295,16 @@ const repSegment = $derived(
     <dd>{node.is_identifier ? "yes" : "no"}</dd>
   </dl>
 
+  <!-- #615: the period picker seeds from the global project window (windowStore)
+       and shows the subject's coverage track. PRECEDENCE `?period` > window >
+       full history is resolved inside the picker; submit/clear flow through the
+       same `?period` URL path (a local change writes `?period` only, never the
+       global window). -->
   <PeriodPicker
     period={params.period ?? null}
     {grains}
+    window={windowStore.value}
+    {coverage}
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />
