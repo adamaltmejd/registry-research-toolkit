@@ -2234,3 +2234,19 @@ class TestDeriveSupersedesFromEdges:
         n = derive_supersedes_from_edges(conn)
         assert n == 0
         assert self._supersedes(conn) == {"a": None, "b": None}
+
+    def test_dead_predecessor_leaves_successor_null(self):
+        """#579 (forward-looking): a curated edge whose `predecessor_slug` has NO
+        live `classification` row (a cross-provider / retired predecessor, allowed
+        verbatim by the `relations.toml` arm) leaves the live successor's
+        supersedes_id NULL — the `SET` subquery's `JOIN p.slug = e.predecessor_slug`
+        finds no live row, so the value derived is NULL. (The UPDATE's `WHERE EXISTS`
+        still MATCHES the successor row, so it's set to NULL explicitly, not skipped.)
+        Mirrors the validator's `missing_ptr` carve-out: a dead-only-predecessor
+        successor legitimately keeps NULL."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        # Edge ('dead-pred' -> 'live-succ') but only 'live-succ' is a live row.
+        conn = self._conn(edges=[("dead-pred", "live-succ")], slugs=["live-succ"])
+        derive_supersedes_from_edges(conn)
+        assert self._supersedes(conn) == {"live-succ": None}

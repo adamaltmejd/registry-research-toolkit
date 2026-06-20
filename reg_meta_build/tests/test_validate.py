@@ -248,6 +248,50 @@ class TestValidateModule:
         assert not result.passed
         assert any("unknown classification slug" in f for f in result.failures)
 
+    def test_dead_predecessor_edge_keeps_supersedes_null_without_missing_ptr(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#579 (forward-looking): a `classification_replaced_by` edge whose
+        `predecessor_slug` has NO live `classification` row (a cross-provider /
+        retired predecessor — allowed verbatim by the curated `relations.toml`
+        arm) leaves the live successor's `supersedes_id` NULL, because
+        `derive_supersedes_from_edges` joins on `p.slug = e.predecessor_slug` and
+        finds no live row. The `supersedes_id`-projection guard must NOT count that
+        as a `missing_ptr` failure — only successors of a LIVE-predecessor edge owe
+        a non-NULL pointer.
+
+        Call the check directly: a full `validate_built_db` run trips the upstream
+        structural `dangling` check on the dead predecessor (a separate invariant),
+        so we assert specifically that the `missing a derived pointer` substring is
+        absent here."""
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_classification_replaced_by,
+        )
+
+        broken = tmp_path / "dead_pred.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.row_factory = sqlite3.Row
+        # Live successor, supersedes_id NULL; predecessor slug is NOT a live row.
+        self._seed_classification(conn, "SUN-NIVA2000", "sun-niva2000")
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('sun1996', 'sun-niva2000', 2000, 'curated:slug_toml')"
+        )
+        conn.commit()
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_classification_replaced_by(conn, result, tables, corpus=False)
+        conn.close()
+        assert not any("missing a derived pointer" in f for f in result.failures), (
+            result.failures
+        )
+
     def test_variable_vintage_lift_self_loop_fails(
         self, fixture_db: Path, tmp_path: Path
     ):
