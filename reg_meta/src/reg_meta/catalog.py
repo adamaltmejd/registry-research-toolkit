@@ -1814,16 +1814,33 @@ class Catalog:
         immediate neighbor.
 
         Ordered by TRAVERSAL, anchored on the QUERIED edition (#588): from the
-        canonical slug we walk forward to the terminal via the deterministic-first
-        successor and backward to the root via the deterministic-first predecessor
-        (the `[0]` of the already-ORDER-BY'd `_classification_successor_edges` /
-        `_classification_predecessor_edges`). The chain is `reversed(backward)` +
-        canonical + forward, so the ORDER is the walk — the `effective_year` is a
-        DISPLAY field, never the sort key (a NULL/undated edge no longer inverts the
-        order). Anchoring on the queried path also means a merge sibling on a
-        DIFFERENT inbound branch (`A→C`, `B→C`: querying `A` never reaches `B`) is
-        not included — only this edition's own path. The deterministic-first pick at
-        a split/merge mirrors `resolve_terminal_successor`.
+        canonical slug we walk backward to the root via the deterministic-first
+        predecessor (the `[0]` of the already-ORDER-BY'd
+        `_classification_predecessor_edges`) and forward via the FULL successor
+        CLOSURE. The chain is `reversed(backward)` + canonical + forward-closure, so
+        the ORDER is the walk — the `effective_year` is a DISPLAY field, never the
+        sort key (a NULL/undated edge no longer inverts the order).
+
+        The forward walk is BRANCH-AWARE (#605): a 1→many succession SPLIT (e.g.
+        `sun1996 → {sun-niva2000, sun-inriktning2000, sun-grupp2000}`, #579) fans out
+        into every branch, so querying the split ROOT surfaces ALL the downstream
+        dimensions rather than only the deterministic-first one. A node with exactly
+        ONE successor walks linearly as before; a node with >1 successor recurses into
+        ALL of them. The closure is a DFS visiting each node's successors in
+        `ORDER BY successor_slug` (deterministic), emitting each branch's editions in
+        vintage (traversal) order before descending the next branch. Every terminal in
+        the closure (a node with no outbound successor) is `is_current=True` — so a
+        split root's chain has MULTIPLE current editions, one per branch tip.
+
+        The BACKWARD walk stays deterministic-first — each classification has ≤1
+        predecessor (no merges exist in the corpus), so the `[0]` predecessor IS the
+        only one. Anchoring on the queried path means: querying a LEAF (e.g.
+        `sun-niva2020`) walks back through its own branch to the split root and then
+        forward — but the forward closure FROM a leaf is just the leaf's own
+        (childless) subtree, so a leaf's chain is its single linear path
+        (`[sun1996, sun-niva2000, sun-niva2020]`), NOT the sibling branches. Only the
+        SPLIT NODE itself fans out, and a leaf reaches the split node only on the
+        backward (single-predecessor) walk.
 
         Two things the immediate-neighbor accessors don't do:
 
@@ -1833,9 +1850,9 @@ class Catalog:
             `is_self`) is anchored on the canonical edition, not the alias. A slug
             that resolves to no live row falls back to itself — succession tolerates
             dead slugs.
-          - full walk: forward to the terminal (the chain end with no outbound
+          - full walk: forward to every terminal (the chain ends with no outbound
             successor) and backward to the root, assembling every edition on the
-            queried node's path.
+            queried node's forward closure + backward path.
 
         Every chain endpoint is a live `classification` row — `reg_meta_build`'s
         validator (`validate.py`, the `classification_replaced_by` check) fails the
@@ -1850,34 +1867,26 @@ class Catalog:
 
         `effective_year` per edition is the year on the OUTBOUND edge by which that
         edition was superseded by its successor on the path (the terminal, with no
-        outbound edge, gets None) — read off the deterministic-first edge `[0]`."""
+        outbound edge, gets None). A SPLIT node's outbound edges may disagree; we read
+        the deterministic-first edge `[0]`'s year (in the #579 split the three edges
+        share the same year, so the pick is moot, but the rule is deterministic)."""
         queried = self._parse_classification(fqid)
         canonical = self._canonical_classification_slug(queried)
         seen = {canonical}
 
-        # Forward: canonical → terminal, stepping the deterministic-first successor
-        # edge `[0]`. In step `cur → nxt`, the edge's `effective_year` is `cur`'s
-        # superseded year, so it's attached to the node we step FROM. The terminal
-        # (no outbound edge) keeps None.
-        forward: list[tuple[str, int | None]] = []
-        cur = canonical
-        canonical_year: int | None = None
-        succ = self._classification_successor_edges(cur)
-        while succ and succ[0].slug not in seen:
-            edge = succ[0]
-            # Attach this edge's year to the node we're leaving (`cur`).
-            if forward:
-                forward[-1] = (forward[-1][0], edge.effective_year)
-            else:
-                canonical_year = edge.effective_year
-            seen.add(edge.slug)
-            forward.append((edge.slug, None))
-            cur = edge.slug
-            succ = self._classification_successor_edges(cur)
+        # Forward CLOSURE: canonical → every reachable terminal, fanning out at a
+        # split. `_classification_forward_closure` (DFS, ORDER BY successor_slug)
+        # emits the closure WITHOUT the canonical node and attaches each node's
+        # `effective_year` (its deterministic-first outbound edge's year). The split
+        # ROOT's own year is the canonical node's, read off its `[0]` edge below.
+        forward = self._classification_forward_closure(canonical, seen)
+        canonical_succ = self._classification_successor_edges(canonical)
+        canonical_year = canonical_succ[0].effective_year if canonical_succ else None
 
         # Backward: canonical → root, stepping the deterministic-first predecessor
         # edge `[0]`. The edge prv→cur is `prv`'s OUTBOUND edge, so its
-        # `effective_year` is prv's superseded year.
+        # `effective_year` is prv's superseded year. Each edition has ≤1 predecessor
+        # (no merges), so `[0]` is the only inbound edge.
         backward: list[tuple[str, int | None]] = []
         cur = canonical
         pred = self._classification_predecessor_edges(cur)
@@ -1888,13 +1897,19 @@ class Catalog:
             cur = edge.slug
             pred = self._classification_predecessor_edges(cur)
 
-        # Chain oldest→current = reversed(backward) + canonical + forward.
+        # Chain oldest→current = reversed(backward) + canonical + forward-closure.
         ordered: list[tuple[str, int | None]] = [
             *reversed(backward),
             (canonical, canonical_year),
             *forward,
         ]
-        terminal = ordered[-1][0]
+        # Terminals = nodes with no outbound successor (in the closure + canonical
+        # when it is itself childless). A split root has MULTIPLE terminals.
+        terminals = {
+            slug
+            for slug, _ in ordered
+            if not self._classification_successor_edges(slug)
+        }
         name_by_slug = self._classification_chain_names(s for s, _ in ordered)
         return [
             ClassificationEdition(
@@ -1902,11 +1917,38 @@ class Catalog:
                 fqid=self._class_ref_fqid(slug),
                 name=name_by_slug.get(slug),
                 effective_year=year,
-                is_current=(slug == terminal),
+                is_current=(slug in terminals),
                 is_self=(slug == canonical),
             )
             for slug, year in ordered
         ]
+
+    def _classification_forward_closure(
+        self, root: str, seen: set[str]
+    ) -> list[tuple[str, int | None]]:
+        """The forward succession closure from `root` (EXCLUSIVE of `root`), as a
+        flat `(slug, effective_year)` list in DFS order (#605). Visits each node's
+        successors in `ORDER BY successor_slug` (the `_classification_successor_edges`
+        order), emitting a branch's whole subtree before descending the next sibling
+        branch — so a split fans out into every branch deterministically.
+
+        `effective_year` per emitted node is the year on its OWN deterministic-first
+        outbound edge (the year it was superseded), so a terminal (no outbound edge)
+        carries None. `seen` is the shared cycle guard (the caller seeds it with the
+        canonical root + any backward-path nodes); a successor already in `seen` is
+        skipped, keeping the walk acyclic."""
+        out: list[tuple[str, int | None]] = []
+        for edge in self._classification_successor_edges(root):
+            if edge.slug in seen:
+                continue
+            seen.add(edge.slug)
+            # The node's own outbound year (None at a terminal) — its
+            # deterministic-first edge, matching `canonical_year` above.
+            child_succ = self._classification_successor_edges(edge.slug)
+            child_year = child_succ[0].effective_year if child_succ else None
+            out.append((edge.slug, child_year))
+            out.extend(self._classification_forward_closure(edge.slug, seen))
+        return out
 
     def _canonical_classification_slug(self, slug: str) -> str:
         """Resolve a (possibly `same_as`-aliased) classification slug to the

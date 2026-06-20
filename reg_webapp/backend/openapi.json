@@ -232,7 +232,7 @@
         "type": "object"
       },
       "ClassificationChainEdition": {
-        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the predecessor \u2014 i.e. the\nyear it was superseded by its successor (None for the terminal, which has no\noutbound edge). `is_current` flags the terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A dedicated model (NOT the search\n`ClassificationEditionModel`, which has no is_current/is_self) keeps the search\nedition a clean 4-field shape.",
+        "description": "One edition in a classification's FULL succession timeline (#571), as\nembedded on `ClassificationNode.edition_chain`. The browse panel renders the\nwhole chain (oldest first, terminal last) synchronously from these \u2014 no\nper-neighbor fetch.\n\n`slug` is the load-bearing identity. Every chain edition is a LIVE\n`classification` row \u2014 the build validator guarantees succession editions are\nlive (it fails on any `classification_replaced_by` edge whose endpoint has no\nlive row), so `fqid` is None only when the slug is malformed/unresolvable (the\nSPA renders such an edition as plain text, not a link). `effective_year` is the\nyear on the succession edge that names this edition as the predecessor \u2014 i.e. the\nyear it was superseded by its successor (None for a terminal, which has no\noutbound edge). `is_current` flags a terminal (current) edition; `is_self`\nflags the edition the caller queried (resolved to its canonical live slug when\nthe query was a `same_as` alias). A 1\u2192many SPLIT root (#605/#579 \u2014 e.g. querying\n`sun1996`, whose chain fans out into the niva/inriktning/grupp branches) yields\nMULTIPLE `is_current` editions, one per branch tip; the common linear chain has\nexactly one. A dedicated model (NOT the search `ClassificationEditionModel`,\nwhich has no is_current/is_self) keeps the search edition a clean 4-field\nshape.",
         "properties": {
           "effective_year": {
             "anyOf": [
@@ -259,7 +259,7 @@
             "title": "Fqid"
           },
           "is_current": {
-            "description": "True for the terminal (current) edition \u2014 no outbound successor.",
+            "description": "True for a terminal (current) edition \u2014 no outbound successor. A 1-to-many split root's chain has MULTIPLE such editions (one per branch tip); a linear chain has exactly one.",
             "title": "Is Current",
             "type": "boolean"
           },

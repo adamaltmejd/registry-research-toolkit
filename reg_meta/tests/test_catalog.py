@@ -1320,11 +1320,13 @@ class TestEdgeAccessors:
         chain_b = Catalog(conn).classification_chain("class/mrg-b")
         assert [e.slug for e in chain_b] == ["mrg-b", "mrg-c"]
 
-    def test_classification_chain_split_follows_deterministic_first(self) -> None:
-        # spl-a→spl-b and spl-a→spl-c: spl-a is a split. chain(spl-a) follows the
-        # deterministic-first successor ([0] of the ORDER BY successor_slug edges =
-        # lexicographic-first, spl-b < spl-c), so [spl-a, spl-b]. Each branch tip
-        # resolves its own walk.
+    def test_classification_chain_split_root_fans_out_to_all_branches(self) -> None:
+        # #605: spl-a→spl-b and spl-a→spl-c — spl-a is a 1→many SPLIT. Querying the
+        # split ROOT (spl-a) now fans out into BOTH branches (the forward closure),
+        # so the panel surfaces every downstream dimension — not just the
+        # deterministic-first one. The closure is DFS in ORDER BY successor_slug
+        # (spl-b < spl-c), each branch's subtree before the next. BOTH branch tips
+        # are terminals → both is_current.
         conn = build_slugged_db()
         for slug in ("spl-a", "spl-b", "spl-c"):
             self._seed_classification(
@@ -1337,17 +1339,100 @@ class TestEdgeAccessors:
             conn, predecessor="spl-a", successor="spl-c", effective_year=2012
         )
         chain_a = Catalog(conn).classification_chain("class/spl-a")
-        assert [e.slug for e in chain_a] == ["spl-a", "spl-b"]
-        # Querying spl-b walks back to spl-a then forward via the det-first successor
-        # (spl-b), so its path is [spl-a, spl-b] with is_self on spl-b.
+        assert [e.slug for e in chain_a] == ["spl-a", "spl-b", "spl-c"]
+        # The split root's year = its deterministic-first ([0]) edge's; both tips None.
+        assert [e.effective_year for e in chain_a] == [2012, None, None]
+        # Both branch tips are terminals → both is_current; only the root is is_self.
+        assert {e.slug for e in chain_a if e.is_current} == {"spl-b", "spl-c"}
+        assert [e.slug for e in chain_a if e.is_self] == ["spl-a"]
+        # Querying a LEAF (spl-b) walks back to spl-a then forward over its OWN
+        # (childless) subtree — so its path is [spl-a, spl-b] WITHOUT the sibling
+        # spl-c. Only the split node fans out, and the leaf reaches it on the
+        # single-predecessor backward walk.
         chain_b = Catalog(conn).classification_chain("class/spl-b")
         assert [e.slug for e in chain_b] == ["spl-a", "spl-b"]
         assert next(e for e in chain_b if e.is_self).slug == "spl-b"
-        # spl-c's backward walk reaches spl-a; spl-a's det-first successor is spl-b,
-        # so the forward walk goes spl-a→spl-b — spl-c is reached only as is_self.
+        assert [e.slug for e in chain_b if e.is_current] == ["spl-b"]
+        # spl-c symmetric: [spl-a, spl-c] WITHOUT the sibling spl-b.
         chain_c = Catalog(conn).classification_chain("class/spl-c")
         assert [e.slug for e in chain_c] == ["spl-a", "spl-c"]
         assert next(e for e in chain_c if e.is_self).slug == "spl-c"
+        assert [e.slug for e in chain_c if e.is_current] == ["spl-c"]
+
+    def test_classification_chain_sun_split_root_surfaces_all_dimensions(self) -> None:
+        # #605 / #579: the real SUN split — sun1996 fans out into the three distinct
+        # SUN dimensions, each its own 2000→2020 succession:
+        #   sun1996 → {sun-niva2000, sun-inriktning2000, sun-grupp2000}
+        #   sun-niva2000 → sun-niva2020 (and likewise inriktning/grupp).
+        # Querying the split ROOT (sun1996) returns ALL 7 editions in deterministic
+        # DFS order (ORDER BY successor_slug = grupp < inriktning < niva, each
+        # branch's 2000→2020 subtree before the next), with the three 2020 tips all
+        # is_current. Querying a LEAF (sun-niva2020) returns ONLY its own path back to
+        # the root — NOT the inriktning/grupp branches.
+        conn = build_slugged_db()
+        for stem in ("niva", "inriktning", "grupp"):
+            for vintage in ("2000", "2020"):
+                slug = f"sun-{stem}{vintage}"
+                self._seed_classification(
+                    conn, slug=slug, short_name=slug.upper(), name=slug
+                )
+        self._seed_classification(
+            conn, slug="sun1996", short_name="SUN1996", name="SUN 1996"
+        )
+        # The split: sun1996 → each dimension's 2000 edition (all share year 2000).
+        for stem in ("niva", "inriktning", "grupp"):
+            self._seed_classification_replaced_by(
+                conn,
+                predecessor="sun1996",
+                successor=f"sun-{stem}2000",
+                effective_year=2000,
+            )
+            self._seed_classification_replaced_by(
+                conn,
+                predecessor=f"sun-{stem}2000",
+                successor=f"sun-{stem}2020",
+                effective_year=2020,
+            )
+
+        # Querying the split root: the full forward closure, DFS, branch-by-branch.
+        chain_root = Catalog(conn).classification_chain("class/sun1996")
+        assert [e.slug for e in chain_root] == [
+            "sun1996",
+            "sun-grupp2000",
+            "sun-grupp2020",
+            "sun-inriktning2000",
+            "sun-inriktning2020",
+            "sun-niva2000",
+            "sun-niva2020",
+        ]
+        # All three 2020 branch tips are current; the root is is_self; the root's
+        # effective_year is its deterministic-first ([0]) edge's year (all share 2000).
+        assert {e.slug for e in chain_root if e.is_current} == {
+            "sun-grupp2020",
+            "sun-inriktning2020",
+            "sun-niva2020",
+        }
+        assert sum(e.is_current for e in chain_root) == 3
+        assert [e.slug for e in chain_root if e.is_self] == ["sun1996"]
+        root_edition = next(e for e in chain_root if e.slug == "sun1996")
+        assert root_edition.effective_year == 2000
+        # The 2000 editions are mid-chain (superseded by their 2020 successor); the
+        # 2020 tips carry no outbound year.
+        by_slug = {e.slug: e for e in chain_root}
+        assert by_slug["sun-niva2000"].effective_year == 2020
+        assert by_slug["sun-niva2020"].effective_year is None
+
+        # Querying a LEAF: only its own linear path, scoped to its branch.
+        chain_leaf = Catalog(conn).classification_chain("class/sun-niva2020")
+        assert [e.slug for e in chain_leaf] == [
+            "sun1996",
+            "sun-niva2000",
+            "sun-niva2020",
+        ]
+        # No inriktning/grupp siblings leak into the leaf's chain.
+        assert not any("inriktning" in e.slug or "grupp" in e.slug for e in chain_leaf)
+        assert next(e for e in chain_leaf if e.is_self).slug == "sun-niva2020"
+        assert [e.slug for e in chain_leaf if e.is_current] == ["sun-niva2020"]
 
     def test_variable_chain_undated_edge_orders_by_traversal(self) -> None:
         # kon → uA (UNDATED) → uB (2018). Order-by-traversal keeps [kon, uA, uB]

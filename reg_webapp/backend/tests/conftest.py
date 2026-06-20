@@ -173,6 +173,7 @@ def _build_catalog_fixture_db(db_path: Path) -> None:
     _seed_kon_edges(src)
     _seed_succession_chain(src)
     _seed_concept_groups(src, add_variable)
+    _seed_classification_split_root(src)
     _seed_same_as_alias_to_grouped(src)
     _seed_code_variable_map(src)
     _seed_merged_family(src, add_variable, add_state)
@@ -461,6 +462,54 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
         [
             ("sun1996", "sun2000", 2000),
             ("sun2000", "sun2020", 2020),
+        ],
+    )
+
+
+def _seed_classification_split_root(src: sqlite3.Connection) -> None:
+    """#605 / #579: a 1→many classification succession SPLIT — a `sni` root fans out
+    into three distinct dimensions, each with its own 2000→2020 edition:
+
+        sni-root1996 → {sni-grp2000, sni-ink2000, sni-niv2000}
+        sni-<dim>2000 → sni-<dim>2020   (the three branch tips)
+
+    A DISTINCT root from the linear sun1996→sun2000→sun2020 chain in
+    `_seed_concept_groups`, kept separate so the linear `class/sun2020` test stays a
+    clean 3-edition chain. Browsing the split root
+    (`/api/catalog/class/sni-root1996`) must embed ALL three branches in
+    `edition_chain`, with the three 2020 tips all `is_current`. All editions are LIVE
+    rows (the build validator forbids dead succession endpoints)."""
+    src.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (100, 'SNI-ROOT1996', 'SNI root 1996', 'sni-root1996')"
+    )
+    next_id = 101
+    for stem in ("grp", "ink", "niv"):
+        for vintage in ("2000", "2020"):
+            src.execute(
+                "INSERT INTO classification (id, short_name, name, slug) "
+                "VALUES (?, ?, ?, ?)",
+                (
+                    next_id,
+                    f"SNI-{stem.upper()}{vintage}",
+                    f"SNI {stem} {vintage}",
+                    f"sni-{stem}{vintage}",
+                ),
+            )
+            next_id += 1
+    src.executemany(
+        "INSERT INTO classification_replaced_by "
+        "(predecessor_slug, successor_slug, effective_year, note) "
+        "VALUES (?, ?, ?, 'derived:test')",
+        [
+            *(
+                ("sni-root1996", f"sni-{stem}2000", 2000)
+                for stem in ("grp", "ink", "niv")
+            ),
+            *(
+                (f"sni-{stem}2000", f"sni-{stem}2020", 2020)
+                for stem in ("grp", "ink", "niv")
+            ),
         ],
     )
 

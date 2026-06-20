@@ -6,11 +6,11 @@ import { catalogHref } from "./catalog";
 // analogue of the variable LineagePanels' succession chain (#489). The node EMBEDS
 // the FULL edition chain (`edition_chain`, oldest first → terminal/current last),
 // so the panel renders it SYNCHRONOUSLY — no per-neighbour fetch. Each edition
-// carries `is_self` (the edition being viewed) and `is_current` (the terminal /
-// latest edition). Every chain edition is a live classification row (the build
-// validator guarantees succession editions are live), so `fqid` is null only when
-// the slug is missing/unresolvable; such an edition renders as plain text rather
-// than a link (a generic, type-justified null-guard on the optional wire field).
+// carries `is_self` (the edition being viewed) and `is_current` (a terminal / latest
+// edition). Every chain edition is a live classification row (the build validator
+// guarantees succession editions are live), so `fqid` is null only when the slug is
+// missing/unresolvable; such an edition renders as plain text rather than a link (a
+// generic, type-justified null-guard on the optional wire field).
 //
 // This is a SEPARATE component from the variable LineagePanels (not a conditional
 // arm): a classification edition is a single `slug` linking to `class/<slug>` (NOT
@@ -28,6 +28,16 @@ const chain = $derived(node.edition_chain ?? []);
 // nothing extra.
 const show = $derived(chain.length > 1);
 
+// #605: a 1→many succession SPLIT root (e.g. browsing `sun1996`, whose chain fans
+// out into the niva/inriktning/grupp branches) carries MULTIPLE `is_current`
+// editions — one per branch tip. The collapse idiom below assumes a LINEAR chain
+// (one viewed + one terminal, everything else collapses around them), which can't
+// represent a fan-out. So when the chain has more than one terminal we render it
+// FLAT — every edition visible, each terminal tagged "current" — and keep the
+// collapse only for the common linear case.
+const currentCount = $derived(chain.filter((e) => e.is_current).length);
+const fanOut = $derived(currentCount > 1);
+
 // The two always-visible anchors split the chain into collapsible groups so a long
 // chain (e.g. lkf = 47 editions) doesn't render 47 tall rows by default:
 //   - the VIEWED edition (`is_self`) — "you are here";
@@ -36,9 +46,12 @@ const show = $derived(chain.length > 1);
 // up to two <details> disclosures (the app's disclosure idiom — mirrors SearchView's
 // concept-group fold): editions BEFORE the viewed one ("N earlier editions") and
 // editions BETWEEN the viewed and the current one ("N later editions"). The viewed
-// and current editions stay visible without expanding.
+// and current editions stay visible without expanding. (Linear case only — the
+// fan-out renders flat instead; see `fanOut`.)
 const selfIndex = $derived(chain.findIndex((e) => e.is_self));
-const currentIndex = $derived(chain.findIndex((e) => e.is_current));
+// The terminal of the LINEAR chain — the last `is_current` (== chain end). In a
+// fan-out this branch is unused (we render flat).
+const currentIndex = $derived(chain.findLastIndex((e) => e.is_current));
 
 // Everything strictly before the viewed edition is the collapsed "earlier" arm.
 const earlier = $derived(selfIndex > 0 ? chain.slice(0, selfIndex) : []);
@@ -107,35 +120,48 @@ const currentEdition = $derived(
   <section aria-labelledby="cls-succession-heading" class="cls-succession">
     <h3 id="cls-succession-heading">Editions</h3>
 
-    <ol class="chain">
-      <!-- Earlier editions (before the viewed one) — collapsed. -->
-      {#if earlier.length > 0}
-        {@render editionRun(
-          `${earlier.length} earlier edition${earlier.length === 1 ? "" : "s"}`,
-          earlier,
-        )}
-      {/if}
+    {#if fanOut}
+      <!-- #605: a 1→many SPLIT root fans out into several branches with MULTIPLE
+           terminal editions — the linear collapse can't represent it, so render the
+           whole closure FLAT. The viewed (self) edition and every branch tip
+           (is_current) are marked in place; the marker fills for any anchor. -->
+      <ol class="chain">
+        {#each chain as edition, i (edition.fqid ?? edition.slug + i)}
+          {@render chainNode(edition, edition.is_self || edition.is_current)}
+        {/each}
+      </ol>
+    {:else}
+      <!-- Linear chain: collapse the bulk around the viewed + current anchors. -->
+      <ol class="chain">
+        <!-- Earlier editions (before the viewed one) — collapsed. -->
+        {#if earlier.length > 0}
+          {@render editionRun(
+            `${earlier.length} earlier edition${earlier.length === 1 ? "" : "s"}`,
+            earlier,
+          )}
+        {/if}
 
-      <!-- The VIEWED edition, marked in place. When it is ALSO the current/terminal
-           edition it carries both tags (a single node). -->
-      {#if selfEdition}
-        {@render chainNode(selfEdition, true)}
-      {/if}
+        <!-- The VIEWED edition, marked in place. When it is ALSO the current/terminal
+             edition it carries both tags (a single node). -->
+        {#if selfEdition}
+          {@render chainNode(selfEdition, true)}
+        {/if}
 
-      <!-- Later editions (between the viewed and the current one) — collapsed. -->
-      {#if later.length > 0}
-        {@render editionRun(
-          `${later.length} later edition${later.length === 1 ? "" : "s"}`,
-          later,
-        )}
-      {/if}
+        <!-- Later editions (between the viewed and the current one) — collapsed. -->
+        {#if later.length > 0}
+          {@render editionRun(
+            `${later.length} later edition${later.length === 1 ? "" : "s"}`,
+            later,
+          )}
+        {/if}
 
-      <!-- The CURRENT/terminal edition, always visible — the path's head, the latest
-           standard. Omitted when the viewed edition IS the current one (one node). -->
-      {#if currentEdition}
-        {@render chainNode(currentEdition, true)}
-      {/if}
-    </ol>
+        <!-- The CURRENT/terminal edition, always visible — the path's head, the
+             latest standard. Omitted when the viewed edition IS the current one. -->
+        {#if currentEdition}
+          {@render chainNode(currentEdition, true)}
+        {/if}
+      </ol>
+    {/if}
   </section>
 {/if}
 
