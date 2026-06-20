@@ -16,6 +16,7 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.catalog import (
+    BindingGroupRef,
     Catalog,
     ClassificationCode,
     ClassificationEdition,
@@ -1782,6 +1783,152 @@ class TestDimensions:
         with pytest.raises(RegMetaError) as exc:
             Catalog(slugged_conn).dimensions("scb/lisa/nonexistent")
         assert exc.value.code == "fqid_not_found"
+
+
+def _add_concept_group(
+    conn: sqlite3.Connection,
+    *,
+    group_id: int,
+    register_id: int,
+    group_key: str,
+    member_slugs: list[str],
+    source: str = "curated",
+) -> None:
+    """Seed one `kind='variable'` concept group over existing variables (by slug),
+    facet-less. `source` exercises the curated/edge/token surfaces (`key` is
+    present for all)."""
+    conn.execute(
+        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+        "label, source) VALUES (?, 'variable', ?, ?, ?, ?)",
+        (group_id, register_id, group_key, f"Group {group_key}", source),
+    )
+    for slug in member_slugs:
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
+            (register_id, slug),
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (?, ?)",
+            (vid, group_id),
+        )
+    conn.commit()
+
+
+class TestConceptGroupByKey:
+    """#616: `concept_group(provider, register, key)` returns the one group
+    addressed by its scope-unique `key` (a filter over `list_concept_groups`),
+    or None for an unknown key / unknown pair — matching the sibling list
+    accessor's tolerance of an unknown pair (`[]`)."""
+
+    def test_returns_group_by_key(self) -> None:
+        conn = build_slugged_db()
+        add_variable(
+            conn, register_id=1, var_id=45, name="Civilstånd", slug="civilstand"
+        )
+        _add_concept_group(
+            conn,
+            group_id=40,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+        )
+        group = Catalog(conn).concept_group("scb", "lisa", "demog")
+        assert group is not None
+        assert group.key == "demog"
+        assert group.source == "curated"
+        assert {str(m.fqid) for m in group.members} == {
+            "scb/lisa/kon",
+            "scb/lisa/civilstand",
+        }
+
+    def test_returns_group_by_key_edge_source(self) -> None:
+        # `key` is present for every source, not just curated — an edge group is
+        # addressable too.
+        conn = build_slugged_db()
+        add_variable(conn, register_id=1, var_id=46, name="Sun 2000", slug="sun2000")
+        _add_concept_group(
+            conn,
+            group_id=41,
+            register_id=1,
+            group_key="sun-edge",
+            member_slugs=["kon", "sun2000"],
+            source="edge",
+        )
+        group = Catalog(conn).concept_group("scb", "lisa", "sun-edge")
+        assert group is not None
+        assert group.source == "edge"
+
+    def test_unknown_key_returns_none(self) -> None:
+        conn = build_slugged_db()
+        _add_concept_group(
+            conn,
+            group_id=42,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon"],
+        )
+        assert Catalog(conn).concept_group("scb", "lisa", "nope") is None
+
+    def test_unknown_pair_returns_none(self, slugged_conn: sqlite3.Connection) -> None:
+        cat = Catalog(slugged_conn)
+        assert cat.concept_group("scb", "nope", "demog") is None
+        assert cat.concept_group("nope", "lisa", "demog") is None
+
+
+class TestResolvedVariableGroupRef:
+    """#616: `ResolvedVariable.group` is the binding's owning group as a
+    `(provider, register, key)` ref (membership is 1:1 — the
+    `concept_group_variable.variable_id` PK), or None for an ungrouped variable,
+    so a member page renders group-aware without a second fetch."""
+
+    def test_grouped_member_carries_group_ref(self) -> None:
+        conn = build_slugged_db()
+        add_variable(
+            conn, register_id=1, var_id=45, name="Civilstånd", slug="civilstand"
+        )
+        _add_concept_group(
+            conn,
+            group_id=43,
+            register_id=1,
+            group_key="demog",
+            member_slugs=["kon", "civilstand"],
+        )
+        r = Catalog(conn).resolve(_KON)
+        assert r.group == BindingGroupRef("scb", "lisa", "demog")
+
+    def test_ungrouped_variable_has_no_group_ref(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        assert Catalog(slugged_conn).resolve(_KON).group is None
+
+    def test_group_ref_follows_same_as_to_target(self) -> None:
+        # The ref keys off the RESOLVED variable's triple (like the edges), so a
+        # same_as alias reports its target's group, not the requested register's.
+        conn = build_slugged_db()
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="personer", name="P"
+        )
+        add_version(conn, regver_id=200, register_variant_id=20, name="RTB 2018")
+        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
+        for src, tgt in (
+            (("scb", "lisa", "phantom"), ("scb", "rtb", "kon")),
+            (("scb", "rtb", "kon"), ("scb", "lisa", "phantom")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        _add_concept_group(
+            conn,
+            group_id=44,
+            register_id=2,
+            group_key="rtbdemog",
+            member_slugs=["kon"],
+        )
+        r = Catalog(conn).resolve("scb/lisa/phantom")
+        assert r.group == BindingGroupRef("scb", "rtb", "rtbdemog")
 
 
 class TestClassificationCodes:

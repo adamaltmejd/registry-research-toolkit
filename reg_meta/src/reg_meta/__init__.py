@@ -1,4 +1,5 @@
 from .catalog import (
+    BindingGroupRef,
     Catalog,
     ClassificationCode,
     ClassificationEdition,
@@ -44,6 +45,7 @@ from .queries import (
 )
 
 __all__ = [
+    "BindingGroupRef",
     "Catalog",
     "ClassificationCode",
     "ClassificationEdition",
