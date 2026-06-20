@@ -1691,6 +1691,47 @@ def _check_classification_replaced_by(
     else:
         result.ok("succession edges resolve to live classification slugs")
 
+    # #579: `classification.supersedes_id` is a DERIVED projection of this table
+    # (`derive_supersedes_from_edges`), not a seed field — so the two must agree.
+    # (1) every non-NULL supersedes_id must back onto an edge whose
+    # predecessor_slug/successor_slug match the classification pair; (2) every
+    # classification that IS a successor of an edge whose predecessor RESOLVES to a
+    # live classification must carry a non-NULL supersedes_id. A mismatch means the
+    # derive pass drifted or was skipped. Defensive: require the pointer only when a
+    # predecessor resolves to a live classification. Classification edges are all-live
+    # (the materializer rejects dead predecessors), so in practice every successor edge
+    # yields a non-NULL supersedes_id; the live-predecessor join (`JOIN classification p`
+    # inside the EXISTS below) keeps the check robust regardless.
+    orphan_ptr = conn.execute(
+        """
+        SELECT COUNT(*) FROM classification c
+        JOIN classification p ON p.id = c.supersedes_id
+        WHERE NOT EXISTS (
+            SELECT 1 FROM classification_replaced_by e
+            WHERE e.predecessor_slug = p.slug AND e.successor_slug = c.slug
+        )
+        """
+    ).fetchone()[0]
+    missing_ptr = conn.execute(
+        """
+        SELECT COUNT(*) FROM classification c
+        WHERE c.supersedes_id IS NULL
+          AND EXISTS (
+              SELECT 1 FROM classification_replaced_by e
+              JOIN classification p ON p.slug = e.predecessor_slug
+              WHERE e.successor_slug = c.slug
+          )
+        """
+    ).fetchone()[0]
+    if orphan_ptr or missing_ptr:
+        result.fail(
+            f"supersedes_id out of sync with classification_replaced_by "
+            f"({orphan_ptr} pointer(s) with no backing edge, "
+            f"{missing_ptr} successor(s) missing a derived pointer)"
+        )
+    else:
+        result.ok("supersedes_id is a faithful projection of succession edges")
+
     n_edges = conn.execute(
         "SELECT COUNT(*) FROM classification_replaced_by"
     ).fetchone()[0]

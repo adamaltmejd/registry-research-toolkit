@@ -30,15 +30,17 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import FqidKind
+from reg_meta.fqid import FqidKind, parse as parse_fqid
 from reg_meta_build.concept_groups import materialize_concept_groups
 from reg_meta_build.relations import (
     _SAME_AS_MAX_COMPONENT,
     CURATED_RELATION_KINDS,
     CuratedRelatedTo,
+    CuratedReplacedBy,
     CuratedSameAs,
     derive_variable_vintage_succession,
     load_relations,
+    materialize_curated_replaced_by,
     materialize_related_to,
     materialize_same_as,
 )
@@ -655,6 +657,261 @@ class TestReplacedByLoad:
             )
         assert exc.value.code == "relations_invalid"
 
+    def test_parses_classification_grain_edge(self, tmp_path: Path) -> None:
+        # #579: the `class/<slug>` form parses as a CLASSIFICATION-grain edge.
+        rel = _load(
+            tmp_path,
+            '[[edge]]\ntype = "replaced_by"\nfrom = "class/sun1996"\n'
+            'to = "class/sun-niva2000"\neffective_year = 2000\n',
+        )
+        assert len(rel.replaced_by) == 1
+        e = rel.replaced_by[0]
+        assert e.predecessor.kind is FqidKind.CLASSIFICATION
+        assert e.successor.kind is FqidKind.CLASSIFICATION
+        assert str(e.predecessor) == "class/sun1996"
+        assert str(e.successor) == "class/sun-niva2000"
+        assert e.effective_year == 2000
+        assert e.note is None
+
+    def test_classification_note_rejected(self, tmp_path: Path) -> None:
+        # #579: `note` is provenance-only on a classification edge (the table has
+        # no `beskrivning`, the build stamps `curated:slug_toml`), so a `note`
+        # field is rejected at load rather than silently dropped — the human reason
+        # belongs in a TOML `#` comment.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "class/sun1996"\n'
+                'to = "class/sun-niva2000"\neffective_year = 2000\nnote = "split"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+        assert "note" in exc.value.message
+
+    def test_classification_mixed_with_register_rejected(self, tmp_path: Path) -> None:
+        # A class↔register mix is a different grain on each side → rejected. The
+        # `class/` form disambiguates from the 2-segment register grain.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "class/sun1996"\n'
+                'to = "scb/lisa"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+    def test_classification_self_loop_rejected(self, tmp_path: Path) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "class/sun1996"\n'
+                'to = "class/sun1996"\n',
+            )
+        assert exc.value.code == "relations_invalid"
+
+
+# ---------------------------------------------------------------------------
+# replaced_by — classification-grain materialize (#579)
+# ---------------------------------------------------------------------------
+
+
+def _replaced_by_edge(
+    frm: str, to: str, *, year: int | None = None, note: str | None = None
+) -> CuratedReplacedBy:
+    """A `CuratedReplacedBy` built straight from FQID strings (the loader's
+    output shape), so the materialize tests bypass the TOML round-trip."""
+    return CuratedReplacedBy(
+        predecessor=parse_fqid(frm),
+        successor=parse_fqid(to),
+        note=note,
+        effective_year=year,
+    )
+
+
+def _class_succession_db() -> sqlite3.Connection:
+    """A slugged scb/lisa DB carrying three live classifications — sun1996 plus
+    the two 2000-split successors — and NO succession edges yet (the curated pass
+    inserts them). `progress` is a no-op sink."""
+    conn = build_slugged_db(classification=None)
+    for short, slug in (
+        ("SUN1996", "sun1996"),
+        ("SUN-NIVA2000", "sun-niva2000"),
+        ("SUN-INRIKTNING2000", "sun-inriktning2000"),
+    ):
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+            (short, short, slug),
+        )
+    conn.commit()
+    return conn
+
+
+def _class_succession_rows(conn: sqlite3.Connection) -> list[tuple]:
+    return [
+        tuple(r)
+        for r in conn.execute(
+            "SELECT predecessor_slug, successor_slug, effective_year, note "
+            "FROM classification_replaced_by "
+            "ORDER BY predecessor_slug, successor_slug"
+        )
+    ]
+
+
+def _noop(_msg: str) -> None:
+    pass
+
+
+class TestClassificationReplacedByMaterialize:
+    """#579: curated classification-grain `replaced_by` edges land in
+    `classification_replaced_by` (alongside the #571 auto edges) — the sun1996 →
+    2000-split 1→many dual the auto same-stem rule can't produce. BOTH endpoints
+    must resolve to a live classification (unlike register/variable, where a dead
+    predecessor is allowed) — classification succession is all-live by design."""
+
+    def test_one_edge_writes_with_provenance_marker(self) -> None:
+        conn = _class_succession_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [_replaced_by_edge("class/sun1996", "class/sun-niva2000", year=2000)],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["classification"] == 1
+        # `note` is provenance-only: the fixed `curated:slug_toml` marker (the
+        # table has no `beskrivning`; the human reason lives in a TOML `#` comment).
+        assert _class_succession_rows(conn) == [
+            ("sun1996", "sun-niva2000", 2000, "curated:slug_toml"),
+        ]
+
+    def test_one_to_many_split_both_allowed(self) -> None:
+        # The branching split is intentional: one predecessor, two successors.
+        conn = _class_succession_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [
+                _replaced_by_edge("class/sun1996", "class/sun-niva2000", year=2000),
+                _replaced_by_edge(
+                    "class/sun1996", "class/sun-inriktning2000", year=2000
+                ),
+            ],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["classification"] == 2
+        # Both rows stamp the provenance marker (note is provenance-only).
+        assert _class_succession_rows(conn) == [
+            ("sun1996", "sun-inriktning2000", 2000, "curated:slug_toml"),
+            ("sun1996", "sun-niva2000", 2000, "curated:slug_toml"),
+        ]
+
+    def test_not_provider_gated(self) -> None:
+        # Classifications are GLOBAL (`class/<slug>` has no provider) — an edge is
+        # NOT skipped just because `scb` isn't the only/active provider; even a
+        # disjoint provider set still materializes the classification edge.
+        conn = _class_succession_db()
+        out = materialize_curated_replaced_by(
+            conn,
+            [_replaced_by_edge("class/sun1996", "class/sun-niva2000", year=2000)],
+            set(),
+            set(),
+            providers=frozenset({"sos"}),  # scb not present
+            progress=_noop,
+        )
+        assert out["classification"] == 1
+        assert out["skipped_inactive_provider"] == 0
+        assert len(_class_succession_rows(conn)) == 1
+
+    def test_unresolved_successor_fails_fast(self) -> None:
+        conn = _class_succession_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [_replaced_by_edge("class/sun1996", "class/ghost2000")],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_successor"
+        assert _class_succession_rows(conn) == []  # nothing written
+
+    def test_dead_predecessor_fails_fast(self) -> None:
+        # UNLIKE the register/variable grain (where a dead predecessor is inserted
+        # verbatim), the classification grain requires BOTH endpoints live: the read
+        # side (`classification_chain`) and the validator's `dangling` check both
+        # depend on classification succession being all-live, so a dead-predecessor
+        # edge must FAIL FAST here (EXIT_CONFIG) rather than fail late at validation
+        # (CLI) or ship a dangling row (`--no-validate`).
+        conn = _class_succession_db()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [_replaced_by_edge("class/retired1990", "class/sun-niva2000")],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_predecessor"
+        assert _class_succession_rows(conn) == []  # nothing written
+
+    def test_dedups_against_existing_auto_edge(self) -> None:
+        # An auto #571 edge already in the table on the same (pred, succ) pair →
+        # the curated row dedups against it (counted as a skip, no second row).
+        conn = _class_succession_db()
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('sun1996', 'sun-niva2000', 2000, 'derived:vintage_chain')"
+        )
+        conn.commit()
+        out = materialize_curated_replaced_by(
+            conn,
+            [_replaced_by_edge("class/sun1996", "class/sun-niva2000", year=2000)],
+            set(),
+            set(),
+            providers=_SCB,
+            progress=_noop,
+        )
+        assert out["classification"] == 0
+        assert out["skipped_duplicate"] == 1
+        # The pre-existing auto edge survives untouched (its note kept).
+        assert _class_succession_rows(conn) == [
+            ("sun1996", "sun-niva2000", 2000, "derived:vintage_chain"),
+        ]
+
+    def test_curated_edge_closing_cycle_with_auto_edge_fails(self) -> None:
+        # An auto edge A→B plus a curated edge B→A close a 2-cycle in the COMBINED
+        # classification graph — caught before any INSERT (both endpoints resolve,
+        # so it's the cycle check, not the unresolved-successor guard).
+        conn = _class_succession_db()
+        conn.execute(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug, effective_year, note) "
+            "VALUES ('sun-niva2000', 'sun1996', 1996, 'derived:vintage_chain')"
+        )
+        conn.commit()
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [_replaced_by_edge("class/sun1996", "class/sun-niva2000")],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_cycle"
+        # The cycle aborts before INSERT: only the pre-seeded auto edge remains.
+        assert _class_succession_rows(conn) == [
+            ("sun-niva2000", "sun1996", 1996, "derived:vintage_chain"),
+        ]
+
 
 # ---------------------------------------------------------------------------
 # The three real edges moved into the repo file
@@ -664,14 +921,34 @@ class TestReplacedByLoad:
 class TestMovedEdges:
     def test_repo_file_carries_the_moved_edges(self) -> None:
         rel = load_relations(_ROOT / "curation" / "relations.toml")
-        # 11 replaced_by (the #375 LISA succession chain) + 3 related_to (#403).
-        assert len(rel.replaced_by) == 11
+        # 11 variable replaced_by (the #375 LISA succession chain) + 3
+        # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
+        # split) + 3 related_to (#403).
+        assert len(rel.replaced_by) == 14
         assert len(rel.related_to) == 3
         assert rel.same_as == ()  # ships empty
         # Spot-check one moved edge of each type.
         assert ("scb/lisa/anninkf", "scb/lisa/anninkf04") in {
             (str(e.predecessor), str(e.successor)) for e in rel.replaced_by
         }
+        # The #579 1→many classification split: one predecessor, three successors
+        # (all three SUN 2000 dimensions), parsed as `class/<slug>` (CLASSIFICATION
+        # grain).
+        sun_succ = {
+            str(e.successor)
+            for e in rel.replaced_by
+            if str(e.predecessor) == "class/sun1996"
+        }
+        assert sun_succ == {
+            "class/sun-niva2000",
+            "class/sun-inriktning2000",
+            "class/sun-grupp2000",
+        }
+        assert all(
+            e.predecessor.kind is FqidKind.CLASSIFICATION
+            for e in rel.replaced_by
+            if str(e.predecessor) == "class/sun1996"
+        )
         assert ("scb", "ekonomiskt-bistand", "belopp") in {
             (e.a_provider, e.a_register, e.a_variable) for e in rel.related_to
         }

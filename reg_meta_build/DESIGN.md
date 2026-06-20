@@ -888,11 +888,15 @@ Build-time invariants (violations fail `reg-meta-build build-db` loudly, exit 10
 - Every classification with at least one tagged instance must resolve to at least one
   value code.
 - A given `vardemangdsversion` string may belong to at most one classification.
-- Every `supersedes` reference must resolve to a declared `short_name`.
 - Every `valid_codes_file`, when present, must resolve to a CSV under the
   classifications directory whose first two columns are the code and label (either
   `vardekod,vardebenamning` or the universal `code,label` header; further columns are
   ignored).
+
+The seed declares **no succession**. Which classification edition supersedes which lives
+in `classification_replaced_by` (auto year-tail chains + curated `relations.toml`
+edges); `classification.supersedes_id` is a derived back-pointer projected from that
+edge table at build time — see "Classification succession" below.
 
 ### Canonical code CSVs
 
@@ -953,10 +957,11 @@ or re-pointed — linkage is additive.
 6. Emit confident candidates into `classification_candidate` additively.
 7. **Vintage-period reclaim** (#494): much of the multi-family residue from step 3 is
    one classification family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
-   editions) — distinct `classification` rows linked by `supersedes_id`. For each
-   remaining multi-family value set, compute every candidate classification's chain root
-   via a recursive CTE over `supersedes_id`. If ALL candidates share one chain root
-   (i.e. every candidate sits on the same supersedes chain), resolve by period: for each
+   editions) — distinct `classification` rows linked by `supersedes_id` (the derived
+   back-pointer onto `classification_replaced_by`; #579). For each remaining
+   multi-family value set, compute every candidate classification's chain root via a
+   recursive CTE over `supersedes_id`. If ALL candidates share one chain root (i.e.
+   every candidate sits on the same supersedes chain), resolve by period: for each
    `(variable_id, value_set_id)` pair, pick the LATEST candidate vintage (max
    `valid_from`) whose `[valid_from, valid_to]` (INTEGER years, NULL = unbounded)
    overlaps AT LEAST ONE of the pair's REAL state windows, then emit it additively.
@@ -1828,14 +1833,17 @@ consolidated:
   `timeseries_event`-derived path cannot express: **cross-provider** succession (e.g.
   SOS→SCB) and **dead-predecessor** edges. Curated edges dedup against event-derived
   ones via the shared `seen_*` PK sets, so a curated row duplicating an event edge
-  collapses (counted as a curated skip). Combined acyclicity is checked over both event
-  and curated edges before any INSERT. Provenance is `note = 'curated:slug_toml'`
-  (distinct from `'auto:timeseries_event'`). This is a **DIFFERENT relation** from the
-  per-entry `replaced_by` key-string field in slug TOMLs — that field is a *within-file
-  slug-typo rename pointer* (one TOML key → another in the same file, validated for
-  cycle-freedom); a `replaced_by` edge is a *succession edge* between two full FQIDs. It
-  is also distinct from `variable_state_lineage` (consumer↔source binding overlap; see
-  below).
+  collapses (counted as a curated skip). The **classification** grain is the exception
+  to the dead-predecessor allowance: both endpoints must be live (classification
+  succession is all-live — the reg_meta read side `classification_chain` depends on it),
+  so a curated `class/<slug>` edge with a dead predecessor fails the build. Combined
+  acyclicity is checked over both event and curated edges before any INSERT. Provenance
+  is `note = 'curated:slug_toml'` (distinct from `'auto:timeseries_event'`). This is a
+  **DIFFERENT relation** from the per-entry `replaced_by` key-string field in slug TOMLs
+  — that field is a *within-file slug-typo rename pointer* (one TOML key → another in
+  the same file, validated for cycle-freedom); a `replaced_by` edge is a *succession
+  edge* between two full FQIDs. It is also distinct from `variable_state_lineage`
+  (consumer↔source binding overlap; see below).
 
 - **`related_to`** — weak "see also" discovery link between distinct variable concepts.
   Variables only (3-seg FQIDs). The curated relation-kind vocabulary
@@ -2004,7 +2012,15 @@ already-grouped member:
    (`lkf1980`…, `sni2007`; guard = ≥2 vintages AND year-stripped-name agreement) but are
    NOT folded into concept groups (#571): editions of one classification are a temporal
    succession, not a parallel browse facet. They materialize as adjacent-edition edges
-   in `classification_replaced_by` via `derive_classification_succession`. The
+   in `classification_replaced_by` via `derive_classification_succession`.
+   `classification_replaced_by` is the **single canonical succession surface** (#579):
+   the auto year-tail edges above plus curated cross-stem edges from `relations.toml`
+   (`type = "replaced_by"`, `class/<slug>` — e.g. the `sun1996` → `sun-niva2000` /
+   `sun-inriktning2000` / `sun-grupp2000` 1→many split the same-stem rule can't
+   produce). `classification.supersedes_id` is a DERIVED back-pointer projected from
+   that edge table by `derive_supersedes_from_edges` (runs after the auto + curated
+   edges land, before `link_value_set_classifications` reads it); the
+   `classifications.toml` seed no longer declares succession. The
    `concept_group_classification` table and `kind='classification'` machinery hold the
    curated umbrella groups — `group:sun` being the first, added by #516 (see below). The
    variable-grain counterpart is derived by `derive_variable_vintage_succession` (#584):

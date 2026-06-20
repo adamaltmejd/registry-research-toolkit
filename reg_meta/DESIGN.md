@@ -540,12 +540,12 @@ carried by `classification_successors` / `classification_predecessors` /
 (`class/<slug>`), so the edge endpoint is a single slug — no provider/register triple.
 Fields: `fqid` (best-effort `class/<slug>`, built via `_class_ref_fqid`; None only on a
 malformed slug), the load-bearing `slug`, `effective_year` (the succession year, or
-None), and `note` (build provenance, e.g. `derived:vintage_chain`). There is no
-`reason`/`beskrivning` column on `classification_replaced_by` (that column exists only
-on the variable-grain `timeseries_event`), so `ClassificationRef` carries `note` where
-`VariableRef` carries `reason`. Succession references the **exact edition slug** as
-identity; `fqid` is best-effort to surface malformed slugs gracefully rather than
-raising.
+None), and `note` (build provenance — `derived:vintage_chain` for the auto edges,
+`curated:slug_toml` for the curated #579 edges). There is no `reason`/`beskrivning`
+column on `classification_replaced_by` (that column exists only on the variable-grain
+`timeseries_event`), so `ClassificationRef` carries `note` where `VariableRef` carries
+`reason`. Succession references the **exact edition slug** as identity; `fqid` is
+best-effort to surface malformed slugs gracefully rather than raising.
 
 **`RelatedRef`** — a `variable_related_to` see-also link (see reg_meta_build/DESIGN.md →
 Build-time triage (SCB)). Same `fqid` (3-seg) + `provider`/`register`/`variable` triple
@@ -608,6 +608,15 @@ deduplicated union of value codes that belong to the classification, with an opt
 `level` integer for prefix-hierarchy filtering (length of all-digit codes; NULL for
 non-numeric codes like ICD letters).
 
+The `supersedes link` (the `supersedes_id` FK / `supersedes` short_name surfaced by
+`list/get classification`, and its reverse `superseded_by` back-pointer) is a **derived
+projection** of `classification_replaced_by`, the single canonical succession surface
+(#579), not a separately-curated field. The read side trusts it as-is. Because a
+predecessor can fan out to several successors (the `sun1996` → 2000
+nivå/inriktning/grupp split), `superseded_by` is a `GROUP_CONCAT` over all rows whose
+`supersedes_id` points back — `superseded_by(sun1996)` returns all three 2000
+dimensions. See `reg_meta_build/DESIGN.md` → "Classification succession".
+
 The FK lives on `variable_state` (per-era), not on `variable`. SCB's data model already
 places the classification label (`value_set_version_label`) per era, and many headline
 variables genuinely span multiple classifications across their lifetime — e.g.
@@ -660,12 +669,15 @@ dimensions and their guards; see `reg_meta_build/DESIGN.md` → Concept-group de
 `sun-niva2000`→`sun-niva2020`) are **not** folded into concept groups (#571). Editions
 of one classification are a temporal succession, not a parallel browse facet. They
 materialize as adjacent-edition edges in `classification_replaced_by` (auto-derived from
-the same year-tail detection). `concept_group_classification` holds CURATED umbrella
-groups: `group:sun` (#516) groups the three genuinely-distinct SUN dimensions
-(`sun-niva2020` Utbildningsnivå, `sun-inriktning2020` Utbildningsinriktning,
-`sun-grupp2020` Utbildningsgrupper) on a `dimension` facet axis. Prior editions
-(`sun1996`, 2000 editions) are not members — they are temporal predecessors of each
-dimension and appear in `classification_replaced_by` (#571).
+the same year-tail detection; cross-stem restructures the year-tail can't reach are
+curated, #579 — e.g. `sun1996` → the 2000 nivå/inriktning split).
+`concept_group_classification` holds CURATED umbrella groups: `group:sun` (#516) groups
+the three genuinely-distinct SUN dimensions (`sun-niva2020` Utbildningsnivå,
+`sun-inriktning2020` Utbildningsinriktning, `sun-grupp2020` Utbildningsgrupper) on a
+`dimension` facet axis. Prior editions (`sun1996`, 2000 editions) are not members — they
+are temporal predecessors of each dimension and appear in `classification_replaced_by`
+(the 2000→2020 steps auto-derived #571; `sun1996`'s 1→many split into the 2000 editions
+curated #579).
 
 **Presentation only, identity untouched.** A group is *not* an FQID kind and never
 becomes a binding/order/stats key — members keep their leaf FQIDs, and a binding's

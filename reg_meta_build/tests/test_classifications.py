@@ -37,8 +37,10 @@ EXTENDED_VARDEMANGDER_ROWS = [
 
 
 # Two classifications: TESTKON tags CVIDs 1001/1003/2001 (vardemangdsversion
-# "Kön"); TESTKON2 supersedes TESTKON and tags CVID 1004 (vardemangdsversion
-# "Kon-2"). With both pointing at real strings the build invariants pass.
+# "Kön"); TESTKON2 tags CVID 1004 (vardemangdsversion "Kon-2"). With both
+# pointing at real strings the build invariants pass. Succession is no longer
+# seed-declared (it lives in `classification_replaced_by`); `derive_supersedes_
+# from_edges` is unit-tested directly below.
 TEST_SEED_TOML = """\
 [[classification]]
 short_name = "TESTKON"
@@ -56,7 +58,6 @@ name = "Successor"
 publisher = "TEST"
 version = "2"
 valid_from = 2022
-supersedes = "TESTKON"
 vardemangdsversion = ["Kon-2"]
 """
 
@@ -139,19 +140,6 @@ class TestLoadSeed:
             load_seed(seed)
         assert ei.value.code == "classification_seed_invalid"
         assert "belongs to exactly one" in ei.value.remediation
-
-    def test_supersedes_unknown_fails(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'supersedes = "GHOST"\n'
-            'vardemangdsversion = ["x"]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "GHOST" in ei.value.message
 
     def test_valid_codes_file_must_be_string(self, tmp_path: Path):
         seed = tmp_path / "c.toml"
@@ -324,27 +312,26 @@ class TestPopulateClassifications:
             r[0] for r in conn2.execute("SELECT short_name FROM classification")
         } == {"SCBONLY", "SOSENT"}
 
-    def test_supersedes_across_provider_skip_boundary(self, tmp_path: Path):
-        """A seeded entry that supersedes a provider-skipped one inserts without
-        KeyError; its supersedes_id stays NULL (the predecessor isn't in the
-        build)."""
+    def test_populate_leaves_supersedes_id_null(self, tmp_path: Path):
+        """The seed no longer declares succession: every inserted classification
+        leaves `supersedes_id` NULL. It becomes a DERIVED projection of
+        `classification_replaced_by` later in the build
+        (`derive_supersedes_from_edges`), so `populate_classifications` itself
+        never sets it — even when the seed carries a stray (now-ignored)
+        `supersedes` key."""
         seed_toml = (
             '[[classification]]\nshort_name = "A"\nname = "A"\n'
             'supersedes = "B"\nvalid_codes_file = "a.csv"\n'
             '[[classification]]\nshort_name = "B"\nname = "B"\n'
-            'provider = "sos"\nvalid_codes_file = "b.csv"\n'
+            'valid_codes_file = "b.csv"\n'
         )
         csvs = {"a.csv": "code,label\nA,Alpha\n", "b.csv": "code,label\nB,Bravo\n"}
-        conn, (n_seeded, skipped) = self._populate_direct(
-            tmp_path, seed_toml, csvs, providers=frozenset({"scb"})
+        conn, (n_seeded, _skipped) = self._populate_direct(
+            tmp_path, seed_toml, csvs, providers=None
         )
-        assert n_seeded == 1
-        assert "B" in skipped
-        row = conn.execute(
-            "SELECT short_name, supersedes_id FROM classification"
-        ).fetchone()
-        assert row[0] == "A"
-        assert row[1] is None
+        assert n_seeded == 2
+        rows = conn.execute("SELECT supersedes_id FROM classification").fetchall()
+        assert all(r[0] is None for r in rows)
 
     def test_untagged_demoted_when_scb_absent(self, tmp_path: Path):
         """#597: an UNTAGGED classification (label-source = scb) whose
@@ -561,18 +548,6 @@ class TestPopulateClassifications:
         ).fetchall()
         # Codes are "1" and "2", both numeric, both length 1.
         assert [(r["code"], r["level"]) for r in rows] == [("1", 1), ("2", 1)]
-
-    def test_supersedes_resolved(self, tmp_path: Path):
-        db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
-        conn = sqlite3.connect(db)
-        conn.row_factory = sqlite3.Row
-        row = conn.execute(
-            "SELECT s.short_name AS predecessor "
-            "FROM classification c "
-            "JOIN classification s ON c.supersedes_id = s.id "
-            "WHERE c.short_name = 'TESTKON2'"
-        ).fetchone()
-        assert row["predecessor"] == "TESTKON"
 
     def test_classification_fts_populated(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
@@ -1057,17 +1032,29 @@ class _Graph:
         supersedes_id: int | None = None,
         valid_from: int | None = None,
         valid_to: int | None = None,
+        slug: str | None = None,
     ) -> None:
         """Seed a classification whose canonical code set is `codes` (each a
         (code, label) pair). is_valid=1 (canonical); level is the digit-length for
         all-digit codes, NULL otherwise — same rule as the build. `supersedes_id`
         (older predecessor on the vintage chain) and `valid_from`/`valid_to` (INTEGER
-        years, NULLABLE = unbounded) feed the #494 vintage-period reclaim."""
+        years, NULLABLE = unbounded) feed the #494 vintage-period reclaim. `slug`
+        defaults to `short_name.lower()` — non-NULL because the real build runs this
+        pass AFTER `populate_slugs`, and the #494 reclaim's stem guard derives the
+        vintage family from the slug (e.g. `sni2002`/`sni2007` → stem `sni`)."""
         self.conn.execute(
             "INSERT INTO classification "
-            "(id, short_name, name, supersedes_id, valid_from, valid_to) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            (cls_id, short_name, short_name, supersedes_id, valid_from, valid_to),
+            "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                cls_id,
+                short_name,
+                short_name,
+                slug if slug is not None else short_name.lower(),
+                supersedes_id,
+                valid_from,
+                valid_to,
+            ),
         )
         for code, label in codes:
             code_id = self._intern_code(code, label)
@@ -1086,17 +1073,26 @@ class _Graph:
         supersedes_id: int | None = None,
         valid_from: int | None = None,
         valid_to: int | None = None,
+        slug: str | None = None,
     ) -> None:
         """Seed a classification with `is_valid=NULL` canonical rows — the no-CSV
         shape (ICD-10-SE in production): its observed codes ARE its code set, so
         the detector's `is_valid IS NOT 0` filter must keep them. Same level rule
-        and same `supersedes_id`/`valid_from`/`valid_to` vintage fields as
+        and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields as
         `add_classification`."""
         self.conn.execute(
             "INSERT INTO classification "
-            "(id, short_name, name, supersedes_id, valid_from, valid_to) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            (cls_id, short_name, short_name, supersedes_id, valid_from, valid_to),
+            "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                cls_id,
+                short_name,
+                short_name,
+                slug if slug is not None else short_name.lower(),
+                supersedes_id,
+                valid_from,
+                valid_to,
+            ),
         )
         for code, label in codes:
             code_id = self._intern_code(code, label)
@@ -1604,6 +1600,58 @@ class TestLinkValueSetClassifications:
         assert counts["multi_family"] == 1
         assert counts["vintage_value_sets_linked"] == 0
         assert counts["multi_family_after"] == 1
+
+    def test_same_root_different_stem_dimensions_stay_ambiguous(self) -> None:
+        """#579 stem guard: the curated sun1996 → {niva, inriktning, grupp} split puts
+        ORTHOGONAL SUN dimensions under ONE chain root, so the chain-root guard alone
+        would collapse a code-ambiguous LABEL-LESS value set spanning two of those
+        dimensions to one. The family key is (chain root AND slug stem): sun-niva2000
+        (stem `sun-niva`) and sun-inriktning2000 (stem `sun-inriktning`) share the
+        sun1996 root but have DIFFERENT stems → NO reclaim; the set stays in the
+        residue for curation. Contrast `test_same_chain_collapse_latest_overlapping_wins`
+        (sni2002/sni2007, same `sni` stem → still collapses)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Root of the split; its OWN codes are disjoint so it is not a candidate — the
+        # value set matches the two dimensions, not the umbrella root.
+        g.add_classification(
+            90,
+            "SUN1996",
+            _numeric_codes("ROOT", 10, 4),
+            slug="sun1996",
+            valid_from=1996,
+            valid_to=None,
+        )
+        # Two dimensions chained onto the sun1996 root → SAME chain root, DIFFERENT
+        # slug stems (`sun-niva` vs `sun-inriktning`).
+        shared = _numeric_codes("SUN", 10, 4)
+        g.add_classification(
+            91,
+            "SUN-niva2000",
+            shared + [("9001", "niva only")],
+            slug="sun-niva2000",
+            supersedes_id=90,
+            valid_from=2000,
+            valid_to=None,
+        )
+        g.add_classification(
+            92,
+            "SUN-inriktning2000",
+            shared + [("9002", "inriktning only")],
+            slug="sun-inriktning2000",
+            supersedes_id=90,
+            valid_from=2000,
+            valid_to=None,
+        )
+        g.add_value_set(190, shared)  # contained in BOTH dimensions → multi-family
+        g.add_variable_state(990, 190)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Same root but two stems → the stem guard keeps it out of _vs_multi_onechain.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
         assert g.candidates() == []
 
     def test_no_overlap_no_link(self) -> None:
@@ -1735,14 +1783,15 @@ class TestLinkValueSetClassifications:
         """FIX 1 (#494 Codex P2): a pair with TWO DISJOINT states straddling a CLOSED
         gap vintage, where the gap vintage is the LATEST that overlaps the aggregate
         span — so the RETIRED span logic would have emitted it. States 2003–2006 and
-        2018–2020; candidates SNI2002 [2002,2007] (covers state1) and a CLOSED SNIgap
+        2018–2020; candidates SNI2002 [2002,2007] (covers state1) and a CLOSED SNI2010
         [2010,2015] (covers NEITHER state — sits in the temporal hole). No candidate
         covers the 2018–2020 state. The aggregate MIN/MAX span [2003,2020] "overlaps"
-        SNIgap (2010<=2020 AND 2015>=2003), and SNIgap has the higher valid_from, so
-        the OLD span logic would have ranked SNIgap rn=1 and emitted it — tagging the
+        SNI2010 (2010<=2020 AND 2015>=2003), and SNI2010 has the higher valid_from, so
+        the OLD span logic would have ranked SNI2010 rn=1 and emitted it — tagging the
         variable with a vintage NONE of its states fall in. Per-state overlap anchors
         to a real window: only SNI2002 overlaps a real state (2003–2006), so SNI2002 is
-        emitted, NOT the gap edition."""
+        emitted, NOT the gap edition. The gap edition is a YEAR-tailed vintage (slug
+        `sni2010`, same `sni` stem) so the #579 stem guard keeps it on the family."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
@@ -1756,7 +1805,7 @@ class TestLinkValueSetClassifications:
         )
         g.add_classification(
             81,
-            "SNIgap",  # CLOSED edition in the hole between the two states
+            "SNI2010",  # CLOSED edition in the hole between the two states
             shared + [("9002", "gap only")],
             supersedes_id=80,
             valid_from=2010,
@@ -1779,9 +1828,10 @@ class TestLinkValueSetClassifications:
     def test_latest_among_real_overlapping_not_latest_overlapping_span(self) -> None:
         """FIX 1 focused variant: the ONLY candidate overlapping any REAL state is the
         OLDER one. States 2003–2006 only; candidates SNI2002 [2002,2007] and a later
-        SNI-late [2016, unbounded]. The aggregate span is [2003, 2006] here (single
+        SNI2016 [2016, unbounded]. The aggregate span is [2003, 2006] here (single
         state), but the point is the pick is "latest among real-overlapping" — only
-        SNI2002 overlaps the 2003–2006 state, so it wins over the later edition."""
+        SNI2002 overlaps the 2003–2006 state, so it wins over the later edition. Both
+        editions share the `sni` stem so the #579 stem guard keeps them on one family."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
@@ -1795,7 +1845,7 @@ class TestLinkValueSetClassifications:
         )
         g.add_classification(
             84,
-            "SNI-late",
+            "SNI2016",
             shared + [("9003", "late only")],
             supersedes_id=83,
             valid_from=2016,
@@ -2274,3 +2324,151 @@ class TestCli:
             for inst in v["instances"]:
                 if inst.get("classification"):
                     assert inst["classification"] in {"TESTKON", "TESTKON2"}
+
+
+class TestDeriveSupersedesFromEdges:
+    """`supersedes_id` is a DERIVED projection of `classification_replaced_by`
+    (#579), not a seed field. The function reads slug-anchored edges and writes
+    each successor's predecessor id back onto `classification.supersedes_id`."""
+
+    def _conn(self, edges: list[tuple[str, str]], slugs: list[str]):
+        """Minimal schema: `classification` (id/slug/supersedes_id) plus the
+        slug-anchored `classification_replaced_by` edge table. Insert one
+        classification per slug, then the edges, leaving supersedes_id unset."""
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(
+            """
+            CREATE TABLE classification (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                short_name TEXT NOT NULL UNIQUE,
+                slug TEXT UNIQUE,
+                name TEXT NOT NULL,
+                supersedes_id INTEGER REFERENCES classification(id)
+            );
+            CREATE TABLE classification_replaced_by (
+                predecessor_slug TEXT NOT NULL,
+                successor_slug   TEXT NOT NULL,
+                effective_year   INTEGER,
+                note             TEXT,
+                PRIMARY KEY (predecessor_slug, successor_slug)
+            ) WITHOUT ROWID;
+            """
+        )
+        for slug in slugs:
+            conn.execute(
+                "INSERT INTO classification (short_name, slug, name) VALUES (?, ?, ?)",
+                (slug.upper(), slug, slug),
+            )
+        conn.executemany(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug) VALUES (?, ?)",
+            edges,
+        )
+        return conn
+
+    def _supersedes(self, conn) -> dict[str, str | None]:
+        """{slug: predecessor_slug or None} after the derive pass."""
+        rows = conn.execute(
+            "SELECT c.slug AS slug, p.slug AS pred "
+            "FROM classification c "
+            "LEFT JOIN classification p ON c.supersedes_id = p.id"
+        ).fetchall()
+        return {r["slug"]: r["pred"] for r in rows}
+
+    def test_linear_chain(self):
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        # ssyk1996 → ssyk2012; root keeps NULL.
+        conn = self._conn(
+            edges=[("ssyk1996", "ssyk2012")], slugs=["ssyk1996", "ssyk2012"]
+        )
+        n = derive_supersedes_from_edges(conn)
+        assert n == 1
+        assert self._supersedes(conn) == {"ssyk1996": None, "ssyk2012": "ssyk1996"}
+
+    def test_one_to_many_split_sun1996(self):
+        """The curated #579 sun1996 split: ONE predecessor fans out to THREE
+        successors. Each 2000 dimension's supersedes_id points back at sun1996,
+        and sun1996 itself stays a root (NULL)."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(
+            edges=[
+                ("sun1996", "sun-niva2000"),
+                ("sun1996", "sun-inriktning2000"),
+                ("sun1996", "sun-grupp2000"),
+            ],
+            slugs=[
+                "sun1996",
+                "sun-niva2000",
+                "sun-inriktning2000",
+                "sun-grupp2000",
+            ],
+        )
+        n = derive_supersedes_from_edges(conn)
+        assert n == 3
+        assert self._supersedes(conn) == {
+            "sun1996": None,
+            "sun-niva2000": "sun1996",
+            "sun-inriktning2000": "sun1996",
+            "sun-grupp2000": "sun1996",
+        }
+        # Read-side back-pointer: superseded_by(sun1996) = all three successors.
+        # (`_classification_by_id` needs the full read schema; assert directly on
+        # the GROUP_CONCAT-over-supersedes_id the read side uses instead.)
+        sun1996_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun1996'"
+        ).fetchone()["id"]
+        superseded_by = conn.execute(
+            "SELECT GROUP_CONCAT(short_name) FROM ("
+            "  SELECT short_name FROM classification "
+            "  WHERE supersedes_id = ? ORDER BY short_name)",
+            (sun1996_id,),
+        ).fetchone()[0]
+        assert superseded_by == "SUN-GRUPP2000,SUN-INRIKTNING2000,SUN-NIVA2000"
+
+    def test_multiple_predecessors_deterministic(self):
+        """A hypothetical merge (>1 predecessor edge into one successor — none
+        today) resolves to the deterministic-first predecessor by
+        `ORDER BY predecessor_slug`, so the projection is reproducible."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(
+            edges=[("bbb", "merged"), ("aaa", "merged")],
+            slugs=["aaa", "bbb", "merged"],
+        )
+        derive_supersedes_from_edges(conn)
+        assert self._supersedes(conn)["merged"] == "aaa"
+
+    def test_reset_drops_stale_supersedes(self):
+        """The pass is a pure function of the edge table: a pre-existing
+        supersedes_id with no backing edge is cleared to NULL."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(edges=[], slugs=["a", "b"])
+        a_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'a'"
+        ).fetchone()["id"]
+        conn.execute(
+            "UPDATE classification SET supersedes_id = ? WHERE slug = 'b'", (a_id,)
+        )
+        n = derive_supersedes_from_edges(conn)
+        assert n == 0
+        assert self._supersedes(conn) == {"a": None, "b": None}
+
+    def test_dead_predecessor_leaves_successor_null(self):
+        """#579 (forward-looking): a curated edge whose `predecessor_slug` has NO
+        live `classification` row (a cross-provider / retired predecessor, allowed
+        verbatim by the `relations.toml` arm) leaves the live successor's
+        supersedes_id NULL — the `SET` subquery's `JOIN p.slug = e.predecessor_slug`
+        finds no live row, so the value derived is NULL. (The UPDATE's `WHERE EXISTS`
+        still MATCHES the successor row, so it's set to NULL explicitly, not skipped.)
+        Mirrors the validator's `missing_ptr` carve-out: a dead-only-predecessor
+        successor legitimately keeps NULL."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        # Edge ('dead-pred' -> 'live-succ') but only 'live-succ' is a live row.
+        conn = self._conn(edges=[("dead-pred", "live-succ")], slugs=["live-succ"])
+        derive_supersedes_from_edges(conn)
+        assert self._supersedes(conn) == {"live-succ": None}

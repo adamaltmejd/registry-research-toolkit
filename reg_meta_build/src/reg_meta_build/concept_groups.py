@@ -770,6 +770,38 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
     return n_groups
 
 
+def classification_slug_stem(slug: str | None) -> str | None:
+    """The year-tail-stripped classification slug — the vintage-FAMILY key.
+
+    Canonical stem rule (single source of truth, mirrored by
+    `derive_classification_succession`'s family bucketing AND the #494
+    vintage-reclaim stem guard in `classifications.link_value_set_classifications`):
+    strip a trailing 4-digit vintage year ONLY when the remaining stem does not
+    itself end in a digit (a digit-ending stem means the tail splits a longer
+    number, not a vintage year). A non-vintage slug is its OWN stem.
+
+    Examples: `sun-niva2000`/`sun-niva2020` → `sun-niva`; `sni2002`/`sni2007` →
+    `sni`; `isced` → `isced` (no year tail); `sun1996` → `sun` (a curated split
+    root collapses to the bare stem — but its siblings `sun-niva*` etc. carry the
+    `-niva`/`-inriktning`/`-grupp` discriminator, so they get DISTINCT stems).
+
+    NULL-safe so it can be a SQLite UDF over `classification.slug` (NULL under
+    `--skip-slugs`, where the reclaim is inert anyway): a NULL slug → NULL stem.
+    """
+    if slug is None:
+        return None
+    tail = slug[-4:]
+    if len(slug) < 5 or not tail.isdigit():
+        return slug
+    year = int(tail)
+    stem = slug[:-4]
+    # A digit-ending stem means the tail splits a longer number — not a vintage
+    # year; an out-of-range year is likewise not a vintage tail.
+    if year not in _VINTAGE_YEARS or stem[-1].isdigit():
+        return slug
+    return stem
+
+
 def derive_classification_succession(conn: sqlite3.Connection) -> int:
     """Classification EDITION succession (#571): detect 4-digit vintage-year slug
     families (lkf1980…lkf2026, sni2002/sni2007, agarkat2000/2020, …) and emit a
@@ -796,16 +828,12 @@ def derive_classification_succession(conn: sqlite3.Connection) -> int:
     # stem → [(year, slug, name)]
     families: dict[str, list[tuple[int, str, str]]] = {}
     for slug, name in rows:
-        tail = slug[-4:]
-        if len(slug) < 5 or not tail.isdigit():
+        stem = classification_slug_stem(slug)
+        # `slug` is non-NULL (WHERE clause), so a None stem can't occur; the
+        # `stem == slug` case means no vintage tail was stripped → not an edition.
+        if stem is None or stem == slug:
             continue
-        year = int(tail)
-        stem = slug[:-4]
-        # A digit-ending stem means the tail splits a longer number — not a
-        # vintage year.
-        if year not in _VINTAGE_YEARS or stem[-1].isdigit():
-            continue
-        families.setdefault(stem, []).append((year, slug, name))
+        families.setdefault(stem, []).append((int(slug[-4:]), slug, name))
     n_edges = 0
     for stem in sorted(families):
         editions = sorted(families[stem])

@@ -308,13 +308,17 @@ def write_csv(year: int, codes: dict[str, str], out_dir: Path) -> Path:
     return out
 
 
-def emit_toml_entry(year: int, prev_year: int | None) -> str:
+def emit_toml_entry(year: int) -> str:
     """Emit a [[classification]] block for LKF{year}."""
     # The vardemangdsversion strings are inconsistent across years — see
     # the existing LKF entry in classifications.toml for the variants.
     # The script prints a starter; reconcile against actual observed
     # strings before committing.
-    sup = f'\nsupersedes = "LKF{prev_year}"' if prev_year else ""
+    #
+    # No `supersedes` field: classification succession lives in
+    # `classification_replaced_by`, auto-derived from the lkf<year> slug-tail
+    # chain at build time (`derive_classification_succession`). The seed declares
+    # no succession.
     return f"""\
 [[classification]]
 short_name = "LKF{year}"
@@ -324,7 +328,7 @@ publisher = "SCB"
 version = "{year}"
 valid_from = {year}
 valid_to = {year}
-url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"{sup}
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 valid_codes_file = "lkf{year}.csv"
 vardemangdsversion = [
   # TODO: add the year's vardemangdsversion variants here. Sample patterns:
@@ -389,7 +393,6 @@ def main() -> int:
 
     failed_years: list[int] = []
     failed_pdfs: list[int] = []
-    prev_year: int | None = None
     for year in sorted(args.years):
         print(f"\n=== LKF {year} ===", file=sys.stderr)
         try:
@@ -407,9 +410,8 @@ def main() -> int:
                 file=sys.stderr,
             )
             if args.emit_toml:
-                sys.stdout.write(emit_toml_entry(year, prev_year))
+                sys.stdout.write(emit_toml_entry(year))
                 sys.stdout.write("\n")
-            prev_year = year
         except Exception as exc:
             print(f"  FAILED: {exc}", file=sys.stderr)
             failed_years.append(year)
