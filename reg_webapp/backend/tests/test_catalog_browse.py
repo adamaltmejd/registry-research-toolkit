@@ -212,25 +212,31 @@ def test_register_without_groups_has_empty_list(client):
     assert body["groups"] == []
 
 
-def test_classification_root_carries_vintage_groups(client):
-    """#303: the classification root carries `kind='classification'` concept
-    groups (here a seeded `sun` group — the conftest stands in for the curated
-    umbrella groups #516 adds; #571 removed the DERIVED vintage groups, but the
-    read surface and table are retained); the grouped classifications ALSO stay
-    in `children`."""
+def test_classification_root_drops_superseded_and_folds_dimension_group(client):
+    """#608: the classification root surfaces only TERMINAL editions as children
+    (a row whose `superseded_by` is truthy — a successor exists — is dropped) and
+    carries the #516 umbrella `sun` group over its DIMENSIONS. The fixture seeds
+    sun1996 → sun2000 → sun2020 with `supersedes_id` projected from those edges
+    (so the superseded-by filter is genuinely exercised, not a no-op on NULLs);
+    the `sun` group members are the terminal sun2020 + the non-succession
+    `niva-test` aggregate, which therefore stay in `children` and fold."""
     body = client.get("/api/catalog/class").json()
     assert len(body["groups"]) == 1
     group = body["groups"][0]
     assert group["key"] == "sun"
-    assert group["axes"] == ["vintage"]
-    assert [m["fqid"] for m in group["members"]] == [
-        "class/sun2000",
+    assert group["axes"] == ["dimension"]
+    assert {m["fqid"] for m in group["members"]} == {
         "class/sun2020",
-    ]
-    assert group["members"][1]["facets"] == [
-        {"axis": "vintage", "value": "2020", "label": "2020"}
-    ]
-    assert {"class/sun2000", "class/sun2020"} <= {c["fqid"] for c in body["children"]}
+        "class/niva-test",
+    }
+    child_fqids = {c["fqid"] for c in body["children"]}
+    # Terminal editions + non-succession aggregates survive and fold under the group.
+    assert "class/sun2020" in child_fqids
+    assert "class/niva-test" in child_fqids
+    # The superseded editions are dropped from children (the regression lock — this
+    # fails on the pre-#608 code, which surfaced every classification as a child).
+    assert "class/sun1996" not in child_fqids
+    assert "class/sun2000" not in child_fqids
 
 
 def test_classification_leaf_resolves(client):

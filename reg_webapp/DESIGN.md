@@ -104,8 +104,11 @@ trace-hook test that counts statements == 0).
   `?value_set_version` query (below), not a path grammar.
 - The classification-root literal `class` (1 seg) is a reserved slug that
   `validate_slug` rejects, so the handler special-cases it **before** `parse` → lists
-  all classifications (via `reg_meta.queries.list_classifications`, no new Catalog
-  method).
+  **current/terminal** classifications only (via
+  `reg_meta.queries.list_classifications`, no new Catalog method). A classification
+  whose `superseded_by` is set — i.e. a successor edition exists — is dropped from the
+  children list; superseded editions are reached via the leaf's edition-chain panel or a
+  direct `class/<slug>` URL.
 
 ## Catalog router structure
 

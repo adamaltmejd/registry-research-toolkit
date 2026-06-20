@@ -5,6 +5,7 @@ import BindingLeafView from "./BindingLeafView.svelte";
 import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
+  axisNoun,
   bindingChildren,
   breadcrumbs,
   catalogHref,
@@ -171,8 +172,11 @@ $effect(() => {
            the URL query, reactive without a remount. -->
       <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} />
     {:else if node.kind === "classification-root"}
-      <!-- #303 vintage folding: e.g. lkf1980…lkf2026 render as ONE group row
-           expanding to a year picker; ungrouped classifications stay leaves. -->
+      <!-- #516 umbrella folding: e.g. group:sun renders as ONE group row
+           expanding to its dimension members; ungrouped classifications stay
+           leaves. Children are terminal editions only (the backend drops
+           superseded ones) — superseded editions are reached via a leaf's
+           edition-chain panel. -->
       {@const clsRows = foldGroupedRows(node.children, node.groups)}
       <h2>{nodeLabel(node)}</h2>
       <h3>Classifications</h3>
@@ -181,7 +185,10 @@ $effect(() => {
           {#each clsRows as row (row.kind === "group" ? row.group.key : row.item.fqid)}
             <li>
               {#if row.kind === "group"}
-                <ConceptGroupRow group={row.group} noun="vintages" />
+                <ConceptGroupRow
+                  group={row.group}
+                  noun={axisNoun(row.group.axes)}
+                />
               {:else}
                 <a href={catalogHref(row.item.fqid)}>
                   <span class="label">{row.item.name}</span>

@@ -173,6 +173,17 @@ export function nodeLabel(node: CatalogNode): string {
   return node.name ?? node.fqid;
 }
 
+/** The plural noun for a concept group's member count, derived from its single
+ * facet axis (e.g. "dimension" → "dimensions"). Classification umbrella groups
+ * are single-axis (#516); we derive the noun from that axis rather than
+ * hardcoding "vintages" (succession editions aren't groups, #571). Naive +"s"
+ * is enough for the axis vocabulary (dimension, month, …); a group with no axis
+ * falls back to "members". */
+export function axisNoun(axes: string[]): string {
+  const axis = axes[0];
+  return axis ? `${axis}s` : "members";
+}
+
 // ── Type-to-filter (catalog browse + pickers) ───────────────────────────────
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so

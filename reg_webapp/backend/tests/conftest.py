@@ -402,7 +402,16 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     exercise the `groups` surface (grouped members ALSO stay in `children`):
 
     - a token month group `ink` on scb/rams over two added variables; and
-    - a classification vintage group `sun` over sun2000 (added) + sun2020."""
+    - a #516 classification umbrella group `sun` (DIMENSION axis, mirroring the
+      real group:sun shape post-#571) over the terminal `sun2020` edition plus a
+      standalone non-succession `niva-test` aggregate — both TERMINAL members so
+      the classification-root's superseded-by drop keeps them.
+
+    Also seeds the sun1996 → sun2000 → sun2020 succession chain and projects
+    `classification.supersedes_id` from it exactly as the build does (see
+    `_project_supersedes_id`), so `list_classifications.superseded_by` is truthy
+    on the two superseded editions — the read surface's terminal-only filter is
+    therefore actually exercised (a NULL `supersedes_id` would make it a no-op)."""
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
         "label, source, facet_axis) "
@@ -425,27 +434,41 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
         "INSERT INTO classification (id, short_name, name, slug) "
         "VALUES (50, 'SUN2000', 'Svensk utbildningsnomenklatur', 'sun2000')"
     )
+    # A standalone, NON-succession aggregate classification (the fixture analogue of
+    # the real niva-oldv1 / grov nivå aggregates): no predecessor edge, so its
+    # `supersedes_id` stays NULL and `superseded_by` stays empty → it's terminal and
+    # survives the classification-root's superseded-by drop.
+    src.execute(
+        "INSERT INTO classification (id, short_name, name, slug) "
+        "VALUES (51, 'NIVA', 'Utbildningsnivå – aggregat', 'niva-test')"
+    )
+    # #516 umbrella group `sun` over its DIMENSIONS (axis='dimension', mirroring the
+    # real group:sun post-#571). Members are TERMINAL classifications only — the
+    # current `sun2020` edition + the version-independent `niva-test` aggregate — so
+    # the classification-root's superseded-by filter keeps them. sun2000 is NOT a
+    # member: it's purely a superseded succession edition now (reached via the leaf's
+    # edition-chain panel, not the umbrella fold).
     src.execute(
         "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
         "label, source, facet_axis) VALUES (11, 'classification', NULL, 'sun', "
-        "'Svensk utbildningsnomenklatur', 'token', 'vintage')"
+        "'Svensk utbildningsnomenklatur', 'token', 'dimension')"
     )
     src.executemany(
         "INSERT INTO concept_group_classification (classification_id, group_id, "
         "facet_value, facet_label) VALUES (?, 11, ?, ?)",
         [
-            (50, "2000", "2000"),
             (
                 src.execute(
                     "SELECT id FROM classification WHERE slug = 'sun2020'"
                 ).fetchone()[0],
-                "2020",
-                "2020",
+                "niva",
+                "Utbildningsnivå",
             ),
+            (51, "aggregat", "Aggregat"),
         ],
     )
     # #571: a classification SUCCESSION chain sun1996 → sun2000 → sun2020 (distinct
-    # from the vintage concept-group above — that's a presentation fold, this is the
+    # from the umbrella concept-group above — that's a presentation fold, this is the
     # edition timeline the leaf node embeds as `edition_chain`). All three are LIVE
     # `classification` rows — the build validator forbids succession edges to dead
     # slugs (validate.py, the classification_replaced_by check), so the fixture
@@ -464,6 +487,17 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
             ("sun2000", "sun2020", 2020),
         ],
     )
+    # Project `classification.supersedes_id` from the edges, mirroring the build's
+    # `_project_supersedes_id`: each successor points back at its predecessor. This
+    # is what makes `list_classifications.superseded_by` (a GROUP_CONCAT over
+    # `supersedes_id`) truthy on sun1996 and sun2000, so the classification-root's
+    # terminal-only filter is genuinely exercised rather than a no-op on NULLs.
+    for predecessor, successor in (("sun1996", "sun2000"), ("sun2000", "sun2020")):
+        src.execute(
+            "UPDATE classification SET supersedes_id = "
+            "(SELECT id FROM classification WHERE slug = ?) WHERE slug = ?",
+            (predecessor, successor),
+        )
 
 
 def _seed_classification_split_root(src: sqlite3.Connection) -> None:
