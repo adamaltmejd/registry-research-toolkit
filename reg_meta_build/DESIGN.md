@@ -854,12 +854,17 @@ strings are deterministic and auditable: any maintainer can enumerate them via
 then projects it onto the **shipped** `variable_state.classification_id` (per-era,
 attributed to the owning split sibling) before `variable_instance` is dropped.
 
-**Provider gate.** A seed entry may carry `provider = "<name>"` (e.g. `"sos"`). When the
-build runs with a restricted provider set (e.g. `--providers=scb`), every entry whose
-`provider` is not in that set is skipped entirely — no codes seeded, no `classification`
-row inserted. This is a build-time filter only: no `provider` column exists in the
-shipped DB; the catalog remains provider-blind. An entry without a `provider` field is
-always processed.
+**Provider gate.** A seed entry may carry `provider = "<name>"` (e.g. `"sos"`) to
+declare its **label-source** — which provider's
+`variable_instance.value_set_version_label` strings carry that classification. Untagged
+entries are implicitly SCB-sourced. Many classifications are shared standards (e.g.
+`ICD-10-SE`/`ATC` are tagged `provider="sos"` but referenced via curated
+`classification=` links by FOHM, FK, Läkemedelsverket, and Pliktverket). A
+provider-tagged entry is seeded when its tag-provider is built **or** a built provider
+references it via a curated `classification=` link — so `ICD-10-SE` stays seeded on a
+`--providers fk` build and FK's diagnosis variables classify. It is skipped only when
+neither holds. Untagged entries are always seeded. No `provider` column exists in the
+shipped DB; the catalog remains provider-blind (#597).
 
 **`vardemangdsversion`-free seeds.** A classification may omit `vardemangdsversion`
 entirely. Without it, no variable instance is tagged and the classification row carries
@@ -871,7 +876,15 @@ in PR2 via the `external_classification` resolver.
 Build-time invariants (violations fail `reg-meta-build build-db` loudly, exit 10):
 
 - Every seed `vardemangdsversion` string must match at least one instance (entries
-  without `vardemangdsversion` are exempt from this check).
+  without `vardemangdsversion` are exempt). Drift checking is **per-classification on
+  label-source**: an unmatched string is a hard error (exit 10) when the
+  classification's label-source provider is built (`providers=None`, or the label-source
+  — its `provider` tag, or `scb` if untagged — is in the build) **or** the
+  classification is mixed (≥1 string matched, ≥1 unmatched). It is demoted to a progress
+  note only when the label-source provider is not built **and** the whole classification
+  is absent (zero strings matched). Concretely: `--providers scb` stays strict for
+  untagged SCB classifications — a real label typo still fails. The full/default build
+  is fully strict for all classifications (#597).
 - Every classification with at least one tagged instance must resolve to at least one
   value code.
 - A given `vardemangdsversion` string may belong to at most one classification.

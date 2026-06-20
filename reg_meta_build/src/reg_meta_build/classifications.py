@@ -611,6 +611,7 @@ def populate_classifications(
     *,
     valid_codes_dir: Path | None = None,
     providers: frozenset[str] | None = None,
+    referenced_classifications: frozenset[str] = frozenset(),
 ) -> tuple[int, frozenset[str]]:
     """Populate classification / classification_code / variable_instance.classification_id.
 
@@ -629,17 +630,41 @@ def populate_classifications(
     codes that don't appear in observed data are still inserted (they get a
     fresh ``value_code`` row with no ``value_set_member`` linkage).
 
-    ``providers`` gates provider-tagged entries: when set, an entry whose
-    ``provider`` field is present AND not in the set is SKIPPED entirely (no
-    classification row, no codes). Entries with no ``provider`` are always
-    seeded. ``None`` (the default) seeds every entry. Provider-seeded entries
-    typically carry no ``vardemangdsversion`` (no instance tagging), so they
-    contribute no value codes from observed instances; their ``valid_codes_file``
-    supplies the canonical codes that keep them above the zero-code guard.
+    ``providers`` and ``referenced_classifications`` together gate which entries
+    are seeded. An entry's ``provider`` field is its LABEL-SOURCE declaration —
+    which provider's ``variable_instance.value_set_version_label`` strings carry
+    it (untagged entries are implicitly SCB-sourced). But classifications are
+    SHARED standards: e.g. ``ICD-10-SE``/``ATC`` are tagged ``provider="sos"``
+    yet referenced via curated ``classification = "..."`` links by FOHM, FK,
+    Läkemedelsverket, Pliktverket. So a provider-tagged entry is KEPT when its
+    label-source provider is built OR it is referenced by a built provider — it
+    is SKIPPED only when ``providers`` is set, its provider is absent, AND its
+    short_name is not in ``referenced_classifications`` (the set of short_names a
+    built provider's curated link points at; #597 P2 #1 — without this, a
+    ``--providers fk`` build would drop ICD-10-SE and leave FK's diagnosis
+    variables unclassified). Untagged entries are always seeded. ``providers``
+    ``None`` (the default) seeds every entry.
+
+    Seed-drift demotion is decided PER-CLASSIFICATION on label-source (#597 P2
+    #2). Each kept entry's label-source is its ``provider`` tag, or ``"scb"`` if
+    untagged. For each unmatched version string of a classification: it is a HARD
+    drift (a real typo/stale on a built provider) when the label-source provider
+    IS built (``providers is None`` or label-source in ``providers``) OR the
+    classification is MIXED (≥1 of its strings matched — a partial-present
+    source). It is DEMOTED (a ``_progress`` note, no error) only when the
+    label-source provider isn't built AND the whole classification is absent
+    (zero strings matched) — the expected shape on a subset build. Without the
+    per-classification rule, a ``--providers scb`` build would wrongly relax
+    drift for the untagged (SCB-sourced) classifications even though SCB IS
+    built, demoting a real typo. Either way every kept classification is still
+    seeded — its CSV ``valid_codes_file`` supplies codes — so the downstream
+    ``classification_empty`` guard is unaffected.
 
     Returns ``(n_seeded, skipped_short_names)`` — the count of classifications
     inserted and the set of provider-skipped short_names (the caller threads the
-    latter into ``populate_slugs`` so their slug entries don't raise).
+    latter into ``populate_slugs`` so their slug entries don't raise). The
+    ``skipped`` set holds only entries actually skipped, so that threading stays
+    correct.
     """
     entries = load_seed(seed_path)
     skipped: set[str] = set()
@@ -647,7 +672,14 @@ def populate_classifications(
         active: list[dict[str, Any]] = []
         for entry in entries:
             prov = entry.get("provider")
-            if prov is not None and prov not in providers:
+            # Keep a provider-tagged entry when its label-source is built OR a
+            # built provider references it (shared standard); skip only when
+            # neither holds (#597 P2 #1).
+            if (
+                prov is not None
+                and prov not in providers
+                and entry["short_name"] not in referenced_classifications
+            ):
                 skipped.add(entry["short_name"])
             else:
                 active.append(entry)
@@ -726,18 +758,21 @@ def populate_classifications(
             WHERE value_set_version_label IN (SELECT vers FROM _vmap)
             """
         )
-        # Drift detection: any seed string that matches no instance.
-        # load_seed already rejects strings claimed by two classifications,
-        # so a non-match here means the data lacks the version entirely.
-        unmatched = conn.execute(
+        # Drift detection: per seed string, whether it matched any instance.
+        # load_seed already rejects strings claimed by two classifications, so a
+        # non-match here means the data lacks the version entirely. We need the
+        # per-classification matched count (computed BEFORE dropping _vmap) to
+        # partition unmatched strings into hard-drift vs partial-build demotions.
+        version_rows = conn.execute(
             """
-            SELECT cls.short_name, m.vers
+            SELECT cls.short_name,
+                   m.vers,
+                   EXISTS (
+                       SELECT 1 FROM variable_instance vi
+                       WHERE vi.value_set_version_label = m.vers
+                   ) AS matched
             FROM _vmap m
             JOIN classification cls ON cls.id = m.cls_id
-            WHERE NOT EXISTS (
-                SELECT 1 FROM variable_instance vi
-                WHERE vi.value_set_version_label = m.vers
-            )
             ORDER BY cls.short_name, m.vers
             """
         ).fetchall()
@@ -745,8 +780,49 @@ def populate_classifications(
     finally:
         conn.execute("DROP INDEX IF EXISTS idx_vi_value_set_version_label_tmp")
 
-    if unmatched:
-        details = "\n".join(f"  - {short}: {vers!r}" for short, vers in unmatched)
+    # Per classification, how many of its seed version strings matched ≥1
+    # instance; then partition the unmatched strings.
+    matched_count: dict[str, int] = {}
+    for short, _vers, matched in version_rows:
+        matched_count[short] = matched_count.get(short, 0) + (1 if matched else 0)
+
+    # Per-classification label-source: its `provider` tag, or "scb" if untagged
+    # (untagged entries are implicitly SCB-sourced). Keyed off the kept/active
+    # `entries` list. #597 P2 #2: the demote decision is made on THIS, not on a
+    # whole-build partial flag — so a built label-source (e.g. scb on a
+    # `--providers scb` build) stays strict even on a provider subset.
+    label_source_by_short = {
+        e["short_name"]: (e.get("provider") or "scb") for e in entries
+    }
+
+    hard_drift: list[tuple[str, str]] = []
+    demoted: list[tuple[str, str]] = []
+    for short, vers, matched in version_rows:
+        if matched:
+            continue
+        label_source = label_source_by_short.get(short, "scb")
+        source_built = providers is None or label_source in providers
+        # Hard error when the label-source IS built (a real typo/stale on a built
+        # provider) OR the classification is MIXED (≥1 matched → a partly-present
+        # source). Demote only when the label-source provider isn't built AND the
+        # whole classification is absent (its expected shape on a subset build).
+        if source_built or matched_count.get(short, 0) > 0:
+            hard_drift.append((short, vers))
+        else:
+            demoted.append((short, vers))
+
+    if demoted:
+        n_demoted = len(demoted)
+        m_classes = len({short for short, _ in demoted})
+        _progress(
+            f"  {n_demoted} seed version-label(s) across {m_classes} "
+            "classification(s) unmatched — expected on a partial --providers "
+            "build (label-source provider not built); classifications kept "
+            "(CSV codes)"
+        )
+
+    if hard_drift:
+        details = "\n".join(f"  - {short}: {vers!r}" for short, vers in hard_drift)
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="classification_seed_drift",
