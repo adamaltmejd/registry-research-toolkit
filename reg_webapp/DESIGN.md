@@ -1193,8 +1193,14 @@ list — opening a file replaces the current draft.
 `windowStore` (`src/lib/window.svelte.ts`) is a module-singleton Svelte 5 rune store — a
 peer of `router.svelte.ts` and `project_store.svelte.ts` — that is the **single
 read/write path** for the active study window (`{from, to}` int years, or `null` = full
-history). The header `YearWindowSlider` and (later, #615) each page's period picker go
-through it rather than touching the project store or `localStorage` directly.
+history). The header `YearWindowSlider` and each page's period picker go through it
+rather than touching the project store or `localStorage` directly. The per-page
+`PeriodPicker` now defaults to `PeriodWindowSlider` (#615): it seeds the local
+dual-thumb slider from the window over the subject's coverage track
+(`coverageFromStates`), with precedence `?period` > window > full history; a local
+change writes `?period` only (never the global window) and surfaces two amber deviation
+states — user-deviation (`?period` ≠ window, with a reset affordance) and
+availability-deviation (selection outside the subject's data-coverage span).
 
 Precedence — two backing stores, one source of truth:
 

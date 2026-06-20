@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  clampYearWindow,
   grainOfToken,
   looksLikePeriod,
   nextResolutionQuery,
+  notDeliveredGaps,
   periodFieldFromQuery,
   periodFromWire,
   periodQueryFromField,
@@ -11,7 +13,11 @@ import {
   periodToWire,
   queryFromParams,
   rangeRepresentable,
+  sameYearWindow,
   VALUE_SET_VERSION_NONE,
+  yearWindowFromWire,
+  yearWindowRepresentable,
+  yearWindowToWire,
 } from "./period";
 
 describe("periodToWire (Source.period → ?period wire string)", () => {
@@ -453,5 +459,172 @@ describe("grainOfToken / rangeRepresentable (#308)", () => {
     expect(rangeRepresentable("2020-08", ["year"])).toBe(false);
     expect(rangeRepresentable("2020-08", ["year", "month"])).toBe(true);
     expect(rangeRepresentable("2020", ["year"])).toBe(true);
+  });
+});
+
+// ── #615 year-window slider helpers ──────────────────────────────────────────
+
+describe("yearWindowToWire (year window → ?period wire)", () => {
+  it("a single year (from === to) → the bare year", () => {
+    expect(yearWindowToWire({ from: 2018, to: 2018 })).toBe("2018");
+  });
+
+  it("a multi-year window → the from..to range", () => {
+    expect(yearWindowToWire({ from: 2010, to: 2020 })).toBe("2010..2020");
+  });
+});
+
+describe("yearWindowFromWire (?period wire → year window | null)", () => {
+  it("a bare year → from === to", () => {
+    expect(yearWindowFromWire("2018")).toEqual({ from: 2018, to: 2018 });
+  });
+
+  it("a uniform-year range → {from, to}", () => {
+    expect(yearWindowFromWire("2010..2020")).toEqual({ from: 2010, to: 2020 });
+  });
+
+  it("blank / null → null", () => {
+    expect(yearWindowFromWire(null)).toBeNull();
+    expect(yearWindowFromWire("")).toBeNull();
+    expect(yearWindowFromWire("   ")).toBeNull();
+  });
+
+  it("a sub-annual token / _default / list / junk → null (belongs to the expander)", () => {
+    expect(yearWindowFromWire("HT2020")).toBeNull();
+    expect(yearWindowFromWire("2020-Q3")).toBeNull();
+    expect(yearWindowFromWire("2020-08")).toBeNull();
+    expect(yearWindowFromWire("_default")).toBeNull();
+    expect(yearWindowFromWire("2005..2010,2015..2020")).toBeNull();
+    expect(yearWindowFromWire("nonsense")).toBeNull();
+  });
+
+  it("a mixed range with a sub-annual endpoint → null", () => {
+    expect(yearWindowFromWire("VT2010..2020")).toBeNull();
+    expect(yearWindowFromWire("2010..2020-08")).toBeNull();
+  });
+
+  it("an inverted year range (to < from) → null", () => {
+    expect(yearWindowFromWire("2020..2010")).toBeNull();
+  });
+});
+
+describe("yearWindowRepresentable", () => {
+  it("true for pure year windows, false otherwise (mirrors yearWindowFromWire)", () => {
+    expect(yearWindowRepresentable("2018")).toBe(true);
+    expect(yearWindowRepresentable("2010..2020")).toBe(true);
+    expect(yearWindowRepresentable("HT2020")).toBe(false);
+    expect(yearWindowRepresentable("_default")).toBe(false);
+    expect(yearWindowRepresentable(null)).toBe(false);
+  });
+});
+
+describe("clampYearWindow", () => {
+  it("clamps both endpoints into [min, max]", () => {
+    expect(clampYearWindow({ from: 1950, to: 2050 }, 1960, 2026)).toEqual({
+      from: 1960,
+      to: 2026,
+    });
+  });
+
+  it("a window inside the bounds is unchanged", () => {
+    expect(clampYearWindow({ from: 2000, to: 2010 }, 1960, 2026)).toEqual({
+      from: 2000,
+      to: 2010,
+    });
+  });
+
+  it("keeps from <= to after clamping (a fully-out-of-range window collapses)", () => {
+    const w = clampYearWindow({ from: 2030, to: 2040 }, 1960, 2026);
+    expect(w.from).toBeLessThanOrEqual(w.to);
+    expect(w).toEqual({ from: 2026, to: 2026 });
+  });
+});
+
+describe("notDeliveredGaps (selection minus coverage)", () => {
+  it("no coverage → no gaps (nothing to compare against)", () => {
+    expect(notDeliveredGaps({ from: 2000, to: 2010 }, null)).toEqual([]);
+  });
+
+  it("coverage fully covers the selection → no gaps", () => {
+    expect(
+      notDeliveredGaps({ from: 2000, to: 2010 }, { from: 1995, to: 2015 }),
+    ).toEqual([]);
+  });
+
+  it("a leading gap (selection starts before coverage)", () => {
+    expect(
+      notDeliveredGaps({ from: 1990, to: 2010 }, { from: 2000, to: 2015 }),
+    ).toEqual([{ from: 1990, to: 1999 }]);
+  });
+
+  it("a trailing gap (selection ends after coverage)", () => {
+    expect(
+      notDeliveredGaps({ from: 2000, to: 2020 }, { from: 1995, to: 2015 }),
+    ).toEqual([{ from: 2016, to: 2020 }]);
+  });
+
+  it("both leading and trailing gaps", () => {
+    expect(
+      notDeliveredGaps({ from: 1990, to: 2020 }, { from: 2000, to: 2010 }),
+    ).toEqual([
+      { from: 1990, to: 1999 },
+      { from: 2011, to: 2020 },
+    ]);
+  });
+
+  it("a selection entirely outside (before) coverage is one gap", () => {
+    expect(
+      notDeliveredGaps({ from: 1980, to: 1990 }, { from: 2000, to: 2010 }),
+    ).toEqual([{ from: 1980, to: 1990 }]);
+  });
+
+  it("an UNBOUNDED start (from: null) preserves the finite-end gap, no leading gap", () => {
+    // Fix A: a `0001..2008` coverage → `{from: null, to: 2008}`. A 2010–2015
+    // selection STILL flags "after 2008" (trailing gap), and the open start
+    // never fires a spurious leading gap.
+    // The trailing gap is clamped to the selection start (2010), not 2009.
+    expect(
+      notDeliveredGaps({ from: 2010, to: 2015 }, { from: null, to: 2008 }),
+    ).toEqual([{ from: 2010, to: 2015 }]);
+    // A selection spanning the open start gaps only on the finite end.
+    expect(
+      notDeliveredGaps({ from: 1990, to: 2010 }, { from: null, to: 2008 }),
+    ).toEqual([{ from: 2009, to: 2010 }]);
+    // Entirely within the covered (finite-end) span → no gap.
+    expect(
+      notDeliveredGaps({ from: 1990, to: 2005 }, { from: null, to: 2008 }),
+    ).toEqual([]);
+  });
+
+  it("an UNBOUNDED end (to: null) preserves the finite-start gap, no trailing gap", () => {
+    // Fix A mirror: a `1990..9999` coverage → `{from: 1990, to: null}`. A
+    // selection before 1990 gaps on the start; a selection after the start never
+    // fires an "after" gap (still delivered).
+    expect(
+      notDeliveredGaps({ from: 1985, to: 2020 }, { from: 1990, to: null }),
+    ).toEqual([{ from: 1985, to: 1989 }]);
+    expect(
+      notDeliveredGaps({ from: 2000, to: 2030 }, { from: 1990, to: null }),
+    ).toEqual([]);
+  });
+});
+
+describe("sameYearWindow", () => {
+  it("two equal windows are the same", () => {
+    expect(
+      sameYearWindow({ from: 2000, to: 2010 }, { from: 2000, to: 2010 }),
+    ).toBe(true);
+  });
+
+  it("differing windows are not", () => {
+    expect(
+      sameYearWindow({ from: 2000, to: 2010 }, { from: 2000, to: 2011 }),
+    ).toBe(false);
+  });
+
+  it("null-safe: two nulls equal, one null not", () => {
+    expect(sameYearWindow(null, null)).toBe(true);
+    expect(sameYearWindow({ from: 2000, to: 2010 }, null)).toBe(false);
+    expect(sameYearWindow(null, { from: 2000, to: 2010 })).toBe(false);
   });
 });

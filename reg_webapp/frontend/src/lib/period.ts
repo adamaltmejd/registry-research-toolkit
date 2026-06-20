@@ -12,7 +12,7 @@
  * server's 422 detail is the authority).
  */
 
-import type { Period, PeriodSegment } from "./project_data";
+import type { Period, PeriodSegment, StudyWindow } from "./project_data";
 
 /** The narrowing modifiers carried in the URL query alongside `?period`. */
 export interface ResolutionParams {
@@ -436,4 +436,124 @@ export function nextResolutionQuery(
       ? current.value_set_version
       : (next.value_set_version ?? undefined);
   return queryFromParams({ period, variant, value_set_version });
+}
+
+// ── Year-window slider (#615 availability-aware local period) ────────────────
+// The default subject-page period control is a year-grain dual-thumb slider over
+// the project WINDOW + the subject's data COVERAGE (#611 → Period model). It is
+// year-granular by design (mirrors the header's `StudyWindow`); the rich
+// sub-annual grammar (term/quarter/month/day, segment lists, `_default`, text)
+// stays behind the picker's "more" expander. These pure helpers do the
+// year-int ↔ wire shaping so the slider can be a presentation-only component
+// (props in / `onchange` out, unit-testable) and the picker stays the wire seam.
+
+/** The `?period` WIRE for a year-grain window: a bare year when `from === to`
+ * (`2018`), else the inclusive `from..to` range (`2018..2020`) — exactly the
+ * forms the existing range path already round-trips. */
+export function yearWindowToWire(window: StudyWindow): string {
+  return window.from === window.to
+    ? String(window.from)
+    : `${window.from}..${window.to}`;
+}
+
+/** Seed a year-grain `{from, to}` from a wire `?period`, or null when the value
+ * isn't a pure YEAR token / uniform year range (a sub-annual token, `_default`,
+ * a segment list, or junk — those belong to the "more" expander, never silently
+ * snapped onto the year slider). Endpoints must parse as bare grammar years. */
+export function yearWindowFromWire(
+  wire: string | null | undefined,
+): StudyWindow | null {
+  const value = (wire ?? "").trim();
+  if (value === "") {
+    return null;
+  }
+  const endpoints = periodRangeEndpoints(value) ?? [value, value];
+  const from = grammarYear(endpoints[0]);
+  const to = grammarYear(endpoints[1]);
+  if (from === null || to === null || to < from) {
+    return null;
+  }
+  return { from, to };
+}
+
+/** Parse a string as a bare grammar year (19xx/20xx) → its int, else null. */
+function grammarYear(raw: string): number | null {
+  const trimmed = raw.trim();
+  return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
+}
+
+/** Whether a wire `?period` is a pure year window the year slider can hold (a
+ * bare year or a uniform-year range) — the slider's representability gate
+ * (analogous to `rangeRepresentable` for the fine-grain range UI). A sub-annual
+ * token / `_default` / segment list / junk routes to the "more" expander. */
+export function yearWindowRepresentable(
+  wire: string | null | undefined,
+): boolean {
+  return yearWindowFromWire(wire) !== null;
+}
+
+/** Clamp a year window to `[min, max]` (and keep `from <= to`) — the slider's
+ * bounds guard for a seed that falls outside the rendered track (an older
+ * `?period` predating the current bounds). */
+export function clampYearWindow(
+  window: StudyWindow,
+  min: number,
+  max: number,
+): StudyWindow {
+  const from = Math.min(Math.max(window.from, min), max);
+  const to = Math.min(Math.max(window.to, min), max);
+  return { from: Math.min(from, to), to: Math.max(from, to) };
+}
+
+/** The subject's data-availability span with INDEPENDENTLY-bounded sides (#615):
+ * a `null` side is UNBOUNDED (the start/end is unknown — the `0001`/`9999`
+ * sentinels of `coverageFromStates`). Distinct from `StudyWindow` (a hard int
+ * pair — the wire shape for the window/selection), since a coverage span can be
+ * open on one side while finite on the other (`0001..2008` → `{from:null,
+ * to:2008}`); a gap fires only against a FINITE side. */
+export interface Coverage {
+  from: number | null;
+  to: number | null;
+}
+
+/** The not-delivered gaps of a `selection` window against the subject's
+ * `coverage` — the sub-spans inside the selection but OUTSIDE coverage (#615
+ * availability deviation). Returns the leading gap (selection starts before a
+ * FINITE coverage start) and/or trailing gap (selection ends after a FINITE
+ * coverage end), each a year-int `{from, to}`; an empty array when coverage
+ * fully covers the selection, the relevant side is unbounded (null = no gap
+ * there), or there is no coverage to compare against. Inclusive bounds. */
+export function notDeliveredGaps(
+  selection: StudyWindow,
+  coverage: Coverage | null,
+): StudyWindow[] {
+  if (coverage === null) {
+    return [];
+  }
+  const gaps: StudyWindow[] = [];
+  if (coverage.from !== null && selection.from < coverage.from) {
+    gaps.push({
+      from: selection.from,
+      to: Math.min(selection.to, coverage.from - 1),
+    });
+  }
+  if (coverage.to !== null && selection.to > coverage.to) {
+    gaps.push({
+      from: Math.max(selection.from, coverage.to + 1),
+      to: selection.to,
+    });
+  }
+  return gaps.filter((g) => g.from <= g.to);
+}
+
+/** Whether two year windows describe the SAME span (the user-deviation test:
+ * `?period` ≠ the project window). Null-safe — two nulls are equal. */
+export function sameYearWindow(
+  a: StudyWindow | null,
+  b: StudyWindow | null,
+): boolean {
+  if (a === null || b === null) {
+    return a === b;
+  }
+  return a.from === b.from && a.to === b.to;
 }
