@@ -2058,10 +2058,13 @@ already-grouped member:
      `_apply_curated_groups` — it populates `concept_group_classification` rather than
      `concept_group_variable`. The SUN group is the worked example: `group:sun` with
      `axis = "dimension"`, members `sun-niva2020` (Utbildningsnivå),
-     `sun-inriktning2020` (Utbildningsinriktning), `sun-grupp2020` (Utbildningsgrupper).
-     Prior editions (`sun1996`, 2000 editions) are intentionally excluded — they are
-     temporal predecessors of each dimension and belong in `classification_replaced_by`
-     (#571), not in the umbrella group.
+     `sun-inriktning2020` (Utbildningsinriktning), `sun-grupp2020` (Utbildningsgrupper),
+     `niva-oldv1` (Nivå – aggregat, 7 nivåer), and `niva-grovv1` (Nivå – aggregat, 5
+     nivåer). The two nivå aggregates are version-independent coarsenings (no succession
+     edge) so they ride the single `dimension` axis; the proper granularity surface is
+     deferred to the value-set viewer (#609). Prior editions (`sun1996`, 2000 editions)
+     are intentionally excluded — they are temporal predecessors of each dimension and
+     belong in `classification_replaced_by` (#571), not in the umbrella group.
 
 Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
 derived fresh every build (regenerate-not-migrate) and carry no identity. The structural
