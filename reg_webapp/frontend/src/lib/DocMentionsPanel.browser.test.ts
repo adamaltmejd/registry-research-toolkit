@@ -77,7 +77,9 @@ describe("DocMentionsPanel (#402)", () => {
       .toBeVisible();
   });
 
-  it("shows the deployment-absent note (ingested:false) and never says 'undocumented'", async () => {
+  it("omits the whole section when no docs index is ingested in this deployment", async () => {
+    // Resolved-empty (ingested:false) is noise on the subject page — the entire
+    // section is omitted, NOT rendered as an empty-state note.
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({ ingested: false, register_ingested: false }),
     );
@@ -85,18 +87,14 @@ describe("DocMentionsPanel (#402)", () => {
 
     await expect
       .element(
-        page.getByText("Documentation index not available in this deployment."),
+        page.getByRole("heading", { name: "Mentioned in documentation" }),
       )
-      .toBeVisible();
-    // The absent-index note must NOT read as "this variable is undocumented".
-    await expect
-      .element(page.getByText(/undocumented/i))
       .not.toBeInTheDocument();
   });
 
-  it("shows the register-not-ingested note and avoids the semantic-trap copy", async () => {
-    // The index EXISTS but THIS register has no docs — "no docs for this register"
-    // (LISA-only coverage), NOT "undocumented" and NOT "not available".
+  it("omits the whole section when this register has no ingested docs", async () => {
+    // The index EXISTS but THIS register has no docs — a resolved-empty state, so
+    // the whole section is omitted (no "no docs for this register" wall).
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({ ingested: true, register_ingested: false }),
     );
@@ -104,20 +102,12 @@ describe("DocMentionsPanel (#402)", () => {
 
     await expect
       .element(
-        page.getByText(
-          "No documentation ingested for this register — coverage is LISA-only today.",
-        ),
+        page.getByRole("heading", { name: "Mentioned in documentation" }),
       )
-      .toBeVisible();
-    await expect
-      .element(page.getByText(/undocumented/i))
-      .not.toBeInTheDocument();
-    await expect
-      .element(page.getByText(/not available/i))
       .not.toBeInTheDocument();
   });
 
-  it("shows the no-mentions line when the index is present but has zero hits", async () => {
+  it("omits the whole section when the index is present but has zero hits", async () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({ ingested: true, register_ingested: true, total_count: 0 }),
     );
@@ -125,9 +115,9 @@ describe("DocMentionsPanel (#402)", () => {
 
     await expect
       .element(
-        page.getByText("No documentation mentions found for this variable."),
+        page.getByRole("heading", { name: "Mentioned in documentation" }),
       )
-      .toBeVisible();
+      .not.toBeInTheDocument();
   });
 
   it("renders a hit with an encoded /doc href and a snippet as LITERAL TEXT (republication guard)", async () => {
