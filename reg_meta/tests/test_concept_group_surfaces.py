@@ -439,6 +439,172 @@ class TestClassificationSuccessionFold:
         _assert_no_internal_keys(results)
 
 
+class TestClassificationSuccessionSplitRoot:
+    """#604: a 1→many split predecessor (sun1996 → {niva,inriktning,grupp}2000) has
+    NO single terminal — the chain BRANCHES. `_terminal_classification_slug` must
+    stop the walk at the split (the split root is its own terminal), so a `sun1996`
+    hit doesn't get folded under one arbitrary branch or annotated with a
+    single-branch `terminal_fqid` ("current")."""
+
+    @staticmethod
+    def _split_conn() -> sqlite3.Connection:
+        """sun1996 splits 3 ways into 2000 editions, each continuing one vintage
+        step to its 2020 edition:
+
+            sun1996 ─┬─ sun-niva2000      ── sun-niva2020
+                     ├─ sun-inriktning2000 ── sun-inriktning2020
+                     └─ sun-grupp2000     ── sun-grupp2020
+
+        All editions share the FTS-searchable name so one query hits them all."""
+        conn = build_slugged_db()
+        name = "Svensk utbildningsnomenklatur"
+        cid = 100
+        for stem in ("niva", "inriktning", "grupp"):
+            for vintage in ("2000", "2020"):
+                slug = f"sun-{stem}{vintage}"
+                _add_classification(
+                    conn, cid=cid, short_name=slug.upper(), name=name, slug=slug
+                )
+                cid += 1
+            _add_succession_edge(
+                conn,
+                predecessor=f"sun-{stem}2000",
+                successor=f"sun-{stem}2020",
+                effective_year=2020,
+            )
+        _add_classification(
+            conn, cid=cid, short_name="SUN1996", name=name, slug="sun1996"
+        )
+        for stem in ("niva", "inriktning", "grupp"):
+            _add_succession_edge(
+                conn,
+                predecessor="sun1996",
+                successor=f"sun-{stem}2000",
+                effective_year=2000,
+            )
+        conn.commit()
+        _rebuild_fts(conn)
+        return conn
+
+    def test_split_root_is_its_own_terminal(self) -> None:
+        from reg_meta.queries import _terminal_classification_slug
+
+        conn = self._split_conn()
+        # sun1996 has 3 successors → it is its own terminal (no single current).
+        assert _terminal_classification_slug(conn, "sun1996") == "sun1996"
+        # Each linear branch still collapses to its real terminal.
+        assert _terminal_classification_slug(conn, "sun-niva2000") == "sun-niva2020"
+        assert _terminal_classification_slug(conn, "sun-grupp2000") == "sun-grupp2020"
+
+    def test_split_root_hit_stays_leaf_without_terminal_fqid(self) -> None:
+        # Only sun1996 matches (the branch editions carry a distinct name) → a lone
+        # split-root hit stays a plain leaf and carries NO single-branch terminal.
+        conn = build_slugged_db()
+        _add_classification(
+            conn,
+            cid=100,
+            short_name="SUN1996",
+            name="Gammal utbildningsstandard",
+            slug="sun1996",
+        )
+        for stem in ("niva", "inriktning", "grupp"):
+            _add_classification(
+                conn,
+                cid={"niva": 101, "inriktning": 102, "grupp": 103}[stem],
+                short_name=f"SUN-{stem.upper()}2000",
+                name="Annan rubrik helt",
+                slug=f"sun-{stem}2000",
+            )
+            _add_succession_edge(
+                conn, predecessor="sun1996", successor=f"sun-{stem}2000"
+            )
+        conn.commit()
+        _rebuild_fts(conn)
+        results = search(conn, "gammal", field="description")["results"]
+        assert [r["type"] for r in results] == ["classification"]
+        assert results[0]["fqid"] == "class/sun1996"
+        # The fix: NO misleading "current" pointing at one arbitrary branch.
+        assert "terminal_fqid" not in results[0]
+
+    def test_split_root_does_not_fold_branch_hit(self) -> None:
+        # sun1996 AND one branch edition (sun-niva2000) both match. They resolve to
+        # DIFFERENT terminals (sun1996 itself vs sun-niva2020), so they do NOT
+        # collapse into one succession row — sun1996's branch is not "current".
+        conn = self._split_conn()
+        results = search(conn, "utbildningsnomenklatur", field="description")["results"]
+        # sun1996 is its own terminal with no sibling in that bucket → leaf.
+        leaves = [r for r in results if r.get("fqid") == "class/sun1996"]
+        assert len(leaves) == 1
+        assert leaves[0]["type"] == "classification"
+        assert "terminal_fqid" not in leaves[0]
+
+    def test_same_branch_linear_pair_still_folds(self) -> None:
+        # A linear vintage pair WITHIN one branch (sun-niva2000 → sun-niva2020)
+        # still collapses to its terminal — the split-stop only fires at the root.
+        conn = build_slugged_db()
+        name = "Svensk utbildningsnomenklatur niva"
+        _add_classification(
+            conn, cid=101, short_name="SUN-NIVA2000", name=name, slug="sun-niva2000"
+        )
+        _add_classification(
+            conn, cid=102, short_name="SUN-NIVA2020", name=name, slug="sun-niva2020"
+        )
+        _add_succession_edge(
+            conn,
+            predecessor="sun-niva2000",
+            successor="sun-niva2020",
+            effective_year=2020,
+        )
+        conn.commit()
+        _rebuild_fts(conn)
+        results = search(conn, "niva", field="description")["results"]
+        succ = [r for r in results if r["type"] == "classification_succession"]
+        assert len(succ) == 1
+        assert succ[0]["fqid"] == "class/sun-niva2020"
+        assert {e["slug"] for e in succ[0]["editions"]} == {
+            "sun-niva2000",
+            "sun-niva2020",
+        }
+        assert not [r for r in results if r["type"] == "classification"]
+
+    def test_hits_on_two_branches_stay_separate(self) -> None:
+        # Hits on two DIFFERENT branches (a niva edition vs a grupp edition) resolve
+        # to different terminals → they stay separate rows, never co-fold.
+        conn = build_slugged_db()
+        _add_classification(
+            conn,
+            cid=101,
+            short_name="SUN-NIVA2020",
+            name="Utbildning niva rubrik",
+            slug="sun-niva2020",
+        )
+        _add_classification(
+            conn,
+            cid=103,
+            short_name="SUN-GRUPP2020",
+            name="Utbildning niva rubrik",
+            slug="sun-grupp2020",
+        )
+        _add_classification(
+            conn,
+            cid=104,
+            short_name="SUN1996",
+            name="Utbildning niva rubrik",
+            slug="sun1996",
+        )
+        _add_succession_edge(conn, predecessor="sun1996", successor="sun-niva2020")
+        _add_succession_edge(conn, predecessor="sun1996", successor="sun-grupp2020")
+        conn.commit()
+        _rebuild_fts(conn)
+        results = search(conn, "niva", field="description")["results"]
+        # No co-fold: each terminal (sun-niva2020, sun-grupp2020) is lone in its
+        # bucket, and sun1996 (the split root) is lone in its own. All three stay
+        # leaves — none is a succession row.
+        assert not [r for r in results if r["type"] == "classification_succession"]
+        fqids = {r["fqid"] for r in results if r["type"] == "classification"}
+        assert fqids == {"class/sun-niva2020", "class/sun-grupp2020", "class/sun1996"}
+
+
 class TestGetConceptGroups:
     def test_lists_register_groups_with_members_and_facets(self) -> None:
         conn = _seeded_conn()
