@@ -169,8 +169,9 @@ class CuratedReplacedBy:
     `Fqid`s of the SAME grain — both register (2 segs), both variable (3 segs),
     or both classification (`class/<slug>`, #579). `note` / `effective_year` are
     optional provenance. Existence (the successor must resolve to a live, slugged
-    DB entity; the predecessor MAY be dead) is checked downstream against the
-    built DB — this loader stays DB-free."""
+    DB entity; the predecessor MAY be dead for the register/variable grain, but the
+    classification grain requires it live too — #579) is checked downstream against
+    the built DB — this loader stays DB-free."""
 
     predecessor: Fqid
     successor: Fqid
@@ -361,7 +362,9 @@ def _load_same_as(entry: dict) -> CuratedSameAs:
 def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     """Validate one `type = "replaced_by"` edge. `from` / `to` are FQIDs of the
     SAME grain (register, variable, or classification — not variant). No
-    self-loop. The predecessor may be dead (not resolved at load).
+    self-loop. Neither endpoint is resolved at load (DB-free); the predecessor may
+    be dead for register/variable, but `materialize_curated_replaced_by` requires
+    the classification grain's predecessor live too (#579).
 
     #579: classification endpoints use the `class/<slug>` form (e.g.
     `class/sun1996`), DISAMBIGUATED from the 2-segment register grain
@@ -943,6 +946,16 @@ def _unresolved_curated_successor(successor: Fqid, grain_noun: str) -> Exception
     )
 
 
+def _unresolved_curated_predecessor(predecessor: Fqid, grain_noun: str) -> Exception:
+    return curation_error(
+        "replaced_by_unresolved_predecessor",
+        f"Curated replaced_by predecessor {str(predecessor)!r} does not resolve to "
+        f"a live, slugged {grain_noun} in this build.",
+        f"Classification succession is all-live (the read side depends on it); "
+        f"both endpoints must exist. Fix the FQID or add the {grain_noun}.",
+    )
+
+
 def materialize_curated_replaced_by(
     conn: sqlite3.Connection,
     edges: Iterable[CuratedReplacedBy],
@@ -968,16 +981,23 @@ def materialize_curated_replaced_by(
 
     Resolution rules: the SUCCESSOR must resolve to a live, slugged DB entity (a
     non-resolving successor is a CURATION ERROR -> fail fast), EXCEPT a successor
-    whose PROVIDER isn't in this (partial) build, which is SKIPPED. The
-    PREDECESSOR MAY be dead — inserted VERBATIM (slug-anchored); its provider is
-    never gated. For register/variable grains `note = 'curated:slug_toml'` marks
-    provenance and the row's own `note` lands in `beskrivning`.
+    whose PROVIDER isn't in this (partial) build, which is SKIPPED. For the
+    register/variable grains the PREDECESSOR MAY be dead — inserted VERBATIM
+    (slug-anchored); its provider is never gated. The CLASSIFICATION grain is the
+    exception: its predecessor must ALSO be live (see the #579 arm below). For
+    register/variable grains `note = 'curated:slug_toml'` marks provenance and the
+    row's own `note` lands in `beskrivning`.
 
     #579 classification arm: classifications are GLOBAL — no provider segment on
     the `class/<slug>` form, so classification edges are NOT provider-gated (the
-    inactive-provider skip never fires for them). The successor slug must resolve
-    to a live `classification` row (fail-fast otherwise); the predecessor MAY be
-    dead. Edges land in `classification_replaced_by (predecessor_slug,
+    inactive-provider skip never fires for them). BOTH endpoints must resolve to a
+    live `classification` row (fail-fast otherwise) — unlike register/variable,
+    where a dead predecessor is allowed. Classification succession is ALL-LIVE by
+    design: the read side (`classification_chain`) and the validator's
+    `_check_classification_replaced_by` `dangling` check both require both endpoints
+    live, so a dead-predecessor edge would otherwise fail LATE at validation (CLI)
+    or ship a dangling row (`--no-validate`). Edges land in
+    `classification_replaced_by (predecessor_slug,
     successor_slug, effective_year, note)` — that table has NO `beskrivning`, so
     there is nowhere for a transition reason: `note` is provenance-only, stamped
     with the same `curated:slug_toml` marker as the register/variable arms (the
@@ -1043,6 +1063,13 @@ def materialize_curated_replaced_by(
             assert classification_cycle_edges is not None
             if succ.classification not in live_classifications:
                 raise _unresolved_curated_successor(succ, "classification")
+            # Classification succession is all-live (the read side
+            # `classification_chain` and the validator's dangling check both
+            # require both endpoints live), so — UNLIKE the register/variable
+            # grain — the predecessor may NOT be dead. Fail fast here rather than
+            # fail late at validation (CLI) or ship a dangling row (--no-validate).
+            if pred.classification not in live_classifications:
+                raise _unresolved_curated_predecessor(pred, "classification")
             cpk = (pred.classification, succ.classification)
             if cpk in seen_classification:
                 n_skipped_duplicate += 1

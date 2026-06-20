@@ -21,6 +21,8 @@ from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+from .concept_groups import classification_slug_stem
+
 if TYPE_CHECKING:
     import sqlite3
 
@@ -888,10 +890,17 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
       7. Vintage-period reclaim (#494 PART 1): much of the multi-family residue is
          ONE family across vintages (SNI2002↔SNI2007, SSYK96↔SSYK2012, SUN/LKF
          editions) — distinct `classification` rows on one `supersedes_id` chain.
-         Resolve a multi-family value set ONLY when EVERY candidate cls sits on the
-         same supersedes-chain root (`_chain_root`); if even one candidate is
-         off-chain (a genuine cross-family coincidence, e.g. SNI vs SSYK), leave the
-         whole set in the residue for curation. For each such (variable_id,
+         Resolve a multi-family value set ONLY when its candidate cls share ONE
+         vintage family, keyed on BOTH the supersedes-chain root (`_chain_root`)
+         AND the slug STEM (`classification_stem`, the year-tail-stripped slug). The
+         chain root alone is NOT enough: the #579 sun1996 → {niva, inriktning, grupp}
+         curated split puts three ORTHOGONAL SUN dimensions under one chain root, so
+         a code-ambiguous label-less value set spanning e.g. SUN nivå + inriktning
+         would collapse to one dimension on the root guard alone — the shared-stem
+         requirement (sun-niva* vs sun-inriktning* are different stems) keeps it in
+         the residue. If even one candidate is off-chain (a genuine cross-family
+         coincidence, e.g. SNI vs SSYK), or the candidates span two stems, leave the
+         whole set in the residue for curation. For each reclaimed (variable_id,
          value_set_id), pick the LATEST candidate vintage whose [valid_from,valid_to]
          overlaps AT LEAST ONE of the pair's real state windows (per-state, NOT the
          aggregate MIN/MAX span — a disjoint-states span would falsely "overlap" a
@@ -903,6 +912,13 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     in the curated tail stays visible. No row-level content is logged.
     """
     _progress("Linking inline classification-coded value sets (#416)...")
+
+    # Stem function for the #494 vintage-reclaim family guard (7b). Deterministic;
+    # scoped to this connection. `classification_slug_stem` is the canonical
+    # year-tail-stripping rule shared with `derive_classification_succession`.
+    conn.create_function(
+        "classification_stem", 1, classification_slug_stem, deterministic=True
+    )
 
     for tmp in (
         "_canon_codes",
@@ -1097,6 +1113,11 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
     # `supersedes_id` UP from each chain root (supersedes_id IS NULL). A standalone
     # classification (no predecessor, no successor) is its own root. reg_meta_build
     # is maintainer-local (not MONA-runtime), so the recursive CTE is fine here.
+    # Also carry the slug STEM (year-tail-stripped, via `classification_stem`) —
+    # the chain root alone is NOT a fine-enough "same vintage family" key since the
+    # #579 sun1996 → {niva, inriktning, grupp} curated split puts three ORTHOGONAL
+    # SUN dimensions under ONE chain root; their slug stems (sun-niva / sun-inriktning
+    # / sun-grupp) differ, so the stem disambiguates them (7b).
     conn.execute(
         """
         CREATE TEMP TABLE _chain_root AS
@@ -1107,16 +1128,25 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
             FROM classification c
             JOIN chain ch ON c.supersedes_id = ch.id
         )
-        SELECT id AS cls_id, root FROM chain
+        SELECT ch.id AS cls_id, ch.root, classification_stem(c.slug) AS stem
+        FROM chain ch
+        JOIN classification c ON c.id = ch.id
         """
     )
     conn.execute("CREATE UNIQUE INDEX _chain_root_pk ON _chain_root(cls_id)")
 
     # 7b. Multi-family value sets whose candidate cls (those in `_vs_cls` — i.e.
-    # whose codes the value set actually matches) ALL share one chain root. The
-    # LEFT JOIN + `COUNT(*) = COUNT(cr.root)` guard defensively requires every
-    # candidate to have resolved a root, so a hypothetical root-less classification
-    # can't make a multi-family set look single-chain.
+    # whose codes the value set actually matches) ALL share one chain root AND one
+    # slug stem. The family key is (chain root AND shared stem): the chain root
+    # gates off-chain cross-family coincidences (SNI vs SSYK), and the stem gates
+    # cross-DIMENSION splits that share a root but are NOT one vintage family — the
+    # #579 sun1996 split chains sun-niva* / sun-inriktning* / sun-grupp* under one
+    # root, but a code-ambiguous label-less value set spanning two of those
+    # dimensions must stay in the residue, not collapse to one. The LEFT JOIN +
+    # `COUNT(*) = COUNT(cr.root)` guard defensively requires every candidate to have
+    # resolved a root (stem is non-NULL whenever root is, both derived from the same
+    # row), so a hypothetical root-less classification can't make a multi-family set
+    # look single-chain.
     conn.execute(
         """
         CREATE TEMP TABLE _vs_multi_onechain AS
@@ -1127,6 +1157,7 @@ def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:
         HAVING COUNT(*) > 1
            AND COUNT(*) = COUNT(cr.root)
            AND COUNT(DISTINCT cr.root) = 1
+           AND COUNT(DISTINCT cr.stem) = 1
         """
     )
     conn.execute(

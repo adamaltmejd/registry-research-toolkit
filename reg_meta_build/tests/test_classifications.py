@@ -885,17 +885,29 @@ class _Graph:
         supersedes_id: int | None = None,
         valid_from: int | None = None,
         valid_to: int | None = None,
+        slug: str | None = None,
     ) -> None:
         """Seed a classification whose canonical code set is `codes` (each a
         (code, label) pair). is_valid=1 (canonical); level is the digit-length for
         all-digit codes, NULL otherwise — same rule as the build. `supersedes_id`
         (older predecessor on the vintage chain) and `valid_from`/`valid_to` (INTEGER
-        years, NULLABLE = unbounded) feed the #494 vintage-period reclaim."""
+        years, NULLABLE = unbounded) feed the #494 vintage-period reclaim. `slug`
+        defaults to `short_name.lower()` — non-NULL because the real build runs this
+        pass AFTER `populate_slugs`, and the #494 reclaim's stem guard derives the
+        vintage family from the slug (e.g. `sni2002`/`sni2007` → stem `sni`)."""
         self.conn.execute(
             "INSERT INTO classification "
-            "(id, short_name, name, supersedes_id, valid_from, valid_to) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            (cls_id, short_name, short_name, supersedes_id, valid_from, valid_to),
+            "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                cls_id,
+                short_name,
+                short_name,
+                slug if slug is not None else short_name.lower(),
+                supersedes_id,
+                valid_from,
+                valid_to,
+            ),
         )
         for code, label in codes:
             code_id = self._intern_code(code, label)
@@ -914,17 +926,26 @@ class _Graph:
         supersedes_id: int | None = None,
         valid_from: int | None = None,
         valid_to: int | None = None,
+        slug: str | None = None,
     ) -> None:
         """Seed a classification with `is_valid=NULL` canonical rows — the no-CSV
         shape (ICD-10-SE in production): its observed codes ARE its code set, so
         the detector's `is_valid IS NOT 0` filter must keep them. Same level rule
-        and same `supersedes_id`/`valid_from`/`valid_to` vintage fields as
+        and same `supersedes_id`/`valid_from`/`valid_to`/`slug` fields as
         `add_classification`."""
         self.conn.execute(
             "INSERT INTO classification "
-            "(id, short_name, name, supersedes_id, valid_from, valid_to) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            (cls_id, short_name, short_name, supersedes_id, valid_from, valid_to),
+            "(id, short_name, name, slug, supersedes_id, valid_from, valid_to) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (
+                cls_id,
+                short_name,
+                short_name,
+                slug if slug is not None else short_name.lower(),
+                supersedes_id,
+                valid_from,
+                valid_to,
+            ),
         )
         for code, label in codes:
             code_id = self._intern_code(code, label)
@@ -1432,6 +1453,59 @@ class TestLinkValueSetClassifications:
         assert counts["multi_family"] == 1
         assert counts["vintage_value_sets_linked"] == 0
         assert counts["multi_family_after"] == 1
+
+    def test_same_root_different_stem_dimensions_stay_ambiguous(self) -> None:
+        """#579 stem guard: the curated sun1996 → {niva, inriktning, grupp} split puts
+        ORTHOGONAL SUN dimensions under ONE chain root, so the chain-root guard alone
+        would collapse a code-ambiguous LABEL-LESS value set spanning two of those
+        dimensions to one. The family key is (chain root AND slug stem): sun-niva2000
+        (stem `sun-niva`) and sun-inriktning2000 (stem `sun-inriktning`) share the
+        sun1996 root but have DIFFERENT stems → NO reclaim; the set stays in the
+        residue for curation. Contrast `test_same_chain_collapse_latest_overlapping_wins`
+        (sni2002/sni2007, same `sni` stem → still collapses)."""
+        from reg_meta_build.classifications import link_value_set_classifications
+
+        g = _Graph()
+        # Root of the split; its OWN codes are disjoint so it is not a candidate — the
+        # value set matches the two dimensions, not the umbrella root.
+        g.add_classification(
+            90,
+            "SUN1996",
+            _numeric_codes("ROOT", 10, 4),
+            slug="sun1996",
+            valid_from=1996,
+            valid_to=None,
+        )
+        # Two dimensions chained onto the sun1996 root → SAME chain root, DIFFERENT
+        # slug stems (`sun-niva` vs `sun-inriktning`).
+        shared = _numeric_codes("SUN", 10, 4)
+        g.add_classification(
+            91,
+            "SUN-niva2000",
+            shared + [("9001", "niva only")],
+            slug="sun-niva2000",
+            supersedes_id=90,
+            valid_from=2000,
+            valid_to=None,
+        )
+        g.add_classification(
+            92,
+            "SUN-inriktning2000",
+            shared + [("9002", "inriktning only")],
+            slug="sun-inriktning2000",
+            supersedes_id=90,
+            valid_from=2000,
+            valid_to=None,
+        )
+        g.add_value_set(190, shared)  # contained in BOTH dimensions → multi-family
+        g.add_variable_state(990, 190)
+
+        counts = link_value_set_classifications(g.conn)
+        assert counts["multi_family"] == 1
+        # Same root but two stems → the stem guard keeps it out of _vs_multi_onechain.
+        assert counts["vintage_value_sets_linked"] == 0
+        assert counts["multi_family_after"] == 1
+        assert g.candidates() == []
         assert g.candidates() == []
 
     def test_no_overlap_no_link(self) -> None:
@@ -1563,14 +1637,15 @@ class TestLinkValueSetClassifications:
         """FIX 1 (#494 Codex P2): a pair with TWO DISJOINT states straddling a CLOSED
         gap vintage, where the gap vintage is the LATEST that overlaps the aggregate
         span — so the RETIRED span logic would have emitted it. States 2003–2006 and
-        2018–2020; candidates SNI2002 [2002,2007] (covers state1) and a CLOSED SNIgap
+        2018–2020; candidates SNI2002 [2002,2007] (covers state1) and a CLOSED SNI2010
         [2010,2015] (covers NEITHER state — sits in the temporal hole). No candidate
         covers the 2018–2020 state. The aggregate MIN/MAX span [2003,2020] "overlaps"
-        SNIgap (2010<=2020 AND 2015>=2003), and SNIgap has the higher valid_from, so
-        the OLD span logic would have ranked SNIgap rn=1 and emitted it — tagging the
+        SNI2010 (2010<=2020 AND 2015>=2003), and SNI2010 has the higher valid_from, so
+        the OLD span logic would have ranked SNI2010 rn=1 and emitted it — tagging the
         variable with a vintage NONE of its states fall in. Per-state overlap anchors
         to a real window: only SNI2002 overlaps a real state (2003–2006), so SNI2002 is
-        emitted, NOT the gap edition."""
+        emitted, NOT the gap edition. The gap edition is a YEAR-tailed vintage (slug
+        `sni2010`, same `sni` stem) so the #579 stem guard keeps it on the family."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
@@ -1584,7 +1659,7 @@ class TestLinkValueSetClassifications:
         )
         g.add_classification(
             81,
-            "SNIgap",  # CLOSED edition in the hole between the two states
+            "SNI2010",  # CLOSED edition in the hole between the two states
             shared + [("9002", "gap only")],
             supersedes_id=80,
             valid_from=2010,
@@ -1607,9 +1682,10 @@ class TestLinkValueSetClassifications:
     def test_latest_among_real_overlapping_not_latest_overlapping_span(self) -> None:
         """FIX 1 focused variant: the ONLY candidate overlapping any REAL state is the
         OLDER one. States 2003–2006 only; candidates SNI2002 [2002,2007] and a later
-        SNI-late [2016, unbounded]. The aggregate span is [2003, 2006] here (single
+        SNI2016 [2016, unbounded]. The aggregate span is [2003, 2006] here (single
         state), but the point is the pick is "latest among real-overlapping" — only
-        SNI2002 overlaps the 2003–2006 state, so it wins over the later edition."""
+        SNI2002 overlaps the 2003–2006 state, so it wins over the later edition. Both
+        editions share the `sni` stem so the #579 stem guard keeps them on one family."""
         from reg_meta_build.classifications import link_value_set_classifications
 
         g = _Graph()
@@ -1623,7 +1699,7 @@ class TestLinkValueSetClassifications:
         )
         g.add_classification(
             84,
-            "SNI-late",
+            "SNI2016",
             shared + [("9003", "late only")],
             supersedes_id=83,
             valid_from=2016,

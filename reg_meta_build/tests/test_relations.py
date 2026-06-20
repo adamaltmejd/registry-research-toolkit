@@ -763,7 +763,9 @@ def _noop(_msg: str) -> None:
 class TestClassificationReplacedByMaterialize:
     """#579: curated classification-grain `replaced_by` edges land in
     `classification_replaced_by` (alongside the #571 auto edges) — the sun1996 →
-    2000-split 1→many dual the auto same-stem rule can't produce."""
+    2000-split 1→many dual the auto same-stem rule can't produce. BOTH endpoints
+    must resolve to a live classification (unlike register/variable, where a dead
+    predecessor is allowed) — classification succession is all-live by design."""
 
     def test_one_edge_writes_with_provenance_marker(self) -> None:
         conn = _class_succession_db()
@@ -837,24 +839,26 @@ class TestClassificationReplacedByMaterialize:
         assert exc.value.code == "replaced_by_unresolved_successor"
         assert _class_succession_rows(conn) == []  # nothing written
 
-    def test_dead_predecessor_inserted_verbatim(self) -> None:
-        # The predecessor MAY be dead (no live classification row) — slug-anchored
-        # verbatim insert, mirroring the register/variable rule. (The build's
-        # validator would flag a truly-dead classification predecessor, but the
-        # materialize step itself does not resolve it.)
+    def test_dead_predecessor_fails_fast(self) -> None:
+        # UNLIKE the register/variable grain (where a dead predecessor is inserted
+        # verbatim), the classification grain requires BOTH endpoints live: the read
+        # side (`classification_chain`) and the validator's `dangling` check both
+        # depend on classification succession being all-live, so a dead-predecessor
+        # edge must FAIL FAST here (EXIT_CONFIG) rather than fail late at validation
+        # (CLI) or ship a dangling row (`--no-validate`).
         conn = _class_succession_db()
-        out = materialize_curated_replaced_by(
-            conn,
-            [_replaced_by_edge("class/retired1990", "class/sun-niva2000")],
-            set(),
-            set(),
-            providers=_SCB,
-            progress=_noop,
-        )
-        assert out["classification"] == 1
-        assert _class_succession_rows(conn) == [
-            ("retired1990", "sun-niva2000", None, "curated:slug_toml"),
-        ]
+        with pytest.raises(RegMetaError) as exc:
+            materialize_curated_replaced_by(
+                conn,
+                [_replaced_by_edge("class/retired1990", "class/sun-niva2000")],
+                set(),
+                set(),
+                providers=_SCB,
+                progress=_noop,
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "replaced_by_unresolved_predecessor"
+        assert _class_succession_rows(conn) == []  # nothing written
 
     def test_dedups_against_existing_auto_edge(self) -> None:
         # An auto #571 edge already in the table on the same (pred, succ) pair →
