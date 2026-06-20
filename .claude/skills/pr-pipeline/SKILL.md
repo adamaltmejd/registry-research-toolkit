@@ -123,14 +123,21 @@ separate claim. Draft also keeps review bots off until near-final, and an inline
 `--body` heredoc can trip the permission classifier, so use `--body-file`. Then dispatch
 the implementer(s) with the scope + the FAST Verify only (lint / format / `ty` /
 `pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min
-merge-gate check (Step E). For a **frontend PR**, the FAST Verify also includes
-*rendering* the change: the implementer starts the dev servers (`preview_start` /
-`/run-reg-webapp`), then `preview_snapshot`s + `preview_screenshot`s the changed views
-and checks `preview_console_logs` — cheap (unlike `build-db`), catches what the headless
-`bun` checks can't, and belongs in their loop. When they report, validate the real diff,
-`git add -A`, commit, and push onto the draft PR's branch. Outward-facing `gh` actions
-(PR create / merge / comment) may be denied by the session's permission mode — if one is
-denied, surface it to the human, don't work around it.
+merge-gate check (Step E). For a **frontend PR**, rendering is part of the loop too —
+cheap, unlike `build-db`: the implementer eyeballs its change in the running app
+(`preview_snapshot` / `preview_screenshot` the changed views, check
+`preview_console_logs`), catching what the headless `bun` checks can't. Two hazards
+decide *who* renders and *how*: **(1) worktree** — `preview_start` and
+`.claude/launch.json` serve *main's* code from a worktree (run-reg-webapp → "Verifying
+from a git worktree"), so in a worktree launch via the worktree-local `.venv`
+(`.venv/bin/uvicorn … --port 8000` + `bun run dev`), NOT `preview_start`; **(2) parallel
+fan-out** — launch.json binds fixed ports 8000/5173, so implementers do NOT each start
+servers. The **authoritative rendered proof is yours (the lead): a single render on the
+assembled tree** — the visual analog of the union Verify, and the merge-gate screenshot
+(Step E). When they report, validate the real diff, `git add -A`, commit, and push onto
+the draft PR's branch. Outward-facing `gh` actions (PR create / merge / comment) may be
+denied by the session's permission mode — if one is denied, surface it to the human,
+don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh

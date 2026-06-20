@@ -308,7 +308,9 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   validation — **required, not optional**, for rendered changes. Headless checks
   (`bun run lint/check/test/build`) never render a pixel, so green `bun` is not
   sufficient: run the app and *look*. Start the dev servers (`preview_start` via
-  `.claude/launch.json`, or the `/run-reg-webapp` skill), then follow the harness
+  `.claude/launch.json`, or the `/run-reg-webapp` skill — but from a **worktree** both
+  serve *main's* code, so launch via the worktree-local `.venv` instead, per
+  run-reg-webapp → "Verifying from a git worktree"), then follow the harness
   verification workflow — check `preview_console_logs` for errors, `preview_snapshot`
   the changed views, exercise changed interactions (`preview_click` / `preview_fill`),
   and `preview_resize` for responsive / dark mode. Attach a `preview_screenshot` as the
