@@ -1162,10 +1162,15 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- DIRECTIONAL like the other `replaced_by` edges: WITHOUT ROWID with a
 -- predecessor-first PK, so the clustered prefix serves the forward "what
 -- replaced X?" lookup; the reverse "what did X replace?" is served by the
--- successor index below. `effective_year` is the successor edition's year;
--- `note` records provenance (`derived:vintage_chain`). (A later PR #516 adds
--- CURATED umbrella classification groups — e.g. SUN — via the retained
--- `concept_group_classification` table; this succession layer is orthogonal.)
+-- successor index below. `effective_year` is the successor edition's year.
+-- The auto #571 rows stamp `note = 'derived:vintage_chain'`; the CURATED #579
+-- rows (e.g. the sun1996 → nivå/inriktning 1→many split that the same-stem auto
+-- rule can't produce, from `curation/relations.toml` `type = "replaced_by"`
+-- `class/<slug>` edges) put their transition reason straight in `note` — unlike
+-- the entity tables there is no `beskrivning` column, so reg_meta reads `note`
+-- as the display string. (A later PR #516 adds CURATED umbrella classification
+-- groups — e.g. SUN — via the retained `concept_group_classification` table;
+-- this succession layer is orthogonal.)
 CREATE TABLE classification_replaced_by (
     predecessor_slug TEXT NOT NULL,
     successor_slug   TEXT NOT NULL,
@@ -1610,11 +1615,15 @@ _REPLACED_BY_STAT_KEYS = (
     # `n_curated_variable_replaced_by` count edges INSERTED from
     # `curation/relations.toml` `type = "replaced_by"` edges (a subset of
     # `n_*_replaced_by` above — the curated rows roll into the same totals).
-    # `n_curated_skipped_duplicate` counts curated rows that
-    # collapse onto an already-seen edge (event-derived or another curated row),
-    # via the SHARED seen-PK sets.
+    # `n_curated_classification_replaced_by` (#579) counts curated classification
+    # edges inserted into `classification_replaced_by` alongside the auto #571
+    # edges (the sun1996 → sun-niva/inriktning 1→many split). `n_curated_skipped_
+    # duplicate` counts curated rows that collapse onto an already-seen edge
+    # (event-derived, an auto classification edge, or another curated row), via the
+    # SHARED seen-PK sets (per-grain).
     "n_curated_register_replaced_by",
     "n_curated_variable_replaced_by",
+    "n_curated_classification_replaced_by",
     "n_curated_skipped_duplicate",
     # A curated edge whose SUCCESSOR's provider isn't in this (partial) build is
     # SKIPPED, not failed — a `--providers=sos` build must not crash on an scb
@@ -2054,6 +2063,7 @@ def _materialize_replaced_by_edges(
         n_skipped_duplicate=n_skipped_duplicate,
         n_curated_register_replaced_by=curated["register"],
         n_curated_variable_replaced_by=curated["variable"],
+        n_curated_classification_replaced_by=curated["classification"],
         n_curated_skipped_duplicate=curated["skipped_duplicate"],
         n_curated_skipped_inactive_provider=curated["skipped_inactive_provider"],
     )
@@ -3485,6 +3495,14 @@ def materialize(
         replaced_by_stats = _materialize_replaced_by_edges(
             conn, relations.replaced_by, providers=active_providers
         )
+        # #579: curated classification edges land in `classification_replaced_by`
+        # AFTER `derive_classification_succession` set the row count to the auto
+        # total — fold the curated additions back in so the manifest record of the
+        # table's size stays accurate (the auto+curated rows now coexist there).
+        if "classification_replaced_by" in row_counts:
+            row_counts["classification_replaced_by"] += replaced_by_stats[
+                "n_curated_classification_replaced_by"
+            ]
 
     # Lineage edges. Runs *after* populate_variable_slugs so
     # `variable.slug` is non-NULL on both sides. `source_register_id` was

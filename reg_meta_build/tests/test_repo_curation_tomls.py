@@ -119,15 +119,17 @@ def test_repo_period_family_merges_parses() -> None:
 
 
 def test_repo_relations_parses() -> None:
-    # The single typed `[[edge]]` surface (#522). It ships with the #375
-    # succession edges (`type = "replaced_by"`) + the #403 see-also edges
-    # (`type = "related_to"`); same_as ships EMPTY (resolver-load-bearing
-    # identity; only confirmed edges ever land). The gate is load-time shape — a
-    # malformed entry would otherwise surface only on a real build. Endpoint
-    # RESOLUTION is maintainer-build territory (the materializers fail fast).
+    # The single typed `[[edge]]` surface (#522). It ships with the #375 variable
+    # succession edges + the #579 sun1996 classification split (both
+    # `type = "replaced_by"`) + the #403 see-also edges (`type = "related_to"`);
+    # same_as ships EMPTY (resolver-load-bearing identity; only confirmed edges
+    # ever land). The gate is load-time shape — a malformed entry would otherwise
+    # surface only on a real build. Endpoint RESOLUTION is maintainer-build
+    # territory (the materializers fail fast).
     relations = load_relations(_ROOT / "curation" / "relations.toml")
     assert not relations.same_as  # empty today
-    assert len(relations.replaced_by) == 11  # the moved #375 succession edges
+    # 11 #375 variable succession edges + 2 #579 classification split edges.
+    assert len(relations.replaced_by) == 13
     assert len(relations.related_to) == 3  # the moved #403 see-also edges
     assert all(
         e.a_provider

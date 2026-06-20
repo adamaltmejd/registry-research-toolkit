@@ -105,11 +105,13 @@ _REPLACED_BY_NOTE_VINTAGE_LIFT = "derived:classification_vintage_lift"
 # curation rather than today's data.
 _SAME_AS_MAX_COMPONENT = 32
 
-# Replaced_by grains: register- or variable-grain only. The variant grain is
-# deliberately out of scope — a variant is a delivery coordinate, not a curation
-# surface for cross-provider succession.
+# Replaced_by grains: register-, variable-, or classification-grain. The variant
+# grain is deliberately out of scope — a variant is a delivery coordinate, not a
+# curation surface for cross-provider succession. Classification grain (#579) is
+# the `class/<slug>` form (a 1→many edition split the #571 auto rule can't
+# produce, e.g. sun1996 → sun-niva2000 + sun-inriktning2000).
 _REPLACED_BY_GRAINS: frozenset[FqidKind] = frozenset(
-    {FqidKind.REGISTER, FqidKind.VARIABLE_BINDING}
+    {FqidKind.REGISTER, FqidKind.VARIABLE_BINDING, FqidKind.CLASSIFICATION}
 )
 
 # Per-type accepted/foreign field maps (besides `type`). A field legal for one
@@ -161,10 +163,11 @@ class CuratedSameAs:
 class CuratedReplacedBy:
     """One `type = "replaced_by"` succession edge, parsed FQID-shaped but
     DB-unverified. `predecessor` / `successor` (TOML `from` / `to`) are parsed
-    `Fqid`s of the SAME grain — both register (2 segs) or both variable (3 segs).
-    `note` / `effective_year` are optional provenance. Existence (the successor
-    must resolve to a live, slugged DB entity; the predecessor MAY be dead) is
-    checked downstream against the built DB — this loader stays DB-free."""
+    `Fqid`s of the SAME grain — both register (2 segs), both variable (3 segs),
+    or both classification (`class/<slug>`, #579). `note` / `effective_year` are
+    optional provenance. Existence (the successor must resolve to a live, slugged
+    DB entity; the predecessor MAY be dead) is checked downstream against the
+    built DB — this loader stays DB-free."""
 
     predecessor: Fqid
     successor: Fqid
@@ -354,8 +357,14 @@ def _load_same_as(entry: dict) -> CuratedSameAs:
 
 def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     """Validate one `type = "replaced_by"` edge. `from` / `to` are FQIDs of the
-    SAME grain (register or variable — not variant). No self-loop. The
-    predecessor may be dead (not resolved at load)."""
+    SAME grain (register, variable, or classification — not variant). No
+    self-loop. The predecessor may be dead (not resolved at load).
+
+    #579: classification endpoints use the `class/<slug>` form (e.g.
+    `class/sun1996`), DISAMBIGUATED from the 2-segment register grain
+    (`provider/register`). This differs from same_as, whose classification grain
+    uses the 2-segment `provider/slug` form — replaced_by can't reuse that without
+    colliding with register grain."""
     _reject_foreign_fields(entry, "replaced_by", _REPLACED_BY_FIELDS)
     predecessor = _parse_replaced_by_fqid("from", entry.get("from"))
     successor = _parse_replaced_by_fqid("to", entry.get("to"))
@@ -365,8 +374,8 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             f"relations [[edge]] type='replaced_by' `from` {str(predecessor)!r} "
             f"({predecessor.kind.value}) and `to` {str(successor)!r} "
             f"({successor.kind.value}) are different grains.",
-            "Both endpoints must be the same grain (register->register or "
-            "variable->variable).",
+            "Both endpoints must be the same grain (register->register, "
+            "variable->variable, or classification->classification).",
         )
     if str(predecessor) == str(successor):
         raise curation_error(
@@ -397,13 +406,15 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
 
 def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
     """Parse one replaced_by endpoint FQID string against the FQID grammar,
-    restricted to the register / variable grains."""
+    restricted to the register / variable / classification grains. The
+    classification grain is the `class/<slug>` form (#579)."""
     if not isinstance(raw, str) or not raw:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `{field}` must be a "
             f"non-empty FQID string, got {raw!r}.",
-            'Quote a register or variable FQID, e.g. "scb/lisa" or "scb/lisa/kon".',
+            "Quote a register, variable, or classification FQID, e.g. "
+            '"scb/lisa", "scb/lisa/kon", or "class/sun1996".',
         )
     try:
         fqid = parse_fqid(raw)
@@ -412,17 +423,17 @@ def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `{field}` {raw!r} is not a "
             f"valid FQID: {exc}.",
-            "Use a register (provider/register) or variable "
-            "(provider/register/variable) FQID.",
+            "Use a register (provider/register), variable "
+            "(provider/register/variable), or classification (class/<slug>) FQID.",
         ) from exc
     if fqid.kind not in _REPLACED_BY_GRAINS:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `{field}` {raw!r} is a "
-            f"{fqid.kind.value}-grain FQID; only register and variable grains "
-            "are supported.",
-            "Use a 2-segment register or 3-segment variable FQID (the variant "
-            "grain is out of scope).",
+            f"{fqid.kind.value}-grain FQID; only register, variable, and "
+            "classification grains are supported.",
+            "Use a 2-segment register, 3-segment variable, or class/<slug> "
+            "classification FQID (the variant grain is out of scope).",
         )
     return fqid
 
@@ -879,6 +890,33 @@ def _slugged_variable_fqids(conn: sqlite3.Connection) -> set[tuple[str, str, str
     }
 
 
+def _slugged_classification_slugs(conn: sqlite3.Connection) -> set[str]:
+    """Live `classification.slug` values — the universe a curated classification
+    successor must resolve into (#579). A classification slug is GLOBALLY unique
+    (no provider segment), mirroring the `classification_replaced_by` PK."""
+    return {
+        slug
+        for (slug,) in conn.execute(
+            "SELECT slug FROM classification WHERE slug IS NOT NULL"
+        )
+    }
+
+
+def _existing_classification_succession(
+    conn: sqlite3.Connection,
+) -> set[tuple[str, str]]:
+    """`(predecessor_slug, successor_slug)` of rows already in
+    `classification_replaced_by` — the #571 auto edges, inserted before this pass.
+    A curated edge on the same pair dedups against these (and the pending curated
+    ones)."""
+    return {
+        (pred, succ)
+        for pred, succ in conn.execute(
+            "SELECT predecessor_slug, successor_slug FROM classification_replaced_by"
+        )
+    }
+
+
 def _unresolved_curated_successor(successor: Fqid, grain_noun: str) -> Exception:
     return curation_error(
         "replaced_by_unresolved_successor",
@@ -915,14 +953,31 @@ def materialize_curated_replaced_by(
     non-resolving successor is a CURATION ERROR -> fail fast), EXCEPT a successor
     whose PROVIDER isn't in this (partial) build, which is SKIPPED. The
     PREDECESSOR MAY be dead — inserted VERBATIM (slug-anchored); its provider is
-    never gated. `note = 'curated:slug_toml'` marks provenance; the row's own
-    `note` lands in `beskrivning`. Returns `{"register", "variable",
-    "skipped_duplicate", "skipped_inactive_provider"}`."""
+    never gated. For register/variable grains `note = 'curated:slug_toml'` marks
+    provenance and the row's own `note` lands in `beskrivning`.
+
+    #579 classification arm: classifications are GLOBAL — no provider segment on
+    the `class/<slug>` form, so classification edges are NOT provider-gated (the
+    inactive-provider skip never fires for them). The successor slug must resolve
+    to a live `classification` row (fail-fast otherwise); the predecessor MAY be
+    dead. Edges land in `classification_replaced_by (predecessor_slug,
+    successor_slug, effective_year, note)` — that table has NO `beskrivning`, so
+    the edge's own `note` (the transition reason) goes straight into the `note`
+    column (reg_meta reads it as the display string), not a fixed provenance
+    marker. The auto #571 edges already exist (`derive_classification_succession`
+    runs earlier in the build), so dedup is by `(predecessor_slug, successor_slug)`
+    against the table + the pending curated edges, and the cycle check runs over
+    the COMBINED slug graph. The 1→many split (one predecessor, several
+    successors) is intentional and supported.
+
+    Returns `{"register", "variable", "classification", "skipped_duplicate",
+    "skipped_inactive_provider"}`."""
     edges = list(edges)
     if not edges:
         return {
             "register": 0,
             "variable": 0,
+            "classification": 0,
             "skipped_duplicate": 0,
             "skipped_inactive_provider": 0,
         }
@@ -930,6 +985,11 @@ def materialize_curated_replaced_by(
     progress("Materializing curated replaced_by edges from relations.toml...")
     live_registers = _slugged_register_fqids(conn)
     live_variables = _slugged_variable_fqids(conn)
+    # Classification universe + combined succession graph are built lazily — only
+    # when a classification edge is actually present (most builds carry none).
+    live_classifications: set[str] | None = None
+    classification_cycle_edges: list[tuple[str, str]] | None = None
+    seen_classification: set[tuple[str, str]] | None = None
 
     # Reconstruct the event-derived edges from the shared seen-set PK tuples
     # snapshotted at pass entry, so the combined-graph cycle check sees them:
@@ -946,10 +1006,41 @@ def materialize_curated_replaced_by(
     n_skipped_inactive_provider = 0
     pending_register: list[tuple] = []
     pending_variable: list[tuple] = []
+    pending_classification: list[tuple] = []
 
     for edge in edges:
         pred = edge.predecessor
         succ = edge.successor
+        # Classification grain (#579) is GLOBAL — `class/<slug>` has no provider,
+        # so it's NOT provider-gated (and `succ.provider` is None, which would
+        # trip the provider assertions below). Handle it before the provider gate.
+        if succ.kind is FqidKind.CLASSIFICATION:
+            assert succ.classification is not None and pred.classification is not None
+            if live_classifications is None:
+                live_classifications = _slugged_classification_slugs(conn)
+                seen_classification = _existing_classification_succession(conn)
+                classification_cycle_edges = list(seen_classification)
+            assert seen_classification is not None
+            assert classification_cycle_edges is not None
+            if succ.classification not in live_classifications:
+                raise _unresolved_curated_successor(succ, "classification")
+            cpk = (pred.classification, succ.classification)
+            if cpk in seen_classification:
+                n_skipped_duplicate += 1
+                continue
+            seen_classification.add(cpk)
+            classification_cycle_edges.append(cpk)
+            # The transition `note` goes straight into the `note` column (the
+            # table has no `beskrivning`); reg_meta reads it as the display string.
+            pending_classification.append(
+                (
+                    pred.classification,
+                    succ.classification,
+                    edge.effective_year,
+                    edge.note,
+                )
+            )
+            continue
         assert succ.provider is not None
         if succ.provider not in providers:
             n_skipped_inactive_provider += 1
@@ -969,7 +1060,7 @@ def materialize_curated_replaced_by(
             pending_register.append(
                 (*pk, edge.effective_year, _REPLACED_BY_NOTE_CURATED, edge.note)
             )
-        else:  # FqidKind.VARIABLE_BINDING (the loader admits only these two grains)
+        else:  # FqidKind.VARIABLE_BINDING (classification handled above)
             assert (
                 succ.provider is not None
                 and succ.register is not None
@@ -1004,6 +1095,12 @@ def materialize_curated_replaced_by(
 
     reject_replaced_by_cycles(register_cycle_edges)
     reject_replaced_by_cycles(variable_cycle_edges)
+    # Classification: cycle-check the COMBINED slug graph (auto #571 edges +
+    # pending curated) before any INSERT. None when no classification edge was
+    # seen — `reject_replaced_by_cycles([])` is a no-op anyway, but the lazy build
+    # skips the table read entirely for the common no-classification build.
+    if classification_cycle_edges is not None:
+        reject_replaced_by_cycles(classification_cycle_edges)
 
     conn.executemany(
         "INSERT INTO register_replaced_by ("
@@ -1019,18 +1116,27 @@ def materialize_curated_replaced_by(
         "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         pending_variable,
     )
+    conn.executemany(
+        "INSERT INTO classification_replaced_by ("
+        "predecessor_slug, successor_slug, effective_year, note) "
+        "VALUES (?, ?, ?, ?)",
+        pending_classification,
+    )
     n_register = len(pending_register)
     n_variable = len(pending_variable)
+    n_classification = len(pending_classification)
 
     progress(
-        f"  {n_register:,} register / {n_variable:,} variable curated "
-        f"replaced_by edges ({n_skipped_duplicate:,} dedup-collapsed, "
+        f"  {n_register:,} register / {n_variable:,} variable / "
+        f"{n_classification:,} classification curated replaced_by edges "
+        f"({n_skipped_duplicate:,} dedup-collapsed, "
         f"{n_skipped_inactive_provider:,} skipped — successor provider "
         f"not in this build)"
     )
     return {
         "register": n_register,
         "variable": n_variable,
+        "classification": n_classification,
         "skipped_duplicate": n_skipped_duplicate,
         "skipped_inactive_provider": n_skipped_inactive_provider,
     }
