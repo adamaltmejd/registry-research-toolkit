@@ -1465,6 +1465,29 @@ def _scb_in_build(conn: sqlite3.Connection) -> bool:
     )
 
 
+def _curated_source_in_build(conn: sqlite3.Connection) -> bool:
+    """True iff a provider whose registers `concept_groups.toml` curates is built.
+
+    The curated concept-group floor below (`n_curated >= 1`) asserts the curated
+    `concept_groups.toml` was applied. That file curates only `scb/*` and `sos/*`
+    register families, so a `--providers` subset including NEITHER legitimately has
+    zero curated groups and must SKIP (not false-fail) the floor (#600; surfaced once
+    #597 let non-SCB builds reach validation). Concept groups are register-scoped (a
+    curated group belongs to one register/provider, not shared), so keying on
+    scb/sos register presence is accurate — update this gate if a future provider
+    gains curated `concept_groups.toml` families. Independent of `n_curated`, so a
+    real "TOML not applied" regression on a build that DOES include scb/sos still
+    fails the floor.
+    """
+    return (
+        conn.execute(
+            "SELECT 1 FROM register WHERE provider_id IN (?, ?) LIMIT 1",
+            (PROVIDER_ID_SCB, PROVIDER_ID_SOS),
+        ).fetchone()
+        is not None
+    )
+
+
 def _check_concept_groups(
     conn: sqlite3.Connection,
     result: ValidationResult,
@@ -1592,7 +1615,12 @@ def _check_concept_groups(
     # would mean family-merge silently stopped merging). The merged families are
     # guarded at their true home — `_check_variable_alias_window` (>= N survivors).
     result.info(f"{n_month} token month group(s) (superseded by family merge)")
-    if n_curated >= 1:
+    if not _curated_source_in_build(conn):
+        result.info(
+            f"{n_curated} curated group(s) — no scb/sos source in this build, "
+            "floor (>= 1) skipped (#600)"
+        )
+    elif n_curated >= 1:
         result.ok(f"{n_curated} curated group(s) (>= 1)")
     else:
         result.fail("no curated concept groups (concept_groups.toml not applied?)")
