@@ -679,6 +679,10 @@ timestamp string (`"2026-06-12T08:30:00Z"`); the footer displays only the leadin
 `YYYY-MM-DD` (split on `"T"`). The intent is citation stability: a reader quoting any
 catalog node can see which reg_meta build it reflects without navigating away.
 
+`App.svelte`'s header also carries a `YearWindowSlider` dual-thumb year slider
+(#614/#611) that sets the active project window (1960 floor → current year). It writes
+through `windowStore` (`src/lib/window.svelte.ts`) — see the store description below.
+
 ## SPA routing + production fallback
 
 The SPA (`frontend/`) browses the catalog read-only with **path-based routing**: clean
@@ -1183,6 +1187,30 @@ rune store holding one draft per session.
 
 Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
 list — opening a file replaces the current draft.
+
+## Project-window store (`window.svelte.ts`) (#614/#611)
+
+`windowStore` (`src/lib/window.svelte.ts`) is a module-singleton Svelte 5 rune store — a
+peer of `router.svelte.ts` and `project_store.svelte.ts` — that is the **single
+read/write path** for the active study window (`{from, to}` int years, or `null` = full
+history). The header `YearWindowSlider` and (later, #615) each page's period picker go
+through it rather than touching the project store or `localStorage` directly.
+
+Precedence — two backing stores, one source of truth:
+
+- **Draft active**: the window IS `draft.window`. Reading returns the draft's value;
+  setting calls `projectStore.updateField("window", …)`, which marks the draft dirty and
+  rides the store's existing debounced autosave. The window is durable because it lives
+  in `project_data.json`. A draft with no `window` field reads as `null` (its own
+  absence) — the active project's state is always authoritative.
+- **No draft**: falls back to `localStorage` (key `reg_webapp:project_window`) so the
+  slider works and survives a reload when browsing without a project. Writes to
+  localStorage are best-effort; a failure (private mode, quota) degrades to an
+  in-memory-only session without crashing.
+
+The draft always wins while it exists; localStorage is purely the no-project fallback
+and is never mirrored while a draft is active. Catalog-derived slider bounds (from the
+API rather than the fixed 1960 floor) are a possible follow-up.
 
 ## API surface
 

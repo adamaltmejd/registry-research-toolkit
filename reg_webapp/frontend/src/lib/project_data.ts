@@ -49,6 +49,18 @@ export type PeriodSegment =
  * the server is the canonical period validator. */
 export type Period = PeriodSegment | PeriodSegment[];
 
+/** The optional global study window (the "project window", #611 → Period model).
+ * A plain year-int pair matching reg_schema's `StudyWindow` wire shape (#613:
+ * `{from, to}` int years, `to >= from`). NOT the full `Period` grammar — the
+ * window is year-granular by design; per-page deviation keeps the rich grammar.
+ * Absent = full history (backward-compatible — existing specs serialize
+ * unchanged). project_data isn't a response model, so this isn't codegen'd into
+ * `api-types` — it's hand-authored here alongside the `ProjectData` shape. */
+export interface StudyWindow {
+  from: number;
+  to: number;
+}
+
 /** A data source / table. Open: panel-referenced or future keys survive. */
 export interface Source {
   name: string;
@@ -69,6 +81,10 @@ export interface ProjectData {
   reg_meta_version: string;
   name: string;
   sources: Source[];
+  // The optional global study window (#611). Additive: omitted when unset (the
+  // serializer drops `undefined` keys), so a project with no window round-trips
+  // and validates unchanged.
+  window?: StudyWindow;
   [key: string]: unknown;
 }
 
