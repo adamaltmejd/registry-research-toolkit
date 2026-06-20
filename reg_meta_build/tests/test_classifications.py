@@ -37,8 +37,10 @@ EXTENDED_VARDEMANGDER_ROWS = [
 
 
 # Two classifications: TESTKON tags CVIDs 1001/1003/2001 (vardemangdsversion
-# "Kön"); TESTKON2 supersedes TESTKON and tags CVID 1004 (vardemangdsversion
-# "Kon-2"). With both pointing at real strings the build invariants pass.
+# "Kön"); TESTKON2 tags CVID 1004 (vardemangdsversion "Kon-2"). With both
+# pointing at real strings the build invariants pass. Succession is no longer
+# seed-declared (it lives in `classification_replaced_by`); `derive_supersedes_
+# from_edges` is unit-tested directly below.
 TEST_SEED_TOML = """\
 [[classification]]
 short_name = "TESTKON"
@@ -56,7 +58,6 @@ name = "Successor"
 publisher = "TEST"
 version = "2"
 valid_from = 2022
-supersedes = "TESTKON"
 vardemangdsversion = ["Kon-2"]
 """
 
@@ -139,19 +140,6 @@ class TestLoadSeed:
             load_seed(seed)
         assert ei.value.code == "classification_seed_invalid"
         assert "belongs to exactly one" in ei.value.remediation
-
-    def test_supersedes_unknown_fails(self, tmp_path: Path):
-        seed = tmp_path / "c.toml"
-        seed.write_text(
-            '[[classification]]\nshort_name = "A"\nname = "A"\n'
-            'supersedes = "GHOST"\n'
-            'vardemangdsversion = ["x"]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as ei:
-            load_seed(seed)
-        assert ei.value.code == "classification_seed_invalid"
-        assert "GHOST" in ei.value.message
 
     def test_valid_codes_file_must_be_string(self, tmp_path: Path):
         seed = tmp_path / "c.toml"
@@ -308,27 +296,26 @@ class TestPopulateClassifications:
             r[0] for r in conn2.execute("SELECT short_name FROM classification")
         } == {"SCBONLY", "SOSENT"}
 
-    def test_supersedes_across_provider_skip_boundary(self, tmp_path: Path):
-        """A seeded entry that supersedes a provider-skipped one inserts without
-        KeyError; its supersedes_id stays NULL (the predecessor isn't in the
-        build)."""
+    def test_populate_leaves_supersedes_id_null(self, tmp_path: Path):
+        """The seed no longer declares succession: every inserted classification
+        leaves `supersedes_id` NULL. It becomes a DERIVED projection of
+        `classification_replaced_by` later in the build
+        (`derive_supersedes_from_edges`), so `populate_classifications` itself
+        never sets it — even when the seed carries a stray (now-ignored)
+        `supersedes` key."""
         seed_toml = (
             '[[classification]]\nshort_name = "A"\nname = "A"\n'
             'supersedes = "B"\nvalid_codes_file = "a.csv"\n'
             '[[classification]]\nshort_name = "B"\nname = "B"\n'
-            'provider = "sos"\nvalid_codes_file = "b.csv"\n'
+            'valid_codes_file = "b.csv"\n'
         )
         csvs = {"a.csv": "code,label\nA,Alpha\n", "b.csv": "code,label\nB,Bravo\n"}
-        conn, (n_seeded, skipped) = self._populate_direct(
-            tmp_path, seed_toml, csvs, providers=frozenset({"scb"})
+        conn, (n_seeded, _skipped) = self._populate_direct(
+            tmp_path, seed_toml, csvs, providers=None
         )
-        assert n_seeded == 1
-        assert "B" in skipped
-        row = conn.execute(
-            "SELECT short_name, supersedes_id FROM classification"
-        ).fetchone()
-        assert row[0] == "A"
-        assert row[1] is None
+        assert n_seeded == 2
+        rows = conn.execute("SELECT supersedes_id FROM classification").fetchall()
+        assert all(r[0] is None for r in rows)
 
     def test_classification_inserted(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
@@ -418,18 +405,6 @@ class TestPopulateClassifications:
         ).fetchall()
         # Codes are "1" and "2", both numeric, both length 1.
         assert [(r["code"], r["level"]) for r in rows] == [("1", 1), ("2", 1)]
-
-    def test_supersedes_resolved(self, tmp_path: Path):
-        db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
-        conn = sqlite3.connect(db)
-        conn.row_factory = sqlite3.Row
-        row = conn.execute(
-            "SELECT s.short_name AS predecessor "
-            "FROM classification c "
-            "JOIN classification s ON c.supersedes_id = s.id "
-            "WHERE c.short_name = 'TESTKON2'"
-        ).fetchone()
-        assert row["predecessor"] == "TESTKON"
 
     def test_classification_fts_populated(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
@@ -2127,3 +2102,135 @@ class TestCli:
             for inst in v["instances"]:
                 if inst.get("classification"):
                     assert inst["classification"] in {"TESTKON", "TESTKON2"}
+
+
+class TestDeriveSupersedesFromEdges:
+    """`supersedes_id` is a DERIVED projection of `classification_replaced_by`
+    (#579), not a seed field. The function reads slug-anchored edges and writes
+    each successor's predecessor id back onto `classification.supersedes_id`."""
+
+    def _conn(self, edges: list[tuple[str, str]], slugs: list[str]):
+        """Minimal schema: `classification` (id/slug/supersedes_id) plus the
+        slug-anchored `classification_replaced_by` edge table. Insert one
+        classification per slug, then the edges, leaving supersedes_id unset."""
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(
+            """
+            CREATE TABLE classification (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                short_name TEXT NOT NULL UNIQUE,
+                slug TEXT UNIQUE,
+                name TEXT NOT NULL,
+                supersedes_id INTEGER REFERENCES classification(id)
+            );
+            CREATE TABLE classification_replaced_by (
+                predecessor_slug TEXT NOT NULL,
+                successor_slug   TEXT NOT NULL,
+                effective_year   INTEGER,
+                note             TEXT,
+                PRIMARY KEY (predecessor_slug, successor_slug)
+            ) WITHOUT ROWID;
+            """
+        )
+        for slug in slugs:
+            conn.execute(
+                "INSERT INTO classification (short_name, slug, name) VALUES (?, ?, ?)",
+                (slug.upper(), slug, slug),
+            )
+        conn.executemany(
+            "INSERT INTO classification_replaced_by "
+            "(predecessor_slug, successor_slug) VALUES (?, ?)",
+            edges,
+        )
+        return conn
+
+    def _supersedes(self, conn) -> dict[str, str | None]:
+        """{slug: predecessor_slug or None} after the derive pass."""
+        rows = conn.execute(
+            "SELECT c.slug AS slug, p.slug AS pred "
+            "FROM classification c "
+            "LEFT JOIN classification p ON c.supersedes_id = p.id"
+        ).fetchall()
+        return {r["slug"]: r["pred"] for r in rows}
+
+    def test_linear_chain(self):
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        # ssyk1996 → ssyk2012; root keeps NULL.
+        conn = self._conn(
+            edges=[("ssyk1996", "ssyk2012")], slugs=["ssyk1996", "ssyk2012"]
+        )
+        n = derive_supersedes_from_edges(conn)
+        assert n == 1
+        assert self._supersedes(conn) == {"ssyk1996": None, "ssyk2012": "ssyk1996"}
+
+    def test_one_to_many_split_sun1996(self):
+        """The curated #579 sun1996 split: ONE predecessor fans out to THREE
+        successors. Each 2000 dimension's supersedes_id points back at sun1996,
+        and sun1996 itself stays a root (NULL)."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(
+            edges=[
+                ("sun1996", "sun-niva2000"),
+                ("sun1996", "sun-inriktning2000"),
+                ("sun1996", "sun-grupp2000"),
+            ],
+            slugs=[
+                "sun1996",
+                "sun-niva2000",
+                "sun-inriktning2000",
+                "sun-grupp2000",
+            ],
+        )
+        n = derive_supersedes_from_edges(conn)
+        assert n == 3
+        assert self._supersedes(conn) == {
+            "sun1996": None,
+            "sun-niva2000": "sun1996",
+            "sun-inriktning2000": "sun1996",
+            "sun-grupp2000": "sun1996",
+        }
+        # Read-side back-pointer: superseded_by(sun1996) = all three successors.
+        # (`_classification_by_id` needs the full read schema; assert directly on
+        # the GROUP_CONCAT-over-supersedes_id the read side uses instead.)
+        sun1996_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun1996'"
+        ).fetchone()["id"]
+        superseded_by = conn.execute(
+            "SELECT GROUP_CONCAT(short_name) FROM ("
+            "  SELECT short_name FROM classification "
+            "  WHERE supersedes_id = ? ORDER BY short_name)",
+            (sun1996_id,),
+        ).fetchone()[0]
+        assert superseded_by == "SUN-GRUPP2000,SUN-INRIKTNING2000,SUN-NIVA2000"
+
+    def test_multiple_predecessors_deterministic(self):
+        """A hypothetical merge (>1 predecessor edge into one successor — none
+        today) resolves to the deterministic-first predecessor by
+        `ORDER BY predecessor_slug`, so the projection is reproducible."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(
+            edges=[("bbb", "merged"), ("aaa", "merged")],
+            slugs=["aaa", "bbb", "merged"],
+        )
+        derive_supersedes_from_edges(conn)
+        assert self._supersedes(conn)["merged"] == "aaa"
+
+    def test_reset_drops_stale_supersedes(self):
+        """The pass is a pure function of the edge table: a pre-existing
+        supersedes_id with no backing edge is cleared to NULL."""
+        from reg_meta_build.classifications import derive_supersedes_from_edges
+
+        conn = self._conn(edges=[], slugs=["a", "b"])
+        a_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'a'"
+        ).fetchone()["id"]
+        conn.execute(
+            "UPDATE classification SET supersedes_id = ? WHERE slug = 'b'", (a_id,)
+        )
+        n = derive_supersedes_from_edges(conn)
+        assert n == 0
+        assert self._supersedes(conn) == {"a": None, "b": None}

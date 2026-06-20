@@ -287,24 +287,6 @@ def load_seed(path: Path) -> list[dict[str, Any]]:
                 remediation='Use a provider slug like provider = "sos".',
             )
 
-    # Resolve supersedes references now that all short_names are known.
-    for entry in entries:
-        sup = entry.get("supersedes")
-        if sup is not None and sup not in seen_short_names:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="classification_seed_invalid",
-                error_class="configuration",
-                message=(
-                    f"{entry['short_name']}: supersedes {sup!r} which is not "
-                    f"declared in the seed."
-                ),
-                remediation=(
-                    "Add the superseded classification to the seed, or remove "
-                    "the supersedes reference."
-                ),
-            )
-
     return entries
 
 
@@ -659,8 +641,10 @@ def populate_classifications(
         f"({len(entries)} entries{skipped_note})..."
     )
 
-    # Insert classification rows. supersedes_id is resolved in a second pass
-    # once every row has a primary key.
+    # Insert classification rows. supersedes_id stays NULL at insert — it is a
+    # DERIVED projection of `classification_replaced_by` (the canonical succession
+    # surface), set later in the build by `derive_supersedes_from_edges` once the
+    # auto + curated edges exist. The seed no longer carries succession.
     id_by_short: dict[str, int] = {}
     for entry in entries:
         cur = conn.execute(
@@ -683,17 +667,6 @@ def populate_classifications(
         )
         assert cur.lastrowid is not None  # sqlite always populates after INSERT
         id_by_short[entry["short_name"]] = cur.lastrowid
-
-    for entry in entries:
-        sup = entry.get("supersedes")
-        # `sup in id_by_short` guards the rare case where a seeded entry
-        # supersedes a provider-skipped one (load_seed already validated the
-        # reference resolves in the full seed).
-        if sup is not None and sup in id_by_short:
-            conn.execute(
-                "UPDATE classification SET supersedes_id = ? WHERE id = ?",
-                (id_by_short[sup], id_by_short[entry["short_name"]]),
-            )
 
     # Tag matching variable instances. The seed has ~100+ version-label
     # strings and the table has ~500k rows — without an index on
@@ -828,6 +801,52 @@ def populate_classifications(
     _progress(f"  {n_cls} classifications, {total_codes:,} codes tagged")
 
     return len(entries), frozenset(skipped)
+
+
+def derive_supersedes_from_edges(conn: sqlite3.Connection) -> int:
+    """Project `classification.supersedes_id` from `classification_replaced_by`.
+
+    `classification_replaced_by` is the single canonical succession surface — fed
+    by `derive_classification_succession` (auto year-tail editions) plus the
+    curated `relations.toml` `class/<slug>` edges (e.g. the sun1996 → niva /
+    inriktning / grupp split). `supersedes_id` is a DERIVED back-pointer onto it:
+    for each classification `c`, set it to the id of `c`'s predecessor — the
+    classification on the `predecessor_slug` side of the edge whose
+    `successor_slug = c.slug`. A classification with no predecessor edge keeps
+    NULL. A classification with MULTIPLE predecessor edges (a hypothetical merge —
+    none today) picks the deterministic-first predecessor `ORDER BY
+    predecessor_slug` so the projection is reproducible.
+
+    Slug-anchored: `classification_replaced_by.predecessor_slug / successor_slug`
+    ↔ `classification.slug`. MUST run AFTER the auto + curated edges are
+    materialized and AFTER `populate_slugs` (the join needs non-NULL slugs), and
+    BEFORE `link_value_set_classifications` — its `_chain_root` recursive CTE
+    walks `supersedes_id`. Resets `supersedes_id` to NULL first so the projection
+    is a pure function of the edge table (no stale carry-over). Returns the count
+    of classifications that gained a non-NULL `supersedes_id`.
+    """
+    conn.execute("UPDATE classification SET supersedes_id = NULL")
+    cur = conn.execute(
+        """
+        UPDATE classification AS c
+        SET supersedes_id = (
+            SELECT p.id
+            FROM classification_replaced_by e
+            JOIN classification p ON p.slug = e.predecessor_slug
+            WHERE e.successor_slug = c.slug
+            ORDER BY e.predecessor_slug
+            LIMIT 1
+        )
+        WHERE c.slug IS NOT NULL
+          AND EXISTS (
+              SELECT 1 FROM classification_replaced_by e
+              WHERE e.successor_slug = c.slug
+          )
+        """
+    )
+    n_set = cur.rowcount if cur.rowcount is not None and cur.rowcount >= 0 else 0
+    _progress(f"  {n_set:,} classification supersedes_id derived from edges")
+    return n_set
 
 
 def link_value_set_classifications(conn: sqlite3.Connection) -> dict[str, int]:

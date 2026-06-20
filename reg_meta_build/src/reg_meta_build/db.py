@@ -33,6 +33,7 @@ from .classification_links import (
     repo_classification_links_path,
 )
 from .classifications import (
+    derive_supersedes_from_edges,
     link_value_set_classifications,
     populate_classifications,
     repo_seed_path,
@@ -3504,6 +3505,18 @@ def materialize(
             row_counts["classification_replaced_by"] += replaced_by_stats[
                 "n_curated_classification_replaced_by"
             ]
+
+        # #579: project `classification.supersedes_id` from the now-complete
+        # `classification_replaced_by` (auto year-tail editions + the curated
+        # `relations.toml` `class/<slug>` edges just materialized). The edge table
+        # is the single canonical succession surface; `supersedes_id` is a derived
+        # back-pointer onto it (see `derive_supersedes_from_edges`). Slug-anchored,
+        # so it shares the `--skip-slugs` honest-failure stance (every slug is NULL
+        # then — the projection would no-op). Runs BEFORE
+        # `link_value_set_classifications` below, whose `_chain_root` recursive CTE
+        # walks `supersedes_id`.
+        n_supersedes = derive_supersedes_from_edges(conn)
+        row_counts["classification_supersedes_derived"] = n_supersedes
 
     # Lineage edges. Runs *after* populate_variable_slugs so
     # `variable.slug` is non-NULL on both sides. `source_register_id` was
