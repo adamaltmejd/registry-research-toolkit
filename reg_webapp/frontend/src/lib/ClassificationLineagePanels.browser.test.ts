@@ -184,4 +184,65 @@ describe("ClassificationLineagePanels — embedded edition chain (#571)", () => 
       .element(page.getByRole("link", { name: "LKF 1990" }))
       .toBeVisible();
   });
+
+  it("renders a SPLIT root flat with every branch tip marked current (#605)", async () => {
+    // #605/#579: browsing the split ROOT (sun1996) fans out into three branches
+    // (niva/inriktning/grupp), each ending in a 2020 tip — MULTIPLE is_current
+    // editions. The linear collapse can't represent a fan-out, so the panel renders
+    // the whole closure FLAT: every branch edition is visible WITHOUT expanding any
+    // disclosure, and each terminal is tagged "current edition".
+    await render(ClassificationLineagePanels, {
+      node: node([
+        edition({
+          slug: "sun1996",
+          name: "SUN 1996",
+          effective_year: 2000,
+          is_self: true,
+        }),
+        edition({ slug: "sun-grupp2000", name: "SUN grupp 2000" }),
+        edition({
+          slug: "sun-grupp2020",
+          name: "SUN grupp 2020",
+          effective_year: 2020,
+          is_current: true,
+        }),
+        edition({ slug: "sun-inriktning2000", name: "SUN inriktning 2000" }),
+        edition({
+          slug: "sun-inriktning2020",
+          name: "SUN inriktning 2020",
+          effective_year: 2020,
+          is_current: true,
+        }),
+        edition({ slug: "sun-niva2000", name: "SUN niva 2000" }),
+        edition({
+          slug: "sun-niva2020",
+          name: "SUN niva 2020",
+          effective_year: 2020,
+          is_current: true,
+        }),
+      ]),
+    });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Editions" }))
+      .toBeVisible();
+    // The fan-out renders FLAT — no <details> collapse, so EVERY branch tip is
+    // visible without expanding.
+    expect(document.querySelector("details")).toBeNull();
+    for (const tip of [
+      "SUN grupp 2020",
+      "SUN inriktning 2020",
+      "SUN niva 2020",
+    ]) {
+      await expect.element(page.getByRole("link", { name: tip })).toBeVisible();
+    }
+    // The viewed root + all three terminal tips are marked (filled marker): 4 nodes.
+    expect(document.querySelectorAll(".chain-node.marked")).toHaveLength(4);
+    // All three tips carry a "current edition" tag; the viewed root "you are here".
+    const tags = [...document.querySelectorAll(".tag")].map(
+      (t) => t.textContent,
+    );
+    expect(tags.filter((t) => t === "current edition")).toHaveLength(3);
+    await expect.element(page.getByText("you are here")).toBeVisible();
+  });
 });

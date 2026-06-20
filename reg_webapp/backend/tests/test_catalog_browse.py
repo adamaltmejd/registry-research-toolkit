@@ -266,6 +266,50 @@ def test_classification_leaf_embeds_full_edition_chain(client):
     assert by_slug["sun2000"]["is_self"] is False
 
 
+def test_classification_split_root_edition_chain_fans_out(client):
+    # #605 / #579: browsing the SPLIT root embeds ALL downstream branches in
+    # edition_chain (the forward closure), not just the deterministic-first one.
+    # The fixture seeds sni-root1996 → {sni-grp2000, sni-ink2000, sni-niv2000},
+    # each → its 2020 tip. The closure is DFS in ORDER BY successor_slug (grp < ink
+    # < niv), each branch's 2000→2020 subtree before the next.
+    resp = client.get("/api/catalog/class/sni-root1996")
+    assert resp.status_code == 200
+    chain = resp.json()["edition_chain"]
+    assert [e["slug"] for e in chain] == [
+        "sni-root1996",
+        "sni-grp2000",
+        "sni-grp2020",
+        "sni-ink2000",
+        "sni-ink2020",
+        "sni-niv2000",
+        "sni-niv2020",
+    ]
+    # All three 2020 branch tips are current → MULTIPLE is_current editions.
+    currents = {e["slug"] for e in chain if e["is_current"]}
+    assert currents == {"sni-grp2020", "sni-ink2020", "sni-niv2020"}
+    assert sum(e["is_current"] for e in chain) == 3
+    # The split root is the queried (self) edition; its year is its det-first edge's.
+    self_editions = [e["slug"] for e in chain if e["is_self"]]
+    assert self_editions == ["sni-root1996"]
+    by_slug = {e["slug"]: e for e in chain}
+    assert by_slug["sni-root1996"]["effective_year"] == 2000
+
+
+def test_classification_split_branch_leaf_scopes_to_own_path(client):
+    # #605: querying a LEAF of the split (sni-niv2020) returns ONLY its own path back
+    # to the root — the inriktning/grupp sibling branches are NOT included.
+    resp = client.get("/api/catalog/class/sni-niv2020")
+    assert resp.status_code == 200
+    chain = resp.json()["edition_chain"]
+    assert [e["slug"] for e in chain] == [
+        "sni-root1996",
+        "sni-niv2000",
+        "sni-niv2020",
+    ]
+    assert [e["slug"] for e in chain if e["is_current"]] == ["sni-niv2020"]
+    assert [e["slug"] for e in chain if e["is_self"]] == ["sni-niv2020"]
+
+
 def test_missing_provider_returns_404(client):
     resp = client.get("/api/catalog/nope")
     assert resp.status_code == 404

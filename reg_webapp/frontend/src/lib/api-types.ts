@@ -587,12 +587,15 @@ export interface components {
          *     live row), so `fqid` is None only when the slug is malformed/unresolvable (the
          *     SPA renders such an edition as plain text, not a link). `effective_year` is the
          *     year on the succession edge that names this edition as the predecessor — i.e. the
-         *     year it was superseded by its successor (None for the terminal, which has no
-         *     outbound edge). `is_current` flags the terminal (current) edition; `is_self`
+         *     year it was superseded by its successor (None for a terminal, which has no
+         *     outbound edge). `is_current` flags a terminal (current) edition; `is_self`
          *     flags the edition the caller queried (resolved to its canonical live slug when
-         *     the query was a `same_as` alias). A dedicated model (NOT the search
-         *     `ClassificationEditionModel`, which has no is_current/is_self) keeps the search
-         *     edition a clean 4-field shape.
+         *     the query was a `same_as` alias). A 1→many SPLIT root (#605/#579 — e.g. querying
+         *     `sun1996`, whose chain fans out into the niva/inriktning/grupp branches) yields
+         *     MULTIPLE `is_current` editions, one per branch tip; the common linear chain has
+         *     exactly one. A dedicated model (NOT the search `ClassificationEditionModel`,
+         *     which has no is_current/is_self) keeps the search edition a clean 4-field
+         *     shape.
          */
         ClassificationChainEdition: {
             /**
@@ -607,7 +610,7 @@ export interface components {
             fqid: string | null;
             /**
              * Is Current
-             * @description True for the terminal (current) edition — no outbound successor.
+             * @description True for a terminal (current) edition — no outbound successor. A 1-to-many split root's chain has MULTIPLE such editions (one per branch tip); a linear chain has exactly one.
              */
             is_current: boolean;
             /**
