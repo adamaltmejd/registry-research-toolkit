@@ -155,6 +155,15 @@ link). The earlier immediate-neighbor routes (`/classification_predecessors`,
 (reg_meta's `Catalog.classification_successors`/`classification_predecessors` accessors
 remain as public API and back the chain walk.)
 
+The classification leaf also embeds two further payloads inline for synchronous SPA
+render (#609): `codes` (`list[ClassificationCodeModel]`, mapped 1:1 from
+`Catalog.classification_codes` — the resolved edition's value-set codes and labels, with
+`is_valid` = canonical/observed/unknown; omitted when empty) and `dimensions`
+(`list[ConceptGroupModel]`, mapped 1:1 from `Catalog.classification_dimensions` — the
+curated umbrella group(s) the edition belongs to, reading
+`concept_group_classification`; omitted when empty). The SPA renders these as a
+filterable code/label panel and a granularity cross-reference panel respectively.
+
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
 variable succession chain** inline as `succession_chain` (`list[VariableEditionModel]`,
 mapped 1:1 from reg_meta's `Catalog.variable_chain`) — the variable-grain dual of the

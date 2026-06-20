@@ -2,6 +2,8 @@
 import { getCatalogNode, isCatalogNode } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
+import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
+import ClassificationDimensionsPanel from "./ClassificationDimensionsPanel.svelte";
 import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
@@ -208,6 +210,11 @@ $effect(() => {
         <dt>Short name</dt>
         <dd>{node.short_name}</dd>
       </dl>
+      <!-- #609: the embedded value-set code viewer (the resolved edition's codes,
+           in-memory filterable) + the niva ↔ aggregate granularity cross-reference.
+           Both omit themselves when empty. -->
+      <ClassificationCodesPanel {node} />
+      <ClassificationDimensionsPanel {node} />
       <!-- #571: the embedded edition succession chain (oldest → current). The
            component omits itself for a standalone classification with no
            succession. -->

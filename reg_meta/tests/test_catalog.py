@@ -17,6 +17,7 @@ from _slugged_db import (
 )
 from reg_meta.catalog import (
     Catalog,
+    ClassificationCode,
     ClassificationEdition,
     ClassificationRef,
     RelatedRef,
@@ -1780,6 +1781,212 @@ class TestDimensions:
     def test_raises_on_unknown_binding(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
             Catalog(slugged_conn).dimensions("scb/lisa/nonexistent")
+        assert exc.value.code == "fqid_not_found"
+
+
+class TestClassificationCodes:
+    """#609: `classification_codes(fqid)` returns ONE edition's value-set codes
+    (code-ordered), scoped to the resolved edition (per `classification_id`), with
+    the canonical/observed/unknown `is_valid` flag surfaced (not filtered)."""
+
+    @staticmethod
+    def _seed_codes(
+        conn: sqlite3.Connection,
+        slug: str,
+        codes: list[tuple[str, str, int | None, int | None]],
+    ) -> None:
+        """Attach (code, label, level, is_valid) rows to the classification `slug`,
+        minting `value_code` rows + `classification_code` links."""
+        cls_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = ?", (slug,)
+        ).fetchone()[0]
+        for code, label, level, is_valid in codes:
+            code_id = conn.execute(
+                "INSERT INTO value_code (code, label) VALUES (?, ?)", (code, label)
+            ).lastrowid
+            conn.execute(
+                "INSERT INTO classification_code "
+                "(classification_id, code_id, level, is_valid) VALUES (?, ?, ?, ?)",
+                (cls_id, code_id, level, is_valid),
+            )
+        conn.commit()
+
+    def test_returns_codes_code_ordered_with_validity(self) -> None:
+        conn = build_slugged_db()  # seeds the live sun2020 (no codes yet)
+        # Inserted out of code order to prove the ORDER BY code; mixed validity.
+        self._seed_codes(
+            conn,
+            "sun2020",
+            [
+                ("3", "Eftergymnasial", 1, 1),
+                ("1", "Förgymnasial", 1, 1),
+                ("X0", "Observerad", 1, 0),
+            ],
+        )
+        codes = Catalog(conn).classification_codes("class/sun2020")
+        assert all(isinstance(c, ClassificationCode) for c in codes)
+        assert [(c.code, c.label) for c in codes] == [
+            ("1", "Förgymnasial"),
+            ("3", "Eftergymnasial"),
+            ("X0", "Observerad"),
+        ]
+        by_code = {c.code: c for c in codes}
+        # is_valid coerces 1/0 → True/False; observed-only is surfaced, not dropped.
+        assert by_code["1"].is_valid is True
+        assert by_code["X0"].is_valid is False
+        assert by_code["1"].level == 1
+
+    def test_null_is_valid_stays_none(self) -> None:
+        # A classification with no canonical CSV has is_valid=NULL everywhere —
+        # surfaced as None (validity unknown), not coerced to False.
+        conn = build_slugged_db()
+        self._seed_codes(conn, "sun2020", [("1", "Kod", None, None)])
+        (code,) = Catalog(conn).classification_codes("class/sun2020")
+        assert code.is_valid is None
+        assert code.level is None
+
+    def test_empty_when_no_codes(self) -> None:
+        conn = build_slugged_db()  # sun2020 with no classification_code rows
+        assert Catalog(conn).classification_codes("class/sun2020") == []
+
+    def test_scoped_to_resolved_edition(self) -> None:
+        # Codes are per-edition: sun2000's codes must NOT leak into sun2020's list.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SUN2000', 'SUN 2000', 'sun2000')"
+        )
+        self._seed_codes(conn, "sun2000", [("9", "Gammal kod", 1, 1)])
+        self._seed_codes(conn, "sun2020", [("1", "Ny kod", 1, 1)])
+        assert [
+            c.code for c in Catalog(conn).classification_codes("class/sun2020")
+        ] == ["1"]
+        assert [
+            c.code for c in Catalog(conn).classification_codes("class/sun2000")
+        ] == ["9"]
+
+    def test_resolves_through_same_as(self) -> None:
+        # An alias slug cites its resolved target edition's codes.
+        conn = build_slugged_db()  # ships sun2020
+        for a_slug, b_slug in (("sun-eqf", "sun2020"), ("sun2020", "sun-eqf")):
+            conn.execute(
+                "INSERT INTO classification_same_as "
+                "(a_provider, a_classification_slug, b_provider, b_classification_slug) "
+                "VALUES ('scb', ?, 'scb', ?)",
+                (a_slug, b_slug),
+            )
+        self._seed_codes(conn, "sun2020", [("1", "Kod", 1, 1)])
+        codes = Catalog(conn).classification_codes("class/sun-eqf")
+        assert [c.code for c in codes] == ["1"]
+
+    def test_raises_on_non_classification_fqid(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).classification_codes("scb/lisa/kon")
+        assert exc.value.code == "not_a_classification_fqid"
+
+    def test_raises_on_unknown_classification(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).classification_codes("class/sun2099")
+        assert exc.value.code == "fqid_not_found"
+
+
+class TestClassificationDimensions:
+    """#609: `classification_dimensions(fqid)` surfaces the curated umbrella
+    group(s) (e.g. `group:sun`) this edition belongs to — the niva ↔ aggregate
+    granularity cross-reference, read off the EXISTING
+    `concept_group_classification` table."""
+
+    @staticmethod
+    def _seed_sun_umbrella(conn: sqlite3.Connection) -> None:
+        """A `group:sun` umbrella (dimension axis) over sun2020 (nivå) + two flat
+        granularity aggregates (niva-old / niva-grov), mirroring the real curation.
+        sun2020 already exists from the fixture; only the two aggregates are minted."""
+        for cid, short, slug in (
+            (61, "NIVA-OLD", "niva-oldv1"),
+            (62, "NIVA-GROV", "niva-grovv1"),
+        ):
+            conn.execute(
+                "INSERT INTO classification (id, short_name, name, slug) "
+                "VALUES (?, ?, 'SUN-aggregat', ?)",
+                (cid, short, slug),
+            )
+        sun_id = conn.execute(
+            "SELECT id FROM classification WHERE slug = 'sun2020'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source, facet_axis) VALUES "
+            "(40, 'classification', NULL, 'sun', 'Utbildningsnivå', 'curated', "
+            "'dimension')"
+        )
+        conn.executemany(
+            "INSERT INTO concept_group_classification (classification_id, group_id, "
+            "facet_value, facet_label) VALUES (?, 40, ?, ?)",
+            [
+                (sun_id, "niva", "Nivå"),
+                (61, "niva-old", "Nivå (7 nivåer)"),
+                (62, "niva-grov", "Nivå (5 nivåer)"),
+            ],
+        )
+        conn.commit()
+
+    def test_returns_umbrella_group_with_sibling_aggregates(self) -> None:
+        conn = build_slugged_db()
+        self._seed_sun_umbrella(conn)
+        groups = Catalog(conn).classification_dimensions("class/sun2020")
+        assert [g.key for g in groups] == ["sun"]
+        assert groups[0].axes == ("dimension",)
+        assert {str(m.fqid) for m in groups[0].members} == {
+            "class/sun2020",
+            "class/niva-oldv1",
+            "class/niva-grovv1",
+        }
+
+    def test_aggregate_leaf_also_sees_the_group(self) -> None:
+        # Browsing an aggregate edition surfaces the same umbrella (the relationship
+        # is symmetric — every member sees its siblings).
+        conn = build_slugged_db()
+        self._seed_sun_umbrella(conn)
+        groups = Catalog(conn).classification_dimensions("class/niva-oldv1")
+        assert [g.key for g in groups] == ["sun"]
+
+    def test_empty_for_ungrouped_classification(self) -> None:
+        conn = build_slugged_db()  # sun2020 in no umbrella group
+        assert Catalog(conn).classification_dimensions("class/sun2020") == []
+
+    def test_resolves_through_same_as(self) -> None:
+        conn = build_slugged_db()
+        self._seed_sun_umbrella(conn)
+        for a_slug, b_slug in (("sun-eqf", "sun2020"), ("sun2020", "sun-eqf")):
+            conn.execute(
+                "INSERT INTO classification_same_as "
+                "(a_provider, a_classification_slug, b_provider, b_classification_slug) "
+                "VALUES ('scb', ?, 'scb', ?)",
+                (a_slug, b_slug),
+            )
+        conn.commit()
+        groups = Catalog(conn).classification_dimensions("class/sun-eqf")
+        assert [g.key for g in groups] == ["sun"]
+
+    def test_raises_on_non_classification_fqid(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).classification_dimensions("scb/lisa")
+        assert exc.value.code == "not_a_classification_fqid"
+
+    def test_raises_on_unknown_classification(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Fail-fast parity with `classification_codes`: a syntactically valid but
+        # ABSENT classification must raise, not silently return [] (which would make
+        # a missing classification indistinguishable from an ungrouped one).
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).classification_dimensions("class/sun2099")
         assert exc.value.code == "fqid_not_found"
 
 

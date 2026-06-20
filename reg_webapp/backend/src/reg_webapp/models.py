@@ -199,6 +199,30 @@ class ClassificationChainEdition(BaseModel):
     )
 
 
+class ClassificationCodeModel(BaseModel):
+    """One code/label entry in a classification edition's value set (#609),
+    embedded on `ClassificationNode.codes`. Scoped to the RESOLVED edition (codes
+    key per `classification_id`), so the leaf shows the codes of the edition being
+    viewed — other editions are reached via the edition-chain panel. These are
+    PUBLIC classification codes, not row-level data.
+
+    `is_valid` is the canonical/observed flag, surfaced (not filtered) so the SPA
+    can show the full list with a validity hint: True = canonical (in the
+    classification's valid-codes CSV), False = observed-only (seen in data, not
+    canonical), None = no CSV exists so validity is unknown (the whole edition is
+    NULL there)."""
+
+    code: str = Field(description="The provider-native value code (e.g. '3').")
+    label: str = Field(description="The human label for the code.")
+    level: int | None = Field(
+        description="The hierarchy depth, or None when the classification is flat."
+    )
+    is_valid: bool | None = Field(
+        description="Canonical (True) / observed-only (False) / unknown (None — no "
+        "canonical CSV exists for this edition)."
+    )
+
+
 class ClassificationNode(BaseModel):
     """A classification leaf (`class/<slug>`, 2 seg)."""
 
@@ -218,6 +242,16 @@ class ClassificationNode(BaseModel):
     # downstream branches, so it can carry MULTIPLE `is_current` editions (one per
     # branch tip); a leaf's chain stays its single linear path.
     edition_chain: list[ClassificationChainEdition] = Field(default_factory=list)
+    # #609: the RESOLVED edition's value-set codes (code-ordered), embedded so the
+    # SPA's code viewer renders synchronously — mirroring `edition_chain`. Scoped to
+    # the viewed edition only (codes are per-edition); a different edition's codes
+    # arrive on ITS `class/<slug>` leaf. Empty when the edition carries no codes.
+    codes: list[ClassificationCodeModel] = Field(default_factory=list)
+    # #609: the curated umbrella group(s) this edition belongs to (e.g. `group:sun`)
+    # — the niva ↔ aggregate granularity cross-reference (#585/#608). Read off the
+    # existing concept-group table; reuses the browse `ConceptGroupModel`. Empty for
+    # an ungrouped classification (the common case).
+    dimensions: list[ConceptGroupModel] = Field(default_factory=list)
 
 
 class BindingChild(BaseModel):

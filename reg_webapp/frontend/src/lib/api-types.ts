@@ -630,6 +630,42 @@ export interface components {
             slug: string;
         };
         /**
+         * ClassificationCodeModel
+         * @description One code/label entry in a classification edition's value set (#609),
+         *     embedded on `ClassificationNode.codes`. Scoped to the RESOLVED edition (codes
+         *     key per `classification_id`), so the leaf shows the codes of the edition being
+         *     viewed — other editions are reached via the edition-chain panel. These are
+         *     PUBLIC classification codes, not row-level data.
+         *
+         *     `is_valid` is the canonical/observed flag, surfaced (not filtered) so the SPA
+         *     can show the full list with a validity hint: True = canonical (in the
+         *     classification's valid-codes CSV), False = observed-only (seen in data, not
+         *     canonical), None = no CSV exists so validity is unknown (the whole edition is
+         *     NULL there).
+         */
+        ClassificationCodeModel: {
+            /**
+             * Code
+             * @description The provider-native value code (e.g. '3').
+             */
+            code: string;
+            /**
+             * Is Valid
+             * @description Canonical (True) / observed-only (False) / unknown (None — no canonical CSV exists for this edition).
+             */
+            is_valid: boolean | null;
+            /**
+             * Label
+             * @description The human label for the code.
+             */
+            label: string;
+            /**
+             * Level
+             * @description The hierarchy depth, or None when the classification is flat.
+             */
+            level: number | null;
+        };
+        /**
          * ClassificationEditionModel
          * @description One edition of a folded classification succession chain (#571): a vintage
          *     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
@@ -665,6 +701,10 @@ export interface components {
          * @description A classification leaf (`class/<slug>`, 2 seg).
          */
         ClassificationNode: {
+            /** Codes */
+            codes?: components["schemas"]["ClassificationCodeModel"][];
+            /** Dimensions */
+            dimensions?: components["schemas"]["ConceptGroupModel"][];
             /** Edition Chain */
             edition_chain?: components["schemas"]["ClassificationChainEdition"][];
             /** Fqid */
