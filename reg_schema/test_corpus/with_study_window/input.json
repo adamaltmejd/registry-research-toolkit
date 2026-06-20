@@ -1,0 +1,22 @@
+{
+  "schema_version": "2.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "study_window_ok",
+  "window": {"from": 2010, "to": 2020},
+  "sources": [
+    {
+      "name": "par_events",
+      "register_variant": "scb/par/_default",
+      "period": {"from": "2018-01-01", "to": "2020-06-30"},
+      "bindings": [
+        {
+          "variable": "scb/par/lopnr",
+          "type": "id",
+          "id_subtype": "integer",
+          "display_name": "LopNr_PersonNr"
+        }
+      ]
+    }
+  ]
+}

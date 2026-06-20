@@ -160,6 +160,64 @@ def test_unknown_top_level_field_is_treated_as_namespaced_block() -> None:
     assert _at(bad, "invalid_field_type") == ["/swecov"]
 
 
+# --- Study window -------------------------------------------------------
+
+
+def test_no_window_is_ok() -> None:
+    # Absent window = full history; the baseline spec already omits it, but
+    # pin that absence is clean (backward compatibility).
+    result = validate_structural(_spec())
+    assert result.ok, result.issues
+    assert "window" not in {i.path.lstrip("/") for i in result.issues}
+
+
+def test_valid_window_is_ok() -> None:
+    result = validate_structural(_spec(window={"from": 2000, "to": 2020}))
+    assert result.ok, result.issues
+
+
+def test_window_same_year_is_ok() -> None:
+    result = validate_structural(_spec(window={"from": 2018, "to": 2018}))
+    assert result.ok, result.issues
+
+
+def test_window_to_before_from_is_invalid_window() -> None:
+    result = validate_structural(_spec(window={"from": 2020, "to": 2000}))
+    assert _at(result, "invalid_window") == ["/window"]
+
+
+def test_window_must_be_object() -> None:
+    result = validate_structural(_spec(window=[2000, 2020]))
+    assert _at(result, "invalid_field_type") == ["/window"]
+
+
+def test_window_null_is_invalid_field_type() -> None:
+    # Optional-baseline null check: explicit null is not a valid shape.
+    result = validate_structural(_spec(window=None))
+    assert "/window" in _at(result, "invalid_field_type")
+
+
+def test_window_endpoints_must_be_ints() -> None:
+    result = validate_structural(_spec(window={"from": "2000", "to": 2020}))
+    assert _at(result, "invalid_field_type") == ["/window/from"]
+
+
+def test_window_bool_endpoint_is_invalid_field_type() -> None:
+    # bool is an int subclass but is never a valid year.
+    result = validate_structural(_spec(window={"from": True, "to": 2020}))
+    assert _at(result, "invalid_field_type") == ["/window/from"]
+
+
+def test_window_missing_endpoint_is_missing_required_field() -> None:
+    result = validate_structural(_spec(window={"from": 2000}))
+    assert _at(result, "missing_required_field") == ["/window/to"]
+
+
+def test_window_unexpected_key_is_unexpected_field() -> None:
+    result = validate_structural(_spec(window={"from": 2000, "to": 2020, "bogus": 1}))
+    assert _at(result, "unexpected_field") == ["/window/bogus"]
+
+
 # --- Sources ------------------------------------------------------------
 
 
@@ -1246,15 +1304,23 @@ def _wire_keys(model: type) -> set[str]:
 
 
 def test_allowed_key_frozensets_match_pydantic_models() -> None:
-    from reg_schema.project_data import Binding, Panel, PanelMember, Source
+    from reg_schema.project_data import (
+        Binding,
+        Panel,
+        PanelMember,
+        Source,
+        StudyWindow,
+    )
     from reg_schema.structural import (
         _BINDING_KEYS,
         _PANEL_KEYS,
         _PANEL_MEMBER_KEYS,
         _SOURCE_KEYS,
+        _WINDOW_KEYS,
     )
 
     assert _wire_keys(Source) == _SOURCE_KEYS
     assert _wire_keys(Binding) == _BINDING_KEYS
     assert _wire_keys(Panel) == _PANEL_KEYS
     assert _wire_keys(PanelMember) == _PANEL_MEMBER_KEYS
+    assert _wire_keys(StudyWindow) == _WINDOW_KEYS

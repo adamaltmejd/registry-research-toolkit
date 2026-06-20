@@ -12,10 +12,13 @@ root `ARCHITECTURE.md`; remaining/unbuilt schema work lives in `REFACTOR_SPEC.md
 
 - The `project_data.json` v2 shape (Model A): Pydantic v2 models for `ProjectData`,
   `Source`, `Binding`, `Panel`, `PanelMember`, `PeriodRange`, `LiteralPeriod`,
-  `TimeRange`, and the `Period` / `EntityKey` / `TimeKey` / `TimePoint` type aliases.
-  Under Model A a `Source` carries a 3-part `register_variant` coordinate plus a
-  required `period`; bindings (renamed from the v0.x `columns`) name a 3-segment binding
-  FQID via `variable`. `Source.period` is a `PeriodSegment` (int year / period token /
+  `TimeRange`, `StudyWindow`, and the `Period` / `EntityKey` / `TimeKey` / `TimePoint`
+  type aliases. Under Model A a `Source` carries a 3-part `register_variant` coordinate
+  plus a required `period`; bindings (renamed from the v0.x `columns`) name a 3-segment
+  binding FQID via `variable`. An optional top-level
+  `window: {"from": <year>, "to": <year>}` (`StudyWindow`) seeds the global study period
+  on the subject page (#613/#611); absent = full history; existing specs validate
+  unchanged. `Source.period` is a `PeriodSegment` (int year / period token /
   `PeriodRange`), the `"_default"` sentinel, or — since #307 — a **list of segments**
   (an interrupted series, e.g.
   `[{"from": 2005, "to": 2010}, {"from": 2015, "to":   2020}]`): one source stays one
@@ -136,12 +139,12 @@ Pydantic, and only on the model surface.
 two are kept apart on purpose:
 
 - **Models** (`project_data.py`, Pydantic v2): `ProjectData`, `Source`, `Binding`,
-  `Panel`, `PanelMember`, `PeriodRange`, `LiteralPeriod`, `TimeRange`, and the `Period`
-  / `EntityKey` / `TimeKey` / `TimePoint` type aliases. **Pure shape definitions** —
-  structural rules are *not* re-encoded as raising field validators. Re-encoding them
-  would replace the issue-accumulating contract with a fail-fast one, and the three
-  runtimes that share the contract (SPA, MONA bundle, webapp) need the full issue list,
-  not the first exception.
+  `Panel`, `PanelMember`, `PeriodRange`, `LiteralPeriod`, `TimeRange`, `StudyWindow`,
+  and the `Period` / `EntityKey` / `TimeKey` / `TimePoint` type aliases. **Pure shape
+  definitions** — structural rules are *not* re-encoded as raising field validators.
+  Re-encoding them would replace the issue-accumulating contract with a fail-fast one,
+  and the three runtimes that share the contract (SPA, MONA bundle, webapp) need the
+  full issue list, not the first exception.
 - **Structural validator** (`structural.py`, §6.8.1): the entrypoint
   `validate_structural(data: Mapping[str, object]) -> ValidationResult` operates on a
   **parsed dict, not the Pydantic models**, for two reasons. First, rules like "`type` ∈
@@ -204,6 +207,7 @@ UI affordances, new codes are additive (§6.8.0). Current codes:
   | `invalid_fqid`                         | FQID segment count or per-segment characters are wrong: binding `variable` is not a 3-segment `<provider>/<register>/<slug>`, `value_set` is not a 2-segment `class/<slug>`, or `register_variant` is not a 3-part `<provider>/<register>/<variant>` coordinate. The binding leaf is a bare slug — the retired `@version` pin is now a stray `@` the per-segment grammar rejects (§6.8.3 resolves the value set from `(variable, variant, period)`).                                                                                                                                                                                                                              |
   | `fqid_register_variant_mismatch`       | A binding `variable`'s first **2** segments (provider/register) don't equal the owning source's `register_variant` prefix. The variant is not repeated on the binding — it lives once on the Source.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | `invalid_period`                       | A `Source.period` is not an int year, a period-token string (`YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`, `VTYYYY`, `YYYY-Q[1-4]`, `YYYY-H[12]`), the snapshot sentinel `"_default"`, a `{"from","to"}` range object with valid endpoints, or a #307 segment LIST (interrupted series). The list rules raise the same code (member-pathed `/period/<i>`): empty list, a non-segment member (`_default` / nested list / junk), an inverted member range, or members not sorted-ascending / overlapping. A `YYYY-MM-DD` token that passes the syntactic 01-31 day envelope but names a calendar-impossible day (`2019-02-29` in a non-leap year, `2018-02-30`) also raises this code. |
+  | `invalid_window`                       | A top-level `window`'s `to` year is less than its `from` year.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
   | `subtype_on_wrong_type`                | A `*_subtype` or `*_format` field is set on a binding whose `type` doesn't own it (e.g. `id_subtype` on a categorical).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
   | `empty_bindings`                       | A source has zero bindings.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
   | `duplicate_source_name`                | Two sources share a `name`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |

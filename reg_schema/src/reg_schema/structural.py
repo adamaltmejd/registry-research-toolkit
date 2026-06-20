@@ -45,7 +45,7 @@ _TOP_LEVEL_REQUIRED: tuple[str, ...] = (
     "name",
     "sources",
 )
-_TOP_LEVEL_OPTIONAL_BASELINE: tuple[str, ...] = ("panels",)
+_TOP_LEVEL_OPTIONAL_BASELINE: tuple[str, ...] = ("panels", "window")
 _TOP_LEVEL_BASELINE: frozenset[str] = frozenset(
     _TOP_LEVEL_REQUIRED + _TOP_LEVEL_OPTIONAL_BASELINE
 )
@@ -78,6 +78,10 @@ _PANEL_KEYS: frozenset[str] = frozenset(
     {"panel_id", "members", "entity_key", "time_key", "comment"}
 )
 _PANEL_MEMBER_KEYS: frozenset[str] = frozenset({"source", "entity_key", "time_key"})
+# ``StudyWindow`` is a CLOSED object (``extra="forbid"``) — like Source/Binding,
+# an unknown key is ``unexpected_field``. Wire keys: ``from`` is the alias of the
+# Python-safe ``from_`` field.
+_WINDOW_KEYS: frozenset[str] = frozenset({"from", "to"})
 
 # Subtype/format fields are only valid on the matching column type
 # (see DESIGN.md → Structural rules and issue codes). Mapping a field to its owning type keeps the per-field check
@@ -123,6 +127,7 @@ def validate_structural(data: Mapping[str, object]) -> ValidationResult:
         return ValidationResult(issues=tuple(issues))
 
     _check_top_level_fields(data, issues)
+    _check_window(data.get("window"), issues)
     _check_sources(data.get("sources"), issues)
     _check_panels(data.get("panels"), data.get("sources"), issues)
     _check_namespaced_blocks(data, issues)
@@ -603,6 +608,63 @@ def _check_top_level_fields(
                 "invalid_enum_value",
                 "/steward",
                 f"steward must be one of {sorted(_STEWARDS)}; got {steward!r}",
+            )
+        )
+
+
+def _check_window(window: object, issues: list[ValidationIssue]) -> None:
+    """Validate the optional top-level ``window`` (study period; see issue #611).
+
+    A CLOSED ``{"from": <year>, "to": <year>}`` object (the ``StudyWindow``
+    model, ``extra="forbid"``). Absence is fine (whole-history default); a
+    present-but-null is rejected by ``_check_top_level_fields`` via the
+    optional-baseline null check, so this only runs on a non-null value.
+    Unlike ``Source.period``, endpoints are plain int years — NOT the
+    period-token grammar — and the one cross-field rule is ``to >= from``
+    (``invalid_window``), mirroring the year-granular slider the window backs.
+    """
+    if window is None:
+        return  # absent (or null, already flagged by the baseline check)
+    if not isinstance(window, Mapping):
+        issues.append(
+            _error(
+                "invalid_field_type",
+                "/window",
+                "window must be an object {'from': <year>, 'to': <year>}",
+            )
+        )
+        return
+    _check_unexpected_keys(window, _WINDOW_KEYS, "/window", "window", issues)
+    endpoints: dict[str, int] = {}
+    for field in ("from", "to"):
+        if not _present_and_not_null(
+            window, field, "/window", f"window {field!r}", issues
+        ):
+            continue
+        value = window[field]
+        # ``bool`` is an ``int`` subclass but is never a valid year; exclude it
+        # (same guard as ``_is_int_literal``), and narrow for the type checker.
+        if not isinstance(value, int) or isinstance(value, bool):
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"/window/{field}",
+                    f"window {field!r} must be an integer year",
+                )
+            )
+            continue
+        endpoints[field] = value
+    if (
+        "from" in endpoints
+        and "to" in endpoints
+        and endpoints["to"] < endpoints["from"]
+    ):
+        issues.append(
+            _error(
+                "invalid_window",
+                "/window",
+                f"window 'to' ({endpoints['to']}) must be >= 'from' "
+                f"({endpoints['from']})",
             )
         )
 
