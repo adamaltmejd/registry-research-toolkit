@@ -199,6 +199,70 @@ class TestValidateModule:
             result.failures
         )
 
+    def test_curated_floor_skips_when_no_scb_sos_source(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """#600: the curated concept-group floor (`n_curated >= 1`) asserts
+        `concept_groups.toml` was applied, but that file curates only scb/* and
+        sos/* register families. A thin-provider-only build (no scb AND no sos
+        registers) legitimately has zero curated groups and must SKIP (report info)
+        rather than false-fail. Simulate it by deleting all scb+sos registers so
+        `_curated_source_in_build` returns False, then assert (a) the skip text
+        renders and (b) the curated-floor FAIL substring is ABSENT. Surfaced once
+        #597 let non-SCB builds reach validation."""
+        from reg_meta_build.db import PROVIDER_ID_SCB, PROVIDER_ID_SOS
+        from reg_meta_build.validate import (
+            ValidationResult,
+            _check_concept_groups,
+            _curated_source_in_build,
+        )
+
+        broken = tmp_path / "noscbsos.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        conn.row_factory = sqlite3.Row
+        # Precondition: the fixture carries a curated (scb/sos) source.
+        assert _curated_source_in_build(conn)
+        conn.execute(
+            "DELETE FROM register WHERE provider_id IN (?, ?)",
+            (PROVIDER_ID_SCB, PROVIDER_ID_SOS),
+        )
+        conn.commit()
+        assert not _curated_source_in_build(conn)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_concept_groups(conn, result, tables, corpus=True)
+        conn.close()
+        report = result.format_report()
+        assert "no scb/sos source in this build" in report, report
+        # The gated curated floor must NOT have fired (assert on its specific
+        # substring — the corpus call also hits the edge floor etc.).
+        assert not any("no curated concept groups" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_curated_floor_fires_when_scb_present(self, fixture_db: Path):
+        """#600: the gate must NOT neuter the floor when a curated (scb/sos) source
+        IS built. The synthetic fixture is an scb build but carries zero curated
+        concept groups, so `_check_concept_groups` with corpus=True must emit the
+        curated-floor FAIL — assert on that SPECIFIC substring."""
+        from reg_meta_build.validate import ValidationResult, _check_concept_groups
+
+        conn = sqlite3.connect(fixture_db)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        result = ValidationResult()
+        _check_concept_groups(conn, result, tables, corpus=True)
+        conn.close()
+        assert any("no curated concept groups" in f for f in result.failures), (
+            result.failures
+        )
+
     @staticmethod
     def _seed_classification(
         conn: sqlite3.Connection, short_name: str, slug: str
