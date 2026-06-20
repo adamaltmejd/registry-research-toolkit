@@ -403,10 +403,12 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   uncurated). Coverage is LISA-only today.
 - **Coverage distinction encoded in the response**: coverage is LISA-only today.
   `ingested` is False when the docs index is absent entirely; the variable hook's
-  `register_ingested` is False when *that register* has no ingested docs — so a UI reads
-  "no docs ingested", never "this variable is undocumented". The variable hook's results
-  are flagged `fuzzy` (a name/provider_key text match, not an authoritative variable→doc
-  link).
+  `register_ingested` is False when *that register* has no ingested docs. The flag
+  distinction is real and preserved in the response — a caller can tell "no docs DB"
+  from "this register has no docs" — but the SPA omits the panel entirely in all empty
+  cases rather than rendering per-state copy (see `DocMentionsPanel` below). The
+  variable hook's results are flagged `fuzzy` (a name/provider_key text match, not an
+  authoritative variable→doc link).
 - **Optional DB / graceful degradation**: the docs DB is OPTIONAL. The boot seam
   (`app._resolve_docs_db_path`) resolves + validates it once; on absence OR
   schema-incompat it sets `app.state.docs_db_path = None` (never crashes — a broken docs
@@ -429,11 +431,13 @@ the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get`
   leaf hook has its own SPA consumer (#402): `BindingLeafView.svelte` renders a
   `DocMentionsPanel` sibling of the lineage panels, firing a SEPARATE independent
   `asyncResource` at `/api/docs/for-variable` — a distinct failure domain (a docs error,
-  timeout, or absent index never blanks the leaf). Coverage-aware copy distinguishes
-  `ingested:false` (no docs DB), `register_ingested:false` (LISA-only; displayed as "no
-  docs ingested for this register", never "undocumented"), empty results, and fuzzy
-  hits; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet as
-  plain text (not `{@html}`).
+  timeout, or absent index never blanks the leaf). The panel omits the entire section
+  when the response is empty in any sense (`ingested:false`, `register_ingested:false`,
+  or zero results), mirroring the omit-when-empty behaviour of `LineagePanels` and
+  `DimensionsPanel` (#612); loading and error states still render inline, so an
+  in-flight or errored fetch never reads as a confirmed absence. When results are
+  present, fuzzy hits are labelled as such; each hit links to the `/doc/<filename>`
+  viewer and renders the FTS snippet as plain text (not `{@html}`).
 - **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
   edge cache key, in the body → ETag) — no per-route caching code.
 

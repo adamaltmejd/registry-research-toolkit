@@ -13,6 +13,11 @@ import { fqidSegments, showingOf } from "./catalog";
 // The hook is FUZZY (every result is `fuzzy:true`) — a name/provider_key text
 // match, NOT an authoritative variable→doc link; the section-level caption marks
 // the list as heuristic.
+//
+// Omit-when-empty (the LineagePanels / DimensionsPanel ethos): the WHOLE section
+// is omitted when there's nothing usable to show — no docs index, no docs for
+// this register, or zero hits — but NOT while still loading or on error (we never
+// hide a section whose state is unknown, which would read as a confirmed absence).
 let { node }: { node: BindingNodeData } = $props();
 
 // The bare register slug = 2nd FQID segment (`scb/lisa/kon` → `lisa`); the
@@ -32,64 +37,62 @@ const resource = asyncResource((signal) =>
 
 const data = $derived(resource.data);
 const results = $derived(data?.results ?? []);
+// Show the section while loading / on error / when it has usable hits; omit it
+// once we KNOW there's nothing to show — no docs index, no docs for this register,
+// or zero hits (those resolved-empty states are noise on the subject page).
+const show = $derived(
+  resource.loading ||
+    !!resource.error ||
+    (!!data && data.ingested && data.register_ingested && results.length > 0),
+);
 </script>
 
-<section class="doc-mentions" aria-labelledby="doc-mentions-heading">
-  <h3 id="doc-mentions-heading">Mentioned in documentation</h3>
+{#if show}
+  <section class="doc-mentions" aria-labelledby="doc-mentions-heading">
+    <h3 id="doc-mentions-heading">Mentioned in documentation</h3>
 
-  {#if resource.loading}
-    <p class="muted" aria-busy="true">Loading…</p>
-  {:else if resource.error}
-    <!-- Any docs failure (error / timeout / 5xx / network drop) stays INLINE —
-         it never throws past this section and never blanks the leaf. -->
-    <p class="error" role="alert">
-      Failed to load documentation mentions: {resource.error}
-    </p>
-  {:else if data && !data.ingested}
-    <!-- No docs index at all in this deployment (dev/steward without the asset;
-         prod always ships it). -->
-    <p class="muted">Documentation index not available in this deployment.</p>
-  {:else if data && !data.register_ingested}
-    <!-- The index exists, but THIS register has no ingested docs. Coverage is
-         LISA-only today — this is "no docs for this register", NOT "undocumented". -->
-    <p class="muted">
-      No documentation ingested for this register — coverage is LISA-only today.
-    </p>
-  {:else if data && results.length === 0}
-    <p class="muted">No documentation mentions found for this variable.</p>
-  {:else if data}
-    <!-- One section-level caption marks the WHOLE list as fuzzy/heuristic name
-         matches (every result is `fuzzy:true`) — cleaner than per-row badges. -->
-    <p class="muted fuzzy-note">
-      Heuristic name matches — not authoritative variable→documentation links.
-    </p>
-    <ul class="mentions">
-      <!-- key by array INDEX — the list is replaced wholesale per fetch; a
-           natural key like filename could collide and crash the keyed each, per
-           the #391 lesson. -->
-      {#each results as r, i (i)}
-        <li>
-          <!-- Links to the minimal /doc viewer; the App shell's use:link
-               intercepts same-origin SPA links (mirrors SearchView's docHit). -->
-          <a href={`/doc/${encodeURIComponent(r.filename)}`}>
-            <span class="label">{r.display_name ?? r.filename}</span>
-          </a>
-          {#if r.snippet}
-            <!-- An FTS EXCERPT rendered as TEXT only (Svelte auto-escapes
-                 `{value}`) — NEVER {@html}: it may carry highlight markers and the
-                 full body lives at the SCB source (republication policy; see
-                 reg_webapp/DESIGN.md → Docs library endpoints). -->
-            <span class="hit-detail muted">{r.snippet}</span>
-          {/if}
-        </li>
-      {/each}
-    </ul>
-    {@const caption = showingOf(results.length, data.total_count)}
-    {#if caption}
-      <p class="muted count">{caption}</p>
+    {#if resource.loading}
+      <p class="muted" aria-busy="true">Loading…</p>
+    {:else if resource.error}
+      <!-- Any docs failure (error / timeout / 5xx / network drop) stays INLINE —
+           it never throws past this section and never blanks the leaf. -->
+      <p class="error" role="alert">
+        Failed to load documentation mentions: {resource.error}
+      </p>
+    {:else if data}
+      <!-- One section-level caption marks the WHOLE list as fuzzy/heuristic name
+           matches (every result is `fuzzy:true`) — cleaner than per-row badges. -->
+      <p class="muted fuzzy-note">
+        Heuristic name matches — not authoritative variable→documentation links.
+      </p>
+      <ul class="mentions">
+        <!-- key by array INDEX — the list is replaced wholesale per fetch; a
+             natural key like filename could collide and crash the keyed each, per
+             the #391 lesson. -->
+        {#each results as r, i (i)}
+          <li>
+            <!-- Links to the minimal /doc viewer; the App shell's use:link
+                 intercepts same-origin SPA links (mirrors SearchView's docHit). -->
+            <a href={`/doc/${encodeURIComponent(r.filename)}`}>
+              <span class="label">{r.display_name ?? r.filename}</span>
+            </a>
+            {#if r.snippet}
+              <!-- An FTS EXCERPT rendered as TEXT only (Svelte auto-escapes
+                   `{value}`) — NEVER {@html}: it may carry highlight markers and the
+                   full body lives at the SCB source (republication policy; see
+                   reg_webapp/DESIGN.md → Docs library endpoints). -->
+              <span class="hit-detail muted">{r.snippet}</span>
+            {/if}
+          </li>
+        {/each}
+      </ul>
+      {@const caption = showingOf(results.length, data.total_count)}
+      {#if caption}
+        <p class="muted count">{caption}</p>
+      {/if}
     {/if}
-  {/if}
-</section>
+  </section>
+{/if}
 
 <style>
   /* Match LineagePanels' section/h3 vocabulary (scoped styles don't pierce into
