@@ -168,9 +168,14 @@ green. Pipeline-specific operational notes the gate doesn't carry:
   `--providers   scb,sos` for an SCB/SOS-only change is faster than the full global
   build. #563 gates the curated-override staleness check to the providers actually
   built, so a thin provider's mandatory entity-key `[variable]` pins (#554) no longer
-  crash a restricted build. Pick the providers your PR actually affects; build the
-  **full** default set (omit `--providers`) for the release asset or a cross-provider
-  change (`input_data/` must then carry every global provider's seed dir).
+  crash a restricted build. #595/#597/#600 extend this to the validation layer — the
+  SCB-assuming corpus volume floors and the classification seed-drift / curated-group
+  gates are scoped to the providers actually built — so a **non-SCB /
+  thin-provider-only** subset (e.g. `--providers fk`) now builds and validates green
+  end-to-end, letting you dbdiff a thin provider's change in isolation. Pick the
+  providers your PR actually affects; build the **full** default set (omit
+  `--providers`) for the release asset or a cross-provider change (`input_data/` must
+  then carry every global provider's seed dir).
 
   If the PR changes **any tracked** `reg_meta_build/input_data/**` file (a provider's
   `*.toml`, a `classifications/` or `scb_canonical/` CSV, an add / delete / rename), the
