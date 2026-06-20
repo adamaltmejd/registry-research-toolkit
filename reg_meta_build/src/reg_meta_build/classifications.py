@@ -611,6 +611,7 @@ def populate_classifications(
     *,
     valid_codes_dir: Path | None = None,
     providers: frozenset[str] | None = None,
+    partial_build: bool = False,
 ) -> tuple[int, frozenset[str]]:
     """Populate classification / classification_code / variable_instance.classification_id.
 
@@ -621,6 +622,19 @@ def populate_classifications(
     - A classification resolving to zero value codes → fail
     - A seed ``valid_codes_file`` that doesn't resolve under
       ``valid_codes_dir`` → fail
+
+    ``partial_build`` (#597) is True when the build covers a strict subset of all
+    known providers (a ``--providers`` subset). Classifications are shared,
+    provider-agnostic standards and are never provider-tagged, so on a subset
+    build a classification whose label-source provider isn't built legitimately
+    matches no instance. The drift check is therefore lenient for WHOLLY-ABSENT
+    classifications (zero matched version strings → demoted to a ``_progress``
+    note, no error); a MIXED classification (≥1 matched string) still hard-errors
+    on its unmatched strings — that signals a real typo/stale on a built
+    provider. On a full build (``partial_build=False``, the release gate) the
+    check stays fully strict. Either way every classification is still seeded —
+    its CSV ``valid_codes_file`` supplies codes — so the downstream
+    ``classification_empty`` guard is unaffected.
 
     ``valid_codes_dir`` is the directory containing per-classification CSVs of
     canonical codes. When an entry has ``valid_codes_file = "<name>.csv"``, the
@@ -726,18 +740,21 @@ def populate_classifications(
             WHERE value_set_version_label IN (SELECT vers FROM _vmap)
             """
         )
-        # Drift detection: any seed string that matches no instance.
-        # load_seed already rejects strings claimed by two classifications,
-        # so a non-match here means the data lacks the version entirely.
-        unmatched = conn.execute(
+        # Drift detection: per seed string, whether it matched any instance.
+        # load_seed already rejects strings claimed by two classifications, so a
+        # non-match here means the data lacks the version entirely. We need the
+        # per-classification matched count (computed BEFORE dropping _vmap) to
+        # partition unmatched strings into hard-drift vs partial-build demotions.
+        version_rows = conn.execute(
             """
-            SELECT cls.short_name, m.vers
+            SELECT cls.short_name,
+                   m.vers,
+                   EXISTS (
+                       SELECT 1 FROM variable_instance vi
+                       WHERE vi.value_set_version_label = m.vers
+                   ) AS matched
             FROM _vmap m
             JOIN classification cls ON cls.id = m.cls_id
-            WHERE NOT EXISTS (
-                SELECT 1 FROM variable_instance vi
-                WHERE vi.value_set_version_label = m.vers
-            )
             ORDER BY cls.short_name, m.vers
             """
         ).fetchall()
@@ -745,8 +762,38 @@ def populate_classifications(
     finally:
         conn.execute("DROP INDEX IF EXISTS idx_vi_value_set_version_label_tmp")
 
-    if unmatched:
-        details = "\n".join(f"  - {short}: {vers!r}" for short, vers in unmatched)
+    # Per classification, how many of its seed version strings matched ≥1
+    # instance; then partition the unmatched strings.
+    matched_count: dict[str, int] = {}
+    for short, _vers, matched in version_rows:
+        matched_count[short] = matched_count.get(short, 0) + (1 if matched else 0)
+
+    hard_drift: list[tuple[str, str]] = []
+    demoted: list[tuple[str, str]] = []
+    for short, vers, matched in version_rows:
+        if matched:
+            continue
+        # Hard error unless this is a partial build AND the classification is
+        # WHOLLY absent (zero matched strings → its label-source provider isn't
+        # in this build). A mixed classification (≥1 matched) hard-errors on its
+        # unmatched strings: a real typo/stale on a built provider (#597).
+        if (not partial_build) or matched_count.get(short, 0) > 0:
+            hard_drift.append((short, vers))
+        else:
+            demoted.append((short, vers))
+
+    if demoted:
+        n_demoted = len(demoted)
+        m_classes = len({short for short, _ in demoted})
+        _progress(
+            f"  {n_demoted} seed version-label(s) across {m_classes} "
+            "classification(s) unmatched — expected on a partial --providers "
+            "build (label-source provider not built); classifications kept "
+            "(CSV codes)"
+        )
+
+    if hard_drift:
+        details = "\n".join(f"  - {short}: {vers!r}" for short, vers in hard_drift)
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
             code="classification_seed_drift",

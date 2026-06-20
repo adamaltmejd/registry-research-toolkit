@@ -3188,6 +3188,10 @@ def materialize(
     # concept-group families whose provider isn't in this build are skipped,
     # not errors (a `--providers=sos` build must not fail on an scb entry).
     active_providers = frozenset(a.provider for a, _ in adapters)
+    # #597: a strict provider subset is a partial build — classifications are
+    # shared/provider-agnostic, so the seed drift check goes lenient for wholly
+    # absent ones (label-source provider not built). Full build → strict gate.
+    partial_build = active_providers != {slug for _pid, slug, _name in _PROVIDER_SEED}
 
     # Curated pairwise relations (#522): one typed `[[edge]]` surface loaded
     # ONCE here, then materialized into its three table groups — `related_to`
@@ -3224,7 +3228,11 @@ def materialize(
         # Provider gate: seed only classifications whose provider is in this
         # build (entries with no provider are always seeded).
         n_classifications, skipped_classifications = populate_classifications(
-            conn, seed, valid_codes_dir=valid_codes_dir, providers=active_providers
+            conn,
+            seed,
+            valid_codes_dir=valid_codes_dir,
+            providers=active_providers,
+            partial_build=partial_build,  # #597: lenient drift on a provider subset
         )
         row_counts["classifications.toml"] = n_classifications
 

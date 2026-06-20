@@ -253,12 +253,17 @@ class TestPopulateClassifications:
         csvs: dict[str, str],
         *,
         providers: frozenset[str] | None,
+        partial_build: bool = False,
+        instance_labels: tuple[str, ...] = (),
     ) -> tuple[sqlite3.Connection, tuple[int, frozenset[str]]]:
         """Call populate_classifications directly on an empty in-memory schema.
 
         Lets us assert the (n_seeded, skipped) return tuple and the provider
         gate without the full build_db machinery (which never surfaces the
-        return value or accepts providers=None).
+        return value or accepts providers=None). ``instance_labels`` seeds a
+        minimal ``variable_instance`` row per label so a seed
+        ``vardemangdsversion`` string can be made to MATCH (the drift check only
+        reads ``value_set_version_label``).
         """
         from reg_meta_build.classifications import populate_classifications
         from reg_meta_build.db import DDL
@@ -272,8 +277,19 @@ class TestPopulateClassifications:
 
         conn = sqlite3.connect(":memory:")
         conn.executescript(DDL)
+        # Dummy NOT NULL fields — only value_set_version_label is read by the
+        # drift check; value_set_id stays NULL (no codes from instances).
+        conn.executemany(
+            "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+            "regver_id, var_id, value_set_version_label) VALUES (?, 1, 1, 1, 1, ?)",
+            [(i, label) for i, label in enumerate(instance_labels, start=1)],
+        )
         result = populate_classifications(
-            conn, seed, valid_codes_dir=cls_dir, providers=providers
+            conn,
+            seed,
+            valid_codes_dir=cls_dir,
+            providers=providers,
+            partial_build=partial_build,
         )
         return conn, result
 
@@ -329,6 +345,72 @@ class TestPopulateClassifications:
         ).fetchone()
         assert row[0] == "A"
         assert row[1] is None
+
+    def test_partial_build_demotes_wholly_absent_drift(self, tmp_path: Path):
+        """#597: on a partial --providers build, a classification whose
+        vardemangdsversion matches NO instance is demoted (no error) and still
+        seeded — its valid_codes_file CSV keeps it above the empty guard."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "ABSENT"\nname = "Absent"\n'
+            'valid_codes_file = "absent.csv"\n'
+            'vardemangdsversion = ["never-occurs"]\n'
+        )
+        csvs = {"absent.csv": "code,label\nA,Alpha\n"}
+        # No matching instances; partial build → demote, don't raise.
+        conn, (n_seeded, skipped) = self._populate_direct(
+            tmp_path,
+            seed_toml,
+            csvs,
+            providers=frozenset({"sos"}),
+            partial_build=True,
+        )
+        assert (n_seeded, skipped) == (1, frozenset())
+        assert {
+            r[0] for r in conn.execute("SELECT short_name FROM classification")
+        } == {"ABSENT"}
+
+    def test_full_build_still_strict_on_drift(self, tmp_path: Path):
+        """#597: the SAME wholly-unmatched seed on a full build
+        (partial_build=False) still hard-errors classification_seed_drift."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "ABSENT"\nname = "Absent"\n'
+            'valid_codes_file = "absent.csv"\n'
+            'vardemangdsversion = ["never-occurs"]\n'
+        )
+        csvs = {"absent.csv": "code,label\nA,Alpha\n"}
+        with pytest.raises(RegMetaError) as ei:
+            self._populate_direct(
+                tmp_path,
+                seed_toml,
+                csvs,
+                providers=None,
+                partial_build=False,
+            )
+        assert ei.value.code == "classification_seed_drift"
+
+    def test_partial_build_mixed_classification_hard_errors(self, tmp_path: Path):
+        """#597: a classification with one MATCHED and one unmatched version
+        string still hard-errors on a partial build — a real typo/stale on a
+        built provider isn't masked by partial-build leniency."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "MIXED"\nname = "Mixed"\n'
+            'valid_codes_file = "mixed.csv"\n'
+            'vardemangdsversion = ["present", "typo-never-occurs"]\n'
+        )
+        csvs = {"mixed.csv": "code,label\nA,Alpha\n"}
+        with pytest.raises(RegMetaError) as ei:
+            self._populate_direct(
+                tmp_path,
+                seed_toml,
+                csvs,
+                providers=frozenset({"sos"}),
+                partial_build=True,
+                instance_labels=("present",),
+            )
+        assert ei.value.code == "classification_seed_drift"
+        # Only the unmatched string is named, not the matched one.
+        assert "typo-never-occurs" in ei.value.message
+        assert "present" not in ei.value.message
 
     def test_classification_inserted(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
@@ -441,9 +523,15 @@ class TestPopulateClassifications:
         assert len(rows) >= 1
 
     def test_seed_drift_fails_build(self, tmp_path: Path):
+        # #597: the SCB-only fixture build is a partial --providers build, so a
+        # WHOLLY-absent classification is demoted, not failed. To still exercise
+        # the drift gate through build_db, GHOST is MIXED — one matched string
+        # ("Kön", present in the SCB fixture) and one stale one. A mixed
+        # classification hard-errors on its unmatched string even on a partial
+        # build (a real typo/stale on a built provider isn't masked).
         seed = (
             '[[classification]]\nshort_name = "GHOST"\nname = "No such label"\n'
-            'vardemangdsversion = ["this-string-never-appears"]\n'
+            'vardemangdsversion = ["Kön", "this-string-never-appears"]\n'
         )
         with pytest.raises(RegMetaError) as ei:
             self._build_with_seed(tmp_path, seed)
