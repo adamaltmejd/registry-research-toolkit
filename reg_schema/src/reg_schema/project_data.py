@@ -41,7 +41,7 @@ from __future__ import annotations
 from collections.abc import Mapping  # noqa: TC003
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 # Top-level enums (see DESIGN.md → Two layers: models vs. validator). Mirrored at runtime by the structural
 # validator using ``get_args`` — same drift-protection pattern as
@@ -255,6 +255,49 @@ class Panel(_Model):
         return value
 
 
+# Study window --------------------------------------------------------
+
+
+class StudyWindow(_Model):
+    """The optional ``{"from": <year>, "to": <year>}`` project study window.
+
+    The global "project window" the redesigned subject page defaults each
+    page's period picker to (see issue #611 → Period model). Deliberately
+    NOT the full ``Period`` / ``PeriodRange`` grammar: it is a plain
+    year-int pair, matching the year-granular header slider. Per-page
+    deviation (months/quarters/terms, interrupted segments) keeps the rich
+    grammar via ``?period``; this window only seeds the default.
+
+    ``from`` is a Python keyword, so the field is ``from_`` with a ``"from"``
+    alias — mirroring ``PeriodRange``. ``serialize_by_alias=True`` so
+    ``model_dump()`` emits ``"from"`` (not ``"from_"``) without callers
+    passing ``by_alias=True``.
+
+    Endpoints are plain ``int`` years (not the ``int | str`` period-token
+    forms of ``PeriodRange``): the window is year-granular by design. The
+    only invariant is ``to >= from`` — a same-year window (``from == to``)
+    is valid; a window can't end before it starts.
+    """
+
+    model_config = ConfigDict(
+        frozen=True,
+        extra="forbid",
+        populate_by_name=True,
+        serialize_by_alias=True,
+    )
+
+    from_: int = Field(alias="from")
+    to: int
+
+    @model_validator(mode="after")
+    def _check_order(self) -> StudyWindow:
+        if self.to < self.from_:
+            raise ValueError(
+                f"study window 'to' ({self.to}) must be >= 'from' ({self.from_})"
+            )
+        return self
+
+
 # Top-level shape -----------------------------------------------------
 
 
@@ -290,4 +333,7 @@ class ProjectData(_Model):
     name: str
     sources: tuple[Source, ...]
     panels: tuple[Panel, ...] = ()
+    # Optional global study window (see issue #611 → Period model). Absent =
+    # full history; existing specs validate unchanged (additive surface).
+    window: StudyWindow | None = None
     reg_monabundle: Mapping[str, object] | None = None

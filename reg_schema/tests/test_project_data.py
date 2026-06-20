@@ -21,6 +21,7 @@ from reg_schema import (
     PeriodRange,
     ProjectData,
     Source,
+    StudyWindow,
     validate_structural,
 )
 
@@ -224,6 +225,48 @@ def test_literal_period_is_frozen_and_equal_by_value() -> None:
         a.period = "2019-01"  # type: ignore[misc]
 
 
+# StudyWindow ----------------------------------------------------------
+
+
+def test_study_window_year_pair() -> None:
+    win = StudyWindow.model_validate({"from": 2000, "to": 2020})
+    assert win.from_ == 2000
+    assert win.to == 2020
+
+
+def test_study_window_same_year_is_valid() -> None:
+    # from == to is a degenerate-but-legal single-year window.
+    win = StudyWindow.model_validate({"from": 2018, "to": 2018})
+    assert win.from_ == win.to == 2018
+
+
+def test_study_window_to_before_from_is_rejected() -> None:
+    with pytest.raises(ValidationError):
+        StudyWindow.model_validate({"from": 2020, "to": 2000})
+
+
+def test_study_window_round_trips_through_alias() -> None:
+    # serialize_by_alias=True: model_dump emits "from"/"to" (not "from_"),
+    # so a dumped window re-validates clean — the same alias-footgun guard
+    # PeriodRange has.
+    win = StudyWindow.model_validate({"from": 2005, "to": 2010})
+    dumped = win.model_dump(mode="json")
+    assert dumped == {"from": 2005, "to": 2010}
+    assert StudyWindow.model_validate(dumped) == win
+
+
+def test_study_window_is_frozen_and_hashable() -> None:
+    win = StudyWindow.model_validate({"from": 2000, "to": 2020})
+    with pytest.raises(ValidationError):
+        win.to = 2021  # type: ignore[misc]
+    assert {win, StudyWindow.model_validate({"from": 2000, "to": 2020})} == {win}
+
+
+def test_study_window_rejects_unknown_field() -> None:
+    with pytest.raises(ValidationError):
+        StudyWindow.model_validate({"from": 2000, "to": 2020, "bogus": 1})
+
+
 # ProjectData -----------------------------------------------------------
 
 
@@ -239,7 +282,28 @@ def test_project_data_required_fields() -> None:
 def test_project_data_defaults() -> None:
     pd = _project()
     assert pd.panels == ()
+    assert pd.window is None  # absent window = full history (backward compatible)
     assert pd.reg_monabundle is None
+
+
+def test_project_data_carries_optional_window() -> None:
+    # The window is an additive optional field: a spec WITH one constructs,
+    # dumps the alias keys, and re-validates clean through the structural gate.
+    pd = ProjectData(
+        schema_version="2.0.0",
+        steward="global",
+        reg_meta_version="reg_meta/v1.0.0",
+        name="demo",
+        sources=(_source(),),
+        window=StudyWindow.model_validate({"from": 2000, "to": 2020}),
+    )
+    assert pd.window == StudyWindow.model_validate({"from": 2000, "to": 2020})
+    # exclude_none mirrors wire serialization: an absent reg_monabundle block
+    # must not dump as null (the structural validator rejects a null block).
+    dumped = pd.model_dump(mode="json", exclude_none=True)
+    assert dumped["window"] == {"from": 2000, "to": 2020}
+    result = validate_structural(dumped)
+    assert result.ok, result.issues
 
 
 def test_project_data_coerces_sources_and_panels_list_to_tuple() -> None:
