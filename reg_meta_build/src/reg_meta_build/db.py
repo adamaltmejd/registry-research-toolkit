@@ -1163,14 +1163,15 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- predecessor-first PK, so the clustered prefix serves the forward "what
 -- replaced X?" lookup; the reverse "what did X replace?" is served by the
 -- successor index below. `effective_year` is the successor edition's year.
--- The auto #571 rows stamp `note = 'derived:vintage_chain'`; the CURATED #579
--- rows (e.g. the sun1996 → nivå/inriktning 1→many split that the same-stem auto
--- rule can't produce, from `curation/relations.toml` `type = "replaced_by"`
--- `class/<slug>` edges) put their transition reason straight in `note` — unlike
--- the entity tables there is no `beskrivning` column, so reg_meta reads `note`
--- as the display string. (A later PR #516 adds CURATED umbrella classification
--- groups — e.g. SUN — via the retained `concept_group_classification` table;
--- this succession layer is orthogonal.)
+-- `note` is PROVENANCE-ONLY for every row: the auto #571 rows stamp
+-- `derived:vintage_chain`, the CURATED #579 rows (e.g. the sun1996 → nivå /
+-- inriktning / grupp 1→many split that the same-stem auto rule can't produce,
+-- from `curation/relations.toml` `type = "replaced_by"` `class/<slug>` edges)
+-- stamp `curated:slug_toml`. Unlike the entity tables there is NO `beskrivning`
+-- column, so a classification edge carries no human transition reason (it lives in
+-- a `#` comment in relations.toml). (A later PR #516 adds CURATED umbrella
+-- classification groups — e.g. SUN — via the retained
+-- `concept_group_classification` table; this succession layer is orthogonal.)
 CREATE TABLE classification_replaced_by (
     predecessor_slug TEXT NOT NULL,
     successor_slug   TEXT NOT NULL,
@@ -1617,7 +1618,7 @@ _REPLACED_BY_STAT_KEYS = (
     # `n_*_replaced_by` above — the curated rows roll into the same totals).
     # `n_curated_classification_replaced_by` (#579) counts curated classification
     # edges inserted into `classification_replaced_by` alongside the auto #571
-    # edges (the sun1996 → sun-niva/inriktning 1→many split). `n_curated_skipped_
+    # edges (the sun1996 → sun-niva/inriktning/grupp 1→many split). `n_curated_skipped_
     # duplicate` counts curated rows that collapse onto an already-seen edge
     # (event-derived, an auto classification edge, or another curated row), via the
     # SHARED seen-PK sets (per-grain).

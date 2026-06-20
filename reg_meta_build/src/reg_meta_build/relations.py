@@ -85,9 +85,12 @@ CURATED_RELATION_KINDS: frozenset[str] = frozenset({"similar_concept"})
 # marker distinguishing these rows from the auto:triage edges in the same table.
 _CURATED_RELATED_NOTE_DEFAULT = "curated"
 
-# Provenance markers for the two replaced_by sources (mirrors db.py so a consumer
-# can tell curated from auto-derived). A curated row's own `note` (the human
-# transition reason) lands in `beskrivning`; this fixed marker lands in `note`.
+# Provenance marker for curated replaced_by edges (mirrors db.py so a consumer can
+# tell curated from auto-derived). It lands in `note` for ALL three grains. For
+# register/variable a row's own `note` (the human transition reason) lands in
+# `beskrivning` beside it; the classification table has NO `beskrivning`, so a
+# classification edge carries no transition reason at all — `note` is
+# provenance-only and any human reason belongs in a `#` comment in relations.toml.
 _REPLACED_BY_NOTE_CURATED = "curated:slug_toml"
 
 # Provenance marker for the #584 derived variable vintage-succession edges:
@@ -384,6 +387,20 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "An entity cannot replace itself; remove the edge.",
         )
     note = _require_note(entry, "replaced_by")
+    # `note` is provenance-only on a classification edge: that table has no
+    # `beskrivning`, so the build stamps the fixed `curated:slug_toml` marker and a
+    # human transition reason has nowhere to go. Reject `note` here rather than
+    # parse-then-silently-drop it (which reads as a bug) — the reason belongs in a
+    # `#` comment above the edges.
+    if note is not None and predecessor.kind is FqidKind.CLASSIFICATION:
+        raise curation_error(
+            "relations_invalid",
+            "relations [[edge]] type='replaced_by' on a classification "
+            f"(`class/<slug>`) edge does not accept `note` (got {note!r}).",
+            "Drop `note` — a classification edge's `note` is provenance-only "
+            "(stamped `curated:slug_toml`). Put the transition reason in a `#` "
+            "comment above the edges in reg_meta_build/curation/relations.toml.",
+        )
     effective_year = entry.get("effective_year")
     # `isinstance(True, int)` is True in Python — reject a bare bool so an
     # `effective_year = true` typo can't masquerade as the year 1.
@@ -962,13 +979,15 @@ def materialize_curated_replaced_by(
     to a live `classification` row (fail-fast otherwise); the predecessor MAY be
     dead. Edges land in `classification_replaced_by (predecessor_slug,
     successor_slug, effective_year, note)` — that table has NO `beskrivning`, so
-    the edge's own `note` (the transition reason) goes straight into the `note`
-    column (reg_meta reads it as the display string), not a fixed provenance
-    marker. The auto #571 edges already exist (`derive_classification_succession`
-    runs earlier in the build), so dedup is by `(predecessor_slug, successor_slug)`
-    against the table + the pending curated edges, and the cycle check runs over
-    the COMBINED slug graph. The 1→many split (one predecessor, several
-    successors) is intentional and supported.
+    there is nowhere for a transition reason: `note` is provenance-only, stamped
+    with the same `curated:slug_toml` marker as the register/variable arms (the
+    auto #571 rows carry `derived:vintage_chain`), and the human reason lives in a
+    `#` comment in relations.toml (the loader rejects `note` on these edges). The
+    auto #571 edges already exist (`derive_classification_succession` runs earlier
+    in the build), so dedup is by `(predecessor_slug, successor_slug)` against the
+    table + the pending curated edges, and the cycle check runs over the COMBINED
+    slug graph. The 1→many split (one predecessor, several successors) is
+    intentional and supported.
 
     Returns `{"register", "variable", "classification", "skipped_duplicate",
     "skipped_inactive_provider"}`."""
@@ -1030,14 +1049,17 @@ def materialize_curated_replaced_by(
                 continue
             seen_classification.add(cpk)
             classification_cycle_edges.append(cpk)
-            # The transition `note` goes straight into the `note` column (the
-            # table has no `beskrivning`); reg_meta reads it as the display string.
+            # `note` is provenance-only (the table has no `beskrivning`): stamp the
+            # fixed `curated:slug_toml` marker, mirroring the register/variable arms
+            # so curated rows are distinguishable from the auto `derived:vintage_chain`
+            # ones. The human transition reason lives in a `#` comment in the TOML
+            # (the loader rejects `note` on a classification edge).
             pending_classification.append(
                 (
                     pred.classification,
                     succ.classification,
                     edge.effective_year,
-                    edge.note,
+                    _REPLACED_BY_NOTE_CURATED,
                 )
             )
             continue

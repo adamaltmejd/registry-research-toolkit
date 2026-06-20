@@ -662,7 +662,7 @@ class TestReplacedByLoad:
         rel = _load(
             tmp_path,
             '[[edge]]\ntype = "replaced_by"\nfrom = "class/sun1996"\n'
-            'to = "class/sun-niva2000"\neffective_year = 2000\nnote = "split"\n',
+            'to = "class/sun-niva2000"\neffective_year = 2000\n',
         )
         assert len(rel.replaced_by) == 1
         e = rel.replaced_by[0]
@@ -671,7 +671,22 @@ class TestReplacedByLoad:
         assert str(e.predecessor) == "class/sun1996"
         assert str(e.successor) == "class/sun-niva2000"
         assert e.effective_year == 2000
-        assert e.note == "split"
+        assert e.note is None
+
+    def test_classification_note_rejected(self, tmp_path: Path) -> None:
+        # #579: `note` is provenance-only on a classification edge (the table has
+        # no `beskrivning`, the build stamps `curated:slug_toml`), so a `note`
+        # field is rejected at load rather than silently dropped — the human reason
+        # belongs in a TOML `#` comment.
+        with pytest.raises(RegMetaError) as exc:
+            _load(
+                tmp_path,
+                '[[edge]]\ntype = "replaced_by"\nfrom = "class/sun1996"\n'
+                'to = "class/sun-niva2000"\neffective_year = 2000\nnote = "split"\n',
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "relations_invalid"
+        assert "note" in exc.value.message
 
     def test_classification_mixed_with_register_rejected(self, tmp_path: Path) -> None:
         # A class↔register mix is a different grain on each side → rejected. The
@@ -750,25 +765,21 @@ class TestClassificationReplacedByMaterialize:
     `classification_replaced_by` (alongside the #571 auto edges) — the sun1996 →
     2000-split 1→many dual the auto same-stem rule can't produce."""
 
-    def test_one_edge_writes_with_note_as_display(self) -> None:
+    def test_one_edge_writes_with_provenance_marker(self) -> None:
         conn = _class_succession_db()
         out = materialize_curated_replaced_by(
             conn,
-            [
-                _replaced_by_edge(
-                    "class/sun1996", "class/sun-niva2000", year=2000, note="r"
-                )
-            ],
+            [_replaced_by_edge("class/sun1996", "class/sun-niva2000", year=2000)],
             set(),
             set(),
             providers=_SCB,
             progress=_noop,
         )
         assert out["classification"] == 1
-        # The transition `note` lands in the `note` column verbatim (no fixed
-        # provenance marker — the table has no `beskrivning`).
+        # `note` is provenance-only: the fixed `curated:slug_toml` marker (the
+        # table has no `beskrivning`; the human reason lives in a TOML `#` comment).
         assert _class_succession_rows(conn) == [
-            ("sun1996", "sun-niva2000", 2000, "r"),
+            ("sun1996", "sun-niva2000", 2000, "curated:slug_toml"),
         ]
 
     def test_one_to_many_split_both_allowed(self) -> None:
@@ -788,9 +799,10 @@ class TestClassificationReplacedByMaterialize:
             progress=_noop,
         )
         assert out["classification"] == 2
+        # Both rows stamp the provenance marker (note is provenance-only).
         assert _class_succession_rows(conn) == [
-            ("sun1996", "sun-inriktning2000", 2000, None),
-            ("sun1996", "sun-niva2000", 2000, None),
+            ("sun1996", "sun-inriktning2000", 2000, "curated:slug_toml"),
+            ("sun1996", "sun-niva2000", 2000, "curated:slug_toml"),
         ]
 
     def test_not_provider_gated(self) -> None:
@@ -841,7 +853,7 @@ class TestClassificationReplacedByMaterialize:
         )
         assert out["classification"] == 1
         assert _class_succession_rows(conn) == [
-            ("retired1990", "sun-niva2000", None, None),
+            ("retired1990", "sun-niva2000", None, "curated:slug_toml"),
         ]
 
     def test_dedups_against_existing_auto_edge(self) -> None:
@@ -905,24 +917,29 @@ class TestClassificationReplacedByMaterialize:
 class TestMovedEdges:
     def test_repo_file_carries_the_moved_edges(self) -> None:
         rel = load_relations(_ROOT / "curation" / "relations.toml")
-        # 11 variable replaced_by (the #375 LISA succession chain) + 2
-        # classification replaced_by (the #579 sun1996 → niva/inriktning split)
-        # + 3 related_to (#403).
-        assert len(rel.replaced_by) == 13
+        # 11 variable replaced_by (the #375 LISA succession chain) + 3
+        # classification replaced_by (the #579 sun1996 → niva/inriktning/grupp
+        # split) + 3 related_to (#403).
+        assert len(rel.replaced_by) == 14
         assert len(rel.related_to) == 3
         assert rel.same_as == ()  # ships empty
         # Spot-check one moved edge of each type.
         assert ("scb/lisa/anninkf", "scb/lisa/anninkf04") in {
             (str(e.predecessor), str(e.successor)) for e in rel.replaced_by
         }
-        # The #579 1→many classification split: one predecessor, two successors,
-        # parsed as `class/<slug>` (CLASSIFICATION grain).
+        # The #579 1→many classification split: one predecessor, three successors
+        # (all three SUN 2000 dimensions), parsed as `class/<slug>` (CLASSIFICATION
+        # grain).
         sun_succ = {
             str(e.successor)
             for e in rel.replaced_by
             if str(e.predecessor) == "class/sun1996"
         }
-        assert sun_succ == {"class/sun-niva2000", "class/sun-inriktning2000"}
+        assert sun_succ == {
+            "class/sun-niva2000",
+            "class/sun-inriktning2000",
+            "class/sun-grupp2000",
+        }
         assert all(
             e.predecessor.kind is FqidKind.CLASSIFICATION
             for e in rel.replaced_by

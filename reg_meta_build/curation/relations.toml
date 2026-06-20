@@ -33,9 +33,13 @@
 #                           `provider/slug`: register grain is ALSO 2-segment, so
 #                           reusing `provider/slug` would collide with it. Lands in
 #                           `classification_replaced_by` beside the #571 auto
-#                           edition chains; that table has no `beskrivning`, so the
-#                           `note` IS the displayed transition reason. A 1→many
-#                           split (one predecessor, several successors) is allowed.
+#                           edition chains; that table has no `beskrivning`, so a
+#                           classification edge does NOT carry a transition reason
+#                           — `note` is provenance-only (`curated:slug_toml` for
+#                           these, `derived:vintage_chain` for the auto rows), and
+#                           any human reason belongs in a `#` comment above the
+#                           edges. A 1→many split (one predecessor, several
+#                           successors) is allowed.
 #
 #   type = "related_to"   — weak "see also" DISCOVERY link between DISTINCT
 #                           concepts (NOT identity). `a` / `b` are 3-segment
@@ -143,25 +147,34 @@ effective_year = 2019
 note = "Näringsgren (rank 3, utökad nivå) source switched from kontrolluppgift to arbetsgivardeklaration (AGI) in 2019"
 
 # ── SUN 1996 → 2000 nomenclature split (#579) ──
-#    The 1996 SUN (Svensk utbildningsnomenklatur) was restructured in 2000 into a
-#    two-dimensional model — nivå (level) + inriktning (field of study) — so the
-#    lone `sun1996` classification is succeeded by BOTH `sun-niva2000` and
-#    `sun-inriktning2000`. This 1→many split across DIFFERENT stems is exactly
+#    The 1996 SUN (Svensk utbildningsnomenklatur) was restructured in 2000 into
+#    all three SUN 2000 dimensions (nivå / inriktning / grupp) — so the lone
+#    `sun1996` classification is succeeded by all three of `sun-niva2000`,
+#    `sun-inriktning2000`, and `sun-grupp2000`, giving `group:sun`'s three members
+#    a consistent lineage. This 1→many split across DIFFERENT stems is exactly
 #    what the #571 same-stem year-tail auto rule (sun-niva2000 → sun-niva2020)
-#    cannot produce, hence the curated dual. Classification grain → `class/<slug>`.
+#    cannot produce, hence the curated set. Classification grain → `class/<slug>`.
+#
+#    Transition reason (no longer stored — `note` is provenance-only, the build
+#    stamps `curated:slug_toml`): "1996 nomenclature restructured into the
+#    three-dimensional nivå / inriktning / grupp model (SUN 2000)".
 [[edge]]
 type = "replaced_by"
 from = "class/sun1996"
 to = "class/sun-niva2000"
 effective_year = 2000
-note = "1996 nomenclature restructured into the two-dimensional nivå/inriktning model (SUN 2000)"
 
 [[edge]]
 type = "replaced_by"
 from = "class/sun1996"
 to = "class/sun-inriktning2000"
 effective_year = 2000
-note = "1996 nomenclature restructured into the two-dimensional nivå/inriktning model (SUN 2000)"
+
+[[edge]]
+type = "replaced_by"
+from = "class/sun1996"
+to = "class/sun-grupp2000"
+effective_year = 2000
 
 # ── Curated "see also" edges (#403) ──
 # Each pair is a DISTINCT-but-related concept — a weak "see also", NOT an

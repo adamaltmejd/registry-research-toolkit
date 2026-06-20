@@ -540,8 +540,8 @@ carried by `classification_successors` / `classification_predecessors` /
 (`class/<slug>`), so the edge endpoint is a single slug — no provider/register triple.
 Fields: `fqid` (best-effort `class/<slug>`, built via `_class_ref_fqid`; None only on a
 malformed slug), the load-bearing `slug`, `effective_year` (the succession year, or
-None), and `note` (for auto edges the build provenance, e.g. `derived:vintage_chain`;
-for curated edges the transition reason, #579). There is no `reason`/`beskrivning`
+None), and `note` (build provenance — `derived:vintage_chain` for the auto edges,
+`curated:slug_toml` for the curated #579 edges). There is no `reason`/`beskrivning`
 column on `classification_replaced_by` (that column exists only on the variable-grain
 `timeseries_event`), so `ClassificationRef` carries `note` where `VariableRef` carries
 `reason`. Succession references the **exact edition slug** as identity; `fqid` is

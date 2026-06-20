@@ -128,8 +128,8 @@ def test_repo_relations_parses() -> None:
     # territory (the materializers fail fast).
     relations = load_relations(_ROOT / "curation" / "relations.toml")
     assert not relations.same_as  # empty today
-    # 11 #375 variable succession edges + 2 #579 classification split edges.
-    assert len(relations.replaced_by) == 13
+    # 11 #375 variable succession edges + 3 #579 classification split edges.
+    assert len(relations.replaced_by) == 14
     assert len(relations.related_to) == 3  # the moved #403 see-also edges
     assert all(
         e.a_provider
