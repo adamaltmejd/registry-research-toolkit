@@ -76,6 +76,35 @@ Stop the servers when done:
 lsof -ti :8000 -ti :5173 | xargs kill
 ```
 
+## Parallel instances (concurrent worktrees / PR lanes)
+
+The default ports are fine for ONE instance. To render two checkouts at once (two PR
+lanes, or a worktree alongside the main checkout), give each its own port pair — the
+only coupling is the Vite proxy, which reads `REG_WEBAPP_BACKEND_URL` (default
+`http://localhost:8000`):
+
+```sh
+# pick two free ports (tiny TOCTOU race, negligible for dev)
+B=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()')
+F=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()')
+
+uv run uvicorn reg_webapp.app:create_app --factory --port "$B" &
+(cd reg_webapp/frontend && REG_WEBAPP_BACKEND_URL="http://localhost:$B" \
+   bun run dev -- --port "$F" --strictPort) &
+
+curl -s -o /dev/null -w '%{http_code}\n' "http://localhost:$F/api/context"   # 200 ⇒ proxy → backend B
+(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="http://localhost:$F" \
+   bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)                    # driver honors the URL
+```
+
+`--strictPort` makes Vite use exactly `$F` (otherwise it silently increments off 5173
+and you lose track of the port). Stop with `lsof -ti :$B -ti :$F | xargs kill`.
+
+**`preview_start` is single-instance.** `.claude/launch.json` is static (fixed
+8000/5173, `autoPort: false`) and can't inject the backend's chosen port into the
+frontend config — so use the manual recipe above for concurrency; `preview_start` stays
+the one-host convenience path.
+
 ## Direct invocation (backend-only PRs)
 
 Most backend changes don't need the SPA at all: the pytest suite runs against a fixture
@@ -104,8 +133,9 @@ Same two servers, then open <http://localhost:5173/> in a browser. Backend API d
   else: `Cannot find package 'playwright'`.
 - **HEAD requests 405** by design (routes register GET only; see DESIGN.md → ETag).
   Probe with `curl` GETs, not `-I`.
-- The Vite proxy targets `http://localhost:8000` (hardcoded in
-  `frontend/vite.config.ts`) — the backend must be on :8000, not a random port.
+- The Vite proxy defaults to `http://localhost:8000` but honors `REG_WEBAPP_BACKEND_URL`
+  (`frontend/vite.config.ts`) — for a non-default backend port, set that env var so the
+  proxy follows (see **Parallel instances**); the default-8000 path needs nothing.
 - **Verifying from a git worktree (`.claude/worktrees/*`): anything launched with the
   main checkout as cwd serves main's code.** "Repo root" above means the checkout under
   test — `uv run uvicorn …` at the main checkout's root, and the `preview_start`
@@ -113,9 +143,13 @@ Same two servers, then open <http://localhost:5173/> in a browser. Backend API d
   silently exercise stale main-branch behavior (bit an agent 2026-06-11: a fix "didn't
   work" because the servers ran main's code). Verified fix: `uv sync --frozen` inside
   the worktree (uv stops at the worktree's own `pyproject.toml`, creating a
-  worktree-local `.venv`), then start the backend via that venv's binary
-  (`.venv/bin/uvicorn reg_webapp.app:create_app --factory --port 8000`) and the frontend
-  via `bun run dev` from the worktree's `reg_webapp/frontend/`.
+  worktree-local `.venv`), then start the backend via that venv's binary on an
+  **isolated port**
+  (`.venv/bin/uvicorn reg_webapp.app:create_app --factory --port "$B"`) and the frontend
+  from the worktree's `reg_webapp/frontend/` pointed at it
+  (`REG_WEBAPP_BACKEND_URL="http://localhost:$B" bun run dev -- --port "$F" --strictPort`).
+  A worktree usually renders **alongside** main's servers, so use the free-port
+  `$B`/`$F` selection from **Parallel instances** rather than the fixed 8000/5173.
 
 ## Troubleshooting
 
