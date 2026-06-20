@@ -253,7 +253,7 @@ class TestPopulateClassifications:
         csvs: dict[str, str],
         *,
         providers: frozenset[str] | None,
-        partial_build: bool = False,
+        referenced_classifications: frozenset[str] = frozenset(),
         instance_labels: tuple[str, ...] = (),
     ) -> tuple[sqlite3.Connection, tuple[int, frozenset[str]]]:
         """Call populate_classifications directly on an empty in-memory schema.
@@ -289,7 +289,7 @@ class TestPopulateClassifications:
             seed,
             valid_codes_dir=cls_dir,
             providers=providers,
-            partial_build=partial_build,
+            referenced_classifications=referenced_classifications,
         )
         return conn, result
 
@@ -346,32 +346,118 @@ class TestPopulateClassifications:
         assert row[0] == "A"
         assert row[1] is None
 
-    def test_partial_build_demotes_wholly_absent_drift(self, tmp_path: Path):
-        """#597: on a partial --providers build, a classification whose
+    def test_untagged_demoted_when_scb_absent(self, tmp_path: Path):
+        """#597: an UNTAGGED classification (label-source = scb) whose
         vardemangdsversion matches NO instance is demoted (no error) and still
-        seeded — its valid_codes_file CSV keeps it above the empty guard."""
+        seeded when SCB is NOT built — its CSV keeps it above the empty guard."""
         seed_toml = (
             '[[classification]]\nshort_name = "ABSENT"\nname = "Absent"\n'
             'valid_codes_file = "absent.csv"\n'
             'vardemangdsversion = ["never-occurs"]\n'
         )
         csvs = {"absent.csv": "code,label\nA,Alpha\n"}
-        # No matching instances; partial build → demote, don't raise.
+        # scb (the untagged label-source) is absent → demote, don't raise.
         conn, (n_seeded, skipped) = self._populate_direct(
             tmp_path,
             seed_toml,
             csvs,
             providers=frozenset({"sos"}),
-            partial_build=True,
         )
         assert (n_seeded, skipped) == (1, frozenset())
         assert {
             r[0] for r in conn.execute("SELECT short_name FROM classification")
         } == {"ABSENT"}
 
+    def test_untagged_strict_when_scb_present(self, tmp_path: Path):
+        """#597 P2 #2: the SAME untagged classification (label-source = scb) with
+        NO matching instance must RAISE on a subset build that INCLUDES scb —
+        the label-source IS built, so an unmatched string is a real typo, not the
+        expected absence of an un-built source."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "ABSENT"\nname = "Absent"\n'
+            'valid_codes_file = "absent.csv"\n'
+            'vardemangdsversion = ["never-occurs"]\n'
+        )
+        csvs = {"absent.csv": "code,label\nA,Alpha\n"}
+        with pytest.raises(RegMetaError) as ei:
+            self._populate_direct(
+                tmp_path,
+                seed_toml,
+                csvs,
+                providers=frozenset({"scb"}),
+            )
+        assert ei.value.code == "classification_seed_drift"
+
+    def test_tagged_shared_kept_when_referenced(self, tmp_path: Path):
+        """#597 P2 #1: a classification tagged provider="sos" is SEEDED on a
+        --providers fk build (sos not built) when a built provider references it
+        (referenced_classifications). Its unmatched sos labels are DEMOTED
+        (label-source sos ∉ {fk}) → no raise."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "ICD-10-SE"\nname = "ICD"\n'
+            'provider = "sos"\nvalid_codes_file = "icd.csv"\n'
+            'vardemangdsversion = ["sos-only-label"]\n'
+        )
+        csvs = {"icd.csv": "code,label\nA01,Alpha\n"}
+        conn, (n_seeded, skipped) = self._populate_direct(
+            tmp_path,
+            seed_toml,
+            csvs,
+            providers=frozenset({"fk"}),
+            referenced_classifications=frozenset({"ICD-10-SE"}),
+        )
+        assert (n_seeded, skipped) == (1, frozenset())
+        assert {
+            r[0] for r in conn.execute("SELECT short_name FROM classification")
+        } == {"ICD-10-SE"}
+
+    def test_tagged_skipped_when_neither_built_nor_referenced(self, tmp_path: Path):
+        """#597 P2 #1 (negative): the same tagged entry is SKIPPED on a
+        --providers fk build when nothing references it — no row, in `skipped`."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "ICD-10-SE"\nname = "ICD"\n'
+            'provider = "sos"\nvalid_codes_file = "icd.csv"\n'
+            'vardemangdsversion = ["sos-only-label"]\n'
+        )
+        csvs = {"icd.csv": "code,label\nA01,Alpha\n"}
+        conn, (n_seeded, skipped) = self._populate_direct(
+            tmp_path,
+            seed_toml,
+            csvs,
+            providers=frozenset({"fk"}),
+            referenced_classifications=frozenset(),
+        )
+        assert (n_seeded, skipped) == (0, frozenset({"ICD-10-SE"}))
+        assert conn.execute("SELECT COUNT(*) FROM classification").fetchone()[0] == 0
+
+    def test_mixed_classification_hard_errors(self, tmp_path: Path):
+        """#597: a classification with one MATCHED and one unmatched version
+        string still hard-errors even when its label-source isn't built — a real
+        typo/stale on a partly-present source isn't masked by the demote path."""
+        seed_toml = (
+            '[[classification]]\nshort_name = "MIXED"\nname = "Mixed"\n'
+            'provider = "sos"\nvalid_codes_file = "mixed.csv"\n'
+            'vardemangdsversion = ["present", "typo-never-occurs"]\n'
+        )
+        csvs = {"mixed.csv": "code,label\nA,Alpha\n"}
+        with pytest.raises(RegMetaError) as ei:
+            self._populate_direct(
+                tmp_path,
+                seed_toml,
+                csvs,
+                providers=frozenset({"fk"}),
+                referenced_classifications=frozenset({"MIXED"}),
+                instance_labels=("present",),
+            )
+        assert ei.value.code == "classification_seed_drift"
+        # Only the unmatched string is named, not the matched one.
+        assert "typo-never-occurs" in ei.value.message
+        assert "present" not in ei.value.message
+
     def test_full_build_still_strict_on_drift(self, tmp_path: Path):
-        """#597: the SAME wholly-unmatched seed on a full build
-        (partial_build=False) still hard-errors classification_seed_drift."""
+        """#597: an unmatched seed on a full build (providers=None) still
+        hard-errors classification_seed_drift — the label-source is always
+        treated as built."""
         seed_toml = (
             '[[classification]]\nshort_name = "ABSENT"\nname = "Absent"\n'
             'valid_codes_file = "absent.csv"\n'
@@ -384,33 +470,8 @@ class TestPopulateClassifications:
                 seed_toml,
                 csvs,
                 providers=None,
-                partial_build=False,
             )
         assert ei.value.code == "classification_seed_drift"
-
-    def test_partial_build_mixed_classification_hard_errors(self, tmp_path: Path):
-        """#597: a classification with one MATCHED and one unmatched version
-        string still hard-errors on a partial build — a real typo/stale on a
-        built provider isn't masked by partial-build leniency."""
-        seed_toml = (
-            '[[classification]]\nshort_name = "MIXED"\nname = "Mixed"\n'
-            'valid_codes_file = "mixed.csv"\n'
-            'vardemangdsversion = ["present", "typo-never-occurs"]\n'
-        )
-        csvs = {"mixed.csv": "code,label\nA,Alpha\n"}
-        with pytest.raises(RegMetaError) as ei:
-            self._populate_direct(
-                tmp_path,
-                seed_toml,
-                csvs,
-                providers=frozenset({"sos"}),
-                partial_build=True,
-                instance_labels=("present",),
-            )
-        assert ei.value.code == "classification_seed_drift"
-        # Only the unmatched string is named, not the matched one.
-        assert "typo-never-occurs" in ei.value.message
-        assert "present" not in ei.value.message
 
     def test_classification_inserted(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
@@ -523,15 +584,13 @@ class TestPopulateClassifications:
         assert len(rows) >= 1
 
     def test_seed_drift_fails_build(self, tmp_path: Path):
-        # #597: the SCB-only fixture build is a partial --providers build, so a
-        # WHOLLY-absent classification is demoted, not failed. To still exercise
-        # the drift gate through build_db, GHOST is MIXED — one matched string
-        # ("Kön", present in the SCB fixture) and one stale one. A mixed
-        # classification hard-errors on its unmatched string even on a partial
-        # build (a real typo/stale on a built provider isn't masked).
+        # #597: the SCB-only fixture build (build_db default providers=("scb",))
+        # HAS scb built. GHOST is an UNTAGGED classification (label-source = scb)
+        # with a wholly-stale string. scb IS its label-source AND is built →
+        # source_built → HARD drift, so the build raises even on this subset.
         seed = (
             '[[classification]]\nshort_name = "GHOST"\nname = "No such label"\n'
-            'vardemangdsversion = ["Kön", "this-string-never-appears"]\n'
+            'vardemangdsversion = ["this-string-never-appears"]\n'
         )
         with pytest.raises(RegMetaError) as ei:
             self._build_with_seed(tmp_path, seed)
