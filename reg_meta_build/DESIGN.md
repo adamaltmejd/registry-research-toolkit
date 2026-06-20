@@ -2060,8 +2060,11 @@ vintage-lift floor in `_check_variable_replaced_by_vintage_lift`, and the
 merged-monthly-families floor in `_check_variable_alias_window` (whose
 `period_family_merges.toml` is entirely `scb/...`) — are additionally gated on SCB being
 in the build (#595), mirroring the #563 precedent: a non-SCB `--providers` real build
-skips rather than false-fails them. The curated `n_curated >= 1` floor is intentionally
-not SCB-gated: curated groups span scb and sos, so it is not SCB-exclusive.
+skips rather than false-fails them. The curated `n_curated >= 1` floor is gated on
+scb-OR-sos register presence (`_curated_source_in_build`, #600) — not on `_scb_in_build`
+alone, because curated groups span scb and sos: a thin-provider-only build (e.g.
+`--providers fk`) including neither legitimately has no curated groups and skips the
+floor, while any scb or sos build still floors it.
 
 ## Delivery-list enrichment (#365)
 
