@@ -1332,20 +1332,30 @@ def _terminal_classification_slug(conn: sqlite3.Connection, slug: str) -> str:
     to its TERMINAL (current) successor — the chain end with no outbound edge —
     and return that slug. Returns the input unchanged when it's already terminal.
 
-    One SQL-walk with a `seen` cycle guard (mirrors `Catalog._walk_terminal`); a
-    split predecessor takes the lexicographically-first successor (ORDER BY +
-    LIMIT 1) so the fold is deterministic."""
+    STOP AT A SPLIT (#604): a 1→many split predecessor (e.g. `sun1996` →
+    {`sun-niva2000`, `sun-inriktning2000`, `sun-grupp2000`}) has NO single terminal
+    — the chain branches into several distinct current editions. The walk stops at
+    such a node and returns IT as its own terminal, rather than arbitrarily
+    following the lexicographically-first branch (which would mislabel a `sun1996`
+    hit with a single branch's terminal). A node with exactly ONE successor is a
+    plain rename — walk to it (a linear chain still collapses to its real terminal).
+    `seen` cycle guard mirrors `Catalog._walk_terminal`."""
     seen = {slug}
     current = slug
     while True:
-        row = conn.execute(
+        rows = conn.execute(
             "SELECT successor_slug FROM classification_replaced_by "
-            "WHERE predecessor_slug = ? ORDER BY successor_slug LIMIT 1",
+            "WHERE predecessor_slug = ?",
             (current,),
-        ).fetchone()
-        if row is None or row["successor_slug"] in seen:
+        ).fetchall()
+        # No outbound edge → terminal. >1 outbound edge → a split; the node is its
+        # own terminal (the chain branches, no single current edition).
+        if len(rows) != 1:
             break
-        current = row["successor_slug"]
+        successor = rows[0]["successor_slug"]
+        if successor in seen:
+            break  # defensive cycle guard
+        current = successor
         seen.add(current)
     return current
 
@@ -1423,6 +1433,10 @@ def _fold_classification_succession(
         if terminal is None or terminal not in collapse:
             # Lone edition (or a NULL-slug leaf): stays a leaf, annotated with its
             # terminal so the webapp can link "current" from an old vintage hit.
+            # A split root (#604) or an already-terminal edition resolves to ITSELF
+            # (`_terminal_classification_slug` stops at a split), so `terminal ==`
+            # its own slug → the guard below skips the annotation: no misleading
+            # single-branch "current" on a node whose chain actually branches.
             if terminal is not None and terminal != slug_by_id.get(
                 r.get("_classification_id")
             ):
