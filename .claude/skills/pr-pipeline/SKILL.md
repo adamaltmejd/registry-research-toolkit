@@ -130,14 +130,14 @@ cheap, unlike `build-db`: the implementer eyeballs its change in the running app
 decide *who* renders and *how*: **(1) worktree** — `preview_start` and
 `.claude/launch.json` serve *main's* code from a worktree (run-reg-webapp → "Verifying
 from a git worktree"), so in a worktree launch via the worktree-local `.venv`
-(`.venv/bin/uvicorn … --port 8000` + `bun run dev`), NOT `preview_start`; **(2) parallel
-fan-out** — launch.json binds fixed ports 8000/5173, so implementers do NOT each start
-servers. The **authoritative rendered proof is yours (the lead): a single render on the
-assembled tree** — the visual analog of the union Verify, and the merge-gate screenshot
-(Step E). When they report, validate the real diff, `git add -A`, commit, and push onto
-the draft PR's branch. Outward-facing `gh` actions (PR create / merge / comment) may be
-denied by the session's permission mode — if one is denied, surface it to the human,
-don't work around it.
+(`.venv/bin/uvicorn … --port 8000`, then `bun run dev` from `reg_webapp/frontend/`), NOT
+`preview_start`; **(2) parallel fan-out** — launch.json binds fixed ports 8000/5173, so
+implementers do NOT each start servers. The **authoritative rendered proof is yours (the
+lead): a single render on the assembled tree** — the visual analog of the union Verify,
+and the merge-gate screenshot (Step E). When they report, validate the real diff,
+`git add -A`, commit, and push onto the draft PR's branch. Outward-facing `gh` actions
+(PR create / merge / comment) may be denied by the session's permission mode — if one is
+denied, surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
