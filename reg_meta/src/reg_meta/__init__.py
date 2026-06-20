@@ -85,7 +85,7 @@ __all__ = [
     "VariableState",
 ]
 
-__version__ = "0.17.0"
+__version__ = "0.18.0"
 
 
 def __getattr__(name: str):
