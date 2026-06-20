@@ -423,6 +423,28 @@ class VariableEdition:
 
 
 @dataclass(frozen=True)
+class ClassificationCode:
+    """One code/label entry in a classification edition's value set (#609), as
+    returned by `Catalog.classification_codes`. Keyed per EDITION
+    (`classification_code.classification_id`) — every edition (slug) is its own
+    `classification` row, so the codes are scoped to the resolved edition the leaf
+    is viewing, not the whole succession chain.
+
+    `code`/`label` come from `value_code` (provider-native strings — these are
+    PUBLIC classification codes, not row-level data). `level` is the optional
+    hierarchy depth (None when the classification is flat). `is_valid` is the
+    canonical/observed flag: True = canonical (in the classification's valid-codes
+    CSV), False = observed-only (seen in data, not canonical), None = no CSV exists
+    so validity is unknown (the whole edition has `is_valid=NULL`). It's surfaced
+    (not filtered) so the leaf can show the full code list with a validity hint."""
+
+    code: str
+    label: str
+    level: int | None
+    is_valid: bool | None
+
+
+@dataclass(frozen=True)
 class RelatedRef:
     """A variable-grain "see also" link from `variable_related_to`. Same 3-part
     identity as `VariableRef` plus the `relation_kind`. The table carries the
@@ -1922,6 +1944,80 @@ class Catalog:
             )
             for slug, year in ordered
         ]
+
+    def classification_codes(self, fqid: str | Fqid) -> list[ClassificationCode]:
+        """The value-set codes/labels of ONE classification edition (#609), code-
+        ordered. Scoped to the RESOLVED edition (`classification_code` keys on
+        `classification_id`, and every edition is its own row), so the leaf shows
+        the codes of the edition it is viewing — other editions are reached via the
+        edition-chain panel (each `class/<slug>` leaf reads its own codes). Resolves
+        `same_as` like the other classification accessors, so an alias cites its
+        resolved target's codes.
+
+        `is_valid` is surfaced, not filtered (canonical / observed-only / unknown);
+        the read side shows the full list with a validity hint rather than dropping
+        observed-only codes. Empty when the edition carries no `classification_code`
+        rows. The codes are PUBLIC classification codes, not row-level data."""
+        resolved = self._resolve_classification(self._coerce_classification_fqid(fqid))
+        rows = self._conn.execute(
+            "SELECT vc.code, vc.label, cc.level, cc.is_valid "
+            "FROM classification_code cc "
+            "JOIN value_code vc ON vc.code_id = cc.code_id "
+            "WHERE cc.classification_id = ? "
+            "ORDER BY vc.code, vc.label",
+            (resolved.classification_id,),
+        ).fetchall()
+        return [
+            ClassificationCode(
+                code=r["code"],
+                label=r["label"],
+                level=r["level"],
+                # is_valid is 1/0/NULL on the row; keep NULL as None (validity
+                # unknown — no canonical CSV exists), else coerce to bool.
+                is_valid=None if r["is_valid"] is None else bool(r["is_valid"]),
+            )
+            for r in rows
+        ]
+
+    def classification_dimensions(self, fqid: str | Fqid) -> list[ConceptGroupSummary]:
+        """The curated classification umbrella group(s) this edition belongs to
+        (#609) — the classification-grain dual of `dimensions` (#516). Surfaces the
+        niva ↔ aggregate granularity relationship that #585/#608 model as flat
+        `dimension`-axis members of `group:sun` (e.g. `sun-niva2020` alongside the
+        7-level `niva-old` and 5-level `niva-grov` aggregates): the leaf reads its
+        sibling members from the EXISTING `concept_group_classification` table — no
+        new query infra, no browse-fold/group-membership change.
+
+        Resolves `same_as` to the canonical edition (so an alias sees its target's
+        groups). Empty for a classification in no umbrella group (the common case —
+        only curated SUN-style dimensions are grouped)."""
+        # Resolve FIRST so an absent (but syntactically valid) classification
+        # FAILS FAST via `_not_found` — fail-fast parity with `classification_codes`.
+        # (Don't reuse `_canonical_classification_slug`: it intentionally tolerates
+        # dead slugs for the succession chain walk, which would swallow not-found
+        # here and make a missing classification look like an ungrouped one.)
+        resolved = self._resolve_classification(self._coerce_classification_fqid(fqid))
+        # Group members carry the CANONICAL `class/<slug>`, never a same_as alias —
+        # so match on the resolved LIVE edition's own slug (re-read from its id),
+        # not the (possibly aliased) queried FQID.
+        row = self._conn.execute(
+            "SELECT slug FROM classification WHERE id = ?",
+            (resolved.classification_id,),
+        ).fetchone()
+        if row is None or row["slug"] is None:
+            return []
+        target = str(Fqid.classification_fqid(row["slug"]))
+        return [
+            g
+            for g in self.list_classification_groups()
+            if any(str(m.fqid) == target for m in g.members)
+        ]
+
+    @staticmethod
+    def _coerce_classification_fqid(fqid: str | Fqid) -> Fqid:
+        """Parse/validate a classification FQID (kind-checked via
+        `_parse_classification`), returning a `Fqid` for the resolve path."""
+        return Fqid.classification_fqid(Catalog._parse_classification(fqid))
 
     def _classification_forward_closure(
         self, root: str, seen: set[str]

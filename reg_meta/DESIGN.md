@@ -680,10 +680,15 @@ axis. The aggregates carry no succession edge (version-independent) and are term
 they survive the classification-root's terminal-only filter and fold under the group.
 The faithful model is a granularity axis (dimension × granularity), but multi-axis
 concept groups were removed (#585), so they ride the single `dimension` axis for now;
-the proper granularity surface is deferred to the value-set viewer (#609). Prior
-editions (`sun1996`, 2000 editions) are not members — they are temporal predecessors of
-each dimension and appear in `classification_replaced_by` (the 2000→2020 steps
-auto-derived #571; `sun1996`'s 1→many split into the 2000 editions curated #579).
+the granularity relationship is surfaced at the classification leaf via
+`Catalog.classification_dimensions`, which reads `concept_group_classification`
+membership and returns the group(s) the edition belongs to as `ConceptGroupSummary`
+objects — the same type returned by `list_classification_groups()`. The value-set viewer
+(#609) renders this alongside `Catalog.classification_codes` (the resolved edition's
+`classification_code` rows, `is_valid` = canonical/observed/unknown). Prior editions
+(`sun1996`, 2000 editions) are not members — they are temporal predecessors of each
+dimension and appear in `classification_replaced_by` (the 2000→2020 steps auto-derived
+#571; `sun1996`'s 1→many split into the 2000 editions curated #579).
 
 **Presentation only, identity untouched.** A group is *not* an FQID kind and never
 becomes a binding/order/stats key — members keep their leaf FQIDs, and a binding's

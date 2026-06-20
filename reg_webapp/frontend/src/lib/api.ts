@@ -252,8 +252,14 @@ export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
  * missing/unresolvable, in which case it renders as plain text. The browse panel
  * renders the whole chain synchronously from these. */
 export type ClassificationChainEdition = Schemas["ClassificationChainEdition"];
+/** One code/label entry in a classification edition's value set (#609), embedded
+ * on `ClassificationNodeData.codes`. `is_valid` is canonical (true) / observed-only
+ * (false) / unknown (null — no canonical CSV for the edition). */
+export type ClassificationCodeModel = Schemas["ClassificationCodeModel"];
 /** The resolved classification leaf the catch-all returns — carries its embedded
- * FULL succession chain (`edition_chain`, oldest first / terminal last). */
+ * FULL succession chain (`edition_chain`, oldest first / terminal last), the
+ * resolved edition's value-set `codes` (#609), and the curated umbrella
+ * `dimensions` it belongs to (#609 niva ↔ aggregate cross-reference). */
 export type ClassificationNodeData = Schemas["ClassificationNode"];
 
 /** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;

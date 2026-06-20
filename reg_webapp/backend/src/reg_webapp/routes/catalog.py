@@ -76,6 +76,7 @@ from reg_webapp.models import (
     BindingNode,
     CatalogNode,
     ClassificationChainEdition,
+    ClassificationCodeModel,
     ClassificationNode,
     ClassificationRootNode,
     ClassificationRootResponse,
@@ -383,6 +384,19 @@ def _classification_chain_edition(edition) -> ClassificationChainEdition:
     )
 
 
+def _classification_code_model(code) -> ClassificationCodeModel:
+    """Map a `reg_meta.ClassificationCode` (#609) 1:1 onto the wire model — one
+    code/label entry of the resolved edition's value set (these are PUBLIC
+    classification codes, not row-level data). `is_valid` is passed through as
+    canonical/observed/unknown (True/False/None)."""
+    return ClassificationCodeModel(
+        code=code.code,
+        label=code.label,
+        level=code.level,
+        is_valid=code.is_valid,
+    )
+
+
 def _classification_node(
     catalog: Catalog, resolved: ResolvedClassification
 ) -> ClassificationNode:
@@ -391,7 +405,14 @@ def _classification_node(
     synchronously — no per-neighbor fetch. The chain resolves `same_as`
     server-side (`Catalog.classification_chain`); every edition is a live
     `classification` row (the build validator guarantees succession editions are
-    live)."""
+    live).
+
+    #609 embeds two more leaf surfaces server-side (same synchronous-render
+    rationale): `codes` — the RESOLVED edition's value-set codes (per-edition, so
+    only the viewed edition's list; other editions are reached via the chain) — and
+    `dimensions` — the curated umbrella group(s) this edition belongs to (the niva ↔
+    aggregate granularity cross-reference, read off the existing concept-group
+    table)."""
     return ClassificationNode(
         fqid=str(resolved.fqid),
         short_name=resolved.short_name,
@@ -404,6 +425,14 @@ def _classification_node(
         edition_chain=[
             _classification_chain_edition(e)
             for e in catalog.classification_chain(resolved.fqid)
+        ],
+        codes=[
+            _classification_code_model(c)
+            for c in catalog.classification_codes(resolved.fqid)
+        ],
+        dimensions=[
+            _concept_group_model(g)
+            for g in catalog.classification_dimensions(resolved.fqid)
         ],
     )
 

@@ -297,6 +297,53 @@
         "title": "ClassificationChainEdition",
         "type": "object"
       },
+      "ClassificationCodeModel": {
+        "description": "One code/label entry in a classification edition's value set (#609),\nembedded on `ClassificationNode.codes`. Scoped to the RESOLVED edition (codes\nkey per `classification_id`), so the leaf shows the codes of the edition being\nviewed \u2014 other editions are reached via the edition-chain panel. These are\nPUBLIC classification codes, not row-level data.\n\n`is_valid` is the canonical/observed flag, surfaced (not filtered) so the SPA\ncan show the full list with a validity hint: True = canonical (in the\nclassification's valid-codes CSV), False = observed-only (seen in data, not\ncanonical), None = no CSV exists so validity is unknown (the whole edition is\nNULL there).",
+        "properties": {
+          "code": {
+            "description": "The provider-native value code (e.g. '3').",
+            "title": "Code",
+            "type": "string"
+          },
+          "is_valid": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Canonical (True) / observed-only (False) / unknown (None \u2014 no canonical CSV exists for this edition).",
+            "title": "Is Valid"
+          },
+          "label": {
+            "description": "The human label for the code.",
+            "title": "Label",
+            "type": "string"
+          },
+          "level": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The hierarchy depth, or None when the classification is flat.",
+            "title": "Level"
+          }
+        },
+        "required": [
+          "code",
+          "label",
+          "level",
+          "is_valid"
+        ],
+        "title": "ClassificationCodeModel",
+        "type": "object"
+      },
       "ClassificationEditionModel": {
         "description": "One edition of a folded classification succession chain (#571): a vintage\nof the same classification (e.g. `sun1996`, `sun2000`). Carried by\n`ClassificationSuccessionSearchResult.editions`, terminal-first then descending\n`effective_year`. Every edition is a live `classification` row (the build\nvalidator guarantees succession editions are live), so `fqid` is None only when\nthe slug is malformed/unresolvable.",
         "properties": {
@@ -351,6 +398,20 @@
       "ClassificationNode": {
         "description": "A classification leaf (`class/<slug>`, 2 seg).",
         "properties": {
+          "codes": {
+            "items": {
+              "$ref": "#/components/schemas/ClassificationCodeModel"
+            },
+            "title": "Codes",
+            "type": "array"
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/ConceptGroupModel"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          },
           "edition_chain": {
             "items": {
               "$ref": "#/components/schemas/ClassificationChainEdition"

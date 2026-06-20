@@ -272,6 +272,47 @@ def test_classification_leaf_embeds_full_edition_chain(client):
     assert by_slug["sun2000"]["is_self"] is False
 
 
+def test_classification_leaf_embeds_value_set_codes(client):
+    # #609: the classification leaf embeds the RESOLVED edition's value-set codes
+    # (code-ordered) so the SPA's code viewer renders synchronously. The fixture
+    # links sun2020 to a canonical "Man" code (is_valid=1) plus two observed-only
+    # codes (X0 / C12, is_valid=0) — observed codes are SURFACED, not filtered, with
+    # the validity flag passed through.
+    resp = client.get("/api/catalog/class/sun2020")
+    assert resp.status_code == 200
+    codes = resp.json()["codes"]
+    by_label = {c["label"]: c for c in codes}
+    assert "Man" in by_label
+    assert by_label["Man"]["is_valid"] is True
+    # Observed-only codes are present with is_valid False (not dropped).
+    assert by_label["Icke-kanonisk kod"]["is_valid"] is False
+    # Code-ordered (the SQL ORDER BY vc.code, vc.label).
+    assert [c["code"] for c in codes] == sorted(c["code"] for c in codes)
+
+
+def test_classification_leaf_embeds_dimension_cross_reference(client):
+    # #609: the leaf embeds the curated umbrella group(s) it belongs to (the niva ↔
+    # aggregate granularity cross-reference). The fixture's `group:sun` umbrella
+    # (dimension axis) has sun2020 + the niva-test aggregate as members.
+    resp = client.get("/api/catalog/class/sun2020")
+    assert resp.status_code == 200
+    dimensions = resp.json()["dimensions"]
+    assert [g["key"] for g in dimensions] == ["sun"]
+    assert dimensions[0]["axes"] == ["dimension"]
+    member_fqids = {m["fqid"] for m in dimensions[0]["members"]}
+    assert {"class/sun2020", "class/niva-test"} <= member_fqids
+
+
+def test_classification_leaf_without_codes_or_dimensions_is_empty(client):
+    # A classification in no umbrella group and with no codes carries empty lists
+    # (the SPA omits both sections). sun1996 is a superseded edition with neither.
+    resp = client.get("/api/catalog/class/sun1996")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["codes"] == []
+    assert body["dimensions"] == []
+
+
 def test_classification_split_root_edition_chain_fans_out(client):
     # #605 / #579: browsing the SPLIT root embeds ALL downstream branches in
     # edition_chain (the forward closure), not just the deterministic-first one.
