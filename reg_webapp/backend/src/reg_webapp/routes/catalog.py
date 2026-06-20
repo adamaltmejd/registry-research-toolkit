@@ -521,22 +521,35 @@ def _register_response(
 def _classification_root_response(
     conn: sqlite3.Connection,
 ) -> ClassificationRootResponse:
-    """The `class` (1 seg) classification-root: every classification as
-    children, plus the #303 vintage groups. The CHILDREN list still reuses
-    `reg_meta.queries.list_classifications` (LOCKED — the children enumeration
-    grew no Catalog method); the GROUPS come from
+    """The `class` (1 seg) classification-root: the CURRENT/TERMINAL
+    classifications as children, plus the #303/#516 umbrella groups. The
+    CHILDREN list still reuses `reg_meta.queries.list_classifications` (LOCKED
+    — the children enumeration grew no Catalog method); the GROUPS come from
     `Catalog.list_classification_groups`, the reg_meta-owned read surface for
     the concept-group layer — a `Catalog(conn)` wrapper over the request
     connection. The wrapper is construction-only (no connection ownership);
     `close()` is never called on it — the connection stays owned by the
     handler's `_catalog_conn` contextmanager. A classification with a NULL
     slug isn't FQID-addressable, so it's excluded from children and group
-    members alike (symmetric with `list_registers`'s slug filter)."""
+    members alike (symmetric with `list_registers`'s slug filter).
+
+    Only TERMINAL editions surface as children: a row whose `superseded_by`
+    is set (a successor exists) is a superseded edition and is dropped here.
+    Superseded editions are reached by drilling into a terminal leaf's
+    edition-chain panel (ClassificationLineagePanels, incl. the #605 split-root
+    fan-out) or by direct URL. This is generic — lkf (47 editions) / ssyk / sni
+    each collapse to their current edition too. Group members are themselves
+    terminal (the 2020 SUN editions + the version-independent nivå aggregates),
+    so they stay in `children` and the SPA folds them under the group row."""
     rows = list_classifications(conn)
     children: list[ClassificationNode] = []
     for row in rows:
         slug = row.get("slug")
         if not slug:
+            continue
+        # superseded_by is a GROUP_CONCAT of successor short_names; truthy ⇒ a
+        # newer edition supersedes this one ⇒ not a current edition, skip it.
+        if row.get("superseded_by"):
             continue
         children.append(
             ClassificationNode(
@@ -547,7 +560,7 @@ def _classification_root_response(
         )
     # Curated classification umbrella groups (e.g. group:sun over its dimensions;
     # #516). Grouped classifications ALSO stay in `children`; the SPA folds them.
-    # Vintage editions are succession edges now (#571), not groups.
+    # Members are terminal editions, so the superseded-by filter above keeps them.
     groups = [
         _concept_group_model(g) for g in Catalog(conn).list_classification_groups()
     ]
