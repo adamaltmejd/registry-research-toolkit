@@ -45,7 +45,13 @@ the lead runs the authoritative union Verify on the assembled result.
    - Frontend: `bun run lint`, `bun run check`, `bun run test`, `bun run build`, and
      `bun run gen:types` (no-diff unless the backend schema intentionally changed — if
      it did, regenerate openapi then `bun run gen:types` and report the regenerated
-     types among your touched files).
+     types among your touched files). These are **headless — they never render a
+     pixel.** If your change alters rendered output, ALSO verify it *visually* per the
+     harness workflow: start the app (`preview_start` / `/run-reg-webapp`),
+     `preview_snapshot` the changed views, check `preview_console_logs` for errors,
+     exercise the changed interactions (`preview_click` / `preview_fill`), and
+     `preview_screenshot` the result — report that screenshot to the lead as your visual
+     proof.
 4. **End your turn with** a short summary (what changed and why) and **the exact list of
    files you touched** — this is your report to the lead. Do NOT run git — no `add` /
    `commit` / `push`; the lead stages, commits, and opens the PR. You never commit,

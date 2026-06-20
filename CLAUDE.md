@@ -303,6 +303,18 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
   point at it with an absolute `--input-dir <main-checkout>/reg_meta_build/input_data/`.
+- **Visual verification** when the PR changes rendered output (`reg_webapp/frontend/**`,
+  or any view / component / style the SPA renders). This is the UI analog of real-data
+  validation — **required, not optional**, for rendered changes. Headless checks
+  (`bun run lint/check/test/build`) never render a pixel, so green `bun` is not
+  sufficient: run the app and *look*. Start the dev servers (`preview_start` via
+  `.claude/launch.json`, or the `/run-reg-webapp` skill), then follow the harness
+  verification workflow — check `preview_console_logs` for errors, `preview_snapshot`
+  the changed views, exercise changed interactions (`preview_click` / `preview_fill`),
+  and `preview_resize` for responsive / dark mode. Attach a `preview_screenshot` as the
+  proof, the same way a build PR attaches its `build-db`. Use `/web-design-reviewer` for
+  a design-quality pass against the running app (and `/frontend-design` when authoring
+  new UI).
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip; after merging, confirm the PR's changes are actually present on main — the
   GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
