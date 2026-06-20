@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { CatalogNode, StatesResponse, VariableStateModel } from "./api";
 import {
+  axisNoun,
   bindingChildren,
   breadcrumbs,
   buildAddPlan,
@@ -147,6 +148,16 @@ describe("nodeLabel", () => {
     expect(nodeLabel(provider)).toBe("Statistics Sweden");
     expect(nodeLabel(register)).toBe("scb/lisa"); // name is null → fqid
     expect(nodeLabel(classification)).toBe("Education");
+  });
+});
+
+describe("axisNoun", () => {
+  it("pluralizes the group's single facet axis, else falls back to members", () => {
+    // The real classification-umbrella case (#608) — must read "dimensions",
+    // never a re-hardcoded "vintages".
+    expect(axisNoun(["dimension"])).toBe("dimensions");
+    expect(axisNoun(["vintage"])).toBe("vintages");
+    expect(axisNoun([])).toBe("members"); // no axis → generic fallback
   });
 });
 

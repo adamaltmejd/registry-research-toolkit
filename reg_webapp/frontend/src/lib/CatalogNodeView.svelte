@@ -5,6 +5,7 @@ import BindingLeafView from "./BindingLeafView.svelte";
 import ClassificationLineagePanels from "./ClassificationLineagePanels.svelte";
 import ConceptGroupRow from "./ConceptGroupRow.svelte";
 import {
+  axisNoun,
   bindingChildren,
   breadcrumbs,
   catalogHref,
@@ -60,16 +61,6 @@ $effect(() => {
   void fqidPath;
   filter = "";
 });
-
-// Plural noun for a classification group's member count. Classification groups
-// are single-axis (e.g. "dimension"), so we derive the noun from that one axis
-// rather than hardcoding "vintages" (succession editions aren't groups, #571).
-// Naive +"s" pluralization is enough for the axis vocabulary (dimension, …);
-// fall back to "members" when a group somehow carries no axis.
-function axisNoun(axes: string[]): string {
-  const axis = axes[0];
-  return axis ? `${axis}s` : "members";
-}
 </script>
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">

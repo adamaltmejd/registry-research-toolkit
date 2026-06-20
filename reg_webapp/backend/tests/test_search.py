@@ -282,10 +282,13 @@ def test_variable_concept_group_folds(client):
 
 
 def test_classification_group_folds_without_duplicate_leaves(client):
-    # sun2000 + sun2020 share the name "Svensk utbildningsnomenklatur", which is
-    # also the `sun` group label → the family folds into ONE group row AND the
-    # member leaves are SUBSUMED (not emitted standalone too — the #350 review
-    # bug: classification leaves were duplicated as both leaf and folded member).
+    # The terminal sun2020 carries the name "Svensk utbildningsnomenklatur", which
+    # is also the `sun` group label → a hit on it folds into ONE group row AND its
+    # member leaves are SUBSUMED (not emitted standalone too — the #350 review bug:
+    # classification leaves were duplicated as both leaf and folded member). The
+    # `sun` group's members are the terminal dimensions sun2020 + niva-test (#608 /
+    # #516 umbrella shape); the superseded sun2000/sun1996 share the name but are
+    # NOT members, so they stay standalone leaves — and never collide with members.
     g = _group(
         client.get("/api/search", params={"q": "utbildningsnomenklatur"}).json(),
         "classifications",
@@ -293,7 +296,7 @@ def test_classification_group_folds_without_duplicate_leaves(client):
     groups = [r for r in g["results"] if r["type"] == "group"]
     grp = next(r for r in groups if r["kind"] == "classification")
     member_fqids = {m["fqid"] for m in grp["members"]}
-    assert {"class/sun2000", "class/sun2020"} <= member_fqids
+    assert {"class/sun2020", "class/niva-test"} <= member_fqids
     leaf_fqids = {r["fqid"] for r in g["results"] if r["type"] == "classification"}
     # No member appears as a standalone leaf alongside its folded group row.
     assert not (member_fqids & leaf_fqids)
