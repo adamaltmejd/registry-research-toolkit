@@ -66,11 +66,14 @@ curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/api/context # pro
 ```
 
 Then drive the SPA with the Playwright driver — run it **from `reg_webapp/frontend/`**
-(it resolves `playwright` from the CWD's `node_modules`):
+(it resolves `playwright` from the CWD's `node_modules`). The driver defaults to
+`:5173`, so if you launched via `dev.sh` (random port) prefix it with
+`REG_WEBAPP_DEV_URL=<the printed frontend URL>`:
 
 ```sh
 cd reg_webapp/frontend
 bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
+# dev.sh port: REG_WEBAPP_DEV_URL=http://localhost:<F> bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
 ```
 
 `smoke` loads `/catalog`, clicks provider → register → variable, fills the period input
@@ -129,13 +132,13 @@ the Playwright browser project).
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
   installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
   `bun install` in the **background** (SessionStart gates the session, so it never
-  blocks) when a completion marker is missing. `dev.sh` also self-provisions
-  synchronously and launches from the checkout's own `.venv`, so a worktree serves ITS
-  code. (Deliberately NOT a `WorktreeCreate` hook: that event *replaces* git's worktree
-  creation — a provisioner there would abort it.) The historical footgun — a `uv run` /
-  `preview_start` started with the **main** checkout as cwd served main's source (bit an
-  agent 2026-06-11) — is why `dev.sh` is preferred in a worktree; raw `preview_start`
-  there still serves main.
+  blocks) when the env is missing or its dependency fingerprint is stale (lockfile
+  changed). `dev.sh` also self-provisions synchronously and launches from the checkout's
+  own `.venv`, so a worktree serves ITS code. (Deliberately NOT a `WorktreeCreate` hook:
+  that event *replaces* git's worktree creation — a provisioner there would abort it.)
+  The historical footgun — a `uv run` / `preview_start` started with the **main**
+  checkout as cwd served main's source (bit an agent 2026-06-11) — is why `dev.sh` is
+  preferred in a worktree; raw `preview_start` there still serves main.
 
 ## Troubleshooting
 
