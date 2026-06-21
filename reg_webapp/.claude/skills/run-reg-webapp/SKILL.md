@@ -92,8 +92,9 @@ Stop the servers when done:
 lsof -ti :8000 -ti :5173 | xargs kill
 ```
 
-**Human path:** instead of driving via Playwright, just open <http://localhost:5173/> in
-a browser (backend API docs at <http://localhost:8000/docs>).
+**Human path:** instead of driving via Playwright, just open the frontend in a browser —
+`http://localhost:5173/` for the manual path above, or the port `dev.sh` printed
+(backend API docs at `<backend>/docs`).
 
 ## Parallel instances (concurrent worktrees / PR lanes)
 
