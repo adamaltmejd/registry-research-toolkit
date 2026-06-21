@@ -1384,6 +1384,23 @@ describe("memberCoverageUnion (#638 PR2a group availability span)", () => {
     ).toBeNull();
   });
 
+  it("a stateless member ({null,null,false}) does NOT unbound the union END", () => {
+    // The stateless payload carries no span — it must be skipped, NOT treated as
+    // open-ended. Its null `coverage_to` would otherwise trip the open-ended
+    // branch and unbound the whole union (`to: null`), drawing the union track
+    // through the vintage even though every finite member ends earlier.
+    expect(
+      memberCoverageUnion([
+        {
+          coverage_from: "2005-01-01",
+          coverage_to: "2010-12-31",
+          open_ended: false,
+        },
+        { coverage_from: null, coverage_to: null, open_ended: false },
+      ]),
+    ).toEqual({ from: 2005, to: 2010 });
+  });
+
   it("a yearless-floor start (0001-01-01) does NOT floor the union to year 1", () => {
     // The `0001-01-01` start sentinel means "start unknown", not year 1 — it must
     // be treated as no finite start (mirrors `coverageFromStates`), else the union

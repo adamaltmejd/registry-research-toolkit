@@ -792,6 +792,19 @@ export function memberCoverageUnion(
     if (!cov) {
       continue;
     }
+    // A stateless member's payload is `{null, null, false}` (not null) — it
+    // carries no span, so treat it like null coverage. WITHOUT this, its null
+    // `coverage_to` would wrongly trip the open-ended branch below and unbound
+    // the WHOLE union END (the union track then runs to the vintage even when
+    // every finite member ends earlier). A finite `coverage_from` WITH a null
+    // `coverage_to` is a GENUINE open-ended member and still falls through.
+    if (
+      cov.coverage_from == null &&
+      cov.coverage_to == null &&
+      !cov.open_ended
+    ) {
+      continue;
+    }
     // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
     // — skip it so it never floors the union `from` (mirrors `coverageFromStates`).
     const fromYear =

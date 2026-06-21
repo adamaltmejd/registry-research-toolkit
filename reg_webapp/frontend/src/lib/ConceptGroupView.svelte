@@ -153,11 +153,25 @@ function writePeriod(next: string | null): void {
 }
 
 // ── The availability lens (greying) ──────────────────────────────────────────
-// The active window for greying: precedence `?period` (year-representable) >
-// project window > none. When an active window exists, a member whose coverage
-// does NOT fully span it is "not delivered in <window>" → greyed. With no active
-// window, no greying (browsing the full group is not a deviation).
-const activeWindow = $derived(yearWindowFromWire(period) ?? windowStore.value);
+// The active window for greying, by precedence:
+//   • an explicit `?period` (ANY form) is authoritative — a year `?period` →
+//     that window; a NON-year `?period` (e.g. `HT2020`, a comma list, a deep
+//     link) → `yearWindowFromWire` null → no greying. The year-grain lens can't
+//     represent a sub-annual selection, so it suppresses greying rather than
+//     silently falling back to the project window and greying against a window
+//     the user isn't actually on (mirrors PeriodPicker treating such values as
+//     `subAnnualPeriod` and suppressing slider availability gaps).
+//   • no `?period` → the project window.
+//   • neither → none (browsing the full group is not a deviation).
+const activeWindow = $derived(
+  period != null ? yearWindowFromWire(period) : windowStore.value,
+);
+
+// The open-ended coverage ceiling (#631): an open-ended member end projects to
+// the catalog vintage year for the gap computation (the catalog only knows
+// delivery up to its vintage), mirroring PeriodPicker's `ceilingYear` fallback
+// and PeriodWindowSlider's `effectiveCoverage` projection.
+const ceilingYear = $derived(vintageYear ?? new Date().getFullYear());
 
 /** A member's coverage as a year-grain `Coverage` (open-ended end → null = "still
  * delivered"), or null when the member is stateless — reused for the per-member
@@ -168,10 +182,10 @@ function memberCoverage(member: ConceptGroupNodeMember): Coverage | null {
 
 /** Whether a member is NOT fully delivered across the active window — the
  * availability deviation (same rule as PeriodWindowSlider: a not-delivered gap
- * exists when the window extends before a finite coverage start or after a finite
- * coverage end; an open-ended end never trails-gaps). False when no window is
- * active, or the member is stateless (nothing to gap against — don't grey a
- * member whose coverage is simply unknown). */
+ * exists when the window extends before a finite coverage start or after the
+ * coverage end, where an open-ended end is first projected to the catalog
+ * vintage). False when no window is active, or the member is stateless (nothing
+ * to gap against — don't grey a member whose coverage is simply unknown). */
 function notDelivered(member: ConceptGroupNodeMember): boolean {
   if (activeWindow === null) {
     return false;
@@ -180,7 +194,15 @@ function notDelivered(member: ConceptGroupNodeMember): boolean {
   if (cov === null) {
     return false;
   }
-  return notDeliveredGaps(activeWindow, cov).length > 0;
+  // Project an open-ended member end (`to === null` = "still delivered") to the
+  // catalog vintage ceiling for the gap test — the catalog only knows delivery
+  // up to its vintage, so a window beyond it reads as "not delivered after
+  // <vintage>" (mirrors PeriodWindowSlider's `effectiveCoverage`). Without this,
+  // a null `to` never trailing-gaps and the member is wrongly never greyed for a
+  // window past the vintage. The DISPLAYED coverage text stays open-ended ("since
+  // <year>") — this projection feeds only the gap/greying computation.
+  const projected = cov.to === null ? { from: cov.from, to: ceilingYear } : cov;
+  return notDeliveredGaps(activeWindow, projected).length > 0;
 }
 
 /** The "not delivered <window>" note for a greyed member, or "" when delivered /

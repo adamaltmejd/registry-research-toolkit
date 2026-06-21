@@ -200,4 +200,32 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       febLink.element().closest("a")?.classList.contains("not-delivered"),
     ).toBe(true);
   });
+
+  it("a non-year `?period` suppresses greying even with a project window set", async () => {
+    // An explicit non-year `?period` (e.g. `HT2020`) is authoritative: the
+    // year-grain lens can't represent it, so it suppresses greying rather than
+    // falling back to the project window (mirrors PeriodPicker's subAnnualPeriod
+    // gap suppression). feb covers 2019–2021, which does NOT span a 2010–2012
+    // window — so with the WINDOW active it would grey, but the non-year period
+    // must win and leave it ungreyed.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    windowStore.set({ from: 2010, to: 2012 });
+    router.navigate("/catalog/group/scb/rams/ink?period=HT2020");
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+
+    // The member renders, but ungreyed (no `not-delivered` class, no note).
+    const febLink = page.getByRole("link", { name: /februari/ });
+    await expect.element(febLink).toBeVisible();
+    expect(
+      febLink.element().closest("a")?.classList.contains("not-delivered"),
+    ).toBe(false);
+    await expect
+      .element(page.getByText(/not delivered/))
+      .not.toBeInTheDocument();
+  });
 });
