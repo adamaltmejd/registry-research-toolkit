@@ -100,6 +100,30 @@ const coexistingB = [
   state({ state_id: 4, variant: "regioner" }),
 ];
 
+/** Two co-existing variants where the PICKED variant (`individer`) ALSO needs a
+ * representation choice: within it two columns share the same window but carry
+ * GENUINELY DIFFERENT codings (distinct `value_set_version_label`), so
+ * `representationsCollapse` is false → `needsRepChoice`. Picking `individer` then
+ * Add opens the rep chooser (the population→rep two-step that exposes the
+ * divergence bug). `arbetsstallen` is a plain single-column variant. */
+const coexistingWithRepChoice = [
+  state({
+    state_id: 1,
+    variant: "individer",
+    delivery_column_name: "Kon",
+    value_set_version_label: "1-siffrig",
+    value_set: [{ code: "1", label: "Man" }],
+  }),
+  state({
+    state_id: 2,
+    variant: "individer",
+    delivery_column_name: "KonDetalj",
+    value_set_version_label: "2-siffrig",
+    value_set: [{ code: "01", label: "Man" }],
+  }),
+  state({ state_id: 3, variant: "arbetsstallen", delivery_column_name: "Sni" }),
+];
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
   // The sibling panels' fetches: resolve empty so they render nothing and never
@@ -194,6 +218,35 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     // Picking one of B's CURRENT options ungates Add again.
     await foretag.click();
     await expect.element(add).toBeEnabled();
+  });
+
+  it("switching population invalidates an in-flight rep prompt (no stale-variant commit)", async () => {
+    // The divergence the fix closes: pick variant A → Add (opens A's rep chooser)
+    // → WITHOUT choosing, pick variant B. The rep chooser must DISAPPEAR
+    // (`addPrompt` cleared) — otherwise choosing a rep would commit A's segments
+    // while the UI shows B selected (wrong variant committed).
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(coexistingWithRepChoice),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // Pick population A (`individer`) → its segment needs a rep choice.
+    await page.getByRole("button", { name: /individer/ }).click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+
+    // The representation chooser is open for A.
+    const repChooser = page.getByRole("group", {
+      name: "Pick a representation",
+    });
+    await expect.element(repChooser).toBeVisible();
+
+    // Switch population to B WITHOUT choosing a rep → the in-flight rep prompt
+    // (holding A's segments) must be discarded.
+    await page.getByRole("button", { name: /arbetsstallen/ }).click();
+    await expect.element(repChooser).not.toBeInTheDocument();
   });
 
   it("a single-variant node shows no selector and Add is enabled", async () => {

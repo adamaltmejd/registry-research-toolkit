@@ -209,6 +209,17 @@ $effect(() => {
   addVariant = null;
 });
 
+/** Pick the population in the proactive selector. Changing it must invalidate any
+ * in-flight rep prompt — that prompt holds the PRIOR variant's segments, so
+ * committing it after switching population would write the wrong variant's data
+ * (the UI shows the new pick) — and any stale add confirmation. The rep flow
+ * restarts cleanly on the next Add. */
+function selectPopulation(variant: string): void {
+  addVariant = variant;
+  addPrompt = null;
+  addOutcome = null;
+}
+
 function startAdd(): void {
   addOutcome = null;
   if (addPlan.kind === "choose-variant") {
@@ -367,7 +378,7 @@ const repSegment = $derived(
               class="pick"
               aria-pressed={addVariant === w.variant}
               class:selected={addVariant === w.variant}
-              onclick={() => (addVariant = w.variant)}
+              onclick={() => selectPopulation(w.variant)}
             >
               <span class="slug">{w.variant}</span>
               <span class="name">{windowLabel(w)}</span>
