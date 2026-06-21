@@ -49,4 +49,10 @@ pids+=($!)
 
 printf 'reg_webapp dev (Ctrl-C to stop):\n  backend : http://localhost:%s\n  frontend: http://localhost:%s\n  driver  : REG_WEBAPP_DEV_URL=http://localhost:%s\n' \
 	"$backend_port" "$frontend_port" "$frontend_port"
-wait
+
+# Fail fast: tear down BOTH if EITHER server exits (a bare `wait` would hang on
+# the survivor when one crashes — e.g. port busy or DB missing). `wait -n` isn't
+# in bash 3.2, so poll liveness; the EXIT trap kills whatever is still up.
+while kill -0 "${pids[0]}" 2>/dev/null && kill -0 "${pids[1]}" 2>/dev/null; do
+	sleep 1
+done

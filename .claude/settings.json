@@ -7,17 +7,6 @@
     ]
   },
   "hooks": {
-    "WorktreeCreate": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/worktree_bootstrap.sh",
-            "timeout": 600
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
         "hooks": [
