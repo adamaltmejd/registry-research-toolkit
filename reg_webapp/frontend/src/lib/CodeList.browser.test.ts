@@ -1,0 +1,97 @@
+import { describe, expect, it } from "vitest";
+import { page } from "vitest/browser";
+import { render } from "vitest-browser-svelte";
+import CodeList from "./CodeList.svelte";
+
+// The unified value-set / code viewer (#638 PR3). Renders code→label rows for
+// BOTH the classification code list and the variable value set; the filter box is
+// size-dependent (hidden below CODE_FILTER_THRESHOLD = 5).
+
+type Code = { code: string; label: string; is_valid?: boolean | null };
+
+// A list of N codes labelled "Code 1".."Code N" — enough to cross the threshold.
+function codes(n: number): Code[] {
+  return Array.from({ length: n }, (_, i) => ({
+    code: String(i + 1),
+    label: `Code ${i + 1}`,
+  }));
+}
+
+describe("CodeList — unified value-set / code viewer (#638 PR3)", () => {
+  it("renders rows but NO filter box below the threshold (< 5 codes)", async () => {
+    await render(CodeList, { codes: codes(4) });
+    // Rows are present…
+    await expect.element(page.getByText("Code 1")).toBeVisible();
+    expect(document.querySelectorAll(".code-row")).toHaveLength(4);
+    // …but the filter box is hidden — pointless for a handful of items.
+    await expect
+      .element(page.getByRole("textbox", { name: "Filter codes" }))
+      .not.toBeInTheDocument();
+  });
+
+  it("shows the filter box at or above the threshold (>= 5 codes)", async () => {
+    await render(CodeList, { codes: codes(5) });
+    await expect
+      .element(page.getByRole("textbox", { name: "Filter codes" }))
+      .toBeVisible();
+  });
+
+  it("narrows the rows as you type in the filter", async () => {
+    await render(CodeList, {
+      codes: [
+        { code: "1", label: "Förgymnasial" },
+        { code: "3", label: "Eftergymnasial utbildning" },
+        { code: "5", label: "Forskarutbildning" },
+        { code: "7", label: "Gymnasial" },
+        { code: "9", label: "Övrig" },
+      ],
+    });
+    const input = page.getByRole("textbox", { name: "Filter codes" });
+    await input.fill("efter");
+    await expect
+      .element(page.getByText("Eftergymnasial utbildning"))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("Förgymnasial"))
+      .not.toBeInTheDocument();
+    // The shared FilterInput surfaces the "1 of 5" count while filtering.
+    await expect.element(page.getByText("1 of 5")).toBeVisible();
+  });
+
+  it("tags an is_valid=false code 'observed' and leaves a normal code untagged", async () => {
+    await render(CodeList, {
+      codes: [
+        { code: "1", label: "Kanonisk", is_valid: true },
+        { code: "X0", label: "Observerad", is_valid: false },
+      ],
+    });
+    await expect.element(page.getByText("observed")).toBeVisible();
+    expect(document.querySelectorAll(".code-row.observed")).toHaveLength(1);
+  });
+
+  it("does not tag value-set members (no is_valid field)", async () => {
+    // A variable value-set member omits `is_valid` → no observed tag at all.
+    await render(CodeList, {
+      codes: [
+        { code: "1", label: "Man" },
+        { code: "2", label: "Kvinna" },
+      ],
+    });
+    await expect.element(page.getByText("Man")).toBeVisible();
+    await expect.element(page.getByText("observed")).not.toBeInTheDocument();
+  });
+
+  it("shows a no-match message when the filter excludes every code", async () => {
+    await render(CodeList, { codes: codes(5) });
+    await page.getByRole("textbox", { name: "Filter codes" }).fill("zzz");
+    await expect.element(page.getByText("No codes match “zzz”.")).toBeVisible();
+  });
+
+  it("renders nothing for an empty code list", async () => {
+    await render(CodeList, { codes: [] });
+    expect(document.querySelectorAll(".code-row")).toHaveLength(0);
+    await expect
+      .element(page.getByRole("textbox", { name: "Filter codes" }))
+      .not.toBeInTheDocument();
+  });
+});
