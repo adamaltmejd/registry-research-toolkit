@@ -626,6 +626,71 @@ class TestGenerator:
             "artal-person-3",
         ]
 
+    def test_accepted_subgroup_degraded_peer_not_retargeted(self) -> None:
+        # Preserve-or-fail (#651): an `[[accept]]`-ed family whose accepted raw-stem
+        # subgroup NO LONGER folds (its labels degraded to NULL after corpus drift)
+        # shares its trimmed key with a DIFFERENT raw stem that DOES fold. Only ONE
+        # stem folds, so the old `len(fold_qual) > 1` accepted-preserve block was
+        # SKIPPED — the non-accepted peer was selected as the winner and, because the
+        # accepted key is collision-exempt, emitted UNDER the accepted scope, so the
+        # `[[accept]]` silently resolved to the WRONG variables. The fix selects the
+        # accepted subgroup as the sole winner regardless of `fold_qual` count; the
+        # degraded subgroup is then dropped by the emit path's NULL gate (the "fail"
+        # arm — `resolve_accept` fails loudly next build), and the folding peer is
+        # NEVER emitted under the accepted key.
+        conn = _base_db()
+        # Accepted family `morsak-1/2/3` (raw stem `morsak-`), labels degraded to NULL
+        # so it no longer folds; its members are materialized as the accepted group.
+        for i, suffix in enumerate([1, 2, 3]):
+            add_variable(
+                conn,
+                register_id=1,
+                var_id=2900 + i,
+                name=None,  # degraded — no labels to agree on
+                slug=f"morsak-{suffix}",
+            )
+        # A DIFFERENT raw stem `morsak` that DOES fold (`morsak4/5/6`, agreeing names).
+        _add_family(
+            conn,
+            register_id=1,
+            stem="morsak",  # slugs morsak4/5/6, raw stem `morsak`
+            suffixes=[4, 5, 6],
+            name="Annan dödsorsak kod",
+            var_id_base=2910,
+        )
+        # Materialize the accept: a curated group keyed on the trimmed `morsak`
+        # claiming the THREE accepted (degraded) members (the `morsak-` family).
+        cur = conn.execute(
+            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+            "VALUES ('variable', 1, 'morsak', 'Dödsorsak', 'curated')"
+        )
+        group_id = cur.lastrowid
+        for slug in ("morsak-1", "morsak-2", "morsak-3"):
+            vid = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+                (slug,),
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (vid, group_id),
+            )
+        conn.commit()
+
+        scope = frozenset({("scb", "lisa", "morsak")})
+        result = infer_concept_group_candidates(conn, accepted_scopes=scope)
+        # The folding peer (`morsak4/5/6`) is NOT emitted under the accepted key — the
+        # accepted (degraded) subgroup is selected and dropped by the NULL gate, so the
+        # `morsak` key yields no candidate (preserve-or-fail). The peer is not a
+        # symmetric collision drop, so no trim-collision is counted.
+        assert result.skipped_trim_collision == 0
+        assert [c.key for c in result.candidates] == []
+        # In particular the peer's slugs never surface under the accepted key.
+        assert all(
+            {m.slug for m in c.members}.isdisjoint({"morsak4", "morsak5", "morsak6"})
+            for c in result.candidates
+        )
+
     def test_non_accepted_trim_collision_still_skips_with_other_scope(self) -> None:
         # A genuine two-family trim-collision whose key is NOT accepted still
         # skips-and-counts, even when an UNRELATED scope is accepted: the accepted-
