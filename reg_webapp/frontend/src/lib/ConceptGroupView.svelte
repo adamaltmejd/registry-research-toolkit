@@ -126,6 +126,23 @@ const ungridded = $derived(
 
 // ── The time axis: `?period` (client-side lens, no refetch) ──────────────────
 const period = $derived(router.getQueryParam("period"));
+
+/** A member's leaf URL, carrying the group page's active `?period` (when set) so
+ * the member's leaf page opens narrowed to the SAME window — continuity into the
+ * leaf, including its add-to-project plan (which keys off `?period`). Without
+ * this, narrowing the group's availability lens then clicking a member would drop
+ * the period and open the leaf at full history. Carries ONLY `?period` — the
+ * group-page-specific `?member` focus hint is not consumed by the binding leaf.
+ * `catalogHref` returns a query-less `/catalog/<path>`, so appending is safe. */
+function memberHref(fqid: string): string {
+  const href = catalogHref(fqid);
+  if (!period) {
+    return href;
+  }
+  const qs = new URLSearchParams();
+  qs.set("period", period);
+  return `${href}?${qs.toString()}`;
+}
 // Members are year-grain coverage, so the picker offers only the year grain.
 const grains: PeriodGrain[] = ["year"];
 // The picker's coverage track = the UNION span over all members (open-ended on
@@ -255,7 +272,7 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
     {@const focused = node?.member === slug}
     {@const muted = notDelivered(member)}
     <a
-      href={catalogHref(member.fqid)}
+      href={memberHref(member.fqid)}
       class:focused
       class:not-delivered={muted}
       title={member.fqid}

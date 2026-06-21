@@ -201,6 +201,43 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
     ).toBe(true);
   });
 
+  it("member links carry the active `?period` into the leaf", async () => {
+    // With a year `?period` active (the availability lens narrowed), each member
+    // link must carry it to the leaf URL so the leaf opens at the SAME window
+    // (continuity, incl. its add-to-project plan). Only `?period` rides along —
+    // never the group-specific `?member` focus hint.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    router.navigate("/catalog/group/scb/rams/ink?period=2019..2020");
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+
+    const febLink = page.getByRole("link", { name: /februari/ });
+    await expect.element(febLink).toBeVisible();
+    const href = febLink.element().closest("a")?.getAttribute("href") ?? "";
+    expect(href).toContain("period=2019..2020");
+    expect(href).not.toContain("member=");
+  });
+
+  it("member links carry no query when no `?period` is set", async () => {
+    // The baseline: browsing the full group (no lens) → plain leaf hrefs, so the
+    // leaf opens at full history.
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+
+    await expect
+      .element(page.getByRole("link", { name: /februari/ }))
+      .toHaveAttribute("href", "/catalog/scb/rams/inkfeb");
+  });
+
   it("a non-year `?period` suppresses greying even with a project window set", async () => {
     // An explicit non-year `?period` (e.g. `HT2020`) is authoritative: the
     // year-grain lens can't represent it, so it suppresses greying rather than
