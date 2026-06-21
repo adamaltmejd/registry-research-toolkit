@@ -76,6 +76,8 @@ from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
 
+from reg_meta.fqid import is_slug
+
 from ._components import DisjointSet
 from ._curation import curation_error, load_curation_entries, require_str
 
@@ -578,6 +580,22 @@ def _insert_group(
     source: str,
     facet_axis: str | None = None,
 ) -> int:
+    # By-key route contract (#640): every group_key — curated / token / edge for
+    # `variable`, plus curated `classification` umbrellas — addresses its group via
+    # `/catalog/group/<provider>/<register>/<key>`. Starlette decodes `%2F` before
+    # matching `{key}` and the SPA helper splits on `/`, so a key must be a single
+    # URL-path-safe slug. Validate at this single insert seam (the public `is_slug`
+    # is the SAME grammar the provider/register path slots enforce).
+    if not is_slug(group_key):
+        raise curation_error(
+            "concept_group_key_not_path_safe",
+            f"concept_group {kind!r} key {group_key!r} (register_id "
+            f"{register_id}) is not a URL-path-safe slug.",
+            "A concept-group key must be a slug (lowercase a-z, digits, single "
+            "hyphens; no `/`, `:`, etc.) — it addresses the group via "
+            "`/catalog/group/<provider>/<register>/<key>`, so a non-slug key is "
+            "unreachable. Pick a path-safe key.",
+        )
     cur = conn.execute(
         "INSERT INTO concept_group "
         "(kind, register_id, group_key, label, source, facet_axis) "
