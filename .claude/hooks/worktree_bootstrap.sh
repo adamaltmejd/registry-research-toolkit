@@ -75,10 +75,12 @@ provision() { # $1 = root; synchronous; idempotent; stamps the fingerprint on su
 	fi
 }
 
-# Internal re-entry used by the non-blocking SessionStart path below, and by
-# callers wanting a direct synchronous provision (dev.sh): `… --provision <root>`.
+# Internal re-entry: a direct synchronous provision of <root> (default: this
+# checkout's toplevel). Used by the non-blocking SessionStart path below, by
+# dev.sh, and by the pre-commit `post-checkout` hook (which runs in the freshly
+# checked-out / worktree-added tree): `… --provision [root]`.
 if [ "${1:-}" = "--provision" ]; then
-	provision "${2:-$PWD}"
+	provision "${2:-$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")}"
 	exit 0
 fi
 
