@@ -1063,8 +1063,9 @@ export interface components {
             /** Key */
             key: string;
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Kind
+             * @default concept-group
+             * @constant
              */
             kind: "concept-group";
             /** Label */
@@ -2104,7 +2105,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"] | components["schemas"]["ConceptGroupNode"]) | components["schemas"]["StatesResponse"];
+                    "application/json": (components["schemas"]["ProviderResponse"] | components["schemas"]["RegisterResponse"] | components["schemas"]["BindingNode"] | components["schemas"]["ClassificationRootResponse"] | components["schemas"]["ClassificationNode"]) | components["schemas"]["StatesResponse"];
                 };
             };
             /** @description Validation Error */

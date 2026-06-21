@@ -166,14 +166,13 @@ export function memberAt(
 
 /** A node's display label — its `name` when present, else its FQID (providers
  * and registers carry an optional `name`; classifications carry a required
- * `name`; the classification-root carries a default `name`; a concept-group node
- * (#617) carries a `label`, not a `name`/`fqid`). */
+ * `name`; the classification-root carries a default `name`). The concept-group
+ * SUBJECT (#617) is NOT a `CatalogNode` arm — it's served by the fixed
+ * `/catalog/group/...` route and labelled directly off its `label` in
+ * `ConceptGroupView`, so it never reaches this catch-all labeller. */
 export function nodeLabel(node: CatalogNode): string {
   if (node.kind === "classification-root" || node.kind === "classification") {
     return node.name;
-  }
-  if (node.kind === "concept-group") {
-    return node.label;
   }
   return node.name ?? node.fqid;
 }
