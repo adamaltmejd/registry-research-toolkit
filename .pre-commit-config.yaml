@@ -1,6 +1,9 @@
 # `pre-commit install` wires BOTH the commit gate and the post-checkout
 # provisioner (below). Existing clones: re-run `pre-commit install` once to pick
 # up the post-checkout hook.
+# NOTE: pre-commit refuses to install while `core.hooksPath` is set (even to the
+# default `.git/hooks`). If `git config --get core.hooksPath` returns a value,
+# `git config --unset core.hooksPath` first, then `pre-commit install`.
 default_install_hook_types: [pre-commit, post-checkout]
 
 repos:
