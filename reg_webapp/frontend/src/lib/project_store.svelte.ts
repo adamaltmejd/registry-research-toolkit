@@ -60,6 +60,7 @@ import {
   updateField,
   updateSource,
 } from "./project_data";
+import { windowStore } from "./window.svelte";
 
 /** The autosave store's OWN schema version (distinct from `project_data`'s
  * `schema_version`). Stamped alongside each persisted draft; the IndexedDB impl
@@ -488,6 +489,22 @@ export const projectStore = {
    * until edited. */
   newProject(seed: ProjectSeed): void {
     const next = newProjectData(seed);
+    // #629 item 3: carry the browse-time window into a project created FROM
+    // BROWSING (i.e. no draft was open). A window set while browsing lives on the
+    // no-draft localStorage fallback; reading it through `windowStore.fallback`
+    // (the single read path — no direct localStorage reach) seeds `draft.window`
+    // so it isn't silently dropped on create. Guard on `draft === null`: "New"
+    // from WITHIN an active project must NOT inherit the fallback — that fallback
+    // is the STALE browse-time value (active-draft window writes/clears don't
+    // touch it), so seeding it would silently hand the fresh project an old
+    // window. From within a draft the new project starts windowless (full
+    // history) unless the user sets one. Open/restore keep their OWN window (they
+    // bypass newProject). A `null` fallback leaves the key absent.
+    const fromBrowsing = draft === null;
+    const seedWindow = windowStore.fallback;
+    if (fromBrowsing && seedWindow !== null) {
+      next.window = seedWindow;
+    }
     // Atomic replacement (compute the mirror before mutating store state) — the
     // skeleton is always well-formed here, but this matches openFromFile/restore.
     const ids = buildIds(next);

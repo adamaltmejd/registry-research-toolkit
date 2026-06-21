@@ -104,6 +104,7 @@ const windowMaxYear = $derived(
       max={windowMaxYear}
       window={windowStore.value}
       onchange={(next) => windowStore.set(next)}
+      onclear={() => windowStore.set(null)}
     />
     <!-- Full-width search row: the header wraps, so the omnibox sits on its own
          line below brand/nav and stretches across (#379). Inside the use:link

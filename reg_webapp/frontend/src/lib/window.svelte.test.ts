@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { serializeProjectData } from "./project_data";
+import { type StudyWindow, serializeProjectData } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -60,6 +60,22 @@ describe("windowStore — no active draft (localStorage fallback)", () => {
     expect(windowStore.value).toBeNull();
     expect(localStorage.getItem("reg_webapp:project_window")).toBeNull();
   });
+
+  it("clearing back to null is reachable after an explicit window (#629 item 1)", () => {
+    // The header's clear control wires `onclear` → `set(null)`. After any
+    // interaction has set an explicit window, clearing restores the null state
+    // (→ the slider's "full history" readout, asserted in the browser test).
+    windowStore.set({ from: 1960, to: 2026 }); // even a FULL-bounds explicit span …
+    expect(windowStore.value).not.toBeNull();
+    windowStore.set(null); // … the explicit clear still returns to full history.
+    expect(windowStore.value).toBeNull();
+  });
+
+  it("exposes the no-draft fallback via `fallback` for the create-seed path", () => {
+    expect(windowStore.fallback).toBeNull();
+    windowStore.set({ from: 2001, to: 2009 });
+    expect(windowStore.fallback).toEqual({ from: 2001, to: 2009 });
+  });
 });
 
 describe("windowStore — active draft (project hydrate + write-back)", () => {
@@ -115,5 +131,85 @@ describe("windowStore — precedence", () => {
     projectStore.newProject(SEED);
     projectStore.updateField("window", { from: 2001, to: 2002 });
     expect(windowStore.value).toEqual({ from: 2001, to: 2002 });
+  });
+});
+
+// The seed-on-create path (#629 item 3) reads the no-DRAFT fallback, but this
+// file's module-singleton store keeps any draft a prior test created (there is no
+// draft→null API — see the file header) and a lingering draft would route
+// `set()` to the draft instead of the fallback. So these cases take a PRISTINE
+// store: `vi.resetModules()` + a dynamic import re-runs the module-init read of
+// `localStorage`, yielding a no-draft singleton whose fallback is whatever the
+// (stubbed) storage holds — isolation-safe regardless of run order.
+describe("browse-time window seeded on draft creation (#629 item 3)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  /** Pre-seed the storage fallback (or leave it empty), then import a fresh
+   * (no-draft) pair of stores. */
+  async function freshStores(fallback: StudyWindow | null) {
+    if (fallback !== null) {
+      storage.set("reg_webapp:project_window", JSON.stringify(fallback));
+    }
+    return {
+      projectStore: (await import("./project_store.svelte")).projectStore,
+      windowStore: (await import("./window.svelte")).windowStore,
+    };
+  }
+
+  it("a fresh draft is seeded with the no-draft fallback window", async () => {
+    const { projectStore, windowStore } = await freshStores({
+      from: 2004,
+      to: 2014,
+    });
+    projectStore.newProject(SEED);
+    // The window carried over onto the new draft (not silently dropped to null).
+    expect(projectStore.draft?.window).toEqual({ from: 2004, to: 2014 });
+    expect(windowStore.value).toEqual({ from: 2004, to: 2014 });
+    // The seed is the draft's INITIAL state, not an edit → the draft is clean.
+    expect(projectStore.dirty).toBe(false);
+  });
+
+  it("a fresh draft with no browse window stays windowless (full history)", async () => {
+    const { projectStore, windowStore } = await freshStores(null);
+    projectStore.newProject(SEED);
+    expect(projectStore.draft?.window).toBeUndefined();
+    expect(windowStore.value).toBeNull();
+  });
+
+  it("New from WITHIN a draft does NOT seed from the stale fallback (#634)", async () => {
+    // Fallback holds a browse-time window; first newProject (from the pristine
+    // no-draft state) seeds it. The "New" button then calls newProject AGAIN
+    // while that draft is active — the fallback is now the stale no-draft value
+    // (active-draft window writes/clears don't touch it), so the second project
+    // must start windowless, not silently inherit the old browse window.
+    const { projectStore } = await freshStores({ from: 2004, to: 2014 });
+    projectStore.newProject(SEED);
+    expect(projectStore.draft?.window).toEqual({ from: 2004, to: 2014 });
+    projectStore.newProject(SEED);
+    expect(projectStore.draft?.window).toBeUndefined();
+  });
+
+  it("OPENING a project keeps its OWN window — the fallback never overwrites it", async () => {
+    const { projectStore } = await freshStores({ from: 1970, to: 1980 });
+    const file = new File(
+      [
+        JSON.stringify({
+          schema_version: "2.0.0",
+          steward: "global",
+          reg_meta_version: "reg_meta/v1.0.0",
+          name: "opened",
+          sources: [],
+          window: { from: 1995, to: 2005 },
+        }),
+      ],
+      "project_data.json",
+      { type: "application/json" },
+    );
+    await projectStore.openFromFile(file);
+    // The opened file's own window wins; the fallback is not seeded over it
+    // (openFromFile bypasses the newProject seed entirely).
+    expect(projectStore.draft?.window).toEqual({ from: 1995, to: 2005 });
   });
 });

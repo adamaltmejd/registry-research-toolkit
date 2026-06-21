@@ -4,9 +4,23 @@ import type { StudyWindow } from "./project_data";
 import YearWindowSlider from "./YearWindowSlider.svelte";
 
 // The header dual-thumb year slider (#611 → Period model). Self-contained: bounds
-// + active window in, `onchange` out. The window runtime layer wiring lives in
-// App.svelte; this verifies the control's own behavior (two thumbs, bounds,
-// readout, clamped emit).
+// + active window in, `onchange` (commit) / `onclear` (reset) out. The window
+// runtime layer wiring lives in App.svelte; this verifies the control's own
+// behavior (two thumbs, bounds, readout, clamped emit, commit-on-release, clear).
+
+/** Set a range input's value and fire ONLY `input` (a live drag tick) — no
+ * `change`. Mirrors the native event sequence during a pointer drag, so a test
+ * can separate the live display from the commit (#629 item 2). */
+function inputTick(el: HTMLInputElement, value: number): void {
+  el.value = String(value);
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+/** Fire `change` on a range input (pointer release / keyboard commit). */
+function commit(el: HTMLInputElement): void {
+  el.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
 describe("YearWindowSlider", () => {
   it("renders two slider thumbs seeded at the bounds when no window is set", async () => {
     const screen = await render(YearWindowSlider, {
@@ -14,6 +28,7 @@ describe("YearWindowSlider", () => {
       max: 2026,
       window: null,
       onchange: vi.fn(),
+      onclear: vi.fn(),
     });
     const fromThumb = screen.getByRole("slider", { name: "From year" });
     const toThumb = screen.getByRole("slider", { name: "To year" });
@@ -29,6 +44,7 @@ describe("YearWindowSlider", () => {
       max: 2026,
       window: { from: 1990, to: 2010 },
       onchange: vi.fn(),
+      onclear: vi.fn(),
     });
     await expect
       .element(screen.getByRole("slider", { name: "From year" }))
@@ -39,25 +55,27 @@ describe("YearWindowSlider", () => {
     await expect.element(screen.getByText("1990–2010")).toBeVisible();
   });
 
-  it("moving the From thumb emits the new window", async () => {
+  it("moving the From thumb commits the new window", async () => {
     const onchange = vi.fn<(next: StudyWindow) => void>();
     const screen = await render(YearWindowSlider, {
       min: 1960,
       max: 2026,
       window: { from: 1990, to: 2010 },
       onchange,
+      onclear: vi.fn(),
     });
     await screen.getByRole("slider", { name: "From year" }).fill("1995");
     expect(onchange).toHaveBeenLastCalledWith({ from: 1995, to: 2010 });
   });
 
-  it("moving the To thumb emits the new window", async () => {
+  it("moving the To thumb commits the new window", async () => {
     const onchange = vi.fn<(next: StudyWindow) => void>();
     const screen = await render(YearWindowSlider, {
       min: 1960,
       max: 2026,
       window: { from: 1990, to: 2010 },
       onchange,
+      onclear: vi.fn(),
     });
     await screen.getByRole("slider", { name: "To year" }).fill("2005");
     expect(onchange).toHaveBeenLastCalledWith({ from: 1990, to: 2005 });
@@ -70,9 +88,76 @@ describe("YearWindowSlider", () => {
       max: 2026,
       window: { from: 1990, to: 2000 },
       onchange,
+      onclear: vi.fn(),
     });
     // Drag From past To → it's clamped to To (no crossed/inverted window).
     await screen.getByRole("slider", { name: "From year" }).fill("2010");
     expect(onchange).toHaveBeenLastCalledWith({ from: 2000, to: 2000 });
+  });
+
+  // ── #629 item 2: live display on input, commit only on change ───────────────
+
+  it("updates the live readout on every input tick but does NOT commit until release", async () => {
+    const onchange = vi.fn<(next: StudyWindow) => void>();
+    const screen = await render(YearWindowSlider, {
+      min: 1960,
+      max: 2026,
+      window: { from: 1990, to: 2010 },
+      onchange,
+      onclear: vi.fn(),
+    });
+    const toThumb = screen.getByRole("slider", { name: "To year" });
+    const el = (await toThumb.element()) as HTMLInputElement;
+
+    // Several live `input` ticks (a drag): the readout tracks each value LIVE …
+    inputTick(el, 2008);
+    await expect.element(screen.getByText("1990–2008")).toBeVisible();
+    inputTick(el, 2005);
+    await expect.element(screen.getByText("1990–2005")).toBeVisible();
+    inputTick(el, 2003);
+    await expect.element(screen.getByText("1990–2003")).toBeVisible();
+    // … but NOT ONE of those ticks committed (the store would clone the draft +
+    // autosave per tick otherwise — the whole point of #629 item 2).
+    expect(onchange).not.toHaveBeenCalled();
+
+    // Release commits exactly once, with the final buffered value.
+    commit(el);
+    expect(onchange).toHaveBeenCalledTimes(1);
+    expect(onchange).toHaveBeenLastCalledWith({ from: 1990, to: 2003 });
+  });
+
+  // ── #629 item 1: clear control resets to full history ───────────────────────
+
+  it("shows no clear control at full history (null window)", async () => {
+    const screen = await render(YearWindowSlider, {
+      min: 1960,
+      max: 2026,
+      window: null,
+      onchange: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // Nothing to clear when already full history — the control is hidden.
+    await expect
+      .element(
+        screen.getByRole("button", {
+          name: "Clear project window (full history)",
+        }),
+      )
+      .not.toBeInTheDocument();
+  });
+
+  it("clicking the clear control fires onclear (→ header sets the window to null)", async () => {
+    const onclear = vi.fn();
+    const screen = await render(YearWindowSlider, {
+      min: 1960,
+      max: 2026,
+      window: { from: 1990, to: 2010 },
+      onchange: vi.fn(),
+      onclear,
+    });
+    await screen
+      .getByRole("button", { name: "Clear project window (full history)" })
+      .click();
+    expect(onclear).toHaveBeenCalledTimes(1);
   });
 });
