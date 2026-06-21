@@ -142,25 +142,33 @@ const grains = $derived(grainsFromStates(node.states));
 // data (no backend coverage field on the leaf node).
 const coverage = $derived(coverageFromStates(node.states));
 
-// ── #306 one-click add: plan → (genuine prompts only) → commit ──────────────
+// ── #306/#638 PR2b one-click add: plan → (genuine choices) → commit ─────────
 // The page-level "Add to project" runs `buildAddPlan` over the VISIBLE states
 // (period-narrowed when a `?period` is active; further narrowed by any
 // `?variant`/`?value_set_version` chips). Succession auto-splits into one
 // source per variant segment (informing afterward); coding-identical parallel
-// columns auto-pick the #266 primary. The user is prompted ONLY for genuine
-// choices: co-existing variants (a population choice) and genuinely distinct
-// codings. Commits go one-segment-at-a-time through `addFromCatalog` — the
-// store's guarded path (stable ids + gen counter) owns every async write.
+// columns auto-pick the #266 primary. Two genuine choices remain, but they live
+// at DIFFERENT points in the flow:
+//  - the VARIANT (population) choice — when ≥2 register variants co-exist for the
+//    period — is surfaced PROACTIVELY in the picker (the `choose-variant`
+//    selector below) and GATES the Add button (#638 PR2b): the user resolves the
+//    population BEFORE clicking, not in a post-click modal;
+//  - the REPRESENTATION (delivery-column) choice stays a POST-click chooser
+//    (`addPrompt.stage === "rep"`) — it's per-segment and a succession split can
+//    carry several, so it's an informed-after queue, not a pre-commit gate.
+// Commits go one-segment-at-a-time through `addFromCatalog` — the store's guarded
+// path (stable ids + gen counter) owns every async write.
 
-/** The pending prompt, when the plan needs a genuine choice:
- *  - `variant`: pick ONE co-existing register variant;
- *  - `rep`: pick the delivery column for `segments[queue[current]]` (a queue —
- *    a multi-segment split can carry several ambiguous segments). */
-let addPrompt = $state<
-  | { stage: "variant"; options: VariantWindow[] }
-  | { stage: "rep"; segments: AddSegment[]; queue: number[]; current: number }
-  | null
->(null);
+/** The pending POST-click representation prompt: pick the delivery column for
+ * `segments[queue[current]]` (a queue — a multi-segment succession split can
+ * carry several ambiguous segments). The variant choice is no longer a prompt —
+ * it's the proactive `choose-variant` selector in the picker (gates Add). */
+let addPrompt = $state<{
+  stage: "rep";
+  segments: AddSegment[];
+  queue: number[];
+  current: number;
+} | null>(null);
 
 /** The committed outcome (drives the inline confirmation): the sources bindings
  * landed in (created or found) and how many were already present. */
@@ -169,35 +177,74 @@ let addOutcome = $state<{
   already: number;
 } | null>(null);
 
-// A fresh resolution clears the in-flight prompt + stale confirmation (the
-// visible states changed underneath the plan).
+// The reactive add plan over the VISIBLE (period-narrowed) states at the page's
+// wire period — recomputed whenever the states or period change. Drives BOTH the
+// proactive `choose-variant` selector (rendered only when ≥2 variants co-exist
+// for the period) and the Add gate. `buildAddPlan` is pure + unit-tested.
+const addPlan = $derived(buildAddPlan(states ?? [], params.period ?? null));
+
+// #638 PR2b: the picker's chosen population, when the plan is `choose-variant`.
+// INVISIBLE unless ≥2 variants co-exist for the period; defaults to NONE (so a
+// fresh plan starts unresolved) and GATES the Add button. The gate is
+// MEMBERSHIP-based (correct-by-construction): Add is enabled only when the pick
+// is one of the CURRENT plan's options (`addPlan.options`). So a null pick OR a
+// stale pick naming a now-absent variant (e.g. after the plan changes
+// underneath) can never gate-pass — the gate doesn't lean on the reset timing or
+// the remount. The `addVariant = null` reset in the param-change effect still
+// cleanly clears the VISUAL pick when the period changes.
+let addVariant = $state<string | null>(null);
+
+// A fresh resolution clears the in-flight prompt + stale confirmation AND the
+// proactive variant pick (the visible states changed underneath the plan, so a
+// prior population choice may name a now-absent variant). Resetting `addVariant`
+// here cleanly clears the VISUAL pick when the period changes; gate CORRECTNESS
+// no longer depends on it (the gate is membership-based — see `addVariant`), but
+// the reset keeps the selector from showing a now-irrelevant highlight.
+//
+// Also tracks the LEAF IDENTITY (`fqidPath`, the navigation key) so a leaf change
+// re-invalidates the add state independent of the parent's `{#key route.fqidPath}`
+// remount. Today the remount supplies fresh state, but leaning on that is a
+// fragile cross-component coupling: if a future leaf were reused (no remount) with
+// a different `node` sharing a variant slug, a stale `addVariant` could satisfy the
+// membership gate and open an ambiguous leaf with Add enabled on the old
+// population. Invalidating on leaf identity here keeps the gate robust on its own.
 $effect(() => {
   void params.period;
   void params.variant;
   void params.value_set_version;
+  void fqidPath;
   addPrompt = null;
   addOutcome = null;
+  addVariant = null;
 });
+
+/** Pick the population in the proactive selector. Changing it must invalidate any
+ * in-flight rep prompt — that prompt holds the PRIOR variant's segments, so
+ * committing it after switching population would write the wrong variant's data
+ * (the UI shows the new pick) — and any stale add confirmation. The rep flow
+ * restarts cleanly on the next Add. */
+function selectPopulation(variant: string): void {
+  addVariant = variant;
+  addPrompt = null;
+  addOutcome = null;
+}
 
 function startAdd(): void {
   addOutcome = null;
-  const plan = buildAddPlan(states ?? [], params.period ?? null);
-  if (plan.kind === "choose-variant") {
-    addPrompt = { stage: "variant", options: plan.options };
+  if (addPlan.kind === "choose-variant") {
+    // The gate — Add disabled unless `addVariant` is one of the current plan's
+    // options — guarantees a valid pick here. Re-plan against ONLY that
+    // variant's states — a single variant can't
+    // be `choose-variant` again, so the result is always `segments` (at most a
+    // rep prompt remains); the defensive `kind` guard keeps TS sound.
+    const subset = (states ?? []).filter((s) => s.variant === addVariant);
+    const plan = buildAddPlan(subset, params.period ?? null);
+    if (plan.kind === "segments") {
+      continueWithSegments(plan.segments);
+    }
     return;
   }
-  continueWithSegments(plan.segments);
-}
-
-/** A variant pick re-plans against ONLY that variant's states (now a
- * single-variant plan — at most a rep prompt remains). */
-function chooseVariant(variant: string): void {
-  addPrompt = null;
-  const subset = (states ?? []).filter((s) => s.variant === variant);
-  const plan = buildAddPlan(subset, params.period ?? null);
-  if (plan.kind === "segments") {
-    continueWithSegments(plan.segments);
-  }
+  continueWithSegments(addPlan.segments);
 }
 
 function continueWithSegments(segments: AddSegment[]): void {
@@ -258,7 +305,7 @@ function commit(segments: AddSegment[]): void {
   addOutcome = { added, already };
 }
 
-/** Human form of a variant's validity window for the variant prompt — the
+/** Human form of a variant's validity window for the population selector — the
  * shared #309 window display. */
 function windowLabel(w: VariantWindow): string {
   return formatWindow(w.from, w.to);
@@ -319,14 +366,52 @@ const repSegment = $derived(
     onclear={() => setResolution({ period: null })}
   />
 
+  <!-- #638 PR2b: the proactive population selector — rendered ONLY when ≥2
+       register variants co-exist for the period (`buildAddPlan` →
+       `choose-variant`). The variant is INVISIBLE for an unambiguous variable
+       (1 variant, or a pure succession that auto-splits); when it shows it GATES
+       the Add button (see `disabled` below) so the user resolves the population
+       BEFORE committing, not in a post-click modal. Same `.add-chooser` /
+       `.pick-list` / `.pick` vocabulary as the rep chooser for visual
+       consistency. -->
+  {#if addPlan.kind === "choose-variant"}
+    <div class="add-chooser" role="group" aria-label="Pick a register variant">
+      <p class="chooser-title">
+        This variable has several populations for this period — pick one to add:
+      </p>
+      <ul class="pick-list">
+        {#each addPlan.options as w (w.variant)}
+          <li>
+            <button
+              type="button"
+              class="pick"
+              aria-pressed={addVariant === w.variant}
+              class:selected={addVariant === w.variant}
+              onclick={() => selectPopulation(w.variant)}
+            >
+              <span class="slug">{w.variant}</span>
+              <span class="name">{windowLabel(w)}</span>
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
+
   <!-- #306: ONE page-level add for the variable at the chosen period. Disabled
        until the deployment seed is ready and the visible states are loaded
-       (nothing to add when none cover the period). -->
+       (nothing to add when none cover the period), and — when ≥2 variants
+       co-exist (`choose-variant`) — until the user has picked the population
+       above (the gate; #638 PR2b). -->
   <div class="page-add">
     <button
       type="button"
       class="add-to-project"
-      disabled={!seedReady || !states || states.length === 0}
+      disabled={!seedReady ||
+        !states ||
+        states.length === 0 ||
+        (addPlan.kind === "choose-variant" &&
+          !addPlan.options.some((o) => o.variant === addVariant))}
       onclick={startAdd}
     >
       Add to project
@@ -354,27 +439,7 @@ const repSegment = $derived(
     {/if}
   </div>
 
-  {#if addPrompt?.stage === "variant"}
-    <div class="add-chooser" role="group" aria-label="Pick a register variant">
-      <p class="chooser-title">
-        Several register variants cover this period — pick the population to
-        extract:
-      </p>
-      <ul class="pick-list">
-        {#each addPrompt.options as w (w.variant)}
-          <li>
-            <button type="button" class="pick" onclick={() => chooseVariant(w.variant)}>
-              <span class="slug">{w.variant}</span>
-              <span class="name">{windowLabel(w)}</span>
-            </button>
-          </li>
-        {/each}
-      </ul>
-      <button type="button" class="cancel" onclick={() => (addPrompt = null)}>
-        Cancel
-      </button>
-    </div>
-  {:else if addPrompt?.stage === "rep" && repSegment}
+  {#if addPrompt?.stage === "rep" && repSegment}
     <div class="add-chooser" role="group" aria-label="Pick a representation">
       <!-- Genuinely distinct codings: an explicit pick, ranked latest-era first
            so the primary leads (#266) — same semantics as the picker chooser. -->
@@ -609,6 +674,12 @@ const repSegment = $derived(
   }
   .pick:hover {
     border-color: var(--accent);
+  }
+  /* #638 PR2b: the currently-picked population in the proactive selector. */
+  .pick.selected {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+    color: var(--accent);
   }
   .pick .slug {
     font-family: var(--mono, monospace);
