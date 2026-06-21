@@ -1210,13 +1210,17 @@ states — user-deviation (`?period` ≠ window, with a reset affordance) and
 availability-deviation (selection outside the subject's data-coverage span). The
 per-page picker shares the header slider's vintage ceiling (#631): `App.svelte` threads
 the ceiling (`context.reg_meta.import_date`'s year) down through `CatalogNodeView` →
-`BindingLeafView` → `PeriodPicker`. The vintage is the ceiling an OPEN-ENDED coverage
-(`coverage.to === null`, "still delivered") projects to — the catalog only knows
-delivery up to its vintage — so the coverage band ends at the vintage and a selection
-past it reads as "not delivered after `<vintage>`". It is NOT a floor on the slider
-bounds: a FINITE coverage keeps its real end (never extended to the vintage), and a
-window/selection past the vintage still widens the bounds (the thumb renders the real
-value) without extending coverage. Wall-clock is the pre-context fallback only.
+`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
+(#638). On the concept-group subject page the picker is a **client-side availability
+lens** over the union of member coverage spans — it greys members not delivered in the
+active window but drives no refetch (`getConceptGroup` takes no period parameter). The
+vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
+delivered") projects to — the catalog only knows delivery up to its vintage — so the
+coverage band ends at the vintage and a selection past it reads as "not delivered after
+`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
+end (never extended to the vintage), and a window/selection past the vintage still
+widens the bounds (the thumb renders the real value) without extending coverage.
+Wall-clock is the pre-context fallback only.
 
 Precedence — two backing stores, one source of truth:
 
