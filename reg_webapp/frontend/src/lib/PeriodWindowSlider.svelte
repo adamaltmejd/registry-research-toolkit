@@ -19,6 +19,7 @@
 // write flows through BindingLeafView's onsubmit/onclear, unchanged.
 
 import { untrack } from "svelte";
+import DualThumbTrack from "./DualThumbTrack.svelte";
 import { type Coverage, notDeliveredGaps, sameYearWindow } from "./period";
 import type { StudyWindow } from "./project_data";
 
@@ -73,37 +74,18 @@ let {
   onreset,
 }: Props = $props();
 
-function clamp(year: number, lo: number, hi: number): number {
-  return Math.min(hi, Math.max(lo, year));
-}
+// The live thumb values, owned/clamped/re-synced by the DualThumbTrack primitive
+// (seeded + re-synced from the `selection` prop) and bound back here so the
+// geometry + deviation derivations below react to them. The initial value is a
+// one-shot placeholder (`untrack` — the primitive owns the real seed via `bind:`).
+let from = $state(untrack(() => selection.from));
+let to = $state(untrack(() => selection.to));
 
-// Local thumb buffer for smooth dragging; the source of truth stays the
-// `selection` prop. `untrack` makes the seed a one-shot init — the $effect below
-// owns re-seeding when the prop changes (a controlled-component re-sync, the
-// YearWindowSlider doctrine).
-let from = $state(untrack(() => clamp(selection.from, min, max)));
-let to = $state(untrack(() => clamp(selection.to, min, max)));
-$effect(() => {
-  from = clamp(selection.from, min, max);
-  to = clamp(selection.to, min, max);
-});
-
-function onFrom(event: Event): void {
-  const v = clamp(
-    Number((event.currentTarget as HTMLInputElement).value),
-    min,
-    max,
-  );
-  from = Math.min(v, to); // never cross past `to`
-  onchange({ from, to });
-}
-function onTo(event: Event): void {
-  const v = clamp(
-    Number((event.currentTarget as HTMLInputElement).value),
-    min,
-    max,
-  );
-  to = Math.max(v, from);
+// EMIT-PER-TICK (#615): unlike the header's commit-on-release, this slider emits
+// the live selection on EVERY input tick — the picker holds it and submits the
+// wire on Apply, so there's no per-tick store cost here. The primitive has
+// already updated the clamped `from`/`to` when `onLiveInput` fires.
+function onLiveInput(): void {
   onchange({ from, to });
 }
 
@@ -222,48 +204,33 @@ const availabilityNote = $derived.by(() => {
     {/if}
   </div>
 
-  <div class="track" role="group" aria-label="Period window (years)">
-    <!-- The coverage (available-data) band: a solid segment of the rail. -->
-    {#if coverageBand}
-      <div
-        class="coverage"
-        style="left: {coverageBand.left}%; width: {coverageBand.width}%;"
-      ></div>
-    {/if}
-    <!-- The selected span fill. -->
-    <div class="fill" style="left: {fillLeft}%; width: {fillWidth}%;"></div>
-    <!-- Not-delivered gaps (inside the selection, outside coverage): greyed
-         (amber-tinted unless softened) cells over the fill. -->
-    {#each gaps as gap (`${gap.from}:${gap.to}`)}
-      <div
-        class="gap"
-        class:soft={availabilitySoft}
-        style="left: {gap.left}%; width: {gap.width}%;"
-        title="Not delivered {gap.from}–{gap.to}"
-      ></div>
-    {/each}
-    <!-- Two overlaid native range thumbs (real slider role + keyboard for
-         free); the `from` thumb sits above so a coincident pair stays grabbable. -->
-    <input
-      class="thumb thumb-from"
-      type="range"
-      {min}
-      {max}
-      step="1"
-      value={from}
-      aria-label="From year"
-      oninput={onFrom}
-    />
-    <input
-      class="thumb thumb-to"
-      type="range"
-      {min}
-      {max}
-      step="1"
-      value={to}
-      aria-label="To year"
-      oninput={onTo}
-    />
+  <!-- The shared dual-thumb track (#632), wrapped to carry this slider's group
+       role/label + sizing. `onLiveInput` emits per tick (#615) — no `onCommit`
+       (this slider doesn't commit on release). The coverage band / fill / gap
+       cells are this slider's own in-track decoration (year-as-cell geometry),
+       drawn behind the primitive's thumbs via the children snippet. -->
+  <div class="track-host" role="group" aria-label="Period window (years)">
+    <DualThumbTrack {min} {max} {selection} bind:from bind:to {onLiveInput}>
+      <!-- The coverage (available-data) band: a solid segment of the rail. -->
+      {#if coverageBand}
+        <div
+          class="coverage"
+          style="left: {coverageBand.left}%; width: {coverageBand.width}%;"
+        ></div>
+      {/if}
+      <!-- The selected span fill. -->
+      <div class="fill" style="left: {fillLeft}%; width: {fillWidth}%;"></div>
+      <!-- Not-delivered gaps (inside the selection, outside coverage): greyed
+           (amber-tinted unless softened) cells over the fill. -->
+      {#each gaps as gap (`${gap.from}:${gap.to}`)}
+        <div
+          class="gap"
+          class:soft={availabilitySoft}
+          style="left: {gap.left}%; width: {gap.width}%;"
+          title="Not delivered {gap.from}–{gap.to}"
+        ></div>
+      {/each}
+    </DualThumbTrack>
   </div>
 
   {#if subAnnualPeriod !== null}
@@ -314,22 +281,14 @@ const availabilityNote = $derived.by(() => {
     font-size: 0.8rem;
     font-variant-numeric: tabular-nums;
   }
-  .track {
-    position: relative;
-    width: 100%;
-    height: 1.4rem;
-  }
-  .track::before {
-    /* The base rail. */
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 4px;
-    border-radius: 4px;
-    background: var(--border);
+  /* The dual-thumb track is the shared DualThumbTrack primitive; this slider sets
+     its own taller sizing (1.4rem track / 4px rail / 0.95rem thumb) via the vars,
+     keeping the full-width default. The vars inherit into the primitive's
+     `.track`; `.track-host` is the role/label group wrapper around it. */
+  .track-host :global(.track) {
+    --track-height: 1.4rem;
+    --rail-height: 4px;
+    --thumb-size: 0.95rem;
   }
   /* The available-data band — a muted solid segment so the user sees where data
      actually exists relative to their selection. */
@@ -376,49 +335,6 @@ const availabilityNote = $derived.by(() => {
       transparent 6px
     );
     opacity: 0.55;
-  }
-  /* Thumbs: both range inputs stack on the same track; only the thumbs show
-     (native rail hidden so the rail/fill/coverage show through). */
-  .thumb {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    background: none;
-    pointer-events: none;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  .thumb-from {
-    z-index: 2;
-  }
-  .thumb::-webkit-slider-runnable-track {
-    background: none;
-  }
-  .thumb::-moz-range-track {
-    background: none;
-  }
-  .thumb::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    pointer-events: auto;
-    width: 0.95rem;
-    height: 0.95rem;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--surface);
-    cursor: pointer;
-  }
-  .thumb::-moz-range-thumb {
-    pointer-events: auto;
-    width: 0.95rem;
-    height: 0.95rem;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--surface);
-    cursor: pointer;
   }
   .deviation {
     margin: 0;
