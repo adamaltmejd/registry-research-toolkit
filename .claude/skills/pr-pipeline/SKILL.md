@@ -124,16 +124,14 @@ separate claim. Draft also keeps review bots off until near-final, and an inline
 the implementer(s) with the scope + the FAST Verify only (lint / format / `ty` /
 `pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min
 merge-gate check (Step E). For a **frontend PR**, rendering is part of the loop too —
-cheap, unlike `build-db`: the implementer eyeballs its change in the running app
-(`preview_snapshot` / `preview_screenshot` the changed views, check
-`preview_console_logs`), catching what the headless `bun` checks can't. Two hazards
-decide *who* renders and *how*: **(1) worktree** — `preview_start` and
-`.claude/launch.json` serve *main's* code from a worktree (run-reg-webapp → "Verifying
-from a git worktree"), so in a worktree launch via the worktree-local `.venv`
-(`.venv/bin/uvicorn … --port 8000`, then `bun run dev` from `reg_webapp/frontend/`), NOT
-`preview_start`; **(2) parallel fan-out** — launch.json binds fixed ports 8000/5173, so
-implementers do NOT each start servers. The **authoritative rendered proof is yours (the
-lead): a single render on the assembled tree** — the visual analog of the union Verify,
+cheap, unlike `build-db`: the implementer renders its change with the one-shot driver,
+`reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
+`dev.sh smoke` for the catalog flow). That mode picks free ports, renders from the
+**worktree's own `.venv`**, and **tears the servers down on exit** — so it's
+worktree-correct and never collides or leaks even under parallel fan-out (no
+`preview_start`/fixed-port hazards). Screenshots land in `/tmp/reg-webapp-shots/`;
+**look at them**. The **authoritative rendered proof is yours (the lead): a single
+`dev.sh smoke`/`shot` on the assembled tree** — the visual analog of the union Verify,
 and the merge-gate screenshot (Step E). When they report, validate the real diff,
 `git add -A`, commit, and push onto the draft PR's branch. Outward-facing `gh` actions
 (PR create / merge / comment) may be denied by the session's permission mode — if one is

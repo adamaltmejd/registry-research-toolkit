@@ -307,17 +307,16 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   or any view / component / style the SPA renders). This is the UI analog of real-data
   validation — **required, not optional**, for rendered changes. Headless checks
   (`bun run lint/check/test/build`) never render a pixel, so green `bun` is not
-  sufficient: run the app and *look*. Start the dev servers (`preview_start` via
-  `.claude/launch.json`, or the `/run-reg-webapp` skill — but from a **worktree** both
-  serve *main's* code, so launch via the worktree-local `.venv` instead, per
-  run-reg-webapp → "Verifying from a git worktree"), then follow the harness
-  verification workflow — check `preview_console_logs` for errors, `preview_snapshot`
-  the changed views, exercise changed interactions (`preview_click` / `preview_fill`),
-  and `preview_resize` for responsive / dark mode. Attach a `preview_screenshot` as the
-  proof, the same way a build PR attaches its `build-db`. The proof itself needs only
-  `run-reg-webapp` / `preview_*` (always available); if the `/web-design-reviewer` skill
-  is installed, also use it for a structured design-quality pass against the running app
-  (and `/frontend-design` when authoring new UI).
+  sufficient: run the app and *look*. Easiest is the **one-shot driver** —
+  `reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke` (or `dev.sh shot <route>` for
+  the changed views): it picks free ports, renders from THIS checkout's `.venv`
+  (worktree-correct), screenshots to `/tmp/reg-webapp-shots/`, and **tears the servers
+  down on exit** — no port collisions, no leaked servers. For interactive poking use
+  `preview_start` + `preview_snapshot` / `preview_click` / `preview_resize` (single-host
+  fixed-port; in a worktree it serves *main's* code, so prefer `dev.sh` there). Attach a
+  screenshot as the proof, the same way a build PR attaches its `build-db`. If the
+  `/web-design-reviewer` skill is installed, also use it for a structured design-quality
+  pass (and `/frontend-design` when authoring new UI).
 - **Stale-head check**: before merging, confirm the PR's `headRefOid` equals the local
   branch tip; after merging, confirm the PR's changes are actually present on main — the
   GitHub API can capture a stale head and silently drop just-pushed commits. (Comparing
