@@ -153,6 +153,7 @@ const windowMaxYear = $derived(
           provider={route.provider}
           register={route.register}
           key={route.key}
+          vintageYear={windowMaxYear}
         />
       {/key}
     {:else if route.name === "project"}

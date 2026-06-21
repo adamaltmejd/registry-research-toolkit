@@ -14,6 +14,7 @@ import {
   fqidSegments,
   grainsFromStates,
   matchesFilter,
+  memberCoverageUnion,
   narrowCatalogNode,
   nodeLabel,
   rankFilter,
@@ -1317,5 +1318,101 @@ describe("coverageFromStates (#615 availability span)", () => {
         }),
       ]),
     ).toEqual({ from: 2002, to: 2010 });
+  });
+});
+
+describe("memberCoverageUnion (#638 PR2a group availability span)", () => {
+  it("unions finite member spans to year ints", () => {
+    expect(
+      memberCoverageUnion([
+        {
+          coverage_from: "2000-01-01",
+          coverage_to: "2008-12-31",
+          open_ended: false,
+        },
+        {
+          coverage_from: "1995-01-01",
+          coverage_to: "2010-06-30",
+          open_ended: false,
+        },
+      ]),
+    ).toEqual({ from: 1995, to: 2010 });
+  });
+
+  it("an open-ended member unbounds the union END (null), start preserved", () => {
+    expect(
+      memberCoverageUnion([
+        {
+          coverage_from: "2000-01-01",
+          coverage_to: "2008-12-31",
+          open_ended: false,
+        },
+        { coverage_from: "2005-01-01", coverage_to: null, open_ended: true },
+      ]),
+    ).toEqual({ from: 2000, to: null });
+  });
+
+  it("a member with no finite end (null coverage_to) also unbounds the END", () => {
+    expect(
+      memberCoverageUnion([
+        { coverage_from: "2000-01-01", coverage_to: null, open_ended: false },
+      ]),
+    ).toEqual({ from: 2000, to: null });
+  });
+
+  it("skips null / stateless members", () => {
+    expect(
+      memberCoverageUnion([
+        null,
+        undefined,
+        {
+          coverage_from: "2001-01-01",
+          coverage_to: "2003-12-31",
+          open_ended: false,
+        },
+      ]),
+    ).toEqual({ from: 2001, to: 2003 });
+  });
+
+  it("null when no member contributes a finite bound and none is open-ended", () => {
+    expect(memberCoverageUnion([])).toBeNull();
+    expect(memberCoverageUnion([null, undefined])).toBeNull();
+    expect(
+      memberCoverageUnion([
+        { coverage_from: null, coverage_to: null, open_ended: false },
+      ]),
+    ).toBeNull();
+  });
+
+  it("a stateless member ({null,null,false}) does NOT unbound the union END", () => {
+    // The stateless payload carries no span — it must be skipped, NOT treated as
+    // open-ended. Its null `coverage_to` would otherwise trip the open-ended
+    // branch and unbound the whole union (`to: null`), drawing the union track
+    // through the vintage even though every finite member ends earlier.
+    expect(
+      memberCoverageUnion([
+        {
+          coverage_from: "2005-01-01",
+          coverage_to: "2010-12-31",
+          open_ended: false,
+        },
+        { coverage_from: null, coverage_to: null, open_ended: false },
+      ]),
+    ).toEqual({ from: 2005, to: 2010 });
+  });
+
+  it("a yearless-floor start (0001-01-01) does NOT floor the union to year 1", () => {
+    // The `0001-01-01` start sentinel means "start unknown", not year 1 — it must
+    // be treated as no finite start (mirrors `coverageFromStates`), else the union
+    // `from` floors to 1 and balloons the PeriodPicker slider track.
+    expect(
+      memberCoverageUnion([
+        {
+          coverage_from: "0001-01-01",
+          coverage_to: "2008-12-31",
+          open_ended: false,
+        },
+      ]),
+    ).toEqual({ from: null, to: 2008 });
   });
 });

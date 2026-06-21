@@ -239,6 +239,11 @@ export type LineageWarningModel = Schemas["LineageWarningModel"];
  * member rows under the group and expands to a facet picker. */
 export type ConceptGroup = Schemas["ConceptGroupModel"];
 export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
+/** One facet assignment on a group member (`axis`/`value`/`label`) — shared by
+ * the browse `ConceptGroupMember` and the subject-page `ConceptGroupNodeMember`,
+ * so the facet-grid helpers (`axisValues`/`memberAt`) can be generic over the
+ * member type. */
+export type GroupFacetModel = Schemas["GroupFacetModel"];
 
 /** The concept group as a browsable SUBJECT (#617), returned by the fixed
  * `/catalog/group/<provider>/<register>/<key>` route — group identity +

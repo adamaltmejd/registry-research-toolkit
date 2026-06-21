@@ -8,8 +8,8 @@ import {
   type BindingChild,
   type CatalogNode,
   type ConceptGroup,
-  type ConceptGroupMember,
   encodeFqid,
+  type GroupFacetModel,
   getCatalogNode,
   isCatalogNode,
   type StatesResponse,
@@ -133,10 +133,21 @@ export function groupMatchesFilter(
   return matchesFilter(needle, ...groupFilterKeys(group));
 }
 
+// `axisValues`/`memberAt` are GENERIC over the member type (#638 PR2a): the
+// register-browse `ConceptGroupRow` passes a `ConceptGroup` (members lack
+// coverage), the group SUBJECT page passes a `ConceptGroupNodeData` (members ADD
+// `coverage`). Both shapes carry `members: { facets: GroupFacetModel[] }[]`, and
+// these helpers read ONLY `.facets`, so the minimal constraint is enough — and
+// `memberAt` preserves the caller's member type so the subject page gets its
+// `coverage` field back on the matched cell.
+
+/** A group member as far as the facet-grid helpers care: just its facets. */
+type FacetedMember = { facets: GroupFacetModel[] };
+
 /** The distinct (value, label) pairs a group's members carry on `axis`,
  * value-sorted — the rows/columns of the facet picker. */
 export function axisValues(
-  group: ConceptGroup,
+  group: { members: readonly FacetedMember[] },
   axis: string,
 ): { value: string; label: string }[] {
   const seen = new Map<string, string>();
@@ -152,11 +163,13 @@ export function axisValues(
 }
 
 /** The member at a facet-coordinate (one value per axis, in `axes` order), or
- * undefined for an empty cell (partial families: a missing month/vintage). */
-export function memberAt(
-  group: ConceptGroup,
+ * undefined for an empty cell (partial families: a missing month/vintage).
+ * Generic over `M` so the matched member keeps its concrete type (the subject
+ * page's `coverage` survives). */
+export function memberAt<M extends FacetedMember>(
+  group: { members: readonly M[] },
   coords: { axis: string; value: string }[],
-): ConceptGroupMember | undefined {
+): M | undefined {
   return group.members.find((m) =>
     coords.every((c) =>
       m.facets.some((f) => f.axis === c.axis && f.value === c.value),
@@ -747,6 +760,75 @@ export function coverageFromStates(
 function yearOf(iso: string): number | null {
   const m = /^(\d{4})/.exec(iso ?? "");
   return m ? Number.parseInt(m[1], 10) : null;
+}
+
+/** A per-member coverage span as it rides on the wire (`VariableCoverageModel`):
+ * ISO `coverage_from`/`coverage_to` (`null` when unknown) + the open-ended flag.
+ * Structural so callers needn't import the schema alias. */
+export interface MemberCoverage {
+  coverage_from?: string | null;
+  coverage_to?: string | null;
+  open_ended: boolean;
+}
+
+/** The UNION data-availability span (#638 PR2a) over a group's member coverages,
+ * as a year-grain `Coverage` for the period picker's availability lens:
+ *  - `from` = the earliest finite member `coverage_from` year (null when none
+ *    has a finite start);
+ *  - `to` = the latest finite member `coverage_to` year — UNLESS any member is
+ *    open-ended (or carries a null `coverage_to`), which unbounds the END
+ *    (`to: null` = "still delivered"), mirroring `coverageFromStates`'s
+ *    open-ended sentinel handling so the slider projects it to the vintage.
+ * Members with null coverage (stateless) are skipped. Returns null when no
+ * member contributes a finite bound AND none is open-ended (nothing to draw or
+ * gap against — the picker softens the deviation hint). */
+export function memberCoverageUnion(
+  coverages: readonly (MemberCoverage | null | undefined)[],
+): Coverage | null {
+  let from: number | null = null;
+  let to: number | null = null;
+  let openEnded = false;
+  for (const cov of coverages) {
+    if (!cov) {
+      continue;
+    }
+    // A stateless member's payload is `{null, null, false}` (not null) — it
+    // carries no span, so treat it like null coverage. WITHOUT this, its null
+    // `coverage_to` would wrongly trip the open-ended branch below and unbound
+    // the WHOLE union END (the union track then runs to the vintage even when
+    // every finite member ends earlier). A finite `coverage_from` WITH a null
+    // `coverage_to` is a GENUINE open-ended member and still falls through.
+    if (
+      cov.coverage_from == null &&
+      cov.coverage_to == null &&
+      !cov.open_ended
+    ) {
+      continue;
+    }
+    // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
+    // — skip it so it never floors the union `from` (mirrors `coverageFromStates`).
+    const fromYear =
+      cov.coverage_from && cov.coverage_from !== YEARLESS_VALID_FROM
+        ? yearOf(cov.coverage_from)
+        : null;
+    if (fromYear !== null && (from === null || fromYear < from)) {
+      from = fromYear;
+    }
+    // An open-ended member (or one with no finite end) unbounds the union END.
+    if (cov.open_ended || cov.coverage_to == null) {
+      openEnded = true;
+    } else {
+      const toYear = yearOf(cov.coverage_to);
+      if (toYear !== null && (to === null || toYear > to)) {
+        to = toYear;
+      }
+    }
+  }
+  const unionTo = openEnded ? null : to;
+  if (from === null && unionTo === null) {
+    return null;
+  }
+  return { from, to: unionTo };
 }
 
 /** Per-state stable key — NOT `state_id` alone. A merged monthly-family
