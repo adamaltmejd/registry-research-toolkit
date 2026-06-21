@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 from _slugged_db import add_register, add_variable, build_slugged_db
 from reg_meta_build.concept_group_candidates import (
+    _split_stem_suffix,
     _strip_digits,
     infer_concept_group_candidates,
     render_candidates_toml,
@@ -129,11 +130,165 @@ class TestGenerator:
         assert result.excluded_batteries == 0
         assert len(result.candidates) == 1
         c = result.candidates[0]
-        assert c.key == "tillsyn-1-skolbarn-"
+        # The digit strip on `tillsyn-1-skolbarn-1` leaves stem `tillsyn-1-skolbarn-`;
+        # the trailing hyphen is trimmed off the URL key (#645). The display label
+        # below still derives from the RAW names, so the fixed "1" is untouched.
+        assert c.key == "tillsyn-1-skolbarn"
         assert [m.suffix for m in c.members] == [1, 2, 3]
         assert c.agreement > 0.9
         # Display label is the RAW common prefix, keeping the fixed "1".
         assert c.group_label == "Tillsyn 1 skolbarn"
+
+    def test_trailing_hyphen_trimmed_from_key(self) -> None:
+        # The digit strip on `artal-person-1` leaves stem `artal-person-`; the URL
+        # key is the trailing-hyphen-TRIMMED slug `artal-person` (#645), not the
+        # dangling-hyphen form. Members are unchanged (the slugs keep their hyphen).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person-",  # slugs `artal-person-1/2/3`
+            suffixes=[1, 2, 3],
+            name="Antal år som person",
+            var_id_base=2000,
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.skipped_trim_collision == 0
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "artal-person"
+        assert [m.slug for m in c.members] == [
+            "artal-person-1",
+            "artal-person-2",
+            "artal-person-3",
+        ]
+
+    def test_trim_collision_skipped_not_merged(self) -> None:
+        # Two genuinely-distinct families whose stems TRIM to the same key:
+        # `artal-person-1/2/3` (raw stem `artal-person-`) and `artal-person4/5/6`
+        # (raw stem `artal-person`). Both → key `artal-person`. Folding them into one
+        # group would silently merge unrelated families, so the bucket is skipped and
+        # counted (never merged, never crashed).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person-",
+            suffixes=[1, 2, 3],
+            name="Antal år som person",
+            var_id_base=2100,
+        )
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person",
+            suffixes=[4, 5, 6],
+            name="Annat antal år",
+            var_id_base=2200,
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.skipped_trim_collision == 1
+        assert result.candidates == []
+        assert result.excluded_batteries == 0
+
+    def test_noise_singleton_does_not_poison_valid_family(self) -> None:
+        # A real digit family `foo-1/2/3` (raw stem `foo-`) shares the trimmed key
+        # `foo` with an unrelated SINGLETON `foo4` (raw stem `foo`, one member, not
+        # itself foldable). The coarse "> 1 raw stem" check would skip the whole
+        # bucket and drop the valid family; the refined check counts only raw stems
+        # that independently qualify (>= min_siblings distinct suffixes), so only the
+        # `foo-` family qualifies → it is EMITTED and the singleton is ignored, no
+        # trim-collision counted (#645).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="foo-",  # slugs `foo-1/2/3`, raw stem `foo-`
+            suffixes=[1, 2, 3],
+            name="Antal år",
+            var_id_base=2400,
+        )
+        add_variable(
+            conn, register_id=1, var_id=2410, name="Annat", slug="foo4"
+        )  # raw stem `foo`, lone member
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.skipped_trim_collision == 0
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "foo"
+        assert [m.slug for m in c.members] == ["foo-1", "foo-2", "foo-3"]
+
+    def test_battery_peer_does_not_suppress_valid_family(self) -> None:
+        # A valid family `foo-1/2/3` (raw stem `foo-`, agreeing names) shares the
+        # trimmed key `foo` with a count-qualifying BATTERY peer `foo4/5/6` (raw stem
+        # `foo`, 3 distinct suffixes but DISAGREEING names → would never fold). The
+        # buggy collision predicate counted the battery as a competing family on the
+        # SUFFIX FLOOR alone and skipped the bucket, silently dropping the valid
+        # family. The qualification now mirrors the full fold predicate, so the
+        # battery doesn't count → the `foo` family IS emitted, not skipped as a
+        # trim-collision (Codex P2 #646). The battery is not separately counted: it
+        # never headlines its own bucket.
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="foo-",  # slugs `foo-1/2/3`, raw stem `foo-`
+            suffixes=[1, 2, 3],
+            name="Förvärvsinkomst total",  # agreeing, prefix >= 8
+            var_id_base=2500,
+        )
+        # Battery peer: raw stem `foo`, 3 distinct suffixes, but genuinely different
+        # label TEXT → weak agreement, never folds.
+        add_variable(conn, register_id=1, var_id=2510, name="Apples", slug="foo4")
+        add_variable(conn, register_id=1, var_id=2511, name="Oranges", slug="foo5")
+        add_variable(conn, register_id=1, var_id=2512, name="Cars", slug="foo6")
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.skipped_trim_collision == 0
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "foo"
+        assert [m.slug for m in c.members] == ["foo-1", "foo-2", "foo-3"]
+
+    def test_null_name_peer_does_not_suppress_valid_family(self) -> None:
+        # Same shape as the battery-peer case, but the count-qualifying peer
+        # `foo4/5/6` (raw stem `foo`) has a NULL member name → no labels to agree on,
+        # never folds. It must NOT count as a competing family: the valid `foo-1/2/3`
+        # family is still emitted, no trim-collision (Codex P2 #646).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="foo-",
+            suffixes=[1, 2, 3],
+            name="Förvärvsinkomst total",
+            var_id_base=2600,
+        )
+        add_variable(conn, register_id=1, var_id=2610, name="Inkomst år", slug="foo4")
+        add_variable(conn, register_id=1, var_id=2611, name=None, slug="foo5")
+        add_variable(conn, register_id=1, var_id=2612, name="Inkomst år", slug="foo6")
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.skipped_trim_collision == 0
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "foo"
+        assert [m.slug for m in c.members] == ["foo-1", "foo-2", "foo-3"]
+
+    def test_hyphen_only_stem_not_emitted(self) -> None:
+        # A slug whose only non-digit prefix is hyphens (`--1`/`--2`) trims to an
+        # EMPTY stem — `_split_stem_suffix` returns None, so no empty/invalid key is
+        # minted (mirrors the bare-number-slug drop).
+        conn = _base_db()
+        add_variable(conn, register_id=1, var_id=2300, name="Kod", slug="--1")
+        add_variable(conn, register_id=1, var_id=2301, name="Kod", slug="--2")
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert result.candidates == []
+        assert result.skipped_trim_collision == 0
 
     def test_battery_excluded_and_counted(self) -> None:
         # Same stem `f`, genuinely different label TEXT (not just the number) →
@@ -181,6 +336,29 @@ class TestGenerator:
         result = infer_concept_group_candidates(conn)
         assert len(result.candidates) == 1
         c = result.candidates[0]
+        assert c.axis == "vintage"
+        assert [m.value for m in c.members] == ["2000", "2010"]
+
+    def test_vintage_axis_uses_raw_stem_not_trimmed_key(self) -> None:
+        # `foo1-2000`/`foo1-2010`: the raw stem is `foo1-` (ends in `-`, proving the
+        # 4-digit tail is a YEAR, not part of a longer number), but the trimmed key
+        # `foo1` ends in a digit. Axis inference must use the RAW stem, so the family
+        # is classified `vintage`; passing the trimmed `foo1` would mis-classify it
+        # `numeric` (#645). The emitted key stays the trimmed `foo1`.
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="foo1-",  # slugs `foo1-2000`, `foo1-2010`; raw stem `foo1-`
+            suffixes=[2000, 2010],
+            name="Inkomst per år",
+            var_id_base=450,
+        )
+        conn.commit()
+        result = infer_concept_group_candidates(conn)
+        assert len(result.candidates) == 1
+        c = result.candidates[0]
+        assert c.key == "foo1"
         assert c.axis == "vintage"
         assert [m.value for m in c.members] == ["2000", "2010"]
 
@@ -377,6 +555,105 @@ class TestGenerator:
         assert c.register_fqid == "scb/lisa"
         assert [m.suffix for m in c.members] == [1, 2, 3]
 
+    def test_accepted_family_preserved_under_trim_collision(self) -> None:
+        # Idempotent-regen + trim-collision interaction (Codex P2 #646): an
+        # `[[accept]]`-ed family `artal-person-1/2/3` (raw stem `artal-person-`,
+        # materialized as a curated group keyed on the trimmed `artal-person`) shares
+        # its trimmed key with a SECOND independently-folding raw stem `artal-person4/5/6`
+        # (raw stem `artal-person`) that appeared in a later build. The blanket
+        # trim-collision skip would drop the WHOLE bucket — including the accepted
+        # family — so the next build's `resolve_accept` would fail on the now-missing
+        # candidate. With the accepted scope passed, the accepted subgroup is preserved
+        # (re-emitted) and only the non-accepted peer is rejected; the collision is NOT
+        # counted (the accepted family survives, it is not a dropped collision).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person-",  # slugs artal-person-1/2/3, raw stem `artal-person-`
+            suffixes=[1, 2, 3],
+            name="Antal år som person",
+            var_id_base=2700,
+        )
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person",  # slugs artal-person4/5/6, raw stem `artal-person`
+            suffixes=[4, 5, 6],
+            name="Annat antal år personräkning",
+            var_id_base=2710,
+        )
+        # Materialize the accept: a curated group keyed on the trimmed `artal-person`
+        # claiming the THREE accepted members (the `artal-person-` family).
+        cur = conn.execute(
+            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+            "VALUES ('variable', 1, 'artal-person', 'Antal år', 'curated')"
+        )
+        group_id = cur.lastrowid
+        for slug in ("artal-person-1", "artal-person-2", "artal-person-3"):
+            vid = conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+                (slug,),
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO concept_group_variable (variable_id, group_id) "
+                "VALUES (?, ?)",
+                (vid, group_id),
+            )
+        conn.commit()
+
+        # WITHOUT the accept scope: the accepted members are grouped → excluded, so
+        # only the peer `artal-person4/5/6` is ungrouped (no collision seen). It is
+        # then dropped anyway — its trimmed key `artal-person` collides with the
+        # materialized curated group's key. Either way the accepted family is missing.
+        bare = infer_concept_group_candidates(conn)
+        assert bare.candidates == []
+        assert bare.skipped_existing_key == 1
+
+        # WITH the accept scope: the accepted family is preserved and re-emitted; the
+        # non-accepted peer is rejected and NOT counted as a trim-collision.
+        scope = frozenset({("scb", "lisa", "artal-person")})
+        aware = infer_concept_group_candidates(conn, accepted_scopes=scope)
+        assert aware.skipped_trim_collision == 0
+        assert [c.key for c in aware.candidates] == ["artal-person"]
+        c = aware.candidates[0]
+        assert c.register_fqid == "scb/lisa"
+        # The re-emitted candidate is the accepted family (the `artal-person-` slugs),
+        # NOT the colliding peer.
+        assert [m.slug for m in c.members] == [
+            "artal-person-1",
+            "artal-person-2",
+            "artal-person-3",
+        ]
+
+    def test_non_accepted_trim_collision_still_skips_with_other_scope(self) -> None:
+        # A genuine two-family trim-collision whose key is NOT accepted still
+        # skips-and-counts, even when an UNRELATED scope is accepted: the accepted-
+        # preserve path only fires for the colliding key's own accept (Codex P2 #646).
+        conn = _base_db()
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person-",
+            suffixes=[1, 2, 3],
+            name="Antal år som person",
+            var_id_base=2800,
+        )
+        _add_family(
+            conn,
+            register_id=1,
+            stem="artal-person",
+            suffixes=[4, 5, 6],
+            name="Annat antal år personräkning",
+            var_id_base=2810,
+        )
+        conn.commit()
+        # Accept a DIFFERENT scope — the colliding `artal-person` key is not accepted.
+        scope = frozenset({("scb", "lisa", "morsak")})
+        result = infer_concept_group_candidates(conn, accepted_scopes=scope)
+        assert result.skipped_trim_collision == 1
+        assert result.candidates == []
+
     def test_non_accepted_group_stays_excluded_with_scopes(self) -> None:
         # A custom `[[variable_group]]` / edge group is NOT a candidate even when
         # OTHER scopes are accepted: only the named scope is re-included. The 'custom'
@@ -507,6 +784,34 @@ class TestGenerator:
         morsak = by_key["morsak"]
         assert all(m.variable is not None for m in morsak.members)
         assert [m.value for m in morsak.members] == ["1", "2", "3"]
+
+
+class TestSplitStemSuffix:
+    def test_plain_family_keeps_stem(self) -> None:
+        # No trailing hyphen: key stem == raw stem, suffix parsed.
+        assert _split_stem_suffix("sun-niva2000") == ("sun-niva", "sun-niva", 2000)
+
+    def test_trailing_hyphen_trimmed_in_key_stem(self) -> None:
+        # The digit strip leaves a trailing hyphen on the raw stem; the KEY stem is
+        # trimmed (#645), the raw stem is returned untrimmed for collision detection.
+        assert _split_stem_suffix("artal-person-1") == (
+            "artal-person",
+            "artal-person-",
+            1,
+        )
+
+    def test_multiple_trailing_hyphens_all_trimmed(self) -> None:
+        assert _split_stem_suffix("kod--3") == ("kod", "kod--", 3)
+
+    def test_no_trailing_digits_is_none(self) -> None:
+        assert _split_stem_suffix("agi1lonfink") is None
+
+    def test_bare_number_is_none(self) -> None:
+        assert _split_stem_suffix("2000") is None
+
+    def test_hyphen_only_stem_is_none(self) -> None:
+        # The stem is all hyphens → trims to empty → not a usable key, return None.
+        assert _split_stem_suffix("--1") is None
 
 
 class TestStripDigits:

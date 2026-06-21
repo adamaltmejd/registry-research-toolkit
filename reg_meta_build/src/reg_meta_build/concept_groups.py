@@ -730,6 +730,35 @@ def _trim_label(prefix: str) -> str:
     return trimmed.strip().rstrip(",;:")
 
 
+def _evaluate_month_fold(
+    members: list[tuple[int, str, int, str | None, str]],
+) -> str | None:
+    """Decide whether one raw-stem month subgroup would FOLD and, if so, return its
+    group label; otherwise `None`. Single source of truth for "would this month
+    subgroup fold", applied in TWO places so they can't drift (Codex P2 #646):
+
+    1. the trim-collision check — a raw-stem subgroup counts as a competing month
+       family only when it would actually fold (not merely meet the sibling floor); and
+    2. the emit path — the winning subgroup reuses the returned label directly.
+
+    Gates, in order (the pre-emit guards `_derive_month_groups` applies):
+    - `_MIN_MONTH_SIBLINGS` DISTINCT-month floor (member tuple index 0 is the month);
+    - NULL-name skip — any NULL member name means no labels to agree on (conservative
+      non-fold);
+    - label-prefix floor — the trimmed common name prefix must be >= `_MIN_LABEL_PREFIX`
+      chars. The existing-key collision guard is a KEY check, NOT a foldability gate,
+      so it is NOT applied here (it stays on the winning fold in the caller)."""
+    if len({m[0] for m in members}) < _MIN_MONTH_SIBLINGS:
+        return None
+    names = [m[3] for m in members]
+    if any(n is None for n in names):
+        return None
+    label = _trim_label(_common_prefix([n for n in names if n is not None]))
+    if len(label) < _MIN_LABEL_PREFIX:
+        return None
+    return label
+
+
 def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) -> int:
     """Dimension 1 (variables): fold month-suffixed slug families. Candidates
     are ungrouped slugged variables whose slug ends in a month token; a
@@ -737,7 +766,22 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
     AND a usable shared label prefix). The group's `facet_axis` is `'month'`;
     each member carries its zero-padded month `facet_value`/`facet_label` inline.
     A family dropped on a group-key collision is reported via `warn` (never
-    silent)."""
+    silent).
+
+    The stem (`slug` minus its month token) doubles as the group's URL key
+    (`/catalog/group/<p>/<r>/<key>`), so a trailing hyphen left by the token strip
+    (`inkomst-jan` → `inkomst-`) is trimmed to a clean slug (#645). An empty/hyphen-
+    only stem is degenerate and skipped (no empty key). The trim can fuse two raw
+    stems into one key (`ink-jan…` raw `ink-` + `inkjan…` raw `ink` both → key
+    `ink`); the collision skip-and-warn fires only when >= 2 of the colliding raw
+    stems would INDEPENDENTLY FOLD — `_evaluate_month_fold` applies ALL the pre-emit
+    guards (sibling floor AND no NULL names AND the label-prefix floor), the same
+    predicate the emit path uses, so a peer trio with NULL/short/disagreeing labels
+    (which would never fold) does NOT count as a competing family and cannot suppress
+    a valid fold (Codex P2 #646). A coincidental singleton (`inkjan` alone, raw `ink`)
+    or a non-folding NULL-name peer sharing the key with a real family
+    (`ink-jan/feb/mars`, raw `ink-`) does NOT suppress the fold — the real family
+    folds and the noise is dropped (#645)."""
     rows = conn.execute(
         "SELECT v.variable_id, v.register_id, v.slug, v.name FROM variable v "
         "WHERE v.slug IS NOT NULL AND NOT EXISTS "
@@ -745,14 +789,19 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
         "   WHERE m.variable_id = v.variable_id) "
         "ORDER BY v.register_id, v.slug"
     ).fetchall()
-    # (register_id, stem) → [(month, slug, variable_id, name)]
-    candidates: dict[tuple[int, str], list[tuple[int, str, int, str | None]]] = {}
+    # (register_id, key_stem) → [(month, slug, variable_id, name, raw_stem)].
+    # `key_stem` is the trailing-hyphen-trimmed URL key; `raw_stem` (untrimmed) is
+    # carried so a trim that collapses two distinct stems into one key is caught.
+    candidates: dict[tuple[int, str], list[tuple[int, str, int, str | None, str]]] = {}
     for variable_id, register_id, slug, name in rows:
         for token, month in _MONTH_TOKENS.items():
             if slug.endswith(token) and len(slug) > len(token):
-                stem = slug[: -len(token)]
-                candidates.setdefault((register_id, stem), []).append(
-                    (month, slug, variable_id, name)
+                raw_stem = slug[: -len(token)]
+                key_stem = raw_stem.rstrip("-")
+                if not key_stem:
+                    break  # hyphen-only/empty stem — not a usable URL key
+                candidates.setdefault((register_id, key_stem), []).append(
+                    (month, slug, variable_id, name, raw_stem)
                 )
                 break  # no month token is a suffix of another — single match
     existing_keys = {
@@ -762,15 +811,44 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
         )
     }
     n_groups = 0
-    for (register_id, stem), members in sorted(candidates.items()):
-        if len({m[0] for m in members}) < _MIN_MONTH_SIBLINGS:
+    for (register_id, stem), bucket in sorted(candidates.items()):
+        # Trim-collision refinement (#645): a clean `stem` reached by `.rstrip("-")`
+        # can fuse pre-trim stems into one bucket (`ink-jan…` raw `ink-` +
+        # `inkjan…` raw `ink` both → key `ink`). Group by RAW stem (member tuple
+        # index 4) and ask which raw-stem subgroups would ACTUALLY FOLD —
+        # `_evaluate_month_fold` applies the FULL pre-emit gate set (month-sibling
+        # floor AND no NULL names AND the label-prefix floor), the same predicate the
+        # emit path uses. A peer trio that meets the sibling floor but would fail the
+        # NULL/label gate never folds, so it must NOT count as a competing family
+        # (Codex P2 #646): only genuinely-folding raw stems do. Only when >= 2 raw
+        # stems each fold is it a GENUINE two-family collision: skip-and-warn (never
+        # silently merge two families onto one key). When exactly ONE folds, the rest
+        # are noise (coincidental singletons, NULL/short-label peers) sharing the
+        # trimmed key — KEEP the real month fold and ignore the noise (#645). A
+        # homogeneous bucket (the common case) has one raw stem and folds with no
+        # behavior change.
+        by_raw_stem: dict[str, list[tuple[int, str, int, str | None, str]]] = {}
+        for member in bucket:
+            by_raw_stem.setdefault(member[4], []).append(member)
+        qualifying = [
+            (sub, label)
+            for sub in by_raw_stem.values()
+            if (label := _evaluate_month_fold(sub)) is not None
+        ]
+        if len(qualifying) > 1:
+            warn(
+                f"  WARN concept-groups: month family {stem!r} "
+                f"(register_id {register_id}, {len(bucket)} variables) NOT "
+                "folded — a trailing-hyphen trim collapsed two distinct stems "
+                "onto this key"
+            )
             continue
-        names = [m[3] for m in members]
-        if any(n is None for n in names):
-            continue  # no labels to agree on — conservative skip
-        label = _trim_label(_common_prefix([n for n in names if n is not None]))
-        if len(label) < _MIN_LABEL_PREFIX:
+        if not qualifying:
             continue
+        # The single folding raw-stem subgroup is the real month family; reuse its
+        # already-computed label rather than re-running the agreement/NULL gates. Noise
+        # under the trimmed key is dropped.
+        members, label = qualifying[0]
         if (register_id, stem) in existing_keys:
             # An edge group already claimed this key (its min member slug
             # equals the stem). Cosmetic collision on a presentation key —
@@ -799,7 +877,7 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
             "(variable_id, group_id, facet_value, facet_label) VALUES (?, ?, ?, ?)",
             [
                 (vid, group_id, f"{month:02d}", _MONTH_LABELS[month])
-                for month, _, vid, _ in ordered
+                for month, _, vid, _, _ in ordered
             ],
         )
         n_groups += 1

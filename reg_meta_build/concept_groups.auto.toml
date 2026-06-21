@@ -20,9 +20,10 @@
 # regenerating against a normal built DB keeps every accept resolvable.
 #
 # thresholds: min-siblings=2 min-label-prefix=8 min-agreement=0.5
-# foldable families: 602
-# excluded batteries (weak label agreement): 374
-# skipped (key collides with an existing group): 3
+# foldable families: 601
+# excluded batteries (weak label agreement): 370
+# skipped (key collides with an existing group): 8
+# skipped (trailing-hyphen trim collapsed two distinct stems): 0
 
 # axis=ordinal agreement=1.00 members=48  ICD-kod för multipel dödsorsak
 [[variable_group]]
@@ -2017,7 +2018,7 @@ label = "999"
 # axis=ordinal agreement=1.00 members=11  Årtal person
 [[variable_group]]
 register = "scb/ulf"
-key = "artal-person-"
+key = "artal-person"
 label = "Årtal person"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2068,7 +2069,7 @@ label = "11"
 # axis=ordinal agreement=1.00 members=11  Årtal -- sedan UP bott med person
 [[variable_group]]
 register = "scb/ulf"
-key = "artal-sedan-up-bott-med-person-"
+key = "artal-sedan-up-bott-med-person"
 label = "Årtal -- sedan UP bott med person"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2119,7 +2120,7 @@ label = "11"
 # axis=ordinal agreement=1.00 members=11  Relation person
 [[variable_group]]
 register = "scb/ulf"
-key = "relation-person-"
+key = "relation-person"
 label = "Relation person"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2264,7 +2265,7 @@ label = "12"
 # axis=ordinal agreement=1.00 members=10  Kön person
 [[variable_group]]
 register = "scb/ulf"
-key = "kon-person-"
+key = "kon-person"
 label = "Kön person"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2311,7 +2312,7 @@ label = "10"
 # axis=ordinal agreement=1.00 members=9  Allergi barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0001a-"
+key = "bha0001a"
 label = "Allergi barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2354,7 +2355,7 @@ label = "9"
 # axis=ordinal agreement=1.00 members=9  Astma, barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0002a-"
+key = "bha0002a"
 label = "Astma, barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2397,7 +2398,7 @@ label = "9"
 # axis=ordinal agreement=1.00 members=9  Annat hälsoproblem barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0007a-"
+key = "bha0007a"
 label = "Annat hälsoproblem barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2440,7 +2441,7 @@ label = "9"
 # axis=ordinal agreement=1.00 members=9  Barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0100a-"
+key = "bha0100a"
 label = "Barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2795,7 +2796,7 @@ label = "8"
 # axis=ordinal agreement=1.00 members=8  Sökorsak
 [[variable_group]]
 register = "scb/distansutbildning"
-key = "f05-"
+key = "f05"
 label = "Sökorsak"
 axis = "ordinal"
 [[variable_group.members]]
@@ -2834,7 +2835,7 @@ label = "8"
 # axis=ordinal agreement=1.00 members=8  Distansorsak
 [[variable_group]]
 register = "scb/distansutbildning"
-key = "f07-"
+key = "f07"
 label = "Distansorsak"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3029,7 +3030,7 @@ label = "8"
 # axis=numeric agreement=1.00 members=8  Barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0008am-"
+key = "bha0008am"
 label = "Barn"
 axis = "numeric"
 [[variable_group.members]]
@@ -3107,7 +3108,7 @@ label = "8"
 # axis=ordinal agreement=1.00 members=7  Betyg i Franska
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
-key = "betyg-i-franska-"
+key = "betyg-i-franska"
 label = "Betyg i Franska"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3142,7 +3143,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Betyg i Italienska
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
-key = "betyg-i-italienska-"
+key = "betyg-i-italienska"
 label = "Betyg i Italienska"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3177,7 +3178,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Betyg i Ryska
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
-key = "betyg-i-ryska-"
+key = "betyg-i-ryska"
 label = "Betyg i Ryska"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3212,7 +3213,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Betyg i Spanska
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
-key = "betyg-i-spanska-"
+key = "betyg-i-spanska"
 label = "Betyg i Spanska"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3247,7 +3248,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Betyg i Tyska
 [[variable_group]]
 register = "scb/gymnasieskola-betyg"
-key = "betyg-i-tyska-"
+key = "betyg-i-tyska"
 label = "Betyg i Tyska"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3282,7 +3283,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Ålder barn
 [[variable_group]]
 register = "scb/ulf"
-key = "aldbha-"
+key = "aldbha"
 label = "Ålder barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3317,7 +3318,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Adhd mm barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0003-"
+key = "bha0003"
 label = "Adhd mm barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3352,7 +3353,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Dyslexi barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0004-"
+key = "bha0004"
 label = "Dyslexi barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3387,7 +3388,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Hörselnedsättning barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0005-"
+key = "bha0005"
 label = "Hörselnedsättning barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3422,7 +3423,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Synnedsättningi barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0006-"
+key = "bha0006"
 label = "Synnedsättningi barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3457,7 +3458,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=7  Tillsyn 1 barn
 [[variable_group]]
 register = "scb/ulf"
-key = "tillsyn-1-barn-"
+key = "tillsyn-1-barn"
 label = "Tillsyn 1 barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3562,7 +3563,7 @@ label = "7"
 # axis=ordinal agreement=1.00 members=6  Ålder för barn
 [[variable_group]]
 register = "scb/aku"
-key = "alder-for-barn-"
+key = "alder-for-barn"
 label = "Ålder för barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3593,7 +3594,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Orsak till ej slutförd kurs
 [[variable_group]]
 register = "scb/distansutbildning"
-key = "f03-"
+key = "f03"
 label = "Orsak till ej slutförd kurs"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3686,7 +3687,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Folkmängd den 1 november år t-
 [[variable_group]]
 register = "scb/kommunalekonomisk-utjamning"
-key = "folkmangd-den-1-november-ar-t-"
+key = "folkmangd-den-1-november-ar-t"
 label = "Folkmängd den 1 november år t-"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3717,7 +3718,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Hur ofta besvär
 [[variable_group]]
 register = "scb/ulf"
-key = "hur-ofta-besvar-"
+key = "hur-ofta-besvar"
 label = "Hur ofta besvär"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3748,7 +3749,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Hur ofta besvär av sjukdom
 [[variable_group]]
 register = "scb/ulf"
-key = "hur-ofta-besvar-av-sjukdom-"
+key = "hur-ofta-besvar-av-sjukdom"
 label = "Hur ofta besvär av sjukdom"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3779,7 +3780,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Läkarbesök barn
 [[variable_group]]
 register = "scb/ulf"
-key = "lakarbesok-barn-"
+key = "lakarbesok-barn"
 label = "Läkarbesök barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3810,7 +3811,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Plats hot (händelse
 [[variable_group]]
 register = "scb/ulf"
-key = "plats-hot-handelse-"
+key = "plats-hot-handelse"
 label = "Plats hot (händelse"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3841,7 +3842,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Plats våld som ej krävde vård (händelse
 [[variable_group]]
 register = "scb/ulf"
-key = "plats-vald-som-ej-kravde-vard-handelse-"
+key = "plats-vald-som-ej-kravde-vard-handelse"
 label = "Plats våld som ej krävde vård (händelse"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3872,7 +3873,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Plats våld som krävde vård (händelse
 [[variable_group]]
 register = "scb/ulf"
-key = "plats-vald-som-kravde-vard-handelse-"
+key = "plats-vald-som-kravde-vard-handelse"
 label = "Plats våld som krävde vård (händelse"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3903,7 +3904,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Regelbunden medicinering
 [[variable_group]]
 register = "scb/ulf"
-key = "regelbunden-medicinering-"
+key = "regelbunden-medicinering"
 label = "Regelbunden medicinering"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3934,7 +3935,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Regelbunden medicinsk behandling
 [[variable_group]]
 register = "scb/ulf"
-key = "regelbunden-medicinsk-behandling-"
+key = "regelbunden-medicinsk-behandling"
 label = "Regelbunden medicinsk behandling"
 axis = "ordinal"
 [[variable_group.members]]
@@ -3965,7 +3966,7 @@ label = "6"
 # axis=ordinal agreement=1.00 members=6  Slag av händelse
 [[variable_group]]
 register = "scb/ulf"
-key = "slag-av-handelse-"
+key = "slag-av-handelse"
 label = "Slag av händelse"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4266,7 +4267,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Månader i förskola barn
 [[variable_group]]
 register = "scb/fasit"
-key = "manader-i-forskola-barn-"
+key = "manader-i-forskola-barn"
 label = "Månader i förskola barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4293,7 +4294,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Månader kommunal dag-/familjedaghem barn
 [[variable_group]]
 register = "scb/fasit"
-key = "manader-kommunal-dag-familjedaghem-barn-"
+key = "manader-kommunal-dag-familjedaghem-barn"
 label = "Månader kommunal dag-/familjedaghem barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4320,7 +4321,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Månader med kommunal omsorg barn
 [[variable_group]]
 register = "scb/fasit"
-key = "manader-med-kommunal-omsorg-barn-"
+key = "manader-med-kommunal-omsorg-barn"
 label = "Månader med kommunal omsorg barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4347,7 +4348,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Månader omsorg totalt barn
 [[variable_group]]
 register = "scb/fasit"
-key = "manader-omsorg-totalt-barn-"
+key = "manader-omsorg-totalt-barn"
 label = "Månader omsorg totalt barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4509,7 +4510,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Huvudsakligt innehåll  eller kursämne, kurs/utbildning
 [[variable_group]]
 register = "scb/personalutbildningsstatistik"
-key = "huvudsakligt-innehall-eller-kursamne-kurs-utbildning-"
+key = "huvudsakligt-innehall-eller-kursamne-kurs-utbildning"
 label = "Huvudsakligt innehåll  eller kursämne, kurs/utbildning"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4536,7 +4537,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Omfattning på kurs/utbildning
 [[variable_group]]
 register = "scb/personalutbildningsstatistik"
-key = "omfattning-pa-kurs-utbildning-"
+key = "omfattning-pa-kurs-utbildning"
 label = "Omfattning på kurs/utbildning"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4563,7 +4564,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Studietimmar per kursdag, kurs/utbildning
 [[variable_group]]
 register = "scb/personalutbildningsstatistik"
-key = "studietimmar-per-kursdag-kurs-utbildning-"
+key = "studietimmar-per-kursdag-kurs-utbildning"
 label = "Studietimmar per kursdag, kurs/utbildning"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4644,7 +4645,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0100b-"
+key = "bha0100b"
 label = "Barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4671,7 +4672,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Huvudsaklig tillsyn barn
 [[variable_group]]
 register = "scb/ulf"
-key = "huvudsaklig-tillsyn-barn-"
+key = "huvudsaklig-tillsyn-barn"
 label = "Huvudsaklig tillsyn barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4698,7 +4699,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Klarar sig själv barn
 [[variable_group]]
 register = "scb/ulf"
-key = "klarar-sig-sjalv-barn-"
+key = "klarar-sig-sjalv-barn"
 label = "Klarar sig själv barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4725,7 +4726,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Klarar sig själv efter skolan, barn
 [[variable_group]]
 register = "scb/ulf"
-key = "klarar-sig-sjalv-efter-skolan-barn-"
+key = "klarar-sig-sjalv-efter-skolan-barn"
 label = "Klarar sig själv efter skolan, barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4752,7 +4753,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Restid tillsyn barn
 [[variable_group]]
 register = "scb/ulf"
-key = "restid-tillsyn-barn-"
+key = "restid-tillsyn-barn"
 label = "Restid tillsyn barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4779,7 +4780,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Tillsyn 1 skolbarn
 [[variable_group]]
 register = "scb/ulf"
-key = "tillsyn-1-skolbarn-"
+key = "tillsyn-1-skolbarn"
 label = "Tillsyn 1 skolbarn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4806,7 +4807,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Tillsyn 2 barn
 [[variable_group]]
 register = "scb/ulf"
-key = "tillsyn-2-barn-"
+key = "tillsyn-2-barn"
 label = "Tillsyn 2 barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4833,7 +4834,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Tillsyn 2 skolbarn
 [[variable_group]]
 register = "scb/ulf"
-key = "tillsyn-2-skolbarn-"
+key = "tillsyn-2-skolbarn"
 label = "Tillsyn 2 skolbarn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4860,7 +4861,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Tillsyn 3 barn
 [[variable_group]]
 register = "scb/ulf"
-key = "tillsyn-3-barn-"
+key = "tillsyn-3-barn"
 label = "Tillsyn 3 barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4887,7 +4888,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=5  Tillsyn 3 skolbarn
 [[variable_group]]
 register = "scb/ulf"
-key = "tillsyn-3-skolbarn-"
+key = "tillsyn-3-skolbarn"
 label = "Tillsyn 3 skolbarn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -4968,7 +4969,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=4  Bisysslans yrkeskod på
 [[variable_group]]
 register = "scb/aku"
-key = "biisco08-"
+key = "biisco08"
 label = "Bisysslans yrkeskod på"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5014,7 +5015,7 @@ label = "4"
 # axis=ordinal agreement=1.00 members=4  Yrke på
 [[variable_group]]
 register = "scb/aku"
-key = "uarbisco08-"
+key = "uarbisco08"
 label = "Yrke på"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5060,7 +5061,7 @@ label = "4"
 # axis=ordinal agreement=1.00 members=4  Kommentar
 [[variable_group]]
 register = "scb/bast"
-key = "kommentar-"
+key = "kommentar"
 label = "Kommentar"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5244,7 +5245,7 @@ label = "4"
 # axis=numeric agreement=1.00 members=4  Folkmängd den 31 december år t-
 [[variable_group]]
 register = "scb/kommunalekonomisk-utjamning"
-key = "folkmangd-den-31-december-ar-t-"
+key = "folkmangd-den-31-december-ar-t"
 label = "Folkmängd den 31 december år t-"
 axis = "numeric"
 [[variable_group.members]]
@@ -5267,7 +5268,7 @@ label = "12"
 # axis=ordinal agreement=1.00 members=4  Värde, kvartal
 [[variable_group]]
 register = "scb/nationalrakenskaper"
-key = "varde-kvartal-"
+key = "varde-kvartal"
 label = "Värde, kvartal"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5382,7 +5383,7 @@ label = "50"
 # axis=ordinal agreement=1.00 members=4  Fler uppdrag organisation
 [[variable_group]]
 register = "scb/ulf"
-key = "fler-uppdrag-organisation-"
+key = "fler-uppdrag-organisation"
 label = "Fler uppdrag organisation"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5405,7 +5406,7 @@ label = "4"
 # axis=ordinal agreement=1.00 members=4  Kursarrangör kurs
 [[variable_group]]
 register = "scb/ulf"
-key = "kursarrangor-kurs-"
+key = "kursarrangor-kurs"
 label = "Kursarrangör kurs"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5428,7 +5429,7 @@ label = "4"
 # axis=ordinal agreement=1.00 members=4  Organisationsnr uppdrag
 [[variable_group]]
 register = "scb/ulf"
-key = "organisationsnr-uppdrag-"
+key = "organisationsnr-uppdrag"
 label = "Organisationsnr uppdrag"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5589,7 +5590,7 @@ label = "14"
 # axis=ordinal agreement=1.00 members=4  Studiestöd kurs
 [[variable_group]]
 register = "scb/ulf"
-key = "studiestod-kurs-"
+key = "studiestod-kurs"
 label = "Studiestöd kurs"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5658,7 +5659,7 @@ label = "4"
 # axis=ordinal agreement=1.00 members=3  HCP_INTERVALL_
 [[variable_group]]
 register = "fk/tandvardsstodet"
-key = "hcp-intervall-"
+key = "hcp-intervall"
 label = "HCP_INTERVALL_"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5677,7 +5678,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=3  DELFORMAN_KOD_
 [[variable_group]]
 register = "fk/tillfallig-foraldrapenning"
-key = "delforman-kod-"
+key = "delforman-kod"
 label = "DELFORMAN_KOD_"
 axis = "ordinal"
 [[variable_group.members]]
@@ -5696,7 +5697,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=3  NgasT3_Naturgas Nät_Uttagspunkter_SNI
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast3-naturgas-nat-uttagspunkter-sni-"
+key = "ngast3-naturgas-nat-uttagspunkter-sni"
 label = "NgasT3_Naturgas Nät_Uttagspunkter_SNI"
 axis = "numeric"
 [[variable_group.members]]
@@ -5715,7 +5716,7 @@ label = "84"
 # axis=numeric agreement=1.00 members=3  SgasT3_Stadsgas Nät_Uttagspunkter_SNI
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "sgast3-stadsgas-nat-uttagspunkter-sni-"
+key = "sgast3-stadsgas-nat-uttagspunkter-sni"
 label = "SgasT3_Stadsgas Nät_Uttagspunkter_SNI"
 axis = "numeric"
 [[variable_group.members]]
@@ -5753,7 +5754,7 @@ label = "9"
 # axis=numeric agreement=1.00 members=3  Näringsgrens indelning på
 [[variable_group]]
 register = "scb/foretagsstatistik"
-key = "ng-"
+key = "ng"
 label = "Näringsgrens indelning på"
 axis = "numeric"
 [[variable_group.members]]
@@ -5810,7 +5811,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=3  Underlag för fastighetsskatt för hyreshus, 0
 [[variable_group]]
 register = "scb/frida"
-key = "underlag-for-fastighetsskatt-for-hyreshus-0-"
+key = "underlag-for-fastighetsskatt-for-hyreshus-0"
 label = "Underlag för fastighetsskatt för hyreshus, 0"
 axis = "numeric"
 [[variable_group.members]]
@@ -5829,7 +5830,7 @@ label = "25"
 # axis=vintage agreement=1.00 members=3  Energi, elbyte efter 19
 [[variable_group]]
 register = "scb/ftr"
-key = "energi-elbyte-efter-"
+key = "energi-elbyte-efter"
 label = "Energi, elbyte efter 19"
 axis = "vintage"
 [[variable_group.members]]
@@ -5848,7 +5849,7 @@ label = "1991"
 # axis=vintage agreement=1.00 members=3  Exteriör, fasadbyte efter 19
 [[variable_group]]
 register = "scb/ftr"
-key = "exterior-fasadbyte-efter-"
+key = "exterior-fasadbyte-efter"
 label = "Exteriör, fasadbyte efter 19"
 axis = "vintage"
 [[variable_group.members]]
@@ -5867,7 +5868,7 @@ label = "1991"
 # axis=vintage agreement=1.00 members=3  Sanitet, vatten och avloppsstambyte efter 19
 [[variable_group]]
 register = "scb/ftr"
-key = "sanitet-vatten-och-avloppsstambyte-efter-"
+key = "sanitet-vatten-och-avloppsstambyte-efter"
 label = "Sanitet, vatten och avloppsstambyte efter 19"
 axis = "vintage"
 [[variable_group.members]]
@@ -6038,7 +6039,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=3  Skatteunderlag enligt taxeringen år t-
 [[variable_group]]
 register = "scb/kommunalekonomisk-utjamning"
-key = "skattund-"
+key = "skattund"
 label = "Skatteunderlag enligt taxeringen år t-"
 axis = "numeric"
 [[variable_group.members]]
@@ -6247,7 +6248,7 @@ label = "16"
 # axis=ordinal agreement=1.00 members=3  Annat hälsoproblem barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0008a-"
+key = "bha0008a"
 label = "Annat hälsoproblem barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -6266,7 +6267,7 @@ label = "3"
 # axis=ordinal agreement=1.00 members=3  Barn
 [[variable_group]]
 register = "scb/ulf"
-key = "bha0100c-"
+key = "bha0100c"
 label = "Barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -6285,7 +6286,7 @@ label = "3"
 # axis=ordinal agreement=1.00 members=3  Fritidsgård barn
 [[variable_group]]
 register = "scb/ulf"
-key = "fritidsgard-barn-"
+key = "fritidsgard-barn"
 label = "Fritidsgård barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -6418,7 +6419,7 @@ label = "13"
 # axis=ordinal agreement=1.00 members=3  Idrott barn
 [[variable_group]]
 register = "scb/ulf"
-key = "idrott-barn-"
+key = "idrott-barn"
 label = "Idrott barn"
 axis = "ordinal"
 [[variable_group.members]]
@@ -6437,7 +6438,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=3  Kontakt andra föräldern barn
 [[variable_group]]
 register = "scb/ulf"
-key = "kontakt-andra-foraldern-barn-"
+key = "kontakt-andra-foraldern-barn"
 label = "Kontakt andra föräldern barn"
 axis = "numeric"
 [[variable_group.members]]
@@ -6570,7 +6571,7 @@ label = "13"
 # axis=ordinal agreement=1.00 members=3  Utbildning
 [[variable_group]]
 register = "scb/ulf"
-key = "utb027-"
+key = "utb027"
 label = "Utbildning"
 axis = "ordinal"
 [[variable_group.members]]
@@ -6589,7 +6590,7 @@ label = "3"
 # axis=ordinal agreement=1.00 members=3  Utbildning tidigare
 [[variable_group]]
 register = "scb/ulf"
-key = "utb031-"
+key = "utb031"
 label = "Utbildning tidigare"
 axis = "ordinal"
 [[variable_group.members]]
@@ -6608,7 +6609,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=3  Vårdnad barn
 [[variable_group]]
 register = "scb/ulf"
-key = "vardnad-barn-"
+key = "vardnad-barn"
 label = "Vårdnad barn"
 axis = "numeric"
 [[variable_group.members]]
@@ -6665,7 +6666,7 @@ label = "3"
 # axis=ordinal agreement=1.00 members=2  Diagnos_
 [[variable_group]]
 register = "fk/bilstod"
-key = "diagnos-"
+key = "diagnos"
 label = "Diagnos_"
 axis = "ordinal"
 [[variable_group.members]]
@@ -7130,7 +7131,7 @@ label = "2"
 # axis=numeric agreement=1.00 members=2  Taxeringsvärde byggnad, år t+
 [[variable_group]]
 register = "scb/fasit"
-key = "taxeringsvarde-byggnad-ar-t-"
+key = "taxeringsvarde-byggnad-ar-t"
 label = "Taxeringsvärde byggnad, år t+"
 axis = "numeric"
 [[variable_group.members]]
@@ -7145,7 +7146,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=2  Taxeringsvärde mark, år t+
 [[variable_group]]
 register = "scb/fasit"
-key = "taxeringsvarde-mark-ar-t-"
+key = "taxeringsvarde-mark-ar-t"
 label = "Taxeringsvärde mark, år t+"
 axis = "numeric"
 [[variable_group.members]]
@@ -7160,7 +7161,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=2  Taxeringsvärde mark och byggnad, år t+
 [[variable_group]]
 register = "scb/fasit"
-key = "taxeringsvarde-mark-och-byggnad-ar-t-"
+key = "taxeringsvarde-mark-och-byggnad-ar-t"
 label = "Taxeringsvärde mark och byggnad, år t+"
 axis = "numeric"
 [[variable_group.members]]
@@ -7175,7 +7176,7 @@ label = "3"
 # axis=ordinal agreement=1.00 members=2  Vid avyttring eller gåva innan utdelningstillfället punkt
 [[variable_group]]
 register = "scb/fasit"
-key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-"
+key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt"
 label = "Vid avyttring eller gåva innan utdelningstillfället punkt"
 axis = "ordinal"
 [[variable_group.members]]
@@ -7250,7 +7251,7 @@ label = "90"
 # axis=ordinal agreement=1.00 members=2  Koppling
 [[variable_group]]
 register = "scb/fordonsreg"
-key = "koppling-"
+key = "koppling"
 label = "Koppling"
 axis = "ordinal"
 [[variable_group.members]]
@@ -7445,7 +7446,7 @@ label = "2"
 # axis=numeric agreement=1.00 members=2  Antal barn under
 [[variable_group]]
 register = "scb/fortroendevalda"
-key = "antal-barn-under-"
+key = "antal-barn-under"
 label = "Antal barn under"
 axis = "numeric"
 [[variable_group.members]]
@@ -7550,7 +7551,7 @@ label = "17"
 # axis=numeric agreement=1.00 members=2  Ökning av expansionsfond  (
 [[variable_group]]
 register = "scb/frida"
-key = "okning-av-expansionsfond-"
+key = "okning-av-expansionsfond"
 label = "Ökning av expansionsfond  ("
 axis = "numeric"
 [[variable_group.members]]
@@ -7565,7 +7566,7 @@ label = "879"
 # axis=numeric agreement=1.00 members=2  Sparat fördelningsbelopp från fg. års taxering  (8
 [[variable_group]]
 register = "scb/frida"
-key = "sparat-fordelningsbelopp-fran-fg-ars-taxering-"
+key = "sparat-fordelningsbelopp-fran-fg-ars-taxering"
 label = "Sparat fördelningsbelopp från fg. års taxering  (8"
 axis = "numeric"
 [[variable_group.members]]
@@ -7580,7 +7581,7 @@ label = "885"
 # axis=ordinal agreement=1.00 members=2  Summa Block G
 [[variable_group]]
 register = "scb/frida"
-key = "summa-block-g-"
+key = "summa-block-g"
 label = "Summa Block G"
 axis = "ordinal"
 [[variable_group.members]]
@@ -7595,7 +7596,7 @@ label = "2"
 # axis=numeric agreement=1.00 members=2  Underskott vid punkt
 [[variable_group]]
 register = "scb/frida"
-key = "underskott-vid-punkt-"
+key = "underskott-vid-punkt"
 label = "Underskott vid punkt"
 axis = "numeric"
 [[variable_group.members]]
@@ -7610,7 +7611,7 @@ label = "30"
 # axis=ordinal agreement=1.00 members=2  Vid avyttring eller gåva innan utdelningstillfället punkt
 [[variable_group]]
 register = "scb/frida"
-key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt-"
+key = "vid-avyttring-eller-gava-innan-utdelningstillfallet-punkt"
 label = "Vid avyttring eller gåva innan utdelningstillfället punkt"
 axis = "ordinal"
 [[variable_group.members]]
@@ -7640,7 +7641,7 @@ label = "2"
 # axis=vintage agreement=1.00 members=2  Exteriör, takbyte efter 19
 [[variable_group]]
 register = "scb/ftr"
-key = "exterior-takbyte-efter-"
+key = "exterior-takbyte-efter"
 label = "Exteriör, takbyte efter 19"
 axis = "vintage"
 [[variable_group.members]]
@@ -7652,11 +7653,11 @@ variable = "exterior-takbyte-efter-1991"
 value = "1991"
 label = "1991"
 
-# axis=vintage agreement=1.00 members=2  kok-koksinredningsbyte-efter-
+# axis=vintage agreement=1.00 members=2  kok-koksinredningsbyte-efter
 [[variable_group]]
 register = "scb/ftr"
-key = "kok-koksinredningsbyte-efter-"
-label = "kok-koksinredningsbyte-efter-"
+key = "kok-koksinredningsbyte-efter"
+label = "kok-koksinredningsbyte-efter"
 axis = "vintage"
 [[variable_group.members]]
 variable = "kok-koksinredningsbyte-efter-1985"
@@ -7670,7 +7671,7 @@ label = "1990"
 # axis=vintage agreement=1.00 members=2  Sanitet, sanitetsutrustningsbyte efter 198
 [[variable_group]]
 register = "scb/ftr"
-key = "sanitet-sanitetsutrustningsbyte-efter-"
+key = "sanitet-sanitetsutrustningsbyte-efter"
 label = "Sanitet, sanitetsutrustningsbyte efter 198"
 axis = "vintage"
 [[variable_group.members]]
@@ -7850,7 +7851,7 @@ label = "2"
 # axis=numeric agreement=1.00 members=2  Antal barn under
 [[variable_group]]
 register = "scb/hek"
-key = "antal-barn-under-"
+key = "antal-barn-under"
 label = "Antal barn under"
 axis = "numeric"
 [[variable_group.members]]
@@ -7880,7 +7881,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Inkomststandard
 [[variable_group]]
 register = "scb/hek"
-key = "inkomststandard-"
+key = "inkomststandard"
 label = "Inkomststandard"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8000,7 +8001,7 @@ label = "2"
 # axis=numeric agreement=1.00 members=2  Antal vårdnadshavare med barn 1–9 år, del, år t-
 [[variable_group]]
 register = "scb/kommunalekonomisk-utjamning"
-key = "antal-vardnadshavare-med-barn-19-ar-del-ar-t-"
+key = "antal-vardnadshavare-med-barn-19-ar-del-ar-t"
 label = "Antal vårdnadshavare med barn 1–9 år, del, år t-"
 axis = "numeric"
 [[variable_group.members]]
@@ -8015,7 +8016,7 @@ label = "4"
 # axis=numeric agreement=1.00 members=2  Antal vårdnadshavare med barn 1–9 år, totalt, år t-
 [[variable_group]]
 register = "scb/kommunalekonomisk-utjamning"
-key = "antal-vardnadshavare-med-barn-19-ar-totalt-ar-t-"
+key = "antal-vardnadshavare-med-barn-19-ar-totalt-ar-t"
 label = "Antal vårdnadshavare med barn 1–9 år, totalt, år t-"
 axis = "numeric"
 [[variable_group.members]]
@@ -8045,7 +8046,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Telefon
 [[variable_group]]
 register = "scb/lbr"
-key = "telefon-"
+key = "telefon"
 label = "Telefon"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8060,7 +8061,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Telefonnummer
 [[variable_group]]
 register = "scb/lbr"
-key = "telefonnummer-"
+key = "telefonnummer"
 label = "Telefonnummer"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8150,7 +8151,7 @@ label = "2005"
 # axis=ordinal agreement=1.00 members=2  Antal sysselsatta år
 [[variable_group]]
 register = "scb/rams"
-key = "antal-sysselsatta-ar-"
+key = "antal-sysselsatta-ar"
 label = "Antal sysselsatta år"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8165,7 +8166,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Antal sysselsatta på arbetsstället år
 [[variable_group]]
 register = "scb/rams"
-key = "antal-sysselsatta-pa-arbetsstallet-ar-"
+key = "antal-sysselsatta-pa-arbetsstallet-ar"
 label = "Antal sysselsatta på arbetsstället år"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8240,7 +8241,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Sjuklön
 [[variable_group]]
 register = "scb/slk"
-key = "sjuklon-"
+key = "sjuklon"
 label = "Sjuklön"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8255,7 +8256,7 @@ label = "2"
 # axis=ordinal agreement=1.00 members=2  Sjuklön
 [[variable_group]]
 register = "scb/slr"
-key = "sjuklon-"
+key = "sjuklon"
 label = "Sjuklön"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8270,7 +8271,7 @@ label = "2"
 # axis=numeric agreement=1.00 members=2  Uppskov att ta upp som intäkt    (83
 [[variable_group]]
 register = "scb/sru"
-key = "uppskov-att-ta-upp-som-intakt-"
+key = "uppskov-att-ta-upp-som-intakt"
 label = "Uppskov att ta upp som intäkt    (83"
 axis = "numeric"
 [[variable_group.members]]
@@ -8375,7 +8376,7 @@ label = "2426"
 # axis=numeric agreement=1.00 members=2  Underlag för fastighetsskatt för hyreshus, 0
 [[variable_group]]
 register = "scb/taxeringsutfallet"
-key = "underlag-for-fastighetsskatt-for-hyreshus-0-"
+key = "underlag-for-fastighetsskatt-for-hyreshus-0"
 label = "Underlag för fastighetsskatt för hyreshus, 0"
 axis = "numeric"
 [[variable_group.members]]
@@ -8390,7 +8391,7 @@ label = "4"
 # axis=numeric agreement=1.00 members=2  Födelseår barn
 [[variable_group]]
 register = "scb/ulf"
-key = "fodelsear-barn-"
+key = "fodelsear-barn"
 label = "Födelseår barn"
 axis = "numeric"
 [[variable_group.members]]
@@ -8405,7 +8406,7 @@ label = "7"
 # axis=numeric agreement=1.00 members=2  Födelseår för barn nummer
 [[variable_group]]
 register = "scb/ulf"
-key = "fodelsear-for-barn-nummer-"
+key = "fodelsear-for-barn-nummer"
 label = "Födelseår för barn nummer"
 axis = "numeric"
 [[variable_group.members]]
@@ -8420,7 +8421,7 @@ label = "7"
 # axis=numeric agreement=1.00 members=2  Besvärens svårighetsgrad
 [[variable_group]]
 register = "scb/ulf"
-key = "ha06-"
+key = "ha06"
 label = "Besvärens svårighetsgrad"
 axis = "numeric"
 [[variable_group.members]]
@@ -8435,7 +8436,7 @@ label = "3"
 # axis=numeric agreement=1.00 members=2  Besvärens svårighetsgrad
 [[variable_group]]
 register = "scb/ulf"
-key = "ha064-"
+key = "ha064"
 label = "Besvärens svårighetsgrad"
 axis = "numeric"
 [[variable_group.members]]
@@ -8480,7 +8481,7 @@ label = "96"
 # axis=numeric agreement=1.00 members=2  Trångbodd enligt norm
 [[variable_group]]
 register = "scb/ulf"
-key = "trangbodd-enligt-norm-"
+key = "trangbodd-enligt-norm"
 label = "Trångbodd enligt norm"
 axis = "numeric"
 [[variable_group.members]]
@@ -8555,7 +8556,7 @@ label = "5"
 # axis=ordinal agreement=1.00 members=2  Förpackningsmultipel
 [[variable_group]]
 register = "sos/lmed"
-key = "antal-multipel-"
+key = "antal-multipel"
 label = "Förpackningsmultipel"
 axis = "ordinal"
 [[variable_group.members]]
@@ -8719,7 +8720,7 @@ label = "206"
 # axis=numeric agreement=0.97 members=2  Underlag för fastighetsskatt för småhus, 1
 [[variable_group]]
 register = "scb/linda"
-key = "underlag-for-fastighetsskatt-for-smahus-1-"
+key = "underlag-for-fastighetsskatt-for-smahus-1"
 label = "Underlag för fastighetsskatt för småhus, 1"
 axis = "numeric"
 [[variable_group.members]]
@@ -8855,7 +8856,7 @@ label = "2"
 # axis=numeric agreement=0.93 members=19  NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_SNI
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni-"
+key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-sni"
 label = "NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_SNI"
 axis = "numeric"
 [[variable_group.members]]
@@ -8993,7 +8994,7 @@ label = "12"
 # axis=numeric agreement=0.92 members=3  Utgående moms
 [[variable_group]]
 register = "scb/frida"
-key = "utgaende-moms-"
+key = "utgaende-moms"
 label = "Utgående moms"
 axis = "numeric"
 [[variable_group.members]]
@@ -9562,7 +9563,7 @@ label = "12"
 # axis=numeric agreement=0.90 members=3  NgasT6_Naturgas Nät_Investering Naturgas_Transmissionsnät
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat-"
+key = "ngast6-naturgas-nat-investering-naturgas-transmissionsnat"
 label = "NgasT6_Naturgas Nät_Investering Naturgas_Transmissionsnät"
 axis = "numeric"
 [[variable_group.members]]
@@ -9691,7 +9692,7 @@ label = "12"
 # axis=numeric agreement=0.89 members=4  Näringsgren för statistiken, på
 [[variable_group]]
 register = "scb/foretagsstatistik"
-key = "ngs-"
+key = "ngs"
 label = "Näringsgren för statistiken, på"
 axis = "numeric"
 [[variable_group.members]]
@@ -9769,7 +9770,7 @@ label = "12"
 # axis=ordinal agreement=0.89 members=12  Ej aktuellt med kommunala arbetsmarknadsinsatser
 [[variable_group]]
 register = "sos/ekb"
-key = "sokins07-"
+key = "sokins07"
 label = "Ej aktuellt med kommunala arbetsmarknadsinsatser"
 axis = "ordinal"
 [[variable_group.members]]
@@ -10071,7 +10072,7 @@ label = "12"
 # axis=ordinal agreement=0.88 members=5  Arbetet överensstämmer inte med den utbildning som avslutats -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f36-"
+key = "f36"
 label = "Arbetet överensstämmer inte med den utbildning som avslutats -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -10098,7 +10099,7 @@ label = "5"
 # axis=numeric agreement=0.88 members=3  NgasT6_Naturgas Nät_Investering Naturgas_Distributionsnät
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast6-naturgas-nat-investering-naturgas-distributionsnat-"
+key = "ngast6-naturgas-nat-investering-naturgas-distributionsnat"
 label = "NgasT6_Naturgas Nät_Investering Naturgas_Distributionsnät"
 axis = "numeric"
 [[variable_group.members]]
@@ -10117,7 +10118,7 @@ label = "4"
 # axis=numeric agreement=0.88 members=3  NgasT6_Naturgas Nät_Investering Stadsgas_Distributionsnät
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast6-naturgas-nat-investering-stadsgas-distributionsnat-"
+key = "ngast6-naturgas-nat-investering-stadsgas-distributionsnat"
 label = "NgasT6_Naturgas Nät_Investering Stadsgas_Distributionsnät"
 axis = "numeric"
 [[variable_group.members]]
@@ -10136,7 +10137,7 @@ label = "4"
 # axis=numeric agreement=0.88 members=3  NgasT6_Naturgas Nät_Investering Stadsgas_Transmissionsnät
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast6-naturgas-nat-investering-stadsgas-transmissionsnat-"
+key = "ngast6-naturgas-nat-investering-stadsgas-transmissionsnat"
 label = "NgasT6_Naturgas Nät_Investering Stadsgas_Transmissionsnät"
 axis = "numeric"
 [[variable_group.members]]
@@ -10210,7 +10211,7 @@ label = "12"
 # axis=numeric agreement=0.88 members=2  Hantering av lärares frånvaro under pandemin - undervisning
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "hantering-av-larares-franvaro-under-pandemin-undervisning-"
+key = "hantering-av-larares-franvaro-under-pandemin-undervisning"
 label = "Hantering av lärares frånvaro under pandemin - undervisning"
 axis = "numeric"
 [[variable_group.members]]
@@ -10225,7 +10226,7 @@ label = "3"
 # axis=ordinal agreement=0.88 members=4  Har känt sig orättvist behandlad på något/några arbeten i Sverige vad gäller
 [[variable_group]]
 register = "scb/hogutbildade-utrikes-fodda"
-key = "f25-"
+key = "f25"
 label = "Har känt sig orättvist behandlad på något/några arbeten i Sverige vad gäller"
 axis = "ordinal"
 [[variable_group.members]]
@@ -10318,7 +10319,7 @@ label = "3"
 # axis=ordinal agreement=0.87 members=12  Övriga kommunala arbetsmarknadsinsatser
 [[variable_group]]
 register = "sos/ekb"
-key = "sokins06-"
+key = "sokins06"
 label = "Övriga kommunala arbetsmarknadsinsatser"
 axis = "ordinal"
 [[variable_group.members]]
@@ -10458,7 +10459,7 @@ label = "12"
 # axis=numeric agreement=0.86 members=3  Minskning av expansionsfond
 [[variable_group]]
 register = "scb/frida"
-key = "minskning-av-expansionsfond-"
+key = "minskning-av-expansionsfond"
 label = "Minskning av expansionsfond"
 axis = "numeric"
 [[variable_group.members]]
@@ -10682,7 +10683,7 @@ label = "12"
 # axis=numeric agreement=0.85 members=2  Tog emot beställningar via webbplats eller app från kunder
 [[variable_group]]
 register = "scb/it-anvandning"
-key = "tog-emot-bestallningar-via-webbplats-eller-app-fran-kunder-"
+key = "tog-emot-bestallningar-via-webbplats-eller-app-fran-kunder"
 label = "Tog emot beställningar via webbplats eller app från kunder"
 axis = "numeric"
 [[variable_group.members]]
@@ -10712,7 +10713,7 @@ label = "21"
 # axis=numeric agreement=0.85 members=3  Specifikation av obligationslån emitterade i utlandet
 [[variable_group]]
 register = "scb/kts"
-key = "specifikation-av-obligationslan-emitterade-i-utlandet-"
+key = "specifikation-av-obligationslan-emitterade-i-utlandet"
 label = "Specifikation av obligationslån emitterade i utlandet"
 axis = "numeric"
 [[variable_group.members]]
@@ -10746,7 +10747,7 @@ label = "21"
 # axis=numeric agreement=0.85 members=3  Specifikation av obligationslån emitterade i Sverige
 [[variable_group]]
 register = "scb/kts"
-key = "specifikation-av-obligationslan-emitterade-i-sverige-"
+key = "specifikation-av-obligationslan-emitterade-i-sverige"
 label = "Specifikation av obligationslån emitterade i Sverige"
 axis = "numeric"
 [[variable_group.members]]
@@ -10780,7 +10781,7 @@ label = "2"
 # axis=numeric agreement=0.84 members=19  SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni-"
+key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-sni"
 label = "SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare"
 axis = "numeric"
 [[variable_group.members]]
@@ -10863,7 +10864,7 @@ label = "94"
 # axis=numeric agreement=0.84 members=3  NgasT8_Naturgas Nät_Apparater för övriga större förbrukare_
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast8-naturgas-nat-apparater-for-ovriga-storre-forbrukare-"
+key = "ngast8-naturgas-nat-apparater-for-ovriga-storre-forbrukare"
 label = "NgasT8_Naturgas Nät_Apparater för övriga större förbrukare_"
 axis = "numeric"
 [[variable_group.members]]
@@ -10927,7 +10928,7 @@ label = "38"
 # axis=ordinal agreement=0.83 members=2  NgasT2_Naturgas Handel_Använd energivara_Eldningsolja nr
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast2-naturgas-handel-anvand-energivara-eldningsolja-nr-"
+key = "ngast2-naturgas-handel-anvand-energivara-eldningsolja-nr"
 label = "NgasT2_Naturgas Handel_Använd energivara_Eldningsolja nr"
 axis = "ordinal"
 [[variable_group.members]]
@@ -10942,7 +10943,7 @@ label = "2"
 # axis=ordinal agreement=0.83 members=2  Taxeringsvärde hyreshus/lokaler
 [[variable_group]]
 register = "scb/fasit"
-key = "taxeringsvarde-hyreshus-lokaler-ar-t-"
+key = "taxeringsvarde-hyreshus-lokaler-ar-t"
 label = "Taxeringsvärde hyreshus/lokaler"
 axis = "ordinal"
 [[variable_group.members]]
@@ -10957,7 +10958,7 @@ label = "2"
 # axis=ordinal agreement=0.82 members=12  Arbetsförberedande insatser
 [[variable_group]]
 register = "sos/ekb"
-key = "sokins01-"
+key = "sokins01"
 label = "Arbetsförberedande insatser"
 axis = "ordinal"
 [[variable_group.members]]
@@ -11012,7 +11013,7 @@ label = "12"
 # axis=ordinal agreement=0.82 members=12  Studie- och yrkesvägledning
 [[variable_group]]
 register = "sos/ekb"
-key = "sokins05-"
+key = "sokins05"
 label = "Studie- och yrkesvägledning"
 axis = "ordinal"
 [[variable_group.members]]
@@ -11067,7 +11068,7 @@ label = "12"
 # axis=numeric agreement=0.81 members=3  Utgående moms
 [[variable_group]]
 register = "scb/sru"
-key = "utgaende-moms-"
+key = "utgaende-moms"
 label = "Utgående moms"
 axis = "numeric"
 [[variable_group.members]]
@@ -11086,7 +11087,7 @@ label = "25"
 # axis=vintage agreement=0.81 members=2  Kokmöjligheter, köksinredningsbyte efter 19
 [[variable_group]]
 register = "scb/ftr"
-key = "kokmojligheter-koksinredningsbyte-efter-"
+key = "kokmojligheter-koksinredningsbyte-efter"
 label = "Kokmöjligheter, köksinredningsbyte efter 19"
 axis = "vintage"
 [[variable_group.members]]
@@ -11101,7 +11102,7 @@ label = "1991"
 # axis=numeric agreement=0.81 members=6  Långfristig placering i obligationer och andra värdepapper, utgivna av
 [[variable_group]]
 register = "scb/kts"
-key = "langfristig-placering-i-obligationer-och-andra-vardepapper-"
+key = "langfristig-placering-i-obligationer-och-andra-vardepapper"
 label = "Långfristig placering i obligationer och andra värdepapper, utgivna av"
 axis = "numeric"
 [[variable_group.members]]
@@ -11163,7 +11164,7 @@ label = "440"
 # axis=numeric agreement=0.81 members=6  Kortfristiga placeringar i obligationer och andra värdepapper, utgivna av
 [[variable_group]]
 register = "scb/kts"
-key = "kortfristiga-placeringar-i-obligationer-och-andra-"
+key = "kortfristiga-placeringar-i-obligationer-och-andra"
 label = "Kortfristiga placeringar i obligationer och andra värdepapper, utgivna av"
 axis = "numeric"
 [[variable_group.members]]
@@ -11194,7 +11195,7 @@ label = "7"
 # axis=ordinal agreement=0.81 members=5  Har haft nytta av utbildningen när det gäller
 [[variable_group]]
 register = "scb/hogutbildades-arbetsmarknad"
-key = "f21-"
+key = "f21"
 label = "Har haft nytta av utbildningen när det gäller"
 axis = "ordinal"
 [[variable_group.members]]
@@ -11331,7 +11332,7 @@ label = "12"
 # axis=numeric agreement=0.81 members=2  SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare-"
+key = "sgast3-stadsgas-nat-distribution-slutlig-forbrukare"
 label = "SgasT3_Stadsgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus"
 axis = "numeric"
 [[variable_group.members]]
@@ -11424,7 +11425,7 @@ label = "12"
 # axis=numeric agreement=0.80 members=2  Företaget upplevde säkerhetsincident som ledde till konfidentiella data som röjdes på grund av
 [[variable_group]]
 register = "scb/it-anvandning"
-key = "foretaget-upplevde-sakerhetsincident-som-ledde-till-"
+key = "foretaget-upplevde-sakerhetsincident-som-ledde-till"
 label = "Företaget upplevde säkerhetsincident som ledde till konfidentiella data som röjdes på grund av"
 axis = "numeric"
 [[variable_group.members]]
@@ -11674,7 +11675,7 @@ label = "2"
 # axis=numeric agreement=0.79 members=10  Specifikation av innehav av kortfristiga fordringar på kommunägda företag, bokfört värde
 [[variable_group]]
 register = "scb/kts"
-key = "specifikation-av-innehav-av-kortfristiga-fordringar-pa-"
+key = "specifikation-av-innehav-av-kortfristiga-fordringar-pa"
 label = "Specifikation av innehav av kortfristiga fordringar på kommunägda företag, bokfört värde"
 axis = "numeric"
 [[variable_group.members]]
@@ -11721,7 +11722,7 @@ label = "11"
 # axis=ordinal agreement=0.78 members=4  Grad av nöjdhet med lärarens tillgänglighet
 [[variable_group]]
 register = "scb/distansutbildning"
-key = "f14-"
+key = "f14"
 label = "Grad av nöjdhet med lärarens tillgänglighet"
 axis = "ordinal"
 [[variable_group.members]]
@@ -11893,7 +11894,7 @@ label = "3"
 # axis=numeric agreement=0.77 members=5  Antal sysselsatta på företaget enligt Sysselsättningsregistret
 [[variable_group]]
 register = "scb/yrkesreg"
-key = "antal-sysselsatta-pa-foretaget-enligt-"
+key = "antal-sysselsatta-pa-foretaget-enligt"
 label = "Antal sysselsatta på företaget enligt Sysselsättningsregistret"
 axis = "numeric"
 [[variable_group.members]]
@@ -11920,7 +11921,7 @@ label = "6"
 # axis=ordinal agreement=0.77 members=7  Kontakter för studie-/yrkesvägledning -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f10-"
+key = "f10"
 label = "Kontakter för studie-/yrkesvägledning -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -12230,7 +12231,7 @@ label = "12"
 # axis=ordinal agreement=0.76 members=12  Jobbsökaraktivitet
 [[variable_group]]
 register = "sos/ekb"
-key = "sokins03-"
+key = "sokins03"
 label = "Jobbsökaraktivitet"
 axis = "ordinal"
 [[variable_group.members]]
@@ -12300,7 +12301,7 @@ label = "4"
 # axis=numeric agreement=0.76 members=3  NgasT5_Naturgas Nät_Lägenheter med Naturgas_Flerbostadshus
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast5-naturgas-nat-lagenheter-med-naturgas-flerbostadshus-"
+key = "ngast5-naturgas-nat-lagenheter-med-naturgas-flerbostadshus"
 label = "NgasT5_Naturgas Nät_Lägenheter med Naturgas_Flerbostadshus"
 axis = "numeric"
 [[variable_group.members]]
@@ -12319,7 +12320,7 @@ label = "4"
 # axis=numeric agreement=0.76 members=3  NgasT5_Naturgas Nät_Lägenheter med Stadsgas_Flerbostadshus
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast5-naturgas-nat-lagenheter-med-stadsgas-flerbostadshus-"
+key = "ngast5-naturgas-nat-lagenheter-med-stadsgas-flerbostadshus"
 label = "NgasT5_Naturgas Nät_Lägenheter med Stadsgas_Flerbostadshus"
 axis = "numeric"
 [[variable_group.members]]
@@ -12338,7 +12339,7 @@ label = "4"
 # axis=numeric agreement=0.76 members=3  NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare-"
+key = "ngast3-naturgas-nat-distribution-slutlig-forbrukare"
 label = "NgasT3_Naturgas Nät_Distribution_Slutlig förbrukare_Flerbostadshus"
 axis = "numeric"
 [[variable_group.members]]
@@ -12592,7 +12593,7 @@ label = "12"
 # axis=numeric agreement=0.74 members=5  Tillgångsderivat utfärdat av svenska motparter exkl. banker
 [[variable_group]]
 register = "scb/kts"
-key = "tillgangsderivat-utfardat-av-svenska-motparter-exkl-banker-"
+key = "tillgangsderivat-utfardat-av-svenska-motparter-exkl-banker"
 label = "Tillgångsderivat utfärdat av svenska motparter exkl. banker"
 axis = "numeric"
 [[variable_group.members]]
@@ -12619,7 +12620,7 @@ label = "6"
 # axis=numeric agreement=0.74 members=2  Rutiner för att identifiera och minska miljöpåverkan genomförda
 [[variable_group]]
 register = "scb/innovation-foretag"
-key = "rutiner-for-att-identifiera-och-minska-miljopaverkan-"
+key = "rutiner-for-att-identifiera-och-minska-miljopaverkan"
 label = "Rutiner för att identifiera och minska miljöpåverkan genomförda"
 axis = "numeric"
 [[variable_group.members]]
@@ -12754,7 +12755,7 @@ label = "2"
 # axis=numeric agreement=0.73 members=11  Specifikation av placeringar i kommunägda företag, bokfört värde
 [[variable_group]]
 register = "scb/kts"
-key = "specifikation-av-placeringar-i-kommunagda-foretag-bokfort-"
+key = "specifikation-av-placeringar-i-kommunagda-foretag-bokfort"
 label = "Specifikation av placeringar i kommunägda företag, bokfört värde"
 axis = "numeric"
 [[variable_group.members]]
@@ -12805,7 +12806,7 @@ label = "12"
 # axis=ordinal agreement=0.73 members=8  Skäl till att inte påbörja gymnasieskolan -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f4a-"
+key = "f4a"
 label = "Skäl till att inte påbörja gymnasieskolan -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -12963,7 +12964,7 @@ label = "28"
 # axis=numeric agreement=0.73 members=8  Specificering av entreprenad och köp av huvudverksamhet
 [[variable_group]]
 register = "scb/rakenskapssammandrag"
-key = "specificering-av-entreprenad-och-kop-av-huvudverksamhet-"
+key = "specificering-av-entreprenad-och-kop-av-huvudverksamhet"
 label = "Specificering av entreprenad och köp av huvudverksamhet"
 axis = "numeric"
 [[variable_group.members]]
@@ -13002,7 +13003,7 @@ label = "9"
 # axis=numeric agreement=0.72 members=2  Utgifter för egen FoU efter finansieringskälla: Offentliga
 [[variable_group]]
 register = "scb/fou"
-key = "utgifter-for-egen-fou-efter-finansieringskalla-offentliga-"
+key = "utgifter-for-egen-fou-efter-finansieringskalla-offentliga"
 label = "Utgifter för egen FoU efter finansieringskälla: Offentliga"
 axis = "numeric"
 [[variable_group.members]]
@@ -13032,7 +13033,7 @@ label = "2"
 # axis=ordinal agreement=0.72 members=6  Negativt särbehandling -
 [[variable_group]]
 register = "scb/hogskolestuderandes-levnadsvillkor"
-key = "f29-"
+key = "f29"
 label = "Negativt särbehandling -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13063,7 +13064,7 @@ label = "6"
 # axis=numeric agreement=0.71 members=2  Annan kort- och långfristig upplåning (ej koncern), därav utlandet
 [[variable_group]]
 register = "scb/bast"
-key = "annan-kort-och-langfristig-upplaning-ej-koncern-darav-"
+key = "annan-kort-och-langfristig-upplaning-ej-koncern-darav"
 label = "Annan kort- och långfristig upplåning (ej koncern), därav utlandet"
 axis = "numeric"
 [[variable_group.members]]
@@ -13078,7 +13079,7 @@ label = "3"
 # axis=numeric agreement=0.71 members=10  Specifikation av placeringar i kommunägda företag, värde
 [[variable_group]]
 register = "scb/kts"
-key = "specifikation-av-placeringar-i-kommunagda-foretag-varde-"
+key = "specifikation-av-placeringar-i-kommunagda-foretag-varde"
 label = "Specifikation av placeringar i kommunägda företag, värde"
 axis = "numeric"
 [[variable_group.members]]
@@ -13125,7 +13126,7 @@ label = "11"
 # axis=ordinal agreement=0.71 members=12  Arbetspraktik
 [[variable_group]]
 register = "sos/ekb"
-key = "sokins02-"
+key = "sokins02"
 label = "Arbetspraktik"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13180,7 +13181,7 @@ label = "12"
 # axis=numeric agreement=0.70 members=18  Rörelsekostnader för egen FoU efter finansieringskälla
 [[variable_group]]
 register = "scb/fou"
-key = "rorelsekostnader-for-egen-fou-efter-finansieringskalla-"
+key = "rorelsekostnader-for-egen-fou-efter-finansieringskalla"
 label = "Rörelsekostnader för egen FoU efter finansieringskälla"
 axis = "numeric"
 [[variable_group.members]]
@@ -13259,7 +13260,7 @@ label = "19"
 # axis=ordinal agreement=0.70 members=8  Distansundervisning bättre ämne -
 [[variable_group]]
 register = "scb/gyst"
-key = "f34-"
+key = "f34"
 label = "Distansundervisning bättre ämne -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13360,7 +13361,7 @@ label = "5"
 # axis=ordinal agreement=0.70 members=4  Ansökan till forskarutbildningen
 [[variable_group]]
 register = "scb/utlandska-doktorander"
-key = "f10-"
+key = "f10"
 label = "Ansökan till forskarutbildningen"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13438,7 +13439,7 @@ label = "12"
 # axis=ordinal agreement=0.69 members=2  Skrivkunskaper
 [[variable_group]]
 register = "scb/utlandska-doktorander"
-key = "f4-"
+key = "f4"
 label = "Skrivkunskaper"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13453,7 +13454,7 @@ label = "2"
 # axis=numeric agreement=0.69 members=4  Utgifter för egen FoU efter finansieringskälla
 [[variable_group]]
 register = "scb/fou"
-key = "utgifter-for-egen-fou-efter-finansieringskalla-"
+key = "utgifter-for-egen-fou-efter-finansieringskalla"
 label = "Utgifter för egen FoU efter finansieringskälla"
 axis = "numeric"
 [[variable_group.members]]
@@ -13476,7 +13477,7 @@ label = "5"
 # axis=numeric agreement=0.69 members=4  Näringsgren tidigare arbete
 [[variable_group]]
 register = "scb/aku"
-key = "uarbsni2002-"
+key = "uarbsni2002"
 label = "Näringsgren tidigare arbete"
 axis = "numeric"
 [[variable_group.members]]
@@ -13499,7 +13500,7 @@ label = "5"
 # axis=numeric agreement=0.69 members=2  Finansiella derivat, därav svenska icke-finansiella företag
 [[variable_group]]
 register = "scb/bast"
-key = "finansiella-derivat-darav-svenska-icke-finansiella-foretag-"
+key = "finansiella-derivat-darav-svenska-icke-finansiella-foretag"
 label = "Finansiella derivat, därav svenska icke-finansiella företag"
 axis = "numeric"
 [[variable_group.members]]
@@ -13575,7 +13576,7 @@ label = "1617"
 # axis=numeric agreement=0.69 members=6  Specifikation av placeringar i svenska börsnoterade aktier
 [[variable_group]]
 register = "scb/kts"
-key = "specifikation-av-placeringar-i-svenska-borsnoterade-aktier-"
+key = "specifikation-av-placeringar-i-svenska-borsnoterade-aktier"
 label = "Specifikation av placeringar i svenska börsnoterade aktier"
 axis = "numeric"
 [[variable_group.members]]
@@ -13737,7 +13738,7 @@ label = "1617"
 # axis=ordinal agreement=0.68 members=5  Näringsgren i huvudsyssla
 [[variable_group]]
 register = "scb/aku"
-key = "husni2002-"
+key = "husni2002"
 label = "Näringsgren i huvudsyssla"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13764,7 +13765,7 @@ label = "5"
 # axis=ordinal agreement=0.68 members=5  Obligatoriskt samarbete genom
 [[variable_group]]
 register = "scb/distansutbildning"
-key = "f13-"
+key = "f13"
 label = "Obligatoriskt samarbete genom"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13825,7 +13826,7 @@ label = "3"
 # axis=ordinal agreement=0.67 members=2  Talkunskaper
 [[variable_group]]
 register = "scb/utlandska-doktorander"
-key = "f5-"
+key = "f5"
 label = "Talkunskaper"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13840,7 +13841,7 @@ label = "2"
 # axis=numeric agreement=0.66 members=8  Investeringar för egen FoU efter finansieringskälla
 [[variable_group]]
 register = "scb/fou"
-key = "investeringar-for-egen-fou-efter-finansieringskalla-"
+key = "investeringar-for-egen-fou-efter-finansieringskalla"
 label = "Investeringar för egen FoU efter finansieringskälla"
 axis = "numeric"
 [[variable_group.members]]
@@ -13879,7 +13880,7 @@ label = "9"
 # axis=ordinal agreement=0.66 members=7  Orsak till inte använt internet
 [[variable_group]]
 register = "scb/it-anvandning"
-key = "p49-"
+key = "p49"
 label = "Orsak till inte använt internet"
 axis = "ordinal"
 [[variable_group.members]]
@@ -13914,7 +13915,7 @@ label = "7"
 # axis=numeric agreement=0.66 members=2  Läkemedel, sjukvårdsartiklar och medicinskt material, därav
 [[variable_group]]
 register = "scb/rakenskapssammandrag"
-key = "lakemedel-sjukvardsartiklar-och-medicinskt-material-darav-"
+key = "lakemedel-sjukvardsartiklar-och-medicinskt-material-darav"
 label = "Läkemedel, sjukvårdsartiklar och medicinskt material, därav"
 axis = "numeric"
 [[variable_group.members]]
@@ -13929,7 +13930,7 @@ label = "3"
 # axis=ordinal agreement=0.66 members=11  Brist på pengar - avstått
 [[variable_group]]
 register = "scb/hogskolestuderandes-levnadsvillkor"
-key = "f26-"
+key = "f26"
 label = "Brist på pengar - avstått"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14022,7 +14023,7 @@ label = "12"
 # axis=ordinal agreement=0.65 members=5  Distansstudier -
 [[variable_group]]
 register = "scb/gyst"
-key = "f17-"
+key = "f17"
 label = "Distansstudier -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14049,7 +14050,7 @@ label = "5"
 # axis=ordinal agreement=0.65 members=5  Näringsgren i bisyssla
 [[variable_group]]
 register = "scb/aku"
-key = "bisni2002-"
+key = "bisni2002"
 label = "Näringsgren i bisyssla"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14214,7 +14215,7 @@ label = "15"
 # axis=ordinal agreement=0.63 members=6  Försörjning av universitets/högskolestudier -
 [[variable_group]]
 register = "scb/gyst"
-key = "f22-"
+key = "f22"
 label = "Försörjning av universitets/högskolestudier -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14272,7 +14273,7 @@ label = "75"
 # axis=ordinal agreement=0.63 members=4  Kännedom om kraven för
 [[variable_group]]
 register = "scb/intradet-pa-arbetsmarknaden"
-key = "f2-"
+key = "f2"
 label = "Kännedom om kraven för"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14295,7 +14296,7 @@ label = "4"
 # axis=numeric agreement=0.63 members=2  Går i skola
 [[variable_group]]
 register = "scb/ulf"
-key = "gar-i-skola-barn-"
+key = "gar-i-skola-barn"
 label = "Går i skola"
 axis = "numeric"
 [[variable_group.members]]
@@ -14348,7 +14349,7 @@ label = "4"
 # axis=numeric agreement=0.62 members=5  Skuldderivat utfärdat av svenska motparter exkl
 [[variable_group]]
 register = "scb/kts"
-key = "skuldderivat-utfardat-av-svenska-motparter-exkl-banker-"
+key = "skuldderivat-utfardat-av-svenska-motparter-exkl-banker"
 label = "Skuldderivat utfärdat av svenska motparter exkl"
 axis = "numeric"
 [[variable_group.members]]
@@ -14421,7 +14422,7 @@ label = "208"
 # axis=numeric agreement=0.62 members=2  Orsak till att läsa vid ett visst universitet -
 [[variable_group]]
 register = "scb/gyst"
-key = "f14-"
+key = "f14"
 label = "Orsak till att läsa vid ett visst universitet -"
 axis = "numeric"
 [[variable_group.members]]
@@ -14463,7 +14464,7 @@ label = "611"
 # axis=numeric agreement=0.61 members=5  Orsak till ointresse för högskolestudier -
 [[variable_group]]
 register = "scb/gyst"
-key = "f2-"
+key = "f2"
 label = "Orsak till ointresse för högskolestudier -"
 axis = "numeric"
 [[variable_group.members]]
@@ -14633,7 +14634,7 @@ label = "65"
 # axis=ordinal agreement=0.61 members=4  Utbildningsbyte
 [[variable_group]]
 register = "scb/studieuppehall"
-key = "f23-"
+key = "f23"
 label = "Utbildningsbyte"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14675,7 +14676,7 @@ label = "12"
 # axis=ordinal agreement=0.60 members=6  Nöjdhet med lärplattformens
 [[variable_group]]
 register = "scb/distansutbildning"
-key = "f11-"
+key = "f11"
 label = "Nöjdhet med lärplattformens"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14706,7 +14707,7 @@ label = "6"
 # axis=ordinal agreement=0.59 members=2  Allergiska
 [[variable_group]]
 register = "scb/ulf"
-key = "allergiska-besvar-"
+key = "allergiska-besvar"
 label = "Allergiska"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14748,7 +14749,7 @@ label = "75"
 # axis=ordinal agreement=0.59 members=5  Samtal med någon vuxen -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f5-"
+key = "f5"
 label = "Samtal med någon vuxen -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14775,7 +14776,7 @@ label = "5"
 # axis=ordinal agreement=0.59 members=5  Tankar om studielån -
 [[variable_group]]
 register = "scb/gyst"
-key = "f25-"
+key = "f25"
 label = "Tankar om studielån -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -14952,7 +14953,7 @@ label = "208"
 # axis=numeric agreement=0.58 members=3  NgasT7_Naturgas Nät_Ledningssystem Naturgas_
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast7-naturgas-nat-ledningssystem-naturgas-"
+key = "ngast7-naturgas-nat-ledningssystem-naturgas"
 label = "NgasT7_Naturgas Nät_Ledningssystem Naturgas_"
 axis = "numeric"
 [[variable_group.members]]
@@ -14971,7 +14972,7 @@ label = "4"
 # axis=numeric agreement=0.58 members=3  NgasT7_Naturgas Nät_Ledningssystem Stadsgas_
 [[variable_group]]
 register = "scb/arlig-energistatistik"
-key = "ngast7-naturgas-nat-ledningssystem-stadsgas-"
+key = "ngast7-naturgas-nat-ledningssystem-stadsgas"
 label = "NgasT7_Naturgas Nät_Ledningssystem Stadsgas_"
 axis = "numeric"
 [[variable_group.members]]
@@ -15044,7 +15045,7 @@ label = "16"
 # axis=ordinal agreement=0.57 members=12  Distansundervisning -
 [[variable_group]]
 register = "scb/gyst"
-key = "f29-"
+key = "f29"
 label = "Distansundervisning -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15146,37 +15147,6 @@ variable = "ahy065"
 value = "65"
 label = "65"
 
-# axis=numeric agreement=0.57 members=6  Orsak till att examen ej tagits ut -
-[[variable_group]]
-register = "scb/intradet-pa-arbetsmarknaden"
-key = "f5-"
-label = "Orsak till att examen ej tagits ut -"
-axis = "numeric"
-[[variable_group.members]]
-variable = "f5-03"
-value = "3"
-label = "3"
-[[variable_group.members]]
-variable = "f5-04"
-value = "4"
-label = "4"
-[[variable_group.members]]
-variable = "f5-05"
-value = "5"
-label = "5"
-[[variable_group.members]]
-variable = "f5-06"
-value = "6"
-label = "6"
-[[variable_group.members]]
-variable = "f5-07"
-value = "7"
-label = "7"
-[[variable_group.members]]
-variable = "f5-08"
-value = "8"
-label = "8"
-
 # axis=ordinal agreement=0.57 members=9  Frånvaroskäl
 [[variable_group]]
 register = "scb/aku"
@@ -15250,7 +15220,7 @@ label = "410"
 # axis=ordinal agreement=0.57 members=8  Arbetsmarknadspolitisk åtgärd -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f16-"
+key = "f16"
 label = "Arbetsmarknadspolitisk åtgärd -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15289,7 +15259,7 @@ label = "8"
 # axis=numeric agreement=0.56 members=2  Svårt att få arbete pga
 [[variable_group]]
 register = "scb/hogutbildade-utrikes-fodda"
-key = "f21-"
+key = "f21"
 label = "Svårt att få arbete pga"
 axis = "numeric"
 [[variable_group.members]]
@@ -15304,7 +15274,7 @@ label = "6"
 # axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2001 -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f15-1-"
+key = "f15-1"
 label = "Huvudsaklig verksamhet 2001 -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15343,7 +15313,7 @@ label = "8"
 # axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2002 -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f15-2-"
+key = "f15-2"
 label = "Huvudsaklig verksamhet 2002 -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15382,7 +15352,7 @@ label = "8"
 # axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2003 -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f15-3-"
+key = "f15-3"
 label = "Huvudsaklig verksamhet 2003 -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15421,7 +15391,7 @@ label = "8"
 # axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2004 -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f15-4-"
+key = "f15-4"
 label = "Huvudsaklig verksamhet 2004 -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15460,7 +15430,7 @@ label = "8"
 # axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2005 -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f15-5-"
+key = "f15-5"
 label = "Huvudsaklig verksamhet 2005 -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15499,7 +15469,7 @@ label = "8"
 # axis=ordinal agreement=0.56 members=8  Huvudsaklig verksamhet 2006 -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f15-6-"
+key = "f15-6"
 label = "Huvudsaklig verksamhet 2006 -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15657,7 +15627,7 @@ label = "28"
 # axis=ordinal agreement=0.56 members=3  Komplettering
 [[variable_group]]
 register = "scb/studieuppehall"
-key = "f12-"
+key = "f12"
 label = "Komplettering"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15695,7 +15665,7 @@ label = "12"
 # axis=ordinal agreement=0.55 members=11  Planer närmaste två åren -
 [[variable_group]]
 register = "scb/utbildningsanalyser"
-key = "f29-"
+key = "f29"
 label = "Planer närmaste två åren -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -15834,7 +15804,7 @@ label = "750"
 # axis=ordinal agreement=0.55 members=8  Distansundervisning svårast
 [[variable_group]]
 register = "scb/gyst"
-key = "f33-"
+key = "f33"
 label = "Distansundervisning svårast"
 axis = "ordinal"
 [[variable_group.members]]
@@ -16011,7 +15981,7 @@ label = "100"
 # axis=ordinal agreement=0.52 members=3  Studietimmar -
 [[variable_group]]
 register = "scb/hogskolestuderandes-levnadsvillkor"
-key = "f7-"
+key = "f7"
 label = "Studietimmar -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -16083,7 +16053,7 @@ label = "2"
 # axis=numeric agreement=0.52 members=2  Kännedom om arbete - genom
 [[variable_group]]
 register = "scb/intradet-pa-arbetsmarknaden"
-key = "f25-"
+key = "f25"
 label = "Kännedom om arbete - genom"
 axis = "numeric"
 [[variable_group.members]]
@@ -16245,7 +16215,7 @@ label = "14"
 # axis=ordinal agreement=0.51 members=3  Andel utgifter för
 [[variable_group]]
 register = "scb/fou"
-key = "v700-"
+key = "v700"
 label = "Andel utgifter för"
 axis = "ordinal"
 [[variable_group.members]]
@@ -16264,7 +16234,7 @@ label = "3"
 # axis=numeric agreement=0.51 members=2  Läkemedel, sjukvårdsmaterial och medicinskt material, därav
 [[variable_group]]
 register = "scb/rakenskapssammandrag"
-key = "lakemedel-sjukvardsmaterial-och-medicinskt-material-darav-"
+key = "lakemedel-sjukvardsmaterial-och-medicinskt-material-darav"
 label = "Läkemedel, sjukvårdsmaterial och medicinskt material, därav"
 axis = "numeric"
 [[variable_group.members]]
@@ -16349,7 +16319,7 @@ label = "100"
 # axis=ordinal agreement=0.51 members=6  Under terminen -
 [[variable_group]]
 register = "scb/hogskolestuderandes-levnadsvillkor"
-key = "f28-"
+key = "f28"
 label = "Under terminen -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -16380,7 +16350,7 @@ label = "6"
 # axis=ordinal agreement=0.50 members=7  Bostadsbidrag -
 [[variable_group]]
 register = "scb/hogskolestuderandes-levnadsvillkor"
-key = "f15-"
+key = "f15"
 label = "Bostadsbidrag -"
 axis = "ordinal"
 [[variable_group.members]]
@@ -16573,7 +16543,7 @@ label = "3"
 # axis=ordinal agreement=0.50 members=2  Distansundervisning
 [[variable_group]]
 register = "scb/gyst"
-key = "f30-"
+key = "f30"
 label = "Distansundervisning"
 axis = "ordinal"
 [[variable_group.members]]

@@ -379,6 +379,112 @@ class TestMonthGroups:
         # inkjan is gone from the candidate pool → only 2 months left → no fold.
         assert counts["month_groups"] == 0
 
+    def test_trailing_hyphen_trimmed_from_month_key(self) -> None:
+        # Slugs `inkomst-jan/feb/mars` strip to stem `inkomst-`; the group's URL key
+        # is the trailing-hyphen-trimmed `inkomst` (#645), not the dangling form.
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "inkomst-", ["jan", "feb", "mars"])
+        counts = materialize_concept_groups(conn)
+        assert counts["month_groups"] == 1
+        groups = _groups(conn)
+        assert "inkomst" in groups
+        assert groups["inkomst"]["source"] == "token"
+        assert groups["inkomst"]["members"] == [
+            "inkomst-feb",
+            "inkomst-jan",
+            "inkomst-mars",
+        ]
+
+    def test_month_trim_collision_skipped_and_warned(self) -> None:
+        # Two distinct month families whose stems TRIM to one key: `ink-jan/feb/mars`
+        # (raw stem `ink-`) and `inkjan/feb/mars` (raw stem `ink`), both → key `ink`.
+        # Folding both would silently merge unrelated families — skip and WARN, never
+        # crash on the unique key index, never merge.
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "ink-", ["jan", "feb", "mars"])
+        self._family(
+            conn,
+            "ink",
+            ["jan", "feb", "mars"],
+            name_fmt="Annan {tok}, totalt",
+            register_id=1,
+        )
+        warnings: list[str] = []
+        counts = materialize_concept_groups(conn, warn=warnings.append)
+        assert counts["month_groups"] == 0
+        assert _groups(conn) == {}
+        assert any("collapsed two distinct stems" in w for w in warnings)
+
+    def test_noise_singleton_does_not_suppress_month_fold(self) -> None:
+        # A valid month family `ink-jan/feb/mars` (raw stem `ink-`) shares the trimmed
+        # key `ink` with an unrelated SINGLETON `inkjan` (raw stem `ink`, one month —
+        # not itself a fold). The coarse "> 1 raw stem" check would skip the whole
+        # bucket and suppress the production fold; the refined check counts only raw
+        # stems that independently satisfy the month-sibling floor, so only `ink-`
+        # qualifies → the month fold IS produced and the singleton is dropped, with no
+        # collision warning (#645).
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "ink-", ["jan", "feb", "mars"])
+        add_variable(
+            conn, register_id=1, var_id=540, name="Annan januari", slug="inkjan"
+        )
+        warnings: list[str] = []
+        counts = materialize_concept_groups(conn, warn=warnings.append)
+        assert counts["month_groups"] == 1
+        groups = _groups(conn)
+        assert "ink" in groups
+        assert groups["ink"]["members"] == ["ink-feb", "ink-jan", "ink-mars"]
+        assert not any("collapsed two distinct stems" in w for w in warnings)
+
+    def test_disagreeing_label_peer_does_not_suppress_month_fold(self) -> None:
+        # A valid month family `ink-jan/feb/mars` (raw stem `ink-`, agreeing labels)
+        # shares the trimmed key `ink` with a count-qualifying PEER trio
+        # `inkjan/inkfeb/inkmars` (raw stem `ink`, 3 distinct months but DISAGREEING
+        # labels → would never fold). The buggy collision predicate counted the peer
+        # as a competing family on the MONTH FLOOR alone and skip-and-warned, dropping
+        # the valid fold. The qualification now mirrors the full fold predicate, so the
+        # disagreeing peer doesn't count → the `ink` month fold IS produced, no warning
+        # (Codex P2 #646).
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "ink-", ["jan", "feb", "mars"])
+        add_variable(conn, register_id=1, var_id=540, name="Aaaa x", slug="inkjan")
+        add_variable(conn, register_id=1, var_id=541, name="Bbbb y", slug="inkfeb")
+        add_variable(conn, register_id=1, var_id=542, name="Cccc z", slug="inkmars")
+        warnings: list[str] = []
+        counts = materialize_concept_groups(conn, warn=warnings.append)
+        assert counts["month_groups"] == 1
+        groups = _groups(conn)
+        assert "ink" in groups
+        assert groups["ink"]["members"] == ["ink-feb", "ink-jan", "ink-mars"]
+        assert not any("collapsed two distinct stems" in w for w in warnings)
+
+    def test_null_label_peer_does_not_suppress_month_fold(self) -> None:
+        # Same shape, but the count-qualifying peer trio `inkjan/inkfeb/inkmars` (raw
+        # stem `ink`) has a NULL member name → no labels to agree on, never folds. It
+        # must NOT count as a competing family: the valid `ink-jan/feb/mars` fold is
+        # still produced, no collision warning (Codex P2 #646).
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "ink-", ["jan", "feb", "mars"])
+        add_variable(conn, register_id=1, var_id=540, name="Lön i jan", slug="inkjan")
+        add_variable(conn, register_id=1, var_id=541, name=None, slug="inkfeb")
+        add_variable(conn, register_id=1, var_id=542, name="Lön i mars", slug="inkmars")
+        warnings: list[str] = []
+        counts = materialize_concept_groups(conn, warn=warnings.append)
+        assert counts["month_groups"] == 1
+        groups = _groups(conn)
+        assert "ink" in groups
+        assert groups["ink"]["members"] == ["ink-feb", "ink-jan", "ink-mars"]
+        assert not any("collapsed two distinct stems" in w for w in warnings)
+
+    def test_hyphen_only_month_stem_not_folded(self) -> None:
+        # Slugs whose only non-token prefix is a hyphen (`-jan`/`-feb`/`-mars`) trim
+        # to an EMPTY stem → no fold, no empty/invalid group key minted.
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "-", ["jan", "feb", "mars"])
+        counts = materialize_concept_groups(conn)
+        assert counts["month_groups"] == 0
+        assert _groups(conn) == {}
+
 
 def _succession_edges(conn: sqlite3.Connection) -> list[tuple[str, str, int, str]]:
     """All `classification_replaced_by` rows as
