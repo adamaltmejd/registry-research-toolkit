@@ -680,8 +680,10 @@ timestamp string (`"2026-06-12T08:30:00Z"`); the footer displays only the leadin
 catalog node can see which reg_meta build it reflects without navigating away.
 
 `App.svelte`'s header also carries a `YearWindowSlider` dual-thumb year slider
-(#614/#611) that sets the active project window (1960 floor → current year). It writes
-through `windowStore` (`src/lib/window.svelte.ts`) — see the store description below.
+(#614/#611) that sets the active project window (1960 floor → the catalog vintage year
+from `context.reg_meta.import_date`; current year as the pre-context fallback). It
+writes through `windowStore` (`src/lib/window.svelte.ts`) — see the store description
+below.
 
 ## SPA routing + production fallback
 
@@ -1200,7 +1202,16 @@ dual-thumb slider from the window over the subject's coverage track
 (`coverageFromStates`), with precedence `?period` > window > full history; a local
 change writes `?period` only (never the global window) and surfaces two amber deviation
 states — user-deviation (`?period` ≠ window, with a reset affordance) and
-availability-deviation (selection outside the subject's data-coverage span).
+availability-deviation (selection outside the subject's data-coverage span). The
+per-page picker shares the header slider's vintage ceiling (#631): `App.svelte` threads
+the ceiling (`context.reg_meta.import_date`'s year) down through `CatalogNodeView` →
+`BindingLeafView` → `PeriodPicker`. The vintage is the ceiling an OPEN-ENDED coverage
+(`coverage.to === null`, "still delivered") projects to — the catalog only knows
+delivery up to its vintage — so the coverage band ends at the vintage and a selection
+past it reads as "not delivered after `<vintage>`". It is NOT a floor on the slider
+bounds: a FINITE coverage keeps its real end (never extended to the vintage), and a
+window/selection past the vintage still widens the bounds (the thumb renders the real
+value) without extending coverage. Wall-clock is the pre-context fallback only.
 
 Precedence — two backing stores, one source of truth:
 
