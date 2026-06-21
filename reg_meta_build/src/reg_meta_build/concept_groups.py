@@ -1022,13 +1022,13 @@ def _apply_curated_groups(
             if is_accept
             else f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
         )
-        reg = conn.execute(
-            "SELECT r.register_id FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ?",
-            (g.provider, g.register),
-        ).fetchone()
-        if reg is None:
+        # STRICT resolution via the shared lenient helper: same join as the two
+        # pre-passes (so the reserved-key/member-id sets can't desync from what
+        # this authoritative pass inserts, #651), but a None here is a build
+        # failure, not a skip — the strict-vs-lenient distinction lives in the
+        # caller's None handling, not in the SQL.
+        register_id = _resolve_group_register(conn, g)
+        if register_id is None:
             raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: register does not resolve.",
@@ -1037,7 +1037,6 @@ def _apply_curated_groups(
                 if is_accept
                 else "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
             )
-        register_id = reg[0]
         try:
             group_id = _insert_group(
                 conn,
@@ -1175,6 +1174,26 @@ def _apply_curated_classification_groups(
     return n_groups
 
 
+def _resolve_group_register(
+    conn: sqlite3.Connection, group: CuratedGroup
+) -> int | None:
+    """Resolve a curated/accept group's `(provider, register)` slugs → its
+    `register_id`, or None when either slug doesn't resolve. The LENIENT form the
+    two pre-passes (`_resolve_curated_member_ids`, `_resolve_curated_group_keys`)
+    share so a future edit to this join can't desync the reserved-key set from the
+    member-id set — both must see the SAME registers (#651). `_apply_curated_groups`
+    deliberately does NOT use this: it is the STRICT authoritative pass that raises
+    EXIT_CONFIG on a dangling register (with origin-tailored remediation), so its
+    None branch is a raise, not a skip."""
+    reg = conn.execute(
+        "SELECT r.register_id FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND r.slug = ?",
+        (group.provider, group.register),
+    ).fetchone()
+    return None if reg is None else reg[0]
+
+
 def _resolve_curated_member_ids(
     conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
 ) -> set[int]:
@@ -1185,18 +1204,13 @@ def _resolve_curated_member_ids(
     fires in `_apply_curated_groups`, the authoritative pass."""
     out: set[int] = set()
     for g in groups:
-        reg = conn.execute(
-            "SELECT r.register_id FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ?",
-            (g.provider, g.register),
-        ).fetchone()
-        if reg is None:
+        register_id = _resolve_group_register(conn, g)
+        if register_id is None:
             continue
         for m in g.members:
             var = conn.execute(
                 "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
-                (reg[0], m.variable),
+                (register_id, m.variable),
             ).fetchone()
             if var is not None:
                 out.add(var[0])
@@ -1220,14 +1234,9 @@ def _resolve_curated_group_keys(
     month groups, so they can't collide."""
     out: set[tuple[int, str]] = set()
     for g in groups:
-        reg = conn.execute(
-            "SELECT r.register_id FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ?",
-            (g.provider, g.register),
-        ).fetchone()
-        if reg is not None:
-            out.add((reg[0], g.key))
+        register_id = _resolve_group_register(conn, g)
+        if register_id is not None:
+            out.add((register_id, g.key))
     return out
 
 
