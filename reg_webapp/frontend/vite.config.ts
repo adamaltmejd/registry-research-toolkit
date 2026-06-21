@@ -5,13 +5,21 @@ import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vite";
 import { configDefaults } from "vitest/config";
 
+// vite.config.ts runs under Node; read the env via globalThis so we don't pull a
+// @types/node dep for one lookup. REG_WEBAPP_BACKEND_URL repoints the dev /api proxy
+// so concurrent instances (parallel worktrees / PR lanes) can each target their own
+// backend port — see reg_webapp/.claude/skills/run-reg-webapp "Parallel instances".
+const backendUrl =
+  (globalThis as { process?: { env?: Record<string, string | undefined> } })
+    .process?.env?.REG_WEBAPP_BACKEND_URL ?? "http://localhost:8000";
+
 export default defineConfig({
   plugins: [svelte()],
   server: {
-    // Dev proxy: the SPA fetches /api/* from the FastAPI backend on :8000.
+    // Dev proxy: the SPA fetches /api/* from the FastAPI backend (default :8000).
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        target: backendUrl,
         changeOrigin: true,
       },
     },
