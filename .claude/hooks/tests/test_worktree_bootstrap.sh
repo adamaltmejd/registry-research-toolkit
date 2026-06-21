@@ -3,14 +3,19 @@
 # test_block_no_verify.sh it is not wired into pytest/CI).
 #
 # The hook does real provisioning (uv sync / bun install), so we stub uv/bun on
-# PATH (they just log their invocation) and run against a TEMP fake checkout, so a
-# real worktree is never mutated. We assert the deterministic contract:
-#   1. Idempotent fast-path: a checkout with .venv + node_modules triggers no
-#      uv/bun and prints nothing — safe to run on every SessionStart.
-#   2. WorktreeCreate provisions SYNCHRONOUSLY (uv sync + bun install run inline).
-#   3. `--provision <root>` (the path dev.sh uses) provisions synchronously.
-#   4. SessionStart is NON-BLOCKING: it emits a well-formed JSON advisory and does
-#      NOT run uv/bun inline (provisioning is backgrounded).
+# PATH (they log their invocation and mimic uv/bun creating .venv / node_modules)
+# and run against a TEMP fake checkout, so a real worktree is never mutated. We
+# assert the deterministic contract:
+#   1. Idempotent fast-path: a fully-provisioned checkout (completion markers
+#      present) triggers no uv/bun and prints nothing — safe on every SessionStart.
+#   2. No-event/direct invocation (how dev.sh calls it) provisions SYNCHRONOUSLY
+#      and writes the completion markers.
+#   3. `--provision <root>` provisions synchronously.
+#   4. SessionStart is NON-BLOCKING: it emits a well-formed JSON advisory (only
+#      that branch writes stdout, so the advisory IS proof the non-blocking path
+#      was taken).
+#   5. A PARTIAL install (.venv dir present but no completion marker) still counts
+#      as needs-provision — not mistaken for done.
 set -uo pipefail
 
 HOOK="$(cd "$(dirname "$0")/.." && pwd)/worktree_bootstrap.sh"
@@ -34,29 +39,36 @@ mkdir -p "$work/repo" "$work/bin"
 mkdir -p "$work/repo/reg_webapp/frontend"
 printf '{}' >"$work/repo/reg_webapp/frontend/package.json"
 
+# Stubs log their call AND mimic the tool creating its output dir, so the hook's
+# post-install marker write (`: > .venv/.wt-provisioned`) lands on a real dir.
 cat >"$work/bin/uv" <<EOF
 #!/usr/bin/env bash
 echo "uv \$*" >>"$calls"
+mkdir -p .venv/bin
 EOF
 cat >"$work/bin/bun" <<EOF
 #!/usr/bin/env bash
 echo "bun \$*" >>"$calls"
+mkdir -p node_modules
 EOF
 chmod +x "$work/bin/uv" "$work/bin/bun"
 
-provision_repo() { # mark the sandbox as fully provisioned
+VENV_MARKER="$work/repo/.venv/.wt-provisioned"
+NODE_MARKER="$work/repo/reg_webapp/frontend/node_modules/.wt-provisioned"
+
+provision_repo() { # mark fully provisioned (markers present)
 	mkdir -p "$work/repo/.venv/bin" "$work/repo/reg_webapp/frontend/node_modules"
-	printf '#!/bin/sh\n' >"$work/repo/.venv/bin/python"
-	chmod +x "$work/repo/.venv/bin/python"
+	: >"$VENV_MARKER"
+	: >"$NODE_MARKER"
 }
 unprovision_repo() { rm -rf "$work/repo/.venv" "$work/repo/reg_webapp/frontend/node_modules"; }
 
-run_event() { # $1 = event name; stdout of hook, run with cwd = sandbox + stub PATH
+run_event() { # $1 = event name ("" = no-event/direct); stdout, cwd = sandbox + stubs
 	printf '{"hook_event_name":"%s","cwd":"%s"}' "$1" "$work/repo" |
 		(cd "$work/repo" && PATH="$work/bin:$PATH" "$HOOK")
 }
 
-# --- Case 1: already provisioned -> fast no-op, no uv/bun, no output ---
+# --- Case 1: fully provisioned -> fast no-op, no uv/bun, no output ---
 provision_repo
 : >"$calls"
 out=$(run_event SessionStart)
@@ -74,20 +86,24 @@ rc=$?
 	fail=1
 }
 
-# --- Case 2: WorktreeCreate + missing -> provisions synchronously ---
+# --- Case 2: no-event/direct (dev.sh path) + missing -> synchronous + markers ---
 unprovision_repo
 : >"$calls"
-run_event WorktreeCreate >/dev/null
+run_event "" >/dev/null
 grep -q '^uv sync --frozen' "$calls" || {
-	note "FAIL[2]: WorktreeCreate should run 'uv sync --frozen'; calls: $(tr '\n' ';' <"$calls")"
+	note "FAIL[2]: no-event should run 'uv sync --frozen'; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
 }
 grep -q '^bun install --frozen-lockfile' "$calls" || {
-	note "FAIL[2]: WorktreeCreate should run 'bun install --frozen-lockfile'; calls: $(tr '\n' ';' <"$calls")"
+	note "FAIL[2]: no-event should run 'bun install --frozen-lockfile'; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+{ [[ -f "$VENV_MARKER" ]] && [[ -f "$NODE_MARKER" ]]; } || {
+	note "FAIL[2]: completion markers not written after successful provision"
 	fail=1
 }
 
-# --- Case 3: --provision <root> (dev.sh path) -> synchronous ---
+# --- Case 3: --provision <root> -> synchronous ---
 unprovision_repo
 : >"$calls"
 (cd "$work/repo" && PATH="$work/bin:$PATH" "$HOOK" --provision "$work/repo")
@@ -95,27 +111,31 @@ grep -q '^uv sync --frozen' "$calls" || {
 	note "FAIL[3]: --provision should run 'uv sync --frozen'; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
 }
-grep -q '^bun install --frozen-lockfile' "$calls" || {
-	note "FAIL[3]: --provision should run 'bun install --frozen-lockfile'; calls: $(tr '\n' ';' <"$calls")"
+
+# --- Case 4: partial install (.venv dir, NO marker) still needs provisioning ---
+unprovision_repo
+mkdir -p "$work/repo/.venv/bin" # dir present but marker absent (interrupted sync)
+: >"$calls"
+run_event "" >/dev/null
+grep -q '^uv sync --frozen' "$calls" || {
+	note "FAIL[4]: partial .venv (no marker) should re-run 'uv sync'; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
 }
 
-# --- Case 4 (last; spawns a detached background job): SessionStart + missing ->
-#     non-blocking advisory. Only the SessionStart branch writes stdout (the
-#     synchronous branch is silent), so a well-formed advisory IS the proof the
-#     non-blocking path was taken. (Asserting "no uv call" would race the fast
-#     stub in the detached job, so we don't.) ---
+# --- Case 5 (last; spawns a detached bg job): SessionStart + missing ->
+#     non-blocking advisory. Only the SessionStart branch writes stdout, so a
+#     well-formed advisory IS proof the non-blocking path was taken. ---
 unprovision_repo
 : >"$calls"
 out=$(run_event SessionStart)
 if ! printf '%s' "$out" | python3 -m json.tool >/dev/null 2>&1; then
-	note "FAIL[4]: SessionStart advisory is not well-formed JSON: $out"
+	note "FAIL[5]: SessionStart advisory is not well-formed JSON: $out"
 	fail=1
 fi
 case "$out" in
 *background*) ;;
 *)
-	note "FAIL[4]: SessionStart advisory should mention background provisioning; got: $out"
+	note "FAIL[5]: SessionStart advisory should mention background provisioning; got: $out"
 	fail=1
 	;;
 esac

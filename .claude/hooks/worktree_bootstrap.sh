@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# WorktreeCreate + SessionStart hook: provision the checkout's OWN environment so
-# dev servers and tooling work in any git worktree, not just the primary checkout.
+# SessionStart hook (+ a `--provision` entry dev.sh reuses): provision the
+# checkout's OWN environment so dev servers and tooling work in any git worktree,
+# not just the primary checkout.
 #
 # Why: a git worktree shares the repo's pyproject but NOT its .venv. uv installs
 # the workspace packages EDITABLE, so a worktree borrowing main's .venv runs
@@ -9,51 +10,61 @@
 # .venv (its editable installs point HERE) plus the frontend's node_modules fixes
 # it at the root, for every tool: pytest, ty, and the dev servers.
 #
-# Two trigger modes, by event:
-#   WorktreeCreate  -> provision SYNCHRONOUSLY (creation-time, once; a brief wait
-#                      there is expected).
-#   SessionStart    -> NON-BLOCKING: SessionStart gates the session, so we never
-#                      run uv/bun inline. If anything is missing we kick the
-#                      provision to the BACKGROUND under a lock and return at
-#                      once. `uv run` and dev.sh self-heal synchronously on
-#                      demand, so a lost/killed background job is harmless.
+# NOT wired to WorktreeCreate: that event REPLACES git's worktree creation (the
+# hook must create the worktree and print its path), so a provisioner there would
+# abort creation. SessionStart is the right post-creation trigger.
 #
-# Idempotent + fast: when .venv and node_modules already exist it exits at once.
-# Always exit 0 — a hook failure must never block the session or the worktree.
+# SessionStart is NON-BLOCKING: SessionStart gates the session, so we never run
+# uv/bun inline. If anything is missing we kick the provision to the BACKGROUND
+# under a lock and return at once. `uv run` and dev.sh self-heal synchronously on
+# demand, so a lost/killed background job is harmless — and the completion-marker
+# check below means a killed-midway provision is retried, not mistaken for done.
+#
+# Always exit 0 — a hook failure must never block the session.
 set -uo pipefail
 
 self=${BASH_SOURCE[0]}
 
-# --- provisioning primitives (operate on an explicit checkout root) ----------
+# Completion markers (inside the gitignored .venv / node_modules) are written
+# only AFTER a successful install — so a partial/interrupted sync (dir present,
+# deps missing) still counts as "needs provision" and is retried.
+VENV_MARKER=".venv/.wt-provisioned"
+NODE_MARKER="reg_webapp/frontend/node_modules/.wt-provisioned"
 
-needs_provision() { # $1 = root; 0 if anything is missing
-	[ ! -x "$1/.venv/bin/python" ] && return 0
-	[ -f "$1/reg_webapp/frontend/package.json" ] && [ ! -d "$1/reg_webapp/frontend/node_modules" ] && return 0
+needs_provision() { # $1 = root; 0 if anything is missing/incomplete
+	[ ! -f "$1/$VENV_MARKER" ] && return 0
+	[ -f "$1/reg_webapp/frontend/package.json" ] && [ ! -f "$1/$NODE_MARKER" ] && return 0
 	return 1
 }
 
 provision() { # $1 = root; synchronous; idempotent (re-checks each piece)
 	local root=$1
-	if [ ! -x "$root/.venv/bin/python" ]; then
+	if [ ! -f "$root/$VENV_MARKER" ]; then
 		if command -v uv >/dev/null 2>&1; then
-			(cd "$root" && uv sync --frozen) >/dev/null 2>&1 ||
+			if (cd "$root" && uv sync --frozen) >/dev/null 2>&1; then
+				: >"$root/$VENV_MARKER"
+			else
 				echo "worktree_bootstrap: 'uv sync --frozen' failed in $root" >&2
+			fi
 		else
 			echo "worktree_bootstrap: uv not on PATH; skipping .venv" >&2
 		fi
 	fi
-	if [ -f "$root/reg_webapp/frontend/package.json" ] && [ ! -d "$root/reg_webapp/frontend/node_modules" ]; then
+	if [ -f "$root/reg_webapp/frontend/package.json" ] && [ ! -f "$root/$NODE_MARKER" ]; then
 		if command -v bun >/dev/null 2>&1; then
-			(cd "$root/reg_webapp/frontend" && bun install --frozen-lockfile) >/dev/null 2>&1 ||
+			if (cd "$root/reg_webapp/frontend" && bun install --frozen-lockfile) >/dev/null 2>&1; then
+				: >"$root/$NODE_MARKER"
+			else
 				echo "worktree_bootstrap: 'bun install --frozen-lockfile' failed in $root" >&2
+			fi
 		else
 			echo "worktree_bootstrap: bun not on PATH; skipping node_modules" >&2
 		fi
 	fi
 }
 
-# Internal re-entry used by the non-blocking SessionStart path (see below) and by
-# callers that want a direct synchronous provision (dev.sh): `… --provision <root>`.
+# Internal re-entry used by the non-blocking SessionStart path below, and by
+# callers wanting a direct synchronous provision (dev.sh): `… --provision <root>`.
 if [ "${1:-}" = "--provision" ]; then
 	provision "${2:-$PWD}"
 	exit 0
@@ -101,6 +112,6 @@ print(json.dumps({
 	exit 0
 fi
 
-# WorktreeCreate (or direct/manual invocation): provision synchronously.
+# Direct/manual invocation (no SessionStart payload, e.g. dev.sh): synchronous.
 provision "$root"
 exit 0

@@ -125,14 +125,17 @@ the Playwright browser project).
 - The Vite proxy defaults to `http://localhost:8000` but honors `REG_WEBAPP_BACKEND_URL`
   (`frontend/vite.config.ts`) — `dev.sh` sets it automatically; it only matters if you
   start Vite by hand against a non-default backend port.
-- **Git worktrees are auto-provisioned.** `.claude/hooks/worktree_bootstrap.sh`
-  (`WorktreeCreate` + an idempotent `SessionStart` guard) runs `uv sync --frozen` +
-  `bun install` so each worktree gets its OWN `.venv` (editable installs resolve to the
-  worktree, not main) and `node_modules`. `dev.sh` also self-provisions and launches
-  from the checkout's own `.venv`, so a worktree serves ITS code. The historical footgun
-  — a `uv run` / `preview_start` started with the **main** checkout as cwd served main's
-  source (bit an agent 2026-06-11) — is why `dev.sh` is preferred in a worktree; raw
-  `preview_start` there still serves main.
+- **Git worktrees are auto-provisioned.** A `SessionStart` hook
+  (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
+  installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
+  `bun install` in the **background** (SessionStart gates the session, so it never
+  blocks) when a completion marker is missing. `dev.sh` also self-provisions
+  synchronously and launches from the checkout's own `.venv`, so a worktree serves ITS
+  code. (Deliberately NOT a `WorktreeCreate` hook: that event *replaces* git's worktree
+  creation — a provisioner there would abort it.) The historical footgun — a `uv run` /
+  `preview_start` started with the **main** checkout as cwd served main's source (bit an
+  agent 2026-06-11) — is why `dev.sh` is preferred in a worktree; raw `preview_start`
+  there still serves main.
 
 ## Troubleshooting
 
