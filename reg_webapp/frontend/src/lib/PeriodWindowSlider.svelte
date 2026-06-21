@@ -55,6 +55,11 @@ interface Props {
   // show an honest cue pointing at the real value in the (already-open) "more"
   // expander, instead of presenting the window as if it were selected.
   subAnnualPeriod: string | null;
+  // false = the no-op full-history default, neither `?period` nor window set —
+  // suppress the not-delivered availability gap, which would otherwise flag a
+  // span the user never chose (#639). The coverage band still renders (an FYI of
+  // where data exists, not a deviation claim).
+  hasSelection: boolean;
   // Emitted with the live selection as the thumbs move (the picker holds it and
   // submits the wire on Apply).
   onchange: (next: StudyWindow) => void;
@@ -70,6 +75,7 @@ let {
   coverage,
   vintageYear,
   subAnnualPeriod,
+  hasSelection,
   onchange,
   onreset,
 }: Props = $props();
@@ -138,9 +144,11 @@ const coverageBand = $derived.by(() => {
 // shown span is then the window PROJECTION, not the real selection, so a gap
 // against it is meaningless (a genuinely-covered `HT2020` would otherwise show
 // unrelated "Not delivered" warnings) — the sub-annual cue already points the
-// user at the real value (Codex P2).
+// user at the real value (Codex P2). Also SUPPRESSED on the no-op full-history
+// default (`!hasSelection`): the thumbs sit at the full bounds the user never
+// chose, so a leading/trailing gap there would flag a span they never selected (#639).
 const gaps = $derived(
-  subAnnualPeriod !== null
+  subAnnualPeriod !== null || !hasSelection
     ? []
     : notDeliveredGaps({ from, to }, effectiveCoverage).map((g) => ({
         left: leftPct(g.from),

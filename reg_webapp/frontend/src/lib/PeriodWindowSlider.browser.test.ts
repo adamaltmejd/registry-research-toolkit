@@ -17,6 +17,9 @@ describe("PeriodWindowSlider", () => {
     // The default: the shown span IS the active selection (year-grain), not a
     // sub-annual projection — the sub-annual-cue tests override this.
     subAnnualPeriod: null as string | null,
+    // A real selection/window is set in these tests (not the no-op full-history
+    // default), so the availability gap is live (#639).
+    hasSelection: true,
   };
 
   it("seeds two thumbs + the readout from the selection, shows the coverage span", async () => {
@@ -186,6 +189,7 @@ describe("PeriodWindowSlider", () => {
       max: 2020,
       coverage: null,
       subAnnualPeriod: null,
+      hasSelection: true,
       selection: { from: 2000, to: 2010 },
       window: { from: 2000, to: 2010 },
       onchange: vi.fn(),

@@ -327,6 +327,7 @@ const MODE_LABELS: Record<PickerMode, string> = {
         {coverage}
         vintageYear={ceilingYear}
         {subAnnualPeriod}
+        hasSelection={activeYearSelection !== null}
         onchange={(next) => (sliderWire = yearWindowToWire(next))}
         onreset={() => resetToWindow()}
       />
