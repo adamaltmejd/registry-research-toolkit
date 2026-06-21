@@ -203,6 +203,19 @@ const sliderSelection = $derived<StudyWindow>(
 // submits it). Re-armed by the {#key period} remount on URL change.
 let sliderWire = $state<string | null>(null);
 
+/** Whether the slider shows a REAL (user-meaningful) selection — drives the
+ * availability not-delivered gap (#639). True for a resolved `?period`/window
+ * (`activeYearSelection`) OR a live un-applied DRAG (`sliderWire`): a drag is a
+ * real selection even before Apply, so the gap must fire during the drag, not
+ * only after Apply re-seeds `activeYearSelection`. Without `sliderWire`, dragging
+ * the no-`?period`/no-window full-history default into a pre-coverage span would
+ * suppress the gap until Apply (Codex P2). The reset $effect clears `sliderWire`
+ * on URL re-seed, so `!== null` reliably means "a live un-applied drag exists"
+ * and nothing else (a stale drag never survives a seed/ceiling change). */
+const hasSliderSelection = $derived(
+  activeYearSelection !== null || sliderWire !== null,
+);
+
 // The "more options" expander. Opens by default for an active `?period` the year
 // slider can't represent (sub-annual / list / `_default` / text) so it's
 // visible + editable, never hidden behind the year-only slider.
@@ -327,7 +340,7 @@ const MODE_LABELS: Record<PickerMode, string> = {
         {coverage}
         vintageYear={ceilingYear}
         {subAnnualPeriod}
-        hasSelection={activeYearSelection !== null}
+        hasSelection={hasSliderSelection}
         onchange={(next) => (sliderWire = yearWindowToWire(next))}
         onreset={() => resetToWindow()}
       />
