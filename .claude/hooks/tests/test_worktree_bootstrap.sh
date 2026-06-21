@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
-# Ad-hoc verifier for .claude/hooks/worktree_bootstrap.sh.
+# Ad-hoc verifier for .claude/hooks/worktree_bootstrap.sh (run it directly; like
+# test_block_no_verify.sh it is not wired into pytest/CI).
 #
-# The hook does real provisioning (uv sync / bun install), so we don't exercise
-# those here. We assert the cheap, deterministic contract that makes it safe to
-# run on every SessionStart:
-#   1. Idempotent fast-path: in a checkout that already has .venv + node_modules,
-#      it exits 0 and provisions nothing (no uv/bun invocation).
-#   2. SessionStart with nothing to do emits no additionalContext.
-#   3. A non-SessionStart event (e.g. WorktreeCreate) never emits structured
-#      output (additionalContext is SessionStart-only).
-# To keep the test hermetic we run the hook against a TEMP fake checkout (so a
-# real un-provisioned worktree is never mutated) with stub `uv`/`bun` on PATH
-# that record whether they were called.
+# The hook does real provisioning (uv sync / bun install), so we stub uv/bun on
+# PATH (they just log their invocation) and run against a TEMP fake checkout, so a
+# real worktree is never mutated. We assert the deterministic contract:
+#   1. Idempotent fast-path: a checkout with .venv + node_modules triggers no
+#      uv/bun and prints nothing — safe to run on every SessionStart.
+#   2. WorktreeCreate provisions SYNCHRONOUSLY (uv sync + bun install run inline).
+#   3. `--provision <root>` (the path dev.sh uses) provisions synchronously.
+#   4. SessionStart is NON-BLOCKING: it emits a well-formed JSON advisory and does
+#      NOT run uv/bun inline (provisioning is backgrounded).
 set -uo pipefail
 
 HOOK="$(cd "$(dirname "$0")/.." && pwd)/worktree_bootstrap.sh"
@@ -23,11 +22,9 @@ fi
 fail=0
 note() { printf '%s\n' "$1"; }
 
-# Sandbox: a fake git checkout with stub uv/bun that log their invocations.
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 calls="$work/calls.log"
-: >"$calls"
 
 mkdir -p "$work/repo" "$work/bin"
 (cd "$work/repo" && git init -q && git commit -q --allow-empty -m init 2>/dev/null) || {
@@ -47,60 +44,81 @@ echo "bun \$*" >>"$calls"
 EOF
 chmod +x "$work/bin/uv" "$work/bin/bun"
 
-run_hook() { # event -> stdout of hook; cwd is the sandbox repo
-	local event="$1"
-	printf '{"hook_event_name":"%s","cwd":"%s"}' "$event" "$work/repo" |
+provision_repo() { # mark the sandbox as fully provisioned
+	mkdir -p "$work/repo/.venv/bin" "$work/repo/reg_webapp/frontend/node_modules"
+	printf '#!/bin/sh\n' >"$work/repo/.venv/bin/python"
+	chmod +x "$work/repo/.venv/bin/python"
+}
+unprovision_repo() { rm -rf "$work/repo/.venv" "$work/repo/reg_webapp/frontend/node_modules"; }
+
+run_event() { # $1 = event name; stdout of hook, run with cwd = sandbox + stub PATH
+	printf '{"hook_event_name":"%s","cwd":"%s"}' "$1" "$work/repo" |
 		(cd "$work/repo" && PATH="$work/bin:$PATH" "$HOOK")
 }
 
 # --- Case 1: already provisioned -> fast no-op, no uv/bun, no output ---
-mkdir -p "$work/repo/.venv/bin"
-printf '#!/bin/sh\n' >"$work/repo/.venv/bin/python"
-chmod +x "$work/repo/.venv/bin/python"
-mkdir -p "$work/repo/reg_webapp/frontend/node_modules"
+provision_repo
 : >"$calls"
-out=$(run_hook SessionStart)
+out=$(run_event SessionStart)
 rc=$?
-if [[ $rc -ne 0 ]]; then
+[[ $rc -eq 0 ]] || {
 	note "FAIL[1]: provisioned checkout exited $rc"
 	fail=1
-fi
-if [[ -s "$calls" ]]; then
-	note "FAIL[1]: provisioned checkout still invoked: $(tr '\n' ';' <"$calls")"
+}
+[[ -s "$calls" ]] && {
+	note "FAIL[1]: provisioned checkout invoked: $(tr '\n' ';' <"$calls")"
 	fail=1
-fi
-if [[ -n "$out" ]]; then
-	note "FAIL[1]: expected no additionalContext when nothing provisioned; got: $out"
+}
+[[ -n "$out" ]] && {
+	note "FAIL[1]: expected no output; got: $out"
 	fail=1
-fi
+}
 
-# --- Case 2: missing env -> provisions via uv + bun ---
-rm -rf "$work/repo/.venv" "$work/repo/reg_webapp/frontend/node_modules"
+# --- Case 2: WorktreeCreate + missing -> provisions synchronously ---
+unprovision_repo
 : >"$calls"
-out=$(run_hook SessionStart)
-rc=$?
-if [[ $rc -ne 0 ]]; then
-	note "FAIL[2]: exited $rc"
+run_event WorktreeCreate >/dev/null
+grep -q '^uv sync --frozen' "$calls" || {
+	note "FAIL[2]: WorktreeCreate should run 'uv sync --frozen'; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
-fi
-if ! grep -q '^uv sync --frozen' "$calls"; then
-	note "FAIL[2]: expected 'uv sync --frozen'; calls: $(tr '\n' ';' <"$calls")"
+}
+grep -q '^bun install --frozen-lockfile' "$calls" || {
+	note "FAIL[2]: WorktreeCreate should run 'bun install --frozen-lockfile'; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
-fi
-if ! grep -q '^bun install --frozen-lockfile' "$calls"; then
-	note "FAIL[2]: expected 'bun install --frozen-lockfile'; calls: $(tr '\n' ';' <"$calls")"
-	fail=1
-fi
+}
 
-# --- Case 3: WorktreeCreate never emits structured output ---
-rm -rf "$work/repo/.venv" "$work/repo/reg_webapp/frontend/node_modules"
-out=$(run_hook WorktreeCreate)
-if [[ -n "$out" ]]; then
-	note "FAIL[3]: WorktreeCreate should emit no stdout payload; got: $out"
+# --- Case 3: --provision <root> (dev.sh path) -> synchronous ---
+unprovision_repo
+: >"$calls"
+(cd "$work/repo" && PATH="$work/bin:$PATH" "$HOOK" --provision "$work/repo")
+grep -q '^uv sync --frozen' "$calls" || {
+	note "FAIL[3]: --provision should run 'uv sync --frozen'; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+grep -q '^bun install --frozen-lockfile' "$calls" || {
+	note "FAIL[3]: --provision should run 'bun install --frozen-lockfile'; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+
+# --- Case 4 (last; spawns a detached background job): SessionStart + missing ->
+#     non-blocking advisory. Only the SessionStart branch writes stdout (the
+#     synchronous branch is silent), so a well-formed advisory IS the proof the
+#     non-blocking path was taken. (Asserting "no uv call" would race the fast
+#     stub in the detached job, so we don't.) ---
+unprovision_repo
+: >"$calls"
+out=$(run_event SessionStart)
+if ! printf '%s' "$out" | python3 -m json.tool >/dev/null 2>&1; then
+	note "FAIL[4]: SessionStart advisory is not well-formed JSON: $out"
 	fail=1
 fi
+case "$out" in
+*background*) ;;
+*)
+	note "FAIL[4]: SessionStart advisory should mention background provisioning; got: $out"
+	fail=1
+	;;
+esac
 
-if [[ $fail -eq 0 ]]; then
-	note "ok: worktree_bootstrap contract holds"
-fi
+[[ $fail -eq 0 ]] && note "ok: worktree_bootstrap contract holds"
 exit "$fail"

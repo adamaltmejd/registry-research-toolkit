@@ -89,6 +89,9 @@ Stop the servers when done:
 lsof -ti :8000 -ti :5173 | xargs kill
 ```
 
+**Human path:** instead of driving via Playwright, just open <http://localhost:5173/> in
+a browser (backend API docs at <http://localhost:8000/docs>).
+
 ## Parallel instances (concurrent worktrees / PR lanes)
 
 `dev.sh` already picks free ports, so just run it in each checkout — two instances never
@@ -102,11 +105,6 @@ Most backend changes don't need the SPA at all: the pytest suite runs against a 
 DB (no real reg_meta DB required) — `uv run python -m pytest reg_webapp/` from the repo
 root. Frontend unit/component tests: `bun run test` from `frontend/` (vitest, includes
 the Playwright browser project).
-
-## Run (human path)
-
-Same two servers, then open <http://localhost:5173/> in a browser. Backend API docs at
-<http://localhost:8000/docs>.
 
 ## Gotchas
 
