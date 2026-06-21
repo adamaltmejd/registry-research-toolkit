@@ -759,7 +759,11 @@ def _evaluate_month_fold(
     return label
 
 
-def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) -> int:
+def _derive_month_groups(
+    conn: sqlite3.Connection,
+    warn: Callable[[str], None],
+    reserved_keys: frozenset[tuple[int, str]] = frozenset(),
+) -> int:
     """Dimension 1 (variables): fold month-suffixed slug families. Candidates
     are ungrouped slugged variables whose slug ends in a month token; a
     (register, stem) family folds only past BOTH guards (>= 3 distinct months
@@ -767,6 +771,15 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
     each member carries its zero-padded month `facet_value`/`facet_label` inline.
     A family dropped on a group-key collision is reported via `warn` (never
     silent).
+
+    Key-collision guard spans BOTH the already-inserted variable groups (the edge
+    pass ran first) AND the PENDING curated/accepted variable-group keys
+    (`reserved_keys`, `(register_id, group_key)`) that `_apply_curated_groups` will
+    insert LATER (#651). The curated/accept pass runs AFTER this one, so without the
+    reservation a trimmed month key (`ink`) that collides with a pending curated key
+    would be inserted here and then crash the curated insert on `idx_concept_group_key`
+    — the pre-trim key `ink-` would not have collided. Reserving the pending keys turns
+    that into the same cosmetic skip-and-warn an already-inserted collision triggers.
 
     The stem (`slug` minus its month token) doubles as the group's URL key
     (`/catalog/group/<p>/<r>/<key>`), so a trailing hyphen left by the token strip
@@ -804,12 +817,16 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
                     (month, slug, variable_id, name, raw_stem)
                 )
                 break  # no month token is a suffix of another — single match
+    # Already-inserted variable-group keys (edge pass) UNION the pending curated/
+    # accept keys the later `_apply_curated_groups` will claim (#651) — a month family
+    # whose trimmed key collides with either is skip-and-warned, never inserted then
+    # crashed on the unique index.
     existing_keys = {
         (r[0], r[1])
         for r in conn.execute(
             "SELECT register_id, group_key FROM concept_group WHERE kind = 'variable'"
         )
-    }
+    } | set(reserved_keys)
     n_groups = 0
     for (register_id, stem), bucket in sorted(candidates.items()):
         # Trim-collision refinement (#645): a clean `stem` reached by `.rstrip("-")`
@@ -850,12 +867,15 @@ def _derive_month_groups(conn: sqlite3.Connection, warn: Callable[[str], None]) 
         # under the trimmed key is dropped.
         members, label = qualifying[0]
         if (register_id, stem) in existing_keys:
-            # An edge group already claimed this key (its min member slug
-            # equals the stem). Cosmetic collision on a presentation key —
-            # skip the fold rather than fail the build, but say so: the family
-            # then renders as ~12 flat near-identical rows (the very symptom
-            # #303 fixes) and the corpus floors only count totals, so without
-            # this line the loss is invisible to the maintainer.
+            # The key is already claimed — by an edge group inserted earlier (its
+            # min member slug equals the stem) OR by a pending curated/accept group
+            # `_apply_curated_groups` will insert later (`reserved_keys`, #651).
+            # Cosmetic collision on a presentation key — skip the fold rather than
+            # fail the build (an unreserved month insert would crash the later
+            # curated insert on `idx_concept_group_key`), but say so: the family then
+            # renders as ~12 flat near-identical rows (the very symptom #303 fixes)
+            # and the corpus floors only count totals, so without this line the loss
+            # is invisible to the maintainer.
             warn(
                 f"  WARN concept-groups: month family {stem!r} "
                 f"(register_id {register_id}, {len(members)} variables) NOT "
@@ -1002,13 +1022,13 @@ def _apply_curated_groups(
             if is_accept
             else f"[[variable_group]] {g.key!r} ({g.provider}/{g.register})"
         )
-        reg = conn.execute(
-            "SELECT r.register_id FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ?",
-            (g.provider, g.register),
-        ).fetchone()
-        if reg is None:
+        # STRICT resolution via the shared lenient helper: same join as the two
+        # pre-passes (so the reserved-key/member-id sets can't desync from what
+        # this authoritative pass inserts, #651), but a None here is a build
+        # failure, not a skip — the strict-vs-lenient distinction lives in the
+        # caller's None handling, not in the SQL.
+        register_id = _resolve_group_register(conn, g)
+        if register_id is None:
             raise curation_error(
                 "concept_groups_unresolved",
                 f"{ctx}: register does not resolve.",
@@ -1017,7 +1037,6 @@ def _apply_curated_groups(
                 if is_accept
                 else "Fix the `register` FQID in reg_meta_build/concept_groups.toml.",
             )
-        register_id = reg[0]
         try:
             group_id = _insert_group(
                 conn,
@@ -1155,6 +1174,26 @@ def _apply_curated_classification_groups(
     return n_groups
 
 
+def _resolve_group_register(
+    conn: sqlite3.Connection, group: CuratedGroup
+) -> int | None:
+    """Resolve a curated/accept group's `(provider, register)` slugs → its
+    `register_id`, or None when either slug doesn't resolve. The LENIENT form the
+    two pre-passes (`_resolve_curated_member_ids`, `_resolve_curated_group_keys`)
+    share so a future edit to this join can't desync the reserved-key set from the
+    member-id set — both must see the SAME registers (#651). `_apply_curated_groups`
+    deliberately does NOT use this: it is the STRICT authoritative pass that raises
+    EXIT_CONFIG on a dangling register (with origin-tailored remediation), so its
+    None branch is a raise, not a skip."""
+    reg = conn.execute(
+        "SELECT r.register_id FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND r.slug = ?",
+        (group.provider, group.register),
+    ).fetchone()
+    return None if reg is None else reg[0]
+
+
 def _resolve_curated_member_ids(
     conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
 ) -> set[int]:
@@ -1165,21 +1204,39 @@ def _resolve_curated_member_ids(
     fires in `_apply_curated_groups`, the authoritative pass."""
     out: set[int] = set()
     for g in groups:
-        reg = conn.execute(
-            "SELECT r.register_id FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ?",
-            (g.provider, g.register),
-        ).fetchone()
-        if reg is None:
+        register_id = _resolve_group_register(conn, g)
+        if register_id is None:
             continue
         for m in g.members:
             var = conn.execute(
                 "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
-                (reg[0], m.variable),
+                (register_id, m.variable),
             ).fetchone()
             if var is not None:
                 out.add(var[0])
+    return out
+
+
+def _resolve_curated_group_keys(
+    conn: sqlite3.Connection, groups: tuple[CuratedGroup, ...]
+) -> set[tuple[int, str]]:
+    """The `(register_id, key)` of every curated/accept VARIABLE group `_apply_
+    curated_groups` will insert — the month pass's `reserved_keys` (#651). These keys
+    are claimed LATER (curated/accept runs after the month pass), so reserving them
+    lets the month pass skip-and-warn a trimmed-key collision instead of inserting a
+    month group that then crashes the curated insert on `idx_concept_group_key`.
+
+    LENIENT register resolution (mirrors `_resolve_curated_member_ids`): a group whose
+    register doesn't resolve carries no key to reserve here — the strict EXIT_CONFIG on
+    a dangling reference still fires in `_apply_curated_groups`, the authoritative pass.
+    Classification umbrella groups are NOT included: they are `kind='classification'`
+    with `register_id IS NULL`, a disjoint key space from the register-scoped variable
+    month groups, so they can't collide."""
+    out: set[tuple[int, str]] = set()
+    for g in groups:
+        register_id = _resolve_group_register(conn, g)
+        if register_id is not None:
+            out.add((register_id, g.key))
     return out
 
 
@@ -1240,8 +1297,13 @@ def materialize_concept_groups(
     # Curated precedence (#591): resolve the curated/accept members BEFORE the
     # edge fold so any FQID they claim is excluded from the edge components.
     exclude_variable_ids = _resolve_curated_member_ids(conn, custom + accepted)
+    # The curated/accept variable-group keys land LATER (`_apply_curated_groups` runs
+    # after the month pass), so reserve them now: a month family whose trailing-hyphen-
+    # trimmed key collides with a pending curated key is skip-and-warned instead of
+    # inserted-then-crashed on `idx_concept_group_key` (#651).
+    reserved_keys = frozenset(_resolve_curated_group_keys(conn, custom + accepted))
     _derive_edge_groups(conn, edge_siblings, exclude_variable_ids)
-    _derive_month_groups(conn, warn or (lambda _msg: None))
+    _derive_month_groups(conn, warn or (lambda _msg: None), reserved_keys)
     _apply_curated_groups(conn, custom + accepted)
     _apply_curated_classification_groups(conn, classification_groups)
     # Count the authoritative shipped rows from the final table after all

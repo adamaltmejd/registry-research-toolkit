@@ -447,79 +447,95 @@ def infer_concept_group_candidates(
         for raw_stem, suffix, var in bucket:
             by_raw_stem.setdefault(raw_stem, []).append((raw_stem, suffix, var))
 
-        # Trim-collision refinement (#645/Codex P2 #646): a clean `stem` reached by
-        # `.rstrip("-")` can fuse pre-trim stems into one bucket (`artal-person-1…`
-        # AND `artal-person1…` both → `artal-person`). Use `_evaluate_fold` — the
-        # FULL foldability predicate (distinct-suffix floor AND no NULL names AND the
-        # battery/label-agreement gate) — ONLY to decide the COLLISION count: a
-        # raw-stem subgroup is a competing family only when it would ACTUALLY FOLD,
-        # not merely meet the sibling floor (so a count-qualifying battery/NULL peer
-        # can't spuriously suppress a valid family). When >= 2 raw stems each fold it
-        # is a GENUINE two-family collision — skip-and-count (never a silent merge,
-        # mirrors `_derive_month_groups`' skip-and-warn). Otherwise the EMIT path
-        # below is exactly round-1: it selects a winner and runs the original
-        # existing-key/NULL/battery/label gates on it, so a homogeneous bucket (one
-        # raw stem — the entire real corpus) reduces precisely to round-1 and the
-        # output stays byte-identical.
-        fold_qual = [
-            folded
-            for sub in by_raw_stem.values()
-            if (
-                folded := _evaluate_fold(
-                    sub,
-                    min_siblings=min_siblings,
-                    min_label_prefix=min_label_prefix,
-                    min_agreement=min_agreement,
-                )
+        # Accepted-key handling FIRST (#646/#651), governing REGARDLESS of how many
+        # raw stems fold — it subsumes the old `len(fold_qual) > 1` accepted-preserve.
+        # A clean key that is currently `[[accept]]`-ed is MATERIALIZED, so the winner
+        # for that key MUST be the accepted family (preserve-or-fail, never retarget):
+        # identify it by member-containment against the materialized accept's members
+        # (the accept emitted a single raw-stem candidate, so it lands in exactly one
+        # raw-stem subgroup; containment, not equality, tolerates an `exclude` that
+        # trimmed the materialized set). Two failure modes the `> 1`-only preserve
+        # missed (#651):
+        #   - the accepted raw-stem subgroup NO LONGER folds (labels degraded to
+        #     NULL/weak after corpus drift) AND a DIFFERENT raw stem DOES fold → only
+        #     one stem folds, so the old `> 1` block was skipped and the non-accepted
+        #     peer was selected, emitting under the accepted scope (the `[[accept]]`
+        #     then silently resolves to the WRONG variables);
+        #   - the genuine two-folder collision the `> 1` block already handled.
+        # In both, force the winner to the accepted subgroup: if it still folds it
+        # re-emits (idempotent); if it has DEGRADED the normal emit path naturally
+        # drops it (NULL→continue / battery→excluded), which is the "fail" arm —
+        # `resolve_accept` fails LOUDLY at the next build, the correct outcome. A
+        # non-accepted peer is NEVER selected for an accepted key. The non-accepted
+        # peer is NOT counted into `skipped_trim_collision` (a peer colliding with an
+        # accepted scope is not a symmetric two-family drop). The `> 1`
+        # skipped_trim_collision path below applies ONLY to non-accepted keys.
+        accepted_ids = accepted_members.get((register_id, stem))
+        if accepted_ids:
+            accepted_sub = next(
+                (
+                    sub
+                    for sub in by_raw_stem.values()
+                    if accepted_ids <= {var.variable_id for _, _, var in sub}
+                ),
+                None,
             )
-            is not None
-        ]
-        if len(fold_qual) > 1:
-            # Accepted-family preserve (#646): a clean key that is currently
-            # `[[accept]]`-ed is MATERIALIZED, so dropping the whole colliding bucket
-            # would drop the accepted family too and break `resolve_accept` at the next
-            # build. When the key is accepted, keep the accepted family and reject only
-            # the non-accepted folding peer(s): find the folding subgroup whose members
-            # contain the materialized accept's members (the accept emitted a single
-            # raw-stem candidate, so it lands in exactly one subgroup; containment, not
-            # equality, tolerates an `exclude` that trimmed the materialized set). That
-            # subgroup runs the normal emit path below (re-emitting identically); the
-            # rejected peer is NOT counted into `skipped_trim_collision` (the accepted
-            # family is not a dropped collision — it survives).
-            accepted_ids = accepted_members.get((register_id, stem))
-            accepted_fold = (
-                next(
-                    (
-                        folded
-                        for folded in fold_qual
-                        if accepted_ids <= {var.variable_id for _, _, var in folded}
-                    ),
-                    None,
+            # The accepted members are materialized as a group, so on a normal built
+            # DB exactly one raw-stem subgroup supersets them. If none does (the
+            # accepted family has genuinely vanished from the catalog), emit nothing
+            # for this key — `resolve_accept` will fail loudly next build (the "fail"
+            # arm). Never let a peer win the accepted key.
+            if accepted_sub is None:
+                continue
+            members = accepted_sub
+        else:
+            # ---- non-accepted keys: round-1 trim-collision logic (#645/#646) ----
+            # A clean `stem` reached by `.rstrip("-")` can fuse pre-trim stems into one
+            # bucket (`artal-person-1…` AND `artal-person1…` both → `artal-person`).
+            # Use `_evaluate_fold` — the FULL foldability predicate (distinct-suffix
+            # floor AND no NULL names AND the battery/label-agreement gate) — ONLY to
+            # decide the COLLISION count: a raw-stem subgroup is a competing family only
+            # when it would ACTUALLY FOLD, not merely meet the sibling floor (so a
+            # count-qualifying battery/NULL peer can't spuriously suppress a valid
+            # family). When >= 2 raw stems each fold it is a GENUINE two-family
+            # collision — skip-and-count (never a silent merge, mirrors
+            # `_derive_month_groups`' skip-and-warn). Otherwise the EMIT path below is
+            # exactly round-1: it selects a winner and runs the original
+            # existing-key/NULL/battery/label gates on it, so a homogeneous bucket (one
+            # raw stem — the entire real corpus) reduces precisely to round-1 and the
+            # output stays byte-identical.
+            fold_qual = [
+                folded
+                for sub in by_raw_stem.values()
+                if (
+                    folded := _evaluate_fold(
+                        sub,
+                        min_siblings=min_siblings,
+                        min_label_prefix=min_label_prefix,
+                        min_agreement=min_agreement,
+                    )
                 )
-                if accepted_ids
-                else None
-            )
-            if accepted_fold is None:
+                is not None
+            ]
+            if len(fold_qual) > 1:
                 skipped_trim_collision += 1
                 continue
-            fold_qual = [accepted_fold]
-
-        # Winner selection (round-1): the single folding subgroup when one folds, else
-        # the count-floor subgroup — so a lone battery / NULL family still reaches the
-        # original existing-key/battery diagnostics. `count_qual` is the round-1
-        # `qualifying` (distinct-suffix floor only); when no raw stem even meets the
-        # floor the bucket is dropped (no family).
-        count_qual = [
-            sub
-            for sub in by_raw_stem.values()
-            if len({suffix for _, suffix, _ in sub}) >= min_siblings
-        ]
-        if fold_qual:
-            members = fold_qual[0]
-        elif count_qual:
-            members = count_qual[0]
-        else:
-            continue
+            # Winner selection (round-1): the single folding subgroup when one folds,
+            # else the count-floor subgroup — so a lone battery / NULL family still
+            # reaches the original existing-key/battery diagnostics. `count_qual` is the
+            # round-1 `qualifying` (distinct-suffix floor only); when no raw stem even
+            # meets the floor the bucket is dropped (no family).
+            count_qual = [
+                sub
+                for sub in by_raw_stem.values()
+                if len({suffix for _, suffix, _ in sub}) >= min_siblings
+            ]
+            if fold_qual:
+                members = fold_qual[0]
+            elif count_qual:
+                members = count_qual[0]
+            else:
+                continue
 
         # ---- round-1 emit path on the winner (unchanged) ----
         # Key-collision FIRST: a family keyed on a `(register_id, stem)` already

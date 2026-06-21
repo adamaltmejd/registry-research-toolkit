@@ -485,6 +485,74 @@ class TestMonthGroups:
         assert counts["month_groups"] == 0
         assert _groups(conn) == {}
 
+    def test_month_key_collision_with_pending_curated_key_skipped(self) -> None:
+        # Pre-reservation guard (#651): a month family `ink-jan/feb/mars` (raw stem
+        # `ink-`) trims to key `ink`, which collides with a PENDING curated
+        # `[[variable_group]]` keyed `ink` that `_apply_curated_groups` inserts LATER.
+        # The month pass runs first, so without reserving the pending curated keys it
+        # would insert `ink` here and then crash the curated insert on
+        # `idx_concept_group_key` (the pre-trim key `ink-` would not have collided).
+        # The reservation turns it into the existing skip-and-warn instead, so the
+        # curated insert on `ink` succeeds.
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "ink-", ["jan", "feb", "mars"])  # trims to key `ink`
+        add_variable(conn, register_id=1, var_id=560, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=561, name="B", slug="varb")
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="ink",  # collides with the month family's trimmed key
+            label="Inkomst",
+            axis="part",
+            members=(
+                CuratedMember(variable="vara", value="1", label="A"),
+                CuratedMember(variable="varb", value="2", label="B"),
+            ),
+        )
+        warnings: list[str] = []
+        counts = materialize_concept_groups(
+            conn, (curated,), providers=_SCB, warn=warnings.append
+        )
+        # The month family is NOT folded (its key is reserved); the curated group on
+        # the same key inserts cleanly (no IntegrityError).
+        assert counts["month_groups"] == 0
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert groups["ink"]["source"] == "curated"
+        assert groups["ink"]["members"] == ["vara", "varb"]
+        assert any("collides with an existing group key" in w for w in warnings)
+
+    def test_month_key_no_collision_with_unrelated_curated_key_folds(self) -> None:
+        # Control: the SAME month family folds normally when the pending curated key
+        # does NOT collide with its trimmed key — the reservation guard only suppresses
+        # an actual key collision, never a non-colliding month fold (#651).
+        conn = build_slugged_db(classification=None)
+        self._family(conn, "ink-", ["jan", "feb", "mars"])  # trims to key `ink`
+        add_variable(conn, register_id=1, var_id=560, name="A", slug="vara")
+        add_variable(conn, register_id=1, var_id=561, name="B", slug="varb")
+        curated = CuratedGroup(
+            provider="scb",
+            register="lisa",
+            key="other",  # distinct from the month key `ink`
+            label="Annan",
+            axis="part",
+            members=(
+                CuratedMember(variable="vara", value="1", label="A"),
+                CuratedMember(variable="varb", value="2", label="B"),
+            ),
+        )
+        warnings: list[str] = []
+        counts = materialize_concept_groups(
+            conn, (curated,), providers=_SCB, warn=warnings.append
+        )
+        assert counts["month_groups"] == 1
+        assert counts["curated_groups"] == 1
+        groups = _groups(conn)
+        assert groups["ink"]["source"] == "token"
+        assert groups["ink"]["members"] == ["ink-feb", "ink-jan", "ink-mars"]
+        assert "other" in groups
+        assert not any("collides with an existing group key" in w for w in warnings)
+
 
 def _succession_edges(conn: sqlite3.Connection) -> list[tuple[str, str, int, str]]:
     """All `classification_replaced_by` rows as
