@@ -35,9 +35,22 @@ cd reg_webapp/frontend && bun install --frozen-lockfile
 No SPA build needed for dev — Vite serves source. Regenerate API types only after a
 contract change (`bun run gen:types`; CI pins drift).
 
-## Run (agent path)
+## Run
 
-Start both servers in the background, **from the repo root**:
+**Quickest — `dev.sh` (works in any checkout, including worktrees):**
+
+```sh
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh
+```
+
+Picks free backend + frontend ports, points the Vite `/api` proxy at the backend
+(`REG_WEBAPP_BACKEND_URL`), starts both from THIS checkout's `.venv`, and prints the
+URLs; Ctrl-C stops both. Ports are automatic, so two checkouts (parallel worktrees / PR
+lanes) never collide — no manual port juggling. Pin them with
+`BACKEND_PORT=… FRONTEND_PORT=…` when you need to know them up front (e.g. to script the
+driver against a fixed `REG_WEBAPP_DEV_URL`).
+
+**Manual (full control / background driving), from the repo root:**
 
 ```sh
 uv run uvicorn reg_webapp.app:create_app --factory --port 8000 &
@@ -53,11 +66,14 @@ curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/api/context # pro
 ```
 
 Then drive the SPA with the Playwright driver — run it **from `reg_webapp/frontend/`**
-(it resolves `playwright` from the CWD's `node_modules`):
+(it resolves `playwright` from the CWD's `node_modules`). The driver defaults to
+`:5173`, so if you launched via `dev.sh` (random port) prefix it with
+`REG_WEBAPP_DEV_URL=<the printed frontend URL>`:
 
 ```sh
 cd reg_webapp/frontend
 bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
+# dev.sh port: REG_WEBAPP_DEV_URL=http://localhost:<F> bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
 ```
 
 `smoke` loads `/catalog`, clicks provider → register → variable, fills the period input
@@ -76,34 +92,16 @@ Stop the servers when done:
 lsof -ti :8000 -ti :5173 | xargs kill
 ```
 
+**Human path:** instead of driving via Playwright, just open the frontend in a browser —
+`http://localhost:5173/` for the manual path above, or the port `dev.sh` printed
+(backend API docs at `<backend>/docs`).
+
 ## Parallel instances (concurrent worktrees / PR lanes)
 
-The default ports are fine for ONE instance. To render two checkouts at once (two PR
-lanes, or a worktree alongside the main checkout), give each its own port pair — the
-only coupling is the Vite proxy, which reads `REG_WEBAPP_BACKEND_URL` (default
-`http://localhost:8000`):
-
-```sh
-# pick two free ports (tiny TOCTOU race, negligible for dev)
-B=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()')
-F=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()')
-
-uv run uvicorn reg_webapp.app:create_app --factory --port "$B" &
-(cd reg_webapp/frontend && REG_WEBAPP_BACKEND_URL="http://localhost:$B" \
-   bun run dev -- --port "$F" --strictPort) &
-
-curl -s -o /dev/null -w '%{http_code}\n' "http://localhost:$F/api/context"   # 200 ⇒ proxy → backend B
-(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="http://localhost:$F" \
-   bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)                    # driver honors the URL
-```
-
-`--strictPort` makes Vite use exactly `$F` (otherwise it silently increments off 5173
-and you lose track of the port). Stop with `lsof -ti :$B -ti :$F | xargs kill`.
-
-**`preview_start` is single-instance.** `.claude/launch.json` is static (fixed
-8000/5173, `autoPort: false`) and can't inject the backend's chosen port into the
-frontend config — so use the manual recipe above for concurrency; `preview_start` stays
-the one-host convenience path.
+`dev.sh` already picks free ports, so just run it in each checkout — two instances never
+collide, no manual port juggling. (`preview_start` / `.claude/launch.json` are
+fixed-port single-host: the static config can't inject the backend's chosen port into
+the frontend config, so use `dev.sh` for concurrency.)
 
 ## Direct invocation (backend-only PRs)
 
@@ -111,11 +109,6 @@ Most backend changes don't need the SPA at all: the pytest suite runs against a 
 DB (no real reg_meta DB required) — `uv run python -m pytest reg_webapp/` from the repo
 root. Frontend unit/component tests: `bun run test` from `frontend/` (vitest, includes
 the Playwright browser project).
-
-## Run (human path)
-
-Same two servers, then open <http://localhost:5173/> in a browser. Backend API docs at
-<http://localhost:8000/docs>.
 
 ## Gotchas
 
@@ -134,22 +127,19 @@ Same two servers, then open <http://localhost:5173/> in a browser. Backend API d
 - **HEAD requests 405** by design (routes register GET only; see DESIGN.md → ETag).
   Probe with `curl` GETs, not `-I`.
 - The Vite proxy defaults to `http://localhost:8000` but honors `REG_WEBAPP_BACKEND_URL`
-  (`frontend/vite.config.ts`) — for a non-default backend port, set that env var so the
-  proxy follows (see **Parallel instances**); the default-8000 path needs nothing.
-- **Verifying from a git worktree (`.claude/worktrees/*`): anything launched with the
-  main checkout as cwd serves main's code.** "Repo root" above means the checkout under
-  test — `uv run uvicorn …` at the main checkout's root, and the `preview_start`
-  launch.json configs (which always run there), bind the main checkout's venv and
-  silently exercise stale main-branch behavior (bit an agent 2026-06-11: a fix "didn't
-  work" because the servers ran main's code). Verified fix: `uv sync --frozen` inside
-  the worktree (uv stops at the worktree's own `pyproject.toml`, creating a
-  worktree-local `.venv`), then start the backend via that venv's binary on an
-  **isolated port**
-  (`.venv/bin/uvicorn reg_webapp.app:create_app --factory --port "$B"`) and the frontend
-  from the worktree's `reg_webapp/frontend/` pointed at it
-  (`REG_WEBAPP_BACKEND_URL="http://localhost:$B" bun run dev -- --port "$F" --strictPort`).
-  A worktree usually renders **alongside** main's servers, so use the free-port
-  `$B`/`$F` selection from **Parallel instances** rather than the fixed 8000/5173.
+  (`frontend/vite.config.ts`) — `dev.sh` sets it automatically; it only matters if you
+  start Vite by hand against a non-default backend port.
+- **Git worktrees are auto-provisioned.** A `SessionStart` hook
+  (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
+  installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
+  `bun install` in the **background** (SessionStart gates the session, so it never
+  blocks) when the env is missing or its dependency fingerprint is stale (lockfile
+  changed). `dev.sh` also self-provisions synchronously and launches from the checkout's
+  own `.venv`, so a worktree serves ITS code. (Deliberately NOT a `WorktreeCreate` hook:
+  that event *replaces* git's worktree creation — a provisioner there would abort it.)
+  The historical footgun — a `uv run` / `preview_start` started with the **main**
+  checkout as cwd served main's source (bit an agent 2026-06-11) — is why `dev.sh` is
+  preferred in a worktree; raw `preview_start` there still serves main.
 
 ## Troubleshooting
 

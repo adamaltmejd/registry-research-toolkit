@@ -1,3 +1,11 @@
+# `pre-commit install` wires BOTH the commit gate and the post-checkout
+# provisioner (below). Existing clones: re-run `pre-commit install` once to pick
+# up the post-checkout hook.
+# NOTE: pre-commit refuses to install while `core.hooksPath` is set (even to the
+# default `.git/hooks`). If `git config --get core.hooksPath` returns a value,
+# `git config --unset core.hooksPath` first, then `pre-commit install`.
+default_install_hook_types: [pre-commit, post-checkout]
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.12
@@ -51,3 +59,15 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-commit]
+      # post-checkout only: provision a freshly checked-out / `git worktree add`ed
+      # tree (its own .venv + node_modules) so worktrees created mid-session — by
+      # `git worktree add`, or the harness (which uses it under the hood) — are
+      # ready without waiting for the next SessionStart. Idempotent + fingerprinted,
+      # so an in-sync checkout is a fast skip; a dep-changing branch switch re-syncs.
+      - id: worktree-provision
+        name: provision worktree env (uv sync / bun install)
+        entry: .claude/hooks/worktree_bootstrap.sh --provision
+        language: script
+        stages: [post-checkout]
+        always_run: true
+        pass_filenames: false
