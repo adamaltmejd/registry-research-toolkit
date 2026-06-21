@@ -626,14 +626,19 @@ that drift surface. (The cross-package bundle boundary — validated `Source` �
 The catalog response models are 1:1 wrappers of reg_meta's frozen `Catalog` dataclasses.
 Each node model carries a `kind` `Literal` discriminator (`provider` / `register` /
 `binding` / `classification` / `classification-root` / `root` / `variants-ref` /
-`concept-group`); the catch-all returns a Pydantic discriminated union
-(`Field(discriminator="kind")`) so `openapi-typescript` emits a clean tagged union. FQID
-fields serialize as plain `str` (`str(fqid)`), never nested models, so the codegen'd TS
-sees flat string fields. The binding **leaf** embeds the variable's FULL longitudinal
-record from one `Catalog.resolve` call (states, value sets, and the variable-grain
-`same_as` / `related_to` / `lineage` edges), plus the full variable `succession_chain`
-(#582, below). `lineage_warnings` are **omitted** — `ResolvedVariable` doesn't carry
-them; they arrive via the `/lineage_warnings` endpoint.
+`concept-group`). The catch-all (`GET /api/catalog/{fqid:path}`) returns a Pydantic
+discriminated union (`Field(discriminator="kind")`) over the five kinds it owns:
+`provider` / `register` / `binding` / `classification` / `classification-root`.
+`concept-group` is **not** a catch-all arm — it is the sole response type of the
+fixed-shape route `GET /api/catalog/group/{provider}/{register}/{key}` (declared above
+the catch-all; see § Routing above). The discriminated union drives `openapi-typescript`
+to emit a clean tagged union for the catch-all; `ConceptGroupNode` is a standalone
+schema used only by the group route. FQID fields serialize as plain `str` (`str(fqid)`),
+never nested models, so the codegen'd TS sees flat string fields. The binding **leaf**
+embeds the variable's FULL longitudinal record from one `Catalog.resolve` call (states,
+value sets, and the variable-grain `same_as` / `related_to` / `lineage` edges), plus the
+full variable `succession_chain` (#582, below). `lineage_warnings` are **omitted** —
+`ResolvedVariable` doesn't carry them; they arrive via the `/lineage_warnings` endpoint.
 
 One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a
 method) and warns. The edge-ref models name the Python attribute `register_name` and
