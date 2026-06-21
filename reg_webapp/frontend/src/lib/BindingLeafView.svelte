@@ -185,16 +185,21 @@ const addPlan = $derived(buildAddPlan(states ?? [], params.period ?? null));
 
 // #638 PR2b: the picker's chosen population, when the plan is `choose-variant`.
 // INVISIBLE unless ≥2 variants co-exist for the period; defaults to NONE (so a
-// fresh plan starts unresolved) and GATES the Add button until the user picks
-// (see the `disabled` expression + the reset in the param-change effect — a
-// stale pick from a prior period must never gate-pass).
+// fresh plan starts unresolved) and GATES the Add button. The gate is
+// MEMBERSHIP-based (correct-by-construction): Add is enabled only when the pick
+// is one of the CURRENT plan's options (`addPlan.options`). So a null pick OR a
+// stale pick naming a now-absent variant (e.g. after the plan changes
+// underneath) can never gate-pass — the gate doesn't lean on the reset timing or
+// the remount. The `addVariant = null` reset in the param-change effect still
+// cleanly clears the VISUAL pick when the period changes.
 let addVariant = $state<string | null>(null);
 
 // A fresh resolution clears the in-flight prompt + stale confirmation AND the
 // proactive variant pick (the visible states changed underneath the plan, so a
 // prior population choice may name a now-absent variant). Resetting `addVariant`
-// here is load-bearing for the gate: without it, switching period could leave a
-// stale pick that passes the gate against a different plan's options.
+// here cleanly clears the VISUAL pick when the period changes; gate CORRECTNESS
+// no longer depends on it (the gate is membership-based — see `addVariant`), but
+// the reset keeps the selector from showing a now-irrelevant highlight.
 $effect(() => {
   void params.period;
   void params.variant;
@@ -384,7 +389,8 @@ const repSegment = $derived(
       disabled={!seedReady ||
         !states ||
         states.length === 0 ||
-        (addPlan.kind === "choose-variant" && addVariant === null)}
+        (addPlan.kind === "choose-variant" &&
+          !addPlan.options.some((o) => o.variant === addVariant))}
       onclick={startAdd}
     >
       Add to project

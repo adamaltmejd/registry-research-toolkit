@@ -92,6 +92,14 @@ const coexisting = [
 /** One variant → `segments` (no population choice). */
 const single = [state({ state_id: 1, variant: "individer" })];
 
+/** A DIFFERENT pair of co-existing variants — node B for the membership-gate
+ * test. Its variants do NOT overlap node A's (`individer`/`arbetsstallen`), so a
+ * pick made against A is a non-member of B's options. */
+const coexistingB = [
+  state({ state_id: 3, variant: "foretag" }),
+  state({ state_id: 4, variant: "regioner" }),
+];
+
 beforeEach(() => {
   vi.mocked(getCatalogNode).mockReset();
   // The sibling panels' fetches: resolve empty so they render nothing and never
@@ -148,6 +156,43 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     // Picking a population marks it pressed and ungates Add.
     await individer.click();
     await expect.element(individer).toHaveAttribute("aria-pressed", "true");
+    await expect.element(add).toBeEnabled();
+  });
+
+  it("a stale pick is non-member of the new plan's options → Add re-gated until a current option is picked", async () => {
+    // The gate is MEMBERSHIP-based: Add is enabled only when `addVariant` is one
+    // of the CURRENT plan's options. This guards the scenario the membership gate
+    // exists for — the plan's options change UNDER the same component instance
+    // (here via `rerender`), leaving `addVariant` holding a now-absent variant. A
+    // value-based gate (`addVariant !== null`) would gate-PASS that stale pick;
+    // the membership gate must re-disable Add.
+    const { rerender } = render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(coexisting),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    const add = page.getByRole("button", { name: "Add to project" });
+
+    // Pick one of node A's variants → Add ungated.
+    await page.getByRole("button", { name: /individer/ }).click();
+    await expect.element(add).toBeEnabled();
+
+    // The plan's options change under the same instance: node B has DIFFERENT
+    // co-existing variants (`foretag`/`regioner`) that do NOT include the picked
+    // `individer`. The stale pick is now a non-member of B's options.
+    await rerender({ node: node(coexistingB) });
+
+    // Add is RE-GATED — the stale pick can't gate-pass against B's options.
+    await expect.element(add).toBeDisabled();
+    // The selector now offers B's populations.
+    const foretag = page.getByRole("button", { name: /foretag/ });
+    await expect.element(foretag).toBeVisible();
+
+    // Picking one of B's CURRENT options ungates Add again.
+    await foretag.click();
     await expect.element(add).toBeEnabled();
   });
 
