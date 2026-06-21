@@ -47,12 +47,32 @@ pids+=($!)
 ) &
 pids+=($!)
 
+# Fail fast on startup: a server that never becomes reachable (busy port, missing
+# DB, stale deps that break import) must make dev.sh exit NONZERO, not look like it
+# succeeded. curl is the real check (immune to whether a dead child is reaped yet);
+# bail early if either child has already exited.
+ready=""
+for _ in $(seq 1 30); do
+	if curl -sf -o /dev/null "http://localhost:$backend_port/api/context" 2>/dev/null &&
+		curl -sf -o /dev/null "http://localhost:$frontend_port/" 2>/dev/null; then
+		ready=1
+		break
+	fi
+	if ! kill -0 "${pids[0]}" 2>/dev/null || ! kill -0 "${pids[1]}" 2>/dev/null; then
+		break # a server died during startup
+	fi
+	sleep 1
+done
+if [ -z "$ready" ]; then
+	echo "dev: a server failed to start (busy port, missing DB, or stale deps?) — see output above." >&2
+	exit 1 # the EXIT trap tears down whatever did come up
+fi
+
 printf 'reg_webapp dev (Ctrl-C to stop):\n  backend : http://localhost:%s\n  frontend: http://localhost:%s\n  driver  : REG_WEBAPP_DEV_URL=http://localhost:%s\n' \
 	"$backend_port" "$frontend_port" "$frontend_port"
 
-# Fail fast: tear down BOTH if EITHER server exits (a bare `wait` would hang on
-# the survivor when one crashes — e.g. port busy or DB missing). `wait -n` isn't
-# in bash 3.2, so poll liveness; the EXIT trap kills whatever is still up.
-while kill -0 "${pids[0]}" 2>/dev/null && kill -0 "${pids[1]}" 2>/dev/null; do
-	sleep 1
-done
+# Steady state: block until Ctrl-C (INT trap -> nonzero) or a server exits. A bare
+# `wait` is fine here — startup already succeeded; a later single-server crash is a
+# rare dev event you'll see and Ctrl-C. (`wait -n` would fail-fast but isn't in
+# bash 3.2.)
+wait
