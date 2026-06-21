@@ -26,6 +26,7 @@ from reg_meta_build.concept_groups import (
     ClassificationGroupMember,
     CuratedGroup,
     CuratedMember,
+    _insert_group,
     derive_classification_succession,
     load_classification_groups,
     load_concept_group_accepts,
@@ -265,6 +266,52 @@ class TestEdgeGroups:
         for g in groups.values():
             if g["source"] == "edge":
                 assert not ({"vara", "varb"} <= set(g["members"]))
+
+
+class TestGroupKeyPathSafe:
+    """#640: every `concept_group` row passes its `group_key` through the single
+    `_insert_group` seam, which rejects a non-URL-path-safe key. This guarantees
+    the by-key route contract — `/catalog/group/<provider>/<register>/<key>` —
+    holds by construction (a key with `/`, `:`, etc. would be unreachable)."""
+
+    @pytest.mark.parametrize("kind", ["variable", "classification"])
+    @pytest.mark.parametrize("bad_key", ["foo/bar", "Foo", "a:b", "x y", ""])
+    def test_path_unsafe_key_fails_fast(self, kind: str, bad_key: str) -> None:
+        conn = build_slugged_db(classification=None)
+        register_id = 1 if kind == "variable" else None
+        with pytest.raises(RegMetaError) as exc:
+            _insert_group(
+                conn,
+                kind=kind,
+                register_id=register_id,
+                group_key=bad_key,
+                label="L",
+                source="curated",
+            )
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert exc.value.code == "concept_group_key_not_path_safe"
+
+    @pytest.mark.parametrize(
+        "good_key",
+        # `foo-bar2` is also a slug; the trailing-hyphen keys are NOT slugs but ARE
+        # path-safe — they are real `concept_groups.auto.toml` candidates the
+        # generator emits, so accepting them is the regression guard for the P2
+        # (an `is_slug` guard would over-reject them and break `[[accept]]`).
+        ["foo-bar2", "artal-person-", "betyg-i-franska-"],
+    )
+    def test_path_safe_key_is_accepted(self, good_key: str) -> None:
+        # A path-safe key inserts cleanly — the guard is not over-broad and does
+        # not narrow path-safety to `is_slug`.
+        conn = build_slugged_db(classification=None)
+        group_id = _insert_group(
+            conn,
+            kind="variable",
+            register_id=1,
+            group_key=good_key,
+            label="L",
+            source="curated",
+        )
+        assert group_id is not None
 
 
 class TestMonthGroups:
