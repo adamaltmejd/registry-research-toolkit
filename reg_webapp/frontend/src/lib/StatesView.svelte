@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { VariableStateModel } from "./api";
+import CodeList from "./CodeList.svelte";
 import {
   formatDataType,
   formatStateWindow,
@@ -79,25 +80,17 @@ function toggleExpanded(key: string): void {
 }
 </script>
 
-<!-- The scrollable (code, label) table — the SAME rendering for the detail
-     mode and a list row's inline expansion (#310). Height-constrained: LISA
-     value sets can be hundreds of codes. -->
+<!-- The (code, label) viewer — the SAME rendering for the detail mode and a
+     list row's inline expansion (#310). The shared CodeList (#638 PR3): a
+     variable value set is a code→label set, identical to a classification's
+     codes, so it renders through the unified viewer (which owns the
+     size-dependent filter + the height-constrained scroll). -->
 {#snippet valueSetTable(valueSet: NonNullable<VariableStateModel["value_set"]>)}
-  <div class="value-set-scroll">
-    <table class="value-set">
-      <thead>
-        <tr><th>Code</th><th>Label</th></tr>
-      </thead>
-      <tbody>
-        {#each valueSet as member (member.code)}
-          <tr>
-            <td><code>{member.code}</code></td>
-            <td>{member.label}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-  </div>
+  <CodeList
+    codes={valueSet}
+    filterLabel="Filter value set"
+    filterPlaceholder="Filter value set…"
+  />
 {/snippet}
 
 {#if states.length === 0}
@@ -275,30 +268,6 @@ function toggleExpanded(key: string): void {
   }
   .vs-heading {
     margin: 0.5rem 0 0.4rem;
-  }
-  .value-set-scroll {
-    max-height: 18rem;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-  }
-  table.value-set {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-  }
-  table.value-set th {
-    position: sticky;
-    top: 0;
-    background: var(--surface);
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    padding: 0.35rem 0.6rem;
-  }
-  table.value-set td {
-    padding: 0.3rem 0.6rem;
-    border-bottom: 1px solid #eee;
-    vertical-align: top;
   }
   .picker {
     border: 1px solid var(--border);

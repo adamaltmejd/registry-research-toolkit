@@ -177,7 +177,10 @@ render (#609): `codes` (`list[ClassificationCodeModel]`, mapped 1:1 from
 (`list[ConceptGroupModel]`, mapped 1:1 from `Catalog.classification_dimensions` — the
 curated umbrella group(s) the edition belongs to, reading
 `concept_group_classification`; omitted when empty). The SPA renders these as a
-filterable code/label panel and a granularity cross-reference panel respectively.
+code/label panel (shared `CodeList` viewer — the same component used for the variable
+value set, with a size-dependent filter: the search box appears only when the set
+reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets; #638) and a granularity
+cross-reference panel respectively.
 
 **Variable succession is embedded too (#582).** The binding leaf node carries the **full
 variable succession chain** inline as `succession_chain` (`list[VariableEditionModel]`,

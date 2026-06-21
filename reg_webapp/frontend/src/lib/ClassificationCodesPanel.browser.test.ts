@@ -76,11 +76,15 @@ describe("ClassificationCodesPanel — embedded value-set codes (#609)", () => {
   });
 
   it("filters in-memory by code or label substring", async () => {
+    // The shared CodeList (#638 PR3) shows the filter only at >= 5 codes, so the
+    // fixture carries five for the filter to be present.
     await render(ClassificationCodesPanel, {
       node: node([
         code({ code: "1", label: "Förgymnasial" }),
         code({ code: "3", label: "Eftergymnasial utbildning" }),
         code({ code: "5", label: "Forskarutbildning" }),
+        code({ code: "7", label: "Gymnasial" }),
+        code({ code: "9", label: "Övrig utbildning" }),
       ]),
     });
     const input = page.getByRole("textbox", { name: "Filter codes" });
@@ -92,13 +96,20 @@ describe("ClassificationCodesPanel — embedded value-set codes (#609)", () => {
     await expect
       .element(page.getByText("Förgymnasial"))
       .not.toBeInTheDocument();
-    // The filter count surfaces "1 of 3".
-    await expect.element(page.getByText("1 of 3")).toBeVisible();
+    // The filter count surfaces "1 of 5".
+    await expect.element(page.getByText("1 of 5")).toBeVisible();
   });
 
   it("shows a no-match message when the filter excludes every code", async () => {
+    // >= 5 codes so the filter box is present (the size-dependent threshold).
     await render(ClassificationCodesPanel, {
-      node: node([code({ code: "1", label: "Förgymnasial" })]),
+      node: node([
+        code({ code: "1", label: "Förgymnasial" }),
+        code({ code: "3", label: "Eftergymnasial" }),
+        code({ code: "5", label: "Forskarutbildning" }),
+        code({ code: "7", label: "Gymnasial" }),
+        code({ code: "9", label: "Övrig" }),
+      ]),
     });
     await page.getByRole("textbox", { name: "Filter codes" }).fill("zzz");
     await expect.element(page.getByText("No codes match “zzz”.")).toBeVisible();
