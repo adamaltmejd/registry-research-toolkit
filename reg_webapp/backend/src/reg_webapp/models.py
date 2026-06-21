@@ -623,16 +623,16 @@ class ConceptGroupNode(BaseModel):
 # The catch-all `/api/catalog/{fqid:path}` returns one of these, discriminated
 # by `kind` so the codegen'd TS is a tagged union (A5.3). A binding leaf is a
 # `BindingNode` (full record embedded); a classification leaf a
-# `ClassificationNode`. `ConceptGroupNode` is the group SUBJECT (#617), returned
-# by the fixed-shape `/catalog/group/...` route — folded into the union so the SPA
-# renders it through the same `kind`-switch as the other browse nodes.
+# `ClassificationNode`. `ConceptGroupNode` is deliberately NOT an arm: the group
+# SUBJECT (#617) is served ONLY by the fixed-shape `/catalog/group/...` route
+# (which declares `response_model=ConceptGroupNode` directly), never by the
+# catch-all — so this union advertises exactly the kinds the catch-all can return.
 CatalogNode = Annotated[
     ProviderResponse
     | RegisterResponse
     | BindingNode
     | ClassificationRootResponse
-    | ClassificationNode
-    | ConceptGroupNode,
+    | ClassificationNode,
     Field(discriminator="kind"),
 ]
 

@@ -3181,7 +3181,6 @@
                           "binding": "#/components/schemas/BindingNode",
                           "classification": "#/components/schemas/ClassificationNode",
                           "classification-root": "#/components/schemas/ClassificationRootResponse",
-                          "concept-group": "#/components/schemas/ConceptGroupNode",
                           "provider": "#/components/schemas/ProviderResponse",
                           "register": "#/components/schemas/RegisterResponse"
                         },
@@ -3202,9 +3201,6 @@
                         },
                         {
                           "$ref": "#/components/schemas/ClassificationNode"
-                        },
-                        {
-                          "$ref": "#/components/schemas/ConceptGroupNode"
                         }
                       ]
                     },

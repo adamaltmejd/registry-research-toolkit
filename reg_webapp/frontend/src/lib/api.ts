@@ -200,16 +200,16 @@ export type RootResponse = Schemas["RootResponse"];
 export type VariantsResponse = Schemas["VariantsResponse"];
 
 /** The discriminated browse union the catch-all returns WITHOUT `?period`
- * (A5.3a). Each arm carries a `kind` literal. `ConceptGroupNode` (#617) is the
- * group SUBJECT returned by the FIXED `/catalog/group/...` route (not the
- * catch-all) — it's in the union so the same `kind`-switch renders it. */
+ * (A5.3a). Each arm carries a `kind` literal. `ConceptGroupNode` (#617) is NOT
+ * an arm: the group SUBJECT is served ONLY by the FIXED `/catalog/group/...`
+ * route (its own response type, `ConceptGroupNodeData`), never by the catch-all,
+ * so this union advertises exactly the kinds the catch-all can return. */
 export type CatalogNode =
   | Schemas["ProviderResponse"]
   | Schemas["RegisterResponse"]
   | Schemas["BindingNode"]
   | Schemas["ClassificationRootResponse"]
-  | Schemas["ClassificationNode"]
-  | Schemas["ConceptGroupNode"];
+  | Schemas["ClassificationNode"];
 
 /** A binding child under a register node — a thin (fqid, name) entry, NOT the
  * embedded longitudinal record (that lives on the binding LEAF, `BindingNode`). */
@@ -242,9 +242,10 @@ export type ConceptGroupMember = Schemas["ConceptGroupMemberModel"];
 
 /** The concept group as a browsable SUBJECT (#617), returned by the fixed
  * `/catalog/group/<provider>/<register>/<key>` route — group identity +
- * members WITH per-member coverage + the echoed `?member=` focus hint. A
- * `kind: "concept-group"` arm of `CatalogNode`. Distinct from the
- * presentation-only `ConceptGroup` folded into a register listing. */
+ * members WITH per-member coverage + the echoed `?member=` focus hint. This is
+ * the group route's OWN response type, NOT an arm of the catch-all `CatalogNode`
+ * union. Distinct from the presentation-only `ConceptGroup` folded into a
+ * register listing. */
 export type ConceptGroupNodeData = Schemas["ConceptGroupNode"];
 /** A member on the group SUBJECT node — the browse member plus its per-variable
  * study-window `coverage` (null for a stateless member). */
