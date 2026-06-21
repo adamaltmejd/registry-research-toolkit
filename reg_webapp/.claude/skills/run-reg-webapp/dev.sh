@@ -29,7 +29,11 @@ frontend_port=${FRONTEND_PORT:-$(freeport)}
 
 pids=()
 cleanup() {
-	for p in "${pids[@]}"; do kill "$p" 2>/dev/null; done
+	# Guard the expansion: `"${pids[@]}"` on an empty array under `set -u` errors
+	# on bash 3.2 (macOS system bash) if a signal lands before the servers start.
+	if [ ${#pids[@]} -gt 0 ]; then
+		for p in "${pids[@]}"; do kill "$p" 2>/dev/null; done
+	fi
 }
 trap cleanup INT TERM EXIT
 
