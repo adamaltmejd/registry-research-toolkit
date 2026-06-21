@@ -6,20 +6,22 @@
 // runtime layer (`window.svelte.ts`); this component is pure presentation so
 // it's unit-testable in isolation (props in, callbacks out, no store import).
 //
-// Implementation: two overlaid native `<input type="range">` thumbs (one "from",
-// one "to"). Native ranges give us real `slider` ARIA roles + keyboard support
-// for free; we clamp so the thumbs can't cross (from <= to). When no window is
-// set, the thumbs seed at the full [min, max] span (a no-op visual default) and
-// the readout shows "full history" until the user moves a thumb.
+// Implementation: the shared DualThumbTrack primitive (#632) draws the two
+// overlaid native `<input type="range">` thumbs (real `slider` ARIA + keyboard,
+// clamped non-crossing); this component layers the readout, the `.fill`, and the
+// clear control on top. When no window is set, the thumbs seed at the full
+// [min, max] span (a no-op visual default) and the readout shows "full history"
+// until the user moves a thumb.
 //
 // COMMIT-ON-RELEASE (#629 item 2): the thumbs/readout update LIVE on each native
-// `input` tick (the local `from`/`to` $state below — smooth dragging), but we
-// only COMMIT out via `onchange` on the native `change` event (pointer release /
-// keyboard commit). The header writes the window store on `onchange`, so a drag
-// is one store write (one draft clone + autosave / one localStorage write), not
-// one per tick.
+// `input` tick (the bound `from`/`to` below — smooth dragging), but we only
+// COMMIT out via `onchange` on the primitive's `onCommit` (native `change`:
+// pointer release / keyboard commit). The header writes the window store on
+// `onchange`, so a drag is one store write (one draft clone + autosave / one
+// localStorage write), not one per tick.
 
 import { untrack } from "svelte";
+import DualThumbTrack from "./DualThumbTrack.svelte";
 import type { StudyWindow } from "./project_data";
 
 interface Props {
@@ -39,23 +41,21 @@ interface Props {
 }
 let { min, max, window: active, onchange, onclear }: Props = $props();
 
-function clamp(year: number, lo: number, hi: number): number {
-  return Math.min(hi, Math.max(lo, year));
-}
+// The live thumb values, owned/clamped/re-synced by the DualThumbTrack primitive
+// and bound back here so the readout + fill geometry react to them. The initial
+// value is a one-shot placeholder (`untrack` — the primitive seeds the real value
+// from `selection` via `bind:` and owns the re-sync); the $derived `selection`
+// below is the tracked source.
+let from = $state(untrack(() => active?.from ?? min));
+let to = $state(untrack(() => active?.to ?? max));
 
-// The thumbs seed from the active window, or the full span when none is set.
-// Local buffer so dragging is smooth; the source of truth stays the `window`
-// prop. `untrack` keeps this seed read out of the reactive graph so it's a
-// one-shot initializer, not a tracked dependency — the $effect below owns
-// re-seeding on prop change (a controlled-component re-sync, see below).
-let from = $state(untrack(() => clamp(active?.from ?? min, min, max)));
-let to = $state(untrack(() => clamp(active?.to ?? max, min, max)));
-// Re-seed the buffer whenever the active window (or bounds) changes — keeps the
-// thumbs in sync when the window is set elsewhere (a project opens, the picker
-// writes it). Reading `active`/`min`/`max` here registers the dependency.
-$effect(() => {
-  from = clamp(active?.from ?? min, min, max);
-  to = clamp(active?.to ?? max, min, max);
+// The source the primitive seeds + re-syncs the thumbs from: the active window,
+// or the full span when none is set (a no-op visual default). Tracking `active`
+// here keeps the thumbs in sync when the window is set elsewhere (a project
+// opens, the picker writes it).
+const selection = $derived({
+  from: active?.from ?? min,
+  to: active?.to ?? max,
 });
 
 // Whether the current thumbs cover the FULL bounds and no window is set — the
@@ -63,24 +63,6 @@ $effect(() => {
 // window means the user hasn't narrowed anything).
 const isFullHistory = $derived(active === null && from === min && to === max);
 
-// LIVE display on each `input` tick: update the local thumb buffer only (smooth
-// drag, no commit). The clamp keeps the thumbs from crossing.
-function onFromInput(event: Event): void {
-  const v = clamp(
-    Number((event.currentTarget as HTMLInputElement).value),
-    min,
-    max,
-  );
-  from = Math.min(v, to); // never cross past `to`
-}
-function onToInput(event: Event): void {
-  const v = clamp(
-    Number((event.currentTarget as HTMLInputElement).value),
-    min,
-    max,
-  );
-  to = Math.max(v, from);
-}
 // COMMIT on `change` (pointer release / keyboard commit): emit the buffered
 // window once. `from`/`to` already hold the clamped live values from `input`.
 function onCommit(): void {
@@ -88,7 +70,8 @@ function onCommit(): void {
 }
 
 // The highlighted span between the thumbs, as left/width percentages of the
-// track, for the visual fill.
+// track, for the visual fill (plain max−min geometry — distinct from the
+// PeriodWindowSlider's year-as-cell model).
 const span = $derived(max - min || 1);
 const fillLeft = $derived(((from - min) / span) * 100);
 const fillWidth = $derived(((to - from) / span) * 100);
@@ -102,38 +85,13 @@ const fillWidth = $derived(((to - from) / span) * 100);
       {from}–{to}
     {/if}
   </span>
-  <div class="track">
-    <div
-      class="fill"
-      style="left: {fillLeft}%; width: {fillWidth}%;"
-    ></div>
-    <!-- Two overlaid thumbs. Each is a real range input (slider role); the
-         `from` thumb sits above so it stays grabbable when the two coincide.
-         `oninput` updates the LIVE thumb buffer; `onchange` COMMITS on release
-         (#629 item 2). -->
-    <input
-      class="thumb thumb-from"
-      type="range"
-      {min}
-      {max}
-      step="1"
-      value={from}
-      aria-label="From year"
-      oninput={onFromInput}
-      onchange={onCommit}
-    />
-    <input
-      class="thumb thumb-to"
-      type="range"
-      {min}
-      {max}
-      step="1"
-      value={to}
-      aria-label="To year"
-      oninput={onToInput}
-      onchange={onCommit}
-    />
-  </div>
+  <!-- The shared dual-thumb track (#632). `onCommit` (native `change`) is the
+       COMMIT (#629 item 2) — no `onLiveInput`, so a drag updates only the bound
+       `from`/`to` (live readout/fill) and commits once on release. The `.fill`
+       is this slider's own decoration, drawn inside the track behind the thumbs. -->
+  <DualThumbTrack {min} {max} {selection} bind:from bind:to {onCommit}>
+    <div class="fill" style="left: {fillLeft}%; width: {fillWidth}%;"></div>
+  </DualThumbTrack>
   <!-- Clear control (#629 item 1): an explicit reset to full history — the only
        way back to a `null` window once dragged (a moved slider always expresses
        an explicit span). Hidden when already at full history so it's not a no-op. -->
@@ -192,23 +150,16 @@ const fillWidth = $derived(((to - from) / span) * 100);
     outline: 2px solid var(--accent);
     outline-offset: 1px;
   }
-  .track {
-    position: relative;
-    width: 9rem;
-    height: 1.25rem;
+  /* The dual-thumb track is the shared DualThumbTrack primitive; this slider only
+     fixes its WIDTH (the header chip is a fixed 9rem) — track height, rail, and
+     thumb size keep the primitive's defaults (1.25rem / 3px / 0.85rem). The var
+     inherits into the primitive's `.track`. */
+  .year-window :global(.track) {
+    --track-width: 9rem;
   }
-  .track::before {
-    /* The base rail. */
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 3px;
-    border-radius: 3px;
-    background: var(--border);
-  }
+  /* The selected-span fill — this slider's own in-track decoration (plain max−min
+     geometry), drawn behind the primitive's thumbs. The native rail is hidden by
+     the primitive, so the `.track::before` rail + this fill show through. */
   .fill {
     position: absolute;
     top: 50%;
@@ -216,51 +167,5 @@ const fillWidth = $derived(((to - from) / span) * 100);
     height: 3px;
     border-radius: 3px;
     background: var(--accent);
-  }
-  /* Both range inputs stack on the same track; only their thumbs are visible
-     (the native rail is hidden so our `.track::before` + `.fill` show through).
-     `pointer-events: none` on the input lets clicks reach whichever thumb is
-     under the cursor; the thumbs re-enable pointer events. */
-  .thumb {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    background: none;
-    pointer-events: none;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  .thumb-from {
-    /* Above the `to` thumb so a coincident pair stays draggable apart. */
-    z-index: 2;
-  }
-  .thumb::-webkit-slider-runnable-track {
-    background: none;
-  }
-  .thumb::-moz-range-track {
-    background: none;
-  }
-  .thumb::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    pointer-events: auto;
-    width: 0.85rem;
-    height: 0.85rem;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--surface);
-    cursor: pointer;
-  }
-  .thumb::-moz-range-thumb {
-    pointer-events: auto;
-    width: 0.85rem;
-    height: 0.85rem;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--surface);
-    cursor: pointer;
   }
 </style>
