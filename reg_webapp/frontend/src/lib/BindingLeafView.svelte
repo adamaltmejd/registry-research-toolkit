@@ -25,6 +25,7 @@ import { regMetaReleaseTag } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
+import SubjectView from "./SubjectView.svelte";
 import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
@@ -271,10 +272,11 @@ const repSegment = $derived(
 );
 </script>
 
-<article>
-  <h2>{node.name ?? node.fqid}</h2>
-  <p class="fqid"><code>{node.fqid}</code></p>
-
+<!-- #638 PR1: the binding leaf renders through the unified SubjectView shell. The
+     `<script>` logic is unchanged — only the markup moves into the shell's section
+     snippets (description / picker / value set / relationships / docs), passed in
+     the canonical order the shell renders. -->
+{#snippet description()}
   {#if node.via_same_as && node.via_same_as.length > 0}
     <p class="muted via">
       Resolved via <code>same_as</code>: {node.via_same_as.join(" → ")}
@@ -299,7 +301,9 @@ const repSegment = $derived(
     <dt>Identifier</dt>
     <dd>{node.is_identifier ? "yes" : "no"}</dd>
   </dl>
+{/snippet}
 
+{#snippet picker()}
   <!-- #615: the period picker seeds from the global project window (windowStore)
        and shows the subject's coverage track. PRECEDENCE `?period` > window >
        full history is resolved inside the picker; submit/clear flow through the
@@ -439,7 +443,9 @@ const repSegment = $derived(
          Surface it inline (the picker stays usable) rather than blanking. -->
     <p class="error inline-error" role="alert">{narrowedError}</p>
   {/if}
+{/snippet}
 
+{#snippet valueSet()}
   <section aria-labelledby="states-heading">
     <h3 id="states-heading">
       <!-- A #307 comma list reads as segments joined with "+" (the union the
@@ -462,7 +468,9 @@ const repSegment = $derived(
       <p class="muted" aria-busy="true">Loading states…</p>
     {/if}
   </section>
+{/snippet}
 
+{#snippet relationships()}
   <!-- #489: the concept-group dimensions this variable belongs to (the "pick your
        variant" facet groups). A SIBLING of LineagePanels — a separate component
        over a separate fetch (its own failure domain; a dimensions error never
@@ -470,18 +478,26 @@ const repSegment = $derived(
   <DimensionsPanel {fqidPath} />
 
   <LineagePanels {fqidPath} {node} />
+{/snippet}
 
+{#snippet docs()}
   <!-- #402: "Mentioned in documentation" — a SIBLING of the lineage panels,
        deliberately a separate component over a separate optional DB (its own
        failure domain; a docs error/timeout/absent-index never blanks the leaf). -->
   <DocMentionsPanel {node} />
-</article>
+{/snippet}
+
+<SubjectView
+  title={node.name ?? node.fqid}
+  fqid={node.fqid}
+  {description}
+  {picker}
+  {valueSet}
+  {relationships}
+  {docs}
+/>
 
 <style>
-  .fqid {
-    margin-top: -0.25rem;
-    color: var(--muted);
-  }
   .via code {
     font-size: 0.9em;
   }
