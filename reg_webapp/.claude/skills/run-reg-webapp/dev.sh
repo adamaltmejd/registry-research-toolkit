@@ -53,13 +53,16 @@ pids+=($!)
 # bail early if either child has already exited.
 ready=""
 for _ in $(seq 1 30); do
+	# OUR servers must be the ones answering. A pinned port already held by another
+	# reg_webapp instance would return 200 even though our uvicorn failed to bind
+	# (and exited) — so confirm our pids are alive BEFORE trusting a 200.
+	if ! kill -0 "${pids[0]}" 2>/dev/null || ! kill -0 "${pids[1]}" 2>/dev/null; then
+		break # a server exited (e.g. a pinned port already in use) — fail fast
+	fi
 	if curl -sf -o /dev/null "http://localhost:$backend_port/api/context" 2>/dev/null &&
 		curl -sf -o /dev/null "http://localhost:$frontend_port/" 2>/dev/null; then
 		ready=1
 		break
-	fi
-	if ! kill -0 "${pids[0]}" 2>/dev/null || ! kill -0 "${pids[1]}" 2>/dev/null; then
-		break # a server died during startup
 	fi
 	sleep 1
 done
