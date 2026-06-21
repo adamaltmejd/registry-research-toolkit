@@ -454,6 +454,69 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2000..2010");
   });
 
+  it("LEADING gap is suppressed at the picker level (no ?period, no window → hasSelection:false, #639)", async () => {
+    // The #639 entry condition: period null + window null + finite coverage
+    // 1995–2008. With no selection, activeYearSelection is null → hasSelection
+    // is false, so the leading 1960–1994 span below coverage must NOT gap as
+    // "Not delivered before 1995" (the user never chose the full-history span).
+    // No note, no gap cells.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    expect(screen.container.querySelectorAll(".gap").length).toBe(0);
+  });
+
+  it("a live drag from the full-history default fires the availability gap before Apply (#639 follow-up)", async () => {
+    // #639 follow-up (Codex P2): the no-?period / no-window default suppresses the
+    // gap (activeYearSelection null → hasSelection false). But a live thumb DRAG is
+    // a real selection even before Apply — the picker now also treats a non-null
+    // `sliderWire` as a selection, so dragging the default [1960, 2008] span into a
+    // pre-coverage span surfaces the not-delivered feedback during the drag.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // Before the drag: the suppressed default → no gap.
+    await expect
+      .element(screen.getByText(/Not delivered/))
+      .not.toBeInTheDocument();
+    // Drag the To thumb back to 1980 → the selection [1960, 1980] sits entirely
+    // before coverage start (1995) → "Not delivered before 1995" fires NOW, not
+    // only after Apply.
+    await screen.getByRole("slider", { name: "To year" }).fill("1980");
+    await expect
+      .element(screen.getByText(/Not delivered before 1995/))
+      .toBeVisible();
+    expect(screen.container.querySelectorAll(".gap").length).toBe(1);
+  });
+
+  it("a window makes the leading gap fire (window set → hasSelection:true, #639)", async () => {
+    // Complement: a project window 1960–2008 makes activeYearSelection non-null
+    // → hasSelection:true, so the leading 1960–1994 span below coverage
+    // (1995–2008) fires "Not delivered before 1995" at the picker level. Locks
+    // the #639 suppression as conditional on a real selection, not a removal.
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 1960, to: 2008 } as StudyWindow,
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered before 1995/))
+      .toBeVisible();
+  });
+
   it("no window set: the availability note softens (no amber deviation) + a 'set a window' hint shows", async () => {
     const screen = await render(PeriodPicker, {
       period: "2005..2012",
