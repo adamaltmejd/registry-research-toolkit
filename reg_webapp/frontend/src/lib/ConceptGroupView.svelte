@@ -3,6 +3,7 @@ import { type ConceptGroupNodeMember, getConceptGroup } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, formatWindow, OPEN_ENDED_VALID_TO } from "./catalog";
 import { router } from "./router.svelte";
+import SubjectView from "./SubjectView.svelte";
 
 // The concept-group SUBJECT page (#617): fetches a group by (provider, register,
 // key) and renders its members + facets + per-member coverage. A group's default
@@ -10,12 +11,14 @@ import { router } from "./router.svelte";
 // has its own address (`/catalog/group/<p>/<r>/<key>`), distinct from the FQID
 // browse path that CatalogNodeView serves.
 //
-// MINIMAL render by design: the full unified SubjectView (5 sections) and
-// browse-row routing into it are OUT of scope here (deferred to the SubjectView
-// work, epic #611). This page just makes the group browsable — label + members +
-// facets + coverage — reusing the member-link shape from ConceptGroupRow rather
-// than the folded <details> (the user navigated TO the group, so members show
-// expanded).
+// Renders through the unified SubjectView shell (#638 PR1), same as the binding +
+// classification leaves. A group fills only two of the shell's sections — the meta
+// `description` (key/source + facets) and the members list as `relationships`; it
+// has no single fqid (its key shows inside the meta), no period picker, no value
+// set, and no docs, so those sections are omitted. The member rows reuse the
+// member-link shape from ConceptGroupRow rather than the folded <details> (the user
+// navigated TO the group, so members show expanded). The breadcrumbs + loading /
+// error arms stay OUTSIDE the shell (the shell is the success-arm body only).
 let {
   provider,
   register,
@@ -85,8 +88,7 @@ function coverageText(member: ConceptGroupNodeMember): string {
     {/if}
   </p>
 {:else if node}
-  <article>
-    <h2>{node.label}</h2>
+  {#snippet description()}
     <dl class="meta">
       <dt>Group</dt>
       <dd><code>{node.key}</code> · {node.source}</dd>
@@ -95,6 +97,9 @@ function coverageText(member: ConceptGroupNodeMember): string {
         <dd>{node.axes.join(", ")}</dd>
       {/if}
     </dl>
+  {/snippet}
+
+  {#snippet relationships()}
     <h3>Members</h3>
     <ul class="members">
       {#each node.members as member (member.fqid)}
@@ -113,7 +118,9 @@ function coverageText(member: ConceptGroupNodeMember): string {
         </li>
       {/each}
     </ul>
-  </article>
+  {/snippet}
+
+  <SubjectView title={node.label} {description} {relationships} />
 {/if}
 
 <style>
