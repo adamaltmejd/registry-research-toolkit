@@ -37,64 +37,42 @@ contract change (`bun run gen:types`; CI pins drift).
 
 ## Run
 
-**Quickest — `dev.sh` (works in any checkout, including worktrees):**
+**Visual verification (agents) — one-shot driver modes.** `dev.sh smoke` / `dev.sh shot`
+pick free ports, run the Playwright driver against them, and **tear both servers down on
+exit** — no port collisions, no leaked dev servers. This is the path the PR pipeline's
+visual-verification step uses; exit status is the driver's:
 
 ```sh
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh
-```
-
-Picks free backend + frontend ports, points the Vite `/api` proxy at the backend
-(`REG_WEBAPP_BACKEND_URL`), starts both from THIS checkout's `.venv`, and prints the
-URLs; Ctrl-C stops both. Ports are automatic, so two checkouts (parallel worktrees / PR
-lanes) never collide — no manual port juggling. Pin them with
-`BACKEND_PORT=… FRONTEND_PORT=…` when you need to know them up front (e.g. to script the
-driver against a fixed `REG_WEBAPP_DEV_URL`).
-
-**Manual (full control / background driving), from the repo root:**
-
-```sh
-uv run uvicorn reg_webapp.app:create_app --factory --port 8000 &
-(cd reg_webapp/frontend && bun run dev) &
-```
-
-Wait a few seconds, then confirm all three hops before driving anything:
-
-```sh
-curl -s http://localhost:8000/api/context | head -c 120   # backend boots + DB found
-curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/            # vite
-curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/api/context # proxy
-```
-
-Then drive the SPA with the Playwright driver — run it **from `reg_webapp/frontend/`**
-(it resolves `playwright` from the CWD's `node_modules`). The driver defaults to
-`:5173`, so if you launched via `dev.sh` (random port) prefix it with
-`REG_WEBAPP_DEV_URL=<the printed frontend URL>`:
-
-```sh
-cd reg_webapp/frontend
-bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
-# dev.sh port: REG_WEBAPP_DEV_URL=http://localhost:<F> bun ../.claude/skills/run-reg-webapp/driver.mjs smoke
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh smoke                   # full smoke flow
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot /catalog/scb/lisa  # specific route(s)
 ```
 
 `smoke` loads `/catalog`, clicks provider → register → variable, fills the period input
 with `2022` and clicks **Apply** (expects "narrowed to 2022"), then cold-reloads the
 deep link. Screenshots land in `/tmp/reg-webapp-shots/` (`01-root` …
-`05-deep-link-reload`) — **look at them**. Other commands:
+`05-deep-link-reload`; `shot` writes `_<route>.png`) — **look at them**.
+
+**Interactive (humans).** `dev.sh` with no args starts the same auto-free-port servers
+and stays up until Ctrl-C (which tears both down). It prints the URLs — open the
+frontend in a browser, backend API docs at `<backend>/docs`. Ports are automatic, so
+parallel worktrees / lanes never collide; pin with `BACKEND_PORT=… FRONTEND_PORT=…` if
+needed.
 
 ```sh
-bun ../.claude/skills/run-reg-webapp/driver.mjs shot /catalog/scb/lisa
-bun ../.claude/skills/run-reg-webapp/driver.mjs eval / "document.title"
+bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh
 ```
 
-Stop the servers when done:
+**Manual (escape hatch).** Only when you need long-lived background servers for custom
+driving — fixed ports, and **you** must tear down (prefer the modes above, which do it
+for you):
 
 ```sh
-lsof -ti :8000 -ti :5173 | xargs kill
+uv run uvicorn reg_webapp.app:create_app --factory --port 8000 &
+(cd reg_webapp/frontend && bun run dev) &
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:5173/api/context  # 200 ⇒ proxy ok
+(cd reg_webapp/frontend && bun ../.claude/skills/run-reg-webapp/driver.mjs eval / "document.title")
+lsof -ti :8000 -ti :5173 | xargs kill   # don't forget this
 ```
-
-**Human path:** instead of driving via Playwright, just open the frontend in a browser —
-`http://localhost:5173/` for the manual path above, or the port `dev.sh` printed
-(backend API docs at `<backend>/docs`).
 
 ## Parallel instances (concurrent worktrees / PR lanes)
 

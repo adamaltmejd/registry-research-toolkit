@@ -46,15 +46,13 @@ the lead runs the authoritative union Verify on the assembled result.
      `bun run gen:types` (no-diff unless the backend schema intentionally changed — if
      it did, regenerate openapi then `bun run gen:types` and report the regenerated
      types among your touched files). These are **headless — they never render a
-     pixel.** If your change alters rendered output, eyeball it in the running app:
-     `preview_snapshot` / `preview_screenshot` the changed views, check
-     `preview_console_logs`, exercise changed interactions (`preview_click` /
-     `preview_fill`); report the screenshot to the lead. Two caveats: in a **worktree**,
-     `preview_start` / `.claude/launch.json` serve *main's* code — launch via the
-     worktree-local `.venv` instead (run-reg-webapp → "Verifying from a git worktree");
-     and if you're **one of several parallel implementers**, do NOT start the dev
-     servers (fixed ports 8000/5173 collide) — flag that the change needs rendering and
-     the lead renders the assembled tree.
+     pixel.** If your change alters rendered output, render it with the one-shot driver:
+     `reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <changed-route>` (or
+     `dev.sh smoke` for the catalog flow). It uses free ports + the checkout's own
+     `.venv` and tears the servers down on exit — so it's worktree-correct and safe even
+     under parallel fan-out (no fixed-port collisions, no leaked servers). **Look at**
+     the screenshots in `/tmp/reg-webapp-shots/` and report them to the lead (who owns
+     the authoritative render on the assembled tree).
 4. **End your turn with** a short summary (what changed and why) and **the exact list of
    files you touched** — this is your report to the lead. Do NOT run git — no `add` /
    `commit` / `push`; the lead stages, commits, and opens the PR. You never commit,

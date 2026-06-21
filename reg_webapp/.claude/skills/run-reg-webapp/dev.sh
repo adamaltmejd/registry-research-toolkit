@@ -1,13 +1,47 @@
 #!/usr/bin/env bash
-# Launch the reg_webapp dev servers on auto-selected FREE ports — works in any
+# Run the reg_webapp dev servers on auto-selected FREE ports — works in any
 # checkout (main or git worktree) with no port collisions. Picks a free backend
-# port and frontend port, points the Vite /api proxy at the backend via
+# and frontend port, points the Vite /api proxy at the backend via
 # REG_WEBAPP_BACKEND_URL, and starts both from THIS checkout's .venv (so a
-# worktree serves its own code, not main's). Ctrl-C stops both.
+# worktree serves its own code, not main's).
 #
-# Ports are automatic: run two of these (two worktrees / lanes) and they won't
-# collide. Pin them by exporting BACKEND_PORT / FRONTEND_PORT.
+# Modes:
+#   dev.sh                 interactive — start both servers and block (Ctrl-C stops).
+#   dev.sh smoke           ONE-SHOT — start, run the Playwright driver `smoke`, tear
+#                          down, exit with the driver's status. For agent visual
+#                          verification: random ports + guaranteed cleanup, so it
+#                          never collides and never leaks a server.
+#   dev.sh shot <route>... ONE-SHOT — screenshot each route, tear down, exit.
+#
+# Ports are automatic (two of these never collide); pin with BACKEND_PORT /
+# FRONTEND_PORT if you need to know them up front.
 set -uo pipefail
+# Job control so each background server runs in its OWN process group — lets
+# cleanup() kill the WHOLE tree (the frontend subshell AND the bun→vite grandchild
+# it spawns), not just the direct child. Without this, vite leaks on teardown.
+set -m
+
+mode=serve
+case "${1:-}" in
+smoke)
+	mode=smoke
+	shift
+	;;
+shot)
+	mode=shot
+	shift
+	;;
+"") mode=serve ;;
+*)
+	echo "usage: dev.sh [smoke | shot <route>...]" >&2
+	exit 2
+	;;
+esac
+
+if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
+	echo "dev: 'shot' needs at least one route, e.g. dev.sh shot /catalog/scb/lisa" >&2
+	exit 2 # validate before booting servers
+fi
 
 root=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
 cd "$root" || exit 1
@@ -31,10 +65,14 @@ pids=()
 cleanup() {
 	# Guard the expansion: `"${pids[@]}"` on an empty array under `set -u` errors
 	# on bash 3.2 (macOS system bash) if a signal lands before the servers start.
+	# `kill -- -PID` signals the job's whole PROCESS GROUP (set -m above), so the
+	# frontend subshell's bun→vite grandchild dies too — no leaked dev server.
 	if [ ${#pids[@]} -gt 0 ]; then
-		for p in "${pids[@]}"; do kill "$p" 2>/dev/null; done
+		for p in "${pids[@]}"; do kill -- -"$p" 2>/dev/null; done
 	fi
 }
+# Tear both servers down on ANY exit — including the one-shot smoke/shot paths, so
+# they never leak a dev server (the failure mode that motivated this mode).
 trap cleanup INT TERM EXIT
 
 # .venv/bin/uvicorn (not `uv run`) binds THIS checkout's venv directly.
@@ -71,11 +109,32 @@ if [ -z "$ready" ]; then
 	exit 1 # the EXIT trap tears down whatever did come up
 fi
 
-printf 'reg_webapp dev (Ctrl-C to stop):\n  backend : http://localhost:%s\n  frontend: http://localhost:%s\n  driver  : REG_WEBAPP_DEV_URL=http://localhost:%s\n' \
-	"$backend_port" "$frontend_port" "$frontend_port"
+dev_url="http://localhost:$frontend_port"
 
-# Steady state: block until Ctrl-C (INT trap -> nonzero) or a server exits. A bare
-# `wait` is fine here — startup already succeeded; a later single-server crash is a
-# rare dev event you'll see and Ctrl-C. (`wait -n` would fail-fast but isn't in
-# bash 3.2.)
-wait
+case "$mode" in
+smoke)
+	# One-shot: drive the smoke flow against OUR frontend, then the EXIT trap tears
+	# both servers down (no leak). Exit status is the driver's.
+	echo "dev: smoke on $dev_url (auto-teardown on exit)" >&2
+	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
+		bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)
+	exit $?
+	;;
+shot)
+	echo "dev: shot $* on $dev_url (auto-teardown on exit)" >&2
+	rc=0
+	for route in "$@"; do
+		(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
+			bun ../.claude/skills/run-reg-webapp/driver.mjs shot "$route") || rc=$?
+	done
+	exit "$rc"
+	;;
+serve)
+	printf 'reg_webapp dev (Ctrl-C to stop):\n  backend : http://localhost:%s\n  frontend: %s\n  driver  : REG_WEBAPP_DEV_URL=%s\n' \
+		"$backend_port" "$dev_url" "$dev_url"
+	# Steady state: block until Ctrl-C (INT trap -> nonzero) or a server exits. A
+	# bare `wait` is fine — startup already succeeded; a later single-server crash
+	# is a rare dev event you'll see and Ctrl-C. (`wait -n` isn't in bash 3.2.)
+	wait
+	;;
+esac
