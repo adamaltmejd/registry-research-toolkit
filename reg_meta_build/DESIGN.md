@@ -2066,6 +2066,15 @@ already-grouped member:
      are intentionally excluded — they are temporal predecessors of each dimension and
      belong in `classification_replaced_by` (#571), not in the umbrella group.
 
+Every `group_key` — whether derived (edge: min member slug; token: stem) or curated — is
+validated URL-path-safe (`reg_meta.fqid.is_slug`) at the single `_insert_group` seam
+that writes all `concept_group` rows (#640). The same slug grammar governs the
+`/catalog/group/<provider>/<register>/<key>` route's `<key>` path slot (Starlette
+decodes `%2F` before matching, and the SPA splits on `/`, so a non-slug key would be
+unreachable). A key that fails `is_slug` aborts the build immediately
+(`curation_error("concept_group_key_not_path_safe", …)`), so the by-key addressing
+contract holds by construction.
+
 Unlike the slug TOMLs there is **no immutability/snapshot machinery**: groups are
 derived fresh every build (regenerate-not-migrate) and carry no identity. The structural
 validator (`validate.py::_check_concept_groups`) checks member-kind/register wiring and
