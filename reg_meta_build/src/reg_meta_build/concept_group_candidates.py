@@ -122,11 +122,18 @@ class CandidateResult:
     agreement (the ULF/FRIDA over-fold magnet) — and `skipped_existing_key` —
     families whose `(register, stem)` already names an edge/token concept group, so
     emitting them verbatim would collide on `idx_concept_group_key` at the next
-    build (mirrors `_derive_month_groups`' existing-key guard)."""
+    build (mirrors `_derive_month_groups`' existing-key guard) — and
+    `skipped_trim_collision` — buckets whose trailing-hyphen-trimmed stem (#645)
+    collapsed >= 2 genuinely-distinct pre-trim stems that EACH independently qualify
+    as a foldable family (`artal-person-1/2/3` + `artal-person4/5/6` → key
+    `artal-person`), skipped rather than silently merged into a single wrong group.
+    A bucket where only one raw stem qualifies and the rest are noise singletons is
+    NOT a collision — the qualifying family is kept and the noise dropped."""
 
     candidates: list[ConceptGroupCandidate]
     excluded_batteries: int
     skipped_existing_key: int
+    skipped_trim_collision: int
 
 
 @dataclass(frozen=True)
@@ -139,6 +146,49 @@ class _RawVar:
     register_slug: str
     slug: str
     name: str | None
+
+
+def _evaluate_fold(
+    members: list[tuple[str, int, _RawVar]],
+    *,
+    min_siblings: int,
+    min_label_prefix: int,
+    min_agreement: float,
+) -> list[tuple[str, int, _RawVar]] | None:
+    """Decide whether one raw-stem subgroup is a FOLDABLE family, returning its
+    members when it folds and `None` otherwise. Used ONLY by the trim-collision
+    count (Codex P2 #646): a raw-stem subgroup counts as a competing family only
+    when it would ACTUALLY FOLD (not merely meet the sibling floor), so a
+    count-qualifying battery / NULL peer can't spuriously suppress a valid family.
+    The EMIT path does NOT consume this — it re-runs the same gates on the winner
+    (round-1), keeping output byte-identical for the homogeneous case.
+
+    Gates, in order (the same pre-emit gates the emit path applies):
+    - `min_siblings` DISTINCT-suffix floor (below it the group isn't a family);
+    - NULL-name skip — any NULL member name means no labels to agree on, a
+      conservative non-fold (mirrors `_derive_month_groups`);
+    - battery gate — the case-insensitive, digit-stripped common name prefix must be
+      >= `min_label_prefix` chars AND the prefix-to-mean-name-length ratio
+      (`agreement`) >= `min_agreement`; otherwise it's a battery (a stem shared by
+      unrelated columns) and not foldable."""
+    if len({suffix for _, suffix, _ in members}) < min_siblings:
+        return None
+    names = [var.name for _, _, var in members]
+    if any(n is None for n in names):
+        return None
+    present_names = [n for n in names if n is not None]
+    # Score agreement on each member's name with ALL digit runs stripped (mirrors the
+    # emit path); the DISPLAY label is recomputed there from the RAW names.
+    stripped = [_strip_digits(n) for n in present_names]
+    # Case-insensitive prefix scores AGREEMENT only (so "Ålder"/"ålder" agree); it
+    # must NOT be sliced back onto an original name, since `casefold()` can change
+    # length (e.g. German ß → "ss").
+    ci_prefix = _common_prefix([s.casefold() for s in stripped])
+    mean_len = statistics.mean(len(s) for s in stripped)
+    agreement = len(ci_prefix) / mean_len if mean_len > 0 else 0.0
+    if not (agreement >= min_agreement and len(ci_prefix) >= min_label_prefix):
+        return None
+    return members
 
 
 def _load_ungrouped_variables(
@@ -225,17 +275,73 @@ def _load_existing_group_keys(
     }
 
 
-def _split_stem_suffix(slug: str) -> tuple[str, int] | None:
-    """`('sun-niva', 2000)` for `sun-niva2000`, or None when the slug has no
-    trailing-digit run or an empty stem (a bare `2000` slug is not a family
-    member)."""
+def _load_accepted_group_members(
+    conn: sqlite3.Connection,
+    accepted_scopes: frozenset[tuple[str, str, str]],
+) -> dict[tuple[int, str], frozenset[int]]:
+    """For each accepted auto family, the `variable_id`s of its MATERIALIZED concept
+    group, keyed by `(register_id, group_key)`. Used only by the trim-collision
+    accepted-preserve path (Codex P2 #646): when a clean key is accepted AND two raw
+    stems independently fold under it, this pins down WHICH folding subgroup is the
+    accepted family — the one whose members include the materialized accept's members
+    (the accept emitted a single raw-stem candidate, so it lands in exactly one
+    subgroup). The remaining (non-accepted) folding peer is the colliding one and is
+    dropped.
+
+    The materialized member set can be a SUBSET of the auto family (an `[[accept]]`
+    may `exclude` members), so the match is membership-containment, not equality:
+    the regenerated subgroup is the FULL auto family and contains every materialized
+    member. Empty when no accepts (then the trim-collision path is never accepted-
+    exempt and the function isn't consulted)."""
+    accepted_members: dict[tuple[int, str], frozenset[int]] = {}
+    for row in conn.execute(
+        "SELECT g.register_id, g.group_key, p.slug AS provider_slug, "
+        "r.slug AS register_slug FROM concept_group g "
+        "JOIN register r ON g.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE g.kind = 'variable'"
+    ):
+        scope = (row["provider_slug"], row["register_slug"], row["group_key"])
+        if scope not in accepted_scopes:
+            continue
+        member_ids = frozenset(
+            m["variable_id"]
+            for m in conn.execute(
+                "SELECT cgv.variable_id FROM concept_group_variable cgv "
+                "JOIN concept_group g ON cgv.group_id = g.group_id "
+                "WHERE g.kind = 'variable' AND g.register_id = ? "
+                "AND g.group_key = ?",
+                (row["register_id"], row["group_key"]),
+            )
+        )
+        accepted_members[(row["register_id"], row["group_key"])] = member_ids
+    return accepted_members
+
+
+def _split_stem_suffix(slug: str) -> tuple[str, str, int] | None:
+    """`('sun-niva', 'sun-niva', 2000)` for `sun-niva2000`, or None when the slug
+    has no trailing-digit run or an empty stem (a bare `2000` slug is not a family
+    member). Returns `(key_stem, raw_stem, suffix)`: `raw_stem` is the prefix
+    before the trailing digit run (verbatim); `key_stem` is `raw_stem` with any
+    trailing hyphen(s) trimmed.
+
+    `key_stem` doubles as the candidate's URL key (`/catalog/group/<p>/<r>/<key>`),
+    so a trailing hyphen left by the digit strip — `artal-person-1` →
+    `artal-person-`, `bha0001a-1` → `bha0001a-` — is trimmed to a clean slug
+    (#645). A stem that is hyphen-only (or empties after the trim) is degenerate:
+    return None rather than mint an empty/invalid key (the loader/`_insert_group`
+    reject an empty key anyway). `raw_stem` is kept so the caller can detect a
+    trim that collapses two genuinely-distinct stems into one key
+    (`artal-person-1` and `artal-person1` both → key `artal-person`) and skip the
+    merge instead of folding unrelated families together."""
     m = _SUFFIX_RE.match(slug)
     if m is None:
         return None
-    stem, digits = m.group(1), m.group(2)
-    if not stem:
+    raw_stem, digits = m.group(1), m.group(2)
+    key_stem = raw_stem.rstrip("-")
+    if not key_stem:
         return None
-    return stem, int(digits)
+    return key_stem, raw_stem, int(digits)
 
 
 def _propose_axis(suffixes: list[int], stem: str) -> str:
@@ -313,24 +419,109 @@ def infer_concept_group_candidates(
     deterministically by (-agreement, -member_count, register_fqid, key)."""
     variables = _load_ungrouped_variables(conn, accepted_scopes)
     existing_keys = _load_existing_group_keys(conn, accepted_scopes)
+    # Materialized member ids of each accepted family, for the trim-collision
+    # accepted-preserve path (#646). Empty unless accepts exist.
+    accepted_members = _load_accepted_group_members(conn, accepted_scopes)
 
-    # (register_id, stem) → [_RawVar]. Suffix-less slugs and bare-number slugs
-    # (empty stem) drop out — they can't be a family member.
-    families: dict[tuple[int, str], list[tuple[int, _RawVar]]] = {}
+    # (register_id, key_stem) → [(raw_stem, suffix, _RawVar)]. Suffix-less slugs
+    # and bare-number slugs (empty stem) drop out — they can't be a family member.
+    # `key_stem` is the trailing-hyphen-TRIMMED URL key (#645); `raw_stem` (the
+    # untrimmed prefix) is tracked per member so a trim that collapses two distinct
+    # stems into one key is detectable.
+    families: dict[tuple[int, str], list[tuple[str, int, _RawVar]]] = {}
     for var in variables:
         split = _split_stem_suffix(var.slug)
         if split is None:
             continue
-        stem, suffix = split
-        families.setdefault((var.register_id, stem), []).append((suffix, var))
+        key_stem, raw_stem, suffix = split
+        families.setdefault((var.register_id, key_stem), []).append(
+            (raw_stem, suffix, var)
+        )
 
     candidates: list[ConceptGroupCandidate] = []
     excluded_batteries = 0
     skipped_existing_key = 0
-    for (register_id, stem), members in families.items():
-        if len({suffix for suffix, _ in members}) < min_siblings:
+    skipped_trim_collision = 0
+    for (register_id, stem), bucket in families.items():
+        by_raw_stem: dict[str, list[tuple[str, int, _RawVar]]] = {}
+        for raw_stem, suffix, var in bucket:
+            by_raw_stem.setdefault(raw_stem, []).append((raw_stem, suffix, var))
+
+        # Trim-collision refinement (#645/Codex P2 #646): a clean `stem` reached by
+        # `.rstrip("-")` can fuse pre-trim stems into one bucket (`artal-person-1…`
+        # AND `artal-person1…` both → `artal-person`). Use `_evaluate_fold` — the
+        # FULL foldability predicate (distinct-suffix floor AND no NULL names AND the
+        # battery/label-agreement gate) — ONLY to decide the COLLISION count: a
+        # raw-stem subgroup is a competing family only when it would ACTUALLY FOLD,
+        # not merely meet the sibling floor (so a count-qualifying battery/NULL peer
+        # can't spuriously suppress a valid family). When >= 2 raw stems each fold it
+        # is a GENUINE two-family collision — skip-and-count (never a silent merge,
+        # mirrors `_derive_month_groups`' skip-and-warn). Otherwise the EMIT path
+        # below is exactly round-1: it selects a winner and runs the original
+        # existing-key/NULL/battery/label gates on it, so a homogeneous bucket (one
+        # raw stem — the entire real corpus) reduces precisely to round-1 and the
+        # output stays byte-identical.
+        fold_qual = [
+            folded
+            for sub in by_raw_stem.values()
+            if (
+                folded := _evaluate_fold(
+                    sub,
+                    min_siblings=min_siblings,
+                    min_label_prefix=min_label_prefix,
+                    min_agreement=min_agreement,
+                )
+            )
+            is not None
+        ]
+        if len(fold_qual) > 1:
+            # Accepted-family preserve (#646): a clean key that is currently
+            # `[[accept]]`-ed is MATERIALIZED, so dropping the whole colliding bucket
+            # would drop the accepted family too and break `resolve_accept` at the next
+            # build. When the key is accepted, keep the accepted family and reject only
+            # the non-accepted folding peer(s): find the folding subgroup whose members
+            # contain the materialized accept's members (the accept emitted a single
+            # raw-stem candidate, so it lands in exactly one subgroup; containment, not
+            # equality, tolerates an `exclude` that trimmed the materialized set). That
+            # subgroup runs the normal emit path below (re-emitting identically); the
+            # rejected peer is NOT counted into `skipped_trim_collision` (the accepted
+            # family is not a dropped collision — it survives).
+            accepted_ids = accepted_members.get((register_id, stem))
+            accepted_fold = (
+                next(
+                    (
+                        folded
+                        for folded in fold_qual
+                        if accepted_ids <= {var.variable_id for _, _, var in folded}
+                    ),
+                    None,
+                )
+                if accepted_ids
+                else None
+            )
+            if accepted_fold is None:
+                skipped_trim_collision += 1
+                continue
+            fold_qual = [accepted_fold]
+
+        # Winner selection (round-1): the single folding subgroup when one folds, else
+        # the count-floor subgroup — so a lone battery / NULL family still reaches the
+        # original existing-key/battery diagnostics. `count_qual` is the round-1
+        # `qualifying` (distinct-suffix floor only); when no raw stem even meets the
+        # floor the bucket is dropped (no family).
+        count_qual = [
+            sub
+            for sub in by_raw_stem.values()
+            if len({suffix for _, suffix, _ in sub}) >= min_siblings
+        ]
+        if fold_qual:
+            members = fold_qual[0]
+        elif count_qual:
+            members = count_qual[0]
+        else:
             continue
 
+        # ---- round-1 emit path on the winner (unchanged) ----
         # Key-collision FIRST: a family keyed on a `(register_id, stem)` already
         # claimed by an edge/token group can't be curated verbatim (it would fail
         # `_apply_curated_groups` on `idx_concept_group_key`). Count it once as a
@@ -340,7 +531,7 @@ def infer_concept_group_candidates(
             skipped_existing_key += 1
             continue
 
-        names = [var.name for _, var in members]
+        names = [var.name for _, _, var in members]
         # Conservative skip: a family with any NULL name has no labels to agree on
         # — neither foldable nor a battery, just not a candidate at all.
         if any(n is None for n in names):
@@ -375,9 +566,17 @@ def infer_concept_group_candidates(
         # — the loader rejects an empty `label` on round-trip.
         group_label = _trim_label(_common_prefix(present_names)) or stem
 
-        ordered = sorted(members, key=lambda m: (m[0], m[1].slug))
-        suffixes = [suffix for suffix, _ in ordered]
-        axis = _propose_axis(suffixes, stem)
+        # Sort by (suffix, slug); member tuples are (raw_stem, suffix, var).
+        ordered = sorted(members, key=lambda m: (m[1], m[2].slug))
+        suffixes = [suffix for _, suffix, _ in ordered]
+        # Axis evidence uses the RAW stem (#645): the family is homogeneous on raw
+        # stem here, and `_propose_axis` keys "vintage vs numeric" off whether the
+        # stem ends in a digit. The trimmed `key` stem can drop the very trailing
+        # hyphen that proved a year tail wasn't part of a longer number (`foo1-2000`
+        # raw stem `foo1-` ends in `-`, but the trimmed `foo1` ends in a digit and
+        # would mis-classify as numeric). The emitted `key` stays the trimmed stem.
+        raw_stem = ordered[0][0]
+        axis = _propose_axis(suffixes, raw_stem)
         width = len(str(max(suffixes)))
         candidate_members = tuple(
             CandidateMember(
@@ -387,9 +586,9 @@ def infer_concept_group_candidates(
                 value=f"{suffix:0{width}d}",
                 label=str(suffix),
             )
-            for suffix, var in ordered
+            for _, suffix, var in ordered
         )
-        first = ordered[0][1]
+        first = ordered[0][2]
         candidates.append(
             ConceptGroupCandidate(
                 provider=first.provider_slug,
@@ -410,6 +609,7 @@ def infer_concept_group_candidates(
         candidates=candidates,
         excluded_batteries=excluded_batteries,
         skipped_existing_key=skipped_existing_key,
+        skipped_trim_collision=skipped_trim_collision,
     )
 
 
@@ -425,8 +625,9 @@ def render_candidates_toml(
     `[[accept]]` reference. Built by hand (not `tomli_w`) so the per-candidate
     `# axis=… agreement=… members=…` provenance comments survive — `tomli_w` drops
     comments. The header records the executable regenerate command, the active
-    thresholds, the foldable count, the `excluded_batteries` count, and the
-    `skipped_existing_key` count (so neither cutoff is ever silent).
+    thresholds, the foldable count, the `excluded_batteries` count, the
+    `skipped_existing_key` count, and the `skipped_trim_collision` count (so no
+    cutoff is ever silent).
 
     The output MUST re-parse cleanly through `concept_groups.load_concept_groups`:
     `register` is a 2-segment FQID, each member sets exactly `variable` +
@@ -465,6 +666,8 @@ def render_candidates_toml(
         f"# excluded batteries (weak label agreement): {result.excluded_batteries}",
         "# skipped (key collides with an existing group): "
         f"{result.skipped_existing_key}",
+        "# skipped (trailing-hyphen trim collapsed two distinct stems): "
+        f"{result.skipped_trim_collision}",
         "",
     ]
     for c in candidates:
