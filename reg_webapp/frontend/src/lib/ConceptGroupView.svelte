@@ -8,6 +8,7 @@ import {
   memberAt,
   memberCoverageUnion,
   OPEN_ENDED_VALID_TO,
+  YEARLESS_VALID_FROM,
 } from "./catalog";
 import PeriodPicker from "./PeriodPicker.svelte";
 import {
@@ -71,7 +72,14 @@ function leafSlug(fqid: string): string {
  * sentinel renders "since <year>", never the raw 9999). */
 function coverageText(member: ConceptGroupNodeMember): string {
   const cov = member.coverage;
-  if (!cov || cov.coverage_from == null) {
+  // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1 —
+  // treat it like a null start (mirrors `coverageFromStates`/`memberCoverageUnion`),
+  // else `formatWindow` would render a bogus "1 – <to>" window.
+  if (
+    !cov ||
+    cov.coverage_from == null ||
+    cov.coverage_from === YEARLESS_VALID_FROM
+  ) {
     return "";
   }
   // `_coverage_bounds` contract: a finite window carries a non-null `coverage_to`;
@@ -221,7 +229,8 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
        a link to its leaf FQID, with the `?member=` focus accent, per-member
        coverage, and the availability-lens greying + note. -->
   {#snippet memberLink(member: ConceptGroupNodeMember, label: string)}
-    {@const focused = node?.member === leafSlug(member.fqid)}
+    {@const slug = leafSlug(member.fqid)}
+    {@const focused = node?.member === slug}
     {@const muted = notDelivered(member)}
     <a
       href={catalogHref(member.fqid)}
@@ -230,6 +239,13 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
       title={member.fqid}
     >
       <span class="label">{label}</span>
+      <!-- Show the leaf slug as a muted secondary code ONLY when it disambiguates
+           — i.e. the label isn't already the slug (the matrix shape passes the
+           slug as the label). For edge groups all members share one name, so the
+           slug is the only thing that tells two rows apart (#638 PR2a regression). -->
+      {#if label !== slug}
+        <code class="member-slug muted">{slug}</code>
+      {/if}
       {#if coverageText(member)}
         <span class="coverage muted">{coverageText(member)}</span>
       {/if}
@@ -418,6 +434,11 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   }
   .coverage,
   .availability {
+    font-size: 0.85em;
+  }
+  /* The disambiguating leaf slug (mirrors ConceptGroupRow's `.member-slug`): a
+     muted monospace code that tells same-named edge-group members apart. */
+  .member-slug {
     font-size: 0.85em;
   }
 </style>

@@ -1383,4 +1383,19 @@ describe("memberCoverageUnion (#638 PR2a group availability span)", () => {
       ]),
     ).toBeNull();
   });
+
+  it("a yearless-floor start (0001-01-01) does NOT floor the union to year 1", () => {
+    // The `0001-01-01` start sentinel means "start unknown", not year 1 — it must
+    // be treated as no finite start (mirrors `coverageFromStates`), else the union
+    // `from` floors to 1 and balloons the PeriodPicker slider track.
+    expect(
+      memberCoverageUnion([
+        {
+          coverage_from: "0001-01-01",
+          coverage_to: "2008-12-31",
+          open_ended: false,
+        },
+      ]),
+    ).toEqual({ from: null, to: 2008 });
+  });
 });

@@ -792,7 +792,12 @@ export function memberCoverageUnion(
     if (!cov) {
       continue;
     }
-    const fromYear = cov.coverage_from ? yearOf(cov.coverage_from) : null;
+    // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1
+    // — skip it so it never floors the union `from` (mirrors `coverageFromStates`).
+    const fromYear =
+      cov.coverage_from && cov.coverage_from !== YEARLESS_VALID_FROM
+        ? yearOf(cov.coverage_from)
+        : null;
     if (fromYear !== null && (from === null || fromYear < from)) {
       from = fromYear;
     }

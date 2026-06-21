@@ -139,6 +139,45 @@ describe("ConceptGroupView member selector (#638 PR2a)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa/agi2inkjan");
   });
 
+  it("an edge-group (0-axis, shared-name) member renders its disambiguating leaf slug", async () => {
+    // Edge groups have no facet axes and all members share one name (vintages of
+    // the same concept), so the list-shape `label` (the name) can't tell two rows
+    // apart — the leaf slug must render as a secondary code to disambiguate.
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        axes: [],
+        members: [
+          {
+            fqid: "scb/lisa/astsni1",
+            name: "Näringsgren, största förvärvskälla",
+            facets: [],
+            coverage: null,
+          },
+          {
+            fqid: "scb/lisa/astsni2",
+            name: "Näringsgren, största förvärvskälla",
+            facets: [],
+            coverage: null,
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "lisa",
+      key: "astsni",
+    });
+
+    // Both same-named members render their distinct leaf slugs (the disambiguator).
+    await expect
+      .element(page.getByText("astsni1", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("astsni2", { exact: true }))
+      .toBeVisible();
+  });
+
   it("greys a member not delivered across the active window", async () => {
     // A two-member group: feb covers 2019–2021, jan is stateless. With a window
     // of 2010–2012 active, feb's coverage (2019–) doesn't span it → greyed +
