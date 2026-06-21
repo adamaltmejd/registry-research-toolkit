@@ -83,10 +83,17 @@ Run the PRs themselves **strictly serially** — one merged before the next star
      cover it → skip).
    - **docs-updater** — only if code/contract drifts from AUTHORED docs (a change that
      edits docs directly, or touches no documented surface, has no drift).
+   - **visual verification** — NOT a role you may skip when the PR changes rendered
+     output (`reg_webapp/frontend/**`, or any view the SPA renders). It's woven through
+     the pipeline, not a one-shot subagent: the implementer eyeballs its change in Step
+     A, you run a design pass in Step C, and you own the authoritative rendered proof (a
+     single render on the assembled tree) at merge in Step E. Headless `bun` checks
+     never render a pixel, so they do NOT satisfy it. This is the UI analog of the
+     `build-db` real-data gate (CLAUDE.md "PR merge gate" → Visual verification).
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
-   `/code-review` only.
+   `/code-review` only (plus visual verification if it touches rendered output).
 
 4. **Settle forks up front.** Resolve any open fork (naming, schema, scope) with
    `AskUserQuestion` now — only you can reach the human.
@@ -116,10 +123,21 @@ separate claim. Draft also keeps review bots off until near-final, and an inline
 `--body` heredoc can trip the permission classifier, so use `--body-file`. Then dispatch
 the implementer(s) with the scope + the FAST Verify only (lint / format / `ty` /
 `pytest`); the real `reg-meta-build build-db` is NOT in their loop — it's your \~20-min
-merge-gate check (Step E). When they report, validate the real diff, `git add -A`,
-commit, and push onto the draft PR's branch. Outward-facing `gh` actions (PR create /
-merge / comment) may be denied by the session's permission mode — if one is denied,
-surface it to the human, don't work around it.
+merge-gate check (Step E). For a **frontend PR**, rendering is part of the loop too —
+cheap, unlike `build-db`: the implementer eyeballs its change in the running app
+(`preview_snapshot` / `preview_screenshot` the changed views, check
+`preview_console_logs`), catching what the headless `bun` checks can't. Two hazards
+decide *who* renders and *how*: **(1) worktree** — `preview_start` and
+`.claude/launch.json` serve *main's* code from a worktree (run-reg-webapp → "Verifying
+from a git worktree"), so in a worktree launch via the worktree-local `.venv`
+(`.venv/bin/uvicorn … --port 8000`, then `bun run dev` from `reg_webapp/frontend/`), NOT
+`preview_start`; **(2) parallel fan-out** — launch.json binds fixed ports 8000/5173, so
+implementers do NOT each start servers. The **authoritative rendered proof is yours (the
+lead): a single render on the assembled tree** — the visual analog of the union Verify,
+and the merge-gate screenshot (Step E). When they report, validate the real diff,
+`git add -A`, commit, and push onto the draft PR's branch. Outward-facing `gh` actions
+(PR create / merge / comment) may be denied by the session's permission mode — if one is
+denied, surface it to the human, don't work around it.
 
 **B · Test.** If the tester role applies (Step 0.3), dispatch it — it only *suggests*
 against the committed HEAD; you pick which suggestions to accept and dispatch a fresh
@@ -139,6 +157,15 @@ on the fix delta. Repeat until a pass reports no further material findings. Safe
 valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
 and surface it via `AskUserQuestion` — never loop forever.
 
+**Frontend addendum.** For a PR that changes rendered output, run a **visual review**
+pass alongside `/code-review`, against the running app — a text-diff review can't catch
+a broken layout, overflow, or contrast regression. The mandatory part is *looking*:
+render the assembled tree (`/run-reg-webapp` + `preview_*`, always available) and
+inspect the changed views. If the `/web-design-reviewer` skill is installed, use it for
+a structured design-quality pass (and `/frontend-design` when the PR *authors* new UI);
+if not, drive the manual run-reg-webapp visual workflow yourself — the gate is the
+looking, not the plugin. Route any findings the same way you route `/code-review`'s.
+
 **D · Docs.** Only if code/contract drifted from authored docs (Step 0.3). Dispatch the
 docs-updater on the final code → commit its result. Do this AFTER review converges and
 BEFORE the merge-gate hold, so the bot-review window runs against the true final HEAD (a
@@ -146,11 +173,12 @@ docs push after the hold starts restarts it).
 
 **E · Merge.** Satisfy the **`CLAUDE.md` "PR merge gate"** in full — independent review
 converged (your `/code-review` loop is the independent Claude pass) · CI green ·
-bot-review window settled · real-data validation for build-affecting work · stale-head
-check. For the bot-review window, follow the gate's method: poll for Codex's signal on
-the **current HEAD** — a review/comment, a 👍/👀 reaction (`gh api .../reactions`), or
-an out-of-tokens comment (`gh api .../comments`) — keyed on the bot, NOT on CI going
-green. Pipeline-specific operational notes the gate doesn't carry:
+bot-review window settled · real-data validation for build-affecting work · **visual
+verification (a rendered-view `preview_screenshot`) for UI changes** · stale-head check.
+For the bot-review window, follow the gate's method: poll for Codex's signal on the
+**current HEAD** — a review/comment, a 👍/👀 reaction (`gh api .../reactions`), or an
+out-of-tokens comment (`gh api .../comments`) — keyed on the bot, NOT on CI going green.
+Pipeline-specific operational notes the gate doesn't carry:
 
 - Run the cheap gates first and the real `build-db` **LAST and ONCE** on the truly-final
   HEAD — it takes \~20 min, so launch it with `run_in_background: true` (the 10-min

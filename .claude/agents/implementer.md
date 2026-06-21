@@ -45,7 +45,16 @@ the lead runs the authoritative union Verify on the assembled result.
    - Frontend: `bun run lint`, `bun run check`, `bun run test`, `bun run build`, and
      `bun run gen:types` (no-diff unless the backend schema intentionally changed — if
      it did, regenerate openapi then `bun run gen:types` and report the regenerated
-     types among your touched files).
+     types among your touched files). These are **headless — they never render a
+     pixel.** If your change alters rendered output, eyeball it in the running app:
+     `preview_snapshot` / `preview_screenshot` the changed views, check
+     `preview_console_logs`, exercise changed interactions (`preview_click` /
+     `preview_fill`); report the screenshot to the lead. Two caveats: in a **worktree**,
+     `preview_start` / `.claude/launch.json` serve *main's* code — launch via the
+     worktree-local `.venv` instead (run-reg-webapp → "Verifying from a git worktree");
+     and if you're **one of several parallel implementers**, do NOT start the dev
+     servers (fixed ports 8000/5173 collide) — flag that the change needs rendering and
+     the lead renders the assembled tree.
 4. **End your turn with** a short summary (what changed and why) and **the exact list of
    files you touched** — this is your report to the lead. Do NOT run git — no `add` /
    `commit` / `push`; the lead stages, commits, and opens the PR. You never commit,
