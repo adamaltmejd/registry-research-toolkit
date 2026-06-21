@@ -200,10 +200,19 @@ let addVariant = $state<string | null>(null);
 // here cleanly clears the VISUAL pick when the period changes; gate CORRECTNESS
 // no longer depends on it (the gate is membership-based — see `addVariant`), but
 // the reset keeps the selector from showing a now-irrelevant highlight.
+//
+// Also tracks the LEAF IDENTITY (`fqidPath`, the navigation key) so a leaf change
+// re-invalidates the add state independent of the parent's `{#key route.fqidPath}`
+// remount. Today the remount supplies fresh state, but leaning on that is a
+// fragile cross-component coupling: if a future leaf were reused (no remount) with
+// a different `node` sharing a variant slug, a stale `addVariant` could satisfy the
+// membership gate and open an ambiguous leaf with Add enabled on the old
+// population. Invalidating on leaf identity here keeps the gate robust on its own.
 $effect(() => {
   void params.period;
   void params.variant;
   void params.value_set_version;
+  void fqidPath;
   addPrompt = null;
   addOutcome = null;
   addVariant = null;

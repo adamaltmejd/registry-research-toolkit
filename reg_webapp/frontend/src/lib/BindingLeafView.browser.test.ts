@@ -100,6 +100,16 @@ const coexistingB = [
   state({ state_id: 4, variant: "regioner" }),
 ];
 
+/** A DIFFERENT leaf that SHARES one of node A's variant slugs (`individer`) — for
+ * the leaf-identity invalidation test. Because `individer` is still a member of
+ * this plan's options, the MEMBERSHIP gate alone would let a stale pick gate-pass;
+ * only the `fqidPath`-tracked reset re-gates Add. `node()` carries its own
+ * `fqid`, so the leaf change is expressed via the `fqidPath` prop. */
+const coexistingSharingVariant = [
+  state({ state_id: 5, variant: "individer" }),
+  state({ state_id: 6, variant: "regioner" }),
+];
+
 /** Two co-existing variants where the PICKED variant (`individer`) ALSO needs a
  * representation choice: within it two columns share the same window but carry
  * GENUINELY DIFFERENT codings (distinct `value_set_version_label`), so
@@ -217,6 +227,42 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
 
     // Picking one of B's CURRENT options ungates Add again.
     await foretag.click();
+    await expect.element(add).toBeEnabled();
+  });
+
+  it("a leaf-identity change re-gates Add even when the new plan shares the picked variant", async () => {
+    // The robustness fix: the reset `$effect` tracks `fqidPath` (the leaf
+    // identity), so navigating to a DIFFERENT leaf re-invalidates the add state
+    // INDEPENDENT of the parent's `{#key route.fqidPath}` remount. The membership
+    // gate alone is NOT enough here: node B shares the picked variant (`individer`),
+    // so the stale pick is still a MEMBER of B's options and would gate-pass —
+    // only the leaf-identity reset clears `addVariant` and re-disables Add.
+    const { rerender } = render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(coexisting),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    const add = page.getByRole("button", { name: "Add to project" });
+
+    // Pick `individer` on leaf A → Add ungated.
+    await page.getByRole("button", { name: /individer/ }).click();
+    await expect.element(add).toBeEnabled();
+
+    // Navigate to a DIFFERENT leaf (new `fqidPath`) whose plan STILL offers
+    // `individer` — so the stale pick remains a member of the options.
+    await rerender({
+      fqidPath: "scb/lisa/sysstatus",
+      node: node(coexistingSharingVariant),
+    });
+
+    // Add is RE-GATED — the leaf-identity reset cleared the pick despite it being
+    // a valid member of the new plan's options.
+    await expect.element(add).toBeDisabled();
+    // Re-picking a current option ungates Add again.
+    await page.getByRole("button", { name: /individer/ }).click();
     await expect.element(add).toBeEnabled();
   });
 
