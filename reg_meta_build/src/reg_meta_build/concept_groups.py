@@ -68,6 +68,7 @@ edge/rank/vintage duty.
 from __future__ import annotations
 
 import functools
+import re
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
@@ -76,10 +77,23 @@ from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
 
-from reg_meta.fqid import is_slug
-
 from ._components import DisjointSet
 from ._curation import curation_error, load_curation_entries, require_str
+
+# A concept-group key is one URL path segment in
+# `/catalog/group/<provider>/<register>/<key>` (#640). Path-safe = the RFC 3986
+# *unreserved* set, lowercased (every current materialized key and auto candidate
+# uses only these), excluding the `.`/`..` dot-segments. NOT `is_slug`: keys are
+# intentionally not slug-validated, and the candidate generator emits valid
+# trailing-hyphen keys (e.g. `artal-person-`) that `is_slug` would reject — yet
+# they are path-safe, so over-rejecting them would break the `[[accept]]`
+# by-reference workflow (an accepted key can't be replaced).
+_PATH_SAFE_KEY_RE = re.compile(r"[a-z0-9._~-]+")
+
+
+def _is_path_safe_key(key: str) -> bool:
+    return bool(_PATH_SAFE_KEY_RE.fullmatch(key)) and key not in (".", "..")
+
 
 # ── token vocabularies + guards ─────────────────────────────────────────────
 
@@ -584,17 +598,21 @@ def _insert_group(
     # `variable`, plus curated `classification` umbrellas — addresses its group via
     # `/catalog/group/<provider>/<register>/<key>`. Starlette decodes `%2F` before
     # matching `{key}` and the SPA helper splits on `/`, so a key must be a single
-    # URL-path-safe slug. Validate at this single insert seam (the public `is_slug`
-    # is the SAME grammar the provider/register path slots enforce).
-    if not is_slug(group_key):
+    # URL-path-safe segment. Validate at this single insert seam. This is a
+    # path-safe CHARACTER check (`_is_path_safe_key`), NOT `is_slug`: the candidate
+    # generator emits valid trailing-hyphen keys (e.g. `artal-person-`) that
+    # `is_slug` would over-reject, breaking the `[[accept]]` by-reference workflow.
+    if not _is_path_safe_key(group_key):
         raise curation_error(
             "concept_group_key_not_path_safe",
             f"concept_group {kind!r} key {group_key!r} (register_id "
-            f"{register_id}) is not a URL-path-safe slug.",
-            "A concept-group key must be a slug (lowercase a-z, digits, single "
-            "hyphens; no `/`, `:`, etc.) — it addresses the group via "
-            "`/catalog/group/<provider>/<register>/<key>`, so a non-slug key is "
-            "unreachable. Pick a path-safe key.",
+            f"{register_id}) is not a URL-path-safe key.",
+            "A concept-group key must use only URL-path-safe characters "
+            "(lowercase letters, digits, and `-._~`) and not be `.`/`..` — it "
+            "addresses the group via `/catalog/group/<provider>/<register>/<key>` "
+            "(Starlette decodes `%2F` before matching, the SPA splits on `/`), so "
+            "a key with `/`, `:`, spaces, uppercase, etc. is unreachable. Pick a "
+            "path-safe key.",
         )
     cur = conn.execute(
         "INSERT INTO concept_group "

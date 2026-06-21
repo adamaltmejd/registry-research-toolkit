@@ -291,14 +291,23 @@ class TestGroupKeyPathSafe:
         assert exc.value.exit_code == EXIT_CONFIG
         assert exc.value.code == "concept_group_key_not_path_safe"
 
-    def test_valid_slug_key_is_accepted(self) -> None:
-        # A path-safe slug inserts cleanly — the guard is not over-broad.
+    @pytest.mark.parametrize(
+        "good_key",
+        # `foo-bar2` is also a slug; the trailing-hyphen keys are NOT slugs but ARE
+        # path-safe — they are real `concept_groups.auto.toml` candidates the
+        # generator emits, so accepting them is the regression guard for the P2
+        # (an `is_slug` guard would over-reject them and break `[[accept]]`).
+        ["foo-bar2", "artal-person-", "betyg-i-franska-"],
+    )
+    def test_path_safe_key_is_accepted(self, good_key: str) -> None:
+        # A path-safe key inserts cleanly — the guard is not over-broad and does
+        # not narrow path-safety to `is_slug`.
         conn = build_slugged_db(classification=None)
         group_id = _insert_group(
             conn,
             kind="variable",
             register_id=1,
-            group_key="foo-bar2",
+            group_key=good_key,
             label="L",
             source="curated",
         )
