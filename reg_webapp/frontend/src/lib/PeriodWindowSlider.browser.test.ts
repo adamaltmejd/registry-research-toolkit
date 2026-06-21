@@ -133,6 +133,53 @@ describe("PeriodWindowSlider", () => {
     await expect.element(screen.getByText("data 1990–…")).toBeVisible();
   });
 
+  it("open-ended coverage projects to the VINTAGE, not the track edge (#631)", async () => {
+    // coverage {1995..null} with vintageYear 2021 on a track that runs to 2026
+    // (a stale window widened the bounds): the open end projects ONLY to the
+    // vintage, NOT to `max`. So a 2000–2026 selection gaps 2022–2026 as "Not
+    // delivered after 2021" — the cap holds even though the slider reaches 2026.
+    // The readout still shows the open end as an ellipsis (raw coverage).
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      min: 1990,
+      max: 2026,
+      coverage: { from: 1995, to: null },
+      vintageYear: 2021,
+      selection: { from: 2000, to: 2026 },
+      window: { from: 2000, to: 2026 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered after 2021/))
+      .toBeVisible();
+    await expect.element(screen.getByText("data 1995–…")).toBeVisible();
+    // The greyed gap cell exists (the band stops at the vintage, the selection
+    // overruns it).
+    expect(screen.container.querySelectorAll(".gap").length).toBe(1);
+  });
+
+  it("finite coverage is NOT re-projected by vintageYear (#631)", async () => {
+    // coverage {1990..2008} with vintageYear 2021: the finite end is the gap
+    // boundary, NOT the vintage. A 2000–2015 selection gaps "after 2008", never
+    // "after 2021" — vintageYear caps only the OPEN end.
+    const screen = await render(PeriodWindowSlider, {
+      ...base,
+      min: 1985,
+      max: 2026,
+      coverage: { from: 1990, to: 2008 },
+      vintageYear: 2021,
+      selection: { from: 2000, to: 2015 },
+      window: { from: 2000, to: 2015 },
+      onchange: vi.fn(),
+      onreset: vi.fn(),
+    });
+    await expect
+      .element(screen.getByText(/Not delivered after 2008/))
+      .toBeVisible();
+    await expect.element(screen.getByText("data 1990–2008")).toBeVisible();
+  });
+
   it("no coverage → no availability note and no coverage readout", async () => {
     const screen = await render(PeriodWindowSlider, {
       min: 1990,

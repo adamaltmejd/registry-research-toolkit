@@ -45,6 +45,7 @@ let {
   node,
   regMetaVersion,
   steward,
+  vintageYear,
 }: {
   fqidPath: string;
   node: BindingNodeData;
@@ -55,6 +56,10 @@ let {
   // until both seed fields are present (sub-second; see `seedReady`).
   regMetaVersion: string;
   steward: string;
+  // #631: the catalog VINTAGE year (App → CatalogNodeView → here), threaded into
+  // the period picker so the local slider's open-ended ceiling caps at the catalog
+  // vintage — matching the header window slider — instead of wall-clock time.
+  vintageYear: number;
 } = $props();
 
 // Read the resolution modifiers off the reactive query so the fetch re-runs when
@@ -305,6 +310,7 @@ const repSegment = $derived(
     {grains}
     window={windowStore.value}
     {coverage}
+    {vintageYear}
     onsubmit={(period) => setResolution({ period })}
     onclear={() => setResolution({ period: null })}
   />

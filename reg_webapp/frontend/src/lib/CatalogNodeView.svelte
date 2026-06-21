@@ -32,12 +32,18 @@ let {
   fqidPath,
   regMetaVersion,
   steward,
+  vintageYear,
 }: {
   fqidPath: string;
   // C1: the deployment seed, threaded to BindingLeafView's "Add to project" so a
   // pristine store can implicitly create the project (App → here → BindingLeafView).
   regMetaVersion: string;
   steward: string;
+  // #631: the catalog VINTAGE year (App derives it from context.reg_meta.import_date,
+  // same value the header window slider caps at). Threaded to BindingLeafView's
+  // period picker so the local slider's open-ended ceiling matches the header — not
+  // wall-clock. Same App→here→BindingLeafView prop-drill as the deployment seed.
+  vintageYear: number;
 } = $props();
 
 const resource = asyncResource(() => getCatalogNode(fqidPath));
@@ -172,7 +178,7 @@ $effect(() => {
            renders those from `node` (always present — so a cold deep-link with
            `?period` isn't blank) and fetches only the period-NARROWED states from
            the URL query, reactive without a remount. -->
-      <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} />
+      <BindingLeafView {fqidPath} {node} {regMetaVersion} {steward} {vintageYear} />
     {:else if node.kind === "classification-root"}
       <!-- #516 umbrella folding: e.g. group:sun renders as ONE group row
            expanding to its dimension members; ungrouped classifications stay

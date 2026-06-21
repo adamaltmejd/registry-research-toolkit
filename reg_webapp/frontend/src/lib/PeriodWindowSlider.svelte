@@ -35,10 +35,18 @@ interface Props {
   window: StudyWindow | null;
   // The subject's data-availability span (derived from embedded states), or
   // null = unknown. Sides are INDEPENDENTLY bounded — a null side is open
-  // (start/end unknown); it draws the band out to the track edge and never
-  // fires a gap on that side. Drives the greyed not-delivered track + the
-  // availability hint.
+  // (start/end unknown). The open END ("still delivered") projects to the
+  // catalog VINTAGE (`vintageYear`), not the track edge: the band stops at the
+  // vintage and a selection past it gaps as "not delivered after <vintage>"
+  // (#631). The open START stays open (band runs to `min`, never gaps). Drives
+  // the greyed not-delivered track + the availability hint.
   coverage: Coverage | null;
+  // The catalog VINTAGE year (#631) — the ceiling an OPEN-ENDED coverage end
+  // projects to ("delivered as far as the catalog knows = the vintage"). It
+  // bounds the coverage BAND and the availability GAP, NOT the slider bounds
+  // (the picker computes those). Optional — when a caller doesn't cap (the
+  // standalone tests) the open end falls back to the track edge `max`.
+  vintageYear?: number;
   // The active `?period` wire when it is set but NOT year-representable (a
   // sub-annual token / segment list / `_default` / text), else null. When
   // non-null the slider's `selection` is the project-window PROJECTION, not the
@@ -59,6 +67,7 @@ let {
   selection,
   window: projectWindow,
   coverage,
+  vintageYear,
   subAnnualPeriod,
   onchange,
   onreset,
@@ -113,29 +122,45 @@ function widthPct(fromYear: number, toYear: number): number {
 const fillLeft = $derived(leftPct(from));
 const fillWidth = $derived(widthPct(from, to));
 
+// The EFFECTIVE coverage for the band + gaps: an open END ("still delivered")
+// projects to the catalog VINTAGE (#631) — the catalog only knows delivery up to
+// its vintage, so the band stops there and a selection past it gaps as "not
+// delivered after <vintage>", instead of reading as covered to the track edge.
+// Falls back to `max` when no `vintageYear` is supplied (standalone callers). The
+// open START is left open (null → band runs to `min`, never gaps). The READOUT
+// below keeps the RAW `coverage` so the open end still shows an ellipsis, not a
+// year.
+const effectiveCoverage = $derived<Coverage | null>(
+  coverage === null
+    ? null
+    : { from: coverage.from, to: coverage.to ?? vintageYear ?? max },
+);
+
 // The coverage (available-data) band — a solid track segment; the not-delivered
-// gaps draw OVER the selection fill as greyed cells. An unbounded (null) side
-// extends the band to the track edge (open start → from `min`; open end → the
-// "still delivered" span reaching the bound `max`/vintage ceiling).
+// gaps draw OVER the selection fill as greyed cells. An open start extends the
+// band to the track edge (`min`); the open end stops at the vintage ceiling (via
+// `effectiveCoverage`).
 const coverageBand = $derived.by(() => {
-  if (coverage === null) {
+  if (effectiveCoverage === null) {
     return null;
   }
-  const bandFrom = coverage.from ?? min;
-  const bandTo = coverage.to ?? max;
+  const bandFrom = effectiveCoverage.from ?? min;
+  const bandTo = effectiveCoverage.to ?? max;
   return { left: leftPct(bandFrom), width: widthPct(bandFrom, bandTo) };
 });
 
 // The not-delivered gaps of the ACTIVE selection (fires relative to the active
-// selection, per the spec), as greyed cells over the fill. SUPPRESSED for a
-// sub-annual `?period`: the shown span is then the window PROJECTION, not the
-// real selection, so a gap against it is meaningless (a genuinely-covered
-// `HT2020` would otherwise show unrelated "Not delivered" warnings) — the
-// sub-annual cue already points the user at the real value (Codex P2).
+// selection, per the spec), as greyed cells over the fill — against the vintage-
+// projected `effectiveCoverage`, so a selection past an open-ended coverage's
+// vintage ceiling gaps too (#631). SUPPRESSED for a sub-annual `?period`: the
+// shown span is then the window PROJECTION, not the real selection, so a gap
+// against it is meaningless (a genuinely-covered `HT2020` would otherwise show
+// unrelated "Not delivered" warnings) — the sub-annual cue already points the
+// user at the real value (Codex P2).
 const gaps = $derived(
   subAnnualPeriod !== null
     ? []
-    : notDeliveredGaps({ from, to }, coverage).map((g) => ({
+    : notDeliveredGaps({ from, to }, effectiveCoverage).map((g) => ({
         left: leftPct(g.from),
         width: widthPct(g.from, g.to),
         from: g.from,
@@ -162,23 +187,26 @@ const userDeviation = $derived(
 const hasGaps = $derived(gaps.length > 0);
 const availabilitySoft = $derived(hasGaps && projectWindow === null);
 
-/** The human note for a not-delivered gap relative to coverage (before / after
- * the coverage span, or both). Coverage is non-null whenever `hasGaps`, and a
- * gap can only fire against a FINITE side (an open side never gaps), so a
+/** The human note for a not-delivered gap relative to the EFFECTIVE coverage
+ * (before / after the band, or both) — so an open-ended coverage's "after" note
+ * names the VINTAGE ceiling (`effectiveCoverage.to`), not the raw open end (#631).
+ * `effectiveCoverage` is non-null whenever `hasGaps`, and a gap can only fire
+ * against a FINITE side (after vintage-projection the end is always finite), so a
  * `before`/`after` note implies that side is non-null. */
 const availabilityNote = $derived.by(() => {
-  if (!hasGaps || coverage === null) {
+  if (!hasGaps || effectiveCoverage === null) {
     return "";
   }
-  const before = coverage.from !== null && from < coverage.from;
-  const after = coverage.to !== null && to > coverage.to;
+  const before =
+    effectiveCoverage.from !== null && from < effectiveCoverage.from;
+  const after = effectiveCoverage.to !== null && to > effectiveCoverage.to;
   if (before && after) {
-    return `Not delivered before ${coverage.from} or after ${coverage.to}`;
+    return `Not delivered before ${effectiveCoverage.from} or after ${effectiveCoverage.to}`;
   }
   if (before) {
-    return `Not delivered before ${coverage.from}`;
+    return `Not delivered before ${effectiveCoverage.from}`;
   }
-  return `Not delivered after ${coverage.to}`;
+  return `Not delivered after ${effectiveCoverage.to}`;
 });
 </script>
 

@@ -136,7 +136,12 @@ const windowMaxYear = $derived(
       <CatalogRoot />
     {:else if route.name === "catalog-node"}
       {#key route.fqidPath}
-        <CatalogNodeView fqidPath={route.fqidPath} {regMetaVersion} {steward} />
+        <CatalogNodeView
+          fqidPath={route.fqidPath}
+          {regMetaVersion}
+          {steward}
+          vintageYear={windowMaxYear}
+        />
       {/key}
     {:else if route.name === "group"}
       <!-- #617: the concept-group SUBJECT page. Keyed on the (provider, register,

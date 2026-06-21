@@ -38,6 +38,7 @@ let {
   grains = undefined,
   window = null,
   coverage = null,
+  vintageYear = undefined,
   onsubmit,
   onclear,
 }: {
@@ -53,6 +54,11 @@ let {
    * or null = unknown. Sides are independently nullable (an open start/end);
    * drives the slider's greyed not-delivered track. */
   coverage?: Coverage | null;
+  /** The catalog VINTAGE year (#631) — the slider's open-ended ceiling, matching
+   * the header window slider (App caps both at `context.reg_meta.import_date`'s
+   * year). undefined only before `/api/context` resolves; falls back to
+   * wall-clock so a pre-context leaf still renders (mirrors App's fallback). */
+  vintageYear?: number;
   /** Emitted with the chosen wire value on submit (empty → cleared). */
   onsubmit: (period: string) => void;
   /** Emitted when the clear button is pressed (drop `?period`). */
@@ -65,6 +71,13 @@ type PickerMode = "range" | "list" | "text";
 // window nor coverage reaches further back (mirrors App.svelte's
 // WINDOW_FLOOR_YEAR; the bounds widen to fit window/coverage/selection below).
 const SLIDER_FLOOR_YEAR = 1960;
+
+// The slider's open-ended CEILING (#631): the catalog vintage year, matching the
+// header window slider (both cap at `context.reg_meta.import_date`'s year). The
+// `vintageYear` prop is undefined only before `/api/context` resolves — then fall
+// back to wall-clock so a pre-context leaf still renders (mirrors App's `||
+// new Date().getFullYear()`).
+const ceilingYear = $derived(vintageYear ?? new Date().getFullYear());
 
 // Mode inference: range-first; an ACTIVE comma list opens in Segments; any
 // other period the range UI can't represent opens in text mode (it must be
@@ -145,12 +158,17 @@ const subAnnualPeriod = $derived<string | null>(
   period !== null && !yearWindowRepresentable(period) ? period : null,
 );
 
-/** The slider bounds: the floor/ceiling that fit the window, coverage, and the
- * active selection so none is clipped off-track. Coverage sides are
- * INDEPENDENTLY nullable (#615) — an unbounded side doesn't extend the bounds
- * (the slider edge stands in for "open" via `coverageBand`). Falls back to a
- * sensible floor + the latest known year (coverage/window/selection, else this
- * year). */
+/** The slider bounds: the floor/ceiling that fit ONLY what's drawn — the window,
+ * the active selection, and the coverage END — so none is clipped off-track.
+ * Coverage sides are INDEPENDENTLY nullable (#615) — an open START doesn't extend
+ * the bounds (the slider edge stands in for "open" via `coverageBand`), and an
+ * open END contributes the catalog VINTAGE (#631), the ceiling the slider projects
+ * "still delivered" to. The vintage is NOT a forced floor on `max`: a finite
+ * coverage (1995–2008) stays bounded by its real end, not pushed to the vintage —
+ * so the default span doesn't spuriously report the post-coverage years as
+ * not-delivered. A window/selection past the vintage still WIDENS the bounds
+ * (never clip a real thumb value), but that doesn't extend the coverage band — the
+ * gap then flags the beyond-vintage span. */
 const sliderBounds = $derived.by(() => {
   const years: number[] = [];
   for (const w of [window, activeYearSelection]) {
@@ -162,11 +180,12 @@ const sliderBounds = $derived.by(() => {
     if (coverage.from !== null) {
       years.push(coverage.from);
     }
-    if (coverage.to !== null) {
-      years.push(coverage.to);
-    }
+    // The coverage END: the finite end, or the vintage when open-ended — so an
+    // open-ended coverage reaches the vintage but a finite one is NOT extended
+    // to it (Codex P2).
+    years.push(coverage.to ?? ceilingYear);
   }
-  const max = years.length > 0 ? Math.max(...years) : new Date().getFullYear();
+  const max = years.length > 0 ? Math.max(...years) : ceilingYear;
   const min = Math.min(SLIDER_FLOOR_YEAR, ...years, max);
   return { min, max };
 });
@@ -198,10 +217,15 @@ $effect(() => {
   // window (header) or opening a project re-seeds the slider to the new
   // selection, so a stale dragged `sliderWire` must clear too — else the next
   // Apply submits the OLD dragged value, not the now-displayed window (Codex P2).
-  // A drag alone changes neither `period` nor the seed, so the legitimate
-  // drag-then-Apply path is untouched (the effect only re-fires on a re-seed).
+  // And track the CEILING (`ceilingYear`): a leaf rendered before `/api/context`
+  // resolves seeds the ceiling at wall-clock, then flips to the catalog vintage
+  // when the prop threads down — without clearing, a stale drag past the vintage
+  // would survive the display correction and Apply a beyond-vintage wire (Codex P2).
+  // A drag alone changes none of these, so the legitimate drag-then-Apply path is
+  // untouched (the effect only re-fires on a re-seed / ceiling flip).
   void period;
   void activeYearSelection;
+  void ceilingYear;
   sliderWire = null;
   showMore = period !== null && !yearWindowRepresentable(period);
 });
@@ -301,6 +325,7 @@ const MODE_LABELS: Record<PickerMode, string> = {
         selection={sliderSelection}
         {window}
         {coverage}
+        vintageYear={ceilingYear}
         {subAnnualPeriod}
         onchange={(next) => (sliderWire = yearWindowToWire(next))}
         onreset={() => resetToWindow()}

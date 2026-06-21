@@ -333,6 +333,127 @@ describe("PeriodPicker — window slider (#615)", () => {
     expect(onsubmit).toHaveBeenLastCalledWith("2003..2010");
   });
 
+  it("OPEN-ended coverage projects to the VINTAGE: a stale window past it doesn't defeat the cap (#631)", async () => {
+    // The model: an open-ended coverage ("still delivered") reaches only as far
+    // as the catalog knows = the vintage (2021), NOT wherever a stale window /
+    // selection runs. A stale localStorage window 2000–2026 on a 2021 catalog
+    // WIDENS the bounds (the thumb renders the real 2026), but the coverage band
+    // still ENDS at 2021 and the 2022–2026 span gaps as "Not delivered after
+    // 2021" — the old `coverage.to ?? max` projection filled to 2026 and showed
+    // no gap, defeating the cap (Codex P2 #1).
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 2000, to: 2026 } as StudyWindow, // stale, past the vintage
+      coverage: { from: 1995, to: null } as Coverage, // open-ended
+      vintageYear: 2021,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // The bounds WIDEN to fit the real window value (never clip the thumb)…
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2026");
+    // …but the open end reads as an ellipsis (projected only to the vintage), and
+    // the 2022–2026 span beyond the vintage is flagged not-delivered.
+    await expect.element(screen.getByText("data 1995–…")).toBeVisible();
+    await expect
+      .element(screen.getByText(/Not delivered after 2021/))
+      .toBeVisible();
+  });
+
+  it("FINITE coverage is NOT extended to the vintage: default span reflects the real end (#631)", async () => {
+    // The model: the vintage caps an OPEN-ended coverage; it must NOT floor the
+    // bounds for a FINITE one. Coverage 1995–2008 on a 2021 catalog, no window /
+    // no ?period → the bounds must stop at the real end (2008), NOT jump to 2021,
+    // so the default full-span selection doesn't spuriously report 2009–2021 as
+    // not-delivered. The old `Math.max(ceilingYear, ...)` forced max to 2021 and
+    // the default [1960, 2021] span reported 2009–2021 as a gap (Codex P2 #2).
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: null,
+      coverage: { from: 1995, to: 2008 } as Coverage, // finite
+      vintageYear: 2021,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    // The bounds end at the real coverage end (2008), not the vintage (2021)…
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2008");
+    // …so the default span tops out at 2008 and there is NO spurious "not
+    // delivered after" gap for the 2009–2021 years the old forced bounds invented
+    // (the leading 1960–1994 gap below coverage is pre-existing #615 behavior,
+    // unrelated to the vintage cap — assert only on the trailing-gap regression).
+    await expect.element(screen.getByText(/1960–2008/)).toBeVisible();
+    await expect
+      .element(screen.getByText(/Not delivered after/))
+      .not.toBeInTheDocument();
+  });
+
+  it("FINITE coverage: a ?period past the finite end still flags 'not delivered' (#631)", async () => {
+    // Finite coverage 1995–2008; an explicit ?period to 2026 WIDENS the bounds
+    // (the thumb shows the real 2026) but reads as beyond the finite end — the
+    // not-delivered gap fires at 2008, independent of the vintage / wall-clock.
+    const screen = await render(PeriodPicker, {
+      period: "2000..2026",
+      window: WINDOW,
+      coverage: { from: 1995, to: 2008 } as Coverage,
+      vintageYear: 2021,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", "2026");
+    await expect
+      .element(screen.getByText(/Not delivered after 2008/))
+      .toBeVisible();
+  });
+
+  it("before /api/context resolves (no vintageYear) the slider falls back to wall-clock (#631)", async () => {
+    // The pre-context fallback (mirroring App's `|| new Date().getFullYear()`):
+    // a leaf rendered before context loads has no vintageYear → the open-ended
+    // ceiling falls back to wall-clock so the slider still works (corrected once
+    // context resolves and the prop threads down). The bounds max (open-ended
+    // coverage end ?? ceiling) is then the current year.
+    const thisYear = new Date().getFullYear();
+    const screen = await render(PeriodPicker, {
+      period: null,
+      window: { from: 2000, to: 2010 } as StudyWindow,
+      coverage: { from: 1995, to: null } as Coverage,
+      onsubmit: vi.fn(),
+      onclear: vi.fn(),
+    });
+    await expect
+      .element(screen.getByRole("slider", { name: "To year" }))
+      .toHaveAttribute("max", String(thisYear));
+  });
+
+  it("a ceiling change clears a stale drag buffer → Apply submits the corrected value (#631)", async () => {
+    // Codex P2 #3: a leaf renders pre-context (ceiling = wall-clock), the user
+    // drags a thumb past the (later) vintage, THEN context resolves and threads
+    // vintageYear down → the ceiling flips. The display clamps to the new max,
+    // but a stale `sliderWire` from the drag would let Apply submit the old
+    // beyond-vintage wire. The reset effect now tracks the ceiling, so the buffer
+    // clears and Apply submits the corrected (re-seeded) selection.
+    const onsubmit = vi.fn<(period: string) => void>();
+    const props = {
+      period: null,
+      window: { from: 2000, to: 2010 } as StudyWindow,
+      coverage: { from: 1995, to: null } as Coverage,
+      onsubmit,
+      onclear: vi.fn(),
+    };
+    // Pre-context: no vintageYear (wall-clock ceiling, so 2026 is in bounds).
+    const screen = await render(PeriodPicker, props);
+    await screen.getByRole("slider", { name: "To year" }).fill("2026");
+    // Context resolves: the vintage (2021) threads down → the ceiling flips.
+    await screen.rerender({ ...props, vintageYear: 2021 });
+    // The stale 2000..2026 drag is cleared; Apply submits the re-seeded window.
+    await screen.getByRole("button", { name: "Apply period" }).click();
+    expect(onsubmit).toHaveBeenLastCalledWith("2000..2010");
+  });
+
   it("no window set: the availability note softens (no amber deviation) + a 'set a window' hint shows", async () => {
     const screen = await render(PeriodPicker, {
       period: "2005..2012",
