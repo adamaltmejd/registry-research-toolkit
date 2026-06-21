@@ -212,8 +212,9 @@ $effect(() => {
 function startAdd(): void {
   addOutcome = null;
   if (addPlan.kind === "choose-variant") {
-    // The gate (Add disabled while `addVariant === null`) guarantees a pick
-    // here. Re-plan against ONLY that variant's states — a single variant can't
+    // The gate — Add disabled unless `addVariant` is one of the current plan's
+    // options — guarantees a valid pick here. Re-plan against ONLY that
+    // variant's states — a single variant can't
     // be `choose-variant` again, so the result is always `segments` (at most a
     // rep prompt remains); the defensive `kind` guard keeps TS sound.
     const subset = (states ?? []).filter((s) => s.variant === addVariant);
