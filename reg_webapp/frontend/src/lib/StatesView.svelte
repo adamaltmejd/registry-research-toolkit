@@ -9,6 +9,7 @@ import {
   windowTitle,
 } from "./catalog";
 import { VALUE_SET_VERSION_NONE } from "./period";
+import TechnicalDetails from "./TechnicalDetails.svelte";
 
 // Presentational view of a variable's `variable_state` rows (from the full
 // node's embedded `states` OR a `?period`-narrowed StatesResponse). Pure
@@ -111,19 +112,30 @@ function toggleExpanded(key: string): void {
       <!-- #309/#321: sentinel-free, coarsest-exact window ("since 2016",
            "VT2009"); the raw ISO window stays on the tooltip. -->
       <dd title={windowTitle(s.valid_from, s.valid_to)}>{formatStateWindow(s)}</dd>
-      {#if s.data_type}
-        <dt>Data type</dt>
-        <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
-             (the "bigint(0)" artifact) while keeping real ones like "char(25)". -->
-        <dd>{formatDataType(s.data_type, s.data_length)}</dd>
-      {/if}
-      {#if s.delivery_column_name}
-        <dt>Delivery column</dt>
-        <dd><code>{s.delivery_column_name}</code></dd>
-      {/if}
       <dt>Value-set version</dt>
       <dd>{s.value_set_version_label || "(no version)"}</dd>
     </dl>
+
+    <!-- #638 PR4: Data type and Delivery column are STRUCTURAL backend fields
+         (the physical SQL type + source column) — kept available but demoted
+         behind the "Technical details" disclosure. Both stay conditionally
+         rendered; the disclosure is omitted entirely when neither is present. -->
+    {#if s.data_type || s.delivery_column_name}
+      <TechnicalDetails>
+        <dl class="meta">
+          {#if s.data_type}
+            <dt>Data type</dt>
+            <!-- formatDataType drops a meaningless "(0)"/empty length parenthetical
+                 (the "bigint(0)" artifact) while keeping real ones like "char(25)". -->
+            <dd>{formatDataType(s.data_type, s.data_length)}</dd>
+          {/if}
+          {#if s.delivery_column_name}
+            <dt>Delivery column</dt>
+            <dd><code>{s.delivery_column_name}</code></dd>
+          {/if}
+        </dl>
+      </TechnicalDetails>
+    {/if}
 
     {#if s.value_set && s.value_set.length > 0}
       <h4 class="vs-heading">

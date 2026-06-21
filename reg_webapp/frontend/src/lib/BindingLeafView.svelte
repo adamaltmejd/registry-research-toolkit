@@ -26,6 +26,7 @@ import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import StatesView from "./StatesView.svelte";
 import SubjectView from "./SubjectView.svelte";
+import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
@@ -343,11 +344,20 @@ const repSegment = $derived(
       <dt>Unit</dt>
       <dd>{node.measurement_unit}</dd>
     {/if}
-    <dt>Sensitive</dt>
-    <dd>{node.is_sensitive ? "yes" : "no"}</dd>
-    <dt>Identifier</dt>
-    <dd>{node.is_identifier ? "yes" : "no"}</dd>
   </dl>
+
+  <!-- #638 PR4: Sensitive / Identifier are STRUCTURAL backend flags — useful but
+       not what a user reads first — so they live behind the "Technical details"
+       disclosure. Both are always present (booleans), so the disclosure is never
+       empty here. -->
+  <TechnicalDetails>
+    <dl class="meta">
+      <dt>Sensitive</dt>
+      <dd>{node.is_sensitive ? "yes" : "no"}</dd>
+      <dt>Identifier</dt>
+      <dd>{node.is_identifier ? "yes" : "no"}</dd>
+    </dl>
+  </TechnicalDetails>
 {/snippet}
 
 {#snippet picker()}
@@ -566,10 +576,11 @@ const repSegment = $derived(
   .via code {
     font-size: 0.9em;
   }
+  /* #638 PR4: row spacing standardized to 0.3rem across the three subject kinds. */
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    gap: 0.35rem 1rem;
+    gap: 0.3rem 1rem;
     margin: 1rem 0;
   }
   .meta dt {

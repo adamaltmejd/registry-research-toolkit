@@ -312,6 +312,39 @@ describe("BindingLeafView add gate (#638 PR2b)", () => {
     ).toBeNull();
   });
 
+  it("demotes Sensitive / Identifier into a 'Technical details' disclosure (#638 PR4)", async () => {
+    // The structural flags are backend metadata — kept available but behind the
+    // collapsed disclosure rather than in the prominent definition meta.
+    render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      node: node(single),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      vintageYear: 2024,
+    });
+
+    // The disclosure renders with a visible "Technical details" summary, collapsed
+    // by default. The demoted rows are in the DOM but NOT visible while collapsed,
+    // so assert STRUCTURE (inside the disclosure), not visibility.
+    await expect.element(page.getByText("Technical details")).toBeVisible();
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure).not.toBeNull();
+    expect(disclosure?.open).toBe(false);
+    // Sensitive + Identifier live INSIDE the disclosure, not the prominent meta.
+    expect(disclosure?.textContent).toContain("Sensitive");
+    expect(disclosure?.textContent).toContain("Identifier");
+    // ...and are NOT in any other (prominent) meta block on the page.
+    const promptMeta = [...document.querySelectorAll("dl.meta")].filter(
+      (dl) => !dl.closest("details.tech-details"),
+    );
+    for (const dl of promptMeta) {
+      expect(dl.textContent).not.toContain("Sensitive");
+      expect(dl.textContent).not.toContain("Identifier");
+    }
+  });
+
   it("Add stays seed-gated (disabled) until the deployment seed is present", async () => {
     render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",

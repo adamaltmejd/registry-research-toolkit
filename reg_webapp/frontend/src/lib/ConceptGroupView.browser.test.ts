@@ -89,6 +89,32 @@ describe("ConceptGroupView (#617)", () => {
       .element(page.getByText("2019 – 2021", { exact: true }))
       .toBeVisible();
   });
+
+  it("demotes the source into a 'Technical details' disclosure (#638 PR4)", async () => {
+    vi.mocked(getConceptGroup).mockResolvedValue(node());
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+
+    // The disclosure exists, is collapsed by default, and carries the demoted
+    // source row INSIDE it (a collapsed <details> keeps its content in the DOM).
+    await expect.element(page.getByText("Technical details")).toBeVisible();
+    const disclosure = document.querySelector<HTMLDetailsElement>(
+      "details.tech-details",
+    );
+    expect(disclosure).not.toBeNull();
+    expect(disclosure?.open).toBe(false);
+    // The source row lives inside the disclosure, not in the prominent meta.
+    expect(disclosure?.textContent).toContain("Source");
+    expect(disclosure?.textContent).toContain("token");
+    // The prominent Group line is now just the key — no inline "· source".
+    const groupRow = page.getByText("ink", { exact: true });
+    await expect.element(groupRow).toBeVisible();
+    expect(groupRow.element().closest("details")).toBeNull();
+  });
 });
 
 describe("ConceptGroupView member selector (#638 PR2a)", () => {

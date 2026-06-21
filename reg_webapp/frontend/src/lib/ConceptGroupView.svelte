@@ -19,6 +19,7 @@ import {
 } from "./period";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
+import TechnicalDetails from "./TechnicalDetails.svelte";
 import { windowStore } from "./window.svelte";
 
 // The concept-group SUBJECT page (#617): fetches a group by (provider, register,
@@ -256,12 +257,22 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   {#snippet description()}
     <dl class="meta">
       <dt>Group</dt>
-      <dd><code>{node.key}</code> · {node.source}</dd>
+      <dd><code>{node.key}</code></dd>
       {#if node.axes.length > 0}
         <dt>Facets</dt>
         <dd>{node.axes.join(", ")}</dd>
       {/if}
     </dl>
+
+    <!-- #638 PR4: the `source` is the group's internal/structural provenance tag —
+         kept available but demoted behind the "Technical details" disclosure so the
+         prominent line is just the user-facing key. -->
+    <TechnicalDetails>
+      <dl class="meta">
+        <dt>Source</dt>
+        <dd>{node.source}</dd>
+      </dl>
+    </TechnicalDetails>
   {/snippet}
 
   <!-- One snippet per member, used by every selector shape. Renders the member as
@@ -396,10 +407,11 @@ function notDeliveredNote(member: ConceptGroupNodeMember): string {
   .breadcrumbs .current {
     color: var(--muted);
   }
+  /* #638 PR4: row spacing standardized to 0.3rem across the three subject kinds. */
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    gap: 0.35rem 1rem;
+    gap: 0.3rem 1rem;
     margin: 1rem 0;
   }
   .meta dt {
