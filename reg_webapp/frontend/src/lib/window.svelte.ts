@@ -84,6 +84,15 @@ class WindowStore {
       : this.#fallback,
   );
 
+  /** The browse-time (no-draft) fallback window, IGNORING any active draft.
+   * `value` collapses to `null` once a windowless draft exists, so the
+   * draft-creation path (#629 item 3) reads the fallback HERE to seed a fresh
+   * draft's `window` — keeping `localStorage` reachable only through this store
+   * (never reached into directly from project_store). */
+  get fallback(): StudyWindow | null {
+    return this.#fallback;
+  }
+
   /** Set (or clear, with `null`) the active window through the single write
    * path. With a draft active it mutates `draft.window` (→ dirty → autosave);
    * with no draft it writes the localStorage fallback. */

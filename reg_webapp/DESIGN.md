@@ -1226,8 +1226,19 @@ Precedence — two backing stores, one source of truth:
   in-memory-only session without crashing.
 
 The draft always wins while it exists; localStorage is purely the no-project fallback
-and is never mirrored while a draft is active. Catalog-derived slider bounds (from the
-API rather than the fixed 1960 floor) are a possible follow-up.
+and is never mirrored while a draft is active. When a fresh draft is created FROM
+BROWSING — `projectStore.newProject` with no draft already open — the browse-time
+fallback (`windowStore.fallback`) is seeded into `draft.window` as the clean baseline,
+so a window set while browsing without a project carries over into the project created
+from that browse state rather than silently reverting to full history. `newProject`
+invoked while a draft is already active (the "New" button inside a project) does NOT
+seed: the fallback is the stale no-draft value (active-draft window writes/clears don't
+update it), so the new project starts windowless (full history) unless the user sets
+one. An opened project (`openFromFile` / restore) keeps its own `window` unchanged. The
+header slider also exposes an explicit ✕ clear control that writes `null` back to the
+store, making full history reachable at any time after the first interaction.
+Catalog-derived slider bounds (from the API rather than the fixed 1960 floor) are a
+possible follow-up.
 
 ## API surface
 

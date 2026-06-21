@@ -1,16 +1,23 @@
 <script lang="ts">
 // A compact DUAL-THUMB year slider for the app header — sets the global project
 // window (#611 → Period model). Self-contained: it takes the bounds + the active
-// window in, and reports a change out via `onchange`. The header (App.svelte)
-// owns the wiring to the window runtime layer (`window.svelte.ts`); this
-// component is pure presentation so it's unit-testable in isolation (props in,
-// callback out, no store import).
+// window in, and reports a change out via `onchange` (commit) / `onclear`
+// (reset to full history). The header (App.svelte) owns the wiring to the window
+// runtime layer (`window.svelte.ts`); this component is pure presentation so
+// it's unit-testable in isolation (props in, callbacks out, no store import).
 //
 // Implementation: two overlaid native `<input type="range">` thumbs (one "from",
 // one "to"). Native ranges give us real `slider` ARIA roles + keyboard support
 // for free; we clamp so the thumbs can't cross (from <= to). When no window is
 // set, the thumbs seed at the full [min, max] span (a no-op visual default) and
 // the readout shows "full history" until the user moves a thumb.
+//
+// COMMIT-ON-RELEASE (#629 item 2): the thumbs/readout update LIVE on each native
+// `input` tick (the local `from`/`to` $state below — smooth dragging), but we
+// only COMMIT out via `onchange` on the native `change` event (pointer release /
+// keyboard commit). The header writes the window store on `onchange`, so a drag
+// is one store write (one draft clone + autosave / one localStorage write), not
+// one per tick.
 
 import { untrack } from "svelte";
 import type { StudyWindow } from "./project_data";
@@ -22,12 +29,15 @@ interface Props {
   max: number;
   // The active window, or null = no window set (full history).
   window: StudyWindow | null;
-  // Emit a new window (clamped to [min, max], from <= to). Never emits null —
-  // the header decides whether a span equal to the full bounds means "clear"; a
-  // moved slider always expresses an explicit window.
+  // Commit a new window (clamped to [min, max], from <= to). Fired on RELEASE
+  // (native `change`), not per live `input` tick. Never emits null — clearing
+  // back to full history goes through `onclear`.
   onchange: (next: StudyWindow) => void;
+  // Reset the window to full history (the header maps this to `set(null)` so
+  // `isFullHistory` becomes reachable again after any interaction — #629 item 1).
+  onclear: () => void;
 }
-let { min, max, window: active, onchange }: Props = $props();
+let { min, max, window: active, onchange, onclear }: Props = $props();
 
 function clamp(year: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, year));
@@ -53,23 +63,27 @@ $effect(() => {
 // window means the user hasn't narrowed anything).
 const isFullHistory = $derived(active === null && from === min && to === max);
 
-function onFrom(event: Event): void {
+// LIVE display on each `input` tick: update the local thumb buffer only (smooth
+// drag, no commit). The clamp keeps the thumbs from crossing.
+function onFromInput(event: Event): void {
   const v = clamp(
     Number((event.currentTarget as HTMLInputElement).value),
     min,
     max,
   );
-  // Don't let `from` cross past `to`.
-  from = Math.min(v, to);
-  onchange({ from, to });
+  from = Math.min(v, to); // never cross past `to`
 }
-function onTo(event: Event): void {
+function onToInput(event: Event): void {
   const v = clamp(
     Number((event.currentTarget as HTMLInputElement).value),
     min,
     max,
   );
   to = Math.max(v, from);
+}
+// COMMIT on `change` (pointer release / keyboard commit): emit the buffered
+// window once. `from`/`to` already hold the clamped live values from `input`.
+function onCommit(): void {
   onchange({ from, to });
 }
 
@@ -94,7 +108,9 @@ const fillWidth = $derived(((to - from) / span) * 100);
       style="left: {fillLeft}%; width: {fillWidth}%;"
     ></div>
     <!-- Two overlaid thumbs. Each is a real range input (slider role); the
-         `from` thumb sits above so it stays grabbable when the two coincide. -->
+         `from` thumb sits above so it stays grabbable when the two coincide.
+         `oninput` updates the LIVE thumb buffer; `onchange` COMMITS on release
+         (#629 item 2). -->
     <input
       class="thumb thumb-from"
       type="range"
@@ -103,7 +119,8 @@ const fillWidth = $derived(((to - from) / span) * 100);
       step="1"
       value={from}
       aria-label="From year"
-      oninput={onFrom}
+      oninput={onFromInput}
+      onchange={onCommit}
     />
     <input
       class="thumb thumb-to"
@@ -113,9 +130,24 @@ const fillWidth = $derived(((to - from) / span) * 100);
       step="1"
       value={to}
       aria-label="To year"
-      oninput={onTo}
+      oninput={onToInput}
+      onchange={onCommit}
     />
   </div>
+  <!-- Clear control (#629 item 1): an explicit reset to full history — the only
+       way back to a `null` window once dragged (a moved slider always expresses
+       an explicit span). Hidden when already at full history so it's not a no-op. -->
+  {#if active !== null}
+    <button
+      type="button"
+      class="clear"
+      aria-label="Clear project window (full history)"
+      title="Clear — full history"
+      onclick={() => onclear()}
+    >
+      ✕
+    </button>
+  {/if}
 </div>
 
 <style>
@@ -131,6 +163,34 @@ const fillWidth = $derived(((to - from) / span) * 100);
     white-space: nowrap;
     min-width: 5.5rem;
     text-align: right;
+  }
+  .clear {
+    /* A small, low-emphasis reset glyph next to the track. Sized to a >=24px
+       hit target (WCAG 2.5.8) while staying visually compact via an inline-flex
+       box that centers the glyph; the readout · slider · ✕ row stays aligned. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 28px;
+    min-height: 28px;
+    font: inherit;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .clear:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .clear:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
   }
   .track {
     position: relative;
