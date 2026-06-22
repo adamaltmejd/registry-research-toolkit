@@ -440,7 +440,7 @@ def _as_int(v: Any) -> int | None:
         return int(v) if v.is_integer() else None
     try:
         return int(str(v).strip())
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 

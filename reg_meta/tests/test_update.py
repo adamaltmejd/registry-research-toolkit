@@ -1,7 +1,7 @@
 """Tests for the update module (version parsing and release resolution)."""
 
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 import zstandard
@@ -20,6 +20,9 @@ from reg_meta.update import (
 )
 
 from reg_meta import download
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestParseVersion:

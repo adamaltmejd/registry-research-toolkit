@@ -56,7 +56,7 @@ def _get(url: str, timeout: float) -> tuple[int, Any]:
     except urllib.error.HTTPError as exc:
         try:
             body = json.loads(exc.read().decode("utf-8"))
-        except (ValueError, OSError):
+        except ValueError, OSError:
             body = None
         return exc.code, body
 

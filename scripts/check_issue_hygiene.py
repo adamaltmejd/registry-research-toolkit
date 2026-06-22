@@ -299,7 +299,7 @@ def check_issue(
             continue
         try:
             matched = any(repo_root.glob(pattern))
-        except (OSError, ValueError, NotImplementedError):
+        except OSError, ValueError, NotImplementedError:
             out.warn(num, f"touches '{pattern}' is not a valid glob")
             continue
         if not matched:

@@ -1631,7 +1631,7 @@ def read_auto_derivations(path: Path) -> dict[str, str]:
         return out
     try:
         text = path.read_text(encoding="utf-8")
-    except (OSError, UnicodeError):
+    except OSError, UnicodeError:
         return out  # tolerant by design — feeds an advisory worklist, never gates
     current: str | None = None
     for raw_line in text.splitlines():

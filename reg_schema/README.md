@@ -3,7 +3,7 @@
 `project_data.json` schema and structural validator. Importable by `mock_data_wizard`,
 the webapp, and (amalgamated) the MONA bundle.
 
-Python ≥3.13. One runtime dependency: Pydantic v2 (the deliberate exception to the
+Python ≥3.14. One runtime dependency: Pydantic v2 (the deliberate exception to the
 workspace no-Pydantic rule); the structural validator itself operates on raw dicts and
 needs no third-party deps. See [DESIGN.md](DESIGN.md) for scope and dependency
 direction.

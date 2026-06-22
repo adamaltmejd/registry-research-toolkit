@@ -51,16 +51,17 @@ skip prompts and `--force` to delete stale files instead of warning-and-keeping 
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
-This WinPython version is the **ceiling on the bundle runner** — every slice lifted into
-the uploaded bundle: the lightweight `constants` / `validate` / `scan` slices **plus**
-`reg_monabundle.runtime.*` (`validate` loads the spec on MONA and `scan.write_export`
-runs before exports there), so a version bump or non-stdlib module-level import in any
-uploaded slice fails on MONA — **not** a MONA-imposed floor on non-MONA code. Non-MONA
-packages can move ahead of it only via a **coordinated bump of the root/CI
-`requires-python`** (per-package floors or a workspace split): the root `pyproject.toml`
-depends on every workspace package and CI runs a workspace-wide `uv sync --frozen`, so
-the floor binds the whole workspace today (tracked by #682, not a unilateral per-package
-bump). See ARCHITECTURE.md → Repo-wide invariants; decided 2026-06-22, #680.
+This WinPython version remains the MONA runner's actual execution ceiling. The workspace
+floor moved **above** it: a coordinated bump (#682, 2026-06-22) raised the whole
+workspace to `>=3.14`, deliberately setting the floor higher than the 3.13.7 ceiling. As
+a result the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and
+`summarize.py`) now contain 3.14-only PEP 758 syntax (`except A, B:`) that would
+SyntaxError on MONA's 3.13.7. The runner's true MONA-compat floor is deferred to
+REFACTOR_SPEC §10a, which rebuilds the runner standalone and must either target 3.14+ or
+re-parenthesize those clauses. See ARCHITECTURE.md → Repo-wide invariants; decided
+2026-06-22, #680. `scripts/probe_mona_python.py` was also reformatted to 3.14-only
+syntax by the same bump (#682), so re-running the probe requires MONA (or the local
+interpreter) to be on 3.14 — deliberately accepted, matching the uniform-3.14 posture.
 
 The batch client ships with the WinPython-31700 distribution at
 `E:\Programs\WinPython-31700\python` (Python 3.13.7, MSC v.1944 64-bit). This is a

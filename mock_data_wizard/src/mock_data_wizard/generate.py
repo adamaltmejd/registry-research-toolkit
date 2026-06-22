@@ -143,7 +143,7 @@ def _generate_date(
     try:
         d_min = date.fromisoformat(min_str)
         d_max = date.fromisoformat(max_str)
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         d_min = date(2000, 1, 1)
         d_max = date(2025, 12, 31)
 

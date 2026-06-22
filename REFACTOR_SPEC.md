@@ -296,12 +296,19 @@ The shipped bundle still runs the legacy two-MODE `discover`/`extract` model emi
 **Decided 2026-06-22 (#680; epic #679).** Earlier §10a planning grew the *amalgamated*
 runtime — e.g. adding a `reg_monabundle.types` module that slices into the bundle.
 Pivot: §10a builds the MONA runner as an **isolated standalone runner that imports no
-toolkit code**. It runs on MONA's WinPython 3.13.7 and may use the preinstalled
+toolkit code**. It targets MONA's WinPython 3.13.7 runtime and may use the preinstalled
 duckdb/pyodbc/numpy **at module top level** (no lazy-import dance) — the air-gap
 austerity binds this runner alone, not a class of "library surfaces" (see
 ARCHITECTURE.md → Repo-wide invariants). Today's amalgamator and its tests still exist
 and are still current truth; this records *how* the runner is built once §10a lands, not
 a change already made.
+
+**Additional constraint from #682 (2026-06-22):** the workspace floor was raised to
+`>=3.14` (ruff `target-version = py314`) deliberately above the 3.13.7 MONA ceiling. The
+PEP 758 reformat that followed introduced `except A, B:` syntax (3.14-only) into the
+current amalgamated slices `reg_monabundle/runtime/classify.py` and `summarize.py`.
+§10a's standalone runner must therefore either target 3.14+ or re-parenthesize those
+`except` clauses if the runner must execute on MONA's 3.13.7.
 
 Consequences:
 

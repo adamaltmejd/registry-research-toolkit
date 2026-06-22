@@ -41,7 +41,7 @@ def _open_or_none(db_path: Path | None):
     try:
         resolved = db_path_from_args(str(db_path) if db_path else None)
         return open_db(resolved)
-    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegMetaError):
+    except FileNotFoundError, OSError, sqlite3.OperationalError, RegMetaError:
         return None
 
 

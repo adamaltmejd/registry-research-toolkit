@@ -192,7 +192,7 @@ def _parses_as_date(s: str, fmt: str) -> bool:
     try:
         datetime.strptime(s, fmt)
         return True
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         return False
 
 
@@ -239,7 +239,7 @@ def _python_kind(values: Sequence[object]) -> str:
             # site rather than restructuring the (perf-sensitive) predicate.
             if all(float(v) == int(float(v)) for v in non_null):  # ty: ignore[invalid-argument-type]
                 return "numeric_int"
-        except (ValueError, TypeError):
+        except ValueError, TypeError:
             pass
         return "numeric_float"
     if all(isinstance(v, str) for v in non_null):
