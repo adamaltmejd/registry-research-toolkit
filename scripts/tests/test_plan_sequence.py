@@ -358,8 +358,10 @@ def test_reject_incomplete_lanes() -> None:
     assert why is not None and "#3" in why
     assert "#1" not in why and "#2" not in why  # only the missing one is named
 
-    # Whole-number matching: #30 must not satisfy ready #3 by substring.
+    # Whole-number matching (#3 ≠ #30): a superstring of a ready id doesn't satisfy it —
+    # #30 alone leaves #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30", basis) is not None
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30, #3", basis) is None
     # Extra non-candidate references (e.g. epic/follow-up ids) are harmless.
     assert ps.reject_incomplete_lanes("1. lane — #1, #2, #3 (see #99)", basis) is None
     # No parsable basis → nothing to check against (callers guard well-formedness).
