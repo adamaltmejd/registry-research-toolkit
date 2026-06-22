@@ -63,10 +63,11 @@ Default epic is `328`.
    ```
 
    `--write-lanes` refuses (non-zero exit, no write) a body that drops a candidate from
-   the floor `plan-lanes` was handed (the basis `free=` set) — one absent from every
-   ranked lane and the Held line (a mention in a rationale/Notes line doesn't count).
-   That means the ranking was incomplete: re-run `plan-lanes` accounting for every
-   candidate and persist the corrected markdown; do not retry the same body.
+   the floor `plan-lanes` was handed (the basis `free=` set) — one absent from the
+   accounting surfaces (a ranked lane, the Held line, or the Notes line; a lane's
+   `- why:` rationale doesn't count). That means the ranking was incomplete: re-run
+   `plan-lanes` accounting for every candidate and persist the corrected markdown; do
+   not retry the same body.
 
 ## Output
 

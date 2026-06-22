@@ -99,10 +99,11 @@ tooling. Don't narrate the steps; just run them and report the result.
 
      `--write-lanes` **refuses** (exit non-zero, no write) a body that drops a candidate
      from the floor `/plan-lanes` was handed (the basis `free=` set) — one absent from
-     every ranked lane and the `**Held:**` line (a mention in a rationale or Notes line
-     doesn't count). That means the ranking was incomplete: re-run `/plan-lanes`
-     accounting for every candidate and persist the corrected markdown — don't retry the
-     same body. (Empty stdout from step 1 is the different, transient case.)
+     the accounting surfaces (a ranked lane, the `**Held:**` line, or the `**Notes:**`
+     line; a lane's `- why:` rationale doesn't count). That means the ranking was
+     incomplete: re-run `/plan-lanes` accounting for every candidate and persist the
+     corrected markdown — don't retry the same body. (Empty stdout from step 1 is the
+     different, transient case.)
 
    Gating on the three-way signal is the point: pay for the non-deterministic
    `/plan-lanes` re-rank only when lane content actually moved, not on every PR merge.

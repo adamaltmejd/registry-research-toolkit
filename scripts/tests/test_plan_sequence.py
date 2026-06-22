@@ -345,18 +345,19 @@ def test_reject_lanes_stdin() -> None:
 # --- lanes completeness guard (#662) -------------------------------------------------
 
 
-def test_placed_numbers_only_counts_lane_and_held_lines() -> None:
+def test_placed_numbers_counts_lanes_held_notes_not_rationale() -> None:
     body = (
-        "**Lanes (ranked)** — open issues 5\n"
+        "**Lanes (ranked)** — open issues 6\n"
         "1. **Lane A** — #1, #2 · `area`\n"
-        "   - why: follows #99; serialize #1 → #2\n"  # rationale — NOT a placement
+        "   - why: follows #99; serialize #1 → #2\n"  # rationale sub-bullet — NOT counted
         "2. **Lane B** — #3\n"
-        "**Held:** #4\n"
+        "**Held:** #4 ← PR #50\n"
         "**Run concurrently now:** lanes 1–2\n"
-        "**Notes:** all accounted: #1 #2 #3 #4 #5\n"  # #5 only here — NOT a placement
+        "**Notes:** #5 blocked by a semantic dep on #2's artifact\n"  # Notes park — counted
     )
-    # #5 (Notes-only) and #99 (rationale) are excluded; lane/Held members counted.
-    assert ps._placed_numbers(body) == {1, 2, 3, 4}
+    # The three accounting surfaces — lanes (#1,#2,#3), Held (#4), Notes-park (#5) — are
+    # counted; the lane's `- why:` rationale (#99) is not.
+    assert ps._placed_numbers(body) == {1, 2, 3, 4, 5}
 
 
 def test_reject_incomplete_lanes() -> None:
@@ -373,10 +374,20 @@ def test_reject_incomplete_lanes() -> None:
     assert why is not None and "#3" in why
     assert "#1" not in why and "#2" not in why  # only the missing one is named
 
-    # Finding B (#663 re-review): a candidate named only in a rationale sub-bullet is NOT a
-    # placement — it must be ranked, not merely mentioned.
+    # Finding B (#663 re-review): a candidate named only in a lane's rationale sub-bullet is
+    # NOT an accounting surface — it must be ranked or parked, not merely mentioned.
     why = ps.reject_incomplete_lanes("1. lane — #1, #2\n   - why: related to #3", basis)
     assert why is not None and "#3" in why
+
+    # …but a floor candidate found blocked is legitimately parked on the Notes line
+    # (/plan-lanes step 5b: never force a discovered-blocked one into a ranked lane). That
+    # accounts for it — no false-reject (this is the non-convergent wedge #663 review #2 hit).
+    assert (
+        ps.reject_incomplete_lanes(
+            "1. lane — #1, #2\n**Notes:** #3 blocked by a semantic dep", basis
+        )
+        is None
+    )
 
     # Whole-number matching (#3 ≠ #30): a superstring on a lane line doesn't satisfy #3 —
     # #30 alone leaves #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).

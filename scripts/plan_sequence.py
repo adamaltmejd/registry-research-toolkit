@@ -640,21 +640,25 @@ def reject_lanes_stdin(content: str) -> str | None:
 
 
 def _placed_numbers(content: str) -> set[int]:
-    """Issue numbers on a PLACEMENT line of a lanes body — a ranked lane or the Held line.
+    """Issue numbers on an ACCOUNTING line of a lanes body — a ranked lane, Held, or Notes.
 
-    A lane renders as `N. **Title** — #a, #b …`; held candidates sit on the `**Held:**`
-    line. Rationale sub-bullets (`- why: … #c`), the `Run concurrently` line, and the
-    `Notes` accounting can name issues that are NOT placements (follow-ups, deps, or a
-    self-asserted "all accounted for" list), so they're excluded — a candidate only
-    name-dropped there was not actually ranked, and counting `#N` anywhere would let such
-    an incidental mention satisfy the completeness guard. `#(\\d+)` matches a whole digit
-    run, so no candidate is masked by a longer id (#42 ≠ #420).
+    `/plan-lanes`' contract accounts for every floor candidate "exactly once across ranked
+    lanes plus the Held/Notes lines" (its `SKILL.md` step 5b): a lane renders
+    `N. **Title** — #a, #b …`; a candidate found blocked only after reading bodies is parked
+    on `**Held:**` (held by in-flight work, `← PR #p`) or `**Notes:**` (a semantic blocker
+    the `touches` floor missed), each with a reason and never forced into a ranked lane.
+    Those three are the accounting surfaces. A lane's `- why:` rationale sub-bullet, the
+    `Run concurrently` line, and the header are NOT — a candidate merely name-dropped there
+    was not placed, and counting `#N` anywhere would let an incidental mention satisfy the
+    guard. The `(?<!PR )` drops the Held line's `← PR #p` references — those are PRs, not
+    issue placements. `#(\\d+)` matches a whole digit run, so no candidate is masked by a
+    longer id (#42 ≠ #420).
     """
     nums: set[int] = set()
     for line in content.splitlines():
-        s = line.lstrip()
-        if re.match(r"\d+\.", s) or s.lower().startswith("**held"):
-            nums.update(int(n) for n in re.findall(r"#(\d+)", line))
+        s = line.lstrip().lower()
+        if re.match(r"\d+\.", s) or s.startswith(("**held", "**notes")):
+            nums.update(int(n) for n in re.findall(r"(?<!PR )#(\d+)", line))
     return nums
 
 
