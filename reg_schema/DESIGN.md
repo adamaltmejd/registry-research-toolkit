@@ -89,14 +89,14 @@ actually-loaded reg_meta DB is a §6.8.3 semantic concern.
 ## Dependency direction
 
 `reg_schema` has **one runtime dependency: Pydantic v2** — the single deliberate
-exception to the workspace no-Pydantic rule (the cross-cutting "no Pydantic on library
-surfaces" policy and why `reg_schema` is exempt live in `ARCHITECTURE.md`; the
-reg_schema-specific reasons follow). The models are the canonical project_data shape,
-double as FastAPI response models in `reg_webapp`, and feed the SPA's TypeScript types
-via `model_json_schema()`; those three jobs make Pydantic's declarative field/model
-validators the right tool here, and keeping `reg_schema` as the *only* Pydantic surface
-kills the 1:1 wrapper-drift that a separate validation model would create between the
-schema and the API.
+exception to the no-Pydantic rule (the cross-cutting "No Pydantic in the amalgamated
+bundle (hard); soft preference elsewhere" policy and why `reg_schema` is exempt live in
+`ARCHITECTURE.md`; the reg_schema-specific reasons follow). The models are the canonical
+project_data shape, double as FastAPI response models in `reg_webapp`, and feed the
+SPA's TypeScript types via `model_json_schema()`; those three jobs make Pydantic's
+declarative field/model validators the right tool here, and keeping `reg_schema` as the
+*only* Pydantic surface kills the 1:1 wrapper-drift that a separate validation model
+would create between the schema and the API.
 
 The **structural validator** (`structural.py`) uses no Pydantic in its rule logic — it
 operates on a parsed dict. (It does import the `Literal` type aliases from
