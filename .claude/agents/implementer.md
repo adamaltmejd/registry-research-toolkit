@@ -34,7 +34,16 @@ the lead runs the authoritative union Verify on the assembled result.
    the lead in your report rather than coding past the ambiguity (see Decisions and
    forks).
 2. Implement **exactly the scope of the plan** — no neighbouring refactors, no scope
-   creep. Keep the diff tight and idiomatic to the surrounding code.
+   creep. **Reuse before you write:** take the CLAUDE.md ladder as a reflex — an
+   existing internal helper / stdlib / already-installed dep beats hand-rolling, and no
+   speculative abstractions (no interface with one implementation, no config for a value
+   that never changes). The leaf you're about to type — a validator, a write loop, a
+   clamp gate — probably already lives in an internal helper (e.g. `reg_meta_build`'s
+   `_curation.py`); extend it instead of re-pasting. A small, contained extension of a
+   shared helper is in-scope reuse, not scope creep; but a larger hoist (reshaping the
+   shared module), or — under parallel fan-out — touching a helper outside your assigned
+   file set, is an altitude fork to surface (below), not to do silently. Keep the diff
+   tight and idiomatic to the surrounding code.
 3. Run the plan's Verify (or the touched package's standard checks) until green:
    - Python: `uv run ruff check`, `uv run ruff format --check`, `uvx ty check`,
      `uv run python -m pytest <pkg>/`.
@@ -53,7 +62,15 @@ the lead runs the authoritative union Verify on the assembled result.
      under parallel fan-out (no fixed-port collisions, no leaked servers). **Look at**
      the screenshots in `/tmp/reg-webapp-shots/` and report them to the lead (who owns
      the authoritative render on the assembled tree).
-4. **End your turn with** a short summary (what changed and why) and **the exact list of
+4. **Self-simplify before reporting** (lazy authorship is the point). Re-read your OWN
+   diff against the ladder and cut what's cuttable: a one-use abstraction → inline it; a
+   re-pasted leaf → reuse the internal helper; a hand-rolled thing stdlib or an
+   installed dep already ships → swap it; dead flexibility → delete it. The diff should
+   land already-lean, so the lead's independent `/simplify` pass confirms it rather than
+   reworking it. Mark any deliberate shortcut with a `simplify:` ceiling comment. Do NOT
+   simplify away validation at trust boundaries, error handling, PII/MONA confinement,
+   k-anonymity, determinism, or anything the plan explicitly requested.
+5. **End your turn with** a short summary (what changed and why) and **the exact list of
    files you touched** — this is your report to the lead. Do NOT run git — no `add` /
    `commit` / `push`; the lead stages, commits, and opens the PR. You never commit,
    push, open, or mark a PR ready.
@@ -85,3 +102,9 @@ per-case unification) or ambiguous design call, STOP and **end your turn**, surf
 the options and your recommendation in your report instead of coding past it. The lead
 decides (escalating to the human when needed) and re-dispatches you with the answer.
 Never silently pick a path.
+
+**Altitude smells are forks too.** You own the leaf-level craft (reuse, simplicity,
+libraries), not the architectural call. If, mid-build, the work smells like it shouldn't
+exist, duplicates an existing subsystem, or a library would change the whole approach,
+you are the sensor, not the decider: surface it to the lead with your read — don't
+silently build past it, and don't unilaterally re-scope.

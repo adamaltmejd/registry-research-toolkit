@@ -40,10 +40,11 @@ tool result** — that IS its report.
   `implementer` with the findings; to re-review, re-run `/code-review` on the fix range
   (`git diff <prev>..HEAD`). Each pass is stateless — it needs the diff, not the prior
   turn.
-- **A subagent that hits a fork** (naming, schema/column, scope) ends its turn and
-  surfaces the options + its recommendation in its report instead of guessing. You
-  decide (escalate to the human with `AskUserQuestion` when it's the human's call) and
-  re-dispatch with the answer.
+- **A subagent that hits a fork** (naming, schema/column, scope, or an *altitude smell*
+  — it duplicates an existing subsystem, a library subsumes the approach, or it may not
+  need to exist) ends its turn and surfaces the options + its recommendation in its
+  report instead of guessing. You decide (escalate to the human with `AskUserQuestion`
+  when it's the human's call) and re-dispatch with the answer.
 - **Parallel fan-out** (implementers only) is the one place you parallelize, and it
   stays *within* one PR. For a large PR you may dispatch several implementers in ONE
   message over **file-disjoint** surfaces (no cross-surface dependency). Partition the
@@ -73,12 +74,17 @@ Run the PRs themselves **strictly serially** — one merged before the next star
    relationships** — the parent epic, blockers, and follow-ups (decisions are recorded
    there); the relevant code, `CLAUDE.md`, and the touched `<package>/DESIGN.md`.
 
-2. **Shape the work.** Break the request into the smallest set of coherent,
-   independently mergeable PRs; write a one-line scope for each; sequence by dependency.
+2. **Shape the work — at altitude first.** Before decomposing into PRs, run the top rung
+   of the CLAUDE.md ladder, which only you (not the implementer) can: *does this need to
+   exist at all, or does an existing subsystem or an installed library already subsume
+   it?* Prefer extending existing architecture to adding a module; if a library changes
+   the whole approach, that's a plan-time call to surface now. Then break the request
+   into the smallest set of coherent, independently mergeable PRs; write a one-line
+   scope for each; sequence by dependency.
 
-3. **Pick the roles per PR.** implementer ALWAYS runs, and `/code-review` ALWAYS reviews
-   (Step C). The rest are conditional — a role you won't use is one you must NOT
-   dispatch:
+3. **Pick the roles per PR.** implementer ALWAYS runs; `/code-review` ALWAYS reviews and
+   `/simplify` runs on any non-trivial code diff when available (both Step C). The rest
+   are conditional — a role you won't use is one you must NOT dispatch:
    - **tester** — only if behaviour changes (existing snapshot/idempotence tests already
      cover it → skip).
    - **docs-updater** — only if code/contract drifts from AUTHORED docs (a change that
@@ -93,7 +99,9 @@ Run the PRs themselves **strictly serially** — one merged before the next star
 
    Skipping a role is a decision you NAME in your closeout report, never a silent
    omission. A large *mechanical* change (even 100+ files) is still implementer +
-   `/code-review` only (plus visual verification if it touches rendered output).
+   `/code-review` only — a mechanical sweep has nothing for `/simplify` to cut, so
+   that's the one place the `/simplify` gate is a named skip (plus visual verification
+   if it touches rendered output).
 
 4. **Settle forks up front.** Resolve any open fork (naming, schema, scope) with
    `AskUserQuestion` now — only you can reach the human.
@@ -154,6 +162,22 @@ to a fresh implementer → re-verify, report → you commit + push → re-run `/
 on the fix delta. Repeat until a pass reports no further material findings. Safety
 valve: if it won't settle after a few rounds or keeps re-raising the same point, STOP
 and surface it via `AskUserQuestion` — never loop forever.
+
+Then run **`/simplify`** (a Claude Code skill, the companion to `/code-review` — not a
+repo skill, and Claude-Code-only; if it isn't available in this install, do the same
+reuse/simplification/altitude pass by hand — never block on a missing command) on any
+non-trivial code diff — the dedicated reuse/simplification/altitude pass, deeper than
+the cleanup lens `/code-review` already folds in. The implementer self-simplified at the
+leaf level (`implementer.md`); `/simplify` is where you catch what needs the whole-diff
+/ cross-codebase view — a one-caller abstraction, a module duplicating a subsystem
+elsewhere, a library that subsumes the approach. Run it **report-only** (no `--fix`,
+same one-writer rule as `/code-review`) and route its cuts through a fresh implementer →
+re-verify → commit, deduping any overlap with `/code-review`'s cleanup findings. Because
+`/simplify` runs *after* the `/code-review` loop converged, **re-run `/code-review` on
+the simplify-fix range** (`git diff <pre-simplify>..HEAD`) before merge — a
+simplification can still touch a safety guard, and Step E's independent review must
+cover the final HEAD. A clean pass returns "lean already". Skip only a docs-only or
+trivial diff (name the skip in closeout).
 
 **Frontend addendum.** For a PR that changes rendered output, run a **visual review**
 pass alongside `/code-review`, against the running app — a text-diff review can't catch

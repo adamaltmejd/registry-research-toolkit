@@ -50,6 +50,39 @@ bridges agentic local work to MONA projects.
 - Validate JSON contracts at read/write boundaries.
 - Avoid leaking sensitive row-level content.
 
+## Reuse first, build last
+
+Apply the global-CLAUDE.md ladder (no change → existing capability → stdlib/platform →
+installed dep → minimal new code → new dep; optimize for risk and maintenance, not line
+count) on every change. Two repo-specific notes:
+
+- **The failure mode here is leaf-helper duplication, not new-module inflation.** A new
+  adapter/route legitimately needs a new module, but a small format-agnostic leaf inside
+  it (a validator, a write loop, a clamp gate) gets re-pasted instead of hoisted. Before
+  writing a leaf, check whether an internal capability already does it
+  (`reg_meta_build`'s `_curation.py` and `db.py`, `reg_webapp`'s `query_input.py` are
+  typical homes). Extend it; don't re-type it.
+- **The ladder cuts both ways.** This repo *under*-uses libraries as often as it
+  over-builds (e.g. `reg_meta_build` hand-rolls TOML validators though it already ships
+  Pydantic for its build-time IR — Stack makes no-Pydantic *hard* only for the
+  amalgamated bundle, soft elsewhere). "Installed dep solves it → use it" binds as hard
+  as "don't add a dep for what a few lines do" — add one only when it removes more
+  complexity than it adds.
+
+**Never simplify away** the load-bearing guards: PII/MONA confinement, k-anonymity /
+disclosure control, determinism / byte-identity, JSON-contract validation, fail-fast. A
+shorter diff that drops one of these isn't simpler, it's broken.
+
+Mark a deliberate shortcut with a `simplify:` comment naming its ceiling and upgrade
+trigger
+(`# simplify: O(n^2) scan, index it if the candidate set passes a few thousand`), so a
+simplification reads as intent and a deferral can't silently rot.
+
+**Altitude split:** "does this need to exist / does an existing subsystem or library
+subsume it?" is a plan-time call (the lead, or whoever scopes the work); the leaf-level
+reuse and simplicity craft is the implementer's — see the pr-pipeline skill (the lead's
+altitude duties) and the implementer role (the leaf craft).
+
 # Python conventions
 
 - Runtime deps live in each package's `pyproject.toml`; dev deps live only in the
@@ -86,11 +119,11 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
     `constants`/`validate`/`scan` slices **plus** `reg_monabundle.runtime.*`, i.e.
     everything lifted into the uploaded `.py` (`validate` runs at bundle load on MONA,
     `scan` gates exports there), not the runtime alone — each must stay liftable into
-    MONA's offline WinPython env. `reg_meta`'s no-Pydantic
-    is a **soft** preference (import-ergonomics — importable from Jupyter/scripts without
-    pulling pydantic-core — plus an aspirational query-layer port), **not** a MONA
-    requirement: reg_meta is already absent from MONA-side code. Decided 2026-06-22
-    (#680); see `REFACTOR_SPEC.md` §10a.
+    MONA's offline WinPython env. `reg_meta`'s no-Pydantic is a **soft** preference
+    (import-ergonomics — importable from Jupyter/scripts without pulling pydantic-core —
+    plus an aspirational query-layer port), **not** a MONA requirement: reg_meta is
+    already absent from MONA-side code. Decided 2026-06-22 (#680); see
+    `REFACTOR_SPEC.md` §10a.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
