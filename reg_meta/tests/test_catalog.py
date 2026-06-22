@@ -1603,6 +1603,38 @@ class TestEdgeAccessors:
         # IS the binding FQID once variant/period left the grammar).
         assert str(r.same_as[0].fqid) == "scb/rtb/kon"
 
+    def test_register_bearing_model_dumps_with_wire_alias(self) -> None:
+        # #681: the register-bearing models alias the `register_name` Python attr
+        # (the `BaseModel.register`-method clash) to the public wire key
+        # `register`. With `serialize_by_alias` on the base, a DIRECT `model_dump`
+        # / `model_dump_json` (library/CLI path, not just FastAPI's by_alias
+        # response path) must emit `register`, never the internal `register_name`.
+        conn = build_slugged_db()
+        for src, tgt in (
+            (("scb", "lisa", "kon"), ("scb", "rtb", "kon")),
+            (("scb", "rtb", "kon"), ("scb", "lisa", "kon")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+        r = Catalog(conn).resolve(_KON)
+        ref = r.same_as[0]
+        dumped = ref.model_dump()
+        assert dumped["register"] == "rtb"
+        assert "register_name" not in dumped
+        # The JSON dump carries the alias too (no `register_name` key on the wire).
+        ref_json = ref.model_dump_json()
+        assert '"register":"rtb"' in ref_json
+        assert "register_name" not in ref_json
+        # Nested: a parent dump propagates alias serialization into the nested
+        # VariableRef under `same_as`, so the wire key is `register` there too.
+        nested = r.model_dump()["same_as"][0]
+        assert nested["register"] == "rtb"
+        assert "register_name" not in nested
+
     def test_related(self) -> None:
         conn = build_slugged_db()
         for src, tgt in (
