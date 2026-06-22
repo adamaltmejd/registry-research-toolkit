@@ -392,16 +392,18 @@ else. The materializer never branches on `provider`, the universal schema carrie
 provider-specific tables or columns, and `reg_meta`'s read side is untouched. The IR is
 the contract.
 
-**IR** (`reg_meta_build/ir/__init__.py`). Pydantic v2 models — the one build-side
-exception to the no-Pydantic-on-library-surfaces rule (see ARCHITECTURE.md), because
-model-level validators catch *builder* bugs at construction (a state validity range that
-crosses zero, a variable referencing a non-existent variant) rather than surfacing them
-as corrupt catalog rows. `_IRBase` sets `extra="forbid"`: Pydantic's default silently
-drops unknown keys, so a misspelled `is_sensitive=True` would vanish and the field would
-quietly stay `False` — adapters speak a strict contract, unknown keys must raise.
-Build-time only: never imported by `reg_meta` runtime, `reg_monabundle.runtime`, the
-MONA bundle, or the webapp (those stick to stdlib dataclasses). Treat `ir/__init__.py`
-as the source of truth for field shapes; a few that bite:
+**IR** (`reg_meta_build/ir/__init__.py`). Pydantic v2 models. The build-time IR never
+reaches the amalgamated bundle, so the no-Pydantic boundary (see ARCHITECTURE.md — "No
+Pydantic in the amalgamated bundle") doesn't bind it; Pydantic earns its place here
+because model-level validators catch *builder* bugs at construction (a state validity
+range that crosses zero, a variable referencing a non-existent variant) rather than
+surfacing them as corrupt catalog rows. `_IRBase` sets `extra="forbid"`: Pydantic's
+default silently drops unknown keys, so a misspelled `is_sensitive=True` would vanish
+and the field would quietly stay `False` — adapters speak a strict contract, unknown
+keys must raise. Build-time only: never imported by `reg_meta` runtime,
+`reg_monabundle.runtime`, the MONA bundle, or the webapp (those stick to stdlib
+dataclasses). Treat `ir/__init__.py` as the source of truth for field shapes; a few that
+bite:
 
 - `IRVariable` is **register-scoped** (the "define once" addressable variable); the
   variant coordinate lives down on `IRVariableState.register_variant_id`. `provider_key`
