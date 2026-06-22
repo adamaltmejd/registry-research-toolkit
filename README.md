@@ -16,7 +16,7 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 
 ## Prerequisites
 
-**Python 3.13+** and **uv** (Python package manager).
+**Python 3.14+** and **uv** (Python package manager).
 
 macOS:
 
@@ -28,7 +28,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Windows:
 
 ```powershell
-winget install Python.Python.3.13   # or download from python.org
+winget install Python.Python.3.14   # or download from python.org
 powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 

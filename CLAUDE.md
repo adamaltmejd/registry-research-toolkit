@@ -98,14 +98,14 @@ altitude duties) and the implementer role (the leaf craft).
   every checkout with no global uv config needed. Don't remove either side: dropping the
   pyproject setting makes plain `uv run` discard the committed lock on checkouts without
   a matching global config.
-- `requires-python` is really a **ceiling on the bundle runner** (MONA's bundled Python,
-  3.13.7) — the code that executes on MONA — not a MONA-imposed floor on non-MONA code.
-  But the root `pyproject.toml` depends on every workspace package and CI runs a
-  workspace-wide `uv sync --frozen`, so the floor binds the whole workspace today: a
-  non-MONA package moves ahead only via a **coordinated bump of the root/CI
-  `requires-python`** (per-package floors or a workspace split), tracked by **#682** —
-  not a unilateral per-package bump. See `mock_data_wizard/DESIGN.md` "MONA Python
-  runtime" before raising it for the runner.
+- The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
+  after a coordinated bump (#682, 2026-06-22). The MONA runner's actual ceiling is
+  WinPython 3.13.7 — **deliberately not enforced right now**: the runner floor is
+  deferred to REFACTOR_SPEC §10a, which rebuilds the runner standalone. As a consequence,
+  the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and `summarize.py`)
+  now contain 3.14-only PEP 758 syntax (`except A, B:`) that would SyntaxError on MONA's
+  3.13.7 — §10a must reconcile this. See `mock_data_wizard/DESIGN.md` "MONA Python
+  runtime" for the probe details.
 
 ## Stack
 
