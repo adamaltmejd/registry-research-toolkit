@@ -45,8 +45,10 @@ lanes freshness (0/1/2 above) — so the `/loop` tick does one fetch instead of 
 `--lanes-stale`. It never writes: CI (`plan-sequence.yml`) + the daily cron own the
 projection block; the loop's only write is the lanes block, when it moves.
 
-The hardened parsers + gh fetchers are reused from the sibling validator
-(check_issue_hygiene.py); if a third consumer appears, lift them into a shared module.
+The gh/git process primitives live in the shared `_gh` module (lifted there once
+`pr_review_status.py` became a third consumer); the issue-domain parsers (label sets, the
+relationship/touches regexes) are still reused from the sibling validator
+(check_issue_hygiene.py).
 """
 
 from __future__ import annotations
@@ -68,11 +70,20 @@ assert _HSPEC and _HSPEC.loader
 _h = importlib.util.module_from_spec(_HSPEC)
 _HSPEC.loader.exec_module(_h)
 
+_GHSPEC = importlib.util.spec_from_file_location(
+    "_gh", Path(__file__).with_name("_gh.py")
+)
+assert _GHSPEC and _GHSPEC.loader
+_gh = importlib.util.module_from_spec(_GHSPEC)
+_GHSPEC.loader.exec_module(_gh)
+
 AREA_LABELS = _h.AREA_LABELS
 PRIORITY_LABELS = _h.PRIORITY_LABELS
 BLOCKING_KEYWORDS = _h.BLOCKING_KEYWORDS
 FETCH_CAP = _h.FETCH_CAP
-gh_json = _h.gh_json
+run = _gh.run
+gh_json = _gh.gh_json
+repo_owner_name = _gh.repo_owner_name
 parse_relationships = _h.parse_relationships
 parse_touches = _h.parse_touches
 
@@ -731,7 +742,7 @@ def build_debt_line() -> str | None:
     """The reg_meta_build rebuild-pending signal, reusing the validator's classifier."""
     out = _h.Findings()
     _h.check_unreleased_build_debt(
-        Path(_h.run(["git", "rev-parse", "--show-toplevel"]).strip()), out
+        Path(run(["git", "rev-parse", "--show-toplevel"]).strip()), out
     )
     # check_unreleased_build_debt emits at most one WARN; take it if present.
     debts = [msg for level, _, msg in out.items if level == "WARN"]
@@ -846,7 +857,7 @@ def main() -> int:
             return 2
         return restamp_lanes_block(args.epic, args.basis)
 
-    owner, name = _h.repo_owner_name()
+    owner, name = repo_owner_name()
     _known, _issue_state, open_numbers = _h.fetch_number_states()
     parent_of = _h.fetch_parents(owner, name)
     recs = build_records(_h.fetch_open_issues(), open_numbers, parent_of)

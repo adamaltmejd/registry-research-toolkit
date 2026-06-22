@@ -138,8 +138,11 @@ For merge, satisfy the repo gate:
 
 - independent review converged;
 - CI green;
-- bot review window settled on the current HEAD, including review-bot reactions/comments
-  if present;
+- bot review window settled on the current HEAD — run `scripts/pr_review_status.py <pr>`
+  (`--wait` to poll to the ceiling) to compute Codex's signal
+  (`clean`/`findings`/`reviewing`/`exhausted`/`none`, gated on after-the-push) instead
+  of re-deriving the login-sensitive `gh api` calls; never conclude while it reports
+  `reviewing`;
 - real-data validation when build pipeline or DB content changed;
 - stale-head check before and after merge.
 

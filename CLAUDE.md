@@ -101,11 +101,11 @@ altitude duties) and the implementer role (the leaf craft).
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
   after a coordinated bump (#682, 2026-06-22). The MONA runner's actual ceiling is
   WinPython 3.13.7 — **deliberately not enforced right now**: the runner floor is
-  deferred to REFACTOR_SPEC §10a, which rebuilds the runner standalone. As a consequence,
-  the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and `summarize.py`)
-  now contain 3.14-only PEP 758 syntax (`except A, B:`) that would SyntaxError on MONA's
-  3.13.7 — §10a must reconcile this. See `mock_data_wizard/DESIGN.md` "MONA Python
-  runtime" for the probe details.
+  deferred to REFACTOR_SPEC §10a, which rebuilds the runner standalone. As a
+  consequence, the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and
+  `summarize.py`) now contain 3.14-only PEP 758 syntax (`except A, B:`) that would
+  SyntaxError on MONA's 3.13.7 — §10a must reconcile this. See
+  `mock_data_wizard/DESIGN.md` "MONA Python runtime" for the probe details.
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
   `uv run --no-project` tooling** (the issue-hygiene / plan-sequence scripts in CI and
   the issue-tracker skills) resolves the `>=3.14` floor instead of the runner's ambient
@@ -338,20 +338,27 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
 - **Bot-review window** — after the PR is ready (and after each substantive push), give
-  Codex/Copilot a bounded window. Poll for the **bot's own signal on the current HEAD**,
+  Codex/Copilot a bounded window. **`scripts/pr_review_status.py <pr>`** computes the
+  signal: JSON to stdout (`signal` ∈ `clean`/`findings`/`reviewing`/`exhausted`/`none`),
+  exit **0** settled · **1** not-settled · **2** tool error; `--wait` polls to the
+  \~10-min ceiling (background it — a long `--wait` can outrun a foreground
+  command-runtime cap). Prefer it over re-deriving the `gh api` calls by hand, which is
+  where this gets shipped wrong: Codex submits reviews as login
+  `chatgpt-codex-connector` but reacts as `chatgpt-codex-connector[bot]`, so a one-login
+  poller misses half the signal. Poll for the **bot's own signal on the current HEAD**,
   NOT for CI finishing — CI is a separate gate that usually goes green far sooner, so a
-  poller that exits on CI-done has not actually given the bot its window. The signal is
-  one of: a submitted review/comment; Codex's clean verdict — a 👍 reaction on the PR
-  body from `chatgpt-codex-connector[bot]` with no review submitted (invisible to
-  `gh pr view`; check `gh api repos/<owner>/<repo>/issues/<pr>/reactions`); or a 👀
-  reaction there meaning Codex is still reviewing — never conclude the window or merge
-  while 👀 is present. Codex can also run **out of tokens**, in which case it posts an
-  issue comment like "You have reached your Codex usage limits for code reviews" (in
-  `gh api repos/<owner>/<repo>/issues/<pr>/comments`, not a review or reaction) — treat
-  that as a definitive end-of-wait, not a blocker. Otherwise \~10 min with no signal is
-  the ceiling — bots may skip a push entirely (Codex auto-reviews on open/ready only; a
-  verdict on a new HEAD must be requested by commenting `@codex review`). Only trust a
-  verdict timestamped after the latest push; absence at the ceiling is not a blocker.
+  poller that exits on CI-done has not actually given the bot its window. The signals: a
+  submitted Codex **review** = findings (its suggestions vehicle); a **👍 reaction** on
+  the PR body (invisible to `gh pr view`;
+  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`) = its clean verdict, which ships
+  alongside a "Codex Review: …" narration **comment** that is *not* itself findings; a
+  **👀 reaction** = still reviewing — never conclude or merge while it's the newest
+  signal; an out-of-tokens comment ("reached your Codex usage limits", in
+  `gh api repos/<owner>/<repo>/issues/<pr>/comments`) = a definitive end-of-wait, not a
+  blocker. Every signal is gated on being **timestamped after the latest push** (the
+  script handles this). \~10 min with no signal is the ceiling — bots may skip a push
+  entirely (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be
+  requested by commenting `@codex review`). Absence at the ceiling is not a blocker.
 - **Real-data validation** when build-pipeline or DB content changed: run a real-seed
   `reg-meta-build build-db` **on the PR head** (validation runs by default), not just
   fixture tests. The untracked seed lives only in the main checkout — from a worktree,
