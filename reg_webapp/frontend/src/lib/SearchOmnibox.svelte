@@ -187,8 +187,9 @@ $effect(() => {
 });
 
 // Debounced suggestion fetch (separate timer from the routing commit so a fetch
-// failure can NEVER affect routing). Reads `query` for dependency tracking;
-// short-circuits a too-short query to an empty list WITHOUT a network call.
+// failure can NEVER affect routing). Reads `query` AND `focused` for dependency
+// tracking; short-circuits a too-short OR unfocused query to an empty list
+// WITHOUT a network call.
 // Resilience: a fetch error/abort (e.g. no backend in the test env, or a
 // superseded query) just yields NO suggestions — it must not break the search
 // box. This isolation is what keeps the existing no-mock browser test green.
@@ -202,7 +203,17 @@ $effect(() => {
   // Also clear the user-dismiss flag: a new query is a fresh chance to suggest.
   suggestions = [];
   dismissed = false;
-  if (raw.length < SEARCH_MIN_QUERY_LENGTH) {
+  // Gate on `focused` too: the popup is focus-gated (the open-state reconcile
+  // effect requires `focused`), so a fetch fired while UNFOCUSED can never render
+  // — it's pure waste. A `/search?q=…` deep-link / bookmark / back-forward seeds
+  // the box (URL→box effect) while unfocused, and SearchView's results resource
+  // already fetches `search(q, …)` for that same URL; without this gate the
+  // omnibox fired a second, hidden `search()`, DOUBLING the (prod-slow)
+  // `/api/search` traffic on cold search-page loads. Reading `focused` also makes
+  // the effect RE-RUN on focus change, so focusing a pre-seeded box fetches its
+  // suggestions and the popup opens. (Bits UI keeps the input focused through an
+  // option pointerdown, so `focused` stays true across a selection.)
+  if (!focused || raw.length < SEARCH_MIN_QUERY_LENGTH) {
     return;
   }
   const controller = new AbortController();

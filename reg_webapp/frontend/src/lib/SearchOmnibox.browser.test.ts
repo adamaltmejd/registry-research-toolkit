@@ -687,13 +687,16 @@ describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
     await expect.element(box).toHaveValue("kon");
   });
 
-  // ── 13. A deep-link does not pop the popup without focus ──────────────────────
-  it("does not open the popup on a /search?q deep-link when the box isn't focused", async () => {
+  // ── 13. A deep-link does not pop the popup OR fetch without focus ─────────────
+  it("does not fetch or open the popup on a /search?q deep-link when the box isn't focused", async () => {
     // REGRESSION (#689 review): on a cold deep-link to /search?q=foo the URL→box
     // effect seeds the box and the suggestion fetch resolves with hits, but the
     // input was never focused — without the focus gate the reconcile effect opened
     // the popup unbidden in the header on the results page. The box may show "foo",
     // but the suggestions popup must stay CLOSED until the user focuses + types.
+    // The focus gate ALSO suppresses the fetch itself (#689 review, P2): a hidden
+    // `search()` while unfocused renders nothing AND doubles the prod-slow
+    // `/api/search` traffic (SearchView's results resource fetches the same `q`).
     vi.mocked(search).mockResolvedValue(
       searchResponse({
         variables: [
@@ -711,12 +714,55 @@ describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
     // The box is seeded from ?q (write-down side), but nothing focused it.
     await expect.element(page.getByRole("combobox")).toHaveValue("foo");
 
-    // Ride past the debounce + fetch resolution: even though suggestions resolve
-    // non-empty, the unfocused box keeps the popup closed.
+    // Ride past the debounce + fetch resolution: the unfocused box neither fires
+    // the suggestion fetch nor opens the popup.
     await new Promise((r) => setTimeout(r, 400));
+    expect(search).not.toHaveBeenCalled();
     await expect.element(page.getByRole("option")).not.toBeInTheDocument();
     await expect
       .element(page.getByRole("combobox"))
       .toHaveAttribute("aria-expanded", "false");
+  });
+
+  // ── 14. Focusing a pre-seeded box fetches its suggestions + opens the popup ───
+  it("fetches suggestions and opens the popup when a pre-seeded box is focused", async () => {
+    // The complement of #13: the deep-link seeds the box unfocused (no fetch),
+    // then the user focuses it — reading `focused` in the suggestion effect makes
+    // it re-run on the focus change, so the seeded query NOW fetches and the popup
+    // opens. (Faithful to real behavior: focus alone is what flips the gate; the
+    // `query` is already seeded from the URL.)
+    vi.mocked(search).mockResolvedValue(
+      searchResponse({
+        variables: [
+          {
+            type: "variable",
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            register: "LISA",
+          },
+        ],
+      }),
+    );
+    setUrl("/search?q=foo");
+    await render(SearchOmnibox);
+    await expect.element(page.getByRole("combobox")).toHaveValue("foo");
+
+    // Unfocused: no fetch yet (the #13 invariant).
+    await new Promise((r) => setTimeout(r, 400));
+    expect(search).not.toHaveBeenCalled();
+
+    // Focus the seeded box — the effect re-runs and fires the (debounced) fetch
+    // for the seeded query, and the resolved hits open the popup.
+    (page.getByRole("combobox").element() as HTMLInputElement).focus();
+
+    await vi.waitFor(() =>
+      expect(search).toHaveBeenCalledWith(
+        "foo",
+        expect.objectContaining({ limit: 8 }),
+      ),
+    );
+    await expect
+      .element(page.getByRole("option", { name: /Kön/ }))
+      .toBeVisible();
   });
 });
