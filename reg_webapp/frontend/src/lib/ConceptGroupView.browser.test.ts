@@ -90,6 +90,57 @@ describe("ConceptGroupView (#617)", () => {
       .toBeVisible();
   });
 
+  it("shows a one-sided 'until <year>' when the coverage start is unknown (#658)", async () => {
+    // Latent on the live corpus, but the data model permits an unknown start —
+    // null (no finite valid_from) OR the yearless sentinel `0001-01-01` — with a
+    // finite end. The known end year must still render, not vanish (the old guard
+    // hid the whole line), and never leak the sentinel as "0001 – 2008".
+    vi.mocked(getConceptGroup).mockResolvedValue(
+      node({
+        members: [
+          {
+            fqid: "scb/rams/inkjan",
+            name: "Inkomst januari",
+            facets: [{ axis: "month", value: "01", label: "januari" }],
+            coverage: {
+              coverage_from: "0001-01-01", // yearless sentinel start
+              coverage_to: "2008-12-31",
+              open_ended: false,
+              state_count: 1,
+            },
+          },
+          {
+            fqid: "scb/rams/inkfeb",
+            name: "Inkomst februari",
+            facets: [{ axis: "month", value: "02", label: "februari" }],
+            coverage: {
+              coverage_from: null, // null start, finite end
+              coverage_to: "2010-12-31",
+              open_ended: false,
+              state_count: 1,
+            },
+          },
+        ],
+      } as unknown as Partial<ConceptGroupNodeData>),
+    );
+
+    await render(ConceptGroupView, {
+      provider: "scb",
+      register: "rams",
+      key: "ink",
+    });
+
+    // Both the sentinel-start and null-start members show their finite end as a
+    // one-sided window — not "" and not "0001 – 2008".
+    await expect
+      .element(page.getByText("until 2008", { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(page.getByText("until 2010", { exact: true }))
+      .toBeVisible();
+    await expect.element(page.getByText("0001 – 2008")).not.toBeInTheDocument();
+  });
+
   it("demotes the key, facets, and source into a 'Technical details' disclosure (#638 PR4)", async () => {
     vi.mocked(getConceptGroup).mockResolvedValue(node());
 

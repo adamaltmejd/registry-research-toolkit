@@ -11,6 +11,7 @@ import {
   foldText,
   formatDataType,
   formatStateWindow,
+  formatWindow,
   fqidSegments,
   grainsFromStates,
   matchesFilter,
@@ -25,6 +26,7 @@ import {
   stateKey,
   variantSeg,
   windowTitle,
+  YEARLESS_VALID_FROM,
 } from "./catalog";
 
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
@@ -934,6 +936,30 @@ describe("buildAddPlan (#306 one-click add)", () => {
       expect(plan.segments[0].needsRepChoice).toBe(false);
       expect(plan.segments[0].representation).toBe("UT0290");
     }
+  });
+});
+
+describe("formatWindow open-start (#658)", () => {
+  it("renders a one-sided 'until <year>' for a yearless start with a finite end", () => {
+    // The mirror of the open-ended 'since <year>': an unknown start (the 0001
+    // floor) with a known end shows only the end, year-collapsed when Dec-31-
+    // aligned — never leaking the sentinel as "0001 – 2008".
+    expect(formatWindow(YEARLESS_VALID_FROM, "2008-12-31")).toBe("until 2008");
+    expect(formatWindow(YEARLESS_VALID_FROM, "2008-12-31")).not.toContain(
+      "0001",
+    );
+  });
+
+  it("keeps a mid-year end as an exact date token (valid grammar), like 'since'", () => {
+    expect(formatWindow(YEARLESS_VALID_FROM, "2008-06-30")).toBe(
+      "until 2008-06-30",
+    );
+  });
+
+  it("a wholly-unbounded 0001..9999 window keeps 'since' (open-end wins)", () => {
+    // Out of #658's finite-end scope, but pin the precedence: the open-ended form
+    // is checked first, so this does NOT become "until 9999".
+    expect(formatWindow(YEARLESS_VALID_FROM, "9999-12-31")).toBe("since 0001");
   });
 });
 

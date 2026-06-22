@@ -69,28 +69,31 @@ function leafSlug(fqid: string): string {
 }
 
 /** A minimal study-window line for a member's coverage (#351), or "" when the
- * member carries none (a stateless member). Delegates to `formatWindow` so the
- * display matches the rest of the catalog (year-collapsed bounds; the open-ended
- * sentinel renders "since <year>", never the raw 9999). */
+ * member carries no finite bound (a stateless member, or one unbounded on both
+ * sides). Delegates to `formatWindow` so the display matches the rest of the
+ * catalog (year-collapsed bounds; the open-ended sentinel renders "since <year>",
+ * never the raw 9999). */
 function coverageText(member: ConceptGroupNodeMember): string {
   const cov = member.coverage;
-  // The yearless-fallback floor (`0001-01-01`) is "start unknown", not year 1 —
-  // treat it like a null start (mirrors `coverageFromStates`/`memberCoverageUnion`),
-  // else `formatWindow` would render a bogus "1 – <to>" window.
-  if (
-    !cov ||
-    cov.coverage_from == null ||
-    cov.coverage_from === YEARLESS_VALID_FROM
-  ) {
+  if (!cov) {
     return "";
   }
   // `_coverage_bounds` contract: a finite window carries a non-null `coverage_to`;
-  // open-ended maps to the sentinel. The null guard is defensive (shouldn't fire).
+  // open-ended maps to the sentinel. A null `to` here is a stateless member —
+  // nothing to show.
   const to = cov.open_ended ? OPEN_ENDED_VALID_TO : cov.coverage_to;
   if (to == null) {
     return "";
   }
-  return formatWindow(cov.coverage_from, to);
+  // The start may be unknown — null (no finite start) or the yearless-fallback
+  // floor (`0001-01-01`). Pass the sentinel through so `formatWindow` renders the
+  // one-sided "until <end>" form (#658) and a known end year is shown rather than
+  // hidden. An unknown start with an open-ended end has no finite bound → "".
+  const from = cov.coverage_from ?? YEARLESS_VALID_FROM;
+  if (from === YEARLESS_VALID_FROM && to === OPEN_ENDED_VALID_TO) {
+    return "";
+  }
+  return formatWindow(from, to);
 }
 
 // ── #638 PR2a: the picker — a slice axis (member selector) × a time axis ──────

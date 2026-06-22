@@ -630,6 +630,10 @@ function statesByVariant(
  * The display form of a validity window (#309/#321):
  *  - open-ended (the `9999-12-31` sentinel) → `"since <from>"` (year-collapsed
  *    when Jan-1-aligned);
+ *  - yearless-start (the `0001-01-01` sentinel, an unknown start) with a finite
+ *    end → a one-sided `"until <to>"` (year-collapsed when Dec-31-aligned) — the
+ *    mirror of `"since"`, so a known end year is shown instead of leaking the
+ *    sentinel as `"0001 – <to>"` (#658);
  *  - a closed window with a SINGLE period token (the coarsest grain that
  *    exactly covers it — `"2009"`, `"VT2009"`, `"2009-Q3"`, `"2020-02"`) →
  *    that token, so two same-year sub-annual siblings never both read as the
@@ -651,6 +655,14 @@ export function formatWindow(
 ): string {
   if (validTo === OPEN_ENDED_VALID_TO) {
     return `since ${validFrom.endsWith("-01-01") ? validFrom.slice(0, 4) : validFrom}`;
+  }
+  // Unknown start (the yearless floor) with a finite end → a one-sided
+  // `"until <to>"`, the mirror of `"since"` above. Checked AFTER `since` so a
+  // wholly-unbounded `0001..9999` window keeps the existing open-ended form
+  // rather than reading `"until 9999"`; the closed-window branch below would
+  // otherwise leak the sentinel as `"0001 – <to>"` (#658).
+  if (validFrom === YEARLESS_VALID_FROM) {
+    return `until ${validTo.endsWith("-12-31") ? validTo.slice(0, 4) : validTo}`;
   }
   if (
     typeof periodToken === "string" &&
