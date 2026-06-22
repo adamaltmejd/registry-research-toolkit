@@ -65,8 +65,14 @@ bridges agentic local work to MONA projects.
   every checkout with no global uv config needed. Don't remove either side: dropping the
   pyproject setting makes plain `uv run` discard the committed lock on checkouts without
   a matching global config.
-- `requires-python` floor is bound to MONA's bundled Python — see
-  `mock_data_wizard/DESIGN.md` "MONA Python runtime" before raising it.
+- `requires-python` is really a **ceiling on the bundle runner** (MONA's bundled Python,
+  3.13.7) — the code that executes on MONA — not a MONA-imposed floor on non-MONA code.
+  But the root `pyproject.toml` depends on every workspace package and CI runs a
+  workspace-wide `uv sync --frozen`, so the floor binds the whole workspace today: a
+  non-MONA package moves ahead only via a **coordinated bump of the root/CI
+  `requires-python`** (per-package floors or a workspace split), tracked by **#682** —
+  not a unilateral per-package bump. See `mock_data_wizard/DESIGN.md` "MONA Python
+  runtime" before raising it for the runner.
 
 ## Stack
 
@@ -75,8 +81,16 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 `REFACTOR_SPEC.md` tracks the remaining work.
 
 - **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
-  - Modeling: `@dataclass`. **No Pydantic on these library surfaces** — keeps them
-    importable from any context (Jupyter, scripts, MONA bundle).
+  - Modeling: `@dataclass`. The **hard** no-Pydantic + stdlib-module-level-imports rule
+    binds **every slice amalgamated into the bundle** — the lightweight
+    `constants`/`validate`/`scan` slices **plus** `reg_monabundle.runtime.*`, i.e.
+    everything lifted into the uploaded `.py` (`validate` runs at bundle load on MONA,
+    `scan` gates exports there), not the runtime alone — each must stay liftable into
+    MONA's offline WinPython env. `reg_meta`'s no-Pydantic
+    is a **soft** preference (import-ergonomics — importable from Jupyter/scripts without
+    pulling pydantic-core — plus an aspirational query-layer port), **not** a MONA
+    requirement: reg_meta is already absent from MONA-side code. Decided 2026-06-22
+    (#680); see `REFACTOR_SPEC.md` §10a.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.

@@ -51,6 +51,17 @@ skip prompts and `--force` to delete stale files instead of warning-and-keeping 
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
+This WinPython version is the **ceiling on the bundle runner** — every slice lifted into
+the uploaded bundle: the lightweight `constants` / `validate` / `scan` slices **plus**
+`reg_monabundle.runtime.*` (`validate` loads the spec on MONA and `scan.write_export`
+runs before exports there), so a version bump or non-stdlib module-level import in any
+uploaded slice fails on MONA — **not** a MONA-imposed floor on non-MONA code. Non-MONA
+packages can move ahead of it only via a **coordinated bump of the root/CI
+`requires-python`** (per-package floors or a workspace split): the root `pyproject.toml`
+depends on every workspace package and CI runs a workspace-wide `uv sync --frozen`, so
+the floor binds the whole workspace today (tracked by #682, not a unilateral per-package
+bump). See ARCHITECTURE.md → Repo-wide invariants; decided 2026-06-22, #680.
+
 The batch client ships with the WinPython-31700 distribution at
 `E:\Programs\WinPython-31700\python` (Python 3.13.7, MSC v.1944 64-bit). This is a
 curated bundle: 955 packages pre-installed, including every runtime dep we need. No

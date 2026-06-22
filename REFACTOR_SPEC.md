@@ -291,6 +291,49 @@ The shipped bundle still runs the legacy two-MODE `discover`/`extract` model emi
 `mock_data_discovery.json`/`mock_data_stats.json`. This section replaces it. There is no
 `reg_monabundle.types` module yet and no realign phase; both land here.
 
+### Build the runner standalone (decision)
+
+**Decided 2026-06-22 (#680; epic #679).** Earlier §10a planning grew the *amalgamated*
+runtime — e.g. adding a `reg_monabundle.types` module that slices into the bundle.
+Pivot: §10a builds the MONA runner as an **isolated standalone runner that imports no
+toolkit code**. It runs on MONA's WinPython 3.13.7 and may use the preinstalled
+duckdb/pyodbc/numpy **at module top level** (no lazy-import dance) — the air-gap
+austerity binds this runner alone, not a class of "library surfaces" (see
+ARCHITECTURE.md → Repo-wide invariants). Today's amalgamator and its tests still exist
+and are still current truth; this records *how* the runner is built once §10a lands, not
+a change already made.
+
+Consequences:
+
+- **Delete the AST amalgamator** (`build/__init__.py`'s `ast.parse`/`ast.unparse`
+  slicing) **and the amalgamation-specific tests** — bundle determinism and the
+  no-Pydantic / no-`reg_meta`-in-bundle *source* scans — which exist only to make
+  amalgamation safe and have nothing to test once the runner is standalone. Two of the
+  \~950 LOC of amalgamation tests are **not** amalgamation artifacts and survive,
+  re-targeted: the **1 MB size-budget cap** is MONA's *upload* limit (re-asserted on the
+  emitted standalone `.py`; see reg_monabundle/DESIGN.md "Bundle-size budget"), and the
+  **lightweight-surface import-boundary test** guards `reg_webapp`'s runtime-free import
+  of `reg_monabundle.build` (no duckdb/pyodbc in the webapp container) — kept or
+  replaced, re-targeted onto the standalone artifact / boundary.
+- **Keep the PII scanner a runtime export gate.** The standalone runner carries
+  `scan.write_export` and runs it on every payload immediately before writing (the same
+  in-memory-scan → temp-file → atomic-rename it does today) — **not** a static artifact
+  scan: a misclassified personnummer-like column leaks as a frequency-table key only at
+  runtime, which a scan of the `.py` source cannot catch.
+- **Re-home the provenance-DB-confinement guarantee** (plus the no-`reg_meta` /
+  no-Pydantic *source* guarantees) as a **static output-artifact gate** over the emitted
+  `.py` — an AST import walk + literal scan — replacing the invariant currently
+  maintained through the amalgamation pipeline.
+- **Replace the duplicated `COLUMN_TYPES` / `CONTRACT_VERSION` constants** between the
+  bundle runner and the local generator (\~33 LOC, hand-copied across modules to avoid
+  importing the runtime tier) **with the versioned stats-v1 data contract + golden
+  fixtures** (§8): producer and consumer agree on JSON shape, not on duplicated
+  constants.
+
+The realign-then-extract *workflow* below is unaffected — it is the MONA workflow being
+built; the pivot is only about how the runner is assembled (standalone, not
+amalgamated).
+
 **Precondition (#240):** the MSSQL integration test
 (`reg_monabundle/tests/test_integration_mssql.py`) has never executed — CI deselects
 integration tests wholesale. Before rewriting the extract surface it covers, run it once
@@ -366,8 +409,14 @@ incompatible declared-vs-observed types.
 
 ### Type compatibility lives in `reg_monabundle`
 
-The SQL↔spec-type machinery is owned by `reg_monabundle`'s pure-python lightweight side
-(amalgamated into the bundle, imported by `reg_webapp`):
+The SQL↔spec-type machinery is owned by `reg_monabundle`'s importable, **non-runtime
+lightweight side**, which `reg_webapp` imports for the realign-review UI. The future
+standalone runner imports no toolkit code, so it will carry its **own copy** of this
+logic — the same way `kit.py` hand-copies `COLUMN_TYPES` today to honor the runtime
+import boundary. A golden/drift test pins the runner's copy against the canonical
+`reg_monabundle.types`, so a newly-learned cast can't land in one without the other —
+otherwise the webapp could call a spec/source pair compatible while the uploaded runner
+reports a mismatch (or skips under `--force`):
 
 - `is_compatible(spec_type, sql_type) -> bool` — what the extract code can ingest
   (`numeric` ↔ `VARCHAR`/`INTEGER`/`DECIMAL`/`DOUBLE`; `date` ↔
