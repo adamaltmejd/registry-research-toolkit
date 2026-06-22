@@ -101,11 +101,11 @@ altitude duties) and the implementer role (the leaf craft).
 - The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
   after a coordinated bump (#682, 2026-06-22). The MONA runner's actual ceiling is
   WinPython 3.13.7 — **deliberately not enforced right now**: the runner floor is
-  deferred to REFACTOR_SPEC §10a, which rebuilds the runner standalone. As a consequence,
-  the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and `summarize.py`)
-  now contain 3.14-only PEP 758 syntax (`except A, B:`) that would SyntaxError on MONA's
-  3.13.7 — §10a must reconcile this. See `mock_data_wizard/DESIGN.md` "MONA Python
-  runtime" for the probe details.
+  deferred to REFACTOR_SPEC §10a, which rebuilds the runner standalone. As a
+  consequence, the amalgamated runner slices (`reg_monabundle/runtime/classify.py` and
+  `summarize.py`) now contain 3.14-only PEP 758 syntax (`except A, B:`) that would
+  SyntaxError on MONA's 3.13.7 — §10a must reconcile this. See
+  `mock_data_wizard/DESIGN.md` "MONA Python runtime" for the probe details.
 - A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
   `uv run --no-project` tooling** (the issue-hygiene / plan-sequence scripts in CI and
   the issue-tracker skills) resolves the `>=3.14` floor instead of the runner's ambient
@@ -156,7 +156,10 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
   SCB/SOS data) and runs the full structural validator
   (`validate_built_db(corpus=False)` — every invariant except the real-corpus volume
   gate). Real-corpus drift is surfaced by a maintainer's actual `build-db`, which
-  validates by default with `corpus=True` (opt out with `--no-validate`).
+  validates by default with `corpus=True` (opt out with `--no-validate`). Hypothesis
+  (dev-only, not in the MONA bundle) is used for property-based tests on invariant-heavy
+  surfaces (`test_*_properties.py` across `reg_meta`, `reg_meta_build`,
+  `reg_monabundle`), additive to the example/snapshot suites.
 - **Type checking**: `uvx --from ty==0.0.44 ty check` (Astral, beta). Blocking in CI;
   pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
   checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
