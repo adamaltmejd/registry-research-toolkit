@@ -18,6 +18,7 @@ from __future__ import annotations
 import re
 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from reg_meta.catalog import ConceptGroupMember, GroupFacet
 from reg_meta.queries import SEARCH_TYPES, search as reg_meta_search
 
 from reg_webapp import golden
@@ -32,9 +33,7 @@ from reg_webapp.models import (
     CodeOwnerVariable,
     CodeSearchGroup,
     CodeSearchResult,
-    ConceptGroupMemberModel,
     ConceptGroupSearchResult,
-    GroupFacetModel,
     RegisterSearchGroup,
     RegisterSearchResult,
     SearchGroup,
@@ -231,11 +230,14 @@ def _group_result(r: dict) -> ConceptGroupSearchResult:
         member_count=r.get("member_count", 0),
         matched_count=len(r.get("matched") or []),
         label_matched=r.get("label_matched", False),
+        # reg_meta's `ConceptGroupMember` (#681) — the `reg_meta.queries.search`
+        # member dicts carry a string `fqid` (the `Fqid` field parses it, serializing
+        # back to the same string) and `{axis, value, label}` facet dicts.
         members=[
-            ConceptGroupMemberModel(
+            ConceptGroupMember(
                 fqid=m["fqid"],
                 name=m.get("name"),
-                facets=[GroupFacetModel(**f) for f in m.get("facets", [])],
+                facets=tuple(GroupFacet(**f) for f in m.get("facets", [])),
             )
             for m in r.get("members", [])
         ],

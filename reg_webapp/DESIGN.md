@@ -617,33 +617,37 @@ doesn't exist there). Remaining: the SPA catalog-authoring mode, a
 
 ## Pydantic boundary
 
-reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) that
-wrap reg_meta's catalog return surface. As of #681 (2026-06-22), reg_meta exposes frozen
-Pydantic v2 models on its catalog surface — but the webapp **still** wraps them in
-per-endpoint 1:1 response models for now; the direct-consumption collapse is the #681
-follow-up (PR2). This is the **only** place a 1:1 Pydantic wrapper remains. For
-`project_data`-related responses (`/api/project/*`) the webapp uses **`reg_schema`
-Pydantic models directly** — no wrapper layer, eliminating that drift surface. (The
-cross-package bundle boundary — validated `Source` → dataclass `LoadedSpec`, which is
-where the Pydantic side hands off to the dataclass bundle runtime — lives in
-`reg_monabundle/DESIGN.md`.)
+reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) for
+the catalog surface. As of #681 PR2 (2026-06-22), the webapp's `kind`-discriminated node
+models (`ProviderNode`, `RegisterNode`, `BindingNode`, `ClassificationNode`, the
+`*Response` composites, `ConceptGroupNode`, and the sub-endpoint envelopes) **embed
+reg_meta's frozen Pydantic leaf models directly** as field types — no per-leaf 1:1
+wrappers or mapper functions. The 16 per-leaf wrappers shipped before PR2 are deleted.
+The node models are **not** 1:1 wrappers: they carry the `kind` discriminator plus
+server-computed enrichment (`succession_chain`, per-member `coverage`, `via_same_as`)
+that has no counterpart in reg_meta. For `project_data`-related responses
+(`/api/project/*`) the webapp uses **`reg_schema` Pydantic models directly** — no
+wrapper layer, eliminating that drift surface. The **only** remaining 1:1 Pydantic
+wrapper is `ValidationResult`/`ValidationIssue` (reg_schema stays a frozen dataclass
+consumed cross-runtime by the MONA bundle and the SPA, so the webapp wraps it 1:1
+there). (The cross-package bundle boundary — validated `Source` → dataclass
+`LoadedSpec`, which is where the Pydantic side hands off to the dataclass bundle runtime
+— lives in `reg_monabundle/DESIGN.md`.)
 
-The catalog response models are 1:1 wrappers of reg_meta's frozen Pydantic catalog
-models. Each node model carries a `kind` `Literal` discriminator (`provider` /
-`register` / `binding` / `classification` / `classification-root` / `root` /
-`variants-ref` / `concept-group`). The catch-all (`GET /api/catalog/{fqid:path}`)
-returns a Pydantic discriminated union (`Field(discriminator="kind")`) over the five
-kinds it owns: `provider` / `register` / `binding` / `classification` /
-`classification-root`. `concept-group` is **not** a catch-all arm — it is the sole
-response type of the fixed-shape route
-`GET /api/catalog/group/{provider}/{register}/{key}` (declared above the catch-all; see
-§ Routing above). The discriminated union drives `openapi-typescript` to emit a clean
-tagged union for the catch-all; `ConceptGroupNode` is a standalone schema used only by
-the group route. FQID fields serialize as plain `str` (`str(fqid)`), never nested
-models, so the codegen'd TS sees flat string fields. The binding **leaf** embeds the
-variable's FULL longitudinal record from one `Catalog.resolve` call (states, value sets,
-and the variable-grain `same_as` / `related_to` / `lineage` edges), plus the full
-variable `succession_chain` (#582, below). `lineage_warnings` are **omitted** —
+Each node model carries a `kind` `Literal` discriminator (`provider` / `register` /
+`binding` / `classification` / `classification-root` / `root` / `variants-ref` /
+`concept-group`). The catch-all (`GET /api/catalog/{fqid:path}`) returns a Pydantic
+discriminated union (`Field(discriminator="kind")`) over the five kinds it owns:
+`provider` / `register` / `binding` / `classification` / `classification-root`.
+`concept-group` is **not** a catch-all arm — it is the sole response type of the
+fixed-shape route `GET /api/catalog/group/{provider}/{register}/{key}` (declared above
+the catch-all; see § Routing above). The discriminated union drives `openapi-typescript`
+to emit a clean tagged union for the catch-all; `ConceptGroupNode` is a standalone
+schema used only by the group route. FQID fields serialize as plain `str` (`str(fqid)`),
+never nested models, so the codegen'd TS sees flat string fields. The binding **leaf**
+embeds the variable's FULL longitudinal record from one `Catalog.resolve` call (states,
+value sets, and the variable-grain `same_as` / `related_to` / `lineage` edges), plus the
+full variable `succession_chain` (#582, below). `lineage_warnings` are **omitted** —
 `ResolvedVariable` doesn't carry them; they arrive via the `/lineage_warnings` endpoint.
 
 One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a

@@ -619,19 +619,19 @@ def test_register_node_register_field_alias_on_wire(client):
     assert "register_name" not in ref
 
 
-def test_state_model_period_token_passes_through_reg_meta():
-    """#321/#681: `_state_model` no longer computes the coarsest exact display
-    token — reg_meta populates `VariableState.period_token` (see
-    `reg_meta.catalog.Catalog._period_token_for_window`, covered by
+def test_state_period_token_passes_through_reg_meta():
+    """#321/#681: the leaf no longer maps states through a webapp wrapper — it
+    embeds reg_meta's `VariableState` directly, so the `period_token` reg_meta
+    populates (see `reg_meta.catalog.Catalog`'s window logic, covered by
     test_fqid.py's `period_token_for_bounds` round-trips and the resolve-path
-    coverage in test_catalog.py). The mapper just passes it through to the wire,
-    so the value reg_meta sets is exactly what serializes."""
-    from types import SimpleNamespace
+    coverage in test_catalog.py) is exactly what serializes to the wire. This
+    asserts the pass-through on the embedded model itself for every token shape
+    (the open-ended → None case is also covered at the response level in
+    test_binding_leaf_embeds_full_record)."""
+    from reg_meta.catalog import VariableState
 
-    from reg_webapp.routes.catalog import _state_model
-
-    def stub(period_token: str | None):
-        return SimpleNamespace(
+    def state(period_token: str | None) -> VariableState:
+        return VariableState(
             state_id=1,
             variant="v",
             register_variant_id=1,
@@ -649,4 +649,4 @@ def test_state_model_period_token_passes_through_reg_meta():
         )
 
     for token in ("2018", "VT2009", "1992-01-01..2009-12-31", None):
-        assert _state_model(stub(token)).period_token == token
+        assert state(token).model_dump()["period_token"] == token
