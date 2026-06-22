@@ -1,4 +1,5 @@
 <script lang="ts">
+import { Command } from "bits-ui";
 import {
   type CatalogNode,
   getCatalogNode,
@@ -25,12 +26,22 @@ import {
   representationsFromStates,
   resolveBindingAt,
 } from "./catalog";
-import FilterInput from "./FilterInput.svelte";
 
 // INLINE-EXPAND embedded pick-mode catalog browser (maintainer decision): NO
 // router import, NO overlay/modal. It reuses the catalog DATA LAYER only
 // (asyncResource + the api.ts catalog GETs) and replaces the browse components'
 // <a href> navigation with internal pick callbacks.
+//
+// The filter+list interaction is built on Bits UI's headless `Command` primitive
+// (UI-foundation spike Arm A, #689): a SINGLE tab-stop on the Command input,
+// Up/Down arrow nav over the filtered rows, Enter to select the active row, and
+// role="listbox"/role="option" + aria-activedescendant ARIA — replacing the
+// hand-rolled FilterInput + <ul><button class=pick> lists that had N tab-stops and
+// no keyboard nav. Command's OWN scoring is turned OFF (`shouldFilter={false}`):
+// the picker feeds it the pre-ranked `filtered*` arrays so `rankFilter` (exact →
+// prefix → other, alphabetical within tier — the target-hunt UX) stays the single
+// source of truth. The "N of M" count is a sibling aria-live element, not a
+// Command feature. See SearchOmnibox.svelte for the sibling Combobox migration.
 //
 // Two modes (the picker mounts once per open with a FIXED mode):
 //  - "variant": pick a 3-seg register_variant, emitted WHOLE via
@@ -39,7 +50,7 @@ import FilterInput from "./FilterInput.svelte";
 //    list. When `register` is EMPTY / not a valid prefix (C2 — catalog→project
 //    handoff), it opens in REGISTER-BROWSE mode: provider list → register list →
 //    variant list, reusing the catalog DATA LAYER (root + provider node fetches) and
-//    the same FilterInput/rankFilter. Either way the emitted value is the full
+//    the same rankFilter. Either way the emitted value is the full
 //    `provider/register/variant`.
 //  - "variable": SCOPED to a source's register (registerPrefix = first 2 segs of
 //    register_variant) — drills ONLY within that register's binding (variable)
@@ -181,7 +192,8 @@ const browseRegisters = $derived(
 // BOTH slug/FQID and display name (rankFilter folds diacritics + case). Unlike
 // the browse pages, the picker RANKS the survivors (exact → prefix → other) so a
 // target-hunt ("kon" → Kön) surfaces the wanted row first; alphabetical order is
-// kept within each tier.
+// kept within each tier. Command's own scoring is disabled — these pre-ranked
+// arrays ARE the listbox content (see `shouldFilter={false}` below).
 let filter = $state("");
 const filteredVariants = $derived(
   rankFilter(variantList, filter, (v) => [v.slug, v.name]),
@@ -331,6 +343,75 @@ function emitVariant(slug: string): void {
 }
 </script>
 
+<!--
+  The Command list snippet — the shared flat-list shell for the variant / provider
+  / register lists (and, below, the variable leaf rows). `shouldFilter={false}`:
+  the picker pre-ranks with rankFilter and feeds the survivors as the items, so the
+  listbox content IS the ranked array (Command would otherwise re-score + re-order
+  by its own algorithm, dropping the tiered target-hunt). `label` gives the input
+  its accessible name (Bits UI renders a visually-hidden <label> the combobox
+  points to via aria-labelledby). `total`/`shown` drive the aria-live count, shown
+  only while filtering (matching the old FilterInput).
+-->
+{#snippet commandList(
+  label: string,
+  placeholder: string,
+  total: number,
+  shown: number,
+  empty: string,
+  body: import("svelte").Snippet,
+  explicitEmptyCount?: number,
+)}
+  <Command.Root shouldFilter={false} {label} class="cmd">
+    <div class="cmd-head">
+      <!-- `filter` binds to the INPUT's search value (NOT Command.Root's `value`,
+           which is the SELECTED item) — it's the needle rankFilter scores against. -->
+      <Command.Input
+        autofocus
+        bind:value={filter}
+        {placeholder}
+        autocomplete="off"
+        class="cmd-input"
+      />
+      {#if filter.trim().length > 0}
+        <span class="cmd-count" aria-live="polite">{shown} of {total}</span>
+      {/if}
+    </div>
+    <Command.List class="cmd-list">
+      <Command.Viewport>
+        {@render body()}
+        <!-- Empty-state: Command.Empty counts only registered Command.Items, which
+             is WRONG for the variable list — its folded ConceptGroupRow rows are
+             role="presentation", NOT Command.Items, so a filter that survives only
+             group rows (or a register with zero ungrouped leaves) leaves the item
+             count at 0 and Command.Empty would show "No variables match" beside a
+             VISIBLE group. So the variable list passes `explicitEmptyCount` (the
+             TRUE filtered count) and we gate the message on that. The homogeneous
+             variant/provider/register lists have no group rows → their item count
+             IS the filtered count, so Command.Empty is correct (and cheaper). -->
+        {#if explicitEmptyCount !== undefined}
+          {#if explicitEmptyCount === 0}
+            <p class="cmd-empty">{empty}</p>
+          {/if}
+        {:else}
+          <Command.Empty class="cmd-empty">{empty}</Command.Empty>
+        {/if}
+      </Command.Viewport>
+    </Command.List>
+  </Command.Root>
+{/snippet}
+
+<!-- One flat pick row (variant / provider / register). The Command.Item value is
+     the row's stable key; selecting it (click or Enter on the active row) fires
+     `onSelect`. `keywords` would feed Command's scorer, but scoring is off — the
+     pre-ranked array already decides membership, so no keywords needed. -->
+{#snippet pickRow(value: string, onSelect: () => void, primary: string, secondary: string | undefined, secondaryClass: string)}
+  <Command.Item {value} {onSelect} class="pick">
+    <span class="slug">{primary}</span>
+    {#if secondary}<span class={secondaryClass}>{secondary}</span>{/if}
+  </Command.Item>
+{/snippet}
+
 <div class="picker">
   <div class="picker-head">
     {#if props.mode === "variant"}
@@ -366,84 +447,42 @@ function emitVariant(slug: string): void {
   {:else if props.mode === "variant" && effectiveRegister}
     <!-- Variant list (hand-typed prefix OR a browsed register). -->
     {#if variantList.length > 0}
-      <FilterInput
-        bind:value={filter}
-        total={variantList.length}
-        shown={filteredVariants.length}
-        placeholder="Filter variants…"
-        label="Filter variants"
-        autofocus
-      />
-      {#if filteredVariants.length > 0}
-        <ul class="pick-list">
-          {#each filteredVariants as variant (variant.slug)}
-            <li>
-              <button type="button" class="pick" onclick={() => emitVariant(variant.slug)}>
-                <span class="slug">{variant.slug}</span>
-                {#if variant.name}<span class="name">{variant.name}</span>{/if}
-              </button>
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <p class="muted">No variants match “{filter}”.</p>
-      {/if}
+      {@render commandList(
+        "Filter variants",
+        "Filter variants…",
+        variantList.length,
+        filteredVariants.length,
+        `No variants match “${filter}”.`,
+        variantRows,
+      )}
     {:else}
       <p class="muted">No variants for this register.</p>
     {/if}
   {:else if props.mode === "variant" && browsedProvider}
     <!-- C2: register-browse step 2 — the chosen provider's registers. -->
     {#if browseRegisters.length > 0}
-      <FilterInput
-        bind:value={filter}
-        total={browseRegisters.length}
-        shown={filteredRegisters.length}
-        placeholder="Filter registers…"
-        label="Filter registers"
-        autofocus
-      />
-      {#if filteredRegisters.length > 0}
-        <ul class="pick-list">
-          {#each filteredRegisters as register (register.fqid)}
-            <li>
-              <button type="button" class="pick" onclick={() => browseRegister(register.fqid)}>
-                <span class="slug">{register.name ?? register.fqid}</span>
-                <code class="leaf-fqid">{register.fqid}</code>
-              </button>
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <p class="muted">No registers match “{filter}”.</p>
-      {/if}
+      {@render commandList(
+        "Filter registers",
+        "Filter registers…",
+        browseRegisters.length,
+        filteredRegisters.length,
+        `No registers match “${filter}”.`,
+        registerRows,
+      )}
     {:else}
       <p class="muted">No registers for this provider.</p>
     {/if}
   {:else if props.mode === "variant"}
     <!-- C2: register-browse step 1 — the provider list (catalog root). -->
     {#if browseProviders.length > 0}
-      <FilterInput
-        bind:value={filter}
-        total={browseProviders.length}
-        shown={filteredProviders.length}
-        placeholder="Filter providers…"
-        label="Filter providers"
-        autofocus
-      />
-      {#if filteredProviders.length > 0}
-        <ul class="pick-list">
-          {#each filteredProviders as provider (provider.fqid)}
-            <li>
-              <button type="button" class="pick" onclick={() => browseProvider(provider.fqid)}>
-                <span class="slug">{provider.name ?? provider.fqid}</span>
-                <code class="leaf-fqid">{provider.fqid}</code>
-              </button>
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <p class="muted">No providers match “{filter}”.</p>
-      {/if}
+      {@render commandList(
+        "Filter providers",
+        "Filter providers…",
+        browseProviders.length,
+        filteredProviders.length,
+        `No providers match “${filter}”.`,
+        providerRows,
+      )}
     {:else}
       <p class="muted">No providers.</p>
     {/if}
@@ -451,43 +490,17 @@ function emitVariant(slug: string): void {
     {#if variableChildren.length > 0}
       <!-- Counts stay in VARIABLE units after folding (#322):
            countFoldedMembers expands group rows to their member counts. -->
-      <FilterInput
-        bind:value={filter}
-        total={variableChildren.length}
-        shown={countFoldedMembers(filteredVariables)}
-        placeholder="Filter variables…"
-        label="Filter variables"
-        autofocus
-      />
-      {#if filteredVariables.length > 0}
-        <ul class="pick-list">
-          {#each filteredVariables as row (row.kind === "group" ? row.group.key : row.item.fqid)}
-            <li>
-              {#if row.kind === "group"}
-                <!-- Folded family (#322): expand to the facet picker; members
-                     emit through the same derive-on-pick path as leaf rows. -->
-                <ConceptGroupRow
-                  group={row.group}
-                  disabled={resolving}
-                  onpick={(fqid) => void pickVariable(fqid)}
-                />
-              {:else}
-                <button
-                  type="button"
-                  class="pick"
-                  disabled={resolving}
-                  onclick={() => void pickVariable(row.item.fqid)}
-                >
-                  <span class="slug">{row.item.name ?? row.item.fqid}</span>
-                  <code class="leaf-fqid">{row.item.fqid}</code>
-                </button>
-              {/if}
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <p class="muted">No variables match “{filter}”.</p>
-      {/if}
+      {@render commandList(
+        "Filter variables",
+        "Filter variables…",
+        variableChildren.length,
+        countFoldedMembers(filteredVariables),
+        `No variables match “${filter}”.`,
+        variableRowsBody,
+        // The TRUE filtered count (leaves + folded group rows) — NOT Command's
+        // item count, which excludes the role="presentation" group rows (#2).
+        filteredVariables.length,
+      )}
     {:else}
       <p class="muted">No variables in this register.</p>
     {/if}
@@ -517,7 +530,7 @@ function emitVariant(slug: string): void {
         </p>
         <ul class="pick-list">
           <li>
-            <button type="button" class="pick primary" onclick={() => chooseRepresentation(pendingReps[0])}>
+            <button type="button" class="pick chooser-pick primary" onclick={() => chooseRepresentation(pendingReps[0])}>
               <span class="slug">{pendingReps[0].column}</span>
               {#if pendingReps[0].label}<span class="name">{pendingReps[0].label}</span>{/if}
               {#if pendingReps[0].codeCount != null}<span class="name">({pendingReps[0].codeCount} codes)</span>{/if}
@@ -543,7 +556,7 @@ function emitVariant(slug: string): void {
           <ul class="pick-list alternates">
             {#each pendingReps.slice(1) as rep (rep.column)}
               <li>
-                <button type="button" class="pick" onclick={() => chooseRepresentation(rep)}>
+                <button type="button" class="pick chooser-pick" onclick={() => chooseRepresentation(rep)}>
                   <span class="slug">{rep.column}</span>
                   {#if rep.label}<span class="name">{rep.label}</span>{/if}
                   {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
@@ -562,7 +575,7 @@ function emitVariant(slug: string): void {
         <ul class="pick-list">
           {#each pendingReps as rep (rep.column)}
             <li>
-              <button type="button" class="pick" onclick={() => chooseRepresentation(rep)}>
+              <button type="button" class="pick chooser-pick" onclick={() => chooseRepresentation(rep)}>
                 <span class="slug">{rep.column}</span>
                 {#if rep.label}<span class="name">{rep.label}</span>{/if}
                 {#if rep.codeCount != null}<span class="name">({rep.codeCount} codes)</span>{/if}
@@ -576,76 +589,191 @@ function emitVariant(slug: string): void {
   {/if}
 </div>
 
+<!-- ── The per-list option bodies (rendered inside commandList's Viewport) ──────
+     Each is a {#each} over the pre-ranked filtered array of Command.Item rows. -->
+{#snippet variantRows()}
+  {#each filteredVariants as variant (variant.slug)}
+    {@render pickRow(variant.slug, () => emitVariant(variant.slug), variant.slug, variant.name ?? undefined, "name")}
+  {/each}
+{/snippet}
+
+{#snippet registerRows()}
+  {#each filteredRegisters as register (register.fqid)}
+    {@render pickRow(register.fqid, () => browseRegister(register.fqid), register.name ?? register.fqid, register.fqid, "leaf-fqid")}
+  {/each}
+{/snippet}
+
+{#snippet providerRows()}
+  {#each filteredProviders as provider (provider.fqid)}
+    {@render pickRow(provider.fqid, () => browseProvider(provider.fqid), provider.name ?? provider.fqid, provider.fqid, "leaf-fqid")}
+  {/each}
+{/snippet}
+
+<!--
+  THE FRICTION (#689 headline evidence). The variable list mixes flat leaf rows
+  with FOLDED group rows (#322). Leaf rows fit Command.Item cleanly (role="option",
+  arrow-navigable, Enter selects). A folded group is a NESTED expandable widget
+  (ConceptGroupRow: a <details> → facet matrix / chips / member list, whose members
+  are themselves pick buttons) and does NOT fit Command's flat-option model:
+    • Command.Item is a single selectable option; an option that instead toggles a
+      disclosure, and whose expansion contains its OWN interactive controls, is
+      invalid ARIA (interactive descendants inside role="option") and fights
+      Command's Enter handler, which `.click()`s the active option.
+    • Command's getValidItems()/arrow-nav indexes every registered item, so a group
+      "option" would be a focus stop that does nothing selectable.
+  Escape hatch: render the group row as a PLAIN element directly in the Viewport
+  (NOT a Command.Item), wrapped in role="presentation" so it sits in the listbox
+  DOM without claiming an option role. The leaf rows remain the only navigable
+  options; the group keeps its own <details>/button keyboard semantics, just
+  outside Command's option model. Counts/ranking still fold it (it's in
+  `filteredVariables`), so the visual list is unchanged — only the keyboard model
+  splits: arrow-nav covers leaves, the group is reached by Tab into its summary.
+-->
+{#snippet variableRowsBody()}
+  {#each filteredVariables as row (row.kind === "group" ? row.group.key : row.item.fqid)}
+    {#if row.kind === "group"}
+      <div class="group-row-wrap" role="presentation">
+        <ConceptGroupRow
+          group={row.group}
+          disabled={resolving}
+          onpick={(fqid) => void pickVariable(fqid)}
+        />
+      </div>
+    {:else}
+      <Command.Item
+        value={row.item.fqid}
+        disabled={resolving}
+        onSelect={() => void pickVariable(row.item.fqid)}
+        class="pick"
+      >
+        <span class="slug">{row.item.name ?? row.item.fqid}</span>
+        <code class="leaf-fqid">{row.item.fqid}</code>
+      </Command.Item>
+    {/if}
+  {/each}
+{/snippet}
+
 <style>
   .picker {
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 0.6rem 0.75rem;
-    margin-top: 0.4rem;
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-3);
+    margin-top: var(--space-2);
     background: var(--surface);
   }
   .picker-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
   }
   .picker-title {
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     font-weight: 600;
   }
   .cancel {
     font: inherit;
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
+    font-size: var(--text-sm);
+    padding: var(--space-1) var(--space-2);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: var(--radius);
     background: var(--surface);
     cursor: pointer;
   }
   .back {
     font: inherit;
-    font-size: 0.8rem;
-    padding: 0.1rem 0;
-    margin-bottom: 0.4rem;
+    font-size: var(--text-sm);
+    padding: var(--space-1) 0;
+    margin-bottom: var(--space-2);
     border: none;
     background: transparent;
     color: var(--accent);
     cursor: pointer;
     text-align: left;
   }
-  .pick-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+
+  /* ── Bits UI Command surfaces ────────────────────────────────────────────
+     The Command primitive renders its own DOM (an application-role wrapper, the
+     combobox input, a listbox). We pass token-styled classes through; the
+     `:global` rules below the scoped ones target the option role-state attrs
+     (data-selected / data-disabled) Bits UI sets, which scoped CSS can't reach
+     on primitive-rendered nodes. */
+  .cmd-head {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+  }
+  :global(.cmd-input) {
+    flex: 1;
+    font: inherit;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  :global(.cmd-input:focus) {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+  }
+  .cmd-count {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    white-space: nowrap;
+  }
+  :global(.cmd-list) {
     max-height: 18rem;
     overflow-y: auto;
   }
-  .pick {
+  :global(.cmd-empty) {
+    color: var(--muted);
+    padding: var(--space-2);
+  }
+
+  /* The flat pick rows (Command.Item, role="option"). The keyboard-active row is
+     marked data-selected by Bits UI; style it like the old :hover so arrow-nav and
+     pointer read the same. */
+  /* CONFINED to this component's subtree: `.pick` is a class Bits UI forwards onto
+     a Command.Item primitive element Svelte's scoping can't hash, so the rule must
+     be `:global`. But an UNSCOPED `:global(.pick)` leaks into the OTHER components
+     that define their own scoped `.pick` buttons (BindingLeafView's rep-chooser),
+     a build-order-dependent specificity battle on hover/selected. Prefixing with
+     `.picker` (which IS in this component's markup → Svelte hashes it) keeps `.pick`
+     global but matches only inside THIS picker's container (#689 review #3). */
+  .picker :global(.pick) {
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
+    gap: var(--space-3);
     width: 100%;
     text-align: left;
     font: inherit;
-    padding: 0.35rem 0.5rem;
+    padding: var(--space-1) var(--space-2);
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: var(--radius);
     background: transparent;
     cursor: pointer;
   }
-  .pick:hover:not(:disabled) {
+  .picker :global(.pick:hover:not([data-disabled])),
+  .picker :global(.pick[data-selected]:not([data-disabled])) {
     border-color: var(--accent);
     background: var(--accent-bg);
   }
-  .pick:disabled {
+  .picker :global(.pick[data-disabled]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
+  /* The folded-group wrapper is a non-option row — strip the option padding so the
+     nested ConceptGroupRow controls its own layout. */
+  :global(.group-row-wrap) {
+    padding: var(--space-1) 0;
+  }
+
+  /* The slug / name / fqid / classification spans are authored in THIS component
+     (the pickRow + leaf-variable snippets + the chooser), so they carry the scope
+     hash even when nested inside a Command.Item's primitive-rendered div — one
+     scoped rule covers both the option rows and the chooser. */
   .slug {
     font-weight: 600;
   }
@@ -653,34 +781,61 @@ function emitVariant(slug: string): void {
   .name,
   .classification {
     color: var(--muted);
-    font-size: 0.85em;
+    font-size: var(--text-sm);
   }
   .hint {
-    font-size: 0.8rem;
-    margin: 0 0 0.4rem;
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-2);
   }
   .resolve-state {
-    font-size: 0.85rem;
-    margin: 0.4rem 0 0;
+    font-size: var(--text-sm);
+    margin: var(--space-2) 0 0;
   }
   .chooser {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
     border-top: 1px solid var(--border);
   }
   .chooser-title {
-    font-size: 0.85rem;
-    margin: 0 0 0.4rem;
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-2);
   }
-  .pick.primary {
+  /* The representation chooser keeps plain <button> rows (a small, static, mutually
+     exclusive set — not a filterable list, so no Command primitive). */
+  .pick-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .chooser-pick {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: transparent;
+    cursor: pointer;
+  }
+  .chooser-pick:hover {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .chooser-pick.primary {
     border-color: var(--accent);
     background: var(--accent-bg);
   }
   .reveal {
     font: inherit;
-    font-size: 0.8rem;
-    margin-top: 0.4rem;
-    padding: 0.2rem 0;
+    font-size: var(--text-sm);
+    margin-top: var(--space-2);
+    padding: var(--space-1) 0;
     border: none;
     background: transparent;
     color: var(--accent);
@@ -688,6 +843,6 @@ function emitVariant(slug: string): void {
     text-align: left;
   }
   .pick-list.alternates {
-    margin-top: 0.25rem;
+    margin-top: var(--space-1);
   }
 </style>

@@ -676,6 +676,92 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
 - The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely (codegen output,
   never hand-formatted).
 
+**UI behavior layer: Bits UI** (`bits-ui@2.18.1`, the Svelte-5-runes major) is the
+sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
+dialogs. It provides behavior + ARIA with no bundled styles; the app's scoped CSS and
+design-token set supply all visual styling. Stop hand-rolling widgets that Bits UI
+covers — #632 (a hand-extracted slider that pre-dated this decision) is the canonical
+motivating example. See the § UI primitives section below for the adoption rationale
+(#689).
+
+## UI primitives — Bits UI + scoped CSS (bake-off #689)
+
+A two-arm spike ahead of the #664/#665/#666 redesign wave evaluated what the frontend
+should use as its UI foundation. The question was purely about styling strategy — **both
+arms sat on Bits UI** for accessible behavior (shadcn-svelte = Bits UI + Tailwind v4),
+so the a11y win was not a differentiator.
+
+**Arm A** — Bits UI + Svelte scoped CSS + a CSS-custom-property design-token set. **Arm
+B** — Bits UI via shadcn-svelte + Tailwind v4.
+
+Both rebuilt `SearchOmnibox.svelte` as an accessible `Combobox`. The verdict: **adopt
+Arm A.**
+
+### Evidence
+
+**Footprint.** Arm A: 1 new runtime dep (`bits-ui@2.18.1`) + a small token block in
+`App.svelte`. Arm B: 8 deps (`tailwindcss`, `@tailwindcss/vite`, `bits-ui`, `clsx`,
+`tailwind-merge`, `tailwind-variants`, `@lucide/svelte`, `tw-animate-css`) + \~1061 LOC
+of vendored `ui/**` components to own + a second, parallel token system (shadcn's oklch
+palette, disconnected from the app's existing `--border`/`--accent`/`--surface` tokens).
+
+**Bundle.** JS was roughly a wash (\~+25–32 kB gzip each arm, dominated by the shared
+Bits UI runtime). The distinguishing cost was CSS: Arm A near-flat (+0.3 kB gzip); Arm
+B's Tailwind utility layer more than doubled CSS (+7.3 kB gzip).
+
+**Tooling friction (Arm B only).** shadcn-svelte's CLI assumes SvelteKit — its `init`
+cannot run non-interactively on this plain-Vite SPA (needed a manual `$lib` alias +
+manual theme transcription + undeclared peer deps). Biome rejected Tailwind v4
+directives and the vendored files violated repo lint conventions; the vendor directory
+had to be excluded from lint entirely. No such friction on Arm A.
+
+**The telling detail.** Even in Arm B, the integration-correct choice was to style the
+omnibox with the existing app tokens, not Tailwind's palette — shadcn's oklch set is a
+disconnected parallel system that doesn't match the app's design language. The Tailwind
+arm didn't actually want Tailwind for the part that mattered.
+
+**Conclusion.** For a \~35-component bespoke app with its own design language, Bits UI
+captures the entire accessibility goal. Tailwind/shadcn's added cost — deps, vendored
+ownership, dual token systems, CSS growth, persistent tooling and lint friction — is
+disproportionate. This is independent of the #679 MONA-austerity loosening; the frontend
+was never MONA-constrained — the adoption gap was purely historical.
+
+### What shipped
+
+- `bits-ui@2.18.1` added to `frontend/package.json` as the single new runtime dep.
+- `App.svelte` `:global(:root)` extended with a purposeful design-token set —
+  `--space-1`/`2`/`3`/`4`, `--text-sm`/`--text-base`, `--radius`, `--focus-ring`,
+  `--surface-hover`, `--surface-selected` — alongside the pre-existing palette
+  (`--border`, `--muted`, `--accent`, `--accent-bg`, `--surface`). These are the
+  geometry, type, and interaction-state tokens the bare palette lacked; the existing
+  color palette stays the source of truth.
+- `SearchOmnibox.svelte` rebuilt as a **Bits UI `Combobox`**: accessible combobox with
+  live `/api/search` suggestions (selecting one navigates to the catalog node; the
+  routing-search `/search?q=` behavior + URL↔box sync are preserved). Behavior nuance to
+  know: Bits UI auto-highlights the first suggestion, so Enter-with-popup-open jumps to
+  the top suggestion (command-palette semantics); Enter routes to `/search` only when no
+  suggestion is highlighted.
+- `CatalogPicker.svelte` filtered lists (variant / provider / register / leaf variables)
+  migrated to **Bits UI `Command`**: single tab-stop, arrow-key nav, `role="listbox"` /
+  `role="option"` ARIA. `rankFilter` stays the single source of truth (`Command`'s own
+  scorer is disabled via `shouldFilter={false}`).
+
+### CatalogPicker / Command friction (relevant to #664/#666)
+
+`Command` fits the **homogeneous** filtered lists (variant / provider / register) with
+zero friction. The **folded `ConceptGroupRow`** (a nested expandable widget) cannot be a
+flat `role="option"` — it is rendered as `role="presentation"` inside the listbox, which
+**splits the keyboard model**: arrow-nav covers the leaf options; Tab reaches the group
+expanders. The picker's most important list (740 grouped variables) therefore gets only
+partial keyboard nav from the primitive. Worth knowing going into the #664 subject-page
+and #666 history-graph work.
+
+### Rollout
+
+Incremental — no big-bang rewrite. New redesign UI (#664/#665/#666) builds on Bits UI +
+the token set; high-risk existing hand-rolled widgets migrate opportunistically as the
+redesign is the natural migration window.
+
 ## Site-wide catalog vintage footer (#355 decision 2)
 
 `App.svelte` renders a `<footer class="vintage">` on every route showing the reg_meta

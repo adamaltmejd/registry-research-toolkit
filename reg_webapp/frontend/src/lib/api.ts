@@ -507,6 +507,13 @@ function searchGet<T>(
   });
 }
 
+/** The minimum query length that's worth a GET /api/search round-trip: a single
+ * char is the most expensive query server-side (the codes/value sub-query) and
+ * the least useful. The single source of truth for this threshold — both
+ * SearchView (the results page) and SearchOmnibox (the header suggestions) gate
+ * their fetches on it. */
+export const SEARCH_MIN_QUERY_LENGTH = 2;
+
 /** Search the catalog. `q` is the raw user query (encoded); `limit` is the
  * per-group result cap — omit it to use the server default (20, clamped ≤50);
  * `type` scopes the search to one group (#393 item 1) — omit it (or pass `all`)
