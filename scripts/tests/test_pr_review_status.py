@@ -1,10 +1,12 @@
 """Unit tests for scripts/pr_review_status.py — the Codex bot-review-window classifier.
 
-The deterministic core (`classify` signal resolution + `_head_push_ts`) is pinned here;
-the gh fetchers (`evaluate`, `poll`, `main`) are covered by a live run, matching the
-sibling scripts. The load-bearing regression is the login split: Codex submits
-reviews/comments as `chatgpt-codex-connector` but reacts as
-`chatgpt-codex-connector[bot]`, and a poller keyed on one login silently misses the other.
+The deterministic core (`classify` signal resolution + the `messages` extraction +
+`_head_push_ts`) is pinned here; the gh fetchers (`evaluate`, `poll`, `main`) are covered
+by a live run, matching the sibling scripts. Load-bearing regressions pinned below:
+  - the login split (reviews `chatgpt-codex-connector`, reactions `…[bot]`);
+  - the two merge-gating verdicts are bound to the head commit by SHA, never a timestamp,
+    so a stale verdict from a prior push can't read as fresh (a bare 👍 is NOT clean);
+  - the #692 false-positive (clean verdict with stale off-head findings reviews).
 """
 
 from __future__ import annotations
@@ -24,12 +26,11 @@ prs = importlib.util.module_from_spec(_SPEC)
 sys.modules[_SPEC.name] = prs
 _SPEC.loader.exec_module(prs)
 
-# Codex's two distinct logins + a human, and a fixed push reference with before/after ticks.
 BOT_REVIEW = "chatgpt-codex-connector"  # reviews + comments
 BOT_REACT = "chatgpt-codex-connector[bot]"  # reactions
 HUMAN = "octocat"
-HEAD = "headsha000"  # the PR's current head commit
-OLD = "oldsha111"  # a pre-fix commit that is no longer head
+HEAD = "abcdef1234567890"  # the PR's current head commit (hex, like a real SHA)
+OLD = "fedcba0987654321"  # a pre-fix commit that is no longer head
 PUSH = "2026-06-22T12:00:00Z"
 BEFORE = "2026-06-22T11:00:00Z"
 AFTER1 = "2026-06-22T12:30:00Z"
@@ -37,66 +38,90 @@ AFTER2 = "2026-06-22T13:00:00Z"
 USAGE_LIMIT = "You have reached your Codex usage limits for code reviews."
 
 
-def _review(login, *, state="COMMENTED", commit_id=HEAD, at=AFTER1, url="r"):
+def _review(
+    login, *, state="COMMENTED", commit_id=HEAD, at=AFTER1, url="r", body="summary"
+):
     return {
         "user": {"login": login},
         "state": state,
         "commit_id": commit_id,
         "submitted_at": at,
         "html_url": url,
+        "body": body,
     }
 
 
-def _comment(login, body, *, at=AFTER1, url="c"):
+def _comment(login, body, *, reviewed_commit=None, at=AFTER1, url="c"):
+    if reviewed_commit:
+        body = f"{body}\n\n**Reviewed commit:** `{reviewed_commit}`"
     return {"user": {"login": login}, "body": body, "created_at": at, "html_url": url}
+
+
+def _clean_comment(*, commit_id=HEAD, at=AFTER1, url="c"):
+    """Codex's no-issues narration comment, stamped with the reviewed commit SHA."""
+    return _comment(
+        BOT_REVIEW, "Codex Review: Didn't find any major issues.",
+        reviewed_commit=commit_id, at=at, url=url,
+    )  # fmt: skip
 
 
 def _reaction(content, login, *, at=AFTER1):
     return {"content": content, "user": {"login": login}, "created_at": at}
 
 
-def _classify(*, reviews=None, comments=None, reactions=None):
+def _review_comment(
+    login, body, *, commit_id=HEAD, at=AFTER1, url="rc", path="f.py", line=1
+):
+    return {
+        "user": {"login": login},
+        "commit_id": commit_id,
+        "created_at": at,
+        "html_url": url,
+        "path": path,
+        "line": line,
+        "body": body,
+    }
+
+
+def _classify(*, reviews=None, comments=None, reactions=None, review_comments=None):
     return prs.classify(
         head_oid=HEAD,
         push_ts=PUSH,
         reviews=reviews or [],
         comments=comments or [],
         reactions=reactions or [],
+        review_comments=review_comments or [],
     )
 
 
 # --- core signals --------------------------------------------------------------------
 
 
-def test_clean_is_thumbs_up_on_body() -> None:
-    out = _classify(reactions=[_reaction("+1", BOT_REACT)])
+def test_clean_is_head_bound_narration_comment() -> None:
+    out = _classify(comments=[_clean_comment()])
     assert out["signal"] == "clean"
     assert out["settled"] is True
     assert out["verdict_ts"] == "2026-06-22T12:30:00+00:00"
 
 
+def test_clean_matches_an_abbreviated_sha() -> None:
+    # Codex stamps an abbreviated SHA; a prefix of the full head_oid must still bind.
+    out = _classify(comments=[_clean_comment(commit_id=HEAD[:10])])
+    assert out["signal"] == "clean"
+
+
 def test_review_from_no_suffix_login_is_findings() -> None:
-    # Regression: the review login has NO `[bot]` suffix; substring match must still catch.
+    # Regression: the review login has NO `[bot]` suffix; the matcher must still catch it.
     out = _classify(reviews=[_review(BOT_REVIEW, state="CHANGES_REQUESTED")])
     assert out["signal"] == "findings"
     assert out["detail"] == {"review_state": "CHANGES_REQUESTED", "url": "r"}
 
 
 def test_both_login_forms_are_recognized() -> None:
-    # The single substring match must cover the no-suffix review login AND the [bot] react
-    # login — pinning that one poller sees both halves of the same bot.
+    # The no-suffix review/comment login AND the `[bot]` reaction login must both resolve —
+    # pinning that the matcher sees both halves of the same bot.
     assert _classify(reviews=[_review(BOT_REVIEW)])["signal"] == "findings"
-    assert _classify(reactions=[_reaction("+1", BOT_REACT)])["signal"] == "clean"
-
-
-def test_narration_comment_alone_is_not_findings() -> None:
-    # Codex's clean verdict ships as a "Codex Review: …" comment + a 👍. The comment is
-    # narration — a top-level comment is never the findings vehicle (that's the review),
-    # so on its own it must NOT read as findings.
-    out = _classify(
-        comments=[_comment(BOT_REVIEW, "Codex Review: Didn't find any issues")]
-    )
-    assert out["signal"] == "none"
+    assert _classify(reactions=[_reaction("eyes", BOT_REACT)])["signal"] == "reviewing"
 
 
 def test_eyes_only_is_reviewing_and_unsettled() -> None:
@@ -118,23 +143,33 @@ def test_empty_is_none() -> None:
     assert out["verdict_ts"] is None
 
 
-# --- staleness gates -----------------------------------------------------------------
+# --- staleness gates (head-bound verdicts; timestamp only for the safe-direction ones) --
 
 
 def test_review_on_non_head_commit_is_ignored() -> None:
-    # Reviews are bound to the head commit by `commit_id`, not by timestamp — a review on
-    # a superseded commit (even one submitted "after" the push clock) is stale. This is the
-    # rebase-proof gate: a stale verdict can never read as fresh findings.
+    # Reviews are bound to the head commit by `commit_id`, not by timestamp — a review on a
+    # superseded commit (even one "after" the push clock) is stale and can't read as fresh.
     out = _classify(reviews=[_review(BOT_REVIEW, commit_id=OLD, at=AFTER2)])
     assert out["signal"] == "none"
 
 
-def test_reactions_before_push_are_ignored() -> None:
-    # Body reactions/comments are commit-unbound, so they fall back to the push timestamp.
-    out = _classify(
-        reactions=[_reaction("+1", BOT_REACT, at=BEFORE)],
-        comments=[_comment(BOT_REVIEW, USAGE_LIMIT, at=BEFORE)],
-    )
+def test_clean_comment_for_non_head_commit_is_ignored() -> None:
+    # The clean verdict is bound to the head via its "Reviewed commit:" SHA — a no-issues
+    # comment stamped with a prior commit must not settle the current HEAD as clean.
+    out = _classify(comments=[_clean_comment(commit_id=OLD, at=AFTER2)])
+    assert out["signal"] == "none"
+
+
+def test_bare_thumbs_up_reaction_is_not_clean() -> None:
+    # The fix for the rebase/no-push-time gap: a 👍 reaction is commit-unbound, so on its
+    # own it is NOT a clean verdict — clean requires the SHA-stamped narration comment.
+    out = _classify(reactions=[_reaction("+1", BOT_REACT, at=AFTER2)])
+    assert out["signal"] == "none"
+
+
+def test_exhausted_before_push_is_ignored() -> None:
+    # The out-of-tokens note carries no SHA, so it falls back to the push timestamp.
+    out = _classify(comments=[_comment(BOT_REVIEW, USAGE_LIMIT, at=BEFORE)])
     assert out["signal"] == "none"
 
 
@@ -156,33 +191,29 @@ def test_pending_and_dismissed_reviews_are_ignored() -> None:
 # --- precedence: newest-eyes vs strongest-verdict ------------------------------------
 
 
-def test_eyes_then_thumbs_is_clean() -> None:
-    # 👀 then a later 👍: review finished → clean (newest non-reviewing event).
+def test_eyes_then_clean_comment_is_clean() -> None:
+    # 👀 then a later clean verdict: review finished → clean (newest non-reviewing event).
     out = _classify(
-        reactions=[
-            _reaction("eyes", BOT_REACT, at=AFTER1),
-            _reaction("+1", BOT_REACT, at=AFTER2),
-        ]  # fmt: skip
+        comments=[_clean_comment(at=AFTER2)],
+        reactions=[_reaction("eyes", BOT_REACT, at=AFTER1)],
     )
     assert out["signal"] == "clean"
 
 
-def test_thumbs_then_eyes_is_reviewing() -> None:
-    # 👍 then a later 👀: Codex re-opened the review → never conclude.
+def test_clean_then_eyes_is_reviewing() -> None:
+    # A clean verdict then a later 👀: Codex re-opened the review → never conclude.
     out = _classify(
-        reactions=[
-            _reaction("+1", BOT_REACT, at=AFTER1),
-            _reaction("eyes", BOT_REACT, at=AFTER2),
-        ]  # fmt: skip
+        comments=[_clean_comment(at=AFTER1)],
+        reactions=[_reaction("eyes", BOT_REACT, at=AFTER2)],
     )
     assert out["signal"] == "reviewing"
 
 
-def test_findings_outrank_a_newer_thumbs_up() -> None:
-    # Priority surfaces actionable feedback over a bare 👍, even if the 👍 is newer.
+def test_findings_outrank_a_newer_clean() -> None:
+    # Priority surfaces actionable feedback over a no-issues note, even if the note is newer.
     out = _classify(
         reviews=[_review(BOT_REVIEW, at=AFTER1)],
-        reactions=[_reaction("+1", BOT_REACT, at=AFTER2)],
+        comments=[_clean_comment(at=AFTER2)],
     )
     assert out["signal"] == "findings"
 
@@ -196,27 +227,26 @@ def test_findings_outrank_exhausted() -> None:
 
 
 def test_clean_outranks_exhausted() -> None:
-    # Pins the `clean > exhausted` priority rung: a 👍 and an out-of-tokens note on the
-    # same HEAD must read clean (Codex both reviewed-clean and later re-ran out), not
-    # exhausted. Without this, reordering the priority tuple regresses silently.
+    # Pins the `clean > exhausted` priority rung: a clean verdict and an out-of-tokens note
+    # on the same HEAD must read clean. Without this, reordering the tuple regresses silently.
     out = _classify(
-        reactions=[_reaction("+1", BOT_REACT, at=AFTER1)],
-        comments=[_comment(BOT_REVIEW, USAGE_LIMIT, at=AFTER2)],
+        comments=[
+            _clean_comment(at=AFTER1),
+            _comment(BOT_REVIEW, USAGE_LIMIT, at=AFTER2),
+        ],
     )
     assert out["signal"] == "clean"
 
 
-def test_clean_when_thumbs_up_accompanies_narration_comment() -> None:
-    # The PR #692 false-positive: a clean verdict (👍 + narration comment), preceded by
-    # findings reviews on the *pre-fix* commits. Must read clean, not findings — the stale
-    # reviews are off-head (gated out) and the narration comment is not a verdict.
+def test_clean_with_stale_off_head_findings_reviews() -> None:
+    # The PR #692 false-positive: a clean verdict, preceded by findings reviews on the
+    # *pre-fix* commits. Must read clean — the stale reviews are off-head (gated out).
     out = _classify(
         reviews=[
-            _review(BOT_REVIEW, commit_id=OLD),  # review on a pre-fix commit
+            _review(BOT_REVIEW, commit_id=OLD),
             _review(BOT_REVIEW, commit_id=OLD),
         ],
-        comments=[_comment(BOT_REVIEW, "Codex Review: Didn't find any major issues.")],
-        reactions=[_reaction("+1", BOT_REACT)],
+        comments=[_clean_comment()],
     )
     assert out["signal"] == "clean"
     assert out["settled"] is True
@@ -238,10 +268,54 @@ def test_findings_keeps_most_recent_instance() -> None:
 def test_human_activity_is_ignored() -> None:
     out = _classify(
         reviews=[_review(HUMAN, state="CHANGES_REQUESTED")],
-        comments=[_comment(HUMAN, "looks good")],
-        reactions=[_reaction("+1", HUMAN), _reaction("eyes", HUMAN)],
+        comments=[
+            _comment(HUMAN, "looks good", reviewed_commit=HEAD),
+            _comment(HUMAN, USAGE_LIMIT),
+        ],
+        reactions=[_reaction("eyes", HUMAN)],
     )
     assert out["signal"] == "none"
+
+
+# --- messages (the bodies the caller would otherwise re-fetch) -----------------------
+
+
+def test_clean_surfaces_narration_comment_in_messages() -> None:
+    # The reported scenario: a clean verdict whose narration text rides along in `messages`
+    # so the caller never re-reads it to "confirm it's not a finding".
+    out = _classify(comments=[_clean_comment()], reactions=[_reaction("+1", BOT_REACT)])
+    assert out["signal"] == "clean"
+    assert [m["kind"] for m in out["messages"]] == ["comment"]
+    assert "Didn't find any major issues" in out["messages"][0]["body"]
+
+
+def test_findings_messages_carry_review_summary_and_inline_comments() -> None:
+    out = _classify(
+        reviews=[_review(BOT_REVIEW, body="Automated review suggestions")],
+        review_comments=[
+            _review_comment(BOT_REVIEW, "Guard the nil case", path="a.py", line=7)
+        ],
+    )
+    assert out["signal"] == "findings"
+    assert {m["kind"] for m in out["messages"]} == {"review", "review_comment"}
+    inline = next(m for m in out["messages"] if m["kind"] == "review_comment")
+    assert (inline["body"], inline["path"], inline["line"]) == (
+        "Guard the nil case",
+        "a.py",
+        7,
+    )
+
+
+def test_messages_exclude_off_head_and_pre_push_and_human() -> None:
+    out = _classify(
+        reviews=[_review(BOT_REVIEW, commit_id=OLD, body="stale review")],
+        review_comments=[_review_comment(BOT_REVIEW, "stale inline", commit_id=OLD)],
+        comments=[
+            _comment(BOT_REVIEW, "pre-push narration", at=BEFORE),
+            _comment(HUMAN, "human comment"),
+        ],
+    )
+    assert out["messages"] == []
 
 
 # --- _head_push_ts -------------------------------------------------------------------

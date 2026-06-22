@@ -338,24 +338,24 @@ Green CI alone is never sufficient to merge. Scale the rest to the PR's size and
   unanswered. Review is iterative: if fixes introduce substantial new changes, run
   another round on the new diff — repeat until a round produces nothing material.
 - **Bot-review window** — after the PR is ready (and after each substantive push), give
-  Codex/Copilot a bounded window. **`scripts/pr_review_status.py <pr>`** computes the
-  signal: JSON to stdout (`signal` ∈ `clean`/`findings`/`reviewing`/`exhausted`/`none`),
-  exit **0** settled · **1** not-settled · **2** tool error; `--wait` polls to the
-  \~10-min ceiling (background it — a long `--wait` can outrun a foreground
-  command-runtime cap). Prefer it over re-deriving the `gh api` calls by hand, which is
-  where this gets shipped wrong: Codex submits reviews as login
-  `chatgpt-codex-connector` but reacts as `chatgpt-codex-connector[bot]`, so a one-login
-  poller misses half the signal. Poll for the **bot's own signal on the current HEAD**,
-  NOT for CI finishing — CI is a separate gate that usually goes green far sooner, so a
-  poller that exits on CI-done has not actually given the bot its window. The signals: a
-  submitted Codex **review** = findings (its suggestions vehicle); a **👍 reaction** on
-  the PR body (invisible to `gh pr view`;
-  `gh api repos/<owner>/<repo>/issues/<pr>/reactions`) = its clean verdict, which ships
-  alongside a "Codex Review: …" narration **comment** that is *not* itself findings; a
-  **👀 reaction** = still reviewing — never conclude or merge while it's the newest
-  signal; an out-of-tokens comment ("reached your Codex usage limits", in
-  `gh api repos/<owner>/<repo>/issues/<pr>/comments`) = a definitive end-of-wait, not a
-  blocker. Every signal is **scoped to the current HEAD** — reviews bound by their
+  Codex/Copilot a bounded window.
+  **`uv run --no-project python scripts/pr_review_status.py <pr>`** computes the signal:
+  JSON to stdout (`signal` ∈ `clean`/`findings`/`reviewing`/`exhausted`/`none`), exit
+  **0** settled · **1** not-settled · **2** tool error; `--wait` polls to the \~10-min
+  ceiling (background it — a long `--wait` can outrun a foreground command-runtime cap).
+  Prefer it over re-deriving the `gh api` calls by hand, which is where this gets
+  shipped wrong: Codex submits reviews as login `chatgpt-codex-connector` but reacts as
+  `chatgpt-codex-connector[bot]`, so a one-login poller misses half the signal. Poll for
+  the **bot's own signal on the current HEAD**, NOT for CI finishing — CI is a separate
+  gate that usually goes green far sooner, so a poller that exits on CI-done has not
+  actually given the bot its window. The signals: a submitted Codex **review** =
+  findings (its suggestions vehicle); a **👍 reaction** on the PR body (invisible to
+  `gh pr view`; `gh api repos/<owner>/<repo>/issues/<pr>/reactions`) = its clean
+  verdict, which ships alongside a "Codex Review: …" narration **comment** that is *not*
+  itself findings; a **👀 reaction** = still reviewing — never conclude or merge while
+  it's the newest signal; an out-of-tokens comment ("reached your Codex usage limits",
+  in `gh api repos/<owner>/<repo>/issues/<pr>/comments`) = a definitive end-of-wait, not
+  a blocker. Every signal is **scoped to the current HEAD** — reviews bound by their
   `commit_id`, body reactions/comments gated on the head commit's timestamp (the script
   handles this). \~10 min with no signal is the ceiling — bots may skip a push entirely
   (Codex auto-reviews on open/ready only; a verdict on a new HEAD must be requested by

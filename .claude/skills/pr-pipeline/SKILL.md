@@ -197,13 +197,14 @@ docs push after the hold starts restarts it).
 converged (your `/code-review` loop is the independent Claude pass) · CI green ·
 bot-review window settled · real-data validation for build-affecting work · **visual
 verification (a rendered-view `preview_screenshot`) for UI changes** · stale-head check.
-For the bot-review window, run **`scripts/pr_review_status.py <pr>`** (`--wait` to poll
-to the ceiling; background a long wait) — it computes Codex's signal on the **current
-HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`, scoped to the current HEAD),
-so you don't re-derive the login-sensitive `gh api` calls. Act on the signal (route
-`findings` to a fix, `@codex review` after a new push, never conclude on `reviewing`);
-never key the window on CI going green. Pipeline-specific operational notes the gate
-doesn't carry:
+For the bot-review window, run
+**`uv run --no-project python scripts/pr_review_status.py <pr>`** (`--wait` to poll to
+the ceiling; background a long wait) — it computes Codex's signal on the **current
+HEAD** (`clean`/`findings`/`reviewing`/`exhausted`/`none`, scoped to the current HEAD)
+and returns the verdict bodies in `messages` (no second `gh` call), so you don't
+re-derive the login-sensitive `gh api` calls. Act on the signal (route `findings` to a
+fix, `@codex review` after a new push, never conclude on `reviewing`); never key the
+window on CI going green. Pipeline-specific operational notes the gate doesn't carry:
 
 - Run the cheap gates first and the real `build-db` **LAST and ONCE** on the truly-final
   HEAD — it takes \~20 min, so launch it with `run_in_background: true` (the 10-min
