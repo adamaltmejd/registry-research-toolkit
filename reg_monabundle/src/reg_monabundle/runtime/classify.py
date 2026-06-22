@@ -280,7 +280,12 @@ def _sql_type_kind(sql_type: str | None) -> str | None:
     if not stripped:
         return None
     # "DECIMAL(18,2)" → "DECIMAL"; "TIMESTAMP WITH TIME ZONE" → "TIMESTAMP".
-    head = stripped.split("(", 1)[0].split()[0].lower()
+    # A leading "(" (e.g. "(18,2)") leaves no keyword before the paren, so the
+    # pre-paren split is empty — guard it like the empty-after-strip case above.
+    keyword = stripped.split("(", 1)[0].split()
+    if not keyword:
+        return None
+    head = keyword[0].lower()
     if head in _NUMERIC_SQL:
         return "numeric"
     if head in _DATE_SQL:
@@ -297,7 +302,15 @@ def _reg_meta_data_type_kind(data_type: str | None) -> str | None:
     """
     if not data_type:
         return None
-    head = data_type.strip().split("(", 1)[0].split()[0].lower()
+    stripped = data_type.strip()
+    if not stripped:
+        return None
+    # A leading "(" (e.g. "(18,2)") leaves no keyword before the paren, so the
+    # pre-paren split is empty — guard it like the empty-after-strip case above.
+    keyword = stripped.split("(", 1)[0].split()
+    if not keyword:
+        return None
+    head = keyword[0].lower()
     if head in _REG_META_NUMERIC:
         return "numeric"
     if head in _REG_META_DATE:
