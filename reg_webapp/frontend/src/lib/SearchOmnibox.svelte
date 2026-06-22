@@ -56,6 +56,14 @@ let selectedValue = $state("");
 // the reconcile effect so a dismiss isn't immediately undone by suggestions still
 // being present; cleared whenever the query text changes (a new query reopens).
 let dismissed = $state(false);
+// Whether the <input> currently holds focus. Gates the reconcile effect (below)
+// so the popup opens ONLY while the box is focused: a blur / outside-click closes
+// it and stays closed (the open-invariant no longer fights Bits UI's blur-close),
+// and a `/search?q=…` deep-link that seeds the box without focusing it never pops
+// the popup unbidden. Bits UI prevents the input from blurring during an option
+// pointerdown (select.svelte item `onpointerdown` → `preventDefault`), so `focused`
+// stays true through an option click and selection still fires (#689 review).
+let focused = $state(false);
 
 /** One popup option: the suggestion's display label + the catalog route to
  * navigate to on selection. `value` is the Combobox item value — we use the href
@@ -226,21 +234,28 @@ $effect(() => {
   };
 });
 
-// THE open-state contract: the popup is open EXACTLY when there are suggestions
-// for the current query AND the user hasn't dismissed them. This single effect
-// owns `open` so it stays honest in both directions:
-//   • OPENS when an async fetch returns a non-empty list (typing opens Bits UI's
-//     combobox before the fetch resolves; without this nothing would reopen it
-//     once the first batch arrives — #689 review #2);
+// THE open-state contract: the popup is open EXACTLY when the input is FOCUSED
+// AND there are suggestions for the current query AND the user hasn't dismissed
+// them. This single effect owns `open` so it stays honest in every direction:
+//   • OPENS when an async fetch returns a non-empty list for a focused box (typing
+//     opens Bits UI's combobox before the fetch resolves; without this nothing
+//     would reopen it once the first batch arrives — #689 review #2);
 //   • CLOSES when the list goes empty (too-short query, fetch miss, or a stale
 //     list just cleared on edit) so `open`/`aria-expanded`/the Escape branch never
 //     lie about a popup that isn't rendered (the Content is gated on the same
-//     `suggestions.length > 0`).
-// Loop-safe: writing `open` doesn't feed back into `suggestions` or `dismissed`,
-// so it converges in one pass; the `open !== shouldOpen` guard avoids a redundant
-// write (and fighting Bits UI's own focus/blur toggles per keystroke).
+//     `suggestions.length > 0`);
+//   • CLOSES — and STAYS closed — on blur / outside-click: Bits UI closes `open`
+//     on an outside interaction, but suggestions are still non-empty and only
+//     Escape sets `dismissed`, so without the focus gate this effect immediately
+//     REOPENED the popup, leaving a combobox you couldn't dismiss by clicking
+//     away. The `focused` gate also keeps a `/search?q=…` deep-link — which seeds
+//     the box and resolves a fetch with no focus — from popping the popup unbidden
+//     in the header on the results page (#689 review).
+// Loop-safe: writing `open` doesn't feed back into `suggestions`/`dismissed`/
+// `focused`, so it converges in one pass; the `open !== shouldOpen` guard avoids a
+// redundant write (and fighting Bits UI's own focus/blur toggles per keystroke).
 $effect(() => {
-  const shouldOpen = suggestions.length > 0 && !dismissed;
+  const shouldOpen = focused && suggestions.length > 0 && !dismissed;
   if (open !== shouldOpen) {
     open = shouldOpen;
   }
@@ -365,12 +380,30 @@ function onKeydown(event: KeyboardEvent, wasOpen: boolean): void {
         {@const bitsInput = props.oninput as
           | ((e: Event) => void)
           | undefined}
+        {@const bitsFocus = props.onfocus as
+          | ((e: FocusEvent) => void)
+          | undefined}
+        {@const bitsBlur = props.onblur as
+          | ((e: FocusEvent) => void)
+          | undefined}
         <input
           {...props}
           type="text"
           aria-label="Search the catalog"
           autocomplete="off"
           placeholder="Search registers, variables, codes…"
+          onfocus={(e) => {
+            // Compose-Bits-UI-first (same pattern as oninput/onkeydown): bits-ui's
+            // input props don't currently carry onfocus/onblur, but call any it
+            // adds before ours so we never clobber its focus management, then track
+            // focus so the open-invariant can gate on it.
+            bitsFocus?.(e);
+            focused = true;
+          }}
+          onblur={(e) => {
+            bitsBlur?.(e);
+            focused = false;
+          }}
           oninput={(e) => {
             // Bits UI's oninput first (updates its internal inputValue + opens /
             // highlights), then mirror the typed text into our `query` (the

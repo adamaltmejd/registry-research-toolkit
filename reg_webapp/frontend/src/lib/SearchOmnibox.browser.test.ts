@@ -644,4 +644,79 @@ describe("SearchOmnibox — live suggestions (#689 Arm A)", () => {
     press(input, "Escape");
     await expect.element(box).toHaveValue("");
   });
+
+  // ── 12. Blur / click-away closes the popup (focus-gated open-invariant) ───────
+  it("closes the popup on blur and keeps it closed (click-away dismiss)", async () => {
+    // REGRESSION (#689 review): the open-invariant reconcile effect had no focus
+    // gate, so when Bits UI closed `open` on an outside-click/blur, the effect
+    // immediately reopened it (suggestions still non-empty, `dismissed` only set by
+    // Escape) — a combobox you couldn't dismiss by clicking away. The fix gates the
+    // invariant on `focused`: blurring the input closes the popup and it STAYS
+    // closed (suggestions are unchanged, so it's purely the focus loss).
+    vi.mocked(search).mockResolvedValue(
+      searchResponse({
+        variables: [
+          {
+            type: "variable",
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            register: "LISA",
+          },
+        ],
+      }),
+    );
+    await render(SearchOmnibox);
+    const box = page.getByRole("combobox");
+    const input = box.element() as HTMLInputElement;
+    await userEvent.type(input, "kon");
+    await expect
+      .element(page.getByRole("option", { name: /Kön/ }))
+      .toBeVisible();
+
+    // Blur the input (click-away analog) — the focus gate closes the popup.
+    input.blur();
+
+    // Popup gone and it stays gone: the query (and thus `suggestions`) is intact,
+    // so only the focus loss could have closed it, and the reconcile effect must
+    // not reopen it on the next tick.
+    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
+    await expect.element(box).toHaveAttribute("aria-expanded", "false");
+    await new Promise((r) => setTimeout(r, 50));
+    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
+    // The text is preserved (blur is not a clear) — only the popup closed.
+    await expect.element(box).toHaveValue("kon");
+  });
+
+  // ── 13. A deep-link does not pop the popup without focus ──────────────────────
+  it("does not open the popup on a /search?q deep-link when the box isn't focused", async () => {
+    // REGRESSION (#689 review): on a cold deep-link to /search?q=foo the URL→box
+    // effect seeds the box and the suggestion fetch resolves with hits, but the
+    // input was never focused — without the focus gate the reconcile effect opened
+    // the popup unbidden in the header on the results page. The box may show "foo",
+    // but the suggestions popup must stay CLOSED until the user focuses + types.
+    vi.mocked(search).mockResolvedValue(
+      searchResponse({
+        variables: [
+          {
+            type: "variable",
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            register: "LISA",
+          },
+        ],
+      }),
+    );
+    setUrl("/search?q=foo");
+    await render(SearchOmnibox);
+    // The box is seeded from ?q (write-down side), but nothing focused it.
+    await expect.element(page.getByRole("combobox")).toHaveValue("foo");
+
+    // Ride past the debounce + fetch resolution: even though suggestions resolve
+    // non-empty, the unfocused box keeps the popup closed.
+    await new Promise((r) => setTimeout(r, 400));
+    await expect.element(page.getByRole("option")).not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("combobox"))
+      .toHaveAttribute("aria-expanded", "false");
+  });
 });
