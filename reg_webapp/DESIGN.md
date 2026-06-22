@@ -720,6 +720,121 @@ backend contract can't drift. The catch-all returns the `kind`-discriminated
 `CatalogNode` union; components narrow on `kind` via `src/lib/catalog.ts` helpers
 (unit-tested).
 
+## Unified catalog subject page (`SubjectView`) (#611/#638)
+
+The catalog's three *leaf* kinds — a **variable** (`scb/lisa/kon`), a **classification**
+(`class/sun2020`), and a **concept group** (`group/scb/lisa/agi-astsni`) — render
+through one shell, `SubjectView.svelte`, so they share a single article wrapper, one
+title/fqid header, and one **canonical section order**:
+
+1. **description**
+2. **picker** — slice axis × time axis
+3. **value set / codes**
+4. **relationships**
+5. **docs**
+
+`SubjectView` is a thin *presentational* shell: it owns no data, no headings beyond the
+title, and no restyling. Each section arrives as a Svelte `Snippet` from the leaf view
+and the shell `{@render}`s the five in the fixed order. Every slot is **optional** — a
+kind that has nothing for a section simply doesn't pass that snippet and the slot
+renders nothing (no empty wrapper, no "none found" wall). `fqid` is shown for the
+variable + classification; a concept group has no single fqid (its key lives in the
+description's Technical details), so it's omitted.
+
+**Dispatch.** `CatalogNodeView.svelte` resolves a node by FQID (a no-query browse fetch,
+so the response is always a `kind`-tagged node) and switches on `kind`. The
+**list/browse** nodes — `provider`, `register`, `classification-root` — are NOT
+subjects: they render their child lists inline (with #303/#516 concept-group folding),
+not through `SubjectView`. The three **leaf** kinds each delegate to a per-kind view
+that fills the shell: `binding` → `BindingLeafView`, `classification` →
+`ClassificationLeafView`, and the `concept-group` (served by the fixed
+`/catalog/group/...` route, see Catalog router structure above) → `ConceptGroupView`.
+
+Per-kind mapping into the five sections:
+
+  | Section       | Variable (`BindingLeafView`)                                                                             | Classification (`ClassificationLeafView`)                                       | Concept group (`ConceptGroupView`)                           |
+  | ------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+  | description   | definition / description / unit `<dl>` + `via_same_as` note + Technical details (sensitive / identifier) | short name `<dl>`                                                               | Technical details only (key / facets / source)               |
+  | picker        | `PeriodPicker` (time) + variant-resolution gate + add-to-project                                         | — (editions switch via the succession panel)                                    | member selector (slice) + `PeriodPicker` (availability lens) |
+  | value / codes | states (`StatesView`, each state's value set via `CodeList`)                                             | `ClassificationCodesPanel` (`CodeList`)                                         | —                                                            |
+  | relationships | `DimensionsPanel` + `LineagePanels`                                                                      | `ClassificationDimensionsPanel` + `ClassificationLineagePanels` (edition chain) | — (members live in the picker)                               |
+  | docs          | `DocMentionsPanel`                                                                                       | —                                                                               | —                                                            |
+
+### The picker — slice axis × time axis
+
+The picker section carries up to two orthogonal controls. The **slice axis** differs per
+kind:
+
+- **Variable** — the slice is the `register_variant` (population). When ≥2 register
+  variants co-exist for the chosen period, `buildAddPlan` (`catalog.ts`) returns
+  `choose-variant` and the picker renders a **proactive population selector** that
+  **gates the "Add to project" button** (#638 PR2b — the *variant-resolution gate*): the
+  user resolves the population *before* committing, not in a post-click modal. A pure
+  time-sequential succession (one variant retiring into the next) is NOT a choice — it
+  auto-splits into one source per segment — so the selector is invisible for an
+  unambiguous variable. (The *representation* / delivery-column choice stays a
+  post-click chooser; it is per-segment and a succession split can carry several.)
+- **Classification** — editions (`sun1996` → `sun2000` → …) are the slice, but there is
+  **deliberately no picker**. Editions switch via the embedded **succession panel**
+  (`edition_chain`, rendered in `ClassificationLineagePanels` under relationships): each
+  edition is its own `class/<slug>` URL, so navigating the chain *is* the edition
+  switch. Adding a picker would duplicate that chain.
+- **Concept group** — the **member selector**: the group's facet grid rendered expanded
+  (a 2-axis matrix / 1-axis chips / 0-axis list, mirroring the register-browse
+  `ConceptGroupRow` shapes but richer — per-member coverage + availability greying).
+  Each member links to its leaf FQID.
+
+The **time axis** is the shared `PeriodPicker` (see the Project-window store section),
+but it does a different job per kind:
+
+- On the **variable** it drives resolution: a local change writes `?period` (precedence
+  `?period` > project window > full history), which **refetches** the `resolve_at`
+  subset and narrows the visible states.
+- On the **concept group** it is a **client-side availability lens only** (#638 PR2a):
+  `getConceptGroup` takes no period, so `?period` drives **no refetch** — it only greys
+  members whose coverage doesn't span the active window (an open-ended member end is
+  first projected to the catalog vintage, mirroring `PeriodWindowSlider`). The member
+  links carry the active `?period` into the leaf for continuity.
+- The **classification** leaf has no time axis (a classification edition is
+  period-less).
+
+The group's availability span is `memberCoverageUnion` over its members' coverages, and
+a member's coverage line uses `formatWindow` — including the one-sided `until <year>`
+form when the start is unknown (#658).
+
+### Shared section components
+
+- **`CodeList`** (#638 PR3) — the single value-set / code viewer. A variable's value set
+  and a classification's code list are the same shape (a code → label set, and a value
+  set often *is* a classification), so they render identically: `StatesView` uses it for
+  each state's value set, and `ClassificationCodesPanel` for the edition's codes. It
+  owns a **size-dependent filter** (a search box appears only at ≥
+  `CODE_FILTER_THRESHOLD` codes — pointless for a handful) and a height-constrained
+  scroll for the long LISA sets; the classification side's per-code `is_valid` surfaces
+  an "observed" tag (a variable member omits it, so no tag shows — same component, fewer
+  columns of signal).
+- **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
+  disclosure that demotes **backend/structural** fields below the user-facing ones: the
+  variable's sensitive / identifier flags, a state's type / length / delivery column
+  (`StatesView`), and a group's key / facets / source. One component keeps the summary +
+  styling consistent across the three call sites; callers omit it entirely when there's
+  nothing to demote.
+
+### Why the variable and classification lineage panels stay separate
+
+`LineagePanels` (variable) and `ClassificationLineagePanels` (classification) are
+**deliberately distinct components over distinct embedded payloads**, not one
+parameterized panel. The grains differ in ways a shared panel would have to special-case
+on every row: the variable succession chain tolerates **dead/renamed predecessors** (the
+#355/#411 model — a chain edition may have no live row but still 301-redirects) and
+carries a per-transition **reason**; the classification chain is **all-live** (the build
+validator forbids a dead edition) and has **no reason column**. The variable side also
+pairs succession with `variable_state_lineage` source → consumer edges and a
+`DimensionsPanel` (the variant facet groups), while the classification side pairs its
+edition chain with a granularity cross-reference (`ClassificationDimensionsPanel`).
+Keeping them separate means each renders exactly its own embedded shape (see Catalog
+router structure → variable / classification chains) with no kind-branching.
+
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 
 §6.5's origin-platform decision (2026-06-11): the container runs on **Fly.io**, with a
