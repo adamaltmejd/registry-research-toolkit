@@ -439,7 +439,8 @@ def render_block(recs: list[Rec], debt: str | None) -> str:
 # existed) still parses — it reads back with an empty sig, which differs from any live
 # signature, so the lanes re-rank once and self-upgrade to the new stamp.
 _BASIS_RE = re.compile(
-    r"<!-- plan-lanes:basis ready=([\d,]*) running=([\d,]*)(?: sig=(\w+))? -->"
+    r"<!-- plan-lanes:basis ready=([\d,]*) running=([\d,]*)"
+    r"(?: sig=(\w+))?(?: free=([\d,]*))? -->"
 )
 
 
@@ -512,7 +513,9 @@ def lanes_content_signature(records: list[Rec]) -> str:
     return hashlib.sha256("\n".join(parts).encode()).hexdigest()[:12]
 
 
-def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
+def basis_comment(
+    ready: set[int], running: set[int], sig: str, free: set[int] | None = None
+) -> str:
     """The machine-readable freshness basis embedded in the lanes block.
 
     Records the ready + running issue numbers AND a content `sig`
@@ -523,10 +526,19 @@ def basis_comment(ready: set[int], running: set[int], sig: str) -> str:
     `touches`/area/`priority`/`Relationships` edit that moves no issue trip staleness too;
     keeping `running` as its own field lets `lanes_freshness` tell a content move (re-rank)
     apart from a running-set-only move (cheap re-stamp).
+
+    `free` (optional) records the candidate floor `/plan-lanes` was handed
+    (`free_candidates` — ready issues not held by in-flight work). It is stamped ONLY for
+    the completeness guard (`reject_incomplete_lanes`); `lanes_freshness` ignores it (a
+    free-set move already flips `sig`). Omitted ⟹ no `free=` field (a legacy basis the
+    guard then abstains on).
     """
     r = ",".join(str(n) for n in sorted(ready))
     g = ",".join(str(n) for n in sorted(running))
-    return f"<!-- plan-lanes:basis ready={r} running={g} sig={sig} -->"
+    out = f"<!-- plan-lanes:basis ready={r} running={g} sig={sig}"
+    if free is not None:
+        out += " free=" + ",".join(str(n) for n in sorted(free))
+    return out + " -->"
 
 
 def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
@@ -542,6 +554,19 @@ def parse_basis(block: str) -> tuple[set[int], set[int], str] | None:
     return nums(m.group(1)), nums(m.group(2)), m.group(3) or ""
 
 
+def _basis_free(basis: str) -> set[int] | None:
+    """The `free=` candidate floor stamped in a basis, or None if the field is absent.
+
+    An empty set (`free=` present but listing no numbers — the all-held case, where nothing
+    must be placed) is distinct from None (a pre-`free=` basis the completeness guard can't
+    check and so abstains on).
+    """
+    m = _BASIS_RE.search(basis)
+    if not m or m.group(4) is None:
+        return None
+    return {int(x) for x in m.group(4).split(",") if x}
+
+
 def lanes_freshness(block: str, ready: set[int], running: set[int], sig: str) -> str:
     """Classify the lanes block vs the live state: 'fresh' | 'restamp' | 'rerank'.
 
@@ -555,10 +580,18 @@ def lanes_freshness(block: str, ready: set[int], running: set[int], sig: str) ->
     The ready check is belt-and-suspenders: a ready-set move already flips the content `sig`
     (every non-running issue is signed with its status), but comparing the set too guards
     against a hash blind spot and keeps the re-stamp path provably running-set-only.
+
+    A block whose basis predates the `free=` field (legacy) is forced to **rerank** even
+    when ready/running/sig match: `reject_incomplete_lanes` can't completeness-check it
+    without `free=`, so an already-incomplete legacy block would otherwise read `fresh`
+    forever and never face the guard. The one-time re-rank upgrades it (stamps `free=`) and
+    runs the guard on the result.
     """
     basis = parse_basis(block)
     if basis is None:
         return "rerank"
+    if _basis_free(block) is None:
+        return "rerank"  # legacy (pre-`free=`) block — upgrade so the guard can run.
     b_ready, b_running, b_sig = basis
     if b_sig != sig or b_ready != set(ready):
         return "rerank"
@@ -591,12 +624,21 @@ def restamp_lanes_block(epic: int, basis: str) -> int:
     the next genuine re-rank — cosmetic, and never a contamination source (`/plan-lanes`
     sources its candidate floor from the live `--lane` view, not the stored block).
 
-    Falls back to exit 1 (caller should re-rank) if there's no existing content to keep.
+    Falls back to exit 1 (caller should re-rank) if there's no existing content to keep, or
+    if that content is itself incomplete vs the new basis. The latter guards a block written
+    before the completeness guard (or before `free=` existed): re-stamping would bless an
+    already-incomplete body with a fresh `free=`-bearing basis, so it would read fresh
+    forever and `/pr-pipeline` would never see the dropped candidate. A re-stamp only fires
+    on a running-set-only delta (the free set is unchanged — `lanes_content_signature` folds
+    it in), so the new basis's `free=` is the set the content should already cover.
     """
     block = extract_block(epic_body(epic), LANES_START, LANES_END)
     content = extract_lanes_content(block)
     if not content:
         print("no existing lanes content to re-stamp; re-rank instead", file=sys.stderr)
+        return 1
+    if (why := reject_incomplete_lanes(content, basis)) is not None:
+        print(f"preserved lanes incomplete ({why}); re-rank instead", file=sys.stderr)
         return 1
     return write_lanes_block(epic, render_lanes_block(content, basis))
 
@@ -611,6 +653,39 @@ def reject_lanes_stdin(content: str) -> str | None:
         return "empty stdin (nothing to splice)"
     if LANES_START in content or LANES_END in content:
         return "stdin contains a plan-lanes marker; refusing to splice"
+    return None
+
+
+def reject_incomplete_lanes(content: str, basis: str) -> str | None:
+    """Why agent-supplied lanes `content` silently drops a free candidate, or None if fine.
+
+    This is a write-boundary **backstop for the catastrophic case**: a free candidate that
+    vanishes from the body ENTIRELY. Such a silent drop is invisible to `lanes_freshness`
+    (it compares only the basis stamp, not the body), so the stamp reads fresh while
+    `/pr-pipeline` never sees the issue (the original #662 failure). The rule is therefore
+    deliberately coarse — every free candidate must appear *somewhere* in `content`. Exact
+    placement quality (ranked exactly once, not merely name-dropped, no duplicate lanes) is
+    `/plan-lanes`' own step-5 self-check's job, not this net's: a mispositioned-but-present
+    candidate is still visible in the body and recoverable, unlike a silent vanish. (Kept
+    simple by design — see PR #663; a structured exactly-once validator was considered and
+    declined as overkill for a safety net.)
+
+    The reference set is the `free=` set stamped in the basis — the floor `/plan-lanes` was
+    handed at the same `--tick`, so the check is TOCTOU-free and excludes held issues: a
+    disjoint in-flight PR leaves most candidates free (still checked), while the all-held
+    case stamps `free=` empty (nothing required). A basis with no `free=` field (legacy)
+    can't be checked, so abstain; the next `--tick` re-stamps with the field. `#(\\d+)`
+    matches a whole digit run, so no candidate is masked by a longer id (#42 ≠ #420); a PR
+    reference can't equal a free candidate (GitHub shares the issue/PR number space).
+    """
+    free = _basis_free(basis)
+    if free is None:
+        return None  # legacy/unstamped basis — re-stamped on the next tick.
+    present = {int(n) for n in re.findall(r"#(\d+)", content)}
+    missing = sorted(free - present)
+    if missing:
+        nums = ", ".join(f"#{n}" for n in missing)
+        return f"lanes drop free candidate(s) {nums} — every candidate must appear in the body"
     return None
 
 
@@ -755,6 +830,9 @@ def main() -> int:
         if not _BASIS_RE.search(args.basis):
             print(f"--write-lanes: malformed --basis: {args.basis!r}", file=sys.stderr)
             return 2
+        if (why := reject_incomplete_lanes(content, args.basis)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
         return write_lanes_block(args.epic, render_lanes_block(content, args.basis))
 
     # Fast path: re-stamp keeps the existing ranking and only swaps the basis stamp, so it
@@ -775,12 +853,15 @@ def main() -> int:
     work = [r for r in recs if not r.is_epic]
     ready_nums = {r.number for r in work if r.status == "ready"}
     running_nums = {r.number for r in work if r.status == "running"}
+    # The free candidate floor /plan-lanes is handed (ready minus held-by-in-flight-work);
+    # stamped into the basis for reject_incomplete_lanes' completeness guard.
+    free_nums = {r.number for r in free_candidates(work)}
     # The lanes' freshness basis: the ready/running sets + a content signature over the
     # lane-affecting projection (so an edit that re-shapes ranking without moving a section
     # still re-ranks, while a running-set-only delta only re-stamps — see
     # lanes_content_signature / lanes_freshness).
     content_sig = lanes_content_signature(work)
-    live_basis = basis_comment(ready_nums, running_nums, content_sig)
+    live_basis = basis_comment(ready_nums, running_nums, content_sig, free_nums)
 
     if args.lane:
         print(dispatch_view(recs))
@@ -824,6 +905,9 @@ def main() -> int:
     if args.write_lanes:
         content = sys.stdin.read()
         if (why := reject_lanes_stdin(content)) is not None:
+            print(f"--write-lanes: {why}", file=sys.stderr)
+            return 2
+        if (why := reject_incomplete_lanes(content, live_basis)) is not None:
             print(f"--write-lanes: {why}", file=sys.stderr)
             return 2
         return write_lanes_block(args.epic, render_lanes_block(content, live_basis))

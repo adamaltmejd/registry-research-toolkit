@@ -342,11 +342,80 @@ def test_reject_lanes_stdin() -> None:
     assert ps.reject_lanes_stdin("1. lane A — #1") is None  # clean content passes
 
 
+# --- lanes completeness guard (#662) -------------------------------------------------
+
+
+def test_reject_incomplete_lanes() -> None:
+    # Backstop semantics (#663): the reference floor is the basis `free=` set; every free
+    # candidate must appear SOMEWHERE in the body (catch the silent vanish). Exact placement
+    # is /plan-lanes' own self-check, not this net's.
+    basis = ps.basis_comment({1, 2, 3}, set(), "sig", {1, 2, 3})
+
+    # Every free candidate present → accepted.
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2\n2. lane — #3", basis) is None
+
+    # A candidate absent from the body entirely → refused, naming exactly what's missing.
+    why = ps.reject_incomplete_lanes("1. lane — #1, #2", basis)
+    assert why is not None and "#3" in why
+    assert "#1" not in why and "#2" not in why  # only the missing one is named
+
+    # Backstop scope: a candidate present ANYWHERE (a Notes park, or even a rationale
+    # mention) passes — placement quality is /plan-lanes' step-5 self-check, not this guard.
+    assert (
+        ps.reject_incomplete_lanes("1. lane — #1, #2\n**Notes:** #3 blocked", basis)
+        is None
+    )
+
+    # Whole-number matching (#3 ≠ #30): a superstring doesn't satisfy #3 — #30 alone leaves
+    # #3 missing (reject), but adding #3 back accepts (locks `\d+` vs `\d`).
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30", basis) is not None
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2, #30, #3", basis) is None
+
+    # Finding A (#663 re-review): a DISJOINT in-flight PR leaves candidates free — they are
+    # still checked. free={1,2,3} though running={9}; dropping #3 is refused.
+    inflight = ps.basis_comment({1, 2, 3}, {9}, "sig", {1, 2, 3})
+    assert ps.reject_incomplete_lanes("1. lane — #1, #2", inflight) is not None
+
+    # All-held: free= is stamped empty → nothing required → "nothing dispatchable" passes.
+    allheld = ps.basis_comment({1, 2, 3}, {9}, "sig", set())
+    assert (
+        ps.reject_incomplete_lanes("No ready issues free of conflicts.", allheld)
+        is None
+    )
+
+    # Legacy basis with no free= field → abstain (can't check soundly; re-stamped next tick).
+    legacy = ps.basis_comment({1, 2, 3}, set(), "sig")  # no free arg
+    assert ps.reject_incomplete_lanes("1. lane — #1", legacy) is None
+    # No parsable basis → abstain.
+    assert ps.reject_incomplete_lanes("1. lane — #1", "garbage") is None
+
+
+def test_restamp_validates_preserved_content(monkeypatch: pytest.MonkeyPatch) -> None:
+    # #663 review #3 (line 540): a running-set-only tick must not re-stamp a preserved block
+    # that already drops a free candidate — that would bless an incomplete body with a fresh
+    # `free=` basis and read fresh forever. Restamp validates and forces a re-rank instead.
+    basis = ps.basis_comment({1, 2, 3}, {9}, "sig", {1, 2, 3})  # free={1,2,3}
+
+    incomplete = ps.render_lanes_block("1. lane — #1, #2", basis)  # #3 dropped
+    monkeypatch.setattr(ps, "epic_body", lambda epic: incomplete)
+    monkeypatch.setattr(
+        ps,
+        "write_lanes_block",
+        lambda *a: pytest.fail("must not write an incomplete block"),
+    )
+    assert ps.restamp_lanes_block(328, basis) == 1  # force re-rank
+
+    complete = ps.render_lanes_block("1. lane — #1, #2, #3", basis)
+    monkeypatch.setattr(ps, "epic_body", lambda epic: complete)
+    monkeypatch.setattr(ps, "write_lanes_block", lambda epic, block: 0)
+    assert ps.restamp_lanes_block(328, basis) == 0  # complete → re-stamps
+
+
 # --- lanes freshness: fresh / re-stamp / re-rank (#468) -------------------------------
 
 
 def test_lanes_freshness_three_way() -> None:
-    block = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig"))
+    block = ps.render_lanes_block("lanes", ps.basis_comment({1, 2}, {3}, "sig", {1, 2}))
     assert ps.lanes_freshness(block, {1, 2}, {3}, "sig") == "fresh"  # nothing moved
     # Running-set-only delta (PR #3 merged → its issue cleared): content sig + ready set
     # unchanged, only `running` moved → cheap re-stamp, no /plan-lanes.
@@ -360,13 +429,35 @@ def test_lanes_freshness_three_way() -> None:
     assert ps.lanes_freshness("", {1}, set(), "sig") == "rerank"  # no parsable basis
 
 
+def test_legacy_basis_without_free_forces_rerank() -> None:
+    # #663 review #4 (line 443): a pre-`free=` block reads fresh on a ready/running/sig
+    # match, so reject_incomplete_lanes never runs on it. Force a one-time re-rank to upgrade
+    # it (stamp `free=`) — otherwise an already-incomplete legacy block stays invisible.
+    legacy = ps.render_lanes_block("1. lane — #1", ps.basis_comment({1}, set(), "sig"))
+    assert ps.lanes_freshness(legacy, {1}, set(), "sig") == "rerank"
+    # Once upgraded (free= present), the same unchanged state reads fresh.
+    upgraded = ps.render_lanes_block(
+        "1. lane — #1", ps.basis_comment({1}, set(), "sig", {1})
+    )
+    assert ps.lanes_freshness(upgraded, {1}, set(), "sig") == "fresh"
+    # The check keys on `free=` ABSENCE, not emptiness: an all-held block stamps `free=`
+    # empty (set()) and must still read fresh — guards a `not _basis_free(...)` regression
+    # (empty set is falsy), the None-vs-empty distinction basis_comment/_basis_free rely on.
+    allheld = ps.render_lanes_block(
+        "none free", ps.basis_comment({1}, {2}, "sig", set())
+    )
+    assert ps.lanes_freshness(allheld, {1}, {2}, "sig") == "fresh"
+
+
 def test_signature_flips_freshness_on_touches_edit_no_section_move() -> None:
     # The FU-2 fix carried over: a `touches` edit that moves no issue between sections must
     # still re-rank, where a membership-only basis (same ready/running sets) would miss it.
     ready, running = {1}, set()
     old_sig = ps.lanes_content_signature([_rec(1, touches=["a.py"])])
     new_sig = ps.lanes_content_signature([_rec(1, touches=["a.py", "b.py"])])
-    block = ps.render_lanes_block("lanes", ps.basis_comment(ready, running, old_sig))
+    block = ps.render_lanes_block(
+        "lanes", ps.basis_comment(ready, running, old_sig, {1})
+    )
     assert ps.lanes_freshness(block, ready, running, old_sig) == "fresh"  # unchanged
     assert (
         ps.lanes_freshness(block, ready, running, new_sig) == "rerank"
@@ -383,7 +474,7 @@ def test_running_set_only_merge_is_restamp_end_to_end() -> None:
             9, area="reg_meta", open_prs=[100], touches=["z.py"]
         ),  # in-flight, disjoint
     ]
-    basis = ps.basis_comment({1}, {9}, ps.lanes_content_signature(before))
+    basis = ps.basis_comment({1}, {9}, ps.lanes_content_signature(before), {1})
     block = ps.render_lanes_block("1. lane — #1", basis)
     after = [_rec(1, area="reg_meta", touches=["a.py"])]  # #9 merged + closed
     assert (

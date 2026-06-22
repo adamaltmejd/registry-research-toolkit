@@ -51,8 +51,8 @@ Default epic is `328`.
    uv run --no-project python scripts/plan_sequence.py --restamp-lanes --epic <N> --basis "$basis"
    ```
 
-   If restamp exits `1` because no existing lanes content exists, fall through to
-   re-rank.
+   If restamp exits `1` (no existing lanes content, or the preserved content is
+   incomplete vs the live floor), fall through to re-rank.
 
 4. If `tick_status` was `1`, use the `plan-lanes` procedure to produce ranked markdown,
    then persist it:
@@ -61,6 +61,20 @@ Default epic is `328`.
    printf '%s' "<ranked lanes markdown>" |
      uv run --no-project python scripts/plan_sequence.py --write-lanes --epic <N> --basis "$basis"
    ```
+
+   `--write-lanes` refuses (non-zero exit, no write) a body that silently drops a free
+   candidate — one from the floor `plan-lanes` was handed (the basis `free=` set) that
+   doesn't appear anywhere in the body. It's a deliberately coarse silent-vanish
+   backstop, not a placement checker (exact placement is `plan-lanes`' own self-check).
+   On a refusal the ranking was incomplete: re-run `plan-lanes` accounting for every
+   candidate and persist the corrected markdown; do not retry the same body.
+
+   Stale-basis caveat: the refusal is judged against `$basis`'s `free=` set captured in
+   step 1. If a candidate closed/became held before `plan-lanes` read the live floor,
+   the correct new ranking omits it but the stale basis still demands it, and a re-rank
+   can't converge. So if a refusal names a candidate no longer on the live `--lane`
+   floor (or it persists across a re-rank), restart the tick (re-capture `$basis` from a
+   fresh `--tick`) instead of re-ranking against the old basis.
 
 ## Output
 
