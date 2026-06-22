@@ -23,7 +23,14 @@ pre-resolution) lives in `REFACTOR_SPEC.md`.
   validated Pydantic `ProjectData` into the stdlib `LoadedSpec` the runtime consumes.
 - **Bundle runtime** (`reg_monabundle.runtime.*`). The modules amalgamated into the
   bundle and executed on MONA: `classify`, `sql_emit`, `sources`, `summarize`, `spec`,
-  `extract`. Pulls duckdb/pyodbc, which WinPython preinstalls on MONA.
+  `extract`. Pulls duckdb/pyodbc, which WinPython preinstalls on MONA. **This runner is
+  the one surface the MONA air-gap austerity legitimately binds** — no Pydantic,
+  stdlib-only module-level imports, amalgamatable — because it is the slice lifted into
+  MONA's offline env. The rest of the toolkit does not pay that tax (ARCHITECTURE.md →
+  Repo-wide invariants). **Forward-pointer:** REFACTOR_SPEC.md §10a rebuilds this runner
+  as a **standalone** runner that imports no toolkit code (deleting the amalgamator +
+  the amalgamation tests, re-homing the PII / provenance gates onto the emitted
+  artifact); the present-tense amalgamation described below is current truth until then.
 - **PII scanner** (`reg_monabundle.scan`). Final pre-export gate over every JSON payload
   the bundle writes (see "PII scanner" below).
 - **§6.8.2 namespaced-block validator** (`reg_monabundle.validate_block`). Validates the
@@ -132,7 +139,10 @@ emitted `.py`, and asserts `≤ 1_048_576`. Current shape lands at \~104 KB (\~1
 headroom on every run so creeping growth is visible before it trips the gate. This
 budget is the reason `runtime.spec` carries a deliberately leaner dataclass tree than
 `reg_schema` (no register_variant / period / value_set), and the reason the bundle ships
-no Pydantic — pydantic-core alone is a multi-MB binary.
+no Pydantic — pydantic-core alone is a multi-MB binary. This size discipline (like the
+no-Pydantic / stdlib-only rule generally) is the **runner's** constraint, not a
+toolkit-wide one; under the §10a standalone-runner rebuild the size-budget test is among
+the amalgamation tests retired (the gate moves to the emitted standalone `.py`).
 
 ## Disclosure control
 

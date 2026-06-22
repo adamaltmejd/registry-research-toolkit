@@ -142,12 +142,20 @@ Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_bu
 These are hygiene that keeps options open, enforced in CI where noted. Package-local
 mechanisms are documented in the owning DESIGN.md and only summarized here.
 
-- **No Pydantic on library surfaces.** `reg_meta`, `reg_meta_build`, `reg_monabundle`,
-  `reg_mockdata` model with `@dataclass` so they import from any context (Jupyter,
-  scripts, the MONA bundle). `reg_schema` is the deliberate exception (it is the
-  canonical validator and the webapp's response-model source); the build-side IR in
-  `reg_meta_build` is Pydantic but build-time-only and never reaches the bundle. See
-  `reg_schema/DESIGN.md` and `reg_meta_build/DESIGN.md`.
+- **No Pydantic in the bundle runner (hard); soft preference elsewhere.** The hard
+  air-gap rule — no Pydantic, stdlib imports at module level — binds only the **bundle
+  runtime** (`reg_monabundle.runtime.*`, the slice amalgamated into the uploaded `.py`):
+  it must stay liftable into MONA's offline WinPython env, so its module-level imports
+  resolve against stdlib + MONA's preinstalled deps (duckdb/pyodbc/numpy) only.
+  `reg_meta`'s no-Pydantic is a **soft** preference — import-ergonomics (importable from
+  Jupyter/scripts without pulling pydantic-core) plus an aspirational query-layer port —
+  **not** a MONA requirement: `reg_meta` is already absent from MONA-side code (see
+  above), so the "liftable into MONA" justification never applied to it. `reg_schema` is
+  the deliberate exception (canonical validator + webapp response-model source); the
+  build-side IR in `reg_meta_build` is Pydantic but build-time-only and never reaches
+  the bundle; `reg_mockdata` consumes JSON only. Decided 2026-06-22 (#680) — see
+  REFACTOR_SPEC.md §10a. See `reg_schema/DESIGN.md`, `reg_meta_build/DESIGN.md`, and
+  `reg_monabundle/DESIGN.md`.
 - **Build / runtime cleanly separated.** `reg_meta` (query) is small and pure;
   `reg_meta_build` is operator-side. A future port replaces query only; build stays
   Python.

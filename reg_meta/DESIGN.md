@@ -407,9 +407,15 @@ resolving raises `fqid_not_found`. The method signatures are the reference in
 `catalog.py` itself; the webapp's `/api/catalog/*` shape derives directly from this
 surface (see `reg_webapp/DESIGN.md`).
 
-The exact dataclass shapes live here. They are frozen `@dataclass` (no Pydantic —
-reg_meta is the no-Pydantic library surface, see root CLAUDE.md "Stack"); collection
-fields are tuples for frozen-dataclass immutability/hashability.
+The exact dataclass shapes live here. They are frozen `@dataclass`; collection fields
+are tuples for frozen-dataclass immutability/hashability. The no-Pydantic choice is a
+**soft** preference here, **not** a MONA air-gap requirement — reg_meta is already
+absent from MONA-side code, so the "liftable into the bundle" justification never
+applied to it (that binds only the bundle runner; see root CLAUDE.md "Stack" and
+ARCHITECTURE.md). It rests on import-ergonomics (importable from Jupyter/scripts without
+pulling pydantic-core) and an aspirational Go/Rust port of the query layer, whose real
+cross-impl contracts are the SQLite `SCHEMA_VERSION` + `openapi.json` (Pydantic touches
+neither). Decided 2026-06-22 (#680).
 
 **Why two methods for succession.** `predecessors` / `successors` are split (not one
 `replaced` returning a dict) so every edge-traversal accessor returns `list[...]`

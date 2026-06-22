@@ -51,6 +51,11 @@ skip prompts and `--force` to delete stale files instead of warning-and-keeping 
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
+This WinPython version is the **ceiling on the bundle runner** — the code that actually
+executes on MONA (`reg_monabundle.runtime.*`) — **not** a toolkit-wide `requires-python`
+floor. Non-MONA packages are free to move ahead of it (see ARCHITECTURE.md → Repo-wide
+invariants; decided 2026-06-22, #680).
+
 The batch client ships with the WinPython-31700 distribution at
 `E:\Programs\WinPython-31700\python` (Python 3.13.7, MSC v.1944 64-bit). This is a
 curated bundle: 955 packages pre-installed, including every runtime dep we need. No
