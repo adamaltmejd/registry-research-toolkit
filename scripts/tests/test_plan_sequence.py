@@ -440,6 +440,13 @@ def test_legacy_basis_without_free_forces_rerank() -> None:
         "1. lane — #1", ps.basis_comment({1}, set(), "sig", {1})
     )
     assert ps.lanes_freshness(upgraded, {1}, set(), "sig") == "fresh"
+    # The check keys on `free=` ABSENCE, not emptiness: an all-held block stamps `free=`
+    # empty (set()) and must still read fresh — guards a `not _basis_free(...)` regression
+    # (empty set is falsy), the None-vs-empty distinction basis_comment/_basis_free rely on.
+    allheld = ps.render_lanes_block(
+        "none free", ps.basis_comment({1}, {2}, "sig", set())
+    )
+    assert ps.lanes_freshness(allheld, {1}, {2}, "sig") == "fresh"
 
 
 def test_signature_flips_freshness_on_touches_edit_no_section_move() -> None:
