@@ -617,30 +617,33 @@ doesn't exist there). Remaining: the SPA catalog-authoring mode, a
 
 ## Pydantic boundary
 
-reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) for
-the reg_meta dataclass surface — reg_meta stays plain dataclasses on the library surface
-(import lightness), so the webapp wraps them 1:1. This is the **only** place a 1:1
-Pydantic wrapper remains. For `project_data`-related responses (`/api/project/*`) the
-webapp uses **`reg_schema` Pydantic models directly** — no wrapper layer, eliminating
-that drift surface. (The cross-package bundle boundary — validated `Source` → dataclass
-`LoadedSpec`, which is where the Pydantic side hands off to the dataclass bundle runtime
-— lives in `reg_monabundle/DESIGN.md`.)
+reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) that
+wrap reg_meta's catalog return surface. As of #681 (2026-06-22), reg_meta exposes frozen
+Pydantic v2 models on its catalog surface — but the webapp **still** wraps them in
+per-endpoint 1:1 response models for now; the direct-consumption collapse is the #681
+follow-up (PR2). This is the **only** place a 1:1 Pydantic wrapper remains. For
+`project_data`-related responses (`/api/project/*`) the webapp uses **`reg_schema`
+Pydantic models directly** — no wrapper layer, eliminating that drift surface. (The
+cross-package bundle boundary — validated `Source` → dataclass `LoadedSpec`, which is
+where the Pydantic side hands off to the dataclass bundle runtime — lives in
+`reg_monabundle/DESIGN.md`.)
 
-The catalog response models are 1:1 wrappers of reg_meta's frozen `Catalog` dataclasses.
-Each node model carries a `kind` `Literal` discriminator (`provider` / `register` /
-`binding` / `classification` / `classification-root` / `root` / `variants-ref` /
-`concept-group`). The catch-all (`GET /api/catalog/{fqid:path}`) returns a Pydantic
-discriminated union (`Field(discriminator="kind")`) over the five kinds it owns:
-`provider` / `register` / `binding` / `classification` / `classification-root`.
-`concept-group` is **not** a catch-all arm — it is the sole response type of the
-fixed-shape route `GET /api/catalog/group/{provider}/{register}/{key}` (declared above
-the catch-all; see § Routing above). The discriminated union drives `openapi-typescript`
-to emit a clean tagged union for the catch-all; `ConceptGroupNode` is a standalone
-schema used only by the group route. FQID fields serialize as plain `str` (`str(fqid)`),
-never nested models, so the codegen'd TS sees flat string fields. The binding **leaf**
-embeds the variable's FULL longitudinal record from one `Catalog.resolve` call (states,
-value sets, and the variable-grain `same_as` / `related_to` / `lineage` edges), plus the
-full variable `succession_chain` (#582, below). `lineage_warnings` are **omitted** —
+The catalog response models are 1:1 wrappers of reg_meta's frozen Pydantic catalog
+models. Each node model carries a `kind` `Literal` discriminator (`provider` /
+`register` / `binding` / `classification` / `classification-root` / `root` /
+`variants-ref` / `concept-group`). The catch-all (`GET /api/catalog/{fqid:path}`)
+returns a Pydantic discriminated union (`Field(discriminator="kind")`) over the five
+kinds it owns: `provider` / `register` / `binding` / `classification` /
+`classification-root`. `concept-group` is **not** a catch-all arm — it is the sole
+response type of the fixed-shape route
+`GET /api/catalog/group/{provider}/{register}/{key}` (declared above the catch-all; see
+§ Routing above). The discriminated union drives `openapi-typescript` to emit a clean
+tagged union for the catch-all; `ConceptGroupNode` is a standalone schema used only by
+the group route. FQID fields serialize as plain `str` (`str(fqid)`), never nested
+models, so the codegen'd TS sees flat string fields. The binding **leaf** embeds the
+variable's FULL longitudinal record from one `Catalog.resolve` call (states, value sets,
+and the variable-grain `same_as` / `related_to` / `lineage` edges), plus the full
+variable `succession_chain` (#582, below). `lineage_warnings` are **omitted** —
 `ResolvedVariable` doesn't carry them; they arrive via the `/lineage_warnings` endpoint.
 
 One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a

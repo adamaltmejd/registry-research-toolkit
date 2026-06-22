@@ -2449,8 +2449,8 @@ class Catalog:
             return None
         # Outbound succession edges (#571) key on the resolved row's OWN slug
         # (`fqid.classification` == the row's slug on a direct hit). The same_as
-        # path `replace(hit, fqid=fqid, …)`s off this direct hit, so it inherits
-        # the resolved edition's edges (only `fqid`/`via_same_as` are overridden).
+        # path `model_copy`s off this direct hit (update={fqid, via_same_as}), so
+        # it inherits the resolved edition's edges (only those two are overridden).
         return ResolvedClassification(
             fqid=fqid,
             classification_id=row["id"],
