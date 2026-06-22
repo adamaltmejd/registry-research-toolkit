@@ -142,10 +142,13 @@ def classify(
     events: list[tuple[datetime, str, dict[str, Any]]] = []
 
     for r in reviews:
+        # A verdict-state review always carries submitted_at (only PENDING is null, and
+        # that's filtered by state); the truthiness check keeps _parse_ts total regardless.
         if (
             is_bot(r)
             and r.get("state") in VERDICT_REVIEW_STATES
             and r.get("commit_id") == head_oid
+            and r.get("submitted_at")
         ):
             events.append(
                 (
